@@ -14,10 +14,10 @@
 
 #pragma once
 
+#include <mongocxx/config/private/prelude.hh>
+
 #include <bsoncxx/builder/basic/array.hpp>
 #include <mongocxx/pipeline.hpp>
-
-#include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

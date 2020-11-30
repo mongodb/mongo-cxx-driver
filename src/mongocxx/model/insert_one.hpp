@@ -14,9 +14,9 @@
 
 #pragma once
 
-#include <bsoncxx/document/view_or_value.hpp>
-
 #include <mongocxx/config/prelude.hpp>
+
+#include <bsoncxx/document/view_or_value.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

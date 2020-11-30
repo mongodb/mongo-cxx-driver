@@ -12,11 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "helpers.hpp"
-
 #include <chrono>
 #include <string>
 
+#include "helpers.hpp"
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/document/element.hpp>
 #include <bsoncxx/json.hpp>
@@ -76,14 +75,15 @@ TEST_CASE("Collection", "[collection]") {
         read_concern rc{};
         rc.acknowledge_level(read_concern::level::k_majority);
 
-        collection_set_read_concern->interpose([&collection_set_rc_called](
-            ::mongoc_collection_t*, const ::mongoc_read_concern_t* rc_t) {
-            REQUIRE(rc_t);
-            const auto result = libmongoc::read_concern_get_level(rc_t);
-            REQUIRE(result);
-            REQUIRE(strcmp(result, "majority") == 0);
-            collection_set_rc_called = true;
-        });
+        collection_set_read_concern->interpose(
+            [&collection_set_rc_called](::mongoc_collection_t*,
+                                        const ::mongoc_read_concern_t* rc_t) {
+                REQUIRE(rc_t);
+                const auto result = libmongoc::read_concern_get_level(rc_t);
+                REQUIRE(result);
+                REQUIRE(strcmp(result, "majority") == 0);
+                collection_set_rc_called = true;
+            });
 
         mongo_coll.read_concern(rc);
         REQUIRE(collection_set_rc_called);
@@ -861,8 +861,10 @@ TEST_CASE("Collection", "[collection]") {
 
         SECTION("Delete One", "[collection::delete_one]") {
             expected_order_setting = true;
-            bulk_operation_remove_one_with_opts->interpose([&](
-                mongoc_bulk_operation_t*, const bson_t* doc, const bson_t* options, bson_error_t*) {
+            bulk_operation_remove_one_with_opts->interpose([&](mongoc_bulk_operation_t*,
+                                                               const bson_t* doc,
+                                                               const bson_t* options,
+                                                               bson_error_t*) {
                 bulk_operation_op_called = true;
                 REQUIRE(bson_get_data(doc) == filter_doc.view().data());
 
@@ -904,8 +906,10 @@ TEST_CASE("Collection", "[collection]") {
 
         SECTION("Delete Many", "[collection::delete_many]") {
             expected_order_setting = true;
-            bulk_operation_remove_many_with_opts->interpose([&](
-                mongoc_bulk_operation_t*, const bson_t* doc, const bson_t* options, bson_error_t*) {
+            bulk_operation_remove_many_with_opts->interpose([&](mongoc_bulk_operation_t*,
+                                                                const bson_t* doc,
+                                                                const bson_t* options,
+                                                                bson_error_t*) {
                 bulk_operation_op_called = true;
                 REQUIRE(bson_get_data(doc) == filter_doc.view().data());
 

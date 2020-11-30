@@ -14,9 +14,9 @@
 
 #pragma once
 
-#include <bsoncxx/types/bson_value/view.hpp>
-
 #include <bsoncxx/config/prelude.hpp>
+
+#include <bsoncxx/types/bson_value/view.hpp>
 
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN

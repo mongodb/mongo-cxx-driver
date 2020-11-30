@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/database.hpp>
+#include <mongocxx/config/private/prelude.hh>
 
 #include <utility>
 
@@ -22,6 +22,7 @@
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/string/to_string.hpp>
 #include <mongocxx/client.hpp>
+#include <mongocxx/database.hpp>
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
@@ -34,8 +35,6 @@
 #include <mongocxx/private/pipeline.hh>
 #include <mongocxx/private/read_concern.hh>
 #include <mongocxx/private/read_preference.hh>
-
-#include <mongocxx/config/private/prelude.hh>
 
 using bsoncxx::builder::concatenate;
 using bsoncxx::builder::basic::kvp;

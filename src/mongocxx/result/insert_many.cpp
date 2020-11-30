@@ -12,11 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/result/insert_many.hpp>
+#include <mongocxx/config/private/prelude.hh>
 
 #include <bsoncxx/types/bson_value/view.hpp>
-
-#include <mongocxx/config/private/prelude.hh>
+#include <mongocxx/result/insert_many.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

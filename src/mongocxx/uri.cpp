@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/uri.hpp>
+#include <mongocxx/config/private/prelude.hh>
 
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/types.hpp>
@@ -23,8 +23,7 @@
 #include <mongocxx/private/read_preference.hh>
 #include <mongocxx/private/uri.hh>
 #include <mongocxx/private/write_concern.hh>
-
-#include <mongocxx/config/private/prelude.hh>
+#include <mongocxx/uri.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

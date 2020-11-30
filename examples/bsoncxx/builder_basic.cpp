@@ -55,8 +55,8 @@ int main(int, char**) {
     // as a parameter, which appends the keys in-place.
     // After the lambda returns, the builder will end the subdocument.
 
-    using bsoncxx::builder::basic::sub_document;
     using bsoncxx::builder::basic::sub_array;
+    using bsoncxx::builder::basic::sub_document;
 
     doc.append(kvp("subdocument key",
                    [](sub_document subdoc) {
@@ -65,14 +65,10 @@ int main(int, char**) {
                    }),
                kvp("subarray key", [](sub_array subarr) {
                    // subarrays work similarly
-                   subarr.append(1,
-                                 types::b_bool{false},
-                                 "hello",
-                                 5,
-                                 [](sub_document subdoc) {
-                                     // nesting works too!
-                                     subdoc.append(kvp("such", "nesting"), kvp("much", "recurse"));
-                                 });
+                   subarr.append(1, types::b_bool{false}, "hello", 5, [](sub_document subdoc) {
+                       // nesting works too!
+                       subdoc.append(kvp("such", "nesting"), kvp("much", "recurse"));
+                   });
                }));
 
     // We can get a view of the resulting bson by calling view()

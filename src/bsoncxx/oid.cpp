@@ -12,15 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/oid.hpp>
+#include <bsoncxx/config/private/prelude.hh>
 
 #include <cstring>
 
 #include <bsoncxx/exception/error_code.hpp>
 #include <bsoncxx/exception/exception.hpp>
+#include <bsoncxx/oid.hpp>
 #include <bsoncxx/private/libbson.hh>
-
-#include <bsoncxx/config/private/prelude.hh>
 
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN

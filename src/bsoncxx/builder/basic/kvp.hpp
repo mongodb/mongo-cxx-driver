@@ -14,9 +14,9 @@
 
 #pragma once
 
-#include <tuple>
-
 #include <bsoncxx/config/prelude.hpp>
+
+#include <tuple>
 
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN

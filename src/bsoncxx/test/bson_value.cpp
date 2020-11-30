@@ -13,6 +13,8 @@
 // limitations under the License.
 
 #include <algorithm>
+#include <vector>
+
 #include <bsoncxx/builder/basic/array.hpp>
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>
@@ -21,15 +23,14 @@
 #include <bsoncxx/types/bson_value/make_value.hpp>
 #include <bsoncxx/types/bson_value/value.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
-#include <vector>
 
 namespace {
 using namespace bsoncxx;
 
 using bsoncxx::to_json;
+using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_array;
 using bsoncxx::builder::basic::make_document;
-using bsoncxx::builder::basic::kvp;
 
 using namespace bsoncxx::types;
 

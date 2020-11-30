@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/config/private/prelude.hh>
+
 #include <map>
 #include <string>
 
@@ -22,8 +24,6 @@
 #include <mongocxx/client_session.hpp>
 #include <mongocxx/pipeline.hpp>
 #include <mongocxx/private/libmongoc.hh>
-
-#include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

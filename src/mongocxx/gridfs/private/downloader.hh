@@ -14,12 +14,12 @@
 
 #pragma once
 
+#include <mongocxx/config/private/prelude.hh>
+
 #include <cstdlib>
 
 #include <mongocxx/exception/gridfs_exception.hpp>
 #include <mongocxx/gridfs/downloader.hpp>
-
-#include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

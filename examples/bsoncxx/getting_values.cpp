@@ -12,12 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <bsoncxx/config/prelude.hpp>
+
 #include <cstdlib>
 
 #include <bsoncxx/builder/stream/array.hpp>
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/builder/stream/helpers.hpp>
-#include <bsoncxx/config/prelude.hpp>
 #include <bsoncxx/types.hpp>
 
 using namespace bsoncxx;

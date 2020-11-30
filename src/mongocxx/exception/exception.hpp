@@ -14,10 +14,11 @@
 
 #pragma once
 
-#include <string>
-#include <system_error>
-
 #include <mongocxx/config/prelude.hpp>
+
+#include <string>
+
+#include <system_error>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

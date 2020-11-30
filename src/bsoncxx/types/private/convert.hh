@@ -14,13 +14,14 @@
 
 #pragma once
 
+#include <bsoncxx/config/private/prelude.hh>
+
+#include <cstdlib>
+
 #include <bsoncxx/private/libbson.hh>
 #include <bsoncxx/private/suppress_deprecation_warnings.hh>
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
-#include <cstdlib>
-
-#include <bsoncxx/config/private/prelude.hh>
 
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN

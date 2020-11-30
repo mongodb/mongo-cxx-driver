@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/config/prelude.hpp>
+
 #include <chrono>
 #include <cstdint>
 #include <memory>
@@ -23,8 +25,6 @@
 #include <bsoncxx/stdx/optional.hpp>
 #include <mongocxx/options/transaction.hpp>
 #include <mongocxx/stdx.hpp>
-
-#include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

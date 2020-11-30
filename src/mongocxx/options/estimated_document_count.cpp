@@ -12,11 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/options/estimated_document_count.hpp>
-
-#include <mongocxx/private/read_preference.hh>
-
 #include <mongocxx/config/private/prelude.hh>
+
+#include <mongocxx/options/estimated_document_count.hpp>
+#include <mongocxx/private/read_preference.hh>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

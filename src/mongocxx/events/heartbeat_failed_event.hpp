@@ -14,9 +14,9 @@
 
 #pragma once
 
-#include <bsoncxx/stdx/string_view.hpp>
-
 #include <mongocxx/config/prelude.hpp>
+
+#include <bsoncxx/stdx/string_view.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

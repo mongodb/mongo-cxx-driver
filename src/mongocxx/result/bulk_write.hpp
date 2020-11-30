@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/config/prelude.hpp>
+
 #include <cstdint>
 #include <map>
 #include <vector>
@@ -21,8 +23,6 @@
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/types.hpp>
-
-#include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

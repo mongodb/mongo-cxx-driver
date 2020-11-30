@@ -18,8 +18,8 @@
 #include <mongocxx/result/replace_one.hpp>
 
 namespace {
-using bsoncxx::builder::basic::make_document;
 using bsoncxx::builder::basic::kvp;
+using bsoncxx::builder::basic::make_document;
 
 TEST_CASE("replace_one", "[replace_one][result]") {
     mongocxx::instance::current();

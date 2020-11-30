@@ -14,12 +14,12 @@
 
 #pragma once
 
+#include <bsoncxx/config/private/prelude.hh>
+
 #include <cstddef>
 #include <cstdint>
 
 #include <bsoncxx/test_util/export_for_testing.hh>
-
-#include <bsoncxx/config/private/prelude.hh>
 
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN

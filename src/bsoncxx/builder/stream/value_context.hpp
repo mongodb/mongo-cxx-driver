@@ -14,13 +14,13 @@
 
 #pragma once
 
+#include <bsoncxx/config/prelude.hpp>
+
 #include <bsoncxx/builder/core.hpp>
 #include <bsoncxx/builder/stream/array_context.hpp>
 #include <bsoncxx/builder/stream/closed_context.hpp>
 #include <bsoncxx/builder/stream/helpers.hpp>
 #include <bsoncxx/util/functor.hpp>
-
-#include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN

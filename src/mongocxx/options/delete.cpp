@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include <mongocxx/config/private/prelude.hh>
+
 #include <mongocxx/hint.hpp>
 #include <mongocxx/options/delete.hpp>
 

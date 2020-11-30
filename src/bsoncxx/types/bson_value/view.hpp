@@ -14,13 +14,13 @@
 
 #pragma once
 
+#include <bsoncxx/config/prelude.hpp>
+
 #include <cstddef>
 #include <cstdint>
-#include <type_traits>
 
 #include <bsoncxx/types.hpp>
-
-#include <bsoncxx/config/prelude.hpp>
+#include <type_traits>
 
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN

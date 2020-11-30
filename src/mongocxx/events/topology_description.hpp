@@ -14,13 +14,13 @@
 
 #pragma once
 
+#include <mongocxx/config/prelude.hpp>
+
 #include <vector>
 
 #include <bsoncxx/stdx/string_view.hpp>
 #include <mongocxx/events/server_description.hpp>
 #include <mongocxx/read_preference.hpp>
-
-#include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

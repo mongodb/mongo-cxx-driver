@@ -12,9 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <helpers.hpp>
-
 #include <fstream>
+#include <helpers.hpp>
 #include <sstream>
 #include <string>
 
@@ -56,16 +55,16 @@ const auto kAwsKeyUUID = "\x01\x64\x80\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x
 
 using bsoncxx::builder::concatenate;
 
-using bsoncxx::builder::basic::make_document;
 using bsoncxx::builder::basic::kvp;
+using bsoncxx::builder::basic::make_document;
 
 using bsoncxx::builder::basic::sub_document;
-using bsoncxx::builder::stream::document;
-using bsoncxx::builder::stream::open_array;
 using bsoncxx::builder::stream::close_array;
-using bsoncxx::builder::stream::open_document;
 using bsoncxx::builder::stream::close_document;
+using bsoncxx::builder::stream::document;
 using bsoncxx::builder::stream::finalize;
+using bsoncxx::builder::stream::open_array;
+using bsoncxx::builder::stream::open_document;
 
 using bsoncxx::types::bson_value::make_value;
 
@@ -341,7 +340,6 @@ TEST_CASE("Datakey and double encryption", "[client_side_encryption]") {
             options::data_key data_key_opts;
             data_key_opts.key_alt_names({"local_altname"});
             return client_encryption.create_data_key("local", data_key_opts);
-
         },
         "local",
         &setup_client,
@@ -364,7 +362,6 @@ TEST_CASE("Datakey and double encryption", "[client_side_encryption]") {
             data_key_opts.master_key(doc.view());
 
             return client_encryption.create_data_key("aws", data_key_opts);
-
         },
         "aws",
         &setup_client,
@@ -882,9 +879,8 @@ void _run_corpus_test(bool use_schema_map) {
 
                     corpus_copied_builder.append(kvp(field_name, std::move(new_field)));
                 } catch (const std::exception& e) {
-                    FAIL("caught an exception for encrypting an allowed field " << field_name
-                                                                                << ": "
-                                                                                << e.what());
+                    FAIL("caught an exception for encrypting an allowed field "
+                         << field_name << ": " << e.what());
                 }
             } else {
                 REQUIRE_THROWS(client_encryption.encrypt(to_encrypt, std::move(encrypt_opts)));

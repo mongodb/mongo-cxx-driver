@@ -56,7 +56,9 @@ void from_bson(Person& person, const bsoncxx::document::view& bson_object) {
 
 TEST_CASE("Convert between Person struct and BSON object") {
     test::Person expected_person{
-        "Lelouch", "Lamperouge", 18,
+        "Lelouch",
+        "Lamperouge",
+        18,
     };
 
     bsoncxx::document::value expected_doc =

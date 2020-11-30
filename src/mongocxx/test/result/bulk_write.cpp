@@ -23,8 +23,8 @@ namespace {
 using namespace bsoncxx;
 
 using bsoncxx::builder::basic::kvp;
-using bsoncxx::builder::basic::make_document;
 using bsoncxx::builder::basic::make_array;
+using bsoncxx::builder::basic::make_document;
 
 TEST_CASE("bulk_write result", "[bulk_write][result]") {
     mongocxx::instance::current();
@@ -83,4 +83,4 @@ TEST_CASE("bulk_write result inequals", "[bulk_write][result]") {
 
     REQUIRE(bw1 != bw2);
 }
-}
+}  // namespace

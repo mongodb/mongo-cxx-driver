@@ -12,10 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/document/element.hpp>
+#include <bsoncxx/config/private/prelude.hh>
 
 #include <cstdlib>
 
+#include <bsoncxx/document/element.hpp>
 #include <bsoncxx/exception/error_code.hpp>
 #include <bsoncxx/exception/exception.hpp>
 #include <bsoncxx/private/libbson.hh>
@@ -23,8 +24,6 @@
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/bson_value/value.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
-
-#include <bsoncxx/config/private/prelude.hh>
 
 #define BSONCXX_CITER \
     bson_iter_t iter; \

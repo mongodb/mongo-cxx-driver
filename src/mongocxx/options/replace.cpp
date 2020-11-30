@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/options/replace.hpp>
+#include <mongocxx/config/private/prelude.hh>
 
 #include <bsoncxx/document/view_or_value.hpp>
-#include <mongocxx/config/private/prelude.hh>
+#include <mongocxx/options/replace.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

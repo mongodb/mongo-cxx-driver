@@ -12,12 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/options/aggregate.hpp>
+#include <mongocxx/config/private/prelude.hh>
 
 #include <bsoncxx/builder/basic/document.hpp>
+#include <mongocxx/options/aggregate.hpp>
 #include <mongocxx/private/read_preference.hh>
-
-#include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

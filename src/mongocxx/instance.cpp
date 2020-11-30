@@ -12,19 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/instance.hpp>
+#include <mongocxx/config/private/prelude.hh>
 
 #include <atomic>
-#include <type_traits>
 #include <utility>
 
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
+#include <mongocxx/instance.hpp>
 #include <mongocxx/logger.hpp>
 #include <mongocxx/private/libmongoc.hh>
-
-#include <mongocxx/config/private/prelude.hh>
+#include <type_traits>
 
 #if !defined(__has_feature)
 #define __has_feature(x) 0

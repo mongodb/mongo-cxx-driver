@@ -14,11 +14,12 @@
 
 #pragma once
 
+#include <bsoncxx/config/private/prelude.hh>
+
 #include <list>
 #include <memory>
-#include <type_traits>
 
-#include <bsoncxx/config/private/prelude.hh>
+#include <type_traits>
 
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN

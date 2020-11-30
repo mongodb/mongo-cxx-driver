@@ -14,10 +14,11 @@
 
 #pragma once
 
-#include <cstdint>
-#include <system_error>
-
 #include <bsoncxx/config/prelude.hpp>
+
+#include <cstdint>
+
+#include <system_error>
 
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
