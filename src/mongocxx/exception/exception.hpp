@@ -17,7 +17,6 @@
 #include <mongocxx/config/prelude.hpp>
 
 #include <string>
-
 #include <system_error>
 
 namespace mongocxx {

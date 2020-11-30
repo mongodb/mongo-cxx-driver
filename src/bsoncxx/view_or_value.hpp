@@ -16,8 +16,9 @@
 
 #include <bsoncxx/config/prelude.hpp>
 
-#include <bsoncxx/stdx/optional.hpp>
 #include <type_traits>
+
+#include <bsoncxx/stdx/optional.hpp>
 
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN

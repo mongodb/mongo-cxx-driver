@@ -24,10 +24,9 @@
 #include <mutex>
 #include <stack>
 #include <thread>
-#include <vector>
-
 #include <type_traits>
 #include <unordered_map>
+#include <vector>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

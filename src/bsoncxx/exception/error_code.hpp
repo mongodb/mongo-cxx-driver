@@ -17,7 +17,6 @@
 #include <bsoncxx/config/prelude.hpp>
 
 #include <cstdint>
-
 #include <system_error>
 
 namespace bsoncxx {

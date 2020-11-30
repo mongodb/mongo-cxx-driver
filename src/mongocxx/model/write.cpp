@@ -14,8 +14,9 @@
 
 #include <mongocxx/config/private/prelude.hh>
 
-#include <mongocxx/model/write.hpp>
 #include <type_traits>
+
+#include <mongocxx/model/write.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

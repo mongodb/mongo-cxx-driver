@@ -15,6 +15,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 #include <atomic>
+#include <type_traits>
 #include <utility>
 
 #include <bsoncxx/stdx/make_unique.hpp>
@@ -23,7 +24,6 @@
 #include <mongocxx/instance.hpp>
 #include <mongocxx/logger.hpp>
 #include <mongocxx/private/libmongoc.hh>
-#include <type_traits>
 
 #if !defined(__has_feature)
 #define __has_feature(x) 0

@@ -11,7 +11,7 @@ IncludeBlocks: Regroup
 IncludeCategories:
   - Regex:    'prelude\.(hpp|hh)' # preludes
     Priority: 1
-  - Regex:    '<[[:alnum:].]+>' # system headers
+  - Regex:    '<[[:alnum:]_.]+>' # system headers
     Priority: 2
   - Regex:    '.*' # driver headers
     Priority: 3
