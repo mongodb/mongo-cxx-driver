@@ -76,7 +76,7 @@ std::int32_t get_max_wire_version(const client& client);
 ///
 /// Determines the server version number by running "serverStatus".
 ///
-std::string get_server_version(const client& client);
+std::string get_server_version(const client& client = {uri{}});
 
 ///
 /// Get replica set name, or empty string.
@@ -91,7 +91,7 @@ bool is_replica_set(const client& client);
 ///
 /// Returns "standalone", "replicaset", or "sharded".
 ///
-std::string get_topology(const client& client);
+std::string get_topology(const client& client = {uri{}});
 
 ///
 /// Parses a JSON file at a given path and return it as a BSON document value.
