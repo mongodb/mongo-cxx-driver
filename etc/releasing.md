@@ -24,6 +24,10 @@ pip install -r etc/requirements.txt
 ```
 
 ## Tag the release
+
+If doing a minor release (e.g. releasing r3.6.0), stay on the master branch. You will create a new `releases/v3.6` branch later in the instructions.
+If doing a patch release (e.g. releasing r3.6.1), check out the corresponding release branch, which should be `releases/v3.6`.
+
 Create a tag for the commit to serve as the release (or release candidate):
 
 ```
