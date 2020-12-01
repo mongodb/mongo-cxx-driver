@@ -21,11 +21,12 @@ for more details about the various versions of the driver.
 
 ## Resources
 
-* [MongoDB C++ Driver Quickstart](https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/tutorial/)
-* [MongoDB C++ Driver Manual](https://mongodb.github.io/mongo-cxx-driver/)
-* [MongoDB C++ Driver API Documentation](https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3)
-* [MongoDB C++ Driver Contribution guidelines](https://mongodb.github.io/mongo-cxx-driver/contributing/)
-* [MongoDB Database Manual](http://docs.mongodb.com/manual/)
+* [MongoDB C++ Driver Installation](http://mongocxx.org/mongocxx-v3/installation/)
+* [MongoDB C++ Driver Quickstart](http://mongocxx.org/mongocxx-v3/tutorial/)
+* [MongoDB C++ Driver Manual](http://mongocxx.org)
+* [MongoDB C++ Driver API Documentation](http://mongocxx.org/api/current/)
+* [MongoDB C++ Driver Contribution guidelines](http://mongocxx.org/contributing/)
+* [MongoDB Database Manual](https://docs.mongodb.com/manual/)
 
 ## Driver status by family and version
 
