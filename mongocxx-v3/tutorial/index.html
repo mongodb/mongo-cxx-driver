@@ -1521,7 +1521,7 @@ which will return a
 instance. For example, the following will extract the <code>name</code> field whose
 value is a string:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">bsoncxx<span style="color:#f92672">::</span>document<span style="color:#f92672">::</span>element element <span style="color:#f92672">=</span> view[<span style="color:#e6db74">&#34;name&#34;</span>];
-<span style="color:#66d9ef">if</span>(element.type() <span style="color:#f92672">!=</span> bsoncxx<span style="color:#f92672">::</span>type<span style="color:#f92672">::</span>k_utf8) {
+<span style="color:#66d9ef">if</span>(element.type() <span style="color:#f92672">!=</span> bsoncxx<span style="color:#f92672">::</span>type<span style="color:#f92672">::</span>k_string) {
   <span style="color:#75715e">// Error
 </span><span style="color:#75715e"></span>}
 std<span style="color:#f92672">::</span>string name <span style="color:#f92672">=</span> element.get_string().value.to_string();

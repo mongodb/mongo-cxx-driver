@@ -1458,16 +1458,23 @@ use each.  For more information and example code, see our
 <li><a href="#fields">Getting Fields out of BSON Documents</a><!-- raw HTML omitted --></li>
 </ol>
 <h2 id="builders">Document Builders</h2>
-<p>The bsoncxx library offers three interfaces for building BSON: one-off
-functions, a basic builder and a stream-based builder.</p>
+<p>The bsoncxx library offers four interfaces for building BSON: one-off
+functions, a basic builder, a list builder and a stream-based builder.</p>
 <p><a href="https://github.com/mongodb/mongo-cxx-driver/blob/master/src/bsoncxx/builder/basic/document.hpp"><code>bsoncxx::builder::basic::document</code></a><!-- raw HTML omitted -->
 <a href="https://github.com/mongodb/mongo-cxx-driver/blob/master/src/bsoncxx/builder/stream/document.hpp"><code>bsoncxx::builder::stream::document</code></a></p>
 <p>The various methods of creating BSON documents and arrays are all
 equivalent. All interfaces will provide the same results, the choice of
 which to use is entirely aesthetic.</p>
+<h2 id="list">List builder</h2>
+<p>The simplest way to create a BSON document or array is to use the JSON-like
+list builder:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#75715e">// { &#34;hello&#34;: &#34;world&#34; }
+</span><span style="color:#75715e"></span>bsoncxx<span style="color:#f92672">::</span>builder<span style="color:#f92672">::</span>list list_builder <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#34;hello&#34;</span>, <span style="color:#e6db74">&#34;world&#34;</span>};
+bsoncxx<span style="color:#f92672">::</span>document<span style="color:#f92672">::</span>view document <span style="color:#f92672">=</span> list_builder.view().get_document();
+</code></pre></div><p>More advanced uses of the list builder are shown in <a href="https://github.com/mongodb/mongo-cxx-driver/blob/master/examples/bsoncxx/builder_list.cpp">this
+example</a>.</p>
 <h2 id="one-off">&ldquo;One-off&rdquo; builder functions</h2>
-<p>The simplest way to create a BSON document or array is to use the one-off
-builder functions, which create documents and arrays in a single call.
+<p>The &ldquo;One-off&rdquo; builder creates documents and arrays in a single call.
 These can be used when no additional logic (such as conditionals or loops)
 needs to be used to create the object:</p>
 <div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">using</span> bsoncxx<span style="color:#f92672">::</span>builder<span style="color:#f92672">::</span>basic<span style="color:#f92672">::</span>kvp;
@@ -1699,6 +1706,7 @@ to convert to a native decimal128 type.</p>
     <nav id="TableOfContents">
   <ul>
     <li><a href="#builders">Document Builders</a></li>
+    <li><a href="#list">List builder</a></li>
     <li><a href="#one-off">&ldquo;One-off&rdquo; builder functions</a></li>
     <li><a href="#basic-builder">Basic builder</a></li>
     <li><a href="#stream-builder">Stream builder</a>

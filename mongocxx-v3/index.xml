@@ -6,7 +6,11 @@
     <description>Recent content in The mongocxx (v3) driver on MongoDB C&#43;&#43; Driver Manual</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 15 Aug 2016 16:11:58 +0530</lastBuildDate><atom:link href="http://mongocxx.org/mongocxx-v3/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 15 Aug 2016 16:11:58 +0530</lastBuildDate>
+    
+	<atom:link href="http://mongocxx.org/mongocxx-v3/index.xml" rel="self" type="application/rss+xml" />
+    
+    
     <item>
       <title>Connection pools</title>
       <link>http://mongocxx.org/mongocxx-v3/connection-pools/</link>
@@ -67,7 +71,7 @@ Even if you create multiple child objects from a single client, and synchronize 
       
       <guid>http://mongocxx.org/mongocxx-v3/working-with-bson/</guid>
       <description>The mongocxx driver ships with a new library, bsoncxx. This article will go over some of the different types in this library, and how and when to use each. For more information and example code, see our examples.
- Document Builders Owning BSON Documents (values) Non-owning BSON Documents (views) Optionally-owning BSON Documents(view_or_value) BSON Document Lifetime Printing BSON Documents Getting Fields out of BSON Documents  Document Builders The bsoncxx library offers three interfaces for building BSON: one-off functions, a basic builder and a stream-based builder.</description>
+ Document Builders Owning BSON Documents (values) Non-owning BSON Documents (views) Optionally-owning BSON Documents(view_or_value) BSON Document Lifetime Printing BSON Documents Getting Fields out of BSON Documents  Document Builders The bsoncxx library offers four interfaces for building BSON: one-off functions, a basic builder, a list builder and a stream-based builder.</description>
     </item>
     
     <item>

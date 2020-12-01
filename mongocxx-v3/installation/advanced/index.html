@@ -1364,6 +1364,11 @@ this behavior with the <code>-DBUILD_SHARED_AND_STATIC_LIBS</code> option:</p>
 </span><span style="color:#ae81ff"></span>    -DBUILD_SHARED_LIBS_WITH_STATIC_MONGOC<span style="color:#f92672">=</span>ON       <span style="color:#ae81ff">\
 </span><span style="color:#ae81ff"></span>    -DCMAKE_PREFIX_PATH<span style="color:#f92672">=</span>C:<span style="color:#ae81ff">\m</span>ongo-c-driver           <span style="color:#ae81ff">\
 </span><span style="color:#ae81ff"></span>    -DCMAKE_INSTALL_PREFIX<span style="color:#f92672">=</span>C:<span style="color:#ae81ff">\m</span>ongo-cxx-driver
+</code></pre></div><h2 id="disabling-tests">Disabling tests</h2>
+<p>Pass <code>-DENABLE_TESTS=OFF</code> as a cmake option to disable configuration of test targets.</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">cmake .. -DENABLE_TESTS<span style="color:#f92672">=</span>OFF
+cmake --build .. --target help
+<span style="color:#75715e"># No test targets are configured.</span>
 </code></pre></div>
 
 
@@ -1403,6 +1408,7 @@ this behavior with the <code>-DBUILD_SHARED_AND_STATIC_LIBS</code> option:</p>
         <li><a href="#for-windows">For Windows</a></li>
       </ul>
     </li>
+    <li><a href="#disabling-tests">Disabling tests</a></li>
   </ul>
 </nav>
   </div>
