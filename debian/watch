@@ -1,4 +1,4 @@
-version=3
+version=4
 
 opts="dversionmangle=s/\+dfsg[.\d]*//" \
 https://github.com/mongodb/mongo-cxx-driver/releases /mongodb/mongo-cxx-driver/releases/download/\d\S*/mongo-cxx-driver-(\d\S*)\.tar\.gz
