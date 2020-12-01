@@ -1,11 +1,12 @@
-mongo-cxx-driver (3.6.1-2) UNRELEASED; urgency=medium
+mongo-cxx-driver (3.6.2-1) UNRELEASED; urgency=medium
 
+  * New upstream release
   * Implement build profile: pkg.mongo-cxx-driver.mnmlstc
     + the build profile allows interested users to rebuild with the
       MNMLSTC/core C++17 polyfill instead of Boost
     + consult README.Debian for details
 
- -- Roberto C. Sanchez <roberto@connexer.com>  Fri, 06 Nov 2020 10:55:50 -0500
+ -- Roberto C. Sanchez <roberto@connexer.com>  Tue, 01 Dec 2020 14:05:45 -0500
 
 mongo-cxx-driver (3.6.1-1) experimental; urgency=medium
 
