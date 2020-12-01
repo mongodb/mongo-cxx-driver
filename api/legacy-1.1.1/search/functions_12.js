@@ -12,7 +12,7 @@ var searchData=
   ['regexflags_1537',['regexFlags',['../classmongo_1_1BSONElement.html#a03ea0448d4adb41b3eb3da021382646e',1,'mongo::BSONElement']]],
   ['release_1538',['release',['../classmongo_1_1OwnedPointerVector.html#a7312758fb0253af75b3ebe7828b2495d',1,'mongo::OwnedPointerVector']]],
   ['releaseat_1539',['releaseAt',['../classmongo_1_1OwnedPointerVector.html#ad577eede6c88b003bae13a30bc23ea47',1,'mongo::OwnedPointerVector']]],
-  ['remove_1540',['remove',['../classmongo_1_1BulkUpdateBuilder.html#accb3b74dcaef89a46f5f73a9a21f5349',1,'mongo::BulkUpdateBuilder::remove()'],['../classmongo_1_1DBClientBase.html#af026cdf70999394092a0be1a88e8be70',1,'mongo::DBClientBase::remove()'],['../classmongo_1_1ReplicaSetMonitor.html#a6faa26f9a587475d489f04eda891e4e3',1,'mongo::ReplicaSetMonitor::remove()'],['../classmongo_1_1DBClientReplicaSet.html#af026cdf70999394092a0be1a88e8be70',1,'mongo::DBClientReplicaSet::remove()']]],
+  ['remove_1540',['remove',['../classmongo_1_1BulkUpdateBuilder.html#accb3b74dcaef89a46f5f73a9a21f5349',1,'mongo::BulkUpdateBuilder::remove()'],['../classmongo_1_1DBClientBase.html#af026cdf70999394092a0be1a88e8be70',1,'mongo::DBClientBase::remove()'],['../classmongo_1_1ReplicaSetMonitor.html#a6faa26f9a587475d489f04eda891e4e3',1,'mongo::ReplicaSetMonitor::remove()']]],
   ['removefield_1541',['removeField',['../classmongo_1_1BSONObj.html#af002047ab61ab04c2c2f4813431f839e',1,'mongo::BSONObj']]],
   ['removefile_1542',['removeFile',['../classmongo_1_1GridFS.html#abf1f29c33f363b1a550ebff588a64533',1,'mongo::GridFS']]],
   ['removeone_1543',['removeOne',['../classmongo_1_1BulkUpdateBuilder.html#a0a25a551192a83a50cd3a3fee4d8b5d4',1,'mongo::BulkUpdateBuilder']]],

@@ -364,7 +364,7 @@ function SearchBox(name, resultsPath, inFrame, label)
     if (domPopupSearchResultsWindow.style.display!='block')
     {
        var domSearchBox = this.DOMSearchBox();
-       this.DOMSearchClose().style.display = 'inline-block';
+       this.DOMSearchClose().style.display = 'inline';
        if (this.insideFrame)
        {
          var domPopupSearchResults = this.DOMPopupSearchResults();

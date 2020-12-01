@@ -7,7 +7,7 @@ var searchData=
   ['validcollectioncomponent_831',['validCollectionComponent',['../classmongo_1_1NamespaceString.html#a0caff0c861060ff22ccc8f94b4eb3f53',1,'mongo::NamespaceString']]],
   ['validcollectionname_832',['validCollectionName',['../classmongo_1_1NamespaceString.html#ab8075470cf60e62321cb572d9dfa7e03',1,'mongo::NamespaceString']]],
   ['validdbname_833',['validDBName',['../classmongo_1_1NamespaceString.html#ae9d8510dd7cbd1522bb96960b93afa12',1,'mongo::NamespaceString']]],
-  ['value_834',['Value',['../classmongo_1_1QueryResult_1_1Value.html',1,'mongo::QueryResult::Value'],['../classmongo_1_1MSGHEADER_1_1Value.html',1,'mongo::MSGHEADER::Value'],['../classmongo_1_1MsgData_1_1Value.html',1,'mongo::MsgData::Value'],['../classmongo_1_1BSONElement.html#a92117b1c6c961bee5e6608a84a93d764',1,'mongo::BSONElement::value()']]],
+  ['value_834',['Value',['../classmongo_1_1MSGHEADER_1_1Value.html',1,'mongo::MSGHEADER::Value'],['../classmongo_1_1MsgData_1_1Value.html',1,'mongo::MsgData::Value'],['../classmongo_1_1QueryResult_1_1Value.html',1,'mongo::QueryResult::Value'],['../classmongo_1_1BSONElement.html#a92117b1c6c961bee5e6608a84a93d764',1,'mongo::BSONElement::value()']]],
   ['valuesequal_835',['valuesEqual',['../classmongo_1_1BSONElement.html#ad32f68fdeccb24c9b6c6280f351f06a3',1,'mongo::BSONElement']]],
   ['valuesize_836',['valuesize',['../classmongo_1_1BSONElement.html#a0d416d4e53e905d8d8cd6f6b9a9a8a38',1,'mongo::BSONElement']]],
   ['valuestr_837',['valuestr',['../classmongo_1_1BSONElement.html#a8a8310fa5ebf6c7ef35524951f052b45',1,'mongo::BSONElement']]],
@@ -16,5 +16,5 @@ var searchData=
   ['valuestrsize_840',['valuestrsize',['../classmongo_1_1BSONElement.html#a9827a93e66d3889f622991118ca5d622',1,'mongo::BSONElement']]],
   ['vector_841',['vector',['../classmongo_1_1OwnedPointerVector.html#a44a3e0865583c5a0081ae2c8b0e407e2',1,'mongo::OwnedPointerVector']]],
   ['version_842',['version',['../classmongo_1_1IndexSpec.html#ac77a780631a83360a895d1781c0cb605',1,'mongo::IndexSpec']]],
-  ['view_843',['View',['../classmongo_1_1MSGHEADER_1_1View.html',1,'mongo::MSGHEADER::View'],['../classmongo_1_1MsgData_1_1View.html',1,'mongo::MsgData::View'],['../classmongo_1_1QueryResult_1_1View.html',1,'mongo::QueryResult::View']]]
+  ['view_843',['View',['../classmongo_1_1QueryResult_1_1View.html',1,'mongo::QueryResult::View'],['../classmongo_1_1MSGHEADER_1_1View.html',1,'mongo::MSGHEADER::View'],['../classmongo_1_1MsgData_1_1View.html',1,'mongo::MsgData::View']]]
 ];
