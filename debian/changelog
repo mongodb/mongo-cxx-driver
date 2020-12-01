@@ -5,6 +5,7 @@ mongo-cxx-driver (3.6.2-1) UNRELEASED; urgency=medium
     + the build profile allows interested users to rebuild with the
       MNMLSTC/core C++17 polyfill instead of Boost
     + consult README.Debian for details
+  * Update to Standards-Version 4.5.1 (no changes)
 
  -- Roberto C. Sanchez <roberto@connexer.com>  Tue, 01 Dec 2020 14:05:45 -0500
 
