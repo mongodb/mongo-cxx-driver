@@ -47,9 +47,9 @@ It requires the following:
 - A GitHub token. Go to the GitHub settings page [Personal Access Tokens](https://github.com/settings/tokens) and create a token. Save the token secret to `mongo-cxx-driver-release/github_token.txt`.
 - Jira OAuth credentials. Ask for these from a team member. Save it to `mongo-cxx-driver-release/jira_creds.txt`.
 
-Run the release script with no arguments.
+Run the release script with the git tag created above as an argument.
 ```
-python ./etc/make_release.py
+python ./etc/make_release.py r3.6.0
 ```
 
 If all goes well, this should build and test the tarball and draft the GitHub release.
