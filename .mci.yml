@@ -284,10 +284,8 @@ functions:
                   fi
                   export CMAKE=${cmake}
 
-                  if [ -f /opt/mongodbtoolchain/v3/bin/python3 ]; then
+                  if ! python -m virtualenv venv 2>/dev/null; then
                       /opt/mongodbtoolchain/v3/bin/python3 -m venv venv
-                  else
-                      python -m virtualenv venv
                   fi
 
                   cd venv
