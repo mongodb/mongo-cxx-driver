@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/exception/error_code.hpp>
+#include <mongocxx/config/private/prelude.hh>
 
 #include <string>
 
-#include <mongocxx/config/private/prelude.hh>
+#include <mongocxx/exception/error_code.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

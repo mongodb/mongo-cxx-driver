@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/config/prelude.hpp>
+
 #include <chrono>
 #include <cstdint>
 
@@ -23,8 +25,6 @@
 #include <mongocxx/cursor.hpp>
 #include <mongocxx/hint.hpp>
 #include <mongocxx/read_preference.hpp>
-
-#include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

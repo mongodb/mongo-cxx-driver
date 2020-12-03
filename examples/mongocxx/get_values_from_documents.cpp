@@ -20,10 +20,10 @@
 #include <mongocxx/client.hpp>
 #include <mongocxx/instance.hpp>
 
+using bsoncxx::type;
 using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_array;
 using bsoncxx::builder::basic::make_document;
-using bsoncxx::type;
 
 // Document model, showing array with nested documents:
 //

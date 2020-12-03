@@ -14,9 +14,9 @@
 
 #pragma once
 
-#include <bsoncxx/builder/concatenate.hpp>
-
 #include <bsoncxx/config/prelude.hpp>
+
+#include <bsoncxx/builder/concatenate.hpp>
 
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN

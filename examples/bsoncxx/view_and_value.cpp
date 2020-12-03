@@ -18,7 +18,6 @@
 #include <vector>
 
 #include <bsoncxx/array/view.hpp>
-#include <bsoncxx/array/view.hpp>
 #include <bsoncxx/builder/basic/array.hpp>
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>

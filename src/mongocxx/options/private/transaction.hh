@@ -14,14 +14,14 @@
 
 #pragma once
 
+#include <mongocxx/config/private/prelude.hh>
+
 #include <chrono>
 #include <memory>
 
 #include <mongocxx/private/read_concern.hh>
 #include <mongocxx/private/read_preference.hh>
 #include <mongocxx/private/write_concern.hh>
-
-#include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

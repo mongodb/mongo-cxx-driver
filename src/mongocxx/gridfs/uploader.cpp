@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/gridfs/uploader.hpp>
+#include <mongocxx/config/private/prelude.hh>
 
 #include <algorithm>
 #include <chrono>
@@ -26,8 +26,7 @@
 #include <mongocxx/exception/gridfs_exception.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/gridfs/private/uploader.hh>
-
-#include <mongocxx/config/private/prelude.hh>
+#include <mongocxx/gridfs/uploader.hpp>
 
 namespace {
 std::size_t chunks_collection_documents_max_length(std::size_t chunk_size) {

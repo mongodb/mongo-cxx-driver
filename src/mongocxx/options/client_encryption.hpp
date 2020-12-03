@@ -14,13 +14,13 @@
 
 #pragma once
 
+#include <mongocxx/config/prelude.hpp>
+
 #include <string>
 
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <mongocxx/stdx.hpp>
-
-#include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
@@ -56,7 +56,7 @@ class MONGOCXX_API client_encryption {
     /// @return
     ///   An optional pointer to the key vault client.
     ///
-    const stdx::optional<client*>& key_vault_client() const;
+    const stdx::optional<mongocxx::client*>& key_vault_client() const;
 
     ///
     /// Sets the namespace to use to access the key vault collection, which

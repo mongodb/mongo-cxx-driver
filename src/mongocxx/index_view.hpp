@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/config/prelude.hpp>
+
 #include <string>
 #include <vector>
 
@@ -23,8 +25,6 @@
 #include <mongocxx/cursor.hpp>
 #include <mongocxx/index_model.hpp>
 #include <mongocxx/options/index_view.hpp>
-
-#include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

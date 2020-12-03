@@ -20,8 +20,8 @@
 using namespace bsoncxx;
 
 int main(int, char**) {
-    using builder::stream::document;
     using builder::stream::array;
+    using builder::stream::document;
 
     // bsoncxx::builder::stream presents an iostream like interface for succinctly
     // constructing complex BSON objects.
@@ -44,13 +44,13 @@ int main(int, char**) {
     // The stream namespace includes some helpers that can be used similarly
     // to the stream manipulators in <iomanip>
     // To build a subdocument, use open_document and close_document
-    using builder::stream::open_document;
     using builder::stream::close_document;
+    using builder::stream::open_document;
     doc << "mySubDoc" << open_document << "subdoc key"
         << "subdoc value" << close_document;
     // To build a subarray, use open_array and close_array
-    using builder::stream::open_array;
     using builder::stream::close_array;
+    using builder::stream::open_array;
     doc << "mySubArr" << open_array << 1 << types::b_bool{false} << "hello" << close_array;
 
     // There is a special finalize helper that converts a stream to its underlying bson value

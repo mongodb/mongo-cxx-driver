@@ -30,15 +30,15 @@
 #include <mongocxx/options/data_key.hpp>
 #include <mongocxx/options/encrypt.hpp>
 
-using bsoncxx::builder::basic::make_document;
 using bsoncxx::builder::basic::kvp;
+using bsoncxx::builder::basic::make_document;
 
-using bsoncxx::builder::stream::document;
-using bsoncxx::builder::stream::open_array;
 using bsoncxx::builder::stream::close_array;
-using bsoncxx::builder::stream::open_document;
 using bsoncxx::builder::stream::close_document;
+using bsoncxx::builder::stream::document;
 using bsoncxx::builder::stream::finalize;
+using bsoncxx::builder::stream::open_array;
+using bsoncxx::builder::stream::open_document;
 
 using bsoncxx::types::bson_value::make_value;
 

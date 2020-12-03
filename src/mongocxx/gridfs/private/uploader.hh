@@ -14,14 +14,14 @@
 
 #pragma once
 
+#include <mongocxx/config/private/prelude.hh>
+
 #include <string>
 #include <vector>
 
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/string/to_string.hpp>
 #include <mongocxx/gridfs/uploader.hpp>
-
-#include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

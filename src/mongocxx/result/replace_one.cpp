@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/result/replace_one.hpp>
-
 #include <mongocxx/config/private/prelude.hh>
+
+#include <mongocxx/result/replace_one.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

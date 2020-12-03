@@ -12,11 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/validation_criteria.hpp>
+#include <mongocxx/config/private/prelude.hh>
 
 #include <bsoncxx/builder/basic/document.hpp>
-
-#include <mongocxx/config/private/prelude.hh>
+#include <mongocxx/validation_criteria.hpp>
 
 namespace {
 

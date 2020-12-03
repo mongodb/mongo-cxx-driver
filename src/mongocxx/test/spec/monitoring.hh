@@ -14,8 +14,9 @@
 
 #pragma once
 
-#include <mongocxx/client.hpp>
 #include <mongocxx/config/private/prelude.hh>
+
+#include <mongocxx/client.hpp>
 #include <mongocxx/test_util/client_helpers.hh>
 
 namespace mongocxx {

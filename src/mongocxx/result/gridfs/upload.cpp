@@ -12,11 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/result/gridfs/upload.hpp>
+#include <mongocxx/config/private/prelude.hh>
 
 #include <bsoncxx/builder/basic/array.hpp>
-
-#include <mongocxx/config/private/prelude.hh>
+#include <mongocxx/result/gridfs/upload.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

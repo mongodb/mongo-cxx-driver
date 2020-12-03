@@ -21,9 +21,9 @@
 #include <mongocxx/instance.hpp>
 #include <mongocxx/uri.hpp>
 
+using bsoncxx::to_json;
 using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_document;
-using bsoncxx::to_json;
 using namespace mongocxx;
 
 int main() {

@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <mongocxx/config/private/prelude.hh>
+
 #include <fstream>
 #include <set>
 #include <string>
 #include <vector>
-
-#include <mongocxx/test/spec/util.hh>
 
 #include <bsoncxx/builder/basic/array.hpp>
 #include <bsoncxx/builder/basic/document.hpp>
@@ -39,8 +39,7 @@
 #include <mongocxx/result/insert_one.hpp>
 #include <mongocxx/test/spec/monitoring.hh>
 #include <mongocxx/test/spec/operation.hh>
-
-#include <mongocxx/config/private/prelude.hh>
+#include <mongocxx/test/spec/util.hh>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
@@ -103,8 +102,7 @@ bool should_skip_spec_test(const client& client, document::view test) {
 
     if (test["skipReason"]) {
         UNSCOPED_INFO("Test skipped - " << test["description"].get_string().value << "\n"
-                                        << "reason: "
-                                        << test["skipReason"].get_string().value);
+                                        << "reason: " << test["skipReason"].get_string().value);
         return true;
     }
 
@@ -344,8 +342,8 @@ void run_operation_check_result(document::view op, make_op_runner_fn make_op_run
         REQUIRE(test_util::tolowercase(error_msg).find(error_contains) < error_msg.length());
     } else {
         if (exception) {
-            FAIL("operation " << bsoncxx::to_json(op) << " threw an unexpected exception: "
-                              << exception->what());
+            FAIL("operation " << bsoncxx::to_json(op)
+                              << " threw an unexpected exception: " << exception->what());
         }
     }
 
@@ -728,29 +726,29 @@ void run_transactions_tests_in_file(const std::string& test_path) {
         }
 
         // Step 11. Compare APM events.
-        test_util::match_visitor visitor = [&](
-            bsoncxx::stdx::string_view key,
-            bsoncxx::stdx::optional<bsoncxx::types::bson_value::view> main,
-            bsoncxx::types::bson_value::view pattern) {
-            if (key.compare("lsid") == 0) {
-                REQUIRE(pattern.type() == type::k_string);
-                REQUIRE(main);
-                REQUIRE(main->type() == type::k_document);
-                auto session_name = pattern.get_string().value;
-                if (session_name.compare("session0") == 0) {
-                    REQUIRE(test_util::matches(session_lsid0, main->get_document().value));
-                } else {
-                    REQUIRE(test_util::matches(session_lsid1, main->get_document().value));
+        test_util::match_visitor visitor =
+            [&](bsoncxx::stdx::string_view key,
+                bsoncxx::stdx::optional<bsoncxx::types::bson_value::view> main,
+                bsoncxx::types::bson_value::view pattern) {
+                if (key.compare("lsid") == 0) {
+                    REQUIRE(pattern.type() == type::k_string);
+                    REQUIRE(main);
+                    REQUIRE(main->type() == type::k_document);
+                    auto session_name = pattern.get_string().value;
+                    if (session_name.compare("session0") == 0) {
+                        REQUIRE(test_util::matches(session_lsid0, main->get_document().value));
+                    } else {
+                        REQUIRE(test_util::matches(session_lsid1, main->get_document().value));
+                    }
+                    return test_util::match_action::k_skip;
+                } else if (pattern.type() == type::k_null) {
+                    if (main) {
+                        return test_util::match_action::k_not_equal;
+                    }
+                    return test_util::match_action::k_skip;
                 }
                 return test_util::match_action::k_skip;
-            } else if (pattern.type() == type::k_null) {
-                if (main) {
-                    return test_util::match_action::k_not_equal;
-                }
-                return test_util::match_action::k_skip;
-            }
-            return test_util::match_action::k_skip;
-        };
+            };
 
         if (test["expectations"]) {
             apm_checker.compare(test["expectations"].get_array().value, false, visitor);

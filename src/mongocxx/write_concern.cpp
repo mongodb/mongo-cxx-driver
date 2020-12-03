@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/write_concern.hpp>
+#include <mongocxx/config/private/prelude.hh>
 
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/stdx/make_unique.hpp>
@@ -22,8 +22,7 @@
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/private/libmongoc.hh>
 #include <mongocxx/private/write_concern.hh>
-
-#include <mongocxx/config/private/prelude.hh>
+#include <mongocxx/write_concern.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
@@ -153,8 +152,8 @@ bool write_concern::is_acknowledged() const {
 }
 
 bsoncxx::document::value write_concern::to_document() const {
-    using bsoncxx::builder::basic::make_document;
     using bsoncxx::builder::basic::kvp;
+    using bsoncxx::builder::basic::make_document;
 
     bsoncxx::builder::basic::document doc;
 

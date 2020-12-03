@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/options/find_one_and_update.hpp>
+#include <mongocxx/config/private/prelude.hh>
 
 #include <bsoncxx/array/view_or_value.hpp>
-#include <mongocxx/config/private/prelude.hh>
+#include <mongocxx/options/find_one_and_update.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

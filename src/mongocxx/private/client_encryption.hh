@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/config/private/prelude.hh>
+
 #include <bsoncxx/private/libbson.hh>
 #include <bsoncxx/types/bson_value/private/value.hh>
 #include <bsoncxx/types/bson_value/value.hpp>
@@ -24,11 +26,8 @@
 #include <mongocxx/exception/private/mongoc_error.hh>
 #include <mongocxx/options/client_encryption.hpp>
 #include <mongocxx/private/client.hh>
-
 #include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/libmongoc.hh>
-
-#include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

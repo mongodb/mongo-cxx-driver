@@ -29,10 +29,10 @@
 #include <mongocxx/uri.hpp>
 #include <mongocxx/write_concern.hpp>
 
-using bsoncxx::builder::stream::document;
-using bsoncxx::builder::stream::open_document;
 using bsoncxx::builder::stream::close_document;
+using bsoncxx::builder::stream::document;
 using bsoncxx::builder::stream::finalize;
+using bsoncxx::builder::stream::open_document;
 
 int main() {
     using namespace mongocxx;

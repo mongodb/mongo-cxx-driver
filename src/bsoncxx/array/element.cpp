@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/array/element.hpp>
-#include <bsoncxx/types/bson_value/view.hpp>
+#include <bsoncxx/config/private/prelude.hh>
 
 #include <stdexcept>
 
-#include <bsoncxx/config/private/prelude.hh>
+#include <bsoncxx/array/element.hpp>
+#include <bsoncxx/types/bson_value/view.hpp>
 
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
@@ -47,6 +47,6 @@ bool BSONCXX_CALL operator!=(const types::bson_value::view& v, const element& el
     return !(elem == v);
 }
 
-}  // namespace document
+}  // namespace array
 BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bsoncxx

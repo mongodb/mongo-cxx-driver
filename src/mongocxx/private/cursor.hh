@@ -14,12 +14,12 @@
 
 #pragma once
 
+#include <mongocxx/config/private/prelude.hh>
+
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <mongocxx/cursor.hpp>
 #include <mongocxx/private/libmongoc.hh>
-
-#include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
@@ -35,8 +35,9 @@ class cursor::impl {
         : cursor_t(cursor),
           status{cursor ? state::k_pending : state::k_dead},
           exhausted(!cursor),
-          tailable{cursor && cursor_type && (*cursor_type == cursor::type::k_tailable ||
-                                             *cursor_type == cursor::type::k_tailable_await)} {}
+          tailable{cursor && cursor_type &&
+                   (*cursor_type == cursor::type::k_tailable ||
+                    *cursor_type == cursor::type::k_tailable_await)} {}
 
     ~impl() {
         libmongoc::cursor_destroy(cursor_t);

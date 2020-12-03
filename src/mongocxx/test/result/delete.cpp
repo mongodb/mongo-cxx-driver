@@ -20,8 +20,8 @@
 
 namespace {
 
-using bsoncxx::builder::basic::make_document;
 using bsoncxx::builder::basic::kvp;
+using bsoncxx::builder::basic::make_document;
 
 TEST_CASE("delete", "[delete][result]") {
     mongocxx::instance::current();

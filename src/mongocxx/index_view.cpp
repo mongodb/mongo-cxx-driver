@@ -12,16 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/index_view.hpp>
+#include <mongocxx/config/private/prelude.hh>
 
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/string/to_string.hpp>
 #include <mongocxx/client_session.hpp>
 #include <mongocxx/exception/private/mongoc_error.hh>
+#include <mongocxx/index_view.hpp>
 #include <mongocxx/options/index_view.hpp>
 #include <mongocxx/private/index_view.hh>
-
-#include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

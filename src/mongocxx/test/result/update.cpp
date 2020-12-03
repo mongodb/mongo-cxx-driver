@@ -18,8 +18,8 @@
 #include <mongocxx/result/update.hpp>
 
 namespace {
-using bsoncxx::builder::basic::make_document;
 using bsoncxx::builder::basic::kvp;
+using bsoncxx::builder::basic::make_document;
 
 TEST_CASE("update", "[update][result]") {
     mongocxx::instance::current();

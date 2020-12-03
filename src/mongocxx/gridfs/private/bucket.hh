@@ -14,13 +14,13 @@
 
 #pragma once
 
+#include <mongocxx/config/private/prelude.hh>
+
 #include <cstddef>
 #include <string>
 
 #include <mongocxx/collection.hpp>
 #include <mongocxx/gridfs/bucket.hpp>
-
-#include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

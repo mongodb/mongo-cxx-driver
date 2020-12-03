@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/json.hpp>
+#include <bsoncxx/config/private/prelude.hh>
 
 #include <memory>
 #include <vector>
@@ -20,13 +20,12 @@
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/exception/error_code.hpp>
 #include <bsoncxx/exception/exception.hpp>
+#include <bsoncxx/json.hpp>
 #include <bsoncxx/private/b64_ntop.hh>
 #include <bsoncxx/private/libbson.hh>
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
-
-#include <bsoncxx/config/private/prelude.hh>
 
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN

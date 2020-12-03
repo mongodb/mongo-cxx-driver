@@ -46,7 +46,6 @@ TEST_CASE("a bulk_write will setup a mongoc bulk operation", "[bulk_write]") {
             /* if no "ordered" field is passed, libmongoc defaults to true. */
             ordered_value = true;
         }
-
     });
 
     SECTION("with an ordered bulk write") {

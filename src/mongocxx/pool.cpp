@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/pool.hpp>
+#include <mongocxx/config/private/prelude.hh>
 
 #include <utility>
 
@@ -24,11 +24,10 @@
 #include <mongocxx/exception/private/mongoc_error.hh>
 #include <mongocxx/options/private/apm.hh>
 #include <mongocxx/options/private/ssl.hh>
+#include <mongocxx/pool.hpp>
 #include <mongocxx/private/client.hh>
 #include <mongocxx/private/pool.hh>
 #include <mongocxx/private/uri.hh>
-
-#include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

@@ -12,10 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "helpers.hpp"
-
 #include <mongocxx/config/private/prelude.hh>
 
+#include "helpers.hpp"
 #include <bsoncxx/string/to_string.hpp>
 #include <bsoncxx/test_util/catch.hh>
 #include <mongocxx/client.hpp>
@@ -73,9 +72,9 @@ TEST_CASE("A client lists its databases with a filter applied", "[client]") {
 }
 
 TEST_CASE("list databases passes authorizedDatabases option", "[client]") {
+    using bsoncxx::to_json;
     using bsoncxx::builder::basic::kvp;
     using bsoncxx::builder::basic::make_document;
-    using bsoncxx::to_json;
 
     MOCK_CLIENT
 

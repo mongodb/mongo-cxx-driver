@@ -27,8 +27,8 @@
 #include <mongocxx/instance.hpp>
 #include <mongocxx/uri.hpp>
 
-using bsoncxx::builder::basic::make_document;
 using bsoncxx::builder::basic::kvp;
+using bsoncxx::builder::basic::make_document;
 
 int main(int, char**) {
     // The mongocxx::instance constructor and destructor initialize and shut down the driver,

@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/model/update_many.hpp>
+#include <mongocxx/config/private/prelude.hh>
 
 #include <bsoncxx/array/view_or_value.hpp>
-#include <mongocxx/config/private/prelude.hh>
+#include <mongocxx/model/update_many.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

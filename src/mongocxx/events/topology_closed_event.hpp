@@ -14,9 +14,9 @@
 
 #pragma once
 
-#include <bsoncxx/oid.hpp>
-
 #include <mongocxx/config/prelude.hpp>
+
+#include <bsoncxx/oid.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

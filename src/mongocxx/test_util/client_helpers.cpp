@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/test_util/client_helpers.hh>
+#include <mongocxx/config/private/prelude.hh>
 
 #include <algorithm>
 #include <fstream>
@@ -36,9 +36,8 @@
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/private/libmongoc.hh>
+#include <mongocxx/test_util/client_helpers.hh>
 #include <third_party/catch/include/catch.hpp>
-
-#include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
