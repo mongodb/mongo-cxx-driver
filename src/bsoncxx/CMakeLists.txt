@@ -281,6 +281,7 @@ set_local_dist (src_bsoncxx_DIST_local
    private/libbson.hh
    private/stack.hh
    private/suppress_deprecation_warnings.hh
+   stdx/any.hpp
    stdx/make_unique.hpp
    stdx/optional.hpp
    stdx/string_view.hpp
