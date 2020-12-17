@@ -284,6 +284,7 @@ set_local_dist (src_bsoncxx_DIST_local
    stdx/make_unique.hpp
    stdx/optional.hpp
    stdx/string_view.hpp
+   stdx/variant.hpp
    string/to_string.hpp
    string/view_or_value.cpp
    string/view_or_value.hpp
