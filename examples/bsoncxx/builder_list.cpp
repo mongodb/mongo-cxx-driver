@@ -47,7 +47,7 @@ int main(int, char**) {
     //   "basic string" : "with value"
     // }
     //
-    doc = {"c-style", "with value", std::string("basic string"), "with value"};
+    doc = {{"c-style", "with value"}, {std::string("basic string"), "with value"}};
 
     //
     // Each document value must be a bson_value::value or implicitly convertible to one.
@@ -61,11 +61,11 @@ int main(int, char**) {
     //  }
     //
     // clang-format off
-    doc = {"BSON boolean value", false,
-           "BSON 32-bit signed integer value", -123,
-           "BSON date value", std::chrono::milliseconds(123456789),
-           "BSON Decimal128 value", decimal128{100, 200},
-           "BSON regex value with options", bson_value::value("regex", "imsx" /* opts */)};
+    doc = {{"BSON boolean value", false},
+           {"BSON 32-bit signed integer value", -123},
+           {"BSON date value", std::chrono::milliseconds(123456789)},
+           {"BSON Decimal128 value", decimal128{100, 200}},
+           {"BSON regex value with options", bson_value::value("regex", "imsx" /* opts */)}};
     // clang-format on
 
     //
@@ -94,37 +94,4 @@ int main(int, char**) {
            std::chrono::milliseconds(123456789),
            decimal128{100, 200},
            bson_value::value("regex", "imsx" /* opts */)};
-
-    //
-    // The list builder will create a BSON document, if possible. Otherwise, it will create a BSON
-    // array. A document is possible if:
-    //      1. The initializer list's size is even; this implies a list of
-    //         key-value pairs or an empty document if the size is zero.
-    //      2. Each 'key' is a string type. In a list of key-value pairs, the 'key' is every other
-    //         element starting at the 0th element.
-    //
-    // BSON document
-    // { "pi" : 3.1415899999999998826, "e" : 2.7182800000000000296 }
-    builder::list lst = {"pi", 3.14159, "e", 2.71828};
-    // BSON array
-    // { "0" : "Numbers", "1" : 3.1415899999999998826, "2" : 2.7182800000000000296 }
-    lst = {"Numbers", 3.14159, 2.71828};
-
-    //
-    // BSON document
-    //
-    // { "this" : { "is" : 10 },
-    //   "valid" : { "BSON" : "document" }
-    //   "with" : [ 1, "nested", "array" ] }
-    lst = {"this", {"is", 0xA}, "valid", {"BSON", "document"}, "with", {1, "nested", "array"}};
-
-    //
-    // BSON array
-    //
-    // { "0" : "this",
-    //   "1" : { "will" : "be" },
-    //   "2" : "an",
-    //   "3" : "array",
-    //   "4" : [ 1, 2, 3] }
-    lst = {"this", {"will", "be"}, "an", "array", {1, 2, 3}};
 }
