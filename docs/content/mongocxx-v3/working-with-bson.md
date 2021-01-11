@@ -39,8 +39,8 @@ list builder:
 
 ```c++
 // { "hello": "world" }
-bsoncxx::builder::list list_builder = {"hello", "world"};
-bsoncxx::document::view document = list_builder.view().get_document();
+bsoncxx::builder::document list_builder = {"hello", "world"};
+bsoncxx::document::value document = list_builder;
 ```
 
 More advanced uses of the list builder are shown in [this
