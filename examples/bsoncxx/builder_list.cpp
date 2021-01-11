@@ -62,8 +62,9 @@ int main(int, char**) {
     //
     // clang-format off
     doc = {{"BSON boolean value", false},
-           {"BSON 32-bit signed integer value", -123},
-           {"BSON date value", std::chrono::milliseconds(123456789)},
+           {"BSON 32-bit signed integer value", -123}};
+
+    doc += {{"BSON date value", std::chrono::milliseconds(123456789)},
            {"BSON Decimal128 value", decimal128{100, 200}},
            {"BSON regex value with options", bson_value::value("regex", "imsx" /* opts */)}};
     // clang-format on
@@ -89,9 +90,8 @@ int main(int, char**) {
     //   "4" : { "$regex" : "any", "$options" : "imsx" }
     // }
     //
-    arr = {false,
-           -123,
-           std::chrono::milliseconds(123456789),
-           decimal128{100, 200},
-           bson_value::value("regex", "imsx" /* opts */)};
+    arr = {false, -123};
+    arr += std::chrono::milliseconds(123456789);
+    arr += decimal128{100, 200};
+    arr += bson_value::value("regex", "imsx" /* opts */);
 }
