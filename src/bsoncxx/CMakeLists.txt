@@ -139,8 +139,7 @@ set(bsoncxx_sources
     array/value.cpp
     array/view.cpp
     builder/core.cpp
-    builder/list.hpp
-    decimal128.cpp
+        decimal128.cpp
     document/element.cpp
     document/value.cpp
     document/view.cpp
@@ -235,7 +234,8 @@ set_local_dist (src_bsoncxx_DIST_local
    array/view.cpp
    array/view.hpp
    array/view_or_value.hpp
-   builder/list.hpp
+   builder/list/document.hpp
+   builder/list/array.hpp
    builder/basic/array.hpp
    builder/basic/document.hpp
    builder/basic/helpers.hpp

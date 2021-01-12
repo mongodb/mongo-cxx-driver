@@ -14,7 +14,8 @@
 
 #include <chrono>
 
-#include <bsoncxx/builder/list.hpp>
+#include <bsoncxx/builder/list/array.hpp>
+#include <bsoncxx/builder/list/document.hpp>
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/bson_value/value.hpp>
 
@@ -24,14 +25,13 @@ int main(int, char**) {
     using namespace bsoncxx::builder;
 
     //
-    // bsoncxx::builder::list, bsoncxx::builder::document, and bsoncxx::builder::array provides a
+    // bsoncxx::builder::list::document and bsoncxx::builder::list::array provides a
     // JSON-like interface for creating BSON objects.
     //
-
-    // builder::document builds an empty BSON document
-    builder::document doc = {};
-    // builder::array builds an empty BSON array
-    builder::array arr = {};
+    // builder::list::document builds an empty BSON document
+    builder::list::document doc = {};
+    // builder::list::array builds an empty BSON array
+    builder::list::array arr = {};
 
     //
     // We can append values to a document using an initializer list of key-value pairs.
@@ -66,7 +66,7 @@ int main(int, char**) {
 
     doc += {{"BSON date value", std::chrono::milliseconds(123456789)},
            {"BSON Decimal128 value", decimal128{100, 200}},
-           {"BSON regex value with options", bson_value::value("regex", "imsx" /* opts */)}};
+           {"BSON regex value with options", types::bson_value::value("regex", "imsx" /* opts */)}};
     // clang-format on
 
     //
@@ -93,5 +93,5 @@ int main(int, char**) {
     arr = {false, -123};
     arr += std::chrono::milliseconds(123456789);
     arr += decimal128{100, 200};
-    arr += bson_value::value("regex", "imsx" /* opts */);
+    arr += types::bson_value::value("regex", "imsx" /* opts */);
 }
