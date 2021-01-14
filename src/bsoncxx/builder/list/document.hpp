@@ -59,7 +59,7 @@ class document {
     /// type, a bsoncxx::builder::document.
     ///
     template <typename T>
-    document(T v) : _value{v} {}
+    document(T v) : _is_value{true}, _value{v} {}
 
     ///
     /// Creates a BSON document from a single key-value pair, e.g., { "key" : 1 }
@@ -81,11 +81,11 @@ class document {
     /// @param init
     ///     the initializer list used to construct the BSON document
     ///
-    document(initializer_list_t init) : _is_document{true} {
+    document(initializer_list_t init) : _is_value{false} {
         for (auto&& kvp : init) {
             _core.key_view(kvp.first);
-            kvp.second._is_document ? _core.append(kvp.second._core.view_document())
-                                    : _core.append(kvp.second._value);
+            kvp.second._is_value ? _core.append(kvp.second._value)
+                                 : _core.append(kvp.second._core.view_document());
         }
     }
 
@@ -104,14 +104,14 @@ class document {
     ///    Throws a bsoncxx::exception if the document is malformed.
     ///
     document& operator+=(document rhs) {
-        if (!rhs._is_document)
+        if (rhs._is_value)
             throw bsoncxx::exception{error_code::k_internal_error};
         _core.concatenate(rhs.extract());
         return *this;
     }
 
    private:
-    bool _is_document{false};
+    bool _is_value{true};
     core _core{false};
     bson_value::value _value{nullptr};
 };
