@@ -82,16 +82,14 @@ class array {
     }
 
     array& append(const array& rhs) {
-        _core.open_array();
-        _core.concatenate(rhs._core.view_array());
-        _core.close_array();
+        _core.open_array().concatenate(rhs._core.view_array()).close_array();
+
         return *this;
     }
 
     array& append(array&& rhs) {
-        _core.open_array();
-        _core.concatenate(rhs.extract().view());
-        _core.close_array();
+        _core.open_array().concatenate(rhs.extract().view()).close_array();
+
         return *this;
     }
 
