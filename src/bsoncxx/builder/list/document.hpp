@@ -81,6 +81,17 @@ class document {
     ///    Throws a bsoncxx::exception if the document is malformed.
     ///
     document& operator+=(const document& rhs) {
+        this->append(rhs);
+        return *this;
+    }
+
+    ///
+    /// Appends a bsoncxx::builder::document.
+    ///
+    /// @exception
+    ///    Throws a bsoncxx::exception if the document is malformed.
+    ///
+    document& append(const document& rhs) {
         _core.concatenate(rhs._core.view_document());
         return *this;
     }

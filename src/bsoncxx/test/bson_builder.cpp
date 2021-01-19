@@ -1763,6 +1763,8 @@ TEST_CASE("empty list builder", "[bsoncxx::builder::list::document]") {
 
     builder::list::array arr = {};
     bson_eq_object(&expected, arr.extract().view());
+
+    bson_destroy(&expected);
 }
 
 TEST_CASE("list builder append", "[bsoncxx::builder::list::document]") {
@@ -1770,15 +1772,40 @@ TEST_CASE("list builder append", "[bsoncxx::builder::list::document]") {
         bson_t expected;
         bson_init(&expected);
 
-        bson_append_utf8(&expected, "foo", -1, "bar", -1);
-        bson_append_utf8(&expected, "foo", -1, "bar", -1);
+        bson_append_utf8(&expected, "hello", -1, "world", -1);
         bson_append_utf8(&expected, "hello", -1, "world", -1);
 
-        builder::list::document doc = {"foo", "bar"};
-        doc += doc;
-        doc += {"hello", "world"};
+        SECTION("append operator with self") {
+            builder::list::document doc = {"hello", "world"};
+            doc += doc;
 
-        bson_eq_object(&expected, doc.extract().view());
+            bson_eq_object(&expected, doc.extract().view());
+            bson_destroy(&expected);
+        }
+
+        SECTION("append operator with temp") {
+            builder::list::document doc = {"hello", "world"};
+            doc += {"hello", "world"};
+
+            bson_eq_object(&expected, doc.extract().view());
+            bson_destroy(&expected);
+        }
+
+        SECTION("append method with self") {
+            builder::list::document doc = {"hello", "world"};
+            doc.append(doc);
+
+            bson_eq_object(&expected, doc.extract().view());
+            bson_destroy(&expected);
+        }
+
+        SECTION("append method with temp and method chaining") {
+            builder::list::document doc = {};
+            doc.append({"hello", "world"}).append({"hello", "world"});
+
+            bson_eq_object(&expected, doc.extract().view());
+            bson_destroy(&expected);
+        }
     }
 
     SECTION("array") {
@@ -1801,6 +1828,7 @@ TEST_CASE("list builder append", "[bsoncxx::builder::list::document]") {
         arr += "qux";
 
         bson_eq_object(&expected, arr.extract().view());
+        bson_destroy(&expected);
     }
 }
 }  // namespace
