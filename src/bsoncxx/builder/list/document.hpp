@@ -40,29 +40,7 @@ class document {
     ///
     /// Creates an empty document.
     ///
-    document() : document({}){};
-
-    ///
-    /// Creates a bsoncxx::builder::document from a value of type T.
-    ///
-    /// @warning T must be a BSON type, i.e., implicitly convertible to a
-    /// bsoncxx::types::bson_value::value.
-    ///
-    /// @see bsoncxx::types::bson_value::value.
-    //
-    /// @warning Extracting a BSON document from an object created with this constructor will result
-    /// in an empty document. Use the key-value or std::initializer_list constructors instead.
-    ///
-    /// @note This constructor bridges the gap between a homogeneous container, a
-    /// std::initializer_list, and a heterogeneous one, a BSON document. In other words, the
-    /// std::initializer_list constructor implicitly uses this to convert all elements into a common
-    /// type, a bsoncxx::builder::document.
-    ///
-    template <typename T>
-    document(key_type key, T value) {
-        _core.key_view(key);
-        _core.append(bson_value::value{value});
-    }
+    document(){};
 
     ///
     /// Creates a BSON document from a single key-value pair, e.g., { "key" : 1 }
@@ -75,20 +53,21 @@ class document {
     ///
     /// @see bsoncxx::types::bson_value::value.
     ///
-    document(key_type key, mapped_type&& value)
-        : document({{key, std::forward<mapped_type>(value)}}) {}
+    template <typename T>
+    document(key_type key, const T& value) {
+        _core.key_view(key);
+        _core.append(std::move(bson_value::value{value}));
+    }
 
-    ///
-    /// Creates a BSON document.
-    ///
-    /// @param init
-    ///     the initializer list used to construct the BSON document
-    ///
-    document(initializer_list_t init) {
-        for (auto&& kvp : init) {
-            _core.key_view(kvp.first);
-            _core.append(kvp.second._core.view_document());
-        }
+    template <typename T>
+    document(key_type key, T&& value) {
+        _core.key_view(key);
+        _core.append(std::move(bson_value::value{value}));
+    }
+
+    document(key_type key, document&& value) {
+        _core.key_view(key);
+        _core.append(value._core.view_document());
     }
 
     operator bsoncxx::document::value() {
