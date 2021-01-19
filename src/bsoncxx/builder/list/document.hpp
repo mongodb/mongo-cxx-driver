@@ -58,7 +58,7 @@ class document {
     document& operator=(document&& other) = default;
 
     document(const document& other) {
-        _core.concatenate(other._core.view_document());
+        this->append(other);
     }
 
     document& operator=(const document& other) {
@@ -85,6 +85,11 @@ class document {
         return *this;
     }
 
+    document& operator+=(document&& rhs) {
+        this->append(std::move(rhs));
+        return *this;
+    }
+
     ///
     /// Appends a bsoncxx::builder::document.
     ///
@@ -93,6 +98,11 @@ class document {
     ///
     document& append(const document& rhs) {
         _core.concatenate(rhs._core.view_document());
+        return *this;
+    }
+
+    document& append(document&& rhs) {
+        _core.concatenate(std::move(rhs.extract()));
         return *this;
     }
 

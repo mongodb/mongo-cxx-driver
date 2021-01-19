@@ -1791,6 +1791,16 @@ TEST_CASE("list builder append", "[bsoncxx::builder::list::document]") {
             bson_destroy(&expected);
         }
 
+        SECTION("append operator with other and move") {
+            builder::list::document doc = {"hello", "world"};
+            builder::list::document other = {"hello", "world"};
+
+            doc += std::move(other);
+
+            bson_eq_object(&expected, doc.extract().view());
+            bson_destroy(&expected);
+        }
+
         SECTION("append method with self") {
             builder::list::document doc = {"hello", "world"};
             doc.append(doc);
@@ -1802,6 +1812,16 @@ TEST_CASE("list builder append", "[bsoncxx::builder::list::document]") {
         SECTION("append method with temp and method chaining") {
             builder::list::document doc = {};
             doc.append({"hello", "world"}).append({"hello", "world"});
+
+            bson_eq_object(&expected, doc.extract().view());
+            bson_destroy(&expected);
+        }
+
+        SECTION("append method with move") {
+            builder::list::document doc = {"hello", "world"};
+            builder::list::document other = {"hello", "world"};
+
+            doc.append(std::move(other));
 
             bson_eq_object(&expected, doc.extract().view());
             bson_destroy(&expected);
