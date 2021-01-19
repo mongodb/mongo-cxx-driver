@@ -1647,7 +1647,7 @@ TEST_CASE("list builder appends inline document", "[bsoncxx::builder::list::docu
     bson_append_utf8(&child, "bar", -1, "baz", -1);
     bson_append_document(&expected, "foo", -1, &child);
 
-    builder::list::document b{"foo", {"bar", "baz"}};
+    builder::list::document b{"foo", builder::list::document{"bar", "baz"}};
     bson_eq_object(&expected, b.extract().view());
 
     bson_destroy(&expected);
@@ -1670,7 +1670,9 @@ TEST_CASE("list builder appends inline nested", "[bsoncxx::builder::list::docume
     bson_append_document(&expected, "foo", -1, &foo);
 
     builder::list::document b{
-        "foo", {"bar", builder::list::array{1, 2, builder::list::document{"hello", "world"}}}};
+        "foo",
+        builder::list::document{
+            "bar", builder::list::array{1, 2, builder::list::document{"hello", "world"}}}};
     bson_eq_object(&expected, b.extract().view());
 
     bson_destroy(&expected);

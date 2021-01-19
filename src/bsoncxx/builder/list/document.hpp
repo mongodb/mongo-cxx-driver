@@ -60,11 +60,6 @@ class document {
         _core.append(std::move(bson_value::value{value}));
     }
 
-    document(stdx::string_view key, document&& value) {
-        _core.key_view(key);
-        _core.append(value._core.view_document());
-    }
-
     operator bsoncxx::document::value() {
         return this->extract();
     }
