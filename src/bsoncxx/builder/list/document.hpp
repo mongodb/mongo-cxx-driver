@@ -31,15 +31,11 @@ using namespace bsoncxx::types;
 /// A JSON-like builder for creating BSON documents.
 ///
 class document {
-    using key_type = stdx::string_view;
-    using mapped_type = document;
-    using value_type = std::pair<key_type, mapped_type>;
-
    public:
     ///
     /// Creates an empty document.
     ///
-    document(){};
+    document() = default;
 
     ///
     /// Creates a BSON document from a single key-value pair, e.g., { "key" : 1 }
@@ -53,18 +49,18 @@ class document {
     /// @see bsoncxx::types::bson_value::value.
     ///
     template <typename T>
-    document(key_type key, const T& value) {
+    document(stdx::string_view key, const T& value) {
         _core.key_view(key);
         _core.append(std::move(bson_value::value{value}));
     }
 
     template <typename T>
-    document(key_type key, T&& value) {
+    document(stdx::string_view key, T&& value) {
         _core.key_view(key);
         _core.append(std::move(bson_value::value{value}));
     }
 
-    document(key_type key, document&& value) {
+    document(stdx::string_view key, document&& value) {
         _core.key_view(key);
         _core.append(value._core.view_document());
     }
@@ -83,7 +79,7 @@ class document {
     /// @exception
     ///    Throws a bsoncxx::exception if the document is malformed.
     ///
-    document& operator+=(document rhs) {
+    document& operator+=(document&& rhs) {
         _core.concatenate(rhs.extract());
         return *this;
     }
