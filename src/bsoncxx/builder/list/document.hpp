@@ -34,7 +34,6 @@ class document {
     using key_type = stdx::string_view;
     using mapped_type = document;
     using value_type = std::pair<key_type, mapped_type>;
-    using initializer_list_t = std::initializer_list<value_type>;
 
    public:
     ///
