@@ -1321,6 +1321,13 @@ TEST_CASE("list builder copy and move constructors", "[bsoncxx::builder::list::d
         bson_eq_object(&expected, copied.extract().view());
     }
 
+    SECTION("self copy assignment") {
+        builder::list::document actual{"hello", "world"};
+        actual = *&actual;  // '*&' suppresses -Wself-assign-overloaded warning
+
+        bson_eq_object(&expected, actual.extract().view());
+    }
+
     bson_destroy(&expected);
 }
 

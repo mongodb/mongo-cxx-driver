@@ -68,7 +68,8 @@ class document {
     }
 
     document& operator=(const document& other) {
-        *this = document(other);
+        if (this != &other)
+            *this = document(other);
         return *this;
     }
 
