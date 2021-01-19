@@ -80,14 +80,8 @@ class document {
     /// @exception
     ///    Throws a bsoncxx::exception if the document is malformed.
     ///
-    document& operator+=(document&& rhs) {
-        _core.concatenate(rhs.extract());
-        return *this;
-    }
-
     document& operator+=(const document& rhs) {
-        auto tmp = rhs;
-        _core.concatenate(tmp.extract());
+        _core.concatenate(rhs._core.view_document());
         return *this;
     }
 
