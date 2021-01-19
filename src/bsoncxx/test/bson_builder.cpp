@@ -1288,6 +1288,42 @@ TEST_CASE("list builder appends utf8", "[bsoncxx::builder::list::document]") {
     bson_destroy(&expected);
 }
 
+TEST_CASE("list builder copy and move constructors", "[bsoncxx::builder::list::document]") {
+    bson_t expected;
+    bson_init(&expected);
+
+    bson_append_utf8(&expected, "hello", -1, "world", -1);
+
+    SECTION("move constructor") {
+        builder::list::document original{"hello", "world"};
+        auto moved{std::move(original)};
+        bson_eq_object(&expected, moved.extract().view());
+    }
+
+    SECTION("move assignment") {
+        builder::list::document original{"hello", "world"};
+        auto moved = std::move(original);
+        bson_eq_object(&expected, moved.extract().view());
+    }
+
+    SECTION("copy constructor") {
+        builder::list::document original{"hello", "world"};
+        auto copied{original};
+        bson_eq_object(&expected, copied.extract().view());
+    }
+
+    SECTION("copy assignment") {
+        builder::list::document original{"hello", "world"};
+
+        builder::list::document copied{};
+        copied = original;
+
+        bson_eq_object(&expected, copied.extract().view());
+    }
+
+    bson_destroy(&expected);
+}
+
 TEST_CASE("list builder appends double", "[bsoncxx::builder::list::document]") {
     bson_t expected;
     bson_init(&expected);
@@ -1735,9 +1771,11 @@ TEST_CASE("list builder append", "[bsoncxx::builder::list::document]") {
         bson_init(&expected);
 
         bson_append_utf8(&expected, "foo", -1, "bar", -1);
+        bson_append_utf8(&expected, "foo", -1, "bar", -1);
         bson_append_utf8(&expected, "hello", -1, "world", -1);
 
         builder::list::document doc = {"foo", "bar"};
+        doc += doc;
         doc += {"hello", "world"};
 
         bson_eq_object(&expected, doc.extract().view());

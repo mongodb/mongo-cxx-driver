@@ -49,15 +49,21 @@ class document {
     /// @see bsoncxx::types::bson_value::value.
     ///
     template <typename T>
-    document(stdx::string_view key, const T& value) {
+    document(stdx::string_view key, T&& value) {
         _core.key_view(key);
         _core.append(std::move(bson_value::value{value}));
     }
 
-    template <typename T>
-    document(stdx::string_view key, T&& value) {
-        _core.key_view(key);
-        _core.append(std::move(bson_value::value{value}));
+    document(document&& other) = default;
+    document& operator=(document&& other) = default;
+
+    document(const document& other) {
+        _core.concatenate(other._core.view_document());
+    }
+
+    document& operator=(const document& other) {
+        *this = document(other);
+        return *this;
     }
 
     operator bsoncxx::document::value() {
@@ -76,6 +82,12 @@ class document {
     ///
     document& operator+=(document&& rhs) {
         _core.concatenate(rhs.extract());
+        return *this;
+    }
+
+    document& operator+=(const document& rhs) {
+        auto tmp = rhs;
+        _core.concatenate(tmp.extract());
         return *this;
     }
 
