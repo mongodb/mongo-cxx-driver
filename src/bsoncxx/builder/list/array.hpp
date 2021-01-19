@@ -29,27 +29,11 @@ using namespace bsoncxx::types;
 /// A JSON-like builder for creating BSON arrays.
 ///
 class array {
-    using value_type = array;
-    using initializer_list_t = std::initializer_list<value_type>;
-
    public:
     ///
     /// Creates an empty array.
     ///
-    array() : array({}){};
-
-    ///
-    /// Creates an array from a single value of type T.
-    ///
-    /// @warning T must be a BSON type, i.e., implicitly convertible to a
-    /// bsoncxx::types::bson_value::value.
-    ///
-    /// @see bsoncxx::types::bson_value::value.
-    ///
-    template <typename T>
-    array(T value) : _value{value} {
-        _core.append(_value);
-    }
+    array() = default;
 
     ///
     /// Creates a BSON array.
@@ -60,31 +44,65 @@ class array {
     /// @see bsoncxx::builder::list
     /// @see bsoncxx::builder::document
     ///
-    array(initializer_list_t init) : _is_array{true} {
-        for (auto&& ele : init)
-            append_array_or_value(_core, ele);
+    template <typename... Args>
+    array(Args&&... args) {
+        _core = make_array(std::move(_core), std::forward<Args>(args)...);
+    }
+
+    core make_array(core&& core) {
+        return std::move(core);
+    }
+
+    template <typename Arg, typename... Args>
+    core make_array(core&& core, Arg&& a, Args&&... args) {
+        bson_value::value v{a};
+        core.append(v);
+        return std::move(make_array(std::move(core), std::forward<Args>(args)...));
+    }
+
+    array(array&& other) = default;
+    array& operator=(array&& other) = default;
+
+    array(const array& other) {
+        for (auto&& value : other._core.view_array())
+            _core.append(bson_value::value{value.get_value()});
+    }
+
+    array& operator=(const array& other) {
+        if (this != &other)
+            *this = array(other);
+        return *this;
     }
 
     operator bsoncxx::array::value() {
-        return this->extract();
+        return extract();
     }
 
     bsoncxx::array::value extract() {
         return _core.extract_array();
     }
 
-    array& operator+=(value_type o) {
-        append_array_or_value(_core, o);
+    array& operator+=(const array& rhs) {
+        this->append(rhs);
+        return *this;
+    }
+
+    array& operator+=(array&& rhs) {
+        this->append(std::move(rhs));
+        return *this;
+    }
+
+    array& append(const array& rhs) {
+        _core.concatenate(rhs._core.view_array());
+        return *this;
+    }
+
+    array& append(array&& rhs) {
+        _core.concatenate(rhs.extract().view());
         return *this;
     }
 
    private:
-    void append_array_or_value(core& core, const array& ele) {
-        ele._is_array ? core.append(ele._core.view_array()) : core.append(ele._value);
-    }
-
-    bool _is_array{false};
-    bson_value::value _value{nullptr};
     core _core{true};
 };
 

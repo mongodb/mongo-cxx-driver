@@ -1850,8 +1850,7 @@ TEST_CASE("list builder append", "[bsoncxx::builder::list::document]") {
 
         bson_append_utf8(&expected, "2", -1, "qux", -1);
 
-        builder::list::array arr = {"foo"};
-        arr += {"bar", "baz"};
+        builder::list::array arr = {"foo", builder::list::array{"bar", "baz"}};
         arr += "qux";
 
         bson_eq_object(&expected, arr.extract().view());
