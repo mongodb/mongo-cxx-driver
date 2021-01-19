@@ -82,12 +82,40 @@ class array {
     }
 
     array& append(const array& rhs) {
+        _core.open_array();
         _core.concatenate(rhs._core.view_array());
+        _core.close_array();
         return *this;
     }
 
     array& append(array&& rhs) {
+        _core.open_array();
         _core.concatenate(rhs.extract().view());
+        _core.close_array();
+        return *this;
+    }
+
+    template <typename T>
+    array& operator+=(T&& rhs) {
+        this->append(std::move(rhs));
+        return *this;
+    }
+
+    template <typename T>
+    array& operator+=(const T& rhs) {
+        this->append(rhs);
+        return *this;
+    }
+
+    template <typename T>
+    array& append(T&& rhs) {
+        _core.append(bson_value::value{rhs});
+        return *this;
+    }
+
+    template <typename T>
+    array& append(const T& rhs) {
+        _core.append(bson_value::value{rhs});
         return *this;
     }
 
