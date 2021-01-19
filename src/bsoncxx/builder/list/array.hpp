@@ -83,13 +83,11 @@ class array {
 
     array& append(const array& rhs) {
         _core.open_array().concatenate(rhs._core.view_array()).close_array();
-
         return *this;
     }
 
     array& append(array&& rhs) {
         _core.open_array().concatenate(rhs.extract().view()).close_array();
-
         return *this;
     }
 
