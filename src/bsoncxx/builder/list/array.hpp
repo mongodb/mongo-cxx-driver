@@ -46,18 +46,7 @@ class array {
     ///
     template <typename... Args>
     array(Args&&... args) {
-        make_array(_core, std::forward<Args>(args)...);
-    }
-
-    void make_array(core&) {
-        return;
-    }
-
-    template <typename Arg, typename... Args>
-    void make_array(core& core, Arg&& a, Args&&... args) {
-        bson_value::value v{a};
-        core.append(v);
-        make_array(core, std::forward<Args>(args)...);
+        _append(_core, std::forward<Args>(args)...);
     }
 
     array(array&& other) = default;
@@ -103,6 +92,14 @@ class array {
     }
 
    private:
+    void _append(core&) {}
+
+    template <typename Arg, typename... Args>
+    void _append(core& core, Arg&& a, Args&&... args) {
+        core.append(bson_value::value{a});
+        _append(core, std::forward<Args>(args)...);
+    }
+
     core _core{true};
 };
 
