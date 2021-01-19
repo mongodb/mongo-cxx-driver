@@ -51,13 +51,13 @@ class document {
     template <typename T>
     document(stdx::string_view key, T&& value) {
         _core.key_view(key);
-        _core.append(std::move(bson_value::value{std::move(value)}));
+        _core.append(bson_value::value{value});
     }
 
     template <typename T>
     document(stdx::string_view key, const T& value) {
         _core.key_view(key);
-        _core.append(std::move(bson_value::value{std::move(value)}));
+        _core.append(bson_value::value{value});
     }
 
     document(document&& other) = default;

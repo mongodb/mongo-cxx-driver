@@ -1832,7 +1832,6 @@ TEST_CASE("list builder append", "[bsoncxx::builder::list::document]") {
             doc += doc;
 
             bson_eq_object(&expected, doc.extract().view());
-            bson_destroy(&expected);
         }
 
         SECTION("append operator with temp") {
@@ -1840,7 +1839,6 @@ TEST_CASE("list builder append", "[bsoncxx::builder::list::document]") {
             doc += {"hello", "world"};
 
             bson_eq_object(&expected, doc.extract().view());
-            bson_destroy(&expected);
         }
 
         SECTION("append operator with other and move") {
@@ -1850,7 +1848,6 @@ TEST_CASE("list builder append", "[bsoncxx::builder::list::document]") {
             doc += std::move(other);
 
             bson_eq_object(&expected, doc.extract().view());
-            bson_destroy(&expected);
         }
 
         SECTION("append method with self") {
@@ -1858,7 +1855,6 @@ TEST_CASE("list builder append", "[bsoncxx::builder::list::document]") {
             doc.append(doc);
 
             bson_eq_object(&expected, doc.extract().view());
-            bson_destroy(&expected);
         }
 
         SECTION("append method with temp and method chaining") {
@@ -1866,7 +1862,6 @@ TEST_CASE("list builder append", "[bsoncxx::builder::list::document]") {
             doc.append({"hello", "world"}).append({"hello", "world"});
 
             bson_eq_object(&expected, doc.extract().view());
-            bson_destroy(&expected);
         }
 
         SECTION("append method with move") {
@@ -1876,8 +1871,9 @@ TEST_CASE("list builder append", "[bsoncxx::builder::list::document]") {
             doc.append(std::move(other));
 
             bson_eq_object(&expected, doc.extract().view());
-            bson_destroy(&expected);
         }
+
+        bson_destroy(&expected);
     }
 
     SECTION("array") {
@@ -1900,6 +1896,8 @@ TEST_CASE("list builder append", "[bsoncxx::builder::list::document]") {
         arr += "qux";
 
         bson_eq_object(&expected, arr.extract().view());
+
+        bson_destroy(&nested);
         bson_destroy(&expected);
     }
 }
