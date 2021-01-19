@@ -1288,7 +1288,8 @@ TEST_CASE("list builder appends utf8", "[bsoncxx::builder::list::document]") {
     bson_destroy(&expected);
 }
 
-TEST_CASE("list builder copy and move constructors", "[bsoncxx::builder::list::document]") {
+TEST_CASE("list builder document copy and move constructors",
+          "[bsoncxx::builder::list::document]") {
     bson_t expected;
     bson_init(&expected);
 
@@ -1308,7 +1309,7 @@ TEST_CASE("list builder copy and move constructors", "[bsoncxx::builder::list::d
 
     SECTION("copy constructor") {
         builder::list::document original{"hello", "world"};
-        auto copied{original};
+        builder::list::document copied{original};
         bson_eq_object(&expected, copied.extract().view());
     }
 
@@ -1323,6 +1324,50 @@ TEST_CASE("list builder copy and move constructors", "[bsoncxx::builder::list::d
 
     SECTION("self copy assignment") {
         builder::list::document actual{"hello", "world"};
+        actual = *&actual;  // '*&' suppresses -Wself-assign-overloaded warning
+
+        bson_eq_object(&expected, actual.extract().view());
+    }
+
+    bson_destroy(&expected);
+}
+
+TEST_CASE("list builder array copy and move constructors", "[bsoncxx::builder::list::document]") {
+    bson_t expected;
+    bson_init(&expected);
+
+    bson_append_utf8(&expected, "0", -1, "hello", -1);
+    bson_append_utf8(&expected, "1", -1, "world", -1);
+
+    SECTION("move constructor") {
+        builder::list::array original{"hello", "world"};
+        auto moved{std::move(original)};
+        bson_eq_object(&expected, moved.extract().view());
+    }
+
+    SECTION("move assignment") {
+        builder::list::array original{"hello", "world"};
+        auto moved = std::move(original);
+        bson_eq_object(&expected, moved.extract().view());
+    }
+
+    SECTION("copy constructor") {
+        const builder::list::array original{"hello", "world"};
+        builder::list::array copied{original};
+        bson_eq_object(&expected, copied.extract().view());
+    }
+
+    SECTION("copy assignment") {
+        builder::list::array original{"hello", "world"};
+
+        builder::list::array copied{};
+        copied = original;
+
+        bson_eq_object(&expected, copied.extract().view());
+    }
+
+    SECTION("self copy assignment") {
+        builder::list::array actual{"hello", "world"};
         actual = *&actual;  // '*&' suppresses -Wself-assign-overloaded warning
 
         bson_eq_object(&expected, actual.extract().view());
