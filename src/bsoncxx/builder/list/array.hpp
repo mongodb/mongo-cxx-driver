@@ -86,6 +86,8 @@ class array {
     ///
     /// @param other another array to use as source to initialize the array with
     ///
+    /// @return *this
+    ///
     array& operator=(const array& other) {
         if (this != &other)
             *this = array(other);
