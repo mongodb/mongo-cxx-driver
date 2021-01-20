@@ -75,7 +75,10 @@ class document {
     }
 
     ///
-    /// Constructs the document with the concatenated contents of the initializer list 'init'.
+    /// Constructs the document with the contents of the initializer list 'init'. All documents in
+    /// 'init' are concatenated.
+    ///
+    /// @param init initializer list to initialize the key-value pairs of the document with
     ///
     document(std::initializer_list<document> init) {
         for (auto doc : init) {
