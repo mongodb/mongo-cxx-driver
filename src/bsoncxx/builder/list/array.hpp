@@ -124,14 +124,16 @@ class array {
         return *this;
     }
 
+    ///
+    /// Appends array rhs.
+    ///
+    /// @param rhs array to append
+    ///
+    /// @return *this
+    ///
     array& append(const array& rhs) {
         auto temp = rhs;
         _core.append(temp.extract());
-        return *this;
-    }
-
-    array& append(array&& rhs) {
-        _core.append(rhs.extract());
         return *this;
     }
 
