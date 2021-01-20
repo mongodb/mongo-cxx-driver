@@ -1779,29 +1779,10 @@ TEST_CASE("list builder appends value", "[bsoncxx::builder::list::document]") {
     bson_destroy(&expected);
 }
 
-TEST_CASE("list builder with explicit type deduction", "[bsoncxx::builder::list::document]") {
-    SECTION("array") {
-        bson_t expected, array;
-        bson_init(&expected);
-        bson_init(&array);
-
-        bson_append_utf8(&array, "0", -1, "bar", -1);
-        bson_append_int32(&array, "1", -1, 1);
-        bson_append_array(&expected, "foo", -1, &array);
-
-        builder::list::document b{"foo", builder::list::array{"bar", 1}};
-        bson_eq_object(&expected, b.extract().view());
-
-        bson_destroy(&expected);
-        bson_destroy(&array);
-    }
-
-    // compile-time error
-    // SECTION("document") {
-    //      builder::list::document b = builder::list::document{"foo", 1, 2};
-    //      builder::list::document b = builder::list::document{"foo", 1, 2, 3};
-    // }
-}
+// TEST_CASE("fails to compile if a key-value pair is not given") {
+//      builder::list::document a = {"foo", 1, 2};
+//      builder::list::document b = {"foo", 1, 2, 3};
+// }
 
 TEST_CASE("empty list builder", "[bsoncxx::builder::list::document]") {
     bson_t expected;
