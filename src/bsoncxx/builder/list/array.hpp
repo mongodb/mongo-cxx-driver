@@ -137,12 +137,14 @@ class array {
         return *this;
     }
 
+    ///
+    /// Concatenates array rhs.
+    ///
+    /// @param rhs array to concatenate
+    ///
+    /// @return *this
+    ///
     array& concatenate(const array& rhs) {
-        _core.concatenate(rhs._core.view_array());
-        return *this;
-    }
-
-    array& concatenate(array&& rhs) {
         _core.concatenate(rhs._core.view_array());
         return *this;
     }
