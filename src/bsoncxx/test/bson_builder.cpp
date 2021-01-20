@@ -1288,8 +1288,7 @@ TEST_CASE("list builder appends utf8", "[bsoncxx::builder::list::document]") {
     bson_destroy(&expected);
 }
 
-TEST_CASE("list builder document copy and move constructors",
-          "[bsoncxx::builder::list::document]") {
+TEST_CASE("list builder document copy and move semantics", "[bsoncxx::builder::list::document]") {
     bson_t expected;
     bson_init(&expected);
 
@@ -1315,8 +1314,7 @@ TEST_CASE("list builder document copy and move constructors",
 
     SECTION("copy assignment") {
         builder::list::document original{"hello", "world"};
-
-        builder::list::document copied{};
+        builder::list::document copied{"wrong", "values"};
         copied = original;
 
         bson_eq_object(&expected, copied.extract().view());
@@ -1332,7 +1330,7 @@ TEST_CASE("list builder document copy and move constructors",
     bson_destroy(&expected);
 }
 
-TEST_CASE("list builder array copy and move constructors", "[bsoncxx::builder::list::document]") {
+TEST_CASE("list builder array copy and move semantics", "[bsoncxx::builder::list::document]") {
     bson_t expected;
     bson_init(&expected);
 
@@ -1359,8 +1357,7 @@ TEST_CASE("list builder array copy and move constructors", "[bsoncxx::builder::l
 
     SECTION("copy assignment") {
         builder::list::array original{"hello", "world"};
-
-        builder::list::array copied{};
+        builder::list::array copied{"wrong"};
         copied = original;
 
         bson_eq_object(&expected, copied.extract().view());
