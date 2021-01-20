@@ -29,6 +29,12 @@ using namespace bsoncxx::types;
 /// A JSON-like builder for creating BSON arrays.
 ///
 class array {
+    template <bool B, class T = void>
+    using enable_if_t = typename std::enable_if<B, T>::type;
+
+    template <class T>
+    using decay_t = typename std::decay<T>::type;
+
    public:
     ///
     /// Creates an empty array.
@@ -64,7 +70,7 @@ class array {
     }
 
     operator bsoncxx::array::value() {
-        return extract();
+        return this->extract();
     }
 
     bsoncxx::array::value extract() {
@@ -76,40 +82,41 @@ class array {
         return *this;
     }
 
-    array& operator+=(array&& rhs) {
+    array& operator+=(list::array&& rhs) {
         this->append(std::move(rhs));
         return *this;
     }
 
     array& append(const array& rhs) {
-        _core.open_array().concatenate(rhs._core.view_array()).close_array();
+        auto temp = rhs;
+        _core.append(temp.extract());
         return *this;
     }
 
     array& append(array&& rhs) {
-        _core.open_array().concatenate(rhs.extract().view()).close_array();
+        _core.append(rhs.extract());
         return *this;
     }
 
-    template <typename T>
+    template <typename T, enable_if_t<!std::is_same<decay_t<T>, array>::value, int> = 0>
     array& operator+=(T&& rhs) {
         this->append(std::move(rhs));
         return *this;
     }
 
-    template <typename T>
+    template <typename T, enable_if_t<!std::is_same<decay_t<T>, array>::value, int> = 0>
     array& operator+=(const T& rhs) {
         this->append(rhs);
         return *this;
     }
 
-    template <typename T>
+    template <typename T, enable_if_t<!std::is_same<decay_t<T>, array>::value, int> = 0>
     array& append(T&& rhs) {
         _core.append(bson_value::value{rhs});
         return *this;
     }
 
-    template <typename T>
+    template <typename T, enable_if_t<!std::is_same<decay_t<T>, array>::value, int> = 0>
     array& append(const T& rhs) {
         _core.append(bson_value::value{rhs});
         return *this;

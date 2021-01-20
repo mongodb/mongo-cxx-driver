@@ -1891,11 +1891,62 @@ TEST_CASE("list builder append", "[bsoncxx::builder::list::document]") {
 
         bson_append_utf8(&expected, "2", -1, "qux", -1);
 
-        builder::list::array arr = {"foo"};
-        arr += {"bar", "baz"};
-        arr += "qux";
+        SECTION("append operator with self") {
+            bson_t* copy = bson_copy(&expected);
+            bson_append_array(&expected, "3", -1, copy);
 
-        bson_eq_object(&expected, arr.extract().view());
+            builder::list::array arr = {"foo", builder::list::array{"bar", "baz"}, "qux"};
+            arr += arr;
+
+            bson_eq_object(&expected, arr.extract().view());
+            bson_destroy(copy);
+        }
+
+        SECTION("append operator with temp") {
+            builder::list::array arr = {"foo"};
+            arr += builder::list::array{"bar", "baz"};
+            arr += "qux";
+
+            bson_eq_object(&expected, arr.extract().view());
+        }
+
+        SECTION("append operator with other and move") {
+            builder::list::array arr = {"foo"};
+            builder::list::array other = {"bar", "baz"};
+
+            arr += std::move(other);
+            arr += "qux";
+
+            bson_eq_object(&expected, arr.extract().view());
+        }
+
+        SECTION("append method with self") {
+            bson_t* copy = bson_copy(&expected);
+            bson_append_array(&expected, "3", -1, copy);
+
+            builder::list::array arr = {"foo", builder::list::array{"bar", "baz"}, "qux"};
+            arr.append(arr);
+
+            bson_eq_object(&expected, arr.extract().view());
+            bson_destroy(copy);
+        }
+
+        SECTION("append method with temp and method chaining") {
+            builder::list::array arr = {};
+            arr.append("foo").append({"bar", "baz"}).append("qux");
+
+            bson_eq_object(&expected, arr.extract().view());
+        }
+
+        SECTION("append method with move") {
+            builder::list::array arr = {"foo"};
+            builder::list::array other = {"bar", "baz"};
+
+            arr.append(std::move(other));
+            arr.append(std::move("qux"));
+
+            bson_eq_object(&expected, arr.extract().view());
+        }
 
         bson_destroy(&nested);
         bson_destroy(&expected);
