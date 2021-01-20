@@ -190,6 +190,7 @@ class array {
    private:
     void _append(core&) {}  // base-case, no-op
 
+    // appends each element in args to core
     template <typename Arg, typename... Args>
     void _append(core& core, Arg&& a, Args&&... args) {
         core.append(bson_value::value{a});
