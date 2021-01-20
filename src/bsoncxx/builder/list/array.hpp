@@ -90,6 +90,13 @@ class array {
         return *this;
     }
 
+    ///
+    /// Returns an owning bsoncxx::array::value.
+    ///
+    /// @return An owning array::value representing the entire contents of the array.
+    ///
+    /// @see bsoncxx::array::value
+    ///
     operator bsoncxx::array::value() {
         return this->extract();
     }

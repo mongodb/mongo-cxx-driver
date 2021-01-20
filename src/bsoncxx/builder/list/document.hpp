@@ -123,6 +123,13 @@ class document {
         return *this;
     }
 
+    ///
+    /// Returns an owning bsoncxx::document::value.
+    ///
+    /// @return An owning document::value representing the entire contents of the document.
+    ///
+    /// @see bsoncxx::document::value
+    ///
     operator bsoncxx::document::value() {
         return this->extract();
     }
