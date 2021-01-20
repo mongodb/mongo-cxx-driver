@@ -112,13 +112,15 @@ class array {
         return _core.extract_array();
     }
 
+    ///
+    /// Appends array rhs.
+    ///
+    /// @param rhs array to append
+    ///
+    /// @return *this
+    ///
     array& operator+=(const array& rhs) {
         this->append(rhs);
-        return *this;
-    }
-
-    array& operator+=(list::array&& rhs) {
-        this->append(std::move(rhs));
         return *this;
     }
 

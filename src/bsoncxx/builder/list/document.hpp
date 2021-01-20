@@ -146,18 +146,14 @@ class document {
     }
 
     ///
-    /// Appends a bsoncxx::builder::document.
+    /// Appends document rhs.
     ///
-    /// @exception
-    ///    Throws a bsoncxx::exception if the document is malformed.
+    /// @param rhs document to append
+    ///
+    /// @return *this
     ///
     document& operator+=(const document& rhs) {
         this->append(rhs);
-        return *this;
-    }
-
-    document& operator+=(document&& rhs) {
-        this->append(std::move(rhs));
         return *this;
     }
 
