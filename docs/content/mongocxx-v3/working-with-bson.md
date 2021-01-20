@@ -39,7 +39,7 @@ list builder:
 
 ```c++
 // { "hello": "world" }
-bsoncxx::builder::document list_builder = {"hello", "world"};
+bsoncxx::builder::list::document list_builder = {"hello", "world"};
 bsoncxx::document::value document = list_builder;
 ```
 
