@@ -37,26 +37,30 @@ class array {
 
    public:
     ///
-    /// Creates an empty array.
+    /// Default constructor. Creates an empty array.
     ///
     array() = default;
 
     ///
-    /// Creates a BSON array.
+    /// Converting constructor. Initializes each element of the array with the corresponding value
+    /// in std::forward<Args>(args).
     ///
-    /// @param init
-    ///     the initializer list used to construct the BSON array
-    ///
-    /// @see bsoncxx::builder::list
-    /// @see bsoncxx::builder::document
+    /// @note a bsoncxx::types::bson_value::value is direct-initialized from each argument.
     ///
     template <typename... Args>
     array(Args&&... args) {
         _append(_core, std::forward<Args>(args)...);
     }
 
-    array(array&& other) = default;
-    array& operator=(array&& other) = default;
+    ///
+    /// Move constructor. Constructs the array with the contents of 'other' using move semantics.
+    ///
+    array(array&& other) noexcept = default;
+
+    ///
+    /// Replaces the contents with those of 'other' using move semantics.
+    ///
+    array& operator=(array&& other) noexcept = default;
 
     array(const array& other) {
         for (auto&& value : other._core.view_array())

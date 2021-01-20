@@ -33,18 +33,20 @@ using namespace bsoncxx::types;
 class document {
    public:
     ///
-    /// Creates an empty document.
+    /// Default constructor. Creates an empty document.
     ///
     document() = default;
 
     ///
-    /// Creates a BSON document from a single key-value pair, e.g., { "key" : 1 }
+    /// Creates a document from a key-value pair. Initializes the key with 'key' and the value with
+    /// 'value'. The value may be another document.
     ///
     /// @param key
     ///     the key in the key-value pair.
     /// @param value
-    ///     the value in the key-value pair. It must be a BSON type, i.e., implicitly convertible to
-    ///     a bsoncxx::types::bson_value::value, or another bsoncxx::builder::document.
+    ///     the value in the key-value pair.
+    ///
+    /// @note a bsoncxx::types::bson_value::value is direct-initialized from 'value'.
     ///
     /// @see bsoncxx::types::bson_value::value.
     ///
@@ -54,19 +56,44 @@ class document {
         _core.append(bson_value::value{value});
     }
 
+    ///
+    /// Creates a document from a key-value pair. The value may be another document.
+    ///
+    /// @param key
+    ///     the key in the key-value pair.
+    /// @param value
+    ///     the value in the key-value pair.
+    ///
+    /// @note a bsoncxx::types::bson_value::value is direct-initialized from 'value'.
+    ///
+    /// @see bsoncxx::types::bson_value::value.
+    ///
     template <typename T>
     document(stdx::string_view key, const T& value) {
         _core.key_view(key);
         _core.append(bson_value::value{value});
     }
 
-    document(document&& other) = default;
-    document& operator=(document&& other) = default;
+    ///
+    /// Move constructor. Constructs the document with the contents of 'other' using move semantics.
+    ///
+    document(document&& other) noexcept = default;
 
+    ///
+    /// Replaces the contents with those of 'other' using move semantics.
+    ///
+    document& operator=(document&& other) noexcept = default;
+
+    ///
+    /// Creates a document identical to the given document. The given document will not be modified.
+    ///
     document(const document& other) {
         this->append(other);
     }
 
+    ///
+    /// Creates a document identical to the given document. The given document will not be modified.
+    ///
     document& operator=(const document& other) {
         if (this != &other)
             *this = document(other);
