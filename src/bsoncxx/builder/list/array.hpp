@@ -45,6 +45,8 @@ class array {
     /// Converting constructor. Initializes each element of the array with the corresponding value
     /// in std::forward<Args>(args).
     ///
+    /// @param args values used to initialize each element of the array
+    ///
     /// @note a bsoncxx::types::bson_value::value is direct-initialized from each argument.
     ///
     template <typename... Args>
@@ -55,18 +57,26 @@ class array {
     ///
     /// Move constructor. Constructs the array with the contents of 'other' using move semantics.
     ///
+    /// @param other another array to use as source to initialize the array with
+    ///
     array(array&& other) noexcept = default;
 
     ///
     /// Replaces the contents with those of 'other' using move semantics.
     ///
+    /// @param other another array to use as source to initialize the array with
+    ///
     array& operator=(array&& other) noexcept = default;
 
+    /// @param other another array to use as source to initialize the array with
+    ///
     array(const array& other) {
         for (auto&& value : other._core.view_array())
             _core.append(bson_value::value{value.get_value()});
     }
 
+    /// @param other another array to use as source to initialize the array with
+    ///
     array& operator=(const array& other) {
         if (this != &other)
             *this = array(other);

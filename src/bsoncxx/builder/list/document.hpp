@@ -42,9 +42,9 @@ class document {
     /// 'value'. The value may be another document.
     ///
     /// @param key
-    ///     the key in the key-value pair.
+    ///     the value to initialize the key in the key-value pair.
     /// @param value
-    ///     the value in the key-value pair.
+    ///     the value to initialize the value in the key-value pair.
     ///
     /// @note a bsoncxx::types::bson_value::value is direct-initialized from 'value'.
     ///
@@ -57,12 +57,13 @@ class document {
     }
 
     ///
-    /// Creates a document from a key-value pair. The value may be another document.
+    /// Creates a document from a key-value pair. Initializes the key with 'key' and the value with
+    /// 'value'. The value may be another document.
     ///
     /// @param key
-    ///     the key in the key-value pair.
+    ///     the value to initialize the key in the key-value pair.
     /// @param value
-    ///     the value in the key-value pair.
+    ///     the value to initialize the value in the key-value pair.
     ///
     /// @note a bsoncxx::types::bson_value::value is direct-initialized from 'value'.
     ///
@@ -90,15 +91,21 @@ class document {
     ///
     /// Move constructor. Constructs the document with the contents of 'other' using move semantics.
     ///
+    /// @param other another document to use as source to initialize the document with
+    ///
     document(document&& other) noexcept = default;
 
     ///
     /// Replaces the contents with those of 'other' using move semantics.
     ///
+    /// @param other another document to use as source to initialize the document with
+    ///
     document& operator=(document&& other) noexcept = default;
 
     ///
     /// Creates a document identical to the given document. The given document will not be modified.
+    ///
+    /// @param other another document to use as source to initialize the document with
     ///
     document(const document& other) {
         this->append(other);
@@ -106,6 +113,8 @@ class document {
 
     ///
     /// Creates a document identical to the given document. The given document will not be modified.
+    ///
+    /// @param other another document to use as source to initialize the document with
     ///
     document& operator=(const document& other) {
         if (this != &other)
