@@ -49,6 +49,8 @@ class array {
     ///
     /// @note a bsoncxx::types::bson_value::value is direct-initialized from each argument.
     ///
+    /// @see bsoncxx::types::bson_value::value
+    ///
     template <typename... Args>
     array(Args&&... args) {
         _append(_core, std::forward<Args>(args)...);
@@ -137,12 +139,34 @@ class array {
         return *this;
     }
 
+    ///
+    /// Appends the value rhs.
+    ///
+    /// @param rhs value to append
+    ///
+    /// @return *this
+    ///
+    /// @note a bsoncxx::types::bson_value::value is direct-initialized from rhs.
+    ///
+    /// @see bsoncxx::types::bson_value::value
+    ///
     template <typename T, enable_if_t<!std::is_same<decay_t<T>, array>::value, int> = 0>
     array& operator+=(const T& rhs) {
         this->append(rhs);
         return *this;
     }
 
+    ///
+    /// Appends the value rhs.
+    ///
+    /// @param rhs value to append
+    ///
+    /// @return *this
+    ///
+    /// @note a bsoncxx::types::bson_value::value is direct-initialized from rhs.
+    ///
+    /// @see bsoncxx::types::bson_value::value
+    ///
     template <typename T, enable_if_t<!std::is_same<decay_t<T>, array>::value, int> = 0>
     array& append(const T& rhs) {
         _core.append(bson_value::value{rhs});
