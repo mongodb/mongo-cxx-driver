@@ -188,7 +188,7 @@ class array {
     }
 
    private:
-    void _append(core&) {}
+    void _append(core&) {}  // base-case, no-op
 
     template <typename Arg, typename... Args>
     void _append(core& core, Arg&& a, Args&&... args) {
