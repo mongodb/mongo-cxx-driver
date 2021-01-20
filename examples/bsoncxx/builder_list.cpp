@@ -29,9 +29,9 @@ int main(int, char**) {
     // JSON-like interface for creating BSON objects.
     //
     // builder::list::document builds an empty BSON document
-    builder::list::document doc = {};
+    list::document doc = {};
     // builder::list::array builds an empty BSON array
-    builder::list::array arr = {};
+    list::array arr = {};
 
     //
     // We can append values to a document using an initializer list of key-value pairs.
@@ -78,7 +78,9 @@ int main(int, char**) {
     //      }
     // }
     //
-    doc = {"Answers", {"Everything", {"The Universe", {"Life", 42}}}};
+    doc = {
+        "Answers",
+        list::document{"Everything", list::document{"The Universe", list::document{"Life", 42}}}};
 
     //
     // Each array element must be bson_value::value or implicitly convertible to one.
