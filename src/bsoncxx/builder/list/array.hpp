@@ -98,6 +98,16 @@ class array {
         return *this;
     }
 
+    array& concatenate(const array& rhs) {
+        _core.concatenate(rhs._core.view_array());
+        return *this;
+    }
+
+    array& concatenate(array&& rhs) {
+        _core.concatenate(rhs._core.view_array());
+        return *this;
+    }
+
     template <typename T, enable_if_t<!std::is_same<decay_t<T>, array>::value, int> = 0>
     array& operator+=(T&& rhs) {
         this->append(std::move(rhs));
