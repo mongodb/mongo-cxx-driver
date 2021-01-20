@@ -198,7 +198,7 @@ class array {
 };
 
 ///
-/// Concatenates array rhs.
+/// Returns an array containing elements from lhs followed by the elements from rhs.
 ///
 /// @param lhs array
 ///
