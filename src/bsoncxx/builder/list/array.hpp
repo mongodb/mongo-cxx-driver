@@ -55,19 +55,22 @@ class array {
     }
 
     ///
-    /// Move constructor. Constructs the array with the contents of 'other' using move semantics.
+    /// Move constructor. Constructs the array with the contents of other using move semantics.
     ///
     /// @param other another array to use as source to initialize the array with
     ///
     array(array&& other) noexcept = default;
 
     ///
-    /// Replaces the contents with those of 'other' using move semantics.
+    /// Replaces the contents with those of other using move semantics.
     ///
     /// @param other another array to use as source to initialize the array with
     ///
     array& operator=(array&& other) noexcept = default;
 
+    ///
+    /// Copy constructor. Constructs the array with a copy of the contents of other.
+    ///
     /// @param other another array to use as source to initialize the array with
     ///
     array(const array& other) {
@@ -75,6 +78,10 @@ class array {
             _core.append(bson_value::value{value.get_value()});
     }
 
+    ///
+    /// Replaces the contents with a copy of other. If *this and other are the same object, this
+    /// function has no effect.
+    ///
     /// @param other another array to use as source to initialize the array with
     ///
     array& operator=(const array& other) {

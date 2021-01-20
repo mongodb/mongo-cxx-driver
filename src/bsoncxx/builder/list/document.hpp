@@ -89,21 +89,21 @@ class document {
     }
 
     ///
-    /// Move constructor. Constructs the document with the contents of 'other' using move semantics.
+    /// Move constructor. Constructs the document with the contents of other using move semantics.
     ///
     /// @param other another document to use as source to initialize the document with
     ///
     document(document&& other) noexcept = default;
 
     ///
-    /// Replaces the contents with those of 'other' using move semantics.
+    /// Replaces the contents with those of other using move semantics.
     ///
     /// @param other another document to use as source to initialize the document with
     ///
     document& operator=(document&& other) noexcept = default;
 
     ///
-    /// Creates a document identical to the given document. The given document will not be modified.
+    /// Copy constructor. Constructs the document with a copy of the contents of other.
     ///
     /// @param other another document to use as source to initialize the document with
     ///
@@ -112,7 +112,8 @@ class document {
     }
 
     ///
-    /// Creates a document identical to the given document. The given document will not be modified.
+    /// Replaces the contents with a copy of other. If *this and other are the same object, this
+    /// function has no effect.
     ///
     /// @param other another document to use as source to initialize the document with
     ///
