@@ -53,7 +53,7 @@ class array {
     ///
     template <typename... Args>
     array(Args&&... args) {
-        _append(_core, std::forward<Args>(args)...);
+        this->_append(_core, std::forward<Args>(args)...);
     }
 
     ///
