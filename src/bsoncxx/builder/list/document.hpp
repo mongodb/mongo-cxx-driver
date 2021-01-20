@@ -158,18 +158,14 @@ class document {
     }
 
     ///
-    /// Appends a bsoncxx::builder::document.
+    /// Appends document rhs.
     ///
-    /// @exception
-    ///    Throws a bsoncxx::exception if the document is malformed.
+    /// @param rhs document to append
+    ///
+    /// @return *this
     ///
     document& append(const document& rhs) {
         _core.concatenate(rhs._core.view_document());
-        return *this;
-    }
-
-    document& append(document&& rhs) {
-        _core.concatenate(std::move(rhs.extract()));
         return *this;
     }
 
