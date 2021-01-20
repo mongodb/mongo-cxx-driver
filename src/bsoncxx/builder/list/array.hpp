@@ -193,8 +193,7 @@ class array {
     // appends each element in args to core
     template <typename Arg, typename... Args>
     void _append(core& core, Arg&& a, Args&&... args) {
-        core.append(bson_value::value{a});
-        _append(core, std::forward<Args>(args)...);
+        _append(core.append(bson_value::value{a}), std::forward<Args>(args)...);
     }
 
     core _core{true};
