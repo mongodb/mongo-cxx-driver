@@ -134,6 +134,13 @@ class document {
         return this->extract();
     }
 
+    ///
+    /// Returns an owning bsoncxx::document::value.
+    ///
+    /// @return An owning document::value representing the entire contents of the document.
+    ///
+    /// @see bsoncxx::document::value
+    ///
     bsoncxx::document::value extract() {
         return _core.extract_document();
     }

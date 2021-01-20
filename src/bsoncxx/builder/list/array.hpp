@@ -101,6 +101,13 @@ class array {
         return this->extract();
     }
 
+    ///
+    /// Returns an owning bsoncxx::array::value.
+    ///
+    /// @return An owning array::value representing the entire contents of the array.
+    ///
+    /// @see bsoncxx::array::value
+    ///
     bsoncxx::array::value extract() {
         return _core.extract_array();
     }
