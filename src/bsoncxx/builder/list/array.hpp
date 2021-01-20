@@ -137,6 +137,18 @@ class array {
         return *this;
     }
 
+    template <typename T, enable_if_t<!std::is_same<decay_t<T>, array>::value, int> = 0>
+    array& operator+=(const T& rhs) {
+        this->append(rhs);
+        return *this;
+    }
+
+    template <typename T, enable_if_t<!std::is_same<decay_t<T>, array>::value, int> = 0>
+    array& append(const T& rhs) {
+        _core.append(bson_value::value{rhs});
+        return *this;
+    }
+
     ///
     /// Concatenates array rhs.
     ///
@@ -146,30 +158,6 @@ class array {
     ///
     array& concatenate(const array& rhs) {
         _core.concatenate(rhs._core.view_array());
-        return *this;
-    }
-
-    template <typename T, enable_if_t<!std::is_same<decay_t<T>, array>::value, int> = 0>
-    array& operator+=(T&& rhs) {
-        this->append(std::move(rhs));
-        return *this;
-    }
-
-    template <typename T, enable_if_t<!std::is_same<decay_t<T>, array>::value, int> = 0>
-    array& operator+=(const T& rhs) {
-        this->append(rhs);
-        return *this;
-    }
-
-    template <typename T, enable_if_t<!std::is_same<decay_t<T>, array>::value, int> = 0>
-    array& append(T&& rhs) {
-        _core.append(bson_value::value{rhs});
-        return *this;
-    }
-
-    template <typename T, enable_if_t<!std::is_same<decay_t<T>, array>::value, int> = 0>
-    array& append(const T& rhs) {
-        _core.append(bson_value::value{rhs});
         return *this;
     }
 
