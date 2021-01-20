@@ -1964,14 +1964,14 @@ TEST_CASE("list builder append", "[bsoncxx::builder::list::document]") {
         SECTION("concatenate") {
             builder::list::array arr = {"foo", builder::list::array{"bar", "baz"}};
             builder::list::array other = {"qux"};
-            SECTION("copy") {
+            SECTION("method") {
                 arr.concatenate(other);
                 bson_eq_object(&expected, arr.extract().view());
             }
 
-            SECTION("moved") {
-                arr.concatenate(std::move(other));
-                bson_eq_object(&expected, arr.extract().view());
+            SECTION("operator") {
+                auto temp = arr + other;
+                bson_eq_object(&expected, temp.extract().view());
             }
         }
 

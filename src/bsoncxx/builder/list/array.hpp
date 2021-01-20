@@ -197,6 +197,21 @@ class array {
     core _core{true};
 };
 
+///
+/// Concatenates array rhs.
+///
+/// @param lhs array
+///
+/// @param rhs array
+///
+/// @return An array containing elements from lhs followed by the elements from rhs
+///
+array operator+(const array& lhs, const array& rhs) {
+    auto temp = lhs;
+    temp.concatenate(rhs);
+    return temp;
+}
+
 }  // namespace list
 }  // namespace builder
 BSONCXX_INLINE_NAMESPACE_END
