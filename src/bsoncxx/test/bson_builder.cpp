@@ -1819,6 +1819,19 @@ TEST_CASE("empty list builder", "[bsoncxx::builder::list::document]") {
     bson_destroy(&expected);
 }
 
+TEST_CASE("list of key-value pairs", "[bsoncxx::builder::list::document]") {
+    bson_t expected;
+    bson_init(&expected);
+
+    bson_append_utf8(&expected, "foo", -1, "bar", -1);
+    bson_append_utf8(&expected, "baz", -1, "qux", -1);
+
+    builder::list::document doc = {{"foo", "bar"}, {"baz", "qux"}};
+
+    bson_eq_object(&expected, doc.extract().view());
+    bson_destroy(&expected);
+}
+
 TEST_CASE("list builder append", "[bsoncxx::builder::list::document]") {
     SECTION("document") {
         bson_t expected;

@@ -75,6 +75,16 @@ class document {
     }
 
     ///
+    /// Constructs the document with the concatenated contents of the initializer list 'init'.
+    ///
+    document(std::initializer_list<document> init) {
+        for (auto doc : init) {
+            bson_value::value val{doc};
+            _core.concatenate(val.view().get_document());
+        }
+    }
+
+    ///
     /// Move constructor. Constructs the document with the contents of 'other' using move semantics.
     ///
     document(document&& other) noexcept = default;
