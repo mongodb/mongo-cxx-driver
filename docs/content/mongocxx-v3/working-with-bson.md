@@ -35,12 +35,18 @@ which to use is entirely aesthetic.
 ## List builder {#list}
 
 The simplest way to create a BSON document or array is to use the JSON-like
-list builder: 
+list builder. The type must be specified for nested documents and arrays. 
 
 ```c++
-// { "hello": "world" }
-bsoncxx::builder::list::document list_builder = {"hello", "world"};
-bsoncxx::document::value document = list_builder;
+// { "books" : { 
+//      "title" : "The Great Gatsby", 
+//      "author" : "Francis Scott Key Fitzgerald" 
+// }}
+using namespace builder;
+list::document book = {"book",
+    list::document{{"title", "The Great Gatsby"}, {"author", "Francis Scott Key Fitzgerald"}}
+};
+bsoncxx::document::value document = book;
 ```
 
 More advanced uses of the list builder are shown in [this
