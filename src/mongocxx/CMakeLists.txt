@@ -209,10 +209,9 @@ endif()
 if(ENABLE_TESTS)
   target_link_libraries(mongocxx_mocked PUBLIC bsoncxx_testing)
   target_compile_definitions(mongocxx_mocked PUBLIC MONGOCXX_TESTING)
-endif()
-
-if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+  if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     target_compile_options(mongocxx_mocked PRIVATE /bigobj)
+  endif()
 endif()
 
 
