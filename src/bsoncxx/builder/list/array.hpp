@@ -71,30 +71,6 @@ class array {
     array& operator=(array&& other) noexcept = default;
 
     ///
-    /// Copy constructor. Constructs the array with a copy of the contents of other.
-    ///
-    /// @param other another array to use as source to initialize the array with
-    ///
-    array(const array& other) {
-        for (auto&& value : other._core.view_array())
-            _core.append(bson_value::value{value.get_value()});
-    }
-
-    ///
-    /// Replaces the contents with a copy of other. If *this and other are the same object, this
-    /// function has no effect.
-    ///
-    /// @param other another array to use as source to initialize the array with
-    ///
-    /// @return *this
-    ///
-    array& operator=(const array& other) {
-        if (this != &other)
-            *this = array(other);
-        return *this;
-    }
-
-    ///
     /// Returns an owning bsoncxx::array::value.
     ///
     /// @return An owning array::value representing the entire contents of the array.
@@ -123,8 +99,8 @@ class array {
     ///
     /// @return *this
     ///
-    array& operator+=(const array& rhs) {
-        this->append(rhs);
+    array& operator+=(array&& rhs) {
+        this->append(std::move(rhs));
         return *this;
     }
 
@@ -135,9 +111,8 @@ class array {
     ///
     /// @return *this
     ///
-    array& append(const array& rhs) {
-        auto temp = rhs;
-        _core.append(temp.extract());
+    array& append(array&& rhs) {
+        _core.append(rhs.extract());
         return *this;
     }
 
@@ -182,8 +157,8 @@ class array {
     ///
     /// @return *this
     ///
-    array& concatenate(const array& rhs) {
-        _core.concatenate(rhs._core.view_array());
+    array& concatenate(array&& rhs) {
+        _core.concatenate(rhs.extract().view());
         return *this;
     }
 
@@ -208,10 +183,9 @@ class array {
 ///
 /// @return An array containing elements from lhs followed by the elements from rhs
 ///
-array operator+(const array& lhs, const array& rhs) {
-    auto temp = lhs;
-    temp.concatenate(rhs);
-    return temp;
+array operator+(array&& lhs, array&& rhs) {
+    lhs.concatenate(std::move(rhs));
+    return std::forward<array>(lhs);
 }
 
 }  // namespace list

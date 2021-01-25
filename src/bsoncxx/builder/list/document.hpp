@@ -82,8 +82,8 @@ class document {
     /// @param init initializer list to initialize the key-value pairs of the document with
     ///
     document(std::initializer_list<document> init) {
-        for (auto doc : init) {
-            bson_value::value val{doc};
+        for (auto&& doc : init) {
+            bson_value::value val{doc._core.view_document()};
             _core.concatenate(val.view().get_document());
         }
     }
@@ -101,27 +101,6 @@ class document {
     /// @param other another document to use as source to initialize the document with
     ///
     document& operator=(document&& other) noexcept = default;
-
-    ///
-    /// Copy constructor. Constructs the document with a copy of the contents of other.
-    ///
-    /// @param other another document to use as source to initialize the document with
-    ///
-    document(const document& other) {
-        this->append(other);
-    }
-
-    ///
-    /// Replaces the contents with a copy of other. If *this and other are the same object, this
-    /// function has no effect.
-    ///
-    /// @param other another document to use as source to initialize the document with
-    ///
-    document& operator=(const document& other) {
-        if (this != &other)
-            *this = document(other);
-        return *this;
-    }
 
     ///
     /// Returns an owning bsoncxx::document::value.
@@ -146,26 +125,26 @@ class document {
     }
 
     ///
-    /// Appends document rhs.
+    /// Concatenates document rhs.
     ///
-    /// @param rhs document to append
+    /// @param rhs document to concatenate
     ///
     /// @return *this
     ///
-    document& operator+=(const document& rhs) {
-        this->append(rhs);
+    document& operator+=(document&& rhs) {
+        this->concatenate(std::move(rhs));
         return *this;
     }
 
     ///
-    /// Appends document rhs.
+    /// Concatenates document rhs.
     ///
-    /// @param rhs document to append
+    /// @param rhs document to concatenate
     ///
     /// @return *this
     ///
-    document& append(const document& rhs) {
-        _core.concatenate(rhs._core.view_document());
+    document& concatenate(document&& rhs) {
+        _core.concatenate(rhs.extract().view());
         return *this;
     }
 

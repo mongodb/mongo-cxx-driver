@@ -1306,27 +1306,6 @@ TEST_CASE("list builder document copy and move semantics", "[bsoncxx::builder::l
         bson_eq_object(&expected, moved.extract().view());
     }
 
-    SECTION("copy constructor") {
-        builder::list::document original{"hello", "world"};
-        builder::list::document copied{original};
-        bson_eq_object(&expected, copied.extract().view());
-    }
-
-    SECTION("copy assignment") {
-        builder::list::document original{"hello", "world"};
-        builder::list::document copied{"wrong", "values"};
-        copied = original;
-
-        bson_eq_object(&expected, copied.extract().view());
-    }
-
-    SECTION("self copy assignment") {
-        builder::list::document actual{"hello", "world"};
-        actual = *&actual;  // '*&' suppresses -Wself-assign-overloaded warning
-
-        bson_eq_object(&expected, actual.extract().view());
-    }
-
     bson_destroy(&expected);
 }
 
@@ -1347,27 +1326,6 @@ TEST_CASE("list builder array copy and move semantics", "[bsoncxx::builder::list
         builder::list::array original{"hello", "world"};
         auto moved = std::move(original);
         bson_eq_object(&expected, moved.extract().view());
-    }
-
-    SECTION("copy constructor") {
-        const builder::list::array original{"hello", "world"};
-        builder::list::array copied{original};
-        bson_eq_object(&expected, copied.extract().view());
-    }
-
-    SECTION("copy assignment") {
-        builder::list::array original{"hello", "world"};
-        builder::list::array copied{"wrong"};
-        copied = original;
-
-        bson_eq_object(&expected, copied.extract().view());
-    }
-
-    SECTION("self copy assignment") {
-        builder::list::array actual{"hello", "world"};
-        actual = *&actual;  // '*&' suppresses -Wself-assign-overloaded warning
-
-        bson_eq_object(&expected, actual.extract().view());
     }
 
     bson_destroy(&expected);
@@ -1810,7 +1768,7 @@ TEST_CASE("list of key-value pairs", "[bsoncxx::builder::list::document]") {
     bson_destroy(&expected);
 }
 
-TEST_CASE("list builder append", "[bsoncxx::builder::list::document]") {
+TEST_CASE("list builder append and concatenate", "[bsoncxx::builder::list::document]") {
     SECTION("document") {
         bson_t expected;
         bson_init(&expected);
@@ -1818,21 +1776,14 @@ TEST_CASE("list builder append", "[bsoncxx::builder::list::document]") {
         bson_append_utf8(&expected, "hello", -1, "world", -1);
         bson_append_utf8(&expected, "hello", -1, "world", -1);
 
-        SECTION("append operator with self") {
-            builder::list::document doc = {"hello", "world"};
-            doc += doc;
-
-            bson_eq_object(&expected, doc.extract().view());
-        }
-
-        SECTION("append operator with temp") {
+        SECTION("concatenate operator with temp") {
             builder::list::document doc = {"hello", "world"};
             doc += {"hello", "world"};
 
             bson_eq_object(&expected, doc.extract().view());
         }
 
-        SECTION("append operator with other and move") {
+        SECTION("concatenate operator with other and move") {
             builder::list::document doc = {"hello", "world"};
             builder::list::document other = {"hello", "world"};
 
@@ -1841,16 +1792,9 @@ TEST_CASE("list builder append", "[bsoncxx::builder::list::document]") {
             bson_eq_object(&expected, doc.extract().view());
         }
 
-        SECTION("append method with self") {
-            builder::list::document doc = {"hello", "world"};
-            doc.append(doc);
-
-            bson_eq_object(&expected, doc.extract().view());
-        }
-
-        SECTION("append method with temp and method chaining") {
+        SECTION("concatenate method with temp and method chaining") {
             builder::list::document doc = {};
-            doc.append({"hello", "world"}).append({"hello", "world"});
+            doc.concatenate({"hello", "world"}).concatenate({"hello", "world"});
 
             bson_eq_object(&expected, doc.extract().view());
         }
@@ -1859,7 +1803,7 @@ TEST_CASE("list builder append", "[bsoncxx::builder::list::document]") {
             builder::list::document doc = {"hello", "world"};
             builder::list::document other = {"hello", "world"};
 
-            doc.append(std::move(other));
+            doc.concatenate(std::move(other));
 
             bson_eq_object(&expected, doc.extract().view());
         }
@@ -1882,17 +1826,6 @@ TEST_CASE("list builder append", "[bsoncxx::builder::list::document]") {
 
         bson_append_utf8(&expected, "2", -1, "qux", -1);
 
-        SECTION("append operator with self") {
-            bson_t* copy = bson_copy(&expected);
-            bson_append_array(&expected, "3", -1, copy);
-
-            builder::list::array arr = {"foo", builder::list::array{"bar", "baz"}, "qux"};
-            arr += arr;
-
-            bson_eq_object(&expected, arr.extract().view());
-            bson_destroy(copy);
-        }
-
         SECTION("append operator with temp") {
             builder::list::array arr = {"foo"};
             arr += builder::list::array{"bar", "baz"};
@@ -1909,17 +1842,6 @@ TEST_CASE("list builder append", "[bsoncxx::builder::list::document]") {
             arr += "qux";
 
             bson_eq_object(&expected, arr.extract().view());
-        }
-
-        SECTION("append method with self") {
-            bson_t* copy = bson_copy(&expected);
-            bson_append_array(&expected, "3", -1, copy);
-
-            builder::list::array arr = {"foo", builder::list::array{"bar", "baz"}, "qux"};
-            arr.append(arr);
-
-            bson_eq_object(&expected, arr.extract().view());
-            bson_destroy(copy);
         }
 
         SECTION("append method with temp and method chaining") {
@@ -1943,12 +1865,12 @@ TEST_CASE("list builder append", "[bsoncxx::builder::list::document]") {
             builder::list::array arr = {"foo", builder::list::array{"bar", "baz"}};
             builder::list::array other = {"qux"};
             SECTION("method") {
-                arr.concatenate(other);
+                arr.concatenate(std::move(other));
                 bson_eq_object(&expected, arr.extract().view());
             }
 
             SECTION("operator") {
-                auto temp = arr + other;
+                auto temp = std::move(arr) + std::move(other);
                 bson_eq_object(&expected, temp.extract().view());
             }
         }
