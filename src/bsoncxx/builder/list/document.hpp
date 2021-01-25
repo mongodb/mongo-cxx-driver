@@ -33,13 +33,13 @@ using namespace bsoncxx::types;
 class document {
    public:
     ///
-    /// Default constructor. Creates an empty document.
+    /// Default constructor. Creates an empty document builder.
     ///
     document() = default;
 
     ///
-    /// Creates a document from a key-value pair. Initializes the key with 'key' and the value with
-    /// 'value'. The value may be another document.
+    /// Creates a document builder from a key-value pair. Initializes the key with 'key' and the
+    /// value with 'value'. The value may be another document builder.
     ///
     /// @param key
     ///     the value to initialize the key in the key-value pair.
@@ -57,8 +57,8 @@ class document {
     }
 
     ///
-    /// Creates a document from a key-value pair. Initializes the key with 'key' and the value with
-    /// 'value'. The value may be another document.
+    /// Creates a document builder from a key-value pair. Initializes the key with 'key' and the
+    /// value with 'value'. The value may be another document builder.
     ///
     /// @param key
     ///     the value to initialize the key in the key-value pair.
@@ -76,10 +76,10 @@ class document {
     }
 
     ///
-    /// Constructs the document with the contents of the initializer list 'init'. All documents in
-    /// 'init' are concatenated.
+    /// Constructs the document builder with the contents of the initializer list 'init'. All
+    /// document builders in 'init' are concatenated.
     ///
-    /// @param init initializer list to initialize the key-value pairs of the document with
+    /// @param init initializer list to initialize the key-value pairs of the document builder with
     ///
     document(std::initializer_list<document> init) {
         for (auto&& doc : init) {
@@ -89,23 +89,26 @@ class document {
     }
 
     ///
-    /// Move constructor. Constructs the document with the contents of other using move semantics.
+    /// Move constructor. Constructs the document builder with the contents of other using move
+    /// semantics.
     ///
-    /// @param other another document to use as source to initialize the document with
+    /// @param other another document builder to use as source to initialize this document builder
+    /// with
     ///
     document(document&& other) noexcept = default;
 
     ///
     /// Replaces the contents with those of other using move semantics.
     ///
-    /// @param other another document to use as source to initialize the document with
+    /// @param other another document builder to use as source to initialize this document builder
+    /// with
     ///
     document& operator=(document&& other) noexcept = default;
 
     ///
     /// Returns an owning bsoncxx::document::value.
     ///
-    /// @return An owning document::value representing the entire contents of the document.
+    /// @return An owning document::value representing the entire contents of the document builder.
     ///
     /// @see bsoncxx::document::value
     ///
@@ -116,7 +119,7 @@ class document {
     ///
     /// Returns an owning bsoncxx::document::value.
     ///
-    /// @return An owning document::value representing the entire contents of the document.
+    /// @return An owning document::value representing the entire contents of the document builder.
     ///
     /// @see bsoncxx::document::value
     ///
@@ -125,9 +128,9 @@ class document {
     }
 
     ///
-    /// Concatenates document rhs.
+    /// Concatenates document builder rhs.
     ///
-    /// @param rhs document to concatenate
+    /// @param rhs document builder to concatenate
     ///
     /// @return *this
     ///
@@ -137,9 +140,9 @@ class document {
     }
 
     ///
-    /// Concatenates document rhs.
+    /// Concatenates document builder rhs.
     ///
-    /// @param rhs document to concatenate
+    /// @param rhs document builder to concatenate
     ///
     /// @return *this
     ///

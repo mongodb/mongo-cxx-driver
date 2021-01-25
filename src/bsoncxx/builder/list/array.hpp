@@ -37,15 +37,15 @@ class array {
 
    public:
     ///
-    /// Default constructor. Creates an empty array.
+    /// Default constructor. Creates an empty array builder.
     ///
     array() = default;
 
     ///
-    /// Converting constructor. Initializes each element of the array with the corresponding value
-    /// in std::forward<Args>(args).
+    /// Converting constructor. Initializes each element of the array builder with the corresponding
+    /// value in std::forward<Args>(args).
     ///
-    /// @param args values used to initialize each element of the array
+    /// @param args values used to initialize each element of the array builder
     ///
     /// @note a bsoncxx::types::bson_value::value is direct-initialized from each argument.
     ///
@@ -57,23 +57,24 @@ class array {
     }
 
     ///
-    /// Move constructor. Constructs the array with the contents of other using move semantics.
+    /// Move constructor. Constructs the array builder with the contents of other using move
+    /// semantics.
     ///
-    /// @param other another array to use as source to initialize the array with
+    /// @param other another array builder to use as source to initialize this array builder with
     ///
     array(array&& other) noexcept = default;
 
     ///
     /// Replaces the contents with those of other using move semantics.
     ///
-    /// @param other another array to use as source to initialize the array with
+    /// @param other another array builder to use as source to initialize this array builder with
     ///
     array& operator=(array&& other) noexcept = default;
 
     ///
     /// Returns an owning bsoncxx::array::value.
     ///
-    /// @return An owning array::value representing the entire contents of the array.
+    /// @return An owning array::value representing the entire contents of the array builder.
     ///
     /// @see bsoncxx::array::value
     ///
@@ -84,7 +85,7 @@ class array {
     ///
     /// Returns an owning bsoncxx::array::value.
     ///
-    /// @return An owning array::value representing the entire contents of the array.
+    /// @return An owning array::value representing the entire contents of the array builder.
     ///
     /// @see bsoncxx::array::value
     ///
@@ -93,9 +94,9 @@ class array {
     }
 
     ///
-    /// Appends array rhs.
+    /// Appends array builder rhs.
     ///
-    /// @param rhs array to append
+    /// @param rhs array builder to append
     ///
     /// @return *this
     ///
@@ -105,9 +106,9 @@ class array {
     }
 
     ///
-    /// Appends array rhs.
+    /// Appends array builder rhs.
     ///
-    /// @param rhs array to append
+    /// @param rhs array builder to append
     ///
     /// @return *this
     ///
@@ -151,9 +152,9 @@ class array {
     }
 
     ///
-    /// Concatenates array rhs.
+    /// Concatenates array builder rhs.
     ///
-    /// @param rhs array to concatenate
+    /// @param rhs array builder to concatenate
     ///
     /// @return *this
     ///
@@ -175,13 +176,13 @@ class array {
 };
 
 ///
-/// Returns an array containing elements from lhs followed by the elements from rhs.
+/// Returns an array builder containing elements from lhs followed by the elements from rhs.
 ///
-/// @param lhs array
+/// @param lhs array builder
 ///
-/// @param rhs array
+/// @param rhs array builder
 ///
-/// @return An array containing elements from lhs followed by the elements from rhs
+/// @return An array builder containing elements from lhs followed by the elements from rhs
 ///
 array operator+(array&& lhs, array&& rhs) {
     lhs.concatenate(std::move(rhs));
