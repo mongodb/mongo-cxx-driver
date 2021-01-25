@@ -19,6 +19,7 @@
 """
 Make a release of the C++ Driver, including steps associated with the CXX
 project in Jira, and with the mongodb/mongo-cxx-driver GitHub repository.
+See releasing.md for complete release instructions.
 """
 
 # CXX Project ID - 11980
@@ -39,12 +40,16 @@ import re
 from distutils.version import LooseVersion
 import os
 import subprocess
+import sys
 import tempfile
 
 import click # pip install Click
 from git import Repo # pip install GitPython
 from github import Github # pip install PyGithub
 from jira import JIRA # pip install jira
+
+if sys.version_info < (3, 0, 0):
+    raise RuntimeError("This script requires Python 3 or higher")
 
 RELEASE_TAG_RE = re.compile('r(?P<ver>(?P<vermaj>[0-9]+)\\.(?P<vermin>[0-9]+)'
                             '\\.(?P<verpatch>[0-9]+)(?:-(?P<verpre>.*))?)')
@@ -90,6 +95,9 @@ ISSUE_TYPE_ID = {'Backport': '10300',
               help='Instead of building the C driver, use the one installed at this path')
 @click.option('--dist-file',
               help='Don\'t build anything; use this C++ driver distribution tarball')
+@click.option('--skip-distcheck',
+              is_flag=True,
+              help="Only build the distribution tarball (do not build the driver or run tests)")
 @click.option('--output-file',
               '-o',
               help='Send release announcement draft output to the specified file')
@@ -111,6 +119,7 @@ def release(jira_creds_file,
             c_driver_build_ref,
             with_c_driver,
             dist_file,
+            skip_distcheck,
             output_file,
             git_revision,
             dry_run,
@@ -119,10 +128,19 @@ def release(jira_creds_file,
     Perform the steps associated with the release.
     """
 
+    # Read Jira credentials and GitHub token first, to check that
+    # user has proper credentials before embarking on lengthy builds.
+    jira_options = {'server': 'https://jira.mongodb.org'}
+    jira_oauth_dict = read_jira_oauth_creds(jira_creds_file)
+    auth_jira = JIRA(jira_options, oauth=jira_oauth_dict)
+
+    github_token = read_github_creds(github_token_file)
+    auth_gh = Github(github_token)
+
     if not is_valid_remote(remote):
         click.echo('The the remote "{}" does not point to the mongodb/mongo-cxx-driver '
                    'repo...exiting!'.format(remote), err=True)
-        exit(1)
+        sys.exit(1)
 
     if dry_run:
         click.echo('DRY RUN! No remote modifications will be made!')
@@ -134,15 +152,15 @@ def release(jira_creds_file,
     if not release_tag:
         click.echo('No release tag points to {}'.format(git_revision), err=True)
         click.echo('Nothing to do here...exiting!', err=True)
-        exit(1)
+        sys.exit(1)
 
     if not working_dir_on_valid_branch(release_version):
         # working_dir_on_valid_branch() has already produced an error message
-        exit(1)
+        sys.exit(1)
 
     if not release_tag_points_to_head(release_tag):
         click.echo('Tag {} does not point to HEAD...exiting!'.format(release_tag), err=True)
-        exit(1)
+        sys.exit(1)
 
     is_pre_release = check_pre_release(release_tag)
 
@@ -155,51 +173,46 @@ def release(jira_creds_file,
     if dist_file:
         if not os.path.exists(dist_file):
             click.echo('Specified distribution tarball does not exist...exiting!', err=True)
-            exit(1)
+            sys.exit(1)
     else:
         c_driver_dir = ensure_c_driver(c_driver_install_dir, c_driver_build_ref,
                                        with_c_driver, quiet)
         if not c_driver_dir:
             click.echo('C driver not built or not found...exiting!', err=True)
-            exit(1)
+            sys.exit(1)
 
-        dist_file = build_distribution(release_tag, release_version, c_driver_dir, quiet)
+        dist_file = build_distribution(release_tag, release_version, c_driver_dir, quiet,
+                                       skip_distcheck)
         if not dist_file:
             click.echo('C++ driver distribution not built or not found...exiting!', err=True)
-            exit(1)
-
-    jira_options = {'server': 'https://jira.mongodb.org'}
-    jira_oauth_dict = read_jira_oauth_creds(jira_creds_file)
-    auth_jira = JIRA(jira_options, oauth=jira_oauth_dict)
+            sys.exit(1)
 
     jira_vers_dict = get_jira_project_versions(auth_jira)
 
     if release_version not in jira_vers_dict.keys():
         click.echo('Version "{}" not found in Jira.  Cannot release!'
                    .format(release_version), err=True)
-        exit(1)
+        sys.exit(1)
     if jira_vers_dict[release_version].released:
         click.echo('Version "{}" already released in Jira.  Cannot release again!'
                    .format(release_version), err=True)
-        exit(1)
+        sys.exit(1)
 
     issues = get_all_issues_for_version(auth_jira, release_version)
 
     if not allow_open_issues and not all_issues_closed(issues):
         # all_issues_closed() has already produced an error message
-        exit(1)
+        sys.exit(1)
 
     release_notes_text = generate_release_notes(issues, release_version)
 
-    github_token = read_github_creds(github_token_file)
-    auth_gh = Github(github_token)
     gh_repo = auth_gh.get_repo('mongodb/mongo-cxx-driver')
     gh_release_dict = get_github_releases(gh_repo)
 
     if release_tag in gh_release_dict.keys():
         click.echo('Version "{}" already released in GitHub.  Cannot release again!'
                    .format(release_tag), err=True)
-        exit(1)
+        sys.exit(1)
 
     if dry_run:
         click.echo('DRY RUN!  Not creating release for tag "{}"'.format(release_tag))
@@ -225,7 +238,7 @@ def is_valid_remote(remote):
                            'mongodb/mongo-cxx-driver(\\.git)?$')
     repo = Repo('.')
 
-    return True if remote_re.match(list(repo.remote(remote).urls)[0]) else False
+    return bool(remote_re.match(list(repo.remote(remote).urls)[0]))
 
 def print_banner(git_revision):
     """
@@ -312,7 +325,7 @@ def check_pre_release(tag_name):
 
     release_re = re.compile('^r[0-9]+\\.[0-9]+\\.[0-9]+')
 
-    return False if release_re.match(tag_name) else True
+    return not bool(release_re.match(tag_name))
 
 def ensure_c_driver(c_driver_install_dir, c_driver_build_ref, with_c_driver, quiet):
     """
@@ -342,87 +355,65 @@ def build_c_driver(c_driver_install_dir, c_driver_build_ref, quiet):
     otherwise return None.
     """
 
-    if not quiet:
-        click.echo('Building C Driver (this could take several minutes)')
     mongoc_prefix = os.path.abspath(c_driver_install_dir)
+
+    if not quiet:
+        click.echo(f'Building C Driver at {mongoc_prefix} (this could take several minutes)')
+        click.echo('Pass --with-c-driver to use an existing installation')
+
     env = os.environ
     env['PREFIX'] = mongoc_prefix
     if not c_driver_build_ref:
         c_driver_build_ref = 'master'
-    proc = subprocess.Popen('./.evergreen/install_c_driver.sh ' + c_driver_build_ref,
-                            stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=env,
-                            shell=True)
-    outs, errs = proc.communicate()
-    if proc.returncode == 0:
-        if not quiet:
-            click.echo('C Driver build was successful.')
-            click.echo('Version "{}" was installed to "{}".'
-                       .format(c_driver_build_ref, mongoc_prefix))
-        return mongoc_prefix
+    run_shell_script('./.evergreen/install_c_driver.sh ' + c_driver_build_ref, env=env)
 
-    # The build had a non-zero result, so we log the output and emit some messages
-    click.echo('C Driver build failed.  Consult output logs.', err=True)
+    if not quiet:
+        click.echo('C Driver build was successful.')
+        click.echo('Version "{}" was installed to "{}".'
+                   .format(c_driver_build_ref, mongoc_prefix))
+    return mongoc_prefix
 
-    with tempfile.NamedTemporaryFile(prefix='c_driver_build_', suffix='.out',
-                                     delete=False) as tmpfp:
-        tmpfp.write(outs)
-        click.echo('C Driver build standard output: {}'.format(tmpfp.name), err=True)
-
-    with tempfile.NamedTemporaryFile(prefix='c_driver_build_', suffix='.err',
-                                     delete=False) as tmpfp:
-        tmpfp.write(errs)
-        click.echo('C Driver build standard error: {}'.format(tmpfp.name), err=True)
-
-    return None
-
-def build_distribution(release_tag, release_version, c_driver_dir, quiet):
+def build_distribution(release_tag, release_version, c_driver_dir, quiet, skip_distcheck):
     """
     Perform the necessary steps to build the distribution tarball which will be
-    attached to the release in GitHub.  Return the name of the distribution
+    attached to the release in GitHub.  Return the path to the distribution
     tarball for a successful build and return None for a failed build.
     """
 
+    dist_file = 'build/mongo-cxx-driver-{}.tar.gz'.format(release_tag)
+
     if not quiet:
-        click.echo('Building C++ Driver (this could take several minutes)')
-    if os.path.exists('build/CMakeCache.txt'):
-        click.echo('Remnants of prior build found in build directory.', err=True)
+        click.echo('Building C++ distribution tarball: {}'.format(dist_file))
+
+    if os.path.exists(dist_file):
+        click.echo('Distribution tarball already exists: {}'.format(dist_file))
+        click.echo('Refusing to build distribution tarball.')
+        click.echo('To use the existing tarball, pass: --dist-file {}'.format(dist_file), err=True)
         return None
 
-    env = os.environ
-    env['MONGOC_PREFIX'] = c_driver_dir
+    if os.path.exists('build/CMakeCache.txt'):
+        click.echo('Remnants of prior build found in ./build directory.')
+        click.echo('Refusing to build distribution tarball.')
+        click.echo('Clear ./build with "git clean -xdf ./build"', err=True)
+        return None
 
-    proc = subprocess.Popen('. .evergreen/find_cmake.sh;'
-                            'cd build;'
-                            'echo ' + release_version + ' > VERSION_CURRENT;'
-                            '${CMAKE} -DCMAKE_BUILD_TYPE=Release '
-                            '-DCMAKE_PREFIX_PATH="${MONGOC_PREFIX}" '
-                            '-DENABLE_UNINSTALL=ON ..;'
-                            'make DISTCHECK_BUILD_OPTS="-j8" -j8 distcheck',
-                            stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=env,
-                            shell=True)
-    outs, errs = proc.communicate()
+    run_shell_script('. .evergreen/find_cmake.sh;'
+                     'cd build;'
+                     'echo ' + release_version + ' > VERSION_CURRENT;'
+                     '${CMAKE} -DCMAKE_BUILD_TYPE=Release '
+                     '-DCMAKE_PREFIX_PATH="' + c_driver_dir + '" '
+                     '-DENABLE_UNINSTALL=ON ..;'
+                     'cmake --build . --target dist')
 
-    dist_file = 'mongo-cxx-driver-{}.tar.gz'.format(release_tag)
-    if proc.returncode == 0 and os.path.exists(dist_file):
-        if not quiet:
-            click.echo('C++ Driver build was successful.')
-            click.echo('Distribution file: {}'.format(dist_file))
-        return dist_file
+    if not quiet:
+        click.echo('C++ Driver build was successful.')
+        click.echo('Distribution file: {}'.format(dist_file))
 
-    # The build had a non-zero result, so we log the output and emit some messages
-    click.echo('C++ Driver build failed.  Consult output logs.', err=True)
-
-    with tempfile.NamedTemporaryFile(prefix='cxx_driver_build_', suffix='.out',
-                                     delete=False) as tmpfp:
-        tmpfp.write(outs)
-        click.echo('C++ Driver build standard output: {}'.format(tmpfp.name), err=True)
-
-    with tempfile.NamedTemporaryFile(prefix='cxx_driver_build_', suffix='.err',
-                                     delete=False) as tmpfp:
-        tmpfp.write(errs)
-        click.echo('C++ Driver build standard error: {}'.format(tmpfp.name), err=True)
-
-    return None
+    if not skip_distcheck:
+        click.echo('Building C++ driver from tarball and running tests.')
+        click.echo('This may take several minutes. This may be skipped with --skip_distcheck')
+        run_shell_script('cmake --build build --target distcheck')
+    return dist_file
 
 def read_jira_oauth_creds(jira_creds_file):
     """
@@ -589,6 +580,31 @@ def create_github_release_draft(gh_repo,
     click.echo('Then generate and publish documentation.')
 
 # pylint: enable=too-many-arguments
+
+def run_shell_script(script, env=None):
+    """
+    Execute a shell process, and returns contents of stdout. Raise an error on failure.
+    """
+
+    proc = subprocess.Popen(script,
+                            stdout=subprocess.PIPE, stderr=subprocess.PIPE, env=env,
+                            shell=True)
+    outs, errs = proc.communicate()
+    if proc.returncode == 0:
+        return outs
+
+    with tempfile.NamedTemporaryFile(suffix='.out', delete=False) as tmpfp:
+        tmpfp.write(outs)
+        stdout_path = tmpfp.name
+
+    with tempfile.NamedTemporaryFile(suffix='.err', delete=False) as tmpfp:
+        tmpfp.write(errs)
+        stderr_path = tmpfp.name
+
+    raise RuntimeError(f'Script failed: {script}\n'
+                       'Consult output logs:\n'
+                       f'stdout: {stdout_path}\n'
+                       f'stderr: {stderr_path}\n')
 
 if __name__ == '__main__':
     release()
