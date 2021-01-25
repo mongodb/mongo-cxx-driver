@@ -53,26 +53,7 @@ class document {
     template <typename T>
     document(stdx::string_view key, T&& value) {
         _core.key_view(key);
-        _core.append(bson_value::value{value});
-    }
-
-    ///
-    /// Creates a document builder from a key-value pair. Initializes the key with 'key' and the
-    /// value with 'value'. The value may be another document builder.
-    ///
-    /// @param key
-    ///     the value to initialize the key in the key-value pair.
-    /// @param value
-    ///     the value to initialize the value in the key-value pair.
-    ///
-    /// @note a bsoncxx::types::bson_value::value is direct-initialized from 'value'.
-    ///
-    /// @see bsoncxx::types::bson_value::value.
-    ///
-    template <typename T>
-    document(stdx::string_view key, const T& value) {
-        _core.key_view(key);
-        _core.append(bson_value::value{value});
+        _core.append(bson_value::value{std::forward<T>(value)});
     }
 
     ///
