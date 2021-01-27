@@ -93,16 +93,9 @@ class document {
     ///
     /// @see bsoncxx::document::value
     ///
-    operator bsoncxx::document::value() {
-        return this->extract();
-    }
-
-    ///
-    /// Returns an owning bsoncxx::document::value.
-    ///
-    /// @return An owning document::value representing the entire contents of the document builder.
-    ///
-    /// @see bsoncxx::document::value
+    /// @warning
+    ///   After calling this method it is illegal to call any methods on this class, unless
+    ///   it is subsequenly moved into.
     ///
     bsoncxx::document::value extract() {
         return _core.extract_document();

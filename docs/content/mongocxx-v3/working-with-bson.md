@@ -43,13 +43,23 @@ list builder. The type must be specified for nested documents and arrays.
 //      { "title" : "One Hundred Years of Solitude", "author" : "Gabriel García Márquez", "year" : 1967 } 
 // ] }
 using namespace builder;
-list::document books = {"books",
+list::document the_great_gatsby = {{"title", "The Great Gatsby"}, 
+                                   {"author", "Francis Scott Key Fitzgerald"}, 
+                                   {"year", 1925}};
+
+list::document one_hundred_years_of_solitude = {{"title", "One Hundred Years of Solitude"},
+                                                {"author", "Gabriel García Márquez"},
+                                                {"year", 1967}};
+
+// You must extract all document and array builders before use, including nested ones.
+list::document books = {
+    "books",
     list::array{
-        list::document{{"title", "The Great Gatsby"}, {"author", "Francis Scott Key Fitzgerald"}, {"year", 1925}},
-        list::document{{"title", "One Hundred Years of Solitude"}, {"author", "Gabriel García Márquez"}, {"year", 1967}}
-    }
+        the_great_gatsby.extract(), 
+        one_hundred_years_of_solitude.extract()
+    }.extract()
 };
-bsoncxx::document::value document = books;
+bsoncxx::document::value document = books.extract();
 ```
 
 More advanced uses of the list builder are shown in [this

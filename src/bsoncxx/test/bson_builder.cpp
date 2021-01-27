@@ -1643,7 +1643,7 @@ TEST_CASE("list builder appends array", "[bsoncxx::builder::list::document]") {
     bson_append_utf8(&child, "0", -1, "bar", -1);
     bson_append_array(&expected, "foo", -1, &child);
 
-    builder::list::document b{"foo", builder::list::array{"bar"}};
+    builder::list::document b{"foo", builder::list::array{"bar"}.extract()};
     bson_eq_object(&expected, b.extract().view());
 
     bson_destroy(&expected);
@@ -1660,7 +1660,7 @@ TEST_CASE("list builder appends document", "[bsoncxx::builder::list::document]")
 
     builder::list::document doc{"bar", "baz"};
 
-    builder::list::document b{"foo", std::move(doc)};
+    builder::list::document b{"foo", doc.extract()};
     bson_eq_object(&expected, b.extract().view());
 
     bson_destroy(&expected);
@@ -1675,7 +1675,7 @@ TEST_CASE("list builder appends inline array", "[bsoncxx::builder::list::documen
     bson_append_utf8(&child, "0", -1, "baz", -1);
     bson_append_array(&expected, "foo", -1, &child);
 
-    builder::list::document b{"foo", builder::list::array{"baz"}};
+    builder::list::document b{"foo", builder::list::array{"baz"}.extract()};
     bson_eq_object(&expected, b.extract().view());
 
     bson_destroy(&expected);
@@ -1690,7 +1690,7 @@ TEST_CASE("list builder appends inline document", "[bsoncxx::builder::list::docu
     bson_append_utf8(&child, "bar", -1, "baz", -1);
     bson_append_document(&expected, "foo", -1, &child);
 
-    builder::list::document b{"foo", builder::list::document{"bar", "baz"}};
+    builder::list::document b{"foo", builder::list::document{"bar", "baz"}.extract()};
     bson_eq_object(&expected, b.extract().view());
 
     bson_destroy(&expected);
@@ -1715,7 +1715,10 @@ TEST_CASE("list builder appends inline nested", "[bsoncxx::builder::list::docume
     builder::list::document b{
         "foo",
         builder::list::document{
-            "bar", builder::list::array{1, 2, builder::list::document{"hello", "world"}}}};
+            "bar",
+            builder::list::array{1, 2, builder::list::document{"hello", "world"}.extract()}
+                .extract()}
+            .extract()};
     bson_eq_object(&expected, b.extract().view());
 
     bson_destroy(&expected);
@@ -1862,7 +1865,7 @@ TEST_CASE("list builder append and concatenate", "[bsoncxx::builder::list::docum
         }
 
         SECTION("concatenate") {
-            builder::list::array arr = {"foo", builder::list::array{"bar", "baz"}};
+            builder::list::array arr = {"foo", builder::list::array{"bar", "baz"}.extract()};
             builder::list::array other = {"qux"};
             SECTION("method") {
                 arr.concatenate(std::move(other));

@@ -16,6 +16,7 @@
 
 #include <bsoncxx/config/prelude.hpp>
 
+#include <bsoncxx/array/view_or_value.hpp>
 #include <bsoncxx/builder/core.hpp>
 #include <bsoncxx/types/bson_value/value.hpp>
 
@@ -78,16 +79,9 @@ class array {
     ///
     /// @see bsoncxx::array::value
     ///
-    operator bsoncxx::array::value() {
-        return this->extract();
-    }
-
-    ///
-    /// Returns an owning bsoncxx::array::value.
-    ///
-    /// @return An owning array::value representing the entire contents of the array builder.
-    ///
-    /// @see bsoncxx::array::value
+    /// @warning
+    ///   After calling this method it is illegal to call any methods on this class, unless
+    ///   it is subsequenly moved into.
     ///
     bsoncxx::array::value extract() {
         return _core.extract_array();
