@@ -51,7 +51,8 @@ list::document one_hundred_years_of_solitude = {{"title", "One Hundred Years of 
                                                 {"author", "Gabriel García Márquez"},
                                                 {"year", 1967}};
 
-// You must extract all document and array builders before use, including nested ones.
+// You must call extract on all document and array builders before use, including nested ones. After extracting a BSON 
+// document or array from its corresponding builder, it is illegal to call any methods on that builder object.
 list::document books = {
     "books",
     list::array{
@@ -59,7 +60,12 @@ list::document books = {
         one_hundred_years_of_solitude.extract()
     }.extract()
 };
-bsoncxx::document::value document = books.extract();
+
+// You can no longer use "the_great_gatsby" or "one_hundred_years_of_solitude" builders.  Alternatively, we could save 
+// the BSON document extract returns to a bsoncxx::document::value, similar to what's done below for "books.
+
+bsoncxx::document::value document = books.extract(); // We can't use "books" anymore, but "document" has no such 
+// restrictions. 
 ```
 
 More advanced uses of the list builder are shown in [this

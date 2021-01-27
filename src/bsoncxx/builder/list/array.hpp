@@ -81,7 +81,7 @@ class array {
     ///
     /// @warning
     ///   After calling this method it is illegal to call any methods on this class, unless
-    ///   it is subsequenly moved into.
+    ///   it is subsequently moved into.
     ///
     bsoncxx::array::value extract() {
         return _core.extract_array();

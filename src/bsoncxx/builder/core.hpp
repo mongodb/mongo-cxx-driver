@@ -660,7 +660,7 @@ class BSONCXX_API core {
     ///
     /// @warning
     ///   After calling extract_document() it is illegal to call any methods on this class, unless
-    ///   it is subsequenly moved into.
+    ///   it is subsequently moved into.
     ///
     document::value extract_document();
 
@@ -677,7 +677,7 @@ class BSONCXX_API core {
     ///
     /// @warning
     ///   After calling extract_array() it is illegal to call any methods on this class, unless it
-    ///   is subsequenly moved into.
+    ///   is subsequently moved into.
     ///
     array::value extract_array();
 
