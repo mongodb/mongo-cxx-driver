@@ -78,9 +78,11 @@ int main(int, char**) {
     //      }
     // }
     //
-    doc = {
-        "Answers",
-        list::document{"Everything", list::document{"The Universe", list::document{"Life", 42}}}};
+    doc = {"Answers",
+           list::document{
+               "Everything",
+               list::document{"The Universe", list::document{"Life", 42}.extract()}.extract()}
+               .extract()};
 
     //
     // Each array element must be bson_value::value or implicitly convertible to one.

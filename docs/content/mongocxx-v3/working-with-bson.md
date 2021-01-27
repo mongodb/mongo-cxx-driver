@@ -61,7 +61,7 @@ list::document books = {
     }.extract()
 };
 
-// You can no longer use "the_great_gatsby" or "one_hundred_years_of_solitude" builders.  Alternatively, we could save 
+// You can no longer use "the_great_gatsby" or "one_hundred_years_of_solitude" builders.  Alternatively, you could save 
 // the BSON document extract returns to a bsoncxx::document::value, similar to what's done below for "books.
 
 bsoncxx::document::value document = books.extract(); // We can't use "books" anymore, but "document" has no such 
