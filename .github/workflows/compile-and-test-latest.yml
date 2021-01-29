@@ -5,6 +5,8 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v2
+              # Fetch all commits. We need the git history to determine a build version.
+              fetch-depth: 0
             - id: setup-mongodb
               uses: mongodb-labs/drivers-evergreen-tools@master
               # Set configuration
@@ -12,6 +14,7 @@ jobs:
                 version: latest
                 topology: replica_set
             - run: |
+                git fetch 
                 INSTALL_PREFIX=$(pwd)/install
                 export LD_LIBRARY_PATH=$INSTALL_PREFIX/lib
                 PREFIX=$INSTALL_PREFIX ./.evergreen/install_c_driver.sh master
