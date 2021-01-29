@@ -20,7 +20,6 @@ jobs:
                 PREFIX=$INSTALL_PREFIX ./.evergreen/install_c_driver.sh master
                 mkdir cmake-build
                 cd cmake-build
-                cmake -DCMAKE_PREFIX_PATH=$INSTALL_PREFIX -DCMAKE_CXX_FLAGS="--coverage" ..
+                cmake -DCMAKE_PREFIX_PATH=$INSTALL_PREFIX ..
                 cmake --build . --target all
                 cmake --build . --target test
-                bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports"
