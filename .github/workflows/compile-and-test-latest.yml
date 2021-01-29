@@ -1,0 +1,23 @@
+name: compile-and-test-latest
+on: [push, pull_request]
+jobs:
+    compile:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v2
+            - id: setup-mongodb
+              uses: mongodb-labs/drivers-evergreen-tools@master
+              # Set configuration
+              with:
+                version: latest
+                topology: replica_set
+            - run: |
+                INSTALL_PREFIX=$(pwd)/install
+                export LD_LIBRARY_PATH=$INSTALL_PREFIX/lib
+                PREFIX=$INSTALL_PREFIX ./.evergreen/install_c_driver.sh master
+                mkdir cmake-build
+                cd cmake-build
+                cmake -DCMAKE_PREFIX_PATH=$INSTALL_PREFIX -DCMAKE_CXX_FLAGS="--coverage" ..
+                cmake --build . --target all
+                cmake --build . --target test
+                bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports"
