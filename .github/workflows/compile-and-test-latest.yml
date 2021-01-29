@@ -5,8 +5,9 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v2
-              # Fetch all commits. We need the git history to determine a build version.
-              fetch-depth: 0
+              with:
+                # Fetch all commits. We need the git history to determine a build version.
+                fetch-depth: 0
             - id: setup-mongodb
               uses: mongodb-labs/drivers-evergreen-tools@master
               # Set configuration
