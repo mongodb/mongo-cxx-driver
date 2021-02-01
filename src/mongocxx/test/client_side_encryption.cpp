@@ -203,6 +203,9 @@ void run_datakey_and_double_encryption(Callable create_data_key,
     // Use client to run a find on keyvault.datakeys by querying with the _id
     // set to the datakey_id.
     auto datakeys = setup_client->database("keyvault").collection("datakeys");
+    mongocxx::read_concern rc_majority;
+    rc_majority.acknowledge_level (mongocxx::read_concern::level::k_majority);
+    datakeys.read_concern (rc_majority);
     auto query = make_document(kvp("_id", datakey_id));
     auto cursor = datakeys.find(query.view());
 
@@ -507,6 +510,9 @@ TEST_CASE("BSON size limits and batch splitting", "[client_side_encryption]") {
 
     // Create the collection db.coll configured with the JSON schema limits/limits-schema.json.
     auto db = client["db"];
+    write_concern wc_majority;
+    wc_majority.acknowledge_level(write_concern::level::k_majority);
+    db.write_concern(wc_majority);
     auto cmd = document{} << "create"
                           << "coll"
                           << "validator" << open_document << "$jsonSchema" << limits_schema.view()
@@ -515,6 +521,7 @@ TEST_CASE("BSON size limits and batch splitting", "[client_side_encryption]") {
 
     // Insert the document limits/limits-key.json into keyvault.datakeys.
     auto datakeys = client["keyvault"]["datakeys"];
+    datakeys.write_concern (wc_majority);
     datakeys.insert_one(limits_key.view());
 
     // Create a MongoClient configured with auto encryption (referred to as client_encrypted),
