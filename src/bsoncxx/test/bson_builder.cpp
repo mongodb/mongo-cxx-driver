@@ -1859,7 +1859,7 @@ TEST_CASE("list builder append and concatenate", "[bsoncxx::builder::list::docum
             builder::list::array other = {"bar", "baz"};
 
             arr.append(std::move(other));
-            arr.append(std::move("qux"));
+            arr.append("qux");
 
             bson_eq_object(&expected, arr.extract().view());
         }
