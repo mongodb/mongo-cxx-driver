@@ -54,7 +54,7 @@ class array {
     ///
     template <typename... Args>
     array(Args&&... args) {
-        this->_append(_core, std::forward<Args>(args)...);
+        this->_append(std::forward<Args>(args)...);
     }
 
     ///
@@ -158,12 +158,13 @@ class array {
     }
 
    private:
-    void _append(core&) {}  // base-case, no-op
+    void _append() {}  // base-case, no-op
 
     // appends each element in args to core
     template <typename Arg, typename... Args>
-    void _append(core& core, Arg&& a, Args&&... args) {
-        _append(core.append(bson_value::value{a}), std::forward<Args>(args)...);
+    void _append(Arg&& a, Args&&... args) {
+        _core.append(bson_value::value{std::forward<Arg>(a)});
+        _append(std::forward<Args>(args)...);
     }
 
     core _core{true};
