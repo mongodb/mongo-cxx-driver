@@ -25,7 +25,6 @@ namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace builder {
 namespace list {
-using namespace bsoncxx::types;
 
 ///
 /// A JSON-like builder for creating BSON documents.
@@ -53,7 +52,7 @@ class document {
     template <typename T>
     document(stdx::string_view key, T&& value) {
         _core.key_view(key);
-        _core.append(bson_value::value{std::forward<T>(value)});
+        _core.append(types::bson_value::value{std::forward<T>(value)});
     }
 
     ///
@@ -64,7 +63,7 @@ class document {
     ///
     document(std::initializer_list<document> init) {
         for (auto&& doc : init) {
-            bson_value::value val{doc._core.view_document()};
+            types::bson_value::value val{doc._core.view_document()};
             _core.concatenate(val.view().get_document());
         }
     }

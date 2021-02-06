@@ -24,7 +24,6 @@ namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace builder {
 namespace list {
-using namespace bsoncxx::types;
 
 ///
 /// A JSON-like builder for creating BSON arrays.
@@ -141,7 +140,7 @@ class array {
     ///
     template <typename T, enable_if_t<!std::is_same<decay_t<T>, array>::value, int> = 0>
     array& append(const T& rhs) {
-        _core.append(bson_value::value{rhs});
+        _core.append(types::bson_value::value{rhs});
         return *this;
     }
 
@@ -163,7 +162,7 @@ class array {
     // appends each element in args to core
     template <typename Arg, typename... Args>
     void _append(Arg&& a, Args&&... args) {
-        _core.append(bson_value::value{std::forward<Arg>(a)});
+        _core.append(types::bson_value::value{std::forward<Arg>(a)});
         _append(std::forward<Args>(args)...);
     }
 
