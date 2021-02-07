@@ -1318,13 +1318,13 @@ TEST_CASE("list builder array copy and move semantics", "[bsoncxx::builder::list
 
     SECTION("move constructor") {
         builder::list::array original{"hello", "world"};
-        auto moved{std::move(original)};
+        builder::list::array moved{std::move(original)};
         bson_eq_object(&expected, moved.extract().view());
     }
 
     SECTION("move assignment") {
         builder::list::array original{"hello", "world"};
-        auto moved = std::move(original);
+        builder::list::array moved = std::move(original);
         bson_eq_object(&expected, moved.extract().view());
     }
 
