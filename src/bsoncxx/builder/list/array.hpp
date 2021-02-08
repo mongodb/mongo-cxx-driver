@@ -198,3 +198,5 @@ array operator+(array&& lhs, array&& rhs) {
 }  // namespace builder
 BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bsoncxx
+
+#include <bsoncxx/config/postlude.hpp>
