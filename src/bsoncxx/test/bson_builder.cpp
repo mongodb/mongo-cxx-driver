@@ -1288,7 +1288,7 @@ TEST_CASE("list builder appends utf8", "[bsoncxx::builder::list::document]") {
     bson_destroy(&expected);
 }
 
-TEST_CASE("list builder document copy and move semantics", "[bsoncxx::builder::list::document]") {
+TEST_CASE("list builder document move semantics", "[bsoncxx::builder::list::document]") {
     bson_t expected;
     bson_init(&expected);
 
@@ -1309,7 +1309,7 @@ TEST_CASE("list builder document copy and move semantics", "[bsoncxx::builder::l
     bson_destroy(&expected);
 }
 
-TEST_CASE("list builder array copy and move semantics", "[bsoncxx::builder::list::document]") {
+TEST_CASE("list builder array move semantics", "[bsoncxx::builder::list::array]") {
     bson_t expected;
     bson_init(&expected);
 
