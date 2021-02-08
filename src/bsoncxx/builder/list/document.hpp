@@ -85,6 +85,15 @@ class document {
     ///
     document& operator=(document&& other) noexcept = default;
 
+    document(const document&) = delete;
+
+    document& operator=(const document&) = delete;
+
+    ///
+    /// Destructs the document builder.
+    ///
+    ~document() noexcept = default;
+
     ///
     /// Returns an owning bsoncxx::document::value.
     ///

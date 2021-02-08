@@ -71,6 +71,15 @@ class array {
     ///
     array& operator=(array&& other) noexcept = default;
 
+    array(const array&) = delete;
+
+    array& operator=(const array&) = delete;
+
+    ///
+    /// Destructs the array builder.
+    ///
+    ~array() noexcept = default;
+
     ///
     /// Returns an owning bsoncxx::array::value.
     ///
