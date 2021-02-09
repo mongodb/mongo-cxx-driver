@@ -1118,6 +1118,7 @@ buildvariants:
          - windows-64-vs2015-compile
       tasks:
          - name: compile_with_shared_libs
+         - name: compile_and_test_with_shared_libs
          - name: compile_and_test_auth_with_shared_libs
 
     - name: packaging
