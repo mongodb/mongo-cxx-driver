@@ -205,7 +205,9 @@ void run_encryption_tests_in_file(const std::string& test_path) {
             }
 
             run_operation_check_result(op.get_document().value, [&]() {
-                return operation_runner{&db, &test_coll};
+                return operation_runner{}
+                    .set_database(std::make_shared<database>(db))
+                    .set_collection(std::make_shared<collection>(test_coll));
             });
 
             if (check_results_logging) {

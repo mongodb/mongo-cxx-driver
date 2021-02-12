@@ -166,7 +166,8 @@ void run_command_monitoring_tests_in_file(std::string test_path) {
 
         document::view operation = test["operation"].get_document().value;
         std::string operation_name = string::to_string(operation["name"].get_string().value);
-        spec::operation_runner op_runner{&coll};
+        auto op_runner =
+            spec::operation_runner{}.set_collection(std::make_shared<collection>(coll));
 
         try {
             op_runner.run(operation);

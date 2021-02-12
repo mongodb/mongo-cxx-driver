@@ -39,23 +39,29 @@ bsoncxx::stdx::optional<read_preference> lookup_read_preference(document::view d
 
 class operation_runner {
    public:
-    explicit operation_runner(collection* coll);
-    operation_runner(database* db,
-                     collection* coll,
-                     client_session* session0 = nullptr,
-                     client_session* session1 = nullptr,
-                     client* client = nullptr);
+    explicit operation_runner() noexcept = default;
+
     document::value run(document::view operation);
 
-   private:
-    collection* _coll;
-    database* _db;
-    client_session* _session0;
-    client_session* _session1;
-    client* _client;
+    operation_runner& set_collection(std::shared_ptr<collection> coll);
 
-    client_session* _lookup_session(document::view doc);
-    client_session* _lookup_session(stdx::string_view key);
+    operation_runner& set_database(std::shared_ptr<database> db);
+
+    operation_runner& set_session0(std::shared_ptr<client_session> session0);
+
+    operation_runner& set_session1(std::shared_ptr<client_session> session1);
+
+    operation_runner& set_client(std::shared_ptr<client> client);
+
+   private:
+    std::shared_ptr<collection> _coll;
+    std::shared_ptr<database> _db;
+    std::shared_ptr<client_session> _session0;
+    std::shared_ptr<client_session> _session1;
+    std::shared_ptr<client> _client;
+
+    std::shared_ptr<client_session> _lookup_session(document::view doc);
+    std::shared_ptr<client_session> _lookup_session(stdx::string_view key);
     document::value _run_aggregate(document::view operation);
     document::value _run_count(document::view operation);
     document::value _run_distinct(document::view operation);

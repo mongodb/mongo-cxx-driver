@@ -43,13 +43,14 @@ void run_retryable_reads_tests_in_file(std::string test_path) {
 
     document::view test_spec_view = test_spec->view();
     for (auto&& test : test_spec_view["tests"].get_array().value) {
-        client client{get_uri(test.get_document().value), client_opts};
-        if (should_skip_spec_test(client, test_spec_view)) {
+        auto client =
+            std::make_shared<class client>(get_uri(test.get_document().value), client_opts);
+        if (should_skip_spec_test(*client, test_spec_view)) {
             return;
         }
 
         INFO("Test description: " << test["description"].get_string().value);
-        if (should_skip_spec_test(client, test.get_document())) {
+        if (should_skip_spec_test(*client, test.get_document())) {
             continue;
         }
 
@@ -63,7 +64,7 @@ void run_retryable_reads_tests_in_file(std::string test_path) {
         auto database_name = get_value_or_default("database_name", "retryable_reads_test");
         auto collection_name = get_value_or_default("collection_name", "test");
 
-        auto database = client[database_name];
+        auto database = (*client)[database_name];
         auto collection = database[collection_name];
 
         /* SPEC: GridFS tests are denoted by when the YAML file contains 'bucket_name'. */
@@ -84,10 +85,12 @@ void run_retryable_reads_tests_in_file(std::string test_path) {
             initialize_collection(&collection, test_spec_view["data"].get_array().value);
         }
 
-        operation_runner op_runner{
-            &database, &collection, nullptr /* session0 */, nullptr /* session1 */, &client};
+        auto op_runner = operation_runner{}
+                             .set_database(std::make_shared<class database>(database))
+                             .set_collection(std::make_shared<class collection>(collection))
+                             .set_client(client);
 
-        configure_fail_point(client, test.get_document().value);
+        configure_fail_point(*client, test.get_document().value);
 
         apm_checker.clear();
         for (auto&& element : test["operations"].get_array().value) {
@@ -113,7 +116,7 @@ void run_retryable_reads_tests_in_file(std::string test_path) {
         }
 
         if (test["failPoint"]) {
-            disable_fail_point(client, test["failPoint"]["configureFailPoint"].get_string().value);
+            disable_fail_point(*client, test["failPoint"]["configureFailPoint"].get_string().value);
         }
     }
 }

@@ -130,7 +130,8 @@ void run_change_stream_tests_in_file(const std::string& test_path) {
                 auto dbname = to_string(operation["database"].get_string().value);
                 auto collname = to_string(operation["collection"].get_string().value);
                 auto coll = global_client[dbname][collname];
-                operation_runner op_runner{&coll};
+                auto op_runner =
+                    operation_runner{}.set_collection(std::make_shared<collection>(coll));
                 op_runner.run(operation.get_document().value);
             }
 

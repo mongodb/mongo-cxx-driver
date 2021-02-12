@@ -122,7 +122,7 @@ bsoncxx::stdx::optional<read_preference> lookup_read_preference(document::view d
     return {};
 }
 
-client_session* operation_runner::_lookup_session(stdx::string_view key) {
+std::shared_ptr<client_session> operation_runner::_lookup_session(stdx::string_view key) {
     if (key.compare("session0") == 0) {
         return _session0;
     } else {
@@ -132,7 +132,7 @@ client_session* operation_runner::_lookup_session(stdx::string_view key) {
     return nullptr;
 }
 
-client_session* operation_runner::_lookup_session(document::view doc) {
+std::shared_ptr<client_session> operation_runner::_lookup_session(document::view doc) {
     if (doc["session"]) {
         stdx::string_view session_name = doc["session"].get_string().value;
         return _lookup_session(session_name);
@@ -156,7 +156,7 @@ document::value operation_runner::_run_aggregate(document::view operation) {
     _set_collection_options(operation);
 
     stdx::optional<cursor> result_cursor;
-    client_session* session = _lookup_session(operation["arguments"].get_document().value);
+    auto session = _lookup_session(operation["arguments"].get_document().value);
 
     if (operation["object"] &&
         operation["object"].get_string().value == stdx::string_view{"database"}) {
@@ -204,7 +204,7 @@ document::value operation_runner::_run_distinct(document::view operation) {
     }
 
     stdx::optional<cursor> result_cursor;
-    if (client_session* session = _lookup_session(operation["arguments"].get_document().value)) {
+    if (auto session = _lookup_session(operation["arguments"].get_document().value)) {
         result_cursor.emplace(_coll->distinct(*session, field_name, filter, options));
     } else {
         result_cursor.emplace(_coll->distinct(field_name, filter, options));
@@ -291,7 +291,7 @@ document::value operation_runner::_run_find(document::view operation) {
     }
 
     stdx::optional<cursor> result_cursor;
-    if (client_session* session = _lookup_session(operation["arguments"].get_document().value)) {
+    if (auto session = _lookup_session(operation["arguments"].get_document().value)) {
         result_cursor.emplace(_coll->find(*session, filter, options));
     } else {
         result_cursor.emplace(_coll->find(filter, options));
@@ -326,7 +326,7 @@ document::value operation_runner::_run_delete_many(document::view operation) {
     auto result = builder::basic::document{};
     std::int32_t deleted_count = 0;
 
-    if (client_session* session = _lookup_session(operation["arguments"].get_document().value)) {
+    if (auto session = _lookup_session(operation["arguments"].get_document().value)) {
         if (auto delete_result = _coll->delete_many(*session, filter, options)) {
             deleted_count = delete_result->deleted_count();
         }
@@ -363,7 +363,7 @@ document::value operation_runner::_run_delete_one(document::view operation) {
     auto result = builder::basic::document{};
     std::int32_t deleted_count = 0;
 
-    if (client_session* session = _lookup_session(operation["arguments"].get_document().value)) {
+    if (auto session = _lookup_session(operation["arguments"].get_document().value)) {
         if (auto delete_result = _coll->delete_one(*session, filter, options)) {
             deleted_count = delete_result->deleted_count();
         }
@@ -414,7 +414,7 @@ document::value operation_runner::_run_find_one_and_delete(document::view operat
 
     auto result = builder::basic::document{};
     stdx::optional<document::value> document;
-    if (client_session* session = _lookup_session(operation["arguments"].get_document().value)) {
+    if (auto session = _lookup_session(operation["arguments"].get_document().value)) {
         document = _coll->find_one_and_delete(*session, filter, options);
     } else {
         document = _coll->find_one_and_delete(filter, options);
@@ -493,7 +493,7 @@ document::value operation_runner::_run_find_one_and_replace(document::view opera
 
     auto result = builder::basic::document{};
     stdx::optional<document::value> document;
-    if (client_session* session = _lookup_session(operation["arguments"].get_document().value)) {
+    if (auto session = _lookup_session(operation["arguments"].get_document().value)) {
         document = _coll->find_one_and_replace(*session, filter, replacement, options);
     } else {
         document = _coll->find_one_and_replace(filter, replacement, options);
@@ -557,7 +557,7 @@ document::value operation_runner::_run_find_one_and_update(document::view operat
 
     auto result = builder::basic::document{};
     stdx::optional<document::value> document;
-    client_session* session = _lookup_session(operation["arguments"].get_document().value);
+    auto session = _lookup_session(operation["arguments"].get_document().value);
 
     switch (arguments["update"].type()) {
         case bsoncxx::type::k_document: {
@@ -613,7 +613,7 @@ document::value operation_runner::_run_insert_many(document::view operation) {
     }
 
     stdx::optional<result::insert_many> insert_many_result;
-    if (client_session* session = _lookup_session(operation["arguments"].get_document().value)) {
+    if (auto session = _lookup_session(operation["arguments"].get_document().value)) {
         insert_many_result = _coll->insert_many(*session, documents_to_insert, insert_options);
     } else {
         insert_many_result = _coll->insert_many(documents_to_insert, insert_options);
@@ -645,7 +645,7 @@ document::value operation_runner::_run_insert_one(document::view operation) {
     }
 
     stdx::optional<result::insert_one> insert_one_result;
-    if (client_session* session = _lookup_session(arguments)) {
+    if (auto session = _lookup_session(arguments)) {
         insert_one_result = _coll->insert_one(*session, document, opts);
     } else {
         insert_one_result = _coll->insert_one(document, opts);
@@ -690,7 +690,7 @@ document::value operation_runner::_run_replace_one(document::view operation) {
     bsoncxx::stdx::optional<std::int32_t> modified_count;
     std::int32_t upserted_count = 0;
     stdx::optional<result::replace_one> replace_result;
-    if (client_session* session = _lookup_session(operation["arguments"].get_document().value)) {
+    if (auto session = _lookup_session(operation["arguments"].get_document().value)) {
         replace_result = _coll->replace_one(*session, filter, replacement, options);
     } else {
         replace_result = _coll->replace_one(filter, replacement, options);
@@ -762,7 +762,7 @@ document::value operation_runner::_run_update_many(document::view operation) {
     bsoncxx::stdx::optional<std::int32_t> modified_count;
     std::int32_t upserted_count = 0;
     stdx::optional<result::update> update_result;
-    client_session* session = _lookup_session(operation["arguments"].get_document().value);
+    auto session = _lookup_session(operation["arguments"].get_document().value);
 
     switch (arguments["update"].type()) {
         case bsoncxx::type::k_document: {
@@ -853,7 +853,7 @@ document::value operation_runner::_run_update_one(document::view operation) {
     bsoncxx::stdx::optional<std::int32_t> modified_count;
     std::int32_t upserted_count = 0;
     stdx::optional<result::update> update_result;
-    client_session* session = _lookup_session(operation["arguments"].get_document().value);
+    auto session = _lookup_session(operation["arguments"].get_document().value);
 
     switch (arguments["update"].type()) {
         case bsoncxx::type::k_document: {
@@ -1104,7 +1104,7 @@ document::value operation_runner::_run_bulk_write(document::view operation) {
     result::bulk_write::id_map upserted_ids;
     std::int32_t inserted_count = 0;
     stdx::optional<result::bulk_write> bulk_write_result;
-    if (client_session* session = _lookup_session(operation["arguments"].get_document().value)) {
+    if (auto session = _lookup_session(operation["arguments"].get_document().value)) {
         bulk_write_result = _coll->bulk_write(*session, writes, options);
     } else {
         bulk_write_result = _coll->bulk_write(writes, options);
@@ -1159,7 +1159,7 @@ document::value operation_runner::_run_count_documents(document::view operation)
     }
 
     int64_t count;
-    if (client_session* session = _lookup_session(operation["arguments"].get_document().value)) {
+    if (auto session = _lookup_session(operation["arguments"].get_document().value)) {
         count = _coll->count_documents(*session, filter, options);
     } else {
         count = _coll->count_documents(filter, options);
@@ -1231,7 +1231,7 @@ document::value operation_runner::_run_run_command(bsoncxx::document::view opera
     document::view command = arguments["command"].get_document().value;
 
     stdx::optional<document::value> reply;
-    if (client_session* session = _lookup_session(operation["arguments"].get_document().value)) {
+    if (auto session = _lookup_session(operation["arguments"].get_document().value)) {
         reply = _db->run_command(*session, command);
     } else {
         reply = _db->run_command(command);
@@ -1247,7 +1247,7 @@ document::value operation_runner::_run_configure_fail_point(bsoncxx::document::v
     auto arguments = operation["arguments"].get_document().value;
     auto command = arguments["failPoint"].get_document().value;
 
-    const client_session* session = _lookup_session(arguments);
+    const auto session = _lookup_session(arguments);
 
     read_preference rp;
     uint32_t server_id = session->server_id();
@@ -1273,13 +1273,30 @@ document::value operation_runner::_create_index(const document::view& operation)
     return _coll->create_index(*session, keys, opts.extract());
 }
 
-operation_runner::operation_runner(collection* coll) : operation_runner(nullptr, coll) {}
-operation_runner::operation_runner(database* db,
-                                   collection* coll,
-                                   client_session* session0,
-                                   client_session* session1,
-                                   client* client)
-    : _coll(coll), _db(db), _session0(session0), _session1(session1), _client(client) {}
+operation_runner& operation_runner::set_collection(std::shared_ptr<collection> coll) {
+    _coll = coll;
+    return *this;
+}
+
+operation_runner& operation_runner::set_database(std::shared_ptr<database> db) {
+    _db = db;
+    return *this;
+}
+
+operation_runner& operation_runner::set_session0(std::shared_ptr<client_session> session0) {
+    _session0 = session0;
+    return *this;
+}
+
+operation_runner& operation_runner::set_session1(std::shared_ptr<client_session> session1) {
+    _session1 = session1;
+    return *this;
+}
+
+operation_runner& operation_runner::set_client(std::shared_ptr<client> client) {
+    _client = client;
+    return *this;
+}
 
 document::value operation_runner::run(document::view operation) {
     using namespace bsoncxx::builder::basic;
@@ -1338,13 +1355,11 @@ document::value operation_runner::run(document::view operation) {
     } else if (key.compare("targetedFailPoint") == 0) {
         return _run_configure_fail_point(operation);
     } else if (key.compare("assertSessionPinned") == 0) {
-        const client_session* session =
-            _lookup_session(operation["arguments"].get_document().value);
+        const auto session = _lookup_session(operation["arguments"].get_document().value);
         REQUIRE(session->server_id());
         return empty_document;
     } else if (key.compare("operationassertSessionUnpinned") == 0) {
-        const client_session* session =
-            _lookup_session(operation["arguments"].get_document().value);
+        const auto session = _lookup_session(operation["arguments"].get_document().value);
         REQUIRE(!session->server_id());
         return empty_document;
     } else if (key.compare("watch") == 0) {

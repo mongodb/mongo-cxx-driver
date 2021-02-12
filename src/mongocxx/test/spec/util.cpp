@@ -502,11 +502,11 @@ void parse_session_opts(document::view session_opts, options::client_session* ou
 
 using bsoncxx::stdx::string_view;
 void run_transaction_operations(document::view test,
-                                client* client,
+                                std::shared_ptr<class client> client,
                                 string_view db_name,
                                 string_view coll_name,
-                                client_session* session0,
-                                client_session* session1,
+                                std::shared_ptr<client_session> session0,
+                                std::shared_ptr<client_session> session1,
                                 bool* fail_point_enabled,
                                 bool throw_on_error = false) {
     auto operations = test["operations"].get_array().value;
@@ -566,7 +566,14 @@ void run_transaction_operations(document::view test,
                 parse_database_options(operation, &db);
                 collection coll = db[coll_name];
                 parse_collection_options(operation, &coll);
-                operation_runner op_runner{&db, &coll, session0, session1, client};
+
+                auto op_runner = operation_runner{}
+                                     .set_database(std::make_shared<database>(db))
+                                     .set_collection(std::make_shared<collection>(coll))
+                                     .set_session0(session0)
+                                     .set_session1(session1)
+                                     .set_client(client);
+
                 actual_result = op_runner.run(operation);
             } catch (const operation_exception& e) {
                 error_msg = e.what();
@@ -673,15 +680,15 @@ void run_transactions_tests_in_file(const std::string& test_path) {
         options::client client_opts;
         apm_checker apm_checker;
         client_opts.apm_opts(apm_checker.get_apm_opts(true /* command_started_events_only */));
-        client client;
-        if (test["useMultipleMongoses"]) {
-            client = {uri{"mongodb://localhost:27017,localhost:27018"}, client_opts};
-        } else {
-            client = {get_uri(test.get_document().value), client_opts};
-        }
+        std::shared_ptr<class client> client = [&] {
+            if (test["useMultipleMongoses"])
+                return std::make_shared<class client>(
+                    uri{"mongodb://localhost:27017,localhost:27018"}, client_opts);
+            return std::make_shared<class client>(get_uri(test.get_document().value), client_opts);
+        }();
 
         /* individual test may contain a skipReason */
-        if (should_skip_spec_test(client, test.get_document())) {
+        if (should_skip_spec_test(*client, test.get_document())) {
             continue;
         }
 
@@ -706,20 +713,20 @@ void run_transactions_tests_in_file(const std::string& test_path) {
         // an abortTransaction that some of the spec tests look for.
 
         {
-            client_session session0 = client.start_session(session0_opts);
-            client_session session1 = client.start_session(session1_opts);
-            session_lsid0.reset(session0.id());
-            session_lsid1.reset(session1.id());
+            auto session0 = std::make_shared<client_session>(client->start_session(session0_opts));
+            auto session1 = std::make_shared<client_session>(client->start_session(session1_opts));
+            session_lsid0.reset(session0->id());
+            session_lsid1.reset(session1->id());
 
             // Step 9. Perform the operations.
             apm_checker.clear();
 
             run_transaction_operations(test.get_document().value,
-                                       &client,
+                                       client,
                                        db_name,
                                        coll_name,
-                                       &session0,
-                                       &session1,
+                                       session0,
+                                       session1,
                                        &fail_point_enabled);
 
             // Step 10. "Call session0.endSession() and session1.endSession." (done in destructors).
@@ -768,7 +775,7 @@ void run_transactions_tests_in_file(const std::string& test_path) {
             if (test["outcome"]["collection"]["name"]) {
                 outcome_coll_name = test["outcome"]["collection"]["name"].get_string().value;
             }
-            auto coll = client[db_name][outcome_coll_name];
+            auto coll = (*client)[db_name][outcome_coll_name];
             test_util::check_outcome_collection(&coll,
                                                 test["outcome"]["collection"].get_document().value);
         }
@@ -788,17 +795,17 @@ void run_crud_tests_in_file(const std::string& test_path, uri test_uri) {
     options::client client_opts;
     apm_checker apm_checker;
     client_opts.apm_opts(apm_checker.get_apm_opts(true /* command_started_events_only */));
-    client client{std::move(test_uri), client_opts};
+    auto client = std::make_shared<class client>(std::move(test_uri), client_opts);
 
     document::view test_spec_view = test_spec->view();
-    if (should_skip_spec_test(client, test_spec_view)) {
+    if (should_skip_spec_test(*client, test_spec_view)) {
         return;
     }
 
     for (auto&& test : test_spec_view["tests"].get_array().value) {
         auto description = test["description"].get_string().value;
         SECTION(to_string(description)) {
-            if (should_skip_spec_test(client, test.get_document())) {
+            if (should_skip_spec_test(*client, test.get_document())) {
                 continue;
             }
 
@@ -812,14 +819,17 @@ void run_crud_tests_in_file(const std::string& test_path, uri test_uri) {
             auto database_name = get_value_or_default("database_name", "crud_test");
             auto collection_name = get_value_or_default("collection_name", "test");
 
-            auto database = client[database_name];
+            auto database = (*client)[database_name];
             auto collection = database[collection_name];
 
             if (test_spec_view["data"]) {
                 initialize_collection(&collection, test_spec_view["data"].get_array().value);
             }
 
-            operation_runner op_runner{&database, &collection, nullptr, nullptr, &client};
+            auto op_runner = operation_runner{}
+                                 .set_database(std::make_shared<class database>(database))
+                                 .set_collection(std::make_shared<class collection>(collection))
+                                 .set_client(client);
 
             std::string outcome_collection_name = collection_name;
             if (test["outcome"] && test["outcome"]["collection"]["name"]) {
@@ -829,7 +839,7 @@ void run_crud_tests_in_file(const std::string& test_path, uri test_uri) {
                 initialize_collection(&outcome_collection, array::view{});
             }
 
-            configure_fail_point(client, test.get_document().value);
+            configure_fail_point(*client, test.get_document().value);
 
             apm_checker.clear();
             auto perform_op =
@@ -898,7 +908,7 @@ void run_crud_tests_in_file(const std::string& test_path, uri test_uri) {
             }
 
             if (test["failPoint"]) {
-                disable_fail_point(client,
+                disable_fail_point(*client,
                                    test["failPoint"]["configureFailPoint"].get_string().value);
             }
         }
