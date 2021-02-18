@@ -21,7 +21,6 @@
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/test_util/catch.hh>
 #include <bsoncxx/types/bson_value/value.hpp>
-#include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/test/spec/monitoring.hh>
 #include <mongocxx/test_util/client_helpers.hh>
@@ -32,11 +31,8 @@ using namespace mongocxx;
 using namespace bsoncxx;
 using namespace spec;
 
-constexpr int major = 1;
-constexpr int minor = 0;
-constexpr int patch = 0;
-
-constexpr std::array<int, 3> schema_version = {major, minor, patch};
+using schema_versions_t = std::array<std::array<int, 3>, 1>;
+constexpr schema_versions_t schema_versions{{{1, 0, 0}}};
 
 // Spec: Version strings, which are used for schemaVersion and runOnRequirement, MUST conform to
 // one of the following formats, where each component is a non-negative integer:
@@ -51,7 +47,7 @@ std::vector<int> get_version(const std::string& input) {
                    std::back_inserter(output),
                    [](const std::string& s) { return std::stoi(s); });
 
-    while (output.size() < schema_version.size())
+    while (output.size() < schema_versions[0].size())
         output.push_back(0);
 
     return output;
@@ -122,7 +118,22 @@ document::value parse_test_file(const std::string& test_path) {
 bool is_compatible_scehema_version(document::view test_spec) {
     REQUIRE(test_spec["schemaVersion"]);
     auto test_schema_version = get_version(test_spec["schemaVersion"]);
-    return is_compatible_version(test_schema_version, schema_version, std::less_equal<int>{});
+    auto compat = [&](std::array<int, 3> v) {
+        return is_compatible_version(test_schema_version, v, std::less_equal<int>{});
+    };
+    return std::any_of(std::begin(schema_versions), std::end(schema_versions), compat);
+}
+
+std::vector<std::string> versions_to_string(schema_versions_t versions) {
+    std::vector<std::string> out;
+    for (const auto& v : versions) {
+        std::stringstream v_str;
+        v_str << std::to_string(v[0]) << '.'  // major.
+              << std::to_string(v[1]) << '.'  // minor.
+              << std::to_string(v[2]);        // patch
+        out.push_back(v_str.str());
+    }
+    return out;
 }
 
 void run_tests_in_file(const std::string& test_path) {
@@ -131,11 +142,15 @@ void run_tests_in_file(const std::string& test_path) {
 
     CAPTURE(test_path, to_json(test_spec_view));
     if (!is_compatible_scehema_version(test_spec_view)) {
+        auto supported_versions = versions_to_string(schema_versions);
         std::stringstream warning;
         warning << "file skipped: " << test_path << std::endl
                 << "incompatible schema versions" << std::endl
                 << "Expected: " << test_spec_view["schemaVersion"].get_string().value << std::endl
-                << "Actual: " << major << '.' << minor << '.' << patch;
+                << "Supported versions:" << std::endl;
+        std::copy(std::begin(supported_versions),
+                  std::end(supported_versions),
+                  std::ostream_iterator<std::string>(warning, "\n"));
         WARN(warning.str());
         return;
     }
