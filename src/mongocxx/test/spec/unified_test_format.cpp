@@ -146,16 +146,15 @@ void run_tests_in_file(const std::string& test_path) {
 
     CAPTURE(test_path, to_json(test_spec_view));
     if (!is_compatible_scehema_version(test_spec_view)) {
-        auto supported_versions = versions_to_string(schema_versions);
-        std::stringstream warning;
-        warning << "file skipped: " << test_path << std::endl
-                << "incompatible schema versions" << std::endl
-                << "Expected: " << test_spec_view["schemaVersion"].get_string().value << std::endl
-                << "Supported versions:" << std::endl;
-        std::copy(std::begin(supported_versions),
-                  std::end(supported_versions),
-                  std::ostream_iterator<std::string>(warning, "\n"));
-        WARN(warning.str());
+        std::stringstream error;
+        error << "incompatible schema version" << std::endl
+              << "Expected: " << test_spec_view["schemaVersion"].get_string().value << std::endl
+              << "Supported versions:" << std::endl;
+
+        auto v = versions_to_string(schema_versions);
+        std::copy(std::begin(v), std::end(v), std::ostream_iterator<std::string>(error, "\n"));
+
+        FAIL(error.str());
         return;
     }
 
