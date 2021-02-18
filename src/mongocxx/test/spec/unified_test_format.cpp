@@ -31,7 +31,8 @@ using namespace mongocxx;
 using namespace bsoncxx;
 using namespace spec;
 
-using schema_versions_t = std::array<std::array<int, 3>, 1>;
+using schema_versions_t =
+    std::array<std::array<int, 3 /* major.minor.patch */>, 1 /* supported version */>;
 constexpr schema_versions_t schema_versions{{{1, 0, 0}}};
 
 // Spec: Version strings, which are used for schemaVersion and runOnRequirement, MUST conform to
