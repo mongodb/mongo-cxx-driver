@@ -57,11 +57,14 @@ std::vector<int> get_version(bsoncxx::document::element doc) {
     return get_version(doc.get_string().value.to_string());
 }
 
-template <typename R1, typename R2, typename Compare>
-bool is_compatible_version(R1 rng1, R2 rng2, Compare comp) {
+template <typename Range1, typename Range2, typename Compare>
+bool is_compatible_version(Range1 range1, Range2 range2, Compare comp) {
     // only compare major and minor in version of the form "<int>.<int>.<int>", i.e., [0:2)
-    return std::lexicographical_compare(
-        std::begin(rng1), std::begin(rng1) + 2, std::begin(rng2), std::begin(rng2) + 2, comp);
+    return std::lexicographical_compare(std::begin(range1),
+                                        std::begin(range1) + 2,
+                                        std::begin(range2),
+                                        std::begin(range2) + 2,
+                                        comp);
 }
 
 bool equals_server_topology(const document::element& topologies) {
