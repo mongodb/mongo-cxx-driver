@@ -58,7 +58,7 @@ document::value get_is_master(const client& client) {
 }
 
 document::value get_server_status(const client& client) {
-    static auto status = client["test"].run_command(make_document(kvp("serverStatus", 1)));
+    static auto status = client["admin"].run_command(make_document(kvp("serverStatus", 1)));
     return status;
 }
 }  // namespace
