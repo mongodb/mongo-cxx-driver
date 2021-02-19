@@ -73,10 +73,10 @@ bool equals_server_topology(const document::element& topologies) {
 
     // The server's topology will not change during the test. No need to make a round-trip for every
     // test file.
-    static std::string server_topology = test_util::get_topology();
-    auto equals = [&](const bsoncxx::array::element& topology) {
-        return topology == value(server_topology) ||
-               (topology == value("sharded-replicaset") && server_topology == "shared");
+    static std::string actual = test_util::get_topology();
+    auto equals = [&](const bsoncxx::array::element& expected) {
+        return expected == value(actual) ||
+               (expected == value("sharded") && actual == "sharded-replicaset");
     };
 
     auto t = topologies.get_array().value;
