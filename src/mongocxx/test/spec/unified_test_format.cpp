@@ -58,14 +58,14 @@ std::vector<int> get_version(bsoncxx::document::element doc) {
     return get_version(doc.get_string().value.to_string());
 }
 
-template <typename Range1, typename Range2, typename Compare>
-bool is_compatible_version(Range1 range1, Range2 range2, Compare comp) {
+template <typename Range1, typename Range2>
+bool is_compatible_version(Range1 range1, Range2 range2) {
     // only compare major and minor in version of the form "<int>.<int>.<int>", i.e., [0:2)
     return std::lexicographical_compare(std::begin(range1),
                                         std::begin(range1) + 2,
                                         std::begin(range2),
                                         std::begin(range2) + 2,
-                                        comp);
+                                        std::less_equal<int>{});
 }
 
 bool equals_server_topology(const document::element& topologies) {
@@ -90,13 +90,13 @@ bool compatible_with_server(const bsoncxx::array::element& requirement) {
 
     if (auto min_server_version = requirement["minServerVersion"]) {
         auto actual = get_version(min_server_version);
-        if (!is_compatible_version(actual, expected, std::less_equal<int>{}))
+        if (!is_compatible_version(actual, expected))
             return false;
     }
 
     if (auto max_server_version = requirement["maxServerVersion"]) {
         auto actual = get_version(max_server_version);
-        if (!is_compatible_version(actual, expected, std::greater_equal<int>{}))
+        if (!is_compatible_version(expected, actual))
             return false;
     }
 
@@ -123,7 +123,10 @@ bool is_compatible_schema_version(document::view test_spec) {
     REQUIRE(test_spec["schemaVersion"]);
     auto test_schema_version = get_version(test_spec["schemaVersion"]);
     auto compat = [&](std::array<int, 3> v) {
-        return is_compatible_version(test_schema_version, v, std::less_equal<int>{});
+        // Test files are considered compatible with a test runner if their schemaVersion is less
+        // than or equal to a supported version in the test runner, given the same major version
+        // component.
+        return test_schema_version[0] == v[0] && is_compatible_version(test_schema_version, v);
     };
     return std::any_of(std::begin(schema_versions), std::end(schema_versions), compat);
 }
