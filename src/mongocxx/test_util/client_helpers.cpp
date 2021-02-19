@@ -50,6 +50,19 @@ using namespace bsoncxx;
 using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_document;
 
+namespace {
+// These frequently used network calls are cached to avoid bottlenecks during tests.
+document::value get_is_master(const client& client) {
+    static auto reply = client["admin"].run_command(make_document(kvp("isMaster", 1)));
+    return reply;
+}
+
+document::value get_server_status(const client& client) {
+    static auto status = client["admin"].run_command(make_document(kvp("serverStatus", 1)));
+    return status;
+}
+}  // namespace
+
 std::vector<std::int32_t> parse_version(std::string version) {
     std::vector<std::int32_t> elements;
     std::stringstream ss{version};
@@ -181,7 +194,7 @@ std::basic_string<std::uint8_t> convert_hex_string_to_bytes(stdx::string_view he
 }
 
 std::int32_t get_max_wire_version(const client& client) {
-    auto reply = client["admin"].run_command(make_document(kvp("isMaster", 1)));
+    auto reply = get_is_master(client);
     auto max_wire_version = reply.view()["maxWireVersion"];
     if (!max_wire_version) {
         // If wire version is not available (i.e. server version too old), it is assumed to be
@@ -195,15 +208,12 @@ std::int32_t get_max_wire_version(const client& client) {
 }
 
 std::string get_server_version(const client& client) {
-    bsoncxx::builder::basic::document server_status{};
-    server_status.append(bsoncxx::builder::basic::kvp("serverStatus", 1));
-    bsoncxx::document::value output = client["test"].run_command(server_status.extract());
-
+    auto output = get_server_status(client);
     return bsoncxx::string::to_string(output.view()["version"].get_string().value);
 }
 
 std::string replica_set_name(const client& client) {
-    auto reply = client["admin"].run_command(make_document(kvp("isMaster", 1)));
+    auto reply = get_is_master(client);
     auto name = reply.view()["setName"];
     if (name) {
         return bsoncxx::string::to_string(name.get_string().value);
@@ -213,12 +223,12 @@ std::string replica_set_name(const client& client) {
 }
 
 bool is_replica_set(const client& client) {
-    auto reply = client["admin"].run_command(make_document(kvp("isMaster", 1)));
+    auto reply = get_is_master(client);
     return static_cast<bool>(reply.view()["setName"]);
 }
 
 std::string get_topology(const client& client) {
-    auto reply = client["admin"].run_command(make_document(kvp("isMaster", 1)));
+    auto reply = get_is_master(client);
     if (reply.view()["setName"]) {
         return "replicaset";
     } else if (reply.view()["msg"] &&
@@ -409,7 +419,7 @@ void check_outcome_collection(mongocxx::collection* coll, bsoncxx::document::vie
 }
 
 bool server_has_sessions(const client& conn) {
-    auto result = conn["admin"].run_command(make_document(kvp("isMaster", 1)));
+    auto result = get_is_master(conn);
     auto result_view = result.view();
 
     if (result_view["logicalSessionTimeoutMinutes"]) {
