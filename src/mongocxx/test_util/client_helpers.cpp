@@ -228,15 +228,22 @@ bool is_replica_set(const client& client) {
 }
 
 std::string get_topology(const client& client) {
-    auto reply = get_is_master(client);
-    if (reply.view()["setName"]) {
+    if (is_replica_set(client))
         return "replicaset";
-    } else if (reply.view()["msg"] &&
-               std::string(reply.view()["msg"].get_string().value) == "isdbgrid") {
+
+    // from: https://docs.mongodb.com/manual/reference/config-database/#config.shards
+    // If the shard is a replica set, the host field displays the name of the replica set, then a
+    // slash, then a comma-separated list of the hostnames of each member of the replica set, as in
+    // the following example:
+    //      { ... , "host" : "shard0001/localhost:27018,localhost:27019,localhost:27020", ... }
+    if (auto shards = client["config"]["shards"].find_one({})) {
+        auto host = shards->view()["host"].get_string().value.to_string();
+        if (std::find(std::begin(host), std::end(host), '/') != std::end(host))
+            return "sharded-replicaset";
         return "sharded";
-    } else {
-        return "single";
     }
+
+    return "single";
 }
 
 stdx::optional<bsoncxx::document::value> parse_test_file(std::string path) {
