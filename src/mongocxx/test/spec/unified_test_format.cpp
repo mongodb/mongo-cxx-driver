@@ -119,7 +119,7 @@ document::value parse_test_file(const std::string& test_path) {
     return test_spec.value();
 }
 
-bool is_compatible_scehema_version(document::view test_spec) {
+bool is_compatible_schema_version(document::view test_spec) {
     REQUIRE(test_spec["schemaVersion"]);
     auto test_schema_version = get_version(test_spec["schemaVersion"]);
     auto compat = [&](std::array<int, 3> v) {
