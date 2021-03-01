@@ -36,7 +36,9 @@ void apm_checker::compare(bsoncxx::array::view expectations,
                           const test_util::match_visitor& match_visitor) {
     auto is_ignored = [&](bsoncxx::document::value v) {
         return std::any_of(std::begin(_ignore), std::end(_ignore), [&](stdx::string_view key) {
-            return v.view()["command_started_event"]["command"][key];
+            return v.view()["command_started_event"]["command"][key] ||
+                   v.view()["command_failed_event"]["command"][key] ||
+                   v.view()["command_succeeded_event"]["command"][key];
         });
     };
 
