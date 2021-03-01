@@ -168,12 +168,14 @@ class array {
    private:
     template <typename Arg>
     void _append(Arg&& a) {
-        _core.append(types::bson_value::value{std::forward<Arg>(a)});
+        auto val = types::bson_value::value{std::forward<Arg>(a)};
+        _core.append(val);
     }
 
     template <typename Arg, typename... Args>
     void _append(Arg&& a, Args&&... args) {
-        _core.append(types::bson_value::value{std::forward<Arg>(a)});
+        auto val = types::bson_value::value{std::forward<Arg>(a)};
+        _core.append(val);
         this->_append(std::forward<Args>(args)...);
     }
 
