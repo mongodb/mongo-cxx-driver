@@ -18,6 +18,8 @@
 
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/json.hpp>
+#include <mongocxx/exception/error_code.hpp>
+#include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/test/spec/monitoring.hh>
 #include <mongocxx/test_util/client_helpers.hh>
 #include <third_party/catch/include/catch.hpp>
@@ -32,13 +34,16 @@ using bsoncxx::to_json;
 void apm_checker::compare(bsoncxx::array::view expectations,
                           bool allow_extra,
                           const test_util::match_visitor& match_visitor) {
-    auto is_kill_cursor = [](bsoncxx::document::value v) {
-        return v.view()["command_started_event"]["command"]["killCursors"];
+    auto is_ignored = [&](bsoncxx::document::value v) {
+        return std::any_of(std::begin(_ignore), std::end(_ignore), [&](stdx::string_view key) {
+            return v.view()["command_started_event"]["command"][key] ||
+                   v.view()["command_failed_event"]["command"][key] ||
+                   v.view()["command_succeeded_event"]["command"][key];
+        });
     };
 
     auto events_iter = _events.begin();
-    if (_skip_kill_cursors)
-        _events.erase(std::remove_if(_events.begin(), _events.end(), is_kill_cursor));
+    _events.erase(std::remove_if(_events.begin(), _events.end(), is_ignored), std::end(_events));
     for (auto expectation : expectations) {
         auto expected = expectation.get_document().view();
 
@@ -75,12 +80,11 @@ void apm_checker::print_all() {
     printf("\n\n");
 }
 
-options::apm apm_checker::get_apm_opts(bool command_started_events_only) {
-    options::apm opts;
+void apm_checker::set_command_started(options::apm& apm) {
     using namespace bsoncxx::builder::basic;
 
-    opts.on_command_started([&](const events::command_started_event& event) {
-        bsoncxx::builder::basic::document builder;
+    apm.on_command_started([&](const events::command_started_event& event) {
+        document builder;
         builder.append(kvp("command_started_event",
                            make_document(kvp("command", event.command()),
                                          kvp("command_name", event.command_name()),
@@ -88,33 +92,70 @@ options::apm apm_checker::get_apm_opts(bool command_started_events_only) {
                                          kvp("database_name", event.database_name()))));
         this->_events.emplace_back(builder.extract());
     });
+}
 
-    if (!command_started_events_only) {
-        opts.on_command_failed([&](const events::command_failed_event& event) {
-            bsoncxx::builder::basic::document builder;
-            builder.append(kvp("command_failed_event",
-                               make_document(kvp("command_name", event.command_name()),
-                                             kvp("operation_id", event.operation_id()))));
-            this->_events.emplace_back(builder.extract());
-        });
-        opts.on_command_succeeded([&](const events::command_succeeded_event& event) {
-            bsoncxx::builder::basic::document builder;
-            builder.append(kvp("command_succeeded_event",
-                               make_document(kvp("reply", event.reply()),
-                                             kvp("command_name", event.command_name()),
-                                             kvp("operation_id", event.operation_id()))));
-            this->_events.emplace_back(builder.extract());
-        });
-    }
+void apm_checker::set_command_failed(options::apm& apm) {
+    using namespace bsoncxx::builder::basic;
+
+    apm.on_command_failed([&](const events::command_failed_event& event) {
+        document builder;
+        builder.append(kvp("command_failed_event",
+                           make_document(kvp("command_name", event.command_name()),
+                                         kvp("operation_id", event.operation_id()))));
+        this->_events.emplace_back(builder.extract());
+    });
+}
+
+void apm_checker::set_command_succeeded(options::apm& apm) {
+    using namespace bsoncxx::builder::basic;
+
+    apm.on_command_succeeded([&](const events::command_succeeded_event& event) {
+        document builder;
+        builder.append(kvp("command_succeeded_event",
+                           make_document(kvp("reply", event.reply()),
+                                         kvp("command_name", event.command_name()),
+                                         kvp("operation_id", event.operation_id()))));
+        this->_events.emplace_back(builder.extract());
+    });
+}
+
+options::apm apm_checker::get_apm_opts(bool command_started_events_only) {
+    options::apm opts;
+
+    this->set_command_started(opts);
+    if (command_started_events_only)
+        return opts;
+
+    this->set_command_failed(opts);
+    this->set_command_succeeded(opts);
     return opts;
+}
+
+apm_checker::event apm_checker::to_event(stdx::string_view s) {
+    if (s.to_string() == "killCursors")
+        return apm_checker::event::kill_cursors;
+    if (s.to_string() == "getMore")
+        return apm_checker::event::get_more;
+    else
+        throw mongocxx::logic_error{error_code::k_invalid_parameter,
+                                    "unrecognized event {" + s.to_string() + "}"};
+}
+
+std::string apm_checker::to_string(event e) {
+    switch (e) {
+        case apm_checker::event::kill_cursors:
+            return "killCursors";
+        case apm_checker::event::get_more:
+            return "getMore";
+    }
+}
+
+void apm_checker::set_ignore_command_monitoring_event(event e) {
+    this->_ignore.push_back(to_string(e));
 }
 
 void apm_checker::clear() {
     this->_events.clear();
-}
-
-void apm_checker::skip_kill_cursors() {
-    this->_skip_kill_cursors = true;
 }
 
 }  // namespace spec

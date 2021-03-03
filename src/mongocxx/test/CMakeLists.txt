@@ -80,7 +80,7 @@ set(spec_test_common
     spec/operation.cpp
     spec/monitoring.cpp
     spec/util.cpp
-        )
+)
 
 add_executable(test_driver
     ${PROJECT_SOURCE_DIR}/test_util/client_helpers.cpp
@@ -165,6 +165,7 @@ add_executable(test_unified_format_spec
     ${PROJECT_SOURCE_DIR}/test_util/client_helpers.cpp
     ${THIRD_PARTY_SOURCE_DIR}/catch/main.cpp
     spec/unified_test_format.cpp
+    spec/entity.cpp
     ${spec_test_common}
 )
 
@@ -319,15 +320,17 @@ set_dist_list (src_mongocxx_test_DIST
    spec/client_side_encryption.cpp
    spec/command_monitoring.cpp
    spec/crud.cpp
+   spec/entity.cpp
+   spec/entity.hh
    spec/gridfs.cpp
    spec/mongohouse.cpp
    spec/monitoring.cpp
    spec/monitoring.hh
    spec/operation.cpp
    spec/operation.hh
-   spec/unified_test_format.cpp
    spec/read_write_concern.cpp
    spec/retryable-reads.cpp
+   spec/unified_test_format.cpp
    spec/transactions.cpp
    spec/util.cpp
    spec/util.hh
