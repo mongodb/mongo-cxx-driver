@@ -15,9 +15,7 @@
 #include <fstream>
 #include <regex>
 
-#include <bsoncxx/array/element.hpp>
-#include <bsoncxx/document/element.hpp>
-#include <bsoncxx/exception/exception.hpp>
+#include "entity.hh"
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/test_util/catch.hh>
 #include <bsoncxx/types/bson_value/value.hpp>
@@ -113,6 +111,180 @@ bool has_run_on_requirements(const bsoncxx::document::view test) {
     return std::any_of(std::begin(requirements), std::end(requirements), compatible_with_server);
 }
 
+std::string json_kvp_to_uri_kvp(std::string s) {
+    // The transformation is as follows:
+    //     1. "{ "key" : "value" }"     -- initial representation
+    //     2. "key:value"               -- intermediate step (without quotes)
+    //     3. "key=value"               -- final step (without quotes)
+
+    using namespace std;
+    auto should_remove = [&](const char c) {
+        const auto remove = {' ', '"', '{', '}'};
+        return end(remove) != find(begin(remove), end(remove), c);
+    };
+
+    s.erase(remove_if(begin(s), end(s), should_remove), end(s));
+    replace(begin(s), end(s), ':', '=');
+    return s;
+}
+
+std::string json_to_uri_opts(const std::string& input) {
+    // Transforms a non-nested JSON document string (assumed to contain URI keys and values) to a
+    // string of equivalent URI options and values. That is,
+    //      input   := "{ "readConcernLevel" : "local", "w" : 1 }"
+    //      output  := "readConcernLevel=local&w=1"
+    std::vector<std::string> output;
+    const std::regex delim(",");
+    std::transform(std::sregex_token_iterator(std::begin(input), std::end(input), delim, -1),
+                   std::sregex_token_iterator(),
+                   std::back_inserter(output),
+                   json_kvp_to_uri_kvp);
+
+    auto join = [](const std::string& s1, const std::string& s2) { return s1 + "&" + s2; };
+    return std::accumulate(std::begin(output) + 1, std::end(output), output[0], join);
+}
+
+std::string uri_options_to_string(document::view object) {
+    // Spec: Optional object. Additional URI options to apply to the test suite's connection string
+    // that is used to create this client. Any keys in this object MUST override conflicting keys in
+    // the connection string.
+    if (!object["uriOptions"])
+        return {};
+
+    // TODO: Spec: if 'readPreferenceTags' is specified in this object, the key will map to an array
+    //  of strings, each representing a tag set, since it is not feasible to define multiple
+    //  'readPreferenceTags' keys in the object.
+    REQUIRE_FALSE(object["readPreferenceTags"]);
+
+    auto json = to_json(object["uriOptions"].get_document());
+    auto opts = json_to_uri_opts(json);
+
+    CAPTURE(json, opts);
+    return opts;
+}
+
+std::string get_hostnames(document::view object) {
+    auto default_uri{"localhost:27017"};
+    // Spec: This [useMultipleMongoses] option has no effect for non-sharded topologies.
+    if (test_util::is_replica_set())
+        return default_uri;
+
+    // Spec: If true and the topology is a sharded cluster, the test runner MUST assert that this
+    // MongoClient connects to multiple mongos hosts (e.g. by inspecting the connection string).
+    if (!object["useMultipleMongoses"] || !object["useMultipleMongoses"].get_bool())
+        return default_uri;
+
+    // from: https://docs.mongodb.com/manual/reference/config-database/#config.shards
+    // If the shard is a replica set, the host field displays the name of the replica set, then a
+    // slash, then a comma-separated list of the hostnames of each member of the replica set, as in
+    // the following example:
+    //      { ... , "host" : "shard0001/localhost:27018,localhost:27019,localhost:27020", ... }
+    auto host = test_util::get_hosts();
+    auto after_slash = ++std::find(std::begin(host), std::end(host), '/');
+    REQUIRE(after_slash < std::end(host));
+
+    auto hostnames = std::string{after_slash, std::end(host)};
+    CAPTURE(host, hostnames);
+
+    // require multiple mongos hosts
+    REQUIRE(std::end(hostnames) != std::find(std::begin(hostnames), std::end(hostnames), ','));
+    return hostnames;
+}
+
+apm_checker& get_apm_checker() {
+    static auto apm = apm_checker{};
+    return apm;
+}
+
+void add_observe_events(options::apm& apm_opts, document::view object) {
+    using types::bson_value::value;
+    if (!object["observeEvents"])
+        return;
+
+    auto events = object["observeEvents"].get_array().value;
+    auto& apm = get_apm_checker();
+    if (std::end(events) !=
+        std::find(std::begin(events), std::end(events), value("commandStartedEvent")))
+        apm.set_command_started(apm_opts);
+
+    if (std::end(events) !=
+        std::find(std::begin(events), std::end(events), value("commandSucceededEvent")))
+        apm.set_command_succeeded(apm_opts);
+
+    if (std::end(events) !=
+        std::find(std::begin(events), std::end(events), value("commandFailedEvent")))
+        apm.set_command_failed(apm_opts);
+}
+
+void add_ignore_command_monitoring_events(document::view object) {
+    if (!object["ignoreCommandMonitoringEvents"])
+        return;
+    for (auto cme : object["ignoreCommandMonitoringEvents"].get_array().value) {
+        auto event = apm_checker::to_event(cme.get_string());
+
+        CAPTURE(apm_checker::to_string(event), cme.get_string());
+        auto& apm = get_apm_checker();
+        apm.set_ignore_command_monitoring_event(event);
+    }
+}
+
+entity::map& get_entity_map() {
+    static auto m = entity::map{};
+    return m;
+}
+
+// TODO: create_change_stream
+// TODO: create_bucket
+// TODO: create_session
+// TODO: create_database
+// TODO: create_collection
+
+client create_client(document::view object) {
+    auto conn = "mongodb://" + get_hostnames(object) + "/?" + uri_options_to_string(object);
+    auto opts = options::apm{};
+
+    add_observe_events(opts, object);
+    add_ignore_command_monitoring_events(object);
+
+    return client{uri{conn}, options::client{}.apm_opts(opts)};
+}
+
+void add_to_map(const array::element& obj) {
+    // Spec: This object MUST contain exactly one top-level key that identifies the entity type and
+    // maps to a nested object, which specifies a unique name for the entity ('id' key) and any
+    // other parameters necessary for its construction.
+    auto doc = obj.get_document().view().begin();
+    auto type = doc->key().to_string();
+    auto params = doc->get_document().view();
+    auto id = params["id"].get_string().value.to_string();
+
+    CAPTURE(type, id, to_json(params));
+    auto& map = get_entity_map();
+
+    if (type == "client") {
+        map.insert(id, create_client(params));
+        REQUIRE(map.contains(id));
+    } else if (type == "database") {
+        WARN("database not implemented");
+    } else if (type == "collection") {
+        WARN("collection not implemented");
+    } else if (type == "bucket") {
+        WARN("bucket not implemented");
+    } else if (type == "session") {
+        WARN("session not implemented");
+    } else {
+        FAIL("unrecognized type { " + type + " }");
+    }
+}
+
+void create_entities(const document::view test) {
+    if (!test["createEntities"])
+        return;
+
+    for (auto entity : test["createEntities"].get_array().value)
+        add_to_map(entity);
+}
+
 document::value parse_test_file(const std::string& test_path) {
     bsoncxx::stdx::optional<document::value> test_spec = test_util::parse_test_file(test_path);
     REQUIRE(test_spec);
@@ -172,7 +344,7 @@ void run_tests_in_file(const std::string& test_path) {
 
     const std::string description = test_spec_view["description"].get_string().value.to_string();
     SECTION(description) {
-        // TODO: createEntities
+        create_entities(test_spec_view);
         // TODO: initialData
         // TODO: tests
     }
