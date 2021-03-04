@@ -19,6 +19,7 @@
 
 #include <bsoncxx/builder/basic/array.hpp>
 #include <bsoncxx/builder/basic/document.hpp>
+#include <bsoncxx/document/element.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/test_util/catch.hh>
 
@@ -28,6 +29,7 @@ using namespace bsoncxx;
 using namespace types;
 using bsoncxx::builder::basic::make_document;
 using bsoncxx::builder::basic::kvp;
+using bsoncxx::document::element;
 
 TEST_CASE("type to_string", "[bsoncxx::type::to_string]") {
     REQUIRE(to_string(bsoncxx::type::k_bool) == "bool");
@@ -184,6 +186,15 @@ TEST_CASE("b_minkey", "[bsoncxx::type::b_minkey]") {
 TEST_CASE("b_maxkey", "[bsoncxx::type::b_maxkey]") {
     b_maxkey a;
     REQUIRE(a == a);
+}
+
+TEST_CASE("getting types from an uninitialized element throws", "[bsoncxx::document::element]") {
+    element elem{};
+    REQUIRE_THROWS(elem.get_value());
+
+#define BSONCXX_ENUM(name, val) REQUIRE_THROWS(elem.get_##name());
+#include <bsoncxx/enums/type.hpp>
+#undef BSONCXX_ENUM
 }
 
 TEST_CASE("bson_value::view returns correct type", "[bsoncxx::types::bson_value::view]") {
