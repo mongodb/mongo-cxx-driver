@@ -37,6 +37,13 @@ collection& map::get_collection(const key_type& key) {
     return e.get<1>();
 }
 
+void map::clear() noexcept {
+    // Clients must outlive the entities created from it.
+    // @see: https://isocpp.org/wiki/faq/dtors#order-dtors-for-members
+    _map.clear();
+    _client_map.clear();
+}
+
 }  // namespace entity
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx

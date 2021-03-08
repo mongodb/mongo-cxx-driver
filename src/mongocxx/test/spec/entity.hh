@@ -46,8 +46,9 @@ class map {
 
     template <typename Entity>
     bool insert(const key_type& key, Entity&& e) {
-        _map.emplace(key, std::forward<Entity>(e));
-        return _map.find(key) != std::end(_map);
+        bool result{};
+        std::tie(std::ignore, result) = _map.emplace(key, std::forward<Entity>(e));
+        return result;
     }
 
     bool insert(const key_type& key, client&& c);
@@ -55,6 +56,8 @@ class map {
     client& get_client(const key_type& key);
     database& get_database(const key_type& key);
     collection& get_collection(const key_type& key);
+
+    void clear() noexcept;
 
    private:
     // Objects are destroyed in reverse order of their appearance in the class definition. Since the

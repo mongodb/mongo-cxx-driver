@@ -388,6 +388,7 @@ void create_entities(const document::view test) {
     if (!test["createEntities"])
         return;
 
+    get_entity_map().clear();
     auto entities = test["createEntities"].get_array().value;
     REQUIRE(std::all_of(std::begin(entities), std::end(entities), add_to_map));
 }
