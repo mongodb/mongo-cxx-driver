@@ -277,7 +277,7 @@ options::gridfs::bucket get_bucket_options(document::view object) {
         opts.bucket_name(name.get_string().value.to_string());
     if (auto size = object["bucketOptions"]["chunkSizeBytes"])
         opts.chunk_size_bytes(size.get_int32().value);
-    REQUIRE_FALSE(/* TODO */ object["bucketOptions"]["disableMD5"]);
+    REQUIRE_FALSE(object["bucketOptions"]["disableMD5"]);
 
     return opts;
 }
