@@ -28,9 +28,8 @@ namespace entity {
 
 class map {
    public:
-    using key_type = mongocxx::stdx::string_view;
-    using mapped_type = bsoncxx::stdx::variant<mongocxx::client,
-                                               mongocxx::database,
+    using key_type = std::string;
+    using mapped_type = bsoncxx::stdx::variant<mongocxx::database,
                                                mongocxx::collection,
                                                mongocxx::client_session,
                                                mongocxx::gridfs::bucket>;
@@ -43,11 +42,31 @@ class map {
     map(map&&) = default;
     map& operator=(map&&) = default;
 
-    void insert(const key_type& key, mongocxx::client&& client);
+    ~map() = default;
 
-    bool contains(const key_type& key) const;
+    template <typename Entity>
+    bool insert(const key_type& key, Entity&& e) {
+        bool result{};
+        std::tie(std::ignore, result) = _map.emplace(key, std::forward<Entity>(e));
+        return result;
+    }
+
+    bool insert(const key_type& key, client&& c);
+
+    client& get_client(const key_type& key);
+    database& get_database(const key_type& key);
+    collection& get_collection(const key_type& key);
+
+    void clear() noexcept;
 
    private:
+    // Objects are destroyed in reverse order of their appearance in the class definition. Since the
+    // client must outlive the objects created from it, the client objects are held in a separate
+    // map and declared first.
+    //
+    // @see: http://mongoc.org/libmongoc/current/lifecycle.html#object-lifecycle
+    // @see: https://isocpp.org/wiki/faq/dtors#order-dtors-for-members
+    std::unordered_map<key_type, client> _client_map;
     std::unordered_map<key_type, mapped_type> _map;
 };
 }  // namespace entity

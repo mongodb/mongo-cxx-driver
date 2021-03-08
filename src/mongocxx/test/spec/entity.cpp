@@ -18,12 +18,30 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace entity {
 
-void map::insert(const key_type& key, mongocxx::client&& client) {
-    _map[key] = std::move(client);
+bool map::insert(const key_type& key, client&& c) {
+    _client_map.emplace(key, std::move(c));
+    return _client_map.find(key) != std::end(_client_map);
 }
 
-bool map::contains(const key_type& key) const {
-    return _map.find(key) != std::end(_map);
+client& map::get_client(const key_type& key) {
+    return _client_map.at(key);
+}
+
+database& map::get_database(const key_type& key) {
+    auto& e = _map.at(key);
+    return e.get<0>();
+}
+
+collection& map::get_collection(const key_type& key) {
+    auto& e = _map.at(key);
+    return e.get<1>();
+}
+
+void map::clear() noexcept {
+    // Clients must outlive the entities created from it.
+    // @see: https://isocpp.org/wiki/faq/dtors#order-dtors-for-members
+    _map.clear();
+    _client_map.clear();
 }
 
 }  // namespace entity
