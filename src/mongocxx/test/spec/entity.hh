@@ -20,6 +20,7 @@
 
 #include <bsoncxx/stdx/variant.hpp>
 #include <mongocxx/client.hpp>
+#include <mongocxx/test/spec/monitoring.hh>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
@@ -34,13 +35,13 @@ class map {
                                                mongocxx::client_session,
                                                mongocxx::gridfs::bucket>;
 
-    map() = default;
+    map() noexcept = default;
 
     map(const map&) = delete;
     map operator=(const map&) = delete;
 
-    map(map&&) = default;
-    map& operator=(map&&) = default;
+    map(map&&) noexcept = default;
+    map& operator=(map&&) noexcept = default;
 
     ~map() = default;
 
@@ -57,9 +58,14 @@ class map {
     database& get_database(const key_type& key);
     collection& get_collection(const key_type& key);
 
+    database& get_database_by_name(stdx::string_view name);
+
     void clear() noexcept;
 
+    spec::apm_checker& get_apm_checker();
+
    private:
+    spec::apm_checker _apm;
     // Objects are destroyed in reverse order of their appearance in the class definition. Since the
     // client must outlive the objects created from it, the client objects are held in a separate
     // map and declared first.

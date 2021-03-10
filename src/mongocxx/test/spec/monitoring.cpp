@@ -156,6 +156,7 @@ void apm_checker::set_ignore_command_monitoring_event(event e) {
 
 void apm_checker::clear() {
     this->_events.clear();
+    this->_ignore.clear();
 }
 
 }  // namespace spec
