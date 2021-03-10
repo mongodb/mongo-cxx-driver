@@ -159,6 +159,9 @@ using match_visitor =
                                bsoncxx::stdx::optional<bsoncxx::types::bson_value::view> main,
                                bsoncxx::types::bson_value::view pattern)>;
 
+void assert_matches(bsoncxx::types::bson_value::view actual,
+                    bsoncxx::types::bson_value::view expected);
+
 bool matches(bsoncxx::types::bson_value::view main,
              bsoncxx::types::bson_value::view pattern,
              match_visitor visitor_fn = {});

@@ -38,6 +38,14 @@ class client;
 ///
 class MONGOCXX_API client_session {
    public:
+    enum class transaction_state {
+        k_mongoc_transaction_none,
+        k_mongoc_transaction_starting,
+        k_mongoc_transaction_in_progress,
+        k_mongoc_transaction_committed,
+        k_mongoc_transaction_aborted,
+    };
+
     ///
     /// Move constructs a session.
     ///
@@ -90,7 +98,22 @@ class MONGOCXX_API client_session {
     ///
     /// Get the server_id the session is pinned to. The server_id is zero if the session is not
     /// pinned to a server.
+    ///
     std::uint32_t server_id() const noexcept;
+
+    ///
+    /// Indicates whether session has been marked “dirty” as defined in the driver sessions
+    /// specification.
+    ///
+    /// @see
+    /// https://github.com/mongodb/specifications/blob/master/source/sessions/driver-sessions.rst
+    ///
+    bool get_dirty() const noexcept;
+
+    ///
+    /// Returns the current transaction state for this session.
+    ///
+    transaction_state get_transaction_state() const noexcept;
 
     ///
     /// Advance the cluster time for a session. Has an effect only if the new cluster time is

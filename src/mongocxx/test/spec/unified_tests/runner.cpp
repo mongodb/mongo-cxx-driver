@@ -16,11 +16,19 @@
 #include <regex>
 
 #include "entity.hh"
+#include "operations.hh"
+#include <bsoncxx/builder/basic/document.hpp>
+#include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/stdx/optional.hpp>
+#include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/test_util/catch.hh>
 #include <bsoncxx/types/bson_value/value.hpp>
+#include <mongocxx/exception/bulk_write_exception.hpp>
+#include <mongocxx/exception/exception.hpp>
+#include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/test/spec/monitoring.hh>
+#include <mongocxx/test/spec/util.hh>
 #include <mongocxx/test_util/client_helpers.hh>
 
 namespace {
@@ -28,6 +36,9 @@ namespace {
 using namespace mongocxx;
 using namespace bsoncxx;
 using namespace spec;
+
+using bsoncxx::builder::basic::kvp;
+using bsoncxx::builder::basic::make_document;
 
 using schema_versions_t =
     std::array<std::array<int, 3 /* major.minor.patch */>, 1 /* supported version */>;
@@ -206,15 +217,15 @@ void add_observe_events(options::apm& apm_opts, document::view object) {
     auto& apm = map.get_apm_checker();
     if (std::end(events) !=
         std::find(std::begin(events), std::end(events), value("commandStartedEvent")))
-        apm.set_command_started(apm_opts);
+        apm.set_command_started_v2(apm_opts);
 
     if (std::end(events) !=
         std::find(std::begin(events), std::end(events), value("commandSucceededEvent")))
-        apm.set_command_succeeded(apm_opts);
+        apm.set_command_succeeded_v2(apm_opts);
 
     if (std::end(events) !=
         std::find(std::begin(events), std::end(events), value("commandFailedEvent")))
-        apm.set_command_failed(apm_opts);
+        apm.set_command_failed_v2(apm_opts);
 }
 
 void add_ignore_command_monitoring_events(document::view object) {
@@ -292,8 +303,6 @@ options::client_session get_session_options(document::view object) {
     session_opts.default_transaction_opts(txn_opts);
     return session_opts;
 }
-
-// TODO: create_change_stream
 
 gridfs::bucket create_bucket(document::view object) {
     auto id = object["database"].get_string().value.to_string();
@@ -429,7 +438,7 @@ std::vector<document::view> array_elements_to_documents(array::view array) {
     return docs;
 }
 
-void add_data_to_collection(const array::element& data) {
+bool add_data_to_collection(const array::element& data) {
     auto db_name = data["databaseName"].get_string().value;
     auto& map = get_entity_map();
     auto& db = map.get_database_by_name(db_name);
@@ -445,18 +454,217 @@ void add_data_to_collection(const array::element& data) {
     auto coll = db.create_collection(coll_name, {}, wc);
 
     auto to_insert = array_elements_to_documents(data["documents"].get_array().value);
-
-    CAPTURE(db_name, coll_name, to_insert);
-    if (!to_insert.empty())
-        REQUIRE(coll.insert_many(to_insert)->result().inserted_count() != 0);
+    return to_insert.empty() || coll.insert_many(to_insert)->result().inserted_count() != 0;
 }
 
 void load_initial_data(document::view test) {
     if (!test["initialData"])
         return;
 
-    for (const auto& datum : test["initialData"].get_array().value)
-        add_data_to_collection(datum);
+    auto data = test["initialData"].get_array().value;
+    std::all_of(std::begin(data), std::end(data), add_data_to_collection);
+}
+
+void assert_result(const array::element& ops, document::view actual_result) {
+    if (!ops["expectResult"])
+        return;
+
+    CAPTURE(to_json(actual_result));
+    auto result = ops["expectResult"];
+    test_util::assert_matches(actual_result["result"].get_value(), result.get_value());
+
+    if (ops["saveResultAsEntity"]) {
+        auto key = ops["saveResultAsEntity"].get_string().value.to_string();
+        get_entity_map().insert(key, actual_result);
+    }
+}
+
+void assert_error(const mongocxx::operation_exception& e,
+                  const array::element& ops,
+                  document::view res) {
+    CAPTURE(e.what(), e.raw_server_error() ? to_json(*e.raw_server_error()) : "no server error");
+    auto expect_error = ops["expectError"];
+    REQUIRE(expect_error);
+
+    if (expect_error["isError"])
+        return;
+
+    auto result = res["result"];
+    if (auto err = expect_error["expectResult"]) {
+        test_util::assert_matches(result.get_value(), err.get_value());
+    }
+
+    if (auto is_client_error = expect_error["isClientError"]) {
+        REQUIRE(!is_client_error.get_bool());
+    }
+
+    if (auto contains = expect_error["errorLabelsContain"]) {
+        auto arr = contains.get_array().value;
+        auto has_error_label = [&](const array::element& ele) {
+            return e.has_error_label(ele.get_string().value);
+        };
+        REQUIRE(std::all_of(std::begin(arr), std::end(arr), has_error_label));
+    }
+
+    if (auto omit = expect_error["errorLabelsOmit"]) {
+        auto arr = omit.get_array().value;
+        auto has_error_label = [&](const array::element& ele) {
+            return e.has_error_label(ele.get_string().value);
+        };
+        REQUIRE(std::none_of(std::begin(arr), std::end(arr), has_error_label));
+    }
+
+    REQUIRE_FALSE(/* TODO */ expect_error["errorContains"]);
+    REQUIRE_FALSE(/* TODO */ expect_error["errorCode"]);
+    REQUIRE_FALSE(/* TODO */ expect_error["errorCodeName"]);
+}
+
+void assert_error(mongocxx::exception& e, const array::element& ops) {
+    CAPTURE(e.what());
+    auto expect_error = ops["expectError"];
+    REQUIRE(expect_error);
+
+    if (expect_error["isError"])
+        return;
+
+    if (auto is_client_error = expect_error["isClientError"]) {
+        REQUIRE(is_client_error.get_bool());
+    }
+
+    // below is only used for server-side errors.
+    REQUIRE_FALSE(expect_error["errorLabelsContain"]);
+    REQUIRE_FALSE(expect_error["expectResult"]);
+    REQUIRE_FALSE(expect_error["errorLabelsOmit"]);
+
+    REQUIRE_FALSE(/* TODO */ expect_error["errorContains"]);
+    REQUIRE_FALSE(/* TODO */ expect_error["errorCode"]);
+    REQUIRE_FALSE(/* TODO */ expect_error["errorCodeName"]);
+}
+
+void assert_events(const array::element& test) {
+    if (!test["expectEvents"])
+        return;
+
+    for (auto e : test["expectEvents"].get_array().value) {
+        auto events = e["events"].get_array().value;
+        get_entity_map().get_apm_checker().compare_v2(events);
+    }
+}
+
+void assert_outcome(const array::element& test) {
+    using std::begin;
+    using std::end;
+    using std::equal;
+
+    if (!test["outcome"])
+        return;
+
+    for (auto outcome : test["outcome"].get_array().value) {
+        CAPTURE(to_json(outcome.get_document()));
+
+        auto db_name = outcome["databaseName"].get_string().value;
+        auto coll_name = outcome["collectionName"].get_string().value;
+        auto docs = outcome["documents"].get_array().value;
+
+        auto db = get_entity_map().get_database_by_name(db_name);
+        auto coll = db.collection(coll_name);
+
+        auto actual = coll.find({}, options::find{}.sort(make_document(kvp("_id", 1))));
+
+        auto matches = [&](const bsoncxx::array::element& ele, const document::view& doc) {
+            return test_util::matches(doc, ele.get_document().value);
+        };
+
+        REQUIRE(equal(begin(docs), end(docs), begin(actual), matches));
+        REQUIRE(begin(actual) == end(actual)); /* cursor is exhausted */
+    }
+}
+
+struct disable_fail_point {
+    std::string uri;
+    std::string command;
+    bool set = false;
+
+    void operator()() const {
+        if (set)
+            spec::disable_fail_point(uri, {}, command);
+    }
+};
+
+document::value bulk_write_result(const mongocxx::bulk_write_exception& e) {
+    auto reply = e.raw_server_error().value();
+
+    auto get_or_default = [&](bsoncxx::stdx::string_view key) {
+        return reply[key] ? reply[key].get_int32().value : 0;
+    };
+
+    auto result = bsoncxx::builder::basic::document{};
+    result.append(kvp("result",
+                      make_document(kvp("matchedCount", get_or_default("nMatched")),
+                                    kvp("modifiedCount", get_or_default("nModified")),
+                                    kvp("upsertedCount", get_or_default("nUpserted")),
+                                    kvp("deletedCount", get_or_default("nRemoved")),
+                                    kvp("insertedCount", get_or_default("nInserted")),
+                                    kvp("upsertedIds", make_document()))));
+
+    return result.extract();
+}
+
+void run_tests(document::view test) {
+    REQUIRE(test["tests"]);
+
+    for (auto ele : test["tests"].get_array().value) {
+        auto description = ele["description"].get_string().value.to_string();
+        SECTION(description) {
+            if (!has_run_on_requirements(ele.get_document())) {
+                std::stringstream warning;
+                warning << "test skipped: "
+                        << "none of the runOnRequirements were met" << std::endl
+                        << to_json(ele["runOnRequirements"].get_array().value);
+                WARN(warning.str());
+                continue;
+            }
+
+            REQUIRE_FALSE(/* TODO */ ele["skipReason"]);
+
+            disable_fail_point disable_fail_point_fn{};
+            get_entity_map().get_apm_checker().clear_events();
+            for (auto ops : ele["operations"].get_array().value) {
+                try {
+                    auto result = bsoncxx::builder::basic::make_document();
+                    result = operations::run(get_entity_map(), ops);
+
+                    // Special test operations return no result and are always expected to succeed.
+                    // These operations SHOULD NOT be combined with expectError, expectResult,
+                    // or saveResultAsEntity.
+                    if (ops["object"].get_string().value.to_string() == "testRunner") {
+                        if (ops["name"].get_string().value.to_string() == "failPoint") {
+                            disable_fail_point_fn.set = true;
+                            disable_fail_point_fn.uri =
+                                result["uri"].get_string().value.to_string();
+                            disable_fail_point_fn.command =
+                                result["failPoint"].get_string().value.to_string();
+                        }
+                        continue;
+                    }
+
+                    CAPTURE(to_json(result));
+                    assert_result(ops, result);
+                } catch (mongocxx::bulk_write_exception& e) {
+                    auto result = bulk_write_result(e);
+                    assert_error(e, ops, result);
+                } catch (mongocxx::operation_exception& e) {
+                    assert_error(e, ops, make_document());
+                } catch (mongocxx::exception& e) {
+                    assert_error(e, ops);
+                }
+            }
+            disable_fail_point_fn();
+
+            assert_events(ele);
+            assert_outcome(ele);
+        }
+    }
 }
 
 void run_tests_in_file(const std::string& test_path) {
@@ -490,7 +698,7 @@ void run_tests_in_file(const std::string& test_path) {
     SECTION(description) {
         create_entities(test_spec_view);
         load_initial_data(test_spec_view);
-        // TODO: tests
+        run_tests(test_spec_view);
     }
 }
 
