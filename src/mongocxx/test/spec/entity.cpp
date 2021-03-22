@@ -14,6 +14,8 @@
 
 #include "entity.hh"
 
+#include <exception>
+
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace entity {
@@ -37,11 +39,23 @@ collection& map::get_collection(const key_type& key) {
     return e.get<1>();
 }
 
+database& map::get_database_by_name(stdx::string_view name) {
+    for (auto&& kvp : _map)
+        if (typeid(database) == kvp.second.type() && name == kvp.second.get<0>().name())
+            return kvp.second.get<0>();
+    throw std::logic_error{"database name {" + name.to_string() + "} not found."};
+}
+
 void map::clear() noexcept {
+    _apm.clear();
     // Clients must outlive the entities created from it.
     // @see: https://isocpp.org/wiki/faq/dtors#order-dtors-for-members
     _map.clear();
     _client_map.clear();
+}
+
+spec::apm_checker& map::get_apm_checker() {
+    return _apm;
 }
 
 }  // namespace entity

@@ -33,6 +33,11 @@ using schema_versions_t =
     std::array<std::array<int, 3 /* major.minor.patch */>, 1 /* supported version */>;
 constexpr schema_versions_t schema_versions{{{1, 0, 0}}};
 
+entity::map& get_entity_map() {
+    static auto m = entity::map{};
+    return m;
+}
+
 // Spec: Version strings, which are used for schemaVersion and runOnRequirement, MUST conform to
 // one of the following formats, where each component is a non-negative integer:
 //      <major>.<minor>.<patch>
@@ -191,18 +196,14 @@ std::string get_hostnames(document::view object) {
     return hostnames;
 }
 
-apm_checker& get_apm_checker() {
-    static auto apm = apm_checker{};
-    return apm;
-}
-
 void add_observe_events(options::apm& apm_opts, document::view object) {
     using types::bson_value::value;
     if (!object["observeEvents"])
         return;
 
     auto events = object["observeEvents"].get_array().value;
-    auto& apm = get_apm_checker();
+    auto& map = get_entity_map();
+    auto& apm = map.get_apm_checker();
     if (std::end(events) !=
         std::find(std::begin(events), std::end(events), value("commandStartedEvent")))
         apm.set_command_started(apm_opts);
@@ -223,14 +224,10 @@ void add_ignore_command_monitoring_events(document::view object) {
         auto event = apm_checker::to_event(cme.get_string());
 
         CAPTURE(apm_checker::to_string(event), cme.get_string());
-        auto& apm = get_apm_checker();
+        auto& map = get_entity_map();
+        auto& apm = map.get_apm_checker();
         apm.set_ignore_command_monitoring_event(event);
     }
-}
-
-entity::map& get_entity_map() {
-    static auto m = entity::map{};
-    return m;
 }
 
 write_concern get_write_concern(const document::element& opts) {
@@ -423,6 +420,45 @@ std::vector<std::string> versions_to_string(schema_versions_t versions) {
     return out;
 }
 
+std::vector<document::view> array_elements_to_documents(array::view array) {
+    // no implicit conversion from 'bsoncxx::array::view' to 'bsoncxx::document::view'
+    auto docs = std::vector<document::view>{};
+    auto arr_to_doc = [](const array::element& doc) { return doc.get_document().value; };
+
+    std::transform(std::begin(array), std::end(array), std::back_inserter(docs), arr_to_doc);
+    return docs;
+}
+
+void add_data_to_collection(const array::element& data) {
+    auto db_name = data["databaseName"].get_string().value;
+    auto& map = get_entity_map();
+    auto& db = map.get_database_by_name(db_name);
+
+    auto wc = write_concern{};
+    wc.majority(std::chrono::milliseconds{0});
+
+    auto coll_name = data["collectionName"].get_string().value;
+
+    if (db.has_collection(coll_name))
+        db[coll_name].drop();
+
+    auto coll = db.create_collection(coll_name, {}, wc);
+
+    auto to_insert = array_elements_to_documents(data["documents"].get_array().value);
+
+    CAPTURE(db_name, coll_name, to_insert);
+    if (!to_insert.empty())
+        REQUIRE(coll.insert_many(to_insert)->result().inserted_count() != 0);
+}
+
+void load_initial_data(document::view test) {
+    if (!test["initialData"])
+        return;
+
+    for (const auto& datum : test["initialData"].get_array().value)
+        add_data_to_collection(datum);
+}
+
 void run_tests_in_file(const std::string& test_path) {
     auto test_spec = parse_test_file(test_path);
     auto test_spec_view = test_spec.view();
@@ -453,7 +489,7 @@ void run_tests_in_file(const std::string& test_path) {
     const std::string description = test_spec_view["description"].get_string().value.to_string();
     SECTION(description) {
         create_entities(test_spec_view);
-        // TODO: initialData
+        load_initial_data(test_spec_view);
         // TODO: tests
     }
 }
