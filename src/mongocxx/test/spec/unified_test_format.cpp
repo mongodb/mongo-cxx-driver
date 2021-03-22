@@ -429,7 +429,7 @@ std::vector<document::view> array_elements_to_documents(array::view array) {
     return docs;
 }
 
-bool add_data_to_collection(const array::element& data) {
+void add_data_to_collection(const array::element& data) {
     auto db_name = data["databaseName"].get_string().value;
     auto& map = get_entity_map();
     auto& db = map.get_database_by_name(db_name);
@@ -445,15 +445,18 @@ bool add_data_to_collection(const array::element& data) {
     auto coll = db.create_collection(coll_name, {}, wc);
 
     auto to_insert = array_elements_to_documents(data["documents"].get_array().value);
-    return to_insert.empty() || coll.insert_many(to_insert)->result().inserted_count() != 0;
+
+    CAPTURE(db_name, coll_name, to_insert);
+    if (!to_insert.empty())
+        REQUIRE(coll.insert_many(to_insert)->result().inserted_count() != 0);
 }
 
 void load_initial_data(document::view test) {
     if (!test["initialData"])
         return;
 
-    auto data = test["initialData"].get_array().value;
-    std::all_of(std::begin(data), std::end(data), add_data_to_collection);
+    for (const auto& datum : test["initialData"].get_array().value)
+        add_data_to_collection(datum);
 }
 
 void run_tests_in_file(const std::string& test_path) {
