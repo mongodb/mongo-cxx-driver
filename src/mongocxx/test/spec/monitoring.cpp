@@ -33,6 +33,7 @@ namespace spec {
 using namespace mongocxx;
 using bsoncxx::to_json;
 
+// commands postfixed with "_v2" are used to support the unified test format.
 void apm_checker::compare_v2(bsoncxx::array::view expectations, bool allow_extra) {
     using bsoncxx::types::bson_value::value;
 
@@ -105,7 +106,6 @@ std::string apm_checker::print_all() {
     return output.str();
 }
 
-// commands postfixed with "_v2" are used to support the unified test format.
 void apm_checker::set_command_started_v2(options::apm& apm) {
     using namespace bsoncxx::builder::basic;
 
