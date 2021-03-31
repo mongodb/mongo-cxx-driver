@@ -66,11 +66,7 @@ void apm_checker::compare(bsoncxx::array::view expectations,
         return std::any_of(std::begin(_ignore), std::end(_ignore), [&](stdx::string_view key) {
             return v.view()["command_started_event"]["command"][key] ||
                    v.view()["command_failed_event"]["command"][key] ||
-                   v.view()["command_succeeded_event"]["command"][key] ||
-                   // unified test format expects camelCase
-                   v.view()["commandStartedEvent"]["command"][key] ||
-                   v.view()["commandFailedEvent"]["command"][key] ||
-                   v.view()["commandSucceededEvent"]["command"][key];
+                   v.view()["command_succeeded_event"]["command"][key];
         });
     };
 
@@ -101,7 +97,6 @@ void apm_checker::has(bsoncxx::array::view expectations) {
 std::string apm_checker::print_all() {
     std::stringstream output{};
     output << std::endl << std::endl;
-    ;
     output << "APM Checker contents: " << std::endl;
     for (auto&& event : _events) {
         output << "APM event: " << bsoncxx::to_json(event) << std::endl;
@@ -110,7 +105,7 @@ std::string apm_checker::print_all() {
     return output.str();
 }
 
-// set commands used to support the unified test format.
+// commands postfixed with "_v2" are used to support the unified test format.
 void apm_checker::set_command_started_v2(options::apm& apm) {
     using namespace bsoncxx::builder::basic;
 
@@ -205,9 +200,8 @@ apm_checker::event apm_checker::to_event(stdx::string_view s) {
         return apm_checker::event::get_more;
     if (s.to_string() == "configureFailPoint")
         return apm_checker::event::configure_fail_point;
-    else
-        throw mongocxx::logic_error{error_code::k_invalid_parameter,
-                                    "unrecognized event {" + s.to_string() + "}"};
+    throw mongocxx::logic_error{error_code::k_invalid_parameter,
+                                "unrecognized event '" + s.to_string() + "'"};
 }
 
 std::string apm_checker::to_string(event e) {
