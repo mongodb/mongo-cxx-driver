@@ -569,14 +569,15 @@ void assert_outcome(const array::element& test) {
         auto db = get_entity_map().get_database_by_name(db_name);
         auto coll = db.collection(coll_name);
 
-        auto actual = coll.find({}, options::find{}.sort(make_document(kvp("_id", 1))));
+        auto results = coll.find({}, options::find{}.sort(make_document(kvp("_id", 1))));
 
-        auto matches = [&](const bsoncxx::array::element& ele, const document::view& doc) {
-            return test_util::matches(doc, ele.get_document().value);
-        };
+        auto actual = results.begin();
+        for (auto& expected : docs) {
+            test_util::assert_matches(types::bson_value::value(*actual), expected.get_value());
+            ++actual;
+        }
 
-        REQUIRE(equal(begin(docs), end(docs), begin(actual), matches));
-        REQUIRE(begin(actual) == end(actual)); /* cursor is exhausted */
+        REQUIRE(begin(results) == end(results)); /* cursor is exhausted */
     }
 }
 
@@ -634,9 +635,6 @@ void run_tests(document::view test) {
                     auto result = bsoncxx::builder::basic::make_document();
                     result = operations::run(get_entity_map(), ops);
 
-                    // Special test operations return no result and are always expected to succeed.
-                    // These operations SHOULD NOT be combined with expectError, expectResult,
-                    // or saveResultAsEntity.
                     if (ops["object"].get_string().value.to_string() == "testRunner") {
                         if (ops["name"].get_string().value.to_string() == "failPoint") {
                             disable_fail_point_fn.set = true;
@@ -645,6 +643,10 @@ void run_tests(document::view test) {
                             disable_fail_point_fn.command =
                                 result["failPoint"].get_string().value.to_string();
                         }
+
+                        // Special test operations return no result and are always expected to
+                        // succeed. These operations SHOULD NOT be combined with expectError,
+                        // expectResult, or saveResultAsEntity.
                         continue;
                     }
 
