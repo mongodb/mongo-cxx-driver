@@ -829,7 +829,7 @@ document::value with_transaction(client_session& session,
 
 document::value end_session(entity::map& map, const std::string& name) {
     auto& session = map.get_client_session(name);
-    auto id = session.id();
+    auto id = types::bson_value::value(session.id());
 
     map.erase(name);
     map.insert(name, id);
