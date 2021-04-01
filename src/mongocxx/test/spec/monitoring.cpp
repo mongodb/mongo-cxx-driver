@@ -212,6 +212,8 @@ std::string apm_checker::to_string(event e) {
             return "getMore";
         case apm_checker::event::configure_fail_point:
             return "configureFailPoint";
+        default:
+            MONGOCXX_UNREACHABLE;
     }
 }
 

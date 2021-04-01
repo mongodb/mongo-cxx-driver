@@ -349,6 +349,8 @@ std::string to_string(types::bson_value::view_or_value val) {
             return val.view().get_symbol().symbol.to_string();
         case bsoncxx::v_noabi::type::k_dbpointer:
             return val.view().get_dbpointer().value.to_string();
+        default:
+            MONGOCXX_UNREACHABLE;
     }
 }
 
