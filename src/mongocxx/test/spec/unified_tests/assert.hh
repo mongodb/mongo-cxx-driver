@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc.
+// Copyright 2020-present MongoDB Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,22 +16,18 @@
 
 #include <mongocxx/config/private/prelude.hh>
 
-#include "entity.hh"
-#include <bsoncxx/array/element.hpp>
-#include <bsoncxx/document/value.hpp>
-#include <bsoncxx/document/view.hpp>
 #include <mongocxx/test/spec/monitoring.hh>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
+namespace assert {
 
-namespace operations {
+void matches(bsoncxx::types::bson_value::view actual,
+             bsoncxx::types::bson_value::view expected,
+             mongocxx::spec::apm_checker& map);
 
-bsoncxx::document::value run(entity::map& map,
-                             spec::apm_checker& apm,
-                             const bsoncxx::array::element& op);
-
-}  // namespace operations
-
+}  // namespace assert
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
+
+#include <mongocxx/config/private/postlude.hh>

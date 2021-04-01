@@ -159,9 +159,6 @@ using match_visitor =
                                bsoncxx::stdx::optional<bsoncxx::types::bson_value::view> main,
                                bsoncxx::types::bson_value::view pattern)>;
 
-void assert_matches(bsoncxx::types::bson_value::view actual,
-                    bsoncxx::types::bson_value::view expected);
-
 bool matches(bsoncxx::types::bson_value::view main,
              bsoncxx::types::bson_value::view pattern,
              match_visitor visitor_fn = {});
@@ -187,6 +184,11 @@ bool matches(bsoncxx::document::view doc,
 std::string tolowercase(stdx::string_view view);
 
 void check_outcome_collection(mongocxx::collection* coll, bsoncxx::document::view expected);
+
+template <typename Container>
+auto size(Container c) -> decltype(std::distance(std::begin(c), std::end(c))) {
+    return std::distance(std::begin(c), std::end(c));
+};
 
 //
 // Require a topology that supports sessions (a post-3.6 replica set or cluster of them).

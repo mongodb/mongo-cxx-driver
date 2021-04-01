@@ -22,7 +22,6 @@
 #include <bsoncxx/stdx/variant.hpp>
 #include <bsoncxx/types/bson_value/value.hpp>
 #include <mongocxx/client.hpp>
-#include <mongocxx/test/spec/monitoring.hh>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

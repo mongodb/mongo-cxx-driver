@@ -34,7 +34,9 @@ using namespace mongocxx;
 using bsoncxx::to_json;
 
 // commands postfixed with "_v2" are used to support the unified test format.
-void apm_checker::compare_v2(bsoncxx::array::view expectations, bool allow_extra) {
+void apm_checker::compare_v2(bsoncxx::array::view expectations,
+                             assert_matches matches_fn,
+                             bool allow_extra) {
     using bsoncxx::types::bson_value::value;
 
     auto is_ignored = [&](bsoncxx::document::value v) {
@@ -51,7 +53,7 @@ void apm_checker::compare_v2(bsoncxx::array::view expectations, bool allow_extra
     for (auto expectation : expectations) {
         auto expected = expectation.get_document().view();
         REQUIRE(events_iter != _events.end());
-        test_util::assert_matches(value(events_iter->view()), value(expected));
+        matches_fn(value(events_iter->view()), value(expected), *this);
         events_iter++;
     }
 

@@ -15,6 +15,7 @@
 #include <fstream>
 #include <regex>
 
+#include "assert.hh"
 #include "entity.hh"
 #include "operations.hh"
 #include <bsoncxx/builder/basic/document.hpp>
@@ -489,7 +490,7 @@ void assert_result(const array::element& ops, document::view actual_result) {
 
     CAPTURE(to_json(actual_result));
     auto result = ops["expectResult"];
-    test_util::assert_matches(actual_result["result"].get_value(), result.get_value());
+    assert::matches(actual_result["result"].get_value(), result.get_value(), get_apm_checker());
 
     if (ops["saveResultAsEntity"]) {
         auto key = ops["saveResultAsEntity"].get_string().value.to_string();
@@ -509,7 +510,7 @@ void assert_error(const mongocxx::operation_exception& e,
 
     auto result = res["result"];
     if (auto err = expect_error["expectResult"]) {
-        test_util::assert_matches(result.get_value(), err.get_value());
+        assert::matches(result.get_value(), err.get_value(), get_apm_checker());
     }
 
     if (auto is_client_error = expect_error["isClientError"]) {
@@ -565,7 +566,7 @@ void assert_events(const array::element& test) {
 
     for (auto e : test["expectEvents"].get_array().value) {
         auto events = e["events"].get_array().value;
-        get_apm_checker().compare_v2(events);
+        get_apm_checker().compare_v2(events, assert::matches);
     }
 }
 
@@ -591,7 +592,8 @@ void assert_outcome(const array::element& test) {
 
         auto actual = results.begin();
         for (auto& expected : docs) {
-            test_util::assert_matches(types::bson_value::value(*actual), expected.get_value());
+            assert::matches(
+                types::bson_value::value(*actual), expected.get_value(), get_apm_checker());
             ++actual;
         }
 

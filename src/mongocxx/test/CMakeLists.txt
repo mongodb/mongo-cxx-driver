@@ -164,9 +164,13 @@ add_executable(test_mongohouse_specs
 add_executable(test_unified_format_spec
     ${PROJECT_SOURCE_DIR}/test_util/client_helpers.cpp
     ${THIRD_PARTY_SOURCE_DIR}/catch/main.cpp
-    spec/unified_tests/runner.cpp
+    spec/unified_tests/assert.cpp
+    spec/unified_tests/assert.hh
     spec/unified_tests/entity.cpp
+    spec/unified_tests/entity.hh
     spec/unified_tests/operations.cpp
+    spec/unified_tests/operations.hh
+    spec/unified_tests/runner.cpp
     ${spec_test_common}
 )
 
@@ -330,6 +334,8 @@ set_dist_list (src_mongocxx_test_DIST
    spec/read_write_concern.cpp
    spec/retryable-reads.cpp
    spec/transactions.cpp
+   spec/unified_tests/assert.cpp
+   spec/unified_tests/assert.hh
    spec/unified_tests/entity.cpp
    spec/unified_tests/entity.hh
    spec/unified_tests/operations.cpp
