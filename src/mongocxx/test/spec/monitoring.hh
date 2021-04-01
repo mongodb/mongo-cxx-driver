@@ -25,6 +25,7 @@ namespace spec {
 
 using namespace mongocxx;
 
+using skip_fn = std::function<bool(bsoncxx::document::value)>;
 // Stores and compares apm events.
 class apm_checker {
    public:
@@ -40,6 +41,7 @@ class apm_checker {
 
     void clear();
     void skip_kill_cursors();
+    void skip_captured_events(skip_fn fn);
     void print_all();
 
     using event_vector = std::vector<bsoncxx::document::value>;
@@ -62,7 +64,7 @@ class apm_checker {
 
    private:
     event_vector _events;
-    bool _skip_kill_cursors = false;
+    std::vector<skip_fn> skip_fns;
 };
 
 }  // namespace spec

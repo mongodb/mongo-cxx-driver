@@ -29,16 +29,18 @@ namespace spec {
 using namespace mongocxx;
 using bsoncxx::to_json;
 
+void apm_checker::skip_captured_events(skip_fn fn) {
+    skip_fns.push_back(fn);
+}
+
 void apm_checker::compare(bsoncxx::array::view expectations,
                           bool allow_extra,
                           const test_util::match_visitor& match_visitor) {
-    auto is_kill_cursor = [](bsoncxx::document::value v) {
-        return v.view()["command_started_event"]["command"]["killCursors"];
-    };
+    for (auto skip_fn : skip_fns) {
+        _events.erase(std::remove_if(_events.begin(), _events.end(), skip_fn), _events.end());
+    }
 
     auto events_iter = _events.begin();
-    if (_skip_kill_cursors)
-        _events.erase(std::remove_if(_events.begin(), _events.end(), is_kill_cursor));
     for (auto expectation : expectations) {
         auto expected = expectation.get_document().view();
 
@@ -114,7 +116,9 @@ void apm_checker::clear() {
 }
 
 void apm_checker::skip_kill_cursors() {
-    this->_skip_kill_cursors = true;
+    skip_captured_events([](bsoncxx::document::value v) {
+        return static_cast<bool>(v.view()["command_started_event"]["command"]["killCursors"]);
+    });
 }
 
 }  // namespace spec

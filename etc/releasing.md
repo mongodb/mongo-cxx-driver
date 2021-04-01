@@ -1,5 +1,7 @@
 # Releasing the mongocxx driver
 
+Ensure the prerequisite version of the C driver is released prior to the C++ driver. Example: The 3.7.0 C++ driver requires the C driver version 1.18.0, so C driver 1.18.0 MUST be released first.
+
 If doing a release on a version prior to 3.5.0, follow the old instructions from the shared Google drive. Go to File -> Version History -> See Version History and select the version "Pre CXX-584".
 
 ## Check fixVersions in Jira

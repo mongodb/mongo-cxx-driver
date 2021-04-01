@@ -17,6 +17,7 @@
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/string/to_string.hpp>
 #include <bsoncxx/test_util/catch.hh>
+#include <mongoc/mongoc.h>
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/exception.hpp>
 #include <mongocxx/instance.hpp>
@@ -82,19 +83,59 @@ void add_auto_encryption_opts(document::view test, options::client* client_opts)
 
             // Add aws credentials (from the environment)
             if (test_encrypt_opts["kmsProviders"]["aws"]) {
-                auto access_key = std::getenv("MONGOCXX_TEST_AWS_SECRET_ACCESS_KEY");
-                auto key_id = std::getenv("MONGOCXX_TEST_AWS_ACCESS_KEY_ID");
-
-                if (!access_key || !key_id) {
-                    FAIL(
-                        "Please set environment variables for client side encryption tests:\n"
-                        "\tMONGOCXX_TEST_AWS_SECRET_ACCESS_KEY\n"
-                        "\tMONGOCXX_TEST_AWS_ACCESS_KEY_ID\n\n");
-                }
-
                 kms_doc.append(kvp("aws", [&](sub_document subdoc) {
-                    subdoc.append(kvp("secretAccessKey", access_key));
-                    subdoc.append(kvp("accessKeyId", key_id));
+                    subdoc.append(
+                        kvp("secretAccessKey",
+                            test_util::getenv_or_fail("MONGOCXX_TEST_AWS_SECRET_ACCESS_KEY")));
+                    subdoc.append(
+                        kvp("accessKeyId",
+                            test_util::getenv_or_fail("MONGOCXX_TEST_AWS_ACCESS_KEY_ID")));
+                }));
+            }
+
+            if (test_encrypt_opts["kmsProviders"]["azure"]) {
+                kms_doc.append(kvp("azure", [&](sub_document subdoc) {
+                    subdoc.append(kvp("tenantId",
+                                      test_util::getenv_or_fail("MONGOCXX_TEST_AZURE_TENANT_ID")));
+                    subdoc.append(kvp("clientId",
+                                      test_util::getenv_or_fail("MONGOCXX_TEST_AZURE_CLIENT_ID")));
+                    subdoc.append(
+                        kvp("clientSecret",
+                            test_util::getenv_or_fail("MONGOCXX_TEST_AZURE_CLIENT_SECRET")));
+                }));
+            }
+
+            if (test_encrypt_opts["kmsProviders"]["gcp"]) {
+                kms_doc.append(kvp("gcp", [&](sub_document subdoc) {
+                    subdoc.append(
+                        kvp("email", test_util::getenv_or_fail("MONGOCXX_TEST_GCP_EMAIL")));
+                    subdoc.append(kvp("privateKey",
+                                      test_util::getenv_or_fail("MONGOCXX_TEST_GCP_PRIVATEKEY")));
+                }));
+            }
+
+            if (test_encrypt_opts["kmsProviders"]["awsTemporary"]) {
+                kms_doc.append(kvp("aws", [&](sub_document subdoc) {
+                    subdoc.append(
+                        kvp("secretAccessKey",
+                            test_util::getenv_or_fail("MONGOCXX_TEST_AWS_TEMP_SECRET_ACCESS_KEY")));
+                    subdoc.append(
+                        kvp("accessKeyId",
+                            test_util::getenv_or_fail("MONGOCXX_TEST_AWS_TEMP_ACCESS_KEY_ID")));
+                    subdoc.append(
+                        kvp("sessionToken",
+                            test_util::getenv_or_fail("MONGOCXX_TEST_AWS_TEMP_SESSION_TOKEN")));
+                }));
+            }
+
+            if (test_encrypt_opts["kmsProviders"]["awsTemporaryNoSessionToken"]) {
+                kms_doc.append(kvp("aws", [&](sub_document subdoc) {
+                    subdoc.append(
+                        kvp("secretAccessKey",
+                            test_util::getenv_or_fail("MONGOCXX_TEST_AWS_TEMP_SECRET_ACCESS_KEY")));
+                    subdoc.append(
+                        kvp("accessKeyId",
+                            test_util::getenv_or_fail("MONGOCXX_TEST_AWS_TEMP_ACCESS_KEY_ID")));
                 }));
             }
 
@@ -162,6 +203,25 @@ void run_encryption_tests_in_file(const std::string& test_path) {
         options::client client_opts;
 
         apm_checker apm_checker;
+        // Because the C++ driver pools clients (and not connections) it does
+        // not have the same issue described in CXX-2155. The spec tests assume
+        // that a separate internal client is used for key vault operations.
+        // Since the parent client is reused in the C/C++ driver, the key vault
+        // operations undergo automatic encryption so listCollections against
+        // the key vault collection appears in the command started events.
+        apm_checker.skip_captured_events([](bsoncxx::document::value v) {
+            if (!v.view()["command_started_event"]["command"]["listCollections"]) {
+                return false;
+            }
+            if (!v.view()["command_started_event"]["command"]["$db"]) {
+                return false;
+            }
+            if (0 != v.view()["command_started_event"]["command"]["$db"].get_string().value.compare(
+                         "keyvault")) {
+                return false;
+            }
+            return true;
+        });
         client_opts.apm_opts(apm_checker.get_apm_opts(true /* command_started_events_only */));
 
         add_auto_encryption_opts(test.get_document().value, &client_opts);
@@ -267,12 +327,14 @@ TEST_CASE("Client side encryption spec automated tests", "[client_side_encryptio
 
     std::string test_file;
     while (std::getline(test_files, test_file)) {
-        if (std::find(unsupported_tests.begin(), unsupported_tests.end(), test_file) !=
-            unsupported_tests.end()) {
-            WARN("skipping " << test_file << " due to unsupported operation");
-            continue;
+        SECTION(test_file) {
+            if (std::find(unsupported_tests.begin(), unsupported_tests.end(), test_file) !=
+                unsupported_tests.end()) {
+                WARN("skipping " << test_file << " due to unsupported operation");
+                continue;
+            }
+            run_encryption_tests_in_file(path + "/" + test_file);
         }
-        run_encryption_tests_in_file(path + "/" + test_file);
     }
 }
 

@@ -451,6 +451,14 @@ bool should_run_client_side_encryption_test(void) {
     return true;
 }
 
+std::string getenv_or_fail(std::string env_name) {
+    auto val = std::getenv(env_name.c_str());
+    if (!val) {
+        FAIL("Please set the environment variable: " << env_name);
+    }
+    return val;
+}
+
 }  // namespace test_util
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
