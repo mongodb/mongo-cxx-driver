@@ -137,10 +137,13 @@ void special_operator(types::bson_value::view actual, document::view expected, e
             assert::matches(actual, val, map);
     } else if (op.key().to_string() == "$$sessionLsid") {
         auto id = op.get_string().value.to_string();
-        auto val = map.get_value(id);
-
-        CAPTURE(id, to_string(val.view()));
-        REQUIRE(actual == val);
+        auto& type = map.type(id);
+        if (type == typeid(client_session)) {
+            REQUIRE(actual == map.get_client_session(id).id());
+        } else {
+            REQUIRE(type == typeid(types::bson_value::value));
+            REQUIRE(actual == map.get_value(id));
+        }
     } else if (op.key().to_string() == "$$matchesEntity") {
         // TODO: get entity from map
     } else if (op.key().to_string() == "$$exists") {
