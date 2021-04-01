@@ -1092,7 +1092,7 @@ buildvariants:
           tar_options: *linux_tar_options
           cmake_flags: *linux_cmake_flags
           mongodb_version: *version_latest
-          mongoc_version: "master" # TODO: CXX-???? update to 1.18.0-beta after beta release.
+          mongoc_version: "master" # TODO: CXX-2220 update to 1.18.0 after release.
       run_on:
           - ubuntu1804-build
       tasks:
