@@ -757,9 +757,11 @@ document::value download(gridfs::bucket& bucket, document::view op) {
     return make_document(kvp("result", value(bytes)));
 }
 
-document::value upload(gridfs::bucket& bucket, document::view op) {
+document::value upload(entity::map& map, document::view op) {
     auto key = op["saveResultAsEntity"].get_string().value.to_string();
     auto arguments = op["arguments"].get_document().value;
+    auto object = op["object"].get_string().value.to_string();
+    auto& bucket = map.get_bucket(object);
 
     options::gridfs::upload upload_options;
 
@@ -781,6 +783,7 @@ document::value upload(gridfs::bucket& bucket, document::view op) {
     auto upload_result = uploader.close();
     auto id = upload_result.id();
 
+    map.insert(key, id);
     return make_document(kvp("result", id));
 }
 
@@ -990,8 +993,7 @@ document::value operations::run(entity::map& map,
         return download(bucket, op_view);
     }
     if (name == "upload") {
-        auto& bucket = map.get_bucket(object);
-        return upload(bucket, op_view);
+        return upload(map, op_view);
     }
     if (name == "deleteOne") {
         auto& coll = map.get_collection(object);

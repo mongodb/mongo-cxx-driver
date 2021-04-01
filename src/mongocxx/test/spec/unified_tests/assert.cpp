@@ -145,7 +145,8 @@ void special_operator(types::bson_value::view actual, document::view expected, e
             REQUIRE(actual == map.get_value(id));
         }
     } else if (op.key().to_string() == "$$matchesEntity") {
-        // TODO: get entity from map
+        auto name = op.get_string().value.to_string();
+        REQUIRE(actual == map.get_value(name));
     } else if (op.key().to_string() == "$$exists") {
         REQUIRE(op.get_bool() == (actual.type() != type::k_null));
     } else if (op.key().to_string() == "$$matchesHexBytes") {
