@@ -19,7 +19,6 @@
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/types/bson_value/value.hpp>
 #include <bsoncxx/types/bson_value/view_or_value.hpp>
-#include <mongocxx/test/spec/monitoring.hh>
 #include <mongocxx/test_util/client_helpers.hh>
 #include <third_party/catch/include/catch.hpp>
 
@@ -137,7 +136,7 @@ void special_operator(types::bson_value::view actual, document::view expected, e
             assert::matches(actual, val, map);
     } else if (op.key().to_string() == "$$sessionLsid") {
         auto id = op.get_string().value.to_string();
-        auto& type = map.type(id);
+        const auto& type = map.type(id);
         if (type == typeid(client_session)) {
             REQUIRE(actual == map.get_client_session(id).id());
         } else {
