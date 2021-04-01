@@ -827,6 +827,15 @@ document::value with_transaction(client_session& session,
     return make_document();
 }
 
+document::value end_session(entity::map& map, const std::string& name) {
+    auto& session = map.get_client_session(name);
+    auto id = session.id();
+
+    map.erase(name);
+    map.insert(name, id);
+    return make_document();
+}
+
 document::value operations::run(entity::map& map,
                                 spec::apm_checker& apm,
                                 const array::element& op) {
@@ -887,14 +896,13 @@ document::value operations::run(entity::map& map,
         return empty_doc;
     }
     if (name == "endSession") {
-        map.get_client_session(object);  // assert 'object' exists and is a session
-        map.erase(object);
-        return empty_doc;
+        return end_session(map, object);
     }
     if (name == "assertSameLsidOnLastTwoCommands") {
         auto cse1 = *(apm.end() - 1);
         auto cse2 = *(apm.end() - 2);
 
+        CAPTURE(to_json(cse1), to_json(cse2));
         REQUIRE(cse1["commandStartedEvent"]["command"]["lsid"].get_value() ==
                 cse2["commandStartedEvent"]["command"]["lsid"].get_value());
         return empty_doc;
@@ -903,6 +911,7 @@ document::value operations::run(entity::map& map,
         auto cse1 = *(apm.end() - 1);
         auto cse2 = *(apm.end() - 2);
 
+        CAPTURE(to_json(cse1), to_json(cse2));
         REQUIRE(cse1["commandStartedEvent"]["command"]["lsid"].get_value() !=
                 cse2["commandStartedEvent"]["command"]["lsid"].get_value());
         return empty_doc;

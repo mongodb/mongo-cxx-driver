@@ -63,6 +63,7 @@ class map {
     change_stream& get_change_stream(const key_type& key);
     client_session& get_client_session(const key_type& key);
     gridfs::bucket& get_bucket(const key_type& key);
+    bsoncxx::types::bson_value::value& get_value(const key_type& key);
 
     database& get_database_by_name(stdx::string_view name);
 

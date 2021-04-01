@@ -54,6 +54,11 @@ change_stream& map::get_change_stream(const key_type& key) {
     return e.get<4>();
 }
 
+bsoncxx::types::bson_value::value& map::get_value(const key_type& key) {
+    auto& e = _map.at(key);
+    return e.get<5>();
+}
+
 const std::type_info& map::type(const key_type& key) {
     if (_map.find(key) != _map.end())
         return _map.at(key).type();

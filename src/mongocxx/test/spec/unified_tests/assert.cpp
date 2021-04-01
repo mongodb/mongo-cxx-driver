@@ -114,6 +114,7 @@ void special_operator(types::bson_value::view actual, document::view expected, e
     auto op = *expected.begin();
     REQUIRE(op.key().starts_with("$$"));  // assert special operator
 
+    CAPTURE(to_string(op.get_value()), to_string(actual));
     if (op.key().to_string() == "$$type") {
         auto actual_t = actual.type();
         if (op.type() == bsoncxx::v_noabi::type::k_string) {
@@ -136,10 +137,10 @@ void special_operator(types::bson_value::view actual, document::view expected, e
             assert::matches(actual, val, map);
     } else if (op.key().to_string() == "$$sessionLsid") {
         auto id = op.get_string().value.to_string();
-        CAPTURE(to_string(op.get_value()), id);
-        map.get_client_session(id);
-        REQUIRE(false);
-        // TODO: get sessions IDs from entity map
+        auto val = map.get_value(id);
+
+        CAPTURE(id, to_string(val.view()));
+        REQUIRE(actual == val);
     } else if (op.key().to_string() == "$$matchesEntity") {
         // TODO: get entity from map
     } else if (op.key().to_string() == "$$exists") {
