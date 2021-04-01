@@ -678,14 +678,19 @@ document::value assert_session_transaction_state(client_session& session, docume
     switch (session.get_transaction_state()) {
         case client_session::transaction_state::k_mongoc_transaction_none:
             REQUIRE(state == "none");
+            break;
         case client_session::transaction_state::k_mongoc_transaction_starting:
             REQUIRE(state == "starting");
+            break;
         case client_session::transaction_state::k_mongoc_transaction_in_progress:
             REQUIRE(state == "in_progress");
+            break;
         case client_session::transaction_state::k_mongoc_transaction_committed:
             REQUIRE(state == "committed");
+            break;
         case client_session::transaction_state::k_mongoc_transaction_aborted:
             REQUIRE(state == "aborted");
+            break;
     }
     return make_document();
 }
@@ -828,7 +833,7 @@ document::value operations::run(entity::map& map, const array::element& op) {
 
     auto empty_doc = make_document();
     auto op_view = op.get_document().view();
-    CAPTURE(name, object, op_view);
+    CAPTURE(name, object, to_json(op_view));
     if (name == "find")
         return find_one(map.get_collection(object), op_view);
     if (name == "bulkWrite")
