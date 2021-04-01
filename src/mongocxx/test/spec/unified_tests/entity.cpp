@@ -71,7 +71,6 @@ database& map::get_database_by_name(stdx::string_view name) {
 }
 
 void map::clear() noexcept {
-    _apm.clear();
     // Clients must outlive the entities created from it.
     // @see: https://isocpp.org/wiki/faq/dtors#order-dtors-for-members
     _map.clear();
@@ -89,10 +88,6 @@ void map::erase(const key_type& key) {
     }
 
     _client_map.erase(_client_map.find(key));
-}
-
-spec::apm_checker& map::get_apm_checker() {
-    return _apm;
 }
 
 }  // namespace entity

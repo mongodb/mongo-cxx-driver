@@ -72,10 +72,7 @@ class map {
 
     void erase(const key_type& key);
 
-    spec::apm_checker& get_apm_checker();
-
    private:
-    spec::apm_checker _apm;
     // Objects are destroyed in reverse order of their appearance in the class definition. Since the
     // client must outlive the objects created from it, the client objects are held in a separate
     // map and declared first.

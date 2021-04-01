@@ -26,7 +26,9 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 namespace operations {
 
-bsoncxx::document::value run(entity::map& map, const bsoncxx::array::element& op);
+bsoncxx::document::value run(entity::map& map,
+                             spec::apm_checker& apm,
+                             const bsoncxx::array::element& op);
 
 }  // namespace operations
 

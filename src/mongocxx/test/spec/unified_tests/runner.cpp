@@ -44,6 +44,11 @@ using schema_versions_t =
     std::array<std::array<int, 3 /* major.minor.patch */>, 1 /* supported version */>;
 constexpr schema_versions_t schema_versions{{{1, 0, 0}}};
 
+spec::apm_checker& get_apm_checker() {
+    static spec::apm_checker apm;
+    return apm;
+}
+
 entity::map& get_entity_map() {
     static auto m = entity::map{};
     return m;
@@ -213,8 +218,7 @@ void add_observe_events(options::apm& apm_opts, document::view object) {
         return;
 
     auto events = object["observeEvents"].get_array().value;
-    auto& map = get_entity_map();
-    auto& apm = map.get_apm_checker();
+    auto& apm = get_apm_checker();
     if (std::end(events) !=
         std::find(std::begin(events), std::end(events), value("commandStartedEvent")))
         apm.set_command_started_v2(apm_opts);
@@ -235,8 +239,7 @@ void add_ignore_command_monitoring_events(document::view object) {
         auto event = apm_checker::to_event(cme.get_string());
 
         CAPTURE(apm_checker::to_string(event), cme.get_string());
-        auto& map = get_entity_map();
-        auto& apm = map.get_apm_checker();
+        auto& apm = get_apm_checker();
         apm.set_ignore_command_monitoring_event(event);
     }
 }
@@ -394,7 +397,22 @@ void create_entities(const document::view test) {
     if (!test["createEntities"])
         return;
 
+    // Below clears leftover apm events and entities from the last tests. This also initializes the
+    // static apm checker in 'get_apm_checker' and entity map 'get_entity_map', if needed, in that
+    // order. This will also ensure they are destroyed in reverse order, which prevents a
+    // "heap-use-after-free" error.
+    //
+    // The "heap-use-after-free" error will happen if:
+    //      1. The apm checker's destructor is called
+    // `    2. The client's destructor is called
+    //          2a. The client calls _mongoc_client_end_sessions in its destruction process.
+    //          2b. The client attempts to log this event in the apm checker, which has been freed.
+    //
+    // Reversing the order of destruction fixes the issue.
+    //
+    get_apm_checker().clear();
     get_entity_map().clear();
+
     auto entities = test["createEntities"].get_array().value;
     REQUIRE(std::all_of(std::begin(entities), std::end(entities), add_to_map));
 }
@@ -547,7 +565,7 @@ void assert_events(const array::element& test) {
 
     for (auto e : test["expectEvents"].get_array().value) {
         auto events = e["events"].get_array().value;
-        get_entity_map().get_apm_checker().compare_v2(events);
+        get_apm_checker().compare_v2(events);
     }
 }
 
@@ -629,11 +647,11 @@ void run_tests(document::view test) {
             REQUIRE_FALSE(/* TODO */ ele["skipReason"]);
 
             disable_fail_point disable_fail_point_fn{};
-            get_entity_map().get_apm_checker().clear_events();
+            get_apm_checker().clear_events();
             for (auto ops : ele["operations"].get_array().value) {
                 try {
                     auto result = bsoncxx::builder::basic::make_document();
-                    result = operations::run(get_entity_map(), ops);
+                    result = operations::run(get_entity_map(), get_apm_checker(), ops);
 
                     if (ops["object"].get_string().value.to_string() == "testRunner") {
                         if (ops["name"].get_string().value.to_string() == "failPoint") {

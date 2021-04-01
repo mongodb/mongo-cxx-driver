@@ -503,14 +503,13 @@ document::value iterate_until_document_or_error(change_stream& stream) {
     return make_document(kvp("result", next(stream)));
 }
 
-document::value fail_point(entity::map& map, document::view op) {
+document::value fail_point(entity::map& map, spec::apm_checker& apm, document::view op) {
     auto args = op["arguments"];
     auto client_name = args["client"].get_string().value.to_string();
     auto& client = map.get_client(client_name);
 
     client["admin"].run_command(args["failPoint"].get_document().value);
 
-    auto& apm = map.get_apm_checker();
     auto event = spec::apm_checker::to_event("configureFailPoint");
     apm.set_ignore_command_monitoring_event(event);
 
@@ -735,10 +734,11 @@ bool index_exists(document::view op) {
 struct with_transaction_cb {
     array::value operations;
     entity::map& map;
+    spec::apm_checker& apm;
 
     void operator()(client_session*) {
         for (auto&& op : operations.view()) {
-            operations::run(map, op);
+            operations::run(map, apm, op);
         }
     }
 };
@@ -827,7 +827,9 @@ document::value with_transaction(client_session& session,
     return make_document();
 }
 
-document::value operations::run(entity::map& map, const array::element& op) {
+document::value operations::run(entity::map& map,
+                                spec::apm_checker& apm,
+                                const array::element& op) {
     auto name = op["name"].get_string().value.to_string();
     auto object = op["object"].get_string().value.to_string();
 
@@ -865,7 +867,7 @@ document::value operations::run(entity::map& map, const array::element& op) {
     if (name == "iterateUntilDocumentOrError")
         return iterate_until_document_or_error(map.get_change_stream(object));
     if (name == "failPoint")
-        return fail_point(map, op_view);
+        return fail_point(map, apm, op_view);
     if (name == "findOneAndUpdate")
         return find_one_and_update(map.get_collection(object), op_view);
     if (name == "listDatabases") {
@@ -890,16 +892,16 @@ document::value operations::run(entity::map& map, const array::element& op) {
         return empty_doc;
     }
     if (name == "assertSameLsidOnLastTwoCommands") {
-        auto cse1 = *(map.get_apm_checker().end() - 1);
-        auto cse2 = *(map.get_apm_checker().end() - 2);
+        auto cse1 = *(apm.end() - 1);
+        auto cse2 = *(apm.end() - 2);
 
         REQUIRE(cse1["commandStartedEvent"]["command"]["lsid"].get_value() ==
                 cse2["commandStartedEvent"]["command"]["lsid"].get_value());
         return empty_doc;
     }
     if (name == "assertDifferentLsidOnLastTwoCommands") {
-        auto cse1 = *(map.get_apm_checker().end() - 1);
-        auto cse2 = *(map.get_apm_checker().end() - 2);
+        auto cse1 = *(apm.end() - 1);
+        auto cse2 = *(apm.end() - 2);
 
         REQUIRE(cse1["commandStartedEvent"]["command"]["lsid"].get_value() !=
                 cse2["commandStartedEvent"]["command"]["lsid"].get_value());
@@ -963,8 +965,8 @@ document::value operations::run(entity::map& map, const array::element& op) {
         return empty_doc;
     }
     if (name == "withTransaction") {
-        auto cb =
-            with_transaction_cb{array::value(op["arguments"]["callback"].get_array().value), map};
+        auto cb = with_transaction_cb{
+            array::value(op["arguments"]["callback"].get_array().value), map, apm};
         auto& session = map.get_client_session(object);
         return with_transaction(session, op_view, cb);
     }
