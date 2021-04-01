@@ -16,7 +16,7 @@
 
 #include <mongocxx/config/private/prelude.hh>
 
-#include <mongocxx/test/spec/monitoring.hh>
+#include "entity.hh"
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
@@ -24,7 +24,7 @@ namespace assert {
 
 void matches(bsoncxx::types::bson_value::view actual,
              bsoncxx::types::bson_value::view expected,
-             mongocxx::spec::apm_checker& map);
+             mongocxx::entity::map& map);
 
 }  // namespace assert
 MONGOCXX_INLINE_NAMESPACE_END

@@ -110,9 +110,7 @@ bool is_set(types::bson_value::view val) {
     }
 }
 
-void special_operator(types::bson_value::view actual,
-                      document::view expected,
-                      spec::apm_checker& map) {
+void special_operator(types::bson_value::view actual, document::view expected, entity::map& map) {
     auto op = *expected.begin();
     REQUIRE(op.key().starts_with("$$"));  // assert special operator
 
@@ -137,6 +135,10 @@ void special_operator(types::bson_value::view actual,
         if (is_set(actual))
             assert::matches(actual, val, map);
     } else if (op.key().to_string() == "$$sessionLsid") {
+        auto id = op.get_string().value.to_string();
+        CAPTURE(to_string(op.get_value()), id);
+        map.get_client_session(id);
+        REQUIRE(false);
         // TODO: get sessions IDs from entity map
     } else if (op.key().to_string() == "$$matchesEntity") {
         // TODO: get entity from map
@@ -160,7 +162,7 @@ bool is_special(document::view doc) {
 
 void matches_document(types::bson_value::view actual,
                       types::bson_value::view expected,
-                      spec::apm_checker& map) {
+                      entity::map& map) {
     auto expected_doc = expected.get_document().value;
     if (is_special(expected_doc)) {
         special_operator(actual, expected_doc, map);
@@ -186,7 +188,7 @@ void matches_document(types::bson_value::view actual,
 
 void matches_array(types::bson_value::view actual,
                    types::bson_value::view expected,
-                   spec::apm_checker& map) {
+                   entity::map& map) {
     REQUIRE(actual.type() == type::k_array);
 
     auto actual_arr = actual.get_array().value;
@@ -200,7 +202,7 @@ void matches_array(types::bson_value::view actual,
 
 void assert::matches(types::bson_value::view actual,
                      types::bson_value::view expected,
-                     spec::apm_checker& map) {
+                     entity::map& map) {
     CAPTURE(to_string(actual.type()), to_string(expected.type()));
     CAPTURE(to_string(actual), to_string(expected));
 

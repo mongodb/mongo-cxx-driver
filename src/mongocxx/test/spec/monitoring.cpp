@@ -23,6 +23,7 @@
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/test/spec/monitoring.hh>
+#include <mongocxx/test/spec/unified_tests/assert.hh>
 #include <mongocxx/test_util/client_helpers.hh>
 #include <third_party/catch/include/catch.hpp>
 
@@ -35,7 +36,7 @@ using bsoncxx::to_json;
 
 // commands postfixed with "_v2" are used to support the unified test format.
 void apm_checker::compare_v2(bsoncxx::array::view expectations,
-                             assert_matches matches_fn,
+                             entity::map& map,
                              bool allow_extra) {
     using bsoncxx::types::bson_value::value;
 
@@ -53,7 +54,7 @@ void apm_checker::compare_v2(bsoncxx::array::view expectations,
     for (auto expectation : expectations) {
         auto expected = expectation.get_document().view();
         REQUIRE(events_iter != _events.end());
-        matches_fn(value(events_iter->view()), value(expected), *this);
+        assert::matches(value(events_iter->view()), value(expected), map);
         events_iter++;
     }
 

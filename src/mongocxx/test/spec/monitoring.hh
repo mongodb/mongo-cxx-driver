@@ -17,6 +17,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 #include <mongocxx/client.hpp>
+#include <mongocxx/test/spec/unified_tests/entity.hh>
 #include <mongocxx/test_util/client_helpers.hh>
 
 namespace mongocxx {
@@ -27,10 +28,6 @@ using namespace mongocxx;
 
 // Stores and compares apm events.
 class apm_checker {
-    using assert_matches = std::function<void(bsoncxx::types::bson_value::view,
-                                              bsoncxx::types::bson_value::view,
-                                              mongocxx::spec::apm_checker&)>;
-
    public:
     enum class event { kill_cursors, get_more, configure_fail_point };
     static event to_event(stdx::string_view s);
@@ -43,9 +40,7 @@ class apm_checker {
                  bool allow_extra = false,
                  const test_util::match_visitor& match_visitor = {});
 
-    void compare_v2(bsoncxx::array::view expectations,
-                    assert_matches matches_fn,
-                    bool allow_extra = false);
+    void compare_v2(bsoncxx::array::view expectations, entity::map& map, bool allow_extra = false);
 
     // Check that the apm checker has all expected events, ignore ordering and extra events.
     void has(bsoncxx::array::view expected);
