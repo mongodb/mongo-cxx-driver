@@ -322,6 +322,38 @@ functions:
 
                   export PATH="${extra_path}:$PATH"
 
+                  # export environment variables for encryption tests (and redact them)
+                  set +o xtrace
+                  set +o errexit
+
+                  export MONGOCXX_TEST_AWS_SECRET_ACCESS_KEY="${cse_aws_secret_access_key}"
+                  export MONGOCXX_TEST_AWS_ACCESS_KEY_ID="${cse_aws_access_key_id}"
+                  export MONGOCXX_TEST_AZURE_TENANT_ID="${cse_azure_tenant_id}"
+                  export MONGOCXX_TEST_AZURE_CLIENT_ID="${cse_azure_client_id}"
+                  export MONGOCXX_TEST_AZURE_CLIENT_SECRET="${cse_azure_client_secret}"
+                  export MONGOCXX_TEST_GCP_EMAIL="${cse_gcp_email}"
+                  export MONGOCXX_TEST_GCP_PRIVATEKEY="${cse_gcp_privatekey}"
+
+                  # Get temporary credentials.
+                  . ./.evergreen/set-virtualenv.sh
+                  $PYTHON -m pip install boto3
+                  cd ../drivers-evergreen-tools
+
+                  pushd ./.evergreen/csfle
+                  export AWS_ACCESS_KEY_ID=$MONGOCXX_TEST_AWS_ACCESS_KEY_ID
+                  export AWS_SECRET_ACCESS_KEY=$MONGOCXX_TEST_AWS_SECRET_ACCESS_KEY
+                  export AWS_DEFAULT_REGION=us-east-1
+                  . ./set-temp-creds.sh
+                  export MONGOCXX_TEST_AWS_TEMP_ACCESS_KEY_ID=$CSFLE_AWS_TEMP_ACCESS_KEY_ID
+                  export MONGOCXX_TEST_AWS_TEMP_SECRET_ACCESS_KEY=$CSFLE_AWS_TEMP_SECRET_ACCESS_KEY
+                  export MONGOCXX_TEST_AWS_TEMP_SESSION_TOKEN=$CSFLE_AWS_TEMP_SESSION_TOKEN
+                  popd
+
+                  cd ../mongo-cxx-driver
+
+                  set -o errexit
+                  set -o xtrace
+
                   cd build
                   export PREFIX=$(pwd)/../../mongoc
 
@@ -344,14 +376,6 @@ functions:
                   export WITH_TRANSACTION_TESTS_PATH="$(pwd)/../data/with_transaction"
                   export RETRYABLE_READS_TESTS_PATH="$(pwd)/../data/retryable-reads"
                   export READ_WRITE_CONCERN_OPERATION_TESTS_PATH="$(pwd)/../data/read-write-concern/operation"
-
-                  # export environment variables for encryption tests (and redact them)
-                  set +o xtrace
-                  set +o errexit
-                  export MONGOCXX_TEST_AWS_SECRET_ACCESS_KEY="${cse_aws_secret_access_key}"
-                  export MONGOCXX_TEST_AWS_ACCESS_KEY_ID="${cse_aws_access_key_id}"
-                  set -o errexit
-                  set -o xtrace
 
                   if [ "Windows_NT" == "$OS" ]; then
                       CRUD_TESTS_PATH=$(cygpath -m $CRUD_TESTS_PATH)
@@ -1068,7 +1092,7 @@ buildvariants:
           tar_options: *linux_tar_options
           cmake_flags: *linux_cmake_flags
           mongodb_version: *version_latest
-          mongoc_version: "1.17.0-beta2"
+          mongoc_version: "master" # TODO: CXX-???? update to 1.18.0-beta after beta release.
       run_on:
           - ubuntu1804-build
       tasks:

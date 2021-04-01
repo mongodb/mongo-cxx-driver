@@ -36,16 +36,40 @@ namespace options {
 class MONGOCXX_API data_key {
    public:
     ///
-    /// Sets a KMS-specific key used to encrypt the new data key. If the
-    /// kmsProvider is "aws" it is required and has the following fields:
+    /// Sets a KMS-specific key used to encrypt the new data key.
     ///
-    ///   - region: String // Required.
+    /// If the KMS provider is "aws" the masterKey is required and has the following fields:
     ///
-    ///   - key: String // Required. The Amazon Resource Name (ARN) to the
-    ///     AWS customer master key (CMK).
+    /// {
+    ///    region: String,
+    ///    key: String, // The Amazon Resource Name (ARN) to the AWS customer master key (CMK).
+    ///    endpoint: Optional<String> // An alternate host identifier to send KMS requests to. May
+    ///    include port number. Defaults to "kms.<region>.amazonaws.com"
+    /// }
     ///
-    ///   - endpoint: String // Optional. An alternate host identifier to send
-    ///     KMS requests to. May include port number.
+    /// If the KMS provider is "azure" the masterKey is required and has the following fields:
+    ///
+    /// {
+    ///    keyVaultEndpoint: String, // Host with optional port. Example: "example.vault.azure.net".
+    ///    keyName: String,
+    ///    keyVersion: Optional<String> // A specific version of the named key, defaults to using
+    ///    the key's primary version.
+    /// }
+    ///
+    /// If the KMS provider is "gcp" the masterKey is required and has the following fields:
+    ///
+    /// {
+    ///    projectId: String,
+    ///    location: String,
+    ///    keyRing: String,
+    ///    keyName: String,
+    ///    keyVersion: Optional<String>, // A specific version of the named key, defaults to using
+    ///    the key's primary version.
+    ///    endpoint: Optional<String> // Host with optional port. Defaults to
+    ///    "cloudkms.googleapis.com".
+    /// }
+    ///
+    /// If the KMS provider is "local" the masterKey is not applicable.
     ///
     /// @param master_key
     ///   The document representing the master key.

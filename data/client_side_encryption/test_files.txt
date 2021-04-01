@@ -1,4 +1,6 @@
 aggregate.json
+awsTemporary.json
+azureKMS.json
 badSchema.json
 basic.json
 bulk.json
@@ -13,6 +15,7 @@ find.json
 findOneAndDelete.json
 findOneAndReplace.json
 findOneAndUpdate.json
+gcpKMS.json
 getMore.json
 insert.json
 keyAltName.json

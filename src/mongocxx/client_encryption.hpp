@@ -50,7 +50,7 @@ class MONGOCXX_API client_encryption {
     ///
     /// @param kms_provider
     ///   A string identifying the KMS service to use to encrypt the datakey
-    ///   (must be "aws" or "local")
+    ///   (must be "aws", "azure", "gcp", or "local")
     /// @param opts
     ///   Optional arguments, see options::data_key.
     ///

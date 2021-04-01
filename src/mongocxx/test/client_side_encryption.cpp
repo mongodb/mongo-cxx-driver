@@ -53,6 +53,12 @@ const auto kLocalKeyUUID = "\x2c\xe0\x80\x2c\x00\x00\x00\x00\x00\x00\x00\x00\x00
 // This is the base64 encoding of AWSAAAAAAAAAAAAAAAAAAA==.
 const auto kAwsKeyUUID = "\x01\x64\x80\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00";
 
+// This is the base64 encoding of AZUREAAAAAAAAAAAAAAAAA==.
+const auto kAzureKeyUUID = "\x01\x95\x11\x10\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00";
+
+// This is the base64 encoding of GCPAAAAAAAAAAAAAAAAAAA==.
+const auto kGcpKeyUUID = "\x18\x23\xc0\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00";
+
 using bsoncxx::builder::concatenate;
 
 using bsoncxx::builder::basic::kvp;
@@ -97,25 +103,33 @@ void _setup_drop_collections(const client& client) {
     auto coll = client["db"]["coll"];
     coll.drop(wc_majority);
 }
-
-bsoncxx::document::value _make_kms_doc(bool include_aws = true) {
-    // set both local and aws kms providers
+// Returns a document with credentials for KMS providers.
+// If include_external is true, all KMS providers are set.
+// If include_external is false, only the local provider is set.
+bsoncxx::document::value _make_kms_doc(bool include_external = true) {
     auto kms_doc = bsoncxx::builder::basic::document{};
 
-    if (include_aws) {
-        // AWS from environment
-        auto access_key = std::getenv("MONGOCXX_TEST_AWS_SECRET_ACCESS_KEY");
-        auto key_id = std::getenv("MONGOCXX_TEST_AWS_ACCESS_KEY_ID");
-        if (!access_key || !key_id) {
-            FAIL(
-                "Please set environment variables for client side encryption tests:\n"
-                "\tMONGOCXX_TEST_AWS_SECRET_ACCESS_KEY\n"
-                "\tMONGOCXX_TEST_AWS_ACCESS_KEY_ID\n\n");
-        }
-
+    if (include_external) {
         kms_doc.append(kvp("aws", [&](sub_document subdoc) {
-            subdoc.append(kvp("secretAccessKey", access_key));
-            subdoc.append(kvp("accessKeyId", key_id));
+            subdoc.append(kvp("secretAccessKey",
+                              test_util::getenv_or_fail("MONGOCXX_TEST_AWS_SECRET_ACCESS_KEY")));
+            subdoc.append(
+                kvp("accessKeyId", test_util::getenv_or_fail("MONGOCXX_TEST_AWS_ACCESS_KEY_ID")));
+        }));
+
+        kms_doc.append(kvp("azure", [&](sub_document subdoc) {
+            subdoc.append(
+                kvp("tenantId", test_util::getenv_or_fail("MONGOCXX_TEST_AZURE_TENANT_ID")));
+            subdoc.append(
+                kvp("clientId", test_util::getenv_or_fail("MONGOCXX_TEST_AZURE_CLIENT_ID")));
+            subdoc.append(kvp("clientSecret",
+                              test_util::getenv_or_fail("MONGOCXX_TEST_AZURE_CLIENT_SECRET")));
+        }));
+
+        kms_doc.append(kvp("gcp", [&](sub_document subdoc) {
+            subdoc.append(kvp("email", test_util::getenv_or_fail("MONGOCXX_TEST_GCP_EMAIL")));
+            subdoc.append(
+                kvp("privateKey", test_util::getenv_or_fail("MONGOCXX_TEST_GCP_PRIVATEKEY")));
         }));
     }
 
@@ -192,6 +206,7 @@ void run_datakey_and_double_encryption(Callable create_data_key,
                                        client_encryption* client_encryption,
                                        mongocxx::spec::apm_checker* apm_checker) {
     // Test creating and using data keys:
+    INFO("using KMS provider: " << provider);
 
     // 1. Call client_encryption.createDataKey()
     auto datakey_id = create_data_key();
@@ -353,7 +368,7 @@ TEST_CASE("Datakey and double encryption", "[client_side_encryption]") {
     // Run with AWS
     run_datakey_and_double_encryption(
         [&]() {
-            // 1. Call client_encryption.createDataKey() with the local KMS provider
+            // 1. Call client_encryption.createDataKey() with the aws KMS provider
             // and keyAltNames set to ["aws_altname"].
             options::data_key data_key_opts;
             data_key_opts.key_alt_names({"aws_altname"});
@@ -367,6 +382,48 @@ TEST_CASE("Datakey and double encryption", "[client_side_encryption]") {
             return client_encryption.create_data_key("aws", data_key_opts);
         },
         "aws",
+        &setup_client,
+        &client_encrypted,
+        &client_encryption,
+        &apm_checker);
+
+    // Run with Azure
+    run_datakey_and_double_encryption(
+        [&]() {
+            // 1. Call client_encryption.createDataKey() with the azure KMS provider
+            // and keyAltNames set to ["azure_altname"].
+            options::data_key data_key_opts;
+            data_key_opts.key_alt_names({"azure_altname"});
+
+            auto doc = make_document(kvp("keyVaultEndpoint", "key-vault-csfle.vault.azure.net"),
+                                     kvp("keyName", "key-name-csfle"));
+            data_key_opts.master_key(doc.view());
+
+            return client_encryption.create_data_key("azure", data_key_opts);
+        },
+        "azure",
+        &setup_client,
+        &client_encrypted,
+        &client_encryption,
+        &apm_checker);
+
+    // Run with GCP
+    run_datakey_and_double_encryption(
+        [&]() {
+            // 1. Call client_encryption.createDataKey() with the gcp KMS provider
+            // and keyAltNames set to ["gcp_altname"].
+            options::data_key data_key_opts;
+            data_key_opts.key_alt_names({"gcp_altname"});
+
+            auto doc = make_document(kvp("projectId", "devprod-drivers"),
+                                     kvp("location", "global"),
+                                     kvp("keyRing", "key-ring-csfle"),
+                                     kvp("keyName", "key-name-csfle"));
+            data_key_opts.master_key(doc.view());
+
+            return client_encryption.create_data_key("gcp", data_key_opts);
+        },
+        "gcp",
         &setup_client,
         &client_encrypted,
         &client_encryption,
@@ -704,18 +761,8 @@ void _run_corpus_test(bool use_schema_map) {
     auto corpus_schema = _doc_from_file("/corpus/corpus-schema.json");
     auto corpus_key_local = _doc_from_file("/corpus/corpus-key-local.json");
     auto corpus_key_aws = _doc_from_file("/corpus/corpus-key-aws.json");
-
-    auto access_key_var = std::getenv("MONGOCXX_TEST_AWS_SECRET_ACCESS_KEY");
-    auto key_id_var = std::getenv("MONGOCXX_TEST_AWS_ACCESS_KEY_ID");
-    if (!access_key_var || !key_id_var) {
-        FAIL(
-            "Please set environment variables for client side encryption tests:\n"
-            "\tMONGOCXX_TEST_AWS_SECRET_ACCESS_KEY\n"
-            "\tMONGOCXX_TEST_AWS_ACCESS_KEY_ID\n\n");
-    }
-
-    std::string access_key{access_key_var};
-    std::string key_id{key_id_var};
+    auto corpus_key_azure = _doc_from_file("/corpus/corpus-key-azure.json");
+    auto corpus_key_gcp = _doc_from_file("/corpus/corpus-key-gcp.json");
 
     // Using client, drop and create the collection db.coll configured with the included
     // JSON schema corpus/corpus-schema.json.
@@ -729,7 +776,7 @@ void _run_corpus_test(bool use_schema_map) {
 
     db.run_command(cmd.view());
 
-    // Insert the documents corpus/corpus-key-local.json and corpus/corpus-key-aws.json.
+    // Insert all of the key documents.
     write_concern wc_majority;
     wc_majority.acknowledge_level(write_concern::level::k_majority);
     options::insert insert_opts;
@@ -738,6 +785,8 @@ void _run_corpus_test(bool use_schema_map) {
     auto keyvault = client["keyvault"]["datakeys"];
     keyvault.insert_one(std::move(corpus_key_local), insert_opts);
     keyvault.insert_one(std::move(corpus_key_aws), insert_opts);
+    keyvault.insert_one(std::move(corpus_key_azure), insert_opts);
+    keyvault.insert_one(std::move(corpus_key_gcp), insert_opts);
 
     // Configure kms credentials as follows:
     // {
@@ -747,26 +796,28 @@ void _run_corpus_test(bool use_schema_map) {
 
     char local_key_id_storage[16];
     char aws_key_id_storage[16];
-    char local_master_key_storage[96];
+    char azure_key_id_storage[16];
+    char gcp_key_id_storage[16];
     memcpy(&(local_key_id_storage[0]), kLocalKeyUUID, 16);
     memcpy(&(aws_key_id_storage[0]), kAwsKeyUUID, 16);
-    memcpy(&(local_master_key_storage[0]), kLocalMasterKey, 96);
+    memcpy(&(azure_key_id_storage[0]), kAzureKeyUUID, 16);
+    memcpy(&(gcp_key_id_storage[0]), kGcpKeyUUID, 16);
 
     bsoncxx::types::b_binary local_key_id{
         bsoncxx::binary_sub_type::k_uuid, 16, (const uint8_t*)&local_key_id_storage};
     bsoncxx::types::b_binary aws_key_id{
         bsoncxx::binary_sub_type::k_uuid, 16, (const uint8_t*)&aws_key_id_storage};
-    bsoncxx::types::b_binary local_master_key{
-        bsoncxx::binary_sub_type::k_binary, 96, (const uint8_t*)&local_master_key_storage};
+    bsoncxx::types::b_binary azure_key_id{
+        bsoncxx::binary_sub_type::k_uuid, 16, (const uint8_t*)&azure_key_id_storage};
+    bsoncxx::types::b_binary gcp_key_id{
+        bsoncxx::binary_sub_type::k_uuid, 16, (const uint8_t*)&gcp_key_id_storage};
 
     auto local_key_value = make_value(local_key_id);
     auto aws_key_value = make_value(aws_key_id);
-    auto local_master_key_value = make_value(local_master_key);
+    auto azure_key_value = make_value(azure_key_id);
+    auto gcp_key_value = make_value(gcp_key_id);
 
-    auto kms_doc = document{} << "local" << open_document << "key" << local_master_key
-                              << close_document << "aws" << open_document << "secretAccessKey"
-                              << access_key << "accessKeyId" << key_id << close_document
-                              << finalize;
+    auto kms_doc = _make_kms_doc();
 
     // Create the following and configure both objects with keyVaultNamespace set to
     // keyvault.datakeys:
@@ -803,8 +854,10 @@ void _run_corpus_test(bool use_schema_map) {
         auto field_name_view = ele.key();
         std::string field_name(field_name_view);
 
-        // If the field name is _id, altname_aws and altname_local, copy the field to corpus_copied.
-        std::vector<std::string> copied_fields = {"_id", "altname_aws", "altname_local"};
+        // If the field name is _id, altname_aws, altname_azure, altname_gcp, altname_local, copy
+        // the field to corpus_copied.
+        std::vector<std::string> copied_fields = {
+            "_id", "altname_aws", "altname_azure", "altname_gcp", "altname_local"};
         if (std::find(copied_fields.begin(), copied_fields.end(), field_name) !=
             copied_fields.end()) {
             corpus_copied_builder.append(kvp(field_name, ele.get_value()));
@@ -856,6 +909,14 @@ void _run_corpus_test(bool use_schema_map) {
                     // If kms is aws set the key_id to the UUID with base64 value
                     // AWSAAAAAAAAAAAAAAAAAAA==.
                     encrypt_opts.key_id(aws_key_value.view());
+                } else if (kms == stdx::string_view{"azure"}) {
+                    // If kms is azure set the key_id to the UUID with base64 value
+                    // AZUREAAAAAAAAAAAAAAAAA==.
+                    encrypt_opts.key_id(azure_key_value.view());
+                } else if (kms == stdx::string_view("gcp")) {
+                    // If kms is gcp set the key_id to the UUID with base64 value
+                    // GCPAAAAAAAAAAAAAAAAAAA==.
+                    encrypt_opts.key_id(gcp_key_value.view());
                 } else {
                     throw exception{error_code::k_invalid_parameter, "unsupported kms identifier"};
                 }
@@ -866,6 +927,12 @@ void _run_corpus_test(bool use_schema_map) {
                 } else if (kms == stdx::string_view{"aws"}) {
                     // If kms is aws set the key_alt_name to "aws".
                     encrypt_opts.key_alt_name("aws");
+                } else if (kms == stdx::string_view("azure")) {
+                    // If kms is azure set the key_alt_name to "azure".
+                    encrypt_opts.key_alt_name("azure");
+                } else if (kms == stdx::string_view("gcp")) {
+                    // If kms is gcp set the key_alt_name to "gcp".
+                    encrypt_opts.key_alt_name("gcp");
                 } else {
                     throw exception{error_code::k_invalid_parameter, "unsupported kms altname"};
                 }
@@ -1004,20 +1071,79 @@ void _round_trip(class client_encryption* client_encryption,
     REQUIRE(decrypted_val == to_encrypt);
 }
 
-void _run_endpoint_test(class client_encryption* client_encryption,
+void _run_endpoint_test(mongocxx::client* setup_client,
                         bsoncxx::document::view masterkey,
-                        stdx::optional<std::string> error_msg = stdx::nullopt) {
+                        std::string kms_provider,
+                        stdx::optional<std::string> error_msg = stdx::nullopt,
+                        stdx::optional<std::string> invalid_error_msg = stdx::nullopt) {
     INFO("masterkey" << bsoncxx::to_json(masterkey));
+
+    mongocxx::options::client_encryption ce_opts;
+    mongocxx::options::client_encryption ce_opts_invalid;
+    bsoncxx::builder::basic::document kms_doc;
+    bsoncxx::builder::basic::document kms_doc_invalid;
+
+    kms_doc.append(kvp("aws", [&](sub_document subdoc) {
+        subdoc.append(kvp("secretAccessKey",
+                          test_util::getenv_or_fail("MONGOCXX_TEST_AWS_SECRET_ACCESS_KEY")));
+        subdoc.append(
+            kvp("accessKeyId", test_util::getenv_or_fail("MONGOCXX_TEST_AWS_ACCESS_KEY_ID")));
+    }));
+
+    kms_doc.append(kvp("azure", [&](sub_document subdoc) {
+        subdoc.append(kvp("tenantId", test_util::getenv_or_fail("MONGOCXX_TEST_AZURE_TENANT_ID")));
+        subdoc.append(kvp("clientId", test_util::getenv_or_fail("MONGOCXX_TEST_AZURE_CLIENT_ID")));
+        subdoc.append(
+            kvp("clientSecret", test_util::getenv_or_fail("MONGOCXX_TEST_AZURE_CLIENT_SECRET")));
+        subdoc.append(kvp("identityPlatformEndpoint", "login.microsoftonline.com:443"));
+    }));
+
+    kms_doc.append(kvp("gcp", [&](sub_document subdoc) {
+        subdoc.append(kvp("email", test_util::getenv_or_fail("MONGOCXX_TEST_GCP_EMAIL")));
+        subdoc.append(kvp("privateKey", test_util::getenv_or_fail("MONGOCXX_TEST_GCP_PRIVATEKEY")));
+        subdoc.append(kvp("endpoint", "oauth2.googleapis.com:443"));
+    }));
+
+    ce_opts.key_vault_client(setup_client);
+    ce_opts.key_vault_namespace({"keyvault", "datakeys"});
+    ce_opts.kms_providers(kms_doc.view());
+    mongocxx::client_encryption client_encryption{ce_opts};
+
+    kms_doc_invalid.append(kvp("azure", [&](sub_document subdoc) {
+        subdoc.append(kvp("tenantId", test_util::getenv_or_fail("MONGOCXX_TEST_AZURE_TENANT_ID")));
+        subdoc.append(kvp("clientId", test_util::getenv_or_fail("MONGOCXX_TEST_AZURE_CLIENT_ID")));
+        subdoc.append(
+            kvp("clientSecret", test_util::getenv_or_fail("MONGOCXX_TEST_AZURE_CLIENT_SECRET")));
+        subdoc.append(kvp("identityPlatformEndpoint", "example.com:443"));
+    }));
+
+    kms_doc_invalid.append(kvp("gcp", [&](sub_document subdoc) {
+        subdoc.append(kvp("email", test_util::getenv_or_fail("MONGOCXX_TEST_GCP_EMAIL")));
+        subdoc.append(kvp("privateKey", test_util::getenv_or_fail("MONGOCXX_TEST_GCP_PRIVATEKEY")));
+        subdoc.append(kvp("endpoint", "example.com:443"));
+    }));
+
+    ce_opts_invalid.key_vault_client(setup_client);
+    ce_opts_invalid.key_vault_namespace({"keyvault", "datakeys"});
+    ce_opts_invalid.kms_providers(kms_doc_invalid.view());
+    mongocxx::client_encryption client_encryption_invalid{ce_opts_invalid};
 
     options::data_key opts;
     opts.master_key(masterkey);
     if (error_msg) {
-        REQUIRE_THROWS_MATCHES(client_encryption->create_data_key("aws", std::move(opts)),
+        REQUIRE_THROWS_MATCHES(client_encryption.create_data_key(kms_provider, std::move(opts)),
                                mongocxx::exception,
                                test_util::mongocxx_exception_matcher{*error_msg});
     } else {
-        auto datakey = client_encryption->create_data_key("aws", std::move(opts));
-        _round_trip(client_encryption, datakey);
+        auto datakey = client_encryption.create_data_key(kms_provider, std::move(opts));
+        _round_trip(&client_encryption, datakey);
+    }
+
+    if (invalid_error_msg) {
+        REQUIRE_THROWS_MATCHES(
+            client_encryption_invalid.create_data_key(kms_provider, std::move(opts)),
+            mongocxx::exception,
+            test_util::mongocxx_exception_matcher{*invalid_error_msg});
     }
 }
 
@@ -1041,17 +1167,6 @@ TEST_CASE("Custom endpoint", "[client_side_encryption]") {
         return;
     }
 
-    // Create a ClientEncryption object (referred to as client_encryption).
-    // Configure with aws KMS providers as follows:
-    // {
-    //     "aws": { <AWS credentials> }
-    // }
-    // Configure with keyVaultNamespace set to keyvault.datakeys, and a default
-    // MongoClient as the keyVaultClient.
-    options::client_encryption cse_opts;
-    _add_cse_opts(&cse_opts, &setup_client);
-    client_encryption client_encryption{std::move(cse_opts)};
-
     // Call client_encryption.createDataKey() with "aws" as the provider and the following
     // masterKey:
     // {
@@ -1063,7 +1178,7 @@ TEST_CASE("Custom endpoint", "[client_side_encryption]") {
     auto simple_masterkey = make_document(
         kvp("region", "us-east-1"),
         kvp("key", "arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0"));
-    _run_endpoint_test(&client_encryption, simple_masterkey.view());
+    _run_endpoint_test(&setup_client, simple_masterkey.view(), "aws");
 
     // Call client_encryption.createDataKey() with "aws" as the provider and the following
     // masterKey:
@@ -1081,7 +1196,7 @@ TEST_CASE("Custom endpoint", "[client_side_encryption]") {
                    << "arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0"
                    << "endpoint"
                    << "kms.us-east-1.amazonaws.com" << finalize;
-    _run_endpoint_test(&client_encryption, endpoint_masterkey.view());
+    _run_endpoint_test(&setup_client, endpoint_masterkey.view(), "aws");
 
     // Call client_encryption.createDataKey() with "aws" as the provider and the following
     // masterKey:
@@ -1099,7 +1214,7 @@ TEST_CASE("Custom endpoint", "[client_side_encryption]") {
                    << "arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0"
                    << "endpoint"
                    << "kms.us-east-1.amazonaws.com:443" << finalize;
-    _run_endpoint_test(&client_encryption, endpoint_masterkey2.view());
+    _run_endpoint_test(&setup_client, endpoint_masterkey2.view(), "aws");
 
     // Call client_encryption.createDataKey() with "aws" as the provider and the following
     // masterKey:
@@ -1116,7 +1231,7 @@ TEST_CASE("Custom endpoint", "[client_side_encryption]") {
                    << "arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0"
                    << "endpoint"
                    << "kms.us-east-1.amazonaws.com:12345" << finalize;
-    _run_endpoint_test(&client_encryption, socket_error_masterkey.view(), {{"error"}});
+    _run_endpoint_test(&setup_client, socket_error_masterkey.view(), "aws", {{"error"}});
 
     // Call client_encryption.createDataKey() with "aws" as the provider and the following
     // masterKey:
@@ -1133,7 +1248,7 @@ TEST_CASE("Custom endpoint", "[client_side_encryption]") {
                    << "arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0"
                    << "endpoint"
                    << "kms.us-east-2.amazonaws.com" << finalize;
-    _run_endpoint_test(&client_encryption, endpoint_error_masterkey.view(), {{"us-east-1"}});
+    _run_endpoint_test(&setup_client, endpoint_error_masterkey.view(), "aws", {{"us-east-1"}});
 
     // Call client_encryption.createDataKey() with "aws" as the provider and the following
     // masterKey:
@@ -1150,7 +1265,73 @@ TEST_CASE("Custom endpoint", "[client_side_encryption]") {
                    << "arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0"
                    << "endpoint"
                    << "example.com" << finalize;
-    _run_endpoint_test(&client_encryption, parse_error_masterkey.view(), {{"parse error"}});
+    _run_endpoint_test(&setup_client, parse_error_masterkey.view(), "aws", {{"parse error"}});
+
+    // Call `client_encryption.createDataKey()` with "azure" as the provider and the following
+    // masterKey:
+    // {
+    //     "keyVaultEndpoint": "key-vault-csfle.vault.azure.net",
+    //     "keyName": "key-name-csfle"
+    // }
+    // Expect this to succeed. Use the returned UUID of the key to explicitly encrypt and decrypt
+    // the string "test" to validate it works. Call ``client_encryption_invalid.createDataKey()``
+    // with the same masterKey. Expect this to fail with an exception with a message containing the
+    // string: "parse error".
+    auto azure_masterkey = document{} << "keyVaultEndpoint"
+                                      << "key-vault-csfle.vault.azure.net"
+                                      << "keyName"
+                                      << "key-name-csfle" << finalize;
+    _run_endpoint_test(
+        &setup_client, azure_masterkey.view(), "azure", stdx::nullopt, {{"parse error"}});
+
+    // Call `client_encryption.createDataKey()` with "gcp" as the provider and the following
+    // masterKey:
+    // {
+    //   "projectId": "devprod-drivers",
+    //   "location": "global",
+    //   "keyRing": "key-ring-csfle",
+    //   "keyName": "key-name-csfle",
+    //   "endpoint": "cloudkms.googleapis.com:443"
+    // }
+    // Expect this to succeed. Use the returned UUID of the key to explicitly encrypt and decrypt
+    // the string "test" to validate it works. Call ``client_encryption_invalid.createDataKey()``
+    // with the same masterKey. Expect this to fail with an exception with a message containing the
+    // string: "parse error".
+    auto gcp_masterkey = document{} << "projectId"
+                                    << "devprod-drivers"
+                                    << "location"
+                                    << "global"
+                                    << "keyRing"
+                                    << "key-ring-csfle"
+                                    << "keyName"
+                                    << "key-name-csfle"
+                                    << "endpoint"
+                                    << "cloudkms.googleapis.com:443" << finalize;
+    _run_endpoint_test(
+        &setup_client, gcp_masterkey.view(), "gcp", stdx::nullopt, {{"parse error"}});
+
+    // Call `client_encryption.createDataKey()` with "gcp" as the provider and the following
+    // masterKey:
+    // {
+    //   "projectId": "devprod-drivers",
+    //   "location": "global",
+    //   "keyRing": "key-ring-csfle",
+    //   "keyName": "key-name-csfle",
+    //   "endpoint": "example.com:443"
+    // }
+    // Expect this to fail with an exception with a message containing the string: "Invalid KMS
+    // response".
+    auto gcp_masterkey2 = document{} << "projectId"
+                                     << "devprod-drivers"
+                                     << "location"
+                                     << "global"
+                                     << "keyRing"
+                                     << "key-ring-csfle"
+                                     << "keyName"
+                                     << "key-name-csfle"
+                                     << "endpoint"
+                                     << "example.com:443" << finalize;
+    _run_endpoint_test(&setup_client, gcp_masterkey2.view(), "gcp", {{"Invalid KMS response"}});
 }
 
 TEST_CASE("Bypass spawning mongocryptd", "[client_side_encryption]") {
