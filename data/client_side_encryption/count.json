@@ -119,7 +119,6 @@
   "tests": [
     {
       "description": "Count with deterministic encryption",
-      "skipReason": "CXX-1940 estimated count cannot take a filter",
       "clientOptions": {
         "autoEncryptOpts": {
           "kmsProviders": {
@@ -146,18 +145,6 @@
               "filter": {
                 "name": "default"
               }
-            },
-            "command_name": "listCollections"
-          }
-        },
-        {
-          "command_started_event": {
-            "command": {
-              "listCollections": 1,
-              "filter": {
-                "name": "datakeys"
-              },
-              "$db": "keyvault"
             },
             "command_name": "listCollections"
           }
