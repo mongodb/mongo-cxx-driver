@@ -78,6 +78,8 @@ set(test_driver_sources
 
 set(spec_test_common
     spec/operation.cpp
+    spec/unified_tests/assert.hh
+    spec/unified_tests/assert.cpp
     spec/monitoring.cpp
     spec/util.cpp
 )
