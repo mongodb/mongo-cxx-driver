@@ -33,6 +33,9 @@ or newer. The MongoDB C Driver supports TLS 1.1 on Linux if OpenSSL is
 at least version 1.0.1. On macOS and Windows, the C Driver uses native
 TLS implementations that support TLS 1.1.
 
+If you are compiling on Windows, you should also use the
+`--DENABLE_EXTRA_ALIGNMENT` cmake flag when configuring the C driver.
+
 ### Step 2: Choose a C++17 polyfill
 
 The mongocxx driver uses the C++17 features `std::optional` and
