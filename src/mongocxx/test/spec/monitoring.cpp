@@ -51,13 +51,25 @@ void remove_ignored_command_monitoring_events(apm_checker::event_vector& events,
 void apm_checker::compare_unified(bsoncxx::array::view expectations, entity::map& map) {
     remove_ignored_command_monitoring_events(_events, _ignore);
 
-    auto eq = [&](const bsoncxx::array::element& expected, const bsoncxx::document::view actual) {
-        CAPTURE(print_all(), to_json(actual), assert::to_string(expected.get_value()));
-        assert::matches(bsoncxx::types::bson_value::value(actual), expected.get_value(), map);
+    auto equal = [&](const bsoncxx::array::element& exp, const bsoncxx::document::view actual) {
+        CAPTURE(print_all(), to_json(actual), assert::to_string(exp.get_value()));
+
+        // Extra fields are only allowed in root-level documents. Here, each k in keys is treated
+        // as its own root-level document, allowing extra fields.
+        auto match_events = [&](stdx::string_view event, std::initializer_list<std::string> keys) {
+            for (auto&& k : keys)
+                if (exp[event][k])
+                    assert::matches(actual[event][k].get_value(), exp[event][k].get_value(), map);
+        };
+
+        match_events("commandStartedEvent", {"command", "commandName", "databaseName"});
+        match_events("commandSucceededEvent", {"reply", "commandName"});
+        match_events("commandFailedEvent", {"commandName"});
         return true;
     };
 
-    REQUIRE(std::equal(expectations.begin(), expectations.end(), _events.begin(), eq));
+    // Because exceptions are thrown on unmatched fields, this always returns true.
+    std::equal(expectations.begin(), expectations.end(), _events.begin(), equal);
 }
 
 void apm_checker::compare(bsoncxx::array::view expectations,

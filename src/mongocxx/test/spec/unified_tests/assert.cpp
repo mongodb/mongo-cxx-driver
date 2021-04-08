@@ -27,6 +27,7 @@ using namespace bsoncxx;
 using namespace mongocxx;
 
 using assert::to_string;
+using bsoncxx::types::bson_value::value;
 
 std::string binary_to_string(types::b_binary binary) {
     std::stringstream ss;
@@ -135,7 +136,7 @@ void special_operator(types::bson_value::view actual, document::view expected, e
     } else if (op.key().to_string() == "$$unsetOrMatches") {
         auto val = op.get_value();
         if (is_set(actual))
-            assert::matches(actual, val, map);
+            assert::matches(actual, val, map, false);
     } else if (op.key().to_string() == "$$sessionLsid") {
         auto id = op.get_string().value.to_string();
         const auto& type = map.type(id);
@@ -144,7 +145,7 @@ void special_operator(types::bson_value::view actual, document::view expected, e
         } else {
             // If the map does not contain the client session, then it's ID should have been cached
             // as a BSON value.
-            REQUIRE(type == typeid(types::bson_value::value));
+            REQUIRE(type == typeid(value));
             REQUIRE(actual == map.get_value(id));
         }
     } else if (op.key().to_string() == "$$matchesEntity") {
@@ -164,34 +165,40 @@ void special_operator(types::bson_value::view actual, document::view expected, e
     }
 }
 
-bool is_special(document::view doc) {
-    return test_util::size(doc) == 1 && doc.begin()->key().starts_with("$$");
+template <typename T>
+bool is_special(T doc) {
+    return doc.type() == type::k_document && test_util::size(doc.get_document().value) == 1 &&
+           doc.get_document().value.begin()->key().starts_with("$$");
 }
 
 void matches_document(types::bson_value::view actual,
                       types::bson_value::view expected,
-                      entity::map& map) {
-    auto expected_doc = expected.get_document().value;
-    if (is_special(expected_doc)) {
-        special_operator(actual, expected_doc, map);
+                      entity::map& map,
+                      bool is_root) {
+    if (is_special(expected)) {
+        special_operator(actual, expected.get_document(), map);
         return;
     }
 
     REQUIRE(actual.type() == type::k_document);
     auto actual_doc = actual.get_document().value;
+    auto extra_fields = test_util::size(actual_doc);
 
-    for (auto&& kvp : expected_doc) {
+    for (auto&& kvp : expected.get_document().value) {
         CAPTURE(kvp.key(), to_string(kvp.type()), to_string(kvp.get_value()), to_json(actual_doc));
-        if (kvp.type() == type::k_document && is_special(kvp.get_document())) {
-            auto actual_el = actual_doc[kvp.key()] ? actual_doc[kvp.key()].get_value()
-                                                   : types::bson_value::value(nullptr);
-            special_operator(actual_el, kvp.get_document(), map);
-            continue;
+        if (is_special(kvp)) {
+            if (!actual_doc[kvp.key()]) {
+                special_operator(value(nullptr), kvp.get_document(), map);
+                continue;
+            }
         }
 
         REQUIRE(actual_doc[kvp.key()]);
-        assert::matches(actual_doc[kvp.key()].get_value(), kvp.get_value(), map);
+        assert::matches(actual_doc[kvp.key()].get_value(), kvp.get_value(), map, false);
+        --extra_fields;
     }
+
+    REQUIRE((is_root || extra_fields == 0));
 }
 
 void matches_array(types::bson_value::view actual,
@@ -204,19 +211,20 @@ void matches_array(types::bson_value::view actual,
 
     REQUIRE(test_util::size(actual_arr) == test_util::size(expected_arr));
     for (auto a = actual_arr.begin(), e = expected_arr.begin(); e != expected_arr.end(); e++, a++) {
-        assert::matches(a->get_value(), e->get_value(), map);
+        assert::matches(a->get_value(), e->get_value(), map, false);
     }
 }
 
 void assert::matches(types::bson_value::view actual,
                      types::bson_value::view expected,
-                     entity::map& map) {
-    CAPTURE(to_string(actual.type()), to_string(expected.type()));
+                     entity::map& map,
+                     bool is_root) {
+    CAPTURE(is_root, to_string(actual.type()), to_string(expected.type()));
     CAPTURE(to_string(actual), to_string(expected));
 
     switch (expected.type()) {
         case type::k_document:
-            matches_document(actual, expected, map);
+            matches_document(actual, expected, map, is_root);
             return;
         case type::k_array:
             matches_array(actual, expected, map);
