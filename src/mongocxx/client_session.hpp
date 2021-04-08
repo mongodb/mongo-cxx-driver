@@ -113,7 +113,7 @@ class MONGOCXX_API client_session {
     ///
     /// Returns the current transaction state for this session.
     ///
-    transaction_state get_transaction_state() const;
+    transaction_state get_transaction_state() const noexcept;
 
     ///
     /// Advance the cluster time for a session. Has an effect only if the new cluster time is

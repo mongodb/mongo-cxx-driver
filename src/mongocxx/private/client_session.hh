@@ -198,7 +198,7 @@ class client_session::impl {
         return libmongoc::client_session_get_dirty(_session_t.get());
     }
 
-    transaction_state get_transaction_state() const {
+    transaction_state get_transaction_state() const noexcept {
         switch (libmongoc::client_session_get_transaction_state(_session_t.get())) {
             case MONGOC_TRANSACTION_NONE:
                 return transaction_state::k_transaction_none;
