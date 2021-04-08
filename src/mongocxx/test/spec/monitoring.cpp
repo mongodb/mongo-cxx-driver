@@ -73,10 +73,10 @@ void apm_checker::compare(bsoncxx::array::view expectations,
 
     auto events_iter = _events.begin();
     _events.erase(std::remove_if(_events.begin(), _events.end(), is_ignored), std::end(_events));
+    CAPTURE(print_all());
     for (auto expectation : expectations) {
         auto expected = expectation.get_document().view();
         REQUIRE(events_iter != _events.end());
-        CAPTURE(print_all());
         REQUIRE_BSON_MATCHES_V(*events_iter, expected, match_visitor);
         events_iter++;
     }
