@@ -142,6 +142,8 @@ void special_operator(types::bson_value::view actual, document::view expected, e
         if (type == typeid(client_session)) {
             REQUIRE(actual == map.get_client_session(id).id());
         } else {
+            // If the map does not contain the client session, then it's ID should have been cached
+            // as a BSON value.
             REQUIRE(type == typeid(types::bson_value::value));
             REQUIRE(actual == map.get_value(id));
         }
