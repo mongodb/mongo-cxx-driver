@@ -222,15 +222,15 @@ void add_observe_events(options::apm& apm_opts, document::view object) {
     auto& apm = get_apm_checker();
     if (std::end(events) !=
         std::find(std::begin(events), std::end(events), value("commandStartedEvent")))
-        apm.set_command_started_v2(apm_opts);
+        apm.set_command_started_unified(apm_opts);
 
     if (std::end(events) !=
         std::find(std::begin(events), std::end(events), value("commandSucceededEvent")))
-        apm.set_command_succeeded_v2(apm_opts);
+        apm.set_command_succeeded_unified(apm_opts);
 
     if (std::end(events) !=
         std::find(std::begin(events), std::end(events), value("commandFailedEvent")))
-        apm.set_command_failed_v2(apm_opts);
+        apm.set_command_failed_unified(apm_opts);
 }
 
 void add_ignore_command_monitoring_events(document::view object) {
@@ -566,7 +566,7 @@ void assert_events(const array::element& test) {
 
     for (auto e : test["expectEvents"].get_array().value) {
         auto events = e["events"].get_array().value;
-        get_apm_checker().compare_v2(events, get_entity_map());
+        get_apm_checker().compare_unified(events, get_entity_map());
     }
 }
 

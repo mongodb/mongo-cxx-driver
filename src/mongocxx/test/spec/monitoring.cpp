@@ -34,10 +34,10 @@ namespace spec {
 using namespace mongocxx;
 using bsoncxx::to_json;
 
-// commands postfixed with "_v2" are used to support the unified test format.
-void apm_checker::compare_v2(bsoncxx::array::view expectations,
-                             entity::map& map,
-                             bool allow_extra) {
+// commands postfixed with "_unified" are used to support the unified test format.
+void apm_checker::compare_unified(bsoncxx::array::view expectations,
+                                  entity::map& map,
+                                  bool allow_extra) {
     using bsoncxx::types::bson_value::value;
 
     auto is_ignored = [&](bsoncxx::document::value v) {
@@ -109,7 +109,7 @@ std::string apm_checker::print_all() {
     return output.str();
 }
 
-void apm_checker::set_command_started_v2(options::apm& apm) {
+void apm_checker::set_command_started_unified(options::apm& apm) {
     using namespace bsoncxx::builder::basic;
 
     apm.on_command_started([&](const events::command_started_event& event) {
@@ -122,7 +122,7 @@ void apm_checker::set_command_started_v2(options::apm& apm) {
     });
 }
 
-void apm_checker::set_command_failed_v2(options::apm& apm) {
+void apm_checker::set_command_failed_unified(options::apm& apm) {
     using namespace bsoncxx::builder::basic;
 
     apm.on_command_failed([&](const events::command_failed_event& event) {
@@ -133,7 +133,7 @@ void apm_checker::set_command_failed_v2(options::apm& apm) {
     });
 }
 
-void apm_checker::set_command_succeeded_v2(options::apm& apm) {
+void apm_checker::set_command_succeeded_unified(options::apm& apm) {
     using namespace bsoncxx::builder::basic;
 
     apm.on_command_succeeded([&](const events::command_succeeded_event& event) {
