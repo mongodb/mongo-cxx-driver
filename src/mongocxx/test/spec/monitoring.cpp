@@ -34,33 +34,30 @@ namespace spec {
 using namespace mongocxx;
 using bsoncxx::to_json;
 
-// commands postfixed with "_unified" are used to support the unified test format.
-void apm_checker::compare_unified(bsoncxx::array::view expectations,
-                                  entity::map& map,
-                                  bool allow_extra) {
-    using bsoncxx::types::bson_value::value;
-
+void remove_ignored_command_monitoring_events(apm_checker::event_vector& events,
+                                              const std::vector<std::string>& ignore) {
     auto is_ignored = [&](bsoncxx::document::value v) {
-        return std::any_of(std::begin(_ignore), std::end(_ignore), [&](stdx::string_view key) {
+        return std::any_of(std::begin(ignore), std::end(ignore), [&](stdx::string_view key) {
             return v.view()["commandStartedEvent"]["command"][key] ||
                    v.view()["commandFailedEvent"]["command"][key] ||
                    v.view()["commandSucceededEvent"]["command"][key];
         });
     };
 
-    auto events_iter = _events.begin();
-    _events.erase(std::remove_if(_events.begin(), _events.end(), is_ignored), std::end(_events));
-    CAPTURE(print_all());
-    for (auto expectation : expectations) {
-        auto expected = expectation.get_document().view();
-        REQUIRE(events_iter != _events.end());
-        assert::matches(value(events_iter->view()), value(expected), map);
-        events_iter++;
-    }
+    events.erase(std::remove_if(events.begin(), events.end(), is_ignored), std::end(events));
+}
 
-    if (!allow_extra && events_iter != _events.end()) {
-        FAIL("extra event found '" + to_json(*events_iter) + "'");
-    }
+// commands postfixed with "_unified" are used to support the unified test format.
+void apm_checker::compare_unified(bsoncxx::array::view expectations, entity::map& map) {
+    remove_ignored_command_monitoring_events(_events, _ignore);
+
+    auto eq = [&](const bsoncxx::array::element& expected, const bsoncxx::document::view actual) {
+        CAPTURE(print_all(), to_json(actual), assert::to_string(expected.get_value()));
+        assert::matches(bsoncxx::types::bson_value::value(actual), expected.get_value(), map);
+        return true;
+    };
+
+    REQUIRE(std::equal(expectations.begin(), expectations.end(), _events.begin(), eq));
 }
 
 void apm_checker::compare(bsoncxx::array::view expectations,

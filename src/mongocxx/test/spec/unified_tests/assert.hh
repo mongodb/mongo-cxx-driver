@@ -17,6 +17,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 #include "entity.hh"
+#include <bsoncxx/types/bson_value/view_or_value.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
@@ -26,6 +27,7 @@ void matches(bsoncxx::types::bson_value::view actual,
              bsoncxx::types::bson_value::view expected,
              mongocxx::entity::map& map);
 
+std::string to_string(bsoncxx::types::bson_value::view_or_value val);
 }  // namespace assert
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx

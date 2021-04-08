@@ -40,9 +40,7 @@ class apm_checker {
                  bool allow_extra = false,
                  const test_util::match_visitor& match_visitor = {});
 
-    void compare_unified(bsoncxx::array::view expectations,
-                         entity::map& map,
-                         bool allow_extra = false);
+    void compare_unified(bsoncxx::array::view expectations, entity::map& map);
 
     // Check that the apm checker has all expected events, ignore ordering and extra events.
     void has(bsoncxx::array::view expected);

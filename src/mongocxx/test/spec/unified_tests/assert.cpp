@@ -18,14 +18,15 @@
 
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/types/bson_value/value.hpp>
-#include <bsoncxx/types/bson_value/view_or_value.hpp>
 #include <mongocxx/test_util/client_helpers.hh>
 #include <third_party/catch/include/catch.hpp>
 
 using namespace bsoncxx;
 using namespace mongocxx;
 
-std::string to_string(types::bson_value::view_or_value val) {
+using assert::to_string;
+
+std::string assert::to_string(types::bson_value::view_or_value val) {
     switch (val.view().type()) {
         case type::k_string:
             return val.view().get_string().value.to_string();
