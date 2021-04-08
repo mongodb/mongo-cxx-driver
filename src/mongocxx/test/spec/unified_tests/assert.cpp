@@ -14,6 +14,8 @@
 
 #include "assert.hh"
 
+#include <iomanip>
+#include <sstream>
 #include <string>
 
 #include <bsoncxx/json.hpp>
@@ -25,6 +27,15 @@ using namespace bsoncxx;
 using namespace mongocxx;
 
 using assert::to_string;
+
+std::string binary_to_string(types::b_binary binary) {
+    std::stringstream ss;
+    ss << std::hex;
+    for (auto&& byte : std::vector<unsigned int>(binary.bytes, binary.bytes + binary.size)) {
+        ss << std::setw(2) << std::setfill('0') << byte;
+    }
+    return ss.str();
+}
 
 std::string assert::to_string(types::bson_value::view_or_value val) {
     switch (val.view().type()) {
@@ -41,8 +52,7 @@ std::string assert::to_string(types::bson_value::view_or_value val) {
         case type::k_oid:
             return val.view().get_oid().value.to_string();
         case type::k_binary:
-            return std::string{reinterpret_cast<const char*>(val.view().get_binary().bytes),
-                               val.view().get_binary().size};
+            return binary_to_string(val.view().get_binary());
         case type::k_bool:
             return std::to_string(static_cast<int>(val.view().get_bool().value));
         case type::k_code:
