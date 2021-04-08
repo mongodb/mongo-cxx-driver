@@ -675,19 +675,19 @@ document::value start_transaction(client_session& session, bsoncxx::document::vi
 document::value assert_session_transaction_state(client_session& session, document::view op) {
     auto state = op["arguments"]["state"].get_string().value.to_string();
     switch (session.get_transaction_state()) {
-        case client_session::transaction_state::k_mongoc_transaction_none:
+        case client_session::transaction_state::k_transaction_none:
             REQUIRE(state == "none");
             break;
-        case client_session::transaction_state::k_mongoc_transaction_starting:
+        case client_session::transaction_state::k_transaction_starting:
             REQUIRE(state == "starting");
             break;
-        case client_session::transaction_state::k_mongoc_transaction_in_progress:
+        case client_session::transaction_state::k_transaction_in_progress:
             REQUIRE(state == "in_progress");
             break;
-        case client_session::transaction_state::k_mongoc_transaction_committed:
+        case client_session::transaction_state::k_transaction_committed:
             REQUIRE(state == "committed");
             break;
-        case client_session::transaction_state::k_mongoc_transaction_aborted:
+        case client_session::transaction_state::k_transaction_aborted:
             REQUIRE(state == "aborted");
             break;
     }

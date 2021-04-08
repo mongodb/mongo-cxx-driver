@@ -39,11 +39,11 @@ class client;
 class MONGOCXX_API client_session {
    public:
     enum class transaction_state {
-        k_mongoc_transaction_none,
-        k_mongoc_transaction_starting,
-        k_mongoc_transaction_in_progress,
-        k_mongoc_transaction_committed,
-        k_mongoc_transaction_aborted,
+        k_transaction_none,
+        k_transaction_starting,
+        k_transaction_in_progress,
+        k_transaction_committed,
+        k_transaction_aborted,
     };
 
     ///

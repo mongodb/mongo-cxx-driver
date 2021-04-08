@@ -201,15 +201,15 @@ class client_session::impl {
     transaction_state get_transaction_state() const {
         switch (libmongoc::client_session_get_transaction_state(_session_t.get())) {
             case MONGOC_TRANSACTION_NONE:
-                return transaction_state::k_mongoc_transaction_none;
+                return transaction_state::k_transaction_none;
             case MONGOC_TRANSACTION_STARTING:
-                return transaction_state::k_mongoc_transaction_starting;
+                return transaction_state::k_transaction_starting;
             case MONGOC_TRANSACTION_IN_PROGRESS:
-                return transaction_state::k_mongoc_transaction_in_progress;
+                return transaction_state::k_transaction_in_progress;
             case MONGOC_TRANSACTION_COMMITTED:
-                return transaction_state::k_mongoc_transaction_committed;
+                return transaction_state::k_transaction_committed;
             case MONGOC_TRANSACTION_ABORTED:
-                return transaction_state::k_mongoc_transaction_aborted;
+                return transaction_state::k_transaction_aborted;
             default:
                 MONGOCXX_UNREACHABLE;
         }
