@@ -108,16 +108,7 @@ type to_type(const Element& type) {
 }
 
 bool is_set(types::bson_value::view val) {
-    switch (val.type()) {
-        case type::k_null:
-            return false;
-        case type::k_document:
-            return !val.get_document().value.empty();
-        case type::k_array:
-            return !val.get_array().value.empty();
-        default:
-            return true;
-    }
+    return val.type() != type::k_null;
 }
 
 void special_operator(types::bson_value::view actual, document::view expected, entity::map& map) {

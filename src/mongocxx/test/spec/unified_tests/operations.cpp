@@ -295,7 +295,6 @@ document::value bulk_write(collection& coll, document::view op) {
                                 kvp("upsertedCount", upserted_count),
                                 kvp("deletedCount", deleted_count),
                                 kvp("insertedCount", inserted_count),
-                                kvp("insertedIds", make_document()),
                                 kvp("upsertedIds", upserted_ids_doc));
     return make_document(kvp("result", result));
 }
