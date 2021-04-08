@@ -54,7 +54,7 @@ std::string assert::to_string(types::bson_value::view_or_value val) {
         case type::k_binary:
             return binary_to_string(val.view().get_binary());
         case type::k_bool:
-            return std::to_string(static_cast<int>(val.view().get_bool().value));
+            return val.view().get_bool().value ? "true" : "false";
         case type::k_code:
             return val.view().get_code().code.to_string();
         case type::k_codewscope:
