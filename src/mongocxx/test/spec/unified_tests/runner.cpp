@@ -473,7 +473,7 @@ void add_data_to_collection(const array::element& data) {
     auto coll = db.create_collection(coll_name, {}, wc);
 
     auto to_insert = array_elements_to_documents(data["documents"].get_array().value);
-    REQUIRE(to_insert.empty() || coll.insert_many(to_insert)->result().inserted_count() != 0);
+    REQUIRE((to_insert.empty() || coll.insert_many(to_insert)->result().inserted_count() != 0));
 }
 
 void load_initial_data(document::view test) {
