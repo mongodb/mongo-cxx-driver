@@ -488,6 +488,7 @@ document::value insert_one(collection& coll, client_session* session, document::
 }
 
 document::value create_change_stream(entity::map& map,
+                                     client_session* session,
                                      const std::string& object,
                                      document::view operation) {
     auto args = operation["arguments"];
@@ -502,11 +503,27 @@ document::value create_change_stream(entity::map& map,
     CAPTURE(object, to_json(operation), key);
     auto stream = [&] {
         const auto& type = map.type(object);
-        if (type == typeid(mongocxx::database))
-            return map.get_database(object).watch(pipeline, options);
-        if (type == typeid(mongocxx::collection))
-            return map.get_collection(object).watch(pipeline, options);
-        return map.get_client(object).watch(pipeline, options);
+        if (type == typeid(mongocxx::database)) {
+            if (session) {
+                return map.get_database(object).watch(*session, pipeline, options);
+            } else {
+                return map.get_database(object).watch(pipeline, options);
+            }
+        }
+
+        if (type == typeid(mongocxx::collection)) {
+            if (session) {
+                return map.get_collection(object).watch(*session, pipeline, options);
+            } else {
+                return map.get_collection(object).watch(pipeline, options);
+            }
+        }
+
+        if (session) {
+            return map.get_client(object).watch(*session, pipeline, options);
+        } else {
+            return map.get_client(object).watch(pipeline, options);
+        }
     }();
 
     auto res = map.insert(key, std::move(stream));
@@ -899,7 +916,7 @@ document::value operations::run(entity::map& map,
         throw std::logic_error{"unrecognized object"};
     }
     if (name == "createChangeStream")
-        return create_change_stream(map, object, op_view);
+        return create_change_stream(map, get_session(op_view, map), object, op_view);
     if (name == "insertOne") {
         if (op["arguments"]["session"]) {
             auto session_name = op["arguments"]["session"].get_string().value.to_string();
