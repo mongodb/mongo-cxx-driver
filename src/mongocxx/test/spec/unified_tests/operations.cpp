@@ -558,7 +558,9 @@ document::value fail_point(entity::map& map, spec::apm_checker& apm, document::v
                          kvp("failPoint", args["failPoint"]["configureFailPoint"].get_string()));
 }
 
-document::value find_one_and_update(collection& coll, document::view operation) {
+document::value find_one_and_update(collection& coll,
+                                    client_session* session,
+                                    document::view operation) {
     document::view arguments = operation["arguments"].get_document().value;
     document::view filter = arguments["filter"].get_document().value;
     options::find_one_and_update options{};
@@ -608,12 +610,20 @@ document::value find_one_and_update(collection& coll, document::view operation) 
     switch (arguments["update"].type()) {
         case bsoncxx::type::k_document: {
             document::view update = arguments["update"].get_document().value;
-            document = coll.find_one_and_update(filter, update, options);
+            if (session) {
+                document = coll.find_one_and_update(*session, filter, update, options);
+            } else {
+                document = coll.find_one_and_update(filter, update, options);
+            }
             break;
         }
         case bsoncxx::type::k_array: {
             pipeline update = build_pipeline(arguments["update"].get_array().value);
-            document = coll.find_one_and_update(filter, update, options);
+            if (session) {
+                document = coll.find_one_and_update(*session, filter, update, options);
+            } else {
+                document = coll.find_one_and_update(filter, update, options);
+            }
             break;
         }
         default:
@@ -930,7 +940,7 @@ document::value operations::run(entity::map& map,
     if (name == "failPoint")
         return fail_point(map, apm, op_view);
     if (name == "findOneAndUpdate")
-        return find_one_and_update(map.get_collection(object), op_view);
+        return find_one_and_update(map.get_collection(object), get_session(op_view, map), op_view);
     if (name == "listDatabases") {
         map.get_client(object).list_databases().begin();
         return empty_doc;
