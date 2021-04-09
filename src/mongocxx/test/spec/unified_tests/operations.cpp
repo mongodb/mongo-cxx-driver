@@ -310,7 +310,7 @@ document::value bulk_write(collection& coll, client_session* session, document::
     return make_document(kvp("result", result));
 }
 
-document::value insert_many(collection& coll, document::view operation) {
+document::value insert_many(collection& coll, client_session* session, document::view operation) {
     using bsoncxx::builder::basic::kvp;
     using bsoncxx::builder::basic::make_document;
 
@@ -328,7 +328,13 @@ document::value insert_many(collection& coll, document::view operation) {
     }
 
     stdx::optional<result::insert_many> insert_many_result;
-    insert_many_result = coll.insert_many(documents_to_insert, insert_options);
+
+    if (session) {
+        insert_many_result = coll.insert_many(*session, documents_to_insert, insert_options);
+    } else {
+        insert_many_result = coll.insert_many(documents_to_insert, insert_options);
+    }
+
     std::map<size_t, document::element> inserted_ids{};
 
     if (insert_many_result) {
@@ -872,8 +878,14 @@ document::value operations::run(entity::map& map,
         }
         return bulk_write(map.get_collection(object), nullptr, op_view);
     }
-    if (name == "insertMany")
-        return insert_many(map.get_collection(object), op_view);
+    if (name == "insertMany") {
+        if (op["arguments"]["session"]) {
+            auto session_name = op["arguments"]["session"].get_string().value.to_string();
+            auto& session = map.get_client_session(session_name);
+            return insert_many(map.get_collection(object), &session, op_view);
+        }
+        return insert_many(map.get_collection(object), nullptr, op_view);
+    }
     if (name == "replaceOne")
         return replace_one(map.get_collection(object), op_view);
     if (name == "aggregate") {
