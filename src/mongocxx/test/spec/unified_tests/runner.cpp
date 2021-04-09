@@ -645,7 +645,10 @@ void run_tests(document::view test) {
                 continue;
             }
 
-            REQUIRE_FALSE(/* TODO */ ele["skipReason"]);
+            if (ele["skipReason"]) {
+                WARN("Skip Reason: " + ele["skipReason"].get_string().value.to_string());
+                continue;
+            }
 
             disable_fail_point disable_fail_point_fn{};
             get_apm_checker().clear_events();
