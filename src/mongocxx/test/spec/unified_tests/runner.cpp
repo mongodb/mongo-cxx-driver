@@ -601,13 +601,16 @@ void assert_outcome(const array::element& test) {
 }
 
 struct disable_fail_point {
-    std::string uri;
-    std::string command;
-    bool set = false;
+    std::vector<std::pair<std::string, std::string>> fail_points;
+
+    void add_fail_point(const std::string& uri, const std::string& command) {
+        fail_points.emplace_back(uri, command);
+    }
 
     void operator()() const {
-        if (set)
-            spec::disable_fail_point(uri, {}, command);
+        for (auto&& f : fail_points) {
+            spec::disable_fail_point(f.first, {}, f.second);
+        }
     }
 };
 
@@ -659,11 +662,9 @@ void run_tests(document::view test) {
 
                     if (ops["object"].get_string().value.to_string() == "testRunner") {
                         if (ops["name"].get_string().value.to_string() == "failPoint") {
-                            disable_fail_point_fn.set = true;
-                            disable_fail_point_fn.uri =
-                                result["uri"].get_string().value.to_string();
-                            disable_fail_point_fn.command =
-                                result["failPoint"].get_string().value.to_string();
+                            disable_fail_point_fn.add_fail_point(
+                                result["uri"].get_string().value.to_string(),
+                                result["failPoint"].get_string().value.to_string());
                         }
 
                         // Special test operations return no result and are always expected to
