@@ -1001,7 +1001,12 @@ document::value operations::run(entity::map& map,
     if (name == "dropCollection") {
         auto coll_name = op["arguments"]["collection"].get_string().value.to_string();
         auto& db = map.get_database(object);
-        db.collection(coll_name).drop();
+        auto* session = get_session(op_view, map);
+        if (session) {
+            db.collection(coll_name).drop(*session);
+        } else {
+            db.collection(coll_name).drop();
+        }
         return empty_doc;
     }
     if (name == "createCollection") {
