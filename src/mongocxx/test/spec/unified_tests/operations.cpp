@@ -426,7 +426,7 @@ document::value replace_one(collection& coll, client_session* session, document:
 }
 
 template <typename Entity>
-document::value aggregate(Entity& entity, document::view operation) {
+document::value aggregate(Entity& entity, client_session* session, document::view operation) {
     document::view arguments = operation["arguments"].get_document().value;
     pipeline pipeline = build_pipeline(arguments["pipeline"].get_array().value);
     options::aggregate options{};
@@ -440,7 +440,12 @@ document::value aggregate(Entity& entity, document::view operation) {
     }
 
     stdx::optional<cursor> result_cursor;
-    result_cursor.emplace(entity.aggregate(pipeline, options));
+
+    if (session) {
+        result_cursor.emplace(entity.aggregate(*session, pipeline, options));
+    } else {
+        result_cursor.emplace(entity.aggregate(pipeline, options));
+    }
 
     auto result = builder::basic::document{};
     result.append(builder::basic::kvp("result", [&result_cursor](builder::basic::sub_array array) {
@@ -886,9 +891,9 @@ document::value operations::run(entity::map& map,
     if (name == "aggregate") {
         const auto& type = map.type(object);
         if (type == typeid(mongocxx::database))
-            return aggregate(map.get_database(object), op_view);
+            return aggregate(map.get_database(object), get_session(op_view, map), op_view);
         if (type == typeid(mongocxx::collection))
-            return aggregate(map.get_collection(object), op_view);
+            return aggregate(map.get_collection(object), get_session(op_view, map), op_view);
 
         CAPTURE(object, type.name());
         throw std::logic_error{"unrecognized object"};
