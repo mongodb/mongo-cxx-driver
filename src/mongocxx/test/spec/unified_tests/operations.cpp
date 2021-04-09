@@ -44,7 +44,7 @@ int32_t as_int32(const document::element& el) {
     return el.get_int32().value;
 }
 
-document::value find_one(collection& coll, document::view operation) {
+document::value find(collection& coll, document::view operation) {
     document::view arguments = operation["arguments"].get_document().value;
     document::value empty_filter = builder::basic::make_document();
     document::view filter;
@@ -846,7 +846,7 @@ document::value operations::run(entity::map& map,
     auto op_view = op.get_document().view();
     CAPTURE(name, object, to_json(op_view));
     if (name == "find")
-        return find_one(map.get_collection(object), op_view);
+        return find(map.get_collection(object), op_view);
     if (name == "bulkWrite")
         return bulk_write(map.get_collection(object), op_view);
     if (name == "insertMany")
