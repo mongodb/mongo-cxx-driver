@@ -354,7 +354,7 @@ document::value insert_many(collection& coll, client_session* session, document:
     return result.extract();
 }
 
-document::value replace_one(collection& coll, document::view operation) {
+document::value replace_one(collection& coll, client_session* session, document::view operation) {
     document::view arguments = operation["arguments"].get_document().value;
     document::view filter = arguments["filter"].get_document().value;
     document::view replacement = arguments["replacement"].get_document().value;
@@ -380,7 +380,12 @@ document::value replace_one(collection& coll, document::view operation) {
     std::int32_t upserted_count = 0;
     stdx::optional<result::replace_one> replace_result;
 
-    replace_result = coll.replace_one(filter, replacement, options);
+    if (session) {
+        replace_result = coll.replace_one(*session, filter, replacement, options);
+    } else {
+        replace_result = coll.replace_one(filter, replacement, options);
+    }
+
     bsoncxx::stdx::optional<types::bson_value::view> upserted_id{};
 
     if (replace_result) {
@@ -853,6 +858,14 @@ document::value end_session(entity::map& map, const std::string& name) {
     return make_document();
 }
 
+client_session* get_session(document::view op, entity::map& map) {
+    if (!op["arguments"]["session"])
+        return nullptr;
+
+    auto session_name = op["arguments"]["session"].get_string().value.to_string();
+    return &map.get_client_session(session_name);
+}
+
 document::value operations::run(entity::map& map,
                                 spec::apm_checker& apm,
                                 const array::element& op) {
@@ -862,32 +875,14 @@ document::value operations::run(entity::map& map,
     auto empty_doc = make_document();
     auto op_view = op.get_document().view();
     CAPTURE(name, object, to_json(op_view));
-    if (name == "find") {
-        if (op["arguments"]["session"]) {
-            auto session_name = op["arguments"]["session"].get_string().value.to_string();
-            auto& session = map.get_client_session(session_name);
-            return find(map.get_collection(object), &session, op_view);
-        }
-        return find(map.get_collection(object), nullptr, op_view);
-    }
-    if (name == "bulkWrite") {
-        if (op["arguments"]["session"]) {
-            auto session_name = op["arguments"]["session"].get_string().value.to_string();
-            auto& session = map.get_client_session(session_name);
-            return bulk_write(map.get_collection(object), &session, op_view);
-        }
-        return bulk_write(map.get_collection(object), nullptr, op_view);
-    }
-    if (name == "insertMany") {
-        if (op["arguments"]["session"]) {
-            auto session_name = op["arguments"]["session"].get_string().value.to_string();
-            auto& session = map.get_client_session(session_name);
-            return insert_many(map.get_collection(object), &session, op_view);
-        }
-        return insert_many(map.get_collection(object), nullptr, op_view);
-    }
+    if (name == "find")
+        return find(map.get_collection(object), get_session(op_view, map), op_view);
+    if (name == "bulkWrite")
+        return bulk_write(map.get_collection(object), get_session(op_view, map), op_view);
+    if (name == "insertMany")
+        return insert_many(map.get_collection(object), get_session(op_view, map), op_view);
     if (name == "replaceOne")
-        return replace_one(map.get_collection(object), op_view);
+        return replace_one(map.get_collection(object), get_session(op_view, map), op_view);
     if (name == "aggregate") {
         const auto& type = map.type(object);
         if (type == typeid(mongocxx::database))
