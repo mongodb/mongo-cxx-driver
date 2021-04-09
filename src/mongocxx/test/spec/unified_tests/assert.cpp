@@ -70,7 +70,7 @@ std::string assert::to_string(types::bson_value::view_or_value val) {
         case type::k_undefined:
             return "undefined";
         case type::k_timestamp:
-            return "timestampe={" + std::to_string(val.view().get_timestamp().timestamp) +
+            return "timestamp={" + std::to_string(val.view().get_timestamp().timestamp) +
                    "}, increment={" + std::to_string(val.view().get_timestamp().increment) + "}";
         case type::k_regex:
             return "regex={" + val.view().get_regex().regex.to_string() + "}, options={" +

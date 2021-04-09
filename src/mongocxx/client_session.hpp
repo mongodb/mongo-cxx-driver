@@ -102,7 +102,7 @@ class MONGOCXX_API client_session {
     std::uint32_t server_id() const noexcept;
 
     ///
-    /// Indicates whether session has been marked “dirty” as defined in the driver sessions
+    /// Indicates whether session has been marked "dirty" as defined in the driver sessions
     /// specification.
     ///
     /// @see
