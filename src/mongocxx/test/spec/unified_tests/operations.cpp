@@ -163,7 +163,7 @@ T _build_update_model(document::view arguments) {
     }
 }
 
-document::value bulk_write(collection& coll, document::view op) {
+document::value bulk_write(collection& coll, client_session* session, document::view op) {
     using bsoncxx::builder::basic::kvp;
     using bsoncxx::builder::basic::make_document;
 
@@ -273,7 +273,13 @@ document::value bulk_write(collection& coll, document::view op) {
     result::bulk_write::id_map upserted_ids;
     std::int32_t inserted_count = 0;
     bsoncxx::stdx::optional<result::bulk_write> bulk_write_result;
-    bulk_write_result = coll.bulk_write(writes, opt);
+
+    if (session) {
+        bulk_write_result = coll.bulk_write(*session, writes, opt);
+    } else {
+        bulk_write_result = coll.bulk_write(writes, opt);
+    }
+
     if (bulk_write_result) {
         matched_count = bulk_write_result->matched_count();
         modified_count = bulk_write_result->modified_count();
@@ -858,8 +864,14 @@ document::value operations::run(entity::map& map,
         }
         return find(map.get_collection(object), nullptr, op_view);
     }
-    if (name == "bulkWrite")
-        return bulk_write(map.get_collection(object), op_view);
+    if (name == "bulkWrite") {
+        if (op["arguments"]["session"]) {
+            auto session_name = op["arguments"]["session"].get_string().value.to_string();
+            auto& session = map.get_client_session(session_name);
+            return bulk_write(map.get_collection(object), &session, op_view);
+        }
+        return bulk_write(map.get_collection(object), nullptr, op_view);
+    }
     if (name == "insertMany")
         return insert_many(map.get_collection(object), op_view);
     if (name == "replaceOne")
