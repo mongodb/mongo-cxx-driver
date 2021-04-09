@@ -44,7 +44,7 @@ int32_t as_int32(const document::element& el) {
     return el.get_int32().value;
 }
 
-document::value find(collection& coll, document::view operation) {
+document::value find(collection& coll, client_session* session, document::view operation) {
     document::view arguments = operation["arguments"].get_document().value;
     document::value empty_filter = builder::basic::make_document();
     document::view filter;
@@ -113,7 +113,12 @@ document::value find(collection& coll, document::view operation) {
     }
 
     stdx::optional<cursor> result_cursor;
-    result_cursor.emplace(coll.find(filter, options));
+
+    if (session) {
+        result_cursor.emplace(coll.find(*session, filter, options));
+    } else {
+        result_cursor.emplace(coll.find(filter, options));
+    }
 
     auto result = builder::basic::document{};
     result.append(builder::basic::kvp("result", [&result_cursor](builder::basic::sub_array array) {
@@ -845,8 +850,14 @@ document::value operations::run(entity::map& map,
     auto empty_doc = make_document();
     auto op_view = op.get_document().view();
     CAPTURE(name, object, to_json(op_view));
-    if (name == "find")
-        return find(map.get_collection(object), op_view);
+    if (name == "find") {
+        if (op["arguments"]["session"]) {
+            auto session_name = op["arguments"]["session"].get_string().value.to_string();
+            auto& session = map.get_client_session(session_name);
+            return find(map.get_collection(object), &session, op_view);
+        }
+        return find(map.get_collection(object), nullptr, op_view);
+    }
     if (name == "bulkWrite")
         return bulk_write(map.get_collection(object), op_view);
     if (name == "insertMany")
