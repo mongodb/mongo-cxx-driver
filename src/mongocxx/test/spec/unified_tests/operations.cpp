@@ -838,7 +838,7 @@ document::value upload(entity::map& map, document::view op) {
     return make_document(kvp("result", id));
 }
 
-document::value delete_one(collection& coll, document::view operation) {
+document::value delete_one(collection& coll, client_session* session, document::view operation) {
     document::view arguments = operation["arguments"].get_document().value;
     document::view filter = arguments["filter"].get_document().value;
     options::delete_options options{};
@@ -857,7 +857,13 @@ document::value delete_one(collection& coll, document::view operation) {
     auto result = builder::basic::document{};
     std::int32_t deleted_count = 0;
 
-    if (auto delete_result = coll.delete_one(filter, options)) {
+    auto delete_result = [&] {
+        if (session)
+            return coll.delete_one(*session, filter, options);
+        return coll.delete_one(filter, options);
+    }();
+
+    if (delete_result) {
         deleted_count = delete_result->deleted_count();
     }
 
@@ -1056,7 +1062,7 @@ document::value operations::run(entity::map& map,
     }
     if (name == "deleteOne") {
         auto& coll = map.get_collection(object);
-        return delete_one(coll, op_view);
+        return delete_one(coll, get_session(op_view, map), op_view);
     }
 
     throw std::logic_error{"unsupported operation: " + name};
