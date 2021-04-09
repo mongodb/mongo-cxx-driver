@@ -205,32 +205,11 @@ options::apm apm_checker::get_apm_opts(bool command_started_events_only) {
     return opts;
 }
 
-apm_checker::event apm_checker::to_event(stdx::string_view s) {
-    if (s.to_string() == "killCursors")
-        return apm_checker::event::kill_cursors;
-    if (s.to_string() == "getMore")
-        return apm_checker::event::get_more;
-    if (s.to_string() == "configureFailPoint")
-        return apm_checker::event::configure_fail_point;
-    throw mongocxx::logic_error{error_code::k_invalid_parameter,
-                                "unrecognized event '" + s.to_string() + "'"};
-}
+void apm_checker::set_ignore_command_monitoring_event(const std::string& event) {
+    auto valid_events = {"killCursors", "getMore", "configureFailPoint"};
+    REQUIRE(std::find(valid_events.begin(), valid_events.end(), event) != valid_events.end());
 
-std::string apm_checker::to_string(event e) {
-    switch (e) {
-        case apm_checker::event::kill_cursors:
-            return "killCursors";
-        case apm_checker::event::get_more:
-            return "getMore";
-        case apm_checker::event::configure_fail_point:
-            return "configureFailPoint";
-        default:
-            MONGOCXX_UNREACHABLE;
-    }
-}
-
-void apm_checker::set_ignore_command_monitoring_event(event e) {
-    this->_ignore.push_back(to_string(e));
+    this->_ignore.push_back(event);
 }
 
 void apm_checker::clear_events() {

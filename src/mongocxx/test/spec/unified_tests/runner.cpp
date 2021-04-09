@@ -237,11 +237,9 @@ void add_ignore_command_monitoring_events(document::view object) {
     if (!object["ignoreCommandMonitoringEvents"])
         return;
     for (auto cme : object["ignoreCommandMonitoringEvents"].get_array().value) {
-        auto event = apm_checker::to_event(cme.get_string());
-
-        CAPTURE(apm_checker::to_string(event), cme.get_string());
+        CAPTURE(cme.get_string());
         auto& apm = get_apm_checker();
-        apm.set_ignore_command_monitoring_event(event);
+        apm.set_ignore_command_monitoring_event(cme.get_string().value.to_string());
     }
 }
 

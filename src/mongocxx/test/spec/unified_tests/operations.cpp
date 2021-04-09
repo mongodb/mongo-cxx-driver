@@ -509,9 +509,7 @@ document::value fail_point(entity::map& map, spec::apm_checker& apm, document::v
 
     client["admin"].run_command(args["failPoint"].get_document().value);
 
-    auto event = spec::apm_checker::to_event("configureFailPoint");
-    apm.set_ignore_command_monitoring_event(event);
-
+    apm.set_ignore_command_monitoring_event("configureFailPoint");
     return make_document(kvp("uri", client.uri().to_string()),
                          kvp("failPoint", args["failPoint"]["configureFailPoint"].get_string()));
 }

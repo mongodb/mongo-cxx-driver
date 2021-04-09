@@ -29,10 +29,6 @@ using namespace mongocxx;
 // Stores and compares apm events.
 class apm_checker {
    public:
-    enum class event { kill_cursors, get_more, configure_fail_point };
-    static event to_event(stdx::string_view s);
-    static std::string to_string(event e);
-
     options::apm get_apm_opts(bool command_started_events_only = false);
 
     // Check that the apm checker's events exactly match our expected events, in order.
@@ -71,7 +67,7 @@ class apm_checker {
     void set_command_started(options::apm& apm);
     void set_command_failed(options::apm& apm);
     void set_command_succeeded(options::apm& apm);
-    void set_ignore_command_monitoring_event(event e);
+    void set_ignore_command_monitoring_event(const std::string& event);
 
     void set_command_started_unified(options::apm& apm);
     void set_command_failed_unified(options::apm& apm);
