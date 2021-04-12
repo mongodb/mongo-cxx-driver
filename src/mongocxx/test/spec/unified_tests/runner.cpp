@@ -553,8 +553,14 @@ void assert_error(mongocxx::exception& e, const array::element& ops) {
     }
 
     // below is only used for server-side errors.
-    REQUIRE_FALSE(expect_error["errorLabelsContain"]);
     REQUIRE_FALSE(expect_error["expectResult"]);
+
+    // TODO CXX-834: client-side errors may contain error labels. However, only
+    //  mongocxx::operation_exception keeps track of the raw_sever_error (and consequently the
+    //  error label) and, as a result, is the only exception type with the required
+    //  `has_error_label` method. Until we fix CXX-834, there's no way to check the error label of a
+    //  mongocxx::exception.
+    REQUIRE_FALSE(expect_error["errorLabelsContain"]);
     REQUIRE_FALSE(expect_error["errorLabelsOmit"]);
 
     REQUIRE_FALSE(/* TODO */ expect_error["errorContains"]);
