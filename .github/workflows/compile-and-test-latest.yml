@@ -20,6 +20,6 @@ jobs:
                 PREFIX=$INSTALL_PREFIX ./.evergreen/install_c_driver.sh master
                 mkdir cmake-build
                 cd cmake-build
-                cmake -DCMAKE_PREFIX_PATH=$INSTALL_PREFIX ..
+                cmake -DCMAKE_PREFIX_PATH=$INSTALL_PREFIX -DCMAKE_BUILD_TYPE=Debug ..
                 cmake --build . --target all
                 cmake --build . --target test
