@@ -28,7 +28,7 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace operations {
 
 bsoncxx::document::value run(entity::map& map,
-                             spec::apm_checker& apm,
+                             std::unordered_map<std::string, spec::apm_checker>& apm,
                              const bsoncxx::array::element& op);
 
 }  // namespace operations

@@ -504,26 +504,20 @@ document::value create_change_stream(entity::map& map,
     auto stream = [&] {
         const auto& type = map.type(object);
         if (type == typeid(mongocxx::database)) {
-            if (session) {
+            if (session)
                 return map.get_database(object).watch(*session, pipeline, options);
-            } else {
-                return map.get_database(object).watch(pipeline, options);
-            }
+            return map.get_database(object).watch(pipeline, options);
         }
 
         if (type == typeid(mongocxx::collection)) {
-            if (session) {
+            if (session)
                 return map.get_collection(object).watch(*session, pipeline, options);
-            } else {
-                return map.get_collection(object).watch(pipeline, options);
-            }
+            return map.get_collection(object).watch(pipeline, options);
         }
 
-        if (session) {
+        if (session)
             return map.get_client(object).watch(*session, pipeline, options);
-        } else {
-            return map.get_client(object).watch(pipeline, options);
-        }
+        return map.get_client(object).watch(pipeline, options);
     }();
 
     auto res = map.insert(key, std::move(stream));
@@ -657,11 +651,11 @@ bsoncxx::stdx::optional<write_concern> lookup_write_concern(document::view doc) 
         document::element w = doc["writeConcern"]["w"];
         if (w.type() == bsoncxx::type::k_string) {
             std::string level = w.get_string().value.to_string();
-            if (level.compare("majority") == 0) {
+            if (level == "majority") {
                 wc.acknowledge_level(write_concern::level::k_majority);
-            } else if (level.compare("acknowledged") == 0) {
+            } else if (level == "acknowledged") {
                 wc.acknowledge_level(write_concern::level::k_acknowledged);
-            } else if (level.compare("unacknowledged") == 0) {
+            } else if (level == "unacknowledged") {
                 wc.acknowledge_level(write_concern::level::k_unacknowledged);
             }
         } else if (w.type() == bsoncxx::type::k_int32) {
@@ -677,15 +671,15 @@ bsoncxx::stdx::optional<read_preference> lookup_read_preference(document::view d
     if (doc["readPreference"] && doc["readPreference"]["mode"]) {
         read_preference rp;
         std::string mode = doc["readPreference"]["mode"].get_string().value.to_string();
-        if (mode.compare("Primary") == 0) {
+        if (mode == "Primary") {
             rp.mode(read_preference::read_mode::k_primary);
-        } else if (mode.compare("PrimaryPreferred") == 0) {
+        } else if (mode == "PrimaryPreferred") {
             rp.mode(read_preference::read_mode::k_primary_preferred);
-        } else if (mode.compare("Secondary") == 0) {
+        } else if (mode == "Secondary") {
             rp.mode(read_preference::read_mode::k_secondary);
-        } else if (mode.compare("SecondaryPreferred") == 0) {
+        } else if (mode == "SecondaryPreferred") {
             rp.mode(read_preference::read_mode::k_secondary_preferred);
-        } else if (mode.compare("Nearest") == 0) {
+        } else if (mode == "Nearest") {
             rp.mode(read_preference::read_mode::k_nearest);
         }
         return rp;
@@ -784,12 +778,12 @@ bool index_exists(document::view op) {
 
 struct with_transaction_cb {
     array::value operations;
-    entity::map& map;
-    spec::apm_checker& apm;
+    entity::map& entity_map;
+    std::unordered_map<std::string, spec::apm_checker>& apm_map;
 
     void operator()(client_session*) {
         for (auto&& op : operations.view()) {
-            operations::run(map, apm, op);
+            operations::run(entity_map, apm_map, op);
         }
     }
 };
@@ -904,8 +898,8 @@ client_session* get_session(document::view op, entity::map& map) {
     return &map.get_client_session(session_name);
 }
 
-document::value operations::run(entity::map& map,
-                                spec::apm_checker& apm,
+document::value operations::run(entity::map& entity_map,
+                                std::unordered_map<std::string, spec::apm_checker>& apm_map,
                                 const array::element& op) {
     auto name = op["name"].get_string().value.to_string();
     auto object = op["object"].get_string().value.to_string();
@@ -914,59 +908,70 @@ document::value operations::run(entity::map& map,
     auto op_view = op.get_document().view();
     CAPTURE(name, object, to_json(op_view));
     if (name == "find")
-        return find(map.get_collection(object), get_session(op_view, map), op_view);
+        return find(entity_map.get_collection(object), get_session(op_view, entity_map), op_view);
     if (name == "bulkWrite")
-        return bulk_write(map.get_collection(object), get_session(op_view, map), op_view);
+        return bulk_write(
+            entity_map.get_collection(object), get_session(op_view, entity_map), op_view);
     if (name == "insertMany")
-        return insert_many(map.get_collection(object), get_session(op_view, map), op_view);
+        return insert_many(
+            entity_map.get_collection(object), get_session(op_view, entity_map), op_view);
     if (name == "replaceOne")
-        return replace_one(map.get_collection(object), get_session(op_view, map), op_view);
+        return replace_one(
+            entity_map.get_collection(object), get_session(op_view, entity_map), op_view);
     if (name == "aggregate") {
-        const auto& type = map.type(object);
+        const auto& type = entity_map.type(object);
         if (type == typeid(mongocxx::database))
-            return aggregate(map.get_database(object), get_session(op_view, map), op_view);
+            return aggregate(
+                entity_map.get_database(object), get_session(op_view, entity_map), op_view);
         if (type == typeid(mongocxx::collection))
-            return aggregate(map.get_collection(object), get_session(op_view, map), op_view);
+            return aggregate(
+                entity_map.get_collection(object), get_session(op_view, entity_map), op_view);
 
         CAPTURE(object, type.name());
         throw std::logic_error{"unrecognized object"};
     }
     if (name == "createChangeStream")
-        return create_change_stream(map, get_session(op_view, map), object, op_view);
+        return create_change_stream(entity_map, get_session(op_view, entity_map), object, op_view);
     if (name == "insertOne") {
         if (op["arguments"]["session"]) {
             auto session_name = op["arguments"]["session"].get_string().value.to_string();
-            auto& session = map.get_client_session(session_name);
-            return insert_one(map.get_collection(object), &session, op_view);
+            auto& session = entity_map.get_client_session(session_name);
+            return insert_one(entity_map.get_collection(object), &session, op_view);
         }
-        return insert_one(map.get_collection(object), nullptr, op_view);
+        return insert_one(entity_map.get_collection(object), nullptr, op_view);
     }
     if (name == "iterateUntilDocumentOrError")
-        return iterate_until_document_or_error(map.get_change_stream(object));
-    if (name == "failPoint")
-        return fail_point(map, apm, op_view);
+        return iterate_until_document_or_error(entity_map.get_change_stream(object));
+    if (name == "failPoint") {
+        auto key = op["arguments"]["client"].get_string().value.to_string();
+        return fail_point(entity_map, apm_map[key], op_view);
+    }
     if (name == "findOneAndUpdate")
-        return find_one_and_update(map.get_collection(object), get_session(op_view, map), op_view);
+        return find_one_and_update(
+            entity_map.get_collection(object), get_session(op_view, entity_map), op_view);
     if (name == "listDatabases") {
-        map.get_client(object).list_databases().begin();
+        entity_map.get_client(object).list_databases().begin();
         return empty_doc;
     }
     if (name == "assertSessionNotDirty") {
         auto session_name = op["arguments"]["session"].get_string().value.to_string();
-        auto& session = map.get_client_session(session_name);
+        auto& session = entity_map.get_client_session(session_name);
         REQUIRE(!session.get_dirty());
         return empty_doc;
     }
     if (name == "assertSessionDirty") {
         auto session_name = op["arguments"]["session"].get_string().value.to_string();
-        auto& session = map.get_client_session(session_name);
+        auto& session = entity_map.get_client_session(session_name);
         REQUIRE(session.get_dirty());
         return empty_doc;
     }
     if (name == "endSession") {
-        return end_session(map, object);
+        return end_session(entity_map, object);
     }
     if (name == "assertSameLsidOnLastTwoCommands") {
+        auto key = op["arguments"]["client"].get_string().value.to_string();
+        auto& apm = apm_map[key];
+
         auto cse1 = *(apm.end() - 1);
         auto cse2 = *(apm.end() - 2);
 
@@ -976,6 +981,9 @@ document::value operations::run(entity::map& map,
         return empty_doc;
     }
     if (name == "assertDifferentLsidOnLastTwoCommands") {
+        auto key = op["arguments"]["client"].get_string().value.to_string();
+        auto& apm = apm_map[key];
+
         auto cse1 = *(apm.end() - 1);
         auto cse2 = *(apm.end() - 2);
 
@@ -985,23 +993,23 @@ document::value operations::run(entity::map& map,
         return empty_doc;
     }
     if (name == "startTransaction") {
-        auto& session = map.get_client_session(object);
+        auto& session = entity_map.get_client_session(object);
         return start_transaction(session, op_view);
     }
     if (name == "commitTransaction") {
-        auto& session = map.get_client_session(object);
+        auto& session = entity_map.get_client_session(object);
         session.commit_transaction();
         return empty_doc;
     }
     if (name == "assertSessionTransactionState") {
         auto session_name = op["arguments"]["session"].get_string().value.to_string();
-        auto& session = map.get_client_session(session_name);
+        auto& session = entity_map.get_client_session(session_name);
         return assert_session_transaction_state(session, op_view);
     }
     if (name == "dropCollection") {
         auto coll_name = op["arguments"]["collection"].get_string().value.to_string();
-        auto& db = map.get_database(object);
-        auto* session = get_session(op_view, map);
+        auto& db = entity_map.get_database(object);
+        auto* session = get_session(op_view, entity_map);
         if (session) {
             db.collection(coll_name).drop(*session);
         } else {
@@ -1011,10 +1019,10 @@ document::value operations::run(entity::map& map,
     }
     if (name == "createCollection") {
         auto coll_name = op["arguments"]["collection"].get_string().value.to_string();
-        auto& db = map.get_database(object);
+        auto& db = entity_map.get_database(object);
         if (op["arguments"]["session"]) {
             auto session_name = op["arguments"]["session"].get_string().value.to_string();
-            auto& session = map.get_client_session(session_name);
+            auto& session = entity_map.get_client_session(session_name);
             db.create_collection(session, coll_name);
         } else {
             db.create_collection(coll_name);
@@ -1030,10 +1038,10 @@ document::value operations::run(entity::map& map,
         return empty_doc;
     }
     if (name == "createIndex") {
-        auto& coll = map.get_collection(object);
+        auto& coll = entity_map.get_collection(object);
         if (op["arguments"]["session"]) {
             auto session_name = op["arguments"]["session"].get_string().value.to_string();
-            auto& session = map.get_client_session(session_name);
+            auto& session = entity_map.get_client_session(session_name);
             return create_index(coll, &session, op_view);
         }
         return create_index(coll, nullptr, op_view);
@@ -1048,26 +1056,26 @@ document::value operations::run(entity::map& map,
     }
     if (name == "withTransaction") {
         auto cb = with_transaction_cb{
-            array::value(op["arguments"]["callback"].get_array().value), map, apm};
-        auto& session = map.get_client_session(object);
+            array::value(op["arguments"]["callback"].get_array().value), entity_map, apm_map};
+        auto& session = entity_map.get_client_session(object);
         return with_transaction(session, op_view, cb);
     }
     if (name == "delete") {
-        auto& bucket = map.get_bucket(object);
+        auto& bucket = entity_map.get_bucket(object);
         auto arguments = op["arguments"];
         bucket.delete_file(arguments.get_document().view()["id"].get_value());
         return empty_doc;
     }
     if (name == "download") {
-        auto& bucket = map.get_bucket(object);
+        auto& bucket = entity_map.get_bucket(object);
         return download(bucket, op_view);
     }
     if (name == "upload") {
-        return upload(map, op_view);
+        return upload(entity_map, op_view);
     }
     if (name == "deleteOne") {
-        auto& coll = map.get_collection(object);
-        return delete_one(coll, get_session(op_view, map), op_view);
+        auto& coll = entity_map.get_collection(object);
+        return delete_one(coll, get_session(op_view, entity_map), op_view);
     }
 
     throw std::logic_error{"unsupported operation: " + name};
