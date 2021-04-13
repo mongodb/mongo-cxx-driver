@@ -70,6 +70,8 @@ set(test_driver_sources
     sdam-monitoring.cpp
     spec/monitoring.cpp
     spec/monitoring.hh
+    spec/unified_tests/assert.cpp
+    spec/unified_tests/entity.cpp
     transactions.cpp
     uri.cpp
     validation_criteria.cpp
@@ -78,6 +80,8 @@ set(test_driver_sources
 
 set(spec_test_common
     spec/operation.cpp
+    spec/unified_tests/entity.cpp
+    spec/unified_tests/assert.cpp
     spec/monitoring.cpp
     spec/util.cpp
 )
@@ -164,8 +168,8 @@ add_executable(test_mongohouse_specs
 add_executable(test_unified_format_spec
     ${PROJECT_SOURCE_DIR}/test_util/client_helpers.cpp
     ${THIRD_PARTY_SOURCE_DIR}/catch/main.cpp
-    spec/unified_test_format.cpp
-    spec/entity.cpp
+    spec/unified_tests/operations.cpp
+    spec/unified_tests/runner.cpp
     ${spec_test_common}
 )
 
@@ -320,8 +324,6 @@ set_dist_list (src_mongocxx_test_DIST
    spec/client_side_encryption.cpp
    spec/command_monitoring.cpp
    spec/crud.cpp
-   spec/entity.cpp
-   spec/entity.hh
    spec/gridfs.cpp
    spec/mongohouse.cpp
    spec/monitoring.cpp
@@ -330,8 +332,11 @@ set_dist_list (src_mongocxx_test_DIST
    spec/operation.hh
    spec/read_write_concern.cpp
    spec/retryable-reads.cpp
-   spec/unified_test_format.cpp
    spec/transactions.cpp
+   spec/unified_tests/assert.cpp
+   spec/unified_tests/entity.cpp
+   spec/unified_tests/operations.cpp
+   spec/unified_tests/runner.cpp
    spec/util.cpp
    spec/util.hh
    transactions.cpp

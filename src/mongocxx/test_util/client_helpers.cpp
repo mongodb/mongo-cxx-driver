@@ -31,6 +31,7 @@
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/string/to_string.hpp>
 #include <bsoncxx/types.hpp>
+#include <bsoncxx/types/bson_value/view_or_value.hpp>
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
@@ -317,7 +318,7 @@ bool matches(types::bson_value::view main,
              types::bson_value::view pattern,
              match_visitor visitor_fn) {
     if (auto t = is_type_operator(pattern)) {
-        return t == main.type() ? true : false;
+        return t == main.type();
     }
 
     if (is_numeric(pattern) && as_double(pattern) == 42) {
@@ -382,7 +383,7 @@ bool matches(types::bson_value::view main,
         array::view main_array = main.get_array().value;
         array::view pattern_array = pattern.get_array().value;
 
-        if (main_array.length() < pattern_array.length()) {
+        if (size(main_array) < size(pattern_array)) {
             return false;
         }
 

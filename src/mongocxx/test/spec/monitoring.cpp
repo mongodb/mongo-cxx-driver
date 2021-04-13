@@ -15,12 +15,15 @@
 #include <mongocxx/config/private/prelude.hh>
 
 #include <iostream>
+#include <sstream>
 
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/json.hpp>
+#include <bsoncxx/types/bson_value/value.hpp>
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/test/spec/monitoring.hh>
+#include <mongocxx/test/spec/unified_tests/assert.hh>
 #include <mongocxx/test_util/client_helpers.hh>
 #include <third_party/catch/include/catch.hpp>
 
@@ -30,6 +33,44 @@ namespace spec {
 
 using namespace mongocxx;
 using bsoncxx::to_json;
+
+void remove_ignored_command_monitoring_events(apm_checker::event_vector& events,
+                                              const std::vector<std::string>& ignore) {
+    auto is_ignored = [&](bsoncxx::document::value v) {
+        return std::any_of(std::begin(ignore), std::end(ignore), [&](stdx::string_view key) {
+            return v.view()["commandStartedEvent"]["command"][key] ||
+                   v.view()["commandFailedEvent"]["command"][key] ||
+                   v.view()["commandSucceededEvent"]["command"][key];
+        });
+    };
+
+    events.erase(std::remove_if(events.begin(), events.end(), is_ignored), std::end(events));
+}
+
+// commands postfixed with "_unified" are used to support the unified test format.
+void apm_checker::compare_unified(bsoncxx::array::view expectations, entity::map& map) {
+    remove_ignored_command_monitoring_events(_events, _ignore);
+
+    auto equal = [&](const bsoncxx::array::element& exp, const bsoncxx::document::view actual) {
+        CAPTURE(print_all(), to_json(actual), assert::to_string(exp.get_value()));
+
+        // Extra fields are only allowed in root-level documents. Here, each k in keys is treated
+        // as its own root-level document, allowing extra fields.
+        auto match_events = [&](stdx::string_view event, std::initializer_list<std::string> keys) {
+            for (auto&& k : keys)
+                if (exp[event][k])
+                    assert::matches(actual[event][k].get_value(), exp[event][k].get_value(), map);
+        };
+
+        match_events("commandStartedEvent", {"command", "commandName", "databaseName"});
+        match_events("commandSucceededEvent", {"reply", "commandName"});
+        match_events("commandFailedEvent", {"commandName"});
+        return true;
+    };
+
+    // This will throw an exception on unmatched fields and return true in all other cases.
+    std::equal(expectations.begin(), expectations.end(), _events.begin(), equal);
+}
 
 void apm_checker::compare(bsoncxx::array::view expectations,
                           bool allow_extra,
@@ -44,40 +85,73 @@ void apm_checker::compare(bsoncxx::array::view expectations,
 
     auto events_iter = _events.begin();
     _events.erase(std::remove_if(_events.begin(), _events.end(), is_ignored), std::end(_events));
+    CAPTURE(print_all());
     for (auto expectation : expectations) {
         auto expected = expectation.get_document().view();
-
-        if (events_iter == _events.end()) {
-            FAIL("Out of events, expected to find event " << to_json(expected) << "\n\n");
-            print_all();
-            REQUIRE(false);
-        }
-
-        CAPTURE(to_json(*events_iter), expectation);
+        REQUIRE(events_iter != _events.end());
         REQUIRE_BSON_MATCHES_V(*events_iter, expected, match_visitor);
         events_iter++;
     }
 
-    REQUIRE((allow_extra || events_iter == _events.end()));
+    if (!allow_extra)
+        REQUIRE(events_iter == _events.end());
 }
 
 void apm_checker::has(bsoncxx::array::view expectations) {
     for (auto expectation : expectations) {
         auto expected = expectation.get_document().view();
-        CAPTURE(to_json(expected).c_str());
+        CAPTURE(to_json(expected).c_str(), print_all());
         REQUIRE(std::find_if(_events.begin(), _events.end(), [&](bsoncxx::document::view doc) {
                     return test_util::matches(doc, expected);
                 }) != _events.end());
     }
 }
 
-void apm_checker::print_all() {
-    printf("\n\n");
-    printf("APM Checker contents: \n");
+std::string apm_checker::print_all() {
+    std::stringstream output{};
+    output << std::endl << std::endl;
+    output << "APM Checker contents: " << std::endl;
     for (auto&& event : _events) {
-        printf("APM event: %s\n", bsoncxx::to_json(event).c_str());
+        output << "APM event: " << bsoncxx::to_json(event) << std::endl;
     }
-    printf("\n\n");
+    output << std::endl << std::endl;
+    return output.str();
+}
+
+void apm_checker::set_command_started_unified(options::apm& apm) {
+    using namespace bsoncxx::builder::basic;
+
+    apm.on_command_started([&](const events::command_started_event& event) {
+        document builder;
+        builder.append(kvp("commandStartedEvent",
+                           make_document(kvp("command", event.command()),
+                                         kvp("commandName", event.command_name()),
+                                         kvp("databaseName", event.database_name()))));
+        this->_events.emplace_back(builder.extract());
+    });
+}
+
+void apm_checker::set_command_failed_unified(options::apm& apm) {
+    using namespace bsoncxx::builder::basic;
+
+    apm.on_command_failed([&](const events::command_failed_event& event) {
+        document builder;
+        builder.append(
+            kvp("commandFailedEvent", make_document(kvp("commandName", event.command_name()))));
+        this->_events.emplace_back(builder.extract());
+    });
+}
+
+void apm_checker::set_command_succeeded_unified(options::apm& apm) {
+    using namespace bsoncxx::builder::basic;
+
+    apm.on_command_succeeded([&](const events::command_succeeded_event& event) {
+        document builder;
+        builder.append(kvp(
+            "commandSucceededEvent",
+            make_document(kvp("reply", event.reply()), kvp("commandName", event.command_name()))));
+        this->_events.emplace_back(builder.extract());
+    });
 }
 
 void apm_checker::set_command_started(options::apm& apm) {
@@ -131,31 +205,19 @@ options::apm apm_checker::get_apm_opts(bool command_started_events_only) {
     return opts;
 }
 
-apm_checker::event apm_checker::to_event(stdx::string_view s) {
-    if (s.to_string() == "killCursors")
-        return apm_checker::event::kill_cursors;
-    if (s.to_string() == "getMore")
-        return apm_checker::event::get_more;
-    else
-        throw mongocxx::logic_error{error_code::k_invalid_parameter,
-                                    "unrecognized event {" + s.to_string() + "}"};
+void apm_checker::set_ignore_command_monitoring_event(const std::string& event) {
+    auto valid_events = {"killCursors", "getMore", "configureFailPoint"};
+    REQUIRE(std::find(valid_events.begin(), valid_events.end(), event) != valid_events.end());
+
+    this->_ignore.push_back(event);
 }
 
-std::string apm_checker::to_string(event e) {
-    switch (e) {
-        case apm_checker::event::kill_cursors:
-            return "killCursors";
-        case apm_checker::event::get_more:
-            return "getMore";
-    }
-}
-
-void apm_checker::set_ignore_command_monitoring_event(event e) {
-    this->_ignore.push_back(to_string(e));
+void apm_checker::clear_events() {
+    this->_events.clear();
 }
 
 void apm_checker::clear() {
-    this->_events.clear();
+    clear_events();
     this->_ignore.clear();
 }
 

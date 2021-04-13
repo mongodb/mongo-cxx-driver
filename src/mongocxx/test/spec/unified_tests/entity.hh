@@ -16,11 +16,12 @@
 
 #include <mongocxx/config/private/prelude.hh>
 
+#include <typeinfo>
 #include <unordered_map>
 
 #include <bsoncxx/stdx/variant.hpp>
+#include <bsoncxx/types/bson_value/value.hpp>
 #include <mongocxx/client.hpp>
-#include <mongocxx/test/spec/monitoring.hh>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
@@ -33,7 +34,9 @@ class map {
     using mapped_type = bsoncxx::stdx::variant<mongocxx::database,
                                                mongocxx::collection,
                                                mongocxx::client_session,
-                                               mongocxx::gridfs::bucket>;
+                                               mongocxx::gridfs::bucket,
+                                               mongocxx::change_stream,
+                                               bsoncxx::types::bson_value::value>;
 
     map() noexcept = default;
 
@@ -57,15 +60,19 @@ class map {
     client& get_client(const key_type& key);
     database& get_database(const key_type& key);
     collection& get_collection(const key_type& key);
+    change_stream& get_change_stream(const key_type& key);
+    client_session& get_client_session(const key_type& key);
+    gridfs::bucket& get_bucket(const key_type& key);
+    bsoncxx::types::bson_value::value& get_value(const key_type& key);
 
     database& get_database_by_name(stdx::string_view name);
 
     void clear() noexcept;
+    const std::type_info& type(const key_type& key);
 
-    spec::apm_checker& get_apm_checker();
+    void erase(const key_type& key);
 
    private:
-    spec::apm_checker _apm;
     // Objects are destroyed in reverse order of their appearance in the class definition. Since the
     // client must outlive the objects created from it, the client objects are held in a separate
     // map and declared first.

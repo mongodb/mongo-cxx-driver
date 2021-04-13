@@ -83,6 +83,14 @@ void client_session::with_transaction(with_transaction_cb cb, options::transacti
     _impl->with_transaction(this, std::move(cb), std::move(opts));
 }
 
+bool client_session::get_dirty() const noexcept {
+    return _impl->get_dirty();
+}
+
+client_session::transaction_state client_session::get_transaction_state() const noexcept {
+    return _impl->get_transaction_state();
+}
+
 const client_session::impl& client_session::_get_impl() const {
     // Never null.
     return *_impl;
