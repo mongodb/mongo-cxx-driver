@@ -188,7 +188,7 @@ void check_outcome_collection(mongocxx::collection* coll, bsoncxx::document::vie
 template <typename Container>
 auto size(Container c) -> decltype(std::distance(std::begin(c), std::end(c))) {
     return std::distance(std::begin(c), std::end(c));
-};
+}
 
 //
 // Require a topology that supports sessions (a post-3.6 replica set or cluster of them).
