@@ -14,6 +14,7 @@
 
 #include <fstream>
 #include <regex>
+#include <sstream>
 
 #include "assert.hh"
 #include "entity.hh"
@@ -500,19 +501,22 @@ void assert_result(const array::element& ops, document::view actual_result) {
     }
 }
 
-void assert_error(const mongocxx::operation_exception& e,
-                  const array::element& ops,
-                  document::view res) {
-    CAPTURE(e.what(), e.raw_server_error() ? to_json(*e.raw_server_error()) : "no server error");
-    auto expect_error = ops["expectError"];
+void assert_error(const mongocxx::operation_exception& exception,
+                  const array::element& expected,
+                  document::view actual) {
+    CAPTURE(
+        exception.what(),
+        exception.raw_server_error() ? to_json(*exception.raw_server_error()) : "no server error");
+
+    auto expect_error = expected["expectError"];
     REQUIRE(expect_error);
 
     if (expect_error["isError"])
         return;
 
-    auto result = res["result"];
-    if (auto err = expect_error["expectResult"]) {
-        assert::matches(result.get_value(), err.get_value(), get_entity_map());
+    auto actual_result = actual["result"];
+    if (auto expected_result = expect_error["expectResult"]) {
+        assert::matches(actual_result.get_value(), expected_result.get_value(), get_entity_map());
     }
 
     if (auto is_client_error = expect_error["isClientError"]) {
@@ -520,19 +524,19 @@ void assert_error(const mongocxx::operation_exception& e,
     }
 
     if (auto contains = expect_error["errorLabelsContain"]) {
-        auto arr = contains.get_array().value;
+        auto labels = contains.get_array().value;
         auto has_error_label = [&](const array::element& ele) {
-            return e.has_error_label(ele.get_string().value);
+            return exception.has_error_label(ele.get_string().value);
         };
-        REQUIRE(std::all_of(std::begin(arr), std::end(arr), has_error_label));
+        REQUIRE(std::all_of(std::begin(labels), std::end(labels), has_error_label));
     }
 
     if (auto omit = expect_error["errorLabelsOmit"]) {
-        auto arr = omit.get_array().value;
+        auto labels = omit.get_array().value;
         auto has_error_label = [&](const array::element& ele) {
-            return e.has_error_label(ele.get_string().value);
+            return exception.has_error_label(ele.get_string().value);
         };
-        REQUIRE(std::none_of(std::begin(arr), std::end(arr), has_error_label));
+        REQUIRE(std::none_of(std::begin(labels), std::end(labels), has_error_label));
     }
 
     REQUIRE_FALSE(/* TODO */ expect_error["errorContains"]);

@@ -68,7 +68,7 @@ void apm_checker::compare_unified(bsoncxx::array::view expectations, entity::map
         return true;
     };
 
-    // Because exceptions are thrown on unmatched fields, this always returns true.
+    // This will throw an exception on unmatched fields and return true in all other cases.
     std::equal(expectations.begin(), expectations.end(), _events.begin(), equal);
 }
 
