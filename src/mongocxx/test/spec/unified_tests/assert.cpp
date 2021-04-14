@@ -29,7 +29,6 @@ using namespace mongocxx;
 
 using assert::to_string;
 using bsoncxx::types::bson_value::value;
-using bsoncxx::v_noabi::type;
 
 std::string binary_to_string(types::b_binary binary) {
     std::stringstream ss;
@@ -42,50 +41,50 @@ std::string binary_to_string(types::b_binary binary) {
 
 std::string assert::to_string(types::bson_value::view_or_value val) {
     switch (val.view().type()) {
-        case type::k_string:
+        case bsoncxx::type::k_string:
             return val.view().get_string().value.to_string();
-        case type::k_int32:
+        case bsoncxx::type::k_int32:
             return std::to_string(val.view().get_int32().value);
-        case type::k_int64:
+        case bsoncxx::type::k_int64:
             return std::to_string(val.view().get_int64().value);
-        case type::k_document:
+        case bsoncxx::type::k_document:
             return to_json(val.view().get_document().value);
-        case type::k_array:
+        case bsoncxx::type::k_array:
             return to_json(val.view().get_array().value);
-        case type::k_oid:
+        case bsoncxx::type::k_oid:
             return val.view().get_oid().value.to_string();
-        case type::k_binary:
+        case bsoncxx::type::k_binary:
             return binary_to_string(val.view().get_binary());
-        case type::k_bool:
+        case bsoncxx::type::k_bool:
             return val.view().get_bool().value ? "true" : "false";
-        case type::k_code:
+        case bsoncxx::type::k_code:
             return val.view().get_code().code.to_string();
-        case type::k_codewscope:
+        case bsoncxx::type::k_codewscope:
             return "code={" + val.view().get_codewscope().code.to_string() + "}, scope={" +
                    to_json(val.view().get_codewscope().scope) + "}";
-        case type::k_date:
+        case bsoncxx::type::k_date:
             return std::to_string(val.view().get_date().value.count());
-        case type::k_double:
+        case bsoncxx::type::k_double:
             return std::to_string(val.view().get_double());
-        case type::k_null:
+        case bsoncxx::type::k_null:
             return "null";
-        case type::k_undefined:
+        case bsoncxx::type::k_undefined:
             return "undefined";
-        case type::k_timestamp:
+        case bsoncxx::type::k_timestamp:
             return "timestamp={" + std::to_string(val.view().get_timestamp().timestamp) +
                    "}, increment={" + std::to_string(val.view().get_timestamp().increment) + "}";
-        case type::k_regex:
+        case bsoncxx::type::k_regex:
             return "regex={" + val.view().get_regex().regex.to_string() + "}, options={" +
                    val.view().get_regex().options.to_string() + "}";
-        case type::k_minkey:
+        case bsoncxx::type::k_minkey:
             return "minkey";
-        case type::k_maxkey:
+        case bsoncxx::type::k_maxkey:
             return "maxkey";
-        case type::k_decimal128:
+        case bsoncxx::type::k_decimal128:
             return val.view().get_decimal128().value.to_string();
-        case type::k_symbol:
+        case bsoncxx::type::k_symbol:
             return val.view().get_symbol().symbol.to_string();
-        case type::k_dbpointer:
+        case bsoncxx::type::k_dbpointer:
             return val.view().get_dbpointer().value.to_string();
         default:
             MONGOCXX_UNREACHABLE;
@@ -96,22 +95,22 @@ template <typename Element>
 type to_type(const Element& type) {
     auto type_str = type.get_string().value.to_string();
     if (type_str == "binData")
-        return type::k_binary;
+        return bsoncxx::type::k_binary;
     if (type_str == "long")
-        return type::k_int64;
+        return bsoncxx::type::k_int64;
     if (type_str == "int")
-        return type::k_int32;
+        return bsoncxx::type::k_int32;
     if (type_str == "objectId")
-        return type::k_oid;
+        return bsoncxx::type::k_oid;
     if (type_str == "object")
-        return type::k_document;
+        return bsoncxx::type::k_document;
     if (type_str == "date")
-        return type::k_date;
+        return bsoncxx::type::k_date;
     throw std::logic_error{"unrecognized element type '" + type_str + "'"};
 }
 
 bool is_set(types::bson_value::view val) {
-    return val.type() != type::k_null;
+    return val.type() != bsoncxx::type::k_null;
 }
 
 void special_operator(types::bson_value::view actual, document::view expected, entity::map& map) {
@@ -154,9 +153,9 @@ void special_operator(types::bson_value::view actual, document::view expected, e
         auto name = op.get_string().value.to_string();
         REQUIRE(actual == map.get_value(name));
     } else if (op.key().to_string() == "$$exists") {
-        REQUIRE(op.get_bool() == (actual.type() != type::k_null));
+        REQUIRE(op.get_bool() == (actual.type() != bsoncxx::type::k_null));
     } else if (op.key().to_string() == "$$matchesHexBytes") {
-        REQUIRE(actual.type() == type::k_binary);
+        REQUIRE(actual.type() == bsoncxx::type::k_binary);
 
         auto expected_bytes = test_util::convert_hex_string_to_bytes(op.get_value().get_string());
         decltype(expected_bytes) actual_bytes(actual.get_binary().bytes, actual.get_binary().size);
@@ -182,7 +181,7 @@ void matches_document(types::bson_value::view actual,
         return;
     }
 
-    REQUIRE(actual.type() == type::k_document);
+    REQUIRE(actual.type() == bsoncxx::type::k_document);
     auto actual_doc = actual.get_document().value;
     auto extra_fields = test_util::size(actual_doc);
 
@@ -206,7 +205,7 @@ void matches_document(types::bson_value::view actual,
 void matches_array(types::bson_value::view actual,
                    types::bson_value::view expected,
                    entity::map& map) {
-    REQUIRE(actual.type() == type::k_array);
+    REQUIRE(actual.type() == bsoncxx::type::k_array);
 
     auto actual_arr = actual.get_array().value;
     auto expected_arr = expected.get_array().value;
@@ -225,15 +224,15 @@ void assert::matches(types::bson_value::view actual,
     CAPTURE(to_string(actual), to_string(expected));
 
     switch (expected.type()) {
-        case type::k_document:
+        case bsoncxx::type::k_document:
             matches_document(actual, expected, map, is_root);
             return;
-        case type::k_array:
+        case bsoncxx::type::k_array:
             matches_array(actual, expected, map);
             return;
-        case type::k_int32:
-        case type::k_int64:
-        case type::k_double:
+        case bsoncxx::type::k_int32:
+        case bsoncxx::type::k_int64:
+        case bsoncxx::type::k_double:
             REQUIRE(test_util::is_numeric(actual));
             REQUIRE(test_util::as_double(expected) == test_util::as_double(actual));
             return;
