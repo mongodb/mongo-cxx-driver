@@ -19,6 +19,7 @@
 #include <string>
 
 #include <bsoncxx/json.hpp>
+#include <bsoncxx/types.hpp>
 #include <bsoncxx/types/bson_value/value.hpp>
 #include <mongocxx/test_util/client_helpers.hh>
 #include <third_party/catch/include/catch.hpp>
