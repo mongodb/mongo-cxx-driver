@@ -334,8 +334,11 @@ set_dist_list (src_mongocxx_test_DIST
    spec/retryable-reads.cpp
    spec/transactions.cpp
    spec/unified_tests/assert.cpp
+   spec/unified_tests/assert.hh
    spec/unified_tests/entity.cpp
+   spec/unified_tests/entity.hh
    spec/unified_tests/operations.cpp
+   spec/unified_tests/operations.hh
    spec/unified_tests/runner.cpp
    spec/util.cpp
    spec/util.hh
