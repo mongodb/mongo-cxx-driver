@@ -28,6 +28,7 @@ using namespace mongocxx;
 
 using assert::to_string;
 using bsoncxx::types::bson_value::value;
+using bsoncxx::v_noabi::type;
 
 std::string binary_to_string(types::b_binary binary) {
     std::stringstream ss;
@@ -119,12 +120,12 @@ void special_operator(types::bson_value::view actual, document::view expected, e
     CAPTURE(to_string(op.get_value()), to_string(actual));
     if (op.key().to_string() == "$$type") {
         auto actual_t = actual.type();
-        if (op.type() == bsoncxx::v_noabi::type::k_string) {
+        if (op.type() == type::k_string) {
             REQUIRE(actual_t == to_type(op));
             return;
         }
 
-        REQUIRE(op.type() == bsoncxx::v_noabi::type::k_array);
+        REQUIRE(op.type() == type::k_array);
         for (auto t : op.get_array().value) {
             if (actual_t == to_type(t)) {
                 return;

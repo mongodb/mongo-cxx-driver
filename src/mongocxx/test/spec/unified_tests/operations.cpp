@@ -138,7 +138,7 @@ void add_hint_to_model(Model model, document::view doc) {
         else
             model.hint(hint{doc["hint"].get_document().value});
     }
-};
+}
 
 pipeline build_pipeline(array::view pipeline_docs) {
     pipeline pipeline{};
