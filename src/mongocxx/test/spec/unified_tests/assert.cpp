@@ -115,7 +115,7 @@ bool is_set(types::bson_value::view val) {
 
 void special_operator(types::bson_value::view actual, document::view expected, entity::map& map) {
     auto op = *expected.begin();
-    REQUIRE(op.key().starts_with("$$"));  // assert special operator
+    REQUIRE(op.key().to_string().rfind("$$", 0) == 0);  // assert special operator
 
     CAPTURE(to_string(op.get_value()), to_string(actual));
     if (op.key().to_string() == "$$type") {
@@ -169,7 +169,7 @@ void special_operator(types::bson_value::view actual, document::view expected, e
 template <typename T>
 bool is_special(T doc) {
     return doc.type() == type::k_document && test_util::size(doc.get_document().value) == 1 &&
-           doc.get_document().value.begin()->key().starts_with("$$");
+           doc.get_document().value.begin()->key().to_string().rfind("$$", 0) == 0;
 }
 
 void matches_document(types::bson_value::view actual,
