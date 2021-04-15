@@ -20,9 +20,39 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace entity {
 
+template <typename Key, typename Entity, typename Map>
+bool _insert(const Key& k, Entity&& e, Map& m) {
+    bool result{};
+    std::tie(std::ignore, result) = m.emplace(k, std::forward<Entity>(e));
+    return result;
+}
+
 bool map::insert(const key_type& key, client&& c) {
-    _client_map.emplace(key, std::move(c));
-    return _client_map.find(key) != std::end(_client_map);
+    return _insert(key, std::move(c), _client_map);
+}
+
+bool map::insert(const key_type& key, mongocxx::database&& db) {
+    return _insert(key, std::move(db), _database_map);
+}
+
+bool map::insert(const key_type& key, mongocxx::collection&& coll) {
+    return _insert(key, std::move(coll), _collection_map);
+}
+
+bool map::insert(const key_type& key, mongocxx::client_session&& session) {
+    return _insert(key, std::move(session), _session_map);
+}
+
+bool map::insert(const key_type& key, mongocxx::gridfs::bucket&& bucket) {
+    return _insert(key, std::move(bucket), _bucket_map);
+}
+
+bool map::insert(const key_type& key, mongocxx::change_stream&& stream) {
+    return _insert(key, std::move(stream), _stream_map);
+}
+
+bool map::insert(const key_type& key, bsoncxx::types::bson_value::value&& value) {
+    return _insert(key, std::move(value), _value_map);
 }
 
 client& map::get_client(const key_type& key) {
@@ -30,69 +60,70 @@ client& map::get_client(const key_type& key) {
 }
 
 database& map::get_database(const key_type& key) {
-    auto& e = _map.at(key);
-    return e.get<0>();
+    return _database_map.at(key);
 }
 
 collection& map::get_collection(const key_type& key) {
-    auto& e = _map.at(key);
-    return e.get<1>();
+    return _collection_map.at(key);
 }
 
 client_session& map::get_client_session(const key_type& key) {
-    auto& e = _map.at(key);
-    return e.get<2>();
+    return _session_map.at(key);
 }
 
 gridfs::bucket& map::get_bucket(const key_type& key) {
-    auto& e = _map.at(key);
-    return e.get<3>();
+    return _bucket_map.at(key);
 }
 
 change_stream& map::get_change_stream(const key_type& key) {
-    auto& e = _map.at(key);
-    return e.get<4>();
+    return _stream_map.at(key);
 }
 
 bsoncxx::types::bson_value::value& map::get_value(const key_type& key) {
-    auto& e = _map.at(key);
-    return e.get<5>();
+    return _value_map.at(key);
 }
 
 const std::type_info& map::type(const key_type& key) {
-    if (_map.find(key) != _map.end())
-        return _map.at(key).type();
-
+    if (_database_map.find(key) != _database_map.end())
+        return typeid(mongocxx::database);
+    if (_collection_map.find(key) != _collection_map.end())
+        return typeid(mongocxx::collection);
+    if (_session_map.find(key) != _session_map.end())
+        return typeid(mongocxx::client_session);
+    if (_stream_map.find(key) != _stream_map.end())
+        return typeid(mongocxx::change_stream);
+    if (_bucket_map.find(key) != _bucket_map.end())
+        return typeid(mongocxx::gridfs::bucket);
+    if (_value_map.find(key) != _value_map.end())
+        return typeid(bsoncxx::types::bson_value::value);
     if (_client_map.find(key) == _client_map.end())
         throw std::logic_error{"no key '" + key + "' in map"};
     return typeid(mongocxx::client);
 }
 
 database& map::get_database_by_name(stdx::string_view name) {
-    for (auto&& kvp : _map)
-        if (typeid(database) == kvp.second.type() && name == kvp.second.get<0>().name())
-            return kvp.second.get<0>();
+    for (auto&& kvp : _database_map)
+        if (name == kvp.second.name())
+            return kvp.second;
     throw std::logic_error{"database name {" + name.to_string() + "} not found."};
 }
 
 void map::clear() noexcept {
     // Clients must outlive the entities created from it.
     // @see: https://isocpp.org/wiki/faq/dtors#order-dtors-for-members
-    _map.clear();
+    _database_map.clear();
+    _collection_map.clear();
+    _session_map.clear();
+    _bucket_map.clear();
+    _stream_map.clear();
+    _value_map.clear();
     _client_map.clear();
 }
 
 void map::erase(const key_type& key) {
-    if (_map.find(key) != _map.end()) {
-        _map.erase(_map.find(key));
-        return;
-    }
-
-    if (_client_map.find(key) == _client_map.end()) {
-        throw std::logic_error{"key '" + key + "' not found."};
-    }
-
-    _client_map.erase(_client_map.find(key));
+    _database_map.erase(key) || _collection_map.erase(key) || _session_map.erase(key) ||
+        _bucket_map.erase(key) || _stream_map.erase(key) || _value_map.erase(key) ||
+        _client_map.erase(key);
 }
 
 }  // namespace entity

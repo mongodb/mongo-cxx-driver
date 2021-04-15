@@ -21,7 +21,6 @@
 
 #include <bsoncxx/types/bson_value/value.hpp>
 #include <mongocxx/client.hpp>
-#include <third_party/variant/variant.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
@@ -31,12 +30,6 @@ namespace entity {
 class map {
    public:
     using key_type = std::string;
-    using mapped_type = core::variant<mongocxx::database,
-                                      mongocxx::collection,
-                                      mongocxx::client_session,
-                                      mongocxx::gridfs::bucket,
-                                      mongocxx::change_stream,
-                                      bsoncxx::types::bson_value::value>;
 
     map() noexcept = default;
 
@@ -48,14 +41,13 @@ class map {
 
     ~map() = default;
 
-    template <typename Entity>
-    bool insert(const key_type& key, Entity&& e) {
-        bool result{};
-        std::tie(std::ignore, result) = _map.emplace(key, std::forward<Entity>(e));
-        return result;
-    }
-
     bool insert(const key_type& key, client&& c);
+    bool insert(const key_type& key, mongocxx::database&&);
+    bool insert(const key_type& key, mongocxx::collection&&);
+    bool insert(const key_type& key, mongocxx::client_session&&);
+    bool insert(const key_type& key, mongocxx::gridfs::bucket&&);
+    bool insert(const key_type& key, mongocxx::change_stream&&);
+    bool insert(const key_type& key, bsoncxx::types::bson_value::value&&);
 
     client& get_client(const key_type& key);
     database& get_database(const key_type& key);
@@ -80,7 +72,12 @@ class map {
     // @see: http://mongoc.org/libmongoc/current/lifecycle.html#object-lifecycle
     // @see: https://isocpp.org/wiki/faq/dtors#order-dtors-for-members
     std::unordered_map<key_type, client> _client_map;
-    std::unordered_map<key_type, mapped_type> _map;
+    std::unordered_map<key_type, mongocxx::database> _database_map;
+    std::unordered_map<key_type, mongocxx::collection> _collection_map;
+    std::unordered_map<key_type, mongocxx::client_session> _session_map;
+    std::unordered_map<key_type, mongocxx::gridfs::bucket> _bucket_map;
+    std::unordered_map<key_type, mongocxx::change_stream> _stream_map;
+    std::unordered_map<key_type, bsoncxx::types::bson_value::value> _value_map;
 };
 }  // namespace entity
 MONGOCXX_INLINE_NAMESPACE_END

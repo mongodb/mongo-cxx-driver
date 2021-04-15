@@ -828,7 +828,7 @@ document::value upload(entity::map& map, document::view op) {
     auto upload_result = uploader.close();
     auto id = upload_result.id();
 
-    map.insert(key, id);
+    map.insert(key, bsoncxx::types::bson_value::value(id));
     return make_document(kvp("result", id));
 }
 
@@ -886,7 +886,7 @@ document::value end_session(entity::map& map, const std::string& name) {
     auto id = types::bson_value::value(session.id());
 
     map.erase(name);
-    map.insert(name, id);
+    map.insert(name, bsoncxx::types::bson_value::value(id));
     return make_document();
 }
 

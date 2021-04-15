@@ -14,7 +14,6 @@
 
 include_directories(
     ${THIRD_PARTY_SOURCE_DIR}/catch/include
-    ${THIRD_PARTY_SOURCE_DIR}/variant
 )
 
 set(test_driver_sources
@@ -90,26 +89,22 @@ set(spec_test_common
 add_executable(test_driver
     ${PROJECT_SOURCE_DIR}/test_util/client_helpers.cpp
     ${THIRD_PARTY_SOURCE_DIR}/catch/main.cpp
-    ${THIRD_PARTY_SOURCE_DIR}/variant/variant.hpp
     ${test_driver_sources}
 )
 
 add_executable(test_logging
   ${THIRD_PARTY_SOURCE_DIR}/catch/main.cpp
-  ${THIRD_PARTY_SOURCE_DIR}/variant/variant.hpp
   logging.cpp
 )
 
 add_executable(test_instance
   ${THIRD_PARTY_SOURCE_DIR}/catch/main.cpp
-  ${THIRD_PARTY_SOURCE_DIR}/variant/variant.hpp
   instance.cpp
 )
 
 add_executable(test_crud_specs
     ${PROJECT_SOURCE_DIR}/test_util/client_helpers.cpp
     ${THIRD_PARTY_SOURCE_DIR}/catch/main.cpp
-    ${THIRD_PARTY_SOURCE_DIR}/variant/variant.hpp
     spec/crud.cpp
     ${spec_test_common}
 )
@@ -117,7 +112,6 @@ add_executable(test_crud_specs
 add_executable(test_change_stream_specs
     ${PROJECT_SOURCE_DIR}/test_util/client_helpers.cpp
     ${THIRD_PARTY_SOURCE_DIR}/catch/main.cpp
-    ${THIRD_PARTY_SOURCE_DIR}/variant/variant.hpp
     spec/change_stream.cpp
     ${spec_test_common}
 )
@@ -125,7 +119,6 @@ add_executable(test_change_stream_specs
 add_executable(test_gridfs_specs
     ${PROJECT_SOURCE_DIR}/test_util/client_helpers.cpp
     ${THIRD_PARTY_SOURCE_DIR}/catch/main.cpp
-    ${THIRD_PARTY_SOURCE_DIR}/variant/variant.hpp
     spec/gridfs.cpp
     ${spec_test_common}
 )
@@ -133,7 +126,6 @@ add_executable(test_gridfs_specs
 add_executable(test_client_side_encryption_specs
   ${PROJECT_SOURCE_DIR}/test_util/client_helpers.cpp
   ${THIRD_PARTY_SOURCE_DIR}/catch/main.cpp
-  ${THIRD_PARTY_SOURCE_DIR}/variant/variant.hpp
   spec/client_side_encryption.cpp
   ${spec_test_common}
 )
@@ -141,7 +133,6 @@ add_executable(test_client_side_encryption_specs
 add_executable(test_command_monitoring_specs
     ${PROJECT_SOURCE_DIR}/test_util/client_helpers.cpp
     ${THIRD_PARTY_SOURCE_DIR}/catch/main.cpp
-    ${THIRD_PARTY_SOURCE_DIR}/variant/variant.hpp
     spec/command_monitoring.cpp
     ${spec_test_common}
 )
@@ -149,7 +140,6 @@ add_executable(test_command_monitoring_specs
 add_executable(test_transactions_specs
     ${PROJECT_SOURCE_DIR}/test_util/client_helpers.cpp
     ${THIRD_PARTY_SOURCE_DIR}/catch/main.cpp
-    ${THIRD_PARTY_SOURCE_DIR}/variant/variant.hpp
     spec/transactions.cpp
     ${spec_test_common}
 )
@@ -157,7 +147,6 @@ add_executable(test_transactions_specs
 add_executable(test_retryable_reads_specs
     ${PROJECT_SOURCE_DIR}/test_util/client_helpers.cpp
     ${THIRD_PARTY_SOURCE_DIR}/catch/main.cpp
-    ${THIRD_PARTY_SOURCE_DIR}/variant/variant.hpp
     spec/retryable-reads.cpp
     ${spec_test_common}
 )
@@ -165,7 +154,6 @@ add_executable(test_retryable_reads_specs
 add_executable(test_read_write_concern_specs
     ${PROJECT_SOURCE_DIR}/test_util/client_helpers.cpp
     ${THIRD_PARTY_SOURCE_DIR}/catch/main.cpp
-    ${THIRD_PARTY_SOURCE_DIR}/variant/variant.hpp
     spec/read_write_concern.cpp
     ${spec_test_common}
 )
@@ -173,7 +161,6 @@ add_executable(test_read_write_concern_specs
 add_executable(test_mongohouse_specs
     ${PROJECT_SOURCE_DIR}/test_util/client_helpers.cpp
     ${THIRD_PARTY_SOURCE_DIR}/catch/main.cpp
-    ${THIRD_PARTY_SOURCE_DIR}/variant/variant.hpp
     spec/mongohouse.cpp
     ${spec_test_common}
 )
@@ -181,7 +168,6 @@ add_executable(test_mongohouse_specs
 add_executable(test_unified_format_spec
     ${PROJECT_SOURCE_DIR}/test_util/client_helpers.cpp
     ${THIRD_PARTY_SOURCE_DIR}/catch/main.cpp
-    ${THIRD_PARTY_SOURCE_DIR}/variant/variant.hpp
     spec/unified_tests/operations.cpp
     spec/unified_tests/runner.cpp
     ${spec_test_common}
