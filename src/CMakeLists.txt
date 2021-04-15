@@ -21,6 +21,7 @@ set_local_dist (src_DIST_local
    third_party/catch/main.cpp
    third_party/catch/include/catch.hpp
    third_party/catch/include/helpers.hpp
+   third_party/variant/variant.hpp
 )
 
 set (src_DIST
