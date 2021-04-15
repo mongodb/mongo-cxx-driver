@@ -19,6 +19,7 @@
 #include <string>
 
 #include <bsoncxx/json.hpp>
+#include <bsoncxx/string/to_string.hpp>
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/bson_value/value.hpp>
 #include <mongocxx/test_util/client_helpers.hh>
@@ -42,7 +43,7 @@ std::string binary_to_string(types::b_binary binary) {
 std::string assert::to_string(types::bson_value::view_or_value val) {
     switch (val.view().type()) {
         case bsoncxx::type::k_string:
-            return val.view().get_string().value.to_string();
+            return string::to_string(val.view().get_string().value);
         case bsoncxx::type::k_int32:
             return std::to_string(val.view().get_int32().value);
         case bsoncxx::type::k_int64:
@@ -58,9 +59,9 @@ std::string assert::to_string(types::bson_value::view_or_value val) {
         case bsoncxx::type::k_bool:
             return val.view().get_bool().value ? "true" : "false";
         case bsoncxx::type::k_code:
-            return val.view().get_code().code.to_string();
+            return string::to_string(val.view().get_code().code);
         case bsoncxx::type::k_codewscope:
-            return "code={" + val.view().get_codewscope().code.to_string() + "}, scope={" +
+            return "code={" + string::to_string(val.view().get_codewscope().code) + "}, scope={" +
                    to_json(val.view().get_codewscope().scope) + "}";
         case bsoncxx::type::k_date:
             return std::to_string(val.view().get_date().value.count());
@@ -74,8 +75,8 @@ std::string assert::to_string(types::bson_value::view_or_value val) {
             return "timestamp={" + std::to_string(val.view().get_timestamp().timestamp) +
                    "}, increment={" + std::to_string(val.view().get_timestamp().increment) + "}";
         case bsoncxx::type::k_regex:
-            return "regex={" + val.view().get_regex().regex.to_string() + "}, options={" +
-                   val.view().get_regex().options.to_string() + "}";
+            return "regex={" + string::to_string(val.view().get_regex().regex) + "}, options={" +
+                   string::to_string(val.view().get_regex().options) + "}";
         case bsoncxx::type::k_minkey:
             return "minkey";
         case bsoncxx::type::k_maxkey:
@@ -83,7 +84,7 @@ std::string assert::to_string(types::bson_value::view_or_value val) {
         case bsoncxx::type::k_decimal128:
             return val.view().get_decimal128().value.to_string();
         case bsoncxx::type::k_symbol:
-            return val.view().get_symbol().symbol.to_string();
+            return string::to_string(val.view().get_symbol().symbol);
         case bsoncxx::type::k_dbpointer:
             return val.view().get_dbpointer().value.to_string();
         default:
@@ -93,7 +94,7 @@ std::string assert::to_string(types::bson_value::view_or_value val) {
 
 template <typename Element>
 type to_type(const Element& type) {
-    auto type_str = type.get_string().value.to_string();
+    auto type_str = string::to_string(type.get_string().value);
     if (type_str == "binData")
         return bsoncxx::type::k_binary;
     if (type_str == "long")
@@ -115,10 +116,10 @@ bool is_set(types::bson_value::view val) {
 
 void special_operator(types::bson_value::view actual, document::view expected, entity::map& map) {
     auto op = *expected.begin();
-    REQUIRE(op.key().to_string().rfind("$$", 0) == 0);  // assert special operator
+    REQUIRE(string::to_string(op.key()).rfind("$$", 0) == 0);  // assert special operator
 
     CAPTURE(to_string(op.get_value()), to_string(actual));
-    if (op.key().to_string() == "$$type") {
+    if (string::to_string(op.key()) == "$$type") {
         auto actual_t = actual.type();
         if (op.type() == type::k_string) {
             REQUIRE(actual_t == to_type(op));
@@ -134,12 +135,12 @@ void special_operator(types::bson_value::view actual, document::view expected, e
 
         FAIL("type '" + to_string(actual_t) + "' expected in array '" +
              to_json(op.get_array().value) + "'");
-    } else if (op.key().to_string() == "$$unsetOrMatches") {
+    } else if (string::to_string(op.key()) == "$$unsetOrMatches") {
         auto val = op.get_value();
         if (is_set(actual))
             assert::matches(actual, val, map, false);
-    } else if (op.key().to_string() == "$$sessionLsid") {
-        auto id = op.get_string().value.to_string();
+    } else if (string::to_string(op.key()) == "$$sessionLsid") {
+        auto id = string::to_string(op.get_string().value);
         const auto& type = map.type(id);
         if (type == typeid(client_session)) {
             REQUIRE(actual == map.get_client_session(id).id());
@@ -149,12 +150,12 @@ void special_operator(types::bson_value::view actual, document::view expected, e
             REQUIRE(type == typeid(value));
             REQUIRE(actual == map.get_value(id));
         }
-    } else if (op.key().to_string() == "$$matchesEntity") {
-        auto name = op.get_string().value.to_string();
+    } else if (string::to_string(op.key()) == "$$matchesEntity") {
+        auto name = string::to_string(op.get_string().value);
         REQUIRE(actual == map.get_value(name));
-    } else if (op.key().to_string() == "$$exists") {
+    } else if (string::to_string(op.key()) == "$$exists") {
         REQUIRE(op.get_bool() == (actual.type() != bsoncxx::type::k_null));
-    } else if (op.key().to_string() == "$$matchesHexBytes") {
+    } else if (string::to_string(op.key()) == "$$matchesHexBytes") {
         REQUIRE(actual.type() == bsoncxx::type::k_binary);
 
         auto expected_bytes = test_util::convert_hex_string_to_bytes(op.get_value().get_string());
@@ -162,14 +163,14 @@ void special_operator(types::bson_value::view actual, document::view expected, e
 
         REQUIRE(actual_bytes == expected_bytes);
     } else {
-        FAIL("unrecognized special operator '" + op.key().to_string() + "'");
+        FAIL("unrecognized special operator '" + string::to_string(op.key()) + "'");
     }
 }
 
 template <typename T>
 bool is_special(T doc) {
     return doc.type() == type::k_document && test_util::size(doc.get_document().value) == 1 &&
-           doc.get_document().value.begin()->key().to_string().rfind("$$", 0) == 0;
+           string::to_string(doc.get_document().value.begin()->key()).rfind("$$", 0) == 0;
 }
 
 void matches_document(types::bson_value::view actual,
