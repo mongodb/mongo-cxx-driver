@@ -23,6 +23,7 @@
 #include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
+#include <bsoncxx/string/to_string.hpp>
 #include <bsoncxx/test_util/catch.hh>
 #include <bsoncxx/types/bson_value/value.hpp>
 #include <mongocxx/exception/bulk_write_exception.hpp>
@@ -90,7 +91,7 @@ std::vector<int> get_version(const std::string& input) {
 }
 
 std::vector<int> get_version(bsoncxx::document::element doc) {
-    return get_version(doc.get_string().value.to_string());
+    return get_version(string::to_string(doc.get_string().value));
 }
 
 template <typename Range1, typename Range2>
@@ -233,7 +234,7 @@ void add_observe_events(options::apm& apm_opts, document::view object) {
     if (!object["observeEvents"])
         return;
 
-    auto name = object["id"].get_string().value.to_string();
+    auto name = string::to_string(object["id"].get_string().value);
     auto& apm = get_apm_map()[name];
 
     auto events = object["observeEvents"].get_array().value;
@@ -255,9 +256,9 @@ void add_ignore_command_monitoring_events(document::view object) {
         return;
     for (auto cme : object["ignoreCommandMonitoringEvents"].get_array().value) {
         CAPTURE(cme.get_string());
-        auto name = object["id"].get_string().value.to_string();
+        auto name = string::to_string(object["id"].get_string().value);
         auto& apm = get_apm_map()[name];
-        apm.set_ignore_command_monitoring_event(cme.get_string().value.to_string());
+        apm.set_ignore_command_monitoring_event(string::to_string(cme.get_string().value));
     }
 }
 
@@ -302,7 +303,7 @@ options::gridfs::bucket get_bucket_options(document::view object) {
     set_common_options(opts, object["bucketOptions"]);
 
     if (auto name = object["bucketOptions"]["bucketName"])
-        opts.bucket_name(name.get_string().value.to_string());
+        opts.bucket_name(string::to_string(name.get_string().value));
     if (auto size = object["bucketOptions"]["chunkSizeBytes"])
         opts.chunk_size_bytes(size.get_int32().value);
     REQUIRE_FALSE(object["bucketOptions"]["disableMD5"]);
@@ -325,7 +326,7 @@ options::client_session get_session_options(document::view object) {
 }
 
 gridfs::bucket create_bucket(document::view object) {
-    auto id = object["database"].get_string().value.to_string();
+    auto id = string::to_string(object["database"].get_string().value);
     auto& map = get_entity_map();
     auto& db = map.get_database(id);
 
@@ -337,7 +338,7 @@ gridfs::bucket create_bucket(document::view object) {
 }
 
 client_session create_session(document::view object) {
-    auto id = object["client"].get_string().value.to_string();
+    auto id = string::to_string(object["client"].get_string().value);
     auto& map = get_entity_map();
     auto& client = map.get_client(id);
 
@@ -349,11 +350,11 @@ client_session create_session(document::view object) {
 }
 
 collection create_collection(document::view object) {
-    auto id = object["database"].get_string().value.to_string();
+    auto id = string::to_string(object["database"].get_string().value);
     auto& map = get_entity_map();
     auto& db = map.get_database(id);
 
-    auto name = object["collectionName"].get_string().value.to_string();
+    auto name = string::to_string(object["collectionName"].get_string().value);
     auto coll = collection{db.collection(name)};
 
     set_common_options(coll, object["collectionOptions"]);
@@ -363,11 +364,11 @@ collection create_collection(document::view object) {
 }
 
 database create_database(document::view object) {
-    auto id = object["client"].get_string().value.to_string();
+    auto id = string::to_string(object["client"].get_string().value);
     auto& map = get_entity_map();
     auto& client = map.get_client(id);
 
-    auto name = object["databaseName"].get_string().value.to_string();
+    auto name = string::to_string(object["databaseName"].get_string().value);
     auto db = database{client.database(name)};
 
     set_common_options(db, object["databaseOptions"]);
@@ -392,9 +393,9 @@ bool add_to_map(const array::element& obj) {
     // maps to a nested object, which specifies a unique name for the entity ('id' key) and any
     // other parameters necessary for its construction.
     auto doc = obj.get_document().view().begin();
-    auto type = doc->key().to_string();
+    auto type = string::to_string(doc->key());
     auto params = doc->get_document().view();
-    auto id = params["id"].get_string().value.to_string();
+    auto id = string::to_string(params["id"].get_string().value);
     auto& map = get_entity_map();
 
     // clang-format off
@@ -496,7 +497,7 @@ void assert_result(const array::element& ops, document::view actual_result) {
     assert::matches(actual_result["result"].get_value(), result.get_value(), get_entity_map());
 
     if (ops["saveResultAsEntity"]) {
-        auto key = ops["saveResultAsEntity"].get_string().value.to_string();
+        auto key = string::to_string(ops["saveResultAsEntity"].get_string().value);
         get_entity_map().insert(key, actual_result);
     }
 }
@@ -578,7 +579,7 @@ void assert_events(const array::element& test) {
 
     for (auto e : test["expectEvents"].get_array().value) {
         auto events = e["events"].get_array().value;
-        auto name = e["client"].get_string().value.to_string();
+        auto name = string::to_string(e["client"].get_string().value);
         get_apm_map()[name].compare_unified(events, get_entity_map());
     }
 }
@@ -651,7 +652,7 @@ void run_tests(document::view test) {
     REQUIRE(test["tests"]);
 
     for (auto ele : test["tests"].get_array().value) {
-        auto description = ele["description"].get_string().value.to_string();
+        auto description = string::to_string(ele["description"].get_string().value);
         SECTION(description) {
             if (!has_run_on_requirements(ele.get_document())) {
                 std::stringstream warning;
@@ -663,7 +664,7 @@ void run_tests(document::view test) {
             }
 
             if (ele["skipReason"]) {
-                WARN("Skip Reason: " + ele["skipReason"].get_string().value.to_string());
+                WARN("Skip Reason: " + string::to_string(ele["skipReason"].get_string().value));
                 continue;
             }
 
@@ -678,11 +679,11 @@ void run_tests(document::view test) {
                     auto result = bsoncxx::builder::basic::make_document();
                     result = operations::run(get_entity_map(), get_apm_map(), ops);
 
-                    if (ops["object"].get_string().value.to_string() == "testRunner") {
-                        if (ops["name"].get_string().value.to_string() == "failPoint") {
+                    if (string::to_string(ops["object"].get_string().value) == "testRunner") {
+                        if (string::to_string(ops["name"].get_string().value) == "failPoint") {
                             disable_fail_point_fn.add_fail_point(
-                                result["uri"].get_string().value.to_string(),
-                                result["failPoint"].get_string().value.to_string());
+                                string::to_string(result["uri"].get_string().value),
+                                string::to_string(result["failPoint"].get_string().value));
                         }
 
                         // Special test operations return no result and are always expected to
@@ -737,7 +738,8 @@ void run_tests_in_file(const std::string& test_path) {
         return;
     }
 
-    const std::string description = test_spec_view["description"].get_string().value.to_string();
+    const std::string description =
+        string::to_string(test_spec_view["description"].get_string().value);
     SECTION(description) {
         create_entities(test_spec_view);
         load_initial_data(test_spec_view);

@@ -19,6 +19,7 @@
 
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/json.hpp>
+#include <bsoncxx/string/to_string.hpp>
 #include <bsoncxx/types/bson_value/value.hpp>
 #include <mongocxx/collection.hpp>
 #include <mongocxx/exception/logic_error.hpp>
@@ -262,7 +263,7 @@ document::value bulk_write(collection& coll, client_session* session, document::
             writes.emplace_back(delete_many);
         } else {
             /* should not happen. */
-            FAIL("unrecognized operation name: " + operation_name.to_string());
+            FAIL("unrecognized operation name: " + string::to_string(operation_name));
         }
     }
 
@@ -499,7 +500,7 @@ document::value create_change_stream(entity::map& map,
         options.batch_size(args["batchSize"].get_int32().value);
     }
 
-    auto key = operation["saveResultAsEntity"].get_string().value.to_string();
+    auto key = string::to_string(operation["saveResultAsEntity"].get_string().value);
     CAPTURE(object, to_json(operation), key);
     auto stream = [&] {
         const auto& type = map.type(object);
@@ -542,7 +543,7 @@ document::value iterate_until_document_or_error(change_stream& stream) {
 
 document::value fail_point(entity::map& map, spec::apm_checker& apm, document::view op) {
     auto args = op["arguments"];
-    auto client_name = args["client"].get_string().value.to_string();
+    auto client_name = string::to_string(args["client"].get_string().value);
     auto& client = map.get_client(client_name);
 
     client["admin"].run_command(args["failPoint"].get_document().value);
@@ -579,7 +580,7 @@ document::value find_one_and_update(collection& coll,
     }
 
     if (arguments["returnDocument"]) {
-        auto return_document = arguments["returnDocument"].get_string().value.to_string();
+        auto return_document = string::to_string(arguments["returnDocument"].get_string().value);
 
         if (return_document == "After") {
             options.return_document(options::return_document::k_after);
@@ -638,7 +639,7 @@ document::value find_one_and_update(collection& coll,
 bsoncxx::stdx::optional<read_concern> lookup_read_concern(document::view doc) {
     if (doc["readConcern"] && doc["readConcern"]["level"]) {
         read_concern rc;
-        rc.acknowledge_string(doc["readConcern"]["level"].get_string().value.to_string());
+        rc.acknowledge_string(string::to_string(doc["readConcern"]["level"].get_string().value));
         return rc;
     }
 
@@ -650,7 +651,7 @@ bsoncxx::stdx::optional<write_concern> lookup_write_concern(document::view doc) 
         write_concern wc;
         document::element w = doc["writeConcern"]["w"];
         if (w.type() == bsoncxx::type::k_string) {
-            std::string level = w.get_string().value.to_string();
+            std::string level = string::to_string(w.get_string().value);
             if (level == "majority") {
                 wc.acknowledge_level(write_concern::level::k_majority);
             } else if (level == "acknowledged") {
@@ -670,7 +671,7 @@ bsoncxx::stdx::optional<write_concern> lookup_write_concern(document::view doc) 
 bsoncxx::stdx::optional<read_preference> lookup_read_preference(document::view doc) {
     if (doc["readPreference"] && doc["readPreference"]["mode"]) {
         read_preference rp;
-        std::string mode = doc["readPreference"]["mode"].get_string().value.to_string();
+        std::string mode = string::to_string(doc["readPreference"]["mode"].get_string().value);
         if (mode == "Primary") {
             rp.mode(read_preference::read_mode::k_primary);
         } else if (mode == "PrimaryPreferred") {
@@ -718,7 +719,7 @@ document::value start_transaction(client_session& session, bsoncxx::document::vi
 }
 
 document::value assert_session_transaction_state(client_session& session, document::view op) {
-    auto state = op["arguments"]["state"].get_string().value.to_string();
+    auto state = string::to_string(op["arguments"]["state"].get_string().value);
     switch (session.get_transaction_state()) {
         case client_session::transaction_state::k_transaction_none:
             REQUIRE(state == "none");
@@ -741,8 +742,8 @@ document::value assert_session_transaction_state(client_session& session, docume
 
 bool collection_exists(document::view op) {
     client client{uri{}};
-    auto coll_name = op["arguments"]["collectionName"].get_string().value.to_string();
-    auto db_name = op["arguments"]["databaseName"].get_string().value.to_string();
+    auto coll_name = string::to_string(op["arguments"]["collectionName"].get_string().value);
+    auto db_name = string::to_string(op["arguments"]["databaseName"].get_string().value);
     return client.database(db_name).has_collection(coll_name);
 }
 
@@ -764,15 +765,15 @@ document::value create_index(collection& coll,
 
 bool index_exists(document::view op) {
     client client{uri{}};
-    auto coll_name = op["arguments"]["collectionName"].get_string().value.to_string();
-    auto db_name = op["arguments"]["databaseName"].get_string().value.to_string();
+    auto coll_name = string::to_string(op["arguments"]["collectionName"].get_string().value);
+    auto db_name = string::to_string(op["arguments"]["databaseName"].get_string().value);
     auto coll = client.database(db_name).collection(coll_name);
 
     auto indexes = coll.indexes().list();
-    auto expected_name = op["arguments"]["indexName"].get_string().value.to_string();
+    auto expected_name = string::to_string(op["arguments"]["indexName"].get_string().value);
 
     return std::any_of(indexes.begin(), indexes.end(), [&](document::view index) {
-        return expected_name == index["name"].get_string().value.to_string();
+        return expected_name == string::to_string(index["name"].get_string().value);
     });
 }
 
@@ -803,9 +804,9 @@ document::value download(gridfs::bucket& bucket, document::view op) {
 }
 
 document::value upload(entity::map& map, document::view op) {
-    auto key = op["saveResultAsEntity"].get_string().value.to_string();
+    auto key = string::to_string(op["saveResultAsEntity"].get_string().value);
     auto arguments = op["arguments"].get_document().value;
-    auto object = op["object"].get_string().value.to_string();
+    auto object = string::to_string(op["object"].get_string().value);
     auto& bucket = map.get_bucket(object);
 
     options::gridfs::upload upload_options;
@@ -894,15 +895,15 @@ client_session* get_session(document::view op, entity::map& map) {
     if (!op["arguments"]["session"])
         return nullptr;
 
-    auto session_name = op["arguments"]["session"].get_string().value.to_string();
+    auto session_name = string::to_string(op["arguments"]["session"].get_string().value);
     return &map.get_client_session(session_name);
 }
 
 document::value operations::run(entity::map& entity_map,
                                 std::unordered_map<std::string, spec::apm_checker>& apm_map,
                                 const array::element& op) {
-    auto name = op["name"].get_string().value.to_string();
-    auto object = op["object"].get_string().value.to_string();
+    auto name = string::to_string(op["name"].get_string().value);
+    auto object = string::to_string(op["object"].get_string().value);
 
     auto empty_doc = make_document();
     auto op_view = op.get_document().view();
@@ -934,7 +935,7 @@ document::value operations::run(entity::map& entity_map,
         return create_change_stream(entity_map, get_session(op_view, entity_map), object, op_view);
     if (name == "insertOne") {
         if (op["arguments"]["session"]) {
-            auto session_name = op["arguments"]["session"].get_string().value.to_string();
+            auto session_name = string::to_string(op["arguments"]["session"].get_string().value);
             auto& session = entity_map.get_client_session(session_name);
             return insert_one(entity_map.get_collection(object), &session, op_view);
         }
@@ -943,7 +944,7 @@ document::value operations::run(entity::map& entity_map,
     if (name == "iterateUntilDocumentOrError")
         return iterate_until_document_or_error(entity_map.get_change_stream(object));
     if (name == "failPoint") {
-        auto key = op["arguments"]["client"].get_string().value.to_string();
+        auto key = string::to_string(op["arguments"]["client"].get_string().value);
         return fail_point(entity_map, apm_map[key], op_view);
     }
     if (name == "findOneAndUpdate")
@@ -954,13 +955,13 @@ document::value operations::run(entity::map& entity_map,
         return empty_doc;
     }
     if (name == "assertSessionNotDirty") {
-        auto session_name = op["arguments"]["session"].get_string().value.to_string();
+        auto session_name = string::to_string(op["arguments"]["session"].get_string().value);
         auto& session = entity_map.get_client_session(session_name);
         REQUIRE(!session.get_dirty());
         return empty_doc;
     }
     if (name == "assertSessionDirty") {
-        auto session_name = op["arguments"]["session"].get_string().value.to_string();
+        auto session_name = string::to_string(op["arguments"]["session"].get_string().value);
         auto& session = entity_map.get_client_session(session_name);
         REQUIRE(session.get_dirty());
         return empty_doc;
@@ -969,7 +970,7 @@ document::value operations::run(entity::map& entity_map,
         return end_session(entity_map, object);
     }
     if (name == "assertSameLsidOnLastTwoCommands") {
-        auto key = op["arguments"]["client"].get_string().value.to_string();
+        auto key = string::to_string(op["arguments"]["client"].get_string().value);
         auto& apm = apm_map[key];
 
         auto cse1 = *(apm.end() - 1);
@@ -981,7 +982,7 @@ document::value operations::run(entity::map& entity_map,
         return empty_doc;
     }
     if (name == "assertDifferentLsidOnLastTwoCommands") {
-        auto key = op["arguments"]["client"].get_string().value.to_string();
+        auto key = string::to_string(op["arguments"]["client"].get_string().value);
         auto& apm = apm_map[key];
 
         auto cse1 = *(apm.end() - 1);
@@ -1002,12 +1003,12 @@ document::value operations::run(entity::map& entity_map,
         return empty_doc;
     }
     if (name == "assertSessionTransactionState") {
-        auto session_name = op["arguments"]["session"].get_string().value.to_string();
+        auto session_name = string::to_string(op["arguments"]["session"].get_string().value);
         auto& session = entity_map.get_client_session(session_name);
         return assert_session_transaction_state(session, op_view);
     }
     if (name == "dropCollection") {
-        auto coll_name = op["arguments"]["collection"].get_string().value.to_string();
+        auto coll_name = string::to_string(op["arguments"]["collection"].get_string().value);
         auto& db = entity_map.get_database(object);
         auto* session = get_session(op_view, entity_map);
         if (session) {
@@ -1018,10 +1019,10 @@ document::value operations::run(entity::map& entity_map,
         return empty_doc;
     }
     if (name == "createCollection") {
-        auto coll_name = op["arguments"]["collection"].get_string().value.to_string();
+        auto coll_name = string::to_string(op["arguments"]["collection"].get_string().value);
         auto& db = entity_map.get_database(object);
         if (op["arguments"]["session"]) {
-            auto session_name = op["arguments"]["session"].get_string().value.to_string();
+            auto session_name = string::to_string(op["arguments"]["session"].get_string().value);
             auto& session = entity_map.get_client_session(session_name);
             db.create_collection(session, coll_name);
         } else {
@@ -1040,7 +1041,7 @@ document::value operations::run(entity::map& entity_map,
     if (name == "createIndex") {
         auto& coll = entity_map.get_collection(object);
         if (op["arguments"]["session"]) {
-            auto session_name = op["arguments"]["session"].get_string().value.to_string();
+            auto session_name = string::to_string(op["arguments"]["session"].get_string().value);
             auto& session = entity_map.get_client_session(session_name);
             return create_index(coll, &session, op_view);
         }

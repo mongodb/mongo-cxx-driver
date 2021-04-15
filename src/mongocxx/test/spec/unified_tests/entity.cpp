@@ -16,6 +16,8 @@
 
 #include <exception>
 
+#include <bsoncxx/string/to_string.hpp>
+
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace entity {
@@ -105,7 +107,7 @@ database& map::get_database_by_name(stdx::string_view name) {
     for (auto&& kvp : _database_map)
         if (name == kvp.second.name())
             return kvp.second;
-    throw std::logic_error{"database name {" + name.to_string() + "} not found."};
+    throw std::logic_error{"database name {" + bsoncxx::string::to_string(name) + "} not found."};
 }
 
 void map::clear() noexcept {

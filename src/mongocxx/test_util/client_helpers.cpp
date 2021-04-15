@@ -236,7 +236,7 @@ bool is_replica_set(const client& client) {
 std::string get_hosts(const client& client) {
     auto shards = get_shards(client);
     if (shards)
-        return shards->view()["host"].get_string().value.to_string();
+        return string::to_string(shards->view()["host"].get_string().value);
     return "";
 }
 
