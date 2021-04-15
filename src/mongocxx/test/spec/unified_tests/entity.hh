@@ -19,9 +19,9 @@
 #include <typeinfo>
 #include <unordered_map>
 
-#include <bsoncxx/stdx/variant.hpp>
 #include <bsoncxx/types/bson_value/value.hpp>
 #include <mongocxx/client.hpp>
+#include <third_party/variant/variant.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
@@ -31,12 +31,12 @@ namespace entity {
 class map {
    public:
     using key_type = std::string;
-    using mapped_type = bsoncxx::stdx::variant<mongocxx::database,
-                                               mongocxx::collection,
-                                               mongocxx::client_session,
-                                               mongocxx::gridfs::bucket,
-                                               mongocxx::change_stream,
-                                               bsoncxx::types::bson_value::value>;
+    using mapped_type = core::variant<mongocxx::database,
+                                      mongocxx::collection,
+                                      mongocxx::client_session,
+                                      mongocxx::gridfs::bucket,
+                                      mongocxx::change_stream,
+                                      bsoncxx::types::bson_value::value>;
 
     map() noexcept = default;
 
