@@ -31,7 +31,7 @@ class map {
    public:
     using key_type = std::string;
 
-    map() noexcept = default;
+    map() = default;
 
     map(const map&) = delete;
     map operator=(const map&) = delete;

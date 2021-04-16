@@ -15,6 +15,7 @@
 #include <fstream>
 #include <regex>
 #include <sstream>
+#include <numeric>
 
 #include "assert.hh"
 #include "entity.hh"
