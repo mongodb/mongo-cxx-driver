@@ -98,11 +98,7 @@ std::vector<int> get_version(bsoncxx::document::element doc) {
 template <typename Range1, typename Range2>
 bool is_compatible_version(Range1 range1, Range2 range2) {
     // only compare major and minor in version of the form "<int>.<int>.<int>", i.e., [0:2)
-    return std::lexicographical_compare(std::begin(range1),
-                                        std::begin(range1) + 2,
-                                        std::begin(range2),
-                                        std::begin(range2) + 2,
-                                        std::less_equal<int>{});
+    return range1[0] < range2[0] || (range1[0] == range2[0] && range1[1] <= range2[1]);
 }
 
 bool equals_server_topology(const document::element& topologies) {
