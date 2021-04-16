@@ -1,0 +1,10 @@
+valid-pass/poc-change-streams.json
+valid-pass/poc-command-monitoring.json
+valid-pass/poc-crud.json
+valid-pass/poc-gridfs.json
+valid-pass/poc-retryable-reads.json
+valid-pass/poc-retryable-writes.json
+valid-pass/poc-sessions.json
+valid-pass/poc-transactions-convenient-api.json
+valid-pass/poc-transactions.json
+valid-pass/poc-transactions-mongos-pin-auto.json

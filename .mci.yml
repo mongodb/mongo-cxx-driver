@@ -344,6 +344,7 @@ functions:
                   export WITH_TRANSACTION_TESTS_PATH="$(pwd)/../data/with_transaction"
                   export RETRYABLE_READS_TESTS_PATH="$(pwd)/../data/retryable-reads"
                   export READ_WRITE_CONCERN_OPERATION_TESTS_PATH="$(pwd)/../data/read-write-concern/operation"
+                  export UNIFIED_FORMAT_TESTS_PATH=$(pwd)/../data/unified-format
 
                   # export environment variables for encryption tests (and redact them)
                   set +o xtrace
@@ -380,6 +381,7 @@ functions:
                       ${test_params} ./src/mongocxx/test/test_logging
                       ${test_params} ./src/mongocxx/test/test_retryable_reads_specs
                       ${test_params} ./src/mongocxx/test/test_read_write_concern_specs
+                      ${test_params} ./src/mongocxx/test/test_unified_format_spec
 
 
                       # Some platforms like OS X don't support the /mode syntax to the -perm option
@@ -1059,7 +1061,7 @@ buildvariants:
           - name: compile_and_test_with_static_libs
           - name: compile_and_test_with_static_libs_extra_alignment
 
-    # Test that we actually support building against the minium required C version claimed.
+    # Test that we actually support building against the minimum required C version claimed.
     - name: ubuntu1804-min-libmongoc
       display_name: "Ubuntu 18.04 with minimum libmongoc (MongoDB Latest)"
       batchtime: 1440 # 1 day

@@ -91,7 +91,7 @@ void run_change_stream_tests_in_file(const std::string& test_path) {
             spec::apm_checker apm_checker;
             options::client client_opts;
             // "Begin monitoring all APM events for `client`"
-            apm_checker.skip_kill_cursors();
+            apm_checker.set_ignore_command_monitoring_event("killCursors");
             client_opts.apm_opts(apm_checker.get_apm_opts(true));
             class client client(uri{}, client_opts);
 

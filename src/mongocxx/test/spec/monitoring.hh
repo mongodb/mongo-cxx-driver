@@ -17,6 +17,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 #include <mongocxx/client.hpp>
+#include <mongocxx/test/spec/unified_tests/entity.hh>
 #include <mongocxx/test_util/client_helpers.hh>
 
 namespace mongocxx {
@@ -35,12 +36,15 @@ class apm_checker {
                  bool allow_extra = false,
                  const test_util::match_visitor& match_visitor = {});
 
+    void compare_unified(bsoncxx::array::view expectations, entity::map& map);
+
     // Check that the apm checker has all expected events, ignore ordering and extra events.
     void has(bsoncxx::array::view expected);
 
     void clear();
-    void skip_kill_cursors();
-    void print_all();
+    void clear_events();
+
+    std::string print_all();
 
     using event_vector = std::vector<bsoncxx::document::value>;
     using iterator = event_vector::iterator;
@@ -60,9 +64,18 @@ class apm_checker {
         return _events.cend();
     }
 
+    void set_command_started(options::apm& apm);
+    void set_command_failed(options::apm& apm);
+    void set_command_succeeded(options::apm& apm);
+    void set_ignore_command_monitoring_event(const std::string& event);
+
+    void set_command_started_unified(options::apm& apm);
+    void set_command_failed_unified(options::apm& apm);
+    void set_command_succeeded_unified(options::apm& apm);
+
    private:
     event_vector _events;
-    bool _skip_kill_cursors = false;
+    std::vector<std::string> _ignore;
 };
 
 }  // namespace spec

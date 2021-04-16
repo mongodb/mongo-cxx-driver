@@ -76,7 +76,7 @@ std::int32_t get_max_wire_version(const client& client);
 ///
 /// Determines the server version number by running "serverStatus".
 ///
-std::string get_server_version(const client& client);
+std::string get_server_version(const client& client = {uri{}});
 
 ///
 /// Get replica set name, or empty string.
@@ -86,12 +86,17 @@ std::string replica_set_name(const client& client);
 ///
 /// Determines if the server is a replica set member.
 ///
-bool is_replica_set(const client& client);
+bool is_replica_set(const client& client = {uri{}});
 
 ///
 /// Returns "standalone", "replicaset", or "sharded".
 ///
-std::string get_topology(const client& client);
+std::string get_topology(const client& client = {uri{}});
+
+///
+/// Returns the "host" field of the config.shards collection.
+///
+std::string get_hosts(const client& client = {uri{}});
 
 ///
 /// Parses a JSON file at a given path and return it as a BSON document value.
@@ -104,7 +109,8 @@ stdx::optional<bsoncxx::document::value> parse_test_file(std::string path);
 // Determines whether or not the given client supports the collation feature, by running the
 // "isMaster" command.
 //
-// Throws mongocxx::operation_exception if the operation fails, or the server reply is malformed.
+// Throws mongocxx::operation_exception if the operation fails, or the server reply is
+// malformed.
 //
 bool supports_collation(const client& client);
 
@@ -122,18 +128,18 @@ using xformer_t = std::function<stdx::optional<item_t>(item_t, bsoncxx::builder:
 //
 //   For document elements, the element's key and value will be passed into the function. If
 //   nothing is returned, the element will be removed from the document. Otherwise, the key and
-//   value pair returned will be added to the document. To leave the element as-is, simply return
-//   the same key and value passed into the function. If no key is returned, an exception will be
-//   thrown.
+//   value pair returned will be added to the document. To leave the element as-is, simply
+//   return the same key and value passed into the function. If no key is returned, an exception
+//   will be thrown.
 //
 //   For array elements, only the value will be passed in (since there is no key). If nothing is
 //   returned, the element will be removed from the array. Otherwise, the value returned will be
 //   added to the array. To leave the element as-is, simply return the value passed into the
 //   function.
 //
-//   The bsoncxx::builder::basic::array* argument of fcn is used for storing non-owned values that
-//   would no longer be alive when fcn returns. Any non-owned values returned from fcn should be
-//   appended to the builder argument so that it remains alive for the duration of the
+//   The bsoncxx::builder::basic::array* argument of fcn is used for storing non-owned values
+//   that would no longer be alive when fcn returns. Any non-owned values returned from fcn
+//   should be appended to the builder argument so that it remains alive for the duration of the
 //   transform_document call.
 //
 // @return The new document that was built.
@@ -178,6 +184,11 @@ bool matches(bsoncxx::document::view doc,
 std::string tolowercase(stdx::string_view view);
 
 void check_outcome_collection(mongocxx::collection* coll, bsoncxx::document::view expected);
+
+template <typename Container>
+auto size(Container c) -> decltype(std::distance(std::begin(c), std::end(c))) {
+    return std::distance(std::begin(c), std::end(c));
+}
 
 //
 // Require a topology that supports sessions (a post-3.6 replica set or cluster of them).

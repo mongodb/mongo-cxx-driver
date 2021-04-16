@@ -70,6 +70,8 @@ set(test_driver_sources
     sdam-monitoring.cpp
     spec/monitoring.cpp
     spec/monitoring.hh
+    spec/unified_tests/assert.cpp
+    spec/unified_tests/entity.cpp
     transactions.cpp
     uri.cpp
     validation_criteria.cpp
@@ -78,8 +80,11 @@ set(test_driver_sources
 
 set(spec_test_common
     spec/operation.cpp
+    spec/unified_tests/entity.cpp
+    spec/unified_tests/assert.cpp
     spec/monitoring.cpp
-    spec/util.cpp)
+    spec/util.cpp
+)
 
 add_executable(test_driver
     ${PROJECT_SOURCE_DIR}/test_util/client_helpers.cpp
@@ -160,6 +165,14 @@ add_executable(test_mongohouse_specs
     ${spec_test_common}
 )
 
+add_executable(test_unified_format_spec
+    ${PROJECT_SOURCE_DIR}/test_util/client_helpers.cpp
+    ${THIRD_PARTY_SOURCE_DIR}/catch/main.cpp
+    spec/unified_tests/operations.cpp
+    spec/unified_tests/runner.cpp
+    ${spec_test_common}
+)
+
 target_link_libraries(test_driver mongocxx_mocked ${libmongoc_target})
 target_link_libraries(test_logging mongocxx_mocked ${libmongoc_target})
 target_link_libraries(test_instance mongocxx_mocked ${libmongoc_target})
@@ -172,6 +185,7 @@ target_link_libraries(test_transactions_specs mongocxx_mocked ${libmongoc_target
 target_link_libraries(test_retryable_reads_specs mongocxx_mocked ${libmongoc_target})
 target_link_libraries(test_read_write_concern_specs mongocxx_mocked ${libmongoc_target})
 target_link_libraries(test_mongohouse_specs mongocxx_mocked ${libmongoc_target})
+target_link_libraries(test_unified_format_spec mongocxx_mocked ${libmongoc_target})
 
 target_include_directories(test_driver PRIVATE ${libmongoc_include_directories})
 target_include_directories(test_logging PRIVATE ${libmongoc_include_directories})
@@ -184,6 +198,7 @@ target_include_directories(test_transactions_specs PRIVATE ${libmongoc_include_d
 target_include_directories(test_retryable_reads_specs PRIVATE ${libmongoc_include_directories})
 target_include_directories(test_read_write_concern_specs PRIVATE ${libmongoc_include_directories})
 target_include_directories(test_mongohouse_specs PRIVATE ${libmongoc_include_directories})
+target_include_directories(test_unified_format_spec PRIVATE ${libmongoc_include_directories})
 
 target_compile_definitions(test_driver PRIVATE ${libmongoc_definitions})
 target_compile_definitions(test_logging PRIVATE ${libmongoc_definitions})
@@ -208,6 +223,7 @@ add_test(change_stream_specs test_change_stream_specs)
 add_test(transactions_specs test_transactions_specs)
 add_test(retryable_reads_spec test_retryable_reads_specs)
 add_test(read_write_concern_specs test_read_write_concern_specs)
+add_test(unified_format_spec test_unified_format_spec)
 
 # Adding this as a test will run it as part of the RUN_TESTS command in MSVC.
 # Do not add, since we only test mongohouse on Linux.
@@ -241,6 +257,9 @@ set_tests_properties(retryable_reads_spec PROPERTIES
 
 set_tests_properties(read_write_concern_specs PROPERTIES
   ENVIRONMENT "READ_WRITE_CONCERN_OPERATION_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/read-write-concern/operation")
+
+set_tests_properties(unified_format_spec PROPERTIES
+        ENVIRONMENT "UNIFIED_FORMAT_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/unified-format")
 
 if (MONGOCXX_ENABLE_SLOW_TESTS)
   set_tests_properties(driver PROPERTIES
@@ -314,6 +333,13 @@ set_dist_list (src_mongocxx_test_DIST
    spec/read_write_concern.cpp
    spec/retryable-reads.cpp
    spec/transactions.cpp
+   spec/unified_tests/assert.cpp
+   spec/unified_tests/assert.hh
+   spec/unified_tests/entity.cpp
+   spec/unified_tests/entity.hh
+   spec/unified_tests/operations.cpp
+   spec/unified_tests/operations.hh
+   spec/unified_tests/runner.cpp
    spec/util.cpp
    spec/util.hh
    transactions.cpp
