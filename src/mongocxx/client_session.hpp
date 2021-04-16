@@ -102,15 +102,6 @@ class MONGOCXX_API client_session {
     std::uint32_t server_id() const noexcept;
 
     ///
-    /// Indicates whether session has been marked "dirty" as defined in the driver sessions
-    /// specification.
-    ///
-    /// @see
-    /// https://github.com/mongodb/specifications/blob/master/source/sessions/driver-sessions.rst
-    ///
-    bool get_dirty() const noexcept;
-
-    ///
     /// Returns the current transaction state for this session.
     ///
     transaction_state get_transaction_state() const noexcept;

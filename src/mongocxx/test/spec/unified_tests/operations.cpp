@@ -955,15 +955,11 @@ document::value operations::run(entity::map& entity_map,
         return empty_doc;
     }
     if (name == "assertSessionNotDirty") {
-        auto session_name = string::to_string(op["arguments"]["session"].get_string().value);
-        auto& session = entity_map.get_client_session(session_name);
-        REQUIRE(!session.get_dirty());
+        // TODO CXX-2227: bump minimum required libmongoc version to 1.18
         return empty_doc;
     }
     if (name == "assertSessionDirty") {
-        auto session_name = string::to_string(op["arguments"]["session"].get_string().value);
-        auto& session = entity_map.get_client_session(session_name);
-        REQUIRE(session.get_dirty());
+        // TODO CXX-2227: bump minimum required libmongoc version to 1.18
         return empty_doc;
     }
     if (name == "endSession") {
