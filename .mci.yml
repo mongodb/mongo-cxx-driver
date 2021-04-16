@@ -381,6 +381,7 @@ functions:
                       ${test_params} ./src/mongocxx/test/test_logging
                       ${test_params} ./src/mongocxx/test/test_retryable_reads_specs
                       ${test_params} ./src/mongocxx/test/test_read_write_concern_specs
+                      ${test_params} ./src/mongocxx/test/test_unified_format_spec
 
 
                       # Some platforms like OS X don't support the /mode syntax to the -perm option
