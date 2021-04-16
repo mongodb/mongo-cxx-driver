@@ -36,8 +36,8 @@ class map {
     map(const map&) = delete;
     map operator=(const map&) = delete;
 
-    map(map&&) noexcept = default;
-    map& operator=(map&&) noexcept = default;
+    map(map&&) = default;
+    map& operator=(map&&) = default;
 
     ~map() = default;
 
