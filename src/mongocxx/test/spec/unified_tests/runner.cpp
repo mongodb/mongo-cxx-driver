@@ -13,9 +13,9 @@
 // limitations under the License.
 
 #include <fstream>
+#include <numeric>
 #include <regex>
 #include <sstream>
-#include <numeric>
 
 #include "assert.hh"
 #include "entity.hh"
