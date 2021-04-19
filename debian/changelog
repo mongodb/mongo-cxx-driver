@@ -1,6 +1,7 @@
 mongo-cxx-driver (3.6.3-1) UNRELEASED; urgency=medium
 
   * New upstream release
+  * Drop A. Jesse Jiryu Davis as uploader
 
  -- Roberto C. Sanchez <roberto@connexer.com>  Mon, 19 Apr 2021 13:37:00 -0400
 
