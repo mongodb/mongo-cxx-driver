@@ -1,8 +1,7 @@
 Source: mongo-cxx-driver
 Priority: optional
 Maintainer: Mongo C++ Driver Team <mongo-cxx-driver-debian@googlegroups.com>
-Uploaders: A. Jesse Jiryu Davis <jesse@mongodb.com>,
-           Kevin Albertson <kevin.albertson@mongodb.com>,
+Uploaders: Kevin Albertson <kevin.albertson@mongodb.com>,
            Samantha Ritter <samantha.ritter@mongodb.com>,
            Roberto C. Sanchez <roberto@connexer.com>
 Build-Depends: debhelper (>= 11),
