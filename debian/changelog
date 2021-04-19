@@ -1,4 +1,4 @@
-mongo-cxx-driver (3.6.3-1) UNRELEASED; urgency=medium
+mongo-cxx-driver (3.6.3-1) unstable; urgency=medium
 
   * New upstream release
   * Drop A. Jesse Jiryu Davis as uploader
