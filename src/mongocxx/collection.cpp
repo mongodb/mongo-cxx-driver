@@ -1149,13 +1149,18 @@ cursor collection::_distinct(const client_session* session,
         throw bsoncxx::exception{bsoncxx::error_code::k_internal_error};
     }
 
-    scoped_bson_t error_document;
-    const bson_t *error_doc = error_document.bson_for_init();
+    const bson_t* error_document;
 
     cursor fake_cursor{libmongoc::cursor_new_from_command_reply_with_opts(
         _get_impl().client_impl->client_t, reply_bson, nullptr)};
-    if (libmongoc::cursor_error_document(fake_cursor._impl->cursor_t, &error, &error_doc)) {
-        throw_exception<operation_exception>(error_document.steal(), error);
+    if (libmongoc::cursor_error_document(fake_cursor._impl->cursor_t, &error, &error_document)) {
+        if (error_document) {
+            bsoncxx::document::value error_doc{
+                bsoncxx::document::view{bson_get_data(error_document), error_document->len}};
+            throw_exception<query_exception>(error_doc, error);
+        } else {
+            throw_exception<query_exception>(error);
+        }
     }
 
     return fake_cursor;
