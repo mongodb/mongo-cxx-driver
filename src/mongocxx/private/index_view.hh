@@ -163,7 +163,7 @@ class index_view::impl {
             _coll, command_bson.bson(), opts_bson.bson(), reply.bson_for_init(), &error);
 
         if (!result) {
-            throw_exception<operation_exception>(error);
+            throw_exception<operation_exception>(reply.steal(), error);
         }
 
         return reply.steal();
@@ -202,7 +202,7 @@ class index_view::impl {
             _coll, command_bson.bson(), opts_bson.bson(), reply.bson_for_init(), &error);
 
         if (!result) {
-            throw_exception<operation_exception>(error);
+            throw_exception<operation_exception>(reply.steal(), error);
         }
     }
 
@@ -236,7 +236,7 @@ class index_view::impl {
             _coll, command_bson.bson(), opts_bson.bson(), reply.bson_for_init(), &error);
 
         if (!result) {
-            throw_exception<operation_exception>(error);
+            throw_exception<operation_exception>(reply.steal(), error);
         }
     }
 
