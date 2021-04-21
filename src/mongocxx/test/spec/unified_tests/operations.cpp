@@ -553,6 +553,112 @@ document::value fail_point(entity::map& map, spec::apm_checker& apm, document::v
                          kvp("failPoint", args["failPoint"]["configureFailPoint"].get_string()));
 }
 
+document::value find_one_and_delete(collection& coll,
+                                    client_session* session,
+                                    document::view operation) {
+    document::view arguments = operation["arguments"].get_document().value;
+    document::view filter = arguments["filter"].get_document().value;
+    options::find_one_and_delete options{};
+
+    if (arguments["collation"]) {
+        options.collation(arguments["collation"].get_document().value);
+    }
+    if (arguments["hint"]) {
+        if (arguments["hint"].type() == bsoncxx::v_noabi::type::k_string)
+            options.hint(hint{arguments["hint"].get_string().value});
+        else
+            options.hint(hint{arguments["hint"].get_document().value});
+    }
+    if (arguments["projection"]) {
+        options.projection(arguments["projection"].get_document().value);
+    }
+    if (arguments["sort"]) {
+        options.sort(arguments["sort"].get_document().value);
+    }
+
+    stdx::optional<document::value> document;
+    if (session) {
+        document = coll.find_one_and_delete(*session, filter, options);
+    } else {
+        document = coll.find_one_and_delete(filter, options);
+    }
+
+    // Server versions below 3.0 sometimes return an empty document rather than null when no
+    // documents match.
+    auto result = builder::basic::document{};
+    if (document && !(document->view().empty())) {
+        result.append(builder::basic::kvp("result", *document));
+    } else {
+        result.append(builder::basic::kvp("result", types::b_null{}));
+    }
+
+    return result.extract();
+}
+
+document::value find_one_and_replace(collection& coll,
+                                     client_session* session,
+                                     document::view operation) {
+    document::view arguments = operation["arguments"].get_document().value;
+    document::view filter = arguments["filter"].get_document().value;
+    options::find_one_and_replace options{};
+
+    if (arguments["collation"]) {
+        options.collation(arguments["collation"].get_document().value);
+    }
+    if (arguments["hint"]) {
+        if (arguments["hint"].type() == bsoncxx::v_noabi::type::k_string)
+            options.hint(hint{arguments["hint"].get_string().value});
+        else
+            options.hint(hint{arguments["hint"].get_document().value});
+    }
+    if (arguments["projection"]) {
+        options.projection(arguments["projection"].get_document().value);
+    }
+    if (arguments["returnDocument"]) {
+        auto return_document = string::to_string(arguments["returnDocument"].get_string().value);
+
+        if (return_document == "After") {
+            options.return_document(options::return_document::k_after);
+        }
+
+        if (return_document == "Before") {
+            options.return_document(options::return_document::k_before);
+        }
+    }
+    if (arguments["sort"]) {
+        options.sort(arguments["sort"].get_document().value);
+    }
+    if (arguments["upsert"]) {
+        options.upsert(arguments["upsert"].get_bool().value);
+    }
+
+    stdx::optional<document::value> document;
+    switch (arguments["replacement"].type()) {
+        case bsoncxx::type::k_document: {
+            document::view replacement = arguments["replacement"].get_document().value;
+            if (session) {
+                document = coll.find_one_and_replace(*session, filter, replacement, options);
+            } else {
+                document = coll.find_one_and_replace(filter, replacement, options);
+            }
+            break;
+        }
+        default:
+            throw std::logic_error{"replacement must be a document"};
+    }
+
+    // Server versions below 3.0 sometimes return an empty document rather than null when no
+    // documents match.
+    auto result = builder::basic::document{};
+    if (document && !(document->view().empty())) {
+        result.append(builder::basic::kvp("result", *document));
+    } else {
+        result.append(builder::basic::kvp("result", types::b_null{}));
+    }
+
+    return result.extract();
+}
+
 document::value find_one_and_update(collection& coll,
                                     client_session* session,
                                     document::view operation) {
@@ -1069,9 +1175,19 @@ document::value operations::run(entity::map& entity_map,
         auto key = string::to_string(op["arguments"]["client"].get_string().value);
         return fail_point(entity_map, apm_map[key], op_view);
     }
+    if (name == "findOneAndDelete")
+        return find_one_and_delete(
+            entity_map.get_collection(object), get_session(op_view, entity_map), op_view);
+    if (name == "findOneAndReplace")
+        return find_one_and_replace(
+            entity_map.get_collection(object), get_session(op_view, entity_map), op_view);
     if (name == "findOneAndUpdate")
         return find_one_and_update(
             entity_map.get_collection(object), get_session(op_view, entity_map), op_view);
+    if (name == "listCollections") {
+        entity_map.get_database(object).list_collections().begin();
+        return empty_doc;
+    }
     if (name == "listDatabases") {
         entity_map.get_client(object).list_databases().begin();
         return empty_doc;
