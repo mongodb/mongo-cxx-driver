@@ -99,7 +99,7 @@ TEST_CASE("CXX-1246: Relaxed Extended JSON") {
     auto output = to_json(doc.view(), ExtendedJsonMode::k_relaxed);
     REQUIRE(
         output ==
-        R"({ "number" : 42, "bin" : { "$binary" : { "base64": "ZGVhZGJlZWY=", "subType" : "04" } } })");
+        R"({ "number" : 42, "bin" : { "$binary" : { "base64" : "ZGVhZGJlZWY=", "subType" : "04" } } })");
 }
 
 TEST_CASE("CXX-1246: Canonical Extended JSON") {
@@ -110,7 +110,7 @@ TEST_CASE("CXX-1246: Canonical Extended JSON") {
     auto output = to_json(doc.view(), ExtendedJsonMode::k_canonical);
     REQUIRE(
         output ==
-        R"({ "number" : { "$numberInt" : "42" }, "bin" : { "$binary" : { "base64": "ZGVhZGJlZWY=", "subType" : "04" } } })");
+        R"({ "number" : { "$numberInt" : "42" }, "bin" : { "$binary" : { "base64" : "ZGVhZGJlZWY=", "subType" : "04" } } })");
 }
 
 TEST_CASE("UDL _bson works like from_json()") {
