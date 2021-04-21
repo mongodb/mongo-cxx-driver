@@ -141,7 +141,8 @@ bool compatible_with_server(const bsoncxx::array::element& requirement) {
         for (auto kvp : server_params.get_document().view()) {
             auto param = kvp.key();
             auto value = kvp.get_value();
-            if (actual[param].get_bool() != value.get_bool()) {
+            // If actual parameter is unset or unequal to requirement, skip test.
+            if (!actual[param] || actual[param].get_bool() != value.get_bool()) {
                 return false;
             }
         }

@@ -899,6 +899,13 @@ client_session* get_session(document::view op, entity::map& map) {
     return &map.get_client_session(session_name);
 }
 
+document::value run_command(database& db, document::view operation) {
+    document::view arguments = operation["arguments"].get_document().value;
+    document::view command = arguments["command"].get_document().value;
+
+    return db.run_command(command);
+}
+
 document::value operations::run(entity::map& entity_map,
                                 std::unordered_map<std::string, spec::apm_checker>& apm_map,
                                 const array::element& op) {
@@ -1073,6 +1080,10 @@ document::value operations::run(entity::map& entity_map,
     if (name == "deleteOne") {
         auto& coll = entity_map.get_collection(object);
         return delete_one(coll, get_session(op_view, entity_map), op_view);
+    }
+    if (name == "runCommand") {
+        auto& db = entity_map.get_database(object);
+        return run_command(db, op_view);
     }
 
     throw std::logic_error{"unsupported operation: " + name};
