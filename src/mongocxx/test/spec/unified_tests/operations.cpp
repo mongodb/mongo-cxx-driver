@@ -976,6 +976,43 @@ document::value delete_one(collection& coll, client_session* session, document::
     return result.extract();
 }
 
+document::value delete_many(collection& coll, client_session* session, document::view operation) {
+    document::view arguments = operation["arguments"].get_document().value;
+    document::view filter = arguments["filter"].get_document().value;
+    options::delete_options options{};
+
+    if (arguments["collation"]) {
+        options.collation(arguments["collation"].get_document().value);
+    }
+
+    if (arguments["hint"]) {
+        if (arguments["hint"].type() == bsoncxx::v_noabi::type::k_string)
+            options.hint(hint{arguments["hint"].get_string().value});
+        else
+            options.hint(hint{arguments["hint"].get_document().value});
+    }
+
+    auto result = builder::basic::document{};
+    std::int32_t deleted_count = 0;
+
+    auto delete_result = [&] {
+        if (session)
+            return coll.delete_many(*session, filter, options);
+        return coll.delete_many(filter, options);
+    }();
+
+    if (delete_result) {
+        deleted_count = delete_result->deleted_count();
+    }
+
+    result.append(
+        builder::basic::kvp("result", [deleted_count](builder::basic::sub_document subdoc) {
+            subdoc.append(builder::basic::kvp("deletedCount", deleted_count));
+        }));
+
+    return result.extract();
+}
+
 document::value with_transaction(client_session& session,
                                  document::view op,
                                  with_transaction_cb cb) {
@@ -1174,6 +1211,40 @@ document::value estimated_document_count(collection& coll) {
     return result.extract();
 }
 
+document::value distinct(collection& coll, client_session* session, document::view operation) {
+    document::view arguments = operation["arguments"].get_document().value;
+    auto field_name = arguments["fieldName"].get_string().value;
+
+    document::value empty_filter = builder::basic::make_document();
+    document::view filter;
+    if (arguments["filter"]) {
+        filter = arguments["filter"].get_document().value;
+    } else {
+        filter = empty_filter.view();
+    }
+
+    options::distinct options{};
+    if (arguments["collation"]) {
+        options.collation(arguments["collation"].get_document().value);
+    }
+
+    stdx::optional<cursor> result_cursor;
+    if (session) {
+        result_cursor.emplace(coll.distinct(*session, field_name, filter, options));
+    } else {
+        result_cursor.emplace(coll.distinct(field_name, filter, options));
+    }
+
+    auto result = builder::basic::document{};
+    result.append(builder::basic::kvp("result", [&result_cursor](builder::basic::sub_array array) {
+        for (auto&& document : *result_cursor) {
+            array.append(document);
+        }
+    }));
+
+    return result.extract();
+}
+
 document::value operations::run(entity::map& entity_map,
                                 std::unordered_map<std::string, spec::apm_checker>& apm_map,
                                 const array::element& op) {
@@ -1364,6 +1435,10 @@ document::value operations::run(entity::map& entity_map,
         auto& coll = entity_map.get_collection(object);
         return delete_one(coll, get_session(op_view, entity_map), op_view);
     }
+    if (name == "deleteMany") {
+        auto& coll = entity_map.get_collection(object);
+        return delete_many(coll, get_session(op_view, entity_map), op_view);
+    }
     if (name == "runCommand") {
         auto& db = entity_map.get_database(object);
         return run_command(db, op_view);
@@ -1379,6 +1454,10 @@ document::value operations::run(entity::map& entity_map,
     }
     if (name == "estimatedDocumentCount") {
         return estimated_document_count(entity_map.get_collection(object));
+    }
+    if (name == "distinct") {
+        auto& coll = entity_map.get_collection(object);
+        return distinct(coll, get_session(op_view, entity_map), op_view);
     }
 
     throw std::logic_error{"unsupported operation: " + name};
