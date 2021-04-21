@@ -79,6 +79,11 @@ std::int32_t get_max_wire_version(const client& client);
 std::string get_server_version(const client& client = {uri{}});
 
 ///
+/// Determines the setting of all server parameters by running "getParameter, *".
+///
+bsoncxx::document::value get_server_params(const client& client = {uri{}});
+
+///
 /// Get replica set name, or empty string.
 ///
 std::string replica_set_name(const client& client);

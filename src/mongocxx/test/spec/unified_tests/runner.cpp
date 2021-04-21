@@ -46,7 +46,7 @@ using bsoncxx::builder::basic::make_document;
 
 using schema_versions_t =
     std::array<std::array<int, 3 /* major.minor.patch */>, 1 /* supported version */>;
-constexpr schema_versions_t schema_versions{{{{1, 0, 0}}}};
+constexpr schema_versions_t schema_versions{{{{1, 1, 0}}}};
 
 std::pair<std::unordered_map<std::string, spec::apm_checker>&, entity::map&> init_maps() {
     // Below initializes the static apm map and entity map if needed, in that order. This will also
@@ -135,6 +135,17 @@ bool compatible_with_server(const bsoncxx::array::element& requirement) {
 
     if (auto topologies = requirement["topologies"])
         return equals_server_topology(topologies);
+
+    if (auto server_params = requirement["serverParameters"]) {
+        auto actual = test_util::get_server_params();
+        for (auto kvp : server_params.get_document().view()) {
+            auto param = kvp.key();
+            auto value = kvp.get_value();
+            if (actual[param].get_bool() != value.get_bool()) {
+                return false;
+            }
+        }
+    }
     return true;
 }
 
@@ -259,6 +270,28 @@ void add_ignore_command_monitoring_events(document::view object) {
     }
 }
 
+/* TODO CXX-2138: Actually implement add_server_api below with new server_api options class.
+void add_server_api(options::server_api& sapi_opts, document::view object) {
+    if (!object["serverApi"])
+        return;
+
+    if (auto sav = object["serverApi"]["version"]) {
+        REQUIRE(sav.type() == type::k_string);
+        sapi_opts.version(sav);
+    } else {
+        FAIL("must specify a version when using serverApi");
+    }
+
+    if (auto de = object["serverApi"]["deprecationErrors"]) {
+        REQUIRE(de.type() == type::k_bool);
+        sapi_opts.deprecation_errors(de);
+    }
+    if (auto strict = object["serverApi"]["strict"]) {
+        REQUIRE(strict.type() == type::k_bool);
+        sapi_opts.strict(strict);
+    }
+} */
+
 write_concern get_write_concern(const document::element& opts) {
     if (!opts["writeConcern"])
         return {};
@@ -380,6 +413,8 @@ client create_client(document::view object) {
 
     add_observe_events(opts, object);
     add_ignore_command_monitoring_events(object);
+    // TODO CXX-2138: Actually add server api options to client.
+    // add_server_api(server_api_opts, object);
 
     CAPTURE(conn);
     return client{uri{conn}, options::client{}.apm_opts(opts)};
@@ -759,4 +794,21 @@ TEST_CASE("unified format spec automated tests", "[unified_format_spec]") {
         run_tests_in_file(path + '/' + file);
     }
 }
+
+/* TODO CXX-2138: Uncomment versioned API spec TEST_CASE below.
+TEST_CASE("versioned API spec automated tests", "[unified_format_spec]") {
+    instance::current();
+
+    std::string path = std::getenv("VERSIONED_API_TESTS_PATH");
+    CAPTURE(path);
+    REQUIRE(path.size());
+
+    std::ifstream files{path + "/test_files.txt"};
+    REQUIRE(files.good());
+
+    for (std::string file; std::getline(files, file);) {
+        CAPTURE(file);
+        run_tests_in_file(path + '/' + file);
+    }
+} */
 }  // namespace
