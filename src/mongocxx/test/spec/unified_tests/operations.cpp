@@ -1127,6 +1127,53 @@ document::value update_many(collection& coll, document::view operation) {
     return result.extract();
 }
 
+document::value count_documents(collection& coll, document::view operation) {
+    document::view arguments = operation["arguments"].get_document().value;
+    document::value empty_filter = builder::basic::make_document();
+    document::view filter;
+    if (arguments["filter"]) {
+        filter = arguments["filter"].get_document().value;
+    } else {
+        filter = empty_filter.view();
+    }
+    options::count options{};
+
+    if (arguments["collation"]) {
+        options.collation(arguments["collation"].get_document().value);
+    }
+    if (arguments["limit"]) {
+        options.limit(as_int64(arguments["limit"]));
+    }
+    if (arguments["skip"]) {
+        options.skip(as_int64(arguments["skip"]));
+    }
+    if (arguments["hint"]) {
+        if (arguments["hint"].type() == bsoncxx::v_noabi::type::k_string)
+            options.hint(hint{arguments["hint"].get_string().value});
+        else
+            options.hint(hint{arguments["hint"].get_document().value});
+    }
+
+    int64_t count = coll.count_documents(filter, options);
+    auto result = builder::basic::document{};
+    result.append(builder::basic::kvp("result", [count](builder::basic::sub_document subdoc) {
+        subdoc.append(builder::basic::kvp("count", count));
+    }));
+
+    return result.extract();
+}
+
+document::value estimated_document_count(collection& coll) {
+    int64_t edc = coll.estimated_document_count();
+
+    auto result = builder::basic::document{};
+    result.append(builder::basic::kvp("result", [edc](builder::basic::sub_document subdoc) {
+        subdoc.append(builder::basic::kvp("count", edc));
+    }));
+
+    return result.extract();
+}
+
 document::value operations::run(entity::map& entity_map,
                                 std::unordered_map<std::string, spec::apm_checker>& apm_map,
                                 const array::element& op) {
@@ -1326,6 +1373,12 @@ document::value operations::run(entity::map& entity_map,
     }
     if (name == "updateMany") {
         return update_many(entity_map.get_collection(object), op_view);
+    }
+    if (name == "countDocuments") {
+        return count_documents(entity_map.get_collection(object), op_view);
+    }
+    if (name == "estimatedDocumentCount") {
+        return estimated_document_count(entity_map.get_collection(object));
     }
 
     throw std::logic_error{"unsupported operation: " + name};
