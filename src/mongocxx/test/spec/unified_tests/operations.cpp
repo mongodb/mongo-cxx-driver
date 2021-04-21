@@ -906,6 +906,121 @@ document::value run_command(database& db, document::view operation) {
     return db.run_command(command);
 }
 
+document::value update_one(collection& coll, document::view operation) {
+    document::view arguments = operation["arguments"].get_document().value;
+    document::view filter = arguments["filter"].get_document().value;
+    document::view update = arguments["update"].get_document().value;
+    options::update options{};
+
+    if (arguments["collation"]) {
+        options.collation(arguments["collation"].get_document().value);
+    }
+    if (arguments["hint"]) {
+        if (arguments["hint"].type() == bsoncxx::v_noabi::type::k_string)
+            options.hint(hint{arguments["hint"].get_string().value});
+        else
+            options.hint(hint{arguments["hint"].get_document().value});
+    }
+    if (arguments["upsert"]) {
+        options.upsert(arguments["upsert"].get_bool().value);
+    }
+
+    std::int32_t matched_count = 0;
+    bsoncxx::stdx::optional<std::int32_t> modified_count;
+    bsoncxx::stdx::optional<types::bson_value::view> upserted_id{};
+
+    auto update_one_result = coll.update_one(filter, update, options);
+    if (update_one_result) {
+        matched_count = update_one_result->matched_count();
+
+        // Server versions below 2.4 do not return an `nModified` count.
+        try {
+            modified_count = update_one_result->modified_count();
+        } catch (const std::exception& e) {
+        }
+
+        if (auto upserted_element = update_one_result->upserted_id()) {
+            upserted_id = upserted_element->get_value();
+        }
+    }
+
+    auto result = builder::basic::document{};
+    result.append(builder::basic::kvp(
+        "result",
+        [matched_count, modified_count, upserted_id](builder::basic::sub_document subdoc) {
+            subdoc.append(builder::basic::kvp("matchedCount", matched_count));
+
+            if (modified_count) {
+                subdoc.append(builder::basic::kvp("modifiedCount", *modified_count));
+            }
+
+            if (upserted_id) {
+                subdoc.append(builder::basic::kvp("upsertedId", *upserted_id));
+            }
+        }));
+
+    return result.extract();
+}
+
+document::value update_many(collection& coll, document::view operation) {
+    document::view arguments = operation["arguments"].get_document().value;
+    document::view filter = arguments["filter"].get_document().value;
+    document::view update = arguments["update"].get_document().value;
+    options::update options{};
+
+    if (arguments["collation"]) {
+        options.collation(arguments["collation"].get_document().value);
+    }
+    if (arguments["hint"]) {
+        if (arguments["hint"].type() == bsoncxx::v_noabi::type::k_string)
+            options.hint(hint{arguments["hint"].get_string().value});
+        else
+            options.hint(hint{arguments["hint"].get_document().value});
+    }
+    if (arguments["upsert"]) {
+        options.upsert(arguments["upsert"].get_bool().value);
+    }
+
+    std::int32_t matched_count = 0;
+    bsoncxx::stdx::optional<std::int32_t> modified_count;
+    std::int32_t upserted_count = 0;
+    bsoncxx::stdx::optional<types::bson_value::view> upserted_id{};
+
+    auto update_many_result = coll.update_many(filter, update, options);
+    if (update_many_result) {
+        matched_count = update_many_result->matched_count();
+
+        // Server versions below 2.4 do not return an `nModified` count.
+        try {
+            modified_count = update_many_result->modified_count();
+        } catch (const std::exception& e) {
+        }
+
+        upserted_count = update_many_result->result().upserted_count();
+
+        if (auto upserted_element = update_many_result->upserted_id()) {
+            upserted_id = upserted_element->get_value();
+        }
+    }
+
+    auto result = builder::basic::document{};
+    result.append(builder::basic::kvp(
+        "result",
+        [matched_count, modified_count, upserted_id](builder::basic::sub_document subdoc) {
+            subdoc.append(builder::basic::kvp("matchedCount", matched_count));
+
+            if (modified_count) {
+                subdoc.append(builder::basic::kvp("modifiedCount", *modified_count));
+            }
+
+            if (upserted_id) {
+                subdoc.append(builder::basic::kvp("upsertedId", *upserted_id));
+            }
+        }));
+
+    return result.extract();
+}
+
 document::value operations::run(entity::map& entity_map,
                                 std::unordered_map<std::string, spec::apm_checker>& apm_map,
                                 const array::element& op) {
@@ -1005,6 +1120,11 @@ document::value operations::run(entity::map& entity_map,
         session.commit_transaction();
         return empty_doc;
     }
+    if (name == "abortTransaction") {
+        auto& session = entity_map.get_client_session(object);
+        session.abort_transaction();
+        return empty_doc;
+    }
     if (name == "assertSessionTransactionState") {
         auto session_name = string::to_string(op["arguments"]["session"].get_string().value);
         auto& session = entity_map.get_client_session(session_name);
@@ -1084,6 +1204,12 @@ document::value operations::run(entity::map& entity_map,
     if (name == "runCommand") {
         auto& db = entity_map.get_database(object);
         return run_command(db, op_view);
+    }
+    if (name == "updateOne") {
+        return update_one(entity_map.get_collection(object), op_view);
+    }
+    if (name == "updateMany") {
+        return update_many(entity_map.get_collection(object), op_view);
     }
 
     throw std::logic_error{"unsupported operation: " + name};
