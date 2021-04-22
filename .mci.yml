@@ -135,7 +135,7 @@ functions:
                 export DRIVERS_TOOLS=$(pwd)
 
                 sh .evergreen/atlas_data_lake/run-mongohouse-local.sh
-              
+
     "test_mongohouse":
         command: shell.exec
         params:
@@ -157,8 +157,8 @@ functions:
 
                 ulimit -c unlimited || true
 
-                ./src/mongocxx/test/test_mongohouse_specs             
-              
+                ./src/mongocxx/test/test_mongohouse_specs
+
     "start_mongod":
         command: shell.exec
         params:
@@ -353,6 +353,9 @@ functions:
                   export MONGOCXX_TEST_AWS_ACCESS_KEY_ID="${cse_aws_access_key_id}"
                   set -o errexit
                   set -o xtrace
+
+                  # export MONGOC_VERSION for `test_bson` test binary.
+                  export MONGOC_VERSION="${mongoc_version|master}"
 
                   if [ "Windows_NT" == "$OS" ]; then
                       CRUD_TESTS_PATH=$(cygpath -m $CRUD_TESTS_PATH)
@@ -1009,7 +1012,7 @@ buildvariants:
       run_on: ubuntu1804-test
       tasks:
           - name: test_mongohouse
-      
+
     - name: ubuntu1804-zseries
       display_name: "s390x Ubuntu 18.04 (MongoDB 4.4)"
       batchtime: 1440 # 1 day

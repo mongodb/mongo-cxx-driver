@@ -27,6 +27,7 @@ using bsoncxx::builder::basic::make_document;
 
 constexpr auto k_invalid_json = R"({])";
 constexpr auto k_valid_json = R"({ "a" : 1, "b" : 2.0 })";
+const char* mongoc_version = std::getenv("MONGOC_VERSION");
 
 TEST_CASE("invalid json throws") {
     using namespace bsoncxx;
@@ -93,24 +94,52 @@ TEST_CASE("CXX-1246: Legacy Extended JSON (Explicit)") {
 
 TEST_CASE("CXX-1246: Relaxed Extended JSON") {
     using namespace bsoncxx;
+    if (!mongoc_version) {
+        WARN("Skipping — environment variable MONGOC_VERSION must be set");
+        return;
+    }
+
     types::b_binary bin_val{
         binary_sub_type::k_uuid, 8, reinterpret_cast<const uint8_t*>("deadbeef")};
     auto doc = make_document(kvp("number", 42), kvp("bin", bin_val));
     auto output = to_json(doc.view(), ExtendedJsonMode::k_relaxed);
-    REQUIRE(
-        output ==
-        R"({ "number" : 42, "bin" : { "$binary" : { "base64" : "ZGVhZGJlZWY=", "subType" : "04" } } })");
+
+    // As of libmongoc 1.18.0, "base64" has correct spacing (see CDRIVER-3958) after extJSON
+    // marshalling.
+    const char* expected;
+    if (std::string(mongoc_version).compare("1.18.0") >= 0) {
+        expected =
+            R"({ "number" : 42, "bin" : { "$binary" : { "base64" : "ZGVhZGJlZWY=", "subType" : "04" } } })";
+    } else {
+        expected =
+            R"({ "number" : 42, "bin" : { "$binary" : { "base64": "ZGVhZGJlZWY=", "subType" : "04" } } })";
+    }
+    REQUIRE(output == expected);
 }
 
 TEST_CASE("CXX-1246: Canonical Extended JSON") {
     using namespace bsoncxx;
+    if (!mongoc_version) {
+        WARN("Skipping — environment variable MONGOC_VERSION must be set");
+        return;
+    }
+
     types::b_binary bin_val{
         binary_sub_type::k_uuid, 8, reinterpret_cast<const uint8_t*>("deadbeef")};
     auto doc = make_document(kvp("number", 42), kvp("bin", bin_val));
     auto output = to_json(doc.view(), ExtendedJsonMode::k_canonical);
-    REQUIRE(
-        output ==
-        R"({ "number" : { "$numberInt" : "42" }, "bin" : { "$binary" : { "base64" : "ZGVhZGJlZWY=", "subType" : "04" } } })");
+
+    // As of libmongoc 1.18.0, "base64" has correct spacing (see CDRIVER-3958) after extJSON
+    // marshalling.
+    const char* expected;
+    if (std::string(mongoc_version).compare("1.18.0") >= 0) {
+        expected =
+            R"({ "number" : { "$numberInt" : "42" }, "bin" : { "$binary" : { "base64" : "ZGVhZGJlZWY=", "subType" : "04" } } })";
+    } else {
+        expected =
+            R"({ "number" : { "$numberInt" : "42" }, "bin" : { "$binary" : { "base64": "ZGVhZGJlZWY=", "subType" : "04" } } })";
+    }
+    REQUIRE(output == expected);
 }
 
 TEST_CASE("UDL _bson works like from_json()") {
