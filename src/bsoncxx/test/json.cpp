@@ -94,6 +94,7 @@ TEST_CASE("CXX-1246: Legacy Extended JSON (Explicit)") {
 
 TEST_CASE("CXX-1246: Relaxed Extended JSON") {
     using namespace bsoncxx;
+    // TODO CXX-2227: Remove skip after minimum libmongoc version is bumped.
     if (!mongoc_version) {
         WARN("Skipping — environment variable MONGOC_VERSION must be set");
         return;
@@ -104,6 +105,8 @@ TEST_CASE("CXX-1246: Relaxed Extended JSON") {
     auto doc = make_document(kvp("number", 42), kvp("bin", bin_val));
     auto output = to_json(doc.view(), ExtendedJsonMode::k_relaxed);
 
+    // TODO CXX-2227: Remove conditional result after minimum libmongoc version is bumped.
+    //
     // As of libmongoc 1.18.0, "base64" has correct spacing (see CDRIVER-3958) after extJSON
     // marshalling.
     const char* expected;
@@ -119,6 +122,7 @@ TEST_CASE("CXX-1246: Relaxed Extended JSON") {
 
 TEST_CASE("CXX-1246: Canonical Extended JSON") {
     using namespace bsoncxx;
+    // TODO CXX-2227: Remove skip after minimum libmongoc version is bumped.
     if (!mongoc_version) {
         WARN("Skipping — environment variable MONGOC_VERSION must be set");
         return;
@@ -129,6 +133,8 @@ TEST_CASE("CXX-1246: Canonical Extended JSON") {
     auto doc = make_document(kvp("number", 42), kvp("bin", bin_val));
     auto output = to_json(doc.view(), ExtendedJsonMode::k_canonical);
 
+    // TODO CXX-2227: Remove conditional result after minimum libmongoc version is bumped.
+    //
     // As of libmongoc 1.18.0, "base64" has correct spacing (see CDRIVER-3958) after extJSON
     // marshalling.
     const char* expected;
