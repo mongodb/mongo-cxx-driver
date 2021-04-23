@@ -99,9 +99,9 @@ TEST_CASE("CXX-1246: Relaxed Extended JSON") {
     auto doc = make_document(kvp("number", 42), kvp("bin", bin_val));
     auto output = to_json(doc.view(), ExtendedJsonMode::k_relaxed);
 
-    // TODO CXX-2227: Remove conditional result after minimum libmongoc version is bumped.
+    // TODO CXX-2227: Remove conditional result after minimum libbson version is bumped.
     //
-    // As of libmongoc 1.18.0, "base64" has correct spacing (see CDRIVER-3958) after extJSON
+    // As of libbson 1.18.0, "base64" has correct spacing (see CDRIVER-3958) after extJSON
     // marshalling.
     const char* expected;
     if ((BSON_MAJOR_VERSION == 1 && BSON_MINOR_VERSION >= 18) || BSON_MAJOR_VERSION > 1) {
@@ -121,9 +121,9 @@ TEST_CASE("CXX-1246: Canonical Extended JSON") {
     auto doc = make_document(kvp("number", 42), kvp("bin", bin_val));
     auto output = to_json(doc.view(), ExtendedJsonMode::k_canonical);
 
-    // TODO CXX-2227: Remove conditional result after minimum libmongoc version is bumped.
+    // TODO CXX-2227: Remove conditional result after minimum libbson version is bumped.
     //
-    // As of libmongoc 1.18.0, "base64" has correct spacing (see CDRIVER-3958) after extJSON
+    // As of libbson 1.18.0, "base64" has correct spacing (see CDRIVER-3958) after extJSON
     // marshalling.
     const char* expected;
     if ((BSON_MAJOR_VERSION == 1 && BSON_MINOR_VERSION >= 18) || BSON_MAJOR_VERSION > 1) {
