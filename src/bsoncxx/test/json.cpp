@@ -18,6 +18,7 @@
 #include <bsoncxx/builder/basic/sub_array.hpp>
 #include <bsoncxx/exception/exception.hpp>
 #include <bsoncxx/json.hpp>
+#include <bsoncxx/private/libbson.hh>
 #include <bsoncxx/test_util/catch.hh>
 
 namespace {
@@ -97,9 +98,20 @@ TEST_CASE("CXX-1246: Relaxed Extended JSON") {
         binary_sub_type::k_uuid, 8, reinterpret_cast<const uint8_t*>("deadbeef")};
     auto doc = make_document(kvp("number", 42), kvp("bin", bin_val));
     auto output = to_json(doc.view(), ExtendedJsonMode::k_relaxed);
-    REQUIRE(
-        output ==
-        R"({ "number" : 42, "bin" : { "$binary" : { "base64": "ZGVhZGJlZWY=", "subType" : "04" } } })");
+
+    // TODO CXX-2227: Remove conditional result after minimum libbson version is bumped.
+    //
+    // As of libbson 1.18.0, "base64" has correct spacing (see CDRIVER-3958) after extJSON
+    // marshalling.
+    const char* expected;
+    if ((BSON_MAJOR_VERSION == 1 && BSON_MINOR_VERSION >= 18) || BSON_MAJOR_VERSION > 1) {
+        expected =
+            R"({ "number" : 42, "bin" : { "$binary" : { "base64" : "ZGVhZGJlZWY=", "subType" : "04" } } })";
+    } else {
+        expected =
+            R"({ "number" : 42, "bin" : { "$binary" : { "base64": "ZGVhZGJlZWY=", "subType" : "04" } } })";
+    }
+    REQUIRE(output == expected);
 }
 
 TEST_CASE("CXX-1246: Canonical Extended JSON") {
@@ -108,9 +120,20 @@ TEST_CASE("CXX-1246: Canonical Extended JSON") {
         binary_sub_type::k_uuid, 8, reinterpret_cast<const uint8_t*>("deadbeef")};
     auto doc = make_document(kvp("number", 42), kvp("bin", bin_val));
     auto output = to_json(doc.view(), ExtendedJsonMode::k_canonical);
-    REQUIRE(
-        output ==
-        R"({ "number" : { "$numberInt" : "42" }, "bin" : { "$binary" : { "base64": "ZGVhZGJlZWY=", "subType" : "04" } } })");
+
+    // TODO CXX-2227: Remove conditional result after minimum libbson version is bumped.
+    //
+    // As of libbson 1.18.0, "base64" has correct spacing (see CDRIVER-3958) after extJSON
+    // marshalling.
+    const char* expected;
+    if ((BSON_MAJOR_VERSION == 1 && BSON_MINOR_VERSION >= 18) || BSON_MAJOR_VERSION > 1) {
+        expected =
+            R"({ "number" : { "$numberInt" : "42" }, "bin" : { "$binary" : { "base64" : "ZGVhZGJlZWY=", "subType" : "04" } } })";
+    } else {
+        expected =
+            R"({ "number" : { "$numberInt" : "42" }, "bin" : { "$binary" : { "base64": "ZGVhZGJlZWY=", "subType" : "04" } } })";
+    }
+    REQUIRE(output == expected);
 }
 
 TEST_CASE("UDL _bson works like from_json()") {
@@ -134,5 +157,4 @@ TEST_CASE("UDL _bson works like from_json()") {
         REQUIRE_THROWS_AS(""_bson, bsoncxx::exception);
     }
 }
-
 }  // namespace
