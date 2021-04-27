@@ -1149,12 +1149,15 @@ document::value update_many(collection& coll, document::view operation) {
     auto result = builder::basic::document{};
     result.append(builder::basic::kvp(
         "result",
-        [matched_count, modified_count, upserted_id](builder::basic::sub_document subdoc) {
+        [matched_count, modified_count, upserted_count, upserted_id](
+            builder::basic::sub_document subdoc) {
             subdoc.append(builder::basic::kvp("matchedCount", matched_count));
 
             if (modified_count) {
                 subdoc.append(builder::basic::kvp("modifiedCount", *modified_count));
             }
+
+            subdoc.append(builder::basic::kvp("upsertedCount", upserted_count));
 
             if (upserted_id) {
                 subdoc.append(builder::basic::kvp("upsertedId", *upserted_id));
