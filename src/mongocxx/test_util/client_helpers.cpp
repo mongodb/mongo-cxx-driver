@@ -218,6 +218,11 @@ std::string get_server_version(const client& client) {
     return bsoncxx::string::to_string(output.view()["version"].get_string().value);
 }
 
+document::value get_server_params(const client& client) {
+    auto reply = client["admin"].run_command(make_document(kvp("getParameter", "*")));
+    return reply;
+}
+
 std::string replica_set_name(const client& client) {
     auto reply = get_is_master(client);
     auto name = reply.view()["setName"];

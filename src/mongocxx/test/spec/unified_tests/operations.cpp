@@ -391,12 +391,7 @@ document::value replace_one(collection& coll, client_session* session, document:
 
     if (replace_result) {
         matched_count = replace_result->matched_count();
-
-        // Server versions below 2.4 do not return an `nModified` count.
-        try {
-            modified_count = replace_result->modified_count();
-        } catch (const std::exception& e) {
-        }
+        modified_count = replace_result->modified_count();
 
         upserted_count = replace_result->result().upserted_count();
 
@@ -551,6 +546,105 @@ document::value fail_point(entity::map& map, spec::apm_checker& apm, document::v
     apm.set_ignore_command_monitoring_event("configureFailPoint");
     return make_document(kvp("uri", client.uri().to_string()),
                          kvp("failPoint", args["failPoint"]["configureFailPoint"].get_string()));
+}
+
+document::value find_one_and_delete(collection& coll,
+                                    client_session* session,
+                                    document::view operation) {
+    document::view arguments = operation["arguments"].get_document().value;
+    document::view filter = arguments["filter"].get_document().value;
+    options::find_one_and_delete options{};
+
+    if (arguments["collation"]) {
+        options.collation(arguments["collation"].get_document().value);
+    }
+    if (arguments["hint"]) {
+        if (arguments["hint"].type() == bsoncxx::v_noabi::type::k_string)
+            options.hint(hint{arguments["hint"].get_string().value});
+        else
+            options.hint(hint{arguments["hint"].get_document().value});
+    }
+    if (arguments["projection"]) {
+        options.projection(arguments["projection"].get_document().value);
+    }
+    if (arguments["sort"]) {
+        options.sort(arguments["sort"].get_document().value);
+    }
+
+    stdx::optional<document::value> document;
+    if (session) {
+        document = coll.find_one_and_delete(*session, filter, options);
+    } else {
+        document = coll.find_one_and_delete(filter, options);
+    }
+
+    // Using an unacknowledged write concern returns an empty document rather than null when no
+    // documents match.
+    auto result = builder::basic::document{};
+    if (document && !(document->view().empty())) {
+        result.append(builder::basic::kvp("result", *document));
+    } else {
+        result.append(builder::basic::kvp("result", types::b_null{}));
+    }
+
+    return result.extract();
+}
+
+document::value find_one_and_replace(collection& coll,
+                                     client_session* session,
+                                     document::view operation) {
+    document::view arguments = operation["arguments"].get_document().value;
+    document::view filter = arguments["filter"].get_document().value;
+    options::find_one_and_replace options{};
+
+    if (arguments["collation"]) {
+        options.collation(arguments["collation"].get_document().value);
+    }
+    if (arguments["hint"]) {
+        if (arguments["hint"].type() == bsoncxx::v_noabi::type::k_string)
+            options.hint(hint{arguments["hint"].get_string().value});
+        else
+            options.hint(hint{arguments["hint"].get_document().value});
+    }
+    if (arguments["projection"]) {
+        options.projection(arguments["projection"].get_document().value);
+    }
+    if (arguments["returnDocument"]) {
+        auto return_document = string::to_string(arguments["returnDocument"].get_string().value);
+
+        if (return_document == "After") {
+            options.return_document(options::return_document::k_after);
+        } else if (return_document == "Before") {
+            options.return_document(options::return_document::k_before);
+        } else {
+            throw std::logic_error{"unrecognized value for returnDocument: " + return_document};
+        }
+    }
+    if (arguments["sort"]) {
+        options.sort(arguments["sort"].get_document().value);
+    }
+    if (arguments["upsert"]) {
+        options.upsert(arguments["upsert"].get_bool().value);
+    }
+
+    stdx::optional<document::value> document;
+    document::view replacement = arguments["replacement"].get_document().value;
+    if (session) {
+        document = coll.find_one_and_replace(*session, filter, replacement, options);
+    } else {
+        document = coll.find_one_and_replace(filter, replacement, options);
+    }
+
+    // Using an unacknowledged write concern returns an empty document rather than null when no
+    // documents match.
+    auto result = builder::basic::document{};
+    if (document && !(document->view().empty())) {
+        result.append(builder::basic::kvp("result", *document));
+    } else {
+        result.append(builder::basic::kvp("result", types::b_null{}));
+    }
+
+    return result.extract();
 }
 
 document::value find_one_and_update(collection& coll,
@@ -870,6 +964,42 @@ document::value delete_one(collection& coll, client_session* session, document::
     return result.extract();
 }
 
+document::value delete_many(collection& coll, client_session* session, document::view operation) {
+    document::view arguments = operation["arguments"].get_document().value;
+    document::view filter = arguments["filter"].get_document().value;
+    options::delete_options options{};
+
+    if (arguments["collation"]) {
+        options.collation(arguments["collation"].get_document().value);
+    }
+    if (arguments["hint"]) {
+        if (arguments["hint"].type() == bsoncxx::v_noabi::type::k_string)
+            options.hint(hint{arguments["hint"].get_string().value});
+        else
+            options.hint(hint{arguments["hint"].get_document().value});
+    }
+
+    auto result = builder::basic::document{};
+    std::int32_t deleted_count = 0;
+
+    stdx::optional<result::delete_result> delete_result;
+    if (session) {
+        delete_result = coll.delete_many(*session, filter, options);
+    } else {
+        delete_result = coll.delete_many(filter, options);
+    }
+
+    if (delete_result) {
+        deleted_count = delete_result->deleted_count();
+    }
+    result.append(
+        builder::basic::kvp("result", [deleted_count](builder::basic::sub_document subdoc) {
+            subdoc.append(builder::basic::kvp("deletedCount", deleted_count));
+        }));
+
+    return result.extract();
+}
+
 document::value with_transaction(client_session& session,
                                  document::view op,
                                  with_transaction_cb cb) {
@@ -897,6 +1027,207 @@ client_session* get_session(document::view op, entity::map& map) {
 
     auto session_name = string::to_string(op["arguments"]["session"].get_string().value);
     return &map.get_client_session(session_name);
+}
+
+document::value run_command(database& db, document::view operation) {
+    document::view arguments = operation["arguments"].get_document().value;
+    document::view command = arguments["command"].get_document().value;
+
+    auto result = builder::basic::document{};
+    result.append(builder::basic::kvp("result", db.run_command(command)));
+    return result.extract();
+}
+
+document::value update_one(collection& coll, document::view operation) {
+    document::view arguments = operation["arguments"].get_document().value;
+    document::view filter = arguments["filter"].get_document().value;
+    document::view update = arguments["update"].get_document().value;
+    options::update options{};
+
+    if (arguments["collation"]) {
+        options.collation(arguments["collation"].get_document().value);
+    }
+    if (arguments["hint"]) {
+        if (arguments["hint"].type() == bsoncxx::v_noabi::type::k_string)
+            options.hint(hint{arguments["hint"].get_string().value});
+        else
+            options.hint(hint{arguments["hint"].get_document().value});
+    }
+    if (arguments["upsert"]) {
+        options.upsert(arguments["upsert"].get_bool().value);
+    }
+
+    std::int32_t matched_count = 0;
+    bsoncxx::stdx::optional<std::int32_t> modified_count;
+    bsoncxx::stdx::optional<types::bson_value::view> upserted_id{};
+
+    auto update_one_result = coll.update_one(filter, update, options);
+    if (update_one_result) {
+        matched_count = update_one_result->matched_count();
+        modified_count = update_one_result->modified_count();
+
+        if (auto upserted_element = update_one_result->upserted_id()) {
+            upserted_id = upserted_element->get_value();
+        }
+    }
+
+    auto result = builder::basic::document{};
+    result.append(builder::basic::kvp(
+        "result",
+        [matched_count, modified_count, upserted_id](builder::basic::sub_document subdoc) {
+            subdoc.append(builder::basic::kvp("matchedCount", matched_count));
+
+            if (modified_count) {
+                subdoc.append(builder::basic::kvp("modifiedCount", *modified_count));
+            }
+
+            if (upserted_id) {
+                subdoc.append(builder::basic::kvp("upsertedId", *upserted_id));
+            }
+        }));
+
+    return result.extract();
+}
+
+document::value update_many(collection& coll, document::view operation) {
+    document::view arguments = operation["arguments"].get_document().value;
+    document::view filter = arguments["filter"].get_document().value;
+    document::view update = arguments["update"].get_document().value;
+    options::update options{};
+
+    if (arguments["collation"]) {
+        options.collation(arguments["collation"].get_document().value);
+    }
+    if (arguments["hint"]) {
+        if (arguments["hint"].type() == bsoncxx::v_noabi::type::k_string)
+            options.hint(hint{arguments["hint"].get_string().value});
+        else
+            options.hint(hint{arguments["hint"].get_document().value});
+    }
+    if (arguments["upsert"]) {
+        options.upsert(arguments["upsert"].get_bool().value);
+    }
+
+    std::int32_t matched_count = 0;
+    bsoncxx::stdx::optional<std::int32_t> modified_count;
+    std::int32_t upserted_count = 0;
+    bsoncxx::stdx::optional<types::bson_value::view> upserted_id{};
+
+    auto update_many_result = coll.update_many(filter, update, options);
+    if (update_many_result) {
+        matched_count = update_many_result->matched_count();
+        modified_count = update_many_result->modified_count();
+
+        upserted_count = update_many_result->result().upserted_count();
+
+        if (auto upserted_element = update_many_result->upserted_id()) {
+            upserted_id = upserted_element->get_value();
+        }
+    }
+
+    auto result = builder::basic::document{};
+    result.append(builder::basic::kvp(
+        "result",
+        [matched_count, modified_count, upserted_count, upserted_id](
+            builder::basic::sub_document subdoc) {
+            subdoc.append(builder::basic::kvp("matchedCount", matched_count));
+
+            if (modified_count) {
+                subdoc.append(builder::basic::kvp("modifiedCount", *modified_count));
+            }
+
+            subdoc.append(builder::basic::kvp("upsertedCount", upserted_count));
+
+            if (upserted_id) {
+                subdoc.append(builder::basic::kvp("upsertedId", *upserted_id));
+            }
+        }));
+
+    return result.extract();
+}
+
+document::value count_documents(collection& coll, document::view operation) {
+    document::view arguments = operation["arguments"].get_document().value;
+    document::value empty_filter = builder::basic::make_document();
+    document::view filter;
+    if (arguments["filter"]) {
+        filter = arguments["filter"].get_document().value;
+    } else {
+        filter = empty_filter.view();
+    }
+    options::count options{};
+
+    if (arguments["collation"]) {
+        options.collation(arguments["collation"].get_document().value);
+    }
+    if (arguments["limit"]) {
+        options.limit(as_int64(arguments["limit"]));
+    }
+    if (arguments["skip"]) {
+        options.skip(as_int64(arguments["skip"]));
+    }
+    if (arguments["hint"]) {
+        if (arguments["hint"].type() == bsoncxx::v_noabi::type::k_string)
+            options.hint(hint{arguments["hint"].get_string().value});
+        else
+            options.hint(hint{arguments["hint"].get_document().value});
+    }
+
+    int64_t count = coll.count_documents(filter, options);
+
+    auto result = builder::basic::document{};
+    result.append(builder::basic::kvp("result", count));
+    return result.extract();
+}
+
+document::value estimated_document_count(collection& coll, document::view operation) {
+    options::estimated_document_count options{};
+    if (operation["arguments"]) {
+        auto arguments = operation["arguments"].get_document().value;
+        if (auto max_time_ms = arguments["maxTimeMS"]) {
+            options.max_time(std::chrono::milliseconds(max_time_ms.get_int32()));
+        }
+    }
+
+    int64_t edc = coll.estimated_document_count(options);
+
+    auto result = builder::basic::document{};
+    result.append(builder::basic::kvp("result", edc));
+    return result.extract();
+}
+
+document::value distinct(collection& coll, client_session* session, document::view operation) {
+    document::view arguments = operation["arguments"].get_document().value;
+    auto field_name = arguments["fieldName"].get_string().value;
+
+    document::value empty_filter = builder::basic::make_document();
+    document::view filter;
+    if (arguments["filter"]) {
+        filter = arguments["filter"].get_document().value;
+    } else {
+        filter = empty_filter.view();
+    }
+
+    options::distinct options{};
+    if (arguments["collation"]) {
+        options.collation(arguments["collation"].get_document().value);
+    }
+
+    stdx::optional<cursor> result_cursor;
+    if (session) {
+        result_cursor.emplace(coll.distinct(*session, field_name, filter, options));
+    } else {
+        result_cursor.emplace(coll.distinct(field_name, filter, options));
+    }
+
+    auto result = builder::basic::document{};
+    result.append(builder::basic::kvp("result", [&result_cursor](builder::basic::sub_array array) {
+        for (auto&& document : *result_cursor) {
+            array.append(document);
+        }
+    }));
+
+    return result.extract();
 }
 
 document::value operations::run(entity::map& entity_map,
@@ -947,9 +1278,19 @@ document::value operations::run(entity::map& entity_map,
         auto key = string::to_string(op["arguments"]["client"].get_string().value);
         return fail_point(entity_map, apm_map[key], op_view);
     }
+    if (name == "findOneAndDelete")
+        return find_one_and_delete(
+            entity_map.get_collection(object), get_session(op_view, entity_map), op_view);
+    if (name == "findOneAndReplace")
+        return find_one_and_replace(
+            entity_map.get_collection(object), get_session(op_view, entity_map), op_view);
     if (name == "findOneAndUpdate")
         return find_one_and_update(
             entity_map.get_collection(object), get_session(op_view, entity_map), op_view);
+    if (name == "listCollections") {
+        entity_map.get_database(object).list_collections().begin();
+        return empty_doc;
+    }
     if (name == "listDatabases") {
         entity_map.get_client(object).list_databases().begin();
         return empty_doc;
@@ -996,6 +1337,11 @@ document::value operations::run(entity::map& entity_map,
     if (name == "commitTransaction") {
         auto& session = entity_map.get_client_session(object);
         session.commit_transaction();
+        return empty_doc;
+    }
+    if (name == "abortTransaction") {
+        auto& session = entity_map.get_client_session(object);
+        session.abort_transaction();
         return empty_doc;
     }
     if (name == "assertSessionTransactionState") {
@@ -1073,6 +1419,30 @@ document::value operations::run(entity::map& entity_map,
     if (name == "deleteOne") {
         auto& coll = entity_map.get_collection(object);
         return delete_one(coll, get_session(op_view, entity_map), op_view);
+    }
+    if (name == "deleteMany") {
+        auto& coll = entity_map.get_collection(object);
+        return delete_many(coll, get_session(op_view, entity_map), op_view);
+    }
+    if (name == "runCommand") {
+        auto& db = entity_map.get_database(object);
+        return run_command(db, op_view);
+    }
+    if (name == "updateOne") {
+        return update_one(entity_map.get_collection(object), op_view);
+    }
+    if (name == "updateMany") {
+        return update_many(entity_map.get_collection(object), op_view);
+    }
+    if (name == "countDocuments") {
+        return count_documents(entity_map.get_collection(object), op_view);
+    }
+    if (name == "estimatedDocumentCount") {
+        return estimated_document_count(entity_map.get_collection(object), op_view);
+    }
+    if (name == "distinct") {
+        auto& coll = entity_map.get_collection(object);
+        return distinct(coll, get_session(op_view, entity_map), op_view);
     }
 
     throw std::logic_error{"unsupported operation: " + name};
