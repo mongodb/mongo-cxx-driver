@@ -391,12 +391,7 @@ document::value replace_one(collection& coll, client_session* session, document:
 
     if (replace_result) {
         matched_count = replace_result->matched_count();
-
-        // Server versions below 2.4 do not return an `nModified` count.
-        try {
-            modified_count = replace_result->modified_count();
-        } catch (const std::exception& e) {
-        }
+        modified_count = replace_result->modified_count();
 
         upserted_count = replace_result->result().upserted_count();
 
@@ -619,10 +614,10 @@ document::value find_one_and_replace(collection& coll,
 
         if (return_document == "After") {
             options.return_document(options::return_document::k_after);
-        }
-
-        if (return_document == "Before") {
+        } else if (return_document == "Before") {
             options.return_document(options::return_document::k_before);
+        } else {
+            throw std::logic_error{"unrecognized value for returnDocument: " + return_document};
         }
     }
     if (arguments["sort"]) {
@@ -633,18 +628,11 @@ document::value find_one_and_replace(collection& coll,
     }
 
     stdx::optional<document::value> document;
-    switch (arguments["replacement"].type()) {
-        case bsoncxx::type::k_document: {
-            document::view replacement = arguments["replacement"].get_document().value;
-            if (session) {
-                document = coll.find_one_and_replace(*session, filter, replacement, options);
-            } else {
-                document = coll.find_one_and_replace(filter, replacement, options);
-            }
-            break;
-        }
-        default:
-            throw std::logic_error{"replacement must be a document"};
+    document::view replacement = arguments["replacement"].get_document().value;
+    if (session) {
+        document = coll.find_one_and_replace(*session, filter, replacement, options);
+    } else {
+        document = coll.find_one_and_replace(filter, replacement, options);
     }
 
     // Server versions below 3.0 sometimes return an empty document rather than null when no
@@ -984,7 +972,6 @@ document::value delete_many(collection& coll, client_session* session, document:
     if (arguments["collation"]) {
         options.collation(arguments["collation"].get_document().value);
     }
-
     if (arguments["hint"]) {
         if (arguments["hint"].type() == bsoncxx::v_noabi::type::k_string)
             options.hint(hint{arguments["hint"].get_string().value});
@@ -995,16 +982,16 @@ document::value delete_many(collection& coll, client_session* session, document:
     auto result = builder::basic::document{};
     std::int32_t deleted_count = 0;
 
-    auto delete_result = [&] {
-        if (session)
-            return coll.delete_many(*session, filter, options);
-        return coll.delete_many(filter, options);
-    }();
+    stdx::optional<result::delete_result> delete_result;
+    if (session) {
+        delete_result = coll.delete_many(*session, filter, options);
+    } else {
+        delete_result = coll.delete_many(filter, options);
+    }
 
     if (delete_result) {
         deleted_count = delete_result->deleted_count();
     }
-
     result.append(
         builder::basic::kvp("result", [deleted_count](builder::basic::sub_document subdoc) {
             subdoc.append(builder::basic::kvp("deletedCount", deleted_count));
@@ -1046,7 +1033,9 @@ document::value run_command(database& db, document::view operation) {
     document::view arguments = operation["arguments"].get_document().value;
     document::view command = arguments["command"].get_document().value;
 
-    return db.run_command(command);
+    auto result = builder::basic::document{};
+    result.append(builder::basic::kvp("result", db.run_command(command)));
+    return result.extract();
 }
 
 document::value update_one(collection& coll, document::view operation) {
@@ -1075,12 +1064,7 @@ document::value update_one(collection& coll, document::view operation) {
     auto update_one_result = coll.update_one(filter, update, options);
     if (update_one_result) {
         matched_count = update_one_result->matched_count();
-
-        // Server versions below 2.4 do not return an `nModified` count.
-        try {
-            modified_count = update_one_result->modified_count();
-        } catch (const std::exception& e) {
-        }
+        modified_count = update_one_result->modified_count();
 
         if (auto upserted_element = update_one_result->upserted_id()) {
             upserted_id = upserted_element->get_value();
@@ -1132,12 +1116,7 @@ document::value update_many(collection& coll, document::view operation) {
     auto update_many_result = coll.update_many(filter, update, options);
     if (update_many_result) {
         matched_count = update_many_result->matched_count();
-
-        // Server versions below 2.4 do not return an `nModified` count.
-        try {
-            modified_count = update_many_result->modified_count();
-        } catch (const std::exception& e) {
-        }
+        modified_count = update_many_result->modified_count();
 
         upserted_count = update_many_result->result().upserted_count();
 
