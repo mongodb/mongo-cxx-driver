@@ -1180,8 +1180,16 @@ document::value count_documents(collection& coll, document::view operation) {
     return result.extract();
 }
 
-document::value estimated_document_count(collection& coll) {
-    int64_t edc = coll.estimated_document_count();
+document::value estimated_document_count(collection& coll, document::view operation) {
+    options::estimated_document_count options{};
+    if (operation["arguments"]) {
+        auto arguments = operation["arguments"].get_document().value;
+        if (auto max_time_ms = arguments["maxTimeMS"]) {
+            options.max_time(std::chrono::milliseconds(max_time_ms.get_int32()));
+        }
+    }
+
+    int64_t edc = coll.estimated_document_count(options);
 
     auto result = builder::basic::document{};
     result.append(builder::basic::kvp("result", edc));
@@ -1430,7 +1438,7 @@ document::value operations::run(entity::map& entity_map,
         return count_documents(entity_map.get_collection(object), op_view);
     }
     if (name == "estimatedDocumentCount") {
-        return estimated_document_count(entity_map.get_collection(object));
+        return estimated_document_count(entity_map.get_collection(object), op_view);
     }
     if (name == "distinct") {
         auto& coll = entity_map.get_collection(object);
