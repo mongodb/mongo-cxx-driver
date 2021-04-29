@@ -578,7 +578,7 @@ document::value find_one_and_delete(collection& coll,
         document = coll.find_one_and_delete(filter, options);
     }
 
-    // Server versions below 3.0 sometimes return an empty document rather than null when no
+    // Using an unacknowledged write concern returns an empty document rather than null when no
     // documents match.
     auto result = builder::basic::document{};
     if (document && !(document->view().empty())) {
@@ -635,7 +635,7 @@ document::value find_one_and_replace(collection& coll,
         document = coll.find_one_and_replace(filter, replacement, options);
     }
 
-    // Server versions below 3.0 sometimes return an empty document rather than null when no
+    // Using an unacknowledged write concern returns an empty document rather than null when no
     // documents match.
     auto result = builder::basic::document{};
     if (document && !(document->view().empty())) {
