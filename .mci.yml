@@ -135,7 +135,7 @@ functions:
                 export DRIVERS_TOOLS=$(pwd)
 
                 sh .evergreen/atlas_data_lake/run-mongohouse-local.sh
-              
+
     "test_mongohouse":
         command: shell.exec
         params:
@@ -157,8 +157,8 @@ functions:
 
                 ulimit -c unlimited || true
 
-                ./src/mongocxx/test/test_mongohouse_specs             
-              
+                ./src/mongocxx/test/test_mongohouse_specs
+
     "start_mongod":
         command: shell.exec
         params:
@@ -333,9 +333,11 @@ functions:
                   export DYLD_LIBRARY_PATH=.:$PREFIX/lib/
                   export PATH=$(pwd)/src/bsoncxx/${build_type}:$(pwd)/src/mongocxx/${build_type}:$PREFIX/bin:$(pwd)/install/bin:$PATH
 
-                  # CRUD_TESTS_PATH and GRIDFS_TESTS_PATH are required to be set by the
-                  # `test_crud_specs` and `test_gridfs_specs` test binaries, respectively.
-                  export CRUD_TESTS_PATH="$(pwd)/../data/crud"
+                  # CRUD_LEGACY_TESTS_PATH, CRUD_UNIFIED_TESTS_PATH and GRIDFS_TESTS_PATH are required to
+                  # be set by the `test_crud_specs`, `test_unified_format_spec` and `test_gridfs_specs` test
+                  # binaries respectively.
+                  export CRUD_LEGACY_TESTS_PATH="$(pwd)/../data/crud/legacy"
+                  export CRUD_UNIFIED_TESTS_PATH="$(pwd)/../data/crud/unified"
                   export CHANGE_STREAM_TESTS_PATH="$(pwd)/../data/change_stream"
                   export ENCRYPTION_TESTS_PATH="$(pwd)/../data/client_side_encryption"
                   export GRIDFS_TESTS_PATH="$(pwd)/../data/gridfs"
@@ -355,7 +357,8 @@ functions:
                   set -o xtrace
 
                   if [ "Windows_NT" == "$OS" ]; then
-                      CRUD_TESTS_PATH=$(cygpath -m $CRUD_TESTS_PATH)
+                      CRUD_LEGACY_TESTS_PATH=$(cygpath -m $CRUD_LEGACY_TESTS_PATH)
+                      CRUD_UNIFIED_TESTS_PATH=$(cygpath -m $CRUD_UNIFIED_TESTS_PATH)
                       ENCRYPTION_TESTS_PATH=$(cygpath -m $ENCRYPTION_TESTS_PATH)
 
                       CTEST_OUTPUT_ON_FAILURE=1 MSBuild.exe /p:Configuration=${build_type} RUN_TESTS.vcxproj
@@ -1009,7 +1012,7 @@ buildvariants:
       run_on: ubuntu1804-test
       tasks:
           - name: test_mongohouse
-      
+
     - name: ubuntu1804-zseries
       display_name: "s390x Ubuntu 18.04 (MongoDB 4.4)"
       batchtime: 1440 # 1 day

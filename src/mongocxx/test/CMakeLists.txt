@@ -230,7 +230,7 @@ add_test(unified_format_spec test_unified_format_spec)
 #add_test(mongohouse_specs test_mongohouse_specs)
 
 set_tests_properties(crud_specs PROPERTIES
-    ENVIRONMENT "CRUD_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/crud")
+    ENVIRONMENT "CRUD_LEGACY_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/crud/legacy")
 
 set_tests_properties(gridfs_specs PROPERTIES
     ENVIRONMENT "GRIDFS_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/gridfs")
@@ -240,7 +240,7 @@ set_tests_properties(client_side_encryption_specs PROPERTIES
 
 set_tests_properties(driver PROPERTIES
     ENVIRONMENT "ENCRYPTION_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/client_side_encryption")
-  
+
 set_tests_properties(command_monitoring_specs PROPERTIES
     ENVIRONMENT "COMMAND_MONITORING_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/command-monitoring")
 
@@ -260,6 +260,8 @@ set_tests_properties(read_write_concern_specs PROPERTIES
 
 set_tests_properties(unified_format_spec PROPERTIES
         ENVIRONMENT "UNIFIED_FORMAT_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/unified-format")
+set_tests_properties(unified_format_spec PROPERTIES
+        ENVIRONMENT "CRUD_UNIFIED_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/crud/unified")
 
 if (MONGOCXX_ENABLE_SLOW_TESTS)
   set_tests_properties(driver PROPERTIES
