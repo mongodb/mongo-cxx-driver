@@ -573,8 +573,12 @@ void assert_error(const mongocxx::operation_exception& exception,
         REQUIRE(std::none_of(std::begin(labels), std::end(labels), has_error_label));
     }
 
+    if (auto expected_error = expect_error["errorCode"]) {
+        auto actual_error = exception.code().value();
+        REQUIRE(actual_error == expected_error.get_int32());
+    }
+
     REQUIRE_FALSE(/* TODO */ expect_error["errorContains"]);
-    REQUIRE_FALSE(/* TODO */ expect_error["errorCode"]);
     REQUIRE_FALSE(/* TODO */ expect_error["errorCodeName"]);
 }
 

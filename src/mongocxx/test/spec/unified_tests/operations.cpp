@@ -1174,11 +1174,9 @@ document::value count_documents(collection& coll, document::view operation) {
     }
 
     int64_t count = coll.count_documents(filter, options);
-    auto result = builder::basic::document{};
-    result.append(builder::basic::kvp("result", [count](builder::basic::sub_document subdoc) {
-        subdoc.append(builder::basic::kvp("count", count));
-    }));
 
+    auto result = builder::basic::document{};
+    result.append(builder::basic::kvp("result", count));
     return result.extract();
 }
 
@@ -1186,10 +1184,7 @@ document::value estimated_document_count(collection& coll) {
     int64_t edc = coll.estimated_document_count();
 
     auto result = builder::basic::document{};
-    result.append(builder::basic::kvp("result", [edc](builder::basic::sub_document subdoc) {
-        subdoc.append(builder::basic::kvp("count", edc));
-    }));
-
+    result.append(builder::basic::kvp("result", edc));
     return result.extract();
 }
 
