@@ -1296,9 +1296,11 @@ document::value operations::run(entity::map& entity_map,
         return empty_doc;
     }
     if (name == "assertSessionNotDirty") {
+        REQUIRE(!get_session(op_view, entity_map)->get_dirty());
         return empty_doc;
     }
     if (name == "assertSessionDirty") {
+        REQUIRE(get_session(op_view, entity_map)->get_dirty());
         return empty_doc;
     }
     if (name == "endSession") {

@@ -211,6 +211,10 @@ class client_session::impl {
         }
     }
 
+    bool get_dirty() const noexcept {
+        return libmongoc::client_session_get_dirty(_session_t.get());
+    }
+
     bsoncxx::document::value to_document() const {
         bson_error_t error;
         bson_t bson = BSON_INITIALIZER;

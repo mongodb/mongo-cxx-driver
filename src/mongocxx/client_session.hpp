@@ -107,6 +107,11 @@ class MONGOCXX_API client_session {
     transaction_state get_transaction_state() const noexcept;
 
     ///
+    /// Returns whether or not this session is dirty.
+    ///
+    bool get_dirty() const noexcept;
+
+    ///
     /// Advance the cluster time for a session. Has an effect only if the new cluster time is
     /// greater than the session's current cluster time.
     ///

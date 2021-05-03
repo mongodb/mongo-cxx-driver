@@ -87,6 +87,10 @@ client_session::transaction_state client_session::get_transaction_state() const 
     return _impl->get_transaction_state();
 }
 
+bool client_session::get_dirty() const noexcept {
+    return _impl->get_dirty();
+}
+
 const client_session::impl& client_session::_get_impl() const {
     // Never null.
     return *_impl;
