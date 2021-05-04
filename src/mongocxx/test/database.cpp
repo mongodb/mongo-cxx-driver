@@ -355,7 +355,6 @@ TEST_CASE("Database integration tests", "[database]") {
             auto cursor = database.aggregate(pipeline);
             auto results = get_results(std::move(cursor));
 
-            REQUIRE(results.size() == 2);
             REQUIRE(results[0].view()["name"].get_string().value == stdx::string_view("Jane"));
             REQUIRE(results[1].view()["name"].get_string().value == stdx::string_view("Jane"));
         }
