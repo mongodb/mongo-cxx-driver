@@ -354,6 +354,8 @@ functions:
                   set -o xtrace
 
                   if [ "Windows_NT" == "$OS" ]; then
+                      ENCRYPTION_TESTS_PATH=$(cygpath -m $ENCRYPTION_TESTS_PATH)
+
                       CTEST_OUTPUT_ON_FAILURE=1 MSBuild.exe /p:Configuration=${build_type} RUN_TESTS.vcxproj
                       CTEST_OUTPUT_ON_FAILURE=1 MSBuild.exe /p:Configuration=${build_type} examples/run-examples.vcxproj
                   else
