@@ -355,8 +355,15 @@ TEST_CASE("Database integration tests", "[database]") {
             auto cursor = database.aggregate(pipeline);
             auto results = get_results(std::move(cursor));
 
-            REQUIRE(results[0].view()["name"].get_string().value == stdx::string_view("Jane"));
-            REQUIRE(results[1].view()["name"].get_string().value == stdx::string_view("Jane"));
+            // start_session() does not actually send a startSession command, so only one
+            // session is guaranteed to be active due to aggregate's implicit session.
+            if (results.size() == 2) {
+                REQUIRE(results[0].view()["name"].get_string().value == stdx::string_view("Jane"));
+                REQUIRE(results[1].view()["name"].get_string().value == stdx::string_view("Jane"));
+            } else {
+                REQUIRE(results.size() == 1);
+                REQUIRE(results[0].view()["name"].get_string().value == stdx::string_view("Jane"));
+            }
         }
     }
 
