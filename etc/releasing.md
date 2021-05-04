@@ -2,6 +2,16 @@
 
 If doing a release on a version prior to 3.5.0, follow the old instructions from the shared Google drive. Go to File -> Version History -> See Version History and select the version "Pre CXX-584".
 
+## Ensure tests are passing
+Ensure the latest commit has run tests on the Evergreen waterfall.
+
+For a minor release this should be the waterfall tracking the master branch:
+https://evergreen.mongodb.com/waterfall/cxx-driver
+For a patch release this is the waterfall tracking that branch. E.g. if you are releasing 3.6.4, then the waterfall tracking releases/v3.6:
+https://evergreen.mongodb.com/waterfall/cxx-driver-v3.6
+
+If there are test failures, ensure they are at least expected or not introduced by changes in the new release.
+
 ## Check fixVersions in Jira
 
 Ensure that all tickets under the [version to be released](https://jira.mongodb.org/projects/CXX?selectedItem=com.atlassian.jira.jira-projects-plugin%3Arelease-page&status=unreleased) are in `Closed` status on the C++ Driver releases page. If not, bulk change open tickets that will NOT be in the release to a new version (create it if necessary).
