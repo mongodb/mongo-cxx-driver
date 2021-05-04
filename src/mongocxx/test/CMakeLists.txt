@@ -259,9 +259,9 @@ set_tests_properties(read_write_concern_specs PROPERTIES
   ENVIRONMENT "READ_WRITE_CONCERN_OPERATION_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/read-write-concern/operation")
 
 set_tests_properties(unified_format_spec PROPERTIES
-        ENVIRONMENT "UNIFIED_FORMAT_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/unified-format")
-set_tests_properties(unified_format_spec PROPERTIES
-        ENVIRONMENT "CRUD_UNIFIED_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/crud/unified")
+  ENVIRONMENT "UNIFIED_FORMAT_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/unified-format")
+set_property(TEST unified_format_spec
+  APPEND PROPERTY ENVIRONMENT "CRUD_UNIFIED_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/crud/unified")
 
 if (MONGOCXX_ENABLE_SLOW_TESTS)
   set_tests_properties(driver PROPERTIES
