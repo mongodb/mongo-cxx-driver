@@ -1296,11 +1296,11 @@ document::value operations::run(entity::map& entity_map,
         return empty_doc;
     }
     if (name == "assertSessionNotDirty") {
-        // TODO CXX-2227: bump minimum required libmongoc version to 1.18
+        REQUIRE(!get_session(op_view, entity_map)->get_dirty());
         return empty_doc;
     }
     if (name == "assertSessionDirty") {
-        // TODO CXX-2227: bump minimum required libmongoc version to 1.18
+        REQUIRE(get_session(op_view, entity_map)->get_dirty());
         return empty_doc;
     }
     if (name == "endSession") {
