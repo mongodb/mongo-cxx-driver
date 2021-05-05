@@ -264,8 +264,8 @@ set_property(TEST unified_format_spec
   APPEND PROPERTY ENVIRONMENT "CRUD_UNIFIED_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/crud/unified")
 
 if (MONGOCXX_ENABLE_SLOW_TESTS)
-  set_tests_properties(driver PROPERTIES
-    ENVIRONMENT "MONGOCXX_ENABLE_SLOW_TESTS=1")
+  set_property(TEST driver
+    APPEND PROPERTY ENVIRONMENT "MONGOCXX_ENABLE_SLOW_TESTS=1")
 endif()
 
 set_dist_list (src_mongocxx_test_DIST
