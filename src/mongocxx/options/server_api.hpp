@@ -43,7 +43,7 @@ class MONGOCXX_API server_api {
     /// @param server_api_version
     ///   The server api version to send to the server.
     ///
-    server_api(const char* server_api_version) noexcept;
+    server_api(const char* server_api_version);
 
     ///
     /// Sets the strict option, specifying whether the server should return
