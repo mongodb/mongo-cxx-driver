@@ -831,7 +831,6 @@ TEST_CASE("CRUD unified format spec automated tests", "[unified_format_spec]") {
     }
 }
 
-/* TODO CXX-2138: Uncomment versioned API spec TEST_CASE below.
 TEST_CASE("versioned API spec automated tests", "[unified_format_spec]") {
     instance::current();
 
@@ -846,5 +845,5 @@ TEST_CASE("versioned API spec automated tests", "[unified_format_spec]") {
         CAPTURE(file);
         run_tests_in_file(path + '/' + file);
     }
-} */
+}
 }  // namespace
