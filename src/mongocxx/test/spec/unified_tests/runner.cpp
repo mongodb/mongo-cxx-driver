@@ -137,7 +137,20 @@ bool compatible_with_server(const bsoncxx::array::element& requirement) {
         return equals_server_topology(topologies);
 
     if (auto server_params = requirement["serverParameters"]) {
-        auto actual = test_util::get_server_params();
+        document::value actual = make_document();
+        try {
+            actual = test_util::get_server_params();
+        } catch (const operation_exception& e) {
+            // Mongohouse does not support getParameter, so if we get an error from
+            // getParameter, exit this logic early and skip the test.
+            std::string message = e.what();
+            if (message.find("command getParameter is unsupported") != std::string::npos) {
+                return false;
+            }
+
+            throw e;
+        }
+
         for (auto kvp : server_params.get_document().view()) {
             auto param = kvp.key();
             auto value = kvp.get_value();
@@ -573,9 +586,9 @@ void assert_error(const mongocxx::operation_exception& exception,
         REQUIRE(std::none_of(std::begin(labels), std::end(labels), has_error_label));
     }
 
-    if (auto expected_error = expect_error["errorCode"]) {
-        auto actual_error = exception.code().value();
-        REQUIRE(actual_error == expected_error.get_int32());
+    if (auto expected_code = expect_error["errorCode"]) {
+        auto actual_code = exception.code().value();
+        REQUIRE(actual_code == expected_code.get_int32());
     }
 
     REQUIRE_FALSE(/* TODO */ expect_error["errorContains"]);
@@ -788,6 +801,22 @@ TEST_CASE("unified format spec automated tests", "[unified_format_spec]") {
     instance::current();
 
     std::string path = std::getenv("UNIFIED_FORMAT_TESTS_PATH");
+    CAPTURE(path);
+    REQUIRE(path.size());
+
+    std::ifstream files{path + "/test_files.txt"};
+    REQUIRE(files.good());
+
+    for (std::string file; std::getline(files, file);) {
+        CAPTURE(file);
+        run_tests_in_file(path + '/' + file);
+    }
+}
+
+TEST_CASE("CRUD unified format spec automated tests", "[unified_format_spec]") {
+    instance::current();
+
+    std::string path = std::getenv("CRUD_UNIFIED_TESTS_PATH");
     CAPTURE(path);
     REQUIRE(path.size());
 
