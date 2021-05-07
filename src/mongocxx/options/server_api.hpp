@@ -18,6 +18,9 @@
 
 #include <string>
 
+#include <bsoncxx/stdx/optional.hpp>
+#include <mongocxx/stdx.hpp>
+
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
@@ -43,7 +46,7 @@ class MONGOCXX_API server_api {
     /// @param server_api_version
     ///   The server api version to send to the server.
     ///
-    server_api(const char* server_api_version);
+    server_api(std::string server_api_version);
 
     ///
     /// Sets the strict option, specifying whether the server should return
@@ -58,14 +61,12 @@ class MONGOCXX_API server_api {
     server_api& strict(bool strict);
 
     ///
-    /// Gets a boolean specifying whether the server will error for features
-    /// that are not a part of the declared API version.
+    /// Gets the current value of the strict option.
     ///
     /// @return
-    ///   A boolean specifying whether the server will error for features that
-    ///   are not part of the declared API version.
+    ///   The optional value of the strict option.
     ///
-    bool strict() const;
+    const stdx::optional<bool>& strict() const;
 
     ///
     /// Sets the deprecation errors option, specifying whether the server should
@@ -80,20 +81,20 @@ class MONGOCXX_API server_api {
     server_api& deprecation_errors(bool deprecation_errors);
 
     ///
-    /// Gets a boolean specifying whether the server will error on deprecated features.
+    /// Gets the current value of the deprecation errors option.
     ///
     /// @return
-    ///   A boolean specifying whether the server will error on deprecated features.
+    ///   The optional value of the deprecation errors option.
     ///
-    bool deprecation_errors() const;
+    const stdx::optional<bool>& deprecation_errors() const;
 
     ///
-    /// Gets the server api version.
+    /// Gets the declared server api version.
     ///
     /// @return
-    ///   A string specifying the declared server api version.
+    ///   The string specifying the declared server api version.
     ///
-    const char* server_api_version() const;
+    std::string server_api_version() const;
 
    private:
     friend class mongocxx::client;
@@ -101,9 +102,9 @@ class MONGOCXX_API server_api {
 
     MONGOCXX_PRIVATE void* convert() const;
 
-    bool _strict;
-    bool _deprecation_errors;
-    const char* _server_api_version;
+    std::string _server_api_version;
+    stdx::optional<bool> _strict;
+    stdx::optional<bool> _deprecation_errors;
 };
 
 }  // namespace options

@@ -17,12 +17,13 @@
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/options/server_api.hpp>
 #include <mongocxx/private/libmongoc.hh>
+#include <mongocxx/stdx.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
 
-server_api::server_api(const char* server_api_version)
+server_api::server_api(std::string server_api_version)
     : _server_api_version(std::move(server_api_version)) {}
 
 server_api& server_api::strict(bool strict) {
@@ -30,7 +31,7 @@ server_api& server_api::strict(bool strict) {
     return *this;
 }
 
-bool server_api::strict() const {
+const stdx::optional<bool>& server_api::strict() const {
     return _strict;
 }
 
@@ -39,17 +40,18 @@ server_api& server_api::deprecation_errors(bool deprecation_errors) {
     return *this;
 }
 
-bool server_api::deprecation_errors() const {
+const stdx::optional<bool>& server_api::deprecation_errors() const {
     return _deprecation_errors;
 }
 
-const char* server_api::server_api_version() const {
+std::string server_api::server_api_version() const {
     return _server_api_version;
 }
 
 void* server_api::convert() const {
     mongoc_server_api_version_t server_api_version;
-    auto r = libmongoc::server_api_version_from_string(_server_api_version, &server_api_version);
+    auto r =
+        libmongoc::server_api_version_from_string(_server_api_version.c_str(), &server_api_version);
     if (!r) {
         throw std::logic_error{"invalid server API version"};
     }
@@ -59,15 +61,12 @@ void* server_api::convert() const {
         throw std::logic_error{"could not get object from libmongoc"};
     }
 
-    // Set both strict and deprecation errors to false by default.
-    libmongoc::server_api_strict(mongoc_server_api_opts, false);
-    libmongoc::server_api_deprecation_errors(mongoc_server_api_opts, false);
-
     if (_strict) {
-        libmongoc::server_api_strict(mongoc_server_api_opts, _strict);
+        libmongoc::server_api_strict(mongoc_server_api_opts, _strict.value_or(false));
     }
     if (_deprecation_errors) {
-        libmongoc::server_api_deprecation_errors(mongoc_server_api_opts, _deprecation_errors);
+        libmongoc::server_api_deprecation_errors(mongoc_server_api_opts,
+                                                 _deprecation_errors.value_or(false));
     }
 
     return mongoc_server_api_opts;
