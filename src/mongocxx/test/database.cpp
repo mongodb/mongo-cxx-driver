@@ -345,25 +345,17 @@ TEST_CASE("Database integration tests", "[database]") {
             }
 
             auto session1 = mongo_client.start_session();
-            auto session2 = mongo_client.start_session();
 
             pipeline.list_local_sessions({});
-            pipeline.limit(2);
+            pipeline.limit(1);
             pipeline.add_fields(make_document(kvp("name", "Jane")));
             pipeline.project(make_document(kvp("name", 1)));
 
             auto cursor = database.aggregate(pipeline);
             auto results = get_results(std::move(cursor));
 
-            // start_session() does not actually send a startSession command, so only one
-            // session is guaranteed to be active due to aggregate's implicit session.
-            if (results.size() == 2) {
-                REQUIRE(results[0].view()["name"].get_string().value == stdx::string_view("Jane"));
-                REQUIRE(results[1].view()["name"].get_string().value == stdx::string_view("Jane"));
-            } else {
-                REQUIRE(results.size() == 1);
-                REQUIRE(results[0].view()["name"].get_string().value == stdx::string_view("Jane"));
-            }
+            REQUIRE(results.size() == 1);
+            REQUIRE(results[0].view()["name"].get_string().value == stdx::string_view("Jane"));
         }
     }
 
