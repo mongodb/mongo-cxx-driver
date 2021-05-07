@@ -136,8 +136,22 @@ bool compatible_with_server(const bsoncxx::array::element& requirement) {
     if (auto topologies = requirement["topologies"])
         return equals_server_topology(topologies);
 
+    // Do not check server params on mongohouse
     if (auto server_params = requirement["serverParameters"]) {
-        auto actual = test_util::get_server_params();
+        document::value actual = make_document();
+        try {
+            actual = test_util::get_server_params();
+        } catch (const operation_exception& e) {
+            // Mongohouse does not support getParameter, so if we get an error from
+            // getParameter, exit this logic early and skip the test.
+            std::string message = e.what();
+            if (message.find("command getParameter is unsupported") != std::string::npos) {
+                return false;
+            }
+
+            throw e;
+        }
+
         for (auto kvp : server_params.get_document().view()) {
             auto param = kvp.key();
             auto value = kvp.get_value();
