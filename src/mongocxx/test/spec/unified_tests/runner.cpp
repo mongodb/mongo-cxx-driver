@@ -136,7 +136,6 @@ bool compatible_with_server(const bsoncxx::array::element& requirement) {
     if (auto topologies = requirement["topologies"])
         return equals_server_topology(topologies);
 
-    // Do not check server params on mongohouse
     if (auto server_params = requirement["serverParameters"]) {
         document::value actual = make_document();
         try {
