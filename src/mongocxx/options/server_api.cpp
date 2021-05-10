@@ -23,8 +23,24 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
 
-server_api::server_api(std::string server_api_version)
-    : _server_api_version(std::move(server_api_version)) {}
+std::string server_api::version_to_string(server_api::version version) {
+    switch (version) {
+        case server_api::version::version_1:
+            return "1";
+        default:
+            throw std::logic_error{"invalid server API version"};
+    }
+}
+
+server_api::version server_api::version_from_string(std::string version) {
+    if (!version.compare("1")) {
+        return server_api::version::version_1;
+    } else {
+        throw std::logic_error{"invalid server API version"};
+    }
+}
+
+server_api::server_api(server_api::version version) : _version(std::move(version)) {}
 
 server_api& server_api::strict(bool strict) {
     _strict = strict;
@@ -44,19 +60,21 @@ const stdx::optional<bool>& server_api::deprecation_errors() const {
     return _deprecation_errors;
 }
 
-std::string server_api::server_api_version() const {
-    return _server_api_version;
+server_api::version server_api::api_version() const {
+    return _version;
 }
 
 void* server_api::convert() const {
-    mongoc_server_api_version_t server_api_version;
-    auto r =
-        libmongoc::server_api_version_from_string(_server_api_version.c_str(), &server_api_version);
+    mongoc_server_api_version_t mongoc_api_version;
+
+    // Convert version enum value to std::string then to c_str to create mongoc api version.
+    auto r = libmongoc::server_api_version_from_string(version_to_string(_version).c_str(),
+                                                       &mongoc_api_version);
     if (!r) {
         throw std::logic_error{"invalid server API version"};
     }
 
-    auto mongoc_server_api_opts = libmongoc::server_api_new(server_api_version);
+    auto mongoc_server_api_opts = libmongoc::server_api_new(mongoc_api_version);
     if (!mongoc_server_api_opts) {
         throw std::logic_error{"could not get object from libmongoc"};
     }

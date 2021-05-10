@@ -35,6 +35,33 @@ namespace options {
 class MONGOCXX_API server_api {
    public:
     ///
+    /// Enum representing the possible values for server API version.
+    ///
+    enum class version { version_1 };
+
+    ///
+    /// Converts a version enum value to its string value.
+    ///
+    /// @param version
+    ///   The enum value to convert to a string.
+    ///
+    /// @return
+    ///   The string value of the given enum value.
+    ///
+    static std::string version_to_string(version version);
+
+    ///
+    /// Converts a version string to its enum value.
+    ///
+    /// @param version
+    ///   The string to convert to an enum value.
+    ///
+    /// @return
+    ///   The enum value of the given string.
+    ///
+    static version version_from_string(std::string version);
+
+    ///
     /// Constructs a new server_api object.
     ///
     /// The specified API version will be sent to the server. This will cause
@@ -43,10 +70,10 @@ class MONGOCXX_API server_api {
     /// driver’s behavior as of the release when the driver first started
     /// to support the specified server API version.
     ///
-    /// @param server_api_version
+    /// @param version
     ///   The server api version to send to the server.
     ///
-    server_api(std::string server_api_version);
+    server_api(version version);
 
     ///
     /// Sets the strict option, specifying whether the server should return
@@ -92,9 +119,9 @@ class MONGOCXX_API server_api {
     /// Gets the declared server api version.
     ///
     /// @return
-    ///   The string specifying the declared server api version.
+    ///   The version enum value specifying the declared server api version.
     ///
-    std::string server_api_version() const;
+    version api_version() const;
 
    private:
     friend class mongocxx::client;
@@ -102,7 +129,7 @@ class MONGOCXX_API server_api {
 
     MONGOCXX_PRIVATE void* convert() const;
 
-    std::string _server_api_version;
+    version _version;
     stdx::optional<bool> _strict;
     stdx::optional<bool> _deprecation_errors;
 };
