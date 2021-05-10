@@ -595,8 +595,13 @@ void assert_error(const mongocxx::operation_exception& exception,
         REQUIRE(actual_code == expected_code.get_int32());
     }
 
+    if (auto code_name = expect_error["errorCodeName"]) {
+        auto expected_name = string::to_string(code_name.get_string().value);
+        uint32_t expected_code = error_code_from_name(expected_name);
+        REQUIRE(exception.code().value() == static_cast<int>(expected_code));
+    }
+
     REQUIRE_FALSE(/* TODO */ expect_error["errorContains"]);
-    // REQUIRE_FALSE(/* TODO */ expect_error["errorCodeName"]);
 }
 
 void assert_error(mongocxx::exception& e, const array::element& ops) {

@@ -75,6 +75,8 @@ uint32_t error_code_from_name(string_view name) {
         return 100;
     } else if (name.compare("OperationNotSupportedInTransaction") == 0) {
         return 263;
+    } else if (name.compare("APIStrictError") == 0) {
+        return 323;
     }
 
     return 0;
