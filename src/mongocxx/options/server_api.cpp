@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <bsoncxx/stdx/string_view.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/options/server_api.hpp>
 #include <mongocxx/private/libmongoc.hh>
@@ -32,7 +33,7 @@ std::string server_api::version_to_string(enum server_api::version version) {
     }
 }
 
-enum server_api::version server_api::version_from_string(std::string_view version) {
+enum server_api::version server_api::version_from_string(stdx::string_view version) {
     if (!version.compare("1")) {
         return server_api::version::k_version_1;
     }

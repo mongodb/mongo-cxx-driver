@@ -17,6 +17,7 @@
 #include <string>
 
 #include <bsoncxx/stdx/optional.hpp>
+#include <bsoncxx/stdx/string_view.hpp>
 #include <mongocxx/stdx.hpp>
 
 #include <mongocxx/config/prelude.hpp>
@@ -59,7 +60,7 @@ class MONGOCXX_API server_api {
     /// @return
     ///   The enum value of the given string.
     ///
-    static version version_from_string(std::string_view version);
+    static version version_from_string(stdx::string_view version);
 
     ///
     /// Constructs a new server_api object.
