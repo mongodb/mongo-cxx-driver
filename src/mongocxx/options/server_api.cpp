@@ -24,7 +24,7 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
 
-std::string server_api::version_to_string(enum server_api::version version) {
+std::string server_api::version_to_string(server_api::version version) {
     switch (version) {
         case server_api::version::k_version_1:
             return "1";
@@ -33,14 +33,14 @@ std::string server_api::version_to_string(enum server_api::version version) {
     }
 }
 
-enum server_api::version server_api::version_from_string(stdx::string_view version) {
+server_api::version server_api::version_from_string(stdx::string_view version) {
     if (!version.compare("1")) {
         return server_api::version::k_version_1;
     }
     throw std::logic_error{"invalid server API version"};
 }
 
-server_api::server_api(enum server_api::version version) : _version(std::move(version)) {}
+server_api::server_api(server_api::version version) : _version(std::move(version)) {}
 
 server_api& server_api::strict(bool strict) {
     _strict = strict;
@@ -60,7 +60,7 @@ const stdx::optional<bool>& server_api::deprecation_errors() const {
     return _deprecation_errors;
 }
 
-enum server_api::version server_api::version() const {
+server_api::version server_api::api_version() const {
     return _version;
 }
 
@@ -68,9 +68,9 @@ void* server_api::convert() const {
     mongoc_server_api_version_t mongoc_api_version;
 
     // Convert version enum value to std::string then to c_str to create mongoc api version.
-    auto r = libmongoc::server_api_version_from_string(version_to_string(_version).c_str(),
-                                                       &mongoc_api_version);
-    if (!r) {
+    auto result = libmongoc::server_api_version_from_string(version_to_string(_version).c_str(),
+                                                            &mongoc_api_version);
+    if (!result) {
         throw std::logic_error{"invalid server API version"};
     }
 

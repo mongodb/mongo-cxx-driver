@@ -122,7 +122,7 @@ class MONGOCXX_API server_api {
     /// @return
     ///   The version enum value specifying the declared server api version.
     ///
-    enum version version() const;
+    version api_version() const;
 
    private:
     friend class mongocxx::client;
@@ -130,7 +130,7 @@ class MONGOCXX_API server_api {
 
     MONGOCXX_PRIVATE void* convert() const;
 
-    enum version _version;
+    version _version;
     stdx::optional<bool> _strict;
     stdx::optional<bool> _deprecation_errors;
 };
