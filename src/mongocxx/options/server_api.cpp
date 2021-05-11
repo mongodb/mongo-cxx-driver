@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc.
+// Copyright 2021 MongoDB Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,35 +12,34 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/config/private/prelude.hh>
-
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/options/server_api.hpp>
 #include <mongocxx/private/libmongoc.hh>
 #include <mongocxx/stdx.hpp>
 
+#include <mongocxx/config/private/prelude.hh>
+
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
 
-std::string server_api::version_to_string(server_api::version version) {
+std::string server_api::version_to_string(enum server_api::version version) {
     switch (version) {
-        case server_api::version::version_1:
+        case server_api::version::k_version_1:
             return "1";
         default:
             throw std::logic_error{"invalid server API version"};
     }
 }
 
-server_api::version server_api::version_from_string(std::string version) {
+enum server_api::version server_api::version_from_string(std::string_view version) {
     if (!version.compare("1")) {
-        return server_api::version::version_1;
-    } else {
-        throw std::logic_error{"invalid server API version"};
+        return server_api::version::k_version_1;
     }
+    throw std::logic_error{"invalid server API version"};
 }
 
-server_api::server_api(server_api::version version) : _version(std::move(version)) {}
+server_api::server_api(enum server_api::version version) : _version(std::move(version)) {}
 
 server_api& server_api::strict(bool strict) {
     _strict = strict;
@@ -60,7 +59,7 @@ const stdx::optional<bool>& server_api::deprecation_errors() const {
     return _deprecation_errors;
 }
 
-server_api::version server_api::api_version() const {
+enum server_api::version server_api::version() const {
     return _version;
 }
 

@@ -115,12 +115,12 @@ client::client(const class uri& uri, const options::client& options) {
         auto mongoc_server_api_opts = static_cast<mongoc_server_api_t*>(server_api_opts.convert());
 
         bson_error_t error;
-        auto r =
+        auto result =
             libmongoc::client_set_server_api(_get_impl().client_t, mongoc_server_api_opts, &error);
 
         libmongoc::server_api_destroy(mongoc_server_api_opts);
 
-        if (!r) {
+        if (!result) {
             throw_exception<operation_exception>(error);
         }
     }

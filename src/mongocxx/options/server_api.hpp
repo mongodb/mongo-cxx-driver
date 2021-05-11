@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc.
+// Copyright 2021 MongoDB Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,12 +14,12 @@
 
 #pragma once
 
-#include <mongocxx/config/prelude.hpp>
-
 #include <string>
 
 #include <bsoncxx/stdx/optional.hpp>
 #include <mongocxx/stdx.hpp>
+
+#include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
@@ -37,7 +37,7 @@ class MONGOCXX_API server_api {
     ///
     /// Enum representing the possible values for server API version.
     ///
-    enum class version { version_1 };
+    enum class version { k_version_1 };
 
     ///
     /// Converts a version enum value to its string value.
@@ -59,7 +59,7 @@ class MONGOCXX_API server_api {
     /// @return
     ///   The enum value of the given string.
     ///
-    static version version_from_string(std::string version);
+    static version version_from_string(std::string_view version);
 
     ///
     /// Constructs a new server_api object.
@@ -121,7 +121,7 @@ class MONGOCXX_API server_api {
     /// @return
     ///   The version enum value specifying the declared server api version.
     ///
-    version api_version() const;
+    enum version version() const;
 
    private:
     friend class mongocxx::client;
@@ -129,7 +129,7 @@ class MONGOCXX_API server_api {
 
     MONGOCXX_PRIVATE void* convert() const;
 
-    version _version;
+    enum version _version;
     stdx::optional<bool> _strict;
     stdx::optional<bool> _deprecation_errors;
 };
@@ -137,3 +137,5 @@ class MONGOCXX_API server_api {
 }  // namespace options
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
+
+#include <mongocxx/config/postlude.hpp>

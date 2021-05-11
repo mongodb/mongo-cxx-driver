@@ -130,7 +130,8 @@ class MONGOCXX_API client {
     client& server_api_opts(server_api server_api_opts);
 
     ///
-    /// Gets the current server API options.
+    /// Gets the current server API options or returns a disengaged optional if there are no server
+    /// API options set.
     ///
     /// @return
     ///   The server API options.
