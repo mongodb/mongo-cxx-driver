@@ -1,7 +1,6 @@
 #!/bin/bash
 set -o errexit
 set -o pipefail
-set -o xtrace
 
 CXX=${CXX:-c++}
 CXX_STANDARD=${CXX_STANDARD:-11}

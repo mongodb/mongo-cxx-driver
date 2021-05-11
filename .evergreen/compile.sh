@@ -8,7 +8,6 @@
 # behavior of this script:
 # - BUILD_TYPE: must be set to "Release" or "Debug"
 
-set -o xtrace
 set -o errexit
 set -o pipefail
 

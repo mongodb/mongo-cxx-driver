@@ -84,7 +84,6 @@ functions:
               shell: bash
               script: |
                  set -o errexit
-                 set -o xtrace
                  set -o pipefail
                  rm -rf "mongo-cxx-driver"
                  rm -fr "mongo-c-driver"
@@ -99,7 +98,6 @@ functions:
               working_dir: "."
               script: |
                  set -o errexit
-                 set -o xtrace
                  set -o pipefail
                  cc --version || true
                  c++ --version || true
@@ -114,7 +112,6 @@ functions:
         params:
             shell: bash
             script: |
-                set -o xtrace
                 if [ ! -d "drivers-evergreen-tools" ]; then
                     git clone git@github.com:mongodb-labs/drivers-evergreen-tools.git
                 fi
@@ -129,8 +126,6 @@ functions:
             shell: bash
             background: true
             script: |
-                set -o xtrace
-
                 cd drivers-evergreen-tools
                 export DRIVERS_TOOLS=$(pwd)
 
@@ -142,7 +137,6 @@ functions:
             shell: bash
             working_dir: "mongo-cxx-driver"
             script: |
-                set -o xtrace
                 echo "testing that mongohouse is running..."
                 ps aux | grep mongohouse
 
@@ -166,7 +160,6 @@ functions:
             working_dir: "."
             script: |
                 set -o errexit
-                set -o xtrace
                 set -o pipefail
                 if [ ! -d "drivers-evergreen-tools" ]; then
                     git clone git@github.com:mongodb-labs/drivers-evergreen-tools.git
@@ -201,7 +194,6 @@ functions:
             working_dir: "."
             script: |
                 set -o errexit
-                set -o xtrace
                 set -o pipefail
                 cd drivers-evergreen-tools/.evergreen/orchestration
                 if [ -f venv/bin/activate ]; then
@@ -218,7 +210,6 @@ functions:
             working_dir: "mongo-cxx-driver"
             script: |
                     set -o errexit
-                    set -o xtrace
                     set -o pipefail
                     export PREFIX=$(pwd)/../mongoc/
                     if [ "Windows_NT" == "$OS" ]; then
@@ -238,7 +229,6 @@ functions:
               working_dir: "mongo-cxx-driver"
               script: |
                   set -o errexit
-                  set -o xtrace
                   set -o pipefail
                   python etc/clang_format.py lint
 
@@ -249,7 +239,6 @@ functions:
           working_dir: "mongo-cxx-driver"
           script: |
             set -o errexit
-            set -o xtrace
             set -o pipefail
             ./etc/run-clang-tidy.sh
 
@@ -260,7 +249,6 @@ functions:
               working_dir: "mongo-cxx-driver"
               script: |
                   set -o errexit
-                  set -o xtrace
                   set -o pipefail
                   export BUILD_TYPE=${build_type}
                   export PATH="${extra_path}:$PATH"
@@ -309,7 +297,6 @@ functions:
               working_dir: "mongo-cxx-driver"
               script: |
                   set -o errexit
-                  set -o xtrace
                   set -o pipefail
 
                   # Grabs the mongocryptd path
@@ -346,12 +333,10 @@ functions:
                   export UNIFIED_FORMAT_TESTS_PATH=$(pwd)/../data/unified-format
 
                   # export environment variables for encryption tests (and redact them)
-                  set +o xtrace
                   set +o errexit
                   export MONGOCXX_TEST_AWS_SECRET_ACCESS_KEY="${cse_aws_secret_access_key}"
                   export MONGOCXX_TEST_AWS_ACCESS_KEY_ID="${cse_aws_access_key_id}"
                   set -o errexit
-                  set -o xtrace
 
                   if [ "Windows_NT" == "$OS" ]; then
                       CTEST_OUTPUT_ON_FAILURE=1 MSBuild.exe /p:Configuration=${build_type} RUN_TESTS.vcxproj
@@ -438,7 +423,6 @@ functions:
               working_dir: "mongo-cxx-driver"
               script: |
                   set -o errexit
-                  set -o xtrace
                   set -o pipefail
                   export PATH="${extra_path}:$PATH"
                   cd build
@@ -511,7 +495,6 @@ functions:
             export CODECOV_TOKEN="${codecov_token}"
 
             set -o errexit
-            set -o xtrace
             set -o pipefail
 
             bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports"
@@ -646,7 +629,6 @@ tasks:
           working_dir: "mongo-cxx-driver"
           script: |-
             set -o errexit
-            set -o xtrace
             export INSTALL_VERSION=${mongocxx_version_finder_sh}
             sh ./.evergreen/uninstall_check.sh
 
@@ -667,7 +649,6 @@ tasks:
           working_dir: "mongo-cxx-driver"
           script: |-
             set -o errexit
-            set -o xtrace
             export INSTALL_VERSION=${mongocxx_version_finder_sh}
             cmd.exe /c .\\.evergreen\\uninstall_check_windows.cmd
 
@@ -682,7 +663,6 @@ tasks:
           shell: bash
           script: |-
             set -o errexit
-            set -o xtrace
             . .evergreen/find_cmake.sh
             cd examples/add_subdirectory
             [ -d mongo-c-driver ] || git clone --depth 1 https://github.com/mongodb/mongo-c-driver
@@ -703,7 +683,6 @@ tasks:
           shell: bash
           script: |-
             set -o errexit
-            set -o xtrace
             export IS_PATCH="${is_patch}"
             sh .evergreen/debian_package_build.sh
       - command: s3.put
@@ -727,7 +706,6 @@ tasks:
           shell: bash
           script: |-
             set -o errexit
-            set -o xtrace
             export IS_PATCH="${is_patch}"
             export DEB_BUILD_PROFILES="pkg.mongo-cxx-driver.mnmlstc"
             sh .evergreen/debian_package_build.sh
@@ -752,7 +730,6 @@ tasks:
           shell: bash
           script: |-
             set -o errexit
-            set -o xtrace
             sh .evergreen/build_snapshot_rpm.sh
       - command: s3.put
         params:

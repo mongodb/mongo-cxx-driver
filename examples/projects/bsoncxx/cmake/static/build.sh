@@ -1,7 +1,6 @@
 #!/bin/bash
 set -o errexit
 set -o pipefail
-set -o xtrace
 
 BUILD_TYPE=${BUILD_TYPE:-Release}
 CXX_STANDARD=${CXX_STANDARD:-11}
