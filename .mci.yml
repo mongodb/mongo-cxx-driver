@@ -332,7 +332,7 @@ functions:
                   export READ_WRITE_CONCERN_OPERATION_TESTS_PATH="$(pwd)/../data/read-write-concern/operation"
                   export UNIFIED_FORMAT_TESTS_PATH=$(pwd)/../data/unified-format
 
-                  # export environment variables for encryption tests (and redact them)
+                  # export environment variables for encryption tests
                   set +o errexit
                   export MONGOCXX_TEST_AWS_SECRET_ACCESS_KEY="${cse_aws_secret_access_key}"
                   export MONGOCXX_TEST_AWS_ACCESS_KEY_ID="${cse_aws_access_key_id}"
