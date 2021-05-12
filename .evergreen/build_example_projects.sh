@@ -1,7 +1,6 @@
 #!/bin/bash
 set -o errexit
 set -o pipefail
-set -o xtrace
 
 if [ "$USE_STATIC_LIBS" ]; then
     DIR=static

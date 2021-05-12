@@ -1,5 +1,4 @@
 #!/bin/sh
-set -o xtrace   # Write all commands first to stderr
 set -o errexit  # Exit the script with error if any of the commands fail
 
 BUILD_DIR=$(pwd)/build
@@ -14,8 +13,6 @@ ls -l $INSTALL_DIR/share/mongo-cxx-driver
 $CMAKE --build $BUILD_DIR --target uninstall
 
 ls -lR $INSTALL_DIR
-
-set +o xtrace
 
 if test -f $INSTALL_DIR/lib/pkgconfig/libbsoncxx.pc; then
   echo "libbsoncxx.pc found!"

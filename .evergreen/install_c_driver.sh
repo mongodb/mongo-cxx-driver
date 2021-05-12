@@ -5,7 +5,6 @@
 # PREFIX=/tmp/installdir ./install.sh 1.3.5
 
 set -o errexit
-set -o xtrace
 set -o pipefail
 
 usage() {

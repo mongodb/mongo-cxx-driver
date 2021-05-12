@@ -1,7 +1,5 @@
 #!/usr/bin/env bash
 
-set -o xtrace
-
 if ! which gdb > /dev/null; then
     echo "gdb not found. Will not search for core files"
     exit 0

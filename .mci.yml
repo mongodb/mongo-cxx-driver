@@ -83,7 +83,6 @@ functions:
               shell: bash
               script: |
                  set -o errexit
-                 set -o xtrace
                  set -o pipefail
                  rm -rf "mongo-cxx-driver"
                  rm -fr "mongo-c-driver"
@@ -98,7 +97,6 @@ functions:
               working_dir: "."
               script: |
                  set -o errexit
-                 set -o xtrace
                  set -o pipefail
                  cc --version || true
                  c++ --version || true
@@ -114,7 +112,6 @@ functions:
             working_dir: "."
             script: |
                 set -o errexit
-                set -o xtrace
                 set -o pipefail
                 if [ ! -d "drivers-evergreen-tools" ]; then
                     git clone git@github.com:mongodb-labs/drivers-evergreen-tools.git
@@ -129,7 +126,7 @@ functions:
                 export MONGODB_VERSION=${mongodb_version}
                 export AUTH=${AUTH}
                 export TOPOLOGY=${TOPOLOGY|server}
-                
+
                 echo "{ \"releases\": { \"default\": \"$MONGODB_BINARIES\" }}" > $MONGO_ORCHESTRATION_HOME/orchestration.config
                 ./.evergreen/run-orchestration.sh
 
@@ -149,7 +146,6 @@ functions:
             working_dir: "."
             script: |
                 set -o errexit
-                set -o xtrace
                 set -o pipefail
                 cd drivers-evergreen-tools/.evergreen/orchestration
                 if [ -f venv/bin/activate ]; then
@@ -166,7 +162,6 @@ functions:
             working_dir: "mongo-cxx-driver"
             script: |
                     set -o errexit
-                    set -o xtrace
                     set -o pipefail
                     export PREFIX=$(pwd)/../mongoc/
                     if [ "Windows_NT" == "$OS" ]; then
@@ -182,7 +177,6 @@ functions:
               working_dir: "mongo-cxx-driver"
               script: |
                   set -o errexit
-                  set -o xtrace
                   set -o pipefail
                   python etc/clang_format.py lint
 
@@ -193,7 +187,6 @@ functions:
               working_dir: "mongo-cxx-driver"
               script: |
                   set -o errexit
-                  set -o xtrace
                   set -o pipefail
                   export BUILD_TYPE=${build_type}
                   export PATH="${extra_path}:$PATH"
@@ -234,7 +227,6 @@ functions:
               working_dir: "mongo-cxx-driver"
               script: |
                   set -o errexit
-                  set -o xtrace
                   set -o pipefail
 
                   # Grabs the mongocryptd path
@@ -244,7 +236,7 @@ functions:
                      export MONGOCRYPTD_PATH=$(cygpath -m $MONGOCRYPTD_PATH)
                   fi
                   cd mongo-cxx-driver
-                  
+
                   export PATH="${extra_path}:$PATH"
 
                   cd build
@@ -270,13 +262,11 @@ functions:
                   export RETRYABLE_READS_TESTS_PATH="$(pwd)/../data/retryable-reads"
                   export READ_WRITE_CONCERN_OPERATION_TESTS_PATH="$(pwd)/../data/read-write-concern/operation"
 
-                  # export environment variables for encryption tests (and redact them)
-                  set +o xtrace
+                  # export environment variables for encryption tests
                   set +o errexit
                   export MONGOCXX_TEST_AWS_SECRET_ACCESS_KEY="${cse_aws_secret_access_key}"
                   export MONGOCXX_TEST_AWS_ACCESS_KEY_ID="${cse_aws_access_key_id}"
                   set -o errexit
-                  set -o xtrace
 
                   if [ "Windows_NT" == "$OS" ]; then
                       CRUD_TESTS_PATH=$(cygpath -m $CRUD_TESTS_PATH)
@@ -289,7 +279,7 @@ functions:
                       if [ -z "${disable_slow_tests}" ]; then
                           export MONGOCXX_ENABLE_SLOW_TESTS=1
                       fi
-                      
+
                       ulimit -c unlimited || true
 
                       # Run tests and examples 1-by-1 with "test_params" so we can run them with valgrind.
@@ -358,7 +348,6 @@ functions:
               working_dir: "mongo-cxx-driver"
               script: |
                   set -o errexit
-                  set -o xtrace
                   set -o pipefail
                   export PATH="${extra_path}:$PATH"
                   cd build
@@ -511,7 +500,6 @@ tasks:
           working_dir: "mongo-cxx-driver"
           script: |-
             set -o errexit
-            set -o xtrace
             export INSTALL_VERSION=${mongocxx_version_finder_sh}
             sh ./.evergreen/uninstall_check.sh
 
@@ -532,7 +520,6 @@ tasks:
           working_dir: "mongo-cxx-driver"
           script: |-
             set -o errexit
-            set -o xtrace
             export INSTALL_VERSION=${mongocxx_version_finder_sh}
             cmd.exe /c .\\.evergreen\\uninstall_check_windows.cmd
 
@@ -546,7 +533,6 @@ tasks:
           shell: bash
           script: |-
             set -o errexit
-            set -o xtrace
             export IS_PATCH="${is_patch}"
             sh .evergreen/debian_package_build.sh
       - command: s3.put
@@ -570,7 +556,6 @@ tasks:
           shell: bash
           script: |-
             set -o errexit
-            set -o xtrace
             export IS_PATCH="${is_patch}"
             export DEB_BUILD_PROFILES="pkg.mongo-cxx-driver.mnmlstc"
             sh .evergreen/debian_package_build.sh
