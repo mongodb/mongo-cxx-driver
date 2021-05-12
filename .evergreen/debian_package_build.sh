@@ -6,7 +6,6 @@
 # Supported/used environment variables:
 #   IS_PATCH    If "true", this is an Evergreen patch build.
 
-set -o xtrace
 set -o errexit
 
 on_exit () {
@@ -51,8 +50,8 @@ git clone https://salsa.debian.org/installer-team/debootstrap.git debootstrap.gi
 export DEBOOTSTRAP_DIR=`pwd`/debootstrap.git
 sudo -E ./debootstrap.git/debootstrap unstable ./unstable-chroot/ http://cdn-aws.deb.debian.org/debian
 cp -a mongo-cxx-driver ./unstable-chroot/tmp/
-sudo DEB_BUILD_PROFILES="${DEB_BUILD_PROFILES}" chroot ./unstable-chroot /bin/bash -c "(set -o xtrace && \
-  apt-get install -y build-essential git-buildpackage fakeroot debhelper cmake curl ca-certificates libboost-dev libsasl2-dev libicu-dev doxygen ${MNMLSTC_DEPS} && \
+sudo DEB_BUILD_PROFILES="${DEB_BUILD_PROFILES}" chroot ./unstable-chroot /bin/bash -c "
+  (apt-get install -y build-essential git-buildpackage fakeroot debhelper cmake curl ca-certificates libboost-dev libsasl2-dev libicu-dev doxygen ${MNMLSTC_DEPS} && \
   mkdir /tmp/mongo-c-driver && \
   curl -o deb.tar.gz -L https://s3.amazonaws.com/mciuploads/mongo-c-driver/master/mongo-c-driver-debian-packages-latest.tar.gz && \
   tar zxvf deb.tar.gz && \

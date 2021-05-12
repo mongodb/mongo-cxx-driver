@@ -1,6 +1,5 @@
 #!/bin/sh
 
-set -o xtrace
 set -o errexit
 
 #
@@ -81,7 +80,6 @@ sudo mock -r ${config} --use-bootstrap-image --isolation=simple --install rpmdev
 sudo mock -r ${config} --use-bootstrap-image --isolation=simple --copyin "$(pwd)" "$(pwd)/${spec_file}" /tmp
 if [ ! -f build/VERSION_CURRENT ]; then
   sudo mock -r ${config} --use-bootstrap-image --isolation=simple --cwd "/tmp/${build_dir}" --chroot -- /bin/sh -c "(
-    set -o xtrace ;
     python3 etc/calc_release_version.py | sed -E 's/([^-]+).*/\1/' > build/VERSION_CURRENT
     )"
   sudo mock -r ${config} --use-bootstrap-image --isolation=simple --copyout "/tmp/${build_dir}/build/VERSION_CURRENT" build/
@@ -105,7 +103,6 @@ fi
 sudo mock -r ${config} --use-bootstrap-image --isolation=simple --copyout "/tmp/${build_dir}/${spec_file}" ..
 
 sudo mock -r ${config} --use-bootstrap-image --isolation=simple --cwd "/tmp/${build_dir}" --chroot -- /bin/sh -c "(
-  set -o xtrace ;
   [ -d build ] || mkdir build ;
   cd build ;
   /usr/bin/cmake -DCMAKE_BUILD_TYPE=Release -DBSONCXX_POLY_USE_BOOST=1 -DENABLE_UNINSTALL=OFF .. ;
@@ -126,7 +123,6 @@ sudo mock --resultdir="${mock_result}" --use-bootstrap-image --isolation=simple 
 sudo mock -r ${config} --use-bootstrap-image --isolation=simple --copyin "${mock_result}" /tmp
 
 sudo mock -r ${config} --use-bootstrap-image --isolation=simple --cwd "/tmp/${build_dir}" --chroot -- /bin/sh -c "(
-  set -o xtrace &&
   rpm -Uvh ../mock-result/*.rpm &&
   /usr/bin/g++ -I/usr/include/bsoncxx/v_noabi -I/usr/include/mongocxx/v_noabi -o runcommand_examples examples/mongocxx/mongodb.com/runcommand_examples.cpp -lmongocxx -lbsoncxx &&
   /usr/bin/g++ -I/usr/include/bsoncxx/v_noabi -I/usr/include/mongocxx/v_noabi -o aggregation_examples examples/mongocxx/mongodb.com/aggregation_examples.cpp -lmongocxx -lbsoncxx &&

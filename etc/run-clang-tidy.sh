@@ -1,6 +1,5 @@
 #!/usr/bin/env bash
 set -o errexit
-set -o xtrace
 
 if ! which clang-tidy > /dev/null; then
     sudo apt-get install -y clang-tidy
