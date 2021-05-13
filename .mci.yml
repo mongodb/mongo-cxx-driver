@@ -578,15 +578,15 @@ axes:
     - id: os
       display_name: "OS"
       values:
-          - id: "ubuntu-1604"
-            display_name: "Ubuntu 16.04 Debug"
+          - id: "ubuntu-1804"
+            display_name: "Ubuntu 18.04 Debug"
             variables:
                 extra_path: *linux_extra_path
                 cmake_flags: *linux_cmake_flags
                 build_type: "Debug"
                 tar_options: *linux_tar_options
             run_on:
-                - ubuntu1604-build
+                - ubuntu1804-build
           - id: "windows-2k8"
             display_name: "Windows (VS 2017) Debug"
             variables:
@@ -643,8 +643,8 @@ buildvariants:
     #######################################
     #         Linux Buildvariants         #
     #######################################
-    - name: ubuntu1604-release
-      display_name: "Ubuntu 16.04 Release (MongoDB Latest)"
+    - name: ubuntu1804-release
+      display_name: "Ubuntu 18.04 Release (MongoDB Latest)"
       expansions:
           build_type: "Release"
           tar_options: *linux_tar_options
@@ -652,7 +652,7 @@ buildvariants:
           cmake_flags: *linux_cmake_flags
           mongodb_version: *version_latest
       run_on:
-          - ubuntu1604-build
+          - ubuntu1804-build
       tasks:
           - name: lint
           - name: compile_and_test_with_shared_libs
@@ -660,15 +660,17 @@ buildvariants:
           - name: compile_and_test_with_shared_libs_replica_set
           - name: uninstall_check
 
+    # TODO CXX-2260 Upgrade std::experimental tasks to use Ubuntu 18.04 and mongodb_latest
+    # after bug fixes with newer g++ versions.
     - name: ubuntu1604-debug-std-experimental
-      display_name: "Ubuntu 16.04 Debug (std::experimental) (MongoDB Latest)"
+      display_name: "Ubuntu 16.04 Debug (std::experimental) (MongoDB 4.4)"
       expansions:
           build_type: "Debug"
           tar_options: *linux_tar_options
           extra_path: *linux_extra_path
           cmake_flags: *linux_cmake_flags
           poly_flags: *poly_std_experimental_flags
-          mongodb_version: *version_latest
+          mongodb_version: *version_44
           example_projects_cxx_standard: *std_experimental_cxx_standard
       run_on:
           - ubuntu1604-build
@@ -676,8 +678,8 @@ buildvariants:
           - name: compile_and_test_with_shared_libs
           - name: compile_and_test_with_static_libs
 
-    - name: ubuntu1604-debug-valgrind
-      display_name: "Valgrind Ubuntu 16.04 Debug (MongoDB Latest)"
+    - name: ubuntu1804-debug-valgrind
+      display_name: "Valgrind Ubuntu 18.04 Debug (MongoDB Latest)"
       expansions:
           build_type: "Debug"
           tar_options: *linux_tar_options
@@ -687,13 +689,13 @@ buildvariants:
           mongodb_version: *version_latest
           disable_slow_tests: 1
       run_on:
-          - ubuntu1604-build
+          - ubuntu1804-build
       tasks:
           - name: compile_and_test_with_shared_libs
           - name: compile_and_test_with_static_libs
 
-    - name: ubuntu1604-debug-asan
-      display_name: "ASAN Ubuntu 16.04 Debug (MongoDB Latest)"
+    - name: ubuntu1804-debug-asan
+      display_name: "ASAN Ubuntu 18.04 Debug (MongoDB Latest)"
       expansions:
           build_type: "Debug"
           tar_options: *linux_tar_options
@@ -706,13 +708,13 @@ buildvariants:
           example_projects_cxxflags: *asan_cxxflags
           example_projects_ldflags: *asan_ldflags
       run_on:
-          - ubuntu1604-build
+          - ubuntu1804-build
       tasks:
           - name: compile_and_test_with_shared_libs
           - name: compile_and_test_with_static_libs
 
-    - name: ubuntu1604-debug-ubsan
-      display_name: "UBSAN Ubuntu 16.04 Debug (MongoDB Latest)"
+    - name: ubuntu1804-debug-ubsan
+      display_name: "UBSAN Ubuntu 18.04 Debug (MongoDB Latest)"
       expansions:
           build_type: "Debug"
           tar_options: *linux_tar_options
@@ -725,7 +727,7 @@ buildvariants:
           example_projects_cxxflags: *ubsan_cxxflags
           example_projects_ldflags: *ubsan_ldflags
       run_on:
-          - ubuntu1604-build
+          - ubuntu1804-build
       tasks:
           # We currently don't run UBSAN on the shared library due to issues with UBSAN reporting
           # numerous false positive instances of undefined behavior in the mock tests, when the
@@ -858,7 +860,7 @@ buildvariants:
 
     - name: packaging
       display_name: Linux Distro Packaging
-      run_on: ubuntu1604-test
+      run_on: ubuntu1804-test
       tasks:
          - name: debian-package-build
          - name: debian-package-build-mnmlstc
