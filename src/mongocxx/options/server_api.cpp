@@ -13,12 +13,11 @@
 // limitations under the License.
 
 #include <bsoncxx/stdx/string_view.hpp>
+#include <mongocxx/config/private/prelude.hh>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/options/server_api.hpp>
 #include <mongocxx/private/libmongoc.hh>
 #include <mongocxx/stdx.hpp>
-
-#include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
@@ -71,12 +70,12 @@ void* server_api::convert() const {
     auto result = libmongoc::server_api_version_from_string(version_to_string(_version).c_str(),
                                                             &mongoc_api_version);
     if (!result) {
-        throw std::logic_error{"invalid server API version"};
+        throw std::logic_error{"invalid server API version" + version_to_string(_version)};
     }
 
     auto mongoc_server_api_opts = libmongoc::server_api_new(mongoc_api_version);
     if (!mongoc_server_api_opts) {
-        throw std::logic_error{"could not get object from libmongoc"};
+        throw std::logic_error{"could not get object create server API"};
     }
 
     if (_strict) {

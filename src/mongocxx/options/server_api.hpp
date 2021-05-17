@@ -18,9 +18,8 @@
 
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
-#include <mongocxx/stdx.hpp>
-
 #include <mongocxx/config/prelude.hpp>
+#include <mongocxx/stdx.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
@@ -46,6 +45,8 @@ class MONGOCXX_API server_api {
     /// @param version
     ///   The enum value to convert to a string.
     ///
+    /// @throws mongocxx::logic_error on an invalid argument
+    ///
     /// @return
     ///   The string value of the given enum value.
     ///
@@ -57,6 +58,8 @@ class MONGOCXX_API server_api {
     /// @param version
     ///   The string to convert to an enum value.
     ///
+    /// @throws mongocxx::logic_error on an invalid argument
+    ///
     /// @return
     ///   The enum value of the given string.
     ///
@@ -67,9 +70,8 @@ class MONGOCXX_API server_api {
     ///
     /// The specified API version will be sent to the server. This will cause
     /// the server to behave in a manner compatible with that API version.
-    /// It also causes the driver to behave in a manner compatible with the
-    /// driver’s behavior as of the release when the driver first started
-    /// to support the specified server API version.
+    /// The driver will behave in a manner compatible with a server configured
+    /// with that API version, regardless of the server's actual release version.
     ///
     /// @param version
     ///   The server api version to send to the server.

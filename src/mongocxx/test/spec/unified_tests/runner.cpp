@@ -291,8 +291,7 @@ options::server_api create_server_api(document::view object) {
     }
 
     REQUIRE(sav.type() == type::k_string);
-    auto version =
-        options::server_api::version_from_string(string::to_string(sav.get_string().value));
+    auto version = options::server_api::version_from_string(sav.get_string().value);
     auto server_api_opts = options::server_api(version);
 
     if (auto de = object["serverApi"]["deprecationErrors"]) {
