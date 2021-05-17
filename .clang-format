@@ -9,10 +9,12 @@ Cpp11BracedListStyle: true
 DerivePointerAlignment: false
 IncludeBlocks: Regroup
 IncludeCategories:
-  - Regex:    '<[[:alnum:]_.]+>' # system headers
+  - Regex:    'prelude\.(hpp|hh)' # preludes
     Priority: 1
-  - Regex:    '.*' # driver headers
+  - Regex:    '<[[:alnum:]_.]+>' # system headers
     Priority: 2
+  - Regex:    '.*' # driver headers
+    Priority: 3
 IndentWidth: 4
 MaxEmptyLinesToKeep: 1
 NamespaceIndentation: None

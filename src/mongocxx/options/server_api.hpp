@@ -14,11 +14,12 @@
 
 #pragma once
 
+#include <mongocxx/config/prelude.hpp>
+
 #include <string>
 
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
-#include <mongocxx/config/prelude.hpp>
 #include <mongocxx/stdx.hpp>
 
 namespace mongocxx {
@@ -129,8 +130,6 @@ class MONGOCXX_API server_api {
    private:
     friend class mongocxx::client;
     friend class mongocxx::pool;
-
-    MONGOCXX_PRIVATE void* convert() const;
 
     version _version;
     stdx::optional<bool> _strict;

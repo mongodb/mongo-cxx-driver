@@ -400,6 +400,7 @@ set_local_dist (src_mongocxx_DIST_local
    options/pool.cpp
    options/pool.hpp
    options/private/apm.hh
+   options/private/server_api.hh
    options/private/ssl.hh
    options/private/transaction.hh
    options/replace.cpp
