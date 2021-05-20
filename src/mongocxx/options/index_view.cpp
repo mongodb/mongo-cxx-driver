@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/config/private/prelude.hh>
-
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/types.hpp>
 #include <mongocxx/options/index_view.hpp>
+
+#include <mongocxx/config/private/prelude.hh>
 
 using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_document;

@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/config/private/prelude.hh>
-
 #include <mongocxx/events/server_changed_event.hpp>
 #include <mongocxx/private/libmongoc.hh>
+
+#include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

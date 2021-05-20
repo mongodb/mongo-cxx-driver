@@ -14,8 +14,6 @@
 
 #pragma once
 
-#include <mongocxx/config/prelude.hpp>
-
 #include <memory>
 #include <string>
 #include <vector>
@@ -25,6 +23,8 @@
 #include <mongocxx/read_concern.hpp>
 #include <mongocxx/read_preference.hpp>
 #include <mongocxx/write_concern.hpp>
+
+#include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

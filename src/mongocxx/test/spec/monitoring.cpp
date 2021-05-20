@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/config/private/prelude.hh>
-
 #include <iostream>
 #include <sstream>
 
@@ -24,6 +22,8 @@
 #include <mongocxx/test/spec/unified_tests/assert.hh>
 #include <mongocxx/test_util/client_helpers.hh>
 #include <third_party/catch/include/catch.hpp>
+
+#include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

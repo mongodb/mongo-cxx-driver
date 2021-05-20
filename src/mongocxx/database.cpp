@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/config/private/prelude.hh>
-
 #include <utility>
 
 #include <bsoncxx/builder/basic/document.hpp>
@@ -35,6 +33,8 @@
 #include <mongocxx/private/pipeline.hh>
 #include <mongocxx/private/read_concern.hh>
 #include <mongocxx/private/read_preference.hh>
+
+#include <mongocxx/config/private/prelude.hh>
 
 using bsoncxx::builder::concatenate;
 using bsoncxx::builder::basic::kvp;

@@ -14,8 +14,6 @@
 
 #pragma once
 
-#include <mongocxx/config/prelude.hpp>
-
 #include <functional>
 
 #include <mongocxx/events/command_failed_event.hpp>
@@ -30,6 +28,8 @@
 #include <mongocxx/events/topology_changed_event.hpp>
 #include <mongocxx/events/topology_closed_event.hpp>
 #include <mongocxx/events/topology_opening_event.hpp>
+
+#include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

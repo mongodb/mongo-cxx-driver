@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/config/private/prelude.hh>
-
 #include <bsoncxx/private/itoa.hh>
+
+#include <bsoncxx/config/private/prelude.hh>
 
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN

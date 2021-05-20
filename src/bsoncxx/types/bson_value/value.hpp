@@ -14,8 +14,6 @@
 
 #pragma once
 
-#include <bsoncxx/config/prelude.hpp>
-
 #include <iostream>
 #include <memory>
 #include <vector>
@@ -24,6 +22,8 @@
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
+
+#include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN

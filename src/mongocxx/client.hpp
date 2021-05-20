@@ -14,8 +14,6 @@
 
 #pragma once
 
-#include <mongocxx/config/prelude.hpp>
-
 #include <memory>
 
 #include <mongocxx/client_session.hpp>
@@ -28,6 +26,8 @@
 #include <mongocxx/stdx.hpp>
 #include <mongocxx/uri.hpp>
 #include <mongocxx/write_concern.hpp>
+
+#include <mongocxx/config/prelude.hpp>
 
 ///
 /// Top level namespace for the MongoDB C++ driver.

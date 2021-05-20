@@ -14,10 +14,10 @@
 
 #pragma once
 
-#include <mongocxx/config/private/prelude.hh>
-
 #include "entity.hh"
 #include <bsoncxx/types/bson_value/view_or_value.hpp>
+
+#include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/config/private/prelude.hh>
-
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/string/to_string.hpp>
@@ -23,6 +21,8 @@
 #include <mongocxx/private/libmongoc.hh>
 #include <mongocxx/private/write_concern.hh>
 #include <mongocxx/write_concern.hpp>
+
+#include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

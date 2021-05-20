@@ -14,12 +14,12 @@
 
 #pragma once
 
-#include <bsoncxx/config/private/prelude.hh>
-
 #include "catch.hpp"
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/stdx/optional.hpp>
+
+#include <bsoncxx/config/private/prelude.hh>
 
 namespace Catch {
 using namespace bsoncxx;

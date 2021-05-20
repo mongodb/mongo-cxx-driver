@@ -12,14 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/config/private/prelude.hh>
-
 #include <string>
 
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <mongocxx/change_stream.hpp>
 #include <mongocxx/private/change_stream.hh>
 #include <mongocxx/private/libmongoc.hh>
+
+#include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

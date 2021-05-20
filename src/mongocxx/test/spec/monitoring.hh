@@ -14,11 +14,11 @@
 
 #pragma once
 
-#include <mongocxx/config/private/prelude.hh>
-
 #include <mongocxx/client.hpp>
 #include <mongocxx/test/spec/unified_tests/entity.hh>
 #include <mongocxx/test_util/client_helpers.hh>
+
+#include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

@@ -14,8 +14,6 @@
 
 #pragma once
 
-#include <mongocxx/config/private/prelude.hh>
-
 #include <vector>
 
 #include <bsoncxx/builder/basic/array.hpp>
@@ -31,6 +29,8 @@
 #include <mongocxx/private/client_session.hh>
 #include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/libmongoc.hh>
+
+#include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

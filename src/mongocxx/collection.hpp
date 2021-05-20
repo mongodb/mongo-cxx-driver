@@ -14,8 +14,6 @@
 
 #pragma once
 
-#include <mongocxx/config/prelude.hpp>
-
 #include <algorithm>
 #include <string>
 
@@ -59,6 +57,8 @@
 #include <mongocxx/result/replace_one.hpp>
 #include <mongocxx/result/update.hpp>
 #include <mongocxx/write_concern.hpp>
+
+#include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

@@ -14,13 +14,13 @@
 
 #pragma once
 
-#include <mongocxx/config/private/prelude.hh>
-
 #include "entity.hh"
 #include <bsoncxx/array/element.hpp>
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/document/view.hpp>
 #include <mongocxx/test/spec/monitoring.hh>
+
+#include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
