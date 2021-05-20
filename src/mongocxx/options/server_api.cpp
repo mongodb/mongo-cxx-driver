@@ -60,7 +60,7 @@ const stdx::optional<bool>& server_api::deprecation_errors() const {
     return _deprecation_errors;
 }
 
-server_api::version server_api::api_version() const {
+server_api::version server_api::get_version() const {
     return _version;
 }
 

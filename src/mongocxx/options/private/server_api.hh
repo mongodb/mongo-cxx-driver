@@ -1,4 +1,4 @@
-// Copyright 2018-present MongoDB Inc.
+// Copyright 2021 MongoDB Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -31,10 +31,10 @@ static unique_server_api make_server_api(const server_api& opts) {
 
     // Convert version enum value to std::string then to c_str to create mongoc api version.
     auto result = libmongoc::server_api_version_from_string(
-        server_api::version_to_string(opts.api_version()).c_str(), &mongoc_api_version);
+        server_api::version_to_string(opts.get_version()).c_str(), &mongoc_api_version);
     if (!result) {
         throw std::logic_error{"invalid server API version" +
-                               server_api::version_to_string(opts.api_version())};
+                               server_api::version_to_string(opts.get_version())};
     }
 
     auto mongoc_server_api_opts = libmongoc::server_api_new(mongoc_api_version);

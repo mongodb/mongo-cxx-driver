@@ -41,6 +41,19 @@ class MONGOCXX_API server_api {
     enum class version { k_version_1 };
 
     ///
+    /// Constructs a new server_api object.
+    ///
+    /// The specified API version will be sent to the server. This will cause
+    /// the server to behave in a manner compatible with that API version.
+    /// The driver will behave in a manner compatible with a server configured
+    /// with that API version, regardless of the server's actual release version.
+    ///
+    /// @param version
+    ///   The server api version to send to the server.
+    ///
+    server_api(version version);
+
+    ///
     /// Converts a version enum value to its string value.
     ///
     /// @param version
@@ -65,19 +78,6 @@ class MONGOCXX_API server_api {
     ///   The enum value of the given string.
     ///
     static version version_from_string(stdx::string_view version);
-
-    ///
-    /// Constructs a new server_api object.
-    ///
-    /// The specified API version will be sent to the server. This will cause
-    /// the server to behave in a manner compatible with that API version.
-    /// The driver will behave in a manner compatible with a server configured
-    /// with that API version, regardless of the server's actual release version.
-    ///
-    /// @param version
-    ///   The server api version to send to the server.
-    ///
-    server_api(version version);
 
     ///
     /// Sets the strict option, specifying whether the server should return
@@ -125,7 +125,7 @@ class MONGOCXX_API server_api {
     /// @return
     ///   The version enum value specifying the declared server api version.
     ///
-    version api_version() const;
+    version get_version() const;
 
    private:
     friend class mongocxx::client;
