@@ -1,13 +1,12 @@
 {
   "description": "Test commands: strict mode",
-  "schemaVersion": "1.4",
+  "schemaVersion": "1.1",
   "runOnRequirements": [
     {
       "minServerVersion": "4.9",
       "serverParameters": {
         "enableTestCommands": true
-      },
-      "serverless": "forbid"
+      }
     }
   ],
   "createEntities": [
