@@ -39,7 +39,7 @@ static unique_server_api make_server_api(const server_api& opts) {
 
     auto mongoc_server_api_opts = libmongoc::server_api_new(mongoc_api_version);
     if (!mongoc_server_api_opts) {
-        throw std::logic_error{"could not get object create server API"};
+        throw std::logic_error{"could not create server API"};
     }
 
     if (opts.strict().value_or(false)) {
