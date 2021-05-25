@@ -44,8 +44,8 @@ class document : public sub_document {
     ///
     /// Move constructor
     ///
-    BSONCXX_INLINE document(document &&doc) noexcept : sub_document(&_core),
-                                                       _core(std::move(doc._core)) {}
+    BSONCXX_INLINE document(document&& doc) noexcept
+        : sub_document(&_core), _core(std::move(doc._core)) {}
 
     ///
     /// Move assignment operator

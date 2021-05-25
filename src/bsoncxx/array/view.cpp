@@ -12,12 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/array/view.hpp>
-
 #include <cstdlib>
 #include <cstring>
 #include <tuple>
 
+#include <bsoncxx/array/view.hpp>
 #include <bsoncxx/private/itoa.hh>
 #include <bsoncxx/private/libbson.hh>
 #include <bsoncxx/types.hpp>

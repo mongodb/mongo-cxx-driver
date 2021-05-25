@@ -62,6 +62,6 @@ BSONCXX_INLINE bson_value::value make_owning_bson(void* internal_value) {
 }  // namespace types
 
 BSONCXX_INLINE_NAMESPACE_END
-}  // namespace bsoncx
+}  // namespace bsoncxx
 
 #include <bsoncxx/config/private/postlude.hh>

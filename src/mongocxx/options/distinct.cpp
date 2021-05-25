@@ -13,7 +13,6 @@
 // limitations under the License.
 
 #include <mongocxx/options/distinct.hpp>
-
 #include <mongocxx/private/read_preference.hh>
 
 #include <mongocxx/config/private/prelude.hh>

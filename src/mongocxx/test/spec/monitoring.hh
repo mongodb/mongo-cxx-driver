@@ -15,8 +15,9 @@
 #pragma once
 
 #include <mongocxx/client.hpp>
-#include <mongocxx/config/private/prelude.hh>
 #include <mongocxx/test_util/client_helpers.hh>
+
+#include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

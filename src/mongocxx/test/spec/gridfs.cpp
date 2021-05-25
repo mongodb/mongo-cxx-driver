@@ -405,9 +405,9 @@ void initialize_collections(database db, document::view data) {
     REQUIRE(data["files"]);
     REQUIRE(data["chunks"]);
 
-    auto sanitize = [](
-        test_util::item_t pair,
-        builder::basic::array* context) -> bsoncxx::stdx::optional<test_util::item_t> {
+    auto sanitize =
+        [](test_util::item_t pair,
+           builder::basic::array* context) -> bsoncxx::stdx::optional<test_util::item_t> {
         auto new_pair = transform_hex(pair, context);
 
         if (!new_pair) {

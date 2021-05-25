@@ -12,10 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/validate.hpp>
-
 #include <bsoncxx/private/libbson.hh>
 #include <bsoncxx/stdx/make_unique.hpp>
+#include <bsoncxx/validate.hpp>
 
 #include <bsoncxx/config/private/prelude.hh>
 

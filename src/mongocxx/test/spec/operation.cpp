@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/test/spec/operation.hh>
-
 #include <functional>
 #include <vector>
 
@@ -43,6 +41,7 @@
 #include <mongocxx/result/insert_one.hpp>
 #include <mongocxx/result/replace_one.hpp>
 #include <mongocxx/result/update.hpp>
+#include <mongocxx/test/spec/operation.hh>
 
 #include <mongocxx/config/private/prelude.hh>
 

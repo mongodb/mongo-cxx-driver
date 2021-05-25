@@ -14,10 +14,11 @@
 
 #pragma once
 
+#include <cstdlib>
+
 #include <bsoncxx/private/libbson.hh>
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
-#include <cstdlib>
 
 #include <bsoncxx/config/private/prelude.hh>
 

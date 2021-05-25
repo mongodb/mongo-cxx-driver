@@ -12,9 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/options/client_encryption.hpp>
-
 #include <mongocxx/client.hpp>
+#include <mongocxx/options/client_encryption.hpp>
 #include <mongocxx/private/client.hh>
 #include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/libmongoc.hh>

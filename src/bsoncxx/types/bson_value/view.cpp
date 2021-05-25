@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/types/bson_value/view.hpp>
-
 #include <cstdlib>
 #include <cstring>
 
@@ -21,6 +19,7 @@
 #include <bsoncxx/exception/exception.hpp>
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/private/libbson.hh>
+#include <bsoncxx/types/bson_value/view.hpp>
 #include <bsoncxx/types/private/convert.hh>
 
 #include <bsoncxx/config/private/prelude.hh>
@@ -47,16 +46,16 @@ view::view() noexcept : view(nullptr) {}
 // so we can't rely on automatic noexcept propagation. It really is though, so it is OK.
 #if !defined(BSONCXX_POLY_USE_BOOST)
 #define BSONCXX_ENUM(name, val)                                                                \
-    view::view(b_##name value) noexcept : _type(static_cast<bsoncxx::type>(val)),              \
-                                          _b_##name(std::move(value)) {                        \
+    view::view(b_##name value) noexcept                                                        \
+        : _type(static_cast<bsoncxx::type>(val)), _b_##name(std::move(value)) {                \
         static_assert(std::is_nothrow_copy_constructible<b_##name>::value, "Copy may throw");  \
         static_assert(std::is_nothrow_copy_assignable<b_##name>::value, "Copy may throw");     \
         static_assert(std::is_nothrow_destructible<b_##name>::value, "Destruction may throw"); \
     }
 #else
 #define BSONCXX_ENUM(name, val)                                                                \
-    view::view(b_##name value) noexcept : _type(static_cast<bsoncxx::type>(val)),              \
-                                          _b_##name(std::move(value)) {                        \
+    view::view(b_##name value) noexcept                                                        \
+        : _type(static_cast<bsoncxx::type>(val)), _b_##name(std::move(value)) {                \
         static_assert(std::is_nothrow_destructible<b_##name>::value, "Destruction may throw"); \
     }
 #endif

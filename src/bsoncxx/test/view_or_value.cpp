@@ -25,8 +25,8 @@ namespace {
 using namespace bsoncxx;
 
 using bsoncxx::to_json;
-using bsoncxx::builder::basic::make_document;
 using bsoncxx::builder::basic::kvp;
+using bsoncxx::builder::basic::make_document;
 
 TEST_CASE("document::view_or_value", "[bsoncxx::document::view_or_value]") {
     auto empty = make_document();

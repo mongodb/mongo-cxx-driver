@@ -15,6 +15,8 @@
 #pragma once
 
 #include <algorithm>
+#include <string>
+
 #include <bsoncxx/builder/basic/array.hpp>
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>
@@ -26,7 +28,6 @@
 #include <mongocxx/bulk_write.hpp>
 #include <mongocxx/change_stream.hpp>
 #include <mongocxx/client_session.hpp>
-#include <mongocxx/config/prelude.hpp>
 #include <mongocxx/cursor.hpp>
 #include <mongocxx/index_view.hpp>
 #include <mongocxx/model/insert_one.hpp>
@@ -56,7 +57,8 @@
 #include <mongocxx/result/replace_one.hpp>
 #include <mongocxx/result/update.hpp>
 #include <mongocxx/write_concern.hpp>
-#include <string>
+
+#include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

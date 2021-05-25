@@ -13,7 +13,6 @@
 // limitations under the License.
 
 #include "helpers.hpp"
-
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/test_util/catch.hh>
 #include <mongocxx/instance.hpp>
