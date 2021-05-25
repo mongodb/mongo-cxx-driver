@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/config/private/prelude.hh>
-
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/types.hpp>
 #include <mongocxx/exception/error_code.hpp>
@@ -24,6 +22,8 @@
 #include <mongocxx/private/uri.hh>
 #include <mongocxx/private/write_concern.hh>
 #include <mongocxx/uri.hpp>
+
+#include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

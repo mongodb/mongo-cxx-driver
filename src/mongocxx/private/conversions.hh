@@ -14,11 +14,11 @@
 
 #pragma once
 
-#include <mongocxx/config/private/prelude.hh>
-
 #include <mongocxx/private/libmongoc.hh>
 #include <mongocxx/read_preference.hpp>
 #include <mongocxx/test_util/export_for_testing.hh>
+
+#include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

@@ -34,9 +34,9 @@
 // TODO: CXX-1366 Disable MSVC warnings for libmongoc
 #endif
 
-#include <mongocxx/config/private/prelude.hh>
-
 #include <mongocxx/test_util/mock.hh>
+
+#include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

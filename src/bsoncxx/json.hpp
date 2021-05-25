@@ -14,13 +14,13 @@
 
 #pragma once
 
-#include <bsoncxx/config/prelude.hpp>
-
 #include <string>
 
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/stdx/optional.hpp>
+
+#include <bsoncxx/config/prelude.hpp>
 
 ///
 /// Top level namespace for MongoDB C++ BSON functionality.

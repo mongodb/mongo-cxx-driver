@@ -14,8 +14,6 @@
 
 #pragma once
 
-#include <mongocxx/config/prelude.hpp>
-
 #include <cstddef>
 #include <cstdint>
 #include <memory>
@@ -29,6 +27,8 @@
 #include <mongocxx/collection.hpp>
 #include <mongocxx/result/gridfs/upload.hpp>
 #include <mongocxx/stdx.hpp>
+
+#include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

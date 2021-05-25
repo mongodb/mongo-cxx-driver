@@ -14,8 +14,6 @@
 
 #pragma once
 
-#include <bsoncxx/config/prelude.hpp>
-
 #include <bsoncxx/array/value.hpp>
 #include <bsoncxx/array/view.hpp>
 #include <bsoncxx/builder/core.hpp>
@@ -23,6 +21,8 @@
 #include <bsoncxx/builder/stream/key_context.hpp>
 #include <bsoncxx/builder/stream/single_context.hpp>
 #include <bsoncxx/builder/stream/value_context.hpp>
+
+#include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN

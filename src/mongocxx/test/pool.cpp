@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/config/private/prelude.hh>
-
 #include <cstddef>
 #include <string>
 
@@ -24,6 +22,8 @@
 #include <mongocxx/options/tls.hpp>
 #include <mongocxx/pool.hpp>
 #include <mongocxx/private/libmongoc.hh>
+
+#include <mongocxx/config/private/prelude.hh>
 
 namespace {
 using namespace mongocxx;

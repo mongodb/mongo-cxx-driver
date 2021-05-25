@@ -14,14 +14,14 @@
 
 #pragma once
 
-#include <mongocxx/config/prelude.hpp>
-
 #include <chrono>
 
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/string/view_or_value.hpp>
 #include <bsoncxx/types.hpp>
 #include <mongocxx/stdx.hpp>
+
+#include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

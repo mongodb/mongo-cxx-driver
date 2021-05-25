@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/config/private/prelude.hh>
-
 #include <atomic>
 #include <type_traits>
 #include <utility>
@@ -24,6 +22,8 @@
 #include <mongocxx/instance.hpp>
 #include <mongocxx/logger.hpp>
 #include <mongocxx/private/libmongoc.hh>
+
+#include <mongocxx/config/private/prelude.hh>
 
 #if !defined(__has_feature)
 #define __has_feature(x) 0

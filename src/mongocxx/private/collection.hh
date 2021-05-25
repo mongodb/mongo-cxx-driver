@@ -14,8 +14,6 @@
 
 #pragma once
 
-#include <mongocxx/config/private/prelude.hh>
-
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/private/helpers.hh>
 #include <bsoncxx/stdx/string_view.hpp>
@@ -25,6 +23,8 @@
 #include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/read_preference.hh>
 #include <mongocxx/private/write_concern.hh>
+
+#include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

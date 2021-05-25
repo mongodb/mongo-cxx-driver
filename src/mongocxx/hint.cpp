@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/config/private/prelude.hh>
-
 #include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/builder/basic/sub_document.hpp>
 #include <bsoncxx/builder/concatenate.hpp>
 #include <mongocxx/hint.hpp>
+
+#include <mongocxx/config/private/prelude.hh>
 
 using bsoncxx::builder::concatenate;
 using bsoncxx::builder::basic::kvp;

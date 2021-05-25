@@ -14,8 +14,6 @@
 
 #pragma once
 
-#include <bsoncxx/config/prelude.hpp>
-
 #include <memory>
 #include <stdexcept>
 #include <type_traits>
@@ -26,6 +24,8 @@
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/types.hpp>
+
+#include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN

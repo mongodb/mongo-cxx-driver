@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/config/private/prelude.hh>
-
 #include <bsoncxx/private/libbson.hh>
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/validate.hpp>
+
+#include <bsoncxx/config/private/prelude.hh>
 
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN

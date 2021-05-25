@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/config/private/prelude.hh>
-
 #include <ios>
 #include <string>
 
@@ -31,6 +29,8 @@
 #include <mongocxx/options/delete.hpp>
 #include <mongocxx/options/index.hpp>
 #include <mongocxx/stdx.hpp>
+
+#include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

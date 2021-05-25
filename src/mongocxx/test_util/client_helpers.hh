@@ -14,8 +14,6 @@
 
 #pragma once
 
-#include <mongocxx/config/private/prelude.hh>
-
 #include <cstdint>
 #include <functional>
 #include <string>
@@ -32,6 +30,8 @@
 #include <mongocxx/collection.hpp>
 #include <mongocxx/stdx.hpp>
 #include <third_party/catch/include/catch.hpp>
+
+#include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

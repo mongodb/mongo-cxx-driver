@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/config/private/prelude.hh>
-
 #include <algorithm>
 #include <cstring>
 #include <sstream>
@@ -24,6 +22,8 @@
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/gridfs/downloader.hpp>
 #include <mongocxx/gridfs/private/downloader.hh>
+
+#include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

@@ -14,8 +14,6 @@
 
 #pragma once
 
-#include <mongocxx/config/private/prelude.hh>
-
 #include <array>
 #include <cassert>
 #include <functional>
@@ -27,6 +25,8 @@
 #include <type_traits>
 #include <unordered_map>
 #include <vector>
+
+#include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

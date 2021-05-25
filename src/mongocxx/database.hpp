@@ -14,8 +14,6 @@
 
 #pragma once
 
-#include <mongocxx/config/prelude.hpp>
-
 #include <memory>
 #include <string>
 
@@ -28,6 +26,8 @@
 #include <mongocxx/options/gridfs/bucket.hpp>
 #include <mongocxx/read_preference.hpp>
 #include <mongocxx/write_concern.hpp>
+
+#include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

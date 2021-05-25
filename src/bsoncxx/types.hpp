@@ -14,8 +14,6 @@
 
 #pragma once
 
-#include <bsoncxx/config/prelude.hpp>
-
 #include <chrono>
 #include <cstring>
 
@@ -24,6 +22,8 @@
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/oid.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
+
+#include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN

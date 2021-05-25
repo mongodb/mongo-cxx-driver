@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/config/private/prelude.hh>
-
 #include <mongocxx/events/server_description.hpp>
 #include <mongocxx/private/libmongoc.hh>
+
+#include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
@@ -39,7 +39,7 @@ bsoncxx::stdx::string_view server_description::type() const {
 }
 
 bsoncxx::document::view server_description::is_master() const {
-    auto reply = libmongoc::server_description_ismaster(
+    auto reply = libmongoc::server_description_hello_response(
         static_cast<const mongoc_server_description_t*>(_sd));
     return {bson_get_data(reply), reply->len};
 }

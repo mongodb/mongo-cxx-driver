@@ -14,13 +14,13 @@
 
 #pragma once
 
-#include <mongocxx/config/prelude.hpp>
-
 #include <bsoncxx/types/bson_value/value.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
 #include <mongocxx/options/client_encryption.hpp>
 #include <mongocxx/options/data_key.hpp>
 #include <mongocxx/options/encrypt.hpp>
+
+#include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
