@@ -284,27 +284,27 @@ void add_ignore_command_monitoring_events(document::view object) {
     }
 }
 
-/* TODO CXX-2138: Actually implement add_server_api below with new server_api options class.
-void add_server_api(options::server_api& sapi_opts, document::view object) {
-    if (!object["serverApi"])
-        return;
-
-    if (auto sav = object["serverApi"]["version"]) {
-        REQUIRE(sav.type() == type::k_string);
-        sapi_opts.version(sav);
-    } else {
+options::server_api create_server_api(document::view object) {
+    document::element sav;
+    if (!(sav = object["serverApi"]["version"])) {
         FAIL("must specify a version when using serverApi");
     }
 
+    REQUIRE(sav.type() == type::k_string);
+    auto version = options::server_api::version_from_string(sav.get_string().value);
+    auto server_api_opts = options::server_api(version);
+
     if (auto de = object["serverApi"]["deprecationErrors"]) {
         REQUIRE(de.type() == type::k_bool);
-        sapi_opts.deprecation_errors(de);
+        server_api_opts.deprecation_errors(de.get_bool());
     }
     if (auto strict = object["serverApi"]["strict"]) {
         REQUIRE(strict.type() == type::k_bool);
-        sapi_opts.strict(strict);
+        server_api_opts.strict(strict.get_bool());
     }
-} */
+
+    return server_api_opts;
+}
 
 write_concern get_write_concern(const document::element& opts) {
     if (!opts["writeConcern"])
@@ -423,15 +423,18 @@ database create_database(document::view object) {
 
 client create_client(document::view object) {
     auto conn = "mongodb://" + get_hostnames(object) + "/?" + uri_options_to_string(object);
-    auto opts = options::apm{};
+    auto apm_opts = options::apm{};
+    auto client_opts = options::client{};
+    if (object["serverApi"]) {
+        auto server_api_opts = create_server_api(object);
+        client_opts.server_api_opts(server_api_opts);
+    }
 
-    add_observe_events(opts, object);
+    add_observe_events(apm_opts, object);
     add_ignore_command_monitoring_events(object);
-    // TODO CXX-2138: Actually add server api options to client.
-    // add_server_api(server_api_opts, object);
 
     CAPTURE(conn);
-    return client{uri{conn}, options::client{}.apm_opts(opts)};
+    return client{uri{conn}, client_opts.apm_opts(apm_opts)};
 }
 
 bool add_to_map(const array::element& obj) {
@@ -591,8 +594,13 @@ void assert_error(const mongocxx::operation_exception& exception,
         REQUIRE(actual_code == expected_code.get_int32());
     }
 
+    if (auto code_name = expect_error["errorCodeName"]) {
+        auto expected_name = string::to_string(code_name.get_string().value);
+        uint32_t expected_code = error_code_from_name(expected_name);
+        REQUIRE(exception.code().value() == static_cast<int>(expected_code));
+    }
+
     REQUIRE_FALSE(/* TODO */ expect_error["errorContains"]);
-    REQUIRE_FALSE(/* TODO */ expect_error["errorCodeName"]);
 }
 
 void assert_error(mongocxx::exception& e, const array::element& ops) {
@@ -829,7 +837,6 @@ TEST_CASE("CRUD unified format spec automated tests", "[unified_format_spec]") {
     }
 }
 
-/* TODO CXX-2138: Uncomment versioned API spec TEST_CASE below.
 TEST_CASE("versioned API spec automated tests", "[unified_format_spec]") {
     instance::current();
 
@@ -844,5 +851,5 @@ TEST_CASE("versioned API spec automated tests", "[unified_format_spec]") {
         CAPTURE(file);
         run_tests_in_file(path + '/' + file);
     }
-} */
+}
 }  // namespace

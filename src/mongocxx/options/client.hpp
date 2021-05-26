@@ -19,6 +19,7 @@
 #include <bsoncxx/stdx/optional.hpp>
 #include <mongocxx/options/apm.hpp>
 #include <mongocxx/options/auto_encryption.hpp>
+#include <mongocxx/options/server_api.hpp>
 #include <mongocxx/options/tls.hpp>
 
 #include <mongocxx/config/prelude.hpp>
@@ -116,10 +117,32 @@ class MONGOCXX_API client {
     ///
     const stdx::optional<apm>& apm_opts() const;
 
+    ///
+    /// Sets the server API options.
+    ///
+    /// @param server_api_opts
+    ///   The options for server API.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
+    client& server_api_opts(server_api server_api_opts);
+
+    ///
+    /// Gets the current server API options or returns a disengaged optional if there are no server
+    /// API options set.
+    ///
+    /// @return
+    ///   The server API options.
+    ///
+    const stdx::optional<server_api>& server_api_opts() const;
+
    private:
     stdx::optional<tls> _tls_opts;
     stdx::optional<apm> _apm_opts;
     stdx::optional<auto_encryption> _auto_encrypt_opts;
+    stdx::optional<server_api> _server_api_opts;
 };
 
 }  // namespace options

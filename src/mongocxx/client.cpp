@@ -21,6 +21,7 @@
 #include <mongocxx/exception/private/mongoc_error.hh>
 #include <mongocxx/options/auto_encryption.hpp>
 #include <mongocxx/options/private/apm.hh>
+#include <mongocxx/options/private/server_api.hh>
 #include <mongocxx/options/private/ssl.hh>
 #include <mongocxx/private/client.hh>
 #include <mongocxx/private/client_session.hh>
@@ -106,6 +107,19 @@ client::client(const class uri& uri, const options::client& options) {
         libmongoc::auto_encryption_opts_destroy(mongoc_auto_encrypt_opts);
 
         if (!r) {
+            throw_exception<operation_exception>(error);
+        }
+    }
+
+    if (options.server_api_opts()) {
+        const auto& server_api_opts = *options.server_api_opts();
+        auto mongoc_server_api_opts = options::make_server_api(server_api_opts);
+
+        bson_error_t error;
+        auto result = libmongoc::client_set_server_api(
+            _get_impl().client_t, mongoc_server_api_opts.get(), &error);
+
+        if (!result) {
             throw_exception<operation_exception>(error);
         }
     }

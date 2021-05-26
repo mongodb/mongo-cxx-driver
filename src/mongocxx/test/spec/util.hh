@@ -32,6 +32,11 @@ using namespace bsoncxx;
 using namespace mongocxx;
 
 ///
+/// Returns corresponding error code from given error name.
+///
+uint32_t error_code_from_name(stdx::string_view name);
+
+///
 /// Returns true if this test should be skipped for any reason (for
 /// example, if a skipReason is defined, or if the given topology is not
 /// supported for this test.

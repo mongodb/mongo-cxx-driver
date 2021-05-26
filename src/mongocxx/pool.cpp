@@ -21,6 +21,7 @@
 #include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/exception/private/mongoc_error.hh>
 #include <mongocxx/options/private/apm.hh>
+#include <mongocxx/options/private/server_api.hh>
 #include <mongocxx/options/private/ssl.hh>
 #include <mongocxx/pool.hpp>
 #include <mongocxx/private/client.hh>
@@ -81,6 +82,19 @@ pool::pool(const uri& uri, const options::pool& options)
         // It will be cast back to an APM class in the event handlers.
         auto context = static_cast<void*>(&(_impl->listeners));
         libmongoc::client_pool_set_apm_callbacks(_impl->client_pool_t, callbacks.get(), context);
+    }
+
+    if (options.client_opts().server_api_opts()) {
+        const auto& server_api_opts = *options.client_opts().server_api_opts();
+        auto mongoc_server_api_opts = options::make_server_api(server_api_opts);
+
+        bson_error_t error;
+        auto result = libmongoc::client_pool_set_server_api(
+            _impl->client_pool_t, mongoc_server_api_opts.get(), &error);
+
+        if (!result) {
+            throw_exception<operation_exception>(error);
+        }
     }
 }
 

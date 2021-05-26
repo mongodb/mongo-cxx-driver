@@ -156,6 +156,7 @@ set(mongocxx_sources
     options/insert.cpp
     options/pool.cpp
     options/replace.cpp
+    options/server_api.cpp
     options/tls.cpp
     options/transaction.cpp
     options/update.cpp
@@ -399,10 +400,13 @@ set_local_dist (src_mongocxx_DIST_local
    options/pool.cpp
    options/pool.hpp
    options/private/apm.hh
+   options/private/server_api.hh
    options/private/ssl.hh
    options/private/transaction.hh
    options/replace.cpp
    options/replace.hpp
+   options/server_api.cpp
+   options/server_api.hpp
    options/ssl.hpp
    options/tls.cpp
    options/tls.hpp
