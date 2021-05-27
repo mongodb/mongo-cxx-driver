@@ -15,8 +15,9 @@
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/types.hpp>
-#include <mongocxx/config/private/prelude.hh>
 #include <mongocxx/options/index_view.hpp>
+
+#include <mongocxx/config/private/prelude.hh>
 
 using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_document;

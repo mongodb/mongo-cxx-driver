@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/collection.hpp>
-
 #include <chrono>
 #include <cstdint>
 #include <limits>
@@ -33,6 +31,7 @@
 #include <bsoncxx/types.hpp>
 #include <mongocxx/bulk_write.hpp>
 #include <mongocxx/client.hpp>
+#include <mongocxx/collection.hpp>
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
@@ -60,12 +59,12 @@
 
 #include <mongocxx/config/private/prelude.hh>
 
+using bsoncxx::builder::concatenate;
 using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_array;
 using bsoncxx::builder::basic::make_document;
 using bsoncxx::builder::basic::sub_array;
 using bsoncxx::builder::basic::sub_document;
-using bsoncxx::builder::concatenate;
 using bsoncxx::document::view_or_value;
 
 namespace {
@@ -1204,9 +1203,8 @@ void collection::_drop(const client_session* session,
     // Throw an exception if the command failed, unless the failure was due to a non-existent
     // collection. We check for this failure using 'code', but we fall back to checking 'message'
     // for old server versions (3.0 and earlier) that do not send a code with the command response.
-    if (!result &&
-        !(error.code == ::MONGOC_ERROR_COLLECTION_DOES_NOT_EXIST ||
-          stdx::string_view{error.message} == stdx::string_view{"ns not found"})) {
+    if (!result && !(error.code == ::MONGOC_ERROR_COLLECTION_DOES_NOT_EXIST ||
+                     stdx::string_view{error.message} == stdx::string_view{"ns not found"})) {
         throw_exception<operation_exception>(error);
     }
 }

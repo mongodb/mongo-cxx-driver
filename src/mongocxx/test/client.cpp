@@ -13,9 +13,6 @@
 // limitations under the License.
 
 #include "helpers.hpp"
-
-#include <mongocxx/config/private/prelude.hh>
-
 #include <bsoncxx/string/to_string.hpp>
 #include <bsoncxx/test_util/catch.hh>
 #include <mongocxx/client.hpp>
@@ -26,6 +23,8 @@
 #include <mongocxx/private/libmongoc.hh>
 #include <mongocxx/test_util/client_helpers.hh>
 #include <mongocxx/uri.hpp>
+
+#include <mongocxx/config/private/prelude.hh>
 
 namespace {
 using namespace mongocxx;

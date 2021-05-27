@@ -12,7 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+// This include must come before the other client include.
+// clang-format off
 #include <mongocxx/options/client_encryption.hpp>
+// clang-format on
 
 #include <mongocxx/client.hpp>
 #include <mongocxx/private/client.hh>

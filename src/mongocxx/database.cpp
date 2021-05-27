@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/database.hpp>
-
 #include <utility>
 
 #include <bsoncxx/builder/basic/document.hpp>
@@ -22,6 +20,7 @@
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/string/to_string.hpp>
 #include <mongocxx/client.hpp>
+#include <mongocxx/database.hpp>
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/exception/operation_exception.hpp>

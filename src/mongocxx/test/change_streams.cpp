@@ -26,7 +26,6 @@
 #include <mongocxx/private/libbson.hh>
 #include <mongocxx/test_util/client_helpers.hh>
 #include <mongocxx/write_concern.hpp>
-
 #include <third_party/catch/include/helpers.hpp>
 
 namespace {
@@ -325,14 +324,15 @@ TEST_CASE("Mock streams and error-handling") {
             REQUIRE(opts["resumeAfter"].get_document().view() == resume_after);
         };
 
-        collection_watch->interpose([&](
-            const mongoc_collection_t* coll, const bson_t* pipeline, const bson_t* opts) {
-            std::string name = mongoc_collection_get_name(const_cast<mongoc_collection_t*>(coll));
-            REQUIRE(name == "collection");
-            check_pipeline_and_opts(pipeline, opts);
-            collection_watch_called = true;
-            return nullptr;
-        });
+        collection_watch->interpose(
+            [&](const mongoc_collection_t* coll, const bson_t* pipeline, const bson_t* opts) {
+                std::string name =
+                    mongoc_collection_get_name(const_cast<mongoc_collection_t*>(coll));
+                REQUIRE(name == "collection");
+                check_pipeline_and_opts(pipeline, opts);
+                collection_watch_called = true;
+                return nullptr;
+            });
 
         database_watch->interpose(
             [&](const mongoc_database_t* db, const bson_t* pipeline, const bson_t* opts) {
@@ -756,4 +756,4 @@ TEST_CASE("Watch a Collection", "[min36]") {
     }
 }
 
-}  // namepsace
+}  // namespace

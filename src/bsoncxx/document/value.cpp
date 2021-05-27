@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/document/value.hpp>
-
 #include <cstdlib>
 #include <cstring>
 #include <utility>
+
+#include <bsoncxx/document/value.hpp>
 
 #include <bsoncxx/config/private/prelude.hh>
 

@@ -12,9 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/options/gridfs/bucket.hpp>
-
 #include <bsoncxx/stdx/optional.hpp>
+#include <mongocxx/options/gridfs/bucket.hpp>
 #include <mongocxx/read_concern.hpp>
 #include <mongocxx/read_preference.hpp>
 #include <mongocxx/stdx.hpp>
@@ -75,4 +74,4 @@ const stdx::optional<class write_concern>& bucket::write_concern() const {
 }  // namespace gridfs
 }  // namespace options
 MONGOCXX_INLINE_NAMESPACE_END
-}
+}  // namespace mongocxx

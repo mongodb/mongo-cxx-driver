@@ -12,10 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "helpers.hpp"
-
 #include <vector>
 
+#include "helpers.hpp"
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/test_util/catch.hh>
 #include <mongocxx/instance.hpp>

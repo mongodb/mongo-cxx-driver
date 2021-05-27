@@ -20,9 +20,9 @@
 namespace {
 TEST_CASE("time_point is converted to b_date and back", "[bsoncxx::types::b_date]") {
     using bsoncxx::types::b_date;
+    using std::chrono::milliseconds;
     using std::chrono::system_clock;
     using std::chrono::time_point_cast;
-    using std::chrono::milliseconds;
 
     system_clock::time_point now1, now2;
 

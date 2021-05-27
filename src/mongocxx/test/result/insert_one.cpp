@@ -13,7 +13,6 @@
 // limitations under the License.
 
 #include "helpers.hpp"
-
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/test_util/catch.hh>
 #include <bsoncxx/types/bson_value/view.hpp>

@@ -12,9 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/client_encryption.hpp>
-
 #include <bsoncxx/stdx/make_unique.hpp>
+#include <mongocxx/client_encryption.hpp>
 #include <mongocxx/private/client_encryption.hh>
 
 #include <mongocxx/config/private/prelude.hh>

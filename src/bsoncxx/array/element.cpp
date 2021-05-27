@@ -12,11 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/array/element.hpp>
-
 #include <cstdlib>
 #include <cstring>
 #include <stdexcept>
+
+#include <bsoncxx/array/element.hpp>
 
 #include <bsoncxx/config/private/prelude.hh>
 
@@ -32,6 +32,6 @@ element::element(const std::uint8_t* raw,
                  std::uint32_t keylen)
     : document::element(raw, length, offset, keylen) {}
 
-}  // namespace document
+}  // namespace array
 BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bsoncxx

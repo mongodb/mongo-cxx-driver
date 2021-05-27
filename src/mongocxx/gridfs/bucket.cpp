@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/gridfs/bucket.hpp>
-
 #include <ios>
 #include <string>
 
@@ -26,6 +24,7 @@
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/gridfs_exception.hpp>
 #include <mongocxx/exception/logic_error.hpp>
+#include <mongocxx/gridfs/bucket.hpp>
 #include <mongocxx/gridfs/private/bucket.hh>
 #include <mongocxx/options/delete.hpp>
 #include <mongocxx/options/index.hpp>

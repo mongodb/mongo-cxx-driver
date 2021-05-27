@@ -14,11 +14,10 @@
 
 #pragma once
 
+#include "catch.hpp"
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/stdx/optional.hpp>
-
-#include "catch.hpp"
 
 #include <bsoncxx/config/private/prelude.hh>
 

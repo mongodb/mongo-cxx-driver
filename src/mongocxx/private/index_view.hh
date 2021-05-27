@@ -14,12 +14,13 @@
 
 #pragma once
 
+#include <vector>
+
 #include <bsoncxx/builder/basic/array.hpp>
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/string/to_string.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
-#include <mongocxx/config/private/prelude.hh>
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
@@ -28,13 +29,14 @@
 #include <mongocxx/private/client_session.hh>
 #include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/libmongoc.hh>
-#include <vector>
+
+#include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
-using bsoncxx::builder::basic::make_document;
 using bsoncxx::builder::basic::kvp;
+using bsoncxx::builder::basic::make_document;
 
 class index_view::impl {
    public:
@@ -140,7 +142,7 @@ class index_view::impl {
             if (!server_description.sd)
                 throw_exception<write_exception>(error);
 
-            auto is_master = libmongoc::server_description_ismaster(server_description.sd);
+            auto is_master = libmongoc::server_description_hello_response(server_description.sd);
 
             bson_iter_t iter;
             if (!bson_iter_init_find(&iter, is_master, "maxWireVersion") ||

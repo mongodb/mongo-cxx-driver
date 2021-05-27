@@ -19,21 +19,20 @@
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/json.hpp>
+#include <bsoncxx/private/libbson.hh>
 #include <bsoncxx/string/view_or_value.hpp>
 #include <bsoncxx/test_util/catch.hh>
 #include <bsoncxx/types/bson_value/make_value.hpp>
 #include <bsoncxx/types/bson_value/value.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
 
-#include <bsoncxx/private/libbson.hh>
-
 namespace {
 using namespace bsoncxx;
 
 using bsoncxx::to_json;
+using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_array;
 using bsoncxx::builder::basic::make_document;
-using bsoncxx::builder::basic::kvp;
 
 using namespace bsoncxx::types;
 

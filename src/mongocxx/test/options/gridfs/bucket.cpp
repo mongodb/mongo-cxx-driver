@@ -13,7 +13,6 @@
 // limitations under the License.
 
 #include "helpers.hpp"
-
 #include <bsoncxx/test_util/catch.hh>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/gridfs/bucket.hpp>
