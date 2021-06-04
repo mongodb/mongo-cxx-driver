@@ -32,7 +32,7 @@ var searchData=
   ['deletewriteoperation_171',['DeleteWriteOperation',['../classmongo_1_1DeleteWriteOperation.html',1,'mongo']]],
   ['deprecated_20list_172',['Deprecated List',['../deprecated.html',1,'']]],
   ['distinct_173',['distinct',['../classmongo_1_1DBClientWithCommands.html#a18a9f8d39b1bd46753d0510fd0cc0490',1,'mongo::DBClientWithCommands']]],
-  ['done_174',['DONE',['../structmongo_1_1ReplicaSetMonitor_1_1Refresher_1_1NextStep.html#a01921cc6f9da16db932bd3977c019a15a4f50546f56e7956901b7a3eb20848f51',1,'mongo::ReplicaSetMonitor::Refresher::NextStep::DONE()'],['../classmongo_1_1BSONObjBuilder.html#ae1a64ea2deb887012b7d1d7c5ae47a79',1,'mongo::BSONObjBuilder::done()']]],
+  ['done_174',['done',['../classmongo_1_1BSONObjBuilder.html#ae1a64ea2deb887012b7d1d7c5ae47a79',1,'mongo::BSONObjBuilder::done()'],['../structmongo_1_1ReplicaSetMonitor_1_1Refresher_1_1NextStep.html#a01921cc6f9da16db932bd3977c019a15a4f50546f56e7956901b7a3eb20848f51',1,'mongo::ReplicaSetMonitor::Refresher::NextStep::DONE()']]],
   ['dosslhandshake_175',['doSSLHandshake',['../classmongo_1_1Socket.html#ae6c9349524d952655fc6b02af4957fb3',1,'mongo::Socket']]],
   ['dropcollection_176',['dropCollection',['../classmongo_1_1DBClientWithCommands.html#a4c5143c1c2f891bdfd991f73baaf865e',1,'mongo::DBClientWithCommands']]],
   ['dropdatabase_177',['dropDatabase',['../classmongo_1_1DBClientWithCommands.html#a7c4e2a3338f9d34cfc9fc8fe9da78ae4',1,'mongo::DBClientWithCommands']]],

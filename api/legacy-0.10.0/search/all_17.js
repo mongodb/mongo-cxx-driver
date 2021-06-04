@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['wait_626',['WAIT',['../structmongo_1_1ReplicaSetMonitor_1_1NextStep.html#aa421378cd5a889ac53b133282f3a8659a8a63dac0ead2d626ffcff89b59157b72',1,'mongo::ReplicaSetMonitor::NextStep::WAIT()'],['../classmongo_1_1BackgroundJob.html#aa75db818af9919b85133bce83109d9b3',1,'mongo::BackgroundJob::wait()']]],
+  ['wait_626',['wait',['../classmongo_1_1BackgroundJob.html#aa75db818af9919b85133bce83109d9b3',1,'mongo::BackgroundJob::wait()'],['../structmongo_1_1ReplicaSetMonitor_1_1NextStep.html#aa421378cd5a889ac53b133282f3a8659a8a63dac0ead2d626ffcff89b59157b72',1,'mongo::ReplicaSetMonitor::NextStep::WAIT()']]],
   ['waitfor_627',['waitFor',['../classmongo_1_1NotifyAll.html#a76cd855ffcdd28f8d2a2299617e8771b',1,'mongo::NotifyAll']]],
   ['warning_628',['warning',['../namespacemongo.html#af417ee17ac67bd62a91c325565b43753',1,'mongo']]],
   ['what_629',['what',['../classmongo_1_1OperationException.html#a18d2a45fb3bfd53b0b4b880f6116d3a3',1,'mongo::OperationException']]],
