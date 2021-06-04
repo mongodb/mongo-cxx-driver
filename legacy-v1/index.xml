@@ -6,11 +6,7 @@
     <description>Recent content in The Legacy C&#43;&#43; Driver on MongoDB C&#43;&#43; Driver Manual</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 15 Aug 2016 16:11:58 +0530</lastBuildDate>
-    
-	<atom:link href="http://mongocxx.org/legacy-v1/index.xml" rel="self" type="application/rss+xml" />
-    
-    
+    <lastBuildDate>Mon, 15 Aug 2016 16:11:58 +0530</lastBuildDate><atom:link href="http://mongocxx.org/legacy-v1/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Breaking changes from 26compat</title>
       <link>http://mongocxx.org/legacy-v1/breaking-changes/</link>
