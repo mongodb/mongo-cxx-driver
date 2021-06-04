@@ -27,9 +27,9 @@ namespace {
 using namespace mongocxx;
 using namespace bsoncxx;
 
-using bsoncxx::builder::concatenate;
 using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_document;
+using bsoncxx::builder::concatenate;
 
 TEST_CASE("Hint", "[hint]") {
     instance::current();

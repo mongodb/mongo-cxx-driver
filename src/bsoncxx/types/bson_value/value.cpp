@@ -12,14 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <bsoncxx/json.hpp>
+
+#include <bsoncxx/types/bson_value/value.hpp>
+
 #include <cstdlib>
 #include <cstring>
 #include <utility>
 
-#include <bsoncxx/json.hpp>
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/types/bson_value/private/value.hh>
-#include <bsoncxx/types/bson_value/value.hpp>
 #include <bsoncxx/types/private/convert.hh>
 
 #include <bsoncxx/config/private/prelude.hh>

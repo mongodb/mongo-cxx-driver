@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <string>
-
 #include <bsoncxx/exception/error_code.hpp>
+
+#include <string>
 
 #include <bsoncxx/config/private/prelude.hh>
 

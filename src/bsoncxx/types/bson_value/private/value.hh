@@ -15,7 +15,6 @@
 #pragma once
 
 #include <bsoncxx/private/libbson.hh>
-#include <bsoncxx/types/bson_value/value.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
 
 #include <bsoncxx/config/private/prelude.hh>
@@ -63,6 +62,6 @@ BSONCXX_INLINE bson_value::value make_owning_bson(void* internal_value) {
 }  // namespace types
 
 BSONCXX_INLINE_NAMESPACE_END
-}  // namespace bsoncxx
+}  // namespace bsoncx
 
 #include <bsoncxx/config/private/postlude.hh>

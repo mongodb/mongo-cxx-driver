@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <mongocxx/instance.hpp>
+
 #include <atomic>
 #include <mutex>
 #include <type_traits>
@@ -20,7 +22,6 @@
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
-#include <mongocxx/instance.hpp>
 #include <mongocxx/logger.hpp>
 #include <mongocxx/private/libmongoc.hh>
 

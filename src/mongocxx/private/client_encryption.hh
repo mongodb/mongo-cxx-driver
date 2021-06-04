@@ -24,6 +24,7 @@
 #include <mongocxx/exception/private/mongoc_error.hh>
 #include <mongocxx/options/client_encryption.hpp>
 #include <mongocxx/private/client.hh>
+
 #include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/libmongoc.hh>
 

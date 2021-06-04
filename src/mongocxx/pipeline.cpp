@@ -12,10 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <mongocxx/pipeline.hpp>
+
 #include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/builder/basic/sub_document.hpp>
 #include <bsoncxx/stdx/make_unique.hpp>
-#include <mongocxx/pipeline.hpp>
 #include <mongocxx/private/pipeline.hh>
 #include <mongocxx/stdx.hpp>
 

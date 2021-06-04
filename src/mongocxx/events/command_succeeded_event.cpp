@@ -12,8 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/stdx/make_unique.hpp>
 #include <mongocxx/events/command_succeeded_event.hpp>
+
+#include <bsoncxx/stdx/make_unique.hpp>
 #include <mongocxx/private/libmongoc.hh>
 
 #include <mongocxx/config/private/prelude.hh>

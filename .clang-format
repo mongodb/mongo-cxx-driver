@@ -1,20 +1,12 @@
+BasedOnStyle: Google
 AllowShortFunctionsOnASingleLine: Empty
 AllowShortIfStatementsOnASingleLine: false
 AllowShortLoopsOnASingleLine: false
-BasedOnStyle: Google
 BinPackArguments: false
 BinPackParameters: false
 ColumnLimit: 100
 Cpp11BracedListStyle: true
 DerivePointerAlignment: false
-IncludeBlocks: Regroup
-IncludeCategories:
-  - Regex:    'prelude\.(hpp|hh)' # preludes
-    Priority: 3
-  - Regex:    '<[[:alnum:]_.]+>' # system headers
-    Priority: 1
-  - Regex:    '.*' # driver headers
-    Priority: 2
 IndentWidth: 4
 MaxEmptyLinesToKeep: 1
 NamespaceIndentation: None

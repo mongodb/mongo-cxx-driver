@@ -12,8 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/json.hpp>
 #include <bsoncxx/types.hpp>
+
+#include <bsoncxx/json.hpp>
 
 #include <bsoncxx/config/private/prelude.hh>
 

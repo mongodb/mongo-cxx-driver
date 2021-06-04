@@ -12,12 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <mongocxx/hint.hpp>
+
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/builder/basic/sub_document.hpp>
 #include <bsoncxx/builder/concatenate.hpp>
 #include <bsoncxx/stdx/make_unique.hpp>
-#include <mongocxx/hint.hpp>
 
 #include <mongocxx/config/private/prelude.hh>
 

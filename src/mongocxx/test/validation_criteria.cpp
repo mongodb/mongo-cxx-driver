@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include "helpers.hpp"
+
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/document/element.hpp>
 #include <bsoncxx/string/to_string.hpp>

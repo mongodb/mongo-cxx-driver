@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <bsoncxx/json.hpp>
+
 #include <iomanip>
 #include <iostream>
 #include <memory>
@@ -21,7 +23,6 @@
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/exception/error_code.hpp>
 #include <bsoncxx/exception/exception.hpp>
-#include <bsoncxx/json.hpp>
 #include <bsoncxx/private/b64_ntop.hh>
 #include <bsoncxx/private/libbson.hh>
 #include <bsoncxx/stdx/make_unique.hpp>

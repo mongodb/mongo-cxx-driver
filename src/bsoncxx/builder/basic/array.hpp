@@ -42,7 +42,7 @@ class array : public sub_array {
     ///
     /// Move constructor
     ///
-    BSONCXX_INLINE array(array&& arr) noexcept : sub_array(&_core), _core(std::move(arr._core)) {}
+    BSONCXX_INLINE array(array &&arr) noexcept : sub_array(&_core), _core(std::move(arr._core)) {}
 
     ///
     /// Move assignment operator

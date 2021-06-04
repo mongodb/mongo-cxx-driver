@@ -13,14 +13,15 @@
 // limitations under the License.
 
 #include "helpers.hpp"
+
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/test_util/catch.hh>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/result/update.hpp>
 
 namespace {
-using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_document;
+using bsoncxx::builder::basic::kvp;
 
 TEST_CASE("update", "[update][result]") {
     mongocxx::instance::current();

@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <mongocxx/gridfs/downloader.hpp>
+
 #include <algorithm>
 #include <cstring>
 #include <sstream>
@@ -20,7 +22,6 @@
 #include <bsoncxx/types.hpp>
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
-#include <mongocxx/gridfs/downloader.hpp>
 #include <mongocxx/gridfs/private/downloader.hh>
 
 #include <mongocxx/config/private/prelude.hh>

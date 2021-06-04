@@ -27,11 +27,11 @@
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
-#include <mongocxx/collection.hpp>
 #include <mongocxx/stdx.hpp>
-#include <third_party/catch/include/catch.hpp>
 
+#include <mongocxx/collection.hpp>
 #include <mongocxx/config/private/prelude.hh>
+#include <third_party/catch/include/catch.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

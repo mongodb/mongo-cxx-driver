@@ -28,8 +28,8 @@
 #include <mongocxx/test_util/client_helpers.hh>
 
 namespace {
-using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_document;
+using bsoncxx::builder::basic::kvp;
 using namespace mongocxx;
 
 bool test_commands_enabled(const client& conn) {
@@ -464,4 +464,4 @@ TEST_CASE("index creation and deletion with different collation") {
         db.drop();
     }
 }
-}  // namespace
+}

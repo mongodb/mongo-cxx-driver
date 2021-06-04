@@ -41,37 +41,37 @@ class BSONCXX_API element : private document::element {
 
     using document::element::type;
 
+    using document::element::get_double;
+    using document::element::get_utf8;
+    using document::element::get_document;
     using document::element::get_array;
     using document::element::get_binary;
-    using document::element::get_bool;
-    using document::element::get_code;
-    using document::element::get_codewscope;
-    using document::element::get_date;
-    using document::element::get_dbpointer;
-    using document::element::get_decimal128;
-    using document::element::get_document;
-    using document::element::get_double;
-    using document::element::get_int32;
-    using document::element::get_int64;
-    using document::element::get_maxkey;
-    using document::element::get_minkey;
-    using document::element::get_null;
-    using document::element::get_oid;
-    using document::element::get_regex;
-    using document::element::get_symbol;
-    using document::element::get_timestamp;
     using document::element::get_undefined;
-    using document::element::get_utf8;
+    using document::element::get_oid;
+    using document::element::get_bool;
+    using document::element::get_date;
+    using document::element::get_null;
+    using document::element::get_regex;
+    using document::element::get_dbpointer;
+    using document::element::get_code;
+    using document::element::get_symbol;
+    using document::element::get_codewscope;
+    using document::element::get_int32;
+    using document::element::get_timestamp;
+    using document::element::get_int64;
+    using document::element::get_decimal128;
+    using document::element::get_minkey;
+    using document::element::get_maxkey;
 
     using document::element::get_value;
 
     using document::element::operator[];
 
-    using document::element::key;
-    using document::element::keylen;
+    using document::element::raw;
     using document::element::length;
     using document::element::offset;
-    using document::element::raw;
+    using document::element::keylen;
+    using document::element::key;
 
    private:
     friend class view;

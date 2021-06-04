@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <mongocxx/gridfs/uploader.hpp>
+
 #include <algorithm>
 #include <chrono>
 #include <cstring>
@@ -27,7 +29,6 @@
 #include <mongocxx/exception/gridfs_exception.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/gridfs/private/uploader.hh>
-#include <mongocxx/gridfs/uploader.hpp>
 
 #include <mongocxx/config/private/prelude.hh>
 

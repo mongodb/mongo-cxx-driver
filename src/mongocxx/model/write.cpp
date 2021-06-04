@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <type_traits>
-
 #include <mongocxx/model/write.hpp>
+
+#include <type_traits>
 
 #include <mongocxx/config/private/prelude.hh>
 

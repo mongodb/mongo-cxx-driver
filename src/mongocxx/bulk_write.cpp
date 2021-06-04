@@ -17,6 +17,7 @@
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <mongocxx/bulk_write.hpp>
 #include <mongocxx/collection.hpp>
+#include <mongocxx/config/private/prelude.hh>
 #include <mongocxx/exception/bulk_write_exception.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/exception/private/mongoc_error.hh>
@@ -26,8 +27,6 @@
 #include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/libmongoc.hh>
 #include <mongocxx/private/write_concern.hh>
-
-#include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

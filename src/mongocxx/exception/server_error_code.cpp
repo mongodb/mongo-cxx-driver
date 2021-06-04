@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <string>
-
 #include <mongocxx/exception/server_error_code.hpp>
+
+#include <string>
 
 #include <mongocxx/config/private/prelude.hh>
 

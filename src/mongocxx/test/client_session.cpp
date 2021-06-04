@@ -12,8 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <helpers.hpp>
 #include <sstream>
+
+#include <helpers.hpp>
 
 #include <bsoncxx/private/helpers.hh>
 #include <bsoncxx/stdx/make_unique.hpp>
@@ -28,9 +29,9 @@
 
 namespace {
 using bsoncxx::from_json;
+using bsoncxx::document::value;
 using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_document;
-using bsoncxx::document::value;
 using bsoncxx::types::b_timestamp;
 
 using namespace mongocxx;

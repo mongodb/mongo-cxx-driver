@@ -35,9 +35,8 @@ class cursor::impl {
         : cursor_t(cursor),
           status{cursor ? state::k_pending : state::k_dead},
           exhausted(!cursor),
-          tailable{cursor && cursor_type &&
-                   (*cursor_type == cursor::type::k_tailable ||
-                    *cursor_type == cursor::type::k_tailable_await)} {}
+          tailable{cursor && cursor_type && (*cursor_type == cursor::type::k_tailable ||
+                                             *cursor_type == cursor::type::k_tailable_await)} {}
 
     ~impl() {
         libmongoc::cursor_destroy(cursor_t);

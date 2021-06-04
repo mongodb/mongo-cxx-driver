@@ -14,19 +14,20 @@
 
 #include <chrono>
 
+#include <bsoncxx/types.hpp>
+#include <bsoncxx/types/bson_value/view.hpp>
+
 #include <bsoncxx/builder/basic/array.hpp>
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/test_util/catch.hh>
-#include <bsoncxx/types.hpp>
-#include <bsoncxx/types/bson_value/view.hpp>
 
 namespace {
 
 using namespace bsoncxx;
 using namespace types;
-using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_document;
+using bsoncxx::builder::basic::kvp;
 
 TEST_CASE("type to_string", "[bsoncxx::type::to_string]") {
     REQUIRE(to_string(bsoncxx::type::k_bool) == "bool");
@@ -355,4 +356,4 @@ TEST_CASE("bson_value::view with inequality for non-value and value",
     b_int64 int64_val{100};
     REQUIRE(int64_val != bson_value::view{b_int64{200}});
 }
-}  // namespace
+}

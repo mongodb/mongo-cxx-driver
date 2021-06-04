@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <mongocxx/uri.hpp>
+
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/types.hpp>
 #include <mongocxx/exception/error_code.hpp>
@@ -21,7 +23,6 @@
 #include <mongocxx/private/read_preference.hh>
 #include <mongocxx/private/uri.hh>
 #include <mongocxx/private/write_concern.hh>
-#include <mongocxx/uri.hpp>
 
 #include <mongocxx/config/private/prelude.hh>
 

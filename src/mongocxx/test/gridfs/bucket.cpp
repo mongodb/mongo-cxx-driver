@@ -13,15 +13,6 @@
 // limitations under the License.
 
 #include <algorithm>
-#include <chrono>
-#include <cstdint>
-#include <cstdlib>
-#include <fstream>
-#include <functional>
-#include <numeric>
-#include <sstream>
-#include <vector>
-
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/document/value.hpp>
@@ -29,6 +20,11 @@
 #include <bsoncxx/test_util/catch.hh>
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
+#include <chrono>
+#include <cstdint>
+#include <cstdlib>
+#include <fstream>
+#include <functional>
 #include <mongocxx/client.hpp>
 #include <mongocxx/database.hpp>
 #include <mongocxx/exception/gridfs_exception.hpp>
@@ -39,6 +35,9 @@
 #include <mongocxx/options/gridfs/upload.hpp>
 #include <mongocxx/options/index.hpp>
 #include <mongocxx/uri.hpp>
+#include <numeric>
+#include <sstream>
+#include <vector>
 
 namespace {
 using namespace mongocxx;
@@ -649,6 +648,7 @@ TEST_CASE("mongocxx::gridfs::uploader::write with arbitrary sizes", "[gridfs::up
     std::int32_t write_size;
 
     auto run_test = [&]() {
+
         std::vector<std::uint8_t> bytes;
 
         // Populate the vector with arbitrary values.

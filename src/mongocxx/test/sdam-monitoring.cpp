@@ -30,10 +30,10 @@
 
 namespace {
 using namespace mongocxx;
-using bsoncxx::oid;
+using bsoncxx::string::to_string;
 using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_document;
-using bsoncxx::string::to_string;
+using bsoncxx::oid;
 
 void open_and_close_client(const uri& test_uri, const options::apm& apm_opts) {
     // Apply listeners and trigger connection.

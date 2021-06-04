@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <mongocxx/pool.hpp>
+
 #include <utility>
 
 #include <bsoncxx/stdx/make_unique.hpp>
@@ -22,7 +24,6 @@
 #include <mongocxx/exception/private/mongoc_error.hh>
 #include <mongocxx/options/private/apm.hh>
 #include <mongocxx/options/private/ssl.hh>
-#include <mongocxx/pool.hpp>
 #include <mongocxx/private/client.hh>
 #include <mongocxx/private/pool.hh>
 #include <mongocxx/private/uri.hh>

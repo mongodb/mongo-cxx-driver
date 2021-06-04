@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include "helpers.hpp"
+
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/test_util/catch.hh>
@@ -21,8 +22,8 @@
 
 namespace {
 
-using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_document;
+using bsoncxx::builder::basic::kvp;
 
 TEST_CASE("delete", "[delete][result]") {
     mongocxx::instance::current();

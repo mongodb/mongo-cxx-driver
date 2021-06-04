@@ -12,8 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/types/bson_value/view.hpp>
 #include <mongocxx/result/insert_many.hpp>
+
+#include <bsoncxx/types/bson_value/view.hpp>
 
 #include <mongocxx/config/private/prelude.hh>
 

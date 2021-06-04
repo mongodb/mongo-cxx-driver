@@ -13,14 +13,15 @@
 // limitations under the License.
 
 #include "helpers.hpp"
+
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/test_util/catch.hh>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/result/replace_one.hpp>
 
 namespace {
-using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_document;
+using bsoncxx::builder::basic::kvp;
 
 TEST_CASE("replace_one", "[replace_one][result]") {
     mongocxx::instance::current();

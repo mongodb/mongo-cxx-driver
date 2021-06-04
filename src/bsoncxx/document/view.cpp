@@ -12,10 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <bsoncxx/document/view.hpp>
+
 #include <cstdlib>
 #include <cstring>
 
-#include <bsoncxx/document/view.hpp>
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/private/libbson.hh>
 #include <bsoncxx/types.hpp>

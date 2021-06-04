@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <bsoncxx/json.hpp>
 #include <iostream>
 
 #include <bsoncxx/builder/basic/document.hpp>

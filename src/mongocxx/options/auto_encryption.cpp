@@ -12,10 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <mongocxx/options/auto_encryption.hpp>
+
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
-#include <mongocxx/options/auto_encryption.hpp>
 #include <mongocxx/pool.hpp>
 #include <mongocxx/private/client.hh>
 #include <mongocxx/private/libbson.hh>
