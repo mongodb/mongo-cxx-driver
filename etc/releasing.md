@@ -12,6 +12,8 @@ https://evergreen.mongodb.com/waterfall/cxx-driver-v3.6
 
 If there are test failures, ensure they are at least expected or not introduced by changes in the new release.
 
+In particular, check that the "Ubuntu 18.04 with minimum libmongoc" variant is passing to ensure that backports have not introduced a dependency on later versions of libmongoc.
+
 ## Check fixVersions in Jira
 
 Ensure that all tickets under the [version to be released](https://jira.mongodb.org/projects/CXX?selectedItem=com.atlassian.jira.jira-projects-plugin%3Arelease-page&status=unreleased) are in `Closed` status on the C++ Driver releases page. If not, bulk change open tickets that will NOT be in the release to a new version (create it if necessary).
