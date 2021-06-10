@@ -467,7 +467,7 @@ void run_tests_in_suite(std::string ev, test_runner cb) {
 
 void test_setup(document::view test, document::view test_spec) {
     // Step 1. "clean up any open transactions from previous test failures"
-    client client{uri{}};
+    client client{uri{}, test_util::add_test_server_api()};
     try {
         client["admin"].run_command(make_document(kvp("killAllSessions", make_array())));
     } catch (const operation_exception& e) {
@@ -655,7 +655,7 @@ void run_transactions_tests_in_file(const std::string& test_path) {
     auto tests = test_spec_view["tests"].get_array().value;
 
     /* we may not have a supported topology */
-    if (should_skip_spec_test(client{uri{}}, test_spec_view)) {
+    if (should_skip_spec_test(client{uri{}, test_util::add_test_server_api()}, test_spec_view)) {
         WARN("File skipped - " + test_path);
         return;
     }
@@ -664,7 +664,8 @@ void run_transactions_tests_in_file(const std::string& test_path) {
         bool fail_point_enabled = (bool)test["failPoint"];
         auto description = test["description"].get_string().value;
         INFO("Test description: " << description);
-        if (should_skip_spec_test(client{uri{}}, test.get_document().value)) {
+        if (should_skip_spec_test(client{uri{}, test_util::add_test_server_api()},
+                                  test.get_document().value)) {
             continue;
         }
 
@@ -675,6 +676,7 @@ void run_transactions_tests_in_file(const std::string& test_path) {
         options::client client_opts;
         apm_checker apm_checker;
         client_opts.apm_opts(apm_checker.get_apm_opts(true /* command_started_events_only */));
+        client_opts = test_util::add_test_server_api(client_opts);
         client client;
         if (test["useMultipleMongoses"]) {
             client = {uri{"mongodb://localhost:27017,localhost:27018"}, client_opts};
@@ -790,6 +792,7 @@ void run_crud_tests_in_file(const std::string& test_path, uri test_uri) {
     options::client client_opts;
     apm_checker apm_checker;
     client_opts.apm_opts(apm_checker.get_apm_opts(true /* command_started_events_only */));
+    client_opts = test_util::add_test_server_api(client_opts);
     client client{std::move(test_uri), client_opts};
 
     document::view test_spec_view = test_spec->view();

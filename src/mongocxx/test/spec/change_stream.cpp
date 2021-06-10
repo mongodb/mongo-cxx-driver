@@ -51,7 +51,7 @@ bool should_skip(const array::element& test) {
 
 void test_setup(document::view test, document::view test_spec) {
     // Step 1. "clean up any open transactions from previous test failures"
-    client client{uri{}};
+    client client{uri{}, test_util::add_test_server_api()};
     try {
         client["admin"].run_command(make_document(kvp("killAllSessions", make_array())));
     } catch (const operation_exception& e) {
@@ -93,7 +93,7 @@ void run_change_stream_tests_in_file(const std::string& test_path) {
             // "Begin monitoring all APM events for `client`"
             apm_checker.set_ignore_command_monitoring_event("killCursors");
             client_opts.apm_opts(apm_checker.get_apm_opts(true));
-            class client client(uri{}, client_opts);
+            class client client(uri{}, test_util::add_test_server_api(client_opts));
 
             options::change_stream cs_opts{};
             if (test["changeStreamOptions"]) {
@@ -124,7 +124,7 @@ void run_change_stream_tests_in_file(const std::string& test_path) {
 
             // "Using `globalClient`, run every operation in operations in serial against the
             // server."
-            mongocxx::client global_client(uri{});
+            mongocxx::client global_client(uri{}, test_util::add_test_server_api());
             for (auto&& operation : test["operations"].get_array().value) {
                 std::string operation_name = to_string(operation["name"].get_string().value);
                 auto dbname = to_string(operation["database"].get_string().value);
@@ -187,7 +187,7 @@ void run_change_stream_tests_in_file(const std::string& test_path) {
 TEST_CASE("Change stream spec tests", "[change_stream_spec]") {
     instance::current();
 
-    client client{uri{}};
+    client client{uri{}, test_util::add_test_server_api()};
     if (!test_util::is_replica_set(client)) {
         WARN("Skipping - not a replica set");
         return;

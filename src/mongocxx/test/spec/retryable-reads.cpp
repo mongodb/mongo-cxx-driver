@@ -40,6 +40,7 @@ void run_retryable_reads_tests_in_file(std::string test_path) {
     apm_checker apm_checker;
     apm_checker.set_ignore_command_monitoring_event("killCursors");
     client_opts.apm_opts(apm_checker.get_apm_opts(true /* command_started_events_only */));
+    client_opts = test_util::add_test_server_api(client_opts);
 
     document::view test_spec_view = test_spec->view();
     for (auto&& test : test_spec_view["tests"].get_array().value) {

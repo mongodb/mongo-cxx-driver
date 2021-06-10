@@ -835,7 +835,7 @@ document::value assert_session_transaction_state(client_session& session, docume
 }
 
 bool collection_exists(document::view op) {
-    client client{uri{}};
+    client client{uri{}, test_util::add_test_server_api()};
     auto coll_name = string::to_string(op["arguments"]["collectionName"].get_string().value);
     auto db_name = string::to_string(op["arguments"]["databaseName"].get_string().value);
     return client.database(db_name).has_collection(coll_name);
@@ -858,7 +858,7 @@ document::value create_index(collection& coll,
 }
 
 bool index_exists(document::view op) {
-    client client{uri{}};
+    client client{uri{}, test_util::add_test_server_api()};
     auto coll_name = string::to_string(op["arguments"]["collectionName"].get_string().value);
     auto db_name = string::to_string(op["arguments"]["databaseName"].get_string().value);
     auto coll = client.database(db_name).collection(coll_name);

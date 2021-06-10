@@ -39,7 +39,7 @@ using test_util::server_has_sessions;
 TEST_CASE("session options", "[session]") {
     instance::current();
 
-    client c{uri{}};
+    client c{uri{}, test_util::add_test_server_api()};
 
     if (!server_has_sessions(c)) {
         return;
@@ -76,7 +76,7 @@ TEST_CASE("start_session failure", "[session]") {
         })
         .forever();
 
-    client c{uri{}};
+    client c{uri{}, test_util::add_test_server_api()};
 
     REQUIRE_THROWS_MATCHES(
         c.start_session(), mongocxx::exception, mongocxx_exception_matcher{"foo"});
@@ -87,7 +87,7 @@ TEST_CASE("session", "[session]") {
 
     instance::current();
 
-    client c{uri{}};
+    client c{uri{}, test_util::add_test_server_api()};
 
     if (!server_has_sessions(c)) {
         return;
@@ -146,7 +146,7 @@ TEST_CASE("session", "[session]") {
 
         // "Session argument is for the right client" test from Driver Sessions Spec.
         // Passing a session from client "c" should fail with client "c2" and related objects.
-        client c2{uri{}};
+        client c2{uri{}, test_util::add_test_server_api()};
         auto db2 = c2["db"];
         auto collection2 = db2["collection"];
 
@@ -238,7 +238,7 @@ class session_test {
         });
 
         client_opts.apm_opts(apm_opts);
-        client = mongocxx::client(uri{}, client_opts);
+        client = mongocxx::client(uri{}, test_util::add_test_server_api(client_opts));
     }
 
     void test_method_with_session(const std::function<void(bool)>& f, const client_session& s) {

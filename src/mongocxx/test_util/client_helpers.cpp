@@ -199,6 +199,16 @@ std::basic_string<std::uint8_t> convert_hex_string_to_bytes(stdx::string_view he
     return bytes;
 }
 
+options::client add_test_server_api(options::client opts) {
+    auto api_version = std::getenv("MONGODB_API_VERSION");
+    // Check if MONGODB_API_VERSION is set and not empty.
+    if (api_version && std::string(api_version).length() > 0) {
+        auto version = options::server_api::version_from_string(api_version);
+        opts.server_api_opts(options::server_api(version));
+    }
+    return opts;
+}
+
 std::int32_t get_max_wire_version(const client& client) {
     auto reply = get_is_master(client);
     auto max_wire_version = reply.view()["maxWireVersion"];

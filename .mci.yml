@@ -375,28 +375,34 @@ functions:
                       # of find(1), and some platforms like Ubuntu 16.04 don't support the +mode
                       # syntax, so we use Perl to help us find executable files.
                       EXAMPLES=$(find examples -type f | sort | perl -nlwe 'print if -x')
-                      for test in $EXAMPLES; do
-                        case "$test" in
-                          *encryption*)
-                            echo "Skipping client side encryption example"
-                            ;;
-                          *change_stream*)
-                            echo "TODO CXX-1201, enable for servers that support change streams"
-                            ;;
-                          *client_session*)
-                            echo "TODO CXX-1201, enable for servers that support change streams"
-                            ;;
-                          *with_transaction*)
-                            echo "TODO CXX-1201, enable for servers that support transactions"
-                            ;;
-                          *causal_consistency*)
-                            echo "TODO CXX-1201, enable for servers that support transactions"
-                            ;;
-                          *)
-                            ${test_params} $test
-                            ;;
-                        esac
-                      done
+
+                      # Only run examples if MONGODB_API_VERSION is unset. We do not append
+                      # API version to example clients, so examples will fail when requireApiVersion
+                      # is true.
+                      if [[ -z "$MONGODB_API_VERSION" ]]; then
+                          for test in $EXAMPLES; do
+                            case "$test" in
+                              *encryption*)
+                                echo "Skipping client side encryption example"
+                                ;;
+                              *change_stream*)
+                                echo "TODO CXX-1201, enable for servers that support change streams"
+                                ;;
+                              *client_session*)
+                                echo "TODO CXX-1201, enable for servers that support change streams"
+                                ;;
+                              *with_transaction*)
+                                echo "TODO CXX-1201, enable for servers that support transactions"
+                                ;;
+                              *causal_consistency*)
+                                echo "TODO CXX-1201, enable for servers that support transactions"
+                                ;;
+                              *)
+                                ${test_params} $test
+                                ;;
+                            esac
+                          done
+                      fi
                   fi
 
                   cd ..
@@ -420,7 +426,14 @@ functions:
                   fi
                   # The example projects never run under valgrind, since we haven't added execution
                   # logic to handle ${test_params}.
-                  MONGOC_VERSION=${mongoc_version|master} .evergreen/build_example_projects.sh
+                  #
+                  # Only run example projects if MONGODB_API_VERSION is unset. We do not append
+                  # API version to example clients, so example projects will fail when requireApiVersion
+                  # is true.
+                  if [[ -z "$MONGODB_API_VERSION" ]]; then
+                    MONGOC_VERSION=${mongoc_version|master} .evergreen/build_example_projects.sh
+                  fi
+                  unset MONGODB_API_VERSION
 
     "test auth":
         - command: shell.exec
@@ -763,7 +776,9 @@ tasks:
         - func: "start_mongod"
           vars:
               REQUIRE_API_VERSION: true
-              AUTH: auth
+              # Authentication with versioned API should already be tested
+              # in the C driver.
+              AUTH: noauth
         - func: "install_c_driver"
         - func: "compile"
         - func: "test"
@@ -780,8 +795,6 @@ tasks:
         - func: "install_c_driver"
         - func: "compile"
         - func: "test"
-          vars:
-              MONGODB_API_VERSION: 1
 
 #######################################
 #           MongoDB Version Matrix    #

@@ -159,7 +159,7 @@ void test_kill_cursors() {
 void test_connection_without_auth() {
     instance::current();
 
-    client client{uri{}};
+    client client{uri{}, test_util::add_test_server_api()};
     client["admin"].run_command(make_document(kvp("ping", 1)));
 }
 
