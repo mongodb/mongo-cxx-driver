@@ -346,7 +346,12 @@ functions:
 
                   if [ "Windows_NT" == "$OS" ]; then
                       CTEST_OUTPUT_ON_FAILURE=1 MSBuild.exe /p:Configuration=${build_type} RUN_TESTS.vcxproj
-                      CTEST_OUTPUT_ON_FAILURE=1 MSBuild.exe /p:Configuration=${build_type} examples/run-examples.vcxproj
+                      # Only run examples if MONGODB_API_VERSION is unset. We do not append
+                      # API version to example clients, so examples will fail when requireApiVersion
+                      # is true.
+                      if [[ -z "$MONGODB_API_VERSION" ]]; then
+                        CTEST_OUTPUT_ON_FAILURE=1 MSBuild.exe /p:Configuration=${build_type} examples/run-examples.vcxproj
+                      fi
                   else
                       # ENABLE_SLOW_TESTS is required to run the slow tests that are disabled by default. The slow tests should not be run if explicitly disabled.
                       if [ -z "${disable_slow_tests}" ]; then
