@@ -174,6 +174,9 @@ functions:
                 export MONGODB_VERSION=${mongodb_version}
                 export AUTH=${AUTH}
                 export TOPOLOGY=${TOPOLOGY|server}
+                export REQUIRE_API_VERSION=${REQUIRE_API_VERSION}
+                export ORCHESTRATION_FILE=${ORCHESTRATION_FILE}
+                export PATH="$MONGODB_BINARIES:$PATH"
 
                 echo "{ \"releases\": { \"default\": \"$MONGODB_BINARIES\" }}" > $MONGO_ORCHESTRATION_HOME/orchestration.config
                 ./.evergreen/run-orchestration.sh
@@ -333,6 +336,8 @@ functions:
                   export UNIFIED_FORMAT_TESTS_PATH=$(pwd)/../data/unified-format
                   export VERSIONED_API_TESTS_PATH=$(pwd)/../data/versioned-api
 
+                  export MONGODB_API_VERSION="${MONGODB_API_VERSION}"
+
                   # export environment variables for encryption tests
                   set +o errexit
                   export MONGOCXX_TEST_AWS_SECRET_ACCESS_KEY="${cse_aws_secret_access_key}"
@@ -341,7 +346,12 @@ functions:
 
                   if [ "Windows_NT" == "$OS" ]; then
                       CTEST_OUTPUT_ON_FAILURE=1 MSBuild.exe /p:Configuration=${build_type} RUN_TESTS.vcxproj
-                      CTEST_OUTPUT_ON_FAILURE=1 MSBuild.exe /p:Configuration=${build_type} examples/run-examples.vcxproj
+                      # Only run examples if MONGODB_API_VERSION is unset. We do not append
+                      # API version to example clients, so examples will fail when requireApiVersion
+                      # is true.
+                      if [[ -z "$MONGODB_API_VERSION" ]]; then
+                        CTEST_OUTPUT_ON_FAILURE=1 MSBuild.exe /p:Configuration=${build_type} examples/run-examples.vcxproj
+                      fi
                   else
                       # ENABLE_SLOW_TESTS is required to run the slow tests that are disabled by default. The slow tests should not be run if explicitly disabled.
                       if [ -z "${disable_slow_tests}" ]; then
@@ -370,28 +380,34 @@ functions:
                       # of find(1), and some platforms like Ubuntu 16.04 don't support the +mode
                       # syntax, so we use Perl to help us find executable files.
                       EXAMPLES=$(find examples -type f | sort | perl -nlwe 'print if -x')
-                      for test in $EXAMPLES; do
-                        case "$test" in
-                          *encryption*)
-                            echo "Skipping client side encryption example"
-                            ;;
-                          *change_stream*)
-                            echo "TODO CXX-1201, enable for servers that support change streams"
-                            ;;
-                          *client_session*)
-                            echo "TODO CXX-1201, enable for servers that support change streams"
-                            ;;
-                          *with_transaction*)
-                            echo "TODO CXX-1201, enable for servers that support transactions"
-                            ;;
-                          *causal_consistency*)
-                            echo "TODO CXX-1201, enable for servers that support transactions"
-                            ;;
-                          *)
-                            ${test_params} $test
-                            ;;
-                        esac
-                      done
+
+                      # Only run examples if MONGODB_API_VERSION is unset. We do not append
+                      # API version to example clients, so examples will fail when requireApiVersion
+                      # is true.
+                      if [[ -z "$MONGODB_API_VERSION" ]]; then
+                          for test in $EXAMPLES; do
+                            case "$test" in
+                              *encryption*)
+                                echo "Skipping client side encryption example"
+                                ;;
+                              *change_stream*)
+                                echo "TODO CXX-1201, enable for servers that support change streams"
+                                ;;
+                              *client_session*)
+                                echo "TODO CXX-1201, enable for servers that support change streams"
+                                ;;
+                              *with_transaction*)
+                                echo "TODO CXX-1201, enable for servers that support transactions"
+                                ;;
+                              *causal_consistency*)
+                                echo "TODO CXX-1201, enable for servers that support transactions"
+                                ;;
+                              *)
+                                ${test_params} $test
+                                ;;
+                            esac
+                          done
+                      fi
                   fi
 
                   cd ..
@@ -415,7 +431,14 @@ functions:
                   fi
                   # The example projects never run under valgrind, since we haven't added execution
                   # logic to handle ${test_params}.
-                  MONGOC_VERSION=${mongoc_version|master} .evergreen/build_example_projects.sh
+                  #
+                  # Only run example projects if MONGODB_API_VERSION is unset. We do not append
+                  # API version to example clients, so example projects will fail when requireApiVersion
+                  # is true.
+                  if [[ -z "$MONGODB_API_VERSION" ]]; then
+                    MONGOC_VERSION=${mongoc_version|master} .evergreen/build_example_projects.sh
+                  fi
+                  unset MONGODB_API_VERSION
 
     "test auth":
         - command: shell.exec
@@ -752,6 +775,32 @@ tasks:
         - func: "run_mongohouse"
         - func: "test_mongohouse"
 
+    - name: test_versioned_api
+      commands:
+        - func: "setup"
+        - func: "start_mongod"
+          vars:
+              REQUIRE_API_VERSION: true
+              # Authentication with versioned API should already be tested
+              # in the C driver.
+              AUTH: noauth
+        - func: "install_c_driver"
+        - func: "compile"
+        - func: "test"
+          vars:
+              MONGODB_API_VERSION: 1
+
+    - name: test_versioned_api_accept_version_two
+      commands:
+        - func: "setup"
+        - func: "start_mongod"
+          vars:
+              ORCHESTRATION_FILE: versioned-api-testing.json
+              AUTH: noauth
+        - func: "install_c_driver"
+        - func: "compile"
+        - func: "test"
+
 #######################################
 #           MongoDB Version Matrix    #
 #######################################
@@ -829,6 +878,13 @@ buildvariants:
       display_name: "${os} ${mongodb_version} Auth"
       tasks:
           - name: compile_and_test_auth_with_shared_libs
+
+    - matrix_name: "versioned api"
+      matrix_spec: {os: "*", mongodb_version: "latest"}
+      display_name: "${os} ${mongodb_version} Versioned API"
+      tasks:
+          - name: test_versioned_api
+          - name: test_versioned_api_accept_version_two
 
     #######################################
     #         Linux Buildvariants         #
@@ -1073,6 +1129,20 @@ buildvariants:
           - name: compile_and_test_with_shared_libs_extra_alignment
           - name: compile_and_test_with_static_libs
           - name: compile_and_test_with_static_libs_extra_alignment
+
+    - name: macos-1014-versioned-api
+      display_name: "MacOS 10.14 Release Versioned API"
+      expansions:
+          build_type: "Release"
+          extra_path: *macos_extra_path
+          cmake_flags: *macos_cmake_flags
+          poly_flags: *poly_boost_flags
+          mongodb_version: *version_latest
+      run_on:
+          - macos-1014
+      tasks:
+          - name: test_versioned_api
+          - name: test_versioned_api_accept_version_two
 
     - name: windows-2k8-release
       display_name: "Windows (VS 2015) Release (MongoDB 4.2)"

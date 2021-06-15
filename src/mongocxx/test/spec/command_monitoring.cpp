@@ -32,7 +32,7 @@ void initialize_collection(document::view test_spec_view) {
     std::string db_name = string::to_string(test_spec_view["database_name"].get_string().value);
     std::string col_name = string::to_string(test_spec_view["collection_name"].get_string().value);
 
-    client temp_client{uri{}};
+    client temp_client{uri{}, test_util::add_test_server_api()};
     collection temp_col = temp_client[db_name][col_name];
 
     temp_col.drop();
@@ -67,7 +67,7 @@ void run_command_monitoring_tests_in_file(std::string test_path) {
         array::view expectations = test["expectations"].get_array().value;
 
         // Use a separate client to check version info, so as not to interfere with APM
-        client temp_client{uri{}};
+        client temp_client{uri{}, test_util::add_test_server_api()};
         if (spec::should_skip_spec_test(temp_client, test.get_document().value)) {
             return;
         }
@@ -160,7 +160,7 @@ void run_command_monitoring_tests_in_file(std::string test_path) {
 
         // Apply listeners, and run operations.
         client_opts.apm_opts(apm_opts);
-        client client{uri{}, client_opts};
+        client client{uri{}, test_util::add_test_server_api(client_opts)};
 
         collection coll = client[db_name][col_name];
 

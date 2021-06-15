@@ -36,7 +36,7 @@ void open_and_close_client(const uri& test_uri, const options::apm& apm_opts) {
     // Apply listeners and trigger connection.
     options::client client_opts;
     client_opts.apm_opts(apm_opts);
-    client client{test_uri, client_opts};
+    client client{test_uri, test_util::add_test_server_api(client_opts)};
     client["admin"].run_command(make_document(kvp("ping", 1)));
 }
 
@@ -45,7 +45,7 @@ TEST_CASE("SDAM Monitoring", "[sdam_monitoring]") {
     std::string rs_name;
     uri test_uri;
 
-    client discoverer{uri{}};
+    client discoverer{uri{}, test_util::add_test_server_api()};
     auto topology_type = test_util::get_topology(discoverer);
     if (topology_type == "replicaset") {
         rs_name = test_util::replica_set_name(discoverer);

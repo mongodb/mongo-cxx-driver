@@ -74,7 +74,7 @@ TEST_CASE("A default constructed database cannot perform operations", "[database
 TEST_CASE("mongocxx::database copy constructor", "[database]") {
     instance::current();
 
-    client client{uri{}};
+    client client{uri{}, test_util::add_test_server_api()};
 
     SECTION("constructing from valid") {
         database database_a = client["a"];
@@ -93,7 +93,7 @@ TEST_CASE("mongocxx::database copy constructor", "[database]") {
 TEST_CASE("mongocxx::database copy assignment operator", "[database]") {
     instance::current();
 
-    client client{uri{}};
+    client client{uri{}, test_util::add_test_server_api()};
 
     SECTION("assigning valid to valid") {
         database database_a = client["a1"];
@@ -133,7 +133,7 @@ TEST_CASE("A database", "[database]") {
 
     instance::current();
 
-    client mongo_client{uri{}};
+    client mongo_client{uri{}, test_util::add_test_server_api()};
 
     SECTION("is created by a client") {
         bool called = false;
@@ -180,7 +180,7 @@ TEST_CASE("A database", "[database]") {
         database_destroy->interpose([&](mongoc_database_t*) { destroy_called = true; });
 
         {
-            client mongo_client{uri{}};
+            client mongo_client{uri{}, test_util::add_test_server_api()};
             database a = mongo_client[database_name];
 
             database b{std::move(a)};
@@ -321,7 +321,7 @@ TEST_CASE("A database", "[database]") {
 TEST_CASE("Database integration tests", "[database]") {
     instance::current();
 
-    client mongo_client{uri{}};
+    client mongo_client{uri{}, test_util::add_test_server_api()};
     stdx::string_view database_name{"database"};
     database database = mongo_client[database_name];
 

@@ -66,6 +66,17 @@ bool newer_than(const client& client, std::string version);
 std::basic_string<std::uint8_t> convert_hex_string_to_bytes(bsoncxx::stdx::string_view hex);
 
 //
+// Adds server API options to passed-in options if MONGODB_API_VERSION
+// environment variable is set.
+//
+// @param opts
+//   The options to add server API options to.
+//
+// @return The new options with appended server API options.
+//
+options::client add_test_server_api(options::client opts = {});
+
+//
 // Determines the max wire version associated with the given client, by running the "isMaster"
 // command.
 //
@@ -76,12 +87,12 @@ std::int32_t get_max_wire_version(const client& client);
 ///
 /// Determines the server version number by running "serverStatus".
 ///
-std::string get_server_version(const client& client = {uri{}});
+std::string get_server_version(const client& client = {uri{}, add_test_server_api()});
 
 ///
 /// Determines the setting of all server parameters by running "getParameter, *".
 ///
-bsoncxx::document::value get_server_params(const client& client = {uri{}});
+bsoncxx::document::value get_server_params(const client& client = {uri{}, add_test_server_api()});
 
 ///
 /// Get replica set name, or empty string.
@@ -91,17 +102,17 @@ std::string replica_set_name(const client& client);
 ///
 /// Determines if the server is a replica set member.
 ///
-bool is_replica_set(const client& client = {uri{}});
+bool is_replica_set(const client& client = {uri{}, add_test_server_api()});
 
 ///
 /// Returns "standalone", "replicaset", or "sharded".
 ///
-std::string get_topology(const client& client = {uri{}});
+std::string get_topology(const client& client = {uri{}, add_test_server_api()});
 
 ///
 /// Returns the "host" field of the config.shards collection.
 ///
-std::string get_hosts(const client& client = {uri{}});
+std::string get_hosts(const client& client = {uri{}, add_test_server_api()});
 
 ///
 /// Parses a JSON file at a given path and return it as a BSON document value.

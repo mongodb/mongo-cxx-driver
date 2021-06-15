@@ -71,7 +71,7 @@ void disable_fail_point(const client& conn) {
 TEST_CASE("create_one", "[index_view]") {
     instance::current();
 
-    client mongodb_client{uri{}};
+    client mongodb_client{uri{}, test_util::add_test_server_api()};
     database db = mongodb_client["index_view_create_one"];
 
     SECTION("works with document and options") {
@@ -217,7 +217,7 @@ TEST_CASE("create_one", "[index_view]") {
 TEST_CASE("create_many", "[index_view]") {
     instance::current();
 
-    client mongodb_client{uri{}};
+    client mongodb_client{uri{}, test_util::add_test_server_api()};
     database db = mongodb_client["index_view_create_many"];
 
     std::vector<index_model> models{index_model(make_document(kvp("a", 1))),
@@ -271,7 +271,7 @@ TEST_CASE("create_many", "[index_view]") {
 TEST_CASE("drop_one", "[index_view]") {
     instance::current();
 
-    client mongodb_client{uri{}};
+    client mongodb_client{uri{}, test_util::add_test_server_api()};
     database db = mongodb_client["index_view_drop_one"];
 
     SECTION("drops index by name") {
@@ -366,7 +366,7 @@ TEST_CASE("drop_one", "[index_view]") {
 TEST_CASE("drop_all", "[index_view]") {
     instance::current();
 
-    client mongodb_client{uri{}};
+    client mongodb_client{uri{}, test_util::add_test_server_api()};
     database db = mongodb_client["index_view_drop_all"];
 
     std::vector<index_model> models{index_model{make_document(kvp("a", 1))},
@@ -422,7 +422,7 @@ TEST_CASE("drop_all", "[index_view]") {
 TEST_CASE("index creation and deletion with different collation") {
     instance::current();
 
-    client mongodb_client{uri{}};
+    client mongodb_client{uri{}, test_util::add_test_server_api()};
 
     if (test_util::get_max_wire_version(mongodb_client) >= 5) {
         database db = mongodb_client["index_view_collation"];

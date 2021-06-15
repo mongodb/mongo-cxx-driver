@@ -57,7 +57,7 @@ TEST_CASE("A default constructed collection cannot perform operations", "[collec
 TEST_CASE("mongocxx::collection copy constructor", "[collection]") {
     instance::current();
 
-    client client{uri{}};
+    client client{uri{}, test_util::add_test_server_api()};
     database db = client["collection_copy_constructor"];
 
     SECTION("constructing from valid") {
@@ -77,7 +77,7 @@ TEST_CASE("mongocxx::collection copy constructor", "[collection]") {
 TEST_CASE("mongocxx::collection copy assignment operator", "[collection]") {
     instance::current();
 
-    client client{uri{}};
+    client client{uri{}, test_util::add_test_server_api()};
     database db = client["collection_copy_assignment"];
 
     SECTION("assigning valid to valid") {
@@ -114,7 +114,7 @@ TEST_CASE("mongocxx::collection copy assignment operator", "[collection]") {
 TEST_CASE("collection renaming", "[collection]") {
     instance::current();
 
-    client mongodb_client{uri{}};
+    client mongodb_client{uri{}, test_util::add_test_server_api()};
     database db = mongodb_client["collection_renaming"];
 
     auto filter = make_document(kvp("key--------unique", "value"));
@@ -150,7 +150,7 @@ TEST_CASE("collection renaming", "[collection]") {
 TEST_CASE("collection dropping") {
     instance::current();
 
-    client mongodb_client{uri{}};
+    client mongodb_client{uri{}, test_util::add_test_server_api()};
     database db = mongodb_client["collection_dropping"];
 
     std::string collname{"mongo_cxx_driver"};
@@ -163,7 +163,7 @@ TEST_CASE("collection dropping") {
 TEST_CASE("CRUD functionality", "[driver::collection]") {
     instance::current();
 
-    client mongodb_client{uri{}};
+    client mongodb_client{uri{}, test_util::add_test_server_api()};
     database db = mongodb_client["collection_crud_functionality"];
 
     auto case_insensitive_collation = make_document(kvp("locale", "en_US"), kvp("strength", 2));
@@ -2276,7 +2276,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 }
 
 TEST_CASE("read_concern is inherited from parent", "[collection]") {
-    client mongo_client{uri{}};
+    client mongo_client{uri{}, test_util::add_test_server_api()};
     database db = mongo_client["collection_read_concern_inheritance"];
 
     read_concern::level majority = read_concern::level::k_majority;
@@ -2327,7 +2327,7 @@ TEST_CASE("create_index tests", "[collection]") {
 
     instance::current();
 
-    client mongodb_client{uri{}};
+    client mongodb_client{uri{}, test_util::add_test_server_api()};
     database db = mongodb_client["collection_create_index"];
 
     SECTION("returns index name") {
@@ -2484,7 +2484,7 @@ TEST_CASE("create_index tests", "[collection]") {
 TEST_CASE("list_indexes", "[collection]") {
     instance::current();
 
-    client mongodb_client{uri{}};
+    client mongodb_client{uri{}, test_util::add_test_server_api()};
     database db = mongodb_client["collection_list_indexes"];
 
     collection coll = db["list_indexes_works"];
@@ -2524,7 +2524,7 @@ TEST_CASE("list_indexes", "[collection]") {
 // use it with all three cursor types.
 TEST_CASE("Cursor iteration", "[collection][cursor]") {
     instance::current();
-    client mongodb_client{uri{}};
+    client mongodb_client{uri{}, test_util::add_test_server_api()};
     database db = mongodb_client["collection_cursor_iteration"];
 
     auto capped_name = std::string("mongo_cxx_driver_capped");
@@ -2651,14 +2651,14 @@ TEST_CASE("Cursor iteration", "[collection][cursor]") {
 TEST_CASE("regressions", "CXX-986") {
     instance::current();
     mongocxx::uri mongo_uri{"mongodb://non-existent-host.invalid/"};
-    mongocxx::client client{mongo_uri};
+    mongocxx::client client{mongo_uri, test_util::add_test_server_api()};
     REQUIRE_THROWS(client.database("irrelevant")["irrelevant"].find_one_and_update(
         make_document(kvp("irrelevant", 1)), make_document(kvp("irrelevant", 2))));
 }
 
 TEST_CASE("bulk_write with container", "[collection]") {
     instance::current();
-    mongocxx::client client{uri{}};
+    mongocxx::client client{uri{}, test_util::add_test_server_api()};
 
     std::vector<model::write> vec;
     for (int32_t i = 0; i != 10; ++i) {
@@ -2677,7 +2677,7 @@ TEST_CASE("bulk_write with container", "[collection]") {
 /* Regression test for CXX-2028. */
 TEST_CASE("find_and_x operations append write concern correctly", "[collection]") {
     instance::current();
-    mongocxx::client client{uri{}};
+    mongocxx::client client{uri{}, test_util::add_test_server_api()};
     mongocxx::write_concern wc;
     wc.acknowledge_level(mongocxx::write_concern::level::k_acknowledged);
 
@@ -2731,7 +2731,7 @@ TEST_CASE("Ensure that the WriteConcernError 'errInfo' object is propagated", "[
     using namespace bsoncxx;
     instance::current();
 
-    client mongodb_client{uri{}};
+    client mongodb_client{uri{}, test_util::add_test_server_api()};
 
     using bsoncxx::builder::basic::sub_document;
     auto err_info = builder::basic::document{};

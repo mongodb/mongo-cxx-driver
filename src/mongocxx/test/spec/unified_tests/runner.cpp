@@ -425,9 +425,12 @@ client create_client(document::view object) {
     auto conn = "mongodb://" + get_hostnames(object) + "/?" + uri_options_to_string(object);
     auto apm_opts = options::apm{};
     auto client_opts = options::client{};
+    // Use specified serverApi or default if none is provided.
     if (object["serverApi"]) {
         auto server_api_opts = create_server_api(object);
         client_opts.server_api_opts(server_api_opts);
+    } else {
+        client_opts = test_util::add_test_server_api();
     }
 
     add_observe_events(apm_opts, object);

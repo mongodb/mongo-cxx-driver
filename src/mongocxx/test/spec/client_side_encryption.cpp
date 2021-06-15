@@ -140,13 +140,13 @@ void run_encryption_tests_in_file(const std::string& test_path) {
     auto tests = test_spec_view["tests"].get_array().value;
 
     /* we may not have a supported topology */
-    if (should_skip_spec_test(client{uri{}}, test_spec_view)) {
+    if (should_skip_spec_test(client{uri{}, test_util::add_test_server_api()}, test_spec_view)) {
         WARN("File skipped - " + test_path);
         return;
     }
 
     class client setup_client {
-        uri {}
+        uri{}, test_util::add_test_server_api(),
     };
 
     write_concern wc_majority;
@@ -155,7 +155,8 @@ void run_encryption_tests_in_file(const std::string& test_path) {
     for (auto&& test : tests) {
         auto description = test["description"].get_string().value;
         INFO("Test description: " << description);
-        if (should_skip_spec_test(client{uri{}}, test.get_document().value)) {
+        if (should_skip_spec_test(client{uri{}, test_util::add_test_server_api()},
+                                  test.get_document().value)) {
             continue;
         }
 
@@ -182,7 +183,7 @@ void run_encryption_tests_in_file(const std::string& test_path) {
         }
 
         class client client {
-            get_uri(test.get_document().value), std::move(client_opts)
+            get_uri(test.get_document().value), test_util::add_test_server_api(client_opts),
         };
 
         auto db = client[db_name];
@@ -227,7 +228,7 @@ void run_encryption_tests_in_file(const std::string& test_path) {
 
         if (test["outcome"] && test["outcome"]["collection"]) {
             class client plaintext_client {
-                uri {}
+                uri{}, test_util::add_test_server_api(),
             };
 
             read_preference rp;

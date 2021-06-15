@@ -31,7 +31,7 @@ using bsoncxx::builder::basic::make_document;
 // Run on replica set with 1 node
 TEST_CASE("Transaction tests", "[transactions]") {
     instance::current();
-    client mongodb_client{uri{}};
+    client mongodb_client{uri{}, test_util::add_test_server_api()};
 
     if (!test_util::is_replica_set(mongodb_client)) {
         WARN("Skipping: transactions tests require replica set");
@@ -218,7 +218,7 @@ TEST_CASE("Transaction tests", "[transactions]") {
 
 TEST_CASE("Transactions Documentation Examples", "[transactions]") {
     instance::current();
-    client client{uri{}};
+    client client{uri{}, test_util::add_test_server_api()};
 
     if (!test_util::is_replica_set(client)) {
         WARN("Skipping: transactions tests require replica set");

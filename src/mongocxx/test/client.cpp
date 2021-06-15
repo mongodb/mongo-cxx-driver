@@ -66,7 +66,7 @@ TEST_CASE("A client lists its databases with a filter applied", "[client]") {
         })
         .forever();
 
-    client mongo_client{uri{}};
+    client mongo_client{uri{}, test_util::add_test_server_api()};
     mongo_client.list_databases(filter_view);
     REQUIRE(client_list_databases_called);
 }
@@ -90,7 +90,7 @@ TEST_CASE("list databases passes authorizedDatabases option", "[client]") {
         return nullptr;
     });
 
-    mongocxx::client client{mongocxx::uri{}};
+    mongocxx::client client{mongocxx::uri{}, test_util::add_test_server_api()};
 
     SECTION("list_databases with no arguments") {
         client.list_databases();
@@ -117,7 +117,7 @@ TEST_CASE("A client constructed with a URI is truthy", "[client]") {
 
     instance::current();
 
-    client a{uri{}};
+    client a{uri{}, test_util::add_test_server_api()};
     REQUIRE(a);
 }
 
@@ -158,7 +158,7 @@ TEST_CASE("A client cleans up its underlying mongoc client on destruction", "[cl
     client_destroy->visit([&](mongoc_client_t*) { destroy_called = true; });
 
     {
-        client object{uri{}};
+        client object{uri{}, test_util::add_test_server_api()};
         REQUIRE(!destroy_called);
     }
 
@@ -170,7 +170,7 @@ TEST_CASE("A client supports move operations", "[client]") {
 
     instance::current();
 
-    client a{uri{}};
+    client a{uri{}, test_util::add_test_server_api()};
 
     bool called = false;
     client_new->visit([&](const mongoc_uri_t*) { called = true; });
@@ -187,7 +187,7 @@ TEST_CASE("A client has a settable Read Concern", "[client]") {
 
     instance::current();
 
-    client mongo_client{uri{}};
+    client mongo_client{uri{}, test_util::add_test_server_api()};
 
     auto client_set_rc_called = false;
     read_concern rc{};
@@ -211,7 +211,7 @@ TEST_CASE("A client's read preferences may be set and obtained", "[client]") {
 
     instance::current();
 
-    client mongo_client{uri{}};
+    client mongo_client{uri{}, test_util::add_test_server_api()};
     read_preference preference{};
     preference.mode(read_preference::read_mode::k_secondary_preferred);
 
@@ -250,7 +250,7 @@ TEST_CASE("A client may not change apm callbacks after they are set", "[client]"
 
     options::client client_opts;
     client_opts.apm_opts(apm_opts);
-    client mongo_client(uri{}, client_opts);
+    client mongo_client(uri{}, test_util::add_test_server_api(client_opts));
 
     apm_opts.on_command_started([&](const events::command_started_event& event) {
         INFO(event.command_name());
@@ -281,7 +281,7 @@ TEST_CASE("A client can delete apm options and the callbacks will still work pro
         client_opts.apm_opts(apm_opts);
     }  // destructor for apm_opts is called
 
-    client mongo_client(uri{}, client_opts);
+    client mongo_client(uri{}, test_util::add_test_server_api(client_opts));
 
     mongo_client["test"]["test_apm"].insert_one(
         bsoncxx::builder::basic::make_document(bsoncxx::builder::basic::kvp("x", 2)));
@@ -294,7 +294,7 @@ TEST_CASE("A client's write concern may be set and obtained", "[client]") {
 
     instance::current();
 
-    client mongo_client{uri{}};
+    client mongo_client{uri{}, test_util::add_test_server_api()};
     write_concern concern;
     concern.majority(std::chrono::milliseconds(100));
 
@@ -338,7 +338,7 @@ TEST_CASE("A client can be reset", "[client]") {
     bool reset_called = false;
     client_reset->interpose([&](const mongoc_client_t*) { reset_called = true; });
 
-    client mongo_client{uri{}};
+    client mongo_client{uri{}, test_util::add_test_server_api()};
     mongo_client.reset();
 
     REQUIRE(reset_called);
@@ -362,7 +362,7 @@ TEST_CASE("A client can create a named database object", "[client]") {
 
     stdx::string_view name("database");
 
-    client mongo_client{uri{}};
+    client mongo_client{uri{}, test_util::add_test_server_api()};
     database obtained_database = mongo_client[name];
     REQUIRE(obtained_database.name() == name);
 }
@@ -425,12 +425,12 @@ TEST_CASE("integration tests for client metadata handshake feature") {
     };
 
     SECTION("with client") {
-        mongocxx::client client{uri};
+        mongocxx::client client{uri, test_util::add_test_server_api()};
         run_test(client);
     }
 
     SECTION("with pool") {
-        mongocxx::pool pool{uri};
+        mongocxx::pool pool{uri, options::pool(test_util::add_test_server_api())};
         auto client = pool.acquire();
         run_test(*client);
     }
