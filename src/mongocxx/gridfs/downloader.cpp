@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include <algorithm>
+#include <cstdint>
 #include <cstring>
 #include <sstream>
 
@@ -29,8 +30,13 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace gridfs {
 
-downloader::downloader(stdx::optional<cursor> chunks, bsoncxx::document::value files_doc)
-    : _impl{stdx::make_unique<impl>(std::move(chunks), std::move(files_doc))} {}
+downloader::downloader(stdx::optional<cursor> chunks,
+                       chunks_and_bytes_offset start,
+                       std::int32_t chunk_size,
+                       std::int32_t file_len,
+                       bsoncxx::document::value files_doc)
+    : _impl{stdx::make_unique<impl>(
+          std::move(chunks), std::move(start), std::move(chunk_size), std::move(file_len), std::move(files_doc))} {}
 
 downloader::downloader() noexcept = default;
 downloader::downloader(downloader&&) noexcept = default;
@@ -100,40 +106,43 @@ void downloader::fetch_chunk() {
             << " chunk(s)";
         throw gridfs_exception{error_code::k_gridfs_file_corrupted, err.str()};
     }
+    auto chunks_seen = _get_impl().chunks_seen;
 
-    if (_get_impl().chunks_seen) {
+    if (chunks_seen) {
         ++(*_get_impl().chunks_curr);
+    } else {
+        chunks_seen = _get_impl().start.chunks_offset;
     }
 
     bsoncxx::document::view chunk_doc = **_get_impl().chunks_curr;
 
     auto chunk_n_ele = chunk_doc["n"];
     if (!chunk_n_ele || chunk_n_ele.type() != bsoncxx::type::k_int32 ||
-        chunk_n_ele.get_int32().value != _get_impl().chunks_seen) {
+        chunk_n_ele.get_int32().value != chunks_seen) {
         std::ostringstream err;
-        err << "chunk #" << _get_impl().chunks_seen
+        err << "chunk #" << chunks_seen
             << ": expected to find field \"n\" with k_int32 type";
         throw gridfs_exception{error_code::k_gridfs_file_corrupted, err.str()};
     }
 
-    if (_get_impl().chunks_seen == std::numeric_limits<std::int32_t>::max()) {
+    if (chunks_seen == std::numeric_limits<std::int32_t>::max()) {
         throw gridfs_exception{error_code::k_gridfs_file_corrupted, "file has too many chunks"};
     }
 
     auto chunk_data_ele = chunk_doc["data"];
     if (!chunk_data_ele || chunk_data_ele.type() != bsoncxx::type::k_binary) {
         std::ostringstream err;
-        err << "chunk #" << _get_impl().chunks_seen
+        err << "chunk #" << chunks_seen
             << ": expected to find field \"data\" with k_binary type";
         throw gridfs_exception{error_code::k_gridfs_file_corrupted, err.str()};
     }
 
     auto binary_data = chunk_data_ele.get_binary();
 
-    if (_get_impl().chunks_seen != _get_impl().file_chunk_count - 1) {
+    if (chunks_seen != _get_impl().file_chunk_count - 1) {
         if (binary_data.size != static_cast<std::uint32_t>(_get_impl().chunk_size)) {
             std::ostringstream err;
-            err << "chunk #" << _get_impl().chunks_seen << ": expected size of chunk to be "
+            err << "chunk #" << chunks_seen << ": expected size of chunk to be "
                 << _get_impl().chunk_size << " bytes, but actual size of chunk is "
                 << binary_data.size << " bytes";
             throw gridfs_exception{error_code::k_gridfs_file_corrupted, err.str()};
@@ -148,18 +157,24 @@ void downloader::fetch_chunk() {
 
         if (binary_data.size != static_cast<std::uint32_t>(expected_size)) {
             std::ostringstream err;
-            err << "chunk #" << _get_impl().chunks_seen << ": expected size of chunk to be "
+            err << "chunk #" << chunks_seen << ": expected size of chunk to be "
                 << expected_size << " bytes, but actual size of chunk is " << binary_data.size
                 << " bytes";
             throw gridfs_exception{error_code::k_gridfs_file_corrupted, err.str()};
         }
     }
 
-    ++_get_impl().chunks_seen;
-
     _get_impl().chunk_buffer_ptr = binary_data.bytes;
     _get_impl().chunk_buffer_len = binary_data.size;
-    _get_impl().chunk_buffer_offset = 0;
+
+    if (not _get_impl().chunks_seen) {
+        _get_impl().chunk_buffer_offset = _get_impl().start.bytes_offset;
+        _get_impl().chunks_seen = chunks_seen;
+    } else {
+        _get_impl().chunk_buffer_offset = 0;
+    }
+
+    ++_get_impl().chunks_seen;
 }
 
 const downloader::impl& downloader::_get_impl() const {
