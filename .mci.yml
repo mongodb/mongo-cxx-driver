@@ -412,7 +412,7 @@ functions:
 
                   cd ..
                   export CMAKE_PREFIX_PATH=$PREFIX:$(pwd)/build/install
-                  export PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig:$(pwd)/build/install/lib/pkgconfig
+                  export PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig:$(pwd)/build/install/lib/pkgconfig:$(pwd)/build/install/lib64/pkgconfig
                   export USE_STATIC_LIBS="${USE_STATIC_LIBS}"
                   export BUILD_TYPE="${build_type}"
 
@@ -427,7 +427,7 @@ functions:
                   elif [ "$(uname -s | tr '[:upper:]' '[:lower:]')" == "darwin" ]; then
                       export DYLD_LIBRARY_PATH="$(pwd)/build/install/lib:$DYLD_LIBRARY_PATH"
                   else
-                      export LD_LIBRARY_PATH="$(pwd)/build/install/lib:$LD_LIBRARY_PATH"
+                      export LD_LIBRARY_PATH="$(pwd)/build/install/lib:$(pwd)/build/install/lib64:$LD_LIBRARY_PATH"
                   fi
                   # The example projects never run under valgrind, since we haven't added execution
                   # logic to handle ${test_params}.
@@ -1059,8 +1059,8 @@ buildvariants:
           - name: compile_and_test_with_static_libs
           - name: compile_and_test_with_static_libs_extra_alignment
 
-    - name: power8-ubuntu1804
-      display_name: "ppc64le Ubuntu 18.04 (MongoDB Latest)"
+    - name: power8-rhel81
+      display_name: "ppc64le RHEL 8.1 (MongoDB Latest)"
       batchtime: 1440 # 1 day
       expansions:
           build_type: "Release"
@@ -1069,7 +1069,7 @@ buildvariants:
           mongodb_version: *version_latest
           cmake: "cmake"
       run_on:
-          - ubuntu1804-power8-build
+          - rhel81-power8-test
       tasks:
           - name: compile_with_shared_libs
           - name: compile_and_test_with_shared_libs
