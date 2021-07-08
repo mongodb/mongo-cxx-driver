@@ -145,7 +145,11 @@ functions:
 
                 # Use LD_LIBRARY_PATH to inform the tests where to find dependencies on Linux.
                 # This task only runs on Linux.
-                export LD_LIBRARY_PATH=.:$PREFIX/lib/
+                if [ -n "${lib_dir}" ]; then
+                    export LD_LIBRARY_PATH=.:$PREFIX/${lib_dir}/
+                else
+                    export LD_LIBRARY_PATH=.:$PREFIX/lib/
+                fi
 
                 export MONGOHOUSE_TESTS_PATH="$(pwd)/../data/mongohouse"
 
@@ -319,8 +323,13 @@ functions:
                   # mongoc library dependencies on Windows / Linux / Mac OS, respectively.
                   # Additionally, on Windows, we also need to inform the tests where to find
                   # mongocxx library dependencies.
-                  export LD_LIBRARY_PATH=.:$PREFIX/lib/
-                  export DYLD_LIBRARY_PATH=.:$PREFIX/lib/
+                  if [ -n "${lib_dir}" ]; then
+                     export LD_LIBRARY_PATH=.:$PREFIX/${lib_dir}/
+                     export DYLD_LIBRARY_PATH=.:$PREFIX/${lib_dir}/
+                  else
+                     export LD_LIBRARY_PATH=.:$PREFIX/lib/
+                     export DYLD_LIBRARY_PATH=.:$PREFIX/lib/
+                  fi
                   export PATH=$(pwd)/src/bsoncxx/${build_type}:$(pwd)/src/mongocxx/${build_type}:$PREFIX/bin:$(pwd)/install/bin:$PATH
 
                   export CRUD_LEGACY_TESTS_PATH="$(pwd)/../data/crud/legacy"
@@ -412,7 +421,11 @@ functions:
 
                   cd ..
                   export CMAKE_PREFIX_PATH=$PREFIX:$(pwd)/build/install
-                  export PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig:$(pwd)/build/install/lib/pkgconfig
+                  if [ -n "${lib_dir}" ]; then
+                     export PKG_CONFIG_PATH=$PREFIX/${lib_dir}/pkgconfig:$(pwd)/build/install/${lib_dir}/pkgconfig
+                  else
+                     export PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig:$(pwd)/build/install/lib/pkgconfig
+                  fi
                   export USE_STATIC_LIBS="${USE_STATIC_LIBS}"
                   export BUILD_TYPE="${build_type}"
 
@@ -427,7 +440,11 @@ functions:
                   elif [ "$(uname -s | tr '[:upper:]' '[:lower:]')" == "darwin" ]; then
                       export DYLD_LIBRARY_PATH="$(pwd)/build/install/lib:$DYLD_LIBRARY_PATH"
                   else
-                      export LD_LIBRARY_PATH="$(pwd)/build/install/lib:$LD_LIBRARY_PATH"
+                      if [ -n "${lib_dir}" ]; then # only needed on Linux
+                          export LD_LIBRARY_PATH="$(pwd)/build/install/${lib_dir}:$LD_LIBRARY_PATH"
+                      else
+                          export LD_LIBRARY_PATH="$(pwd)/build/install/lib:$LD_LIBRARY_PATH"
+                      fi
                   fi
                   # The example projects never run under valgrind, since we haven't added execution
                   # logic to handle ${test_params}.
@@ -456,8 +473,13 @@ functions:
                   # mongoc library dependencies on Windows / Linux / Mac OS, respectively.
                   # Additionally, on Windows, we also need to inform the tests where to find
                   # mongocxx library dependencies.
-                  export LD_LIBRARY_PATH=.:$PREFIX/lib/
-                  export DYLD_LIBRARY_PATH=.:$PREFIX/lib/
+                  if [ -n "${lib_dir}" ]; then
+                     export LD_LIBRARY_PATH=.:$PREFIX/${lib_dir}/
+                     export DYLD_LIBRARY_PATH=.:$PREFIX/${lib_dir}/
+                  else
+                     export LD_LIBRARY_PATH=.:$PREFIX/lib/
+                     export DYLD_LIBRARY_PATH=.:$PREFIX/lib/
+                  fi
                   export PATH=$(pwd)/src/bsoncxx/${build_type}:$(pwd)/src/mongocxx/${build_type}:$PREFIX/bin:$(pwd)/install/bin:$PATH
 
                   URI="mongodb://bob:pwd123@localhost"
@@ -1059,8 +1081,8 @@ buildvariants:
           - name: compile_and_test_with_static_libs
           - name: compile_and_test_with_static_libs_extra_alignment
 
-    - name: power8-ubuntu1804
-      display_name: "ppc64le Ubuntu 18.04 (MongoDB Latest)"
+    - name: power8-rhel81
+      display_name: "ppc64le RHEL 8.1 (MongoDB Latest)"
       batchtime: 1440 # 1 day
       expansions:
           build_type: "Release"
@@ -1068,8 +1090,9 @@ buildvariants:
           cmake_flags: *linux_cmake_flags
           mongodb_version: *version_latest
           cmake: "cmake"
+          lib_dir: "lib64"
       run_on:
-          - ubuntu1804-power8-build
+          - rhel81-power8-large
       tasks:
           - name: compile_with_shared_libs
           - name: compile_and_test_with_shared_libs
