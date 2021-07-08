@@ -223,8 +223,7 @@ functions:
                     if [ "1" == "${BSON_EXTRA_ALIGNMENT}" ]; then
                         echo "Building C driver with BSON extra alignment"
                     fi
-                    # TODO: CXX-2286 update from 1.18.0-alpha2 to master
-                    BSON_EXTRA_ALIGNMENT=${BSON_EXTRA_ALIGNMENT} ./.evergreen/install_c_driver.sh ${mongoc_version|1.18.0-alpha2}
+                    BSON_EXTRA_ALIGNMENT=${BSON_EXTRA_ALIGNMENT} ./.evergreen/install_c_driver.sh ${mongoc_version|master}
 
     "lint":
         - command: shell.exec
@@ -437,8 +436,7 @@ functions:
                   # API version to example clients, so example projects will fail when requireApiVersion
                   # is true.
                   if [[ -z "$MONGODB_API_VERSION" ]]; then
-                    # TODO: CXX-2286 update from 1.18.0-alpha2 to master
-                    MONGOC_VERSION=${mongoc_version|1.18.0-alpha2} .evergreen/build_example_projects.sh
+                    MONGOC_VERSION=${mongoc_version|master} .evergreen/build_example_projects.sh
                   fi
                   unset MONGODB_API_VERSION
 
@@ -1104,7 +1102,7 @@ buildvariants:
           tar_options: *linux_tar_options
           cmake_flags: *linux_cmake_flags
           mongodb_version: *version_latest
-          mongoc_version: "1.18.0-alpha2" # TODO: CXX-2220 update to 1.18.0 after release.
+          mongoc_version: "master" # TODO: CXX-2220 update to 1.18.0 after release.
       run_on:
           - ubuntu1804-build
       tasks:
