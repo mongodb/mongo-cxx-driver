@@ -31,6 +31,48 @@ using namespace mongocxx;
 using assert::to_string;
 using bsoncxx::types::bson_value::value;
 
+namespace {
+
+/// When we are matching two documents, we walk down them recursively. To aide test debugging, store
+/// a path as we go, in this variable:
+thread_local std::vector<std::string> S_match_doc_path;
+
+/**
+ * @brief Declare that the current scope is stepping into the given string key of a key-value
+ * mapping
+ */
+struct match_scope_doc_key {
+    match_scope_doc_key(bsoncxx::stdx::string_view key) {
+        S_match_doc_path.push_back("/" + std::string(key));
+    }
+
+    ~match_scope_doc_key() {
+        S_match_doc_path.pop_back();
+    }
+};
+
+/**
+ * @brief Declare that the current scope is stepping into the given index of an array
+ */
+struct match_scope_array_idx {
+    match_scope_array_idx(int idx) {
+        S_match_doc_path.push_back("[" + std::to_string(idx) + "]");
+    }
+
+    ~match_scope_array_idx() {
+        S_match_doc_path.pop_back();
+    }
+};
+
+/**
+ * @brief Obtain a string representation of the current path in the matched object
+ */
+std::string match_doc_current_path() noexcept {
+    return std::accumulate(S_match_doc_path.cbegin(), S_match_doc_path.cend(), std::string());
+}
+
+}  // namespace
+
 std::string binary_to_string(types::b_binary binary) {
     std::stringstream ss;
     ss << std::hex;
@@ -118,7 +160,7 @@ void special_operator(types::bson_value::view actual, document::view expected, e
     auto op = *expected.begin();
     REQUIRE(string::to_string(op.key()).rfind("$$", 0) == 0);  // assert special operator
 
-    CAPTURE(to_string(op.get_value()), to_string(actual));
+    CAPTURE(match_doc_current_path());
     if (string::to_string(op.key()) == "$$type") {
         auto actual_t = actual.type();
         if (op.type() == type::k_string) {
@@ -154,7 +196,13 @@ void special_operator(types::bson_value::view actual, document::view expected, e
         auto name = string::to_string(op.get_string().value);
         REQUIRE(actual == map.get_value(name));
     } else if (string::to_string(op.key()) == "$$exists") {
-        REQUIRE(op.get_bool() == (actual.type() != bsoncxx::type::k_null));
+        const bool should_exist = op.get_bool();
+        const bool does_exist = actual.type() != bsoncxx::type::k_null;
+        if (does_exist && !should_exist) {
+            FAIL_CHECK("Expected this document element to be absent, but it is present");
+        } else if (!does_exist && should_exist) {
+            FAIL_CHECK("Expected this document element to be present, but it is absent");
+        }
     } else if (string::to_string(op.key()) == "$$matchesHexBytes") {
         REQUIRE(actual.type() == bsoncxx::type::k_binary);
 
@@ -187,7 +235,7 @@ void matches_document(types::bson_value::view actual,
     auto extra_fields = test_util::size(actual_doc);
 
     for (auto&& kvp : expected.get_document().value) {
-        CAPTURE(kvp.key(), to_string(kvp.type()), to_string(kvp.get_value()), to_json(actual_doc));
+        match_scope_doc_key scope_key{string::to_string(kvp.key())};
         if (is_special(kvp)) {
             if (!actual_doc[kvp.key()]) {
                 special_operator(value(nullptr), kvp.get_document(), map);
@@ -212,7 +260,10 @@ void matches_array(types::bson_value::view actual,
     auto expected_arr = expected.get_array().value;
 
     REQUIRE(test_util::size(actual_arr) == test_util::size(expected_arr));
-    for (auto a = actual_arr.begin(), e = expected_arr.begin(); e != expected_arr.end(); e++, a++) {
+    int idx = 0;
+    for (auto a = actual_arr.begin(), e = expected_arr.begin(); e != expected_arr.end();
+         e++, a++, ++idx) {
+        match_scope_array_idx scope_idx{idx};
         assert::matches(a->get_value(), e->get_value(), map, false);
     }
 }
@@ -221,9 +272,6 @@ void assert::matches(types::bson_value::view actual,
                      types::bson_value::view expected,
                      entity::map& map,
                      bool is_root) {
-    CAPTURE(is_root, to_string(actual.type()), to_string(expected.type()));
-    CAPTURE(to_string(actual), to_string(expected));
-
     switch (expected.type()) {
         case bsoncxx::type::k_document:
             matches_document(actual, expected, map, is_root);
@@ -233,12 +281,26 @@ void assert::matches(types::bson_value::view actual,
             return;
         case bsoncxx::type::k_int32:
         case bsoncxx::type::k_int64:
-        case bsoncxx::type::k_double:
+        case bsoncxx::type::k_double: {
+            CAPTURE(is_root,
+                    to_string(actual.type()),
+                    to_string(expected.type()),
+                    to_string(actual),
+                    to_string(expected),
+                    match_doc_current_path());
             REQUIRE(test_util::is_numeric(actual));
             REQUIRE(test_util::as_double(expected) == test_util::as_double(actual));
             return;
-        default:
+        }
+        default: {
+            CAPTURE(is_root,
+                    to_string(actual.type()),
+                    to_string(expected.type()),
+                    to_string(actual),
+                    to_string(expected),
+                    match_doc_current_path());
             REQUIRE(actual.type() == expected.type());
             REQUIRE(actual == expected);
+        }
     }
 }
