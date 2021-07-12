@@ -15,6 +15,7 @@
 #include "assert.hh"
 
 #include <iomanip>
+#include <numeric>
 #include <sstream>
 #include <string>
 
