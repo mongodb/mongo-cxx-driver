@@ -259,6 +259,9 @@ void add_observe_events(options::apm& apm_opts, document::view object) {
     auto name = string::to_string(object["id"].get_string().value);
     auto& apm = get_apm_map()[name];
 
+    auto observe_sensitive = object["observeSensitiveCommands"];
+    apm.observe_sensitive_events = observe_sensitive && observe_sensitive.get_bool();
+
     auto events = object["observeEvents"].get_array().value;
     if (std::end(events) !=
         std::find(std::begin(events), std::end(events), value("commandStartedEvent")))
