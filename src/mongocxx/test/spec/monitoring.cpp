@@ -49,7 +49,8 @@ void remove_ignored_command_monitoring_events(apm_checker::event_vector& events,
 void apm_checker::compare_unified(bsoncxx::array::view expectations, entity::map& map) {
     remove_ignored_command_monitoring_events(_events, _ignore);
 
-    auto equal = [&](const bsoncxx::array::element& exp, const bsoncxx::document::view actual) {
+    // This will throw an exception on unmatched fields and return true in all other cases.
+    auto compare = [&](const bsoncxx::array::element& exp, const bsoncxx::document::view actual) {
         CAPTURE(print_all(), to_json(actual), assert::to_string(exp.get_value()));
 
         // Extra fields are only allowed in root-level documents. Here, each k in keys is treated
@@ -66,8 +67,23 @@ void apm_checker::compare_unified(bsoncxx::array::view expectations, entity::map
         return true;
     };
 
-    // This will throw an exception on unmatched fields and return true in all other cases.
-    std::equal(expectations.begin(), expectations.end(), _events.begin(), equal);
+    auto exp_it = expectations.cbegin();
+    auto exp_end = expectations.cend();
+    auto ev_it = _events.cbegin();
+    auto ev_end = _events.cend();
+    for (; exp_it != exp_end && ev_it != ev_end; ++exp_it, ++ev_it) {
+        compare(*exp_it, *ev_it);
+    }
+    if (exp_it != exp_end) {
+        auto next_expected = exp_it->get_document();
+        CAPTURE(to_json(next_expected));
+        FAIL("Not enough events occurred");
+    }
+    if (ev_it != ev_end) {
+        auto next_event = *ev_it;
+        CAPTURE(to_json(next_event));
+        FAIL("Too many events occurred");
+    }
 }
 
 void apm_checker::compare(bsoncxx::array::view expectations,
@@ -116,10 +132,36 @@ std::string apm_checker::print_all() {
     return output.str();
 }
 
+/**
+ * @brief Determine whether 'event' is one of the "sensitive" events. `event` must have a
+ *      `command_name() const -> stdx::string_view` method.
+ */
+template <typename Ev>
+static bool is_sensitive_command(const Ev& event) noexcept {
+    static stdx::string_view sensitive_commands[] = {
+        "authenticate",
+        "saslStart",
+        "saslContinue",
+        "getnonce",
+        "createUser",
+        "updateUser",
+        "gopydbgetnonce",
+        "copyDbSaslStart",
+        "copydb",
+    };
+    return std::find(std::begin(sensitive_commands),
+                     std::end(sensitive_commands),
+                     event.command_name())  //
+           != std::end(sensitive_commands);
+}
+
 void apm_checker::set_command_started_unified(options::apm& apm) {
     using namespace bsoncxx::builder::basic;
 
     apm.on_command_started([&](const events::command_started_event& event) {
+        if (!observe_sensitive_events && is_sensitive_command(event)) {
+            return;
+        }
         document builder;
         builder.append(kvp("commandStartedEvent",
                            make_document(kvp("command", event.command()),
@@ -133,6 +175,9 @@ void apm_checker::set_command_failed_unified(options::apm& apm) {
     using namespace bsoncxx::builder::basic;
 
     apm.on_command_failed([&](const events::command_failed_event& event) {
+        if (!observe_sensitive_events && is_sensitive_command(event)) {
+            return;
+        }
         document builder;
         builder.append(
             kvp("commandFailedEvent", make_document(kvp("commandName", event.command_name()))));
@@ -144,6 +189,9 @@ void apm_checker::set_command_succeeded_unified(options::apm& apm) {
     using namespace bsoncxx::builder::basic;
 
     apm.on_command_succeeded([&](const events::command_succeeded_event& event) {
+        if (!observe_sensitive_events && is_sensitive_command(event)) {
+            return;
+        }
         document builder;
         builder.append(kvp(
             "commandSucceededEvent",

@@ -45,8 +45,10 @@ using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_document;
 
 using schema_versions_t =
-    std::array<std::array<int, 3 /* major.minor.patch */>, 1 /* supported version */>;
-constexpr schema_versions_t schema_versions{{{{1, 1, 0}}}};
+    std::array<std::array<int, 3 /* major.minor.patch */>, 2 /* supported version */>;
+// NOTE: 1.5.0 support is only *partial*: Enough for to support the redacted-commands.json
+// test cases.
+constexpr schema_versions_t schema_versions{{{{1, 1, 0}}, {{1, 5, 0}}}};
 
 std::pair<std::unordered_map<std::string, spec::apm_checker>&, entity::map&> init_maps() {
     // Below initializes the static apm map and entity map if needed, in that order. This will also
@@ -258,6 +260,9 @@ void add_observe_events(options::apm& apm_opts, document::view object) {
 
     auto name = string::to_string(object["id"].get_string().value);
     auto& apm = get_apm_map()[name];
+
+    auto observe_sensitive = object["observeSensitiveCommands"];
+    apm.observe_sensitive_events = observe_sensitive && observe_sensitive.get_bool();
 
     auto events = object["observeEvents"].get_array().value;
     if (std::end(events) !=
