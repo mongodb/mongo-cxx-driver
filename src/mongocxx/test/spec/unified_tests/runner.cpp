@@ -46,6 +46,8 @@ using bsoncxx::builder::basic::make_document;
 
 using schema_versions_t =
     std::array<std::array<int, 3 /* major.minor.patch */>, 2 /* supported version */>;
+// NOTE: 1.5.0 support is only *partial*: Enough for to support the redacted-commands.json
+// test cases.
 constexpr schema_versions_t schema_versions{{{{1, 1, 0}}, {{1, 5, 0}}}};
 
 std::pair<std::unordered_map<std::string, spec::apm_checker>&, entity::map&> init_maps() {

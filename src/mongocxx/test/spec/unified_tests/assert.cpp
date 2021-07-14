@@ -34,7 +34,7 @@ using bsoncxx::types::bson_value::value;
 
 namespace {
 
-/// When we are matching two documents, we walk down them recursively. To aide test debugging, store
+/// When we are matching two documents, we walk down them recursively. To aid test debugging, store
 /// a path as we go, in this variable:
 thread_local std::vector<std::string> S_match_doc_path;
 
