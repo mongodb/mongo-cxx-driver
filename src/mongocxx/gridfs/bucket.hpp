@@ -16,6 +16,7 @@
 
 #include <istream>
 #include <memory>
+#include <optional>
 #include <ostream>
 
 #include <bsoncxx/document/view_or_value.hpp>
@@ -499,6 +500,10 @@ class MONGOCXX_API bucket {
     ///   re-thrown.
     ///
     void download_to_stream(bsoncxx::types::bson_value::view id, std::ostream* destination);
+    void download_to_stream(bsoncxx::types::bson_value::view id,
+                            std::ostream* destination,
+                            std::size_t start,
+                            std::size_t end);
 
     ///
     /// Downloads the contents of a stored GridFS file from the bucket and writes it to a stream.
@@ -526,6 +531,11 @@ class MONGOCXX_API bucket {
     void download_to_stream(const client_session& session,
                             bsoncxx::types::bson_value::view id,
                             std::ostream* destination);
+    void download_to_stream(const client_session& session,
+                            bsoncxx::types::bson_value::view id,
+                            std::ostream* destination,
+                            std::size_t start,
+                            std::size_t end);
     ///
     /// @}
     ///
@@ -643,11 +653,15 @@ class MONGOCXX_API bucket {
                                                       const options::gridfs::upload& options);
 
     MONGOCXX_PRIVATE downloader _open_download_stream(const client_session* session,
-                                                      bsoncxx::types::bson_value::view id);
+                                                      bsoncxx::types::bson_value::view id,
+                                                      stdx::optional<std::size_t> start,
+                                                      stdx::optional<std::size_t> end);
 
     MONGOCXX_PRIVATE void _download_to_stream(const client_session* session,
                                               bsoncxx::types::bson_value::view id,
-                                              std::ostream* destination);
+                                              std::ostream* destination,
+                                              stdx::optional<std::size_t> start,
+                                              stdx::optional<std::size_t> end);
 
     MONGOCXX_PRIVATE void _delete_file(const client_session* session,
                                        bsoncxx::types::bson_value::view id);

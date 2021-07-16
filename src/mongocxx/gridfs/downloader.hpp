@@ -31,6 +31,11 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace gridfs {
 
+struct chunks_and_bytes_offset {
+    std::int32_t chunks_offset;
+    std::int32_t bytes_offset;
+};
+
 ///
 /// Class used to download a GridFS file.
 ///
@@ -134,7 +139,11 @@ class MONGOCXX_API downloader {
     // @param files_doc
     //   The files collection document of the file being downloaded.
     //
-    MONGOCXX_PRIVATE downloader(stdx::optional<cursor> chunks, bsoncxx::document::value files_doc);
+    MONGOCXX_PRIVATE downloader(stdx::optional<cursor> chunks,
+               chunks_and_bytes_offset start,
+               std::int32_t chunk_size,
+               std::int32_t file_len,
+               bsoncxx::document::value files_doc);
 
     MONGOCXX_PRIVATE void fetch_chunk();
 
