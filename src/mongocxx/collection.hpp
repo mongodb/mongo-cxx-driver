@@ -413,6 +413,9 @@ class MONGOCXX_API collection {
     ///
     /// @throws mongocxx::query_exception if the count operation fails.
     ///
+    /// @note For a fast count of the total documents in a collection, see estimated_document_count().
+    /// @see mongocxx::estimated_document_count
+    ///
     std::int64_t count_documents(bsoncxx::document::view_or_value filter,
                                  const options::count& options = options::count());
 
@@ -448,6 +451,8 @@ class MONGOCXX_API collection {
     /// @return The count of the documents that matched the filter.
     ///
     /// @throws mongocxx::query_exception if the count operation fails.
+    ///
+    /// @see mongocxx::count_documents
     ///
     std::int64_t estimated_document_count(
         const options::estimated_document_count& options = options::estimated_document_count());
