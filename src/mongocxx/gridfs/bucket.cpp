@@ -340,11 +340,8 @@ downloader bucket::_open_download_stream(const client_session* session,
                         "expected end to not be greater than the file length"};
         }
         if (*end < file_len) {
-            auto actual_batch_size = (int32_t)(1 + ((*end - *start) / chunk_size));
-            if (chunks_options.batch_size()) {
-                actual_batch_size = std::min(*chunks_options.batch_size(), actual_batch_size);
-            }
-            chunks_options.batch_size(actual_batch_size);
+            const int32_t batch_size = 1 + ((*end - *start) / chunk_size);
+            chunks_options.batch_size(batch_size);
         }
     }
 
