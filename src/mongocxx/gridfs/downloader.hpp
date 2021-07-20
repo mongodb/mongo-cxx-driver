@@ -32,8 +32,8 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace gridfs {
 
 struct chunks_and_bytes_offset {
-    std::int32_t chunks_offset;
-    std::int32_t bytes_offset;
+    std::int32_t chunks_offset = 0;
+    std::int32_t bytes_offset = 0;
 };
 
 ///
