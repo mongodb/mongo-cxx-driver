@@ -142,7 +142,7 @@ class MONGOCXX_API downloader {
     MONGOCXX_PRIVATE downloader(stdx::optional<cursor> chunks,
                chunks_and_bytes_offset start,
                std::int32_t chunk_size,
-               std::int32_t file_len,
+               std::int64_t file_len,
                bsoncxx::document::value files_doc);
 
     MONGOCXX_PRIVATE void fetch_chunk();

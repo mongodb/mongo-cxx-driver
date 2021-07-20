@@ -30,7 +30,7 @@ class downloader::impl {
     impl(stdx::optional<cursor> chunks_param,
          chunks_and_bytes_offset start_param,
          std::int32_t chunk_size_param,
-         std::int32_t file_len_param,
+         std::int64_t file_len_param,
          bsoncxx::document::value files_doc_param)
         : files_doc{std::move(files_doc_param)},
           chunk_buffer_len{0},

@@ -33,7 +33,7 @@ namespace gridfs {
 downloader::downloader(stdx::optional<cursor> chunks,
                        chunks_and_bytes_offset start,
                        std::int32_t chunk_size,
-                       std::int32_t file_len,
+                       std::int64_t file_len,
                        bsoncxx::document::value files_doc)
     : _impl{stdx::make_unique<impl>(
           std::move(chunks), std::move(start), std::move(chunk_size), std::move(file_len), std::move(files_doc))} {}
