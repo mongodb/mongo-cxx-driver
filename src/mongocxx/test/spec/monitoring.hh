@@ -73,6 +73,9 @@ class apm_checker {
     void set_command_failed_unified(options::apm& apm);
     void set_command_succeeded_unified(options::apm& apm);
 
+    /// Whether we should record "sensitive" events
+    bool observe_sensitive_events = false;
+
    private:
     event_vector _events;
     std::vector<std::string> _ignore;
