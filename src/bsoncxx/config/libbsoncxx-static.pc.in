@@ -14,7 +14,7 @@
 
 prefix=@CMAKE_INSTALL_PREFIX@
 includedir=${prefix}/include
-libdir=${prefix}/lib
+libdir=@libdir@
 
 Name: libbsoncxx-static
 Description: The MongoDB C++11 BSON Library
