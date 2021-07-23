@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+set (libdir "\${prefix}/${CMAKE_INSTALL_LIBDIR}")
+
 configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/config.hpp.in
     ${CMAKE_CURRENT_BINARY_DIR}/config.hpp
