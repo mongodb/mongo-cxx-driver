@@ -9,7 +9,7 @@
  Name:           mongo-cxx-driver
 -Version:        3.4.1
 -Release:        5%{?dist}
-+Version:        3.6.1
++Version:        3.7.0
 +Release:        1%{?dist}
  Summary:        A C++ Driver for MongoDB
  License:        ASL 2.0
