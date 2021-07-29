@@ -1,15 +1,19 @@
---- mongo-cxx-driver.spec.orig	2020-08-17 16:22:55.490400655 -0400
-+++ mongo-cxx-driver.spec	2020-08-17 16:26:24.490702714 -0400
-@@ -1,6 +1,8 @@
+--- mongo-cxx-driver.spec.orig	2021-07-21 13:05:46.139038889 -0400
++++ mongo-cxx-driver.spec	2021-07-22 18:23:45.099314489 -0400
+@@ -1,17 +1,17 @@
  # for better compatibility with SCL spec file
  %global pkg_name mongo-cxx-driver
  
 +%define _unpackaged_files_terminate_build 0
 +
  Name:           mongo-cxx-driver
- Version:        3.4.1
- Release:        4%{?dist}
-@@ -10,8 +12,6 @@
+-Version:        3.4.1
+-Release:        5%{?dist}
++Version:        3.7.0
++Release:        1%{?dist}
+ Summary:        A C++ Driver for MongoDB
+ License:        ASL 2.0
+ URL:            https://github.com/mongodb/mongo-cxx-driver/wiki
  Source0:        https://github.com/mongodb/%{pkg_name}/archive/%{name}-r%{version}.tar.gz
  
  
@@ -27,15 +31,16 @@
  
  %build
  
-@@ -77,6 +75,7 @@
+@@ -77,6 +75,8 @@
  %cmake \
      -DCMAKE_BUILD_TYPE=Release \
      -DBSONCXX_POLY_USE_BOOST=1 \
 +    -DENABLE_UNINSTALL=OFF \
++    -DENABLE_TESTS=OFF \
      .
  
  %cmake_build
-@@ -94,7 +93,7 @@
+@@ -94,7 +94,7 @@
  %{_includedir}/mongocxx/
  %{_libdir}/libmongocxx.so
  %{_libdir}/pkgconfig/libmongocxx.pc
@@ -44,7 +49,7 @@
  
  %files bsoncxx
  %{_libdir}/libbsoncxx.so.*
-@@ -103,7 +102,7 @@
+@@ -103,7 +103,7 @@
  %{_includedir}/bsoncxx
  %{_libdir}/libbsoncxx.so
  %{_libdir}/pkgconfig/libbsoncxx.pc
@@ -52,4 +57,4 @@
 +%{_libdir}/cmake/*bsoncxx*
  
  %changelog
- * Tue Aug 11 2020 Honza Horak <hhorak@redhat.com> - 3.4.1-4
+ * Tue Jan 26 2021 Fedora Release Engineering <releng@fedoraproject.org> - 3.4.1-5

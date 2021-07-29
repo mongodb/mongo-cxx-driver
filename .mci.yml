@@ -9,6 +9,7 @@ variables:
 
     mongodb_version:
         version_latest: &version_latest latest
+        version_50: &version_50 5.0
         version_44: &version_44 4.4
         version_42: &version_42 4.2
         version_40: &version_40 4.0
@@ -860,6 +861,10 @@ axes:
             display_name: "Latest"
             variables:
                 mongodb_version: *version_latest
+          - id: "5.0"
+            display_name: "5.0"
+            variables:
+                mongodb_version: *version_50
           - id: "4.4"
             display_name: "4.4"
             variables:
@@ -911,7 +916,7 @@ buildvariants:
     #######################################
     #         Linux Buildvariants         #
     #######################################
-    - name: ubuntu1804-release
+    - name: ubuntu1804-release-latest
       display_name: "Ubuntu 18.04 Release (MongoDB Latest)"
       expansions:
           build_type: "Release"
@@ -923,6 +928,27 @@ buildvariants:
           - ubuntu1804-build
       tasks:
           - name: lint
+          - name: compile_and_test_with_shared_libs
+          - name: compile_and_test_with_shared_libs_extra_alignment
+          - name: compile_and_test_with_static_libs
+          - name: compile_and_test_with_static_libs_extra_alignment
+          - name: compile_and_test_with_shared_libs_replica_set
+          - name: build_example_with_add_subdirectory
+            distros:
+            - ubuntu1804-build
+          - name: uninstall_check
+
+    - name: ubuntu1804-release-50
+      display_name: "Ubuntu 18.04 Release (MongoDB 5.0)"
+      expansions:
+          build_type: "Release"
+          tar_options: *linux_tar_options
+          extra_path: *linux_extra_path
+          cmake_flags: *linux_cmake_flags
+          mongodb_version: *version_50
+      run_on:
+          - ubuntu1804-build
+      tasks:
           - name: compile_and_test_with_shared_libs
           - name: compile_and_test_with_shared_libs_extra_alignment
           - name: compile_and_test_with_static_libs
@@ -953,7 +979,7 @@ buildvariants:
           - name: compile_and_test_with_static_libs
           - name: compile_and_test_with_static_libs_extra_alignment
 
-    - name: ubuntu1804-debug-valgrind
+    - name: ubuntu1804-debug-valgrind-latest
       display_name: "Valgrind Ubuntu 18.04 Debug (MongoDB Latest)"
       expansions:
           build_type: "Debug"
@@ -971,7 +997,25 @@ buildvariants:
           - name: compile_and_test_with_static_libs
           - name: compile_and_test_with_static_libs_extra_alignment
 
-    - name: ubuntu1804-debug-asan
+    - name: ubuntu1804-debug-valgrind-50
+      display_name: "Valgrind Ubuntu 18.04 Debug (MongoDB 5.0)"
+      expansions:
+          build_type: "Debug"
+          tar_options: *linux_tar_options
+          extra_path: *linux_extra_path
+          cmake_flags: *linux_cmake_flags
+          test_params: *valgrind_test_params
+          mongodb_version: *version_50
+          disable_slow_tests: 1
+      run_on:
+          - ubuntu1804-build
+      tasks:
+          - name: compile_and_test_with_shared_libs
+          - name: compile_and_test_with_shared_libs_extra_alignment
+          - name: compile_and_test_with_static_libs
+          - name: compile_and_test_with_static_libs_extra_alignment
+
+    - name: ubuntu1804-debug-asan-latest
       display_name: "ASAN Ubuntu 18.04 Debug (MongoDB Latest)"
       expansions:
           build_type: "Debug"
@@ -992,7 +1036,28 @@ buildvariants:
           - name: compile_and_test_with_static_libs
           - name: compile_and_test_with_static_libs_extra_alignment
 
-    - name: ubuntu1804-debug-ubsan
+    - name: ubuntu1804-debug-asan-50
+      display_name: "ASAN Ubuntu 18.04 Debug (MongoDB 5.0)"
+      expansions:
+          build_type: "Debug"
+          tar_options: *linux_tar_options
+          extra_path: *linux_extra_path
+          cmake_flags: *asan_cmake_flags
+          test_params: *asan_test_params
+          mongodb_version: *version_50
+          example_projects_cc: *asan_cc_path
+          example_projects_cxx: *asan_cxx_path
+          example_projects_cxxflags: *asan_cxxflags
+          example_projects_ldflags: *asan_ldflags
+      run_on:
+          - ubuntu1804-build
+      tasks:
+          - name: compile_and_test_with_shared_libs
+          - name: compile_and_test_with_shared_libs_extra_alignment
+          - name: compile_and_test_with_static_libs
+          - name: compile_and_test_with_static_libs_extra_alignment
+
+    - name: ubuntu1804-debug-ubsan-latest
       display_name: "UBSAN Ubuntu 18.04 Debug (MongoDB Latest)"
       expansions:
           build_type: "Debug"
@@ -1001,6 +1066,28 @@ buildvariants:
           cmake_flags: *ubsan_cmake_flags
           test_params: *ubsan_test_params
           mongodb_version: *version_latest
+          example_projects_cc: *ubsan_cc_path
+          example_projects_cxx: *ubsan_cxx_path
+          example_projects_cxxflags: *ubsan_cxxflags
+          example_projects_ldflags: *ubsan_ldflags
+      run_on:
+          - ubuntu1804-build
+      tasks:
+          # We currently don't run UBSAN on the shared library due to issues with UBSAN reporting
+          # numerous false positive instances of undefined behavior in the mock tests, when the
+          # driver invokes mock callback functions that have libmongoc types in the callback
+          # signature.
+          - name: compile_and_test_with_static_libs
+
+    - name: ubuntu1804-debug-ubsan-50
+      display_name: "UBSAN Ubuntu 18.04 Debug (MongoDB 5.0)"
+      expansions:
+          build_type: "Debug"
+          tar_options: *linux_tar_options
+          extra_path: *linux_extra_path
+          cmake_flags: *ubsan_cmake_flags
+          test_params: *ubsan_test_params
+          mongodb_version: *version_50
           example_projects_cc: *ubsan_cc_path
           example_projects_cxx: *ubsan_cxx_path
           example_projects_cxxflags: *ubsan_cxxflags
@@ -1081,7 +1168,7 @@ buildvariants:
           - name: compile_and_test_with_static_libs
           - name: compile_and_test_with_static_libs_extra_alignment
 
-    - name: power8-rhel81
+    - name: power8-rhel81-latest
       display_name: "ppc64le RHEL 8.1 (MongoDB Latest)"
       batchtime: 1440 # 1 day
       expansions:
@@ -1100,7 +1187,26 @@ buildvariants:
           - name: compile_and_test_with_static_libs
           - name: compile_and_test_with_static_libs_extra_alignment
 
-    - name: arm-ubuntu1804
+    - name: power8-rhel81-50
+      display_name: "ppc64le RHEL 8.1 (MongoDB 5.0)"
+      batchtime: 1440 # 1 day
+      expansions:
+          build_type: "Release"
+          tar_options: *linux_tar_options
+          cmake_flags: *linux_cmake_flags
+          mongodb_version: *version_50
+          cmake: "cmake"
+          lib_dir: "lib64"
+      run_on:
+          - rhel81-power8-large
+      tasks:
+          - name: compile_with_shared_libs
+          - name: compile_and_test_with_shared_libs
+          - name: compile_and_test_with_shared_libs_extra_alignment
+          - name: compile_and_test_with_static_libs
+          - name: compile_and_test_with_static_libs_extra_alignment
+
+    - name: arm-ubuntu1804-latest
       display_name: "arm64 Ubuntu 18.04 (MongoDB Latest)"
       batchtime: 1440 # 1 day
       expansions:
@@ -1108,6 +1214,22 @@ buildvariants:
           tar_options: *linux_tar_options
           cmake_flags: *linux_cmake_flags
           mongodb_version: *version_latest
+      run_on:
+          - ubuntu1804-arm64-build
+      tasks:
+          - name: compile_and_test_with_shared_libs
+          - name: compile_and_test_with_shared_libs_extra_alignment
+          - name: compile_and_test_with_static_libs
+          - name: compile_and_test_with_static_libs_extra_alignment
+
+    - name: arm-ubuntu1804-50
+      display_name: "arm64 Ubuntu 18.04 (MongoDB 5.0)"
+      batchtime: 1440 # 1 day
+      expansions:
+          build_type: "Release"
+          tar_options: *linux_tar_options
+          cmake_flags: *linux_cmake_flags
+          mongodb_version: *version_50
       run_on:
           - ubuntu1804-arm64-build
       tasks:
@@ -1137,7 +1259,7 @@ buildvariants:
     #######################################
     #         Mac and Windows             #
     #######################################
-    - name: macos-1014
+    - name: macos-1014-latest
       display_name: "MacOS 10.14 Release (Boost) (MongoDB Latest)"
       expansions:
           build_type: "Release"
@@ -1145,6 +1267,22 @@ buildvariants:
           cmake_flags: *macos_cmake_flags
           poly_flags: *poly_boost_flags
           mongodb_version: *version_latest
+      run_on:
+          - macos-1014
+      tasks:
+          - name: compile_and_test_with_shared_libs
+          - name: compile_and_test_with_shared_libs_extra_alignment
+          - name: compile_and_test_with_static_libs
+          - name: compile_and_test_with_static_libs_extra_alignment
+
+    - name: macos-1014-50
+      display_name: "MacOS 10.14 Release (Boost) (MongoDB 5.0)"
+      expansions:
+          build_type: "Release"
+          extra_path: *macos_extra_path
+          cmake_flags: *macos_cmake_flags
+          poly_flags: *poly_boost_flags
+          mongodb_version: *version_50
       run_on:
           - macos-1014
       tasks:
