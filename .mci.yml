@@ -1362,4 +1362,4 @@ buildvariants:
          - name: debian-package-build-mnmlstc
          - name: rpm-package-build
            distros:
-           - rhel80-test
+           - rhel82-arm64-small
