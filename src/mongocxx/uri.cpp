@@ -97,14 +97,14 @@ std::string uri::password() const {
 
 class read_concern uri::read_concern() const {
     auto rc = libmongoc::uri_get_read_concern(_impl->uri_t);
-    return (class read_concern)(
-        stdx::make_unique<read_concern::impl>(libmongoc::read_concern_copy(rc)));
+    return (class read_concern)(stdx::make_unique<read_concern::impl>(
+        libmongoc::read_concern_copy(rc)));
 }
 
 class read_preference uri::read_preference() const {
     auto rp = libmongoc::uri_get_read_prefs_t(_impl->uri_t);
-    return (class read_preference)(
-        stdx::make_unique<read_preference::impl>(libmongoc::read_prefs_copy(rp)));
+    return (class read_preference)(stdx::make_unique<read_preference::impl>(
+        libmongoc::read_prefs_copy(rp)));
 }
 
 std::string uri::replica_set() const {
@@ -129,8 +129,8 @@ std::string uri::username() const {
 
 class write_concern uri::write_concern() const {
     auto wc = libmongoc::uri_get_write_concern(_impl->uri_t);
-    return (class write_concern)(
-        stdx::make_unique<write_concern::impl>(libmongoc::write_concern_copy(wc)));
+    return (class write_concern)(stdx::make_unique<write_concern::impl>(
+        libmongoc::write_concern_copy(wc)));
 }
 
 static stdx::optional<stdx::string_view> _string_option(mongoc_uri_t* uri, std::string opt_name) {
