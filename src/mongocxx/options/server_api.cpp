@@ -32,7 +32,8 @@ std::string server_api::version_to_string(server_api::version version) {
         case server_api::version::k_version_1:
             return "1";
         default:
-            throw mongocxx::logic_error { mongocxx::error_code::k_invalid_parameter, "invalid server API version" };
+            throw mongocxx::logic_error{mongocxx::error_code::k_invalid_parameter,
+                                        "invalid server API version"};
     }
 }
 
@@ -40,7 +41,8 @@ server_api::version server_api::version_from_string(stdx::string_view version) {
     if (!version.compare("1")) {
         return server_api::version::k_version_1;
     }
-    throw mongocxx::logic_error { mongocxx::error_code::k_invalid_parameter, "invalid server API version" };
+    throw mongocxx::logic_error{mongocxx::error_code::k_invalid_parameter,
+                                "invalid server API version"};
 }
 
 server_api::server_api(server_api::version version) : _version(std::move(version)) {}

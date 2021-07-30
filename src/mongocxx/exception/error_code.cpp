@@ -84,8 +84,8 @@ class error_category final : public std::error_category {
                 return "an invalid client session was provided";
             case error_code::k_invalid_transaction_options_object:
                 return "an invalid transactions options object was provided";
-	    case error_code::k_create_resource_fail:
-		return "could not create resource";
+            case error_code::k_create_resource_fail:
+                return "could not create resource";
             default:
                 return "unknown mongocxx error";
         }
