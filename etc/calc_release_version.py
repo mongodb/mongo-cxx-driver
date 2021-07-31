@@ -43,13 +43,21 @@ def check_output(args):
     provides a reasonable facsimile.
     """
     if 'check_output' in dir(subprocess):
-        return subprocess.check_output(args)
+        out = subprocess.check_output(args)
+    else:
+        proc = subprocess.Popen(args, stdout=subprocess.PIPE)
+        out, err = proc.communicate()
+        ret = proc.poll()
+        if ret:
+            raise subprocess.CalledProcessError(ret, args[0], output=out)
 
-    proc = subprocess.Popen(args, stdout=subprocess.PIPE)
-    out, err = proc.communicate()
-    ret = proc.poll()
-    if ret:
-        raise subprocess.CalledProcessError(ret, args[0], output=out)
+    if type(out) is bytes:
+        """
+        git isn't guaranteed to always return UTF-8, but for our purposes
+        this should be fine as tags and hashes should be ASCII only.
+        """
+        out = out.decode('utf-8')
+
     return out
 
 
@@ -69,7 +77,6 @@ def check_head_tag():
     head_commit = check_output(['git', 'rev-parse', '--revs-only',
                                            'HEAD^{commit}']).strip()
     for tag in tags:
-        tag = tag.decode('utf-8')
         release_tag_match = RELEASE_TAG_RE.match(tag)
         tag_commit = check_output(['git', 'rev-parse', '--revs-only',
                                               tag + '^{commit}']).strip()
@@ -112,7 +119,7 @@ def main():
     version_loose = LooseVersion('0.0.0')
     head_commit_short = check_output(['git', 'rev-parse',
                                                  '--revs-only', '--short=10',
-                                                 'HEAD^{commit}']).decode('utf-8').strip()
+                                                 'HEAD^{commit}']).strip()
     prerelease_marker = datetime.date.today().strftime('%Y%m%d') \
             + '+git' + head_commit_short
 
@@ -145,7 +152,7 @@ def main():
 
     else:
         tags = check_output (['git', 'describe', '--tags', '--match', 'r*', '--abbrev=0'])
-        tag = tags.splitlines()[-1].decode('utf-8')
+        tag = tags.splitlines()[-1]
         release_tag_match = RELEASE_TAG_RE.match(tag)
         if release_tag_match:
             version_new = {}
