@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include <iostream>
+#include <optional>
 #include <vector>
 
 #include <bsoncxx/builder/basic/array.hpp>
@@ -22,6 +23,8 @@
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/types.hpp>
 #include <mongocxx/client.hpp>
+#include <mongocxx/exception/error_code.hpp>
+#include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/find.hpp>
 #include <mongocxx/uri.hpp>
@@ -1180,6 +1183,63 @@ void delete_examples(mongocxx::database db) {
     }
 }
 
+void start_versioned_API_examples() {
+    // To start a versioned API, you can set specific options in the mongocxx::client's
+    // server flags:
+    auto server_api =
+        mongocxx::options::server_api(mongocxx::options::server_api::version::k_version_1);
+
+    // There are several helper member functions for converting between strings and API versions:
+    auto version_string = mongocxx::options::server_api::version_to_string(
+        mongocxx::options::server_api::version::k_version_1);
+
+    // Convert a string to an API version:
+
+    // Using an invalid version string should throw a mongocxx::logic_error:
+    try {
+        auto version =
+            mongocxx::options::server_api::version_from_string(R"("invalid version string")");
+
+        throw std::runtime_error("oops! We shouldn't make it this far!");
+    } catch (const mongocxx::logic_error& e) {
+        // Make sure that we're seeing in invalid paramter error, and that it wasn't generated for
+        // some other reason:
+        if (mongocxx::error_code::k_invalid_parameter != e.code())
+            throw;  // some other reason: re-throw
+
+        std::cout << "calling version_from_string() with an invalid version string threw an "
+                     "invalid parameter error, as expected: good\n";
+    }
+
+    // Using a valid version string should be ok:
+    try {
+        auto version = mongocxx::options::server_api::version_from_string(R"(1)");
+        std::cout
+            << "calling version_from_string() with a version string worked, as expected: good\n";
+    } catch (const mongocxx::logic_error&) {
+        std::cout << "oh no! This error should not have occured!\n";
+
+        // In this case, any reason is grounds to re-throw
+        throw;
+    }
+
+    // Get the declared server API version:
+    { auto version = server_api.get_version(); }
+
+    // You can see if the strict flag has been set:
+    if (const auto& is_strict = server_api.strict(); *is_strict) {
+        std::cout << "strict is set\n";
+    }
+
+    // Or set the strict flag:
+    server_api.strict(true);
+
+    // Get the optional value of the deprecation_errors option:
+    if (const auto& deprecation_errors = server_api.deprecation_errors(); *deprecation_errors) {
+        std::cout << "deprecation errors are set\n";
+    }
+}
+
 int main() {
     // The mongocxx::instance constructor and destructor initialize and shut down the driver,
     // respectively. Therefore, a mongocxx::instance must be created before using the driver and
@@ -1187,6 +1247,10 @@ int main() {
     mongocxx::instance inst{};
 
     mongocxx::client conn{mongocxx::uri{}};
+
+    // Alternatively, we could start with a versioned API connection, or adjust flags:
+    start_versioned_API_examples();
+
     auto db = conn["documentation_examples"];
 
     try {
@@ -1199,8 +1263,15 @@ int main() {
         projection_examples(db);
         update_examples(db);
         delete_examples(db);
-    } catch (const std::logic_error& e) {
-        std::cerr << e.what() << std::endl;
-        return EXIT_FAILURE;
+
+        return EXIT_SUCCESS;
+    } catch (const mongocxx::exception& e) {
+        std::cerr << "mongodb error: " << e.what() << '\n';
+    } catch (const std::exception& e) {
+        std::cerr << e.what() << '\n';
+    } catch (...) {
+        std::cerr << "unhandled exception\n";
     }
+
+    return EXIT_FAILURE;
 }
