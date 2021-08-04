@@ -173,6 +173,13 @@ add_executable(test_unified_format_spec
     ${spec_test_common}
 )
 
+add_executable(test_versioned_api
+    ${PROJECT_SOURCE_DIR}/test_util/client_helpers.cpp
+    ${THIRD_PARTY_SOURCE_DIR}/catch/main.cpp
+    versioned_api.cpp
+    ${spec_test_common}
+    )
+
 target_link_libraries(test_driver mongocxx_mocked ${libmongoc_target})
 target_link_libraries(test_logging mongocxx_mocked ${libmongoc_target})
 target_link_libraries(test_instance mongocxx_mocked ${libmongoc_target})
@@ -186,6 +193,7 @@ target_link_libraries(test_retryable_reads_specs mongocxx_mocked ${libmongoc_tar
 target_link_libraries(test_read_write_concern_specs mongocxx_mocked ${libmongoc_target})
 target_link_libraries(test_mongohouse_specs mongocxx_mocked ${libmongoc_target})
 target_link_libraries(test_unified_format_spec mongocxx_mocked ${libmongoc_target})
+target_link_libraries(test_versioned_api mongocxx_mocked ${libmongoc_target})
 
 target_include_directories(test_driver PRIVATE ${libmongoc_include_directories})
 target_include_directories(test_logging PRIVATE ${libmongoc_include_directories})
@@ -224,6 +232,7 @@ add_test(transactions_specs test_transactions_specs)
 add_test(retryable_reads_spec test_retryable_reads_specs)
 add_test(read_write_concern_specs test_read_write_concern_specs)
 add_test(unified_format_spec test_unified_format_spec)
+add_test(versioned_api test_versioned_api)
 
 # Adding this as a test will run it as part of the RUN_TESTS command in MSVC.
 # Do not add, since we only test mongohouse on Linux.
