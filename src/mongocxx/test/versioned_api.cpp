@@ -43,9 +43,9 @@ TEST_CASE("Versioned API, non-strict") {
     // End Versioned API Example 1
 }
 
-TEST_CASE("Verioned API, strict") {
+TEST_CASE("Versioned API, strict") {
     instance::current();
-    // Start Versioned API Example 1
+    // Start Versioned API Example 2
     using namespace mongocxx;
     uri client_uri{"mongodb://localhost"};
     // Create an option set for API v1
@@ -55,15 +55,15 @@ TEST_CASE("Verioned API, strict") {
     // Store it in the set of client options
     const auto client_opts =
         options::client{}
-            .server_api_opts(server_api_opts); // Set the version
+            .server_api_opts(server_api_opts); // Set the version and options
     // Create a new client with the options
     mongocxx::client client{client_uri, client_opts};
-    // End Versioned API Example 1
+    // End Versioned API Example 2
 }
 
-TEST_CASE("Verioned API, non-strict, for commands/features outside versioned API") {
+TEST_CASE("Versioned API, non-strict, for commands/features outside versioned API") {
     instance::current();
-    // Start Versioned API Example 1
+    // Start Versioned API Example 3
     using namespace mongocxx;
     uri client_uri{"mongodb://localhost"};
     // Create an option set for API v1
@@ -73,10 +73,29 @@ TEST_CASE("Verioned API, non-strict, for commands/features outside versioned API
     // Store it in the set of client options
     const auto client_opts =
         options::client{}
-            .server_api_opts(server_api_opts); // Set the version
+            .server_api_opts(server_api_opts); // Set the version and options
     // Create a new client with the options
     mongocxx::client client{client_uri, client_opts};
-    // End Versioned API Example 1
+    // End Versioned API Example 3
+}
+
+TEST_CASE("Versioned API, non-strict with deprecation errors") {
+    instance::current();
+    // Start Versioned API Example 4
+    using namespace mongocxx;
+    uri client_uri{"mongodb://localhost"};
+    // Create an option set for API v1
+    const auto server_api_opts =
+        options::server_api{options::server_api::version_from_string("1")}
+            .strict(false)              // Explicitly disable strict mode for the server API
+            .deprecation_errors(true);  // Enable deprecation errors
+    // Store it in the set of client options
+    const auto client_opts =
+        options::client{}
+            .server_api_opts(server_api_opts); // Set the version and options
+    // Create a new client with the options
+    mongocxx::client client{client_uri, client_opts};
+    // End Versioned API Example 4
 }
 // clang-format on
 
