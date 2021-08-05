@@ -358,5 +358,6 @@ set_dist_list (src_mongocxx_test_DIST
    transactions.cpp
    uri.cpp
    validation_criteria.cpp
+   versioned_api.cpp
    write_concern.cpp
 )
