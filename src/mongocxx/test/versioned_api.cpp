@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <bsoncxx/string/to_string.hpp>
 #include <bsoncxx/test_util/catch.hh>
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
@@ -26,8 +27,23 @@ using namespace mongocxx;
 // We'll format many of these examples by hand
 // clang-format off
 
+static bool is_server_v5_or_newer() {
+    using namespace bsoncxx::builder::basic;
+    client cl{uri{}};
+    auto status = cl["admin"].run_command(make_document(kvp("serverStatus", 1)));
+    auto version = bsoncxx::string::to_string(status["version"].get_string().value);
+    auto dot_pos = version.find('.');
+    REQUIRE(dot_pos != version.npos);
+    auto major_digit_str = version.substr(0, dot_pos);
+    auto major_version = std::stoul(major_digit_str);
+    return major_version >= 5;
+}
+
 TEST_CASE("Versioned API, non-strict") {
     instance::current();
+    if (!is_server_v5_or_newer()) {
+        return;
+    }
     // Start Versioned API Example 1
     using namespace mongocxx;
     uri client_uri{"mongodb://localhost"};
@@ -45,6 +61,9 @@ TEST_CASE("Versioned API, non-strict") {
 
 TEST_CASE("Versioned API, strict") {
     instance::current();
+    if (!is_server_v5_or_newer()) {
+        return;
+    }
     // Start Versioned API Example 2
     using namespace mongocxx;
     uri client_uri{"mongodb://localhost"};
@@ -63,6 +82,9 @@ TEST_CASE("Versioned API, strict") {
 
 TEST_CASE("Versioned API, non-strict, for commands/features outside versioned API") {
     instance::current();
+    if (!is_server_v5_or_newer()) {
+        return;
+    }
     // Start Versioned API Example 3
     using namespace mongocxx;
     uri client_uri{"mongodb://localhost"};
@@ -81,13 +103,15 @@ TEST_CASE("Versioned API, non-strict, for commands/features outside versioned AP
 
 TEST_CASE("Versioned API, non-strict with deprecation errors") {
     instance::current();
+    if (!is_server_v5_or_newer()) {
+        return;
+    }
     // Start Versioned API Example 4
     using namespace mongocxx;
     uri client_uri{"mongodb://localhost"};
     // Create an option set for API v1
     const auto server_api_opts =
         options::server_api{options::server_api::version_from_string("1")}
-            .strict(false)              // Explicitly disable strict mode for the server API
             .deprecation_errors(true);  // Enable deprecation errors
     // Store it in the set of client options
     const auto client_opts =
@@ -101,6 +125,9 @@ TEST_CASE("Versioned API, non-strict with deprecation errors") {
 
 TEST_CASE("Versioned API, with insert-many for 'count' migration") {
     instance::current();
+    if (!is_server_v5_or_newer()) {
+        return;
+    }
 
     using namespace mongocxx;
     mongocxx::client client{
