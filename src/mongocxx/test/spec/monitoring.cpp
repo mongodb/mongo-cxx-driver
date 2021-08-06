@@ -77,12 +77,16 @@ void apm_checker::compare_unified(bsoncxx::array::view expectations, entity::map
     if (exp_it != exp_end) {
         auto next_expected = exp_it->get_document();
         CAPTURE(to_json(next_expected));
-        FAIL("Not enough events occurred");
+        FAIL_CHECK("Not enough events occurred (Expected "
+                   << std::distance(expectations.cbegin(), expectations.cend())
+                   << " events, but got " << (_events.size()) << " events)");
     }
     if (ev_it != ev_end) {
         auto next_event = *ev_it;
         CAPTURE(to_json(next_event));
-        FAIL("Too many events occurred");
+        FAIL_CHECK("Too many events occurred (Expected "
+                   << std::distance(expectations.cbegin(), expectations.cend())
+                   << " events, but got " << (_events.size()) << " events)");
     }
 }
 
@@ -132,9 +136,32 @@ std::string apm_checker::print_all() {
     return output.str();
 }
 
+/// A "sensitive" hello is a hello command with the "speculativeAuthenticate" argument set
+/// We don't have access to the original command definition here, but (at present) we can
+/// detect that it is sensitive by the mongoc library having removed the main body of the
+/// command events' requests and responses, thus we check for ".empty()" on that body.
+static bool is_hello_cmd_name(stdx::string_view name) {
+    return name == stdx::string_view("hello") || name == stdx::string_view("ismaster") ||
+           name == stdx::string_view("isMaster");
+}
+static bool is_sensitive_hello_cmd_event(const events::command_started_event& event) {
+    return event.command().empty();
+}
+
+static bool is_sensitive_hello_cmd_event(const events::command_succeeded_event& ev) {
+    return ev.reply().empty();
+}
+
+static bool is_sensitive_hello_cmd_event(const events::command_failed_event& ev) {
+    return ev.failure().empty();
+}
+
 /**
- * @brief Determine whether 'event' is one of the "sensitive" events. `event` must have a
- *      `command_name() const -> stdx::string_view` method.
+ * @brief Determine whether 'event' is one of the "sensitive" events.
+ *
+ * `event` must have a `command_name() const -> stdx::string_view` method. If the
+ * event is a 'hello' or 'isMaster' event, it is sensitive if it is a commandStartedEvent
+ * and 'speculativeAuthenticate' is provided in the command (See is_sensitive_hello_cmd_event).
  */
 template <typename Ev>
 static bool is_sensitive_command(const Ev& event) noexcept {
@@ -149,10 +176,15 @@ static bool is_sensitive_command(const Ev& event) noexcept {
         "copyDbSaslStart",
         "copydb",
     };
-    return std::find(std::begin(sensitive_commands),
-                     std::end(sensitive_commands),
-                     event.command_name())  //
-           != std::end(sensitive_commands);
+    const bool is_sensitive_cmd_name = std::find(std::begin(sensitive_commands),
+                                                 std::end(sensitive_commands),
+                                                 event.command_name())  //
+                                       != std::end(sensitive_commands);
+    if (is_sensitive_cmd_name) {
+        return true;
+    }
+    // Special logic for hello commands
+    return is_hello_cmd_name(event.command_name()) && is_sensitive_hello_cmd_event(event);
 }
 
 void apm_checker::set_command_started_unified(options::apm& apm) {
