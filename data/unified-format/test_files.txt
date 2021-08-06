@@ -9,3 +9,4 @@ valid-pass/poc-transactions-convenient-api.json
 valid-pass/poc-transactions.json
 valid-pass/poc-transactions-mongos-pin-auto.json
 valid-pass/redacted-commands.json
+valid-pass/observeSensitiveCommands.json
