@@ -17,6 +17,8 @@
 #include <memory>
 
 #include <bsoncxx/document/view.hpp>
+#include <bsoncxx/oid.hpp>
+#include <bsoncxx/stdx/optional.hpp>
 
 #include <mongocxx/config/prelude.hpp>
 
@@ -74,6 +76,15 @@ class MONGOCXX_API command_succeeded_event {
     /// @return The operation id.
     ///
     std::int64_t operation_id() const;
+
+    ///
+    /// Returns the service id.
+    ///
+    /// @note service_id() only returns a value if load balancing is enabled.
+    ///
+    /// @return No value, or the service id if load balancing is enabled.
+    ///
+    bsoncxx::stdx::optional<bsoncxx::oid> service_id() const;
 
     ///
     /// Returns the host name.
