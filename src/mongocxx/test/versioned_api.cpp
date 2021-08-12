@@ -28,15 +28,8 @@ using namespace mongocxx;
 // clang-format off
 
 static bool is_server_v5_or_newer() {
-    using namespace bsoncxx::builder::basic;
-    client cl{uri{}};
-    auto status = cl["admin"].run_command(make_document(kvp("serverStatus", 1)));
-    auto version = bsoncxx::string::to_string(status["version"].get_string().value);
-    auto dot_pos = version.find('.');
-    REQUIRE(dot_pos != version.npos);
-    auto major_digit_str = version.substr(0, dot_pos);
-    auto major_version = std::stoul(major_digit_str);
-    return major_version >= 5;
+    auto wire_version = mongocxx::test_util::get_max_wire_version(client{uri{}});
+    return wire_version >= 13;
 }
 
 TEST_CASE("Versioned API, non-strict") {
@@ -123,6 +116,12 @@ TEST_CASE("Versioned API, non-strict with deprecation errors") {
 }
 // clang-format on
 
+/// Not actually a version function. Just used to appear in the documentation examples "as if" we
+/// were creating a date from a timestamp string
+static bsoncxx::types::b_date iso_string_to_bson_datetime(const std::string&) {
+    return bsoncxx::types::b_date(std::chrono::milliseconds{0});
+}
+
 TEST_CASE("Versioned API, with insert-many for 'count' migration") {
     instance::current();
     if (!is_server_v5_or_newer()) {
@@ -145,11 +144,12 @@ TEST_CASE("Versioned API, with insert-many for 'count' migration") {
     auto sales = db.collection("sales");
     auto make_sale =
         [](int id, std::string item_name, int price, int quanitity, std::string time) {
+            bsoncxx::types::b_date bson_datetime = iso_string_to_bson_datetime(time);
             return make_document(kvp("_id", id),
                                  kvp("item", item_name),
                                  kvp("price", price),
                                  kvp("quantity", quanitity),
-                                 kvp("date", time));
+                                 kvp("date", bson_datetime));
         };
     auto items = {
         //       _id  item    price  qty  date
