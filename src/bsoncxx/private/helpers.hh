@@ -39,7 +39,9 @@ Construct an oid from a bson_oid_t (which is a C API type that we don't want to
 expose to the world).
 
 Note: passing a nullptr is unguarded
-Note: Deduction guides aren't yet available to us, so a factory it is!
+Note: Deduction guides aren't yet available to us, so a factory it is! This is
+something that can be improved as part of CXX-2350 (migration to more recent C++
+standards).
 */
 inline bsoncxx::oid make_oid(const bson_oid_t* bson_oid) {
     return bsoncxx::oid(reinterpret_cast<const char*>(const_cast<bson_oid_t*>(bson_oid)),
