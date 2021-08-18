@@ -78,11 +78,9 @@ class MONGOCXX_API command_started_event {
     std::int64_t operation_id() const;
 
     ///
-    /// Returns the service id.
+    /// Optionally returns the service id.
     ///
-    /// @note service_id() only returns a value if load balancing is enabled.
-    ///
-    /// @return No value, or the service id if load balancing is enabled.
+    /// @return No contained value, or contains the service id if load balancing is enabled.
     ///
     bsoncxx::stdx::optional<bsoncxx::oid> service_id() const;
 
