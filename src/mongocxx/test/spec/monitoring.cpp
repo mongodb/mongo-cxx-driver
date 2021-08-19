@@ -243,8 +243,12 @@ void apm_checker::set_command_started(options::apm& apm) {
                                          kvp("operation_id", event.operation_id()),
                                          kvp("database_name", event.database_name()))));
 
-        // We MUST NOT report a service_id() outside of load-balancing mode:
-        CHECK_FALSE(event.service_id());
+        // We MUST NOT report a service_id() outside of load-balancing mode, but in 
+	// load-balancing mode, a value is required:
+	if(test_util::is_load_balanced())
+	 CHECK(event.service_id());
+	else
+         CHECK_FALSE(event.service_id());
 
         this->_events.emplace_back(builder.extract());
     });
@@ -259,8 +263,12 @@ void apm_checker::set_command_failed(options::apm& apm) {
                            make_document(kvp("command_name", event.command_name()),
                                          kvp("operation_id", event.operation_id()))));
 
-        // We MUST NOT report a service_id() outside of load-balancing mode:
-        CHECK_FALSE(event.service_id());
+        // We MUST NOT report a service_id() outside of load-balancing mode, but in 
+	// load-balancing mode, a value is required:
+	if(test_util::is_load_balanced())
+	 CHECK(event.service_id());
+	else
+         CHECK_FALSE(event.service_id());
 
         this->_events.emplace_back(builder.extract());
     });
@@ -276,8 +284,12 @@ void apm_checker::set_command_succeeded(options::apm& apm) {
                                          kvp("command_name", event.command_name()),
                                          kvp("operation_id", event.operation_id()))));
 
-        // We MUST NOT report a service_id() outside of load-balancing mode:
-        CHECK_FALSE(event.service_id());
+        // We MUST NOT report a service_id() outside of load-balancing mode, but in 
+	// load-balancing mode, a value is required:
+	if(test_util::is_load_balanced())
+	 CHECK(event.service_id());
+	else
+         CHECK_FALSE(event.service_id());
 
         this->_events.emplace_back(builder.extract());
     });
