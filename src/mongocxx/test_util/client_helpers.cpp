@@ -248,6 +248,11 @@ bool is_replica_set(const client& client) {
     return static_cast<bool>(reply.view()["setName"]);
 }
 
+bool is_load_balanced(const client& client) {
+	// JFW: unclear how to implement this for now-- we have a few ideas!
+	return false;
+}
+
 std::string get_hosts(const client& client) {
     auto shards = get_shards(client);
     if (shards)
