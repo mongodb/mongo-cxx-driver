@@ -24,13 +24,14 @@
 
 using namespace mongocxx;
 
-// We'll format many of these examples by hand
-// clang-format off
-
 static bool is_server_v5_or_newer() {
-    auto wire_version = mongocxx::test_util::get_max_wire_version(client{uri{}});
+    auto wire_version =
+        mongocxx::test_util::get_max_wire_version(client{uri{}, test_util::add_test_server_api()});
     return wire_version >= 13;
 }
+
+// We'll format many of these examples by hand
+// clang-format off
 
 TEST_CASE("Versioned API, non-strict") {
     instance::current();
