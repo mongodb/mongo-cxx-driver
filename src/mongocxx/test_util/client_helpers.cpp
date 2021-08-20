@@ -248,7 +248,7 @@ bool is_replica_set(const client& client) {
     return static_cast<bool>(reply.view()["setName"]);
 }
 
-bool is_load_balanced(const client& client) {
+bool is_load_balanced(const client& /* client */) {
 	// JFW: unclear how to implement this for now-- we have a few ideas!
 	return false;
 }
