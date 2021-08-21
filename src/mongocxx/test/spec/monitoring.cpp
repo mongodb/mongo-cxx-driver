@@ -299,30 +299,6 @@ void apm_checker::set_command_succeeded(options::apm& apm) {
     });
 }
 
-void apm_checker::set_command_started_load_balanced(options::apm& apm)
-{
- using namespace bsoncxx::builder::basic;
-
- bson_oid_t mock_oid = {};
-
- apm.on_command_started([&](const events::command_started_event& event) {
-	document builder;
-	buildre.append(kvp("command_started_event",
-			   make_document(kvp("command", event.command()),
-			   		 kvp("command_name", event.command_name()),
-					 kvp("operation_id", event.operation_id()),
-					 kvp("database_name", event.database_name()))));
- }
-}
-
-void apm_checker::set_command_failed_load_balanced(options::apm& apm)
-{
-}
-
-void apm_checker::set_command_succeeded_load_balanced(options::apm& apm)
-{
-}
-
 options::apm apm_checker::get_apm_opts(bool command_started_events_only) {
     options::apm opts;
 
@@ -332,18 +308,6 @@ options::apm apm_checker::get_apm_opts(bool command_started_events_only) {
 
     this->set_command_failed(opts);
     this->set_command_succeeded(opts);
-    return opts;
-}
-
-options::apm apm_checker::get_apm_opts_load_balanced(bool command_started_events_only) {
-    options::apm opts;
-
-    this->set_command_started_load_balanced(opts);
-    if (command_started_events_only)
-        return opts;
-
-    this->set_command_failed_load_balanced(opts);
-    this->set_command_succeeded_load_balanced(opts);
     return opts;
 }
 
