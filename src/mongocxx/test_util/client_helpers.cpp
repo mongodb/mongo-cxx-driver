@@ -249,8 +249,7 @@ bool is_replica_set(const client& client) {
 }
 
 bool is_load_balanced(const client& /* client */) {
-	// JFW: unclear how to implement this for now-- we have a few ideas!
-	return false;
+	return not (nullptr == std::getenv("MONGOC_TEST_LOADBALANCED"));
 }
 
 std::string get_hosts(const client& client) {
