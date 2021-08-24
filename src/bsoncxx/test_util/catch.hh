@@ -15,10 +15,9 @@
 #pragma once
 
 #include "catch.hpp"
-
 #include <bsoncxx/document/value.hpp>
-#include <bsoncxx/oid.hpp>
 #include <bsoncxx/json.hpp>
+#include <bsoncxx/oid.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 
 #include <bsoncxx/config/private/prelude.hh>
@@ -31,7 +30,7 @@ using namespace bsoncxx;
 template <>
 struct StringMaker<bsoncxx::oid> {
     static std::string convert(const bsoncxx::oid& value) {
-	return value.to_string(); 
+        return value.to_string();
     }
 };
 
