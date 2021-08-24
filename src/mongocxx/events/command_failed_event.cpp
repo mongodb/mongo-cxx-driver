@@ -61,9 +61,9 @@ bsoncxx::stdx::optional<bsoncxx::oid> command_failed_event::service_id() const {
         static_cast<const mongoc_apm_command_failed_t*>(_failed_event));
 
     if (nullptr == bson_oid)
-        return {}; 
+        return {};
 
-    return { bsoncxx::helpers::make_oid(bson_oid) };
+    return {bsoncxx::helpers::make_oid(bson_oid)};
 }
 
 bsoncxx::stdx::string_view command_failed_event::host() const {
