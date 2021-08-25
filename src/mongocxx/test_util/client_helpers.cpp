@@ -250,7 +250,7 @@ bool is_replica_set(const client& client) {
 }
 
 bool is_load_balanced(const client& /* client */) {
-    return not(nullptr == std::getenv("MONGOC_TEST_LOADBALANCED"));
+    return nullptr != std::getenv("MONGOC_TEST_LOADBALANCED");
 }
 
 std::string get_hosts(const client& client) {
