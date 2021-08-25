@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <bsoncxx/private/helpers.hh>
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <mongocxx/events/command_succeeded_event.hpp>
 #include <mongocxx/private/libmongoc.hh>
@@ -50,6 +51,16 @@ std::int64_t command_succeeded_event::request_id() const {
 std::int64_t command_succeeded_event::operation_id() const {
     return libmongoc::apm_command_succeeded_get_operation_id(
         static_cast<const mongoc_apm_command_succeeded_t*>(_succeeded_event));
+}
+
+bsoncxx::stdx::optional<bsoncxx::oid> command_succeeded_event::service_id() const {
+    const bson_oid_t* bson_oid = libmongoc::apm_command_succeeded_get_service_id(
+        static_cast<const mongoc_apm_command_succeeded_t*>(_succeeded_event));
+
+    if (nullptr == bson_oid)
+        return bsoncxx::stdx::optional<bsoncxx::oid>{};
+
+    return bsoncxx::stdx::optional<bsoncxx::oid>{bsoncxx::helpers::make_oid(bson_oid)};
 }
 
 bsoncxx::stdx::string_view command_succeeded_event::host() const {

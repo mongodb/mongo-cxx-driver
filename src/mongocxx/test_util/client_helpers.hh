@@ -110,6 +110,11 @@ bool is_replica_set(const client& client = {uri{}, add_test_server_api()});
 std::string get_topology(const client& client = {uri{}, add_test_server_api()});
 
 ///
+/// Returns true if load balancing is active.
+///
+bool is_load_balanced(const client& client = {uri{}, add_test_server_api()});
+
+///
 /// Returns the "host" field of the config.shards collection.
 ///
 std::string get_hosts(const client& client = {uri{}, add_test_server_api()});

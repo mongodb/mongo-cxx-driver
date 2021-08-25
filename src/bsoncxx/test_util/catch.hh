@@ -17,6 +17,7 @@
 #include "catch.hpp"
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/json.hpp>
+#include <bsoncxx/oid.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 
 #include <bsoncxx/config/private/prelude.hh>
@@ -25,6 +26,14 @@ namespace Catch {
 using namespace bsoncxx;
 
 // Catch2 must be able to stringify documents, optionals, etc. if they're used in Catch2 macros.
+
+template <>
+struct StringMaker<bsoncxx::oid> {
+    static std::string convert(const bsoncxx::oid& value) {
+        return value.to_string();
+    }
+};
+
 template <>
 struct StringMaker<bsoncxx::document::view> {
     static std::string convert(const bsoncxx::document::view& value) {

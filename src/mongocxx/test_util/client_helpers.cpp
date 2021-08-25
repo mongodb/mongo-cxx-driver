@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include <algorithm>
+#include <cstdlib>
 #include <fstream>
 #include <sstream>
 #include <string>
@@ -246,6 +247,10 @@ std::string replica_set_name(const client& client) {
 bool is_replica_set(const client& client) {
     auto reply = get_is_master(client);
     return static_cast<bool>(reply.view()["setName"]);
+}
+
+bool is_load_balanced(const client& /* client */) {
+    return not(nullptr == std::getenv("MONGOC_TEST_LOADBALANCED"));
 }
 
 std::string get_hosts(const client& client) {
