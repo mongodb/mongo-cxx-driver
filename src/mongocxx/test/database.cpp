@@ -501,20 +501,18 @@ struct check_service_id
 {
     void operator()(const EventT& event) {
 
-    // We MUST NOT report a service_id() outside of load-balancing mode, but in
-    // load-balancing mode, a value is required:
-    INFO("checking for service_id()")
-    CAPTURE(event.command_name(), test_util::is_load_balanced());
-    auto service_id = event.service_id();
-    if (test_util::is_load_balanced())
-        CHECK(service_id);
-    else
+        // We MUST NOT report a service_id() outside of load-balancing mode, but in
+        // load-balancing mode, a value is required:
+        INFO("checking for service_id()")
+        CAPTURE(event.command_name(), test_util::is_load_balanced());
+        auto service_id = event.service_id();
+
+        // We do NOT expect a service_id when NOT IN load-balanced mode:
         CHECK_FALSE(service_id);
     }
 };
 
-
-TEST_CASE("Test serviceId is included in command monitoring events") {
+TEST_CASE("Test serviceId is not included in command monitoring events when not in load-balancing mode") {
 
     instance::current();
 
@@ -526,6 +524,41 @@ TEST_CASE("Test serviceId is included in command monitoring events") {
     apm_opts.on_command_succeeded ( check_service_id<mongocxx::events::command_succeeded_event> {} );
     apm_opts.on_command_failed ( check_service_id<mongocxx::events::command_failed_event> {} );
 
+    // Set up mocking for mongoc_apm_command_started_get_service_id:
+    auto apm_command_started_get_service_id = libmongoc::apm_command_started_get_service_id.create_instance();
+    auto apm_command_succeeded_get_service_id = libmongoc::apm_command_succeeded_get_service_id.create_instance();
+    auto apm_command_failed_get_service_id = libmongoc::apm_command_failed_get_service_id.create_instance();
+
+    // We have no actual way of knowing if load-balancing is enabled, so we'll have to satisfy ourselves
+    // with checking for the positive case for now:
+
+    struct 
+    {
+	bson_oid_t *operator()(const void *) {
+	    static bson_oid_t tmp = {};
+            return &tmp;
+        }
+    } make_empty_bson_oid_t;
+
+    apm_command_started_get_service_id->interpose(make_empty_bson_oid_t);
+
+/*
+    apm_command_started_get_service_id->interpose([&] (const mongoc_apm_command_started_t *) {
+	static bson_oid_t tmp = {};
+        return &tmp;
+    });
+*/
+    apm_command_succeeded_get_service_id->interpose([&] (const mongoc_apm_command_succeeded_t *) {
+	static bson_oid_t tmp = {};
+        return &tmp;
+    });
+
+    apm_command_failed_get_service_id->interpose([&] (const mongoc_apm_command_failed_t *) {
+	static bson_oid_t tmp = {};
+        return &tmp;
+    });
+
+    // Set up our connection:
     client_opts.apm_opts (apm_opts);
     // Adding ?loadBalanced=true results in an error in the C driver because
     // the initial hello response from the server does not include serviceId.
@@ -533,18 +566,12 @@ TEST_CASE("Test serviceId is included in command monitoring events") {
     stdx::string_view database_name{"database"};
     database database = mongo_client[database_name];
 
-    // Mock mongoc_apm_command_started_get_service_id
-    auto apm_command_started_get_service_id = libmongoc::apm_command_started_get_service_id.create_instance();
-
-    // We have no actual way of knowing if load-balancing is enabled, so we'll have to satisfy ourselves
-    // with checking for the positive case for now:
-    apm_command_started_get_service_id->interpose([&] (const mongoc_apm_command_started_t *) {
-	static bson_oid_t tmp = {};
-        return &tmp;
-    });
-
-    // Run a command, triggering start and completion:
+    // Run a command, triggering start and completion events:
     auto cmd = make_document (kvp ("ping", 1));
+    database.run_command (cmd.view());
+
+    // Attempt to trigger failure:
+    cmd = make_document (kvp ("some_sort_of_invalid_command_that_should_never_happen", 1));
     database.run_command (cmd.view());
 }
 
