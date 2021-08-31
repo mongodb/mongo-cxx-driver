@@ -40,6 +40,7 @@ BSONCXX_INLINE_NAMESPACE_END
 
 #include <boost/none.hpp>
 #include <boost/optional/optional.hpp>
+#include <boost/optional/optional_io.hpp>
 
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
