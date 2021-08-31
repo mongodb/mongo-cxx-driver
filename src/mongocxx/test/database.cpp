@@ -1,4 +1,4 @@
-// Copyright 2014 MongoDB Inc.
+// Copyright 2014-present MongoDB Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -490,6 +490,62 @@ TEST_CASE("Database integration tests", "[database]") {
 
         REQUIRE(expected_colls.size() == 0);
     }
+}
+
+// As C++11 lacks generic lambdas, and "ordinary" templates can't appear at block scope,
+// we'll have to define our helper for the serviceId tests here. This implementation would
+// be more straightforward in newer versions of C++ (C++14 and on allow generic lambdas), 
+// see CXX-2350 (migration to more recent C++ standards):
+template <typename EventT>
+struct check_service_id
+{
+    void operator()(const EventT& event) {
+
+    // We MUST NOT report a service_id() outside of load-balancing mode, but in
+    // load-balancing mode, a value is required:
+    INFO("checking for service_id()")
+    CAPTURE(event.command_name(), test_util::is_load_balanced());
+    auto service_id = event.service_id();
+    if (test_util::is_load_balanced())
+        CHECK(service_id);
+    else
+        CHECK_FALSE(service_id);
+    }
+};
+
+
+TEST_CASE("Test serviceId is included in command monitoring events") {
+
+    instance::current();
+
+    auto client_opts = test_util::add_test_server_api();
+
+    // Set Application Performance Monitoring options (APM):
+    mongocxx::options::apm apm_opts;
+    apm_opts.on_command_started ( check_service_id<mongocxx::events::command_started_event>{} );
+    apm_opts.on_command_succeeded ( check_service_id<mongocxx::events::command_succeeded_event> {} );
+    apm_opts.on_command_failed ( check_service_id<mongocxx::events::command_failed_event> {} );
+
+    client_opts.apm_opts (apm_opts);
+    // Adding ?loadBalanced=true results in an error in the C driver because
+    // the initial hello response from the server does not include serviceId.
+    client mongo_client(uri("mongodb://localhost:27017/"), client_opts);
+    stdx::string_view database_name{"database"};
+    database database = mongo_client[database_name];
+
+    // Mock mongoc_apm_command_started_get_service_id
+    auto apm_command_started_get_service_id = libmongoc::apm_command_started_get_service_id.create_instance();
+
+    // We have no actual way of knowing if load-balancing is enabled, so we'll have to satisfy ourselves
+    // with checking for the positive case for now:
+    apm_command_started_get_service_id->interpose([&] (const mongoc_apm_command_started_t *) {
+	static bson_oid_t tmp = {};
+        return &tmp;
+    });
+
+    // Run a command, triggering start and completion:
+    auto cmd = make_document (kvp ("ping", 1));
+    database.run_command (cmd.view());
 }
 
 }  // namespace
