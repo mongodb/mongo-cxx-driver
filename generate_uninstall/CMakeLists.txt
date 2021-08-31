@@ -73,7 +73,7 @@ else ()
          \"\${MONGOCXX_INSTALL_MANIFEST_CONTENT}\")
       execute_process (
          COMMAND
-            find ${CMAKE_INSTALL_PREFIX} -type d -empty -delete
+            find \"\$ENV{DESTDIR}/${CMAKE_INSTALL_PREFIX}/${BSONCXX_HEADER_INSTALL_DIR}\" \"\$ENV{DESTDIR}/${CMAKE_INSTALL_PREFIX}/${MONGOCXX_HEADER_INSTALL_DIR}\" -type d -empty -delete
       )
       execute_process (
          COMMAND
