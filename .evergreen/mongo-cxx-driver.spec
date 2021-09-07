@@ -2,8 +2,8 @@
 %global pkg_name mongo-cxx-driver
 
 Name:           mongo-cxx-driver
-Version:        3.4.1
-Release:        5%{?dist}
+Version:        3.6.5
+Release:        1%{?dist}
 Summary:        A C++ Driver for MongoDB
 License:        ASL 2.0
 URL:            https://github.com/mongodb/mongo-cxx-driver/wiki
@@ -11,7 +11,7 @@ Source0:        https://github.com/mongodb/%{pkg_name}/archive/%{name}-r%{versio
 
 
 Patch2:         mongo-cxx-driver-3.3.1_paths.patch
-
+Patch3:         mongo-cxx-driver-catch-update.patch
 BuildRequires:  boost-devel >= 1.49
 BuildRequires:  openssl-devel
 BuildRequires:  cmake
@@ -26,6 +26,7 @@ BuildRequires:  cmake(mongocrypt)
 Provides: libmongodb = 2.6.0-%{release}
 Provides: libmongodb%{?_isa} = 2.6.0-%{release}
 Obsoletes: libmongodb <= 2.4.9-8
+Provides: bundled(catch) = 2.13.5
 
 %description
 This package provides the shared library for the MongoDB C++ Driver.
@@ -67,6 +68,7 @@ This package provides the C++ header files for library for working with BSON.
 %setup -q -n %{name}-r%{version}
 
 %patch2 -p1 -b .paths
+%patch3 -p1 -b .catchupdate
 
 
 %build
@@ -84,10 +86,14 @@ export LDFLAGS="$LDFLAGS $RPM_LD_FLAGS"
 
 %install
 %cmake_install
+rm -r %{buildroot}%{_datadir}/%{name}
+rm %{buildroot}%{_libdir}/cmake/mongocxx-%{version}/*.cmake
+rm %{buildroot}%{_libdir}/cmake/bsoncxx-%{version}/*.cmake
 
 %files
 %doc README.md
 %license LICENSE
+%license THIRD-PARTY-NOTICES
 %{_libdir}/libmongocxx.so.*
 
 %files devel
@@ -106,6 +112,13 @@ export LDFLAGS="$LDFLAGS $RPM_LD_FLAGS"
 %{_libdir}/cmake/libbsoncxx*
 
 %changelog
+* Mon Aug 09 2021 Honza Horak <hhorak@redhat.com> - 3.6.5-1
+- Update to 3.6.5
+- Update bundled catch to 2.13.5
+
+* Thu Jul 22 2021 Fedora Release Engineering <releng@fedoraproject.org> - 3.4.1-6
+- Rebuilt for https://fedoraproject.org/wiki/Fedora_35_Mass_Rebuild
+
 * Tue Jan 26 2021 Fedora Release Engineering <releng@fedoraproject.org> - 3.4.1-5
 - Rebuilt for https://fedoraproject.org/wiki/Fedora_34_Mass_Rebuild
 
