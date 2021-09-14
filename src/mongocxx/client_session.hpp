@@ -29,7 +29,8 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 class client;
 
 ///
-/// Use a session for a sequence of operations, optionally with causal consistency.
+/// Use a session for a sequence of operations, optionally with either causal consistency 
+/// or snapshots.
 ///
 /// Note that client_session is not thread-safe. See
 /// https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/thread-safety/ for more details.
