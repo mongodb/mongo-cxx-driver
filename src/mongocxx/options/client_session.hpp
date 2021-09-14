@@ -55,6 +55,27 @@ class MONGOCXX_API client_session {
     bool causal_consistency() const noexcept;
 
     ///
+    /// Sets the read concern "snapshot" (not enabled by default).
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
+    /// @see
+    /// https://docs.mongodb.com/manual/reference/read-concern-snapshot/
+    ///
+    /// @note Snapshot reads and causal consistency are mutually exclusive: only one or the
+    /// other may be active at a time. Attempting to do so will result in an error being thrown 
+    /// by mongocxx::client::start_session.
+    ///
+    client_session& snapshot(bool enable_snapshot_reads) noexcept;
+
+    ///
+    /// Gets the current value of the snapshot_reads option.
+    ///
+    bool snapshot() const noexcept;
+
+    ///
     /// Sets the default transaction options.
     ///
     /// @param default_transaction_opts
@@ -75,6 +96,7 @@ class MONGOCXX_API client_session {
 
    private:
     bool _causal_consistency = true;
+    bool _enable_snapshot_reads = false;
     stdx::optional<transaction> _default_transaction_opts;
 };
 

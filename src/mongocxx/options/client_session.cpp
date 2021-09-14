@@ -29,6 +29,15 @@ bool client_session::causal_consistency() const noexcept {
     return _causal_consistency;
 }
 
+client_session& client_session::snapshot(bool enable_snapshot_reads) noexcept {
+    _enable_snapshot_reads = enable_snapshot_reads;
+    return *this;
+}
+
+bool client_session::snapshot() const noexcept { 
+    return _enable_snapshot_reads; 
+}
+
 client_session& client_session::default_transaction_opts(transaction default_transaction_opts) {
     _default_transaction_opts = std::move(default_transaction_opts);
     return *this;

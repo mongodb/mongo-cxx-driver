@@ -78,6 +78,7 @@ class client_session::impl {
             libmongoc::session_opts_new(), libmongoc::session_opts_destroy};
 
         libmongoc::session_opts_set_causal_consistency(opt_t.get(), _options.causal_consistency());
+        libmongoc::session_opts_set_snapshot(opt_t.get(), _options.snapshot());
 
         if (session_options.default_transaction_opts()) {
             libmongoc::session_opts_set_default_transaction_opts(
