@@ -34,8 +34,8 @@ client_session& client_session::snapshot(bool enable_snapshot_reads) noexcept {
     return *this;
 }
 
-bool client_session::snapshot() const noexcept { 
-    return _enable_snapshot_reads; 
+bool client_session::snapshot() const noexcept {
+    return _enable_snapshot_reads;
 }
 
 client_session& client_session::default_transaction_opts(transaction default_transaction_opts) {
