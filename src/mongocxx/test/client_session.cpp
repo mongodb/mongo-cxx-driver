@@ -48,7 +48,11 @@ TEST_CASE("session options", "[session]") {
     SECTION("default") {
         auto s = c.start_session();
 
+	/* These cannot both be set at the same time; by default,
+	causal consistency is enabled and snapshots are disabled,
+	as per spec "Snapshot Reads Specification": */
         REQUIRE(s.options().causal_consistency());
+	REQUIRE_FALSE(s.options().snapshot());
     }
 
     SECTION("set causal consistency") {
@@ -60,6 +64,35 @@ TEST_CASE("session options", "[session]") {
         auto s = c.start_session(opts);
         REQUIRE(!s.options().causal_consistency());
     }
+
+    SECTION("set snapshot consistency") {
+	options::client_session opts;
+
+	REQUIRE_FALSE(opts.snapshot());
+        opts.causal_consistency(false);
+	opts.snapshot(true);
+	REQUIRE(opts.snapshot());
+	REQUIRE_FALSE(opts.causal_consistency());
+
+	auto s = c.start_session(opts);
+
+	REQUIRE(opts.snapshot());
+	REQUIRE_FALSE(opts.causal_consistency());
+    }
+
+   SECTION("causal and snapshot consistency are mutually exclusive") {
+	// Trying to set both casusal and snapshot consistency should result
+	// in an error when starting the session:
+	options::client_session opts;
+       
+	opts.snapshot(true);
+	opts.causal_consistency(true);
+
+	REQUIRE(opts.causal_consistency()); 
+	REQUIRE(opts.snapshot()); 
+
+	REQUIRE_THROWS_AS(c.start_session(opts), mongocxx::exception);
+   }
 }
 
 TEST_CASE("start_session failure", "[session]") {
