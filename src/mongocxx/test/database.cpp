@@ -544,12 +544,10 @@ TEST_CASE("serviceId presence depends on load-balancing mode") {
     // Set up mocked functions that DO emit a service_id:
     if (expect_service_id) {
         // Return a bson_oid_t with data where the service_id has some value:
-        struct {
-            bson_oid_t* operator()(const void*) {
-                static bson_oid_t tmp = {0x65};
-                return &tmp;
-            }
-        } make_service_id_bson_oid_t;
+	const auto make_service_id_bson_oid_t = [](const void *) -> const bson_oid_t* {
+		static bson_oid_t tmp = { 0x65 };
+		return &tmp;
+	};
 
         // Add forever() so that the mock function also extends to endSession:
         apm_command_started_get_service_id->interpose(make_service_id_bson_oid_t).forever();
