@@ -533,7 +533,7 @@ TEST_CASE("serviceId presence depends on load-balancing mode") {
     apm_opts.on_command_failed(
         check_service_id<mongocxx::events::command_failed_event>{expect_service_id});
 
-    // Set up mocking for mongoc_apm_command_started_get_service_id:
+    // Set up mocking for get_service_id events:
     auto apm_command_started_get_service_id =
         libmongoc::apm_command_started_get_service_id.create_instance();
     auto apm_command_succeeded_get_service_id =

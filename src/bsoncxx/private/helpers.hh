@@ -44,7 +44,7 @@ something that can be improved as part of CXX-2350 (migration to more recent C++
 standards).
 */
 inline bsoncxx::oid make_oid(const bson_oid_t* bson_oid) {
-    return bsoncxx::oid(reinterpret_cast<const char*>(const_cast<bson_oid_t*>(bson_oid)),
+    return bsoncxx::oid(reinterpret_cast<const char*>(bson_oid),
                         bsoncxx::oid::size());
 }
 
