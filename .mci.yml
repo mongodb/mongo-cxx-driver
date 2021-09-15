@@ -280,7 +280,9 @@ functions:
                   fi
                   export CMAKE=${cmake}
 
-                  if ! python -m virtualenv venv 2>/dev/null; then
+                  if [ "x$(lsb_release -cs)" = "xtrusty" -a -f /opt/mongodbtoolchain/v2/bin/python ]; then
+                      /opt/mongodbtoolchain/v2/bin/python -m virtualenv venv
+                  elif ! python -m virtualenv venv 2>/dev/null; then
                       /opt/mongodbtoolchain/v3/bin/python3 -m venv venv
                   fi
 
