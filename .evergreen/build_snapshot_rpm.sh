@@ -119,7 +119,7 @@ echo "Building source RPM ..."
 rpmbuild -bs ${spec_file}
 echo "Building binary RPMs ..."
 mock_result=$(readlink -f ../mock-result)
-sudo mock --resultdir="${mock_result}" --use-bootstrap-image --isolation=simple -r ${config} --no-clean --no-cleanup-after --rebuild ~/rpmbuild/SRPMS/${package}-${snapshot_version}*.src.rpm
+sudo mock --resultdir="${mock_result}" --use-bootstrap-image --isolation=simple -r ${config} --no-clean --no-cleanup-after --rebuild ~/rpmbuild/SRPMS/${package}-${snapshot_version}*.src.rpm || ( cd "${mock_result}" ; cat *.log ; exit 1 )
 sudo mock -r ${config} --use-bootstrap-image --isolation=simple --copyin "${mock_result}" /tmp
 
 sudo mock -r ${config} --use-bootstrap-image --isolation=simple --cwd "/tmp/${build_dir}" --chroot -- /bin/sh -c "(
