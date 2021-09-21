@@ -48,18 +48,18 @@ TEST_CASE("session options", "[session]") {
     SECTION("default") {
         auto s = c.start_session();
 
-        /* These cannot both be set at the same time; by default,
-        causal consistency is enabled and snapshots are disabled,
-        as per spec "Snapshot Reads Specification": */
-        REQUIRE(s.options().causal_consistency());
-        REQUIRE_FALSE(s.options().snapshot());
+	// Causal consistency and snapshot reads are both optional,
+	// and should contain no value:
+	CHECK_FALSE(s.options().causal_consistency());
+	CHECK_FALSE(s.options().snapshot());
     }
 
     SECTION("set causal consistency") {
         options::client_session opts;
-        REQUIRE(opts.causal_consistency());
+        CHECK_FALSE(opts.causal_consistency());
         opts.causal_consistency(false);
-        REQUIRE(!opts.causal_consistency());
+        REQUIRE(opts.causal_consistency());
+	REQUIRE(*opts.causal_consistency());
 
         auto s = c.start_session(opts);
         REQUIRE(!s.options().causal_consistency());
