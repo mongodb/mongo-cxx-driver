@@ -25,7 +25,7 @@ client_session& client_session::causal_consistency(bool causal_consistency) noex
     return *this;
 }
 
-bool client_session::causal_consistency() const noexcept {
+stdx::optional<bool> client_session::causal_consistency() const noexcept {
     return _causal_consistency;
 }
 
@@ -34,7 +34,7 @@ client_session& client_session::snapshot(bool enable_snapshot_reads) noexcept {
     return *this;
 }
 
-bool client_session::snapshot() const noexcept {
+stdx::optional<bool> client_session::snapshot() const noexcept {
     return _enable_snapshot_reads;
 }
 
