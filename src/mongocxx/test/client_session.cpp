@@ -59,26 +59,70 @@ TEST_CASE("session options", "[session]") {
         CHECK_FALSE(opts.causal_consistency());
         opts.causal_consistency(false);
         REQUIRE(opts.causal_consistency());
-	REQUIRE(*opts.causal_consistency());
+	REQUIRE_FALSE(*opts.causal_consistency());
 
         auto s = c.start_session(opts);
-        REQUIRE(!s.options().causal_consistency());
+
+	// Setting for causal consistency should now be present, but false:
+	REQUIRE(s.options().causal_consistency());
+        REQUIRE_FALSE(*s.options().causal_consistency());
     }
 
-    SECTION("set snapshot consistency") {
+    SECTION("manually set snapshot consistency") {
         options::client_session opts;
 
         REQUIRE_FALSE(opts.snapshot());
         opts.causal_consistency(false);
         opts.snapshot(true);
+
         REQUIRE(opts.snapshot());
-        REQUIRE_FALSE(opts.causal_consistency());
+	REQUIRE(*opts.snapshot());
+
+	REQUIRE(opts.causal_consistency());
+        REQUIRE_FALSE(*opts.causal_consistency());
 
         auto s = c.start_session(opts);
 
+	// Nothing from the preconditions should have changed (because we
+	// specified values above):
         REQUIRE(opts.snapshot());
-        REQUIRE_FALSE(opts.causal_consistency());
+	REQUIRE(*opts.snapshot());
+
+	REQUIRE(opts.causal_consistency());
+        REQUIRE_FALSE(*opts.causal_consistency());
     }
+
+/* JFW: I feel like this test SHOULD work, however we don't actually get values "back" from the
+server, and it looks like this is by design. Is this the intended behavior, or should this be
+a valid test?
+
+    SECTION("check default causal and snapshot consistency") {
+
+	GIVEN("a default set of options") {
+
+        	options::client_session opts;
+
+		THEN("they should have no contained value by default") {
+        		CHECK_FALSE(opts.snapshot());
+			CHECK_FALSE(opts.causal_consistency());
+		}
+
+		WHEN("we start the session") {
+        		auto s = c.start_session(opts);
+
+			THEN("the default values should propegate") {
+				// Note that we don't necessarily know what these values should be:
+				REQUIRE(opts.causal_consistency());
+        			REQUIRE(opts.snapshot());
+			}
+
+			THEN("then the default values should be mutually exclusive") {
+				REQUIRE_FALSE((*opts.causal_consistency() && *opts.snapshot()));
+			}
+		}	
+        }
+    }
+*/
 
     SECTION("causal and snapshot consistency are mutually exclusive") {
         // Trying to set both casusal and snapshot consistency should result
@@ -89,9 +133,45 @@ TEST_CASE("session options", "[session]") {
         opts.causal_consistency(true);
 
         REQUIRE(opts.causal_consistency());
+        REQUIRE(*opts.causal_consistency());
+
         REQUIRE(opts.snapshot());
+        REQUIRE(*opts.snapshot());
 
         REQUIRE_THROWS_AS(c.start_session(opts), mongocxx::exception);
+    }
+
+    SECTION("invalid combinations of causal and snapshot consistency should fail") {
+	// Essentially, we can expect any number of combinations of un-set (i.e. does
+	// not contain a value), true, or false to be possible; but in the end any result
+	// leading to a final combination of [present, true, true] should result in an
+	// exception.
+
+        options::client_session opts;
+
+	stdx::optional<bool> causal_consistenty_opt   = GENERATE(stdx::nullopt, false, true);
+	stdx::optional<bool> snapshot_consistency_opt = GENERATE(stdx::nullopt, false, true);
+
+	// Only actually set a value if we generate a non-empty setting:
+	if(stdx::nullopt != causal_consistenty_opt)
+	 opts.causal_consistency(*causal_consistenty_opt);
+
+	if(stdx::nullopt != snapshot_consistency_opt)
+	 opts.snapshot(*snapshot_consistency_opt);
+
+	// We should always expect an error if both have a vaule of true:
+	if((causal_consistenty_opt && true == *causal_consistenty_opt)
+           && (snapshot_consistency_opt && true == *snapshot_consistency_opt))
+         {
+        	REQUIRE_THROWS_AS(c.start_session(opts), mongocxx::exception);
+         }
+	else
+	 {
+		// No other condition /should/ trigger an error. Note that
+		// we do not necessarily know what the resultant values
+		// are, if set by the server:
+		CHECK_NOTHROW(c.start_session(opts));
+	 }
     }
 }
 
