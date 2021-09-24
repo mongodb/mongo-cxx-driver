@@ -50,12 +50,10 @@ class MONGOCXX_API client_session {
     client_session& causal_consistency(bool causal_consistency) noexcept;
 
     ///
-    /// Gets the current value of the causal_consistency option.
+    /// Gets the value of the causal_consistency option.
     ///
-    /// If the user has not specified a value, and no reply has been applied from the server, then
-    /// the returned optional contains no value.
     ///
-    stdx::optional<bool> causal_consistency() const noexcept;
+    bool causal_consistency() const noexcept;
 
     ///
     /// Sets the read concern "snapshot" (not enabled by default).
@@ -74,9 +72,9 @@ class MONGOCXX_API client_session {
     client_session& snapshot(bool enable_snapshot_reads) noexcept;
 
     ///
-    /// Gets the current value of the snapshot_reads option.
+    /// Gets the value of the snapshot_reads option.
     ///
-    stdx::optional<bool> snapshot() const noexcept;
+    bool snapshot() const noexcept;
 
     ///
     /// Sets the default transaction options.

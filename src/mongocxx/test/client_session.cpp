@@ -46,26 +46,44 @@ TEST_CASE("session options", "[session]") {
     }
 
     SECTION("default") {
+	// Make sure the defaults don't cause the server to reject our connection:
+	options::client_session opts;
+
+        auto s = c.start_session(opts);
+    }
+
+    SECTION("default-- check values") {
         auto s = c.start_session();
 
-	// Causal consistency and snapshot reads are both optional,
-	// and should contain no value:
-	CHECK_FALSE(s.options().causal_consistency());
+	CHECK(s.options().causal_consistency());
 	CHECK_FALSE(s.options().snapshot());
     }
 
-    SECTION("set causal consistency") {
+    SECTION("default causal consistency-- no connection") {
+        // By default, causal consistency shouldn't have a value (there's no
+	// way to detect this through our public API), but we can force it
+	// to a default value by reading:
         options::client_session opts;
+
+	// The default value SHOULD be false, however this may change in the
+	// future, as per the Causal Consistency spec:
+	REQUIRE_FALSE(opts.causal_consistency());
+    }
+
+    SECTION("manually set causal consistency") {
+        options::client_session opts;
+
+	// By default, causal_consistency() may or may not
+	// have a value; here, we'll make sure:
         CHECK_FALSE(opts.causal_consistency());
         opts.causal_consistency(false);
-        REQUIRE(opts.causal_consistency());
-	REQUIRE_FALSE(*opts.causal_consistency());
+	REQUIRE_FALSE(opts.causal_consistency());
 
         auto s = c.start_session(opts);
 
 	// Setting for causal consistency should now be present, but false:
 	REQUIRE(s.options().causal_consistency());
-        REQUIRE_FALSE(*s.options().causal_consistency());
+        REQUIRE_FALSE(s.options().causal_consistency());
     }
 
     SECTION("manually set snapshot consistency") {
@@ -76,53 +94,16 @@ TEST_CASE("session options", "[session]") {
         opts.snapshot(true);
 
         REQUIRE(opts.snapshot());
-	REQUIRE(*opts.snapshot());
-
-	REQUIRE(opts.causal_consistency());
-        REQUIRE_FALSE(*opts.causal_consistency());
+	REQUIRE_FALSE(opts.causal_consistency());
 
         auto s = c.start_session(opts);
 
 	// Nothing from the preconditions should have changed (because we
 	// specified values above):
         REQUIRE(opts.snapshot());
-	REQUIRE(*opts.snapshot());
 
-	REQUIRE(opts.causal_consistency());
-        REQUIRE_FALSE(*opts.causal_consistency());
+        REQUIRE_FALSE(opts.causal_consistency());
     }
-
-/* JFW: I feel like this test SHOULD work, however we don't actually get values "back" from the
-server, and it looks like this is by design. Is this the intended behavior, or should this be
-a valid test?
-
-    SECTION("check default causal and snapshot consistency") {
-
-	GIVEN("a default set of options") {
-
-        	options::client_session opts;
-
-		THEN("they should have no contained value by default") {
-        		CHECK_FALSE(opts.snapshot());
-			CHECK_FALSE(opts.causal_consistency());
-		}
-
-		WHEN("we start the session") {
-        		auto s = c.start_session(opts);
-
-			THEN("the default values should propegate") {
-				// Note that we don't necessarily know what these values should be:
-				REQUIRE(opts.causal_consistency());
-        			REQUIRE(opts.snapshot());
-			}
-
-			THEN("then the default values should be mutually exclusive") {
-				REQUIRE_FALSE((*opts.causal_consistency() && *opts.snapshot()));
-			}
-		}	
-        }
-    }
-*/
 
     SECTION("causal and snapshot consistency are mutually exclusive") {
         // Trying to set both casusal and snapshot consistency should result
@@ -133,10 +114,7 @@ a valid test?
         opts.causal_consistency(true);
 
         REQUIRE(opts.causal_consistency());
-        REQUIRE(*opts.causal_consistency());
-
         REQUIRE(opts.snapshot());
-        REQUIRE(*opts.snapshot());
 
         REQUIRE_THROWS_AS(c.start_session(opts), mongocxx::exception);
     }
