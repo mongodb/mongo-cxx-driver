@@ -829,6 +829,22 @@ TEST_CASE("unified format spec automated tests", "[unified_format_spec]") {
     }
 }
 
+TEST_CASE("session unified format spec automated tests", "[unified_format_spec]") {
+    instance::current();
+
+    std::string path = std::getenv("SESSION_UNIFIED_TESTS_PATH");
+    CAPTURE(path);
+    REQUIRE(path.size());
+
+    std::ifstream files{path + "/test_files.txt"};
+    REQUIRE(files.good());
+
+    for (std::string file; std::getline(files, file);) {
+        CAPTURE(file);
+        run_tests_in_file(path + '/' + file);
+    }
+}
+
 TEST_CASE("CRUD unified format spec automated tests", "[unified_format_spec]") {
     instance::current();
 
