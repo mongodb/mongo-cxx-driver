@@ -478,6 +478,7 @@ functions:
                   export MONGOCXX_INSTALL_PREFIX=$(pwd)/build/install
                   export LIB_DIR=${lib_dir}
                   export BUILD_TYPE=${build_type}
+                  export BUILD_DIR=$(pwd)/build
                   ./.evergreen/connect.sh
 
     "backtrace":
