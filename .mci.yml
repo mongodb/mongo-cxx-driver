@@ -471,32 +471,14 @@ functions:
               shell: bash
               working_dir: "mongo-cxx-driver"
               script: |
-                  set -o errexit
-                  set -o pipefail
-                  export PATH="${extra_path}:$PATH"
-                  cd build
-                  export PREFIX=$(pwd)/../../mongoc
+                  set -o xtrace
 
-                  # Use PATH / LD_LIBRARY_PATH / DYLD_LIBRARY_PATH to inform the tests where to find
-                  # mongoc library dependencies on Windows / Linux / Mac OS, respectively.
-                  # Additionally, on Windows, we also need to inform the tests where to find
-                  # mongocxx library dependencies.
-                  if [ -n "${lib_dir}" ]; then
-                     export LD_LIBRARY_PATH=.:$PREFIX/${lib_dir}/
-                     export DYLD_LIBRARY_PATH=.:$PREFIX/${lib_dir}/
-                  else
-                     export LD_LIBRARY_PATH=.:$PREFIX/lib/
-                     export DYLD_LIBRARY_PATH=.:$PREFIX/lib/
-                  fi
-                  export PATH=$(pwd)/src/bsoncxx/${build_type}:$(pwd)/src/mongocxx/${build_type}:$PREFIX/bin:$(pwd)/install/bin:$PATH
-
-                  URI="mongodb://bob:pwd123@localhost"
-
-                  if [ "Windows_NT" == "$OS" ]; then
-                      ./examples/mongocxx/${build_type}/connect.exe "$URI"
-                  else
-                      ./examples/mongocxx/connect "$URI"
-                  fi
+                  export URI="mongodb://bob:pwd123@localhost"
+                  export MONGOC_INSTALL_PREFIX=$(pwd)/../mongoc
+                  export MONGOCXX_INSTALL_PREFIX=$(pwd)/build/install
+                  export LIB_DIR=${lib_dir}
+                  export BUILD_TYPE=${build_type}
+                  ./.evergreen/connect.sh
 
     "backtrace":
         - command: shell.exec
@@ -626,6 +608,8 @@ tasks:
         - func: "install_c_driver"
         - func: "compile"
         - func: "test auth"
+          vars:
+            URI:"mongodb://bob:pwd123@localhost"
 
     - name: compile_and_test_with_static_libs
       commands:
