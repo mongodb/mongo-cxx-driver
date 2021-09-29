@@ -816,8 +816,7 @@ void run_tests_in_file(const std::string& test_path) {
 // Check the environment for the specified variable; if present, extract it
 // as a directory and run all the tests contained in the magic "test_files.txt"
 // file:
-bool run_unified_format_tests_in_env_dir(const std::string& env_path)
-{
+bool run_unified_format_tests_in_env_dir(const std::string& env_path) {
     instance::current();
 
     std::string path = std::getenv(env_path.c_str());
@@ -832,23 +831,23 @@ bool run_unified_format_tests_in_env_dir(const std::string& env_path)
         run_tests_in_file(path + '/' + file);
     }
 
- return true;
+    return true;
 }
 
 TEST_CASE("unified format spec automated tests", "[unified_format_spec]") {
- CHECK(run_unified_format_tests_in_env_dir("UNIFIED_FORMAT_TESTS_PATH"));
+    CHECK(run_unified_format_tests_in_env_dir("UNIFIED_FORMAT_TESTS_PATH"));
 }
 
 TEST_CASE("session unified format spec automated tests", "[unified_format_spec]") {
- CHECK(run_unified_format_tests_in_env_dir("SESSION_UNIFIED_TESTS_PATH"));
+    CHECK(run_unified_format_tests_in_env_dir("SESSION_UNIFIED_TESTS_PATH"));
 }
 
 TEST_CASE("CRUD unified format spec automated tests", "[unified_format_spec]") {
- CHECK(run_unified_format_tests_in_env_dir("CRUD_UNIFIED_TESTS_PATH"));
+    CHECK(run_unified_format_tests_in_env_dir("CRUD_UNIFIED_TESTS_PATH"));
 }
 
 TEST_CASE("versioned API spec automated tests", "[unified_format_spec]") {
- CHECK(run_unified_format_tests_in_env_dir("VERSIONED_API_TESTS_PATH"));
+    CHECK(run_unified_format_tests_in_env_dir("VERSIONED_API_TESTS_PATH"));
 }
 
 }  // namespace

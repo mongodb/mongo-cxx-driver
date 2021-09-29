@@ -77,13 +77,14 @@ class client_session::impl {
         std::unique_ptr<mongoc_session_opt_t, decltype(libmongoc::session_opts_destroy)> opt_t{
             libmongoc::session_opts_new(), libmongoc::session_opts_destroy};
 
-/* JFW:
-	if(_options._causal_consistency)
-         libmongoc::session_opts_set_causal_consistency(opt_t.get(), *_options.causal_consistency);
+        /* JFW:
+                if(_options._causal_consistency)
+                 libmongoc::session_opts_set_causal_consistency(opt_t.get(),
+           *_options.causal_consistency);
 
-	if(_options._snapshot())
-         libmongoc::session_opts_set_snapshot(opt_t.get(), *_options.snapshot());
-*/
+                if(_options._snapshot())
+                 libmongoc::session_opts_set_snapshot(opt_t.get(), *_options.snapshot());
+        */
         if (session_options.default_transaction_opts()) {
             libmongoc::session_opts_set_default_transaction_opts(
                 opt_t.get(),
