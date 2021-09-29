@@ -813,10 +813,14 @@ void run_tests_in_file(const std::string& test_path) {
     }
 }
 
-TEST_CASE("unified format spec automated tests", "[unified_format_spec]") {
+// Check the environment for the specified variable; if present, extract it
+// as a directory and run all the tests contained in the magic "test_files.txt"
+// file:
+bool run_unified_format_tests_in_env_dir(const std::string& env_path)
+{
     instance::current();
 
-    std::string path = std::getenv("UNIFIED_FORMAT_TESTS_PATH");
+    std::string path = std::getenv(env_path.c_str());
     CAPTURE(path);
     REQUIRE(path.size());
 
@@ -827,53 +831,24 @@ TEST_CASE("unified format spec automated tests", "[unified_format_spec]") {
         CAPTURE(file);
         run_tests_in_file(path + '/' + file);
     }
+
+ return true;
+}
+
+TEST_CASE("unified format spec automated tests", "[unified_format_spec]") {
+ CHECK(run_unified_format_tests_in_env_dir("UNIFIED_FORMAT_TESTS_PATH"));
 }
 
 TEST_CASE("session unified format spec automated tests", "[unified_format_spec]") {
-    instance::current();
-
-    std::string path = std::getenv("SESSION_UNIFIED_TESTS_PATH");
-    CAPTURE(path);
-    REQUIRE(path.size());
-
-    std::ifstream files{path + "/test_files.txt"};
-    REQUIRE(files.good());
-
-    for (std::string file; std::getline(files, file);) {
-        CAPTURE(file);
-        run_tests_in_file(path + '/' + file);
-    }
+ CHECK(run_unified_format_tests_in_env_dir("SESSION_UNIFIED_TESTS_PATH"));
 }
 
 TEST_CASE("CRUD unified format spec automated tests", "[unified_format_spec]") {
-    instance::current();
-
-    std::string path = std::getenv("CRUD_UNIFIED_TESTS_PATH");
-    CAPTURE(path);
-    REQUIRE(path.size());
-
-    std::ifstream files{path + "/test_files.txt"};
-    REQUIRE(files.good());
-
-    for (std::string file; std::getline(files, file);) {
-        CAPTURE(file);
-        run_tests_in_file(path + '/' + file);
-    }
+ CHECK(run_unified_format_tests_in_env_dir("CRUD_UNIFIED_TESTS_PATH"));
 }
 
 TEST_CASE("versioned API spec automated tests", "[unified_format_spec]") {
-    instance::current();
-
-    std::string path = std::getenv("VERSIONED_API_TESTS_PATH");
-    CAPTURE(path);
-    REQUIRE(path.size());
-
-    std::ifstream files{path + "/test_files.txt"};
-    REQUIRE(files.good());
-
-    for (std::string file; std::getline(files, file);) {
-        CAPTURE(file);
-        run_tests_in_file(path + '/' + file);
-    }
+ CHECK(run_unified_format_tests_in_env_dir("VERSIONED_API_TESTS_PATH"));
 }
+
 }  // namespace
