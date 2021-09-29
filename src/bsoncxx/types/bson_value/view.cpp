@@ -89,7 +89,8 @@ view& view::operator=(const view& rhs) noexcept {
         break;
 #include <bsoncxx/enums/type.hpp>
 #undef BSONCXX_ENUM
-default : break;
+        default:
+            break;
     }
 
     _type = rhs._type;

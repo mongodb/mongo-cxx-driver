@@ -495,7 +495,7 @@ TEST_CASE("Database integration tests", "[database]") {
 // As C++11 lacks generic lambdas, and "ordinary" templates can't appear at block scope,
 // we'll have to define our helper for the serviceId tests here. This implementation would
 // be more straightforward in newer versions of C++ (C++14 and on allow generic lambdas),
-// see CXX-2350 (migration to more recent C++ standards); our C++17 optional<> implementation 
+// see CXX-2350 (migration to more recent C++ standards); our C++17 optional<> implementation
 // also has a few inconsistencies with the standard, which appear to vary across platforms.
 template <typename EventT>
 struct check_service_id {
@@ -544,10 +544,10 @@ TEST_CASE("serviceId presence depends on load-balancing mode") {
     // Set up mocked functions that DO emit a service_id:
     if (expect_service_id) {
         // Return a bson_oid_t with data where the service_id has some value:
-	const auto make_service_id_bson_oid_t = [](const void *) -> const bson_oid_t* {
-		static bson_oid_t tmp = { 0x65 };
-		return &tmp;
-	};
+        const auto make_service_id_bson_oid_t = [](const void*) -> const bson_oid_t* {
+            static bson_oid_t tmp = {0x65};
+            return &tmp;
+        };
 
         // Add forever() so that the mock function also extends to endSession:
         apm_command_started_get_service_id->interpose(make_service_id_bson_oid_t).forever();
