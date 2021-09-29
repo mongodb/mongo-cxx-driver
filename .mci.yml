@@ -609,7 +609,7 @@ tasks:
         - func: "compile"
         - func: "test auth"
           vars:
-            URI:"mongodb://bob:pwd123@localhost"
+            URI: "mongodb://bob:pwd123@localhost"
 
     - name: compile_and_test_with_static_libs
       commands:
