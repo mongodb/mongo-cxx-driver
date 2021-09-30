@@ -49,7 +49,7 @@ TEST_CASE("session options", "[session]") {
         // Make sure the defaults don't cause the server to reject our connection:
         options::client_session opts;
 
-        auto s = c.start_session(opts);
+        REQUIRE_NOTHROW(c.start_session(opts));
     }
 
     SECTION("default-- check values") {
@@ -65,24 +65,19 @@ TEST_CASE("session options", "[session]") {
         // to a default value by reading:
         options::client_session opts;
 
-        // The default value SHOULD be false, however this may change in the
-        // future, as per the Causal Consistency spec:
-        REQUIRE_FALSE(opts.causal_consistency());
+	// If internally un-set, we "see" a value of true:
+        REQUIRE(opts.causal_consistency());
     }
 
     SECTION("manually set causal consistency") {
         options::client_session opts;
 
-        // By default, causal_consistency() may or may not
-        // have a value; here, we'll make sure:
-        CHECK_FALSE(opts.causal_consistency());
         opts.causal_consistency(false);
         REQUIRE_FALSE(opts.causal_consistency());
 
         auto s = c.start_session(opts);
 
         // Setting for causal consistency should now be present, but false:
-        REQUIRE(s.options().causal_consistency());
         REQUIRE_FALSE(s.options().causal_consistency());
     }
 
@@ -127,19 +122,23 @@ TEST_CASE("session options", "[session]") {
 
         options::client_session opts;
 
-        stdx::optional<bool> causal_consistenty_opt = GENERATE(stdx::nullopt, false, true);
-        stdx::optional<bool> snapshot_consistency_opt = GENERATE(stdx::nullopt, false, true);
+        // Unfortunately, stdx::nullopt doesn't always play well with others, so we'll use
+	// an enumeration:
+	enum struct optional_state { empty, no, yes };
+
+        auto causal_consistenty_opt = GENERATE(Catch::Generators::as<optional_state> {}, optional_state::empty, optional_state::no, optional_state::yes);
+        auto snapshot_consistenty_opt = GENERATE(Catch::Generators::as<optional_state> {}, optional_state::empty, optional_state::no, optional_state::yes);
 
         // Only actually set a value if we generate a non-empty setting:
-        if (stdx::nullopt != causal_consistenty_opt)
-            opts.causal_consistency(*causal_consistenty_opt);
+        if (optional_state::empty != causal_consistenty_opt)
+            opts.causal_consistency(optional_state::yes == causal_consistenty_opt ? true : false);
 
-        if (stdx::nullopt != snapshot_consistency_opt)
-            opts.snapshot(*snapshot_consistency_opt);
+        if (optional_state::empty != snapshot_consistenty_opt)
+            opts.snapshot(optional_state::yes == snapshot_consistenty_opt ? true : false);
 
-        // We should always expect an error if both have a vaule of true:
-        if ((causal_consistenty_opt && true == *causal_consistenty_opt) &&
-            (snapshot_consistency_opt && true == *snapshot_consistency_opt)) {
+        // We should always expect an error if both are enabled:
+        if ((optional_state::empty != causal_consistenty_opt && optional_state::yes == causal_consistenty_opt) &&
+            (optional_state::empty != snapshot_consistenty_opt && optional_state::yes == snapshot_consistenty_opt)) {
             REQUIRE_THROWS_AS(c.start_session(opts), mongocxx::exception);
         } else {
             // No other condition /should/ trigger an error. Note that

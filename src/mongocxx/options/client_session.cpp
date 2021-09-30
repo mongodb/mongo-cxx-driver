@@ -39,7 +39,7 @@ client_session& client_session::snapshot(bool enable_snapshot_reads) noexcept {
 
 bool client_session::snapshot() const noexcept {
     // As per the Causal Consistency spec, if there is no value then false is implied:
-    return _enable_snapshot_reads ? *_enable_snapshot_reads : false;
+    return _enable_snapshot_reads.value_or(false);
 }
 
 client_session& client_session::default_transaction_opts(transaction default_transaction_opts) {

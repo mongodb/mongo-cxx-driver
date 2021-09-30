@@ -96,6 +96,9 @@ class MONGOCXX_API client_session {
     const stdx::optional<transaction>& default_transaction_opts() const;
 
    private:
+    // Allow the implementation of client_session to see these:
+    friend mongocxx::client_session;
+
     stdx::optional<bool> _causal_consistency;
     stdx::optional<bool> _enable_snapshot_reads;
 

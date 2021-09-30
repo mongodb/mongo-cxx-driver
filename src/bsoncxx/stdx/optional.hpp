@@ -30,7 +30,9 @@ namespace stdx {
 
 using ::core::make_optional;
 using ::core::nullopt;
+using ::core::nullopt_t;
 using ::core::optional;
+
 
 }  // namespace stdx
 BSONCXX_INLINE_NAMESPACE_END
@@ -82,6 +84,7 @@ namespace stdx {
 
 using ::std::make_optional;
 using ::std::nullopt;
+using ::std::nullopt_t;
 using ::std::optional;
 
 }  // namespace stdx
