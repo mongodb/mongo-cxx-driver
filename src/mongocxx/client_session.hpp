@@ -193,7 +193,6 @@ class MONGOCXX_API client_session {
     friend class index_view;
 
     class MONGOCXX_PRIVATE impl;
-    // JFW:    friend class impl;
 
     // "class client" distinguishes from client() method above.
     MONGOCXX_PRIVATE client_session(const class client* client,
