@@ -1254,7 +1254,7 @@ buildvariants:
           tar_options: *linux_tar_options
           cmake_flags: *linux_cmake_flags
           mongodb_version: *version_latest
-          mongoc_version: "1.18.0"
+          mongoc_version: "1.19.0"
       run_on:
           - ubuntu1804-build
       tasks:
