@@ -1386,12 +1386,8 @@ auto_encrypt_opts.extra_options({mongocryptd_options.view()});
 </span><span style="color:#75715e">//         &#34;bsonType&#34; : &#34;object&#34;,
 </span><span style="color:#75715e">//         &#34;properties&#34; : {
 </span><span style="color:#75715e">//            &#34;encryptedFieldName&#34; : {
-</span><span style="color:#75715e"></span><span style="color:#f92672">&lt;&lt;&lt;&lt;&lt;&lt;&lt;</span> HEAD
-<span style="color:#75715e">//               &#34;encrypt&#34; : {
-</span><span style="color:#75715e"></span><span style="color:#f92672">=======</span>
-<span style="color:#75715e">//               &#34;encryptField&#34; : {
-</span><span style="color:#75715e"></span><span style="color:#f92672">&gt;&gt;&gt;&gt;&gt;&gt;&gt;</span> CXX<span style="color:#f92672">-</span><span style="color:#ae81ff">1855</span> add tutorial and example <span style="color:#66d9ef">for</span> client<span style="color:#f92672">-</span>side encryption
-<span style="color:#75715e">//                  &#34;keyId&#34; : [ &lt;datakey as UUID&gt; ],
+</span><span style="color:#75715e">//               &#34;encrypt&#34; : {
+</span><span style="color:#75715e">//                  &#34;keyId&#34; : [ &lt;datakey as UUID&gt; ],
 </span><span style="color:#75715e">//                  &#34;bsonType&#34; : &#34;string&#34;,
 </span><span style="color:#75715e">//                  &#34;algorithm&#34; : &lt;algorithm&gt;
 </span><span style="color:#75715e">//               }
@@ -1436,22 +1432,6 @@ auto_encrypt_opts.bypass_auto_encryption(true);
 client_opts.auto_encryption_opts(std<span style="color:#f92672">::</span>move(auto_encrypt_opts));
 <span style="color:#66d9ef">class</span> <span style="color:#a6e22e">client</span> client_encrypted {uri{}, std<span style="color:#f92672">::</span>move(client_opts)};
 </code></pre></div><p>Please see  <a href="https://github.com/mongodb/mongo-cxx-driver/blob/master/examples/mongocxx/explicit_encryption_auto_decryption.cpp"><code>examples/mongocxx/explicit_encryption_auto_decryption.cpp</code></a> for an example of using explicit encryption with automatic decryption.</p>
-<h1 id="-head">&laquo;&laquo;&laquo;&lt; HEAD</h1>
-<blockquote>
-<blockquote>
-<blockquote>
-<blockquote>
-<blockquote>
-<blockquote>
-<blockquote>
-<p>CXX-1855 add tutorial and example for client-side encryption</p>
-</blockquote>
-</blockquote>
-</blockquote>
-</blockquote>
-</blockquote>
-</blockquote>
-</blockquote>
 
 
 

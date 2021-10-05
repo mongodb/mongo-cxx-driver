@@ -1692,10 +1692,10 @@ For example:</p>
 <p>Some of the tests require a running mongod instance.  For this, first download
 the <a href="https://www.mongodb.com/download-center">mongodb server</a>.</p>
 <p>Then deploy a mongod on the default port with the command:</p>
-<pre><code>mongod
+<pre><code>mongod --setParameter enableTestCommands=1
 </code></pre><p>if it is installed, otherwise navigate to the directory holding the mongod
 executable, and run:</p>
-<pre><code>./mongod
+<pre><code>./mongod --setParameter enableTestCommands=1
 </code></pre><p>following either command with any flags you wish to use, excluding
 <code>--port</code>.  While the mongod is running, run the tests as normal.</p>
 <h2 id="writing-new-tests">Writing new tests</h2>
