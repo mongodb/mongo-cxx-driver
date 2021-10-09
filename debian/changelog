@@ -1,6 +1,7 @@
 mongo-cxx-driver (3.6.6-1) UNRELEASED; urgency=medium
 
   * New upstream release
+  * Drop Samantha Ritter as uploader
 
  -- Roberto C. Sanchez <roberto@connexer.com>  Sat, 09 Oct 2021 06:34:44 -0400
 
