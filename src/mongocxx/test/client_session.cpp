@@ -61,11 +61,10 @@ TEST_CASE("session options", "[session]") {
 
     SECTION("default causal consistency-- no connection") {
         // By default, causal consistency shouldn't have a value (there's no
-        // way to detect this through our public API), but we can force it
-        // to a default value by reading:
+        // way to detect this through our public API):
         options::client_session opts;
 
-	// If internally un-set, we "see" a value of true:
+	// If internally un-set, we "see" the default value of true on read:
         REQUIRE(opts.causal_consistency());
     }
 
@@ -131,18 +130,17 @@ TEST_CASE("session options", "[session]") {
 
         // Only actually set a value if we generate a non-empty setting:
         if (optional_state::empty != causal_consistenty_opt)
-            opts.causal_consistency(optional_state::yes == causal_consistenty_opt ? true : false);
+            opts.causal_consistency(optional_state::yes == causal_consistenty_opt);
 
         if (optional_state::empty != snapshot_consistenty_opt)
-            opts.snapshot(optional_state::yes == snapshot_consistenty_opt ? true : false);
+            opts.snapshot(optional_state::yes == snapshot_consistenty_opt);
 
         // We should always expect an error if both are enabled:
         if ((optional_state::empty != causal_consistenty_opt && optional_state::yes == causal_consistenty_opt) &&
             (optional_state::empty != snapshot_consistenty_opt && optional_state::yes == snapshot_consistenty_opt)) {
             REQUIRE_THROWS_AS(c.start_session(opts), mongocxx::exception);
         } else {
-            // No other condition /should/ trigger an error. Note that
-            // we do not necessarily know what the resultant values
+            // Note that we do not necessarily know what the resultant values 
             // are, if set by the server:
             CHECK_NOTHROW(c.start_session(opts));
         }
