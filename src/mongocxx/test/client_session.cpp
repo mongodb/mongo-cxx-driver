@@ -64,7 +64,7 @@ TEST_CASE("session options", "[session]") {
         // way to detect this through our public API):
         options::client_session opts;
 
-	// If internally un-set, we "see" the default value of true on read:
+        // If internally un-set, we "see" the default value of true on read:
         REQUIRE(opts.causal_consistency());
     }
 
@@ -122,11 +122,17 @@ TEST_CASE("session options", "[session]") {
         options::client_session opts;
 
         // Unfortunately, stdx::nullopt doesn't always play well with others, so we'll use
-	// an enumeration:
-	enum struct optional_state { empty, no, yes };
+        // an enumeration:
+        enum struct optional_state { empty, no, yes };
 
-        auto causal_consistenty_opt = GENERATE(Catch::Generators::as<optional_state> {}, optional_state::empty, optional_state::no, optional_state::yes);
-        auto snapshot_consistenty_opt = GENERATE(Catch::Generators::as<optional_state> {}, optional_state::empty, optional_state::no, optional_state::yes);
+        auto causal_consistenty_opt = GENERATE(Catch::Generators::as<optional_state>{},
+                                               optional_state::empty,
+                                               optional_state::no,
+                                               optional_state::yes);
+        auto snapshot_consistenty_opt = GENERATE(Catch::Generators::as<optional_state>{},
+                                                 optional_state::empty,
+                                                 optional_state::no,
+                                                 optional_state::yes);
 
         // Only actually set a value if we generate a non-empty setting:
         if (optional_state::empty != causal_consistenty_opt)
@@ -136,11 +142,13 @@ TEST_CASE("session options", "[session]") {
             opts.snapshot(optional_state::yes == snapshot_consistenty_opt);
 
         // We should always expect an error if both are enabled:
-        if ((optional_state::empty != causal_consistenty_opt && optional_state::yes == causal_consistenty_opt) &&
-            (optional_state::empty != snapshot_consistenty_opt && optional_state::yes == snapshot_consistenty_opt)) {
+        if ((optional_state::empty != causal_consistenty_opt &&
+             optional_state::yes == causal_consistenty_opt) &&
+            (optional_state::empty != snapshot_consistenty_opt &&
+             optional_state::yes == snapshot_consistenty_opt)) {
             REQUIRE_THROWS_AS(c.start_session(opts), mongocxx::exception);
         } else {
-            // Note that we do not necessarily know what the resultant values 
+            // Note that we do not necessarily know what the resultant values
             // are, if set by the server:
             CHECK_NOTHROW(c.start_session(opts));
         }
