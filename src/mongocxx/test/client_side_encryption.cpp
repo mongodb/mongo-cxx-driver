@@ -1265,4 +1265,136 @@ TEST_CASE("Bypass spawning mongocryptd", "[client_side_encryption]") {
     REQUIRE_THROWS(ping_client["admin"].run_command(make_document(kvp("isMaster", 1))));
 }
 
+class kms_tls_expired_cert_matcher : public Catch::MatcherBase<mongocxx::exception> {
+   public:
+    bool match(const mongocxx::exception& exc) const override {
+        return (Catch::Contains("certificate has expired") ||  // OpenSSL
+                Catch::Contains("CSSMERR_TP_CERT_EXPIRED") ||  // Secure Transport
+                Catch::Contains("certificate has expired") ||  // Secure Channel
+                Catch::Contains("certificate has expired"))    // LibreSSL
+            .match(exc.what());
+    }
+
+    std::string describe() const override {
+        return "message should reference an expired certificate";
+    }
+};
+
+TEST_CASE("KMS TLS expired certificate", "[client_side_encryption]") {
+    instance::current();
+
+    // Create a mongoclient without encryption.
+    options::client client_opts;
+    spec::apm_checker apm_checker;
+    client_opts.apm_opts(apm_checker.get_apm_opts(true /* command_started_events_only */));
+
+    class client setup_client {
+        uri{}, test_util::add_test_server_api(client_opts),
+    };
+
+    if (!mongocxx::test_util::should_run_client_side_encryption_test()) {
+        return;
+    }
+
+    // Support for detailed certificate verify failure messages required by this test are only
+    // available in libmongoc 1.20.0 and newer (CDRIVER-3927).
+    if (!mongoc_check_version(1, 20, 0)) {
+        WARN("Skipping - libmongoc version is < 1.20.0 (CDRIVER-3927)");
+        return;
+    }
+
+    // Required CA certificates may not be registered on system. See BUILD-14068.
+    if (!std::getenv("MONGOCXX_TEST_SKIP_KMS_TLS_TESTS")) {
+        WARN("Skipping - KMS TLS tests disabled (BUILD-14068)");
+        return;
+    }
+
+    if (test_util::get_max_wire_version(setup_client) < 8) {
+        // Automatic encryption requires wire version 8.
+        WARN("Skipping - max wire version is < 8");
+        return;
+    }
+
+    options::client_encryption cse_opts;
+    _add_cse_opts(&cse_opts, &setup_client);
+    client_encryption client_encryption{std::move(cse_opts)};
+    options::data_key data_key_opts;
+
+    auto doc = make_document(
+        kvp("region", "us-east-1"),
+        kvp("key", "arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0"),
+        kvp("endpoint", "127.0.0.1:8000"));
+    data_key_opts.master_key(doc.view());
+
+    REQUIRE_THROWS_MATCHES(client_encryption.create_data_key("aws", data_key_opts),
+                           mongocxx::exception,
+                           kms_tls_expired_cert_matcher());
+}
+
+class kms_tls_wrong_host_cert_matcher : public Catch::MatcherBase<mongocxx::exception> {
+   public:
+    bool match(const mongocxx::exception& exc) const override {
+        return (Catch::Contains("IP address mismatch") ||                 // OpenSSL
+                Catch::Contains("Host name mismatch") ||                  // Secure Transport
+                Catch::Contains("hostname doesn't match certificate") ||  // Secure Channel
+                Catch::Contains("not present in server certificate"))     // LibreSSL
+            .match(exc.what());
+    }
+
+    std::string describe() const override {
+        return "message should reference an incorrect or unexpected host";
+    }
+};
+
+TEST_CASE("KMS TLS wrong host certificate", "[client_side_encryption]") {
+    instance::current();
+
+    // Create a mongoclient without encryption.
+    options::client client_opts;
+    spec::apm_checker apm_checker;
+    client_opts.apm_opts(apm_checker.get_apm_opts(true /* command_started_events_only */));
+
+    class client setup_client {
+        uri{}, test_util::add_test_server_api(client_opts),
+    };
+
+    if (!mongocxx::test_util::should_run_client_side_encryption_test()) {
+        return;
+    }
+
+    // Support for detailed certificate verify failure messages required by this test are only
+    // available in libmongoc 1.20.0 and newer (CDRIVER-3927).
+    if (!mongoc_check_version(1, 20, 0)) {
+        WARN("Skipping - libmongoc version is < 1.20.0 (CDRIVER-3927)");
+        return;
+    }
+
+    // Required CA certificates may not be registered on system. See BUILD-14068.
+    if (!std::getenv("MONGOCXX_TEST_SKIP_KMS_TLS_TESTS")) {
+        WARN("Skipping - KMS TLS tests disabled (BUILD-14068)");
+        return;
+    }
+
+    if (test_util::get_max_wire_version(setup_client) < 8) {
+        // Automatic encryption requires wire version 8.
+        WARN("Skipping - max wire version is < 8");
+        return;
+    }
+
+    options::client_encryption cse_opts;
+    _add_cse_opts(&cse_opts, &setup_client);
+    client_encryption client_encryption{std::move(cse_opts)};
+    options::data_key data_key_opts;
+
+    auto doc = make_document(
+        kvp("region", "us-east-1"),
+        kvp("key", "arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0"),
+        kvp("endpoint", "127.0.0.1:8001"));
+    data_key_opts.master_key(doc.view());
+
+    REQUIRE_THROWS_MATCHES(client_encryption.create_data_key("aws", data_key_opts),
+                           mongocxx::exception,
+                           kms_tls_wrong_host_cert_matcher());
+}
+
 }  // namespace
