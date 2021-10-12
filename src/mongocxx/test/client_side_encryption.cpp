@@ -1304,7 +1304,7 @@ TEST_CASE("KMS TLS expired certificate", "[client_side_encryption]") {
     }
 
     // Required CA certificates may not be registered on system. See BUILD-14068.
-    if (!std::getenv("MONGOCXX_TEST_SKIP_KMS_TLS_TESTS")) {
+    if (std::getenv("MONGOCXX_TEST_SKIP_KMS_TLS_TESTS")) {
         WARN("Skipping - KMS TLS tests disabled (BUILD-14068)");
         return;
     }
@@ -1370,7 +1370,7 @@ TEST_CASE("KMS TLS wrong host certificate", "[client_side_encryption]") {
     }
 
     // Required CA certificates may not be registered on system. See BUILD-14068.
-    if (!std::getenv("MONGOCXX_TEST_SKIP_KMS_TLS_TESTS")) {
+    if (std::getenv("MONGOCXX_TEST_SKIP_KMS_TLS_TESTS")) {
         WARN("Skipping - KMS TLS tests disabled (BUILD-14068)");
         return;
     }
