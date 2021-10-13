@@ -328,16 +328,7 @@ read_concern get_read_concern(const document::element& opts) {
 WARN("JFW: get_read_concern() enter");
 
     if (!opts["readConcern"])
-{
-WARN("JFW: get_read_concern(): nothing; FORCING setting");
-
-
-	read_concern rc;
-	rc.acknowledge_level(mongocxx::read_concern::level::k_snapshot);
-	return rc;
-
-// historically, we bail with default:        return {};
-}
+	return {};
 
     auto rc = read_concern{};
 
@@ -347,8 +338,13 @@ WARN("JFW: get_read_concern(): nothing; FORCING setting");
 WARN("JFW: get_read_concern(): level was returned: " << level.get_string().value);
         rc.acknowledge_string(level.get_string().value);
 }
+/* JFW
 else
-WARN("JFW: REQUESTED, BUT DID NOT change rc level");
+ {
+// JFW: I actually am completely unsure what to do here, as far as the testing goes!
+WARN("JFW: REQUESTED, USING DEFAULT rc level (FORCING default)");
+	rc.acknowledge_level(mongocxx::read_concern::level::k_snapshot);
+ } */
 
     return rc;
 }
@@ -395,6 +391,11 @@ options::client_session get_session_options(document::view object) {
     REQUIRE_FALSE(/* TODO */ object["sessionOptions"]["causalConsistency"]);
 
     session_opts.default_transaction_opts(txn_opts);
+
+// JFW:
+if(object["sessionOptions"]["snapshot"])
+ session_opts.snapshot(true);
+ 
     return session_opts;
 }
 
