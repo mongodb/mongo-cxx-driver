@@ -30,7 +30,7 @@
 #include <mongocxx/exception/bulk_write_exception.hpp>
 #include <mongocxx/exception/exception.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
-#include <mongocxx/instance.hpp>
+#include <mongocxx/instance.hpp> 
 #include <mongocxx/test/spec/monitoring.hh>
 #include <mongocxx/test/spec/util.hh>
 #include <mongocxx/test_util/client_helpers.hh>
@@ -325,17 +325,41 @@ write_concern get_write_concern(const document::element& opts) {
 }
 
 read_concern get_read_concern(const document::element& opts) {
+WARN("JFW: get_read_concern() enter");
+
     if (!opts["readConcern"])
-        return {};
+{
+WARN("JFW: get_read_concern(): nothing; FORCING setting");
+
+
+	read_concern rc;
+	rc.acknowledge_level(mongocxx::read_concern::level::k_snapshot);
+	return rc;
+
+// historically, we bail with default:        return {};
+}
 
     auto rc = read_concern{};
+
     if (auto level = opts["readConcern"]["level"])
+{
+// JFW: this should mutate variable rc by side-effect:
+WARN("JFW: get_read_concern(): level was returned: " << level.get_string().value);
         rc.acknowledge_string(level.get_string().value);
+}
+else
+WARN("JFW: REQUESTED, BUT DID NOT change rc level");
+
     return rc;
 }
 
 template <typename T>
 void set_common_options(T& t, const document::element& opts) {
+
+WARN("JFW: forcing set_common_options()");
+    t.read_concern(get_read_concern(opts));
+    t.write_concern(get_write_concern(opts));
+
     if (!opts)
         return;
 
