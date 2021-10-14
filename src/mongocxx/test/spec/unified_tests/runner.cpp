@@ -317,7 +317,21 @@ write_concern get_write_concern(const document::element& opts) {
 
     auto wc = write_concern{};
     if (auto w = opts["writeConcern"]["w"]) {
-        REQUIRE(w.type() == type::k_int32);  // TODO: support type k_utf8
+        REQUIRE(w.type() == type::k_int32);
+
+        if (w.type() == type::k_utf8) {
+            auto strval = w.get_utf8().value;
+            if (0 == strval.compare("majority")) {
+                wc.acknowledge_level (mongocxx::write_concern::level::k_majority);
+            } else {
+                FAIL ("Unsupported write concern string " << strval);
+            }
+        } else if (w.type() == type::k_int32) {
+            wc.nodes(w.get_int32());
+        } else {
+            FAIL ("Unsupported write concern value");
+        }
+
         wc.nodes(w.get_int32());
     }
 
