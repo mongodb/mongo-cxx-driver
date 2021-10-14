@@ -856,14 +856,30 @@ void run_tests_in_file(const std::string& test_path) {
 // as a directory and run all the tests contained in the magic "test_files.txt"
 // file:
 bool run_unified_format_tests_in_env_dir(const std::string& env_path) {
-    instance::current();
+   
+    const char *p = std::getenv(env_path.c_str());
+ 
+    std::string path = nullptr == p ? "" : p;
 
-    std::string path = std::getenv(env_path.c_str());
-    CAPTURE(path);
-    REQUIRE(path.size());
+    if(path.empty())
+     {
+	WARN("unable to look up path from environment variable");
+	CAPTURE(env_path);
+	REQUIRE(path.size());
+     }
 
-    std::ifstream files{path + "/test_files.txt"};
+    auto test_file_set_path = path + "/test_files.txt";
+    std::ifstream files{test_file_set_path};
+
+    if(!files.good())
+     {
+	WARN("unable to find/open test_files.txt in path");
+	CAPTURE(test_file_set_path);
+     }
+
     REQUIRE(files.good());
+
+    instance::current();
 
     for (std::string file; std::getline(files, file);) {
         CAPTURE(file);
