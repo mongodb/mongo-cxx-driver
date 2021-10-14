@@ -339,7 +339,6 @@ write_concern get_write_concern(const document::element& opts) {
 }
 
 read_concern get_read_concern(const document::element& opts) {
-WARN("JFW: get_read_concern() enter");
 
     if (!opts["readConcern"])
 	return {};
@@ -348,17 +347,8 @@ WARN("JFW: get_read_concern() enter");
 
     if (auto level = opts["readConcern"]["level"])
 {
-// JFW: this should mutate variable rc by side-effect:
-WARN("JFW: get_read_concern(): level was returned: " << level.get_string().value);
         rc.acknowledge_string(level.get_string().value);
 }
-/* JFW
-else
- {
-// JFW: I actually am completely unsure what to do here, as far as the testing goes!
-WARN("JFW: REQUESTED, USING DEFAULT rc level (FORCING default)");
-	rc.acknowledge_level(mongocxx::read_concern::level::k_snapshot);
- } */
 
     return rc;
 }
@@ -366,7 +356,6 @@ WARN("JFW: REQUESTED, USING DEFAULT rc level (FORCING default)");
 template <typename T>
 void set_common_options(T& t, const document::element& opts) {
 
-WARN("JFW: forcing set_common_options()");
     t.read_concern(get_read_concern(opts));
     t.write_concern(get_write_concern(opts));
 
@@ -863,7 +852,7 @@ bool run_unified_format_tests_in_env_dir(const std::string& env_path) {
 
     if(path.empty())
      {
-	WARN("unable to look up path from environment variable");
+	WARN("unable to look up path from environment variable \"" << path << "\"");
 	CAPTURE(env_path);
 	REQUIRE(path.size());
      }
@@ -873,7 +862,7 @@ bool run_unified_format_tests_in_env_dir(const std::string& env_path) {
 
     if(!files.good())
      {
-	WARN("unable to find/open test_files.txt in path");
+	WARN("unable to find/open test_files.txt in path \"" << test_file_set_path << '\"');
 	CAPTURE(test_file_set_path);
      }
 
