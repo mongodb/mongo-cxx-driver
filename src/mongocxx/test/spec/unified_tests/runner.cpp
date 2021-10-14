@@ -320,7 +320,7 @@ write_concern get_write_concern(const document::element& opts) {
         REQUIRE(w.type() == type::k_int32);
 
         if (w.type() == type::k_utf8) {
-            auto strval = w.get_utf8().value;
+            auto strval = w.get_string().value;
             if (0 == strval.compare("majority")) {
                 wc.acknowledge_level (mongocxx::write_concern::level::k_majority);
             } else {
