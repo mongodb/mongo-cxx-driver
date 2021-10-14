@@ -125,7 +125,8 @@ void apm_checker::has(bsoncxx::array::view expectations) {
     }
 }
 
-bool apm_checker::should_ignore(stdx::string_view command_name) const {
+// TODO: JFW: quick-n-dirty hack; string_view would be nice:
+bool apm_checker::should_ignore(const std::string command_name) const {
     return std::end(_ignore) != std::find(std::begin(_ignore), std::end(_ignore), command_name);
 }
 
