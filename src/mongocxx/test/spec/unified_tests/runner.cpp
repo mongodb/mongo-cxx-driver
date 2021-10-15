@@ -593,7 +593,7 @@ void assert_error(const mongocxx::operation_exception& exception,
 
     using std::string;
 
-    string server_error_msg = to_json(*exception.raw_server_error()) : "no server error";
+    string server_error_msg =  exception.raw_server_error() ? to_json(*exception.raw_server_error()) : "no server error";
 
     CAPTURE(
         exception.what(),
