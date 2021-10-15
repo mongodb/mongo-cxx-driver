@@ -590,9 +590,14 @@ void assert_result(const array::element& ops, document::view actual_result) {
 void assert_error(const mongocxx::operation_exception& exception,
                   const array::element& expected,
                   document::view actual) {
+
+    using std::string;
+
+    string server_error_msg = to_json(*exception.raw_server_error()) : "no server error";
+
     CAPTURE(
         exception.what(),
-        exception.raw_server_error() ? to_json(*exception.raw_server_error()) : "no server error");
+        server_error_msg);
 
     auto expect_error = expected["expectError"];
     REQUIRE(expect_error);
@@ -606,7 +611,11 @@ void assert_error(const mongocxx::operation_exception& exception,
     }
 
     if (auto is_client_error = expect_error["isClientError"]) {
-        REQUIRE(!is_client_error.get_bool());
+	/* JFW: isClientError: Optional boolean. If true, the test runner MUST assert that the error originates from the client (i.e. it is not derived from a server response). If false, the test runner MUST assert that the error does not originate from the client.
+
+Client errors include, but are not limited to: parameter validation errors before a command is sent to the server; network errors. */
+// JFW: this seems strange:         REQUIRE(!is_client_error.get_bool());
+	REQUIRE(is_client_error.get_bool());
     }
 
     if (auto contains = expect_error["errorLabelsContain"]) {
