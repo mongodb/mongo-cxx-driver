@@ -377,7 +377,7 @@ functions:
                   echo "Registering CA certificate for KMS TLS tests..."
                   register_ca_cert() {
                       local OS=$(uname -s | tr '[:upper:]' '[:lower:]')
-                      echo "OS: $OS"
+                      echo "register_ca_cert: OS: $OS"
                       case "$OS" in
                           cygwin*)
                               certutil.exe -addstore "Root" "$DRIVERS_TOOLS\.evergreen\x509gen\ca.pem"
