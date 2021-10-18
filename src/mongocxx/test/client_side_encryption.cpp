@@ -1285,8 +1285,6 @@ TEST_CASE("KMS TLS expired certificate", "[client_side_encryption]") {
 
     // Create a mongoclient without encryption.
     options::client client_opts;
-    spec::apm_checker apm_checker;
-    client_opts.apm_opts(apm_checker.get_apm_opts(true /* command_started_events_only */));
 
     class client setup_client {
         uri{}, test_util::add_test_server_api(client_opts),
@@ -1351,8 +1349,6 @@ TEST_CASE("KMS TLS wrong host certificate", "[client_side_encryption]") {
 
     // Create a mongoclient without encryption.
     options::client client_opts;
-    spec::apm_checker apm_checker;
-    client_opts.apm_opts(apm_checker.get_apm_opts(true /* command_started_events_only */));
 
     class client setup_client {
         uri{}, test_util::add_test_server_api(client_opts),
