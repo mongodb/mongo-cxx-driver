@@ -68,6 +68,7 @@ namespace stdx {
 
 using ::std::experimental::make_optional;
 using ::std::experimental::nullopt;
+using ::std::experimental::nullopt_t;
 using ::std::experimental::optional;
 
 }  // namespace stdx
