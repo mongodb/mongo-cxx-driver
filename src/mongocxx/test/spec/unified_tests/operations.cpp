@@ -1288,8 +1288,10 @@ document::value operations::run(entity::map& entity_map,
         return find_one_and_update(
             entity_map.get_collection(object), get_session(op_view, entity_map), op_view);
     if (name == "listCollections") {
-        entity_map.get_database(object).list_collections().begin();
-        return empty_doc;
+            entity_map.get_database(object).list_collections().begin();
+// JFW: is there side-effect behavior from the get_*() calls that produce output, or do these 
+// just have an incomplete implementation..?
+	    return empty_doc;
     }
     if (name == "listDatabases") {
         entity_map.get_client(object).list_databases().begin();

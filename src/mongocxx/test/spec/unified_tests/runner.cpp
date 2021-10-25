@@ -317,7 +317,17 @@ write_concern get_write_concern(const document::element& opts) {
 
     auto wc = write_concern{};
     if (auto w = opts["writeConcern"]["w"]) {
-        REQUIRE(w.type() == type::k_int32);
+	WARN("JFW: checking type of writeConcern");
+//JFW:
+if(type::k_string == w.type())
+{
+            auto strval = w.get_string().value;
+WARN("JFW: writeConcern value: " << strval);
+}
+// JFW //
+
+//JFW: Note that if this is true, then the following assertions are impossible:
+//JFW:        REQUIRE(w.type() == type::k_int32);
 
         if (w.type() == type::k_utf8) {
             auto strval = w.get_string().value;
