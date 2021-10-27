@@ -311,6 +311,8 @@ options::server_api create_server_api(document::view object) {
     return server_api_opts;
 }
 
+// JFW: is this the same as the one (acutally, at least two) in the other module? Might be time for
+// the ubiquitous-- and all but inevitable-- "util"!
 write_concern get_write_concern(const document::element& opts) {
     if (!opts["writeConcern"])
         return {};
@@ -557,12 +559,16 @@ std::vector<document::view> array_elements_to_documents(array::view array) {
     return docs;
 }
 
-void add_data_to_collection(const array::element& data) {
+void add_data_to_collection(const array::element& data, const document::view& test) {
     auto db_name = data["databaseName"].get_string().value;
     auto& map = get_entity_map();
     auto& db = map.get_database_by_name(db_name);
 
-    auto wc = write_concern{};
+//JFW:
+auto wc = write_concern{};
+auto wco = lookup_write_concern(test);
+if(wco) { wc = *wco; }
+
     wc.majority(std::chrono::milliseconds{0});
 
     auto coll_name = data["collectionName"].get_string().value;
@@ -582,7 +588,7 @@ void load_initial_data(document::view test) {
 
     auto data = test["initialData"].get_array().value;
     for (auto&& d : data)
-        add_data_to_collection(d);
+        add_data_to_collection(d, test);
 }
 
 void assert_result(const array::element& ops, document::view actual_result) {

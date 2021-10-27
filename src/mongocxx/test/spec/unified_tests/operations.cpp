@@ -730,7 +730,7 @@ document::value find_one_and_update(collection& coll,
     return result.extract();
 }
 
-bsoncxx::stdx::optional<read_concern> lookup_read_concern(document::view doc) {
+bsoncxx::stdx::optional<read_concern> operations::lookup_read_concern(document::view doc) {
     if (doc["readConcern"] && doc["readConcern"]["level"]) {
         read_concern rc;
         rc.acknowledge_string(string::to_string(doc["readConcern"]["level"].get_string().value));
@@ -740,7 +740,7 @@ bsoncxx::stdx::optional<read_concern> lookup_read_concern(document::view doc) {
     return {};
 }
 
-bsoncxx::stdx::optional<write_concern> lookup_write_concern(document::view doc) {
+bsoncxx::stdx::optional<write_concern> operations::lookup_write_concern(document::view doc) {
     if (doc["writeConcern"] && doc["writeConcern"]["w"]) {
         write_concern wc;
         document::element w = doc["writeConcern"]["w"];
@@ -762,7 +762,7 @@ bsoncxx::stdx::optional<write_concern> lookup_write_concern(document::view doc) 
     return {};
 }
 
-bsoncxx::stdx::optional<read_preference> lookup_read_preference(document::view doc) {
+bsoncxx::stdx::optional<read_preference> operations::lookup_read_preference(document::view doc) {
     if (doc["readPreference"] && doc["readPreference"]["mode"]) {
         read_preference rp;
         std::string mode = string::to_string(doc["readPreference"]["mode"].get_string().value);
@@ -786,15 +786,15 @@ bsoncxx::stdx::optional<read_preference> lookup_read_preference(document::view d
 options::transaction set_opts(document::view args) {
     options::transaction txn_opts;
 
-    if (auto rc = lookup_read_concern(args)) {
+    if (auto rc = operations::lookup_read_concern(args)) {
         txn_opts.read_concern(*rc);
     }
 
-    if (auto wc = lookup_write_concern(args)) {
+    if (auto wc = operations::lookup_write_concern(args)) {
         txn_opts.write_concern(*wc);
     }
 
-    if (auto rp = lookup_read_preference(args)) {
+    if (auto rp = operations::lookup_read_preference(args)) {
         txn_opts.read_preference(*rp);
     }
 
