@@ -317,34 +317,34 @@ write_concern get_write_concern(const document::element& opts) {
 
     auto wc = write_concern{};
     if (auto w = opts["writeConcern"]["w"]) {
-	WARN("JFW: checking type of writeConcern");
-//JFW:
-if(type::k_string == w.type())
-{
+        WARN("JFW: checking type of writeConcern");
+        // JFW:
+        if (type::k_string == w.type()) {
             auto strval = w.get_string().value;
-WARN("JFW: writeConcern value: " << strval);
-}
-// JFW //
+            WARN("JFW: writeConcern value: " << strval);
+        }
+        // JFW //
 
-//JFW: Note that if this is true, then the following assertions are impossible:
-//JFW:        REQUIRE(w.type() == type::k_int32);
+        // JFW: Note that if this is true, then the following assertions are impossible:
+        // JFW:        REQUIRE(w.type() == type::k_int32);
 
         if (w.type() == type::k_utf8) {
             auto strval = w.get_string().value;
             if (0 == strval.compare("majority")) {
-                wc.acknowledge_level (mongocxx::write_concern::level::k_majority);
+                wc.acknowledge_level(mongocxx::write_concern::level::k_majority);
             } else {
-                FAIL ("Unsupported write concern string " << strval);
+                FAIL("Unsupported write concern string " << strval);
             }
+            return wc;
         } else if (w.type() == type::k_int32) {
             wc.nodes(w.get_int32());
         } else {
-            FAIL ("Unsupported write concern value");
+            FAIL("Unsupported write concern value");
         }
 
-WARN("JFW: @wc.nodes(): w.type() == " << static_cast<int>(w.type()));
+        WARN("JFW: @wc.nodes(): w.type() == " << static_cast<int>(w.type()));
         wc.nodes(w.get_int32());
-WARN("JFW: AFTER @wc.nodes()");
+        WARN("JFW: AFTER @wc.nodes()");
     }
 
     return wc;
