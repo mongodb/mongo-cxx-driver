@@ -312,7 +312,8 @@ options::server_api create_server_api(document::view object) {
 }
 
 // JFW: is this the same as the one (acutally, at least two) in the other module? Might be time for
-// the ubiquitous-- and all but inevitable-- "util"!
+// the ubiquitous-- and all but inevitable-- "util"! (Answer: yes, it looks like it's doing the same
+// kind of thing, they should all be consolidated. -J.)
 write_concern get_write_concern(const document::element& opts) {
     if (!opts["writeConcern"])
         return {};
@@ -568,6 +569,7 @@ void add_data_to_collection(const array::element& data, const document::view& te
 auto wc = write_concern{};
 auto wco = lookup_write_concern(test);
 if(wco) { wc = *wco; }
+WARN("JFW: writeConcern had " << (wco ? "a" : "no") << " value");
 
     wc.majority(std::chrono::milliseconds{0});
 

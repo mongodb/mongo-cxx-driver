@@ -244,9 +244,6 @@ void matches_document(types::bson_value::view actual,
             }
         }
 
-std::string k(kvp.key()); // JFW:
-WARN("JFW: kvp.key()  == " << kvp.key());
-CAPTURE(k);
         REQUIRE(actual_doc[kvp.key()]); 
         assert::matches(actual_doc[kvp.key()].get_value(), kvp.get_value(), map, false);
         --extra_fields;
