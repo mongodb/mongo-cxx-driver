@@ -832,7 +832,9 @@ void run_tests_in_file(const std::string& test_path) {
     auto test_spec = parse_test_file(test_path);
     auto test_spec_view = test_spec.view();
 
-    CAPTURE(test_path, to_json(test_spec_view));
+    // TODO: remove this in a separate PR.
+    // This capture logs the full test file contents on failure.
+    // CAPTURE(test_path, to_json(test_spec_view));
     if (!is_compatible_schema_version(test_spec_view)) {
         std::stringstream error;
         error << "incompatible schema version" << std::endl
