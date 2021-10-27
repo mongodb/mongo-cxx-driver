@@ -1486,6 +1486,16 @@ document::value operations::run(entity::map& entity_map,
         auto& coll = entity_map.get_collection(object);
         return distinct(coll, get_session(op_view, entity_map), op_view);
     }
+    
+    if (name == "listIndexes") {
+        auto session = get_session (op_view, entity_map);
+        if (session) {
+            entity_map.get_collection(object).list_indexes(*session).begin();
+        } else {
+            entity_map.get_collection(object).list_indexes().begin();
+        }
+	    return empty_doc;
+    }
 
     throw std::logic_error{"unsupported operation: " + name};
 }
