@@ -1029,16 +1029,20 @@ client_session* get_session(document::view op, entity::map& map) {
     return &map.get_client_session(session_name);
 }
 
-document::value run_command(database& db, document::view operation) {
+document::value run_command(database& db, client_session *session, document::view operation) {
     document::view arguments = operation["arguments"].get_document().value;
     document::view command = arguments["command"].get_document().value;
 
     auto result = builder::basic::document{};
-    result.append(builder::basic::kvp("result", db.run_command(command)));
+    if (session) {
+        result.append(builder::basic::kvp("result", db.run_command(*session, command)));
+    } else {
+        result.append(builder::basic::kvp("result", db.run_command(command)));
+    }
     return result.extract();
 }
 
-document::value update_one(collection& coll, document::view operation) {
+document::value update_one(collection& coll, client_session* session, document::view operation) {
     document::view arguments = operation["arguments"].get_document().value;
     document::view filter = arguments["filter"].get_document().value;
     document::view update = arguments["update"].get_document().value;
@@ -1061,14 +1065,26 @@ document::value update_one(collection& coll, document::view operation) {
     bsoncxx::stdx::optional<std::int32_t> modified_count;
     bsoncxx::stdx::optional<types::bson_value::view> upserted_id{};
 
-    auto update_one_result = coll.update_one(filter, update, options);
-    if (update_one_result) {
-        matched_count = update_one_result->matched_count();
-        modified_count = update_one_result->modified_count();
+    if (session) {
+        auto update_one_result = coll.update_one(*session, filter, update, options);
+        if (update_one_result) {
+            matched_count = update_one_result->matched_count();
+            modified_count = update_one_result->modified_count();
 
-        if (auto upserted_element = update_one_result->upserted_id()) {
-            upserted_id = upserted_element->get_value();
+            if (auto upserted_element = update_one_result->upserted_id()) {
+                upserted_id = upserted_element->get_value();
+            }
         }
+    } else {
+        auto update_one_result = coll.update_one(filter, update, options);
+        if (update_one_result) {
+            matched_count = update_one_result->matched_count();
+            modified_count = update_one_result->modified_count();
+
+            if (auto upserted_element = update_one_result->upserted_id()) {
+                upserted_id = upserted_element->get_value();
+            }
+        }  
     }
 
     auto result = builder::basic::document{};
@@ -1298,13 +1314,25 @@ document::value operations::run(entity::map& entity_map,
         return find_one_and_update(
             entity_map.get_collection(object), get_session(op_view, entity_map), op_view);
     if (name == "listCollections") {
+        auto session = get_session (op_view, entity_map);
+        if (session) {
+            std::cout << "applying session to listCollections!" << std::endl;
+            entity_map.get_database(object).list_collections(*session).begin();
+        } else {
+            std::cout << "NOT applying session to listCollections!" << std::endl;
             entity_map.get_database(object).list_collections().begin();
+        }
 // JFW: is there side-effect behavior from the get_*() calls that produce output, or do these 
 // just have an incomplete implementation..?
 	    return empty_doc;
     }
     if (name == "listDatabases") {
-        entity_map.get_client(object).list_databases().begin();
+        auto session = get_session (op_view, entity_map);
+        if (session) {
+            entity_map.get_client(object).list_databases(*session).begin();
+        } else {
+            entity_map.get_client(object).list_databases().begin();
+        }
         return empty_doc;
     }
     if (name == "assertSessionNotDirty") {
@@ -1438,10 +1466,11 @@ document::value operations::run(entity::map& entity_map,
     }
     if (name == "runCommand") {
         auto& db = entity_map.get_database(object);
-        return run_command(db, op_view);
+        return run_command(db, get_session (op_view, entity_map), op_view);
     }
     if (name == "updateOne") {
-        return update_one(entity_map.get_collection(object), op_view);
+        auto* session = get_session(op_view, entity_map);
+        return update_one(entity_map.get_collection(object), session, op_view);
     }
     if (name == "updateMany") {
         return update_many(entity_map.get_collection(object), op_view);
