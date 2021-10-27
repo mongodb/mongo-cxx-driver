@@ -1146,7 +1146,7 @@ document::value update_many(collection& coll, document::view operation) {
     return result.extract();
 }
 
-document::value count_documents(collection& coll, document::view operation) {
+document::value count_documents(collection& coll, client_session* session, document::view operation) {
     document::view arguments = operation["arguments"].get_document().value;
     document::value empty_filter = builder::basic::make_document();
     document::view filter;
@@ -1173,7 +1173,13 @@ document::value count_documents(collection& coll, document::view operation) {
             options.hint(hint{arguments["hint"].get_document().value});
     }
 
-    int64_t count = coll.count_documents(filter, options);
+    int64_t count;
+    
+    if (session) {
+        count = coll.count_documents(*session, filter, options);
+    } else {
+        count = coll.count_documents(filter, options);
+    } 
 
     auto result = builder::basic::document{};
     result.append(builder::basic::kvp("result", count));
@@ -1441,7 +1447,8 @@ document::value operations::run(entity::map& entity_map,
         return update_many(entity_map.get_collection(object), op_view);
     }
     if (name == "countDocuments") {
-        return count_documents(entity_map.get_collection(object), op_view);
+        // TODO: all operations which accept a session should check and apply a session.
+        return count_documents(entity_map.get_collection(object), get_session(op_view, entity_map), op_view);
     }
     if (name == "estimatedDocumentCount") {
         return estimated_document_count(entity_map.get_collection(object), op_view);
