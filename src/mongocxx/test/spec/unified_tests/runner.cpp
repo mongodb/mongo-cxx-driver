@@ -342,7 +342,9 @@ WARN("JFW: writeConcern value: " << strval);
             FAIL ("Unsupported write concern value");
         }
 
+WARN("JFW: @wc.nodes(): w.type() == " << static_cast<int>(w.type()));
         wc.nodes(w.get_int32());
+WARN("JFW: AFTER @wc.nodes()");
     }
 
     return wc;
