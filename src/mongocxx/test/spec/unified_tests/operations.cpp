@@ -1220,10 +1220,14 @@ document::value distinct(collection& coll, client_session* session, document::vi
         result_cursor.emplace(coll.distinct(field_name, filter, options));
     }
 
+    // A cursor returned by collection::distinct returns one document like:
+    // { values: [<value1>, <value2>, ... ]}
     auto result = builder::basic::document{};
     result.append(builder::basic::kvp("result", [&result_cursor](builder::basic::sub_array array) {
-        for (auto&& document : *result_cursor) {
-            array.append(document);
+        for (auto&& result_doc : *result_cursor) {
+            for (auto&& value : result_doc["values"].get_array().value) {
+                array.append(value.get_value());
+            }
         }
     }));
 
