@@ -564,6 +564,7 @@ void add_data_to_collection(const array::element& data, const document::view& te
     auto db_name = data["databaseName"].get_string().value;
     auto& map = get_entity_map();
     auto& db = map.get_database_by_name(db_name);
+    auto insert_opts = mongocxx::options::insert();
 
 //JFW:
 auto wc = write_concern{};
@@ -579,9 +580,10 @@ WARN("JFW: writeConcern had " << (wco ? "a" : "no") << " value");
         db[coll_name].drop();
 
     auto coll = db.create_collection(coll_name, {}, wc);
+    insert_opts.write_concern(wc);
 
     auto to_insert = array_elements_to_documents(data["documents"].get_array().value);
-    REQUIRE((to_insert.empty() || coll.insert_many(to_insert)->result().inserted_count() != 0));
+    REQUIRE((to_insert.empty() || coll.insert_many(to_insert, insert_opts)->result().inserted_count() != 0));
 }
 
 void load_initial_data(document::view test) {
