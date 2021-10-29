@@ -547,7 +547,7 @@ void add_data_to_collection(const array::element& data) {
     auto insert_opts = mongocxx::options::insert();
 
     auto wc = write_concern{};
-
+    wc.acknowledge_level(write_concern::level::k_majority);
     wc.majority(std::chrono::milliseconds{0});
 
     auto coll_name = data["collectionName"].get_string().value;
