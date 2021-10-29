@@ -1029,7 +1029,7 @@ client_session* get_session(document::view op, entity::map& map) {
     return &map.get_client_session(session_name);
 }
 
-document::value run_command(database& db, client_session *session, document::view operation) {
+document::value run_command(database& db, client_session* session, document::view operation) {
     document::view arguments = operation["arguments"].get_document().value;
     document::view command = arguments["command"].get_document().value;
 
@@ -1084,7 +1084,7 @@ document::value update_one(collection& coll, client_session* session, document::
             if (auto upserted_element = update_one_result->upserted_id()) {
                 upserted_id = upserted_element->get_value();
             }
-        }  
+        }
     }
 
     auto result = builder::basic::document{};
@@ -1162,7 +1162,9 @@ document::value update_many(collection& coll, document::view operation) {
     return result.extract();
 }
 
-document::value count_documents(collection& coll, client_session* session, document::view operation) {
+document::value count_documents(collection& coll,
+                                client_session* session,
+                                document::view operation) {
     document::view arguments = operation["arguments"].get_document().value;
     document::value empty_filter = builder::basic::make_document();
     document::view filter;
@@ -1190,12 +1192,12 @@ document::value count_documents(collection& coll, client_session* session, docum
     }
 
     int64_t count;
-    
+
     if (session) {
         count = coll.count_documents(*session, filter, options);
     } else {
         count = coll.count_documents(filter, options);
-    } 
+    }
 
     auto result = builder::basic::document{};
     result.append(builder::basic::kvp("result", count));
@@ -1314,7 +1316,7 @@ document::value operations::run(entity::map& entity_map,
         return find_one_and_update(
             entity_map.get_collection(object), get_session(op_view, entity_map), op_view);
     if (name == "listCollections") {
-        auto session = get_session (op_view, entity_map);
+        auto session = get_session(op_view, entity_map);
         if (session) {
             std::cout << "applying session to listCollections!" << std::endl;
             entity_map.get_database(object).list_collections(*session).begin();
@@ -1322,10 +1324,10 @@ document::value operations::run(entity::map& entity_map,
             std::cout << "NOT applying session to listCollections!" << std::endl;
             entity_map.get_database(object).list_collections().begin();
         }
-	return empty_doc;
+        return empty_doc;
     }
     if (name == "listDatabases") {
-        auto session = get_session (op_view, entity_map);
+        auto session = get_session(op_view, entity_map);
         if (session) {
             entity_map.get_client(object).list_databases(*session).begin();
         } else {
@@ -1464,7 +1466,7 @@ document::value operations::run(entity::map& entity_map,
     }
     if (name == "runCommand") {
         auto& db = entity_map.get_database(object);
-        return run_command(db, get_session (op_view, entity_map), op_view);
+        return run_command(db, get_session(op_view, entity_map), op_view);
     }
     if (name == "updateOne") {
         auto* session = get_session(op_view, entity_map);
@@ -1475,7 +1477,8 @@ document::value operations::run(entity::map& entity_map,
     }
     if (name == "countDocuments") {
         // TODO: all operations which accept a session should check and apply a session.
-        return count_documents(entity_map.get_collection(object), get_session(op_view, entity_map), op_view);
+        return count_documents(
+            entity_map.get_collection(object), get_session(op_view, entity_map), op_view);
     }
     if (name == "estimatedDocumentCount") {
         return estimated_document_count(entity_map.get_collection(object), op_view);
@@ -1484,15 +1487,15 @@ document::value operations::run(entity::map& entity_map,
         auto& coll = entity_map.get_collection(object);
         return distinct(coll, get_session(op_view, entity_map), op_view);
     }
-    
+
     if (name == "listIndexes") {
-        auto session = get_session (op_view, entity_map);
+        auto session = get_session(op_view, entity_map);
         if (session) {
             entity_map.get_collection(object).list_indexes(*session).begin();
         } else {
             entity_map.get_collection(object).list_indexes().begin();
         }
-	    return empty_doc;
+        return empty_doc;
     }
 
     throw std::logic_error{"unsupported operation: " + name};

@@ -31,7 +31,6 @@ bsoncxx::document::value run(entity::map& map,
                              std::unordered_map<std::string, spec::apm_checker>& apm,
                              const bsoncxx::array::element& op);
 
-
 }  // namespace operations
 
 namespace operations {
@@ -40,7 +39,7 @@ bsoncxx::stdx::optional<read_concern> lookup_read_concern(bsoncxx::document::vie
 bsoncxx::stdx::optional<write_concern> lookup_write_concern(bsoncxx::document::view doc);
 bsoncxx::stdx::optional<read_preference> lookup_read_preference(bsoncxx::document::view doc);
 
-} // namespace operations
+}  // namespace operations
 
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx

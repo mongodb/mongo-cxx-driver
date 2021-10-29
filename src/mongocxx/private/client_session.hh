@@ -77,15 +77,17 @@ class client_session::impl {
         std::unique_ptr<mongoc_session_opt_t, decltype(libmongoc::session_opts_destroy)> opt_t{
             libmongoc::session_opts_new(), libmongoc::session_opts_destroy};
 
-	// If there is an actual representation for our consistency options, submit them; otherwise ignore
-	// and let the server apply its defaults (note that some of our compatibility targets lack has_value()):
-       if(_options._causal_consistency) {
-        libmongoc::session_opts_set_causal_consistency(opt_t.get(), session_options.causal_consistency());
-       }
+        // If there is an actual representation for our consistency options, submit them; otherwise
+        // ignore and let the server apply its defaults (note that some of our compatibility targets
+        // lack has_value()):
+        if (_options._causal_consistency) {
+            libmongoc::session_opts_set_causal_consistency(opt_t.get(),
+                                                           session_options.causal_consistency());
+        }
 
-       if(_options._enable_snapshot_reads) {
-        libmongoc::session_opts_set_snapshot(opt_t.get(), session_options.snapshot());
-       }
+        if (_options._enable_snapshot_reads) {
+            libmongoc::session_opts_set_snapshot(opt_t.get(), session_options.snapshot());
+        }
 
         if (session_options.default_transaction_opts()) {
             libmongoc::session_opts_set_default_transaction_opts(
@@ -97,7 +99,8 @@ class client_session::impl {
         auto s =
             libmongoc::client_start_session(_client->_get_impl().client_t, opt_t.get(), &error);
         if (!s) {
-            throw mongocxx::exception{error_code::k_cannot_create_session, error.message}; }
+            throw mongocxx::exception{error_code::k_cannot_create_session, error.message};
+        }
 
         _session_t = unique_session{
             s, [](mongoc_client_session_t* cs) { libmongoc::client_session_destroy(cs); }};

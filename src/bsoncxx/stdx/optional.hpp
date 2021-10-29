@@ -33,7 +33,6 @@ using ::core::nullopt;
 using ::core::nullopt_t;
 using ::core::optional;
 
-
 }  // namespace stdx
 BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bsoncxx

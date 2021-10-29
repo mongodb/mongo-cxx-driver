@@ -30,7 +30,7 @@
 #include <mongocxx/exception/bulk_write_exception.hpp>
 #include <mongocxx/exception/exception.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
-#include <mongocxx/instance.hpp> 
+#include <mongocxx/instance.hpp>
 #include <mongocxx/test/spec/monitoring.hh>
 #include <mongocxx/test/spec/util.hh>
 #include <mongocxx/test_util/client_helpers.hh>
@@ -317,7 +317,6 @@ write_concern get_write_concern(const document::element& opts) {
 
     auto wc = write_concern{};
     if (auto w = opts["writeConcern"]["w"]) {
-
         if (w.type() == type::k_utf8) {
             auto strval = w.get_string().value;
             if (0 == strval.compare("majority")) {
@@ -339,23 +338,20 @@ write_concern get_write_concern(const document::element& opts) {
 }
 
 read_concern get_read_concern(const document::element& opts) {
-
     if (!opts["readConcern"])
-	return {};
+        return {};
 
     auto rc = read_concern{};
 
-    if (auto level = opts["readConcern"]["level"])
-{
+    if (auto level = opts["readConcern"]["level"]) {
         rc.acknowledge_string(level.get_string().value);
-}
+    }
 
     return rc;
 }
 
 template <typename T>
 void set_common_options(T& t, const document::element& opts) {
-
     t.read_concern(get_read_concern(opts));
     t.write_concern(get_write_concern(opts));
 
@@ -395,9 +391,9 @@ options::client_session get_session_options(document::view object) {
 
     session_opts.default_transaction_opts(txn_opts);
 
-    if(object["sessionOptions"]["snapshot"])
-     session_opts.snapshot(true);
- 
+    if (object["sessionOptions"]["snapshot"])
+        session_opts.snapshot(true);
+
     return session_opts;
 }
 
@@ -563,7 +559,8 @@ void add_data_to_collection(const array::element& data, const document::view& te
     insert_opts.write_concern(wc);
 
     auto to_insert = array_elements_to_documents(data["documents"].get_array().value);
-    REQUIRE((to_insert.empty() || coll.insert_many(to_insert, insert_opts)->result().inserted_count() != 0));
+    REQUIRE((to_insert.empty() ||
+             coll.insert_many(to_insert, insert_opts)->result().inserted_count() != 0));
 }
 
 void load_initial_data(document::view test) {
@@ -592,12 +589,10 @@ void assert_result(const array::element& ops, document::view actual_result) {
 void assert_error(const mongocxx::operation_exception& exception,
                   const array::element& expected,
                   document::view actual) {
+    std::string server_error_msg =
+        exception.raw_server_error() ? to_json(*exception.raw_server_error()) : "no server error";
 
-    std::string server_error_msg =  exception.raw_server_error() ? to_json(*exception.raw_server_error()) : "no server error";
-
-    CAPTURE(
-        exception.what(),
-        server_error_msg);
+    CAPTURE(exception.what(), server_error_msg);
 
     auto expect_error = expected["expectError"];
     REQUIRE(expect_error);
@@ -611,7 +606,7 @@ void assert_error(const mongocxx::operation_exception& exception,
     }
 
     if (auto is_client_error = expect_error["isClientError"]) {
-	REQUIRE(is_client_error.get_bool());
+        REQUIRE(is_client_error.get_bool());
     }
 
     if (auto contains = expect_error["errorLabelsContain"]) {
@@ -642,13 +637,21 @@ void assert_error(const mongocxx::operation_exception& exception,
     }
 
     if (auto expected_error = expect_error["errorContains"]) {
-        /* See "https://github.com/mongodb/specifications/blob/master/source/unified-test-format/unified-test-format.rst#expectederror": A substring of the expected error message (e.g. "errmsg" field in a server error document). The test runner MUST assert that the error message contains this string using a case-insensitive match. */
+        /* See
+         * "https://github.com/mongodb/specifications/blob/master/source/unified-test-format/unified-test-format.rst#expectederror":
+         * A substring of the expected error message (e.g. "errmsg" field in a server error
+         * document). The test runner MUST assert that the error message contains this string using
+         * a case-insensitive match. */
         std::string expected_error_str(expected_error.get_string().value);
-        std::string actual_str(reinterpret_cast<const std::string::value_type *>(actual.data()), actual.length());
+        std::string actual_str(reinterpret_cast<const std::string::value_type*>(actual.data()),
+                               actual.length());
 
-	transform(begin(expected_error_str), end(expected_error_str), begin(expected_error_str), &toupper);
+        transform(begin(expected_error_str),
+                  end(expected_error_str),
+                  begin(expected_error_str),
+                  &toupper);
 
-	REQUIRE(actual_str.substr(expected_error_str.size()) == expected_error_str);
+        REQUIRE(actual_str.substr(expected_error_str.size()) == expected_error_str);
     }
 }
 
@@ -860,26 +863,23 @@ void run_tests_in_file(const std::string& test_path) {
 // as a directory and run all the tests contained in the magic "test_files.txt"
 // file:
 bool run_unified_format_tests_in_env_dir(const std::string& env_path) {
-   
-    const char *p = std::getenv(env_path.c_str());
- 
+    const char* p = std::getenv(env_path.c_str());
+
     std::string path = nullptr == p ? "" : p;
 
-    if(path.empty())
-     {
-	WARN("unable to look up path from environment variable \"" << path << "\"");
-	CAPTURE(env_path);
-	REQUIRE(path.size());
-     }
+    if (path.empty()) {
+        WARN("unable to look up path from environment variable \"" << path << "\"");
+        CAPTURE(env_path);
+        REQUIRE(path.size());
+    }
 
     auto test_file_set_path = path + "/test_files.txt";
     std::ifstream files{test_file_set_path};
 
-    if(!files.good())
-     {
-	WARN("unable to find/open test_files.txt in path \"" << test_file_set_path << '\"');
-	CAPTURE(test_file_set_path);
-     }
+    if (!files.good()) {
+        WARN("unable to find/open test_files.txt in path \"" << test_file_set_path << '\"');
+        CAPTURE(test_file_set_path);
+    }
 
     REQUIRE(files.good());
 

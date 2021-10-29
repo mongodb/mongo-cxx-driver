@@ -46,7 +46,7 @@ struct StringMaker<stdx::optional<T>> {
 template <>
 struct StringMaker<stdx::optional<bsoncxx::stdx::nullopt_t>> {
     static std::string convert(const bsoncxx::stdx::optional<bsoncxx::stdx::nullopt_t>&) {
-	return "{nullopt}";
+        return "{nullopt}";
     }
 };
 

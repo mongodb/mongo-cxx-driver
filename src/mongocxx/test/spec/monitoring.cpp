@@ -126,9 +126,9 @@ void apm_checker::has(bsoncxx::array::view expectations) {
 }
 
 bool apm_checker::should_ignore(stdx::string_view command_name) const {
-     // JFW: this is std::any_of, but where I don't spend time fighting the type system today:
-     std::string cmp { command_name };
-     return std::end(_ignore) != std::find(std::begin(_ignore), std::end(_ignore), cmp);
+    // JFW: this is std::any_of, but where I don't spend time fighting the type system today:
+    std::string cmp{command_name};
+    return std::end(_ignore) != std::find(std::begin(_ignore), std::end(_ignore), cmp);
 }
 
 std::string apm_checker::print_all() {
@@ -201,9 +201,9 @@ void apm_checker::set_command_started_unified(options::apm& apm) {
             return;
         }
 
-	if (should_ignore(event.command_name())) {
-         return;
-	}
+        if (should_ignore(event.command_name())) {
+            return;
+        }
 
         document builder;
         builder.append(kvp("commandStartedEvent",
@@ -222,8 +222,8 @@ void apm_checker::set_command_failed_unified(options::apm& apm) {
             return;
         }
 
-	if (should_ignore(event.command_name())) {
-	    return;
+        if (should_ignore(event.command_name())) {
+            return;
         }
 
         document builder;
@@ -241,9 +241,9 @@ void apm_checker::set_command_succeeded_unified(options::apm& apm) {
             return;
         }
 
-	if (should_ignore(event.command_name())) {
-	    return;
-	}
+        if (should_ignore(event.command_name())) {
+            return;
+        }
 
         document builder;
         builder.append(kvp(
@@ -257,10 +257,9 @@ void apm_checker::set_command_started(options::apm& apm) {
     using namespace bsoncxx::builder::basic;
 
     apm.on_command_started([&](const events::command_started_event& event) {
-
-	if (should_ignore(event.command_name())) {
-	    return;
-	}
+        if (should_ignore(event.command_name())) {
+            return;
+        }
 
         document builder;
         builder.append(kvp("command_started_event",
@@ -276,9 +275,9 @@ void apm_checker::set_command_failed(options::apm& apm) {
     using namespace bsoncxx::builder::basic;
 
     apm.on_command_failed([&](const events::command_failed_event& event) {
-	if (should_ignore(event.command_name())) {
-	    return;
-	}
+        if (should_ignore(event.command_name())) {
+            return;
+        }
 
         document builder;
         builder.append(kvp("command_failed_event",
@@ -292,9 +291,9 @@ void apm_checker::set_command_succeeded(options::apm& apm) {
     using namespace bsoncxx::builder::basic;
 
     apm.on_command_succeeded([&](const events::command_succeeded_event& event) {
-	if (should_ignore(event.command_name())) {
-	    return;
-	}
+        if (should_ignore(event.command_name())) {
+            return;
+        }
 
         document builder;
         builder.append(kvp("command_succeeded_event",
