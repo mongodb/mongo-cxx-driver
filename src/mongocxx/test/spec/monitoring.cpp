@@ -126,8 +126,9 @@ void apm_checker::has(bsoncxx::array::view expectations) {
 }
 
 bool apm_checker::should_ignore(stdx::string_view command_name) const {
-    std::string cmp(command_name); // JFW: quick-n-dirty hack
-    return std::end(_ignore) != std::find(std::begin(_ignore), std::end(_ignore), cmp);
+     // JFW: this is std::any_of, but where I don't spend time fighting the type system today:
+     std::string cmp { command_name };
+     return std::end(_ignore) != std::find(std::begin(_ignore), std::end(_ignore), cmp);
 }
 
 std::string apm_checker::print_all() {
@@ -221,7 +222,6 @@ void apm_checker::set_command_failed_unified(options::apm& apm) {
             return;
         }
 
-// JFW: note: can combine with sensitive check if needed:
 	if (should_ignore(event.command_name())) {
 	    return;
         }
@@ -258,9 +258,6 @@ void apm_checker::set_command_started(options::apm& apm) {
 
     apm.on_command_started([&](const events::command_started_event& event) {
 
-// JFW: this snippet appears so often that maybe where we dispatch events is actually
-// where we should filter this-- and not even call something we should ignore, to begin
-// with (see all dispatch functions):
 	if (should_ignore(event.command_name())) {
 	    return;
 	}
@@ -321,11 +318,6 @@ options::apm apm_checker::get_apm_opts(bool command_started_events_only) {
 }
 
 void apm_checker::set_ignore_command_monitoring_event(const std::string& event) {
-/* JFW: this causes test failure and is probably not actually needed:
-    auto valid_events = {"killCursors", "getMore", "configureFailPoint"};
-    REQUIRE(std::find(valid_events.begin(), valid_events.end(), event) != valid_events.end());
-*/
-
     this->_ignore.push_back(event);
 }
 

@@ -311,25 +311,12 @@ options::server_api create_server_api(document::view object) {
     return server_api_opts;
 }
 
-// JFW: is this the same as the one (acutally, at least two) in the other module? Might be time for
-// the ubiquitous-- and all but inevitable-- "util"! (Answer: yes, it looks like it's doing the same
-// kind of thing, they should all be consolidated. -J.)
 write_concern get_write_concern(const document::element& opts) {
     if (!opts["writeConcern"])
         return {};
 
     auto wc = write_concern{};
     if (auto w = opts["writeConcern"]["w"]) {
-        WARN("JFW: checking type of writeConcern");
-        // JFW:
-        if (type::k_string == w.type()) {
-            auto strval = w.get_string().value;
-            WARN("JFW: writeConcern value: " << strval);
-        }
-        // JFW //
-
-        // JFW: Note that if this is true, then the following assertions are impossible:
-        // JFW:        REQUIRE(w.type() == type::k_int32);
 
         if (w.type() == type::k_utf8) {
             auto strval = w.get_string().value;
@@ -345,9 +332,7 @@ write_concern get_write_concern(const document::element& opts) {
             FAIL("Unsupported write concern value");
         }
 
-        WARN("JFW: @wc.nodes(): w.type() == " << static_cast<int>(w.type()));
         wc.nodes(w.get_int32());
-        WARN("JFW: AFTER @wc.nodes()");
     }
 
     return wc;
@@ -410,9 +395,8 @@ options::client_session get_session_options(document::view object) {
 
     session_opts.default_transaction_opts(txn_opts);
 
-// JFW:
-if(object["sessionOptions"]["snapshot"])
- session_opts.snapshot(true);
+    if(object["sessionOptions"]["snapshot"])
+     session_opts.snapshot(true);
  
     return session_opts;
 }
@@ -566,11 +550,7 @@ void add_data_to_collection(const array::element& data, const document::view& te
     auto& db = map.get_database_by_name(db_name);
     auto insert_opts = mongocxx::options::insert();
 
-//JFW:
-auto wc = write_concern{};
-auto wco = lookup_write_concern(test);
-if(wco) { wc = *wco; }
-WARN("JFW: writeConcern had " << (wco ? "a" : "no") << " value");
+    auto wc = write_concern{};
 
     wc.majority(std::chrono::milliseconds{0});
 
@@ -631,10 +611,6 @@ void assert_error(const mongocxx::operation_exception& exception,
     }
 
     if (auto is_client_error = expect_error["isClientError"]) {
-	/* JFW: isClientError: Optional boolean. If true, the test runner MUST assert that the error originates from the client (i.e. it is not derived from a server response). If false, the test runner MUST assert that the error does not originate from the client.
-
-Client errors include, but are not limited to: parameter validation errors before a command is sent to the server; network errors. */
-// JFW: this seems strange:         REQUIRE(!is_client_error.get_bool());
 	REQUIRE(is_client_error.get_bool());
     }
 
@@ -666,9 +642,13 @@ Client errors include, but are not limited to: parameter validation errors befor
     }
 
     if (auto expected_error = expect_error["errorContains"]) {
-	WARN("JFW: errorContains is unimplemented");
-//JFW TODO:    REQUIRE_FALSE(/* TODO */ expect_error["errorContains"]);
-/* JFW see "https://github.com/mongodb/specifications/blob/master/source/unified-test-format/unified-test-format.rst#expectederror": A substring of the expected error message (e.g. "errmsg" field in a server error document). The test runner MUST assert that the error message contains this string using a case-insensitive match. */
+        /* See "https://github.com/mongodb/specifications/blob/master/source/unified-test-format/unified-test-format.rst#expectederror": A substring of the expected error message (e.g. "errmsg" field in a server error document). The test runner MUST assert that the error message contains this string using a case-insensitive match. */
+        std::string expected_error_str(expected_error.get_string().value);
+        std::string actual_str(reinterpret_cast<const std::string::value_type *>(actual.data()), actual.length());
+
+	transform(begin(expected_error_str), end(expected_error_str), begin(expected_error_str), &toupper);
+
+	REQUIRE(actual_str.substr(expected_error_str.size()) == expected_error_str);
     }
 }
 

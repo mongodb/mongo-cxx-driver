@@ -1322,9 +1322,7 @@ document::value operations::run(entity::map& entity_map,
             std::cout << "NOT applying session to listCollections!" << std::endl;
             entity_map.get_database(object).list_collections().begin();
         }
-// JFW: is there side-effect behavior from the get_*() calls that produce output, or do these 
-// just have an incomplete implementation..?
-	    return empty_doc;
+	return empty_doc;
     }
     if (name == "listDatabases") {
         auto session = get_session (op_view, entity_map);
