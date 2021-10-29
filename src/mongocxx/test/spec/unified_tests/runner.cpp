@@ -569,7 +569,7 @@ void load_initial_data(document::view test) {
 
     auto data = test["initialData"].get_array().value;
     for (auto&& d : data)
-        add_data_to_collection(d, test);
+        add_data_to_collection(d);
 }
 
 void assert_result(const array::element& ops, document::view actual_result) {
