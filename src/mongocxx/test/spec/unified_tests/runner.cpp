@@ -540,7 +540,7 @@ std::vector<document::view> array_elements_to_documents(array::view array) {
     return docs;
 }
 
-void add_data_to_collection(const array::element& data, const document::view& test) {
+void add_data_to_collection(const array::element& data) {
     auto db_name = data["databaseName"].get_string().value;
     auto& map = get_entity_map();
     auto& db = map.get_database_by_name(db_name);
