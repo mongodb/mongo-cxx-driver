@@ -636,12 +636,16 @@ void assert_error(const mongocxx::operation_exception& exception,
         REQUIRE(exception.code().value() == static_cast<int>(expected_code));
     }
 
+    /*
+    // This has no data to act on until CXX-834 as been implemented; see notes
     if (auto expected_error = expect_error["errorContains"]) {
-        /* See
-         * "https://github.com/mongodb/specifications/blob/master/source/unified-test-format/unified-test-format.rst#expectederror":
-         * A substring of the expected error message (e.g. "errmsg" field in a server error
-         * document). The test runner MUST assert that the error message contains this string using
-         * a case-insensitive match. */
+        // in assert_error():
+        // See
+        //
+    "https://github.com/mongodb/specifications/blob/master/source/unified-test-format/unified-test-format.rst#expectederror":
+        // A substring of the expected error message (e.g. "errmsg" field in a server error
+        // document). The test runner MUST assert that the error message contains this string using
+        // a case-insensitive match.
         std::string expected_error_str(expected_error.get_string().value);
         std::string actual_str(reinterpret_cast<const std::string::value_type*>(actual.data()),
                                actual.length());
@@ -653,6 +657,7 @@ void assert_error(const mongocxx::operation_exception& exception,
 
         REQUIRE(actual_str.substr(expected_error_str.size()) == expected_error_str);
     }
+    */
 }
 
 void assert_error(mongocxx::exception& e, const array::element& ops) {
