@@ -126,9 +126,8 @@ void apm_checker::has(bsoncxx::array::view expectations) {
 }
 
 bool apm_checker::should_ignore(stdx::string_view command_name) const {
-    // JFW: this is std::any_of, but where I don't spend time fighting the type system today:
-    std::string cmp{command_name};
-    return std::end(_ignore) != std::find(std::begin(_ignore), std::end(_ignore), cmp);
+    return std::any_of(std::begin(_ignore), std::end(_ignore), 
+                       [command_name](stdx::string_view cmp) { return command_name == cmp; });
 }
 
 std::string apm_checker::print_all() {

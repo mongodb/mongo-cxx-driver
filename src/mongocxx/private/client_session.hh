@@ -77,9 +77,6 @@ class client_session::impl {
         std::unique_ptr<mongoc_session_opt_t, decltype(libmongoc::session_opts_destroy)> opt_t{
             libmongoc::session_opts_new(), libmongoc::session_opts_destroy};
 
-        // If there is an actual representation for our consistency options, submit them; otherwise
-        // ignore and let the server apply its defaults (note that some of our compatibility targets
-        // lack has_value()):
         if (_options._causal_consistency) {
             libmongoc::session_opts_set_causal_consistency(opt_t.get(),
                                                            session_options.causal_consistency());

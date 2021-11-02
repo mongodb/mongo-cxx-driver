@@ -352,9 +352,6 @@ read_concern get_read_concern(const document::element& opts) {
 
 template <typename T>
 void set_common_options(T& t, const document::element& opts) {
-    t.read_concern(get_read_concern(opts));
-    t.write_concern(get_write_concern(opts));
-
     if (!opts)
         return;
 
@@ -830,9 +827,6 @@ void run_tests_in_file(const std::string& test_path) {
     auto test_spec = parse_test_file(test_path);
     auto test_spec_view = test_spec.view();
 
-    // TODO: remove this in a separate PR.
-    // This capture logs the full test file contents on failure.
-    // CAPTURE(test_path, to_json(test_spec_view));
     if (!is_compatible_schema_version(test_spec_view)) {
         std::stringstream error;
         error << "incompatible schema version" << std::endl
@@ -870,32 +864,30 @@ void run_tests_in_file(const std::string& test_path) {
 bool run_unified_format_tests_in_env_dir(const std::string& env_path) {
     const char* p = std::getenv(env_path.c_str());
 
-    std::string path = nullptr == p ? "" : p;
+    if (nullptr == p)
+        WARN("unable to look up path from environment variable \"" << env_path << "\"");
+    CAPTURE(env_path);
+    REQUIRE(env_path.size());
+}
 
-    if (path.empty()) {
-        WARN("unable to look up path from environment variable \"" << path << "\"");
-        CAPTURE(env_path);
-        REQUIRE(path.size());
-    }
+auto test_file_set_path = std::string{p} + "/test_files.txt";
+std::ifstream files{test_file_set_path};
 
-    auto test_file_set_path = path + "/test_files.txt";
-    std::ifstream files{test_file_set_path};
+if (!files.good()) {
+    WARN("unable to find/open test_files.txt in path \"" << test_file_set_path << '\"');
+    CAPTURE(test_file_set_path);
+}
 
-    if (!files.good()) {
-        WARN("unable to find/open test_files.txt in path \"" << test_file_set_path << '\"');
-        CAPTURE(test_file_set_path);
-    }
+REQUIRE(files.good());
 
-    REQUIRE(files.good());
+instance::current();
 
-    instance::current();
+for (std::string file; std::getline(files, file);) {
+    CAPTURE(file);
+    run_tests_in_file(path + '/' + file);
+}
 
-    for (std::string file; std::getline(files, file);) {
-        CAPTURE(file);
-        run_tests_in_file(path + '/' + file);
-    }
-
-    return true;
+return true;
 }
 
 TEST_CASE("unified format spec automated tests", "[unified_format_spec]") {
