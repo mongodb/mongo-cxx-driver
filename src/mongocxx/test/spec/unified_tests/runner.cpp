@@ -864,30 +864,32 @@ void run_tests_in_file(const std::string& test_path) {
 bool run_unified_format_tests_in_env_dir(const std::string& env_path) {
     const char* p = std::getenv(env_path.c_str());
 
-    if (nullptr == p)
+    if (nullptr == p) 
         WARN("unable to look up path from environment variable \"" << env_path << "\"");
+
     CAPTURE(env_path);
-    REQUIRE(env_path.size());
-}
+    REQUIRE(nullptr != p);
 
-auto test_file_set_path = std::string{p} + "/test_files.txt";
-std::ifstream files{test_file_set_path};
-
-if (!files.good()) {
-    WARN("unable to find/open test_files.txt in path \"" << test_file_set_path << '\"');
-    CAPTURE(test_file_set_path);
-}
-
-REQUIRE(files.good());
-
-instance::current();
-
-for (std::string file; std::getline(files, file);) {
-    CAPTURE(file);
-    run_tests_in_file(path + '/' + file);
-}
-
-return true;
+    const std::string base_path { p };
+	
+    auto test_file_set_path = base_path + "/test_files.txt";
+    std::ifstream files{test_file_set_path};
+    
+    if (!files.good()) {
+        WARN("unable to find/open test_files.txt in path \"" << test_file_set_path << '\"');
+        CAPTURE(test_file_set_path);
+    }
+    
+    REQUIRE(files.good());
+    
+    instance::current();
+    
+    for (std::string file; std::getline(files, file);) {
+        CAPTURE(file);
+        run_tests_in_file(base_path + '/' + file);
+    }
+    
+    return true;
 }
 
 TEST_CASE("unified format spec automated tests", "[unified_format_spec]") {
