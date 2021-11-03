@@ -38,7 +38,7 @@ client_session& client_session::snapshot(bool enable_snapshot_reads) noexcept {
 }
 
 bool client_session::snapshot() const noexcept {
-    // As per the Causal Consistency spec, if there is no value then false is implied:
+    // As per the Snapshot Consistency spec, if there is no value then false is implied:
     return _enable_snapshot_reads.value_or(false);
 }
 

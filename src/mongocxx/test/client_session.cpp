@@ -46,7 +46,7 @@ TEST_CASE("session options", "[session]") {
     }
 
     SECTION("default") {
-        // Make sure the defaults don't cause the server to reject our connection:
+        // Make sure the defaults don't cause a client exception:
         options::client_session opts;
 
         REQUIRE_NOTHROW(c.start_session(opts));
@@ -59,7 +59,7 @@ TEST_CASE("session options", "[session]") {
         CHECK_FALSE(s.options().snapshot());
     }
 
-    SECTION("default causal consistency-- no connection") {
+    SECTION("default causal consistency") {
         options::client_session opts;
 
         // If internally un-set, we "see" the default value of true on read:
@@ -91,10 +91,13 @@ TEST_CASE("session options", "[session]") {
         auto s = c.start_session(opts);
 
         // Nothing from the preconditions should have changed (because we
-        // specified values above):
+        // specified values above; i.e. there have been no side-effects):
         REQUIRE(opts.snapshot());
-
         REQUIRE_FALSE(opts.causal_consistency());
+
+	// ...and the returned options have been set:
+	REQUIRE(s.options().snapshot());
+	REQUIRE_FALSE(s.options().causal_consistency());
     }
 
     SECTION("causal and snapshot consistency are mutually exclusive") {
