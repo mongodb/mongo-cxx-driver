@@ -891,11 +891,8 @@ bool run_unified_format_tests_in_env_dir(const std::string& env_path) {
     std::ifstream files{test_file_set_path};
     
     if (!files.good()) {
-        WARN("unable to find/open test_files.txt in path \"" << test_file_set_path << '\"');
-        CAPTURE(test_file_set_path);
+        FAIL("unable to find/open test_files.txt in path \"" << test_file_set_path << '\"');
     }
-    
-    REQUIRE(files.good());
     
     instance::current();
     
