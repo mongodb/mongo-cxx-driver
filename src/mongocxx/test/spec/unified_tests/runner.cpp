@@ -609,7 +609,7 @@ void assert_error(const mongocxx::operation_exception& exception,
 	const std::string snapshot_required_msg = "Snapshot reads require MongoDB 5.0 or later";
 	std::string exception_msg { exception.what() };
 
-        if (snapshot_required_msg == exception_msg.substr(snapshot_required_msg.length())) {
+        if (snapshot_required_msg == exception_msg.substr(0, snapshot_required_msg.length())) {
             // Do not assert a server-side error. 
             // The C driver returns this error with the domain MONGOC_ERROR_CLIENT,
             // but the C++ driver throws the error as a server-side error operation_exception.
