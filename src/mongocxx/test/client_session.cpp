@@ -143,10 +143,8 @@ TEST_CASE("session options", "[session]") {
             opts.snapshot(optional_state::yes == snapshot_consistenty_opt);
 
         // We should always expect an error if both are enabled:
-        if ((optional_state::empty != causal_consistenty_opt &&
-             optional_state::yes == causal_consistenty_opt) &&
-            (optional_state::empty != snapshot_consistenty_opt &&
-             optional_state::yes == snapshot_consistenty_opt)) {
+        if ( optional_state::yes == causal_consistenty_opt &&
+             optional_state::yes == snapshot_consistenty_opt) {
             REQUIRE_THROWS_AS(c.start_session(opts), mongocxx::exception);
         } else {
             CHECK_NOTHROW(c.start_session(opts));
