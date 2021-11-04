@@ -880,10 +880,7 @@ bool run_unified_format_tests_in_env_dir(const std::string& env_path) {
     const char* p = std::getenv(env_path.c_str());
 
     if (nullptr == p) 
-        WARN("unable to look up path from environment variable \"" << env_path << "\"");
-
-    CAPTURE(env_path);
-    REQUIRE(nullptr != p);
+        FAIL("unable to look up path from environment variable \"" << env_path << "\"");
 
     const std::string base_path { p };
 	
