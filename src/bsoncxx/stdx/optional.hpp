@@ -30,6 +30,7 @@ namespace stdx {
 
 using ::core::make_optional;
 using ::core::nullopt;
+using ::core::nullopt_t;
 using ::core::optional;
 
 }  // namespace stdx
@@ -67,6 +68,7 @@ namespace stdx {
 
 using ::std::experimental::make_optional;
 using ::std::experimental::nullopt;
+using ::std::experimental::nullopt_t;
 using ::std::experimental::optional;
 
 }  // namespace stdx
@@ -83,6 +85,7 @@ namespace stdx {
 
 using ::std::make_optional;
 using ::std::nullopt;
+using ::std::nullopt_t;
 using ::std::optional;
 
 }  // namespace stdx

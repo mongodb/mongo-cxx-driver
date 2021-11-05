@@ -730,7 +730,7 @@ document::value find_one_and_update(collection& coll,
     return result.extract();
 }
 
-bsoncxx::stdx::optional<read_concern> lookup_read_concern(document::view doc) {
+bsoncxx::stdx::optional<read_concern> operations::lookup_read_concern(document::view doc) {
     if (doc["readConcern"] && doc["readConcern"]["level"]) {
         read_concern rc;
         rc.acknowledge_string(string::to_string(doc["readConcern"]["level"].get_string().value));
@@ -740,7 +740,7 @@ bsoncxx::stdx::optional<read_concern> lookup_read_concern(document::view doc) {
     return {};
 }
 
-bsoncxx::stdx::optional<write_concern> lookup_write_concern(document::view doc) {
+bsoncxx::stdx::optional<write_concern> operations::lookup_write_concern(document::view doc) {
     if (doc["writeConcern"] && doc["writeConcern"]["w"]) {
         write_concern wc;
         document::element w = doc["writeConcern"]["w"];
@@ -762,7 +762,7 @@ bsoncxx::stdx::optional<write_concern> lookup_write_concern(document::view doc) 
     return {};
 }
 
-bsoncxx::stdx::optional<read_preference> lookup_read_preference(document::view doc) {
+bsoncxx::stdx::optional<read_preference> operations::lookup_read_preference(document::view doc) {
     if (doc["readPreference"] && doc["readPreference"]["mode"]) {
         read_preference rp;
         std::string mode = string::to_string(doc["readPreference"]["mode"].get_string().value);
@@ -786,15 +786,15 @@ bsoncxx::stdx::optional<read_preference> lookup_read_preference(document::view d
 options::transaction set_opts(document::view args) {
     options::transaction txn_opts;
 
-    if (auto rc = lookup_read_concern(args)) {
+    if (auto rc = operations::lookup_read_concern(args)) {
         txn_opts.read_concern(*rc);
     }
 
-    if (auto wc = lookup_write_concern(args)) {
+    if (auto wc = operations::lookup_write_concern(args)) {
         txn_opts.write_concern(*wc);
     }
 
-    if (auto rp = lookup_read_preference(args)) {
+    if (auto rp = operations::lookup_read_preference(args)) {
         txn_opts.read_preference(*rp);
     }
 
@@ -1029,16 +1029,20 @@ client_session* get_session(document::view op, entity::map& map) {
     return &map.get_client_session(session_name);
 }
 
-document::value run_command(database& db, document::view operation) {
+document::value run_command(database& db, client_session* session, document::view operation) {
     document::view arguments = operation["arguments"].get_document().value;
     document::view command = arguments["command"].get_document().value;
 
     auto result = builder::basic::document{};
-    result.append(builder::basic::kvp("result", db.run_command(command)));
+    if (session) {
+        result.append(builder::basic::kvp("result", db.run_command(*session, command)));
+    } else {
+        result.append(builder::basic::kvp("result", db.run_command(command)));
+    }
     return result.extract();
 }
 
-document::value update_one(collection& coll, document::view operation) {
+document::value update_one(collection& coll, client_session* session, document::view operation) {
     document::view arguments = operation["arguments"].get_document().value;
     document::view filter = arguments["filter"].get_document().value;
     document::view update = arguments["update"].get_document().value;
@@ -1061,13 +1065,25 @@ document::value update_one(collection& coll, document::view operation) {
     bsoncxx::stdx::optional<std::int32_t> modified_count;
     bsoncxx::stdx::optional<types::bson_value::view> upserted_id{};
 
-    auto update_one_result = coll.update_one(filter, update, options);
-    if (update_one_result) {
-        matched_count = update_one_result->matched_count();
-        modified_count = update_one_result->modified_count();
+    if (session) {
+        auto update_one_result = coll.update_one(*session, filter, update, options);
+        if (update_one_result) {
+            matched_count = update_one_result->matched_count();
+            modified_count = update_one_result->modified_count();
 
-        if (auto upserted_element = update_one_result->upserted_id()) {
-            upserted_id = upserted_element->get_value();
+            if (auto upserted_element = update_one_result->upserted_id()) {
+                upserted_id = upserted_element->get_value();
+            }
+        }
+    } else {
+        auto update_one_result = coll.update_one(filter, update, options);
+        if (update_one_result) {
+            matched_count = update_one_result->matched_count();
+            modified_count = update_one_result->modified_count();
+
+            if (auto upserted_element = update_one_result->upserted_id()) {
+                upserted_id = upserted_element->get_value();
+            }
         }
     }
 
@@ -1146,7 +1162,9 @@ document::value update_many(collection& coll, document::view operation) {
     return result.extract();
 }
 
-document::value count_documents(collection& coll, document::view operation) {
+document::value count_documents(collection& coll,
+                                client_session* session,
+                                document::view operation) {
     document::view arguments = operation["arguments"].get_document().value;
     document::value empty_filter = builder::basic::make_document();
     document::view filter;
@@ -1173,7 +1191,13 @@ document::value count_documents(collection& coll, document::view operation) {
             options.hint(hint{arguments["hint"].get_document().value});
     }
 
-    int64_t count = coll.count_documents(filter, options);
+    int64_t count;
+
+    if (session) {
+        count = coll.count_documents(*session, filter, options);
+    } else {
+        count = coll.count_documents(filter, options);
+    }
 
     auto result = builder::basic::document{};
     result.append(builder::basic::kvp("result", count));
@@ -1220,10 +1244,14 @@ document::value distinct(collection& coll, client_session* session, document::vi
         result_cursor.emplace(coll.distinct(field_name, filter, options));
     }
 
+    // A cursor returned by collection::distinct returns one document like:
+    // { values: [<value1>, <value2>, ... ]}
     auto result = builder::basic::document{};
     result.append(builder::basic::kvp("result", [&result_cursor](builder::basic::sub_array array) {
-        for (auto&& document : *result_cursor) {
-            array.append(document);
+        for (auto&& result_doc : *result_cursor) {
+            for (auto&& value : result_doc["values"].get_array().value) {
+                array.append(value.get_value());
+            }
         }
     }));
 
@@ -1288,11 +1316,23 @@ document::value operations::run(entity::map& entity_map,
         return find_one_and_update(
             entity_map.get_collection(object), get_session(op_view, entity_map), op_view);
     if (name == "listCollections") {
-        entity_map.get_database(object).list_collections().begin();
+        auto session = get_session(op_view, entity_map);
+        if (session) {
+            std::cout << "applying session to listCollections!" << std::endl;
+            entity_map.get_database(object).list_collections(*session).begin();
+        } else {
+            std::cout << "NOT applying session to listCollections!" << std::endl;
+            entity_map.get_database(object).list_collections().begin();
+        }
         return empty_doc;
     }
     if (name == "listDatabases") {
-        entity_map.get_client(object).list_databases().begin();
+        auto session = get_session(op_view, entity_map);
+        if (session) {
+            entity_map.get_client(object).list_databases(*session).begin();
+        } else {
+            entity_map.get_client(object).list_databases().begin();
+        }
         return empty_doc;
     }
     if (name == "assertSessionNotDirty") {
@@ -1426,16 +1466,19 @@ document::value operations::run(entity::map& entity_map,
     }
     if (name == "runCommand") {
         auto& db = entity_map.get_database(object);
-        return run_command(db, op_view);
+        return run_command(db, get_session(op_view, entity_map), op_view);
     }
     if (name == "updateOne") {
-        return update_one(entity_map.get_collection(object), op_view);
+        auto* session = get_session(op_view, entity_map);
+        return update_one(entity_map.get_collection(object), session, op_view);
     }
     if (name == "updateMany") {
         return update_many(entity_map.get_collection(object), op_view);
     }
     if (name == "countDocuments") {
-        return count_documents(entity_map.get_collection(object), op_view);
+        // TODO: all operations which accept a session should check and apply a session.
+        return count_documents(
+            entity_map.get_collection(object), get_session(op_view, entity_map), op_view);
     }
     if (name == "estimatedDocumentCount") {
         return estimated_document_count(entity_map.get_collection(object), op_view);
@@ -1443,6 +1486,16 @@ document::value operations::run(entity::map& entity_map,
     if (name == "distinct") {
         auto& coll = entity_map.get_collection(object);
         return distinct(coll, get_session(op_view, entity_map), op_view);
+    }
+
+    if (name == "listIndexes") {
+        auto session = get_session(op_view, entity_map);
+        if (session) {
+            entity_map.get_collection(object).list_indexes(*session).begin();
+        } else {
+            entity_map.get_collection(object).list_indexes().begin();
+        }
+        return empty_doc;
     }
 
     throw std::logic_error{"unsupported operation: " + name};

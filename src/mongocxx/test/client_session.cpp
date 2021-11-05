@@ -46,19 +46,109 @@ TEST_CASE("session options", "[session]") {
     }
 
     SECTION("default") {
-        auto s = c.start_session();
+        // Make sure the defaults don't cause a client exception:
+        options::client_session opts;
 
-        REQUIRE(s.options().causal_consistency());
+        REQUIRE_NOTHROW(c.start_session(opts));
     }
 
-    SECTION("set causal consistency") {
+    SECTION("default-- check values") {
+        auto s = c.start_session();
+
+        CHECK(s.options().causal_consistency());
+        CHECK_FALSE(s.options().snapshot());
+    }
+
+    SECTION("default causal consistency") {
         options::client_session opts;
+
+        // If internally un-set, we "see" the default value of true on read:
         REQUIRE(opts.causal_consistency());
+    }
+
+    SECTION("manually set causal consistency") {
+        options::client_session opts;
+
         opts.causal_consistency(false);
-        REQUIRE(!opts.causal_consistency());
+        REQUIRE_FALSE(opts.causal_consistency());
 
         auto s = c.start_session(opts);
-        REQUIRE(!s.options().causal_consistency());
+
+        // Setting for causal consistency should now be present, but false:
+        REQUIRE_FALSE(s.options().causal_consistency());
+    }
+
+    SECTION("manually set snapshot consistency") {
+        options::client_session opts;
+
+        REQUIRE_FALSE(opts.snapshot());
+        opts.causal_consistency(false);
+        opts.snapshot(true);
+
+        REQUIRE(opts.snapshot());
+        REQUIRE_FALSE(opts.causal_consistency());
+
+        auto s = c.start_session(opts);
+
+        // Nothing from the preconditions should have changed (because we
+        // specified values above; i.e. there have been no side-effects):
+        REQUIRE(opts.snapshot());
+        REQUIRE_FALSE(opts.causal_consistency());
+
+	// ...and the returned options have been set:
+	REQUIRE(s.options().snapshot());
+	REQUIRE_FALSE(s.options().causal_consistency());
+    }
+
+    SECTION("causal and snapshot consistency are mutually exclusive") {
+        // Trying to set both casusal and snapshot consistency should result
+        // in an error when starting the session:
+        options::client_session opts;
+
+        opts.snapshot(true);
+        opts.causal_consistency(true);
+
+        REQUIRE(opts.causal_consistency());
+        REQUIRE(opts.snapshot());
+
+        REQUIRE_THROWS_AS(c.start_session(opts), mongocxx::exception);
+    }
+
+    SECTION("invalid combinations of causal and snapshot consistency should fail") {
+        // Essentially, we can expect any number of combinations of un-set (i.e. does
+        // not contain a value), true, or false to be possible; but in the end any result
+        // leading to a final combination of [present, true, true] should result in an
+        // exception.
+
+        options::client_session opts;
+
+        // Unfortunately, stdx::nullopt doesn't always play well with others, so we'll use
+        // an enumeration:
+        enum struct optional_state { empty, no, yes };
+
+        auto causal_consistenty_opt = GENERATE(Catch::Generators::as<optional_state>{},
+                                               optional_state::empty,
+                                               optional_state::no,
+                                               optional_state::yes);
+        auto snapshot_consistenty_opt = GENERATE(Catch::Generators::as<optional_state>{},
+                                                 optional_state::empty,
+                                                 optional_state::no,
+                                                 optional_state::yes);
+
+        // Only actually set a value if we generate a non-empty setting:
+        if (optional_state::empty != causal_consistenty_opt)
+            opts.causal_consistency(optional_state::yes == causal_consistenty_opt);
+
+        if (optional_state::empty != snapshot_consistenty_opt)
+            opts.snapshot(optional_state::yes == snapshot_consistenty_opt);
+
+        // We should always expect an error if both are enabled:
+        if ( optional_state::yes == causal_consistenty_opt &&
+             optional_state::yes == snapshot_consistenty_opt) {
+            REQUIRE_THROWS_AS(c.start_session(opts), mongocxx::exception);
+        } else {
+            CHECK_NOTHROW(c.start_session(opts));
+        }
     }
 }
 
