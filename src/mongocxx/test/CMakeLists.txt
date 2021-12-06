@@ -76,6 +76,7 @@ set(test_driver_sources
     uri.cpp
     validation_criteria.cpp
     write_concern.cpp
+    exception.cpp
 )
 
 set(spec_test_common
