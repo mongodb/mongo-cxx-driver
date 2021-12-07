@@ -19,7 +19,6 @@
 #include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/test_util/catch.hh>
-#include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/exception.hpp>
 #include <mongocxx/uri.hpp>
 
@@ -70,7 +69,7 @@ TEST_CASE("URI", "[uri]") {
         try {
             mongocxx::uri{invalid};
         } catch (const mongocxx::logic_error& e) {
-            REQUIRE(e.code() == mongocxx::error_code::k_invalid_uri);
+            REQUIRE(e.code() == mongocxx::error_code::invalid_uri);
 
             std::string invalid_schema =
                 "Invalid URI Schema, expecting 'mongodb://' or 'mongodb+srv://': ";

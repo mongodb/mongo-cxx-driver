@@ -16,7 +16,6 @@
 
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <mongocxx/client.hpp>
-#include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/exception.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/exception/private/mongoc_error.hh>
@@ -47,8 +46,7 @@ pool::pool(const uri& uri, const options::pool& options)
 #if defined(MONGOCXX_ENABLE_SSL) && defined(MONGOC_ENABLE_SSL)
     if (options.client_opts().tls_opts()) {
         if (!uri.tls())
-            throw exception{error_code::k_invalid_parameter,
-                            "cannot set TLS options if 'tls=true' not in URI"};
+            throw invalid_parameter {"cannot set TLS options if 'tls=true' not in URI"};
 
         auto mongoc_opts = options::make_tls_opts(*options.client_opts().tls_opts());
         _impl->tls_options = std::move(mongoc_opts.second);
@@ -56,7 +54,7 @@ pool::pool(const uri& uri, const options::pool& options)
     }
 #else
     if (uri.tls() || options.client_opts().tls_opts())
-        throw exception{error_code::k_ssl_not_supported};
+        throw ssl_not_supported();
 #endif
 
     if (options.client_opts().auto_encryption_opts()) {

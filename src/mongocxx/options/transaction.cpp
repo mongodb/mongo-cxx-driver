@@ -13,7 +13,6 @@
 // limitations under the License.
 
 #include <bsoncxx/stdx/make_unique.hpp>
-#include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/exception.hpp>
 #include <mongocxx/options/private/transaction.hh>
 
@@ -77,7 +76,7 @@ stdx::optional<std::chrono::milliseconds> transaction::max_commit_time_ms() cons
 
 const transaction::impl& transaction::_get_impl() const {
     if (!_impl) {
-        throw logic_error{error_code::k_invalid_transaction_options_object};
+        throw invalid_transaction_options_object();
     }
     return *_impl;
 }

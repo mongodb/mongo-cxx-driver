@@ -15,7 +15,6 @@
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/string/to_string.hpp>
-#include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/exception.hpp>
 #include <mongocxx/private/libmongoc.hh>
 #include <mongocxx/private/write_concern.hh>
@@ -52,7 +51,7 @@ void write_concern::journal(bool journal) {
 
 void write_concern::nodes(std::int32_t confirm_from) {
     if (confirm_from < 0) {
-        throw mongocxx::logic_error{error_code::k_invalid_parameter};
+        throw invalid_parameter();
     }
     libmongoc::write_concern_set_w(_impl->write_concern_t, confirm_from);
 }
@@ -76,7 +75,7 @@ void write_concern::acknowledge_level(write_concern::level confirm_level) {
             // no exception for setting tag if it's set
             if (libmongoc::write_concern_get_w(_impl->write_concern_t) !=
                 MONGOC_WRITE_CONCERN_W_TAG) {
-                throw exception{error_code::k_unknown_write_concern};
+                throw unknown_write_concern();
             } else {
                 return;
             }
@@ -92,7 +91,7 @@ void write_concern::tag(stdx::string_view confirm_from) {
 void write_concern::majority(std::chrono::milliseconds timeout) {
     const auto count = timeout.count();
     if ((count < 0) || (count >= std::numeric_limits<std::int32_t>::max()))
-        throw logic_error{error_code::k_invalid_parameter};
+        throw invalid_parameter();
 
     libmongoc::write_concern_set_wmajority(_impl->write_concern_t,
                                            static_cast<std::int32_t>(count));
@@ -101,7 +100,7 @@ void write_concern::majority(std::chrono::milliseconds timeout) {
 void write_concern::timeout(std::chrono::milliseconds timeout) {
     const auto count = timeout.count();
     if ((count < 0) || (count >= std::numeric_limits<std::int32_t>::max()))
-        throw logic_error{error_code::k_invalid_parameter};
+        throw invalid_parameter();
 
     libmongoc::write_concern_set_wtimeout(_impl->write_concern_t, static_cast<std::int32_t>(count));
 }

@@ -13,7 +13,6 @@
 // limitations under the License.
 
 #include <mongocxx/client.hpp>
-#include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/exception.hpp>
 #include <mongocxx/options/auto_encryption.hpp>
 #include <mongocxx/pool.hpp>
@@ -97,8 +96,7 @@ void* auto_encryption::convert() const {
     using libbson::scoped_bson_t;
 
     if (_key_vault_client && _key_vault_pool) {
-        throw exception{error_code::k_invalid_parameter,
-                        "cannot set both key vault client and key vault pool, please choose one"};
+        throw invalid_parameter {"cannot set both key vault client and key vault pool, please choose one"};
     }
 
     auto mongoc_auto_encrypt_opts = libmongoc::auto_encryption_opts_new();

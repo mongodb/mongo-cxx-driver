@@ -17,7 +17,6 @@
 
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/json.hpp>
-#include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/test/spec/monitoring.hh>
 #include <mongocxx/test/spec/unified_tests/assert.hh>
 #include <mongocxx/test_util/client_helpers.hh>

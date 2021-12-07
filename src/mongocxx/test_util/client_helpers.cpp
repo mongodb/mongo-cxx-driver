@@ -31,7 +31,6 @@
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/bson_value/view_or_value.hpp>
 #include <mongocxx/client.hpp>
-#include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/exception.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/private/libmongoc.hh>
@@ -136,7 +135,7 @@ bsoncxx::document::value transform_document_recursive(bsoncxx::document::view vi
 
         // For document elements, it's an error if key is not returned.
         if (!transformed->first) {
-            throw logic_error{error_code::k_invalid_parameter};
+            throw invalid_parameter();
         }
 
         auto k = *(transformed->first);
@@ -218,7 +217,7 @@ std::int32_t get_max_wire_version(const client& client) {
         return 0;
     }
     if (max_wire_version.type() != bsoncxx::type::k_int32) {
-        throw operation_exception{error_code::k_server_response_malformed};
+        throw server_response_malformed();
     }
     return max_wire_version.get_int32().value;
 }

@@ -22,8 +22,8 @@
 #include <bsoncxx/builder/basic/sub_array.hpp>
 #include <bsoncxx/builder/basic/sub_document.hpp>
 #include <bsoncxx/builder/concatenate.hpp>
-#include <bsoncxx/exception/error_code.hpp>
 #include <bsoncxx/exception/exception.hpp>
+#include <bsoncxx/exception/error_code.hpp>
 #include <bsoncxx/private/helpers.hh>
 #include <bsoncxx/private/libbson.hh>
 #include <bsoncxx/stdx/make_unique.hpp>
@@ -32,7 +32,6 @@
 #include <mongocxx/bulk_write.hpp>
 #include <mongocxx/client.hpp>
 #include <mongocxx/collection.hpp>
-#include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/exception.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/exception/private/mongoc_error.hh>
@@ -103,7 +102,7 @@ mongocxx::stdx::optional<bsoncxx::document::value> find_and_modify(
     // Write concern, collation, and session are passed in "extra".
     if (options.write_concern()) {
         if (!options.write_concern()->is_acknowledged() && options.collation()) {
-            throw mongocxx::logic_error{mongocxx::error_code::k_invalid_parameter};
+            throw mongocxx::invalid_parameter();
         }
         extra.append(kvp("writeConcern", options.write_concern()->to_document()));
     }
@@ -112,7 +111,7 @@ mongocxx::stdx::optional<bsoncxx::document::value> find_and_modify(
         bson_t bson = BSON_INITIALIZER;
         if (!mongocxx::libmongoc::client_session_append(session_t, &bson, &error)) {
             bson_destroy(&bson);
-            throw mongocxx::logic_error{mongocxx::error_code::k_invalid_session, error.message};
+            throw mongocxx::invalid_session { error.message };
         }
 
         // document::value takes ownership of the bson buffer.
@@ -327,7 +326,7 @@ bsoncxx::builder::basic::document build_find_options_document(const options::fin
             options_builder.append(kvp("awaitData", bsoncxx::types::b_bool{true}));
         } else if (*options.cursor_type() == cursor::type::k_non_tailable) {
         } else {
-            throw logic_error{error_code::k_invalid_parameter};
+            throw invalid_parameter();
         }
     }
 
@@ -408,7 +407,7 @@ cursor collection::_find(const client_session* session,
     if (options.max_await_time()) {
         const auto count = options.max_await_time()->count();
         if ((count < 0) || (count >= std::numeric_limits<std::uint32_t>::max())) {
-            throw logic_error{error_code::k_invalid_parameter};
+            throw invalid_parameter();
         }
         libmongoc::cursor_set_max_await_time_ms(query_cursor._impl->cursor_t,
                                                 static_cast<std::uint32_t>(count));
@@ -1345,7 +1344,7 @@ stdx::optional<result::insert_many> collection::_exec_insert_many(
 
 const collection::impl& collection::_get_impl() const {
     if (!_impl) {
-        throw logic_error{error_code::k_invalid_collection_object};
+        throw invalid_collection_object();
     }
     return *_impl;
 }

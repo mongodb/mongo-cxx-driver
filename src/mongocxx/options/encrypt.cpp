@@ -13,7 +13,6 @@
 // limitations under the License.
 
 #include <bsoncxx/types/private/convert.hh>
-#include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/exception.hpp>
 #include <mongocxx/options/encrypt.hpp>
 #include <mongocxx/private/libbson.hh>
@@ -62,15 +61,14 @@ void* encrypt::convert() const {
     if (_key_id) {
         if (_key_id->view().type() != bsoncxx::type::k_binary) {
             libmongoc::client_encryption_encrypt_opts_destroy(opts);
-            throw exception{error_code::k_invalid_parameter, "key id myst be a binary value"};
+            throw invalid_parameter {"key id myst be a binary value"};
         }
 
         auto key_id = _key_id->view().get_binary();
 
         if (key_id.sub_type != bsoncxx::binary_sub_type::k_uuid) {
             libmongoc::client_encryption_encrypt_opts_destroy(opts);
-            throw exception{error_code::k_invalid_parameter,
-                            "key id must be a binary value with subtype 4 (UUID)"};
+            throw invalid_parameter {"key id must be a binary value with subtype 4 (UUID)"};
         }
 
         bson_value_t bson_uuid;
@@ -97,8 +95,7 @@ void* encrypt::convert() const {
                 break;
             default:
                 libmongoc::client_encryption_encrypt_opts_destroy(opts);
-                throw exception{error_code::k_invalid_parameter,
-                                "unsupported encryption algorithm"};
+                throw invalid_parameter{"unsupported encryption algorithm"};
         }
     } else {
         // libmongoc will error in this case, encryption algorithm must be set.

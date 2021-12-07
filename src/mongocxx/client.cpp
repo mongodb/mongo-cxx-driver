@@ -15,7 +15,6 @@
 #include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <mongocxx/client.hpp>
-#include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/exception.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/exception/private/mongoc_error.hh>
@@ -70,8 +69,7 @@ client::client(const class uri& uri, const options::client& options) {
 #if defined(MONGOCXX_ENABLE_SSL) && defined(MONGOC_ENABLE_SSL)
     if (options.tls_opts()) {
         if (!uri.tls())
-            throw exception{error_code::k_invalid_parameter,
-                            "cannot set TLS options if 'tls=true' not in URI"};
+            throw invalid_parameter { "cannot set TLS options if 'tls=true' not in URI" };
     }
 #else
     if (uri.tls() || options.tls_opts()) {
@@ -81,7 +79,7 @@ client::client(const class uri& uri, const options::client& options) {
     auto new_client = libmongoc::client_new_from_uri(uri._impl->uri_t);
     if (!new_client) {
         // Shouldn't happen after checks above, but future libmongoc's may change behavior.
-        throw exception{error_code::k_invalid_parameter, "could not construct client from URI"};
+        throw invalid_parameter { "could not construct client from URI" };
     }
 
     _impl = stdx::make_unique<impl>(std::move(new_client));
@@ -286,7 +284,7 @@ class change_stream client::_watch(const client_session* session,
 
 const client::impl& client::_get_impl() const {
     if (!_impl) {
-        throw logic_error{error_code::k_invalid_client_object};
+        throw invalid_client_object();
     }
     return *_impl;
 }

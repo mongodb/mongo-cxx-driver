@@ -14,7 +14,6 @@
 
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/types.hpp>
-#include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/exception.hpp>
 #include <mongocxx/private/libmongoc.hh>
 #include <mongocxx/private/read_concern.hh>
@@ -54,7 +53,7 @@ uri::uri(bsoncxx::string::view_or_value uri_string) {
         libmongoc::uri_new_with_error(uri_string.terminated().data(), &error));
 
     if (_impl->uri_t == nullptr) {
-        throw logic_error{error_code::k_invalid_uri, error.message};
+        throw invalid_uri {error.message};
     }
 }
 

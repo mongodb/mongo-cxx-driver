@@ -14,7 +14,6 @@
 
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/stdx/make_unique.hpp>
-#include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/exception.hpp>
 #include <mongocxx/options/index.hpp>
 #include <mongocxx/private/libmongoc.hh>
@@ -237,7 +236,7 @@ index::operator bsoncxx::document::view_or_value() {
     if (_expire_after) {
         const auto count = _expire_after->count();
         if ((count < 0) || (count > std::numeric_limits<std::int32_t>::max())) {
-            throw logic_error{error_code::k_invalid_parameter};
+            throw invalid_parameter();
         }
 
         root.append(kvp("expireAfterSeconds", types::b_int32{static_cast<std::int32_t>(count)}));

@@ -18,7 +18,6 @@
 
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/types.hpp>
-#include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/exception.hpp>
 #include <mongocxx/gridfs/downloader.hpp>
 #include <mongocxx/gridfs/private/downloader.hh>
@@ -43,7 +42,7 @@ downloader::operator bool() const noexcept {
 
 std::size_t downloader::read(std::uint8_t* buffer, std::size_t length_requested) {
     if (_get_impl().closed) {
-        throw logic_error{error_code::k_gridfs_stream_not_open};
+        throw gridfs_stream_not_open();
     }
 
     if (_get_impl().file_len == 0) {
@@ -73,7 +72,7 @@ std::size_t downloader::read(std::uint8_t* buffer, std::size_t length_requested)
 
 void downloader::close() {
     if (_get_impl().closed) {
-        throw logic_error{error_code::k_gridfs_stream_not_open};
+        throw gridfs_stream_not_open();
     }
 
     _get_impl().chunks = {};
@@ -98,7 +97,7 @@ void downloader::fetch_chunk() {
         err << "expected file to have " << _get_impl().file_chunk_count
             << " chunk(s), but query to chunks collection only returned " << _get_impl().chunks_seen
             << " chunk(s)";
-        throw gridfs_exception{error_code::k_gridfs_file_corrupted, err.str()};
+        throw gridfs_file_corrupted { err.str() };
     }
 
     if (_get_impl().chunks_seen) {
@@ -113,11 +112,11 @@ void downloader::fetch_chunk() {
         std::ostringstream err;
         err << "chunk #" << _get_impl().chunks_seen
             << ": expected to find field \"n\" with k_int32 type";
-        throw gridfs_exception{error_code::k_gridfs_file_corrupted, err.str()};
+        throw gridfs_file_corrupted { err.str() };
     }
 
     if (_get_impl().chunks_seen == std::numeric_limits<std::int32_t>::max()) {
-        throw gridfs_exception{error_code::k_gridfs_file_corrupted, "file has too many chunks"};
+        throw gridfs_file_corrupted { "file has too many chunks" }; // JFW: what about gridfs_upload_requires_too_many_chunks?
     }
 
     auto chunk_data_ele = chunk_doc["data"];
@@ -125,7 +124,7 @@ void downloader::fetch_chunk() {
         std::ostringstream err;
         err << "chunk #" << _get_impl().chunks_seen
             << ": expected to find field \"data\" with k_binary type";
-        throw gridfs_exception{error_code::k_gridfs_file_corrupted, err.str()};
+        throw gridfs_file_corrupted { err.str() };
     }
 
     auto binary_data = chunk_data_ele.get_binary();
@@ -136,7 +135,7 @@ void downloader::fetch_chunk() {
             err << "chunk #" << _get_impl().chunks_seen << ": expected size of chunk to be "
                 << _get_impl().chunk_size << " bytes, but actual size of chunk is "
                 << binary_data.size << " bytes";
-            throw gridfs_exception{error_code::k_gridfs_file_corrupted, err.str()};
+            throw gridfs_file_corrupted { err.str() };
         }
     } else {
         auto expected_size =
@@ -151,7 +150,7 @@ void downloader::fetch_chunk() {
             err << "chunk #" << _get_impl().chunks_seen << ": expected size of chunk to be "
                 << expected_size << " bytes, but actual size of chunk is " << binary_data.size
                 << " bytes";
-            throw gridfs_exception{error_code::k_gridfs_file_corrupted, err.str()};
+            throw gridfs_file_corrupted { err.str() };
         }
     }
 
@@ -164,7 +163,7 @@ void downloader::fetch_chunk() {
 
 const downloader::impl& downloader::_get_impl() const {
     if (!_impl) {
-        throw logic_error{error_code::k_invalid_gridfs_downloader_object};
+        throw invalid_gridfs_downloader_object();
     }
     return *_impl;
 }

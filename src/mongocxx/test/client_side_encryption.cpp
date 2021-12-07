@@ -28,7 +28,6 @@
 #include <bsoncxx/types/bson_value/view.hpp>
 #include <mongocxx/client.hpp>
 #include <mongocxx/client_encryption.hpp>
-#include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/client.hpp>
 #include <mongocxx/options/client_encryption.hpp>
@@ -844,7 +843,7 @@ void _run_corpus_test(bool use_schema_map) {
             } else if (algo == stdx::string_view{"det"}) {
                 encrypt_opts.algorithm(options::encrypt::encryption_algorithm::k_deterministic);
             } else {
-                throw exception{error_code::k_invalid_parameter, "unsupported algorithm"};
+                throw invalid_parameter {"unsupported algorithm"};
             }
 
             if (identifier == stdx::string_view{"id"}) {
@@ -857,7 +856,7 @@ void _run_corpus_test(bool use_schema_map) {
                     // AWSAAAAAAAAAAAAAAAAAAA==.
                     encrypt_opts.key_id(aws_key_value.view());
                 } else {
-                    throw exception{error_code::k_invalid_parameter, "unsupported kms identifier"};
+                    throw invalid_parameter {"unsupported kms identifier"};
                 }
             } else if (identifier == stdx::string_view{"altname"}) {
                 if (kms == stdx::string_view{"local"}) {
@@ -867,10 +866,10 @@ void _run_corpus_test(bool use_schema_map) {
                     // If kms is aws set the key_alt_name to "aws".
                     encrypt_opts.key_alt_name("aws");
                 } else {
-                    throw exception{error_code::k_invalid_parameter, "unsupported kms altname"};
+                    throw invalid_parameter {"unsupported kms altname"};
                 }
             } else {
-                throw exception{error_code::k_invalid_parameter, "unsupported identifier"};
+                throw invalid_parameter {"unsupported identifier"};
             }
 
             if (allowed) {

@@ -21,7 +21,6 @@
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/string/to_string.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
-#include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/exception.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/exception/write_exception.hpp>
@@ -147,9 +146,7 @@ class index_view::impl {
             bson_iter_t iter;
             if (!bson_iter_init_find(&iter, is_master, "maxWireVersion") ||
                 bson_iter_int32(&iter) < 9) {
-                throw write_exception{
-                    error_code::k_invalid_parameter,
-                    "option 'commitQuorum' not available on the current server version"};
+                throw invalid_parameter {"option 'commitQuorum' not available on the current server version"};
             }
 
             command =
@@ -173,7 +170,7 @@ class index_view::impl {
                   bsoncxx::stdx::string_view name,
                   const options::index_view& options) {
         if (name == bsoncxx::stdx::string_view{"*"}) {
-            throw logic_error(error_code::k_invalid_parameter);
+            throw invalid_parameter();
         }
 
         bsoncxx::builder::basic::document opts_doc;

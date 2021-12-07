@@ -15,7 +15,6 @@
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/builder/core.hpp>
-#include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/exception.hpp>
 #include <mongocxx/options/change_stream.hpp>
 
@@ -115,7 +114,7 @@ bsoncxx::document::value change_stream::as_bson() const {
     if (max_await_time()) {
         auto count = max_await_time().value().count();
         if ((count < 0) || (count >= std::numeric_limits<std::uint32_t>::max())) {
-            throw mongocxx::logic_error{mongocxx::error_code::k_invalid_parameter};
+            throw mongocxx::invalid_parameter(); 
         }
         out.append(
             bsoncxx::builder::basic::kvp("maxAwaitTimeMS", static_cast<std::int64_t>(count)));

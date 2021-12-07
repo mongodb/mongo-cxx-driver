@@ -19,7 +19,6 @@
 #include <bsoncxx/private/helpers.hh>
 #include <bsoncxx/private/libbson.hh>
 #include <mongocxx/client_session.hpp>
-#include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/exception.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/exception/private/mongoc_error.hh>
@@ -96,7 +95,7 @@ class client_session::impl {
         auto s =
             libmongoc::client_start_session(_client->_get_impl().client_t, opt_t.get(), &error);
         if (!s) {
-            throw mongocxx::exception{error_code::k_cannot_create_session, error.message};
+            throw cannot_create_session { error.message };
         }
 
         _session_t = unique_session{
@@ -226,7 +225,7 @@ class client_session::impl {
         bson_error_t error;
         bson_t bson = BSON_INITIALIZER;
         if (!libmongoc::client_session_append(_session_t.get(), &bson, &error)) {
-            throw mongocxx::logic_error{error_code::k_invalid_session, error.message};
+            throw invalid_session { error.message };
         }
 
         // document::value takes ownership of the bson buffer.

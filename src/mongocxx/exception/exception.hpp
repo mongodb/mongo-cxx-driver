@@ -20,10 +20,32 @@
 
 namespace mongocxx { inline namespace v_noabi {
 
-// This is what the user maintains:
-#define MONGOCXX_ERRORS                                                                       	\
+// This is what the user maintains for any general (i.e. non-customized) exceptions:
+#define MONGOCXX_ERRORS \
  MONGOCXX_X(logic_error,		"logic_error")						\
- MONGOCXX_X(invalid_parameter,          "that parameter may not walk again")
+ MONGOCXX_X(invalid_client_object, 	"invalid use of default constructed or moved-from mongocxx::client object") 	\
+ MONGOCXX_X(invalid_collection_object,	"invalid use of default constructed or moved-from mongocxx::collection object") \
+ MONGOCXX_X(invalid_database_object,	"invalid use of default constructed or moved-from mongocxx::database object") 	\
+ MONGOCXX_X(invalid_parameter, "an invalid or out-of-bounds parameter was provided") \
+ MONGOCXX_X(ssl_not_supported, "SSL support not available") \
+ MONGOCXX_X(unknown_read_concern, "invalid attempt to set an unknown read concern level") \
+ MONGOCXX_X(unknown_write_concern, "invalid attempt to set an unknown write concern level") \
+ MONGOCXX_X(cannot_recreate_instance, "cannot create a mongocxx::instance object if one has already been created") \
+ MONGOCXX_X(server_response_malformed, "the response from the server was malformed") \
+ MONGOCXX_X(invalid_uri, "an invalid MongoDB URI was provided") \
+ MONGOCXX_X(invalid_gridfs_bucket_object, "invalid use of default constructed or moved-from mongocxx::gridfs::bucket object") \
+ MONGOCXX_X(invalid_gridfs_uploader_object, "invalid use of default constructed or moved-from mongocxx::gridfs::uploader object") \
+ MONGOCXX_X(invalid_gridfs_downloader_object, "invalid use of default constructed or moved-from mongocxx::gridfs::downloader object") \
+ MONGOCXX_X(gridfs_stream_not_open, "a mongocxx::gridfs::uploader object was not open for writing, or a mongocxx::gridfs::downloader object was not open for reading") \
+ MONGOCXX_X(gridfs_upload_requires_too_many_chunks, "a mongocxx::gridfs::uploader object has exceeded the maximum number of allowable GridFS chunks when attempting to upload the requested file") \
+ MONGOCXX_X(gridfs_file_not_found, "the requested GridFS file was not found") \
+ MONGOCXX_X(gridfs_file_corrupted, "a GridFS file being operated on was discovered to be corrupted") \
+ MONGOCXX_X(instance_destroyed, "the mongocxx instance has been destroyed") \
+ MONGOCXX_X(cannot_create_session, "failed to create a client session") \
+ MONGOCXX_X(invalid_session, "an invalid client session was provided") \
+ MONGOCXX_X(invalid_transaction_options_object, "an invalid transactions options object was provided") \
+ MONGOCXX_X(create_resource_fail, "could not create resource") \
+////
 // end x-macro table 
 
 }} // namespace mongocxx::inline v_noabi
@@ -33,7 +55,7 @@ namespace mongocxx { inline namespace v_noabi {
 
 // Generate the error_code table:
 #define MONGOCXX_X(mongocxx_field_enum_label, mongocxx__) mongocxx_field_enum_label,
-enum struct Zerror_code : std::int32_t
+enum struct error_code : std::int32_t
 {
  INITIAL_ENTRY__ = 0,
  //////////////////////
@@ -45,80 +67,84 @@ enum struct Zerror_code : std::int32_t
 
 /* JFW: C++11 doesn't have "constinit inline"; may want to use a singleton function: */
 #define MONGOCXX_X(mongocxx__, field_error_msg) field_error_msg,
-static const char* const Zerror_code_msgs[] =
+static const char* const error_code_msgs[] =
 {
  "__invalid_entry__",
  MONGOCXX_ERRORS
 };
 #undef MONGOCXX_X
 
-}} // namespace mongocxx::inline v_noabi
-
-/**** END implementation details, back to our regularly scheduled program! */
-
-struct my_error_category final : std::error_category
+struct error_category final : std::error_category
 {
  const char *name() const noexcept override { return "mongocxx"; }
 
  std::string message(int code) const noexcept override;
 };
 
-inline std::string my_error_category::message(int ec) const noexcept
+inline std::string error_category::message(int ec) const noexcept
 {
- if(static_cast<int>(mongocxx::v_noabi::Zerror_code::INITIAL_ENTRY__) >= ec
-    || ec >= static_cast<int>(mongocxx::v_noabi::Zerror_code::MAX_ENTRY__))
+ if(static_cast<int>(mongocxx::v_noabi::error_code::INITIAL_ENTRY__) >= ec
+    || ec >= static_cast<int>(mongocxx::v_noabi::error_code::MAX_ENTRY__))
   return "invalid value";
 
- return mongocxx::Zerror_code_msgs[ec];
-}
-
-const std::error_category& error_category();
-
-inline std::error_code make_error_code(mongocxx::Zerror_code error) {
-    return {static_cast<int>(error), error_category()};
+ return mongocxx::error_code_msgs[ec];
 }
 
 inline const std::error_category& error_category() {
-    static const struct my_error_category my_category {};
-    return my_category;
+    static const struct error_category category {};
+    return category;
 }
+
+inline std::error_code make_error_code(mongocxx::v_noabi::error_code error) {
+    return {static_cast<int>(error), error_category()};
+}
+
+}} // namespace mongocxx::inline v_noabi
 
 namespace std {
 template <>
-struct is_error_code_enum<mongocxx::Zerror_code> : public true_type {};
+struct is_error_code_enum<mongocxx::error_code> : public true_type {};
 }  // namespace std
 
 /******************************************************************/
 
-namespace mongocxx { inline namespace v_noabi {
+namespace mongocxx { inline namespace v_noabi { 
 
 class exception : public std::system_error {
     using system_error::system_error;
 };
 
 /* JFW: generalized mongocxx exception with both an error code and a customizable
-message-- for rubber-stamping out new error types: */
-
+message-- for rubber-stamping out new error types: 
+NOTE: There's deliberately no error-code-only ctor, as we want a type-to-code mapping
+that's automatic: 
+*/
 namespace detail {
 
-template <std::int32_t errc>
+template <std::int32_t err_code>
 struct general_error : mongocxx::exception
 {
+ std::int32_t error_code; // JFW: TODO: system_error<> already contains an ec, make this go away :>
+
+ general_error()
+  : error_code{err_code},
+    mongocxx::exception(static_cast<mongocxx::v_noabi::error_code>(err_code), "error")
+ {}
+
  general_error(const std::string& what)
-  : mongocxx::exception(static_cast<mongocxx::Zerror_code>(errc), what)
+  : error_code{err_code},
+    mongocxx::exception(static_cast<mongocxx::v_noabi::error_code>(err_code), what)
  {}
 
  general_error(const char *what)
-  : mongocxx::exception(static_cast<mongocxx::Zerror_code>(errc), what)
+  : error_code{err_code},
+    mongocxx::exception(static_cast<mongocxx::v_noabi::error_code>(err_code), what)
  {}
 
-/* JFW: note: we should entirely deprecate these-- in the meantime, they're useful for tracking what
-we have during development: */
- general_error()
-  : mongocxx::exception(static_cast<mongocxx::Zerror_code>(errc), "error")
- {}
-
- general_error(const mongocxx::Zerror_code errc_, const char *what) : mongocxx::exception(static_cast<mongocxx::Zerror_code>(errc_), what)
+ // JFW: TODO: we do NOT want to keep this around: it's to facilitate tracking down mongocxx::throw_exception<>: 
+ general_error(const std::int32_t err_c, const char *what)
+  : error_code { err_c },
+    mongocxx::exception(static_cast<mongocxx::v_noabi::error_code>(err_c), what)
  {}
 
 };
@@ -127,38 +153,33 @@ we have during development: */
 
 }} // namespace mongocxx::inline namespace v_noabi
 
-namespace mongocxx { namespace v_noabi { 
+/* This section is where "general" non-customized exceptions are "rubber-stamped" out. If you exception type doesn't need
+any special behavior or rules, it should be put in the table above and then generated here: 
 
-//JFW: using logic_error = mongocxx::v_noabi::detail::general_error<(int32_t)mongocxx::v_noabi::Zerror_code::logic_error>;
+What we generate looks ABOUT like:
+using logic_error = mongocxx::v_noabi::detail::general_error<(int32_t)mongocxx::v_noabi::error_code::logic_error>;
+
+*/
+namespace mongocxx { namespace v_noabi { 
 
 #define MONGOCXX_X_REPASTE(field_name) field_name
 
-#define MONGOCXX_X(mongocxx_field_enum_label, my__) using MONGOCXX_X_REPASTE(mongocxx_field_enum_label) = mongocxx::v_noabi::detail::general_error<static_cast<std::int32_t>( mongocxx::v_noabi::Zerror_code::MONGOCXX_X_REPASTE(mongocxx_field_enum_label))>; 
+#define MONGOCXX_X(mongocxx_field_enum_label, my__) using MONGOCXX_X_REPASTE(mongocxx_field_enum_label) = mongocxx::v_noabi::detail::general_error<static_cast<std::int32_t>( mongocxx::v_noabi::error_code::MONGOCXX_X_REPASTE(mongocxx_field_enum_label))>; 
 MONGOCXX_ERRORS
 #undef MONGOCXX_X
 #undef MONGOCXX_X_REPASTE
 
 #undef MONGOCXX_ERRORS
 
-}} // JFW
+}} // namespace mongocxx::v_noabi
+
+/* This is where customized types that don't easily fit the stamped-out pattern go:
+Note that nothing prevents further generators from being added as-needed: */
+namespace mongocxx { namespace v_noabi {
+
+// Your special types go here!
+
+}} // namespace mongocxx
 
 /*********************************************************************/
 
-/* JFW:
-#include <mongocxx/config/prelude.hpp>
-
-namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
-
-///
-/// A class to be used as the base class for all mongocxx exceptions.
-///
-class MONGOCXX_API exception : public std::system_error {
-    using system_error::system_error;
-};
-
-MONGOCXX_INLINE_NAMESPACE_END
-}  // namespace mongocxx
-
-#include <mongocxx/config/postlude.hpp>
-*/

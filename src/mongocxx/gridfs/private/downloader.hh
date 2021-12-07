@@ -34,15 +34,13 @@ std::int64_t read_length_from_files_document(bsoncxx::document::view files_doc) 
     } else if (length_ele && length_ele.type() == bsoncxx::type::k_int32) {
         length = length_ele.get_int32().value;
     } else {
-        throw gridfs_exception{error_code::k_gridfs_file_corrupted,
-                               "expected files document to contain field \"length\" with type "
-                               "k_int32 or k_int64"};
+        throw gridfs_file_corrupted { "expected files document to contain field \"length\" with type k_int32 or k_int64" };
     }
 
     if (length < 0) {
         std::ostringstream err;
         err << "files document contains unexpected negative value for \"length\": " << length;
-        throw gridfs_exception{error_code::k_gridfs_file_corrupted, err.str()};
+        throw gridfs_file_corrupted { err.str() };
     }
 
     return length;
@@ -59,9 +57,7 @@ std::int32_t read_chunk_size_from_files_document(bsoncxx::document::view files_d
     } else if (chunk_size_ele && chunk_size_ele.type() == bsoncxx::type::k_int32) {
         chunk_size = chunk_size_ele.get_int32().value;
     } else {
-        throw gridfs_exception{error_code::k_gridfs_file_corrupted,
-                               "expected files document to contain field \"chunkSize\" with type "
-                               "k_int32 or k_int64"};
+        throw gridfs_file_corrupted { "expected files document to contain field \"chunkSize\" with type k_int32 or k_int64" };
     }
 
     // Each chunk needs to be able to fit in a single document.
@@ -69,12 +65,12 @@ std::int32_t read_chunk_size_from_files_document(bsoncxx::document::view files_d
         std::ostringstream err;
         err << "files document contains unexpected chunk size of " << chunk_size
             << ", which exceeds maximum chunk size of " << k_max_document_size;
-        throw gridfs_exception{error_code::k_gridfs_file_corrupted, err.str()};
+        throw gridfs_file_corrupted { err.str() };
     } else if (chunk_size <= 0) {
         std::ostringstream err;
         err << "files document contains unexpected chunk size: " << chunk_size
             << "; value must be positive";
-        throw gridfs_exception{error_code::k_gridfs_file_corrupted, err.str()};
+        throw gridfs_file_corrupted { err.str() };
     }
 
     return static_cast<std::int32_t>(chunk_size);
@@ -108,7 +104,7 @@ class downloader::impl {
                 std::ostringstream err;
                 err << "file has " << num_chunks_div.quot << " chunks, which exceeds maximum of "
                     << std::numeric_limits<std::int32_t>::max();
-                throw gridfs_exception{error_code::k_gridfs_file_corrupted, err.str()};
+                throw gridfs_file_corrupted { err.str() };
             }
 
             file_chunk_count = static_cast<std::int32_t>(num_chunks_div.quot);

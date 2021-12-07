@@ -21,7 +21,6 @@
 #include <bsoncxx/string/to_string.hpp>
 #include <mongocxx/client.hpp>
 #include <mongocxx/database.hpp>
-#include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/exception.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/exception/private/mongoc_error.hh>
@@ -514,7 +513,7 @@ class change_stream database::_watch(const client_session* session,
 
 const database::impl& database::_get_impl() const {
     if (!_impl) {
-        throw logic_error{error_code::k_invalid_database_object};
+        throw invalid_database_object();
     }
     return *_impl;
 }

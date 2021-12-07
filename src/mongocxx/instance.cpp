@@ -17,7 +17,6 @@
 #include <utility>
 
 #include <bsoncxx/stdx/make_unique.hpp>
-#include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/exception.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/logger.hpp>
@@ -119,7 +118,7 @@ instance::instance(std::unique_ptr<logger> logger) {
     instance* expected = nullptr;
 
     if (!current_instance.compare_exchange_strong(expected, this)) {
-        throw logic_error{error_code::k_cannot_recreate_instance};
+        throw cannot_recreate_instance();
     }
 
     _impl = stdx::make_unique<impl>(std::move(logger));
@@ -141,7 +140,7 @@ instance& instance::current() {
     instance* curr = current_instance.load();
 
     if (curr == reinterpret_cast<instance*>(&sentinel)) {
-        throw logic_error{error_code::k_instance_destroyed};
+        throw instance_destroyed();
     }
 
     return *curr;

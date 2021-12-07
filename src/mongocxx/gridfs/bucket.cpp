@@ -21,7 +21,6 @@
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <mongocxx/database.hpp>
-#include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/gridfs_exception.hpp>
 #include <mongocxx/exception/exception.hpp>
 #include <mongocxx/gridfs/bucket.hpp>
@@ -43,7 +42,7 @@ bucket::bucket(const database& db, const options::gridfs::bucket& options) {
     }
 
     if (bucket_name.empty()) {
-        throw logic_error{error_code::k_invalid_parameter, "non-empty bucket name required"};
+        throw invalid_parameter {"non-empty bucket name required"};
     }
 
     std::int32_t default_chunk_size_bytes = 255 * 1024;
@@ -52,8 +51,7 @@ bucket::bucket(const database& db, const options::gridfs::bucket& options) {
     }
 
     if (default_chunk_size_bytes <= 0) {
-        throw logic_error{error_code::k_invalid_parameter,
-                          "positive value for chunk_size_bytes required"};
+        throw invalid_parameter {"positive value for chunk_size_bytes required"};
     }
 
     collection chunks = db[bucket_name + ".chunks"];
@@ -125,9 +123,7 @@ uploader bucket::_open_upload_stream_with_id(const client_session* session,
 
     if (auto chunk_size = options.chunk_size_bytes()) {
         if (*chunk_size <= 0) {
-            throw logic_error{
-                error_code::k_invalid_parameter,
-                "positive value required for options::gridfs::upload::chunk_size_bytes()"};
+            throw invalid_parameter {"positive value required for options::gridfs::upload::chunk_size_bytes()"};
         }
 
         chunk_size_bytes = *chunk_size;
@@ -226,16 +222,14 @@ downloader bucket::_open_download_stream(const client_session* session,
                              : _get_impl().files.find_one(files_filter.extract());
 
     if (!files_doc) {
-        throw gridfs_exception{error_code::k_gridfs_file_not_found};
+        throw gridfs_file_not_found();
     }
 
     auto files_doc_view = files_doc->view();
 
     if (!files_doc_view["length"] || (files_doc_view["length"].type() != type::k_int64 &&
                                       files_doc_view["length"].type() != type::k_int32)) {
-        throw gridfs_exception{error_code::k_gridfs_file_corrupted,
-                               "expected files document to contain field \"length\" with type "
-                               "k_int32 or k_int64"};
+        throw gridfs_file_corrupted { "expected files document to contain field \"length\" with type k_int32 or k_int64"};
     }
 
     auto length = files_doc_view["length"];
@@ -308,7 +302,7 @@ void bucket::_delete_file(const client_session* session, bsoncxx::types::bson_va
                           : _get_impl().files.delete_one(files_builder.extract());
     if (result) {
         if (result->deleted_count() == 0) {
-            throw gridfs_exception{error_code::k_gridfs_file_not_found};
+            throw gridfs_file_not_found();
         }
     }
 
@@ -392,7 +386,7 @@ void bucket::create_indexes_if_nonexistent(const client_session* session) {
 
 const bucket::impl& bucket::_get_impl() const {
     if (!_impl) {
-        throw logic_error{error_code::k_invalid_gridfs_bucket_object};
+        throw invalid_gridfs_bucket_object();
     }
     return *_impl;
 }
