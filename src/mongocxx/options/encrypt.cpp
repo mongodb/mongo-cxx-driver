@@ -14,7 +14,7 @@
 
 #include <bsoncxx/types/private/convert.hh>
 #include <mongocxx/exception/error_code.hpp>
-#include <mongocxx/exception/logic_error.hpp>
+#include <mongocxx/exception/exception.hpp>
 #include <mongocxx/options/encrypt.hpp>
 #include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/libmongoc.hh>

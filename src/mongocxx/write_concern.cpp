@@ -17,7 +17,6 @@
 #include <bsoncxx/string/to_string.hpp>
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/exception.hpp>
-#include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/private/libmongoc.hh>
 #include <mongocxx/private/write_concern.hh>
 #include <mongocxx/write_concern.hpp>

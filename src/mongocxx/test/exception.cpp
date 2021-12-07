@@ -20,6 +20,9 @@ namespace {
 
 TEST_CASE("exceptions/basic", "[exceptions]") {
 
+/* Although std::logic_error is not thrown by the standard library, we have a history of
+doing it (using error_code for more specific behavior) with our implementation: */
+mongocxx::logic_error le("this is a mongocxx::logic_error");
 
 }
 

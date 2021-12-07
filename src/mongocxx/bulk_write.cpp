@@ -18,7 +18,7 @@
 #include <mongocxx/bulk_write.hpp>
 #include <mongocxx/collection.hpp>
 #include <mongocxx/exception/bulk_write_exception.hpp>
-#include <mongocxx/exception/logic_error.hpp>
+#include <mongocxx/exception/exception.hpp>
 #include <mongocxx/exception/private/mongoc_error.hh>
 #include <mongocxx/private/bulk_write.hh>
 #include <mongocxx/private/client_session.hh>

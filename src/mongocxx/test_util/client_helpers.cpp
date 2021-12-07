@@ -32,7 +32,7 @@
 #include <bsoncxx/types/bson_value/view_or_value.hpp>
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/error_code.hpp>
-#include <mongocxx/exception/logic_error.hpp>
+#include <mongocxx/exception/exception.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/private/libmongoc.hh>
 #include <mongocxx/test_util/client_helpers.hh>

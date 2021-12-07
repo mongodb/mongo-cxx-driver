@@ -13,7 +13,7 @@
 // limitations under the License.
 
 #include <bsoncxx/test_util/catch.hh>
-#include <mongocxx/exception/logic_error.hpp>
+#include <mongocxx/exception/exception.hpp>
 #include <mongocxx/gridfs/downloader.hpp>
 #include <mongocxx/instance.hpp>
 

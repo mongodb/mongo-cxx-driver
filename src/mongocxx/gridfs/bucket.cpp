@@ -23,7 +23,7 @@
 #include <mongocxx/database.hpp>
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/gridfs_exception.hpp>
-#include <mongocxx/exception/logic_error.hpp>
+#include <mongocxx/exception/exception.hpp>
 #include <mongocxx/gridfs/bucket.hpp>
 #include <mongocxx/gridfs/private/bucket.hh>
 #include <mongocxx/options/delete.hpp>

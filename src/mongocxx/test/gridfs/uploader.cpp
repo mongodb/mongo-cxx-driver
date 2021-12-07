@@ -15,7 +15,7 @@
 #include <cstdint>
 
 #include <bsoncxx/test_util/catch.hh>
-#include <mongocxx/exception/logic_error.hpp>
+#include <mongocxx/exception/exception.hpp>
 #include <mongocxx/gridfs/uploader.hpp>
 
 namespace {

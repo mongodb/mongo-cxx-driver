@@ -16,7 +16,7 @@
 
 #include <bsoncxx/stdx/string_view.hpp>
 #include <mongocxx/exception/error_code.hpp>
-#include <mongocxx/exception/logic_error.hpp>
+#include <mongocxx/exception/exception.hpp>
 #include <mongocxx/options/server_api.hpp>
 #include <mongocxx/private/libmongoc.hh>
 #include <mongocxx/stdx.hpp>

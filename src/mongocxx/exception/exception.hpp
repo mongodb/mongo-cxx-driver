@@ -18,57 +18,63 @@
 #include <cstdint>
 #include <system_error>
 
+namespace mongocxx { inline namespace v_noabi {
+
 // This is what the user maintains:
-#define MY_ERRORS                                                                       \
- X(my_bad,                      "comment about what I did")                             \
- X(my_also_bad,                 "a comment about what else happened")                   \
- X(merely_unfortunate,          "all of them victims... all of them martyrs")           \
- X(invalid_parameter,           "that parameter may not walk again")
+#define MONGOCXX_ERRORS                                                                       	\
+ MONGOCXX_X(logic_error,		"logic_error")						\
+ MONGOCXX_X(invalid_parameter,          "that parameter may not walk again")
 // end x-macro table 
 
+}} // namespace mongocxx::inline v_noabi
+
 /******************************************************************* implementation details: */
+namespace mongocxx { inline namespace v_noabi { 
+
 // Generate the error_code table:
-#define X(my_field_enum_label, my__) my_field_enum_label,
-enum struct my_error_codes : std::int32_t
+#define MONGOCXX_X(mongocxx_field_enum_label, mongocxx__) mongocxx_field_enum_label,
+enum struct Zerror_code : std::int32_t
 {
  INITIAL_ENTRY__ = 0,
  //////////////////////
- MY_ERRORS
+ MONGOCXX_ERRORS
  //////////////////////
  MAX_ENTRY__
 };
-#undef X
+#undef MONGOCXX_X
 
 /* JFW: C++11 doesn't have "constinit inline"; may want to use a singleton function: */
-#define X(my__, my_field_error_msg) my_field_error_msg,
-static const char* const my_error_code_msgs[] =
+#define MONGOCXX_X(mongocxx__, field_error_msg) field_error_msg,
+static const char* const Zerror_code_msgs[] =
 {
  "__invalid_entry__",
- MY_ERRORS
+ MONGOCXX_ERRORS
 };
-#undef X
+#undef MONGOCXX_X
+
+}} // namespace mongocxx::inline v_noabi
 
 /**** END implementation details, back to our regularly scheduled program! */
 
 struct my_error_category final : std::error_category
 {
- const char *name() const noexcept override { return "my_company"; }
+ const char *name() const noexcept override { return "mongocxx"; }
 
  std::string message(int code) const noexcept override;
 };
 
 inline std::string my_error_category::message(int ec) const noexcept
 {
- if(static_cast<int>(my_error_codes::INITIAL_ENTRY__) >= ec
-    || ec >= static_cast<int>(my_error_codes::MAX_ENTRY__))
+ if(static_cast<int>(mongocxx::v_noabi::Zerror_code::INITIAL_ENTRY__) >= ec
+    || ec >= static_cast<int>(mongocxx::v_noabi::Zerror_code::MAX_ENTRY__))
   return "invalid value";
 
- return my_error_code_msgs[ec];
+ return mongocxx::Zerror_code_msgs[ec];
 }
 
 const std::error_category& error_category();
 
-inline std::error_code make_error_code(my_error_codes error) {
+inline std::error_code make_error_code(mongocxx::Zerror_code error) {
     return {static_cast<int>(error), error_category()};
 }
 
@@ -79,7 +85,7 @@ inline const std::error_category& error_category() {
 
 namespace std {
 template <>
-struct is_error_code_enum<my_error_codes> : public true_type {};
+struct is_error_code_enum<mongocxx::Zerror_code> : public true_type {};
 }  // namespace std
 
 /******************************************************************/
@@ -90,27 +96,51 @@ class exception : public std::system_error {
     using system_error::system_error;
 };
 
-}} // namespace mongocxx::inline namespace v_noabi
+/* JFW: generalized mongocxx exception with both an error code and a customizable
+message-- for rubber-stamping out new error types: */
+
+namespace detail {
 
 template <std::int32_t errc>
-struct my_logic_error : mongocxx::exception
+struct general_error : mongocxx::exception
 {
- my_logic_error(const std::string& what)
-  : mongocxx::exception(static_cast<my_error_codes>(errc), what)
+ general_error(const std::string& what)
+  : mongocxx::exception(static_cast<mongocxx::Zerror_code>(errc), what)
  {}
 
- my_logic_error(const char *what)
-  : mongocxx::exception(static_cast<my_error_codes>(errc), what)
+ general_error(const char *what)
+  : mongocxx::exception(static_cast<mongocxx::Zerror_code>(errc), what)
  {}
+
+/* JFW: note: we should entirely deprecate these-- in the meantime, they're useful for tracking what
+we have during development: */
+ general_error()
+  : mongocxx::exception(static_cast<mongocxx::Zerror_code>(errc), "error")
+ {}
+
+ general_error(const mongocxx::Zerror_code errc_, const char *what) : mongocxx::exception(static_cast<mongocxx::Zerror_code>(errc_), what)
+ {}
+
 };
 
-#define X_REPASTE(field_name) field_name
-#define X(my_field_enum_label, my__) using exception_ ## my_field_enum_label = my_logic_error<static_cast<std::int32_t>( my_error_codes::X_REPASTE(my_field_enum_label))>; 
-MY_ERRORS
-#undef X
-#undef X_REPASTE
+} // namespace detail
 
-#undef MY_ERRORS
+}} // namespace mongocxx::inline namespace v_noabi
+
+namespace mongocxx { namespace v_noabi { 
+
+//JFW: using logic_error = mongocxx::v_noabi::detail::general_error<(int32_t)mongocxx::v_noabi::Zerror_code::logic_error>;
+
+#define MONGOCXX_X_REPASTE(field_name) field_name
+
+#define MONGOCXX_X(mongocxx_field_enum_label, my__) using MONGOCXX_X_REPASTE(mongocxx_field_enum_label) = mongocxx::v_noabi::detail::general_error<static_cast<std::int32_t>( mongocxx::v_noabi::Zerror_code::MONGOCXX_X_REPASTE(mongocxx_field_enum_label))>; 
+MONGOCXX_ERRORS
+#undef MONGOCXX_X
+#undef MONGOCXX_X_REPASTE
+
+#undef MONGOCXX_ERRORS
+
+}} // JFW
 
 /*********************************************************************/
 

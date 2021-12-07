@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <mongocxx/exception/logic_error.hpp>
+#include <mongocxx/exception/exception.hpp>
 #include <mongocxx/options/apm.hpp>
 #include <mongocxx/private/libmongoc.hh>
 

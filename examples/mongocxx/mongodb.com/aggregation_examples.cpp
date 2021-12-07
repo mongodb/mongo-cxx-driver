@@ -23,7 +23,7 @@
 #include <bsoncxx/string/to_string.hpp>
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/exception.hpp>
-#include <mongocxx/exception/logic_error.hpp>
+#include <mongocxx/exception/exception.hpp>
 #include <mongocxx/instance.hpp>
 
 // NOTE: Any time this file is modified, a DOCS ticket should be opened to sync the changes with the

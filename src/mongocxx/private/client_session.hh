@@ -20,7 +20,7 @@
 #include <bsoncxx/private/libbson.hh>
 #include <mongocxx/client_session.hpp>
 #include <mongocxx/exception/error_code.hpp>
-#include <mongocxx/exception/logic_error.hpp>
+#include <mongocxx/exception/exception.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/exception/private/mongoc_error.hh>
 #include <mongocxx/options/private/transaction.hh>

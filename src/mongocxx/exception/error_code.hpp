@@ -124,3 +124,4 @@ namespace std {
 template <>
 struct is_error_code_enum<mongocxx::error_code> : public true_type {};
 }  // namespace std
+

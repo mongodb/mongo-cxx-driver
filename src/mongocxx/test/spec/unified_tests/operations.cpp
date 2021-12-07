@@ -22,7 +22,7 @@
 #include <bsoncxx/string/to_string.hpp>
 #include <bsoncxx/types/bson_value/value.hpp>
 #include <mongocxx/collection.hpp>
-#include <mongocxx/exception/logic_error.hpp>
+#include <mongocxx/exception/exception.hpp>
 #include <mongocxx/test/spec/monitoring.hh>
 
 namespace mongocxx {
