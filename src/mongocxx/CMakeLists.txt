@@ -113,7 +113,6 @@ set(mongocxx_sources
     events/topology_description.cpp
     events/topology_opening_event.cpp
     exception/operation_exception.cpp
-    exception/server_error_code.cpp
     gridfs/bucket.cpp
     gridfs/downloader.cpp
     gridfs/uploader.cpp
