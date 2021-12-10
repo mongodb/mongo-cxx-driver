@@ -22,21 +22,14 @@
 
 #include <mongocxx/config/private/prelude.hh>
 
-namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
+namespace mongocxx { namespace v_noabi {
 
+/*JFW:
 operation_exception::operation_exception(std::error_code ec,
                                          bsoncxx::document::value&& raw_server_error,
                                          std::string what_arg)
-    : exception(ec, what_arg), _raw_server_error{std::move(raw_server_error)} {}
-
-const stdx::optional<bsoncxx::document::value>& operation_exception::raw_server_error() const {
-    return _raw_server_error;
-}
-
-stdx::optional<bsoncxx::document::value>& operation_exception::raw_server_error() {
-    return _raw_server_error;
-}
+    : exception(ec, what_arg), _raw_server_error{std::move(raw_server_error)} 
+{}
 
 bool operation_exception::has_error_label(stdx::string_view label) const {
     if (!_raw_server_error) {
@@ -47,6 +40,6 @@ bool operation_exception::has_error_label(stdx::string_view label) const {
     std::string label_str{label.data(), label.size()};
     return libmongoc::error_has_label(error.bson(), label_str.c_str());
 }
+*/
 
-MONGOCXX_INLINE_NAMESPACE_END
-}  // namespace mongocxx
+}}  // namespace mongocxx::inline v_noabi

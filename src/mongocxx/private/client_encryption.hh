@@ -21,7 +21,6 @@
 #include <bsoncxx/types/private/convert.hh>
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
-#include <mongocxx/exception/private/mongoc_error.hh>
 #include <mongocxx/options/client_encryption.hpp>
 #include <mongocxx/private/client.hh>
 #include <mongocxx/private/libbson.hh>
@@ -46,7 +45,7 @@ class client_encryption::impl {
         libmongoc::client_encryption_opts_destroy(encryption_opts);
 
         if (_client_encryption_t == nullptr) {
-            throw_exception<operation_exception>(error);
+	    throw operation_exception(error);
         }
     }
 
@@ -69,7 +68,7 @@ class client_encryption::impl {
         if (!libmongoc::client_encryption_create_datakey(
                 _client_encryption_t, kms_provider.c_str(), datakey_opts, &keyid, &error)) {
             cleanup();
-            throw_exception<operation_exception>(error);
+	    throw operation_exception(error);
         }
 
         bsoncxx::types::bson_value::value out =
@@ -104,7 +103,7 @@ class client_encryption::impl {
 
         if (!r) {
             cleanup();
-            throw_exception<operation_exception>(error);
+	    throw operation_exception(error);
         }
 
         auto encrypted = bsoncxx::types::bson_value::make_owning_bson(&ciphertext);
@@ -132,7 +131,7 @@ class client_encryption::impl {
 
         if (!r) {
             cleanup();
-            throw_exception<operation_exception>(error);
+            throw operation_exception(error);
         }
 
         auto decrypted = bsoncxx::types::bson_value::make_owning_bson(&decrypted_value);

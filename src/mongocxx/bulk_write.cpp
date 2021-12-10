@@ -17,9 +17,8 @@
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <mongocxx/bulk_write.hpp>
 #include <mongocxx/collection.hpp>
-#include <mongocxx/exception/bulk_write_exception.hpp>
+#include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/exception/exception.hpp>
-#include <mongocxx/exception/private/mongoc_error.hh>
 #include <mongocxx/private/bulk_write.hh>
 #include <mongocxx/private/client_session.hh>
 #include <mongocxx/private/collection.hh>
@@ -48,28 +47,7 @@ bulk_write& bulk_write::append(const model::write& operation) {
             auto result = libmongoc::bulk_operation_insert_with_opts(
                 _impl->operation_t, doc.bson(), nullptr, &error);
             if (!result) {
-//JFW: TODO: DNM if this is unresolved(!):
-// has this been mapping a bson_error_t into the mongocxx error codes??
-// throw_exception<logic_error>(error);
-// ...we may need a new type, and to be sure there's no bsoncxx::logic_error...
-// has this /ever/ been checked?
-/* This currently comes out of the C API:
-typedef struct _bson_error_t {
-   uint32_t domain;
-   uint32_t code;
-   char message[BSON_ERROR_BUFFER_SIZE];
-} bson_error_t BSON_ALIGNED_END (8);
-
-Ok, the answer is that this is a case where throw_exception has a magical overload:
-template <typename exception_type>
-void throw_exception(const ::bson_error_t& error) {
-    throw exception_type{make_error_code(error), error.message};
-}
-JFW: this requires further care in a another pass to fully unwind what these overloads do... we don't handle
-the right internal conversions yet:
-*/
-#pragma warn "JFW DO NOT MERGE THIS CODE"
-throw;
+              throw mongocxx::operation_exception(error);
             }
             break;
         }
@@ -97,10 +75,7 @@ throw;
             auto result = libmongoc::bulk_operation_update_one_with_opts(
                 _impl->operation_t, filter.bson(), update.bson(), options.bson(), &error);
             if (!result) {
-/* JFW: DNM: same situation as above:
-                throw_exception<logic_error>(error); */
-#pragma warn "JFW DO NOT MERGE THIS CODE"
-throw;
+		throw bulk_write_exception(error);
             }
             break;
         }
@@ -128,10 +103,7 @@ throw;
             auto result = libmongoc::bulk_operation_update_many_with_opts(
                 _impl->operation_t, filter.bson(), update.bson(), options.bson(), &error);
             if (!result) {
-/* JFW: DNM: same situation as above:
-                throw_exception<logic_error>(error); */
-#pragma warn "JFW DO NOT MERGE THIS CODE"
-throw;
+		throw bulk_write_exception(error);
             }
             break;
         }
@@ -151,10 +123,7 @@ throw;
             auto result = libmongoc::bulk_operation_remove_one_with_opts(
                 _impl->operation_t, filter.bson(), options.bson(), &error);
             if (!result) {
-/* JFW: DNM: same situation as above:
-                throw_exception<logic_error>(error); */
-#pragma warn "JFW DO NOT MERGE THIS CODE"
-throw;
+		throw bulk_write_exception(error);
             }
             break;
         }
@@ -174,10 +143,7 @@ throw;
             auto result = libmongoc::bulk_operation_remove_many_with_opts(
                 _impl->operation_t, filter.bson(), options.bson(), &error);
             if (!result) {
-/* JFW: DNM: same situation as above:
-                throw_exception<logic_error>(error); */
-#pragma warn "JFW DO NOT MERGE THIS CODE"
-throw;
+		throw bulk_write_exception(error);
             }
             break;
         }
@@ -201,10 +167,7 @@ throw;
             auto result = libmongoc::bulk_operation_replace_one_with_opts(
                 _impl->operation_t, filter.bson(), replace.bson(), options.bson(), &error);
             if (!result) {
-/* JFW: DNM: same situation as above:
-                throw_exception<logic_error>(error); */
-#pragma warn "JFW DO NOT MERGE THIS CODE"
-throw;
+		throw bulk_write_exception(error);
             }
             break;
         }
@@ -219,7 +182,7 @@ stdx::optional<result::bulk_write> bulk_write::execute() const {
     bson_error_t error;
 
     if (!libmongoc::bulk_operation_execute(b, reply.bson_for_init(), &error)) {
-        throw_exception<bulk_write_exception>(reply.steal(), error);
+        throw mongocxx::bulk_write_exception(error, reply.steal());
     }
 
     // Reply is empty for unacknowledged writes, so return disengaged optional.

@@ -20,7 +20,10 @@
 
 namespace mongocxx { inline namespace v_noabi {
 
-// This is what the user maintains for any general (i.e. non-customized) exceptions:
+/* This is what the user maintains for any general (i.e. non-customized) exceptions:
+Note that the order of appearance determines the error code; you should add new errors to the
+end.
+*/
 #define MONGOCXX_ERRORS \
  MONGOCXX_X(logic_error,		"logic_error")						\
  MONGOCXX_X(invalid_client_object, 	"invalid use of default constructed or moved-from mongocxx::client object") 	\
@@ -78,23 +81,22 @@ struct error_category final : std::error_category
 {
  const char *name() const noexcept override { return "mongocxx"; }
 
- std::string message(int code) const noexcept override;
+ std::string message(int ec) const noexcept override
+  {
+	if(static_cast<int>(mongocxx::v_noabi::error_code::INITIAL_ENTRY__) >= ec
+	    || ec >= static_cast<int>(mongocxx::v_noabi::error_code::MAX_ENTRY__))
+	 return "invalid value";
+	
+	return mongocxx::error_code_msgs[ec];
+  }
 };
-
-inline std::string error_category::message(int ec) const noexcept
-{
- if(static_cast<int>(mongocxx::v_noabi::error_code::INITIAL_ENTRY__) >= ec
-    || ec >= static_cast<int>(mongocxx::v_noabi::error_code::MAX_ENTRY__))
-  return "invalid value";
-
- return mongocxx::error_code_msgs[ec];
-}
 
 inline const std::error_category& error_category() {
     static const struct error_category category {};
     return category;
 }
 
+// The names can be confusing, but this is "our" error_code to std::error_code:
 inline std::error_code make_error_code(mongocxx::v_noabi::error_code error) {
     return {static_cast<int>(error), error_category()};
 }
@@ -121,28 +123,33 @@ that's automatic:
 */
 namespace detail {
 
+/* A base for most mongocxx exceptions, specifically those which map to a mongocxx::system_error (as
+distinct from bsoncxx::system_error, for instance).
+
+	Not meant to be instanced directly.
+*/
 template <std::int32_t err_code>
-struct general_error : mongocxx::exception
+struct mongocxx_general_error : mongocxx::exception
 {
  std::int32_t error_code; // JFW: TODO: system_error<> already contains an ec, make this go away :>
 
- general_error()
+ mongocxx_general_error()
   : error_code{err_code},
     mongocxx::exception(static_cast<mongocxx::v_noabi::error_code>(err_code), "error")
  {}
 
- general_error(const std::string& what)
+ mongocxx_general_error(const std::string& what)
   : error_code{err_code},
     mongocxx::exception(static_cast<mongocxx::v_noabi::error_code>(err_code), what)
  {}
 
- general_error(const char *what)
+ mongocxx_general_error(const char *what)
   : error_code{err_code},
     mongocxx::exception(static_cast<mongocxx::v_noabi::error_code>(err_code), what)
  {}
 
  // JFW: TODO: we do NOT want to keep this around: it's to facilitate tracking down mongocxx::throw_exception<>: 
- general_error(const std::int32_t err_c, const char *what)
+ mongocxx_general_error(const std::int32_t err_c, const char *what)
   : error_code { err_c },
     mongocxx::exception(static_cast<mongocxx::v_noabi::error_code>(err_c), what)
  {}
@@ -157,14 +164,14 @@ struct general_error : mongocxx::exception
 any special behavior or rules, it should be put in the table above and then generated here: 
 
 What we generate looks ABOUT like:
-using logic_error = mongocxx::v_noabi::detail::general_error<(int32_t)mongocxx::v_noabi::error_code::logic_error>;
+using logic_error = mongocxx::v_noabi::detail::mongocxx_general_error<(int32_t)mongocxx::v_noabi::error_code::logic_error>;
 
 */
 namespace mongocxx { namespace v_noabi { 
 
 #define MONGOCXX_X_REPASTE(field_name) field_name
 
-#define MONGOCXX_X(mongocxx_field_enum_label, my__) using MONGOCXX_X_REPASTE(mongocxx_field_enum_label) = mongocxx::v_noabi::detail::general_error<static_cast<std::int32_t>( mongocxx::v_noabi::error_code::MONGOCXX_X_REPASTE(mongocxx_field_enum_label))>; 
+#define MONGOCXX_X(mongocxx_field_enum_label, mongocxx__) using MONGOCXX_X_REPASTE(mongocxx_field_enum_label) = mongocxx::v_noabi::detail::mongocxx_general_error<static_cast<std::int32_t>( mongocxx::v_noabi::error_code::MONGOCXX_X_REPASTE(mongocxx_field_enum_label))>; 
 MONGOCXX_ERRORS
 #undef MONGOCXX_X
 #undef MONGOCXX_X_REPASTE

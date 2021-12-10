@@ -27,7 +27,6 @@
 #include <bsoncxx/string/to_string.hpp>
 #include <bsoncxx/test_util/catch.hh>
 #include <bsoncxx/types/bson_value/value.hpp>
-#include <mongocxx/exception/bulk_write_exception.hpp>
 #include <mongocxx/exception/exception.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/instance.hpp>

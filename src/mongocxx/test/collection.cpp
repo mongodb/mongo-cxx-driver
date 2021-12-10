@@ -24,11 +24,8 @@
 #include <bsoncxx/types.hpp>
 #include <mongocxx/client.hpp>
 #include <mongocxx/collection.hpp>
-#include <mongocxx/exception/bulk_write_exception.hpp>
 #include <mongocxx/exception/exception.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
-#include <mongocxx/exception/query_exception.hpp>
-#include <mongocxx/exception/write_exception.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/pipeline.hpp>
 #include <mongocxx/private/libbson.hh>

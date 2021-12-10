@@ -17,7 +17,6 @@
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/exception.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
-#include <mongocxx/exception/private/mongoc_error.hh>
 #include <mongocxx/options/auto_encryption.hpp>
 #include <mongocxx/options/private/apm.hh>
 #include <mongocxx/options/private/server_api.hh>
@@ -105,7 +104,7 @@ client::client(const class uri& uri, const options::client& options) {
         libmongoc::auto_encryption_opts_destroy(mongoc_auto_encrypt_opts);
 
         if (!r) {
-            throw_exception<operation_exception>(error);
+	    throw operation_exception(error);
         }
     }
 
@@ -118,7 +117,7 @@ client::client(const class uri& uri, const options::client& options) {
             _get_impl().client_t, mongoc_server_api_opts.get(), &error);
 
         if (!result) {
-            throw_exception<operation_exception>(error);
+	    throw operation_exception(error);
         }
     }
 
@@ -224,7 +223,7 @@ std::vector<std::string> client::list_database_names(
         _get_impl().client_t, options_bson.bson(), &error));
 
     if (!names) {
-        throw_exception<operation_exception>(error);
+	throw operation_exception(error);
     }
 
     std::vector<std::string> _names;

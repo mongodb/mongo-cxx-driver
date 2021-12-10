@@ -34,9 +34,6 @@
 #include <mongocxx/collection.hpp>
 #include <mongocxx/exception/exception.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
-#include <mongocxx/exception/private/mongoc_error.hh>
-#include <mongocxx/exception/query_exception.hpp>
-#include <mongocxx/exception/write_exception.hpp>
 #include <mongocxx/hint.hpp>
 #include <mongocxx/model/write.hpp>
 #include <mongocxx/private/bulk_write.hh>
@@ -170,9 +167,9 @@ mongocxx::stdx::optional<bsoncxx::document::value> find_and_modify(
 
     if (!result) {
         if (!reply.view().empty()) {
-            mongocxx::throw_exception<mongocxx::write_exception>(reply.steal(), error);
+            throw mongocxx::write_exception(error, reply.steal());
         }
-        mongocxx::throw_exception<mongocxx::write_exception>(error);
+        throw mongocxx::write_exception(error);
     }
 
     bsoncxx::document::view reply_view = reply.view();
@@ -229,7 +226,7 @@ void collection::_rename(const client_session* session,
                                                          &error);
 
     if (!result) {
-        throw_exception<operation_exception>(error);
+        throw operation_exception(error);
     }
 }
 
@@ -1011,7 +1008,7 @@ std::int64_t collection::_count_documents(const client_session* session,
                                                         reply.bson_for_init(),
                                                         &error);
     if (result < 0) {
-        throw_exception<query_exception>(reply.steal(), error);
+        throw query_exception(error, reply.steal());
     }
     return result;
 }
@@ -1047,7 +1044,7 @@ std::int64_t collection::estimated_document_count(
     auto result = libmongoc::collection_estimated_document_count(
         _get_impl().collection_t, opts_bson.bson(), read_prefs, reply.bson_for_init(), &error);
     if (result < 0) {
-        throw_exception<query_exception>(reply.steal(), error);
+        throw query_exception(error, reply.steal());
     }
     return result;
 }
@@ -1128,7 +1125,7 @@ cursor collection::_distinct(const client_session* session,
                                                                &error);
 
     if (!result) {
-        throw_exception<operation_exception>(reply.steal(), error);
+        throw operation_exception(error, reply.steal());
     }
 
     //
@@ -1156,9 +1153,9 @@ cursor collection::_distinct(const client_session* session,
         if (error_document) {
             bsoncxx::document::value error_doc{
                 bsoncxx::document::view{bson_get_data(error_document), error_document->len}};
-            throw_exception<query_exception>(error_doc, error);
+            throw query_exception(error, std::move(error_doc));
         } else {
-            throw_exception<query_exception>(error);
+            throw query_exception(error);
         }
     }
 
@@ -1212,7 +1209,7 @@ void collection::_drop(const client_session* session,
     // for old server versions (3.0 and earlier) that do not send a code with the command response.
     if (!result && !(error.code == ::MONGOC_ERROR_COLLECTION_DOES_NOT_EXIST ||
                      stdx::string_view{error.message} == stdx::string_view{"ns not found"})) {
-        throw_exception<operation_exception>(error);
+        throw operation_exception(error);
     }
 }
 

@@ -18,7 +18,6 @@
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/exception.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
-#include <mongocxx/exception/private/mongoc_error.hh>
 #include <mongocxx/options/private/apm.hh>
 #include <mongocxx/options/private/server_api.hh>
 #include <mongocxx/options/private/ssl.hh>
@@ -69,7 +68,7 @@ pool::pool(const uri& uri, const options::pool& options)
         libmongoc::auto_encryption_opts_destroy(mongoc_auto_encrypt_opts);
 
         if (!r) {
-            throw_exception<operation_exception>(error);
+            throw operation_exception(error);
         }
     }
 
@@ -91,7 +90,7 @@ pool::pool(const uri& uri, const options::pool& options)
             _impl->client_pool_t, mongoc_server_api_opts.get(), &error);
 
         if (!result) {
-            throw_exception<operation_exception>(error);
+            throw operation_exception(error);
         }
     }
 }

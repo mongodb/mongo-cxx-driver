@@ -307,7 +307,6 @@ set_local_dist (src_mongocxx_DIST_local
    exception/gridfs_exception.hpp
    exception/operation_exception.cpp
    exception/operation_exception.hpp
-   exception/private/mongoc_error.hh
    exception/query_exception.hpp
    exception/server_error_code.cpp
    exception/server_error_code.hpp

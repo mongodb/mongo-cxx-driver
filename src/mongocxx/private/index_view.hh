@@ -23,7 +23,6 @@
 #include <bsoncxx/types/bson_value/view.hpp>
 #include <mongocxx/exception/exception.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
-#include <mongocxx/exception/write_exception.hpp>
 #include <mongocxx/options/index_view.hpp>
 #include <mongocxx/private/client_session.hh>
 #include <mongocxx/private/libbson.hh>
@@ -139,7 +138,7 @@ class index_view::impl {
             auto server_description = scoped_server_description(libmongoc::client_select_server(
                 _client, true /* for_writes */, nullptr /* read_prefs */, &error));
             if (!server_description.sd)
-                throw_exception<write_exception>(error);
+		throw write_exception(error);
 
             auto is_master = libmongoc::server_description_hello_response(server_description.sd);
 
@@ -160,7 +159,7 @@ class index_view::impl {
             _coll, command_bson.bson(), opts_bson.bson(), reply.bson_for_init(), &error);
 
         if (!result) {
-            throw_exception<operation_exception>(reply.steal(), error);
+            throw operation_exception(error, reply.steal());
         }
 
         return reply.steal();
@@ -199,7 +198,7 @@ class index_view::impl {
             _coll, command_bson.bson(), opts_bson.bson(), reply.bson_for_init(), &error);
 
         if (!result) {
-            throw_exception<operation_exception>(reply.steal(), error);
+	    throw operation_exception(error, reply.steal());
         }
     }
 
@@ -233,7 +232,7 @@ class index_view::impl {
             _coll, command_bson.bson(), opts_bson.bson(), reply.bson_for_init(), &error);
 
         if (!result) {
-            throw_exception<operation_exception>(reply.steal(), error);
+	    throw operation_exception(error, reply.steal());
         }
     }
 

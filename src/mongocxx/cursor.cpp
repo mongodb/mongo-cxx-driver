@@ -15,8 +15,7 @@
 #include <bsoncxx/private/libbson.hh>
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <mongocxx/cursor.hpp>
-#include <mongocxx/exception/private/mongoc_error.hh>
-#include <mongocxx/exception/query_exception.hpp>
+#include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/private/cursor.hh>
 #include <mongocxx/private/libmongoc.hh>
 
@@ -50,9 +49,9 @@ cursor::iterator& cursor::iterator::operator++() {
         if (error_document) {
             bsoncxx::document::value error_doc{
                 bsoncxx::document::view{bson_get_data(error_document), error_document->len}};
-            throw_exception<query_exception>(error_doc, error);
+            throw query_exception(error, std::move(error_doc));
         } else {
-            throw_exception<query_exception>(error);
+            throw query_exception(error);
         }
     } else {
         _cursor->_impl->mark_nothing_left();

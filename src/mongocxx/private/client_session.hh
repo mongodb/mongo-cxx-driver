@@ -21,7 +21,6 @@
 #include <mongocxx/client_session.hpp>
 #include <mongocxx/exception/exception.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
-#include <mongocxx/exception/private/mongoc_error.hh>
 #include <mongocxx/options/private/transaction.hh>
 #include <mongocxx/private/client.hh>
 #include <mongocxx/private/libbson.hh>
@@ -52,16 +51,15 @@ bool with_transaction_cpp_cb(mongoc_client_session_t*,
     try {
         cb_ctx->cb(cb_ctx->parent);
         return true;
-    } catch (const operation_exception& e) {
-        make_bson_error(error, e);
+    } catch (const mongocxx::operation_exception& e) {
+        mongocxx::operation_exception::make_bson_error(error, e);
         if (e.raw_server_error()) {
             libbson::scoped_bson_t raw{e.raw_server_error()->view()};
             *reply = bson_copy(raw.bson());
         }
         return false;
     } catch (...) {
-        cb_ctx->eptr = std::current_exception();
-        make_generic_bson_error(error);
+        mongocxx::bson_util::make_unknown_bson_error(error);
         return false;
     }
 }
@@ -157,7 +155,7 @@ class client_session::impl {
 
         if (!libmongoc::client_session_start_transaction(
                 _session_t.get(), transaction_opt_t, &error)) {
-            throw_exception<operation_exception>(error);
+            throw mongocxx::operation_exception(error);
         }
     }
 
@@ -166,14 +164,14 @@ class client_session::impl {
         bson_error_t error;
         if (!libmongoc::client_session_commit_transaction(
                 _session_t.get(), reply.bson_for_init(), &error)) {
-            throw_exception<operation_exception>(reply.steal(), error);
+            throw mongocxx::operation_exception { error, reply.steal() };
         }
     }
 
     void abort_transaction() {
         bson_error_t error;
         if (!libmongoc::client_session_abort_transaction(_session_t.get(), &error)) {
-            throw_exception<operation_exception>(error);
+            throw mongocxx::operation_exception(error);
         }
     }
 
@@ -196,7 +194,7 @@ class client_session::impl {
                 std::rethrow_exception(ctx.eptr);
             }
 
-            throw_exception<operation_exception>(reply.steal(), error);
+            throw operation_exception(error, reply.steal());
         }
     }
 

@@ -17,8 +17,7 @@
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <mongocxx/change_stream.hpp>
-#include <mongocxx/exception/private/mongoc_error.hh>
-#include <mongocxx/exception/query_exception.hpp>
+#include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/libmongoc.hh>
 
@@ -92,7 +91,7 @@ class change_stream::impl {
             this->doc_ = bsoncxx::document::view{};
             mongocxx::libbson::scoped_bson_t scoped_error_reply{};
             bson_copy_to(out, scoped_error_reply.bson_for_init());
-            throw_exception<query_exception>(scoped_error_reply.steal(), error);
+            throw mongocxx::query_exception(error, scoped_error_reply.steal());
         }
 
         // Just nothing left.

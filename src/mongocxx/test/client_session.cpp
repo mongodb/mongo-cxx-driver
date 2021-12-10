@@ -19,9 +19,8 @@
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/test_util/catch.hh>
 #include <mongocxx/client.hpp>
-#include <mongocxx/exception/bulk_write_exception.hpp>
 #include <mongocxx/exception/exception.hpp>
-#include <mongocxx/exception/server_error_code.hpp>
+#include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/private/libmongoc.hh>
 #include <mongocxx/test_util/client_helpers.hh>

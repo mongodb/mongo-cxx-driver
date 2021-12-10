@@ -23,7 +23,6 @@
 #include <mongocxx/database.hpp>
 #include <mongocxx/exception/exception.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
-#include <mongocxx/exception/private/mongoc_error.hh>
 #include <mongocxx/private/client.hh>
 #include <mongocxx/private/client_session.hh>
 #include <mongocxx/private/database.hh>
@@ -180,7 +179,7 @@ std::vector<std::string> database::_list_collection_names(const client_session* 
         _get_impl().database_t, options_bson.bson(), &error));
 
     if (!names) {
-        throw_exception<operation_exception>(error);
+        throw operation_exception(error);
     }
 
     std::vector<std::string> _names;
@@ -225,7 +224,7 @@ bsoncxx::document::value database::_run_command(const client_session* session,
                                                         &error);
 
     if (!result) {
-        throw_exception<operation_exception>(reply_bson.steal(), error);
+	throw operation_exception(error, reply_bson.steal());
     }
 
     return reply_bson.steal();
@@ -256,7 +255,7 @@ bsoncxx::document::value database::run_command(bsoncxx::document::view_or_value 
                                                         &error);
 
     if (!result) {
-        throw_exception<operation_exception>(reply_bson.steal(), error);
+        throw operation_exception(error, reply_bson.steal());
     }
 
     return reply_bson.steal();
@@ -285,7 +284,7 @@ collection database::_create_collection(const client_session* session,
         _get_impl().database_t, bsoncxx::string::to_string(name).c_str(), opts_bson.bson(), &error);
 
     if (!result) {
-        throw_exception<operation_exception>(error);
+	throw operation_exception(error);
     }
 
     return mongocxx::collection(*this, result);
@@ -411,7 +410,7 @@ void database::_drop(const client_session* session,
     libbson::scoped_bson_t opts_bson{opts_doc.view()};
 
     if (!libmongoc::database_drop_with_opts(_get_impl().database_t, opts_bson.bson(), &error)) {
-        throw_exception<operation_exception>(error);
+	throw operation_exception(error);
     }
 }
 
@@ -442,7 +441,7 @@ bool database::has_collection(bsoncxx::string::view_or_value name) const {
     auto result = libmongoc::database_has_collection(
         _get_impl().database_t, name.terminated().data(), &error);
     if (error.domain != 0) {
-        throw_exception<operation_exception>(error);
+	throw operation_exception(error);
     }
 
     return result;
