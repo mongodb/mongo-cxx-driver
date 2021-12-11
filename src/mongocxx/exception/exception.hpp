@@ -131,7 +131,7 @@ distinct from bsoncxx::system_error, for instance).
 template <std::int32_t err_code>
 struct mongocxx_general_error : mongocxx::exception
 {
- std::int32_t error_code; // JFW: TODO: system_error<> already contains an ec, make this go away :>
+ std::int32_t error_code = 0; // JFW: TODO: system_error<> already contains an ec, make this go away :>
 
  mongocxx_general_error()
   : error_code{err_code},
