@@ -83,8 +83,8 @@ struct error_category final : std::error_category
 
  std::string message(int ec) const noexcept override
   {
-	if(static_cast<int>(mongocxx::v_noabi::error_code::INITIAL_ENTRY__) >= ec
-	    || ec >= static_cast<int>(mongocxx::v_noabi::error_code::MAX_ENTRY__))
+	if(static_cast<int>(mongocxx::error_code::INITIAL_ENTRY__) >= ec
+	    || ec >= static_cast<int>(mongocxx::error_code::MAX_ENTRY__))
 	 return "invalid value";
 	
 	return mongocxx::error_code_msgs[ec];
@@ -97,7 +97,7 @@ inline const std::error_category& error_category() {
 }
 
 // The names can be confusing, but this is "our" error_code to std::error_code:
-inline std::error_code make_error_code(mongocxx::v_noabi::error_code error) {
+inline std::error_code make_error_code(mongocxx::error_code error) {
     return {static_cast<int>(error), error_category()};
 }
 
@@ -154,7 +154,6 @@ struct mongocxx_general_error : mongocxx::exception
 };
 
 } // namespace detail
-
 }} // namespace mongocxx::inline namespace v_noabi
 
 /* This section is where "general" non-customized exceptions are "rubber-stamped" out. If you exception type doesn't need
@@ -164,7 +163,7 @@ What we generate looks ABOUT like:
 using logic_error = mongocxx::v_noabi::detail::mongocxx_general_error<(int32_t)mongocxx::v_noabi::error_code::logic_error>;
 
 */
-namespace mongocxx { namespace v_noabi { 
+namespace mongocxx { inline namespace v_noabi { 
 
 #define MONGOCXX_X_REPASTE(field_name) field_name
 
@@ -175,15 +174,15 @@ MONGOCXX_ERRORS
 
 #undef MONGOCXX_ERRORS
 
-}} // namespace mongocxx::v_noabi
+}} // namespace mongocxx::inline v_noabi
 
 /* This is where customized types that don't easily fit the stamped-out pattern go:
 Note that nothing prevents further generators from being added as-needed: */
-namespace mongocxx { namespace v_noabi {
+namespace mongocxx { inline namespace v_noabi {
 
 // Your special types go here!
 
-}} // namespace mongocxx
+}} // namespace mongocxx::inline v_noabi
 
 /*********************************************************************/
 
