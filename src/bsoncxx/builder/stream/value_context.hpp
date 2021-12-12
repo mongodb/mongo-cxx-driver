@@ -114,7 +114,7 @@ class value_context {
     ///
     operator single_context();
 
-#if !defined(_MSC_VER)
+#if !defined(_MSC_VER) && !defined(__INTEL_COMPILER)
     // TODO(MSVC): Causes an ICE under VS2015U1
     static_assert(
         std::is_same<value_context, decltype(std::declval<value_context>() << 1 << "str")>::value,
