@@ -19,7 +19,6 @@
 #include <mongocxx/exception/exception.hpp>
 #include <mongocxx/stdx.hpp>
 
-#include <bsoncxx/private/libbson.hh>
 #include <bsoncxx/string/to_string.hpp>
 
 #include <mongocxx/private/libbson.hh>
