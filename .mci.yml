@@ -355,11 +355,15 @@ functions:
                   export VERSIONED_API_TESTS_PATH=$(pwd)/../data/versioned-api
                   export MONGODB_API_VERSION="${MONGODB_API_VERSION}"
 
-                  # export environment variables for encryption tests
-                  set +o errexit
-                  export MONGOCXX_TEST_AWS_SECRET_ACCESS_KEY="${cse_aws_secret_access_key}"
-                  export MONGOCXX_TEST_AWS_ACCESS_KEY_ID="${cse_aws_access_key_id}"
-                  set -o errexit
+                  if [ "$(uname -m)" == "ppc64le" ]; then
+                      echo "Skipping CSFLE test setup (CDRIVER-4246/CXX-2423)"
+                  else
+                      # export environment variables for encryption tests
+                      set +o errexit
+                      export MONGOCXX_TEST_AWS_SECRET_ACCESS_KEY="${cse_aws_secret_access_key}"
+                      export MONGOCXX_TEST_AWS_ACCESS_KEY_ID="${cse_aws_access_key_id}"
+                      set -o errexit
+                  fi
 
                   # Clone drivers-evergreen-tools if not already present.
                   pushd ../../
@@ -373,61 +377,65 @@ functions:
                   fi
                   popd
 
-                  # Register CA certificate required by KMS TLS connections.
-                  echo "Registering CA certificate for KMS TLS tests..."
-                  register_ca_cert() {
-                      local OS=$(uname -s | tr '[:upper:]' '[:lower:]')
-                      echo "register_ca_cert: OS: $OS"
-                      case "$OS" in
-                          cygwin*)
-                              certutil.exe -addstore "Root" "$DRIVERS_TOOLS\.evergreen\x509gen\ca.pem"
-                              ;;
-                          darwin*)
-                              sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain $DRIVERS_TOOLS/.evergreen/x509gen/ca.pem
-                              ;;
-                          *)
-                              if [ -f /etc/redhat-release ]; then
-                                  # CSE KMS TLS tests are disabled on RHEL due to sudo permissions. See BUILD-14068.
-                                  # sudo cp -v $DRIVERS_TOOLS/.evergreen/x509gen/ca.pem /usr/share/pki/ca-trust-source/anchors/cdriver.crt
-                                  # sudo update-ca-trust extract --verbose
-                                  export MONGOCXX_TEST_SKIP_KMS_TLS_TESTS=1
+                  if [ "$(uname -m)" == "ppc64le" ]; then
+                      echo "Skipping CSFLE test setup (CDRIVER-4246/CXX-2423)"
+                  else
+                      # Register CA certificate required by KMS TLS connections.
+                      echo "Registering CA certificate for KMS TLS tests..."
+                      register_ca_cert() {
+                          local OS=$(uname -s | tr '[:upper:]' '[:lower:]')
+                          echo "register_ca_cert: OS: $OS"
+                          case "$OS" in
+                              cygwin*)
+                                  certutil.exe -addstore "Root" "$DRIVERS_TOOLS\.evergreen\x509gen\ca.pem"
+                                  ;;
+                              darwin*)
+                                  sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain $DRIVERS_TOOLS/.evergreen/x509gen/ca.pem
+                                  ;;
+                              *)
+                                  if [ -f /etc/redhat-release ]; then
+                                      # CSE KMS TLS tests are disabled on RHEL due to sudo permissions. See BUILD-14068.
+                                      # sudo cp -v $DRIVERS_TOOLS/.evergreen/x509gen/ca.pem /usr/share/pki/ca-trust-source/anchors/cdriver.crt
+                                      # sudo update-ca-trust extract --verbose
+                                      export MONGOCXX_TEST_SKIP_KMS_TLS_TESTS=1
+                                  else
+                                      sudo cp -v $DRIVERS_TOOLS/.evergreen/x509gen/ca.pem /usr/local/share/ca-certificates/cdriver.crt
+                                      sudo update-ca-certificates --verbose
+                                  fi
+                                  ;;
+                          esac
+                      }
+                      register_ca_cert
+                      echo "Registering CA certificate for KMS TLS tests... done."
+
+                      # Start mock KMS servers.
+                      echo "Starting mock KMS servers..."
+                      pushd $DRIVERS_TOOLS/.evergreen/csfle
+                      . ./activate_venv.sh
+                      python -u kms_http_server.py --ca_file ../x509gen/ca.pem --cert_file ../x509gen/expired.pem --port 8000 < /dev/null &
+                      python -u kms_http_server.py --ca_file ../x509gen/ca.pem --cert_file ../x509gen/wrong-host.pem --port 8001 < /dev/null &
+                      trap 'kill $(jobs -p)' EXIT HUP
+                      popd
+                      echo "Starting mock KMS servers... done."
+
+                      # Ensure mock KMS servers are running before starting tests.
+                      wait_for_kms_server() {
+                          for i in $(seq 60); do
+                              # Exit code 7: "Failed to connect to host".
+                              if curl -s "localhost:$1"; (($? != 7)); then
+                                  return 0
                               else
-                                  sudo cp -v $DRIVERS_TOOLS/.evergreen/x509gen/ca.pem /usr/local/share/ca-certificates/cdriver.crt
-                                  sudo update-ca-certificates --verbose
+                                  sleep 1
                               fi
-                              ;;
-                      esac
-                  }
-                  register_ca_cert
-                  echo "Registering CA certificate for KMS TLS tests... done."
-
-                  # Start mock KMS servers.
-                  echo "Starting mock KMS servers..."
-                  pushd $DRIVERS_TOOLS/.evergreen/csfle
-                  . ./activate_venv.sh
-                  python -u kms_http_server.py --ca_file ../x509gen/ca.pem --cert_file ../x509gen/expired.pem --port 8000 < /dev/null &
-                  python -u kms_http_server.py --ca_file ../x509gen/ca.pem --cert_file ../x509gen/wrong-host.pem --port 8001 < /dev/null &
-                  trap 'kill $(jobs -p)' EXIT HUP
-                  popd
-                  echo "Starting mock KMS servers... done."
-
-                  # Ensure mock KMS servers are running before starting tests.
-                  wait_for_kms_server() {
-                      for i in $(seq 60); do
-                          # Exit code 7: "Failed to connect to host".
-                          if curl -s "localhost:$1"; (($? != 7)); then
-                              return 0
-                          else
-                              sleep 1
-                          fi
-                      done
-                      echo "Could not detect mock KMS server on port $1"
-                      return 1
-                  }
-                  echo "Waiting for mock KMS servers to start..."
-                  wait_for_kms_server 8000
-                  wait_for_kms_server 8001
-                  echo "Waiting for mock KMS servers to start... done."
+                          done
+                          echo "Could not detect mock KMS server on port $1"
+                          return 1
+                      }
+                      echo "Waiting for mock KMS servers to start..."
+                      wait_for_kms_server 8000
+                      wait_for_kms_server 8001
+                      echo "Waiting for mock KMS servers to start... done."
+                  fi
 
                   if [ "Windows_NT" == "$OS" ]; then
                       CTEST_OUTPUT_ON_FAILURE=1 MSBuild.exe /p:Configuration=${build_type} RUN_TESTS.vcxproj
