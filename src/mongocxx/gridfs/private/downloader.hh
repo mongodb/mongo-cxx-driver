@@ -76,8 +76,7 @@ class downloader::impl {
     // A pointer to the current chunk being read.
     const uint8_t* chunk_buffer_ptr;
 
-    // An offset from which to start downloading the file. The quotient is the number of chunks to
-    // skip, the remainder is the number of bytes to skip in the first downloaded chunk.
+    // An offset from which to start downloading the file.
     const chunks_and_bytes_offset start;
 
     // A cursor iterating over the chunks documents being read. In the case of a zero-length file,
