@@ -136,6 +136,15 @@ class MONGOCXX_API downloader {
     //   The cursor to read the chunks of the file from. It must have a value if the length of the
     //   file is non-zero.
     //
+    // @param start
+    //   The offset from which to start reading the chunks of the file.
+    //
+    // @param chunk_size
+    //   The expected size of a chunk in bytes.
+    //
+    // @param file_len
+    //   The expected size of the file in bytes.
+    //
     // @param files_doc
     //   The files collection document of the file being downloaded.
     //
