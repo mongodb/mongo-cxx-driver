@@ -36,6 +36,7 @@ class downloader::impl {
           chunk_buffer_len{0},
           chunk_buffer_offset{0},
           chunk_buffer_ptr{nullptr},
+          start{start_param},
           chunks{chunks_param ? std::move(chunks_param) : stdx::nullopt},
           chunks_curr{chunks ? stdx::make_optional<cursor::iterator>(chunks->begin())
                              : stdx::nullopt},
@@ -44,8 +45,7 @@ class downloader::impl {
           chunk_size{chunk_size_param},
           closed{false},
           file_chunk_count{0},
-          file_len{file_len_param},
-          start{start_param} {
+          file_len{file_len_param} {
         if (chunk_size) {
             std::lldiv_t num_chunks_div = std::lldiv(file_len, chunk_size);
             if (num_chunks_div.rem) {
