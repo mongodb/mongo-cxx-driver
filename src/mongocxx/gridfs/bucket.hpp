@@ -16,7 +16,7 @@
 
 #include <istream>
 #include <memory>
-#include <optional>
+#include <bsoncxx/stdx/optional.hpp>
 #include <ostream>
 
 #include <bsoncxx/document/view_or_value.hpp>
