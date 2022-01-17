@@ -329,8 +329,8 @@ downloader bucket::_open_download_stream(const client_session* session,
                         "expected start to not be greater than the file length"};
         }
         auto start_offset_div = std::lldiv(*start, chunk_size);
-        start_offset.chunks_offset = start_offset_div.quot;
-        start_offset.bytes_offset = start_offset_div.rem;
+        start_offset.chunks_offset = static_cast<int32_t>(start_offset_div.quot);
+        start_offset.bytes_offset = static_cast<int32_t>(start_offset_div.rem);
         chunks_options.skip(start_offset.chunks_offset);
     }
 
@@ -340,7 +340,7 @@ downloader bucket::_open_download_stream(const client_session* session,
                         "expected end to not be greater than the file length"};
         }
         if (file_len >= 0 && *end < (std::size_t)file_len) {
-            const int32_t batch_size = 1 + ((*end - *start) / chunk_size);
+            const int32_t batch_size = static_cast<int32_t>(1 + ((*end - *start) / chunk_size));
             chunks_options.batch_size(batch_size);
         }
     }
