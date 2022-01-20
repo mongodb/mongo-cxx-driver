@@ -243,13 +243,13 @@ a `document::value` is passed in, it must be passed by r-value reference, so
 ownership of the document is transferred to the method.
 
 ```
-document::value ismaster = document{} << "ismaster" << 1 << finalize;
+document::value ping = document{} << "ping" << 1 << finalize;
 
 // You can pass a document::view into run_command()
-db.run_command(ismaster.view());
+db.run_command(ping.view());
 
 // Or you can move in a document::value
-db.run_command(std::move(ismaster));
+db.run_command(std::move(ping));
 ```
 
 You shouldn't need to create view_or_value types directly in order to use
