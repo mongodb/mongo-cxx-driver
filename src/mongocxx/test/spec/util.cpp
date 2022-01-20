@@ -54,7 +54,7 @@ using bsoncxx::builder::basic::make_document;
 using bsoncxx::stdx::optional;
 using bsoncxx::stdx::string_view;
 
-static const int kMaxIsMasterFailCommands = 7;
+static const int kMaxHelloFailCommands = 7;
 
 uint32_t error_code_from_name(string_view name) {
     if (name.compare("CannotSatisfyWriteConcern") == 0) {
@@ -188,15 +188,15 @@ void configure_fail_point(const client& client, document::view test) {
 }
 
 void disable_fail_point(const client& client, stdx::string_view fail_point) {
-    /* Some transactions tests have a failCommand for "isMaster" repeat seven times. */
-    for (int i = 0; i < kMaxIsMasterFailCommands; i++) {
+    /* Some transactions tests have a failCommand for "hello" repeat seven times. */
+    for (int i = 0; i < kMaxHelloFailCommands; i++) {
         try {
             client["admin"].run_command(
                 make_document(kvp("configureFailPoint", fail_point), kvp("mode", "off")));
             break;
         } catch (const std::exception&) {
-            /* Tests that fail with isMaster also fail to disable the failpoint
-             * (since we run isMaster when opening the connection). Ignore those
+            /* Tests that fail with hello also fail to disable the failpoint
+             * (since we run hello when opening the connection). Ignore those
              * errors. */
             continue;
         }

@@ -77,7 +77,7 @@ std::basic_string<std::uint8_t> convert_hex_string_to_bytes(bsoncxx::stdx::strin
 options::client add_test_server_api(options::client opts = {});
 
 //
-// Determines the max wire version associated with the given client, by running the "isMaster"
+// Determines the max wire version associated with the given client, by running the "hello"
 // command.
 //
 // Throws mongocxx::operation_exception if the operation fails, or the server reply is malformed.
@@ -123,7 +123,7 @@ stdx::optional<bsoncxx::document::value> parse_test_file(std::string path);
 
 //
 // Determines whether or not the given client supports the collation feature, by running the
-// "isMaster" command.
+// "hello" command.
 //
 // Throws mongocxx::operation_exception if the operation fails, or the server reply is
 // malformed.

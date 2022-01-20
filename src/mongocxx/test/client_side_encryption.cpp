@@ -1255,14 +1255,14 @@ TEST_CASE("Bypass spawning mongocryptd", "[client_side_encryption]") {
     coll2.insert_one(make_document(kvp("unencrypted", "test")));
 
     // Validate that mongocryptd was not spawned. Create a MongoClient to localhost:27021
-    // (or whatever was passed via --port) with serverSelectionTimeoutMS=1000. Run an isMaster
+    // (or whatever was passed via --port) with serverSelectionTimeoutMS=1000. Run a ping
     // command and ensure it fails with a server selection timeout.
     options::client ping_client_opts;
     class client ping_client {
         uri{"mongodb://localhost:27021/?serverSelectionTimeoutMS=1000"},
             test_util::add_test_server_api(),
     };
-    REQUIRE_THROWS(ping_client["admin"].run_command(make_document(kvp("isMaster", 1))));
+    REQUIRE_THROWS(ping_client["admin"].run_command(make_document(kvp("ping", 1))));
 }
 
 class kms_tls_expired_cert_matcher : public Catch::MatcherBase<mongocxx::exception> {

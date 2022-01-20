@@ -45,7 +45,7 @@ class run_command : public microbench {
     mongocxx::database _db;
 };
 void run_command::task() {
-    auto command = make_document(kvp("ismaster", true));
+    auto command = make_document(kvp("ping", 1));
     for (std::int32_t i = 0; i < 10000; i++) {
         _db.run_command(command.view());
     }
