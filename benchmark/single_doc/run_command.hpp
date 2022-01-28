@@ -31,7 +31,7 @@ class run_command : public microbench {
    public:
     run_command()
         : microbench{"TestRunCommand",
-                     0.16,
+                     0.13,
                      std::set<benchmark_type>{benchmark_type::run_command_bench}},
           _conn{mongocxx::uri{}} {
         _db = _conn["perftest"];
