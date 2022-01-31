@@ -16,6 +16,8 @@
 
 #include <chrono>
 #include <cstring>
+#include <float.h>
+#include <math.h>
 
 #include <bsoncxx/array/view.hpp>
 #include <bsoncxx/decimal128.hpp>
@@ -106,7 +108,7 @@ struct BSONCXX_API b_double {
 /// @relatesalso b_double
 ///
 BSONCXX_INLINE bool operator==(const b_double& lhs, const b_double& rhs) {
-    return lhs.value == rhs.value;
+    return fabs(lhs.value - rhs.value) < DBL_EPSILON;
 }
 
 ///
