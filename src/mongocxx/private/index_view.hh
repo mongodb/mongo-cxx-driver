@@ -142,10 +142,10 @@ class index_view::impl {
             if (!server_description.sd)
                 throw_exception<write_exception>(error);
 
-            auto is_master = libmongoc::server_description_hello_response(server_description.sd);
+            auto hello = libmongoc::server_description_hello_response(server_description.sd);
 
             bson_iter_t iter;
-            if (!bson_iter_init_find(&iter, is_master, "maxWireVersion") ||
+            if (!bson_iter_init_find(&iter, hello, "maxWireVersion") ||
                 bson_iter_int32(&iter) < 9) {
                 throw write_exception{
                     error_code::k_invalid_parameter,

@@ -37,8 +37,8 @@ class collection;
 /// method. Options that you would typically specify for individual write operations (such as write
 /// concern) are instead specified for the aggregate operation.
 ///
-/// @see https://docs.mongodb.com/master/core/crud/
-/// @see https://docs.mongodb.com/master/core/bulk-write-operations/
+/// @see https://docs.mongodb.com/manual/core/crud/
+/// @see https://docs.mongodb.com/manual/core/bulk-write-operations/
 ///
 class MONGOCXX_API bulk_write {
    public:
@@ -88,7 +88,7 @@ class MONGOCXX_API bulk_write {
     ///
     /// @return The optional result of the bulk operation execution, a result::bulk_write.
     ///
-    /// @see https://docs.mongodb.com/master/core/bulk-write-operations/
+    /// @see https://docs.mongodb.com/manual/core/bulk-write-operations/
     ///
     stdx::optional<result::bulk_write> execute() const;
 

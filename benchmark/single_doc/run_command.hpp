@@ -31,7 +31,7 @@ class run_command : public microbench {
    public:
     run_command()
         : microbench{"TestRunCommand",
-                     0.16,
+                     0.13,
                      std::set<benchmark_type>{benchmark_type::run_command_bench}},
           _conn{mongocxx::uri{}} {
         _db = _conn["perftest"];
@@ -45,7 +45,7 @@ class run_command : public microbench {
     mongocxx::database _db;
 };
 void run_command::task() {
-    auto command = make_document(kvp("ismaster", true));
+    auto command = make_document(kvp("hello", true));
     for (std::int32_t i = 0; i < 10000; i++) {
         _db.run_command(command.view());
     }

@@ -67,7 +67,7 @@ class MONGOCXX_API replace {
     ///   method chaining.
     ///
     /// @see
-    ///   https://docs.mongodb.com/master/reference/collation/
+    ///   https://docs.mongodb.com/manual/reference/collation/
     ///
     replace& collation(bsoncxx::document::view_or_value collation);
 
@@ -78,7 +78,7 @@ class MONGOCXX_API replace {
     ///   The current collation.
     ///
     /// @see
-    ///   https://docs.mongodb.com/master/reference/collation/
+    ///   https://docs.mongodb.com/manual/reference/collation/
     ///
     const stdx::optional<bsoncxx::document::view_or_value>& collation() const;
 
@@ -117,7 +117,7 @@ class MONGOCXX_API replace {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://docs.mongodb.com/master/core/write-concern/
+    /// @see https://docs.mongodb.com/manual/core/write-concern/
     ///
     replace& write_concern(class write_concern wc);
 
@@ -127,7 +127,7 @@ class MONGOCXX_API replace {
     /// @return
     ///   The current write_concern
     ///
-    /// @see https://docs.mongodb.com/master/core/write-concern/
+    /// @see https://docs.mongodb.com/manual/core/write-concern/
     ///
     const stdx::optional<class write_concern>& write_concern() const;
 

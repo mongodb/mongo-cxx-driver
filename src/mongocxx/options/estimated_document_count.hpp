@@ -41,7 +41,7 @@ class MONGOCXX_API estimated_document_count {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://docs.mongodb.com/master/reference/command/count/
+    /// @see https://docs.mongodb.com/manual/reference/command/count/
     ///
     estimated_document_count& max_time(std::chrono::milliseconds max_time);
 
@@ -50,7 +50,7 @@ class MONGOCXX_API estimated_document_count {
     ///
     /// @return The current max time (in milliseconds).
     ///
-    /// @see https://docs.mongodb.com/master/reference/command/count/
+    /// @see https://docs.mongodb.com/manual/reference/command/count/
     ///
     const bsoncxx::stdx::optional<std::chrono::milliseconds>& max_time() const;
 
@@ -64,7 +64,7 @@ class MONGOCXX_API estimated_document_count {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://docs.mongodb.com/master/reference/command/count/
+    /// @see https://docs.mongodb.com/manual/reference/command/count/
     ///
     estimated_document_count& read_preference(class read_preference rp);
 
@@ -73,7 +73,7 @@ class MONGOCXX_API estimated_document_count {
     ///
     /// @return the current read_preference
     ///
-    /// @see https://docs.mongodb.com/master/reference/command/count/
+    /// @see https://docs.mongodb.com/manual/reference/command/count/
     ///
     const bsoncxx::stdx::optional<class read_preference>& read_preference() const;
 

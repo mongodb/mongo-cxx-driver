@@ -317,10 +317,10 @@ class session_test {
         apm_opts.on_command_started([&](const events::command_started_event& event) {
             std::string command_name{event.command_name().data()};
 
-            // Ignore auth commands like "saslStart", and handshakes with "isMaster".
+            // Ignore auth commands like "saslStart", and handshakes with "hello" (and the legacy "hello" command).
             std::string sasl{"sasl"};
             if (event.command_name().substr(0, sasl.size()).compare(sasl) == 0 ||
-                command_name.compare("isMaster") == 0) {
+                command_name.compare("hello") == 0 || command_name.compare("isMaster") == 0) {
                 return;
             }
 

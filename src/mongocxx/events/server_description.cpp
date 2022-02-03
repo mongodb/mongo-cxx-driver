@@ -39,6 +39,10 @@ bsoncxx::stdx::string_view server_description::type() const {
 }
 
 bsoncxx::document::view server_description::is_master() const {
+    return hello();
+}
+
+bsoncxx::document::view server_description::hello() const {
     auto reply = libmongoc::server_description_hello_response(
         static_cast<const mongoc_server_description_t*>(_sd));
     return {bson_get_data(reply), reply->len};
