@@ -167,7 +167,7 @@ void downloader::fetch_chunk() {
     _get_impl().chunk_buffer_ptr = binary_data.bytes;
     _get_impl().chunk_buffer_len = binary_data.size;
 
-    if (not _get_impl().chunks_seen) {
+    if (! _get_impl().chunks_seen) {
         _get_impl().chunk_buffer_offset = static_cast<std::size_t>(_get_impl().start.bytes_offset);
         _get_impl().chunks_seen = chunks_seen;
     } else {

@@ -316,14 +316,14 @@ downloader bucket::_open_download_stream(const client_session* session,
     options::find chunks_options;
     chunks_options.sort(chunks_sort.extract());
 
-    if (start and end) {
+    if (start && end) {
         if (*start > *end) {
             throw gridfs_exception{error_code::k_invalid_parameter,
                                    "expected end to be greater than start"};
         }
     }
 
-    if (start and *start > 0) {
+    if (start && *start > 0) {
         if (file_len >= 0 && *start > (std::size_t)file_len) {
             throw gridfs_exception{error_code::k_invalid_parameter,
                                    "expected start to not be greater than the file length"};
@@ -368,10 +368,10 @@ void bucket::_download_to_stream(const client_session* session,
                                  stdx::optional<std::size_t> end) {
     downloader download_stream = _open_download_stream(session, id, start, end);
     std::size_t chunk_size = static_cast<std::size_t>(download_stream.chunk_size());
-    if (not start) {
+    if (! start) {
         start.emplace<std::size_t>(0);
     }
-    if (not end) {
+    if (! end) {
         end = static_cast<std::size_t>(download_stream.file_length());
     }
     auto bytes_expected = *end - *start;
