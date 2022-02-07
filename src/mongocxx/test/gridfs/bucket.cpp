@@ -888,8 +888,8 @@ TEST_CASE("gridfs::bucket::download_to_stream works", "[gridfs::bucket]") {
             auto str = os.str();
             std::vector<std::uint8_t> actual_bytes{str.begin(), str.end()};
             REQUIRE(actual_bytes.size() == end - start);
-            const std::vector<std::uint8_t> expected_bytes{file_bytes.begin() + static_cast<decltype(file_bytes)::difference_type>(start),
-                                                           file_bytes.begin() + static_cast<decltype(file_bytes)::difference_type>(end)};
+            const std::vector<std::uint8_t> expected_bytes{file_bytes.begin() + static_cast<std::vector<uint8_t>::difference_type>(start),
+                                                           file_bytes.begin() + static_cast<std::vector<uint8_t>::difference_type>(end)};
             REQUIRE(expected_bytes == actual_bytes);
         };
 
