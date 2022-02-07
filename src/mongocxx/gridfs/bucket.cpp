@@ -324,7 +324,7 @@ downloader bucket::_open_download_stream(const client_session* session,
     }
 
     if (start && *start > 0) {
-        if (file_len >= 0 && *start > (std::size_t)file_len) {
+        if (file_len >= 0 && *start > static_cast<std::size_t>(file_len)) {
             throw gridfs_exception{error_code::k_invalid_parameter,
                                    "expected start to not be greater than the file length"};
         }
@@ -335,11 +335,11 @@ downloader bucket::_open_download_stream(const client_session* session,
     }
 
     if (end) {
-        if (file_len >= 0 && *end > (std::size_t)file_len) {
+        if (file_len >= 0 && *end > static_cast<std::size_t>(file_len)) {
             throw gridfs_exception{error_code::k_invalid_parameter,
                                    "expected end to not be greater than the file length"};
         }
-        if (file_len >= 0 && *end < (std::size_t)file_len) {
+        if (file_len >= 0 && *end < static_cast<std::size_t>(file_len)) {
             const int32_t num_chunks = static_cast<int32_t>(1 + ((*end - *start) / static_cast<std::size_t>(chunk_size)));
             chunks_options.limit(num_chunks);
         }
