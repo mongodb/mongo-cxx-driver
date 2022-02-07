@@ -328,7 +328,7 @@ downloader bucket::_open_download_stream(const client_session* session,
             throw gridfs_exception{error_code::k_invalid_parameter,
                                    "expected start to not be greater than the file length"};
         }
-        auto start_offset_div = std::lldiv(*start, chunk_size);
+        auto start_offset_div = std::lldiv(static_cast<long long>(*start), chunk_size);
         start_offset.chunks_offset = static_cast<int32_t>(start_offset_div.quot);
         start_offset.bytes_offset = static_cast<int32_t>(start_offset_div.rem);
         chunks_options.skip(start_offset.chunks_offset);
@@ -340,7 +340,7 @@ downloader bucket::_open_download_stream(const client_session* session,
                                    "expected end to not be greater than the file length"};
         }
         if (file_len >= 0 && *end < (std::size_t)file_len) {
-            const int32_t num_chunks = static_cast<int32_t>(1 + ((*end - *start) / chunk_size));
+            const int32_t num_chunks = static_cast<int32_t>(1 + ((*end - *start) / static_cast<std::size_t>(chunk_size)));
             chunks_options.limit(num_chunks);
         }
     }
@@ -367,12 +367,12 @@ void bucket::_download_to_stream(const client_session* session,
                                  stdx::optional<std::size_t> start,
                                  stdx::optional<std::size_t> end) {
     downloader download_stream = _open_download_stream(session, id, start, end);
-    std::size_t chunk_size = download_stream.chunk_size();
+    std::size_t chunk_size = static_cast<std::size_t>(download_stream.chunk_size());
     if (not start) {
-        start = 0;
+        start.emplace<std::size_t>(0);
     }
     if (not end) {
-        end = download_stream.file_length();
+        end = static_cast<std::size_t>(download_stream.file_length());
     }
     auto bytes_expected = *end - *start;
     std::unique_ptr<std::uint8_t[]> buffer =
