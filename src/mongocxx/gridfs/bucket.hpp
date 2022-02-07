@@ -16,10 +16,10 @@
 
 #include <istream>
 #include <memory>
-#include <bsoncxx/stdx/optional.hpp>
 #include <ostream>
 
 #include <bsoncxx/document/view_or_value.hpp>
+#include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
 #include <mongocxx/cursor.hpp>

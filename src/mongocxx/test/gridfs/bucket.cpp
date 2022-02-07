@@ -917,7 +917,7 @@ TEST_CASE("gridfs::bucket::download_to_stream works", "[gridfs::bucket]") {
 
         SECTION("middle of the file") {
             SECTION("partial chunk") {
-                const auto start = chunk_size+ chunk_size / 2;
+                const auto start = chunk_size + chunk_size / 2;
                 const auto end = start + 1;
                 check_downloaded_content(start, end);
             }

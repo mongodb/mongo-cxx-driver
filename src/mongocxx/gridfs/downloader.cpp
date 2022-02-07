@@ -35,8 +35,11 @@ downloader::downloader(stdx::optional<cursor> chunks,
                        std::int32_t chunk_size,
                        std::int64_t file_len,
                        bsoncxx::document::value files_doc)
-    : _impl{stdx::make_unique<impl>(
-          std::move(chunks), std::move(start), std::move(chunk_size), std::move(file_len), std::move(files_doc))} {}
+    : _impl{stdx::make_unique<impl>(std::move(chunks),
+                                    std::move(start),
+                                    std::move(chunk_size),
+                                    std::move(file_len),
+                                    std::move(files_doc))} {}
 
 downloader::downloader() noexcept = default;
 downloader::downloader(downloader&&) noexcept = default;
@@ -120,8 +123,7 @@ void downloader::fetch_chunk() {
     if (!chunk_n_ele || chunk_n_ele.type() != bsoncxx::type::k_int32 ||
         chunk_n_ele.get_int32().value != chunks_seen) {
         std::ostringstream err;
-        err << "chunk #" << chunks_seen
-            << ": expected to find field \"n\" with k_int32 type";
+        err << "chunk #" << chunks_seen << ": expected to find field \"n\" with k_int32 type";
         throw gridfs_exception{error_code::k_gridfs_file_corrupted, err.str()};
     }
 
@@ -132,8 +134,7 @@ void downloader::fetch_chunk() {
     auto chunk_data_ele = chunk_doc["data"];
     if (!chunk_data_ele || chunk_data_ele.type() != bsoncxx::type::k_binary) {
         std::ostringstream err;
-        err << "chunk #" << chunks_seen
-            << ": expected to find field \"data\" with k_binary type";
+        err << "chunk #" << chunks_seen << ": expected to find field \"data\" with k_binary type";
         throw gridfs_exception{error_code::k_gridfs_file_corrupted, err.str()};
     }
 
@@ -157,9 +158,8 @@ void downloader::fetch_chunk() {
 
         if (binary_data.size != static_cast<std::uint32_t>(expected_size)) {
             std::ostringstream err;
-            err << "chunk #" << chunks_seen << ": expected size of chunk to be "
-                << expected_size << " bytes, but actual size of chunk is " << binary_data.size
-                << " bytes";
+            err << "chunk #" << chunks_seen << ": expected size of chunk to be " << expected_size
+                << " bytes, but actual size of chunk is " << binary_data.size << " bytes";
             throw gridfs_exception{error_code::k_gridfs_file_corrupted, err.str()};
         }
     }
