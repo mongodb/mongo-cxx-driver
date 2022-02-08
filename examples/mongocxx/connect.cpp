@@ -77,7 +77,7 @@ int main(int argc, char* argv[]) {
 
         auto admin = client["admin"];
 
-        auto result = admin.run_command(make_document(kvp("isMaster", 1)));
+        auto result = admin.run_command(make_document(kvp("ping", 1)));
 
         std::cout << bsoncxx::to_json(result) << "\n";
 

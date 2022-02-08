@@ -107,7 +107,7 @@ class MONGOCXX_API update_one {
     ///   The new collation.
     ///
     /// @see
-    ///   https://docs.mongodb.com/master/reference/collation/
+    ///   https://docs.mongodb.com/manual/reference/collation/
     ///
     update_one& collation(bsoncxx::document::view_or_value collation);
 
@@ -118,7 +118,7 @@ class MONGOCXX_API update_one {
     ///   The optional value of the collation option.
     ///
     /// @see
-    ///   https://docs.mongodb.com/master/reference/collation/
+    ///   https://docs.mongodb.com/manual/reference/collation/
     ///
     const stdx::optional<bsoncxx::document::view_or_value>& collation() const;
 

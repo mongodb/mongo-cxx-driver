@@ -9,7 +9,7 @@ title = "Tutorial for mongocxx"
 
 ## Prerequisites
 
-- A [mongod](https://docs.mongodb.com/master/reference/program/mongod/)
+- A [mongod](https://docs.mongodb.com/manual/reference/program/mongod/)
   instance running on localhost on port 27017.
 
 - The mongocxx Driver. See [Installation for mongocxx]({{< ref "/mongocxx-v3/installation" >}}).
@@ -74,7 +74,7 @@ class.
 
 You must specify the host to connect to using a
 [`mongocxx::uri`]({{< api3ref classmongocxx_1_1uri >}}) instance containing a
-[MongoDB URI](https://docs.mongodb.com/master/reference/connection-string/),
+[MongoDB URI](https://docs.mongodb.com/manual/reference/connection-string/),
 and pass that into the `mongocxx::client` constructor.  For details regarding
 supported URI options see the documentation for the version of libmongoc used
 to build the C++ driver or for the [latest libmongoc release](
@@ -436,7 +436,7 @@ if(result) {
 
 ## Create Indexes
 
-To create an [index](https://docs.mongodb.com/master/indexes/) on a
+To create an [index](https://docs.mongodb.com/manual/indexes/) on a
 field or set of fields, pass an index specification document to the
 `create_index()` method of a
 [`mongocxx::collection`]({{< api3ref classmongocxx_1_1collection >}}) instance. An

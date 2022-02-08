@@ -14,6 +14,7 @@
 
 #pragma once
 
+#include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/options/apm.hpp>
 #include <mongocxx/private/libmongoc.hh>
 
@@ -33,13 +34,15 @@ static unique_server_api make_server_api(const server_api& opts) {
     auto result = libmongoc::server_api_version_from_string(
         server_api::version_to_string(opts.get_version()).c_str(), &mongoc_api_version);
     if (!result) {
-        throw std::logic_error{"invalid server API version" +
-                               server_api::version_to_string(opts.get_version())};
+        throw mongocxx::logic_error{
+            mongocxx::error_code::k_invalid_parameter,
+            "invalid server API version" + server_api::version_to_string(opts.get_version())};
     }
 
     auto mongoc_server_api_opts = libmongoc::server_api_new(mongoc_api_version);
     if (!mongoc_server_api_opts) {
-        throw std::logic_error{"could not create server API"};
+        throw mongocxx::logic_error{mongocxx::error_code::k_create_resource_fail,
+                                    "could not create server API"};
     }
 
     if (opts.strict().value_or(false)) {

@@ -44,7 +44,7 @@ class MONGOCXX_API server_description {
     std::uint32_t id() const;
 
     ///
-    /// The duration of the last isMaster call, indicating network latency.
+    /// The duration of the last hello call, indicating network latency.
     ///
     /// @return The duration in microseconds.
     ///
@@ -59,12 +59,19 @@ class MONGOCXX_API server_description {
     bsoncxx::stdx::string_view type() const;
 
     ///
-    /// The server's last response to the "isMaster" command, or an empty document if the driver
+    /// @return The response as a short-lived document view.
+    ///
+    /// @deprecated use hello instead.
+    ///
+    MONGOCXX_DEPRECATED bsoncxx::document::view is_master() const;
+
+    ///
+    /// The server's last response to the "hello" command, or an empty document if the driver
     /// has not yet reached the server or there was an error.
     ///
     /// @return The response as a short-lived document view.
     ///
-    bsoncxx::document::view is_master() const;
+    bsoncxx::document::view hello() const;
 
     ///
     /// Returns the server host name.

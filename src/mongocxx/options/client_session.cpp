@@ -26,7 +26,20 @@ client_session& client_session::causal_consistency(bool causal_consistency) noex
 }
 
 bool client_session::causal_consistency() const noexcept {
-    return _causal_consistency;
+    // Unless causal consistency has been explicitly disabled (i.e. it has a value, and
+    // that value is false), we always return true. If snapshot reads are enabled,
+    // the invalid setting combination will later be rejected:
+    return _causal_consistency.value_or(true);
+}
+
+client_session& client_session::snapshot(bool enable_snapshot_reads) noexcept {
+    _enable_snapshot_reads = enable_snapshot_reads;
+    return *this;
+}
+
+bool client_session::snapshot() const noexcept {
+    // As per the Snapshot Consistency spec, if there is no value then false is implied:
+    return _enable_snapshot_reads.value_or(false);
 }
 
 client_session& client_session::default_transaction_opts(transaction default_transaction_opts) {

@@ -71,11 +71,7 @@ JSON Schemas supplied in the `schema_map` only apply to configuring automatic cl
 //         "bsonType" : "object",
 //         "properties" : {
 //            "encryptedFieldName" : {
-<<<<<<< HEAD
 //               "encrypt" : {
-=======
-//               "encryptField" : {
->>>>>>> CXX-1855 add tutorial and example for client-side encryption
 //                  "keyId" : [ <datakey as UUID> ],
 //                  "bsonType" : "string",
 //                  "algorithm" : <algorithm>
@@ -143,10 +139,3 @@ class client client_encrypted {uri{}, std::move(client_opts)};
 
 Please see  [`examples/mongocxx/explicit_encryption_auto_decryption.cpp`](https://github.com/mongodb/mongo-cxx-driver/blob/master/examples/mongocxx/explicit_encryption_auto_decryption.cpp) for an example of using explicit encryption with automatic decryption.
 
-
-
-<<<<<<< HEAD
-=======
-
-
->>>>>>> CXX-1855 add tutorial and example for client-side encryption

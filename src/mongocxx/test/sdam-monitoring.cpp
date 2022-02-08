@@ -23,7 +23,7 @@
 #include <mongocxx/test/spec/operation.hh>
 #include <mongocxx/test_util/client_helpers.hh>
 
-// Don't use SDAM Monitoring spec tests, we'd need libmongoc internals to send isMaster replies.
+// Don't use SDAM Monitoring spec tests, we'd need libmongoc internals to send hello replies.
 
 namespace {
 using namespace mongocxx;
@@ -85,14 +85,14 @@ TEST_CASE("SDAM Monitoring", "[sdam_monitoring]") {
             auto new_sd = event.new_description();
             auto new_type = to_string(new_sd.type());
 
-            REQUIRE(old_sd.is_master().empty());
+            REQUIRE(old_sd.hello().empty());
             REQUIRE(to_string(old_sd.host()) == to_string(event.host()));
             REQUIRE(old_sd.port() == event.port());
             REQUIRE(old_sd.round_trip_time() == -1);
             REQUIRE(to_string(old_sd.type()) == "Unknown");
 
             REQUIRE(to_string(new_sd.host()) == to_string(event.host()));
-            REQUIRE_FALSE(new_sd.is_master().empty());
+            REQUIRE_FALSE(new_sd.hello().empty());
             REQUIRE(new_sd.port() == event.port());
             REQUIRE(new_sd.round_trip_time() >= 0);
             if (topology_type == "single") {
@@ -173,7 +173,7 @@ TEST_CASE("SDAM Monitoring", "[sdam_monitoring]") {
                 found_servers = true;
                 auto new_sd_type = to_string(new_sd.type());
                 REQUIRE(new_sd.host().length());
-                REQUIRE_FALSE(new_sd.is_master().empty());
+                REQUIRE_FALSE(new_sd.hello().empty());
                 REQUIRE(new_sd.port() > 0);
                 REQUIRE(new_sd.round_trip_time() >= 0);
                 if (topology_type == "single") {
@@ -231,7 +231,7 @@ TEST_CASE("SDAM Monitoring", "[sdam_monitoring]") {
             heartbeat_started_events++;
             REQUIRE_FALSE(event.host().empty());
             REQUIRE(event.port() != 0);
-            // Client is single-threaded, and will never perform an awaitable ismaster.
+            // Client is single-threaded, and will never perform an awaitable hello.
             REQUIRE(!event.awaited());
         });
 
@@ -241,7 +241,7 @@ TEST_CASE("SDAM Monitoring", "[sdam_monitoring]") {
             REQUIRE_FALSE(event.host().empty());
             REQUIRE(event.port() != 0);
             REQUIRE_FALSE(event.reply().empty());
-            // Client is single-threaded, and will never perform an awaitable ismaster.
+            // Client is single-threaded, and will never perform an awaitable hello.
             REQUIRE(!event.awaited());
         });
 

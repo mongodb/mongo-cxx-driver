@@ -1,4 +1,4 @@
-// Copyright 2014 MongoDB Inc.
+// Copyright 2014-present MongoDB Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -490,6 +490,95 @@ TEST_CASE("Database integration tests", "[database]") {
 
         REQUIRE(expected_colls.size() == 0);
     }
+}
+
+// As C++11 lacks generic lambdas, and "ordinary" templates can't appear at block scope,
+// we'll have to define our helper for the serviceId tests here. This implementation would
+// be more straightforward in newer versions of C++ (C++14 and on allow generic lambdas),
+// see CXX-2350 (migration to more recent C++ standards); our C++17 optional<> implementation
+// also has a few inconsistencies with the standard, which appear to vary across platforms.
+template <typename EventT>
+struct check_service_id {
+    const bool expect_service_id;
+
+    check_service_id(const bool expect_service_id) : expect_service_id(expect_service_id) {}
+
+    void operator()(const EventT& event) {
+        INFO("checking for service_id()")
+        CAPTURE(event.command_name(), expect_service_id);
+
+        auto service_id = event.service_id();
+
+        if (expect_service_id)
+            CHECK(service_id);
+        else
+            CHECK_FALSE(service_id);
+    }
+};
+
+TEST_CASE("serviceId presence depends on load-balancing mode") {
+    // Repeat this test case for a situation in which service_id should and should not be returned:
+    auto expect_service_id = GENERATE(true, false);
+
+    instance::current();
+
+    auto client_opts = test_util::add_test_server_api();
+
+    // Set Application Performance Monitoring options (APM):
+    mongocxx::options::apm apm_opts;
+    apm_opts.on_command_started(
+        check_service_id<mongocxx::events::command_started_event>{expect_service_id});
+    apm_opts.on_command_succeeded(
+        check_service_id<mongocxx::events::command_succeeded_event>{expect_service_id});
+    apm_opts.on_command_failed(
+        check_service_id<mongocxx::events::command_failed_event>{expect_service_id});
+
+    // Set up mocking for get_service_id events:
+    auto apm_command_started_get_service_id =
+        libmongoc::apm_command_started_get_service_id.create_instance();
+    auto apm_command_succeeded_get_service_id =
+        libmongoc::apm_command_succeeded_get_service_id.create_instance();
+    auto apm_command_failed_get_service_id =
+        libmongoc::apm_command_failed_get_service_id.create_instance();
+
+    // Set up mocked functions that DO emit a service_id:
+    if (expect_service_id) {
+        // Return a bson_oid_t with data where the service_id has some value:
+        const auto make_service_id_bson_oid_t = [](const void*) -> const bson_oid_t* {
+            static bson_oid_t tmp = {0x65};
+            return &tmp;
+        };
+
+        // Add forever() so that the mock function also extends to endSession:
+        apm_command_started_get_service_id->interpose(make_service_id_bson_oid_t).forever();
+        apm_command_succeeded_get_service_id->interpose(make_service_id_bson_oid_t).forever();
+        apm_command_failed_get_service_id->interpose(make_service_id_bson_oid_t).forever();
+    }
+
+    // Set up mocked functions that DO NOT emit a service_id:
+    if (!expect_service_id) {
+        auto make_empty_bson_oid_t = [](const void*) -> bson_oid_t* { return nullptr; };
+
+        apm_command_started_get_service_id->interpose(make_empty_bson_oid_t).forever();
+        apm_command_succeeded_get_service_id->interpose(make_empty_bson_oid_t).forever();
+        apm_command_failed_get_service_id->interpose(make_empty_bson_oid_t).forever();
+    }
+
+    // Set up our connection:
+    client_opts.apm_opts(apm_opts);
+    // Adding ?loadBalanced=true results in an error in the C driver because
+    // the initial hello response from the server does not include serviceId.
+    client mongo_client(uri("mongodb://localhost:27017/"), client_opts);
+    stdx::string_view database_name{"database"};
+    database database = mongo_client[database_name];
+
+    // Run a command, triggering start and completion events:
+    auto cmd = make_document(kvp("ping", 1));
+    database.run_command(cmd.view());
+
+    // Attempt to trigger failure:
+    cmd = make_document(kvp("some_sort_of_invalid_command_that_should_never_happen", 1));
+    CHECK_THROWS(database.run_command(cmd.view()));
 }
 
 }  // namespace

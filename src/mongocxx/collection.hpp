@@ -151,7 +151,7 @@ class MONGOCXX_API collection {
     /// the cursor throws mongocxx::query_exception when the returned cursor
     /// is iterated.
     ///
-    /// @see https://docs.mongodb.com/master/reference/command/aggregate/
+    /// @see https://docs.mongodb.com/manual/reference/command/aggregate/
     ///
     /// @note
     ///   In order to pass a read concern to this, you must use the
@@ -175,7 +175,7 @@ class MONGOCXX_API collection {
     /// the cursor throws mongocxx::query_exception when the returned cursor
     /// is iterated.
     ///
-    /// @see https://docs.mongodb.com/master/reference/command/aggregate/
+    /// @see https://docs.mongodb.com/manual/reference/command/aggregate/
     ///
     /// @note
     ///   In order to pass a read concern to this, you must use the
@@ -241,7 +241,7 @@ class MONGOCXX_API collection {
     ///   the writes.
     ///
     /// @see mongocxx::bulk_write
-    /// @see https://docs.mongodb.com/master/core/bulk-write-operations/
+    /// @see https://docs.mongodb.com/manual/core/bulk-write-operations/
     ///
     MONGOCXX_INLINE stdx::optional<result::bulk_write> write(
         const model::write& write, const options::bulk_write& options = options::bulk_write());
@@ -266,7 +266,7 @@ class MONGOCXX_API collection {
     ///   the writes.
     ///
     /// @see mongocxx::bulk_write
-    /// @see https://docs.mongodb.com/master/core/bulk-write-operations/
+    /// @see https://docs.mongodb.com/manual/core/bulk-write-operations/
     ///
     MONGOCXX_INLINE stdx::optional<result::bulk_write> write(
         const client_session& session,
@@ -297,7 +297,7 @@ class MONGOCXX_API collection {
     /// @throws mongocxx::bulk_write_exception when there are errors processing the writes.
     ///
     /// @see mongocxx::bulk_write
-    /// @see https://docs.mongodb.com/master/core/bulk-write-operations/
+    /// @see https://docs.mongodb.com/manual/core/bulk-write-operations/
     ///
     template <typename container_type>
     MONGOCXX_INLINE stdx::optional<result::bulk_write> bulk_write(
@@ -324,7 +324,7 @@ class MONGOCXX_API collection {
     /// @throws mongocxx::bulk_write_exception when there are errors processing the writes.
     ///
     /// @see mongocxx::bulk_write
-    /// @see https://docs.mongodb.com/master/core/bulk-write-operations/
+    /// @see https://docs.mongodb.com/manual/core/bulk-write-operations/
     ///
     template <typename container_type>
     MONGOCXX_INLINE stdx::optional<result::bulk_write> bulk_write(
@@ -357,7 +357,7 @@ class MONGOCXX_API collection {
     /// @throws mongocxx::bulk_write_exception when there are errors processing the writes.
     ///
     /// @see mongocxx::bulk_write
-    /// @see https://docs.mongodb.com/master/core/bulk-write-operations/
+    /// @see https://docs.mongodb.com/manual/core/bulk-write-operations/
     ///
     template <typename write_model_iterator_type>
     MONGOCXX_INLINE stdx::optional<result::bulk_write> bulk_write(
@@ -387,7 +387,7 @@ class MONGOCXX_API collection {
     /// @throws mongocxx::bulk_write_exception when there are errors processing the writes.
     ///
     /// @see mongocxx::bulk_write
-    /// @see https://docs.mongodb.com/master/core/bulk-write-operations/
+    /// @see https://docs.mongodb.com/manual/core/bulk-write-operations/
     ///
     template <typename write_model_iterator_type>
     MONGOCXX_INLINE stdx::optional<result::bulk_write> bulk_write(
@@ -412,6 +412,10 @@ class MONGOCXX_API collection {
     /// @return The count of the documents that matched the filter.
     ///
     /// @throws mongocxx::query_exception if the count operation fails.
+    ///
+    /// @note For a fast count of the total documents in a collection, see
+    /// estimated_document_count().
+    /// @see mongocxx::estimated_document_count
     ///
     std::int64_t count_documents(bsoncxx::document::view_or_value filter,
                                  const options::count& options = options::count());
@@ -449,6 +453,8 @@ class MONGOCXX_API collection {
     ///
     /// @throws mongocxx::query_exception if the count operation fails.
     ///
+    /// @see mongocxx::count_documents
+    ///
     std::int64_t estimated_document_count(
         const options::estimated_document_count& options = options::estimated_document_count());
     ///
@@ -471,7 +477,7 @@ class MONGOCXX_API collection {
     ///   mongocxx::operation_exception if index creation fails.
     ///
     /// @see
-    ///   https://docs.mongodb.com/master/reference/command/createIndexes/
+    ///   https://docs.mongodb.com/manual/reference/command/createIndexes/
     ///
     /// @note
     ///   Write concern supported only for MongoDB 3.4+.
@@ -497,7 +503,7 @@ class MONGOCXX_API collection {
     ///   mongocxx::operation_exception if index creation fails.
     ///
     /// @see
-    ///   https://docs.mongodb.com/master/reference/command/createIndexes/
+    ///   https://docs.mongodb.com/manual/reference/command/createIndexes/
     ///
     /// @note
     ///   Write concern supported only for MongoDB 3.4+.
@@ -528,7 +534,7 @@ class MONGOCXX_API collection {
     ///
     /// @throws mongocxx::bulk_write_exception if the delete fails.
     ///
-    /// @see https://docs.mongodb.com/master/reference/command/delete/
+    /// @see https://docs.mongodb.com/manual/reference/command/delete/
     ///
     stdx::optional<result::delete_result> delete_many(
         bsoncxx::document::view_or_value filter,
@@ -550,7 +556,7 @@ class MONGOCXX_API collection {
     ///
     /// @throws mongocxx::bulk_write_exception if the delete fails.
     ///
-    /// @see https://docs.mongodb.com/master/reference/command/delete/
+    /// @see https://docs.mongodb.com/manual/reference/command/delete/
     ///
     stdx::optional<result::delete_result> delete_many(
         const client_session& session,
@@ -577,7 +583,7 @@ class MONGOCXX_API collection {
     ///
     /// @throws mongocxx::bulk_write_exception if the delete fails.
     ///
-    /// @see https://docs.mongodb.com/master/reference/command/delete/
+    /// @see https://docs.mongodb.com/manual/reference/command/delete/
     ///
     stdx::optional<result::delete_result> delete_one(
         bsoncxx::document::view_or_value filter,
@@ -599,7 +605,7 @@ class MONGOCXX_API collection {
     ///
     /// @throws mongocxx::bulk_write_exception if the delete fails.
     ///
-    /// @see https://docs.mongodb.com/master/reference/command/delete/
+    /// @see https://docs.mongodb.com/manual/reference/command/delete/
     ///
     stdx::optional<result::delete_result> delete_one(
         const client_session& session,
@@ -626,7 +632,7 @@ class MONGOCXX_API collection {
     /// field.  If the operation fails, the cursor throws
     /// mongocxx::query_exception when the returned cursor is iterated.
 
-    /// @see https://docs.mongodb.com/master/reference/command/distinct/
+    /// @see https://docs.mongodb.com/manual/reference/command/distinct/
     ///
     cursor distinct(bsoncxx::string::view_or_value name,
                     bsoncxx::document::view_or_value filter,
@@ -648,7 +654,7 @@ class MONGOCXX_API collection {
     /// field.  If the operation fails, the cursor throws
     /// mongocxx::query_exception when the returned cursor is iterated.
 
-    /// @see https://docs.mongodb.com/master/reference/command/distinct/
+    /// @see https://docs.mongodb.com/manual/reference/command/distinct/
     ///
     cursor distinct(const client_session& session,
                     bsoncxx::string::view_or_value name,
@@ -672,7 +678,7 @@ class MONGOCXX_API collection {
     ///   mongocxx::operation_exception if the operation fails.
     ///
     /// @see
-    ///   https://docs.mongodb.com/master/reference/command/drop/
+    ///   https://docs.mongodb.com/manual/reference/command/drop/
     ///
     /// @note
     ///   Write concern supported only for MongoDB 3.4+.
@@ -692,7 +698,7 @@ class MONGOCXX_API collection {
     ///   mongocxx::operation_exception if the operation fails.
     ///
     /// @see
-    ///   https://docs.mongodb.com/master/reference/command/drop/
+    ///   https://docs.mongodb.com/manual/reference/command/drop/
     ///
     /// @note
     ///   Write concern supported only for MongoDB 3.4+.
@@ -721,7 +727,7 @@ class MONGOCXX_API collection {
     /// @throws mongocxx::logic_error if the options are invalid, or if the unsupported option
     /// modifiers "$query" or "$explain" are used.
     ///
-    /// @see https://docs.mongodb.com/master/core/read-operations-introduction/
+    /// @see https://docs.mongodb.com/manual/core/read-operations-introduction/
     ///
     cursor find(bsoncxx::document::view_or_value filter,
                 const options::find& options = options::find());
@@ -743,7 +749,7 @@ class MONGOCXX_API collection {
     /// @throws mongocxx::logic_error if the options are invalid, or if the unsupported option
     /// modifiers "$query" or "$explain" are used.
     ///
-    /// @see https://docs.mongodb.com/master/core/read-operations-introduction/
+    /// @see https://docs.mongodb.com/manual/core/read-operations-introduction/
     ///
     cursor find(const client_session& session,
                 bsoncxx::document::view_or_value filter,
@@ -763,7 +769,7 @@ class MONGOCXX_API collection {
     ///
     /// @throws mongocxx::query_exception if the operation fails.
     ///
-    /// @see https://docs.mongodb.com/master/core/read-operations-introduction/
+    /// @see https://docs.mongodb.com/manual/core/read-operations-introduction/
     ///
     stdx::optional<bsoncxx::document::value> find_one(
         bsoncxx::document::view_or_value filter, const options::find& options = options::find());
@@ -782,7 +788,7 @@ class MONGOCXX_API collection {
     ///
     /// @throws mongocxx::query_exception if the operation fails.
     ///
-    /// @see https://docs.mongodb.com/master/core/read-operations-introduction/
+    /// @see https://docs.mongodb.com/manual/core/read-operations-introduction/
     ///
     stdx::optional<bsoncxx::document::value> find_one(
         const client_session& session,
@@ -1236,7 +1242,7 @@ class MONGOCXX_API collection {
     ///
     /// @throws mongocxx::operation_exception if the operation fails.
     ///
-    /// @see https://docs.mongodb.com/master/reference/command/listIndexes/
+    /// @see https://docs.mongodb.com/manual/reference/command/listIndexes/
     ///
     cursor list_indexes() const;
 
@@ -1250,7 +1256,7 @@ class MONGOCXX_API collection {
     ///
     /// @throws mongocxx::operation_exception if the operation fails.
     ///
-    /// @see https://docs.mongodb.com/master/reference/command/listIndexes/
+    /// @see https://docs.mongodb.com/manual/reference/command/listIndexes/
     ///
     cursor list_indexes(const client_session& session) const;
 
@@ -1280,7 +1286,7 @@ class MONGOCXX_API collection {
     ///   mongocxx::operation_exception if the operation fails.
     ///
     /// @see
-    ///   https://docs.mongodb.com/master/reference/command/renameCollection/
+    ///   https://docs.mongodb.com/manual/reference/command/renameCollection/
     ///
     /// @note
     ///   Write concern supported only for MongoDB 3.4+.
@@ -1305,7 +1311,7 @@ class MONGOCXX_API collection {
     ///   mongocxx::operation_exception if the operation fails.
     ///
     /// @see
-    ///   https://docs.mongodb.com/master/reference/command/renameCollection/
+    ///   https://docs.mongodb.com/manual/reference/command/renameCollection/
     ///
     /// @note
     ///   Write concern supported only for MongoDB 3.4+.
@@ -1326,7 +1332,7 @@ class MONGOCXX_API collection {
     /// @param rc
     ///   The new @c read_concern
     ///
-    /// @see https://docs.mongodb.com/master/reference/read-concern/
+    /// @see https://docs.mongodb.com/manual/reference/read-concern/
     ///
     void read_concern(class read_concern rc);
 
@@ -1347,7 +1353,7 @@ class MONGOCXX_API collection {
     /// @param rp
     ///   The read_preference to set.
     ///
-    /// @see https://docs.mongodb.com/master/core/read-preference/
+    /// @see https://docs.mongodb.com/manual/core/read-preference/
     ///
     void read_preference(class read_preference rp);
 
@@ -1356,7 +1362,7 @@ class MONGOCXX_API collection {
     ///
     /// @return The current read_preference.
     ///
-    /// @see https://docs.mongodb.com/master/core/read-preference/
+    /// @see https://docs.mongodb.com/manual/core/read-preference/
     ///
     class read_preference read_preference() const;
 
@@ -1380,7 +1386,7 @@ class MONGOCXX_API collection {
     ///   mongocxx::logic_error if the replacement is invalid, or mongocxx::bulk_write_exception if
     ///   the operation fails.
     ///
-    /// @see https://docs.mongodb.com/master/reference/command/update/
+    /// @see https://docs.mongodb.com/manual/reference/command/update/
     ///
     stdx::optional<result::replace_one> replace_one(
         bsoncxx::document::view_or_value filter,
@@ -1407,7 +1413,7 @@ class MONGOCXX_API collection {
     ///   mongocxx::logic_error if the replacement is invalid, or mongocxx::bulk_write_exception if
     ///   the operation fails.
     ///
-    /// @see https://docs.mongodb.com/master/reference/command/update/
+    /// @see https://docs.mongodb.com/manual/reference/command/update/
     ///
     stdx::optional<result::replace_one> replace_one(
         const client_session& session,
@@ -1435,7 +1441,7 @@ class MONGOCXX_API collection {
     ///   mongocxx::logic_error if the update is invalid, or mongocxx::bulk_write_exception if the
     ///   operation fails.
     ///
-    /// @see https://docs.mongodb.com/master/reference/command/update/
+    /// @see https://docs.mongodb.com/manual/reference/command/update/
     ///
     stdx::optional<result::update> update_many(bsoncxx::document::view_or_value filter,
                                                bsoncxx::document::view_or_value update,
@@ -1459,7 +1465,7 @@ class MONGOCXX_API collection {
     ///   mongocxx::logic_error if the update is invalid, or mongocxx::bulk_write_exception if the
     ///   operation fails.
     ///
-    /// @see https://docs.mongodb.com/master/reference/command/update/
+    /// @see https://docs.mongodb.com/manual/reference/command/update/
     ///
     stdx::optional<result::update> update_many(bsoncxx::document::view_or_value filter,
                                                const pipeline& update,
@@ -1483,7 +1489,7 @@ class MONGOCXX_API collection {
     ///   mongocxx::logic_error if the update is invalid, or mongocxx::bulk_write_exception if the
     ///   operation fails.
     ///
-    /// @see https://docs.mongodb.com/master/reference/command/update/
+    /// @see https://docs.mongodb.com/manual/reference/command/update/
     ///
     stdx::optional<result::update> update_many(bsoncxx::document::view_or_value filter,
                                                std::initializer_list<_empty_doc_tag> update,
@@ -1509,7 +1515,7 @@ class MONGOCXX_API collection {
     ///   mongocxx::logic_error if the update is invalid, or mongocxx::bulk_write_exception if the
     ///   operation fails.
     ///
-    /// @see https://docs.mongodb.com/master/reference/command/update/
+    /// @see https://docs.mongodb.com/manual/reference/command/update/
     ///
     stdx::optional<result::update> update_many(const client_session& session,
                                                bsoncxx::document::view_or_value filter,
@@ -1536,7 +1542,7 @@ class MONGOCXX_API collection {
     ///   mongocxx::logic_error if the update is invalid, or mongocxx::bulk_write_exception if the
     ///   operation fails.
     ///
-    /// @see https://docs.mongodb.com/master/reference/command/update/
+    /// @see https://docs.mongodb.com/manual/reference/command/update/
     ///
     stdx::optional<result::update> update_many(const client_session& session,
                                                bsoncxx::document::view_or_value filter,
@@ -1563,7 +1569,7 @@ class MONGOCXX_API collection {
     ///   mongocxx::logic_error if the update is invalid, or mongocxx::bulk_write_exception if the
     ///   operation fails.
     ///
-    /// @see https://docs.mongodb.com/master/reference/command/update/
+    /// @see https://docs.mongodb.com/manual/reference/command/update/
     ///
     stdx::optional<result::update> update_many(const client_session& session,
                                                bsoncxx::document::view_or_value filter,
@@ -1594,7 +1600,7 @@ class MONGOCXX_API collection {
     ///   mongocxx::logic_error if the update is invalid, or mongocxx::bulk_write_exception if the
     ///   operation fails.
     ///
-    /// @see https://docs.mongodb.com/master/reference/command/update/
+    /// @see https://docs.mongodb.com/manual/reference/command/update/
     ///
     stdx::optional<result::update> update_one(bsoncxx::document::view_or_value filter,
                                               bsoncxx::document::view_or_value update,
@@ -1618,7 +1624,7 @@ class MONGOCXX_API collection {
     ///   mongocxx::logic_error if the update is invalid, or mongocxx::bulk_write_exception if the
     ///   operation fails.
     ///
-    /// @see https://docs.mongodb.com/master/reference/command/update/
+    /// @see https://docs.mongodb.com/manual/reference/command/update/
     ///
     stdx::optional<result::update> update_one(bsoncxx::document::view_or_value filter,
                                               const pipeline& update,
@@ -1642,7 +1648,7 @@ class MONGOCXX_API collection {
     ///   mongocxx::logic_error if the update is invalid, or mongocxx::bulk_write_exception if the
     ///   operation fails.
     ///
-    /// @see https://docs.mongodb.com/master/reference/command/update/
+    /// @see https://docs.mongodb.com/manual/reference/command/update/
     ///
     stdx::optional<result::update> update_one(bsoncxx::document::view_or_value filter,
                                               std::initializer_list<_empty_doc_tag> update,
@@ -1668,7 +1674,7 @@ class MONGOCXX_API collection {
     ///   mongocxx::logic_error if the update is invalid, or mongocxx::bulk_write_exception if the
     ///   operation fails.
     ///
-    /// @see https://docs.mongodb.com/master/reference/command/update/
+    /// @see https://docs.mongodb.com/manual/reference/command/update/
     ///
     stdx::optional<result::update> update_one(const client_session& session,
                                               bsoncxx::document::view_or_value filter,
@@ -1695,7 +1701,7 @@ class MONGOCXX_API collection {
     ///   mongocxx::logic_error if the update is invalid, or mongocxx::bulk_write_exception if the
     ///   operation fails.
     ///
-    /// @see https://docs.mongodb.com/master/reference/command/update/
+    /// @see https://docs.mongodb.com/manual/reference/command/update/
     ///
     stdx::optional<result::update> update_one(const client_session& session,
                                               bsoncxx::document::view_or_value filter,
@@ -1722,7 +1728,7 @@ class MONGOCXX_API collection {
     ///   mongocxx::logic_error if the update is invalid, or mongocxx::bulk_write_exception if the
     ///   operation fails.
     ///
-    /// @see https://docs.mongodb.com/master/reference/command/update/
+    /// @see https://docs.mongodb.com/manual/reference/command/update/
     ///
     stdx::optional<result::update> update_one(const client_session& session,
                                               bsoncxx::document::view_or_value filter,

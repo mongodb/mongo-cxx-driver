@@ -30,5 +30,5 @@ set_dist_list (etc_DIST
    ${etc_DIST_shs}
    ${etc_DIST_txts}
    memcheck.suppressions
-   ubsan.blacklist
+   ubsan.ignorelist
 )

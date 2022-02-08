@@ -41,6 +41,9 @@ class apm_checker {
     // Check that the apm checker has all expected events, ignore ordering and extra events.
     void has(bsoncxx::array::view expected);
 
+    // True if we should not process the given command:
+    bool should_ignore(const stdx::string_view command_name) const;
+
     void clear();
     void clear_events();
 
@@ -72,6 +75,9 @@ class apm_checker {
     void set_command_started_unified(options::apm& apm);
     void set_command_failed_unified(options::apm& apm);
     void set_command_succeeded_unified(options::apm& apm);
+
+    /// Whether we should record "sensitive" events
+    bool observe_sensitive_events = false;
 
    private:
     event_vector _events;

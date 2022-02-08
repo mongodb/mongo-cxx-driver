@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <bsoncxx/private/helpers.hh>
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <mongocxx/events/command_started_event.hpp>
 #include <mongocxx/private/libmongoc.hh>
@@ -50,6 +51,16 @@ std::int64_t command_started_event::request_id() const {
 std::int64_t command_started_event::operation_id() const {
     return libmongoc::apm_command_started_get_operation_id(
         static_cast<const mongoc_apm_command_started_t*>(_started_event));
+}
+
+bsoncxx::stdx::optional<bsoncxx::oid> command_started_event::service_id() const {
+    const bson_oid_t* bson_oid = libmongoc::apm_command_started_get_service_id(
+        static_cast<const mongoc_apm_command_started_t*>(_started_event));
+
+    if (nullptr == bson_oid)
+        return {bsoncxx::stdx::nullopt};
+
+    return {bsoncxx::helpers::make_oid(bson_oid)};
 }
 
 bsoncxx::stdx::string_view command_started_event::host() const {

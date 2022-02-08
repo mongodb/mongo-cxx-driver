@@ -25,7 +25,7 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace events {
 
 ///
-/// An event notification sent when the driver completes an "isMaster" command to check the status
+/// An event notification sent when the driver completes a "hello" command to check the status
 /// of a server.
 ///
 /// @see "ServerHeartbeatSucceededEvent" in
@@ -69,7 +69,7 @@ class MONGOCXX_API heartbeat_succeeded_event {
     std::uint16_t port() const;
 
     ///
-    /// Returns a boolean indicating whether this heartbeat event is from an awaitable isMaster.
+    /// Returns a boolean indicating whether this heartbeat event is from an awaitable hello.
     ///
     /// @return A boolean.
     ///

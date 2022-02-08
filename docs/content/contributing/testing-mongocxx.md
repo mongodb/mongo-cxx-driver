@@ -61,14 +61,14 @@ the [mongodb server](https://www.mongodb.com/download-center).
 Then deploy a mongod on the default port with the command:
 
 ```
-mongod
+mongod --setParameter enableTestCommands=1
 ```
 
 if it is installed, otherwise navigate to the directory holding the mongod
 executable, and run:
 
 ```
-./mongod
+./mongod --setParameter enableTestCommands=1
 ```
 
 following either command with any flags you wish to use, excluding
