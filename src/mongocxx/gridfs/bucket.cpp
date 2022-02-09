@@ -272,6 +272,33 @@ void bucket::upload_from_stream_with_id(const client_session& session,
     return _upload_from_stream_with_id(&session, id, filename, source, options);
 }
 
+// size_t_to_int64_safe checks if @in is within the bounds of an int64_t.
+// If yes, it safely casts into @out and returns true.
+// If no, @out is not modified and returns false.
+bool size_t_to_int64_safe (std::size_t in, int64_t *out) {
+    if (sizeof (in) >= sizeof (int64_t)) {
+        if (in > static_cast<std::size_t>(std::numeric_limits<int64_t>::max())) {
+            return false;
+        }
+    }
+    *out = static_cast<int64_t> (in);
+    return true;
+}
+
+// int64_to_int32_safe checks if @in is within the bounds of an int32_t.
+// If yes, it safely casts into @out and returns true.
+// If no, @out is not modified and returns false.
+bool int64_to_int32_safe (int64_t in, int32_t *out) {
+    if (in > std::numeric_limits<int32_t>::max()) {
+        return false;
+    }
+    if (in < std::numeric_limits<int32_t>::min()) {
+        return false;
+    }
+    *out = static_cast<int32_t> (in);
+    return true;
+}
+
 downloader bucket::_open_download_stream(const client_session* session,
                                          bsoncxx::types::bson_value::view id,
                                          stdx::optional<std::size_t> start,
@@ -323,24 +350,42 @@ downloader bucket::_open_download_stream(const client_session* session,
         }
     }
 
+    int64_t start_i64 = 0;
     if (start && *start > 0) {
-        if (file_len >= 0 && *start > static_cast<std::size_t>(file_len)) {
+        if (!size_t_to_int64_safe (*start, &start_i64)) {
+            throw gridfs_exception{error_code::k_invalid_parameter,
+                                   "expected start to not be greater than max int64"};
+        }
+        if (file_len >= 0 && start_i64 > file_len) {
             throw gridfs_exception{error_code::k_invalid_parameter,
                                    "expected start to not be greater than the file length"};
         }
-        auto start_offset_div = std::lldiv(static_cast<long long>(*start), chunk_size);
-        start_offset.chunks_offset = static_cast<int32_t>(start_offset_div.quot);
-        start_offset.bytes_offset = static_cast<int32_t>(start_offset_div.rem);
+        auto start_offset_div = std::lldiv(start_i64, chunk_size);
+        if (!int64_to_int32_safe (start_offset_div.quot, &start_offset.chunks_offset)) {
+            throw gridfs_exception{error_code::k_invalid_parameter,
+                                   "expected chunk offset to be in bounds of int32"};
+        }
+        
+        if (!int64_to_int32_safe (start_offset_div.rem, &start_offset.bytes_offset)) {
+            throw gridfs_exception{error_code::k_invalid_parameter,
+                                   "expected bytes offset to be in bounds of int32"};
+        }
         chunks_options.skip(start_offset.chunks_offset);
     }
 
     if (end) {
-        if (file_len >= 0 && *end > static_cast<std::size_t>(file_len)) {
+        int64_t end_i64;
+        if (!size_t_to_int64_safe (*end, &end_i64)) {
+            throw gridfs_exception{error_code::k_invalid_parameter,
+                                   "expected end to not be greater than max int64"};
+        }
+
+        if (file_len >= 0 && end_i64 > file_len) {
             throw gridfs_exception{error_code::k_invalid_parameter,
                                    "expected end to not be greater than the file length"};
         }
-        if (file_len >= 0 && *end < static_cast<std::size_t>(file_len)) {
-            const int32_t num_chunks = static_cast<int32_t>(1 + ((*end - *start) / static_cast<std::size_t>(chunk_size)));
+        if (file_len >= 0 && end_i64 < file_len) {
+            const int64_t num_chunks = 1 + ((end_i64 - start_i64) / static_cast<int64_t>(chunk_size));
             chunks_options.limit(num_chunks);
         }
     }
