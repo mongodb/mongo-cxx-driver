@@ -37,6 +37,11 @@ bool int64_to_int32_safe(int64_t in, int32_t* out);
 // If no, @out is not modified and returns false.
 bool int32_to_size_t_safe(int32_t in, std::size_t* out);
 
+// int64_to_size_t_safe checks if @in is within the bounds of an size_t.
+// If yes, it safely casts into @out and returns true.
+// If no, @out is not modified and returns false.
+bool int64_to_size_t_safe(int64_t in, std::size_t* out);
+
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
 

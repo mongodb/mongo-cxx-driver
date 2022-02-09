@@ -387,12 +387,22 @@ void bucket::_download_to_stream(const client_session* session,
                                  stdx::optional<std::size_t> start,
                                  stdx::optional<std::size_t> end) {
     downloader download_stream = _open_download_stream(session, id, start, end);
-    std::size_t chunk_size = static_cast<std::size_t>(download_stream.chunk_size());
+    
+    std::size_t chunk_size;
+    if (!int32_to_size_t_safe (download_stream.chunk_size(), &chunk_size)) {
+        throw gridfs_exception{error_code::k_invalid_parameter,
+                                   "expected chunk size to be in bounds of size_t"};
+    }
     if (!start) {
         start.emplace<std::size_t>(0);
     }
     if (!end) {
-        end = static_cast<std::size_t>(download_stream.file_length());
+        std::size_t file_length_sz;
+        if (!int64_to_size_t_safe (download_stream.file_length(), &file_length_sz)) {
+            throw gridfs_exception{error_code::k_invalid_parameter,
+                                    "expected file length to be in bounds of int64"};
+        }
+        end = file_length_sz;
     }
     auto bytes_expected = *end - *start;
     std::unique_ptr<std::uint8_t[]> buffer =

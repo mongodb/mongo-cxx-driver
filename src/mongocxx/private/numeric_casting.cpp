@@ -55,5 +55,18 @@ bool int32_to_size_t_safe(int32_t in, std::size_t* out) {
     return true;
 }
 
+bool int64_to_size_t_safe(int64_t in, std::size_t* out) {
+    if (in < 0) {
+        return false;
+    }
+    if (sizeof(in) >= sizeof(std::size_t)) {
+        if (in > static_cast<std::int64_t>(std::numeric_limits<std::size_t>::max())) {
+            return false;
+        }
+    }
+    *out = static_cast<std::size_t>(in);
+    return true;
+}
+
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
