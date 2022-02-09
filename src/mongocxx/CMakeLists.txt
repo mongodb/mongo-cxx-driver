@@ -165,6 +165,7 @@ set(mongocxx_sources
     private/conversions.cpp
     private/libbson.cpp
     private/libmongoc.cpp
+    private/numeric_casting.cpp
     read_concern.cpp
     read_preference.cpp
     result/bulk_write.cpp
@@ -434,6 +435,8 @@ set_local_dist (src_mongocxx_DIST_local
    private/libmongoc.cpp
    private/libmongoc.hh
    private/libmongoc_symbols.hh
+   private/numeric_casting.cpp
+   private/numeric_casting.hh
    private/pipeline.hh
    private/pool.hh
    private/read_concern.hh

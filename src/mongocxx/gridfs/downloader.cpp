@@ -23,6 +23,7 @@
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/gridfs/downloader.hpp>
 #include <mongocxx/gridfs/private/downloader.hh>
+#include <mongocxx/private/numeric_casting.hh>
 
 #include <mongocxx/config/private/prelude.hh>
 
@@ -101,22 +102,6 @@ bsoncxx::document::view downloader::files_document() const {
     return _get_impl().files_doc.view();
 }
 
-// int32_to_size_t checks if @in is within the bounds of an size_t.
-// If yes, it safely casts into @out and returns true.
-// If no, @out is not modified and returns false.
-bool int32_to_size_t_safe (int32_t in, std::size_t *out) {
-    if (in < 0) {
-        return false;
-    }
-    if (sizeof (in) >= sizeof (std::size_t)) {
-        if (in > static_cast<std::int32_t>(std::numeric_limits<std::size_t>::max())) {
-            return false;
-        }
-    }
-    *out = static_cast<std::size_t> (in);
-    return true;
-}
-
 void downloader::fetch_chunk() {
     if (_get_impl().chunks_curr == _get_impl().chunks_end) {
         std::ostringstream err;
@@ -183,8 +168,9 @@ void downloader::fetch_chunk() {
     _get_impl().chunk_buffer_ptr = binary_data.bytes;
     _get_impl().chunk_buffer_len = binary_data.size;
 
-    if (! _get_impl().chunks_seen) {
-        if (!int32_to_size_t_safe (_get_impl().start.bytes_offset, &_get_impl().chunk_buffer_offset)) {
+    if (!_get_impl().chunks_seen) {
+        if (!int32_to_size_t_safe(_get_impl().start.bytes_offset,
+                                  &_get_impl().chunk_buffer_offset)) {
             throw gridfs_exception{error_code::k_invalid_parameter,
                                    "expected bytes offset to be in bounds of size_t"};
         }
