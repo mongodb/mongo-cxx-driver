@@ -1140,17 +1140,17 @@ TEST_CASE("Custom endpoint", "[client_side_encryption]") {
     // {
     //   region: "us-east-1",
     //   key: "arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0",
-    //   endpoint: "example.com"
+    //   endpoint: "doesnotexist.invalid"
     // }
-    // Expect this to fail with an exception with a message containing the string: "parse error"
+    // Expect this to fail with a network exception indicating failure to resolve "doesnotexist.invalid".
     auto parse_error_masterkey =
         document{} << "region"
                    << "us-east-1"
                    << "key"
                    << "arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0"
                    << "endpoint"
-                   << "example.com" << finalize;
-    _run_endpoint_test(&client_encryption, parse_error_masterkey.view(), {{"parse error"}});
+                   << "doesnotexist.invalid" << finalize;
+    _run_endpoint_test(&client_encryption, parse_error_masterkey.view(), {{"Failed to resolve"}});
 }
 
 TEST_CASE("Bypass spawning mongocryptd", "[client_side_encryption]") {
