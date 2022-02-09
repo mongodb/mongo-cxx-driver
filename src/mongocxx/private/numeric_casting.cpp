@@ -46,7 +46,7 @@ bool int32_to_size_t_safe(int32_t in, std::size_t* out) {
     if (in < 0) {
         return false;
     }
-    if (sizeof(in) >= sizeof(std::size_t)) {
+    if (sizeof(in) > sizeof(std::size_t)) {
         if (in > static_cast<std::int32_t>(std::numeric_limits<std::size_t>::max())) {
             return false;
         }
@@ -59,7 +59,7 @@ bool int64_to_size_t_safe(int64_t in, std::size_t* out) {
     if (in < 0) {
         return false;
     }
-    if (sizeof(in) >= sizeof(std::size_t)) {
+    if (sizeof(in) > sizeof(std::size_t)) {
         if (in > static_cast<std::int64_t>(std::numeric_limits<std::size_t>::max())) {
             return false;
         }
