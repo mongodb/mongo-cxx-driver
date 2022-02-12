@@ -435,6 +435,10 @@ document::value aggregate(Entity& entity, client_session* session, document::vie
         options.collation(arguments["collation"].get_document().value);
     }
 
+    if (arguments["let"]) {
+        options.let(arguments["let"].get_document().value);
+    }
+
     stdx::optional<cursor> result_cursor;
 
     if (session) {
