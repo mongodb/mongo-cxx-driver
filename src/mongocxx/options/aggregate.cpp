@@ -38,6 +38,10 @@ void aggregate::append(bsoncxx::builder::basic::document& builder) const {
         builder.append(kvp("collation", *this->collation()));
     }
 
+    if (this->let()) {
+        builder.append(kvp("let", *this->let()));
+    }
+
     if (this->max_time()) {
         builder.append(kvp("maxTimeMS", bsoncxx::types::b_int64{this->max_time()->count()}));
     }
@@ -61,6 +65,11 @@ void aggregate::append(bsoncxx::builder::basic::document& builder) const {
 
 aggregate& aggregate::collation(bsoncxx::document::view_or_value collation) {
     _collation = std::move(collation);
+    return *this;
+}
+
+aggregate& aggregate::let(bsoncxx::document::view_or_value let) {
+    _let = std::move(let);
     return *this;
 }
 
@@ -109,6 +118,10 @@ const stdx::optional<std::int32_t>& aggregate::batch_size() const {
 
 const stdx::optional<bsoncxx::document::view_or_value>& aggregate::collation() const {
     return _collation;
+}
+
+const stdx::optional<bsoncxx::document::view_or_value>& aggregate::let() const {
+    return _let;
 }
 
 const stdx::optional<std::chrono::milliseconds>& aggregate::max_time() const {

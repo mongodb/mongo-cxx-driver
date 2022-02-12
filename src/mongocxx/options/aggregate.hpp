@@ -109,6 +109,30 @@ class MONGOCXX_API aggregate {
     const stdx::optional<bsoncxx::document::view_or_value>& collation() const;
 
     ///
+    /// Sets the variable mapping for this operation.
+    ///
+    /// @param let
+    ///   The new variable mapping.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called. This facilitates
+    ///   method chaining.
+    ///
+    /// @see https://docs.mongodb.com/manual/reference/command/aggregate/
+    ///
+    aggregate& let(bsoncxx::document::view_or_value let);
+
+    ///
+    /// Retrieves the current variable mapping for this operation.
+    ///
+    /// @return
+    ///   The current variable mapping.
+    ///
+    /// @see https://docs.mongodb.com/manual/reference/command/aggregate/
+    ///
+    const stdx::optional<bsoncxx::document::view_or_value>& let() const;
+
+    ///
     /// Sets the maximum amount of time for this operation to run server-side in milliseconds.
     ///
     /// @param max_time
@@ -261,6 +285,7 @@ class MONGOCXX_API aggregate {
     stdx::optional<bool> _allow_disk_use;
     stdx::optional<std::int32_t> _batch_size;
     stdx::optional<bsoncxx::document::view_or_value> _collation;
+    stdx::optional<bsoncxx::document::view_or_value> _let;
     stdx::optional<std::chrono::milliseconds> _max_time;
     stdx::optional<class read_preference> _read_preference;
     stdx::optional<bool> _bypass_document_validation;
