@@ -80,9 +80,16 @@ std::int32_t read_chunk_size_from_files_document(bsoncxx::document::view files_d
 std::int64_t read_length_from_files_document(const bsoncxx::document::view files_doc) {
     auto length_ele = files_doc["length"];
     std::int64_t length;
-    if (length_ele && length_ele.type() == bsoncxx::type::k_int64) {
+
+    if (!length_ele) {
+        throw gridfs_exception{error_code::k_gridfs_file_corrupted,
+                               "expected files document to contain field \"length\" with type "
+                               "k_int32 or k_int64"};
+    }
+
+    if (length_ele.type() == bsoncxx::type::k_int64) {
         length = length_ele.get_int64().value;
-    } else if (length_ele && length_ele.type() == bsoncxx::type::k_int32) {
+    } else if (length_ele.type() == bsoncxx::type::k_int32) {
         length = length_ele.get_int32().value;
     } else {
         throw gridfs_exception{error_code::k_gridfs_file_corrupted,
