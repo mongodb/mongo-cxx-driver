@@ -857,7 +857,7 @@ TEST_CASE("gridfs::bucket::download_to_stream works", "[gridfs::bucket]") {
     db["fs.files"].drop();
     db["fs.chunks"].drop();
 
-    std::int64_t length = 19;
+    std::int64_t length = 19; // length is the length of the test file in bytes.
     std::int32_t chunk_size = 4;
     bsoncxx::types::bson_value::view id{bsoncxx::types::b_oid{bsoncxx::oid{}}};
     auto file_bytes = manual_gridfs_initialize(db, length, chunk_size, id);
