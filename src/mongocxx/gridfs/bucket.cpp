@@ -45,9 +45,15 @@ std::int32_t read_chunk_size_from_files_document(bsoncxx::document::view files_d
 
     auto chunk_size_ele = files_doc["chunkSize"];
 
-    if (chunk_size_ele && chunk_size_ele.type() == bsoncxx::type::k_int64) {
+    if (!chunk_size_ele) {
+        throw gridfs_exception{error_code::k_gridfs_file_corrupted,
+                        "expected files document to contain field \"chunkSize\" with type "
+                        "k_int32 or k_int64"};
+    }
+
+    if (chunk_size_ele.type() == bsoncxx::type::k_int64) {
         chunk_size = chunk_size_ele.get_int64().value;
-    } else if (chunk_size_ele && chunk_size_ele.type() == bsoncxx::type::k_int32) {
+    } else if (chunk_size_ele.type() == bsoncxx::type::k_int32) {
         chunk_size = chunk_size_ele.get_int32().value;
     } else {
         throw gridfs_exception{error_code::k_gridfs_file_corrupted,
