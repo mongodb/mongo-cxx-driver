@@ -1142,7 +1142,8 @@ TEST_CASE("Custom endpoint", "[client_side_encryption]") {
     //   key: "arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0",
     //   endpoint: "doesnotexist.invalid"
     // }
-    // Expect this to fail with a network exception indicating failure to resolve "doesnotexist.invalid".
+    // Expect this to fail with a network exception indicating failure to resolve
+    // "doesnotexist.invalid".
     auto parse_error_masterkey =
         document{} << "region"
                    << "us-east-1"

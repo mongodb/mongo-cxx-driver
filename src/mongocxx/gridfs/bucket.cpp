@@ -47,8 +47,8 @@ std::int32_t read_chunk_size_from_files_document(bsoncxx::document::view files_d
 
     if (!chunk_size_ele) {
         throw gridfs_exception{error_code::k_gridfs_file_corrupted,
-                        "expected files document to contain field \"chunkSize\" with type "
-                        "k_int32 or k_int64"};
+                               "expected files document to contain field \"chunkSize\" with type "
+                               "k_int32 or k_int64"};
     }
 
     if (chunk_size_ele.type() == bsoncxx::type::k_int64) {
@@ -400,20 +400,20 @@ void bucket::_download_to_stream(const client_session* session,
                                  stdx::optional<std::size_t> start,
                                  stdx::optional<std::size_t> end) {
     downloader download_stream = _open_download_stream(session, id, start, end);
-    
+
     std::size_t chunk_size;
-    if (!int32_to_size_t_safe (download_stream.chunk_size(), chunk_size)) {
+    if (!int32_to_size_t_safe(download_stream.chunk_size(), chunk_size)) {
         throw gridfs_exception{error_code::k_invalid_parameter,
-                                   "expected chunk size to be in bounds of size_t"};
+                               "expected chunk size to be in bounds of size_t"};
     }
     if (!start) {
         start.emplace<std::size_t>(0);
     }
     if (!end) {
         std::size_t file_length_sz;
-        if (!int64_to_size_t_safe (download_stream.file_length(), file_length_sz)) {
+        if (!int64_to_size_t_safe(download_stream.file_length(), file_length_sz)) {
             throw gridfs_exception{error_code::k_invalid_parameter,
-                                    "expected file length to be in bounds of int64"};
+                                   "expected file length to be in bounds of int64"};
         }
         end = file_length_sz;
     }

@@ -126,7 +126,8 @@ void apm_checker::has(bsoncxx::array::view expectations) {
 }
 
 bool apm_checker::should_ignore(stdx::string_view command_name) const {
-    return std::any_of(std::begin(_ignore), std::end(_ignore), 
+    return std::any_of(std::begin(_ignore),
+                       std::end(_ignore),
                        [command_name](stdx::string_view cmp) { return command_name == cmp; });
 }
 
