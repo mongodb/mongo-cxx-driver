@@ -57,6 +57,7 @@ set(test_driver_sources
     options/replace.cpp
     options/update.cpp
     pool.cpp
+    private/numeric_casting.cpp
     private/scoped_bson_t.cpp
     private/write_concern.cpp
     read_concern.cpp
@@ -324,6 +325,7 @@ set_dist_list (src_mongocxx_test_DIST
    options/replace.cpp
    options/update.cpp
    pool.cpp
+   private/numeric_casting.cpp
    private/scoped_bson_t.cpp
    private/write_concern.cpp
    read_concern.cpp
