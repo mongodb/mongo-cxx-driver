@@ -37,9 +37,9 @@ downloader::downloader(stdx::optional<cursor> chunks,
                        std::int64_t file_len,
                        bsoncxx::document::value files_doc)
     : _impl{stdx::make_unique<impl>(std::move(chunks),
-                                    std::move(start),
-                                    std::move(chunk_size),
-                                    std::move(file_len),
+                                    start,
+                                    chunk_size,
+                                    file_len,
                                     std::move(files_doc))} {}
 
 downloader::downloader() noexcept = default;
