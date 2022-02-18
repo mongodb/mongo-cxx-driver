@@ -170,7 +170,7 @@ void downloader::fetch_chunk() {
 
     if (!_get_impl().chunks_seen) {
         if (!int32_to_size_t_safe(_get_impl().start.bytes_offset,
-                                  &_get_impl().chunk_buffer_offset)) {
+                                  _get_impl().chunk_buffer_offset)) {
             throw gridfs_exception{error_code::k_invalid_parameter,
                                    "expected bytes offset to be in bounds of size_t"};
         }

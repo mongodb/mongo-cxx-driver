@@ -339,7 +339,7 @@ downloader bucket::_open_download_stream(const client_session* session,
 
     int64_t start_i64 = 0;
     if (start && *start > 0) {
-        if (!size_t_to_int64_safe(*start, &start_i64)) {
+        if (!size_t_to_int64_safe(*start, start_i64)) {
             throw gridfs_exception{error_code::k_invalid_parameter,
                                    "expected start to not be greater than max int64"};
         }
@@ -348,12 +348,12 @@ downloader bucket::_open_download_stream(const client_session* session,
                                    "expected start to not be greater than the file length"};
         }
         auto start_offset_div = std::lldiv(start_i64, chunk_size);
-        if (!int64_to_int32_safe(start_offset_div.quot, &start_offset.chunks_offset)) {
+        if (!int64_to_int32_safe(start_offset_div.quot, start_offset.chunks_offset)) {
             throw gridfs_exception{error_code::k_invalid_parameter,
                                    "expected chunk offset to be in bounds of int32"};
         }
 
-        if (!int64_to_int32_safe(start_offset_div.rem, &start_offset.bytes_offset)) {
+        if (!int64_to_int32_safe(start_offset_div.rem, start_offset.bytes_offset)) {
             throw gridfs_exception{error_code::k_invalid_parameter,
                                    "expected bytes offset to be in bounds of int32"};
         }
@@ -362,7 +362,7 @@ downloader bucket::_open_download_stream(const client_session* session,
 
     if (end) {
         int64_t end_i64;
-        if (!size_t_to_int64_safe(*end, &end_i64)) {
+        if (!size_t_to_int64_safe(*end, end_i64)) {
             throw gridfs_exception{error_code::k_invalid_parameter,
                                    "expected end to not be greater than max int64"};
         }
@@ -402,7 +402,7 @@ void bucket::_download_to_stream(const client_session* session,
     downloader download_stream = _open_download_stream(session, id, start, end);
     
     std::size_t chunk_size;
-    if (!int32_to_size_t_safe (download_stream.chunk_size(), &chunk_size)) {
+    if (!int32_to_size_t_safe (download_stream.chunk_size(), chunk_size)) {
         throw gridfs_exception{error_code::k_invalid_parameter,
                                    "expected chunk size to be in bounds of size_t"};
     }
@@ -411,7 +411,7 @@ void bucket::_download_to_stream(const client_session* session,
     }
     if (!end) {
         std::size_t file_length_sz;
-        if (!int64_to_size_t_safe (download_stream.file_length(), &file_length_sz)) {
+        if (!int64_to_size_t_safe (download_stream.file_length(), file_length_sz)) {
             throw gridfs_exception{error_code::k_invalid_parameter,
                                     "expected file length to be in bounds of int64"};
         }
