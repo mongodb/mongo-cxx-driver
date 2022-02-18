@@ -144,6 +144,8 @@ type to_type(const Element& type) {
         return bsoncxx::type::k_int64;
     if (type_str == "int")
         return bsoncxx::type::k_int32;
+    if (type_str == "double")
+        return bsoncxx::type::k_double;
     if (type_str == "objectId")
         return bsoncxx::type::k_oid;
     if (type_str == "object")
