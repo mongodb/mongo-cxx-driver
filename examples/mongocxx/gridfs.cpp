@@ -56,6 +56,14 @@ int main() {
     // is still in scope.
     bsoncxx::types::bson_value::view id = result.id();
 
+    // Download a file using the ObjectId of an existing file.
+
+    // auto bson_id = oid(bsoncxx::stdx::string_view("ObjectId"));
+	// builder::stream::document build_doc;
+	// build_doc << "id" << bson_id;
+	// auto id = build_doc.view()["id"].get_value();
+    
+
     auto downloader = bucket.open_download_stream(id);
     auto file_length = downloader.file_length();
     auto bytes_counter = 0;
