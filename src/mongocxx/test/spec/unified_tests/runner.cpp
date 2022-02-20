@@ -605,19 +605,19 @@ void assert_error(const mongocxx::operation_exception& exception,
     if (auto is_client_error = expect_error["isClientError"]) {
         REQUIRE(is_client_error.get_bool());
 
-	// Alas, C++20's std::string::start_with() isn't available: 
-	const std::string snapshot_required_msg = "Snapshot reads require MongoDB 5.0 or later";
-	std::string exception_msg { exception.what() };
+        // Alas, C++20's std::string::start_with() isn't available:
+        const std::string snapshot_required_msg = "Snapshot reads require MongoDB 5.0 or later";
+        std::string exception_msg{exception.what()};
 
         if (snapshot_required_msg == exception_msg.substr(0, snapshot_required_msg.length())) {
-            // Do not assert a server-side error. 
+            // Do not assert a server-side error.
             // The C driver returns this error with the domain MONGOC_ERROR_CLIENT,
             // but the C++ driver throws the error as a server-side error operation_exception.
             // Remove this special case as part of CXX-2377.
             REQUIRE(is_client_error.get_bool());
         } else {
             // An operation_exception represents a server-side error.
-            REQUIRE(!is_client_error.get_bool());	
+            REQUIRE(!is_client_error.get_bool());
         }
     }
 
@@ -879,25 +879,25 @@ void run_tests_in_file(const std::string& test_path) {
 bool run_unified_format_tests_in_env_dir(const std::string& env_path) {
     const char* p = std::getenv(env_path.c_str());
 
-    if (nullptr == p) 
+    if (nullptr == p)
         FAIL("unable to look up path from environment variable \"" << env_path << "\"");
 
-    const std::string base_path { p };
-	
+    const std::string base_path{p};
+
     auto test_file_set_path = base_path + "/test_files.txt";
     std::ifstream files{test_file_set_path};
-    
+
     if (!files.good()) {
         FAIL("unable to find/open test_files.txt in path \"" << test_file_set_path << '\"');
     }
-    
+
     instance::current();
-    
+
     for (std::string file; std::getline(files, file);) {
         CAPTURE(file);
         run_tests_in_file(base_path + '/' + file);
     }
-    
+
     return true;
 }
 

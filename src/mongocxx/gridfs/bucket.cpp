@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include <ios>
+#include <sstream>
 #include <string>
 
 #include <bsoncxx/builder/basic/document.hpp>
@@ -28,6 +29,7 @@
 #include <mongocxx/gridfs/private/bucket.hh>
 #include <mongocxx/options/delete.hpp>
 #include <mongocxx/options/index.hpp>
+#include <mongocxx/private/numeric_casting.hh>
 #include <mongocxx/stdx.hpp>
 
 #include <mongocxx/config/private/prelude.hh>
@@ -35,6 +37,75 @@
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace gridfs {
+
+namespace {
+std::int32_t read_chunk_size_from_files_document(bsoncxx::document::view files_doc) {
+    const std::int64_t k_max_document_size = 16 * 1024 * 1024;
+    std::int64_t chunk_size;
+
+    auto chunk_size_ele = files_doc["chunkSize"];
+
+    if (!chunk_size_ele) {
+        throw gridfs_exception{error_code::k_gridfs_file_corrupted,
+                               "expected files document to contain field \"chunkSize\" with type "
+                               "k_int32 or k_int64"};
+    }
+
+    if (chunk_size_ele.type() == bsoncxx::type::k_int64) {
+        chunk_size = chunk_size_ele.get_int64().value;
+    } else if (chunk_size_ele.type() == bsoncxx::type::k_int32) {
+        chunk_size = chunk_size_ele.get_int32().value;
+    } else {
+        throw gridfs_exception{error_code::k_gridfs_file_corrupted,
+                               "expected files document to contain field \"chunkSize\" with type "
+                               "k_int32 or k_int64"};
+    }
+
+    // Each chunk needs to be able to fit in a single document.
+    if (chunk_size > k_max_document_size) {
+        std::ostringstream err;
+        err << "files document contains unexpected chunk size of " << chunk_size
+            << ", which exceeds maximum chunk size of " << k_max_document_size;
+        throw gridfs_exception{error_code::k_gridfs_file_corrupted, err.str()};
+    } else if (chunk_size <= 0) {
+        std::ostringstream err;
+        err << "files document contains unexpected chunk size: " << chunk_size
+            << "; value must be positive";
+        throw gridfs_exception{error_code::k_gridfs_file_corrupted, err.str()};
+    }
+
+    return static_cast<std::int32_t>(chunk_size);
+}
+
+std::int64_t read_length_from_files_document(const bsoncxx::document::view files_doc) {
+    auto length_ele = files_doc["length"];
+    std::int64_t length;
+
+    if (!length_ele) {
+        throw gridfs_exception{error_code::k_gridfs_file_corrupted,
+                               "expected files document to contain field \"length\" with type "
+                               "k_int32 or k_int64"};
+    }
+
+    if (length_ele.type() == bsoncxx::type::k_int64) {
+        length = length_ele.get_int64().value;
+    } else if (length_ele.type() == bsoncxx::type::k_int32) {
+        length = length_ele.get_int32().value;
+    } else {
+        throw gridfs_exception{error_code::k_gridfs_file_corrupted,
+                               "expected files document to contain field \"length\" with type "
+                               "k_int32 or k_int64"};
+    }
+
+    if (length < 0) {
+        std::ostringstream err;
+        err << "files document contains unexpected negative value for \"length\": " << length;
+        throw gridfs_exception{error_code::k_gridfs_file_corrupted, err.str()};
+    }
+
+    return length;
+}
+}  // namespace
 
 bucket::bucket(const database& db, const options::gridfs::bucket& options) {
     std::string bucket_name = "fs";
@@ -216,7 +287,9 @@ void bucket::upload_from_stream_with_id(const client_session& session,
 }
 
 downloader bucket::_open_download_stream(const client_session* session,
-                                         bsoncxx::types::bson_value::view id) {
+                                         bsoncxx::types::bson_value::view id,
+                                         stdx::optional<std::size_t> start,
+                                         stdx::optional<std::size_t> end) {
     using namespace bsoncxx;
 
     builder::basic::document files_filter;
@@ -238,11 +311,14 @@ downloader bucket::_open_download_stream(const client_session* session,
                                "k_int32 or k_int64"};
     }
 
+    const auto chunk_size = read_chunk_size_from_files_document(*files_doc);
+    const auto file_len = read_length_from_files_document(*files_doc);
+    chunks_and_bytes_offset start_offset;
     auto length = files_doc_view["length"];
 
     if ((length.type() == type::k_int64 && !length.get_int64().value) ||
         (length.type() == type::k_int32 && !length.get_int32().value)) {
-        return downloader{stdx::nullopt, *files_doc};
+        return downloader{stdx::nullopt, start_offset, chunk_size, file_len, *files_doc};
     }
 
     builder::basic::document chunks_filter;
@@ -254,48 +330,131 @@ downloader bucket::_open_download_stream(const client_session* session,
     options::find chunks_options;
     chunks_options.sort(chunks_sort.extract());
 
+    if (start && end) {
+        if (*start > *end) {
+            throw gridfs_exception{error_code::k_invalid_parameter,
+                                   "expected end to be greater than start"};
+        }
+    }
+
+    int64_t start_i64 = 0;
+    if (start && *start > 0) {
+        if (!size_t_to_int64_safe(*start, start_i64)) {
+            throw gridfs_exception{error_code::k_invalid_parameter,
+                                   "expected start to not be greater than max int64"};
+        }
+        if (file_len >= 0 && start_i64 > file_len) {
+            throw gridfs_exception{error_code::k_invalid_parameter,
+                                   "expected start to not be greater than the file length"};
+        }
+        auto start_offset_div = std::lldiv(start_i64, chunk_size);
+        if (!int64_to_int32_safe(start_offset_div.quot, start_offset.chunks_offset)) {
+            throw gridfs_exception{error_code::k_invalid_parameter,
+                                   "expected chunk offset to be in bounds of int32"};
+        }
+
+        if (!int64_to_int32_safe(start_offset_div.rem, start_offset.bytes_offset)) {
+            throw gridfs_exception{error_code::k_invalid_parameter,
+                                   "expected bytes offset to be in bounds of int32"};
+        }
+        chunks_options.skip(start_offset.chunks_offset);
+    }
+
+    if (end) {
+        int64_t end_i64;
+        if (!size_t_to_int64_safe(*end, end_i64)) {
+            throw gridfs_exception{error_code::k_invalid_parameter,
+                                   "expected end to not be greater than max int64"};
+        }
+
+        if (file_len >= 0 && end_i64 > file_len) {
+            throw gridfs_exception{error_code::k_invalid_parameter,
+                                   "expected end to not be greater than the file length"};
+        }
+        if (file_len >= 0 && end_i64 < file_len) {
+            const int64_t num_chunks =
+                1 + ((end_i64 - start_i64) / static_cast<int64_t>(chunk_size));
+            chunks_options.limit(num_chunks);
+        }
+    }
+
     auto cursor = session
                       ? _get_impl().chunks.find(*session, chunks_filter.extract(), chunks_options)
                       : _get_impl().chunks.find(chunks_filter.extract(), chunks_options);
 
-    return downloader{std::move(cursor), *files_doc};
+    return downloader{std::move(cursor), start_offset, chunk_size, file_len, *files_doc};
 }
 
 downloader bucket::open_download_stream(bsoncxx::types::bson_value::view id) {
-    return _open_download_stream(nullptr, id);
+    return _open_download_stream(nullptr, id, stdx::nullopt, stdx::nullopt);
 }
 
 downloader bucket::open_download_stream(const client_session& session,
                                         bsoncxx::types::bson_value::view id) {
-    return _open_download_stream(&session, id);
+    return _open_download_stream(&session, id, stdx::nullopt, stdx::nullopt);
 }
 
 void bucket::_download_to_stream(const client_session* session,
                                  bsoncxx::types::bson_value::view id,
-                                 std::ostream* destination) {
-    downloader download_stream = _open_download_stream(session, id);
-    std::int32_t chunk_size = download_stream.chunk_size();
+                                 std::ostream* destination,
+                                 stdx::optional<std::size_t> start,
+                                 stdx::optional<std::size_t> end) {
+    downloader download_stream = _open_download_stream(session, id, start, end);
+
+    std::size_t chunk_size;
+    if (!int32_to_size_t_safe(download_stream.chunk_size(), chunk_size)) {
+        throw gridfs_exception{error_code::k_invalid_parameter,
+                               "expected chunk size to be in bounds of size_t"};
+    }
+    if (!start) {
+        start.emplace<std::size_t>(0);
+    }
+    if (!end) {
+        std::size_t file_length_sz;
+        if (!int64_to_size_t_safe(download_stream.file_length(), file_length_sz)) {
+            throw gridfs_exception{error_code::k_invalid_parameter,
+                                   "expected file length to be in bounds of int64"};
+        }
+        end = file_length_sz;
+    }
+    auto bytes_expected = *end - *start;
     std::unique_ptr<std::uint8_t[]> buffer =
         stdx::make_unique<std::uint8_t[]>(static_cast<std::size_t>(chunk_size));
-    std::size_t bytes_read;
 
-    while ((bytes_read =
-                download_stream.read(buffer.get(), static_cast<std::size_t>(chunk_size))) != 0) {
+    while (bytes_expected > 0) {
+        const std::size_t bytes_read = download_stream.read(
+            buffer.get(), static_cast<std::size_t>(std::min(bytes_expected, chunk_size)));
         destination->write(reinterpret_cast<char*>(buffer.get()),
                            static_cast<std::streamsize>(bytes_read));
+        bytes_expected -= bytes_read;
     }
 
     download_stream.close();
 }
 
 void bucket::download_to_stream(bsoncxx::types::bson_value::view id, std::ostream* destination) {
-    _download_to_stream(nullptr, id, destination);
+    _download_to_stream(nullptr, id, destination, stdx::nullopt, stdx::nullopt);
+}
+
+void bucket::download_to_stream(bsoncxx::types::bson_value::view id,
+                                std::ostream* destination,
+                                std::size_t start,
+                                std::size_t end) {
+    _download_to_stream(nullptr, id, destination, start, end);
 }
 
 void bucket::download_to_stream(const client_session& session,
                                 bsoncxx::types::bson_value::view id,
                                 std::ostream* destination) {
-    _download_to_stream(&session, id, destination);
+    _download_to_stream(&session, id, destination, stdx::nullopt, stdx::nullopt);
+}
+
+void bucket::download_to_stream(const client_session& session,
+                                bsoncxx::types::bson_value::view id,
+                                std::ostream* destination,
+                                std::size_t start,
+                                std::size_t end) {
+    _download_to_stream(&session, id, destination, start, end);
 }
 
 void bucket::_delete_file(const client_session* session, bsoncxx::types::bson_value::view id) {

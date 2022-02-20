@@ -857,18 +857,114 @@ TEST_CASE("gridfs::bucket::download_to_stream works", "[gridfs::bucket]") {
     db["fs.files"].drop();
     db["fs.chunks"].drop();
 
-    std::int64_t length = 10;
+    std::int64_t length = 19;  // length is the length of the test file in bytes.
     std::int32_t chunk_size = 4;
     bsoncxx::types::bson_value::view id{bsoncxx::types::b_oid{bsoncxx::oid{}}};
-    auto expected_bytes = manual_gridfs_initialize(db, length, chunk_size, id);
-
+    auto file_bytes = manual_gridfs_initialize(db, length, chunk_size, id);
     std::ostringstream os;
-    bucket.download_to_stream(id, &os);
 
-    auto str = os.str();
-    std::vector<std::uint8_t> actual_bytes{str.begin(), str.end()};
+    SECTION("download complete file") {
+        bucket.download_to_stream(id, &os);
 
-    REQUIRE(expected_bytes == actual_bytes);
+        auto str = os.str();
+        std::vector<std::uint8_t> actual_bytes{str.begin(), str.end()};
+
+        REQUIRE(file_bytes == actual_bytes);
+    }
+
+    SECTION("download complete file with start/end offsets") {
+        bucket.download_to_stream(id, &os, 0, static_cast<size_t>(length));
+
+        auto str = os.str();
+        std::vector<std::uint8_t> actual_bytes{str.begin(), str.end()};
+
+        REQUIRE(file_bytes == actual_bytes);
+    }
+
+    SECTION("download partial file") {
+        auto check_downloaded_content = [&](std::size_t start, std::size_t end) {
+            bucket.download_to_stream(id, &os, start, end);
+
+            auto str = os.str();
+            std::vector<std::uint8_t> actual_bytes{str.begin(), str.end()};
+            REQUIRE(actual_bytes.size() == end - start);
+            const std::vector<std::uint8_t> expected_bytes{
+                file_bytes.begin() + static_cast<std::vector<uint8_t>::difference_type>(start),
+                file_bytes.begin() + static_cast<std::vector<uint8_t>::difference_type>(end)};
+            REQUIRE(expected_bytes == actual_bytes);
+        };
+
+        SECTION("whole file") {
+            check_downloaded_content(0, static_cast<std::size_t>(length));
+        }
+
+        SECTION("no data") {
+            check_downloaded_content(0, 0);
+        }
+
+        SECTION("at file start") {
+            SECTION("partial chunk") {
+                check_downloaded_content(0, static_cast<std::size_t>(chunk_size - 1));
+            }
+
+            SECTION("complete chunk") {
+                check_downloaded_content(0, static_cast<std::size_t>(chunk_size));
+            }
+
+            SECTION("across chunks") {
+                check_downloaded_content(0, static_cast<std::size_t>(2 * chunk_size));
+            }
+        }
+
+        SECTION("middle of the file") {
+            SECTION("partial chunk") {
+                const auto start = chunk_size + chunk_size / 2;
+                const auto end = start + 1;
+                check_downloaded_content(static_cast<std::size_t>(start),
+                                         static_cast<std::size_t>(end));
+            }
+
+            SECTION("complete chunk") {
+                const auto start = chunk_size;
+                const auto end = start + chunk_size;
+                check_downloaded_content(static_cast<std::size_t>(start),
+                                         static_cast<std::size_t>(end));
+            }
+
+            SECTION("across 2 chunks") {
+                const auto start = chunk_size / 2;
+                const auto end = start + chunk_size;
+                check_downloaded_content(static_cast<std::size_t>(start),
+                                         static_cast<std::size_t>(end));
+            }
+
+            SECTION("across 3 chunks") {
+                const auto start = chunk_size / 2;
+                const auto end = start + 2 * chunk_size;
+                check_downloaded_content(static_cast<std::size_t>(start),
+                                         static_cast<std::size_t>(end));
+            }
+        }
+
+        SECTION("at file end") {
+            const auto last_chunk_start = chunk_size * (length / chunk_size);
+            SECTION("across chunks") {
+                check_downloaded_content(
+                    static_cast<std::size_t>(last_chunk_start - (2 * chunk_size) + 1),
+                    static_cast<std::size_t>(length));
+            }
+
+            SECTION("partial chunk") {
+                check_downloaded_content(static_cast<std::size_t>(last_chunk_start + 1),
+                                         static_cast<std::size_t>(length));
+            }
+
+            SECTION("complete chunk") {
+                check_downloaded_content(static_cast<std::size_t>(last_chunk_start),
+                                         static_cast<std::size_t>(length));
+            }
+        }
+    }
 }
 
 TEST_CASE("gridfs::bucket::delete_file works", "[gridfs::bucket]") {
