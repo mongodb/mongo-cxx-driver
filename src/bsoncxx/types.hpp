@@ -16,8 +16,8 @@
 
 #include <chrono>
 #include <cstring>
-#include <math.h>
-#include <limits.h>
+#include <cmath>
+#include <limits>
 
 #include <bsoncxx/array/view.hpp>
 #include <bsoncxx/decimal128.hpp>
@@ -108,7 +108,7 @@ struct BSONCXX_API b_double {
 /// @relatesalso b_double
 ///
 BSONCXX_INLINE bool operator==(const b_double& lhs, const b_double& rhs) {
-    return fabs(lhs.value - rhs.value) <= ( (fabs(lhs.value) > fabs(rhs.value) ? fabs(rhs.value) : fabs(lhs.value)) * std::numeric_limits<double>::epsilon());
+    return std::fabs(lhs.value - rhs.value) <= ( (std::fabs(lhs.value) > std::fabs(rhs.value) ? std::fabs(rhs.value) : std::fabs(lhs.value)) * std::numeric_limits<double>::epsilon());
 }
 
 ///
