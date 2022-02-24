@@ -18,6 +18,7 @@
 #include <iterator>
 #include <new>
 #include <vector>
+#include <sstream>
 
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/json.hpp>
@@ -2816,6 +2817,39 @@ TEST_CASE("Ensure that the WriteConcernError 'errInfo' object is propagated", "[
 //JFW: TEST_CASE("expose writeErrors[].errInfo", "[collection]") {
 TEST_CASE("JFWstuff", "[collection]") {
 
+    // A helper for checking that an error document is well-formed according to our requirements:
+    auto writeErrors_well_formed = [](const bsoncxx::document::view& reply_view) -> bool {
+
+//        std::cout << "<- command reply " << ev.command_name() << " " << bsoncxx::to_json (reply_view) << std::endl;
+
+	if(!reply_view["writeErrors"]) {
+		return false;
+	}
+
+	const auto& errdoc = reply_view["writeErrors"][0];
+
+	auto error_code = errdoc["code"].get_int32();
+
+	// The code should be 121 (DocumentValidationFailure):
+	if(121 != error_code) {
+		std::ostringstream os;
+		os << "writeErrors expected to have code 121, but had " << error_code << " instead";
+		throw std::runtime_error(os.str());
+	}
+
+	// We require the "details" field be present: 
+	if(!reply_view["writeErrors"][0]["errInfo"]["details"]) {
+		throw std::runtime_error("no \"details\" field in \"writeErrors\"");
+	}
+
+/* JFW: to show:
+        auto reply_json = bsoncxx::to_json(reply_view);
+        std::cout << "JFW: REPLY:\n" << reply_json << '\n'; */
+
+	return true;
+    };
+
+    // Set up our test environment:
     instance::current();
 
     auto client_opts = mongocxx::options::client();
@@ -2824,42 +2858,13 @@ TEST_CASE("JFWstuff", "[collection]") {
     // response so that we can compare it to the thrown exception later:
     {
     mongocxx::options::apm apm_opts;
-    apm_opts.on_command_failed([](const events::command_failed_event& ev) {
-        std::cout << "<- command failed " << ev.command_name() << " " << bsoncxx::to_json (ev.failure()) << std::endl;
+    apm_opts.on_command_failed([&writeErrors_well_formed](const events::command_failed_event& ev) {
+abort(); // JFW
+        writeErrors_well_formed(ev.failure());
     });
-    apm_opts.on_command_succeeded ([](const mongocxx::events::command_succeeded_event& ev) {
 
-//        std::cout << "<- command succeeded " << ev.command_name() << " " << bsoncxx::to_json (ev.reply()) << std::endl;
-/* JFW: we'll get something like this back:
-{ "n" : 0, "writeErrors" : [ { "index" : 0, "code" : 121, "errInfo" : { "failingDocumentId" : { "$oid" : "6217bd907048698de70e05f1" }, "details" : { "operatorName" : "$type", "specifiedAs" : { "field_x" : { "$type" : "string" } }, "reason" : "type did not match", "consideredValue" : 42, "consideredType" : "int" } }, "errmsg" : "Document failed validation" } ], "nModified" : 0, "ok" : 1.0 }
-
-...we want to be sure that we got "errInfo" and inside of that a "details" document.
-
-          auto error = e.raw_server_error()->view();
-          auto result = error["writeConcernErrors"][0]["errInfo"];
-          contains_err_info = (err_info == result.get_document().view());
-
-*
-*/
-
-        auto reply_view = ev.reply();
-
-        auto errInfo = reply_view["writeErrors"][0]["errInfo"];
-
-        if(errInfo.get_document().view().empty()) {
-	 std::cout << "JFW: errInfo not found\n";
-        }
-
-        auto details = errInfo["details"];
-
-        if(details.get_document().view().empty()) {
-         std::cout << "JFW: no details!\n";
-        }
-
-std::cout << "JFW: ******** OK!\n";
-/* JFW: to show:
-        auto reply_json = bsoncxx::to_json(reply_view);
-        std::cout << "JFW: REPLY:\n" << reply_json << '\n'; */
+    apm_opts.on_command_succeeded ([&writeErrors_well_formed](const mongocxx::events::command_succeeded_event& ev) {
+        writeErrors_well_formed(ev.reply());
     });
 
     client_opts.apm_opts(apm_opts);
@@ -2898,7 +2903,27 @@ std::cout << "JFW: ******** OK!\n";
 
     entry.append(kvp("_id", bsoncxx::oid()), kvp("field_x", 42));
 
-    REQUIRE_THROWS(coll.insert_one(entry.view()));
+    	try
+    	{
+	coll.insert_one(entry.view());
+
+	// We should not make it here:
+	CHECK(false); 
+    	}
+	catch(const operation_exception& e)
+	{
+		auto rse = e.raw_server_error();
+
+		CHECK(rse.has_value());
+		 
+		CHECK(writeErrors_well_formed(*rse));
+        }
+        catch(...)
+	{
+       		 // An exception was thrown, but of the wrong type:
+		CHECK(false);
+	}
+
     }
 
     // We should be able to update our valid object with a valid value type:
