@@ -12,7 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <iostream>
+
 #include <chrono>
+#include <iterator>
+#include <new>
 #include <vector>
 
 #include <bsoncxx/builder/basic/document.hpp>
@@ -2807,5 +2811,125 @@ TEST_CASE("Ensure that the WriteConcernError 'errInfo' object is propagated", "[
 
     REQUIRE(contains_err_info);
 }
+
+//JFW: TEST_CASE("Prose test 2. WriteError.details exposes writeErrors[].errInfo") {
+//JFW: TEST_CASE("expose writeErrors[].errInfo", "[collection]") {
+TEST_CASE("JFWstuff", "[collection]") {
+
+    instance::current();
+
+    auto client_opts = mongocxx::options::client();
+
+    // Listen to the insertion-failed event: we want to get a copy of the server's
+    // response so that we can compare it to the thrown exception later:
+    {
+    mongocxx::options::apm apm_opts;
+    apm_opts.on_command_failed([](const events::command_failed_event& ev) {
+        std::cout << "<- command failed " << ev.command_name() << " " << bsoncxx::to_json (ev.failure()) << std::endl;
+    });
+    apm_opts.on_command_succeeded ([](const mongocxx::events::command_succeeded_event& ev) {
+
+//        std::cout << "<- command succeeded " << ev.command_name() << " " << bsoncxx::to_json (ev.reply()) << std::endl;
+/* JFW: we'll get something like this back:
+{ "n" : 0, "writeErrors" : [ { "index" : 0, "code" : 121, "errInfo" : { "failingDocumentId" : { "$oid" : "6217bd907048698de70e05f1" }, "details" : { "operatorName" : "$type", "specifiedAs" : { "field_x" : { "$type" : "string" } }, "reason" : "type did not match", "consideredValue" : 42, "consideredType" : "int" } }, "errmsg" : "Document failed validation" } ], "nModified" : 0, "ok" : 1.0 }
+
+...we want to be sure that we got "errInfo" and inside of that a "details" document.
+
+          auto error = e.raw_server_error()->view();
+          auto result = error["writeConcernErrors"][0]["errInfo"];
+          contains_err_info = (err_info == result.get_document().view());
+
+*
+*/
+
+        auto reply_view = ev.reply();
+
+        auto errInfo = reply_view["writeErrors"][0]["errInfo"];
+
+        if(errInfo.get_document().view().empty()) {
+	 std::cout << "JFW: errInfo not found\n";
+        }
+
+        auto details = errInfo["details"];
+
+        if(details.get_document().view().empty()) {
+         std::cout << "JFW: no details!\n";
+        }
+
+std::cout << "JFW: ******** OK!\n";
+/* JFW: to show:
+        auto reply_json = bsoncxx::to_json(reply_view);
+        std::cout << "JFW: REPLY:\n" << reply_json << '\n'; */
+    });
+
+    client_opts.apm_opts(apm_opts);
+    }
+
+    auto mongodb_client = mongocxx::client(uri{}, client_opts);
+
+    database db = mongodb_client["prose_test_expose_details"];
+
+    const std::string collname{"mongo_cxx_driver-expose_details"};
+
+    // Drop the existing collection, if any:
+    db[collname].drop();
+
+    // Make a new collection with validation checking:
+    collection coll = db.create_collection(
+       collname,
+       make_document(
+           kvp("validator", make_document(kvp("field_x", make_document(kvp("$type", "string")))))));
+
+    // Hold on to the for a valid object, we'll use this later:
+    auto oid_token = bsoncxx::oid();
+
+    // We should be able to insert a valid document:
+    {
+    bsoncxx::builder::basic::document entry;
+
+    entry.append(kvp("_id", oid_token), kvp("field_x", "value0"));
+
+    REQUIRE(coll.insert_one(entry.view()));
+    }
+
+    // But now, cause a type violation on create:
+    {
+    bsoncxx::builder::basic::document entry;
+
+    entry.append(kvp("_id", bsoncxx::oid()), kvp("field_x", 42));
+
+    REQUIRE_THROWS(coll.insert_one(entry.view()));
+    }
+
+    // We should be able to update our valid object with a valid value type:
+    {
+    bsoncxx::builder::basic::document filter, entry;
+
+    filter.append(kvp("_id", oid_token));
+    entry.append(kvp("$set", make_document(kvp("field_x", "value_updated"))));
+
+    REQUIRE(coll.update_one(filter.view(), entry.view()));
+    }
+
+    // We should NOT be able to update our valid object with an invalid value type:
+    {
+    bsoncxx::builder::basic::document filter, entry;
+
+    filter.append(kvp("_id", oid_token));
+    entry.append(kvp("$set", make_document(kvp("field_x", 42))));
+
+    REQUIRE_THROWS(coll.update_one(filter.view(), entry.view()));
+    }
+
+    // We should be able to delete our valid object:
+    {
+    bsoncxx::builder::basic::document entry;
+
+    entry.append(kvp("_id", oid_token));
+
+    REQUIRE(coll.delete_one(entry.view()));
+    }
+}
+
 
 }  // namespace
