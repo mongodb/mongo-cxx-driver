@@ -2882,7 +2882,7 @@ TEST_CASE("expose writeErrors[].errInfo", "[collection]") {
         try {
             coll.insert_one(entry.view());
 
-            // We should not make it here:
+            // We should not make it here (i.e. this is an error):
             CHECK(false);
         } catch (const operation_exception& e) {
             auto rse = e.raw_server_error();
