@@ -2842,13 +2842,19 @@ TEST_CASE("expose writeErrors[].errInfo", "[collection]") {
     // Set up our test environment:
     instance::current();
 
+    mongocxx::options::apm apm_opts;
+
     auto client_opts = mongocxx::options::client();
 
     // Listen to the insertion-failed event: we want to get a copy of the server's
     // response so that we can compare it to the thrown exception later:
     apm_opts.on_command_succeeded(
         [&writeErrors_well_formed](const mongocxx::events::command_succeeded_event& ev) {
-            if(!writeErrors_well_formed(ev.reply()))
+            if (0 != ev.command_name().compare("insert")) {
+                return;
+            }
+
+            writeErrors_well_formed(ev.reply()); 
         });
 
     client_opts.apm_opts(apm_opts);
@@ -2868,14 +2874,6 @@ TEST_CASE("expose writeErrors[].errInfo", "[collection]") {
         make_document(kvp("validator",
                           make_document(kvp("field_x", make_document(kvp("$type", "string")))))));
 
-    SECTION("insert a valid document") {
-        bsoncxx::builder::basic::document entry;
-
-        entry.append(kvp("_id", bsoncxx::oid()), kvp("field_x", "value0"));
-
-        REQUIRE_NOTHROW(coll.insert_one(entry.view()));
-    }
-
     SECTION("cause a type violation on insert") {
         bsoncxx::builder::basic::document entry;
 
@@ -2889,63 +2887,14 @@ TEST_CASE("expose writeErrors[].errInfo", "[collection]") {
         } catch (const operation_exception& e) {
             auto rse = e.raw_server_error();
 
-            CHECK(rse.has_value());
+            // We have no has_value() check:
+            CHECK(rse);
 
             CHECK(writeErrors_well_formed(*rse));
         } catch (...) {
             // An exception was thrown, but of the wrong type:
             CHECK(false);
         }
-    }
-
-    SECTION("can update valid object with a valid value type") {
-        auto oid_token = bsoncxx::oid();
-
-        // Make sure we have a valid entry to update:
-        bsoncxx::builder::basic::document original_entry;
-        original_entry.append(kvp("_id", oid_token), kvp("field_x", "value0"));
-        REQUIRE_NOTHROW(coll.insert_one(original_entry.view()));
-
-        // Update the same document:
-        bsoncxx::builder::basic::document filter, entry;
-
-        filter.append(kvp("_id", oid_token));
-        entry.append(kvp("$set", make_document(kvp("field_x", "value_updated"))));
-
-        REQUIRE_NOTHROW(coll.update_one(filter.view(), entry.view()));
-    }
-
-    SECTION("should NOT be able to update valid object with an invalid type") {
-        auto oid_token = bsoncxx::oid();
-
-        // Construct a valid entry to update:
-        bsoncxx::builder::basic::document original_entry;
-        original_entry.append(kvp("_id", oid_token), kvp("field_x", "value0"));
-        REQUIRE_NOTHROW(coll.insert_one(original_entry.view()));
-
-        // Update that same document:
-        bsoncxx::builder::basic::document filter, entry;
-
-        filter.append(kvp("_id", oid_token));
-        entry.append(kvp("$set", make_document(kvp("field_x", 42))));
-
-        REQUIRE_THROWS(coll.update_one(filter.view(), entry.view()));
-    }
-
-    SECTION("can delete a valid object") {
-        auto oid_token = bsoncxx::oid();
-
-        // Construct a valid entry to update:
-        bsoncxx::builder::basic::document original_entry;
-        original_entry.append(kvp("_id", oid_token), kvp("field_x", "value0"));
-        REQUIRE_NOTHROW(coll.insert_one(original_entry.view()));
-
-        // ...and now delete that entry:
-        bsoncxx::builder::basic::document entry;
-
-        entry.append(kvp("_id", oid_token));
-
-        REQUIRE_NOTHROW(coll.delete_one(entry.view()));
     }
 }
 
