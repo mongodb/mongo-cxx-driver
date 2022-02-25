@@ -2813,6 +2813,7 @@ TEST_CASE("Ensure that the WriteConcernError 'errInfo' object is propagated", "[
 }
 
 TEST_CASE("expose writeErrors[].errInfo", "[collection]") {
+
     // A helper for checking that an error document is well-formed according to our requirements:
     auto writeErrors_well_formed = [](const bsoncxx::document::view& reply_view) -> bool {
         if (!reply_view["writeErrors"]) {
@@ -2831,7 +2832,7 @@ TEST_CASE("expose writeErrors[].errInfo", "[collection]") {
         }
 
         // We require the "details" field be present:
-        if (!reply_view["writeErrors"][0]["errInfo"]["details"]) {
+        if (!errdoc["errInfo"]["details"]) {
             throw std::runtime_error("no \"details\" field in \"writeErrors\"");
         }
 
@@ -2845,14 +2846,9 @@ TEST_CASE("expose writeErrors[].errInfo", "[collection]") {
 
     // Listen to the insertion-failed event: we want to get a copy of the server's
     // response so that we can compare it to the thrown exception later:
-    mongocxx::options::apm apm_opts;
-    apm_opts.on_command_failed([&writeErrors_well_formed](const events::command_failed_event& ev) {
-        writeErrors_well_formed(ev.failure());
-    });
-
     apm_opts.on_command_succeeded(
         [&writeErrors_well_formed](const mongocxx::events::command_succeeded_event& ev) {
-            writeErrors_well_formed(ev.reply());
+            if(!writeErrors_well_formed(ev.reply()))
         });
 
     client_opts.apm_opts(apm_opts);
