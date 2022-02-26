@@ -2813,7 +2813,6 @@ TEST_CASE("Ensure that the WriteConcernError 'errInfo' object is propagated", "[
 }
 
 TEST_CASE("expose writeErrors[].errInfo", "[collection]") {
-
     // A helper for checking that an error document is well-formed according to our requirements:
     auto writeErrors_well_formed = [](const bsoncxx::document::view& reply_view) -> bool {
         if (!reply_view["writeErrors"]) {
@@ -2844,7 +2843,7 @@ TEST_CASE("expose writeErrors[].errInfo", "[collection]") {
 
     mongocxx::options::apm apm_opts;
 
-    auto client_opts = mongocxx::options::client();
+    auto client_opts = test_util::add_test_server_api();
 
     // Listen to the insertion-failed event: we want to get a copy of the server's
     // response so that we can compare it to the thrown exception later:
@@ -2854,12 +2853,17 @@ TEST_CASE("expose writeErrors[].errInfo", "[collection]") {
                 return;
             }
 
-            writeErrors_well_formed(ev.reply()); 
+            REQUIRE(writeErrors_well_formed(ev.reply()));
         });
 
     client_opts.apm_opts(apm_opts);
 
     auto mongodb_client = mongocxx::client(uri{}, client_opts);
+
+    if (!test_util::newer_than(mongodb_client, "5.0")) {
+        WARN("skip: test requires MongoDB server 5.0 or newer");
+        return;
+    }
 
     database db = mongodb_client["prose_test_expose_details"];
 
