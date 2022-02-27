@@ -8,6 +8,12 @@
 # behavior of this script:
 # - BUILD_TYPE: must be set to "Release" or "Debug"
 
+echo "CXX-2359 getting intel... begin"
+ls /usr/local/Cellar
+ls /opt/homebrew/Cellar
+echo "CXX-2359 getting intel... end"
+
+set -o xtrace
 set -o errexit
 set -o pipefail
 
