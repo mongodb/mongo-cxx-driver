@@ -2813,8 +2813,11 @@ TEST_CASE("Ensure that the WriteConcernError 'errInfo' object is propagated", "[
 }
 
 TEST_CASE("expose writeErrors[].errInfo", "[collection]") {
+    bool insert_succeeded = false;  // this is checked by side-effect in writeErrors_well_formed
+
     // A helper for checking that an error document is well-formed according to our requirements:
-    auto writeErrors_well_formed = [](const bsoncxx::document::view& reply_view) -> bool {
+    auto writeErrors_well_formed =
+        [&insert_succeeded](const bsoncxx::document::view& reply_view) -> bool {
         if (!reply_view["writeErrors"]) {
             return false;
         }
@@ -2834,6 +2837,8 @@ TEST_CASE("expose writeErrors[].errInfo", "[collection]") {
         if (!errdoc["errInfo"]["details"]) {
             throw std::runtime_error("no \"details\" field in \"writeErrors\"");
         }
+
+        insert_succeeded = true;
 
         return true;
     };
@@ -2899,6 +2904,9 @@ TEST_CASE("expose writeErrors[].errInfo", "[collection]") {
             // An exception was thrown, but of the wrong type:
             CHECK(false);
         }
+
+        // Make sure that our callback was actually triggered and completed successfully:
+        REQUIRE(insert_succeeded);
     }
 }
 
