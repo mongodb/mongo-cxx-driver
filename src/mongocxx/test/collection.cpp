@@ -2813,7 +2813,7 @@ TEST_CASE("Ensure that the WriteConcernError 'errInfo' object is propagated", "[
 }
 
 TEST_CASE("expose writeErrors[].errInfo", "[collection]") {
-    bool insert_succeeded = false;  // this is checked by side-effect in writeErrors_well_formed
+    bool insert_succeeded = false;  // this is checked by side-effect
 
     // A helper for checking that an error document is well-formed according to our requirements:
     auto writeErrors_well_formed =
@@ -2838,8 +2838,6 @@ TEST_CASE("expose writeErrors[].errInfo", "[collection]") {
             throw std::runtime_error("no \"details\" field in \"writeErrors\"");
         }
 
-        insert_succeeded = true;
-
         return true;
     };
 
@@ -2859,6 +2857,9 @@ TEST_CASE("expose writeErrors[].errInfo", "[collection]") {
             }
 
             REQUIRE(writeErrors_well_formed(ev.reply()));
+
+            // Make sure that "we" were actually called:
+            insert_succeeded = true;
         });
 
     client_opts.apm_opts(apm_opts);
