@@ -2813,11 +2813,8 @@ TEST_CASE("Ensure that the WriteConcernError 'errInfo' object is propagated", "[
 }
 
 TEST_CASE("expose writeErrors[].errInfo", "[collection]") {
-    bool insert_succeeded = false;  // this is checked by side-effect
-
     // A helper for checking that an error document is well-formed according to our requirements:
-    auto writeErrors_well_formed =
-        [&insert_succeeded](const bsoncxx::document::view& reply_view) -> bool {
+    auto writeErrors_well_formed = [](const bsoncxx::document::view& reply_view) -> bool {
         if (!reply_view["writeErrors"]) {
             return false;
         }
@@ -2848,19 +2845,23 @@ TEST_CASE("expose writeErrors[].errInfo", "[collection]") {
 
     auto client_opts = test_util::add_test_server_api();
 
+    // We set this by side effect in on_command_succeeded to make sure the callback was actually
+    // triggered:
+    bool insert_succeeded = false;
+
     // Listen to the insertion-failed event: we want to get a copy of the server's
     // response so that we can compare it to the thrown exception later:
-    apm_opts.on_command_succeeded(
-        [&writeErrors_well_formed, &insert_succeeded](const mongocxx::events::command_succeeded_event& ev) {
-            if (0 != ev.command_name().compare("insert")) {
-                return;
-            }
+    apm_opts.on_command_succeeded([&writeErrors_well_formed, &insert_succeeded](
+                                      const mongocxx::events::command_succeeded_event& ev) {
+        if (0 != ev.command_name().compare("insert")) {
+            return;
+        }
 
-            REQUIRE(writeErrors_well_formed(ev.reply()));
+        REQUIRE(writeErrors_well_formed(ev.reply()));
 
-            // Make sure that "we" were actually called:
-            insert_succeeded = true;
-        });
+        // Make sure that "we" were actually called:
+        insert_succeeded = true;
+    });
 
     client_opts.apm_opts(apm_opts);
 
