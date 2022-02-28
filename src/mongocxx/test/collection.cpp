@@ -2851,7 +2851,7 @@ TEST_CASE("expose writeErrors[].errInfo", "[collection]") {
     // Listen to the insertion-failed event: we want to get a copy of the server's
     // response so that we can compare it to the thrown exception later:
     apm_opts.on_command_succeeded(
-        [&writeErrors_well_formed](const mongocxx::events::command_succeeded_event& ev) {
+        [&writeErrors_well_formed, &insert_succeeded](const mongocxx::events::command_succeeded_event& ev) {
             if (0 != ev.command_name().compare("insert")) {
                 return;
             }
