@@ -2813,7 +2813,6 @@ TEST_CASE("Ensure that the WriteConcernError 'errInfo' object is propagated", "[
 }
 
 TEST_CASE("expose writeErrors[].errInfo", "[collection]") {
-
     // A helper for checking that an error document is well-formed according to our requirements:
     auto writeErrors_well_formed = [](const bsoncxx::document::view& reply_view) -> bool {
         if (!reply_view["writeErrors"]) {
