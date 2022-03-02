@@ -13,11 +13,16 @@
 // limitations under the License.
 
 #pragma once
+#if defined(__clang__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wfloat-equal"
+#elif defined(__GNUC__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wfloat-equal"
+#endif
 
 #include <chrono>
 #include <cstring>
-#include <cmath>
-#include <limits>
 
 #include <bsoncxx/array/view.hpp>
 #include <bsoncxx/decimal128.hpp>
@@ -108,7 +113,7 @@ struct BSONCXX_API b_double {
 /// @relatesalso b_double
 ///
 BSONCXX_INLINE bool operator==(const b_double& lhs, const b_double& rhs) {
-    return std::fabs(lhs.value - rhs.value) <= ( (std::fabs(lhs.value) > std::fabs(rhs.value) ? std::fabs(rhs.value) : std::fabs(lhs.value)) * std::numeric_limits<double>::epsilon());
+    return lhs.value == rhs.value;
 }
 
 ///
@@ -684,3 +689,9 @@ BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
+
+#if defined(__clang__)
+#pragma clang diagnostic pop
+#elif defined(__GNUC__)
+#pragma GCC diagnostic pop
+#endif
