@@ -13,6 +13,10 @@
 // limitations under the License.
 
 #include <chrono>
+#include <iostream>
+#include <iterator>
+#include <new>
+#include <sstream>
 #include <vector>
 
 #include <bsoncxx/builder/basic/document.hpp>
@@ -2333,10 +2337,10 @@ TEST_CASE("read_concern is inherited from parent", "[collection]") {
     }
 }
 
-void find_index_and_validate(collection& coll,
-                             stdx::string_view index_name,
-                             const std::function<void(bsoncxx::document::view)>& validate =
-                                 [](bsoncxx::document::view) {}) {
+void find_index_and_validate(
+    collection& coll,
+    stdx::string_view index_name,
+    const std::function<void(bsoncxx::document::view)>& validate = [](bsoncxx::document::view) {}) {
     auto cursor = coll.list_indexes();
 
     for (auto&& index : cursor) {
@@ -2806,6 +2810,106 @@ TEST_CASE("Ensure that the WriteConcernError 'errInfo' object is propagated", "[
     }
 
     REQUIRE(contains_err_info);
+}
+
+TEST_CASE("expose writeErrors[].errInfo", "[collection]") {
+    // A helper for checking that an error document is well-formed according to our requirements:
+    auto writeErrors_well_formed = [](const bsoncxx::document::view& reply_view) -> bool {
+        if (!reply_view["writeErrors"]) {
+            return false;
+        }
+
+        const auto& errdoc = reply_view["writeErrors"][0];
+
+        auto error_code = errdoc["code"].get_int32();
+
+        // The code should always be 121 (DocumentValidationFailure):
+        if (121 != error_code) {
+            std::ostringstream os;
+            os << "writeErrors expected to have code 121, but had " << error_code << " instead";
+            throw std::runtime_error(os.str());
+        }
+
+        // We require the "details" field be present:
+        if (!errdoc["errInfo"]["details"]) {
+            throw std::runtime_error("no \"details\" field in \"writeErrors\"");
+        }
+
+        return true;
+    };
+
+    // Set up our test environment:
+    instance::current();
+
+    mongocxx::options::apm apm_opts;
+
+    auto client_opts = test_util::add_test_server_api();
+
+    // We set this by side effect in on_command_succeeded to make sure the callback was actually
+    // triggered:
+    bool insert_succeeded = false;
+
+    // Listen to the insertion-failed event: we want to get a copy of the server's
+    // response so that we can compare it to the thrown exception later:
+    apm_opts.on_command_succeeded([&writeErrors_well_formed, &insert_succeeded](
+                                      const mongocxx::events::command_succeeded_event& ev) {
+        if (0 != ev.command_name().compare("insert")) {
+            return;
+        }
+
+        REQUIRE(writeErrors_well_formed(ev.reply()));
+
+        // Make sure that "we" were actually called:
+        insert_succeeded = true;
+    });
+
+    client_opts.apm_opts(apm_opts);
+
+    auto mongodb_client = mongocxx::client(uri{}, client_opts);
+
+    if (!test_util::newer_than(mongodb_client, "5.0")) {
+        WARN("skip: test requires MongoDB server 5.0 or newer");
+        return;
+    }
+
+    database db = mongodb_client["prose_test_expose_details"];
+
+    const std::string collname{"mongo_cxx_driver-expose_details"};
+
+    // Drop the existing collection, if any:
+    db[collname].drop();
+
+    // Make a new collection with validation checking:
+    collection coll = db.create_collection(
+        collname,
+        make_document(kvp("validator",
+                          make_document(kvp("field_x", make_document(kvp("$type", "string")))))));
+
+    SECTION("cause a type violation on insert") {
+        bsoncxx::builder::basic::document entry;
+
+        entry.append(kvp("_id", bsoncxx::oid()), kvp("field_x", 42));
+
+        try {
+            coll.insert_one(entry.view());
+
+            // We should not make it here (i.e. this is an error):
+            CHECK(false);
+        } catch (const operation_exception& e) {
+            auto rse = e.raw_server_error();
+
+            // We have no has_value() check:
+            CHECK(rse);
+
+            CHECK(writeErrors_well_formed(*rse));
+        } catch (...) {
+            // An exception was thrown, but of the wrong type:
+            CHECK(false);
+        }
+
+        // Make sure that our callback was actually triggered and completed successfully:
+        REQUIRE(insert_succeeded);
+    }
 }
 
 }  // namespace
