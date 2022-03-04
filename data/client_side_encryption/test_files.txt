@@ -4,8 +4,8 @@ basic.json
 bulk.json
 bypassAutoEncryption.json
 bypassedCommand.json
-count.json
 countDocuments.json
+count.json
 delete.json
 distinct.json
 explain.json
@@ -13,6 +13,7 @@ find.json
 findOneAndDelete.json
 findOneAndReplace.json
 findOneAndUpdate.json
+gcpKMS.json
 getMore.json
 insert.json
 keyAltName.json
