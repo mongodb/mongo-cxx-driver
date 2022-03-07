@@ -48,9 +48,8 @@ void _set_up_key_vault(const client& client, document::view test_spec_view) {
 }
 
 void add_auto_encryption_opts(document::view test, options::client* client_opts) {
-
-    using std::string;
     using std::getenv;
+    using std::string;
 
     if (test["clientOptions"]["autoEncryptOpts"]) {
         auto test_encrypt_opts = test["clientOptions"]["autoEncryptOpts"].get_document().value;
@@ -63,8 +62,8 @@ void add_auto_encryption_opts(document::view test, options::client* client_opts)
         }
 
         if (test_encrypt_opts["keyVaultNamespace"]) {
-            auto ns_string =
-                bsoncxx::string::to_string(test_encrypt_opts["keyVaultNamespace"].get_string().value);
+            auto ns_string = bsoncxx::string::to_string(
+                test_encrypt_opts["keyVaultNamespace"].get_string().value);
             auto dot = ns_string.find(".");
             std::string db = ns_string.substr(0, dot);
             std::string coll = ns_string.substr(dot + 1);
@@ -104,29 +103,74 @@ void add_auto_encryption_opts(document::view test, options::client* client_opts)
 
             // Add gcp credentials (from the enviornment):
             if (test_encrypt_opts["kmsProviders"]["gcp"]) {
+                auto email = getenv("MONGOCXX_TEST_GCP_EMAIL");
+                auto private_key = getenv("MONGOCXX_TEST_GCP_PRIVATEKEY");
 
-		auto email = getenv("MONGOCXX_TEST_GCP_EMAIL");
-		auto private_key = getenv("MONGOCXX_TEST_GCP_PRIVATEKEY");
+                auto endpoint = getenv("MONGOCXX_TEST_GCP_ENDPOINT")
+                                    ? getenv("MONGOCXX_TEST_GCP_ENDPOINT")
+                                    : "oauth2.googleapis.com";
 
-                auto endpoint = getenv("MONGOCXX_TEST_GCP_ENDPOINT") ? getenv("MONGOCXX_TEST_GCP_ENDPOINT") : "oauth2.googleapis.com";
-
-		if(!email || !private_key) {
-			FAIL(
+                if (!email || !private_key) {
+                    FAIL(
                         "Please set environment variables for client side encryption tests:\n"
                         "\tMONGOCXX_TEST_GCP_EMAIL\n"
                         "\tMONGOCXX_TEST_GCP_PRIVATEKEY\n"
                         "\n");
-		}
+                }
 
-		kms_doc.append(kvp("gcp", [&email, &private_key, &endpoint](sub_document subdoc) {
+                /* JFW: the test doesn't fail without these, but the client-side-encryption
+                documentation says they're expected to be present: projectId: String, location:
+                String, keyRing: String, keyName: String, keyVersion: Optional<String>, // A
+                specific version of the named key, defaults to using the key's primary version.
+                      endpoint: Optional<String> // Host with optional port. Defaults to
+                "cloudkms.googleapis.com".
+                */
 
-			subdoc.append(kvp("email", email));
-			subdoc.append(kvp("privateKey", private_key));
-			subdoc.append(kvp("endpoint", endpoint));
+                kms_doc.append(kvp("gcp", [&email, &private_key, &endpoint](sub_document subdoc) {
+                    subdoc.append(kvp("email", email));
+                    subdoc.append(kvp("privateKey", private_key));
+                    subdoc.append(kvp("endpoint", endpoint));
                 }));
-	    }
+            }
 
-// Add local credentials (from the json file)
+            // Add Azure credentials (from the environment):
+            if (test_encrypt_opts["kmsProviders"]["azure"]) {
+                auto tenantId = getenv("MONGOCXX_TEST_AZURE_TENANT_ID");
+                auto clientId = getenv("MONGOCXX_TEST_AZURE_CLIENT_ID");
+                auto clientSecret = getenv("MONGOCXX_TEST_AZURE_CLIENT_SECRET");
+                auto identityPlatform_endpoint =
+                    getenv("MONGOCXX_TEST_AZURE_IDENTITY_PLATFORM_ENDPOINT");
+
+                if (!tenantId || !clientId || !clientSecret) {
+                    FAIL(
+                        "Please set environment variables for client side encryption tests:\n"
+                        "\tMONGOCXX_TEST_AZURE_TENANT_ID\n"
+                        "\tMONGOCXX_TEST_AZURE_CLIENT_ID\n"
+                        "\tMONGOCXX_TEST_AZURE_CLIENT_SECRET\n"
+                        "\n");
+                }
+
+                /* JFW: the documentation suggests these should also be present:
+                      keyVaultEndpoint: String, // Host with optional port. Example:
+                   "example.vault.azure.net". keyName: String, keyVersion: Optional<String> // A
+                   specific version of the named key, defaults to using the key's primary version.
+                */
+                kms_doc.append(
+                    kvp("azure",
+                        [&tenantId, &clientId, &clientSecret, &identityPlatform_endpoint](
+                            sub_document subdoc) {
+                            subdoc.append(kvp("tenantId", tenantId));
+                            subdoc.append(kvp("clientId", clientId));
+                            subdoc.append(kvp("clientSecret", clientSecret));
+
+                            if (NULL != identityPlatform_endpoint) {
+                                subdoc.append(
+                                    kvp("identityPlatform_endpoint", identityPlatform_endpoint));
+                            }
+                        }));
+            }
+
+            // Add local credentials (from the json file)
             if (test_encrypt_opts["kmsProviders"]["local"]) {
                 kms_doc.append(
                     kvp("local", test_encrypt_opts["kmsProviders"]["local"].get_document().value));

@@ -1,4 +1,5 @@
 aggregate.json
+azureKMS.json
 badSchema.json
 basic.json
 bulk.json
