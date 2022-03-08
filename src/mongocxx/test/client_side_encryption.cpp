@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc.
+// Copyright 2020-present MongoDB Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -367,6 +367,35 @@ TEST_CASE("Datakey and double encryption", "[client_side_encryption]") {
             return client_encryption.create_data_key("aws", data_key_opts);
         },
         "aws",
+        &setup_client,
+        &client_encrypted,
+        &client_encryption,
+        &apm_checker);
+
+    // Run with GCP:
+    run_datakey_and_double_encryption(
+        [&]() {
+            // 1. Call client_encryption.createDataKey() with the local KMS provider
+            // and keyAltNames set to ["aws_altname"].
+            options::data_key data_key_opts;
+
+            auto doc = make_document(kvp("projectId", "devprod-drivers"),
+                                     kvp("location", "global"),
+                                     kvp("keyRing", "key-ring-csfle"),
+                                     kvp("keyName", "key-name-csfle"));
+            /*
+                        data_key_opts.key_alt_names({"aws_altname"});
+
+                        auto doc = make_document(
+                            kvp("region", "us-east-1"),
+                            kvp("key",
+                                "arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0"));
+            */
+            data_key_opts.master_key(doc.view());
+
+            return client_encryption.create_data_key("gcp", data_key_opts);
+        },
+        "gcp",
         &setup_client,
         &client_encrypted,
         &client_encryption,

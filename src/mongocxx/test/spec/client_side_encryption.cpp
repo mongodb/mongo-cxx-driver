@@ -118,14 +118,6 @@ void add_auto_encryption_opts(document::view test, options::client* client_opts)
                         "\n");
                 }
 
-                /* JFW: the test doesn't fail without these, but the client-side-encryption
-                documentation says they're expected to be present: projectId: String, location:
-                String, keyRing: String, keyName: String, keyVersion: Optional<String>, // A
-                specific version of the named key, defaults to using the key's primary version.
-                      endpoint: Optional<String> // Host with optional port. Defaults to
-                "cloudkms.googleapis.com".
-                */
-
                 kms_doc.append(kvp("gcp", [&email, &private_key, &endpoint](sub_document subdoc) {
                     subdoc.append(kvp("email", email));
                     subdoc.append(kvp("privateKey", private_key));
@@ -150,11 +142,6 @@ void add_auto_encryption_opts(document::view test, options::client* client_opts)
                         "\n");
                 }
 
-                /* JFW: the documentation suggests these should also be present:
-                      keyVaultEndpoint: String, // Host with optional port. Example:
-                   "example.vault.azure.net". keyName: String, keyVersion: Optional<String> // A
-                   specific version of the named key, defaults to using the key's primary version.
-                */
                 kms_doc.append(
                     kvp("azure",
                         [&tenantId, &clientId, &clientSecret, &identityPlatform_endpoint](
