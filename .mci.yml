@@ -1294,43 +1294,43 @@ buildvariants:
           - name: compile_and_test_with_static_libs
           - name: compile_and_test_with_static_libs_extra_alignment
 
-    - name: power8-rhel81-latest
-      display_name: "ppc64le RHEL 8.1 (MongoDB Latest)"
-      batchtime: 1440 # 1 day
-      expansions:
-          build_type: "Release"
-          tar_options: *linux_tar_options
-          cmake_flags: *linux_cmake_flags
-          mongodb_version: *version_latest
-          cmake: "cmake"
-          lib_dir: "lib64"
-      run_on:
-          - rhel81-power8-large
-      tasks:
-          - name: compile_with_shared_libs
-          - name: compile_and_test_with_shared_libs
-          - name: compile_and_test_with_shared_libs_extra_alignment
-          - name: compile_and_test_with_static_libs
-          - name: compile_and_test_with_static_libs_extra_alignment
-
-    - name: power8-rhel81-50
-      display_name: "ppc64le RHEL 8.1 (MongoDB 5.0)"
-      batchtime: 1440 # 1 day
-      expansions:
-          build_type: "Release"
-          tar_options: *linux_tar_options
-          cmake_flags: *linux_cmake_flags
-          mongodb_version: *version_50
-          cmake: "cmake"
-          lib_dir: "lib64"
-      run_on:
-          - rhel81-power8-large
-      tasks:
-          - name: compile_with_shared_libs
-          - name: compile_and_test_with_shared_libs
-          - name: compile_and_test_with_shared_libs_extra_alignment
-          - name: compile_and_test_with_static_libs
-          - name: compile_and_test_with_static_libs_extra_alignment
+#    - name: power8-rhel81-latest
+#      display_name: "ppc64le RHEL 8.1 (MongoDB Latest)"
+#      batchtime: 1440 # 1 day
+#      expansions:
+#          build_type: "Release"
+#          tar_options: *linux_tar_options
+#          cmake_flags: *linux_cmake_flags
+#          mongodb_version: *version_latest
+#          cmake: "cmake"
+#          lib_dir: "lib64"
+#      run_on:
+#          - rhel81-power8-large
+#      tasks:
+#          - name: compile_with_shared_libs
+#          - name: compile_and_test_with_shared_libs
+#          - name: compile_and_test_with_shared_libs_extra_alignment
+#          - name: compile_and_test_with_static_libs
+#          - name: compile_and_test_with_static_libs_extra_alignment
+#
+#    - name: power8-rhel81-50
+#      display_name: "ppc64le RHEL 8.1 (MongoDB 5.0)"
+#      batchtime: 1440 # 1 day
+#      expansions:
+#          build_type: "Release"
+#          tar_options: *linux_tar_options
+#          cmake_flags: *linux_cmake_flags
+#          mongodb_version: *version_50
+#          cmake: "cmake"
+#          lib_dir: "lib64"
+#      run_on:
+#          - rhel81-power8-large
+#      tasks:
+#          - name: compile_with_shared_libs
+#          - name: compile_and_test_with_shared_libs
+#          - name: compile_and_test_with_shared_libs_extra_alignment
+#          - name: compile_and_test_with_static_libs
+#          - name: compile_and_test_with_static_libs_extra_alignment
 
     - name: arm-ubuntu1804-latest
       display_name: "arm64 Ubuntu 18.04 (MongoDB Latest)"
