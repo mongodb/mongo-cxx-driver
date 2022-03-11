@@ -1386,6 +1386,8 @@ TEST_CASE("Bypass spawning mongocryptd", "[client_side_encryption]") {
     auto_encrypt_opts.extra_options({extra.view()});
     client_encrypted_opts.auto_encryption_opts(std::move(auto_encrypt_opts));
 
+    test_util::add_test_server_api(client_encrypted_opts);
+
     class client client_encrypted {
         uri{}, std::move(client_encrypted_opts)
     };
@@ -1405,6 +1407,8 @@ TEST_CASE("Bypass spawning mongocryptd", "[client_side_encryption]") {
     // { "local": { "key": <base64 decoding of LOCAL_MASTERKEY> } }
     // Configure with the keyVaultNamespace set to keyvault.datakeys.
     options::client client_encrypted_opts2;
+
+    test_util::add_test_server_api(client_encrypted_opts2);
 
     options::auto_encryption auto_encrypt_opts2{};
     auto kms_doc2 = _make_kms_doc();
@@ -1426,6 +1430,8 @@ TEST_CASE("Bypass spawning mongocryptd", "[client_side_encryption]") {
     auto_encrypt_opts2.extra_options({extra2.view()});
     client_encrypted_opts2.auto_encryption_opts(std::move(auto_encrypt_opts2));
 
+    test_util::add_test_server_api(client_encrypted_opts2);
+    
     class client client_encrypted2 {
         uri{}, std::move(client_encrypted_opts2)
     };
@@ -1439,6 +1445,9 @@ TEST_CASE("Bypass spawning mongocryptd", "[client_side_encryption]") {
     // (or whatever was passed via --port) with serverSelectionTimeoutMS=1000. Run a ping
     // command and ensure it fails with a server selection timeout.
     options::client ping_client_opts;
+
+    test_util::add_test_server_api(ping_client_opts);
+
     class client ping_client {
         uri {
             "mongodb://localhost:27021/?serverSelectionTimeoutMS=1000"
