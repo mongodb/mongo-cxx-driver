@@ -1431,7 +1431,7 @@ TEST_CASE("Bypass spawning mongocryptd", "[client_side_encryption]") {
     client_encrypted_opts2.auto_encryption_opts(std::move(auto_encrypt_opts2));
 
     test_util::add_test_server_api(client_encrypted_opts2);
-    
+
     class client client_encrypted2 {
         uri{}, std::move(client_encrypted_opts2)
     };
