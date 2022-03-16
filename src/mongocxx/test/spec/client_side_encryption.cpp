@@ -125,8 +125,6 @@ void add_auto_encryption_opts(document::view test, options::client* client_opts)
                 auto tenantId = getenv("MONGOCXX_TEST_AZURE_TENANT_ID");
                 auto clientId = getenv("MONGOCXX_TEST_AZURE_CLIENT_ID");
                 auto clientSecret = getenv("MONGOCXX_TEST_AZURE_CLIENT_SECRET");
-                auto identityPlatform_endpoint =
-                    getenv("MONGOCXX_TEST_AZURE_IDENTITY_PLATFORM_ENDPOINT");
 
                 if (!tenantId || !clientId || !clientSecret) {
                     FAIL(
@@ -144,11 +142,6 @@ void add_auto_encryption_opts(document::view test, options::client* client_opts)
                             subdoc.append(kvp("tenantId", tenantId));
                             subdoc.append(kvp("clientId", clientId));
                             subdoc.append(kvp("clientSecret", clientSecret));
-
-                            if (NULL != identityPlatform_endpoint) {
-                                subdoc.append(
-                                    kvp("identityPlatform_endpoint", identityPlatform_endpoint));
-                            }
                         }));
             }
 
