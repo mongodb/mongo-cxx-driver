@@ -137,7 +137,7 @@ void add_auto_encryption_opts(document::view test, options::client* client_opts)
 
                 kms_doc.append(
                     kvp("azure",
-                        [&tenantId, &clientId, &clientSecret, &identityPlatform_endpoint](
+                        [&tenantId, &clientId, &clientSecret](
                             sub_document subdoc) {
                             subdoc.append(kvp("tenantId", tenantId));
                             subdoc.append(kvp("clientId", clientId));
