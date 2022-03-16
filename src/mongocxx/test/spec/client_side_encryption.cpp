@@ -136,13 +136,11 @@ void add_auto_encryption_opts(document::view test, options::client* client_opts)
                 }
 
                 kms_doc.append(
-                    kvp("azure",
-                        [&tenantId, &clientId, &clientSecret](
-                            sub_document subdoc) {
-                            subdoc.append(kvp("tenantId", tenantId));
-                            subdoc.append(kvp("clientId", clientId));
-                            subdoc.append(kvp("clientSecret", clientSecret));
-                        }));
+                    kvp("azure", [&tenantId, &clientId, &clientSecret](sub_document subdoc) {
+                        subdoc.append(kvp("tenantId", tenantId));
+                        subdoc.append(kvp("clientId", clientId));
+                        subdoc.append(kvp("clientSecret", clientSecret));
+                    }));
             }
 
             // Add local credentials (from the json file)
