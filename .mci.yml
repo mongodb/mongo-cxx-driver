@@ -355,39 +355,6 @@ functions:
                   export VERSIONED_API_TESTS_PATH=$(pwd)/../data/versioned-api
                   export MONGODB_API_VERSION="${MONGODB_API_VERSION}"
 
-                  # export environment variables for encryption tests (and redact them)
-                  set +o xtrace
-                  set +o errexit
-
-                  export MONGOCXX_TEST_AWS_SECRET_ACCESS_KEY="${cse_aws_secret_access_key}"
-                  export MONGOCXX_TEST_AWS_ACCESS_KEY_ID="${cse_aws_access_key_id}"
-                  export MONGOCXX_TEST_AZURE_TENANT_ID="${cse_azure_tenant_id}"
-                  export MONGOCXX_TEST_AZURE_CLIENT_ID="${cse_azure_client_id}"
-                  export MONGOCXX_TEST_AZURE_CLIENT_SECRET="${cse_azure_client_secret}"
-                  export MONGOCXX_TEST_GCP_EMAIL="${cse_gcp_email}"
-                  export MONGOCXX_TEST_GCP_PRIVATEKEY="${cse_gcp_privatekey}"
-
-                  # Get temporary credentials.
-                  . ./.evergreen/set-virtualenv.sh
-                  $PYTHON -m pip install boto3
-                  cd ../drivers-evergreen-tools
-
-                  pushd ./.evergreen/csfle
-                  export AWS_ACCESS_KEY_ID=$MONGOCXX_TEST_AWS_ACCESS_KEY_ID
-                  export AWS_SECRET_ACCESS_KEY=$MONGOCXX_TEST_AWS_SECRET_ACCESS_KEY
-                  export AWS_DEFAULT_REGION=us-east-1
-                  . ./set-temp-creds.sh
-                  export MONGOCXX_TEST_AWS_TEMP_ACCESS_KEY_ID=$CSFLE_AWS_TEMP_ACCESS_KEY_ID
-                  export MONGOCXX_TEST_AWS_TEMP_SECRET_ACCESS_KEY=$CSFLE_AWS_TEMP_SECRET_ACCESS_KEY
-                  export MONGOCXX_TEST_AWS_TEMP_SESSION_TOKEN=$CSFLE_AWS_TEMP_SESSION_TOKEN
-                  popd
-
-                  cd ../mongo-cxx-driver
-
-                  set -o errexit
-                  set -o xtrace
-
-
                   if [ "$(uname -m)" == "ppc64le" ]; then
                       echo "Skipping CSFLE test setup (CDRIVER-4246/CXX-2423)"
                   else
@@ -419,6 +386,39 @@ functions:
                   if [ "$(uname -m)" == "ppc64le" ]; then
                       echo "Skipping CSFLE test setup (CDRIVER-4246/CXX-2423)"
                   else
+
+                      # export environment variables for encryption tests (and redact them)
+                      set +o xtrace
+                      set +o errexit
+    
+                      export MONGOCXX_TEST_AWS_SECRET_ACCESS_KEY="${cse_aws_secret_access_key}"
+                      export MONGOCXX_TEST_AWS_ACCESS_KEY_ID="${cse_aws_access_key_id}"
+                      export MONGOCXX_TEST_AZURE_TENANT_ID="${cse_azure_tenant_id}"
+                      export MONGOCXX_TEST_AZURE_CLIENT_ID="${cse_azure_client_id}"
+                      export MONGOCXX_TEST_AZURE_CLIENT_SECRET="${cse_azure_client_secret}"
+                      export MONGOCXX_TEST_GCP_EMAIL="${cse_gcp_email}"
+                      export MONGOCXX_TEST_GCP_PRIVATEKEY="${cse_gcp_privatekey}"
+    
+                      # Get temporary credentials.
+                      . ./.evergreen/set-virtualenv.sh
+                      $PYTHON -m pip install boto3
+                      cd ../drivers-evergreen-tools
+    
+                      pushd ./.evergreen/csfle
+                      export AWS_ACCESS_KEY_ID=$MONGOCXX_TEST_AWS_ACCESS_KEY_ID
+                      export AWS_SECRET_ACCESS_KEY=$MONGOCXX_TEST_AWS_SECRET_ACCESS_KEY
+                      export AWS_DEFAULT_REGION=us-east-1
+                      . ./set-temp-creds.sh
+                      export MONGOCXX_TEST_AWS_TEMP_ACCESS_KEY_ID=$CSFLE_AWS_TEMP_ACCESS_KEY_ID
+                      export MONGOCXX_TEST_AWS_TEMP_SECRET_ACCESS_KEY=$CSFLE_AWS_TEMP_SECRET_ACCESS_KEY
+                      export MONGOCXX_TEST_AWS_TEMP_SESSION_TOKEN=$CSFLE_AWS_TEMP_SESSION_TOKEN
+                      popd
+    
+                      cd ../mongo-cxx-driver
+    
+                      set -o errexit
+                      set -o xtrace
+    
                       # Register CA certificate required by KMS TLS connections.
                       echo "Registering CA certificate for KMS TLS tests..."
                       register_ca_cert() {
@@ -1294,43 +1294,43 @@ buildvariants:
           - name: compile_and_test_with_static_libs
           - name: compile_and_test_with_static_libs_extra_alignment
 
-#    - name: power8-rhel81-latest
-#      display_name: "ppc64le RHEL 8.1 (MongoDB Latest)"
-#      batchtime: 1440 # 1 day
-#      expansions:
-#          build_type: "Release"
-#          tar_options: *linux_tar_options
-#          cmake_flags: *linux_cmake_flags
-#          mongodb_version: *version_latest
-#          cmake: "cmake"
-#          lib_dir: "lib64"
-#      run_on:
-#          - rhel81-power8-large
-#      tasks:
-#          - name: compile_with_shared_libs
-#          - name: compile_and_test_with_shared_libs
-#          - name: compile_and_test_with_shared_libs_extra_alignment
-#          - name: compile_and_test_with_static_libs
-#          - name: compile_and_test_with_static_libs_extra_alignment
-#
-#    - name: power8-rhel81-50
-#      display_name: "ppc64le RHEL 8.1 (MongoDB 5.0)"
-#      batchtime: 1440 # 1 day
-#      expansions:
-#          build_type: "Release"
-#          tar_options: *linux_tar_options
-#          cmake_flags: *linux_cmake_flags
-#          mongodb_version: *version_50
-#          cmake: "cmake"
-#          lib_dir: "lib64"
-#      run_on:
-#          - rhel81-power8-large
-#      tasks:
-#          - name: compile_with_shared_libs
-#          - name: compile_and_test_with_shared_libs
-#          - name: compile_and_test_with_shared_libs_extra_alignment
-#          - name: compile_and_test_with_static_libs
-#          - name: compile_and_test_with_static_libs_extra_alignment
+    - name: power8-rhel81-latest
+      display_name: "ppc64le RHEL 8.1 (MongoDB Latest)"
+      batchtime: 1440 # 1 day
+      expansions:
+          build_type: "Release"
+          tar_options: *linux_tar_options
+          cmake_flags: *linux_cmake_flags
+          mongodb_version: *version_latest
+          cmake: "cmake"
+          lib_dir: "lib64"
+      run_on:
+          - rhel81-power8-large
+      tasks:
+          - name: compile_with_shared_libs
+          - name: compile_and_test_with_shared_libs
+          - name: compile_and_test_with_shared_libs_extra_alignment
+          - name: compile_and_test_with_static_libs
+          - name: compile_and_test_with_static_libs_extra_alignment
+
+    - name: power8-rhel81-50
+      display_name: "ppc64le RHEL 8.1 (MongoDB 5.0)"
+      batchtime: 1440 # 1 day
+      expansions:
+          build_type: "Release"
+          tar_options: *linux_tar_options
+          cmake_flags: *linux_cmake_flags
+          mongodb_version: *version_50
+          cmake: "cmake"
+          lib_dir: "lib64"
+      run_on:
+          - rhel81-power8-large
+      tasks:
+          - name: compile_with_shared_libs
+          - name: compile_and_test_with_shared_libs
+          - name: compile_and_test_with_shared_libs_extra_alignment
+          - name: compile_and_test_with_static_libs
+          - name: compile_and_test_with_static_libs_extra_alignment
 
     - name: arm-ubuntu1804-latest
       display_name: "arm64 Ubuntu 18.04 (MongoDB Latest)"
