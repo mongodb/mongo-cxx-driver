@@ -388,7 +388,6 @@ functions:
                   else
 
                       # export environment variables for encryption tests (and redact them)
-                      set +o xtrace
                       set +o errexit
     
                       export MONGOCXX_TEST_AWS_SECRET_ACCESS_KEY="${cse_aws_secret_access_key}"
@@ -417,7 +416,6 @@ functions:
                       cd ../mongo-cxx-driver
     
                       set -o errexit
-                      set -o xtrace
     
                       # Register CA certificate required by KMS TLS connections.
                       echo "Registering CA certificate for KMS TLS tests..."
