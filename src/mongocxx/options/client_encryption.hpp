@@ -89,13 +89,26 @@ class MONGOCXX_API client_encryption {
     ///
     /// Sets the KMS providers to use for client side encryption.
     ///
-    /// Multiple KMS providers may be specified. Two KMS providers are
-    /// supported: "aws" and "local". The kmsProviders map values differ
+    /// Multiple KMS providers may be specified. Supported KMS providers are
+    /// "aws", "azure", "gcp", and "local". The kmsProviders map values differ
     /// by provider:
     ///
     ///    aws: {
     ///      accessKeyId: String,
     ///      secretAccessKey: String
+    ///    }
+    ///
+    ///    azure: {
+    ///       tenantId: String,
+    ///       clientId: String,
+    ///       clientSecret: String,
+    ///       identityPlatformEndpoint: Optional<String> // Defaults to login.microsoftonline.com
+    ///    }
+    ///
+    ///    gcp: {
+    ///       email: String,
+    ///       privateKey: byte[] or String, // May be passed as a base64 encoded string.
+    ///       endpoint: Optional<String> // Defaults to oauth2.googleapis.com
     ///    }
     ///
     ///    local: {
