@@ -114,7 +114,7 @@ void add_auto_encryption_opts(document::view test, options::client* client_opts)
                         "\n");
                 }
 
-                kms_doc.append(kvp("gcp", [&email, &private_key, &endpoint](sub_document subdoc) {
+                kms_doc.append(kvp("gcp", [&email, &private_key](sub_document subdoc) {
                     subdoc.append(kvp("email", email));
                     subdoc.append(kvp("privateKey", private_key));
                 }));
