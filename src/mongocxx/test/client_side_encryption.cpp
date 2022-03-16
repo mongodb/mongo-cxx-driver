@@ -1114,13 +1114,13 @@ void _run_endpoint_test(mongocxx::client* setup_client,
         subdoc.append(kvp("clientId", test_util::getenv_or_fail("MONGOCXX_TEST_AZURE_CLIENT_ID")));
         subdoc.append(
             kvp("clientSecret", test_util::getenv_or_fail("MONGOCXX_TEST_AZURE_CLIENT_SECRET")));
-        subdoc.append(kvp("identityPlatformEndpoint", "example.com:443"));
+        subdoc.append(kvp("identityPlatformEndpoint", "doesnoteexist.invalid:443"));
     }));
 
     kms_doc_invalid.append(kvp("gcp", [&](sub_document subdoc) {
         subdoc.append(kvp("email", test_util::getenv_or_fail("MONGOCXX_TEST_GCP_EMAIL")));
         subdoc.append(kvp("privateKey", test_util::getenv_or_fail("MONGOCXX_TEST_GCP_PRIVATEKEY")));
-        subdoc.append(kvp("endpoint", "example.com:443"));
+        subdoc.append(kvp("endpoint", "doesnoteexist.invalid:443"));
     }));
 
     ce_opts_invalid.key_vault_client(setup_client);
@@ -1255,7 +1255,7 @@ TEST_CASE("Custom endpoint", "[client_side_encryption]") {
     // {
     //   region: "us-east-1",
     //   key: "arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0",
-    //   endpoint: "example.com"
+    //   endpoint: "doesnoteexist.invalid"
     // }
     // Expect this to fail with an exception with a message containing the string: "parse error"
     auto parse_error_masterkey =
@@ -1264,7 +1264,7 @@ TEST_CASE("Custom endpoint", "[client_side_encryption]") {
                    << "key"
                    << "arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0"
                    << "endpoint"
-                   << "example.com" << finalize;
+                   << "doesnoteexist.invalid" << finalize;
     _run_endpoint_test(&setup_client, parse_error_masterkey.view(), "aws", {{"parse error"}});
 
     // Call `client_encryption.createDataKey()` with "azure" as the provider and the following
@@ -1317,7 +1317,7 @@ TEST_CASE("Custom endpoint", "[client_side_encryption]") {
     //   "location": "global",
     //   "keyRing": "key-ring-csfle",
     //   "keyName": "key-name-csfle",
-    //   "endpoint": "example.com:443"
+    //   "endpoint": "doesnoteexist.invalid:443"
     // }
     // Expect this to fail with an exception with a message containing the string: "Invalid KMS
     // response".
@@ -1330,7 +1330,7 @@ TEST_CASE("Custom endpoint", "[client_side_encryption]") {
                                      << "keyName"
                                      << "key-name-csfle"
                                      << "endpoint"
-                                     << "example.com:443" << finalize;
+                                     << "doesnoteexist.invalid:443" << finalize;
     _run_endpoint_test(&setup_client, gcp_masterkey2.view(), "gcp", {{"Invalid KMS response"}});
 }
 
