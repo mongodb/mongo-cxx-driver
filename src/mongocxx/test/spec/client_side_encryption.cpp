@@ -106,10 +106,6 @@ void add_auto_encryption_opts(document::view test, options::client* client_opts)
                 auto email = getenv("MONGOCXX_TEST_GCP_EMAIL");
                 auto private_key = getenv("MONGOCXX_TEST_GCP_PRIVATEKEY");
 
-                auto endpoint = getenv("MONGOCXX_TEST_GCP_ENDPOINT")
-                                    ? getenv("MONGOCXX_TEST_GCP_ENDPOINT")
-                                    : "oauth2.googleapis.com";
-
                 if (!email || !private_key) {
                     FAIL(
                         "Please set environment variables for client side encryption tests:\n"
@@ -121,7 +117,6 @@ void add_auto_encryption_opts(document::view test, options::client* client_opts)
                 kms_doc.append(kvp("gcp", [&email, &private_key, &endpoint](sub_document subdoc) {
                     subdoc.append(kvp("email", email));
                     subdoc.append(kvp("privateKey", private_key));
-                    subdoc.append(kvp("endpoint", endpoint));
                 }));
             }
 
