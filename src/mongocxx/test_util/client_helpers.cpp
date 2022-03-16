@@ -471,8 +471,10 @@ bool should_run_client_side_encryption_test(void) {
     return false;
 #endif
 
-    auto access_key = std::getenv("MONGOCXX_TEST_AWS_SECRET_ACCESS_KEY");
-    auto key_id = std::getenv("MONGOCXX_TEST_AWS_ACCESS_KEY_ID");
+    using std::getenv;
+
+    auto access_key = getenv("MONGOCXX_TEST_AWS_SECRET_ACCESS_KEY");
+    auto key_id = getenv("MONGOCXX_TEST_AWS_ACCESS_KEY_ID");
 
     if (!access_key || !key_id) {
         WARN(
@@ -481,6 +483,30 @@ bool should_run_client_side_encryption_test(void) {
             "\tMONGOCXX_TEST_AWS_SECRET_ACCESS_KEY\n"
             "\tMONGOCXX_TEST_AWS_ACCESS_KEY_ID\n\n");
         return false;
+    }
+
+    auto email = getenv("MONGOCXX_TEST_GCP_EMAIL");
+    auto private_key = getenv("MONGOCXX_TEST_GCP_PRIVATEKEY");
+
+    if (!email || !private_key) {
+        FAIL(
+            "Please set environment variables for client side encryption tests:\n"
+            "\tMONGOCXX_TEST_GCP_EMAIL\n"
+            "\tMONGOCXX_TEST_GCP_PRIVATEKEY\n"
+            "\n");
+    }
+
+    auto tenantId = getenv("MONGOCXX_TEST_AZURE_TENANT_ID");
+    auto clientId = getenv("MONGOCXX_TEST_AZURE_CLIENT_ID");
+    auto clientSecret = getenv("MONGOCXX_TEST_AZURE_CLIENT_SECRET");
+
+    if (!tenantId || !clientId || !clientSecret) {
+        FAIL(
+            "Please set environment variables for client side encryption tests:\n"
+            "\tMONGOCXX_TEST_AZURE_TENANT_ID\n"
+            "\tMONGOCXX_TEST_AZURE_CLIENT_ID\n"
+            "\tMONGOCXX_TEST_AZURE_CLIENT_SECRET\n"
+            "\n");
     }
 
     return true;
