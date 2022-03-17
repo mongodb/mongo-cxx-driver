@@ -310,7 +310,7 @@ TEST_CASE("Datakey and double encryption", "[client_side_encryption]") {
     client_opts.apm_opts(apm_checker.get_apm_opts(true /* command_started_events_only */));
 
     class client setup_client {
-        uri{}, std::move(client_opts)
+        uri{}, test_util::add_test_server_api(client_opts)
     };
 
     if (!mongocxx::test_util::should_run_client_side_encryption_test()) {
@@ -434,7 +434,8 @@ void run_external_key_vault_test(bool with_external_key_vault) {
     class client external_key_vault_client {
         uri {
             "mongodb://fake-user:fake-pwd@localhost:27017"
-        }
+        },
+        test_util::add_test_server_api()
     };
 
     // Create a MongoClient without encryption enabled (referred to as client).
@@ -1114,13 +1115,13 @@ void _run_endpoint_test(mongocxx::client* setup_client,
         subdoc.append(kvp("clientId", test_util::getenv_or_fail("MONGOCXX_TEST_AZURE_CLIENT_ID")));
         subdoc.append(
             kvp("clientSecret", test_util::getenv_or_fail("MONGOCXX_TEST_AZURE_CLIENT_SECRET")));
-        subdoc.append(kvp("identityPlatformEndpoint", "doesnoteexist.invalid:443"));
+        subdoc.append(kvp("identityPlatformEndpoint", "doesnotexist.invalid:443"));
     }));
 
     kms_doc_invalid.append(kvp("gcp", [&](sub_document subdoc) {
         subdoc.append(kvp("email", test_util::getenv_or_fail("MONGOCXX_TEST_GCP_EMAIL")));
         subdoc.append(kvp("privateKey", test_util::getenv_or_fail("MONGOCXX_TEST_GCP_PRIVATEKEY")));
-        subdoc.append(kvp("endpoint", "doesnoteexist.invalid:443"));
+        subdoc.append(kvp("endpoint", "doesnotexist.invalid:443"));
     }));
 
     ce_opts_invalid.key_vault_client(setup_client);
@@ -1255,17 +1256,17 @@ TEST_CASE("Custom endpoint", "[client_side_encryption]") {
     // {
     //   region: "us-east-1",
     //   key: "arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0",
-    //   endpoint: "doesnoteexist.invalid"
+    //   endpoint: "doesnotexist.invalid"
     // }
-    // Expect this to fail with an exception with a message containing the string: "parse error"
+    // Expect this to fail with a network exception indicating failure to resolve "doesnotexist.invalid".
     auto parse_error_masterkey =
         document{} << "region"
                    << "us-east-1"
                    << "key"
                    << "arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0"
                    << "endpoint"
-                   << "doesnoteexist.invalid" << finalize;
-    _run_endpoint_test(&setup_client, parse_error_masterkey.view(), "aws", {{"parse error"}});
+                   << "doesnotexist.invalid" << finalize;
+    _run_endpoint_test(&setup_client, parse_error_masterkey.view(), "aws", {{"Failed to resolve doesnotexist.invalid: generic server error"}});
 
     // Call `client_encryption.createDataKey()` with "azure" as the provider and the following
     // masterKey:
@@ -1275,14 +1276,14 @@ TEST_CASE("Custom endpoint", "[client_side_encryption]") {
     // }
     // Expect this to succeed. Use the returned UUID of the key to explicitly encrypt and decrypt
     // the string "test" to validate it works. Call ``client_encryption_invalid.createDataKey()``
-    // with the same masterKey. Expect this to fail with an exception with a message containing the
-    // string: "parse error".
+    // with the same masterKey.
+    // Expect this to fail with a network exception indicating failure to resolve "doesnotexist.invalid".
     auto azure_masterkey = document{} << "keyVaultEndpoint"
                                       << "key-vault-csfle.vault.azure.net"
                                       << "keyName"
                                       << "key-name-csfle" << finalize;
     _run_endpoint_test(
-        &setup_client, azure_masterkey.view(), "azure", stdx::nullopt, {{"parse error"}});
+        &setup_client, azure_masterkey.view(), "azure", stdx::nullopt, {{"Failed to resolve doesnotexist.invalid: generic server error"}});
 
     // Call `client_encryption.createDataKey()` with "gcp" as the provider and the following
     // masterKey:
@@ -1295,8 +1296,8 @@ TEST_CASE("Custom endpoint", "[client_side_encryption]") {
     // }
     // Expect this to succeed. Use the returned UUID of the key to explicitly encrypt and decrypt
     // the string "test" to validate it works. Call ``client_encryption_invalid.createDataKey()``
-    // with the same masterKey. Expect this to fail with an exception with a message containing the
-    // string: "parse error".
+    // with the same masterKey. 
+    // Expect this to fail with a network exception indicating failure to resolve "doesnotexist.invalid".
     auto gcp_masterkey = document{} << "projectId"
                                     << "devprod-drivers"
                                     << "location"
@@ -1308,7 +1309,7 @@ TEST_CASE("Custom endpoint", "[client_side_encryption]") {
                                     << "endpoint"
                                     << "cloudkms.googleapis.com:443" << finalize;
     _run_endpoint_test(
-        &setup_client, gcp_masterkey.view(), "gcp", stdx::nullopt, {{"parse error"}});
+        &setup_client, gcp_masterkey.view(), "gcp", stdx::nullopt, {{"Failed to resolve doesnotexist.invalid: generic server error"}});
 
     // Call `client_encryption.createDataKey()` with "gcp" as the provider and the following
     // masterKey:
@@ -1317,7 +1318,7 @@ TEST_CASE("Custom endpoint", "[client_side_encryption]") {
     //   "location": "global",
     //   "keyRing": "key-ring-csfle",
     //   "keyName": "key-name-csfle",
-    //   "endpoint": "doesnoteexist.invalid:443"
+    //   "endpoint": "doesnotexist.invalid:443"
     // }
     // Expect this to fail with an exception with a message containing the string: "Invalid KMS
     // response".
@@ -1330,7 +1331,7 @@ TEST_CASE("Custom endpoint", "[client_side_encryption]") {
                                      << "keyName"
                                      << "key-name-csfle"
                                      << "endpoint"
-                                     << "doesnoteexist.invalid:443" << finalize;
+                                     << "doesnotexist.invalid:443" << finalize;
     _run_endpoint_test(&setup_client, gcp_masterkey2.view(), "gcp", {{"Invalid KMS response"}});
 }
 
