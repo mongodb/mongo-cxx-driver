@@ -709,9 +709,7 @@ TEST_CASE("Views are prohibited", "[client_side_encryption]") {
     instance::current();
 
     // Create a MongoClient without encryption enabled (referred to as client).
-    class client client {
-        uri{}, test_util::add_test_server_api(),
-    };
+    class client client { uri{} };
 
     if (test_util::get_max_wire_version(client) < 8) {
         // Automatic encryption requires wire version 8.
