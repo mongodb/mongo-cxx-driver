@@ -709,7 +709,10 @@ TEST_CASE("Views are prohibited", "[client_side_encryption]") {
     instance::current();
 
     // Create a MongoClient without encryption enabled (referred to as client).
-    class client client { uri{} };
+    class client client { 
+	uri{},
+        test_util::add_test_server_api()
+    };
 
     if (test_util::get_max_wire_version(client) < 8) {
         // Automatic encryption requires wire version 8.
@@ -737,7 +740,7 @@ TEST_CASE("Views are prohibited", "[client_side_encryption]") {
     auto kms_doc = _make_kms_doc();
     _add_client_encrypted_opts(&opts, {}, std::move(kms_doc));
     class client client_encrypted {
-        uri{}, std::move(opts)
+        uri{}, test_util::add_test_server_api(opts)
     };
 
     // Using client_encrypted, attempt to insert a document into db.view.
