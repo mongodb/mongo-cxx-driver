@@ -30,6 +30,12 @@ static bool is_server_v5_or_newer() {
     return wire_version >= 13;
 }
 
+static bool is_server_v53_or_newer() {
+    auto wire_version =
+        mongocxx::test_util::get_max_wire_version(client{uri{}, test_util::add_test_server_api()});
+    return wire_version >= 16;
+}
+
 // We'll format many of these examples by hand
 // clang-format off
 
@@ -126,6 +132,13 @@ static bsoncxx::types::b_date iso_string_to_bson_datetime(const std::string&) {
 TEST_CASE("Versioned API, with insert-many for 'count' migration") {
     instance::current();
     if (!is_server_v5_or_newer()) {
+        return;
+    }
+
+    // Do not run this test on 5.3 or newer servers.
+    // This test assumes the count command is not in API version 1.
+    // The count command was added to API version 1 in SERVER-63850.
+    if (is_server_v53_or_newer()) {
         return;
     }
 
