@@ -471,19 +471,47 @@ bool should_run_client_side_encryption_test(void) {
     return false;
 #endif
 
-    auto access_key = std::getenv("MONGOCXX_TEST_AWS_SECRET_ACCESS_KEY");
-    auto key_id = std::getenv("MONGOCXX_TEST_AWS_ACCESS_KEY_ID");
+    std::vector<const char*> vars{"MONGOCXX_TEST_AWS_SECRET_ACCESS_KEY",
+                                  "MONGOCXX_TEST_AWS_ACCESS_KEY_ID",
+                                  "MONGOCXX_TEST_GCP_EMAIL",
+                                  "MONGOCXX_TEST_GCP_PRIVATEKEY",
+                                  "MONGOCXX_TEST_AZURE_TENANT_ID",
+                                  "MONGOCXX_TEST_AZURE_CLIENT_ID",
+                                  "MONGOCXX_TEST_AZURE_CLIENT_SECRET"};
 
-    if (!access_key || !key_id) {
-        WARN(
-            "Skipping tests. Please set environment variables to enable client side encryption "
-            "tests:\n"
-            "\tMONGOCXX_TEST_AWS_SECRET_ACCESS_KEY\n"
-            "\tMONGOCXX_TEST_AWS_ACCESS_KEY_ID\n\n");
+    // If none of the variables are set, we should skip the tests:
+    if (std::none_of(std::begin(vars), std::end(vars), std::getenv)) {
+        std::ostringstream os;
+        os << "Skipping tests. Please set environment variables to enable client side encryption "
+              "tests:\n";
+        std::copy(std::begin(vars), std::end(vars), std::ostream_iterator<const char*>(os, "\n"));
+
+        return false;
+    }
+
+    // If some, but not all, variables are set, fail:
+    if (!std::all_of(std::begin(vars), std::end(vars), std::getenv)) {
+        std::ostringstream os;
+        os << "Failing client side encryption tests, some enviornment variables were not set."
+           << "; "
+           << "Please set the following environment variables to enable client side encryption "
+              "tests:\n";
+        std::copy(std::begin(vars), std::end(vars), std::ostream_iterator<const char*>(os, "\n"));
+
+        FAIL(os.str());
+
         return false;
     }
 
     return true;
+}
+
+std::string getenv_or_fail(const std::string env_name) {
+    auto val = std::getenv(env_name.c_str());
+    if (!val) {
+        FAIL("Please set the environment variable: " << env_name);
+    }
+    return val;
 }
 
 }  // namespace test_util

@@ -218,6 +218,8 @@ bool server_has_sessions(const client& conn);
 
 bool should_run_client_side_encryption_test(void);
 
+std::string getenv_or_fail(const std::string env_name);
+
 }  // namespace test_util
 
 MONGOCXX_INLINE_NAMESPACE_END

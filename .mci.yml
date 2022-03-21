@@ -362,6 +362,12 @@ functions:
                       set +o errexit
                       export MONGOCXX_TEST_AWS_SECRET_ACCESS_KEY="${cse_aws_secret_access_key}"
                       export MONGOCXX_TEST_AWS_ACCESS_KEY_ID="${cse_aws_access_key_id}"
+                      export MONGOCXX_TEST_AZURE_TENANT_ID="${cse_azure_tenant_id}"
+                      export MONGOCXX_TEST_AZURE_CLIENT_ID="${cse_azure_client_id}"
+                      export MONGOCXX_TEST_AZURE_CLIENT_SECRET="${cse_azure_client_secret}"
+                      export MONGOCXX_TEST_GCP_EMAIL="${cse_gcp_email}"
+                      export MONGOCXX_TEST_GCP_PRIVATEKEY="${cse_gcp_privatekey}"
+   
                       set -o errexit
                   fi
 

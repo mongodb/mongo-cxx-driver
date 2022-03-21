@@ -48,6 +48,9 @@ void _set_up_key_vault(const client& client, document::view test_spec_view) {
 }
 
 void add_auto_encryption_opts(document::view test, options::client* client_opts) {
+    using std::getenv;
+    using std::string;
+
     if (test["clientOptions"]["autoEncryptOpts"]) {
         auto test_encrypt_opts = test["clientOptions"]["autoEncryptOpts"].get_document().value;
 
@@ -59,8 +62,8 @@ void add_auto_encryption_opts(document::view test, options::client* client_opts)
         }
 
         if (test_encrypt_opts["keyVaultNamespace"]) {
-            auto ns_string =
-                string::to_string(test_encrypt_opts["keyVaultNamespace"].get_string().value);
+            auto ns_string = bsoncxx::string::to_string(
+                test_encrypt_opts["keyVaultNamespace"].get_string().value);
             auto dot = ns_string.find(".");
             std::string db = ns_string.substr(0, dot);
             std::string coll = ns_string.substr(dot + 1);
@@ -96,6 +99,48 @@ void add_auto_encryption_opts(document::view test, options::client* client_opts)
                     subdoc.append(kvp("secretAccessKey", access_key));
                     subdoc.append(kvp("accessKeyId", key_id));
                 }));
+            }
+
+            // Add gcp credentials (from the enviornment):
+            if (test_encrypt_opts["kmsProviders"]["gcp"]) {
+                auto email = getenv("MONGOCXX_TEST_GCP_EMAIL");
+                auto private_key = getenv("MONGOCXX_TEST_GCP_PRIVATEKEY");
+
+                if (!email || !private_key) {
+                    FAIL(
+                        "Please set environment variables for client side encryption tests:\n"
+                        "\tMONGOCXX_TEST_GCP_EMAIL\n"
+                        "\tMONGOCXX_TEST_GCP_PRIVATEKEY\n"
+                        "\n");
+                }
+
+                kms_doc.append(kvp("gcp", [&email, &private_key](sub_document subdoc) {
+                    subdoc.append(kvp("email", email));
+                    subdoc.append(kvp("privateKey", private_key));
+                }));
+            }
+
+            // Add Azure credentials (from the environment):
+            if (test_encrypt_opts["kmsProviders"]["azure"]) {
+                auto tenantId = getenv("MONGOCXX_TEST_AZURE_TENANT_ID");
+                auto clientId = getenv("MONGOCXX_TEST_AZURE_CLIENT_ID");
+                auto clientSecret = getenv("MONGOCXX_TEST_AZURE_CLIENT_SECRET");
+
+                if (!tenantId || !clientId || !clientSecret) {
+                    FAIL(
+                        "Please set environment variables for client side encryption tests:\n"
+                        "\tMONGOCXX_TEST_AZURE_TENANT_ID\n"
+                        "\tMONGOCXX_TEST_AZURE_CLIENT_ID\n"
+                        "\tMONGOCXX_TEST_AZURE_CLIENT_SECRET\n"
+                        "\n");
+                }
+
+                kms_doc.append(
+                    kvp("azure", [&tenantId, &clientId, &clientSecret](sub_document subdoc) {
+                        subdoc.append(kvp("tenantId", tenantId));
+                        subdoc.append(kvp("clientId", clientId));
+                        subdoc.append(kvp("clientSecret", clientSecret));
+                    }));
             }
 
             // Add local credentials (from the json file)
