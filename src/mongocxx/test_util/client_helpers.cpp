@@ -473,40 +473,37 @@ bool should_run_client_side_encryption_test(void) {
 
     using std::getenv;
 
+    // Amazon:
     auto access_key = getenv("MONGOCXX_TEST_AWS_SECRET_ACCESS_KEY");
     auto key_id = getenv("MONGOCXX_TEST_AWS_ACCESS_KEY_ID");
 
-    if (!access_key || !key_id) {
-        WARN(
-            "Skipping tests. Please set environment variables to enable client side encryption "
-            "tests:\n"
-            "\tMONGOCXX_TEST_AWS_SECRET_ACCESS_KEY\n"
-            "\tMONGOCXX_TEST_AWS_ACCESS_KEY_ID\n\n");
-        return false;
-    }
-
+    // GCP:
     auto email = getenv("MONGOCXX_TEST_GCP_EMAIL");
     auto private_key = getenv("MONGOCXX_TEST_GCP_PRIVATEKEY");
 
-    if (!email || !private_key) {
-        FAIL(
-            "Please set environment variables for client side encryption tests:\n"
-            "\tMONGOCXX_TEST_GCP_EMAIL\n"
-            "\tMONGOCXX_TEST_GCP_PRIVATEKEY\n"
-            "\n");
-    }
-
+    // Azure:
     auto tenantId = getenv("MONGOCXX_TEST_AZURE_TENANT_ID");
     auto clientId = getenv("MONGOCXX_TEST_AZURE_CLIENT_ID");
     auto clientSecret = getenv("MONGOCXX_TEST_AZURE_CLIENT_SECRET");
 
-    if (!tenantId || !clientId || !clientSecret) {
-        FAIL(
-            "Please set environment variables for client side encryption tests:\n"
+    // Require that all enviornment variables are set to run the tests:
+    if (!access_key || !key_id ||
+        !email || !private_key ||
+        !tenantId || !clientId || !clientSecret) {
+
+        WARN(
+            "Skipping tests. Please set environment variables to enable client side encryption "
+            "tests:\n"
+            "\tMONGOCXX_TEST_AWS_SECRET_ACCESS_KEY\n"
+            "\tMONGOCXX_TEST_AWS_ACCESS_KEY_ID\n"
+            "\tMONGOCXX_TEST_GCP_EMAIL\n"
+            "\tMONGOCXX_TEST_GCP_PRIVATEKEY\n"
             "\tMONGOCXX_TEST_AZURE_TENANT_ID\n"
             "\tMONGOCXX_TEST_AZURE_CLIENT_ID\n"
             "\tMONGOCXX_TEST_AZURE_CLIENT_SECRET\n"
-            "\n");
+	    "\n");
+
+        return false;
     }
 
     return true;
