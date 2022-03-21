@@ -37,7 +37,7 @@ public:
     }
 
     std::string describe() const override {
-        return std::string("mongocxx::exception contains message: \"") + expected_msg + "\"";
+        return std::string("mongocxx::exception was expected to contain the message: \"") + expected_msg + "\"";
     }
 };
 } // namespace test_util
