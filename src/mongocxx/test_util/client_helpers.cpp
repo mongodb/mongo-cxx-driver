@@ -479,24 +479,20 @@ bool should_run_client_side_encryption_test(void) {
                                   "MONGOCXX_TEST_AZURE_CLIENT_ID",
                                   "MONGOCXX_TEST_AZURE_CLIENT_SECRET"};
 
-    // If none of the variables are set, we should skip the tests:
+    std::ostringstream os;
+    os << "Please set environment variables to enable client side encryption tests:\n";
+    std::copy(std::begin(vars), std::end(vars), std::ostream_iterator<const char*>(os, "\n"));
+
     if (std::none_of(std::begin(vars), std::end(vars), std::getenv)) {
-        std::ostringstream os;
-        os << "Skipping tests. Please set environment variables to enable client side encryption "
-              "tests:\n";
-        std::copy(std::begin(vars), std::end(vars), std::ostream_iterator<const char*>(os, "\n"));
+        os << "Skipping client side encryption tests.\n";
+
+        WARN(os.str());
 
         return false;
     }
 
-    // If some, but not all, variables are set, fail:
     if (!std::all_of(std::begin(vars), std::end(vars), std::getenv)) {
-        std::ostringstream os;
-        os << "Failing client side encryption tests, some enviornment variables were not set."
-           << "; "
-           << "Please set the following environment variables to enable client side encryption "
-              "tests:\n";
-        std::copy(std::begin(vars), std::end(vars), std::ostream_iterator<const char*>(os, "\n"));
+        os << "Failing client side encryption tests (some environment variables were not set).\n";
 
         FAIL(os.str());
 
