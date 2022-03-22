@@ -553,7 +553,6 @@ functions:
               shell: bash
               working_dir: "mongo-cxx-driver"
               script: |
-                  set -o xtrace
 
                   export MONGOC_INSTALL_PREFIX=$(pwd)/../mongoc
                   export MONGOCXX_INSTALL_PREFIX=$(pwd)/build/install
@@ -570,7 +569,6 @@ functions:
               working_dir: "mongo-cxx-driver"
               silent: true
               script: |
-                  set -o xtrace
 
                   export MONGOC_INSTALL_PREFIX=$(pwd)/../mongoc
                   export MONGOCXX_INSTALL_PREFIX=$(pwd)/build/install
