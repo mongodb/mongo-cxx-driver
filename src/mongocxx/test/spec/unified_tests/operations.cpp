@@ -186,6 +186,17 @@ document::value bulk_write(collection& coll, client_session* session, document::
         CAPTURE(to_json(request_arguments), operation_name);
 
         if (operation_name.compare("updateOne") == 0) {
+            std::cout << "JFW: updateOne(): build update model" << std::endl;
+            /*
+            see:
+                  stdx::optional<result::update> update_one(const c
+                                                            bsoncxx namespace mongocxx {} ue filter,
+                                                            const pipeline& update,
+                                                            const options::update& options =
+            options::update());
+
+            std::cout << "JFW: updateOne(): build update model OK" << std::endl;
+            */
             auto update_one = _build_update_model<model::update_one>(request_arguments);
 
             add_hint_to_model(update_one, request_arguments);
@@ -1049,7 +1060,24 @@ document::value run_command(database& db, client_session* session, document::vie
 document::value update_one(collection& coll, client_session* session, document::view operation) {
     document::view arguments = operation["arguments"].get_document().value;
     document::view filter = arguments["filter"].get_document().value;
-    document::view update = arguments["update"].get_document().value;
+
+    document::view update;
+
+    switch (arguments["update"].type()) {
+        default:
+            // Note that we throw std:logic_error, not a mongoxx exception:
+            throw std::logic_error{"update must be a document or an array"};
+
+        case bsoncxx::type::k_array: {
+            update = arguments["update"].get_array().value;
+            break;
+        }
+        case bsoncxx::type::k_document: {
+            update = arguments["update"].get_document().view();
+            break;
+        }
+    }
+
     options::update options{};
 
     if (arguments["collation"]) {
