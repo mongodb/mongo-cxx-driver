@@ -1,3 +1,4 @@
+change-streams.json
 snapshot-sessions.json
 snapshot-sessions-not-supported-client-error.json
 snapshot-sessions-not-supported-server-error.json

@@ -186,17 +186,6 @@ document::value bulk_write(collection& coll, client_session* session, document::
         CAPTURE(to_json(request_arguments), operation_name);
 
         if (operation_name.compare("updateOne") == 0) {
-            std::cout << "JFW: updateOne(): build update model" << std::endl;
-            /*
-            see:
-                  stdx::optional<result::update> update_one(const c
-                                                            bsoncxx namespace mongocxx {} ue filter,
-                                                            const pipeline& update,
-                                                            const options::update& options =
-            options::update());
-
-            std::cout << "JFW: updateOne(): build update model OK" << std::endl;
-            */
             auto update_one = _build_update_model<model::update_one>(request_arguments);
 
             add_hint_to_model(update_one, request_arguments);
