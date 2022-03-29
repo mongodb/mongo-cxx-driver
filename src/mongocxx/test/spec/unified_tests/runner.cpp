@@ -826,7 +826,7 @@ void run_tests(document::view test) {
                     assert_error(e, ops, make_document());
                 } catch (mongocxx::exception& e) {
                     assert_error(e, ops);
-                } 
+                }
             }
             disable_fail_point_fn();
 
