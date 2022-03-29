@@ -1,4 +1,3 @@
-change-streams/change-streams.json
 valid-pass/poc-change-streams.json
 valid-pass/poc-command-monitoring.json
 valid-pass/poc-crud.json
