@@ -353,6 +353,8 @@ functions:
                   export UNIFIED_FORMAT_TESTS_PATH=$(pwd)/../data/unified-format
                   export SESSION_UNIFIED_TESTS_PATH="$(pwd)/../data/sessions/unified"
                   export VERSIONED_API_TESTS_PATH=$(pwd)/../data/versioned-api
+                  export TIMESERIES_UNIFIED_TESTS_PATH="$(pwd)/../data/timeseries"
+
                   export MONGODB_API_VERSION="${MONGODB_API_VERSION}"
 
                   if [ "$(uname -m)" == "ppc64le" ]; then
