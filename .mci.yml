@@ -343,7 +343,7 @@ functions:
                   export CRUD_LEGACY_TESTS_PATH="$(pwd)/../data/crud/legacy"
                   export CRUD_UNIFIED_TESTS_PATH="$(pwd)/../data/crud/unified"
                   export CHANGE_STREAM_TESTS_PATH="$(pwd)/../data/change-streams-unified"
-                  export CHANGE_STREAMS_UNIFIED_TESTS_PATH="$(pwd)/../data/unified-format/change-streams"
+                  export CHANGE_STREAMS_UNIFIED_TESTS_PATH="$(pwd)/../data/change-streams-unified"
                   export ENCRYPTION_TESTS_PATH="$(pwd)/../data/client_side_encryption"
                   export GRIDFS_TESTS_PATH="$(pwd)/../data/gridfs"
                   export COMMAND_MONITORING_TESTS_PATH="$(pwd)/../data/command-monitoring"
