@@ -493,9 +493,6 @@ functions:
                               *change_stream*)
                                 echo "TODO CXX-1201, enable for servers that support change streams"
                                 ;;
-                              *change-streams-unified*)
-                                echo "TODO CXX-1201, enable for servers that support change streams"
-                                ;;
                               *client_session*)
                                 echo "TODO CXX-1201, enable for servers that support change streams"
                                 ;;
