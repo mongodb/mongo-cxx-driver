@@ -56,6 +56,7 @@ sudo DEB_BUILD_PROFILES="${DEB_BUILD_PROFILES}" chroot ./unstable-chroot /bin/ba
   curl -o deb.tar.gz -L https://s3.amazonaws.com/mciuploads/mongo-c-driver/master/mongo-c-driver-debian-packages-latest.tar.gz && \
   tar zxvf deb.tar.gz && \
   apt-get install -y ./*.deb && \
+  chown -R root:root /tmp/mongo-cxx-driver && \
   cd /tmp/mongo-cxx-driver && \
   git clean -fdx && \
   git reset --hard HEAD && \
