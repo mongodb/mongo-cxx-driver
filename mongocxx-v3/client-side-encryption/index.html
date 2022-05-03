@@ -1359,12 +1359,12 @@
 <p>Automatic CSFLE relies upon a new binary called <code>mongocryptd</code> running as a daemon while the driver operates.  This binary is only available with MongoDB Enterprise.</p>
 <p><code>mongocryptd</code> can either be started separately from the driver, or left to spawn automatically when encryption is used.</p>
 <p>To run mongocryptd separately, pass the <code>mongocryptdBypassSpawn</code> flag to the client&rsquo;s auto encryption options:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">auto</span> mongocryptd_options <span style="color:#f92672">=</span> make_document(kvp(<span style="color:#e6db74">&#34;mongocryptdBypassSpawn&#34;</span>, true));
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">auto</span> mongocryptd_options <span style="color:#f92672">=</span> make_document(kvp(<span style="color:#e6db74">&#34;mongocryptdBypassSpawn&#34;</span>, true));
 
 options<span style="color:#f92672">::</span>auto_encryption auto_encrypt_opts{};
 auto_encrypt_opts.extra_options({mongocryptd_options.view()});
 </code></pre></div><p>If the mongocryptd binary is on the current path, the driver will be able to spawn it without any custom flags.  However, if the mongocryptd binary is on a different path, set the path with the <code>mongocryptdSpawnPath</code> option:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">auto</span> mongocryptd_options <span style="color:#f92672">=</span> make_document(kvp(<span style="color:#e6db74">&#34;mongocryptdSpawnPath&#34;</span>, <span style="color:#e6db74">&#34;path/to/mongocryptd&#34;</span>));
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">auto</span> mongocryptd_options <span style="color:#f92672">=</span> make_document(kvp(<span style="color:#e6db74">&#34;mongocryptdSpawnPath&#34;</span>, <span style="color:#e6db74">&#34;path/to/mongocryptd&#34;</span>));
 
 options<span style="color:#f92672">::</span>auto_encryption auto_encrypt_opts{};
 auto_encrypt_opts.extra_options({mongocryptd_options.view()});
@@ -1378,7 +1378,7 @@ auto_encrypt_opts.extra_options({mongocryptd_options.view()});
 <p>The following example shows how to specify automatic encryption rules via the schema_map option. The automatic encryption rules are expressed using a <a href="https://docs.mongodb.com/manual/reference/security-client-side-automatic-json-schema/">strict subset of the JSON Schema syntax</a>.</p>
 <p>Supplying a <code>schema_map</code> provides more security than relying on JSON Schemas obtained from the server. It protects against a malicious server advertising a false JSON Schema, which could trick the client into sending unencrypted data that should be encrypted.</p>
 <p>JSON Schemas supplied in the <code>schema_map</code> only apply to configuring automatic client-side field level encryption. Other validation rules in the JSON schema will not be enforced by the driver and will result in an error.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#75715e">//
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#75715e">//
 </span><span style="color:#75715e">// The schema map has the following form:
 </span><span style="color:#75715e">//
 </span><span style="color:#75715e">//   {
@@ -1400,7 +1400,7 @@ auto_encrypt_opts.extra_options({mongocryptd_options.view()});
 <h3 id="server-side-field-level-encryption-enforcement">Server-Side Field Level Encryption Enforcement</h3>
 <p>The MongoDB 4.2 server supports using schema validation to enforce encryption of specific fields in a collection. This schema validation will prevent an application from inserting unencrypted values for any fields marked with the <code>&quot;encrypt&quot;</code> JSON schema keyword.</p>
 <p>It is possible to set up automatic client-side field level encryption using the <code>mongocxx::client_encryption</code> to create a new encryption data key and create a collection with the <a href="https://docs.mongodb.com/manual/reference/security-client-side-automatic-json-schema/">Automatic Encryption JSON Schema Syntax</a>.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#75715e">// Please see the linked example below for full json_schema construction.
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#75715e">// Please see the linked example below for full json_schema construction.
 </span><span style="color:#75715e"></span>bsoncxx<span style="color:#f92672">::</span>document<span style="color:#f92672">::</span>value json_schema{};
 
 <span style="color:#75715e">// Create the collection with the encryption JSON Schema.
@@ -1414,7 +1414,7 @@ db.run_command(cmd.view());
 </code></pre></div><p>Please see <a href="https://github.com/mongodb/mongo-cxx-driver/blob/master/examples/mongocxx/server_side_field_level_encryption_enforcement.cpp"><code>examples/mongocxx/server_side_field_level_encryption_enforcement.cpp</code></a> for a full example of setting encryption enforcement on the server.</p>
 <h3 id="explicit-encryption">Explicit Encryption</h3>
 <p>Explicit encryption is a MongoDB community feature and does not use the <code>mongocryptd</code> process. Explicit encryption is provided by the <code>mongocxx::client_encryption</code> class.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#75715e">// Explicitly encrypt a BSON value.
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#75715e">// Explicitly encrypt a BSON value.
 </span><span style="color:#75715e"></span><span style="color:#66d9ef">auto</span> to_encrypt <span style="color:#f92672">=</span> bsoncxx<span style="color:#f92672">::</span>types<span style="color:#f92672">::</span>bson_value<span style="color:#f92672">::</span>make_value(<span style="color:#e6db74">&#34;secret message&#34;</span>);
 <span style="color:#66d9ef">auto</span> encrypted_message <span style="color:#f92672">=</span> client_encryption.encrypt(to_encrypt, encrypt_opts);
 
@@ -1423,7 +1423,7 @@ db.run_command(cmd.view());
 </code></pre></div><p>Please see <a href="https://github.com/mongodb/mongo-cxx-driver/blob/master/examples/mongocxx/explicit_encryption.cpp"><code>examples/mongocxx/explicit_encryption.cpp</code></a> for a full example of using explicit encryption and decryption.</p>
 <h3 id="explicit-encryption-with-automatic-decryption">Explicit Encryption with Automatic Decryption</h3>
 <p>Although automatic encryption requires MongoDB 4.2 enterprise or a MongoDB 4.2 Atlas cluster, automatic decryption is supported for all users. To configure automatic decryption without automatic encryption, set <code>bypass_auto_encryption=True</code> in the <code>options::auto_encryption</code> class.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">options<span style="color:#f92672">::</span>auto_encryption auto_encrypt_opts{};
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">options<span style="color:#f92672">::</span>auto_encryption auto_encrypt_opts{};
 auto_encrypt_opts.bypass_auto_encryption(true);
 <span style="color:#75715e">// Please see full example for complete options construction.
 </span><span style="color:#75715e"></span>

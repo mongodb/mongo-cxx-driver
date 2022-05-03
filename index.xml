@@ -14,7 +14,7 @@
       
       <guid>http://mongocxx.org/mongocxx-v3/installation/windows/</guid>
       <description>Step 1: Install the latest version of the MongoDB C driver. The mongocxx driver builds on top of the MongoDB C driver.
- For mongocxx-3.7.x, libmongoc 1.19.0 or later is required. For mongocxx-3.6.x, libmongoc 1.17.0 or later is required. For mongocxx-3.5.x, libmongoc 1.15.0 or later is required. For mongocxx-3.4.x, libmongoc 1.13.0 or later is required. For mongocxx-3.3.x, libmongoc 1.10.1 or later is required. For mongocxx-3.2.x, libmongoc 1.9.2 or later is required.</description>
+ For mongocxx-3.6.x, libmongoc 1.17.0 or later is required. For mongocxx-3.5.x, libmongoc 1.15.0 or later is required. For mongocxx-3.4.x, libmongoc 1.13.0 or later is required. For mongocxx-3.3.x, libmongoc 1.10.1 or later is required. For mongocxx-3.2.x, libmongoc 1.9.2 or later is required. For mongocxx-3.1.4+, libmongoc 1.7.0 or later is required.</description>
     </item>
     
     <item>
@@ -24,7 +24,7 @@
       
       <guid>http://mongocxx.org/mongocxx-v3/installation/macos/</guid>
       <description>Step 1: Install the latest version of the MongoDB C driver. The mongocxx driver builds on top of the MongoDB C driver.
- For mongocxx-3.7.x, libmongoc 1.19.0 or later is required. For mongocxx-3.6.x, libmongoc 1.17.0 or later is required. For mongocxx-3.5.x, libmongoc 1.15.0 or later is required. For mongocxx-3.4.x, libmongoc 1.13.0 or later is required. For mongocxx-3.3.x, libmongoc 1.10.1 or later is required. For mongocxx-3.2.x, libmongoc 1.9.2 or later is required.</description>
+ For mongocxx-3.6.x, libmongoc 1.17.0 or later is required. For mongocxx-3.5.x, libmongoc 1.15.0 or later is required. For mongocxx-3.4.x, libmongoc 1.13.0 or later is required. For mongocxx-3.3.x, libmongoc 1.10.1 or later is required. For mongocxx-3.2.x, libmongoc 1.9.2 or later is required. For mongocxx-3.1.4+, libmongoc 1.7.0 or later is required.</description>
     </item>
     
     <item>
@@ -34,7 +34,7 @@
       
       <guid>http://mongocxx.org/mongocxx-v3/installation/linux/</guid>
       <description>Step 1: Install the latest version of the MongoDB C driver. The mongocxx driver builds on top of the MongoDB C driver.
- For mongocxx-3.7.x, libmongoc 1.19.0 or later is required. For mongocxx-3.6.x, libmongoc 1.17.0 or later is required. For mongocxx-3.5.x, libmongoc 1.15.0 or later is required. For mongocxx-3.4.x, libmongoc 1.13.0 or later is required. For mongocxx-3.3.x, libmongoc 1.10.1 or later is required. For mongocxx-3.2.x, libmongoc 1.9.2 or later is required.</description>
+ For mongocxx-3.6.x, libmongoc 1.17.0 or later is required. For mongocxx-3.5.x, libmongoc 1.15.0 or later is required. For mongocxx-3.4.x, libmongoc 1.13.0 or later is required. For mongocxx-3.3.x, libmongoc 1.10.1 or later is required. For mongocxx-3.2.x, libmongoc 1.9.2 or later is required. For mongocxx-3.1.4+, libmongoc 1.7.0 or later is required.</description>
     </item>
     
     <item>
