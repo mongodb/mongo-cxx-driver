@@ -79,9 +79,9 @@ page will have links to the release tarball for the version you wish you install
 example, to download version 3.6.4:
 
 ```sh
-curl -OL https://github.com/mongodb/mongo-cxx-driver/releases/download/r3.6.4/mongo-cxx-driver-r3.6.4.tar.gz
-tar -xzf mongo-cxx-driver-r3.6.4.tar.gz
-cd mongo-cxx-driver-r3.6.4/build
+curl -OL https://github.com/mongodb/mongo-cxx-driver/releases/download/r3.6.7/mongo-cxx-driver-r3.6.7.tar.gz
+tar -xzf mongo-cxx-driver-r3.6.7.tar.gz
+cd mongo-cxx-driver-r3.6.7/build
 ```
 
 Make sure you change to the `build` directory of whatever source tree you
