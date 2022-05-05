@@ -915,4 +915,8 @@ TEST_CASE("versioned API spec automated tests", "[unified_format_spec]") {
     CHECK(run_unified_format_tests_in_env_dir("VERSIONED_API_TESTS_PATH"));
 }
 
+TEST_CASE("collection management spec automated tests", "[unified_format_spec]") {
+    CHECK(run_unified_format_tests_in_env_dir("COLLECTION_MANAGEMENT_TESTS_PATH"));
+}
+
 }  // namespace

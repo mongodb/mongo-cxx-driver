@@ -276,6 +276,8 @@ set_property(TEST unified_format_spec
   APPEND PROPERTY ENVIRONMENT "CRUD_UNIFIED_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/crud/unified")
 set_property(TEST unified_format_spec
   APPEND PROPERTY ENVIRONMENT "VERSIONED_API_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/versioned-api")
+set_property(TEST unified_format_spec
+  APPEND PROPERTY ENVIRONMENT "COLLECTION_MANAGEMENT_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/collection-management")
 
 if (MONGOCXX_ENABLE_SLOW_TESTS)
   set_property(TEST driver

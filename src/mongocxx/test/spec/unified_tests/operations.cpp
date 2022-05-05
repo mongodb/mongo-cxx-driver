@@ -1407,12 +1407,21 @@ document::value operations::run(entity::map& entity_map,
     if (name == "createCollection") {
         auto coll_name = string::to_string(op["arguments"]["collection"].get_string().value);
         auto& db = entity_map.get_database(object);
+        auto opts = builder::basic::document{};
+        if (op["arguments"]["timeseries"]) {
+            opts.append(builder::basic::kvp("timeseries",
+                                            op["arguments"]["timeseries"].get_document().view()));
+        }
+        if (op["arguments"]["expireAfterSeconds"]) {
+            opts.append(builder::basic::kvp(
+                "expireAfterSeconds", op["arguments"]["expireAfterSeconds"].get_int32().value));
+        }
         if (op["arguments"]["session"]) {
             auto session_name = string::to_string(op["arguments"]["session"].get_string().value);
             auto& session = entity_map.get_client_session(session_name);
-            db.create_collection(session, coll_name);
+            db.create_collection(session, coll_name, opts.view());
         } else {
-            db.create_collection(coll_name);
+            db.create_collection(coll_name, opts.view());
         }
         return empty_doc;
     }
