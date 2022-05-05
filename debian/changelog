@@ -1,4 +1,4 @@
-mongo-cxx-driver (3.6.7-1) UNRELEASED; urgency=medium
+mongo-cxx-driver (3.6.7-1) experimental; urgency=medium
 
   * New upstream release
   * 
