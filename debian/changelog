@@ -1,7 +1,6 @@
 mongo-cxx-driver (3.6.7-1) experimental; urgency=medium
 
   * New upstream release
-  * 
 
  -- Roberto C. Sanchez <roberto@connexer.com>  Thu, 05 May 2022 17:58:52 -0400
 
