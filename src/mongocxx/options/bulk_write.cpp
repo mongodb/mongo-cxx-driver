@@ -49,6 +49,15 @@ const stdx::optional<bool> bulk_write::bypass_document_validation() const {
     return _bypass_document_validation;
 }
 
+bulk_write& bulk_write::let(bsoncxx::document::view_or_value let) {
+    _let = let;
+    return *this;
+}
+
+const stdx::optional<bsoncxx::document::view_or_value> bulk_write::let() const {
+    return _let;
+}
+
 }  // namespace options
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
