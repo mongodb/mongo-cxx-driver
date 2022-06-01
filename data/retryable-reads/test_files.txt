@@ -15,8 +15,8 @@ distinct.json
 distinct-serverErrors.json
 estimatedDocumentCount-4.9.json
 estimatedDocumentCount-serverErrors-4.9.json
-estimatedDocumentCount-pre4.9.json
-estimatedDocumentCount-serverErrors-pre4.9.json
+estimatedDocumentCount.json
+estimatedDocumentCount-serverErrors.json
 find.json
 findOne.json
 findOne-serverErrors.json
