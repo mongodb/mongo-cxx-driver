@@ -108,7 +108,7 @@ bool is_compatible_version(Range1 range1, Range2 range2, ignore_patch ip) {
     }
 
     // Compatible major, minor and patch ignored.
-    if (range1[0] < range2[1]) {
+    if (range1[0] < range2[0]) {
         return true;
     }
 
