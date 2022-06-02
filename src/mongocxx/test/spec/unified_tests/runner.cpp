@@ -123,7 +123,7 @@ bool is_compatible_version(Range1 range1, Range2 range2, ignore_patch ip) {
     }
 
     // Compatible major, compatible minor, and compatible patch.
-    return range1[1] < range2[1] || range1[2] <= range2[2];
+    return range1[2] <= range2[2];
 }
 
 template <typename Range1, typename Range2>
