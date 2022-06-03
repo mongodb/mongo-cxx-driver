@@ -32,7 +32,7 @@ echo "About to install C driver ($VERSION) into $PREFIX"
 
 LIB=mongo-c-driver
 rm -rf $(echo $LIB*)
-curl -o $LIB.zip -L https://github.com/mongodb/$LIB/archive/$VERSION.zip
+curl -sS -o $LIB.zip -L https://github.com/mongodb/$LIB/archive/$VERSION.zip
 unzip -q $LIB.zip
 DIR=$(echo $LIB-*)
 
@@ -45,7 +45,7 @@ else
     # Otherwise, use the tag name of the latest release to construct a prerelease version string.
 
     # Extract "tag_name" from latest Github release.
-    BUILD_VERSION=$(curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/mongodb/mongo-c-driver/releases/latest | jq -r ".tag_name")
+    BUILD_VERSION=$(curl -sS -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/mongodb/mongo-c-driver/releases/latest | jq -r ".tag_name")
 
     # Assert the tag name is a SemVer string.
     test $(echo $BUILD_VERSION | grep -P "$SEMVER_REGEX")
