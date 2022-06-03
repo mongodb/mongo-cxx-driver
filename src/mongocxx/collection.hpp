@@ -415,6 +415,12 @@ class MONGOCXX_API collection {
     ///
     /// @note For a fast count of the total documents in a collection, see
     /// estimated_document_count().
+    ///
+    /// @note Due to an oversight in MongoDB server versions 5.0.0 through 5.0.7, the `count`
+    /// command was not included in Stable API v1. Users of the Stable API with
+    /// estimatedDocumentCount are recommended to upgrade their server version to 5.0.8 or newer, or
+    /// set `apiStrict: false` to avoid encountering errors.
+    ///
     /// @see mongocxx::estimated_document_count
     ///
     std::int64_t count_documents(bsoncxx::document::view_or_value filter,
@@ -434,6 +440,13 @@ class MONGOCXX_API collection {
     ///
     /// @throws mongocxx::query_exception if the count operation fails.
     ///
+    /// @note Due to an oversight in MongoDB server versions 5.0.0 through 5.0.7, the `count`
+    /// command was not included in Stable API v1. Users of the Stable API with
+    /// estimatedDocumentCount are recommended to upgrade their server version to 5.0.8 or newer, or
+    /// set `apiStrict: false` to avoid encountering errors.
+    ///
+    /// @see mongocxx::estimated_document_count
+    ///
     std::int64_t count_documents(const client_session& session,
                                  bsoncxx::document::view_or_value filter,
                                  const options::count& options = options::count());
@@ -452,6 +465,9 @@ class MONGOCXX_API collection {
     /// @return The count of the documents that matched the filter.
     ///
     /// @throws mongocxx::query_exception if the count operation fails.
+    ///
+    /// @note This function is implemented in terms of the count server command. See:
+    /// https://www.mongodb.com/docs/manual/reference/command/count/#behavior for more information.
     ///
     /// @see mongocxx::count_documents
     ///
