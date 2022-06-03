@@ -38,20 +38,20 @@ DIR=$(echo $LIB-*)
 
 # RegEx pattern to match SemVer strings. See https://semver.org/.
 SEMVER_REGEX="^(?P<major>0|[1-9]\d*)\.(?P<minor>0|[1-9]\d*)\.(?P<patch>0|[1-9]\d*)(?:-(?P<prerelease>(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+(?P<buildmetadata>[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$"
-if [ $(echo "$VERSION" | grep -P "$SEMVER_REGEX") ]; then
+if [ $(echo "$VERSION" | perl -ne "$(printf 'exit 1 unless /%s/' $SEMVER_REGEX)") ]; then
     # If $VERSION is already SemVer compliant, use as-is.
     CMAKE_ARGS="$CMAKE_ARGS -DBUILD_VERSION=$BUILD_VERSION"
 else
     # Otherwise, use the tag name of the latest release to construct a prerelease version string.
 
     # Extract "tag_name" from latest Github release.
-    BUILD_VERSION=$(curl -sS -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/mongodb/mongo-c-driver/releases/latest | jq -r ".tag_name")
+    BUILD_VERSION=$(curl -sS -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/mongodb/mongo-c-driver/releases/latest | perl -ne 'print for /"tag_name": "(.+)"/')
 
-    # Assert the tag name is a SemVer string.
-    test $(echo $BUILD_VERSION | grep -P "$SEMVER_REGEX")
+    # Assert the tag name is a SemVer string via errexit.
+    echo $BUILD_VERSION | perl -ne "$(printf 'exit 1 unless /%s/' $SEMVER_REGEX)"
 
     # Bump to the next minor version, e.g. 1.0.1 -> 1.1.0.
-    BUILD_VERSION=$(echo $BUILD_VERSION | perl -pe "$(printf 's/%s/$+{major} . "." . ($+{minor}+1) . ".0"/e' $SEMVER_REGEX)")
+    BUILD_VERSION=$(echo $BUILD_VERSION | perl -ne "$(printf '/%s/; print $+{major} . "." . ($+{minor}+1) . ".0"' $SEMVER_REGEX)")
 
     # Append a prerelease tag, e.g. 1.1.0-pre+<version>.
     BUILD_VERSION=$(printf "%s-pre+%s" $BUILD_VERSION $VERSION)
