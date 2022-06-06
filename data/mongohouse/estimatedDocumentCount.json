@@ -16,7 +16,9 @@
           "command_started_event": {
             "command": {
               "count": "driverdata"
-            }
+            },
+            "command_name": "count",
+            "database_name": "test"
           }
         }
       ]

@@ -31,18 +31,33 @@ CMAKE_ARGS="
 echo "About to install C driver ($VERSION) into $PREFIX"
 
 LIB=mongo-c-driver
-if [ -n "$(echo "${VERSION}" | grep '^[a-z]' )" ]; then
-    rm -rf $LIB
-    # Must be http as rhel55 has https issues
-    curl -o $LIB.tgz -L http://s3.amazonaws.com/mciuploads/$LIB/$VERSION/$LIB-latest.tar.gz
-    tar --extract --file $LIB.tgz
-    rm -rf $LIB
-    DIR=$(echo $LIB-*)
+rm -rf $(echo $LIB*)
+curl -sS -o $LIB.zip -L https://github.com/mongodb/$LIB/archive/$VERSION.zip
+unzip -q $LIB.zip
+DIR=$(echo $LIB-*)
+
+# RegEx pattern to match SemVer strings. See https://semver.org/.
+SEMVER_REGEX="^(?P<major>0|[1-9]\d*)\.(?P<minor>0|[1-9]\d*)\.(?P<patch>0|[1-9]\d*)(?:-(?P<prerelease>(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+(?P<buildmetadata>[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$"
+if [ $(echo "$VERSION" | perl -ne "$(printf 'exit 1 unless /%s/' $SEMVER_REGEX)") ]; then
+    # If $VERSION is already SemVer compliant, use as-is.
+    CMAKE_ARGS="$CMAKE_ARGS -DBUILD_VERSION=$BUILD_VERSION"
 else
-    DIR=$LIB-${VERSION}
-    rm -rf $LIB.tgz $DIR
-    curl -o $LIB.tgz -L https://github.com/mongodb/$LIB/releases/download/${VERSION}/$LIB-${VERSION}.tar.gz
-    tar --extract --file $LIB.tgz
+    # Otherwise, use the tag name of the latest release to construct a prerelease version string.
+
+    # Extract "tag_name" from latest Github release.
+    BUILD_VERSION=$(curl -sS -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/mongodb/mongo-c-driver/releases/latest | perl -ne 'print for /"tag_name": "(.+)"/')
+
+    # Assert the tag name is a SemVer string via errexit.
+    echo $BUILD_VERSION | perl -ne "$(printf 'exit 1 unless /%s/' $SEMVER_REGEX)"
+
+    # Bump to the next minor version, e.g. 1.0.1 -> 1.1.0.
+    BUILD_VERSION=$(echo $BUILD_VERSION | perl -ne "$(printf '/%s/; print $+{major} . "." . ($+{minor}+1) . ".0"' $SEMVER_REGEX)")
+
+    # Append a prerelease tag, e.g. 1.1.0-pre+<version>.
+    BUILD_VERSION=$(printf "%s-pre+%s" $BUILD_VERSION $VERSION)
+
+    # Use the constructed prerelease build version when building the C driver.
+    CMAKE_ARGS="$CMAKE_ARGS -DBUILD_VERSION=$BUILD_VERSION"
 fi
 
 . .evergreen/find_cmake.sh
