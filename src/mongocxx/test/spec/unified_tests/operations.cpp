@@ -172,11 +172,14 @@ document::value bulk_write(collection& coll, client_session* session, document::
     std::vector<model::write> writes;
 
     auto arguments = op["arguments"].get_document().value;
-    if (arguments["options"]) {
-        document::view options_doc = arguments["options"].get_document().value;
-        if (options_doc["ordered"]) {
-            opt.ordered(options_doc["ordered"].get_bool().value);
+    if (auto options = arguments["options"]) {
+        document::view options_doc = options.get_document().value;
+        if (auto ordered = options_doc["ordered"]) {
+            opt.ordered(ordered.get_bool().value);
         }
+    }
+    if (auto let = arguments["let"]) {
+        opt.let(let.get_document().value);
     }
 
     auto requests = arguments["requests"].get_array().value;
