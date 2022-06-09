@@ -1081,7 +1081,6 @@ document::value run_command(database& db, client_session* session, document::vie
 document::value update_one(collection& coll, client_session* session, document::view operation) {
     document::view arguments = operation["arguments"].get_document().value;
     document::view filter = arguments["filter"].get_document().value;
-    document::view update = arguments["update"].get_document().value;
     options::update options{};
 
     if (arguments["collation"]) {
@@ -1097,8 +1096,31 @@ document::value update_one(collection& coll, client_session* session, document::
         options.upsert(arguments["upsert"].get_bool().value);
     }
 
-    const auto update_one_result = session ? coll.update_one(*session, filter, update, options)
-                                           : coll.update_one(filter, update, options);
+    stdx::optional<result::update> update_one_result;
+
+    {
+        const auto update = arguments["update"];
+        const auto type = update.type();
+
+        switch (type) {
+            case bsoncxx::type::k_document: {
+                const auto doc = update.get_document().value;
+                update_one_result = session ? coll.update_one(*session, filter, doc, options)
+                                            : coll.update_one(filter, doc, options);
+                break;
+            }
+            case bsoncxx::type::k_array: {
+                pipeline pipe;
+                pipe.append_stages(update.get_array().value);
+                update_one_result = session ? coll.update_one(*session, filter, pipe, options)
+                                            : coll.update_one(filter, pipe, options);
+                break;
+            }
+            default:
+                throw std::logic_error("unexpected type '" + to_string(type) +
+                                       "' for field 'update'");
+        }
+    }
 
     auto result = builder::basic::document{};
     result.append(builder::basic::kvp("result", [&](builder::basic::sub_document subdoc) {
@@ -1122,7 +1144,6 @@ document::value update_one(collection& coll, client_session* session, document::
 document::value update_many(collection& coll, document::view operation) {
     document::view arguments = operation["arguments"].get_document().value;
     document::view filter = arguments["filter"].get_document().value;
-    document::view update = arguments["update"].get_document().value;
     options::update options{};
 
     if (arguments["collation"]) {
@@ -1138,7 +1159,29 @@ document::value update_many(collection& coll, document::view operation) {
         options.upsert(arguments["upsert"].get_bool().value);
     }
 
-    const auto update_many_result = coll.update_many(filter, update, options);
+    stdx::optional<result::update> update_many_result;
+
+    {
+        const auto update = arguments["update"];
+        const auto type = update.type();
+
+        switch (type) {
+            case bsoncxx::type::k_document: {
+                const auto doc = update.get_document().value;
+                update_many_result = coll.update_many(filter, doc, options);
+                break;
+            }
+            case bsoncxx::type::k_array: {
+                pipeline pipe;
+                pipe.append_stages(update.get_array().value);
+                update_many_result = coll.update_many(filter, pipe, options);
+                break;
+            }
+            default:
+                throw std::logic_error("unexpected type '" + to_string(type) +
+                                       "' for field 'update'");
+        }
+    }
 
     auto result = builder::basic::document{};
     result.append(builder::basic::kvp("result", [&](builder::basic::sub_document subdoc) {
