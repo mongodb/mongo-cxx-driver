@@ -54,6 +54,12 @@ class MONGOCXX_API update {
     std::int32_t modified_count() const;
 
     ///
+    /// Gets the number of documents that were upserted during this operation.
+    ///
+    /// @return The number of documents that were upserted.
+    std::int32_t upserted_count() const;
+
+    ///
     /// If a document was upserted during this operation, gets the _id of the upserted document.
     ///
     /// @return The value of the _id field for upserted document.

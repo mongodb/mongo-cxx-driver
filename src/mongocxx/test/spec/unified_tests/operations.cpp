@@ -1097,46 +1097,24 @@ document::value update_one(collection& coll, client_session* session, document::
         options.upsert(arguments["upsert"].get_bool().value);
     }
 
-    std::int32_t matched_count = 0;
-    bsoncxx::stdx::optional<std::int32_t> modified_count;
-    bsoncxx::stdx::optional<types::bson_value::view> upserted_id{};
-
-    if (session) {
-        auto update_one_result = coll.update_one(*session, filter, update, options);
-        if (update_one_result) {
-            matched_count = update_one_result->matched_count();
-            modified_count = update_one_result->modified_count();
-
-            if (auto upserted_element = update_one_result->upserted_id()) {
-                upserted_id = upserted_element->get_value();
-            }
-        }
-    } else {
-        auto update_one_result = coll.update_one(filter, update, options);
-        if (update_one_result) {
-            matched_count = update_one_result->matched_count();
-            modified_count = update_one_result->modified_count();
-
-            if (auto upserted_element = update_one_result->upserted_id()) {
-                upserted_id = upserted_element->get_value();
-            }
-        }
-    }
+    const auto update_one_result = session ? coll.update_one(*session, filter, update, options)
+                                           : coll.update_one(filter, update, options);
 
     auto result = builder::basic::document{};
-    result.append(builder::basic::kvp(
-        "result",
-        [matched_count, modified_count, upserted_id](builder::basic::sub_document subdoc) {
-            subdoc.append(builder::basic::kvp("matchedCount", matched_count));
+    result.append(builder::basic::kvp("result", [&](builder::basic::sub_document subdoc) {
+        if (!update_one_result) {
+            subdoc.append(builder::basic::kvp("matchedCount", 0));
+            return;
+        }
 
-            if (modified_count) {
-                subdoc.append(builder::basic::kvp("modifiedCount", *modified_count));
-            }
+        subdoc.append(builder::basic::kvp("matchedCount", update_one_result->matched_count()));
+        subdoc.append(builder::basic::kvp("modifiedCount", update_one_result->modified_count()));
+        subdoc.append(builder::basic::kvp("upsertedCount", update_one_result->upserted_count()));
 
-            if (upserted_id) {
-                subdoc.append(builder::basic::kvp("upsertedId", *upserted_id));
-            }
-        }));
+        if (auto upserted_element = update_one_result->upserted_id()) {
+            subdoc.append(builder::basic::kvp("upsertedId", upserted_element->get_value()));
+        }
+    }));
 
     return result.extract();
 }
@@ -1160,40 +1138,23 @@ document::value update_many(collection& coll, document::view operation) {
         options.upsert(arguments["upsert"].get_bool().value);
     }
 
-    std::int32_t matched_count = 0;
-    bsoncxx::stdx::optional<std::int32_t> modified_count;
-    std::int32_t upserted_count = 0;
-    bsoncxx::stdx::optional<types::bson_value::view> upserted_id{};
-
-    auto update_many_result = coll.update_many(filter, update, options);
-    if (update_many_result) {
-        matched_count = update_many_result->matched_count();
-        modified_count = update_many_result->modified_count();
-
-        upserted_count = update_many_result->result().upserted_count();
-
-        if (auto upserted_element = update_many_result->upserted_id()) {
-            upserted_id = upserted_element->get_value();
-        }
-    }
+    const auto update_many_result = coll.update_many(filter, update, options);
 
     auto result = builder::basic::document{};
-    result.append(builder::basic::kvp(
-        "result",
-        [matched_count, modified_count, upserted_count, upserted_id](
-            builder::basic::sub_document subdoc) {
-            subdoc.append(builder::basic::kvp("matchedCount", matched_count));
+    result.append(builder::basic::kvp("result", [&](builder::basic::sub_document subdoc) {
+        if (!update_many_result) {
+            subdoc.append(builder::basic::kvp("matchedCount", 0));
+            return;
+        }
 
-            if (modified_count) {
-                subdoc.append(builder::basic::kvp("modifiedCount", *modified_count));
-            }
+        subdoc.append(builder::basic::kvp("matchedCount", update_many_result->matched_count()));
+        subdoc.append(builder::basic::kvp("modifiedCount", update_many_result->modified_count()));
+        subdoc.append(builder::basic::kvp("upsertedCount", update_many_result->upserted_count()));
 
-            subdoc.append(builder::basic::kvp("upsertedCount", upserted_count));
-
-            if (upserted_id) {
-                subdoc.append(builder::basic::kvp("upsertedId", *upserted_id));
-            }
-        }));
+        if (auto upserted_element = update_many_result->upserted_id()) {
+            subdoc.append(builder::basic::kvp("upsertedId", upserted_element->get_value()));
+        }
+    }));
 
     return result.extract();
 }
