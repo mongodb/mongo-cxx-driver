@@ -248,6 +248,11 @@ bool is_replica_set(const client& client) {
     return static_cast<bool>(reply.view()["setName"]);
 }
 
+bool is_sharded_cluster(const client& client) {
+    auto reply = get_is_master(client);
+    return static_cast<bool>(reply.view()["config"]["sharded"]);
+}
+
 std::string get_hosts(const client& client) {
     auto shards = get_shards(client);
     if (shards)

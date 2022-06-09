@@ -105,6 +105,11 @@ std::string replica_set_name(const client& client);
 bool is_replica_set(const client& client = {uri{}, add_test_server_api()});
 
 ///
+/// Determines if the server is a sharded cluster member.
+///
+bool is_sharded_cluster(const client& client = {uri{}, add_test_server_api()});
+
+///
 /// Returns "standalone", "replicaset", or "sharded".
 ///
 std::string get_topology(const client& client = {uri{}, add_test_server_api()});

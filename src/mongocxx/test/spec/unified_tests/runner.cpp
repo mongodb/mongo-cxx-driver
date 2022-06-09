@@ -255,25 +255,32 @@ std::string uri_options_to_string(document::view object) {
 
 std::string get_hostnames(document::view object) {
     const auto default_uri = std::string{"localhost:27017"};
+
     // Spec: This [useMultipleMongoses] option has no effect for non-sharded topologies.
-    if (test_util::is_replica_set())
+    if (!test_util::is_sharded_cluster()) {
         return default_uri;
+    }
 
     // Spec: If true and the topology is a sharded cluster, the test runner MUST assert that this
     // MongoClient connects to multiple mongos hosts (e.g. by inspecting the connection string).
-    if (!object["useMultipleMongoses"] || !object["useMultipleMongoses"].get_bool())
+    if (!object["useMultipleMongoses"] || !object["useMultipleMongoses"].get_bool()) {
         return default_uri;
+    }
 
     // from: https://docs.mongodb.com/manual/reference/config-database/#config.shards
     // If the shard is a replica set, the host field displays the name of the replica set, then a
     // slash, then a comma-separated list of the hostnames of each member of the replica set, as in
     // the following example:
     //      { ... , "host" : "shard0001/localhost:27018,localhost:27019,localhost:27020", ... }
-    auto host = test_util::get_hosts();
-    auto after_slash = ++std::find(std::begin(host), std::end(host), '/');
-    REQUIRE(after_slash < std::end(host));
+    const auto host = test_util::get_hosts();
+    const auto slash = std::find(std::begin(host), std::end(host), '/');
 
-    auto hostnames = std::string{after_slash, std::end(host)};
+    // If no slash, not a sharded cluster.
+    if (slash == std::end(host)) {
+        return default_uri;
+    }
+
+    const auto hostnames = std::string{std::next(slash), std::end(host)};
     CAPTURE(host, hostnames);
 
     // require multiple mongos hosts
