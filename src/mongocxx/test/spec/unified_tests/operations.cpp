@@ -164,6 +164,15 @@ T _build_update_model(document::view arguments) {
     }
 }
 
+template <typename Model>
+void set_hint(Model& model, const mongocxx::document::element& hint) {
+    if (hint.type() == bsoncxx::v_noabi::type::k_string) {
+        model.hint(mongocxx::hint(hint.get_string().value));
+    } else {
+        model.hint(mongocxx::hint(hint.get_document().value));
+    }
+}
+
 document::value bulk_write(collection& coll, client_session* session, document::view op) {
     using bsoncxx::builder::basic::kvp;
     using bsoncxx::builder::basic::make_document;
@@ -197,6 +206,10 @@ document::value bulk_write(collection& coll, client_session* session, document::
                 update_one.collation(request_arguments["collation"].get_document().value);
             }
 
+            if (const auto hint = request_arguments["hint"]) {
+                set_hint(update_one, hint);
+            }
+
             if (request_arguments["upsert"]) {
                 update_one.upsert(request_arguments["upsert"].get_bool().value);
             }
@@ -213,6 +226,10 @@ document::value bulk_write(collection& coll, client_session* session, document::
 
             if (request_arguments["collation"]) {
                 update_many.collation(request_arguments["collation"].get_document().value);
+            }
+
+            if (const auto hint = request_arguments["hint"]) {
+                set_hint(update_many, hint);
             }
 
             if (request_arguments["upsert"]) {
@@ -235,6 +252,10 @@ document::value bulk_write(collection& coll, client_session* session, document::
                 replace_one.collation(request_arguments["collation"].get_document().value);
             }
 
+            if (const auto hint = request_arguments["hint"]) {
+                set_hint(replace_one, hint);
+            }
+
             if (request_arguments["upsert"]) {
                 replace_one.upsert(request_arguments["upsert"].get_bool().value);
             }
@@ -253,6 +274,10 @@ document::value bulk_write(collection& coll, client_session* session, document::
                 delete_one.collation(request_arguments["collation"].get_document().value);
             }
 
+            if (const auto hint = request_arguments["hint"]) {
+                set_hint(delete_one, hint);
+            }
+
             writes.emplace_back(delete_one);
         } else if (operation_name.compare("deleteMany") == 0) {
             document::view filter = request_arguments["filter"].get_document().value;
@@ -261,6 +286,10 @@ document::value bulk_write(collection& coll, client_session* session, document::
 
             if (request_arguments["collation"]) {
                 delete_many.collation(request_arguments["collation"].get_document().value);
+            }
+
+            if (const auto hint = request_arguments["hint"]) {
+                set_hint(delete_many, hint);
             }
 
             writes.emplace_back(delete_many);
