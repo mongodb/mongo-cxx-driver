@@ -893,17 +893,18 @@ void run_tests_in_file(const std::string& test_path) {
 
     const std::string description =
         string::to_string(test_spec_view["description"].get_string().value);
-    SECTION(description) {
-        create_entities(test_spec_view);
-        load_initial_data(test_spec_view);
-        run_tests(test_spec_view);
-    }
+    CAPTURE(description);
+    create_entities(test_spec_view);
+    load_initial_data(test_spec_view);
+    run_tests(test_spec_view);
 }
 
 // Check the environment for the specified variable; if present, extract it
 // as a directory and run all the tests contained in the magic "test_files.txt"
 // file:
-bool run_unified_format_tests_in_env_dir(const std::string& env_path) {
+bool run_unified_format_tests_in_env_dir(
+    const std::string& env_path,
+    const std::set<mongocxx::stdx::string_view>& unsupported_tests = {}) {
     const char* p = std::getenv(env_path.c_str());
 
     if (nullptr == p)
@@ -921,8 +922,13 @@ bool run_unified_format_tests_in_env_dir(const std::string& env_path) {
     instance::current();
 
     for (std::string file; std::getline(files, file);) {
-        CAPTURE(file);
-        run_tests_in_file(base_path + '/' + file);
+        SECTION(file) {
+            if (unsupported_tests.find(file) != unsupported_tests.end()) {
+                WARN("Skipping unsupported test file: " << file);
+            } else {
+                run_tests_in_file(base_path + '/' + file);
+            }
+        }
     }
 
     return true;
@@ -937,7 +943,30 @@ TEST_CASE("session unified format spec automated tests", "[unified_format_spec]"
 }
 
 TEST_CASE("CRUD unified format spec automated tests", "[unified_format_spec]") {
-    CHECK(run_unified_format_tests_in_env_dir("CRUD_UNIFIED_TESTS_PATH"));
+    const std::set<mongocxx::stdx::string_view> unsupported_tests = {
+        "bulkWrite-arrayFilters-clientError.json",
+        "bulkWrite-delete-hint-clientError.json",
+        "bulkWrite-update-hint-clientError.json",
+        "deleteMany-hint-clientError.json",
+        "deleteOne-hint-clientError.json",
+        "find-allowdiskuse-clientError.json",
+        "findOneAndDelete-hint-clientError.json",
+        "findOneAndReplace-hint-clientError.json",
+        "findOneAndUpdate-hint-clientError.json",
+        "unacknowledged-bulkWrite-delete-hint-clientError.json",
+        "unacknowledged-bulkWrite-update-hint-clientError.json",
+        "unacknowledged-deleteMany-hint-clientError.json",
+        "unacknowledged-deleteOne-hint-clientError.json",
+        "unacknowledged-findOneAndDelete-hint-clientError.json",
+        "unacknowledged-findOneAndReplace-hint-clientError.json",
+        "unacknowledged-findOneAndUpdate-hint-clientError.json",
+        "unacknowledged-replaceOne-hint-clientError.json",
+        "unacknowledged-updateMany-hint-clientError.json",
+        "unacknowledged-updateOne-hint-clientError.json",
+        "updateMany-hint-clientError.json",
+        "updateOne-hint-clientError.json"};
+
+    CHECK(run_unified_format_tests_in_env_dir("CRUD_UNIFIED_TESTS_PATH", unsupported_tests));
 }
 
 TEST_CASE("versioned API spec automated tests", "[unified_format_spec]") {
