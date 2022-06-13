@@ -1125,7 +1125,6 @@ document::value update_one(collection& coll, client_session* session, document::
     auto result = builder::basic::document{};
     result.append(builder::basic::kvp("result", [&](builder::basic::sub_document subdoc) {
         if (!update_one_result) {
-            subdoc.append(builder::basic::kvp("matchedCount", 0));
             return;
         }
 
@@ -1186,7 +1185,6 @@ document::value update_many(collection& coll, document::view operation) {
     auto result = builder::basic::document{};
     result.append(builder::basic::kvp("result", [&](builder::basic::sub_document subdoc) {
         if (!update_many_result) {
-            subdoc.append(builder::basic::kvp("matchedCount", 0));
             return;
         }
 
