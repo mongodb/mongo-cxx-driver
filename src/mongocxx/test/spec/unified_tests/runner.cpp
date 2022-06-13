@@ -946,15 +946,6 @@ TEST_CASE("session unified format spec automated tests", "[unified_format_spec]"
 
 TEST_CASE("CRUD unified format spec automated tests", "[unified_format_spec]") {
     const std::set<mongocxx::stdx::string_view> unsupported_tests = {
-        "bulkWrite-arrayFilters-clientError.json",
-        "bulkWrite-delete-hint-clientError.json",
-        "bulkWrite-update-hint-clientError.json",
-        "deleteMany-hint-clientError.json",
-        "deleteOne-hint-clientError.json",
-        "find-allowdiskuse-clientError.json",
-        "findOneAndDelete-hint-clientError.json",
-        "findOneAndReplace-hint-clientError.json",
-        "findOneAndUpdate-hint-clientError.json",
         "unacknowledged-bulkWrite-delete-hint-clientError.json",
         "unacknowledged-bulkWrite-update-hint-clientError.json",
         "unacknowledged-deleteMany-hint-clientError.json",
@@ -964,9 +955,7 @@ TEST_CASE("CRUD unified format spec automated tests", "[unified_format_spec]") {
         "unacknowledged-findOneAndUpdate-hint-clientError.json",
         "unacknowledged-replaceOne-hint-clientError.json",
         "unacknowledged-updateMany-hint-clientError.json",
-        "unacknowledged-updateOne-hint-clientError.json",
-        "updateMany-hint-clientError.json",
-        "updateOne-hint-clientError.json"};
+        "unacknowledged-updateOne-hint-clientError.json"};
 
     CHECK(run_unified_format_tests_in_env_dir("CRUD_UNIFIED_TESTS_PATH", unsupported_tests));
 }
