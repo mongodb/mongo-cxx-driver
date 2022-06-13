@@ -249,8 +249,14 @@ bool is_replica_set(const client& client) {
 }
 
 bool is_sharded_cluster(const client& client) {
-    auto reply = get_is_master(client);
-    return static_cast<bool>(reply.view()["config"]["sharded"]);
+    const auto reply = get_is_master(client);
+    const auto msg = reply.view()["msg"];
+
+    if (!msg) {
+        return false;
+    }
+
+    return msg.get_string().value.compare ("isdbgrid") == 0;
 }
 
 std::string get_hosts(const client& client) {
