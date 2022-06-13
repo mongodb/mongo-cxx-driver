@@ -256,7 +256,7 @@ bool is_sharded_cluster(const client& client) {
         return false;
     }
 
-    return msg.get_string().value.compare ("isdbgrid") == 0;
+    return msg.get_string().value.compare("isdbgrid") == 0;
 }
 
 std::string get_hosts(const client& client) {
