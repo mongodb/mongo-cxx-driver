@@ -164,6 +164,15 @@ T _build_update_model(document::view arguments) {
     }
 }
 
+template <typename Model>
+void set_hint(Model& model, const mongocxx::document::element& hint) {
+    if (hint.type() == bsoncxx::v_noabi::type::k_string) {
+        model.hint(mongocxx::hint(hint.get_string().value));
+    } else {
+        model.hint(mongocxx::hint(hint.get_document().value));
+    }
+}
+
 document::value bulk_write(collection& coll, client_session* session, document::view op) {
     using bsoncxx::builder::basic::kvp;
     using bsoncxx::builder::basic::make_document;
@@ -197,6 +206,10 @@ document::value bulk_write(collection& coll, client_session* session, document::
                 update_one.collation(request_arguments["collation"].get_document().value);
             }
 
+            if (const auto hint = request_arguments["hint"]) {
+                set_hint(update_one, hint);
+            }
+
             if (request_arguments["upsert"]) {
                 update_one.upsert(request_arguments["upsert"].get_bool().value);
             }
@@ -213,6 +226,10 @@ document::value bulk_write(collection& coll, client_session* session, document::
 
             if (request_arguments["collation"]) {
                 update_many.collation(request_arguments["collation"].get_document().value);
+            }
+
+            if (const auto hint = request_arguments["hint"]) {
+                set_hint(update_many, hint);
             }
 
             if (request_arguments["upsert"]) {
@@ -235,6 +252,10 @@ document::value bulk_write(collection& coll, client_session* session, document::
                 replace_one.collation(request_arguments["collation"].get_document().value);
             }
 
+            if (const auto hint = request_arguments["hint"]) {
+                set_hint(replace_one, hint);
+            }
+
             if (request_arguments["upsert"]) {
                 replace_one.upsert(request_arguments["upsert"].get_bool().value);
             }
@@ -253,6 +274,10 @@ document::value bulk_write(collection& coll, client_session* session, document::
                 delete_one.collation(request_arguments["collation"].get_document().value);
             }
 
+            if (const auto hint = request_arguments["hint"]) {
+                set_hint(delete_one, hint);
+            }
+
             writes.emplace_back(delete_one);
         } else if (operation_name.compare("deleteMany") == 0) {
             document::view filter = request_arguments["filter"].get_document().value;
@@ -261,6 +286,10 @@ document::value bulk_write(collection& coll, client_session* session, document::
 
             if (request_arguments["collation"]) {
                 delete_many.collation(request_arguments["collation"].get_document().value);
+            }
+
+            if (const auto hint = request_arguments["hint"]) {
+                set_hint(delete_many, hint);
             }
 
             writes.emplace_back(delete_many);
@@ -1052,7 +1081,6 @@ document::value run_command(database& db, client_session* session, document::vie
 document::value update_one(collection& coll, client_session* session, document::view operation) {
     document::view arguments = operation["arguments"].get_document().value;
     document::view filter = arguments["filter"].get_document().value;
-    document::view update = arguments["update"].get_document().value;
     options::update options{};
 
     if (arguments["collation"]) {
@@ -1068,46 +1096,46 @@ document::value update_one(collection& coll, client_session* session, document::
         options.upsert(arguments["upsert"].get_bool().value);
     }
 
-    std::int32_t matched_count = 0;
-    bsoncxx::stdx::optional<std::int32_t> modified_count;
-    bsoncxx::stdx::optional<types::bson_value::view> upserted_id{};
+    stdx::optional<result::update> update_one_result;
 
-    if (session) {
-        auto update_one_result = coll.update_one(*session, filter, update, options);
-        if (update_one_result) {
-            matched_count = update_one_result->matched_count();
-            modified_count = update_one_result->modified_count();
+    {
+        const auto update = arguments["update"];
+        const auto type = update.type();
 
-            if (auto upserted_element = update_one_result->upserted_id()) {
-                upserted_id = upserted_element->get_value();
+        switch (type) {
+            case bsoncxx::type::k_document: {
+                const auto doc = update.get_document().value;
+                update_one_result = session ? coll.update_one(*session, filter, doc, options)
+                                            : coll.update_one(filter, doc, options);
+                break;
             }
-        }
-    } else {
-        auto update_one_result = coll.update_one(filter, update, options);
-        if (update_one_result) {
-            matched_count = update_one_result->matched_count();
-            modified_count = update_one_result->modified_count();
-
-            if (auto upserted_element = update_one_result->upserted_id()) {
-                upserted_id = upserted_element->get_value();
+            case bsoncxx::type::k_array: {
+                pipeline pipe;
+                pipe.append_stages(update.get_array().value);
+                update_one_result = session ? coll.update_one(*session, filter, pipe, options)
+                                            : coll.update_one(filter, pipe, options);
+                break;
             }
+            default:
+                throw std::logic_error("unexpected type '" + to_string(type) +
+                                       "' for field 'update'");
         }
     }
 
     auto result = builder::basic::document{};
-    result.append(builder::basic::kvp(
-        "result",
-        [matched_count, modified_count, upserted_id](builder::basic::sub_document subdoc) {
-            subdoc.append(builder::basic::kvp("matchedCount", matched_count));
+    result.append(builder::basic::kvp("result", [&](builder::basic::sub_document subdoc) {
+        if (!update_one_result) {
+            return;
+        }
 
-            if (modified_count) {
-                subdoc.append(builder::basic::kvp("modifiedCount", *modified_count));
-            }
+        subdoc.append(builder::basic::kvp("matchedCount", update_one_result->matched_count()));
+        subdoc.append(builder::basic::kvp("modifiedCount", update_one_result->modified_count()));
+        subdoc.append(builder::basic::kvp("upsertedCount", update_one_result->upserted_count()));
 
-            if (upserted_id) {
-                subdoc.append(builder::basic::kvp("upsertedId", *upserted_id));
-            }
-        }));
+        if (auto upserted_element = update_one_result->upserted_id()) {
+            subdoc.append(builder::basic::kvp("upsertedId", upserted_element->get_value()));
+        }
+    }));
 
     return result.extract();
 }
@@ -1115,7 +1143,6 @@ document::value update_one(collection& coll, client_session* session, document::
 document::value update_many(collection& coll, document::view operation) {
     document::view arguments = operation["arguments"].get_document().value;
     document::view filter = arguments["filter"].get_document().value;
-    document::view update = arguments["update"].get_document().value;
     options::update options{};
 
     if (arguments["collation"]) {
@@ -1131,40 +1158,44 @@ document::value update_many(collection& coll, document::view operation) {
         options.upsert(arguments["upsert"].get_bool().value);
     }
 
-    std::int32_t matched_count = 0;
-    bsoncxx::stdx::optional<std::int32_t> modified_count;
-    std::int32_t upserted_count = 0;
-    bsoncxx::stdx::optional<types::bson_value::view> upserted_id{};
+    stdx::optional<result::update> update_many_result;
 
-    auto update_many_result = coll.update_many(filter, update, options);
-    if (update_many_result) {
-        matched_count = update_many_result->matched_count();
-        modified_count = update_many_result->modified_count();
+    {
+        const auto update = arguments["update"];
+        const auto type = update.type();
 
-        upserted_count = update_many_result->result().upserted_count();
-
-        if (auto upserted_element = update_many_result->upserted_id()) {
-            upserted_id = upserted_element->get_value();
+        switch (type) {
+            case bsoncxx::type::k_document: {
+                const auto doc = update.get_document().value;
+                update_many_result = coll.update_many(filter, doc, options);
+                break;
+            }
+            case bsoncxx::type::k_array: {
+                pipeline pipe;
+                pipe.append_stages(update.get_array().value);
+                update_many_result = coll.update_many(filter, pipe, options);
+                break;
+            }
+            default:
+                throw std::logic_error("unexpected type '" + to_string(type) +
+                                       "' for field 'update'");
         }
     }
 
     auto result = builder::basic::document{};
-    result.append(builder::basic::kvp(
-        "result",
-        [matched_count, modified_count, upserted_count, upserted_id](
-            builder::basic::sub_document subdoc) {
-            subdoc.append(builder::basic::kvp("matchedCount", matched_count));
+    result.append(builder::basic::kvp("result", [&](builder::basic::sub_document subdoc) {
+        if (!update_many_result) {
+            return;
+        }
 
-            if (modified_count) {
-                subdoc.append(builder::basic::kvp("modifiedCount", *modified_count));
-            }
+        subdoc.append(builder::basic::kvp("matchedCount", update_many_result->matched_count()));
+        subdoc.append(builder::basic::kvp("modifiedCount", update_many_result->modified_count()));
+        subdoc.append(builder::basic::kvp("upsertedCount", update_many_result->upserted_count()));
 
-            subdoc.append(builder::basic::kvp("upsertedCount", upserted_count));
-
-            if (upserted_id) {
-                subdoc.append(builder::basic::kvp("upsertedId", *upserted_id));
-            }
-        }));
+        if (auto upserted_element = update_many_result->upserted_id()) {
+            subdoc.append(builder::basic::kvp("upsertedId", upserted_element->get_value()));
+        }
+    }));
 
     return result.extract();
 }

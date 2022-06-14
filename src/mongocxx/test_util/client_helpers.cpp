@@ -248,6 +248,17 @@ bool is_replica_set(const client& client) {
     return static_cast<bool>(reply.view()["setName"]);
 }
 
+bool is_sharded_cluster(const client& client) {
+    const auto reply = get_is_master(client);
+    const auto msg = reply.view()["msg"];
+
+    if (!msg) {
+        return false;
+    }
+
+    return msg.get_string().value.compare("isdbgrid") == 0;
+}
+
 std::string get_hosts(const client& client) {
     auto shards = get_shards(client);
     if (shards)

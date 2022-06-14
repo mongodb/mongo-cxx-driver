@@ -246,7 +246,11 @@ void matches_document(types::bson_value::view actual,
             }
         }
 
-        REQUIRE(actual_doc[kvp.key()]);
+        if (!actual_doc[kvp.key()]) {
+            FAIL("expected field '" + string::to_string(kvp.key()) +
+                 "' to be present, but it is absent");
+        }
+
         assert::matches(actual_doc[kvp.key()].get_value(), kvp.get_value(), map, false);
         --extra_fields;
     }
