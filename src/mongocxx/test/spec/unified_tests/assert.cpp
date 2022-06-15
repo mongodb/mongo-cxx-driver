@@ -152,6 +152,8 @@ type to_type(const Element& type) {
         return bsoncxx::type::k_document;
     if (type_str == "date")
         return bsoncxx::type::k_date;
+    if (type_str == "string")
+        return bsoncxx::type::k_string;
     throw std::logic_error{"unrecognized element type '" + type_str + "'"};
 }
 
