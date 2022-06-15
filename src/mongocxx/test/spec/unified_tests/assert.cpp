@@ -255,7 +255,10 @@ void matches_document(types::bson_value::view actual,
         --extra_fields;
     }
 
-    REQUIRE((is_root || extra_fields == 0));
+    if (!is_root && extra_fields > 0) {
+        FAIL("match failed: non-root document contains " + std::to_string(extra_fields) +
+             " extra fields");
+    }
 }
 
 void matches_array(types::bson_value::view actual,
