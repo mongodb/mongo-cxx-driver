@@ -178,7 +178,9 @@ mongocxx::stdx::optional<bsoncxx::document::value> find_and_modify(
 
     bsoncxx::document::view reply_view = reply.view();
 
-    if (reply_view["value"].type() == bsoncxx::type::k_null) {
+    const auto value = reply_view["value"];
+
+    if (!value || value.type() == bsoncxx::type::k_null) {
         return mongocxx::stdx::optional<bsoncxx::document::value>{};
     }
 
