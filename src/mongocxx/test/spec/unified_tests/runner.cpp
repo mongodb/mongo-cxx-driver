@@ -903,9 +903,7 @@ void run_tests_in_file(const std::string& test_path) {
 // Check the environment for the specified variable; if present, extract it
 // as a directory and run all the tests contained in the magic "test_files.txt"
 // file:
-bool run_unified_format_tests_in_env_dir(
-    const std::string& env_path,
-    const std::set<mongocxx::stdx::string_view>& unsupported_tests = {}) {
+bool run_unified_format_tests_in_env_dir(const std::string& env_path) {
     const char* p = std::getenv(env_path.c_str());
 
     if (nullptr == p)
@@ -923,13 +921,8 @@ bool run_unified_format_tests_in_env_dir(
     instance::current();
 
     for (std::string file; std::getline(files, file);) {
-        SECTION(file) {
-            if (unsupported_tests.find(file) != unsupported_tests.end()) {
-                WARN("Skipping unsupported test file: " << file);
-            } else {
-                run_tests_in_file(base_path + '/' + file);
-            }
-        }
+        CAPTURE(file);
+        run_tests_in_file(base_path + '/' + file);
     }
 
     return true;
@@ -944,19 +937,7 @@ TEST_CASE("session unified format spec automated tests", "[unified_format_spec]"
 }
 
 TEST_CASE("CRUD unified format spec automated tests", "[unified_format_spec]") {
-    const std::set<mongocxx::stdx::string_view> unsupported_tests = {
-        "unacknowledged-bulkWrite-delete-hint-clientError.json",
-        "unacknowledged-bulkWrite-update-hint-clientError.json",
-        "unacknowledged-deleteMany-hint-clientError.json",
-        "unacknowledged-deleteOne-hint-clientError.json",
-        "unacknowledged-findOneAndDelete-hint-clientError.json",
-        "unacknowledged-findOneAndReplace-hint-clientError.json",
-        "unacknowledged-findOneAndUpdate-hint-clientError.json",
-        "unacknowledged-replaceOne-hint-clientError.json",
-        "unacknowledged-updateMany-hint-clientError.json",
-        "unacknowledged-updateOne-hint-clientError.json"};
-
-    CHECK(run_unified_format_tests_in_env_dir("CRUD_UNIFIED_TESTS_PATH", unsupported_tests));
+    CHECK(run_unified_format_tests_in_env_dir("CRUD_UNIFIED_TESTS_PATH"));
 }
 
 TEST_CASE("versioned API spec automated tests", "[unified_format_spec]") {
