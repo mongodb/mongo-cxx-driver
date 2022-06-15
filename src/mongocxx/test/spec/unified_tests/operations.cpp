@@ -299,12 +299,6 @@ document::value bulk_write(collection& coll, client_session* session, document::
         }
     }
 
-    std::int32_t deleted_count = 0;
-    std::int32_t matched_count = 0;
-    std::int32_t modified_count = 0;
-    std::int32_t upserted_count = 0;
-    result::bulk_write::id_map upserted_ids;
-    std::int32_t inserted_count = 0;
     bsoncxx::stdx::optional<result::bulk_write> bulk_write_result;
 
     if (session) {
@@ -313,20 +307,8 @@ document::value bulk_write(collection& coll, client_session* session, document::
         bulk_write_result = coll.bulk_write(writes, opt);
     }
 
-    if (bulk_write_result) {
-        matched_count = bulk_write_result->matched_count();
-        modified_count = bulk_write_result->modified_count();
-        upserted_count = bulk_write_result->upserted_count();
-        upserted_ids = bulk_write_result->upserted_ids();
-        inserted_count = bulk_write_result->inserted_count();
-        deleted_count = bulk_write_result->deleted_count();
-    }
+    builder::basic::document result;
     builder::basic::document upserted_ids_builder;
-    for (auto&& index_and_id : upserted_ids) {
-        upserted_ids_builder.append(
-            kvp(std::to_string(index_and_id.first), index_and_id.second.get_int32().value));
-    }
-    auto upserted_ids_doc = upserted_ids_builder.extract();
 
     // Construct the result document.
     // Note: insertedIds is currently hard coded as an empty document, because result::bulk_write
@@ -334,13 +316,25 @@ document::value bulk_write(collection& coll, client_session* session, document::
     // are: "NOT REQUIRED: Drivers may choose to not provide this property." So just add an empty
     // document for insertedIds. There are no current bulk write tests testing insert operations.
     // The insertedIds field in current bulk write spec tests is always an empty document.
-    auto result = make_document(kvp("matchedCount", matched_count),
-                                kvp("modifiedCount", modified_count),
-                                kvp("upsertedCount", upserted_count),
-                                kvp("deletedCount", deleted_count),
-                                kvp("insertedCount", inserted_count),
-                                kvp("upsertedIds", upserted_ids_doc));
-    return make_document(kvp("result", result));
+    result.append(builder::basic::kvp("result", [&](builder::basic::sub_document subdoc) {
+        if (!bulk_write_result) {
+            return;
+        }
+
+        subdoc.append(builder::basic::kvp("matchedCount", bulk_write_result->matched_count()));
+        subdoc.append(builder::basic::kvp("modifiedCount", bulk_write_result->modified_count()));
+        subdoc.append(builder::basic::kvp("upsertedCount", bulk_write_result->upserted_count()));
+        subdoc.append(builder::basic::kvp("deletedCount", bulk_write_result->deleted_count()));
+        subdoc.append(builder::basic::kvp("insertedCount", bulk_write_result->inserted_count()));
+
+        for (auto&& index_and_id : bulk_write_result->upserted_ids()) {
+            upserted_ids_builder.append(
+                kvp(std::to_string(index_and_id.first), index_and_id.second.get_int32().value));
+        }
+        subdoc.append(builder::basic::kvp("upsertedIds", upserted_ids_builder.extract()));
+    }));
+
+    return result.extract();
 }
 
 document::value insert_many(collection& coll, client_session* session, document::view operation) {
