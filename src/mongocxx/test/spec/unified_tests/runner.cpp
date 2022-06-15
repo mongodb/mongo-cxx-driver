@@ -604,9 +604,9 @@ void assert_result(const array::element& ops, document::view actual_result) {
     if (!ops["expectResult"])
         return;
 
-    CAPTURE(to_json(actual_result));
-    auto result = ops["expectResult"];
-    assert::matches(actual_result["result"].get_value(), result.get_value(), get_entity_map());
+    auto expected_result = ops["expectResult"];
+    assert::matches(
+        actual_result["result"].get_value(), expected_result.get_value(), get_entity_map());
 
     if (ops["saveResultAsEntity"]) {
         auto key = string::to_string(ops["saveResultAsEntity"].get_string().value);
@@ -848,7 +848,6 @@ void run_tests(document::view test) {
                         continue;
                     }
 
-                    CAPTURE(to_json(result));
                     assert_result(ops, result);
                 } catch (mongocxx::bulk_write_exception& e) {
                     auto result = bulk_write_result(e);

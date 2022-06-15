@@ -234,10 +234,14 @@ void matches_document(types::bson_value::view actual,
     }
 
     REQUIRE(actual.type() == bsoncxx::type::k_document);
-    auto actual_doc = actual.get_document().value;
+    const auto actual_doc = actual.get_document().value;
+    const auto expected_doc = expected.get_document().value;
     auto extra_fields = test_util::size(actual_doc);
 
-    for (auto&& kvp : expected.get_document().value) {
+    CAPTURE(to_json(expected_doc));
+    CAPTURE(to_json(actual_doc));
+
+    for (auto&& kvp : expected_doc) {
         match_scope_doc_key scope_key{string::to_string(kvp.key())};
         if (is_special(kvp)) {
             if (!actual_doc[kvp.key()]) {
@@ -266,8 +270,11 @@ void matches_array(types::bson_value::view actual,
                    entity::map& map) {
     REQUIRE(actual.type() == bsoncxx::type::k_array);
 
-    auto actual_arr = actual.get_array().value;
-    auto expected_arr = expected.get_array().value;
+    const auto actual_arr = actual.get_array().value;
+    const auto expected_arr = expected.get_array().value;
+
+    CAPTURE(to_json(expected_arr));
+    CAPTURE(to_json(actual_arr));
 
     REQUIRE(test_util::size(actual_arr) == test_util::size(expected_arr));
     int idx = 0;
