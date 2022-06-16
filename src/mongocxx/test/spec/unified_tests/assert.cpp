@@ -159,7 +159,10 @@ bool is_set(types::bson_value::view val) {
     return val.type() != bsoncxx::type::k_null;
 }
 
-void special_operator(types::bson_value::view actual, document::view expected, entity::map& map) {
+void special_operator(types::bson_value::view actual,
+                      document::view expected,
+                      entity::map& map,
+                      bool is_root) {
     auto op = *expected.begin();
     REQUIRE(string::to_string(op.key()).rfind("$$", 0) == 0);  // assert special operator
 
@@ -182,8 +185,10 @@ void special_operator(types::bson_value::view actual, document::view expected, e
              to_json(op.get_array().value) + "'");
     } else if (string::to_string(op.key()) == "$$unsetOrMatches") {
         auto val = op.get_value();
-        if (is_set(actual))
-            assert::matches(actual, val, map, false);
+        if (is_set(actual)) {
+            // $$unsetOrMatches as root document should treat match as root document.
+            assert::matches(actual, val, map, is_root);
+        }
     } else if (string::to_string(op.key()) == "$$sessionLsid") {
         auto id = string::to_string(op.get_string().value);
         const auto& type = map.type(id);
@@ -229,7 +234,7 @@ void matches_document(types::bson_value::view actual,
                       entity::map& map,
                       bool is_root) {
     if (is_special(expected)) {
-        special_operator(actual, expected.get_document(), map);
+        special_operator(actual, expected.get_document(), map, is_root);
         return;
     }
 
@@ -245,7 +250,7 @@ void matches_document(types::bson_value::view actual,
         match_scope_doc_key scope_key{string::to_string(kvp.key())};
         if (is_special(kvp)) {
             if (!actual_doc[kvp.key()]) {
-                special_operator(value(nullptr), kvp.get_document(), map);
+                special_operator(value(nullptr), kvp.get_document(), map, false);
                 continue;
             }
         }
