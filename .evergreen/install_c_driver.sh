@@ -1,19 +1,20 @@
 #!/bin/bash
 # Usage examples:
-# ./install.sh master
-# ./install.sh 1.3.5
-# PREFIX=/tmp/installdir ./install.sh 1.3.5
+# MONGOC_VERSION=1.21.2  MONGOCRYPT_VERSION=1.4.1 ./install.sh
+# MONGOC_VERSION=1.21.2 MONGOCRYPT_VERSION=1.4.1 ./install.sh
+# PREFIX=/tmp/installdir MONGOC_VERSION=1.21.2 MONGOCRYPT_VERSION=1.4.1 ./install.sh
 
 set -o errexit
 set -o pipefail
 
-usage() {
-    echo "Please say which version"
-    echo "$0 <master|x.y.z>"
+print_usage() {
+    echo "usage: MONGOC_VERSION=<version> MONGOCRYPT_VERSION=<version> ./install.sh"
 }
-[ $# -lt 1 ] && { usage; exit 2; }
 
-VERSION=${1}
+if [[ -z $MONGOC_VERSION ]]; then print_usage; exit 2; fi
+if [[ -z $MONGOCRYPT_VERSION ]]; then print_usage; exit 2; fi
+
+VERSION=$MONGOC_VERSION
 PREFIX=${PREFIX:-$(pwd)"/../mongoc/"}
 OS=$(uname -s | tr '[:upper:]' '[:lower:]')
 
@@ -32,9 +33,9 @@ echo "About to install C driver ($VERSION) into $PREFIX"
 
 LIB=mongo-c-driver
 rm -rf $(echo $LIB*)
-curl -sS -o $LIB.zip -L https://github.com/mongodb/$LIB/archive/$VERSION.zip
-unzip -q $LIB.zip
-DIR=$(echo $LIB-*)
+curl -sS -o $LIB.tar.gz -L https://api.github.com/repos/mongodb/$LIB/tarball/$VERSION
+tar xzf $LIB.tar.gz
+DIR=$(echo mongodb-$LIB-*)
 
 # RegEx pattern to match SemVer strings. See https://semver.org/.
 SEMVER_REGEX="^(?P<major>0|[1-9]\d*)\.(?P<minor>0|[1-9]\d*)\.(?P<patch>0|[1-9]\d*)(?:-(?P<prerelease>(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+(?P<buildmetadata>[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$"
@@ -104,6 +105,7 @@ cd ../../
 git clone https://github.com/mongodb/libmongocrypt
 mkdir libmongocrypt/cmake_build
 cd libmongocrypt/cmake_build
+git checkout $MONGOCRYPT_VERSION
 "$CMAKE" -G "$GENERATOR" -DENABLE_SHARED_BSON=ON -DCMAKE_INSTALL_PREFIX="$PREFIX" -DCMAKE_PREFIX_PATH="$PREFIX" -DCMAKE_BUILD_TYPE="Debug" -DENABLE_CLIENT_SIDE_ENCRYPTION=OFF ..
 "$CMAKE" --build . --config Debug -- $CMAKE_BUILD_OPTS
 "$CMAKE" --build . --config Debug --target install

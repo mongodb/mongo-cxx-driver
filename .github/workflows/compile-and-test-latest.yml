@@ -17,7 +17,7 @@ jobs:
             - run: |
                 INSTALL_PREFIX=$(pwd)/install
                 export LD_LIBRARY_PATH=$INSTALL_PREFIX/lib
-                PREFIX=$INSTALL_PREFIX ./.evergreen/install_c_driver.sh master
+                PREFIX=$INSTALL_PREFIX MONGOC_VERSION=db7e894bc MONGOCRYPT_VERSION=1.5.0-rc1 ./.evergreen/install_c_driver.sh
                 mkdir cmake-build
                 cd cmake-build
                 cmake -DCMAKE_PREFIX_PATH=$INSTALL_PREFIX -DCMAKE_BUILD_TYPE=Debug ..

@@ -365,7 +365,7 @@ def build_c_driver(c_driver_install_dir, c_driver_build_ref, quiet):
     env['PREFIX'] = mongoc_prefix
     if not c_driver_build_ref:
         c_driver_build_ref = 'master'
-    run_shell_script('./.evergreen/install_c_driver.sh ' + c_driver_build_ref, env=env)
+    run_shell_script('MONGOC_VERSION=' + c_driver_build_ref + ' ./.evergreen/install_c_driver.sh', env=env)
 
     if not quiet:
         click.echo('C Driver build was successful.')
