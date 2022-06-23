@@ -10,7 +10,6 @@ variables:
     mongoc_version_default: &mongoc_version_default "fe2bae72" # Accept string arguments for queryType and "index_type"
     mongocrypt_version_default: &mongocrypt_version_default "638b8090" # Update use of removed API
 
-    # Remember to update .github/workflows/compile-and-test-latest.yml.
     mongoc_version_minimum: &mongoc_version_minimum "db7e894bc" # TODO: set to 1.22.0 once released.
     mongocrypt_version_minimum: &mongocrypt_version_minimum "1.5.0-rc1" # TODO: set to 1.5.0 once released.
 
