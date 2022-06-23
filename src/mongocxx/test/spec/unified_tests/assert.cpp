@@ -159,7 +159,10 @@ bool is_set(types::bson_value::view val) {
     return val.type() != bsoncxx::type::k_null;
 }
 
-void special_operator(types::bson_value::view actual, document::view expected, entity::map& map) {
+void special_operator(types::bson_value::view actual,
+                      document::view expected,
+                      entity::map& map,
+                      bool is_root) {
     auto op = *expected.begin();
     REQUIRE(string::to_string(op.key()).rfind("$$", 0) == 0);  // assert special operator
 
@@ -182,8 +185,10 @@ void special_operator(types::bson_value::view actual, document::view expected, e
              to_json(op.get_array().value) + "'");
     } else if (string::to_string(op.key()) == "$$unsetOrMatches") {
         auto val = op.get_value();
-        if (is_set(actual))
-            assert::matches(actual, val, map, false);
+        if (is_set(actual)) {
+            // $$unsetOrMatches as root document should treat match as root document.
+            assert::matches(actual, val, map, is_root);
+        }
     } else if (string::to_string(op.key()) == "$$sessionLsid") {
         auto id = string::to_string(op.get_string().value);
         const auto& type = map.type(id);
@@ -229,19 +234,23 @@ void matches_document(types::bson_value::view actual,
                       entity::map& map,
                       bool is_root) {
     if (is_special(expected)) {
-        special_operator(actual, expected.get_document(), map);
+        special_operator(actual, expected.get_document(), map, is_root);
         return;
     }
 
     REQUIRE(actual.type() == bsoncxx::type::k_document);
-    auto actual_doc = actual.get_document().value;
+    const auto actual_doc = actual.get_document().value;
+    const auto expected_doc = expected.get_document().value;
     auto extra_fields = test_util::size(actual_doc);
 
-    for (auto&& kvp : expected.get_document().value) {
+    CAPTURE(to_json(expected_doc));
+    CAPTURE(to_json(actual_doc));
+
+    for (auto&& kvp : expected_doc) {
         match_scope_doc_key scope_key{string::to_string(kvp.key())};
         if (is_special(kvp)) {
             if (!actual_doc[kvp.key()]) {
-                special_operator(value(nullptr), kvp.get_document(), map);
+                special_operator(value(nullptr), kvp.get_document(), map, false);
                 continue;
             }
         }
@@ -255,7 +264,10 @@ void matches_document(types::bson_value::view actual,
         --extra_fields;
     }
 
-    REQUIRE((is_root || extra_fields == 0));
+    if (!is_root && extra_fields > 0) {
+        FAIL("match failed: non-root document contains " + std::to_string(extra_fields) +
+             " extra fields");
+    }
 }
 
 void matches_array(types::bson_value::view actual,
@@ -263,8 +275,11 @@ void matches_array(types::bson_value::view actual,
                    entity::map& map) {
     REQUIRE(actual.type() == bsoncxx::type::k_array);
 
-    auto actual_arr = actual.get_array().value;
-    auto expected_arr = expected.get_array().value;
+    const auto actual_arr = actual.get_array().value;
+    const auto expected_arr = expected.get_array().value;
+
+    CAPTURE(to_json(expected_arr));
+    CAPTURE(to_json(actual_arr));
 
     REQUIRE(test_util::size(actual_arr) == test_util::size(expected_arr));
     int idx = 0;

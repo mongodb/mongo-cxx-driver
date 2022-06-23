@@ -133,6 +133,10 @@ class MONGOCXX_API write_concern {
     ///   Setting this to level::k_unacknowledged disables write acknowledgment and all other
     ///   write concern options.
     ///
+    /// @warning
+    ///   Unacknowledged writes using dollar-prefixed or dotted keys may be silently rejected by
+    ///   pre-5.0 servers.
+    ///
     /// @exception
     ///   Throws mongocxx::exception for setting a tag acknowledge level. Use tag() instead.
     ///

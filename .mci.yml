@@ -7,6 +7,12 @@
 #######################################
 variables:
 
+    mongoc_version_default: &mongoc_version_default "fe2bae72" # Accept string arguments for queryType and "index_type"
+    mongocrypt_version_default: &mongocrypt_version_default "638b8090" # Update use of removed API
+
+    mongoc_version_minimum: &mongoc_version_minimum "db7e894bc" # TODO: set to 1.22.0 once released.
+    mongocrypt_version_minimum: &mongocrypt_version_minimum "1.5.0-rc1" # TODO: set to 1.5.0 once released.
+
     mongodb_version:
         version_latest: &version_latest latest
         version_50: &version_50 5.0
@@ -212,7 +218,14 @@ functions:
                 mongo-orchestration stop
 
     "install_c_driver":
-        command: shell.exec
+      - command: expansions.update
+        params:
+          updates:
+            - key: mongoc_version_default
+              value: *mongoc_version_default
+            - key: mongocrypt_version_default
+              value: *mongocrypt_version_default
+      - command: shell.exec
         params:
             shell: bash
             working_dir: "mongo-cxx-driver"
@@ -228,7 +241,15 @@ functions:
                     if [ "1" == "${BSON_EXTRA_ALIGNMENT}" ]; then
                         echo "Building C driver with BSON extra alignment"
                     fi
-                    BSON_EXTRA_ALIGNMENT=${BSON_EXTRA_ALIGNMENT} ./.evergreen/install_c_driver.sh ${mongoc_version|master}
+                    MONGOC_VERSION=${mongoc_version}
+                    MONGOCRYPT_VERSION=${mongocrypt_version}
+                    if [[ -z $MONGOC_VERSION ]]; then
+                      MONGOC_VERSION=${mongoc_version_default}
+                    fi
+                    if [[ -z $MONGOCRYPT_VERSION ]]; then
+                      MONGOCRYPT_VERSION=${mongocrypt_version_default}
+                    fi
+                    BSON_EXTRA_ALIGNMENT=${BSON_EXTRA_ALIGNMENT} MONGOC_VERSION=$MONGOC_VERSION MONGOCRYPT_VERSION=$MONGOCRYPT_VERSION ./.evergreen/install_c_driver.sh
 
     "lint":
         - command: shell.exec
@@ -561,7 +582,7 @@ functions:
                   # API version to example clients, so example projects will fail when requireApiVersion
                   # is true.
                   if [[ -z "$MONGODB_API_VERSION" ]]; then
-                    MONGOC_VERSION=${mongoc_version|master} .evergreen/build_example_projects.sh
+                    .evergreen/build_example_projects.sh
                   fi
                   unset MONGODB_API_VERSION
 
@@ -1353,7 +1374,8 @@ buildvariants:
           tar_options: *linux_tar_options
           cmake_flags: *linux_cmake_flags
           mongodb_version: *version_latest
-          mongoc_version: "db7e894bc" # TODO: set to 1.22.0 once released.
+          mongoc_version: *mongoc_version_minimum
+          mongocrypt_version: *mongocrypt_version_minimum
       run_on:
           - ubuntu1804-build
       tasks:
