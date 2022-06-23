@@ -1296,23 +1296,6 @@ buildvariants:
       tasks:
           - name: test_mongohouse
 
-    - name: ubuntu1804-zseries
-      display_name: "s390x Ubuntu 18.04 (MongoDB 4.4)"
-      batchtime: 1440 # 1 day
-      expansions:
-          build_type: "Release"
-          cmake: "cmake"
-          tar_options: *linux_tar_options
-          cmake_flags: *linux_cmake_flags
-          mongodb_version: *version_44
-      run_on:
-          - ubuntu1804-zseries-small
-      tasks:
-          - name: compile_and_test_with_shared_libs
-          - name: compile_and_test_with_shared_libs_extra_alignment
-          - name: compile_and_test_with_static_libs
-          - name: compile_and_test_with_static_libs_extra_alignment
-
     - name: power8-rhel81-latest
       display_name: "ppc64le RHEL 8.1 (MongoDB Latest)"
       batchtime: 1440 # 1 day
