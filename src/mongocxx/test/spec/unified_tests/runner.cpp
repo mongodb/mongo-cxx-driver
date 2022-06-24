@@ -634,17 +634,21 @@ void assert_error(const mongocxx::operation_exception& exception,
     }
 
     if (auto is_client_error = expect_error["isClientError"]) {
-        // Alas, C++20's std::string::start_with() isn't available:
-        const std::string snapshot_required_msg = "Snapshot reads require MongoDB 5.0 or later";
-        std::string exception_msg{exception.what()};
-
-        if (snapshot_required_msg == exception_msg.substr(0, snapshot_required_msg.length())) {
+        if (std::strstr(exception.what(), "Snapshot reads require MongoDB 5.0 or later") !=
+            nullptr) {
+            // Original error: { MONGOC_ERROR_CLIENT, MONGOC_ERROR_CLIENT_SESSION_FAILURE }
             // Do not assert a server-side error.
-            // The C driver returns this error with the domain MONGOC_ERROR_CLIENT,
-            // but the C++ driver throws the error as a server-side error operation_exception.
+            // The C++ driver throws this error as a server-side error operation_exception.
             // Remove this special case as part of CXX-2377.
             REQUIRE(is_client_error.get_bool());
-        } else {
+        } else if (std::strstr(exception.what(), "The selected server does not support hint for") !=
+                   nullptr) {
+            // Original error: { MONGOC_ERROR_COMMAND, MONGOC_ERROR_PROTOCOL_BAD_WIRE_VERSION }
+            // Do not assert a server-side error.
+            // The C++ driver throws this error as a server-side error operation_exception.
+            // Remove this special case as part of CXX-2377.
+            REQUIRE(is_client_error.get_bool());
+        } else if (is_client_error.get_bool()) {
             // An operation_exception represents a server-side error.
             REQUIRE(!is_client_error.get_bool());
         }
