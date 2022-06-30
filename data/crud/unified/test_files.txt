@@ -64,6 +64,7 @@ insertOne-dots_and_dollars.json
 replaceOne-dots_and_dollars.json
 replaceOne-hint-unacknowledged.json
 replaceOne-hint.json
+replaceOne-let.json
 replaceOne-validation.json
 updateMany-dots_and_dollars.json
 updateMany-hint-clientError.json
