@@ -24,16 +24,34 @@
 
 using namespace mongocxx;
 
-static bool is_server_v5_or_newer() {
-    auto wire_version =
-        mongocxx::test_util::get_max_wire_version(client{uri{}, test_util::add_test_server_api()});
-    return wire_version >= 13;
+static bool has_api_version_1(
+    const mongocxx::client& client = mongocxx::client(uri(), test_util::add_test_server_api())) {
+    // API Version 1 was introduced in 5.0.
+    return test_util::get_max_wire_version(client) >= 13;
 }
 
-static bool is_server_v53_or_newer() {
-    auto wire_version =
-        mongocxx::test_util::get_max_wire_version(client{uri{}, test_util::add_test_server_api()});
-    return wire_version >= 16;
+static bool has_api_version_1_with_count(
+    const mongocxx::client& client = mongocxx::client(uri(), test_util::add_test_server_api())) {
+    if (!has_api_version_1(client)) {
+        return false;
+    }
+
+    const auto version = test_util::get_server_version(client);
+
+    // BACKPORT-12171: count command was backported to 5.0.9.
+    if (test_util::compare_versions(version, "5.0") == 0 &&
+        test_util::compare_versions(version, "5.0.9") >= 0) {
+        return true;
+    }
+
+    // BACKPORT-12170: count command was backported to 5.3.2.
+    if (test_util::compare_versions(version, "5.3") == 0 &&
+        test_util::compare_versions(version, "5.3.2") >= 0) {
+        return true;
+    }
+
+    // SERVER-63850: count command was added in 6.0.
+    return test_util::newer_than(client, "6.0");
 }
 
 // We'll format many of these examples by hand
@@ -41,7 +59,7 @@ static bool is_server_v53_or_newer() {
 
 TEST_CASE("Versioned API, non-strict") {
     instance::current();
-    if (!is_server_v5_or_newer()) {
+    if (!has_api_version_1()) {
         return;
     }
     // Start Versioned API Example 1
@@ -61,7 +79,7 @@ TEST_CASE("Versioned API, non-strict") {
 
 TEST_CASE("Versioned API, strict") {
     instance::current();
-    if (!is_server_v5_or_newer()) {
+    if (!has_api_version_1()) {
         return;
     }
     // Start Versioned API Example 2
@@ -82,7 +100,7 @@ TEST_CASE("Versioned API, strict") {
 
 TEST_CASE("Versioned API, non-strict, for commands/features outside versioned API") {
     instance::current();
-    if (!is_server_v5_or_newer()) {
+    if (!has_api_version_1()) {
         return;
     }
     // Start Versioned API Example 3
@@ -103,7 +121,7 @@ TEST_CASE("Versioned API, non-strict, for commands/features outside versioned AP
 
 TEST_CASE("Versioned API, non-strict with deprecation errors") {
     instance::current();
-    if (!is_server_v5_or_newer()) {
+    if (!has_api_version_1()) {
         return;
     }
     // Start Versioned API Example 4
@@ -131,14 +149,13 @@ static bsoncxx::types::b_date iso_string_to_bson_datetime(const std::string&) {
 
 TEST_CASE("Versioned API, with insert-many for 'count' migration") {
     instance::current();
-    if (!is_server_v5_or_newer()) {
+
+    if (!has_api_version_1()) {
         return;
     }
 
-    // Do not run this test on 5.3 or newer servers.
-    // This test assumes the count command is not in API version 1.
-    // The count command was added to API version 1 in SERVER-63850.
-    if (is_server_v53_or_newer()) {
+    // Do *not* run this test if count command is included in API Version 1.
+    if (has_api_version_1_with_count()) {
         return;
     }
 
