@@ -620,27 +620,36 @@ stdx::optional<result::update> collection::_update_many(const client_session* se
                                                         const options::update& options) {
     options::bulk_write bulk_opts;
 
-    if (options.bypass_document_validation()) {
-        bulk_opts.bypass_document_validation(*options.bypass_document_validation());
+    if (const auto bdv = options.bypass_document_validation()) {
+        bulk_opts.bypass_document_validation(*bdv);
     }
-    if (options.write_concern()) {
-        bulk_opts.write_concern(*options.write_concern());
+
+    if (const auto wc = options.write_concern()) {
+        bulk_opts.write_concern(*wc);
+    }
+
+    if (const auto let = options.let()) {
+        bulk_opts.let(*let);
     }
 
     auto bulk_op = session ? create_bulk_write(*session, bulk_opts) : create_bulk_write(bulk_opts);
 
     model::update_many update_op(std::move(filter), std::move(update));
-    if (options.collation()) {
-        update_op.collation(*options.collation());
+
+    if (const auto collation = options.collation()) {
+        update_op.collation(*collation);
     }
-    if (options.hint()) {
-        update_op.hint(*options.hint());
+
+    if (const auto hint = options.hint()) {
+        update_op.hint(*hint);
     }
-    if (options.upsert()) {
-        update_op.upsert(*options.upsert());
+
+    if (const auto upsert = options.upsert()) {
+        update_op.upsert(*upsert);
     }
-    if (options.array_filters()) {
-        update_op.array_filters(*options.array_filters());
+
+    if (const auto array_filters = options.array_filters()) {
+        update_op.array_filters(*array_filters);
     }
 
     bulk_op.append(update_op);
@@ -700,27 +709,36 @@ stdx::optional<result::update> collection::_update_one(const client_session* ses
                                                        const options::update& options) {
     options::bulk_write bulk_opts;
 
-    if (options.bypass_document_validation()) {
-        bulk_opts.bypass_document_validation(*options.bypass_document_validation());
+    if (const auto bdv = options.bypass_document_validation()) {
+        bulk_opts.bypass_document_validation(*bdv);
     }
-    if (options.write_concern()) {
-        bulk_opts.write_concern(*options.write_concern());
+
+    if (const auto wc = options.write_concern()) {
+        bulk_opts.write_concern(*wc);
+    }
+
+    if (const auto let = options.let()) {
+        bulk_opts.let(*let);
     }
 
     auto bulk_op = session ? create_bulk_write(*session, bulk_opts) : create_bulk_write(bulk_opts);
 
     model::update_one update_op(std::move(filter), std::move(update));
-    if (options.collation()) {
-        update_op.collation(*options.collation());
+
+    if (const auto collation = options.collation()) {
+        update_op.collation(*collation);
     }
-    if (options.hint()) {
-        update_op.hint(*options.hint());
+
+    if (const auto hint = options.hint()) {
+        update_op.hint(*hint);
     }
-    if (options.upsert()) {
-        update_op.upsert(*options.upsert());
+
+    if (const auto upsert = options.upsert()) {
+        update_op.upsert(*upsert);
     }
-    if (options.array_filters()) {
-        update_op.array_filters(*options.array_filters());
+
+    if (const auto array_filters = options.array_filters()) {
+        update_op.array_filters(*array_filters);
     }
 
     bulk_op.append(update_op);

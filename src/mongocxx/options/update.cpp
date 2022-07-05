@@ -37,6 +37,11 @@ update& update::hint(class hint index_hint) {
     return *this;
 }
 
+update& update::let(bsoncxx::document::view_or_value let) {
+    _let = let;
+    return *this;
+}
+
 update& update::upsert(bool upsert) {
     _upsert = upsert;
     return *this;
@@ -57,6 +62,10 @@ const stdx::optional<bsoncxx::document::view_or_value>& update::collation() cons
 
 const stdx::optional<class hint>& update::hint() const {
     return _hint;
+}
+
+const stdx::optional<bsoncxx::document::view_or_value> update::let() const {
+    return _let;
 }
 
 const stdx::optional<bool>& update::upsert() const {

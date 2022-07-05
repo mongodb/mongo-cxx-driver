@@ -1113,17 +1113,23 @@ document::value update_one(collection& coll, client_session* session, document::
     document::view filter = arguments["filter"].get_document().value;
     options::update options{};
 
-    if (arguments["collation"]) {
-        options.collation(arguments["collation"].get_document().value);
+    if (const auto collation = arguments["collation"]) {
+        options.collation(collation.get_document().value);
     }
-    if (arguments["hint"]) {
+
+    if (const auto hint = arguments["hint"]) {
         if (arguments["hint"].type() == bsoncxx::v_noabi::type::k_string)
-            options.hint(hint{arguments["hint"].get_string().value});
+            options.hint(mongocxx::hint(hint.get_string().value));
         else
-            options.hint(hint{arguments["hint"].get_document().value});
+            options.hint(mongocxx::hint(hint.get_document().value));
     }
-    if (arguments["upsert"]) {
-        options.upsert(arguments["upsert"].get_bool().value);
+
+    if (const auto let = arguments["let"]) {
+        options.let(let.get_document().value);
+    }
+
+    if (const auto upsert = arguments["upsert"]) {
+        options.upsert(upsert.get_bool().value);
     }
 
     stdx::optional<result::update> update_one_result;
@@ -1175,17 +1181,23 @@ document::value update_many(collection& coll, document::view operation) {
     document::view filter = arguments["filter"].get_document().value;
     options::update options{};
 
-    if (arguments["collation"]) {
-        options.collation(arguments["collation"].get_document().value);
+    if (const auto collation = arguments["collation"]) {
+        options.collation(collation.get_document().value);
     }
-    if (arguments["hint"]) {
-        if (arguments["hint"].type() == bsoncxx::v_noabi::type::k_string)
-            options.hint(hint{arguments["hint"].get_string().value});
+
+    if (const auto hint = arguments["hint"]) {
+        if (hint.type() == bsoncxx::v_noabi::type::k_string)
+            options.hint(mongocxx::hint(hint.get_string().value));
         else
-            options.hint(hint{arguments["hint"].get_document().value});
+            options.hint(mongocxx::hint(hint.get_document().value));
     }
-    if (arguments["upsert"]) {
-        options.upsert(arguments["upsert"].get_bool().value);
+
+    if (const auto let = arguments["let"]) {
+        options.let(let.get_document().value);
+    }
+
+    if (const auto upsert = arguments["upsert"]) {
+        options.upsert(upsert.get_bool().value);
     }
 
     stdx::optional<result::update> update_many_result;
