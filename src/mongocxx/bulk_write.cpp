@@ -153,14 +153,14 @@ bulk_write& bulk_write::append(const model::write& operation) {
             scoped_bson_t replace(operation.get_replace_one().replacement());
 
             bsoncxx::builder::basic::document options_builder;
-            if (operation.get_replace_one().collation()) {
-                options_builder.append(kvp("collation", *operation.get_replace_one().collation()));
+            if (const auto collation = operation.get_replace_one().collation()) {
+                options_builder.append(kvp("collation", *collation));
             }
-            if (operation.get_replace_one().hint()) {
-                options_builder.append(kvp("hint", *operation.get_replace_one().hint()));
+            if (const auto hint = operation.get_replace_one().hint()) {
+                options_builder.append(kvp("hint", *hint));
             }
-            if (operation.get_replace_one().upsert()) {
-                options_builder.append(kvp("upsert", *operation.get_replace_one().upsert()));
+            if (const auto upsert = operation.get_replace_one().upsert()) {
+                options_builder.append(kvp("upsert", *upsert));
             }
             scoped_bson_t options(options_builder.extract());
 

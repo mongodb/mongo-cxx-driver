@@ -31,6 +31,11 @@ replace& replace::hint(class hint index_hint) {
     return *this;
 }
 
+replace& replace::let(bsoncxx::document::view_or_value let) {
+    _let = let;
+    return *this;
+}
+
 replace& replace::collation(bsoncxx::document::view_or_value collation) {
     _collation = std::move(collation);
     return *this;
@@ -48,6 +53,10 @@ replace& replace::write_concern(class write_concern wc) {
 
 const stdx::optional<class hint>& replace::hint() const {
     return _hint;
+}
+
+const stdx::optional<bsoncxx::document::view_or_value> replace::let() const {
+    return _let;
 }
 
 const stdx::optional<bool>& replace::bypass_document_validation() const {
