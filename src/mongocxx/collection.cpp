@@ -765,19 +765,26 @@ stdx::optional<result::delete_result> collection::_delete_many(
     const client_session* session, view_or_value filter, const options::delete_options& options) {
     options::bulk_write bulk_opts;
 
-    if (options.write_concern()) {
-        bulk_opts.write_concern(*options.write_concern());
+    if (const auto wc = options.write_concern()) {
+        bulk_opts.write_concern(*wc);
+    }
+
+    if (const auto let = options.let()) {
+        bulk_opts.let(*let);
     }
 
     auto bulk_op = session ? create_bulk_write(*session, bulk_opts) : create_bulk_write(bulk_opts);
 
     model::delete_many delete_op(filter);
-    if (options.collation()) {
-        delete_op.collation(*options.collation());
+
+    if (const auto collation = options.collation()) {
+        delete_op.collation(*collation);
     }
-    if (options.hint()) {
-        delete_op.hint(*options.hint());
+
+    if (const auto hint = options.hint()) {
+        delete_op.hint(*hint);
     }
+
     bulk_op.append(delete_op);
 
     auto result = bulk_op.execute();
@@ -802,19 +809,26 @@ stdx::optional<result::delete_result> collection::_delete_one(
     const client_session* session, view_or_value filter, const options::delete_options& options) {
     options::bulk_write bulk_opts;
 
-    if (options.write_concern()) {
-        bulk_opts.write_concern(*options.write_concern());
+    if (const auto wc = options.write_concern()) {
+        bulk_opts.write_concern(*wc);
+    }
+
+    if (const auto let = options.let()) {
+        bulk_opts.let(*let);
     }
 
     auto bulk_op = session ? create_bulk_write(*session, bulk_opts) : create_bulk_write(bulk_opts);
 
     model::delete_one delete_op(filter);
-    if (options.collation()) {
-        delete_op.collation(*options.collation());
+
+    if (const auto collation = options.collation()) {
+        delete_op.collation(*collation);
     }
-    if (options.hint()) {
-        delete_op.hint(*options.hint());
+
+    if (const auto hint = options.hint()) {
+        delete_op.hint(*hint);
     }
+
     bulk_op.append(delete_op);
 
     auto result = bulk_op.execute();

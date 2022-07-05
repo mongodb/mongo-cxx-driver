@@ -48,6 +48,15 @@ const stdx::optional<class hint>& delete_options::hint() const {
     return _hint;
 }
 
+delete_options& delete_options::let(bsoncxx::document::view_or_value let) {
+    _let = let;
+    return *this;
+}
+
+const stdx::optional<bsoncxx::document::view_or_value> delete_options::let() const {
+    return _let;
+}
+
 }  // namespace options
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
