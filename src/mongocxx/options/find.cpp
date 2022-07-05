@@ -148,6 +148,15 @@ const stdx::optional<std::int64_t>& find::limit() const {
     return _limit;
 }
 
+find& find::let(bsoncxx::document::view_or_value let) {
+    _let = let;
+    return *this;
+}
+
+const stdx::optional<bsoncxx::document::view_or_value> find::let() const {
+    return _let;
+}
+
 const stdx::optional<bsoncxx::document::view_or_value>& find::max() const {
     return _max;
 }

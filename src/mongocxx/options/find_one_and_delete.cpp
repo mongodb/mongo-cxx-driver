@@ -50,6 +50,11 @@ find_one_and_delete& find_one_and_delete::hint(class hint index_hint) {
     return *this;
 }
 
+find_one_and_delete& find_one_and_delete::let(bsoncxx::document::view_or_value let) {
+    _let = let;
+    return *this;
+}
+
 const stdx::optional<class hint>& find_one_and_delete::hint() const {
     return _hint;
 }
@@ -72,6 +77,10 @@ const stdx::optional<std::chrono::milliseconds>& find_one_and_delete::max_time()
 
 const stdx::optional<mongocxx::write_concern>& find_one_and_delete::write_concern() const {
     return _write_concern;
+}
+
+const stdx::optional<bsoncxx::document::view_or_value> find_one_and_delete::let() const {
+    return _let;
 }
 
 }  // namespace options

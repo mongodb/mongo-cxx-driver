@@ -49,67 +49,69 @@ document::value find(collection& coll, client_session* session, document::view o
     document::view arguments = operation["arguments"].get_document().value;
     document::value empty_filter = builder::basic::make_document();
     document::view filter;
-    if (arguments["filter"]) {
-        filter = arguments["filter"].get_document().value;
+    if (const auto f = arguments["filter"]) {
+        filter = f.get_document().value;
     } else {
         filter = empty_filter.view();
     }
     options::find options{};
 
-    if (arguments["batchSize"]) {
-        options.batch_size(as_int32(arguments["batchSize"]));
+    if (const auto batch_size = arguments["batchSize"]) {
+        options.batch_size(as_int32(batch_size));
     }
 
-    if (arguments["collation"]) {
-        options.collation(arguments["collation"].get_document().value);
+    if (const auto collation = arguments["collation"]) {
+        options.collation(collation.get_document().value);
     }
 
-    if (arguments["limit"]) {
-        options.limit(as_int64(arguments["limit"]));
+    if (const auto limit = arguments["limit"]) {
+        options.limit(as_int64(limit));
     }
 
-    if (arguments["skip"]) {
-        options.skip(as_int64(arguments["skip"]));
+    if (const auto skip = arguments["skip"]) {
+        options.skip(as_int64(skip));
     }
 
-    if (arguments["sort"]) {
-        options.sort(arguments["sort"].get_document().value);
+    if (const auto sort = arguments["sort"]) {
+        options.sort(sort.get_document().value);
     }
 
-    if (arguments["allowDiskUse"]) {
-        options.allow_disk_use(arguments["allowDiskUse"].get_bool().value);
+    if (const auto adu = arguments["allowDiskUse"]) {
+        options.allow_disk_use(adu.get_bool().value);
     }
 
-    if (arguments["modifiers"]) {
-        document::view modifiers = arguments["modifiers"].get_document().value;
-        if (modifiers["$comment"]) {
-            options.comment(modifiers["$comment"].get_string().value);
+    if (const auto let = arguments["let"]) {
+        options.let(let.get_document().value);
+    }
+
+    if (const auto modifiers = arguments["modifiers"]) {
+        if (const auto comment = modifiers["$comment"]) {
+            options.comment(comment.get_string().value);
         }
 
-        if (modifiers["$hint"]) {
-            hint my_hint(modifiers["$hint"].get_document().value);
-            options.hint(my_hint);
+        if (const auto hint = modifiers["$hint"]) {
+            options.hint(mongocxx::hint(hint.get_document().value));
         }
 
-        if (modifiers["$max"]) {
-            options.max(modifiers["$max"].get_document().value);
+        if (const auto max = modifiers["$max"]) {
+            options.max(max.get_document().value);
         }
 
-        if (modifiers["$maxTimeMS"]) {
-            std::chrono::milliseconds my_millis(modifiers["$maxTimeMS"].get_int32().value);
+        if (const auto max_time_ms = modifiers["$maxTimeMS"]) {
+            std::chrono::milliseconds my_millis(max_time_ms.get_int32().value);
             options.max_time(my_millis);
         }
 
-        if (modifiers["$min"]) {
-            options.min(modifiers["$min"].get_document().value);
+        if (const auto min = modifiers["$min"]) {
+            options.min(min.get_document().value);
         }
 
-        if (modifiers["$returnKey"]) {
-            options.return_key(modifiers["$returnKey"].get_bool().value);
+        if (const auto return_key = modifiers["$returnKey"]) {
+            options.return_key(return_key.get_bool().value);
         }
 
-        if (modifiers["$showDiskLoc"]) {
-            options.show_record_id(modifiers["$showDiskLoc"].get_bool().value);
+        if (const auto show_disk_loc = modifiers["$showDiskLoc"]) {
+            options.show_record_id(show_disk_loc.get_bool().value);
         }
     }
 
@@ -585,20 +587,27 @@ document::value find_one_and_delete(collection& coll,
     document::view filter = arguments["filter"].get_document().value;
     options::find_one_and_delete options{};
 
-    if (arguments["collation"]) {
-        options.collation(arguments["collation"].get_document().value);
+    if (const auto collation = arguments["collation"]) {
+        options.collation(collation.get_document().value);
     }
-    if (arguments["hint"]) {
-        if (arguments["hint"].type() == bsoncxx::v_noabi::type::k_string)
-            options.hint(hint{arguments["hint"].get_string().value});
+
+    if (const auto hint = arguments["hint"]) {
+        if (hint.type() == bsoncxx::v_noabi::type::k_string)
+            options.hint(mongocxx::hint(hint.get_string().value));
         else
-            options.hint(hint{arguments["hint"].get_document().value});
+            options.hint(mongocxx::hint(hint.get_document().value));
     }
-    if (arguments["projection"]) {
-        options.projection(arguments["projection"].get_document().value);
+
+    if (const auto let = arguments["let"]) {
+        options.let(let.get_document().value);
     }
-    if (arguments["sort"]) {
-        options.sort(arguments["sort"].get_document().value);
+
+    if (const auto projection = arguments["projection"]) {
+        options.projection(projection.get_document().value);
+    }
+
+    if (const auto sort = arguments["sort"]) {
+        options.sort(sort.get_document().value);
     }
 
     stdx::optional<document::value> document;
@@ -627,20 +636,27 @@ document::value find_one_and_replace(collection& coll,
     document::view filter = arguments["filter"].get_document().value;
     options::find_one_and_replace options{};
 
-    if (arguments["collation"]) {
-        options.collation(arguments["collation"].get_document().value);
+    if (const auto collation = arguments["collation"]) {
+        options.collation(collation.get_document().value);
     }
-    if (arguments["hint"]) {
-        if (arguments["hint"].type() == bsoncxx::v_noabi::type::k_string)
-            options.hint(hint{arguments["hint"].get_string().value});
+
+    if (const auto hint = arguments["hint"]) {
+        if (hint.type() == bsoncxx::v_noabi::type::k_string)
+            options.hint(mongocxx::hint(hint.get_string().value));
         else
-            options.hint(hint{arguments["hint"].get_document().value});
+            options.hint(mongocxx::hint(hint.get_document().value));
     }
-    if (arguments["projection"]) {
-        options.projection(arguments["projection"].get_document().value);
+
+    if (const auto let = arguments["let"]) {
+        options.let(let.get_document().value);
     }
-    if (arguments["returnDocument"]) {
-        auto return_document = string::to_string(arguments["returnDocument"].get_string().value);
+
+    if (const auto projection = arguments["projection"]) {
+        options.projection(projection.get_document().value);
+    }
+
+    if (const auto rd = arguments["returnDocument"]) {
+        const auto return_document = string::to_string(rd.get_string().value);
 
         if (return_document == "After") {
             options.return_document(options::return_document::k_after);
@@ -650,11 +666,13 @@ document::value find_one_and_replace(collection& coll,
             throw std::logic_error{"unrecognized value for returnDocument: " + return_document};
         }
     }
-    if (arguments["sort"]) {
-        options.sort(arguments["sort"].get_document().value);
+
+    if (const auto sort = arguments["sort"]) {
+        options.sort(sort.get_document().value);
     }
-    if (arguments["upsert"]) {
-        options.upsert(arguments["upsert"].get_bool().value);
+
+    if (const auto upsert = arguments["upsert"]) {
+        options.upsert(upsert.get_bool().value);
     }
 
     stdx::optional<document::value> document;
@@ -684,27 +702,31 @@ document::value find_one_and_update(collection& coll,
     document::view filter = arguments["filter"].get_document().value;
     options::find_one_and_update options{};
 
-    if (arguments["collation"]) {
-        options.collation(arguments["collation"].get_document().value);
+    if (const auto collation = arguments["collation"]) {
+        options.collation(collation.get_document().value);
     }
 
-    if (arguments["hint"]) {
-        if (arguments["hint"].type() == bsoncxx::v_noabi::type::k_string)
-            options.hint(hint{arguments["hint"].get_string().value});
+    if (const auto hint = arguments["hint"]) {
+        if (hint.type() == bsoncxx::v_noabi::type::k_string)
+            options.hint(mongocxx::hint(hint.get_string().value));
         else
-            options.hint(hint{arguments["hint"].get_document().value});
+            options.hint(mongocxx::hint(hint.get_document().value));
     }
 
-    if (arguments["projection"]) {
-        options.projection(arguments["projection"].get_document().value);
+    if (const auto let = arguments["let"]) {
+        options.let(let.get_document().value);
     }
 
-    if (arguments["arrayFilters"]) {
-        options.array_filters(arguments["arrayFilters"].get_array().value);
+    if (const auto projection = arguments["projection"]) {
+        options.projection(projection.get_document().value);
     }
 
-    if (arguments["returnDocument"]) {
-        auto return_document = string::to_string(arguments["returnDocument"].get_string().value);
+    if (const auto array_filters = arguments["arrayFilters"]) {
+        options.array_filters(array_filters.get_array().value);
+    }
+
+    if (const auto rd = arguments["returnDocument"]) {
+        auto return_document = string::to_string(rd.get_string().value);
 
         if (return_document == "After") {
             options.return_document(options::return_document::k_after);
@@ -715,12 +737,12 @@ document::value find_one_and_update(collection& coll,
         }
     }
 
-    if (arguments["sort"]) {
-        options.sort(arguments["sort"].get_document().value);
+    if (const auto sort = arguments["sort"]) {
+        options.sort(sort.get_document().value);
     }
 
-    if (arguments["upsert"]) {
-        options.upsert(arguments["upsert"].get_bool().value);
+    if (const auto upsert = arguments["upsert"]) {
+        options.upsert(upsert.get_bool().value);
     }
 
     auto result = builder::basic::document{};
