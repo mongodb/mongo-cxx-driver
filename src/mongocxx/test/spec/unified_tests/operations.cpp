@@ -988,15 +988,15 @@ document::value delete_one(collection& coll, client_session* session, document::
     document::view filter = arguments["filter"].get_document().value;
     options::delete_options options{};
 
-    if (arguments["collation"]) {
-        options.collation(arguments["collation"].get_document().value);
+    if (const auto collation = arguments["collation"]) {
+        options.collation(collation.get_document().value);
     }
 
-    if (arguments["hint"]) {
-        if (arguments["hint"].type() == bsoncxx::v_noabi::type::k_string)
-            options.hint(hint{arguments["hint"].get_string().value});
+    if (const auto hint = arguments["hint"]) {
+        if (hint.type() == bsoncxx::v_noabi::type::k_string)
+            options.hint(mongocxx::hint(hint.get_string().value));
         else
-            options.hint(hint{arguments["hint"].get_document().value});
+            options.hint(mongocxx::hint(hint.get_document().value));
     }
 
     if (const auto let = arguments["let"]) {
