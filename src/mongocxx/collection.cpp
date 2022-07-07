@@ -89,7 +89,6 @@ mongocxx::stdx::optional<bsoncxx::document::value> find_and_modify(
     mongoc_find_and_modify_flags_t flags,
     bool bypass,
     mongocxx::stdx::optional<bsoncxx::array::view_or_value> array_filters,
-    const mongocxx::stdx::optional<mongocxx::hint>& hint,
     const T& options) {
     using unique_opts =
         std::unique_ptr<mongoc_find_and_modify_opts_t,
@@ -101,11 +100,11 @@ mongocxx::stdx::optional<bsoncxx::document::value> find_and_modify(
     ::bson_error_t error;
 
     // Write concern, collation, and session are passed in "extra".
-    if (options.write_concern()) {
-        if (!options.write_concern()->is_acknowledged() && options.collation()) {
+    if (const auto wc = options.write_concern()) {
+        if (!wc->is_acknowledged() && options.collation()) {
             throw mongocxx::logic_error{mongocxx::error_code::k_invalid_parameter};
         }
-        extra.append(kvp("writeConcern", options.write_concern()->to_document()));
+        extra.append(kvp("writeConcern", wc->to_document()));
     }
 
     if (session_t) {
@@ -120,16 +119,20 @@ mongocxx::stdx::optional<bsoncxx::document::value> find_and_modify(
         extra.append(concatenate(session_id.view()));
     }
 
-    if (options.collation()) {
-        extra.append(kvp("collation", *options.collation()));
+    if (const auto collation = options.collation()) {
+        extra.append(kvp("collation", *collation));
     }
 
     if (array_filters) {
         extra.append(kvp("arrayFilters", *array_filters));
     }
 
-    if (hint) {
+    if (const auto hint = options.hint()) {
         extra.append(kvp("hint", hint->to_value()));
+    }
+
+    if (const auto let = options.let()) {
+        extra.append(kvp("let", *let));
     }
 
     scoped_bson_t extra_bson{extra.view()};
@@ -144,19 +147,19 @@ mongocxx::stdx::optional<bsoncxx::document::value> find_and_modify(
         mongocxx::libmongoc::find_and_modify_opts_set_bypass_document_validation(opts.get(), true);
     }
 
-    if (options.sort()) {
-        scoped_bson_t sort_bson{*options.sort()};
+    if (const auto sort = options.sort()) {
+        scoped_bson_t sort_bson{*sort};
         mongocxx::libmongoc::find_and_modify_opts_set_sort(opts.get(), sort_bson.bson());
     }
 
-    if (options.projection()) {
-        scoped_bson_t projection_bson{*options.projection()};
+    if (const auto projection = options.projection()) {
+        scoped_bson_t projection_bson{*projection};
         mongocxx::libmongoc::find_and_modify_opts_set_fields(opts.get(), projection_bson.bson());
     }
 
-    if (options.max_time()) {
+    if (const auto max_time = options.max_time()) {
         mongocxx::libmongoc::find_and_modify_opts_set_max_time_ms(
-            opts.get(), static_cast<uint32_t>(options.max_time()->count()));
+            opts.get(), static_cast<uint32_t>(max_time->count()));
     }
 
     // Upsert, remove, and new are passed in flags.
@@ -301,82 +304,84 @@ namespace {
 bsoncxx::builder::basic::document build_find_options_document(const options::find& options) {
     bsoncxx::builder::basic::document options_builder;
 
-    if (options.allow_disk_use()) {
-        options_builder.append(kvp("allowDiskUse", *options.allow_disk_use()));
+    if (const auto adu = options.allow_disk_use()) {
+        options_builder.append(kvp("allowDiskUse", *adu));
     }
 
-    if (options.allow_partial_results()) {
-        options_builder.append(kvp("allowPartialResults", *options.allow_partial_results()));
+    if (const auto apr = options.allow_partial_results()) {
+        options_builder.append(kvp("allowPartialResults", *apr));
     }
 
-    if (options.batch_size()) {
-        options_builder.append(kvp("batchSize", *options.batch_size()));
+    if (const auto batch_size = options.batch_size()) {
+        options_builder.append(kvp("batchSize", *batch_size));
     }
 
-    if (options.collation()) {
-        options_builder.append(kvp("collation", *options.collation()));
+    if (const auto collation = options.collation()) {
+        options_builder.append(kvp("collation", *collation));
     }
 
-    if (options.comment()) {
-        options_builder.append(kvp("comment", *options.comment()));
+    if (const auto comment = options.comment()) {
+        options_builder.append(kvp("comment", *comment));
     }
 
-    if (options.cursor_type()) {
-        if (*options.cursor_type() == cursor::type::k_tailable) {
+    if (const auto cursor_type = options.cursor_type()) {
+        if (*cursor_type == cursor::type::k_tailable) {
             options_builder.append(kvp("tailable", bsoncxx::types::b_bool{true}));
-        } else if (*options.cursor_type() == cursor::type::k_tailable_await) {
+        } else if (*cursor_type == cursor::type::k_tailable_await) {
             options_builder.append(kvp("tailable", bsoncxx::types::b_bool{true}));
             options_builder.append(kvp("awaitData", bsoncxx::types::b_bool{true}));
-        } else if (*options.cursor_type() == cursor::type::k_non_tailable) {
+        } else if (*cursor_type == cursor::type::k_non_tailable) {
         } else {
             throw logic_error{error_code::k_invalid_parameter};
         }
     }
 
-    if (options.hint()) {
-        options_builder.append(kvp("hint", options.hint()->to_value()));
+    if (const auto hint = options.hint()) {
+        options_builder.append(kvp("hint", hint->to_value()));
     }
 
-    if (options.limit()) {
-        options_builder.append(kvp("limit", *options.limit()));
+    if (const auto let = options.let()) {
+        options_builder.append(kvp("let", *let));
     }
 
-    if (options.max()) {
-        options_builder.append(kvp("max", *options.max()));
+    if (const auto limit = options.limit()) {
+        options_builder.append(kvp("limit", *limit));
     }
 
-    if (options.max_time()) {
-        options_builder.append(
-            kvp("maxTimeMS", bsoncxx::types::b_int64{options.max_time()->count()}));
+    if (const auto max = options.max()) {
+        options_builder.append(kvp("max", *max));
     }
 
-    if (options.min()) {
-        options_builder.append(kvp("min", *options.min()));
+    if (const auto max_time = options.max_time()) {
+        options_builder.append(kvp("maxTimeMS", bsoncxx::types::b_int64{max_time->count()}));
     }
 
-    if (options.no_cursor_timeout()) {
-        options_builder.append(kvp("noCursorTimeout", *options.no_cursor_timeout()));
+    if (const auto min = options.min()) {
+        options_builder.append(kvp("min", *min));
     }
 
-    if (options.projection()) {
-        options_builder.append(
-            kvp("projection", bsoncxx::types::b_document{*options.projection()}));
+    if (const auto nct = options.no_cursor_timeout()) {
+        options_builder.append(kvp("noCursorTimeout", *nct));
     }
 
-    if (options.return_key()) {
-        options_builder.append(kvp("returnKey", *options.return_key()));
+    if (const auto projection = options.projection()) {
+        options_builder.append(kvp("projection", bsoncxx::types::b_document{*projection}));
     }
 
-    if (options.show_record_id()) {
-        options_builder.append(kvp("showRecordId", *options.show_record_id()));
+    if (const auto return_key = options.return_key()) {
+        options_builder.append(kvp("returnKey", *return_key));
     }
 
-    if (options.skip()) {
-        options_builder.append(kvp("skip", *options.skip()));
+    if (const auto show_record_id = options.show_record_id()) {
+        options_builder.append(kvp("showRecordId", *show_record_id));
     }
 
-    if (options.sort()) {
-        options_builder.append(kvp("sort", bsoncxx::types::b_document{*options.sort()}));
+    if (const auto skip = options.skip()) {
+        options_builder.append(kvp("skip", *skip));
+    }
+
+    if (const auto sort = options.sort()) {
+        options_builder.append(kvp("sort", bsoncxx::types::b_document{*sort}));
     }
 
     return options_builder;
@@ -567,22 +572,30 @@ stdx::optional<result::replace_one> collection::_replace_one(const client_sessio
                                                              const options::replace& options) {
     options::bulk_write bulk_opts;
 
-    if (options.bypass_document_validation()) {
-        bulk_opts.bypass_document_validation(*options.bypass_document_validation());
+    if (const auto bdv = options.bypass_document_validation()) {
+        bulk_opts.bypass_document_validation(*bdv);
     }
-    if (options.write_concern()) {
-        bulk_opts.write_concern(*options.write_concern());
+
+    if (const auto wc = options.write_concern()) {
+        bulk_opts.write_concern(*wc);
+    }
+
+    if (const auto let = options.let()) {
+        bulk_opts.let(*let);
     }
 
     model::replace_one replace_op(std::move(filter), std::move(replacement));
-    if (options.collation()) {
-        replace_op.collation(*options.collation());
+
+    if (const auto collation = options.collation()) {
+        replace_op.collation(*collation);
     }
-    if (options.hint()) {
-        replace_op.hint(*options.hint());
+
+    if (const auto hint = options.hint()) {
+        replace_op.hint(*hint);
     }
-    if (options.upsert()) {
-        replace_op.upsert(*options.upsert());
+
+    if (const auto upsert = options.upsert()) {
+        replace_op.upsert(*upsert);
     }
 
     return _replace_one(session, bulk_opts, replace_op);
@@ -607,27 +620,36 @@ stdx::optional<result::update> collection::_update_many(const client_session* se
                                                         const options::update& options) {
     options::bulk_write bulk_opts;
 
-    if (options.bypass_document_validation()) {
-        bulk_opts.bypass_document_validation(*options.bypass_document_validation());
+    if (const auto bdv = options.bypass_document_validation()) {
+        bulk_opts.bypass_document_validation(*bdv);
     }
-    if (options.write_concern()) {
-        bulk_opts.write_concern(*options.write_concern());
+
+    if (const auto wc = options.write_concern()) {
+        bulk_opts.write_concern(*wc);
+    }
+
+    if (const auto let = options.let()) {
+        bulk_opts.let(*let);
     }
 
     auto bulk_op = session ? create_bulk_write(*session, bulk_opts) : create_bulk_write(bulk_opts);
 
     model::update_many update_op(std::move(filter), std::move(update));
-    if (options.collation()) {
-        update_op.collation(*options.collation());
+
+    if (const auto collation = options.collation()) {
+        update_op.collation(*collation);
     }
-    if (options.hint()) {
-        update_op.hint(*options.hint());
+
+    if (const auto hint = options.hint()) {
+        update_op.hint(*hint);
     }
-    if (options.upsert()) {
-        update_op.upsert(*options.upsert());
+
+    if (const auto upsert = options.upsert()) {
+        update_op.upsert(*upsert);
     }
-    if (options.array_filters()) {
-        update_op.array_filters(*options.array_filters());
+
+    if (const auto array_filters = options.array_filters()) {
+        update_op.array_filters(*array_filters);
     }
 
     bulk_op.append(update_op);
@@ -687,27 +709,36 @@ stdx::optional<result::update> collection::_update_one(const client_session* ses
                                                        const options::update& options) {
     options::bulk_write bulk_opts;
 
-    if (options.bypass_document_validation()) {
-        bulk_opts.bypass_document_validation(*options.bypass_document_validation());
+    if (const auto bdv = options.bypass_document_validation()) {
+        bulk_opts.bypass_document_validation(*bdv);
     }
-    if (options.write_concern()) {
-        bulk_opts.write_concern(*options.write_concern());
+
+    if (const auto wc = options.write_concern()) {
+        bulk_opts.write_concern(*wc);
+    }
+
+    if (const auto let = options.let()) {
+        bulk_opts.let(*let);
     }
 
     auto bulk_op = session ? create_bulk_write(*session, bulk_opts) : create_bulk_write(bulk_opts);
 
     model::update_one update_op(std::move(filter), std::move(update));
-    if (options.collation()) {
-        update_op.collation(*options.collation());
+
+    if (const auto collation = options.collation()) {
+        update_op.collation(*collation);
     }
-    if (options.hint()) {
-        update_op.hint(*options.hint());
+
+    if (const auto hint = options.hint()) {
+        update_op.hint(*hint);
     }
-    if (options.upsert()) {
-        update_op.upsert(*options.upsert());
+
+    if (const auto upsert = options.upsert()) {
+        update_op.upsert(*upsert);
     }
-    if (options.array_filters()) {
-        update_op.array_filters(*options.array_filters());
+
+    if (const auto array_filters = options.array_filters()) {
+        update_op.array_filters(*array_filters);
     }
 
     bulk_op.append(update_op);
@@ -765,19 +796,26 @@ stdx::optional<result::delete_result> collection::_delete_many(
     const client_session* session, view_or_value filter, const options::delete_options& options) {
     options::bulk_write bulk_opts;
 
-    if (options.write_concern()) {
-        bulk_opts.write_concern(*options.write_concern());
+    if (const auto wc = options.write_concern()) {
+        bulk_opts.write_concern(*wc);
+    }
+
+    if (const auto let = options.let()) {
+        bulk_opts.let(*let);
     }
 
     auto bulk_op = session ? create_bulk_write(*session, bulk_opts) : create_bulk_write(bulk_opts);
 
     model::delete_many delete_op(filter);
-    if (options.collation()) {
-        delete_op.collation(*options.collation());
+
+    if (const auto collation = options.collation()) {
+        delete_op.collation(*collation);
     }
-    if (options.hint()) {
-        delete_op.hint(*options.hint());
+
+    if (const auto hint = options.hint()) {
+        delete_op.hint(*hint);
     }
+
     bulk_op.append(delete_op);
 
     auto result = bulk_op.execute();
@@ -802,19 +840,26 @@ stdx::optional<result::delete_result> collection::_delete_one(
     const client_session* session, view_or_value filter, const options::delete_options& options) {
     options::bulk_write bulk_opts;
 
-    if (options.write_concern()) {
-        bulk_opts.write_concern(*options.write_concern());
+    if (const auto wc = options.write_concern()) {
+        bulk_opts.write_concern(*wc);
+    }
+
+    if (const auto let = options.let()) {
+        bulk_opts.let(*let);
     }
 
     auto bulk_op = session ? create_bulk_write(*session, bulk_opts) : create_bulk_write(bulk_opts);
 
     model::delete_one delete_op(filter);
-    if (options.collation()) {
-        delete_op.collation(*options.collation());
+
+    if (const auto collation = options.collation()) {
+        delete_op.collation(*collation);
     }
-    if (options.hint()) {
-        delete_op.hint(*options.hint());
+
+    if (const auto hint = options.hint()) {
+        delete_op.hint(*hint);
     }
+
     bulk_op.append(delete_op);
 
     auto result = bulk_op.execute();
@@ -856,7 +901,6 @@ stdx::optional<bsoncxx::document::value> collection::_find_one_and_replace(
                            flags,
                            options.bypass_document_validation().value_or(false),
                            stdx::nullopt,
-                           options.hint(),
                            options);
 }
 
@@ -894,7 +938,6 @@ stdx::optional<bsoncxx::document::value> collection::_find_one_and_update(
                            flags,
                            options.bypass_document_validation().value_or(false),
                            options.array_filters(),
-                           options.hint(),
                            options);
 }
 
@@ -952,7 +995,6 @@ stdx::optional<bsoncxx::document::value> collection::_find_one_and_delete(
                            MONGOC_FIND_AND_MODIFY_REMOVE,
                            false,
                            stdx::nullopt,
-                           options.hint(),
                            options);
 }
 

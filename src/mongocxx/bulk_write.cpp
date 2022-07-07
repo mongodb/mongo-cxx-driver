@@ -57,18 +57,17 @@ bulk_write& bulk_write::append(const model::write& operation) {
             scoped_bson_t update(operation.get_update_one().update());
 
             bsoncxx::builder::basic::document options_builder;
-            if (operation.get_update_one().collation()) {
-                options_builder.append(kvp("collation", *operation.get_update_one().collation()));
+            if (const auto collation = operation.get_update_one().collation()) {
+                options_builder.append(kvp("collation", *collation));
             }
-            if (operation.get_update_one().hint()) {
-                options_builder.append(kvp("hint", *operation.get_update_one().hint()));
+            if (const auto hint = operation.get_update_one().hint()) {
+                options_builder.append(kvp("hint", *hint));
             }
-            if (operation.get_update_one().upsert()) {
-                options_builder.append(kvp("upsert", *operation.get_update_one().upsert()));
+            if (const auto upsert = operation.get_update_one().upsert()) {
+                options_builder.append(kvp("upsert", *upsert));
             }
-            if (operation.get_update_one().array_filters()) {
-                options_builder.append(
-                    kvp("arrayFilters", *operation.get_update_one().array_filters()));
+            if (const auto array_filters = operation.get_update_one().array_filters()) {
+                options_builder.append(kvp("arrayFilters", *array_filters));
             }
             scoped_bson_t options(options_builder.extract());
 
@@ -85,18 +84,17 @@ bulk_write& bulk_write::append(const model::write& operation) {
             scoped_bson_t update(operation.get_update_many().update());
 
             bsoncxx::builder::basic::document options_builder;
-            if (operation.get_update_many().collation()) {
-                options_builder.append(kvp("collation", *operation.get_update_many().collation()));
+            if (const auto collation = operation.get_update_many().collation()) {
+                options_builder.append(kvp("collation", *collation));
             }
-            if (operation.get_update_many().hint()) {
-                options_builder.append(kvp("hint", *operation.get_update_many().hint()));
+            if (const auto hint = operation.get_update_many().hint()) {
+                options_builder.append(kvp("hint", *hint));
             }
-            if (operation.get_update_many().upsert()) {
-                options_builder.append(kvp("upsert", *operation.get_update_many().upsert()));
+            if (const auto upsert = operation.get_update_many().upsert()) {
+                options_builder.append(kvp("upsert", *upsert));
             }
-            if (operation.get_update_many().array_filters()) {
-                options_builder.append(
-                    kvp("arrayFilters", *operation.get_update_many().array_filters()));
+            if (const auto array_filters = operation.get_update_many().array_filters()) {
+                options_builder.append(kvp("arrayFilters", *array_filters));
             }
             scoped_bson_t options(options_builder.extract());
 
@@ -112,11 +110,11 @@ bulk_write& bulk_write::append(const model::write& operation) {
             scoped_bson_t filter(operation.get_delete_one().filter());
 
             bsoncxx::builder::basic::document options_builder;
-            if (operation.get_delete_one().collation()) {
-                options_builder.append(kvp("collation", *operation.get_delete_one().collation()));
+            if (const auto collation = operation.get_delete_one().collation()) {
+                options_builder.append(kvp("collation", *collation));
             }
-            if (operation.get_delete_one().hint()) {
-                options_builder.append(kvp("hint", *operation.get_delete_one().hint()));
+            if (const auto hint = operation.get_delete_one().hint()) {
+                options_builder.append(kvp("hint", *hint));
             }
             scoped_bson_t options(options_builder.extract());
 
@@ -132,11 +130,11 @@ bulk_write& bulk_write::append(const model::write& operation) {
             scoped_bson_t filter(operation.get_delete_many().filter());
 
             bsoncxx::builder::basic::document options_builder;
-            if (operation.get_delete_many().collation()) {
-                options_builder.append(kvp("collation", *operation.get_delete_many().collation()));
+            if (const auto collation = operation.get_delete_many().collation()) {
+                options_builder.append(kvp("collation", *collation));
             }
-            if (operation.get_delete_many().hint()) {
-                options_builder.append(kvp("hint", *operation.get_delete_many().hint()));
+            if (const auto hint = operation.get_delete_many().hint()) {
+                options_builder.append(kvp("hint", *hint));
             }
             scoped_bson_t options(options_builder.extract());
 
@@ -153,14 +151,14 @@ bulk_write& bulk_write::append(const model::write& operation) {
             scoped_bson_t replace(operation.get_replace_one().replacement());
 
             bsoncxx::builder::basic::document options_builder;
-            if (operation.get_replace_one().collation()) {
-                options_builder.append(kvp("collation", *operation.get_replace_one().collation()));
+            if (const auto collation = operation.get_replace_one().collation()) {
+                options_builder.append(kvp("collation", *collation));
             }
-            if (operation.get_replace_one().hint()) {
-                options_builder.append(kvp("hint", *operation.get_replace_one().hint()));
+            if (const auto hint = operation.get_replace_one().hint()) {
+                options_builder.append(kvp("hint", *hint));
             }
-            if (operation.get_replace_one().upsert()) {
-                options_builder.append(kvp("upsert", *operation.get_replace_one().upsert()));
+            if (const auto upsert = operation.get_replace_one().upsert()) {
+                options_builder.append(kvp("upsert", *upsert));
             }
             scoped_bson_t options(options_builder.extract());
 

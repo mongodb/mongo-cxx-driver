@@ -36,6 +36,11 @@ find_one_and_replace& find_one_and_replace::hint(class hint index_hint) {
     return *this;
 }
 
+find_one_and_replace& find_one_and_replace::let(bsoncxx::document::view_or_value let) {
+    _let = let;
+    return *this;
+}
+
 find_one_and_replace& find_one_and_replace::max_time(std::chrono::milliseconds max_time) {
     _max_time = std::move(max_time);
     return *this;
@@ -78,6 +83,10 @@ const stdx::optional<bsoncxx::document::view_or_value>& find_one_and_replace::co
 
 const stdx::optional<class hint>& find_one_and_replace::hint() const {
     return _hint;
+}
+
+const stdx::optional<bsoncxx::document::view_or_value> find_one_and_replace::let() const {
+    return _let;
 }
 
 const stdx::optional<std::chrono::milliseconds>& find_one_and_replace::max_time() const {

@@ -110,6 +110,26 @@ class MONGOCXX_API find_one_and_update {
     const stdx::optional<class hint>& hint() const;
 
     ///
+    /// Set the value of the let option.
+    ///
+    /// @param let
+    ///   The new let option.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
+    find_one_and_update& let(bsoncxx::document::view_or_value let);
+
+    ///
+    /// Gets the current value of the let option.
+    ///
+    /// @return
+    ///  The current let option.
+    ///
+    const stdx::optional<bsoncxx::document::view_or_value> let() const;
+
+    ///
     /// Sets the maximum amount of time for this operation to run (server-side) in milliseconds.
     ///
     /// @param max_time
@@ -286,6 +306,7 @@ class MONGOCXX_API find_one_and_update {
     stdx::optional<bool> _bypass_document_validation;
     stdx::optional<bsoncxx::document::view_or_value> _collation;
     stdx::optional<class hint> _hint;
+    stdx::optional<bsoncxx::document::view_or_value> _let;
     stdx::optional<std::chrono::milliseconds> _max_time;
     stdx::optional<bsoncxx::document::view_or_value> _projection;
     stdx::optional<mongocxx::options::return_document> _return_document;

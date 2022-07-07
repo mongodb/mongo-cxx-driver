@@ -153,12 +153,33 @@ class MONGOCXX_API replace {
     ///
     const stdx::optional<class hint>& hint() const;
 
+    ///
+    /// Set the value of the let option.
+    ///
+    /// @param let
+    ///   The new let option.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
+    replace& let(bsoncxx::document::view_or_value let);
+
+    ///
+    /// Gets the current value of the let option.
+    ///
+    /// @return
+    ///  The current let option.
+    ///
+    const stdx::optional<bsoncxx::document::view_or_value> let() const;
+
    private:
     stdx::optional<bool> _bypass_document_validation;
     stdx::optional<bsoncxx::document::view_or_value> _collation;
     stdx::optional<bool> _upsert;
     stdx::optional<class write_concern> _write_concern;
     stdx::optional<class hint> _hint;
+    stdx::optional<bsoncxx::document::view_or_value> _let;
 };
 
 }  // namespace options

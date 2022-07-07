@@ -208,6 +208,30 @@ class MONGOCXX_API find {
     const stdx::optional<class hint>& hint() const;
 
     ///
+    /// Set the value of the let option.
+    ///
+    /// @param let
+    ///   The new let option.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
+    /// @see https://docs.mongodb.com/manual/reference/command/find/
+    ///
+    find& let(bsoncxx::document::view_or_value let);
+
+    ///
+    /// Gets the current value of the let option.
+    ///
+    /// @return
+    ///  The current let option.
+    ///
+    /// @see https://docs.mongodb.com/manual/reference/command/find/
+    ///
+    const stdx::optional<bsoncxx::document::view_or_value> let() const;
+
+    ///
     /// Sets maximum number of documents to return.
     ///
     /// @param limit
@@ -506,6 +530,7 @@ class MONGOCXX_API find {
     stdx::optional<bsoncxx::string::view_or_value> _comment;
     stdx::optional<cursor::type> _cursor_type;
     stdx::optional<class hint> _hint;
+    stdx::optional<bsoncxx::document::view_or_value> _let;
     stdx::optional<std::int64_t> _limit;
     stdx::optional<bsoncxx::document::view_or_value> _max;
     stdx::optional<std::chrono::milliseconds> _max_await_time;
