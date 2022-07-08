@@ -42,6 +42,7 @@ fi
 . .evergreen/find_cmake.sh
 
 cd $DIR
+MONGOC_DIR="$(pwd)"
 
 if [ -f /proc/cpuinfo ]; then
     CONCURRENCY=$(grep -c ^processor /proc/cpuinfo)
@@ -63,6 +64,7 @@ case "$OS" in
     cygwin*)
         GENERATOR=${GENERATOR:-"Visual Studio 14 2015 Win64"}
         CMAKE_BUILD_OPTS="/maxcpucount:$CONCURRENCY"
+        MONGOC_DIR=$(cygpath -m "$MONGOC_DIR")
         ;;
 
     *)
@@ -83,7 +85,9 @@ cd ../../
 git clone https://github.com/mongodb/libmongocrypt
 mkdir libmongocrypt/cmake_build
 cd libmongocrypt/cmake_build
-"$CMAKE" -G "$GENERATOR" -DENABLE_SHARED_BSON=ON -DCMAKE_INSTALL_PREFIX="$PREFIX" -DCMAKE_PREFIX_PATH="$PREFIX" -DCMAKE_BUILD_TYPE="Debug" -DENABLE_CLIENT_SIDE_ENCRYPTION=OFF ..
+"$CMAKE" -G "$GENERATOR" -DENABLE_SHARED_BSON=ON -DCMAKE_INSTALL_PREFIX="$PREFIX" \
+    -DCMAKE_PREFIX_PATH="$PREFIX" -DCMAKE_BUILD_TYPE="Debug" \
+    -DMONGOCRYPT_MONGOC_DIR="$MONGOC_DIR" -DENABLE_CLIENT_SIDE_ENCRYPTION=OFF ..
 "$CMAKE" --build . --config Debug -- $CMAKE_BUILD_OPTS
 "$CMAKE" --build . --config Debug --target install
 cd ../../$DIR
