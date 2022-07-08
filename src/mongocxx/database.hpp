@@ -189,6 +189,9 @@ class MONGOCXX_API database {
     /// @see
     ///   https://docs.mongodb.com/manual/reference/command/create/
     ///
+    /// @note This function can also be used to create a Time Series Collection. See:
+    /// https://docs.mongodb.com/manual/core/timeseries-collections/
+    ///
     /// @param name
     ///   the new collection's name.
     /// @param collection_options
@@ -209,6 +212,9 @@ class MONGOCXX_API database {
     ///
     /// @see
     ///   https://docs.mongodb.com/manual/reference/command/create/
+    ///
+    /// @note This function can also be used to create a Time Series Collection. See:
+    /// https://docs.mongodb.com/manual/core/timeseries-collections/
     ///
     /// @param session
     ///   The mongocxx::client_session with which to perform the create operation.
