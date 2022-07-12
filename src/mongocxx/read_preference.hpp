@@ -19,6 +19,7 @@
 #include <memory>
 #include <string>
 
+#include <bsoncxx/array/view_or_value.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <mongocxx/options/transaction.hpp>
@@ -177,25 +178,39 @@ class MONGOCXX_API read_preference {
     read_mode mode() const;
 
     ///
-    /// Sets or updates the tags for this read_preference.
+    /// Sets or updates the tag set list for this read_preference.
     ///
     /// @param tags
-    ///   Document representing the tags.
+    ///   Document representing the tag set list.
     ///
-    /// @see https://docs.mongodb.com/manual/core/read-preference/#tag-sets
+    /// @see https://www.mongodb.com/docs/manual/core/read-preference-tags/
     ///
     /// @return
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    read_preference& tags(bsoncxx::document::view_or_value tags);
+    read_preference& tags(bsoncxx::document::view_or_value tag_set_list);
 
     ///
-    /// Returns the current tags for this read_preference.
+    /// Sets or updates the tag set list for this read_preference.
     ///
-    /// @return The optionally set current tags.
+    /// @param tags
+    ///   Array of tag sets.
     ///
-    /// @see https://docs.mongodb.com/manual/core/read-preference/#tag-sets
+    /// @see https://www.mongodb.com/docs/manual/core/read-preference-tags/
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
+    read_preference& tags(bsoncxx::array::view_or_value tag_set_list);
+
+    ///
+    /// Sets or updates the tag set list for this read_preference.
+    ///
+    /// @return The optionally set current tag set list.
+    ///
+    /// @see https://www.mongodb.com/docs/manual/core/read-preference-tags/
     ///
     stdx::optional<bsoncxx::document::view> tags() const;
 
