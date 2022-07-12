@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include <bsoncxx/stdx/make_unique.hpp>
+#include <bsoncxx/types.hpp>
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/private/conversions.hh>
@@ -71,8 +72,15 @@ read_preference& read_preference::mode(read_mode mode) {
     return *this;
 }
 
-read_preference& read_preference::tags(bsoncxx::document::view_or_value tags) {
-    libbson::scoped_bson_t scoped_bson_tags(std::move(tags));
+read_preference& read_preference::tags(bsoncxx::document::view_or_value tag_set_list) {
+    libbson::scoped_bson_t scoped_bson_tags(std::move(tag_set_list));
+    libmongoc::read_prefs_set_tags(_impl->read_preference_t, scoped_bson_tags.bson());
+
+    return *this;
+}
+
+read_preference& read_preference::tags(bsoncxx::array::view_or_value tag_set_list) {
+    libbson::scoped_bson_t scoped_bson_tags(bsoncxx::document::view(tag_set_list.view()));
     libmongoc::read_prefs_set_tags(_impl->read_preference_t, scoped_bson_tags.bson());
 
     return *this;

@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include "helpers.hpp"
+#include <bsoncxx/builder/basic/array.hpp>
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/test_util/catch.hh>
@@ -26,6 +27,7 @@ using namespace bsoncxx;
 using namespace mongocxx;
 
 using builder::basic::kvp;
+using builder::basic::make_array;
 using builder::basic::make_document;
 
 TEST_CASE("Read preference", "[read_preference]") {
@@ -45,10 +47,20 @@ TEST_CASE("Read preference", "[read_preference]") {
                 MONGOC_READ_NEAREST);
     }
 
-    SECTION("Can have tags changed") {
-        auto tags = make_document(kvp("tag_key", "tag_value"));
-        rp.tags(tags.view());
-        REQUIRE(rp.tags().value() == tags);
+    {
+        const auto tag_set_1 = make_document(kvp("a", "1"), kvp("b", "2"));
+        const auto tag_set_2 = make_document(kvp("c", "3"), kvp("d", "4"));
+        const auto tag_set_list = make_document(kvp("0", tag_set_1), kvp("1", tag_set_2));
+
+        SECTION("Can provide tag set list as a document") {
+            rp.tags(tag_set_list.view());
+            REQUIRE(rp.tags().value() == tag_set_list);
+        }
+
+        SECTION("Can provide tag set list as an array") {
+            rp.tags(make_array(tag_set_1, tag_set_2).view());
+            REQUIRE(rp.tags().value() == tag_set_list);
+        }
     }
 
     SECTION("Can have max_staleness changed") {
@@ -148,14 +160,29 @@ TEST_CASE("Read preference methods call underlying mongoc methods", "[read_prefe
         REQUIRE(called);
     }
 
-    SECTION("tags() calls mongoc_read_prefs_set_tags()") {
-        auto expected_tags = make_document(kvp("foo", "bar"));
-        read_prefs_set_tags->interpose([&](mongoc_read_prefs_t*, const bson_t* tags) {
-            called = true;
-            REQUIRE(bson_get_data(tags) == expected_tags.view().data());
-        });
-        rp.tags(expected_tags.view());
-        REQUIRE(called);
+    {
+        const auto tag_set_1 = make_document(kvp("foo", "abc"));
+        const auto tag_set_2 = make_document(kvp("bar", "def"));
+
+        SECTION("tags(document) calls mongoc_read_prefs_set_tags()") {
+            const auto tag_set_list = make_document(kvp("0", tag_set_1), kvp("1", tag_set_2));
+            read_prefs_set_tags->interpose([&](mongoc_read_prefs_t*, const bson_t* arg) {
+                called = true;
+                REQUIRE(bson_get_data(arg) == tag_set_list.view().data());
+            });
+            rp.tags(tag_set_list.view());
+            REQUIRE(called);
+        }
+
+        SECTION("tags(array) calls _mongoc_read_prefs_set_tags()") {
+            const auto tag_set_list = make_array(tag_set_1, tag_set_2);
+            read_prefs_set_tags->interpose([&](mongoc_read_prefs_t*, const bson_t* arg) {
+                called = true;
+                REQUIRE(bson_get_data(arg) == tag_set_list.view().data());
+            });
+            rp.tags(tag_set_list.view());
+            REQUIRE(called);
+        }
     }
 
     SECTION("max_staleness() calls mongoc_read_prefs_set_max_staleness_seconds()") {
