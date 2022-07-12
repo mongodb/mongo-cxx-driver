@@ -128,6 +128,9 @@ class BSONCXX_API view {
     ///
     bool empty() const;
 
+    ///
+    /// Conversion operator unwrapping a document::view
+    ///
     operator document::view() const;
 
     ///
