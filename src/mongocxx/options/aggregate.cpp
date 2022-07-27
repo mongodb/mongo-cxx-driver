@@ -30,36 +30,40 @@ aggregate& aggregate::allow_disk_use(bool allow_disk_use) {
 }
 
 void aggregate::append(bsoncxx::builder::basic::document& builder) const {
-    if (this->allow_disk_use()) {
-        builder.append(kvp("allowDiskUse", *this->allow_disk_use()));
+    if (const auto& allow_disk_use = this->allow_disk_use()) {
+        builder.append(kvp("allowDiskUse", *allow_disk_use));
     }
 
-    if (this->collation()) {
-        builder.append(kvp("collation", *this->collation()));
+    if (const auto& collation = this->collation()) {
+        builder.append(kvp("collation", *collation));
     }
 
-    if (this->let()) {
-        builder.append(kvp("let", *this->let()));
+    if (const auto& let = this->let()) {
+        builder.append(kvp("let", *let));
     }
 
-    if (this->max_time()) {
-        builder.append(kvp("maxTimeMS", bsoncxx::types::b_int64{this->max_time()->count()}));
+    if (const auto& max_time = this->max_time()) {
+        builder.append(kvp("maxTimeMS", bsoncxx::types::b_int64{max_time->count()}));
     }
 
-    if (this->bypass_document_validation()) {
-        builder.append(kvp("bypassDocumentValidation", *this->bypass_document_validation()));
+    if (const auto& bypass_document_validation = this->bypass_document_validation()) {
+        builder.append(kvp("bypassDocumentValidation", *bypass_document_validation));
     }
 
-    if (this->hint()) {
-        builder.append(kvp("hint", this->hint()->to_value()));
+    if (const auto& hint = this->hint()) {
+        builder.append(kvp("hint", hint->to_value()));
     }
 
-    if (this->write_concern()) {
-        builder.append(kvp("writeConcern", this->write_concern()->to_document()));
+    if (const auto& write_concern = this->write_concern()) {
+        builder.append(kvp("writeConcern", write_concern->to_document()));
     }
 
-    if (this->batch_size()) {
-        builder.append(kvp("batchSize", *this->batch_size()));
+    if (const auto& batch_size = this->batch_size()) {
+        builder.append(kvp("batchSize", *batch_size));
+    }
+
+    if (const auto& comment = this->comment()) {
+        builder.append(kvp("comment", *comment));
     }
 }
 
@@ -108,6 +112,11 @@ aggregate& aggregate::write_concern(class write_concern write_concern) {
     return *this;
 }
 
+aggregate& aggregate::comment(bsoncxx::types::bson_value::view_or_value comment) {
+    _comment = std::move(comment);
+    return *this;
+}
+
 const stdx::optional<bool>& aggregate::allow_disk_use() const {
     return _allow_disk_use;
 }
@@ -146,6 +155,10 @@ const stdx::optional<class read_concern>& aggregate::read_concern() const {
 
 const stdx::optional<class write_concern>& aggregate::write_concern() const {
     return _write_concern;
+}
+
+const stdx::optional<bsoncxx::types::bson_value::view_or_value>& aggregate::comment() const {
+    return _comment;
 }
 
 }  // namespace options

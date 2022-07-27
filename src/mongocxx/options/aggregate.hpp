@@ -20,6 +20,7 @@
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
+#include <bsoncxx/types/bson_value/view_or_value.hpp>
 #include <mongocxx/hint.hpp>
 #include <mongocxx/read_concern.hpp>
 #include <mongocxx/read_preference.hpp>
@@ -276,6 +277,31 @@ class MONGOCXX_API aggregate {
     ///
     const stdx::optional<class read_concern>& read_concern() const;
 
+    ///
+    /// Sets the comment to use for this operation.
+    ///
+    /// @see
+    ///   https://docs.mongodb.com/manual/reference/command/aggregate/
+    ///
+    /// @param read_concern
+    ///   Object representing the comment.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.
+    ///
+    aggregate& comment(bsoncxx::types::bson_value::view_or_value comment);
+
+    ///
+    /// Gets the current comment.
+    ///
+    /// @return
+    ///   The current comment, if it is set.
+    ///
+    /// @see
+    ///   https://docs.mongodb.com/manual/reference/command/aggregate/
+    ///
+    const stdx::optional<bsoncxx::types::bson_value::view_or_value>& comment() const;
+
    private:
     friend class ::mongocxx::database;
     friend class ::mongocxx::collection;
@@ -292,6 +318,7 @@ class MONGOCXX_API aggregate {
     stdx::optional<class hint> _hint;
     stdx::optional<class write_concern> _write_concern;
     stdx::optional<class read_concern> _read_concern;
+    stdx::optional<bsoncxx::types::bson_value::view_or_value> _comment;
 };
 
 }  // namespace options

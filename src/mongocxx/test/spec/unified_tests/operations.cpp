@@ -459,16 +459,20 @@ document::value aggregate(Entity& entity, client_session* session, document::vie
     pipeline pipeline = build_pipeline(arguments["pipeline"].get_array().value);
     options::aggregate options{};
 
-    if (arguments["batchSize"]) {
-        options.batch_size(arguments["batchSize"].get_int32().value);
+    if (const auto batch_size = arguments["batchSize"]) {
+        options.batch_size(batch_size.get_int32().value);
     }
 
-    if (arguments["collation"]) {
-        options.collation(arguments["collation"].get_document().value);
+    if (const auto collation = arguments["collation"]) {
+        options.collation(collation.get_document().value);
     }
 
-    if (arguments["let"]) {
-        options.let(arguments["let"].get_document().value);
+    if (const auto let = arguments["let"]) {
+        options.let(let.get_document().value);
+    }
+
+    if (const auto comment = arguments["comment"]) {
+        options.comment(comment.get_value());
     }
 
     stdx::optional<cursor> result_cursor;
