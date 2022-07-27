@@ -192,6 +192,9 @@ document::value bulk_write(collection& coll, client_session* session, document::
     if (auto let = arguments["let"]) {
         opt.let(let.get_document().value);
     }
+    if (auto comment = arguments["comment"]) {
+        opt.comment(comment.get_value());
+    }
 
     auto requests = arguments["requests"].get_array().value;
     for (auto&& request_element : requests) {
