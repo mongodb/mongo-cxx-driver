@@ -1010,6 +1010,10 @@ document::value delete_one(collection& coll, client_session* session, document::
         options.let(let.get_document().value);
     }
 
+    if (auto comment = arguments["comment"]) {
+        options.comment(std::move(comment));
+    }
+
     auto result = builder::basic::document{};
     std::int32_t deleted_count = 0;
 
@@ -1050,6 +1054,10 @@ document::value delete_many(collection& coll, client_session* session, document:
 
     if (const auto let = arguments["let"]) {
         options.let(let.get_document().value);
+    }
+
+    if (const auto comment = arguments["comment"]) {
+        options.comment(std::move(comment));
     }
 
     auto result = builder::basic::document{};
