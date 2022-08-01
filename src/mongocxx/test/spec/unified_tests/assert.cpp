@@ -274,7 +274,8 @@ void matches_document(types::bson_value::view actual,
 
 void matches_array(types::bson_value::view actual,
                    types::bson_value::view expected,
-                   entity::map& map) {
+                   entity::map& map,
+                   bool is_array_of_root_docs = false) {
     REQUIRE(actual.type() == bsoncxx::type::k_array);
 
     const auto actual_arr = actual.get_array().value;
@@ -288,20 +289,21 @@ void matches_array(types::bson_value::view actual,
     for (auto a = actual_arr.begin(), e = expected_arr.begin(); e != expected_arr.end();
          e++, a++, ++idx) {
         match_scope_array_idx scope_idx{idx};
-        assert::matches(a->get_value(), e->get_value(), map, false);
+        assert::matches(a->get_value(), e->get_value(), map, is_array_of_root_docs);
     }
 }
 
 void assert::matches(types::bson_value::view actual,
                      types::bson_value::view expected,
                      entity::map& map,
-                     bool is_root) {
+                     bool is_root,
+                     bool is_array_of_root_docs) {
     switch (expected.type()) {
         case bsoncxx::type::k_document:
             matches_document(actual, expected, map, is_root);
             return;
         case bsoncxx::type::k_array:
-            matches_array(actual, expected, map);
+            matches_array(actual, expected, map, is_array_of_root_docs);
             return;
         case bsoncxx::type::k_int32:
         case bsoncxx::type::k_int64:

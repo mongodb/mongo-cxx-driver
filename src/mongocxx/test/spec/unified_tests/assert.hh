@@ -26,7 +26,8 @@ namespace assert {
 void matches(bsoncxx::types::bson_value::view actual,
              bsoncxx::types::bson_value::view expected,
              mongocxx::entity::map& map,
-             bool is_root = true);
+             bool is_root = true,
+             bool is_array_of_root_docs = false);
 
 std::string to_string(bsoncxx::types::bson_value::view_or_value val);
 }  // namespace assert
