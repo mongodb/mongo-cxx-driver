@@ -515,12 +515,16 @@ stdx::optional<result::insert_one> collection::_insert_one(const client_session*
 
     options::bulk_write bulk_opts;
 
-    if (options.write_concern()) {
-        bulk_opts.write_concern(*options.write_concern());
+    if (const auto& wc = options.write_concern()) {
+        bulk_opts.write_concern(*wc);
     }
 
-    if (options.bypass_document_validation()) {
-        bulk_opts.bypass_document_validation(*options.bypass_document_validation());
+    if (const auto& bdv = options.bypass_document_validation()) {
+        bulk_opts.bypass_document_validation(*bdv);
+    }
+
+    if (const auto& comment = options.comment()) {
+        bulk_opts.comment(*comment);
     }
 
     class bulk_write bulk_op {
@@ -1361,13 +1365,21 @@ class index_view collection::indexes() {
 class bulk_write collection::_init_insert_many(const options::insert& options,
                                                const client_session* session) {
     options::bulk_write bulk_write_options;
+
     bulk_write_options.ordered(options.ordered().value_or(true));
-    if (options.write_concern()) {
-        bulk_write_options.write_concern(*options.write_concern());
+
+    if (const auto& wc = options.write_concern()) {
+        bulk_write_options.write_concern(*wc);
     }
-    if (options.bypass_document_validation()) {
-        bulk_write_options.bypass_document_validation(*options.bypass_document_validation());
+
+    if (const auto& bdv = options.bypass_document_validation()) {
+        bulk_write_options.bypass_document_validation(*bdv);
     }
+
+    if (const auto& comment = options.comment()) {
+        bulk_write_options.comment(*comment);
+    }
+
     if (session) {
         return create_bulk_write(*session, bulk_write_options);
     }

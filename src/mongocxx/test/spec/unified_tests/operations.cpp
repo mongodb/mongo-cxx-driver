@@ -356,8 +356,12 @@ document::value insert_many(collection& coll, client_session* session, document:
     std::vector<document::view> documents_to_insert{};
     options::insert insert_options;
 
-    if (arguments["ordered"]) {
-        insert_options.ordered(arguments["ordered"].get_bool().value);
+    if (const auto ordered = arguments["ordered"]) {
+        insert_options.ordered(ordered.get_bool().value);
+    }
+
+    if (const auto comment = arguments["comment"]) {
+        insert_options.comment(comment.get_value());
     }
 
     for (auto&& element : documents) {
@@ -506,8 +510,13 @@ document::value insert_one(collection& coll, client_session* session, document::
     document::view document = arguments["document"].get_document().value;
 
     options::insert opts{};
-    if (arguments["bypassDocumentValidation"]) {
-        opts.bypass_document_validation(true);
+
+    if (const auto bdv = arguments["bypassDocumentValidation"]) {
+        opts.bypass_document_validation(bdv.get_bool().value);
+    }
+
+    if (const auto comment = arguments["comment"]) {
+        opts.comment(comment.get_value());
     }
 
     stdx::optional<result::insert_one> insert_one_result;
