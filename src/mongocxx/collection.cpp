@@ -304,27 +304,30 @@ namespace {
 bsoncxx::builder::basic::document build_find_options_document(const options::find& options) {
     bsoncxx::builder::basic::document options_builder;
 
-    if (const auto adu = options.allow_disk_use()) {
+    if (const auto& adu = options.allow_disk_use()) {
         options_builder.append(kvp("allowDiskUse", *adu));
     }
 
-    if (const auto apr = options.allow_partial_results()) {
+    if (const auto& apr = options.allow_partial_results()) {
         options_builder.append(kvp("allowPartialResults", *apr));
     }
 
-    if (const auto batch_size = options.batch_size()) {
+    if (const auto& batch_size = options.batch_size()) {
         options_builder.append(kvp("batchSize", *batch_size));
     }
 
-    if (const auto collation = options.collation()) {
+    if (const auto& collation = options.collation()) {
         options_builder.append(kvp("collation", *collation));
     }
 
-    if (const auto comment = options.comment()) {
+    // Prioritize new comment option over old $comment modifier.
+    if (const auto& comment = options.comment_option()) {
+        options_builder.append(kvp("comment", *comment));
+    } else if (const auto& comment = options.comment()) {
         options_builder.append(kvp("comment", *comment));
     }
 
-    if (const auto cursor_type = options.cursor_type()) {
+    if (const auto& cursor_type = options.cursor_type()) {
         if (*cursor_type == cursor::type::k_tailable) {
             options_builder.append(kvp("tailable", bsoncxx::types::b_bool{true}));
         } else if (*cursor_type == cursor::type::k_tailable_await) {
@@ -336,51 +339,51 @@ bsoncxx::builder::basic::document build_find_options_document(const options::fin
         }
     }
 
-    if (const auto hint = options.hint()) {
+    if (const auto& hint = options.hint()) {
         options_builder.append(kvp("hint", hint->to_value()));
     }
 
-    if (const auto let = options.let()) {
+    if (const auto& let = options.let()) {
         options_builder.append(kvp("let", *let));
     }
 
-    if (const auto limit = options.limit()) {
+    if (const auto& limit = options.limit()) {
         options_builder.append(kvp("limit", *limit));
     }
 
-    if (const auto max = options.max()) {
+    if (const auto& max = options.max()) {
         options_builder.append(kvp("max", *max));
     }
 
-    if (const auto max_time = options.max_time()) {
+    if (const auto& max_time = options.max_time()) {
         options_builder.append(kvp("maxTimeMS", bsoncxx::types::b_int64{max_time->count()}));
     }
 
-    if (const auto min = options.min()) {
+    if (const auto& min = options.min()) {
         options_builder.append(kvp("min", *min));
     }
 
-    if (const auto nct = options.no_cursor_timeout()) {
+    if (const auto& nct = options.no_cursor_timeout()) {
         options_builder.append(kvp("noCursorTimeout", *nct));
     }
 
-    if (const auto projection = options.projection()) {
+    if (const auto& projection = options.projection()) {
         options_builder.append(kvp("projection", bsoncxx::types::b_document{*projection}));
     }
 
-    if (const auto return_key = options.return_key()) {
+    if (const auto& return_key = options.return_key()) {
         options_builder.append(kvp("returnKey", *return_key));
     }
 
-    if (const auto show_record_id = options.show_record_id()) {
+    if (const auto& show_record_id = options.show_record_id()) {
         options_builder.append(kvp("showRecordId", *show_record_id));
     }
 
-    if (const auto skip = options.skip()) {
+    if (const auto& skip = options.skip()) {
         options_builder.append(kvp("skip", *skip));
     }
 
-    if (const auto sort = options.sort()) {
+    if (const auto& sort = options.sort()) {
         options_builder.append(kvp("sort", bsoncxx::types::b_document{*sort}));
     }
 

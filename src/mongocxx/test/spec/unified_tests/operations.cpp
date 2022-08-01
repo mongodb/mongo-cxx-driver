@@ -54,6 +54,7 @@ document::value find(collection& coll, client_session* session, document::view o
     } else {
         filter = empty_filter.view();
     }
+
     options::find options{};
 
     if (const auto batch_size = arguments["batchSize"]) {
@@ -82,6 +83,10 @@ document::value find(collection& coll, client_session* session, document::view o
 
     if (const auto let = arguments["let"]) {
         options.let(let.get_document().value);
+    }
+
+    if (const auto comment = arguments["comment"]) {
+        options.comment_option(comment.get_value());
     }
 
     if (const auto modifiers = arguments["modifiers"]) {

@@ -61,6 +61,16 @@ find& find::limit(std::int64_t limit) {
     return *this;
 }
 
+find& find::let(bsoncxx::document::view_or_value let) {
+    _let = let;
+    return *this;
+}
+
+find& find::comment_option(bsoncxx::types::bson_value::view_or_value comment) {
+    _comment_option = std::move(comment);
+    return *this;
+}
+
 find& find::max(bsoncxx::document::view_or_value max) {
     _max = std::move(max);
     return *this;
@@ -148,13 +158,12 @@ const stdx::optional<std::int64_t>& find::limit() const {
     return _limit;
 }
 
-find& find::let(bsoncxx::document::view_or_value let) {
-    _let = let;
-    return *this;
-}
-
 const stdx::optional<bsoncxx::document::view_or_value> find::let() const {
     return _let;
+}
+
+const stdx::optional<bsoncxx::types::bson_value::view_or_value>& find::comment_option() const {
+    return _comment_option;
 }
 
 const stdx::optional<bsoncxx::document::view_or_value>& find::max() const {

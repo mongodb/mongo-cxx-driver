@@ -20,6 +20,7 @@
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/string/view_or_value.hpp>
+#include <bsoncxx/types/bson_value/view_or_value.hpp>
 #include <mongocxx/cursor.hpp>
 #include <mongocxx/hint.hpp>
 #include <mongocxx/read_preference.hpp>
@@ -138,6 +139,8 @@ class MONGOCXX_API find {
     /// Attaches a comment to the query. If $comment also exists in the modifiers document then
     /// the comment field overwrites $comment.
     ///
+    /// @deprecated use comment_option instead.
+    ///
     /// @param comment
     ///   The comment to attach to this query.
     ///
@@ -151,6 +154,8 @@ class MONGOCXX_API find {
 
     ///
     /// Gets the current comment attached to this query.
+    ///
+    /// @deprecated use comment_option instead.
     ///
     /// @return The comment attached to this query.
     ///
@@ -230,6 +235,34 @@ class MONGOCXX_API find {
     /// @see https://docs.mongodb.com/manual/reference/command/find/
     ///
     const stdx::optional<bsoncxx::document::view_or_value> let() const;
+
+    ///
+    /// Set the value of the comment option.
+    ///
+    /// @note Not to be confused with the $comment query modifier.
+    ///
+    /// @param comment
+    ///   The new comment option.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
+    /// @see https://docs.mongodb.com/manual/reference/command/find/
+    ///
+    find& comment_option(bsoncxx::types::bson_value::view_or_value comment);
+
+    ///
+    /// Gets the current value of the comment option.
+    ///
+    /// @note Not to be confused with the $comment query modifier.
+    ///
+    /// @return
+    ///  The current comment option.
+    ///
+    /// @see https://docs.mongodb.com/manual/reference/command/find/
+    ///
+    const stdx::optional<bsoncxx::types::bson_value::view_or_value>& comment_option() const;
 
     ///
     /// Sets maximum number of documents to return.
@@ -531,6 +564,7 @@ class MONGOCXX_API find {
     stdx::optional<cursor::type> _cursor_type;
     stdx::optional<class hint> _hint;
     stdx::optional<bsoncxx::document::view_or_value> _let;
+    stdx::optional<bsoncxx::types::bson_value::view_or_value> _comment_option;
     stdx::optional<std::int64_t> _limit;
     stdx::optional<bsoncxx::document::view_or_value> _max;
     stdx::optional<std::chrono::milliseconds> _max_await_time;
