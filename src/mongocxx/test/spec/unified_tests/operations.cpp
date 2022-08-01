@@ -618,6 +618,10 @@ document::value find_one_and_delete(collection& coll,
         options.let(let.get_document().value);
     }
 
+    if (const auto comment = arguments["comment"]) {
+        options.comment(comment.get_value());
+    }
+
     if (const auto projection = arguments["projection"]) {
         options.projection(projection.get_document().value);
     }
@@ -665,6 +669,10 @@ document::value find_one_and_replace(collection& coll,
 
     if (const auto let = arguments["let"]) {
         options.let(let.get_document().value);
+    }
+
+    if (const auto comment = arguments["comment"]) {
+        options.comment(comment.get_value());
     }
 
     if (const auto projection = arguments["projection"]) {
@@ -731,6 +739,10 @@ document::value find_one_and_update(collection& coll,
 
     if (const auto let = arguments["let"]) {
         options.let(let.get_document().value);
+    }
+
+    if (const auto comment = arguments["comment"]) {
+        options.comment(comment.get_value());
     }
 
     if (const auto projection = arguments["projection"]) {

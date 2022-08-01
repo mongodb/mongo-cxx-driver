@@ -100,7 +100,7 @@ mongocxx::stdx::optional<bsoncxx::document::value> find_and_modify(
     ::bson_error_t error;
 
     // Write concern, collation, and session are passed in "extra".
-    if (const auto wc = options.write_concern()) {
+    if (const auto& wc = options.write_concern()) {
         if (!wc->is_acknowledged() && options.collation()) {
             throw mongocxx::logic_error{mongocxx::error_code::k_invalid_parameter};
         }
@@ -119,7 +119,7 @@ mongocxx::stdx::optional<bsoncxx::document::value> find_and_modify(
         extra.append(concatenate(session_id.view()));
     }
 
-    if (const auto collation = options.collation()) {
+    if (const auto& collation = options.collation()) {
         extra.append(kvp("collation", *collation));
     }
 
@@ -127,12 +127,16 @@ mongocxx::stdx::optional<bsoncxx::document::value> find_and_modify(
         extra.append(kvp("arrayFilters", *array_filters));
     }
 
-    if (const auto hint = options.hint()) {
+    if (const auto& hint = options.hint()) {
         extra.append(kvp("hint", hint->to_value()));
     }
 
-    if (const auto let = options.let()) {
+    if (const auto& let = options.let()) {
         extra.append(kvp("let", *let));
+    }
+
+    if (const auto& comment = options.comment()) {
+        extra.append(kvp("comment", *comment));
     }
 
     scoped_bson_t extra_bson{extra.view()};
@@ -147,17 +151,17 @@ mongocxx::stdx::optional<bsoncxx::document::value> find_and_modify(
         mongocxx::libmongoc::find_and_modify_opts_set_bypass_document_validation(opts.get(), true);
     }
 
-    if (const auto sort = options.sort()) {
+    if (const auto& sort = options.sort()) {
         scoped_bson_t sort_bson{*sort};
         mongocxx::libmongoc::find_and_modify_opts_set_sort(opts.get(), sort_bson.bson());
     }
 
-    if (const auto projection = options.projection()) {
+    if (const auto& projection = options.projection()) {
         scoped_bson_t projection_bson{*projection};
         mongocxx::libmongoc::find_and_modify_opts_set_fields(opts.get(), projection_bson.bson());
     }
 
-    if (const auto max_time = options.max_time()) {
+    if (const auto& max_time = options.max_time()) {
         mongocxx::libmongoc::find_and_modify_opts_set_max_time_ms(
             opts.get(), static_cast<uint32_t>(max_time->count()));
     }
