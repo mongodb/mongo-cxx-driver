@@ -583,29 +583,33 @@ stdx::optional<result::replace_one> collection::_replace_one(const client_sessio
                                                              const options::replace& options) {
     options::bulk_write bulk_opts;
 
-    if (const auto bdv = options.bypass_document_validation()) {
+    if (const auto& bdv = options.bypass_document_validation()) {
         bulk_opts.bypass_document_validation(*bdv);
     }
 
-    if (const auto wc = options.write_concern()) {
+    if (const auto& wc = options.write_concern()) {
         bulk_opts.write_concern(*wc);
     }
 
-    if (const auto let = options.let()) {
+    if (const auto& let = options.let()) {
         bulk_opts.let(*let);
+    }
+
+    if (const auto& comment = options.comment()) {
+        bulk_opts.comment(*comment);
     }
 
     model::replace_one replace_op(std::move(filter), std::move(replacement));
 
-    if (const auto collation = options.collation()) {
+    if (const auto& collation = options.collation()) {
         replace_op.collation(*collation);
     }
 
-    if (const auto hint = options.hint()) {
+    if (const auto& hint = options.hint()) {
         replace_op.hint(*hint);
     }
 
-    if (const auto upsert = options.upsert()) {
+    if (const auto& upsert = options.upsert()) {
         replace_op.upsert(*upsert);
     }
 

@@ -416,6 +416,10 @@ document::value replace_one(collection& coll, client_session* session, document:
         options.let(let.get_document().value);
     }
 
+    if (const auto comment = arguments["comment"]) {
+        options.comment(comment.get_value());
+    }
+
     if (const auto upsert = arguments["upsert"]) {
         options.upsert(upsert.get_bool().value);
     }
