@@ -110,6 +110,11 @@ bool is_replica_set(const client& client = {uri{}, add_test_server_api()});
 bool is_sharded_cluster(const client& client = {uri{}, add_test_server_api()});
 
 ///
+/// Returns the hostname of the primary in a replica set.
+///
+std::string get_primary(const client& client = {uri{}, add_test_server_api()});
+
+///
 /// Returns "standalone", "replicaset", or "sharded".
 ///
 std::string get_topology(const client& client = {uri{}, add_test_server_api()});

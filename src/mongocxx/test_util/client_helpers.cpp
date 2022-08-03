@@ -259,6 +259,14 @@ bool is_sharded_cluster(const client& client) {
     return msg.get_string().value.compare("isdbgrid") == 0;
 }
 
+std::string get_primary(const client& client) {
+    auto reply = get_is_master(client);
+    if (const auto primary = reply["primary"]) {
+        return string::to_string(primary.get_string().value);
+    }
+    return {};
+}
+
 std::string get_hosts(const client& client) {
     auto shards = get_shards(client);
     if (shards)

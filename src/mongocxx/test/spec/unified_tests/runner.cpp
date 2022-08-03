@@ -254,17 +254,13 @@ std::string uri_options_to_string(document::view object) {
 }
 
 std::string get_hostnames(document::view object) {
-    const auto default_uri = std::string{"localhost:27017"};
-
-    // Spec: This [useMultipleMongoses] option has no effect for non-sharded topologies.
-    if (!test_util::is_sharded_cluster()) {
-        return default_uri;
-    }
-
+    // Spec: [useMultipleMongoses] option has no effect for non-sharded topologies.
     // Spec: If true and the topology is a sharded cluster, the test runner MUST assert that this
     // MongoClient connects to multiple mongos hosts (e.g. by inspecting the connection string).
-    if (!object["useMultipleMongoses"] || !object["useMultipleMongoses"].get_bool())
-        return default_uri;
+    if (!test_util::is_sharded_cluster() || !object["useMultipleMongoses"] ||
+        !object["useMultipleMongoses"].get_bool()) {
+        return test_util::is_replica_set() ? test_util::get_primary() : "localhost:27017";
+    }
 
     // from: https://docs.mongodb.com/manual/reference/config-database/#config.shards
     // If the shard is a replica set, the host field displays the name of the replica set, then a
