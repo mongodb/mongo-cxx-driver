@@ -1113,14 +1113,18 @@ std::int64_t collection::estimated_document_count(
 
     const mongoc_read_prefs_t* read_prefs = NULL;
 
-    if (options.read_preference()) {
-        read_prefs = options.read_preference()->_impl->read_preference_t;
+    if (const auto& rp = options.read_preference()) {
+        read_prefs = rp->_impl->read_preference_t;
     }
 
     bsoncxx::builder::basic::document opts_builder;
 
-    if (options.max_time()) {
-        opts_builder.append(kvp("maxTimeMS", bsoncxx::types::b_int64{options.max_time()->count()}));
+    if (const auto& max_time = options.max_time()) {
+        opts_builder.append(kvp("maxTimeMS", bsoncxx::types::b_int64{max_time->count()}));
+    }
+
+    if (const auto& comment = options.comment()) {
+        opts_builder.append(kvp("comment", *comment));
     }
 
     scoped_bson_t opts_bson{opts_builder.view()};

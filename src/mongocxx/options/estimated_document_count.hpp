@@ -17,6 +17,7 @@
 #include <chrono>
 
 #include <bsoncxx/stdx/optional.hpp>
+#include <bsoncxx/types/bson_value/view_or_value.hpp>
 #include <mongocxx/read_preference.hpp>
 
 #include <mongocxx/config/prelude.hpp>
@@ -55,6 +56,29 @@ class MONGOCXX_API estimated_document_count {
     const bsoncxx::stdx::optional<std::chrono::milliseconds>& max_time() const;
 
     ///
+    /// Sets the comment for this operation.
+    ///
+    /// @param comment
+    ///   The new comment.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
+    /// @see https://docs.mongodb.com/manual/reference/command/count/
+    ///
+    estimated_document_count& comment(bsoncxx::types::bson_value::view_or_value comment);
+
+    ///
+    /// The current comment for this operation.
+    ///
+    /// @return The current comment
+    ///
+    /// @see https://docs.mongodb.com/manual/reference/command/count/
+    ///
+    const bsoncxx::stdx::optional<bsoncxx::types::bson_value::view_or_value>& comment() const;
+
+    ///
     /// Sets the read_preference for this operation.
     ///
     /// @param rp
@@ -79,6 +103,7 @@ class MONGOCXX_API estimated_document_count {
 
    private:
     bsoncxx::stdx::optional<std::chrono::milliseconds> _max_time;
+    bsoncxx::stdx::optional<bsoncxx::types::bson_value::view_or_value> _comment;
     bsoncxx::stdx::optional<class read_preference> _read_preference;
 };
 

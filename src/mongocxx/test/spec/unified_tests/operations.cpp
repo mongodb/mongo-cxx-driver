@@ -1347,10 +1347,14 @@ document::value count_documents(collection& coll,
 
 document::value estimated_document_count(collection& coll, document::view operation) {
     options::estimated_document_count options{};
-    if (operation["arguments"]) {
-        auto arguments = operation["arguments"].get_document().value;
-        if (auto max_time_ms = arguments["maxTimeMS"]) {
+
+    if (const auto arguments = operation["arguments"]) {
+        if (const auto max_time_ms = arguments["maxTimeMS"]) {
             options.max_time(std::chrono::milliseconds(max_time_ms.get_int32()));
+        }
+
+        if (const auto comment = arguments["comment"]) {
+            options.comment(comment.get_value());
         }
     }
 
