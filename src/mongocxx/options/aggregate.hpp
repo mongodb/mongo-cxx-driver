@@ -283,7 +283,7 @@ class MONGOCXX_API aggregate {
     /// @see
     ///   https://docs.mongodb.com/manual/reference/command/aggregate/
     ///
-    /// @param read_concern
+    /// @param comment
     ///   Object representing the comment.
     ///
     /// @return
