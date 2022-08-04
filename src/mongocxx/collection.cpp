@@ -828,7 +828,7 @@ stdx::optional<result::delete_result> collection::_delete_many(
     }
 
     if (const auto& comment = options.comment()) {
-        bulk_opts.comment(comment->get_value());
+        bulk_opts.comment(*comment);
     }
 
     auto bulk_op = session ? create_bulk_write(*session, bulk_opts) : create_bulk_write(bulk_opts);
@@ -876,7 +876,7 @@ stdx::optional<result::delete_result> collection::_delete_one(
     }
 
     if (const auto& comment = options.comment()) {
-        bulk_opts.comment(comment->get_value());
+        bulk_opts.comment(*comment);
     }
 
     auto bulk_op = session ? create_bulk_write(*session, bulk_opts) : create_bulk_write(bulk_opts);

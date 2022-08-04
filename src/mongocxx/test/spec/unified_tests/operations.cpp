@@ -1041,7 +1041,7 @@ document::value delete_one(collection& coll, client_session* session, document::
     }
 
     if (auto comment = arguments["comment"]) {
-        options.comment(std::move(comment));
+        options.comment(comment.get_value());
     }
 
     auto result = builder::basic::document{};
@@ -1087,7 +1087,7 @@ document::value delete_many(collection& coll, client_session* session, document:
     }
 
     if (const auto comment = arguments["comment"]) {
-        options.comment(std::move(comment));
+        options.comment(comment.get_value());
     }
 
     auto result = builder::basic::document{};

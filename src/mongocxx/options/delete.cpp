@@ -57,12 +57,12 @@ const stdx::optional<bsoncxx::document::view_or_value> delete_options::let() con
     return _let;
 }
 
-delete_options& delete_options::comment(bsoncxx::document::element comment) {
+delete_options& delete_options::comment(bsoncxx::types::bson_value::view_or_value comment) {
     _comment = std::move(comment);
     return *this;
 }
 
-const stdx::optional<bsoncxx::document::element> delete_options::comment() const {
+const stdx::optional<bsoncxx::types::bson_value::view_or_value> delete_options::comment() const {
     return _comment;
 }
 
