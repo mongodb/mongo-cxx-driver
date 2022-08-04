@@ -31,6 +31,11 @@ distinct& distinct::max_time(std::chrono::milliseconds max_time) {
     return *this;
 }
 
+distinct& distinct::comment(bsoncxx::types::bson_value::view_or_value comment) {
+    _comment = std::move(comment);
+    return *this;
+}
+
 distinct& distinct::read_preference(class read_preference rp) {
     _read_preference = std::move(rp);
     return *this;
@@ -42,6 +47,10 @@ const stdx::optional<bsoncxx::document::view_or_value>& distinct::collation() co
 
 const stdx::optional<std::chrono::milliseconds>& distinct::max_time() const {
     return _max_time;
+}
+
+const stdx::optional<bsoncxx::types::bson_value::view_or_value>& distinct::comment() const {
+    return _comment;
 }
 
 const stdx::optional<class read_preference>& distinct::read_preference() const {

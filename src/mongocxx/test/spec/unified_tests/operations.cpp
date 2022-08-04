@@ -1371,15 +1371,21 @@ document::value distinct(collection& coll, client_session* session, document::vi
 
     document::value empty_filter = builder::basic::make_document();
     document::view filter;
-    if (arguments["filter"]) {
-        filter = arguments["filter"].get_document().value;
+
+    if (const auto f = arguments["filter"]) {
+        filter = f.get_document().value;
     } else {
         filter = empty_filter.view();
     }
 
     options::distinct options{};
-    if (arguments["collation"]) {
-        options.collation(arguments["collation"].get_document().value);
+
+    if (const auto collation = arguments["collation"]) {
+        options.collation(collation.get_document().value);
+    }
+
+    if (const auto comment = arguments["comment"]) {
+        options.comment(comment.get_value());
     }
 
     stdx::optional<cursor> result_cursor;

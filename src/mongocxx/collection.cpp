@@ -1177,14 +1177,17 @@ cursor collection::_distinct(const client_session* session,
                            kvp("key", field_name.view()),
                            kvp("query", bsoncxx::types::b_document{query}));
 
-    if (options.max_time()) {
-        command_builder.append(
-            kvp("maxTimeMS", bsoncxx::types::b_int64{options.max_time()->count()}));
+    if (const auto& max_time = options.max_time()) {
+        command_builder.append(kvp("maxTimeMS", bsoncxx::types::b_int64{max_time->count()}));
     }
 
     bsoncxx::builder::basic::document opts_builder{};
-    if (options.collation()) {
-        opts_builder.append(kvp("collation", *options.collation()));
+    if (const auto& collation = options.collation()) {
+        opts_builder.append(kvp("collation", *collation));
+    }
+
+    if (const auto& comment = options.comment()) {
+        opts_builder.append(kvp("comment", *comment));
     }
 
     if (session) {
@@ -1192,8 +1195,8 @@ cursor collection::_distinct(const client_session* session,
     }
 
     const mongoc_read_prefs_t* rp_ptr = NULL;
-    if (options.read_preference()) {
-        rp_ptr = options.read_preference()->_impl->read_preference_t;
+    if (const auto& rp = options.read_preference()) {
+        rp_ptr = rp->_impl->read_preference_t;
     }
 
     //

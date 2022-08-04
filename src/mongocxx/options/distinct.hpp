@@ -20,6 +20,7 @@
 
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
+#include <bsoncxx/types/bson_value/view_or_value.hpp>
 #include <mongocxx/read_preference.hpp>
 
 #include <mongocxx/config/prelude.hpp>
@@ -81,6 +82,29 @@ class MONGOCXX_API distinct {
     const stdx::optional<std::chrono::milliseconds>& max_time() const;
 
     ///
+    /// Sets the comment for this operation.
+    ///
+    /// @param comment
+    ///   The new comment.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
+    /// @see https://docs.mongodb.com/manual/reference/command/distinct/
+    ///
+    distinct& comment(bsoncxx::types::bson_value::view_or_value comment);
+
+    ///
+    /// The current comment for this operation.
+    ///
+    /// @return The current comment
+    ///
+    /// @see https://docs.mongodb.com/manual/reference/command/distinct/
+    ///
+    const stdx::optional<bsoncxx::types::bson_value::view_or_value>& comment() const;
+
+    ///
     /// Sets the read_preference for this operation.
     ///
     /// @param rp
@@ -106,6 +130,7 @@ class MONGOCXX_API distinct {
    private:
     stdx::optional<bsoncxx::document::view_or_value> _collation;
     stdx::optional<std::chrono::milliseconds> _max_time;
+    stdx::optional<bsoncxx::types::bson_value::view_or_value> _comment;
     stdx::optional<class read_preference> _read_preference;
 };
 
