@@ -26,6 +26,7 @@ bulkWrite-updateMany-let.json
 bulkWrite-updateOne-dots_and_dollars.json
 bulkWrite-updateOne-hint-unacknowledged.json
 bulkWrite-updateOne-let.json
+countDocuments-comment.json
 db-aggregate.json
 deleteMany-comment.json
 deleteMany-hint-clientError.json
@@ -39,6 +40,7 @@ deleteOne-hint-serverError.json
 deleteOne-hint-unacknowledged.json
 deleteOne-hint.json
 deleteOne-let.json
+estimatedDocumentCount-comment.json
 estimatedDocumentCount.json
 find-allowdiskuse-clientError.json
 find-allowdiskuse-serverError.json
