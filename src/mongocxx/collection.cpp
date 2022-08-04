@@ -1049,34 +1049,38 @@ std::int64_t collection::_count_documents(const client_session* session,
     bson_error_t error;
     const mongoc_read_prefs_t* read_prefs = NULL;
 
-    if (options.read_preference()) {
-        read_prefs = options.read_preference()->_impl->read_preference_t;
+    if (const auto& rp = options.read_preference()) {
+        read_prefs = rp->_impl->read_preference_t;
     }
 
     bsoncxx::builder::basic::document opts_builder;
 
-    if (options.collation()) {
-        opts_builder.append(kvp("collation", *options.collation()));
+    if (const auto& collation = options.collation()) {
+        opts_builder.append(kvp("collation", *collation));
     }
 
-    if (options.max_time()) {
-        opts_builder.append(kvp("maxTimeMS", bsoncxx::types::b_int64{options.max_time()->count()}));
+    if (const auto& max_time = options.max_time()) {
+        opts_builder.append(kvp("maxTimeMS", bsoncxx::types::b_int64{max_time->count()}));
     }
 
-    if (options.hint()) {
-        opts_builder.append(kvp("hint", options.hint()->to_value()));
+    if (const auto& hint = options.hint()) {
+        opts_builder.append(kvp("hint", hint->to_value()));
+    }
+
+    if (const auto& comment = options.comment()) {
+        opts_builder.append(kvp("comment", *comment));
     }
 
     if (session) {
         opts_builder.append(bsoncxx::builder::concatenate_doc{session->_get_impl().to_document()});
     }
 
-    if (options.skip()) {
-        opts_builder.append(kvp("skip", *options.skip()));
+    if (const auto& skip = options.skip()) {
+        opts_builder.append(kvp("skip", *skip));
     }
 
-    if (options.limit()) {
-        opts_builder.append(kvp("limit", *options.limit()));
+    if (const auto& limit = options.limit()) {
+        opts_builder.append(kvp("limit", *limit));
     }
 
     scoped_bson_t opts_bson{opts_builder.view()};

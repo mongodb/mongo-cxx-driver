@@ -20,6 +20,7 @@
 
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
+#include <bsoncxx/types/bson_value/view_or_value.hpp>
 #include <mongocxx/hint.hpp>
 #include <mongocxx/read_preference.hpp>
 
@@ -81,6 +82,29 @@ class MONGOCXX_API count {
     /// @see https://docs.mongodb.com/manual/reference/command/aggregate/
     ///
     const stdx::optional<class hint>& hint() const;
+
+    ///
+    /// Set the value of the comment option.
+    ///
+    /// @param comment
+    ///   The new comment option.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
+    /// @see https://docs.mongodb.com/manual/reference/command/aggregate/
+    ///
+    count& comment(bsoncxx::types::bson_value::view_or_value comment);
+
+    ///
+    /// Gets the current value of the comment option.
+    ///
+    /// @return The current comment option.
+    ///
+    /// @see https://docs.mongodb.com/manual/reference/command/aggregate/
+    ///
+    const stdx::optional<bsoncxx::types::bson_value::view_or_value>& comment() const;
 
     ///
     /// Sets the maximum number of documents to count.
@@ -177,6 +201,7 @@ class MONGOCXX_API count {
    private:
     stdx::optional<bsoncxx::document::view_or_value> _collation;
     stdx::optional<class hint> _hint;
+    stdx::optional<bsoncxx::types::bson_value::view_or_value> _comment;
     stdx::optional<std::int64_t> _limit;
     stdx::optional<std::chrono::milliseconds> _max_time;
     stdx::optional<std::int64_t> _skip;

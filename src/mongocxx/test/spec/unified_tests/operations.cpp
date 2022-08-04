@@ -1308,20 +1308,28 @@ document::value count_documents(collection& coll,
     }
     options::count options{};
 
-    if (arguments["collation"]) {
-        options.collation(arguments["collation"].get_document().value);
+    if (const auto collation = arguments["collation"]) {
+        options.collation(collation.get_document().value);
     }
-    if (arguments["limit"]) {
-        options.limit(as_int64(arguments["limit"]));
+
+    if (const auto limit = arguments["limit"]) {
+        options.limit(as_int64(limit));
     }
-    if (arguments["skip"]) {
-        options.skip(as_int64(arguments["skip"]));
+
+    if (const auto skip = arguments["skip"]) {
+        options.skip(as_int64(skip));
     }
-    if (arguments["hint"]) {
-        if (arguments["hint"].type() == bsoncxx::v_noabi::type::k_string)
-            options.hint(hint{arguments["hint"].get_string().value});
-        else
-            options.hint(hint{arguments["hint"].get_document().value});
+
+    if (const auto hint = arguments["hint"]) {
+        if (hint.type() == bsoncxx::v_noabi::type::k_string) {
+            options.hint(mongocxx::hint(hint.get_string().value));
+        } else {
+            options.hint(mongocxx::hint(hint.get_document().value));
+        }
+    }
+
+    if (const auto comment = arguments["comment"]) {
+        options.comment(comment.get_value());
     }
 
     int64_t count;
