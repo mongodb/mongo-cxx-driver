@@ -40,6 +40,7 @@ deleteOne-hint-serverError.json
 deleteOne-hint-unacknowledged.json
 deleteOne-hint.json
 deleteOne-let.json
+distinct-comment.json
 estimatedDocumentCount-comment.json
 estimatedDocumentCount.json
 find-allowdiskuse-clientError.json
