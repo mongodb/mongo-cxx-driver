@@ -42,6 +42,12 @@ find_one_and_update& find_one_and_update::let(bsoncxx::document::view_or_value l
     return *this;
 }
 
+find_one_and_update& find_one_and_update::comment(
+    bsoncxx::types::bson_value::view_or_value comment) {
+    _comment = std::move(comment);
+    return *this;
+}
+
 find_one_and_update& find_one_and_update::max_time(std::chrono::milliseconds max_time) {
     _max_time = std::move(max_time);
     return *this;
@@ -87,6 +93,11 @@ const stdx::optional<class hint>& find_one_and_update::hint() const {
 
 const stdx::optional<bsoncxx::document::view_or_value> find_one_and_update::let() const {
     return _let;
+}
+
+const stdx::optional<bsoncxx::types::bson_value::view_or_value> find_one_and_update::comment()
+    const {
+    return _comment;
 }
 
 const stdx::optional<std::chrono::milliseconds>& find_one_and_update::max_time() const {

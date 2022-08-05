@@ -16,6 +16,7 @@
 
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/stdx/optional.hpp>
+#include <bsoncxx/types/bson_value/view_or_value.hpp>
 #include <mongocxx/stdx.hpp>
 #include <mongocxx/write_concern.hpp>
 
@@ -105,10 +106,34 @@ class MONGOCXX_API insert {
     ///
     const stdx::optional<bool>& ordered() const;
 
+    ///
+    /// Sets the comment for this operation.
+    ///
+    /// @param comment
+    ///   The new comment.
+    ///
+    /// @see https://docs.mongodb.com/manual/reference/command/insert/
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
+    insert& comment(bsoncxx::types::bson_value::view_or_value comment);
+
+    ///
+    /// The current comment for this operation.
+    ///
+    /// @return The current comment.
+    ///
+    /// @see https://docs.mongodb.com/manual/reference/command/insert/
+    ///
+    const stdx::optional<bsoncxx::types::bson_value::view_or_value>& comment() const;
+
    private:
     stdx::optional<class write_concern> _write_concern;
     stdx::optional<bool> _ordered;
     stdx::optional<bool> _bypass_document_validation;
+    stdx::optional<bsoncxx::types::bson_value::view_or_value> _comment;
 };
 
 }  // namespace options

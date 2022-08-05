@@ -54,6 +54,7 @@ document::value find(collection& coll, client_session* session, document::view o
     } else {
         filter = empty_filter.view();
     }
+
     options::find options{};
 
     if (const auto batch_size = arguments["batchSize"]) {
@@ -82,6 +83,10 @@ document::value find(collection& coll, client_session* session, document::view o
 
     if (const auto let = arguments["let"]) {
         options.let(let.get_document().value);
+    }
+
+    if (const auto comment = arguments["comment"]) {
+        options.comment_option(comment.get_value());
     }
 
     if (const auto modifiers = arguments["modifiers"]) {
@@ -191,6 +196,9 @@ document::value bulk_write(collection& coll, client_session* session, document::
     }
     if (auto let = arguments["let"]) {
         opt.let(let.get_document().value);
+    }
+    if (auto comment = arguments["comment"]) {
+        opt.comment(comment.get_value());
     }
 
     auto requests = arguments["requests"].get_array().value;
@@ -348,8 +356,12 @@ document::value insert_many(collection& coll, client_session* session, document:
     std::vector<document::view> documents_to_insert{};
     options::insert insert_options;
 
-    if (arguments["ordered"]) {
-        insert_options.ordered(arguments["ordered"].get_bool().value);
+    if (const auto ordered = arguments["ordered"]) {
+        insert_options.ordered(ordered.get_bool().value);
+    }
+
+    if (const auto comment = arguments["comment"]) {
+        insert_options.comment(comment.get_value());
     }
 
     for (auto&& element : documents) {
@@ -402,6 +414,10 @@ document::value replace_one(collection& coll, client_session* session, document:
 
     if (const auto let = arguments["let"]) {
         options.let(let.get_document().value);
+    }
+
+    if (const auto comment = arguments["comment"]) {
+        options.comment(comment.get_value());
     }
 
     if (const auto upsert = arguments["upsert"]) {
@@ -459,16 +475,20 @@ document::value aggregate(Entity& entity, client_session* session, document::vie
     pipeline pipeline = build_pipeline(arguments["pipeline"].get_array().value);
     options::aggregate options{};
 
-    if (arguments["batchSize"]) {
-        options.batch_size(arguments["batchSize"].get_int32().value);
+    if (const auto batch_size = arguments["batchSize"]) {
+        options.batch_size(batch_size.get_int32().value);
     }
 
-    if (arguments["collation"]) {
-        options.collation(arguments["collation"].get_document().value);
+    if (const auto collation = arguments["collation"]) {
+        options.collation(collation.get_document().value);
     }
 
-    if (arguments["let"]) {
-        options.let(arguments["let"].get_document().value);
+    if (const auto let = arguments["let"]) {
+        options.let(let.get_document().value);
+    }
+
+    if (const auto comment = arguments["comment"]) {
+        options.comment(comment.get_value());
     }
 
     stdx::optional<cursor> result_cursor;
@@ -494,8 +514,13 @@ document::value insert_one(collection& coll, client_session* session, document::
     document::view document = arguments["document"].get_document().value;
 
     options::insert opts{};
-    if (arguments["bypassDocumentValidation"]) {
-        opts.bypass_document_validation(true);
+
+    if (const auto bdv = arguments["bypassDocumentValidation"]) {
+        opts.bypass_document_validation(bdv.get_bool().value);
+    }
+
+    if (const auto comment = arguments["comment"]) {
+        opts.comment(comment.get_value());
     }
 
     stdx::optional<result::insert_one> insert_one_result;
@@ -606,6 +631,10 @@ document::value find_one_and_delete(collection& coll,
         options.let(let.get_document().value);
     }
 
+    if (const auto comment = arguments["comment"]) {
+        options.comment(comment.get_value());
+    }
+
     if (const auto projection = arguments["projection"]) {
         options.projection(projection.get_document().value);
     }
@@ -653,6 +682,10 @@ document::value find_one_and_replace(collection& coll,
 
     if (const auto let = arguments["let"]) {
         options.let(let.get_document().value);
+    }
+
+    if (const auto comment = arguments["comment"]) {
+        options.comment(comment.get_value());
     }
 
     if (const auto projection = arguments["projection"]) {
@@ -719,6 +752,10 @@ document::value find_one_and_update(collection& coll,
 
     if (const auto let = arguments["let"]) {
         options.let(let.get_document().value);
+    }
+
+    if (const auto comment = arguments["comment"]) {
+        options.comment(comment.get_value());
     }
 
     if (const auto projection = arguments["projection"]) {
@@ -1003,6 +1040,10 @@ document::value delete_one(collection& coll, client_session* session, document::
         options.let(let.get_document().value);
     }
 
+    if (auto comment = arguments["comment"]) {
+        options.comment(comment.get_value());
+    }
+
     auto result = builder::basic::document{};
     std::int32_t deleted_count = 0;
 
@@ -1043,6 +1084,10 @@ document::value delete_many(collection& coll, client_session* session, document:
 
     if (const auto let = arguments["let"]) {
         options.let(let.get_document().value);
+    }
+
+    if (const auto comment = arguments["comment"]) {
+        options.comment(comment.get_value());
     }
 
     auto result = builder::basic::document{};
@@ -1128,6 +1173,10 @@ document::value update_one(collection& coll, client_session* session, document::
         options.let(let.get_document().value);
     }
 
+    if (const auto comment = arguments["comment"]) {
+        options.comment(comment.get_value());
+    }
+
     if (const auto upsert = arguments["upsert"]) {
         options.upsert(upsert.get_bool().value);
     }
@@ -1196,6 +1245,10 @@ document::value update_many(collection& coll, document::view operation) {
         options.let(let.get_document().value);
     }
 
+    if (const auto comment = arguments["comment"]) {
+        options.comment(comment.get_value());
+    }
+
     if (const auto upsert = arguments["upsert"]) {
         options.upsert(upsert.get_bool().value);
     }
@@ -1255,20 +1308,28 @@ document::value count_documents(collection& coll,
     }
     options::count options{};
 
-    if (arguments["collation"]) {
-        options.collation(arguments["collation"].get_document().value);
+    if (const auto collation = arguments["collation"]) {
+        options.collation(collation.get_document().value);
     }
-    if (arguments["limit"]) {
-        options.limit(as_int64(arguments["limit"]));
+
+    if (const auto limit = arguments["limit"]) {
+        options.limit(as_int64(limit));
     }
-    if (arguments["skip"]) {
-        options.skip(as_int64(arguments["skip"]));
+
+    if (const auto skip = arguments["skip"]) {
+        options.skip(as_int64(skip));
     }
-    if (arguments["hint"]) {
-        if (arguments["hint"].type() == bsoncxx::v_noabi::type::k_string)
-            options.hint(hint{arguments["hint"].get_string().value});
-        else
-            options.hint(hint{arguments["hint"].get_document().value});
+
+    if (const auto hint = arguments["hint"]) {
+        if (hint.type() == bsoncxx::v_noabi::type::k_string) {
+            options.hint(mongocxx::hint(hint.get_string().value));
+        } else {
+            options.hint(mongocxx::hint(hint.get_document().value));
+        }
+    }
+
+    if (const auto comment = arguments["comment"]) {
+        options.comment(comment.get_value());
     }
 
     int64_t count;
@@ -1286,10 +1347,14 @@ document::value count_documents(collection& coll,
 
 document::value estimated_document_count(collection& coll, document::view operation) {
     options::estimated_document_count options{};
-    if (operation["arguments"]) {
-        auto arguments = operation["arguments"].get_document().value;
-        if (auto max_time_ms = arguments["maxTimeMS"]) {
+
+    if (const auto arguments = operation["arguments"]) {
+        if (const auto max_time_ms = arguments["maxTimeMS"]) {
             options.max_time(std::chrono::milliseconds(max_time_ms.get_int32()));
+        }
+
+        if (const auto comment = arguments["comment"]) {
+            options.comment(comment.get_value());
         }
     }
 
@@ -1306,15 +1371,21 @@ document::value distinct(collection& coll, client_session* session, document::vi
 
     document::value empty_filter = builder::basic::make_document();
     document::view filter;
-    if (arguments["filter"]) {
-        filter = arguments["filter"].get_document().value;
+
+    if (const auto f = arguments["filter"]) {
+        filter = f.get_document().value;
     } else {
         filter = empty_filter.view();
     }
 
     options::distinct options{};
-    if (arguments["collation"]) {
-        options.collation(arguments["collation"].get_document().value);
+
+    if (const auto collation = arguments["collation"]) {
+        options.collation(collation.get_document().value);
+    }
+
+    if (const auto comment = arguments["comment"]) {
+        options.comment(comment.get_value());
     }
 
     stdx::optional<cursor> result_cursor;

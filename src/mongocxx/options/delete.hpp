@@ -16,6 +16,7 @@
 
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
+#include <bsoncxx/types/bson_value/view_or_value.hpp>
 #include <mongocxx/hint.hpp>
 #include <mongocxx/write_concern.hpp>
 
@@ -123,11 +124,32 @@ class MONGOCXX_API delete_options {
     ///
     const stdx::optional<bsoncxx::document::view_or_value> let() const;
 
+    ///
+    /// Set the value of the comment option.
+    ///
+    /// @param comment
+    ///   The new comment option.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
+    delete_options& comment(bsoncxx::types::bson_value::view_or_value comment);
+
+    ///
+    /// Gets the current value of the comment option.
+    ///
+    /// @return
+    ///  The current comment option.
+    ///
+    const stdx::optional<bsoncxx::types::bson_value::view_or_value> comment() const;
+
    private:
     stdx::optional<bsoncxx::document::view_or_value> _collation;
     stdx::optional<class write_concern> _write_concern;
     stdx::optional<class hint> _hint;
     stdx::optional<bsoncxx::document::view_or_value> _let;
+    stdx::optional<bsoncxx::types::bson_value::view_or_value> _comment;
 };
 
 }  // namespace options

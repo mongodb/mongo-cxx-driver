@@ -20,6 +20,7 @@
 #include <bsoncxx/array/view_or_value.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
+#include <bsoncxx/types/bson_value/view_or_value.hpp>
 #include <mongocxx/hint.hpp>
 #include <mongocxx/options/find_one_common_options.hpp>
 #include <mongocxx/stdx.hpp>
@@ -128,6 +129,26 @@ class MONGOCXX_API find_one_and_update {
     ///  The current let option.
     ///
     const stdx::optional<bsoncxx::document::view_or_value> let() const;
+
+    ///
+    /// Set the value of the comment option.
+    ///
+    /// @param comment
+    ///   The new comment option.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
+    find_one_and_update& comment(bsoncxx::types::bson_value::view_or_value comment);
+
+    ///
+    /// Gets the current value of the comment option.
+    ///
+    /// @return
+    ///  The current comment option.
+    ///
+    const stdx::optional<bsoncxx::types::bson_value::view_or_value> comment() const;
 
     ///
     /// Sets the maximum amount of time for this operation to run (server-side) in milliseconds.
@@ -307,6 +328,7 @@ class MONGOCXX_API find_one_and_update {
     stdx::optional<bsoncxx::document::view_or_value> _collation;
     stdx::optional<class hint> _hint;
     stdx::optional<bsoncxx::document::view_or_value> _let;
+    stdx::optional<bsoncxx::types::bson_value::view_or_value> _comment;
     stdx::optional<std::chrono::milliseconds> _max_time;
     stdx::optional<bsoncxx::document::view_or_value> _projection;
     stdx::optional<mongocxx::options::return_document> _return_document;

@@ -58,6 +58,15 @@ const stdx::optional<bsoncxx::document::view_or_value> bulk_write::let() const {
     return _let;
 }
 
+bulk_write& bulk_write::comment(bsoncxx::types::bson_value::view_or_value comment) {
+    _comment = std::move(comment);
+    return *this;
+}
+
+const stdx::optional<bsoncxx::types::bson_value::view_or_value> bulk_write::comment() const {
+    return _comment;
+}
+
 }  // namespace options
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx

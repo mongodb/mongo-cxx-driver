@@ -35,6 +35,11 @@ insert& insert::ordered(bool ordered) {
     return *this;
 }
 
+insert& insert::comment(bsoncxx::types::bson_value::view_or_value comment) {
+    _comment = std::move(comment);
+    return *this;
+}
+
 const stdx::optional<bool>& insert::bypass_document_validation() const {
     return _bypass_document_validation;
 }
@@ -45,6 +50,10 @@ const stdx::optional<class write_concern>& insert::write_concern() const {
 
 const stdx::optional<bool>& insert::ordered() const {
     return _ordered;
+}
+
+const stdx::optional<bsoncxx::types::bson_value::view_or_value>& insert::comment() const {
+    return _comment;
 }
 
 }  // namespace options

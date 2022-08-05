@@ -16,6 +16,7 @@
 #include <numeric>
 #include <regex>
 #include <sstream>
+#include <unordered_set>
 
 #include "assert.hh"
 #include "entity.hh"
@@ -600,13 +601,18 @@ void load_initial_data(document::view test) {
         add_data_to_collection(d);
 }
 
-void assert_result(const array::element& ops, document::view actual_result) {
+void assert_result(const array::element& ops,
+                   document::view actual_result,
+                   bool is_array_of_root_docs) {
     if (!ops["expectResult"])
         return;
 
     auto expected_result = ops["expectResult"];
-    assert::matches(
-        actual_result["result"].get_value(), expected_result.get_value(), get_entity_map());
+    assert::matches(actual_result["result"].get_value(),
+                    expected_result.get_value(),
+                    get_entity_map(),
+                    true,
+                    is_array_of_root_docs);
 
     if (ops["saveResultAsEntity"]) {
         auto key = string::to_string(ops["saveResultAsEntity"].get_string().value);
@@ -852,7 +858,25 @@ void run_tests(document::view test) {
                         continue;
                     }
 
-                    assert_result(ops, result);
+                    // Some operations fully iterate a cursor and return the result as an array. The
+                    // elements of such an array should all be treated as root-level documents.
+                    auto is_array_of_root_docs = false;
+                    {
+                        static const std::unordered_set<std::string> names = {
+                            "aggregate",
+                            "find",
+                            "iterateUntilDocumentOrError",
+                            "listCollections",
+                            "listDatabases",
+                            "listIndexes",
+                        };
+
+                        const auto name = string::to_string(ops["name"].get_string().value);
+
+                        is_array_of_root_docs = names.find(name) != names.end();
+                    }
+
+                    assert_result(ops, result, is_array_of_root_docs);
                 } catch (mongocxx::bulk_write_exception& e) {
                     auto result = bulk_write_result(e);
                     assert_error(e, ops, result);

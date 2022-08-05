@@ -31,6 +31,11 @@ count& count::hint(class hint index_hint) {
     return *this;
 }
 
+count& count::comment(bsoncxx::types::bson_value::view_or_value comment) {
+    _comment = std::move(comment);
+    return *this;
+}
+
 count& count::limit(std::int64_t limit) {
     _limit = limit;
     return *this;
@@ -57,6 +62,10 @@ const stdx::optional<bsoncxx::document::view_or_value>& count::collation() const
 
 const stdx::optional<class hint>& count::hint() const {
     return _hint;
+}
+
+const stdx::optional<bsoncxx::types::bson_value::view_or_value>& count::comment() const {
+    return _comment;
 }
 
 const stdx::optional<std::int64_t>& count::limit() const {

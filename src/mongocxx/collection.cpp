@@ -100,7 +100,7 @@ mongocxx::stdx::optional<bsoncxx::document::value> find_and_modify(
     ::bson_error_t error;
 
     // Write concern, collation, and session are passed in "extra".
-    if (const auto wc = options.write_concern()) {
+    if (const auto& wc = options.write_concern()) {
         if (!wc->is_acknowledged() && options.collation()) {
             throw mongocxx::logic_error{mongocxx::error_code::k_invalid_parameter};
         }
@@ -119,7 +119,7 @@ mongocxx::stdx::optional<bsoncxx::document::value> find_and_modify(
         extra.append(concatenate(session_id.view()));
     }
 
-    if (const auto collation = options.collation()) {
+    if (const auto& collation = options.collation()) {
         extra.append(kvp("collation", *collation));
     }
 
@@ -127,12 +127,16 @@ mongocxx::stdx::optional<bsoncxx::document::value> find_and_modify(
         extra.append(kvp("arrayFilters", *array_filters));
     }
 
-    if (const auto hint = options.hint()) {
+    if (const auto& hint = options.hint()) {
         extra.append(kvp("hint", hint->to_value()));
     }
 
-    if (const auto let = options.let()) {
+    if (const auto& let = options.let()) {
         extra.append(kvp("let", *let));
+    }
+
+    if (const auto& comment = options.comment()) {
+        extra.append(kvp("comment", *comment));
     }
 
     scoped_bson_t extra_bson{extra.view()};
@@ -147,17 +151,17 @@ mongocxx::stdx::optional<bsoncxx::document::value> find_and_modify(
         mongocxx::libmongoc::find_and_modify_opts_set_bypass_document_validation(opts.get(), true);
     }
 
-    if (const auto sort = options.sort()) {
+    if (const auto& sort = options.sort()) {
         scoped_bson_t sort_bson{*sort};
         mongocxx::libmongoc::find_and_modify_opts_set_sort(opts.get(), sort_bson.bson());
     }
 
-    if (const auto projection = options.projection()) {
+    if (const auto& projection = options.projection()) {
         scoped_bson_t projection_bson{*projection};
         mongocxx::libmongoc::find_and_modify_opts_set_fields(opts.get(), projection_bson.bson());
     }
 
-    if (const auto max_time = options.max_time()) {
+    if (const auto& max_time = options.max_time()) {
         mongocxx::libmongoc::find_and_modify_opts_set_max_time_ms(
             opts.get(), static_cast<uint32_t>(max_time->count()));
     }
@@ -304,27 +308,30 @@ namespace {
 bsoncxx::builder::basic::document build_find_options_document(const options::find& options) {
     bsoncxx::builder::basic::document options_builder;
 
-    if (const auto adu = options.allow_disk_use()) {
+    if (const auto& adu = options.allow_disk_use()) {
         options_builder.append(kvp("allowDiskUse", *adu));
     }
 
-    if (const auto apr = options.allow_partial_results()) {
+    if (const auto& apr = options.allow_partial_results()) {
         options_builder.append(kvp("allowPartialResults", *apr));
     }
 
-    if (const auto batch_size = options.batch_size()) {
+    if (const auto& batch_size = options.batch_size()) {
         options_builder.append(kvp("batchSize", *batch_size));
     }
 
-    if (const auto collation = options.collation()) {
+    if (const auto& collation = options.collation()) {
         options_builder.append(kvp("collation", *collation));
     }
 
-    if (const auto comment = options.comment()) {
+    // Prioritize new comment option over old $comment modifier.
+    if (const auto& comment = options.comment_option()) {
+        options_builder.append(kvp("comment", *comment));
+    } else if (const auto& comment = options.comment()) {
         options_builder.append(kvp("comment", *comment));
     }
 
-    if (const auto cursor_type = options.cursor_type()) {
+    if (const auto& cursor_type = options.cursor_type()) {
         if (*cursor_type == cursor::type::k_tailable) {
             options_builder.append(kvp("tailable", bsoncxx::types::b_bool{true}));
         } else if (*cursor_type == cursor::type::k_tailable_await) {
@@ -336,51 +343,51 @@ bsoncxx::builder::basic::document build_find_options_document(const options::fin
         }
     }
 
-    if (const auto hint = options.hint()) {
+    if (const auto& hint = options.hint()) {
         options_builder.append(kvp("hint", hint->to_value()));
     }
 
-    if (const auto let = options.let()) {
+    if (const auto& let = options.let()) {
         options_builder.append(kvp("let", *let));
     }
 
-    if (const auto limit = options.limit()) {
+    if (const auto& limit = options.limit()) {
         options_builder.append(kvp("limit", *limit));
     }
 
-    if (const auto max = options.max()) {
+    if (const auto& max = options.max()) {
         options_builder.append(kvp("max", *max));
     }
 
-    if (const auto max_time = options.max_time()) {
+    if (const auto& max_time = options.max_time()) {
         options_builder.append(kvp("maxTimeMS", bsoncxx::types::b_int64{max_time->count()}));
     }
 
-    if (const auto min = options.min()) {
+    if (const auto& min = options.min()) {
         options_builder.append(kvp("min", *min));
     }
 
-    if (const auto nct = options.no_cursor_timeout()) {
+    if (const auto& nct = options.no_cursor_timeout()) {
         options_builder.append(kvp("noCursorTimeout", *nct));
     }
 
-    if (const auto projection = options.projection()) {
+    if (const auto& projection = options.projection()) {
         options_builder.append(kvp("projection", bsoncxx::types::b_document{*projection}));
     }
 
-    if (const auto return_key = options.return_key()) {
+    if (const auto& return_key = options.return_key()) {
         options_builder.append(kvp("returnKey", *return_key));
     }
 
-    if (const auto show_record_id = options.show_record_id()) {
+    if (const auto& show_record_id = options.show_record_id()) {
         options_builder.append(kvp("showRecordId", *show_record_id));
     }
 
-    if (const auto skip = options.skip()) {
+    if (const auto& skip = options.skip()) {
         options_builder.append(kvp("skip", *skip));
     }
 
-    if (const auto sort = options.sort()) {
+    if (const auto& sort = options.sort()) {
         options_builder.append(kvp("sort", bsoncxx::types::b_document{*sort}));
     }
 
@@ -508,12 +515,16 @@ stdx::optional<result::insert_one> collection::_insert_one(const client_session*
 
     options::bulk_write bulk_opts;
 
-    if (options.write_concern()) {
-        bulk_opts.write_concern(*options.write_concern());
+    if (const auto& wc = options.write_concern()) {
+        bulk_opts.write_concern(*wc);
     }
 
-    if (options.bypass_document_validation()) {
-        bulk_opts.bypass_document_validation(*options.bypass_document_validation());
+    if (const auto& bdv = options.bypass_document_validation()) {
+        bulk_opts.bypass_document_validation(*bdv);
+    }
+
+    if (const auto& comment = options.comment()) {
+        bulk_opts.comment(*comment);
     }
 
     class bulk_write bulk_op {
@@ -572,29 +583,33 @@ stdx::optional<result::replace_one> collection::_replace_one(const client_sessio
                                                              const options::replace& options) {
     options::bulk_write bulk_opts;
 
-    if (const auto bdv = options.bypass_document_validation()) {
+    if (const auto& bdv = options.bypass_document_validation()) {
         bulk_opts.bypass_document_validation(*bdv);
     }
 
-    if (const auto wc = options.write_concern()) {
+    if (const auto& wc = options.write_concern()) {
         bulk_opts.write_concern(*wc);
     }
 
-    if (const auto let = options.let()) {
+    if (const auto& let = options.let()) {
         bulk_opts.let(*let);
+    }
+
+    if (const auto& comment = options.comment()) {
+        bulk_opts.comment(*comment);
     }
 
     model::replace_one replace_op(std::move(filter), std::move(replacement));
 
-    if (const auto collation = options.collation()) {
+    if (const auto& collation = options.collation()) {
         replace_op.collation(*collation);
     }
 
-    if (const auto hint = options.hint()) {
+    if (const auto& hint = options.hint()) {
         replace_op.hint(*hint);
     }
 
-    if (const auto upsert = options.upsert()) {
+    if (const auto& upsert = options.upsert()) {
         replace_op.upsert(*upsert);
     }
 
@@ -620,35 +635,39 @@ stdx::optional<result::update> collection::_update_many(const client_session* se
                                                         const options::update& options) {
     options::bulk_write bulk_opts;
 
-    if (const auto bdv = options.bypass_document_validation()) {
+    if (const auto& bdv = options.bypass_document_validation()) {
         bulk_opts.bypass_document_validation(*bdv);
     }
 
-    if (const auto wc = options.write_concern()) {
+    if (const auto& wc = options.write_concern()) {
         bulk_opts.write_concern(*wc);
     }
 
-    if (const auto let = options.let()) {
+    if (const auto& let = options.let()) {
         bulk_opts.let(*let);
+    }
+
+    if (const auto& comment = options.comment()) {
+        bulk_opts.comment(*comment);
     }
 
     auto bulk_op = session ? create_bulk_write(*session, bulk_opts) : create_bulk_write(bulk_opts);
 
     model::update_many update_op(std::move(filter), std::move(update));
 
-    if (const auto collation = options.collation()) {
+    if (const auto& collation = options.collation()) {
         update_op.collation(*collation);
     }
 
-    if (const auto hint = options.hint()) {
+    if (const auto& hint = options.hint()) {
         update_op.hint(*hint);
     }
 
-    if (const auto upsert = options.upsert()) {
+    if (const auto& upsert = options.upsert()) {
         update_op.upsert(*upsert);
     }
 
-    if (const auto array_filters = options.array_filters()) {
+    if (const auto& array_filters = options.array_filters()) {
         update_op.array_filters(*array_filters);
     }
 
@@ -709,35 +728,39 @@ stdx::optional<result::update> collection::_update_one(const client_session* ses
                                                        const options::update& options) {
     options::bulk_write bulk_opts;
 
-    if (const auto bdv = options.bypass_document_validation()) {
+    if (const auto& bdv = options.bypass_document_validation()) {
         bulk_opts.bypass_document_validation(*bdv);
     }
 
-    if (const auto wc = options.write_concern()) {
+    if (const auto& wc = options.write_concern()) {
         bulk_opts.write_concern(*wc);
     }
 
-    if (const auto let = options.let()) {
+    if (const auto& let = options.let()) {
         bulk_opts.let(*let);
+    }
+
+    if (const auto& comment = options.comment()) {
+        bulk_opts.comment(*comment);
     }
 
     auto bulk_op = session ? create_bulk_write(*session, bulk_opts) : create_bulk_write(bulk_opts);
 
     model::update_one update_op(std::move(filter), std::move(update));
 
-    if (const auto collation = options.collation()) {
+    if (const auto& collation = options.collation()) {
         update_op.collation(*collation);
     }
 
-    if (const auto hint = options.hint()) {
+    if (const auto& hint = options.hint()) {
         update_op.hint(*hint);
     }
 
-    if (const auto upsert = options.upsert()) {
+    if (const auto& upsert = options.upsert()) {
         update_op.upsert(*upsert);
     }
 
-    if (const auto array_filters = options.array_filters()) {
+    if (const auto& array_filters = options.array_filters()) {
         update_op.array_filters(*array_filters);
     }
 
@@ -796,23 +819,27 @@ stdx::optional<result::delete_result> collection::_delete_many(
     const client_session* session, view_or_value filter, const options::delete_options& options) {
     options::bulk_write bulk_opts;
 
-    if (const auto wc = options.write_concern()) {
+    if (const auto& wc = options.write_concern()) {
         bulk_opts.write_concern(*wc);
     }
 
-    if (const auto let = options.let()) {
+    if (const auto& let = options.let()) {
         bulk_opts.let(*let);
+    }
+
+    if (const auto& comment = options.comment()) {
+        bulk_opts.comment(*comment);
     }
 
     auto bulk_op = session ? create_bulk_write(*session, bulk_opts) : create_bulk_write(bulk_opts);
 
     model::delete_many delete_op(filter);
 
-    if (const auto collation = options.collation()) {
+    if (const auto& collation = options.collation()) {
         delete_op.collation(*collation);
     }
 
-    if (const auto hint = options.hint()) {
+    if (const auto& hint = options.hint()) {
         delete_op.hint(*hint);
     }
 
@@ -840,12 +867,16 @@ stdx::optional<result::delete_result> collection::_delete_one(
     const client_session* session, view_or_value filter, const options::delete_options& options) {
     options::bulk_write bulk_opts;
 
-    if (const auto wc = options.write_concern()) {
+    if (const auto& wc = options.write_concern()) {
         bulk_opts.write_concern(*wc);
     }
 
-    if (const auto let = options.let()) {
+    if (const auto& let = options.let()) {
         bulk_opts.let(*let);
+    }
+
+    if (const auto& comment = options.comment()) {
+        bulk_opts.comment(*comment);
     }
 
     auto bulk_op = session ? create_bulk_write(*session, bulk_opts) : create_bulk_write(bulk_opts);
@@ -1018,34 +1049,38 @@ std::int64_t collection::_count_documents(const client_session* session,
     bson_error_t error;
     const mongoc_read_prefs_t* read_prefs = NULL;
 
-    if (options.read_preference()) {
-        read_prefs = options.read_preference()->_impl->read_preference_t;
+    if (const auto& rp = options.read_preference()) {
+        read_prefs = rp->_impl->read_preference_t;
     }
 
     bsoncxx::builder::basic::document opts_builder;
 
-    if (options.collation()) {
-        opts_builder.append(kvp("collation", *options.collation()));
+    if (const auto& collation = options.collation()) {
+        opts_builder.append(kvp("collation", *collation));
     }
 
-    if (options.max_time()) {
-        opts_builder.append(kvp("maxTimeMS", bsoncxx::types::b_int64{options.max_time()->count()}));
+    if (const auto& max_time = options.max_time()) {
+        opts_builder.append(kvp("maxTimeMS", bsoncxx::types::b_int64{max_time->count()}));
     }
 
-    if (options.hint()) {
-        opts_builder.append(kvp("hint", options.hint()->to_value()));
+    if (const auto& hint = options.hint()) {
+        opts_builder.append(kvp("hint", hint->to_value()));
+    }
+
+    if (const auto& comment = options.comment()) {
+        opts_builder.append(kvp("comment", *comment));
     }
 
     if (session) {
         opts_builder.append(bsoncxx::builder::concatenate_doc{session->_get_impl().to_document()});
     }
 
-    if (options.skip()) {
-        opts_builder.append(kvp("skip", *options.skip()));
+    if (const auto& skip = options.skip()) {
+        opts_builder.append(kvp("skip", *skip));
     }
 
-    if (options.limit()) {
-        opts_builder.append(kvp("limit", *options.limit()));
+    if (const auto& limit = options.limit()) {
+        opts_builder.append(kvp("limit", *limit));
     }
 
     scoped_bson_t opts_bson{opts_builder.view()};
@@ -1078,14 +1113,18 @@ std::int64_t collection::estimated_document_count(
 
     const mongoc_read_prefs_t* read_prefs = NULL;
 
-    if (options.read_preference()) {
-        read_prefs = options.read_preference()->_impl->read_preference_t;
+    if (const auto& rp = options.read_preference()) {
+        read_prefs = rp->_impl->read_preference_t;
     }
 
     bsoncxx::builder::basic::document opts_builder;
 
-    if (options.max_time()) {
-        opts_builder.append(kvp("maxTimeMS", bsoncxx::types::b_int64{options.max_time()->count()}));
+    if (const auto& max_time = options.max_time()) {
+        opts_builder.append(kvp("maxTimeMS", bsoncxx::types::b_int64{max_time->count()}));
+    }
+
+    if (const auto& comment = options.comment()) {
+        opts_builder.append(kvp("comment", *comment));
     }
 
     scoped_bson_t opts_bson{opts_builder.view()};
@@ -1138,14 +1177,17 @@ cursor collection::_distinct(const client_session* session,
                            kvp("key", field_name.view()),
                            kvp("query", bsoncxx::types::b_document{query}));
 
-    if (options.max_time()) {
-        command_builder.append(
-            kvp("maxTimeMS", bsoncxx::types::b_int64{options.max_time()->count()}));
+    if (const auto& max_time = options.max_time()) {
+        command_builder.append(kvp("maxTimeMS", bsoncxx::types::b_int64{max_time->count()}));
     }
 
     bsoncxx::builder::basic::document opts_builder{};
-    if (options.collation()) {
-        opts_builder.append(kvp("collation", *options.collation()));
+    if (const auto& collation = options.collation()) {
+        opts_builder.append(kvp("collation", *collation));
+    }
+
+    if (const auto& comment = options.comment()) {
+        opts_builder.append(kvp("comment", *comment));
     }
 
     if (session) {
@@ -1153,8 +1195,8 @@ cursor collection::_distinct(const client_session* session,
     }
 
     const mongoc_read_prefs_t* rp_ptr = NULL;
-    if (options.read_preference()) {
-        rp_ptr = options.read_preference()->_impl->read_preference_t;
+    if (const auto& rp = options.read_preference()) {
+        rp_ptr = rp->_impl->read_preference_t;
     }
 
     //
@@ -1346,13 +1388,21 @@ class index_view collection::indexes() {
 class bulk_write collection::_init_insert_many(const options::insert& options,
                                                const client_session* session) {
     options::bulk_write bulk_write_options;
+
     bulk_write_options.ordered(options.ordered().value_or(true));
-    if (options.write_concern()) {
-        bulk_write_options.write_concern(*options.write_concern());
+
+    if (const auto& wc = options.write_concern()) {
+        bulk_write_options.write_concern(*wc);
     }
-    if (options.bypass_document_validation()) {
-        bulk_write_options.bypass_document_validation(*options.bypass_document_validation());
+
+    if (const auto& bdv = options.bypass_document_validation()) {
+        bulk_write_options.bypass_document_validation(*bdv);
     }
+
+    if (const auto& comment = options.comment()) {
+        bulk_write_options.comment(*comment);
+    }
+
     if (session) {
         return create_bulk_write(*session, bulk_write_options);
     }

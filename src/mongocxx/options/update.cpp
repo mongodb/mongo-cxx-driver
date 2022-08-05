@@ -42,6 +42,11 @@ update& update::let(bsoncxx::document::view_or_value let) {
     return *this;
 }
 
+update& update::comment(bsoncxx::types::bson_value::view_or_value comment) {
+    _comment = std::move(comment);
+    return *this;
+}
+
 update& update::upsert(bool upsert) {
     _upsert = upsert;
     return *this;
@@ -66,6 +71,10 @@ const stdx::optional<class hint>& update::hint() const {
 
 const stdx::optional<bsoncxx::document::view_or_value> update::let() const {
     return _let;
+}
+
+const stdx::optional<bsoncxx::types::bson_value::view_or_value> update::comment() const {
+    return _comment;
 }
 
 const stdx::optional<bool>& update::upsert() const {

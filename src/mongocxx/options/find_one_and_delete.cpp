@@ -55,6 +55,12 @@ find_one_and_delete& find_one_and_delete::let(bsoncxx::document::view_or_value l
     return *this;
 }
 
+find_one_and_delete& find_one_and_delete::comment(
+    bsoncxx::types::bson_value::view_or_value comment) {
+    _comment = std::move(comment);
+    return *this;
+}
+
 const stdx::optional<class hint>& find_one_and_delete::hint() const {
     return _hint;
 }
@@ -81,6 +87,11 @@ const stdx::optional<mongocxx::write_concern>& find_one_and_delete::write_concer
 
 const stdx::optional<bsoncxx::document::view_or_value> find_one_and_delete::let() const {
     return _let;
+}
+
+const stdx::optional<bsoncxx::types::bson_value::view_or_value> find_one_and_delete::comment()
+    const {
+    return _comment;
 }
 
 }  // namespace options

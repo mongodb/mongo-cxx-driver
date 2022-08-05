@@ -203,11 +203,14 @@ bulk_write::bulk_write(const collection& coll,
         // ordered is true by default. Only append it if set to false.
         options_builder.append(kvp("ordered", false));
     }
-    if (auto wc = options.write_concern()) {
+    if (const auto& wc = options.write_concern()) {
         options_builder.append(kvp("writeConcern", wc->to_document()));
     }
-    if (auto let = options.let()) {
+    if (const auto& let = options.let()) {
         options_builder.append(kvp("let", *let));
+    }
+    if (const auto& comment = options.comment()) {
+        options_builder.append(kvp("comment", *comment));
     }
     if (session) {
         options_builder.append(

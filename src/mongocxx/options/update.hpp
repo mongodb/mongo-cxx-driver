@@ -17,6 +17,7 @@
 #include <bsoncxx/array/view_or_value.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
+#include <bsoncxx/types/bson_value/view_or_value.hpp>
 #include <mongocxx/hint.hpp>
 #include <mongocxx/stdx.hpp>
 #include <mongocxx/write_concern.hpp>
@@ -125,6 +126,26 @@ class MONGOCXX_API update {
     const stdx::optional<bsoncxx::document::view_or_value> let() const;
 
     ///
+    /// Set the value of the comment option.
+    ///
+    /// @param comment
+    ///   The new comment option.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
+    update& comment(bsoncxx::types::bson_value::view_or_value comment);
+
+    ///
+    /// Gets the current value of the comment option.
+    ///
+    /// @return
+    ///  The current comment option.
+    ///
+    const stdx::optional<bsoncxx::types::bson_value::view_or_value> comment() const;
+
+    ///
     /// Sets the upsert option.
     ///
     /// By default, if no document matches the filter, the update operation does nothing.
@@ -205,6 +226,7 @@ class MONGOCXX_API update {
     stdx::optional<bsoncxx::array::view_or_value> _array_filters;
     stdx::optional<class hint> _hint;
     stdx::optional<bsoncxx::document::view_or_value> _let;
+    stdx::optional<bsoncxx::types::bson_value::view_or_value> _comment;
 };
 
 }  // namespace options

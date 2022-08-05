@@ -19,6 +19,7 @@
 
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
+#include <bsoncxx/types/bson_value/view_or_value.hpp>
 #include <mongocxx/hint.hpp>
 #include <mongocxx/write_concern.hpp>
 
@@ -196,6 +197,26 @@ class MONGOCXX_API find_one_and_delete {
     ///
     const stdx::optional<bsoncxx::document::view_or_value> let() const;
 
+    ///
+    /// Set the value of the comment option.
+    ///
+    /// @param comment
+    ///   The new comment option.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called.  This facilitates
+    ///   method chaining.
+    ///
+    find_one_and_delete& comment(bsoncxx::types::bson_value::view_or_value comment);
+
+    ///
+    /// Gets the current value of the comment option.
+    ///
+    /// @return
+    ///  The current comment option.
+    ///
+    const stdx::optional<bsoncxx::types::bson_value::view_or_value> comment() const;
+
    private:
     stdx::optional<bsoncxx::document::view_or_value> _collation;
     stdx::optional<std::chrono::milliseconds> _max_time;
@@ -204,6 +225,7 @@ class MONGOCXX_API find_one_and_delete {
     stdx::optional<mongocxx::write_concern> _write_concern;
     stdx::optional<class hint> _hint;
     stdx::optional<bsoncxx::document::view_or_value> _let;
+    stdx::optional<bsoncxx::types::bson_value::view_or_value> _comment;
 };
 
 }  // namespace options
