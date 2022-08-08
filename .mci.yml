@@ -1060,6 +1060,132 @@ buildvariants:
     #######################################
     #         Linux Buildvariants         #
     #######################################
+    - name: debian11-release-latest
+      display_name: "Debian 11 Release (MongoDB Latest)"
+      expansions:
+          build_type: "Release"
+          tar_options: *linux_tar_options
+          extra_path: *linux_extra_path
+          cmake_flags: *linux_cmake_flags
+          mongodb_version: *version_latest
+      run_on:
+          - debian11-large
+      tasks:
+          - name: compile_and_test_with_shared_libs
+          - name: compile_and_test_with_shared_libs_extra_alignment
+          - name: compile_and_test_with_static_libs
+          - name: compile_and_test_with_static_libs_extra_alignment
+          - name: compile_and_test_with_shared_libs_replica_set
+          - name: build_example_with_add_subdirectory
+            distros:
+            - debian11-large
+          - name: uninstall_check
+
+    - name: debian11-release-50
+      display_name: "Debian 11 Release (MongoDB 5.0)"
+      expansions:
+          build_type: "Release"
+          tar_options: *linux_tar_options
+          extra_path: *linux_extra_path
+          cmake_flags: *linux_cmake_flags
+          mongodb_version: *version_50
+      run_on:
+          - debian11-large
+      tasks:
+          - name: compile_and_test_with_shared_libs
+          - name: compile_and_test_with_shared_libs_extra_alignment
+          - name: compile_and_test_with_static_libs
+          - name: compile_and_test_with_static_libs_extra_alignment
+          - name: compile_and_test_with_shared_libs_replica_set
+          - name: build_example_with_add_subdirectory
+            distros:
+            - debian11-large
+          - name: uninstall_check
+
+    - name: debian10-release-latest
+      display_name: "Debian 10 Release (MongoDB Latest)"
+      expansions:
+          build_type: "Release"
+          tar_options: *linux_tar_options
+          extra_path: *linux_extra_path
+          cmake_flags: *linux_cmake_flags
+          mongodb_version: *version_latest
+      run_on:
+          - debian10-large
+      tasks:
+          - name: compile_and_test_with_shared_libs
+          - name: compile_and_test_with_shared_libs_extra_alignment
+          - name: compile_and_test_with_static_libs
+          - name: compile_and_test_with_static_libs_extra_alignment
+          - name: compile_and_test_with_shared_libs_replica_set
+          - name: build_example_with_add_subdirectory
+            distros:
+            - debian10-large
+          - name: uninstall_check
+
+    - name: debian10-release-50
+      display_name: "Debian 10 Release (MongoDB 5.0)"
+      expansions:
+          build_type: "Release"
+          tar_options: *linux_tar_options
+          extra_path: *linux_extra_path
+          cmake_flags: *linux_cmake_flags
+          mongodb_version: *version_50
+      run_on:
+          - debian10-large
+      tasks:
+          - name: compile_and_test_with_shared_libs
+          - name: compile_and_test_with_shared_libs_extra_alignment
+          - name: compile_and_test_with_static_libs
+          - name: compile_and_test_with_static_libs_extra_alignment
+          - name: compile_and_test_with_shared_libs_replica_set
+          - name: build_example_with_add_subdirectory
+            distros:
+            - debian10-large
+          - name: uninstall_check
+
+    - name: ubuntu2004-release-latest
+      display_name: "Ubuntu 20.04 Release (MongoDB Latest)"
+      expansions:
+          build_type: "Release"
+          tar_options: *linux_tar_options
+          extra_path: *linux_extra_path
+          cmake_flags: *linux_cmake_flags
+          mongodb_version: *version_latest
+      run_on:
+          - ubuntu2004-large
+      tasks:
+          - name: compile_and_test_with_shared_libs
+          - name: compile_and_test_with_shared_libs_extra_alignment
+          - name: compile_and_test_with_static_libs
+          - name: compile_and_test_with_static_libs_extra_alignment
+          - name: compile_and_test_with_shared_libs_replica_set
+          - name: build_example_with_add_subdirectory
+            distros:
+            - ubuntu2004-large
+          - name: uninstall_check
+
+    - name: ubuntu2004-release-50
+      display_name: "Ubuntu 20.04 Release (MongoDB 5.0)"
+      expansions:
+          build_type: "Release"
+          tar_options: *linux_tar_options
+          extra_path: *linux_extra_path
+          cmake_flags: *linux_cmake_flags
+          mongodb_version: *version_50
+      run_on:
+          - ubuntu2004-large
+      tasks:
+          - name: compile_and_test_with_shared_libs
+          - name: compile_and_test_with_shared_libs_extra_alignment
+          - name: compile_and_test_with_static_libs
+          - name: compile_and_test_with_static_libs_extra_alignment
+          - name: compile_and_test_with_shared_libs_replica_set
+          - name: build_example_with_add_subdirectory
+            distros:
+            - ubuntu2004-large
+          - name: uninstall_check
+
     - name: ubuntu1804-release-latest
       display_name: "Ubuntu 18.04 Release (MongoDB Latest)"
       expansions:
