@@ -931,7 +931,9 @@ void run_tests_in_file(const std::string& test_path) {
 // Check the environment for the specified variable; if present, extract it
 // as a directory and run all the tests contained in the magic "test_files.txt"
 // file:
-bool run_unified_format_tests_in_env_dir(const std::string& env_path) {
+bool run_unified_format_tests_in_env_dir(
+    const std::string& env_path,
+    const std::set<mongocxx::stdx::string_view>& unsupported_tests = {}) {
     const char* p = std::getenv(env_path.c_str());
 
     if (nullptr == p)
@@ -949,15 +951,24 @@ bool run_unified_format_tests_in_env_dir(const std::string& env_path) {
     instance::current();
 
     for (std::string file; std::getline(files, file);) {
-        CAPTURE(file);
-        run_tests_in_file(base_path + '/' + file);
+        SECTION(file) {
+            if (unsupported_tests.find(file) != unsupported_tests.end()) {
+                WARN("Skipping unsupported test file: " << file);
+            } else {
+                run_tests_in_file(base_path + '/' + file);
+            }
+        }
     }
 
     return true;
 }
 
 TEST_CASE("unified format spec automated tests", "[unified_format_spec]") {
-    CHECK(run_unified_format_tests_in_env_dir("UNIFIED_FORMAT_TESTS_PATH"));
+    const std::set<mongocxx::stdx::string_view> unsupported_tests = {
+        "valid-pass/entity-client-cmap-events.json",
+        "valid-pass/assertNumberConnectionsCheckedOut.json"};
+
+    CHECK(run_unified_format_tests_in_env_dir("UNIFIED_FORMAT_TESTS_PATH", unsupported_tests));
 }
 
 TEST_CASE("session unified format spec automated tests", "[unified_format_spec]") {
