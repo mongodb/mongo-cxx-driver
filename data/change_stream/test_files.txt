@@ -1,4 +1,0 @@
-change-streams-errors.json
-change-streams.json
-change-streams-resume-errorLabels.json
-change-streams-resume-whitelist.json

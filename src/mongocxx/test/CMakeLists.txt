@@ -110,13 +110,6 @@ add_executable(test_crud_specs
     ${spec_test_common}
 )
 
-add_executable(test_change_stream_specs
-    ${PROJECT_SOURCE_DIR}/test_util/client_helpers.cpp
-    ${THIRD_PARTY_SOURCE_DIR}/catch/main.cpp
-    spec/change_stream.cpp
-    ${spec_test_common}
-)
-
 add_executable(test_gridfs_specs
     ${PROJECT_SOURCE_DIR}/test_util/client_helpers.cpp
     ${THIRD_PARTY_SOURCE_DIR}/catch/main.cpp
@@ -188,7 +181,6 @@ target_link_libraries(test_client_side_encryption_specs mongocxx_mocked ${libmon
 target_link_libraries(test_crud_specs mongocxx_mocked ${libmongoc_target})
 target_link_libraries(test_gridfs_specs mongocxx_mocked ${libmongoc_target})
 target_link_libraries(test_command_monitoring_specs mongocxx_mocked ${libmongoc_target})
-target_link_libraries(test_change_stream_specs mongocxx_mocked ${libmongoc_target})
 target_link_libraries(test_transactions_specs mongocxx_mocked ${libmongoc_target})
 target_link_libraries(test_retryable_reads_specs mongocxx_mocked ${libmongoc_target})
 target_link_libraries(test_read_write_concern_specs mongocxx_mocked ${libmongoc_target})
@@ -203,7 +195,6 @@ target_include_directories(test_client_side_encryption_specs PRIVATE ${libmongoc
 target_include_directories(test_crud_specs PRIVATE ${libmongoc_include_directories})
 target_include_directories(test_gridfs_specs PRIVATE ${libmongoc_include_directories})
 target_include_directories(test_command_monitoring_specs PRIVATE ${libmongoc_include_directories})
-target_include_directories(test_change_stream_specs PRIVATE ${libmongoc_include_directories})
 target_include_directories(test_transactions_specs PRIVATE ${libmongoc_include_directories})
 target_include_directories(test_retryable_reads_specs PRIVATE ${libmongoc_include_directories})
 target_include_directories(test_read_write_concern_specs PRIVATE ${libmongoc_include_directories})
@@ -230,7 +221,6 @@ add_test(crud_specs test_crud_specs)
 add_test(gridfs_specs test_gridfs_specs)
 add_test(client_side_encryption_specs test_client_side_encryption_specs)
 add_test(command_monitoring_specs test_command_monitoring_specs)
-add_test(change_stream_specs test_change_stream_specs)
 add_test(transactions_specs test_transactions_specs)
 add_test(retryable_reads_spec test_retryable_reads_specs)
 add_test(read_write_concern_specs test_read_write_concern_specs)
@@ -255,9 +245,6 @@ set_tests_properties(driver PROPERTIES
 
 set_tests_properties(command_monitoring_specs PROPERTIES
     ENVIRONMENT "COMMAND_MONITORING_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/command-monitoring")
-
-set_tests_properties(change_stream_specs PROPERTIES
-    ENVIRONMENT "CHANGE_STREAM_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/change_stream")
 
 set_tests_properties(transactions_specs PROPERTIES
   ENVIRONMENT "TRANSACTIONS_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/transactions")
@@ -341,7 +328,6 @@ set_dist_list (src_mongocxx_test_DIST
    result/replace_one.cpp
    result/update.cpp
    sdam-monitoring.cpp
-   spec/change_stream.cpp
    spec/client_side_encryption.cpp
    spec/command_monitoring.cpp
    spec/crud.cpp
