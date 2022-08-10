@@ -19,6 +19,7 @@
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/string/view_or_value.hpp>
 #include <bsoncxx/types.hpp>
+#include <bsoncxx/types/bson_value/view_or_value.hpp>
 #include <mongocxx/stdx.hpp>
 
 #include <mongocxx/config/prelude.hpp>
@@ -117,6 +118,26 @@ class MONGOCXX_API change_stream {
     ///   The current batch size.
     ///
     const stdx::optional<std::int32_t>& batch_size() const;
+
+    ///
+    /// Sets the current value of the comment option.
+    ///
+    /// @param comment
+    ///   The new comment option.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called. This facilitates
+    ///   method chaining.
+    ///
+    change_stream& comment(bsoncxx::types::bson_value::view_or_value comment);
+
+    ///
+    /// Gets the current value of the comment option.
+    ///
+    /// @return
+    ///   The current comment option.
+    ///
+    const stdx::optional<bsoncxx::types::bson_value::view_or_value>& comment() const;
 
     ///
     /// Specifies the logical starting point for the new change stream.
@@ -236,6 +257,7 @@ class MONGOCXX_API change_stream {
     stdx::optional<bsoncxx::string::view_or_value> _full_document;
     stdx::optional<bsoncxx::string::view_or_value> _full_document_before_change;
     stdx::optional<std::int32_t> _batch_size;
+    stdx::optional<bsoncxx::types::bson_value::view_or_value> _comment;
     stdx::optional<bsoncxx::document::view_or_value> _collation;
     stdx::optional<bsoncxx::document::view_or_value> _resume_after;
     stdx::optional<bsoncxx::document::view_or_value> _start_after;
