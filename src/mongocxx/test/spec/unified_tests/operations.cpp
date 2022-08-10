@@ -558,8 +558,17 @@ document::value create_change_stream(entity::map& map,
     auto pipeline = build_pipeline(args["pipeline"].get_array().value);
 
     options::change_stream options{};
-    if (args["batchSize"]) {
-        options.batch_size(args["batchSize"].get_int32().value);
+
+    if (const auto batch_size = args["batchSize"]) {
+        options.batch_size(batch_size.get_int32().value);
+    }
+
+    if (const auto full_document = args["fullDocument"]) {
+        options.full_document(full_document.get_string().value);
+    }
+
+    if (const auto full_document_before_change = args["fullDocumentBeforeChange"]) {
+        options.full_document_before_change(full_document_before_change.get_string().value);
     }
 
     const auto save_result_as_entity = operation["saveResultAsEntity"];
