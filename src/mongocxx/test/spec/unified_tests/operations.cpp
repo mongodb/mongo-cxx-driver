@@ -45,17 +45,8 @@ int32_t as_int32(const document::element& el) {
     return el.get_int32().value;
 }
 
-document::value find(collection& coll, client_session* session, document::view operation) {
-    document::view arguments = operation["arguments"].get_document().value;
-    document::value empty_filter = builder::basic::make_document();
-    document::view filter;
-    if (const auto f = arguments["filter"]) {
-        filter = f.get_document().value;
-    } else {
-        filter = empty_filter.view();
-    }
-
-    options::find options{};
+options::find make_find_options(document::view arguments) {
+    options::find options;
 
     if (const auto batch_size = arguments["batchSize"]) {
         options.batch_size(as_int32(batch_size));
@@ -119,6 +110,21 @@ document::value find(collection& coll, client_session* session, document::view o
             options.show_record_id(show_disk_loc.get_bool().value);
         }
     }
+
+    return options;
+}
+
+document::value find(collection& coll, client_session* session, document::view operation) {
+    document::view arguments = operation["arguments"].get_document().value;
+    document::value empty_filter = builder::basic::make_document();
+    document::view filter;
+    if (const auto f = arguments["filter"]) {
+        filter = f.get_document().value;
+    } else {
+        filter = empty_filter.view();
+    }
+
+    options::find options = make_find_options(arguments);
 
     stdx::optional<cursor> result_cursor;
 
@@ -561,7 +567,7 @@ document::value create_change_stream(entity::map& map,
                          ? string::to_string(save_result_as_entity.get_string().value)
                          : std::string();
     CAPTURE(object, to_json(operation), key);
-    auto stream = [&] {
+    auto stream = [&]() -> mongocxx::change_stream {
         const auto& type = map.type(object);
         if (type == typeid(mongocxx::database)) {
             if (session)
@@ -610,6 +616,23 @@ document::value iterate_until_document_or_error(
     }
 
     return make_document(kvp("result", iter != stream.end() ? *iter : make_document()));
+}
+
+document::value iterate_until_document_or_error(
+    cursor& cursor,
+    std::unordered_map<mongocxx::cursor*, mongocxx::cursor::iterator>& cursor_iters) {
+    const auto cursor_iter = cursor_iters.find(&cursor);
+    const auto is_first = cursor_iter == cursor_iters.end();
+
+    auto& iter = is_first ? cursor_iters.emplace(&cursor, cursor.begin()).first->second
+                          : cursor_iter->second;
+
+    // Do not double-increment iterator on first iteration, but increment on subsequent iterations.
+    if (!is_first) {
+        ++iter;
+    }
+
+    return make_document(kvp("result", iter != cursor.end() ? *iter : make_document()));
 }
 
 document::value fail_point(entity::map& map, spec::apm_checker& apm, document::view op) {
@@ -1416,6 +1439,25 @@ document::value distinct(collection& coll, client_session* session, document::vi
     return result.extract();
 }
 
+document::value find_cursor(entity::map& map,
+                            const std::string& object,
+                            client_session* session,
+                            document::view operation) {
+    const auto arguments = operation["arguments"].get_document().value;
+    const auto empty_filter = builder::basic::make_document();
+    const auto filter = [&]() -> document::view {
+        const auto f = arguments["filter"];
+        return f ? f.get_document().value : empty_filter;
+    }();
+    const auto options = make_find_options(arguments);
+
+    auto coll = map.get_collection(object);
+    auto cursor = session ? coll.find(*session, filter, options) : coll.find(filter, options);
+    map.insert(string::to_string(operation["saveResultAsEntity"].get_string().value),
+               std::move(cursor));
+    return make_document();
+}
+
 document::value operations::run(entity::map& entity_map,
                                 std::unordered_map<std::string, spec::apm_checker>& apm_map,
                                 const array::element& op,
@@ -1459,9 +1501,36 @@ document::value operations::run(entity::map& entity_map,
         }
         return insert_one(entity_map.get_collection(object), nullptr, op_view);
     }
-    if (name == "iterateUntilDocumentOrError")
-        return iterate_until_document_or_error(entity_map.get_change_stream(object),
-                                               state.stream_iters);
+    if (name == "createFindCursor") {
+        return find_cursor(entity_map, object, get_session(op_view, entity_map), op_view);
+    }
+    if (name == "iterateUntilDocumentOrError") {
+        const auto& type = entity_map.type(object);
+
+        if (type == typeid(mongocxx::change_stream)) {
+            return iterate_until_document_or_error(entity_map.get_change_stream(object),
+                                                   state.stream_iters);
+        }
+
+        if (type == typeid(mongocxx::cursor)) {
+            return iterate_until_document_or_error(entity_map.get_cursor(object),
+                                                   state.cursor_iters);
+        }
+
+        CAPTURE(object, type.name());
+        throw std::logic_error("unrecognized object");
+    }
+    if (name == "close") {
+        const auto& type = entity_map.type(object);
+
+        if (type == typeid(mongocxx::change_stream) || type == typeid(mongocxx::cursor)) {
+            entity_map.erase(object);
+            return empty_doc;
+        }
+
+        CAPTURE(object, type.name());
+        FAIL("attempted to close an unrecognized object");
+    }
     if (name == "failPoint") {
         auto key = string::to_string(op["arguments"]["client"].get_string().value);
         return fail_point(entity_map, apm_map[key], op_view);

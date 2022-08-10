@@ -30,6 +30,7 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace operations {
 
 struct state {
+    std::unordered_map<mongocxx::cursor*, mongocxx::cursor::iterator> cursor_iters;
     std::unordered_map<mongocxx::change_stream*, mongocxx::change_stream::iterator> stream_iters;
 };
 

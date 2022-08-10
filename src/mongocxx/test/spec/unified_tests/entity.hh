@@ -48,6 +48,7 @@ class map {
     bool insert(const key_type& key, mongocxx::gridfs::bucket&&);
     bool insert(const key_type& key, mongocxx::change_stream&&);
     bool insert(const key_type& key, bsoncxx::types::bson_value::value&&);
+    bool insert(const key_type& key, mongocxx::cursor&&);
 
     client& get_client(const key_type& key);
     database& get_database(const key_type& key);
@@ -56,6 +57,7 @@ class map {
     client_session& get_client_session(const key_type& key);
     gridfs::bucket& get_bucket(const key_type& key);
     bsoncxx::types::bson_value::value& get_value(const key_type& key);
+    cursor& get_cursor(const key_type& key);
 
     database& get_database_by_name(stdx::string_view name);
 
@@ -78,6 +80,7 @@ class map {
     std::unordered_map<key_type, mongocxx::gridfs::bucket> _bucket_map;
     std::unordered_map<key_type, mongocxx::change_stream> _stream_map;
     std::unordered_map<key_type, bsoncxx::types::bson_value::value> _value_map;
+    std::unordered_map<key_type, mongocxx::cursor> _cursor_map;
 };
 }  // namespace entity
 MONGOCXX_INLINE_NAMESPACE_END

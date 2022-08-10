@@ -57,6 +57,10 @@ bool map::insert(const key_type& key, bsoncxx::types::bson_value::value&& value)
     return _insert(key, std::move(value), _value_map);
 }
 
+bool map::insert(const key_type& key, mongocxx::cursor&& value) {
+    return _insert(key, std::move(value), _cursor_map);
+}
+
 client& map::get_client(const key_type& key) {
     return _client_map.at(key);
 }
@@ -85,6 +89,10 @@ bsoncxx::types::bson_value::value& map::get_value(const key_type& key) {
     return _value_map.at(key);
 }
 
+mongocxx::cursor& map::get_cursor(const key_type& key) {
+    return _cursor_map.at(key);
+}
+
 const std::type_info& map::type(const key_type& key) {
     if (_database_map.find(key) != _database_map.end())
         return typeid(mongocxx::database);
@@ -98,6 +106,8 @@ const std::type_info& map::type(const key_type& key) {
         return typeid(mongocxx::gridfs::bucket);
     if (_value_map.find(key) != _value_map.end())
         return typeid(bsoncxx::types::bson_value::value);
+    if (_cursor_map.find(key) != _cursor_map.end())
+        return typeid(mongocxx::cursor);
     if (_client_map.find(key) == _client_map.end())
         throw std::logic_error{"no key '" + key + "' in map"};
     return typeid(mongocxx::client);
@@ -120,12 +130,13 @@ void map::clear() noexcept {
     _stream_map.clear();
     _value_map.clear();
     _client_map.clear();
+    _cursor_map.clear();
 }
 
 void map::erase(const key_type& key) {
     _database_map.erase(key) || _collection_map.erase(key) || _session_map.erase(key) ||
         _bucket_map.erase(key) || _stream_map.erase(key) || _value_map.erase(key) ||
-        _client_map.erase(key);
+        _client_map.erase(key) || _cursor_map.erase(key);
 }
 
 }  // namespace entity
