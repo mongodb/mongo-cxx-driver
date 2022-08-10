@@ -742,9 +742,13 @@ void assert_events(const array::element& test) {
         return;
 
     for (auto e : test["expectEvents"].get_array().value) {
-        auto events = e["events"].get_array().value;
-        auto name = string::to_string(e["client"].get_string().value);
-        get_apm_map()[name].compare_unified(events, get_entity_map());
+        const auto ignore_extra_events = [&]() -> bool {
+            const auto elem = e["ignoreExtraEvents"];
+            return elem && elem.get_bool().value;
+        }();
+        const auto events = e["events"].get_array().value;
+        const auto name = string::to_string(e["client"].get_string().value);
+        get_apm_map()[name].compare_unified(events, get_entity_map(), ignore_extra_events);
     }
 }
 

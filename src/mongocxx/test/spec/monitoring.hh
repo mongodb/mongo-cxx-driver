@@ -36,7 +36,9 @@ class apm_checker {
                  bool allow_extra = false,
                  const test_util::match_visitor& match_visitor = {});
 
-    void compare_unified(bsoncxx::array::view expectations, entity::map& map);
+    void compare_unified(bsoncxx::array::view expectations,
+                         entity::map& map,
+                         bool ignore_extra_events = false);
 
     // Check that the apm checker has all expected events, ignore ordering and extra events.
     void has(bsoncxx::array::view expected);
@@ -78,6 +80,9 @@ class apm_checker {
 
     /// Whether we should record "sensitive" events
     bool observe_sensitive_events = false;
+
+    /// Whether we should ignore extra events when comparing against expected
+    bool ignore_extra_events = false;
 
    private:
     event_vector _events;
