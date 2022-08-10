@@ -845,6 +845,11 @@ void run_tests(document::view test) {
             operations::state state;
 
             for (auto ops : ele["operations"].get_array().value) {
+                const auto ignore_result_and_error = [&]() -> bool {
+                    const auto elem = ops["ignoreResultAndError"];
+                    return elem && elem.get_bool().value;
+                }();
+
                 try {
                     auto result = bsoncxx::builder::basic::make_document();
                     result = operations::run(get_entity_map(), get_apm_map(), ops, state);
@@ -880,14 +885,22 @@ void run_tests(document::view test) {
                         is_array_of_root_docs = names.find(name) != names.end();
                     }
 
-                    assert_result(ops, result, is_array_of_root_docs);
+                    if (!ignore_result_and_error) {
+                        assert_result(ops, result, is_array_of_root_docs);
+                    }
                 } catch (mongocxx::bulk_write_exception& e) {
-                    auto result = bulk_write_result(e);
-                    assert_error(e, ops, result);
+                    if (!ignore_result_and_error) {
+                        auto result = bulk_write_result(e);
+                        assert_error(e, ops, result);
+                    }
                 } catch (mongocxx::operation_exception& e) {
-                    assert_error(e, ops, make_document());
+                    if (!ignore_result_and_error) {
+                        assert_error(e, ops, make_document());
+                    }
                 } catch (mongocxx::exception& e) {
-                    assert_error(e, ops);
+                    if (!ignore_result_and_error) {
+                        assert_error(e, ops);
+                    }
                 }
             }
             disable_fail_point_fn();
