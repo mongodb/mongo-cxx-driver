@@ -588,19 +588,28 @@ document::value create_change_stream(entity::map& map,
     return make_document();
 }
 
-document::value next(change_stream& stream) {
-    static std::unordered_map<change_stream*, change_stream::iterator> map;
-    if (map.find(&stream) == map.end())
-        map[&stream] = stream.begin();
+document::value iterate_until_document_or_error(
+    change_stream& stream,
+    std::unordered_map<mongocxx::change_stream*, mongocxx::change_stream::iterator>& stream_iters) {
+    const auto stream_iter = stream_iters.find(&stream);
+    const auto is_first = stream_iter == stream_iters.end();
 
-    auto iter = map[&stream];
-    auto copy = document::value{*iter};
-    ++iter;  // prepare for next call to this function.
-    return copy;
-}
+    auto& iter = is_first ? stream_iters.emplace(&stream, stream.begin()).first->second
+                          : stream_iter->second;
 
-document::value iterate_until_document_or_error(change_stream& stream) {
-    return make_document(kvp("result", next(stream)));
+    // `.begin()` performs iterator increment on first call for a given stream.
+    // Ensure a double-increment does not take place on any given call to
+    // iterate_until_document_or_error.
+    if (!is_first) {
+        if (iter == stream.end()) {
+            // Permit blocking until next notification or error.
+            iter = stream.begin();
+        } else {
+            ++iter;
+        }
+    }
+
+    return make_document(kvp("result", iter != stream.end() ? *iter : make_document()));
 }
 
 document::value fail_point(entity::map& map, spec::apm_checker& apm, document::view op) {
@@ -970,18 +979,6 @@ bool index_exists(document::view op) {
     });
 }
 
-struct with_transaction_cb {
-    array::value operations;
-    entity::map& entity_map;
-    std::unordered_map<std::string, spec::apm_checker>& apm_map;
-
-    void operator()(client_session*) {
-        for (auto&& op : operations.view()) {
-            operations::run(entity_map, apm_map, op);
-        }
-    }
-};
-
 document::value download(gridfs::bucket& bucket, document::view op) {
     using bsoncxx::types::bson_value::value;
 
@@ -1123,7 +1120,7 @@ document::value delete_many(collection& coll, client_session* session, document:
 
 document::value with_transaction(client_session& session,
                                  document::view op,
-                                 with_transaction_cb cb) {
+                                 client_session::with_transaction_cb cb) {
     if (op["arguments"]) {
         auto opts = set_opts(op["arguments"].get_document());
         session.with_transaction(cb, opts);
@@ -1421,7 +1418,8 @@ document::value distinct(collection& coll, client_session* session, document::vi
 
 document::value operations::run(entity::map& entity_map,
                                 std::unordered_map<std::string, spec::apm_checker>& apm_map,
-                                const array::element& op) {
+                                const array::element& op,
+                                operations::state& state) {
     auto name = string::to_string(op["name"].get_string().value);
     auto object = string::to_string(op["object"].get_string().value);
 
@@ -1462,7 +1460,8 @@ document::value operations::run(entity::map& entity_map,
         return insert_one(entity_map.get_collection(object), nullptr, op_view);
     }
     if (name == "iterateUntilDocumentOrError")
-        return iterate_until_document_or_error(entity_map.get_change_stream(object));
+        return iterate_until_document_or_error(entity_map.get_change_stream(object),
+                                               state.stream_iters);
     if (name == "failPoint") {
         auto key = string::to_string(op["arguments"]["client"].get_string().value);
         return fail_point(entity_map, apm_map[key], op_view);
@@ -1617,8 +1616,11 @@ document::value operations::run(entity::map& entity_map,
         return empty_doc;
     }
     if (name == "withTransaction") {
-        auto cb = with_transaction_cb{
-            array::value(op["arguments"]["callback"].get_array().value), entity_map, apm_map};
+        auto cb = [&](client_session*) {
+            for (auto&& o : op["arguments"]["callback"].get_array().value) {
+                operations::run(entity_map, apm_map, o, state);
+            }
+        };
         auto& session = entity_map.get_client_session(object);
         return with_transaction(session, op_view, cb);
     }

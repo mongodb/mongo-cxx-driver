@@ -840,10 +840,12 @@ void run_tests(document::view test) {
                 apm.second.clear_events();
             }
 
+            operations::state state;
+
             for (auto ops : ele["operations"].get_array().value) {
                 try {
                     auto result = bsoncxx::builder::basic::make_document();
-                    result = operations::run(get_entity_map(), get_apm_map(), ops);
+                    result = operations::run(get_entity_map(), get_apm_map(), ops, state);
 
                     if (string::to_string(ops["object"].get_string().value) == "testRunner") {
                         if (string::to_string(ops["name"].get_string().value) == "failPoint") {
