@@ -563,6 +563,10 @@ document::value create_change_stream(entity::map& map,
         options.batch_size(batch_size.get_int32().value);
     }
 
+    if (const auto comment = args["comment"]) {
+        options.comment(comment.get_value());
+    }
+
     if (const auto full_document = args["fullDocument"]) {
         options.full_document(full_document.get_string().value);
     }
