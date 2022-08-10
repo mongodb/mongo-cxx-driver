@@ -37,6 +37,17 @@ const bsoncxx::stdx::optional<bsoncxx::string::view_or_value>& change_stream::fu
     return _full_document;
 }
 
+change_stream& change_stream::full_document_before_change(
+    bsoncxx::string::view_or_value full_doc_before_change) {
+    _full_document_before_change = std::move(full_doc_before_change);
+    return *this;
+}
+
+const bsoncxx::stdx::optional<bsoncxx::string::view_or_value>&
+change_stream::full_document_before_change() const {
+    return _full_document_before_change;
+}
+
 change_stream& change_stream::batch_size(std::int32_t batch_size) {
     _batch_size = batch_size;
     return *this;
@@ -104,6 +115,7 @@ bsoncxx::document::value change_stream::as_bson() const {
     bsoncxx::builder::basic::document out{};
 
     append_if(out, "fullDocument", full_document());
+    append_if(out, "fullDocumentBeforeChange", full_document_before_change());
     append_if(out, "resumeAfter", resume_after());
     append_if(out, "startAfter", start_after());
     append_if(out, "batchSize", batch_size());

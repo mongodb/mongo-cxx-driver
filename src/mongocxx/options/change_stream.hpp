@@ -68,6 +68,37 @@ class MONGOCXX_API change_stream {
     const bsoncxx::stdx::optional<bsoncxx::string::view_or_value>& full_document() const;
 
     ///
+    /// Sets the fullDocumentBeforeChange stage for the $changeStream.
+    ///
+    /// The allowed values are: 'whenAvailable', 'required', 'off'.
+    /// If none set, defaults to 'off'.
+    ///
+    /// When set to 'whenAvailable', configures the change stream to return the pre-image of the
+    /// modified document for replace, update, and delete change events if it is available.
+    ///
+    /// When set to 'required', the same behavior as 'whenAvailable' except that an error is raised
+    /// if the pre-image is not available.
+    ///
+    /// @param full_doc_before_change
+    ///   The fullDocumentBeforeChange setting to use on this stream.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called. This facilitates
+    ///   method chaining.
+    ///
+    change_stream& full_document_before_change(
+        bsoncxx::string::view_or_value full_doc_before_change);
+
+    ///
+    /// Gets the current fullDocumentBeforeChange setting.
+    ///
+    /// @return
+    ///   The current fullDocumentBeforeChange setting.
+    ///
+    const bsoncxx::stdx::optional<bsoncxx::string::view_or_value>& full_document_before_change()
+        const;
+
+    ///
     /// Sets the number of documents to return per batch.
     ///
     /// @param batch_size
@@ -203,6 +234,7 @@ class MONGOCXX_API change_stream {
 
     bsoncxx::document::value as_bson() const;
     stdx::optional<bsoncxx::string::view_or_value> _full_document;
+    stdx::optional<bsoncxx::string::view_or_value> _full_document_before_change;
     stdx::optional<std::int32_t> _batch_size;
     stdx::optional<bsoncxx::document::view_or_value> _collation;
     stdx::optional<bsoncxx::document::view_or_value> _resume_after;
