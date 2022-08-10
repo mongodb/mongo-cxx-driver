@@ -556,7 +556,10 @@ document::value create_change_stream(entity::map& map,
         options.batch_size(args["batchSize"].get_int32().value);
     }
 
-    auto key = string::to_string(operation["saveResultAsEntity"].get_string().value);
+    const auto save_result_as_entity = operation["saveResultAsEntity"];
+    const auto key = save_result_as_entity
+                         ? string::to_string(save_result_as_entity.get_string().value)
+                         : std::string();
     CAPTURE(object, to_json(operation), key);
     auto stream = [&] {
         const auto& type = map.type(object);
@@ -577,8 +580,11 @@ document::value create_change_stream(entity::map& map,
         return map.get_client(object).watch(pipeline, options);
     }();
 
-    auto res = map.insert(key, std::move(stream));
-    REQUIRE(res);
+    if (!key.empty()) {
+        auto res = map.insert(key, std::move(stream));
+        REQUIRE(res);
+    }
+
     return make_document();
 }
 
@@ -991,9 +997,10 @@ document::value download(gridfs::bucket& bucket, document::view op) {
 }
 
 document::value upload(entity::map& map, document::view op) {
-    auto key = string::to_string(op["saveResultAsEntity"].get_string().value);
-    auto arguments = op["arguments"].get_document().value;
-    auto object = string::to_string(op["object"].get_string().value);
+    const auto save_result_as_entity = op["saveResultAsEntity"];
+    const auto key = string::to_string(save_result_as_entity.get_string().value);
+    const auto arguments = op["arguments"].get_document().value;
+    const auto object = string::to_string(op["object"].get_string().value);
     auto& bucket = map.get_bucket(object);
 
     options::gridfs::upload upload_options;
@@ -1016,7 +1023,10 @@ document::value upload(entity::map& map, document::view op) {
     auto upload_result = uploader.close();
     auto id = upload_result.id();
 
-    map.insert(key, bsoncxx::types::bson_value::value(id));
+    if (!key.empty()) {
+        map.insert(key, bsoncxx::types::bson_value::value(id));
+    }
+
     return make_document(kvp("result", id));
 }
 
