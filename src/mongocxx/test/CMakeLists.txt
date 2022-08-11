@@ -263,6 +263,8 @@ set_property(TEST unified_format_spec
   APPEND PROPERTY ENVIRONMENT "SESSION_UNIFIED_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/sessions/unified/")
 set_property(TEST unified_format_spec
   APPEND PROPERTY ENVIRONMENT "CRUD_UNIFIED_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/crud/unified")
+  set_property(TEST unified_format_spec
+    APPEND PROPERTY ENVIRONMENT "CHANGE_STREAMS_UNIFIED_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/change-streams/unified")
 set_property(TEST unified_format_spec
   APPEND PROPERTY ENVIRONMENT "VERSIONED_API_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/versioned-api")
 set_property(TEST unified_format_spec

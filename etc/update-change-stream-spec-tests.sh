@@ -14,7 +14,7 @@ fi
 tmpdir=`perl -MFile::Temp=tempdir -wle 'print tempdir(TMPDIR => 1, CLEANUP => 0)'`
 curl -sL https://github.com/mongodb/specifications/archive/master.zip -o "$tmpdir/specs.zip"
 unzip -d "$tmpdir" "$tmpdir/specs.zip" > /dev/null
-mkdir -p data/change_stream
-rsync -ah "$tmpdir/specifications-master/source/change-streams/tests/" data/change_stream
-( cd data/change_stream && find * -name \*.json | sort > test_files.txt )
+mkdir -p data/change-streams/unified
+rsync -ah --include='*/' --include='**.json' --exclude='*' "$tmpdir/specifications-master/source/change-streams/tests/unified" data/change-streams
+( cd data/change-streams/unified && find * -name \*.json | sort > test_files.txt )
 rm -rf "$tmpdir"
