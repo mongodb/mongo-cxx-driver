@@ -660,6 +660,15 @@ document::value fail_point(entity::map& map, spec::apm_checker& apm, document::v
                          kvp("failPoint", args["failPoint"]["configureFailPoint"].get_string()));
 }
 
+document::value rename(mongocxx::collection& coll, document::view op) {
+    const auto args = op["arguments"];
+    const auto to = args["to"];
+
+    coll.rename(to.get_string().value);
+
+    return make_document();
+}
+
 document::value find_one_and_delete(collection& coll,
                                     client_session* session,
                                     document::view operation) {
@@ -1705,6 +1714,13 @@ document::value operations::run(entity::map& entity_map,
         };
         auto& session = entity_map.get_client_session(object);
         return with_transaction(session, op_view, cb);
+    }
+    if (name == "rename") {
+        const auto& type = entity_map.type(object);
+        if (type != typeid(mongocxx::collection)) {
+            FAIL("rename operation requested on object with type " << type.name());
+        }
+        return rename(entity_map.get_collection(object), op_view);
     }
     if (name == "delete") {
         auto& bucket = entity_map.get_bucket(object);
