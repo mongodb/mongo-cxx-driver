@@ -185,6 +185,19 @@ document::value list_databases(entity::map& map,
     return result.extract();
 }
 
+document::value list_indexes(entity::map& map, client_session* session, const std::string& object) {
+    auto cursor = session ? map.get_collection(object).list_indexes(*session)
+                          : map.get_collection(object).list_indexes();
+
+    builder::basic::document result;
+    result.append(builder::basic::kvp("result", [&cursor](builder::basic::sub_array array) {
+        for (auto&& document : cursor) {
+            array.append(document);
+        }
+    }));
+    return result.extract();
+}
+
 template <typename Model>
 void add_hint_to_model(Model model, document::view doc) {
     if (doc["hint"]) {
@@ -1613,6 +1626,9 @@ document::value operations::run(entity::map& entity_map,
     if (name == "listDatabases") {
         return list_databases(entity_map, get_session(op_view, entity_map), object);
     }
+    if (name == "listIndexes") {
+        return list_indexes(entity_map, get_session(op_view, entity_map), object);
+    }
     if (name == "assertSessionNotDirty") {
         REQUIRE(!get_session(op_view, entity_map)->get_dirty());
         return empty_doc;
@@ -1792,16 +1808,6 @@ document::value operations::run(entity::map& entity_map,
     if (name == "distinct") {
         auto& coll = entity_map.get_collection(object);
         return distinct(coll, get_session(op_view, entity_map), op_view);
-    }
-
-    if (name == "listIndexes") {
-        auto session = get_session(op_view, entity_map);
-        if (session) {
-            entity_map.get_collection(object).list_indexes(*session).begin();
-        } else {
-            entity_map.get_collection(object).list_indexes().begin();
-        }
-        return empty_doc;
     }
 
     throw std::logic_error{"unsupported operation: " + name};
