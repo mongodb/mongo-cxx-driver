@@ -1517,7 +1517,7 @@ document::value distinct(collection& coll, client_session* session, document::vi
     return result.extract();
 }
 
-document::value find_cursor(entity::map& map,
+document::value create_find_cursor(entity::map& map,
                             const std::string& object,
                             client_session* session,
                             document::view operation) {
@@ -1580,7 +1580,7 @@ document::value operations::run(entity::map& entity_map,
         return insert_one(entity_map.get_collection(object), nullptr, op_view);
     }
     if (name == "createFindCursor") {
-        return find_cursor(entity_map, object, get_session(op_view, entity_map), op_view);
+        return create_find_cursor(entity_map, object, get_session(op_view, entity_map), op_view);
     }
     if (name == "iterateUntilDocumentOrError") {
         const auto& type = entity_map.type(object);
