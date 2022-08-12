@@ -1096,7 +1096,9 @@ document::value download(gridfs::bucket& bucket, document::view op) {
 
 document::value upload(entity::map& map, document::view op) {
     const auto save_result_as_entity = op["saveResultAsEntity"];
-    const auto key = string::to_string(save_result_as_entity.get_string().value);
+    const auto key = save_result_as_entity
+                         ? string::to_string(save_result_as_entity.get_string().value)
+                         : std::string();
     const auto arguments = op["arguments"].get_document().value;
     const auto object = string::to_string(op["object"].get_string().value);
     auto& bucket = map.get_bucket(object);
@@ -1518,9 +1520,13 @@ document::value distinct(collection& coll, client_session* session, document::vi
 }
 
 document::value create_find_cursor(entity::map& map,
-                            const std::string& object,
-                            client_session* session,
-                            document::view operation) {
+                                   const std::string& object,
+                                   client_session* session,
+                                   document::view operation) {
+    const auto save_result_as_entity = operation["saveResultAsEntity"];
+    const auto key = save_result_as_entity
+                         ? string::to_string(save_result_as_entity.get_string().value)
+                         : std::string();
     const auto arguments = operation["arguments"].get_document().value;
     const auto empty_filter = builder::basic::make_document();
     const auto filter = [&]() -> document::view {
@@ -1531,8 +1537,11 @@ document::value create_find_cursor(entity::map& map,
 
     auto coll = map.get_collection(object);
     auto cursor = session ? coll.find(*session, filter, options) : coll.find(filter, options);
-    map.insert(string::to_string(operation["saveResultAsEntity"].get_string().value),
-               std::move(cursor));
+
+    if (!key.empty()) {
+        map.insert(key, std::move(cursor));
+    }
+
     return make_document();
 }
 
