@@ -694,7 +694,9 @@ document::value iterate_until_document_or_error(
     auto& iter = is_first ? cursor_iters.emplace(&cursor, cursor.begin()).first->second
                           : cursor_iter->second;
 
-    // Do not double-increment iterator on first iteration, but increment on subsequent iterations.
+    // `.begin()` performs iterator increment on first call for a given cursor.
+    // Ensure a double-increment does not take place on any given call to
+    // iterate_until_document_or_error.
     if (!is_first) {
         ++iter;
     }
