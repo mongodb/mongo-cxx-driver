@@ -1732,6 +1732,28 @@ document::value operations::run(entity::map& entity_map,
 
         return empty_doc;
     }
+    if (name == "modifyCollection") {
+        const auto arguments = op["arguments"];
+        const auto coll_name = string::to_string(arguments["collection"].get_string().value);
+        auto& db = entity_map.get_database(object);
+
+        builder::basic::document command;
+
+        command.append(builder::basic::kvp("collMod", coll_name));
+
+        if (const auto pre_and_post = arguments["changeStreamPreAndPostImages"]) {
+            command.append(builder::basic::kvp("changeStreamPreAndPostImages",
+                                               pre_and_post.get_document().view()));
+        }
+
+        builder::basic::document result;
+        if (const auto session = get_session(op_view, entity_map)) {
+            result.append(builder::basic::kvp("result", db.run_command(*session, command.view())));
+        } else {
+            result.append(builder::basic::kvp("result", db.run_command(command.view())));
+        }
+        return result.extract();
+    }
     if (name == "assertCollectionNotExists") {
         REQUIRE_FALSE(collection_exists(op_view));
         return empty_doc;
