@@ -1695,7 +1695,7 @@ document::value operations::run(entity::map& entity_map,
         return empty_doc;
     }
     if (name == "createCollection") {
-        auto coll_name = string::to_string(op["arguments"]["collection"].get_string().value);
+        const auto coll_name = string::to_string(op["arguments"]["collection"].get_string().value);
         auto& db = entity_map.get_database(object);
         auto opts = builder::basic::document{};
         const auto arguments = op["arguments"];
@@ -1704,6 +1704,10 @@ document::value operations::run(entity::map& entity_map,
         }
         if (const auto eas = arguments["expireAfterSeconds"]) {
             opts.append(builder::basic::kvp("expireAfterSeconds", eas.get_int32().value));
+        }
+        if (const auto clustered_index = arguments["clusteredIndex"]) {
+            opts.append(
+                builder::basic::kvp("clusteredIndex", clustered_index.get_document().view()));
         }
         {
             const auto view_on = arguments["viewOn"];
@@ -1715,13 +1719,13 @@ document::value operations::run(entity::map& entity_map,
                 opts.append(builder::basic::kvp("pipeline", pipeline.get_array().value));
             }
         }
-        if (const auto session = arguments["session"]) {
-            const auto session_name = string::to_string(session.get_string().value);
-            const auto& client_session = entity_map.get_client_session(session_name);
-            db.create_collection(client_session, coll_name, opts.view());
+
+        if (const auto session = get_session(op_view, entity_map)) {
+            db.create_collection(*session, coll_name, opts.view());
         } else {
             db.create_collection(coll_name, opts.view());
         }
+
         return empty_doc;
     }
     if (name == "assertCollectionNotExists") {
