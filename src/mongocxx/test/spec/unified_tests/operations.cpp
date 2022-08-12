@@ -170,6 +170,21 @@ document::value list_collections(entity::map& map,
     return result.extract();
 }
 
+document::value list_databases(entity::map& map,
+                               client_session* session,
+                               const std::string& object) {
+    auto cursor = session ? map.get_client(object).list_databases(*session)
+                          : map.get_client(object).list_databases();
+
+    builder::basic::document result;
+    result.append(builder::basic::kvp("result", [&cursor](builder::basic::sub_array array) {
+        for (auto&& document : cursor) {
+            array.append(document);
+        }
+    }));
+    return result.extract();
+}
+
 template <typename Model>
 void add_hint_to_model(Model model, document::view doc) {
     if (doc["hint"]) {
@@ -1596,13 +1611,7 @@ document::value operations::run(entity::map& entity_map,
         return list_collections(entity_map, get_session(op_view, entity_map), object, op_view);
     }
     if (name == "listDatabases") {
-        auto session = get_session(op_view, entity_map);
-        if (session) {
-            entity_map.get_client(object).list_databases(*session).begin();
-        } else {
-            entity_map.get_client(object).list_databases().begin();
-        }
-        return empty_doc;
+        return list_databases(entity_map, get_session(op_view, entity_map), object);
     }
     if (name == "assertSessionNotDirty") {
         REQUIRE(!get_session(op_view, entity_map)->get_dirty());
