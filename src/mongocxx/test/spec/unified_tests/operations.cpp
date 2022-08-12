@@ -1709,6 +1709,10 @@ document::value operations::run(entity::map& entity_map,
             opts.append(
                 builder::basic::kvp("clusteredIndex", clustered_index.get_document().view()));
         }
+        if (const auto pre_and_post = arguments["changeStreamPreAndPostImages"]) {
+            opts.append(builder::basic::kvp("changeStreamPreAndPostImages",
+                                            pre_and_post.get_document().view()));
+        }
         {
             const auto view_on = arguments["viewOn"];
             const auto pipeline = arguments["pipeline"];
