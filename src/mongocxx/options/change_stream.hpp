@@ -211,7 +211,7 @@ class MONGOCXX_API change_stream {
     // _start_at_operation_time is not wrapped in a stdx::optional because of a longstanding bug in
     // the MNMLSTC polyfill that has been fixed on master, but not in the latest release:
     // https://github.com/mnmlstc/core/pull/23
-    bsoncxx::types::b_timestamp _start_at_operation_time;
+    bsoncxx::types::b_timestamp _start_at_operation_time = {};
     bool _start_at_operation_time_set = false;
 };
 }  // namespace options
