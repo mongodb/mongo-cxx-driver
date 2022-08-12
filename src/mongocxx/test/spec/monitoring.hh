@@ -81,9 +81,6 @@ class apm_checker {
     /// Whether we should record "sensitive" events
     bool observe_sensitive_events = false;
 
-    /// Whether we should ignore extra events when comparing against expected
-    bool ignore_extra_events = false;
-
    private:
     event_vector _events;
     std::vector<std::string> _ignore;
