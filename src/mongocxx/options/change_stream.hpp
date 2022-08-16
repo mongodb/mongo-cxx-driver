@@ -41,7 +41,7 @@ class MONGOCXX_API change_stream {
     change_stream();
 
     ///
-    /// Sets the fullDocument stage for the $changeStream.
+    /// Sets the fullDocument option for the $changeStream.
     ///
     /// The allowed values are: ‘default’, ‘updateLookup’.
     /// If none set, defaults to ‘default’.
@@ -52,7 +52,7 @@ class MONGOCXX_API change_stream {
     /// the change occurred. This will be stored in the "fullDocument" field of the notification.
     ///
     /// @param full_doc
-    ///   The fullDocument setting to use on this stream.
+    ///   The fullDocument option to use on this stream.
     ///
     /// @return
     ///   A reference to the object on which this member function is being called. This facilitates
@@ -61,15 +61,15 @@ class MONGOCXX_API change_stream {
     change_stream& full_document(bsoncxx::string::view_or_value full_doc);
 
     ///
-    /// Gets the current fullDocument setting.
+    /// Gets the current fullDocument option.
     ///
     /// @return
-    ///   The current fullDocument setting.
+    ///   The current fullDocument option.
     ///
     const bsoncxx::stdx::optional<bsoncxx::string::view_or_value>& full_document() const;
 
     ///
-    /// Sets the fullDocumentBeforeChange stage for the $changeStream.
+    /// Sets the fullDocumentBeforeChange option for the $changeStream.
     ///
     /// The allowed values are: 'whenAvailable', 'required', 'off'.
     /// If none set, defaults to 'off'.
@@ -81,7 +81,7 @@ class MONGOCXX_API change_stream {
     /// if the pre-image is not available.
     ///
     /// @param full_doc_before_change
-    ///   The fullDocumentBeforeChange setting to use on this stream.
+    ///   The fullDocumentBeforeChange option to use on this stream.
     ///
     /// @return
     ///   A reference to the object on which this member function is being called. This facilitates
@@ -91,10 +91,10 @@ class MONGOCXX_API change_stream {
         bsoncxx::string::view_or_value full_doc_before_change);
 
     ///
-    /// Gets the current fullDocumentBeforeChange setting.
+    /// Gets the current fullDocumentBeforeChange option.
     ///
     /// @return
-    ///   The current fullDocumentBeforeChange setting.
+    ///   The current fullDocumentBeforeChange option.
     ///
     const bsoncxx::stdx::optional<bsoncxx::string::view_or_value>& full_document_before_change()
         const;
