@@ -43,13 +43,22 @@ class MONGOCXX_API change_stream {
     ///
     /// Sets the fullDocument option for the $changeStream.
     ///
-    /// The allowed values are: ‘default’, ‘updateLookup’.
-    /// If none set, defaults to ‘default’.
+    /// Allowed values: 'default', 'updateLookup', 'whenAvailable', 'required'.
     ///
-    /// When set to ‘updateLookup’, the change stream will include both a delta describing the
-    /// changes to
-    /// the document, as well as a copy of the entire document that was changed from some time after
-    /// the change occurred. This will be stored in the "fullDocument" field of the notification.
+    /// The default is to not send a value, which is equivalent to 'default'. By default, the change
+    /// notification for partial updates will include a delta describing the changes to the
+    /// document.
+    ///
+    /// When set to 'updateLookup', the change notification for partial updates will include both a
+    /// delta describing the changes to the document as well as a copy of the entire document that
+    /// was changed from some time after the change occurred.
+    ///
+    /// When set to 'whenAvailable', configures the change stream to return the post-image of the
+    /// modified document for replace and update change events if the post-image for this event is
+    /// available.
+    ///
+    /// When set to 'required', the same behavior as 'whenAvailable' except that an error is raised
+    /// if the post-image is not available.
     ///
     /// @param full_doc
     ///   The fullDocument option to use on this stream.
