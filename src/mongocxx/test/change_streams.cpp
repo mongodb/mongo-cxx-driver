@@ -123,7 +123,7 @@ TEST_CASE("Spec Prose Tests") {
     coll.drop();
 
     write_concern wc_majority;
-    wc_majority.majority(std::chrono::milliseconds(0));
+    wc_majority.majority(std::chrono::seconds(30));
 
     // As a sanity check, we implement the first prose test. The behavior tested
     // by the prose tests is implemented and tested by the C driver, so we won't
@@ -141,7 +141,7 @@ TEST_CASE("Spec Prose Tests") {
         auto doc3 = make_document(kvp("c", 3));
 
         options::insert insert_opts{};
-        insert_opts.write_concern(wc_majority);
+        insert_opts.write_concern(write_concern());
 
         {
             auto res = coll.insert_one(doc1.view(), insert_opts);
