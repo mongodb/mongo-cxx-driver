@@ -674,12 +674,12 @@ document::value iterate_until_document_or_error(
     // Ensure a double-increment does not take place on any given call to
     // iterate_until_document_or_error.
     if (!is_first) {
-        if (iter == stream.end()) {
-            // Permit blocking until next notification or error.
-            iter = stream.begin();
-        } else {
-            ++iter;
-        }
+        ++iter;
+    }
+
+    // Loop until document or error.
+    while (iter == stream.end()) {
+        iter = stream.begin();
     }
 
     return make_document(kvp("result", iter != stream.end() ? *iter : make_document()));
@@ -699,6 +699,11 @@ document::value iterate_until_document_or_error(
     // iterate_until_document_or_error.
     if (!is_first) {
         ++iter;
+    }
+
+    // Loop until document or error.
+    while (iter == cursor.end()) {
+        iter = cursor.begin();
     }
 
     return make_document(kvp("result", iter != cursor.end() ? *iter : make_document()));
