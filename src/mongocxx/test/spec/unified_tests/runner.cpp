@@ -982,7 +982,9 @@ bool run_unified_format_tests_in_env_dir(
 
 TEST_CASE("unified format spec automated tests", "[unified_format_spec]") {
     const std::set<mongocxx::stdx::string_view> unsupported_tests = {
+        // Waiting on CDRIVER-3525 and CXX-2166.
         "valid-pass/entity-client-cmap-events.json",
+        // Waiting on CDRIVER-3525 and CXX-2166.
         "valid-pass/assertNumberConnectionsCheckedOut.json"};
 
     CHECK(run_unified_format_tests_in_env_dir("UNIFIED_FORMAT_TESTS_PATH", unsupported_tests));
