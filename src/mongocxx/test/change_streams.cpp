@@ -141,7 +141,7 @@ TEST_CASE("Spec Prose Tests") {
         auto doc3 = make_document(kvp("c", 3));
 
         options::insert insert_opts{};
-        insert_opts.write_concern(write_concern());
+        insert_opts.write_concern(wc_majority);
 
         {
             auto res = coll.insert_one(doc1.view(), insert_opts);
