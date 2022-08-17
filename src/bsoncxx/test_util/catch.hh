@@ -41,6 +41,13 @@ struct StringMaker<bsoncxx::document::view> {
     }
 };
 
+template <>
+struct StringMaker<bsoncxx::document::value> {
+    static std::string convert(const bsoncxx::document::value& value) {
+        return StringMaker<bsoncxx::document::view>::convert(value.view());
+    }
+};
+
 template <typename T>
 struct StringMaker<stdx::optional<T>> {
     static std::string convert(const bsoncxx::stdx::optional<T>& value) {
