@@ -123,7 +123,7 @@ TEST_CASE("Spec Prose Tests") {
     coll.drop();
 
     write_concern wc_majority;
-    wc_majority.majority(std::chrono::milliseconds(0));
+    wc_majority.majority(std::chrono::seconds(30));
 
     // As a sanity check, we implement the first prose test. The behavior tested
     // by the prose tests is implemented and tested by the C driver, so we won't
@@ -136,30 +136,45 @@ TEST_CASE("Spec Prose Tests") {
         auto cs = client.watch(std::move(opts));
 
         // With WC majority, insert some documents to listen for.
-        auto doc1 = make_document(kvp("_id", 1));
-        auto doc2 = make_document(kvp("_id", 2));
-        auto doc3 = make_document(kvp("_id", 3));
+        auto doc1 = make_document(kvp("a", 1));
+        auto doc2 = make_document(kvp("b", 2));
+        auto doc3 = make_document(kvp("c", 3));
 
         options::insert insert_opts{};
         insert_opts.write_concern(wc_majority);
 
-        coll.insert_one(doc1.view(), insert_opts);
-        coll.insert_one(doc2.view(), insert_opts);
-        coll.insert_one(doc3.view(), insert_opts);
+        {
+            auto res = coll.insert_one(doc1.view(), insert_opts);
+            REQUIRE(res);
+            REQUIRE(res->result().inserted_count() == 1);
+        }
+        {
+            auto res = coll.insert_one(doc2.view(), insert_opts);
+            REQUIRE(res);
+            REQUIRE(res->result().inserted_count() == 1);
+        }
+        {
+            auto res = coll.insert_one(doc3.view(), insert_opts);
+            REQUIRE(res);
+            REQUIRE(res->result().inserted_count() == 1);
+        }
 
         // For each read, check the resume token is updated. We should
         // be reading the postBatchResumeToken on each read, since our
         // batch size is 1.
         auto it = cs.begin();
+        REQUIRE(it != cs.end());
         REQUIRE(cs.get_resume_token());
         auto token1 = bsoncxx::document::value(*cs.get_resume_token());
 
         it++;
+        REQUIRE(it != cs.end());
         REQUIRE(cs.get_resume_token());
         auto token2 = bsoncxx::document::value(*cs.get_resume_token());
         REQUIRE(token1 != token2);
 
         it++;
+        REQUIRE(it != cs.end());
         REQUIRE(cs.get_resume_token());
         auto token3 = bsoncxx::document::value(*cs.get_resume_token());
         REQUIRE(token2 != token3);
@@ -168,6 +183,7 @@ TEST_CASE("Spec Prose Tests") {
         // When out of docs, check that the resume token is the same as the last doc.
         it++;
         REQUIRE(it == cs.end());
+        REQUIRE(cs.get_resume_token());
         REQUIRE(*cs.get_resume_token() == token3);
     }
 }
