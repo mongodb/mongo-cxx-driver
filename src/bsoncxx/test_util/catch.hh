@@ -58,17 +58,6 @@ struct StringMaker<stdx::optional<bsoncxx::stdx::nullopt_t>> {
         return "{nullopt}";
     }
 };
-
-template <>
-struct StringMaker<stdx::optional<bsoncxx::document::view>> {
-    static std::string convert(const bsoncxx::stdx::optional<bsoncxx::document::view>& value) {
-        if (value) {
-            return StringMaker::convert(value.value());
-        }
-
-        return "{nullopt}";
-    }
-};
 }  // namespace Catch
 
 #include <bsoncxx/config/private/postlude.hh>
