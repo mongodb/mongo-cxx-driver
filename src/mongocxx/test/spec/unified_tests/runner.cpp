@@ -47,9 +47,7 @@ using bsoncxx::builder::basic::make_document;
 
 using schema_versions_t =
     std::array<std::array<int, 3 /* major.minor.patch */>, 2 /* supported version */>;
-// NOTE: 1.5.0 support is only *partial*: Enough for to support the redacted-commands.json
-// test cases.
-constexpr schema_versions_t schema_versions{{{{1, 1, 0}}, {{1, 5, 0}}}};
+constexpr schema_versions_t schema_versions{{{{1, 1, 0}}, {{1, 7, 0}}}};
 
 std::pair<std::unordered_map<std::string, spec::apm_checker>&, entity::map&> init_maps() {
     // Below initializes the static apm map and entity map if needed, in that order. This will also
@@ -744,9 +742,13 @@ void assert_events(const array::element& test) {
         return;
 
     for (auto e : test["expectEvents"].get_array().value) {
-        auto events = e["events"].get_array().value;
-        auto name = string::to_string(e["client"].get_string().value);
-        get_apm_map()[name].compare_unified(events, get_entity_map());
+        const auto ignore_extra_events = [&]() -> bool {
+            const auto elem = e["ignoreExtraEvents"];
+            return elem && elem.get_bool().value;
+        }();
+        const auto events = e["events"].get_array().value;
+        const auto name = string::to_string(e["client"].get_string().value);
+        get_apm_map()[name].compare_unified(events, get_entity_map(), ignore_extra_events);
     }
 }
 
@@ -840,10 +842,17 @@ void run_tests(document::view test) {
                 apm.second.clear_events();
             }
 
+            operations::state state;
+
             for (auto ops : ele["operations"].get_array().value) {
+                const auto ignore_result_and_error = [&]() -> bool {
+                    const auto elem = ops["ignoreResultAndError"];
+                    return elem && elem.get_bool().value;
+                }();
+
                 try {
                     auto result = bsoncxx::builder::basic::make_document();
-                    result = operations::run(get_entity_map(), get_apm_map(), ops);
+                    result = operations::run(get_entity_map(), get_apm_map(), ops, state);
 
                     if (string::to_string(ops["object"].get_string().value) == "testRunner") {
                         if (string::to_string(ops["name"].get_string().value) == "failPoint") {
@@ -876,14 +885,22 @@ void run_tests(document::view test) {
                         is_array_of_root_docs = names.find(name) != names.end();
                     }
 
-                    assert_result(ops, result, is_array_of_root_docs);
+                    if (!ignore_result_and_error) {
+                        assert_result(ops, result, is_array_of_root_docs);
+                    }
                 } catch (mongocxx::bulk_write_exception& e) {
-                    auto result = bulk_write_result(e);
-                    assert_error(e, ops, result);
+                    if (!ignore_result_and_error) {
+                        auto result = bulk_write_result(e);
+                        assert_error(e, ops, result);
+                    }
                 } catch (mongocxx::operation_exception& e) {
-                    assert_error(e, ops, make_document());
+                    if (!ignore_result_and_error) {
+                        assert_error(e, ops, make_document());
+                    }
                 } catch (mongocxx::exception& e) {
-                    assert_error(e, ops);
+                    if (!ignore_result_and_error) {
+                        assert_error(e, ops);
+                    }
                 }
             }
             disable_fail_point_fn();
@@ -931,7 +948,9 @@ void run_tests_in_file(const std::string& test_path) {
 // Check the environment for the specified variable; if present, extract it
 // as a directory and run all the tests contained in the magic "test_files.txt"
 // file:
-bool run_unified_format_tests_in_env_dir(const std::string& env_path) {
+bool run_unified_format_tests_in_env_dir(
+    const std::string& env_path,
+    const std::set<mongocxx::stdx::string_view>& unsupported_tests = {}) {
     const char* p = std::getenv(env_path.c_str());
 
     if (nullptr == p)
@@ -949,15 +968,26 @@ bool run_unified_format_tests_in_env_dir(const std::string& env_path) {
     instance::current();
 
     for (std::string file; std::getline(files, file);) {
-        CAPTURE(file);
-        run_tests_in_file(base_path + '/' + file);
+        SECTION(file) {
+            if (unsupported_tests.find(file) != unsupported_tests.end()) {
+                WARN("Skipping unsupported test file: " << file);
+            } else {
+                run_tests_in_file(base_path + '/' + file);
+            }
+        }
     }
 
     return true;
 }
 
 TEST_CASE("unified format spec automated tests", "[unified_format_spec]") {
-    CHECK(run_unified_format_tests_in_env_dir("UNIFIED_FORMAT_TESTS_PATH"));
+    const std::set<mongocxx::stdx::string_view> unsupported_tests = {
+        // Waiting on CDRIVER-3525 and CXX-2166.
+        "valid-pass/entity-client-cmap-events.json",
+        // Waiting on CDRIVER-3525 and CXX-2166.
+        "valid-pass/assertNumberConnectionsCheckedOut.json"};
+
+    CHECK(run_unified_format_tests_in_env_dir("UNIFIED_FORMAT_TESTS_PATH", unsupported_tests));
 }
 
 TEST_CASE("session unified format spec automated tests", "[unified_format_spec]") {
@@ -966,6 +996,10 @@ TEST_CASE("session unified format spec automated tests", "[unified_format_spec]"
 
 TEST_CASE("CRUD unified format spec automated tests", "[unified_format_spec]") {
     CHECK(run_unified_format_tests_in_env_dir("CRUD_UNIFIED_TESTS_PATH"));
+}
+
+TEST_CASE("change streams unified format spec automated tests", "[unified_format_spec]") {
+    CHECK(run_unified_format_tests_in_env_dir("CHANGE_STREAMS_UNIFIED_TESTS_PATH"));
 }
 
 TEST_CASE("versioned API spec automated tests", "[unified_format_spec]") {

@@ -77,6 +77,8 @@ uint32_t error_code_from_name(string_view name) {
         return 263;
     } else if (name.compare("APIStrictError") == 0) {
         return 323;
+    } else if (name.compare("ChangeStreamFatalError") == 0) {
+        return 280;
     }
 
     return 0;

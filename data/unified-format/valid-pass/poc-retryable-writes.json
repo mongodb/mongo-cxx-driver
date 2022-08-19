@@ -297,13 +297,12 @@
             "ordered": true
           },
           "expectResult": {
-            "insertedCount": {
-              "$$unsetOrMatches": 2
-            },
-            "insertedIds": {
-              "$$unsetOrMatches": {
-                "0": 3,
-                "1": 4
+            "$$unsetOrMatches": {
+              "insertedIds": {
+                "$$unsetOrMatches": {
+                  "0": 3,
+                  "1": 4
+                }
               }
             }
           }

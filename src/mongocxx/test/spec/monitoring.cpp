@@ -46,7 +46,9 @@ void remove_ignored_command_monitoring_events(apm_checker::event_vector& events,
 }
 
 // commands postfixed with "_unified" are used to support the unified test format.
-void apm_checker::compare_unified(bsoncxx::array::view expectations, entity::map& map) {
+void apm_checker::compare_unified(bsoncxx::array::view expectations,
+                                  entity::map& map,
+                                  bool ignore_extra_events) {
     remove_ignored_command_monitoring_events(_events, _ignore);
 
     // This will throw an exception on unmatched fields and return true in all other cases.
@@ -81,7 +83,7 @@ void apm_checker::compare_unified(bsoncxx::array::view expectations, entity::map
                    << std::distance(expectations.cbegin(), expectations.cend())
                    << " events, but got " << (_events.size()) << " events)");
     }
-    if (ev_it != ev_end) {
+    if (!ignore_extra_events && ev_it != ev_end) {
         auto next_event = *ev_it;
         CAPTURE(to_json(next_event));
         FAIL_CHECK("Too many events occurred (Expected "

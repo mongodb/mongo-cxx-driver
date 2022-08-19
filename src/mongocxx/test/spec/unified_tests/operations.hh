@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <unordered_map>
+
 #include "entity.hh"
 #include <bsoncxx/array/element.hpp>
 #include <bsoncxx/document/value.hpp>
@@ -27,9 +29,15 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 namespace operations {
 
+struct state {
+    std::unordered_map<mongocxx::cursor*, mongocxx::cursor::iterator> cursor_iters;
+    std::unordered_map<mongocxx::change_stream*, mongocxx::change_stream::iterator> stream_iters;
+};
+
 bsoncxx::document::value run(entity::map& map,
                              std::unordered_map<std::string, spec::apm_checker>& apm,
-                             const bsoncxx::array::element& op);
+                             const bsoncxx::array::element& op,
+                             state& state);
 
 }  // namespace operations
 

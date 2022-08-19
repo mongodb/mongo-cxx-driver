@@ -45,17 +45,8 @@ int32_t as_int32(const document::element& el) {
     return el.get_int32().value;
 }
 
-document::value find(collection& coll, client_session* session, document::view operation) {
-    document::view arguments = operation["arguments"].get_document().value;
-    document::value empty_filter = builder::basic::make_document();
-    document::view filter;
-    if (const auto f = arguments["filter"]) {
-        filter = f.get_document().value;
-    } else {
-        filter = empty_filter.view();
-    }
-
-    options::find options{};
+options::find make_find_options(document::view arguments) {
+    options::find options;
 
     if (const auto batch_size = arguments["batchSize"]) {
         options.batch_size(as_int32(batch_size));
@@ -120,6 +111,21 @@ document::value find(collection& coll, client_session* session, document::view o
         }
     }
 
+    return options;
+}
+
+document::value find(collection& coll, client_session* session, document::view operation) {
+    document::view arguments = operation["arguments"].get_document().value;
+    document::value empty_filter = builder::basic::make_document();
+    document::view filter;
+    if (const auto f = arguments["filter"]) {
+        filter = f.get_document().value;
+    } else {
+        filter = empty_filter.view();
+    }
+
+    options::find options = make_find_options(arguments);
+
     stdx::optional<cursor> result_cursor;
 
     if (session) {
@@ -135,6 +141,60 @@ document::value find(collection& coll, client_session* session, document::view o
         }
     }));
 
+    return result.extract();
+}
+
+document::value list_collections(entity::map& map,
+                                 client_session* session,
+                                 const std::string& object,
+                                 document::view op) {
+    const auto arguments = op["arguments"];
+    const auto empty_doc = make_document();
+
+    document::view filter;
+    if (const auto f = arguments["filter"]) {
+        filter = f.get_document().value;
+    } else {
+        filter = empty_doc;
+    }
+
+    auto cursor = session ? map.get_database(object).list_collections(*session, filter)
+                          : map.get_database(object).list_collections(filter);
+
+    builder::basic::document result;
+    result.append(builder::basic::kvp("result", [&cursor](builder::basic::sub_array array) {
+        for (auto&& document : cursor) {
+            array.append(document);
+        }
+    }));
+    return result.extract();
+}
+
+document::value list_databases(entity::map& map,
+                               client_session* session,
+                               const std::string& object) {
+    auto cursor = session ? map.get_client(object).list_databases(*session)
+                          : map.get_client(object).list_databases();
+
+    builder::basic::document result;
+    result.append(builder::basic::kvp("result", [&cursor](builder::basic::sub_array array) {
+        for (auto&& document : cursor) {
+            array.append(document);
+        }
+    }));
+    return result.extract();
+}
+
+document::value list_indexes(entity::map& map, client_session* session, const std::string& object) {
+    auto cursor = session ? map.get_collection(object).list_indexes(*session)
+                          : map.get_collection(object).list_indexes();
+
+    builder::basic::document result;
+    result.append(builder::basic::kvp("result", [&cursor](builder::basic::sub_array array) {
+        for (auto&& document : cursor) {
+            array.append(document);
+        }
+    }));
     return result.extract();
 }
 
@@ -552,13 +612,29 @@ document::value create_change_stream(entity::map& map,
     auto pipeline = build_pipeline(args["pipeline"].get_array().value);
 
     options::change_stream options{};
-    if (args["batchSize"]) {
-        options.batch_size(args["batchSize"].get_int32().value);
+
+    if (const auto batch_size = args["batchSize"]) {
+        options.batch_size(batch_size.get_int32().value);
     }
 
-    auto key = string::to_string(operation["saveResultAsEntity"].get_string().value);
+    if (const auto comment = args["comment"]) {
+        options.comment(comment.get_value());
+    }
+
+    if (const auto full_document = args["fullDocument"]) {
+        options.full_document(full_document.get_string().value);
+    }
+
+    if (const auto full_document_before_change = args["fullDocumentBeforeChange"]) {
+        options.full_document_before_change(full_document_before_change.get_string().value);
+    }
+
+    const auto save_result_as_entity = operation["saveResultAsEntity"];
+    const auto key = save_result_as_entity
+                         ? string::to_string(save_result_as_entity.get_string().value)
+                         : std::string();
     CAPTURE(object, to_json(operation), key);
-    auto stream = [&] {
+    auto stream = [&]() -> mongocxx::change_stream {
         const auto& type = map.type(object);
         if (type == typeid(mongocxx::database)) {
             if (session)
@@ -577,24 +653,60 @@ document::value create_change_stream(entity::map& map,
         return map.get_client(object).watch(pipeline, options);
     }();
 
-    auto res = map.insert(key, std::move(stream));
-    REQUIRE(res);
+    if (!key.empty()) {
+        auto res = map.insert(key, std::move(stream));
+        REQUIRE(res);
+    }
+
     return make_document();
 }
 
-document::value next(change_stream& stream) {
-    static std::unordered_map<change_stream*, change_stream::iterator> map;
-    if (map.find(&stream) == map.end())
-        map[&stream] = stream.begin();
+document::value iterate_until_document_or_error(
+    change_stream& stream,
+    std::unordered_map<mongocxx::change_stream*, mongocxx::change_stream::iterator>& stream_iters) {
+    const auto stream_iter = stream_iters.find(&stream);
+    const auto is_first = stream_iter == stream_iters.end();
 
-    auto iter = map[&stream];
-    auto copy = document::value{*iter};
-    ++iter;  // prepare for next call to this function.
-    return copy;
+    auto& iter = is_first ? stream_iters.emplace(&stream, stream.begin()).first->second
+                          : stream_iter->second;
+
+    // `.begin()` performs iterator increment on first call for a given stream.
+    // Ensure a double-increment does not take place on any given call to
+    // iterate_until_document_or_error.
+    if (!is_first) {
+        ++iter;
+    }
+
+    // Loop until document or error.
+    while (iter == stream.end()) {
+        iter = stream.begin();
+    }
+
+    return make_document(kvp("result", iter != stream.end() ? *iter : make_document()));
 }
 
-document::value iterate_until_document_or_error(change_stream& stream) {
-    return make_document(kvp("result", next(stream)));
+document::value iterate_until_document_or_error(
+    cursor& cursor,
+    std::unordered_map<mongocxx::cursor*, mongocxx::cursor::iterator>& cursor_iters) {
+    const auto cursor_iter = cursor_iters.find(&cursor);
+    const auto is_first = cursor_iter == cursor_iters.end();
+
+    auto& iter = is_first ? cursor_iters.emplace(&cursor, cursor.begin()).first->second
+                          : cursor_iter->second;
+
+    // `.begin()` performs iterator increment on first call for a given cursor.
+    // Ensure a double-increment does not take place on any given call to
+    // iterate_until_document_or_error.
+    if (!is_first) {
+        ++iter;
+    }
+
+    // Loop until document or error.
+    while (iter == cursor.end()) {
+        iter = cursor.begin();
+    }
+
+    return make_document(kvp("result", iter != cursor.end() ? *iter : make_document()));
 }
 
 document::value fail_point(entity::map& map, spec::apm_checker& apm, document::view op) {
@@ -607,6 +719,15 @@ document::value fail_point(entity::map& map, spec::apm_checker& apm, document::v
     apm.set_ignore_command_monitoring_event("configureFailPoint");
     return make_document(kvp("uri", client.uri().to_string()),
                          kvp("failPoint", args["failPoint"]["configureFailPoint"].get_string()));
+}
+
+document::value rename(mongocxx::collection& coll, document::view op) {
+    const auto args = op["arguments"];
+    const auto to = args["to"];
+
+    coll.rename(to.get_string().value);
+
+    return make_document();
 }
 
 document::value find_one_and_delete(collection& coll,
@@ -964,18 +1085,6 @@ bool index_exists(document::view op) {
     });
 }
 
-struct with_transaction_cb {
-    array::value operations;
-    entity::map& entity_map;
-    std::unordered_map<std::string, spec::apm_checker>& apm_map;
-
-    void operator()(client_session*) {
-        for (auto&& op : operations.view()) {
-            operations::run(entity_map, apm_map, op);
-        }
-    }
-};
-
 document::value download(gridfs::bucket& bucket, document::view op) {
     using bsoncxx::types::bson_value::value;
 
@@ -991,9 +1100,12 @@ document::value download(gridfs::bucket& bucket, document::view op) {
 }
 
 document::value upload(entity::map& map, document::view op) {
-    auto key = string::to_string(op["saveResultAsEntity"].get_string().value);
-    auto arguments = op["arguments"].get_document().value;
-    auto object = string::to_string(op["object"].get_string().value);
+    const auto save_result_as_entity = op["saveResultAsEntity"];
+    const auto key = save_result_as_entity
+                         ? string::to_string(save_result_as_entity.get_string().value)
+                         : std::string();
+    const auto arguments = op["arguments"].get_document().value;
+    const auto object = string::to_string(op["object"].get_string().value);
     auto& bucket = map.get_bucket(object);
 
     options::gridfs::upload upload_options;
@@ -1016,7 +1128,10 @@ document::value upload(entity::map& map, document::view op) {
     auto upload_result = uploader.close();
     auto id = upload_result.id();
 
-    map.insert(key, bsoncxx::types::bson_value::value(id));
+    if (!key.empty()) {
+        map.insert(key, bsoncxx::types::bson_value::value(id));
+    }
+
     return make_document(kvp("result", id));
 }
 
@@ -1113,7 +1228,7 @@ document::value delete_many(collection& coll, client_session* session, document:
 
 document::value with_transaction(client_session& session,
                                  document::view op,
-                                 with_transaction_cb cb) {
+                                 client_session::with_transaction_cb cb) {
     if (op["arguments"]) {
         auto opts = set_opts(op["arguments"].get_document());
         session.with_transaction(cb, opts);
@@ -1409,9 +1524,36 @@ document::value distinct(collection& coll, client_session* session, document::vi
     return result.extract();
 }
 
+document::value create_find_cursor(entity::map& map,
+                                   const std::string& object,
+                                   client_session* session,
+                                   document::view operation) {
+    const auto save_result_as_entity = operation["saveResultAsEntity"];
+    const auto key = save_result_as_entity
+                         ? string::to_string(save_result_as_entity.get_string().value)
+                         : std::string();
+    const auto arguments = operation["arguments"].get_document().value;
+    const auto empty_filter = builder::basic::make_document();
+    const auto filter = [&]() -> document::view {
+        const auto f = arguments["filter"];
+        return f ? f.get_document().value : empty_filter;
+    }();
+    const auto options = make_find_options(arguments);
+
+    auto coll = map.get_collection(object);
+    auto cursor = session ? coll.find(*session, filter, options) : coll.find(filter, options);
+
+    if (!key.empty()) {
+        map.insert(key, std::move(cursor));
+    }
+
+    return make_document();
+}
+
 document::value operations::run(entity::map& entity_map,
                                 std::unordered_map<std::string, spec::apm_checker>& apm_map,
-                                const array::element& op) {
+                                const array::element& op,
+                                operations::state& state) {
     auto name = string::to_string(op["name"].get_string().value);
     auto object = string::to_string(op["object"].get_string().value);
 
@@ -1451,8 +1593,36 @@ document::value operations::run(entity::map& entity_map,
         }
         return insert_one(entity_map.get_collection(object), nullptr, op_view);
     }
-    if (name == "iterateUntilDocumentOrError")
-        return iterate_until_document_or_error(entity_map.get_change_stream(object));
+    if (name == "createFindCursor") {
+        return create_find_cursor(entity_map, object, get_session(op_view, entity_map), op_view);
+    }
+    if (name == "iterateUntilDocumentOrError") {
+        const auto& type = entity_map.type(object);
+
+        if (type == typeid(mongocxx::change_stream)) {
+            return iterate_until_document_or_error(entity_map.get_change_stream(object),
+                                                   state.stream_iters);
+        }
+
+        if (type == typeid(mongocxx::cursor)) {
+            return iterate_until_document_or_error(entity_map.get_cursor(object),
+                                                   state.cursor_iters);
+        }
+
+        CAPTURE(object, type.name());
+        throw std::logic_error("unrecognized object");
+    }
+    if (name == "close") {
+        const auto& type = entity_map.type(object);
+
+        if (type == typeid(mongocxx::change_stream) || type == typeid(mongocxx::cursor)) {
+            entity_map.erase(object);
+            return empty_doc;
+        }
+
+        CAPTURE(object, type.name());
+        FAIL("attempted to close an unrecognized object");
+    }
     if (name == "failPoint") {
         auto key = string::to_string(op["arguments"]["client"].get_string().value);
         return fail_point(entity_map, apm_map[key], op_view);
@@ -1467,24 +1637,13 @@ document::value operations::run(entity::map& entity_map,
         return find_one_and_update(
             entity_map.get_collection(object), get_session(op_view, entity_map), op_view);
     if (name == "listCollections") {
-        auto session = get_session(op_view, entity_map);
-        if (session) {
-            std::cout << "applying session to listCollections!" << std::endl;
-            entity_map.get_database(object).list_collections(*session).begin();
-        } else {
-            std::cout << "NOT applying session to listCollections!" << std::endl;
-            entity_map.get_database(object).list_collections().begin();
-        }
-        return empty_doc;
+        return list_collections(entity_map, get_session(op_view, entity_map), object, op_view);
     }
     if (name == "listDatabases") {
-        auto session = get_session(op_view, entity_map);
-        if (session) {
-            entity_map.get_client(object).list_databases(*session).begin();
-        } else {
-            entity_map.get_client(object).list_databases().begin();
-        }
-        return empty_doc;
+        return list_databases(entity_map, get_session(op_view, entity_map), object);
+    }
+    if (name == "listIndexes") {
+        return list_indexes(entity_map, get_session(op_view, entity_map), object);
     }
     if (name == "assertSessionNotDirty") {
         REQUIRE(!get_session(op_view, entity_map)->get_dirty());
@@ -1552,7 +1711,7 @@ document::value operations::run(entity::map& entity_map,
         return empty_doc;
     }
     if (name == "createCollection") {
-        auto coll_name = string::to_string(op["arguments"]["collection"].get_string().value);
+        const auto coll_name = string::to_string(op["arguments"]["collection"].get_string().value);
         auto& db = entity_map.get_database(object);
         auto opts = builder::basic::document{};
         const auto arguments = op["arguments"];
@@ -1561,6 +1720,14 @@ document::value operations::run(entity::map& entity_map,
         }
         if (const auto eas = arguments["expireAfterSeconds"]) {
             opts.append(builder::basic::kvp("expireAfterSeconds", eas.get_int32().value));
+        }
+        if (const auto clustered_index = arguments["clusteredIndex"]) {
+            opts.append(
+                builder::basic::kvp("clusteredIndex", clustered_index.get_document().view()));
+        }
+        if (const auto pre_and_post = arguments["changeStreamPreAndPostImages"]) {
+            opts.append(builder::basic::kvp("changeStreamPreAndPostImages",
+                                            pre_and_post.get_document().view()));
         }
         {
             const auto view_on = arguments["viewOn"];
@@ -1572,14 +1739,36 @@ document::value operations::run(entity::map& entity_map,
                 opts.append(builder::basic::kvp("pipeline", pipeline.get_array().value));
             }
         }
-        if (const auto session = arguments["session"]) {
-            const auto session_name = string::to_string(session.get_string().value);
-            const auto& client_session = entity_map.get_client_session(session_name);
-            db.create_collection(client_session, coll_name, opts.view());
+
+        if (const auto session = get_session(op_view, entity_map)) {
+            db.create_collection(*session, coll_name, opts.view());
         } else {
             db.create_collection(coll_name, opts.view());
         }
+
         return empty_doc;
+    }
+    if (name == "modifyCollection") {
+        const auto arguments = op["arguments"];
+        const auto coll_name = string::to_string(arguments["collection"].get_string().value);
+        auto& db = entity_map.get_database(object);
+
+        builder::basic::document command;
+
+        command.append(builder::basic::kvp("collMod", coll_name));
+
+        if (const auto pre_and_post = arguments["changeStreamPreAndPostImages"]) {
+            command.append(builder::basic::kvp("changeStreamPreAndPostImages",
+                                               pre_and_post.get_document().view()));
+        }
+
+        builder::basic::document result;
+        if (const auto session = get_session(op_view, entity_map)) {
+            result.append(builder::basic::kvp("result", db.run_command(*session, command.view())));
+        } else {
+            result.append(builder::basic::kvp("result", db.run_command(command.view())));
+        }
+        return result.extract();
     }
     if (name == "assertCollectionNotExists") {
         REQUIRE_FALSE(collection_exists(op_view));
@@ -1607,10 +1796,20 @@ document::value operations::run(entity::map& entity_map,
         return empty_doc;
     }
     if (name == "withTransaction") {
-        auto cb = with_transaction_cb{
-            array::value(op["arguments"]["callback"].get_array().value), entity_map, apm_map};
+        auto cb = [&](client_session*) {
+            for (auto&& o : op["arguments"]["callback"].get_array().value) {
+                operations::run(entity_map, apm_map, o, state);
+            }
+        };
         auto& session = entity_map.get_client_session(object);
         return with_transaction(session, op_view, cb);
+    }
+    if (name == "rename") {
+        const auto& type = entity_map.type(object);
+        if (type != typeid(mongocxx::collection)) {
+            FAIL("rename operation requested on object with type " << type.name());
+        }
+        return rename(entity_map.get_collection(object), op_view);
     }
     if (name == "delete") {
         auto& bucket = entity_map.get_bucket(object);
@@ -1655,16 +1854,6 @@ document::value operations::run(entity::map& entity_map,
     if (name == "distinct") {
         auto& coll = entity_map.get_collection(object);
         return distinct(coll, get_session(op_view, entity_map), op_view);
-    }
-
-    if (name == "listIndexes") {
-        auto session = get_session(op_view, entity_map);
-        if (session) {
-            entity_map.get_collection(object).list_indexes(*session).begin();
-        } else {
-            entity_map.get_collection(object).list_indexes().begin();
-        }
-        return empty_doc;
     }
 
     throw std::logic_error{"unsupported operation: " + name};

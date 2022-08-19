@@ -19,6 +19,7 @@
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/string/view_or_value.hpp>
 #include <bsoncxx/types.hpp>
+#include <bsoncxx/types/bson_value/view_or_value.hpp>
 #include <mongocxx/stdx.hpp>
 
 #include <mongocxx/config/prelude.hpp>
@@ -40,18 +41,27 @@ class MONGOCXX_API change_stream {
     change_stream();
 
     ///
-    /// Sets the fullDocument stage for the $changeStream.
+    /// Sets the fullDocument option for the $changeStream.
     ///
-    /// The allowed values are: ‘default’, ‘updateLookup’.
-    /// If none set, defaults to ‘default’.
+    /// Allowed values: 'default', 'updateLookup', 'whenAvailable', 'required'.
     ///
-    /// When set to ‘updateLookup’, the change stream will include both a delta describing the
-    /// changes to
-    /// the document, as well as a copy of the entire document that was changed from some time after
-    /// the change occurred. This will be stored in the "fullDocument" field of the notification.
+    /// The default is to not send a value, which is equivalent to 'default'. By default, the change
+    /// notification for partial updates will include a delta describing the changes to the
+    /// document.
+    ///
+    /// When set to 'updateLookup', the change notification for partial updates will include both a
+    /// delta describing the changes to the document as well as a copy of the entire document that
+    /// was changed from some time after the change occurred.
+    ///
+    /// When set to 'whenAvailable', configures the change stream to return the post-image of the
+    /// modified document for replace and update change events if the post-image for this event is
+    /// available.
+    ///
+    /// When set to 'required', the same behavior as 'whenAvailable' except that an error is raised
+    /// if the post-image is not available.
     ///
     /// @param full_doc
-    ///   The fullDocument setting to use on this stream.
+    ///   The fullDocument option to use on this stream.
     ///
     /// @return
     ///   A reference to the object on which this member function is being called. This facilitates
@@ -60,12 +70,43 @@ class MONGOCXX_API change_stream {
     change_stream& full_document(bsoncxx::string::view_or_value full_doc);
 
     ///
-    /// Gets the current fullDocument setting.
+    /// Gets the current fullDocument option.
     ///
     /// @return
-    ///   The current fullDocument setting.
+    ///   The current fullDocument option.
     ///
     const bsoncxx::stdx::optional<bsoncxx::string::view_or_value>& full_document() const;
+
+    ///
+    /// Sets the fullDocumentBeforeChange option for the $changeStream.
+    ///
+    /// The allowed values are: 'whenAvailable', 'required', 'off'.
+    /// If none set, defaults to 'off'.
+    ///
+    /// When set to 'whenAvailable', configures the change stream to return the pre-image of the
+    /// modified document for replace, update, and delete change events if it is available.
+    ///
+    /// When set to 'required', the same behavior as 'whenAvailable' except that an error is raised
+    /// if the pre-image is not available.
+    ///
+    /// @param full_doc_before_change
+    ///   The fullDocumentBeforeChange option to use on this stream.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called. This facilitates
+    ///   method chaining.
+    ///
+    change_stream& full_document_before_change(
+        bsoncxx::string::view_or_value full_doc_before_change);
+
+    ///
+    /// Gets the current fullDocumentBeforeChange option.
+    ///
+    /// @return
+    ///   The current fullDocumentBeforeChange option.
+    ///
+    const bsoncxx::stdx::optional<bsoncxx::string::view_or_value>& full_document_before_change()
+        const;
 
     ///
     /// Sets the number of documents to return per batch.
@@ -86,6 +127,26 @@ class MONGOCXX_API change_stream {
     ///   The current batch size.
     ///
     const stdx::optional<std::int32_t>& batch_size() const;
+
+    ///
+    /// Sets the current value of the comment option.
+    ///
+    /// @param comment
+    ///   The new comment option.
+    ///
+    /// @return
+    ///   A reference to the object on which this member function is being called. This facilitates
+    ///   method chaining.
+    ///
+    change_stream& comment(bsoncxx::types::bson_value::view_or_value comment);
+
+    ///
+    /// Gets the current value of the comment option.
+    ///
+    /// @return
+    ///   The current comment option.
+    ///
+    const stdx::optional<bsoncxx::types::bson_value::view_or_value>& comment() const;
 
     ///
     /// Specifies the logical starting point for the new change stream.
@@ -203,7 +264,9 @@ class MONGOCXX_API change_stream {
 
     bsoncxx::document::value as_bson() const;
     stdx::optional<bsoncxx::string::view_or_value> _full_document;
+    stdx::optional<bsoncxx::string::view_or_value> _full_document_before_change;
     stdx::optional<std::int32_t> _batch_size;
+    stdx::optional<bsoncxx::types::bson_value::view_or_value> _comment;
     stdx::optional<bsoncxx::document::view_or_value> _collation;
     stdx::optional<bsoncxx::document::view_or_value> _resume_after;
     stdx::optional<bsoncxx::document::view_or_value> _start_after;
@@ -211,7 +274,7 @@ class MONGOCXX_API change_stream {
     // _start_at_operation_time is not wrapped in a stdx::optional because of a longstanding bug in
     // the MNMLSTC polyfill that has been fixed on master, but not in the latest release:
     // https://github.com/mnmlstc/core/pull/23
-    bsoncxx::types::b_timestamp _start_at_operation_time;
+    bsoncxx::types::b_timestamp _start_at_operation_time = {};
     bool _start_at_operation_time_set = false;
 };
 }  // namespace options

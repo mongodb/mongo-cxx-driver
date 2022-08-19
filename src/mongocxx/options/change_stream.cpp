@@ -37,6 +37,17 @@ const bsoncxx::stdx::optional<bsoncxx::string::view_or_value>& change_stream::fu
     return _full_document;
 }
 
+change_stream& change_stream::full_document_before_change(
+    bsoncxx::string::view_or_value full_doc_before_change) {
+    _full_document_before_change = std::move(full_doc_before_change);
+    return *this;
+}
+
+const bsoncxx::stdx::optional<bsoncxx::string::view_or_value>&
+change_stream::full_document_before_change() const {
+    return _full_document_before_change;
+}
+
 change_stream& change_stream::batch_size(std::int32_t batch_size) {
     _batch_size = batch_size;
     return *this;
@@ -44,6 +55,15 @@ change_stream& change_stream::batch_size(std::int32_t batch_size) {
 
 const stdx::optional<std::int32_t>& change_stream::batch_size() const {
     return _batch_size;
+}
+
+change_stream& change_stream::comment(bsoncxx::types::bson_value::view_or_value comment) {
+    _comment = std::move(comment);
+    return *this;
+}
+
+const stdx::optional<bsoncxx::types::bson_value::view_or_value>& change_stream::comment() const {
+    return _comment;
 }
 
 change_stream& change_stream::resume_after(bsoncxx::document::view_or_value resume_after) {
@@ -104,10 +124,12 @@ bsoncxx::document::value change_stream::as_bson() const {
     bsoncxx::builder::basic::document out{};
 
     append_if(out, "fullDocument", full_document());
+    append_if(out, "fullDocumentBeforeChange", full_document_before_change());
     append_if(out, "resumeAfter", resume_after());
     append_if(out, "startAfter", start_after());
     append_if(out, "batchSize", batch_size());
     append_if(out, "collation", collation());
+    append_if(out, "comment", comment());
     if (_start_at_operation_time_set) {
         out.append(bsoncxx::builder::basic::kvp("startAtOperationTime", _start_at_operation_time));
     }

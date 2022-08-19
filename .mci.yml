@@ -391,7 +391,7 @@ functions:
 
                   export CRUD_LEGACY_TESTS_PATH="$(pwd)/../data/crud/legacy"
                   export CRUD_UNIFIED_TESTS_PATH="$(pwd)/../data/crud/unified"
-                  export CHANGE_STREAM_TESTS_PATH="$(pwd)/../data/change_stream"
+                  export CHANGE_STREAMS_UNIFIED_TESTS_PATH="$(pwd)/../data/change-streams/unified"
                   export ENCRYPTION_TESTS_PATH="$(pwd)/../data/client_side_encryption"
                   export GRIDFS_TESTS_PATH="$(pwd)/../data/gridfs"
                   export COMMAND_MONITORING_TESTS_PATH="$(pwd)/../data/command-monitoring"
@@ -502,7 +502,6 @@ functions:
                       # Run tests and examples 1-by-1 with "test_params" so we can run them with valgrind.
                       ${test_params} ./src/bsoncxx/test/test_bson
                       ${test_params} ./src/mongocxx/test/test_driver
-                      ${test_params} ./src/mongocxx/test/test_change_stream_specs
                       ${test_params} ./src/mongocxx/test/test_client_side_encryption_specs
                       ${test_params} ./src/mongocxx/test/test_crud_specs
                       ${test_params} ./src/mongocxx/test/test_gridfs_specs
