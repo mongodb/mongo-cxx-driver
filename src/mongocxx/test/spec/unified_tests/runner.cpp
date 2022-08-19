@@ -514,7 +514,7 @@ bool add_to_map(const array::element& obj) {
     if (type == "session")      return map.insert(id, create_session(params));
     // clang-format on
 
-    CAPTURE(type, id, to_json(params));
+    CAPTURE(type, id, params);
     FAIL("unrecognized type { " + type + " }");
     return false;
 }
