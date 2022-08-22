@@ -52,6 +52,15 @@ const stdx::optional<bsoncxx::document::view_or_value>& client_encryption::kms_p
     return _kms_providers;
 }
 
+client_encryption& client_encryption::tls_opts(bsoncxx::document::view_or_value tls_opts) {
+    _tls_opts = std::move(tls_opts);
+    return *this;
+}
+
+const stdx::optional<bsoncxx::document::view_or_value>& client_encryption::tls_opts() const {
+    return _tls_opts;
+}
+
 void* client_encryption::convert() const {
     mongoc_client_encryption_opts_t* opts_t = libmongoc::client_encryption_opts_new();
 
@@ -69,6 +78,11 @@ void* client_encryption::convert() const {
     if (_kms_providers) {
         libbson::scoped_bson_t kms_providers{*_kms_providers};
         libmongoc::client_encryption_opts_set_kms_providers(opts_t, kms_providers.bson());
+    }
+
+    if (_tls_opts) {
+        libbson::scoped_bson_t tls_opts{*_tls_opts};
+        libmongoc::client_encryption_opts_set_tls_opts(opts_t, tls_opts.bson());
     }
 
     return opts_t;
