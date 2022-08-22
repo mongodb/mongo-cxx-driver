@@ -66,6 +66,15 @@ const stdx::optional<bsoncxx::document::view_or_value>& auto_encryption::kms_pro
     return _kms_providers;
 }
 
+auto_encryption& auto_encryption::tls_opts(bsoncxx::document::view_or_value tls_opts) {
+    _tls_opts = std::move(tls_opts);
+    return *this;
+}
+
+const stdx::optional<bsoncxx::document::view_or_value>& auto_encryption::tls_opts() const {
+    return _tls_opts;
+}
+
 auto_encryption& auto_encryption::schema_map(bsoncxx::document::view_or_value schema_map) {
     _schema_map = std::move(schema_map);
     return *this;
@@ -126,6 +135,11 @@ void* auto_encryption::convert() const {
         scoped_bson_t kms_providers{*_kms_providers};
         libmongoc::auto_encryption_opts_set_kms_providers(mongoc_auto_encrypt_opts,
                                                           kms_providers.bson());
+    }
+
+    if (_tls_opts) {
+        scoped_bson_t tls_opts{*_tls_opts};
+        libmongoc::auto_encryption_opts_set_tls_opts(mongoc_auto_encrypt_opts, tls_opts.bson());
     }
 
     if (_schema_map) {

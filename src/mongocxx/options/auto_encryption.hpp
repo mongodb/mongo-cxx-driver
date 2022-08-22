@@ -128,7 +128,7 @@ class MONGOCXX_API auto_encryption {
     /// Sets the KMS providers to use for client side encryption.
     ///
     /// Multiple KMS providers may be specified. The following KMS providers are
-    /// supported: "aws", "azure", "gcp", and "local". The kmsProviders map values differ
+    /// supported: "aws", "azure", "gcp", "kmip", and "local". The kmsProviders map values differ
     /// by provider:
     ///
     ///    aws: {
@@ -147,6 +147,10 @@ class MONGOCXX_API auto_encryption {
     ///       email: String,
     ///       privateKey: byte[] or String, // May be passed as a base64 encoded string.
     ///       endpoint: Optional<String> // Defaults to oauth2.googleapis.com
+    ///    }
+    ///
+    ///    kmip: {
+    ///       endpoint: String
     ///    }
     ///
     ///    local: {
@@ -170,6 +174,37 @@ class MONGOCXX_API auto_encryption {
     ///   An optional document containing the KMS providers.
     ///
     const stdx::optional<bsoncxx::document::view_or_value>& kms_providers() const;
+
+    ///
+    /// Sets the TLS options to use for client side encryption with a given KMS provider.
+    ///
+    /// Multiple KMS providers may be specified. Supported KMS providers are "aws", "azure", "gcp",
+    /// and "kmip". The KMSProvidersTLSOptions map value has the same form for all supported
+    /// providers:
+    ///
+    ///    <KMS provider name>: {
+    ///        tlsCaFile: Optional<String>
+    ///        tlsCertificateKeyFile: Optional<String>
+    ///        tlsCertificateKeyFilePassword: Optional<String>
+    ///    }
+    ///
+    /// @param tls_opts
+    ///   A document containing the TLS options.
+    ///
+    /// @return
+    ///   A reference to this object to facilitate method chaining.
+    ///
+    /// @see https://docs.mongodb.com/manual/core/security-client-side-encryption/
+    ///
+    auto_encryption& tls_opts(bsoncxx::document::view_or_value tls_opts);
+
+    ///
+    /// Gets the TLS options.
+    ///
+    /// @return
+    ///   An optional document containing the TLS options.
+    ///
+    const stdx::optional<bsoncxx::document::view_or_value>& tls_opts() const;
 
     ///
     /// Sets a local JSON schema.
@@ -268,6 +303,7 @@ class MONGOCXX_API auto_encryption {
     stdx::optional<mongocxx::pool*> _key_vault_pool;
     stdx::optional<ns_pair> _key_vault_namespace;
     stdx::optional<bsoncxx::document::view_or_value> _kms_providers;
+    stdx::optional<bsoncxx::document::view_or_value> _tls_opts;
     stdx::optional<bsoncxx::document::view_or_value> _schema_map;
     stdx::optional<bsoncxx::document::view_or_value> _extra_options;
 };
