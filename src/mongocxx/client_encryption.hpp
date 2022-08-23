@@ -46,6 +46,19 @@ class MONGOCXX_API client_encryption {
     ~client_encryption() noexcept;
 
     ///
+    /// Move-constructs a client_encryption object.
+    ///
+    client_encryption(client_encryption&&);
+
+    ///
+    /// Move-assigns a client_encryption object.
+    ///
+    client_encryption& operator=(client_encryption&&);
+
+    client_encryption(const client_encryption&) = delete;
+    client_encryption& operator=(const client_encryption&) = delete;
+
+    ///
     /// Creates a new key document and inserts into the key vault collection.
     ///
     /// @param kms_provider
