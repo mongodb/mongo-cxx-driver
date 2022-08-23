@@ -131,6 +131,10 @@ bsoncxx::document::value _make_kms_doc(bool include_external = true) {
             subdoc.append(
                 kvp("privateKey", test_util::getenv_or_fail("MONGOCXX_TEST_GCP_PRIVATEKEY")));
         }));
+
+        kms_doc.append(kvp("kmip", [&](sub_document subdoc) {
+            subdoc.append(kvp("endpoint", "localhost:5698"));
+        }));
     }
 
     char key_storage[96];
@@ -145,14 +149,30 @@ bsoncxx::document::value _make_kms_doc(bool include_external = true) {
     return {kms_doc.extract()};
 }
 
+bsoncxx::document::value _make_tls_opts() {
+    bsoncxx::builder::basic::document tls_opts;
+
+    tls_opts.append(kvp("kmip", [&](sub_document subdoc) {
+        subdoc.append(
+            kvp("tlsCAFile", test_util::getenv_or_fail("MONGOCXX_TEST_CSFLE_TLS_CA_FILE")));
+        subdoc.append(
+            kvp("tlsCertificateKeyFile",
+                test_util::getenv_or_fail("MONGOCXX_TEST_CSFLE_TLS_CERTIFICATE_KEY_FILE")));
+    }));
+
+    return tls_opts.extract();
+}
+
 void _add_client_encrypted_opts(options::client* client_opts,
                                 bsoncxx::document::view_or_value schema_map,
                                 bsoncxx::document::view_or_value kms_doc,
+                                bsoncxx::document::view_or_value tls_opts,
                                 class client* key_vault_client = nullptr) {
     options::auto_encryption auto_encrypt_opts{};
 
     // KMS
     auto_encrypt_opts.kms_providers(std::move(kms_doc));
+    auto_encrypt_opts.tls_opts(std::move(tls_opts));
     auto_encrypt_opts.key_vault_namespace({"keyvault", "datakeys"});
 
     if (!schema_map.view().empty()) {
@@ -188,8 +208,10 @@ void _add_cse_opts(options::client_encryption* opts,
                    class client* client,
                    bool include_aws = true) {
     // KMS providers
-    auto kms = _make_kms_doc(include_aws);
-    opts->kms_providers(std::move(kms));
+    opts->kms_providers(_make_kms_doc(include_aws));
+
+    // TLS options
+    opts->tls_opts(_make_tls_opts());
 
     // Key vault client
     opts->key_vault_client(client);
@@ -339,8 +361,8 @@ TEST_CASE("Datakey and double encryption", "[client_side_encryption]") {
                                  << close_document << close_document << close_document << finalize;
 
     options::client encrypted_client_opts;
-    auto kms_doc = _make_kms_doc();
-    _add_client_encrypted_opts(&encrypted_client_opts, std::move(schema_map), std::move(kms_doc));
+    _add_client_encrypted_opts(
+        &encrypted_client_opts, std::move(schema_map), _make_kms_doc(), _make_tls_opts());
     class client client_encrypted {
         uri{}, test_util::add_test_server_api(encrypted_client_opts),
     };
@@ -460,16 +482,16 @@ void run_external_key_vault_test(bool with_external_key_vault) {
     // Create a MongoClient configured with auto encryption (referred to as client_encrypted),
     // that is configured with an external key vault client if with_external_key_vault is true
     options::client encrypted_client_opts;
-    auto kms_doc = _make_kms_doc(false);
 
     if (with_external_key_vault) {
         _add_client_encrypted_opts(&encrypted_client_opts,
                                    std::move(schema_map),
-                                   std::move(kms_doc),
+                                   _make_kms_doc(false),
+                                   _make_tls_opts(),
                                    &external_key_vault_client);
     } else {
         _add_client_encrypted_opts(
-            &encrypted_client_opts, std::move(schema_map), std::move(kms_doc));
+            &encrypted_client_opts, std::move(schema_map), _make_kms_doc(false), _make_tls_opts());
     }
 
     class client client_encrypted {
@@ -583,10 +605,9 @@ TEST_CASE("BSON size limits and batch splitting", "[client_side_encryption]") {
     // with local KMS provider as follows:
     //     { "local": { "key": <base64 decoding of LOCAL_MASTERKEY> } }
     // and with the keyVaultNamespace set to keyvault.datakeys.
-    auto kms_doc = _make_kms_doc(false);
-
     options::client client_encrypted_opts;
-    _add_client_encrypted_opts(&client_encrypted_opts, limits_schema.view(), std::move(kms_doc));
+    _add_client_encrypted_opts(
+        &client_encrypted_opts, limits_schema.view(), _make_kms_doc(false), _make_tls_opts());
 
     // Add a counter to verify splits
     int n_inserts = 0;
@@ -733,8 +754,7 @@ TEST_CASE("Views are prohibited", "[client_side_encryption]") {
     // { "local": { "key": <base64 decoding of LOCAL_MASTERKEY> } }
     // Configure with the keyVaultNamespace set to keyvault.datakeys.
     options::client opts;
-    auto kms_doc = _make_kms_doc();
-    _add_client_encrypted_opts(&opts, {}, std::move(kms_doc));
+    _add_client_encrypted_opts(&opts, {}, _make_kms_doc(), _make_tls_opts());
     class client client_encrypted {
         uri{}, test_util::add_test_server_api(opts)
     };
@@ -815,16 +835,15 @@ void _run_corpus_test(bool use_schema_map) {
     auto azure_key_value = make_value(azure_key_id);
     auto gcp_key_value = make_value(gcp_key_id);
 
-    auto kms_doc = _make_kms_doc();
-
     // Create the following and configure both objects with keyVaultNamespace set to
     // keyvault.datakeys:
     // A MongoClient configured with auto encryption (referred to as client_encrypted)
     options::client client_encrypted_opts;
     if (use_schema_map) {
-        _add_client_encrypted_opts(&client_encrypted_opts, corpus_schema.view(), kms_doc.view());
+        _add_client_encrypted_opts(
+            &client_encrypted_opts, corpus_schema.view(), _make_kms_doc(), _make_tls_opts());
     } else {
-        _add_client_encrypted_opts(&client_encrypted_opts, {}, kms_doc.view());
+        _add_client_encrypted_opts(&client_encrypted_opts, {}, _make_kms_doc(), _make_tls_opts());
     }
 
     class client client_encrypted {
@@ -833,7 +852,8 @@ void _run_corpus_test(bool use_schema_map) {
 
     // A ClientEncryption object (referred to as client_encryption)
     options::client_encryption cse_opts;
-    cse_opts.kms_providers(kms_doc.view());
+    cse_opts.kms_providers(_make_kms_doc());
+    cse_opts.tls_opts(_make_tls_opts());
     cse_opts.key_vault_client(&client);
     cse_opts.key_vault_namespace({"keyvault", "datakeys"});
     class client_encryption client_encryption {
@@ -1376,8 +1396,8 @@ TEST_CASE("Bypass spawning mongocryptd", "[client_side_encryption]") {
     options::client client_encrypted_opts;
 
     options::auto_encryption auto_encrypt_opts{};
-    auto kms_doc = _make_kms_doc();
-    auto_encrypt_opts.kms_providers(std::move(kms_doc));
+    auto_encrypt_opts.kms_providers(_make_kms_doc());
+    auto_encrypt_opts.tls_opts(_make_tls_opts());
     auto_encrypt_opts.key_vault_namespace({"keyvault", "datakeys"});
     auto_encrypt_opts.schema_map({external_schema.view()});
 
@@ -1416,8 +1436,8 @@ TEST_CASE("Bypass spawning mongocryptd", "[client_side_encryption]") {
     // Configure with the keyVaultNamespace set to keyvault.datakeys.
     options::client client_encrypted_opts2;
     options::auto_encryption auto_encrypt_opts2{};
-    auto kms_doc2 = _make_kms_doc();
-    auto_encrypt_opts2.kms_providers(std::move(kms_doc2));
+    auto_encrypt_opts2.kms_providers(_make_kms_doc());
+    auto_encrypt_opts2.tls_opts(_make_tls_opts());
     auto_encrypt_opts2.key_vault_namespace({"keyvault", "datakeys"});
     auto_encrypt_opts2.schema_map({external_schema.view()});
 
