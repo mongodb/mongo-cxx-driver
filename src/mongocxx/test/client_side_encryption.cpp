@@ -1141,6 +1141,7 @@ void _run_endpoint_test(mongocxx::client* setup_client,
     mongocxx::options::client_encryption ce_opts_invalid;
     bsoncxx::builder::basic::document kms_doc;
     bsoncxx::builder::basic::document kms_doc_invalid;
+    bsoncxx::builder::basic::document tls_opts;
 
     kms_doc.append(kvp("aws", [&](sub_document subdoc) {
         subdoc.append(kvp("secretAccessKey",
@@ -1163,9 +1164,21 @@ void _run_endpoint_test(mongocxx::client* setup_client,
         subdoc.append(kvp("endpoint", "oauth2.googleapis.com:443"));
     }));
 
+    kms_doc.append(kvp(
+        "kmip", [&](sub_document subdoc) { subdoc.append(kvp("endpoint", "localhost:5698")); }));
+
+    tls_opts.append(kvp("kmip", [&](sub_document subdoc) {
+        subdoc.append(
+            kvp("tlsCAFile", test_util::getenv_or_fail("MONGOCXX_TEST_CSFLE_TLS_CA_FILE")));
+        subdoc.append(
+            kvp("tlsCertificateKeyFile",
+                test_util::getenv_or_fail("MONGOCXX_TEST_CSFLE_TLS_CERTIFICATE_KEY_FILE")));
+    }));
+
     ce_opts.key_vault_client(setup_client);
     ce_opts.key_vault_namespace({"keyvault", "datakeys"});
     ce_opts.kms_providers(kms_doc.view());
+    ce_opts.tls_opts(tls_opts.view());
     mongocxx::client_encryption client_encryption{ce_opts};
 
     kms_doc_invalid.append(kvp("azure", [&](sub_document subdoc) {
@@ -1180,6 +1193,10 @@ void _run_endpoint_test(mongocxx::client* setup_client,
         subdoc.append(kvp("email", test_util::getenv_or_fail("MONGOCXX_TEST_GCP_EMAIL")));
         subdoc.append(kvp("privateKey", test_util::getenv_or_fail("MONGOCXX_TEST_GCP_PRIVATEKEY")));
         subdoc.append(kvp("endpoint", "doesnotexist.invalid:443"));
+    }));
+
+    kms_doc_invalid.append(kvp("kmip", [&](sub_document subdoc) {
+        subdoc.append(kvp("endpoint", "doesnotexist.local:5698"));
     }));
 
     ce_opts_invalid.key_vault_client(setup_client);
@@ -1427,6 +1444,61 @@ TEST_CASE("Custom endpoint", "[client_side_encryption]") {
                                          << "doesnotexist.invalid:443" << finalize;
         _run_endpoint_test(&setup_client, gcp_masterkey2.view(), "gcp", {{"Invalid KMS response"}});
     }
+
+    // Call `client_encryption.createDataKey()` with "kmip" as the provider and the following
+    // masterKey:
+    // {
+    //   "keyId": "1"
+    // }
+    // Expect this to succeed. Use the returned UUID of the key to explicitly encrypt and decrypt
+    // the string "test" to validate it works. Call client_encryption_invalid.createDataKey() with
+    // the same masterKey. Expect this to fail with a network exception indicating failure to
+    // resolve "doesnotexist.local".
+    SECTION("Test Case 10") {
+        auto kmip_masterkey = document{} << "keyId"
+                                         << "1" << finalize;
+        _run_endpoint_test(&setup_client,
+                           kmip_masterkey.view(),
+                           "kmip",
+                           stdx::nullopt,
+                           {{"generic server error"}});
+    }
+
+    // Call `client_encryption.createDataKey()` with "kmip" as the provider and the following
+    // masterKey:
+    // {
+    //   "keyId": "1",
+    //   "endpoint": "localhost:5698"
+    // }
+    // Expect this to succeed. Use the returned UUID of the key to explicitly encrypt and decrypt
+    // the string "test" to validate it works.
+    SECTION("Test Case 11") {
+        auto kmip_masterkey = document{} << "keyId"
+                                         << "1"
+                                         << "endpoint"
+                                         << "localhost:5698" << finalize;
+        _run_endpoint_test(&setup_client, kmip_masterkey.view(), "kmip");
+    }
+
+    // Call `client_encryption.createDataKey()` with "kmip" as the provider and the following
+    // masterKey:
+    // {
+    //   "keyId": "1",
+    //   "endpoint": "doesnotexist.local:5698"
+    // }
+    // Expect this to fail with a network exception indicating failure to resolve
+    // "doesnotexist.local".
+    SECTION("Test Case 12") {
+        auto kmip_masterkey = document{} << "keyId"
+                                         << "1"
+                                         << "endpoint"
+                                         << "doesnotexist.local:5698" << finalize;
+        _run_endpoint_test(&setup_client,
+                           kmip_masterkey.view(),
+                           "kmip",
+                           {{"Failed to resolve doesnotexist.local: generic server error"}});
+    }
+}
 
 TEST_CASE("Bypass spawning mongocryptd", "[client_side_encryption]") {
     instance::current();
