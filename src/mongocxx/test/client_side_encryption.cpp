@@ -1193,10 +1193,13 @@ TEST_CASE("Custom endpoint", "[client_side_encryption]") {
     // }
     // Expect this to succeed. Use the returned UUID of the key to explicitly encrypt and
     // decrypt the string "test" to validate it works.
-    auto simple_masterkey = make_document(
-        kvp("region", "us-east-1"),
-        kvp("key", "arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0"));
-    _run_endpoint_test(&setup_client, simple_masterkey.view(), "aws");
+    SECTION("Test Case 1") {
+        auto simple_masterkey = make_document(
+            kvp("region", "us-east-1"),
+            kvp("key",
+                "arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0"));
+        _run_endpoint_test(&setup_client, simple_masterkey.view(), "aws");
+    }
 
     // Call client_encryption.createDataKey() with "aws" as the provider and the following
     // masterKey:
@@ -1207,14 +1210,17 @@ TEST_CASE("Custom endpoint", "[client_side_encryption]") {
     // }
     // Expect this to succeed. Use the returned UUID of the key to explicitly encrypt and
     // decrypt the string "test" to validate it works.
-    auto endpoint_masterkey =
-        document{} << "region"
-                   << "us-east-1"
-                   << "key"
-                   << "arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0"
-                   << "endpoint"
-                   << "kms.us-east-1.amazonaws.com" << finalize;
-    _run_endpoint_test(&setup_client, endpoint_masterkey.view(), "aws");
+    SECTION("Test Case 2") {
+        auto endpoint_masterkey =
+            document{}
+            << "region"
+            << "us-east-1"
+            << "key"
+            << "arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0"
+            << "endpoint"
+            << "kms.us-east-1.amazonaws.com" << finalize;
+        _run_endpoint_test(&setup_client, endpoint_masterkey.view(), "aws");
+    }
 
     // Call client_encryption.createDataKey() with "aws" as the provider and the following
     // masterKey:
@@ -1225,14 +1231,17 @@ TEST_CASE("Custom endpoint", "[client_side_encryption]") {
     // }
     // Expect this to succeed. Use the returned UUID of the key to explicitly encrypt and
     // decrypt the string "test" to validate it works.
-    auto endpoint_masterkey2 =
-        document{} << "region"
-                   << "us-east-1"
-                   << "key"
-                   << "arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0"
-                   << "endpoint"
-                   << "kms.us-east-1.amazonaws.com:443" << finalize;
-    _run_endpoint_test(&setup_client, endpoint_masterkey2.view(), "aws");
+    SECTION("Test Case 3") {
+        auto endpoint_masterkey2 =
+            document{}
+            << "region"
+            << "us-east-1"
+            << "key"
+            << "arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0"
+            << "endpoint"
+            << "kms.us-east-1.amazonaws.com:443" << finalize;
+        _run_endpoint_test(&setup_client, endpoint_masterkey2.view(), "aws");
+    }
 
     // Call client_encryption.createDataKey() with "aws" as the provider and the following
     // masterKey:
@@ -1242,14 +1251,17 @@ TEST_CASE("Custom endpoint", "[client_side_encryption]") {
     //   endpoint: "kms.us-east-1.amazonaws.com:12345"
     // }
     // Expect this to fail with a socket connection error.
-    auto socket_error_masterkey =
-        document{} << "region"
-                   << "us-east-1"
-                   << "key"
-                   << "arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0"
-                   << "endpoint"
-                   << "kms.us-east-1.amazonaws.com:12345" << finalize;
-    _run_endpoint_test(&setup_client, socket_error_masterkey.view(), "aws", {{"error"}});
+    SECTION("Test Case 4") {
+        auto socket_error_masterkey =
+            document{}
+            << "region"
+            << "us-east-1"
+            << "key"
+            << "arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0"
+            << "endpoint"
+            << "kms.us-east-1.amazonaws.com:12345" << finalize;
+        _run_endpoint_test(&setup_client, socket_error_masterkey.view(), "aws", {{"error"}});
+    }
 
     // Call client_encryption.createDataKey() with "aws" as the provider and the following
     // masterKey:
@@ -1259,14 +1271,17 @@ TEST_CASE("Custom endpoint", "[client_side_encryption]") {
     //   endpoint: "kms.us-east-2.amazonaws.com"
     // }
     // Expect this to fail with an exception.
-    auto endpoint_error_masterkey =
-        document{} << "region"
-                   << "us-east-1"
-                   << "key"
-                   << "arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0"
-                   << "endpoint"
-                   << "kms.us-east-2.amazonaws.com" << finalize;
-    _run_endpoint_test(&setup_client, endpoint_error_masterkey.view(), "aws", {{""}});
+    SECTION("Test Case 5") {
+        auto endpoint_error_masterkey =
+            document{}
+            << "region"
+            << "us-east-1"
+            << "key"
+            << "arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0"
+            << "endpoint"
+            << "kms.us-east-2.amazonaws.com" << finalize;
+        _run_endpoint_test(&setup_client, endpoint_error_masterkey.view(), "aws", {{""}});
+    }
 
     // Call client_encryption.createDataKey() with "aws" as the provider and the following
     // masterKey:
@@ -1277,17 +1292,20 @@ TEST_CASE("Custom endpoint", "[client_side_encryption]") {
     // }
     // Expect this to fail with a network exception indicating failure to resolve
     // "doesnotexist.invalid".
-    auto parse_error_masterkey =
-        document{} << "region"
-                   << "us-east-1"
-                   << "key"
-                   << "arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0"
-                   << "endpoint"
-                   << "doesnotexist.invalid" << finalize;
-    _run_endpoint_test(&setup_client,
-                       parse_error_masterkey.view(),
-                       "aws",
-                       {{"Failed to resolve doesnotexist.invalid: generic server error"}});
+    SECTION("Test Case 6") {
+        auto parse_error_masterkey =
+            document{}
+            << "region"
+            << "us-east-1"
+            << "key"
+            << "arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0"
+            << "endpoint"
+            << "doesnotexist.invalid" << finalize;
+        _run_endpoint_test(&setup_client,
+                           parse_error_masterkey.view(),
+                           "aws",
+                           {{"Failed to resolve doesnotexist.invalid: generic server error"}});
+    }
 
     // Call `client_encryption.createDataKey()` with "azure" as the provider and the following
     // masterKey:
@@ -1300,15 +1318,17 @@ TEST_CASE("Custom endpoint", "[client_side_encryption]") {
     // with the same masterKey.
     // Expect this to fail with a network exception indicating failure to resolve
     // "doesnotexist.invalid".
-    auto azure_masterkey = document{} << "keyVaultEndpoint"
-                                      << "key-vault-csfle.vault.azure.net"
-                                      << "keyName"
-                                      << "key-name-csfle" << finalize;
-    _run_endpoint_test(&setup_client,
-                       azure_masterkey.view(),
-                       "azure",
-                       stdx::nullopt,
-                       {{"Failed to resolve doesnotexist.invalid: generic server error"}});
+    SECTION("Test Case 7") {
+        auto azure_masterkey = document{} << "keyVaultEndpoint"
+                                          << "key-vault-csfle.vault.azure.net"
+                                          << "keyName"
+                                          << "key-name-csfle" << finalize;
+        _run_endpoint_test(&setup_client,
+                           azure_masterkey.view(),
+                           "azure",
+                           stdx::nullopt,
+                           {{"Failed to resolve doesnotexist.invalid: generic server error"}});
+    }
 
     // Call `client_encryption.createDataKey()` with "gcp" as the provider and the following
     // masterKey:
@@ -1324,21 +1344,23 @@ TEST_CASE("Custom endpoint", "[client_side_encryption]") {
     // with the same masterKey.
     // Expect this to fail with a network exception indicating failure to resolve
     // "doesnotexist.invalid".
-    auto gcp_masterkey = document{} << "projectId"
-                                    << "devprod-drivers"
-                                    << "location"
-                                    << "global"
-                                    << "keyRing"
-                                    << "key-ring-csfle"
-                                    << "keyName"
-                                    << "key-name-csfle"
-                                    << "endpoint"
-                                    << "cloudkms.googleapis.com:443" << finalize;
-    _run_endpoint_test(&setup_client,
-                       gcp_masterkey.view(),
-                       "gcp",
-                       stdx::nullopt,
-                       {{"Failed to resolve doesnotexist.invalid: generic server error"}});
+    SECTION("Test Case 8") {
+        auto gcp_masterkey = document{} << "projectId"
+                                        << "devprod-drivers"
+                                        << "location"
+                                        << "global"
+                                        << "keyRing"
+                                        << "key-ring-csfle"
+                                        << "keyName"
+                                        << "key-name-csfle"
+                                        << "endpoint"
+                                        << "cloudkms.googleapis.com:443" << finalize;
+        _run_endpoint_test(&setup_client,
+                           gcp_masterkey.view(),
+                           "gcp",
+                           stdx::nullopt,
+                           {{"Failed to resolve doesnotexist.invalid: generic server error"}});
+    }
 
     // Call `client_encryption.createDataKey()` with "gcp" as the provider and the following
     // masterKey:
@@ -1351,18 +1373,19 @@ TEST_CASE("Custom endpoint", "[client_side_encryption]") {
     // }
     // Expect this to fail with an exception with a message containing the string: "Invalid KMS
     // response".
-    auto gcp_masterkey2 = document{} << "projectId"
-                                     << "devprod-drivers"
-                                     << "location"
-                                     << "global"
-                                     << "keyRing"
-                                     << "key-ring-csfle"
-                                     << "keyName"
-                                     << "key-name-csfle"
-                                     << "endpoint"
-                                     << "doesnotexist.invalid:443" << finalize;
-    _run_endpoint_test(&setup_client, gcp_masterkey2.view(), "gcp", {{"Invalid KMS response"}});
-}
+    SECTION("Test Case 9") {
+        auto gcp_masterkey2 = document{} << "projectId"
+                                         << "devprod-drivers"
+                                         << "location"
+                                         << "global"
+                                         << "keyRing"
+                                         << "key-ring-csfle"
+                                         << "keyName"
+                                         << "key-name-csfle"
+                                         << "endpoint"
+                                         << "doesnotexist.invalid:443" << finalize;
+        _run_endpoint_test(&setup_client, gcp_masterkey2.view(), "gcp", {{"Invalid KMS response"}});
+    }
 
 TEST_CASE("Bypass spawning mongocryptd", "[client_side_encryption]") {
     instance::current();
