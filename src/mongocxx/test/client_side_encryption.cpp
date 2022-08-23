@@ -1512,7 +1512,7 @@ TEST_CASE("KMS TLS expired certificate", "[client_side_encryption]") {
     auto doc = make_document(
         kvp("region", "us-east-1"),
         kvp("key", "arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0"),
-        kvp("endpoint", "127.0.0.1:8000"));
+        kvp("endpoint", "127.0.0.1:9000"));
     data_key_opts.master_key(doc.view());
 
     REQUIRE_THROWS_MATCHES(client_encryption.create_data_key("aws", data_key_opts),
@@ -1576,7 +1576,7 @@ TEST_CASE("KMS TLS wrong host certificate", "[client_side_encryption]") {
     auto doc = make_document(
         kvp("region", "us-east-1"),
         kvp("key", "arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0"),
-        kvp("endpoint", "127.0.0.1:8001"));
+        kvp("endpoint", "127.0.0.1:9001"));
     data_key_opts.master_key(doc.view());
 
     REQUIRE_THROWS_MATCHES(client_encryption.create_data_key("aws", data_key_opts),
