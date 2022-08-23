@@ -59,6 +59,9 @@ const auto kAzureKeyUUID = "\x01\x95\x11\x10\x00\x00\x00\x00\x00\x00\x00\x00\x00
 // This is the base64 encoding of GCPAAAAAAAAAAAAAAAAAAA==.
 const auto kGcpKeyUUID = "\x18\x23\xc0\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00";
 
+// This is the base64 encoding of KMIPAAAAAAAAAAAAAAAAAA==.
+const auto kKmipKeyUUID = "\x28\xc2\x0f\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00";
+
 using bsoncxx::builder::concatenate;
 
 using bsoncxx::builder::basic::kvp;
@@ -802,6 +805,7 @@ void _run_corpus_test(bool use_schema_map) {
     auto corpus_key_aws = _doc_from_file("/corpus/corpus-key-aws.json");
     auto corpus_key_azure = _doc_from_file("/corpus/corpus-key-azure.json");
     auto corpus_key_gcp = _doc_from_file("/corpus/corpus-key-gcp.json");
+    auto corpus_key_kmip = _doc_from_file("/corpus/corpus-key-kmip.json");
 
     // Using client, drop and create the collection db.coll configured with the included
     // JSON schema corpus/corpus-schema.json.
@@ -826,21 +830,27 @@ void _run_corpus_test(bool use_schema_map) {
     keyvault.insert_one(std::move(corpus_key_aws), insert_opts);
     keyvault.insert_one(std::move(corpus_key_azure), insert_opts);
     keyvault.insert_one(std::move(corpus_key_gcp), insert_opts);
+    keyvault.insert_one(std::move(corpus_key_kmip), insert_opts);
 
     // Configure kms credentials as follows:
     // {
     //     "aws": { <AWS credentials> },
-    //     "local": { "key": <base64 decoding of LOCAL_MASTERKEY> }
+    //     "azure": { <Azure credentials> },
+    //     "gcp": { <GCP credentials> },
+    //     "local": { "key": <base64 decoding of LOCAL_MASTERKEY> },
+    //     "kmip": { "endpoint": "localhost:5698" }
     // }
 
     char local_key_id_storage[16];
     char aws_key_id_storage[16];
     char azure_key_id_storage[16];
     char gcp_key_id_storage[16];
+    char kmip_key_id_storage[16];
     memcpy(&(local_key_id_storage[0]), kLocalKeyUUID, 16);
     memcpy(&(aws_key_id_storage[0]), kAwsKeyUUID, 16);
     memcpy(&(azure_key_id_storage[0]), kAzureKeyUUID, 16);
     memcpy(&(gcp_key_id_storage[0]), kGcpKeyUUID, 16);
+    memcpy(&(kmip_key_id_storage[0]), kKmipKeyUUID, 16);
 
     bsoncxx::types::b_binary local_key_id{
         bsoncxx::binary_sub_type::k_uuid, 16, (const uint8_t*)&local_key_id_storage};
@@ -850,11 +860,14 @@ void _run_corpus_test(bool use_schema_map) {
         bsoncxx::binary_sub_type::k_uuid, 16, (const uint8_t*)&azure_key_id_storage};
     bsoncxx::types::b_binary gcp_key_id{
         bsoncxx::binary_sub_type::k_uuid, 16, (const uint8_t*)&gcp_key_id_storage};
+    bsoncxx::types::b_binary kmip_key_id{
+        bsoncxx::binary_sub_type::k_uuid, 16, (const uint8_t*)&kmip_key_id_storage};
 
     auto local_key_value = make_value(local_key_id);
     auto aws_key_value = make_value(aws_key_id);
     auto azure_key_value = make_value(azure_key_id);
     auto gcp_key_value = make_value(gcp_key_id);
+    auto kmip_key_value = make_value(kmip_key_id);
 
     // Create the following and configure both objects with keyVaultNamespace set to
     // keyvault.datakeys:
@@ -896,7 +909,7 @@ void _run_corpus_test(bool use_schema_map) {
         // If the field name is _id, altname_aws, altname_azure, altname_gcp, altname_local, copy
         // the field to corpus_copied.
         std::vector<std::string> copied_fields = {
-            "_id", "altname_aws", "altname_azure", "altname_gcp", "altname_local"};
+            "_id", "altname_aws", "altname_azure", "altname_gcp", "altname_kmip", "altname_local"};
         if (std::find(copied_fields.begin(), copied_fields.end(), field_name) !=
             copied_fields.end()) {
             corpus_copied_builder.append(kvp(field_name, ele.get_value()));
@@ -956,6 +969,10 @@ void _run_corpus_test(bool use_schema_map) {
                     // If kms is gcp set the key_id to the UUID with base64 value
                     // GCPAAAAAAAAAAAAAAAAAAA==.
                     encrypt_opts.key_id(gcp_key_value.view());
+                } else if (kms == stdx::string_view("kmip")) {
+                    // If kms is kmip set the key_id to the UUID with base64 value
+                    // KMIPAAAAAAAAAAAAAAAAAA==.
+                    encrypt_opts.key_id(kmip_key_value.view());
                 } else {
                     throw exception{error_code::k_invalid_parameter, "unsupported kms identifier"};
                 }
@@ -972,6 +989,9 @@ void _run_corpus_test(bool use_schema_map) {
                 } else if (kms == stdx::string_view("gcp")) {
                     // If kms is gcp set the key_alt_name to "gcp".
                     encrypt_opts.key_alt_name("gcp");
+                } else if (kms == stdx::string_view("kmip")) {
+                    // If kms is kmip set the key_alt_name to "kmip".
+                    encrypt_opts.key_alt_name("kmip");
                 } else {
                     throw exception{error_code::k_invalid_parameter, "unsupported kms altname"};
                 }
