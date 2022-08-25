@@ -349,20 +349,22 @@ TEST_CASE("Datakey and double encryption", "[client_side_encryption]") {
     _setup_drop_collections(setup_client);
 
     // 3. Create and configure client_encrypted, client_encryption.
-    auto schema_map = document{} << "db.coll" << open_document << "bsonType"
-                                 << "object"
-                                 << "properties" << open_document << "encrypted_placeholder"
-                                 << open_document << "encrypt" << open_document << "keyId"
-                                 << "/placeholder"
-                                 << "bsonType"
-                                 << "string"
-                                 << "algorithm"
-                                 << "AEAD_AES_256_CBC_HMAC_SHA_512-Random" << close_document
-                                 << close_document << close_document << close_document << finalize;
-
     options::client encrypted_client_opts;
     _add_client_encrypted_opts(
-        &encrypted_client_opts, std::move(schema_map), _make_kms_doc(), _make_tls_opts());
+        &encrypted_client_opts,
+        document() << "db.coll" << open_document << "bsonType"
+                   << "object"
+                   << "properties" << open_document << "encrypted_placeholder" << open_document
+                   << "encrypt" << open_document << "keyId"
+                   << "/placeholder"
+                   << "bsonType"
+                   << "string"
+                   << "algorithm"
+                   << "AEAD_AES_256_CBC_HMAC_SHA_512-Random" << close_document << close_document
+                   << close_document << close_document << finalize,
+        _make_kms_doc(),
+        _make_tls_opts());
+
     class client client_encrypted {
         uri{}, test_util::add_test_server_api(encrypted_client_opts),
     };
@@ -446,6 +448,25 @@ TEST_CASE("Datakey and double encryption", "[client_side_encryption]") {
             return client_encryption.create_data_key("gcp", data_key_opts);
         },
         "gcp",
+        &setup_client,
+        &client_encrypted,
+        &client_encryption,
+        &apm_checker);
+
+    // Run with KMIP
+    run_datakey_and_double_encryption(
+        [&]() {
+            // 1. Call client_encryption.createDataKey() with the KMIP KMS provider
+            // and keyAltNames set to ["kmip_altname"].
+            options::data_key data_key_opts;
+            data_key_opts.key_alt_names({"kmip_altname"});
+
+            auto doc = make_document();
+            data_key_opts.master_key(doc.view());
+
+            return client_encryption.create_data_key("kmip", data_key_opts);
+        },
+        "kmip",
         &setup_client,
         &client_encrypted,
         &client_encryption,
