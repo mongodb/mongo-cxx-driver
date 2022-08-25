@@ -14,11 +14,12 @@
 
 #pragma once
 
-#include "catch.hpp"
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/oid.hpp>
 #include <bsoncxx/stdx/optional.hpp>
+#include <bsoncxx/test_util/to_string.hh>
+#include <third_party/catch/include/catch.hpp>
 
 #include <bsoncxx/config/private/prelude.hh>
 
@@ -45,6 +46,27 @@ template <>
 struct StringMaker<bsoncxx::document::value> {
     static std::string convert(const bsoncxx::document::value& value) {
         return StringMaker<bsoncxx::document::view>::convert(value.view());
+    }
+};
+
+template <>
+struct StringMaker<bsoncxx::types::bson_value::view> {
+    static std::string convert(const bsoncxx::types::bson_value::view& value) {
+        return '{' + to_string(value.type()) + ": " + to_string(value) + '}';
+    }
+};
+
+template <>
+struct StringMaker<bsoncxx::types::bson_value::value> {
+    static std::string convert(const bsoncxx::types::bson_value::value& value) {
+        return StringMaker<bsoncxx::types::bson_value::view>::convert(value.view());
+    }
+};
+
+template <>
+struct StringMaker<bsoncxx::types::bson_value::view_or_value> {
+    static std::string convert(const bsoncxx::types::bson_value::view_or_value& value) {
+        return StringMaker<bsoncxx::types::bson_value::view>::convert(value.view());
     }
 };
 

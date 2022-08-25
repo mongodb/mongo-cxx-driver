@@ -17,6 +17,7 @@
 
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/json.hpp>
+#include <bsoncxx/test_util/to_string.hh>
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/test/spec/monitoring.hh>
 #include <mongocxx/test/spec/unified_tests/assert.hh>
@@ -53,7 +54,7 @@ void apm_checker::compare_unified(bsoncxx::array::view expectations,
 
     // This will throw an exception on unmatched fields and return true in all other cases.
     auto compare = [&](const bsoncxx::array::element& exp, const bsoncxx::document::view actual) {
-        CAPTURE(print_all(), to_json(actual), assert::to_string(exp.get_value()));
+        CAPTURE(print_all(), to_json(actual), bsoncxx::to_string(exp.get_value()));
 
         // Extra fields are only allowed in root-level documents. Here, each k in keys is treated
         // as its own root-level document, allowing extra fields.
