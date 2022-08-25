@@ -406,22 +406,6 @@ functions:
 
                   export MONGODB_API_VERSION="${MONGODB_API_VERSION}"
 
-                  if [ "$(uname -m)" == "ppc64le" ]; then
-                      echo "Skipping CSFLE test setup (CDRIVER-4246/CXX-2423)"
-                  else
-                      # export environment variables for encryption tests
-                      set +o errexit
-                      export MONGOCXX_TEST_AWS_SECRET_ACCESS_KEY="${cse_aws_secret_access_key}"
-                      export MONGOCXX_TEST_AWS_ACCESS_KEY_ID="${cse_aws_access_key_id}"
-                      export MONGOCXX_TEST_AZURE_TENANT_ID="${cse_azure_tenant_id}"
-                      export MONGOCXX_TEST_AZURE_CLIENT_ID="${cse_azure_client_id}"
-                      export MONGOCXX_TEST_AZURE_CLIENT_SECRET="${cse_azure_client_secret}"
-                      export MONGOCXX_TEST_GCP_EMAIL="${cse_gcp_email}"
-                      export MONGOCXX_TEST_GCP_PRIVATEKEY="${cse_gcp_privatekey}"
-   
-                      set -o errexit
-                  fi
-
                   pushd ../../
                   cd drivers-evergreen-tools
                   export DRIVERS_TOOLS=$(pwd)
@@ -429,6 +413,31 @@ functions:
                       export DRIVERS_TOOLS=$(cygpath -m $DRIVERS_TOOLS)
                   fi
                   popd
+
+                  if [ "$(uname -m)" == "ppc64le" ]; then
+                      echo "Skipping CSFLE test setup (CDRIVER-4246/CXX-2423)"
+                  else
+                      # export environment variables for encryption tests
+                      set +o errexit
+
+                      if [ "Windows_NT" == "$OS"]; then
+                          export MONGOCXX_TEST_CSFLE_TLS_CA_FILE=$DRIVERS_TOOLS\.evergreen\x509gen\ca.pem
+                          export MONGOCXX_TEST_CSFLE_TLS_CERTIFICATE_KEY_FILE=$DRIVERS_TOOLS\.evergreen\x509gen\client.pem
+                      else
+                          export MONGOCXX_TEST_CSFLE_TLS_CA_FILE=$DRIVERS_TOOLS/.evergreen/x509gen/ca.pem
+                          export MONGOCXX_TEST_CSFLE_TLS_CERTIFICATE_KEY_FILE=$DRIVERS_TOOLS/.evergreen/x509gen/client.pem
+                      fi
+
+                      export MONGOCXX_TEST_AWS_SECRET_ACCESS_KEY="${cse_aws_secret_access_key}"
+                      export MONGOCXX_TEST_AWS_ACCESS_KEY_ID="${cse_aws_access_key_id}"
+                      export MONGOCXX_TEST_AZURE_TENANT_ID="${cse_azure_tenant_id}"
+                      export MONGOCXX_TEST_AZURE_CLIENT_ID="${cse_azure_client_id}"
+                      export MONGOCXX_TEST_AZURE_CLIENT_SECRET="${cse_azure_client_secret}"
+                      export MONGOCXX_TEST_GCP_EMAIL="${cse_gcp_email}"
+                      export MONGOCXX_TEST_GCP_PRIVATEKEY="${cse_gcp_privatekey}"
+
+                      set -o errexit
+                  fi
 
                   if [ "$(uname -m)" == "ppc64le" ]; then
                       echo "Skipping CSFLE test setup (CDRIVER-4246/CXX-2423)"
