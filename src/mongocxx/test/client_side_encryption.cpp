@@ -1740,4 +1740,262 @@ TEST_CASE("KMS TLS wrong host certificate", "[client_side_encryption]") {
                            kms_tls_wrong_host_cert_matcher());
 }
 
+bsoncxx::document::value make_kms_providers_with_custom_endpoints(stdx::string_view azure,
+                                                                  stdx::string_view gcp,
+                                                                  stdx::string_view kmip) {
+    bsoncxx::builder::basic::document kms_doc;
+
+    kms_doc.append(kvp("aws", [&](sub_document subdoc) {
+        subdoc.append(kvp("secretAccessKey",
+                          test_util::getenv_or_fail("MONGOCXX_TEST_AWS_SECRET_ACCESS_KEY")));
+        subdoc.append(
+            kvp("accessKeyId", test_util::getenv_or_fail("MONGOCXX_TEST_AWS_ACCESS_KEY_ID")));
+    }));
+
+    kms_doc.append(kvp("azure", [&](sub_document subdoc) {
+        subdoc.append(kvp("tenantId", test_util::getenv_or_fail("MONGOCXX_TEST_AZURE_TENANT_ID")));
+        subdoc.append(kvp("clientId", test_util::getenv_or_fail("MONGOCXX_TEST_AZURE_CLIENT_ID")));
+        subdoc.append(
+            kvp("clientSecret", test_util::getenv_or_fail("MONGOCXX_TEST_AZURE_CLIENT_SECRET")));
+        subdoc.append(kvp("identityPlatformEndpoint", azure));
+    }));
+
+    kms_doc.append(kvp("gcp", [&](sub_document subdoc) {
+        subdoc.append(kvp("email", test_util::getenv_or_fail("MONGOCXX_TEST_GCP_EMAIL")));
+        subdoc.append(kvp("privateKey", test_util::getenv_or_fail("MONGOCXX_TEST_GCP_PRIVATEKEY")));
+        subdoc.append(kvp("endpoint", gcp));
+    }));
+
+    kms_doc.append(kvp("kmip", [&](sub_document subdoc) { subdoc.append(kvp("endpoint", kmip)); }));
+
+    return kms_doc.extract();
+}
+
+enum struct with_certs { none, ca_only, cert_only, both };
+
+bsoncxx::document::value make_tls_opts_with_certs(with_certs with) {
+    bsoncxx::builder::basic::document tls_opts;
+
+    stdx::string_view providers[] = {"aws", "azure", "gcp", "kmip"};
+
+    for (const auto& provider : providers) {
+        tls_opts.append(kvp(provider, [&](sub_document subdoc) {
+            if (with == with_certs::ca_only || with == with_certs::both) {
+                subdoc.append(
+                    kvp("tlsCAFile", test_util::getenv_or_fail("MONGOCXX_TEST_CSFLE_TLS_CA_FILE")));
+            }
+
+            if (with == with_certs::cert_only || with == with_certs::both) {
+                subdoc.append(
+                    kvp("tlsCertificateKeyFile",
+                        test_util::getenv_or_fail("MONGOCXX_TEST_CSFLE_TLS_CERTIFICATE_KEY_FILE")));
+            }
+        }));
+    }
+
+    return tls_opts.extract();
+}
+
+client_encryption make_prose_test_11_ce(mongocxx::client* client,
+                                        stdx::string_view azure,
+                                        stdx::string_view gcp,
+                                        stdx::string_view kmip,
+                                        with_certs with) {
+    options::client_encryption cse_opts;
+    cse_opts.key_vault_client(client);
+    cse_opts.key_vault_namespace({"keyvault", "datakeys"});
+    cse_opts.kms_providers(make_kms_providers_with_custom_endpoints(azure, gcp, kmip));
+    cse_opts.tls_opts(make_tls_opts_with_certs(with));
+    return client_encryption(std::move(cse_opts));
+}
+
+TEST_CASE("KMS TLS Options Tests", "[client_side_encryption]") {
+    instance::current();
+
+    auto setup_client = client(uri(), test_util::add_test_server_api());
+
+    if (!mongocxx::test_util::should_run_client_side_encryption_test()) {
+        return;
+    }
+
+    // Support for detailed certificate verify failure messages required by this test are only
+    // available in libmongoc 1.20.0 and newer (CDRIVER-3927).
+    if (!mongoc_check_version(1, 20, 0)) {
+        WARN("Skipping - libmongoc version is < 1.20.0 (CDRIVER-3927)");
+        return;
+    }
+
+    // Required CA certificates may not be registered on system. See BUILD-14068.
+    if (std::getenv("MONGOCXX_TEST_SKIP_KMS_TLS_TESTS")) {
+        WARN("Skipping - KMS TLS tests disabled (BUILD-14068)");
+        return;
+    }
+
+    if (test_util::get_max_wire_version(setup_client) < 8) {
+        // Automatic encryption requires wire version 8.
+        WARN("Skipping - max wire version is < 8");
+        return;
+    }
+
+    auto client_encryption_no_client_cert = make_prose_test_11_ce(
+        &setup_client, "127.0.0.1:9002", "127.0.0.1:9002", "127.0.0.1:5698", with_certs::ca_only);
+    auto client_encryption_with_tls = make_prose_test_11_ce(
+        &setup_client, "127.0.0.1:9002", "127.0.0.1:9002", "127.0.0.1:5698", with_certs::both);
+    auto client_encryption_expired = make_prose_test_11_ce(
+        &setup_client, "127.0.0.1:9000", "127.0.0.1:9000", "127.0.0.1:9000", with_certs::ca_only);
+    auto client_encryption_invalid_hostname = make_prose_test_11_ce(
+        &setup_client, "127.0.0.1:9001", "127.0.0.1:9001", "127.0.0.1:9001", with_certs::ca_only);
+
+    const auto expired_cert_matcher = Catch::Contains("expired", Catch::CaseSensitive::No);
+    const auto invalid_hostname_matcher = Catch::Matches(
+        // Content of error message may vary depending on the SSL library being used.
+        ".*(mismatch|doesn't match|not present).*",
+        Catch::CaseSensitive::No);
+
+    SECTION("Case 1 - AWS") {
+        // Expect an error indicating TLS handshake failed.
+        // Note: The remote server may disconnect during the TLS handshake, causing miscellaneous
+        // errors instead of a neat handshake failure. Just assert that *an* error occurred.
+        REQUIRE_THROWS_AS(
+            client_encryption_no_client_cert.create_data_key(
+                "aws",
+                options::data_key().master_key(
+                    document()
+                    << "region"
+                    << "us-east-1"
+                    << "key"
+                    << "arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0"
+                    << "endpoint"
+                    << "127.0.0.1:9002" << finalize)),
+            mongocxx::exception);
+
+        // Expect an error from libmongocrypt with a message containing the string: "parse error".
+        // This implies TLS handshake succeeded.
+        REQUIRE_THROWS_WITH(
+            client_encryption_with_tls.create_data_key(
+                "aws",
+                options::data_key().master_key(
+                    document()
+                    << "region"
+                    << "us-east-1"
+                    << "key"
+                    << "arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0"
+                    << "endpoint"
+                    << "127.0.0.1:9002" << finalize)),
+            Catch::Contains("parse error", Catch::CaseSensitive::No));
+
+        // Expect an error indicating TLS handshake failed due to an expired certificate.
+        REQUIRE_THROWS_WITH(
+            client_encryption_with_tls.create_data_key(
+                "aws",
+                options::data_key().master_key(
+                    document()
+                    << "region"
+                    << "us-east-1"
+                    << "key"
+                    << "arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0"
+                    << "endpoint"
+                    << "127.0.0.1:9000" << finalize)),
+            expired_cert_matcher);
+
+        // Expect an error indicating TLS handshake failed due to an invalid hostname.
+        REQUIRE_THROWS_WITH(
+            client_encryption_with_tls.create_data_key(
+                "aws",
+                options::data_key().master_key(
+                    document()
+                    << "region"
+                    << "us-east-1"
+                    << "key"
+                    << "arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0"
+                    << "endpoint"
+                    << "127.0.0.1:9001" << finalize)),
+            invalid_hostname_matcher);
+    }
+
+    SECTION("Case 2 - Azure") {
+        options::data_key opts;
+
+        opts.master_key(document() << "keyVaultEndpoint"
+                                   << "doesnotexist.local"
+                                   << "keyName"
+                                   << "foo" << finalize);
+
+        // Expect an error indicating TLS handshake failed.
+        // Note: The remote server may disconnect during the TLS handshake, causing miscellaneous
+        // errors instead of a neat handshake failure. Just assert that *an* error occurred.
+        REQUIRE_THROWS_AS(client_encryption_no_client_cert.create_data_key("azure", opts),
+                          mongocxx::exception);
+
+        // Expect an error from libmongocrypt with a message containing the string: "HTTP
+        // status=404". This implies TLS handshake succeeded.
+        REQUIRE_THROWS_WITH(client_encryption_with_tls.create_data_key("azure", opts),
+                            Catch::Contains("HTTP status=404", Catch::CaseSensitive::No));
+
+        // Expect an error indicating TLS handshake failed due to an expired certificate.
+        REQUIRE_THROWS_WITH(client_encryption_expired.create_data_key("azure", opts),
+                            expired_cert_matcher);
+
+        // Expect an error indicating TLS handshake failed due to an invalid hostname.
+        REQUIRE_THROWS_WITH(client_encryption_invalid_hostname.create_data_key("azure", opts),
+                            invalid_hostname_matcher);
+    }
+
+    SECTION("Case 3 - GCP") {
+        options::data_key opts;
+
+        opts.master_key(document() << "projectId"
+                                   << "foo"
+                                   << "location"
+                                   << "bar"
+                                   << "keyRing"
+                                   << "baz"
+                                   << "keyName"
+                                   << "foo" << finalize);
+
+        // Expect an error indicating TLS handshake failed.
+        // Note: The remote server may disconnect during the TLS handshake, causing miscellaneous
+        // errors instead of a neat handshake failure. Just assert that *an* error occurred.
+        REQUIRE_THROWS_AS(client_encryption_no_client_cert.create_data_key("gcp", opts),
+                          mongocxx::exception);
+
+        // Expect an error from libmongocrypt with a message containing the string: "HTTP
+        // status=404". This implies TLS handshake succeeded.
+        REQUIRE_THROWS_WITH(client_encryption_with_tls.create_data_key("gcp", opts),
+                            Catch::Contains("HTTP status=404", Catch::CaseSensitive::No));
+
+        // Expect an error indicating TLS handshake failed due to an expired certificate.
+        REQUIRE_THROWS_WITH(client_encryption_expired.create_data_key("gcp", opts),
+                            expired_cert_matcher);
+
+        // Expect an error indicating TLS handshake failed due to an invalid hostname.
+        REQUIRE_THROWS_WITH(client_encryption_invalid_hostname.create_data_key("gcp", opts),
+                            invalid_hostname_matcher);
+    }
+
+    SECTION("Case 4 - KMIP") {
+        options::data_key opts;
+
+        opts.master_key({});
+
+        // Expect an error indicating TLS handshake failed.
+        // Note: The remote server may disconnect during the TLS handshake, causing miscellaneous
+        // errors instead of a neat handshake failure. Just assert that *an* error occurred.
+        REQUIRE_THROWS_AS(client_encryption_no_client_cert.create_data_key("kmip", opts),
+                          mongocxx::exception);
+
+        // Expect success.
+        REQUIRE_NOTHROW(client_encryption_with_tls.create_data_key("kmip", opts),
+                        Catch::Contains("HTTP status=404", Catch::CaseSensitive::No));
+
+        // Expect an error indicating TLS handshake failed due to an expired certificate.
+        REQUIRE_THROWS_WITH(client_encryption_expired.create_data_key("kmip", opts),
+                            expired_cert_matcher);
+
+        // Expect an error indicating TLS handshake failed due to an invalid hostname.
+        REQUIRE_THROWS_WITH(client_encryption_invalid_hostname.create_data_key("kmip", opts),
+                            invalid_hostname_matcher);
+    }
+}
+
 }  // namespace
