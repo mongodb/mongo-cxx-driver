@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <bsoncxx/document/value.hpp>
+#include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/oid.hpp>
 #include <bsoncxx/stdx/optional.hpp>
@@ -39,6 +39,13 @@ template <>
 struct StringMaker<bsoncxx::document::view> {
     static std::string convert(const bsoncxx::document::view& value) {
         return bsoncxx::to_json(value, ExtendedJsonMode::k_relaxed);
+    }
+};
+
+template <>
+struct StringMaker<bsoncxx::document::view_or_value> {
+    static std::string convert(const bsoncxx::document::view_or_value& value) {
+        return StringMaker<bsoncxx::document::view>::convert(value.view());
     }
 };
 
