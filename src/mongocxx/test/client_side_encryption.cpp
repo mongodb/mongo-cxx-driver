@@ -1837,14 +1837,16 @@ TEST_CASE("KMS TLS Options Tests", "[client_side_encryption]") {
         return;
     }
 
+    // Use "localhost" instead of "127.0.0.1" to avoid "hostname doesn't match certificate" errors
+    // on Windows when using Secure Channel as SSL library.
     auto client_encryption_no_client_cert = make_prose_test_11_ce(
-        &setup_client, "127.0.0.1:9002", "127.0.0.1:9002", "127.0.0.1:5698", with_certs::ca_only);
+        &setup_client, "127.0.0.1:9002", "127.0.0.1:9002", "localhost:5698", with_certs::ca_only);
     auto client_encryption_with_tls = make_prose_test_11_ce(
-        &setup_client, "127.0.0.1:9002", "127.0.0.1:9002", "127.0.0.1:5698", with_certs::both);
+        &setup_client, "127.0.0.1:9002", "127.0.0.1:9002", "localhost:5698", with_certs::both);
     auto client_encryption_expired = make_prose_test_11_ce(
-        &setup_client, "127.0.0.1:9000", "127.0.0.1:9000", "127.0.0.1:9000", with_certs::ca_only);
+        &setup_client, "127.0.0.1:9000", "127.0.0.1:9000", "localhost:9000", with_certs::ca_only);
     auto client_encryption_invalid_hostname = make_prose_test_11_ce(
-        &setup_client, "127.0.0.1:9001", "127.0.0.1:9001", "127.0.0.1:9001", with_certs::ca_only);
+        &setup_client, "127.0.0.1:9001", "127.0.0.1:9001", "localhost:9001", with_certs::ca_only);
 
     const auto expired_cert_matcher = Catch::Contains("expired", Catch::CaseSensitive::No);
     const auto invalid_hostname_matcher = Catch::Matches(
