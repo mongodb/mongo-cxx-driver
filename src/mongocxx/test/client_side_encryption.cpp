@@ -1858,7 +1858,7 @@ TEST_CASE("KMS TLS Options Tests", "[client_side_encryption]") {
         // Expect an error indicating TLS handshake failed.
         // Note: The remote server may disconnect during the TLS handshake, causing miscellaneous
         // errors instead of a neat handshake failure. Just assert that *an* error occurred.
-        REQUIRE_THROWS_AS(
+        CHECK_THROWS_AS(
             client_encryption_no_client_cert.create_data_key(
                 "aws",
                 options::data_key().master_key(
@@ -1873,7 +1873,7 @@ TEST_CASE("KMS TLS Options Tests", "[client_side_encryption]") {
 
         // Expect an error from libmongocrypt with a message containing the string: "parse error".
         // This implies TLS handshake succeeded.
-        REQUIRE_THROWS_WITH(
+        CHECK_THROWS_WITH(
             client_encryption_with_tls.create_data_key(
                 "aws",
                 options::data_key().master_key(
@@ -1887,7 +1887,7 @@ TEST_CASE("KMS TLS Options Tests", "[client_side_encryption]") {
             Catch::Contains("parse error", Catch::CaseSensitive::No));
 
         // Expect an error indicating TLS handshake failed due to an expired certificate.
-        REQUIRE_THROWS_WITH(
+        CHECK_THROWS_WITH(
             client_encryption_with_tls.create_data_key(
                 "aws",
                 options::data_key().master_key(
@@ -1901,7 +1901,7 @@ TEST_CASE("KMS TLS Options Tests", "[client_side_encryption]") {
             expired_cert_matcher);
 
         // Expect an error indicating TLS handshake failed due to an invalid hostname.
-        REQUIRE_THROWS_WITH(
+        CHECK_THROWS_WITH(
             client_encryption_with_tls.create_data_key(
                 "aws",
                 options::data_key().master_key(
@@ -1926,20 +1926,20 @@ TEST_CASE("KMS TLS Options Tests", "[client_side_encryption]") {
         // Expect an error indicating TLS handshake failed.
         // Note: The remote server may disconnect during the TLS handshake, causing miscellaneous
         // errors instead of a neat handshake failure. Just assert that *an* error occurred.
-        REQUIRE_THROWS_AS(client_encryption_no_client_cert.create_data_key("azure", opts),
+        CHECK_THROWS_AS(client_encryption_no_client_cert.create_data_key("azure", opts),
                           mongocxx::exception);
 
         // Expect an error from libmongocrypt with a message containing the string: "HTTP
         // status=404". This implies TLS handshake succeeded.
-        REQUIRE_THROWS_WITH(client_encryption_with_tls.create_data_key("azure", opts),
+        CHECK_THROWS_WITH(client_encryption_with_tls.create_data_key("azure", opts),
                             Catch::Contains("HTTP status=404", Catch::CaseSensitive::No));
 
         // Expect an error indicating TLS handshake failed due to an expired certificate.
-        REQUIRE_THROWS_WITH(client_encryption_expired.create_data_key("azure", opts),
+        CHECK_THROWS_WITH(client_encryption_expired.create_data_key("azure", opts),
                             expired_cert_matcher);
 
         // Expect an error indicating TLS handshake failed due to an invalid hostname.
-        REQUIRE_THROWS_WITH(client_encryption_invalid_hostname.create_data_key("azure", opts),
+        CHECK_THROWS_WITH(client_encryption_invalid_hostname.create_data_key("azure", opts),
                             invalid_hostname_matcher);
     }
 
@@ -1958,20 +1958,20 @@ TEST_CASE("KMS TLS Options Tests", "[client_side_encryption]") {
         // Expect an error indicating TLS handshake failed.
         // Note: The remote server may disconnect during the TLS handshake, causing miscellaneous
         // errors instead of a neat handshake failure. Just assert that *an* error occurred.
-        REQUIRE_THROWS_AS(client_encryption_no_client_cert.create_data_key("gcp", opts),
+        CHECK_THROWS_AS(client_encryption_no_client_cert.create_data_key("gcp", opts),
                           mongocxx::exception);
 
         // Expect an error from libmongocrypt with a message containing the string: "HTTP
         // status=404". This implies TLS handshake succeeded.
-        REQUIRE_THROWS_WITH(client_encryption_with_tls.create_data_key("gcp", opts),
+        CHECK_THROWS_WITH(client_encryption_with_tls.create_data_key("gcp", opts),
                             Catch::Contains("HTTP status=404", Catch::CaseSensitive::No));
 
         // Expect an error indicating TLS handshake failed due to an expired certificate.
-        REQUIRE_THROWS_WITH(client_encryption_expired.create_data_key("gcp", opts),
+        CHECK_THROWS_WITH(client_encryption_expired.create_data_key("gcp", opts),
                             expired_cert_matcher);
 
         // Expect an error indicating TLS handshake failed due to an invalid hostname.
-        REQUIRE_THROWS_WITH(client_encryption_invalid_hostname.create_data_key("gcp", opts),
+        CHECK_THROWS_WITH(client_encryption_invalid_hostname.create_data_key("gcp", opts),
                             invalid_hostname_matcher);
     }
 
@@ -1983,19 +1983,19 @@ TEST_CASE("KMS TLS Options Tests", "[client_side_encryption]") {
         // Expect an error indicating TLS handshake failed.
         // Note: The remote server may disconnect during the TLS handshake, causing miscellaneous
         // errors instead of a neat handshake failure. Just assert that *an* error occurred.
-        REQUIRE_THROWS_AS(client_encryption_no_client_cert.create_data_key("kmip", opts),
+        CHECK_THROWS_AS(client_encryption_no_client_cert.create_data_key("kmip", opts),
                           mongocxx::exception);
 
         // Expect success.
-        REQUIRE_NOTHROW(client_encryption_with_tls.create_data_key("kmip", opts),
+        CHECK_NOTHROW(client_encryption_with_tls.create_data_key("kmip", opts),
                         Catch::Contains("HTTP status=404", Catch::CaseSensitive::No));
 
         // Expect an error indicating TLS handshake failed due to an expired certificate.
-        REQUIRE_THROWS_WITH(client_encryption_expired.create_data_key("kmip", opts),
+        CHECK_THROWS_WITH(client_encryption_expired.create_data_key("kmip", opts),
                             expired_cert_matcher);
 
         // Expect an error indicating TLS handshake failed due to an invalid hostname.
-        REQUIRE_THROWS_WITH(client_encryption_invalid_hostname.create_data_key("kmip", opts),
+        CHECK_THROWS_WITH(client_encryption_invalid_hostname.create_data_key("kmip", opts),
                             invalid_hostname_matcher);
     }
 }
