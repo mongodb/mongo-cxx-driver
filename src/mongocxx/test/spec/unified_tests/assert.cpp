@@ -21,6 +21,7 @@
 
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/string/to_string.hpp>
+#include <bsoncxx/test_util/to_string.hh>
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/bson_value/value.hpp>
 #include <mongocxx/test_util/client_helpers.hh>
@@ -29,7 +30,6 @@
 using namespace bsoncxx;
 using namespace mongocxx;
 
-using assert::to_string;
 using bsoncxx::types::bson_value::value;
 
 namespace {
@@ -73,67 +73,6 @@ std::string match_doc_current_path() noexcept {
 }
 
 }  // namespace
-
-std::string binary_to_string(types::b_binary binary) {
-    std::stringstream ss;
-    ss << std::hex;
-    for (auto&& byte : std::vector<unsigned int>(binary.bytes, binary.bytes + binary.size)) {
-        ss << std::setw(2) << std::setfill('0') << byte;
-    }
-    return ss.str();
-}
-
-std::string assert::to_string(types::bson_value::view_or_value val) {
-    switch (val.view().type()) {
-        case bsoncxx::type::k_string:
-            return string::to_string(val.view().get_string().value);
-        case bsoncxx::type::k_int32:
-            return std::to_string(val.view().get_int32().value);
-        case bsoncxx::type::k_int64:
-            return std::to_string(val.view().get_int64().value);
-        case bsoncxx::type::k_document:
-            return to_json(val.view().get_document().value);
-        case bsoncxx::type::k_array:
-            return to_json(val.view().get_array().value);
-        case bsoncxx::type::k_oid:
-            return val.view().get_oid().value.to_string();
-        case bsoncxx::type::k_binary:
-            return binary_to_string(val.view().get_binary());
-        case bsoncxx::type::k_bool:
-            return val.view().get_bool().value ? "true" : "false";
-        case bsoncxx::type::k_code:
-            return string::to_string(val.view().get_code().code);
-        case bsoncxx::type::k_codewscope:
-            return "code={" + string::to_string(val.view().get_codewscope().code) + "}, scope={" +
-                   to_json(val.view().get_codewscope().scope) + "}";
-        case bsoncxx::type::k_date:
-            return std::to_string(val.view().get_date().value.count());
-        case bsoncxx::type::k_double:
-            return std::to_string(val.view().get_double());
-        case bsoncxx::type::k_null:
-            return "null";
-        case bsoncxx::type::k_undefined:
-            return "undefined";
-        case bsoncxx::type::k_timestamp:
-            return "timestamp={" + std::to_string(val.view().get_timestamp().timestamp) +
-                   "}, increment={" + std::to_string(val.view().get_timestamp().increment) + "}";
-        case bsoncxx::type::k_regex:
-            return "regex={" + string::to_string(val.view().get_regex().regex) + "}, options={" +
-                   string::to_string(val.view().get_regex().options) + "}";
-        case bsoncxx::type::k_minkey:
-            return "minkey";
-        case bsoncxx::type::k_maxkey:
-            return "maxkey";
-        case bsoncxx::type::k_decimal128:
-            return val.view().get_decimal128().value.to_string();
-        case bsoncxx::type::k_symbol:
-            return string::to_string(val.view().get_symbol().symbol);
-        case bsoncxx::type::k_dbpointer:
-            return val.view().get_dbpointer().value.to_string();
-        default:
-            MONGOCXX_UNREACHABLE;
-    }
-}
 
 template <typename Element>
 type to_type(const Element& type) {

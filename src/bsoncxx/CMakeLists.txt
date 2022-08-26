@@ -289,6 +289,7 @@ set_local_dist (src_bsoncxx_DIST_local
    string/view_or_value.hpp
    test_util/catch.hh
    test_util/export_for_testing.hh
+   test_util/to_string.hh
    types.cpp
    types.hpp
    types/value.hpp

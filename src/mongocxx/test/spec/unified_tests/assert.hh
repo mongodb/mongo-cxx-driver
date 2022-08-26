@@ -29,7 +29,6 @@ void matches(bsoncxx::types::bson_value::view actual,
              bool is_root = true,
              bool is_array_of_root_docs = false);
 
-std::string to_string(bsoncxx::types::bson_value::view_or_value val);
 }  // namespace assert
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
