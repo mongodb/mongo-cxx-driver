@@ -1809,7 +1809,9 @@ client_encryption make_prose_test_11_ce(mongocxx::client* client,
     return client_encryption(std::move(cse_opts));
 }
 
-TEST_CASE("KMS TLS Options Tests", "[client_side_encryption]") {
+// CDRIVER-4181: may fail due to unexpected invalid hostname errors if C Driver was built with VS
+// 2015 and uses Secure Channel (ENABLE_SSL=WINDOWS).
+TEST_CASE("KMS TLS Options Tests", "[client_side_encryption][!mayfail]") {
     instance::current();
 
     auto setup_client = client(uri(), test_util::add_test_server_api());
