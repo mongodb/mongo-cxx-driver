@@ -77,79 +77,70 @@ void add_auto_encryption_opts(document::view test, options::client* client_opts)
             auto_encrypt_opts.schema_map(test_encrypt_opts["schemaMap"].get_document().value);
         }
 
-        if (test_encrypt_opts["kmsProviders"]) {
+        if (const auto providers = test_encrypt_opts["kmsProviders"]) {
             using bsoncxx::builder::basic::kvp;
             using bsoncxx::builder::basic::sub_document;
 
-            auto kms_doc = bsoncxx::builder::basic::document{};
+            bsoncxx::builder::basic::document kms_doc;
+            bsoncxx::builder::basic::document tls_opts;
 
             // Add aws credentials (from the environment)
-            if (test_encrypt_opts["kmsProviders"]["aws"]) {
-                auto access_key = std::getenv("MONGOCXX_TEST_AWS_SECRET_ACCESS_KEY");
-                auto key_id = std::getenv("MONGOCXX_TEST_AWS_ACCESS_KEY_ID");
-
-                if (!access_key || !key_id) {
-                    FAIL(
-                        "Please set environment variables for client side encryption tests:\n"
-                        "\tMONGOCXX_TEST_AWS_SECRET_ACCESS_KEY\n"
-                        "\tMONGOCXX_TEST_AWS_ACCESS_KEY_ID\n\n");
-                }
-
-                kms_doc.append(kvp("aws", [&](sub_document subdoc) {
-                    subdoc.append(kvp("secretAccessKey", access_key));
-                    subdoc.append(kvp("accessKeyId", key_id));
+            if (providers["aws"]) {
+                kms_doc.append(kvp("aws", [](sub_document subdoc) {
+                    subdoc.append(
+                        kvp("secretAccessKey",
+                            test_util::getenv_or_fail("MONGOCXX_TEST_AWS_SECRET_ACCESS_KEY")));
+                    subdoc.append(
+                        kvp("accessKeyId",
+                            test_util::getenv_or_fail("MONGOCXX_TEST_AWS_ACCESS_KEY_ID")));
                 }));
             }
 
             // Add gcp credentials (from the enviornment):
-            if (test_encrypt_opts["kmsProviders"]["gcp"]) {
-                auto email = getenv("MONGOCXX_TEST_GCP_EMAIL");
-                auto private_key = getenv("MONGOCXX_TEST_GCP_PRIVATEKEY");
-
-                if (!email || !private_key) {
-                    FAIL(
-                        "Please set environment variables for client side encryption tests:\n"
-                        "\tMONGOCXX_TEST_GCP_EMAIL\n"
-                        "\tMONGOCXX_TEST_GCP_PRIVATEKEY\n"
-                        "\n");
-                }
-
-                kms_doc.append(kvp("gcp", [&email, &private_key](sub_document subdoc) {
-                    subdoc.append(kvp("email", email));
-                    subdoc.append(kvp("privateKey", private_key));
+            if (providers["gcp"]) {
+                kms_doc.append(kvp("gcp", [](sub_document subdoc) {
+                    subdoc.append(
+                        kvp("email", test_util::getenv_or_fail("MONGOCXX_TEST_GCP_EMAIL")));
+                    subdoc.append(kvp("privateKey",
+                                      test_util::getenv_or_fail("MONGOCXX_TEST_GCP_PRIVATEKEY")));
                 }));
             }
 
             // Add Azure credentials (from the environment):
-            if (test_encrypt_opts["kmsProviders"]["azure"]) {
-                auto tenantId = getenv("MONGOCXX_TEST_AZURE_TENANT_ID");
-                auto clientId = getenv("MONGOCXX_TEST_AZURE_CLIENT_ID");
-                auto clientSecret = getenv("MONGOCXX_TEST_AZURE_CLIENT_SECRET");
+            if (providers["azure"]) {
+                kms_doc.append(kvp("azure", [](sub_document subdoc) {
+                    subdoc.append(kvp("tenantId",
+                                      test_util::getenv_or_fail("MONGOCXX_TEST_AZURE_TENANT_ID")));
+                    subdoc.append(kvp("clientId",
+                                      test_util::getenv_or_fail("MONGOCXX_TEST_AZURE_CLIENT_ID")));
+                    subdoc.append(
+                        kvp("clientSecret",
+                            test_util::getenv_or_fail("MONGOCXX_TEST_AZURE_CLIENT_SECRET")));
+                }));
+            }
 
-                if (!tenantId || !clientId || !clientSecret) {
-                    FAIL(
-                        "Please set environment variables for client side encryption tests:\n"
-                        "\tMONGOCXX_TEST_AZURE_TENANT_ID\n"
-                        "\tMONGOCXX_TEST_AZURE_CLIENT_ID\n"
-                        "\tMONGOCXX_TEST_AZURE_CLIENT_SECRET\n"
-                        "\n");
-                }
+            // Add KMIP credentials (from the json file):
+            if (providers["kmip"]) {
+                kms_doc.append(kvp("kmip", [&](sub_document subdoc) {
+                    subdoc.append(kvp("endpoint", "localhost:5698"));
+                }));
 
-                kms_doc.append(
-                    kvp("azure", [&tenantId, &clientId, &clientSecret](sub_document subdoc) {
-                        subdoc.append(kvp("tenantId", tenantId));
-                        subdoc.append(kvp("clientId", clientId));
-                        subdoc.append(kvp("clientSecret", clientSecret));
-                    }));
+                tls_opts.append(kvp("kmip", [&](sub_document subdoc) {
+                    subdoc.append(kvp(
+                        "tlsCAFile", test_util::getenv_or_fail("MONGOCXX_TEST_CSFLE_TLS_CA_FILE")));
+                    subdoc.append(kvp(
+                        "tlsCertificateKeyFile",
+                        test_util::getenv_or_fail("MONGOCXX_TEST_CSFLE_TLS_CERTIFICATE_KEY_FILE")));
+                }));
             }
 
             // Add local credentials (from the json file)
-            if (test_encrypt_opts["kmsProviders"]["local"]) {
-                kms_doc.append(
-                    kvp("local", test_encrypt_opts["kmsProviders"]["local"].get_document().value));
+            if (providers["local"]) {
+                kms_doc.append(kvp("local", providers["local"].get_document().value));
             }
 
             auto_encrypt_opts.kms_providers({kms_doc.extract()});
+            auto_encrypt_opts.tls_opts({tls_opts.extract()});
         }
 
         char* bypass_spawn = std::getenv("ENCRYPTION_TESTS_BYPASS_SPAWN");
