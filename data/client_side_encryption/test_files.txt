@@ -18,6 +18,7 @@ gcpKMS.json
 getMore.json
 insert.json
 keyAltName.json
+kmipKMS.json
 localKMS.json
 localSchema.json
 malformedCiphertext.json
