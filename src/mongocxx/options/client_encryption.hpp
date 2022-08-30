@@ -141,8 +141,7 @@ class MONGOCXX_API client_encryption {
     /// Sets the TLS options to use for client side encryption with a given KMS provider.
     ///
     /// Multiple KMS providers may be specified. Supported KMS providers are "aws", "azure", "gcp",
-    /// and "kmip". The KMSProvidersTLSOptions map value has the same form for all supported
-    /// providers:
+    /// and "kmip". The map value has the same form for all supported providers:
     ///
     ///    <KMS provider name>: {
     ///        tlsCaFile: Optional<String>
