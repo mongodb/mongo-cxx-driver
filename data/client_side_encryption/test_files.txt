@@ -5,8 +5,8 @@ basic.json
 bulk.json
 bypassAutoEncryption.json
 bypassedCommand.json
-countDocuments.json
 count.json
+countDocuments.json
 delete.json
 distinct.json
 explain.json
