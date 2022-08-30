@@ -1987,8 +1987,7 @@ TEST_CASE("KMS TLS Options Tests", "[client_side_encryption][!mayfail]") {
                         mongocxx::exception);
 
         // Expect success.
-        CHECK_NOTHROW(client_encryption_with_tls.create_data_key("kmip", opts),
-                      Catch::Contains("HTTP status=404", Catch::CaseSensitive::No));
+        CHECK_NOTHROW(client_encryption_with_tls.create_data_key("kmip", opts));
 
         // Expect an error indicating TLS handshake failed due to an expired certificate.
         CHECK_THROWS_WITH(client_encryption_expired.create_data_key("kmip", opts),
