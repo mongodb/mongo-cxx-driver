@@ -189,95 +189,97 @@ void run_encryption_tests_in_file(const std::string& test_path) {
     wc_majority.acknowledge_level(write_concern::level::k_majority);
 
     for (auto&& test : tests) {
-        auto description = test["description"].get_string().value;
-        INFO("Test description: " << description);
-        if (should_skip_spec_test(client{uri{}, test_util::add_test_server_api()},
-                                  test.get_document().value)) {
-            continue;
-        }
+        const auto description = string::to_string(test["description"].get_string().value);
 
-        options::client client_opts;
-
-        apm_checker apm_checker;
-        client_opts.apm_opts(apm_checker.get_apm_opts(true /* command_started_events_only */));
-
-        add_auto_encryption_opts(test.get_document().value, &client_opts);
-
-        if (strcmp(test["description"].get_string().value.data(),
-                   "operation fails with maxWireVersion < 8") == 0) {
-            // We cannot create a client with auto encryption enabled on 4.0,
-            // and it fails in different ways on Windows and POSIX, so rather
-            // than running this test, skip it.
-            continue;
-        }
-
-        bool check_results_logging = false;
-        if (strcmp(test["description"].get_string().value.data(),
-                   "Insert with deterministic encryption, then find it") == 0) {
-            // CDRIVER-3566 Remove this once windows is debugged.
-            check_results_logging = true;
-        }
-
-        class client client {
-            get_uri(test.get_document().value), test_util::add_test_server_api(client_opts),
-        };
-
-        auto db = client[db_name];
-        auto test_coll = db[coll_name];
-
-        _set_up_key_vault(setup_client, test_spec_view);
-        set_up_collection(setup_client, test_spec_view);
-
-        for (auto&& op : test["operations"].get_array().value) {
-            if (check_results_logging) {
-                fprintf(stdout,
-                        "about to run operation %s\n",
-                        to_json(op.get_document().value).c_str());
-                fprintf(stdout, "collection contents before: \n");
-                auto cursor = test_coll.find({});
-                for (auto&& doc : cursor) {
-                    fprintf(stdout, "%s\n", to_json(doc).c_str());
-                }
-                fprintf(stdout, "\n\n");
+        SECTION(description) {
+            if (should_skip_spec_test(client{uri{}, test_util::add_test_server_api()},
+                                      test.get_document().value)) {
+                continue;
             }
 
-            run_operation_check_result(op.get_document().value, [&]() {
-                return operation_runner{&db, &test_coll};
-            });
+            options::client client_opts;
 
-            if (check_results_logging) {
-                fprintf(stdout, "after running operation, collection contents:\n");
-                auto cursor = test_coll.find({});
-                for (auto&& doc : cursor) {
-                    fprintf(stdout, "%s\n", to_json(doc).c_str());
-                }
-                fprintf(stdout, "\n\n");
+            apm_checker apm_checker;
+            client_opts.apm_opts(apm_checker.get_apm_opts(true /* command_started_events_only */));
+
+            add_auto_encryption_opts(test.get_document().value, &client_opts);
+
+            if (strcmp(test["description"].get_string().value.data(),
+                       "operation fails with maxWireVersion < 8") == 0) {
+                // We cannot create a client with auto encryption enabled on 4.0,
+                // and it fails in different ways on Windows and POSIX, so rather
+                // than running this test, skip it.
+                continue;
             }
-        }
 
-        if (test["expectations"]) {
-            // remove this if statement
-            if (!check_results_logging) {
-                apm_checker.compare(test["expectations"].get_array().value, true);
+            bool check_results_logging = false;
+            if (strcmp(test["description"].get_string().value.data(),
+                       "Insert with deterministic encryption, then find it") == 0) {
+                // CDRIVER-3566 Remove this once windows is debugged.
+                check_results_logging = true;
             }
-        }
 
-        if (test["outcome"] && test["outcome"]["collection"]) {
-            class client plaintext_client {
-                uri{}, test_util::add_test_server_api(),
+            class client client {
+                get_uri(test.get_document().value), test_util::add_test_server_api(client_opts),
             };
 
-            read_preference rp;
-            read_concern rc;
-            rp.mode(read_preference::read_mode::k_primary);
-            rc.acknowledge_level(read_concern::level::k_local);
+            auto db = client[db_name];
+            auto test_coll = db[coll_name];
 
-            auto outcome_coll = plaintext_client[db_name][coll_name];
-            outcome_coll.read_concern(rc);
-            outcome_coll.read_preference(std::move(rp));
+            _set_up_key_vault(setup_client, test_spec_view);
+            set_up_collection(setup_client, test_spec_view);
 
-            test_util::check_outcome_collection(&outcome_coll,
-                                                test["outcome"]["collection"].get_document().value);
+            for (auto&& op : test["operations"].get_array().value) {
+                if (check_results_logging) {
+                    fprintf(stdout,
+                            "about to run operation %s\n",
+                            to_json(op.get_document().value).c_str());
+                    fprintf(stdout, "collection contents before: \n");
+                    auto cursor = test_coll.find({});
+                    for (auto&& doc : cursor) {
+                        fprintf(stdout, "%s\n", to_json(doc).c_str());
+                    }
+                    fprintf(stdout, "\n\n");
+                }
+
+                run_operation_check_result(op.get_document().value, [&]() {
+                    return operation_runner{&db, &test_coll};
+                });
+
+                if (check_results_logging) {
+                    fprintf(stdout, "after running operation, collection contents:\n");
+                    auto cursor = test_coll.find({});
+                    for (auto&& doc : cursor) {
+                        fprintf(stdout, "%s\n", to_json(doc).c_str());
+                    }
+                    fprintf(stdout, "\n\n");
+                }
+            }
+
+            if (test["expectations"]) {
+                // remove this if statement
+                if (!check_results_logging) {
+                    apm_checker.compare(test["expectations"].get_array().value, true);
+                }
+            }
+
+            if (test["outcome"] && test["outcome"]["collection"]) {
+                class client plaintext_client {
+                    uri{}, test_util::add_test_server_api(),
+                };
+
+                read_preference rp;
+                read_concern rc;
+                rp.mode(read_preference::read_mode::k_primary);
+                rc.acknowledge_level(read_concern::level::k_local);
+
+                auto outcome_coll = plaintext_client[db_name][coll_name];
+                outcome_coll.read_concern(rc);
+                outcome_coll.read_preference(std::move(rp));
+
+                test_util::check_outcome_collection(
+                    &outcome_coll, test["outcome"]["collection"].get_document().value);
+            }
         }
     }
 }
@@ -305,12 +307,15 @@ TEST_CASE("Client side encryption spec automated tests", "[client_side_encryptio
 
     std::string test_file;
     while (std::getline(test_files, test_file)) {
-        if (std::find(unsupported_tests.begin(), unsupported_tests.end(), test_file) !=
-            unsupported_tests.end()) {
-            WARN("skipping " << test_file);
-            continue;
+        SECTION(test_file) {
+            if (std::find(unsupported_tests.begin(), unsupported_tests.end(), test_file) !=
+                unsupported_tests.end()) {
+                WARN("skipping " << test_file);
+                continue;
+            }
+
+            run_encryption_tests_in_file(path + "/" + test_file);
         }
-        run_encryption_tests_in_file(path + "/" + test_file);
     }
 }
 
