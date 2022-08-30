@@ -1461,7 +1461,7 @@ TEST_CASE("Custom endpoint", "[client_side_encryption]") {
                            kmip_masterkey.view(),
                            "kmip",
                            stdx::nullopt,
-                           {{"generic server error"}});
+                           {{"Failed to resolve doesnotexist.local: generic server error"}});
     }
 
     // Call `client_encryption.createDataKey()` with "kmip" as the provider and the following
