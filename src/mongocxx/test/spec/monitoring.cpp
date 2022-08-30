@@ -97,10 +97,23 @@ void apm_checker::compare(bsoncxx::array::view expectations,
                           bool allow_extra,
                           const test_util::match_visitor& match_visitor) {
     auto is_ignored = [&](bsoncxx::document::value v) {
+        const auto view = v.view();
+
+        // CXX-2155: Sharing a MongoClient for metadata lookup can lead to deadlock in
+        // drivers using automatic encryption. Since the C++ driver does not use a separate
+        // `client` for listCollections and finds on the key vault, we skip these checks.
+        if (view["command_started_event"]["command"]["listCollections"]) {
+            const auto db = view["command_started_event"]["command"]["$db"];
+
+            if (db && db.get_string().value == stdx::string_view("keyvault")) {
+                return true;
+            }
+        }
+
         return std::any_of(std::begin(_ignore), std::end(_ignore), [&](stdx::string_view key) {
-            return v.view()["command_started_event"]["command"][key] ||
-                   v.view()["command_failed_event"]["command"][key] ||
-                   v.view()["command_succeeded_event"]["command"][key];
+            return view["command_started_event"]["command"][key] ||
+                   view["command_failed_event"]["command"][key] ||
+                   view["command_succeeded_event"]["command"][key];
         });
     };
 
