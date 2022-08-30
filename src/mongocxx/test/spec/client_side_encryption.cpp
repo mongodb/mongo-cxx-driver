@@ -284,8 +284,9 @@ void run_encryption_tests_in_file(const std::string& test_path) {
 
 TEST_CASE("Client side encryption spec automated tests", "[client_side_encryption_spec]") {
     instance::current();
-    /* Tests that use operations that the C++ driver does not have. */
-    std::set<std::string> unsupported_tests = {"count.json", "unsupportedCommand.json"};
+
+    std::set<std::string> unsupported_tests = {
+        "badQueries.json", "count.json", "unsupportedCommand.json"};
 
     char* encryption_tests_path = std::getenv("ENCRYPTION_TESTS_PATH");
     REQUIRE(encryption_tests_path);
@@ -306,7 +307,7 @@ TEST_CASE("Client side encryption spec automated tests", "[client_side_encryptio
     while (std::getline(test_files, test_file)) {
         if (std::find(unsupported_tests.begin(), unsupported_tests.end(), test_file) !=
             unsupported_tests.end()) {
-            WARN("skipping " << test_file << " due to unsupported operation");
+            WARN("skipping " << test_file);
             continue;
         }
         run_encryption_tests_in_file(path + "/" + test_file);

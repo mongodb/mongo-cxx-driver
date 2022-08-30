@@ -1,5 +1,6 @@
 aggregate.json
 azureKMS.json
+badQueries.json
 badSchema.json
 basic.json
 bulk.json
