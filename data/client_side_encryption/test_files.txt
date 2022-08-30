@@ -25,6 +25,7 @@ localSchema.json
 malformedCiphertext.json
 maxWireVersion.json
 missingKey.json
+noSchema.json
 replaceOne.json
 types.json
 unsupportedCommand.json
