@@ -59,6 +59,9 @@ const auto kAzureKeyUUID = "\x01\x95\x11\x10\x00\x00\x00\x00\x00\x00\x00\x00\x00
 // This is the base64 encoding of GCPAAAAAAAAAAAAAAAAAAA==.
 const auto kGcpKeyUUID = "\x18\x23\xc0\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00";
 
+// This is the base64 encoding of KMIPAAAAAAAAAAAAAAAAAA==.
+const auto kKmipKeyUUID = "\x28\xc2\x0f\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00";
+
 using bsoncxx::builder::concatenate;
 
 using bsoncxx::builder::basic::kvp;
@@ -131,6 +134,10 @@ bsoncxx::document::value _make_kms_doc(bool include_external = true) {
             subdoc.append(
                 kvp("privateKey", test_util::getenv_or_fail("MONGOCXX_TEST_GCP_PRIVATEKEY")));
         }));
+
+        kms_doc.append(kvp("kmip", [&](sub_document subdoc) {
+            subdoc.append(kvp("endpoint", "localhost:5698"));
+        }));
     }
 
     char key_storage[96];
@@ -145,14 +152,30 @@ bsoncxx::document::value _make_kms_doc(bool include_external = true) {
     return {kms_doc.extract()};
 }
 
+bsoncxx::document::value _make_tls_opts() {
+    bsoncxx::builder::basic::document tls_opts;
+
+    tls_opts.append(kvp("kmip", [&](sub_document subdoc) {
+        subdoc.append(
+            kvp("tlsCAFile", test_util::getenv_or_fail("MONGOCXX_TEST_CSFLE_TLS_CA_FILE")));
+        subdoc.append(
+            kvp("tlsCertificateKeyFile",
+                test_util::getenv_or_fail("MONGOCXX_TEST_CSFLE_TLS_CERTIFICATE_KEY_FILE")));
+    }));
+
+    return tls_opts.extract();
+}
+
 void _add_client_encrypted_opts(options::client* client_opts,
                                 bsoncxx::document::view_or_value schema_map,
                                 bsoncxx::document::view_or_value kms_doc,
+                                bsoncxx::document::view_or_value tls_opts,
                                 class client* key_vault_client = nullptr) {
     options::auto_encryption auto_encrypt_opts{};
 
     // KMS
     auto_encrypt_opts.kms_providers(std::move(kms_doc));
+    auto_encrypt_opts.tls_opts(std::move(tls_opts));
     auto_encrypt_opts.key_vault_namespace({"keyvault", "datakeys"});
 
     if (!schema_map.view().empty()) {
@@ -188,8 +211,10 @@ void _add_cse_opts(options::client_encryption* opts,
                    class client* client,
                    bool include_aws = true) {
     // KMS providers
-    auto kms = _make_kms_doc(include_aws);
-    opts->kms_providers(std::move(kms));
+    opts->kms_providers(_make_kms_doc(include_aws));
+
+    // TLS options
+    opts->tls_opts(_make_tls_opts());
 
     // Key vault client
     opts->key_vault_client(client);
@@ -327,20 +352,22 @@ TEST_CASE("Datakey and double encryption", "[client_side_encryption]") {
     _setup_drop_collections(setup_client);
 
     // 3. Create and configure client_encrypted, client_encryption.
-    auto schema_map = document{} << "db.coll" << open_document << "bsonType"
-                                 << "object"
-                                 << "properties" << open_document << "encrypted_placeholder"
-                                 << open_document << "encrypt" << open_document << "keyId"
-                                 << "/placeholder"
-                                 << "bsonType"
-                                 << "string"
-                                 << "algorithm"
-                                 << "AEAD_AES_256_CBC_HMAC_SHA_512-Random" << close_document
-                                 << close_document << close_document << close_document << finalize;
-
     options::client encrypted_client_opts;
-    auto kms_doc = _make_kms_doc();
-    _add_client_encrypted_opts(&encrypted_client_opts, std::move(schema_map), std::move(kms_doc));
+    _add_client_encrypted_opts(
+        &encrypted_client_opts,
+        document() << "db.coll" << open_document << "bsonType"
+                   << "object"
+                   << "properties" << open_document << "encrypted_placeholder" << open_document
+                   << "encrypt" << open_document << "keyId"
+                   << "/placeholder"
+                   << "bsonType"
+                   << "string"
+                   << "algorithm"
+                   << "AEAD_AES_256_CBC_HMAC_SHA_512-Random" << close_document << close_document
+                   << close_document << close_document << finalize,
+        _make_kms_doc(),
+        _make_tls_opts());
+
     class client client_encrypted {
         uri{}, test_util::add_test_server_api(encrypted_client_opts),
     };
@@ -428,6 +455,25 @@ TEST_CASE("Datakey and double encryption", "[client_side_encryption]") {
         &client_encrypted,
         &client_encryption,
         &apm_checker);
+
+    // Run with KMIP
+    run_datakey_and_double_encryption(
+        [&]() {
+            // 1. Call client_encryption.createDataKey() with the KMIP KMS provider
+            // and keyAltNames set to ["kmip_altname"].
+            options::data_key data_key_opts;
+            data_key_opts.key_alt_names({"kmip_altname"});
+
+            auto doc = make_document();
+            data_key_opts.master_key(doc.view());
+
+            return client_encryption.create_data_key("kmip", data_key_opts);
+        },
+        "kmip",
+        &setup_client,
+        &client_encrypted,
+        &client_encryption,
+        &apm_checker);
 }
 
 void run_external_key_vault_test(bool with_external_key_vault) {
@@ -460,16 +506,16 @@ void run_external_key_vault_test(bool with_external_key_vault) {
     // Create a MongoClient configured with auto encryption (referred to as client_encrypted),
     // that is configured with an external key vault client if with_external_key_vault is true
     options::client encrypted_client_opts;
-    auto kms_doc = _make_kms_doc(false);
 
     if (with_external_key_vault) {
         _add_client_encrypted_opts(&encrypted_client_opts,
                                    std::move(schema_map),
-                                   std::move(kms_doc),
+                                   _make_kms_doc(false),
+                                   _make_tls_opts(),
                                    &external_key_vault_client);
     } else {
         _add_client_encrypted_opts(
-            &encrypted_client_opts, std::move(schema_map), std::move(kms_doc));
+            &encrypted_client_opts, std::move(schema_map), _make_kms_doc(false), _make_tls_opts());
     }
 
     class client client_encrypted {
@@ -583,10 +629,9 @@ TEST_CASE("BSON size limits and batch splitting", "[client_side_encryption]") {
     // with local KMS provider as follows:
     //     { "local": { "key": <base64 decoding of LOCAL_MASTERKEY> } }
     // and with the keyVaultNamespace set to keyvault.datakeys.
-    auto kms_doc = _make_kms_doc(false);
-
     options::client client_encrypted_opts;
-    _add_client_encrypted_opts(&client_encrypted_opts, limits_schema.view(), std::move(kms_doc));
+    _add_client_encrypted_opts(
+        &client_encrypted_opts, limits_schema.view(), _make_kms_doc(false), _make_tls_opts());
 
     // Add a counter to verify splits
     int n_inserts = 0;
@@ -733,8 +778,7 @@ TEST_CASE("Views are prohibited", "[client_side_encryption]") {
     // { "local": { "key": <base64 decoding of LOCAL_MASTERKEY> } }
     // Configure with the keyVaultNamespace set to keyvault.datakeys.
     options::client opts;
-    auto kms_doc = _make_kms_doc();
-    _add_client_encrypted_opts(&opts, {}, std::move(kms_doc));
+    _add_client_encrypted_opts(&opts, {}, _make_kms_doc(), _make_tls_opts());
     class client client_encrypted {
         uri{}, test_util::add_test_server_api(opts)
     };
@@ -761,6 +805,7 @@ void _run_corpus_test(bool use_schema_map) {
     auto corpus_key_aws = _doc_from_file("/corpus/corpus-key-aws.json");
     auto corpus_key_azure = _doc_from_file("/corpus/corpus-key-azure.json");
     auto corpus_key_gcp = _doc_from_file("/corpus/corpus-key-gcp.json");
+    auto corpus_key_kmip = _doc_from_file("/corpus/corpus-key-kmip.json");
 
     // Using client, drop and create the collection db.coll configured with the included
     // JSON schema corpus/corpus-schema.json.
@@ -785,21 +830,27 @@ void _run_corpus_test(bool use_schema_map) {
     keyvault.insert_one(std::move(corpus_key_aws), insert_opts);
     keyvault.insert_one(std::move(corpus_key_azure), insert_opts);
     keyvault.insert_one(std::move(corpus_key_gcp), insert_opts);
+    keyvault.insert_one(std::move(corpus_key_kmip), insert_opts);
 
     // Configure kms credentials as follows:
     // {
     //     "aws": { <AWS credentials> },
-    //     "local": { "key": <base64 decoding of LOCAL_MASTERKEY> }
+    //     "azure": { <Azure credentials> },
+    //     "gcp": { <GCP credentials> },
+    //     "local": { "key": <base64 decoding of LOCAL_MASTERKEY> },
+    //     "kmip": { "endpoint": "localhost:5698" }
     // }
 
     char local_key_id_storage[16];
     char aws_key_id_storage[16];
     char azure_key_id_storage[16];
     char gcp_key_id_storage[16];
+    char kmip_key_id_storage[16];
     memcpy(&(local_key_id_storage[0]), kLocalKeyUUID, 16);
     memcpy(&(aws_key_id_storage[0]), kAwsKeyUUID, 16);
     memcpy(&(azure_key_id_storage[0]), kAzureKeyUUID, 16);
     memcpy(&(gcp_key_id_storage[0]), kGcpKeyUUID, 16);
+    memcpy(&(kmip_key_id_storage[0]), kKmipKeyUUID, 16);
 
     bsoncxx::types::b_binary local_key_id{
         bsoncxx::binary_sub_type::k_uuid, 16, (const uint8_t*)&local_key_id_storage};
@@ -809,22 +860,24 @@ void _run_corpus_test(bool use_schema_map) {
         bsoncxx::binary_sub_type::k_uuid, 16, (const uint8_t*)&azure_key_id_storage};
     bsoncxx::types::b_binary gcp_key_id{
         bsoncxx::binary_sub_type::k_uuid, 16, (const uint8_t*)&gcp_key_id_storage};
+    bsoncxx::types::b_binary kmip_key_id{
+        bsoncxx::binary_sub_type::k_uuid, 16, (const uint8_t*)&kmip_key_id_storage};
 
     auto local_key_value = make_value(local_key_id);
     auto aws_key_value = make_value(aws_key_id);
     auto azure_key_value = make_value(azure_key_id);
     auto gcp_key_value = make_value(gcp_key_id);
-
-    auto kms_doc = _make_kms_doc();
+    auto kmip_key_value = make_value(kmip_key_id);
 
     // Create the following and configure both objects with keyVaultNamespace set to
     // keyvault.datakeys:
     // A MongoClient configured with auto encryption (referred to as client_encrypted)
     options::client client_encrypted_opts;
     if (use_schema_map) {
-        _add_client_encrypted_opts(&client_encrypted_opts, corpus_schema.view(), kms_doc.view());
+        _add_client_encrypted_opts(
+            &client_encrypted_opts, corpus_schema.view(), _make_kms_doc(), _make_tls_opts());
     } else {
-        _add_client_encrypted_opts(&client_encrypted_opts, {}, kms_doc.view());
+        _add_client_encrypted_opts(&client_encrypted_opts, {}, _make_kms_doc(), _make_tls_opts());
     }
 
     class client client_encrypted {
@@ -833,7 +886,8 @@ void _run_corpus_test(bool use_schema_map) {
 
     // A ClientEncryption object (referred to as client_encryption)
     options::client_encryption cse_opts;
-    cse_opts.kms_providers(kms_doc.view());
+    cse_opts.kms_providers(_make_kms_doc());
+    cse_opts.tls_opts(_make_tls_opts());
     cse_opts.key_vault_client(&client);
     cse_opts.key_vault_namespace({"keyvault", "datakeys"});
     class client_encryption client_encryption {
@@ -855,7 +909,7 @@ void _run_corpus_test(bool use_schema_map) {
         // If the field name is _id, altname_aws, altname_azure, altname_gcp, altname_local, copy
         // the field to corpus_copied.
         std::vector<std::string> copied_fields = {
-            "_id", "altname_aws", "altname_azure", "altname_gcp", "altname_local"};
+            "_id", "altname_aws", "altname_azure", "altname_gcp", "altname_kmip", "altname_local"};
         if (std::find(copied_fields.begin(), copied_fields.end(), field_name) !=
             copied_fields.end()) {
             corpus_copied_builder.append(kvp(field_name, ele.get_value()));
@@ -915,6 +969,10 @@ void _run_corpus_test(bool use_schema_map) {
                     // If kms is gcp set the key_id to the UUID with base64 value
                     // GCPAAAAAAAAAAAAAAAAAAA==.
                     encrypt_opts.key_id(gcp_key_value.view());
+                } else if (kms == stdx::string_view("kmip")) {
+                    // If kms is kmip set the key_id to the UUID with base64 value
+                    // KMIPAAAAAAAAAAAAAAAAAA==.
+                    encrypt_opts.key_id(kmip_key_value.view());
                 } else {
                     throw exception{error_code::k_invalid_parameter, "unsupported kms identifier"};
                 }
@@ -931,6 +989,9 @@ void _run_corpus_test(bool use_schema_map) {
                 } else if (kms == stdx::string_view("gcp")) {
                     // If kms is gcp set the key_alt_name to "gcp".
                     encrypt_opts.key_alt_name("gcp");
+                } else if (kms == stdx::string_view("kmip")) {
+                    // If kms is kmip set the key_alt_name to "kmip".
+                    encrypt_opts.key_alt_name("kmip");
                 } else {
                     throw exception{error_code::k_invalid_parameter, "unsupported kms altname"};
                 }
@@ -1080,6 +1141,7 @@ void _run_endpoint_test(mongocxx::client* setup_client,
     mongocxx::options::client_encryption ce_opts_invalid;
     bsoncxx::builder::basic::document kms_doc;
     bsoncxx::builder::basic::document kms_doc_invalid;
+    bsoncxx::builder::basic::document tls_opts;
 
     kms_doc.append(kvp("aws", [&](sub_document subdoc) {
         subdoc.append(kvp("secretAccessKey",
@@ -1102,9 +1164,21 @@ void _run_endpoint_test(mongocxx::client* setup_client,
         subdoc.append(kvp("endpoint", "oauth2.googleapis.com:443"));
     }));
 
+    kms_doc.append(kvp(
+        "kmip", [&](sub_document subdoc) { subdoc.append(kvp("endpoint", "localhost:5698")); }));
+
+    tls_opts.append(kvp("kmip", [&](sub_document subdoc) {
+        subdoc.append(
+            kvp("tlsCAFile", test_util::getenv_or_fail("MONGOCXX_TEST_CSFLE_TLS_CA_FILE")));
+        subdoc.append(
+            kvp("tlsCertificateKeyFile",
+                test_util::getenv_or_fail("MONGOCXX_TEST_CSFLE_TLS_CERTIFICATE_KEY_FILE")));
+    }));
+
     ce_opts.key_vault_client(setup_client);
     ce_opts.key_vault_namespace({"keyvault", "datakeys"});
     ce_opts.kms_providers(kms_doc.view());
+    ce_opts.tls_opts(tls_opts.view());
     mongocxx::client_encryption client_encryption{ce_opts};
 
     kms_doc_invalid.append(kvp("azure", [&](sub_document subdoc) {
@@ -1119,6 +1193,10 @@ void _run_endpoint_test(mongocxx::client* setup_client,
         subdoc.append(kvp("email", test_util::getenv_or_fail("MONGOCXX_TEST_GCP_EMAIL")));
         subdoc.append(kvp("privateKey", test_util::getenv_or_fail("MONGOCXX_TEST_GCP_PRIVATEKEY")));
         subdoc.append(kvp("endpoint", "doesnotexist.invalid:443"));
+    }));
+
+    kms_doc_invalid.append(kvp("kmip", [&](sub_document subdoc) {
+        subdoc.append(kvp("endpoint", "doesnotexist.local:5698"));
     }));
 
     ce_opts_invalid.key_vault_client(setup_client);
@@ -1173,10 +1251,13 @@ TEST_CASE("Custom endpoint", "[client_side_encryption]") {
     // }
     // Expect this to succeed. Use the returned UUID of the key to explicitly encrypt and
     // decrypt the string "test" to validate it works.
-    auto simple_masterkey = make_document(
-        kvp("region", "us-east-1"),
-        kvp("key", "arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0"));
-    _run_endpoint_test(&setup_client, simple_masterkey.view(), "aws");
+    SECTION("Test Case 1") {
+        auto simple_masterkey = make_document(
+            kvp("region", "us-east-1"),
+            kvp("key",
+                "arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0"));
+        _run_endpoint_test(&setup_client, simple_masterkey.view(), "aws");
+    }
 
     // Call client_encryption.createDataKey() with "aws" as the provider and the following
     // masterKey:
@@ -1187,14 +1268,17 @@ TEST_CASE("Custom endpoint", "[client_side_encryption]") {
     // }
     // Expect this to succeed. Use the returned UUID of the key to explicitly encrypt and
     // decrypt the string "test" to validate it works.
-    auto endpoint_masterkey =
-        document{} << "region"
-                   << "us-east-1"
-                   << "key"
-                   << "arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0"
-                   << "endpoint"
-                   << "kms.us-east-1.amazonaws.com" << finalize;
-    _run_endpoint_test(&setup_client, endpoint_masterkey.view(), "aws");
+    SECTION("Test Case 2") {
+        auto endpoint_masterkey =
+            document{}
+            << "region"
+            << "us-east-1"
+            << "key"
+            << "arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0"
+            << "endpoint"
+            << "kms.us-east-1.amazonaws.com" << finalize;
+        _run_endpoint_test(&setup_client, endpoint_masterkey.view(), "aws");
+    }
 
     // Call client_encryption.createDataKey() with "aws" as the provider and the following
     // masterKey:
@@ -1205,14 +1289,17 @@ TEST_CASE("Custom endpoint", "[client_side_encryption]") {
     // }
     // Expect this to succeed. Use the returned UUID of the key to explicitly encrypt and
     // decrypt the string "test" to validate it works.
-    auto endpoint_masterkey2 =
-        document{} << "region"
-                   << "us-east-1"
-                   << "key"
-                   << "arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0"
-                   << "endpoint"
-                   << "kms.us-east-1.amazonaws.com:443" << finalize;
-    _run_endpoint_test(&setup_client, endpoint_masterkey2.view(), "aws");
+    SECTION("Test Case 3") {
+        auto endpoint_masterkey2 =
+            document{}
+            << "region"
+            << "us-east-1"
+            << "key"
+            << "arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0"
+            << "endpoint"
+            << "kms.us-east-1.amazonaws.com:443" << finalize;
+        _run_endpoint_test(&setup_client, endpoint_masterkey2.view(), "aws");
+    }
 
     // Call client_encryption.createDataKey() with "aws" as the provider and the following
     // masterKey:
@@ -1222,14 +1309,17 @@ TEST_CASE("Custom endpoint", "[client_side_encryption]") {
     //   endpoint: "kms.us-east-1.amazonaws.com:12345"
     // }
     // Expect this to fail with a socket connection error.
-    auto socket_error_masterkey =
-        document{} << "region"
-                   << "us-east-1"
-                   << "key"
-                   << "arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0"
-                   << "endpoint"
-                   << "kms.us-east-1.amazonaws.com:12345" << finalize;
-    _run_endpoint_test(&setup_client, socket_error_masterkey.view(), "aws", {{"error"}});
+    SECTION("Test Case 4") {
+        auto socket_error_masterkey =
+            document{}
+            << "region"
+            << "us-east-1"
+            << "key"
+            << "arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0"
+            << "endpoint"
+            << "kms.us-east-1.amazonaws.com:12345" << finalize;
+        _run_endpoint_test(&setup_client, socket_error_masterkey.view(), "aws", {{"error"}});
+    }
 
     // Call client_encryption.createDataKey() with "aws" as the provider and the following
     // masterKey:
@@ -1239,14 +1329,17 @@ TEST_CASE("Custom endpoint", "[client_side_encryption]") {
     //   endpoint: "kms.us-east-2.amazonaws.com"
     // }
     // Expect this to fail with an exception.
-    auto endpoint_error_masterkey =
-        document{} << "region"
-                   << "us-east-1"
-                   << "key"
-                   << "arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0"
-                   << "endpoint"
-                   << "kms.us-east-2.amazonaws.com" << finalize;
-    _run_endpoint_test(&setup_client, endpoint_error_masterkey.view(), "aws", {{""}});
+    SECTION("Test Case 5") {
+        auto endpoint_error_masterkey =
+            document{}
+            << "region"
+            << "us-east-1"
+            << "key"
+            << "arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0"
+            << "endpoint"
+            << "kms.us-east-2.amazonaws.com" << finalize;
+        _run_endpoint_test(&setup_client, endpoint_error_masterkey.view(), "aws", {{""}});
+    }
 
     // Call client_encryption.createDataKey() with "aws" as the provider and the following
     // masterKey:
@@ -1257,17 +1350,20 @@ TEST_CASE("Custom endpoint", "[client_side_encryption]") {
     // }
     // Expect this to fail with a network exception indicating failure to resolve
     // "doesnotexist.invalid".
-    auto parse_error_masterkey =
-        document{} << "region"
-                   << "us-east-1"
-                   << "key"
-                   << "arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0"
-                   << "endpoint"
-                   << "doesnotexist.invalid" << finalize;
-    _run_endpoint_test(&setup_client,
-                       parse_error_masterkey.view(),
-                       "aws",
-                       {{"Failed to resolve doesnotexist.invalid: generic server error"}});
+    SECTION("Test Case 6") {
+        auto parse_error_masterkey =
+            document{}
+            << "region"
+            << "us-east-1"
+            << "key"
+            << "arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0"
+            << "endpoint"
+            << "doesnotexist.invalid" << finalize;
+        _run_endpoint_test(&setup_client,
+                           parse_error_masterkey.view(),
+                           "aws",
+                           {{"Failed to resolve doesnotexist.invalid: generic server error"}});
+    }
 
     // Call `client_encryption.createDataKey()` with "azure" as the provider and the following
     // masterKey:
@@ -1280,15 +1376,17 @@ TEST_CASE("Custom endpoint", "[client_side_encryption]") {
     // with the same masterKey.
     // Expect this to fail with a network exception indicating failure to resolve
     // "doesnotexist.invalid".
-    auto azure_masterkey = document{} << "keyVaultEndpoint"
-                                      << "key-vault-csfle.vault.azure.net"
-                                      << "keyName"
-                                      << "key-name-csfle" << finalize;
-    _run_endpoint_test(&setup_client,
-                       azure_masterkey.view(),
-                       "azure",
-                       stdx::nullopt,
-                       {{"Failed to resolve doesnotexist.invalid: generic server error"}});
+    SECTION("Test Case 7") {
+        auto azure_masterkey = document{} << "keyVaultEndpoint"
+                                          << "key-vault-csfle.vault.azure.net"
+                                          << "keyName"
+                                          << "key-name-csfle" << finalize;
+        _run_endpoint_test(&setup_client,
+                           azure_masterkey.view(),
+                           "azure",
+                           stdx::nullopt,
+                           {{"Failed to resolve doesnotexist.invalid: generic server error"}});
+    }
 
     // Call `client_encryption.createDataKey()` with "gcp" as the provider and the following
     // masterKey:
@@ -1304,21 +1402,23 @@ TEST_CASE("Custom endpoint", "[client_side_encryption]") {
     // with the same masterKey.
     // Expect this to fail with a network exception indicating failure to resolve
     // "doesnotexist.invalid".
-    auto gcp_masterkey = document{} << "projectId"
-                                    << "devprod-drivers"
-                                    << "location"
-                                    << "global"
-                                    << "keyRing"
-                                    << "key-ring-csfle"
-                                    << "keyName"
-                                    << "key-name-csfle"
-                                    << "endpoint"
-                                    << "cloudkms.googleapis.com:443" << finalize;
-    _run_endpoint_test(&setup_client,
-                       gcp_masterkey.view(),
-                       "gcp",
-                       stdx::nullopt,
-                       {{"Failed to resolve doesnotexist.invalid: generic server error"}});
+    SECTION("Test Case 8") {
+        auto gcp_masterkey = document{} << "projectId"
+                                        << "devprod-drivers"
+                                        << "location"
+                                        << "global"
+                                        << "keyRing"
+                                        << "key-ring-csfle"
+                                        << "keyName"
+                                        << "key-name-csfle"
+                                        << "endpoint"
+                                        << "cloudkms.googleapis.com:443" << finalize;
+        _run_endpoint_test(&setup_client,
+                           gcp_masterkey.view(),
+                           "gcp",
+                           stdx::nullopt,
+                           {{"Failed to resolve doesnotexist.invalid: generic server error"}});
+    }
 
     // Call `client_encryption.createDataKey()` with "gcp" as the provider and the following
     // masterKey:
@@ -1331,17 +1431,73 @@ TEST_CASE("Custom endpoint", "[client_side_encryption]") {
     // }
     // Expect this to fail with an exception with a message containing the string: "Invalid KMS
     // response".
-    auto gcp_masterkey2 = document{} << "projectId"
-                                     << "devprod-drivers"
-                                     << "location"
-                                     << "global"
-                                     << "keyRing"
-                                     << "key-ring-csfle"
-                                     << "keyName"
-                                     << "key-name-csfle"
-                                     << "endpoint"
-                                     << "doesnotexist.invalid:443" << finalize;
-    _run_endpoint_test(&setup_client, gcp_masterkey2.view(), "gcp", {{"Invalid KMS response"}});
+    SECTION("Test Case 9") {
+        auto gcp_masterkey2 = document{} << "projectId"
+                                         << "devprod-drivers"
+                                         << "location"
+                                         << "global"
+                                         << "keyRing"
+                                         << "key-ring-csfle"
+                                         << "keyName"
+                                         << "key-name-csfle"
+                                         << "endpoint"
+                                         << "doesnotexist.invalid:443" << finalize;
+        _run_endpoint_test(&setup_client, gcp_masterkey2.view(), "gcp", {{"Invalid KMS response"}});
+    }
+
+    // Call `client_encryption.createDataKey()` with "kmip" as the provider and the following
+    // masterKey:
+    // {
+    //   "keyId": "1"
+    // }
+    // Expect this to succeed. Use the returned UUID of the key to explicitly encrypt and decrypt
+    // the string "test" to validate it works. Call client_encryption_invalid.createDataKey() with
+    // the same masterKey. Expect this to fail with a network exception indicating failure to
+    // resolve "doesnotexist.local".
+    SECTION("Test Case 10") {
+        auto kmip_masterkey = document{} << "keyId"
+                                         << "1" << finalize;
+        _run_endpoint_test(&setup_client,
+                           kmip_masterkey.view(),
+                           "kmip",
+                           stdx::nullopt,
+                           {{"Failed to resolve doesnotexist.local: generic server error"}});
+    }
+
+    // Call `client_encryption.createDataKey()` with "kmip" as the provider and the following
+    // masterKey:
+    // {
+    //   "keyId": "1",
+    //   "endpoint": "localhost:5698"
+    // }
+    // Expect this to succeed. Use the returned UUID of the key to explicitly encrypt and decrypt
+    // the string "test" to validate it works.
+    SECTION("Test Case 11") {
+        auto kmip_masterkey = document{} << "keyId"
+                                         << "1"
+                                         << "endpoint"
+                                         << "localhost:5698" << finalize;
+        _run_endpoint_test(&setup_client, kmip_masterkey.view(), "kmip");
+    }
+
+    // Call `client_encryption.createDataKey()` with "kmip" as the provider and the following
+    // masterKey:
+    // {
+    //   "keyId": "1",
+    //   "endpoint": "doesnotexist.local:5698"
+    // }
+    // Expect this to fail with a network exception indicating failure to resolve
+    // "doesnotexist.local".
+    SECTION("Test Case 12") {
+        auto kmip_masterkey = document{} << "keyId"
+                                         << "1"
+                                         << "endpoint"
+                                         << "doesnotexist.local:5698" << finalize;
+        _run_endpoint_test(&setup_client,
+                           kmip_masterkey.view(),
+                           "kmip",
+                           {{"Failed to resolve doesnotexist.local: generic server error"}});
+    }
 }
 
 TEST_CASE("Bypass spawning mongocryptd", "[client_side_encryption]") {
@@ -1376,8 +1532,8 @@ TEST_CASE("Bypass spawning mongocryptd", "[client_side_encryption]") {
     options::client client_encrypted_opts;
 
     options::auto_encryption auto_encrypt_opts{};
-    auto kms_doc = _make_kms_doc();
-    auto_encrypt_opts.kms_providers(std::move(kms_doc));
+    auto_encrypt_opts.kms_providers(_make_kms_doc());
+    auto_encrypt_opts.tls_opts(_make_tls_opts());
     auto_encrypt_opts.key_vault_namespace({"keyvault", "datakeys"});
     auto_encrypt_opts.schema_map({external_schema.view()});
 
@@ -1416,8 +1572,8 @@ TEST_CASE("Bypass spawning mongocryptd", "[client_side_encryption]") {
     // Configure with the keyVaultNamespace set to keyvault.datakeys.
     options::client client_encrypted_opts2;
     options::auto_encryption auto_encrypt_opts2{};
-    auto kms_doc2 = _make_kms_doc();
-    auto_encrypt_opts2.kms_providers(std::move(kms_doc2));
+    auto_encrypt_opts2.kms_providers(_make_kms_doc());
+    auto_encrypt_opts2.tls_opts(_make_tls_opts());
     auto_encrypt_opts2.key_vault_namespace({"keyvault", "datakeys"});
     auto_encrypt_opts2.schema_map({external_schema.view()});
 
@@ -1582,6 +1738,265 @@ TEST_CASE("KMS TLS wrong host certificate", "[client_side_encryption]") {
     REQUIRE_THROWS_MATCHES(client_encryption.create_data_key("aws", data_key_opts),
                            mongocxx::exception,
                            kms_tls_wrong_host_cert_matcher());
+}
+
+bsoncxx::document::value make_kms_providers_with_custom_endpoints(stdx::string_view azure,
+                                                                  stdx::string_view gcp,
+                                                                  stdx::string_view kmip) {
+    bsoncxx::builder::basic::document kms_doc;
+
+    kms_doc.append(kvp("aws", [&](sub_document subdoc) {
+        subdoc.append(kvp("secretAccessKey",
+                          test_util::getenv_or_fail("MONGOCXX_TEST_AWS_SECRET_ACCESS_KEY")));
+        subdoc.append(
+            kvp("accessKeyId", test_util::getenv_or_fail("MONGOCXX_TEST_AWS_ACCESS_KEY_ID")));
+    }));
+
+    kms_doc.append(kvp("azure", [&](sub_document subdoc) {
+        subdoc.append(kvp("tenantId", test_util::getenv_or_fail("MONGOCXX_TEST_AZURE_TENANT_ID")));
+        subdoc.append(kvp("clientId", test_util::getenv_or_fail("MONGOCXX_TEST_AZURE_CLIENT_ID")));
+        subdoc.append(
+            kvp("clientSecret", test_util::getenv_or_fail("MONGOCXX_TEST_AZURE_CLIENT_SECRET")));
+        subdoc.append(kvp("identityPlatformEndpoint", azure));
+    }));
+
+    kms_doc.append(kvp("gcp", [&](sub_document subdoc) {
+        subdoc.append(kvp("email", test_util::getenv_or_fail("MONGOCXX_TEST_GCP_EMAIL")));
+        subdoc.append(kvp("privateKey", test_util::getenv_or_fail("MONGOCXX_TEST_GCP_PRIVATEKEY")));
+        subdoc.append(kvp("endpoint", gcp));
+    }));
+
+    kms_doc.append(kvp("kmip", [&](sub_document subdoc) { subdoc.append(kvp("endpoint", kmip)); }));
+
+    return kms_doc.extract();
+}
+
+enum struct with_certs { none, ca_only, cert_only, both };
+
+bsoncxx::document::value make_tls_opts_with_certs(with_certs with) {
+    bsoncxx::builder::basic::document tls_opts;
+
+    stdx::string_view providers[] = {"aws", "azure", "gcp", "kmip"};
+
+    for (const auto& provider : providers) {
+        tls_opts.append(kvp(provider, [&](sub_document subdoc) {
+            if (with == with_certs::ca_only || with == with_certs::both) {
+                subdoc.append(
+                    kvp("tlsCAFile", test_util::getenv_or_fail("MONGOCXX_TEST_CSFLE_TLS_CA_FILE")));
+            }
+
+            if (with == with_certs::cert_only || with == with_certs::both) {
+                subdoc.append(
+                    kvp("tlsCertificateKeyFile",
+                        test_util::getenv_or_fail("MONGOCXX_TEST_CSFLE_TLS_CERTIFICATE_KEY_FILE")));
+            }
+        }));
+    }
+
+    return tls_opts.extract();
+}
+
+client_encryption make_prose_test_11_ce(mongocxx::client* client,
+                                        stdx::string_view azure,
+                                        stdx::string_view gcp,
+                                        stdx::string_view kmip,
+                                        with_certs with) {
+    options::client_encryption cse_opts;
+    cse_opts.key_vault_client(client);
+    cse_opts.key_vault_namespace({"keyvault", "datakeys"});
+    cse_opts.kms_providers(make_kms_providers_with_custom_endpoints(azure, gcp, kmip));
+    cse_opts.tls_opts(make_tls_opts_with_certs(with));
+    return client_encryption(std::move(cse_opts));
+}
+
+// CDRIVER-4181: may fail due to unexpected invalid hostname errors if C Driver was built with VS
+// 2015 and uses Secure Channel (ENABLE_SSL=WINDOWS).
+TEST_CASE("KMS TLS Options Tests", "[client_side_encryption][!mayfail]") {
+    instance::current();
+
+    auto setup_client = client(uri(), test_util::add_test_server_api());
+
+    if (!mongocxx::test_util::should_run_client_side_encryption_test()) {
+        return;
+    }
+
+    // Support for detailed certificate verify failure messages required by this test are only
+    // available in libmongoc 1.20.0 and newer (CDRIVER-3927).
+    if (!mongoc_check_version(1, 20, 0)) {
+        WARN("Skipping - libmongoc version is < 1.20.0 (CDRIVER-3927)");
+        return;
+    }
+
+    // Required CA certificates may not be registered on system. See BUILD-14068.
+    if (std::getenv("MONGOCXX_TEST_SKIP_KMS_TLS_TESTS")) {
+        WARN("Skipping - KMS TLS tests disabled (BUILD-14068)");
+        return;
+    }
+
+    if (test_util::get_max_wire_version(setup_client) < 8) {
+        // Automatic encryption requires wire version 8.
+        WARN("Skipping - max wire version is < 8");
+        return;
+    }
+
+    auto client_encryption_no_client_cert = make_prose_test_11_ce(
+        &setup_client, "127.0.0.1:9002", "127.0.0.1:9002", "127.0.0.1:5698", with_certs::ca_only);
+    auto client_encryption_with_tls = make_prose_test_11_ce(
+        &setup_client, "127.0.0.1:9002", "127.0.0.1:9002", "127.0.0.1:5698", with_certs::both);
+    auto client_encryption_expired = make_prose_test_11_ce(
+        &setup_client, "127.0.0.1:9000", "127.0.0.1:9000", "127.0.0.1:9000", with_certs::ca_only);
+    auto client_encryption_invalid_hostname = make_prose_test_11_ce(
+        &setup_client, "127.0.0.1:9001", "127.0.0.1:9001", "127.0.0.1:9001", with_certs::ca_only);
+
+    const auto expired_cert_matcher = Catch::Contains("expired", Catch::CaseSensitive::No);
+    const auto invalid_hostname_matcher = Catch::Matches(
+        // Content of error message may vary depending on the SSL library being used.
+        ".*(mismatch|doesn't match|not present).*",
+        Catch::CaseSensitive::No);
+
+    SECTION("Case 1 - AWS") {
+        // Expect an error indicating TLS handshake failed.
+        // Note: The remote server may disconnect during the TLS handshake, causing miscellaneous
+        // errors instead of a neat handshake failure. Just assert that *an* error occurred.
+        CHECK_THROWS_AS(
+            client_encryption_no_client_cert.create_data_key(
+                "aws",
+                options::data_key().master_key(
+                    document()
+                    << "region"
+                    << "us-east-1"
+                    << "key"
+                    << "arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0"
+                    << "endpoint"
+                    << "127.0.0.1:9002" << finalize)),
+            mongocxx::exception);
+
+        // Expect an error from libmongocrypt with a message containing the string: "parse error".
+        // This implies TLS handshake succeeded.
+        CHECK_THROWS_WITH(
+            client_encryption_with_tls.create_data_key(
+                "aws",
+                options::data_key().master_key(
+                    document()
+                    << "region"
+                    << "us-east-1"
+                    << "key"
+                    << "arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0"
+                    << "endpoint"
+                    << "127.0.0.1:9002" << finalize)),
+            Catch::Contains("parse error", Catch::CaseSensitive::No));
+
+        // Expect an error indicating TLS handshake failed due to an expired certificate.
+        CHECK_THROWS_WITH(
+            client_encryption_with_tls.create_data_key(
+                "aws",
+                options::data_key().master_key(
+                    document()
+                    << "region"
+                    << "us-east-1"
+                    << "key"
+                    << "arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0"
+                    << "endpoint"
+                    << "127.0.0.1:9000" << finalize)),
+            expired_cert_matcher);
+
+        // Expect an error indicating TLS handshake failed due to an invalid hostname.
+        CHECK_THROWS_WITH(
+            client_encryption_with_tls.create_data_key(
+                "aws",
+                options::data_key().master_key(
+                    document()
+                    << "region"
+                    << "us-east-1"
+                    << "key"
+                    << "arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0"
+                    << "endpoint"
+                    << "127.0.0.1:9001" << finalize)),
+            invalid_hostname_matcher);
+    }
+
+    SECTION("Case 2 - Azure") {
+        options::data_key opts;
+
+        opts.master_key(document() << "keyVaultEndpoint"
+                                   << "doesnotexist.local"
+                                   << "keyName"
+                                   << "foo" << finalize);
+
+        // Expect an error indicating TLS handshake failed.
+        // Note: The remote server may disconnect during the TLS handshake, causing miscellaneous
+        // errors instead of a neat handshake failure. Just assert that *an* error occurred.
+        CHECK_THROWS_AS(client_encryption_no_client_cert.create_data_key("azure", opts),
+                        mongocxx::exception);
+
+        // Expect an error from libmongocrypt with a message containing the string: "HTTP
+        // status=404". This implies TLS handshake succeeded.
+        CHECK_THROWS_WITH(client_encryption_with_tls.create_data_key("azure", opts),
+                          Catch::Contains("HTTP status=404", Catch::CaseSensitive::No));
+
+        // Expect an error indicating TLS handshake failed due to an expired certificate.
+        CHECK_THROWS_WITH(client_encryption_expired.create_data_key("azure", opts),
+                          expired_cert_matcher);
+
+        // Expect an error indicating TLS handshake failed due to an invalid hostname.
+        CHECK_THROWS_WITH(client_encryption_invalid_hostname.create_data_key("azure", opts),
+                          invalid_hostname_matcher);
+    }
+
+    SECTION("Case 3 - GCP") {
+        options::data_key opts;
+
+        opts.master_key(document() << "projectId"
+                                   << "foo"
+                                   << "location"
+                                   << "bar"
+                                   << "keyRing"
+                                   << "baz"
+                                   << "keyName"
+                                   << "foo" << finalize);
+
+        // Expect an error indicating TLS handshake failed.
+        // Note: The remote server may disconnect during the TLS handshake, causing miscellaneous
+        // errors instead of a neat handshake failure. Just assert that *an* error occurred.
+        CHECK_THROWS_AS(client_encryption_no_client_cert.create_data_key("gcp", opts),
+                        mongocxx::exception);
+
+        // Expect an error from libmongocrypt with a message containing the string: "HTTP
+        // status=404". This implies TLS handshake succeeded.
+        CHECK_THROWS_WITH(client_encryption_with_tls.create_data_key("gcp", opts),
+                          Catch::Contains("HTTP status=404", Catch::CaseSensitive::No));
+
+        // Expect an error indicating TLS handshake failed due to an expired certificate.
+        CHECK_THROWS_WITH(client_encryption_expired.create_data_key("gcp", opts),
+                          expired_cert_matcher);
+
+        // Expect an error indicating TLS handshake failed due to an invalid hostname.
+        CHECK_THROWS_WITH(client_encryption_invalid_hostname.create_data_key("gcp", opts),
+                          invalid_hostname_matcher);
+    }
+
+    SECTION("Case 4 - KMIP") {
+        options::data_key opts;
+
+        opts.master_key({});
+
+        // Expect an error indicating TLS handshake failed.
+        // Note: The remote server may disconnect during the TLS handshake, causing miscellaneous
+        // errors instead of a neat handshake failure. Just assert that *an* error occurred.
+        CHECK_THROWS_AS(client_encryption_no_client_cert.create_data_key("kmip", opts),
+                        mongocxx::exception);
+
+        // Expect success.
+        CHECK_NOTHROW(client_encryption_with_tls.create_data_key("kmip", opts));
+
+        // Expect an error indicating TLS handshake failed due to an expired certificate.
+        CHECK_THROWS_WITH(client_encryption_expired.create_data_key("kmip", opts),
+                          expired_cert_matcher);
+
+        // Expect an error indicating TLS handshake failed due to an invalid hostname.
+        CHECK_THROWS_WITH(client_encryption_invalid_hostname.create_data_key("kmip", opts),
+                          invalid_hostname_matcher);
+    }
 }
 
 }  // namespace

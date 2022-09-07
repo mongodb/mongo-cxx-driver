@@ -344,11 +344,9 @@ void run_operation_check_result(document::view op, make_op_runner_fn make_op_run
         auto error_contains =
             test_util::tolowercase(op["result"]["errorContains"].get_string().value);
         REQUIRE(test_util::tolowercase(error_msg).find(error_contains) < error_msg.length());
-    } else {
-        if (exception) {
-            FAIL("operation " << bsoncxx::to_json(op)
-                              << " threw an unexpected exception: " << exception->what());
-        }
+    } else if (exception) {
+        CAPTURE(server_error);
+        FAIL("unexpected exception: " << error_msg);
     }
 
     // "If the result document has an 'errorCodeName' field, verify that the method threw a

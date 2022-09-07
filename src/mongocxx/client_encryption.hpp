@@ -46,11 +46,24 @@ class MONGOCXX_API client_encryption {
     ~client_encryption() noexcept;
 
     ///
+    /// Move-constructs a client_encryption object.
+    ///
+    client_encryption(client_encryption&&);
+
+    ///
+    /// Move-assigns a client_encryption object.
+    ///
+    client_encryption& operator=(client_encryption&&);
+
+    client_encryption(const client_encryption&) = delete;
+    client_encryption& operator=(const client_encryption&) = delete;
+
+    ///
     /// Creates a new key document and inserts into the key vault collection.
     ///
     /// @param kms_provider
-    ///   A string identifying the KMS service to use to encrypt the datakey
-    ///   (must be "aws" or "local")
+    ///   A string identifying the KMS service to use to encrypt the datakey.
+    ///   Must be one of "aws", "azure", "gcp", "kmip", or "local".
     /// @param opts
     ///   Optional arguments, see options::data_key.
     ///

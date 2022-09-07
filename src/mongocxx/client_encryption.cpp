@@ -27,6 +27,8 @@ client_encryption::client_encryption(options::client_encryption opts)
     : _impl(stdx::make_unique<impl>(std::move(opts))) {}
 
 client_encryption::~client_encryption() noexcept = default;
+client_encryption::client_encryption(client_encryption&&) = default;
+client_encryption& client_encryption::operator=(client_encryption&&) = default;
 
 bsoncxx::types::bson_value::value client_encryption::create_data_key(
     std::string kms_provider, const options::data_key& opts) {

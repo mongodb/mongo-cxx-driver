@@ -69,6 +69,15 @@ class MONGOCXX_API data_key {
     ///    "cloudkms.googleapis.com".
     /// }
     ///
+    /// If the KMS provider is "kmip" the masterKey is required and has the following fields:
+    ///
+    /// {
+    //     keyId: Optional<String>, // keyId is the KMIP Unique Identifier to a 96 byte KMIP Secret
+    //                              // Data managed object.If keyId is omitted, the driver creates a
+    //                              // random 96 byte KMIP Secret Data managed object.
+    //     endpoint: Optional<String> // Host with optional port.
+    /// }
+    ///
     /// If the KMS provider is "local" the masterKey is not applicable.
     ///
     /// @param master_key

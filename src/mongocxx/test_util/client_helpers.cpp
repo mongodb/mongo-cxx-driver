@@ -482,13 +482,17 @@ bool should_run_client_side_encryption_test(void) {
     return false;
 #endif
 
-    std::vector<const char*> vars{"MONGOCXX_TEST_AWS_SECRET_ACCESS_KEY",
-                                  "MONGOCXX_TEST_AWS_ACCESS_KEY_ID",
-                                  "MONGOCXX_TEST_GCP_EMAIL",
-                                  "MONGOCXX_TEST_GCP_PRIVATEKEY",
-                                  "MONGOCXX_TEST_AZURE_TENANT_ID",
-                                  "MONGOCXX_TEST_AZURE_CLIENT_ID",
-                                  "MONGOCXX_TEST_AZURE_CLIENT_SECRET"};
+    std::vector<const char*> vars{
+        "MONGOCXX_TEST_AWS_SECRET_ACCESS_KEY",
+        "MONGOCXX_TEST_AWS_ACCESS_KEY_ID",
+        "MONGOCXX_TEST_AZURE_TENANT_ID",
+        "MONGOCXX_TEST_AZURE_CLIENT_ID",
+        "MONGOCXX_TEST_AZURE_CLIENT_SECRET",
+        "MONGOCXX_TEST_CSFLE_TLS_CA_FILE",
+        "MONGOCXX_TEST_CSFLE_TLS_CERTIFICATE_KEY_FILE",
+        "MONGOCXX_TEST_GCP_EMAIL",
+        "MONGOCXX_TEST_GCP_PRIVATEKEY",
+    };
 
     std::ostringstream os;
     os << "Please set environment variables to enable client side encryption tests:\n";
