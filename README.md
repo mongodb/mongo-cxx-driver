@@ -2,8 +2,8 @@
 [![Travis Build Status](https://travis-ci.org/mongodb/mongo-cxx-driver.svg?branch=master)](https://travis-ci.org/mongodb/mongo-cxx-driver)
 [![Evergreen Build Status](https://img.shields.io/badge/build-evergreen-brightgreen)](https://evergreen.mongodb.com/waterfall/cxx-driver)
 [![codecov](https://codecov.io/gh/mongodb/mongo-cxx-driver/branch/master/graph/badge.svg)](https://codecov.io/gh/mongodb/mongo-cxx-driver)
-[![Documentation](https://img.shields.io/badge/docs-doxygen-blue.svg)](http://mongocxx.org/api/mongocxx-v3/)
-[![Documentation](https://img.shields.io/badge/docs-mongocxx-green.svg)](http://mongocxx.org/)
+[![Documentation](https://img.shields.io/badge/docs-doxygen-blue.svg)](https://mongocxx.org/api/mongocxx-v3/)
+[![Documentation](https://img.shields.io/badge/docs-mongocxx-green.svg)](https://mongocxx.org/)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/mongodb/mongo-cxx-driver/blob/master/LICENSE)
 
 Welcome to the MongoDB C++ Driver!
@@ -21,11 +21,11 @@ for more details about the various versions of the driver.
 
 ## Resources
 
-* [MongoDB C++ Driver Installation](http://mongocxx.org/mongocxx-v3/installation/)
-* [MongoDB C++ Driver Quickstart](http://mongocxx.org/mongocxx-v3/tutorial/)
-* [MongoDB C++ Driver Manual](http://mongocxx.org)
-* [MongoDB C++ Driver API Documentation](http://mongocxx.org/api/current/)
-* [MongoDB C++ Driver Contribution guidelines](http://mongocxx.org/contributing/)
+* [MongoDB C++ Driver Installation](https://mongocxx.org/mongocxx-v3/installation/)
+* [MongoDB C++ Driver Quickstart](https://mongocxx.org/mongocxx-v3/tutorial/)
+* [MongoDB C++ Driver Manual](https://mongocxx.org)
+* [MongoDB C++ Driver API Documentation](https://mongocxx.org/api/current/)
+* [MongoDB C++ Driver Contribution guidelines](https://mongocxx.org/contributing/)
 * [MongoDB Database Manual](https://docs.mongodb.com/manual/)
 
 ## Driver status by family and version
