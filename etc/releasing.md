@@ -112,7 +112,6 @@ Documentation generation must be run after the release tag has been made and pus
 - Edit `etc/generate-all-apidocs.pl` and add the new release version to the `@DOC_TAGS` array, following the established pattern.
 - Edit `docs/content/mongocxx-v3/installation/linux.md`, `docs/content/mongocxx-v3/installation/macos.md` and `docs/content/mongocxx-v3/installation/windows.md` and update `Step 1` to reflect to libmongoc requirements. If the release was not a release candidate, update `Step 3` to reflect the new latest stable version to download.
 - Commit these changes: `git commit -am "Prepare to generate r3.8.0 release documentation"`
-- Merge the commit containing these changes into the master branch. This may require pushing the commit to a fork of the C++ Driver repository and creating a pull request.
 - Ensure you have `doxygen` and `hugo` installed and up to date.
 - Run `git clean -dxf` to clear out all extraneous files.
 - Configure with `cmake` in the `build` directory as you usually would.
@@ -127,6 +126,7 @@ Documentation generation must be run after the release tag has been made and pus
     - Update the `api/mongocxx-v3` symlink to point to the newly released version. If a major version bump has occurred, revise the symlink structure as needed. Make sure `current` always points to a symlink tracking the latest stable release branch.
     - Commit and push the symlink change: `git commit -am "Update symlink for r3.8.0"`
 - Wait a few minutes and verify mongocxx.org has updated.
+- Merge the commit containing these changes into the master branch. This may require pushing the commit to a fork of the C++ Driver repository and creating a pull request.
 
 ## File a DOCSP ticket if needed
 Add a comment to the generated DOCSP ticket describing if the [MongoDB Compatibility Table](https://www.mongodb.com/docs/drivers/cxx/#mongodb-compatibility) or [Language Compatibility Table](https://www.mongodb.com/docs/drivers/cxx/#language-compatibility) should be updated. Generally, only a minor release will require updates. (See DOCSP-3504 for an example.)
