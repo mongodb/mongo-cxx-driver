@@ -1343,7 +1343,7 @@ the connection string, or by creating a
 object and passing it to <code>tls_opts</code> on mongocxx::options::client.</p>
 <p>For example, to use a custom CA or to disable certificate validation,
 see the following example:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
 <span style="color:#75715e">// 1) Using tls_options
 </span><span style="color:#75715e"></span>mongocxx<span style="color:#f92672">::</span>options<span style="color:#f92672">::</span>client client_options;
 mongocxx<span style="color:#f92672">::</span>options<span style="color:#f92672">::</span>tls tls_options;
@@ -1368,7 +1368,7 @@ to SCRAM-SHA-1. To create a credential that will authenticate properly
 regardless of server version, use a connection string with the user and
 password directly in the URI and with a parameter specifying the database
 to authenticate from:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;mongocxx/client.hpp&gt;</span><span style="color:#75715e">
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;mongocxx/client.hpp&gt;</span><span style="color:#75715e">
 </span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;mongocxx/uri.hpp&gt;</span><span style="color:#75715e">
 </span><span style="color:#75715e"></span>
 <span style="color:#66d9ef">auto</span> client <span style="color:#f92672">=</span> mongocxx<span style="color:#f92672">::</span>client{uri{<span style="color:#e6db74">&#34;mongodb://user1:pwd1@host1/?authSource=db1&#34;</span>}};
@@ -1376,7 +1376,7 @@ to authenticate from:</p>
 <p>To explicitly create a credential of type SCRAM-SHA-1 use a connection
 string as above but with a parameter specifying the authentication
 mechanism as &ldquo;SCRAM-SHA-1&rdquo;:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;mongocxx/client.hpp&gt;</span><span style="color:#75715e">
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;mongocxx/client.hpp&gt;</span><span style="color:#75715e">
 </span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;mongocxx/uri.hpp&gt;</span><span style="color:#75715e">
 </span><span style="color:#75715e"></span>
 <span style="color:#66d9ef">auto</span> client <span style="color:#f92672">=</span> mongocxx<span style="color:#f92672">::</span>client{
@@ -1394,7 +1394,7 @@ and newer. To create a credential of this type, use a connection string with a
 parameter that specifies the authentication mechanism as &ldquo;MONGODB-X509&rdquo;,
 that specifies the path to the PEM file containing the client private key
 and certificate, and that has TLS enabled:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;mongocxx/client.hpp&gt;</span><span style="color:#75715e">
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;mongocxx/client.hpp&gt;</span><span style="color:#75715e">
 </span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;mongocxx/uri.hpp&gt;</span><span style="color:#75715e">
 </span><span style="color:#75715e"></span>
 <span style="color:#66d9ef">auto</span> client <span style="color:#f92672">=</span> mongocxx<span style="color:#f92672">::</span>client{
@@ -1411,7 +1411,7 @@ supports proxy authentication through Kerberos service. To create a
 credential of type <a href="https://www.mongodb.org/dochub/core/kerberos">Kerberos (GSSAPI)</a>
 use a connection string with the username and realm in the URI as well as
 a parameter specifying the authentication mechanism as &ldquo;GSSAPI&rdquo;:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;mongocxx/client.hpp&gt;</span><span style="color:#75715e">
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;mongocxx/client.hpp&gt;</span><span style="color:#75715e">
 </span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;mongocxx/uri.hpp&gt;</span><span style="color:#75715e">
 </span><span style="color:#75715e"></span>
 <span style="color:#66d9ef">auto</span> client <span style="color:#f92672">=</span> mongocxx<span style="color:#f92672">::</span>client{
@@ -1424,7 +1424,7 @@ Protocol (LDAP) service. To create a credential of type LDAP use a
 connection string specifying the user as well as parameters specifying
 the authentication source as &ldquo;$external&rdquo; and the authentication mechanishm
 as &ldquo;PLAIN&rdquo;:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;mongocxx/client.hpp&gt;</span><span style="color:#75715e">
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;mongocxx/client.hpp&gt;</span><span style="color:#75715e">
 </span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;mongocxx/uri.hpp&gt;</span><span style="color:#75715e">
 </span><span style="color:#75715e"></span>
 <span style="color:#66d9ef">auto</span> client <span style="color:#f92672">=</span> mongocxx<span style="color:#f92672">::</span>client{
@@ -1435,7 +1435,7 @@ the URI as an argument. The size of the pool can be configured in the URI.
 Then, call <code>mongocxx::pool::acquire</code> to receive a client from the pool.
 The client will automatically be returned to the pool when it goes out of
 scope.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;mongocxx/pool.hpp&gt;</span><span style="color:#75715e">
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;mongocxx/pool.hpp&gt;</span><span style="color:#75715e">
 </span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;mongocxx/uri.hpp&gt;</span><span style="color:#75715e">
 </span><span style="color:#75715e"></span>
 <span style="color:#66d9ef">auto</span> pool <span style="color:#f92672">=</span> mongocxx<span style="color:#f92672">::</span>pool{uri{<span style="color:#e6db74">&#34;mongodb://host1/?minPoolSize=3&amp;maxPoolSize=5&#34;</span>}};

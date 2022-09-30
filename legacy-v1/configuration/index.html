@@ -1604,7 +1604,7 @@ passing a default constructed <code>mongo::client::Options</code> object.</p>
 <p>Because the <code>mongo::client::Options</code> class has setters returning a
 <code>mongo::client::Options&amp;</code> you can chain together options to easily
 configure them at the call site:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">using</span> mongo<span style="color:#f92672">::</span>client<span style="color:#f92672">::</span>initialize;
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">using</span> mongo<span style="color:#f92672">::</span>client<span style="color:#f92672">::</span>initialize;
 <span style="color:#66d9ef">using</span> mongo<span style="color:#f92672">::</span>client<span style="color:#f92672">::</span>Options;
 
 <span style="color:#75715e">// Configure the mongo C++ client driver, enabling SSL and setting
@@ -1726,7 +1726,7 @@ can be found
 <a href="https://github.com/mongodb/mongo-cxx-driver/blob/legacy/src/mongo/client/examples/loggingTest.cpp">here</a>.
 You may only configure one appender through startup options.</li>
 </ul>
-<h4 id="optionssetminloggedseverity-and-optionsminloggedseverity"><code>Options::setMinLoggedSeverity</code> and `Options::minLoggedSeverity'</h4>
+<h4 id="optionssetminloggedseverity-and-optionsminloggedseverity"><code>Options::setMinLoggedSeverity</code> and `Options::minLoggedSeverity&rsquo;</h4>
 <ul>
 <li>Type: <code>logger::LogSeverity</code></li>
 <li>Default: <code>LogSeverity::Log()</code></li>

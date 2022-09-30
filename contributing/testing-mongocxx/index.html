@@ -1678,32 +1678,32 @@ unit tests rather than integration tests.</p>
 <p>We also have integration tests for this driver in <code>test/collection.cpp</code>.</p>
 <h2 id="running-the-existing-tests">Running the existing tests</h2>
 <p>Build the tests with:</p>
-<pre tabindex="0"><code>make
+<pre><code>make
 </code></pre><p>This will generate test binaries.  You can either run all the tests with:</p>
-<pre tabindex="0"><code>make test
+<pre><code>make test
 </code></pre><p>or, for more detailed output with Catch, run the generated binary:</p>
-<pre tabindex="0"><code>./build/src/mongocxx/test/test_driver
+<pre><code>./build/src/mongocxx/test/test_driver
 </code></pre><p>or you can run the ctest command and make use of ctest&rsquo;s various flags.
 For example:</p>
-<pre tabindex="0"><code>ctest -V
+<pre><code>ctest -V
 </code></pre><p>can be used to run the tests with verbose output, or</p>
-<pre tabindex="0"><code>ctest -R bson
+<pre><code>ctest -R bson
 </code></pre><p>could be used to run only the bson tests.</p>
 <h3 id="running-integration-tests">Running integration tests</h3>
 <p>Some of the tests require a running mongod instance.  For this, first download
 the <a href="https://www.mongodb.com/download-center">mongodb server</a>.</p>
 <p>Then deploy a mongod on the default port with the command:</p>
-<pre tabindex="0"><code>mongod --setParameter enableTestCommands=1
+<pre><code>mongod --setParameter enableTestCommands=1
 </code></pre><p>if it is installed, otherwise navigate to the directory holding the mongod
 executable, and run:</p>
-<pre tabindex="0"><code>./mongod --setParameter enableTestCommands=1
+<pre><code>./mongod --setParameter enableTestCommands=1
 </code></pre><p>following either command with any flags you wish to use, excluding
 <code>--port</code>.  While the mongod is running, run the tests as normal.</p>
 <h2 id="writing-new-tests">Writing new tests</h2>
 <p>If you&rsquo;d like to add a feature to the driver, please write a test for it as
 well.  Additions to existing classes should have new sections added to the
 existing test cases:</p>
-<pre tabindex="0"><code>TEST_CASE(&quot;existing_class&quot;, &quot;[existing_class]&quot;) {
+<pre><code>TEST_CASE(&quot;existing_class&quot;, &quot;[existing_class]&quot;) {
    SECTION(&quot;Can do some new thing&quot;) {
       ...
       REQUIRE(new_thing_works);
@@ -1713,7 +1713,7 @@ existing test cases:</p>
 <code>test</code> directory.  The test file&rsquo;s name should match the new class&rsquo;s file&rsquo;s
 name.  You will need to add your file as a source for the driver&rsquo;s test
 target, in <code>src/mongocxx/test/CMakeLists.txt</code>:</p>
-<pre tabindex="0"><code>set(mongocxx_test_sources
+<pre><code>set(mongocxx_test_sources
    ...
    some_new_class.cpp
    ...

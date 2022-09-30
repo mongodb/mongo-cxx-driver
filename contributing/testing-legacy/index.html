@@ -1714,18 +1714,18 @@ they test (so, <code>bson_validate.cpp</code> and <code>bson_validate_test.cpp</
 both found in <code>src/mongo/bson</code>).  The different unit tests are listed
 <a href="https://github.com/mongodb/mongo-cxx-driver/blob/e240e0604678b1028aaee63e8de98e18047f7f31/src/mongo/SConscript#L49">here</a>.</p>
 <p>Build all the unit tests with scons:</p>
-<pre tabindex="0"><code>&gt; scons build-unit
+<pre><code>&gt; scons build-unit
 </code></pre><p>Build and run all the unit tests:</p>
-<pre tabindex="0"><code>&gt; scons unit
+<pre><code>&gt; scons unit
 </code></pre><p>Build an individual unit test:</p>
-<pre tabindex="0"><code>&gt; scons build-full/test/name
+<pre><code>&gt; scons build-full/test/name
 </code></pre><p>Build and run an individual unit test:</p>
-<pre tabindex="0"><code>&gt; scons run-full/test/name
+<pre><code>&gt; scons run-full/test/name
 </code></pre><h3 id="integration-tests">Integration Tests</h3>
 <p>Integration tests must run against <a href="https://github.com/10gen/mongo-orchestration">Mongo
 Orchestration</a>.  Install and
 setup Mongo Orchestration as follows:</p>
-<pre tabindex="0"><code>&gt; git clone https://github.com/10gen/mongo-orchestration.git
+<pre><code>&gt; git clone https://github.com/10gen/mongo-orchestration.git
 &gt; cd mongo-orchestration
 &gt; python setup.py install
 </code></pre><p>To run Mongo Orchestration, you&rsquo;ll need to alter the provided config file
@@ -1737,15 +1737,15 @@ entries. Mongo orchestration is <strong>very</strong> strict about JSON so no tr
 commas please.</p>
 <p>Start up Mongo Orchestration and leave it running in the background while
 you run the integration test suite:</p>
-<pre tabindex="0"><code>&gt; mongo-orchestration -f mongo-orchestration.config -e &lt;release_name&gt; start
+<pre><code>&gt; mongo-orchestration -f mongo-orchestration.config -e &lt;release_name&gt; start
 </code></pre><p>The integration tests are located in <code>src/mongo/integration</code>.
 Additionally, some tests require the parameter <code>enableTestCommands</code> to
 be set. There is a list of the different integration tests
 <a href="https://github.com/mongodb/mongo-cxx-driver/blob/e240e0604678b1028aaee63e8de98e18047f7f31/src/mongo/SConscript#L114">here</a>.</p>
 <p>To build all the integration tests:</p>
-<pre tabindex="0"><code>&gt; scons build-integration
+<pre><code>&gt; scons build-integration
 </code></pre><p>Build and run all the integration tests:</p>
-<pre tabindex="0"><code>&gt; scons integration
+<pre><code>&gt; scons integration
 </code></pre><p>Individual integration tests can be run in the same way as individual unit tests, shown above.</p>
 <p>Note: to run the SASL integration tests, you should build with the <code>--use-sasl-client</code> flag.</p>
 <h3 id="client-example-programs">Client Example Programs</h3>
@@ -1755,12 +1755,12 @@ are listed
 and the source files are found in <code>src/mongo/client/examples</code>.  The
 examples expect a mongod to be running locally on port 27999.</p>
 <p>Build the examples with scons:</p>
-<pre tabindex="0"><code>&gt; scons build-examples
+<pre><code>&gt; scons build-examples
 </code></pre><p>Build and run the examples:</p>
-<pre tabindex="0"><code>&gt; scons examples
+<pre><code>&gt; scons examples
 </code></pre><h3 id="run-all-tests">Run all tests</h3>
 <p>Run the unit tests, integration tests, and examples with scons:</p>
-<pre tabindex="0"><code>&gt; scons test
+<pre><code>&gt; scons test
 </code></pre>
 
 

@@ -1407,7 +1407,7 @@ synchronize them individually, that is unsafe as they will concurrently
 modify internal structures of the <code>client</code>. The same is true if you copy a
 child object.</p>
 <h2 id="never-do-this">Never do this</h2>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">mongocxx<span style="color:#f92672">::</span>instance instance{};
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">mongocxx<span style="color:#f92672">::</span>instance instance{};
 mongocxx<span style="color:#f92672">::</span>uri uri{};
 mongocxx<span style="color:#f92672">::</span>client c{uri};
 <span style="color:#66d9ef">auto</span> db1 <span style="color:#f92672">=</span> c[<span style="color:#e6db74">&#34;db1&#34;</span>];
@@ -1433,7 +1433,7 @@ synchronized, they are derived from the same client. There is shared state
 inside the library that is now being modified without synchronization. The
 same problem occurs if <code>db2</code> is a copy of <code>db1</code>.</p>
 <h2 id="a-better-version">A better version</h2>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">mongocxx<span style="color:#f92672">::</span>instance instance{};
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">mongocxx<span style="color:#f92672">::</span>instance instance{};
 mongocxx<span style="color:#f92672">::</span>uri uri{};
 mongocxx<span style="color:#f92672">::</span>client c1{uri};
 mongocxx<span style="color:#f92672">::</span>client c2{uri};
@@ -1454,7 +1454,7 @@ std<span style="color:#f92672">::</span><span style="color:#66d9ef">thread</span
 t1.join();
 t2.join();
 </code></pre></div><h2 id="the-best-version">The best version</h2>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">mongocxx<span style="color:#f92672">::</span>instance instance{};
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">mongocxx<span style="color:#f92672">::</span>instance instance{};
 mongocxx<span style="color:#f92672">::</span>pool pool{mongocxx<span style="color:#f92672">::</span>uri{}};
 
 <span style="color:#66d9ef">auto</span> threadfunc <span style="color:#f92672">=</span> [](mongocxx<span style="color:#f92672">::</span>client<span style="color:#f92672">&amp;</span> client, std<span style="color:#f92672">::</span>string dbname) {
