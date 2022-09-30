@@ -1,4 +1,5 @@
 aggregate.json
+awsTemporary.json
 azureKMS.json
 badQueries.json
 badSchema.json
