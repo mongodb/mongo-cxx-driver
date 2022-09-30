@@ -57,6 +57,7 @@ my @DOC_TAGS = qw(
   r3.6.5
   r3.6.6
   r3.6.7
+  r3.7.0
 );
 
 sub main {
