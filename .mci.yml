@@ -378,16 +378,16 @@ functions:
                   set -o pipefail
 
                   # Grabs the mongocryptd path
-                  cd ../
+                  pushd ..
                   export MONGOCRYPTD_PATH=$(pwd)/
                   if [ "Windows_NT" == "$OS" ]; then
                      export MONGOCRYPTD_PATH=$(cygpath -m $MONGOCRYPTD_PATH)
                   fi
-                  cd mongo-cxx-driver
+                  popd # ..
 
                   export PATH="${extra_path}:$PATH"
 
-                  cd build
+                  pushd build
                   export PREFIX=$(pwd)/../../mongoc
 
                   # Use PATH / LD_LIBRARY_PATH / DYLD_LIBRARY_PATH to inform the tests where to find
@@ -420,13 +420,12 @@ functions:
 
                   export MONGODB_API_VERSION="${MONGODB_API_VERSION}"
 
-                  pushd ../../
-                  cd drivers-evergreen-tools
+                  pushd ../../drivers-evergreen-tools
                   export DRIVERS_TOOLS=$(pwd)
                   if [ "Windows_NT" == "$OS" ]; then
                       export DRIVERS_TOOLS=$(cygpath -m $DRIVERS_TOOLS)
                   fi
-                  popd
+                  popd # ../../drivers-evergreen-tools
 
                   if [ "$(uname -m)" == "ppc64le" ]; then
                       echo "Skipping CSFLE test setup (CDRIVER-4246/CXX-2423)"
@@ -449,7 +448,7 @@ functions:
                       PYTHON="$(type -P python)" . ./set-temp-creds.sh
                       echo "Running set-temp-creds.sh... done."
                       deactivate
-                      popd
+                      popd # "$DRIVERS_TOOLS/.evergreen/csfle"
                       echo "Setting temporary credentials... done."
 
                       # Ensure temporary credentials were properly set.
@@ -598,7 +597,8 @@ functions:
                       fi
                   fi
 
-                  cd ..
+                  popd # ./build
+
                   export CMAKE_PREFIX_PATH=$PREFIX:$(pwd)/build/install
                   if [ -n "${lib_dir}" ]; then
                      export PKG_CONFIG_PATH=$PREFIX/${lib_dir}/pkgconfig:$(pwd)/build/install/${lib_dir}/pkgconfig
