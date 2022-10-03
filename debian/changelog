@@ -1,6 +1,7 @@
 mongo-cxx-driver (3.7.0-1) UNRELEASED; urgency=medium
 
   * New upstream release
+  * Bump dependency on libmongoc-dev
 
  -- Roberto C. Sanchez <roberto@connexer.com>  Mon, 03 Oct 2022 16:14:30 -0400
 
