@@ -96,6 +96,31 @@ void add_auto_encryption_opts(document::view test, options::client* client_opts)
                 }));
             }
 
+            if (providers["awsTemporary"]) {
+                kms_doc.append(kvp("aws", [](sub_document subdoc) {
+                    subdoc.append(
+                        kvp("secretAccessKey",
+                            test_util::getenv_or_fail("MONGOCXX_TEST_AWS_TEMP_SECRET_ACCESS_KEY")));
+                    subdoc.append(
+                        kvp("accessKeyId",
+                            test_util::getenv_or_fail("MONGOCXX_TEST_AWS_TEMP_ACCESS_KEY_ID")));
+                    subdoc.append(
+                        kvp("sessionToken",
+                            test_util::getenv_or_fail("MONGOCXX_TEST_AWS_TEMP_SESSION_TOKEN")));
+                }));
+            }
+
+            if (providers["awsTemporaryNoSessionToken"]) {
+                kms_doc.append(kvp("aws", [](sub_document subdoc) {
+                    subdoc.append(
+                        kvp("secretAccessKey",
+                            test_util::getenv_or_fail("MONGOCXX_TEST_AWS_TEMP_SECRET_ACCESS_KEY")));
+                    subdoc.append(
+                        kvp("accessKeyId",
+                            test_util::getenv_or_fail("MONGOCXX_TEST_AWS_TEMP_ACCESS_KEY_ID")));
+                }));
+            }
+
             // Add gcp credentials (from the enviornment):
             if (providers["gcp"]) {
                 kms_doc.append(kvp("gcp", [](sub_document subdoc) {

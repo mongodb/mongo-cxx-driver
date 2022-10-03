@@ -285,6 +285,20 @@ functions:
     "run_kms_servers":
       - command: shell.exec
         params:
+          shell: bash
+          script: |-
+            set -o errexit
+            echo "Preparing CSFLE venv environment..."
+            cd ./drivers-evergreen-tools/.evergreen/csfle
+            # This function ensures future invocations of activate_venv.sh conducted in
+            # parallel do not race to setup a venv environment; it has already been prepared.
+            # This primarily addresses the situation where the "test" and "run_kms_servers"
+            # functions invoke 'activate_venv.sh' simultaneously.
+            . ./activate_venv.sh
+            deactivate
+            echo "Preparing CSFLE venv environment... done."
+      - command: shell.exec
+        params:
           background: true
           shell: bash
           script: |-
@@ -364,16 +378,16 @@ functions:
                   set -o pipefail
 
                   # Grabs the mongocryptd path
-                  cd ../
+                  pushd ..
                   export MONGOCRYPTD_PATH=$(pwd)/
                   if [ "Windows_NT" == "$OS" ]; then
                      export MONGOCRYPTD_PATH=$(cygpath -m $MONGOCRYPTD_PATH)
                   fi
-                  cd mongo-cxx-driver
+                  popd # ..
 
                   export PATH="${extra_path}:$PATH"
 
-                  cd build
+                  pushd build
                   export PREFIX=$(pwd)/../../mongoc
 
                   # Use PATH / LD_LIBRARY_PATH / DYLD_LIBRARY_PATH to inform the tests where to find
@@ -406,19 +420,42 @@ functions:
 
                   export MONGODB_API_VERSION="${MONGODB_API_VERSION}"
 
-                  pushd ../../
-                  cd drivers-evergreen-tools
+                  pushd ../../drivers-evergreen-tools
                   export DRIVERS_TOOLS=$(pwd)
                   if [ "Windows_NT" == "$OS" ]; then
                       export DRIVERS_TOOLS=$(cygpath -m $DRIVERS_TOOLS)
                   fi
-                  popd
+                  popd # ../../drivers-evergreen-tools
 
                   if [ "$(uname -m)" == "ppc64le" ]; then
                       echo "Skipping CSFLE test setup (CDRIVER-4246/CXX-2423)"
                   else
                       # export environment variables for encryption tests
                       set +o errexit
+
+                      # Avoid printing credentials in logs.
+                      set +o xtrace
+
+                      echo "Setting temporary credentials..."
+                      pushd "$DRIVERS_TOOLS/.evergreen/csfle"
+                      export AWS_SECRET_ACCESS_KEY="${cse_aws_secret_access_key}"
+                      export AWS_ACCESS_KEY_ID="${cse_aws_access_key_id}"
+                      export AWS_DEFAULT_REGION="us-east-1"
+                      echo "Running activate_venv.sh..."
+                      . ./activate_venv.sh
+                      echo "Running activate_venv.sh... done."
+                      echo "Running set-temp-creds.sh..."
+                      PYTHON="$(type -P python)" . ./set-temp-creds.sh
+                      echo "Running set-temp-creds.sh... done."
+                      deactivate
+                      popd # "$DRIVERS_TOOLS/.evergreen/csfle"
+                      echo "Setting temporary credentials... done."
+
+                      # Ensure temporary credentials were properly set.
+                      if [ -z "$CSFLE_AWS_TEMP_ACCESS_KEY_ID" ]; then
+                        echo "Failed to set temporary credentials!"
+                        exit 1
+                      fi
 
                       if [ "Windows_NT" == "$OS"]; then
                           export MONGOCXX_TEST_CSFLE_TLS_CA_FILE=$DRIVERS_TOOLS\.evergreen\x509gen\ca.pem
@@ -428,6 +465,9 @@ functions:
                           export MONGOCXX_TEST_CSFLE_TLS_CERTIFICATE_KEY_FILE=$DRIVERS_TOOLS/.evergreen/x509gen/client.pem
                       fi
 
+                      export MONGOCXX_TEST_AWS_TEMP_ACCESS_KEY_ID="$CSFLE_AWS_TEMP_ACCESS_KEY_ID"
+                      export MONGOCXX_TEST_AWS_TEMP_SECRET_ACCESS_KEY="$CSFLE_AWS_TEMP_SECRET_ACCESS_KEY"
+                      export MONGOCXX_TEST_AWS_TEMP_SESSION_TOKEN="$CSFLE_AWS_TEMP_SESSION_TOKEN"
                       export MONGOCXX_TEST_AWS_SECRET_ACCESS_KEY="${cse_aws_secret_access_key}"
                       export MONGOCXX_TEST_AWS_ACCESS_KEY_ID="${cse_aws_access_key_id}"
                       export MONGOCXX_TEST_AZURE_TENANT_ID="${cse_azure_tenant_id}"
@@ -557,7 +597,8 @@ functions:
                       fi
                   fi
 
-                  cd ..
+                  popd # ./build
+
                   export CMAKE_PREFIX_PATH=$PREFIX:$(pwd)/build/install
                   if [ -n "${lib_dir}" ]; then
                      export PKG_CONFIG_PATH=$PREFIX/${lib_dir}/pkgconfig:$(pwd)/build/install/${lib_dir}/pkgconfig
