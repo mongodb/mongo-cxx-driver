@@ -3,3 +3,4 @@ Click
 GitPython
 PyGithub
 jira
+cryptography

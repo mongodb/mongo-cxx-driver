@@ -1,7 +1,7 @@
 #!/bin/bash
 # Usage examples:
-# MONGOC_VERSION=1.21.2 MONGOCRYPT_VERSION=1.4.1 ./install.sh
-# PREFIX=/tmp/installdir MONGOC_VERSION=1.21.2 MONGOCRYPT_VERSION=1.4.1 ./install.sh
+# MONGOC_VERSION=1.22.1 MONGOCRYPT_VERSION=1.5.2 ./install.sh
+# PREFIX=/tmp/installdir MONGOC_VERSION=1.22.1 MONGOCRYPT_VERSION=1.5.2 ./install.sh
 
 set -o errexit
 set -o pipefail
