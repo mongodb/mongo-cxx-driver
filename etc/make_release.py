@@ -365,7 +365,7 @@ def build_c_driver(c_driver_install_dir, c_driver_build_ref, mongocrypt_build_re
         click.echo(f'Building C Driver at {mongoc_prefix} (this could take several minutes)')
         click.echo('Pass --with-c-driver to use an existing installation')
 
-    env = os.environ
+    env = os.environ.copy()
     env['PREFIX'] = mongoc_prefix
     env['MONGOC_VERSION'] = c_driver_build_ref
     env['MONGOCRYPT_VERSION'] = mongocrypt_build_ref
