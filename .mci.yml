@@ -10,7 +10,7 @@ variables:
     mongoc_version_default: &mongoc_version_default "2966c67d"
     mongocrypt_version_default: &mongocrypt_version_default "1.5.2"
 
-    # If updating mongoc_version_minimum and mongocrypt_version_minimum, also update:
+    # If updating mongoc_version_minimum, also update:
     # - the default value of --c-driver-build-ref in etc/make_release.py
     # - LIBMONGOC_REQUIRED_VERSION in src/mongocxx/CMakeLists.txt
     mongoc_version_minimum: &mongoc_version_minimum "1.22.1"
