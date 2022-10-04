@@ -29,9 +29,6 @@ message ("mongocxx version: ${MONGOCXX_VERSION}")
 set(MONGOCXX_INLINE_NAMESPACE "v${MONGOCXX_ABI_VERSION}")
 set(MONGOCXX_HEADER_INSTALL_DIR "${CMAKE_INSTALL_INCLUDEDIR}/mongocxx/${MONGOCXX_INLINE_NAMESPACE}" CACHE INTERNAL "")
 
-# If updating LIBMONGOC_REQUIRED_VERSION also update:
-# - the default value of --c-driver-build-ref in etc/make_release.py
-# - mongoc_version_minimum in .mci.yml
 set(LIBMONGOC_REQUIRED_VERSION 1.22.1)
 set(LIBMONGOC_REQUIRED_ABI_VERSION 1.0)
 

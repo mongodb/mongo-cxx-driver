@@ -87,9 +87,6 @@ ISSUE_TYPE_ID = {'Backport': '10300',
               default=os.getcwd() + '/../mongoc',
               show_default=True,
               help='When building the C driver and libmongocrypt, install to this directory')
-# If updating the default value of --c-driver-build-ref, also update:
-# - LIBMONGOC_REQUIRED_VERSION in src/mongocxx/CMakeLists.txt
-# - mongoc_version_minimum in .mci.yml
 @click.option('--c-driver-build-ref',
               default='1.22.1',
               show_default=True,
