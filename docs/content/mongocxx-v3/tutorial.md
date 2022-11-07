@@ -205,6 +205,7 @@ bsoncxx::document::element element = view["name"];
 if(element.type() != bsoncxx::type::k_string) {
   // Error
 }
+// For the versions older than 3.7.0, use get_utf8 instead of get_string
 std::string name = element.get_string().value.to_string();
 ```
 
