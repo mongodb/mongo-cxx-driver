@@ -1184,8 +1184,7 @@ void delete_examples(mongocxx::database db) {
 }
 
 void snapshot_examples(mongocxx::client& client) {
-    using bsoncxx::builder::stream::close_array;
-    using bsoncxx::builder::stream::close_document;
+    // Start Example 59
     using bsoncxx::builder::stream::document;
     using bsoncxx::builder::stream::finalize;
     using mongocxx::v_noabi::pipeline;
@@ -1208,8 +1207,7 @@ void snapshot_examples(mongocxx::client& client) {
         auto cats = client["pets"]["cats"];
         pipeline p;
 
-        p.match(document{} << "adoptable" << true << bsoncxx::builder::stream::finalize)
-            .count("adoptableCatsCount");
+        p.match(document{} << "adoptable" << true << finalize).count("adoptableCatsCount");
         auto cursor = cats.aggregate(session, p);
 
         for (auto doc : cursor) {
@@ -1221,8 +1219,7 @@ void snapshot_examples(mongocxx::client& client) {
         auto dogs = client["pets"]["dogs"];
         pipeline p;
 
-        p.match(document{} << "adoptable" << true << bsoncxx::builder::stream::finalize)
-            .count("adoptableDogsCount");
+        p.match(document{} << "adoptable" << true << finalize).count("adoptableDogsCount");
         auto cursor = dogs.aggregate(session, p);
 
         for (auto doc : cursor) {
@@ -1234,6 +1231,7 @@ void snapshot_examples(mongocxx::client& client) {
         throw std::logic_error("wrong number of adoptable pets in example 57, expecting 2 got: " +
                                std::to_string(adoptable_pets_count));
     }
+    // End Example 59
 }
 
 int main() {
