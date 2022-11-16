@@ -21,12 +21,13 @@
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/types.hpp>
+#include <bsoncxx/builder/stream/document.hpp>
+#include <bsoncxx/json.hpp>
 #include <mongocxx/client.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/find.hpp>
 #include <mongocxx/uri.hpp>
 #include <mongocxx/pipeline.hpp>
-#include <bsoncxx/builder/stream/document.hpp>
 
 // NOTE: Any time this file is modified, a DOCS ticket should be opened to sync the changes with the
 // corresponding page on docs.mongodb.com. See CXX-1249 and DRIVERS-356 for more info.
@@ -1189,28 +1190,22 @@ void snapshot_examples(mongocxx::database db, mongocxx::client &client) {
     using bsoncxx::builder::stream::finalize;
     using bsoncxx::builder::stream::close_array;
 
+    // TODO: insert sample data into db.pets.cats
+
     auto opts = mongocxx::options::client_session{};
     opts.snapshot(true);
     auto session = client.start_session(opts);
     auto items = client["pets"]["cats"];
     auto builder = bsoncxx::builder::stream::document{};
-    bsoncxx::document::value doc_value = builder
-      << "name" << "MongoDB"
-      << "type" << "database"
-      << "count" << 1
-      << "versions" << bsoncxx::builder::stream::open_array
-        << "v3.2" << "v3.0" << "v2.6"
-      << close_array
-      << "info" << bsoncxx::builder::stream::open_document
-        << "x" << 203
-        << "y" << 102
-      << bsoncxx::builder::stream::close_document
-      << bsoncxx::builder::stream::finalize;
-    //document cats_match = builder << "adoptable", true << finalize;
-    document cats_match;
     pipeline pip;
-    pip.match(doc_value.view());
-    items.aggregate(session, pip);
+    pip.match(
+        document{} << "adoptable" << true
+        << bsoncxx::builder::stream::finalize
+    ).count("adoptableCatsCount");
+    auto cursor = items.aggregate(session, pip);
+    for (auto doc : cursor) {
+        std::cout << bsoncxx::to_json(doc) << std::endl;
+    }
 }
 
 int main() {
