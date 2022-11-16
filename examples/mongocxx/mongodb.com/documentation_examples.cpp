@@ -1194,7 +1194,7 @@ void snapshot_examples(mongocxx::client& client) {
     db["dogs"].insert_one(make_document(kvp("adoptable", true)));
     db["dogs"].insert_one(make_document(kvp("adoptable", false)));
 
-    uint64_t adoptable_pets_count = 0;
+    int64_t adoptable_pets_count = 0;
 
     auto opts = mongocxx::options::client_session{};
     opts.snapshot(true);
