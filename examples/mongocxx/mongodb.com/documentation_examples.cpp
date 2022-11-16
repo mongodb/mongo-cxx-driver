@@ -1199,6 +1199,7 @@ int main() {
         projection_examples(db);
         update_examples(db);
         delete_examples(db);
+
     } catch (const std::logic_error& e) {
         std::cerr << e.what() << std::endl;
         return EXIT_FAILURE;
