@@ -18,15 +18,12 @@
 #include <bsoncxx/builder/basic/array.hpp>
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>
-#include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/document/value.hpp>
-#include <bsoncxx/json.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/types.hpp>
 #include <mongocxx/client.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/find.hpp>
-#include <mongocxx/pipeline.hpp>
 #include <mongocxx/uri.hpp>
 
 // NOTE: Any time this file is modified, a DOCS ticket should be opened to sync the changes with the
@@ -1185,17 +1182,17 @@ void delete_examples(mongocxx::database db) {
 
 void snapshot_examples(mongocxx::client& client) {
     // Start Example 59
-    using bsoncxx::builder::stream::document;
-    using bsoncxx::builder::stream::finalize;
+    using bsoncxx::builder::basic::kvp;
+    using bsoncxx::builder::basic::make_document;
     using mongocxx::v_noabi::pipeline;
 
     auto db = client["pets"];
 
     // seed 'pets' database with dogs and cats
     db.drop();
-    db["cats"].insert_one(document{} << "adoptable" << true << finalize);
-    db["dogs"].insert_one(document{} << "adoptable" << true << finalize);
-    db["dogs"].insert_one(document{} << "adoptable" << false << finalize);
+    db["cats"].insert_one(make_document(kvp("adoptable", true)));
+    db["dogs"].insert_one(make_document(kvp("adoptable", true)));
+    db["dogs"].insert_one(make_document(kvp("adoptable", false)));
 
     uint64_t adoptable_pets_count = 0;
 
@@ -1207,7 +1204,7 @@ void snapshot_examples(mongocxx::client& client) {
         auto cats = client["pets"]["cats"];
         pipeline p;
 
-        p.match(document{} << "adoptable" << true << finalize).count("adoptableCatsCount");
+        p.match(make_document(kvp("adoptable", true))).count("adoptableCatsCount");
         auto cursor = cats.aggregate(session, p);
 
         for (auto doc : cursor) {
@@ -1219,7 +1216,7 @@ void snapshot_examples(mongocxx::client& client) {
         auto dogs = client["pets"]["dogs"];
         pipeline p;
 
-        p.match(document{} << "adoptable" << true << finalize).count("adoptableDogsCount");
+        p.match(make_document(kvp("adoptable", true))).count("adoptableDogsCount");
         auto cursor = dogs.aggregate(session, p);
 
         for (auto doc : cursor) {
