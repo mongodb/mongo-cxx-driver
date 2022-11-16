@@ -1206,31 +1206,27 @@ void snapshot_examples(mongocxx::client& client) {
 
     {
         auto cats = client["pets"]["cats"];
-        auto builder = bsoncxx::builder::stream::document{};
-        pipeline pip;
+        pipeline p;
 
-        pip.match(document{} << "adoptable" << true << bsoncxx::builder::stream::finalize)
+        p.match(document{} << "adoptable" << true << bsoncxx::builder::stream::finalize)
             .count("adoptableCatsCount");
-        auto cursor = cats.aggregate(session, pip);
+        auto cursor = cats.aggregate(session, p);
 
         for (auto doc : cursor) {
-            auto value = doc.find("adoptableCatsCount");
-            adoptable_pets_count += value->get_int32();
+            adoptable_pets_count += doc.find("adoptableCatsCount")->get_int32();
         }
     }
 
     {
         auto dogs = client["pets"]["dogs"];
-        auto builder = bsoncxx::builder::stream::document{};
-        pipeline pip;
+        pipeline p;
 
-        pip.match(document{} << "adoptable" << true << bsoncxx::builder::stream::finalize)
+        p.match(document{} << "adoptable" << true << bsoncxx::builder::stream::finalize)
             .count("adoptableDogsCount");
-        auto cursor = dogs.aggregate(session, pip);
+        auto cursor = dogs.aggregate(session, p);
 
         for (auto doc : cursor) {
-            auto value = doc.find("adoptableDogsCount");
-            adoptable_pets_count += value->get_int32();
+            adoptable_pets_count += doc.find("adoptableDogsCount")->get_int32();
         }
     }
 
