@@ -1201,11 +1201,10 @@ void snapshot_examples(mongocxx::client& client) {
     auto session = client.start_session(opts);
 
     {
-        auto cats = client["pets"]["cats"];
         pipeline p;
 
         p.match(make_document(kvp("adoptable", true))).count("adoptableCatsCount");
-        auto cursor = cats.aggregate(session, p);
+        auto cursor = db["cats"].aggregate(session, p);
 
         for (auto doc : cursor) {
             adoptable_pets_count += doc.find("adoptableCatsCount")->get_int32();
@@ -1213,11 +1212,10 @@ void snapshot_examples(mongocxx::client& client) {
     }
 
     {
-        auto dogs = client["pets"]["dogs"];
         pipeline p;
 
         p.match(make_document(kvp("adoptable", true))).count("adoptableDogsCount");
-        auto cursor = dogs.aggregate(session, p);
+        auto cursor = db["dogs"].aggregate(session, p);
 
         for (auto doc : cursor) {
             adoptable_pets_count += doc.find("adoptableDogsCount")->get_int32();
