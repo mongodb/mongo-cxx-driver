@@ -1187,16 +1187,29 @@ void snapshot_examples(mongocxx::database db, mongocxx::client &client) {
     using mongocxx::v_noabi::pipeline;
     using bsoncxx::builder::stream::close_document;
     using bsoncxx::builder::stream::finalize;
+    using bsoncxx::builder::stream::close_array;
 
     auto opts = mongocxx::options::client_session{};
     opts.snapshot(true);
     auto session = client.start_session(opts);
     auto items = client["pets"]["cats"];
     auto builder = bsoncxx::builder::stream::document{};
+    bsoncxx::document::value doc_value = builder
+      << "name" << "MongoDB"
+      << "type" << "database"
+      << "count" << 1
+      << "versions" << bsoncxx::builder::stream::open_array
+        << "v3.2" << "v3.0" << "v2.6"
+      << close_array
+      << "info" << bsoncxx::builder::stream::open_document
+        << "x" << 203
+        << "y" << 102
+      << bsoncxx::builder::stream::close_document
+      << bsoncxx::builder::stream::finalize;
     //document cats_match = builder << "adoptable", true << finalize;
     document cats_match;
     pipeline pip;
-    pip.match(cats_match.view());
+    pip.match(doc_value.view());
     items.aggregate(session, pip);
 }
 
