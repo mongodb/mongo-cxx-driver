@@ -1183,28 +1183,44 @@ void delete_examples(mongocxx::database db) {
     }
 }
 
-void snapshot_examples(mongocxx::database db, mongocxx::client &client) {
+void snapshot_examples(mongocxx::client &client) {
     using bsoncxx::builder::stream::document;
     using mongocxx::v_noabi::pipeline;
     using bsoncxx::builder::stream::close_document;
     using bsoncxx::builder::stream::finalize;
     using bsoncxx::builder::stream::close_array;
 
-    // TODO: insert sample data into db.pets.cats
+    auto db = client["pets"];
+
+    // seed 'pets' database with dogs and cats
+    db.drop();
+    db["cats"].insert_one(document{} << "adoptable" << true << finalize);
+    db["dogs"].insert_one(document{} << "adoptable" << true << finalize);
+    db["dogs"].insert_one(document{} << "adoptable" << false << finalize);
 
     auto opts = mongocxx::options::client_session{};
     opts.snapshot(true);
     auto session = client.start_session(opts);
-    auto items = client["pets"]["cats"];
+    auto cats = client["pets"]["cats"];
     auto builder = bsoncxx::builder::stream::document{};
     pipeline pip;
     pip.match(
         document{} << "adoptable" << true
         << bsoncxx::builder::stream::finalize
     ).count("adoptableCatsCount");
-    auto cursor = items.aggregate(session, pip);
+    auto cursor = cats.aggregate(session, pip);
+
+    uint64_t adoptable_pets_count = 0;
     for (auto doc : cursor) {
-        std::cout << bsoncxx::to_json(doc) << std::endl;
+        auto value = doc.find("adoptableCatsCount");
+        adoptable_pets_count += value->get_int32();
+    }
+    
+    if (adoptable_pets_count != 2) {
+        throw std::logic_error(
+            std::string("wrong number of adoptable pets in example 57, expecting 2 got ") +
+            std::to_string(adoptable_pets_count)
+        );
     }
 }
 
@@ -1227,7 +1243,7 @@ int main() {
         projection_examples(db);
         update_examples(db);
         delete_examples(db);
-        snapshot_examples(db, conn);
+        snapshot_examples(conn);
     } catch (const std::logic_error& e) {
         std::cerr << e.what() << std::endl;
         return EXIT_FAILURE;
