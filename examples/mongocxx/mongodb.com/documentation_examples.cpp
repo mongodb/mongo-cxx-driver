@@ -1198,26 +1198,45 @@ void snapshot_examples(mongocxx::client& client) {
     db["dogs"].insert_one(document{} << "adoptable" << true << finalize);
     db["dogs"].insert_one(document{} << "adoptable" << false << finalize);
 
+    uint64_t adoptable_pets_count = 0;
+
     auto opts = mongocxx::options::client_session{};
     opts.snapshot(true);
     auto session = client.start_session(opts);
-    auto cats = client["pets"]["cats"];
-    auto builder = bsoncxx::builder::stream::document{};
-    pipeline pip;
-    pip.match(document{} << "adoptable" << true << bsoncxx::builder::stream::finalize)
-        .count("adoptableCatsCount");
-    auto cursor = cats.aggregate(session, pip);
 
-    uint64_t adoptable_pets_count = 0;
-    for (auto doc : cursor) {
-        auto value = doc.find("adoptableCatsCount");
-        adoptable_pets_count += value->get_int32();
+    {
+        auto cats = client["pets"]["cats"];
+        auto builder = bsoncxx::builder::stream::document{};
+        pipeline pip;
+
+        pip.match(document{} << "adoptable" << true << bsoncxx::builder::stream::finalize)
+            .count("adoptableCatsCount");
+        auto cursor = cats.aggregate(session, pip);
+
+        for (auto doc : cursor) {
+            auto value = doc.find("adoptableCatsCount");
+            adoptable_pets_count += value->get_int32();
+        }
+    }
+
+    {
+        auto dogs = client["pets"]["dogs"];
+        auto builder = bsoncxx::builder::stream::document{};
+        pipeline pip;
+
+        pip.match(document{} << "adoptable" << true << bsoncxx::builder::stream::finalize)
+            .count("adoptableDogsCount");
+        auto cursor = dogs.aggregate(session, pip);
+
+        for (auto doc : cursor) {
+            auto value = doc.find("adoptableDogsCount");
+            adoptable_pets_count += value->get_int32();
+        }
     }
 
     if (adoptable_pets_count != 2) {
-        throw std::logic_error(
-            std::string("wrong number of adoptable pets in example 57, expecting 2 got ") +
-            std::to_string(adoptable_pets_count));
+        throw std::logic_error("wrong number of adoptable pets in example 57, expecting 2 got: " +
+                               std::to_string(adoptable_pets_count));
     }
 }
 
