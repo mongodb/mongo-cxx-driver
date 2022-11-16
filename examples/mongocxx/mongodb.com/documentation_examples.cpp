@@ -25,6 +25,8 @@
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/find.hpp>
 #include <mongocxx/uri.hpp>
+#include <mongocxx/pipeline.hpp>
+#include <bsoncxx/builder/stream/document.hpp>
 
 // NOTE: Any time this file is modified, a DOCS ticket should be opened to sync the changes with the
 // corresponding page on docs.mongodb.com. See CXX-1249 and DRIVERS-356 for more info.
@@ -1180,6 +1182,24 @@ void delete_examples(mongocxx::database db) {
     }
 }
 
+void snapshot_examples(mongocxx::database db, mongocxx::client &client) {
+    using bsoncxx::builder::stream::document;
+    using mongocxx::v_noabi::pipeline;
+    using bsoncxx::builder::stream::close_document;
+    using bsoncxx::builder::stream::finalize;
+
+    auto opts = mongocxx::options::client_session{};
+    opts.snapshot(true);
+    auto session = client.start_session(opts);
+    auto items = client["pets"]["cats"];
+    auto builder = bsoncxx::builder::stream::document{};
+    //document cats_match = builder << "adoptable", true << finalize;
+    document cats_match;
+    pipeline pip;
+    pip.match(cats_match.view());
+    items.aggregate(session, pip);
+}
+
 int main() {
     // The mongocxx::instance constructor and destructor initialize and shut down the driver,
     // respectively. Therefore, a mongocxx::instance must be created before using the driver and
@@ -1199,6 +1219,7 @@ int main() {
         projection_examples(db);
         update_examples(db);
         delete_examples(db);
+        snapshot_examples(db, conn);
     } catch (const std::logic_error& e) {
         std::cerr << e.what() << std::endl;
         return EXIT_FAILURE;
