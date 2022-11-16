@@ -18,16 +18,16 @@
 #include <bsoncxx/builder/basic/array.hpp>
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>
+#include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/document/value.hpp>
+#include <bsoncxx/json.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/types.hpp>
-#include <bsoncxx/builder/stream/document.hpp>
-#include <bsoncxx/json.hpp>
 #include <mongocxx/client.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/find.hpp>
-#include <mongocxx/uri.hpp>
 #include <mongocxx/pipeline.hpp>
+#include <mongocxx/uri.hpp>
 
 // NOTE: Any time this file is modified, a DOCS ticket should be opened to sync the changes with the
 // corresponding page on docs.mongodb.com. See CXX-1249 and DRIVERS-356 for more info.
@@ -1183,12 +1183,12 @@ void delete_examples(mongocxx::database db) {
     }
 }
 
-void snapshot_examples(mongocxx::client &client) {
-    using bsoncxx::builder::stream::document;
-    using mongocxx::v_noabi::pipeline;
-    using bsoncxx::builder::stream::close_document;
-    using bsoncxx::builder::stream::finalize;
+void snapshot_examples(mongocxx::client& client) {
     using bsoncxx::builder::stream::close_array;
+    using bsoncxx::builder::stream::close_document;
+    using bsoncxx::builder::stream::document;
+    using bsoncxx::builder::stream::finalize;
+    using mongocxx::v_noabi::pipeline;
 
     auto db = client["pets"];
 
@@ -1204,10 +1204,8 @@ void snapshot_examples(mongocxx::client &client) {
     auto cats = client["pets"]["cats"];
     auto builder = bsoncxx::builder::stream::document{};
     pipeline pip;
-    pip.match(
-        document{} << "adoptable" << true
-        << bsoncxx::builder::stream::finalize
-    ).count("adoptableCatsCount");
+    pip.match(document{} << "adoptable" << true << bsoncxx::builder::stream::finalize)
+        .count("adoptableCatsCount");
     auto cursor = cats.aggregate(session, pip);
 
     uint64_t adoptable_pets_count = 0;
@@ -1215,12 +1213,11 @@ void snapshot_examples(mongocxx::client &client) {
         auto value = doc.find("adoptableCatsCount");
         adoptable_pets_count += value->get_int32();
     }
-    
+
     if (adoptable_pets_count != 2) {
         throw std::logic_error(
             std::string("wrong number of adoptable pets in example 57, expecting 2 got ") +
-            std::to_string(adoptable_pets_count)
-        );
+            std::to_string(adoptable_pets_count));
     }
 }
 
