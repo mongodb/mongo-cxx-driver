@@ -54,6 +54,19 @@ void check_has_no_field(const T& document, const char* field, int example_no) {
     check_field(document, field, false, example_no);
 }
 
+static bsoncxx::document::value get_is_master(const mongocxx::client& client) {
+    using bsoncxx::builder::basic::kvp;
+    using bsoncxx::builder::basic::make_document;
+
+    static auto reply = client["admin"].run_command(make_document(kvp("isMaster", 1)));
+    return reply;
+}
+
+static bool is_replica_set(const mongocxx::client& client) {
+    auto reply = get_is_master(client);
+    return static_cast<bool>(reply.view()["setName"]);
+}
+
 void insert_examples(mongocxx::database db) {
     db["inventory"].drop();
 
@@ -1248,7 +1261,9 @@ int main() {
         projection_examples(db);
         update_examples(db);
         delete_examples(db);
-        snapshot_examples(conn);
+        if (is_replica_set(conn)) {
+            snapshot_examples(conn);
+        }
     } catch (const std::logic_error& e) {
         std::cerr << e.what() << std::endl;
         return EXIT_FAILURE;
