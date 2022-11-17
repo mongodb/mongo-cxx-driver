@@ -1193,7 +1193,7 @@ void delete_examples(mongocxx::database db) {
     }
 }
 
-void snapshot_examples(mongocxx::client& client) {
+static void snapshot_examples(mongocxx::client& client) {
     // Start Example 59
     using bsoncxx::builder::basic::kvp;
     using bsoncxx::builder::basic::make_document;
