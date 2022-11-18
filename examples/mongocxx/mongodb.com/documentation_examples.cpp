@@ -13,7 +13,6 @@
 // limitations under the License.
 
 #include <iostream>
-#include <thread>
 #include <vector>
 
 #include <bsoncxx/builder/basic/array.hpp>
@@ -23,7 +22,6 @@
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/types.hpp>
 #include <mongocxx/client.hpp>
-#include <mongocxx/exception/query_exception.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/find.hpp>
 #include <mongocxx/uri.hpp>
@@ -1196,6 +1194,13 @@ void delete_examples(mongocxx::database db) {
 }
 
 static void snapshot_examples(mongocxx::client& client) {
+    // Write concern "majority" needed to avoid the following error below:
+    //
+    // Unable to read from a snapshot due to pending collection catalog changes;
+    // please retry the operation.
+    //
+    // See also: https://jira.mongodb.org/browse/SERVER-41532
+
     // Start Example 59
     using namespace mongocxx::v_noabi;
     using bsoncxx::builder::basic::kvp;
@@ -1213,14 +1218,6 @@ static void snapshot_examples(mongocxx::client& client) {
     db["cats"].insert_one(make_document(kvp("adoptable", true)), write_options);
     db["dogs"].insert_one(make_document(kvp("adoptable", true)), write_options);
     db["dogs"].insert_one(make_document(kvp("adoptable", false)), write_options);
-
-    // Sleep to avoid this error:
-    //
-    // Unable to read from a snapshot due to pending collection catalog changes;
-    // please retry the operation.
-    //
-    // See: https://jira.mongodb.org/browse/SERVER-41532
-    // std::this_thread::sleep_for(std::chrono::seconds(1));
 
     int64_t adoptable_pets_count = 0;
 
