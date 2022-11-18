@@ -13,7 +13,6 @@
 // limitations under the License.
 
 #include <iostream>
-#include <thread>
 #include <vector>
 
 #include <bsoncxx/builder/basic/array.hpp>
@@ -1197,19 +1196,22 @@ void delete_examples(mongocxx::database db) {
 
 static void snapshot_examples(mongocxx::client& client) {
     // Start Example 59
+    using namespace mongocxx::v_noabi;
     using bsoncxx::builder::basic::kvp;
     using bsoncxx::builder::basic::make_document;
-    using mongocxx::v_noabi::pipeline;
+
+    options::insert write_options;
+    write_concern wc;
+    wc.majority();
+    write_options.write_concern(wc);
 
     auto db = client["pets"];
 
     // seed 'pets' database with dogs and cats
     db.drop();
-    db["cats"].insert_one(make_document(kvp("adoptable", true)));
-    db["dogs"].insert_one(make_document(kvp("adoptable", true)));
-    db["dogs"].insert_one(make_document(kvp("adoptable", false)));
-
-    std::this_thread::sleep_for(std::chrono::seconds(120));
+    db["cats"].insert_one(make_document(kvp("adoptable", true)), write_options);
+    db["dogs"].insert_one(make_document(kvp("adoptable", true)), write_options);
+    db["dogs"].insert_one(make_document(kvp("adoptable", false)), write_options);
 
     int64_t adoptable_pets_count = 0;
 
@@ -1266,21 +1268,10 @@ int main() {
         update_examples(db);
         delete_examples(db);
         if (is_replica_set(conn)) {
-            for (int i = 0; i < 10; i++) {
-                try {
-                    snapshot_examples(conn);
-                    goto done;
-                } catch (const mongocxx::query_exception& e) {
-                    std::cerr << "Failed on try number: " << i << " " << e.what() << std::endl;
-                }
-            }
-            throw std::logic_error("failed to run snapshot_examples after several retries");
+            snapshot_examples(conn);
         }
     } catch (const std::logic_error& e) {
         std::cerr << e.what() << std::endl;
         return EXIT_FAILURE;
     }
-
-done:
-    return EXIT_SUCCESS;
 }
