@@ -25,6 +25,7 @@
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/find.hpp>
 #include <mongocxx/uri.hpp>
+#include <mongocxx/exception/query_exception.hpp>
 
 // NOTE: Any time this file is modified, a DOCS ticket should be opened to sync the changes with the
 // corresponding page on docs.mongodb.com. See CXX-1249 and DRIVERS-356 for more info.
@@ -1266,7 +1267,7 @@ int main() {
                 try {
                     snapshot_examples(conn);
                     goto done;
-                } catch (const std::logic_error& e) {
+                } catch (const mongocxx::query_exception& e) {
                     std::cerr << "Failed on try number: " << i << " " << e.what() << std::endl;
                 }
             }
