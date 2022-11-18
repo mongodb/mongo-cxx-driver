@@ -1262,10 +1262,21 @@ int main() {
         update_examples(db);
         delete_examples(db);
         if (is_replica_set(conn)) {
-            snapshot_examples(conn);
+            for (int i = 0; i < 10; i++) {
+                try {
+                    snapshot_examples(conn);
+                    goto done;
+                } catch (const std::logic_error& e) {
+                    std::cerr << "Failed on try number: " << i << " " << e.what() << std::endl;
+                }
+            }
+            throw std::logic_error("failed to run snapshot_examples after several retries");
         }
     } catch (const std::logic_error& e) {
         std::cerr << e.what() << std::endl;
         return EXIT_FAILURE;
     }
+
+done:
+    return EXIT_SUCCESS;
 }
