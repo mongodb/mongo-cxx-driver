@@ -13,8 +13,8 @@
 // limitations under the License.
 
 #include <iostream>
-#include <vector>
 #include <thread>
+#include <vector>
 
 #include <bsoncxx/builder/basic/array.hpp>
 #include <bsoncxx/builder/basic/document.hpp>
@@ -23,10 +23,10 @@
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/types.hpp>
 #include <mongocxx/client.hpp>
+#include <mongocxx/exception/query_exception.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/find.hpp>
 #include <mongocxx/uri.hpp>
-#include <mongocxx/exception/query_exception.hpp>
 
 // NOTE: Any time this file is modified, a DOCS ticket should be opened to sync the changes with the
 // corresponding page on docs.mongodb.com. See CXX-1249 and DRIVERS-356 for more info.
