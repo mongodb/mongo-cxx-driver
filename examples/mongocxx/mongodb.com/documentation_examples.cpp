@@ -1215,10 +1215,12 @@ static void snapshot_examples(mongocxx::client& client) {
     db["dogs"].insert_one(make_document(kvp("adoptable", false)), write_options);
 
     // Sleep to avoid this error:
+    //
     // Unable to read from a snapshot due to pending collection catalog changes;
     // please retry the operation.
+    //
     // See: https://jira.mongodb.org/browse/SERVER-41532
-    // std::this_thread::sleep_for(std::chrono::seconds(120));
+    std::this_thread::sleep_for(std::chrono::seconds(1));
 
     int64_t adoptable_pets_count = 0;
 
