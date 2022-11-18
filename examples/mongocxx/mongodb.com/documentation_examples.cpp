@@ -1248,6 +1248,24 @@ static void snapshot_examples(mongocxx::client& client) {
     // End Example 59
 }
 
+static bool version_at_least(mongocxx::v_noabi::database& db, int minimum_major) {
+    using bsoncxx::builder::basic::kvp;
+    using bsoncxx::builder::basic::make_document;
+
+    auto resp = db.run_command(make_document(kvp("buildInfo", 1)));
+    auto version = resp.find("version")->get_string().value;
+    std::string major_string;
+    for (auto i : version) {
+        if (i == '.') {
+            break;
+        }
+        major_string += i;
+    }
+    int server_major = std::stoi(major_string);
+
+    return server_major >= minimum_major;
+}
+
 int main() {
     // The mongocxx::instance constructor and destructor initialize and shut down the driver,
     // respectively. Therefore, a mongocxx::instance must be created before using the driver and
@@ -1267,7 +1285,7 @@ int main() {
         projection_examples(db);
         update_examples(db);
         delete_examples(db);
-        if (is_replica_set(conn)) {
+        if (is_replica_set(conn) && version_at_least(db, 5)) {
             snapshot_examples(conn);
         }
     } catch (const std::logic_error& e) {
