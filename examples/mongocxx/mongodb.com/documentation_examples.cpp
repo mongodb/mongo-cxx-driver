@@ -1203,7 +1203,7 @@ static void snapshot_examples(mongocxx::client& client) {
 
     options::insert write_options;
     write_concern wc;
-    wc.majority();
+    wc.majority(std::chrono::milliseconds(10000));
     write_options.write_concern(wc);
 
     auto db = client["pets"];
@@ -1220,7 +1220,7 @@ static void snapshot_examples(mongocxx::client& client) {
     // please retry the operation.
     //
     // See: https://jira.mongodb.org/browse/SERVER-41532
-    std::this_thread::sleep_for(std::chrono::seconds(1));
+    // std::this_thread::sleep_for(std::chrono::seconds(1));
 
     int64_t adoptable_pets_count = 0;
 
