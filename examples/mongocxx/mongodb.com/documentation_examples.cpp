@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include <iostream>
+#include <thread>
 #include <vector>
 
 #include <bsoncxx/builder/basic/array.hpp>
@@ -1212,6 +1213,8 @@ static void snapshot_examples(mongocxx::client& client) {
     db["cats"].insert_one(make_document(kvp("adoptable", true)), write_options);
     db["dogs"].insert_one(make_document(kvp("adoptable", true)), write_options);
     db["dogs"].insert_one(make_document(kvp("adoptable", false)), write_options);
+
+    std::this_thread::sleep_for(std::chrono::seconds(120));
 
     int64_t adoptable_pets_count = 0;
 
