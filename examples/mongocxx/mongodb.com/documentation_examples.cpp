@@ -1208,7 +1208,7 @@ static void snapshot_examples(mongocxx::client& client) {
 
     options::insert write_options;
     write_concern wc;
-    wc.majority(std::chrono::milliseconds(10000));
+    wc.majority(std::chrono::seconds(10));
     write_options.write_concern(wc);
 
     auto db = client["pets"];
