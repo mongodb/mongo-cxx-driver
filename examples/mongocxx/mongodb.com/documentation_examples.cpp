@@ -1201,7 +1201,7 @@ static void snapshot_examples(mongocxx::client& client) {
     //
     // See also: https://jira.mongodb.org/browse/SERVER-41532
 
-    // Start Example 59
+    // Start Snapshot Query Example 1
     using namespace mongocxx;
     using bsoncxx::builder::basic::kvp;
     using bsoncxx::builder::basic::make_document;
