@@ -22,6 +22,7 @@
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/types.hpp>
 #include <mongocxx/client.hpp>
+#include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/find.hpp>
 #include <mongocxx/uri.hpp>
@@ -1193,6 +1194,22 @@ void delete_examples(mongocxx::database db) {
     }
 }
 
+static bool check_for_snapshot(mongocxx::client& client, mongocxx::collection& collection) {
+    auto opts = mongocxx::options::client_session{};
+    opts.snapshot(true);
+    auto session = client.start_session(opts);
+
+    try {
+        auto cursor = collection.aggregate(session, {});
+    } catch (const mongocxx::operation_exception& e) {
+        if (e.code().value() == 246) {  // snapshot unavailable
+            return false;
+        }
+        throw;
+    }
+    return true;
+}
+
 static void snapshot_examples(mongocxx::client& client) {
     // Write concern "majority" needed to avoid the following error below:
     //
@@ -1218,6 +1235,14 @@ static void snapshot_examples(mongocxx::client& client) {
     db["cats"].insert_one(make_document(kvp("adoptable", true)), write_options);
     db["dogs"].insert_one(make_document(kvp("adoptable", true)), write_options);
     db["dogs"].insert_one(make_document(kvp("adoptable", false)), write_options);
+
+    bool ok = true;
+    do {
+        auto cats = db["cats"];
+        ok = ok && check_for_snapshot(client, cats);
+        auto dogs = db["dogs"];
+        ok = ok && check_for_snapshot(client, dogs);
+    } while (!ok);
 
     int64_t adoptable_pets_count = 0;
 
