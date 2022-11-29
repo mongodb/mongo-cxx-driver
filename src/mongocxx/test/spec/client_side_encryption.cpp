@@ -328,6 +328,7 @@ TEST_CASE("Client side encryption spec automated tests", "[client_side_encryptio
     }
 
     std::ifstream test_files{path + "/test_files.txt"};
+    std::cout << path + "/test_files.txt" << std::endl;
     REQUIRE(test_files.good());
 
     std::string test_file;
