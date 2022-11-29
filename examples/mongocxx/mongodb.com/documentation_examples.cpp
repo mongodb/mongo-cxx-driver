@@ -1210,6 +1210,17 @@ static bool check_for_snapshot(mongocxx::client& client, mongocxx::collection& c
     return true;
 }
 
+static void seed_pets(mongocxx::database& db) {
+    using namespace mongocxx;
+    using bsoncxx::builder::basic::kvp;
+    using bsoncxx::builder::basic::make_document;
+
+    db.drop();
+    db["cats"].insert_one(make_document(kvp("adoptable", true)));
+    db["dogs"].insert_one(make_document(kvp("adoptable", true)));
+    db["dogs"].insert_one(make_document(kvp("adoptable", false)));
+}
+
 static void snapshot_examples(mongocxx::client& client) {
     // Write concern "majority" needed to avoid the following error below:
     //
@@ -1218,23 +1229,17 @@ static void snapshot_examples(mongocxx::client& client) {
     //
     // See also: https://jira.mongodb.org/browse/SERVER-41532
 
+    {
+        auto db = client["pets"];
+        seed_pets(db);
+    }
+
     // Start Snapshot Query Example 1
     using namespace mongocxx;
     using bsoncxx::builder::basic::kvp;
     using bsoncxx::builder::basic::make_document;
 
-    options::insert write_options;
-    write_concern wc;
-    wc.majority(std::chrono::seconds(10));
-    write_options.write_concern(wc);
-
     auto db = client["pets"];
-
-    // seed 'pets' database with dogs and cats
-    db.drop();
-    db["cats"].insert_one(make_document(kvp("adoptable", true)), write_options);
-    db["dogs"].insert_one(make_document(kvp("adoptable", true)), write_options);
-    db["dogs"].insert_one(make_document(kvp("adoptable", false)), write_options);
 
     bool ok = true;
     do {
