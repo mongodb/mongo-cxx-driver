@@ -1201,11 +1201,8 @@ static bool check_for_snapshot(mongocxx::client& client, mongocxx::collection& c
 
     try {
         auto cursor = collection.aggregate(session, {});
-    } catch (const mongocxx::operation_exception& e) {
-        if (e.code().value() == 246) {  // snapshot unavailable
-            return false;
-        }
-        throw;
+    } catch (const mongocxx::exception& e) {
+        return false;
     }
     return true;
 }
