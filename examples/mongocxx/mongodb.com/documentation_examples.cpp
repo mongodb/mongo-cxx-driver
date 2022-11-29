@@ -1259,9 +1259,11 @@ static void snapshot_examples(mongocxx::client& client) {
         pipeline p;
 
         p.match(make_document(kvp("adoptable", true))).count("adoptableCatsCount");
+        std::cerr << "RUNNING AGGREGATION 1" << std::endl;
         auto cursor = db["cats"].aggregate(session, p);
 
         for (auto doc : cursor) {
+            std::cerr << "EXTRACTING AGGREGATION 1" << std::endl;
             adoptable_pets_count += doc.find("adoptableCatsCount")->get_int32();
         }
     }
@@ -1270,9 +1272,11 @@ static void snapshot_examples(mongocxx::client& client) {
         pipeline p;
 
         p.match(make_document(kvp("adoptable", true))).count("adoptableDogsCount");
+        std::cerr << "RUNNING AGGREGATION 2" << std::endl;
         auto cursor = db["dogs"].aggregate(session, p);
 
         for (auto doc : cursor) {
+            std::cerr << "EXTRACTING AGGREGATION 2" << std::endl;
             adoptable_pets_count += doc.find("adoptableDogsCount")->get_int32();
         }
     }
