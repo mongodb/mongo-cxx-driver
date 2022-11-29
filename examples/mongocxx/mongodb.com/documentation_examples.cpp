@@ -1203,6 +1203,10 @@ static bool check_for_snapshot(mongocxx::client& client, mongocxx::collection& c
         auto session = client.start_session(opts);
         std::cerr << "TESTING AGGREGATION" << std::endl;
         auto cursor = collection.aggregate(session, {});
+        for (const auto& it : cursor) {
+            (void)it;
+            break;
+        }
     } catch (const mongocxx::exception& e) {
         std::cerr << "SNAPSHOT NOT READY" << std::endl;
         return false;
