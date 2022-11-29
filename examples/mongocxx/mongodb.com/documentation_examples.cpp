@@ -1199,11 +1199,15 @@ static bool check_for_snapshot(mongocxx::client& client, mongocxx::collection& c
     opts.snapshot(true);
 
     try {
+        std::cerr << "TRYING SESSION" << std::endl;
         auto session = client.start_session(opts);
+        std::cerr << "TESTING AGGREGATION" << std::endl;
         auto cursor = collection.aggregate(session, {});
     } catch (const mongocxx::exception& e) {
+        std::cerr << "SNAPSHOT NOT READY" << std::endl;
         return false;
     }
+    std::cerr << "SNAPSHOT IS READY" << std::endl;
     return true;
 }
 
@@ -1224,10 +1228,12 @@ static void snapshot_examples(mongocxx::client& client) {
     // https://github.com/mongodb/mongo-python-driver/commit/e325b24b78e431cb889c5902d00b8f4af2c700c3#diff-c5d782e261f04fca18024ab18c3ed38fb45ede24cde4f9092e012f6fcbbe0df5R1368
     {
         auto db = client["pets"];
+        std::cerr << "SEEDING PETS" << std::endl;
         seed_pets(db);
 
         bool ok = true;
         do {
+            std::cerr << "CHECKING FOR SNAPSHOT" << std::endl;
             auto cats = db["cats"];
             ok = ok && check_for_snapshot(client, cats);
             auto dogs = db["dogs"];
@@ -1244,6 +1250,7 @@ static void snapshot_examples(mongocxx::client& client) {
 
     int64_t adoptable_pets_count = 0;
 
+    std::cerr << "STARTING SESSION" << std::endl;
     auto opts = mongocxx::options::client_session{};
     opts.snapshot(true);
     auto session = client.start_session(opts);
