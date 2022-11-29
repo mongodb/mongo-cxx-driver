@@ -1197,9 +1197,9 @@ void delete_examples(mongocxx::database db) {
 static bool check_for_snapshot(mongocxx::client& client, mongocxx::collection& collection) {
     auto opts = mongocxx::options::client_session{};
     opts.snapshot(true);
-    auto session = client.start_session(opts);
 
     try {
+        auto session = client.start_session(opts);
         auto cursor = collection.aggregate(session, {});
     } catch (const mongocxx::exception& e) {
         return false;
