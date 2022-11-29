@@ -1232,6 +1232,14 @@ static void snapshot_examples(mongocxx::client& client) {
     {
         auto db = client["pets"];
         seed_pets(db);
+
+        bool ok = true;
+        do {
+            auto cats = db["cats"];
+            ok = ok && check_for_snapshot(client, cats);
+            auto dogs = db["dogs"];
+            ok = ok && check_for_snapshot(client, dogs);
+        } while (!ok);
     }
 
     // Start Snapshot Query Example 1
@@ -1240,14 +1248,6 @@ static void snapshot_examples(mongocxx::client& client) {
     using bsoncxx::builder::basic::make_document;
 
     auto db = client["pets"];
-
-    bool ok = true;
-    do {
-        auto cats = db["cats"];
-        ok = ok && check_for_snapshot(client, cats);
-        auto dogs = db["dogs"];
-        ok = ok && check_for_snapshot(client, dogs);
-    } while (!ok);
 
     int64_t adoptable_pets_count = 0;
 
