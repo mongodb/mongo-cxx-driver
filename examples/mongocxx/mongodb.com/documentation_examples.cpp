@@ -1216,32 +1216,44 @@ static bool is_snapshot_ready(mongocxx::client& client, mongocxx::collection& co
     return true;
 }
 
-static void seed_pets(mongocxx::database& db) {
+// Seed the pets database and wait for the snapshot to become available.
+// This follows the pattern from the Python driver as seen below:
+// https://github.com/mongodb/mongo-python-driver/commit/e325b24b78e431cb889c5902d00b8f4af2c700c3#diff-c5d782e261f04fca18024ab18c3ed38fb45ede24cde4f9092e012f6fcbbe0df5R1368
+static void wait_for_snapshot_ready(mongocxx::client& client,
+                                    std::vector<mongocxx::collection> collections) {
+    size_t sleep_time = 1;
+
+    for (;;) {
+        bool is_ready = true;
+        for (auto& collection : collections) {
+            if (!is_snapshot_ready(client, collection)) {
+                is_ready = false;
+                break;  // inner
+            }
+        }
+        if (is_ready) {
+            break;  // outer
+        } else {
+            std::this_thread::sleep_for(std::chrono::seconds(sleep_time++));
+        }
+    }
+}
+
+static void setup_pets(mongocxx::client& client) {
     using namespace mongocxx;
     using bsoncxx::builder::basic::kvp;
     using bsoncxx::builder::basic::make_document;
 
+    auto db = client["pets"];
     db.drop();
     db["cats"].insert_one(make_document(kvp("adoptable", true)));
     db["dogs"].insert_one(make_document(kvp("adoptable", true)));
     db["dogs"].insert_one(make_document(kvp("adoptable", false)));
+    wait_for_snapshot_ready(client, {db["cats"], db["dogs"]});
 }
 
-static void snapshot_examples(mongocxx::client& client) {
-    // Seed the pets database and wait for the snapshot to become available.
-    // This follows the pattern from the Python driver as seen below:
-    // https://github.com/mongodb/mongo-python-driver/commit/e325b24b78e431cb889c5902d00b8f4af2c700c3#diff-c5d782e261f04fca18024ab18c3ed38fb45ede24cde4f9092e012f6fcbbe0df5R1368
-    {
-        auto db = client["pets"];
-        seed_pets(db);
-
-        auto cats = db["cats"];
-        auto dogs = db["dogs"];
-        size_t sleep_time = 1;
-        while (!is_snapshot_ready(client, cats) && !is_snapshot_ready(client, dogs)) {
-            std::this_thread::sleep_for(std::chrono::seconds(sleep_time++));
-        }
-    }
+static void snapshot_example1(mongocxx::client& client) {
+    setup_pets(client);
 
     // Start Snapshot Query Example 1
     using namespace mongocxx;
@@ -1285,6 +1297,55 @@ static void snapshot_examples(mongocxx::client& client) {
     // End Snapshot Query Example 1
 }
 
+static void setup_retail(mongocxx::client& client) {
+    using bsoncxx::builder::basic::kvp;
+    using bsoncxx::builder::basic::make_document;
+    using bsoncxx::types::b_date;
+    using std::chrono::minutes;
+    using std::chrono::system_clock;
+
+    auto db = client["retail"];
+    b_date sales_date{system_clock::now() - minutes(1)};
+    db["sales"].insert_one(
+        make_document(kvp("shoeType", "boot"), kvp("price", 30), kvp("saleDate", sales_date)));
+    wait_for_snapshot_ready(client, {db["sales"]});
+}
+
+static void snapshot_example2(mongocxx::client& client) {
+    setup_retail(client);
+
+    auto opts = mongocxx::options::client_session{};
+    opts.snapshot(true);
+    auto session = client.start_session(opts);
+
+    // Start Snapshot Query Example 2
+    // client = MongoClient()
+    // db = client.retail
+    // with client.start_session(snapshot=True) as s:
+    //   total = db.sales.aggregate( [
+    //      {
+    //         $match: {
+    //            $expr: {
+    //               $gt: [
+    //                  "$saleDate",
+    //                  {
+    //                     $dateSubtract: {
+    //                        startDate: "$$NOW",
+    //                        unit: "day",
+    //                        amount: 1
+    //                     }
+    //                  }
+    //               ]
+    //             }
+    //          }
+    //      },
+    //      { $count: "totalDailySales" }
+    //   ], session=s
+    //   ).next()["totalDailySales"]
+
+    // End Snapshot Query Example 2
+}
+
 static bool version_at_least(mongocxx::v_noabi::database& db, int minimum_major) {
     using bsoncxx::builder::basic::kvp;
     using bsoncxx::builder::basic::make_document;
@@ -1323,7 +1384,8 @@ int main() {
         update_examples(db);
         delete_examples(db);
         if (is_replica_set(conn) && version_at_least(db, 5)) {
-            snapshot_examples(conn);
+            snapshot_example1(conn);
+            snapshot_example2(conn);
         }
     } catch (const std::logic_error& e) {
         std::cerr << e.what() << std::endl;
