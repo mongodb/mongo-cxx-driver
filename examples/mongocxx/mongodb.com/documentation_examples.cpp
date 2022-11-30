@@ -1200,20 +1200,19 @@ static bool is_snapshot_ready(mongocxx::client& client, mongocxx::collection& co
     auto opts = mongocxx::options::client_session{};
     opts.snapshot(true);
 
+    auto session = client.start_session(opts);
     try {
-        std::cerr << "TRYING SESSION" << std::endl;
-        auto session = client.start_session(opts);
-        std::cerr << "TESTING AGGREGATION" << std::endl;
         auto cursor = collection.aggregate(session, {});
         for (const auto& it : cursor) {
             (void)it;
             break;
         }
-    } catch (const mongocxx::exception& e) {
-        std::cerr << "SNAPSHOT NOT READY" << std::endl;
-        return false;
+    } catch (const mongocxx::operation_exception& e) {
+        if (e.code().value() == 246) {  // snapshot unavailable
+            return false;
+        }
+        throw;
     }
-    std::cerr << "SNAPSHOT IS READY" << std::endl;
     return true;
 }
 
@@ -1234,14 +1233,12 @@ static void snapshot_examples(mongocxx::client& client) {
     // https://github.com/mongodb/mongo-python-driver/commit/e325b24b78e431cb889c5902d00b8f4af2c700c3#diff-c5d782e261f04fca18024ab18c3ed38fb45ede24cde4f9092e012f6fcbbe0df5R1368
     {
         auto db = client["pets"];
-        std::cerr << "SEEDING PETS" << std::endl;
         seed_pets(db);
 
         auto cats = db["cats"];
         auto dogs = db["dogs"];
         size_t sleep_time = 1;
         while (!is_snapshot_ready(client, cats) && !is_snapshot_ready(client, dogs)) {
-            std::cerr << "WILL RETRY IN " << sleep_time << " SECONDS" << std::endl;
             std::this_thread::sleep_for(std::chrono::seconds(sleep_time++));
         }
     }
@@ -1255,7 +1252,6 @@ static void snapshot_examples(mongocxx::client& client) {
 
     int64_t adoptable_pets_count = 0;
 
-    std::cerr << "STARTING SESSION" << std::endl;
     auto opts = mongocxx::options::client_session{};
     opts.snapshot(true);
     auto session = client.start_session(opts);
@@ -1264,11 +1260,9 @@ static void snapshot_examples(mongocxx::client& client) {
         pipeline p;
 
         p.match(make_document(kvp("adoptable", true))).count("adoptableCatsCount");
-        std::cerr << "RUNNING AGGREGATION 1" << std::endl;
         auto cursor = db["cats"].aggregate(session, p);
 
         for (auto doc : cursor) {
-            std::cerr << "EXTRACTING AGGREGATION 1" << std::endl;
             adoptable_pets_count += doc.find("adoptableCatsCount")->get_int32();
         }
     }
@@ -1277,11 +1271,9 @@ static void snapshot_examples(mongocxx::client& client) {
         pipeline p;
 
         p.match(make_document(kvp("adoptable", true))).count("adoptableDogsCount");
-        std::cerr << "RUNNING AGGREGATION 2" << std::endl;
         auto cursor = db["dogs"].aggregate(session, p);
 
         for (auto doc : cursor) {
-            std::cerr << "EXTRACTING AGGREGATION 2" << std::endl;
             adoptable_pets_count += doc.find("adoptableDogsCount")->get_int32();
         }
     }
