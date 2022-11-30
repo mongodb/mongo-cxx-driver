@@ -1301,11 +1301,10 @@ static void setup_retail(mongocxx::client& client) {
     using bsoncxx::builder::basic::kvp;
     using bsoncxx::builder::basic::make_document;
     using bsoncxx::types::b_date;
-    using std::chrono::minutes;
     using std::chrono::system_clock;
 
     auto db = client["retail"];
-    b_date sales_date{system_clock::now() - minutes(1)};
+    b_date sales_date{system_clock::now()};
     db["sales"].insert_one(
         make_document(kvp("shoeType", "boot"), kvp("price", 30), kvp("saleDate", sales_date)));
     wait_for_snapshot_ready(client, {db["sales"]});
@@ -1314,11 +1313,18 @@ static void setup_retail(mongocxx::client& client) {
 static void snapshot_example2(mongocxx::client& client) {
     setup_retail(client);
 
+    // Start Snapshot Query Example 1
+    using namespace mongocxx;
+    using bsoncxx::builder::basic::kvp;
+    using bsoncxx::builder::basic::make_array;
+    using bsoncxx::builder::basic::make_document;
+
     auto opts = mongocxx::options::client_session{};
     opts.snapshot(true);
     auto session = client.start_session(opts);
 
-    // Start Snapshot Query Example 2
+    auto db = client["retail"];
+
     // client = MongoClient()
     // db = client.retail
     // with client.start_session(snapshot=True) as s:
@@ -1342,6 +1348,36 @@ static void snapshot_example2(mongocxx::client& client) {
     //      { $count: "totalDailySales" }
     //   ], session=s
     //   ).next()["totalDailySales"]
+
+    pipeline p;
+
+    // array gt_array;
+    // gt_array.append("$saleDate");
+    // gt_array.append(make_document(kvp("$dateSubtract", make_document(kvp("startDate", "$$NOW"),
+    // kvp("unit", "day"), kvp("amount", 1)))));
+    // auto gt_array = make_array(
+    //    "$saleDate",
+    //    make_document(
+    //        kvp("$dateSubtract",
+    //            make_document(kvp("startDate", "$$NOW"), kvp("unit", "day"), kvp("amount", 1)))));
+
+    auto gt_array = bsoncxx::builder::basic::array{};
+    gt_array.append("$saleDate");
+    gt_array.append(make_document(
+        kvp("$dateSubtract",
+            make_document(kvp("startDate", "$$NOW"), kvp("unit", "day"), kvp("amount", 1)))));
+
+    auto gt_expr = kvp("$gt", gt_array);
+    auto full_expr = kvp("$expr", gt_expr);
+
+    p.match(make_document(full_expr)).count("totalDailySales");
+    // auto cursor = db["sales"].aggregate(session, p);
+
+    // int64_t total_daily_sales = 0;
+    // for (auto doc : cursor) {
+    //    total_daily_sales += doc.find("totalDailySales")->get_int32();
+    //    std::cout << "SALES: " << total_daily_sales << std::endl;
+    //}
 
     // End Snapshot Query Example 2
 }
