@@ -1196,7 +1196,7 @@ void delete_examples(mongocxx::database db) {
     }
 }
 
-static bool check_for_snapshot(mongocxx::client& client, mongocxx::collection& collection) {
+static bool is_snapshot_ready(mongocxx::client& client, mongocxx::collection& collection) {
     auto opts = mongocxx::options::client_session{};
     opts.snapshot(true);
 
@@ -1237,17 +1237,11 @@ static void snapshot_examples(mongocxx::client& client) {
         std::cerr << "SEEDING PETS" << std::endl;
         seed_pets(db);
 
-        bool ok = true;
-        do {
-            std::cerr << "CHECKING FOR SNAPSHOT" << std::endl;
-            auto cats = db["cats"];
-            ok = ok && check_for_snapshot(client, cats);
-            auto dogs = db["dogs"];
-            ok = ok && check_for_snapshot(client, dogs);
-            if (!ok) {
-                std::this_thread::sleep_for(std::chrono::seconds(1));
-            }
-        } while (!ok);
+        auto cats = db["cats"];
+        auto dogs = db["dogs"];
+        while (!is_snapshot_ready(client, cats) && !is_snapshot_ready(client, dogs)) {
+            std::this_thread::sleep_for(std::chrono::seconds(5));
+        }
     }
 
     // Start Snapshot Query Example 1
