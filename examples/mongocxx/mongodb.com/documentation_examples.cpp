@@ -1239,8 +1239,9 @@ static void snapshot_examples(mongocxx::client& client) {
 
         auto cats = db["cats"];
         auto dogs = db["dogs"];
+        size_t sleep_time = 1;
         while (!is_snapshot_ready(client, cats) && !is_snapshot_ready(client, dogs)) {
-            std::this_thread::sleep_for(std::chrono::seconds(5));
+            std::this_thread::sleep_for(std::chrono::seconds(sleep_time++));
         }
     }
 
