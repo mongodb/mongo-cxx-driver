@@ -12,7 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <chrono>
 #include <iostream>
+#include <thread>
 #include <vector>
 
 #include <bsoncxx/builder/basic/array.hpp>
@@ -1242,6 +1244,9 @@ static void snapshot_examples(mongocxx::client& client) {
             ok = ok && check_for_snapshot(client, cats);
             auto dogs = db["dogs"];
             ok = ok && check_for_snapshot(client, dogs);
+            if (!ok) {
+                std::this_thread::sleep_for(std::chrono::seconds(1));
+            }
         } while (!ok);
     }
 
