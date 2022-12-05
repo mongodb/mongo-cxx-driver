@@ -1290,11 +1290,12 @@ static void snapshot_example1(mongocxx::client& client) {
         }
     }
 
+    // End Snapshot Query Example 1
+
     if (adoptable_pets_count != 2) {
         throw std::logic_error("wrong number of adoptable pets in example 59, expecting 2 got: " +
                                std::to_string(adoptable_pets_count));
     }
-    // End Snapshot Query Example 1
 }
 
 static void setup_retail(mongocxx::client& client) {
@@ -1304,6 +1305,7 @@ static void setup_retail(mongocxx::client& client) {
     using std::chrono::system_clock;
 
     auto db = client["retail"];
+    db.drop();
     b_date sales_date{system_clock::now()};
     db["sales"].insert_one(
         make_document(kvp("shoeType", "boot"), kvp("price", 30), kvp("saleDate", sales_date)));
@@ -1325,73 +1327,26 @@ static void snapshot_example2(mongocxx::client& client) {
 
     auto db = client["retail"];
 
-    // auto gt_array = bsoncxx::builder::basic::array{};
-    // gt_array.append("$saleDate");
-    // gt_array.append(make_document(
-    //    kvp("$dateSubtract",
-    //        make_document(kvp("startDate", "$$NOW"), kvp("unit", "day"), kvp("amount", 1)))));
-
-    // array gt_array;
-    // gt_array.append("$saleDate");
-    // gt_array.append(make_document(kvp("$dateSubtract", make_document(kvp("startDate", "$$NOW"),
-    // kvp("unit", "day"), kvp("amount", 1)))));
-
-    // client = MongoClient()
-    // db = client.retail
-    // with client.start_session(snapshot=True) as s:
-    //   total = db.sales.aggregate( [
-    //      {
-    //         $match: {
-    //            $expr: {
-    //               $gt: [
-    //                  "$saleDate",
-    //                  {
-    //                     $dateSubtract: {
-    //                        startDate: "$$NOW",
-    //                        unit: "day",
-    //                        amount: 1
-    //                     }
-    //                  }
-    //               ]
-    //             }
-    //          }
-    //      },
-    //      { $count: "totalDailySales" }
-    //   ], session=s
-    //   ).next()["totalDailySales"]
-
-    // pipeline p;
-
-    // auto gt_array = make_array(
-    //   "$saleDate",
-    //   make_document(
-    //       kvp("$dateSubtract",
-    //           make_document(kvp("startDate", "$$NOW"), kvp("unit", "day"), kvp("amount", 1)))));
-
-    // auto gt_expr = kvp("$gt", gt_array);
-    // auto full_expr = kvp("$expr", gt_expr);
-    // auto doc = make_document(full_expr);
-
     pipeline p;
 
-    auto doc = make_document(kvp(
-        "$expr",
-        make_document(kvp(
-            "$gt",
-            make_array(
-                "$salesDate",
-                make_document(kvp("startDate", "$$NOW"), kvp("unit", "day"), kvp("amount", 1)))))));
+    p.match(make_document(kvp("$expr",
+                              make_document(kvp("$gt",
+                                                make_array("$saleDate",
+                                                           make_document(kvp("startDate", "$$NOW"),
+                                                                         kvp("unit", "day"),
+                                                                         kvp("amount", 1))))))))
+        .count("totalDailySales");
 
-    p.match(std::move(doc)).count("totalDailySales");
-    // auto cursor = db["sales"].aggregate(session, p);
+    auto cursor = db["sales"].aggregate(session, p);
 
-    // int64_t total_daily_sales = 0;
-    // for (auto doc : cursor) {
-    //    total_daily_sales += doc.find("totalDailySales")->get_int32();
-    //    std::cout << "SALES: " << total_daily_sales << std::endl;
-    //}
+    auto doc = *cursor.begin();
+    auto total_daily_sales = doc.find("totalDailySales")->get_int32();
 
     // End Snapshot Query Example 2
+    if (total_daily_sales != 1) {
+        throw std::logic_error("wrong number of total sales in example 60, expecting 1 got: " +
+                               std::to_string(total_daily_sales));
+    }
 }
 
 static bool version_at_least(mongocxx::v_noabi::database& db, int minimum_major) {
