@@ -1315,7 +1315,7 @@ static void setup_retail(mongocxx::client& client) {
 static void snapshot_example2(mongocxx::client& client) {
     setup_retail(client);
 
-    // Start Snapshot Query Example 1
+    // Start Snapshot Query Example 2
     using namespace mongocxx;
     using bsoncxx::builder::basic::kvp;
     using bsoncxx::builder::basic::make_array;
