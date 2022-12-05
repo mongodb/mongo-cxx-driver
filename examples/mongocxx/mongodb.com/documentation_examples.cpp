@@ -1325,6 +1325,17 @@ static void snapshot_example2(mongocxx::client& client) {
 
     auto db = client["retail"];
 
+    // auto gt_array = bsoncxx::builder::basic::array{};
+    // gt_array.append("$saleDate");
+    // gt_array.append(make_document(
+    //    kvp("$dateSubtract",
+    //        make_document(kvp("startDate", "$$NOW"), kvp("unit", "day"), kvp("amount", 1)))));
+
+    // array gt_array;
+    // gt_array.append("$saleDate");
+    // gt_array.append(make_document(kvp("$dateSubtract", make_document(kvp("startDate", "$$NOW"),
+    // kvp("unit", "day"), kvp("amount", 1)))));
+
     // client = MongoClient()
     // db = client.retail
     // with client.start_session(snapshot=True) as s:
@@ -1349,28 +1360,29 @@ static void snapshot_example2(mongocxx::client& client) {
     //   ], session=s
     //   ).next()["totalDailySales"]
 
+    // pipeline p;
+
+    // auto gt_array = make_array(
+    //   "$saleDate",
+    //   make_document(
+    //       kvp("$dateSubtract",
+    //           make_document(kvp("startDate", "$$NOW"), kvp("unit", "day"), kvp("amount", 1)))));
+
+    // auto gt_expr = kvp("$gt", gt_array);
+    // auto full_expr = kvp("$expr", gt_expr);
+    // auto doc = make_document(full_expr);
+
     pipeline p;
 
-    // array gt_array;
-    // gt_array.append("$saleDate");
-    // gt_array.append(make_document(kvp("$dateSubtract", make_document(kvp("startDate", "$$NOW"),
-    // kvp("unit", "day"), kvp("amount", 1)))));
-    // auto gt_array = make_array(
-    //    "$saleDate",
-    //    make_document(
-    //        kvp("$dateSubtract",
-    //            make_document(kvp("startDate", "$$NOW"), kvp("unit", "day"), kvp("amount", 1)))));
+    auto doc = make_document(kvp(
+        "$expr",
+        make_document(kvp(
+            "$gt",
+            make_array(
+                "$salesDate",
+                make_document(kvp("startDate", "$$NOW"), kvp("unit", "day"), kvp("amount", 1)))))));
 
-    auto gt_array = bsoncxx::builder::basic::array{};
-    gt_array.append("$saleDate");
-    gt_array.append(make_document(
-        kvp("$dateSubtract",
-            make_document(kvp("startDate", "$$NOW"), kvp("unit", "day"), kvp("amount", 1)))));
-
-    auto gt_expr = kvp("$gt", gt_array);
-    auto full_expr = kvp("$expr", gt_expr);
-
-    p.match(make_document(full_expr)).count("totalDailySales");
+    p.match(std::move(doc)).count("totalDailySales");
     // auto cursor = db["sales"].aggregate(session, p);
 
     // int64_t total_daily_sales = 0;
