@@ -1273,6 +1273,18 @@ document::value operation_runner::_create_index(const document::view& operation)
     return _coll->create_index(*session, keys, opts.extract());
 }
 
+document::value operation_runner::_run_create_collection(document::view operation) {
+    bsoncxx::document::value empty_document({});
+    auto collection_name = operation["arguments"]["collection"].get_string().value;
+    auto session = _lookup_session(operation["arguments"].get_document().value);
+    if (session) {
+        _db->create_collection(*session, collection_name);
+    } else {
+        _db->create_collection(collection_name);
+    }
+    return empty_document;
+}
+
 operation_runner::operation_runner(collection* coll) : operation_runner(nullptr, coll) {}
 operation_runner::operation_runner(database* db,
                                    collection* coll,
@@ -1392,12 +1404,7 @@ document::value operation_runner::run(document::view operation) {
 
         return empty_document;
     } else if (key.compare("createCollection") == 0) {
-        auto collection_name = operation["arguments"]["collection"].get_string().value;
-        auto session = _lookup_session(operation["arguments"].get_document().value);
-        REQUIRE(session);
-
-        _db->create_collection(*session, collection_name);
-        return empty_document;
+        return _run_create_collection(operation);
     } else if (key.compare("assertCollectionNotExists") == 0) {
         auto collection_name = operation["arguments"]["collection"].get_string().value;
         client client{uri{}};
