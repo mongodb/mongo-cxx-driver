@@ -1293,8 +1293,9 @@ static void snapshot_example1(mongocxx::client& client) {
     // End Snapshot Query Example 1
 
     if (adoptable_pets_count != 2) {
-        throw std::logic_error("wrong number of adoptable pets in Snapshot Query Example 1, expecting 2 got: " +
-                               std::to_string(adoptable_pets_count));
+        throw std::logic_error(
+            "wrong number of adoptable pets in Snapshot Query Example 1, expecting 2 got: " +
+            std::to_string(adoptable_pets_count));
     }
 }
 

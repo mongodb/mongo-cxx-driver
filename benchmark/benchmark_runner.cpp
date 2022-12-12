@@ -14,8 +14,6 @@
 
 #include "benchmark_runner.hpp"
 
-#include <bsoncxx/stdx/make_unique.hpp>
-
 #include "bson/bson_encoding.hpp"
 #include "multi_doc/bulk_insert.hpp"
 #include "multi_doc/find_many.hpp"
@@ -28,6 +26,7 @@
 #include "single_doc/find_one_by_id.hpp"
 #include "single_doc/insert_one.hpp"
 #include "single_doc/run_command.hpp"
+#include <bsoncxx/stdx/make_unique.hpp>
 
 namespace benchmark {
 
