@@ -229,7 +229,16 @@ class MONGOCXX_API auto_encryption {
     ///
     auto_encryption& schema_map(bsoncxx::document::view_or_value schema_map);
 
-    /// @brief TODO
+    ///
+    /// Gets the schema map.
+    ///
+    /// @return
+    ///   An optional document containing the schema map.
+    ///
+    const stdx::optional<bsoncxx::document::view_or_value>& schema_map() const;
+
+    ///
+    /// TODO
     /// @param encrypted_fields_map 
     /// @return 
     ///   A reference to this object to facilitate method chaining.
@@ -238,13 +247,12 @@ class MONGOCXX_API auto_encryption {
     ///
     auto_encryption& encrypted_fields_map(bsoncxx::document::view_or_value encrypted_fields_map);
 
+    /// 
+    /// Get encrypted fields map
     ///
-    /// Gets the schema map.
-    ///
-    /// @return
-    ///   An optional document containing the schema map.
-    ///
-    const stdx::optional<bsoncxx::document::view_or_value>& schema_map() const;
+    /// @return 
+    ///   An optional document containing the encrypted fields map
+    const stdx::optional<bsoncxx::document::view_or_value>& encrypted_fields_map() const;
 
     ///
     /// Automatic encryption is disabled when the 'bypassAutoEncryption'
