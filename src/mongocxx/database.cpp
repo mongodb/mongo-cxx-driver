@@ -282,9 +282,8 @@ collection database::_create_collection(const client_session* session,
     }
 
     libbson::scoped_bson_t opts_bson{options_builder.view()};
-    auto str_name = bsoncxx::string::to_string(name);
     auto result = libmongoc::database_create_collection(
-        _get_impl().database_t, str_name.c_str(), opts_bson.bson(), &error);
+        _get_impl().database_t, bsoncxx::string::to_string(name).c_str(), opts_bson.bson(), &error);
 
     if (!result) {
         throw_exception<operation_exception>(error);
