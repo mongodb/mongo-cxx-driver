@@ -156,6 +156,11 @@ void* auto_encryption::convert() const {
         libmongoc::auto_encryption_opts_set_schema_map(mongoc_auto_encrypt_opts, schema_map.bson());
     }
 
+    if (_encrypted_fields_map) {
+        scoped_bson_t encrypted_fields_map{*_encrypted_fields_map};
+        libmongoc::auto_encryption_opts_set_encrypted_fields_map(mongoc_auto_encrypt_opts, encrypted_fields_map.bson());
+    }
+
     if (_bypass) {
         libmongoc::auto_encryption_opts_set_bypass_auto_encryption(mongoc_auto_encrypt_opts, true);
     }
