@@ -52,6 +52,7 @@ void add_auto_encryption_opts(document::view test, options::client* client_opts)
     using std::string;
 
     if (test["clientOptions"]["autoEncryptOpts"]) {
+        std::cout << "AUTO ENCRYPT OPTS: " << bsoncxx::to_json(test["clientOptions"]["autoEncryptOpts"].get_document().value) << std::endl;
         auto test_encrypt_opts = test["clientOptions"]["autoEncryptOpts"].get_document().value;
 
         options::auto_encryption auto_encrypt_opts{};
@@ -75,6 +76,10 @@ void add_auto_encryption_opts(document::view test, options::client* client_opts)
 
         if (test_encrypt_opts["schemaMap"]) {
             auto_encrypt_opts.schema_map(test_encrypt_opts["schemaMap"].get_document().value);
+        }
+
+        if (test_encrypt_opts["encryptedFieldsMap"]) {
+            auto_encrypt_opts.encrypted_fields_map(test_encrypt_opts["encryptedFieldsMap"].get_document().value);
         }
 
         if (const auto providers = test_encrypt_opts["kmsProviders"]) {

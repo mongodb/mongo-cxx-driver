@@ -282,10 +282,6 @@ collection database::_create_collection(const client_session* session,
     }
 
     libbson::scoped_bson_t opts_bson{options_builder.view()};
-    /*
-     * BUG:
-     * Spec tests require the encrypted collection name ends with '.esc'
-     */
     auto str_name = bsoncxx::string::to_string(name);
     auto result = libmongoc::database_create_collection(
         _get_impl().database_t, str_name.c_str(), opts_bson.bson(), &error);
@@ -294,7 +290,6 @@ collection database::_create_collection(const client_session* session,
         throw_exception<operation_exception>(error);
     }
 
-    std::cerr << "FINISHED CREATING COLLECTION: " << str_name << std::endl;
     return mongocxx::collection(*this, result);
 }
 

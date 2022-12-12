@@ -1278,22 +1278,25 @@ document::value operation_runner::_run_create_collection(document::view operatio
     using bsoncxx::builder::basic::kvp;
 
     bsoncxx::document::value empty_document({});
-    auto collection_name = operation["arguments"]["collection"].get_string().value;
-    std::cerr << "CREATED COLLECTION NAME: " << collection_name << std::endl;
-    std::cerr << "OPERATION: " << bsoncxx::to_json(operation) << std::endl;
-    auto encrypted_fields = operation["arguments"]["encryptedFields"].get_document().value;
-    auto encrypted_fields_map = make_document(kvp("encryptedFields", encrypted_fields));
-    std::cerr << "ARGUMENTS: " << bsoncxx::to_json(encrypted_fields_map) << std::endl;
-    auto session = _lookup_session(operation["arguments"].get_document().value);
+
+    auto arguments = operation["arguments"].get_document().value;
+    auto collection_name = arguments["collection"].get_string().value;
+    std::cerr << "CREATING COLLECTION NAME: " << collection_name << std::endl;
+    std::cerr << "GOT encrypted_fields" << std::endl;
+    auto session = _lookup_session(arguments);
+    std::cerr << "GOT session" << std::endl;
     if (session) {
+        std::cerr << "HERE 1" << std::endl;
         _db->create_collection(*session, collection_name);
+    } else if (arguments.find("encryptedFields") != arguments.end()) {
+        std::cerr << "HERE 2" << std::endl;
+        auto encrypted_fields = arguments["encryptedFields"].get_document().value;
+        auto encrypted_fields_map = make_document(kvp("encryptedFields", encrypted_fields));
+        _db->create_collection(collection_name, std::move(encrypted_fields_map));
     } else {
-        try {
-            _db->create_collection(collection_name, std::move(encrypted_fields_map));
-        } catch (std::exception& e) {
-            std::cerr << "EXCEPTION: " << e.what() << std::endl;
-            throw;
-        }
+        std::cerr << "HERE 3" << std::endl;
+        //_db->create_collection(collection_name, arguments);
+        _db->create_collection(collection_name);
     }
     return empty_document;
 }
@@ -1307,8 +1310,13 @@ operation_runner::operation_runner(database* db,
     : _coll(coll), _db(db), _session0(session0), _session1(session1), _client(client) {}
 
 document::value operation_runner::run(document::view operation) {
+    static int i = 0;
+    std::cout << "\n\ni = " << i++ << "\n\n" << std::endl;
     using namespace bsoncxx::builder::basic;
+
     bsoncxx::document::value empty_document({});
+
+    std::cerr << "OPERATION: " << bsoncxx::to_json(operation) << std::endl;
 
     stdx::string_view key = operation["name"].get_string().value;
     stdx::string_view object;
@@ -1426,10 +1434,10 @@ document::value operation_runner::run(document::view operation) {
     } else if (key.compare("assertCollectionExists") == 0) {
         auto collection_name = operation["arguments"]["collection"].get_string().value;
         client client{uri{}};
-        std::cerr << "REQUIRING COLLECTION NAME: " << "'" << collection_name << "'" << std::endl;
         REQUIRE(client[_db->name()].has_collection(collection_name));
         return empty_document;
     } else if (key.compare("createIndex") == 0) {
+        std::cerr << "CREATING INDEX: " << bsoncxx::to_json(operation) << std::endl;
         return _create_index(operation);
     } else if (key.compare("assertIndexNotExists") == 0) {
         client client{uri{}};
@@ -1448,6 +1456,7 @@ document::value operation_runner::run(document::view operation) {
         client client{uri{}};
         auto cursor = client[_db->name()][_coll->name()].list_indexes();
 
+        std::cerr << "REQUIRING INDEX ON: " << "'" << _db->name() << "." << _coll->name() << "'" << std::endl;
         REQUIRE(cursor.end() !=
                 std::find_if(cursor.begin(),
                              cursor.end(),

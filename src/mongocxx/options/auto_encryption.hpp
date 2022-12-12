@@ -229,6 +229,15 @@ class MONGOCXX_API auto_encryption {
     ///
     auto_encryption& schema_map(bsoncxx::document::view_or_value schema_map);
 
+    /// @brief TODO
+    /// @param encrypted_fields_map 
+    /// @return 
+    ///   A reference to this object to facilitate method chaining.
+    ///
+    /// @see https://docs.mongodb.com/manual/core/security-client-side-encryption/
+    ///
+    auto_encryption& encrypted_fields_map(bsoncxx::document::view_or_value encrypted_fields_map);
+
     ///
     /// Gets the schema map.
     ///
@@ -304,6 +313,7 @@ class MONGOCXX_API auto_encryption {
     stdx::optional<bsoncxx::document::view_or_value> _kms_providers;
     stdx::optional<bsoncxx::document::view_or_value> _tls_opts;
     stdx::optional<bsoncxx::document::view_or_value> _schema_map;
+    stdx::optional<bsoncxx::document::view_or_value> _encrypted_fields_map;
     stdx::optional<bsoncxx::document::view_or_value> _extra_options;
 };
 

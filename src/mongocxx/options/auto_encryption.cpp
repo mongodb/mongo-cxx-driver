@@ -80,6 +80,11 @@ auto_encryption& auto_encryption::schema_map(bsoncxx::document::view_or_value sc
     return *this;
 }
 
+auto_encryption& auto_encryption::encrypted_fields_map(bsoncxx::document::view_or_value encrypted_fields_map) {
+    _encrypted_fields_map = std::move(encrypted_fields_map);
+    return *this;
+}
+
 const stdx::optional<bsoncxx::document::view_or_value>& auto_encryption::schema_map() const {
     return _schema_map;
 }
