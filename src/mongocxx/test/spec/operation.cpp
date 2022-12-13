@@ -1274,8 +1274,8 @@ document::value operation_runner::_create_index(const document::view& operation)
 }
 
 document::value operation_runner::_run_create_collection(document::view operation) {
-    using bsoncxx::builder::basic::make_document;
     using bsoncxx::builder::basic::kvp;
+    using bsoncxx::builder::basic::make_document;
 
     bsoncxx::document::value empty_document({});
 
@@ -1298,8 +1298,8 @@ document::value operation_runner::_run_create_collection(document::view operatio
 }
 
 document::value operation_runner::_run_drop_collection(document::view operation) {
-    using bsoncxx::builder::basic::make_document;
     using bsoncxx::builder::basic::kvp;
+    using bsoncxx::builder::basic::make_document;
 
     bsoncxx::document::value empty_document({});
 
