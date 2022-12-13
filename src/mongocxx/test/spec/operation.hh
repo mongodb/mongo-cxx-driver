@@ -59,6 +59,7 @@ class operation_runner {
     document::value _run_aggregate(document::view operation);
     document::value _run_count(document::view operation);
     document::value _run_create_collection(document::view operation);
+    document::value _run_drop_collection(document::view operation);
     document::value _run_distinct(document::view operation);
     document::value _run_find(document::view operation);
     document::value _run_delete_many(document::view operation);

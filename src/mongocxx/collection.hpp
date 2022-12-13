@@ -722,6 +722,7 @@ class MONGOCXX_API collection {
     void drop(const client_session& session,
               const bsoncxx::stdx::optional<mongocxx::write_concern>& write_concern = {});
 
+    void drop(bsoncxx::document::view_or_value collection_options);
     ///
     /// @}
     ///
