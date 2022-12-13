@@ -1312,6 +1312,9 @@ void collection::drop(const client_session& session,
     return _drop(&session, wc);
 }
 
+// TODO: This was needed to get FLE 2 spec tests to pass.
+//     Should we allow users to specify options, or should there be a specialized
+//     drop for specifying encrypted fields?
 void collection::drop(bsoncxx::document::view_or_value collection_options) {
     bson_error_t error;
 
