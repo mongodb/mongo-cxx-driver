@@ -12,7 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <chrono>
 #include <iostream>
+#include <thread>
 #include <vector>
 
 #include <bsoncxx/builder/basic/array.hpp>
@@ -22,6 +24,7 @@
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/types.hpp>
 #include <mongocxx/client.hpp>
+#include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/find.hpp>
 #include <mongocxx/uri.hpp>
@@ -52,6 +55,19 @@ void check_has_field(const T& document, const char* field, int example_no) {
 template <typename T>
 void check_has_no_field(const T& document, const char* field, int example_no) {
     check_field(document, field, false, example_no);
+}
+
+static bsoncxx::document::value get_is_master(const mongocxx::client& client) {
+    using bsoncxx::builder::basic::kvp;
+    using bsoncxx::builder::basic::make_document;
+
+    static auto reply = client["admin"].run_command(make_document(kvp("isMaster", 1)));
+    return reply;
+}
+
+static bool is_replica_set(const mongocxx::client& client) {
+    auto reply = get_is_master(client);
+    return static_cast<bool>(reply.view()["setName"]);
 }
 
 void insert_examples(mongocxx::database db) {
@@ -1180,6 +1196,178 @@ void delete_examples(mongocxx::database db) {
     }
 }
 
+static bool is_snapshot_ready(mongocxx::client& client, mongocxx::collection& collection) {
+    auto opts = mongocxx::options::client_session{};
+    opts.snapshot(true);
+
+    auto session = client.start_session(opts);
+    try {
+        auto cursor = collection.aggregate(session, {});
+        for (const auto& it : cursor) {
+            (void)it;
+            break;
+        }
+    } catch (const mongocxx::operation_exception& e) {
+        if (e.code().value() == 246) {  // snapshot unavailable
+            return false;
+        }
+        throw;
+    }
+    return true;
+}
+
+// Seed the pets database and wait for the snapshot to become available.
+// This follows the pattern from the Python driver as seen below:
+// https://github.com/mongodb/mongo-python-driver/commit/e325b24b78e431cb889c5902d00b8f4af2c700c3#diff-c5d782e261f04fca18024ab18c3ed38fb45ede24cde4f9092e012f6fcbbe0df5R1368
+static void wait_for_snapshot_ready(mongocxx::client& client,
+                                    std::vector<mongocxx::collection> collections) {
+    size_t sleep_time = 1;
+
+    for (;;) {
+        bool is_ready = true;
+        for (auto& collection : collections) {
+            if (!is_snapshot_ready(client, collection)) {
+                is_ready = false;
+                break;  // inner
+            }
+        }
+        if (is_ready) {
+            break;  // outer
+        } else {
+            std::this_thread::sleep_for(std::chrono::seconds(sleep_time++));
+        }
+    }
+}
+
+static void setup_pets(mongocxx::client& client) {
+    using namespace mongocxx;
+    using bsoncxx::builder::basic::kvp;
+    using bsoncxx::builder::basic::make_document;
+
+    auto db = client["pets"];
+    db.drop();
+    db["cats"].insert_one(make_document(kvp("adoptable", true)));
+    db["dogs"].insert_one(make_document(kvp("adoptable", true)));
+    db["dogs"].insert_one(make_document(kvp("adoptable", false)));
+    wait_for_snapshot_ready(client, {db["cats"], db["dogs"]});
+}
+
+static void snapshot_example1(mongocxx::client& client) {
+    setup_pets(client);
+
+    // Start Snapshot Query Example 1
+    using namespace mongocxx;
+    using bsoncxx::builder::basic::kvp;
+    using bsoncxx::builder::basic::make_document;
+
+    auto db = client["pets"];
+
+    int64_t adoptable_pets_count = 0;
+
+    auto opts = mongocxx::options::client_session{};
+    opts.snapshot(true);
+    auto session = client.start_session(opts);
+
+    {
+        pipeline p;
+
+        p.match(make_document(kvp("adoptable", true))).count("adoptableCatsCount");
+        auto cursor = db["cats"].aggregate(session, p);
+
+        for (auto doc : cursor) {
+            adoptable_pets_count += doc.find("adoptableCatsCount")->get_int32();
+        }
+    }
+
+    {
+        pipeline p;
+
+        p.match(make_document(kvp("adoptable", true))).count("adoptableDogsCount");
+        auto cursor = db["dogs"].aggregate(session, p);
+
+        for (auto doc : cursor) {
+            adoptable_pets_count += doc.find("adoptableDogsCount")->get_int32();
+        }
+    }
+
+    // End Snapshot Query Example 1
+
+    if (adoptable_pets_count != 2) {
+        throw std::logic_error(
+            "wrong number of adoptable pets in Snapshot Query Example 1, expecting 2 got: " +
+            std::to_string(adoptable_pets_count));
+    }
+}
+
+static void setup_retail(mongocxx::client& client) {
+    using bsoncxx::builder::basic::kvp;
+    using bsoncxx::builder::basic::make_document;
+    using bsoncxx::types::b_date;
+    using std::chrono::system_clock;
+
+    auto db = client["retail"];
+    db.drop();
+    b_date sales_date{system_clock::now()};
+    db["sales"].insert_one(
+        make_document(kvp("shoeType", "boot"), kvp("price", 30), kvp("saleDate", sales_date)));
+    wait_for_snapshot_ready(client, {db["sales"]});
+}
+
+static void snapshot_example2(mongocxx::client& client) {
+    setup_retail(client);
+
+    // Start Snapshot Query Example 2
+    using namespace mongocxx;
+    using bsoncxx::builder::basic::kvp;
+    using bsoncxx::builder::basic::make_array;
+    using bsoncxx::builder::basic::make_document;
+
+    auto opts = mongocxx::options::client_session{};
+    opts.snapshot(true);
+    auto session = client.start_session(opts);
+
+    auto db = client["retail"];
+
+    pipeline p;
+
+    p.match(make_document(kvp("$expr",
+                              make_document(kvp("$gt",
+                                                make_array("$saleDate",
+                                                           make_document(kvp("startDate", "$$NOW"),
+                                                                         kvp("unit", "day"),
+                                                                         kvp("amount", 1))))))))
+        .count("totalDailySales");
+
+    auto cursor = db["sales"].aggregate(session, p);
+
+    auto doc = *cursor.begin();
+    auto total_daily_sales = doc.find("totalDailySales")->get_int32();
+
+    // End Snapshot Query Example 2
+    if (total_daily_sales != 1) {
+        throw std::logic_error("wrong number of total sales in example 60, expecting 1 got: " +
+                               std::to_string(total_daily_sales));
+    }
+}
+
+static bool version_at_least(mongocxx::v_noabi::database& db, int minimum_major) {
+    using bsoncxx::builder::basic::kvp;
+    using bsoncxx::builder::basic::make_document;
+
+    auto resp = db.run_command(make_document(kvp("buildInfo", 1)));
+    auto version = resp.find("version")->get_string().value;
+    std::string major_string;
+    for (auto i : version) {
+        if (i == '.') {
+            break;
+        }
+        major_string += i;
+    }
+    int server_major = std::stoi(major_string);
+
+    return server_major >= minimum_major;
+}
+
 int main() {
     // The mongocxx::instance constructor and destructor initialize and shut down the driver,
     // respectively. Therefore, a mongocxx::instance must be created before using the driver and
@@ -1199,6 +1387,10 @@ int main() {
         projection_examples(db);
         update_examples(db);
         delete_examples(db);
+        if (is_replica_set(conn) && version_at_least(db, 5)) {
+            snapshot_example1(conn);
+            snapshot_example2(conn);
+        }
     } catch (const std::logic_error& e) {
         std::cerr << e.what() << std::endl;
         return EXIT_FAILURE;
