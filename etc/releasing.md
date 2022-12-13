@@ -6,9 +6,9 @@ If doing a release on a version prior to 3.5.0, follow the old instructions from
 Ensure the latest commit has run tests on the Evergreen waterfall.
 
 For a minor release this should be the waterfall tracking the master branch:
-https://evergreen.mongodb.com/waterfall/cxx-driver
+https://evergreen.mongodb.com/waterfall/cxx-driver (requires auth)
 For a patch release this is the waterfall tracking that branch. E.g. if you are releasing 3.7.1, then the waterfall tracking releases/v3.7:
-https://spruce.mongodb.com/commits/cxx-driver-v3.7
+https://spruce.mongodb.com/commits/cxx-driver-v3.7 (requires auth)
 
 If there are test failures, ensure they are at least expected or not introduced by changes in the new release.
 
