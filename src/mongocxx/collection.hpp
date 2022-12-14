@@ -722,7 +722,23 @@ class MONGOCXX_API collection {
     void drop(const client_session& session,
               const bsoncxx::stdx::optional<mongocxx::write_concern>& write_concern = {});
 
+    ///
+    /// Drops this collection and all its contained documents from the database.
+    ///
+    /// @param collection_options
+    ///   the options for the dropped collection.
+    ///
+    /// @exception
+    ///   mongocxx::operation_exception if the operation fails.
+    ///
+    /// @see
+    ///   https://docs.mongodb.com/manual/reference/command/drop/
+    ///
+    /// @note
+    ///   Needed for FLE 2 Support.
+    ///
     void drop(bsoncxx::document::view_or_value collection_options);
+
     ///
     /// @}
     ///

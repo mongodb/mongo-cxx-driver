@@ -1283,14 +1283,12 @@ document::value operation_runner::_run_create_collection(document::view operatio
     auto collection_name = arguments["collection"].get_string().value;
     auto session = _lookup_session(arguments);
 
-    std::cerr << "CREATE COLLECTION: " << bsoncxx::to_json(operation) << std::endl;
     if (session) {
         _db->create_collection(*session, collection_name);
     } else if (arguments.find("encryptedFields") != arguments.end()) {
         auto encrypted_fields = arguments["encryptedFields"].get_document().value;
         auto encrypted_fields_map = make_document(kvp("encryptedFields", encrypted_fields));
         _db->create_collection(collection_name, std::move(encrypted_fields_map));
-        std::cerr << "CREATED COLLECTION WITH ENCRYPTED FIELDS" << std::endl;
     } else {
         _db->create_collection(collection_name);
     }
@@ -1305,14 +1303,12 @@ document::value operation_runner::_run_drop_collection(document::view operation)
 
     auto arguments = operation["arguments"].get_document().value;
 
-    std::cerr << "DROP COLLECTION: " << bsoncxx::to_json(operation) << std::endl;
     auto collection_name = operation["arguments"]["collection"].get_string().value;
 
     if (arguments.find("encryptedFields") != arguments.end()) {
         auto encrypted_fields = arguments["encryptedFields"].get_document().value;
         auto encrypted_fields_map = make_document(kvp("encryptedFields", encrypted_fields));
         _db->collection(collection_name).drop(std::move(encrypted_fields_map));
-        std::cerr << "CREATED COLLECTION WITH ENCRYPTED FIELDS" << std::endl;
     } else {
         _db->collection(collection_name).drop();
     }
