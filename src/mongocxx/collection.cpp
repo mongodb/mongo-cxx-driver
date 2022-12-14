@@ -1278,7 +1278,8 @@ cursor collection::list_indexes(const client_session& session) const {
 }
 
 void collection::_drop(const client_session* session,
-                       const stdx::optional<mongocxx::write_concern>& wc) {
+                       const stdx::optional<mongocxx::write_concern>& wc,
+                       bsoncxx::document::view_or_value collection_options) {
     bson_error_t error;
 
     bsoncxx::builder::basic::document opts_doc;
@@ -1288,6 +1289,10 @@ void collection::_drop(const client_session* session,
 
     if (session) {
         opts_doc.append(bsoncxx::builder::concatenate_doc{session->_get_impl().to_document()});
+    }
+
+    if (!collection_options.view().empty()) {
+        opts_doc.append(bsoncxx::builder::concatenate_doc{collection_options});
     }
 
     scoped_bson_t opts_bson{opts_doc.view()};
@@ -1304,35 +1309,22 @@ void collection::_drop(const client_session* session,
 }
 
 void collection::drop(const stdx::optional<mongocxx::write_concern>& wc) {
-    return _drop(nullptr, wc);
+    return _drop(nullptr, wc, {});
 }
 
 void collection::drop(const client_session& session,
                       const stdx::optional<mongocxx::write_concern>& wc) {
-    return _drop(&session, wc);
+    return _drop(&session, wc, {});
 }
 
-// TODO: This was needed to get FLE 2 spec tests to pass.
-//     Should we allow users to specify options, or should there be a specialized
-//     drop for specifying encrypted fields?
+// From the spec:
+// https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/client-side-encryption.rst#user-facing-api
+// > Drivers MUST support a BSON document option named encryptedFields for any
+// > drop command helpers (e.g. Database.dropCollection(), Collection.drop()).
+// > This option will only be interpreted by the helper method and MUST NOT be
+// > passed to the drop command.
 void collection::drop(bsoncxx::document::view_or_value collection_options) {
-    bson_error_t error;
-
-    bsoncxx::builder::basic::document opts_doc;
-
-    opts_doc.append(bsoncxx::builder::concatenate_doc{collection_options});
-
-    scoped_bson_t opts_bson{opts_doc.view()};
-    auto result =
-        libmongoc::collection_drop_with_opts(_get_impl().collection_t, opts_bson.bson(), &error);
-
-    // Throw an exception if the command failed, unless the failure was due to a non-existent
-    // collection. We check for this failure using 'code', but we fall back to checking 'message'
-    // for old server versions (3.0 and earlier) that do not send a code with the command response.
-    if (!result && !(error.code == ::MONGOC_ERROR_COLLECTION_DOES_NOT_EXIST ||
-                     stdx::string_view{error.message} == stdx::string_view{"ns not found"})) {
-        throw_exception<operation_exception>(error);
-    }
+    return _drop(nullptr, {}, collection_options);
 }
 
 void collection::read_concern(class read_concern rc) {
