@@ -1325,7 +1325,6 @@ operation_runner::operation_runner(database* db,
 
 document::value operation_runner::run(document::view operation) {
     using namespace bsoncxx::builder::basic;
-
     bsoncxx::document::value empty_document({});
 
     stdx::string_view key = operation["name"].get_string().value;
