@@ -1324,7 +1324,8 @@ void collection::drop(const client_session& session,
 // > This option will only be interpreted by the helper method and MUST NOT be
 // > passed to the drop command.
 void collection::drop(bsoncxx::document::view_or_value collection_options) {
-    return _drop(nullptr, stdx::nullopt, collection_options);
+    (void)collection_options;
+    //return _drop(nullptr, stdx::nullopt, collection_options);
 }
 
 void collection::read_concern(class read_concern rc) {
