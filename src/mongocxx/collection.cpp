@@ -1324,24 +1324,7 @@ void collection::drop(const client_session& session,
 // > This option will only be interpreted by the helper method and MUST NOT be
 // > passed to the drop command.
 void collection::drop(bsoncxx::document::view_or_value collection_options) {
-    bsoncxx::builder::basic::document opts_doc;
-    bson_error_t error;
-
-    if (!collection_options.view().empty()) {
-        opts_doc.append(bsoncxx::builder::concatenate_doc{collection_options});
-    }
-
-    scoped_bson_t opts_bson{opts_doc.view()};
-    auto result =
-        libmongoc::collection_drop_with_opts(_get_impl().collection_t, opts_bson.bson(), &error);
-
-    // Throw an exception if the command failed, unless the failure was due to a non-existent
-    // collection. We check for this failure using 'code', but we fall back to checking 'message'
-    // for old server versions (3.0 and earlier) that do not send a code with the command response.
-    if (!result && !(error.code == ::MONGOC_ERROR_COLLECTION_DOES_NOT_EXIST ||
-                     stdx::string_view{error.message} == stdx::string_view{"ns not found"})) {
-        throw_exception<operation_exception>(error);
-    }
+    return _drop(nullptr, {}, collection_options);
 }
 
 void collection::read_concern(class read_concern rc) {
