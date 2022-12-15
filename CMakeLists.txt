@@ -40,6 +40,8 @@ else()
   message(WARNING "Unknown compiler... recklessly proceeding without a version check")
 endif()
 
+message ("CMAKE_SYSTEM_PROCESSOR is: " ${CMAKE_SYSTEM_PROCESSOR})
+
 # All of our target compilers support the deprecated
 # attribute. Normally, we would just let the GenerateExportHeader
 # subsystem do this via configure check, but there appears to be a
