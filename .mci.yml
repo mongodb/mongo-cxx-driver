@@ -214,12 +214,10 @@ functions:
                 set -o errexit
                 set -o pipefail
                 cd drivers-evergreen-tools/.evergreen/orchestration
-                if [ -f venv/bin/activate ]; then
-                    . venv/bin/activate
-                elif [ -f venv/Scripts/activate ]; then
-                    . venv/Scripts/activate
+                . ../venv-utils.sh
+                if venvactivate venv; then
+                  mongo-orchestration stop
                 fi
-                mongo-orchestration stop
 
     "install_c_driver":
       - command: expansions.update
