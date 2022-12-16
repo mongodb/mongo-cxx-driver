@@ -346,21 +346,14 @@ functions:
                   fi
                   export CMAKE=${cmake}
 
-                  if [ "x$(lsb_release -cs)" = "xtrusty" -a -f /opt/mongodbtoolchain/v2/bin/python ]; then
-                      /opt/mongodbtoolchain/v2/bin/python -m virtualenv venv
-                  elif ! python -m virtualenv venv 2>/dev/null; then
-                      /opt/mongodbtoolchain/v3/bin/python3 -m venv venv
+                  if [ ! -d ../drivers-evergreen-tools ]; then
+                    git clone --depth 1 git@github.com:mongodb-labs/drivers-evergreen-tools.git ../drivers-evergreen-tools
                   fi
+                  . ../drivers-evergreen-tools/.evergreen/find-python3.sh
+                  . ../drivers-evergreen-tools/.evergreen/venv-utils.sh
 
-                  cd venv
-                  if [ -f bin/activate ]; then
-                      . bin/activate
-                      ./bin/pip install GitPython
-                  elif [ -f Scripts/activate ]; then
-                      . Scripts/activate
-                      ./Scripts/pip install GitPython
-                  fi
-                  cd ..
+                  venvcreate "$(find_python3)" venv
+                  python -m pip install GitPython
 
                   export GENERATOR="${generator}"
 
