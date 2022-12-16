@@ -462,14 +462,8 @@ functions:
                         exit 1
                       fi
 
-                      if [ "Windows_NT" == "$OS" ]; then
-                          export MONGOCXX_TEST_CSFLE_TLS_CA_FILE=$DRIVERS_TOOLS\.evergreen\x509gen\ca.pem
-                          export MONGOCXX_TEST_CSFLE_TLS_CERTIFICATE_KEY_FILE=$DRIVERS_TOOLS\.evergreen\x509gen\client.pem
-                      else
-                          export MONGOCXX_TEST_CSFLE_TLS_CA_FILE=$DRIVERS_TOOLS/.evergreen/x509gen/ca.pem
-                          export MONGOCXX_TEST_CSFLE_TLS_CERTIFICATE_KEY_FILE=$DRIVERS_TOOLS/.evergreen/x509gen/client.pem
-                      fi
-
+                      export MONGOCXX_TEST_CSFLE_TLS_CA_FILE=$DRIVERS_TOOLS/.evergreen/x509gen/ca.pem
+                      export MONGOCXX_TEST_CSFLE_TLS_CERTIFICATE_KEY_FILE=$DRIVERS_TOOLS/.evergreen/x509gen/client.pem
                       export MONGOCXX_TEST_AWS_TEMP_ACCESS_KEY_ID="$CSFLE_AWS_TEMP_ACCESS_KEY_ID"
                       export MONGOCXX_TEST_AWS_TEMP_SECRET_ACCESS_KEY="$CSFLE_AWS_TEMP_SECRET_ACCESS_KEY"
                       export MONGOCXX_TEST_AWS_TEMP_SESSION_TOKEN="$CSFLE_AWS_TEMP_SESSION_TOKEN"
