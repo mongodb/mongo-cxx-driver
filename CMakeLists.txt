@@ -40,10 +40,6 @@ else()
   message(WARNING "Unknown compiler... recklessly proceeding without a version check")
 endif()
 
-if(CMAKE_SYSTEM_PROCESSOR STREQUAL "ppc64le")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-maybe-uninitialized")
-endif()
-
 # All of our target compilers support the deprecated
 # attribute. Normally, we would just let the GenerateExportHeader
 # subsystem do this via configure check, but there appears to be a
@@ -56,6 +52,10 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
   set(COMPILER_HAS_DEPRECATED true)
 else()
   set(COMPILER_HAS_DEPRECATED_ATTR true)
+endif()
+
+if(CMAKE_SYSTEM_PROCESSOR STREQUAL "ppc64le")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-error=-maybe-uninitialized")
 endif()
 
 set (CMAKE_SKIP_BUILD_RPATH false)
