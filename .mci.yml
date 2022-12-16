@@ -296,8 +296,18 @@ functions:
             # parallel do not race to setup a venv environment; it has already been prepared.
             # This primarily addresses the situation where the "test" and "run_kms_servers"
             # functions invoke 'activate-kmstlsvenv.sh' simultaneously.
-            . ./activate-kmstlsvenv.sh
-            deactivate
+            if [[ "$OSTYPE" =~ cygwin && ! -d kmstlsvenv ]]; then
+                # Avoid using Python 3.10 on Windows due to incompatible cipher suites.
+                # See CXX-2628.
+                . ../venv-utils.sh
+                venvcreate "C:/python/Python39/python.exe" kmstlsvenv || # windows-2017
+                venvcreate "C:/python/Python38/python.exe" kmstlsvenv    # windows-2015
+                python -m pip install --upgrade boto3~=1.19 pykmip~=0.10.0
+                deactivate
+            else
+                . ./activate-kmstlsvenv.sh
+                deactivate
+            fi
             echo "Preparing CSFLE venv environment... done."
       - command: shell.exec
         params:
