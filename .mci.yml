@@ -124,7 +124,7 @@ functions:
             shell: bash
             script: |
                 if [ ! -d "drivers-evergreen-tools" ]; then
-                    git clone git@github.com:eramongodb/drivers-evergreen-tools.git --depth 1 --branch det-scripts
+                    git clone git@github.com:mongodb-labs/drivers-evergreen-tools.git
                 fi
                 cd drivers-evergreen-tools
                 export DRIVERS_TOOLS=$(pwd)
@@ -177,7 +177,7 @@ functions:
                 set -o errexit
                 set -o pipefail
                 if [ ! -d "drivers-evergreen-tools" ]; then
-                    git clone git@github.com:eramongodb/drivers-evergreen-tools.git --depth 1 --branch det-scripts
+                    git clone git@github.com:mongodb-labs/drivers-evergreen-tools.git
                 fi
                 cd drivers-evergreen-tools
                 export DRIVERS_TOOLS=$(pwd)
@@ -280,7 +280,7 @@ functions:
           script: |-
             set -o errexit
             if [ ! -d "drivers-evergreen-tools" ]; then
-                git clone git@github.com:eramongodb/drivers-evergreen-tools.git --depth 1 --branch det-scripts
+                git clone git@github.com:mongodb-labs/drivers-evergreen-tools.git --depth=1
             fi
 
     "run_kms_servers":
@@ -345,7 +345,7 @@ functions:
                   export CMAKE=${cmake}
 
                   if [ ! -d ../drivers-evergreen-tools ]; then
-                    git clone git@github.com:eramongodb/drivers-evergreen-tools.git ../drivers-evergreen-tools --depth 1 --branch det-scripts
+                    git clone --depth 1 git@github.com:mongodb-labs/drivers-evergreen-tools.git ../drivers-evergreen-tools
                   fi
                   . ../drivers-evergreen-tools/.evergreen/find-python3.sh
                   . ../drivers-evergreen-tools/.evergreen/venv-utils.sh
