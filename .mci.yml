@@ -451,7 +451,7 @@ functions:
                         exit 1
                       fi
 
-                      if [ "Windows_NT" == "$OS"]; then
+                      if [ "Windows_NT" == "$OS" ]; then
                           export MONGOCXX_TEST_CSFLE_TLS_CA_FILE=$DRIVERS_TOOLS\.evergreen\x509gen\ca.pem
                           export MONGOCXX_TEST_CSFLE_TLS_CERTIFICATE_KEY_FILE=$DRIVERS_TOOLS\.evergreen\x509gen\client.pem
                       else
