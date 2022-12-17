@@ -213,10 +213,11 @@ functions:
             script: |
                 set -o errexit
                 set -o pipefail
-                cd drivers-evergreen-tools/.evergreen/orchestration
-                . ../venv-utils.sh
-                if venvactivate venv; then
-                  mongo-orchestration stop
+                if cd drivers-evergreen-tools/.evergreen/orchestration; then
+                  . ../venv-utils.sh
+                  if venvactivate venv; then
+                    mongo-orchestration stop
+                  fi
                 fi
 
     "install_c_driver":
