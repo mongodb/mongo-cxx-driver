@@ -1308,23 +1308,15 @@ void collection::_drop(const client_session* session,
     }
 }
 
-void collection::drop(const stdx::optional<mongocxx::write_concern>& wc) {
-    return _drop(nullptr, wc, {});
+void collection::drop(const stdx::optional<mongocxx::write_concern>& wc,
+                      bsoncxx::document::view_or_value collection_options) {
+    return _drop(nullptr, wc, collection_options);
 }
 
 void collection::drop(const client_session& session,
-                      const stdx::optional<mongocxx::write_concern>& wc) {
-    return _drop(&session, wc, {});
-}
-
-// From the spec:
-// https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/client-side-encryption.rst#user-facing-api
-// > Drivers MUST support a BSON document option named encryptedFields for any
-// > drop command helpers (e.g. Database.dropCollection(), Collection.drop()).
-// > This option will only be interpreted by the helper method and MUST NOT be
-// > passed to the drop command.
-void collection::drop(bsoncxx::document::view_or_value collection_options) {
-    return _drop(nullptr, {}, collection_options);
+                      const stdx::optional<mongocxx::write_concern>& wc,
+                      bsoncxx::document::view_or_value collection_options) {
+    return _drop(&session, wc, collection_options);
 }
 
 void collection::read_concern(class read_concern rc) {

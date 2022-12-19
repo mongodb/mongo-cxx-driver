@@ -1309,7 +1309,7 @@ document::value operation_runner::_run_drop_collection(document::view operation)
     if (arguments.find("encryptedFields") != arguments.end()) {
         auto encrypted_fields = arguments["encryptedFields"].get_document().value;
         auto encrypted_fields_map = make_document(kvp("encryptedFields", encrypted_fields));
-        _db->collection(collection_name).drop(std::move(encrypted_fields_map));
+        _db->collection(collection_name).drop(stdx::nullopt, std::move(encrypted_fields_map));
     } else {
         _db->collection(collection_name).drop();
     }
