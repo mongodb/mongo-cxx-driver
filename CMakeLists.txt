@@ -54,10 +54,6 @@ else()
   set(COMPILER_HAS_DEPRECATED_ATTR true)
 endif()
 
-if(CMAKE_SYSTEM_PROCESSOR STREQUAL "ppc64le")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-error=maybe-uninitialized")
-endif()
-
 set (CMAKE_SKIP_BUILD_RPATH false)
 set (CMAKE_BUILD_WITH_INSTALL_RPATH false)
 set (CMAKE_INSTALL_RPATH_USE_LINK_PATH true)

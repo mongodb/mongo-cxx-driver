@@ -52,6 +52,7 @@ variables:
         msvc2017_cmake_flags: &msvc2017_cmake_flags -DCMAKE_CXX_STANDARD=17 -DCMAKE_CXX_FLAGS="/Zc:__cplusplus /EHsc"
         msvc2017_generator: &msvc2017_generator Visual Studio 15 2017 Win64
         code_coverage_cmake_flags: &code_coverage_cmake_flags -DENABLE_CODE_COVERAGE=ON
+        power8_cmake_flags: &power8_cmake_flags -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-missing-field-initializers $ignore_deprecated" -DCMAKE_CXX_FLAGS="-Wall -Wextra -Wconversion -Wnarrowing -Wno-expansion-to-defined -pedantic -Werror -Wno-missing-field-initializers -Wno-aligned-new $ignore_deprecated -Wno-error=maybe-uninitialized"
 
     example_projects_cc:
         asan_cc_path: &asan_cc_path /usr/bin/clang
@@ -1537,7 +1538,7 @@ buildvariants:
       expansions:
           build_type: "Release"
           tar_options: *linux_tar_options
-          cmake_flags: *linux_cmake_flags
+          cmake_flags: *power8_cmake_flags
           mongodb_version: *version_latest
           cmake: "cmake"
           lib_dir: "lib64"
@@ -1556,7 +1557,7 @@ buildvariants:
       expansions:
           build_type: "Release"
           tar_options: *linux_tar_options
-          cmake_flags: *linux_cmake_flags
+          cmake_flags: *power8_cmake_flags
           mongodb_version: *version_50
           cmake: "cmake"
           lib_dir: "lib64"
