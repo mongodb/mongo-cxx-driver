@@ -1282,15 +1282,16 @@ document::value operation_runner::_run_create_collection(document::view operatio
     auto arguments = operation["arguments"].get_document().value;
     auto collection_name = arguments["collection"].get_string().value;
     auto session = _lookup_session(arguments);
+    bsoncxx::builder::basic::document opts;
+
+    if (arguments["encryptedFields"]) {
+        opts.append(kvp("encryptedFields", arguments["encryptedFields"].get_document().value));
+    }
 
     if (session) {
-        _db->create_collection(*session, collection_name);
-    } else if (arguments.find("encryptedFields") != arguments.end()) {
-        auto encrypted_fields = arguments["encryptedFields"].get_document().value;
-        auto encrypted_fields_map = make_document(kvp("encryptedFields", encrypted_fields));
-        _db->create_collection(collection_name, std::move(encrypted_fields_map));
+        _db->create_collection(*session, collection_name, opts.extract());
     } else {
-        _db->create_collection(collection_name);
+        _db->create_collection(collection_name, opts.extract());
     }
     return empty_document;
 }
