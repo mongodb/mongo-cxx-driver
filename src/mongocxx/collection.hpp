@@ -733,6 +733,7 @@ class MONGOCXX_API collection {
     ///
     /// @see
     ///   https://docs.mongodb.com/manual/reference/command/drop/
+    ///   https://mongoc.org/libmongoc/current/mongoc_collection_drop_with_opts.html
     ///
     /// @note
     ///   Needed for Queryable Encryption Support.
