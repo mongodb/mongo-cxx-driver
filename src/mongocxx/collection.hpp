@@ -735,7 +735,7 @@ class MONGOCXX_API collection {
     ///   https://docs.mongodb.com/manual/reference/command/drop/
     ///
     /// @note
-    ///   Needed for FLE 2 Support.
+    ///   Needed for Queryable Encryption Support.
     ///
     void drop(bsoncxx::document::view_or_value collection_options);
 
