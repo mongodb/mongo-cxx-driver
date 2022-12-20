@@ -286,6 +286,9 @@ class MONGOCXX_API auto_encryption {
     ///
     bool bypass_auto_encryption() const;
 
+    auto_encryption& bypass_query_analysis(bool should_bypass);
+    bool bypass_query_analysis() const;
+
     ///
     /// Set extra options related to the mongocryptd process. This options
     /// document may include the following fields:
@@ -325,6 +328,7 @@ class MONGOCXX_API auto_encryption {
     MONGOCXX_PRIVATE void* convert() const;
 
     bool _bypass;
+    bool _bypass_query_analysis;
     stdx::optional<mongocxx::client*> _key_vault_client;
     stdx::optional<mongocxx::pool*> _key_vault_pool;
     stdx::optional<ns_pair> _key_vault_namespace;

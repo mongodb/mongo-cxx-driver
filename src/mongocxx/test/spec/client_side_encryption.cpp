@@ -47,7 +47,8 @@ void _set_up_key_vault(const client& client, document::view test_spec_view) {
     }
 }
 
-void add_auto_encryption_opts(document::view test, options::client* client_opts) {
+void add_auto_encryption_opts(document::view test,
+                              options::client* client_opts) {
     using std::getenv;
     using std::string;
 
@@ -59,6 +60,11 @@ void add_auto_encryption_opts(document::view test, options::client* client_opts)
         if (test_encrypt_opts["bypassAutoEncryption"]) {
             auto_encrypt_opts.bypass_auto_encryption(
                 test_encrypt_opts["bypassAutoEncryption"].get_bool().value);
+        }
+
+        if (test_encrypt_opts["bypassQueryAnalysis"]) {
+            auto_encrypt_opts.bypass_query_analysis(
+                test_encrypt_opts["bypassQueryAnalysis"].get_bool().value);
         }
 
         if (test_encrypt_opts["keyVaultNamespace"]) {
