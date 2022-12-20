@@ -77,6 +77,11 @@ void add_auto_encryption_opts(document::view test, options::client* client_opts)
             auto_encrypt_opts.schema_map(test_encrypt_opts["schemaMap"].get_document().value);
         }
 
+        if (test_encrypt_opts["encryptedFieldsMap"]) {
+            auto_encrypt_opts.encrypted_fields_map(
+                test_encrypt_opts["encryptedFieldsMap"].get_document().value);
+        }
+
         if (const auto providers = test_encrypt_opts["kmsProviders"]) {
             using bsoncxx::builder::basic::kvp;
             using bsoncxx::builder::basic::sub_document;

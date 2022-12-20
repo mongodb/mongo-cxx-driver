@@ -699,7 +699,8 @@ class MONGOCXX_API collection {
     /// @note
     ///   Write concern supported only for MongoDB 3.4+.
     ///
-    void drop(const bsoncxx::stdx::optional<mongocxx::write_concern>& write_concern = {});
+    void drop(const bsoncxx::stdx::optional<mongocxx::write_concern>& write_concern = {},
+              bsoncxx::document::view_or_value collection_options = {});
 
     ///
     /// Drops this collection and all its contained documents from the database.
@@ -720,7 +721,8 @@ class MONGOCXX_API collection {
     ///   Write concern supported only for MongoDB 3.4+.
     ///
     void drop(const client_session& session,
-              const bsoncxx::stdx::optional<mongocxx::write_concern>& write_concern = {});
+              const bsoncxx::stdx::optional<mongocxx::write_concern>& write_concern = {},
+              bsoncxx::document::view_or_value collection_options = {});
 
     ///
     /// @}
@@ -1889,7 +1891,8 @@ class MONGOCXX_API collection {
 
     MONGOCXX_PRIVATE void _drop(
         const client_session* session,
-        const bsoncxx::stdx::optional<mongocxx::write_concern>& write_concern);
+        const bsoncxx::stdx::optional<mongocxx::write_concern>& write_concern,
+        bsoncxx::document::view_or_value collection_options);
 
     MONGOCXX_PRIVATE cursor _find(const client_session* session,
                                   bsoncxx::document::view_or_value filter,

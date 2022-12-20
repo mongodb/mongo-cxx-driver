@@ -1273,6 +1273,49 @@ document::value operation_runner::_create_index(const document::view& operation)
     return _coll->create_index(*session, keys, opts.extract());
 }
 
+document::value operation_runner::_run_create_collection(document::view operation) {
+    using bsoncxx::builder::basic::kvp;
+    using bsoncxx::builder::basic::make_document;
+
+    bsoncxx::document::value empty_document({});
+
+    auto arguments = operation["arguments"].get_document().value;
+    auto collection_name = arguments["collection"].get_string().value;
+    auto session = _lookup_session(arguments);
+    bsoncxx::builder::basic::document opts;
+
+    if (arguments["encryptedFields"]) {
+        opts.append(kvp("encryptedFields", arguments["encryptedFields"].get_document().value));
+    }
+
+    if (session) {
+        _db->create_collection(*session, collection_name, opts.extract());
+    } else {
+        _db->create_collection(collection_name, opts.extract());
+    }
+    return empty_document;
+}
+
+document::value operation_runner::_run_drop_collection(document::view operation) {
+    using bsoncxx::builder::basic::kvp;
+    using bsoncxx::builder::basic::make_document;
+
+    bsoncxx::document::value empty_document({});
+
+    auto arguments = operation["arguments"].get_document().value;
+
+    auto collection_name = operation["arguments"]["collection"].get_string().value;
+
+    if (arguments.find("encryptedFields") != arguments.end()) {
+        auto encrypted_fields = arguments["encryptedFields"].get_document().value;
+        auto encrypted_fields_map = make_document(kvp("encryptedFields", encrypted_fields));
+        _db->collection(collection_name).drop(stdx::nullopt, std::move(encrypted_fields_map));
+    } else {
+        _db->collection(collection_name).drop();
+    }
+    return empty_document;
+}
+
 operation_runner::operation_runner(collection* coll) : operation_runner(nullptr, coll) {}
 operation_runner::operation_runner(database* db,
                                    collection* coll,
@@ -1365,9 +1408,7 @@ document::value operation_runner::run(document::view operation) {
         _coll->drop();
         return empty_document;
     } else if (key.compare("dropCollection") == 0) {
-        auto collection_name = operation["arguments"]["collection"].get_string().value;
-        _db->collection(collection_name).drop();
-        return empty_document;
+        return _run_drop_collection(operation);
     } else if (key.compare("listCollectionNames") == 0) {
         _db->list_collection_names();
         return empty_document;
@@ -1392,12 +1433,7 @@ document::value operation_runner::run(document::view operation) {
 
         return empty_document;
     } else if (key.compare("createCollection") == 0) {
-        auto collection_name = operation["arguments"]["collection"].get_string().value;
-        auto session = _lookup_session(operation["arguments"].get_document().value);
-        REQUIRE(session);
-
-        _db->create_collection(*session, collection_name);
-        return empty_document;
+        return _run_create_collection(operation);
     } else if (key.compare("assertCollectionNotExists") == 0) {
         auto collection_name = operation["arguments"]["collection"].get_string().value;
         client client{uri{}};
@@ -1425,7 +1461,9 @@ document::value operation_runner::run(document::view operation) {
         return empty_document;
     } else if (key.compare("assertIndexExists") == 0) {
         client client{uri{}};
-        auto cursor = client[_db->name()][_coll->name()].list_indexes();
+        auto db = operation["arguments"]["database"].get_string().value;
+        auto collection = operation["arguments"]["collection"].get_string().value;
+        auto cursor = client[db][collection].list_indexes();
 
         REQUIRE(cursor.end() !=
                 std::find_if(cursor.begin(),

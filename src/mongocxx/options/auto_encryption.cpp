@@ -84,6 +84,17 @@ const stdx::optional<bsoncxx::document::view_or_value>& auto_encryption::schema_
     return _schema_map;
 }
 
+auto_encryption& auto_encryption::encrypted_fields_map(
+    bsoncxx::document::view_or_value encrypted_fields_map) {
+    _encrypted_fields_map = std::move(encrypted_fields_map);
+    return *this;
+}
+
+const stdx::optional<bsoncxx::document::view_or_value>& auto_encryption::encrypted_fields_map()
+    const {
+    return _encrypted_fields_map;
+}
+
 auto_encryption& auto_encryption::bypass_auto_encryption(bool should_bypass) {
     _bypass = should_bypass;
     return *this;
@@ -145,6 +156,12 @@ void* auto_encryption::convert() const {
     if (_schema_map) {
         scoped_bson_t schema_map{*_schema_map};
         libmongoc::auto_encryption_opts_set_schema_map(mongoc_auto_encrypt_opts, schema_map.bson());
+    }
+
+    if (_encrypted_fields_map) {
+        scoped_bson_t encrypted_fields_map{*_encrypted_fields_map};
+        libmongoc::auto_encryption_opts_set_encrypted_fields_map(mongoc_auto_encrypt_opts,
+                                                                 encrypted_fields_map.bson());
     }
 
     if (_bypass) {

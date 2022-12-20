@@ -238,6 +238,33 @@ class MONGOCXX_API auto_encryption {
     const stdx::optional<bsoncxx::document::view_or_value>& schema_map() const;
 
     ///
+    /// Sets the local encrypted fields map.
+    ///
+    /// Supplying an encryptedFieldsMap provides more security than relying on
+    /// an encryptedFields obtained from the server. It protects against a
+    /// malicious server advertising a false encryptedFields.
+    ///
+    /// @param encrypted_fields_map 
+    ///   The mapping of which fields to encrypt.
+    ///
+    /// @see https://docs.mongodb.com/manual/core/security-client-side-encryption/
+    ///
+    /// @return 
+    ///   A reference to this object to facilitate method chaining.
+    ///
+    /// @see https://docs.mongodb.com/manual/core/security-client-side-encryption/
+    ///
+    auto_encryption& encrypted_fields_map(bsoncxx::document::view_or_value encrypted_fields_map);
+
+    /// 
+    /// Get encrypted fields map
+    ///
+    /// @return 
+    ///   An optional document containing the encrypted fields map
+    ///
+    const stdx::optional<bsoncxx::document::view_or_value>& encrypted_fields_map() const;
+
+    ///
     /// Automatic encryption is disabled when the 'bypassAutoEncryption'
     /// option is true. Default is 'false,' so auto encryption is enabled.
     ///
@@ -304,6 +331,7 @@ class MONGOCXX_API auto_encryption {
     stdx::optional<bsoncxx::document::view_or_value> _kms_providers;
     stdx::optional<bsoncxx::document::view_or_value> _tls_opts;
     stdx::optional<bsoncxx::document::view_or_value> _schema_map;
+    stdx::optional<bsoncxx::document::view_or_value> _encrypted_fields_map;
     stdx::optional<bsoncxx::document::view_or_value> _extra_options;
 };
 

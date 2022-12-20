@@ -1278,7 +1278,8 @@ cursor collection::list_indexes(const client_session& session) const {
 }
 
 void collection::_drop(const client_session* session,
-                       const stdx::optional<mongocxx::write_concern>& wc) {
+                       const stdx::optional<mongocxx::write_concern>& wc,
+                       bsoncxx::document::view_or_value collection_options) {
     bson_error_t error;
 
     bsoncxx::builder::basic::document opts_doc;
@@ -1288,6 +1289,10 @@ void collection::_drop(const client_session* session,
 
     if (session) {
         opts_doc.append(bsoncxx::builder::concatenate_doc{session->_get_impl().to_document()});
+    }
+
+    if (!collection_options.view().empty()) {
+        opts_doc.append(bsoncxx::builder::concatenate_doc{collection_options});
     }
 
     scoped_bson_t opts_bson{opts_doc.view()};
@@ -1303,13 +1308,15 @@ void collection::_drop(const client_session* session,
     }
 }
 
-void collection::drop(const stdx::optional<mongocxx::write_concern>& wc) {
-    return _drop(nullptr, wc);
+void collection::drop(const stdx::optional<mongocxx::write_concern>& wc,
+                      bsoncxx::document::view_or_value collection_options) {
+    return _drop(nullptr, wc, collection_options);
 }
 
 void collection::drop(const client_session& session,
-                      const stdx::optional<mongocxx::write_concern>& wc) {
-    return _drop(&session, wc);
+                      const stdx::optional<mongocxx::write_concern>& wc,
+                      bsoncxx::document::view_or_value collection_options) {
+    return _drop(&session, wc, collection_options);
 }
 
 void collection::read_concern(class read_concern rc) {

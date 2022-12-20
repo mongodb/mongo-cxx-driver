@@ -16,6 +16,7 @@ find.json
 findOneAndDelete.json
 findOneAndReplace.json
 findOneAndUpdate.json
+fle2-CreateCollection.json
 gcpKMS.json
 getMore.json
 insert.json
