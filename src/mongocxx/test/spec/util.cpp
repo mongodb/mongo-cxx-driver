@@ -222,15 +222,15 @@ void set_up_collection(const client& client,
     auto db = client[test[database_name].get_string().value];
     db.drop();
 
-    auto coll_name = test[collection_name].get_string().value;
-    auto coll = db[coll_name];
-
-    coll.drop(wc_majority);
-
     bsoncxx::builder::basic::document opts;
     if (test["encrypted_fields"]) {
         opts.append(kvp("encryptedFields", test["encrypted_fields"].get_document().value));
     }
+
+    auto coll_name = test[collection_name].get_string().value;
+    auto coll = db[coll_name];
+
+    coll.drop(wc_majority, opts.extract());
 
     coll = db.create_collection(coll_name, opts.extract(), wc_majority);
 
