@@ -14,8 +14,6 @@
 
 #include <functional>
 #include <vector>
-#include <thread>
-#include <chrono>
 
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/json.hpp>

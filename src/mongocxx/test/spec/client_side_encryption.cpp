@@ -47,8 +47,7 @@ void _set_up_key_vault(const client& client, document::view test_spec_view) {
     }
 }
 
-void add_auto_encryption_opts(document::view test,
-                              options::client* client_opts) {
+void add_auto_encryption_opts(document::view test, options::client* client_opts) {
     using std::getenv;
     using std::string;
 

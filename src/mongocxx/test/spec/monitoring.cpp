@@ -125,8 +125,6 @@ void apm_checker::compare(bsoncxx::array::view expectations,
     for (auto expectation : expectations) {
         auto expected = expectation.get_document().view();
         REQUIRE(events_iter != _events.end());
-        std::cerr << "EXPECTED: " << bsoncxx::to_json(expected) << std::endl;
-        std::cerr << "ACTUAL: " << bsoncxx::to_json(*events_iter) << std::endl;
         REQUIRE_BSON_MATCHES_V(*events_iter, expected, match_visitor);
         events_iter++;
     }

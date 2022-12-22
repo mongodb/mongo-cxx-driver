@@ -223,7 +223,6 @@ void set_up_collection(const client& client,
     db.drop();
 
     bsoncxx::builder::basic::document opts;
-    bsoncxx::builder::basic::document opts2;
     if (test["encrypted_fields"]) {
         opts.append(kvp("encryptedFields", test["encrypted_fields"].get_document().value));
     }
