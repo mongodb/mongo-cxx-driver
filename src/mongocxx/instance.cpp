@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include <atomic>
+#include <sstream>
 #include <type_traits>
 #include <utility>
 
@@ -90,7 +91,10 @@ class instance::impl {
         } else {
             libmongoc::log_set_handler(null_log_handler, nullptr);
         }
-        libmongoc::handshake_data_append("mongocxx", MONGOCXX_VERSION_STRING, NULL);
+        std::stringstream platform;
+        platform << "CXX=" << MONGOCXX_COMPILER_ID << " " << MONGOCXX_COMPILER_VERSION << " / ";
+        libmongoc::handshake_data_append(
+            "mongocxx", MONGOCXX_VERSION_STRING, platform.str().c_str());
     }
 
     ~impl() {

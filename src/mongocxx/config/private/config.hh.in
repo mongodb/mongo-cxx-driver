@@ -13,3 +13,5 @@
 // limitations under the License.
 
 #cmakedefine MONGOCXX_ENABLE_SSL
+#cmakedefine MONGOCXX_COMPILER_ID "${MONGOCXX_COMPILER_ID}"
+#cmakedefine MONGOCXX_COMPILER_VERSION "${MONGOCXX_COMPILER_VERSION}"
