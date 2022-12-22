@@ -231,7 +231,6 @@ void set_up_collection(const client& client,
     auto coll = db[coll_name];
 
     coll.drop(wc_majority, opts.view());
-
     coll = db.create_collection(coll_name, opts.view(), wc_majority);
 
     // Set up JSON schema, if we have one
