@@ -91,6 +91,10 @@ class instance::impl {
         } else {
             libmongoc::log_set_handler(null_log_handler, nullptr);
         }
+
+        // Despite the name, mongoc_handshake_data_append *prepends* the platform string.
+        // mongoc_handshake_data_append does not add a delimitter, so include the " / " in the
+        // argument for consistency with the driver_name, and driver_version.
         std::stringstream platform;
         platform << "CXX=" << MONGOCXX_COMPILER_ID << " " << MONGOCXX_COMPILER_VERSION << " / ";
         libmongoc::handshake_data_append(
