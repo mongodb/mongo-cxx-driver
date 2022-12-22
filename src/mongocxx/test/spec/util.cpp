@@ -226,17 +226,14 @@ void set_up_collection(const client& client,
     bsoncxx::builder::basic::document opts2;
     if (test["encrypted_fields"]) {
         opts.append(kvp("encryptedFields", test["encrypted_fields"].get_document().value));
-        opts2.append(kvp("encryptedFields", test["encrypted_fields"].get_document().value));
     }
-
-    auto extracted = opts.extract();
 
     auto coll_name = test[collection_name].get_string().value;
     auto coll = db[coll_name];
 
     coll.drop(wc_majority, opts.view());
 
-    coll = db.create_collection(coll_name, opts2.view(), wc_majority);
+    coll = db.create_collection(coll_name, opts.view(), wc_majority);
 
     // Set up JSON schema, if we have one
     if (test["json_schema"]) {
