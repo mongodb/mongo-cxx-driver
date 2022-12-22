@@ -26,8 +26,6 @@
 
 #include <mongocxx/config/private/prelude.hh>
 
-#include <bsoncxx/json.hpp>
-
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace spec {
