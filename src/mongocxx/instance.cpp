@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include <atomic>
+#include <sstream>
 #include <type_traits>
 #include <utility>
 
@@ -90,7 +91,22 @@ class instance::impl {
         } else {
             libmongoc::log_set_handler(null_log_handler, nullptr);
         }
-        libmongoc::handshake_data_append("mongocxx", MONGOCXX_VERSION_STRING, NULL);
+
+        // Despite the name, mongoc_handshake_data_append *prepends* the platform string.
+        // mongoc_handshake_data_append does not add a delimitter, so include the " / " in the
+        // argument for consistency with the driver_name, and driver_version.
+        std::stringstream platform;
+        long stdcxx = __cplusplus;
+#ifdef _MSVC_LANG
+        // Prefer _MSVC_LANG to report the supported C++ standard with MSVC.
+        // The __cplusplus macro may be incorrect. See:
+        // https://devblogs.microsoft.com/cppblog/msvc-now-correctly-reports-__cplusplus/
+        stdcxx = _MSVC_LANG;
+#endif
+        platform << "CXX=" << MONGOCXX_COMPILER_ID << " " << MONGOCXX_COMPILER_VERSION << " "
+                 << "stdcxx=" << stdcxx << " / ";
+        libmongoc::handshake_data_append(
+            "mongocxx", MONGOCXX_VERSION_STRING, platform.str().c_str());
     }
 
     ~impl() {
