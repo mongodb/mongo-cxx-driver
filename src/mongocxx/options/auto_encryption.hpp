@@ -244,22 +244,22 @@ class MONGOCXX_API auto_encryption {
     /// an encryptedFields obtained from the server. It protects against a
     /// malicious server advertising a false encryptedFields.
     ///
-    /// @param encrypted_fields_map 
+    /// @param encrypted_fields_map
     ///   The mapping of which fields to encrypt.
     ///
     /// @see https://docs.mongodb.com/manual/core/security-client-side-encryption/
     ///
-    /// @return 
+    /// @return
     ///   A reference to this object to facilitate method chaining.
     ///
     /// @see https://docs.mongodb.com/manual/core/security-client-side-encryption/
     ///
     auto_encryption& encrypted_fields_map(bsoncxx::document::view_or_value encrypted_fields_map);
 
-    /// 
+    ///
     /// Get encrypted fields map
     ///
-    /// @return 
+    /// @return
     ///   An optional document containing the encrypted fields map
     ///
     const stdx::optional<bsoncxx::document::view_or_value>& encrypted_fields_map() const;
