@@ -96,7 +96,8 @@ class instance::impl {
         // mongoc_handshake_data_append does not add a delimitter, so include the " / " in the
         // argument for consistency with the driver_name, and driver_version.
         std::stringstream platform;
-        platform << "CXX=" << MONGOCXX_COMPILER_ID << " " << MONGOCXX_COMPILER_VERSION << " / ";
+        platform << "CXX=" << MONGOCXX_COMPILER_ID << " " << MONGOCXX_COMPILER_VERSION << " "
+                 << "stdcxx=" << __cplusplus << " / ";
         libmongoc::handshake_data_append(
             "mongocxx", MONGOCXX_VERSION_STRING, platform.str().c_str());
     }
