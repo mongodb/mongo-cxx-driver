@@ -291,7 +291,7 @@ class MONGOCXX_API auto_encryption {
     /// option is true. Default is 'false' (i.e. query analysis is enabled).
     ///
     /// @param should_bypass
-    ///   Whether or not to bypass automatic encryption.
+    ///   Whether or not to bypass query analysis.
     ///
     /// @return
     ///   A reference to this object to facilitate method chaining.
