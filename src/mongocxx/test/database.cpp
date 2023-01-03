@@ -421,8 +421,6 @@ TEST_CASE("Database integration tests", "[database]") {
     }
 
     SECTION("read_concern is inherited from parent", "[database]") {
-        stdx::string_view collection_name{"collection_read_concern"};
-
         read_concern::level majority = read_concern::level::k_majority;
         read_concern::level local = read_concern::level::k_local;
 
