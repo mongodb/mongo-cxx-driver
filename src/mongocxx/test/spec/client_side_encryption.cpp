@@ -61,9 +61,8 @@ void add_auto_encryption_opts(document::view test, options::client* client_opts)
                 test_encrypt_opts["bypassAutoEncryption"].get_bool().value);
         }
 
-        if (test_encrypt_opts["bypassQueryAnalysis"]) {
-            auto_encrypt_opts.bypass_query_analysis(
-                test_encrypt_opts["bypassQueryAnalysis"].get_bool().value);
+        if (const auto bqa = test_encrypt_opts["bypassQueryAnalysis"]) {
+            auto_encrypt_opts.bypass_query_analysis(bqa.get_bool().value);
         }
 
         if (test_encrypt_opts["keyVaultNamespace"]) {
