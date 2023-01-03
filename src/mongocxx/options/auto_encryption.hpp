@@ -286,7 +286,26 @@ class MONGOCXX_API auto_encryption {
     ///
     bool bypass_auto_encryption() const;
 
+    ///
+    /// Query analysis is disabled when the 'bypassQueryAnalysis'
+    /// option is true. Default is 'false' (i.e. query analysis is enabled).
+    ///
+    /// @param should_bypass
+    ///   Whether or not to bypass automatic encryption.
+    ///
+    /// @return
+    ///   A reference to this object to facilitate method chaining.
+    ///
+    /// @see https://docs.mongodb.com/manual/core/security-client-side-encryption/
+    ///
     auto_encryption& bypass_query_analysis(bool should_bypass);
+
+    ///
+    /// Gets a boolean specifying whether or not query analysis is bypassed.
+    ///
+    /// @return
+    ///   A boolean specifying whether query analysis is bypassed.
+    ///
     bool bypass_query_analysis() const;
 
     ///
