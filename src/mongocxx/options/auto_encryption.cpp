@@ -28,7 +28,7 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
 
-auto_encryption::auto_encryption() noexcept : _bypass(false) {}
+auto_encryption::auto_encryption() noexcept : _bypass(false), _bypass_query_analysis(false) {}
 
 auto_encryption& auto_encryption::key_vault_client(mongocxx::client* client) {
     _key_vault_client = client;
