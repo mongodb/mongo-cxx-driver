@@ -24,6 +24,18 @@ configure_file(
     ${CMAKE_CURRENT_BINARY_DIR}/config.hpp
 )
 
+if (DEFINED CMAKE_CXX_COMPILER_ID)
+    set (MONGOCXX_COMPILER_ID "${CMAKE_CXX_COMPILER_ID}")
+else ()
+    set (MONGOCXX_COMPILER_ID "Unknown")
+endif ()
+
+if (DEFINED CMAKE_CXX_COMPILER_VERSION)
+    set (MONGOCXX_COMPILER_VERSION "${CMAKE_CXX_COMPILER_VERSION}")
+else ()
+    set (MONGOCXX_COMPILER_VERSION "Unknown")
+endif ()
+
 configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/private/config.hh.in
     ${CMAKE_CURRENT_BINARY_DIR}/private/config.hh
