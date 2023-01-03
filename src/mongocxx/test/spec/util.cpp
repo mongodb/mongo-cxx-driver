@@ -223,8 +223,9 @@ void set_up_collection(const client& client,
     db.drop();
 
     bsoncxx::builder::basic::document opts;
-    if (test["encrypted_fields"]) {
-        opts.append(kvp("encryptedFields", test["encrypted_fields"].get_document().value));
+    bsoncxx::builder::basic::document opts;
+    if (const auto ef = test["encrypted_fields"]) {
+        opts.append(kvp("encryptedFields", ef.get_document().value));
     }
 
     auto coll_name = test[collection_name].get_string().value;
