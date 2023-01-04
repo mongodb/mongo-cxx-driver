@@ -89,6 +89,10 @@ class MONGOCXX_API encrypt {
         k_random
     };
 
+    enum class encryption_contention_factor : std::int64_t {
+        k_value,
+    };
+
     ///
     /// Sets the algorithm to use for encryption.
     ///
@@ -108,6 +112,9 @@ class MONGOCXX_API encrypt {
     ///
     const stdx::optional<encryption_algorithm>& algorithm() const;
 
+    encrypt& contention_factor(encryption_contention_factor contention_factor);
+    const stdx::optional<encryption_contention_factor>& contention_factor() const;
+
     ///
     /// Gets the key_id.
     ///
@@ -123,6 +130,7 @@ class MONGOCXX_API encrypt {
     stdx::optional<bsoncxx::types::bson_value::view_or_value> _key_id;
     stdx::optional<std::string> _key_alt_name;
     stdx::optional<encryption_algorithm> _algorithm;
+    stdx::optional<encryption_contention_factor> _contention_factor;
 };
 
 }  // namespace options

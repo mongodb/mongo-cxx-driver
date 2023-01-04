@@ -48,6 +48,15 @@ const stdx::optional<encrypt::encryption_algorithm>& encrypt::algorithm() const 
     return _algorithm;
 }
 
+encrypt& encrypt::contention_factor (encrypt::encryption_contention_factor contention_factor) {
+    _contention_factor = contention_factor;
+    return *this;
+}
+
+const stdx::optional<encrypt::encryption_contention_factor>& encrypt::contention_factor() const {
+    return _contention_factor;
+}
+
 const stdx::optional<bsoncxx::types::bson_value::view_or_value>& encrypt::key_id() const {
     return _key_id;
 }
