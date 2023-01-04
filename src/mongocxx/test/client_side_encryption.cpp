@@ -1999,10 +1999,16 @@ TEST_CASE("KMS TLS Options Tests", "[client_side_encryption][!mayfail]") {
     }
 }
 
-// https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.rst#test-setup
-TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
-    // Setup
+struct explicit_encryption_prelim {
+    mongocxx::client_encryption _client_encryption;
+    mongocxx::client _encrypted_client;
 
+    explicit_encryption_prelim(mongocxx::client_encryption& ce, mongocxx::client& ec)
+        : _client_encryption{std::move(ce)}, _encrypted_client{std::move(ec)} {}
+};
+
+// https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.rst#test-setup
+static struct explicit_encryption_prelim _setup_explicit_enctyption() {
     class client client {
         uri{}, test_util::add_test_server_api(),
     };
@@ -2082,7 +2088,18 @@ TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
         uri{}, encrypted_client_opts
     };
 
-    // Case 1: can insert encrypted indexed and find
+    struct explicit_encryption_prelim prelim {
+        client_encryption, encrypted_client
+    };
+
+    return prelim;
+}
+
+// https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.rst
+TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
+    SECTION("Case 1: can insert encrypted indexed and find") {
+        auto prelim = _setup_explicit_enctyption();
+    }
 }
 
 }  // namespace
