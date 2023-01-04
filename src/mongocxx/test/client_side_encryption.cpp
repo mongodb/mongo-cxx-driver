@@ -2013,7 +2013,7 @@ TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
 
     // Load the file encryptedFields.json as encryptedFields.
     auto encrypted_fields = _doc_from_file("/explicit-encryption/encryptedFields.json");
-    
+
     // Load the file key1-document.json as key1Document.
     auto key1_document = _doc_from_file("/explicit-encryption/key1-document.json");
 
@@ -2066,7 +2066,7 @@ TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
     client_encryption client_encryption(std::move(ce_opts));
 
     // Create a MongoClient named encryptedClient with these AutoEncryptionOpts:
-    // 
+    //
     // AutoEncryptionOpts {
     //    keyVaultNamespace: "keyvault.datakeys";
     //    kmsProviders: { "local": { "key": <base64 decoding of LOCAL_MASTERKEY> } }
@@ -2083,7 +2083,6 @@ TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
     };
 
     // Case 1: can insert encrypted indexed and find
-
 }
 
 }  // namespace

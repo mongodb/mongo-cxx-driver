@@ -48,7 +48,7 @@ const stdx::optional<encrypt::encryption_algorithm>& encrypt::algorithm() const 
     return _algorithm;
 }
 
-encrypt& encrypt::contention_factor (int64_t contention_factor) {
+encrypt& encrypt::contention_factor(int64_t contention_factor) {
     _contention_factor = contention_factor;
     return *this;
 }
@@ -123,7 +123,8 @@ void* encrypt::convert() const {
     }
 
     if (_contention_factor) {
-        libmongoc::client_encryption_encrypt_opts_set_contention_factor(opts, _contention_factor.value());
+        libmongoc::client_encryption_encrypt_opts_set_contention_factor(opts,
+                                                                        _contention_factor.value());
     }
 
     if (_query_type) {
