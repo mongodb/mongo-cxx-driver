@@ -28,7 +28,7 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
 
-auto_encryption::auto_encryption() noexcept : _bypass(false) {}
+auto_encryption::auto_encryption() noexcept : _bypass(false), _bypass_query_analysis(false) {}
 
 auto_encryption& auto_encryption::key_vault_client(mongocxx::client* client) {
     _key_vault_client = client;
@@ -104,6 +104,15 @@ bool auto_encryption::bypass_auto_encryption() const {
     return _bypass;
 }
 
+auto_encryption& auto_encryption::bypass_query_analysis(bool should_bypass) {
+    _bypass_query_analysis = should_bypass;
+    return *this;
+}
+
+bool auto_encryption::bypass_query_analysis() const {
+    return _bypass_query_analysis;
+}
+
 auto_encryption& auto_encryption::extra_options(bsoncxx::document::view_or_value extra) {
     _extra_options = std::move(extra);
     return *this;
@@ -166,6 +175,10 @@ void* auto_encryption::convert() const {
 
     if (_bypass) {
         libmongoc::auto_encryption_opts_set_bypass_auto_encryption(mongoc_auto_encrypt_opts, true);
+    }
+
+    if (_bypass_query_analysis) {
+        libmongoc::auto_encryption_opts_set_bypass_query_analysis(mongoc_auto_encrypt_opts, true);
     }
 
     if (_extra_options) {
