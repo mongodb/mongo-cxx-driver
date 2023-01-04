@@ -1999,15 +1999,20 @@ TEST_CASE("KMS TLS Options Tests", "[client_side_encryption][!mayfail]") {
     }
 }
 
-static void _explicit_encryption_setup(client &client) {
+// https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.rst#test-setup
+static void _explicit_encryption_setup(mongocxx::client &client, mongocxx::client *key_vault_client) {
+    // Load the file encryptedFields.json as encryptedFields.
     auto encrypted_fields = _doc_from_file("/explicit-encryption/encryptedFields.json");
+    
+    // Load the file key1-document.json as key1Document.
     auto key1_document = _doc_from_file("/explicit-encryption/key1-document.json");
+
+    // Read the "_id" field of key1Document as key1ID.
     auto key1_ID = key1_document["_id"].get_value();
 
-    {
-        _setup_drop_collections(client);
-    }
-
+    // Drop and create the collection db.explicit_encryption using
+    // encryptedFields as an option. See FLE 2 CreateCollection() and
+    // Collection.Drop().
     {
         write_concern wc_majority;
         wc_majority.acknowledge_level(write_concern::level::k_majority);
@@ -2015,8 +2020,14 @@ static void _explicit_encryption_setup(client &client) {
         auto coll = client["db"]["explicit_encryption"];
         auto drop_doc = make_document(kvp("encryptedFields", encrypted_fields));
         coll.drop(wc_majority, drop_doc.view());
+
+        client["db"].create_collection("explicit_encryption", drop_doc.view(), wc_majority);
     }
 
+    // Drop and create the collection keyvault.datakeys.
+    _setup_drop_collections(client);
+
+    // Insert key1Document in keyvault.datakeys with majority write concern.
     {
         write_concern wc_majority;
         wc_majority.acknowledge_level(write_concern::level::k_majority);
@@ -2028,15 +2039,49 @@ static void _explicit_encryption_setup(client &client) {
 
         client["keyvault"]["datakeys"].insert_one(insert_doc.view(), insert_opts);
     }
+
+    // Create a MongoClient named keyVaultClient.
+    // Create a ClientEncryption object named clientEncryption with these
+    // options:
+    //
+    // ClientEncryptionOpts {
+    //    keyVaultClient: <keyVaultClient>;
+    //    keyVaultNamespace: "keyvault.datakeys";
+    //    kmsProviders: { "local": { "key": <base64 decoding of LOCAL_MASTERKEY> } }
+    // }
+    {
+        options::client_encryption ce_opts;
+        ce_opts.key_vault_client(key_vault_client);
+        ce_opts.key_vault_namespace({"keyvault", "datakeys"});
+        ce_opts.kms_providers(_make_kms_doc(false));
+        client_encryption client_encryption(std::move(ce_opts));
+    }
+
+    // Create a MongoClient named encryptedClient with these AutoEncryptionOpts:
+    // 
+    // AutoEncryptionOpts {
+    //    keyVaultNamespace: "keyvault.datakeys";
+    //    kmsProviders: { "local": { "key": <base64 decoding of LOCAL_MASTERKEY> } }
+    //    bypassQueryAnalysis: true
+    // }
+    {
+        options::auto_encryption auto_encrypt_opts{};
+        auto_encrypt_opts.key_vault_namespace({"keyvault", "datakeys"});
+        auto_encrypt_opts.kms_providers(_make_kms_doc(false));
+        auto_encrypt_opts.bypass_query_analysis(true);
+    }
 }
 
-// TODO: add test here
 TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
     class client client {
         uri{}, test_util::add_test_server_api(),
     };
-    _explicit_encryption_setup(client);
-    REQUIRE(true);
+
+    class client key_vault_client {
+        uri{}, test_util::add_test_server_api(),
+    };
+
+    _explicit_encryption_setup(client, &key_vault_client);
 }
 
 }  // namespace
