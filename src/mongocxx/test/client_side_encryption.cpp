@@ -1999,6 +1999,44 @@ TEST_CASE("KMS TLS Options Tests", "[client_side_encryption][!mayfail]") {
     }
 }
 
+static void _explicit_encryption_setup(client &client) {
+    auto encrypted_fields = _doc_from_file("/explicit-encryption/encryptedFields.json");
+    auto key1_document = _doc_from_file("/explicit-encryption/key1-document.json");
+    auto key1_ID = key1_document["_id"].get_value();
+
+    {
+        _setup_drop_collections(client);
+    }
+
+    {
+        write_concern wc_majority;
+        wc_majority.acknowledge_level(write_concern::level::k_majority);
+
+        auto coll = client["db"]["explicit_encryption"];
+        auto drop_doc = make_document(kvp("encryptedFields", encrypted_fields));
+        coll.drop(wc_majority, drop_doc.view());
+    }
+
+    {
+        write_concern wc_majority;
+        wc_majority.acknowledge_level(write_concern::level::k_majority);
+
+        options::insert insert_opts;
+        insert_opts.write_concern(std::move(wc_majority));
+
+        auto insert_doc = make_document(kvp("encryptedFields", key1_document));
+
+        client["keyvault"]["datakeys"].insert_one(insert_doc.view(), insert_opts);
+    }
+}
+
 // TODO: add test here
+TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
+    class client client {
+        uri{}, test_util::add_test_server_api(),
+    };
+    _explicit_encryption_setup(client);
+    REQUIRE(true);
+}
 
 }  // namespace
