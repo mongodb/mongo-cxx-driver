@@ -2000,7 +2000,17 @@ TEST_CASE("KMS TLS Options Tests", "[client_side_encryption][!mayfail]") {
 }
 
 // https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.rst#test-setup
-static void _explicit_encryption_setup(mongocxx::client &client, mongocxx::client *key_vault_client) {
+TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
+    // Setup
+
+    class client client {
+        uri{}, test_util::add_test_server_api(),
+    };
+
+    class client key_vault_client {
+        uri{}, test_util::add_test_server_api(),
+    };
+
     // Load the file encryptedFields.json as encryptedFields.
     auto encrypted_fields = _doc_from_file("/explicit-encryption/encryptedFields.json");
     
@@ -2049,13 +2059,11 @@ static void _explicit_encryption_setup(mongocxx::client &client, mongocxx::clien
     //    keyVaultNamespace: "keyvault.datakeys";
     //    kmsProviders: { "local": { "key": <base64 decoding of LOCAL_MASTERKEY> } }
     // }
-    {
-        options::client_encryption ce_opts;
-        ce_opts.key_vault_client(key_vault_client);
-        ce_opts.key_vault_namespace({"keyvault", "datakeys"});
-        ce_opts.kms_providers(_make_kms_doc(false));
-        client_encryption client_encryption(std::move(ce_opts));
-    }
+    options::client_encryption ce_opts;
+    ce_opts.key_vault_client(&key_vault_client);
+    ce_opts.key_vault_namespace({"keyvault", "datakeys"});
+    ce_opts.kms_providers(_make_kms_doc(false));
+    client_encryption client_encryption(std::move(ce_opts));
 
     // Create a MongoClient named encryptedClient with these AutoEncryptionOpts:
     // 
@@ -2064,24 +2072,18 @@ static void _explicit_encryption_setup(mongocxx::client &client, mongocxx::clien
     //    kmsProviders: { "local": { "key": <base64 decoding of LOCAL_MASTERKEY> } }
     //    bypassQueryAnalysis: true
     // }
-    {
-        options::auto_encryption auto_encrypt_opts{};
-        auto_encrypt_opts.key_vault_namespace({"keyvault", "datakeys"});
-        auto_encrypt_opts.kms_providers(_make_kms_doc(false));
-        auto_encrypt_opts.bypass_query_analysis(true);
-    }
-}
-
-TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
-    class client client {
-        uri{}, test_util::add_test_server_api(),
+    options::auto_encryption auto_encrypt_opts{};
+    auto_encrypt_opts.key_vault_namespace({"keyvault", "datakeys"});
+    auto_encrypt_opts.kms_providers(_make_kms_doc(false));
+    auto_encrypt_opts.bypass_query_analysis(true);
+    options::client encrypted_client_opts;
+    encrypted_client_opts.auto_encryption_opts(std::move(auto_encrypt_opts));
+    class client encrypted_client {
+        uri{}, encrypted_client_opts
     };
 
-    class client key_vault_client {
-        uri{}, test_util::add_test_server_api(),
-    };
+    // Case 1: can insert encrypted indexed and find
 
-    _explicit_encryption_setup(client, &key_vault_client);
 }
 
 }  // namespace
