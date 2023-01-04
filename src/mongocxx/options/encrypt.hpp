@@ -86,7 +86,11 @@ class MONGOCXX_API encrypt {
         ///
         /// Use randomized encryption.
         ///
-        k_random
+        k_random,
+
+        k_indexed,
+
+        k_unindexed
     };
 
     ///
@@ -111,6 +115,9 @@ class MONGOCXX_API encrypt {
     encrypt& contention_factor(int64_t contention_factor);
     const stdx::optional<int64_t>& contention_factor() const;
 
+    encrypt& query_type(std::string query_type);
+    const stdx::optional<std::string>& query_type() const;
+
     ///
     /// Gets the key_id.
     ///
@@ -127,6 +134,7 @@ class MONGOCXX_API encrypt {
     stdx::optional<std::string> _key_alt_name;
     stdx::optional<encryption_algorithm> _algorithm;
     stdx::optional<int64_t> _contention_factor;
+    stdx::optional<std::string> _query_type;
 };
 
 }  // namespace options

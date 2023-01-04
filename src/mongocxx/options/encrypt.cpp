@@ -57,6 +57,15 @@ const stdx::optional<int64_t>& encrypt::contention_factor() const {
     return _contention_factor;
 }
 
+encrypt& encrypt::query_type(std::string query_type) {
+    _query_type = std::move(query_type);
+    return *this;
+}
+
+const stdx::optional<std::string>& encrypt::query_type() const {
+    return _query_type;
+}
+
 const stdx::optional<bsoncxx::types::bson_value::view_or_value>& encrypt::key_id() const {
     return _key_id;
 }
@@ -115,6 +124,10 @@ void* encrypt::convert() const {
 
     if (_contention_factor) {
         libmongoc::client_encryption_encrypt_opts_set_contention_factor(opts, _contention_factor.value());
+    }
+
+    if (_query_type) {
+        libmongoc::client_encryption_encrypt_opts_set_query_type(opts, _query_type->c_str());
     }
     return opts;
 }
