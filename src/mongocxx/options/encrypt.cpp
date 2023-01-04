@@ -48,12 +48,12 @@ const stdx::optional<encrypt::encryption_algorithm>& encrypt::algorithm() const 
     return _algorithm;
 }
 
-encrypt& encrypt::contention_factor (encrypt::encryption_contention_factor contention_factor) {
+encrypt& encrypt::contention_factor (int64_t contention_factor) {
     _contention_factor = contention_factor;
     return *this;
 }
 
-const stdx::optional<encrypt::encryption_contention_factor>& encrypt::contention_factor() const {
+const stdx::optional<int64_t>& encrypt::contention_factor() const {
     return _contention_factor;
 }
 
@@ -113,6 +113,9 @@ void* encrypt::convert() const {
         // libmongoc will error in this case, encryption algorithm must be set.
     }
 
+    if (_contention_factor) {
+        libmongoc::client_encryption_encrypt_opts_set_contention_factor(opts, _contention_factor.value());
+    }
     return opts;
 }
 
