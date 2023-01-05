@@ -2152,9 +2152,115 @@ TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
             for (const auto& it : found) {
                 count++;
                 auto doc = it.find("encryptedIndexed")->get_string().value.to_string();
+
+                // Assert one document is returned containing the field { "encryptedIndexed": "encrypted indexed value" }.
                 REQUIRE(doc == plain_text);
             }
+
+            // Assert one document is returned containing the field { "encryptedIndexed": "encrypted indexed value" }.
             REQUIRE(count == 1);
+        }
+    }
+
+    SECTION("Case 2: can insert encrypted indexed and find with non-zero contention") {
+        class client key_vault_client {
+            uri{}, test_util::add_test_server_api(),
+        };
+        auto tpl = _setup_explicit_enctyption(key1_document, &key_vault_client);
+
+        auto client_encryption = std::move(std::get<0>(tpl));
+        auto encrypted_client = std::move(std::get<1>(tpl));
+
+        // Use clientEncryption to encrypt the value "encrypted indexed value" with these EncryptOpts:
+        // 
+        // class EncryptOpts {
+        //    keyId : <key1ID>
+        //    algorithm: "Indexed",
+        //    contentionFactor: 10
+        // }
+        //
+        // Store the result in insertPayload.
+        for (size_t i = 0; i < 10; i++) {
+            options::encrypt encrypt_opts;
+            encrypt_opts.key_id(key1_id);
+            encrypt_opts.algorithm(options::encrypt::encryption_algorithm::k_indexed);
+            encrypt_opts.contention_factor(10);
+            auto insert_payload = client_encryption.encrypt(value, encrypt_opts);
+
+            // Use encryptedClient to insert the document { "encryptedIndexed": <insertPayload> } into db.explicit_encryption.
+            auto doc = make_document(kvp("encryptedIndexed", insert_payload));
+            encrypted_client["db"]["explicit_encryption"].insert_one(doc.view());
+
+            // Repeat the above steps 10 times to insert 10 total documents.
+            // The insertPayload must be regenerated each iteration.
+        }
+
+        // Use clientEncryption to encrypt the value "encrypted indexed value" with these EncryptOpts:
+        // 
+        // class EncryptOpts {
+        //    keyId : <key1ID>
+        //    algorithm: "Indexed",
+        //    queryType: "equality",
+        //    contentionFactor: 0
+        // }
+        //
+        // Store the result in findPayload.
+        {
+            options::encrypt encrypt_opts;
+            encrypt_opts.key_id(key1_id);
+            encrypt_opts.algorithm(options::encrypt::encryption_algorithm::k_indexed);
+            encrypt_opts.query_type(options::encrypt::encryption_query_type::k_equality);
+            encrypt_opts.contention_factor(0);
+            auto find_payload = client_encryption.encrypt(value, encrypt_opts);
+
+            // Use encryptedClient to run a "find" operation on the db.explicit_encryption collection with the filter { "encryptedIndexed": <findPayload> }.
+            auto find_filter = make_document(kvp("encryptedIndexed", find_payload));
+            auto found = encrypted_client["db"]["explicit_encryption"].find(find_filter.view());
+            size_t count = 0;
+            for (const auto& it : found) {
+                count++;
+                auto doc = it.find("encryptedIndexed")->get_string().value.to_string();
+
+                // Assert less than 10 documents are returned. 0 documents may be returned. Assert each returned document contains the field { "encryptedIndexed": "encrypted indexed value" }.
+                REQUIRE(doc == plain_text);
+            }
+
+            // Assert less than 10 documents are returned. 0 documents may be returned. Assert each returned document contains the field { "encryptedIndexed": "encrypted indexed value" }.
+            REQUIRE(count < 10);
+        }
+
+        // Use clientEncryption to encrypt the value "encrypted indexed value" with these EncryptOpts:
+        // 
+        // class EncryptOpts {
+        //    keyId : <key1ID>
+        //    algorithm: "Indexed",
+        //    queryType: "equality",
+        //    contentionFactor: 10
+        // }
+        // 
+        // Store the result in findPayload2.
+        {
+            options::encrypt encrypt_opts;
+            encrypt_opts.key_id(key1_id);
+            encrypt_opts.algorithm(options::encrypt::encryption_algorithm::k_indexed);
+            encrypt_opts.query_type(options::encrypt::encryption_query_type::k_equality);
+            encrypt_opts.contention_factor(10);
+            auto find_payload2 = client_encryption.encrypt(value, encrypt_opts);
+
+            // Use encryptedClient to run a "find" operation on the db.explicit_encryption collection with the filter { "encryptedIndexed": <findPayload2> }.
+            auto find_filter = make_document(kvp("encryptedIndexed", find_payload2));
+            auto found = encrypted_client["db"]["explicit_encryption"].find(find_filter.view());
+            size_t count = 0;
+            for (const auto& it : found) {
+                count++;
+                auto doc = it.find("encryptedIndexed")->get_string().value.to_string();
+
+                // Assert 10 documents are returned. Assert each returned document contains the field { "encryptedIndexed": "encrypted indexed value" }.
+                REQUIRE(doc == plain_text);
+            }
+
+            // Assert 10 documents are returned. Assert each returned document contains the field { "encryptedIndexed": "encrypted indexed value" }.
+            REQUIRE(count == 10);
         }
     }
 }
