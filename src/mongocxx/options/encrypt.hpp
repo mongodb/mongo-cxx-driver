@@ -93,7 +93,7 @@ class MONGOCXX_API encrypt {
         k_unindexed
     };
 
-    enum class t_query_type : std::uint8_t {
+    enum class encryption_query_type : std::uint8_t {
         k_equality
     };
 
@@ -119,8 +119,8 @@ class MONGOCXX_API encrypt {
     encrypt& contention_factor(int64_t contention_factor);
     const stdx::optional<int64_t>& contention_factor() const;
 
-    encrypt& query_type(t_query_type query_type);
-    const stdx::optional<t_query_type>& query_type() const;
+    encrypt& query_type(encryption_query_type query_type);
+    const stdx::optional<encryption_query_type>& query_type() const;
 
     ///
     /// Gets the key_id.
@@ -138,7 +138,7 @@ class MONGOCXX_API encrypt {
     stdx::optional<std::string> _key_alt_name;
     stdx::optional<encryption_algorithm> _algorithm;
     stdx::optional<int64_t> _contention_factor;
-    stdx::optional<t_query_type> _query_type;
+    stdx::optional<encryption_query_type> _query_type;
 };
 
 }  // namespace options
