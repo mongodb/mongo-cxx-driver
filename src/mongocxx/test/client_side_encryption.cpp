@@ -2090,8 +2090,11 @@ TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
     // Read the "_id" field of key1Document as key1ID.
     auto key1_id = key1_document["_id"].get_value();
 
-    std::string plain_text = "encrypted indexed value";
-    bsoncxx::types::bson_value::value value(plain_text);
+    std::string plain_text_indexed = "encrypted indexed value";
+    bsoncxx::types::bson_value::value plain_text_indexed_value(plain_text_indexed);
+    
+    std::string plain_text_unindexed = "encrypted unindexed value";
+    bsoncxx::types::bson_value::value plain_text_unindexed_value(plain_text_unindexed);
 
     SECTION("Case 1: can insert encrypted indexed and find") {
         class client key_vault_client {
@@ -2117,7 +2120,7 @@ TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
             encrypt_opts.key_id(key1_id);
             encrypt_opts.algorithm(options::encrypt::encryption_algorithm::k_indexed);
             encrypt_opts.contention_factor(0);
-            auto insert_payload = client_encryption.encrypt(value, encrypt_opts);
+            auto insert_payload = client_encryption.encrypt(plain_text_indexed_value, encrypt_opts);
 
             // Use encryptedClient to insert the document { "encryptedIndexed": <insertPayload> }
             // into db.explicit_encryption.
@@ -2141,7 +2144,7 @@ TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
             encrypt_opts.algorithm(options::encrypt::encryption_algorithm::k_indexed);
             encrypt_opts.contention_factor(0);
             encrypt_opts.query_type(options::encrypt::encryption_query_type::k_equality);
-            auto find_payload = client_encryption.encrypt(value, encrypt_opts);
+            auto find_payload = client_encryption.encrypt(plain_text_indexed_value, encrypt_opts);
 
             // Use encryptedClient to run a "find" operation on the
             // db.explicit_encryption collection with the filter
@@ -2154,7 +2157,7 @@ TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
                 auto doc = it.find("encryptedIndexed")->get_string().value.to_string();
 
                 // Assert one document is returned containing the field { "encryptedIndexed": "encrypted indexed value" }.
-                REQUIRE(doc == plain_text);
+                REQUIRE(doc == plain_text_indexed);
             }
 
             // Assert one document is returned containing the field { "encryptedIndexed": "encrypted indexed value" }.
@@ -2185,7 +2188,7 @@ TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
             encrypt_opts.key_id(key1_id);
             encrypt_opts.algorithm(options::encrypt::encryption_algorithm::k_indexed);
             encrypt_opts.contention_factor(10);
-            auto insert_payload = client_encryption.encrypt(value, encrypt_opts);
+            auto insert_payload = client_encryption.encrypt(plain_text_indexed_value, encrypt_opts);
 
             // Use encryptedClient to insert the document { "encryptedIndexed": <insertPayload> } into db.explicit_encryption.
             auto doc = make_document(kvp("encryptedIndexed", insert_payload));
@@ -2211,7 +2214,7 @@ TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
             encrypt_opts.algorithm(options::encrypt::encryption_algorithm::k_indexed);
             encrypt_opts.query_type(options::encrypt::encryption_query_type::k_equality);
             encrypt_opts.contention_factor(0);
-            auto find_payload = client_encryption.encrypt(value, encrypt_opts);
+            auto find_payload = client_encryption.encrypt(plain_text_indexed_value, encrypt_opts);
 
             // Use encryptedClient to run a "find" operation on the db.explicit_encryption collection with the filter { "encryptedIndexed": <findPayload> }.
             auto find_filter = make_document(kvp("encryptedIndexed", find_payload));
@@ -2222,7 +2225,7 @@ TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
                 auto doc = it.find("encryptedIndexed")->get_string().value.to_string();
 
                 // Assert less than 10 documents are returned. 0 documents may be returned. Assert each returned document contains the field { "encryptedIndexed": "encrypted indexed value" }.
-                REQUIRE(doc == plain_text);
+                REQUIRE(doc == plain_text_indexed);
             }
 
             // Assert less than 10 documents are returned. 0 documents may be returned. Assert each returned document contains the field { "encryptedIndexed": "encrypted indexed value" }.
@@ -2245,7 +2248,7 @@ TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
             encrypt_opts.algorithm(options::encrypt::encryption_algorithm::k_indexed);
             encrypt_opts.query_type(options::encrypt::encryption_query_type::k_equality);
             encrypt_opts.contention_factor(10);
-            auto find_payload2 = client_encryption.encrypt(value, encrypt_opts);
+            auto find_payload2 = client_encryption.encrypt(plain_text_indexed_value, encrypt_opts);
 
             // Use encryptedClient to run a "find" operation on the db.explicit_encryption collection with the filter { "encryptedIndexed": <findPayload2> }.
             auto find_filter = make_document(kvp("encryptedIndexed", find_payload2));
@@ -2256,11 +2259,56 @@ TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
                 auto doc = it.find("encryptedIndexed")->get_string().value.to_string();
 
                 // Assert 10 documents are returned. Assert each returned document contains the field { "encryptedIndexed": "encrypted indexed value" }.
-                REQUIRE(doc == plain_text);
+                REQUIRE(doc == plain_text_indexed);
             }
 
             // Assert 10 documents are returned. Assert each returned document contains the field { "encryptedIndexed": "encrypted indexed value" }.
             REQUIRE(count == 10);
+        }
+    }
+
+    SECTION("Case 3: can insert encrypted unindexed") {
+        class client key_vault_client {
+            uri{}, test_util::add_test_server_api(),
+        };
+        auto tpl = _setup_explicit_enctyption(key1_document, &key_vault_client);
+
+        auto client_encryption = std::move(std::get<0>(tpl));
+        auto encrypted_client = std::move(std::get<1>(tpl));
+
+        // Use clientEncryption to encrypt the value "encrypted unindexed value" with these EncryptOpts:
+        //
+        //class EncryptOpts {
+        //   keyId : <key1ID>
+        //   algorithm: "Unindexed"
+        //}
+        //
+        //Store the result in insertPayload.
+        {
+            options::encrypt encrypt_opts;
+            encrypt_opts.key_id(key1_id);
+            encrypt_opts.algorithm(options::encrypt::encryption_algorithm::k_unindexed);
+
+            auto insert_payload = client_encryption.encrypt(plain_text_unindexed_value, encrypt_opts);
+
+            // Use encryptedClient to insert the document { "_id": 1, "encryptedUnindexed": <insertPayload> } into db.explicit_encryption.
+            auto doc = make_document(kvp("_id", 1), kvp("encryptedUnindexed", insert_payload));
+            encrypted_client["db"]["explicit_encryption"].insert_one(doc.view());
+
+            // Use encryptedClient to run a "find" operation on the db.explicit_encryption collection with the filter { "_id": 1 }.
+            auto find_filter = make_document(kvp("_id", 1));
+            auto found = encrypted_client["db"]["explicit_encryption"].find(find_filter.view());
+            size_t count = 0;
+            for (const auto& it : found) {
+                count++;
+                auto doc = it.find("encryptedUnindexed")->get_string().value.to_string();
+
+                // Assert one document is returned containing the field { "encryptedUnindexed": "encrypted unindexed value" }.
+                REQUIRE(doc == plain_text_unindexed);
+            }
+
+            // Assert one document is returned containing the field { "encryptedUnindexed": "encrypted unindexed value" }.
+            REQUIRE(count == 1);
         }
     }
 }
