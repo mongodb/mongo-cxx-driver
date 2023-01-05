@@ -2025,7 +2025,16 @@ std::tuple<mongocxx::client_encryption, mongocxx::client> _setup_explicit_enctyp
     }
 
     // Drop and create the collection keyvault.datakeys.
-    _setup_drop_collections(client);
+    {
+        write_concern wc_majority;
+        wc_majority.acknowledge_level(write_concern::level::k_majority);
+
+        auto coll = client["keyvault"]["datakeys"];
+        coll.drop(wc_majority);
+
+        const auto empty_doc = make_document();
+        client["keyvault"].create_collection("datakeys", empty_doc.view(), wc_majority);
+    }
 
     // Insert key1Document in keyvault.datakeys with majority write concern.
     {
@@ -2035,9 +2044,7 @@ std::tuple<mongocxx::client_encryption, mongocxx::client> _setup_explicit_enctyp
         options::insert insert_opts;
         insert_opts.write_concern(std::move(wc_majority));
 
-        auto insert_doc = make_document(kvp("encryptedFields", key1_document));
-
-        client["keyvault"]["datakeys"].insert_one(insert_doc.view(), insert_opts);
+        client["keyvault"]["datakeys"].insert_one(key1_document, insert_opts);
     }
 
     // Create a MongoClient named keyVaultClient.
