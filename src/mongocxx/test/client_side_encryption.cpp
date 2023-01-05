@@ -16,6 +16,7 @@
 #include <helpers.hpp>
 #include <sstream>
 #include <string>
+#include <tuple>
 
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/builder/stream/helpers.hpp>
@@ -1999,16 +2000,8 @@ TEST_CASE("KMS TLS Options Tests", "[client_side_encryption][!mayfail]") {
     }
 }
 
-struct explicit_encryption_prelim {
-    mongocxx::client_encryption _client_encryption;
-    mongocxx::client _encrypted_client;
-
-    explicit_encryption_prelim(mongocxx::client_encryption& ce, mongocxx::client& ec)
-        : _client_encryption{std::move(ce)}, _encrypted_client{std::move(ec)} {}
-};
-
 // https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.rst#test-setup
-static struct explicit_encryption_prelim _setup_explicit_enctyption() {
+std::tuple<mongocxx::client_encryption, mongocxx::client> _setup_explicit_enctyption() {
     class client client {
         uri{}, test_util::add_test_server_api(),
     };
@@ -2024,7 +2017,7 @@ static struct explicit_encryption_prelim _setup_explicit_enctyption() {
     auto key1_document = _doc_from_file("/explicit-encryption/key1-document.json");
 
     // Read the "_id" field of key1Document as key1ID.
-    auto key1_ID = key1_document["_id"].get_value();
+    auto key1_id = _doc_from_file("/explicit-encryption/key1-document.json")["_id"].get_value();
 
     // Drop and create the collection db.explicit_encryption using
     // encryptedFields as an option. See FLE 2 CreateCollection() and
@@ -2088,17 +2081,31 @@ static struct explicit_encryption_prelim _setup_explicit_enctyption() {
         uri{}, encrypted_client_opts
     };
 
-    struct explicit_encryption_prelim prelim {
-        client_encryption, encrypted_client
-    };
-
-    return prelim;
+    return std::make_tuple(std::move(client_encryption), std::move(encrypted_client));
 }
 
 // https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.rst
 TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
     SECTION("Case 1: can insert encrypted indexed and find") {
-        auto prelim = _setup_explicit_enctyption();
+        auto tpl = _setup_explicit_enctyption();
+        auto key1_id = _doc_from_file("/explicit-encryption/key1-document.json")["_id"].get_value();
+        auto client_encryption = std::move(std::get<0>(tpl));
+        auto encrypted_client = std::move(std::get<1>(tpl));
+
+        // Use clientEncryption to encrypt the value "encrypted indexed value" with these
+        // EncryptOpts:
+        //
+        // class EncryptOpts {
+        //    keyId : <key1ID>
+        //    algorithm: "Indexed",
+        //    contentionFactor: 0
+        // }
+        bsoncxx::types::bson_value::value value("encrypted indexed value");
+        options::encrypt encrypt_opts;
+        encrypt_opts.key_id(key1_id);
+        encrypt_opts.algorithm(options::encrypt::encryption_algorithm::k_indexed);
+        encrypt_opts.contention_factor(0);
+        auto encrypted = client_encryption.encrypt(value, encrypt_opts);
     }
 }
 
