@@ -114,12 +114,10 @@ void* encrypt::convert() const {
                     opts, "AEAD_AES_256_CBC_HMAC_SHA_512-Random");
                 break;
             case encryption_algorithm::k_indexed:
-                libmongoc::client_encryption_encrypt_opts_set_algorithm(
-                    opts, "Indexed");
+                libmongoc::client_encryption_encrypt_opts_set_algorithm(opts, "Indexed");
                 break;
             case encryption_algorithm::k_unindexed:
-                libmongoc::client_encryption_encrypt_opts_set_algorithm(
-                    opts, "Unindexed");
+                libmongoc::client_encryption_encrypt_opts_set_algorithm(opts, "Unindexed");
                 break;
             default:
                 libmongoc::client_encryption_encrypt_opts_destroy(opts);
