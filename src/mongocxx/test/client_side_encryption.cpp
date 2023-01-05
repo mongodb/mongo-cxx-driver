@@ -2002,16 +2002,13 @@ TEST_CASE("KMS TLS Options Tests", "[client_side_encryption][!mayfail]") {
 
 // https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.rst#test-setup
 std::tuple<mongocxx::client_encryption, mongocxx::client> _setup_explicit_enctyption(
-    mongocxx::client* key_vault_client) {
+    bsoncxx::document::view key1_document, mongocxx::client* key_vault_client) {
     class client client {
         uri{}, test_util::add_test_server_api(),
     };
 
     // Load the file encryptedFields.json as encryptedFields.
     auto encrypted_fields = _doc_from_file("/explicit-encryption/encryptedFields.json");
-
-    // Load the file key1-document.json as key1Document.
-    auto key1_document = _doc_from_file("/explicit-encryption/key1-document.json");
 
     // Drop and create the collection db.explicit_encryption using
     // encryptedFields as an option. See FLE 2 CreateCollection() and
@@ -2080,15 +2077,18 @@ std::tuple<mongocxx::client_encryption, mongocxx::client> _setup_explicit_enctyp
 
 // https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.rst
 TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
+    // Load the file key1-document.json as key1Document.
+    auto key1_document = _doc_from_file("/explicit-encryption/key1-document.json");
+
+    // Read the "_id" field of key1Document as key1ID.
+    auto key1_id = key1_document["_id"].get_value();
+
     SECTION("Case 1: can insert encrypted indexed and find") {
         class client key_vault_client {
             uri{}, test_util::add_test_server_api(),
         };
-        auto tpl = _setup_explicit_enctyption(&key_vault_client);
+        auto tpl = _setup_explicit_enctyption(key1_document, &key_vault_client);
 
-        // Read the "_id" field of key1Document as key1ID.
-        auto doc = _doc_from_file("/explicit-encryption/key1-document.json");
-        auto key1_id = doc["_id"].get_value();
         auto client_encryption = std::move(std::get<0>(tpl));
         auto encrypted_client = std::move(std::get<1>(tpl));
 
@@ -2100,12 +2100,14 @@ TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
         //    algorithm: "Indexed",
         //    contentionFactor: 0
         // }
-        bsoncxx::types::bson_value::value value("encrypted indexed value");
+        bsoncxx::types::bson_value::value plain_text("encrypted indexed value");
         options::encrypt encrypt_opts;
         encrypt_opts.key_id(key1_id);
         encrypt_opts.algorithm(options::encrypt::encryption_algorithm::k_indexed);
         encrypt_opts.contention_factor(0);
-        auto encrypted = client_encryption.encrypt(value, encrypt_opts);
+        std::cerr << "encrypting" << std::endl;
+        auto cypher_text = client_encryption.encrypt(plain_text, encrypt_opts);
+        std::cerr << "done encrypting" << std::endl;
     }
 }
 
