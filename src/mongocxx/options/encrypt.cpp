@@ -57,12 +57,12 @@ const stdx::optional<int64_t>& encrypt::contention_factor() const {
     return _contention_factor;
 }
 
-encrypt& encrypt::query_type(std::string query_type) {
-    _query_type = std::move(query_type);
+encrypt& encrypt::query_type(encrypt::t_query_type query_type) {
+    _query_type = query_type;
     return *this;
 }
 
-const stdx::optional<std::string>& encrypt::query_type() const {
+const stdx::optional<encrypt::t_query_type>& encrypt::query_type() const {
     return _query_type;
 }
 
@@ -134,7 +134,15 @@ void* encrypt::convert() const {
     }
 
     if (_query_type) {
-        libmongoc::client_encryption_encrypt_opts_set_query_type(opts, _query_type->c_str());
+        switch (*_query_type) {
+            case t_query_type::k_equality:
+                libmongoc::client_encryption_encrypt_opts_set_query_type(opts, "equality");
+                break;
+            default:
+                libmongoc::client_encryption_encrypt_opts_destroy(opts);
+                throw exception{error_code::k_invalid_parameter,
+                                "unsupported query type"};
+        }
     }
     return opts;
 }

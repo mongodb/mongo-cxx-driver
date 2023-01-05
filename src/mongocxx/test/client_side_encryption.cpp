@@ -2107,14 +2107,38 @@ TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
         //    algorithm: "Indexed",
         //    contentionFactor: 0
         // }
-        bsoncxx::types::bson_value::value plain_text("encrypted indexed value");
-        options::encrypt encrypt_opts;
-        encrypt_opts.key_id(key1_id);
-        encrypt_opts.algorithm(options::encrypt::encryption_algorithm::k_indexed);
-        encrypt_opts.contention_factor(0);
-        std::cerr << "encrypting" << std::endl;
-        auto cypher_text = client_encryption.encrypt(plain_text, encrypt_opts);
-        std::cerr << "done encrypting" << std::endl;
+        //
+        // Store the result in insertPayload.
+        {
+            bsoncxx::types::bson_value::value plain_text("encrypted indexed value");
+            options::encrypt encrypt_opts;
+            encrypt_opts.key_id(key1_id);
+            encrypt_opts.algorithm(options::encrypt::encryption_algorithm::k_indexed);
+            encrypt_opts.contention_factor(0);
+            auto insert_payload = client_encryption.encrypt(plain_text, encrypt_opts);
+
+            // Use encryptedClient to insert the document { "encryptedIndexed": <insertPayload> } into db.explicit_encryption.
+            auto doc = make_document(kvp("encryptedIndexed", insert_payload));
+            encrypted_client["db"]["explicit_encryption"].insert_one(doc.view());
+        }
+
+        // Use clientEncryption to encrypt the value "encrypted indexed value" with these EncryptOpts:
+        //
+        // class EncryptOpts {
+        //    keyId : <key1ID>
+        //    algorithm: "Indexed",
+        //    queryType: "equality",
+        //    contentionFactor: 0
+        // }
+        // Store the result in findPayload.
+        {
+            options::encrypt encrypt_opts;
+            encrypt_opts.key_id(key1_id);
+            encrypt_opts.algorithm(options::encrypt::encryption_algorithm::k_indexed);
+            encrypt_opts.contention_factor(0);
+            //encrypt_opts.query_type();
+            //auto find_payload = client_encryption()
+        }
     }
 }
 
