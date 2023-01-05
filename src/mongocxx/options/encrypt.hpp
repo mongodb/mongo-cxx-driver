@@ -93,9 +93,7 @@ class MONGOCXX_API encrypt {
         k_unindexed
     };
 
-    enum class encryption_query_type : std::uint8_t {
-        k_equality
-    };
+    enum class encryption_query_type : std::uint8_t { k_equality };
 
     ///
     /// Sets the algorithm to use for encryption.

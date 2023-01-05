@@ -140,8 +140,7 @@ void* encrypt::convert() const {
                 break;
             default:
                 libmongoc::client_encryption_encrypt_opts_destroy(opts);
-                throw exception{error_code::k_invalid_parameter,
-                                "unsupported query type"};
+                throw exception{error_code::k_invalid_parameter, "unsupported query type"};
         }
     }
     return opts;

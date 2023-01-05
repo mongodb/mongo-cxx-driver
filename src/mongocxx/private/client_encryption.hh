@@ -91,14 +91,10 @@ class client_encryption::impl {
 
         mongoc_client_encryption_encrypt_opts_t* converted_opts;
 
-        std::cerr << "converting opts" << std::endl;
         converted_opts = (mongoc_client_encryption_encrypt_opts_t*)opts.convert();
-        std::cerr << "done converting opts" << std::endl;
 
-        std::cerr << "mongoc encrypting" << std::endl;
         auto r = libmongoc::client_encryption_encrypt(
             _client_encryption_t, &libbson_value, converted_opts, &ciphertext, &error);
-        std::cerr << "done mongoc encrypting" << std::endl;
 
         auto cleanup = [&]() {
             bson_value_destroy(&libbson_value);
@@ -107,7 +103,6 @@ class client_encryption::impl {
         };
 
         if (!r) {
-            std::cerr << "mongo c error, throwing exception" << std::endl;
             cleanup();
             throw_exception<operation_exception>(error);
         }
@@ -116,7 +111,6 @@ class client_encryption::impl {
 
         cleanup();
 
-        std::cerr << "finished encrypt method" << std::endl;
         return encrypted;
     }
 
