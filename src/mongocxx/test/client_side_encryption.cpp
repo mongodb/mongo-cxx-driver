@@ -2016,9 +2016,6 @@ std::tuple<mongocxx::client_encryption, mongocxx::client> _setup_explicit_enctyp
     // Load the file key1-document.json as key1Document.
     auto key1_document = _doc_from_file("/explicit-encryption/key1-document.json");
 
-    // Read the "_id" field of key1Document as key1ID.
-    auto key1_id = _doc_from_file("/explicit-encryption/key1-document.json")["_id"].get_value();
-
     // Drop and create the collection db.explicit_encryption using
     // encryptedFields as an option. See FLE 2 CreateCollection() and
     // Collection.Drop().
@@ -2088,6 +2085,8 @@ std::tuple<mongocxx::client_encryption, mongocxx::client> _setup_explicit_enctyp
 TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
     SECTION("Case 1: can insert encrypted indexed and find") {
         auto tpl = _setup_explicit_enctyption();
+
+        // Read the "_id" field of key1Document as key1ID.
         auto key1_id = _doc_from_file("/explicit-encryption/key1-document.json")["_id"].get_value();
         auto client_encryption = std::move(std::get<0>(tpl));
         auto encrypted_client = std::move(std::get<1>(tpl));
