@@ -2116,7 +2116,7 @@ TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
         return;
     }
 
-    if (!is_replica_set(conn)) {
+    if (!test_util::is_replica_set(conn)) {
         std::cerr << "'Explicit Encryption' cannot run on standalone" << std::endl;
         return;
     }
