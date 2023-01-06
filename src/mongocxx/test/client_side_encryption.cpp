@@ -2076,7 +2076,7 @@ std::tuple<mongocxx::client_encryption, mongocxx::client> _setup_explicit_encryp
     options::client encrypted_client_opts;
     encrypted_client_opts.auto_encryption_opts(std::move(auto_encrypt_opts));
     class client encrypted_client {
-        uri{}, encrypted_client_opts
+        uri{}, test_util::add_test_server_api(encrypted_client_opts)
     };
 
     return std::make_tuple(std::move(client_encryption), std::move(encrypted_client));
