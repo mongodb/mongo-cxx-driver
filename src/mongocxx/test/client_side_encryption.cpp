@@ -2105,7 +2105,9 @@ static bool version_at_least(mongocxx::v_noabi::database& db, int minimum_major)
 TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
     instance::current();
 
-    mongocxx::client conn{mongocxx::uri{}};
+    class client conn {
+        mongocxx::uri{}, test_util::add_test_server_api()
+    };
     auto db = conn["db"];
 
     if (!mongocxx::test_util::should_run_client_side_encryption_test()) {
