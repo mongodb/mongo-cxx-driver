@@ -2142,8 +2142,8 @@ TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
             options::encrypt encrypt_opts;
             encrypt_opts.key_id(key1_id);
             encrypt_opts.algorithm(options::encrypt::encryption_algorithm::k_indexed);
-            encrypt_opts.contention_factor(0);
             encrypt_opts.query_type(options::encrypt::encryption_query_type::k_equality);
+            encrypt_opts.contention_factor(0);
             auto find_payload = client_encryption.encrypt(plain_text_indexed_value, encrypt_opts);
 
             // Use encryptedClient to run a "find" operation on the
