@@ -2107,6 +2107,11 @@ TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
     mongocxx::client conn{mongocxx::uri{}};
     auto db = conn["db"];
 
+    if (!mongocxx::test_util::should_run_client_side_encryption_test()) {
+        std::cerr << "SHOULD NOT RUN CLIENT SIDE ENCRYPTION TEST" << std::endl;
+        return;
+    }
+
     if (!version_at_least(db, 6)) {
         std::cerr << "'Explicit Encryption' must run on mongod version 6.0+" << std::endl;
         return;
