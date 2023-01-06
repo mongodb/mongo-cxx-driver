@@ -2082,8 +2082,35 @@ std::tuple<mongocxx::client_encryption, mongocxx::client> _setup_explicit_encryp
     return std::make_tuple(std::move(client_encryption), std::move(encrypted_client));
 }
 
+static bool version_at_least(mongocxx::v_noabi::database& db, int minimum_major) {
+    using bsoncxx::builder::basic::kvp;
+    using bsoncxx::builder::basic::make_document;
+
+    auto resp = db.run_command(make_document(kvp("buildInfo", 1)));
+    auto version = resp.find("version")->get_string().value;
+    std::cerr << "RUNNING ON mongod version: " << version << std::endl;
+    std::string major_string;
+    for (auto i : version) {
+        if (i == '.') {
+            break;
+        }
+        major_string += i;
+    }
+    int server_major = std::stoi(major_string);
+
+    return server_major >= minimum_major;
+}
+
 // https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.rst
 TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
+
+    mongocxx::client conn{mongocxx::uri{}};
+    auto db = conn["db"];
+
+    if (!version_at_least(db, 6)) {
+        std::cerr << "'Explicit Encryption' must run on mongod version 6.0+" << std::endl;
+        return;
+    }
     // Load the file key1-document.json as key1Document.
     auto key1_document = _doc_from_file("/explicit-encryption/key1-document.json");
 
