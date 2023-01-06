@@ -2105,6 +2105,8 @@ TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
         return;
     }
 
+    REQUIRE(std::strcmp("this test ", " will run") == 0);
+
     // Load the file key1-document.json as key1Document.
     auto key1_document = _doc_from_file("/explicit-encryption/key1-document.json");
 
