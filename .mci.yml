@@ -130,6 +130,7 @@ functions:
                     git clone git@github.com:mongodb-labs/drivers-evergreen-tools.git
                 fi
                 cd drivers-evergreen-tools
+                git checkout b96b6e55c5b3993e772bd54f905ea034bace7bd0
                 export DRIVERS_TOOLS=$(pwd)
 
                 sh .evergreen/atlas_data_lake/build-mongohouse-local.sh
@@ -141,6 +142,7 @@ functions:
             background: true
             script: |
                 cd drivers-evergreen-tools
+                git checkout b96b6e55c5b3993e772bd54f905ea034bace7bd0
                 export DRIVERS_TOOLS=$(pwd)
 
                 sh .evergreen/atlas_data_lake/run-mongohouse-local.sh
@@ -183,6 +185,7 @@ functions:
                     git clone git@github.com:mongodb-labs/drivers-evergreen-tools.git
                 fi
                 cd drivers-evergreen-tools
+                git checkout b96b6e55c5b3993e772bd54f905ea034bace7bd0
                 export DRIVERS_TOOLS=$(pwd)
                 if [ "Windows_NT" == "$OS" ]; then
                     export DRIVERS_TOOLS=$(cygpath -m $DRIVERS_TOOLS)
