@@ -2103,6 +2103,8 @@ static bool version_at_least(mongocxx::v_noabi::database& db, int minimum_major)
 
 // https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.rst
 TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
+    instance::current();
+
     mongocxx::client conn{mongocxx::uri{}};
     auto db = conn["db"];
 
