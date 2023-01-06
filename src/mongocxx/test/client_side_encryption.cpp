@@ -2103,7 +2103,6 @@ static bool version_at_least(mongocxx::v_noabi::database& db, int minimum_major)
 
 // https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.rst
 TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
-
     mongocxx::client conn{mongocxx::uri{}};
     auto db = conn["db"];
 
@@ -2186,11 +2185,11 @@ TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
             size_t count = 0;
             for (const auto& it : found) {
                 count++;
-                auto doc = it.find("encryptedIndexed")->get_string().value.to_string();
+                auto doc = it.find("encryptedIndexed")->get_string().value;
 
                 // Assert one document is returned containing the field { "encryptedIndexed":
                 // "encrypted indexed value" }.
-                REQUIRE(doc == plain_text_indexed);
+                REQUIRE(doc == plain_text_indexed_value);
             }
 
             // Assert one document is returned containing the field { "encryptedIndexed": "encrypted
@@ -2260,12 +2259,12 @@ TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
             size_t count = 0;
             for (const auto& it : found) {
                 count++;
-                auto doc = it.find("encryptedIndexed")->get_string().value.to_string();
+                auto doc = it.find("encryptedIndexed")->get_string().value;
 
                 // Assert less than 10 documents are returned. 0 documents may be returned. Assert
                 // each returned document contains the field { "encryptedIndexed": "encrypted
                 // indexed value" }.
-                REQUIRE(doc == plain_text_indexed);
+                REQUIRE(doc == plain_text_indexed_value);
             }
 
             // Assert less than 10 documents are returned. 0 documents may be returned. Assert each
@@ -2300,11 +2299,11 @@ TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
             size_t count = 0;
             for (const auto& it : found) {
                 count++;
-                auto doc = it.find("encryptedIndexed")->get_string().value.to_string();
+                auto doc = it.find("encryptedIndexed")->get_string().value;
 
                 // Assert 10 documents are returned. Assert each returned document contains the
                 // field { "encryptedIndexed": "encrypted indexed value" }.
-                REQUIRE(doc == plain_text_indexed);
+                REQUIRE(doc == plain_text_indexed_value);
             }
 
             // Assert 10 documents are returned. Assert each returned document contains the field {
@@ -2351,11 +2350,11 @@ TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
             size_t count = 0;
             for (const auto& it : found) {
                 count++;
-                auto doc = it.find("encryptedUnindexed")->get_string().value.to_string();
+                auto doc = it.find("encryptedUnindexed")->get_string().value;
 
                 // Assert one document is returned containing the field { "encryptedUnindexed":
                 // "encrypted unindexed value" }.
-                REQUIRE(doc == plain_text_unindexed);
+                REQUIRE(doc == plain_text_unindexed_value);
             }
 
             // Assert one document is returned containing the field { "encryptedUnindexed":
@@ -2401,10 +2400,10 @@ TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
             std::cerr << "CALLING DENCRYPT" << std::endl;
             auto plain_text_value = client_encryption.decrypt(payload);
             std::cerr << "EXTRACTING PLAIN TEXT" << std::endl;
-            auto plain_text = plain_text_value.view().get_string().value.to_string();
+            auto plain_text = plain_text_value.view().get_string().value;
 
             // Assert the returned value equals "encrypted indexed value".
-            REQUIRE(plain_text == plain_text_indexed);
+            REQUIRE(plain_text == plain_text_indexed_value);
         }
 
         SECTION("Case 5: can roundtrip encrypted unindexed") {
@@ -2433,10 +2432,10 @@ TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
 
                 // Use clientEncryption to decrypt payload.
                 auto plain_text_value = client_encryption.decrypt(payload);
-                auto plain_text = plain_text_value.view().get_string().value.to_string();
+                auto plain_text = plain_text_value.view().get_string().value;
 
                 // Assert the returned value equals "encrypted unindexed value".
-                REQUIRE(plain_text == plain_text_unindexed);
+                REQUIRE(plain_text == plain_text_unindexed_value);
             }
         }
     }
