@@ -2089,7 +2089,6 @@ TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
     class client conn {
         mongocxx::uri{}, test_util::add_test_server_api()
     };
-    auto db = conn["db"];
 
     if (!mongocxx::test_util::should_run_client_side_encryption_test()) {
         return;
