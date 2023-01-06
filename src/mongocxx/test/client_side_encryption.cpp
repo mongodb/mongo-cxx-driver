@@ -2001,7 +2001,7 @@ TEST_CASE("KMS TLS Options Tests", "[client_side_encryption][!mayfail]") {
 }
 
 // https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.rst#test-setup
-std::tuple<mongocxx::client_encryption, mongocxx::client> _setup_explicit_enctyption(
+std::tuple<mongocxx::client_encryption, mongocxx::client> _setup_explicit_encryption(
     bsoncxx::document::view key1_document, mongocxx::client* key_vault_client) {
     class client client {
         uri{}, test_util::add_test_server_api(),
@@ -2100,7 +2100,7 @@ TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
         class client key_vault_client {
             uri{}, test_util::add_test_server_api(),
         };
-        auto tpl = _setup_explicit_enctyption(key1_document, &key_vault_client);
+        auto tpl = _setup_explicit_encryption(key1_document, &key_vault_client);
 
         auto client_encryption = std::move(std::get<0>(tpl));
         auto encrypted_client = std::move(std::get<1>(tpl));
@@ -2171,7 +2171,7 @@ TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
         class client key_vault_client {
             uri{}, test_util::add_test_server_api(),
         };
-        auto tpl = _setup_explicit_enctyption(key1_document, &key_vault_client);
+        auto tpl = _setup_explicit_encryption(key1_document, &key_vault_client);
 
         auto client_encryption = std::move(std::get<0>(tpl));
         auto encrypted_client = std::move(std::get<1>(tpl));
@@ -2285,7 +2285,7 @@ TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
         class client key_vault_client {
             uri{}, test_util::add_test_server_api(),
         };
-        auto tpl = _setup_explicit_enctyption(key1_document, &key_vault_client);
+        auto tpl = _setup_explicit_encryption(key1_document, &key_vault_client);
 
         auto client_encryption = std::move(std::get<0>(tpl));
         auto encrypted_client = std::move(std::get<1>(tpl));
@@ -2333,12 +2333,17 @@ TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
     }
 
     SECTION("Case 4: can roundtrip encrypted indexed") {
+        std::cerr << "CREATING KEY VAULT CLIENT" << std::endl;
         class client key_vault_client {
             uri{}, test_util::add_test_server_api(),
         };
-        auto tpl = _setup_explicit_enctyption(key1_document, &key_vault_client);
+        std::cerr << "SETTING UP" << std::endl;
+        auto tpl = _setup_explicit_encryption(key1_document, &key_vault_client);
 
+        std::cerr << "EXTRACTING CLIENT ENCRYPTION" << std::endl;
         auto client_encryption = std::move(std::get<0>(tpl));
+
+        std::cerr << "EXTRACTING CLIENT" << std::endl;
         auto encrypted_client = std::move(std::get<1>(tpl));
 
         // Use clientEncryption to encrypt the value "encrypted indexed value" with these
@@ -2356,10 +2361,14 @@ TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
             encrypt_opts.key_id(key1_id);
             encrypt_opts.algorithm(options::encrypt::encryption_algorithm::k_indexed);
             encrypt_opts.contention_factor(0);
+
+            std::cerr << "CALLING ENCRYPT" << std::endl;
             auto payload = client_encryption.encrypt(plain_text_indexed_value, encrypt_opts);
 
             // Use clientEncryption to decrypt payload.
+            std::cerr << "CALLING DENCRYPT" << std::endl;
             auto plain_text_value = client_encryption.decrypt(payload);
+            std::cerr << "EXTRACTING PLAIN TEXT" << std::endl;
             auto plain_text = plain_text_value.view().get_string().value.to_string();
 
             // Assert the returned value equals "encrypted indexed value".
@@ -2370,7 +2379,7 @@ TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
             class client key_vault_client {
                 uri{}, test_util::add_test_server_api(),
             };
-            auto tpl = _setup_explicit_enctyption(key1_document, &key_vault_client);
+            auto tpl = _setup_explicit_encryption(key1_document, &key_vault_client);
 
             auto client_encryption = std::move(std::get<0>(tpl));
             auto encrypted_client = std::move(std::get<1>(tpl));
