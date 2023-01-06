@@ -2115,6 +2115,12 @@ TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
         std::cerr << "'Explicit Encryption' must run on mongod version 6.0+" << std::endl;
         return;
     }
+
+    if (!is_replica_set(conn)) {
+        std::cerr << "'Explicit Encryption' cannot run on standalone" << std::endl;
+        return;
+    }
+
     // Load the file key1-document.json as key1Document.
     auto key1_document = _doc_from_file("/explicit-encryption/key1-document.json");
 
