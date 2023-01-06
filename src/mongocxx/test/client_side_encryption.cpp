@@ -2082,25 +2082,6 @@ std::tuple<mongocxx::client_encryption, mongocxx::client> _setup_explicit_encryp
     return std::make_tuple(std::move(client_encryption), std::move(encrypted_client));
 }
 
-static bool version_at_least(mongocxx::v_noabi::database& db, int minimum_major) {
-    using bsoncxx::builder::basic::kvp;
-    using bsoncxx::builder::basic::make_document;
-
-    auto resp = db.run_command(make_document(kvp("buildInfo", 1)));
-    auto version = resp.find("version")->get_string().value;
-    std::cerr << "RUNNING ON mongod version: " << version << std::endl;
-    std::string major_string;
-    for (auto i : version) {
-        if (i == '.') {
-            break;
-        }
-        major_string += i;
-    }
-    int server_major = std::stoi(major_string);
-
-    return server_major >= minimum_major;
-}
-
 // https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.rst
 TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
     instance::current();
@@ -2111,17 +2092,16 @@ TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
     auto db = conn["db"];
 
     if (!mongocxx::test_util::should_run_client_side_encryption_test()) {
-        std::cerr << "SHOULD NOT RUN CLIENT SIDE ENCRYPTION TEST" << std::endl;
         return;
     }
 
-    if (!version_at_least(db, 6)) {
-        std::cerr << "'Explicit Encryption' must run on mongod version 6.0+" << std::endl;
+    if (!test_util::newer_than(conn, "6.0")) {
+        std::cerr << "The Explicit Encryption tests require MongoDB server 6.0+." << std::endl;
         return;
     }
 
     if (!test_util::is_replica_set(conn)) {
-        std::cerr << "'Explicit Encryption' cannot run on standalone" << std::endl;
+        std::cerr << "The tests must not run against a standalone." << std::endl;
         return;
     }
 
@@ -2374,17 +2354,13 @@ TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
     }
 
     SECTION("Case 4: can roundtrip encrypted indexed") {
-        std::cerr << "CREATING KEY VAULT CLIENT" << std::endl;
         class client key_vault_client {
             uri{}, test_util::add_test_server_api(),
         };
-        std::cerr << "SETTING UP" << std::endl;
         auto tpl = _setup_explicit_encryption(key1_document, &key_vault_client);
 
-        std::cerr << "EXTRACTING CLIENT ENCRYPTION" << std::endl;
         auto client_encryption = std::move(std::get<0>(tpl));
 
-        std::cerr << "EXTRACTING CLIENT" << std::endl;
         auto encrypted_client = std::move(std::get<1>(tpl));
 
         // Use clientEncryption to encrypt the value "encrypted indexed value" with these
@@ -2403,13 +2379,10 @@ TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
             encrypt_opts.algorithm(options::encrypt::encryption_algorithm::k_indexed);
             encrypt_opts.contention_factor(0);
 
-            std::cerr << "CALLING ENCRYPT" << std::endl;
             auto payload = client_encryption.encrypt(plain_text_indexed_value, encrypt_opts);
 
             // Use clientEncryption to decrypt payload.
-            std::cerr << "CALLING DENCRYPT" << std::endl;
             auto plain_text_value = client_encryption.decrypt(payload);
-            std::cerr << "EXTRACTING PLAIN TEXT" << std::endl;
             auto plain_text = plain_text_value.view().get_string().value;
 
             // Assert the returned value equals "encrypted indexed value".
