@@ -150,3 +150,33 @@ git push --set-upstream origin releases/v3.8
 ```
 
 The new branch should be continuously tested on Evergreen. Create a BUILD ticket to request the build team create new Evergreen project to track the `releases/vx.y` branch (see BUILD-5666 for an example).
+
+## Handle Linux Distribution Packages
+
+Note: updates to these instructions should be synced to the corresponding C driver process documentation Google doc.
+
+### Debian
+
+- For the first Debian package release on a new release branch, edit `debian/gbp.conf` and update the `upstream-branch` and `debian-branch` variables to match the name of the new release branch (e.g., `releases/v3.x`); both variables will have the same value
+- The Debian package release is made after the upstream release has been tagged
+- Create a new changelog entry (use the command ‘dch -i’ to ensure proper formatting, then adjust the version number on the top line of the changelog as appropriate
+- Make any other necessary changes to the Debian packaging components (e.g., update to standards version, dependencies, descriptions, etc.) and make relevant entries in `debian/changelog` as needed
+- Use `git add` to stage the changed files for commit (only files in the `debian/` directory should be committed), then commit them (the `debcommit` utility is helpful here)
+- Build the package with `gbp buildpackage` and inspect the resulting package files (at a minimum use `debc` on the `.changes` file in order to confirm files are installed to the proper locations by the proper packages and also use `lintian` on the `.changes` file in order to confirm that there are no unexpected errors or warnings; the `lintian` used for this check should always be the latest version as it is found in the unstable distribution)
+- If any changes are needed, make them, commit them, and rebuild the package
+- It may be desirable to squash multiple commits down to a single commit before building the final packages
+- Once the final packages are built, they can be signed and uploaded and the version can be tagged using the `--git-tag` option of `gbp buildpackage`
+- After the commit has been tagged, switch from the release branch to the `master` branch and cherry-pick the commit(s) made on the release branch that touch only the Debian packaging (this will ensure that the packaging and especially the changelog on the master remain up to date)
+- The final steps are to sign and upload the package, push the commits on the release branch and the master branch to the remote, and push the Debian package tag
+
+### Fedora
+
+- After CXX-2226, the RPM spec file has been vendored into the project; it needs to be updated periodically
+- Starting in the project root directory, retrieve the latest spec file: `curl -L -o .evergreen/mongo-cxx-driver.spec https://src.fedoraproject.org/rpms/mongo-cxx-driver/raw/rawhide/f/mongo-cxx-driver.spec`
+- Confirm that our spec patch applies to the new downstream spec: `patch --dry-run -d .evergreen -p0 -i spec.patch`
+- If the patch command fails, rebase the patch
+- For a new major release (e.g., 3.6.0, 3.7.0, etc.), then ensure that the patch updates the `up_version` to be the NEXT major version (e.g., when releasing 3.7.0, the spec patch should update `up_version` to 3.8.0); this is necessary to ensure that the spec file matches the tarball created by the dist target; if this is wrong, then the `rpm-package-build` task will fail in the next step
+- Additionally, ensure that any changes made on the release branch vis-a-vis the spec file are also replicated on the `master` or `main` branch
+- Test the build with something like this: `evergreen patch -p cxx-driver -v packaging -t rpm-package-build -f`
+- There is no package upload step, since the downstream maintainer handles that and we only have the Evergreen task to ensure that we do not break the package build
+- The same steps need to be executed on active release branches (e.g., `releases/v3.6`), which can usually be accomplished via `git cherry-pick` and then resolving any minor conflicts
