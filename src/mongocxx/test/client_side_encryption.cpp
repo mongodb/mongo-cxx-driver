@@ -2387,38 +2387,38 @@ TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
             // Assert the returned value equals "encrypted indexed value".
             REQUIRE(plain_text == plain_text_indexed_value);
         }
+    }
 
-        SECTION("Case 5: can roundtrip encrypted unindexed") {
-            class client key_vault_client {
-                uri{}, test_util::add_test_server_api(),
-            };
-            auto tpl = _setup_explicit_encryption(key1_document, &key_vault_client);
+    SECTION("Case 5: can roundtrip encrypted unindexed") {
+        class client key_vault_client {
+            uri{}, test_util::add_test_server_api(),
+        };
+        auto tpl = _setup_explicit_encryption(key1_document, &key_vault_client);
 
-            auto client_encryption = std::move(std::get<0>(tpl));
-            auto encrypted_client = std::move(std::get<1>(tpl));
+        auto client_encryption = std::move(std::get<0>(tpl));
+        auto encrypted_client = std::move(std::get<1>(tpl));
 
-            // Use clientEncryption to encrypt the value "encrypted unindexed value" with these
-            // EncryptOpts:
-            //
-            // class EncryptOpts {
-            //    keyId : <key1ID>
-            //    algorithm: "Unindexed",
-            // }
-            //
-            // Store the result in payload.
-            {
-                options::encrypt encrypt_opts;
-                encrypt_opts.key_id(key1_id);
-                encrypt_opts.algorithm(options::encrypt::encryption_algorithm::k_unindexed);
-                auto payload = client_encryption.encrypt(plain_text_unindexed_value, encrypt_opts);
+        // Use clientEncryption to encrypt the value "encrypted unindexed value" with these
+        // EncryptOpts:
+        //
+        // class EncryptOpts {
+        //    keyId : <key1ID>
+        //    algorithm: "Unindexed",
+        // }
+        //
+        // Store the result in payload.
+        {
+            options::encrypt encrypt_opts;
+            encrypt_opts.key_id(key1_id);
+            encrypt_opts.algorithm(options::encrypt::encryption_algorithm::k_unindexed);
+            auto payload = client_encryption.encrypt(plain_text_unindexed_value, encrypt_opts);
 
-                // Use clientEncryption to decrypt payload.
-                auto plain_text_value = client_encryption.decrypt(payload);
-                auto plain_text = plain_text_value.view().get_string().value;
+            // Use clientEncryption to decrypt payload.
+            auto plain_text_value = client_encryption.decrypt(payload);
+            auto plain_text = plain_text_value.view().get_string().value;
 
-                // Assert the returned value equals "encrypted unindexed value".
-                REQUIRE(plain_text == plain_text_unindexed_value);
-            }
+            // Assert the returned value equals "encrypted unindexed value".
+            REQUIRE(plain_text == plain_text_unindexed_value);
         }
     }
 }
