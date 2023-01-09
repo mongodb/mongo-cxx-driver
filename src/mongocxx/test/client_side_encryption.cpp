@@ -2099,7 +2099,7 @@ TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
         return;
     }
 
-    if (!test_util::is_replica_set(conn)) {
+    if (test_util::get_topology(conn) != "single") {
         std::cerr << "Explicit Encryption tests must not run against a standalone." << std::endl;
         return;
     }
