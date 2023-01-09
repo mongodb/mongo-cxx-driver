@@ -171,7 +171,7 @@ Note: updates to these instructions should be synced to the corresponding C driv
 
 ### Fedora
 
-- After CXX-2226, the RMP spec file has been vendored into the project; it needs to be updated periodically
+- After CXX-2226, the RPM spec file has been vendored into the project; it needs to be updated periodically
 - Starting in the project root directory, retrieve the latest spec file: `curl -L -o .evergreen/mongo-cxx-driver.spec https://src.fedoraproject.org/rpms/mongo-cxx-driver/raw/rawhide/f/mongo-cxx-driver.spec`
 - Confirm that our spec patch applies to the new downstream spec: `patch --dry-run -d .evergreen -p0 -i spec.patch`
 - If the patch command fails, rebase the patch
