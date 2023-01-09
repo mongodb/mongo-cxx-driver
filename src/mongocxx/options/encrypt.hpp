@@ -111,6 +111,7 @@ class MONGOCXX_API encrypt {
     /// @param algorithm
     ///   An algorithm, either deterministic, random, indexed, or unindexed to use for encryption.
     ///
+    /// @note To insert or query with an indexed encrypted payload, use a mongocxx::client configured with mongocxx::options::auto_encryption. mongocxx::options::auto_encryption::bypass_query_analysis may be true. mongocxx::options::auto_encryption::bypass_auto_encryption must be false.
     /// @see
     /// https://docs.mongodb.com/manual/core/security-client-side-encryption/#encryption-algorithms
     ///
