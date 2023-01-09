@@ -2116,15 +2116,15 @@ TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
     std::string plain_text_unindexed = "encrypted unindexed value";
     bsoncxx::types::bson_value::value plain_text_unindexed_value(plain_text_unindexed);
 
+    class client key_vault_client {
+        uri{}, test_util::add_test_server_api(),
+    };
+    auto tpl = _setup_explicit_encryption(key1_document, &key_vault_client);
+
+    auto client_encryption = std::move(std::get<0>(tpl));
+    auto encrypted_client = std::move(std::get<1>(tpl));
+
     SECTION("Case 1: can insert encrypted indexed and find") {
-        class client key_vault_client {
-            uri{}, test_util::add_test_server_api(),
-        };
-        auto tpl = _setup_explicit_encryption(key1_document, &key_vault_client);
-
-        auto client_encryption = std::move(std::get<0>(tpl));
-        auto encrypted_client = std::move(std::get<1>(tpl));
-
         // Use clientEncryption to encrypt the value "encrypted indexed value" with these
         // EncryptOpts:
         //
@@ -2188,14 +2188,6 @@ TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
     }
 
     SECTION("Case 2: can insert encrypted indexed and find with non-zero contention") {
-        class client key_vault_client {
-            uri{}, test_util::add_test_server_api(),
-        };
-        auto tpl = _setup_explicit_encryption(key1_document, &key_vault_client);
-
-        auto client_encryption = std::move(std::get<0>(tpl));
-        auto encrypted_client = std::move(std::get<1>(tpl));
-
         // Use clientEncryption to encrypt the value "encrypted indexed value" with these
         // EncryptOpts:
         //
@@ -2302,14 +2294,6 @@ TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
     }
 
     SECTION("Case 3: can insert encrypted unindexed") {
-        class client key_vault_client {
-            uri{}, test_util::add_test_server_api(),
-        };
-        auto tpl = _setup_explicit_encryption(key1_document, &key_vault_client);
-
-        auto client_encryption = std::move(std::get<0>(tpl));
-        auto encrypted_client = std::move(std::get<1>(tpl));
-
         // Use clientEncryption to encrypt the value "encrypted unindexed value" with these
         // EncryptOpts:
         //
@@ -2353,15 +2337,6 @@ TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
     }
 
     SECTION("Case 4: can roundtrip encrypted indexed") {
-        class client key_vault_client {
-            uri{}, test_util::add_test_server_api(),
-        };
-        auto tpl = _setup_explicit_encryption(key1_document, &key_vault_client);
-
-        auto client_encryption = std::move(std::get<0>(tpl));
-
-        auto encrypted_client = std::move(std::get<1>(tpl));
-
         // Use clientEncryption to encrypt the value "encrypted indexed value" with these
         // EncryptOpts:
         //
@@ -2390,14 +2365,6 @@ TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
     }
 
     SECTION("Case 5: can roundtrip encrypted unindexed") {
-        class client key_vault_client {
-            uri{}, test_util::add_test_server_api(),
-        };
-        auto tpl = _setup_explicit_encryption(key1_document, &key_vault_client);
-
-        auto client_encryption = std::move(std::get<0>(tpl));
-        auto encrypted_client = std::move(std::get<1>(tpl));
-
         // Use clientEncryption to encrypt the value "encrypted unindexed value" with these
         // EncryptOpts:
         //
