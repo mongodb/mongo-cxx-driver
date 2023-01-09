@@ -2095,7 +2095,7 @@ TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
     }
 
     if (!test_util::newer_than(conn, "6.0")) {
-        std::cerr << "The Explicit Encryption tests require MongoDB server 6.0+." << std::endl;
+        std::cerr << "Explicit Encryption tests require MongoDB server 6.0+." << std::endl;
         return;
     }
 
