@@ -137,7 +137,8 @@ void* encrypt::convert() const {
     if (_query_type) {
         switch (*_query_type) {
             case encryption_query_type::k_equality:
-                libmongoc::client_encryption_encrypt_opts_set_query_type(opts, "equality");
+                libmongoc::client_encryption_encrypt_opts_set_query_type(
+                    opts, MONGOC_ENCRYPT_QUERY_TYPE_EQUALITY);
                 break;
             default:
                 libmongoc::client_encryption_encrypt_opts_destroy(opts);
