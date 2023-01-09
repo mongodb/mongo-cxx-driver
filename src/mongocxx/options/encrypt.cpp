@@ -118,7 +118,8 @@ void* encrypt::convert() const {
                     opts, MONGOC_ENCRYPT_ALGORITHM_INDEXED);
                 break;
             case encryption_algorithm::k_unindexed:
-                libmongoc::client_encryption_encrypt_opts_set_algorithm(opts, "Unindexed");
+                libmongoc::client_encryption_encrypt_opts_set_algorithm(
+                    opts, MONGOC_ENCRYPT_ALGORITHM_UNINDEXED);
                 break;
             default:
                 libmongoc::client_encryption_encrypt_opts_destroy(opts);
