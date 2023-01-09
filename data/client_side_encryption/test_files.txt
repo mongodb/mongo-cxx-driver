@@ -17,6 +17,7 @@ findOneAndDelete.json
 findOneAndReplace.json
 findOneAndUpdate.json
 fle2-BypassQueryAnalysis.json
+fle2-Compact.json
 fle2-CreateCollection.json
 fle2-DecryptExistingData.json
 fle2-Delete.json
