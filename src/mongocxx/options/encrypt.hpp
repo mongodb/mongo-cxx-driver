@@ -86,15 +86,35 @@ class MONGOCXX_API encrypt {
         ///
         /// Use randomized encryption.
         ///
-        k_random
+        k_random,
+
+        ///
+        /// Use indexed encryption.
+        ///
+        k_indexed,
+
+        ///
+        /// Use unindexed encryption.
+        ///
+        k_unindexed
     };
+
+    ///
+    /// queryType only applies when algorithm is "Indexed" or "RangePreview".
+    /// It is an error to set queryType when algorithm is not "Indexed" or "RangePreview".
+    ///
+    enum class encryption_query_type : std::uint8_t { k_equality };
 
     ///
     /// Sets the algorithm to use for encryption.
     ///
     /// @param algorithm
-    ///   An algorithm, either deterministic or random, to use for encryption.
+    ///   An algorithm, either deterministic, random, indexed, or unindexed to use for encryption.
     ///
+    /// @note To insert or query with an indexed encrypted payload, use a mongocxx::client
+    /// configured with mongocxx::options::auto_encryption.
+    /// mongocxx::options::auto_encryption::bypass_query_analysis may be true.
+    /// mongocxx::options::auto_encryption::bypass_auto_encryption must be false.
     /// @see
     /// https://docs.mongodb.com/manual/core/security-client-side-encryption/#encryption-algorithms
     ///
@@ -107,6 +127,42 @@ class MONGOCXX_API encrypt {
     ///   An optional algorithm.
     ///
     const stdx::optional<encryption_algorithm>& algorithm() const;
+
+    ///
+    /// Sets the contention factor to use for encryption.
+    /// contentionFactor only applies when algorithm is "Indexed" or "RangePreview".
+    /// It is an error to set contentionFactor when algorithm is not "Indexed".
+    ///
+    /// @param contention_factor
+    ///   An integer specifiying the desired contention factor.
+    ///
+    encrypt& contention_factor(int64_t contention_factor);
+
+    ///
+    /// Gets the current contention factor.
+    ///
+    /// @return
+    ///   An optional contention factor.
+    ///
+    const stdx::optional<int64_t>& contention_factor() const;
+
+    ///
+    /// Sets the query type to use for encryption.
+    ///
+    /// @param query_type
+    /// One of the following: - equality
+    /// query_type only applies when algorithm is "Indexed" or "RangePreview".
+    /// It is an error to set query_type when algorithm is not "Indexed" or "RangePreview".
+    ///
+    encrypt& query_type(encryption_query_type query_type);
+
+    ///
+    /// Gets the current query type.
+    ///
+    /// @return
+    ///   A query type.
+    ///
+    const stdx::optional<encryption_query_type>& query_type() const;
 
     ///
     /// Gets the key_id.
@@ -123,6 +179,8 @@ class MONGOCXX_API encrypt {
     stdx::optional<bsoncxx::types::bson_value::view_or_value> _key_id;
     stdx::optional<std::string> _key_alt_name;
     stdx::optional<encryption_algorithm> _algorithm;
+    stdx::optional<int64_t> _contention_factor;
+    stdx::optional<encryption_query_type> _query_type;
 };
 
 }  // namespace options

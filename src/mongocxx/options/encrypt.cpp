@@ -48,6 +48,24 @@ const stdx::optional<encrypt::encryption_algorithm>& encrypt::algorithm() const 
     return _algorithm;
 }
 
+encrypt& encrypt::contention_factor(int64_t contention_factor) {
+    _contention_factor = contention_factor;
+    return *this;
+}
+
+const stdx::optional<int64_t>& encrypt::contention_factor() const {
+    return _contention_factor;
+}
+
+encrypt& encrypt::query_type(encrypt::encryption_query_type query_type) {
+    _query_type = query_type;
+    return *this;
+}
+
+const stdx::optional<encrypt::encryption_query_type>& encrypt::query_type() const {
+    return _query_type;
+}
+
 const stdx::optional<bsoncxx::types::bson_value::view_or_value>& encrypt::key_id() const {
     return _key_id;
 }
@@ -95,6 +113,14 @@ void* encrypt::convert() const {
                 libmongoc::client_encryption_encrypt_opts_set_algorithm(
                     opts, "AEAD_AES_256_CBC_HMAC_SHA_512-Random");
                 break;
+            case encryption_algorithm::k_indexed:
+                libmongoc::client_encryption_encrypt_opts_set_algorithm(
+                    opts, MONGOC_ENCRYPT_ALGORITHM_INDEXED);
+                break;
+            case encryption_algorithm::k_unindexed:
+                libmongoc::client_encryption_encrypt_opts_set_algorithm(
+                    opts, MONGOC_ENCRYPT_ALGORITHM_UNINDEXED);
+                break;
             default:
                 libmongoc::client_encryption_encrypt_opts_destroy(opts);
                 throw exception{error_code::k_invalid_parameter,
@@ -104,6 +130,22 @@ void* encrypt::convert() const {
         // libmongoc will error in this case, encryption algorithm must be set.
     }
 
+    if (_contention_factor) {
+        libmongoc::client_encryption_encrypt_opts_set_contention_factor(opts,
+                                                                        _contention_factor.value());
+    }
+
+    if (_query_type) {
+        switch (*_query_type) {
+            case encryption_query_type::k_equality:
+                libmongoc::client_encryption_encrypt_opts_set_query_type(
+                    opts, MONGOC_ENCRYPT_QUERY_TYPE_EQUALITY);
+                break;
+            default:
+                libmongoc::client_encryption_encrypt_opts_destroy(opts);
+                throw exception{error_code::k_invalid_parameter, "unsupported query type"};
+        }
+    }
     return opts;
 }
 
