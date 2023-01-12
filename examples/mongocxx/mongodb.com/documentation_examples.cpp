@@ -1525,7 +1525,7 @@ static void queryable_encryption_api(mongocxx::client& client) {
                                      kvp("bsonType", "string"),
                                      kvp("keyId", key2_id)))))));
 
-    // Create an FLE 2 collection.
+    // Create an Queryable Encryption collection.
     options::auto_encryption auto_encrypt_opts{};
     auto_encrypt_opts.key_vault_namespace({"keyvault", "datakeys"});
     auto_encrypt_opts.kms_providers(_make_kms_doc(false));
