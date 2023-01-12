@@ -43,11 +43,7 @@ variables:
         ubsan_cmake_flags: &ubsan_cmake_flags -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-missing-field-initializers $ignore_deprecated" -DCMAKE_CXX_COMPILER="/usr/bin/clang++" -DCMAKE_CXX_FLAGS="-D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=undefined -fsanitize-blacklist=$(pwd)/etc/ubsan.ignorelist -fno-sanitize-recover=undefined -O1 -g -fno-omit-frame-pointer -Wall -Wextra -Wconversion -Wnarrowing -pedantic -Werror $ignore_deprecated"
         msvc2015_cmake_flags: &msvc2015_cmake_flags -DBOOST_ROOT=c:/local/boost_1_60_0
         msvc2015_generator: &msvc2015_generator Visual Studio 14 2015 Win64
-        # The VS option /Zc:__cplusplus is necessary to build with VS2017's
-        # native C++17 support. __cplusplus should indicate the standard of C++
-        # the compiler supports. VS2017 erroneously reports it as 199711L
-        # (instead of 201703L) without this option.
-        msvc2017_cmake_flags: &msvc2017_cmake_flags -DCMAKE_CXX_STANDARD=17 -DCMAKE_CXX_FLAGS="/Zc:__cplusplus"
+        msvc2017_cmake_flags: &msvc2017_cmake_flags -DCMAKE_CXX_STANDARD=17
         msvc2017_generator: &msvc2017_generator Visual Studio 15 2017 Win64
         code_coverage_cmake_flags: &code_coverage_cmake_flags -DENABLE_CODE_COVERAGE=ON
 
