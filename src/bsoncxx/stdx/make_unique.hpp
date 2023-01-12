@@ -48,7 +48,7 @@ using ::boost::make_unique;
 BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bsoncxx
 
-#elif __cplusplus >= 201402L
+#elif __cplusplus >= 201402L || (defined(_MSVC_LANG) && _MSVC_LANG >= 201402L)
 
 #include <memory>
 

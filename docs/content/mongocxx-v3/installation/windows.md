@@ -108,21 +108,33 @@ The example above assumes:
 * `libmongoc` is found in `C:\mongo-c-driver`.
 * `mongocxx` is to be installed into `C:\mongo-cxx-driver`.
 
-For building with Visual Studio 2017 (without a C++17 polyfill), it is necessary to configure with
-an additional option, `/Zc:__cplusplus` to opt into the correct definition of `__cplusplus`
-([problem described here](https://blogs.msdn.microsoft.com/vcblog/2018/04/09/msvc-now-correctly-reports-__cplusplus/)):
+To build with Visual Studio 2017 without a C++17 polyfill, configure as follows:
 
 ```sh
 'C:\Program Files (x86)\CMake\bin\cmake.exe' .. \
     -G "Visual Studio 15 2017 Win64"            \
     -DCMAKE_CXX_STANDARD=17                     \
-    -DCMAKE_CXX_FLAGS="/Zc:__cplusplus"         \
     -DCMAKE_PREFIX_PATH=C:\mongo-c-driver       \
     -DCMAKE_INSTALL_PREFIX=C:\mongo-cxx-driver  \
 ```
 
 For details on how to install libmongoc for Windows, see the
 [mongoc Windows installation instructions](http://mongoc.org/libmongoc/current/installing.html#building-windows).
+
+#### Configuring with `mongocxx` 3.7.0 and older
+
+To build versions 3.7.0 and older without a C++17 polyfill, it is necessary to configure with additional options:
+- `/Zc:__cplusplus` to opt into the correct definition of `__cplusplus` ([problem described here](https://blogs.msdn.microsoft.com/vcblog/2018/04/09/msvc-now-correctly-reports-__cplusplus/))
+- `/EHsc` to enable recommended [exception handling behavior](https://learn.microsoft.com/en-us/cpp/build/reference/eh-exception-handling-model?view=msvc-170).
+
+```sh
+'C:\Program Files (x86)\CMake\bin\cmake.exe' .. \
+    -G "Visual Studio 15 2017 Win64"            \
+    -DCMAKE_CXX_STANDARD=17                     \
+    -DCMAKE_CXX_FLAGS="/Zc:__cplusplus /EHsc"   \
+    -DCMAKE_PREFIX_PATH=C:\mongo-c-driver       \
+    -DCMAKE_INSTALL_PREFIX=C:\mongo-cxx-driver  \
+```
 
 #### Configuring with `mongocxx` 3.1.x or 3.0.x
 

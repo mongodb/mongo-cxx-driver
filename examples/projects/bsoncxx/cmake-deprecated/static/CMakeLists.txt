@@ -46,8 +46,6 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
         find_package(Boost 1.56.0 REQUIRED)
         target_link_libraries(hello_bsoncxx PRIVATE Boost::boost)
         target_compile_definitions(hello_bsoncxx PRIVATE BSONCXX_POLY_USE_BOOST=ON)
-    else ()
-        target_compile_options(hello_bsoncxx PRIVATE /Zc:__cplusplus)
     endif ()
 endif()
 
