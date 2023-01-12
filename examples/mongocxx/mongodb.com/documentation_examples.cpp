@@ -1544,8 +1544,8 @@ static void queryable_encryption_api(mongocxx::client& client) {
         uri{}, add_test_server_api(encrypted_client_opts)
     };
 
-    // Create the FLE 2 collection docsExample.encrypted.
-    // Because docsExample.encrypted is in encryptedFieldsMap, it is created with FLE 2 support.
+    // Create the Queryable Encryption collection docsExample.encrypted.
+    // Because docsExample.encrypted is in encryptedFieldsMap, it is created with Queryable Encryption support.
     auto db = encrypted_client["docsExamples"];
     db.create_collection("encrypted");
     auto encrypted_collection = db["encrypted"];
