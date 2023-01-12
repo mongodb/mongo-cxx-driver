@@ -14,19 +14,23 @@
 
 #include <chrono>
 #include <iostream>
+#include <sstream>
 #include <thread>
 #include <vector>
 
 #include <bsoncxx/builder/basic/array.hpp>
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>
+#include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/types.hpp>
 #include <mongocxx/client.hpp>
+#include <mongocxx/client_encryption.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/find.hpp>
+#include <mongocxx/options/server_api.hpp>
 #include <mongocxx/uri.hpp>
 
 // NOTE: Any time this file is modified, a DOCS ticket should be opened to sync the changes with the
@@ -55,6 +59,119 @@ void check_has_field(const T& document, const char* field, int example_no) {
 template <typename T>
 void check_has_no_field(const T& document, const char* field, int example_no) {
     check_field(document, field, false, example_no);
+}
+
+bool should_run_client_side_encryption_test(void) {
+    std::vector<const char*> vars{
+        "MONGOCXX_TEST_AWS_SECRET_ACCESS_KEY",
+        "MONGOCXX_TEST_AWS_ACCESS_KEY_ID",
+        "MONGOCXX_TEST_AZURE_TENANT_ID",
+        "MONGOCXX_TEST_AZURE_CLIENT_ID",
+        "MONGOCXX_TEST_AZURE_CLIENT_SECRET",
+        "MONGOCXX_TEST_CSFLE_TLS_CA_FILE",
+        "MONGOCXX_TEST_CSFLE_TLS_CERTIFICATE_KEY_FILE",
+        "MONGOCXX_TEST_GCP_EMAIL",
+        "MONGOCXX_TEST_GCP_PRIVATEKEY",
+    };
+
+    std::ostringstream os;
+    os << "Please set environment variables to enable client side encryption tests:\n";
+    std::copy(std::begin(vars), std::end(vars), std::ostream_iterator<const char*>(os, "\n"));
+
+    if (std::none_of(std::begin(vars), std::end(vars), std::getenv)) {
+        os << "Skipping client side encryption tests.\n";
+        std::cerr << os.str() << std::endl;
+        return false;
+    }
+
+    if (!std::all_of(std::begin(vars), std::end(vars), std::getenv)) {
+        os << "Failing client side encryption tests (some environment variables were not set).\n";
+        std::cerr << os.str() << std::endl;
+        return false;
+    }
+
+    return true;
+}
+
+mongocxx::options::client add_test_server_api(mongocxx::options::client opts = {}) {
+    auto api_version = std::getenv("MONGODB_API_VERSION");
+    if (api_version && std::string(api_version).length() > 0) {
+        if (!std::string(api_version).compare("1")) {
+            opts.server_api_opts(
+                mongocxx::options::server_api(mongocxx::options::server_api::version::k_version_1));
+        } else {
+            throw std::logic_error("invalid server API version");
+        }
+    }
+    return opts;
+}
+
+std::string getenv_or_fail(const char* s) {
+    const char* env = std::getenv(s);
+    if (!env) {
+        throw std::runtime_error("missing a required environment variable: " + std::string(s));
+    }
+    return std::string(env);
+}
+
+// Returns a document with credentials for KMS providers.
+// If include_external is true, all KMS providers are set.
+// If include_external is false, only the local provider is set.
+bsoncxx::document::value _make_kms_doc(bool include_external = true) {
+    using bsoncxx::builder::basic::sub_document;
+    using bsoncxx::builder::stream::close_array;
+    using bsoncxx::builder::stream::close_document;
+    using bsoncxx::builder::stream::document;
+    using bsoncxx::builder::stream::finalize;
+    using bsoncxx::builder::stream::open_array;
+    using bsoncxx::builder::stream::open_document;
+
+    using bsoncxx::builder::basic::kvp;
+    using bsoncxx::builder::basic::make_document;
+
+    const auto kLocalMasterKey =
+        "\x32\x78\x34\x34\x2b\x78\x64\x75\x54\x61\x42\x42\x6b\x59\x31\x36\x45\x72"
+        "\x35\x44\x75\x41\x44\x61\x67\x68\x76\x53\x34\x76\x77\x64\x6b\x67\x38\x74"
+        "\x70\x50\x70\x33\x74\x7a\x36\x67\x56\x30\x31\x41\x31\x43\x77\x62\x44\x39"
+        "\x69\x74\x51\x32\x48\x46\x44\x67\x50\x57\x4f\x70\x38\x65\x4d\x61\x43\x31"
+        "\x4f\x69\x37\x36\x36\x4a\x7a\x58\x5a\x42\x64\x42\x64\x62\x64\x4d\x75\x72"
+        "\x64\x6f\x6e\x4a\x31\x64";
+
+    auto kms_doc = bsoncxx::builder::basic::document{};
+
+    if (include_external) {
+        kms_doc.append(kvp("aws", [&](sub_document subdoc) {
+            subdoc.append(
+                kvp("secretAccessKey", getenv_or_fail("MONGOCXX_TEST_AWS_SECRET_ACCESS_KEY")));
+            subdoc.append(kvp("accessKeyId", getenv_or_fail("MONGOCXX_TEST_AWS_ACCESS_KEY_ID")));
+        }));
+
+        kms_doc.append(kvp("azure", [&](sub_document subdoc) {
+            subdoc.append(kvp("tenantId", getenv_or_fail("MONGOCXX_TEST_AZURE_TENANT_ID")));
+            subdoc.append(kvp("clientId", getenv_or_fail("MONGOCXX_TEST_AZURE_CLIENT_ID")));
+            subdoc.append(kvp("clientSecret", getenv_or_fail("MONGOCXX_TEST_AZURE_CLIENT_SECRET")));
+        }));
+
+        kms_doc.append(kvp("gcp", [&](sub_document subdoc) {
+            subdoc.append(kvp("email", getenv_or_fail("MONGOCXX_TEST_GCP_EMAIL")));
+            subdoc.append(kvp("privateKey", getenv_or_fail("MONGOCXX_TEST_GCP_PRIVATEKEY")));
+        }));
+
+        kms_doc.append(kvp("kmip", [&](sub_document subdoc) {
+            subdoc.append(kvp("endpoint", "localhost:5698"));
+        }));
+    }
+
+    char key_storage[96];
+    memcpy(&(key_storage[0]), kLocalMasterKey, 96);
+
+    bsoncxx::types::b_binary local_master_key{
+        bsoncxx::binary_sub_type::k_binary, 96, (const uint8_t*)&key_storage};
+
+    kms_doc.append(
+        kvp("local", [&](sub_document subdoc) { subdoc.append(kvp("key", local_master_key)); }));
+
+    return {kms_doc.extract()};
 }
 
 static bsoncxx::document::value get_is_master(const mongocxx::client& client) {
@@ -1368,6 +1485,113 @@ static bool version_at_least(mongocxx::v_noabi::database& db, int minimum_major)
     return server_major >= minimum_major;
 }
 
+// https://jira.mongodb.org/browse/CXX-2505
+static void queryable_encryption_api(mongocxx::client& client) {
+    // Start Queryable Encryption Example
+    using namespace mongocxx;
+    using bsoncxx::builder::basic::kvp;
+    using bsoncxx::builder::basic::make_array;
+    using bsoncxx::builder::basic::make_document;
+    using bsoncxx::types::bson_value::value;
+
+    // Drop data from prior test runs.
+    client["keyvault"]["datakeys"].drop();
+    client["docsExamples"].drop();
+
+    // Create two data keys.
+    class client key_vault_client {
+        uri{}, add_test_server_api(),
+    };
+
+    options::client_encryption ce_opts;
+    ce_opts.key_vault_client(&key_vault_client);
+    ce_opts.key_vault_namespace({"keyvault", "datakeys"});
+    ce_opts.kms_providers(_make_kms_doc(false));
+    client_encryption client_encryption(std::move(ce_opts));
+
+    auto key1_id = client_encryption.create_data_key("local");
+    auto key2_id = client_encryption.create_data_key("local");
+
+    // Create an encryptedFieldsMap.
+    auto encrypted_fields_map = make_document(kvp(
+        "docsExamples.encrypted",
+        make_document(kvp(
+            "fields",
+            make_array(make_document(kvp("path", "encryptedIndexed"),
+                                     kvp("bsonType", "string"),
+                                     kvp("keyId", key1_id),
+                                     kvp("queries", make_document(kvp("queryType", "equality")))),
+                       make_document(kvp("path", "encryptedUnindexed"),
+                                     kvp("bsonType", "string"),
+                                     kvp("keyId", key2_id)))))));
+
+    // Create an FLE 2 collection.
+    options::auto_encryption auto_encrypt_opts{};
+    auto_encrypt_opts.key_vault_namespace({"keyvault", "datakeys"});
+    auto_encrypt_opts.kms_providers(_make_kms_doc(false));
+    auto_encrypt_opts.encrypted_fields_map(encrypted_fields_map.view());
+
+    // Optional, If mongocryptd is not in PATH, then find the binary at MONGOCRYPTD_PATH.
+    char* mongocryptd_path = std::getenv("MONGOCRYPTD_PATH");
+    if (mongocryptd_path) {
+        auto_encrypt_opts.extra_options(
+            make_document(kvp("mongocryptdSpawnPath", mongocryptd_path)));
+    }
+
+    mongocxx::options::client encrypted_client_opts;
+    encrypted_client_opts.auto_encryption_opts(std::move(auto_encrypt_opts));
+    class client encrypted_client {
+        uri{}, add_test_server_api(encrypted_client_opts)
+    };
+
+    // Create the FLE 2 collection docsExample.encrypted.
+    // Because docsExample.encrypted is in encryptedFieldsMap, it is created with FLE 2 support.
+    auto db = encrypted_client["docsExamples"];
+    db.create_collection("encrypted");
+    auto encrypted_collection = db["encrypted"];
+
+    // Auto encrypt an insert and find.
+    {
+        // Encrypt an insert.
+        encrypted_collection.insert_one(make_document(kvp("_id", 1),
+                                                      kvp("encryptedIndexed", "indexedValue"),
+                                                      kvp("encryptedUnindexed", "unindexedValue")));
+
+        // Encrypt a find.
+        auto res =
+            encrypted_collection.find_one(make_document(kvp("encryptedIndexed", "indexedValue")));
+
+        auto doc = res.value();
+
+        if (doc["encryptedIndexed"] != value("indexedValue")) {
+            throw std::logic_error("expected 'indexedValue'");
+        }
+        if (doc["encryptedUnindexed"] != value("unindexedValue")) {
+            throw std::logic_error("expected 'unindexedValue'");
+        }
+    }
+
+    // Find documents without decryption.
+    {
+        auto unencrypted_collection = client["docsExamples"]["encrypted"];
+        auto res = unencrypted_collection.find_one(make_document(kvp("_id", 1)));
+        auto doc = res.value();
+        {
+            auto val = doc["encryptedIndexed"];
+            if (val.type() != bsoncxx::type::k_binary) {
+                throw std::logic_error("expected encryptedIndexed to be Binary");
+            }
+        }
+        {
+            auto val = doc["encryptedUnindexed"];
+            if (val.type() != bsoncxx::type::k_binary) {
+                throw std::logic_error("expected encryptedUnindexed to be Binary");
+            }
+        }
+    }
+    // End Queryable Encryption Example
+}
+
 int main() {
     // The mongocxx::instance constructor and destructor initialize and shut down the driver,
     // respectively. Therefore, a mongocxx::instance must be created before using the driver and
@@ -1390,6 +1614,10 @@ int main() {
         if (is_replica_set(conn) && version_at_least(db, 5)) {
             snapshot_example1(conn);
             snapshot_example2(conn);
+        }
+        if (should_run_client_side_encryption_test() && is_replica_set(conn) &&
+            version_at_least(db, 6)) {
+            queryable_encryption_api(conn);
         }
     } catch (const std::logic_error& e) {
         std::cerr << e.what() << std::endl;
