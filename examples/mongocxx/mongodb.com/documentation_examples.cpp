@@ -164,11 +164,8 @@ bsoncxx::document::value _make_kms_doc(bool include_external = true) {
         }));
     }
 
-    char key_storage[96];
-    memcpy(&(key_storage[0]), kLocalMasterKey, 96);
-
     bsoncxx::types::b_binary local_master_key{
-        bsoncxx::binary_sub_type::k_binary, 96, (const uint8_t*)&key_storage};
+        bsoncxx::binary_sub_type::k_binary, 96, kLocalMasterKey};
 
     kms_doc.append(
         kvp("local", [&](sub_document subdoc) { subdoc.append(kvp("key", local_master_key)); }));
