@@ -62,7 +62,7 @@ void check_has_no_field(const T& document, const char* field, int example_no) {
 }
 
 bool should_run_client_side_encryption_test(void) {
-    std::vector<const char*> vars{
+    const char* const vars[] = {
         "MONGOCXX_TEST_AWS_SECRET_ACCESS_KEY",
         "MONGOCXX_TEST_AWS_ACCESS_KEY_ID",
         "MONGOCXX_TEST_AZURE_TENANT_ID",
@@ -74,19 +74,12 @@ bool should_run_client_side_encryption_test(void) {
         "MONGOCXX_TEST_GCP_PRIVATEKEY",
     };
 
-    std::ostringstream os;
-    os << "Please set environment variables to enable client side encryption tests:\n";
-    std::copy(std::begin(vars), std::end(vars), std::ostream_iterator<const char*>(os, "\n"));
+    const auto iter = std::find_if_not(
+        std::begin(vars), std::end(vars), [](const char* var) { return std::getenv(var); });
 
-    if (std::none_of(std::begin(vars), std::end(vars), std::getenv)) {
-        os << "Skipping client side encryption tests.\n";
-        std::cerr << os.str() << std::endl;
-        return false;
-    }
-
-    if (!std::all_of(std::begin(vars), std::end(vars), std::getenv)) {
-        os << "Failing client side encryption tests (some environment variables were not set).\n";
-        std::cerr << os.str() << std::endl;
+    if (iter != std::end(vars)) {
+        std::cerr << "Skipping Queryable Encryption tests: environment variable " << *iter
+                  << " not defined" << std::endl;
         return false;
     }
 
@@ -94,15 +87,23 @@ bool should_run_client_side_encryption_test(void) {
 }
 
 mongocxx::options::client add_test_server_api(mongocxx::options::client opts = {}) {
-    auto api_version = std::getenv("MONGODB_API_VERSION");
-    if (api_version && std::string(api_version).length() > 0) {
-        if (!std::string(api_version).compare("1")) {
+    const auto api_version = std::getenv("MONGODB_API_VERSION");
+
+    if (!api_version) {
+        return opts;
+    }
+
+    const auto api_version_sv = bsoncxx::stdx::string_view(api_version);
+
+    if (!api_version_sv.empty()) {
+        if (api_version_sv.compare("1") == 0) {
             opts.server_api_opts(
                 mongocxx::options::server_api(mongocxx::options::server_api::version::k_version_1));
         } else {
-            throw std::logic_error("invalid server API version");
+            throw std::logic_error("invalid MONGODB_API_VERSION: " + std::string(api_version_sv));
         }
     }
+
     return opts;
 }
 
@@ -1544,7 +1545,8 @@ static void queryable_encryption_api(mongocxx::client& client) {
     };
 
     // Create the Queryable Encryption collection docsExample.encrypted.
-    // Because docsExample.encrypted is in encryptedFieldsMap, it is created with Queryable Encryption support.
+    // Because docsExample.encrypted is in encryptedFieldsMap, it is created with Queryable
+    // Encryption support.
     auto db = encrypted_client["docsExamples"];
     db.create_collection("encrypted");
     auto encrypted_collection = db["encrypted"];
