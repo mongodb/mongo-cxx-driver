@@ -50,8 +50,6 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
             target_link_libraries(hello_bsoncxx PRIVATE Boost::boost)
         endif()
         target_compile_definitions(hello_bsoncxx PRIVATE BSONCXX_POLY_USE_BOOST=ON)
-    else ()
-        target_compile_options(hello_bsoncxx PRIVATE /Zc:__cplusplus)
     endif ()
 endif()
 
