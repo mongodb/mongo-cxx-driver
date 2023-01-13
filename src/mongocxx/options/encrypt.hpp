@@ -77,6 +77,10 @@ class MONGOCXX_API encrypt {
     /// Determines which AEAD_AES_256_CBC algorithm to use with HMAC_SHA_512 when
     /// encrypting data.
     ///
+    /// Indexed and Unindexed are used for Queryable Encryption.
+    /// Queryable Encryption is in Public Technical Preview. Queryable Encryption should not be used
+    /// in production and is subject to backwards breaking changes.
+    ///
     enum class encryption_algorithm : std::uint8_t {
         ///
         /// Use deterministic encryption.
@@ -103,10 +107,17 @@ class MONGOCXX_API encrypt {
     /// queryType only applies when algorithm is "Indexed" or "RangePreview".
     /// It is an error to set queryType when algorithm is not "Indexed" or "RangePreview".
     ///
+    /// Queryable Encryption is in Public Technical Preview. Queryable Encryption should not be used
+    /// in production and is subject to backwards breaking changes.
+    ///
     enum class encryption_query_type : std::uint8_t { k_equality };
 
     ///
     /// Sets the algorithm to use for encryption.
+    ///
+    /// Indexed and Unindexed are used for Queryable Encryption.
+    /// Queryable Encryption is in Public Technical Preview. Queryable Encryption should not be used
+    /// in production and is subject to backwards breaking changes.
     ///
     /// @param algorithm
     ///   An algorithm, either deterministic, random, indexed, or unindexed to use for encryption.
@@ -123,6 +134,10 @@ class MONGOCXX_API encrypt {
     ///
     /// Gets the current algorithm.
     ///
+    /// Indexed and Unindexed are used for Queryable Encryption.
+    /// Queryable Encryption is in Public Technical Preview. Queryable Encryption should not be used
+    /// in production and is subject to backwards breaking changes.
+    ///
     /// @return
     ///   An optional algorithm.
     ///
@@ -133,6 +148,10 @@ class MONGOCXX_API encrypt {
     /// contentionFactor only applies when algorithm is "Indexed" or "RangePreview".
     /// It is an error to set contentionFactor when algorithm is not "Indexed".
     ///
+    /// The contention factor is used for Queryable Encryption.
+    /// Queryable Encryption is in Public Technical Preview. Queryable Encryption should not be used
+    /// in production and is subject to backwards breaking changes.
+    ///
     /// @param contention_factor
     ///   An integer specifiying the desired contention factor.
     ///
@@ -140,6 +159,9 @@ class MONGOCXX_API encrypt {
 
     ///
     /// Gets the current contention factor.
+    ///
+    /// Queryable Encryption is in Public Technical Preview. Queryable Encryption should not be used
+    /// in production and is subject to backwards breaking changes.
     ///
     /// @return
     ///   An optional contention factor.
@@ -154,6 +176,10 @@ class MONGOCXX_API encrypt {
     /// query_type only applies when algorithm is "Indexed" or "RangePreview".
     /// It is an error to set query_type when algorithm is not "Indexed" or "RangePreview".
     ///
+    /// QueryType is used for Queryable Encryption.
+    /// Queryable Encryption is in Public Technical Preview. Queryable Encryption should not be used
+    /// in production and is subject to backwards breaking changes.
+    ///
     encrypt& query_type(encryption_query_type query_type);
 
     ///
@@ -161,6 +187,10 @@ class MONGOCXX_API encrypt {
     ///
     /// @return
     ///   A query type.
+    ///
+    /// QueryType is used for Queryable Encryption.
+    /// Queryable Encryption is in Public Technical Preview. Queryable Encryption should not be used
+    /// in production and is subject to backwards breaking changes.
     ///
     const stdx::optional<encryption_query_type>& query_type() const;
 
