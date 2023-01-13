@@ -129,6 +129,7 @@ class MONGOCXX_API encrypt {
     ///
     /// Gets the current algorithm.
     ///
+    /// Indexed and Unindexed are used for Queryable Encryption.
     /// Queryable Encryption is in Public Technical Preview. Queryable Encryption should not be used
     /// in production and is subject to backwards breaking changes.
     ///
@@ -142,6 +143,7 @@ class MONGOCXX_API encrypt {
     /// contentionFactor only applies when algorithm is "Indexed" or "RangePreview".
     /// It is an error to set contentionFactor when algorithm is not "Indexed".
     ///
+    /// Indexed and Unindexed are used for Queryable Encryption.
     /// Queryable Encryption is in Public Technical Preview. Queryable Encryption should not be used
     /// in production and is subject to backwards breaking changes.
     ///
