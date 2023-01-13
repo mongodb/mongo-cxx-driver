@@ -77,6 +77,10 @@ class MONGOCXX_API encrypt {
     /// Determines which AEAD_AES_256_CBC algorithm to use with HMAC_SHA_512 when
     /// encrypting data.
     ///
+    /// Indexed and Unindexed are used for Queryable Encryption.
+    /// Queryable Encryption is in Public Technical Preview. Queryable Encryption should not be used
+    /// in production and is subject to backwards breaking changes.
+    ///
     enum class encryption_algorithm : std::uint8_t {
         ///
         /// Use deterministic encryption.
