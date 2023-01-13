@@ -115,6 +115,7 @@ class MONGOCXX_API encrypt {
     ///
     /// Sets the algorithm to use for encryption.
     ///
+    /// Indexed and Unindexed are used for Queryable Encryption.
     /// Queryable Encryption is in Public Technical Preview. Queryable Encryption should not be used
     /// in production and is subject to backwards breaking changes.
     ///
