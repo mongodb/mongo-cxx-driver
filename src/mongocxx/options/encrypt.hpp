@@ -175,6 +175,10 @@ class MONGOCXX_API encrypt {
     /// query_type only applies when algorithm is "Indexed" or "RangePreview".
     /// It is an error to set query_type when algorithm is not "Indexed" or "RangePreview".
     ///
+    /// QueryType is used for Queryable Encryption.
+    /// Queryable Encryption is in Public Technical Preview. Queryable Encryption should not be used
+    /// in production and is subject to backwards breaking changes.
+    ///
     encrypt& query_type(encryption_query_type query_type);
 
     ///
@@ -182,6 +186,10 @@ class MONGOCXX_API encrypt {
     ///
     /// @return
     ///   A query type.
+    ///
+    /// QueryType is used for Queryable Encryption.
+    /// Queryable Encryption is in Public Technical Preview. Queryable Encryption should not be used
+    /// in production and is subject to backwards breaking changes.
     ///
     const stdx::optional<encryption_query_type>& query_type() const;
 
