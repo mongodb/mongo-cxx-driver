@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <bsoncxx/json.hpp>
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/types.hpp>
 #include <mongocxx/exception/error_code.hpp>
@@ -164,6 +165,18 @@ static stdx::optional<bool> _bool_option(mongoc_uri_t* uri, std::string opt_name
         return {};
     }
     return bson_iter_bool(&iter);
+}
+
+stdx::optional<bsoncxx::document::view> uri::credentials() {
+    const bson_t* options_bson = libmongoc::uri_get_credentials(_impl->uri_t);
+    const uint8_t* data = bson_get_data(options_bson);
+    uint32_t len = options_bson->len;
+
+    if (len) {
+        return bsoncxx::document::view(data, len);
+    } else {
+        return {};
+    }
 }
 
 static stdx::optional<bsoncxx::document::view> _credential_document_option(mongoc_uri_t* uri,

@@ -409,6 +409,7 @@ functions:
                   export CRUD_UNIFIED_TESTS_PATH="$(pwd)/../data/crud/unified"
                   export CHANGE_STREAMS_UNIFIED_TESTS_PATH="$(pwd)/../data/change-streams/unified"
                   export ENCRYPTION_TESTS_PATH="$(pwd)/../data/client_side_encryption"
+                  export TEST_DATA_PATH="$(pwd)/../data"
                   export GRIDFS_TESTS_PATH="$(pwd)/../data/gridfs"
                   export COMMAND_MONITORING_TESTS_PATH="$(pwd)/../data/command-monitoring"
                   export TRANSACTIONS_TESTS_PATH="$(pwd)/../data/transactions"
@@ -428,6 +429,8 @@ functions:
                       export DRIVERS_TOOLS=$(cygpath -m $DRIVERS_TOOLS)
                   fi
                   popd # ../../drivers-evergreen-tools
+
+                  export MONGOCXX_TEST_TLS_CA_FILE=$DRIVERS_TOOLS/.evergreen/x509gen/ca.pem
 
                   if [ "$(uname -m)" == "ppc64le" ]; then
                       echo "Skipping CSFLE test setup (CDRIVER-4246/CXX-2423)"
