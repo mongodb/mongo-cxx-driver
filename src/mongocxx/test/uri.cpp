@@ -22,12 +22,13 @@
 #include <bsoncxx/test_util/catch.hh>
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
+#include <mongocxx/instance.hpp>
 #include <mongocxx/test/spec/monitoring.hh>
 
 namespace {
 
 static bsoncxx::document::value _doc_from_file(mongocxx::stdx::string_view sub_path) {
-    const char* test_path = std::getenv("TEST_DATA_PATH");
+    const char* test_path = std::getenv("URI_OPTIONS_TESTS_PATH");
     REQUIRE(test_path);
 
     std::string path = std::string(test_path) + sub_path.data();
@@ -458,7 +459,7 @@ static void run_srv_max_hosts_test_file(bsoncxx::document::view test_doc) {
 
 static void iterate_srv_max_hosts_tests(std::string dir, std::vector<std::string> files) {
     for (const auto& file : files) {
-        auto test_doc = _doc_from_file("/initial_dns_seedlist_discovery/" + dir + "/" + file);
+        auto test_doc = _doc_from_file("/" + dir + "/" + file);
         run_srv_max_hosts_test_file(test_doc);
     }
 }
@@ -492,7 +493,7 @@ static bool is_tls_enabled(void) {
 }
 
 TEST_CASE("uri::test_srv_max_hosts", "[uri]") {
-   mongocxx::instance::current();
+    mongocxx::instance::current();
 
     if (!is_tls_enabled()) {
         std::cerr << "TLS is not supported by server, skipping test: 'uri::test_srv_max_hosts'"

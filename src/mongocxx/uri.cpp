@@ -170,7 +170,7 @@ static stdx::optional<bool> _bool_option(mongoc_uri_t* uri, std::string opt_name
 stdx::optional<bsoncxx::document::view> uri::credentials() {
     const bson_t* options_bson = libmongoc::uri_get_credentials(_impl->uri_t);
     const uint8_t* data = bson_get_data(options_bson);
-    
+
     return bsoncxx::document::view(data, options_bson->len);
 }
 

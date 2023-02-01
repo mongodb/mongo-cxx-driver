@@ -409,7 +409,7 @@ functions:
                   export CRUD_UNIFIED_TESTS_PATH="$(pwd)/../data/crud/unified"
                   export CHANGE_STREAMS_UNIFIED_TESTS_PATH="$(pwd)/../data/change-streams/unified"
                   export ENCRYPTION_TESTS_PATH="$(pwd)/../data/client_side_encryption"
-                  export URI_OPTIONS_TESTS_PATH="$(pwd)/../data/uri-options"
+                  export URI_OPTIONS_TESTS_PATH=""$(pwd)/../data/initial_dns_seedlist_discovery"
                   export GRIDFS_TESTS_PATH="$(pwd)/../data/gridfs"
                   export COMMAND_MONITORING_TESTS_PATH="$(pwd)/../data/command-monitoring"
                   export TRANSACTIONS_TESTS_PATH="$(pwd)/../data/transactions"
