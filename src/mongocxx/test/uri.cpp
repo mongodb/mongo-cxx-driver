@@ -492,6 +492,8 @@ static bool is_tls_enabled(void) {
 }
 
 TEST_CASE("uri::test_srv_max_hosts", "[uri]") {
+   mongocxx::instance::current();
+
     if (!is_tls_enabled()) {
         std::cerr << "TLS is not supported by server, skipping test: 'uri::test_srv_max_hosts'"
                   << std::endl;
