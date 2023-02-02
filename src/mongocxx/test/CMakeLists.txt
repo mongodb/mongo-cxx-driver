@@ -75,6 +75,7 @@ set(test_driver_sources
     spec/unified_tests/entity.cpp
     transactions.cpp
     uri.cpp
+    spec/uri.cpp
     validation_criteria.cpp
     write_concern.cpp
 )
