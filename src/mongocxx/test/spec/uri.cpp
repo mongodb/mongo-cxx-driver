@@ -218,6 +218,7 @@ static bool is_tls_enabled(void) {
         REQUIRE(result.begin()->get_double() == 1.0);
         return true;
     } catch (mongocxx::operation_exception& e) {
+        FAIL("Unable to ping server with TLS. Is TLS enabled on the server?");
         return false;
     }
 }
