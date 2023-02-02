@@ -222,6 +222,7 @@ static bool is_tls_enabled(void) {
     }
 }
 
+// TODO(CXX-2087) extend this test to run all Initial DNS Seedlist Discovery tests.
 TEST_CASE("uri::test_srv_max_hosts", "[uri]") {
     mongocxx::instance::current();
 
