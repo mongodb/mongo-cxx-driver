@@ -25,7 +25,7 @@
 namespace {
 
 static bsoncxx::document::value _doc_from_file(mongocxx::stdx::string_view sub_path) {
-    const char* test_path = std::getenv("URI_OPTIONS_TESTS_PATH");
+    const char* test_path = std::getenv("INITIAL_DNS_SEEDLIST_DISCOVERY_TESTS_PATH");
     REQUIRE(test_path);
 
     std::string path = std::string(test_path) + sub_path.data();
