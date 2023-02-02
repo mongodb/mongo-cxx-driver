@@ -13,22 +13,17 @@
 // limitations under the License.
 
 #include <algorithm>
-#include <cctype>
-#include <cxxabi.h>
-#include <fstream>
-#include <mutex>
 #include <string>
-#include <thread>
 
+#include <bsoncxx/builder/basic/document.hpp>
+#include <bsoncxx/builder/basic/kvp.hpp>
+#include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/test_util/catch.hh>
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
-#include <mongocxx/exception/operation_exception.hpp>
-#include <mongocxx/instance.hpp>
-#include <mongocxx/test/spec/monitoring.hh>
+#include <mongocxx/uri.hpp>
 
 namespace {
-
 TEST_CASE("URI", "[uri]") {
     SECTION("Default URI") {
         REQUIRE_NOTHROW(mongocxx::uri{});
