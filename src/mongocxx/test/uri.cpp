@@ -14,6 +14,7 @@
 
 #include <algorithm>
 #include <cctype>
+#include <cxxabi.h>
 #include <fstream>
 #include <mutex>
 #include <string>
@@ -22,6 +23,7 @@
 #include <bsoncxx/test_util/catch.hh>
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
+#include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/test/spec/monitoring.hh>
 
@@ -314,8 +316,8 @@ TEST_CASE("uri::wait_queue_timeout_ms()", "[uri]") {
                        [](mongocxx::uri& uri) { return uri.wait_queue_timeout_ms(); });
 }
 
-static void compare_elements(bsoncxx::document::element expected_option,
-                             bsoncxx::document::element my_option) {
+static void assert_elements_equal(bsoncxx::document::element expected_option,
+                                  bsoncxx::document::element my_option) {
     REQUIRE(expected_option.type() == my_option.type());
     switch (expected_option.type()) {
         case bsoncxx::type::k_int32:
@@ -347,11 +349,11 @@ static void compare_options(bsoncxx::document::view_or_value expected_options,
 
         bsoncxx::document::element my_value = my_options_view[key];
         if (my_value) {
-            compare_elements(expected_option, my_value);
+            assert_elements_equal(expected_option, my_value);
         } else if (creds && creds.value()[key]) {
-            compare_elements(expected_option, creds.value()[key]);
+            assert_elements_equal(expected_option, creds.value()[key]);
         } else {
-            REQUIRE(false);
+            FAIL("neither options nor credentials contains the required key: " + key);
         }
     }
 }
@@ -487,7 +489,7 @@ static bool is_tls_enabled(void) {
         REQUIRE(!result.empty());
         REQUIRE(result.begin()->get_double() == 1.0);
         return true;
-    } catch (mongocxx::exception& e) {
+    } catch (mongocxx::operation_exception& e) {
         return false;
     }
 }
