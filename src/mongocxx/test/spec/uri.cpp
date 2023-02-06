@@ -120,7 +120,8 @@ static void validate_srv_max_hosts(mongocxx::client client,
     }
 
     auto expected_hosts = test_doc["hosts"];
-    if (expected_hosts) {
+    auto num_hosts = test_doc["numHosts"];
+    if (num_hosts || expected_hosts) {
         size_t count = 0;
         while (!hosts_are_equal(expected_hosts.get_array().value, new_hosts, mtx)) {
             count++;
@@ -129,6 +130,10 @@ static void validate_srv_max_hosts(mongocxx::client client,
             }
             std::this_thread::sleep_for(std::chrono::seconds(count));
         }
+    }
+
+    if (num_hosts) {
+        REQUIRE((size_t)num_hosts.get_int32().value == new_hosts.size());
     }
 }
 
@@ -260,7 +265,7 @@ TEST_CASE("uri::test_srv_max_hosts", "[uri]") {
     SECTION("sharded") {
         std::vector<std::string> files = {
             //"srvMaxHosts-zero.json", // Blocked until CXX-1848 is implemented
-            "srvMaxHosts-less_than_srv_records.json",
+            //"srvMaxHosts-less_than_srv_records.json", // Blocked until CXX-1848 is implemented
             "srvMaxHosts-invalid_type.json",
             "srvMaxHosts-invalid_integer.json",
             //"srvMaxHosts-greater_than_srv_records.json", // Blocked until CXX-1848 is implemented
