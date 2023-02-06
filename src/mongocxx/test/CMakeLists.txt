@@ -69,11 +69,11 @@ set(test_driver_sources
     result/replace_one.cpp
     result/update.cpp
     sdam-monitoring.cpp
+    spec/initial_dns_seedlist_discovery.cpp
     spec/monitoring.cpp
     spec/monitoring.hh
     spec/unified_tests/assert.cpp
     spec/unified_tests/entity.cpp
-    spec/uri.cpp
     transactions.cpp
     uri.cpp
     validation_criteria.cpp
@@ -331,6 +331,7 @@ set_dist_list (src_mongocxx_test_DIST
    spec/command_monitoring.cpp
    spec/crud.cpp
    spec/gridfs.cpp
+   spec/initial_dns_seedlist_discovery.cpp
    spec/mongohouse.cpp
    spec/monitoring.cpp
    spec/monitoring.hh
@@ -348,7 +349,6 @@ set_dist_list (src_mongocxx_test_DIST
    spec/unified_tests/runner.cpp
    spec/util.cpp
    spec/util.hh
-   spec/uri.cpp
    transactions.cpp
    uri.cpp
    validation_criteria.cpp
