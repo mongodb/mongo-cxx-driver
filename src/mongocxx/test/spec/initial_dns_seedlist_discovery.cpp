@@ -24,6 +24,50 @@
 
 namespace {
 
+struct InitialDNSSeedlistTest {
+    bsoncxx::stdx::string_view uri;
+    bsoncxx::array::view hosts;
+    int32_t num_hosts;
+    bsoncxx::document::view options;
+    bool error;
+    bool ping;
+
+    InitialDNSSeedlistTest() {
+        error = false;
+        ping = true;
+        num_hosts = 0;
+    }
+
+    static InitialDNSSeedlistTest parse(bsoncxx::document::view test_doc) {
+        InitialDNSSeedlistTest test;
+
+        for (auto el : test_doc) {
+            if (0 == el.key().compare("uri")) {
+                test.uri = el.get_string().value;
+            } else if (0 == el.key().compare("seeds") || 0 == el.key().compare("numSeeds")) {
+                // The 'seeds' and 'numSeeds' assertions are explicitly skipped. The C++ driver does
+                // not have access to the initial seedlist populated in the C driver.
+            } else if (0 == el.key().compare("hosts")) {
+                test.hosts = el.get_array().value;
+            } else if (0 == el.key().compare("numHosts")) {
+                test.num_hosts = el.get_int32().value;
+            } else if (0 == el.key().compare("options")) {
+                test.options = el.get_document().value;
+            } else if (0 == el.key().compare("error")) {
+                test.error = el.get_bool().value;
+            } else if (0 == el.key().compare("comment")) {
+                // Ignore comment.
+            } else if (0 == el.key().compare("ping")) {
+                test.ping = el.get_bool().value;
+            } else {
+                FAIL("InitialDNSSeedlistTest does not understand the field: '"
+                     << el.key() << "'. Please add support.");
+            }
+        }
+        return test;
+    }
+};
+
 static bsoncxx::document::value _doc_from_file(mongocxx::stdx::string_view sub_path) {
     const char* test_path = std::getenv("INITIAL_DNS_SEEDLIST_DISCOVERY_TESTS_PATH");
     REQUIRE(test_path);
@@ -82,7 +126,7 @@ static void compare_options(bsoncxx::document::view_or_value expected_options,
     }
 }
 
-static bool hosts_are_equal(bsoncxx::document::view expected_hosts,
+static bool hosts_are_equal(bsoncxx::array::view expected_hosts,
                             std::vector<std::string> actual,
                             std::mutex& mtx) {
     const std::lock_guard<std::mutex> lock(mtx);
@@ -100,7 +144,7 @@ static bool hosts_are_equal(bsoncxx::document::view expected_hosts,
 }
 
 static void validate_srv_max_hosts(mongocxx::client client,
-                                   bsoncxx::document::view test_doc,
+                                   InitialDNSSeedlistTest test,
                                    std::mutex& mtx,
                                    std::vector<std::string>& new_hosts) {
     using namespace mongocxx;
@@ -114,38 +158,33 @@ static void validate_srv_max_hosts(mongocxx::client client,
     auto uri = client.uri();
     auto my_options = uri.options();
     auto creds = uri.credentials();
-    auto expected_options = test_doc["options"];
-    if (expected_options) {
-        compare_options(expected_options.get_document().view(), my_options, creds);
-    }
+    compare_options(test.options, my_options, creds);
 
-    auto expected_hosts = test_doc["hosts"];
-    auto num_hosts = test_doc["numHosts"];
-    if (num_hosts || expected_hosts) {
+    bool has_hosts_list = !test.hosts.empty();
+    if (test.num_hosts || has_hosts_list) {
         size_t count = 0;
-        while (!hosts_are_equal(expected_hosts.get_array().value, new_hosts, mtx)) {
+        while (!hosts_are_equal(test.hosts, new_hosts, mtx)) {
             count++;
             if (count > 4) {
-                REQUIRE(hosts_are_equal(expected_hosts.get_array().value, new_hosts, mtx));
+                REQUIRE(hosts_are_equal(test.hosts, new_hosts, mtx));
             }
             std::this_thread::sleep_for(std::chrono::seconds(count));
         }
     }
 
-    if (num_hosts) {
-        REQUIRE((size_t)num_hosts.get_int32().value == new_hosts.size());
+    if (test.num_hosts) {
+        REQUIRE((size_t)test.num_hosts == new_hosts.size());
     }
 }
 
-static void run_srv_max_hosts_test_file(bsoncxx::document::view test_doc) {
+static void run_srv_max_hosts_test_file(InitialDNSSeedlistTest test) {
     using namespace mongocxx;
 
-    bool expect_exception = test_doc["error"] && test_doc["error"].get_bool().value;
     bool should_ping = true;
-    if (test_doc["ping"] && test_doc["ping"].get_bool() == false) {
+    if (!test.ping) {
         should_ping = false;
     }
-    should_ping = should_ping && !expect_exception;
+    should_ping = should_ping && !test.error;
 
     options::apm apm_opts;
     std::mutex mtx;
@@ -173,7 +212,7 @@ static void run_srv_max_hosts_test_file(bsoncxx::document::view test_doc) {
 
     mongocxx::uri my_uri;
     try {
-        my_uri = uri{test_doc["uri"].get_string().value};
+        my_uri = uri{test.uri};
         class client client {
             my_uri, test_util::add_test_server_api(client_options)
         };
@@ -181,19 +220,20 @@ static void run_srv_max_hosts_test_file(bsoncxx::document::view test_doc) {
         if (!using_tls) {
             return;
         }
-        REQUIRE(!expect_exception);
+        REQUIRE(!test.error);
         if (should_ping) {
-            validate_srv_max_hosts(std::move(client), test_doc, mtx, new_hosts);
+            validate_srv_max_hosts(std::move(client), test, mtx, new_hosts);
         }
     } catch (mongocxx::exception& e) {
-        REQUIRE(expect_exception);
+        REQUIRE(test.error);
     }
 }
 
 static void iterate_srv_max_hosts_tests(std::string dir, std::vector<std::string> files) {
     for (const auto& file : files) {
         auto test_doc = _doc_from_file("/" + dir + "/" + file);
-        run_srv_max_hosts_test_file(test_doc);
+        auto test = InitialDNSSeedlistTest::parse(test_doc);
+        run_srv_max_hosts_test_file(test);
     }
 }
 
