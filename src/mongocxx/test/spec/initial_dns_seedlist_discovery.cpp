@@ -213,8 +213,6 @@ static void run_srv_max_hosts_test_file(InitialDNSSeedlistTest test) {
         class client client {
             my_uri, test_util::add_test_server_api(client_options)
         };
-        mongocxx::pool pool{my_uri, options::pool(test_util::add_test_server_api(client_options))};
-        auto pool_client = pool.acquire();
         bool using_tls = client.uri().tls();
         if (!using_tls) {
             return;
@@ -222,6 +220,9 @@ static void run_srv_max_hosts_test_file(InitialDNSSeedlistTest test) {
         REQUIRE(!test.error);
         if (should_ping) {
             validate_srv_max_hosts(client, test, mtx, new_hosts);
+            mongocxx::pool pool{my_uri,
+                                options::pool(test_util::add_test_server_api(client_options))};
+            auto pool_client = pool.acquire();
             validate_srv_max_hosts(*pool_client, test, mtx, new_hosts);
         }
     } catch (mongocxx::exception& e) {
