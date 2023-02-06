@@ -32,11 +32,7 @@ struct InitialDNSSeedlistTest {
     bool error;
     bool ping;
 
-    InitialDNSSeedlistTest() {
-        error = false;
-        ping = true;
-        num_hosts = 0;
-    }
+    InitialDNSSeedlistTest() : num_hosts(0), error(false), ping(true) {}
 
     static InitialDNSSeedlistTest parse(bsoncxx::document::view test_doc) {
         InitialDNSSeedlistTest test;
