@@ -20,6 +20,8 @@
 #include <bsoncxx/test_util/catch.hh>
 #include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/instance.hpp>
+#include <mongocxx/options/pool.hpp>
+#include <mongocxx/pool.hpp>
 #include <mongocxx/test/spec/monitoring.hh>
 
 namespace {
@@ -139,7 +141,7 @@ static bool hosts_are_equal(bsoncxx::array::view expected_hosts,
     return expected == actual;
 }
 
-static void validate_srv_max_hosts(mongocxx::client client,
+static void validate_srv_max_hosts(mongocxx::client& client,
                                    InitialDNSSeedlistTest test,
                                    std::mutex& mtx,
                                    std::vector<std::string>& new_hosts) {
@@ -206,19 +208,21 @@ static void run_srv_max_hosts_test_file(InitialDNSSeedlistTest test) {
     client_options.tls_opts(tls_options);
     client_options.apm_opts(apm_opts);
 
-    mongocxx::uri my_uri;
     try {
-        my_uri = uri{test.uri};
+        mongocxx::uri my_uri{test.uri};
         class client client {
             my_uri, test_util::add_test_server_api(client_options)
         };
+        mongocxx::pool pool{my_uri, options::pool(test_util::add_test_server_api(client_options))};
+        auto pool_client = pool.acquire();
         bool using_tls = client.uri().tls();
         if (!using_tls) {
             return;
         }
         REQUIRE(!test.error);
         if (should_ping) {
-            validate_srv_max_hosts(std::move(client), test, mtx, new_hosts);
+            validate_srv_max_hosts(client, test, mtx, new_hosts);
+            validate_srv_max_hosts(*pool_client, test, mtx, new_hosts);
         }
     } catch (mongocxx::exception& e) {
         REQUIRE(test.error);
