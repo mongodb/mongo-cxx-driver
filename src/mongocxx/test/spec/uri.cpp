@@ -232,6 +232,13 @@ static bool is_tls_enabled(void) {
 TEST_CASE("uri::test_srv_max_hosts", "[uri]") {
     mongocxx::instance::current();
 
+    if (!std::getenv("MONGOCXX_TEST_TLS_CA_FILE")) {
+        std::cerr << "The environment variable 'MONGOCXX_TEST_TLS_CA_FILE' must be present to run "
+                     "the test 'uri::test_srv_max_hosts'"
+                  << std::endl;
+        return;
+    }
+
     if (!is_tls_enabled()) {
         std::cerr << "TLS is not supported by server, skipping test: 'uri::test_srv_max_hosts'"
                   << std::endl;
