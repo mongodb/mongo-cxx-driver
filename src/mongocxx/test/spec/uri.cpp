@@ -197,7 +197,7 @@ static void iterate_srv_max_hosts_tests(std::string dir, std::vector<std::string
     }
 }
 
-static bool is_tls_enabled(void) {
+static void assert_tls_enabled(void) {
     using namespace mongocxx;
     using bsoncxx::builder::basic::kvp;
     using bsoncxx::builder::basic::make_document;
@@ -221,10 +221,8 @@ static bool is_tls_enabled(void) {
         auto result = admin.run_command(make_document(kvp("ping", 1)));
         REQUIRE(!result.empty());
         REQUIRE(result.begin()->get_double() == 1.0);
-        return true;
     } catch (mongocxx::operation_exception& e) {
         FAIL("Unable to ping server with TLS. Is TLS enabled on the server?");
-        return false;
     }
 }
 
@@ -239,11 +237,7 @@ TEST_CASE("uri::test_srv_max_hosts", "[uri]") {
         return;
     }
 
-    if (!is_tls_enabled()) {
-        std::cerr << "TLS is not supported by server, skipping test: 'uri::test_srv_max_hosts'"
-                  << std::endl;
-        return;
-    }
+    assert_tls_enabled();
 
     SECTION("replica-set") {
         std::vector<std::string> files = {"srvMaxHosts-less_than_srv_records.json",
