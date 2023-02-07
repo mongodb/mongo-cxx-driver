@@ -12,16 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <cxxabi.h>
 #include <fstream>
 
 #include <bsoncxx/test_util/catch.hh>
 #include <mongocxx/exception/logic_error.hpp>
-#include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/instance.hpp>
-#include <mongocxx/options/pool.hpp>
 #include <mongocxx/pool.hpp>
-#include <mongocxx/test/spec/monitoring.hh>
 
 namespace {
 
