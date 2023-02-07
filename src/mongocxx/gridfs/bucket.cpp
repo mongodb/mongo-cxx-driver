@@ -372,8 +372,8 @@ downloader bucket::_open_download_stream(const client_session* session,
                                    "expected end to not be greater than the file length"};
         }
         if (file_len >= 0 && end_i64 < file_len) {
-            const int64_t num_chunks =
-                1 + ((end_i64 - start_i64) / static_cast<int64_t>(chunk_size));
+            const int64_t num_chunks = (end_i64 / static_cast<int64_t>(chunk_size)) -
+                                       (start_i64 / static_cast<int64_t>(chunk_size)) + 1;
             chunks_options.limit(num_chunks);
         }
     }
