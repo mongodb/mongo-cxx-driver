@@ -938,6 +938,12 @@ TEST_CASE("gridfs::bucket::download_to_stream works", "[gridfs::bucket]") {
                                          static_cast<std::size_t>(end));
             }
 
+            SECTION("across 2 chunks at the end") {
+                const auto start = chunk_size - 1;
+                const auto end = start + chunk_size - 1;
+                check_downloaded_content(static_cast<std::size_t>(start),
+                                         static_cast<std::size_t>(end));
+            }
             SECTION("across 3 chunks") {
                 const auto start = chunk_size / 2;
                 const auto end = start + 2 * chunk_size;
