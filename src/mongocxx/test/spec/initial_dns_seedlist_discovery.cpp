@@ -142,7 +142,7 @@ static bool hosts_are_equal(bsoncxx::array::view expected_hosts,
 }
 
 static void validate_srv_max_hosts(mongocxx::client& client,
-                                   InitialDNSSeedlistTest test,
+                                   const InitialDNSSeedlistTest& test,
                                    std::mutex& mtx,
                                    std::vector<std::string>& new_hosts) {
     using namespace mongocxx;
@@ -175,7 +175,7 @@ static void validate_srv_max_hosts(mongocxx::client& client,
     }
 }
 
-static void run_srv_max_hosts_test_file(InitialDNSSeedlistTest test) {
+static void run_srv_max_hosts_test_file(const InitialDNSSeedlistTest& test) {
     using namespace mongocxx;
 
     bool should_ping = true;
