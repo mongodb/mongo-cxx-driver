@@ -74,6 +74,7 @@ set(test_driver_sources
     spec/monitoring.hh
     spec/unified_tests/assert.cpp
     spec/unified_tests/entity.cpp
+    spec/uri_options.cpp
     transactions.cpp
     uri.cpp
     validation_criteria.cpp
@@ -349,6 +350,7 @@ set_dist_list (src_mongocxx_test_DIST
    spec/unified_tests/runner.cpp
    spec/util.cpp
    spec/util.hh
+   spec/uri_options.cpp
    transactions.cpp
    uri.cpp
    validation_criteria.cpp

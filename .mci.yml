@@ -420,6 +420,7 @@ functions:
                   export SESSION_UNIFIED_TESTS_PATH="$(pwd)/../data/sessions/unified"
                   export VERSIONED_API_TESTS_PATH=$(pwd)/../data/versioned-api
                   export COLLECTION_MANAGEMENT_TESTS_PATH="$(pwd)/../data/collection-management"
+                  export URI_OPTIONS_DISCOVERY_TESTS_PATH="$(pwd)/../data/uri-options"
 
                   export MONGODB_API_VERSION="${MONGODB_API_VERSION}"
 
