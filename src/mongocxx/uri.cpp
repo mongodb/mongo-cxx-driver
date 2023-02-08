@@ -174,7 +174,7 @@ stdx::optional<bsoncxx::document::view> uri::credentials() {
 }
 
 stdx::optional<std::int32_t> uri::srv_max_hosts() const {
-    return libmongoc::uri_get_option_as_int32(_impl->uri_t, MONGOC_URI_SRVMAXHOSTS, 0);
+    return _int32_option(_impl->uri_t, MONGOC_URI_SRVMAXHOSTS);
 }
 
 static stdx::optional<bsoncxx::document::view> _credential_document_option(mongoc_uri_t* uri,
