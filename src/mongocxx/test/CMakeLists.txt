@@ -252,6 +252,8 @@ set_tests_properties(transactions_specs PROPERTIES
   ENVIRONMENT "TRANSACTIONS_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/transactions")
 set_property(TEST transactions_specs
   APPEND PROPERTY ENVIRONMENT "WITH_TRANSACTION_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/with_transaction")
+set_property(TEST driver
+  APPEND PROPERTY ENVIRONMENT "URI_OPTIONS_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/uri-options")
 
 set_tests_properties(retryable_reads_spec PROPERTIES
    ENVIRONMENT "RETRYABLE_READS_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/retryable-reads")
