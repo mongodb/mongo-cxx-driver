@@ -227,7 +227,7 @@ static void iterate_srv_max_hosts_tests(std::string dir, std::vector<std::string
     for (const auto& file : files) {
         auto test_doc = _doc_from_file("/" + dir + "/" + file);
         auto test = InitialDNSSeedlistTest::parse(test_doc);
-        SECTION (file) {
+        SECTION(file) {
             run_srv_max_hosts_test_file(test);
         }
     }
