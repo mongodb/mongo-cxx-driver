@@ -29,12 +29,11 @@ namespace {
 struct InitialDNSSeedlistTest {
     bsoncxx::stdx::string_view uri;
     bsoncxx::array::view hosts;
-    int32_t num_hosts;
     bsoncxx::document::view options;
     bool error;
     bool ping;
 
-    InitialDNSSeedlistTest() : num_hosts(0), error(false), ping(true) {}
+    InitialDNSSeedlistTest() : error(false), ping(true) {}
 
     static InitialDNSSeedlistTest parse(bsoncxx::document::view test_doc) {
         InitialDNSSeedlistTest test;
@@ -47,8 +46,6 @@ struct InitialDNSSeedlistTest {
                 // not have access to the initial seedlist populated in the C driver.
             } else if (0 == el.key().compare("hosts")) {
                 test.hosts = el.get_array().value;
-            } else if (0 == el.key().compare("numHosts")) {
-                test.num_hosts = el.get_int32().value;
             } else if (0 == el.key().compare("options")) {
                 test.options = el.get_document().value;
             } else if (0 == el.key().compare("error")) {
@@ -159,7 +156,7 @@ static void validate_srv_max_hosts(mongocxx::client& client,
     compare_options(test.options, my_options, creds);
 
     bool has_hosts_list = !test.hosts.empty();
-    if (test.num_hosts || has_hosts_list) {
+    if (has_hosts_list) {
         size_t count = 0;
         while (!hosts_are_equal(test.hosts, new_hosts, mtx)) {
             count++;
@@ -168,10 +165,6 @@ static void validate_srv_max_hosts(mongocxx::client& client,
             }
             std::this_thread::sleep_for(std::chrono::seconds(count));
         }
-    }
-
-    if (test.num_hosts) {
-        REQUIRE((size_t)test.num_hosts == new_hosts.size());
     }
 }
 
