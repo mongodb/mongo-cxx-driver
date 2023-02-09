@@ -345,8 +345,10 @@ read_preference get_read_preference(const document::element& opts) {
     auto read_pref = opts["readPreference"];
     auto doc = read_pref.get_document().value;
     auto mode = std::string(doc["mode"].get_string().value);
-    auto max_staleness_seconds = doc["maxStalenessSeconds"].get_int32().value;
-    rp.max_staleness(std::chrono::seconds(max_staleness_seconds));
+    if (doc["maxStalenessSeconds"]) {
+        auto max_staleness_seconds = doc["maxStalenessSeconds"].get_int32().value;
+        rp.max_staleness(std::chrono::seconds(max_staleness_seconds));
+    }
     if (mode == "secondaryPreferred") {
         rp.mode(read_preference::read_mode::k_secondary_preferred);
     } else {
