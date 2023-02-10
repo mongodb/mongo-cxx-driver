@@ -30,10 +30,8 @@ struct initial_dns_seedlist_test {
     bsoncxx::stdx::string_view uri;
     bsoncxx::array::view hosts;
     bsoncxx::document::view options;
-    bool error;
-    bool ping;
-
-    InitialDNSSeedlistTest() : error(false), ping(true) {}
+    bool error = false;
+    bool ping = false;
 
     static InitialDNSSeedlistTest parse(bsoncxx::document::view test_doc) {
         InitialDNSSeedlistTest test;
