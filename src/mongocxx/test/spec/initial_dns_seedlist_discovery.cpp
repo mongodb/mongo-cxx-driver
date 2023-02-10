@@ -31,10 +31,10 @@ struct initial_dns_seedlist_test {
     bsoncxx::array::view hosts;
     bsoncxx::document::view options;
     bool error = false;
-    bool ping = false;
+    bool ping = true;
 
-    static InitialDNSSeedlistTest parse(bsoncxx::document::view test_doc) {
-        InitialDNSSeedlistTest test;
+    static initial_dns_seedlist_test parse(bsoncxx::document::view test_doc) {
+        initial_dns_seedlist_test test;
 
         for (auto el : test_doc) {
             if (0 == el.key().compare("uri")) {
@@ -53,7 +53,7 @@ struct initial_dns_seedlist_test {
             } else if (0 == el.key().compare("ping")) {
                 test.ping = el.get_bool().value;
             } else {
-                FAIL("InitialDNSSeedlistTest does not understand the field: '"
+                FAIL("initial_dns_seedlist_test does not understand the field: '"
                      << el.key() << "'. Please add support.");
             }
         }
@@ -137,7 +137,7 @@ static bool hosts_are_equal(bsoncxx::array::view expected_hosts,
 }
 
 static void validate_srv_max_hosts(mongocxx::client& client,
-                                   const InitialDNSSeedlistTest& test,
+                                   const initial_dns_seedlist_test& test,
                                    std::mutex& mtx,
                                    std::vector<std::string>& new_hosts) {
     using namespace mongocxx;
@@ -166,7 +166,7 @@ static void validate_srv_max_hosts(mongocxx::client& client,
     }
 }
 
-static void run_srv_max_hosts_test_file(const InitialDNSSeedlistTest& test) {
+static void run_srv_max_hosts_test_file(const initial_dns_seedlist_test& test) {
     using namespace mongocxx;
 
     bool should_ping = true;
@@ -224,7 +224,7 @@ static void run_srv_max_hosts_test_file(const InitialDNSSeedlistTest& test) {
 static void iterate_srv_max_hosts_tests(std::string dir, std::vector<std::string> files) {
     for (const auto& file : files) {
         auto test_doc = _doc_from_file("/" + dir + "/" + file);
-        auto test = InitialDNSSeedlistTest::parse(test_doc);
+        auto test = initial_dns_seedlist_test::parse(test_doc);
         SECTION(file) {
             run_srv_max_hosts_test_file(test);
         }
