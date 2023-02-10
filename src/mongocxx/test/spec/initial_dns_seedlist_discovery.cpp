@@ -263,10 +263,8 @@ static void assert_tls_enabled(void) {
 TEST_CASE("uri::test_srv_max_hosts", "[uri]") {
     mongocxx::instance::current();
 
-    if (!std::getenv("MONGOCXX_TEST_TLS_CA_FILE")) {
-        std::cerr << "The environment variable 'MONGOCXX_TEST_TLS_CA_FILE' must be present to run "
-                     "the test 'uri::test_srv_max_hosts'"
-                  << std::endl;
+    if (!std::getenv("MONGOCXX_TEST_DNS")) {
+        WARN("Skipping - initial DNS seedlist discovery tests require MONGOCXX_TEST_DNS to be set");
         return;
     }
 
