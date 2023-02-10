@@ -105,7 +105,7 @@ static void compare_options(bsoncxx::document::view_or_value expected_options,
         auto key = std::string(expected_option.key());
         std::transform(key.begin(), key.end(), key.begin(), [](int c) { return std::tolower(c); });
         if (key == "ssl") {
-            key = std::string("tls");
+            key = "tls";
         }
 
         bsoncxx::document::element my_value = my_options_view[key];
