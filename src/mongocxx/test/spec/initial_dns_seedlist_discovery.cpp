@@ -215,7 +215,9 @@ static void run_srv_max_hosts_test_file(const initial_dns_seedlist_test& test) {
             validate_srv_max_hosts(*pool_client, test, mtx, new_hosts);
         }
     } catch (mongocxx::exception& e) {
-        REQUIRE(test.error);
+        if (!test.error) {
+            FAIL("expected success, but got: " << e.what());
+        }
     }
 }
 
