@@ -431,6 +431,8 @@ functions:
                   fi
                   popd # ../../drivers-evergreen-tools
 
+                  export MONGOCXX_TEST_TLS_CA_FILE="$DRIVERS_TOOLS/.evergreen/x509gen/ca.pem"
+
                   if [ "$(uname -m)" == "ppc64le" ]; then
                       echo "Skipping CSFLE test setup (CDRIVER-4246/CXX-2423)"
                   else
