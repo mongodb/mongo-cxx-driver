@@ -38,20 +38,20 @@ struct initial_dns_seedlist_test {
 
         for (auto el : test_doc) {
             const auto key = el.key();
-            if (0 == el.key().compare("uri")) {
+            if (0 == key.compare("uri")) {
                 test.uri = el.get_string().value;
-            } else if (0 == el.key().compare("seeds") || 0 == el.key().compare("numSeeds")) {
+            } else if (0 == key.compare("seeds") || 0 == key.compare("numSeeds")) {
                 // The 'seeds' and 'numSeeds' assertions are explicitly skipped. The C++ driver does
                 // not have access to the initial seedlist populated in the C driver.
-            } else if (0 == el.key().compare("hosts")) {
+            } else if (0 == key.compare("hosts")) {
                 test.hosts = el.get_array().value;
-            } else if (0 == el.key().compare("options")) {
+            } else if (0 == key.compare("options")) {
                 test.options = el.get_document().value;
-            } else if (0 == el.key().compare("error")) {
+            } else if (0 == key.compare("error")) {
                 test.error = el.get_bool().value;
-            } else if (0 == el.key().compare("comment")) {
+            } else if (0 == key.compare("comment")) {
                 // Ignore comment.
-            } else if (0 == el.key().compare("ping")) {
+            } else if (0 == key.compare("ping")) {
                 test.ping = el.get_bool().value;
             } else {
                 FAIL("unexpected initial_dns_seedlist_test option: " << el.key());
