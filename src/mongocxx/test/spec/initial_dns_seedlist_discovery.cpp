@@ -239,8 +239,7 @@ static void assert_tls_enabled(void) {
     options::tls tls_options;
     options::client client_options;
 
-    auto ca_file_path = std::getenv("MONGOCXX_TEST_TLS_CA_FILE");
-    REQUIRE(ca_file_path);
+    auto ca_file_path = test_util::getenv_or_fail("MONGOCXX_TEST_TLS_CA_FILE");
     tls_options.ca_file(ca_file_path);
     tls_options.allow_invalid_certificates(true);
     client_options.tls_opts(tls_options);
