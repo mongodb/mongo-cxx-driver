@@ -102,8 +102,7 @@ static void compare_options(bsoncxx::document::view_or_value expected_options,
                             bsoncxx::stdx::optional<bsoncxx::document::view> creds) {
     auto my_options_view = my_options.view();
     for (const auto& expected_option : expected_options.view()) {
-        auto key = std::string(expected_option.key());
-        std::transform(key.begin(), key.end(), key.begin(), [](int c) { return std::tolower(c); });
+        auto key = mongocxx::test_util::tolowercase(expected_option.key());
         if (key == "ssl") {
             key = "tls";
         }
