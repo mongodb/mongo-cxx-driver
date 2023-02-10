@@ -168,11 +168,7 @@ static void validate_srv_max_hosts(mongocxx::client& client,
 static void run_srv_max_hosts_test_file(const initial_dns_seedlist_test& test) {
     using namespace mongocxx;
 
-    bool should_ping = true;
-    if (!test.ping) {
-        should_ping = false;
-    }
-    should_ping = should_ping && !test.error;
+    const bool should_ping = test.ping && !test.error;
 
     options::apm apm_opts;
     std::mutex mtx;
