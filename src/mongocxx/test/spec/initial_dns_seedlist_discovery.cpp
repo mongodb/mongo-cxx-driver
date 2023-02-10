@@ -153,8 +153,7 @@ static void validate_srv_max_hosts(mongocxx::client& client,
     auto creds = uri.credentials();
     compare_options(test.options, my_options, creds);
 
-    bool has_hosts_list = !test.hosts.empty();
-    if (has_hosts_list) {
+    if (!test.hosts.empty()) {
         size_t count = 0;
         while (!hosts_are_equal(test.hosts, new_hosts, mtx)) {
             count++;
