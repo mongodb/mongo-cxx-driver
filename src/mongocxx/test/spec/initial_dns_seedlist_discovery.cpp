@@ -37,6 +37,7 @@ struct initial_dns_seedlist_test {
         initial_dns_seedlist_test test;
 
         for (auto el : test_doc) {
+            const auto key = el.key();
             if (0 == el.key().compare("uri")) {
                 test.uri = el.get_string().value;
             } else if (0 == el.key().compare("seeds") || 0 == el.key().compare("numSeeds")) {
