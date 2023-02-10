@@ -114,7 +114,7 @@ static void compare_options(bsoncxx::document::view_or_value expected_options,
         } else if (creds && creds.value()[key]) {
             assert_elements_equal(expected_option, creds.value()[key]);
         } else {
-            FAIL("neither options nor credentials contains the required key: " + key);
+            FAIL("neither options nor credentials contains the required key: " << key);
         }
     }
 }
