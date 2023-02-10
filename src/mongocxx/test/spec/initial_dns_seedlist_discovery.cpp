@@ -53,8 +53,7 @@ struct initial_dns_seedlist_test {
             } else if (0 == el.key().compare("ping")) {
                 test.ping = el.get_bool().value;
             } else {
-                FAIL("initial_dns_seedlist_test does not understand the field: '"
-                     << el.key() << "'. Please add support.");
+                FAIL("unexpected initial_dns_seedlist_test option: " << el.key());
             }
         }
         return test;
