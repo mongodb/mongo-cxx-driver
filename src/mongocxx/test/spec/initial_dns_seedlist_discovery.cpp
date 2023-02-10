@@ -26,7 +26,7 @@
 
 namespace {
 
-struct InitialDNSSeedlistTest {
+struct initial_dns_seedlist_test {
     bsoncxx::stdx::string_view uri;
     bsoncxx::array::view hosts;
     bsoncxx::document::view options;
