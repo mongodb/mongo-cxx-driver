@@ -340,10 +340,27 @@ options::server_api create_server_api(document::view object) {
     return server_api_opts;
 }
 
-write_concern get_write_concern(const document::element& opts) {
-    if (!opts["writeConcern"])
-        return {};
+read_preference get_read_preference(const document::element& opts) {
+    read_preference rp;
 
+    const auto read_pref = opts["readPreference"];
+
+    if (const auto mss = read_pref["maxStalenessSeconds"]) {
+        rp.max_staleness(std::chrono::seconds(mss.get_int32().value));
+    }
+
+    const auto mode = read_pref["mode"].get_string().value;
+
+    if (mode.compare("secondaryPreferred") == 0) {
+        rp.mode(read_preference::read_mode::k_secondary_preferred);
+    } else {
+        FAIL("unhandled readPreference mode: " << mode);
+    }
+
+    return rp;
+}
+
+write_concern get_write_concern(const document::element& opts) {
     auto wc = write_concern{};
     if (auto w = opts["writeConcern"]["w"]) {
         if (w.type() == type::k_utf8) {
@@ -367,9 +384,6 @@ write_concern get_write_concern(const document::element& opts) {
 }
 
 read_concern get_read_concern(const document::element& opts) {
-    if (!opts["readConcern"])
-        return {};
-
     auto rc = read_concern{};
 
     if (auto level = opts["readConcern"]["level"]) {
@@ -384,9 +398,17 @@ void set_common_options(T& t, const document::element& opts) {
     if (!opts)
         return;
 
-    t.read_concern(get_read_concern(opts));
-    t.write_concern(get_write_concern(opts));
-    REQUIRE_FALSE(/* TODO */ opts["readPreference"]);
+    if (opts["readConcern"]) {
+        t.read_concern(get_read_concern(opts));
+    }
+
+    if (opts["writeConcern"]) {
+        t.write_concern(get_write_concern(opts));
+    }
+
+    if (opts["readPreference"]) {
+        t.read_preference(get_read_preference(opts));
+    }
 }
 
 options::gridfs::bucket get_bucket_options(document::view object) {
