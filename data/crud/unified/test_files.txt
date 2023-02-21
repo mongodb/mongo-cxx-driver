@@ -1,3 +1,4 @@
+aggregate-allowdiskuse.json
 aggregate-let.json
 aggregate-merge.json
 aggregate-out-readConcern.json
