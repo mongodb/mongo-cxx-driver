@@ -198,6 +198,20 @@ class MONGOCXX_API uri {
     stdx::optional<bsoncxx::document::view> auth_mechanism_properties() const;
 
     ///
+    /// Returns the value of the option credentials if present in the uri.
+    ///
+    /// @return An optional bsoncxx::document::view
+    ///
+    stdx::optional<bsoncxx::document::view> credentials();
+
+    ///
+    /// Returns the value of the option "srvMaxHosts" if present in the uri.
+    ///
+    /// @return An optional std::int32_t
+    ///
+    stdx::optional<std::int32_t> srv_max_hosts() const;
+
+    ///
     /// Returns the list of compressors present in the uri or an empty list if "compressors" was not
     /// present or contained no valid compressors.
     ///
