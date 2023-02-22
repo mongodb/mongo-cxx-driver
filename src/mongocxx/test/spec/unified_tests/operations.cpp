@@ -551,6 +551,10 @@ document::value aggregate(Entity& entity, client_session* session, document::vie
         options.comment(comment.get_value());
     }
 
+    if (const auto allow_disk_use = arguments["allowDiskUse"]) {
+        options.allow_disk_use(allow_disk_use.get_bool());
+    }
+
     stdx::optional<cursor> result_cursor;
 
     if (session) {
