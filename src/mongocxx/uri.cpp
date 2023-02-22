@@ -166,6 +166,17 @@ static stdx::optional<bool> _bool_option(mongoc_uri_t* uri, std::string opt_name
     return bson_iter_bool(&iter);
 }
 
+stdx::optional<bsoncxx::document::view> uri::credentials() {
+    const bson_t* options_bson = libmongoc::uri_get_credentials(_impl->uri_t);
+    const uint8_t* data = bson_get_data(options_bson);
+
+    return bsoncxx::document::view(data, options_bson->len);
+}
+
+stdx::optional<std::int32_t> uri::srv_max_hosts() const {
+    return _int32_option(_impl->uri_t, MONGOC_URI_SRVMAXHOSTS);
+}
+
 static stdx::optional<bsoncxx::document::view> _credential_document_option(mongoc_uri_t* uri,
                                                                            std::string opt_name) {
     bson_iter_t iter;

@@ -2,6 +2,7 @@ aggregate-allowdiskuse.json
 aggregate-let.json
 aggregate-merge.json
 aggregate-out-readConcern.json
+aggregate-write-readPreference.json
 aggregate.json
 bulkWrite-arrayFilters-clientError.json
 bulkWrite-arrayFilters.json
@@ -28,6 +29,7 @@ bulkWrite-updateOne-dots_and_dollars.json
 bulkWrite-updateOne-hint-unacknowledged.json
 bulkWrite-updateOne-let.json
 countDocuments-comment.json
+db-aggregate-write-readPreference.json
 db-aggregate.json
 deleteMany-comment.json
 deleteMany-hint-clientError.json
