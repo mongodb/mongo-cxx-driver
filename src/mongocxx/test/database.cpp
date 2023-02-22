@@ -401,12 +401,21 @@ TEST_CASE("Database integration tests", "[database]") {
             obtained_collection.drop();
         }
 
-        SECTION("but raises exception when collection already exists") {
+        SECTION("verify that collection is created server side") {
             database[collection_name].drop();
 
             database.create_collection(collection_name);
 
-            REQUIRE_THROWS(database.create_collection(collection_name));
+            auto cursor = database.list_collections();
+            bool found = false;
+            for (const auto& coll : cursor) {
+                auto name = bsoncxx::string::to_string(coll["name"].get_string().value);
+                if (name == std::string(collection_name)) {
+                    found = true;
+                    break;
+                }
+            }
+            REQUIRE(found);
         }
     }
 
