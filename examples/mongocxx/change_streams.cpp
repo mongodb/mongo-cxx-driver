@@ -34,8 +34,8 @@ std::string get_server_version(const mongocxx::client& client) {
     return bsoncxx::string::to_string(output.view()["version"].get_string().value);
 }
 
-void watch_until(const mongocxx::client& client,
-                 const std::chrono::time_point<std::chrono::system_clock> end) {
+// watch_forever iterates the change stream until an error occurs.
+void watch_forever(const mongocxx::client& client) {
     mongocxx::options::change_stream options;
     // Wait up to 1 second before polling again.
     const std::chrono::milliseconds await_time{1000};
@@ -44,12 +44,11 @@ void watch_until(const mongocxx::client& client,
     auto collection = client["db"]["coll"];
     mongocxx::change_stream stream = collection.watch(options);
 
-    while (std::chrono::system_clock::now() < end) {
+    while (true) {
         for (const auto& event : stream) {
             std::cout << bsoncxx::to_json(event) << std::endl;
-            if (std::chrono::system_clock::now() >= end)
-                break;
         }
+        std::cout << "No new notifications. Trying again..." << std::endl;
     }
 }
 
@@ -67,10 +66,7 @@ int main() {
             return EXIT_FAILURE;
         }
 
-        // End in 10 seconds:
-        const auto end = std::chrono::system_clock::now() + std::chrono::seconds{10};
-
-        watch_until(*entry, end);
+        watch_forever(*entry);
 
         return EXIT_SUCCESS;
     } catch (const std::exception& exception) {
