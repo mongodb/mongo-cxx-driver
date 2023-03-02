@@ -64,8 +64,7 @@ int main() {
 
         if (get_server_version(*entry) < "3.6") {
             std::cerr << "Change streams are only supported on Mongo versions >= 3.6." << std::endl;
-            // CXX-1548: Should return EXIT_FAILURE, but Travis is currently running Mongo 3.4
-            return EXIT_SUCCESS;
+            return EXIT_FAILURE;
         }
 
         // End in 10 seconds:
