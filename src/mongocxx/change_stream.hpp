@@ -153,7 +153,7 @@ class MONGOCXX_API change_stream::iterator {
     ///
     /// change_stream::begin() and increment operators are blocking operations.
     /// They will not return until a notification is available, the max_await_time (from
-    /// the options::change_stream) miliseconds have elapsed, or a server
+    /// the options::change_stream) milliseconds have elapsed, or a server
     /// error is encountered.
     ///
     /// @throws mongocxx::query_exception if the query failed
@@ -165,7 +165,7 @@ class MONGOCXX_API change_stream::iterator {
     ///
     /// change_stream::begin() and increment operators are blocking operations.
     /// They will not return until a notification is available, the max_await_time (from
-    /// the options::change_stream) miliseconds have elapsed, or a server
+    /// the options::change_stream) milliseconds have elapsed, or a server
     /// error is encountered.
     ///
     /// @throws mongocxx::query_exception if the query failed
