@@ -57,10 +57,10 @@ class MONGOCXX_API change_stream {
     /// available notification. The state of all iterators is tracked by the
     /// change_stream itself, so advancing one iterator advances all iterators.
     ///
-    /// change_stream::begin() and the increment operators are blocking operations.
-    /// They will not return until a notification is available, the max_await_time (from
-    /// the options::change_stream) milliseconds have elapsed, or a server
-    /// error is encountered.
+    /// change_stream::begin() and increment operators may block if the current batch of documents
+    /// is exhausted. They will not return until a notification is available, the max_await_time
+    /// (from the options::change_stream) milliseconds have elapsed, or a server error is
+    /// encountered.
     ///
     /// When change_stream.begin() == change_stream.end(), no notifications
     /// are available. Each call to change_stream.begin() checks again for
@@ -151,10 +151,10 @@ class MONGOCXX_API change_stream::iterator {
     ///
     /// Pre-increments the iterator to move to the next document.
     ///
-    /// change_stream::begin() and increment operators are blocking operations.
-    /// They will not return until a notification is available, the max_await_time (from
-    /// the options::change_stream) milliseconds have elapsed, or a server
-    /// error is encountered.
+    /// change_stream::begin() and increment operators may block if the current batch of documents
+    /// is exhausted. They will not return until a notification is available, the max_await_time
+    /// (from the options::change_stream) milliseconds have elapsed, or a server error is
+    /// encountered.
     ///
     /// @throws mongocxx::query_exception if the query failed
     ///
@@ -163,10 +163,10 @@ class MONGOCXX_API change_stream::iterator {
     ///
     /// Post-increments the iterator to move to the next document.
     ///
-    /// change_stream::begin() and increment operators are blocking operations.
-    /// They will not return until a notification is available, the max_await_time (from
-    /// the options::change_stream) milliseconds have elapsed, or a server
-    /// error is encountered.
+    /// change_stream::begin() and increment operators may block if the current batch of documents
+    /// is exhausted. They will not return until a notification is available, the max_await_time
+    /// (from the options::change_stream) milliseconds have elapsed, or a server error is
+    /// encountered.
     ///
     /// @throws mongocxx::query_exception if the query failed
     ///
