@@ -162,6 +162,9 @@ class MONGOCXX_API change_stream::iterator {
     /// (from the options::change_stream) milliseconds have elapsed, or a server error is
     /// encountered.
     ///
+    /// If no notification is available, callers may call change_stream::begin() to check for more
+    /// notifications.
+    ///
     /// @throws mongocxx::query_exception if the query failed
     ///
     iterator& operator++();
@@ -173,6 +176,9 @@ class MONGOCXX_API change_stream::iterator {
     /// is exhausted. They will not return until a notification is available, the max_await_time
     /// (from the options::change_stream) milliseconds have elapsed, or a server error is
     /// encountered.
+    ///
+    /// If no notification is available, callers may call change_stream::begin() to check for more
+    /// notifications.
     ///
     /// @throws mongocxx::query_exception if the query failed
     ///
