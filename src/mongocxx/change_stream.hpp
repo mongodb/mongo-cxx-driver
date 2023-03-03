@@ -95,7 +95,7 @@ class MONGOCXX_API change_stream {
     /// resume token of the most recently returned document in the stream, or a
     /// postBatchResumeToken if the current batch of documents has been exhausted.
     ///
-    /// @see https://docs.mongodb.com/manual/changeStreams/#change-stream-resume-token
+    /// @see https://www.mongodb.com/docs/manual/changeStreams/#resume-tokens
     ///
     /// The returned document::view is valid for the lifetime of the stream and
     /// its data may be updated if the change stream is iterated after this function.
