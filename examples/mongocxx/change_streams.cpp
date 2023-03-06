@@ -41,9 +41,14 @@ void watch_forever(const mongocxx::client& client) {
     const std::chrono::milliseconds await_time{1000};
     options.max_await_time(await_time);
 
-    auto collection = client["db"]["coll"];
+    const auto db_name = "db";
+    const auto coll_name = "coll";
+    auto collection = client[db_name][coll_name];
     mongocxx::change_stream stream = collection.watch(options);
 
+    std::cout << "Watching for notifications on the collection " << db_name << "." << coll_name
+              << std::endl;
+    std::cout << "To observe a notification, try inserting a document." << std::endl;
     while (true) {
         for (const auto& event : stream) {
             std::cout << bsoncxx::to_json(event) << std::endl;
