@@ -64,7 +64,7 @@ int main(int argc, char* argv[]) {
         std::string arg = argv[i];
         bsoncxx::stdx::optional<std::string> nextarg;
         if (i < argc - 1) {
-            nextarg = argv[i + 1];
+            nextarg = std::string(argv[i + 1]);
         }
 
         if (arg == "--uri") {
