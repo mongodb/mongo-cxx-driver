@@ -17,6 +17,7 @@
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/json.hpp>
+#include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/string/to_string.hpp>
 #include <mongocxx/change_stream.hpp>
 #include <mongocxx/client.hpp>
@@ -35,20 +36,14 @@ std::string get_server_version(const mongocxx::client& client) {
 }
 
 // watch_forever iterates the change stream until an error occurs.
-void watch_forever(const mongocxx::client& client) {
+void watch_forever(mongocxx::collection& collection) {
     mongocxx::options::change_stream options;
     // Wait up to 1 second before polling again.
     const std::chrono::milliseconds await_time{1000};
     options.max_await_time(await_time);
 
-    const auto db_name = "db";
-    const auto coll_name = "coll";
-    auto collection = client[db_name][coll_name];
     mongocxx::change_stream stream = collection.watch(options);
 
-    std::cout << "Watching for notifications on the collection " << db_name << "." << coll_name
-              << std::endl;
-    std::cout << "To observe a notification, try inserting a document." << std::endl;
     while (true) {
         for (const auto& event : stream) {
             std::cout << bsoncxx::to_json(event) << std::endl;
@@ -59,19 +54,68 @@ void watch_forever(const mongocxx::client& client) {
 
 }  // namespace
 
-int main() {
+int main(int argc, char* argv[]) {
     mongocxx::instance inst{};
-    mongocxx::pool pool{mongocxx::uri{}};
+    auto uri_str = mongocxx::uri::k_default_uri;
+    std::string db = "db";
+    std::string coll = "coll";
+
+    for (int i = 1; i < argc; i++) {
+        std::string arg = argv[i];
+        bsoncxx::stdx::optional<std::string> nextarg;
+        if (i < argc - 1) {
+            nextarg = argv[i + 1];
+        }
+
+        if (arg == "--uri") {
+            if (!nextarg) {
+                std::cerr << "Expected value for '" << arg << "' option" << std::endl;
+                return EXIT_FAILURE;
+            }
+            uri_str = *nextarg;
+            i++;
+            continue;
+        }
+        if (arg == "--db") {
+            if (!nextarg) {
+                std::cerr << "Expected value for '" << arg << "' option" << std::endl;
+                return EXIT_FAILURE;
+            }
+            db = *nextarg;
+            i++;
+            continue;
+        }
+        if (arg == "--coll") {
+            if (!nextarg) {
+                std::cerr << "Expected value for '" << arg << "'option" << std::endl;
+                return EXIT_FAILURE;
+            }
+            coll = *nextarg;
+            i++;
+            continue;
+        }
+
+        std::cerr << "Unexpected argument: '" << arg << "'" << std::endl;
+        std::cerr << "Usage: " << argv[0] << " [--uri <uri>] [--db <db_name>] [--coll <coll_name>]"
+                  << std::endl;
+        return EXIT_FAILURE;
+    }
+
+    mongocxx::pool pool{mongocxx::uri(uri_str)};
 
     try {
         auto entry = pool.acquire();
+        auto collection = (*entry)[db][coll];
 
         if (get_server_version(*entry) < "3.6") {
             std::cerr << "Change streams are only supported on Mongo versions >= 3.6." << std::endl;
             return EXIT_FAILURE;
         }
 
-        watch_forever(*entry);
+        std::cout << "Watching for notifications on the collection " << db << "." << coll
+                  << std::endl;
+        std::cout << "To observe a notification, try inserting a document." << std::endl;
+        watch_forever(collection);
 
         return EXIT_SUCCESS;
     } catch (const std::exception& exception) {
