@@ -22,7 +22,9 @@
 #include <mongocxx/collection.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/insert.hpp>
+#include <mongocxx/options/pool.hpp>
 #include <mongocxx/pipeline.hpp>
+#include <mongocxx/pool.hpp>
 #include <mongocxx/private/libbson.hh>
 #include <mongocxx/test_util/client_helpers.hh>
 #include <mongocxx/write_concern.hpp>
@@ -432,13 +434,14 @@ TEST_CASE("Give an invalid pipeline", "[min36]") {
 
 TEST_CASE("Documentation Examples", "[min36]") {
     instance::current();
-    client mongodb_client{uri{}, test_util::add_test_server_api()};
-    if (!test_util::is_replica_set(mongodb_client)) {
+    mongocxx::pool pool{uri{}, options::pool(test_util::add_test_server_api())};
+    auto mongodb_client = pool.acquire();
+    if (!test_util::is_replica_set(*mongodb_client)) {
         WARN("skip: change streams require replica set");
         return;
     }
 
-    collection events = mongodb_client["streams"]["events"];
+    collection events = (*mongodb_client)["streams"]["events"];
     collection inventory = events;  // doc examples use this name
 
     SECTION("Example 1") {
