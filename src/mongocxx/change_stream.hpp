@@ -57,10 +57,10 @@ class MONGOCXX_API change_stream {
     /// available notification. The state of all iterators is tracked by the
     /// change_stream itself, so advancing one iterator advances all iterators.
     ///
-    /// change_stream::begin() and the increment operators are blocking operations.
-    /// They will not return until a notification is available, the max_await_time (from
-    /// the options::change_stream) milliseconds have elapsed, or a server
-    /// error is encountered.
+    /// change_stream::begin() and increment operators may block if the current batch of documents
+    /// is exhausted. They will not return until a notification is available, the max_await_time
+    /// (from the options::change_stream) milliseconds have elapsed, or a server error is
+    /// encountered.
     ///
     /// When change_stream.begin() == change_stream.end(), no notifications
     /// are available. Each call to change_stream.begin() checks again for
@@ -95,7 +95,7 @@ class MONGOCXX_API change_stream {
     /// resume token of the most recently returned document in the stream, or a
     /// postBatchResumeToken if the current batch of documents has been exhausted.
     ///
-    /// @see https://docs.mongodb.com/manual/changeStreams/#change-stream-resume-token
+    /// @see https://www.mongodb.com/docs/manual/changeStreams/#resume-tokens
     ///
     /// The returned document::view is valid for the lifetime of the stream and
     /// its data may be updated if the change stream is iterated after this function.
@@ -141,20 +141,29 @@ class MONGOCXX_API change_stream::iterator {
     ///
     /// Dereferences the view for the document currently being pointed to.
     ///
+    /// The returned document::view is valid until the iterator is incremented. The value may be
+    /// copied to extend its lifetime.
+    ///
     const bsoncxx::document::view& operator*() const;
 
     ///
     /// Accesses a member of the dereferenced document currently being pointed to.
+    ///
+    /// The returned document::view is valid until the iterator is incremented. The value may be
+    /// copied to extend its lifetime.
     ///
     const bsoncxx::document::view* operator->() const;
 
     ///
     /// Pre-increments the iterator to move to the next document.
     ///
-    /// change_stream::begin() and increment operators are blocking operations.
-    /// They will not return until a notification is available, the max_await_time (from
-    /// the options::change_stream) miliseconds have elapsed, or a server
-    /// error is encountered.
+    /// change_stream::begin() and increment operators may block if the current batch of documents
+    /// is exhausted. They will not return until a notification is available, the max_await_time
+    /// (from the options::change_stream) milliseconds have elapsed, or a server error is
+    /// encountered.
+    ///
+    /// If no notification is available, callers may call change_stream::begin() to check for more
+    /// notifications.
     ///
     /// @throws mongocxx::query_exception if the query failed
     ///
@@ -163,10 +172,13 @@ class MONGOCXX_API change_stream::iterator {
     ///
     /// Post-increments the iterator to move to the next document.
     ///
-    /// change_stream::begin() and increment operators are blocking operations.
-    /// They will not return until a notification is available, the max_await_time (from
-    /// the options::change_stream) miliseconds have elapsed, or a server
-    /// error is encountered.
+    /// change_stream::begin() and increment operators may block if the current batch of documents
+    /// is exhausted. They will not return until a notification is available, the max_await_time
+    /// (from the options::change_stream) milliseconds have elapsed, or a server error is
+    /// encountered.
+    ///
+    /// If no notification is available, callers may call change_stream::begin() to check for more
+    /// notifications.
     ///
     /// @throws mongocxx::query_exception if the query failed
     ///
