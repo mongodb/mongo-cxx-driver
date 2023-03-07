@@ -463,10 +463,14 @@ TEST_CASE("Documentation Examples", "[min36]") {
     SECTION("Example 1") {
         // Start Changestream Example 1
         change_stream stream = inventory.watch();
-        for (auto& event : stream) {
-            std::cout << bsoncxx::to_json(event) << std::endl;
+        auto it = stream.begin();
+        while (it == stream.end()) {
+            // Server returned no new notifications. Restart iteration to poll server.
+            it = stream.begin();
         }
+        bsoncxx::document::view next = *it;
         // End Changestream Example 1
+        (void)next;
     }
 
     SECTION("Example 2") {
@@ -474,29 +478,40 @@ TEST_CASE("Documentation Examples", "[min36]") {
         options::change_stream options;
         options.full_document(bsoncxx::string::view_or_value{"updateLookup"});
         change_stream stream = inventory.watch(options);
-        for (auto& event : stream) {
-            std::cout << bsoncxx::to_json(event) << std::endl;
+        auto it = stream.begin();
+        while (it == stream.end()) {
+            // Server returned no new notifications. Restart iteration to poll server.
+            it = stream.begin();
         }
+        bsoncxx::document::view next = *it;
         // End Changestream Example 2
+        REQUIRE(next["operationType"].get_string().value == "insert");
     }
 
     SECTION("Example 3") {
-        // Start Changestream Example 3
-        stdx::optional<bsoncxx::document::view> resume_token;
-        change_stream stream = inventory.watch();
-        for (auto it = stream.begin(); it != stream.end(); it++) {
-            resume_token = stream.get_resume_token();
-        }
-
-        if (resume_token) {
-            options::change_stream options;
-            options.resume_after(resume_token.value());
-            change_stream resumed = inventory.watch(options);
-            for (auto& event : stream) {
-                std::cout << bsoncxx::to_json(event) << std::endl;
+        bsoncxx::stdx::optional<bsoncxx::document::value> next;
+        // Get one notification to set `next`.
+        {
+            change_stream stream = inventory.watch();
+            auto it = stream.begin();
+            while (it == stream.end()) {
+                // Server returned no new notifications. Restart iteration to poll server.
+                it = stream.begin();
             }
+            next = *it;
+        }
+        // Start Changestream Example 3
+        auto resume_token = (*next)["_id"].get_document().value;
+        options::change_stream options;
+        options.resume_after(resume_token);
+        change_stream stream = inventory.watch(options);
+        auto it = stream.begin();
+        while (it == stream.end()) {
+            // Server returned no new notifications. Restart iteration to poll server.
+            it = stream.begin();
         }
         // End Changestream Example 3
+        REQUIRE((*it)["operationType"].get_string().value == "insert");
     }
 
     SECTION("Example 4") {
@@ -511,10 +526,13 @@ TEST_CASE("Documentation Examples", "[min36]") {
                                          make_document(kvp("operationType", "delete"))))));
 
         change_stream stream = inventory.watch(cs_pipeline);
-        for (auto& event : stream) {
-            std::cout << bsoncxx::to_json(event) << std::endl;
+        auto it = stream.begin();
+        while (it == stream.end()) {
+            // Server returned no new notifications. Restart iteration to poll server.
+            it = stream.begin();
         }
         // End Changestream Example 4
+        REQUIRE((*it)["operationType"].get_string().value == "insert");
     }
 
     insert_thread_done = true;
