@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <atomic>
 #include <iostream>
 
 #include <bsoncxx/builder/basic/document.hpp>
@@ -444,6 +445,21 @@ TEST_CASE("Documentation Examples", "[min36]") {
     collection events = (*mongodb_client)["streams"]["events"];
     collection inventory = events;  // doc examples use this name
 
+    std::atomic_bool insert_thread_done = false;
+    // Start a thread repeatedly insert documents to generate notifications.
+    auto insert_thread = std::thread{[&pool, &insert_thread_done] {
+        auto client = pool.acquire();
+        auto inventory = (*client)["streams"]["events"];
+        while (true) {
+            auto doc = make_document(kvp("username", "alice"));
+            inventory.insert_one(doc.view());
+            if (insert_thread_done) {
+                return;
+            }
+            std::this_thread::sleep_for(std::chrono::milliseconds(100));
+        }
+    }};
+
     SECTION("Example 1") {
         // Start Changestream Example 1
         change_stream stream = inventory.watch();
@@ -500,6 +516,10 @@ TEST_CASE("Documentation Examples", "[min36]") {
         }
         // End Changestream Example 4
     }
+
+    insert_thread_done = true;
+    insert_thread.join();
+    inventory.drop();
 }
 
 TEST_CASE("Watch 2 collections", "[min36]") {
