@@ -95,6 +95,10 @@ add_executable(test_driver
     ${test_driver_sources}
 )
 
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(Threads REQUIRED)
+target_link_libraries(test_driver Threads::Threads)
+
 add_executable(test_logging
   ${THIRD_PARTY_SOURCE_DIR}/catch/main.cpp
   logging.cpp
