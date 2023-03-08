@@ -370,6 +370,10 @@ functions:
                       ADDL_OPTS="$ADDL_OPTS -DENABLE_TESTS=OFF"
                   fi
 
+                  if [ "${REQUIRED_CXX_STANDARD}" ]; then
+                      ADDL_OPTS="$ADDL_OPTS -DCMAKE_CXX_STANDARD=${REQUIRED_CXX_STANDARD} -DCMAKE_CXX_STANDARD_REQUIRED=ON"
+                  fi
+
                   MONGOC_PREFIX="$(pwd)/../mongoc"
                   echo "MONGOC_PREFIX=$MONGOC_PREFIX"
 
@@ -687,6 +691,10 @@ functions:
                   # API version to example clients, so example projects will fail when requireApiVersion
                   # is true.
                   if [[ -z "$MONGODB_API_VERSION" ]]; then
+                    if [ "${REQUIRED_CXX_STANDARD}" ]; then
+                      ADDL_OPTS="$ADDL_OPTS -DCMAKE_CXX_STANDARD=${REQUIRED_CXX_STANDARD} -DCMAKE_CXX_STANDARD_REQUIRED=ON"
+                      CXX_STANDARD=${REQUIRED_CXX_STANDARD}
+                    fi
                     echo "Building example projects..."
                     . "$PREFIX/.evergreen/scripts/find-cmake-latest.sh"
                     declare cmake_binary
@@ -850,6 +858,37 @@ tasks:
         - func: "clone_drivers-evergreen-tools"
         - func: "run_kms_servers"
         - func: "test"
+
+    - name: compile_and_test_with_shared_libs_cxx20
+      commands:
+        - func: "setup"
+        - func: "start_mongod"
+        - func: "install_c_driver"
+        - func: "compile"
+          vars:
+              RUN_DISTCHECK: 1
+              REQUIRED_CXX_STANDARD: 20
+        - func: "clone_drivers-evergreen-tools"
+        - func: "run_kms_servers"
+        - func: "test"
+          vars:
+              REQUIRED_CXX_STANDARD: 20
+
+    - name: compile_and_test_with_shared_libs_extra_alignment_cxx20
+      commands:
+        - func: "setup"
+        - func: "start_mongod"
+        - func: "install_c_driver"
+          vars:
+              BSON_EXTRA_ALIGNMENT: 1
+        - func: "compile"
+          vars:
+              REQUIRED_CXX_STANDARD: 20
+        - func: "clone_drivers-evergreen-tools"
+        - func: "run_kms_servers"
+        - func: "test"
+          vars:
+              REQUIRED_CXX_STANDARD: 20
 
     - name: compile_with_shared_libs
       commands:
@@ -1196,6 +1235,8 @@ buildvariants:
       tasks:
           - name: compile_and_test_with_shared_libs
           - name: compile_and_test_with_shared_libs_extra_alignment
+          - name: compile_and_test_with_shared_libs_cxx20
+          - name: compile_and_test_with_shared_libs_extra_alignment_cxx20
           - name: compile_and_test_with_static_libs
           - name: compile_and_test_with_static_libs_extra_alignment
           - name: compile_and_test_with_shared_libs_replica_set
@@ -1217,6 +1258,8 @@ buildvariants:
       tasks:
           - name: compile_and_test_with_shared_libs
           - name: compile_and_test_with_shared_libs_extra_alignment
+          - name: compile_and_test_with_shared_libs_cxx20
+          - name: compile_and_test_with_shared_libs_extra_alignment_cxx20
           - name: compile_and_test_with_static_libs
           - name: compile_and_test_with_static_libs_extra_alignment
           - name: compile_and_test_with_shared_libs_replica_set
