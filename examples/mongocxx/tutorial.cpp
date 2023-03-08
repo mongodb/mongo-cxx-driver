@@ -56,8 +56,7 @@ int main() {
     // Insert One Document
     {
         auto insert_one_result = collection.insert_one(make_document(kvp("hello", "world")));
-        // Acknowledged writes return a result.
-        assert(insert_one_result);
+        assert(insert_one_result);  // Acknowledged writes return results.
         auto doc_id = insert_one_result->inserted_id();
         assert(doc_id.type() == bsoncxx::type::k_oid);
     }
@@ -70,7 +69,7 @@ int main() {
         }
 
         auto insert_many_result = collection.insert_many(documents);
-        assert(insert_many_result);
+        assert(insert_many_result);  // Acknowledged writes return results.
         auto doc0_id = insert_many_result->inserted_ids().at(0);
         auto doc1_id = insert_many_result->inserted_ids().at(1);
         assert(doc0_id.type() == bsoncxx::type::k_oid);
@@ -122,10 +121,8 @@ int main() {
         auto update_many_result =
             collection.update_many(make_document(kvp("i", make_document(kvp("$lt", 3)))),
                                    make_document(kvp("$inc", make_document(kvp("i", 1)))));
-
-        if (update_many_result) {
-            std::cout << update_many_result->modified_count() << "\n";
-        }
+        assert(update_many_result);  // Acknowledged writes return results.
+        std::cout << update_many_result->modified_count() << "\n";
     }
 
     // Delete a Single Document
@@ -135,10 +132,8 @@ int main() {
     {
         auto delete_many_result =
             collection.delete_many(make_document(kvp("i", make_document(kvp("$gte", 3)))));
-
-        if (delete_many_result) {
-            std::cout << delete_many_result->deleted_count() << "\n";
-        }
+        assert(delete_many_result);  // Acknowledged writes return results.
+        std::cout << delete_many_result->deleted_count() << "\n";
     }
 
     // Create Indexes
