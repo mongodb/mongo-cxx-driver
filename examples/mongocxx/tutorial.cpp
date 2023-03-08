@@ -62,7 +62,7 @@ int main() {
     }
     std::string name = element.get_string().value.to_string();
 
-    bsoncxx::stdx::optional<mongocxx::result::insert_one> result = restaurants.insert_one(doc);
+    bsoncxx::stdx::optional<mongocxx::result::insert_one> result = collection.insert_one(doc);
 
     std::vector<bsoncxx::document::value> documents;
     for (int i = 0; i < 100; i++) {
