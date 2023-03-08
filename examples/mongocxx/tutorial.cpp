@@ -63,13 +63,19 @@ int main() {
     auto name = element.get_string().value;
 
     auto insert_one_result = collection.insert_one(view);
+    // Acknowledged writes return a result.
+    assert(insert_one_result);
+    auto doc_id = insert_one_result->inserted_id();
 
     std::vector<bsoncxx::document::value> documents;
     for (int i = 0; i < 100; i++) {
         documents.push_back(bsoncxx::builder::stream::document{} << "i" << i << finalize);
     }
 
-    collection.insert_many(documents);
+    auto insert_many_result = collection.insert_many(documents);
+    assert(insert_many_result);
+    auto doc0_id = insert_many_result->inserted_ids().at(0);
+    auto doc1_id = insert_many_result->inserted_ids().at(1);
 
     auto find_one_result = collection.find_one({});
     if (find_one_result) {
