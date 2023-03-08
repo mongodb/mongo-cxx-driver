@@ -67,7 +67,8 @@ int main() {
 
     // Insert One Document
     {
-        auto insert_one_result = collection.insert_one(view);
+        auto insert_one_result = collection.insert_one(document{} << "hello"
+                                                                  << "world" << finalize);
         // Acknowledged writes return a result.
         assert(insert_one_result);
         auto doc_id = insert_one_result->inserted_id();
