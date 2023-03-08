@@ -62,7 +62,7 @@ int main() {
     }
     auto name = element.get_string().value;
 
-    auto result = collection.insert_one(view);
+    auto insert_one_result = collection.insert_one(view);
 
     std::vector<bsoncxx::document::value> documents;
     for (int i = 0; i < 100; i++) {
@@ -71,24 +71,25 @@ int main() {
 
     collection.insert_many(documents);
 
-    auto maybe_result = collection.find_one({});
-    if (maybe_result) {
-        // Do something with *maybe_result;
+    auto find_one_result = collection.find_one({});
+    if (find_one_result) {
+        // Do something with *find_one_result;
     }
 
-    auto cursor = collection.find({});
-    for (auto doc : cursor) {
+    auto cursor_all = collection.find({});
+    for (auto doc : cursor_all) {
         std::cout << bsoncxx::to_json(doc) << "\n";
     }
 
-    auto maybe_result = collection.find_one(document{} << "i" << 71 << finalize);
-    if (maybe_result) {
-        std::cout << bsoncxx::to_json(*maybe_result) << "\n";
+    auto find_one_filtered_result = collection.find_one(document{} << "i" << 71 << finalize);
+    if (find_one_filtered_result) {
+        std::cout << bsoncxx::to_json(*find_one_filtered_result) << "\n";
     }
 
-    auto cursor = collection.find(document{} << "i" << open_document << "$gt" << 50 << "$lte" << 100
-                                             << close_document << finalize);
-    for (auto doc : cursor) {
+    auto cursor_filtered =
+        collection.find(document{} << "i" << open_document << "$gt" << 50 << "$lte" << 100
+                                   << close_document << finalize);
+    for (auto doc : cursor_filtered) {
         std::cout << bsoncxx::to_json(doc) << "\n";
     }
 
@@ -96,21 +97,21 @@ int main() {
         document{} << "i" << 10 << finalize,
         document{} << "$set" << open_document << "i" << 110 << close_document << finalize);
 
-    auto result = collection.update_many(
+    auto update_many_result = collection.update_many(
         document{} << "i" << open_document << "$lt" << 100 << close_document << finalize,
         document{} << "$inc" << open_document << "i" << 100 << close_document << finalize);
 
-    if (result) {
-        std::cout << result->modified_count() << "\n";
+    if (update_many_result) {
+        std::cout << update_many_result->modified_count() << "\n";
     }
 
     collection.delete_one(document{} << "i" << 110 << finalize);
 
-    auto result = collection.delete_many(document{} << "i" << open_document << "$gte" << 100
-                                                    << close_document << finalize);
+    auto delete_many_result = collection.delete_many(
+        document{} << "i" << open_document << "$gte" << 100 << close_document << finalize);
 
-    if (result) {
-        std::cout << result->deleted_count() << "\n";
+    if (delete_many_result) {
+        std::cout << delete_many_result->deleted_count() << "\n";
     }
 
     auto index_specification = document{} << "i" << 1 << finalize;
