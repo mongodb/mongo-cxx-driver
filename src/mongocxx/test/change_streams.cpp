@@ -499,7 +499,7 @@ TEST_CASE("Documentation Examples", "[min36]") {
                 // Server returned no new notifications. Restart iteration to poll server.
                 it = stream.begin();
             }
-            next = *it;
+            next = bsoncxx::document::value(*it);
         }
         // Start Changestream Example 3
         auto resume_token = (*next)["_id"].get_document().value;
