@@ -60,7 +60,7 @@ int main() {
     if (element.type() != bsoncxx::type::k_string) {
         // Error
     }
-    std::string name = element.get_string().value.to_string();
+    bsoncxx::stdx::string_view name = element.get_string().value;
 
     bsoncxx::stdx::optional<mongocxx::result::insert_one> result = collection.insert_one(doc);
 
