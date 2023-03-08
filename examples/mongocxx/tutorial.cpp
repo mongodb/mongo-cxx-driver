@@ -45,9 +45,9 @@ int main() {
                                        kvp("versions", make_array("v3.2", "v3.0", "v2.6")),
                                        kvp("info", make_document(kvp("x", 203), kvp("y", 102))));
 
-        auto view = doc_value.view();
+        auto doc_view = doc_value.view();
 
-        auto element = view["name"];
+        auto element = doc_view["name"];
         if (element.type() != bsoncxx::type::k_string) {
             // Error
         }
