@@ -447,7 +447,7 @@ TEST_CASE("Documentation Examples", "[min36]") {
 
     std::atomic_bool insert_thread_done;
     insert_thread_done.store(false);
-    // Start a thread repeatedly insert documents to generate notifications.
+    // Start a thread to repeatedly insert documents to generate notifications.
     auto insert_thread = std::thread{[&pool, &insert_thread_done] {
         auto client = pool.acquire();
         auto inventory = (*client)["streams"]["events"];
