@@ -62,7 +62,7 @@ int main() {
     }
     bsoncxx::stdx::string_view name = element.get_string().value;
 
-    bsoncxx::stdx::optional<mongocxx::result::insert_one> result = collection.insert_one(doc);
+    bsoncxx::stdx::optional<mongocxx::result::insert_one> result = collection.insert_one(view);
 
     std::vector<bsoncxx::document::value> documents;
     for (int i = 0; i < 100; i++) {
