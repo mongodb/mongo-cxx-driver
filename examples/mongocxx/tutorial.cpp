@@ -39,11 +39,11 @@ int main() {
     mongocxx::uri uri("mongodb://localhost:27017");
     mongocxx::client client(uri);
 
-    mongocxx::database db = client["mydb"];
-    mongocxx::collection collection = db["test"];
+    auto db = client["mydb"];
+    auto collection = db["test"];
 
     auto builder = bsoncxx::builder::stream::document{};
-    bsoncxx::document::value doc_value =
+    auto doc_value =
         builder << "name"
                 << "MongoDB"
                 << "type"
@@ -54,15 +54,15 @@ int main() {
                 << 203 << "y" << 102 << bsoncxx::builder::stream::close_document
                 << bsoncxx::builder::stream::finalize;
 
-    bsoncxx::document::view view = doc_value.view();
+    auto view = doc_value.view();
 
-    bsoncxx::document::element element = view["name"];
+    auto element = view["name"];
     if (element.type() != bsoncxx::type::k_string) {
         // Error
     }
-    bsoncxx::stdx::string_view name = element.get_string().value;
+    auto name = element.get_string().value;
 
-    bsoncxx::stdx::optional<mongocxx::result::insert_one> result = collection.insert_one(view);
+    auto result = collection.insert_one(view);
 
     std::vector<bsoncxx::document::value> documents;
     for (int i = 0; i < 100; i++) {
@@ -71,25 +71,23 @@ int main() {
 
     collection.insert_many(documents);
 
-    bsoncxx::stdx::optional<bsoncxx::document::value> maybe_result = collection.find_one({});
+    auto maybe_result = collection.find_one({});
     if (maybe_result) {
         // Do something with *maybe_result;
     }
 
-    mongocxx::cursor cursor = collection.find({});
+    auto cursor = collection.find({});
     for (auto doc : cursor) {
         std::cout << bsoncxx::to_json(doc) << "\n";
     }
 
-    bsoncxx::stdx::optional<bsoncxx::document::value> maybe_result =
-        collection.find_one(document{} << "i" << 71 << finalize);
+    auto maybe_result = collection.find_one(document{} << "i" << 71 << finalize);
     if (maybe_result) {
         std::cout << bsoncxx::to_json(*maybe_result) << "\n";
     }
 
-    mongocxx::cursor cursor =
-        collection.find(document{} << "i" << open_document << "$gt" << 50 << "$lte" << 100
-                                   << close_document << finalize);
+    auto cursor = collection.find(document{} << "i" << open_document << "$gt" << 50 << "$lte" << 100
+                                             << close_document << finalize);
     for (auto doc : cursor) {
         std::cout << bsoncxx::to_json(doc) << "\n";
     }
@@ -98,7 +96,7 @@ int main() {
         document{} << "i" << 10 << finalize,
         document{} << "$set" << open_document << "i" << 110 << close_document << finalize);
 
-    bsoncxx::stdx::optional<mongocxx::result::update> result = collection.update_many(
+    auto result = collection.update_many(
         document{} << "i" << open_document << "$lt" << 100 << close_document << finalize,
         document{} << "$inc" << open_document << "i" << 100 << close_document << finalize);
 
@@ -108,8 +106,8 @@ int main() {
 
     collection.delete_one(document{} << "i" << 110 << finalize);
 
-    bsoncxx::stdx::optional<mongocxx::result::delete_result> result = collection.delete_many(
-        document{} << "i" << open_document << "$gte" << 100 << close_document << finalize);
+    auto result = collection.delete_many(document{} << "i" << open_document << "$gte" << 100
+                                                    << close_document << finalize);
 
     if (result) {
         std::cout << result->deleted_count() << "\n";
