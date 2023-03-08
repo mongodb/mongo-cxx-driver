@@ -143,4 +143,7 @@ int main() {
         auto index_specification = make_document(kvp("i", 1));
         collection.create_index(std::move(index_specification));
     }
+
+    // Drop collection to clean up.
+    collection.drop();
 }
