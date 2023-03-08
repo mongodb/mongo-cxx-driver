@@ -244,7 +244,7 @@ To insert multiple documents to the collection, use a
 The following example will add multiple documents of the form:
 
 ```json
-{ "i" : value }
+{ "i" : "<value>" }
 ```
 
 Create the documents in a loop and add to the documents list:
@@ -445,7 +445,7 @@ index key specification document contains the fields to index and the
 index type for each field:
 
 ```json
-{ "index1": "<type>", "index2": <type> }
+{ "index1": "<type>", "index2": "<type>" }
 ```
 
 - For an ascending index type, specify 1 for `<type>`.
