@@ -48,10 +48,9 @@ int main() {
         auto doc_view = doc_value.view();
 
         auto element = doc_view["name"];
-        if (element.type() != bsoncxx::type::k_string) {
-            // Error
-        }
+        assert(element.type() != bsoncxx::type::k_string);
         auto name = element.get_string().value;
+        assert(0 == name.compare("MongoDB"));
     }
 
     // Insert One Document
@@ -60,6 +59,7 @@ int main() {
         // Acknowledged writes return a result.
         assert(insert_one_result);
         auto doc_id = insert_one_result->inserted_id();
+        assert(doc_id.type() == bsoncxx::type::k_oid);
     }
 
     // Insert Multiple Documents
@@ -73,6 +73,8 @@ int main() {
         assert(insert_many_result);
         auto doc0_id = insert_many_result->inserted_ids().at(0);
         auto doc1_id = insert_many_result->inserted_ids().at(1);
+        assert(doc0_id.type() == bsoncxx::type::k_oid);
+        assert(doc1_id.type() == bsoncxx::type::k_oid);
     }
 
     // Find a Single Document in a Collection
@@ -81,6 +83,7 @@ int main() {
         if (find_one_result) {
             // Do something with *find_one_result;
         }
+        assert(find_one_result);
     }
 
     // Find All Documents in a Collection
