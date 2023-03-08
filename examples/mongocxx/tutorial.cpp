@@ -65,7 +65,7 @@ int main() {
     // Insert Multiple Documents
     {
         std::vector<bsoncxx::document::value> documents;
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 5; i++) {
             documents.push_back(make_document(kvp("i", i)));
         }
 
@@ -93,7 +93,7 @@ int main() {
 
     // Get A Single Document That Matches a Filter
     {
-        auto find_one_filtered_result = collection.find_one(make_document(kvp("i", 71)));
+        auto find_one_filtered_result = collection.find_one(make_document(kvp("i", 3)));
         if (find_one_filtered_result) {
             std::cout << bsoncxx::to_json(*find_one_filtered_result) << "\n";
         }
@@ -101,8 +101,8 @@ int main() {
 
     // Get All Documents That Match a Filter
     {
-        auto cursor_filtered = collection.find(
-            make_document(kvp("i", make_document(kvp("$gt", 50), kvp("$lte", 100)))));
+        auto cursor_filtered =
+            collection.find(make_document(kvp("i", make_document(kvp("$gt", 50), kvp("$lte", 3)))));
         for (auto doc : cursor_filtered) {
             std::cout << bsoncxx::to_json(doc) << "\n";
         }
@@ -110,15 +110,15 @@ int main() {
 
     // Update a Single Document
     {
-        collection.update_one(make_document(kvp("i", 10)),
-                              make_document(kvp("$set", make_document(kvp("i", 110)))));
+        collection.update_one(make_document(kvp("i", 3)),
+                              make_document(kvp("$set", make_document(kvp("i", 10)))));
     }
 
     // Update Multiple Documents
     {
         auto update_many_result =
-            collection.update_many(make_document(kvp("i", make_document(kvp("$lt", 100)))),
-                                   make_document(kvp("$inc", make_document(kvp("i", 100)))));
+            collection.update_many(make_document(kvp("i", make_document(kvp("$lt", 3)))),
+                                   make_document(kvp("$inc", make_document(kvp("i", 1)))));
 
         if (update_many_result) {
             std::cout << update_many_result->modified_count() << "\n";
@@ -131,7 +131,7 @@ int main() {
     // Delete All Documents That Match a Filter
     {
         auto delete_many_result =
-            collection.delete_many(make_document(kvp("i", make_document(kvp("$gte", 100)))));
+            collection.delete_many(make_document(kvp("i", make_document(kvp("$gte", 3)))));
 
         if (delete_many_result) {
             std::cout << delete_many_result->deleted_count() << "\n";
