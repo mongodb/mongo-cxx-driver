@@ -40,7 +40,7 @@ int main() {
     mongocxx::client client(uri);
 
     mongocxx::database db = client["mydb"];
-    mongocxx::collection coll = db["test"];
+    mongocxx::collection collection = db["test"];
 
     auto builder = bsoncxx::builder::stream::document{};
     bsoncxx::document::value doc_value =
