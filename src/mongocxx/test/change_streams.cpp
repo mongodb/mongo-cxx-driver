@@ -445,7 +445,8 @@ TEST_CASE("Documentation Examples", "[min36]") {
     collection events = (*mongodb_client)["streams"]["events"];
     collection inventory = events;  // doc examples use this name
 
-    std::atomic_bool insert_thread_done = false;
+    std::atomic_bool insert_thread_done;
+    insert_thread_done.store(false);
     // Start a thread repeatedly insert documents to generate notifications.
     auto insert_thread = std::thread{[&pool, &insert_thread_done] {
         auto client = pool.acquire();
