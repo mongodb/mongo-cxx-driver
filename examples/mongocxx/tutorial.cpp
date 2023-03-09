@@ -48,7 +48,7 @@ int main() {
         auto doc_view = doc_value.view();
         auto element = doc_view["name"];
         assert(element.type() == bsoncxx::type::k_string);
-        auto name = element.get_string().value;
+        auto name = element.get_string().value;  // For C++ driver version < 3.7.0, use get_utf8()
         assert(0 == name.compare("MongoDB"));
     }
 
