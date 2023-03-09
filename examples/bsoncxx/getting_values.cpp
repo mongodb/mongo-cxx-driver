@@ -82,7 +82,13 @@ int main(int, char**) {
         BSONCXX_UNREACHABLE;  // Not reached.
     }
 
+    // Values are accessed through get_*() methods.
+    auto id_i32 = doc["_id"].get_int32().value;
+    auto first_name_str = doc["name"]["first"].get_string().value;
+
     // Make all variables used.
-    return (awards && first_award_year && second_award_year && last_name) ? EXIT_SUCCESS
-                                                                          : EXIT_FAILURE;
+    return (awards && first_award_year && second_award_year && last_name && id_i32 == 1 &&
+            0 == first_name_str.compare("John"))
+               ? EXIT_SUCCESS
+               : EXIT_FAILURE;
 }
