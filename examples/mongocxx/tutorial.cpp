@@ -12,7 +12,6 @@
 #endif
 
 // The following is a formatted copy from the tutorial https://mongocxx.org/mongocxx-v3/tutorial/.
-// It does not currently compiled. TODO: fix.
 
 #include <cstdint>
 #include <iostream>
