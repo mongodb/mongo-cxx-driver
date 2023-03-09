@@ -54,20 +54,19 @@ int main() {
         assert(0 == name.compare("MongoDB"));
     }
 
-    // Insert One Document
+    // Insert One Document: { "i": 0 }
     {
-        auto insert_one_result = collection.insert_one(make_document(kvp("hello", "world")));
+        auto insert_one_result = collection.insert_one(make_document(kvp("i", 0)));
         assert(insert_one_result);  // Acknowledged writes return results.
         auto doc_id = insert_one_result->inserted_id();
         assert(doc_id.type() == bsoncxx::type::k_oid);
     }
 
-    // Insert Multiple Documents
+    // Insert Multiple Documents: { "i": 1 } and { "i": 2 }
     {
         std::vector<bsoncxx::document::value> documents;
-        for (int i = 0; i < 5; i++) {
-            documents.push_back(make_document(kvp("i", i)));
-        }
+        documents.push_back(make_document(kvp("i", 1)));
+        documents.push_back(make_document(kvp("i", 2)));
 
         auto insert_many_result = collection.insert_many(documents);
         assert(insert_many_result);  // Acknowledged writes return results.
@@ -96,7 +95,7 @@ int main() {
 
     // Get A Single Document That Matches a Filter
     {
-        auto find_one_filtered_result = collection.find_one(make_document(kvp("i", 3)));
+        auto find_one_filtered_result = collection.find_one(make_document(kvp("i", 0)));
         if (find_one_filtered_result) {
             std::cout << bsoncxx::to_json(*find_one_filtered_result) << "\n";
         }
@@ -105,7 +104,7 @@ int main() {
     // Get All Documents That Match a Filter
     {
         auto cursor_filtered =
-            collection.find(make_document(kvp("i", make_document(kvp("$gt", 50), kvp("$lte", 3)))));
+            collection.find(make_document(kvp("i", make_document(kvp("$gt", 0), kvp("$lte", 2)))));
         for (auto doc : cursor_filtered) {
             std::cout << bsoncxx::to_json(doc) << "\n";
         }
@@ -113,8 +112,9 @@ int main() {
 
     // Update a Single Document
     {
-        auto update_one_result = collection.update_one(
-            make_document(kvp("i", 3)), make_document(kvp("$set", make_document(kvp("i", 10)))));
+        auto update_one_result =
+            collection.update_one(make_document(kvp("i", 0)),
+                                  make_document(kvp("$set", make_document(kvp("foo", "bar")))));
         assert(update_one_result);  // Acknowledged writes return results.
         std::cout << "update_one_result->modified_count() = " << update_one_result->modified_count()
                   << std::endl;
@@ -123,19 +123,23 @@ int main() {
     // Update Multiple Documents
     {
         auto update_many_result =
-            collection.update_many(make_document(kvp("i", make_document(kvp("$lt", 3)))),
-                                   make_document(kvp("$inc", make_document(kvp("i", 1)))));
+            collection.update_many(make_document(kvp("i", make_document(kvp("$gt", 0)))),
+                                   make_document(kvp("$set", make_document(kvp("foo", "buzz")))));
         assert(update_many_result);  // Acknowledged writes return results.
         std::cout << update_many_result->modified_count() << "\n";
     }
 
     // Delete a Single Document
-    { collection.delete_one(make_document(kvp("i", 110))); }
+    {
+        auto delete_one_result = collection.delete_one(make_document(kvp("i", 0)));
+        assert(delete_one_result);  // Acknowledged writes return results.
+        assert(delete_one_result->deleted_count() == 1);
+    }
 
     // Delete All Documents That Match a Filter
     {
         auto delete_many_result =
-            collection.delete_many(make_document(kvp("i", make_document(kvp("$gte", 3)))));
+            collection.delete_many(make_document(kvp("i", make_document(kvp("$gt", 0)))));
         assert(delete_many_result);  // Acknowledged writes return results.
         std::cout << delete_many_result->deleted_count() << "\n";
     }
