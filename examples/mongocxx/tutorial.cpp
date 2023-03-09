@@ -94,6 +94,17 @@ int main() {
         }
     }
 
+    // Print All Documents in a Collection
+    {
+        auto cursor_all = collection.find({});
+        std::cout << "collection " << collection.name()
+                  << " contains these documents:" << std::endl;
+        for (auto doc : cursor_all) {
+            std::cout << bsoncxx::to_json(doc, bsoncxx::ExtendedJsonMode::k_relaxed) << std::endl;
+        }
+        std::cout << std::endl;
+    }
+
     // Get A Single Document That Matches a Filter
     {
         auto find_one_filtered_result = collection.find_one(make_document(kvp("i", 0)));
