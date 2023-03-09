@@ -49,7 +49,7 @@ int main() {
         auto doc_view = doc_value.view();
 
         auto element = doc_view["name"];
-        assert(element.type() != bsoncxx::type::k_string);
+        assert(element.type() == bsoncxx::type::k_string);
         auto name = element.get_string().value;
         assert(0 == name.compare("MongoDB"));
     }
