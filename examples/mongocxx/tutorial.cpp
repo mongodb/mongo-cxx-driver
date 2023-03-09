@@ -80,7 +80,7 @@ int main() {
     {
         auto find_one_result = collection.find_one({});
         if (find_one_result) {
-            // Do something with *find_one_result;
+            // Do something with *find_one_result
         }
         assert(find_one_result);
     }
@@ -89,7 +89,8 @@ int main() {
     {
         auto cursor_all = collection.find({});
         for (auto doc : cursor_all) {
-            std::cout << bsoncxx::to_json(doc) << "\n";
+            // Do something with doc
+            assert(doc["_id"].type() == bsoncxx::type::k_oid);
         }
     }
 
@@ -97,7 +98,7 @@ int main() {
     {
         auto find_one_filtered_result = collection.find_one(make_document(kvp("i", 0)));
         if (find_one_filtered_result) {
-            std::cout << bsoncxx::to_json(*find_one_filtered_result) << "\n";
+            // Do something with *find_one_filtered_result
         }
     }
 
@@ -106,7 +107,8 @@ int main() {
         auto cursor_filtered =
             collection.find(make_document(kvp("i", make_document(kvp("$gt", 0), kvp("$lte", 2)))));
         for (auto doc : cursor_filtered) {
-            std::cout << bsoncxx::to_json(doc) << "\n";
+            // Do something with doc
+            assert(doc["_id"].type() == bsoncxx::type::k_oid);
         }
     }
 
@@ -116,8 +118,7 @@ int main() {
             collection.update_one(make_document(kvp("i", 0)),
                                   make_document(kvp("$set", make_document(kvp("foo", "bar")))));
         assert(update_one_result);  // Acknowledged writes return results.
-        std::cout << "update_one_result->modified_count() = " << update_one_result->modified_count()
-                  << std::endl;
+        assert(update_one_result->modified_count() == 1);
     }
 
     // Update Multiple Documents
@@ -126,7 +127,7 @@ int main() {
             collection.update_many(make_document(kvp("i", make_document(kvp("$gt", 0)))),
                                    make_document(kvp("$set", make_document(kvp("foo", "buzz")))));
         assert(update_many_result);  // Acknowledged writes return results.
-        std::cout << update_many_result->modified_count() << "\n";
+        assert(update_many_result->modified_count() == 2);
     }
 
     // Delete a Single Document
@@ -141,7 +142,7 @@ int main() {
         auto delete_many_result =
             collection.delete_many(make_document(kvp("i", make_document(kvp("$gt", 0)))));
         assert(delete_many_result);  // Acknowledged writes return results.
-        std::cout << delete_many_result->deleted_count() << "\n";
+        assert(delete_many_result->deleted_count() == 2);
     }
 
     // Create Indexes
