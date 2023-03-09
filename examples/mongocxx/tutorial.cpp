@@ -39,11 +39,12 @@ int main() {
 
     // Create a Document
     {
-        auto doc_value = make_document(kvp("name", "MongoDB"),
-                                       kvp("type", "database"),
-                                       kvp("count", 1),
-                                       kvp("versions", make_array("v3.2", "v3.0", "v2.6")),
-                                       kvp("info", make_document(kvp("x", 203), kvp("y", 102))));
+        auto doc_value = make_document(
+            kvp("name", "MongoDB"),
+            kvp("type", "database"),
+            kvp("count", 1),
+            kvp("versions", make_array("v6.0", "v5.0", "v4.4", "v4.2", "v4.0", "v3.6")),
+            kvp("info", make_document(kvp("x", 203), kvp("y", 102))));
 
         auto doc_view = doc_value.view();
 
@@ -112,8 +113,11 @@ int main() {
 
     // Update a Single Document
     {
-        collection.update_one(make_document(kvp("i", 3)),
-                              make_document(kvp("$set", make_document(kvp("i", 10)))));
+        auto update_one_result = collection.update_one(
+            make_document(kvp("i", 3)), make_document(kvp("$set", make_document(kvp("i", 10)))));
+        assert(update_one_result);  // Acknowledged writes return results.
+        std::cout << "update_one_result->modified_count() = " << update_one_result->modified_count()
+                  << std::endl;
     }
 
     // Update Multiple Documents
