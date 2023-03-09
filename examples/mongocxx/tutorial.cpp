@@ -1,6 +1,6 @@
 // Compile with: c++ --std=c++11 tutorial.cpp $(pkg-config --cflags --libs libmongocxx)
 
-#ifdef NDEBUG
+#if defined(NDEBUG) || !defined(assert)
 #undef assert
 #define assert(stmt)                                                                         \
     do {                                                                                     \
