@@ -1,16 +1,5 @@
 // Compile with: c++ --std=c++11 tutorial.cpp $(pkg-config --cflags --libs libmongocxx)
 
-#if defined(NDEBUG) || !defined(assert)
-#undef assert
-#define assert(stmt)                                                                         \
-    do {                                                                                     \
-        if (!(stmt)) {                                                                       \
-            std::cerr << "Assert on line " << __LINE__ << " failed: " << #stmt << std::endl; \
-            abort();                                                                         \
-        }                                                                                    \
-    } while (0)
-#endif
-
 // The following is a formatted copy from the tutorial https://mongocxx.org/mongocxx-v3/tutorial/.
 
 #include <cstdint>
@@ -23,6 +12,19 @@
 #include <mongocxx/instance.hpp>
 #include <mongocxx/stdx.hpp>
 #include <mongocxx/uri.hpp>
+
+// Redefine assert after including headers. Release builds may undefine the assert macro and result
+// in -Wunused-variable warnings.
+#if defined(NDEBUG) || !defined(assert)
+#undef assert
+#define assert(stmt)                                                                         \
+    do {                                                                                     \
+        if (!(stmt)) {                                                                       \
+            std::cerr << "Assert on line " << __LINE__ << " failed: " << #stmt << std::endl; \
+            abort();                                                                         \
+        }                                                                                    \
+    } while (0)
+#endif
 
 using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_array;
