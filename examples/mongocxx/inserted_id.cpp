@@ -36,10 +36,6 @@ int main(int, char**) {
     try {
         auto result = collection.insert_one(make_document(kvp("test", 1)));
 
-        // Currently, result will always be true (or an exception will be
-        // thrown).  Eventually, unacknowledged writes will give a false
-        // result. See https://jira.mongodb.org/browse/CXX-894
-
         if (!result) {
             std::cout << "Unacknowledged write. No id available." << std::endl;
             return EXIT_SUCCESS;
