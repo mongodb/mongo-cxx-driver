@@ -311,7 +311,7 @@ for (auto doc : cursor_all) {
 
 ### Print All Documents in a Collection
 
-The [`bsoncxx::to_json`]({{< api3ref namespacebsoncxx>}}) function to converts a BSON document to a JSON string.
+The [`bsoncxx::to_json`]({{< api3ref namespacebsoncxx>}}) function converts a BSON document to a JSON string.
 
 ```c++
 auto cursor_all = collection.find({});
