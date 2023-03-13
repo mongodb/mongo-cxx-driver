@@ -7,6 +7,9 @@ title = "Tutorial for mongocxx"
   parent="mongocxx3"
 +++
 
+See the full code for this tutorial in
+[tutorial.cpp](https://github.com/mongodb/mongo-cxx-driver/blob/master/examples/mongocxx/tutorial.cpp).
+
 ## Prerequisites
 
 - A [mongod](https://docs.mongodb.com/manual/reference/program/mongod/)
@@ -20,22 +23,17 @@ title = "Tutorial for mongocxx"
 #include <cstdint>
 #include <iostream>
 #include <vector>
+
+#include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/json.hpp>
 #include <mongocxx/client.hpp>
+#include <mongocxx/instance.hpp>
 #include <mongocxx/stdx.hpp>
 #include <mongocxx/uri.hpp>
-#include <mongocxx/instance.hpp>
-#include <bsoncxx/builder/stream/helpers.hpp>
-#include <bsoncxx/builder/stream/document.hpp>
-#include <bsoncxx/builder/stream/array.hpp>
 
-
-using bsoncxx::builder::stream::close_array;
-using bsoncxx::builder::stream::close_document;
-using bsoncxx::builder::stream::document;
-using bsoncxx::builder::stream::finalize;
-using bsoncxx::builder::stream::open_array;
-using bsoncxx::builder::stream::open_document;
+using bsoncxx::builder::basic::kvp;
+using bsoncxx::builder::basic::make_array;
+using bsoncxx::builder::basic::make_document;
 ```
 
 ## Compiling
@@ -57,8 +55,8 @@ line in above expands to this:
 
 ```sh
 c++ --std=c++11 <input>.cpp
-  -I/usr/local/include/mongocxx/v_noabi -I/usr/local/include/libmongoc-1.0 \
-  -I/usr/local/include/bsoncxx/v_noabi -I/usr/local/include/libbson-1.0 \
+  -I/usr/local/include/mongocxx/v_noabi \
+  -I/usr/local/include/bsoncxx/v_noabi \
   -L/usr/local/lib -lmongocxx -lbsoncxx
 ```
 
@@ -110,7 +108,7 @@ first store data.
 The following example accesses the `mydb` database:
 
 ```c++
-mongocxx::database db = client["mydb"];
+auto db = client["mydb"];
 ```
 
 ## Access a Collection
@@ -129,7 +127,7 @@ the following statement accesses the collection named `test` in the
 `mydb` database:
 
 ```c++
-mongocxx::collection coll = db["test"];
+auto collection = db["test"];
 ```
 
 ## Create a Document
@@ -145,7 +143,7 @@ Basic builder: `bsoncxx::builder::basic`
   A more conventional document builder that involves calling methods on
   a builder instance.
 
-This guide only briefly describes the stream builder.
+This guide only briefly describes the basic builder.
 
 For example, consider the following JSON document:
 
@@ -154,7 +152,7 @@ For example, consider the following JSON document:
    "name" : "MongoDB",
    "type" : "database",
    "count" : 1,
-   "versions": [ "v3.2", "v3.0", "v2.6" ],
+   "versions": [ "v6.0", "v5.0", "v4.4", "v4.2", "v4.0", "v3.6" ],
    "info" : {
                "x" : 203,
                "y" : 102
@@ -162,28 +160,17 @@ For example, consider the following JSON document:
 }
 ```
 
-Using the stream builder interface, you can construct this document
+Using the basic builder interface, you can construct this document
 as follows:
 
 ```c++
-auto builder = bsoncxx::builder::stream::document{};
-bsoncxx::document::value doc_value = builder
-  << "name" << "MongoDB"
-  << "type" << "database"
-  << "count" << 1
-  << "versions" << bsoncxx::builder::stream::open_array
-    << "v3.2" << "v3.0" << "v2.6"
-  << close_array
-  << "info" << bsoncxx::builder::stream::open_document
-    << "x" << 203
-    << "y" << 102
-  << bsoncxx::builder::stream::close_document
-  << bsoncxx::builder::stream::finalize;
+auto doc_value = make_document(
+    kvp("name", "MongoDB"),
+    kvp("type", "database"),
+    kvp("count", 1),
+    kvp("versions", make_array("v6.0", "v5.0", "v4.4", "v4.2", "v4.0", "v3.6")),
+    kvp("info", make_document(kvp("x", 203), kvp("y", 102))));
 ```
-
-Use `bsoncxx::builder::stream::finalize` to obtain a
-[`bsoncxx::document::value`]({{< api3ref classbsoncxx_1_1document_1_1value >}})
-instance.
 
 This `bsoncxx::document::value` type is a read-only object owning
 its own memory. To use it, you must obtain a
@@ -191,7 +178,7 @@ its own memory. To use it, you must obtain a
 the `view()` method:
 
 ```c++
-bsoncxx::document::view view = doc_value.view();
+auto doc_view = doc_value.view();
 ```
 
 You can access fields within this document view using `operator[]`,
@@ -201,12 +188,10 @@ instance. For example, the following will extract the `name` field whose
 value is a string:
 
 ```c++
-bsoncxx::document::element element = view["name"];
-if(element.type() != bsoncxx::type::k_string) {
-  // Error
-}
-// For the versions older than 3.7.0, use get_utf8 instead of get_string
-std::string name = element.get_string().value.to_string();
+auto element = doc_view["name"];
+assert(element.type() == bsoncxx::type::k_string);
+auto name = element.get_string().value; // For C++ driver version < 3.7.0, use get_utf8()
+assert(0 == name.compare("MongoDB"));
 ```
 
 If the value in the `name` field is not a string and you do not
@@ -220,11 +205,20 @@ throw an instance of
 
 To insert a single document into the collection, use a
 [`mongocxx::collection`]({{< api3ref classmongocxx_1_1collection >}})
-instance's `insert_one()` method:
+instance's `insert_one()` method to insert `{ "i": 0 }`:
 
 ```c++
-bsoncxx::stdx::optional<mongocxx::result::insert_one> result =
- restaurants.insert_one(doc);
+auto insert_one_result = collection.insert_one(make_document(kvp("i", 0)));
+```
+
+`insert_one_result` is an optional [`mongocxx::result::insert_one`]({{< api3ref
+classmongocxx_1_1result_1_1insert_one >}}). In this example, `insert_one_result`
+is expected to be set. The default behavior for write operations is to wait for
+a reply from the server. This may be overriden by setting an unacknowledged
+[`mongocxx::write_concern`]({{< api3ref classmongocxx_1_1write__concern >}}).
+
+```c++
+assert(insert_one_result);  // Acknowledged writes return results.
 ```
 
 If you do not specify a top-level `_id` field in the document,
@@ -235,33 +229,32 @@ returned
 [`mongocxx::result::insert_one`]({{< api3ref classmongocxx_1_1result_1_1insert__one >}})
 instance.
 
+```c++
+auto doc_id = insert_one_result->inserted_id();
+assert(doc_id.type() == bsoncxx::type::k_oid);
+```
+
 ### Insert Multiple Documents
 
 To insert multiple documents to the collection, use a
 [`mongocxx::collection`]({{< api3ref classmongocxx_1_1collection >}}) instance's
 `insert_many()` method, which takes a list of documents to insert.
 
-The following example will add multiple documents of the form:
-
-```json
-{ "i" : value }
-```
-
-Create the documents in a loop and add to the documents list:
+The following example inserts the documents `{ "i": 1 }` and `{ "i": 2 }`.
+Create the documents and add to the documents list:
 
 ```c++
 std::vector<bsoncxx::document::value> documents;
-for(int i = 0; i < 100; i++) {
-    documents.push_back(
-      bsoncxx::builder::stream::document{} << "i" << i << finalize);
-}
+documents.push_back(make_document(kvp("i", 1)));
+documents.push_back(make_document(kvp("i", 2)));
 ```
 
 To insert these documents to the collection, pass the list of documents
 to the `insert_many()` method.
 
 ```c++
-collection.insert_many(documents);
+auto insert_many_result = collection.insert_many(documents);
+assert(insert_many_result);  // Acknowledged writes return results.
 ```
 
 If you do not specify a top-level `_id` field in each document,
@@ -271,6 +264,13 @@ You can obtain this value using the `inserted_ids()` method of the
 returned
 [`mongocxx::result::insert_many`]({{< api3ref classmongocxx_1_1result_1_1insert__many >}})
 instance.
+
+```c++
+auto doc0_id = insert_many_result->inserted_ids().at(0);
+auto doc1_id = insert_many_result->inserted_ids().at(1);
+assert(doc0_id.type() == bsoncxx::type::k_oid);
+assert(doc1_id.type() == bsoncxx::type::k_oid);
+```
 
 ## Query the Collection
 
@@ -292,41 +292,43 @@ To return a single document in the collection, use the `find_one()`
 method without any parameters.
 
 ```c++
-bsoncxx::stdx::optional<bsoncxx::document::value> maybe_result =
-  collection.find_one({});
-if(maybe_result) {
-  // Do something with *maybe_result;
+auto find_one_result = collection.find_one({});
+if (find_one_result) {
+    // Do something with *find_one_result
 }
+assert(find_one_result);
 ```
 
 ### Find All Documents in a Collection
 
 ```c++
-mongocxx::cursor cursor = collection.find({});
-for(auto doc : cursor) {
-  std::cout << bsoncxx::to_json(doc) << "\n";
+auto cursor_all = collection.find({});
+for (auto doc : cursor_all) {
+    // Do something with doc
+    assert(doc["_id"].type() == bsoncxx::type::k_oid);
 }
 ```
 
-### Specify a Query Filter
+### Print All Documents in a Collection
 
-#### Get A Single Document That Matches a Filter
-
-To find the first document where the field `i` has the value `71`,
-pass the document `{"i": 71}` to specify the equality condition:
+The [`bsoncxx::to_json`]({{< api3ref namespacebsoncxx>}}) function converts a BSON document to a JSON string.
 
 ```c++
-bsoncxx::stdx::optional<bsoncxx::document::value> maybe_result =
-  collection.find_one(document{} << "i" << 71 << finalize);
-if(maybe_result) {
-  std::cout << bsoncxx::to_json(*maybe_result) << "\n";
+auto cursor_all = collection.find({});
+std::cout << "collection " << collection.name()
+          << " contains these documents:" << std::endl;
+for (auto doc : cursor_all) {
+    std::cout << bsoncxx::to_json(doc, bsoncxx::ExtendedJsonMode::k_relaxed) << std::endl;
 }
+std::cout << std::endl;
 ```
 
-The example prints one document:
-
-```json
-{ "_id" : { "$oid" : "5755e19b38c96f1fb25667a8" },  "i" : 71 }
+The above example prints output resembling the following:
+```
+collection test contains these documents:
+{ "_id" : { "$oid" : "6409edb48c37f371c70f03a1" }, "i" : 0 }
+{ "_id" : { "$oid" : "6409edb48c37f371c70f03a2" }, "i" : 1 }
+{ "_id" : { "$oid" : "6409edb48c37f371c70f03a3" }, "i" : 2 }
 ```
 
 The `_id` element has been added automatically by MongoDB to your
@@ -334,19 +336,30 @@ document and your value will differ from that shown. MongoDB reserves
 field names that start with an underscore (`_`) and the dollar sign
 (`$`) for internal use.
 
-#### Get All Documents That Match a Filter
+### Specify a Query Filter
 
-The following example returns and prints all documents where
-`50 < "i" <= 100`:
+#### Get A Single Document That Matches a Filter
+
+To find the first document where the field `i` has the value `0`,
+pass the document `{"i": 0}` to specify the equality condition:
 
 ```c++
-mongocxx::cursor cursor = collection.find(
-  document{} << "i" << open_document <<
-    "$gt" << 50 <<
-    "$lte" << 100
-  << close_document << finalize);
-for(auto doc : cursor) {
-  std::cout << bsoncxx::to_json(doc) << "\n";
+auto find_one_filtered_result = collection.find_one(make_document(kvp("i", 0)));
+if (find_one_filtered_result) {
+    // Do something with *find_one_filtered_result
+}
+```
+
+#### Get All Documents That Match a Filter
+
+The following example gets all documents where `0 < "i" <= 2`:
+
+```c++
+auto cursor_filtered =
+    collection.find(make_document(kvp("i", make_document(kvp("$gt", 0), kvp("$lte", 2)))));
+for (auto doc : cursor_filtered) {
+    // Do something with doc
+    assert(doc["_id"].type() == bsoncxx::type::k_oid);
 }
 ```
 
@@ -365,12 +378,14 @@ documents modified by the update.
 To update at most one document, use the `update_one()` method.
 
 The following example updates the first document that matches the filter
-`{ "i": 10 }` and sets the value of `i` to `110`:
+`{ "i": 0 }` and sets the value of `foo` to `bar`:
 
 ```c++
-collection.update_one(document{} << "i" << 10 << finalize,
-                      document{} << "$set" << open_document <<
-                        "i" << 110 << close_document << finalize);
+auto update_one_result =
+    collection.update_one(make_document(kvp("i", 0)),
+                          make_document(kvp("$set", make_document(kvp("foo", "bar")))));
+assert(update_one_result);  // Acknowledged writes return results.
+assert(update_one_result->modified_count() == 1);
 ```
 
 
@@ -379,20 +394,15 @@ collection.update_one(document{} << "i" << 10 << finalize,
 To update all documents matching a filter, use the `update_many()`
 method.
 
-The following example increments the value of `i` by `100` where
-`i` is less than `100`:
+The following example sets the value of `foo` to `buzz` where
+`i` is greater than `0`:
 
 ```c++
-bsoncxx::stdx::optional<mongocxx::result::update> result =
- collection.update_many(
-  document{} << "i" << open_document <<
-    "$lt" << 100 << close_document << finalize,
-  document{} << "$inc" << open_document <<
-    "i" << 100 << close_document << finalize);
-
-if(result) {
-  std::cout << result->modified_count() << "\n";
-}
+auto update_many_result =
+    collection.update_many(make_document(kvp("i", make_document(kvp("$gt", 0)))),
+                            make_document(kvp("$set", make_document(kvp("foo", "buzz")))));
+assert(update_many_result);  // Acknowledged writes return results.
+assert(update_many_result->modified_count() == 2);
 ```
 
 ## Delete Documents
@@ -410,10 +420,12 @@ To delete at most a single document that matches a filter, use the
 `delete_one()` method.
 
 For example, to delete a document that matches the filter
-`{ "i": 110 }`:
+`{ "i": 0 }`:
 
 ```c++
-collection.delete_one(document{} << "i" << 110 << finalize);
+auto delete_one_result = collection.delete_one(make_document(kvp("i", 0)));
+assert(delete_one_result);  // Acknowledged writes return results.
+assert(delete_one_result->deleted_count() == 1);
 ```
 
 ### Delete All Documents That Match a Filter
@@ -421,18 +433,13 @@ collection.delete_one(document{} << "i" << 110 << finalize);
 To delete all documents matching a filter, use a collection's
 `delete_many()` method.
 
-The following example deletes all documents where `i` is greater or
-equal to `100`:
+The following example deletes all documents where `i` is greater than `0`:
 
 ```c++
-bsoncxx::stdx::optional<mongocxx::result::delete_result> result =
- collection.delete_many(
-  document{} << "i" << open_document <<
-    "$gte" << 100 << close_document << finalize);
-
-if(result) {
-  std::cout << result->deleted_count() << "\n";
-}
+auto delete_many_result =
+    collection.delete_many(make_document(kvp("i", make_document(kvp("$gt", 0)))));
+assert(delete_many_result);  // Acknowledged writes return results.
+assert(delete_many_result->deleted_count() == 2);
 ```
 
 ## Create Indexes
@@ -445,7 +452,7 @@ index key specification document contains the fields to index and the
 index type for each field:
 
 ```json
-{ "index1": "<type>", "index2": <type> }
+{ "index1": "<type>", "index2": "<type>" }
 ```
 
 - For an ascending index type, specify 1 for `<type>`.
@@ -454,6 +461,6 @@ index type for each field:
 The following example creates an ascending index on the `i` field:
 
 ```c++
-auto index_specification = document{} << "i" << 1 << finalize;
+auto index_specification = make_document(kvp("i", 1));
 collection.create_index(std::move(index_specification));
 ```

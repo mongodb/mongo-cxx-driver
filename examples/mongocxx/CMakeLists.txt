@@ -45,6 +45,7 @@ set(MONGOCXX_EXAMPLES
     remove.cpp
     server_side_field_level_encryption_enforcement.cpp
     tailable_cursor.cpp
+    tutorial.cpp
     update.cpp
     view_or_value_variant.cpp
     with_transaction.cpp
