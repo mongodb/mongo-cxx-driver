@@ -18,6 +18,8 @@ In particular, check that the "Ubuntu 18.04 with minimum libmongoc" variant is p
 
 Ensure that all tickets under the [version to be released](https://jira.mongodb.org/projects/CXX?selectedItem=com.atlassian.jira.jira-projects-plugin%3Arelease-page&status=unreleased) are in `Closed` status on the C++ Driver releases page. If not, bulk change open tickets that will NOT be in the release to a new version (create it if necessary).
 
+For a patch release, check that all tickets for the version to be released have changes cherry-picked onto the release branch. This is indicated by a comment on the ticket. Here is an [example comment](https://jira.mongodb.org/browse/CXX-2650?focusedCommentId=5271981&page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel#comment-5271981).
+
 ## Audit Jira ticket titles and types for use in release notes
 From the releases page click the "Release Notes" link to see a summary of tickets to be included in release notes. Update the ticket type and title as appropriate. User-facing issues should generally be either "Bug" or "New Feature". Non-user facing issues should generally be "Task" tickets (and will be omitted later, so you can ignore them here).
 
