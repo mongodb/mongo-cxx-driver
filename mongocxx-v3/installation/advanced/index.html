@@ -1306,10 +1306,10 @@
 <h1>Advanced Configuration and Installation Options</h1>
 <h2 id="additional-options-for-integrators">Additional Options for Integrators</h2>
 <p>In the event that you are building the BSON C++ library and/or the C++ driver to embed with other components and you wish to avoid the potential for collision with components installed from a standard build or from a distribution package manager, you can make use of the <code>BSONCXX_OUTPUT_BASENAME</code> and <code>MONGOCXX_OUTPUT_BASENAME</code> options to <code>cmake</code>.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">cmake ..                                            <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>    -DBSONCXX_OUTPUT_BASENAME<span style="color:#f92672">=</span>custom_bsoncxx        <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>    -DMONGOCXX_OUTPUT_BASENAME<span style="color:#f92672">=</span>custom_mongocxx
-</code></pre></div><p>The above command would produce libraries named <code>libcustom_bsoncxx.so</code> and <code>libcustom_mongocxx.so</code> (or with the extension appropriate for the build platform).  Those libraries could be placed in a standard system directory or in an alternate location and could be linked to by specifying something like <code>-lcustom_mongocxx -lcustom_bsoncxx</code> on the linker command line (possibly adjusting the specific flags to those required by your linker).</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>cmake ..                                            <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DBSONCXX_OUTPUT_BASENAME<span style="color:#f92672">=</span>custom_bsoncxx        <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DMONGOCXX_OUTPUT_BASENAME<span style="color:#f92672">=</span>custom_mongocxx
+</span></span></code></pre></div><p>The above command would produce libraries named <code>libcustom_bsoncxx.so</code> and <code>libcustom_mongocxx.so</code> (or with the extension appropriate for the build platform).  Those libraries could be placed in a standard system directory or in an alternate location and could be linked to by specifying something like <code>-lcustom_mongocxx -lcustom_bsoncxx</code> on the linker command line (possibly adjusting the specific flags to those required by your linker).</p>
 <h2 id="advanced-configuration-static-configurations">Advanced configuration (static configurations)</h2>
 <p>The following sub-sections detail advanced options for configuring the C++ driver and/or its
 dependencies as static libraries rather than the typical shared libraries.  These options will
@@ -1319,58 +1319,58 @@ of the implications of the various linking approaches before utilizing these opt
 <h4 id="configuring-with-mongocxx-32x-or-newer">Configuring with <code>mongocxx</code> 3.2.x or newer</h4>
 <p>Users have the option to build <code>mongocxx</code> as a static library. <strong>This is not recommended for novice
 users.</strong> A user can enable this behavior with the <code>-DBUILD_SHARED_LIBS</code> option:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">cmake ..                                            <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>    -DCMAKE_BUILD_TYPE<span style="color:#f92672">=</span>Release                      <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>    -DBUILD_SHARED_LIBS<span style="color:#f92672">=</span>OFF                         <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>    -DCMAKE_PREFIX_PATH<span style="color:#f92672">=</span>/opt/mongo-c-driver         <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>    -DCMAKE_INSTALL_PREFIX<span style="color:#f92672">=</span>/opt/mongo-cxx-driver
-</code></pre></div><h4 id="configuring-with-mongocxx-350-or-newer">Configuring with <code>mongocxx</code> 3.5.0 or newer</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>cmake ..                                            <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DCMAKE_BUILD_TYPE<span style="color:#f92672">=</span>Release                      <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DBUILD_SHARED_LIBS<span style="color:#f92672">=</span>OFF                         <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DCMAKE_PREFIX_PATH<span style="color:#f92672">=</span>/opt/mongo-c-driver         <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DCMAKE_INSTALL_PREFIX<span style="color:#f92672">=</span>/opt/mongo-cxx-driver
+</span></span></code></pre></div><h4 id="configuring-with-mongocxx-350-or-newer">Configuring with <code>mongocxx</code> 3.5.0 or newer</h4>
 <p>Users have the option to build <code>mongocxx</code> as both static and shared libraries. A user can enable
 this behavior with the <code>-DBUILD_SHARED_AND_STATIC_LIBS</code> option:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">cmake ..                                            <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>    -DCMAKE_BUILD_TYPE<span style="color:#f92672">=</span>Release                      <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>    -DBUILD_SHARED_AND_STATIC_LIBS<span style="color:#f92672">=</span>ON               <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>    -DCMAKE_PREFIX_PATH<span style="color:#f92672">=</span>/opt/mongo-c-driver         <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>    -DCMAKE_INSTALL_PREFIX<span style="color:#f92672">=</span>/opt/mongo-cxx-driver
-</code></pre></div><p>Users have the option to build <code>mongocxx</code> as a shared library that has statically linked
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>cmake ..                                            <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DCMAKE_BUILD_TYPE<span style="color:#f92672">=</span>Release                      <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DBUILD_SHARED_AND_STATIC_LIBS<span style="color:#f92672">=</span>ON               <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DCMAKE_PREFIX_PATH<span style="color:#f92672">=</span>/opt/mongo-c-driver         <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DCMAKE_INSTALL_PREFIX<span style="color:#f92672">=</span>/opt/mongo-cxx-driver
+</span></span></code></pre></div><p>Users have the option to build <code>mongocxx</code> as a shared library that has statically linked
 <code>libmongoc</code>. <strong>This is not recommended for novice users.</strong> A user can enable this behavior with the
 <code>-DBUILD_SHARED_LIBS_WITH_STATIC_MONGOC</code> option:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">cmake ..                                            <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>    -DCMAKE_BUILD_TYPE<span style="color:#f92672">=</span>Release                      <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>    -DBUILD_SHARED_LIBS_WITH_STATIC_MONGOC<span style="color:#f92672">=</span>ON       <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>    -DCMAKE_PREFIX_PATH<span style="color:#f92672">=</span>/opt/mongo-c-driver         <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>    -DCMAKE_INSTALL_PREFIX<span style="color:#f92672">=</span>/opt/mongo-cxx-driver
-</code></pre></div><h3 id="for-windows">For Windows</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>cmake ..                                            <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DCMAKE_BUILD_TYPE<span style="color:#f92672">=</span>Release                      <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DBUILD_SHARED_LIBS_WITH_STATIC_MONGOC<span style="color:#f92672">=</span>ON       <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DCMAKE_PREFIX_PATH<span style="color:#f92672">=</span>/opt/mongo-c-driver         <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DCMAKE_INSTALL_PREFIX<span style="color:#f92672">=</span>/opt/mongo-cxx-driver
+</span></span></code></pre></div><h3 id="for-windows">For Windows</h3>
 <h4 id="configuring-with-mongocxx-32x-or-newer-1">Configuring with <code>mongocxx</code> 3.2.x or newer</h4>
 <p>Users have the option to build <code>mongocxx</code> as a static library. <strong>This is not recommended for novice
 users.</strong> A user can enable this behavior with the <code>-DBUILD_SHARED_LIBS</code> option:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">cmake ..                                            <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>    -DCMAKE_BUILD_TYPE<span style="color:#f92672">=</span>Release                      <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>    -DBUILD_SHARED_LIBS<span style="color:#f92672">=</span>OFF                         <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>    -DCMAKE_PREFIX_PATH<span style="color:#f92672">=</span>C:<span style="color:#ae81ff">\m</span>ongo-c-driver           <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>    -DCMAKE_INSTALL_PREFIX<span style="color:#f92672">=</span>C:<span style="color:#ae81ff">\m</span>ongo-cxx-driver
-</code></pre></div><h4 id="configuring-with-mongocxx-350-or-newer-1">Configuring with <code>mongocxx</code> 3.5.0 or newer</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>cmake ..                                            <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DCMAKE_BUILD_TYPE<span style="color:#f92672">=</span>Release                      <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DBUILD_SHARED_LIBS<span style="color:#f92672">=</span>OFF                         <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DCMAKE_PREFIX_PATH<span style="color:#f92672">=</span>C:<span style="color:#ae81ff">\m</span>ongo-c-driver           <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DCMAKE_INSTALL_PREFIX<span style="color:#f92672">=</span>C:<span style="color:#ae81ff">\m</span>ongo-cxx-driver
+</span></span></code></pre></div><h4 id="configuring-with-mongocxx-350-or-newer-1">Configuring with <code>mongocxx</code> 3.5.0 or newer</h4>
 <p>Users have the option to build <code>mongocxx</code> as both static and shared libraries. A user can enable
 this behavior with the <code>-DBUILD_SHARED_AND_STATIC_LIBS</code> option:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">cmake ..                                            <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>    -DCMAKE_BUILD_TYPE<span style="color:#f92672">=</span>Release                      <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>    -DBUILD_SHARED_AND_STATIC_LIBS<span style="color:#f92672">=</span>ON               <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>    -DCMAKE_PREFIX_PATH<span style="color:#f92672">=</span>C:<span style="color:#ae81ff">\m</span>ongo-c-driver           <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>    -DCMAKE_INSTALL_PREFIX<span style="color:#f92672">=</span>C:<span style="color:#ae81ff">\m</span>ongo-cxx-driver
-</code></pre></div><p>Users have the option to build <code>mongocxx</code> as a shared library that has statically linked
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>cmake ..                                            <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DCMAKE_BUILD_TYPE<span style="color:#f92672">=</span>Release                      <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DBUILD_SHARED_AND_STATIC_LIBS<span style="color:#f92672">=</span>ON               <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DCMAKE_PREFIX_PATH<span style="color:#f92672">=</span>C:<span style="color:#ae81ff">\m</span>ongo-c-driver           <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DCMAKE_INSTALL_PREFIX<span style="color:#f92672">=</span>C:<span style="color:#ae81ff">\m</span>ongo-cxx-driver
+</span></span></code></pre></div><p>Users have the option to build <code>mongocxx</code> as a shared library that has statically linked
 <code>libmongoc</code>. <strong>This is not recommended for novice users.</strong> A user can enable this behavior with the
 <code>-DBUILD_SHARED_LIBS_WITH_STATIC_MONGOC</code> option:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">cmake ..                                            <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>    -DCMAKE_BUILD_TYPE<span style="color:#f92672">=</span>Release                      <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>    -DBUILD_SHARED_LIBS_WITH_STATIC_MONGOC<span style="color:#f92672">=</span>ON       <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>    -DCMAKE_PREFIX_PATH<span style="color:#f92672">=</span>C:<span style="color:#ae81ff">\m</span>ongo-c-driver           <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>    -DCMAKE_INSTALL_PREFIX<span style="color:#f92672">=</span>C:<span style="color:#ae81ff">\m</span>ongo-cxx-driver
-</code></pre></div><h2 id="disabling-tests">Disabling tests</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>cmake ..                                            <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DCMAKE_BUILD_TYPE<span style="color:#f92672">=</span>Release                      <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DBUILD_SHARED_LIBS_WITH_STATIC_MONGOC<span style="color:#f92672">=</span>ON       <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DCMAKE_PREFIX_PATH<span style="color:#f92672">=</span>C:<span style="color:#ae81ff">\m</span>ongo-c-driver           <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DCMAKE_INSTALL_PREFIX<span style="color:#f92672">=</span>C:<span style="color:#ae81ff">\m</span>ongo-cxx-driver
+</span></span></code></pre></div><h2 id="disabling-tests">Disabling tests</h2>
 <p>Pass <code>-DENABLE_TESTS=OFF</code> as a cmake option to disable configuration of test targets.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">cmake .. -DENABLE_TESTS<span style="color:#f92672">=</span>OFF
-cmake --build .. --target help
-<span style="color:#75715e"># No test targets are configured.</span>
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>cmake .. -DENABLE_TESTS<span style="color:#f92672">=</span>OFF
+</span></span><span style="display:flex;"><span>cmake --build .. --target help
+</span></span><span style="display:flex;"><span><span style="color:#75715e"># No test targets are configured.</span>
+</span></span></code></pre></div>
 
 
 
