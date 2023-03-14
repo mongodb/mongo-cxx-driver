@@ -58,12 +58,16 @@ python ./etc/make_release.py --help
 ```
 
 It requires the following:
-- A GitHub token. Go to the GitHub settings page [Personal Access Tokens](https://github.com/settings/tokens) and create a token. Save the token secret to `mongo-cxx-driver-release/github_token.txt`.
-- Jira OAuth credentials. Ask for these from a team member. Save it to `mongo-cxx-driver-release/jira_creds.txt`.
+- A GitHub token. Go to the GitHub settings page [Personal Access Tokens](https://github.com/settings/tokens) and create a token. Save the token secret to `~/.secrets/github_token.txt`.
+- Jira OAuth credentials. Ask for these from a team member. Save it to `~/.secrets/jira_creds.txt`.
 
 Run the release script with the git tag created above as an argument and `--dry-run` to test for unexpected errors.
 ```
-python ./etc/make_release.py --dry-run r3.8.0
+python ./etc/make_release.py \
+    --dry-run \
+    --jira-creds-file ~/.secrets/jira_creds.txt \
+    --github-token-file ~/.secrets/github_token.txt \
+    r3.8.0 
 ```
 
 If all goes well, run the command again without `--dry-run`, which should build and test the tarball and draft the GitHub release.

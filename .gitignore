@@ -9,3 +9,7 @@ cmake-build*
 
 # OSX
 .DS_Store
+
+# Credentials files referenced in release documentation.
+github_token.txt
+jira_creds.txt
