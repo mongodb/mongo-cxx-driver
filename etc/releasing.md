@@ -132,7 +132,7 @@ Documentation generation must be run after the release tag has been made and pus
     - Update the `api/mongocxx-v3` symlink to point to the newly released version. If a major version bump has occurred, revise the symlink structure as needed. Make sure `current` always points to a symlink tracking the latest stable release branch.
     - Commit and push the symlink change: `git commit -am "Update symlink for r3.8.0"`
 - Wait a few minutes and verify mongocxx.org has updated.
-- Merge the commit containing these changes into the master branch. This may require pushing the commit to a fork of the C++ Driver repository and creating a pull request.
+- Checkout the master branch. Push the commit containing changes to `etc/` and `docs/`. This may require pushing the commit to a fork of the C++ Driver repository and creating a pull request.
 
 ## File a DOCSP ticket if needed
 Add a comment to the generated DOCSP ticket describing if the [MongoDB Compatibility Table](https://www.mongodb.com/docs/drivers/cxx/#mongodb-compatibility) or [Language Compatibility Table](https://www.mongodb.com/docs/drivers/cxx/#language-compatibility) should be updated. Generally, only a minor release will require updates. (See DOCSP-3504 for an example.)
