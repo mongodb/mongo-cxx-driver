@@ -18,6 +18,8 @@ In particular, check that the "Ubuntu 18.04 with minimum libmongoc" variant is p
 
 Ensure that all tickets under the [version to be released](https://jira.mongodb.org/projects/CXX?selectedItem=com.atlassian.jira.jira-projects-plugin%3Arelease-page&status=unreleased) are in `Closed` status on the C++ Driver releases page. If not, bulk change open tickets that will NOT be in the release to a new version (create it if necessary).
 
+For a patch release, check that all tickets for the version to be released have changes cherry-picked onto the release branch. This is indicated by a comment on the ticket. Here is an [example comment](https://jira.mongodb.org/browse/CXX-2650?focusedCommentId=5271981&page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel#comment-5271981).
+
 ## Audit Jira ticket titles and types for use in release notes
 From the releases page click the "Release Notes" link to see a summary of tickets to be included in release notes. Update the ticket type and title as appropriate. User-facing issues should generally be either "Bug" or "New Feature". Non-user facing issues should generally be "Task" tickets (and will be omitted later, so you can ignore them here).
 
@@ -56,12 +58,16 @@ python ./etc/make_release.py --help
 ```
 
 It requires the following:
-- A GitHub token. Go to the GitHub settings page [Personal Access Tokens](https://github.com/settings/tokens) and create a token. Save the token secret to `mongo-cxx-driver-release/github_token.txt`.
-- Jira OAuth credentials. Ask for these from a team member. Save it to `mongo-cxx-driver-release/jira_creds.txt`.
+- A GitHub token. Go to the GitHub settings page [Personal Access Tokens](https://github.com/settings/tokens) and create a token. Save the token secret to `~/.secrets/github_token.txt`.
+- Jira OAuth credentials. Ask for these from a team member. Save it to `~/.secrets/jira_creds.txt`.
 
 Run the release script with the git tag created above as an argument and `--dry-run` to test for unexpected errors.
 ```
-python ./etc/make_release.py --dry-run r3.8.0
+python ./etc/make_release.py \
+    --dry-run \
+    --jira-creds-file ~/.secrets/jira_creds.txt \
+    --github-token-file ~/.secrets/github_token.txt \
+    r3.8.0 
 ```
 
 If all goes well, run the command again without `--dry-run`, which should build and test the tarball and draft the GitHub release.
@@ -126,7 +132,7 @@ Documentation generation must be run after the release tag has been made and pus
     - Update the `api/mongocxx-v3` symlink to point to the newly released version. If a major version bump has occurred, revise the symlink structure as needed. Make sure `current` always points to a symlink tracking the latest stable release branch.
     - Commit and push the symlink change: `git commit -am "Update symlink for r3.8.0"`
 - Wait a few minutes and verify mongocxx.org has updated.
-- Merge the commit containing these changes into the master branch. This may require pushing the commit to a fork of the C++ Driver repository and creating a pull request.
+- Checkout the master branch. Push the commit containing changes to `etc/` and `docs/`. This may require pushing the commit to a fork of the C++ Driver repository and creating a pull request.
 
 ## File a DOCSP ticket if needed
 Add a comment to the generated DOCSP ticket describing if the [MongoDB Compatibility Table](https://www.mongodb.com/docs/drivers/cxx/#mongodb-compatibility) or [Language Compatibility Table](https://www.mongodb.com/docs/drivers/cxx/#language-compatibility) should be updated. Generally, only a minor release will require updates. (See DOCSP-3504 for an example.)
