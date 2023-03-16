@@ -1,6 +1,7 @@
 mongo-cxx-driver (3.7.1-1) UNRELEASED; urgency=medium
 
   * New upstream release
+  * Update to Standards-Version 4.6.2 (no changes)
 
  -- Kyle Kloberdanz <kyle.kloberdanz@mongodb.com>  Thu, 16 Mar 2023 10:38:58 -0500
 
