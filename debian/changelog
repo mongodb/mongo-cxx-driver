@@ -1,9 +1,9 @@
-mongo-cxx-driver (3.7.1-1) UNRELEASED; urgency=medium
+mongo-cxx-driver (3.7.1-1) experimental; urgency=medium
 
   * New upstream release
   * Update to Standards-Version 4.6.2 (no changes)
 
- -- Kyle Kloberdanz <kyle.kloberdanz@mongodb.com>  Thu, 16 Mar 2023 10:38:58 -0500
+ -- Kyle Kloberdanz <kyle.kloberdanz@mongodb.com>  Thu, 16 Mar 2023 11:33:43 -0500
 
 mongo-cxx-driver (3.7.0-1) experimental; urgency=medium
 
