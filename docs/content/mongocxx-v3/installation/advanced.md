@@ -115,3 +115,24 @@ cmake .. -DENABLE_TESTS=OFF
 cmake --build .. --target help
 # No test targets are configured.
 ```
+
+## Installing to non-standard directories
+
+To install the C++ driver to a non-standard directory, specify `CMAKE_INSTALL_PREFIX` to the desired
+install path:
+
+```sh
+cmake ..                                            \
+    -DCMAKE_BUILD_TYPE=Release                      \
+    -DCMAKE_INSTALL_PREFIX=$HOME/mongo-cxx-driver
+```
+
+Consider also specifying the `-DCMAKE_INSTALL_RPATH=` option to the `lib` directory of the install.
+This may enable libmongocxx.so to locate libbsoncxx.so:
+
+```sh
+cmake ..                                             \
+    -DCMAKE_BUILD_TYPE=Release                       \
+    -DCMAKE_INSTALL_PREFIX=$HOME/mongo-cxx-driver    \
+    -DCMAKE_INSTALL_RPATH=$HOME/mongo-cxx-driver/lib
+```
