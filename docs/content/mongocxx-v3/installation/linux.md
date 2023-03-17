@@ -102,13 +102,14 @@ cmake ..                                \
 ```
 
 If installing to a non-standard directory (i.e., one which the dynamic loader does not search),
-consider specifying the `-DCMAKE_INSTALL_RPATH=` option:
+consider specifying the `-DCMAKE_INSTALL_RPATH=` option. This may enable libmongocxx.so to locate
+libbsoncxx.so:
 
 ```
 cmake ..                                \
     -DCMAKE_BUILD_TYPE=Release          \
     -DCMAKE_INSTALL_PREFIX=/opt/mongo   \
-    -DCMAKE_INSTALL_RPATH=/opt/mongo
+    -DCMAKE_INSTALL_RPATH=/opt/mongo/lib
 ```
 
 In the Unix examples that follow, `mongocxx` is customized in these ways:
