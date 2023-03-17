@@ -136,3 +136,30 @@ cmake ..                                             \
     -DCMAKE_INSTALL_PREFIX=$HOME/mongo-cxx-driver    \
     -DCMAKE_INSTALL_RPATH=$HOME/mongo-cxx-driver/lib
 ```
+
+If the C driver is installed to a non-standard directory, specify `CMAKE_PREFIX_PATH` to the install
+path of the C driver:
+
+```sh
+cmake ..                                            \
+    -DCMAKE_BUILD_TYPE=Release                      \
+    -DCMAKE_PREFIX_PATH=$HOME/mongo-c-driver        \
+    -DCMAKE_INSTALL_PREFIX=$HOME/mongo-cxx-driver
+```
+
+> *Note* If you need multiple paths in a CMake PATH variable, separate them with a semicolon like
+> this:
+> `-DCMAKE_PREFIX_PATH="/your/cdriver/prefix;/some/other/path"`
+
+### Configuring with `mongocxx` 3.1.x or 3.0.x
+
+Instead of the `-DCMAKE_PREFIX_PATH` option, users must specify the `libmongoc` installation
+directory by using the `-DLIBMONGOC_DIR` and `-DLIBBSON_DIR` options:
+
+```sh
+cmake ..                                            \
+    -DCMAKE_BUILD_TYPE=Release                      \
+    -DLIBMONGOC_DIR=$HOME/mongo-c-driver            \
+    -DLIBBSON_DIR=$HOME/mongo-c-driver              \
+    -DCMAKE_INSTALL_PREFIX=$HOME/mongo-cxx-driver
+```
