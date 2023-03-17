@@ -103,15 +103,15 @@ cmake ..                                \
 
 In the Unix examples that follow, `mongocxx` is customized in these ways:
 
-* `libmongoc` is found in `/opt/mongo-c-driver`.
-* `mongocxx` is to be installed into `/opt/mongo-cxx-driver`.
+* `libmongoc` is found in `$HOME/mongo-c-driver`.
+* `mongocxx` is to be installed into `$HOME/mongo-cxx-driver`.
 
 With those two distinct (arbitrary) install locations, a user would run this `cmake` command:
 ```sh
 cmake ..                                            \
     -DCMAKE_BUILD_TYPE=Release                      \
-    -DCMAKE_PREFIX_PATH=/opt/mongo-c-driver         \
-    -DCMAKE_INSTALL_PREFIX=/opt/mongo-cxx-driver
+    -DCMAKE_PREFIX_PATH=$HOME/mongo-c-driver         \
+    -DCMAKE_INSTALL_PREFIX=$HOME/mongo-cxx-driver
 ```
 
 > *Note* If you need multiple paths in a CMake PATH variable, separate them with a semicolon like
@@ -124,8 +124,8 @@ would run the command above with the Boost polyfill option:
 cmake ..                                            \
     -DCMAKE_BUILD_TYPE=Release                      \
     -DBSONCXX_POLY_USE_BOOST=1                      \
-    -DCMAKE_PREFIX_PATH=/opt/mongo-c-driver         \
-    -DCMAKE_INSTALL_PREFIX=/opt/mongo-cxx-driver
+    -DCMAKE_PREFIX_PATH=$HOME/mongo-c-driver         \
+    -DCMAKE_INSTALL_PREFIX=$HOME/mongo-cxx-driver
 ```
 
 #### Configuring with `mongocxx` 3.1.x or 3.0.x
@@ -136,9 +136,9 @@ directory by using the `-DLIBMONGOC_DIR` and `-DLIBBSON_DIR` options:
 ```sh
 cmake ..                                            \
     -DCMAKE_BUILD_TYPE=Release                      \
-    -DLIBMONGOC_DIR=/opt/mongo-c-driver             \
-    -DLIBBSON_DIR=/opt/mongo-c-driver               \
-    -DCMAKE_INSTALL_PREFIX=/opt/mongo-cxx-driver
+    -DLIBMONGOC_DIR=$HOME/mongo-c-driver             \
+    -DLIBBSON_DIR=$HOME/mongo-c-driver               \
+    -DCMAKE_INSTALL_PREFIX=$HOME/mongo-cxx-driver
 ```
 
 ### Step 5: Build and install the driver
@@ -171,6 +171,6 @@ sudo cmake --build . --target uninstall
 Second, the uninstall script can be called:
 
 ```sh
-sudo /opt/mongo-cxx-driver/share/mongo-cxx-driver/uninstall.sh
+sudo $HOME/mongo-cxx-driver/share/mongo-cxx-driver/uninstall.sh
 ```
 

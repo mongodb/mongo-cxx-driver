@@ -37,8 +37,8 @@ users.** A user can enable this behavior with the `-DBUILD_SHARED_LIBS` option:
 cmake ..                                            \
     -DCMAKE_BUILD_TYPE=Release                      \
     -DBUILD_SHARED_LIBS=OFF                         \
-    -DCMAKE_PREFIX_PATH=/opt/mongo-c-driver         \
-    -DCMAKE_INSTALL_PREFIX=/opt/mongo-cxx-driver
+    -DCMAKE_PREFIX_PATH=$HOME/mongo-c-driver         \
+    -DCMAKE_INSTALL_PREFIX=$HOME/mongo-cxx-driver
 ```
 
 #### Configuring with `mongocxx` 3.5.0 or newer
@@ -50,8 +50,8 @@ this behavior with the `-DBUILD_SHARED_AND_STATIC_LIBS` option:
 cmake ..                                            \
     -DCMAKE_BUILD_TYPE=Release                      \
     -DBUILD_SHARED_AND_STATIC_LIBS=ON               \
-    -DCMAKE_PREFIX_PATH=/opt/mongo-c-driver         \
-    -DCMAKE_INSTALL_PREFIX=/opt/mongo-cxx-driver
+    -DCMAKE_PREFIX_PATH=$HOME/mongo-c-driver         \
+    -DCMAKE_INSTALL_PREFIX=$HOME/mongo-cxx-driver
 ```
 
 Users have the option to build `mongocxx` as a shared library that has statically linked
@@ -62,8 +62,8 @@ Users have the option to build `mongocxx` as a shared library that has staticall
 cmake ..                                            \
     -DCMAKE_BUILD_TYPE=Release                      \
     -DBUILD_SHARED_LIBS_WITH_STATIC_MONGOC=ON       \
-    -DCMAKE_PREFIX_PATH=/opt/mongo-c-driver         \
-    -DCMAKE_INSTALL_PREFIX=/opt/mongo-cxx-driver
+    -DCMAKE_PREFIX_PATH=$HOME/mongo-c-driver         \
+    -DCMAKE_INSTALL_PREFIX=$HOME/mongo-cxx-driver
 ```
 
 ### For Windows
