@@ -342,7 +342,7 @@ $ DEBEMAIL='my-email@mongodb.com' DEBFULLNAME='FIRSTNAME LASTNAME' dch -r -D exp
 
 - It may be desirable to squash multiple commits down to a single commit before
   building the final packages
-- After you finish making commits, build the debian package for one final time,
+- After you finish making commits, build the Debian package for one final time,
   and if you are not a Debian maintainer, then give the packages to a debian
   maintainer to do the two steps below:
   - Once the final packages are built, they can be signed and uploaded and the
