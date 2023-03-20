@@ -319,7 +319,7 @@ $ sudo cowbuilder --login --basepath /var/cache/pbuilder/base-sid.cow/ --bindmou
 # lintian -viI mongo-cxx-driver_3.7.1-1_amd64.changes
 ```
 
-- You may need to update to the latest debian policy, which you can do the
+- You may need to update to the latest Debian policy, which you can do the
   following to see the latest policy.
 
 ```
