@@ -140,6 +140,6 @@ sudo cmake --build . --target uninstall
 Second, the uninstall script can be called:
 
 ```sh
-sudo /usr/local/share/mongo-cxx-driver/uninstall.sh
+sudo <install-dir>/share/mongo-cxx-driver/uninstall.sh
 ```
 
