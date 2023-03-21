@@ -26,9 +26,7 @@ dependencies as static libraries rather than the typical shared libraries.  Thes
 produce library artifacts that will behave differently.  Ensure you have a complete understanding
 of the implications of the various linking approaches before utilizing these options.
 
-### For Linux and macOS
-
-#### Configuring with `mongocxx` 3.2.x or newer
+### Configuring with `mongocxx` 3.2.x or newer
 
 Users have the option to build `mongocxx` as a static library. **This is not recommended for novice
 users.** A user can enable this behavior with the `-DBUILD_SHARED_LIBS` option:
@@ -39,41 +37,7 @@ cmake ..                                            \
     -DBUILD_SHARED_LIBS=OFF
 ```
 
-#### Configuring with `mongocxx` 3.5.0 or newer
-
-Users have the option to build `mongocxx` as both static and shared libraries. A user can enable
-this behavior with the `-DBUILD_SHARED_AND_STATIC_LIBS` option:
-
-```sh
-cmake ..                                            \
-    -DCMAKE_BUILD_TYPE=Release                      \
-    -DBUILD_SHARED_AND_STATIC_LIBS=ON
-```
-
-Users have the option to build `mongocxx` as a shared library that has statically linked
-`libmongoc`. **This is not recommended for novice users.** A user can enable this behavior with the
-`-DBUILD_SHARED_LIBS_WITH_STATIC_MONGOC` option:
-
-```sh
-cmake ..                                            \
-    -DCMAKE_BUILD_TYPE=Release                      \
-    -DBUILD_SHARED_LIBS_WITH_STATIC_MONGOC=ON
-```
-
-### For Windows
-
-#### Configuring with `mongocxx` 3.2.x or newer
-
-Users have the option to build `mongocxx` as a static library. **This is not recommended for novice
-users.** A user can enable this behavior with the `-DBUILD_SHARED_LIBS` option:
-
-```sh
-cmake ..                                            \
-    -DCMAKE_BUILD_TYPE=Release                      \
-    -DBUILD_SHARED_LIBS=OFF
-```
-
-#### Configuring with `mongocxx` 3.5.0 or newer
+### Configuring with `mongocxx` 3.5.0 or newer
 
 Users have the option to build `mongocxx` as both static and shared libraries. A user can enable
 this behavior with the `-DBUILD_SHARED_AND_STATIC_LIBS` option:
