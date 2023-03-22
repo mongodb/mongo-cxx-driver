@@ -147,9 +147,10 @@ class client_encryption::impl {
                                                     options::rewrap_many_datakey& opts) {
         bson_error_t error;
 
-        std::shared_ptr<mongoc_client_encryption_rewrap_many_datakey_result_t> result_ptr(
-            mongoc_client_encryption_rewrap_many_datakey_result_new(),
-            mongoc_client_encryption_rewrap_many_datakey_result_destroy);
+        std::unique_ptr<mongoc_client_encryption_rewrap_many_datakey_result_t,
+                        decltype(libmongoc::client_encryption_rewrap_many_datakey_result_destroy)>
+            result_ptr(libmongoc::client_encryption_rewrap_many_datakey_result_new(),
+                       libmongoc::client_encryption_rewrap_many_datakey_result_destroy);
 
         std::string provider = opts.provider().value();
         const char* provider_ptr = provider.empty() ? NULL : provider.c_str();
