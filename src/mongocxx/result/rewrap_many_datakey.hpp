@@ -26,7 +26,7 @@ class MONGOCXX_API rewrap_many_datakey {
     rewrap_many_datakey(bsoncxx::stdx::optional<bsoncxx::document::value> bulk_write_result_doc);
 
     ///
-    /// Returns the bulk write result for this insert operation.
+    /// Returns the bulk write result for this rewrap_many_datakey operation.
     ///
     /// @return The raw bulk write result.
     ///
