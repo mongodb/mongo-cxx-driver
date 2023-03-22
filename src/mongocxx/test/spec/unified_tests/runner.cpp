@@ -1136,7 +1136,7 @@ TEST_CASE("collection management spec automated tests", "[unified_format_spec]")
 // https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/client-side-encryption.rst
 TEST_CASE("client side encryption unified format spec automated tests", "[unified_format_spec]") {
     if (!mongocxx::test_util::should_run_client_side_encryption_test()) {
-        std::cerr << "Skipping client side encryption unified tests" << std::endl;
+        WARN("Skipping - client side encryption unified tests");
         return;
     }
     mongocxx::client client{uri{}};
