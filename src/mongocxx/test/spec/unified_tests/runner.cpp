@@ -1141,7 +1141,7 @@ TEST_CASE("client side encryption unified format spec automated tests", "[unifie
     }
     mongocxx::client client{uri{}};
     if (!mongocxx::test_util::newer_than(client, "4.2")) {
-        std::cerr << "Client Side Encryption requires server version at least 4.2" << std::endl;
+        WARN("Skipping - Client Side Encryption requires server version at least 4.2");
         return;
     }
     CHECK(run_unified_format_tests_in_env_dir("CLIENT_SIDE_ENCRYPTION_UNIFIED_TESTS_PATH"));
