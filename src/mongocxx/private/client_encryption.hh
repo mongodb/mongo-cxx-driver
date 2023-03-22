@@ -256,7 +256,7 @@ class client_encryption::impl {
         bsoncxx::document::value val{data, len, [](uint8_t* ptr) { delete[] ptr; }};
         cleanup();
 
-        if (val["_id"]) {
+        if (!val.empty()) {
             return val;
         } else {
             return stdx::nullopt;
