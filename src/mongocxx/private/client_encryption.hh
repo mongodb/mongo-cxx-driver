@@ -176,8 +176,6 @@ class client_encryption::impl {
             throw_exception<operation_exception>(error);
         }
 
-        mongocxx::libbson::scoped_bson_t reply;
-
         const bson_t* bulk_write_result =
             libmongoc::client_encryption_rewrap_many_datakey_result_get_bulk_write_result(
                 result_ptr.get());
