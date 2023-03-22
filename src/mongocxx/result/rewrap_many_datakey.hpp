@@ -20,7 +20,7 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace result {
 
-/// Class representing the result of a MongoDB insert operation.
+/// Class representing the result of a MongoDB rewrap_many_datakey operation.
 class MONGOCXX_API rewrap_many_datakey {
    public:
     rewrap_many_datakey(bsoncxx::stdx::optional<bsoncxx::document::value> bulk_write_result_doc);
