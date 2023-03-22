@@ -174,7 +174,7 @@ bool is_special(T doc) {
 
 // The C driver returns different names than the spec test. This will return the
 // name as the C driver declares it.
-bsoncxx::stdx::string_view get_alternate_name(bsoncxx::stdx::string_view key) {
+std::string get_alternate_name(const std::string& key) {
     const static std::unordered_map<std::string, std::string> alternate_names = {
         {"insertedCount", "nInserted"},
         {"matchedCount", "nMatched"},
