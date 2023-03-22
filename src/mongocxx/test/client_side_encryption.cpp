@@ -2459,22 +2459,45 @@ TEST_CASE("Unique Index on keyAltNames", "[client_side_encryption]") {
 
     // 5. Using client_encryption, create a data key with a local KMS provider and the keyAltName
     // "def".
-    mongocxx::options::data_key dk_opts;
-    dk_opts.key_alt_names({"def"});
-    std::string provider = "local";
-    client_encryption.create_data_key(provider, dk_opts);
+    {
+        mongocxx::options::data_key dk_opts;
+        dk_opts.key_alt_names({"def"});
+        std::string provider = "local";
+        client_encryption.create_data_key(provider, dk_opts);
+    }
 
     SECTION("Case 1: createKey()") {
         // Case 1: createKey()
 
         // 1. Use client_encryption to create a new local data key with a keyAltName "abc" and
         // assert the operation does not fail.
+        {
+            mongocxx::options::data_key dk_opts;
+            dk_opts.key_alt_names({"abc"});
+            std::string provider = "local";
+            client_encryption.create_data_key(provider, dk_opts);
+            std::cerr << "CREATED LOCAL KEY: abc" << std::endl;
+        }
 
         // 2. Repeat Step 1 and assert the operation fails due to a duplicate key server error
         // (error code 11000).
+        {
+            mongocxx::options::data_key dk_opts;
+            dk_opts.key_alt_names({"abc"});
+            std::string provider = "local";
+            client_encryption.create_data_key(provider, dk_opts);
+            std::cerr << "CREATED DUPLICATE LOCAL KEY: abc" << std::endl;
+        }
 
         // 3. Use client_encryption to create a new local data key with a keyAltName "def" and
         // assert the operation fails due to a duplicate key server error (error code 11000).
+        {
+            mongocxx::options::data_key dk_opts;
+            dk_opts.key_alt_names({"def"});
+            std::string provider = "local";
+            client_encryption.create_data_key(provider, dk_opts);
+            std::cerr << "CREATED DUPLICATE LOCAL KEY: def" << std::endl;
+        }
     }
 
     SECTION("Case 2: addKeyAltName()") {
