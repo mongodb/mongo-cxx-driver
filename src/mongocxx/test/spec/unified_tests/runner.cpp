@@ -482,8 +482,7 @@ options::client_session get_session_options(document::view object) {
     return session_opts;
 }
 
-options::client_encryption get_client_encryption_options(document::view object,
-                                                         client* key_vault_client) {
+options::client_encryption get_client_encryption_options(document::view, client* key_vault_client) {
     options::client_encryption ce_opts;
     ce_opts.key_vault_client(key_vault_client);
     ce_opts.key_vault_namespace({"keyvault", "datakeys"});
