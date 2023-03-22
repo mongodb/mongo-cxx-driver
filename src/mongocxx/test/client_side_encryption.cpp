@@ -2451,9 +2451,18 @@ TEST_CASE("Unique Index on keyAltNames", "[client_side_encryption]") {
 
     // 4. Create a ClientEncryption object (referred to as client_encryption) with client set as the
     // keyVaultClient.
+    options::client_encryption ce_opts;
+    ce_opts.key_vault_client(&client);
+    ce_opts.key_vault_namespace({"keyvault", "datakeys"});
+    ce_opts.kms_providers(_make_kms_doc(false));
+    client_encryption client_encryption(std::move(ce_opts));
 
     // 5. Using client_encryption, create a data key with a local KMS provider and the keyAltName
     // "def".
+    mongocxx::options::data_key dk_opts;
+    dk_opts.key_alt_names({"def"});
+    std::string provider = "local";
+    client_encryption.create_data_key(provider, dk_opts);
 
     SECTION("Case 1: createKey()") {
         // Case 1: createKey()
