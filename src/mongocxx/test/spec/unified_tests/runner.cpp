@@ -47,8 +47,8 @@ using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_document;
 
 using schema_versions_t =
-    std::array<std::array<int, 3 /* major.minor.patch */>, 3 /* supported version */>;
-constexpr schema_versions_t schema_versions{{{{1, 1, 0}}, {{1, 7, 0}}, {{1, 8, 0}}}};
+    std::array<std::array<int, 3 /* major.minor.patch */>, 2 /* supported version */>;
+constexpr schema_versions_t schema_versions{{{{1, 1, 0}}, {{1, 8, 0}}}};
 
 std::pair<std::unordered_map<std::string, spec::apm_checker>&, entity::map&> init_maps() {
     // Below initializes the static apm map and entity map if needed, in that order. This will also
