@@ -66,8 +66,8 @@ const auto kKmipKeyUUID = "\x28\xc2\x0f\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\
 using bsoncxx::builder::concatenate;
 
 using bsoncxx::builder::basic::kvp;
-using bsoncxx::builder::basic::make_document;
 using bsoncxx::builder::basic::make_array;
+using bsoncxx::builder::basic::make_document;
 
 using bsoncxx::builder::basic::sub_document;
 using bsoncxx::builder::stream::close_array;
@@ -2413,16 +2413,15 @@ TEST_CASE("Unique Index on keyAltNames", "[client_side_encryption]") {
 
     // Setup
 
-    // Create a MongoClient object (referred to as client).
-    mongocxx::client client {
-        mongocxx::uri{}, test_util::add_test_server_api()
-    };
+    // 1. Create a MongoClient object (referred to as client).
+    mongocxx::client client{mongocxx::uri{}, test_util::add_test_server_api()};
 
-    // Using client, drop the collection keyvault.datakeys.
+    // 2. Using client, drop the collection keyvault.datakeys.
     client["keyvault"]["datakeys"].drop();
 
-    // Using client, create a unique index on keyAltNames with a partial index filter for only documents where keyAltNames exists using writeConcern "majority".
-    // The command should be equivalent to:
+    // 3. Using client, create a unique index on keyAltNames with a partial index filter for only
+    // documents where keyAltNames exists using writeConcern "majority". The command should be
+    // equivalent to:
     //
     // db.runCommand(
     //   {
@@ -2439,56 +2438,54 @@ TEST_CASE("Unique Index on keyAltNames", "[client_side_encryption]") {
     //   }
     // )
     auto db = client["keyAltNames"];
-    db.run_command(
-        make_document(
-            kvp("createIndexes", "datakeys"),
-            kvp("indexes",
-                make_array(
-                    make_document(
-                        kvp("name", "keyAltNames_1"),
-                        kvp("key",
-                            make_document(
-                                kvp("keyAltNames", 1)
-                            )
-                        ),
-                        kvp("unique", true),
-                        kvp("partialFilterExpression",
-                            make_document(
-                                kvp("keyAltNames",
-                                    make_document(
-                                        kvp("exists", true)
-                                    )
-                                )
-                            )
-                        )
-                    )
-                )
-            ),
-            kvp("writeConcern",
-                make_document(
-                    kvp("w", "majority")
-                )
-            )
-        )
-    );
+    db.run_command(make_document(
+        kvp("createIndexes", "datakeys"),
+        kvp("indexes",
+            make_array(make_document(
+                kvp("name", "keyAltNames_1"),
+                kvp("key", make_document(kvp("keyAltNames", 1))),
+                kvp("unique", true),
+                kvp("partialFilterExpression",
+                    make_document(kvp("keyAltNames", make_document(kvp("exists", true)))))))),
+        kvp("writeConcern", make_document(kvp("w", "majority")))));
 
-    // Create a ClientEncryption object (referred to as client_encryption) with client set as the keyVaultClient.
-    // Using client_encryption, create a data key with a local KMS provider and the keyAltName "def".
+    // 4. Create a ClientEncryption object (referred to as client_encryption) with client set as the
+    // keyVaultClient.
+
+    // 5. Using client_encryption, create a data key with a local KMS provider and the keyAltName
+    // "def".
 
     SECTION("Case 1: createKey()") {
-    // Case 1: createKey()
-    // Use client_encryption to create a new local data key with a keyAltName "abc" and assert the operation does not fail.
-    // Repeat Step 1 and assert the operation fails due to a duplicate key server error (error code 11000).
-    // Use client_encryption to create a new local data key with a keyAltName "def" and assert the operation fails due to a duplicate key server error (error code 11000).
+        // Case 1: createKey()
+
+        // 1. Use client_encryption to create a new local data key with a keyAltName "abc" and
+        // assert the operation does not fail.
+
+        // 2. Repeat Step 1 and assert the operation fails due to a duplicate key server error
+        // (error code 11000).
+
+        // 3. Use client_encryption to create a new local data key with a keyAltName "def" and
+        // assert the operation fails due to a duplicate key server error (error code 11000).
     }
 
     SECTION("Case 2: addKeyAltName()") {
-    // Case 2: addKeyAltName()
-    // Use client_encryption to create a new local data key and assert the operation does not fail.
-    // Use client_encryption to add a keyAltName "abc" to the key created in Step 1 and assert the operation does not fail.
-    // Repeat Step 2, assert the operation does not fail, and assert the returned key document contains the keyAltName "abc" added in Step 2.
-    // Use client_encryption to add a keyAltName "def" to the key created in Step 1 and assert the operation fails due to a duplicate key server error (error code 11000).
-    // Use client_encryption to add a keyAltName "def" to the existing key, assert the operation does not fail, and assert the returned key document contains the keyAltName "def" added during Setup.
+        // Case 2: addKeyAltName()
+
+        // 1. Use client_encryption to create a new local data key and assert the operation does not
+        // fail.
+
+        // 2. Use client_encryption to add a keyAltName "abc" to the key created in Step 1 and
+        // assert the operation does not fail.
+
+        // 3. Repeat Step 2, assert the operation does not fail, and assert the returned key
+        // document contains the keyAltName "abc" added in Step 2.
+
+        // 4. Use client_encryption to add a keyAltName "def" to the key created in Step 1 and
+        // assert the operation fails due to a duplicate key server error (error code 11000).
+
+        // 5. Use client_encryption to add a keyAltName "def" to the existing key, assert the
+        // operation does not fail, and assert the returned key document contains the keyAltName
+        // "def" added during Setup.
     }
 }
 
