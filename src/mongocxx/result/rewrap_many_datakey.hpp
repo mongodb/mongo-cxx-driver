@@ -30,7 +30,7 @@ class MONGOCXX_API rewrap_many_datakey {
     ///
     /// @return The raw bulk write result.
     ///
-    bsoncxx::stdx::optional<bsoncxx::document::value> result();
+    const bsoncxx::stdx::optional<bsoncxx::document::value>& result();
 
    private:
     bsoncxx::stdx::optional<bsoncxx::document::value> _result;
