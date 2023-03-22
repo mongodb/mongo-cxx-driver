@@ -227,10 +227,10 @@ void matches_document(types::bson_value::view actual,
             }
         }
 
-        if (actual_doc[key]) {
-            assert::matches(actual_doc[key].get_value(), kvp.get_value(), map, false);
-        } else if (actual_doc[original_key]) {
-            assert::matches(actual_doc[original_key].get_value(), kvp.get_value(), map, false);
+        if (const auto doc = actual_doc[key]) {
+            assert::matches(doc.get_value(), kvp.get_value(), map, false);
+        } else if (const auto doc = actual_doc[original_key]) {
+            assert::matches(doc.get_value(), kvp.get_value(), map, false);
         } else {
             FAIL("expected field '" + key + "' to be present, but it is absent");
         }
