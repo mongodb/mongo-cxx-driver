@@ -26,7 +26,7 @@ rewrap_many_datakey::rewrap_many_datakey(
     _result = std::move(bulk_write_result_doc);
 }
 
-bsoncxx::stdx::optional<bsoncxx::document::value> rewrap_many_datakey::result() {
+const bsoncxx::stdx::optional<bsoncxx::document::value>& rewrap_many_datakey::result() {
     return _result;
 }
 

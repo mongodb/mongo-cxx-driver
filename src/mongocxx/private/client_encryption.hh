@@ -181,7 +181,8 @@ class client_encryption::impl {
                 result_ptr.get());
 
         if (bulk_write_result) {
-            const auto doc = bsoncxx::document::view(bson_get_data(bulk_write_result), bulk_write_result->len);
+            const auto doc =
+                bsoncxx::document::view(bson_get_data(bulk_write_result), bulk_write_result->len);
             return result::rewrap_many_datakey(bsoncxx::document::value(doc));
         } else {
             result::rewrap_many_datakey rewrap_result{{}};

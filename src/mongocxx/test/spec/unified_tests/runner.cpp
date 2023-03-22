@@ -487,7 +487,6 @@ options::client_encryption get_client_encryption_options(document::view, client*
     ce_opts.key_vault_client(key_vault_client);
     ce_opts.key_vault_namespace({"keyvault", "datakeys"});
     ce_opts.kms_providers(make_kms_doc());
-    (void)object;
 
     // Configure TLS options.
     auto tls_opts = make_document(
