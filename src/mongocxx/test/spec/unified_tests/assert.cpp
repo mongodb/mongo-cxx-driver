@@ -232,7 +232,7 @@ void matches_document(types::bson_value::view actual,
         } else if (const auto doc = actual_doc[original_key]) {
             assert::matches(doc.get_value(), kvp.get_value(), map, false);
         } else {
-            FAIL("expected field '" + key + "' to be present, but it is absent");
+            FAIL("expected field '" << key << "' to be present, but it is absent");
         }
 
         --extra_fields;
