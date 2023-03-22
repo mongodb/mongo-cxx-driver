@@ -1528,6 +1528,166 @@ document::value distinct(collection& coll, client_session* session, document::vi
     return result.extract();
 }
 
+document::value rewrap_many_datakey(entity::map& map,
+                                    const std::string& object,
+                                    document::view operation) {
+    auto filter = operation["arguments"]["filter"].get_document();
+
+    options::rewrap_many_datakey rewrap_opts;
+    std::string provider;
+    if (operation["arguments"]["opts"]["provider"]) {
+        provider = std::string(operation["arguments"]["opts"]["provider"].get_string().value);
+    }
+    rewrap_opts.provider(provider);
+
+    if (operation["arguments"]["opts"]["masterKey"]) {
+        auto master_key = operation["arguments"]["opts"]["masterKey"].get_document().view();
+        rewrap_opts.master_key(master_key);
+    }
+
+    client_encryption& client_encryption = map.get_client_encryption(object);
+    auto result = client_encryption.rewrap_many_datakey(filter.view(), rewrap_opts);
+
+    auto maybe_doc = result.result();
+    if (maybe_doc) {
+        auto doc =
+            make_document(kvp("result", make_document(kvp("bulkWriteResult", maybe_doc.value()))));
+        return doc;
+    } else {
+        auto doc =
+            make_document(kvp("result", make_document(kvp("bulkWriteResult", types::b_null{}))));
+        return doc;
+    }
+}
+
+document::value delete_key(entity::map& map, const std::string& object, document::view operation) {
+    auto arguments = operation["arguments"].get_document().value;
+    auto key = arguments["id"].get_value();
+
+    client_encryption& client_encryption = map.get_client_encryption(object);
+    auto result = client_encryption.delete_key(key);
+
+    auto doc = make_document(kvp("result", make_document(kvp("nRemoved", result.deleted_count()))));
+    return doc;
+}
+
+document::value get_key(entity::map& map, const std::string& object, document::view operation) {
+    auto arguments = operation["arguments"].get_document().value;
+    auto key = arguments["id"].get_value();
+
+    client_encryption& client_encryption = map.get_client_encryption(object);
+    auto result = client_encryption.get_key(key);
+
+    if (result) {
+        auto doc = make_document(kvp("result", *result));
+        return doc;
+    } else {
+        auto doc = make_document(kvp("result", types::b_null{}));
+        return doc;
+    }
+}
+
+document::value get_keys(entity::map& map, const std::string& object, document::view operation) {
+    (void)operation;
+    client_encryption& client_encryption = map.get_client_encryption(object);
+    auto cursor = client_encryption.get_keys();
+
+    return make_document(kvp("result", [&cursor](builder::basic::sub_array array) {
+        for (auto&& document : cursor) {
+            array.append(document);
+        }
+    }));
+}
+
+document::value create_data_key(entity::map& map,
+                                const std::string& object,
+                                document::view operation) {
+    std::string provider;
+    if (operation["arguments"]["kmsProvider"]) {
+        provider = std::string(operation["arguments"]["kmsProvider"].get_string().value);
+    }
+
+    options::data_key data_key_opts;
+    if (operation["arguments"]["opts"]["masterKey"]) {
+        auto master_key = operation["arguments"]["opts"]["masterKey"].get_document().value;
+        data_key_opts.master_key(master_key);
+    }
+    if (operation["arguments"]["opts"]["keyAltNames"]) {
+        std::vector<std::string> key_alt_names;
+        auto arr = operation["arguments"]["opts"]["keyAltNames"].get_array().value;
+        for (const auto& it : arr) {
+            key_alt_names.push_back(std::string(it.get_string().value));
+        }
+        data_key_opts.key_alt_names(key_alt_names);
+    }
+    if (operation["arguments"]["opts"]["keyMaterial"]) {
+        auto bin = operation["arguments"]["opts"]["keyMaterial"].get_binary();
+        std::vector<uint8_t> bytes(bin.bytes, bin.bytes + bin.size);
+        data_key_opts.key_material(bytes);
+    }
+
+    client_encryption& client_encryption = map.get_client_encryption(object);
+    auto result = client_encryption.create_data_key(provider, data_key_opts);
+
+    return make_document(kvp("result", result));
+}
+
+document::value add_key_alt_name(entity::map& map,
+                                 const std::string& object,
+                                 document::view operation) {
+    auto arguments = operation["arguments"].get_document().value;
+    auto id = arguments["id"].get_value();
+    std::string key_alt_name = std::string(arguments["keyAltName"].get_string().value);
+
+    client_encryption& client_encryption = map.get_client_encryption(object);
+    auto result = client_encryption.add_key_alt_name(id, key_alt_name);
+
+    if (result) {
+        auto doc = make_document(kvp("result", *result));
+        return doc;
+    } else {
+        auto doc = make_document(kvp("result", types::b_null{}));
+        return doc;
+    }
+}
+
+document::value get_key_by_alt_name(entity::map& map,
+                                    const std::string& object,
+                                    document::view operation) {
+    auto arguments = operation["arguments"].get_document().value;
+    std::string key_alt_name = std::string(arguments["keyAltName"].get_string().value);
+
+    client_encryption& client_encryption = map.get_client_encryption(object);
+    auto result = client_encryption.get_key_by_alt_name(key_alt_name);
+
+    if (result) {
+        auto doc = make_document(kvp("result", *result));
+        return doc;
+    } else {
+        auto doc = make_document(kvp("result", types::b_null{}));
+        return doc;
+    }
+}
+
+document::value remove_key_alt_name(entity::map& map,
+                                    const std::string& object,
+                                    document::view operation) {
+    auto arguments = operation["arguments"].get_document().value;
+    auto id = arguments["id"].get_value();
+    std::string key_alt_name = std::string(arguments["keyAltName"].get_string().value);
+
+    client_encryption& client_encryption = map.get_client_encryption(object);
+    auto result = client_encryption.remove_key_alt_name(id, key_alt_name);
+
+    if (result) {
+        auto doc = make_document(kvp("result", *result));
+        return doc;
+    } else {
+        auto doc = make_document(kvp("result", types::b_null{}));
+        return doc;
+    }
+}
+
 document::value create_find_cursor(entity::map& map,
                                    const std::string& object,
                                    client_session* session,
@@ -1858,6 +2018,30 @@ document::value operations::run(entity::map& entity_map,
     if (name == "distinct") {
         auto& coll = entity_map.get_collection(object);
         return distinct(coll, get_session(op_view, entity_map), op_view);
+    }
+    if (name == "rewrapManyDataKey") {
+        return rewrap_many_datakey(entity_map, object, op_view);
+    }
+    if (name == "deleteKey") {
+        return delete_key(entity_map, object, op_view);
+    }
+    if (name == "getKey") {
+        return get_key(entity_map, object, op_view);
+    }
+    if (name == "getKeys") {
+        return get_keys(entity_map, object, op_view);
+    }
+    if (name == "createDataKey") {
+        return create_data_key(entity_map, object, op_view);
+    }
+    if (name == "addKeyAltName") {
+        return add_key_alt_name(entity_map, object, op_view);
+    }
+    if (name == "getKeyByAltName") {
+        return get_key_by_alt_name(entity_map, object, op_view);
+    }
+    if (name == "removeKeyAltName") {
+        return remove_key_alt_name(entity_map, object, op_view);
     }
 
     throw std::logic_error{"unsupported operation: " + name};

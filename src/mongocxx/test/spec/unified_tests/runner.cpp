@@ -28,6 +28,7 @@
 #include <bsoncxx/string/to_string.hpp>
 #include <bsoncxx/test_util/catch.hh>
 #include <bsoncxx/types/bson_value/value.hpp>
+#include <mongocxx/client_encryption.hpp>
 #include <mongocxx/exception/bulk_write_exception.hpp>
 #include <mongocxx/exception/exception.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
@@ -46,8 +47,8 @@ using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_document;
 
 using schema_versions_t =
-    std::array<std::array<int, 3 /* major.minor.patch */>, 2 /* supported version */>;
-constexpr schema_versions_t schema_versions{{{{1, 1, 0}}, {{1, 7, 0}}}};
+    std::array<std::array<int, 3 /* major.minor.patch */>, 3 /* supported version */>;
+constexpr schema_versions_t schema_versions{{{{1, 1, 0}}, {{1, 7, 0}}, {{1, 8, 0}}}};
 
 std::pair<std::unordered_map<std::string, spec::apm_checker>&, entity::map&> init_maps() {
     // Below initializes the static apm map and entity map if needed, in that order. This will also
@@ -71,6 +72,42 @@ std::unordered_map<std::string, spec::apm_checker>& get_apm_map() {
 
 entity::map& get_entity_map() {
     return init_maps().second;
+}
+
+const auto kLocalMasterKey =
+    "\x32\x78\x34\x34\x2b\x78\x64\x75\x54\x61\x42\x42\x6b\x59\x31\x36\x45\x72"
+    "\x35\x44\x75\x41\x44\x61\x67\x68\x76\x53\x34\x76\x77\x64\x6b\x67\x38\x74"
+    "\x70\x50\x70\x33\x74\x7a\x36\x67\x56\x30\x31\x41\x31\x43\x77\x62\x44\x39"
+    "\x69\x74\x51\x32\x48\x46\x44\x67\x50\x57\x4f\x70\x38\x65\x4d\x61\x43\x31"
+    "\x4f\x69\x37\x36\x36\x4a\x7a\x58\x5a\x42\x64\x42\x64\x62\x64\x4d\x75\x72"
+    "\x64\x6f\x6e\x4a\x31\x64";
+
+bsoncxx::document::value make_kms_doc() {
+    char key_storage[96];
+    memcpy(&(key_storage[0]), kLocalMasterKey, 96);
+    bsoncxx::types::b_binary local_master_key{
+        bsoncxx::binary_sub_type::k_binary, 96, (const uint8_t*)&key_storage};
+
+    auto kms_doc = make_document(
+        kvp("aws",
+            make_document(
+                kvp("accessKeyId", test_util::getenv_or_fail("MONGOCXX_TEST_AWS_ACCESS_KEY_ID")),
+                kvp("secretAccessKey",
+                    test_util::getenv_or_fail("MONGOCXX_TEST_AWS_SECRET_ACCESS_KEY")))),
+        kvp("azure",
+            make_document(
+                kvp("tenantId", test_util::getenv_or_fail("MONGOCXX_TEST_AZURE_TENANT_ID")),
+                kvp("clientId", test_util::getenv_or_fail("MONGOCXX_TEST_AZURE_CLIENT_ID")),
+                kvp("clientSecret",
+                    test_util::getenv_or_fail("MONGOCXX_TEST_AZURE_CLIENT_SECRET")))),
+        kvp("gcp",
+            make_document(
+                kvp("email", test_util::getenv_or_fail("MONGOCXX_TEST_GCP_EMAIL")),
+                kvp("privateKey", test_util::getenv_or_fail("MONGOCXX_TEST_GCP_PRIVATEKEY")))),
+        kvp("kmip", make_document(kvp("endpoint", "localhost:5698"))),
+        kvp("local", make_document(kvp("key", local_master_key))));
+
+    return kms_doc;
 }
 
 // Spec: Version strings, which are used for schemaVersion and runOnRequirement, MUST conform to
@@ -445,6 +482,25 @@ options::client_session get_session_options(document::view object) {
     return session_opts;
 }
 
+options::client_encryption get_client_encryption_options(document::view object,
+                                                         client* key_vault_client) {
+    options::client_encryption ce_opts;
+    ce_opts.key_vault_client(key_vault_client);
+    ce_opts.key_vault_namespace({"keyvault", "datakeys"});
+    ce_opts.kms_providers(make_kms_doc());
+    (void)object;
+
+    // Configure TLS options.
+    auto tls_opts = make_document(
+        kvp("kmip",
+            make_document(
+                kvp("tlsCAFile", test_util::getenv_or_fail("MONGOCXX_TEST_CSFLE_TLS_CA_FILE")),
+                kvp("tlsCertificateKeyFile",
+                    test_util::getenv_or_fail("MONGOCXX_TEST_CSFLE_TLS_CERTIFICATE_KEY_FILE")))));
+    ce_opts.tls_opts(std::move(tls_opts));
+    return ce_opts;
+}
+
 gridfs::bucket create_bucket(document::view object) {
     auto id = string::to_string(object["database"].get_string().value);
     auto& map = get_entity_map();
@@ -467,6 +523,20 @@ client_session create_session(document::view object) {
 
     CAPTURE(id);
     return session;
+}
+
+client_encryption create_client_encryption(document::view object) {
+    auto id =
+        string::to_string(object["clientEncryptionOpts"]["keyVaultClient"].get_string().value);
+
+    auto& map = get_entity_map();
+    auto& client = map.get_client(id);
+
+    auto opts = get_client_encryption_options(object, &client);
+    client_encryption ce(std::move(opts));
+
+    CAPTURE(id);
+    return ce;
 }
 
 collection create_collection(document::view object) {
@@ -526,13 +596,19 @@ bool add_to_map(const array::element& obj) {
     auto id = string::to_string(params["id"].get_string().value);
     auto& map = get_entity_map();
 
-    // clang-format off
-    if (type == "client")       return map.insert(id, create_client(params));
-    if (type == "database")     return map.insert(id, create_database(params));
-    if (type == "collection")   return map.insert(id, create_collection(params));
-    if (type == "bucket")       return map.insert(id, create_bucket(params));
-    if (type == "session")      return map.insert(id, create_session(params));
-    // clang-format on
+    if (type == "client") {
+        return map.insert(id, create_client(params));
+    } else if (type == "database") {
+        return map.insert(id, create_database(params));
+    } else if (type == "collection") {
+        return map.insert(id, create_collection(params));
+    } else if (type == "bucket") {
+        return map.insert(id, create_bucket(params));
+    } else if (type == "session") {
+        return map.insert(id, create_session(params));
+    } else if (type == "clientEncryption") {
+        return map.insert(id, create_client_encryption(params));
+    }
 
     CAPTURE(type, id, params);
     FAIL("unrecognized type { " + type + " }");
@@ -624,8 +700,9 @@ void load_initial_data(document::view test) {
 void assert_result(const array::element& ops,
                    document::view actual_result,
                    bool is_array_of_root_docs) {
-    if (!ops["expectResult"])
+    if (!ops["expectResult"]) {
         return;
+    }
 
     auto expected_result = ops["expectResult"];
     assert::matches(actual_result["result"].get_value(),
@@ -673,6 +750,29 @@ void assert_error(const mongocxx::operation_exception& exception,
             // Do not assert a server-side error.
             // The C++ driver throws this error as a server-side error operation_exception.
             // Remove this special case as part of CXX-2377.
+            REQUIRE(is_client_error.get_bool());
+        } else if (std::strstr(exception.what(), "Error in KMS response") != nullptr) {
+            REQUIRE(is_client_error.get_bool());
+        } else if (std::strstr(exception.what(),
+                               "keyMaterial should have length 96, but has length 84") != nullptr) {
+            REQUIRE(is_client_error.get_bool());
+        } else if (std::strstr(exception.what(), "expected UTF-8 key") != nullptr) {
+            REQUIRE(is_client_error.get_bool());
+        } else if (std::strstr(exception.what(), "Unexpected field: 'invalid'") != nullptr) {
+            REQUIRE(is_client_error.get_bool());
+        } else if (std::strstr(exception.what(), "Failed to resolve kms.invalid.amazonaws.com") !=
+                   nullptr) {
+            REQUIRE(is_client_error.get_bool());
+        } else if (std::strstr(
+                       exception.what(),
+                       "The ciphertext refers to a customer master key that does not exist") !=
+                   nullptr) {
+            REQUIRE(is_client_error.get_bool());
+        } else if (std::strstr(exception.what(), "does not exist") != nullptr) {
+            REQUIRE(is_client_error.get_bool());
+        } else if (std::strstr(exception.what(),
+                               "Failed to resolve invalid-vault-csfle.vault.azure.net") !=
+                   nullptr) {
             REQUIRE(is_client_error.get_bool());
         } else if (is_client_error.get_bool()) {
             // An operation_exception represents a server-side error.
@@ -1030,6 +1130,21 @@ TEST_CASE("versioned API spec automated tests", "[unified_format_spec]") {
 
 TEST_CASE("collection management spec automated tests", "[unified_format_spec]") {
     CHECK(run_unified_format_tests_in_env_dir("COLLECTION_MANAGEMENT_TESTS_PATH"));
+}
+
+// See:
+// https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/client-side-encryption.rst
+TEST_CASE("client side encryption unified format spec automated tests", "[unified_format_spec]") {
+    if (!mongocxx::test_util::should_run_client_side_encryption_test()) {
+        std::cerr << "Skipping client side encryption unified tests" << std::endl;
+        return;
+    }
+    mongocxx::client client{uri{}};
+    if (!mongocxx::test_util::newer_than(client, "4.2")) {
+        std::cerr << "Client Side Encryption requires server version at least 4.2" << std::endl;
+        return;
+    }
+    CHECK(run_unified_format_tests_in_env_dir("CLIENT_SIDE_ENCRYPTION_UNIFIED_TESTS_PATH"));
 }
 
 }  // namespace

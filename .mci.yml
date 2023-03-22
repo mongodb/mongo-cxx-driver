@@ -421,6 +421,7 @@ functions:
                   export VERSIONED_API_TESTS_PATH=$(pwd)/../data/versioned-api
                   export COLLECTION_MANAGEMENT_TESTS_PATH="$(pwd)/../data/collection-management"
                   export URI_OPTIONS_TESTS_PATH="$(pwd)/../data/uri-options"
+                  export CLIENT_SIDE_ENCRYPTION_UNIFIED_TESTS_PATH="$(pwd)/../data/client_side_encryption/unified"
 
                   export MONGODB_API_VERSION="${MONGODB_API_VERSION}"
 

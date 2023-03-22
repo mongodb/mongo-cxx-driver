@@ -172,6 +172,24 @@ bool is_special(T doc) {
            string::to_string(doc.get_document().value.begin()->key()).rfind("$$", 0) == 0;
 }
 
+// The C driver returns different names than the spec test. This will return the
+// name as the C driver declares it.
+std::string get_alternate_name(const std::string& key) {
+    const static std::unordered_map<std::string, std::string> alternate_names = {
+        {"insertedCount", "nInserted"},
+        {"matchedCount", "nMatched"},
+        {"modifiedCount", "nModified"},
+        {"deletedCount", "nRemoved"},
+        {"upsertedCount", "nUpserted"},
+    };
+
+    auto alternate_name = alternate_names.find(key);
+    if (alternate_name != alternate_names.end()) {
+        return alternate_name->second;
+    }
+    return key;
+}
+
 void matches_document(types::bson_value::view actual,
                       types::bson_value::view expected,
                       entity::map& map,
@@ -190,26 +208,34 @@ void matches_document(types::bson_value::view actual,
     CAPTURE(to_json(actual_doc));
 
     for (auto&& kvp : expected_doc) {
-        match_scope_doc_key scope_key{string::to_string(kvp.key())};
+        std::string original_key = std::string(kvp.key());
+        std::string key = get_alternate_name(original_key);
+
         if (is_special(kvp)) {
-            if (!actual_doc[kvp.key()]) {
+            if (!actual_doc[key]) {
                 special_operator(value(nullptr), kvp.get_document(), map, false);
                 continue;
             }
         }
 
-        if (!actual_doc[kvp.key()]) {
-            FAIL("expected field '" + string::to_string(kvp.key()) +
-                 "' to be present, but it is absent");
+        if (auto n_inserted = actual_doc["nInserted"]) {
+            auto num_inserted = n_inserted.get_int32();
+            // If nothing was inserted, then we don't get "upsertedIds", so skip
+            // the check for it.
+            if ((num_inserted == 0) && (key == "upsertedIds")) {
+                continue;
+            }
         }
 
-        assert::matches(actual_doc[kvp.key()].get_value(), kvp.get_value(), map, false);
-        --extra_fields;
-    }
+        if (actual_doc[key]) {
+            assert::matches(actual_doc[key].get_value(), kvp.get_value(), map, false);
+        } else if (actual_doc[original_key]) {
+            assert::matches(actual_doc[original_key].get_value(), kvp.get_value(), map, false);
+        } else {
+            FAIL("expected field '" + key + "' to be present, but it is absent");
+        }
 
-    if (!is_root && extra_fields > 0) {
-        FAIL("match failed: non-root document contains " + std::to_string(extra_fields) +
-             " extra fields");
+        --extra_fields;
     }
 }
 

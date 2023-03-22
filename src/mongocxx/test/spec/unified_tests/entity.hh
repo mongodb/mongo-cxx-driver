@@ -19,6 +19,7 @@
 
 #include <bsoncxx/types/bson_value/value.hpp>
 #include <mongocxx/client.hpp>
+#include <mongocxx/client_encryption.hpp>
 
 #include <mongocxx/config/private/prelude.hh>
 
@@ -49,6 +50,7 @@ class map {
     bool insert(const key_type& key, mongocxx::change_stream&&);
     bool insert(const key_type& key, bsoncxx::types::bson_value::value&&);
     bool insert(const key_type& key, mongocxx::cursor&&);
+    bool insert(const key_type& key, mongocxx::client_encryption&&);
 
     client& get_client(const key_type& key);
     database& get_database(const key_type& key);
@@ -58,6 +60,7 @@ class map {
     gridfs::bucket& get_bucket(const key_type& key);
     bsoncxx::types::bson_value::value& get_value(const key_type& key);
     cursor& get_cursor(const key_type& key);
+    mongocxx::client_encryption& get_client_encryption(const key_type& key);
 
     database& get_database_by_name(stdx::string_view name);
 
@@ -81,6 +84,7 @@ class map {
     std::unordered_map<key_type, mongocxx::change_stream> _stream_map;
     std::unordered_map<key_type, bsoncxx::types::bson_value::value> _value_map;
     std::unordered_map<key_type, mongocxx::cursor> _cursor_map;
+    std::unordered_map<key_type, mongocxx::client_encryption> _client_encryption_map;
 };
 }  // namespace entity
 MONGOCXX_INLINE_NAMESPACE_END
