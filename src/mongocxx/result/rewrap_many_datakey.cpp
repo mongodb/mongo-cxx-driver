@@ -21,8 +21,7 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace result {
 
-rewrap_many_datakey::rewrap_many_datakey(
-    bsoncxx::stdx::optional<bsoncxx::document::value> bulk_write_result_doc) {
+rewrap_many_datakey::rewrap_many_datakey(bsoncxx::document::value bulk_write_result_doc) {
     _result = std::move(bulk_write_result_doc);
 }
 
