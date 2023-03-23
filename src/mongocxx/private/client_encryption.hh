@@ -210,11 +210,8 @@ class client_encryption::impl {
             throw_exception<operation_exception>(error);
         }
 
-        const uint8_t* data_source = bson_get_data(reply_ptr.get());
-        size_t len = reply_ptr->len;
-        uint8_t* data = new uint8_t[len];
-        memcpy(data, data_source, len);
-        bsoncxx::document::value val{data, len, [](uint8_t* ptr) { delete[] ptr; }};
+        const auto doc = bsoncxx::document::view(bson_get_data(reply_ptr.get()), reply_ptr->len);
+        bsoncxx::document::value val(doc);
 
         // The C driver calls this field "deletedCount", but the C++ driver
         // refers to this as "nRemoved". Make a new document with the field name
@@ -249,18 +246,11 @@ class client_encryption::impl {
             throw_exception<operation_exception>(error);
         }
 
-        const uint8_t* data_source = bson_get_data(&key_doc);
-        size_t len = key_doc.len;
-        uint8_t* data = new uint8_t[len];
-        memcpy(data, data_source, len);
-        bsoncxx::document::value val{data, len, [](uint8_t* ptr) { delete[] ptr; }};
-        cleanup();
+        const auto doc = bsoncxx::document::view(bson_get_data(&key_doc), key_doc.len);
+        bsoncxx::document::value val(doc);
 
-        if (!val.empty()) {
-            return val;
-        } else {
-            return stdx::nullopt;
-        }
+        cleanup();
+        return val.empty() ? stdx::nullopt : stdx::optional<bsoncxx::document::value>{val};
     }
 
     mongocxx::cursor get_keys() {
@@ -297,18 +287,11 @@ class client_encryption::impl {
             throw_exception<operation_exception>(error);
         }
 
-        const uint8_t* data_source = bson_get_data(&key_doc);
-        size_t len = key_doc.len;
-        uint8_t* data = new uint8_t[len];
-        memcpy(data, data_source, len);
-        bsoncxx::document::value val{data, len, [](uint8_t* ptr) { delete[] ptr; }};
+        const auto doc = bsoncxx::document::view(bson_get_data(&key_doc), key_doc.len);
+        bsoncxx::document::value val(doc);
 
         cleanup();
-        if (val["_id"]) {
-            return val;
-        } else {
-            return stdx::nullopt;
-        }
+        return val.empty() ? stdx::nullopt : stdx::optional<bsoncxx::document::value>{val};
     }
 
     stdx::optional<bsoncxx::document::value> get_key_by_alt_name(const std::string& key_alt_name) {
@@ -325,18 +308,11 @@ class client_encryption::impl {
             throw_exception<operation_exception>(error);
         }
 
-        const uint8_t* data_source = bson_get_data(&key_doc);
-        size_t len = key_doc.len;
-        uint8_t* data = new uint8_t[len];
-        memcpy(data, data_source, len);
-        bsoncxx::document::value val{data, len, [](uint8_t* ptr) { delete[] ptr; }};
+        const auto doc = bsoncxx::document::view(bson_get_data(&key_doc), key_doc.len);
+        bsoncxx::document::value val(doc);
 
         cleanup();
-        if (val["_id"]) {
-            return val;
-        } else {
-            return stdx::nullopt;
-        }
+        return val.empty() ? stdx::nullopt : stdx::optional<bsoncxx::document::value>{val};
     }
 
     stdx::optional<bsoncxx::document::value> remove_key_alt_name(
@@ -360,18 +336,11 @@ class client_encryption::impl {
             throw_exception<operation_exception>(error);
         }
 
-        const uint8_t* data_source = bson_get_data(&key_doc);
-        size_t len = key_doc.len;
-        uint8_t* data = new uint8_t[len];
-        memcpy(data, data_source, len);
-        bsoncxx::document::value val{data, len, [](uint8_t* ptr) { delete[] ptr; }};
+        const auto doc = bsoncxx::document::view(bson_get_data(&key_doc), key_doc.len);
+        bsoncxx::document::value val(doc);
 
         cleanup();
-        if (val["_id"]) {
-            return val;
-        } else {
-            return stdx::nullopt;
-        }
+        return val.empty() ? stdx::nullopt : stdx::optional<bsoncxx::document::value>{val};
     }
 
     options::client_encryption _opts;
