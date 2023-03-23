@@ -31,7 +31,7 @@ namespace options {
 class MONGOCXX_API rewrap_many_datakey {
    public:
     ///
-    /// Set the KMS provider
+    /// Set the optional KMS provider use to encrypt the data keys. Do not set to use the current KMS provider(s).
     ///
     /// A KMS provider (AWS KMS, Azure Key Vault, GCP KMS, the local provider,
     /// or KMIP) is used to decrypt data keys after fetching from the MongoDB
