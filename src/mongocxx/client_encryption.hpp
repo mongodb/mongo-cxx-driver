@@ -127,7 +127,7 @@ class MONGOCXX_API client_encryption {
     ///   Document to filter which keys get re-wrapped.
     ///
     /// @param opts
-    ///   Options to specify which provider stores the key and an optional
+    ///   Options to specify which provider to encrypt the data keys and an optional
     ///   master key document.
     ///
     /// @return a RewrapManyDataKeyResult.
