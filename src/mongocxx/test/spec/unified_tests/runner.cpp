@@ -482,20 +482,37 @@ options::client_session get_session_options(document::view object) {
     return session_opts;
 }
 
-options::client_encryption get_client_encryption_options(document::view, client* key_vault_client) {
+options::client_encryption get_client_encryption_options(document::view object) {
+    auto key_vault_namespace =
+        std::string(object["clientEncryptionOpts"]["keyVaultNamespace"].get_string().value);
+    auto dot = key_vault_namespace.find(".");
+    std::string db = key_vault_namespace.substr(0, dot);
+    std::string coll = key_vault_namespace.substr(dot + 1);
+
+    auto id =
+        string::to_string(object["clientEncryptionOpts"]["keyVaultClient"].get_string().value);
+
+    auto& map = get_entity_map();
+    auto& client = map.get_client(id);
+    CAPTURE(id);
+
+    auto providers = object["clientEncryptionOpts"]["kmsProviders"].get_document().value;
+
     options::client_encryption ce_opts;
-    ce_opts.key_vault_client(key_vault_client);
-    ce_opts.key_vault_namespace({"keyvault", "datakeys"});
+    ce_opts.key_vault_client(&client);
+    ce_opts.key_vault_namespace({db, coll});
     ce_opts.kms_providers(make_kms_doc());
 
-    // Configure TLS options.
-    auto tls_opts = make_document(
-        kvp("kmip",
+    if (!providers.empty()) {
+        // Configure TLS options.
+        auto tls_opts = make_document(kvp(
+            "kmip",
             make_document(
                 kvp("tlsCAFile", test_util::getenv_or_fail("MONGOCXX_TEST_CSFLE_TLS_CA_FILE")),
                 kvp("tlsCertificateKeyFile",
                     test_util::getenv_or_fail("MONGOCXX_TEST_CSFLE_TLS_CERTIFICATE_KEY_FILE")))));
-    ce_opts.tls_opts(std::move(tls_opts));
+        ce_opts.tls_opts(std::move(tls_opts));
+    }
     return ce_opts;
 }
 
@@ -524,16 +541,9 @@ client_session create_session(document::view object) {
 }
 
 client_encryption create_client_encryption(document::view object) {
-    auto id =
-        string::to_string(object["clientEncryptionOpts"]["keyVaultClient"].get_string().value);
-
-    auto& map = get_entity_map();
-    auto& client = map.get_client(id);
-
-    auto opts = get_client_encryption_options(object, &client);
+    auto opts = get_client_encryption_options(object);
     client_encryption ce(std::move(opts));
 
-    CAPTURE(id);
     return ce;
 }
 
