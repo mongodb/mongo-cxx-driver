@@ -138,7 +138,7 @@ class MONGOCXX_API client_encryption {
     /// https://www.mongodb.com/docs/manual/reference/method/KeyVault.rewrapManyDataKey/
     ///
     result::rewrap_many_datakey rewrap_many_datakey(bsoncxx::document::view_or_value filter,
-                                                    options::rewrap_many_datakey& opts);
+                                                    const options::rewrap_many_datakey& opts);
 
     ///
     /// Removes the key document with the given UUID (BSON binary subtype 0x04)
