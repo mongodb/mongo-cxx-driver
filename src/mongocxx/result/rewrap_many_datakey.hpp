@@ -26,10 +26,8 @@ namespace result {
 /// Class representing the result of a MongoDB rewrap_many_datakey operation.
 class MONGOCXX_API rewrap_many_datakey {
    public:
-    // This constructor is public for testing purposes only.
     rewrap_many_datakey() = default;
 
-    // This constructor is public for testing purposes only.
     explicit rewrap_many_datakey(bsoncxx::document::value bulk_write_result_doc);
 
     ///
