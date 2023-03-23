@@ -162,8 +162,8 @@ class client_encryption::impl {
                                                        optional_master_key.value().view().length())
                                   : nullptr;
 
-        std::shared_ptr<_bson_t> bson_master_key(raw_master_key, bson_destroy);
-        std::shared_ptr<_bson_t> bson_filter(
+        std::unique_ptr<_bson_t, void (&)(_bson_t*)> bson_master_key(raw_master_key, bson_destroy);
+        std::unique_ptr<_bson_t, void (&)(_bson_t*)> bson_filter(
             bson_new_from_data(filter.view().data(), filter.view().length()), bson_destroy);
         auto r = libmongoc::client_encryption_rewrap_many_datakey(_client_encryption_t,
                                                                   bson_filter.get(),
@@ -194,15 +194,14 @@ class client_encryption::impl {
         using bsoncxx::builder::basic::make_document;
 
         bson_error_t error;
-
-        std::shared_ptr<_bson_t> reply_ptr(bson_new(), bson_free);
+        libbson::scoped_bson_t reply_ptr;
 
         bson_value_t libbson_key;
 
         convert_to_libbson(&libbson_key, id);
 
         auto r = libmongoc::client_encryption_delete_key(
-            _client_encryption_t, &libbson_key, reply_ptr.get(), &error);
+            _client_encryption_t, &libbson_key, reply_ptr.bson_for_init(), &error);
 
         bson_value_destroy(&libbson_key);
 
@@ -210,8 +209,7 @@ class client_encryption::impl {
             throw_exception<operation_exception>(error);
         }
 
-        const auto doc = bsoncxx::document::view(bson_get_data(reply_ptr.get()), reply_ptr->len);
-        bsoncxx::document::value val(doc);
+        bsoncxx::document::value val = reply_ptr.steal();
 
         // The C driver calls this field "deletedCount", but the C++ driver
         // refers to this as "nRemoved". Make a new document with the field name
