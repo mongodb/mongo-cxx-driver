@@ -227,27 +227,23 @@ class client_encryption::impl {
 
     stdx::optional<bsoncxx::document::value> get_key(bsoncxx::types::bson_value::view_or_value id) {
         bson_error_t error;
-        bson_t key_doc;
+        libbson::scoped_bson_t key_doc;
 
         bson_value_t libbson_value;
 
         convert_to_libbson(&libbson_value, id);
 
         auto r = libmongoc::client_encryption_get_key(
-            _client_encryption_t, &libbson_value, &key_doc, &error);
+            _client_encryption_t, &libbson_value, key_doc.bson_for_init(), &error);
 
-        auto cleanup = [&]() {
-            bson_destroy(&key_doc);
-            bson_value_destroy(&libbson_value);
-        };
+        auto cleanup = [&]() { bson_value_destroy(&libbson_value); };
 
         if (!r) {
             cleanup();
             throw_exception<operation_exception>(error);
         }
 
-        const auto doc = bsoncxx::document::view(bson_get_data(&key_doc), key_doc.len);
-        bsoncxx::document::value val(doc);
+        bsoncxx::document::value val(key_doc.steal());
 
         cleanup();
         return val.empty() ? stdx::nullopt : stdx::optional<bsoncxx::document::value>{val};
@@ -269,26 +265,22 @@ class client_encryption::impl {
     stdx::optional<bsoncxx::document::value> add_key_alt_name(
         bsoncxx::types::bson_value::view_or_value id, const std::string& key_alt_name) {
         bson_error_t error;
-        bson_t key_doc;
+        libbson::scoped_bson_t key_doc;
         bson_value_t key_id;
 
         convert_to_libbson(&key_id, id);
 
         auto r = libmongoc::client_encryption_add_key_alt_name(
-            _client_encryption_t, &key_id, key_alt_name.c_str(), &key_doc, &error);
+            _client_encryption_t, &key_id, key_alt_name.c_str(), key_doc.bson_for_init(), &error);
 
-        auto cleanup = [&]() {
-            bson_destroy(&key_doc);
-            bson_value_destroy(&key_id);
-        };
+        auto cleanup = [&]() { bson_value_destroy(&key_id); };
 
         if (!r) {
             cleanup();
             throw_exception<operation_exception>(error);
         }
 
-        const auto doc = bsoncxx::document::view(bson_get_data(&key_doc), key_doc.len);
-        bsoncxx::document::value val(doc);
+        bsoncxx::document::value val(key_doc.steal());
 
         cleanup();
         return val.empty() ? stdx::nullopt : stdx::optional<bsoncxx::document::value>{val};
@@ -296,48 +288,37 @@ class client_encryption::impl {
 
     stdx::optional<bsoncxx::document::value> get_key_by_alt_name(const std::string& key_alt_name) {
         bson_error_t error;
-        bson_t key_doc;
+        libbson::scoped_bson_t key_doc;
 
         auto r = libmongoc::client_encryption_get_key_by_alt_name(
-            _client_encryption_t, key_alt_name.c_str(), &key_doc, &error);
-
-        auto cleanup = [&]() { bson_destroy(&key_doc); };
+            _client_encryption_t, key_alt_name.c_str(), key_doc.bson_for_init(), &error);
 
         if (!r) {
-            cleanup();
             throw_exception<operation_exception>(error);
         }
-
-        const auto doc = bsoncxx::document::view(bson_get_data(&key_doc), key_doc.len);
-        bsoncxx::document::value val(doc);
-
-        cleanup();
+        bsoncxx::document::value val = key_doc.steal();
         return val.empty() ? stdx::nullopt : stdx::optional<bsoncxx::document::value>{val};
     }
 
     stdx::optional<bsoncxx::document::value> remove_key_alt_name(
         bsoncxx::types::bson_value::view_or_value id, const std::string& key_alt_name) {
         bson_error_t error;
-        bson_t key_doc;
+        libbson::scoped_bson_t key_doc;
         bson_value_t key_id;
 
         convert_to_libbson(&key_id, id);
 
         auto r = libmongoc::client_encryption_remove_key_alt_name(
-            _client_encryption_t, &key_id, key_alt_name.c_str(), &key_doc, &error);
+            _client_encryption_t, &key_id, key_alt_name.c_str(), key_doc.bson_for_init(), &error);
 
-        auto cleanup = [&]() {
-            bson_destroy(&key_doc);
-            bson_value_destroy(&key_id);
-        };
+        auto cleanup = [&]() { bson_value_destroy(&key_id); };
 
         if (!r) {
             cleanup();
             throw_exception<operation_exception>(error);
         }
 
-        const auto doc = bsoncxx::document::view(bson_get_data(&key_doc), key_doc.len);
-        bsoncxx::document::value val(doc);
+        bsoncxx::document::value val(key_doc.steal());
 
         cleanup();
         return val.empty() ? stdx::nullopt : stdx::optional<bsoncxx::document::value>{val};
