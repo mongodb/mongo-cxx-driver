@@ -53,8 +53,7 @@ class MONGOCXX_API rewrap_many_datakey {
     ///
     /// A KMS provider (AWS KMS, Azure Key Vault, GCP KMS, the local provider,
     /// or KMIP) is used to decrypt data keys after fetching from the MongoDB
-    /// Key Vault, and encrypt newly created data keys. Refer to KMSProviders
-    /// for the shape of the KMS provider options.
+    /// Key Vault, and encrypt newly created data keys.
     ///
     /// @return
     ///   An optional string name of the provider.
