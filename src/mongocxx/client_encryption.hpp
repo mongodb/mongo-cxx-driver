@@ -132,7 +132,7 @@ class MONGOCXX_API client_encryption {
     ///
     /// @return a RewrapManyDataKeyResult.
     ///
-    /// @throws mongocxx::exception if there is an error rewraping the key.
+    /// @throws mongocxx::exception if there is an error rewrapping the key.
     ///
     /// @see
     /// https://www.mongodb.com/docs/manual/reference/method/KeyVault.rewrapManyDataKey/
