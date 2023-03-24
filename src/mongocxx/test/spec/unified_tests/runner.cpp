@@ -239,11 +239,6 @@ bool compatible_with_server(const bsoncxx::array::element& requirement) {
             if (!is_compatible_version(requires_at_lest, expected)) {
                 return false;
             }
-        } else {
-            // TODO:
-            // if csfle is not enabled on the server:
-            // then return true
-            // else return false
         }
     }
     return true;
