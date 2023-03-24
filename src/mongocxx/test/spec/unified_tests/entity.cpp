@@ -102,6 +102,8 @@ mongocxx::client_encryption& map::get_client_encryption(const key_type& key) {
 }
 
 const std::type_info& map::type(const key_type& key) {
+    if (_client_encryption_map.find(key) != _client_encryption_map.end())
+        return typeid(mongocxx::client_encryption);
     if (_database_map.find(key) != _database_map.end())
         return typeid(mongocxx::database);
     if (_collection_map.find(key) != _collection_map.end())
