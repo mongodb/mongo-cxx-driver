@@ -199,7 +199,7 @@ class MONGOCXX_API client_encryption {
     /// Removes a keyAltName from the keyAltNames array of the key document in
     /// the key vault collection with the given UUID (BSON binary subtype 0x04).
     ///
-    /// @param id Binary id of which key to delete
+    /// @param id Binary id of the key to remove the key alternate name from
     ///
     /// @param key_alt_name String alternative name for the key
     ///
