@@ -103,7 +103,7 @@ class mock<R (*)(Args...)> {
 
         // Visiting functions get called in addition to the original C-Driver function
         rule& visit(std::function<void(Args...)> func) {
-            _callbacks.emplace([=](Args... args) {
+            _callbacks.emplace([this, func](Args... args) {
                 func(args...);
                 return _parent->_func(args...);
             });
