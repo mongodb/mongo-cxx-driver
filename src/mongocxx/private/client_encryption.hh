@@ -156,21 +156,22 @@ class client_encryption::impl {
         const char* provider_ptr = provider.empty() ? NULL : provider.c_str();
 
         auto optional_master_key = opts.master_key();
+        stdx::optional<mongocxx::libbson::scoped_bson_t> bson_master_key;
+        if (optional_master_key) {
+            bson_master_key.emplace();
+            bson_master_key->init_from_static(optional_master_key.value().view());
+        }
 
-        auto raw_master_key = optional_master_key
-                                  ? bson_new_from_data(optional_master_key.value().view().data(),
-                                                       optional_master_key.value().view().length())
-                                  : nullptr;
+        libbson::scoped_bson_t bson_filter;
+        bson_filter.init_from_static(filter);
 
-        std::unique_ptr<_bson_t, void (&)(_bson_t*)> bson_master_key(raw_master_key, bson_destroy);
-        std::unique_ptr<_bson_t, void (&)(_bson_t*)> bson_filter(
-            bson_new_from_data(filter.view().data(), filter.view().length()), bson_destroy);
-        auto r = libmongoc::client_encryption_rewrap_many_datakey(_client_encryption_t,
-                                                                  bson_filter.get(),
-                                                                  provider_ptr,
-                                                                  bson_master_key.get(),
-                                                                  result_ptr.get(),
-                                                                  &error);
+        auto r = libmongoc::client_encryption_rewrap_many_datakey(
+            _client_encryption_t,
+            bson_filter.bson(),
+            provider_ptr,
+            bson_master_key ? bson_master_key->bson() : nullptr,
+            result_ptr.get(),
+            &error);
 
         if (!r) {
             throw_exception<operation_exception>(error);
