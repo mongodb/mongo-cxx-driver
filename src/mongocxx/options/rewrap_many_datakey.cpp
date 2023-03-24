@@ -30,7 +30,7 @@ rewrap_many_datakey& rewrap_many_datakey::provider(std::string provider) {
     return *this;
 }
 
-const stdx::optional<std::string>& rewrap_many_datakey::provider() {
+const stdx::optional<std::string>& rewrap_many_datakey::provider() const {
     return _provider;
 }
 
@@ -39,7 +39,7 @@ rewrap_many_datakey& rewrap_many_datakey::master_key(bsoncxx::document::view_or_
     return *this;
 }
 
-const stdx::optional<bsoncxx::document::view_or_value>& rewrap_many_datakey::master_key() {
+const stdx::optional<bsoncxx::document::view_or_value>& rewrap_many_datakey::master_key() const {
     return _master_key;
 }
 

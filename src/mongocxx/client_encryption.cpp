@@ -46,7 +46,7 @@ bsoncxx::types::bson_value::value client_encryption::decrypt(
 }
 
 result::rewrap_many_datakey client_encryption::rewrap_many_datakey(
-    bsoncxx::document::view_or_value filter, options::rewrap_many_datakey& opts) {
+    bsoncxx::document::view_or_value filter, const options::rewrap_many_datakey& opts) {
     return _impl->rewrap_many_datakey(filter, opts);
 }
 

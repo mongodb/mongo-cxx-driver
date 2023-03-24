@@ -31,7 +31,8 @@ namespace options {
 class MONGOCXX_API rewrap_many_datakey {
    public:
     ///
-    /// Set the optional KMS provider use to encrypt the data keys. Do not set to use the current KMS provider(s).
+    /// Set the optional KMS provider use to encrypt the data keys. Do not set to use the current
+    /// KMS provider(s).
     ///
     /// A KMS provider (AWS KMS, Azure Key Vault, GCP KMS, the local provider,
     /// or KMIP) is used to decrypt data keys after fetching from the MongoDB
@@ -62,7 +63,7 @@ class MONGOCXX_API rewrap_many_datakey {
     /// @see
     /// https://www.mongodb.com/docs/manual/core/csfle/reference/kms-providers/#std-label-csfle-reference-kms-providers
     ///
-    const stdx::optional<std::string>& provider();
+    const stdx::optional<std::string>& provider() const;
 
     ///
     /// Set the masterKey option.
@@ -94,7 +95,7 @@ class MONGOCXX_API rewrap_many_datakey {
     /// @see
     /// https://www.mongodb.com/docs/manual/core/csfle/reference/kms-providers/#std-label-csfle-reference-kms-providers-create-and-store
     ///
-    const stdx::optional<bsoncxx::document::view_or_value>& master_key();
+    const stdx::optional<bsoncxx::document::view_or_value>& master_key() const;
 
    private:
     friend class mongocxx::client_encryption;

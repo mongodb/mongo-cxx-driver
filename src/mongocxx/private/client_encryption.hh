@@ -144,7 +144,7 @@ class client_encryption::impl {
     }
 
     result::rewrap_many_datakey rewrap_many_datakey(bsoncxx::document::view_or_value filter,
-                                                    options::rewrap_many_datakey& opts) {
+                                                    const options::rewrap_many_datakey& opts) {
         bson_error_t error;
 
         std::unique_ptr<mongoc_client_encryption_rewrap_many_datakey_result_t,
