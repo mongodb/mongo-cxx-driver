@@ -226,6 +226,26 @@ bool compatible_with_server(const bsoncxx::array::element& requirement) {
             }
         }
     }
+
+    if (auto csfle = requirement["csfle"]) {
+        // csfle: Optional boolean. If true, the tests MUST only run if the
+        // driver and server support Client-Side Field Level Encryption. A
+        // server supports CSFLE if it is version 4.2.0 or higher. If false,
+        // tests MUST only run if CSFLE is not enabled. If this field is
+        // omitted, there is no CSFLE requirement.
+        std::vector<int> requires_at_lest{4, 2, 0};
+        bool is_csfle = csfle.get_bool().value;
+        if (is_csfle) {
+            if (!is_compatible_version(requires_at_lest, expected)) {
+                return false;
+            }
+        } else {
+            // TODO:
+            // if csfle is not enabled on the server:
+            // then return true
+            // else return false
+        }
+    }
     return true;
 }
 
@@ -1145,10 +1165,6 @@ TEST_CASE("collection management spec automated tests", "[unified_format_spec]")
 TEST_CASE("client side encryption unified format spec automated tests", "[unified_format_spec]") {
     if (!mongocxx::test_util::should_run_client_side_encryption_test()) {
         WARN("Skipping - client side encryption unified tests");
-        return;
-    }
-    if (!mongocxx::test_util::newer_than({uri{}}, "4.2")) {
-        WARN("Skipping - Client Side Encryption requires server version at least 4.2");
         return;
     }
     CHECK(run_unified_format_tests_in_env_dir("CLIENT_SIDE_ENCRYPTION_UNIFIED_TESTS_PATH"));
