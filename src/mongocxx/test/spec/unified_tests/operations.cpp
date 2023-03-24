@@ -1528,6 +1528,24 @@ document::value distinct(collection& coll, client_session* session, document::vi
     return result.extract();
 }
 
+// The C driver returns different names than the spec test. This will return the
+// name as the C driver declares it.
+std::string get_alternate_name(const std::string& key) {
+    const static std::unordered_map<std::string, std::string> alternate_names = {
+        {"nInserted", "insertedCount"},
+        {"nMatched", "matchedCount"},
+        {"nModified", "modifiedCount"},
+        {"nRemoved", "deletedCount"},
+        {"nUpserted", "upsertedCount"},
+    };
+
+    auto alternate_name = alternate_names.find(key);
+    if (alternate_name != alternate_names.end()) {
+        return alternate_name->second;
+    }
+    return key;
+}
+
 document::value rewrap_many_datakey(entity::map& map,
                                     const std::string& object,
                                     document::view operation) {
@@ -1550,8 +1568,29 @@ document::value rewrap_many_datakey(entity::map& map,
 
     auto maybe_doc = result.result();
     if (maybe_doc) {
-        auto doc =
-            make_document(kvp("result", make_document(kvp("bulkWriteResult", maybe_doc.value()))));
+        bsoncxx::builder::basic::document basic_builder{};
+        for (const auto& it : maybe_doc.value()) {
+            auto key = get_alternate_name(std::string(it.key()));
+            if (key == "writeErrors") {
+                auto arr = it.get_array().value;
+                if (!arr.empty()) {
+                    basic_builder.append(kvp(key, arr));
+                }
+            } else {
+                basic_builder.append(kvp(key, it.get_int32()));
+            }
+
+            if (key == "insertedCount") {
+                auto n_inserted = it.get_int32().value;
+                if (n_inserted == 0) {
+                    // If nothing was inserted, then we don't get "upsertedIds",
+                    // so make this field an empty doc
+                    basic_builder.append(kvp("upsertedIds", make_document()));
+                }
+            }
+        }
+        auto doc = make_document(
+            kvp("result", make_document(kvp("bulkWriteResult", basic_builder.extract()))));
         return doc;
     } else {
         auto doc =
@@ -1567,7 +1606,8 @@ document::value delete_key(entity::map& map, const std::string& object, document
     client_encryption& client_encryption = map.get_client_encryption(object);
     auto result = client_encryption.delete_key(key);
 
-    auto doc = make_document(kvp("result", make_document(kvp("nRemoved", result.deleted_count()))));
+    auto doc =
+        make_document(kvp("result", make_document(kvp("deletedCount", result.deleted_count()))));
     return doc;
 }
 
