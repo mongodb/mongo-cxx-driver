@@ -66,6 +66,7 @@ const auto kKmipKeyUUID = "\x28\xc2\x0f\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\
 using bsoncxx::builder::concatenate;
 
 using bsoncxx::builder::basic::kvp;
+using bsoncxx::builder::basic::make_array;
 using bsoncxx::builder::basic::make_document;
 
 using bsoncxx::builder::basic::sub_document;
@@ -2387,6 +2388,136 @@ TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
             // Assert the returned value equals "encrypted unindexed value".
             REQUIRE(plain_text == plain_text_unindexed_value);
         }
+    }
+}
+
+TEST_CASE("Unique Index on keyAltNames", "[client_side_encryption]") {
+    instance::current();
+
+    if (!mongocxx::test_util::should_run_client_side_encryption_test()) {
+        std::cerr << "Skipping 'Unique Index on keyAltNames' prose tests" << std::endl;
+        return;
+    }
+
+    // if (!test_util::newer_than(client, "6.0")) {
+    //     std::cerr << "Explicit Encryption tests require MongoDB server 6.0+." << std::endl;
+    //     return;
+    // }
+
+    // if (test_util::get_topology(client) == "single") {
+    //     std::cerr << "Explicit Encryption tests must not run against a standalone." << std::endl;
+    //     return;
+    // }
+
+    // 13. Unique Index on keyAltNames
+
+    // Setup
+
+    // 1. Create a MongoClient object (referred to as client).
+    mongocxx::client client{mongocxx::uri{}, test_util::add_test_server_api()};
+
+    // 2. Using client, drop the collection keyvault.datakeys.
+    client["keyvault"]["datakeys"].drop();
+
+    // 3. Using client, create a unique index on keyAltNames with a partial index filter for only
+    // documents where keyAltNames exists using writeConcern "majority". The command should be
+    // equivalent to:
+    //
+    // db.runCommand(
+    //   {
+    //      createIndexes: "datakeys",
+    //      indexes: [
+    //        {
+    //          name: "keyAltNames_1",
+    //          key: { "keyAltNames": 1 },
+    //          unique: true,
+    //          partialFilterExpression: { keyAltNames: { $exists: true } }
+    //        }
+    //      ],
+    //      writeConcern: { w: "majority" }
+    //   }
+    // )
+    auto db = client["keyAltNames"];
+    db.run_command(make_document(
+        kvp("createIndexes", "datakeys"),
+        kvp("indexes",
+            make_array(make_document(
+                kvp("name", "keyAltNames_1"),
+                kvp("key", make_document(kvp("keyAltNames", 1))),
+                kvp("unique", true),
+                kvp("partialFilterExpression",
+                    make_document(kvp("keyAltNames", make_document(kvp("exists", true)))))))),
+        kvp("writeConcern", make_document(kvp("w", "majority")))));
+
+    // 4. Create a ClientEncryption object (referred to as client_encryption) with client set as the
+    // keyVaultClient.
+    options::client_encryption ce_opts;
+    ce_opts.key_vault_client(&client);
+    ce_opts.key_vault_namespace({"keyvault", "datakeys"});
+    ce_opts.kms_providers(_make_kms_doc(false));
+    client_encryption client_encryption(std::move(ce_opts));
+
+    // 5. Using client_encryption, create a data key with a local KMS provider and the keyAltName
+    // "def".
+    {
+        mongocxx::options::data_key dk_opts;
+        dk_opts.key_alt_names({"def"});
+        std::string provider = "local";
+        client_encryption.create_data_key(provider, dk_opts);
+    }
+
+    SECTION("Case 1: createKey()") {
+        // Case 1: createKey()
+
+        // 1. Use client_encryption to create a new local data key with a keyAltName "abc" and
+        // assert the operation does not fail.
+        {
+            mongocxx::options::data_key dk_opts;
+            dk_opts.key_alt_names({"abc"});
+            std::string provider = "local";
+            client_encryption.create_data_key(provider, dk_opts);
+            std::cerr << "CREATED LOCAL KEY: abc" << std::endl;
+        }
+
+        // 2. Repeat Step 1 and assert the operation fails due to a duplicate key server error
+        // (error code 11000).
+        {
+            mongocxx::options::data_key dk_opts;
+            dk_opts.key_alt_names({"abc"});
+            std::string provider = "local";
+            client_encryption.create_data_key(provider, dk_opts);
+            std::cerr << "CREATED DUPLICATE LOCAL KEY: abc" << std::endl;
+        }
+
+        // 3. Use client_encryption to create a new local data key with a keyAltName "def" and
+        // assert the operation fails due to a duplicate key server error (error code 11000).
+        {
+            mongocxx::options::data_key dk_opts;
+            dk_opts.key_alt_names({"def"});
+            std::string provider = "local";
+            client_encryption.create_data_key(provider, dk_opts);
+            std::cerr << "CREATED DUPLICATE LOCAL KEY: def" << std::endl;
+        }
+    }
+
+    SECTION("Case 2: addKeyAltName()") {
+        // Case 2: addKeyAltName()
+
+        // 1. Use client_encryption to create a new local data key and assert the operation does not
+        // fail.
+
+        // 2. Use client_encryption to add a keyAltName "abc" to the key created in Step 1 and
+        // assert the operation does not fail.
+
+        // 3. Repeat Step 2, assert the operation does not fail, and assert the returned key
+        // document contains the keyAltName "abc" added in Step 2.
+
+        // 4. Use client_encryption to add a keyAltName "def" to the key created in Step 1 and
+        // assert the operation fails due to a duplicate key server error (error code 11000).
+
+        // 5. Use client_encryption to add a keyAltName "def" to the existing key, assert the
+        // operation does not fail, and assert the returned key document contains the keyAltName
+        // "def" added during Setup.
     }
 }
 
