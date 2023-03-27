@@ -2460,12 +2460,10 @@ TEST_CASE("Unique Index on keyAltNames", "[client_side_encryption]") {
 
     // 5. Using client_encryption, create a data key with a local KMS provider and the keyAltName
     // "def".
-    {
-        mongocxx::options::data_key dk_opts;
-        dk_opts.key_alt_names({"def"});
-        std::string provider = "local";
-        client_encryption.create_data_key(provider, dk_opts);
-    }
+    mongocxx::options::data_key dk_opts;
+    dk_opts.key_alt_names({"def"});
+    std::string provider = "local";
+    auto existing_key = client_encryption.create_data_key(provider, dk_opts);
 
     SECTION("Case 1: createKey()") {
         // Case 1: createKey()
@@ -2523,19 +2521,42 @@ TEST_CASE("Unique Index on keyAltNames", "[client_side_encryption]") {
 
         // 1. Use client_encryption to create a new local data key and assert the operation does not
         // fail.
+        auto key_doc = client_encryption.create_data_key("local");
 
         // 2. Use client_encryption to add a keyAltName "abc" to the key created in Step 1 and
         // assert the operation does not fail.
+        client_encryption.add_key_alt_name(key_doc.view(), "abc");
 
         // 3. Repeat Step 2, assert the operation does not fail, and assert the returned key
         // document contains the keyAltName "abc" added in Step 2.
+        {
+            auto alt_key = client_encryption.add_key_alt_name(key_doc.view(), "abc");
+            REQUIRE(std::string(alt_key.value()["keyAltNames"][0].get_string().value) == "abc");
+        }
 
         // 4. Use client_encryption to add a keyAltName "def" to the key created in Step 1 and
         // assert the operation fails due to a duplicate key server error (error code 11000).
+        {
+            bool exception_thrown = false;
+            try {
+                client_encryption.add_key_alt_name(key_doc.view(), "def");
+            } catch (mongocxx::operation_exception& e) {
+                REQUIRE(std::strstr(
+                    e.what(),
+                    "E11000 duplicate key error collection: keyvault.datakeys index: keyAltNames_1 "
+                    "dup key: { keyAltNames: \"def\" }: generic server error"));
+                exception_thrown = true;
+            }
+            REQUIRE(exception_thrown);
+        }
 
         // 5. Use client_encryption to add a keyAltName "def" to the existing key, assert the
         // operation does not fail, and assert the returned key document contains the keyAltName
         // "def" added during Setup.
+        {
+            auto alt_key = client_encryption.add_key_alt_name(existing_key.view(), "def");
+            REQUIRE(std::string(alt_key.value()["keyAltNames"][0].get_string().value) == "def");
+        }
     }
 }
 
