@@ -30,6 +30,7 @@
 #include <mongocxx/client.hpp>
 #include <mongocxx/client_encryption.hpp>
 #include <mongocxx/exception/error_code.hpp>
+#include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/client.hpp>
 #include <mongocxx/options/client_encryption.hpp>
@@ -2437,7 +2438,7 @@ TEST_CASE("Unique Index on keyAltNames", "[client_side_encryption]") {
     //      writeConcern: { w: "majority" }
     //   }
     // )
-    auto db = client["keyAltNames"];
+    auto db = client["keyvault"];
     db.run_command(make_document(
         kvp("createIndexes", "datakeys"),
         kvp("indexes",
@@ -2446,7 +2447,7 @@ TEST_CASE("Unique Index on keyAltNames", "[client_side_encryption]") {
                 kvp("key", make_document(kvp("keyAltNames", 1))),
                 kvp("unique", true),
                 kvp("partialFilterExpression",
-                    make_document(kvp("keyAltNames", make_document(kvp("exists", true)))))))),
+                    make_document(kvp("keyAltNames", make_document(kvp("$exists", true)))))))),
         kvp("writeConcern", make_document(kvp("w", "majority")))));
 
     // 4. Create a ClientEncryption object (referred to as client_encryption) with client set as the
@@ -2476,7 +2477,6 @@ TEST_CASE("Unique Index on keyAltNames", "[client_side_encryption]") {
             dk_opts.key_alt_names({"abc"});
             std::string provider = "local";
             client_encryption.create_data_key(provider, dk_opts);
-            std::cerr << "CREATED LOCAL KEY: abc" << std::endl;
         }
 
         // 2. Repeat Step 1 and assert the operation fails due to a duplicate key server error
@@ -2485,8 +2485,17 @@ TEST_CASE("Unique Index on keyAltNames", "[client_side_encryption]") {
             mongocxx::options::data_key dk_opts;
             dk_opts.key_alt_names({"abc"});
             std::string provider = "local";
-            client_encryption.create_data_key(provider, dk_opts);
-            std::cerr << "CREATED DUPLICATE LOCAL KEY: abc" << std::endl;
+            bool exception_thrown = false;
+            try {
+                client_encryption.create_data_key(provider, dk_opts);
+            } catch (mongocxx::operation_exception& e) {
+                REQUIRE(std::strstr(
+                    e.what(),
+                    "E11000 duplicate key error collection: keyvault.datakeys index: keyAltNames_1 "
+                    "dup key: { keyAltNames: \"abc\" }: generic server error"));
+                exception_thrown = true;
+            }
+            REQUIRE(exception_thrown);
         }
 
         // 3. Use client_encryption to create a new local data key with a keyAltName "def" and
@@ -2495,8 +2504,17 @@ TEST_CASE("Unique Index on keyAltNames", "[client_side_encryption]") {
             mongocxx::options::data_key dk_opts;
             dk_opts.key_alt_names({"def"});
             std::string provider = "local";
-            client_encryption.create_data_key(provider, dk_opts);
-            std::cerr << "CREATED DUPLICATE LOCAL KEY: def" << std::endl;
+            bool exception_thrown = false;
+            try {
+                client_encryption.create_data_key(provider, dk_opts);
+            } catch (mongocxx::operation_exception& e) {
+                REQUIRE(std::strstr(
+                    e.what(),
+                    "E11000 duplicate key error collection: keyvault.datakeys index: keyAltNames_1 "
+                    "dup key: { keyAltNames: \"def\" }: generic server error"));
+                exception_thrown = true;
+            }
+            REQUIRE(exception_thrown);
         }
     }
 
