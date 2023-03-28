@@ -270,6 +270,7 @@ set_property(TEST unified_format_spec APPEND PROPERTY ENVIRONMENT
   "COLLECTION_MANAGEMENT_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/collection-management"
   "CRUD_UNIFIED_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/crud/unified"
   "SESSION_UNIFIED_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/sessions/unified/"
+  "RETRYABLE_READS_UNIFIED_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/retryable-reads/unified/"
   "UNIFIED_FORMAT_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/unified-format"
   "VERSIONED_API_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/versioned-api"
 )

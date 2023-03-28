@@ -1024,6 +1024,10 @@ TEST_CASE("change streams unified format spec automated tests", "[unified_format
     CHECK(run_unified_format_tests_in_env_dir("CHANGE_STREAMS_UNIFIED_TESTS_PATH"));
 }
 
+TEST_CASE("retryable reads unified format spec automated tests", "[unified_format_spec]") {
+    CHECK(run_unified_format_tests_in_env_dir("RETRYABLE_READS_UNIFIED_TESTS_PATH"));
+}
+
 TEST_CASE("versioned API spec automated tests", "[unified_format_spec]") {
     CHECK(run_unified_format_tests_in_env_dir("VERSIONED_API_TESTS_PATH"));
 }
