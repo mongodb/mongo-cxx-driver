@@ -101,44 +101,13 @@ cmake ..                                \
     -DCMAKE_INSTALL_PREFIX=/usr/local
 ```
 
-In the Unix examples that follow, `mongocxx` is customized in these ways:
-
-* `libmongoc` is found in `/opt/mongo-c-driver`.
-* `mongocxx` is to be installed into `/opt/mongo-cxx-driver`.
-
-With those two distinct (arbitrary) install locations, a user would run this `cmake` command:
-```sh
-cmake ..                                            \
-    -DCMAKE_BUILD_TYPE=Release                      \
-    -DCMAKE_PREFIX_PATH=/opt/mongo-c-driver         \
-    -DCMAKE_INSTALL_PREFIX=/opt/mongo-cxx-driver
-```
-
-> *Note* If you need multiple paths in a CMake PATH variable, separate them with a semicolon like
-> this:
-> `-DCMAKE_PREFIX_PATH="/your/cdriver/prefix;/some/other/path"`
-
 These options can be freely mixed with a C++17 polyfill option. For instance, this is how a user
 would run the command above with the Boost polyfill option:
 ```sh
 cmake ..                                            \
     -DCMAKE_BUILD_TYPE=Release                      \
     -DBSONCXX_POLY_USE_BOOST=1                      \
-    -DCMAKE_PREFIX_PATH=/opt/mongo-c-driver         \
-    -DCMAKE_INSTALL_PREFIX=/opt/mongo-cxx-driver
-```
-
-#### Configuring with `mongocxx` 3.1.x or 3.0.x
-
-Instead of the `-DCMAKE_PREFIX_PATH` option, users must specify the `libmongoc` installation
-directory by using the `-DLIBMONGOC_DIR` and `-DLIBBSON_DIR` options:
-
-```sh
-cmake ..                                            \
-    -DCMAKE_BUILD_TYPE=Release                      \
-    -DLIBMONGOC_DIR=/opt/mongo-c-driver             \
-    -DLIBBSON_DIR=/opt/mongo-c-driver               \
-    -DCMAKE_INSTALL_PREFIX=/opt/mongo-cxx-driver
+    -DCMAKE_INSTALL_PREFIX=/usr/local
 ```
 
 ### Step 5: Build and install the driver
@@ -171,6 +140,6 @@ sudo cmake --build . --target uninstall
 Second, the uninstall script can be called:
 
 ```sh
-sudo /opt/mongo-cxx-driver/share/mongo-cxx-driver/uninstall.sh
+sudo <install-dir>/share/mongo-cxx-driver/uninstall.sh
 ```
 
