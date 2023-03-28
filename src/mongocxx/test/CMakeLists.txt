@@ -260,7 +260,7 @@ set_property(TEST transactions_specs
   APPEND PROPERTY ENVIRONMENT "WITH_TRANSACTION_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/with_transaction")
 
 set_tests_properties(retryable_reads_spec PROPERTIES
-   ENVIRONMENT "RETRYABLE_READS_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/retryable-reads")
+   ENVIRONMENT "RETRYABLE_READS_LEGACY_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/retryable-reads/legacy")
 
 set_tests_properties(read_write_concern_specs PROPERTIES
   ENVIRONMENT "READ_WRITE_CONCERN_OPERATION_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/read-write-concern/operation")
