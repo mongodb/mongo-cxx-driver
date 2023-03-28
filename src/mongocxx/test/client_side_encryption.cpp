@@ -35,6 +35,7 @@
 #include <mongocxx/options/client.hpp>
 #include <mongocxx/options/client_encryption.hpp>
 #include <mongocxx/options/data_key.hpp>
+#include <mongocxx/private/libbson.hh>
 #include <mongocxx/test/spec/monitoring.hh>
 #include <mongocxx/test_util/client_helpers.hh>
 #include <mongocxx/uri.hpp>
@@ -2558,6 +2559,97 @@ TEST_CASE("Unique Index on keyAltNames", "[client_side_encryption]") {
             REQUIRE(std::string(alt_key.value()["keyAltNames"][0].get_string().value) == "def");
         }
     }
+}
+
+TEST_CASE("Custom Key Material Test", "[client_side_encryption]") {
+    instance::current();
+
+    // 1. Create a MongoClient object (referred to as client).
+    mongocxx::client client{mongocxx::uri{}, test_util::add_test_server_api()};
+
+    // 2. Using client, drop the collection keyvault.datakeys.
+    client["keyvault"]["datakeys"].drop();
+
+    // 3. Create a ClientEncryption object (referred to as client_encryption) with client set as the
+    // keyVaultClient.
+    options::client_encryption ce_opts;
+    ce_opts.key_vault_client(&client);
+    ce_opts.key_vault_namespace({"keyvault", "datakeys"});
+    ce_opts.kms_providers(_make_kms_doc(false));
+    client_encryption client_encryption(std::move(ce_opts));
+
+    // 4. Using client_encryption, create a data key with a local KMS provider and the following
+    // custom key material (given as base64):
+    // xPTAjBRG5JiPm+d3fj6XLi2q5DMXUS/f1f+SMAlhhwkhDRL0kr8r9GDLIGTAGlvC+HVjSIgdL+RKwZCvpXSyxTICWSXTUYsWYPyu3IoHbuBZdmw2faM3WhcRIgbMReU5
+    mongocxx::options::data_key dk_opts;
+    std::vector<uint8_t> key_material{
+        0xc4, 0xf4, 0xc0, 0x8c, 0x14, 0x46, 0xe4, 0x98, 0x8f, 0x9b, 0xe7, 0x77, 0x7e, 0x3e,
+        0x97, 0x2e, 0x2d, 0xaa, 0xe4, 0x33, 0x17, 0x51, 0x2f, 0xdf, 0xd5, 0xff, 0x92, 0x30,
+        0x9,  0x61, 0x87, 0x9,  0x21, 0xd,  0x12, 0xf4, 0x92, 0xbf, 0x2b, 0xf4, 0x60, 0xcb,
+        0x20, 0x64, 0xc0, 0x1a, 0x5b, 0xc2, 0xf8, 0x75, 0x63, 0x48, 0x88, 0x1d, 0x2f, 0xe4,
+        0x4a, 0xc1, 0x90, 0xaf, 0xa5, 0x74, 0xb2, 0xc5, 0x32, 0x2,  0x59, 0x25, 0xd3, 0x51,
+        0x8b, 0x16, 0x60, 0xfc, 0xae, 0xdc, 0x8a, 0x7,  0x6e, 0xe0, 0x59, 0x76, 0x6c, 0x36,
+        0x7d, 0xa3, 0x37, 0x5a, 0x17, 0x11, 0x22, 0x6,  0xcc, 0x45, 0xe5, 0x39};
+    dk_opts.key_material(key_material);
+    auto key = client_encryption.create_data_key("local", dk_opts);
+    auto key_id = key.view().get_binary();
+
+    // 5. Find the resulting key document in keyvault.datakeys, save a copy of the key document,
+    // then remove the key document from the collection.
+    auto cursor = client["keyvault"]["datakeys"].find(make_document(kvp("_id", key_id)));
+    const auto doc = *cursor.begin();
+    client["keyvault"]["datakeys"].delete_one(make_document(kvp("_id", key_id)));
+
+    // 6. Replace the _id field in the copied key document with a UUID with base64 value
+    // AAAAAAAAAAAAAAAAAAAAAA== (16 bytes all equal to 0x00) and insert the modified key document
+    // into keyvault.datakeys with majority write concern.
+    std::vector<uint8_t> id = {
+        0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0};
+    bsoncxx::types::b_binary id_bin{
+        bsoncxx::binary_sub_type::k_uuid, (uint32_t)id.size(), id.data()};
+
+    bsoncxx::builder::basic::document builder;
+    mongocxx::libbson::scoped_bson_t bson_doc;
+    bson_doc.init_from_static(doc);
+    mongocxx::libbson::scoped_bson_t doc_without_id;
+    bson_copy_to_excluding_noinit(bson_doc.bson(), doc_without_id.bson_for_init(), "_id", NULL);
+
+    bsoncxx::document::value val(doc_without_id.steal());
+    builder.append(kvp("_id", id_bin));
+    builder.append(concatenate(val.view()));
+    auto doc_with_new_key = builder.extract();
+
+    write_concern wc_majority;
+    wc_majority.acknowledge_level(write_concern::level::k_majority);
+
+    options::insert insert_opts;
+    insert_opts.write_concern(std::move(wc_majority));
+
+    client["keyvault"]["datakeys"].insert_one(doc_with_new_key.view(), insert_opts);
+
+    // 7. Using client_encryption, encrypt the string "test" with the modified data key using the
+    // AEAD_AES_256_CBC_HMAC_SHA_512-Deterministic algorithm and assert the resulting value is equal
+    // to the following (given as base64):
+    // AQAAAAAAAAAAAAAAAAAAAAACz0ZOLuuhEYi807ZXTdhbqhLaS2/t9wLifJnnNYwiw79d75QYIZ6M/aYC1h9nCzCjZ7pGUpAuNnkUhnIXM3PjrA==
+    auto key_doc = make_document(kvp("_id", id_bin));
+    options::encrypt encrypt_opts{};
+    encrypt_opts.key_id(key_doc.view()["_id"].get_value());
+    encrypt_opts.algorithm(options::encrypt::encryption_algorithm::k_deterministic);
+
+    auto to_encrypt = make_value("test");
+
+    auto encrypted = client_encryption.encrypt(to_encrypt.view(), encrypt_opts);
+    std::vector<uint8_t> expected = {
+        0x1,  0x0,  0x0,  0x0,  0x0,  0x0,  0x0,  0x0,  0x0,  0x0,  0x0,  0x0,  0x0,  0x0,
+        0x0,  0x0,  0x0,  0x2,  0xcf, 0x46, 0x4e, 0x2e, 0xeb, 0xa1, 0x11, 0x88, 0xbc, 0xd3,
+        0xb6, 0x57, 0x4d, 0xd8, 0x5b, 0xaa, 0x12, 0xda, 0x4b, 0x6f, 0xed, 0xf7, 0x2,  0xe2,
+        0x7c, 0x99, 0xe7, 0x35, 0x8c, 0x22, 0xc3, 0xbf, 0x5d, 0xef, 0x94, 0x18, 0x21, 0x9e,
+        0x8c, 0xfd, 0xa6, 0x2,  0xd6, 0x1f, 0x67, 0xb,  0x30, 0xa3, 0x67, 0xba, 0x46, 0x52,
+        0x90, 0x2e, 0x36, 0x79, 0x14, 0x86, 0x72, 0x17, 0x33, 0x73, 0xe3, 0xac};
+
+    auto encrypted_as_binary = encrypted.view().get_binary();
+    REQUIRE(expected.size() == encrypted_as_binary.size);
+    REQUIRE(std::memcmp(expected.data(), encrypted_as_binary.bytes, expected.size()) == 0);
 }
 
 }  // namespace
