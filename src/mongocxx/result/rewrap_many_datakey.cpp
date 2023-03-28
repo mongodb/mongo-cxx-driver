@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <mongocxx/bulk_write.hpp>
 #include <mongocxx/private/libbson.hh>
 #include <mongocxx/result/rewrap_many_datakey.hpp>
 
@@ -21,11 +22,11 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace result {
 
-rewrap_many_datakey::rewrap_many_datakey(bsoncxx::document::value bulk_write_result_doc) {
+rewrap_many_datakey::rewrap_many_datakey(mongocxx::result::bulk_write bulk_write_result_doc) {
     _result = std::move(bulk_write_result_doc);
 }
 
-const bsoncxx::stdx::optional<bsoncxx::document::value>& rewrap_many_datakey::result() {
+const bsoncxx::stdx::optional<mongocxx::result::bulk_write>& rewrap_many_datakey::result() {
     return _result;
 }
 

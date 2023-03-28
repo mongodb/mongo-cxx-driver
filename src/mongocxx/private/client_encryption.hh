@@ -27,6 +27,7 @@
 #include <mongocxx/private/cursor.hh>
 #include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/libmongoc.hh>
+#include <mongocxx/result/bulk_write.hpp>
 
 #include <mongocxx/config/private/prelude.hh>
 
@@ -184,7 +185,9 @@ class client_encryption::impl {
         if (bulk_write_result) {
             const auto doc =
                 bsoncxx::document::view(bson_get_data(bulk_write_result), bulk_write_result->len);
-            return result::rewrap_many_datakey(bsoncxx::document::value(doc));
+            auto val = bsoncxx::document::value(doc);
+            result::bulk_write bulk_write_result{val};
+            return result::rewrap_many_datakey(bulk_write_result);
         } else {
             return result::rewrap_many_datakey();
         }

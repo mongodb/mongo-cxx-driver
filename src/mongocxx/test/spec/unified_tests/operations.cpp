@@ -31,6 +31,7 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 using namespace bsoncxx;
 
 using builder::basic::kvp;
+using builder::basic::make_array;
 using builder::basic::make_document;
 
 int64_t as_int64(const document::element& el) {
@@ -1528,24 +1529,6 @@ document::value distinct(collection& coll, client_session* session, document::vi
     return result.extract();
 }
 
-// The C driver returns different names than the spec test. This will return the
-// name as the C driver declares it.
-std::string get_alternate_name(const std::string& key) {
-    const static std::unordered_map<std::string, std::string> alternate_names = {
-        {"nInserted", "insertedCount"},
-        {"nMatched", "matchedCount"},
-        {"nModified", "modifiedCount"},
-        {"nRemoved", "deletedCount"},
-        {"nUpserted", "upsertedCount"},
-    };
-
-    auto alternate_name = alternate_names.find(key);
-    if (alternate_name != alternate_names.end()) {
-        return alternate_name->second;
-    }
-    return key;
-}
-
 document::value rewrap_many_datakey(entity::map& map,
                                     const std::string& object,
                                     document::view operation) {
@@ -1566,28 +1549,22 @@ document::value rewrap_many_datakey(entity::map& map,
     client_encryption& client_encryption = map.get_client_encryption(object);
     auto result = client_encryption.rewrap_many_datakey(filter.view(), rewrap_opts);
 
-    auto maybe_doc = result.result();
-    if (maybe_doc) {
+    auto maybe_bulk_write = result.result();
+    if (maybe_bulk_write) {
+        auto bulk_write_result = maybe_bulk_write.value();
         bsoncxx::builder::basic::document basic_builder{};
-        for (const auto& it : maybe_doc.value()) {
-            auto key = get_alternate_name(std::string(it.key()));
-            if (key == "writeErrors") {
-                auto arr = it.get_array().value;
-                if (!arr.empty()) {
-                    basic_builder.append(kvp(key, arr));
-                }
-            } else {
-                basic_builder.append(kvp(key, it.get_int32()));
-            }
+        auto matched = bulk_write_result.matched_count();
+        auto modified = bulk_write_result.modified_count();
 
-            if (key == "insertedCount") {
-                auto n_inserted = it.get_int32().value;
-                if (n_inserted == 0) {
-                    // If nothing was inserted, then we don't get "upsertedIds",
-                    // so make this field an empty doc
-                    basic_builder.append(kvp("upsertedIds", make_document()));
-                }
-            }
+        basic_builder.append(kvp("deletedCount", bulk_write_result.deleted_count()));
+        basic_builder.append(kvp("insertedCount", bulk_write_result.inserted_count()));
+        basic_builder.append(kvp("upsertedCount", bulk_write_result.upserted_count()));
+        basic_builder.append(kvp("upsertedIds", make_document()));
+        if (matched) {
+            basic_builder.append(kvp("matchedCount", matched));
+        }
+        if (modified) {
+            basic_builder.append(kvp("modifiedCount", modified));
         }
         auto doc = make_document(
             kvp("result", make_document(kvp("bulkWriteResult", basic_builder.extract()))));

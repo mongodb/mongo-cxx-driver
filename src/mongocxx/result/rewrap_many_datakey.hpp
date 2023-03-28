@@ -16,6 +16,7 @@
 
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
+#include <mongocxx/bulk_write.hpp>
 
 #include <mongocxx/config/prelude.hpp>
 
@@ -28,17 +29,18 @@ class MONGOCXX_API rewrap_many_datakey {
    public:
     rewrap_many_datakey() = default;
 
-    explicit rewrap_many_datakey(bsoncxx::document::value bulk_write_result_doc);
+    explicit rewrap_many_datakey(mongocxx::result::bulk_write bulk_write_result_doc);
 
     ///
     /// Returns the bulk write result for this rewrap_many_datakey operation.
     ///
     /// @return The raw bulk write result.
     ///
-    const bsoncxx::stdx::optional<bsoncxx::document::value>& result();
+    // const bsoncxx::stdx::optional<bsoncxx::document::value>& result();
+    const bsoncxx::stdx::optional<mongocxx::result::bulk_write>& result();
 
    private:
-    bsoncxx::stdx::optional<bsoncxx::document::value> _result;
+    bsoncxx::stdx::optional<mongocxx::result::bulk_write> _result;
 };
 
 }  // namespace result
