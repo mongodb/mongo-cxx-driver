@@ -2397,23 +2397,14 @@ TEST_CASE("Unique Index on keyAltNames", "[client_side_encryption]") {
     instance::current();
 
     if (!mongocxx::test_util::should_run_client_side_encryption_test()) {
-        std::cerr << "Skipping 'Unique Index on keyAltNames' prose tests" << std::endl;
+        std::cerr << "Skipping Unique Index on keyAltNames prose tests" << std::endl;
         return;
     }
 
-    // if (!test_util::newer_than(client, "6.0")) {
-    //     std::cerr << "Explicit Encryption tests require MongoDB server 6.0+." << std::endl;
-    //     return;
-    // }
-
-    // if (test_util::get_topology(client) == "single") {
-    //     std::cerr << "Explicit Encryption tests must not run against a standalone." << std::endl;
-    //     return;
-    // }
-
-    // 13. Unique Index on keyAltNames
-
-    // Setup
+    if (!test_util::newer_than(uri{}, "4.2")) {
+        std::cerr << "Unique Index on keyAltNames tests require MongoDB server 4.2+." << std::endl;
+        return;
+    }
 
     // 1. Create a MongoClient object (referred to as client).
     mongocxx::client client{mongocxx::uri{}, test_util::add_test_server_api()};
@@ -2467,8 +2458,6 @@ TEST_CASE("Unique Index on keyAltNames", "[client_side_encryption]") {
     auto existing_key = client_encryption.create_data_key(provider, dk_opts);
 
     SECTION("Case 1: createKey()") {
-        // Case 1: createKey()
-
         // 1. Use client_encryption to create a new local data key with a keyAltName "abc" and
         // assert the operation does not fail.
         {
@@ -2518,8 +2507,6 @@ TEST_CASE("Unique Index on keyAltNames", "[client_side_encryption]") {
     }
 
     SECTION("Case 2: addKeyAltName()") {
-        // Case 2: addKeyAltName()
-
         // 1. Use client_encryption to create a new local data key and assert the operation does not
         // fail.
         auto key_doc = client_encryption.create_data_key("local");
@@ -2564,6 +2551,16 @@ TEST_CASE("Unique Index on keyAltNames", "[client_side_encryption]") {
 TEST_CASE("Custom Key Material Test", "[client_side_encryption]") {
     instance::current();
 
+    if (!mongocxx::test_util::should_run_client_side_encryption_test()) {
+        std::cerr << "Skipping Custom Key Material Test prose tests" << std::endl;
+        return;
+    }
+
+    if (!test_util::newer_than(uri{}, "4.2")) {
+        std::cerr << "Custom Key Material Test requires MongoDB server 4.2+." << std::endl;
+        return;
+    }
+
     // 1. Create a MongoClient object (referred to as client).
     mongocxx::client client{mongocxx::uri{}, test_util::add_test_server_api()};
 
@@ -2607,16 +2604,18 @@ TEST_CASE("Custom Key Material Test", "[client_side_encryption]") {
         0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0};
     bsoncxx::types::b_binary id_bin{
         bsoncxx::binary_sub_type::k_uuid, (uint32_t)id.size(), id.data()};
+    auto key_doc = make_document(kvp("_id", id_bin));
 
-    bsoncxx::builder::basic::document builder;
     mongocxx::libbson::scoped_bson_t bson_doc;
     bson_doc.init_from_static(doc);
     mongocxx::libbson::scoped_bson_t doc_without_id;
     bson_copy_to_excluding_noinit(bson_doc.bson(), doc_without_id.bson_for_init(), "_id", NULL);
 
-    bsoncxx::document::value val(doc_without_id.steal());
-    builder.append(kvp("_id", id_bin));
-    builder.append(concatenate(val.view()));
+    bsoncxx::document::value new_doc(doc_without_id.steal());
+
+    bsoncxx::builder::basic::document builder;
+    builder.append(concatenate(key_doc.view()));
+    builder.append(concatenate(new_doc.view()));
     auto doc_with_new_key = builder.extract();
 
     write_concern wc_majority;
@@ -2631,7 +2630,6 @@ TEST_CASE("Custom Key Material Test", "[client_side_encryption]") {
     // AEAD_AES_256_CBC_HMAC_SHA_512-Deterministic algorithm and assert the resulting value is equal
     // to the following (given as base64):
     // AQAAAAAAAAAAAAAAAAAAAAACz0ZOLuuhEYi807ZXTdhbqhLaS2/t9wLifJnnNYwiw79d75QYIZ6M/aYC1h9nCzCjZ7pGUpAuNnkUhnIXM3PjrA==
-    auto key_doc = make_document(kvp("_id", id_bin));
     options::encrypt encrypt_opts{};
     encrypt_opts.key_id(key_doc.view()["_id"].get_value());
     encrypt_opts.algorithm(options::encrypt::encryption_algorithm::k_deterministic);
