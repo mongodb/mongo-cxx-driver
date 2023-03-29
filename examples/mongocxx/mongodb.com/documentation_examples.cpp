@@ -1402,6 +1402,7 @@ static void snapshot_example1(mongocxx::client& client) {
         for (auto doc : cursor) {
             std::cerr << "CAT DOC: " << bsoncxx::to_json(doc) << std::endl;
             auto found = doc.find("adoptableCatsCount");
+            std::cerr << "TYPE: " << bsoncxx::to_string(found->type()) << std::endl;
             switch (found->type()) {
                 case bsoncxx::type::k_int32:
                     adoptable_pets_count += found->get_int32();
@@ -1410,7 +1411,8 @@ static void snapshot_example1(mongocxx::client& client) {
                     adoptable_pets_count += found->get_int64();
                     break;
                 default:
-                    throw std::logic_error("expecting either an int32 or int64");
+                    throw std::logic_error("expecting either an int32 or int64, got " +
+                                           std::string(bsoncxx::to_string(found->type())));
             }
         }
     }
@@ -1424,6 +1426,7 @@ static void snapshot_example1(mongocxx::client& client) {
         for (auto doc : cursor) {
             std::cerr << "DOG DOC: " << bsoncxx::to_json(doc) << std::endl;
             auto found = doc.find("adoptableDogsCount");
+            std::cerr << "TYPE: " << bsoncxx::to_string(found->type()) << std::endl;
             switch (found->type()) {
                 case bsoncxx::type::k_int32:
                     adoptable_pets_count += found->get_int32();
@@ -1432,7 +1435,8 @@ static void snapshot_example1(mongocxx::client& client) {
                     adoptable_pets_count += found->get_int64();
                     break;
                 default:
-                    throw std::logic_error("expecting either an int32 or int64");
+                    throw std::logic_error("expecting either an int32 or int64, got " +
+                                           std::string(bsoncxx::to_string(found->type())));
             }
         }
     }
