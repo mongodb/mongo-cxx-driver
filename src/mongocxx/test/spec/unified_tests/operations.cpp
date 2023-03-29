@@ -114,6 +114,21 @@ options::find make_find_options(document::view arguments) {
     return options;
 }
 
+document::value bulk_write_result_to_document(const mongocxx::result::bulk_write& result) {
+    builder::basic::document upserted_ids_builder;
+    for (auto&& index_and_id : result.upserted_ids()) {
+        upserted_ids_builder.append(
+            kvp(std::to_string(index_and_id.first), index_and_id.second.get_int32().value));
+    }
+
+    return make_document(kvp("matchedCount", result.matched_count()),
+                         kvp("modifiedCount", result.matched_count()),
+                         kvp("deletedCount", result.deleted_count()),
+                         kvp("insertedCount", result.inserted_count()),
+                         kvp("upsertedCount", result.upserted_count()),
+                         kvp("upsertedIds", upserted_ids_builder.extract()));
+}
+
 document::value find(collection& coll, client_session* session, document::view operation) {
     document::view arguments = operation["arguments"].get_document().value;
     document::value empty_filter = builder::basic::make_document();
@@ -1555,7 +1570,6 @@ document::value rewrap_many_datakey(entity::map& map,
             kvp("result",
                 make_document(
                     kvp("bulkWriteResult", bulk_write_result_to_document(bulk_write_result)))));
-        return doc;
         return doc;
     } else {
         auto doc =
