@@ -82,7 +82,7 @@ const auto kLocalMasterKey =
     "\x4f\x69\x37\x36\x36\x4a\x7a\x58\x5a\x42\x64\x42\x64\x62\x64\x4d\x75\x72"
     "\x64\x6f\x6e\x4a\x31\x64";
 
-bsoncxx::document::value make_kms_doc() {
+bsoncxx::document::value get_kms_values() {
     char key_storage[96];
     memcpy(&(key_storage[0]), kLocalMasterKey, 96);
     bsoncxx::types::b_binary local_master_key{
@@ -108,6 +108,41 @@ bsoncxx::document::value make_kms_doc() {
         kvp("local", make_document(kvp("key", local_master_key))));
 
     return kms_doc;
+}
+
+bsoncxx::document::value parse_kms_doc(bsoncxx::document::view_or_value test_kms_doc) {
+    auto kms_values = get_kms_values();
+    auto doc = bsoncxx::builder::basic::document{};
+    auto test_kms_doc_view = test_kms_doc.view();
+    for (const auto& it : test_kms_doc_view) {
+        auto provider = it.key();
+        if (!kms_values[provider]) {
+            FAIL("FAIL: got unexpected KMS provider: " << provider);
+        }
+        auto variables_doc = bsoncxx::builder::basic::document{};
+        auto variables = test_kms_doc_view[provider].get_document().view();
+        for (const auto& i : variables) {
+            auto variable = i.key();
+            auto actual_value = kms_values[provider][variable];
+            if (!kms_values[provider][variable]) {
+                FAIL("FAIL: expecting to find variable: '"
+                     << variable << "' in KMS doc for provider: '" << provider << "'");
+            }
+            switch (actual_value.type()) {
+                case bsoncxx::type::k_string:
+                    variables_doc.append(kvp(variable, actual_value.get_string()));
+                    break;
+                case bsoncxx::type::k_binary:
+                    variables_doc.append(kvp(variable, actual_value.get_binary()));
+                    break;
+                default:
+                    FAIL("FAIL: unexpected variable type in KMS doc: '"
+                         << bsoncxx::to_string(actual_value.type()) << "'");
+            }
+        }
+        doc.append(kvp(provider, variables_doc.extract()));
+    }
+    return doc.extract();
 }
 
 // Spec: Version strings, which are used for schemaVersion and runOnRequirement, MUST conform to
@@ -516,7 +551,7 @@ options::client_encryption get_client_encryption_options(document::view object) 
     options::client_encryption ce_opts;
     ce_opts.key_vault_client(&client);
     ce_opts.key_vault_namespace({db, coll});
-    ce_opts.kms_providers(make_kms_doc());
+    ce_opts.kms_providers(parse_kms_doc(providers));
 
     if (!providers.empty()) {
         // Configure TLS options.
