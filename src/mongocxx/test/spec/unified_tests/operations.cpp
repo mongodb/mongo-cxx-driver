@@ -211,6 +211,18 @@ document::value list_databases(entity::map& map,
     return result.extract();
 }
 
+document::value list_database_names(entity::map& map, const std::string& object) {
+    auto cursor = map.get_client(object).list_database_names();
+
+    builder::basic::document result;
+    result.append(builder::basic::kvp("result", [&cursor](builder::basic::sub_array array) {
+        for (auto&& document : cursor) {
+            array.append(document);
+        }
+    }));
+    return result.extract();
+}
+
 document::value list_indexes(entity::map& map, client_session* session, const std::string& object) {
     auto cursor = session ? map.get_collection(object).list_indexes(*session)
                           : map.get_collection(object).list_indexes();
@@ -1677,6 +1689,9 @@ document::value operations::run(entity::map& entity_map,
     }
     if (name == "listDatabases") {
         return list_databases(entity_map, get_session(op_view, entity_map), object);
+    }
+    if (name == "listDatabaseNames") {
+        return list_database_names(entity_map, object);
     }
     if (name == "listIndexes") {
         return list_indexes(entity_map, get_session(op_view, entity_map), object);
