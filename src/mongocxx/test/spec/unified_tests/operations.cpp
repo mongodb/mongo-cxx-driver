@@ -31,7 +31,6 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 using namespace bsoncxx;
 
 using builder::basic::kvp;
-using builder::basic::make_array;
 using builder::basic::make_document;
 
 int64_t as_int64(const document::element& el) {
