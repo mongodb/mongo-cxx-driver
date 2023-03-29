@@ -1377,6 +1377,8 @@ static void snapshot_example1(mongocxx::client& client) {
     using bsoncxx::builder::basic::kvp;
     using bsoncxx::builder::basic::make_document;
 
+    std::this_thread::sleep_for(std::chrono::seconds(10));
+
     auto db = client["pets"];
 
     int64_t adoptable_pets_count = 0;
