@@ -279,10 +279,10 @@ bool compatible_with_server(const bsoncxx::array::element& requirement) {
         // server supports CSFLE if it is version 4.2.0 or higher. If false,
         // tests MUST only run if CSFLE is not enabled. If this field is
         // omitted, there is no CSFLE requirement.
-        std::vector<int> requires_at_lest{4, 2, 0};
+        std::vector<int> requires_at_least{4, 2, 0};
         bool is_csfle = csfle.get_bool().value;
         if (is_csfle) {
-            if (!is_compatible_version(requires_at_lest, expected)) {
+            if (!is_compatible_version(requires_at_least, expected)) {
                 return false;
             }
         }
