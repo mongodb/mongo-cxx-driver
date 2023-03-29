@@ -128,6 +128,17 @@ bsoncxx::document::value parse_kms_doc(bsoncxx::document::view_or_value test_kms
                 FAIL("FAIL: expecting to find variable: '"
                      << variable << "' in KMS doc for provider: '" << provider << "'");
             }
+            bool is_placeholder = false;
+            if (i.type() == bsoncxx::type::k_document &&
+                i.get_document().value == make_document(kvp("$$placeholder", 1))) {
+                is_placeholder = true;
+            }
+            if (!is_placeholder) {
+                // Append value as-is.
+                variables_doc.append(kvp(variable, i.get_value()));
+                continue;
+            }
+            // A placeholder was specified. Append the credential from the environment.
             switch (actual_value.type()) {
                 case bsoncxx::type::k_string:
                     variables_doc.append(kvp(variable, actual_value.get_string()));
