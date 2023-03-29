@@ -23,6 +23,7 @@
 #include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/document/value.hpp>
+#include <bsoncxx/json.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/types.hpp>
 #include <mongocxx/client.hpp>
@@ -1394,6 +1395,7 @@ static void snapshot_example1(mongocxx::client& client) {
         auto cursor = db["cats"].aggregate(session, p);
 
         for (auto doc : cursor) {
+            std::cerr << "CAT DOC: " << bsoncxx::to_json(doc) << std::endl;
             adoptable_pets_count += doc.find("adoptableCatsCount")->get_int32();
         }
     }
@@ -1405,6 +1407,7 @@ static void snapshot_example1(mongocxx::client& client) {
         auto cursor = db["dogs"].aggregate(session, p);
 
         for (auto doc : cursor) {
+            std::cerr << "DOG DOC: " << bsoncxx::to_json(doc) << std::endl;
             adoptable_pets_count += doc.find("adoptableDogsCount")->get_int32();
         }
     }
