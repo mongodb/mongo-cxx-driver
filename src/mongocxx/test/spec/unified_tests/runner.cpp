@@ -294,17 +294,19 @@ void add_observe_events(options::apm& apm_opts, document::view object) {
     apm.observe_sensitive_events = observe_sensitive && observe_sensitive.get_bool();
 
     auto events = object["observeEvents"].get_array().value;
-    if (std::end(events) !=
-        std::find(std::begin(events), std::end(events), value("commandStartedEvent")))
-        apm.set_command_started_unified(apm_opts);
 
-    if (std::end(events) !=
-        std::find(std::begin(events), std::end(events), value("commandSucceededEvent")))
-        apm.set_command_succeeded_unified(apm_opts);
-
-    if (std::end(events) !=
-        std::find(std::begin(events), std::end(events), value("commandFailedEvent")))
-        apm.set_command_failed_unified(apm_opts);
+    for (const auto& event : events) {
+        const auto event_type = event.get_string().value;
+        if (event_type == mongocxx::stdx::string_view("commandStartedEvent")) {
+            apm.set_command_started_unified(apm_opts);
+        } else if (event_type == mongocxx::stdx::string_view("commandSucceededEvent")) {
+            apm.set_command_succeeded_unified(apm_opts);
+        } else if (event_type == mongocxx::stdx::string_view("commandFailedEvent")) {
+            apm.set_command_failed_unified(apm_opts);
+        } else {
+            UNSCOPED_INFO("ignoring unsupported command monitoring event " << event_type);
+        }
+    }
 }
 
 void add_ignore_command_monitoring_events(document::view object) {
