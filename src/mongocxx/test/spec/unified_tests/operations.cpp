@@ -718,9 +718,12 @@ document::value fail_point(entity::map& map, spec::apm_checker& apm, document::v
     auto client_name = string::to_string(args["client"].get_string().value);
     auto& client = map.get_client(client_name);
 
+    // The test runner MUST also ensure that the `configureFailPoint` command is excluded from the
+    // list of observed command monitoring events for this client (if applicable).
+    apm.set_ignore_command_monitoring_event("configureFailPoint");
+
     client["admin"].run_command(args["failPoint"].get_document().value);
 
-    apm.set_ignore_command_monitoring_event("configureFailPoint");
     return make_document(kvp("uri", client.uri().to_string()),
                          kvp("failPoint", args["failPoint"]["configureFailPoint"].get_string()));
 }
