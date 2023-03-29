@@ -1362,11 +1362,16 @@ static void setup_pets(mongocxx::client& client) {
     using bsoncxx::builder::basic::kvp;
     using bsoncxx::builder::basic::make_document;
 
+    write_concern wc_majority{};
+    wc_majority.majority(std::chrono::milliseconds(10000));
+    mongocxx::options::insert ins_opts;
+    ins_opts.write_concern(wc_majority);
+
     auto db = client["pets"];
     db.drop();
-    db["cats"].insert_one(make_document(kvp("adoptable", true)));
-    db["dogs"].insert_one(make_document(kvp("adoptable", true)));
-    db["dogs"].insert_one(make_document(kvp("adoptable", false)));
+    db["cats"].insert_one(make_document(kvp("adoptable", true)), ins_opts);
+    db["dogs"].insert_one(make_document(kvp("adoptable", true)), ins_opts);
+    db["dogs"].insert_one(make_document(kvp("adoptable", false)), ins_opts);
     wait_for_snapshot_ready(client, {db["cats"], db["dogs"]});
 }
 
@@ -1396,7 +1401,17 @@ static void snapshot_example1(mongocxx::client& client) {
 
         for (auto doc : cursor) {
             std::cerr << "CAT DOC: " << bsoncxx::to_json(doc) << std::endl;
-            adoptable_pets_count += doc.find("adoptableCatsCount")->get_int32();
+            auto found = doc.find("adoptableCatsCount");
+            switch (found->type()) {
+                case bsoncxx::type::k_int32:
+                    adoptable_pets_count += found->get_int32();
+                    break;
+                case bsoncxx::type::k_int64:
+                    adoptable_pets_count += found->get_int64();
+                    break;
+                default:
+                    throw std::logic_error("expecting either an int32 or int64");
+            }
         }
     }
 
@@ -1408,7 +1423,17 @@ static void snapshot_example1(mongocxx::client& client) {
 
         for (auto doc : cursor) {
             std::cerr << "DOG DOC: " << bsoncxx::to_json(doc) << std::endl;
-            adoptable_pets_count += doc.find("adoptableDogsCount")->get_int32();
+            auto found = doc.find("adoptableDogsCount");
+            switch (found->type()) {
+                case bsoncxx::type::k_int32:
+                    adoptable_pets_count += found->get_int32();
+                    break;
+                case bsoncxx::type::k_int64:
+                    adoptable_pets_count += found->get_int64();
+                    break;
+                default:
+                    throw std::logic_error("expecting either an int32 or int64");
+            }
         }
     }
 
