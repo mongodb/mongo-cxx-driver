@@ -1551,22 +1551,11 @@ document::value rewrap_many_datakey(entity::map& map,
     auto maybe_bulk_write = result.result();
     if (maybe_bulk_write) {
         auto bulk_write_result = maybe_bulk_write.value();
-        bsoncxx::builder::basic::document basic_builder{};
-        auto matched = bulk_write_result.matched_count();
-        auto modified = bulk_write_result.modified_count();
-
-        basic_builder.append(kvp("deletedCount", bulk_write_result.deleted_count()));
-        basic_builder.append(kvp("insertedCount", bulk_write_result.inserted_count()));
-        basic_builder.append(kvp("upsertedCount", bulk_write_result.upserted_count()));
-        basic_builder.append(kvp("upsertedIds", make_document()));
-        if (matched) {
-            basic_builder.append(kvp("matchedCount", matched));
-        }
-        if (modified) {
-            basic_builder.append(kvp("modifiedCount", modified));
-        }
         auto doc = make_document(
-            kvp("result", make_document(kvp("bulkWriteResult", basic_builder.extract()))));
+            kvp("result",
+                make_document(
+                    kvp("bulkWriteResult", bulk_write_result_to_document(bulk_write_result)))));
+        return doc;
         return doc;
     } else {
         auto doc =
