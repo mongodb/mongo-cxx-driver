@@ -170,6 +170,32 @@ document::value list_collections(entity::map& map,
     return result.extract();
 }
 
+document::value list_collection_names(entity::map& map,
+                                      client_session* session,
+                                      const std::string& object,
+                                      document::view op) {
+    const auto arguments = op["arguments"];
+    const auto empty_doc = make_document();
+
+    document::view filter;
+    if (const auto f = arguments["filter"]) {
+        filter = f.get_document().value;
+    } else {
+        filter = empty_doc;
+    }
+
+    auto cursor = session ? map.get_database(object).list_collection_names(*session, filter)
+                          : map.get_database(object).list_collection_names(filter);
+
+    builder::basic::document result;
+    result.append(builder::basic::kvp("result", [&cursor](builder::basic::sub_array array) {
+        for (auto&& document : cursor) {
+            array.append(document);
+        }
+    }));
+    return result.extract();
+}
+
 document::value list_databases(entity::map& map,
                                client_session* session,
                                const std::string& object) {
@@ -1645,6 +1671,9 @@ document::value operations::run(entity::map& entity_map,
             entity_map.get_collection(object), get_session(op_view, entity_map), op_view);
     if (name == "listCollections") {
         return list_collections(entity_map, get_session(op_view, entity_map), object, op_view);
+    }
+    if (name == "listCollectionNames") {
+        return list_collection_names(entity_map, get_session(op_view, entity_map), object, op_view);
     }
     if (name == "listDatabases") {
         return list_databases(entity_map, get_session(op_view, entity_map), object);
