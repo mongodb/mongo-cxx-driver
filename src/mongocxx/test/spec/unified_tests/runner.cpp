@@ -838,12 +838,40 @@ document::value bulk_write_result(const mongocxx::bulk_write_exception& e) {
     return result.extract();
 }
 
-void run_tests(document::view test) {
+// Match test cases that should be skipped by both test and case descriptions.
+const std::map<std::pair<mongocxx::stdx::string_view, mongocxx::stdx::string_view>,
+               mongocxx::stdx::string_view>
+    should_skip_test_cases = {
+        {{"retryable reads handshake failures",
+          "collection.findOne succeeds after retryable handshake network error"},
+         "collection.findOne optional helper is not supported"},
+        {{"retryable reads handshake failures",
+          "collection.findOne succeeds after retryable handshake server error "
+          "(ShutdownInProgress)"},
+         "collection.findOne optional helper is not supported"},
+        {{"retryable reads handshake failures",
+          "collection.listIndexNames succeeds after retryable handshake network error"},
+         "collection.listIndexNames optional helper is not supported"},
+        {{"retryable reads handshake failures",
+          "collection.listIndexNames succeeds after retryable handshake server error "
+          "(ShutdownInProgress)"},
+         "collection.listIndexNames optional helper is not supported"},
+};
+
+void run_tests(mongocxx::stdx::string_view test_description, document::view test) {
     REQUIRE(test["tests"]);
 
     for (auto ele : test["tests"].get_array().value) {
         auto description = string::to_string(ele["description"].get_string().value);
         SECTION(description) {
+            {
+                const auto iter = should_skip_test_cases.find({test_description, description});
+                if (iter != should_skip_test_cases.end()) {
+                    WARN("test skipped: " << iter->second);
+                    continue;
+                }
+            }
+
             if (!has_run_on_requirements(ele.get_document())) {
                 std::stringstream warning;
                 warning << "test skipped: "
@@ -959,12 +987,11 @@ void run_tests_in_file(const std::string& test_path) {
         return;
     }
 
-    const std::string description =
-        string::to_string(test_spec_view["description"].get_string().value);
+    const auto description = test_spec_view["description"].get_string().value;
     CAPTURE(description);
     create_entities(test_spec_view);
     load_initial_data(test_spec_view);
-    run_tests(test_spec_view);
+    run_tests(description, test_spec_view);
 }
 
 // Check the environment for the specified variable; if present, extract it
