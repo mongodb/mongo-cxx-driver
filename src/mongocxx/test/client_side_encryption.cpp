@@ -2401,7 +2401,7 @@ TEST_CASE("Unique Index on keyAltNames", "[client_side_encryption]") {
     }
 
     if (!test_util::newer_than(uri{}, "4.2")) {
-        WARN ("Skipping - requires MongoDB server 4.2+");
+        WARN("Skipping - requires MongoDB server 4.2+");
         return;
     }
 
