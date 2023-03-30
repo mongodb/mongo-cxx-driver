@@ -73,12 +73,12 @@ void* data_key::convert() const {
     return opts_t;
 }
 
-data_key& data_key::key_material(key_material_type key_material) {
+data_key& data_key::key_material(data_key::key_material_type key_material) {
     _key_material = std::move(key_material);
     return *this;
 }
 
-const stdx::optional<key_material_type>& data_key::key_material() {
+const stdx::optional<data_key::key_material_type>& data_key::key_material() {
     return _key_material;
 }
 

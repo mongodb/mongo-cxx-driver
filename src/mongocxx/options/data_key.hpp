@@ -30,8 +30,6 @@ class client_encryption;
 
 namespace options {
 
-using key_material_type = std::vector<uint8_t>;
-
 ///
 /// Class representing options for data key generation for encryption.
 ///
@@ -141,6 +139,7 @@ class MONGOCXX_API data_key {
     ///
     /// @see https://www.mongodb.com/docs/v6.0/reference/method/KeyVault.createKey/
     ///
+    using key_material_type = std::vector<uint8_t>;
     data_key& key_material(key_material_type key_material);
 
     ///
