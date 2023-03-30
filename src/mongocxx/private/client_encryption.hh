@@ -142,6 +142,45 @@ class client_encryption::impl {
         return decrypted;
     }
 
+    stdx::optional<collection> create_encrypted_collection(
+        const database& dbcxx,
+        mongoc_database_t* const db,
+        const std::string& coll_name,
+        const bsoncxx::document::view opts,
+        bsoncxx::document::value& out_options,
+        const std::string& kms_provider,
+        const stdx::optional<bsoncxx::document::view>& masterkey,
+        std::error_code& ec) noexcept {
+        ec = {};
+        bson_error_t error = {};
+        bson_t out_opts = BSON_INITIALIZER;
+
+        bson_t* opt_mkey_ptr = nullptr;
+        bson_t opt_mkey = BSON_INITIALIZER;
+        if (masterkey) {
+            bson_init_static(&opt_mkey, masterkey->data(), masterkey->length());
+            opt_mkey_ptr = &opt_mkey;
+        }
+
+        bson_t coll_opts;
+        bson_init_static(&coll_opts, opts.data(), opts.length());
+
+        auto coll_ptr =
+            libmongoc::client_encryption_create_encrypted_collection(_client_encryption_t,
+                                                                     db,
+                                                                     coll_name.data(),
+                                                                     &coll_opts,
+                                                                     &out_opts,
+                                                                     kms_provider.data(),
+                                                                     opt_mkey_ptr,
+                                                                     &error);
+        if (not coll_ptr) {
+            ec = make_error_code(error);
+            return stdx::nullopt;
+        }
+        return collection(dbcxx, coll_ptr);
+    }
+
     options::client_encryption _opts;
     mongoc_client_encryption_t* _client_encryption_t;
 };

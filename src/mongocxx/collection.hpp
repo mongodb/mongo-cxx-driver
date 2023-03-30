@@ -65,6 +65,7 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 class client;
 class database;
+class client_encryption;
 
 ///
 /// Class representing server side document groupings within a MongoDB database.
@@ -1848,8 +1849,9 @@ class MONGOCXX_API collection {
     ///
 
    private:
-    friend class bulk_write;
-    friend class database;
+    friend mongocxx::bulk_write;
+    friend mongocxx::database;
+    friend mongocxx::client_encryption;
 
     MONGOCXX_PRIVATE collection(const database& database,
                                 bsoncxx::string::view_or_value collection_name);

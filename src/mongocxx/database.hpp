@@ -33,6 +33,7 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 class client;
+class client_encryption;
 
 ///
 /// Class representing a MongoDB database.
@@ -623,8 +624,9 @@ class MONGOCXX_API database {
     ///
 
    private:
-    friend class client;
-    friend class collection;
+    friend mongocxx::client;
+    friend mongocxx::collection;
+    friend mongocxx::client_encryption;
 
     MONGOCXX_PRIVATE database(const class client& client, bsoncxx::string::view_or_value name);
 

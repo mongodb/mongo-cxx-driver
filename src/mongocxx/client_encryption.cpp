@@ -15,6 +15,7 @@
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <mongocxx/client_encryption.hpp>
 #include <mongocxx/private/client_encryption.hh>
+#include <mongocxx/private/database.hh>
 
 #include <mongocxx/config/private/prelude.hh>
 
@@ -43,6 +44,55 @@ bsoncxx::types::bson_value::value client_encryption::encrypt(bsoncxx::types::bso
 bsoncxx::types::bson_value::value client_encryption::decrypt(
     bsoncxx::types::bson_value::view value) {
     return _impl->decrypt(value);
+}
+
+collection client_encryption::create_encrypted_collection(const database& db,
+                                                          const std::string& coll_name,
+                                                          const bsoncxx::document::view& options,
+                                                          bsoncxx::document::value& out_options,
+                                                          const std::string& kms_provider) {
+    return this->create_encrypted_collection(
+        db, coll_name, options, out_options, kms_provider, stdx::nullopt);
+}
+
+collection client_encryption::create_encrypted_collection(
+    const database& db,
+    const std::string& coll_name,
+    const bsoncxx::document::view& options,
+    bsoncxx::document::value& out_options,
+    const std::string& kms_provider,
+    const stdx::optional<bsoncxx::document::view>& masterkey) {
+    std::error_code ec;
+    auto coll = this->create_encrypted_collection(
+        db, coll_name, options, out_options, kms_provider, masterkey, ec);
+    if (not coll) {
+        throw operation_exception(ec, ec.message());
+    }
+    return *coll;
+}
+
+stdx::optional<collection> client_encryption::create_encrypted_collection(
+    const database& db,
+    const std::string& coll_name,
+    const bsoncxx::document::view& options,
+    bsoncxx::document::value& out_options,
+    const std::string& kms_provider,
+    std::error_code& ec) noexcept {
+    return this->create_encrypted_collection(
+        db, coll_name, options, out_options, kms_provider, stdx::nullopt, ec);
+}
+
+stdx::optional<collection> client_encryption::create_encrypted_collection(
+    const database& db,
+    const std::string& coll_name,
+    const bsoncxx::document::view& coll_options,
+    bsoncxx::document::value& out_options,
+    const std::string& kms_provider,
+    const stdx::optional<bsoncxx::document::view>& masterkey,
+    std::error_code& ec) noexcept {
+    auto& db_impl = db._get_impl();
+    return _impl->create_encrypted_collection(
+        db, db_impl.database_t, coll_name, coll_options, out_options, kms_provider, masterkey, ec);
 }
 
 MONGOCXX_INLINE_NAMESPACE_END
