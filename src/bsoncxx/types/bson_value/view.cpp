@@ -122,6 +122,12 @@ view::view(const std::uint8_t* raw,
            std::uint32_t length,
            std::uint32_t offset,
            std::uint32_t keylen) {
+    uint8_t* non_const = (uint8_t*)raw;
+    size_t len = length;
+    bson_t* as_bson = bson_new_from_buffer(&non_const, &len, NULL, NULL);
+    char* str = bson_as_json(as_bson, NULL);
+    fprintf(stderr, "RAW BSON: '%s'\n", str);
+    free(str);
     BSONCXX_CITER;
 
     auto value = bson_iter_value(&iter);
