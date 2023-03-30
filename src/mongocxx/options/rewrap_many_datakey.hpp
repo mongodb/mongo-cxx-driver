@@ -46,7 +46,7 @@ class MONGOCXX_API rewrap_many_datakey {
     /// @see
     /// https://www.mongodb.com/docs/manual/core/csfle/reference/kms-providers/#std-label-csfle-reference-kms-providers
     ///
-    rewrap_many_datakey& provider(std::string provider);
+    rewrap_many_datakey& provider(bsoncxx::string::view_or_value provider);
 
     ///
     /// Get the KMS provider
