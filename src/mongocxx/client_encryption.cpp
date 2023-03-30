@@ -64,7 +64,7 @@ mongocxx::cursor client_encryption::get_keys() {
 }
 
 stdx::optional<bsoncxx::document::value> client_encryption::add_key_alt_name(
-    bsoncxx::types::bson_value::view_or_value id, const std::string& key_alt_name) {
+    bsoncxx::types::bson_value::view_or_value id, bsoncxx::string::view_or_value key_alt_name) {
     return _impl->add_key_alt_name(id, key_alt_name);
 }
 

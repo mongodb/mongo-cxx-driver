@@ -267,15 +267,19 @@ class client_encryption::impl {
     }
 
     stdx::optional<bsoncxx::document::value> add_key_alt_name(
-        bsoncxx::types::bson_value::view_or_value id, const std::string& key_alt_name) {
+        bsoncxx::types::bson_value::view_or_value id, bsoncxx::string::view_or_value key_alt_name) {
         bson_error_t error;
         libbson::scoped_bson_t key_doc;
         bson_value_t key_id;
 
         convert_to_libbson(&key_id, id);
 
-        auto r = libmongoc::client_encryption_add_key_alt_name(
-            _client_encryption_t, &key_id, key_alt_name.c_str(), key_doc.bson_for_init(), &error);
+        auto key_alt_name_terminated = key_alt_name.terminated();
+        auto r = libmongoc::client_encryption_add_key_alt_name(_client_encryption_t,
+                                                               &key_id,
+                                                               key_alt_name_terminated.data(),
+                                                               key_doc.bson_for_init(),
+                                                               &error);
 
         auto cleanup = [&]() { bson_value_destroy(&key_id); };
 
