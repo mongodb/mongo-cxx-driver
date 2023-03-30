@@ -85,10 +85,10 @@ const auto kLocalMasterKey =
 bsoncxx::document::value get_kms_values() {
     char key_storage[96];
     memcpy(&(key_storage[0]), kLocalMasterKey, 96);
-    bsoncxx::types::b_binary local_master_key{
+    const bsoncxx::types::b_binary local_master_key{
         bsoncxx::binary_sub_type::k_binary, 96, (const uint8_t*)&key_storage};
 
-    auto kms_doc = make_document(
+    const auto kms_doc = make_document(
         kvp("aws",
             make_document(
                 kvp("accessKeyId", test_util::getenv_or_fail("MONGOCXX_TEST_AWS_ACCESS_KEY_ID")),
@@ -113,17 +113,17 @@ bsoncxx::document::value get_kms_values() {
 bsoncxx::document::value parse_kms_doc(bsoncxx::document::view_or_value test_kms_doc) {
     const auto kms_values = get_kms_values();
     auto doc = bsoncxx::builder::basic::document{};
-    auto test_kms_doc_view = test_kms_doc.view();
+    const auto test_kms_doc_view = test_kms_doc.view();
     for (const auto& it : test_kms_doc_view) {
-        auto provider = it.key();
+        const auto provider = it.key();
         if (!kms_values[provider]) {
             FAIL("FAIL: got unexpected KMS provider: " << provider);
         }
         auto variables_doc = bsoncxx::builder::basic::document{};
-        auto variables = test_kms_doc_view[provider].get_document().view();
+        const auto variables = test_kms_doc_view[provider].get_document().view();
         for (const auto& i : variables) {
-            auto variable = i.key();
-            auto actual_value = kms_values[provider][variable];
+            const auto variable = i.key();
+            const auto actual_value = kms_values[provider][variable];
             if (!kms_values[provider][variable]) {
                 FAIL("FAIL: expecting to find variable: '"
                      << variable << "' in KMS doc for provider: '" << provider << "'");
@@ -218,44 +218,44 @@ bool equals_server_topology(const document::element& topologies) {
 
     // The server's topology will not change during the test. No need to make a round-trip for every
     // test file.
-    static std::string actual = test_util::get_topology();
-    auto equals = [&](const bsoncxx::array::element& expected) {
+    const static std::string actual = test_util::get_topology();
+    const auto equals = [&](const bsoncxx::array::element& expected) {
         return expected == value(actual) ||
                (expected == value("sharded") && actual == "sharded-replicaset");
     };
 
-    auto t = topologies.get_array().value;
+    const auto t = topologies.get_array().value;
     return std::end(t) != std::find_if(std::begin(t), std::end(t), equals);
 }
 
 bool compatible_with_server(const bsoncxx::array::element& requirement) {
     // The server's version will not change during the test. No need to make a round-trip for every
     // test file.
-    static std::vector<int> expected = get_version(test_util::get_server_version());
+    const static std::vector<int> expected = get_version(test_util::get_server_version());
 
-    if (auto min_server_version = requirement["minServerVersion"]) {
-        auto actual = get_version(min_server_version);
+    if (const auto min_server_version = requirement["minServerVersion"]) {
+        const auto actual = get_version(min_server_version);
         if (!is_compatible_version(actual, expected))
             return false;
     }
 
-    if (auto max_server_version = requirement["maxServerVersion"]) {
-        auto actual = get_version(max_server_version);
+    if (const auto max_server_version = requirement["maxServerVersion"]) {
+        const auto actual = get_version(max_server_version);
         if (!is_compatible_version(expected, actual))
             return false;
     }
 
-    if (auto topologies = requirement["topologies"])
+    if (const auto topologies = requirement["topologies"])
         return equals_server_topology(topologies);
 
-    if (auto server_params = requirement["serverParameters"]) {
+    if (const auto server_params = requirement["serverParameters"]) {
         document::value actual = make_document();
         try {
             actual = test_util::get_server_params();
         } catch (const operation_exception& e) {
             // Mongohouse does not support getParameter, so if we get an error from
             // getParameter, exit this logic early and skip the test.
-            std::string message = e.what();
+            const std::string message = e.what();
             if (message.find("command getParameter is unsupported") != std::string::npos) {
                 return false;
             }
@@ -263,9 +263,9 @@ bool compatible_with_server(const bsoncxx::array::element& requirement) {
             throw e;
         }
 
-        for (auto kvp : server_params.get_document().view()) {
-            auto param = kvp.key();
-            auto value = kvp.get_value();
+        for (const auto kvp : server_params.get_document().view()) {
+            const auto param = kvp.key();
+            const auto value = kvp.get_value();
             // If actual parameter is unset or unequal to requirement, skip test.
             if (!actual[param] || actual[param].get_bool() != value.get_bool()) {
                 return false;
@@ -273,14 +273,14 @@ bool compatible_with_server(const bsoncxx::array::element& requirement) {
         }
     }
 
-    if (auto csfle = requirement["csfle"]) {
+    if (const auto csfle = requirement["csfle"]) {
         // csfle: Optional boolean. If true, the tests MUST only run if the
         // driver and server support Client-Side Field Level Encryption. A
         // server supports CSFLE if it is version 4.2.0 or higher. If false,
         // tests MUST only run if CSFLE is not enabled. If this field is
         // omitted, there is no CSFLE requirement.
-        std::vector<int> requires_at_least{4, 2, 0};
-        bool is_csfle = csfle.get_bool().value;
+        const std::vector<int> requires_at_least{4, 2, 0};
+        const bool is_csfle = csfle.get_bool().value;
         if (is_csfle) {
             if (!is_compatible_version(requires_at_least, expected)) {
                 return false;
@@ -294,7 +294,7 @@ bool has_run_on_requirements(const bsoncxx::document::view test) {
     if (!test["runOnRequirements"])
         return true;
 
-    auto requirements = test["runOnRequirements"].get_array().value;
+    const auto requirements = test["runOnRequirements"].get_array().value;
     return std::any_of(std::begin(requirements), std::end(requirements), compatible_with_server);
 }
 
@@ -305,7 +305,7 @@ std::string json_kvp_to_uri_kvp(std::string s) {
     //     3. "key=value"               -- final step (without quotes)
 
     using namespace std;
-    auto should_remove = [&](const char c) {
+    const auto should_remove = [&](const char c) {
         const auto remove = {' ', '"', '{', '}'};
         return end(remove) != find(begin(remove), end(remove), c);
     };
@@ -327,7 +327,7 @@ std::string json_to_uri_opts(const std::string& input) {
                    std::back_inserter(output),
                    json_kvp_to_uri_kvp);
 
-    auto join = [](const std::string& s1, const std::string& s2) { return s1 + "&" + s2; };
+    const auto join = [](const std::string& s1, const std::string& s2) { return s1 + "&" + s2; };
     return std::accumulate(std::begin(output) + 1, std::end(output), output[0], join);
 }
 
@@ -343,8 +343,8 @@ std::string uri_options_to_string(document::view object) {
     //  'readPreferenceTags' keys in the object.
     REQUIRE_FALSE(object["readPreferenceTags"]);
 
-    auto json = to_json(object["uriOptions"].get_document());
-    auto opts = json_to_uri_opts(json);
+    const auto json = to_json(object["uriOptions"].get_document());
+    const auto opts = json_to_uri_opts(json);
 
     CAPTURE(json, opts);
     return opts;
@@ -368,11 +368,11 @@ std::string get_hostnames(document::view object) {
     // slash, then a comma-separated list of the hostnames of each member of the replica set, as in
     // the following example:
     //      { ... , "host" : "shard0001/localhost:27018,localhost:27019,localhost:27020", ... }
-    auto host = test_util::get_hosts();
-    auto after_slash = ++std::find(std::begin(host), std::end(host), '/');
+    const auto host = test_util::get_hosts();
+    const auto after_slash = ++std::find(std::begin(host), std::end(host), '/');
     REQUIRE(after_slash < std::end(host));
 
-    auto hostnames = std::string{after_slash, std::end(host)};
+    const auto hostnames = std::string{after_slash, std::end(host)};
     CAPTURE(host, hostnames);
 
     // require multiple mongos hosts
@@ -385,13 +385,13 @@ void add_observe_events(options::apm& apm_opts, document::view object) {
     if (!object["observeEvents"])
         return;
 
-    auto name = string::to_string(object["id"].get_string().value);
+    const auto name = string::to_string(object["id"].get_string().value);
     auto& apm = get_apm_map()[name];
 
-    auto observe_sensitive = object["observeSensitiveCommands"];
+    const auto observe_sensitive = object["observeSensitiveCommands"];
     apm.observe_sensitive_events = observe_sensitive && observe_sensitive.get_bool();
 
-    auto events = object["observeEvents"].get_array().value;
+    const auto events = object["observeEvents"].get_array().value;
     if (std::end(events) !=
         std::find(std::begin(events), std::end(events), value("commandStartedEvent")))
         apm.set_command_started_unified(apm_opts);
@@ -410,7 +410,7 @@ void add_ignore_command_monitoring_events(document::view object) {
         return;
     for (auto cme : object["ignoreCommandMonitoringEvents"].get_array().value) {
         CAPTURE(cme.get_string());
-        auto name = string::to_string(object["id"].get_string().value);
+        const auto name = string::to_string(object["id"].get_string().value);
         auto& apm = get_apm_map()[name];
         apm.set_ignore_command_monitoring_event(string::to_string(cme.get_string().value));
     }
@@ -423,7 +423,7 @@ options::server_api create_server_api(document::view object) {
     }
 
     REQUIRE(sav.type() == type::k_string);
-    auto version = options::server_api::version_from_string(sav.get_string().value);
+    const auto version = options::server_api::version_from_string(sav.get_string().value);
     auto server_api_opts = options::server_api(version);
 
     if (auto de = object["serverApi"]["deprecationErrors"]) {
@@ -462,7 +462,7 @@ write_concern get_write_concern(const document::element& opts) {
     auto wc = write_concern{};
     if (auto w = opts["writeConcern"]["w"]) {
         if (w.type() == type::k_utf8) {
-            auto strval = w.get_string().value;
+            const auto strval = w.get_string().value;
             if (0 == strval.compare("majority")) {
                 wc.acknowledge_level(mongocxx::write_concern::level::k_majority);
             } else {
@@ -484,7 +484,7 @@ write_concern get_write_concern(const document::element& opts) {
 read_concern get_read_concern(const document::element& opts) {
     auto rc = read_concern{};
 
-    if (auto level = opts["readConcern"]["level"]) {
+    if (const auto level = opts["readConcern"]["level"]) {
         rc.acknowledge_string(level.get_string().value);
     }
 
@@ -544,20 +544,20 @@ options::client_session get_session_options(document::view object) {
 }
 
 options::client_encryption get_client_encryption_options(document::view object) {
-    auto key_vault_namespace =
+    const auto key_vault_namespace =
         std::string(object["clientEncryptionOpts"]["keyVaultNamespace"].get_string().value);
-    auto dot = key_vault_namespace.find(".");
-    std::string db = key_vault_namespace.substr(0, dot);
-    std::string coll = key_vault_namespace.substr(dot + 1);
+    const auto dot = key_vault_namespace.find(".");
+    const std::string db = key_vault_namespace.substr(0, dot);
+    const std::string coll = key_vault_namespace.substr(dot + 1);
 
-    auto id =
+    const auto id =
         string::to_string(object["clientEncryptionOpts"]["keyVaultClient"].get_string().value);
 
     auto& map = get_entity_map();
     auto& client = map.get_client(id);
     CAPTURE(id);
 
-    auto providers = object["clientEncryptionOpts"]["kmsProviders"].get_document().value;
+    const auto providers = object["clientEncryptionOpts"]["kmsProviders"].get_document().value;
 
     options::client_encryption ce_opts;
     ce_opts.key_vault_client(&client);
@@ -578,23 +578,23 @@ options::client_encryption get_client_encryption_options(document::view object) 
 }
 
 gridfs::bucket create_bucket(document::view object) {
-    auto id = string::to_string(object["database"].get_string().value);
+    const auto id = string::to_string(object["database"].get_string().value);
     auto& map = get_entity_map();
     auto& db = map.get_database(id);
 
-    auto opts = get_bucket_options(object);
-    auto bucket = db.gridfs_bucket(opts);
+    const auto opts = get_bucket_options(object);
+    const auto bucket = db.gridfs_bucket(opts);
 
     CAPTURE(id);
     return bucket;
 }
 
 client_session create_session(document::view object) {
-    auto id = string::to_string(object["client"].get_string().value);
+    const auto id = string::to_string(object["client"].get_string().value);
     auto& map = get_entity_map();
     auto& client = map.get_client(id);
 
-    auto opts = get_session_options(object);
+    const auto opts = get_session_options(object);
     auto session = client.start_session(opts);
 
     CAPTURE(id);
@@ -602,18 +602,18 @@ client_session create_session(document::view object) {
 }
 
 client_encryption create_client_encryption(document::view object) {
-    auto opts = get_client_encryption_options(object);
+    const auto opts = get_client_encryption_options(object);
     client_encryption ce(std::move(opts));
 
     return ce;
 }
 
 collection create_collection(document::view object) {
-    auto id = string::to_string(object["database"].get_string().value);
+    const auto id = string::to_string(object["database"].get_string().value);
     auto& map = get_entity_map();
     auto& db = map.get_database(id);
 
-    auto name = string::to_string(object["collectionName"].get_string().value);
+    const auto name = string::to_string(object["collectionName"].get_string().value);
     auto coll = collection{db.collection(name)};
 
     set_common_options(coll, object["collectionOptions"]);
@@ -623,11 +623,11 @@ collection create_collection(document::view object) {
 }
 
 database create_database(document::view object) {
-    auto id = string::to_string(object["client"].get_string().value);
+    const auto id = string::to_string(object["client"].get_string().value);
     auto& map = get_entity_map();
     auto& client = map.get_client(id);
 
-    auto name = string::to_string(object["databaseName"].get_string().value);
+    const auto name = string::to_string(object["databaseName"].get_string().value);
     auto db = database{client.database(name)};
 
     set_common_options(db, object["databaseOptions"]);
@@ -637,12 +637,12 @@ database create_database(document::view object) {
 }
 
 client create_client(document::view object) {
-    auto conn = "mongodb://" + get_hostnames(object) + "/?" + uri_options_to_string(object);
+    const auto conn = "mongodb://" + get_hostnames(object) + "/?" + uri_options_to_string(object);
     auto apm_opts = options::apm{};
     auto client_opts = options::client{};
     // Use specified serverApi or default if none is provided.
     if (object["serverApi"]) {
-        auto server_api_opts = create_server_api(object);
+        const auto server_api_opts = create_server_api(object);
         client_opts.server_api_opts(server_api_opts);
     } else {
         client_opts = test_util::add_test_server_api();
@@ -660,9 +660,9 @@ bool add_to_map(const array::element& obj) {
     // maps to a nested object, which specifies a unique name for the entity ('id' key) and any
     // other parameters necessary for its construction.
     auto doc = obj.get_document().view().begin();
-    auto type = string::to_string(doc->key());
-    auto params = doc->get_document().view();
-    auto id = string::to_string(params["id"].get_string().value);
+    const auto type = string::to_string(doc->key());
+    const auto params = doc->get_document().view();
+    const auto id = string::to_string(params["id"].get_string().value);
     auto& map = get_entity_map();
 
     if (type == "client") {
@@ -690,20 +690,21 @@ void create_entities(const document::view test) {
 
     get_entity_map().clear();
     get_apm_map().clear();
-    auto entities = test["createEntities"].get_array().value;
+    const auto entities = test["createEntities"].get_array().value;
     REQUIRE(std::all_of(std::begin(entities), std::end(entities), add_to_map));
 }
 
 document::value parse_test_file(const std::string& test_path) {
-    bsoncxx::stdx::optional<document::value> test_spec = test_util::parse_test_file(test_path);
+    const bsoncxx::stdx::optional<document::value> test_spec =
+        test_util::parse_test_file(test_path);
     REQUIRE(test_spec);
     return test_spec.value();
 }
 
 bool is_compatible_schema_version(document::view test_spec) {
     REQUIRE(test_spec["schemaVersion"]);
-    auto test_schema_version = get_version(test_spec["schemaVersion"]);
-    auto compat = [&](std::array<int, 3> v) {
+    const auto test_schema_version = get_version(test_spec["schemaVersion"]);
+    const auto compat = [&](std::array<int, 3> v) {
         // Test files are considered compatible with a test runner if their schemaVersion is less
         // than or equal to a supported version in the test runner, given the same major version
         // component.
@@ -728,14 +729,14 @@ std::vector<std::string> versions_to_string(schema_versions_t versions) {
 std::vector<document::view> array_elements_to_documents(array::view array) {
     // no implicit conversion from 'bsoncxx::array::view' to 'bsoncxx::document::view'
     auto docs = std::vector<document::view>{};
-    auto arr_to_doc = [](const array::element& doc) { return doc.get_document().value; };
+    const auto arr_to_doc = [](const array::element& doc) { return doc.get_document().value; };
 
     std::transform(std::begin(array), std::end(array), std::back_inserter(docs), arr_to_doc);
     return docs;
 }
 
 void add_data_to_collection(const array::element& data) {
-    auto db_name = data["databaseName"].get_string().value;
+    const auto db_name = data["databaseName"].get_string().value;
     auto& map = get_entity_map();
     auto& db = map.get_database_by_name(db_name);
     auto insert_opts = mongocxx::options::insert();
@@ -744,7 +745,7 @@ void add_data_to_collection(const array::element& data) {
     wc.acknowledge_level(write_concern::level::k_majority);
     wc.majority(std::chrono::milliseconds{0});
 
-    auto coll_name = data["collectionName"].get_string().value;
+    const auto coll_name = data["collectionName"].get_string().value;
 
     if (db.has_collection(coll_name))
         db[coll_name].drop();
@@ -752,7 +753,7 @@ void add_data_to_collection(const array::element& data) {
     auto coll = db.create_collection(coll_name, {}, wc);
     insert_opts.write_concern(wc);
 
-    auto to_insert = array_elements_to_documents(data["documents"].get_array().value);
+    const auto to_insert = array_elements_to_documents(data["documents"].get_array().value);
     REQUIRE((to_insert.empty() ||
              coll.insert_many(to_insert, insert_opts)->result().inserted_count() != 0));
 }
@@ -761,7 +762,7 @@ void load_initial_data(document::view test) {
     if (!test["initialData"])
         return;
 
-    auto data = test["initialData"].get_array().value;
+    const auto data = test["initialData"].get_array().value;
     for (auto&& d : data)
         add_data_to_collection(d);
 }
@@ -773,7 +774,7 @@ void assert_result(const array::element& ops,
         return;
     }
 
-    auto expected_result = ops["expectResult"];
+    const auto expected_result = ops["expectResult"];
     assert::matches(actual_result["result"].get_value(),
                     expected_result.get_value(),
                     get_entity_map(),
@@ -781,7 +782,7 @@ void assert_result(const array::element& ops,
                     is_array_of_root_docs);
 
     if (ops["saveResultAsEntity"]) {
-        auto key = string::to_string(ops["saveResultAsEntity"].get_string().value);
+        const auto key = string::to_string(ops["saveResultAsEntity"].get_string().value);
         get_entity_map().insert(key, actual_result);
     }
 }
@@ -789,23 +790,23 @@ void assert_result(const array::element& ops,
 void assert_error(const mongocxx::operation_exception& exception,
                   const array::element& expected,
                   document::view actual) {
-    std::string server_error_msg =
+    const std::string server_error_msg =
         exception.raw_server_error() ? to_json(*exception.raw_server_error()) : "no server error";
 
     CAPTURE(exception.what(), server_error_msg);
 
-    auto expect_error = expected["expectError"];
+    const auto expect_error = expected["expectError"];
     REQUIRE(expect_error);
 
     if (expect_error["isError"])
         return;
 
-    auto actual_result = actual["result"];
-    if (auto expected_result = expect_error["expectResult"]) {
+    const auto actual_result = actual["result"];
+    if (const auto expected_result = expect_error["expectResult"]) {
         assert::matches(actual_result.get_value(), expected_result.get_value(), get_entity_map());
     }
 
-    if (auto is_client_error = expect_error["isClientError"]) {
+    if (const auto is_client_error = expect_error["isClientError"]) {
         if (std::strstr(exception.what(), "Snapshot reads require MongoDB 5.0 or later") !=
             nullptr) {
             // Original error: { MONGOC_ERROR_CLIENT, MONGOC_ERROR_CLIENT_SESSION_FAILURE }
@@ -849,24 +850,24 @@ void assert_error(const mongocxx::operation_exception& exception,
         }
     }
 
-    if (auto contains = expect_error["errorLabelsContain"]) {
-        auto labels = contains.get_array().value;
-        auto has_error_label = [&](const array::element& ele) {
+    if (const auto contains = expect_error["errorLabelsContain"]) {
+        const auto labels = contains.get_array().value;
+        const auto has_error_label = [&](const array::element& ele) {
             return exception.has_error_label(ele.get_string().value);
         };
         REQUIRE(std::all_of(std::begin(labels), std::end(labels), has_error_label));
     }
 
-    if (auto omit = expect_error["errorLabelsOmit"]) {
-        auto labels = omit.get_array().value;
-        auto has_error_label = [&](const array::element& ele) {
+    if (const auto omit = expect_error["errorLabelsOmit"]) {
+        const auto labels = omit.get_array().value;
+        const auto has_error_label = [&](const array::element& ele) {
             return exception.has_error_label(ele.get_string().value);
         };
         REQUIRE(std::none_of(std::begin(labels), std::end(labels), has_error_label));
     }
 
-    if (auto expected_code = expect_error["errorCode"]) {
-        auto actual_code = exception.code().value();
+    if (const auto expected_code = expect_error["errorCode"]) {
+        const auto actual_code = exception.code().value();
         REQUIRE(actual_code == expected_code.get_int32());
     }
 
@@ -902,13 +903,13 @@ void assert_error(const mongocxx::operation_exception& exception,
 
 void assert_error(mongocxx::exception& e, const array::element& ops) {
     CAPTURE(e.what());
-    auto expect_error = ops["expectError"];
+    const auto expect_error = ops["expectError"];
     REQUIRE(expect_error);
 
     if (expect_error["isError"])
         return;
 
-    if (auto is_client_error = expect_error["isClientError"]) {
+    if (const auto is_client_error = expect_error["isClientError"]) {
         REQUIRE(is_client_error.get_bool());
     }
 
@@ -951,20 +952,20 @@ void assert_outcome(const array::element& test) {
     if (!test["outcome"])
         return;
 
-    for (auto outcome : test["outcome"].get_array().value) {
+    for (const auto outcome : test["outcome"].get_array().value) {
         CAPTURE(to_json(outcome.get_document()));
 
-        auto db_name = outcome["databaseName"].get_string().value;
-        auto coll_name = outcome["collectionName"].get_string().value;
-        auto docs = outcome["documents"].get_array().value;
+        const auto db_name = outcome["databaseName"].get_string().value;
+        const auto coll_name = outcome["collectionName"].get_string().value;
+        const auto docs = outcome["documents"].get_array().value;
 
-        auto db = get_entity_map().get_database_by_name(db_name);
+        const auto db = get_entity_map().get_database_by_name(db_name);
         auto coll = db.collection(coll_name);
 
         auto results = coll.find({}, options::find{}.sort(make_document(kvp("_id", 1))));
 
         auto actual = results.begin();
-        for (auto& expected : docs) {
+        for (const auto& expected : docs) {
             assert::matches(
                 types::bson_value::value(*actual), expected.get_value(), get_entity_map());
             ++actual;
@@ -989,9 +990,9 @@ struct disable_fail_point {
 };
 
 document::value bulk_write_result(const mongocxx::bulk_write_exception& e) {
-    auto reply = e.raw_server_error().value();
+    const auto reply = e.raw_server_error().value();
 
-    auto get_or_default = [&](bsoncxx::stdx::string_view key) {
+    const auto get_or_default = [&](bsoncxx::stdx::string_view key) {
         return reply[key] ? reply[key].get_int32().value : 0;
     };
 
@@ -1010,8 +1011,8 @@ document::value bulk_write_result(const mongocxx::bulk_write_exception& e) {
 void run_tests(document::view test) {
     REQUIRE(test["tests"]);
 
-    for (auto ele : test["tests"].get_array().value) {
-        auto description = string::to_string(ele["description"].get_string().value);
+    for (const auto ele : test["tests"].get_array().value) {
+        const auto description = string::to_string(ele["description"].get_string().value);
         SECTION(description) {
             if (!has_run_on_requirements(ele.get_document())) {
                 std::stringstream warning;
@@ -1035,7 +1036,7 @@ void run_tests(document::view test) {
 
             operations::state state;
 
-            for (auto ops : ele["operations"].get_array().value) {
+            for (const auto ops : ele["operations"].get_array().value) {
                 const auto ignore_result_and_error = [&]() -> bool {
                     const auto elem = ops["ignoreResultAndError"];
                     return elem && elem.get_bool().value;
@@ -1079,12 +1080,12 @@ void run_tests(document::view test) {
                     if (!ignore_result_and_error) {
                         assert_result(ops, result, is_array_of_root_docs);
                     }
-                } catch (mongocxx::bulk_write_exception& e) {
+                } catch (const mongocxx::bulk_write_exception& e) {
                     if (!ignore_result_and_error) {
                         auto result = bulk_write_result(e);
                         assert_error(e, ops, result);
                     }
-                } catch (mongocxx::operation_exception& e) {
+                } catch (const mongocxx::operation_exception& e) {
                     if (!ignore_result_and_error) {
                         assert_error(e, ops, make_document());
                     }
@@ -1103,8 +1104,8 @@ void run_tests(document::view test) {
 }
 
 void run_tests_in_file(const std::string& test_path) {
-    auto test_spec = parse_test_file(test_path);
-    auto test_spec_view = test_spec.view();
+    const auto test_spec = parse_test_file(test_path);
+    const auto test_spec_view = test_spec.view();
 
     if (!is_compatible_schema_version(test_spec_view)) {
         std::stringstream error;
@@ -1112,7 +1113,7 @@ void run_tests_in_file(const std::string& test_path) {
               << "Expected: " << test_spec_view["schemaVersion"].get_string().value << std::endl
               << "Supported versions:" << std::endl;
 
-        auto v = versions_to_string(schema_versions);
+        const auto v = versions_to_string(schema_versions);
         std::copy(std::begin(v), std::end(v), std::ostream_iterator<std::string>(error, "\n"));
 
         FAIL(error.str());
@@ -1149,7 +1150,7 @@ bool run_unified_format_tests_in_env_dir(
 
     const std::string base_path{p};
 
-    auto test_file_set_path = base_path + "/test_files.txt";
+    const auto test_file_set_path = base_path + "/test_files.txt";
     std::ifstream files{test_file_set_path};
 
     if (!files.good()) {
