@@ -2518,7 +2518,8 @@ TEST_CASE("Unique Index on keyAltNames", "[client_side_encryption]") {
         // document contains the keyAltName "abc" added in Step 2.
         {
             auto alt_key = client_encryption.add_key_alt_name(key_doc.view(), "abc");
-            REQUIRE(std::string(alt_key.value()["keyAltNames"][0].get_string().value) == "abc");
+            REQUIRE(std::string(alt_key.value().view()["keyAltNames"][0].get_string().value) ==
+                    "abc");
         }
 
         // 4. Use client_encryption to add a keyAltName "def" to the key created in Step 1 and
@@ -2542,7 +2543,8 @@ TEST_CASE("Unique Index on keyAltNames", "[client_side_encryption]") {
         // "def" added during Setup.
         {
             auto alt_key = client_encryption.add_key_alt_name(existing_key.view(), "def");
-            REQUIRE(std::string(alt_key.value()["keyAltNames"][0].get_string().value) == "def");
+            REQUIRE(std::string(alt_key.value().view()["keyAltNames"][0].get_string().value) ==
+                    "def");
         }
     }
 }
