@@ -1429,6 +1429,7 @@ static void snapshot_example1(mongocxx::client& client) {
             std::cerr << "TYPE: " << bsoncxx::to_string(found->type()) << std::endl;
             switch (found->type()) {
                 case bsoncxx::type::k_int32:
+                    std::cerr << "FETCHING AS int32" << std::endl;
                     adoptable_pets_count += found->get_int32();
                     break;
                 case bsoncxx::type::k_int64:
