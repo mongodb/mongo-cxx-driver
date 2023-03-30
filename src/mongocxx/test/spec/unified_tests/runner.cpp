@@ -111,7 +111,7 @@ bsoncxx::document::value get_kms_values() {
 }
 
 bsoncxx::document::value parse_kms_doc(bsoncxx::document::view_or_value test_kms_doc) {
-    auto kms_values = get_kms_values();
+    const auto kms_values = get_kms_values();
     auto doc = bsoncxx::builder::basic::document{};
     auto test_kms_doc_view = test_kms_doc.view();
     for (const auto& it : test_kms_doc_view) {
