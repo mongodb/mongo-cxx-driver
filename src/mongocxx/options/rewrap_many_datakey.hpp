@@ -61,7 +61,7 @@ class MONGOCXX_API rewrap_many_datakey {
     /// @see
     /// https://www.mongodb.com/docs/manual/core/csfle/reference/kms-providers/#std-label-csfle-reference-kms-providers
     ///
-    const stdx::optional<std::string>& provider() const;
+    bsoncxx::string::view_or_value provider() const;
 
     ///
     /// Set the masterKey option.
