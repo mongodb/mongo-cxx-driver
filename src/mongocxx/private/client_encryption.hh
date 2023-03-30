@@ -153,12 +153,12 @@ class client_encryption::impl {
             result_ptr(libmongoc::client_encryption_rewrap_many_datakey_result_new(),
                        libmongoc::client_encryption_rewrap_many_datakey_result_destroy);
 
-        auto provider = opts.provider();
-        auto provider_terminated = provider.terminated();
+        const auto provider = opts.provider();
+        const auto provider_terminated = provider.terminated();
         const char* provider_ptr =
             provider_terminated.view().empty() ? nullptr : provider_terminated.data();
 
-        auto optional_master_key = opts.master_key();
+        const auto optional_master_key = opts.master_key();
         stdx::optional<mongocxx::libbson::scoped_bson_t> bson_master_key;
         if (optional_master_key) {
             bson_master_key.emplace();
@@ -168,7 +168,7 @@ class client_encryption::impl {
         libbson::scoped_bson_t bson_filter;
         bson_filter.init_from_static(filter);
 
-        auto r = libmongoc::client_encryption_rewrap_many_datakey(
+        const auto r = libmongoc::client_encryption_rewrap_many_datakey(
             _client_encryption_t,
             bson_filter.bson(),
             provider_ptr,
@@ -187,7 +187,7 @@ class client_encryption::impl {
         if (bulk_write_result) {
             const auto doc =
                 bsoncxx::document::view(bson_get_data(bulk_write_result), bulk_write_result->len);
-            auto val = bsoncxx::document::value(doc);
+            const auto val = bsoncxx::document::value(doc);
             result::bulk_write bulk_write_result{val};
             return result::rewrap_many_datakey(bulk_write_result);
         } else {
@@ -206,7 +206,7 @@ class client_encryption::impl {
 
         convert_to_libbson(&libbson_key, id);
 
-        auto r = libmongoc::client_encryption_delete_key(
+        const auto r = libmongoc::client_encryption_delete_key(
             _client_encryption_t, &libbson_key, reply_ptr.bson_for_init(), &error);
 
         bson_value_destroy(&libbson_key);
@@ -215,7 +215,7 @@ class client_encryption::impl {
             throw_exception<operation_exception>(error);
         }
 
-        bsoncxx::document::value val = reply_ptr.steal();
+        const bsoncxx::document::value val = reply_ptr.steal();
 
         // The C driver calls this field "deletedCount", but the C++ driver
         // refers to this as "nRemoved". Make a new document with the field name
@@ -225,7 +225,7 @@ class client_encryption::impl {
         // Function: std::int32_t bulk_write::deleted_count() const {
         //     return view()["nRemoved"].get_int32();
         // }
-        auto new_val = make_document(kvp("nRemoved", val["deletedCount"].get_int32()));
+        const auto new_val = make_document(kvp("nRemoved", val["deletedCount"].get_int32()));
         return result::delete_result(result::bulk_write(new_val));
     }
 
@@ -237,17 +237,17 @@ class client_encryption::impl {
 
         convert_to_libbson(&libbson_value, id);
 
-        auto r = libmongoc::client_encryption_get_key(
+        const auto r = libmongoc::client_encryption_get_key(
             _client_encryption_t, &libbson_value, key_doc.bson_for_init(), &error);
 
-        auto cleanup = [&]() { bson_value_destroy(&libbson_value); };
+        const auto cleanup = [&]() { bson_value_destroy(&libbson_value); };
 
         if (!r) {
             cleanup();
             throw_exception<operation_exception>(error);
         }
 
-        bsoncxx::document::value val(key_doc.steal());
+        const bsoncxx::document::value val(key_doc.steal());
 
         cleanup();
         return val.empty() ? stdx::nullopt : stdx::optional<bsoncxx::document::value>{val};
@@ -274,21 +274,21 @@ class client_encryption::impl {
 
         convert_to_libbson(&key_id, id);
 
-        auto key_alt_name_terminated = key_alt_name.terminated();
-        auto r = libmongoc::client_encryption_add_key_alt_name(_client_encryption_t,
-                                                               &key_id,
-                                                               key_alt_name_terminated.data(),
-                                                               key_doc.bson_for_init(),
-                                                               &error);
+        const auto key_alt_name_terminated = key_alt_name.terminated();
+        const auto r = libmongoc::client_encryption_add_key_alt_name(_client_encryption_t,
+                                                                     &key_id,
+                                                                     key_alt_name_terminated.data(),
+                                                                     key_doc.bson_for_init(),
+                                                                     &error);
 
-        auto cleanup = [&]() { bson_value_destroy(&key_id); };
+        const auto cleanup = [&]() { bson_value_destroy(&key_id); };
 
         if (!r) {
             cleanup();
             throw_exception<operation_exception>(error);
         }
 
-        bsoncxx::document::value val(key_doc.steal());
+        const bsoncxx::document::value val(key_doc.steal());
 
         cleanup();
         return val.empty() ? stdx::nullopt : stdx::optional<bsoncxx::document::value>{val};
@@ -298,13 +298,13 @@ class client_encryption::impl {
         bson_error_t error;
         libbson::scoped_bson_t key_doc;
 
-        auto r = libmongoc::client_encryption_get_key_by_alt_name(
+        const auto r = libmongoc::client_encryption_get_key_by_alt_name(
             _client_encryption_t, key_alt_name.c_str(), key_doc.bson_for_init(), &error);
 
         if (!r) {
             throw_exception<operation_exception>(error);
         }
-        bsoncxx::document::value val = key_doc.steal();
+        const bsoncxx::document::value val = key_doc.steal();
         return val.empty() ? stdx::nullopt : stdx::optional<bsoncxx::document::value>{val};
     }
 
@@ -316,17 +316,17 @@ class client_encryption::impl {
 
         convert_to_libbson(&key_id, id);
 
-        auto r = libmongoc::client_encryption_remove_key_alt_name(
+        const auto r = libmongoc::client_encryption_remove_key_alt_name(
             _client_encryption_t, &key_id, key_alt_name.c_str(), key_doc.bson_for_init(), &error);
 
-        auto cleanup = [&]() { bson_value_destroy(&key_id); };
+        const auto cleanup = [&]() { bson_value_destroy(&key_id); };
 
         if (!r) {
             cleanup();
             throw_exception<operation_exception>(error);
         }
 
-        bsoncxx::document::value val(key_doc.steal());
+        const bsoncxx::document::value val(key_doc.steal());
 
         cleanup();
         return val.empty() ? stdx::nullopt : stdx::optional<bsoncxx::document::value>{val};
