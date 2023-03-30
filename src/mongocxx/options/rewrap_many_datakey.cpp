@@ -25,12 +25,12 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace options {
 
-rewrap_many_datakey& rewrap_many_datakey::provider(std::string provider) {
+rewrap_many_datakey& rewrap_many_datakey::provider(bsoncxx::string::view_or_value provider) {
     _provider = std::move(provider);
     return *this;
 }
 
-const stdx::optional<std::string>& rewrap_many_datakey::provider() const {
+bsoncxx::string::view_or_value rewrap_many_datakey::provider() const {
     return _provider;
 }
 

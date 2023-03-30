@@ -153,8 +153,10 @@ class client_encryption::impl {
             result_ptr(libmongoc::client_encryption_rewrap_many_datakey_result_new(),
                        libmongoc::client_encryption_rewrap_many_datakey_result_destroy);
 
-        std::string provider = opts.provider().value();
-        const char* provider_ptr = provider.empty() ? NULL : provider.c_str();
+        auto provider = opts.provider();
+        auto provider_terminated = provider.terminated();
+        const char* provider_ptr =
+            provider_terminated.view().empty() ? nullptr : provider_terminated.data();
 
         auto optional_master_key = opts.master_key();
         stdx::optional<mongocxx::libbson::scoped_bson_t> bson_master_key;

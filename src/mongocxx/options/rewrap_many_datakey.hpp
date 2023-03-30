@@ -15,6 +15,7 @@
 #pragma once
 
 #include <bsoncxx/stdx/optional.hpp>
+#include <bsoncxx/string/view_or_value.hpp>
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/bson_value/view_or_value.hpp>
 #include <mongocxx/stdx.hpp>
@@ -97,7 +98,7 @@ class MONGOCXX_API rewrap_many_datakey {
 
    private:
     friend class mongocxx::client_encryption;
-    stdx::optional<std::string> _provider;
+    bsoncxx::string::view_or_value _provider;
     stdx::optional<bsoncxx::document::view_or_value> _master_key;
 };
 
