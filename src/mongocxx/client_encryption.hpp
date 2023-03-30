@@ -193,6 +193,7 @@ class MONGOCXX_API client_encryption {
     /// @see https://www.mongodb.com/docs/manual/reference/method/KeyVault.addKeyAlternateName/
     ///
     stdx::optional<bsoncxx::document::value> add_key_alt_name(
+        bsoncxx::types::bson_value::view_or_value id, bsoncxx::string::view_or_value key_alt_name);
         bsoncxx::types::bson_value::view_or_value id, const std::string& key_alt_name);
 
     ///
