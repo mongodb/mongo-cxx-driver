@@ -2397,7 +2397,6 @@ TEST_CASE("Unique Index on keyAltNames", "[client_side_encryption]") {
     instance::current();
 
     if (!mongocxx::test_util::should_run_client_side_encryption_test()) {
-        std::cerr << "Skipping Unique Index on keyAltNames prose tests" << std::endl;
         return;
     }
 
