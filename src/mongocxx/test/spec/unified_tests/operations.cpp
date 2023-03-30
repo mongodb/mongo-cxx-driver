@@ -126,6 +126,7 @@ document::value bulk_write_result_to_document(const mongocxx::result::bulk_write
                          kvp("deletedCount", result.deleted_count()),
                          kvp("insertedCount", result.inserted_count()),
                          kvp("upsertedCount", result.upserted_count()),
+                         kvp("insertedIds", make_document()),
                          kvp("upsertedIds", upserted_ids_builder.extract()));
 }
 
