@@ -16,9 +16,13 @@
 
 #include <bsoncxx/types/bson_value/value.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
+#include <mongocxx/cursor.hpp>
 #include <mongocxx/options/client_encryption.hpp>
 #include <mongocxx/options/data_key.hpp>
 #include <mongocxx/options/encrypt.hpp>
+#include <mongocxx/options/rewrap_many_datakey.hpp>
+#include <mongocxx/result/delete.hpp>
+#include <mongocxx/result/rewrap_many_datakey.hpp>
 
 #include <mongocxx/config/prelude.hpp>
 
@@ -111,6 +115,116 @@ class MONGOCXX_API client_encryption {
     /// https://docs.mongodb.com/manual/reference/method/ClientEncryption.decrypt/#ClientEncryption.decrypt
     ///
     bsoncxx::types::bson_value::value decrypt(bsoncxx::types::bson_value::view value);
+
+    ///
+    /// Decrypts multiple data keys and (re-)encrypts them with a new masterKey,
+    /// or with their current masterKey if a new one is not given. The updated
+    /// fields of each rewrapped data key is updated in the key vault collection
+    /// as part of a single bulk write operation. If no data key matches the
+    /// given filter, no bulk write operation is executed.
+    ///
+    /// @param filter
+    ///   Document to filter which keys get re-wrapped.
+    ///
+    /// @param opts
+    ///   Options to specify which provider to encrypt the data keys and an optional
+    ///   master key document.
+    ///
+    /// @return a RewrapManyDataKeyResult.
+    ///
+    /// @throws mongocxx::exception if there is an error rewrapping the key.
+    ///
+    /// @see
+    /// https://www.mongodb.com/docs/manual/reference/method/KeyVault.rewrapManyDataKey/
+    ///
+    result::rewrap_many_datakey rewrap_many_datakey(bsoncxx::document::view_or_value filter,
+                                                    const options::rewrap_many_datakey& opts);
+
+    ///
+    /// Removes the key document with the given UUID (BSON binary subtype 0x04)
+    /// from the key vault collection.
+    ///
+    /// @param id Binary id of which key to delete
+    ///
+    /// @throws mongocxx::exception if there is an error deleting the key.
+    ///
+    /// @return the result of the internal deleteOne() operation on the key vault collection.
+    ///
+    /// @see https://www.mongodb.com/docs/manual/reference/method/KeyVault.deleteKey/
+    ///
+    result::delete_result delete_key(bsoncxx::types::bson_value::view_or_value id);
+
+    ///
+    /// Finds a single key document with the given UUID (BSON binary subtype 0x04).
+    ///
+    /// @param id Binary id of which key to delete
+    ///
+    /// @throws mongocxx::exception if there is an error getting the key.
+    ///
+    /// @return The result of the internal find() operation on the key vault collection.
+    ///
+    /// @see https://www.mongodb.com/docs/manual/reference/method/KeyVault.getKey/
+    ///
+    stdx::optional<bsoncxx::document::value> get_key(bsoncxx::types::bson_value::view_or_value id);
+
+    ///
+    /// Finds all documents in the key vault collection.
+    ///
+    /// @throws mongocxx::exception if there is an error getting the keys.
+    ///
+    /// @return the result of the internal find() operation on the key vault collection.
+    ///
+    /// @see https://www.mongodb.com/docs/manual/reference/method/KeyVault.getKeys/
+    ///
+    mongocxx::cursor get_keys();
+
+    ///
+    /// Adds a keyAltName to the keyAltNames array of the key document in the
+    /// key vault collection with the given UUID (BSON binary subtype 0x04).
+    ///
+    /// @param id Binary id of the key to add the key alternate name to
+    ///
+    /// @param key_alt_name String alternative name for the key
+    ///
+    /// @throws mongocxx::exception if there is an error adding the key alt name.
+    ///
+    /// @return the previous version of the key document.
+    ///
+    /// @see https://www.mongodb.com/docs/manual/reference/method/KeyVault.addKeyAlternateName/
+    ///
+    stdx::optional<bsoncxx::document::value> add_key_alt_name(
+        bsoncxx::types::bson_value::view_or_value id, bsoncxx::string::view_or_value key_alt_name);
+
+    ///
+    /// Removes a keyAltName from the keyAltNames array of the key document in
+    /// the key vault collection with the given UUID (BSON binary subtype 0x04).
+    ///
+    /// @param id Binary id of the key to remove the key alternate name from
+    ///
+    /// @param key_alt_name String alternative name for the key
+    ///
+    /// @throws mongocxx::exception if there is an error removing the key alt name.
+    ///
+    /// @return The previous version of the key document.
+    ///
+    /// @see https://www.mongodb.com/docs/manual/reference/method/KeyVault.removeKeyAlternateName/
+    ///
+    stdx::optional<bsoncxx::document::value> remove_key_alt_name(
+        bsoncxx::types::bson_value::view_or_value id, bsoncxx::string::view_or_value key_alt_name);
+
+    ///
+    /// Get the key document from the key vault collection with the provided name.
+    ///
+    /// @param key_alt_name String alternative name for the key
+    ///
+    /// @throws mongocxx::exception if there is an error getting the key by alt name.
+    ///
+    /// @return A key document in the key vault collection with the given keyAltName.
+    ///
+    /// @see https://www.mongodb.com/docs/manual/reference/method/KeyVault.getKeyByAltName/
+    ///
+    stdx::optional<bsoncxx::document::value> get_key_by_alt_name(
+        bsoncxx::string::view_or_value key_alt_name);
 
    private:
     class MONGOCXX_PRIVATE impl;

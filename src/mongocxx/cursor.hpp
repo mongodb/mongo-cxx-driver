@@ -81,6 +81,7 @@ class MONGOCXX_API cursor {
    private:
     friend class collection;
     friend class client;
+    friend class client_encryption;
     friend class database;
     friend class index_view;
     friend class cursor::iterator;
