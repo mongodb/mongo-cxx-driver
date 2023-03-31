@@ -156,6 +156,7 @@ set(mongocxx_sources
     options/insert.cpp
     options/pool.cpp
     options/replace.cpp
+    options/rewrap_many_datakey.cpp
     options/server_api.cpp
     options/tls.cpp
     options/transaction.cpp
@@ -174,6 +175,7 @@ set(mongocxx_sources
     result/insert_many.cpp
     result/insert_one.cpp
     result/replace_one.cpp
+    result/rewrap_many_datakey.cpp
     result/update.cpp
     uri.cpp
     validation_criteria.cpp
@@ -406,6 +408,8 @@ set_local_dist (src_mongocxx_DIST_local
    options/private/transaction.hh
    options/replace.cpp
    options/replace.hpp
+   options/rewrap_many_datakey.cpp
+   options/rewrap_many_datakey.hpp
    options/server_api.cpp
    options/server_api.hpp
    options/ssl.hpp
@@ -459,6 +463,8 @@ set_local_dist (src_mongocxx_DIST_local
    result/insert_one.hpp
    result/replace_one.cpp
    result/replace_one.hpp
+   result/rewrap_many_datakey.cpp
+   result/rewrap_many_datakey.hpp
    result/update.cpp
    result/update.hpp
    stdx.hpp

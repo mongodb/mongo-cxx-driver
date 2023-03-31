@@ -267,6 +267,7 @@ set_tests_properties(read_write_concern_specs PROPERTIES
 
 set_property(TEST unified_format_spec APPEND PROPERTY ENVIRONMENT
   "CHANGE_STREAMS_UNIFIED_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/change-streams/unified"
+  "CLIENT_SIDE_ENCRYPTION_UNIFIED_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/client_side_encryption/unified"
   "COLLECTION_MANAGEMENT_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/collection-management"
   "CRUD_UNIFIED_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/crud/unified"
   "SESSION_UNIFIED_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/sessions/unified/"
