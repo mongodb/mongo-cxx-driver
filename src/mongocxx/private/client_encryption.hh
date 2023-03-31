@@ -245,10 +245,9 @@ class client_encryption::impl {
             throw_exception<operation_exception>(error);
         }
 
-        const bsoncxx::document::value val(key_doc.steal());
-
         cleanup();
-        return val.empty() ? stdx::nullopt : stdx::optional<bsoncxx::document::value>{val};
+        return key_doc.view().empty() ? stdx::nullopt
+                                      : stdx::optional<bsoncxx::document::value>{key_doc.steal()};
     }
 
     mongocxx::cursor get_keys() {
@@ -286,10 +285,9 @@ class client_encryption::impl {
             throw_exception<operation_exception>(error);
         }
 
-        const bsoncxx::document::value val(key_doc.steal());
-
         cleanup();
-        return val.empty() ? stdx::nullopt : stdx::optional<bsoncxx::document::value>{val};
+        return key_doc.view().empty() ? stdx::nullopt
+                                      : stdx::optional<bsoncxx::document::value>{key_doc.steal()};
     }
 
     stdx::optional<bsoncxx::document::value> get_key_by_alt_name(
@@ -304,8 +302,8 @@ class client_encryption::impl {
         if (!r) {
             throw_exception<operation_exception>(error);
         }
-        const bsoncxx::document::value val = key_doc.steal();
-        return val.empty() ? stdx::nullopt : stdx::optional<bsoncxx::document::value>{val};
+        return key_doc.view().empty() ? stdx::nullopt
+                                      : stdx::optional<bsoncxx::document::value>{key_doc.steal()};
     }
 
     stdx::optional<bsoncxx::document::value> remove_key_alt_name(
@@ -331,10 +329,9 @@ class client_encryption::impl {
             throw_exception<operation_exception>(error);
         }
 
-        const bsoncxx::document::value val(key_doc.steal());
-
         cleanup();
-        return val.empty() ? stdx::nullopt : stdx::optional<bsoncxx::document::value>{val};
+        return key_doc.view().empty() ? stdx::nullopt
+                                      : stdx::optional<bsoncxx::document::value>{key_doc.steal()};
     }
 
     options::client_encryption _opts;
