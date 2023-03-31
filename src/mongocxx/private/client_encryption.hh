@@ -227,8 +227,7 @@ class client_encryption::impl {
             result::bulk_write(make_document(kvp("nRemoved", val["deletedCount"].get_int32()))));
     }
 
-    stdx::optional<bsoncxx::document::view_or_value> get_key(
-        bsoncxx::types::bson_value::view_or_value id) {
+    stdx::optional<bsoncxx::document::value> get_key(bsoncxx::types::bson_value::view_or_value id) {
         bson_error_t error;
         libbson::scoped_bson_t key_doc;
 
@@ -246,11 +245,10 @@ class client_encryption::impl {
             throw_exception<operation_exception>(error);
         }
 
-        const bsoncxx::document::view_or_value val(key_doc.steal());
+        const bsoncxx::document::value val(key_doc.steal());
 
         cleanup();
-        return val.view().empty() ? stdx::nullopt
-                                  : stdx::optional<bsoncxx::document::view_or_value>{val};
+        return val.empty() ? stdx::nullopt : stdx::optional<bsoncxx::document::value>{val};
     }
 
     mongocxx::cursor get_keys() {
@@ -266,7 +264,7 @@ class client_encryption::impl {
         return wrapped_cursor;
     }
 
-    stdx::optional<bsoncxx::document::view_or_value> add_key_alt_name(
+    stdx::optional<bsoncxx::document::value> add_key_alt_name(
         bsoncxx::types::bson_value::view_or_value id, bsoncxx::string::view_or_value key_alt_name) {
         bson_error_t error;
         libbson::scoped_bson_t key_doc;
@@ -288,14 +286,13 @@ class client_encryption::impl {
             throw_exception<operation_exception>(error);
         }
 
-        const bsoncxx::document::view_or_value val(key_doc.steal());
+        const bsoncxx::document::value val(key_doc.steal());
 
         cleanup();
-        return val.view().empty() ? stdx::nullopt
-                                  : stdx::optional<bsoncxx::document::view_or_value>{val};
+        return val.empty() ? stdx::nullopt : stdx::optional<bsoncxx::document::value>{val};
     }
 
-    stdx::optional<bsoncxx::document::view_or_value> get_key_by_alt_name(
+    stdx::optional<bsoncxx::document::value> get_key_by_alt_name(
         bsoncxx::string::view_or_value key_alt_name) {
         bson_error_t error;
         libbson::scoped_bson_t key_doc;
@@ -307,12 +304,11 @@ class client_encryption::impl {
         if (!r) {
             throw_exception<operation_exception>(error);
         }
-        const bsoncxx::document::view_or_value val = key_doc.steal();
-        return val.view().empty() ? stdx::nullopt
-                                  : stdx::optional<bsoncxx::document::view_or_value>{val};
+        const bsoncxx::document::value val = key_doc.steal();
+        return val.empty() ? stdx::nullopt : stdx::optional<bsoncxx::document::value>{val};
     }
 
-    stdx::optional<bsoncxx::document::view_or_value> remove_key_alt_name(
+    stdx::optional<bsoncxx::document::value> remove_key_alt_name(
         bsoncxx::types::bson_value::view_or_value id, bsoncxx::string::view_or_value key_alt_name) {
         bson_error_t error;
         libbson::scoped_bson_t key_doc;
@@ -335,11 +331,10 @@ class client_encryption::impl {
             throw_exception<operation_exception>(error);
         }
 
-        const bsoncxx::document::view_or_value val(key_doc.steal());
+        const bsoncxx::document::value val(key_doc.steal());
 
         cleanup();
-        return val.view().empty() ? stdx::nullopt
-                                  : stdx::optional<bsoncxx::document::view_or_value>{val};
+        return val.empty() ? stdx::nullopt : stdx::optional<bsoncxx::document::value>{val};
     }
 
     options::client_encryption _opts;

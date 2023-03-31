@@ -165,8 +165,7 @@ class MONGOCXX_API client_encryption {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/method/KeyVault.getKey/
     ///
-    stdx::optional<bsoncxx::document::view_or_value> get_key(
-        bsoncxx::types::bson_value::view_or_value id);
+    stdx::optional<bsoncxx::document::value> get_key(bsoncxx::types::bson_value::view_or_value id);
 
     ///
     /// Finds all documents in the key vault collection.
@@ -193,7 +192,7 @@ class MONGOCXX_API client_encryption {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/method/KeyVault.addKeyAlternateName/
     ///
-    stdx::optional<bsoncxx::document::view_or_value> add_key_alt_name(
+    stdx::optional<bsoncxx::document::value> add_key_alt_name(
         bsoncxx::types::bson_value::view_or_value id, bsoncxx::string::view_or_value key_alt_name);
 
     ///
@@ -210,7 +209,7 @@ class MONGOCXX_API client_encryption {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/method/KeyVault.removeKeyAlternateName/
     ///
-    stdx::optional<bsoncxx::document::view_or_value> remove_key_alt_name(
+    stdx::optional<bsoncxx::document::value> remove_key_alt_name(
         bsoncxx::types::bson_value::view_or_value id, bsoncxx::string::view_or_value key_alt_name);
 
     ///
@@ -224,7 +223,7 @@ class MONGOCXX_API client_encryption {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/method/KeyVault.getKeyByAltName/
     ///
-    stdx::optional<bsoncxx::document::view_or_value> get_key_by_alt_name(
+    stdx::optional<bsoncxx::document::value> get_key_by_alt_name(
         bsoncxx::string::view_or_value key_alt_name);
 
    private:
