@@ -301,6 +301,25 @@ class MONGOCXX_API client {
         const bsoncxx::document::view_or_value filter = {}) const;
 
     ///
+    /// Queries the MongoDB server for a list of known databases.
+    ///
+    /// @param session
+    ///   The mongocxx::client_session with which to perform the aggregation.
+    ///
+    /// @param filter
+    ///   An optional query expression to filter the returned database names.
+    ///
+    /// @return std::vector<std::string> containing the database names.
+    ///
+    /// @throws mongocxx::operation_exception if the underlying 'listDatabases'
+    /// command fails.
+    ///
+    /// @see https://docs.mongodb.com/manual/reference/command/listDatabases
+    ///
+    std::vector<std::string> list_database_names(
+        const client_session& session, const bsoncxx::document::view_or_value filter = {}) const;
+
+    ///
     /// @}
     ///
 
