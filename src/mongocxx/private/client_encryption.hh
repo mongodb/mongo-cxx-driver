@@ -213,7 +213,7 @@ class client_encryption::impl {
             throw_exception<operation_exception>(error);
         }
 
-        const bsoncxx::document::value val = reply_ptr.steal();
+        const auto val = reply_ptr.view();
 
         // The C driver calls this field "deletedCount", but the C++ driver
         // refers to this as "nRemoved". Make a new document with the field name
