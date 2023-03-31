@@ -198,9 +198,14 @@ document::value list_collection_names(entity::map& map,
 
 document::value list_databases(entity::map& map,
                                client_session* session,
-                               const std::string& object) {
-    auto cursor = session ? map.get_client(object).list_databases(*session)
-                          : map.get_client(object).list_databases();
+                               const std::string& object,
+                               document::view op) {
+    const auto arguments = op["arguments"];
+    const auto empty_doc = make_document();
+    const auto arguments_view = arguments ? arguments.get_document().value : empty_doc.view();
+
+    auto cursor = session ? map.get_client(object).list_databases(*session, arguments_view)
+                          : map.get_client(object).list_databases(arguments_view);
 
     builder::basic::document result;
     result.append(builder::basic::kvp("result", [&cursor](builder::basic::sub_array array) {
@@ -1688,7 +1693,7 @@ document::value operations::run(entity::map& entity_map,
         return list_collection_names(entity_map, get_session(op_view, entity_map), object, op_view);
     }
     if (name == "listDatabases") {
-        return list_databases(entity_map, get_session(op_view, entity_map), object);
+        return list_databases(entity_map, get_session(op_view, entity_map), object, op_view);
     }
     if (name == "listDatabaseNames") {
         return list_database_names(entity_map, object);

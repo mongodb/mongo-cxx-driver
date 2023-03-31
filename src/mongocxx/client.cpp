@@ -213,6 +213,15 @@ cursor client::list_databases(const bsoncxx::document::view_or_value opts) const
     return libmongoc::client_find_databases_with_opts(_get_impl().client_t, opts_bson.bson());
 }
 
+cursor client::list_databases(const client_session& session,
+                              const bsoncxx::document::view_or_value opts) const {
+    bsoncxx::builder::basic::document options_doc;
+    options_doc.append(bsoncxx::builder::concatenate_doc{session._get_impl().to_document()});
+    options_doc.append(bsoncxx::builder::concatenate_doc{opts});
+    mongocxx::scoped_bson_t opts_bson(options_doc.extract());
+    return libmongoc::client_find_databases_with_opts(_get_impl().client_t, opts_bson.bson());
+}
+
 std::vector<std::string> client::list_database_names(
     bsoncxx::document::view_or_value filter) const {
     bsoncxx::builder::basic::document options_builder;
