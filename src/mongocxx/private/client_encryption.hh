@@ -298,12 +298,13 @@ class client_encryption::impl {
     }
 
     stdx::optional<bsoncxx::document::view_or_value> get_key_by_alt_name(
-        const std::string& key_alt_name) {
+        bsoncxx::string::view_or_value key_alt_name) {
         bson_error_t error;
         libbson::scoped_bson_t key_doc;
 
+        const auto key_alt_name_terminated = key_alt_name.terminated();
         const auto r = libmongoc::client_encryption_get_key_by_alt_name(
-            _client_encryption_t, key_alt_name.c_str(), key_doc.bson_for_init(), &error);
+            _client_encryption_t, key_alt_name_terminated.data(), key_doc.bson_for_init(), &error);
 
         if (!r) {
             throw_exception<operation_exception>(error);
@@ -314,15 +315,20 @@ class client_encryption::impl {
     }
 
     stdx::optional<bsoncxx::document::view_or_value> remove_key_alt_name(
-        bsoncxx::types::bson_value::view_or_value id, const std::string& key_alt_name) {
+        bsoncxx::types::bson_value::view_or_value id, bsoncxx::string::view_or_value key_alt_name) {
         bson_error_t error;
         libbson::scoped_bson_t key_doc;
         bson_value_t key_id;
 
         convert_to_libbson(&key_id, id);
 
-        const auto r = libmongoc::client_encryption_remove_key_alt_name(
-            _client_encryption_t, &key_id, key_alt_name.c_str(), key_doc.bson_for_init(), &error);
+        const auto key_alt_name_terminated = key_alt_name.terminated();
+        const auto r =
+            libmongoc::client_encryption_remove_key_alt_name(_client_encryption_t,
+                                                             &key_id,
+                                                             key_alt_name_terminated.data(),
+                                                             key_doc.bson_for_init(),
+                                                             &error);
 
         const auto cleanup = [&]() { bson_value_destroy(&key_id); };
 

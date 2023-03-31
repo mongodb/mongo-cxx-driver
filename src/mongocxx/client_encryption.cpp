@@ -69,12 +69,12 @@ stdx::optional<bsoncxx::document::view_or_value> client_encryption::add_key_alt_
 }
 
 stdx::optional<bsoncxx::document::view_or_value> client_encryption::get_key_by_alt_name(
-    const std::string& key_alt_name) {
+    bsoncxx::string::view_or_value key_alt_name) {
     return _impl->get_key_by_alt_name(key_alt_name);
 }
 
 stdx::optional<bsoncxx::document::view_or_value> client_encryption::remove_key_alt_name(
-    bsoncxx::types::bson_value::view_or_value id, const std::string& key_alt_name) {
+    bsoncxx::types::bson_value::view_or_value id, bsoncxx::string::view_or_value key_alt_name) {
     return _impl->remove_key_alt_name(id, key_alt_name);
 }
 

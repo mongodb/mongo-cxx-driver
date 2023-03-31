@@ -211,7 +211,7 @@ class MONGOCXX_API client_encryption {
     /// @see https://www.mongodb.com/docs/manual/reference/method/KeyVault.removeKeyAlternateName/
     ///
     stdx::optional<bsoncxx::document::view_or_value> remove_key_alt_name(
-        bsoncxx::types::bson_value::view_or_value id, const std::string& key_alt_name);
+        bsoncxx::types::bson_value::view_or_value id, bsoncxx::string::view_or_value key_alt_name);
 
     ///
     /// Get the key document from the key vault collection with the provided name.
@@ -225,7 +225,7 @@ class MONGOCXX_API client_encryption {
     /// @see https://www.mongodb.com/docs/manual/reference/method/KeyVault.getKeyByAltName/
     ///
     stdx::optional<bsoncxx::document::view_or_value> get_key_by_alt_name(
-        const std::string& key_alt_name);
+        bsoncxx::string::view_or_value key_alt_name);
 
    private:
     class MONGOCXX_PRIVATE impl;
