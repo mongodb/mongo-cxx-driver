@@ -88,7 +88,7 @@ bsoncxx::document::value get_kms_values() {
     const bsoncxx::types::b_binary local_master_key{
         bsoncxx::binary_sub_type::k_binary, 96, (const uint8_t*)&key_storage};
 
-    const auto kms_doc = make_document(
+    auto kms_doc = make_document(
         kvp("aws",
             make_document(
                 kvp("accessKeyId", test_util::getenv_or_fail("MONGOCXX_TEST_AWS_ACCESS_KEY_ID")),
