@@ -260,7 +260,7 @@ set_property(TEST transactions_specs
   APPEND PROPERTY ENVIRONMENT "WITH_TRANSACTION_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/with_transaction")
 
 set_tests_properties(retryable_reads_spec PROPERTIES
-   ENVIRONMENT "RETRYABLE_READS_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/retryable-reads")
+   ENVIRONMENT "RETRYABLE_READS_LEGACY_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/retryable-reads/legacy")
 
 set_tests_properties(read_write_concern_specs PROPERTIES
   ENVIRONMENT "READ_WRITE_CONCERN_OPERATION_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/read-write-concern/operation")
@@ -271,6 +271,8 @@ set_property(TEST unified_format_spec APPEND PROPERTY ENVIRONMENT
   "COLLECTION_MANAGEMENT_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/collection-management"
   "CRUD_UNIFIED_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/crud/unified"
   "SESSION_UNIFIED_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/sessions/unified/"
+  "RETRYABLE_READS_UNIFIED_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/retryable-reads/unified/"
+  "RETRYABLE_WRITES_UNIFIED_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/retryable-writes/unified/"
   "UNIFIED_FORMAT_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/unified-format"
   "VERSIONED_API_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/versioned-api"
 )

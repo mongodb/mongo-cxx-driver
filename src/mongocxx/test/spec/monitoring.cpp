@@ -52,9 +52,11 @@ void apm_checker::compare_unified(bsoncxx::array::view expectations,
                                   bool ignore_extra_events) {
     remove_ignored_command_monitoring_events(_events, _ignore);
 
+    CAPTURE(print_all());
+
     // This will throw an exception on unmatched fields and return true in all other cases.
     auto compare = [&](const bsoncxx::array::element& exp, const bsoncxx::document::view actual) {
-        CAPTURE(print_all(), to_json(actual), bsoncxx::to_string(exp.get_value()));
+        CAPTURE(to_json(actual), bsoncxx::to_string(exp.get_value()));
 
         // Extra fields are only allowed in root-level documents. Here, each k in keys is treated
         // as its own root-level document, allowing extra fields.
@@ -78,15 +80,11 @@ void apm_checker::compare_unified(bsoncxx::array::view expectations,
         compare(*exp_it, *ev_it);
     }
     if (exp_it != exp_end) {
-        auto next_expected = exp_it->get_document();
-        CAPTURE(to_json(next_expected));
         FAIL_CHECK("Not enough events occurred (Expected "
                    << std::distance(expectations.cbegin(), expectations.cend())
                    << " events, but got " << (_events.size()) << " events)");
     }
     if (!ignore_extra_events && ev_it != ev_end) {
-        auto next_event = *ev_it;
-        CAPTURE(to_json(next_event));
         FAIL_CHECK("Too many events occurred (Expected "
                    << std::distance(expectations.cbegin(), expectations.cend())
                    << " events, but got " << (_events.size()) << " events)");
@@ -148,14 +146,13 @@ bool apm_checker::should_ignore(stdx::string_view command_name) const {
 }
 
 std::string apm_checker::print_all() {
-    std::stringstream output{};
-    output << std::endl << std::endl;
-    output << "APM Checker contents: " << std::endl;
-    for (auto&& event : _events) {
-        output << "APM event: " << bsoncxx::to_json(event) << std::endl;
+    std::ostringstream output;
+    output << "\n\n";
+    output << "APM Checker contents:\n";
+    for (const auto& event : _events) {
+        output << "APM event: " << bsoncxx::to_json(event) << '\n';
     }
-    output << std::endl << std::endl;
-    return output.str();
+    return std::move(output).str();
 }
 
 /// A "sensitive" hello is a hello command with the "speculativeAuthenticate" argument set

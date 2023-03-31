@@ -186,11 +186,68 @@ document::value list_collections(entity::map& map,
     return result.extract();
 }
 
+document::value list_collection_names(entity::map& map,
+                                      client_session* session,
+                                      const std::string& object,
+                                      document::view op) {
+    const auto arguments = op["arguments"];
+    const auto empty_doc = make_document();
+
+    document::view filter;
+    if (const auto f = arguments["filter"]) {
+        filter = f.get_document().value;
+    } else {
+        filter = empty_doc;
+    }
+
+    auto cursor = session ? map.get_database(object).list_collection_names(*session, filter)
+                          : map.get_database(object).list_collection_names(filter);
+
+    builder::basic::document result;
+    result.append(builder::basic::kvp("result", [&cursor](builder::basic::sub_array array) {
+        for (auto&& document : cursor) {
+            array.append(document);
+        }
+    }));
+    return result.extract();
+}
+
 document::value list_databases(entity::map& map,
                                client_session* session,
-                               const std::string& object) {
-    auto cursor = session ? map.get_client(object).list_databases(*session)
-                          : map.get_client(object).list_databases();
+                               const std::string& object,
+                               document::view op) {
+    const auto arguments = op["arguments"];
+    const auto empty_doc = make_document();
+    const auto arguments_view = arguments ? arguments.get_document().value : empty_doc.view();
+
+    auto cursor = session ? map.get_client(object).list_databases(*session, arguments_view)
+                          : map.get_client(object).list_databases(arguments_view);
+
+    builder::basic::document result;
+    result.append(builder::basic::kvp("result", [&cursor](builder::basic::sub_array array) {
+        for (auto&& document : cursor) {
+            array.append(document);
+        }
+    }));
+    return result.extract();
+}
+
+document::value list_database_names(entity::map& map,
+                                    client_session* session,
+                                    const std::string& object,
+                                    document::view op) {
+    const auto arguments = op["arguments"];
+    const auto empty_doc = make_document();
+
+    document::view filter;
+    if (const auto f = arguments["filter"]) {
+        filter = f.get_document().value;
+    } else {
+        filter = empty_doc;
+    }
+
+    auto cursor = session ? map.get_client(object).list_database_names(*session, filter)
+                          : map.get_client(object).list_database_names(filter);
 
     builder::basic::document result;
     result.append(builder::basic::kvp("result", [&cursor](builder::basic::sub_array array) {
@@ -734,9 +791,12 @@ document::value fail_point(entity::map& map, spec::apm_checker& apm, document::v
     auto client_name = string::to_string(args["client"].get_string().value);
     auto& client = map.get_client(client_name);
 
+    // The test runner MUST also ensure that the `configureFailPoint` command is excluded from the
+    // list of observed command monitoring events for this client (if applicable).
+    apm.set_ignore_command_monitoring_event("configureFailPoint");
+
     client["admin"].run_command(args["failPoint"].get_document().value);
 
-    apm.set_ignore_command_monitoring_event("configureFailPoint");
     return make_document(kvp("uri", client.uri().to_string()),
                          kvp("failPoint", args["failPoint"]["configureFailPoint"].get_string()));
 }
@@ -1823,8 +1883,14 @@ document::value operations::run(entity::map& entity_map,
     if (name == "listCollections") {
         return list_collections(entity_map, get_session(op_view, entity_map), object, op_view);
     }
+    if (name == "listCollectionNames") {
+        return list_collection_names(entity_map, get_session(op_view, entity_map), object, op_view);
+    }
     if (name == "listDatabases") {
-        return list_databases(entity_map, get_session(op_view, entity_map), object);
+        return list_databases(entity_map, get_session(op_view, entity_map), object, op_view);
+    }
+    if (name == "listDatabaseNames") {
+        return list_database_names(entity_map, get_session(op_view, entity_map), object, op_view);
     }
     if (name == "listIndexes") {
         return list_indexes(entity_map, get_session(op_view, entity_map), object);

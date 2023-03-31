@@ -414,7 +414,9 @@ functions:
                   export COMMAND_MONITORING_TESTS_PATH="$(pwd)/../data/command-monitoring"
                   export TRANSACTIONS_TESTS_PATH="$(pwd)/../data/transactions"
                   export WITH_TRANSACTION_TESTS_PATH="$(pwd)/../data/with_transaction"
-                  export RETRYABLE_READS_TESTS_PATH="$(pwd)/../data/retryable-reads"
+                  export RETRYABLE_READS_LEGACY_TESTS_PATH="$(pwd)/../data/retryable-reads/legacy"
+                  export RETRYABLE_READS_UNIFIED_TESTS_PATH="$(pwd)/../data/retryable-reads/unified"
+                  export RETRYABLE_WRITES_UNIFIED_TESTS_PATH="$(pwd)/../data/retryable-writes/unified"
                   export READ_WRITE_CONCERN_OPERATION_TESTS_PATH="$(pwd)/../data/read-write-concern/operation"
                   export UNIFIED_FORMAT_TESTS_PATH=$(pwd)/../data/unified-format
                   export SESSION_UNIFIED_TESTS_PATH="$(pwd)/../data/sessions/unified"

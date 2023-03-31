@@ -392,17 +392,19 @@ void add_observe_events(options::apm& apm_opts, document::view object) {
     apm.observe_sensitive_events = observe_sensitive && observe_sensitive.get_bool();
 
     const auto events = object["observeEvents"].get_array().value;
-    if (std::end(events) !=
-        std::find(std::begin(events), std::end(events), value("commandStartedEvent")))
-        apm.set_command_started_unified(apm_opts);
 
-    if (std::end(events) !=
-        std::find(std::begin(events), std::end(events), value("commandSucceededEvent")))
-        apm.set_command_succeeded_unified(apm_opts);
-
-    if (std::end(events) !=
-        std::find(std::begin(events), std::end(events), value("commandFailedEvent")))
-        apm.set_command_failed_unified(apm_opts);
+    for (const auto& event : events) {
+        const auto event_type = event.get_string().value;
+        if (event_type == mongocxx::stdx::string_view("commandStartedEvent")) {
+            apm.set_command_started_unified(apm_opts);
+        } else if (event_type == mongocxx::stdx::string_view("commandSucceededEvent")) {
+            apm.set_command_succeeded_unified(apm_opts);
+        } else if (event_type == mongocxx::stdx::string_view("commandFailedEvent")) {
+            apm.set_command_failed_unified(apm_opts);
+        } else {
+            UNSCOPED_INFO("ignoring unsupported command monitoring event " << event_type);
+        }
+    }
 }
 
 void add_ignore_command_monitoring_events(document::view object) {
@@ -1008,12 +1010,40 @@ document::value bulk_write_result(const mongocxx::bulk_write_exception& e) {
     return result.extract();
 }
 
-void run_tests(document::view test) {
+// Match test cases that should be skipped by both test and case descriptions.
+const std::map<std::pair<mongocxx::stdx::string_view, mongocxx::stdx::string_view>,
+               mongocxx::stdx::string_view>
+    should_skip_test_cases = {
+        {{"retryable reads handshake failures",
+          "collection.findOne succeeds after retryable handshake network error"},
+         "collection.findOne optional helper is not supported"},
+        {{"retryable reads handshake failures",
+          "collection.findOne succeeds after retryable handshake server error "
+          "(ShutdownInProgress)"},
+         "collection.findOne optional helper is not supported"},
+        {{"retryable reads handshake failures",
+          "collection.listIndexNames succeeds after retryable handshake network error"},
+         "collection.listIndexNames optional helper is not supported"},
+        {{"retryable reads handshake failures",
+          "collection.listIndexNames succeeds after retryable handshake server error "
+          "(ShutdownInProgress)"},
+         "collection.listIndexNames optional helper is not supported"},
+};
+
+void run_tests(mongocxx::stdx::string_view test_description, document::view test) {
     REQUIRE(test["tests"]);
 
     for (const auto ele : test["tests"].get_array().value) {
         const auto description = string::to_string(ele["description"].get_string().value);
         SECTION(description) {
+            {
+                const auto iter = should_skip_test_cases.find({test_description, description});
+                if (iter != should_skip_test_cases.end()) {
+                    WARN("test skipped: " << iter->second);
+                    continue;
+                }
+            }
+
             if (!has_run_on_requirements(ele.get_document())) {
                 std::stringstream warning;
                 warning << "test skipped: "
@@ -1129,12 +1159,11 @@ void run_tests_in_file(const std::string& test_path) {
         return;
     }
 
-    const std::string description =
-        string::to_string(test_spec_view["description"].get_string().value);
+    const auto description = test_spec_view["description"].get_string().value;
     CAPTURE(description);
     create_entities(test_spec_view);
     load_initial_data(test_spec_view);
-    run_tests(test_spec_view);
+    run_tests(description, test_spec_view);
 }
 
 // Check the environment for the specified variable; if present, extract it
@@ -1192,6 +1221,14 @@ TEST_CASE("CRUD unified format spec automated tests", "[unified_format_spec]") {
 
 TEST_CASE("change streams unified format spec automated tests", "[unified_format_spec]") {
     CHECK(run_unified_format_tests_in_env_dir("CHANGE_STREAMS_UNIFIED_TESTS_PATH"));
+}
+
+TEST_CASE("retryable reads unified format spec automated tests", "[unified_format_spec]") {
+    CHECK(run_unified_format_tests_in_env_dir("RETRYABLE_READS_UNIFIED_TESTS_PATH"));
+}
+
+TEST_CASE("retryable writes unified format spec automated tests", "[unified_format_spec]") {
+    CHECK(run_unified_format_tests_in_env_dir("RETRYABLE_WRITES_UNIFIED_TESTS_PATH"));
 }
 
 TEST_CASE("versioned API spec automated tests", "[unified_format_spec]") {

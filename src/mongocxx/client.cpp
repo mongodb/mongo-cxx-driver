@@ -51,6 +51,11 @@ class database_names {
         bson_strfreev(_names);
     }
 
+    database_names(database_names&&) = delete;
+    database_names& operator=(database_names&&) = delete;
+    database_names(const database_names&) = delete;
+    database_names& operator=(const database_names&) = delete;
+
     const char* operator[](const std::size_t i) const {
         return _names[i];
     };
@@ -213,16 +218,25 @@ cursor client::list_databases(const bsoncxx::document::view_or_value opts) const
     return libmongoc::client_find_databases_with_opts(_get_impl().client_t, opts_bson.bson());
 }
 
+cursor client::list_databases(const client_session& session,
+                              const bsoncxx::document::view_or_value opts) const {
+    bsoncxx::builder::basic::document options_doc;
+    options_doc.append(bsoncxx::builder::concatenate_doc{session._get_impl().to_document()});
+    options_doc.append(bsoncxx::builder::concatenate_doc{opts});
+    mongocxx::scoped_bson_t opts_bson(options_doc.extract());
+    return libmongoc::client_find_databases_with_opts(_get_impl().client_t, opts_bson.bson());
+}
+
 std::vector<std::string> client::list_database_names(
     bsoncxx::document::view_or_value filter) const {
     bsoncxx::builder::basic::document options_builder;
+
     options_builder.append(kvp("filter", filter));
 
     scoped_bson_t options_bson(options_builder.extract());
-
     bson_error_t error;
 
-    database_names names(libmongoc::client_get_database_names_with_opts(
+    const database_names names(libmongoc::client_get_database_names_with_opts(
         _get_impl().client_t, options_bson.bson(), &error));
 
     if (!names) {
@@ -230,11 +244,36 @@ std::vector<std::string> client::list_database_names(
     }
 
     std::vector<std::string> _names;
-    for (std::size_t i = 0; names[i]; ++i) {
+    for (std::size_t i = 0u; names[i]; ++i) {
         _names.emplace_back(names[i]);
     }
 
     return _names;
+}
+
+std::vector<std::string> client::list_database_names(
+    const client_session& session, const bsoncxx::document::view_or_value filter) const {
+    bsoncxx::builder::basic::document options_builder;
+
+    options_builder.append(bsoncxx::builder::concatenate_doc{session._get_impl().to_document()});
+    options_builder.append(kvp("filter", filter));
+
+    mongocxx::scoped_bson_t opts_bson(options_builder.extract());
+    bson_error_t error;
+
+    const database_names names(libmongoc::client_get_database_names_with_opts(
+        _get_impl().client_t, opts_bson.bson(), &error));
+
+    if (!names) {
+        throw_exception<operation_exception>(error);
+    }
+
+    std::vector<std::string> res;
+    for (std::size_t i = 0u; names[i]; ++i) {
+        res.emplace_back(names[i]);
+    }
+
+    return res;
 }
 
 class client_session client::start_session(const mongocxx::options::client_session& options) {
