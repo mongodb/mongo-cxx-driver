@@ -223,8 +223,8 @@ class client_encryption::impl {
         // Function: std::int32_t bulk_write::deleted_count() const {
         //     return view()["nRemoved"].get_int32();
         // }
-        const auto new_val = make_document(kvp("nRemoved", val["deletedCount"].get_int32()));
-        return result::delete_result(result::bulk_write(new_val));
+        return result::delete_result(
+            result::bulk_write(make_document(kvp("nRemoved", val["deletedCount"].get_int32()))));
     }
 
     stdx::optional<bsoncxx::document::view_or_value> get_key(
