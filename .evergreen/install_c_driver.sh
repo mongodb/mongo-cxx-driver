@@ -6,6 +6,24 @@
 set -o errexit
 set -o pipefail
 
+export PREFIX=$(pwd)/../mongoc/
+if [ "Windows_NT" == "$OS" ]; then
+  PREFIX=$(cygpath -m "$PREFIX")
+fi
+export CMAKE=${cmake}
+export GENERATOR="${generator}"
+if [ "1" == "${BSON_EXTRA_ALIGNMENT}" ]; then
+  echo "Building C driver with BSON extra alignment"
+fi
+MONGOC_VERSION=${mongoc_version}
+MONGOCRYPT_VERSION=${mongocrypt_version}
+if [[ -z $MONGOC_VERSION ]]; then
+  MONGOC_VERSION=${mongoc_version_default}
+fi
+if [[ -z $MONGOCRYPT_VERSION ]]; then
+  MONGOCRYPT_VERSION=${mongocrypt_version_default}
+fi
+
 print_usage() {
   echo "usage: MONGOC_VERSION=<version> MONGOCRYPT_VERSION=<version> ./install.sh"
 }
