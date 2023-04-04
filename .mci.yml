@@ -8,13 +8,11 @@
 variables:
 
     mongoc_version_default: &mongoc_version_default "9ef1cc99" # TODO: update to 1.24.0 once released.
-    mongocrypt_version_default: &mongocrypt_version_default "1.7.0"
 
     # If updating mongoc_version_minimum, also update:
     # - the default value of --c-driver-build-ref in etc/make_release.py
     # - LIBMONGOC_REQUIRED_VERSION in src/mongocxx/CMakeLists.txt
     mongoc_version_minimum: &mongoc_version_minimum "9ef1cc99" # TODO: update to 1.24.0 once released.
-    mongocrypt_version_minimum: &mongocrypt_version_minimum "1.7.0"
 
     mongodb_version:
         version_latest: &version_latest "latest"
@@ -223,14 +221,11 @@ functions:
           updates:
             - key: mongoc_version_default
               value: *mongoc_version_default
-            - key: mongocrypt_version_default
-              value: *mongocrypt_version_default
       - command: shell.exec
         params:
             shell: bash
-            working_dir: "mongo-cxx-driver"
             add_expansions_to_env: true
-            script: .evergreen/install_c_driver.sh
+            script: mongo-cxx-driver/.evergreen/install_c_driver.sh
 
     "lint":
         - command: shell.exec
@@ -1592,7 +1587,6 @@ buildvariants:
           cmake_flags: *linux_cmake_flags
           mongodb_version: *version_latest
           mongoc_version: *mongoc_version_minimum
-          mongocrypt_version: *mongocrypt_version_minimum
       run_on:
           - ubuntu1804-build
       tasks:
