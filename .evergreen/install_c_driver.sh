@@ -30,7 +30,6 @@ fi
 : "${mongoc_install_idir:?}"
 
 echo "libmongoc version: ${mongoc_version}"
-echo "libmongocrypt version: ${mongocrypt_version}"
 
 echo "Installing C Driver into ${mongoc_dir}..."
 
