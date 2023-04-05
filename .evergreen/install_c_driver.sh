@@ -27,7 +27,7 @@ else
   mongoc_install_idir="${mongoc_dir}"
 fi
 : "${mongoc_idir:?}"
-: "${mongoc_install_idir}"
+: "${mongoc_install_idir:?}"
 
 echo "libmongoc version: ${mongoc_version}"
 echo "libmongocrypt version: ${mongocrypt_version}"
