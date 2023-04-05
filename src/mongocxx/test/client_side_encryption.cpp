@@ -2098,7 +2098,7 @@ TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
     }
 
     if (!test_util::newer_than(conn, "6.0")) {
-        std::cerr << "Explicit Encryption tests require MongoDB server 6.0+." << std::endl;
+        WARN("Skipping - MongoDB server 6.0 or newer required");
         return;
     }
 
@@ -2110,7 +2110,7 @@ TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
     }
 
     if (test_util::get_topology(conn) == "single") {
-        std::cerr << "Explicit Encryption tests must not run against a standalone." << std::endl;
+        WARN("Skipping - must not run against a standalone server");
         return;
     }
 
@@ -2558,12 +2558,12 @@ TEST_CASE("Custom Key Material Test", "[client_side_encryption]") {
     instance::current();
 
     if (!mongocxx::test_util::should_run_client_side_encryption_test()) {
-        std::cerr << "Skipping Custom Key Material Test prose tests" << std::endl;
+        WARN("Skipping - Client Side Encryption is required");
         return;
     }
 
     if (!test_util::newer_than(uri{}, "4.2")) {
-        std::cerr << "Custom Key Material Test requires MongoDB server 4.2+." << std::endl;
+        WARN("Skipping - MongoDB server 4.2 or newer required");
         return;
     }
 
