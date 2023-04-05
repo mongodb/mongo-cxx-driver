@@ -83,9 +83,9 @@ using bsoncxx::types::bson_value::make_value;
 
 using namespace mongocxx;
 
-// Takes a path relative to the ENCRYPTION_TESTS_PATH variable, with leading '/'.
+// Takes a path relative to the CLIENT_SIDE_ENCRYPTION_TESTS_PATH variable, with leading '/'.
 bsoncxx::document::value _doc_from_file(stdx::string_view sub_path) {
-    char* encryption_tests_path = std::getenv("ENCRYPTION_TESTS_PATH");
+    char* encryption_tests_path = std::getenv("CLIENT_SIDE_ENCRYPTION_TESTS_PATH");
     REQUIRE(encryption_tests_path);
 
     std::string path = std::string(encryption_tests_path) + sub_path.data();

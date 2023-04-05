@@ -324,7 +324,7 @@ TEST_CASE("Client side encryption spec automated tests", "[client_side_encryptio
     std::set<std::string> unsupported_tests = {
         "badQueries.json", "count.json", "unsupportedCommand.json"};
 
-    char* encryption_tests_path = std::getenv("ENCRYPTION_TESTS_PATH");
+    char* encryption_tests_path = std::getenv("CLIENT_SIDE_ENCRYPTION_LEGACY_TESTS_PATH");
     REQUIRE(encryption_tests_path);
 
     if (!mongocxx::test_util::should_run_client_side_encryption_test()) {
