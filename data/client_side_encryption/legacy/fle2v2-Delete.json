@@ -1,7 +1,8 @@
 {
   "runOn": [
     {
-      "minServerVersion": "6.0.0",
+      "minServerVersion": "7.0.0",
+      "serverless": "forbid",
       "topology": [
         "replicaset",
         "sharded",
@@ -79,7 +80,7 @@
   ],
   "tests": [
     {
-      "description": "Insert and find FLE2 indexed field",
+      "description": "Delete can query an FLE2 indexed field",
       "clientOptions": {
         "autoEncryptOpts": {
           "kmsProviders": {
@@ -100,23 +101,20 @@
           "arguments": {
             "document": {
               "_id": 1,
-              "encryptedIndexed": "123"
+              "encryptedIndexed": "value123"
             }
           }
         },
         {
-          "name": "find",
+          "name": "deleteOne",
           "arguments": {
             "filter": {
-              "encryptedIndexed": "123"
+              "encryptedIndexed": "value123"
             }
           },
-          "result": [
-            {
-              "_id": 1,
-              "encryptedIndexed": "123"
-            }
-          ]
+          "result": {
+            "deletedCount": 1
+          }
         }
       ],
       "expectations": [
@@ -222,17 +220,22 @@
         {
           "command_started_event": {
             "command": {
-              "find": "default",
-              "filter": {
-                "encryptedIndexed": {
-                  "$eq": {
-                    "$binary": {
-                      "base64": "BbEAAAAFZAAgAAAAAPGmZcUzdE/FPILvRSyAScGvZparGI2y9rJ/vSBxgCujBXMAIAAAAACi1RjmndKqgnXy7xb22RzUbnZl1sOZRXPOC0KcJkAxmQVjACAAAAAAWuidNu47c9A4Clic3DvFhn1AQJVC+FJtoE5bGZuz6PsFZQAgAAAAAOuac/eRLYakKX6B0vZ1r3QodOQFfjqJD+xlGiPu4/PsEmNtAAAAAAAAAAAAAA==",
-                      "subType": "06"
+              "delete": "default",
+              "deletes": [
+                {
+                  "q": {
+                    "encryptedIndexed": {
+                      "$eq": {
+                        "$binary": {
+                          "base64": "DIkAAAAFZAAgAAAAAPtVteJQAlgb2YMa/+7YWH00sbQPyt7L6Rb8OwBdMmL2BXMAIAAAAAAd44hgVKnEnTFlwNVC14oyc9OZOTspeymusqkRQj57nAVsACAAAAAAaZ9s3G+4znfxStxeOZwcZy1OhzjMGc5hjmdMN+b/w6kSY20AAAAAAAAAAAAA",
+                          "subType": "06"
+                        }
+                      }
                     }
-                  }
+                  },
+                  "limit": 1
                 }
-              },
+              ],
               "encryptionInformation": {
                 "type": 1,
                 "schema": {
@@ -272,28 +275,13 @@
                 }
               }
             },
-            "command_name": "find"
+            "command_name": "delete"
           }
         }
       ],
       "outcome": {
         "collection": {
-          "data": [
-            {
-              "_id": 1,
-              "encryptedIndexed": {
-                "$$type": "binData"
-              },
-              "__safeContent__": [
-                {
-                  "$binary": {
-                    "base64": "31eCYlbQoVboc5zwC8IoyJVSkag9PxREka8dkmbXJeY=",
-                    "subType": "00"
-                  }
-                }
-              ]
-            }
-          ]
+          "data": []
         }
       }
     }
