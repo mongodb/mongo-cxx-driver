@@ -4,6 +4,7 @@ set -o errexit
 set -o pipefail
 
 declare -r mongoc_version="${mongoc_version:-"${mongoc_version_default:?"missing mongoc version"}"}"
+: "${mongoc_version:?}"
 
 # Usage:
 #   to_windows_path "./some/unix/style/path"
