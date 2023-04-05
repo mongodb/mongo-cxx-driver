@@ -2102,6 +2102,13 @@ TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
         return;
     }
 
+    // CXX-2656: temporarily workaround "payload type that is no longer supported" errors until the
+    // QEv2 protocol is properly supported.
+    if (test_util::newer_than(conn, "7.0")) {
+        WARN("Skipping - skipping tests that require QEv2 (CXX-2656)");
+        return;
+    }
+
     if (test_util::get_topology(conn) == "single") {
         std::cerr << "Explicit Encryption tests must not run against a standalone." << std::endl;
         return;
