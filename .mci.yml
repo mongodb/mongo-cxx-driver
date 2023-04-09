@@ -357,6 +357,9 @@ functions:
                   export BUILD_TYPE=${build_type}
                   export PATH="${extra_path}:$PATH"
                   export RUN_DISTCHECK=${RUN_DISTCHECK}
+                  # distro_id is needed by find-cmake-version.sh, but we don't
+                  # want to use add_expansions_to_env
+                  export distro_id=${distro_id}
 
                   ADDL_OPTS=${code_coverage_cmake_flags}
                   if [ "${USE_STATIC_LIBS}" ]; then
@@ -370,10 +373,13 @@ functions:
                   MONGOC_PREFIX="$(pwd)/../mongoc"
                   echo "MONGOC_PREFIX=$MONGOC_PREFIX"
 
-                  if [ "Windows_NT" == "$OS" ]; then
+                  if [[ "$OSTYPE" =~ cygwin ]]; then
                       MONGOC_PREFIX=$(cygpath -m "$MONGOC_PREFIX")
                   fi
-                  export CMAKE=${cmake}
+                  . "$MONGOC_PREFIX/.evergreen/scripts/find-cmake-latest.sh"
+                  declare cmake_binary
+                  export cmake_binary="$(find_cmake_latest)"
+                  command -v "$cmake_binary"
 
                   if [ ! -d ../drivers-evergreen-tools ]; then
                     git clone --depth 1 git@github.com:mongodb-labs/drivers-evergreen-tools.git ../drivers-evergreen-tools
@@ -402,10 +408,13 @@ functions:
                   set -o errexit
                   set -o pipefail
 
+                  # distro_id is needed by find-cmake-version.sh, but we don't
+                  # want to use add_expansions_to_env
+                  export distro_id=${distro_id}
                   # Grabs the mongocryptd path
                   pushd ..
                   export MONGOCRYPTD_PATH=$(pwd)/
-                  if [ "Windows_NT" == "$OS" ]; then
+                  if [[ "$OSTYPE" =~ cygwin ]]; then
                      export MONGOCRYPTD_PATH=$(cygpath -m $MONGOCRYPTD_PATH)
                   fi
                   popd # ..
@@ -453,7 +462,7 @@ functions:
 
                   pushd ../../drivers-evergreen-tools
                   export DRIVERS_TOOLS=$(pwd)
-                  if [ "Windows_NT" == "$OS" ]; then
+                  if [[ "$OSTYPE" =~ cygwin ]]; then
                       export DRIVERS_TOOLS=$(cygpath -m $DRIVERS_TOOLS)
                   fi
                   popd # ../../drivers-evergreen-tools
@@ -514,7 +523,7 @@ functions:
                       register_ca_cert() {
                           local OS=$(uname -s | tr '[:upper:]' '[:lower:]')
                           echo "register_ca_cert: OS: $OS"
-                          case "$OS" in
+                          case "$OSTYPE" in
                               cygwin*)
                                   certutil.exe -addstore "Root" "$DRIVERS_TOOLS\.evergreen\x509gen\ca.pem"
                                   ;;
@@ -559,7 +568,7 @@ functions:
                       echo "Waiting for mock KMS servers to start... done."
                   fi
 
-                  if [ "Windows_NT" == "$OS" ]; then
+                  if [[ "$OSTYPE" =~ cygwin ]]; then
                       CTEST_OUTPUT_ON_FAILURE=1 MSBuild.exe /p:Configuration=${build_type} /verbosity:minimal RUN_TESTS.vcxproj
                       # Only run examples if MONGODB_API_VERSION is unset. We do not append
                       # API version to example clients, so examples will fail when requireApiVersion
@@ -660,8 +669,7 @@ functions:
                   export CC="${example_projects_cc}"
                   export CXX="${example_projects_cxx}"
                   export CXX_STANDARD="${example_projects_cxx_standard}"
-                  export CMAKE=${cmake}
-                  if [ "Windows_NT" == "$OS" ]; then
+                  if [[ "$OSTYPE" =~ cygwin ]]; then
                       export MSVC=1
                   elif [ "$(uname -s | tr '[:upper:]' '[:lower:]')" == "darwin" ]; then
                       export DYLD_LIBRARY_PATH="$(pwd)/build/install/lib:$DYLD_LIBRARY_PATH"
@@ -680,6 +688,10 @@ functions:
                   # is true.
                   if [[ -z "$MONGODB_API_VERSION" ]]; then
                     echo "Building example projects..."
+                    . "$PREFIX/.evergreen/scripts/find-cmake-latest.sh"
+                    declare cmake_binary
+                    export cmake_binary="$(find_cmake_latest)"
+                    command -v "$cmake_binary"
                     .evergreen/build_example_projects.sh
                     echo "Building example projects... done."
                   fi

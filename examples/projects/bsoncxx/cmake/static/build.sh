@@ -4,7 +4,7 @@ set -o pipefail
 
 BUILD_TYPE=${BUILD_TYPE:-Release}
 CXX_STANDARD=${CXX_STANDARD:-11}
-CMAKE=${CMAKE:-cmake}
+CMAKE=${cmake_binary:-cmake}
 
 rm -rf build/*
 cd build
