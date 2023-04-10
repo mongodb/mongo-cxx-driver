@@ -1320,11 +1320,14 @@ static bool is_snapshot_ready(mongocxx::client& client, mongocxx::collection& co
 
     auto session = client.start_session(opts);
     try {
-        auto cursor = collection.aggregate(session, {});
-        for (const auto& it : cursor) {
-            (void)it;
-            break;
-        }
+        // auto cursor = collection.aggregate(session, {});
+        auto cursor = collection.find_one(session, {});
+        auto unused = cursor->begin();
+        (void)unused;
+        // for (const auto& it : cursor) {
+        //     (void)it;
+        //     break;
+        // }
     } catch (const mongocxx::operation_exception& e) {
         if (e.code().value() == 246) {  // snapshot unavailable
             return false;
