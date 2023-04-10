@@ -1365,16 +1365,11 @@ static void setup_pets(mongocxx::client& client) {
     using bsoncxx::builder::basic::kvp;
     using bsoncxx::builder::basic::make_document;
 
-    write_concern wc_majority{};
-    wc_majority.majority(std::chrono::milliseconds(10000));
-    mongocxx::options::insert ins_opts;
-    ins_opts.write_concern(wc_majority);
-
     auto db = client["pets"];
     db.drop();
-    db["cats"].insert_one(make_document(kvp("adoptable", true)), ins_opts);
-    db["dogs"].insert_one(make_document(kvp("adoptable", true)), ins_opts);
-    db["dogs"].insert_one(make_document(kvp("adoptable", false)), ins_opts);
+    db["cats"].insert_one(make_document(kvp("adoptable", true)));
+    db["dogs"].insert_one(make_document(kvp("adoptable", true)));
+    db["dogs"].insert_one(make_document(kvp("adoptable", false)));
     wait_for_snapshot_ready(client, {db["cats"], db["dogs"]});
 }
 
