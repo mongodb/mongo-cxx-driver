@@ -1,7 +1,8 @@
 {
   "runOn": [
     {
-      "minServerVersion": "6.0.0",
+      "minServerVersion": "7.0.0",
+      "serverless": "forbid",
       "topology": [
         "replicaset",
         "sharded",
@@ -79,7 +80,7 @@
   ],
   "tests": [
     {
-      "description": "findOneAndUpdate can query an FLE2 indexed field",
+      "description": "Update can query an FLE2 indexed field",
       "clientOptions": {
         "autoEncryptOpts": {
           "kmsProviders": {
@@ -105,7 +106,7 @@
           }
         },
         {
-          "name": "findOneAndUpdate",
+          "name": "updateOne",
           "arguments": {
             "filter": {
               "encryptedIndexed": "value123"
@@ -114,12 +115,12 @@
               "$set": {
                 "foo": "bar"
               }
-            },
-            "returnDocument": "Before"
+            }
           },
           "result": {
-            "_id": 1,
-            "encryptedIndexed": "value123"
+            "matchedCount": 1,
+            "modifiedCount": 1,
+            "upsertedCount": 0
           }
         }
       ],
@@ -226,22 +227,26 @@
         {
           "command_started_event": {
             "command": {
-              "findAndModify": "default",
-              "query": {
-                "encryptedIndexed": {
-                  "$eq": {
-                    "$binary": {
-                      "base64": "BbEAAAAFZAAgAAAAAPtVteJQAlgb2YMa/+7YWH00sbQPyt7L6Rb8OwBdMmL2BXMAIAAAAAAd44hgVKnEnTFlwNVC14oyc9OZOTspeymusqkRQj57nAVjACAAAAAA19X9v9NlWidu/wR5/C/7WUV54DfL5CkNmT5WYrhxdDcFZQAgAAAAAOuac/eRLYakKX6B0vZ1r3QodOQFfjqJD+xlGiPu4/PsEmNtAAAAAAAAAAAAAA==",
-                      "subType": "06"
+              "update": "default",
+              "updates": [
+                {
+                  "q": {
+                    "encryptedIndexed": {
+                      "$eq": {
+                        "$binary": {
+                          "base64": "DIkAAAAFZAAgAAAAAPtVteJQAlgb2YMa/+7YWH00sbQPyt7L6Rb8OwBdMmL2BXMAIAAAAAAd44hgVKnEnTFlwNVC14oyc9OZOTspeymusqkRQj57nAVsACAAAAAAaZ9s3G+4znfxStxeOZwcZy1OhzjMGc5hjmdMN+b/w6kSY20AAAAAAAAAAAAA",
+                          "subType": "06"
+                        }
+                      }
+                    }
+                  },
+                  "u": {
+                    "$set": {
+                      "foo": "bar"
                     }
                   }
                 }
-              },
-              "update": {
-                "$set": {
-                  "foo": "bar"
-                }
-              },
+              ],
               "encryptionInformation": {
                 "type": 1,
                 "schema": {
@@ -278,28 +283,10 @@
                       }
                     ]
                   }
-                },
-                "deleteTokens": {
-                  "default.default": {
-                    "encryptedIndexed": {
-                      "e": {
-                        "$binary": {
-                          "base64": "65pz95EthqQpfoHS9nWvdCh05AV+OokP7GUaI+7j8+w=",
-                          "subType": "00"
-                        }
-                      },
-                      "o": {
-                        "$binary": {
-                          "base64": "noN+05JsuO1oDg59yypIGj45i+eFH6HOTXOPpeZ//Mk=",
-                          "subType": "00"
-                        }
-                      }
-                    }
-                  }
                 }
               }
             },
-            "command_name": "findAndModify"
+            "command_name": "update"
           }
         }
       ],
@@ -326,7 +313,7 @@
       }
     },
     {
-      "description": "findOneAndUpdate can modify an FLE2 indexed field",
+      "description": "Update can modify an FLE2 indexed field",
       "clientOptions": {
         "autoEncryptOpts": {
           "kmsProviders": {
@@ -352,7 +339,7 @@
           }
         },
         {
-          "name": "findOneAndUpdate",
+          "name": "updateOne",
           "arguments": {
             "filter": {
               "encryptedIndexed": "value123"
@@ -361,12 +348,12 @@
               "$set": {
                 "encryptedIndexed": "value456"
               }
-            },
-            "returnDocument": "Before"
+            }
           },
           "result": {
-            "_id": 1,
-            "encryptedIndexed": "value123"
+            "matchedCount": 1,
+            "modifiedCount": 1,
+            "upsertedCount": 0
           }
         },
         {
@@ -486,24 +473,28 @@
         {
           "command_started_event": {
             "command": {
-              "findAndModify": "default",
-              "query": {
-                "encryptedIndexed": {
-                  "$eq": {
-                    "$binary": {
-                      "base64": "BbEAAAAFZAAgAAAAAPtVteJQAlgb2YMa/+7YWH00sbQPyt7L6Rb8OwBdMmL2BXMAIAAAAAAd44hgVKnEnTFlwNVC14oyc9OZOTspeymusqkRQj57nAVjACAAAAAA19X9v9NlWidu/wR5/C/7WUV54DfL5CkNmT5WYrhxdDcFZQAgAAAAAOuac/eRLYakKX6B0vZ1r3QodOQFfjqJD+xlGiPu4/PsEmNtAAAAAAAAAAAAAA==",
-                      "subType": "06"
+              "update": "default",
+              "updates": [
+                {
+                  "q": {
+                    "encryptedIndexed": {
+                      "$eq": {
+                        "$binary": {
+                          "base64": "DIkAAAAFZAAgAAAAAPtVteJQAlgb2YMa/+7YWH00sbQPyt7L6Rb8OwBdMmL2BXMAIAAAAAAd44hgVKnEnTFlwNVC14oyc9OZOTspeymusqkRQj57nAVsACAAAAAAaZ9s3G+4znfxStxeOZwcZy1OhzjMGc5hjmdMN+b/w6kSY20AAAAAAAAAAAAA",
+                          "subType": "06"
+                        }
+                      }
+                    }
+                  },
+                  "u": {
+                    "$set": {
+                      "encryptedIndexed": {
+                        "$$type": "binData"
+                      }
                     }
                   }
                 }
-              },
-              "update": {
-                "$set": {
-                  "encryptedIndexed": {
-                    "$$type": "binData"
-                  }
-                }
-              },
+              ],
               "encryptionInformation": {
                 "type": 1,
                 "schema": {
@@ -540,28 +531,10 @@
                       }
                     ]
                   }
-                },
-                "deleteTokens": {
-                  "default.default": {
-                    "encryptedIndexed": {
-                      "e": {
-                        "$binary": {
-                          "base64": "65pz95EthqQpfoHS9nWvdCh05AV+OokP7GUaI+7j8+w=",
-                          "subType": "00"
-                        }
-                      },
-                      "o": {
-                        "$binary": {
-                          "base64": "noN+05JsuO1oDg59yypIGj45i+eFH6HOTXOPpeZ//Mk=",
-                          "subType": "00"
-                        }
-                      }
-                    }
-                  }
                 }
               }
             },
-            "command_name": "findAndModify"
+            "command_name": "update"
           }
         },
         {

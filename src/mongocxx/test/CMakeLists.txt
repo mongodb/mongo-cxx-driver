@@ -244,10 +244,10 @@ set_tests_properties(gridfs_specs PROPERTIES
     ENVIRONMENT "GRIDFS_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/gridfs")
 
 set_tests_properties(client_side_encryption_specs PROPERTIES
-    ENVIRONMENT "ENCRYPTION_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/client_side_encryption")
+    ENVIRONMENT "CLIENT_SIDE_ENCRYPTION_LEGACY_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/client_side_encryption/legacy")
 
 set_tests_properties(driver PROPERTIES
-    ENVIRONMENT "ENCRYPTION_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/client_side_encryption")
+    ENVIRONMENT "CLIENT_SIDE_ENCRYPTION_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/client_side_encryption")
 set_property(TEST driver
   APPEND PROPERTY ENVIRONMENT "URI_OPTIONS_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/uri-options")
 

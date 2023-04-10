@@ -342,7 +342,10 @@ void run_operation_check_result(document::view op, make_op_runner_fn make_op_run
     // exception or returned an error, and that the value of the 'errorContains' field
     // matches the error string."
     if (op["result"]["errorContains"]) {
-        REQUIRE(exception);
+        if (!exception) {
+            REQUIRE(actual_result);
+            FAIL("expected an error, got: " << bsoncxx::to_json(*actual_result));
+        }
         INFO("expected error message " << op["result"]["errorContains"].get_string().value);
         INFO("got error message" << error_msg);
         // Do a case insensitive check.
@@ -358,6 +361,10 @@ void run_operation_check_result(document::view op, make_op_runner_fn make_op_run
     // command failed exception or returned an error, and that the value of the
     // 'errorCodeName' field matches the 'codeName' in the server error response."
     if (op["result"]["errorCodeName"]) {
+        if (!op_exception) {
+            REQUIRE(actual_result);
+            FAIL("expected an error, got: " << bsoncxx::to_json(*actual_result));
+        }
         REQUIRE(op_exception);
         uint32_t expected = error_code_from_name(op["result"]["errorCodeName"].get_string().value);
         REQUIRE(op_exception->code().value() == static_cast<int>(expected));
@@ -366,7 +373,10 @@ void run_operation_check_result(document::view op, make_op_runner_fn make_op_run
     // "If the result document has an 'errorLabelsContain' field, [...] Verify that all of
     // the error labels in 'errorLabelsContain' are present"
     if (op["result"]["errorLabelsContain"]) {
-        REQUIRE(op_exception);
+        if (!op_exception) {
+            REQUIRE(actual_result);
+            FAIL("expected an error, got: " << bsoncxx::to_json(*actual_result));
+        }
         for (auto&& label_el : op["result"]["errorLabelsContain"].get_array().value) {
             auto label = label_el.get_string().value;
             REQUIRE(op_exception->has_error_label(label));
@@ -376,7 +386,10 @@ void run_operation_check_result(document::view op, make_op_runner_fn make_op_run
     // "If the result document has an 'errorLabelsOmit' field, [...] Verify that none of the
     // error labels in 'errorLabelsOmit' are present."
     if (op["result"]["errorLabelsOmit"]) {
-        REQUIRE(op_exception);
+        if (!op_exception) {
+            REQUIRE(actual_result);
+            FAIL("expected an error, got: " << bsoncxx::to_json(*actual_result));
+        }
         for (auto&& label_el : op["result"]["errorLabelsOmit"].get_array().value) {
             auto label = label_el.get_string().value;
             REQUIRE(!op_exception->has_error_label(label));
