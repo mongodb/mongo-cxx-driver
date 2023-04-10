@@ -1327,7 +1327,7 @@ static bool is_snapshot_ready(mongocxx::client& client, mongocxx::collection& co
             std::cerr << "DOC TYPE: " << bsoncxx::to_string(doc->type()) << std::endl;
             return true;
         }
-        return false
+        return false;
         // for (const auto& it : cursor) {
         //     (void)it;
         //     break;
