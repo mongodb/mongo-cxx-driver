@@ -1,7 +1,8 @@
 {
   "runOn": [
     {
-      "minServerVersion": "6.0.0",
+      "minServerVersion": "7.0.0",
+      "serverless": "forbid",
       "topology": [
         "replicaset",
         "sharded",
@@ -109,7 +110,7 @@
   ],
   "tests": [
     {
-      "description": "BypassQueryAnalysis decrypts",
+      "description": "Compact works",
       "clientOptions": {
         "autoEncryptOpts": {
           "kmsProviders": {
@@ -121,38 +122,19 @@
                 }
               }
             }
-          },
-          "bypassQueryAnalysis": true
+          }
         }
       },
       "operations": [
         {
-          "name": "insertOne",
+          "name": "runCommand",
+          "object": "database",
+          "command_name": "compactStructuredEncryptionData",
           "arguments": {
-            "document": {
-              "_id": 1,
-              "encryptedIndexed": {
-                "$binary": {
-                  "base64": "BHEBAAAFZAAgAAAAAHb62aV7+mqmaGcotPLdG3KP7S8diFwWMLM/5rYtqLrEBXMAIAAAAAAVJ6OWHRv3OtCozHpt3ZzfBhaxZirLv3B+G8PuaaO4EgVjACAAAAAAsZXWOWA+UiCBbrJNB6bHflB/cn7pWSvwWN2jw4FPeIUFcABQAAAAAMdD1nV2nqeI1eXEQNskDflCy8I7/HvvqDKJ6XxjhrPQWdLqjz+8GosGUsB7A8ee/uG9/guENuL25XD+Fxxkv1LLXtavHOlLF7iW0u9yabqqBXUAEAAAAAQSNFZ4EjSYdhI0EjRWeJASEHQAAgAAAAV2AE0AAAAAq83vqxI0mHYSNBI0VniQEkzZZBBDgeZh+h+gXEmOrSFtVvkUcnHWj/rfPW7iJ0G3UJ8zpuBmUM/VjOMJCY4+eDqdTiPIwX+/vNXegc8FZQAgAAAAAOuac/eRLYakKX6B0vZ1r3QodOQFfjqJD+xlGiPu4/PsAA==",
-                  "subType": "06"
-                }
-              }
+            "command": {
+              "compactStructuredEncryptionData": "default"
             }
           }
-        },
-        {
-          "name": "find",
-          "arguments": {
-            "filter": {
-              "_id": 1
-            }
-          },
-          "result": [
-            {
-              "_id": 1,
-              "encryptedIndexed": "value123"
-            }
-          ]
         }
       ],
       "expectations": [
@@ -170,37 +152,6 @@
         {
           "command_started_event": {
             "command": {
-              "insert": "default",
-              "documents": [
-                {
-                  "_id": 1,
-                  "encryptedIndexed": {
-                    "$binary": {
-                      "base64": "BHEBAAAFZAAgAAAAAHb62aV7+mqmaGcotPLdG3KP7S8diFwWMLM/5rYtqLrEBXMAIAAAAAAVJ6OWHRv3OtCozHpt3ZzfBhaxZirLv3B+G8PuaaO4EgVjACAAAAAAsZXWOWA+UiCBbrJNB6bHflB/cn7pWSvwWN2jw4FPeIUFcABQAAAAAMdD1nV2nqeI1eXEQNskDflCy8I7/HvvqDKJ6XxjhrPQWdLqjz+8GosGUsB7A8ee/uG9/guENuL25XD+Fxxkv1LLXtavHOlLF7iW0u9yabqqBXUAEAAAAAQSNFZ4EjSYdhI0EjRWeJASEHQAAgAAAAV2AE0AAAAAq83vqxI0mHYSNBI0VniQEkzZZBBDgeZh+h+gXEmOrSFtVvkUcnHWj/rfPW7iJ0G3UJ8zpuBmUM/VjOMJCY4+eDqdTiPIwX+/vNXegc8FZQAgAAAAAOuac/eRLYakKX6B0vZ1r3QodOQFfjqJD+xlGiPu4/PsAA==",
-                      "subType": "06"
-                    }
-                  }
-                }
-              ],
-              "ordered": true
-            },
-            "command_name": "insert"
-          }
-        },
-        {
-          "command_started_event": {
-            "command": {
-              "find": "default",
-              "filter": {
-                "_id": 1
-              }
-            },
-            "command_name": "find"
-          }
-        },
-        {
-          "command_started_event": {
-            "command": {
               "find": "datakeys",
               "filter": {
                 "$or": [
@@ -212,34 +163,7 @@
                             "base64": "EjRWeBI0mHYSNBI0VniQEg==",
                             "subType": "04"
                           }
-                        }
-                      ]
-                    }
-                  },
-                  {
-                    "keyAltNames": {
-                      "$in": []
-                    }
-                  }
-                ]
-              },
-              "$db": "keyvault",
-              "readConcern": {
-                "level": "majority"
-              }
-            },
-            "command_name": "find"
-          }
-        },
-        {
-          "command_started_event": {
-            "command": {
-              "find": "datakeys",
-              "filter": {
-                "$or": [
-                  {
-                    "_id": {
-                      "$in": [
+                        },
                         {
                           "$binary": {
                             "base64": "q83vqxI0mHYSNBI0VniQEg==",
@@ -263,28 +187,48 @@
             },
             "command_name": "find"
           }
-        }
-      ],
-      "outcome": {
-        "collection": {
-          "data": [
-            {
-              "_id": 1,
-              "encryptedIndexed": {
-                "$$type": "binData"
-              },
-              "__safeContent__": [
-                {
+        },
+        {
+          "command_started_event": {
+            "command": {
+              "compactStructuredEncryptionData": "default",
+              "compactionTokens": {
+                "encryptedIndexed": {
                   "$binary": {
-                    "base64": "ThpoKfQ8AkOzkFfNC1+9PF0pY2nIzfXvRdxQgjkNbBw=",
+                    "base64": "noN+05JsuO1oDg59yypIGj45i+eFH6HOTXOPpeZ//Mk=",
+                    "subType": "00"
+                  }
+                },
+                "encryptedUnindexed": {
+                  "$binary": {
+                    "base64": "SWO8WEoZ2r2Kx/muQKb7+COizy85nIIUFiHh4K9kcvA=",
                     "subType": "00"
                   }
                 }
-              ]
-            }
-          ]
+              }
+            },
+            "command_name": "compactStructuredEncryptionData"
+          }
         }
-      }
+      ]
+    },
+    {
+      "description": "Compact errors on an unencrypted client",
+      "operations": [
+        {
+          "name": "runCommand",
+          "object": "database",
+          "command_name": "compactStructuredEncryptionData",
+          "arguments": {
+            "command": {
+              "compactStructuredEncryptionData": "default"
+            }
+          },
+          "result": {
+            "errorContains": "'compactStructuredEncryptionData.compactionTokens' is missing"
+          }
+        }
+      ]
     }
   ]
 }

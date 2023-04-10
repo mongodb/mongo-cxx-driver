@@ -1,7 +1,8 @@
 {
   "runOn": [
     {
-      "minServerVersion": "6.0.0",
+      "minServerVersion": "7.0.0",
+      "serverless": "forbid",
       "topology": [
         "replicaset",
         "sharded",
@@ -75,7 +76,6 @@
                   "default.default": {
                     "fields": [],
                     "escCollection": "enxcol_.default.esc",
-                    "eccCollection": "enxcol_.default.ecc",
                     "ecocCollection": "enxcol_.default.ecoc"
                   }
                 }

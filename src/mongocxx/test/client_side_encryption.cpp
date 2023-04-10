@@ -83,9 +83,9 @@ using bsoncxx::types::bson_value::make_value;
 
 using namespace mongocxx;
 
-// Takes a path relative to the ENCRYPTION_TESTS_PATH variable, with leading '/'.
+// Takes a path relative to the CLIENT_SIDE_ENCRYPTION_TESTS_PATH variable, with leading '/'.
 bsoncxx::document::value _doc_from_file(stdx::string_view sub_path) {
-    char* encryption_tests_path = std::getenv("ENCRYPTION_TESTS_PATH");
+    char* encryption_tests_path = std::getenv("CLIENT_SIDE_ENCRYPTION_TESTS_PATH");
     REQUIRE(encryption_tests_path);
 
     std::string path = std::string(encryption_tests_path) + sub_path.data();
@@ -2097,13 +2097,13 @@ TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
         return;
     }
 
-    if (!test_util::newer_than(conn, "6.0")) {
-        std::cerr << "Explicit Encryption tests require MongoDB server 6.0+." << std::endl;
+    if (!test_util::newer_than(conn, "7.0")) {
+        WARN("Skipping - MongoDB server 7.0 or newer required");
         return;
     }
 
     if (test_util::get_topology(conn) == "single") {
-        std::cerr << "Explicit Encryption tests must not run against a standalone." << std::endl;
+        WARN("Skipping - must not run against a standalone server");
         return;
     }
 
@@ -2551,12 +2551,12 @@ TEST_CASE("Custom Key Material Test", "[client_side_encryption]") {
     instance::current();
 
     if (!mongocxx::test_util::should_run_client_side_encryption_test()) {
-        std::cerr << "Skipping Custom Key Material Test prose tests" << std::endl;
+        WARN("Skipping - Client Side Encryption is required");
         return;
     }
 
     if (!test_util::newer_than(uri{}, "4.2")) {
-        std::cerr << "Custom Key Material Test requires MongoDB server 4.2+." << std::endl;
+        WARN("Skipping - MongoDB server 4.2 or newer required");
         return;
     }
 

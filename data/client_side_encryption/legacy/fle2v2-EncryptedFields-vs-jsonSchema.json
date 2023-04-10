@@ -1,7 +1,8 @@
 {
   "runOn": [
     {
-      "minServerVersion": "6.0.0",
+      "minServerVersion": "7.0.0",
+      "serverless": "forbid",
       "topology": [
         "replicaset",
         "sharded",
@@ -12,6 +13,10 @@
   "database_name": "default",
   "collection_name": "default",
   "data": [],
+  "json_schema": {
+    "properties": {},
+    "bsonType": "object"
+  },
   "encrypted_fields": {
     "escCollection": "enxcol_.default.esc",
     "eccCollection": "enxcol_.default.ecc",
@@ -79,7 +84,7 @@
   ],
   "tests": [
     {
-      "description": "Delete can query an FLE2 indexed field",
+      "description": "encryptedFields is preferred over jsonSchema",
       "clientOptions": {
         "autoEncryptOpts": {
           "kmsProviders": {
@@ -100,20 +105,23 @@
           "arguments": {
             "document": {
               "_id": 1,
-              "encryptedIndexed": "value123"
+              "encryptedIndexed": "123"
             }
           }
         },
         {
-          "name": "deleteOne",
+          "name": "find",
           "arguments": {
             "filter": {
-              "encryptedIndexed": "value123"
+              "encryptedIndexed": "123"
             }
           },
-          "result": {
-            "deletedCount": 1
-          }
+          "result": [
+            {
+              "_id": 1,
+              "encryptedIndexed": "123"
+            }
+          ]
         }
       ],
       "expectations": [
@@ -219,22 +227,17 @@
         {
           "command_started_event": {
             "command": {
-              "delete": "default",
-              "deletes": [
-                {
-                  "q": {
-                    "encryptedIndexed": {
-                      "$eq": {
-                        "$binary": {
-                          "base64": "BbEAAAAFZAAgAAAAAPtVteJQAlgb2YMa/+7YWH00sbQPyt7L6Rb8OwBdMmL2BXMAIAAAAAAd44hgVKnEnTFlwNVC14oyc9OZOTspeymusqkRQj57nAVjACAAAAAA19X9v9NlWidu/wR5/C/7WUV54DfL5CkNmT5WYrhxdDcFZQAgAAAAAOuac/eRLYakKX6B0vZ1r3QodOQFfjqJD+xlGiPu4/PsEmNtAAAAAAAAAAAAAA==",
-                          "subType": "06"
-                        }
-                      }
+              "find": "default",
+              "filter": {
+                "encryptedIndexed": {
+                  "$eq": {
+                    "$binary": {
+                      "base64": "DIkAAAAFZAAgAAAAAPGmZcUzdE/FPILvRSyAScGvZparGI2y9rJ/vSBxgCujBXMAIAAAAACi1RjmndKqgnXy7xb22RzUbnZl1sOZRXPOC0KcJkAxmQVsACAAAAAApJtKPW4+o9B7gAynNLL26jtlB4+hq5TXResijcYet8USY20AAAAAAAAAAAAA",
+                      "subType": "06"
                     }
-                  },
-                  "limit": 1
+                  }
                 }
-              ],
+              },
               "encryptionInformation": {
                 "type": 1,
                 "schema": {
@@ -271,34 +274,31 @@
                       }
                     ]
                   }
-                },
-                "deleteTokens": {
-                  "default.default": {
-                    "encryptedIndexed": {
-                      "e": {
-                        "$binary": {
-                          "base64": "65pz95EthqQpfoHS9nWvdCh05AV+OokP7GUaI+7j8+w=",
-                          "subType": "00"
-                        }
-                      },
-                      "o": {
-                        "$binary": {
-                          "base64": "noN+05JsuO1oDg59yypIGj45i+eFH6HOTXOPpeZ//Mk=",
-                          "subType": "00"
-                        }
-                      }
-                    }
-                  }
                 }
               }
             },
-            "command_name": "delete"
+            "command_name": "find"
           }
         }
       ],
       "outcome": {
         "collection": {
-          "data": []
+          "data": [
+            {
+              "_id": 1,
+              "encryptedIndexed": {
+                "$$type": "binData"
+              },
+              "__safeContent__": [
+                {
+                  "$binary": {
+                    "base64": "31eCYlbQoVboc5zwC8IoyJVSkag9PxREka8dkmbXJeY=",
+                    "subType": "00"
+                  }
+                }
+              ]
+            }
+          ]
         }
       }
     }

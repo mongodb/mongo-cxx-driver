@@ -7,12 +7,12 @@
 #######################################
 variables:
 
-    mongoc_version_default: &mongoc_version_default "9ef1cc99" # TODO: update to 1.24.0 once released.
+    mongoc_version_default: &mongoc_version_default "8aced03a" # TODO: update to 1.24.0 once released.
 
     # If updating mongoc_version_minimum, also update:
     # - the default value of --c-driver-build-ref in etc/make_release.py
     # - LIBMONGOC_REQUIRED_VERSION in src/mongocxx/CMakeLists.txt
-    mongoc_version_minimum: &mongoc_version_minimum "9ef1cc99" # TODO: update to 1.24.0 once released.
+    mongoc_version_minimum: &mongoc_version_minimum "8aced03a" # TODO: update to 1.24.0 once released.
 
     mongodb_version:
         version_latest: &version_latest "latest"
@@ -381,25 +381,26 @@ functions:
                   fi
                   export PATH=$(pwd)/src/bsoncxx/${build_type}:$(pwd)/src/mongocxx/${build_type}:$PREFIX/bin:$(pwd)/install/bin:$PATH
 
+                  export CHANGE_STREAMS_UNIFIED_TESTS_PATH="$(pwd)/../data/change-streams/unified"
+                  export CLIENT_SIDE_ENCRYPTION_LEGACY_TESTS_PATH="$(pwd)/../data/client_side_encryption/legacy"
+                  export CLIENT_SIDE_ENCRYPTION_TESTS_PATH="$(pwd)/../data/client_side_encryption"
+                  export CLIENT_SIDE_ENCRYPTION_UNIFIED_TESTS_PATH="$(pwd)/../data/client_side_encryption/unified"
+                  export COLLECTION_MANAGEMENT_TESTS_PATH="$(pwd)/../data/collection-management"
+                  export COMMAND_MONITORING_TESTS_PATH="$(pwd)/../data/command-monitoring"
                   export CRUD_LEGACY_TESTS_PATH="$(pwd)/../data/crud/legacy"
                   export CRUD_UNIFIED_TESTS_PATH="$(pwd)/../data/crud/unified"
-                  export CHANGE_STREAMS_UNIFIED_TESTS_PATH="$(pwd)/../data/change-streams/unified"
-                  export ENCRYPTION_TESTS_PATH="$(pwd)/../data/client_side_encryption"
-                  export INITIAL_DNS_SEEDLIST_DISCOVERY_TESTS_PATH="$(pwd)/../data/initial_dns_seedlist_discovery"
                   export GRIDFS_TESTS_PATH="$(pwd)/../data/gridfs"
-                  export COMMAND_MONITORING_TESTS_PATH="$(pwd)/../data/command-monitoring"
-                  export TRANSACTIONS_TESTS_PATH="$(pwd)/../data/transactions"
-                  export WITH_TRANSACTION_TESTS_PATH="$(pwd)/../data/with_transaction"
+                  export INITIAL_DNS_SEEDLIST_DISCOVERY_TESTS_PATH="$(pwd)/../data/initial_dns_seedlist_discovery"
+                  export READ_WRITE_CONCERN_OPERATION_TESTS_PATH="$(pwd)/../data/read-write-concern/operation"
                   export RETRYABLE_READS_LEGACY_TESTS_PATH="$(pwd)/../data/retryable-reads/legacy"
                   export RETRYABLE_READS_UNIFIED_TESTS_PATH="$(pwd)/../data/retryable-reads/unified"
                   export RETRYABLE_WRITES_UNIFIED_TESTS_PATH="$(pwd)/../data/retryable-writes/unified"
-                  export READ_WRITE_CONCERN_OPERATION_TESTS_PATH="$(pwd)/../data/read-write-concern/operation"
-                  export UNIFIED_FORMAT_TESTS_PATH=$(pwd)/../data/unified-format
                   export SESSION_UNIFIED_TESTS_PATH="$(pwd)/../data/sessions/unified"
-                  export VERSIONED_API_TESTS_PATH=$(pwd)/../data/versioned-api
-                  export COLLECTION_MANAGEMENT_TESTS_PATH="$(pwd)/../data/collection-management"
+                  export TRANSACTIONS_TESTS_PATH="$(pwd)/../data/transactions"
+                  export UNIFIED_FORMAT_TESTS_PATH=$(pwd)/../data/unified-format
                   export URI_OPTIONS_TESTS_PATH="$(pwd)/../data/uri-options"
-                  export CLIENT_SIDE_ENCRYPTION_UNIFIED_TESTS_PATH="$(pwd)/../data/client_side_encryption/unified"
+                  export VERSIONED_API_TESTS_PATH=$(pwd)/../data/versioned-api
+                  export WITH_TRANSACTION_TESTS_PATH="$(pwd)/../data/with_transaction"
 
                   export MONGODB_API_VERSION="${MONGODB_API_VERSION}"
 
