@@ -1321,9 +1321,13 @@ static bool is_snapshot_ready(mongocxx::client& client, mongocxx::collection& co
     auto session = client.start_session(opts);
     try {
         // auto cursor = collection.aggregate(session, {});
-        auto cursor = collection.find_one(session, {});
-        auto doc = cursor->begin();
-        std::cerr << "DOC TYPE: " << bsoncxx::to_string(doc->type()) << std::endl;
+        auto maybe_value = collection.find_one(session, {});
+        if (maybe_value) {
+            auto doc = maybe_value->begin();
+            std::cerr << "DOC TYPE: " << bsoncxx::to_string(doc->type()) << std::endl;
+            return true;
+        }
+        return false
         // for (const auto& it : cursor) {
         //     (void)it;
         //     break;
