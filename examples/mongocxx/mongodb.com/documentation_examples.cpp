@@ -1322,8 +1322,8 @@ static bool is_snapshot_ready(mongocxx::client& client, mongocxx::collection& co
     try {
         // auto cursor = collection.aggregate(session, {});
         auto cursor = collection.find_one(session, {});
-        auto unused = cursor->begin();
-        (void)unused;
+        auto doc = cursor->begin();
+        std::cerr << "DOC TYPE: " << bsoncxx::to_string(doc->type()) << std::endl;
         // for (const auto& it : cursor) {
         //     (void)it;
         //     break;
