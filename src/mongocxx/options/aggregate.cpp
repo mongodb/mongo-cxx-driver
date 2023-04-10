@@ -54,6 +54,10 @@ void aggregate::append(bsoncxx::builder::basic::document& builder) const {
         builder.append(kvp("hint", hint->to_value()));
     }
 
+    if (const auto& read_concern = this->read_concern()) {
+        builder.append(kvp("readConcern", read_concern->to_document()));
+    }
+
     if (const auto& write_concern = this->write_concern()) {
         builder.append(kvp("writeConcern", write_concern->to_document()));
     }
