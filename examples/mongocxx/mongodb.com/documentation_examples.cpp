@@ -1319,11 +1319,11 @@ static bool is_snapshot_ready(mongocxx::client& client, mongocxx::collection& co
 
     auto session = client.start_session(opts);
     try {
-        auto cursor = collection.aggregate(session, {});
-        for (const auto& it : cursor) {
-            (void)it;
-            break;
+        auto maybe_value = collection.find_one(session, {});
+        if (maybe_value) {
+            return true;
         }
+        return false;
     } catch (const mongocxx::operation_exception& e) {
         if (e.code().value() == 246) {  // snapshot unavailable
             return false;
