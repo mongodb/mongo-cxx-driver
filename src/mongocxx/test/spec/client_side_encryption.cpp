@@ -265,15 +265,14 @@ void run_encryption_tests_in_file(const std::string& test_path) {
 
             for (auto&& op : test["operations"].get_array().value) {
                 if (check_results_logging) {
-                    fprintf(stdout,
-                            "about to run operation %s\n",
-                            to_json(op.get_document().value).c_str());
-                    fprintf(stdout, "collection contents before: \n");
+                    UNSCOPED_INFO("about to run operation " << to_json(op.get_document().value));
+                    std::string contents;
                     auto cursor = test_coll.find({});
                     for (auto&& doc : cursor) {
-                        fprintf(stdout, "%s\n", to_json(doc).c_str());
+                        contents += to_json(doc);
+                        contents += '\n';
                     }
-                    fprintf(stdout, "\n\n");
+                    UNSCOPED_INFO("collection contents before:\n" << contents);
                 }
 
                 run_operation_check_result(op.get_document().value, [&]() {
@@ -281,12 +280,13 @@ void run_encryption_tests_in_file(const std::string& test_path) {
                 });
 
                 if (check_results_logging) {
-                    fprintf(stdout, "after running operation, collection contents:\n");
+                    std::string contents;
                     auto cursor = test_coll.find({});
                     for (auto&& doc : cursor) {
-                        fprintf(stdout, "%s\n", to_json(doc).c_str());
+                        contents += to_json(doc);
+                        contents += '\n';
                     }
-                    fprintf(stdout, "\n\n");
+                    UNSCOPED_INFO("after running operation, collection contents:\n" << contents);
                 }
             }
 
