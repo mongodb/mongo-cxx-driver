@@ -53,6 +53,14 @@ class MONGOCXX_API encrypt {
     encrypt& key_id(bsoncxx::types::bson_value::view_or_value key_id);
 
     ///
+    /// Gets the key_id.
+    ///
+    /// @return
+    ///   An optional owning bson_value containing the key_id.
+    ///
+    const stdx::optional<bsoncxx::types::bson_value::view_or_value>& key_id() const;
+
+    ///
     /// Sets a name by which to lookup a key from the key vault collection to use
     /// for this encryption operation. A key alt name can be used instead of a key id.
     ///
@@ -209,14 +217,6 @@ class MONGOCXX_API encrypt {
     /// not be used in production and is subject to backwards breaking changes.
     ///
     const stdx::optional<encryption_query_type>& query_type() const;
-
-    ///
-    /// Gets the key_id.
-    ///
-    /// @return
-    ///   An optional owning bson_value containing the key_id.
-    ///
-    const stdx::optional<bsoncxx::types::bson_value::view_or_value>& key_id() const;
 
     ///
     /// Sets the range options to use for encryption.

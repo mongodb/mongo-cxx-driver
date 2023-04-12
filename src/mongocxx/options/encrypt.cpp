@@ -30,6 +30,10 @@ encrypt& encrypt::key_id(bsoncxx::types::bson_value::view_or_value key_id) {
     return *this;
 }
 
+const stdx::optional<bsoncxx::types::bson_value::view_or_value>& encrypt::key_id() const {
+    return _key_id;
+}
+
 encrypt& encrypt::key_alt_name(std::string name) {
     _key_alt_name = std::move(name);
     return *this;
@@ -64,10 +68,6 @@ encrypt& encrypt::query_type(encrypt::encryption_query_type query_type) {
 
 const stdx::optional<encrypt::encryption_query_type>& encrypt::query_type() const {
     return _query_type;
-}
-
-const stdx::optional<bsoncxx::types::bson_value::view_or_value>& encrypt::key_id() const {
-    return _key_id;
 }
 
 encrypt& encrypt::range_opts(options::range opts) {
