@@ -116,6 +116,31 @@ class client_encryption::impl {
         return encrypted;
     }
 
+    bsoncxx::document::value encrypt_expression(bsoncxx::document::view_or_value expr,
+                                                const options::encrypt& opts) {
+        using mongocxx::libbson::scoped_bson_t;
+
+        using opts_type = mongoc_client_encryption_encrypt_opts_t;
+        using deleter_type = decltype(libmongoc::client_encryption_encrypt_opts_destroy);
+
+        const auto converted_opts = std::unique_ptr<opts_type, deleter_type>(
+            static_cast<opts_type*>(opts.convert()),
+            libmongoc::client_encryption_encrypt_opts_destroy);
+
+        scoped_bson_t encrypted;
+        bson_error_t error = {};
+
+        if (!libmongoc::client_encryption_encrypt_expression(_client_encryption_t,
+                                                             scoped_bson_t(expr).bson(),
+                                                             converted_opts.get(),
+                                                             encrypted.bson_for_init(),
+                                                             &error)) {
+            throw_exception<operation_exception>(error);
+        }
+
+        return encrypted.steal();
+    }
+
     bsoncxx::types::bson_value::value decrypt(bsoncxx::types::bson_value::view value) {
         bson_error_t error;
         bson_value_t decrypted_value;

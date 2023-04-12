@@ -102,6 +102,22 @@ class MONGOCXX_API client_encryption {
                                               const options::encrypt& opts);
 
     ///
+    /// Encrypts a Match Expression or Aggregate Expression to query a range index.
+    ///
+    /// @note Only supported when queryType is "rangePreview" and algorithm is "RangePreview".
+    ///
+    /// @param expr A BSON document corresponding to either a Match Expression or an Aggregate
+    /// Expression.
+    /// @param opts Options must be given in order to specify queryType and algorithm.
+    ///
+    /// @returns The encrypted expression.
+    ///
+    /// @warning The Range algorithm is experimental only. It is not intended for public use. It is
+    /// subject to breaking changes.
+    bsoncxx::document::value encrypt_expression(bsoncxx::document::view_or_value expr,
+                                                const options::encrypt& opts);
+
+    ///
     /// Decrypts an encrypted value (BSON binary of subtype 6).
     ///
     /// @param value
