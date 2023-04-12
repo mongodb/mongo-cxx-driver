@@ -17,6 +17,7 @@
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/bson_value/view_or_value.hpp>
+#include <mongocxx/options/range.hpp>
 #include <mongocxx/stdx.hpp>
 
 #include <mongocxx/config/prelude.hpp>
@@ -218,6 +219,29 @@ class MONGOCXX_API encrypt {
     ///
     const stdx::optional<bsoncxx::types::bson_value::view_or_value>& key_id() const;
 
+    ///
+    /// Sets the range options to use for encryption.
+    ///
+    /// @warning Queryable Encryption is in Public Technical Preview. Queryable Encryption should
+    /// not be used in production and is subject to backwards breaking changes.
+    ///
+    /// @warning The Range algorithm is experimental only. It is not intended for public use. It
+    /// is subject to breaking changes.
+    encrypt& range_opts(options::range opts);
+
+    ///
+    /// Gets the current range options.
+    ///
+    /// @return
+    ///   An optional range options.
+    ///
+    /// @warning Queryable Encryption is in Public Technical Preview. Queryable Encryption should
+    /// not be used in production and is subject to backwards breaking changes.
+    ///
+    /// @warning The Range algorithm is experimental only. It is not intended for public use. It
+    /// is subject to breaking changes.
+    const stdx::optional<options::range>& range_opts() const;
+
    private:
     friend class mongocxx::client_encryption;
     MONGOCXX_PRIVATE void* convert() const;
@@ -227,6 +251,7 @@ class MONGOCXX_API encrypt {
     stdx::optional<encryption_algorithm> _algorithm;
     stdx::optional<int64_t> _contention_factor;
     stdx::optional<encryption_query_type> _query_type;
+    stdx::optional<options::range> _range_opts;
 };
 
 }  // namespace options

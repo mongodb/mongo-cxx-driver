@@ -70,6 +70,15 @@ const stdx::optional<bsoncxx::types::bson_value::view_or_value>& encrypt::key_id
     return _key_id;
 }
 
+encrypt& encrypt::range_opts(options::range opts) {
+    _range_opts = std::move(opts);
+    return *this;
+}
+
+const stdx::optional<options::range>& encrypt::range_opts() const {
+    return _range_opts;
+}
+
 void* encrypt::convert() const {
     using libbson::scoped_bson_t;
 
@@ -154,6 +163,65 @@ void* encrypt::convert() const {
                 throw exception{error_code::k_invalid_parameter, "unsupported query type"};
         }
     }
+
+    if (_range_opts) {
+        struct range_opts_deleter {
+            void operator()(mongoc_client_encryption_encrypt_range_opts_t* ptr) noexcept {
+                libmongoc::client_encryption_encrypt_range_opts_destroy(ptr);
+            }
+        };
+
+        auto range_opts =
+            std::unique_ptr<mongoc_client_encryption_encrypt_range_opts_t, range_opts_deleter>(
+                libmongoc::client_encryption_encrypt_range_opts_new());
+
+        const auto& min = _range_opts->min();
+        const auto& max = _range_opts->max();
+        const auto& precision = _range_opts->precision();
+        const auto& sparsity = _range_opts->sparsity();
+
+        if (!!min != !!max) {
+            throw exception{error_code::k_invalid_parameter,
+                            "one of min or max was set without the other"};
+        }
+
+        if (min && max) {
+            struct guard_type {
+                bson_value_t min = {};
+                bson_value_t max = {};
+
+                ~guard_type() {
+                    bson_value_destroy(&min);
+                    bson_value_destroy(&max);
+                }
+
+                guard_type() = default;
+                guard_type(const guard_type&) = delete;
+                guard_type(const guard_type&&) = delete;
+                guard_type& operator=(const guard_type&) = delete;
+                guard_type& operator=(const guard_type&&) = delete;
+            } guard;
+
+            bsoncxx::types::convert_to_libbson(&guard.min, min->view());
+            bsoncxx::types::convert_to_libbson(&guard.max, max->view());
+
+            libmongoc::client_encryption_encrypt_range_opts_set_min_max(
+                range_opts.get(), &guard.min, &guard.max);
+        }
+
+        if (precision) {
+            libmongoc::client_encryption_encrypt_range_opts_set_precision(range_opts.get(),
+                                                                          *precision);
+        }
+
+        if (sparsity) {
+            libmongoc::client_encryption_encrypt_range_opts_set_sparsity(range_opts.get(),
+                                                                         *sparsity);
+        }
+
+        libmongoc::client_encryption_encrypt_opts_set_range_opts(opts, range_opts.get());
+    }
+
     return opts;
 }
 
