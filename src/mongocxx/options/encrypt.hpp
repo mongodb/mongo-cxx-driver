@@ -112,13 +112,21 @@ class MONGOCXX_API encrypt {
     };
 
     ///
-    /// queryType only applies when algorithm is "Indexed" or "RangePreview".
-    /// It is an error to set queryType when algorithm is not "Indexed" or "RangePreview".
+    /// queryType only applies when algorithm is "indexed" or "rangePreview".
+    /// It is an error to set queryType when algorithm is not "indexed" or "rangePreview".
     ///
-    /// Queryable Encryption is in Public Technical Preview. Queryable Encryption should not be used
-    /// in production and is subject to backwards breaking changes.
+    /// @warning Queryable Encryption is in Public Technical Preview. Queryable Encryption should
+    /// not be used in production and is subject to backwards breaking changes.
     ///
-    enum class encryption_query_type : std::uint8_t { k_equality };
+    enum class encryption_query_type : std::uint8_t {
+        /// @brief Use query type "equality".
+        k_equality,
+
+        /// @brief Use query type "rangePreview".
+        /// @warning The Range algorithm is experimental only. It is not intended for public use. It
+        /// is subject to breaking changes.
+        k_range_preview,
+    };
 
     ///
     /// Sets the algorithm to use for encryption.
