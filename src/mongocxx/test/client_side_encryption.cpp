@@ -93,7 +93,7 @@ bsoncxx::document::value _doc_from_file(stdx::string_view sub_path) {
     CAPTURE(path);
 
     std::ifstream file{path};
-    REQUIRE(file);
+    REQUIRE(file.is_open());
 
     std::string file_contents((std::istreambuf_iterator<char>(file)),
                               std::istreambuf_iterator<char>());
