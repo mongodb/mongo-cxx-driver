@@ -164,7 +164,7 @@ functions:
                 ./src/mongocxx/test/test_mongohouse_specs
 
     "start_mongod":
-        command: shell.exec
+      - command: shell.exec
         params:
             shell: bash
             working_dir: "."
@@ -198,6 +198,10 @@ functions:
 
                 cd ../
                 pwd
+      - command: expansions.update
+        params:
+          type: setup
+          file: drivers-evergreen-tools/mo-expansion.yml
 
 
     "stop_mongod":
@@ -527,6 +531,14 @@ functions:
                       fi
 
                       ulimit -c unlimited || true
+
+                      if [ "${use_mongocryptd}" = "ON" ] || [ "${use_mongocryptd}" = "true" ]; then
+                          echo "Will run tests using mongocryptd (instead of crypted_shared library)"
+                      else
+                          echo "Will run tests using cryptd_shared library (instead of mongocryptd)"
+                          export CRYPT_SHARED_LIB_PATH="${CRYPT_SHARED_LIB_PATH}"
+                          echo "CRYPT_SHARED_LIB_PATH=$CRYPT_SHARED_LIB_PATH"
+                      fi
 
                       # Run tests and examples 1-by-1 with "test_params" so we can run them with valgrind.
                       ${test_params} ./src/bsoncxx/test/test_bson
@@ -1174,6 +1186,28 @@ buildvariants:
             - debian10-large
           - name: uninstall_check
 
+    - name: ubuntu2004-with-mongocryptd-release-latest
+      display_name: "Ubuntu 20.04 Release with mongocryptd (MongoDB Latest)"
+      expansions:
+          build_type: "Release"
+          tar_options: *linux_tar_options
+          extra_path: *linux_extra_path
+          cmake_flags: *linux_cmake_flags
+          mongodb_version: *version_latest
+          use_mongocryptd: true
+      run_on:
+          - ubuntu2004-large
+      tasks:
+          - name: compile_and_test_with_shared_libs
+          - name: compile_and_test_with_shared_libs_extra_alignment
+          - name: compile_and_test_with_static_libs
+          - name: compile_and_test_with_static_libs_extra_alignment
+          - name: compile_and_test_with_shared_libs_replica_set
+          - name: build_example_with_add_subdirectory
+            distros:
+            - ubuntu2004-large
+          - name: uninstall_check
+
     - name: ubuntu2004-release-latest
       display_name: "Ubuntu 20.04 Release (MongoDB Latest)"
       expansions:
@@ -1271,6 +1305,7 @@ buildvariants:
           poly_flags: *poly_std_experimental_flags
           mongodb_version: *version_44
           example_projects_cxx_standard: *std_experimental_cxx_standard
+          use_mongocryptd: true
       run_on:
           - ubuntu1604-build
       tasks:
@@ -1289,6 +1324,7 @@ buildvariants:
           test_params: *valgrind_test_params
           mongodb_version: *version_latest
           disable_slow_tests: 1
+          use_mongocryptd: true
       run_on:
           - ubuntu1804-build
       tasks:
@@ -1307,6 +1343,7 @@ buildvariants:
           test_params: *valgrind_test_params
           mongodb_version: *version_50
           disable_slow_tests: 1
+          use_mongocryptd: true
       run_on:
           - ubuntu1804-build
       tasks:
