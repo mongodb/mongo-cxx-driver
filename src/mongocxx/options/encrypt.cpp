@@ -121,6 +121,10 @@ void* encrypt::convert() const {
                 libmongoc::client_encryption_encrypt_opts_set_algorithm(
                     opts, MONGOC_ENCRYPT_ALGORITHM_UNINDEXED);
                 break;
+            case encryption_algorithm::k_range_preview:
+                libmongoc::client_encryption_encrypt_opts_set_algorithm(
+                    opts, MONGOC_ENCRYPT_ALGORITHM_RANGEPREVIEW);
+                break;
             default:
                 libmongoc::client_encryption_encrypt_opts_destroy(opts);
                 throw exception{error_code::k_invalid_parameter,

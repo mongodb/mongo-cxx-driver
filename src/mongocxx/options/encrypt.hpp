@@ -100,7 +100,15 @@ class MONGOCXX_API encrypt {
         ///
         /// Use unindexed encryption.
         ///
-        k_unindexed
+        k_unindexed,
+
+        ///
+        /// Use range encryption.
+        ///
+        /// @warning The Range algorithm is experimental only. It is not intended for public use. It
+        /// is subject to breaking changes.
+        ///
+        k_range_preview,
     };
 
     ///
