@@ -21,6 +21,7 @@
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/builder/stream/helpers.hpp>
 #include <bsoncxx/document/element.hpp>
+#include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/test_util/catch.hh>
 #include <bsoncxx/types.hpp>
@@ -2647,6 +2648,646 @@ TEST_CASE("Custom Key Material Test", "[client_side_encryption]") {
     auto encrypted_as_binary = encrypted.view().get_binary();
     REQUIRE(expected.size() == encrypted_as_binary.size);
     REQUIRE(std::memcmp(expected.data(), encrypted_as_binary.bytes, expected.size()) == 0);
+}
+
+enum struct RangeFieldType : int {
+    DecimalNoPrecision,
+    DecimalPrecision,
+    DoubleNoPrecision,
+    DoublePrecision,
+    Date,
+    Int,
+    Long,
+};
+
+std::string to_type_str(RangeFieldType field_type) {
+    switch (field_type) {
+        case RangeFieldType::DecimalNoPrecision:
+            return "DecimalNoPrecision";
+        case RangeFieldType::DecimalPrecision:
+            return "DecimalPrecision";
+        case RangeFieldType::DoubleNoPrecision:
+            return "DoubleNoPrecision";
+        case RangeFieldType::DoublePrecision:
+            return "DoublePrecision";
+        case RangeFieldType::Date:
+            return "Date";
+        case RangeFieldType::Int:
+            return "Int";
+        case RangeFieldType::Long:
+            return "Long";
+    };
+
+    FAIL("unexpected field type " << static_cast<int>(field_type));
+    MONGOCXX_UNREACHABLE;
+}
+
+bsoncxx::types::bson_value::value to_field_value(int test_value, RangeFieldType field_type) {
+    switch (field_type) {
+        case RangeFieldType::DecimalNoPrecision:
+        case RangeFieldType::DecimalPrecision:
+            return {bsoncxx::decimal128(std::to_string(test_value))};
+        case RangeFieldType::DoubleNoPrecision:
+        case RangeFieldType::DoublePrecision:
+            return {static_cast<double>(test_value)};
+        case RangeFieldType::Date:
+            return {std::chrono::milliseconds(test_value)};
+        case RangeFieldType::Int:
+            return {test_value};
+        case RangeFieldType::Long:
+            return {std::int64_t{test_value}};
+    }
+
+    FAIL("unexpected field type " << static_cast<int>(field_type));
+    MONGOCXX_UNREACHABLE;
+}
+
+options::range to_range_opts(RangeFieldType field_type) {
+    using namespace bsoncxx::types;
+
+    switch (field_type) {
+        case RangeFieldType::DecimalNoPrecision:
+            return options::range().sparsity(1);
+        case RangeFieldType::DecimalPrecision:
+            return options::range()
+                .min(make_value(b_decimal128{bsoncxx::decimal128(std::to_string(0))}))
+                .max(make_value(b_decimal128{bsoncxx::decimal128(std::to_string(200))}))
+                .sparsity(1)
+                .precision(2);
+        case RangeFieldType::DoubleNoPrecision:
+            return options::range().sparsity(1);
+        case RangeFieldType::DoublePrecision:
+            return options::range()
+                .min(make_value(b_double{0.0}))
+                .max(make_value(b_double{200.0}))
+                .sparsity(1)
+                .precision(2);
+        case RangeFieldType::Date:
+            return options::range()
+                .min(make_value(b_date{std::chrono::milliseconds(0)}))
+                .max(make_value(b_date{std::chrono::milliseconds(200)}))
+                .sparsity(1);
+        case RangeFieldType::Int:
+            return options::range()
+                .min(make_value(b_int32{0}))
+                .max(make_value(b_int32{200}))
+                .sparsity(1);
+        case RangeFieldType::Long:
+            return options::range()
+                .min(make_value(b_int64{0}))
+                .max(make_value(b_int64{200}))
+                .sparsity(1);
+    }
+
+    FAIL("unexpected field type " << static_cast<int>(field_type));
+    MONGOCXX_UNREACHABLE;
+}
+
+struct field_type_values {
+    bsoncxx::types::bson_value::value v0;
+    bsoncxx::types::bson_value::value v6;
+    bsoncxx::types::bson_value::value v30;
+    bsoncxx::types::bson_value::value v200;
+
+    explicit field_type_values(RangeFieldType field_type)
+        : v0(to_field_value(0, field_type)),
+          v6(to_field_value(6, field_type)),
+          v30(to_field_value(30, field_type)),
+          v200(to_field_value(200, field_type)) {}
+};
+
+struct range_explicit_encryption_objects {
+    options::range range_opts;
+    bsoncxx::document::value key1_document = make_document();
+    bsoncxx::types::bson_value::view key1_id;
+    std::unique_ptr<mongocxx::client> key_vault_client_ptr;
+    std::unique_ptr<mongocxx::client_encryption> client_encryption_ptr;
+    std::unique_ptr<mongocxx::client> encrypted_client_ptr;
+    std::string field_name;
+    std::unique_ptr<field_type_values> field_values_ptr;
+};
+
+range_explicit_encryption_objects range_explicit_encryption_setup(const std::string& type_str,
+                                                                  RangeFieldType field_type) {
+    range_explicit_encryption_objects res;
+
+    // Load the file for the specific data type being tested `encryptedFields-<type>.json`.
+    const auto encrypted_fields =
+        _doc_from_file("/explicit-encryption/range-encryptedFields-" + type_str + ".json");
+    const auto collection_options = make_document(kvp("encryptedFields", encrypted_fields));
+
+    // Load the file key1-document.json as `key1Document`.
+    auto& key1_document =
+        (res.key1_document = _doc_from_file("/explicit-encryption/key1-document.json"));
+
+    // Read the "_id" field of key1Document as `key1ID`.
+    const auto& key1_id = (res.key1_id = key1_document["_id"].get_value());
+
+    const auto wc_majority = []() -> mongocxx::write_concern {
+        write_concern res;
+        res.acknowledge_level(write_concern::level::k_majority);
+        return res;
+    }();
+
+    const auto rc_majority = []() -> mongocxx::read_concern {
+        read_concern res;
+        res.acknowledge_level(read_concern::level::k_majority);
+        return res;
+    }();
+
+    const auto empty_doc = make_document();
+
+    auto client = mongocxx::client(uri(), test_util::add_test_server_api());
+
+    // Drop and create the collection `db.explicit_encryption` using `encryptedFields` as an option.
+    {
+        auto db = client["db"];
+        db["explicit_encryption"].drop();
+        db.create_collection("explicit_encryption", collection_options.view());
+    }
+
+    {
+        auto keyvault = client["keyvault"];
+
+        // Drop and create the collection `keyvault.datakeys`.
+        keyvault["datakeys"].drop();
+        auto datakeys = keyvault.create_collection("datakeys");
+
+        // Insert `key1Document` in `keyvault.datakeys` with majority write concern.
+        datakeys.insert_one(key1_document.view(), options::insert().write_concern(wc_majority));
+    }
+
+    const auto kms_providers = _make_kms_doc(false);
+
+    using bsoncxx::stdx::make_unique;
+
+    // Create a MongoClient named `keyVaultClient`.
+    auto& key_vault_client = *(res.key_vault_client_ptr = make_unique<mongocxx::client>(
+                                   uri(), test_util::add_test_server_api()));
+
+    // Create a ClientEncryption object named `clientEncryption` with these options:
+    //   ClientEncryptionOpts {
+    //      keyVaultClient: <keyVaultClient>;
+    //      keyVaultNamespace: "keyvault.datakeys";
+    //      kmsProviders: { "local": { "key": <base64 decoding of LOCAL_MASTERKEY> } }
+    //   }
+    auto& client_encryption =
+        *(res.client_encryption_ptr = make_unique<mongocxx::client_encryption>(
+              options::client_encryption()
+                  .key_vault_client(&key_vault_client)
+                  .key_vault_namespace({"keyvault", "datakeys"})
+                  .kms_providers(kms_providers.view())));
+
+    // Create a MongoClient named `encryptedClient` with these `AutoEncryptionOpts`:
+    //   AutoEncryptionOpts {
+    //      keyVaultNamespace: "keyvault.datakeys";
+    //      kmsProviders: { "local": { "key": <base64 decoding of LOCAL_MASTERKEY> } }
+    //      bypassQueryAnalysis: true
+    //   }
+    auto& encrypted_client = *(res.encrypted_client_ptr = make_unique<mongocxx::client>(
+                                   uri(),
+                                   test_util::add_test_server_api().auto_encryption_opts(
+                                       options::auto_encryption()
+                                           .key_vault_namespace({"keyvault", "datakeys"})
+                                           .kms_providers(kms_providers.view())
+                                           .bypass_query_analysis(true))));
+
+    // Ensure the type matches with the type of the encrypted field.
+    const auto& field_values = *(res.field_values_ptr = make_unique<field_type_values>(field_type));
+    const auto& field_name = (res.field_name = "encrypted" + type_str);
+    const auto& range_opts = (res.range_opts = to_range_opts(field_type));
+
+    // Encrypt these values with the matching `RangeOpts` listed in Test Setup: RangeOpts and these
+    // `EncryptOpts`:
+    //   class EncryptOpts {
+    //      keyId : <key1ID>:
+    //      algorithm: "RangePreview",
+    //      contentionFactor: 0
+    //   }
+    const auto encrypt_opts =
+        options::encrypt()
+            .range_opts(range_opts)
+            .key_id(key1_id)
+            .algorithm(options::encrypt::encryption_algorithm::k_range_preview)
+            .contention_factor(0);
+
+    // Use `clientEncryption` to encrypt these values: 0, 6, 30, and 200.
+    const auto encrypted_v0 = client_encryption.encrypt(field_values.v0, encrypt_opts);
+    const auto encrypted_v6 = client_encryption.encrypt(field_values.v6, encrypt_opts);
+    const auto encrypted_v30 = client_encryption.encrypt(field_values.v30, encrypt_opts);
+    const auto encrypted_v200 = client_encryption.encrypt(field_values.v200, encrypt_opts);
+
+    auto explicit_encryption = encrypted_client["db"]["explicit_encryption"];
+
+    // Use `encryptedClient` to insert these documents into
+    // `db.explicit_encryption`:
+    //   { "encrypted<Type>": <encrypted 0>, _id: 0 }
+    //   { "encrypted<Type>": <encrypted 6>, _id: 1 }
+    //   { "encrypted<Type>": <encrypted 30>, _id: 2 }
+    //   { "encrypted<Type>": <encrypted 200>, _id: 3 }
+    explicit_encryption.insert_one(make_document(kvp(field_name, encrypted_v0), kvp("_id", 0)));
+    explicit_encryption.insert_one(make_document(kvp(field_name, encrypted_v6), kvp("_id", 1)));
+    explicit_encryption.insert_one(make_document(kvp(field_name, encrypted_v30), kvp("_id", 2)));
+    explicit_encryption.insert_one(make_document(kvp(field_name, encrypted_v200), kvp("_id", 3)));
+
+    return res;
+}
+
+// Prose Test 22
+TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
+    instance::current();
+
+    if (!mongocxx::test_util::should_run_client_side_encryption_test()) {
+        return;
+    }
+
+    {
+        auto client = mongocxx::client(mongocxx::uri(), test_util::add_test_server_api());
+
+        if (!test_util::newer_than(client, "7.0")) {
+            WARN("Skipping - MongoDB server 7.0 or newer required");
+            return;
+        }
+
+        if (test_util::get_topology(client) == "single") {
+            WARN("Skipping - must not run against a standalone server");
+            return;
+        }
+    }
+
+    const RangeFieldType field_types[] = {
+        RangeFieldType::DecimalNoPrecision,
+        RangeFieldType::DecimalPrecision,
+        RangeFieldType::DoubleNoPrecision,
+        RangeFieldType::DoublePrecision,
+        RangeFieldType::Date,
+        RangeFieldType::Int,
+        RangeFieldType::Long,
+    };
+
+    for (const auto& field_type : field_types) {
+        const auto type_str = to_type_str(field_type);
+
+        DYNAMIC_SECTION("Field Type - " << type_str) {
+            auto test_objects = range_explicit_encryption_setup(type_str, field_type);
+
+            REQUIRE(test_objects.client_encryption_ptr);
+            REQUIRE(test_objects.encrypted_client_ptr);
+            REQUIRE(test_objects.field_values_ptr);
+
+            const auto& range_opts = test_objects.range_opts;
+            const auto& key1_id = test_objects.key1_id;
+            auto& client_encryption = *test_objects.client_encryption_ptr;
+            auto& encrypted_client = *test_objects.encrypted_client_ptr;
+            const auto& field_name = test_objects.field_name;
+            const auto& field_values = *test_objects.field_values_ptr;
+
+            auto explicit_encryption = encrypted_client["db"]["explicit_encryption"];
+
+            SECTION("Case 1: can decrypt a payload") {
+                // Use `clientEncryption.encrypt()` to encrypt the value 6.
+                const auto& original = field_values.v6;
+
+                // Encrypt with the matching `RangeOpts` listed in Test Setup: RangeOpts and these
+                // `EncryptOpts`:
+                //   class EncryptOpts {
+                //      keyId : <key1ID>
+                //      algorithm: "RangePreview",
+                //      contentionFactor: 0
+                //   }
+                // Store the result in insertPayload.
+                const auto insert_payload = client_encryption.encrypt(
+                    original.view(),
+                    options::encrypt()
+                        .range_opts(range_opts)
+                        .key_id(key1_id)
+                        .algorithm(options::encrypt::encryption_algorithm::k_range_preview)
+                        .contention_factor(0));
+
+                // Use `clientEncryption` to decrypt `insertPayload`.
+                const auto result = client_encryption.decrypt(insert_payload);
+
+                // Assert the returned value equals 6.
+                REQUIRE(result == original);
+            }
+
+            SECTION("Case 2: can find encrypted range and return the maximum") {
+                // Use clientEncryption.encryptExpression() to encrypt this query:
+                //   {"$and": [{"encrypted<Type>": {"$gte": 6}}, {"encrypted<Type>": {"$lte":
+                //   200}}]}
+                const auto query = make_document(kvp(
+                    "$and",
+                    make_array(
+                        make_document(kvp(field_name, make_document(kvp("$gte", field_values.v6)))),
+                        make_document(
+                            kvp(field_name, make_document(kvp("$lte", field_values.v200)))))));
+
+                // Use the matching `RangeOpts` listed in Test Setup: RangeOpts and these
+                // `EncryptOpts` to encrypt the query:
+                //   class EncryptOpts {
+                //      keyId : <key1ID>
+                //      algorithm: "RangePreview",
+                //      queryType: "rangePreview",
+                //      contentionFactor: 0
+                //   }
+                // Store the result in `findPayload`.
+                const auto find_payload = client_encryption.encrypt_expression(
+                    query.view(),
+                    options::encrypt()
+                        .range_opts(range_opts)
+                        .key_id(key1_id)
+                        .algorithm(options::encrypt::encryption_algorithm::k_range_preview)
+                        .query_type(options::encrypt::encryption_query_type::k_range_preview)
+                        .contention_factor(0));
+
+                // Use encryptedClient to run a "find" operation on the `db.explicit_encryption`
+                // collection with the filter findPayload and sort the results by _id.
+                auto cursor = explicit_encryption.find(
+                    find_payload.view(),
+                    options::find()
+                        .sort(make_document(kvp("_id", 1)))
+                        .projection(make_document(kvp("_id", 0), kvp(field_name, 1))));
+
+                // Assert these three documents are returned:
+                //  - { "encrypted<Type>": 6 }
+                //  - { "encrypted<Type>": 30 }
+                //  - { "encrypted<Type>": 200 }
+                const auto expected = std::vector<bsoncxx::document::value>({
+                    make_document(kvp(field_name, field_values.v6)),
+                    make_document(kvp(field_name, field_values.v30)),
+                    make_document(kvp(field_name, field_values.v200)),
+                });
+
+                const auto actual =
+                    std::vector<bsoncxx::document::value>(cursor.begin(), cursor.end());
+
+                REQUIRE(actual == expected);
+            }
+
+            SECTION("Case 3: can find encrypted range and return the minimum") {
+                // Use `clientEncryption.encryptExpression()` to encrypt this query:
+                //   {"$and": [{"encrypted<Type>": {"$gte": 0}}, {"encrypted<Type>": {"$lte": 6}}]}
+                const auto query = make_document(kvp(
+                    "$and",
+                    make_array(
+                        make_document(kvp(field_name, make_document(kvp("$gte", field_values.v0)))),
+                        make_document(
+                            kvp(field_name, make_document(kvp("$lte", field_values.v6)))))));
+
+                // Use the matching `RangeOpts` listed in Test Setup: RangeOpts and these
+                // `EncryptOpts` to encrypt the query:
+                //   class EncryptOpts {
+                //      keyId : <key1ID>
+                //      algorithm: "RangePreview",
+                //      queryType: "rangePreview",
+                //      contentionFactor: 0
+                //   }
+                // Store the result in `findPayload`.
+                const auto find_payload = client_encryption.encrypt_expression(
+                    query.view(),
+                    options::encrypt()
+                        .range_opts(range_opts)
+                        .key_id(key1_id)
+                        .algorithm(options::encrypt::encryption_algorithm::k_range_preview)
+                        .query_type(options::encrypt::encryption_query_type::k_range_preview)
+                        .contention_factor(0));
+
+                // Use `encryptedClient` to run a "find" operation on the `db.explicit_encryption`
+                // collection with the filter `findPayload` and sort the results by `_id`.
+                auto cursor = explicit_encryption.find(
+                    find_payload.view(),
+                    options::find()
+                        .sort(make_document(kvp("_id", 1)))
+                        .projection(make_document(kvp("_id", 0), kvp(field_name, 1))));
+
+                // Assert these two documents are returned:
+                //  - { "encrypted<Type>": 0 }
+                //  - { "encrypted<Type>": 6 }
+                const auto expected = std::vector<bsoncxx::document::value>({
+                    make_document(kvp(field_name, field_values.v0)),
+                    make_document(kvp(field_name, field_values.v6)),
+                });
+
+                const auto actual =
+                    std::vector<bsoncxx::document::value>(cursor.begin(), cursor.end());
+
+                REQUIRE(actual == expected);
+            }
+
+            SECTION("Case 4: can find encrypted range with an open range query") {
+                // Use clientEncryption.encryptExpression() to encrypt this query:
+                //   {"$and": [{"encrypted<Type>": {"$gt": 30}}]}
+                const auto query = make_document(
+                    kvp("$and",
+                        make_array(make_document(
+                            kvp(field_name, make_document(kvp("$gt", field_values.v30)))))));
+
+                // Use the matching `RangeOpts` listed in Test Setup: RangeOpts and these
+                // `EncryptOpts` to encrypt the query:
+                //   class EncryptOpts {
+                //      keyId : <key1ID>
+                //      algorithm: "RangePreview",
+                //      queryType: "rangePreview",
+                //      contentionFactor: 0
+                //   }
+                // Store the result in `findPayload`.
+                const auto find_payload = client_encryption.encrypt_expression(
+                    query.view(),
+                    options::encrypt()
+                        .range_opts(range_opts)
+                        .key_id(key1_id)
+                        .algorithm(options::encrypt::encryption_algorithm::k_range_preview)
+                        .query_type(options::encrypt::encryption_query_type::k_range_preview)
+                        .contention_factor(0));
+
+                // Use encryptedClient to run a "find" operation on the `db.explicit_encryption`
+                // collection with the filter findPayload and sort the results by _id.
+                auto cursor = explicit_encryption.find(
+                    find_payload.view(),
+                    options::find()
+                        .sort(make_document(kvp("_id", 1)))
+                        .projection(make_document(kvp("_id", 0), kvp(field_name, 1))));
+
+                // Assert that only this document is returned:
+                //  - { "encrypted<Type>": 200 }
+                const auto expected = std::vector<bsoncxx::document::value>({
+                    make_document(kvp(field_name, field_values.v200)),
+                });
+
+                const auto actual =
+                    std::vector<bsoncxx::document::value>(cursor.begin(), cursor.end());
+
+                REQUIRE(actual == expected);
+            }
+
+            SECTION("Case 5: can run an aggregation expression inside $expr") {
+                // Use clientEncryption.encryptExpression() to encrypt this query:
+                //   {'$and': [ { '$lt': [ '$encrypted<Type>', 30 ] } ] } }
+                const auto query = make_document(
+                    kvp("$and",
+                        make_array(make_document(
+                            kvp(field_name, make_document(kvp("$lt", field_values.v30)))))));
+
+                // Use the matching `RangeOpts` listed in Test Setup: RangeOpts and these
+                // `EncryptOpts` to encrypt the query:
+                //   class EncryptOpts {
+                //      keyId : <key1ID>
+                //      algorithm: "RangePreview",
+                //      queryType: "rangePreview",
+                //      contentionFactor: 0
+                //   }
+                // Store the result in `findPayload`.
+                const auto find_payload = client_encryption.encrypt_expression(
+                    query.view(),
+                    options::encrypt()
+                        .range_opts(range_opts)
+                        .key_id(key1_id)
+                        .algorithm(options::encrypt::encryption_algorithm::k_range_preview)
+                        .query_type(options::encrypt::encryption_query_type::k_range_preview)
+                        .contention_factor(0));
+
+                // Use encryptedClient to run a "find" operation on the `db.explicit_encryption`
+                // collection with the filter findPayload and sort the results by _id.
+                auto cursor = explicit_encryption.find(
+                    find_payload.view(),
+                    options::find()
+                        .sort(make_document(kvp("_id", 1)))
+                        .projection(make_document(kvp("_id", 0), kvp(field_name, 1))));
+
+                // Assert these two documents are returned:
+                //  - { "encrypted<Type>": 0 }
+                //  - { "encrypted<Type>": 6 }
+                const auto expected = std::vector<bsoncxx::document::value>({
+                    make_document(kvp(field_name, field_values.v0)),
+                    make_document(kvp(field_name, field_values.v6)),
+                });
+
+                const auto actual =
+                    std::vector<bsoncxx::document::value>(cursor.begin(), cursor.end());
+
+                REQUIRE(actual == expected);
+            }
+
+            switch (field_type) {
+                case RangeFieldType::DoubleNoPrecision:
+                case RangeFieldType::DecimalNoPrecision:
+                    // This test case should be skipped if the encrypted field is
+                    // `encryptedDoubleNoPrecision` or `encryptedDecimalNoPrecision`.
+                    break;
+                default: {
+                    SECTION("Case 6: encrypting a document greater than the maximum errors") {
+                        const auto original = to_field_value(201, field_type);
+
+                        // Use clientEncryption.encrypt() to try to encrypt the value 201 with the
+                        // matching RangeOpts listed in Test Setup: RangeOpts and these EncryptOpts:
+                        //   class EncryptOpts {
+                        //      keyId : <key1ID>
+                        //      algorithm: "RangePreview",
+                        //      contentionFactor: 0
+                        //   }
+                        // The error should be raised because 201 is greater than the maximum value
+                        // in RangeOpts. Assert that an error was raised.
+                        REQUIRE_THROWS_WITH(
+                            client_encryption.encrypt(
+                                original.view(),
+                                options::encrypt()
+                                    .range_opts(range_opts)
+                                    .key_id(key1_id)
+                                    .algorithm(
+                                        options::encrypt::encryption_algorithm::k_range_preview)
+                                    .contention_factor(0)),
+                            Catch::Contains(
+                                "Value must be greater than or equal to the minimum value and "
+                                "less than or equal to the maximum value"));
+                    }
+                    break;
+                }
+            }
+
+            switch (field_type) {
+                case RangeFieldType::DoubleNoPrecision:
+                case RangeFieldType::DecimalNoPrecision:
+                    // This test case should be skipped if the encrypted field is
+                    // `encryptedDoubleNoPrecision`.
+                    break;
+                default: {
+                    SECTION("Case 7: encrypting a document of a different type errors") {
+                        // For all the tests below use these EncryptOpts:
+                        //   class EncryptOpts {
+                        //      keyId : <key1ID>
+                        //      algorithm: "RangePreview",
+                        //      contentionFactor: 0
+                        //   }
+                        const auto encrypt_opts =
+                            options::encrypt()
+                                .range_opts(range_opts)
+                                .key_id(key1_id)
+                                .algorithm(options::encrypt::encryption_algorithm::k_range_preview)
+                                .contention_factor(0);
+
+                        // If the encrypted field is encryptedInt encrypt:
+                        //   { "encryptedInt": { "$numberDouble": "6" } }
+                        // Otherwise, encrypt:
+                        //   { "encrypted<Type>": { "$numberInt": "6" } }
+                        const auto value = field_type == RangeFieldType::Int
+                                               ? to_field_value(6, RangeFieldType::DoublePrecision)
+                                               : to_field_value(6, RangeFieldType::Int);
+
+                        // Assert an error was raised.
+                        REQUIRE_THROWS_WITH(
+                            client_encryption.encrypt(value.view(), encrypt_opts),
+                            Catch::Contains("expected matching 'min' and value type"));
+                    }
+                    break;
+                }
+            }
+
+            switch (field_type) {
+                case RangeFieldType::DoublePrecision:
+                case RangeFieldType::DoubleNoPrecision:
+                case RangeFieldType::DecimalPrecision:
+                case RangeFieldType::DecimalNoPrecision:
+                    // This test case should be skipped if the encrypted field is
+                    // `encryptedDoublePrecision` or `encryptedDoubleNoPrecision` or
+                    // `encryptedDecimalPrecision` or `encryptedDecimalNoPrecision`.
+                    break;
+                default: {
+                    SECTION("Case 8: setting precision errors if the type is not a double") {
+                        // Use `clientEncryption.encrypt()` to try to encrypt the value 6 with these
+                        // `EncryptOpts` and these `RangeOpts`:
+                        //   class EncryptOpts {
+                        //      keyId : <key1ID>
+                        //      algorithm: "RangePreview",
+                        //      contentionFactor: 0
+                        //   }
+                        //
+                        //   class RangeOpts {
+                        //      min: 0,
+                        //      max: 200,
+                        //      sparsity: 1,
+                        //      precision: 2,
+                        //   }
+                        // Assert an error was raised.
+                        REQUIRE_THROWS_WITH(
+                            client_encryption.encrypt(
+                                field_values.v6,
+                                options::encrypt()
+                                    .range_opts(options::range()
+                                                    .min(to_field_value(0, field_type))
+                                                    .max(to_field_value(200, field_type))
+                                                    .sparsity(1)
+                                                    .precision(2))
+                                    .key_id(key1_id)
+                                    .algorithm(
+                                        options::encrypt::encryption_algorithm::k_range_preview)
+                                    .contention_factor(0)),
+                            Catch::Contains(
+                                "expected 'precision' to be set with double or decimal128 index"));
+                    }
+                } break;
+            }
+        }
+    }
 }
 
 }  // namespace
