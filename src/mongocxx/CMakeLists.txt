@@ -155,6 +155,7 @@ set(mongocxx_sources
     options/index_view.cpp
     options/insert.cpp
     options/pool.cpp
+    options/range.cpp
     options/replace.cpp
     options/rewrap_many_datakey.cpp
     options/server_api.cpp
@@ -406,6 +407,8 @@ set_local_dist (src_mongocxx_DIST_local
    options/private/server_api.hh
    options/private/ssl.hh
    options/private/transaction.hh
+   options/range.cpp
+   options/range.hpp
    options/replace.cpp
    options/replace.hpp
    options/rewrap_many_datakey.cpp
