@@ -535,7 +535,7 @@ functions:
                       if [ "${use_mongocryptd}" = "ON" ] || [ "${use_mongocryptd}" = "true" ]; then
                           echo "Will run tests using mongocryptd (instead of crypt_shared library)"
                       else
-                          echo "Will run tests using cryptd_shared library (instead of mongocryptd)"
+                          echo "Will run tests using crypt_shared library (instead of mongocryptd)"
                           export CRYPT_SHARED_LIB_PATH="${CRYPT_SHARED_LIB_PATH}"
                           echo "CRYPT_SHARED_LIB_PATH=$CRYPT_SHARED_LIB_PATH"
                       fi
