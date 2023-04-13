@@ -536,6 +536,7 @@ functions:
                           echo "Will run tests using mongocryptd (instead of crypt_shared library)"
                       else
                           echo "Will run tests using crypt_shared library (instead of mongocryptd)"
+                          # Set by run-orchestration.sh in "start_mongod".
                           export CRYPT_SHARED_LIB_PATH="${CRYPT_SHARED_LIB_PATH}"
                           echo "CRYPT_SHARED_LIB_PATH=$CRYPT_SHARED_LIB_PATH"
                       fi
