@@ -231,7 +231,8 @@ void _add_cse_opts(options::client_encryption* opts,
     opts->key_vault_namespace({"keyvault", "datakeys"});
 }
 
-options::client crypt_shared_opts(options::client opts = {}) {
+options::client crypt_shared_opts() {
+    options::client opts;
     const auto shared_lib_path = std::getenv("CRYPT_SHARED_LIB_PATH");
     if (shared_lib_path) {
         opts.auto_encryption_opts(
@@ -668,7 +669,7 @@ TEST_CASE("BSON size limits and batch splitting", "[client_side_encryption]") {
     client_encrypted_opts.apm_opts(apm_opts);
 
     class client client_encrypted {
-        uri{}, test_util::add_test_server_api(crypt_shared_opts(client_encrypted_opts)),
+        uri{}, test_util::add_test_server_api(client_encrypted_opts)
     };
 
     // Using client_encrypted perform the following operations:
@@ -803,7 +804,7 @@ TEST_CASE("Views are prohibited", "[client_side_encryption]") {
     options::client opts;
     _add_client_encrypted_opts(&opts, {}, _make_kms_doc(), _make_tls_opts());
     class client client_encrypted {
-        uri{}, test_util::add_test_server_api(crypt_shared_opts(opts)),
+        uri{}, test_util::add_test_server_api(opts)
     };
 
     // Using client_encrypted, attempt to insert a document into db.view.
@@ -1751,7 +1752,7 @@ TEST_CASE("KMS TLS expired certificate", "[client_side_encryption]") {
     options::client client_opts;
 
     class client setup_client {
-        uri{}, test_util::add_test_server_api(crypt_shared_opts(client_opts)),
+        uri{}, test_util::add_test_server_api(client_opts)
     };
 
     // Support for detailed certificate verify failure messages required by this test are only
@@ -1815,7 +1816,7 @@ TEST_CASE("KMS TLS wrong host certificate", "[client_side_encryption]") {
     options::client client_opts;
 
     class client setup_client {
-        uri{}, test_util::add_test_server_api(crypt_shared_opts(client_opts)),
+        uri{}, test_util::add_test_server_api(client_opts)
     };
 
     // Support for detailed certificate verify failure messages required by this test are only
