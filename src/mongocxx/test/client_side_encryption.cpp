@@ -234,15 +234,12 @@ void _add_cse_opts(options::client_encryption* opts,
 options::client crypt_shared_opts(options::client opts = {}) {
     const auto shared_lib_path = std::getenv("CRYPT_SHARED_LIB_PATH");
     if (shared_lib_path) {
-        auto extra = make_document(kvp("cryptSharedLibPath", shared_lib_path),
-                                   kvp("cryptSharedLibRequired", true));
-
-        options::auto_encryption auto_encrypt_opts{};
-        auto_encrypt_opts.kms_providers(_make_kms_doc());
-        auto_encrypt_opts.key_vault_namespace({"keyvault", "datakeys"});
-        auto_encrypt_opts.extra_options({std::move(extra)});
-
-        opts.auto_encryption_opts(std::move(auto_encrypt_opts));
+        opts.auto_encryption_opts(
+            options::auto_encryption()
+                .kms_providers(_make_kms_doc())
+                .key_vault_namespace({"keyvault", "datakeys"})
+                .extra_options(make_document(kvp("cryptSharedLibPath", shared_lib_path),
+                                             kvp("cryptSharedLibRequired", true))));
     }
     return opts;
 }
