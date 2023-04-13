@@ -192,9 +192,8 @@ void _add_client_encrypted_opts(options::client* client_opts,
 
     const auto shared_lib_path = std::getenv("CRYPT_SHARED_LIB_PATH");
     if (shared_lib_path) {
-        auto extra = make_document(kvp("cryptSharedLibPath", shared_lib_path),
-                                   kvp("cryptSharedLibRequired", true));
-        auto_encrypt_opts.extra_options({std::move(extra)});
+        auto_encrypt_opts.extra_options(make_document(kvp("cryptSharedLibPath", shared_lib_path),
+                                                      kvp("cryptSharedLibRequired", true)));
     } else if (bypass_spawn || mongocryptd_path) {
         auto cmd = bsoncxx::builder::basic::document{};
 
