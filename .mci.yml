@@ -1315,6 +1315,7 @@ buildvariants:
           test_params: *valgrind_test_params
           mongodb_version: *version_latest
           disable_slow_tests: 1
+          use_mongocryptd: true
       run_on:
           - ubuntu1804-build
       tasks:
@@ -1333,6 +1334,7 @@ buildvariants:
           test_params: *valgrind_test_params
           mongodb_version: *version_50
           disable_slow_tests: 1
+          use_mongocryptd: true
       run_on:
           - ubuntu1804-build
       tasks:
