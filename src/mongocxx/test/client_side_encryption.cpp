@@ -231,20 +231,6 @@ void _add_cse_opts(options::client_encryption* opts,
     opts->key_vault_namespace({"keyvault", "datakeys"});
 }
 
-options::client crypt_shared_opts() {
-    options::client opts;
-    const auto shared_lib_path = std::getenv("CRYPT_SHARED_LIB_PATH");
-    if (shared_lib_path) {
-        opts.auto_encryption_opts(
-            options::auto_encryption()
-                .kms_providers(_make_kms_doc())
-                .key_vault_namespace({"keyvault", "datakeys"})
-                .extra_options(make_document(kvp("cryptSharedLibPath", shared_lib_path),
-                                             kvp("cryptSharedLibRequired", true))));
-    }
-    return opts;
-}
-
 template <typename Callable>
 void run_datakey_and_double_encryption(Callable create_data_key,
                                        stdx::string_view provider,
@@ -500,13 +486,12 @@ TEST_CASE("Datakey and double encryption", "[client_side_encryption]") {
 
 void run_external_key_vault_test(bool with_external_key_vault) {
     class client external_key_vault_client {
-        uri{"mongodb://fake-user:fake-pwd@localhost:27017"},
-            test_util::add_test_server_api(crypt_shared_opts()),
+        uri{"mongodb://fake-user:fake-pwd@localhost:27017"}, test_util::add_test_server_api(),
     };
 
     // Create a MongoClient without encryption enabled (referred to as client).
     class client client {
-        uri{}, test_util::add_test_server_api(crypt_shared_opts()),
+        uri{}, test_util::add_test_server_api(),
     };
 
     // Using client, drop the collections keyvault.datakeys and db.coll.
@@ -595,7 +580,7 @@ TEST_CASE("External key vault", "[client_side_encryption]") {
     }
 
     class client setup_client {
-        uri{}, test_util::add_test_server_api(crypt_shared_opts()),
+        uri{}, test_util::add_test_server_api(),
     };
 
     if (test_util::get_max_wire_version(setup_client) < 8) {
@@ -617,7 +602,7 @@ TEST_CASE("BSON size limits and batch splitting", "[client_side_encryption]") {
 
     // Create a MongoClient without encryption enabled (referred to as client).
     class client client {
-        uri{}, test_util::add_test_server_api(crypt_shared_opts()),
+        uri{}, test_util::add_test_server_api(),
     };
 
     if (test_util::get_max_wire_version(client) < 8) {
@@ -1129,7 +1114,7 @@ TEST_CASE("Corpus", "[client_side_encryption]") {
     }
 
     class client setup_client {
-        uri{}, test_util::add_test_server_api(crypt_shared_opts()),
+        uri{}, test_util::add_test_server_api(),
     };
 
     if (test_util::get_max_wire_version(setup_client) < 8) {
@@ -1258,7 +1243,7 @@ TEST_CASE("Custom endpoint", "[client_side_encryption]") {
     }
 
     class client setup_client {
-        uri{}, test_util::add_test_server_api(crypt_shared_opts()),
+        uri{}, test_util::add_test_server_api(),
     };
 
     if (test_util::get_max_wire_version(setup_client) < 8) {
@@ -1932,7 +1917,7 @@ TEST_CASE("KMS TLS Options Tests", "[client_side_encryption][!mayfail]") {
         return;
     }
 
-    auto setup_client = client(uri(), test_util::add_test_server_api(crypt_shared_opts()));
+    auto setup_client = client(uri(), test_util::add_test_server_api());
 
     // Support for detailed certificate verify failure messages required by this test are only
     // available in libmongoc 1.20.0 and newer (CDRIVER-3927).
@@ -2516,7 +2501,7 @@ TEST_CASE("Unique Index on keyAltNames", "[client_side_encryption]") {
     }
 
     // 1. Create a MongoClient object (referred to as client).
-    mongocxx::client client{mongocxx::uri{}, test_util::add_test_server_api(crypt_shared_opts())};
+    mongocxx::client client{mongocxx::uri{}, test_util::add_test_server_api()};
 
     // 2. Using client, drop the collection keyvault.datakeys.
     client["keyvault"]["datakeys"].drop();
@@ -2671,7 +2656,7 @@ TEST_CASE("Custom Key Material Test", "[client_side_encryption]") {
     }
 
     // 1. Create a MongoClient object (referred to as client).
-    mongocxx::client client{mongocxx::uri{}, test_util::add_test_server_api(crypt_shared_opts())};
+    mongocxx::client client{mongocxx::uri{}, test_util::add_test_server_api()};
 
     // 2. Using client, drop the collection keyvault.datakeys.
     client["keyvault"]["datakeys"].drop();
