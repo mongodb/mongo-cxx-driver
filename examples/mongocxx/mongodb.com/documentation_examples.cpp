@@ -1612,8 +1612,7 @@ int main() {
         projection_examples(db);
         update_examples(db);
         delete_examples(db);
-        if (is_replica_set(conn) && version_at_least(db, 5) && !version_at_least(db, 7)) {
-            // CXX-2671: revert skipping 7.0+ once fix for snapshot example error is known.
+        if (is_replica_set(conn) && version_at_least(db, 5)) {
             snapshot_example1(conn);
             snapshot_example2(conn);
         }
