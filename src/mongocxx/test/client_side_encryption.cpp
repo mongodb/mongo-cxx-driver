@@ -1565,7 +1565,7 @@ void bypass_mongocrypt_via_shared_library(const std::string& shared_lib_path,
     // 2. Use client_encrypted to insert the document {"unencrypted": "test"} into db.coll.
     // Expect this to succeed.
     auto coll = client_encrypted["db"]["coll"];
-    coll.insert_one(make_document(kvp("encrypted", "test")));
+    coll.insert_one(make_document(kvp("unencrypted", "test")));
 
     // 3. Validate that mongocryptd was not spawned. Create a MongoClient to localhost:27021 (or
     // whatever was passed via --port) with serverSelectionTimeoutMS=1000. Run a handshake
