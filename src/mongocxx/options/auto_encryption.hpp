@@ -244,9 +244,6 @@ class MONGOCXX_API auto_encryption {
     /// an encryptedFields obtained from the server. It protects against a
     /// malicious server advertising a false encryptedFields.
     ///
-    /// Queryable Encryption is in Public Technical Preview. Queryable Encryption should not be used
-    /// in production and is subject to backwards breaking changes.
-    ///
     /// @param encrypted_fields_map
     ///   The mapping of which fields to encrypt.
     ///
@@ -257,16 +254,19 @@ class MONGOCXX_API auto_encryption {
     ///
     /// @see https://docs.mongodb.com/manual/core/security-client-side-encryption/
     ///
+    /// @warning Queryable Encryption is in Public Technical Preview. Queryable Encryption should
+    /// not be used in production and is subject to backwards breaking changes.
+    ///
     auto_encryption& encrypted_fields_map(bsoncxx::document::view_or_value encrypted_fields_map);
 
     ///
     /// Get encrypted fields map
     ///
-    /// Queryable Encryption is in Public Technical Preview. Queryable Encryption should not be used
-    /// in production and is subject to backwards breaking changes.
-    ///
     /// @return
     ///   An optional document containing the encrypted fields map
+    ///
+    /// @warning Queryable Encryption is in Public Technical Preview. Queryable Encryption should
+    /// not be used in production and is subject to backwards breaking changes.
     ///
     const stdx::optional<bsoncxx::document::view_or_value>& encrypted_fields_map() const;
 
@@ -296,9 +296,6 @@ class MONGOCXX_API auto_encryption {
     /// Query analysis is disabled when the 'bypassQueryAnalysis'
     /// option is true. Default is 'false' (i.e. query analysis is enabled).
     ///
-    /// Queryable Encryption is in Public Technical Preview. Queryable Encryption should not be used
-    /// in production and is subject to backwards breaking changes.
-    ///
     /// @param should_bypass
     ///   Whether or not to bypass query analysis.
     ///
@@ -307,16 +304,19 @@ class MONGOCXX_API auto_encryption {
     ///
     /// @see https://docs.mongodb.com/manual/core/security-client-side-encryption/
     ///
+    /// @warning Queryable Encryption is in Public Technical Preview. Queryable Encryption should
+    /// not be used in production and is subject to backwards breaking changes.
+    ///
     auto_encryption& bypass_query_analysis(bool should_bypass);
 
     ///
     /// Gets a boolean specifying whether or not query analysis is bypassed.
     ///
-    /// Queryable Encryption is in Public Technical Preview. Queryable Encryption should not be used
-    /// in production and is subject to backwards breaking changes.
-    ///
     /// @return
     ///   A boolean specifying whether query analysis is bypassed.
+    ///
+    /// @warning Queryable Encryption is in Public Technical Preview. Queryable Encryption should
+    /// not be used in production and is subject to backwards breaking changes.
     ///
     bool bypass_query_analysis() const;
 

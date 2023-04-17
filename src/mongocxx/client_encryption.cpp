@@ -40,6 +40,11 @@ bsoncxx::types::bson_value::value client_encryption::encrypt(bsoncxx::types::bso
     return _impl->encrypt(value, opts);
 }
 
+bsoncxx::document::value client_encryption::encrypt_expression(
+    bsoncxx::document::view_or_value expr, const options::encrypt& opts) {
+    return _impl->encrypt_expression(expr, opts);
+}
+
 bsoncxx::types::bson_value::value client_encryption::decrypt(
     bsoncxx::types::bson_value::view value) {
     return _impl->decrypt(value);
