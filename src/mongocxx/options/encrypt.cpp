@@ -91,9 +91,8 @@ struct scoped_bson_value {
         return &value;
     }
 
-    // Ensure this->value can be initialized/overwritten properly.
+    // Communicate this->value is to be initialized via the resulting pointer.
     bson_value_t* value_for_init() noexcept {
-        bson_value_destroy(&value);
         return &this->value;
     }
 
@@ -120,7 +119,9 @@ struct scoped_bson_value {
         bson_value_destroy(&value);
     }
 
+    // Expectation is that value_for_init() will be used to initialize this->value.
     scoped_bson_value() = default;
+
     scoped_bson_value(const scoped_bson_value&) = delete;
     scoped_bson_value(scoped_bson_value&&) = delete;
     scoped_bson_value& operator=(const scoped_bson_value&) = delete;
