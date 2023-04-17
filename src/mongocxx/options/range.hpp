@@ -49,11 +49,11 @@ class MONGOCXX_API range {
     /// @note Required if @ref precision is set.
     const stdx::optional<bsoncxx::types::bson_value::view_or_value>& min() const;
 
-    /// @brief Sets `RangeOpts.min`.
+    /// @brief Sets `RangeOpts.max`.
     /// @note Required if @ref precision is set.
     range& max(bsoncxx::types::bson_value::view_or_value value);
 
-    /// @brief Gets `RangeOpts.min`.
+    /// @brief Gets `RangeOpts.max`.
     /// @note Required if @ref precision is set.
     const stdx::optional<bsoncxx::types::bson_value::view_or_value>& max() const;
 
