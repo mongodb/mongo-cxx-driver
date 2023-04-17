@@ -2771,7 +2771,7 @@ range_explicit_encryption_objects range_explicit_encryption_setup(const std::str
                                                                   RangeFieldType field_type) {
     range_explicit_encryption_objects res;
 
-    // Load the file for the specific data type being tested `encryptedFields-<type>.json`.
+    // Load the file for the specific data type being tested `range-encryptedFields-<type>.json`.
     const auto encrypted_fields =
         _doc_from_file("/explicit-encryption/range-encryptedFields-" + type_str + ".json");
     const auto collection_options = make_document(kvp("encryptedFields", encrypted_fields));
