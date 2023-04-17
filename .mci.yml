@@ -1187,27 +1187,18 @@ buildvariants:
             - debian10-large
           - name: uninstall_check
 
-    - name: ubuntu2004-with-mongocryptd-release-latest
-      display_name: "Ubuntu 20.04 Release with mongocryptd (MongoDB Latest)"
-      expansions:
-          build_type: "Release"
-          tar_options: *linux_tar_options
-          extra_path: *linux_extra_path
-          cmake_flags: *linux_cmake_flags
-          mongodb_version: *version_latest
-          use_mongocryptd: true
-      run_on:
-          - ubuntu2004-large
+    # Add matrix for specification test requirement of mongocryptd:
+    # "Drivers MUST run all tests with mongocryptd on at least one platform for all tested server versions (4.2+)."
+    - matrix_name: "mongocryptd"
+      matrix_spec:
+        os: "ubuntu-1804"
+        mongodb_version: ["4.2", "4.4", "5.0", "latest"]
+      display_name: "${os} (MongoDB ${mongodb_version}) with mongocryptd"
       tasks:
           - name: compile_and_test_with_shared_libs
-          - name: compile_and_test_with_shared_libs_extra_alignment
-          - name: compile_and_test_with_static_libs
-          - name: compile_and_test_with_static_libs_extra_alignment
           - name: compile_and_test_with_shared_libs_replica_set
-          - name: build_example_with_add_subdirectory
-            distros:
-            - ubuntu2004-large
-          - name: uninstall_check
+      expansions:
+        use_mongocryptd: true
 
     - name: ubuntu2004-release-latest
       display_name: "Ubuntu 20.04 Release (MongoDB Latest)"
@@ -1306,7 +1297,6 @@ buildvariants:
           poly_flags: *poly_std_experimental_flags
           mongodb_version: *version_44
           example_projects_cxx_standard: *std_experimental_cxx_standard
-          use_mongocryptd: true
       run_on:
           - ubuntu1604-build
       tasks:
@@ -1325,7 +1315,6 @@ buildvariants:
           test_params: *valgrind_test_params
           mongodb_version: *version_latest
           disable_slow_tests: 1
-          use_mongocryptd: true
       run_on:
           - ubuntu1804-build
       tasks:
@@ -1344,7 +1333,6 @@ buildvariants:
           test_params: *valgrind_test_params
           mongodb_version: *version_50
           disable_slow_tests: 1
-          use_mongocryptd: true
       run_on:
           - ubuntu1804-build
       tasks:
