@@ -2901,6 +2901,9 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
         return;
     }
 
+    // Tests for `DecimalNoPrecision` must only run against a replica set.
+    auto is_replica_set = false;
+
     {
         auto client = mongocxx::client(mongocxx::uri(), test_util::add_test_server_api());
 
@@ -2913,6 +2916,8 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
             WARN("Skipping - must not run against a standalone server");
             return;
         }
+
+        is_replica_set = test_util::get_topology(client) == "replicaset";
     }
 
     const RangeFieldType field_types[] = {
@@ -2929,6 +2934,11 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
         const auto type_str = to_type_str(field_type);
 
         DYNAMIC_SECTION("Field Type - " << type_str) {
+            if (field_type == RangeFieldType::DecimalNoPrecision && !is_replica_set) {
+                WARN("Skipping - must only run against a replica set");
+                continue;
+            }
+
             auto test_objects = range_explicit_encryption_setup(type_str, field_type);
 
             REQUIRE(test_objects.client_encryption_ptr);
