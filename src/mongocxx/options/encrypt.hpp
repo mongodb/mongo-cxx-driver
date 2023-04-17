@@ -100,6 +100,9 @@ class MONGOCXX_API encrypt {
         ///
         /// Use indexed encryption.
         ///
+        /// @warning Queryable Encryption is in Public Technical Preview. Queryable Encryption
+        /// should not be used in production and is subject to backwards breaking changes.
+        ///
         k_indexed,
 
         ///
