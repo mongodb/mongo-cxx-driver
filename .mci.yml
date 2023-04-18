@@ -1297,6 +1297,7 @@ buildvariants:
           poly_flags: *poly_std_experimental_flags
           mongodb_version: *version_44
           example_projects_cxx_standard: *std_experimental_cxx_standard
+          use_mongocryptd: true  # crypt_shared is not available for Ubuntu 16.04
       run_on:
           - ubuntu1604-build
       tasks:
@@ -1315,7 +1316,7 @@ buildvariants:
           test_params: *valgrind_test_params
           mongodb_version: *version_latest
           disable_slow_tests: 1
-          use_mongocryptd: true
+          use_mongocryptd: true  # false positives arise from the crypt_shared library
       run_on:
           - ubuntu1804-build
       tasks:
