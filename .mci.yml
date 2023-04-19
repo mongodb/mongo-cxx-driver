@@ -164,7 +164,7 @@ functions:
                 ./src/mongocxx/test/test_mongohouse_specs
 
     "start_mongod":
-        command: shell.exec
+      - command: shell.exec
         params:
             shell: bash
             working_dir: "."
@@ -198,6 +198,10 @@ functions:
 
                 cd ../
                 pwd
+      - command: expansions.update
+        params:
+          type: setup
+          file: drivers-evergreen-tools/mo-expansion.yml
 
 
     "stop_mongod":
@@ -527,6 +531,15 @@ functions:
                       fi
 
                       ulimit -c unlimited || true
+
+                      if [ "${use_mongocryptd}" = "true" ]; then
+                          echo "Will run tests using mongocryptd (instead of crypt_shared library)"
+                      else
+                          echo "Will run tests using crypt_shared library (instead of mongocryptd)"
+                          # Set by run-orchestration.sh in "start_mongod".
+                          export CRYPT_SHARED_LIB_PATH="${CRYPT_SHARED_LIB_PATH}"
+                          echo "CRYPT_SHARED_LIB_PATH=$CRYPT_SHARED_LIB_PATH"
+                      fi
 
                       # Run tests and examples 1-by-1 with "test_params" so we can run them with valgrind.
                       ${test_params} ./src/bsoncxx/test/test_bson
@@ -1174,6 +1187,19 @@ buildvariants:
             - debian10-large
           - name: uninstall_check
 
+    # Add matrix for specification test requirement of mongocryptd:
+    # "Drivers MUST run all tests with mongocryptd on at least one platform for all tested server versions (4.2+)."
+    - matrix_name: "mongocryptd"
+      matrix_spec:
+        os: "ubuntu-1804"
+        mongodb_version: ["4.2", "4.4", "5.0", "latest"]
+      display_name: "${os} (MongoDB ${mongodb_version}) with mongocryptd"
+      tasks:
+          - name: compile_and_test_with_shared_libs
+          - name: compile_and_test_with_shared_libs_replica_set
+      expansions:
+        use_mongocryptd: true
+
     - name: ubuntu2004-release-latest
       display_name: "Ubuntu 20.04 Release (MongoDB Latest)"
       expansions:
@@ -1271,6 +1297,7 @@ buildvariants:
           poly_flags: *poly_std_experimental_flags
           mongodb_version: *version_44
           example_projects_cxx_standard: *std_experimental_cxx_standard
+          use_mongocryptd: true  # crypt_shared is not available for Ubuntu 16.04
       run_on:
           - ubuntu1604-build
       tasks:
@@ -1289,6 +1316,7 @@ buildvariants:
           test_params: *valgrind_test_params
           mongodb_version: *version_latest
           disable_slow_tests: 1
+          use_mongocryptd: true  # false positives arise from the crypt_shared library
       run_on:
           - ubuntu1804-build
       tasks:
@@ -1307,6 +1335,7 @@ buildvariants:
           test_params: *valgrind_test_params
           mongodb_version: *version_50
           disable_slow_tests: 1
+          use_mongocryptd: true
       run_on:
           - ubuntu1804-build
       tasks:

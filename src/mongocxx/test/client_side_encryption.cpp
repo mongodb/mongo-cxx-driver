@@ -191,7 +191,11 @@ void _add_client_encrypted_opts(options::client* client_opts,
     char* bypass_spawn = std::getenv("ENCRYPTION_TESTS_BYPASS_SPAWN");
     char* mongocryptd_path = std::getenv("MONGOCRYPTD_PATH");
 
-    if (bypass_spawn || mongocryptd_path) {
+    const auto shared_lib_path = std::getenv("CRYPT_SHARED_LIB_PATH");
+    if (shared_lib_path) {
+        auto_encrypt_opts.extra_options(make_document(kvp("cryptSharedLibPath", shared_lib_path),
+                                                      kvp("cryptSharedLibRequired", true)));
+    } else if (bypass_spawn || mongocryptd_path) {
         auto cmd = bsoncxx::builder::basic::document{};
 
         if (bypass_spawn && strcmp(bypass_spawn, "TRUE") == 0) {
@@ -483,7 +487,7 @@ TEST_CASE("Datakey and double encryption", "[client_side_encryption]") {
 
 void run_external_key_vault_test(bool with_external_key_vault) {
     class client external_key_vault_client {
-        uri{"mongodb://fake-user:fake-pwd@localhost:27017"}, test_util::add_test_server_api()
+        uri{"mongodb://fake-user:fake-pwd@localhost:27017"}, test_util::add_test_server_api(),
     };
 
     // Create a MongoClient without encryption enabled (referred to as client).
@@ -572,16 +576,17 @@ void run_external_key_vault_test(bool with_external_key_vault) {
 TEST_CASE("External key vault", "[client_side_encryption]") {
     instance::current();
 
-    class client setup_client {
-        uri{}, test_util::add_test_server_api(),
-    };
-    if (test_util::get_max_wire_version(setup_client) < 8) {
-        // Automatic encryption requires wire version 8.
-        WARN("Skipping - max wire version is < 8");
+    if (!mongocxx::test_util::should_run_client_side_encryption_test()) {
         return;
     }
 
-    if (!mongocxx::test_util::should_run_client_side_encryption_test()) {
+    class client setup_client {
+        uri{}, test_util::add_test_server_api(),
+    };
+
+    if (test_util::get_max_wire_version(setup_client) < 8) {
+        // Automatic encryption requires wire version 8.
+        WARN("Skipping - max wire version is < 8");
         return;
     }
 
@@ -592,6 +597,10 @@ TEST_CASE("External key vault", "[client_side_encryption]") {
 TEST_CASE("BSON size limits and batch splitting", "[client_side_encryption]") {
     instance::current();
 
+    if (!mongocxx::test_util::should_run_client_side_encryption_test()) {
+        return;
+    }
+
     // Create a MongoClient without encryption enabled (referred to as client).
     class client client {
         uri{}, test_util::add_test_server_api(),
@@ -600,10 +609,6 @@ TEST_CASE("BSON size limits and batch splitting", "[client_side_encryption]") {
     if (test_util::get_max_wire_version(client) < 8) {
         // Automatic encryption requires wire version 8.
         WARN("Skipping - max wire version is < 8");
-        return;
-    }
-
-    if (!mongocxx::test_util::should_run_client_side_encryption_test()) {
         return;
     }
 
@@ -650,7 +655,7 @@ TEST_CASE("BSON size limits and batch splitting", "[client_side_encryption]") {
     client_encrypted_opts.apm_opts(apm_opts);
 
     class client client_encrypted {
-        uri{}, test_util::add_test_server_api(client_encrypted_opts),
+        uri{}, test_util::add_test_server_api(client_encrypted_opts)
     };
 
     // Using client_encrypted perform the following operations:
@@ -755,18 +760,18 @@ TEST_CASE("BSON size limits and batch splitting", "[client_side_encryption]") {
 TEST_CASE("Views are prohibited", "[client_side_encryption]") {
     instance::current();
 
+    if (!mongocxx::test_util::should_run_client_side_encryption_test()) {
+        return;
+    }
+
     // Create a MongoClient without encryption enabled (referred to as client).
     class client client {
-        uri{}, test_util::add_test_server_api()
+        uri{}, test_util::add_test_server_api(),
     };
 
     if (test_util::get_max_wire_version(client) < 8) {
         // Automatic encryption requires wire version 8.
         WARN("Skipping - max wire version is < 8");
-        return;
-    }
-
-    if (!mongocxx::test_util::should_run_client_side_encryption_test()) {
         return;
     }
 
@@ -1105,8 +1110,12 @@ TEST_CASE("Corpus", "[client_side_encryption]") {
     // Data keys created with AWS KMS may specify a custom endpoint to contact
     // (instead of the default endpoint derived from the AWS region).
 
+    if (!mongocxx::test_util::should_run_client_side_encryption_test()) {
+        return;
+    }
+
     class client setup_client {
-        uri {}
+        uri{}, test_util::add_test_server_api(),
     };
 
     if (test_util::get_max_wire_version(setup_client) < 8) {
@@ -1114,10 +1123,6 @@ TEST_CASE("Corpus", "[client_side_encryption]") {
         WARN("Skipping - max wire version is < 8");
         return;
     }
-    if (!mongocxx::test_util::should_run_client_side_encryption_test()) {
-        return;
-    }
-
     _run_corpus_test(true);
     _run_corpus_test(false);
 }
@@ -1234,6 +1239,10 @@ TEST_CASE("Custom endpoint", "[client_side_encryption]") {
     // Data keys created with AWS KMS may specify a custom endpoint to contact
     // (instead of the default endpoint derived from the AWS region).
 
+    if (!mongocxx::test_util::should_run_client_side_encryption_test()) {
+        return;
+    }
+
     class client setup_client {
         uri{}, test_util::add_test_server_api(),
     };
@@ -1241,10 +1250,6 @@ TEST_CASE("Custom endpoint", "[client_side_encryption]") {
     if (test_util::get_max_wire_version(setup_client) < 8) {
         // Automatic encryption requires wire version 8.
         WARN("Skipping - max wire version is < 8");
-        return;
-    }
-
-    if (!mongocxx::test_util::should_run_client_side_encryption_test()) {
         return;
     }
 
@@ -1505,26 +1510,116 @@ TEST_CASE("Custom endpoint", "[client_side_encryption]") {
     }
 }
 
+void bypass_mongocrypt_via_shared_library(const std::string& shared_lib_path,
+                                          bsoncxx::document::view_or_value external_schema) {
+    // Via loading shared library
+    // The following tests that loading crypt_shared bypasses spawning mongocryptd.
+    //
+    // Note
+    //
+    // IMPORTANT: This test requires the crypt_shared library be loaded. If the crypt_shared
+    // library is not available, skip the test.
+    //
+
+    // 1. Create a MongoClient configured with auto encryption (referred to as client_encrypted)
+    //
+    // Configure the required options. Use the local KMS provider as follows:
+    //
+    // { "local": { "key": <base64 decoding of LOCAL_MASTERKEY> } }
+    // Configure with the keyVaultNamespace set to keyvault.datakeys.
+    //
+    // Configure client_encrypted to use the schema external/external-schema.json for db.coll by
+    // setting a schema map like: { "db.coll": <contents of external-schema.json>}
+    //
+    // Configure the following extraOptions:
+    //
+    // {
+    //   "mongocryptdURI": "mongodb://localhost:27021/db?serverSelectionTimeoutMS=1000",
+    //   "mongocryptdSpawnArgs": [
+    //      "--pidfilepath=bypass-spawning-mongocryptd.pid",
+    //      "--port=27021"
+    //   ],
+    //   "cryptSharedLibPath": "<path to shared library>",
+    //   "cryptSharedLibRequired": true
+    // }
+    auto extra = make_document(
+        kvp("mongocryptdURI", "mongodb://localhost:27021/db?serverSelectionTimeoutMS=1000"),
+        kvp("mongocryptdSpawnArgs",
+            make_array("--pidfilepath=bypass-spawning-mongocryptd.pid", "--port=27021")),
+        kvp("cryptSharedLibPath", shared_lib_path),
+        kvp("cryptSharedLibRequired", true));
+
+    options::auto_encryption auto_encrypt_opts{};
+    auto_encrypt_opts.kms_providers(_make_kms_doc());
+    auto_encrypt_opts.tls_opts(_make_tls_opts());
+    auto_encrypt_opts.key_vault_namespace({"keyvault", "datakeys"});
+    auto_encrypt_opts.schema_map({external_schema.view()});
+    auto_encrypt_opts.extra_options({extra.view()});
+
+    options::client client_encrypted_opts;
+    client_encrypted_opts.auto_encryption_opts(std::move(auto_encrypt_opts));
+
+    class client client_encrypted {
+        uri{}, test_util::add_test_server_api(client_encrypted_opts),
+    };
+
+    // 2. Use client_encrypted to insert the document {"unencrypted": "test"} into db.coll.
+    // Expect this to succeed.
+    auto coll = client_encrypted["db"]["coll"];
+    coll.insert_one(make_document(kvp("unencrypted", "test")));
+
+    // 3. Validate that mongocryptd was not spawned. Create a MongoClient to localhost:27021 (or
+    // whatever was passed via --port) with serverSelectionTimeoutMS=1000. Run a handshake
+    // command and ensure it fails with a server selection timeout.
+    class client ping_client {
+        uri{"mongodb://localhost:27021/?serverSelectionTimeoutMS=1000"},
+            test_util::add_test_server_api(),
+    };
+    REQUIRE_THROWS(ping_client["admin"].run_command(make_document(kvp("ping", 1))));
+
+    // Note
+    //
+    // IMPORTANT: If crypt_shared is visible to the operating system's library search mechanism,
+    // the expected server error generated by these mongocryptdBypassSpawn tests will not appear
+    // because libmongocrypt will load the crypt_shared library instead of consulting
+    // mongocryptd. For the following tests, it is required that libmongocrypt not load
+    // crypt_shared. Refer to the client-side-encryption document for more information on
+    // "disabling" crypt_shared.
+}
+
 TEST_CASE("Bypass spawning mongocryptd", "[client_side_encryption]") {
     instance::current();
+
+    if (!mongocxx::test_util::should_run_client_side_encryption_test()) {
+        return;
+    }
 
     class client setup_client {
         uri{}, test_util::add_test_server_api(),
     };
+
     if (test_util::get_max_wire_version(setup_client) < 8) {
         // Automatic encryption requires wire version 8.
         WARN("Skipping - max wire version is < 8");
         return;
     }
 
-    if (!mongocxx::test_util::should_run_client_side_encryption_test()) {
+    auto shared_lib_path = getenv("CRYPT_SHARED_LIB_PATH");
+
+    auto external_schema_file = _doc_from_file("/external/external-schema.json");
+    auto external_schema = document{} << "db.coll" << external_schema_file << finalize;
+
+    SECTION("Via loading shared library") {
+        if (shared_lib_path) {
+            bypass_mongocrypt_via_shared_library(shared_lib_path, external_schema.view());
+        }
+    }
+
+    if (shared_lib_path) {
         return;
     }
 
     // Via mongocryptdBypassSpawn
-
-    auto external_schema_file = _doc_from_file("/external/external-schema.json");
-    auto external_schema = document{} << "db.coll" << external_schema_file << finalize;
 
     // Create a MongoClient configured with auto encryption (referred to as client_encrypted)
     //
@@ -1635,16 +1730,16 @@ class kms_tls_expired_cert_matcher : public Catch::MatcherBase<mongocxx::excepti
 TEST_CASE("KMS TLS expired certificate", "[client_side_encryption]") {
     instance::current();
 
+    if (!mongocxx::test_util::should_run_client_side_encryption_test()) {
+        return;
+    }
+
     // Create a mongoclient without encryption.
     options::client client_opts;
 
     class client setup_client {
-        uri{}, test_util::add_test_server_api(client_opts),
+        uri{}, test_util::add_test_server_api(client_opts)
     };
-
-    if (!mongocxx::test_util::should_run_client_side_encryption_test()) {
-        return;
-    }
 
     // Support for detailed certificate verify failure messages required by this test are only
     // available in libmongoc 1.20.0 and newer (CDRIVER-3927).
@@ -1699,16 +1794,16 @@ class kms_tls_wrong_host_cert_matcher : public Catch::MatcherBase<mongocxx::exce
 TEST_CASE("KMS TLS wrong host certificate", "[client_side_encryption]") {
     instance::current();
 
+    if (!mongocxx::test_util::should_run_client_side_encryption_test()) {
+        return;
+    }
+
     // Create a mongoclient without encryption.
     options::client client_opts;
 
     class client setup_client {
-        uri{}, test_util::add_test_server_api(client_opts),
+        uri{}, test_util::add_test_server_api(client_opts)
     };
-
-    if (!mongocxx::test_util::should_run_client_side_encryption_test()) {
-        return;
-    }
 
     // Support for detailed certificate verify failure messages required by this test are only
     // available in libmongoc 1.20.0 and newer (CDRIVER-3927).
@@ -1819,11 +1914,11 @@ client_encryption make_prose_test_11_ce(mongocxx::client* client,
 TEST_CASE("KMS TLS Options Tests", "[client_side_encryption][!mayfail]") {
     instance::current();
 
-    auto setup_client = client(uri(), test_util::add_test_server_api());
-
     if (!mongocxx::test_util::should_run_client_side_encryption_test()) {
         return;
     }
+
+    auto setup_client = client(uri(), test_util::add_test_server_api());
 
     // Support for detailed certificate verify failure messages required by this test are only
     // available in libmongoc 1.20.0 and newer (CDRIVER-3927).
@@ -2080,7 +2175,7 @@ std::tuple<mongocxx::client_encryption, mongocxx::client> _setup_explicit_encryp
     options::client encrypted_client_opts;
     encrypted_client_opts.auto_encryption_opts(std::move(auto_encrypt_opts));
     class client encrypted_client {
-        uri{}, test_util::add_test_server_api(encrypted_client_opts)
+        uri{}, test_util::add_test_server_api(encrypted_client_opts),
     };
 
     return std::make_tuple(std::move(client_encryption), std::move(encrypted_client));
@@ -2090,13 +2185,13 @@ std::tuple<mongocxx::client_encryption, mongocxx::client> _setup_explicit_encryp
 TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
     instance::current();
 
-    class client conn {
-        mongocxx::uri{}, test_util::add_test_server_api()
-    };
-
     if (!mongocxx::test_util::should_run_client_side_encryption_test()) {
         return;
     }
+
+    class client conn {
+        mongocxx::uri{}, test_util::add_test_server_api(),
+    };
 
     if (!test_util::newer_than(conn, "7.0")) {
         WARN("Skipping - MongoDB server 7.0 or newer required");
