@@ -232,16 +232,14 @@ void* encrypt::convert() const {
         const auto& precision = _range_opts->precision();
         const auto& sparsity = _range_opts->sparsity();
 
-        if (!!min != !!max) {
-            throw exception{error_code::k_invalid_parameter,
-                            "one of min or max was set without the other"};
+        if (min) {
+            libmongoc::client_encryption_encrypt_range_opts_set_min(
+                range_opts, scoped_bson_value(min->view()).get());
         }
 
-        if (min && max) {
-            libmongoc::client_encryption_encrypt_range_opts_set_min_max(
-                range_opts,
-                scoped_bson_value(min->view()).get(),
-                scoped_bson_value(max->view()).get());
+        if (max) {
+            libmongoc::client_encryption_encrypt_range_opts_set_max(
+                range_opts, scoped_bson_value(max->view()).get());
         }
 
         if (precision) {
