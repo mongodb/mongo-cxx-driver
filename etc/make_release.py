@@ -83,18 +83,10 @@ ISSUE_TYPE_ID = {'Backport': '10300',
               default='origin',
               show_default=True,
               help='The remote reference which points to the mongodb/mongo-cxx-driver repo')
-@click.option('--c-driver-install-dir',
-              default=os.getcwd() + '/../mongoc',
-              show_default=True,
-              help='When building the C driver and libmongocrypt, install to this directory')
 @click.option('--c-driver-build-ref',
               default='11e31e3e',
               show_default=True,
               help='When building the C driver, build at this Git reference')
-@click.option('--mongocrypt-build-ref',
-              default='1.5.2',
-              show_default=True,
-              help='When building libmongocrypt, build at this Git reference')
 @click.option('--with-c-driver',
               help='Instead of building the C driver, use the one installed at this path')
 @click.option('--dist-file',
@@ -119,9 +111,7 @@ def release(jira_creds_file,
             github_token_file,
             allow_open_issues,
             remote,
-            c_driver_install_dir,
             c_driver_build_ref,
-            mongocrypt_build_ref,
             with_c_driver,
             dist_file,
             skip_distcheck,
@@ -180,7 +170,7 @@ def release(jira_creds_file,
             click.echo('Specified distribution tarball does not exist...exiting!', err=True)
             sys.exit(1)
     else:
-        c_driver_dir = ensure_c_driver(c_driver_install_dir, c_driver_build_ref, mongocrypt_build_ref, with_c_driver, quiet)
+        c_driver_dir = ensure_c_driver(c_driver_build_ref, with_c_driver, quiet)
         if not c_driver_dir:
             click.echo('C driver not built or not found...exiting!', err=True)
             sys.exit(1)
@@ -331,14 +321,13 @@ def check_pre_release(tag_name):
 
     return not bool(release_re.match(tag_name))
 
-def ensure_c_driver(c_driver_install_dir, c_driver_build_ref, mongocrypt_build_ref, with_c_driver, quiet):
+def ensure_c_driver(c_driver_build_ref, with_c_driver, quiet):
     """
     Ensures that there is a properly installed C driver, returning the location
     of the C driver installation.  If the with_c_driver parameter is set and
     points to a proper installation of the C driver, then this function simply
     returns that directory.  Otherwise, delegates to another function to build
-    the C driver and install it to the directory specified by the
-    c_driver_install_dir parameter.
+    the C driver and install it to the mongoc directory.
     """
 
     if with_c_driver:
@@ -350,32 +339,27 @@ def ensure_c_driver(c_driver_install_dir, c_driver_build_ref, mongocrypt_build_r
             click.echo('A required component of the C driver is missing!', err=True)
         return None
 
-    return build_c_driver(c_driver_install_dir, c_driver_build_ref, mongocrypt_build_ref, quiet)
+    return build_c_driver(c_driver_build_ref, quiet)
 
-def build_c_driver(c_driver_install_dir, c_driver_build_ref, mongocrypt_build_ref, quiet):
+def build_c_driver(c_driver_build_ref, quiet):
     """
-    Build the C driver and install to the specified directory.  If the build is
+    Build the C driver and install to the mongoc directory.  If the build is
     successful, then return the directory where the C driver was installed,
     otherwise return None.
     """
 
-    mongoc_prefix = os.path.abspath(c_driver_install_dir)
-
     if not quiet:
-        click.echo(f'Building C Driver at {mongoc_prefix} (this could take several minutes)')
+        click.echo(f'Building C Driver (this could take several minutes)')
         click.echo('Pass --with-c-driver to use an existing installation')
 
     env = os.environ.copy()
-    env['PREFIX'] = mongoc_prefix
-    env['MONGOC_VERSION'] = c_driver_build_ref
-    env['MONGOCRYPT_VERSION'] = mongocrypt_build_ref
+    env['mongoc_version'] = c_driver_build_ref
     run_shell_script('./.evergreen/install_c_driver.sh', env=env)
 
     if not quiet:
-        click.echo('C Driver build was successful.')
-        click.echo('Version "{}" was installed to "{}".'
-                   .format(c_driver_build_ref, mongoc_prefix))
-    return mongoc_prefix
+        click.echo('Build of C Driver version "{}" was successful.'.format(c_driver_build_ref))
+
+    return './mongoc'
 
 def build_distribution(release_tag, release_version, c_driver_dir, quiet, skip_distcheck):
     """
