@@ -88,7 +88,7 @@ ISSUE_TYPE_ID = {'Backport': '10300',
               show_default=True,
               help='When building the C driver and libmongocrypt, install to this directory')
 @click.option('--c-driver-build-ref',
-              default='1.22.1',
+              default='11e31e3e',
               show_default=True,
               help='When building the C driver, build at this Git reference')
 @click.option('--mongocrypt-build-ref',
