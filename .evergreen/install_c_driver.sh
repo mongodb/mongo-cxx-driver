@@ -31,8 +31,6 @@ fi
 
 echo "libmongoc version: ${mongoc_version}"
 
-echo "Installing C Driver into ${mongoc_dir}..."
-
 # Download tarball from GitHub and extract into ${mongoc_dir}.
 rm -rf "${mongoc_dir}"
 mkdir "${mongoc_dir}"
@@ -72,7 +70,11 @@ cmake_binary="$(find_cmake_latest)"
 command -v "${cmake_binary:?}"
 
 # Install libmongocrypt.
-"${mongoc_dir}/.evergreen/scripts/compile-libmongocrypt.sh" "${cmake_binary}" "${mongoc_idir}" "${mongoc_install_idir}"
+{
+  echo "Installing libmongocrypt into ${mongoc_dir}..." 1>&2
+  "${mongoc_dir}/.evergreen/scripts/compile-libmongocrypt.sh" "${cmake_binary}" "${mongoc_idir}" "${mongoc_install_idir}"
+  echo "Installing libmongocrypt into ${mongoc_dir}... done." 1>&2
+} >/dev/null
 
 if [[ "${OSTYPE}" == darwin* ]]; then
   # MacOS does not have nproc.
@@ -127,7 +129,9 @@ else
 fi
 
 # Install libmongoc.
-"${cmake_binary}" -S "${mongoc_idir}" -B "${mongoc_idir}" -G "${cmake_generator}" "${configure_flags[@]}"
-"${cmake_binary}" --build "${mongoc_idir}" --config Debug --target install -- "${compile_flags[@]}"
-
-echo "Installing C Driver into ${mongoc_dir}... done."
+{
+  echo "Installing C Driver into ${mongoc_dir}..." 1>&2
+  "${cmake_binary}" -S "${mongoc_idir}" -B "${mongoc_idir}" -G "${cmake_generator}" "${configure_flags[@]}"
+  "${cmake_binary}" --build "${mongoc_idir}" --config Debug --target install -- "${compile_flags[@]}"
+  echo "Installing C Driver into ${mongoc_dir}... done." 1>&2
+} >/dev/null

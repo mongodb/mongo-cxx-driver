@@ -221,11 +221,13 @@ functions:
 
     "install_c_driver":
       - command: expansions.update
+        type: setup
         params:
           updates:
             - key: mongoc_version_default
               value: *mongoc_version_default
       - command: shell.exec
+        type: setup
         params:
             shell: bash
             add_expansions_to_env: true
