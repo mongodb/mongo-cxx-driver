@@ -491,7 +491,7 @@ functions:
                                   fi
                                   ;;
                           esac
-                      }
+                      } >/dev/null
                       register_ca_cert
                       echo "Registering CA certificate for KMS TLS tests... done."
 
