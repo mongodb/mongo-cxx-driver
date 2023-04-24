@@ -17,5 +17,5 @@ else
         # Boost is needed for pre-17 Windows polyfill.
         "$CMAKE" -G "Visual Studio 14 2015 Win64" -DCMAKE_CXX_STANDARD="${CXX_STANDARD}" -DBOOST_ROOT=c:/local/boost_1_60_0 ..
     fi
-    "$CMAKE" --build . --target run --config "${BUILD_TYPE}"
+    "$CMAKE" --build . --target run --config "${BUILD_TYPE}" -- /verbosity:minimal
 fi
