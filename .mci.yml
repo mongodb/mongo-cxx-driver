@@ -523,7 +523,13 @@ functions:
                       # API version to example clients, so examples will fail when requireApiVersion
                       # is true.
                       if [[ -z "$MONGODB_API_VERSION" ]]; then
-                        CTEST_OUTPUT_ON_FAILURE=1 MSBuild.exe /p:Configuration=${build_type} /verbosity:minimal examples/run-examples.vcxproj
+                        echo "Running examples..."
+                        if ! CTEST_OUTPUT_ON_FAILURE=1 MSBuild.exe /p:Configuration=${build_type} /verbosity:minimal examples/run-examples.vcxproj >|output.txt 2>&1; then
+                          # Only emit output on failure.
+                          cat output.txt 1>&2
+                          exit 1
+                        fi
+                        echo "Running examples... done."
                       fi
                   else
                       # ENABLE_SLOW_TESTS is required to run the slow tests that are disabled by default. The slow tests should not be run if explicitly disabled.
@@ -567,24 +573,29 @@ functions:
                       # is true.
                       if [[ -z "$MONGODB_API_VERSION" ]]; then
                           for test in $EXAMPLES; do
+                            echo "Running example $test"
                             case "$test" in
                               *encryption*)
-                                echo "Skipping client side encryption example"
+                                echo " - Skipping client side encryption example"
                                 ;;
                               *change_stream*)
-                                echo "TODO CXX-1201, enable for servers that support change streams"
+                                echo " - TODO CXX-1201, enable for servers that support change streams"
                                 ;;
                               *client_session*)
-                                echo "TODO CXX-1201, enable for servers that support change streams"
+                                echo " - TODO CXX-1201, enable for servers that support change streams"
                                 ;;
                               *with_transaction*)
-                                echo "TODO CXX-1201, enable for servers that support transactions"
+                                echo " - TODO CXX-1201, enable for servers that support transactions"
                                 ;;
                               *causal_consistency*)
-                                echo "TODO CXX-1201, enable for servers that support transactions"
+                                echo " - TODO CXX-1201, enable for servers that support transactions"
                                 ;;
                               *)
-                                ${test_params} $test
+                                if ! ${test_params} $test >|output.txt 2>&1; then
+                                  # Only emit output on failure.
+                                  cat output.txt 1>&2
+                                  exit 1
+                                fi
                                 ;;
                             esac
                           done
@@ -626,7 +637,9 @@ functions:
                   # API version to example clients, so example projects will fail when requireApiVersion
                   # is true.
                   if [[ -z "$MONGODB_API_VERSION" ]]; then
+                    echo "Building example projects..."
                     .evergreen/build_example_projects.sh
+                    echo "Building example projects... done."
                   fi
                   unset MONGODB_API_VERSION
 
