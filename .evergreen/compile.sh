@@ -39,7 +39,7 @@ case "$OS" in
 
    cygwin*)
       GENERATOR=${GENERATOR:-"Visual Studio 14 2015 Win64"}
-      CMAKE_BUILD_OPTS="/maxcpucount:$CONCURRENCY"
+      CMAKE_BUILD_OPTS="/verbosity:minimal /maxcpucount:$CONCURRENCY"
       CMAKE_EXAMPLES_TARGET=examples/examples
       ;;
 
@@ -52,10 +52,10 @@ esac
 . .evergreen/find_cmake.sh
 
 cd build
-"$CMAKE" -G "$GENERATOR" "-DCMAKE_BUILD_TYPE=${BUILD_TYPE}" -DCMAKE_VERBOSE_MAKEFILE=ON -DMONGOCXX_ENABLE_SLOW_TESTS=ON -DENABLE_UNINSTALL=ON "$@" ..
+"$CMAKE" -G "$GENERATOR" "-DCMAKE_BUILD_TYPE=${BUILD_TYPE}" -DMONGOCXX_ENABLE_SLOW_TESTS=ON -DENABLE_UNINSTALL=ON "$@" ..
 "$CMAKE" --build . --config $BUILD_TYPE -- $CMAKE_BUILD_OPTS
-"$CMAKE" --build . --config $BUILD_TYPE --target install
-"$CMAKE" --build . --config $BUILD_TYPE --target $CMAKE_EXAMPLES_TARGET
+"$CMAKE" --build . --config $BUILD_TYPE --target install -- $CMAKE_BUILD_OPTS
+"$CMAKE" --build . --config $BUILD_TYPE --target $CMAKE_EXAMPLES_TARGET -- $CMAKE_BUILD_OPTS
 
 if [ "$_RUN_DISTCHECK" ]; then
    DISTCHECK_BUILD_OPTS="-j$CONCURRENCY" "$CMAKE" --build . --config $BUILD_TYPE --target distcheck

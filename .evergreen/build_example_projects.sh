@@ -16,10 +16,22 @@ cd examples/projects
 for project in bsoncxx mongocxx; do
 (
     cd $project
-    ( cd cmake/$DIR && ./build.sh )
-    ( cd cmake-deprecated/$DIR && ./build.sh )
+
+    if ! ( cd cmake/$DIR && ./build.sh >|output.txt 2>&1); then
+        cat output.txt 1>&2
+        exit 1
+    fi
+
+    if ! ( cd cmake-deprecated/$DIR && ./build.sh >|output.txt 2>&1); then
+        cat output.txt 1>&2
+        exit 1
+    fi
+
     if [ "Windows_NT" != "$OS" ]; then
-        ( cd pkg-config/$DIR && ./build.sh )
+        if ! ( cd pkg-config/$DIR && ./build.sh >|output.txt 2>&1); then
+            cat output.txt 1>&2
+            exit 1
+        fi
     fi
 )
 done

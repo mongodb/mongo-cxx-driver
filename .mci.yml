@@ -191,6 +191,48 @@ functions:
                 echo "{ \"releases\": { \"default\": \"$MONGODB_BINARIES\" }}" > $MONGO_ORCHESTRATION_HOME/orchestration.config
                 ./.evergreen/run-orchestration.sh
 
+                # Ensure server on port 27017 is the primary server.
+                if [[ "$TOPOLOGY" == replica_set ]]; then
+                  # Replset members should be on the following ports.
+                  declare hosts="localhost:27017,localhost:27018,localhost:27019"
+
+                  # Authentication may be required.
+                  declare creds
+                  if [[ -n "$AUTH" ]]; then
+                    creds="bob:pwd123@"
+                  else
+                    creds=""
+                  fi
+
+                  declare uri
+                  printf -v uri "mongodb://%s%s" "$creds" "$hosts"
+
+                  # Raise the priority of the member on port 27017. Others should have priority 1.
+                  declare script
+                  printf -v script "%s\n%s\n%s\n" \
+                    "let c = rs.conf()" \
+                    "c.members.find((m) => m.host.includes('27017')).priority = 10" \
+                    "rs.reconfig(c)"
+
+                  mongosh --quiet "$uri" --eval "$script"
+
+                  # Wait up to a minute for member on port 27017 to become primary.
+                  wait_for_primary() {
+                    for _ in $(seq 60); do
+                      if mongosh --quiet "$uri" --eval "quit(rs.hello().primary.includes('27017') ? 0 : 1)"; then
+                        return 0
+                      else
+                        sleep 1
+                      fi
+                    done
+                    echo "Could not set replset member on port 27017 as primary"
+                    return 1
+                  }
+                  echo "Waiting for replset member 27017 to become primary..."
+                  wait_for_primary
+                  echo "Waiting for replset member 27017 to become primary... done."
+                fi
+
                 # Copy mongocryptd up so other functions can find it later, since we can't share PATHs
                 if [ -f $MONGODB_BINARIES/mongocryptd ]; then
                     cp $MONGODB_BINARIES/mongocryptd ../mongocryptd
@@ -221,11 +263,13 @@ functions:
 
     "install_c_driver":
       - command: expansions.update
+        type: setup
         params:
           updates:
             - key: mongoc_version_default
               value: *mongoc_version_default
       - command: shell.exec
+        type: setup
         params:
             shell: bash
             add_expansions_to_env: true
@@ -325,7 +369,6 @@ functions:
 
                   MONGOC_PREFIX="$(pwd)/../mongoc"
                   echo "MONGOC_PREFIX=$MONGOC_PREFIX"
-                  ls -l $MONGOC_PREFIX
 
                   if [ "Windows_NT" == "$OS" ]; then
                       MONGOC_PREFIX=$(cygpath -m "$MONGOC_PREFIX")
@@ -490,7 +533,7 @@ functions:
                                   fi
                                   ;;
                           esac
-                      }
+                      } >/dev/null
                       register_ca_cert
                       echo "Registering CA certificate for KMS TLS tests... done."
 
@@ -517,12 +560,18 @@ functions:
                   fi
 
                   if [ "Windows_NT" == "$OS" ]; then
-                      CTEST_OUTPUT_ON_FAILURE=1 MSBuild.exe /p:Configuration=${build_type} RUN_TESTS.vcxproj
+                      CTEST_OUTPUT_ON_FAILURE=1 MSBuild.exe /p:Configuration=${build_type} /verbosity:minimal RUN_TESTS.vcxproj
                       # Only run examples if MONGODB_API_VERSION is unset. We do not append
                       # API version to example clients, so examples will fail when requireApiVersion
                       # is true.
                       if [[ -z "$MONGODB_API_VERSION" ]]; then
-                        CTEST_OUTPUT_ON_FAILURE=1 MSBuild.exe /p:Configuration=${build_type} examples/run-examples.vcxproj
+                        echo "Running examples..."
+                        if ! CTEST_OUTPUT_ON_FAILURE=1 MSBuild.exe /p:Configuration=${build_type} /verbosity:minimal examples/run-examples.vcxproj >|output.txt 2>&1; then
+                          # Only emit output on failure.
+                          cat output.txt 1>&2
+                          exit 1
+                        fi
+                        echo "Running examples... done."
                       fi
                   else
                       # ENABLE_SLOW_TESTS is required to run the slow tests that are disabled by default. The slow tests should not be run if explicitly disabled.
@@ -566,24 +615,29 @@ functions:
                       # is true.
                       if [[ -z "$MONGODB_API_VERSION" ]]; then
                           for test in $EXAMPLES; do
+                            echo "Running $test"
                             case "$test" in
                               *encryption*)
-                                echo "Skipping client side encryption example"
+                                echo " - Skipping client side encryption example"
                                 ;;
                               *change_stream*)
-                                echo "TODO CXX-1201, enable for servers that support change streams"
+                                echo " - TODO CXX-1201, enable for servers that support change streams"
                                 ;;
                               *client_session*)
-                                echo "TODO CXX-1201, enable for servers that support change streams"
+                                echo " - TODO CXX-1201, enable for servers that support change streams"
                                 ;;
                               *with_transaction*)
-                                echo "TODO CXX-1201, enable for servers that support transactions"
+                                echo " - TODO CXX-1201, enable for servers that support transactions"
                                 ;;
                               *causal_consistency*)
-                                echo "TODO CXX-1201, enable for servers that support transactions"
+                                echo " - TODO CXX-1201, enable for servers that support transactions"
                                 ;;
                               *)
-                                ${test_params} $test
+                                if ! ${test_params} $test >|output.txt 2>&1; then
+                                  # Only emit output on failure.
+                                  cat output.txt 1>&2
+                                  exit 1
+                                fi
                                 ;;
                             esac
                           done
@@ -625,7 +679,9 @@ functions:
                   # API version to example clients, so example projects will fail when requireApiVersion
                   # is true.
                   if [[ -z "$MONGODB_API_VERSION" ]]; then
+                    echo "Building example projects..."
                     .evergreen/build_example_projects.sh
+                    echo "Building example projects... done."
                   fi
                   unset MONGODB_API_VERSION
 
@@ -710,13 +766,25 @@ functions:
           shell: bash
           working_dir: "mongo-cxx-driver"
           script: |
-            # redacted code coverage token
-            export CODECOV_TOKEN="${codecov_token}"
-
             set -o errexit
             set -o pipefail
 
-            bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports"
+            # Nothing to do if code coverage was not enabled.
+            if [[ -z "${code_coverage_cmake_flags}" ]]; then
+              exit 0
+            fi
+
+            # Note: coverage is currently only enabled on the ubuntu-1804 distro.
+            # This script does not support MacOS, Windows, or non-x86_64 distros.
+            # Update accordingly if code coverage is expanded to other distros.
+            curl -Os https://uploader.codecov.io/latest/linux/codecov
+            chmod +x codecov
+
+            # -Z: Exit with a non-zero value if error.
+            # -g: Run with gcov support.
+            # -t: Codecov upload token.
+            # perl: filter verbose "Found" list and "Processing" messages.
+            ./codecov -Zgt "${codecov_token}" | perl -lne 'print if not m|(^.*\.gcov(\.\.\.)?$)|'
 
 #######################################
 #              Post Task              #
@@ -899,7 +967,7 @@ tasks:
             rsync -aq --exclude='examples/add_subdirectory' $(readlink -f ../..) .
             [ -d build ] || mkdir build
             cd build
-            $CMAKE -DCMAKE_VERBOSE_MAKEFILE=ON ..
+            $CMAKE ..
             $CMAKE --build . -- -j 8
             ./hello_mongocxx
 
