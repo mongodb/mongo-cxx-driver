@@ -10,6 +10,7 @@ rm -rf build/*
 cd build
 if [ -z "$MSVC" ]; then
     "$CMAKE" -DCMAKE_BUILD_TYPE="${BUILD_TYPE}" -DCMAKE_CXX_STANDARD="${CXX_STANDARD}" ..
+    "$CMAKE" --build . --target run
 else
     if [ "$CXX_STANDARD" = "17" ]; then
         "$CMAKE" -G "Visual Studio 15 2017 Win64" -DCMAKE_CXX_STANDARD="${CXX_STANDARD}" ..
