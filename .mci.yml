@@ -910,7 +910,7 @@ tasks:
             rsync -aq --exclude='examples/add_subdirectory' $(readlink -f ../..) .
             [ -d build ] || mkdir build
             cd build
-            $CMAKE -DCMAKE_VERBOSE_MAKEFILE=ON ..
+            $CMAKE ..
             $CMAKE --build . -- -j 8
             ./hello_mongocxx
 
