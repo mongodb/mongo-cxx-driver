@@ -710,13 +710,25 @@ functions:
           shell: bash
           working_dir: "mongo-cxx-driver"
           script: |
-            # redacted code coverage token
-            export CODECOV_TOKEN="${codecov_token}"
-
             set -o errexit
             set -o pipefail
 
-            bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports"
+            # Nothing to do if code coverage was not enabled.
+            if [[ -z "${code_coverage_cmake_flags}" ]]; then
+              exit 0
+            fi
+
+            # Note: coverage is currently only enabled on the ubuntu-1804 distro.
+            # This script does not support MacOS, Windows, or non-x86_64 distros.
+            # Update accordingly if code coverage is expanded to other distros.
+            curl -Os https://uploader.codecov.io/latest/linux/codecov
+            chmod +x codecov
+
+            # -Z: Exit with a non-zero value if error.
+            # -g: Run with gcov support.
+            # -t: Codecov upload token.
+            # perl: filter verbose "Found" list and "Processing" messages.
+            ./codecov -Zgt "${codecov_token}" | perl -lne 'print if not m|(^.*\.gcov(\.\.\.)?$)|'
 
 #######################################
 #              Post Task              #
