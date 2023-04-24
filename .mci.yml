@@ -615,7 +615,7 @@ functions:
                       # is true.
                       if [[ -z "$MONGODB_API_VERSION" ]]; then
                           for test in $EXAMPLES; do
-                            echo "Running example $test"
+                            echo "Running $test"
                             case "$test" in
                               *encryption*)
                                 echo " - Skipping client side encryption example"
