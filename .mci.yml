@@ -325,7 +325,6 @@ functions:
 
                   MONGOC_PREFIX="$(pwd)/../mongoc"
                   echo "MONGOC_PREFIX=$MONGOC_PREFIX"
-                  ls -l $MONGOC_PREFIX
 
                   if [ "Windows_NT" == "$OS" ]; then
                       MONGOC_PREFIX=$(cygpath -m "$MONGOC_PREFIX")
