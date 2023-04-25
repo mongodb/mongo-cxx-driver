@@ -121,12 +121,44 @@ class MONGOCXX_API data_key {
     ///
     const std::vector<std::string>& key_alt_names() const;
 
+    ///
+    /// Sets the binary data for the key material
+    ///
+    /// An optional BinData of 96 bytes to use as custom key material for the
+    /// data key being created. If keyMaterial is given, the custom key material
+    /// is used for encrypting and decrypting data.
+    ///
+    /// Otherwise, the key material for the new data key is generated from a
+    /// cryptographically secure random device.
+    ///
+    /// @param key_material
+    ///   The binary data for the keyMaterial
+    ///
+    /// @return
+    ///   A reference to this object.
+    ///
+    /// @see https://www.mongodb.com/docs/v6.0/reference/method/KeyVault.createKey/
+    ///
+    using key_material_type = std::vector<uint8_t>;
+    data_key& key_material(key_material_type key_material);
+
+    ///
+    /// Gets the keyMaterial as binary data
+    ///
+    /// @return
+    ///   The binary data for the key material
+    ///
+    /// @see https://www.mongodb.com/docs/v6.0/reference/method/KeyVault.createKey/
+    ///
+    const stdx::optional<key_material_type>& key_material();
+
    private:
     friend class mongocxx::client_encryption;
     MONGOCXX_PRIVATE void* convert() const;
 
     stdx::optional<bsoncxx::document::view_or_value> _master_key;
     std::vector<std::string> _key_alt_names;
+    stdx::optional<key_material_type> _key_material;
 };
 
 }  // namespace options

@@ -244,9 +244,6 @@ class MONGOCXX_API auto_encryption {
     /// an encryptedFields obtained from the server. It protects against a
     /// malicious server advertising a false encryptedFields.
     ///
-    /// Queryable Encryption is in Public Technical Preview. Queryable Encryption should not be used
-    /// in production and is subject to backwards breaking changes.
-    ///
     /// @param encrypted_fields_map
     ///   The mapping of which fields to encrypt.
     ///
@@ -257,16 +254,19 @@ class MONGOCXX_API auto_encryption {
     ///
     /// @see https://docs.mongodb.com/manual/core/security-client-side-encryption/
     ///
+    /// @warning Queryable Encryption is in Public Technical Preview. Queryable Encryption should
+    /// not be used in production and is subject to backwards breaking changes.
+    ///
     auto_encryption& encrypted_fields_map(bsoncxx::document::view_or_value encrypted_fields_map);
 
     ///
     /// Get encrypted fields map
     ///
-    /// Queryable Encryption is in Public Technical Preview. Queryable Encryption should not be used
-    /// in production and is subject to backwards breaking changes.
-    ///
     /// @return
     ///   An optional document containing the encrypted fields map
+    ///
+    /// @warning Queryable Encryption is in Public Technical Preview. Queryable Encryption should
+    /// not be used in production and is subject to backwards breaking changes.
     ///
     const stdx::optional<bsoncxx::document::view_or_value>& encrypted_fields_map() const;
 
@@ -296,9 +296,6 @@ class MONGOCXX_API auto_encryption {
     /// Query analysis is disabled when the 'bypassQueryAnalysis'
     /// option is true. Default is 'false' (i.e. query analysis is enabled).
     ///
-    /// Queryable Encryption is in Public Technical Preview. Queryable Encryption should not be used
-    /// in production and is subject to backwards breaking changes.
-    ///
     /// @param should_bypass
     ///   Whether or not to bypass query analysis.
     ///
@@ -307,16 +304,19 @@ class MONGOCXX_API auto_encryption {
     ///
     /// @see https://docs.mongodb.com/manual/core/security-client-side-encryption/
     ///
+    /// @warning Queryable Encryption is in Public Technical Preview. Queryable Encryption should
+    /// not be used in production and is subject to backwards breaking changes.
+    ///
     auto_encryption& bypass_query_analysis(bool should_bypass);
 
     ///
     /// Gets a boolean specifying whether or not query analysis is bypassed.
     ///
-    /// Queryable Encryption is in Public Technical Preview. Queryable Encryption should not be used
-    /// in production and is subject to backwards breaking changes.
-    ///
     /// @return
     ///   A boolean specifying whether query analysis is bypassed.
+    ///
+    /// @warning Queryable Encryption is in Public Technical Preview. Queryable Encryption should
+    /// not be used in production and is subject to backwards breaking changes.
     ///
     bool bypass_query_analysis() const;
 
@@ -333,6 +333,33 @@ class MONGOCXX_API auto_encryption {
     ///
     /// - mongocryptdSpawnArgs: array[strings], options passed to mongocryptd
     ///   when spawing. Defaults to ["--idleShutdownTimeoutSecs=60"].
+    ///
+    /// - cryptSharedLibPath - Set a filepath string referring to a crypt_shared library file. Unset
+    ///   by default. If not set (the default), libmongocrypt will attempt to load crypt_shared
+    ///   using the host system’s default dynamic-library-search system.
+    ///
+    ///   If set, the given path should identify the crypt_shared dynamic library file itself, not
+    ///   the directory that contains it.
+    ///
+    ///   If the given path is a relative path and the first path component is $ORIGIN, the $ORIGIN
+    ///   component will be replaced with the absolute path to the directory containing the
+    ///   libmongocrypt library in use by the application.
+    ///
+    ///   Note No other RPATH/RUNPATH-style substitutions are available.
+    ///   If the given path is a relative path, the path will be resolved relative to the working
+    ///   directory of the operating system process.
+    ///
+    ///   If this option is set and libmongocrypt fails to load crypt_shared from the given
+    ///   filepath, libmongocrypt will fail to initialize and will not attempt to search for
+    ///   crypt_shared in any other locations.
+    ///
+    /// - cryptSharedLibRequired - If set to true, and libmongocrypt fails to load a crypt_shared
+    ///   library, initialization of auto-encryption will fail immediately and will not attempt to
+    ///   spawn mongocryptd.
+    ///
+    ///   If set to false (the default), cryptSharedLibPath is not set, and libmongocrypt fails to
+    ///   load crypt_shared, then libmongocrypt will proceed without crypt_shared and fall back to
+    ///   using mongocryptd.
     ///
     /// @param extra
     ///   The extra options to set.

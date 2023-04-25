@@ -7,14 +7,12 @@
 #######################################
 variables:
 
-    mongoc_version_default: &mongoc_version_default "2966c67d"
-    mongocrypt_version_default: &mongocrypt_version_default "1.5.2"
+    mongoc_version_default: &mongoc_version_default "11e31e3e" # TODO: update to 1.24.0 once released.
 
     # If updating mongoc_version_minimum, also update:
     # - the default value of --c-driver-build-ref in etc/make_release.py
     # - LIBMONGOC_REQUIRED_VERSION in src/mongocxx/CMakeLists.txt
-    mongoc_version_minimum: &mongoc_version_minimum "1.22.1"
-    mongocrypt_version_minimum: &mongocrypt_version_minimum "1.5.2"
+    mongoc_version_minimum: &mongoc_version_minimum "11e31e3e" # TODO: update to 1.24.0 once released.
 
     mongodb_version:
         version_latest: &version_latest "latest"
@@ -166,7 +164,7 @@ functions:
                 ./src/mongocxx/test/test_mongohouse_specs
 
     "start_mongod":
-        command: shell.exec
+      - command: shell.exec
         params:
             shell: bash
             working_dir: "."
@@ -193,6 +191,48 @@ functions:
                 echo "{ \"releases\": { \"default\": \"$MONGODB_BINARIES\" }}" > $MONGO_ORCHESTRATION_HOME/orchestration.config
                 ./.evergreen/run-orchestration.sh
 
+                # Ensure server on port 27017 is the primary server.
+                if [[ "$TOPOLOGY" == replica_set ]]; then
+                  # Replset members should be on the following ports.
+                  declare hosts="localhost:27017,localhost:27018,localhost:27019"
+
+                  # Authentication may be required.
+                  declare creds
+                  if [[ -n "$AUTH" ]]; then
+                    creds="bob:pwd123@"
+                  else
+                    creds=""
+                  fi
+
+                  declare uri
+                  printf -v uri "mongodb://%s%s" "$creds" "$hosts"
+
+                  # Raise the priority of the member on port 27017. Others should have priority 1.
+                  declare script
+                  printf -v script "%s\n%s\n%s\n" \
+                    "let c = rs.conf()" \
+                    "c.members.find((m) => m.host.includes('27017')).priority = 10" \
+                    "rs.reconfig(c)"
+
+                  mongosh --quiet "$uri" --eval "$script"
+
+                  # Wait up to a minute for member on port 27017 to become primary.
+                  wait_for_primary() {
+                    for _ in $(seq 60); do
+                      if mongosh --quiet "$uri" --eval "quit(rs.hello().primary.includes('27017') ? 0 : 1)"; then
+                        return 0
+                      else
+                        sleep 1
+                      fi
+                    done
+                    echo "Could not set replset member on port 27017 as primary"
+                    return 1
+                  }
+                  echo "Waiting for replset member 27017 to become primary..."
+                  wait_for_primary
+                  echo "Waiting for replset member 27017 to become primary... done."
+                fi
+
                 # Copy mongocryptd up so other functions can find it later, since we can't share PATHs
                 if [ -f $MONGODB_BINARIES/mongocryptd ]; then
                     cp $MONGODB_BINARIES/mongocryptd ../mongocryptd
@@ -200,6 +240,10 @@ functions:
 
                 cd ../
                 pwd
+      - command: expansions.update
+        params:
+          type: setup
+          file: drivers-evergreen-tools/mo-expansion.yml
 
 
     "stop_mongod":
@@ -219,37 +263,17 @@ functions:
 
     "install_c_driver":
       - command: expansions.update
+        type: setup
         params:
           updates:
             - key: mongoc_version_default
               value: *mongoc_version_default
-            - key: mongocrypt_version_default
-              value: *mongocrypt_version_default
       - command: shell.exec
+        type: setup
         params:
             shell: bash
-            working_dir: "mongo-cxx-driver"
-            script: |
-                    set -o errexit
-                    set -o pipefail
-                    export PREFIX=$(pwd)/../mongoc/
-                    if [ "Windows_NT" == "$OS" ]; then
-                        PREFIX=$(cygpath -m "$PREFIX")
-                    fi
-                    export CMAKE=${cmake}
-                    export GENERATOR="${generator}"
-                    if [ "1" == "${BSON_EXTRA_ALIGNMENT}" ]; then
-                        echo "Building C driver with BSON extra alignment"
-                    fi
-                    MONGOC_VERSION=${mongoc_version}
-                    MONGOCRYPT_VERSION=${mongocrypt_version}
-                    if [[ -z $MONGOC_VERSION ]]; then
-                      MONGOC_VERSION=${mongoc_version_default}
-                    fi
-                    if [[ -z $MONGOCRYPT_VERSION ]]; then
-                      MONGOCRYPT_VERSION=${mongocrypt_version_default}
-                    fi
-                    BSON_EXTRA_ALIGNMENT=${BSON_EXTRA_ALIGNMENT} MONGOC_VERSION=$MONGOC_VERSION MONGOCRYPT_VERSION=$MONGOCRYPT_VERSION ./.evergreen/install_c_driver.sh
+            add_expansions_to_env: true
+            script: mongo-cxx-driver/.evergreen/install_c_driver.sh
 
     "lint":
         - command: shell.exec
@@ -345,7 +369,6 @@ functions:
 
                   MONGOC_PREFIX="$(pwd)/../mongoc"
                   echo "MONGOC_PREFIX=$MONGOC_PREFIX"
-                  ls -l $MONGOC_PREFIX
 
                   if [ "Windows_NT" == "$OS" ]; then
                       MONGOC_PREFIX=$(cygpath -m "$MONGOC_PREFIX")
@@ -405,22 +428,26 @@ functions:
                   fi
                   export PATH=$(pwd)/src/bsoncxx/${build_type}:$(pwd)/src/mongocxx/${build_type}:$PREFIX/bin:$(pwd)/install/bin:$PATH
 
+                  export CHANGE_STREAMS_UNIFIED_TESTS_PATH="$(pwd)/../data/change-streams/unified"
+                  export CLIENT_SIDE_ENCRYPTION_LEGACY_TESTS_PATH="$(pwd)/../data/client_side_encryption/legacy"
+                  export CLIENT_SIDE_ENCRYPTION_TESTS_PATH="$(pwd)/../data/client_side_encryption"
+                  export CLIENT_SIDE_ENCRYPTION_UNIFIED_TESTS_PATH="$(pwd)/../data/client_side_encryption/unified"
+                  export COLLECTION_MANAGEMENT_TESTS_PATH="$(pwd)/../data/collection-management"
+                  export COMMAND_MONITORING_TESTS_PATH="$(pwd)/../data/command-monitoring"
                   export CRUD_LEGACY_TESTS_PATH="$(pwd)/../data/crud/legacy"
                   export CRUD_UNIFIED_TESTS_PATH="$(pwd)/../data/crud/unified"
-                  export CHANGE_STREAMS_UNIFIED_TESTS_PATH="$(pwd)/../data/change-streams/unified"
-                  export ENCRYPTION_TESTS_PATH="$(pwd)/../data/client_side_encryption"
-                  export INITIAL_DNS_SEEDLIST_DISCOVERY_TESTS_PATH="$(pwd)/../data/initial_dns_seedlist_discovery"
                   export GRIDFS_TESTS_PATH="$(pwd)/../data/gridfs"
-                  export COMMAND_MONITORING_TESTS_PATH="$(pwd)/../data/command-monitoring"
-                  export TRANSACTIONS_TESTS_PATH="$(pwd)/../data/transactions"
-                  export WITH_TRANSACTION_TESTS_PATH="$(pwd)/../data/with_transaction"
-                  export RETRYABLE_READS_TESTS_PATH="$(pwd)/../data/retryable-reads"
+                  export INITIAL_DNS_SEEDLIST_DISCOVERY_TESTS_PATH="$(pwd)/../data/initial_dns_seedlist_discovery"
                   export READ_WRITE_CONCERN_OPERATION_TESTS_PATH="$(pwd)/../data/read-write-concern/operation"
-                  export UNIFIED_FORMAT_TESTS_PATH=$(pwd)/../data/unified-format
+                  export RETRYABLE_READS_LEGACY_TESTS_PATH="$(pwd)/../data/retryable-reads/legacy"
+                  export RETRYABLE_READS_UNIFIED_TESTS_PATH="$(pwd)/../data/retryable-reads/unified"
+                  export RETRYABLE_WRITES_UNIFIED_TESTS_PATH="$(pwd)/../data/retryable-writes/unified"
                   export SESSION_UNIFIED_TESTS_PATH="$(pwd)/../data/sessions/unified"
-                  export VERSIONED_API_TESTS_PATH=$(pwd)/../data/versioned-api
-                  export COLLECTION_MANAGEMENT_TESTS_PATH="$(pwd)/../data/collection-management"
+                  export TRANSACTIONS_TESTS_PATH="$(pwd)/../data/transactions"
+                  export UNIFIED_FORMAT_TESTS_PATH=$(pwd)/../data/unified-format
                   export URI_OPTIONS_TESTS_PATH="$(pwd)/../data/uri-options"
+                  export VERSIONED_API_TESTS_PATH=$(pwd)/../data/versioned-api
+                  export WITH_TRANSACTION_TESTS_PATH="$(pwd)/../data/with_transaction"
 
                   export MONGODB_API_VERSION="${MONGODB_API_VERSION}"
 
@@ -506,7 +533,7 @@ functions:
                                   fi
                                   ;;
                           esac
-                      }
+                      } >/dev/null
                       register_ca_cert
                       echo "Registering CA certificate for KMS TLS tests... done."
 
@@ -533,12 +560,18 @@ functions:
                   fi
 
                   if [ "Windows_NT" == "$OS" ]; then
-                      CTEST_OUTPUT_ON_FAILURE=1 MSBuild.exe /p:Configuration=${build_type} RUN_TESTS.vcxproj
+                      CTEST_OUTPUT_ON_FAILURE=1 MSBuild.exe /p:Configuration=${build_type} /verbosity:minimal RUN_TESTS.vcxproj
                       # Only run examples if MONGODB_API_VERSION is unset. We do not append
                       # API version to example clients, so examples will fail when requireApiVersion
                       # is true.
                       if [[ -z "$MONGODB_API_VERSION" ]]; then
-                        CTEST_OUTPUT_ON_FAILURE=1 MSBuild.exe /p:Configuration=${build_type} examples/run-examples.vcxproj
+                        echo "Running examples..."
+                        if ! CTEST_OUTPUT_ON_FAILURE=1 MSBuild.exe /p:Configuration=${build_type} /verbosity:minimal examples/run-examples.vcxproj >|output.txt 2>&1; then
+                          # Only emit output on failure.
+                          cat output.txt 1>&2
+                          exit 1
+                        fi
+                        echo "Running examples... done."
                       fi
                   else
                       # ENABLE_SLOW_TESTS is required to run the slow tests that are disabled by default. The slow tests should not be run if explicitly disabled.
@@ -547,6 +580,15 @@ functions:
                       fi
 
                       ulimit -c unlimited || true
+
+                      if [ "${use_mongocryptd}" = "true" ]; then
+                          echo "Will run tests using mongocryptd (instead of crypt_shared library)"
+                      else
+                          echo "Will run tests using crypt_shared library (instead of mongocryptd)"
+                          # Set by run-orchestration.sh in "start_mongod".
+                          export CRYPT_SHARED_LIB_PATH="${CRYPT_SHARED_LIB_PATH}"
+                          echo "CRYPT_SHARED_LIB_PATH=$CRYPT_SHARED_LIB_PATH"
+                      fi
 
                       # Run tests and examples 1-by-1 with "test_params" so we can run them with valgrind.
                       ${test_params} ./src/bsoncxx/test/test_bson
@@ -573,24 +615,29 @@ functions:
                       # is true.
                       if [[ -z "$MONGODB_API_VERSION" ]]; then
                           for test in $EXAMPLES; do
+                            echo "Running $test"
                             case "$test" in
                               *encryption*)
-                                echo "Skipping client side encryption example"
+                                echo " - Skipping client side encryption example"
                                 ;;
                               *change_stream*)
-                                echo "TODO CXX-1201, enable for servers that support change streams"
+                                echo " - TODO CXX-1201, enable for servers that support change streams"
                                 ;;
                               *client_session*)
-                                echo "TODO CXX-1201, enable for servers that support change streams"
+                                echo " - TODO CXX-1201, enable for servers that support change streams"
                                 ;;
                               *with_transaction*)
-                                echo "TODO CXX-1201, enable for servers that support transactions"
+                                echo " - TODO CXX-1201, enable for servers that support transactions"
                                 ;;
                               *causal_consistency*)
-                                echo "TODO CXX-1201, enable for servers that support transactions"
+                                echo " - TODO CXX-1201, enable for servers that support transactions"
                                 ;;
                               *)
-                                ${test_params} $test
+                                if ! ${test_params} $test >|output.txt 2>&1; then
+                                  # Only emit output on failure.
+                                  cat output.txt 1>&2
+                                  exit 1
+                                fi
                                 ;;
                             esac
                           done
@@ -632,7 +679,9 @@ functions:
                   # API version to example clients, so example projects will fail when requireApiVersion
                   # is true.
                   if [[ -z "$MONGODB_API_VERSION" ]]; then
+                    echo "Building example projects..."
                     .evergreen/build_example_projects.sh
+                    echo "Building example projects... done."
                   fi
                   unset MONGODB_API_VERSION
 
@@ -717,13 +766,25 @@ functions:
           shell: bash
           working_dir: "mongo-cxx-driver"
           script: |
-            # redacted code coverage token
-            export CODECOV_TOKEN="${codecov_token}"
-
             set -o errexit
             set -o pipefail
 
-            bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports"
+            # Nothing to do if code coverage was not enabled.
+            if [[ -z "${code_coverage_cmake_flags}" ]]; then
+              exit 0
+            fi
+
+            # Note: coverage is currently only enabled on the ubuntu-1804 distro.
+            # This script does not support MacOS, Windows, or non-x86_64 distros.
+            # Update accordingly if code coverage is expanded to other distros.
+            curl -Os https://uploader.codecov.io/latest/linux/codecov
+            chmod +x codecov
+
+            # -Z: Exit with a non-zero value if error.
+            # -g: Run with gcov support.
+            # -t: Codecov upload token.
+            # perl: filter verbose "Found" list and "Processing" messages.
+            ./codecov -Zgt "${codecov_token}" | perl -lne 'print if not m|(^.*\.gcov(\.\.\.)?$)|'
 
 #######################################
 #              Post Task              #
@@ -906,7 +967,7 @@ tasks:
             rsync -aq --exclude='examples/add_subdirectory' $(readlink -f ../..) .
             [ -d build ] || mkdir build
             cd build
-            $CMAKE -DCMAKE_VERBOSE_MAKEFILE=ON ..
+            $CMAKE ..
             $CMAKE --build . -- -j 8
             ./hello_mongocxx
 
@@ -1194,6 +1255,19 @@ buildvariants:
             - debian10-large
           - name: uninstall_check
 
+    # Add matrix for specification test requirement of mongocryptd:
+    # "Drivers MUST run all tests with mongocryptd on at least one platform for all tested server versions (4.2+)."
+    - matrix_name: "mongocryptd"
+      matrix_spec:
+        os: "ubuntu-1804"
+        mongodb_version: ["4.2", "4.4", "5.0", "latest"]
+      display_name: "${os} (MongoDB ${mongodb_version}) with mongocryptd"
+      tasks:
+          - name: compile_and_test_with_shared_libs
+          - name: compile_and_test_with_shared_libs_replica_set
+      expansions:
+        use_mongocryptd: true
+
     - name: ubuntu2004-release-latest
       display_name: "Ubuntu 20.04 Release (MongoDB Latest)"
       expansions:
@@ -1291,6 +1365,7 @@ buildvariants:
           poly_flags: *poly_std_experimental_flags
           mongodb_version: *version_44
           example_projects_cxx_standard: *std_experimental_cxx_standard
+          use_mongocryptd: true  # crypt_shared is not available for Ubuntu 16.04
       run_on:
           - ubuntu1604-build
       tasks:
@@ -1309,6 +1384,7 @@ buildvariants:
           test_params: *valgrind_test_params
           mongodb_version: *version_latest
           disable_slow_tests: 1
+          use_mongocryptd: true  # false positives arise from the crypt_shared library
       run_on:
           - ubuntu1804-build
       tasks:
@@ -1327,6 +1403,7 @@ buildvariants:
           test_params: *valgrind_test_params
           mongodb_version: *version_50
           disable_slow_tests: 1
+          use_mongocryptd: true
       run_on:
           - ubuntu1804-build
       tasks:
@@ -1608,7 +1685,6 @@ buildvariants:
           cmake_flags: *linux_cmake_flags
           mongodb_version: *version_latest
           mongoc_version: *mongoc_version_minimum
-          mongocrypt_version: *mongocrypt_version_minimum
       run_on:
           - ubuntu1804-build
       tasks:

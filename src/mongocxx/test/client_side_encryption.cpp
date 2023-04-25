@@ -22,6 +22,7 @@
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/builder/stream/helpers.hpp>
 #include <bsoncxx/document/element.hpp>
+#include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/test_util/catch.hh>
 #include <bsoncxx/types.hpp>
@@ -36,6 +37,7 @@
 #include <mongocxx/options/client.hpp>
 #include <mongocxx/options/client_encryption.hpp>
 #include <mongocxx/options/data_key.hpp>
+#include <mongocxx/private/libbson.hh>
 #include <mongocxx/test/spec/monitoring.hh>
 #include <mongocxx/test_util/client_helpers.hh>
 #include <mongocxx/uri.hpp>
@@ -83,16 +85,16 @@ using bsoncxx::types::bson_value::make_value;
 
 using namespace mongocxx;
 
-// Takes a path relative to the ENCRYPTION_TESTS_PATH variable, with leading '/'.
+// Takes a path relative to the CLIENT_SIDE_ENCRYPTION_TESTS_PATH variable, with leading '/'.
 bsoncxx::document::value _doc_from_file(stdx::string_view sub_path) {
-    char* encryption_tests_path = std::getenv("ENCRYPTION_TESTS_PATH");
+    char* encryption_tests_path = std::getenv("CLIENT_SIDE_ENCRYPTION_TESTS_PATH");
     REQUIRE(encryption_tests_path);
 
     std::string path = std::string(encryption_tests_path) + sub_path.data();
     CAPTURE(path);
 
     std::ifstream file{path};
-    REQUIRE(file);
+    REQUIRE(file.is_open());
 
     std::string file_contents((std::istreambuf_iterator<char>(file)),
                               std::istreambuf_iterator<char>());
@@ -190,7 +192,11 @@ void _add_client_encrypted_opts(options::client* client_opts,
     char* bypass_spawn = std::getenv("ENCRYPTION_TESTS_BYPASS_SPAWN");
     char* mongocryptd_path = std::getenv("MONGOCRYPTD_PATH");
 
-    if (bypass_spawn || mongocryptd_path) {
+    const auto shared_lib_path = std::getenv("CRYPT_SHARED_LIB_PATH");
+    if (shared_lib_path) {
+        auto_encrypt_opts.extra_options(make_document(kvp("cryptSharedLibPath", shared_lib_path),
+                                                      kvp("cryptSharedLibRequired", true)));
+    } else if (bypass_spawn || mongocryptd_path) {
         auto cmd = bsoncxx::builder::basic::document{};
 
         if (bypass_spawn && strcmp(bypass_spawn, "TRUE") == 0) {
@@ -482,7 +488,7 @@ TEST_CASE("Datakey and double encryption", "[client_side_encryption]") {
 
 void run_external_key_vault_test(bool with_external_key_vault) {
     class client external_key_vault_client {
-        uri{"mongodb://fake-user:fake-pwd@localhost:27017"}, test_util::add_test_server_api()
+        uri{"mongodb://fake-user:fake-pwd@localhost:27017"}, test_util::add_test_server_api(),
     };
 
     // Create a MongoClient without encryption enabled (referred to as client).
@@ -571,16 +577,17 @@ void run_external_key_vault_test(bool with_external_key_vault) {
 TEST_CASE("External key vault", "[client_side_encryption]") {
     instance::current();
 
-    class client setup_client {
-        uri{}, test_util::add_test_server_api(),
-    };
-    if (test_util::get_max_wire_version(setup_client) < 8) {
-        // Automatic encryption requires wire version 8.
-        WARN("Skipping - max wire version is < 8");
+    if (!mongocxx::test_util::should_run_client_side_encryption_test()) {
         return;
     }
 
-    if (!mongocxx::test_util::should_run_client_side_encryption_test()) {
+    class client setup_client {
+        uri{}, test_util::add_test_server_api(),
+    };
+
+    if (test_util::get_max_wire_version(setup_client) < 8) {
+        // Automatic encryption requires wire version 8.
+        WARN("Skipping - max wire version is < 8");
         return;
     }
 
@@ -591,6 +598,10 @@ TEST_CASE("External key vault", "[client_side_encryption]") {
 TEST_CASE("BSON size limits and batch splitting", "[client_side_encryption]") {
     instance::current();
 
+    if (!mongocxx::test_util::should_run_client_side_encryption_test()) {
+        return;
+    }
+
     // Create a MongoClient without encryption enabled (referred to as client).
     class client client {
         uri{}, test_util::add_test_server_api(),
@@ -599,10 +610,6 @@ TEST_CASE("BSON size limits and batch splitting", "[client_side_encryption]") {
     if (test_util::get_max_wire_version(client) < 8) {
         // Automatic encryption requires wire version 8.
         WARN("Skipping - max wire version is < 8");
-        return;
-    }
-
-    if (!mongocxx::test_util::should_run_client_side_encryption_test()) {
         return;
     }
 
@@ -649,7 +656,7 @@ TEST_CASE("BSON size limits and batch splitting", "[client_side_encryption]") {
     client_encrypted_opts.apm_opts(apm_opts);
 
     class client client_encrypted {
-        uri{}, test_util::add_test_server_api(client_encrypted_opts),
+        uri{}, test_util::add_test_server_api(client_encrypted_opts)
     };
 
     // Using client_encrypted perform the following operations:
@@ -754,18 +761,18 @@ TEST_CASE("BSON size limits and batch splitting", "[client_side_encryption]") {
 TEST_CASE("Views are prohibited", "[client_side_encryption]") {
     instance::current();
 
+    if (!mongocxx::test_util::should_run_client_side_encryption_test()) {
+        return;
+    }
+
     // Create a MongoClient without encryption enabled (referred to as client).
     class client client {
-        uri{}, test_util::add_test_server_api()
+        uri{}, test_util::add_test_server_api(),
     };
 
     if (test_util::get_max_wire_version(client) < 8) {
         // Automatic encryption requires wire version 8.
         WARN("Skipping - max wire version is < 8");
-        return;
-    }
-
-    if (!mongocxx::test_util::should_run_client_side_encryption_test()) {
         return;
     }
 
@@ -1104,8 +1111,12 @@ TEST_CASE("Corpus", "[client_side_encryption]") {
     // Data keys created with AWS KMS may specify a custom endpoint to contact
     // (instead of the default endpoint derived from the AWS region).
 
+    if (!mongocxx::test_util::should_run_client_side_encryption_test()) {
+        return;
+    }
+
     class client setup_client {
-        uri {}
+        uri{}, test_util::add_test_server_api(),
     };
 
     if (test_util::get_max_wire_version(setup_client) < 8) {
@@ -1113,10 +1124,6 @@ TEST_CASE("Corpus", "[client_side_encryption]") {
         WARN("Skipping - max wire version is < 8");
         return;
     }
-    if (!mongocxx::test_util::should_run_client_side_encryption_test()) {
-        return;
-    }
-
     _run_corpus_test(true);
     _run_corpus_test(false);
 }
@@ -1233,6 +1240,10 @@ TEST_CASE("Custom endpoint", "[client_side_encryption]") {
     // Data keys created with AWS KMS may specify a custom endpoint to contact
     // (instead of the default endpoint derived from the AWS region).
 
+    if (!mongocxx::test_util::should_run_client_side_encryption_test()) {
+        return;
+    }
+
     class client setup_client {
         uri{}, test_util::add_test_server_api(),
     };
@@ -1240,10 +1251,6 @@ TEST_CASE("Custom endpoint", "[client_side_encryption]") {
     if (test_util::get_max_wire_version(setup_client) < 8) {
         // Automatic encryption requires wire version 8.
         WARN("Skipping - max wire version is < 8");
-        return;
-    }
-
-    if (!mongocxx::test_util::should_run_client_side_encryption_test()) {
         return;
     }
 
@@ -1504,26 +1511,116 @@ TEST_CASE("Custom endpoint", "[client_side_encryption]") {
     }
 }
 
+void bypass_mongocrypt_via_shared_library(const std::string& shared_lib_path,
+                                          bsoncxx::document::view_or_value external_schema) {
+    // Via loading shared library
+    // The following tests that loading crypt_shared bypasses spawning mongocryptd.
+    //
+    // Note
+    //
+    // IMPORTANT: This test requires the crypt_shared library be loaded. If the crypt_shared
+    // library is not available, skip the test.
+    //
+
+    // 1. Create a MongoClient configured with auto encryption (referred to as client_encrypted)
+    //
+    // Configure the required options. Use the local KMS provider as follows:
+    //
+    // { "local": { "key": <base64 decoding of LOCAL_MASTERKEY> } }
+    // Configure with the keyVaultNamespace set to keyvault.datakeys.
+    //
+    // Configure client_encrypted to use the schema external/external-schema.json for db.coll by
+    // setting a schema map like: { "db.coll": <contents of external-schema.json>}
+    //
+    // Configure the following extraOptions:
+    //
+    // {
+    //   "mongocryptdURI": "mongodb://localhost:27021/db?serverSelectionTimeoutMS=1000",
+    //   "mongocryptdSpawnArgs": [
+    //      "--pidfilepath=bypass-spawning-mongocryptd.pid",
+    //      "--port=27021"
+    //   ],
+    //   "cryptSharedLibPath": "<path to shared library>",
+    //   "cryptSharedLibRequired": true
+    // }
+    auto extra = make_document(
+        kvp("mongocryptdURI", "mongodb://localhost:27021/db?serverSelectionTimeoutMS=1000"),
+        kvp("mongocryptdSpawnArgs",
+            make_array("--pidfilepath=bypass-spawning-mongocryptd.pid", "--port=27021")),
+        kvp("cryptSharedLibPath", shared_lib_path),
+        kvp("cryptSharedLibRequired", true));
+
+    options::auto_encryption auto_encrypt_opts{};
+    auto_encrypt_opts.kms_providers(_make_kms_doc());
+    auto_encrypt_opts.tls_opts(_make_tls_opts());
+    auto_encrypt_opts.key_vault_namespace({"keyvault", "datakeys"});
+    auto_encrypt_opts.schema_map({external_schema.view()});
+    auto_encrypt_opts.extra_options({extra.view()});
+
+    options::client client_encrypted_opts;
+    client_encrypted_opts.auto_encryption_opts(std::move(auto_encrypt_opts));
+
+    class client client_encrypted {
+        uri{}, test_util::add_test_server_api(client_encrypted_opts),
+    };
+
+    // 2. Use client_encrypted to insert the document {"unencrypted": "test"} into db.coll.
+    // Expect this to succeed.
+    auto coll = client_encrypted["db"]["coll"];
+    coll.insert_one(make_document(kvp("unencrypted", "test")));
+
+    // 3. Validate that mongocryptd was not spawned. Create a MongoClient to localhost:27021 (or
+    // whatever was passed via --port) with serverSelectionTimeoutMS=1000. Run a handshake
+    // command and ensure it fails with a server selection timeout.
+    class client ping_client {
+        uri{"mongodb://localhost:27021/?serverSelectionTimeoutMS=1000"},
+            test_util::add_test_server_api(),
+    };
+    REQUIRE_THROWS(ping_client["admin"].run_command(make_document(kvp("ping", 1))));
+
+    // Note
+    //
+    // IMPORTANT: If crypt_shared is visible to the operating system's library search mechanism,
+    // the expected server error generated by these mongocryptdBypassSpawn tests will not appear
+    // because libmongocrypt will load the crypt_shared library instead of consulting
+    // mongocryptd. For the following tests, it is required that libmongocrypt not load
+    // crypt_shared. Refer to the client-side-encryption document for more information on
+    // "disabling" crypt_shared.
+}
+
 TEST_CASE("Bypass spawning mongocryptd", "[client_side_encryption]") {
     instance::current();
+
+    if (!mongocxx::test_util::should_run_client_side_encryption_test()) {
+        return;
+    }
 
     class client setup_client {
         uri{}, test_util::add_test_server_api(),
     };
+
     if (test_util::get_max_wire_version(setup_client) < 8) {
         // Automatic encryption requires wire version 8.
         WARN("Skipping - max wire version is < 8");
         return;
     }
 
-    if (!mongocxx::test_util::should_run_client_side_encryption_test()) {
+    auto shared_lib_path = getenv("CRYPT_SHARED_LIB_PATH");
+
+    auto external_schema_file = _doc_from_file("/external/external-schema.json");
+    auto external_schema = document{} << "db.coll" << external_schema_file << finalize;
+
+    SECTION("Via loading shared library") {
+        if (shared_lib_path) {
+            bypass_mongocrypt_via_shared_library(shared_lib_path, external_schema.view());
+        }
+    }
+
+    if (shared_lib_path) {
         return;
     }
 
     // Via mongocryptdBypassSpawn
-
-    auto external_schema_file = _doc_from_file("/external/external-schema.json");
-    auto external_schema = document{} << "db.coll" << external_schema_file << finalize;
 
     // Create a MongoClient configured with auto encryption (referred to as client_encrypted)
     //
@@ -1634,16 +1731,16 @@ class kms_tls_expired_cert_matcher : public Catch::MatcherBase<mongocxx::excepti
 TEST_CASE("KMS TLS expired certificate", "[client_side_encryption]") {
     instance::current();
 
+    if (!mongocxx::test_util::should_run_client_side_encryption_test()) {
+        return;
+    }
+
     // Create a mongoclient without encryption.
     options::client client_opts;
 
     class client setup_client {
-        uri{}, test_util::add_test_server_api(client_opts),
+        uri{}, test_util::add_test_server_api(client_opts)
     };
-
-    if (!mongocxx::test_util::should_run_client_side_encryption_test()) {
-        return;
-    }
 
     // Support for detailed certificate verify failure messages required by this test are only
     // available in libmongoc 1.20.0 and newer (CDRIVER-3927).
@@ -1698,16 +1795,16 @@ class kms_tls_wrong_host_cert_matcher : public Catch::MatcherBase<mongocxx::exce
 TEST_CASE("KMS TLS wrong host certificate", "[client_side_encryption]") {
     instance::current();
 
+    if (!mongocxx::test_util::should_run_client_side_encryption_test()) {
+        return;
+    }
+
     // Create a mongoclient without encryption.
     options::client client_opts;
 
     class client setup_client {
-        uri{}, test_util::add_test_server_api(client_opts),
+        uri{}, test_util::add_test_server_api(client_opts)
     };
-
-    if (!mongocxx::test_util::should_run_client_side_encryption_test()) {
-        return;
-    }
 
     // Support for detailed certificate verify failure messages required by this test are only
     // available in libmongoc 1.20.0 and newer (CDRIVER-3927).
@@ -1818,11 +1915,11 @@ client_encryption make_prose_test_11_ce(mongocxx::client* client,
 TEST_CASE("KMS TLS Options Tests", "[client_side_encryption][!mayfail]") {
     instance::current();
 
-    auto setup_client = client(uri(), test_util::add_test_server_api());
-
     if (!mongocxx::test_util::should_run_client_side_encryption_test()) {
         return;
     }
+
+    auto setup_client = client(uri(), test_util::add_test_server_api());
 
     // Support for detailed certificate verify failure messages required by this test are only
     // available in libmongoc 1.20.0 and newer (CDRIVER-3927).
@@ -2079,7 +2176,7 @@ std::tuple<mongocxx::client_encryption, mongocxx::client> _setup_explicit_encryp
     options::client encrypted_client_opts;
     encrypted_client_opts.auto_encryption_opts(std::move(auto_encrypt_opts));
     class client encrypted_client {
-        uri{}, test_util::add_test_server_api(encrypted_client_opts)
+        uri{}, test_util::add_test_server_api(encrypted_client_opts),
     };
 
     return std::make_tuple(std::move(client_encryption), std::move(encrypted_client));
@@ -2089,21 +2186,21 @@ std::tuple<mongocxx::client_encryption, mongocxx::client> _setup_explicit_encryp
 TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
     instance::current();
 
-    class client conn {
-        mongocxx::uri{}, test_util::add_test_server_api()
-    };
-
     if (!mongocxx::test_util::should_run_client_side_encryption_test()) {
         return;
     }
 
-    if (!test_util::newer_than(conn, "6.0")) {
-        std::cerr << "Explicit Encryption tests require MongoDB server 6.0+." << std::endl;
+    class client conn {
+        mongocxx::uri{}, test_util::add_test_server_api(),
+    };
+
+    if (!test_util::newer_than(conn, "7.0")) {
+        WARN("Skipping - MongoDB server 7.0 or newer required");
         return;
     }
 
     if (test_util::get_topology(conn) == "single") {
-        std::cerr << "Explicit Encryption tests must not run against a standalone." << std::endl;
+        WARN("Skipping - must not run against a standalone server");
         return;
     }
 
@@ -2526,6 +2623,912 @@ TEST_CASE("Create Encrypted Collection", "[client_side_encryption]") {
             enc.algorithm(options::encrypt::encryption_algorithm::k_unindexed);
             cse.encrypt(bsoncxx::types::bson_value::view(ssn), enc);
             CHECK_NOTHROW(coll->insert_one(make_document(kvp("ssn", "123-45-6789"))));
+        }
+    }
+}
+
+TEST_CASE("Unique Index on keyAltNames", "[client_side_encryption]") {
+    instance::current();
+
+    if (!mongocxx::test_util::should_run_client_side_encryption_test()) {
+        return;
+    }
+
+    if (!test_util::newer_than(uri{}, "4.2")) {
+        WARN("Skipping - requires MongoDB server 4.2+");
+        return;
+    }
+
+    // 1. Create a MongoClient object (referred to as client).
+    mongocxx::client client{mongocxx::uri{}, test_util::add_test_server_api()};
+
+    // 2. Using client, drop the collection keyvault.datakeys.
+    client["keyvault"]["datakeys"].drop();
+
+    // 3. Using client, create a unique index on keyAltNames with a partial index filter for only
+    // documents where keyAltNames exists using writeConcern "majority". The command should be
+    // equivalent to:
+    //
+    // db.runCommand(
+    //   {
+    //      createIndexes: "datakeys",
+    //      indexes: [
+    //        {
+    //          name: "keyAltNames_1",
+    //          key: { "keyAltNames": 1 },
+    //          unique: true,
+    //          partialFilterExpression: { keyAltNames: { $exists: true } }
+    //        }
+    //      ],
+    //      writeConcern: { w: "majority" }
+    //   }
+    // )
+    auto db = client["keyvault"];
+    db.run_command(make_document(
+        kvp("createIndexes", "datakeys"),
+        kvp("indexes",
+            make_array(make_document(
+                kvp("name", "keyAltNames_1"),
+                kvp("key", make_document(kvp("keyAltNames", 1))),
+                kvp("unique", true),
+                kvp("partialFilterExpression",
+                    make_document(kvp("keyAltNames", make_document(kvp("$exists", true)))))))),
+        kvp("writeConcern", make_document(kvp("w", "majority")))));
+
+    // 4. Create a ClientEncryption object (referred to as client_encryption) with client set as the
+    // keyVaultClient.
+    options::client_encryption ce_opts;
+    ce_opts.key_vault_client(&client);
+    ce_opts.key_vault_namespace({"keyvault", "datakeys"});
+    ce_opts.kms_providers(_make_kms_doc(false));
+    client_encryption client_encryption(std::move(ce_opts));
+
+    // 5. Using client_encryption, create a data key with a local KMS provider and the keyAltName
+    // "def".
+    mongocxx::options::data_key dk_opts;
+    dk_opts.key_alt_names({"def"});
+    std::string provider = "local";
+    auto existing_key = client_encryption.create_data_key(provider, dk_opts);
+
+    SECTION("Case 1: createKey()") {
+        // 1. Use client_encryption to create a new local data key with a keyAltName "abc" and
+        // assert the operation does not fail.
+        {
+            mongocxx::options::data_key dk_opts;
+            dk_opts.key_alt_names({"abc"});
+            std::string provider = "local";
+            client_encryption.create_data_key(provider, dk_opts);
+        }
+
+        // 2. Repeat Step 1 and assert the operation fails due to a duplicate key server error
+        // (error code 11000).
+        {
+            mongocxx::options::data_key dk_opts;
+            dk_opts.key_alt_names({"abc"});
+            std::string provider = "local";
+            bool exception_thrown = false;
+            try {
+                client_encryption.create_data_key(provider, dk_opts);
+            } catch (mongocxx::operation_exception& e) {
+                REQUIRE(std::strstr(
+                    e.what(),
+                    "E11000 duplicate key error collection: keyvault.datakeys index: keyAltNames_1 "
+                    "dup key: { keyAltNames: \"abc\" }: generic server error"));
+                exception_thrown = true;
+            }
+            REQUIRE(exception_thrown);
+        }
+
+        // 3. Use client_encryption to create a new local data key with a keyAltName "def" and
+        // assert the operation fails due to a duplicate key server error (error code 11000).
+        {
+            mongocxx::options::data_key dk_opts;
+            dk_opts.key_alt_names({"def"});
+            std::string provider = "local";
+            bool exception_thrown = false;
+            try {
+                client_encryption.create_data_key(provider, dk_opts);
+            } catch (mongocxx::operation_exception& e) {
+                REQUIRE(std::strstr(
+                    e.what(),
+                    "E11000 duplicate key error collection: keyvault.datakeys index: keyAltNames_1 "
+                    "dup key: { keyAltNames: \"def\" }: generic server error"));
+                exception_thrown = true;
+            }
+            REQUIRE(exception_thrown);
+        }
+    }
+
+    SECTION("Case 2: addKeyAltName()") {
+        // 1. Use client_encryption to create a new local data key and assert the operation does not
+        // fail.
+        auto key_doc = client_encryption.create_data_key("local");
+
+        // 2. Use client_encryption to add a keyAltName "abc" to the key created in Step 1 and
+        // assert the operation does not fail.
+        client_encryption.add_key_alt_name(key_doc.view(), "abc");
+
+        // 3. Repeat Step 2, assert the operation does not fail, and assert the returned key
+        // document contains the keyAltName "abc" added in Step 2.
+        {
+            auto alt_key = client_encryption.add_key_alt_name(key_doc.view(), "abc");
+            REQUIRE(std::string(alt_key.value()["keyAltNames"][0].get_string().value) == "abc");
+        }
+
+        // 4. Use client_encryption to add a keyAltName "def" to the key created in Step 1 and
+        // assert the operation fails due to a duplicate key server error (error code 11000).
+        {
+            bool exception_thrown = false;
+            try {
+                client_encryption.add_key_alt_name(key_doc.view(), "def");
+            } catch (mongocxx::operation_exception& e) {
+                REQUIRE(std::strstr(
+                    e.what(),
+                    "E11000 duplicate key error collection: keyvault.datakeys index: keyAltNames_1 "
+                    "dup key: { keyAltNames: \"def\" }: generic server error"));
+                exception_thrown = true;
+            }
+            REQUIRE(exception_thrown);
+        }
+
+        // 5. Use client_encryption to add a keyAltName "def" to the existing key, assert the
+        // operation does not fail, and assert the returned key document contains the keyAltName
+        // "def" added during Setup.
+        {
+            auto alt_key = client_encryption.add_key_alt_name(existing_key.view(), "def");
+            REQUIRE(std::string(alt_key.value()["keyAltNames"][0].get_string().value) == "def");
+        }
+    }
+}
+
+TEST_CASE("Custom Key Material Test", "[client_side_encryption]") {
+    instance::current();
+
+    if (!mongocxx::test_util::should_run_client_side_encryption_test()) {
+        WARN("Skipping - Client Side Encryption is required");
+        return;
+    }
+
+    if (!test_util::newer_than(uri{}, "4.2")) {
+        WARN("Skipping - MongoDB server 4.2 or newer required");
+        return;
+    }
+
+    // 1. Create a MongoClient object (referred to as client).
+    mongocxx::client client{mongocxx::uri{}, test_util::add_test_server_api()};
+
+    // 2. Using client, drop the collection keyvault.datakeys.
+    client["keyvault"]["datakeys"].drop();
+
+    // 3. Create a ClientEncryption object (referred to as client_encryption) with client set as the
+    // keyVaultClient.
+    options::client_encryption ce_opts;
+    ce_opts.key_vault_client(&client);
+    ce_opts.key_vault_namespace({"keyvault", "datakeys"});
+    ce_opts.kms_providers(_make_kms_doc(false));
+    client_encryption client_encryption(std::move(ce_opts));
+
+    // 4. Using client_encryption, create a data key with a local KMS provider and the following
+    // custom key material (given as base64):
+    // xPTAjBRG5JiPm+d3fj6XLi2q5DMXUS/f1f+SMAlhhwkhDRL0kr8r9GDLIGTAGlvC+HVjSIgdL+RKwZCvpXSyxTICWSXTUYsWYPyu3IoHbuBZdmw2faM3WhcRIgbMReU5
+    mongocxx::options::data_key dk_opts;
+    std::vector<uint8_t> key_material{
+        0xc4, 0xf4, 0xc0, 0x8c, 0x14, 0x46, 0xe4, 0x98, 0x8f, 0x9b, 0xe7, 0x77, 0x7e, 0x3e,
+        0x97, 0x2e, 0x2d, 0xaa, 0xe4, 0x33, 0x17, 0x51, 0x2f, 0xdf, 0xd5, 0xff, 0x92, 0x30,
+        0x9,  0x61, 0x87, 0x9,  0x21, 0xd,  0x12, 0xf4, 0x92, 0xbf, 0x2b, 0xf4, 0x60, 0xcb,
+        0x20, 0x64, 0xc0, 0x1a, 0x5b, 0xc2, 0xf8, 0x75, 0x63, 0x48, 0x88, 0x1d, 0x2f, 0xe4,
+        0x4a, 0xc1, 0x90, 0xaf, 0xa5, 0x74, 0xb2, 0xc5, 0x32, 0x2,  0x59, 0x25, 0xd3, 0x51,
+        0x8b, 0x16, 0x60, 0xfc, 0xae, 0xdc, 0x8a, 0x7,  0x6e, 0xe0, 0x59, 0x76, 0x6c, 0x36,
+        0x7d, 0xa3, 0x37, 0x5a, 0x17, 0x11, 0x22, 0x6,  0xcc, 0x45, 0xe5, 0x39};
+    dk_opts.key_material(key_material);
+    auto key = client_encryption.create_data_key("local", dk_opts);
+    auto key_id = key.view().get_binary();
+
+    // 5. Find the resulting key document in keyvault.datakeys, save a copy of the key document,
+    // then remove the key document from the collection.
+    auto cursor = client["keyvault"]["datakeys"].find(make_document(kvp("_id", key_id)));
+    const auto doc = *cursor.begin();
+    client["keyvault"]["datakeys"].delete_one(make_document(kvp("_id", key_id)));
+
+    // 6. Replace the _id field in the copied key document with a UUID with base64 value
+    // AAAAAAAAAAAAAAAAAAAAAA== (16 bytes all equal to 0x00) and insert the modified key document
+    // into keyvault.datakeys with majority write concern.
+    std::vector<uint8_t> id = {
+        0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0};
+    bsoncxx::types::b_binary id_bin{
+        bsoncxx::binary_sub_type::k_uuid, (uint32_t)id.size(), id.data()};
+    auto key_doc = make_document(kvp("_id", id_bin));
+
+    mongocxx::libbson::scoped_bson_t bson_doc;
+    bson_doc.init_from_static(doc);
+    mongocxx::libbson::scoped_bson_t doc_without_id;
+    bson_copy_to_excluding_noinit(bson_doc.bson(), doc_without_id.bson_for_init(), "_id", NULL);
+
+    bsoncxx::document::value new_doc(doc_without_id.steal());
+
+    bsoncxx::builder::basic::document builder;
+    builder.append(concatenate(key_doc.view()));
+    builder.append(concatenate(new_doc.view()));
+    auto doc_with_new_key = builder.extract();
+
+    write_concern wc_majority;
+    wc_majority.acknowledge_level(write_concern::level::k_majority);
+
+    options::insert insert_opts;
+    insert_opts.write_concern(std::move(wc_majority));
+
+    client["keyvault"]["datakeys"].insert_one(doc_with_new_key.view(), insert_opts);
+
+    // 7. Using client_encryption, encrypt the string "test" with the modified data key using the
+    // AEAD_AES_256_CBC_HMAC_SHA_512-Deterministic algorithm and assert the resulting value is equal
+    // to the following (given as base64):
+    // AQAAAAAAAAAAAAAAAAAAAAACz0ZOLuuhEYi807ZXTdhbqhLaS2/t9wLifJnnNYwiw79d75QYIZ6M/aYC1h9nCzCjZ7pGUpAuNnkUhnIXM3PjrA==
+    options::encrypt encrypt_opts{};
+    encrypt_opts.key_id(key_doc.view()["_id"].get_value());
+    encrypt_opts.algorithm(options::encrypt::encryption_algorithm::k_deterministic);
+
+    auto to_encrypt = make_value("test");
+
+    auto encrypted = client_encryption.encrypt(to_encrypt.view(), encrypt_opts);
+    std::vector<uint8_t> expected = {
+        0x1,  0x0,  0x0,  0x0,  0x0,  0x0,  0x0,  0x0,  0x0,  0x0,  0x0,  0x0,  0x0,  0x0,
+        0x0,  0x0,  0x0,  0x2,  0xcf, 0x46, 0x4e, 0x2e, 0xeb, 0xa1, 0x11, 0x88, 0xbc, 0xd3,
+        0xb6, 0x57, 0x4d, 0xd8, 0x5b, 0xaa, 0x12, 0xda, 0x4b, 0x6f, 0xed, 0xf7, 0x2,  0xe2,
+        0x7c, 0x99, 0xe7, 0x35, 0x8c, 0x22, 0xc3, 0xbf, 0x5d, 0xef, 0x94, 0x18, 0x21, 0x9e,
+        0x8c, 0xfd, 0xa6, 0x2,  0xd6, 0x1f, 0x67, 0xb,  0x30, 0xa3, 0x67, 0xba, 0x46, 0x52,
+        0x90, 0x2e, 0x36, 0x79, 0x14, 0x86, 0x72, 0x17, 0x33, 0x73, 0xe3, 0xac};
+
+    auto encrypted_as_binary = encrypted.view().get_binary();
+    REQUIRE(expected.size() == encrypted_as_binary.size);
+    REQUIRE(std::memcmp(expected.data(), encrypted_as_binary.bytes, expected.size()) == 0);
+}
+
+enum struct RangeFieldType : int {
+    DecimalNoPrecision,
+    DecimalPrecision,
+    DoubleNoPrecision,
+    DoublePrecision,
+    Date,
+    Int,
+    Long,
+};
+
+std::string to_type_str(RangeFieldType field_type) {
+    switch (field_type) {
+        case RangeFieldType::DecimalNoPrecision:
+            return "DecimalNoPrecision";
+        case RangeFieldType::DecimalPrecision:
+            return "DecimalPrecision";
+        case RangeFieldType::DoubleNoPrecision:
+            return "DoubleNoPrecision";
+        case RangeFieldType::DoublePrecision:
+            return "DoublePrecision";
+        case RangeFieldType::Date:
+            return "Date";
+        case RangeFieldType::Int:
+            return "Int";
+        case RangeFieldType::Long:
+            return "Long";
+    };
+
+    FAIL("unexpected field type " << static_cast<int>(field_type));
+    MONGOCXX_UNREACHABLE;
+}
+
+bsoncxx::types::bson_value::value to_field_value(int test_value, RangeFieldType field_type) {
+    switch (field_type) {
+        case RangeFieldType::DecimalNoPrecision:
+        case RangeFieldType::DecimalPrecision:
+            return {bsoncxx::decimal128(std::to_string(test_value))};
+        case RangeFieldType::DoubleNoPrecision:
+        case RangeFieldType::DoublePrecision:
+            return {static_cast<double>(test_value)};
+        case RangeFieldType::Date:
+            return {std::chrono::milliseconds(test_value)};
+        case RangeFieldType::Int:
+            return {test_value};
+        case RangeFieldType::Long:
+            return {std::int64_t{test_value}};
+    }
+
+    FAIL("unexpected field type " << static_cast<int>(field_type));
+    MONGOCXX_UNREACHABLE;
+}
+
+options::range to_range_opts(RangeFieldType field_type) {
+    using namespace bsoncxx::types;
+
+    switch (field_type) {
+        case RangeFieldType::DecimalNoPrecision:
+            return options::range().sparsity(1);
+        case RangeFieldType::DecimalPrecision:
+            return options::range()
+                .min(make_value(b_decimal128{bsoncxx::decimal128(std::to_string(0))}))
+                .max(make_value(b_decimal128{bsoncxx::decimal128(std::to_string(200))}))
+                .sparsity(1)
+                .precision(2);
+        case RangeFieldType::DoubleNoPrecision:
+            return options::range().sparsity(1);
+        case RangeFieldType::DoublePrecision:
+            return options::range()
+                .min(make_value(b_double{0.0}))
+                .max(make_value(b_double{200.0}))
+                .sparsity(1)
+                .precision(2);
+        case RangeFieldType::Date:
+            return options::range()
+                .min(make_value(b_date{std::chrono::milliseconds(0)}))
+                .max(make_value(b_date{std::chrono::milliseconds(200)}))
+                .sparsity(1);
+        case RangeFieldType::Int:
+            return options::range()
+                .min(make_value(b_int32{0}))
+                .max(make_value(b_int32{200}))
+                .sparsity(1);
+        case RangeFieldType::Long:
+            return options::range()
+                .min(make_value(b_int64{0}))
+                .max(make_value(b_int64{200}))
+                .sparsity(1);
+    }
+
+    FAIL("unexpected field type " << static_cast<int>(field_type));
+    MONGOCXX_UNREACHABLE;
+}
+
+struct field_type_values {
+    bsoncxx::types::bson_value::value v0;
+    bsoncxx::types::bson_value::value v6;
+    bsoncxx::types::bson_value::value v30;
+    bsoncxx::types::bson_value::value v200;
+
+    explicit field_type_values(RangeFieldType field_type)
+        : v0(to_field_value(0, field_type)),
+          v6(to_field_value(6, field_type)),
+          v30(to_field_value(30, field_type)),
+          v200(to_field_value(200, field_type)) {}
+};
+
+struct range_explicit_encryption_objects {
+    options::range range_opts;
+    bsoncxx::document::value key1_document = make_document();
+    bsoncxx::types::bson_value::view key1_id;
+    std::unique_ptr<mongocxx::client> key_vault_client_ptr;
+    std::unique_ptr<mongocxx::client_encryption> client_encryption_ptr;
+    std::unique_ptr<mongocxx::client> encrypted_client_ptr;
+    std::string field_name;
+    std::unique_ptr<field_type_values> field_values_ptr;
+};
+
+range_explicit_encryption_objects range_explicit_encryption_setup(const std::string& type_str,
+                                                                  RangeFieldType field_type) {
+    range_explicit_encryption_objects res;
+
+    // Load the file for the specific data type being tested `range-encryptedFields-<type>.json`.
+    const auto encrypted_fields =
+        _doc_from_file("/explicit-encryption/range-encryptedFields-" + type_str + ".json");
+    const auto collection_options = make_document(kvp("encryptedFields", encrypted_fields));
+
+    // Load the file key1-document.json as `key1Document`.
+    auto& key1_document =
+        (res.key1_document = _doc_from_file("/explicit-encryption/key1-document.json"));
+
+    // Read the "_id" field of key1Document as `key1ID`.
+    const auto& key1_id = (res.key1_id = key1_document["_id"].get_value());
+
+    const auto wc_majority = []() -> mongocxx::write_concern {
+        write_concern res;
+        res.acknowledge_level(write_concern::level::k_majority);
+        return res;
+    }();
+
+    const auto rc_majority = []() -> mongocxx::read_concern {
+        read_concern res;
+        res.acknowledge_level(read_concern::level::k_majority);
+        return res;
+    }();
+
+    const auto empty_doc = make_document();
+
+    auto client = mongocxx::client(uri(), test_util::add_test_server_api());
+
+    // Drop and create the collection `db.explicit_encryption` using `encryptedFields` as an option.
+    {
+        auto db = client["db"];
+        db["explicit_encryption"].drop();
+        db.create_collection("explicit_encryption", collection_options.view());
+    }
+
+    {
+        auto keyvault = client["keyvault"];
+
+        // Drop and create the collection `keyvault.datakeys`.
+        keyvault["datakeys"].drop();
+        auto datakeys = keyvault.create_collection("datakeys");
+
+        // Insert `key1Document` in `keyvault.datakeys` with majority write concern.
+        datakeys.insert_one(key1_document.view(), options::insert().write_concern(wc_majority));
+    }
+
+    const auto kms_providers = _make_kms_doc(false);
+
+    using bsoncxx::stdx::make_unique;
+
+    // Create a MongoClient named `keyVaultClient`.
+    auto& key_vault_client = *(res.key_vault_client_ptr = make_unique<mongocxx::client>(
+                                   uri(), test_util::add_test_server_api()));
+
+    // Create a ClientEncryption object named `clientEncryption` with these options:
+    //   ClientEncryptionOpts {
+    //      keyVaultClient: <keyVaultClient>;
+    //      keyVaultNamespace: "keyvault.datakeys";
+    //      kmsProviders: { "local": { "key": <base64 decoding of LOCAL_MASTERKEY> } }
+    //   }
+    auto& client_encryption =
+        *(res.client_encryption_ptr = make_unique<mongocxx::client_encryption>(
+              options::client_encryption()
+                  .key_vault_client(&key_vault_client)
+                  .key_vault_namespace({"keyvault", "datakeys"})
+                  .kms_providers(kms_providers.view())));
+
+    // Create a MongoClient named `encryptedClient` with these `AutoEncryptionOpts`:
+    //   AutoEncryptionOpts {
+    //      keyVaultNamespace: "keyvault.datakeys";
+    //      kmsProviders: { "local": { "key": <base64 decoding of LOCAL_MASTERKEY> } }
+    //      bypassQueryAnalysis: true
+    //   }
+    auto& encrypted_client = *(res.encrypted_client_ptr = make_unique<mongocxx::client>(
+                                   uri(),
+                                   test_util::add_test_server_api().auto_encryption_opts(
+                                       options::auto_encryption()
+                                           .key_vault_namespace({"keyvault", "datakeys"})
+                                           .kms_providers(kms_providers.view())
+                                           .bypass_query_analysis(true))));
+
+    // Ensure the type matches with the type of the encrypted field.
+    const auto& field_values = *(res.field_values_ptr = make_unique<field_type_values>(field_type));
+    const auto& field_name = (res.field_name = "encrypted" + type_str);
+    const auto& range_opts = (res.range_opts = to_range_opts(field_type));
+
+    // Encrypt these values with the matching `RangeOpts` listed in Test Setup: RangeOpts and these
+    // `EncryptOpts`:
+    //   class EncryptOpts {
+    //      keyId : <key1ID>:
+    //      algorithm: "RangePreview",
+    //      contentionFactor: 0
+    //   }
+    const auto encrypt_opts =
+        options::encrypt()
+            .range_opts(range_opts)
+            .key_id(key1_id)
+            .algorithm(options::encrypt::encryption_algorithm::k_range_preview)
+            .contention_factor(0);
+
+    // Use `clientEncryption` to encrypt these values: 0, 6, 30, and 200.
+    const auto encrypted_v0 = client_encryption.encrypt(field_values.v0, encrypt_opts);
+    const auto encrypted_v6 = client_encryption.encrypt(field_values.v6, encrypt_opts);
+    const auto encrypted_v30 = client_encryption.encrypt(field_values.v30, encrypt_opts);
+    const auto encrypted_v200 = client_encryption.encrypt(field_values.v200, encrypt_opts);
+
+    auto explicit_encryption = encrypted_client["db"]["explicit_encryption"];
+
+    // Use `encryptedClient` to insert these documents into
+    // `db.explicit_encryption`:
+    //   { "encrypted<Type>": <encrypted 0>, _id: 0 }
+    //   { "encrypted<Type>": <encrypted 6>, _id: 1 }
+    //   { "encrypted<Type>": <encrypted 30>, _id: 2 }
+    //   { "encrypted<Type>": <encrypted 200>, _id: 3 }
+    explicit_encryption.insert_one(make_document(kvp(field_name, encrypted_v0), kvp("_id", 0)));
+    explicit_encryption.insert_one(make_document(kvp(field_name, encrypted_v6), kvp("_id", 1)));
+    explicit_encryption.insert_one(make_document(kvp(field_name, encrypted_v30), kvp("_id", 2)));
+    explicit_encryption.insert_one(make_document(kvp(field_name, encrypted_v200), kvp("_id", 3)));
+
+    return res;
+}
+
+// Prose Test 22
+TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
+    instance::current();
+
+    if (!mongocxx::test_util::should_run_client_side_encryption_test()) {
+        return;
+    }
+
+    // Tests for `DecimalNoPrecision` must only run against a replica set.
+    auto is_replica_set = false;
+
+    {
+        auto client = mongocxx::client(mongocxx::uri(), test_util::add_test_server_api());
+
+        if (!test_util::newer_than(client, "7.0")) {
+            WARN("Skipping - MongoDB server 7.0 or newer required");
+            return;
+        }
+
+        if (test_util::get_topology(client) == "single") {
+            WARN("Skipping - must not run against a standalone server");
+            return;
+        }
+
+        is_replica_set = test_util::get_topology(client) == "replicaset";
+    }
+
+    const RangeFieldType field_types[] = {
+        RangeFieldType::DecimalNoPrecision,
+        RangeFieldType::DecimalPrecision,
+        RangeFieldType::DoubleNoPrecision,
+        RangeFieldType::DoublePrecision,
+        RangeFieldType::Date,
+        RangeFieldType::Int,
+        RangeFieldType::Long,
+    };
+
+    for (const auto& field_type : field_types) {
+        const auto type_str = to_type_str(field_type);
+
+        DYNAMIC_SECTION("Field Type - " << type_str) {
+            if (field_type == RangeFieldType::DecimalNoPrecision && !is_replica_set) {
+                WARN("Skipping - must only run against a replica set");
+                continue;
+            }
+
+            auto test_objects = range_explicit_encryption_setup(type_str, field_type);
+
+            REQUIRE(test_objects.client_encryption_ptr);
+            REQUIRE(test_objects.encrypted_client_ptr);
+            REQUIRE(test_objects.field_values_ptr);
+
+            const auto& range_opts = test_objects.range_opts;
+            const auto& key1_id = test_objects.key1_id;
+            auto& client_encryption = *test_objects.client_encryption_ptr;
+            auto& encrypted_client = *test_objects.encrypted_client_ptr;
+            const auto& field_name = test_objects.field_name;
+            const auto& field_values = *test_objects.field_values_ptr;
+
+            auto explicit_encryption = encrypted_client["db"]["explicit_encryption"];
+
+            SECTION("Case 1: can decrypt a payload") {
+                // Use `clientEncryption.encrypt()` to encrypt the value 6.
+                const auto& original = field_values.v6;
+
+                // Encrypt with the matching `RangeOpts` listed in Test Setup: RangeOpts and these
+                // `EncryptOpts`:
+                //   class EncryptOpts {
+                //      keyId : <key1ID>
+                //      algorithm: "RangePreview",
+                //      contentionFactor: 0
+                //   }
+                // Store the result in insertPayload.
+                const auto insert_payload = client_encryption.encrypt(
+                    original.view(),
+                    options::encrypt()
+                        .range_opts(range_opts)
+                        .key_id(key1_id)
+                        .algorithm(options::encrypt::encryption_algorithm::k_range_preview)
+                        .contention_factor(0));
+
+                // Use `clientEncryption` to decrypt `insertPayload`.
+                const auto result = client_encryption.decrypt(insert_payload);
+
+                // Assert the returned value equals 6.
+                REQUIRE(result == original);
+            }
+
+            SECTION("Case 2: can find encrypted range and return the maximum") {
+                // Use clientEncryption.encryptExpression() to encrypt this query:
+                //   {"$and": [{"encrypted<Type>": {"$gte": 6}}, {"encrypted<Type>": {"$lte":
+                //   200}}]}
+                const auto query = make_document(kvp(
+                    "$and",
+                    make_array(
+                        make_document(kvp(field_name, make_document(kvp("$gte", field_values.v6)))),
+                        make_document(
+                            kvp(field_name, make_document(kvp("$lte", field_values.v200)))))));
+
+                // Use the matching `RangeOpts` listed in Test Setup: RangeOpts and these
+                // `EncryptOpts` to encrypt the query:
+                //   class EncryptOpts {
+                //      keyId : <key1ID>
+                //      algorithm: "RangePreview",
+                //      queryType: "rangePreview",
+                //      contentionFactor: 0
+                //   }
+                // Store the result in `findPayload`.
+                const auto find_payload = client_encryption.encrypt_expression(
+                    query.view(),
+                    options::encrypt()
+                        .range_opts(range_opts)
+                        .key_id(key1_id)
+                        .algorithm(options::encrypt::encryption_algorithm::k_range_preview)
+                        .query_type(options::encrypt::encryption_query_type::k_range_preview)
+                        .contention_factor(0));
+
+                // Use encryptedClient to run a "find" operation on the `db.explicit_encryption`
+                // collection with the filter findPayload and sort the results by _id.
+                auto cursor = explicit_encryption.find(
+                    find_payload.view(),
+                    options::find()
+                        .sort(make_document(kvp("_id", 1)))
+                        .projection(make_document(kvp("_id", 0), kvp(field_name, 1))));
+
+                // Assert these three documents are returned:
+                //  - { "encrypted<Type>": 6 }
+                //  - { "encrypted<Type>": 30 }
+                //  - { "encrypted<Type>": 200 }
+                const auto expected = std::vector<bsoncxx::document::value>({
+                    make_document(kvp(field_name, field_values.v6)),
+                    make_document(kvp(field_name, field_values.v30)),
+                    make_document(kvp(field_name, field_values.v200)),
+                });
+
+                const auto actual =
+                    std::vector<bsoncxx::document::value>(cursor.begin(), cursor.end());
+
+                REQUIRE(actual == expected);
+            }
+
+            SECTION("Case 3: can find encrypted range and return the minimum") {
+                // Use `clientEncryption.encryptExpression()` to encrypt this query:
+                //   {"$and": [{"encrypted<Type>": {"$gte": 0}}, {"encrypted<Type>": {"$lte": 6}}]}
+                const auto query = make_document(kvp(
+                    "$and",
+                    make_array(
+                        make_document(kvp(field_name, make_document(kvp("$gte", field_values.v0)))),
+                        make_document(
+                            kvp(field_name, make_document(kvp("$lte", field_values.v6)))))));
+
+                // Use the matching `RangeOpts` listed in Test Setup: RangeOpts and these
+                // `EncryptOpts` to encrypt the query:
+                //   class EncryptOpts {
+                //      keyId : <key1ID>
+                //      algorithm: "RangePreview",
+                //      queryType: "rangePreview",
+                //      contentionFactor: 0
+                //   }
+                // Store the result in `findPayload`.
+                const auto find_payload = client_encryption.encrypt_expression(
+                    query.view(),
+                    options::encrypt()
+                        .range_opts(range_opts)
+                        .key_id(key1_id)
+                        .algorithm(options::encrypt::encryption_algorithm::k_range_preview)
+                        .query_type(options::encrypt::encryption_query_type::k_range_preview)
+                        .contention_factor(0));
+
+                // Use `encryptedClient` to run a "find" operation on the `db.explicit_encryption`
+                // collection with the filter `findPayload` and sort the results by `_id`.
+                auto cursor = explicit_encryption.find(
+                    find_payload.view(),
+                    options::find()
+                        .sort(make_document(kvp("_id", 1)))
+                        .projection(make_document(kvp("_id", 0), kvp(field_name, 1))));
+
+                // Assert these two documents are returned:
+                //  - { "encrypted<Type>": 0 }
+                //  - { "encrypted<Type>": 6 }
+                const auto expected = std::vector<bsoncxx::document::value>({
+                    make_document(kvp(field_name, field_values.v0)),
+                    make_document(kvp(field_name, field_values.v6)),
+                });
+
+                const auto actual =
+                    std::vector<bsoncxx::document::value>(cursor.begin(), cursor.end());
+
+                REQUIRE(actual == expected);
+            }
+
+            SECTION("Case 4: can find encrypted range with an open range query") {
+                // Use clientEncryption.encryptExpression() to encrypt this query:
+                //   {"$and": [{"encrypted<Type>": {"$gt": 30}}]}
+                const auto query = make_document(
+                    kvp("$and",
+                        make_array(make_document(
+                            kvp(field_name, make_document(kvp("$gt", field_values.v30)))))));
+
+                // Use the matching `RangeOpts` listed in Test Setup: RangeOpts and these
+                // `EncryptOpts` to encrypt the query:
+                //   class EncryptOpts {
+                //      keyId : <key1ID>
+                //      algorithm: "RangePreview",
+                //      queryType: "rangePreview",
+                //      contentionFactor: 0
+                //   }
+                // Store the result in `findPayload`.
+                const auto find_payload = client_encryption.encrypt_expression(
+                    query.view(),
+                    options::encrypt()
+                        .range_opts(range_opts)
+                        .key_id(key1_id)
+                        .algorithm(options::encrypt::encryption_algorithm::k_range_preview)
+                        .query_type(options::encrypt::encryption_query_type::k_range_preview)
+                        .contention_factor(0));
+
+                // Use encryptedClient to run a "find" operation on the `db.explicit_encryption`
+                // collection with the filter findPayload and sort the results by _id.
+                auto cursor = explicit_encryption.find(
+                    find_payload.view(),
+                    options::find()
+                        .sort(make_document(kvp("_id", 1)))
+                        .projection(make_document(kvp("_id", 0), kvp(field_name, 1))));
+
+                // Assert that only this document is returned:
+                //  - { "encrypted<Type>": 200 }
+                const auto expected = std::vector<bsoncxx::document::value>({
+                    make_document(kvp(field_name, field_values.v200)),
+                });
+
+                const auto actual =
+                    std::vector<bsoncxx::document::value>(cursor.begin(), cursor.end());
+
+                REQUIRE(actual == expected);
+            }
+
+            SECTION("Case 5: can run an aggregation expression inside $expr") {
+                // Use clientEncryption.encryptExpression() to encrypt this query:
+                //   {'$and': [ { '$lt': [ '$encrypted<Type>', 30 ] } ] } }
+                const auto query = make_document(
+                    kvp("$and",
+                        make_array(make_document(
+                            kvp(field_name, make_document(kvp("$lt", field_values.v30)))))));
+
+                // Use the matching `RangeOpts` listed in Test Setup: RangeOpts and these
+                // `EncryptOpts` to encrypt the query:
+                //   class EncryptOpts {
+                //      keyId : <key1ID>
+                //      algorithm: "RangePreview",
+                //      queryType: "rangePreview",
+                //      contentionFactor: 0
+                //   }
+                // Store the result in `findPayload`.
+                const auto find_payload = client_encryption.encrypt_expression(
+                    query.view(),
+                    options::encrypt()
+                        .range_opts(range_opts)
+                        .key_id(key1_id)
+                        .algorithm(options::encrypt::encryption_algorithm::k_range_preview)
+                        .query_type(options::encrypt::encryption_query_type::k_range_preview)
+                        .contention_factor(0));
+
+                // Use encryptedClient to run a "find" operation on the `db.explicit_encryption`
+                // collection with the filter findPayload and sort the results by _id.
+                auto cursor = explicit_encryption.find(
+                    find_payload.view(),
+                    options::find()
+                        .sort(make_document(kvp("_id", 1)))
+                        .projection(make_document(kvp("_id", 0), kvp(field_name, 1))));
+
+                // Assert these two documents are returned:
+                //  - { "encrypted<Type>": 0 }
+                //  - { "encrypted<Type>": 6 }
+                const auto expected = std::vector<bsoncxx::document::value>({
+                    make_document(kvp(field_name, field_values.v0)),
+                    make_document(kvp(field_name, field_values.v6)),
+                });
+
+                const auto actual =
+                    std::vector<bsoncxx::document::value>(cursor.begin(), cursor.end());
+
+                REQUIRE(actual == expected);
+            }
+
+            switch (field_type) {
+                case RangeFieldType::DoubleNoPrecision:
+                case RangeFieldType::DecimalNoPrecision:
+                    // This test case should be skipped if the encrypted field is
+                    // `encryptedDoubleNoPrecision` or `encryptedDecimalNoPrecision`.
+                    break;
+                default: {
+                    SECTION("Case 6: encrypting a document greater than the maximum errors") {
+                        const auto original = to_field_value(201, field_type);
+
+                        // Use clientEncryption.encrypt() to try to encrypt the value 201 with the
+                        // matching RangeOpts listed in Test Setup: RangeOpts and these EncryptOpts:
+                        //   class EncryptOpts {
+                        //      keyId : <key1ID>
+                        //      algorithm: "RangePreview",
+                        //      contentionFactor: 0
+                        //   }
+                        // The error should be raised because 201 is greater than the maximum value
+                        // in RangeOpts. Assert that an error was raised.
+                        REQUIRE_THROWS_WITH(
+                            client_encryption.encrypt(
+                                original.view(),
+                                options::encrypt()
+                                    .range_opts(range_opts)
+                                    .key_id(key1_id)
+                                    .algorithm(
+                                        options::encrypt::encryption_algorithm::k_range_preview)
+                                    .contention_factor(0)),
+                            Catch::Contains(
+                                "Value must be greater than or equal to the minimum value and "
+                                "less than or equal to the maximum value"));
+                    }
+                    break;
+                }
+            }
+
+            switch (field_type) {
+                case RangeFieldType::DoubleNoPrecision:
+                case RangeFieldType::DecimalNoPrecision:
+                    // This test case should be skipped if the encrypted field is
+                    // `encryptedDoubleNoPrecision`.
+                    break;
+                default: {
+                    SECTION("Case 7: encrypting a document of a different type errors") {
+                        // For all the tests below use these EncryptOpts:
+                        //   class EncryptOpts {
+                        //      keyId : <key1ID>
+                        //      algorithm: "RangePreview",
+                        //      contentionFactor: 0
+                        //   }
+                        const auto encrypt_opts =
+                            options::encrypt()
+                                .range_opts(range_opts)
+                                .key_id(key1_id)
+                                .algorithm(options::encrypt::encryption_algorithm::k_range_preview)
+                                .contention_factor(0);
+
+                        // If the encrypted field is encryptedInt encrypt:
+                        //   { "encryptedInt": { "$numberDouble": "6" } }
+                        // Otherwise, encrypt:
+                        //   { "encrypted<Type>": { "$numberInt": "6" } }
+                        const auto value = field_type == RangeFieldType::Int
+                                               ? to_field_value(6, RangeFieldType::DoublePrecision)
+                                               : to_field_value(6, RangeFieldType::Int);
+
+                        // Assert an error was raised.
+                        REQUIRE_THROWS_WITH(
+                            client_encryption.encrypt(value.view(), encrypt_opts),
+                            Catch::Contains("expected matching 'min' and value type"));
+                    }
+                    break;
+                }
+            }
+
+            switch (field_type) {
+                case RangeFieldType::DoublePrecision:
+                case RangeFieldType::DoubleNoPrecision:
+                case RangeFieldType::DecimalPrecision:
+                case RangeFieldType::DecimalNoPrecision:
+                    // This test case should be skipped if the encrypted field is
+                    // `encryptedDoublePrecision` or `encryptedDoubleNoPrecision` or
+                    // `encryptedDecimalPrecision` or `encryptedDecimalNoPrecision`.
+                    break;
+                default: {
+                    SECTION("Case 8: setting precision errors if the type is not a double") {
+                        // Use `clientEncryption.encrypt()` to try to encrypt the value 6 with these
+                        // `EncryptOpts` and these `RangeOpts`:
+                        //   class EncryptOpts {
+                        //      keyId : <key1ID>
+                        //      algorithm: "RangePreview",
+                        //      contentionFactor: 0
+                        //   }
+                        //
+                        //   class RangeOpts {
+                        //      min: 0,
+                        //      max: 200,
+                        //      sparsity: 1,
+                        //      precision: 2,
+                        //   }
+                        // Assert an error was raised.
+                        REQUIRE_THROWS_WITH(
+                            client_encryption.encrypt(
+                                field_values.v6,
+                                options::encrypt()
+                                    .range_opts(options::range()
+                                                    .min(to_field_value(0, field_type))
+                                                    .max(to_field_value(200, field_type))
+                                                    .sparsity(1)
+                                                    .precision(2))
+                                    .key_id(key1_id)
+                                    .algorithm(
+                                        options::encrypt::encryption_algorithm::k_range_preview)
+                                    .contention_factor(0)),
+                            Catch::Contains(
+                                "expected 'precision' to be set with double or decimal128 index"));
+                    }
+                } break;
+            }
         }
     }
 }

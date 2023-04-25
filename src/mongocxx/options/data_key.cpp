@@ -64,7 +64,22 @@ void* data_key::convert() const {
         bson_free(names);
     }
 
+    if (_key_material) {
+        uint32_t size = static_cast<uint32_t>(_key_material->size());
+        libmongoc::client_encryption_datakey_opts_set_keymaterial(
+            opts_t, _key_material->data(), size);
+    }
+
     return opts_t;
+}
+
+data_key& data_key::key_material(data_key::key_material_type key_material) {
+    _key_material = std::move(key_material);
+    return *this;
+}
+
+const stdx::optional<data_key::key_material_type>& data_key::key_material() {
+    return _key_material;
 }
 
 }  // namespace options

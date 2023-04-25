@@ -29,7 +29,7 @@ message ("mongocxx version: ${MONGOCXX_VERSION}")
 set(MONGOCXX_INLINE_NAMESPACE "v${MONGOCXX_ABI_VERSION}")
 set(MONGOCXX_HEADER_INSTALL_DIR "${CMAKE_INSTALL_INCLUDEDIR}/mongocxx/${MONGOCXX_INLINE_NAMESPACE}" CACHE INTERNAL "")
 
-set(LIBMONGOC_REQUIRED_VERSION 1.22.1)
+set(LIBMONGOC_REQUIRED_VERSION 1.22.1) # TODO: update to 1.24.0 once released.
 set(LIBMONGOC_REQUIRED_ABI_VERSION 1.0)
 
 set(mongocxx_pkg_dep "")
@@ -155,7 +155,9 @@ set(mongocxx_sources
     options/index_view.cpp
     options/insert.cpp
     options/pool.cpp
+    options/range.cpp
     options/replace.cpp
+    options/rewrap_many_datakey.cpp
     options/server_api.cpp
     options/tls.cpp
     options/transaction.cpp
@@ -174,6 +176,7 @@ set(mongocxx_sources
     result/insert_many.cpp
     result/insert_one.cpp
     result/replace_one.cpp
+    result/rewrap_many_datakey.cpp
     result/update.cpp
     uri.cpp
     validation_criteria.cpp
@@ -404,8 +407,12 @@ set_local_dist (src_mongocxx_DIST_local
    options/private/server_api.hh
    options/private/ssl.hh
    options/private/transaction.hh
+   options/range.cpp
+   options/range.hpp
    options/replace.cpp
    options/replace.hpp
+   options/rewrap_many_datakey.cpp
+   options/rewrap_many_datakey.hpp
    options/server_api.cpp
    options/server_api.hpp
    options/ssl.hpp
@@ -459,6 +466,8 @@ set_local_dist (src_mongocxx_DIST_local
    result/insert_one.hpp
    result/replace_one.cpp
    result/replace_one.hpp
+   result/rewrap_many_datakey.cpp
+   result/rewrap_many_datakey.hpp
    result/update.cpp
    result/update.hpp
    stdx.hpp

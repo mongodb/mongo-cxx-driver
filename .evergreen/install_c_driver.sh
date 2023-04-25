@@ -1,127 +1,137 @@
-#!/bin/bash
-# Usage examples:
-# MONGOC_VERSION=1.22.1 MONGOCRYPT_VERSION=1.5.2 ./install.sh
-# PREFIX=/tmp/installdir MONGOC_VERSION=1.22.1 MONGOCRYPT_VERSION=1.5.2 ./install.sh
+#!/usr/bin/env bash
 
 set -o errexit
 set -o pipefail
 
-print_usage() {
-    echo "usage: MONGOC_VERSION=<version> MONGOCRYPT_VERSION=<version> ./install.sh"
+declare -r mongoc_version="${mongoc_version:-"${mongoc_version_default:?"missing mongoc version"}"}"
+: "${mongoc_version:?}"
+
+# Usage:
+#   to_windows_path "./some/unix/style/path"
+#   to_windows_path "/some/unix/style/path"
+to_windows_path() {
+  cygpath -aw "${1:?"to_windows_path requires a path to convert"}"
 }
 
-if [[ -z $MONGOC_VERSION ]]; then print_usage; exit 2; fi
-if [[ -z $MONGOCRYPT_VERSION ]]; then print_usage; exit 2; fi
+declare mongoc_dir
+mongoc_dir="$(pwd)/mongoc"
 
-VERSION=$MONGOC_VERSION
-PREFIX=${PREFIX:-$(pwd)"/../mongoc/"}
-OS=$(uname -s | tr '[:upper:]' '[:lower:]')
-
-if [ "$BSON_EXTRA_ALIGNMENT" = "1" ]; then
-    ENABLE_EXTRA_ALIGNMENT="ON"
+# "i" for "(platform-)independent".
+declare mongoc_idir mongoc_install_idir
+if [[ "${OSTYPE:?}" == "cygwin" ]]; then
+  # CMake requires Windows paths for configuration variables on Windows.
+  mongoc_idir="$(to_windows_path "${mongoc_dir}")"
+  mongoc_install_idir="$(to_windows_path "${mongoc_dir}")"
 else
-    ENABLE_EXTRA_ALIGNMENT="OFF"
+  mongoc_idir="${mongoc_dir}"
+  mongoc_install_idir="${mongoc_dir}"
 fi
-CMAKE_ARGS="
-  -DENABLE_AUTOMATIC_INIT_AND_CLEANUP=OFF -DENABLE_SHM_COUNTERS=OFF
-  -DENABLE_TESTS=OFF -DENABLE_EXAMPLES=OFF -DENABLE_STATIC=ON
-  -DENABLE_EXTRA_ALIGNMENT=${ENABLE_EXTRA_ALIGNMENT} -DCMAKE_MACOSX_RPATH=ON
-  -DCMAKE_INSTALL_PREFIX=$PREFIX -DCMAKE_PREFIX_PATH=$PREFIX"
+: "${mongoc_idir:?}"
+: "${mongoc_install_idir:?}"
 
-echo "About to install C driver ($VERSION) into $PREFIX"
+echo "libmongoc version: ${mongoc_version}"
 
-LIB=mongo-c-driver
-rm -rf $(echo $LIB*)
-curl -sS -o $LIB.tar.gz -L https://api.github.com/repos/mongodb/$LIB/tarball/$VERSION
-tar xzf $LIB.tar.gz
-DIR=$(echo mongodb-$LIB-*)
+# Download tarball from GitHub and extract into ${mongoc_dir}.
+rm -rf "${mongoc_dir}"
+mkdir "${mongoc_dir}"
+curl -sS -o mongo-c-driver.tar.gz -L "https://api.github.com/repos/mongodb/mongo-c-driver/tarball/${mongoc_version}"
+tar xzf mongo-c-driver.tar.gz --directory "${mongoc_dir}" --strip-components=1
 
+# C Driver needs VERSION_CURRENT to compute BUILD_VERSION.
 # RegEx pattern to match SemVer strings. See https://semver.org/.
-SEMVER_REGEX="^(?P<major>0|[1-9]\d*)\.(?P<minor>0|[1-9]\d*)\.(?P<patch>0|[1-9]\d*)(?:-(?P<prerelease>(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+(?P<buildmetadata>[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$"
-if [ $(echo "$VERSION" | perl -ne "$(printf 'exit 1 unless /%s/' $SEMVER_REGEX)") ]; then
-    # If $VERSION is already SemVer compliant, use as-is.
-    CMAKE_ARGS="$CMAKE_ARGS -DBUILD_VERSION=$BUILD_VERSION"
+declare -r semver_regex="^(?P<major>0|[1-9]\d*)\.(?P<minor>0|[1-9]\d*)\.(?P<patch>0|[1-9]\d*)(?:-(?P<prerelease>(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+(?P<buildmetadata>[0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$"
+if echo "${mongoc_version}" | perl -ne "$(printf 'exit 1 unless /%s/' "${semver_regex}")"; then
+  # If $VERSION is already SemVer compliant, use as-is.
+  echo "${mongoc_version}" >|"${mongoc_dir}/VERSION_CURRENT"
 else
-    # Otherwise, use the tag name of the latest release to construct a prerelease version string.
+  # Otherwise, use the tag name of the latest release to construct a prerelease version string.
 
-    # Extract "tag_name" from latest Github release.
-    BUILD_VERSION=$(curl -sS -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/mongodb/mongo-c-driver/releases/latest | perl -ne 'print for /"tag_name": "(.+)"/')
+  # Extract "tag_name" from latest Github release.
+  declare build_version
+  build_version=$(curl -sS -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/mongodb/mongo-c-driver/releases/latest | perl -ne 'print for /"tag_name": "(.+)"/')
 
-    # Assert the tag name is a SemVer string via errexit.
-    echo $BUILD_VERSION | perl -ne "$(printf 'exit 1 unless /%s/' $SEMVER_REGEX)"
+  # Assert the tag name is a SemVer string via errexit.
+  echo "${build_version}" | perl -ne "$(printf 'exit 1 unless /%s/' "${semver_regex}")"
 
-    # Bump to the next minor version, e.g. 1.0.1 -> 1.1.0.
-    BUILD_VERSION=$(echo $BUILD_VERSION | perl -ne "$(printf '/%s/; print $+{major} . "." . ($+{minor}+1) . ".0"' $SEMVER_REGEX)")
+  # Bump to the next minor version, e.g. 1.0.1 -> 1.1.0.
+  build_version="$(echo "${build_version}" | perl -ne "$(printf '/%s/; print $+{major} . "." . ($+{minor}+1) . ".0"' "${semver_regex}")")"
 
-    # Append a prerelease tag, e.g. 1.1.0-pre+<version>.
-    BUILD_VERSION=$(printf "%s-pre+%s" $BUILD_VERSION $VERSION)
+  # Append a prerelease tag, e.g. 1.1.0-pre+<version>.
+  build_version="$(printf "%s-pre+%s" "${build_version}" "${mongoc_version}")"
 
-    # Use the constructed prerelease build version when building the C driver.
-    CMAKE_ARGS="$CMAKE_ARGS -DBUILD_VERSION=$BUILD_VERSION"
+  # Use the constructed prerelease build version when building the C driver.
+  echo "${build_version}" >|"${mongoc_dir}/VERSION_CURRENT"
 fi
 
-. .evergreen/find_cmake.sh
+# shellcheck source=/dev/null
+. "${mongoc_dir}/.evergreen/scripts/find-cmake-latest.sh"
+declare cmake_binary
+cmake_binary="$(find_cmake_latest)"
+command -v "${cmake_binary:?}"
 
-cd $DIR
-MONGOC_DIR="$(pwd)"
+# Install libmongocrypt.
+{
+  echo "Installing libmongocrypt into ${mongoc_dir}..." 1>&2
+  "${mongoc_dir}/.evergreen/scripts/compile-libmongocrypt.sh" "${cmake_binary}" "${mongoc_idir}" "${mongoc_install_idir}"
+  echo "Installing libmongocrypt into ${mongoc_dir}... done." 1>&2
+} >/dev/null
 
-if [ -f /proc/cpuinfo ]; then
-    CONCURRENCY=$(grep -c ^processor /proc/cpuinfo)
-elif which sysctl; then
-    CONCURRENCY=$(sysctl -n hw.logicalcpu)
-else
-    echo "$0: can't figure out what value of -j to pass to 'make'" >&2
-    exit 1
+if [[ "${OSTYPE}" == darwin* ]]; then
+  # MacOS does not have nproc.
+  nproc() {
+    sysctl -n hw.logicalcpu
+  }
 fi
 
-export CFLAGS="-fPIC"
+# Default CMake generator to use if not already provided.
+declare cmake_generator
+if [[ "${OSTYPE:?}" == "cygwin" ]]; then
+  cmake_generator=${generator:-"Visual Studio 14 2015 Win64"}
+else
+  cmake_generator=${generator:-"Unix Makefiles"}
+fi
+: "${cmake_generator:?}"
 
-case "$OS" in
-    darwin|linux)
-        GENERATOR=${GENERATOR:-"Unix Makefiles"}
-        CMAKE_BUILD_OPTS="-j $CONCURRENCY"
-        ;;
+declare -a configure_flags=(
+  "-DCMAKE_BUILD_TYPE=Debug"
+  "-DCMAKE_INSTALL_PREFIX=${mongoc_install_idir}"
+  "-DCMAKE_PREFIX_PATH=${mongoc_idir}"
+  "-DENABLE_AUTOMATIC_INIT_AND_CLEANUP=OFF"
+  "-DENABLE_CLIENT_SIDE_ENCRYPTION=ON"
+  "-DENABLE_EXAMPLES=OFF"
+  "-DENABLE_SHM_COUNTERS=OFF"
+  "-DENABLE_STATIC=ON"
+  "-DENABLE_TESTS=OFF"
+)
 
-    cygwin*)
-        GENERATOR=${GENERATOR:-"Visual Studio 14 2015 Win64"}
-        CMAKE_BUILD_OPTS="/maxcpucount:$CONCURRENCY"
-        MONGOC_DIR=$(cygpath -m "$MONGOC_DIR")
-        ;;
+declare -a compile_flags
 
-    *)
-        echo "$0: unsupported platform '$OS'" >&2
-        exit 2
-        ;;
+case "${OSTYPE:?}" in
+cygwin)
+  compile_flags+=("/maxcpucount:$(nproc)")
+  ;;
+darwin*)
+  configure_flags+=("-DCMAKE_C_FLAGS=-fPIC")
+  configure_flags+=("-DCMAKE_MACOSX_RPATH=ON")
+  compile_flags+=("-j" "$(nproc)")
+  ;;
+*)
+  configure_flags+=("-DCMAKE_C_FLAGS=-fPIC")
+  compile_flags+=("-j" "$(nproc)")
+  ;;
 esac
 
-# build libbson
-mkdir cmake_build
-cd cmake_build
-"$CMAKE" -G "$GENERATOR" -DCMAKE_BUILD_TYPE="Debug" -DENABLE_MONGOC=OFF $CMAKE_ARGS ..
-"$CMAKE" --build . --config Debug -- $CMAKE_BUILD_OPTS
-"$CMAKE" --build . --config Debug --target install
-cd ../../
+if [[ "${BSON_EXTRA_ALIGNMENT}" == "1" ]]; then
+  echo "Building C Driver with ENABLE_EXTRA_ALIGNMENT=ON"
+  configure_flags+=("-DENABLE_EXTRA_ALIGNMENT=ON")
+else
+  configure_flags+=("-DENABLE_EXTRA_ALIGNMENT=OFF")
+fi
 
-# fetch and build libmongocrypt
-git clone https://github.com/mongodb/libmongocrypt
-mkdir libmongocrypt/cmake_build
-cd libmongocrypt/cmake_build
-git checkout $MONGOCRYPT_VERSION
-"$CMAKE" -G "$GENERATOR" -DENABLE_SHARED_BSON=ON -DCMAKE_INSTALL_PREFIX="$PREFIX" \
-    -DCMAKE_PREFIX_PATH="$PREFIX" -DCMAKE_BUILD_TYPE="Debug" \
-    -DMONGOCRYPT_MONGOC_DIR="$MONGOC_DIR" -DENABLE_CLIENT_SIDE_ENCRYPTION=OFF ..
-"$CMAKE" --build . --config Debug -- $CMAKE_BUILD_OPTS
-"$CMAKE" --build . --config Debug --target install
-cd ../../$DIR
-
-# build libmongoc
-cd cmake_build
-"$CMAKE" -G "$GENERATOR" -DCMAKE_BUILD_TYPE="Debug" -DENABLE_MONGOC=ON -DENABLE_CLIENT_SIDE_ENCRYPTION=ON $CMAKE_ARGS ..
-"$CMAKE" --build . --config Debug -- $CMAKE_BUILD_OPTS
-"$CMAKE" --build . --config Debug --target install
-cd ../
-
-echo "Done installing"
-
-cd ..
-ls -l ..
+# Install libmongoc.
+{
+  echo "Installing C Driver into ${mongoc_dir}..." 1>&2
+  "${cmake_binary}" -S "${mongoc_idir}" -B "${mongoc_idir}" -G "${cmake_generator}" "${configure_flags[@]}"
+  "${cmake_binary}" --build "${mongoc_idir}" --config Debug --target install -- "${compile_flags[@]}"
+  echo "Installing C Driver into ${mongoc_dir}... done." 1>&2
+} >/dev/null

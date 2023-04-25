@@ -17,6 +17,7 @@
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/bson_value/view_or_value.hpp>
+#include <mongocxx/options/range.hpp>
 #include <mongocxx/stdx.hpp>
 
 #include <mongocxx/config/prelude.hpp>
@@ -52,6 +53,14 @@ class MONGOCXX_API encrypt {
     encrypt& key_id(bsoncxx::types::bson_value::view_or_value key_id);
 
     ///
+    /// Gets the key_id.
+    ///
+    /// @return
+    ///   An optional owning bson_value containing the key_id.
+    ///
+    const stdx::optional<bsoncxx::types::bson_value::view_or_value>& key_id() const;
+
+    ///
     /// Sets a name by which to lookup a key from the key vault collection to use
     /// for this encryption operation. A key alt name can be used instead of a key id.
     ///
@@ -77,10 +86,6 @@ class MONGOCXX_API encrypt {
     /// Determines which AEAD_AES_256_CBC algorithm to use with HMAC_SHA_512 when
     /// encrypting data.
     ///
-    /// Indexed and Unindexed are used for Queryable Encryption.
-    /// Queryable Encryption is in Public Technical Preview. Queryable Encryption should not be used
-    /// in production and is subject to backwards breaking changes.
-    ///
     enum class encryption_algorithm : std::uint8_t {
         ///
         /// Use deterministic encryption.
@@ -95,29 +100,49 @@ class MONGOCXX_API encrypt {
         ///
         /// Use indexed encryption.
         ///
+        /// @warning Queryable Encryption is in Public Technical Preview. Queryable Encryption
+        /// should not be used in production and is subject to backwards breaking changes.
+        ///
         k_indexed,
 
         ///
         /// Use unindexed encryption.
         ///
-        k_unindexed
+        /// @warning Queryable Encryption is in Public Technical Preview. Queryable Encryption
+        /// should not be used in production and is subject to backwards breaking changes.
+        ///
+        k_unindexed,
+
+        ///
+        /// Use range encryption.
+        ///
+        /// @warning The Range algorithm is experimental only. It is not intended for public use. It
+        /// is subject to breaking changes.
+        ///
+        k_range_preview,
     };
 
     ///
-    /// queryType only applies when algorithm is "Indexed" or "RangePreview".
-    /// It is an error to set queryType when algorithm is not "Indexed" or "RangePreview".
+    /// queryType only applies when algorithm is "indexed" or "rangePreview".
+    /// It is an error to set queryType when algorithm is not "indexed" or "rangePreview".
     ///
-    /// Queryable Encryption is in Public Technical Preview. Queryable Encryption should not be used
-    /// in production and is subject to backwards breaking changes.
+    /// @warning Queryable Encryption is in Public Technical Preview. Queryable Encryption should
+    /// not be used in production and is subject to backwards breaking changes.
     ///
-    enum class encryption_query_type : std::uint8_t { k_equality };
+    enum class encryption_query_type : std::uint8_t {
+        /// @brief Use query type "equality".
+        k_equality,
+
+        /// @brief Use query type "rangePreview".
+        /// @warning The Range algorithm is experimental only. It is not intended for public use. It
+        /// is subject to breaking changes.
+        k_range_preview,
+    };
 
     ///
     /// Sets the algorithm to use for encryption.
     ///
     /// Indexed and Unindexed are used for Queryable Encryption.
-    /// Queryable Encryption is in Public Technical Preview. Queryable Encryption should not be used
-    /// in production and is subject to backwards breaking changes.
     ///
     /// @param algorithm
     ///   An algorithm, either deterministic, random, indexed, or unindexed to use for encryption.
@@ -126,8 +151,12 @@ class MONGOCXX_API encrypt {
     /// configured with mongocxx::options::auto_encryption.
     /// mongocxx::options::auto_encryption::bypass_query_analysis may be true.
     /// mongocxx::options::auto_encryption::bypass_auto_encryption must be false.
+    ///
     /// @see
     /// https://docs.mongodb.com/manual/core/security-client-side-encryption/#encryption-algorithms
+    ///
+    /// @warning Queryable Encryption is in Public Technical Preview. Queryable Encryption should
+    /// not be used in production and is subject to backwards breaking changes.
     ///
     encrypt& algorithm(encryption_algorithm algorithm);
 
@@ -135,11 +164,12 @@ class MONGOCXX_API encrypt {
     /// Gets the current algorithm.
     ///
     /// Indexed and Unindexed are used for Queryable Encryption.
-    /// Queryable Encryption is in Public Technical Preview. Queryable Encryption should not be used
-    /// in production and is subject to backwards breaking changes.
     ///
     /// @return
     ///   An optional algorithm.
+    ///
+    /// @warning Queryable Encryption is in Public Technical Preview. Queryable Encryption should
+    /// not be used in production and is subject to backwards breaking changes.
     ///
     const stdx::optional<encryption_algorithm>& algorithm() const;
 
@@ -148,23 +178,22 @@ class MONGOCXX_API encrypt {
     /// contentionFactor only applies when algorithm is "Indexed" or "RangePreview".
     /// It is an error to set contentionFactor when algorithm is not "Indexed".
     ///
-    /// The contention factor is used for Queryable Encryption.
-    /// Queryable Encryption is in Public Technical Preview. Queryable Encryption should not be used
-    /// in production and is subject to backwards breaking changes.
-    ///
     /// @param contention_factor
     ///   An integer specifiying the desired contention factor.
+    ///
+    /// @warning Queryable Encryption is in Public Technical Preview. Queryable Encryption should
+    /// not be used in production and is subject to backwards breaking changes.
     ///
     encrypt& contention_factor(int64_t contention_factor);
 
     ///
     /// Gets the current contention factor.
     ///
-    /// Queryable Encryption is in Public Technical Preview. Queryable Encryption should not be used
-    /// in production and is subject to backwards breaking changes.
-    ///
     /// @return
     ///   An optional contention factor.
+    ///
+    /// @warning Queryable Encryption is in Public Technical Preview. Queryable Encryption should
+    /// not be used in production and is subject to backwards breaking changes.
     ///
     const stdx::optional<int64_t>& contention_factor() const;
 
@@ -176,9 +205,8 @@ class MONGOCXX_API encrypt {
     /// query_type only applies when algorithm is "Indexed" or "RangePreview".
     /// It is an error to set query_type when algorithm is not "Indexed" or "RangePreview".
     ///
-    /// QueryType is used for Queryable Encryption.
-    /// Queryable Encryption is in Public Technical Preview. Queryable Encryption should not be used
-    /// in production and is subject to backwards breaking changes.
+    /// @warning Queryable Encryption is in Public Technical Preview. Queryable Encryption should
+    /// not be used in production and is subject to backwards breaking changes.
     ///
     encrypt& query_type(encryption_query_type query_type);
 
@@ -188,19 +216,33 @@ class MONGOCXX_API encrypt {
     /// @return
     ///   A query type.
     ///
-    /// QueryType is used for Queryable Encryption.
-    /// Queryable Encryption is in Public Technical Preview. Queryable Encryption should not be used
-    /// in production and is subject to backwards breaking changes.
+    /// @warning Queryable Encryption is in Public Technical Preview. Queryable Encryption should
+    /// not be used in production and is subject to backwards breaking changes.
     ///
     const stdx::optional<encryption_query_type>& query_type() const;
 
     ///
-    /// Gets the key_id.
+    /// Sets the range options to use for encryption.
+    ///
+    /// @warning Queryable Encryption is in Public Technical Preview. Queryable Encryption should
+    /// not be used in production and is subject to backwards breaking changes.
+    ///
+    /// @warning The Range algorithm is experimental only. It is not intended for public use. It
+    /// is subject to breaking changes.
+    encrypt& range_opts(options::range opts);
+
+    ///
+    /// Gets the current range options.
     ///
     /// @return
-    ///   An optional owning bson_value containing the key_id.
+    ///   An optional range options.
     ///
-    const stdx::optional<bsoncxx::types::bson_value::view_or_value>& key_id() const;
+    /// @warning Queryable Encryption is in Public Technical Preview. Queryable Encryption should
+    /// not be used in production and is subject to backwards breaking changes.
+    ///
+    /// @warning The Range algorithm is experimental only. It is not intended for public use. It
+    /// is subject to breaking changes.
+    const stdx::optional<options::range>& range_opts() const;
 
    private:
     friend class mongocxx::client_encryption;
@@ -211,6 +253,7 @@ class MONGOCXX_API encrypt {
     stdx::optional<encryption_algorithm> _algorithm;
     stdx::optional<int64_t> _contention_factor;
     stdx::optional<encryption_query_type> _query_type;
+    stdx::optional<options::range> _range_opts;
 };
 
 }  // namespace options

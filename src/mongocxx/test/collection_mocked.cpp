@@ -92,16 +92,36 @@ TEST_CASE("Collection", "[collection]") {
     auto filter_doc = make_document(kvp("_id", "wow"), kvp("foo", "bar"));
 
     SECTION("Aggregate", "[Collection::aggregate]") {
-        auto collection_aggregate_called = false;
-        auto expected_allow_disk_use = true;
-        auto expected_max_time_ms = 1234;
-        auto expected_batch_size = 5678;
-        auto expected_bypass_document_validation = true;
-        auto expected_read_preference =
+        const auto expected_allow_disk_use = true;
+        const auto expected_batch_size = 5678;
+        const auto expected_bypass_document_validation = true;
+        const auto expected_collation = make_document(kvp("locale", "en_US"));
+        const auto expected_comment = make_document(kvp("$comment", "some_comment"));
+        const auto expected_hint = hint("some_hint");
+        const auto expected_let = make_document(kvp("x", "foo"));
+        const auto expected_max_time_ms = 1234;
+        const auto expected_read_preference =
             read_preference{}.mode(read_preference::read_mode::k_secondary);
+
+        const auto expected_read_concern = make_document(kvp("level", "majority"));
+        const auto read_concern = [] {
+            mongocxx::read_concern rc;
+            rc.acknowledge_level(read_concern::level::k_majority);
+            return rc;
+        }();
+
+        const auto expected_write_concern =
+            make_document(kvp("w", "majority"), kvp("wtimeout", 100));
+        const auto write_concern = [] {
+            mongocxx::write_concern wc;
+            wc.majority(std::chrono::milliseconds(100));
+            return wc;
+        }();
 
         pipeline pipe;
         options::aggregate opts;
+
+        auto collection_aggregate_called = false;
 
         collection_aggregate->interpose(
             [&](mongoc_collection_t*,
@@ -123,34 +143,75 @@ TEST_CASE("Collection", "[collection]") {
                 REQUIRE(bar == bsoncxx::stdx::string_view("bar"));
                 REQUIRE(one == 1);
 
-                if (opts.allow_disk_use())
+                if (opts.allow_disk_use()) {
                     REQUIRE(o["allowDiskUse"].get_bool().value == expected_allow_disk_use);
-                else
+                } else {
                     REQUIRE(o.find("allowDiskUse") == o.end());
+                }
 
-                if (opts.max_time())
-                    REQUIRE(o["maxTimeMS"].get_int64().value == expected_max_time_ms);
-                else
-                    REQUIRE(o.find("maxTimeMS") == o.end());
+                if (opts.batch_size()) {
+                    REQUIRE(o["batchSize"].get_int32().value == expected_batch_size);
+                } else {
+                    REQUIRE(o.find("batchSize") == o.end());
+                }
 
-                if (opts.bypass_document_validation())
+                if (opts.bypass_document_validation()) {
                     REQUIRE(o["bypassDocumentValidation"].get_bool().value ==
                             expected_bypass_document_validation);
-                else
+                } else {
                     REQUIRE(!o["bypassDocumentValidation"]);
+                }
 
-                if (opts.read_preference())
+                if (opts.collation()) {
+                    REQUIRE(o["collation"].get_document().value == expected_collation);
+                } else {
+                    REQUIRE(o.find("collation") == o.end());
+                }
+
+                if (opts.comment()) {
+                    REQUIRE(o["comment"].get_value() == expected_comment["$comment"].get_value());
+                } else {
+                    REQUIRE(o.find("comment") == o.end());
+                }
+
+                if (opts.hint()) {
+                    REQUIRE(o["hint"].get_value() == expected_hint.to_value());
+                } else {
+                    REQUIRE(o.find("hint") == o.end());
+                }
+
+                if (opts.let()) {
+                    REQUIRE(o["let"].get_document().value == expected_let);
+                } else {
+                    REQUIRE(o.find("let") == o.end());
+                }
+
+                if (opts.max_time()) {
+                    REQUIRE(o["maxTimeMS"].get_int64().value == expected_max_time_ms);
+                } else {
+                    REQUIRE(o.find("maxTimeMS") == o.end());
+                }
+
+                if (opts.read_concern()) {
+                    REQUIRE(o["readConcern"].get_document().value == expected_read_concern);
+                } else {
+                    REQUIRE(o.find("readConcern") == o.end());
+                }
+
+                if (opts.read_preference()) {
                     REQUIRE(mongoc_read_prefs_get_mode(read_preference) ==
                             static_cast<int>(opts.read_preference()->mode()));
-                else
+                } else {
                     REQUIRE(mongoc_read_prefs_get_mode(read_preference) ==
                             libmongoc::conversions::read_mode_t_from_read_mode(
                                 mongo_coll.read_preference().mode()));
+                }
 
-                if (opts.batch_size())
-                    REQUIRE(o["batchSize"].get_int32().value == expected_batch_size);
-                else
-                    REQUIRE(o.find("batchSize") == o.end());
+                if (opts.write_concern()) {
+                    REQUIRE(o["writeConcern"].get_document().value == expected_write_concern);
+                } else {
+                    REQUIRE(o.find("writeConcern") == o.end());
+                }
 
                 return NULL;
             });
@@ -162,10 +223,16 @@ TEST_CASE("Collection", "[collection]") {
 
         SECTION("With some options") {
             opts.allow_disk_use(expected_allow_disk_use);
-            opts.max_time(std::chrono::milliseconds{expected_max_time_ms});
             opts.batch_size(expected_batch_size);
             opts.bypass_document_validation(expected_bypass_document_validation);
+            opts.collation(expected_collation.view());
+            opts.comment(expected_comment["$comment"].get_value());
+            opts.hint(expected_hint);
+            opts.let(expected_let.view());
+            opts.max_time(std::chrono::milliseconds{expected_max_time_ms});
+            opts.read_concern(read_concern);
             opts.read_preference(expected_read_preference);
+            opts.write_concern(write_concern);
         }
 
         mongo_coll.aggregate(pipe, opts);

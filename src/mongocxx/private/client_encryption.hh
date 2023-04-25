@@ -14,6 +14,9 @@
 
 #pragma once
 
+#include <memory>
+#include <utility>
+
 #include <bsoncxx/private/libbson.hh>
 #include <bsoncxx/types/bson_value/private/value.hh>
 #include <bsoncxx/types/bson_value/value.hpp>
@@ -24,122 +27,325 @@
 #include <mongocxx/exception/private/mongoc_error.hh>
 #include <mongocxx/options/client_encryption.hpp>
 #include <mongocxx/private/client.hh>
+#include <mongocxx/private/cursor.hh>
 #include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/libmongoc.hh>
+#include <mongocxx/result/bulk_write.hpp>
 
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
-using bsoncxx::types::convert_from_libbson;
-using bsoncxx::types::convert_to_libbson;
-
 class client_encryption::impl {
+   private:
+    using scoped_bson_t = mongocxx::libbson::scoped_bson_t;
+
+    struct scoped_bson_value {
+        bson_value_t value = {};
+
+        // Allow obtaining a pointer to this->value even in rvalue expressions.
+        bson_value_t* get() noexcept {
+            return &value;
+        }
+
+        // Communicate this->value is to be initialized via the resulting pointer.
+        bson_value_t* value_for_init() noexcept {
+            return &this->value;
+        }
+
+        template <typename T>
+        auto convert(const T& value)
+            // Use trailing return type syntax to SFINAE without triggering GCC -Wignored-attributes
+            // warnings due to using decltype within template parameters.
+            -> decltype(bsoncxx::types::convert_to_libbson(std::declval<const T&>(),
+                                                           std::declval<bson_value_t*>())) {
+            bsoncxx::types::convert_to_libbson(value, &this->value);
+        }
+
+        template <typename T>
+        explicit scoped_bson_value(const T& value) {
+            convert(value);
+        }
+
+        explicit scoped_bson_value(const bsoncxx::types::bson_value::view& view) {
+            // Argument order is reversed for bsoncxx::types::bson_value::view.
+            bsoncxx::types::convert_to_libbson(&this->value, view);
+        }
+
+        ~scoped_bson_value() {
+            bson_value_destroy(&value);
+        }
+
+        // Expectation is that value_for_init() will be used to initialize this->value.
+        scoped_bson_value() = default;
+
+        scoped_bson_value(const scoped_bson_value&) = delete;
+        scoped_bson_value(scoped_bson_value&&) = delete;
+        scoped_bson_value& operator=(const scoped_bson_value&) = delete;
+        scoped_bson_value& operator=(scoped_bson_value&&) = delete;
+    };
+
+    struct encrypt_opts_deleter {
+        void operator()(mongoc_client_encryption_encrypt_opts_t* ptr) noexcept {
+            libmongoc::client_encryption_encrypt_opts_destroy(ptr);
+        }
+    };
+
+    using encrypt_opts_ptr =
+        std::unique_ptr<mongoc_client_encryption_encrypt_opts_t, encrypt_opts_deleter>;
+
    public:
     impl(options::client_encryption opts) : _opts(std::move(opts)) {
+        using opts_type = mongoc_client_encryption_opts_t;
+
+        struct opts_deleter {
+            void operator()(opts_type* ptr) noexcept {
+                libmongoc::client_encryption_opts_destroy(ptr);
+            }
+        };
+
+        using encryption_opts_ptr = std::unique_ptr<opts_type, opts_deleter>;
+
         bson_error_t error;
 
-        auto encryption_opts = static_cast<mongoc_client_encryption_opts_t*>(_opts.convert());
-        _client_encryption_t = libmongoc::client_encryption_new(encryption_opts, &error);
+        _client_encryption.reset(libmongoc::client_encryption_new(
+            encryption_opts_ptr(static_cast<opts_type*>(_opts.convert())).get(), &error));
 
-        libmongoc::client_encryption_opts_destroy(encryption_opts);
-
-        if (_client_encryption_t == nullptr) {
+        if (!_client_encryption) {
             throw_exception<operation_exception>(error);
         }
-    }
-
-    ~impl() {
-        libmongoc::client_encryption_destroy(_client_encryption_t);
     }
 
     bsoncxx::types::bson_value::value create_data_key(std::string kms_provider,
                                                       const options::data_key& opts) {
-        bson_value_t keyid;
-        bson_error_t error;
+        using opts_type = mongoc_client_encryption_datakey_opts_t;
 
-        auto datakey_opts = static_cast<mongoc_client_encryption_datakey_opts_t*>(opts.convert());
-
-        auto cleanup = [&]() {
-            bson_value_destroy(&keyid);
-            libmongoc::client_encryption_datakey_opts_destroy(datakey_opts);
+        struct opts_deleter {
+            void operator()(opts_type* ptr) noexcept {
+                libmongoc::client_encryption_datakey_opts_destroy(ptr);
+            }
         };
 
-        if (!libmongoc::client_encryption_create_datakey(
-                _client_encryption_t, kms_provider.c_str(), datakey_opts, &keyid, &error)) {
-            cleanup();
+        using datakey_opts_ptr = std::unique_ptr<opts_type, opts_deleter>;
+
+        const auto datakey_opts = datakey_opts_ptr(static_cast<opts_type*>(opts.convert()));
+
+        scoped_bson_value keyid;
+        bson_error_t error;
+
+        if (!libmongoc::client_encryption_create_datakey(_client_encryption.get(),
+                                                         kms_provider.c_str(),
+                                                         datakey_opts.get(),
+                                                         keyid.value_for_init(),
+                                                         &error)) {
             throw_exception<operation_exception>(error);
         }
 
-        bsoncxx::types::bson_value::value out =
-            bsoncxx::types::bson_value::make_owning_bson(&keyid);
-
-        cleanup();
-
-        return out;
+        return bsoncxx::types::bson_value::make_owning_bson(keyid.get());
     }
 
     bsoncxx::types::bson_value::value encrypt(bsoncxx::types::bson_value::view value,
                                               const options::encrypt& opts) {
+        const auto encrypt_opts =
+            encrypt_opts_ptr(static_cast<mongoc_client_encryption_encrypt_opts_t*>(opts.convert()));
+
+        scoped_bson_value ciphertext;
         bson_error_t error;
-        bson_value_t ciphertext;
 
-        bson_value_t libbson_value;
-
-        convert_to_libbson(&libbson_value, value);
-
-        mongoc_client_encryption_encrypt_opts_t* converted_opts;
-
-        converted_opts = (mongoc_client_encryption_encrypt_opts_t*)opts.convert();
-
-        auto r = libmongoc::client_encryption_encrypt(
-            _client_encryption_t, &libbson_value, converted_opts, &ciphertext, &error);
-
-        auto cleanup = [&]() {
-            bson_value_destroy(&libbson_value);
-            bson_value_destroy(&ciphertext);
-            libmongoc::client_encryption_encrypt_opts_destroy(converted_opts);
-        };
-
-        if (!r) {
-            cleanup();
+        if (!libmongoc::client_encryption_encrypt(_client_encryption.get(),
+                                                  scoped_bson_value(value).get(),
+                                                  encrypt_opts.get(),
+                                                  ciphertext.value_for_init(),
+                                                  &error)) {
             throw_exception<operation_exception>(error);
         }
 
-        auto encrypted = bsoncxx::types::bson_value::make_owning_bson(&ciphertext);
+        return bsoncxx::types::bson_value::make_owning_bson(ciphertext.get());
+    }
 
-        cleanup();
+    bsoncxx::document::value encrypt_expression(bsoncxx::document::view_or_value expr,
+                                                const options::encrypt& opts) {
+        const auto encrypt_opts =
+            encrypt_opts_ptr(static_cast<mongoc_client_encryption_encrypt_opts_t*>(opts.convert()));
 
-        return encrypted;
+        scoped_bson_t encrypted;
+        bson_error_t error = {};
+
+        if (!libmongoc::client_encryption_encrypt_expression(_client_encryption.get(),
+                                                             scoped_bson_t(expr).bson(),
+                                                             encrypt_opts.get(),
+                                                             encrypted.bson_for_init(),
+                                                             &error)) {
+            throw_exception<operation_exception>(error);
+        }
+
+        return encrypted.steal();
     }
 
     bsoncxx::types::bson_value::value decrypt(bsoncxx::types::bson_value::view value) {
+        scoped_bson_value decrypted_value;
         bson_error_t error;
-        bson_value_t decrypted_value;
 
-        bson_value_t encrypted;
-
-        convert_to_libbson(&encrypted, value);
-
-        auto r = libmongoc::client_encryption_decrypt(
-            _client_encryption_t, &encrypted, &decrypted_value, &error);
-
-        auto cleanup = [&]() {
-            bson_value_destroy(&decrypted_value);
-            bson_value_destroy(&encrypted);
-        };
-
-        if (!r) {
-            cleanup();
+        if (!libmongoc::client_encryption_decrypt(_client_encryption.get(),
+                                                  scoped_bson_value(value).get(),
+                                                  decrypted_value.value_for_init(),
+                                                  &error)) {
             throw_exception<operation_exception>(error);
         }
 
-        auto decrypted = bsoncxx::types::bson_value::make_owning_bson(&decrypted_value);
+        return bsoncxx::types::bson_value::make_owning_bson(decrypted_value.get());
+    }
 
-        cleanup();
+    result::rewrap_many_datakey rewrap_many_datakey(bsoncxx::document::view_or_value filter,
+                                                    const options::rewrap_many_datakey& opts) {
+        using result_type = mongoc_client_encryption_rewrap_many_datakey_result_t;
 
-        return decrypted;
+        struct result_deleter {
+            void operator()(result_type* ptr) noexcept {
+                libmongoc::client_encryption_rewrap_many_datakey_result_destroy(ptr);
+            }
+        };
+
+        using result_ptr = std::unique_ptr<result_type, result_deleter>;
+
+        auto result = result_ptr(libmongoc::client_encryption_rewrap_many_datakey_result_new());
+
+        const auto provider_terminated = opts.provider().terminated();
+
+        scoped_bson_t bson_master_key;
+
+        if (const auto master_key_opt = opts.master_key()) {
+            bson_master_key.init_from_static(master_key_opt->view());
+        }
+
+        bson_error_t error;
+
+        if (!libmongoc::client_encryption_rewrap_many_datakey(
+                _client_encryption.get(),
+                scoped_bson_t(filter).bson(),
+                provider_terminated.view().empty() ? nullptr : provider_terminated.data(),
+                bson_master_key.bson(),
+                result.get(),
+                &error)) {
+            throw_exception<operation_exception>(error);
+        }
+
+        const bson_t* bulk_write_result =
+            libmongoc::client_encryption_rewrap_many_datakey_result_get_bulk_write_result(
+                result.get());
+
+        if (bulk_write_result) {
+            const auto doc =
+                bsoncxx::document::view(bson_get_data(bulk_write_result), bulk_write_result->len);
+            return result::rewrap_many_datakey(result::bulk_write(bsoncxx::document::value(doc)));
+        } else {
+            return result::rewrap_many_datakey();
+        }
+    }
+
+    result::delete_result delete_key(bsoncxx::types::bson_value::view_or_value id) {
+        using bsoncxx::builder::basic::kvp;
+        using bsoncxx::builder::basic::make_document;
+
+        scoped_bson_t reply;
+        bson_error_t error;
+
+        if (!libmongoc::client_encryption_delete_key(_client_encryption.get(),
+                                                     scoped_bson_value(id.view()).get(),
+                                                     reply.bson_for_init(),
+                                                     &error)) {
+            throw_exception<operation_exception>(error);
+        }
+
+        // The C driver calls this field "deletedCount", but the C++ driver
+        // refers to this as "nRemoved". Make a new document with the field name
+        // changed to get around this.
+        //
+        // See: mongo-cxx-driver/src/mongocxx/result/bulk_write.cpp
+        // Function: std::int32_t bulk_write::deleted_count() const {
+        //     return view()["nRemoved"].get_int32();
+        // }
+        return result::delete_result(result::bulk_write(
+            make_document(kvp("nRemoved", reply.view()["deletedCount"].get_int32()))));
+    }
+
+    stdx::optional<bsoncxx::document::value> get_key(bsoncxx::types::bson_value::view_or_value id) {
+        libbson::scoped_bson_t key_doc;
+        bson_error_t error;
+
+        if (!libmongoc::client_encryption_get_key(_client_encryption.get(),
+                                                  scoped_bson_value(id.view()).get(),
+                                                  key_doc.bson_for_init(),
+                                                  &error)) {
+            throw_exception<operation_exception>(error);
+        }
+
+        return key_doc.view().empty() ? stdx::nullopt
+                                      : stdx::optional<bsoncxx::document::value>{key_doc.steal()};
+    }
+
+    mongocxx::cursor get_keys() {
+        bson_error_t error;
+
+        mongoc_cursor_t* const cursor =
+            mongoc_client_encryption_get_keys(_client_encryption.get(), &error);
+
+        if (!cursor) {
+            throw_exception<operation_exception>(error);
+        }
+
+        return mongocxx::cursor(cursor);
+    }
+
+    stdx::optional<bsoncxx::document::value> add_key_alt_name(
+        bsoncxx::types::bson_value::view_or_value id, bsoncxx::string::view_or_value key_alt_name) {
+        scoped_bson_t key_doc;
+        bson_error_t error;
+
+        if (!libmongoc::client_encryption_add_key_alt_name(_client_encryption.get(),
+                                                           scoped_bson_value(id.view()).get(),
+                                                           key_alt_name.terminated().data(),
+                                                           key_doc.bson_for_init(),
+                                                           &error)) {
+            throw_exception<operation_exception>(error);
+        }
+
+        return key_doc.view().empty() ? stdx::nullopt
+                                      : stdx::optional<bsoncxx::document::value>{key_doc.steal()};
+    }
+
+    stdx::optional<bsoncxx::document::value> get_key_by_alt_name(
+        bsoncxx::string::view_or_value key_alt_name) {
+        scoped_bson_t key_doc;
+        bson_error_t error;
+
+        if (!libmongoc::client_encryption_get_key_by_alt_name(_client_encryption.get(),
+                                                              key_alt_name.terminated().data(),
+                                                              key_doc.bson_for_init(),
+                                                              &error)) {
+            throw_exception<operation_exception>(error);
+        }
+
+        return key_doc.view().empty() ? stdx::nullopt
+                                      : stdx::optional<bsoncxx::document::value>{key_doc.steal()};
+    }
+
+    stdx::optional<bsoncxx::document::value> remove_key_alt_name(
+        bsoncxx::types::bson_value::view_or_value id, bsoncxx::string::view_or_value key_alt_name) {
+        scoped_bson_t key_doc;
+        bson_error_t error;
+
+        if (!libmongoc::client_encryption_remove_key_alt_name(_client_encryption.get(),
+                                                              scoped_bson_value(id.view()).get(),
+                                                              key_alt_name.terminated().data(),
+                                                              key_doc.bson_for_init(),
+                                                              &error)) {
+            throw_exception<operation_exception>(error);
+        }
+
+        return key_doc.view().empty() ? stdx::nullopt
+                                      : stdx::optional<bsoncxx::document::value>{key_doc.steal()};
     }
 
     stdx::optional<collection> create_encrypted_collection(
@@ -166,7 +372,7 @@ class client_encryption::impl {
         bson_init_static(&coll_opts, opts.data(), opts.length());
 
         auto coll_ptr =
-            libmongoc::client_encryption_create_encrypted_collection(_client_encryption_t,
+            libmongoc::client_encryption_create_encrypted_collection(_client_encryption,
                                                                      db,
                                                                      coll_name.data(),
                                                                      &coll_opts,
@@ -181,8 +387,15 @@ class client_encryption::impl {
         return collection(dbcxx, coll_ptr);
     }
 
+   private:
+    struct encryption_deleter {
+        void operator()(mongoc_client_encryption_t* ptr) noexcept {
+            libmongoc::client_encryption_destroy(ptr);
+        }
+    };
+
     options::client_encryption _opts;
-    mongoc_client_encryption_t* _client_encryption_t;
+    std::unique_ptr<mongoc_client_encryption_t, encryption_deleter> _client_encryption;
 };
 
 MONGOCXX_INLINE_NAMESPACE_END

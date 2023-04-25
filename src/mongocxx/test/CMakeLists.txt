@@ -244,10 +244,10 @@ set_tests_properties(gridfs_specs PROPERTIES
     ENVIRONMENT "GRIDFS_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/gridfs")
 
 set_tests_properties(client_side_encryption_specs PROPERTIES
-    ENVIRONMENT "ENCRYPTION_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/client_side_encryption")
+    ENVIRONMENT "CLIENT_SIDE_ENCRYPTION_LEGACY_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/client_side_encryption/legacy")
 
 set_tests_properties(driver PROPERTIES
-    ENVIRONMENT "ENCRYPTION_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/client_side_encryption")
+    ENVIRONMENT "CLIENT_SIDE_ENCRYPTION_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/client_side_encryption")
 set_property(TEST driver
   APPEND PROPERTY ENVIRONMENT "URI_OPTIONS_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/uri-options")
 
@@ -260,16 +260,19 @@ set_property(TEST transactions_specs
   APPEND PROPERTY ENVIRONMENT "WITH_TRANSACTION_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/with_transaction")
 
 set_tests_properties(retryable_reads_spec PROPERTIES
-   ENVIRONMENT "RETRYABLE_READS_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/retryable-reads")
+   ENVIRONMENT "RETRYABLE_READS_LEGACY_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/retryable-reads/legacy")
 
 set_tests_properties(read_write_concern_specs PROPERTIES
   ENVIRONMENT "READ_WRITE_CONCERN_OPERATION_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/read-write-concern/operation")
 
 set_property(TEST unified_format_spec APPEND PROPERTY ENVIRONMENT
   "CHANGE_STREAMS_UNIFIED_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/change-streams/unified"
+  "CLIENT_SIDE_ENCRYPTION_UNIFIED_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/client_side_encryption/unified"
   "COLLECTION_MANAGEMENT_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/collection-management"
   "CRUD_UNIFIED_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/crud/unified"
   "SESSION_UNIFIED_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/sessions/unified/"
+  "RETRYABLE_READS_UNIFIED_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/retryable-reads/unified/"
+  "RETRYABLE_WRITES_UNIFIED_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/retryable-writes/unified/"
   "UNIFIED_FORMAT_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/unified-format"
   "VERSIONED_API_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/versioned-api"
 )
