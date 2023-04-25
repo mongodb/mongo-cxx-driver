@@ -17,6 +17,7 @@
 #include <memory>
 #include <utility>
 
+#include <bsoncxx/private/helpers.hh>
 #include <bsoncxx/private/libbson.hh>
 #include <bsoncxx/types/bson_value/private/value.hh>
 #include <bsoncxx/types/bson_value/value.hpp>
@@ -372,7 +373,7 @@ class client_encryption::impl {
         bson_init_static(&coll_opts, opts.data(), opts.length());
 
         auto coll_ptr =
-            libmongoc::client_encryption_create_encrypted_collection(_client_encryption,
+            libmongoc::client_encryption_create_encrypted_collection(_client_encryption.get(),
                                                                      db,
                                                                      coll_name.data(),
                                                                      &coll_opts,
@@ -380,6 +381,7 @@ class client_encryption::impl {
                                                                      kms_provider.data(),
                                                                      opt_mkey_ptr,
                                                                      &error);
+        out_options = bsoncxx::helpers::value_from_bson_t(&out_opts);
         if (not coll_ptr) {
             ec = make_error_code(error);
             return stdx::nullopt;
