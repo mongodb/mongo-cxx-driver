@@ -382,7 +382,7 @@ class client_encryption::impl {
                                                                      opt_mkey_ptr,
                                                                      &error);
         out_options = bsoncxx::helpers::value_from_bson_t(&out_opts);
-        if (not coll_ptr) {
+        if (!coll_ptr) {
             ec = make_error_code(error);
             return stdx::nullopt;
         }

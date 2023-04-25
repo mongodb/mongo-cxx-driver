@@ -70,7 +70,7 @@ collection client_encryption::create_encrypted_collection(
     std::error_code ec;
     auto coll = this->create_encrypted_collection(
         db, coll_name, options, out_options, kms_provider, masterkey, ec);
-    if (not coll) {
+    if (!coll) {
         throw operation_exception(ec, ec.message());
     }
     return *coll;
