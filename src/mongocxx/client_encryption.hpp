@@ -126,50 +126,6 @@ class MONGOCXX_API client_encryption {
         const std::string& kms_provider,
         const stdx::optional<bsoncxx::document::view>& masterkey);
 
-    /**
-     * @brief Create a collection with client-side-encryption enabled, automatically filling any
-     * datakeys for encrypted fields.
-     *
-     * @param db The database in which the collection will be created
-     * @param coll_name The name of the new collection
-     * @param options The options for creating the collection. @see database::create_collection
-     * @param out_options Output parameter to receive the generated collection options.
-     * @param kms_provider The KMS provider to use when creating data encryption keys for the
-     * collection's encrypted fields
-     * @param ec Set to indicate an error with the underlying operation.
-     * @return collection Upon success, returns a collection, otherwise a null optional
-     */
-    stdx::optional<collection> create_encrypted_collection(const database& db,
-                                                           const std::string& coll_name,
-                                                           const bsoncxx::document::view& options,
-                                                           bsoncxx::document::value& out_options,
-                                                           const std::string& kms_provider,
-                                                           std::error_code& ec) noexcept;
-
-    /**
-     * @brief Create a collection with client-side-encryption enabled, automatically filling any
-     * datakeys for encrypted fields.
-     *
-     * @param db The database in which the collection will be created
-     * @param coll_name The name of the new collection
-     * @param options The options for creating the collection. @see database::create_collection
-     * @param out_options Output parameter to receive the generated collection options.
-     * @param kms_provider The KMS provider to use when creating data encryption keys for the
-     * collection's encrypted fields
-     * @param masterkey If non-null, specify the masterkey to be used when creating data keys in the
-     * collection.
-     * @param ec Set to indicate an error with the underlying operation.
-     * @return collection Upon success, returns a collection, otherwise a null optional
-     */
-    stdx::optional<collection> create_encrypted_collection(
-        const database& db,
-        const std::string& coll_name,
-        const bsoncxx::document::view& options,
-        bsoncxx::document::value& out_options,
-        const std::string& kms_provider,
-        const stdx::optional<bsoncxx::document::view>& masterkey,
-        std::error_code& ec) noexcept;
-
     ///
     /// Encrypts a BSON value with a given key and algorithm.
     ///

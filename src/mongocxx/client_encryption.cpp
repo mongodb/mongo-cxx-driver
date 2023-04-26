@@ -67,37 +67,9 @@ collection client_encryption::create_encrypted_collection(
     bsoncxx::document::value& out_options,
     const std::string& kms_provider,
     const stdx::optional<bsoncxx::document::view>& masterkey) {
-    std::error_code ec;
-    auto coll = this->create_encrypted_collection(
-        db, coll_name, options, out_options, kms_provider, masterkey, ec);
-    if (!coll) {
-        throw operation_exception(ec, ec.message());
-    }
-    return *coll;
-}
-
-stdx::optional<collection> client_encryption::create_encrypted_collection(
-    const database& db,
-    const std::string& coll_name,
-    const bsoncxx::document::view& options,
-    bsoncxx::document::value& out_options,
-    const std::string& kms_provider,
-    std::error_code& ec) noexcept {
-    return this->create_encrypted_collection(
-        db, coll_name, options, out_options, kms_provider, stdx::nullopt, ec);
-}
-
-stdx::optional<collection> client_encryption::create_encrypted_collection(
-    const database& db,
-    const std::string& coll_name,
-    const bsoncxx::document::view& coll_options,
-    bsoncxx::document::value& out_options,
-    const std::string& kms_provider,
-    const stdx::optional<bsoncxx::document::view>& masterkey,
-    std::error_code& ec) noexcept {
     auto& db_impl = db._get_impl();
     return _impl->create_encrypted_collection(
-        db, db_impl.database_t, coll_name, coll_options, out_options, kms_provider, masterkey, ec);
+        db, db_impl.database_t, coll_name, options, out_options, kms_provider, masterkey);
 }
 
 result::rewrap_many_datakey client_encryption::rewrap_many_datakey(
