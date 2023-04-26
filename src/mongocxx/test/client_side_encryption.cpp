@@ -2501,7 +2501,7 @@ TEST_CASE("Create Encrypted Collection", "[client_side_encryption]") {
     }
 
     if (!test_util::newer_than(conn, "7.0")) {
-        std::cerr << "Explicit Encryption tests require MongoDB server 6.0+." << std::endl;
+        std::cerr << "Explicit Encryption tests require MongoDB server 7.0+." << std::endl;
         return;
     }
 
@@ -2617,7 +2617,7 @@ TEST_CASE("Create Encrypted Collection", "[client_side_encryption]") {
                 fin_options,
                 w.kms_provider,
                 w.master_key ? stdx::make_optional(w.master_key->view()) : stdx::nullopt);
-                CAPTURE(fin_options, coll);
+            CAPTURE(fin_options, coll);
 
             bsoncxx::types::b_string ssn{"123-45-6789"};
             auto key = fin_options["encryptedFields"]["fields"][0]["keyId"];
