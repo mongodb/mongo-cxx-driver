@@ -51,15 +51,6 @@ bsoncxx::types::bson_value::value client_encryption::decrypt(
     return _impl->decrypt(value);
 }
 
-collection client_encryption::create_encrypted_collection(const database& db,
-                                                          const std::string& coll_name,
-                                                          const bsoncxx::document::view& options,
-                                                          bsoncxx::document::value& out_options,
-                                                          const std::string& kms_provider) {
-    return this->create_encrypted_collection(
-        db, coll_name, options, out_options, kms_provider, stdx::nullopt);
-}
-
 collection client_encryption::create_encrypted_collection(
     const database& db,
     const std::string& coll_name,

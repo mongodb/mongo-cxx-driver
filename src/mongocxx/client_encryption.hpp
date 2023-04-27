@@ -96,24 +96,6 @@ class MONGOCXX_API client_encryption {
      * @param out_options Output parameter to receive the generated collection options.
      * @param kms_provider The KMS provider to use when creating data encryption keys for the
      * collection's encrypted fields
-     * @return collection A handle to the newly created collection
-     */
-    collection create_encrypted_collection(const database& db,
-                                           const std::string& coll_name,
-                                           const bsoncxx::document::view& options,
-                                           bsoncxx::document::value& out_options,
-                                           const std::string& kms_provider);
-
-    /**
-     * @brief Create a collection with client-side-encryption enabled, automatically filling any
-     * datakeys for encrypted fields.
-     *
-     * @param db The database in which the collection will be created
-     * @param coll_name The name of the new collection
-     * @param options The options for creating the collection. @see database::create_collection
-     * @param out_options Output parameter to receive the generated collection options.
-     * @param kms_provider The KMS provider to use when creating data encryption keys for the
-     * collection's encrypted fields
      * @param masterkey If non-null, specify the masterkey to be used when creating data keys in the
      * collection.
      * @return collection A handle to the newly created collection
@@ -124,7 +106,7 @@ class MONGOCXX_API client_encryption {
         const bsoncxx::document::view& options,
         bsoncxx::document::value& out_options,
         const std::string& kms_provider,
-        const stdx::optional<bsoncxx::document::view>& masterkey);
+        const stdx::optional<bsoncxx::document::view>& masterkey = stdx::nullopt);
 
     ///
     /// Encrypts a BSON value with a given key and algorithm.

@@ -364,12 +364,11 @@ class client_encryption::impl {
         bson_t* opt_mkey_ptr = nullptr;
         scoped_bson_t opt_mkey;
         if (masterkey) {
-            bson_init_static(opt_mkey.bson_for_init(), masterkey->data(), masterkey->length());
+            opt_mkey.init_from_static(*masterkey);
             opt_mkey_ptr = opt_mkey.bson();
         }
 
-        scoped_bson_t coll_opts;
-        bson_init_static(coll_opts.bson_for_init(), opts.data(), opts.length());
+        scoped_bson_t coll_opts{opts};
 
         auto coll_ptr =
             libmongoc::client_encryption_create_encrypted_collection(_client_encryption.get(),
