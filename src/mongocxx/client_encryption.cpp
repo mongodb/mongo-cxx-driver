@@ -15,6 +15,7 @@
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <mongocxx/client_encryption.hpp>
 #include <mongocxx/private/client_encryption.hh>
+#include <mongocxx/private/database.hh>
 
 #include <mongocxx/config/private/prelude.hh>
 
@@ -48,6 +49,18 @@ bsoncxx::document::value client_encryption::encrypt_expression(
 bsoncxx::types::bson_value::value client_encryption::decrypt(
     bsoncxx::types::bson_value::view value) {
     return _impl->decrypt(value);
+}
+
+collection client_encryption::create_encrypted_collection(
+    const database& db,
+    const std::string& coll_name,
+    const bsoncxx::document::view& options,
+    bsoncxx::document::value& out_options,
+    const std::string& kms_provider,
+    const stdx::optional<bsoncxx::document::view>& masterkey) {
+    auto& db_impl = db._get_impl();
+    return _impl->create_encrypted_collection(
+        db, db_impl.database_t, coll_name, options, out_options, kms_provider, masterkey);
 }
 
 result::rewrap_many_datakey client_encryption::rewrap_many_datakey(

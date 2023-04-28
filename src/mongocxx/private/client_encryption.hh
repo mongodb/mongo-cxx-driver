@@ -17,6 +17,7 @@
 #include <memory>
 #include <utility>
 
+#include <bsoncxx/private/helpers.hh>
 #include <bsoncxx/private/libbson.hh>
 #include <bsoncxx/types/bson_value/private/value.hh>
 #include <bsoncxx/types/bson_value/value.hpp>
@@ -346,6 +347,43 @@ class client_encryption::impl {
 
         return key_doc.view().empty() ? stdx::nullopt
                                       : stdx::optional<bsoncxx::document::value>{key_doc.steal()};
+    }
+
+    collection create_encrypted_collection(
+        const database& dbcxx,
+        mongoc_database_t* const db,
+        const std::string& coll_name,
+        const bsoncxx::document::view opts,
+        bsoncxx::document::value& out_options,
+        const std::string& kms_provider,
+        const stdx::optional<bsoncxx::document::view>& masterkey) {
+        bson_error_t error = {};
+        scoped_bson_t out_opts;
+        out_opts.init();
+
+        bson_t* opt_mkey_ptr = nullptr;
+        scoped_bson_t opt_mkey;
+        if (masterkey) {
+            opt_mkey.init_from_static(*masterkey);
+            opt_mkey_ptr = opt_mkey.bson();
+        }
+
+        scoped_bson_t coll_opts{opts};
+
+        auto coll_ptr =
+            libmongoc::client_encryption_create_encrypted_collection(_client_encryption.get(),
+                                                                     db,
+                                                                     coll_name.data(),
+                                                                     coll_opts.bson(),
+                                                                     out_opts.bson(),
+                                                                     kms_provider.data(),
+                                                                     opt_mkey_ptr,
+                                                                     &error);
+        out_options = bsoncxx::helpers::value_from_bson_t(out_opts.bson());
+        if (!coll_ptr) {
+            throw_exception<operation_exception>(error);
+        }
+        return collection(dbcxx, coll_ptr);
     }
 
    private:

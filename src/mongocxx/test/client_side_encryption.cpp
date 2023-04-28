@@ -18,6 +18,7 @@
 #include <string>
 #include <tuple>
 
+#include <bsoncxx/builder/stream/array.hpp>
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/builder/stream/helpers.hpp>
 #include <bsoncxx/document/element.hpp>
@@ -2485,6 +2486,146 @@ TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
 
             // Assert the returned value equals "encrypted unindexed value".
             REQUIRE(plain_text == plain_text_unindexed_value);
+        }
+    }
+}
+
+TEST_CASE("Create Encrypted Collection", "[client_side_encryption]") {
+    instance::current();
+    class client conn {
+        mongocxx::uri{}, test_util::add_test_server_api()
+    };
+
+    if (!mongocxx::test_util::should_run_client_side_encryption_test()) {
+        return;
+    }
+
+    if (!test_util::newer_than(conn, "7.0")) {
+        std::cerr << "Explicit Encryption tests require MongoDB server 7.0+." << std::endl;
+        return;
+    }
+
+    if (test_util::get_topology(conn) == "single") {
+        std::cerr << "Explicit Encryption tests must not run against a standalone." << std::endl;
+        return;
+    }
+
+    conn.database("keyvault").collection("datakeys").drop();
+
+    struct which {
+        std::string kms_provider;
+        stdx::optional<bsoncxx::document::value> master_key;
+    };
+
+    which w = GENERATE(Catch::Generators::values<which>({
+        {"aws",
+         make_document(
+             kvp("region", "us-east-1"),
+             kvp("key",
+                 "arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0"))},
+        // When testing 'local', use master_key of 'null'
+        {"local", stdx::nullopt},
+    }));
+
+    options::client_encryption cse_opts;
+    _add_cse_opts(&cse_opts, &conn, true);
+    client_encryption cse{std::move(cse_opts)};
+
+    auto db = conn.database("cec-test-db");
+    db.drop();
+    auto fin_options = make_document();
+
+    DYNAMIC_SECTION("KMS Provider - " << w.kms_provider) {
+        SECTION("Case 1: Simple Creation and Validation") {
+            const auto create_opts = make_document(
+                kvp("encryptedFields",
+                    make_document(
+                        kvp("fields",
+                            make_array(make_document(kvp("path", "ssn"),
+                                                     kvp("bsonType", "string"),
+                                                     kvp("keyId", bsoncxx::types::b_null{})))))));
+
+            auto coll = cse.create_encrypted_collection(
+                db,
+                "testing1",
+                create_opts,
+                fin_options,
+                w.kms_provider,
+                w.master_key ? stdx::make_optional(w.master_key->view()) : stdx::nullopt);
+            CAPTURE(fin_options, coll);
+            try {
+                coll.insert_one(make_document(kvp("ssn", "123-45-6789")));
+                FAIL_CHECK("Insert should have failed");
+            } catch (const mongocxx::operation_exception& e) {
+                CHECK(e.code().value() == 121);  // VALIDATION_ERROR
+            }
+        }
+
+        SECTION("Case 2: Missing 'encryptedFields'") {
+            const auto create_opts = make_document();
+            try {
+                auto coll = cse.create_encrypted_collection(
+                    db,
+                    "testing1",
+                    create_opts,
+                    fin_options,
+                    w.kms_provider,
+                    w.master_key ? stdx::make_optional(w.master_key->view()) : stdx::nullopt);
+                CAPTURE(fin_options, coll);
+                FAIL_CHECK("Did not throw");
+            } catch (const mongocxx::operation_exception& e) {
+                CHECK(e.code().value() == 22);  // INVALID_ARG
+            }
+        }
+
+        SECTION("Case 3: Invalid keyId") {
+            const auto create_opts = make_document(kvp(
+                "encryptedFields",
+                make_document(kvp(
+                    "fields",
+                    make_array(make_document(
+                        kvp("path", "ssn"), kvp("bsonType", "string"), kvp("keyId", false)))))));
+
+            try {
+                auto coll = cse.create_encrypted_collection(
+                    db,
+                    "testing1",
+                    create_opts,
+                    fin_options,
+                    w.kms_provider,
+                    w.master_key ? stdx::make_optional(w.master_key->view()) : stdx::nullopt);
+                CAPTURE(fin_options, coll);
+                FAIL_CHECK("Did not throw");
+            } catch (const mongocxx::operation_exception& e) {
+                CHECK(e.code().value() == 14);  // INVALID_REPLY
+            }
+        }
+
+        SECTION("Case 4: Insert encrypted value") {
+            const auto create_opts = make_document(
+                kvp("encryptedFields",
+                    make_document(
+                        kvp("fields",
+                            make_array(make_document(kvp("path", "ssn"),
+                                                     kvp("bsonType", "string"),
+                                                     kvp("keyId", bsoncxx::types::b_null{})))))));
+
+            auto coll = cse.create_encrypted_collection(
+                db,
+                "testing1",
+                create_opts,
+                fin_options,
+                w.kms_provider,
+                w.master_key ? stdx::make_optional(w.master_key->view()) : stdx::nullopt);
+            CAPTURE(fin_options, coll);
+
+            bsoncxx::types::b_string ssn{"123-45-6789"};
+            auto key = fin_options["encryptedFields"]["fields"][0]["keyId"];
+            options::encrypt enc;
+            enc.key_id(key.get_value());
+            enc.algorithm(options::encrypt::encryption_algorithm::k_unindexed);
+            auto encrypted = cse.encrypt(bsoncxx::types::bson_value::view(ssn), enc);
+            CHECK_NOTHROW(coll.insert_one(make_document(kvp("ssn", encrypted))));
         }
     }
 }
