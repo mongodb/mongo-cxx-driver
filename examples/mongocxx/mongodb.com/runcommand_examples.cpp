@@ -33,22 +33,6 @@ void runcommand_examples(mongocxx::database& db) {
             throw std::logic_error("buildInfo command failed in runCommand example 1");
         }
     }
-
-    {
-        using namespace bsoncxx::builder::basic;
-        // drop and recreate dummy data so command succeeds
-        db["restaurants"].drop();
-        db["restaurants"].insert_one(make_document(kvp("name", "Noodle-Sushi")));
-
-        // Start runCommand Example 2
-        using namespace bsoncxx::builder::basic;
-        auto buildInfo = db.run_command(make_document(kvp("collStats", "restaurants")));
-        // End runCommand Example 1
-
-        if (buildInfo.view()["ok"].get_double() != double{1}) {
-            throw std::logic_error("buildInfo command failed in runCommand example 2");
-        }
-    }
 }
 
 int main() {
