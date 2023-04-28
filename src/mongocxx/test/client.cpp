@@ -377,15 +377,9 @@ TEST_CASE("integration tests for client metadata handshake feature") {
 
     auto run_test = [app_name](const client& client) {
         mongocxx::database db = client["admin"];
-        auto current_op = db.run_command(make_document(kvp("currentOp", 1)));
-        auto current_op_view = current_op.view();
-
-        auto in_prog = current_op_view["inprog"].get_array().value;
+        auto cursor = db.aggregate(pipeline().current_op(make_document()));
         bool found_op = false;
-
-        for (auto&& it : in_prog) {
-            auto op_view = it.get_document().view();
-
+        for (auto&& op_view : cursor) {
             if (!op_view["appName"] ||
                 op_view["appName"].get_string().value != stdx::string_view(app_name)) {
                 continue;
@@ -395,29 +389,24 @@ TEST_CASE("integration tests for client metadata handshake feature") {
 
             std::string server_version = test_util::get_server_version(client);
 
-            // clientMetadata not returned until 3.5.8.
-            if (test_util::compare_versions(server_version, "3.5.8") >= 0) {
-                REQUIRE(op_view["clientMetadata"]);
-                auto metadata = op_view["clientMetadata"].get_document();
-                auto metadata_view = metadata.view();
+            REQUIRE(op_view["clientMetadata"]);
+            auto metadata = op_view["clientMetadata"].get_document();
+            auto metadata_view = metadata.view();
 
-                REQUIRE(metadata_view["application"]);
-                auto application = metadata_view["application"].get_document();
-                REQUIRE(application.view()["name"].get_string().value ==
-                        stdx::string_view(app_name));
+            REQUIRE(metadata_view["application"]);
+            auto application = metadata_view["application"].get_document();
+            REQUIRE(application.view()["name"].get_string().value == stdx::string_view(app_name));
 
-                REQUIRE(metadata_view["driver"]);
-                auto driver = metadata_view["driver"].get_document();
-                auto driver_view = driver.view();
-                REQUIRE(driver_view["name"].get_string().value ==
-                        stdx::string_view{"mongoc / mongocxx"});
-                auto version =
-                    bsoncxx::string::to_string(driver_view["version"].get_string().value);
-                REQUIRE(version.find(MONGOCXX_VERSION_STRING) != std::string::npos);
+            REQUIRE(metadata_view["driver"]);
+            auto driver = metadata_view["driver"].get_document();
+            auto driver_view = driver.view();
+            REQUIRE(driver_view["name"].get_string().value ==
+                    stdx::string_view{"mongoc / mongocxx"});
+            auto version = bsoncxx::string::to_string(driver_view["version"].get_string().value);
+            REQUIRE(version.find(MONGOCXX_VERSION_STRING) != std::string::npos);
 
-                REQUIRE(metadata_view["os"]);
-                REQUIRE(metadata_view["os"].get_document().view()["type"]);
-            }
+            REQUIRE(metadata_view["os"]);
+            REQUIRE(metadata_view["os"].get_document().view()["type"]);
 
             break;
         }
