@@ -377,15 +377,9 @@ TEST_CASE("integration tests for client metadata handshake feature") {
 
     auto run_test = [app_name](const client& client) {
         mongocxx::database db = client["admin"];
-        auto current_op = db.run_command(make_document(kvp("currentOp", 1)));
-        auto current_op_view = current_op.view();
-
-        auto in_prog = current_op_view["inprog"].get_array().value;
+        auto cursor = db.aggregate(pipeline().current_op(make_document()));
         bool found_op = false;
-
-        for (auto&& it : in_prog) {
-            auto op_view = it.get_document().view();
-
+        for (auto&& op_view : cursor) {
             if (!op_view["appName"] ||
                 op_view["appName"].get_string().value != stdx::string_view(app_name)) {
                 continue;
