@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <cstdint>
+
 #include <bsoncxx/oid.hpp>
 
 #include <mongocxx/config/prelude.hpp>

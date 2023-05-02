@@ -15,6 +15,7 @@
 #pragma once
 
 #include <system_error>
+#include <cstdint>
 
 #include <mongocxx/config/prelude.hpp>
 
