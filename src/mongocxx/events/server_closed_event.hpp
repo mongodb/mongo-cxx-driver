@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <cstdint>
+
 #include <bsoncxx/oid.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 

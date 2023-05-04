@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <cstdint>
+
 #include <bsoncxx/stdx/string_view.hpp>
 
 #include <mongocxx/config/prelude.hpp>
