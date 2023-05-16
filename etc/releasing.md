@@ -206,6 +206,13 @@ pushed.
   `docs/`. This may require pushing the commit to a fork of the C++ Driver
   repository and creating a pull request.
 
+## Homebrew
+This requires a macOS machine. 
+If this is a stable release, update the [mongo-cxx-driver](https://github.com/Homebrew/homebrew-core/blob/master/Formula/mongo-cxx-driver.rb) homebrew formula, using: `brew bump-formula-pr --url <tarball url>`
+
+Example:
+`brew bump-formula-pr mongo-cxx-driver --url https://github.com/mongodb/mongo-cxx-driver/releases/download/r3.7.1/mongo-cxx-driver-r3.7.1.tar.gz`
+
 ## File a DOCSP ticket if needed
 
 Add a comment to the generated DOCSP ticket describing if the
