@@ -84,7 +84,7 @@ ISSUE_TYPE_ID = {'Backport': '10300',
               show_default=True,
               help='The remote reference which points to the mongodb/mongo-cxx-driver repo')
 @click.option('--c-driver-build-ref',
-              default='f14370ea',
+              default='98995b5d9e31768ae02be265e3debe43ec35cff8',
               show_default=True,
               help='When building the C driver, build at this Git reference')
 @click.option('--with-c-driver',
