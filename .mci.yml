@@ -76,7 +76,6 @@ variables:
     test_params:
         asan_test_params: &asan_test_params PATH="/usr/lib/llvm-3.8/bin" ASAN_OPTIONS="detect_leaks=1"
         ubsan_test_params: &ubsan_test_params PATH="/usr/lib/llvm-3.8/bin" UBSAN_OPTIONS="print_stacktrace=1"
-        valgrind_test_params: &valgrind_test_params valgrind --leak-check=full --track-origins=yes --num-callers=50 --error-exitcode=1 --error-limit=no --read-var-info=yes --suppressions=../etc/memcheck.suppressions
 
 
 #######################################
@@ -590,7 +589,7 @@ functions:
                           echo "CRYPT_SHARED_LIB_PATH=$CRYPT_SHARED_LIB_PATH"
                       fi
 
-                      # Run tests and examples 1-by-1 with "test_params" so we can run them with valgrind.
+                      # Run tests and examples 1-by-1 with "test_params" so we can run them with asan/ubsan.
                       ${test_params} ./src/bsoncxx/test/test_bson
                       ${test_params} ./src/mongocxx/test/test_driver
                       ${test_params} ./src/mongocxx/test/test_client_side_encryption_specs
@@ -672,7 +671,7 @@ functions:
                           export LD_LIBRARY_PATH="$(pwd)/build/install/lib:$LD_LIBRARY_PATH"
                       fi
                   fi
-                  # The example projects never run under valgrind, since we haven't added execution
+                  # The example projects never run under asan/ubsan, since we haven't added execution
                   # logic to handle ${test_params}.
                   #
                   # Only run example projects if MONGODB_API_VERSION is unset. We do not append
@@ -1368,44 +1367,6 @@ buildvariants:
           use_mongocryptd: true  # crypt_shared is not available for Ubuntu 16.04
       run_on:
           - ubuntu1604-build
-      tasks:
-          - name: compile_and_test_with_shared_libs
-          - name: compile_and_test_with_shared_libs_extra_alignment
-          - name: compile_and_test_with_static_libs
-          - name: compile_and_test_with_static_libs_extra_alignment
-
-    - name: ubuntu1804-debug-valgrind-latest
-      display_name: "Valgrind Ubuntu 18.04 Debug (MongoDB Latest)"
-      expansions:
-          build_type: "Debug"
-          tar_options: *linux_tar_options
-          extra_path: *linux_extra_path
-          cmake_flags: *linux_cmake_flags
-          test_params: *valgrind_test_params
-          mongodb_version: *version_latest
-          disable_slow_tests: 1
-          use_mongocryptd: true  # false positives arise from the crypt_shared library
-      run_on:
-          - ubuntu1804-build
-      tasks:
-          - name: compile_and_test_with_shared_libs
-          - name: compile_and_test_with_shared_libs_extra_alignment
-          - name: compile_and_test_with_static_libs
-          - name: compile_and_test_with_static_libs_extra_alignment
-
-    - name: ubuntu1804-debug-valgrind-50
-      display_name: "Valgrind Ubuntu 18.04 Debug (MongoDB 5.0)"
-      expansions:
-          build_type: "Debug"
-          tar_options: *linux_tar_options
-          extra_path: *linux_extra_path
-          cmake_flags: *linux_cmake_flags
-          test_params: *valgrind_test_params
-          mongodb_version: *version_50
-          disable_slow_tests: 1
-          use_mongocryptd: true
-      run_on:
-          - ubuntu1804-build
       tasks:
           - name: compile_and_test_with_shared_libs
           - name: compile_and_test_with_shared_libs_extra_alignment
