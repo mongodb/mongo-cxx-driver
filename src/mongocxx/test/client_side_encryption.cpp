@@ -3536,4 +3536,25 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
     }
 }
 
+TEST_CASE("16. Rewrap. Case 2: RewrapManyDataKeyOpts.provider is not optional",
+          "[client_side_encryption]") {
+    instance::current();
+
+    if (!mongocxx::test_util::should_run_client_side_encryption_test()) {
+        return;
+    }
+
+    auto keyvault_client = mongocxx::client(mongocxx::uri(), test_util::add_test_server_api());
+    auto ce_opts = mongocxx::options::client_encryption();
+    ce_opts.key_vault_client(&keyvault_client);
+    ce_opts.key_vault_namespace({"keyvault", "datakeys"});
+    ce_opts.kms_providers(_make_kms_doc(true /* include_external */));
+
+    auto clientEncryption = mongocxx::client_encryption(ce_opts);
+    REQUIRE_THROWS_WITH(
+        clientEncryption.rewrap_many_datakey(
+            make_document(), mongocxx::options::rewrap_many_datakey().master_key(make_document())),
+        Catch::Contains("expected 'provider' to be set to identify type of 'master_key'"));
+}
+
 }  // namespace
