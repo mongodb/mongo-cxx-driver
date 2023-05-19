@@ -175,6 +175,9 @@ functions:
                     git clone git@github.com:mongodb-labs/drivers-evergreen-tools.git
                 fi
                 cd drivers-evergreen-tools
+                if [[ "${build_variant}" =~ "rhel9" ]]; then
+                    export SKIP_LEGACY_SHELL=1
+                fi
                 export DRIVERS_TOOLS=$(pwd)
                 if [ "Windows_NT" == "$OS" ]; then
                     export DRIVERS_TOOLS=$(cygpath -m $DRIVERS_TOOLS)
@@ -1222,6 +1225,52 @@ buildvariants:
     #######################################
     #         Linux Buildvariants         #
     #######################################
+    - name: rhel9-release-latest
+      display_name: "RHEL 9 Release (MongoDB Latest)"
+      expansions:
+          build_type: "Release"
+          tar_options: *linux_tar_options
+          extra_path: *linux_extra_path
+          cmake_flags: *linux_cmake_flags
+          mongodb_version: *version_latest
+          lib_dir: "lib64"
+      run_on:
+          - rhel90-large
+      tasks:
+          - name: compile_and_test_with_shared_libs
+          - name: compile_and_test_with_shared_libs_extra_alignment
+          - name: compile_and_test_with_shared_libs_cxx20
+          - name: compile_and_test_with_shared_libs_extra_alignment_cxx20
+          - name: compile_and_test_with_static_libs
+          - name: compile_and_test_with_static_libs_extra_alignment
+          - name: compile_and_test_with_shared_libs_replica_set
+          - name: build_example_with_add_subdirectory
+            distros:
+            - rhel90-large
+
+    - name: arm-rhel9-release-latest
+      display_name: "arm64 RHEL 9 Release (MongoDB Latest)"
+      expansions:
+          build_type: "Release"
+          tar_options: *linux_tar_options
+          extra_path: *linux_extra_path
+          cmake_flags: *linux_cmake_flags
+          mongodb_version: *version_latest
+          lib_dir: "lib64"
+      run_on:
+          - rhel90-arm64-large
+      tasks:
+          - name: compile_and_test_with_shared_libs
+          - name: compile_and_test_with_shared_libs_extra_alignment
+          - name: compile_and_test_with_shared_libs_cxx20
+          - name: compile_and_test_with_shared_libs_extra_alignment_cxx20
+          - name: compile_and_test_with_static_libs
+          - name: compile_and_test_with_static_libs_extra_alignment
+          - name: compile_and_test_with_shared_libs_replica_set
+          - name: build_example_with_add_subdirectory
+            distros:
+            - rhel90-arm64-large
+
     - name: debian11-release-latest
       display_name: "Debian 11 Release (MongoDB Latest)"
       expansions:
