@@ -354,15 +354,13 @@ functions:
           params:
               shell: bash
               working_dir: "mongo-cxx-driver"
+              include_expansions_in_env: ["distro_id"]
               script: |
                   set -o errexit
                   set -o pipefail
                   export BUILD_TYPE=${build_type}
                   export PATH="${extra_path}:$PATH"
                   export RUN_DISTCHECK=${RUN_DISTCHECK}
-                  # distro_id is needed by find-cmake-version.sh, but we don't
-                  # want to use add_expansions_to_env
-                  export distro_id=${distro_id}
 
                   ADDL_OPTS=${code_coverage_cmake_flags}
                   if [ "${USE_STATIC_LIBS}" ]; then
@@ -411,13 +409,11 @@ functions:
           params:
               shell: bash
               working_dir: "mongo-cxx-driver"
+              include_expansions_in_env: ["distro_id"]
               script: |
                   set -o errexit
                   set -o pipefail
 
-                  # distro_id is needed by find-cmake-version.sh, but we don't
-                  # want to use add_expansions_to_env
-                  export distro_id=${distro_id}
                   # Grabs the mongocryptd path
                   pushd ..
                   export MONGOCRYPTD_PATH=$(pwd)/
