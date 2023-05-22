@@ -101,21 +101,21 @@ class transaction::impl {
         libmongoc::transaction_opts_set_max_commit_time_ms(_transaction_opt_t.get(), ms.count());
     }
 
+    stdx::optional<std::chrono::milliseconds> max_commit_time_ms() const {
+        auto ms = libmongoc::transaction_opts_get_max_commit_time_ms(_transaction_opt_t.get());
+        if (!ms) {
 #if defined(__GNUC__) && (__cplusplus >= 201709L)
 // Silence false positive with g++ 10.2.1 on Debian 11.
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
 #endif
-    stdx::optional<std::chrono::milliseconds> max_commit_time_ms() const {
-        auto ms = libmongoc::transaction_opts_get_max_commit_time_ms(_transaction_opt_t.get());
-        if (!ms) {
             return {};
-        }
-        return {std::chrono::milliseconds{ms}};
-    }
 #if defined(__GNUC__) && (__cplusplus >= 201709L)
 #pragma GCC diagnostic pop
 #endif
+        }
+        return {std::chrono::milliseconds{ms}};
+    }
 
     mongoc_transaction_opt_t* get_transaction_opt_t() const noexcept {
         return _transaction_opt_t.get();
