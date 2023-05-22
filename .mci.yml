@@ -690,10 +690,6 @@ functions:
                   # API version to example clients, so example projects will fail when requireApiVersion
                   # is true.
                   if [[ -z "$MONGODB_API_VERSION" ]]; then
-                    if [ "${REQUIRED_CXX_STANDARD}" ]; then
-                      ADDL_OPTS="$ADDL_OPTS -DCMAKE_CXX_STANDARD=${REQUIRED_CXX_STANDARD} -DCMAKE_CXX_STANDARD_REQUIRED=ON"
-                      CXX_STANDARD=${REQUIRED_CXX_STANDARD}
-                    fi
                     echo "Building example projects..."
                     . "$PREFIX/.evergreen/scripts/find-cmake-latest.sh"
                     declare cmake_binary
@@ -872,6 +868,7 @@ tasks:
         - func: "test"
           vars:
               REQUIRED_CXX_STANDARD: 20
+              example_projects_cxx_standard: 20
 
     - name: compile_and_test_with_shared_libs_extra_alignment_cxx20
       commands:
@@ -888,6 +885,7 @@ tasks:
         - func: "test"
           vars:
               REQUIRED_CXX_STANDARD: 20
+              example_projects_cxx_standard: 20
 
     - name: compile_with_shared_libs
       commands:
