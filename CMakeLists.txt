@@ -43,7 +43,7 @@ endif()
 set(LIBMONGOC_REQUIRED_VERSION 1.22.1) # TODO: update to 1.24.0 once released.
 set(LIBMONGOC_REQUIRED_ABI_VERSION 1.0)
 
-set(NEED_DOWNLOAD_C_DRIVER false CACHE INTERNAL "")
+set(NEED_DOWNLOAD_C_DRIVER false INTERNAL "")
 if(TARGET mongoc_shared OR TARGET mongoc_static)
   # If these targets exist, then libmongoc has already been included as a project
   # sub-directory
@@ -84,13 +84,6 @@ if (NEED_DOWNLOAD_C_DRIVER)
     # Set the installation directory for mongo-c-driver
     set(MONGOC_INSTALL_DIR ${CMAKE_BINARY_DIR}/mongo-c-driver-install)
 
-    # Build mongo-c-driver using ExternalProject
-    ExternalProject_Add(mongo-c-driver-build
-        SOURCE_DIR ${mongo-c-driver_SOURCE_DIR}
-        BINARY_DIR ${CMAKE_BINARY_DIR}/mongo-c-driver-build
-        INSTALL_DIR ${MONGOC_INSTALL_DIR}
-        CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${MONGOC_INSTALL_DIR}
-    )
     file(REMOVE ${mongo-c-driver_SOURCE_DIR}/build/generate-uninstall.sh)
     file(REMOVE ${mongo-c-driver_SOURCE_DIR}/build/generate-uninstall.cmd)
 endif()
