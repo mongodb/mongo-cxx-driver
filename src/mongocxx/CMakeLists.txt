@@ -29,9 +29,6 @@ message ("mongocxx version: ${MONGOCXX_VERSION}")
 set(MONGOCXX_INLINE_NAMESPACE "v${MONGOCXX_ABI_VERSION}")
 set(MONGOCXX_HEADER_INSTALL_DIR "${CMAKE_INSTALL_INCLUDEDIR}/mongocxx/${MONGOCXX_INLINE_NAMESPACE}" CACHE INTERNAL "")
 
-set(LIBMONGOC_REQUIRED_VERSION 1.22.1) # TODO: update to 1.24.0 once released.
-set(LIBMONGOC_REQUIRED_ABI_VERSION 1.0)
-
 set(mongocxx_pkg_dep "")
 
 if(TARGET mongoc_shared OR TARGET mongoc_static)
@@ -69,7 +66,10 @@ else()
       find_package(libmongoc-${LIBMONGOC_REQUIRED_ABI_VERSION} ${LIBMONGOC_REQUIRED_VERSION} REQUIRED)
       message ("found libmongoc version ${MONGOC_VERSION}")
       set(libmongoc_target ${MONGOC_LIBRARIES})
-      set(libmongoc_include_directories ${MONGOC_INCLUDE_DIRS})
+      set(libmongoc_include_directories ${MONGOC_INCLUDE_DIRS}
+        ${MONGOC_INSTALL_DIR}/include/libmongoc-1.0/mongoc/
+        ${MONGOC_INSTALL_DIR}/include/libbson-1.0/bson/
+      )
       set(libmongoc_definitions ${MONGOC_DEFINITIONS})
       if(MONGOCXX_BUILD_STATIC)
         set(mongocxx_pkg_dep "find_dependency(libmongoc-1.0 REQUIRED)")
@@ -78,7 +78,10 @@ else()
       find_package(libmongoc-static-${LIBMONGOC_REQUIRED_ABI_VERSION} ${LIBMONGOC_REQUIRED_VERSION} REQUIRED)
       message ("found libmongoc version ${MONGOC_STATIC_VERSION}")
       set(libmongoc_target ${MONGOC_STATIC_LIBRARIES})
-      set(libmongoc_include_directories ${MONGOC_STATIC_INCLUDE_DIRS})
+      set(libmongoc_include_directories ${MONGOC_STATIC_INCLUDE_DIRS}
+        ${MONGOC_INSTALL_DIR}/include/libmongoc-1.0/mongoc/
+        ${MONGOC_INSTALL_DIR}/include/libbson-1.0/bson/
+      )
       set(libmongoc_definitions ${MONGOC_STATIC_DEFINITIONS})
       if(MONGOCXX_BUILD_STATIC)
         set(mongocxx_pkg_dep "find_dependency(libmongoc-static-1.0 REQUIRED)")

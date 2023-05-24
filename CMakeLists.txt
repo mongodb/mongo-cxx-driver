@@ -40,6 +40,61 @@ else()
   message(WARNING "Unknown compiler... recklessly proceeding without a version check")
 endif()
 
+set(LIBMONGOC_REQUIRED_VERSION 1.22.1) # TODO: update to 1.24.0 once released.
+set(LIBMONGOC_REQUIRED_ABI_VERSION 1.0)
+
+set(NEED_DOWNLOAD_C_DRIVER false CACHE INTERNAL "")
+if(TARGET mongoc_shared OR TARGET mongoc_static)
+  # If these targets exist, then libmongoc has already been included as a project
+  # sub-directory
+  message ("found libmongoc targets declared in current build scope; version not checked")
+
+  if(NOT MONGOCXX_LINK_WITH_STATIC_MONGOC)
+    set(libmongoc_target mongoc_shared)
+  else()
+    set(libmongoc_target mongoc_static)
+  endif()
+
+  if(MONGOCXX_BUILD_STATIC)
+    set(mongocxx_pkg_dep "find_dependency(mongoc-1.0 REQUIRED)")
+  endif()
+else()
+    find_package(mongoc-${LIBMONGOC_REQUIRED_ABI_VERSION} ${LIBMONGOC_REQUIRED_VERSION} QUIET)
+    if(mongoc-${LIBMONGOC_REQUIRED_ABI_VERSION}_FOUND)
+        message("already found libmongoc, don't need to download it.")
+    else()
+        set(NEED_DOWNLOAD_C_DRIVER true CACHE INTERNAL "")
+    endif()
+endif()
+
+if (${NEED_DOWNLOAD_C_DRIVER})
+    message("No Mongo C Driver path provided via CMAKE_PREFIX_PATH, will download a release from the internet.")
+    include(FetchContent)
+    include(ExternalProject)
+
+    # Declare mongo-c-driver as a dependency
+    FetchContent_Declare(
+      mongo-c-driver
+      GIT_REPOSITORY https://github.com/kkloberdanz/mongo-c-driver.git
+      GIT_TAG 1.24.0
+    )
+
+    FetchContent_MakeAvailable(mongo-c-driver)
+
+    # Set the installation directory for mongo-c-driver
+    set(MONGOC_INSTALL_DIR ${CMAKE_BINARY_DIR}/mongo-c-driver-install)
+
+    # Build mongo-c-driver using ExternalProject
+    ExternalProject_Add(mongo-c-driver-build
+        SOURCE_DIR ${mongo-c-driver_SOURCE_DIR}
+        BINARY_DIR ${CMAKE_BINARY_DIR}/mongo-c-driver-build
+        INSTALL_DIR ${MONGOC_INSTALL_DIR}
+        CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${MONGOC_INSTALL_DIR}
+    )
+    file(REMOVE ${mongo-c-driver_SOURCE_DIR}/build/generate-uninstall.sh)
+    file(REMOVE ${mongo-c-driver_SOURCE_DIR}/build/generate-uninstall.cmd)
+endif()
+
 # All of our target compilers support the deprecated
 # attribute. Normally, we would just let the GenerateExportHeader
 # subsystem do this via configure check, but there appears to be a

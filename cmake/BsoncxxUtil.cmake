@@ -62,6 +62,12 @@ function(bsoncxx_add_library TARGET OUTPUT_NAME LINK_TYPE)
         EXPORT_FILE_NAME config/export.hpp
         STATIC_DEFINE BSONCXX_STATIC
     )
+
+    if (${NEED_DOWNLOAD_C_DRIVER})
+        add_dependencies(${TARGET} mongo-c-driver-build)
+        target_include_directories(${TARGET} PRIVATE ${MONGOC_INSTALL_DIR}/include/libmongoc-1.0/mongoc/)
+        target_include_directories(${TARGET} PRIVATE ${MONGOC_INSTALL_DIR}/include/libbson-1.0/bson/)
+    endif()
 endfunction(bsoncxx_add_library)
 
 # Install the specified forms of the bsoncxx library (i.e., shared and/or static)
