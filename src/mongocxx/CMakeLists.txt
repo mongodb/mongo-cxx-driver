@@ -66,10 +66,6 @@ else()
       find_package(libmongoc-${LIBMONGOC_REQUIRED_ABI_VERSION} ${LIBMONGOC_REQUIRED_VERSION} REQUIRED)
       message ("found libmongoc version ${MONGOC_VERSION}")
       set(libmongoc_target ${MONGOC_LIBRARIES})
-      set(libmongoc_include_directories ${MONGOC_INCLUDE_DIRS}
-        ${MONGOC_INSTALL_DIR}/include/libmongoc-1.0/mongoc/
-        ${MONGOC_INSTALL_DIR}/include/libbson-1.0/bson/
-      )
       set(libmongoc_definitions ${MONGOC_DEFINITIONS})
       if(MONGOCXX_BUILD_STATIC)
         set(mongocxx_pkg_dep "find_dependency(libmongoc-1.0 REQUIRED)")
