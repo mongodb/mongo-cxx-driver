@@ -75,8 +75,8 @@ if (${NEED_DOWNLOAD_C_DRIVER})
     # Declare mongo-c-driver as a dependency
     FetchContent_Declare(
       mongo-c-driver
-      GIT_REPOSITORY https://github.com/kkloberdanz/mongo-c-driver.git
-      GIT_TAG 1.24.0
+      GIT_REPOSITORY https://github.com/mongodb/mongo-c-driver.git
+      GIT_TAG b9ca36ff8c64f12330326f080c725c5502294834
     )
 
     FetchContent_MakeAvailable(mongo-c-driver)
