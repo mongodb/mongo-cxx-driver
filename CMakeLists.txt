@@ -47,7 +47,7 @@ set(NEED_DOWNLOAD_C_DRIVER false CACHE INTERNAL "")
 if(TARGET mongoc_shared OR TARGET mongoc_static)
   # If these targets exist, then libmongoc has already been included as a project
   # sub-directory
-  message ("found libmongoc targets declared in current build scope; version not checked")
+  message (STATUS "Found libmongoc targets declared in current build scope; version not checked")
 
   if(NOT MONGOCXX_LINK_WITH_STATIC_MONGOC)
     set(libmongoc_target mongoc_shared)
