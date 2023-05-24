@@ -181,13 +181,6 @@ if (BUILD_TESTS STREQUAL "ON")
         ${spec_test_common}
         )
 
-    set (test_include_directories
-        ${libmongoc_include_directories}
-        ${MONGOC_INSTALL_DIR}/include/libmongoc-1.0/
-        ${MONGOC_INSTALL_DIR}/include/libbson-1.0/
-        ${MONGOC_INSTALL_DIR}/include/libbson-1.0/bson/
-        ${MONGOC_INSTALL_DIR}/include/libmongoc-1.0/mongoc/
-    )
 
     target_link_libraries(test_driver mongocxx_mocked ${libmongoc_target})
     target_link_libraries(test_logging mongocxx_mocked ${libmongoc_target})
