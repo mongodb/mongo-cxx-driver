@@ -40,7 +40,7 @@ else()
   message(WARNING "Unknown compiler... recklessly proceeding without a version check")
 endif()
 
-set(LIBMONGOC_REQUIRED_VERSION 1.22.1) # TODO: update to 1.24.0 once released.
+set(LIBMONGOC_REQUIRED_VERSION 1.22.1) # TODO (CXX-2696): update to 1.24.0 once released.
 set(LIBMONGOC_REQUIRED_ABI_VERSION 1.0)
 
 set(NEED_DOWNLOAD_C_DRIVER false)
