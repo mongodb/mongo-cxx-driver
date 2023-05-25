@@ -43,7 +43,7 @@ endif()
 set(LIBMONGOC_REQUIRED_VERSION 1.22.1) # TODO: update to 1.24.0 once released.
 set(LIBMONGOC_REQUIRED_ABI_VERSION 1.0)
 
-set(NEED_DOWNLOAD_C_DRIVER false CACHE INTERNAL "")
+set(NEED_DOWNLOAD_C_DRIVER false)
 if(TARGET mongoc_shared OR TARGET mongoc_static)
   # If these targets exist, then libmongoc has already been included as a project
   # sub-directory
