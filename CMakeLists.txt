@@ -85,6 +85,7 @@ if(NEED_DOWNLOAD_C_DRIVER)
     # Set the installation directory for mongo-c-driver
     set(MONGOC_INSTALL_DIR ${CMAKE_BINARY_DIR}/mongo-c-driver-install)
 
+    # These scripts are not needed, and cause the installation to freeze.
     file(REMOVE ${mongo-c-driver_SOURCE_DIR}/build/generate-uninstall.sh)
     file(REMOVE ${mongo-c-driver_SOURCE_DIR}/build/generate-uninstall.cmd)
 endif()
