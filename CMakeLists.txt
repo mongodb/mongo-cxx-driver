@@ -73,6 +73,10 @@ if(NEED_DOWNLOAD_C_DRIVER)
     include(FetchContent)
     include(ExternalProject)
 
+    set(libmongoc_target mongoc_static)
+    set(BUILD_SHARED_LIBS_WITH_STATIC_MONGOC ON CACHE INTERNAL "")
+    set(MONGOCXX_LINK_WITH_STATIC_MONGOC ON CACHE INTERNAL "")
+
     # Declare mongo-c-driver as a dependency
     FetchContent_Declare(
       mongo-c-driver
@@ -80,7 +84,11 @@ if(NEED_DOWNLOAD_C_DRIVER)
       GIT_TAG ${LIBMONGOC_DOWNLOAD_VERSION}
     )
 
-    FetchContent_MakeAvailable(mongo-c-driver)
+    FetchContent_GetProperties(mongo-c-driver)
+    if(NOT mongo-c-driver_POPULATED)
+      FetchContent_Populate(mongo-c-driver)
+      add_subdirectory(${mongo-c-driver_SOURCE_DIR} ${mongo-c-driver_BINARY_DIR} EXCLUDE_FROM_ALL)
+    endif()
 
     # Set the installation directory for mongo-c-driver
     set(MONGOC_INSTALL_DIR ${CMAKE_BINARY_DIR}/mongo-c-driver-install)
