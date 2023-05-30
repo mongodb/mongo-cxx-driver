@@ -87,10 +87,6 @@ if(NEED_DOWNLOAD_C_DRIVER)
       FetchContent_Populate(mongo-c-driver)
       add_subdirectory(${mongo-c-driver_SOURCE_DIR} ${mongo-c-driver_BINARY_DIR} EXCLUDE_FROM_ALL)
     endif()
-
-    # These scripts are not needed, and cause the installation to freeze.
-    file(REMOVE ${mongo-c-driver_SOURCE_DIR}/build/generate-uninstall.sh)
-    file(REMOVE ${mongo-c-driver_SOURCE_DIR}/build/generate-uninstall.cmd)
 endif()
 
 # All of our target compilers support the deprecated
