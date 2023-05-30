@@ -811,11 +811,10 @@ tasks:
     - name: clang-tidy
       commands:
         - func: "setup"
-        - func: "install_c_driver"
         - func: "compile"
         - func: "clang-tidy"
 
-    - name: compile_and_test_with_shared_libs
+    - name: preinstalled_c_driver
       commands:
         - func: "setup"
         - func: "start_mongod"
@@ -827,11 +826,21 @@ tasks:
         - func: "run_kms_servers"
         - func: "test"
 
+    - name: compile_and_test_with_shared_libs
+      commands:
+        - func: "setup"
+        - func: "start_mongod"
+        - func: "compile"
+          vars:
+              RUN_DISTCHECK: 1
+        - func: "clone_drivers-evergreen-tools"
+        - func: "run_kms_servers"
+        - func: "test"
+
     - name: compile_and_test_with_shared_libs_extra_alignment
       commands:
         - func: "setup"
         - func: "start_mongod"
-        - func: "install_c_driver"
           vars:
               BSON_EXTRA_ALIGNMENT: 1
         - func: "compile"
@@ -843,13 +852,11 @@ tasks:
       commands:
       - func: "setup"
       - func: "start_mongod"
-      - func: "install_c_driver"
       - func: "compile"
 
     - name: compile_without_tests
       commands:
       - func: "setup"
-      - func: "install_c_driver"
       - func: "compile"
         vars:
             ENABLE_TESTS: OFF
@@ -860,7 +867,6 @@ tasks:
         - func: "start_mongod"
           vars:
               AUTH: auth
-        - func: "install_c_driver"
         - func: "compile"
         - func: "test auth"
         - func: "test atlas connectivity"
@@ -869,7 +875,6 @@ tasks:
       commands:
         - func: "setup"
         - func: "start_mongod"
-        - func: "install_c_driver"
         - func: "compile"
           vars:
               USE_STATIC_LIBS: 1
@@ -884,7 +889,6 @@ tasks:
       commands:
         - func: "setup"
         - func: "start_mongod"
-        - func: "install_c_driver"
           vars:
               BSON_EXTRA_ALIGNMENT: 1
         - func: "compile"
@@ -902,7 +906,6 @@ tasks:
         - func: "start_mongod"
           vars:
               TOPOLOGY: "replica_set"
-        - func: "install_c_driver"
         - func: "compile"
           vars:
               RUN_DISTCHECK: 1
@@ -913,7 +916,6 @@ tasks:
     - name: uninstall_check
       commands:
       - func: "setup"
-      - func: "install_c_driver"
       - func: "compile"
       - command: expansions.update
         params:
@@ -933,7 +935,6 @@ tasks:
     - name: uninstall_check_windows
       commands:
       - func: "setup"
-      - func: "install_c_driver"
       - func: "compile"
       - command: expansions.update
         params:
@@ -1043,7 +1044,6 @@ tasks:
     - name: test_mongohouse
       commands:
         - func: "setup"
-        - func: "install_c_driver"
         - func: "compile"
         - func: "build_mongohouse"
         - func: "run_mongohouse"
@@ -1058,7 +1058,6 @@ tasks:
               # Authentication with versioned API should already be tested
               # in the C driver.
               AUTH: noauth
-        - func: "install_c_driver"
         - func: "compile"
         - func: "clone_drivers-evergreen-tools"
         - func: "run_kms_servers"
@@ -1073,7 +1072,6 @@ tasks:
           vars:
               ORCHESTRATION_FILE: versioned-api-testing.json
               AUTH: noauth
-        - func: "install_c_driver"
         - func: "compile"
         - func: "clone_drivers-evergreen-tools"
         - func: "run_kms_servers"
@@ -1209,6 +1207,7 @@ buildvariants:
           - name: compile_and_test_with_static_libs_extra_alignment
           - name: compile_and_test_with_shared_libs_replica_set
           - name: build_example_with_add_subdirectory
+          - name: preinstalled_c_driver
             distros:
             - debian11-large
           - name: uninstall_check
@@ -1284,6 +1283,7 @@ buildvariants:
           - name: compile_and_test_with_static_libs
           - name: compile_and_test_with_static_libs_extra_alignment
           - name: compile_and_test_with_shared_libs_replica_set
+          - name: preinstalled_c_driver
           - name: build_example_with_add_subdirectory
             distros:
             - ubuntu2004-large
