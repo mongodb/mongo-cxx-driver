@@ -205,6 +205,14 @@ pushed.
 - Checkout the master branch. Push the commit containing changes to `etc/` and
   `docs/`. This may require pushing the commit to a fork of the C++ Driver
   repository and creating a pull request.
+- Edit the `Installing the MongoDB C driver` section of
+  `docs/content/mongocxx-v3/installation/advanced.md` to reflect to libmongoc
+  requirements.
+- Edit `docs/content/mongocxx-v3/installation/linux.md`,
+  `docs/content/mongocxx-v3/installation/macos.md` and
+  `docs/content/mongocxx-v3/installation/windows.md`.
+   If the release was not a release candidate, update `Step 3` to reflect the
+   new latest stable version to download.
 
 ## Homebrew
 This requires a macOS machine. 
