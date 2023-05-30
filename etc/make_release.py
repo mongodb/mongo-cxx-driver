@@ -123,6 +123,8 @@ def release(jira_creds_file,
     Perform the steps associated with the release.
     """
 
+    check_libmongoc_version()
+
     # Read Jira credentials and GitHub token first, to check that
     # user has proper credentials before embarking on lengthy builds.
     jira_options = {'server': 'https://jira.mongodb.org'}
@@ -219,6 +221,43 @@ def release(jira_creds_file,
     else:
         create_github_release_draft(gh_repo, release_tag, is_pre_release, dist_file,
                                     release_notes_text, output_file, quiet)
+
+
+def check_libmongoc_version():
+    got_LIBMONGOC_REQUIRED_VERSION = None
+    got_LIBMONGOC_DOWNLOAD_VERSION = None
+    with open("CMakeLists.txt", "r") as cmakelists:
+        for line in cmakelists:
+            match = re.match(
+                r"set\(LIBMONGOC_REQUIRED_VERSION\s+(.*?)\)", line)
+            if match:
+                if 'TODO' in line:
+                    click.echo(
+                        'Found TODO on LIBMONGOC_REQUIRED_VERSION line in CMakeLists.txt: {}'.format(line))
+                    sys.exit(1)
+                got_LIBMONGOC_REQUIRED_VERSION = match.group(1)
+                continue
+            match = re.match(
+                r"set\(LIBMONGOC_DOWNLOAD_VERSION\s+(.*?)\)", line)
+            if match:
+                if 'TODO' in line:
+                    click.echo(
+                        'Found TODO on LIBMONGOC_DOWNLOAD_VERSION line in CMakeLists.txt: {}'.format(line))
+                    sys.exit(1)
+                got_LIBMONGOC_DOWNLOAD_VERSION = match.group(1)
+                continue
+    assert got_LIBMONGOC_DOWNLOAD_VERSION
+    assert got_LIBMONGOC_REQUIRED_VERSION
+    libmongoc_version_pattern = r'[0-9]+\.[0-9]+\.[0-9]+'
+    if not re.match (libmongoc_version_pattern, got_LIBMONGOC_DOWNLOAD_VERSION):
+        click.echo("Expected LIBMONGOC_DOWNLOAD_VERSION to match: {}, got: {}".format(
+            libmongoc_version_pattern, got_LIBMONGOC_DOWNLOAD_VERSION))
+        sys.exit(1)
+    if not re.match (libmongoc_version_pattern, got_LIBMONGOC_REQUIRED_VERSION):
+        click.echo("Expected LIBMONGOC_REQUIRED_VERSION to match: {}, got: {}".format(
+            libmongoc_version_pattern, got_LIBMONGOC_REQUIRED_VERSION))
+        sys.exit(1)
+
 
 # pylint: enable=too-many-arguments,too-many-locals,too-many-branches,too-many-statements
 def is_valid_remote(remote):
