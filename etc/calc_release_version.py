@@ -196,16 +196,19 @@ def process_and_sort_tags(tags):
     for tag in raw_tags:
         release_tag_match = RELEASE_TAG_RE.match(tag)
         if release_tag_match and not release_tag_match.group('verpre'):
-            processed_and_sorted_tags.append(tag)
+            # strip leading "r" for version comparison
+            processed_and_sorted_tags.append(tag[1:])
     # collect together final release tags and pre-release tags for
     # versions that have not yet had a final release
     for tag in raw_tags:
         tag_parts = tag.split('-')
         if len(tag_parts) >= 2 and tag_parts[0] not in processed_and_sorted_tags:
-            processed_and_sorted_tags.append(tag)
+            # strip leading "r" for version comparison
+            processed_and_sorted_tags.append(tag[1:])
     processed_and_sorted_tags.sort(key=Version)
 
-    return processed_and_sorted_tags
+    # restore leading "r" so that constructed tag matches existing pattern
+    return ["r" + t for t in processed_and_sorted_tags]
 
 def main():
     """
