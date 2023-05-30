@@ -73,9 +73,7 @@ if(NEED_DOWNLOAD_C_DRIVER)
     include(FetchContent)
     include(ExternalProject)
 
-    set(libmongoc_target mongoc_static)
     set(BUILD_SHARED_LIBS_WITH_STATIC_MONGOC ON CACHE INTERNAL "")
-    set(MONGOCXX_LINK_WITH_STATIC_MONGOC ON CACHE INTERNAL "")
 
     # Declare mongo-c-driver as a dependency
     FetchContent_Declare(
