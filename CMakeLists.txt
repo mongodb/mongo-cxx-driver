@@ -82,6 +82,8 @@ if(NEED_DOWNLOAD_C_DRIVER)
       GIT_TAG ${LIBMONGOC_DOWNLOAD_VERSION}
     )
 
+    set (CMAKE_C_FLAGS -Wno-error)
+
     FetchContent_GetProperties(mongo-c-driver)
     if(NOT mongo-c-driver_POPULATED)
       FetchContent_Populate(mongo-c-driver)
