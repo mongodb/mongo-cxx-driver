@@ -954,6 +954,7 @@ tasks:
     - name: build_example_with_add_subdirectory
       commands:
       - func: "setup"
+      - func: "install_c_driver"
       - func: "start_mongod"
       - command: shell.exec
         type: test
