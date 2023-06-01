@@ -39,11 +39,17 @@
      // Because REQUIREs trigger GCC's -Wparentheses, and because still
      // supported version of g++ have only buggy support for _Pragmas,
      // Wparentheses have to be suppressed globally.
+#if !defined(__has_warning) || __has_warning("-Wparantheses")
 #    pragma GCC diagnostic ignored "-Wparentheses" // See #674 for details
+#endif
 
 #    pragma GCC diagnostic push
+#if !defined(__has_warning) || __has_warning("-Wunused-variable")
 #    pragma GCC diagnostic ignored "-Wunused-variable"
+#endif
+#if !defined(__has_warning) || __has_warning("-Wpadded")
 #    pragma GCC diagnostic ignored "-Wpadded"
+#endif
 #endif
 // end catch_suppress_warnings.h
 #if defined(CATCH_CONFIG_MAIN) || defined(CATCH_CONFIG_RUNNER)
@@ -10877,7 +10883,9 @@ namespace Catch {
 // that.
 #if defined(__GNUC__)
 #    pragma GCC diagnostic push
+#if !defined(__has_warning) || __has_warning("-Wmissing-field-initializers")
 #    pragma GCC diagnostic ignored "-Wmissing-field-initializers"
+#endif
 #endif
 
     static char* altStackMem = nullptr;

@@ -18,7 +18,9 @@
 #pragma clang diagnostic ignored "-Wfloat-equal"
 #elif defined(__GNUC__)
 #pragma GCC diagnostic push
+#if !defined(__has_warning) || __has_warning("-Wfloat-equal")
 #pragma GCC diagnostic ignored "-Wfloat-equal"
+#endif
 #endif
 
 #include <chrono>

@@ -107,7 +107,9 @@ class transaction::impl {
 #if defined(__GNUC__) && (__cplusplus >= 201709L)
 // Silence false positive with g++ 10.2.1 on Debian 11.
 #pragma GCC diagnostic push
+#if !defined(__has_warning) || __has_warning("-Wmaybe-uninitialized")
 #pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
+#endif
 #endif
             return {};
 #if defined(__GNUC__) && (__cplusplus >= 201709L)

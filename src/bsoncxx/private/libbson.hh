@@ -19,7 +19,9 @@
 #pragma clang diagnostic ignored "-Wconversion"
 #elif defined(__GNUC__)
 #pragma GCC diagnostic push
+#if !defined(__has_warning) || __has_warning("-Wconversion")
 #pragma GCC diagnostic ignored "-Wconversion"
+#endif
 #elif (_MSC_VER)
 // TODO: CXX-1366 Disable MSVC warnings for libbson
 #endif

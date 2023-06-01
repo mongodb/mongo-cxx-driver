@@ -19,7 +19,9 @@
 #pragma clang diagnostic ignored "-Wconversion"
 #elif defined(__GNUC__)
 #pragma GCC diagnostic push
+#if !defined(__has_warning) || __has_warning("-Wconversion")
 #pragma GCC diagnostic ignored "-Wconversion"
+#endif
 #elif (_MSC_VER)
 // TODO: CXX-1366 Disable MSVC warnings for libmongoc
 #endif
@@ -51,7 +53,9 @@ namespace libmongoc {
 // and considers them part of the type, and then emits a silly
 // diagnostic stating that the attribute was ignored.
 #pragma GCC diagnostic push
+#if !defined(__has_warning) || __has_warning("-Wignored-attributes")
 #pragma GCC diagnostic ignored "-Wignored-attributes"
+#endif
 #endif
 
 #define MONGOCXX_LIBMONGOC_SYMBOL(name) \

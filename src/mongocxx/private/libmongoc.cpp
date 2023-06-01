@@ -25,7 +25,9 @@ namespace libmongoc {
 #if defined(__GNUC__) && (__GNUC__ >= 6) && !defined(__clang__)
 // See libmongoc.hh for details on this diagnostic suppression
 #pragma GCC diagnostic push
+#if !defined(__has_warning) || __has_warning("-Wignored-attributes")
 #pragma GCC diagnostic ignored "-Wignored-attributes"
+#endif
 #endif
 
 #define MONGOCXX_LIBMONGOC_SYMBOL(name)               \
