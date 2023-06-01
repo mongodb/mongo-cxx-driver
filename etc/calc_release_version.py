@@ -185,7 +185,7 @@ def get_branch_tags(active_branch_name):
 def process_and_sort_tags(tags):
     """
     Given a string (as returned from get_branch_tags), return a sorted list of
-    zero or more tags (sorted based on the LooseVersion comparison) which meet
+    zero or more tags (sorted based on the Version comparison) which meet
     the following criteria:
         - a final release tag (i.e., r3.x.y without any pre-release suffix)
         - a pre-release tag which is not superseded by a release tag (i.e.,
