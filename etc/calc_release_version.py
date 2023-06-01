@@ -26,14 +26,19 @@ import datetime
 import re
 import subprocess
 import sys
-if sys.version_info < (3, 9):
-    from distutils.version import LooseVersion as Version
-    from distutils.version import LooseVersion as parse_version
-else:
-    # on newer versions of Python use setuptools rather than distutils
-    # (which has been deprecated)
-    from pkg_resources.extern.packaging.version import Version
-    from pkg_resources import parse_version
+try:
+    # Prefer newer `packaging` over deprecated packages.
+    from packaging.version import Version as Version
+    from packaging.version import parse as parse_version
+except ImportError:
+    # Fallback to deprecated pkg_resources.
+    try:
+        from pkg_resources.extern.packaging.version import Version
+        from pkg_resources import parse_version
+    except ImportError:
+        # Fallback to deprecated distutils.
+        from distutils.version import LooseVersion as Version
+        from distutils.version import LooseVersion as parse_version
 
 DEBUG = len(sys.argv) > 1 and '-d' in sys.argv
 if DEBUG:
