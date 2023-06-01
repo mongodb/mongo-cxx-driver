@@ -206,7 +206,7 @@ pushed.
   `docs/`. This may require pushing the commit to a fork of the C++ Driver
   repository and creating a pull request.
 - Edit the `Installing the MongoDB C driver` section of
-  `docs/content/mongocxx-v3/installation/advanced.md` to reflect to libmongoc
+  `docs/content/mongocxx-v3/installation/advanced.md` to reflect libmongoc
   requirements.
 - Edit `docs/content/mongocxx-v3/installation/linux.md`,
   `docs/content/mongocxx-v3/installation/macos.md` and
