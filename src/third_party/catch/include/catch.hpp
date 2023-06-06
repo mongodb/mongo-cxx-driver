@@ -10875,7 +10875,7 @@ namespace Catch {
 // Older GCCs trigger -Wmissing-field-initializers for T foo = {}
 // which is zero initialization, but not explicit. We want to avoid
 // that.
-#if defined(__GNUC__)
+#if !defined(__clang__) && defined(__GNUC__)
 #    pragma GCC diagnostic push
 #    pragma GCC diagnostic ignored "-Wmissing-field-initializers"
 #endif
