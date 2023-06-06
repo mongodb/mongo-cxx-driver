@@ -21,6 +21,7 @@ Currently, no drivers guarantee API or ABI stability.
 
 | mongocxx                                     |
 | ---------------------------------------------|
+| [mongocxx-3.7.2](../mongocxx-3.7.2)          |
 | [mongocxx-3.7.1](../mongocxx-3.7.1)          |
 | [mongocxx-3.7.0](../mongocxx-3.7.0)          |
 | [mongocxx-3.6.7](../mongocxx-3.6.7)          |
