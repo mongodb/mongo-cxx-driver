@@ -1407,77 +1407,77 @@ synchronize them individually, that is unsafe as they will concurrently
 modify internal structures of the <code>client</code>. The same is true if you copy a
 child object.</p>
 <h2 id="never-do-this">Never do this</h2>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span>mongocxx<span style="color:#f92672">::</span>instance instance{};
-</span></span><span style="display:flex;"><span>mongocxx<span style="color:#f92672">::</span>uri uri{};
-</span></span><span style="display:flex;"><span>mongocxx<span style="color:#f92672">::</span>client c{uri};
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">auto</span> db1 <span style="color:#f92672">=</span> c[<span style="color:#e6db74">&#34;db1&#34;</span>];
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">auto</span> db2 <span style="color:#f92672">=</span> c[<span style="color:#e6db74">&#34;db2&#34;</span>];
-</span></span><span style="display:flex;"><span>std<span style="color:#f92672">::</span>mutex db1_mtx{};
-</span></span><span style="display:flex;"><span>std<span style="color:#f92672">::</span>mutex db2_mtx{};
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">auto</span> threadfunc <span style="color:#f92672">=</span> [](mongocxx<span style="color:#f92672">::</span>database<span style="color:#f92672">&amp;</span> db, std<span style="color:#f92672">::</span>mutex<span style="color:#f92672">&amp;</span> mtx) {
-</span></span><span style="display:flex;"><span>  mtx.lock();
-</span></span><span style="display:flex;"><span>  db[<span style="color:#e6db74">&#34;col&#34;</span>].insert_one({});
-</span></span><span style="display:flex;"><span>  mtx.unlock();
-</span></span><span style="display:flex;"><span>};
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">// BAD! These two databases are individually synchronized, but they are derived from the same
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// client, so they can only be accessed by one thread at a time
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>std<span style="color:#f92672">::</span><span style="color:#66d9ef">thread</span> t1([<span style="color:#f92672">&amp;</span>]() { threadfunc(db1, db1_mtx); threadfunc(db2, db2_mtx); });
-</span></span><span style="display:flex;"><span>std<span style="color:#f92672">::</span><span style="color:#66d9ef">thread</span> t2([<span style="color:#f92672">&amp;</span>]() { threadfunc(db2, db2_mtx); threadfunc(db1, db1_mtx); });
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>t1.join();
-</span></span><span style="display:flex;"><span>t2.join();
-</span></span></code></pre></div><p>In the above example, even though the two databases are individually
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">mongocxx<span style="color:#f92672">::</span>instance instance{};
+mongocxx<span style="color:#f92672">::</span>uri uri{};
+mongocxx<span style="color:#f92672">::</span>client c{uri};
+<span style="color:#66d9ef">auto</span> db1 <span style="color:#f92672">=</span> c[<span style="color:#e6db74">&#34;db1&#34;</span>];
+<span style="color:#66d9ef">auto</span> db2 <span style="color:#f92672">=</span> c[<span style="color:#e6db74">&#34;db2&#34;</span>];
+std<span style="color:#f92672">::</span>mutex db1_mtx{};
+std<span style="color:#f92672">::</span>mutex db2_mtx{};
+
+<span style="color:#66d9ef">auto</span> threadfunc <span style="color:#f92672">=</span> [](mongocxx<span style="color:#f92672">::</span>database<span style="color:#f92672">&amp;</span> db, std<span style="color:#f92672">::</span>mutex<span style="color:#f92672">&amp;</span> mtx) {
+  mtx.lock();
+  db[<span style="color:#e6db74">&#34;col&#34;</span>].insert_one({});
+  mtx.unlock();
+};
+
+<span style="color:#75715e">// BAD! These two databases are individually synchronized, but they are derived from the same
+</span><span style="color:#75715e">// client, so they can only be accessed by one thread at a time
+</span><span style="color:#75715e"></span>std<span style="color:#f92672">::</span><span style="color:#66d9ef">thread</span> t1([<span style="color:#f92672">&amp;</span>]() { threadfunc(db1, db1_mtx); threadfunc(db2, db2_mtx); });
+std<span style="color:#f92672">::</span><span style="color:#66d9ef">thread</span> t2([<span style="color:#f92672">&amp;</span>]() { threadfunc(db2, db2_mtx); threadfunc(db1, db1_mtx); });
+
+t1.join();
+t2.join();
+</code></pre></div><p>In the above example, even though the two databases are individually
 synchronized, they are derived from the same client. There is shared state
 inside the library that is now being modified without synchronization. The
 same problem occurs if <code>db2</code> is a copy of <code>db1</code>.</p>
 <h2 id="a-better-version">A better version</h2>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span>mongocxx<span style="color:#f92672">::</span>instance instance{};
-</span></span><span style="display:flex;"><span>mongocxx<span style="color:#f92672">::</span>uri uri{};
-</span></span><span style="display:flex;"><span>mongocxx<span style="color:#f92672">::</span>client c1{uri};
-</span></span><span style="display:flex;"><span>mongocxx<span style="color:#f92672">::</span>client c2{uri};
-</span></span><span style="display:flex;"><span>std<span style="color:#f92672">::</span>mutex c1_mtx{};
-</span></span><span style="display:flex;"><span>std<span style="color:#f92672">::</span>mutex c2_mtx{};
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">auto</span> threadfunc <span style="color:#f92672">=</span> [](std<span style="color:#f92672">::</span>string dbname, mongocxx<span style="color:#f92672">::</span>client<span style="color:#f92672">&amp;</span> client, std<span style="color:#f92672">::</span>mutex<span style="color:#f92672">&amp;</span> mtx) {
-</span></span><span style="display:flex;"><span>  mtx.lock();
-</span></span><span style="display:flex;"><span>  client[dbname][<span style="color:#e6db74">&#34;col&#34;</span>].insert_one({});
-</span></span><span style="display:flex;"><span>  mtx.unlock();
-</span></span><span style="display:flex;"><span>};
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">// These two clients are individually synchronized, so it is safe to share them between
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// threads.
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>std<span style="color:#f92672">::</span><span style="color:#66d9ef">thread</span> t1([<span style="color:#f92672">&amp;</span>]() { threadfunc(<span style="color:#e6db74">&#34;db1&#34;</span>, c1, c1_mtx); threadfunc(<span style="color:#e6db74">&#34;db2&#34;</span>, c2, c2_mtx); });
-</span></span><span style="display:flex;"><span>std<span style="color:#f92672">::</span><span style="color:#66d9ef">thread</span> t2([<span style="color:#f92672">&amp;</span>]() { threadfunc(<span style="color:#e6db74">&#34;db2&#34;</span>, c2, c2_mtx); threadfunc(<span style="color:#e6db74">&#34;db1&#34;</span>, c1, c1_mtx); });
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>t1.join();
-</span></span><span style="display:flex;"><span>t2.join();
-</span></span></code></pre></div><h2 id="the-best-version">The best version</h2>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span>mongocxx<span style="color:#f92672">::</span>instance instance{};
-</span></span><span style="display:flex;"><span>mongocxx<span style="color:#f92672">::</span>pool pool{mongocxx<span style="color:#f92672">::</span>uri{}};
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">auto</span> threadfunc <span style="color:#f92672">=</span> [](mongocxx<span style="color:#f92672">::</span>client<span style="color:#f92672">&amp;</span> client, std<span style="color:#f92672">::</span>string dbname) {
-</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">auto</span> col <span style="color:#f92672">=</span> client[dbname][<span style="color:#e6db74">&#34;col&#34;</span>].insert_one({});
-</span></span><span style="display:flex;"><span>};
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">// Great! Using the pool allows the clients to be synchronized while sharing only one
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// background monitoring thread.
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>std<span style="color:#f92672">::</span><span style="color:#66d9ef">thread</span> t1 ([<span style="color:#f92672">&amp;</span>]() {
-</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">auto</span> c <span style="color:#f92672">=</span> pool.acquire();
-</span></span><span style="display:flex;"><span>  threadfunc(<span style="color:#f92672">*</span>c, <span style="color:#e6db74">&#34;db1&#34;</span>);
-</span></span><span style="display:flex;"><span>  threadfunc(<span style="color:#f92672">*</span>c, <span style="color:#e6db74">&#34;db2&#34;</span>);
-</span></span><span style="display:flex;"><span>});
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>std<span style="color:#f92672">::</span><span style="color:#66d9ef">thread</span> t2 ([<span style="color:#f92672">&amp;</span>]() {
-</span></span><span style="display:flex;"><span>  <span style="color:#66d9ef">auto</span> c <span style="color:#f92672">=</span> pool.acquire();
-</span></span><span style="display:flex;"><span>  threadfunc(<span style="color:#f92672">*</span>c, <span style="color:#e6db74">&#34;db2&#34;</span>);
-</span></span><span style="display:flex;"><span>  threadfunc(<span style="color:#f92672">*</span>c, <span style="color:#e6db74">&#34;db1&#34;</span>);
-</span></span><span style="display:flex;"><span>});
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>t1.join();
-</span></span><span style="display:flex;"><span>t2.join();
-</span></span></code></pre></div><p>In most programs, clients will be long lived - so it is less of a hassle (and
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">mongocxx<span style="color:#f92672">::</span>instance instance{};
+mongocxx<span style="color:#f92672">::</span>uri uri{};
+mongocxx<span style="color:#f92672">::</span>client c1{uri};
+mongocxx<span style="color:#f92672">::</span>client c2{uri};
+std<span style="color:#f92672">::</span>mutex c1_mtx{};
+std<span style="color:#f92672">::</span>mutex c2_mtx{};
+
+<span style="color:#66d9ef">auto</span> threadfunc <span style="color:#f92672">=</span> [](std<span style="color:#f92672">::</span>string dbname, mongocxx<span style="color:#f92672">::</span>client<span style="color:#f92672">&amp;</span> client, std<span style="color:#f92672">::</span>mutex<span style="color:#f92672">&amp;</span> mtx) {
+  mtx.lock();
+  client[dbname][<span style="color:#e6db74">&#34;col&#34;</span>].insert_one({});
+  mtx.unlock();
+};
+
+<span style="color:#75715e">// These two clients are individually synchronized, so it is safe to share them between
+</span><span style="color:#75715e">// threads.
+</span><span style="color:#75715e"></span>std<span style="color:#f92672">::</span><span style="color:#66d9ef">thread</span> t1([<span style="color:#f92672">&amp;</span>]() { threadfunc(<span style="color:#e6db74">&#34;db1&#34;</span>, c1, c1_mtx); threadfunc(<span style="color:#e6db74">&#34;db2&#34;</span>, c2, c2_mtx); });
+std<span style="color:#f92672">::</span><span style="color:#66d9ef">thread</span> t2([<span style="color:#f92672">&amp;</span>]() { threadfunc(<span style="color:#e6db74">&#34;db2&#34;</span>, c2, c2_mtx); threadfunc(<span style="color:#e6db74">&#34;db1&#34;</span>, c1, c1_mtx); });
+
+t1.join();
+t2.join();
+</code></pre></div><h2 id="the-best-version">The best version</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">mongocxx<span style="color:#f92672">::</span>instance instance{};
+mongocxx<span style="color:#f92672">::</span>pool pool{mongocxx<span style="color:#f92672">::</span>uri{}};
+
+<span style="color:#66d9ef">auto</span> threadfunc <span style="color:#f92672">=</span> [](mongocxx<span style="color:#f92672">::</span>client<span style="color:#f92672">&amp;</span> client, std<span style="color:#f92672">::</span>string dbname) {
+  <span style="color:#66d9ef">auto</span> col <span style="color:#f92672">=</span> client[dbname][<span style="color:#e6db74">&#34;col&#34;</span>].insert_one({});
+};
+
+<span style="color:#75715e">// Great! Using the pool allows the clients to be synchronized while sharing only one
+</span><span style="color:#75715e">// background monitoring thread.
+</span><span style="color:#75715e"></span>std<span style="color:#f92672">::</span><span style="color:#66d9ef">thread</span> t1 ([<span style="color:#f92672">&amp;</span>]() {
+  <span style="color:#66d9ef">auto</span> c <span style="color:#f92672">=</span> pool.acquire();
+  threadfunc(<span style="color:#f92672">*</span>c, <span style="color:#e6db74">&#34;db1&#34;</span>);
+  threadfunc(<span style="color:#f92672">*</span>c, <span style="color:#e6db74">&#34;db2&#34;</span>);
+});
+
+std<span style="color:#f92672">::</span><span style="color:#66d9ef">thread</span> t2 ([<span style="color:#f92672">&amp;</span>]() {
+  <span style="color:#66d9ef">auto</span> c <span style="color:#f92672">=</span> pool.acquire();
+  threadfunc(<span style="color:#f92672">*</span>c, <span style="color:#e6db74">&#34;db2&#34;</span>);
+  threadfunc(<span style="color:#f92672">*</span>c, <span style="color:#e6db74">&#34;db1&#34;</span>);
+});
+
+t1.join();
+t2.join();
+</code></pre></div><p>In most programs, clients will be long lived - so it is less of a hassle (and
 more performant) to make one per-thread. Obviously in this contrived example,
 there&rsquo;s quite a bit of overhead because we&rsquo;re doing so little work with each
 client - but in a real program this is the best solution.</p>

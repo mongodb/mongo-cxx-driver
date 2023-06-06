@@ -14,7 +14,7 @@
       
       <guid>http://mongocxx.org/mongocxx-v3/installation/windows/</guid>
       <description>Step 1: Install the latest version of the MongoDB C driver. The mongocxx driver builds on top of the MongoDB C driver.
-For mongocxx-3.7.x, libmongoc 1.22.1 or later is required. For mongocxx-3.6.x, libmongoc 1.17.0 or later is required. For mongocxx-3.5.x, libmongoc 1.15.0 or later is required. For mongocxx-3.4.x, libmongoc 1.13.0 or later is required. For mongocxx-3.3.x, libmongoc 1.10.1 or later is required. For mongocxx-3.2.x, libmongoc 1.9.2 or later is required. For mongocxx-3.</description>
+ For mongocxx-3.7.x, libmongoc 1.22.1 or later is required. For mongocxx-3.6.x, libmongoc 1.17.0 or later is required. For mongocxx-3.5.x, libmongoc 1.15.0 or later is required. For mongocxx-3.4.x, libmongoc 1.13.0 or later is required. For mongocxx-3.3.x, libmongoc 1.10.1 or later is required. For mongocxx-3.2.x, libmongoc 1.9.2 or later is required.</description>
     </item>
     
     <item>
@@ -24,7 +24,7 @@ For mongocxx-3.7.x, libmongoc 1.22.1 or later is required. For mongocxx-3.6.x, l
       
       <guid>http://mongocxx.org/mongocxx-v3/installation/macos/</guid>
       <description>Step 1: Install the latest version of the MongoDB C driver. The mongocxx driver builds on top of the MongoDB C driver.
-For mongocxx-3.7.x, libmongoc 1.22.1 or later is required. For mongocxx-3.6.x, libmongoc 1.17.0 or later is required. For mongocxx-3.5.x, libmongoc 1.15.0 or later is required. For mongocxx-3.4.x, libmongoc 1.13.0 or later is required. For mongocxx-3.3.x, libmongoc 1.10.1 or later is required. For mongocxx-3.2.x, libmongoc 1.9.2 or later is required. For mongocxx-3.</description>
+ For mongocxx-3.7.x, libmongoc 1.22.1 or later is required. For mongocxx-3.6.x, libmongoc 1.17.0 or later is required. For mongocxx-3.5.x, libmongoc 1.15.0 or later is required. For mongocxx-3.4.x, libmongoc 1.13.0 or later is required. For mongocxx-3.3.x, libmongoc 1.10.1 or later is required. For mongocxx-3.2.x, libmongoc 1.9.2 or later is required.</description>
     </item>
     
     <item>
@@ -34,7 +34,7 @@ For mongocxx-3.7.x, libmongoc 1.22.1 or later is required. For mongocxx-3.6.x, l
       
       <guid>http://mongocxx.org/mongocxx-v3/installation/linux/</guid>
       <description>Step 1: Install the latest version of the MongoDB C driver. The mongocxx driver builds on top of the MongoDB C driver.
-For mongocxx-3.7.x, libmongoc 1.22.1 or later is required. For mongocxx-3.6.x, libmongoc 1.17.0 or later is required. For mongocxx-3.5.x, libmongoc 1.15.0 or later is required. For mongocxx-3.4.x, libmongoc 1.13.0 or later is required. For mongocxx-3.3.x, libmongoc 1.10.1 or later is required. For mongocxx-3.2.x, libmongoc 1.9.2 or later is required. For mongocxx-3.</description>
+ For mongocxx-3.7.x, libmongoc 1.22.1 or later is required. For mongocxx-3.6.x, libmongoc 1.17.0 or later is required. For mongocxx-3.5.x, libmongoc 1.15.0 or later is required. For mongocxx-3.4.x, libmongoc 1.13.0 or later is required. For mongocxx-3.3.x, libmongoc 1.10.1 or later is required. For mongocxx-3.2.x, libmongoc 1.9.2 or later is required.</description>
     </item>
     
     <item>
@@ -44,7 +44,7 @@ For mongocxx-3.7.x, libmongoc 1.22.1 or later is required. For mongocxx-3.6.x, l
       
       <guid>http://mongocxx.org/mongocxx-v3/installation/advanced/</guid>
       <description>Additional Options for Integrators In the event that you are building the BSON C++ library and/or the C++ driver to embed with other components and you wish to avoid the potential for collision with components installed from a standard build or from a distribution package manager, you can make use of the BSONCXX_OUTPUT_BASENAME and MONGOCXX_OUTPUT_BASENAME options to cmake.
-cmake .. \ -DBSONCXX_OUTPUT_BASENAME=custom_bsoncxx \ -DMONGOCXX_OUTPUT_BASENAME=custom_mongocxx The above command would produce libraries named libcustom_bsoncxx.</description>
+cmake .. \  -DBSONCXX_OUTPUT_BASENAME=custom_bsoncxx \  -DMONGOCXX_OUTPUT_BASENAME=custom_mongocxx The above command would produce libraries named libcustom_bsoncxx.</description>
     </item>
     
     <item>
@@ -62,7 +62,7 @@ cmake .. \ -DBSONCXX_OUTPUT_BASENAME=custom_bsoncxx \ -DMONGOCXX_OUTPUT_BASENAME
       <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
       
       <guid>http://mongocxx.org/mongocxx-v3/api-abi-versioning/</guid>
-      <description>API Versioning We use semantic versioning. bsoncxx and mongocxx both define corresponding CMake variables for MAJOR, MINOR, and PATCH. ABI Versioning Both bsoncxx and mongocxx both have a single scalar ABI version. Only bump ABI version on incompatible ABI change (not for ABI additions). We stay on ABI version _noabi (without bumping for incompatible changes) until ABI is stable. Parallel Header Installation For mongocxx, install all headers to $PREFIX/mongocxx/v$ABI/. For bsoncxx, install all headers to $PREFIX/bsoncxx/v$ABI/.</description>
+      <description>API Versioning  We use semantic versioning. bsoncxx and mongocxx both define corresponding CMake variables for MAJOR, MINOR, and PATCH.  ABI Versioning  Both bsoncxx and mongocxx both have a single scalar ABI version. Only bump ABI version on incompatible ABI change (not for ABI additions). We stay on ABI version _noabi (without bumping for incompatible changes) until ABI is stable.  Parallel Header Installation  For mongocxx, install all headers to $PREFIX/mongocxx/v$ABI/.</description>
     </item>
     
     <item>
@@ -91,10 +91,10 @@ The mongo::client::initialize function The mongo::client::initialize function, f
       <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
       
       <guid>http://mongocxx.org/mongocxx-v3/configuration/</guid>
-      <description>In the mongocxx driver, most configuration is done via the connection URI. Some additional connection options are possible via the [mongocxx::options::client] (https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1options_1_1client.html ) class.
+      <description>In the mongocxx driver, most configuration is done via the connection URI. Some additional connection options are possible via the mongocxx::options::client class.
 Configuring TLS/SSL To enable TLS (SSL), set tls=true in the URI:
-mongodb://mongodb.example.com/?tls=true
-By default, mongocxx will verify server certificates against the local system CA list. You can override that either by specifying different settings in the connection string, or by creating a [mongocxx::options::tls] (https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1options_1_1tls.html ) object and passing it to tls_opts on mongocxx::options::client.</description>
+ mongodb://mongodb.example.com/?tls=true
+ By default, mongocxx will verify server certificates against the local system CA list. You can override that either by specifying different settings in the connection string, or by creating a mongocxx::options::tls object and passing it to tls_opts on mongocxx::options::client.</description>
     </item>
     
     <item>
@@ -103,7 +103,7 @@ By default, mongocxx will verify server certificates against the local system CA
       <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
       
       <guid>http://mongocxx.org/legacy-v1/installation/</guid>
-      <description>Table of Contents How to ask for Help Get the source code Choose a branch legacy branch Compile the Driver SCons options when Compiling the C++ Driver Targets Client Options Path Options Build Options SCons Options Windows Options Mac OS X Options Deprecated Options Windows Considerations Example C++ Driver Compilations Debug Builds Building on Windows Building against the pre-built boost binaries Building a DLL Building multiple Windows library variants Using the driver in your application Initialization and Configuration Client Headers Client Libraries Windows autolinking Linking with the static client library How to ask for Help If you are having difficulty building the driver after reading the below instructions, please post on the MongoDB Community Forums to ask for help.</description>
+      <description>Table of Contents  How to ask for Help Get the source code Choose a branch  legacy branch   Compile the Driver  SCons options when Compiling the C++ Driver  Targets Client Options Path Options Build Options SCons Options Windows Options Mac OS X Options Deprecated Options   Windows Considerations   Example C++ Driver Compilations  Debug Builds Building on Windows  Building against the pre-built boost binaries Building a DLL Building multiple Windows library variants     Using the driver in your application  Initialization and Configuration Client Headers Client Libraries  Windows autolinking Linking with the static client library      How to ask for Help If you are having difficulty building the driver after reading the below instructions, please post on the MongoDB Community Forums to ask for help.</description>
     </item>
     
     <item>
@@ -125,11 +125,10 @@ Next, you may wish to take a look at the MongoDB Manual for a language independe
       
       <guid>http://mongocxx.org/reporting-bugs/</guid>
       <description>If you think you have found a bug or want to see a new feature in the C++ driver, please open an issue in JIRA:
-Create a Jira account and login.
-Navigate to the CXX project.
-Click Create Issue. Provide as much information as possible about the issue and the steps to reproduce it.
-Be aware that bug reports in JIRA for the C++ driver are public.
-If you identify a security vulnerability in a driver or any other MongoDB project, please report it according to the instructions found in Create a Vulnerability Report.</description>
+  Create a Jira account and login.
+  Navigate to the CXX project.
+  Click Create Issue. Provide as much information as possible about the issue and the steps to reproduce it.
+  Be aware that bug reports in JIRA for the C++ driver are public.</description>
     </item>
     
     <item>
@@ -172,10 +171,10 @@ Even if you create multiple child objects from a single client, and synchronize 
       
       <guid>http://mongocxx.org/mongocxx-v3/tutorial/</guid>
       <description>See the full code for this tutorial in tutorial.cpp.
-Prerequisites A mongod instance running on localhost on port 27017.
-The mongocxx Driver. See Installation for mongocxx.
-The following statements at the top of your source file:
-#include &amp;lt;cstdint&amp;gt; #include &amp;lt;iostream&amp;gt; #include &amp;lt;vector&amp;gt; #include &amp;lt;bsoncxx/builder/basic/document.hpp&amp;gt; #include &amp;lt;bsoncxx/json.hpp&amp;gt; #include &amp;lt;mongocxx/client.hpp&amp;gt; #include &amp;lt;mongocxx/instance.hpp&amp;gt; #include &amp;lt;mongocxx/stdx.hpp&amp;gt; #include &amp;lt;mongocxx/uri.hpp&amp;gt; using bsoncxx::builder::basic::kvp; using bsoncxx::builder::basic::make_array; using bsoncxx::builder::basic::make_document; Compiling The mongocxx driver&amp;rsquo;s installation process will install a libmongocxx.pc file for use with pkg-config.</description>
+Prerequisites   A mongod instance running on localhost on port 27017.
+  The mongocxx Driver. See Installation for mongocxx.
+  The following statements at the top of your source file:
+  #include &amp;lt;cstdint&amp;gt;#include &amp;lt;iostream&amp;gt;#include &amp;lt;vector&amp;gt; #include &amp;lt;bsoncxx/builder/basic/document.hpp&amp;gt;#include &amp;lt;bsoncxx/json.hpp&amp;gt;#include &amp;lt;mongocxx/client.hpp&amp;gt;#include &amp;lt;mongocxx/instance.hpp&amp;gt;#include &amp;lt;mongocxx/stdx.hpp&amp;gt;#include &amp;lt;mongocxx/uri.hpp&amp;gt; using bsoncxx::builder::basic::kvp; using bsoncxx::builder::basic::make_array; using bsoncxx::builder::basic::make_document; Compiling The mongocxx driver&amp;rsquo;s installation process will install a libmongocxx.</description>
     </item>
     
     <item>
@@ -197,7 +196,7 @@ BSONObj p = BSON( GENOID &amp;lt;&amp;lt; &amp;#34;name&amp;#34; &amp;lt;&amp;lt
       
       <guid>http://mongocxx.org/mongocxx-v3/working-with-bson/</guid>
       <description>The mongocxx driver ships with a new library, bsoncxx. This article will go over some of the different types in this library, and how and when to use each. For more information and example code, see our examples.
-Document Builders Owning BSON Documents (values) Non-owning BSON Documents (views) Optionally-owning BSON Documents(view_or_value) BSON Document Lifetime Printing BSON Documents Getting Fields out of BSON Documents Document Builders The bsoncxx library offers four interfaces for building BSON: one-off functions, a basic builder, a list builder and a stream-based builder.</description>
+ Document Builders Owning BSON Documents (values) Non-owning BSON Documents (views) Optionally-owning BSON Documents(view_or_value) BSON Document Lifetime Printing BSON Documents Getting Fields out of BSON Documents  Document Builders The bsoncxx library offers four interfaces for building BSON: one-off functions, a basic builder, a list builder and a stream-based builder.</description>
     </item>
     
     <item>

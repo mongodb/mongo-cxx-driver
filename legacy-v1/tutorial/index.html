@@ -1598,31 +1598,31 @@ instructions on how to properly initialize and terminate the driver:</p>
 <p>See the <a href="http://mongodb.github.io/api/1.0.2/">API documentation</a> for
 details on each of the above classes.</p>
 <h4 id="a-simple-program-that-connects-to-the-database">A simple program that connects to the database</h4>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;cstdlib&gt;</span><span style="color:#75715e">
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;iostream&gt;</span><span style="color:#75715e">
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&#34;mongo/client/dbclient.h&#34; // for the driver</span><span style="color:#75715e">
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">run</span>() {
-</span></span><span style="display:flex;"><span>  mongo<span style="color:#f92672">::</span>DBClientConnection c;
-</span></span><span style="display:flex;"><span>  c.connect(<span style="color:#e6db74">&#34;localhost&#34;</span>);
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>() {
-</span></span><span style="display:flex;"><span>    mongo<span style="color:#f92672">::</span>client<span style="color:#f92672">::</span>initialize();
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">try</span> {
-</span></span><span style="display:flex;"><span>        run();
-</span></span><span style="display:flex;"><span>        std<span style="color:#f92672">::</span>cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;connected ok&#34;</span> <span style="color:#f92672">&lt;&lt;</span> std<span style="color:#f92672">::</span>endl;
-</span></span><span style="display:flex;"><span>    } <span style="color:#66d9ef">catch</span>( <span style="color:#66d9ef">const</span> mongo<span style="color:#f92672">::</span>DBException <span style="color:#f92672">&amp;</span>e ) {
-</span></span><span style="display:flex;"><span>        std<span style="color:#f92672">::</span>cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;caught &#34;</span> <span style="color:#f92672">&lt;&lt;</span> e.what() <span style="color:#f92672">&lt;&lt;</span> std<span style="color:#f92672">::</span>endl;
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">return</span> EXIT_SUCCESS;
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><p>(Note that in a production environment, the return value of <code>mongo::client::initialize()</code> must be checked)</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;cstdlib&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;iostream&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&#34;mongo/client/dbclient.h&#34; // for the driver</span><span style="color:#75715e">
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">run</span>() {
+  mongo<span style="color:#f92672">::</span>DBClientConnection c;
+  c.connect(<span style="color:#e6db74">&#34;localhost&#34;</span>);
+}
+
+<span style="color:#66d9ef">int</span> <span style="color:#a6e22e">main</span>() {
+    mongo<span style="color:#f92672">::</span>client<span style="color:#f92672">::</span>initialize();
+    <span style="color:#66d9ef">try</span> {
+        run();
+        std<span style="color:#f92672">::</span>cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;connected ok&#34;</span> <span style="color:#f92672">&lt;&lt;</span> std<span style="color:#f92672">::</span>endl;
+    } <span style="color:#66d9ef">catch</span>( <span style="color:#66d9ef">const</span> mongo<span style="color:#f92672">::</span>DBException <span style="color:#f92672">&amp;</span>e ) {
+        std<span style="color:#f92672">::</span>cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;caught &#34;</span> <span style="color:#f92672">&lt;&lt;</span> e.what() <span style="color:#f92672">&lt;&lt;</span> std<span style="color:#f92672">::</span>endl;
+    }
+    <span style="color:#66d9ef">return</span> EXIT_SUCCESS;
+}
+</code></pre></div><p>(Note that in a production environment, the return value of <code>mongo::client::initialize()</code> must be checked)</p>
 <p>If you are using gcc on Linux, you would compile with something like this, depending on location of your include files and libraries:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>$ g++ tutorial.cpp -pthread -lmongoclient -lboost_thread-mt -lboost_system -lboost_regex -o tutorial
-</span></span><span style="display:flex;"><span>$ ./tutorial
-</span></span><span style="display:flex;"><span>connected ok
-</span></span></code></pre></div><blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ g++ tutorial.cpp -pthread -lmongoclient -lboost_thread-mt -lboost_system -lboost_regex -o tutorial
+$ ./tutorial
+connected ok
+</code></pre></div><blockquote>
 <p><strong>Warning</strong></p>
 </blockquote>
 <ul>
@@ -1644,53 +1644,53 @@ objects.</p>
 <a href="https://github.com/mongodb/mongo-cxx-driver/blob/legacy/src/mongo/bson/bsondemo/bsondemo.cpp">bsondemo</a>
 for example usage.</p>
 <h5 id="key-classes">Key classes</h5>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>mongo<span style="color:#f92672">::</span>BSONObj: a BSON object
-</span></span><span style="display:flex;"><span>mongo<span style="color:#f92672">::</span>BSONElement: a single element in a BSON object. This is a key and a value.
-</span></span><span style="display:flex;"><span>mongo<span style="color:#f92672">::</span>BSONObjBuilder: used to make BSON objects
-</span></span><span style="display:flex;"><span>mongo<span style="color:#f92672">::</span>BSONObjIterator: used to enumerate BSON objects
-</span></span></code></pre></div><h5 id="working-with-bson">Working with BSON</h5>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">mongo<span style="color:#f92672">::</span>BSONObj: a BSON object
+mongo<span style="color:#f92672">::</span>BSONElement: a single element in a BSON object. This is a key and a value.
+mongo<span style="color:#f92672">::</span>BSONObjBuilder: used to make BSON objects
+mongo<span style="color:#f92672">::</span>BSONObjIterator: used to enumerate BSON objects
+</code></pre></div><h5 id="working-with-bson">Working with BSON</h5>
 <p>Let’s now create a BSON “person” object which contains name and age. We might invoke:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>BSONObjBuilder b;
-</span></span><span style="display:flex;"><span>b.append(<span style="color:#e6db74">&#34;name&#34;</span>, <span style="color:#e6db74">&#34;Joe&#34;</span>);
-</span></span><span style="display:flex;"><span>b.append(<span style="color:#e6db74">&#34;age&#34;</span>, <span style="color:#ae81ff">33</span>);
-</span></span><span style="display:flex;"><span>BSONObj p <span style="color:#f92672">=</span> b.obj();
-</span></span></code></pre></div><p>Or more concisely:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>BSONObj p <span style="color:#f92672">=</span> BSONObjBuilder().append(<span style="color:#e6db74">&#34;name&#34;</span>, <span style="color:#e6db74">&#34;Joe&#34;</span>).append(<span style="color:#e6db74">&#34;age&#34;</span>, <span style="color:#ae81ff">33</span>).obj();
-</span></span></code></pre></div><p>We can also create BSON objects using the stream oriented syntax:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>BSONObjBuilder b;
-</span></span><span style="display:flex;"><span>b <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;Joe&#34;</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;age&#34;</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">33</span>;
-</span></span><span style="display:flex;"><span>BSONObj p <span style="color:#f92672">=</span> b.obj();
-</span></span></code></pre></div><p>The BSON Macro lets us be even more compact:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>BSONObj p <span style="color:#f92672">=</span> BSON( <span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;Joe&#34;</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;age&#34;</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">33</span> );
-</span></span></code></pre></div><p>Use the GENOID helper to add an object id to your object. The server will
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">BSONObjBuilder b;
+b.append(<span style="color:#e6db74">&#34;name&#34;</span>, <span style="color:#e6db74">&#34;Joe&#34;</span>);
+b.append(<span style="color:#e6db74">&#34;age&#34;</span>, <span style="color:#ae81ff">33</span>);
+BSONObj p <span style="color:#f92672">=</span> b.obj();
+</code></pre></div><p>Or more concisely:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">BSONObj p <span style="color:#f92672">=</span> BSONObjBuilder().append(<span style="color:#e6db74">&#34;name&#34;</span>, <span style="color:#e6db74">&#34;Joe&#34;</span>).append(<span style="color:#e6db74">&#34;age&#34;</span>, <span style="color:#ae81ff">33</span>).obj();
+</code></pre></div><p>We can also create BSON objects using the stream oriented syntax:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">BSONObjBuilder b;
+b <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;Joe&#34;</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;age&#34;</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">33</span>;
+BSONObj p <span style="color:#f92672">=</span> b.obj();
+</code></pre></div><p>The BSON Macro lets us be even more compact:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">BSONObj p <span style="color:#f92672">=</span> BSON( <span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;Joe&#34;</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;age&#34;</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">33</span> );
+</code></pre></div><p>Use the GENOID helper to add an object id to your object. The server will
 add an _id automatically if it is not included explicitly.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>BSONObj p <span style="color:#f92672">=</span> BSON( GENOID <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;Joe&#34;</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;age&#34;</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">33</span> );
-</span></span><span style="display:flex;"><span><span style="color:#75715e">// result is: { _id : ..., name : &#34;Joe&#34;, age : 33 }
-</span></span></span></code></pre></div><p>GENOID should be at the beginning of the generated object. We can do something similar with the non-stream builder syntax:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>BSONObj p <span style="color:#f92672">=</span> BSONObjBuilder().genOID().append(<span style="color:#e6db74">&#34;name&#34;</span>,<span style="color:#e6db74">&#34;Joe&#34;</span>).append(<span style="color:#e6db74">&#34;age&#34;</span>,<span style="color:#ae81ff">33</span>).obj();
-</span></span></code></pre></div><p>Other helpers are listed in <a href="http://mongocxx.org/legacy-v1/working-with-bson/">Working with BSON</a>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">BSONObj p <span style="color:#f92672">=</span> BSON( GENOID <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;Joe&#34;</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;age&#34;</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">33</span> );
+<span style="color:#75715e">// result is: { _id : ..., name : &#34;Joe&#34;, age : 33 }
+</span></code></pre></div><p>GENOID should be at the beginning of the generated object. We can do something similar with the non-stream builder syntax:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">BSONObj p <span style="color:#f92672">=</span> BSONObjBuilder().genOID().append(<span style="color:#e6db74">&#34;name&#34;</span>,<span style="color:#e6db74">&#34;Joe&#34;</span>).append(<span style="color:#e6db74">&#34;age&#34;</span>,<span style="color:#ae81ff">33</span>).obj();
+</code></pre></div><p>Other helpers are listed in <a href="http://mongocxx.org/legacy-v1/working-with-bson/">Working with BSON</a>.</p>
 <h3 id="inserting">Inserting</h3>
 <p>We now save our person object in a persons collection in the database:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>c.insert(<span style="color:#e6db74">&#34;tutorial.persons&#34;</span>, p);
-</span></span></code></pre></div><p>The first parameter to insert is the namespace. tutorial is the database and persons is the collection name.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">c.insert(<span style="color:#e6db74">&#34;tutorial.persons&#34;</span>, p);
+</code></pre></div><p>The first parameter to insert is the namespace. tutorial is the database and persons is the collection name.</p>
 <h4 id="getlasterror">getLastError</h4>
 <p>In order to ensure the write succeeded we need to call getLastError.</p>
 <p>Get error result from the last operation on this connection:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>string mongo<span style="color:#f92672">::</span>DBClientWithCommands<span style="color:#f92672">::</span>getLastError(); <span style="color:#75715e">// Empty string if no error
-</span></span></span></code></pre></div><p>Get the full last error object:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>BSONObj DBClientWithCommands<span style="color:#f92672">::</span>getLastErrorDetailed();
-</span></span></code></pre></div><p>For an example, see <a href="https://github.com/mongodb/mongo-cxx-driver/blob/legacy/src/mongo/client/examples/simple_client_demo.cpp">this demo</a>.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">string mongo<span style="color:#f92672">::</span>DBClientWithCommands<span style="color:#f92672">::</span>getLastError(); <span style="color:#75715e">// Empty string if no error
+</span></code></pre></div><p>Get the full last error object:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">BSONObj DBClientWithCommands<span style="color:#f92672">::</span>getLastErrorDetailed();
+</code></pre></div><p>For an example, see <a href="https://github.com/mongodb/mongo-cxx-driver/blob/legacy/src/mongo/client/examples/simple_client_demo.cpp">this demo</a>.</p>
 <p>For additional background information on getLastError see the <a href="https://docs.mongodb.com/manual/core/write-operations/#write-concern">write
 operations documentation</a>.</p>
 <h3 id="count">Count</h3>
 <p>Let’s now fetch all objects from the persons collection, and display them. We’ll also show here how to use count().</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;count:&#34;</span> <span style="color:#f92672">&lt;&lt;</span> c.count(<span style="color:#e6db74">&#34;tutorial.persons&#34;</span>) <span style="color:#f92672">&lt;&lt;</span> endl;
-</span></span></code></pre></div><h3 id="query">Query</h3>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>auto_ptr<span style="color:#f92672">&lt;</span>DBClientCursor<span style="color:#f92672">&gt;</span> cursor <span style="color:#f92672">=</span> c.query(<span style="color:#e6db74">&#34;tutorial.persons&#34;</span>, BSONObj());
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">while</span> (cursor<span style="color:#f92672">-&gt;</span>more())
-</span></span><span style="display:flex;"><span>   cout <span style="color:#f92672">&lt;&lt;</span> cursor<span style="color:#f92672">-&gt;</span>next().toString() <span style="color:#f92672">&lt;&lt;</span> endl;
-</span></span></code></pre></div><p><code>BSONObj()</code> is an empty BSON object – it represents <code>{}</code> which indicates an
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;count:&#34;</span> <span style="color:#f92672">&lt;&lt;</span> c.count(<span style="color:#e6db74">&#34;tutorial.persons&#34;</span>) <span style="color:#f92672">&lt;&lt;</span> endl;
+</code></pre></div><h3 id="query">Query</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">auto_ptr<span style="color:#f92672">&lt;</span>DBClientCursor<span style="color:#f92672">&gt;</span> cursor <span style="color:#f92672">=</span> c.query(<span style="color:#e6db74">&#34;tutorial.persons&#34;</span>, BSONObj());
+
+<span style="color:#66d9ef">while</span> (cursor<span style="color:#f92672">-&gt;</span>more())
+   cout <span style="color:#f92672">&lt;&lt;</span> cursor<span style="color:#f92672">-&gt;</span>next().toString() <span style="color:#f92672">&lt;&lt;</span> endl;
+</code></pre></div><p><code>BSONObj()</code> is an empty BSON object – it represents <code>{}</code> which indicates an
 empty query pattern (an empty query is a query for all objects).</p>
 <p>We use <code>BSONObj::toString()</code> above to print out information about each
 object retrieved. <code>BSONObj::toString</code> is a diagnostic function which prints
@@ -1698,21 +1698,21 @@ an abbreviated JSON string representation of the object. For full JSON
 output, use <code>BSONObj::jsonString</code>.</p>
 <p>Let’s now write a function which prints out the name (only) of all persons
 in the collection whose age is a given value:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">printIfAge</span>(DBClientConnection<span style="color:#f92672">&amp;</span> c, <span style="color:#66d9ef">int</span> age) {
-</span></span><span style="display:flex;"><span>    auto_ptr<span style="color:#f92672">&lt;</span>DBClientCursor<span style="color:#f92672">&gt;</span> cursor <span style="color:#f92672">=</span>
-</span></span><span style="display:flex;"><span>        c.query(<span style="color:#e6db74">&#34;tutorial.persons&#34;</span>, MONGO_QUERY(<span style="color:#e6db74">&#34;age&#34;</span> <span style="color:#f92672">&lt;&lt;</span> age));
-</span></span><span style="display:flex;"><span>    <span style="color:#66d9ef">while</span> (cursor<span style="color:#f92672">-&gt;</span>more()) {
-</span></span><span style="display:flex;"><span>        BSONObj p <span style="color:#f92672">=</span> cursor<span style="color:#f92672">-&gt;</span>next();
-</span></span><span style="display:flex;"><span>        cout <span style="color:#f92672">&lt;&lt;</span> p.getStringField(<span style="color:#e6db74">&#34;name&#34;</span>) <span style="color:#f92672">&lt;&lt;</span> endl;
-</span></span><span style="display:flex;"><span>    }
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><p><code>getStringField()</code> is a helper that assumes the name field is of type
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">printIfAge</span>(DBClientConnection<span style="color:#f92672">&amp;</span> c, <span style="color:#66d9ef">int</span> age) {
+    auto_ptr<span style="color:#f92672">&lt;</span>DBClientCursor<span style="color:#f92672">&gt;</span> cursor <span style="color:#f92672">=</span>
+        c.query(<span style="color:#e6db74">&#34;tutorial.persons&#34;</span>, MONGO_QUERY(<span style="color:#e6db74">&#34;age&#34;</span> <span style="color:#f92672">&lt;&lt;</span> age));
+    <span style="color:#66d9ef">while</span> (cursor<span style="color:#f92672">-&gt;</span>more()) {
+        BSONObj p <span style="color:#f92672">=</span> cursor<span style="color:#f92672">-&gt;</span>next();
+        cout <span style="color:#f92672">&lt;&lt;</span> p.getStringField(<span style="color:#e6db74">&#34;name&#34;</span>) <span style="color:#f92672">&lt;&lt;</span> endl;
+    }
+}
+</code></pre></div><p><code>getStringField()</code> is a helper that assumes the name field is of type
 string. To manipulate an element in a more generic fashion we can retrieve
 the particular BSONElement from the enclosing object:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>BSONElement name <span style="color:#f92672">=</span> p[<span style="color:#e6db74">&#34;name&#34;</span>];
-</span></span><span style="display:flex;"><span><span style="color:#75715e">// or:
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>BSONElement name <span style="color:#f92672">=</span> p.getField(<span style="color:#e6db74">&#34;name&#34;</span>);
-</span></span></code></pre></div><p>See the api docs, and jsobj.h, for more information.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">BSONElement name <span style="color:#f92672">=</span> p[<span style="color:#e6db74">&#34;name&#34;</span>];
+<span style="color:#75715e">// or:
+</span><span style="color:#75715e"></span>BSONElement name <span style="color:#f92672">=</span> p.getField(<span style="color:#e6db74">&#34;name&#34;</span>);
+</code></pre></div><p>See the api docs, and jsobj.h, for more information.</p>
 <p>Our query above, written as JSON, is of the form</p>
 <p><code>{ age : &lt;agevalue&gt; }</code></p>
 <p>Queries are BSON objects of a particular format – in fact, we could have
@@ -1720,16 +1720,16 @@ used the BSON() macro above instead of MONGO_QUERY(). See class Query in
 dbclient.h for more information on Query objects, and the Sorting section
 below.</p>
 <p>In the mongo shell (which uses javascript), we could invoke:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-js" data-lang="js"><span style="display:flex;"><span><span style="color:#a6e22e">use</span> <span style="color:#a6e22e">tutorial</span>;
-</span></span><span style="display:flex;"><span><span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">persons</span>.<span style="color:#a6e22e">find</span>({<span style="color:#a6e22e">age</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">33</span>});
-</span></span></code></pre></div><h3 id="indexing">Indexing</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#a6e22e">use</span> <span style="color:#a6e22e">tutorial</span>;
+<span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">persons</span>.<span style="color:#a6e22e">find</span>({<span style="color:#a6e22e">age</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">33</span>});
+</code></pre></div><h3 id="indexing">Indexing</h3>
 <p>Let’s suppose we want to have an index on age so that our queries are fast. We would use:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>c.createIndex(<span style="color:#e6db74">&#34;tutorial.persons&#34;</span>, fromjson(<span style="color:#e6db74">&#34;{age:1}&#34;</span>));
-</span></span></code></pre></div><p>In the above example we use a new function, fromjson. fromjson converts a
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">c.createIndex(<span style="color:#e6db74">&#34;tutorial.persons&#34;</span>, fromjson(<span style="color:#e6db74">&#34;{age:1}&#34;</span>));
+</code></pre></div><p>In the above example we use a new function, fromjson. fromjson converts a
 JSON string to a BSONObj. This is sometimes a convenient way to specify
 BSON. Alternatively, we could have written:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>c.createIndex(<span style="color:#e6db74">&#34;tutorial.persons&#34;</span>, BSON( <span style="color:#e6db74">&#34;age&#34;</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">1</span> ));
-</span></span></code></pre></div><p>While calling createIndex multiple times won&rsquo;t result in duplicate index
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">c.createIndex(<span style="color:#e6db74">&#34;tutorial.persons&#34;</span>, BSON( <span style="color:#e6db74">&#34;age&#34;</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">1</span> ));
+</code></pre></div><p>While calling createIndex multiple times won&rsquo;t result in duplicate index
 creation on the server, it will cause an extra network round-trip and
 server operation for each call. It&rsquo;s best practice to use this method
 sparingly, for example once at the beginning of your code, or perhaps in an
@@ -1739,24 +1739,24 @@ docs</a>.</p>
 <h3 id="sorting">Sorting</h3>
 <p>Let’s now make the results from printIfAge sorted alphabetically by name.
 To do this, we change the query statement from:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>auto_ptr<span style="color:#f92672">&lt;</span>DBClientCursor<span style="color:#f92672">&gt;</span> cursor <span style="color:#f92672">=</span> c.query(<span style="color:#e6db74">&#34;tutorial.persons&#34;</span>, MONGO_QUERY(<span style="color:#e6db74">&#34;age&#34;</span> <span style="color:#f92672">&lt;&lt;</span> age));
-</span></span></code></pre></div><p>to</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>auto_ptr<span style="color:#f92672">&lt;</span>DBClientCursor<span style="color:#f92672">&gt;</span> cursor <span style="color:#f92672">=</span> c.query(<span style="color:#e6db74">&#34;tutorial.persons&#34;</span>, MONGO_QUERY(<span style="color:#e6db74">&#34;age&#34;</span> <span style="color:#f92672">&lt;&lt;</span> age ).sort(<span style="color:#e6db74">&#34;name&#34;</span>));
-</span></span></code></pre></div><p>Here we have used <code>Query::sort()</code> to add a modifier to our query expression for sorting.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">auto_ptr<span style="color:#f92672">&lt;</span>DBClientCursor<span style="color:#f92672">&gt;</span> cursor <span style="color:#f92672">=</span> c.query(<span style="color:#e6db74">&#34;tutorial.persons&#34;</span>, MONGO_QUERY(<span style="color:#e6db74">&#34;age&#34;</span> <span style="color:#f92672">&lt;&lt;</span> age));
+</code></pre></div><p>to</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">auto_ptr<span style="color:#f92672">&lt;</span>DBClientCursor<span style="color:#f92672">&gt;</span> cursor <span style="color:#f92672">=</span> c.query(<span style="color:#e6db74">&#34;tutorial.persons&#34;</span>, MONGO_QUERY(<span style="color:#e6db74">&#34;age&#34;</span> <span style="color:#f92672">&lt;&lt;</span> age ).sort(<span style="color:#e6db74">&#34;name&#34;</span>));
+</code></pre></div><p>Here we have used <code>Query::sort()</code> to add a modifier to our query expression for sorting.</p>
 <h3 id="updating">Updating</h3>
 <p>Use the <code>update()</code> method to perform a database update. For example the
 following update in the mongo shell:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-js" data-lang="js"><span style="display:flex;"><span><span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">use</span> <span style="color:#a6e22e">tutorial</span>
-</span></span><span style="display:flex;"><span><span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">persons</span>.<span style="color:#a6e22e">update</span>(
-</span></span><span style="display:flex;"><span>    { <span style="color:#a6e22e">name</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;Joe&#39;</span>, <span style="color:#a6e22e">age</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">33</span> },
-</span></span><span style="display:flex;"><span>    { <span style="color:#a6e22e">$inc</span> <span style="color:#f92672">:</span> { <span style="color:#a6e22e">visits</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">1</span> } }
-</span></span><span style="display:flex;"><span>)
-</span></span></code></pre></div><p>is equivalent to the following C++ code:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>db.update(<span style="color:#e6db74">&#34;tutorial.persons&#34;</span>,
-</span></span><span style="display:flex;"><span>    BSON(<span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;Joe&#34;</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;age&#34;</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">33</span>),
-</span></span><span style="display:flex;"><span>    BSON(<span style="color:#e6db74">&#34;$inc&#34;</span> <span style="color:#f92672">&lt;&lt;</span> BSON( <span style="color:#e6db74">&#34;visits&#34;</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">1</span>))
-</span></span><span style="display:flex;"><span>);
-</span></span></code></pre></div><p>The <code>update()</code> method can be used to modify specific fields, replace the
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-js" data-lang="js"><span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">use</span> <span style="color:#a6e22e">tutorial</span>
+<span style="color:#f92672">&gt;</span> <span style="color:#a6e22e">db</span>.<span style="color:#a6e22e">persons</span>.<span style="color:#a6e22e">update</span>(
+    { <span style="color:#a6e22e">name</span> <span style="color:#f92672">:</span> <span style="color:#e6db74">&#39;Joe&#39;</span>, <span style="color:#a6e22e">age</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">33</span> },
+    { <span style="color:#a6e22e">$inc</span> <span style="color:#f92672">:</span> { <span style="color:#a6e22e">visits</span> <span style="color:#f92672">:</span> <span style="color:#ae81ff">1</span> } }
+)
+</code></pre></div><p>is equivalent to the following C++ code:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">db.update(<span style="color:#e6db74">&#34;tutorial.persons&#34;</span>,
+    BSON(<span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;Joe&#34;</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;age&#34;</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">33</span>),
+    BSON(<span style="color:#e6db74">&#34;$inc&#34;</span> <span style="color:#f92672">&lt;&lt;</span> BSON( <span style="color:#e6db74">&#34;visits&#34;</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">1</span>))
+);
+</code></pre></div><p>The <code>update()</code> method can be used to modify specific fields, replace the
 entire existing document, insert new documents or update multiple
 documents.  In the MongoDB Manual, examples are provided in the <a href="https://docs.mongodb.com/manual/tutorial/modify-documents/">Modify
 Documents Tutorial</a>.</p>

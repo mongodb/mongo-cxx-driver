@@ -1314,10 +1314,10 @@ release tarball.</p>
 <p>The <a href="https://github.com/mongodb/mongo-cxx-driver/releases">mongocxx releases</a>
 page will have links to the release tarball for the version you wish you install.  For
 example, to download version 3.7.1:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>curl -OL https://github.com/mongodb/mongo-cxx-driver/releases/download/r3.7.1/mongo-cxx-driver-r3.7.1.tar.gz
-</span></span><span style="display:flex;"><span>tar -xzf mongo-cxx-driver-r3.7.1.tar.gz
-</span></span><span style="display:flex;"><span>cd mongo-cxx-driver-r3.7.1/build
-</span></span></code></pre></div><p>Make sure you change to the <code>build</code> directory of whatever source tree you
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">curl -OL https://github.com/mongodb/mongo-cxx-driver/releases/download/r3.7.1/mongo-cxx-driver-r3.7.1.tar.gz
+tar -xzf mongo-cxx-driver-r3.7.1.tar.gz
+cd mongo-cxx-driver-r3.7.1/build
+</code></pre></div><p>Make sure you change to the <code>build</code> directory of whatever source tree you
 obtain.</p>
 <h3 id="step-4-configure-the-driver">Step 4: Configure the driver</h3>
 <p>On Unix systems, <code>libmongoc</code> installs into <code>/usr/local</code> by default. Without additional
@@ -1327,53 +1327,29 @@ from source. To configure <code>mongocxx</code> for installation into <code>/usr
 <pre tabindex="0"><code>cmake ..                                \
     -DCMAKE_BUILD_TYPE=Release          \
     -DCMAKE_INSTALL_PREFIX=/usr/local
-</code></pre><p>In the Unix examples that follow, <code>mongocxx</code> is customized in these ways:</p>
-<ul>
-<li><code>libmongoc</code> is found in <code>/opt/mongo-c-driver</code>.</li>
-<li><code>mongocxx</code> is to be installed into <code>/opt/mongo-cxx-driver</code>.</li>
-</ul>
-<p>With those two distinct (arbitrary) install locations, a user would run this <code>cmake</code> command:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>cmake ..                                            <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DCMAKE_BUILD_TYPE<span style="color:#f92672">=</span>Release                      <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DCMAKE_PREFIX_PATH<span style="color:#f92672">=</span>/opt/mongo-c-driver         <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DCMAKE_INSTALL_PREFIX<span style="color:#f92672">=</span>/opt/mongo-cxx-driver
-</span></span></code></pre></div><blockquote>
-<p><em>Note</em> If you need multiple paths in a CMake PATH variable, separate them with a semicolon like
-this:
-<code>-DCMAKE_PREFIX_PATH=&quot;/your/cdriver/prefix;/some/other/path&quot;</code></p>
-</blockquote>
-<p>These options can be freely mixed with a C++17 polyfill option. For instance, this is how a user
+</code></pre><p>These options can be freely mixed with a C++17 polyfill option. For instance, this is how a user
 would run the command above with the Boost polyfill option:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>cmake ..                                            <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DCMAKE_BUILD_TYPE<span style="color:#f92672">=</span>Release                      <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DBSONCXX_POLY_USE_BOOST<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>                      <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DCMAKE_PREFIX_PATH<span style="color:#f92672">=</span>/opt/mongo-c-driver         <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DCMAKE_INSTALL_PREFIX<span style="color:#f92672">=</span>/opt/mongo-cxx-driver
-</span></span></code></pre></div><h4 id="configuring-with-mongocxx-31x-or-30x">Configuring with <code>mongocxx</code> 3.1.x or 3.0.x</h4>
-<p>Instead of the <code>-DCMAKE_PREFIX_PATH</code> option, users must specify the <code>libmongoc</code> installation
-directory by using the <code>-DLIBMONGOC_DIR</code> and <code>-DLIBBSON_DIR</code> options:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>cmake ..                                            <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DCMAKE_BUILD_TYPE<span style="color:#f92672">=</span>Release                      <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DLIBMONGOC_DIR<span style="color:#f92672">=</span>/opt/mongo-c-driver             <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DLIBBSON_DIR<span style="color:#f92672">=</span>/opt/mongo-c-driver               <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DCMAKE_INSTALL_PREFIX<span style="color:#f92672">=</span>/opt/mongo-cxx-driver
-</span></span></code></pre></div><h3 id="step-5-build-and-install-the-driver">Step 5: Build and install the driver</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">cmake ..                                            <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -DCMAKE_BUILD_TYPE<span style="color:#f92672">=</span>Release                      <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -DBSONCXX_POLY_USE_BOOST<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>                      <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -DCMAKE_INSTALL_PREFIX<span style="color:#f92672">=</span>/usr/local
+</code></pre></div><h3 id="step-5-build-and-install-the-driver">Step 5: Build and install the driver</h3>
 <p>If you are using the default MNMLSTC polyfill and are installing to a
 directory requiring root permissions, you should install the polyfill with
 <code>sudo</code> before building the rest of mongocxx so you don&rsquo;t have to run
 the entire build with <code>sudo</code>:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># Only for MNMLSTC polyfill</span>
-</span></span><span style="display:flex;"><span>sudo cmake --build . --target EP_mnmlstc_core
-</span></span></code></pre></div><p>Once MNMLSTC is installed, or if you are using a different polyfill,
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#75715e"># Only for MNMLSTC polyfill</span>
+sudo cmake --build . --target EP_mnmlstc_core
+</code></pre></div><p>Once MNMLSTC is installed, or if you are using a different polyfill,
 build and install the driver:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>cmake --build .
-</span></span><span style="display:flex;"><span>sudo cmake --build . --target install
-</span></span></code></pre></div><p>The driver can be uninstalled at a later time in one of two ways.  First,
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">cmake --build .
+sudo cmake --build . --target install
+</code></pre></div><p>The driver can be uninstalled at a later time in one of two ways.  First,
 the uninstall target can be called:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>sudo cmake --build . --target uninstall
-</span></span></code></pre></div><p>Second, the uninstall script can be called:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>sudo /opt/mongo-cxx-driver/share/mongo-cxx-driver/uninstall.sh
-</span></span></code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">sudo cmake --build . --target uninstall
+</code></pre></div><p>Second, the uninstall script can be called:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">sudo &lt;install-dir&gt;/share/mongo-cxx-driver/uninstall.sh
+</code></pre></div>
 
 
 

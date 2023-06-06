@@ -1292,31 +1292,31 @@ release tarball.</p>
 <p>The <a href="https://github.com/mongodb/mongo-cxx-driver/releases">mongocxx releases</a>
 page will have links to the release tarball for the version you wish you install.  For
 example, to download version 3.7.1:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>curl -OL https://github.com/mongodb/mongo-cxx-driver/releases/download/r3.7.1/mongo-cxx-driver-r3.7.1.tar.gz
-</span></span><span style="display:flex;"><span>tar -xzf mongo-cxx-driver-r3.7.1.tar.gz
-</span></span><span style="display:flex;"><span>cd mongo-cxx-driver-r3.7.1/build
-</span></span></code></pre></div><p>Make sure you change to the <code>build</code> directory of whatever source tree you
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">curl -OL https://github.com/mongodb/mongo-cxx-driver/releases/download/r3.7.1/mongo-cxx-driver-r3.7.1.tar.gz
+tar -xzf mongo-cxx-driver-r3.7.1.tar.gz
+cd mongo-cxx-driver-r3.7.1/build
+</code></pre></div><p>Make sure you change to the <code>build</code> directory of whatever source tree you
 obtain.</p>
 <h3 id="step-4-configure-the-driver">Step 4: Configure the driver</h3>
 <p>On Windows, the C++ driver is configured as follows (adjusting the path of the CMake executable as appropriate to your system):</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#e6db74">&#39;C:\Program Files (x86)\CMake\bin\cmake.exe&#39;</span> .. <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>     -G <span style="color:#e6db74">&#34;Visual Studio 14 2015 Win64&#34;</span>           <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DBOOST_ROOT<span style="color:#f92672">=</span>C:<span style="color:#ae81ff">\l</span>ocal<span style="color:#ae81ff">\b</span>oost_1_60_0          <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DCMAKE_PREFIX_PATH<span style="color:#f92672">=</span>C:<span style="color:#ae81ff">\m</span>ongo-c-driver       <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DCMAKE_INSTALL_PREFIX<span style="color:#f92672">=</span>C:<span style="color:#ae81ff">\m</span>ongo-cxx-driver
-</span></span></code></pre></div><p>The example above assumes:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#e6db74">&#39;C:\Program Files (x86)\CMake\bin\cmake.exe&#39;</span> .. <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>     -G <span style="color:#e6db74">&#34;Visual Studio 14 2015 Win64&#34;</span>           <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -DBOOST_ROOT<span style="color:#f92672">=</span>C:<span style="color:#ae81ff">\l</span>ocal<span style="color:#ae81ff">\b</span>oost_1_60_0          <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -DCMAKE_PREFIX_PATH<span style="color:#f92672">=</span>C:<span style="color:#ae81ff">\m</span>ongo-c-driver       <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -DCMAKE_INSTALL_PREFIX<span style="color:#f92672">=</span>C:<span style="color:#ae81ff">\m</span>ongo-cxx-driver
+</code></pre></div><p>The example above assumes:</p>
 <ul>
 <li>Boost is found in <code>C:\local\boost_1_60_0</code>.</li>
 <li><code>libmongoc</code> is found in <code>C:\mongo-c-driver</code>.</li>
 <li><code>mongocxx</code> is to be installed into <code>C:\mongo-cxx-driver</code>.</li>
 </ul>
 <p>To build with Visual Studio 2017 without a C++17 polyfill, configure as follows:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#e6db74">&#39;C:\Program Files (x86)\CMake\bin\cmake.exe&#39;</span> .. <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -G <span style="color:#e6db74">&#34;Visual Studio 15 2017 Win64&#34;</span>            <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DCMAKE_CXX_STANDARD<span style="color:#f92672">=</span><span style="color:#ae81ff">17</span>                     <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DCMAKE_PREFIX_PATH<span style="color:#f92672">=</span>C:<span style="color:#ae81ff">\m</span>ongo-c-driver       <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DCMAKE_INSTALL_PREFIX<span style="color:#f92672">=</span>C:<span style="color:#ae81ff">\m</span>ongo-cxx-driver  <span style="color:#ae81ff">\
-</span></span></span></code></pre></div><p>For details on how to install libmongoc for Windows, see the
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#e6db74">&#39;C:\Program Files (x86)\CMake\bin\cmake.exe&#39;</span> .. <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -G <span style="color:#e6db74">&#34;Visual Studio 15 2017 Win64&#34;</span>            <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -DCMAKE_CXX_STANDARD<span style="color:#f92672">=</span><span style="color:#ae81ff">17</span>                     <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -DCMAKE_PREFIX_PATH<span style="color:#f92672">=</span>C:<span style="color:#ae81ff">\m</span>ongo-c-driver       <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -DCMAKE_INSTALL_PREFIX<span style="color:#f92672">=</span>C:<span style="color:#ae81ff">\m</span>ongo-cxx-driver  <span style="color:#ae81ff">\
+</span></code></pre></div><p>For details on how to install libmongoc for Windows, see the
 <a href="http://mongoc.org/libmongoc/current/installing.html#building-windows">mongoc Windows installation instructions</a>.</p>
 <h4 id="configuring-with-mongocxx-370-and-older">Configuring with <code>mongocxx</code> 3.7.0 and older</h4>
 <p>To build versions 3.7.0 and older without a C++17 polyfill, it is necessary to configure with additional options:</p>
@@ -1324,30 +1324,30 @@ obtain.</p>
 <li><code>/Zc:__cplusplus</code> to opt into the correct definition of <code>__cplusplus</code> (<a href="https://blogs.msdn.microsoft.com/vcblog/2018/04/09/msvc-now-correctly-reports-__cplusplus/">problem described here</a>)</li>
 <li><code>/EHsc</code> to enable recommended <a href="https://learn.microsoft.com/en-us/cpp/build/reference/eh-exception-handling-model?view=msvc-170">exception handling behavior</a>.</li>
 </ul>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#e6db74">&#39;C:\Program Files (x86)\CMake\bin\cmake.exe&#39;</span> .. <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -G <span style="color:#e6db74">&#34;Visual Studio 15 2017 Win64&#34;</span>            <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DCMAKE_CXX_STANDARD<span style="color:#f92672">=</span><span style="color:#ae81ff">17</span>                     <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DCMAKE_CXX_FLAGS<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;/Zc:__cplusplus /EHsc&#34;</span>   <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DCMAKE_PREFIX_PATH<span style="color:#f92672">=</span>C:<span style="color:#ae81ff">\m</span>ongo-c-driver       <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DCMAKE_INSTALL_PREFIX<span style="color:#f92672">=</span>C:<span style="color:#ae81ff">\m</span>ongo-cxx-driver  <span style="color:#ae81ff">\
-</span></span></span></code></pre></div><h4 id="configuring-with-mongocxx-31x-or-30x">Configuring with <code>mongocxx</code> 3.1.x or 3.0.x</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#e6db74">&#39;C:\Program Files (x86)\CMake\bin\cmake.exe&#39;</span> .. <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -G <span style="color:#e6db74">&#34;Visual Studio 15 2017 Win64&#34;</span>            <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -DCMAKE_CXX_STANDARD<span style="color:#f92672">=</span><span style="color:#ae81ff">17</span>                     <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -DCMAKE_CXX_FLAGS<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;/Zc:__cplusplus /EHsc&#34;</span>   <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -DCMAKE_PREFIX_PATH<span style="color:#f92672">=</span>C:<span style="color:#ae81ff">\m</span>ongo-c-driver       <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -DCMAKE_INSTALL_PREFIX<span style="color:#f92672">=</span>C:<span style="color:#ae81ff">\m</span>ongo-cxx-driver  <span style="color:#ae81ff">\
+</span></code></pre></div><h4 id="configuring-with-mongocxx-31x-or-30x">Configuring with <code>mongocxx</code> 3.1.x or 3.0.x</h4>
 <p>Instead of the <code>-DCMAKE_PREFIX_PATH</code> option, users must specify the <code>libmongoc</code> installation
 directory by using the <code>-DLIBMONGOC_DIR</code> and <code>-DLIBBSON_DIR</code> options:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>cmake ..                                            <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DCMAKE_BUILD_TYPE<span style="color:#f92672">=</span>Release                      <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DLIBMONGOC_DIR<span style="color:#f92672">=</span>C:<span style="color:#ae81ff">\m</span>ongo-c-driver               <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DLIBBSON_DIR<span style="color:#f92672">=</span>C:<span style="color:#ae81ff">\m</span>ongo-c-driver                 <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DCMAKE_INSTALL_PREFIX<span style="color:#f92672">=</span>C:<span style="color:#ae81ff">\m</span>ongo-cxx-driver
-</span></span></code></pre></div><h3 id="step-5-build-and-install-the-driver">Step 5: Build and install the driver</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">cmake ..                                            <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -DCMAKE_BUILD_TYPE<span style="color:#f92672">=</span>Release                      <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -DLIBMONGOC_DIR<span style="color:#f92672">=</span>C:<span style="color:#ae81ff">\m</span>ongo-c-driver               <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -DLIBBSON_DIR<span style="color:#f92672">=</span>C:<span style="color:#ae81ff">\m</span>ongo-c-driver                 <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -DCMAKE_INSTALL_PREFIX<span style="color:#f92672">=</span>C:<span style="color:#ae81ff">\m</span>ongo-cxx-driver
+</code></pre></div><h3 id="step-5-build-and-install-the-driver">Step 5: Build and install the driver</h3>
 <p>Build and install the driver:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>cmake --build .
-</span></span><span style="display:flex;"><span>cmake --build . --target install
-</span></span></code></pre></div><p>The driver can be uninstalled at a later time in one of two ways.  First,
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">cmake --build .
+cmake --build . --target install
+</code></pre></div><p>The driver can be uninstalled at a later time in one of two ways.  First,
 the uninstall target can be called:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>cmake --build . --target uninstall
-</span></span></code></pre></div><p>Second, the uninstall script can be called:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>C:<span style="color:#ae81ff">\o</span>pt<span style="color:#ae81ff">\m</span>ongo-cxx-driver<span style="color:#ae81ff">\s</span>hare<span style="color:#ae81ff">\m</span>ongo-cxx-driver<span style="color:#ae81ff">\u</span>ninstall.cmd
-</span></span></code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">cmake --build . --target uninstall
+</code></pre></div><p>Second, the uninstall script can be called:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">C:<span style="color:#ae81ff">\o</span>pt<span style="color:#ae81ff">\m</span>ongo-cxx-driver<span style="color:#ae81ff">\s</span>hare<span style="color:#ae81ff">\m</span>ongo-cxx-driver<span style="color:#ae81ff">\u</span>ninstall.cmd
+</code></pre></div>
 
 
 
