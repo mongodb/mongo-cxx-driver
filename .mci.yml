@@ -1900,4 +1900,4 @@ buildvariants:
          - name: debian-package-build-mnmlstc
          - name: rpm-package-build
            distros:
-           - rhel82-arm64-small
+           - rhel90-arm64-small
