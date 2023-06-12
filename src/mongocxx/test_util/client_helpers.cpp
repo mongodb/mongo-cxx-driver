@@ -277,8 +277,6 @@ std::string get_topology(const client& client) {
     //      { ... , "host" : "shard0001/localhost:27018,localhost:27019,localhost:27020", ... }
     auto host = get_hosts(client);
     if (!host.empty()) {
-        if (std::find(std::begin(host), std::end(host), '/') != std::end(host))
-            return "sharded-replicaset";
         return "sharded";
     }
 

@@ -220,8 +220,7 @@ bool equals_server_topology(const document::element& topologies) {
     // test file.
     const static std::string actual = test_util::get_topology();
     const auto equals = [&](const bsoncxx::array::element& expected) {
-        return expected == value(actual) ||
-               (expected == value("sharded") && actual == "sharded-replicaset");
+        return expected == value(actual);
     };
 
     const auto t = topologies.get_array().value;
