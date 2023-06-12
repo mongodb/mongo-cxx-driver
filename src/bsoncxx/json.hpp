@@ -56,6 +56,9 @@ enum class ExtendedJsonMode : std::uint8_t {
 BSONCXX_API std::string BSONCXX_CALL to_json(document::view view,
                                              ExtendedJsonMode mode = ExtendedJsonMode::k_legacy);
 
+BSONCXX_API std::string BSONCXX_CALL to_json(bsoncxx::array::view view,
+                                             ExtendedJsonMode mode = ExtendedJsonMode::k_legacy);
+
 ///
 /// Constructs a new document::value from the provided JSON text.
 ///
