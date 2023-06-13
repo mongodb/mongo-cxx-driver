@@ -680,7 +680,7 @@ functions:
                   # is true.
                   if [[ -z "$MONGODB_API_VERSION" ]]; then
                     echo "Building example projects..."
-                    .evergreen/build_example_projects>|output.txt.sh
+                    .evergreen/build_example_projects.sh
                     echo "Building example projects... done."
                   fi
                   unset MONGODB_API_VERSION
