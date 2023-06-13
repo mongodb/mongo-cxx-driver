@@ -1012,11 +1012,12 @@ tasks:
           shell: bash
           script: |-
             set -o errexit
-            . .evergreen/find_cmake.sh
             cd examples/add_subdirectory
             [ -d mongo-c-driver ] || git clone --depth 1 https://github.com/mongodb/mongo-c-driver
             rsync -aq --exclude='examples/add_subdirectory' $(readlink -f ../..) .
             [ -d build ] || mkdir build
+            . ./mongo-c-driver/.evergreen/scripts/find-cmake-latest.sh
+            export CMAKE="$(find_cmake_latest)"
             cd build
             $CMAKE ..
             $CMAKE --build . -- -j 8
