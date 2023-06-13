@@ -83,6 +83,12 @@ cmake ..                                            \
     -DCMAKE_INSTALL_PREFIX=/usr/local
 ```
 
+If CMake is unable to find an existing C driver installation, then it will
+automatically download a C driver release from the internet and include it in
+the build. If you wish to override this behavior with your preferred
+installation, then please refer to the `Installing the MongoDB C driver` section
+in the `advanced.md` document for the instructions for how to do so.
+
 ### Step 4: Build and install the driver
 
 If you are using the default MNMLSTC polyfill and are installing to a
