@@ -77,6 +77,7 @@ set(LIBBSON_REQUIRED_VERSION 1.13.0)
 set(LIBBSON_REQUIRED_ABI_VERSION 1.0)
 
 set(bsoncxx_pkg_dep "")
+set(bsoncxx_boost_pkg_dep "")
 
 if(TARGET bson_shared OR TARGET bson_static)
   # If these targets exist, then libbson has already been included as a project
@@ -154,10 +155,6 @@ set(bsoncxx_sources
     validate.cpp
 )
 
-if(BSONCXX_POLY_USE_BOOST)
-    find_package(Boost 1.56.0 REQUIRED)
-endif()
-
 # We define both the normal libraries and the testing-only library.  The testing-only
 # library does not get installed, but the tests link against it instead of the normal library.  The
 # only difference between the libraries is that BSONCXX_TESTING is defined in the testing-only
@@ -219,7 +216,10 @@ if(BSONCXX_BUILD_STATIC)
     list(APPEND bsoncxx_target_list bsoncxx_static)
     set(bsoncxx_pkg_dep "find_dependency(bson-1.0 REQUIRED)")
 endif()
-bsoncxx_install("${bsoncxx_target_list}" "${bsoncxx_pkg_dep}")
+if(BSONCXX_POLY_USE_BOOST)
+    set(bsoncxx_boost_pkg_dep "find_dependency(Boost 1.56.0 REQUIRED)")
+endif()
+bsoncxx_install("${bsoncxx_target_list}" "${bsoncxx_pkg_dep}" "${bsoncxx_boost_pkg_dep}")
 
 if(ENABLE_TESTS)
   add_subdirectory(test)

@@ -37,12 +37,13 @@ function(bsoncxx_add_library TARGET OUTPUT_NAME LINK_TYPE)
                 $<BUILD_INTERFACE:${source_dir}/include>
                 $<BUILD_INTERFACE:${CMAKE_INSTALL_PREFIX}/${BSONCXX_HEADER_INSTALL_DIR}>
         )
-      elseif(BSONCXX_POLY_USE_BOOST)
-	if (CMAKE_VERSION VERSION_LESS 3.15.0)
-	  target_include_directories(${TARGET} PUBLIC ${Boost_INCLUDE_DIRS})
-	else()
-          target_link_libraries(${TARGET} PUBLIC Boost::boost)
-	endif()
+    elseif(BSONCXX_POLY_USE_BOOST)
+        find_package(Boost 1.56.0 REQUIRED)
+        if(CMAKE_VERSION VERSION_LESS 3.15.0)
+            target_include_directories(${TARGET} PUBLIC ${Boost_INCLUDE_DIRS})
+        else()
+            target_link_libraries(${TARGET} PUBLIC Boost::boost)
+        endif()
     endif()
 
     target_link_libraries(${TARGET} PRIVATE ${libbson_target})
@@ -66,7 +67,7 @@ endfunction(bsoncxx_add_library)
 
 # Install the specified forms of the bsoncxx library (i.e., shared and/or static)
 # with associated CMake config files
-function(bsoncxx_install BSONCXX_TARGET_LIST BSONCXX_PKG_DEP)
+function(bsoncxx_install BSONCXX_TARGET_LIST BSONCXX_PKG_DEP BSONCXX_BOOST_PKG_DEP)
     install(TARGETS
         ${BSONCXX_TARGET_LIST}
         EXPORT bsoncxx_targets

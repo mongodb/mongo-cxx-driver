@@ -12,7 +12,7 @@ For a minor release this should be the
 [waterfall](https://evergreen.mongodb.com/waterfall/cxx-driver) tracking the
 master branch (requires auth).
 For a patch release this is the waterfall tracking that branch. E.g. if you are
-releasing 3.7.1, then refer to the the waterfall tracking
+releasing 3.7.3, then refer to the the waterfall tracking
 [releases/v3.7](https://spruce.mongodb.com/commits/cxx-driver-v3.7)
 (requires auth).
 
@@ -65,7 +65,7 @@ pip install -r etc/requirements.txt
 
 If doing a minor release (e.g. releasing r3.8.0), stay on the master branch. You
 will create a new `releases/v3.8` branch later in the instructions. If doing a
-patch release (e.g. releasing r3.7.1), check out the corresponding release
+patch release (e.g. releasing r3.7.3), check out the corresponding release
 branch, which should be the existing `releases/v3.7` branch.
 
 Create a tag for the commit to serve as the release (or release candidate):
@@ -219,7 +219,7 @@ This requires a macOS machine.
 If this is a stable release, update the [mongo-cxx-driver](https://github.com/Homebrew/homebrew-core/blob/master/Formula/mongo-cxx-driver.rb) homebrew formula, using: `brew bump-formula-pr --url <tarball url>`
 
 Example:
-`brew bump-formula-pr mongo-cxx-driver --url https://github.com/mongodb/mongo-cxx-driver/releases/download/r3.7.1/mongo-cxx-driver-r3.7.1.tar.gz`
+`brew bump-formula-pr mongo-cxx-driver --url https://github.com/mongodb/mongo-cxx-driver/releases/download/r3.7.3/mongo-cxx-driver-r3.7.3.tar.gz`
 
 ## File a DOCSP ticket if needed
 
@@ -331,7 +331,7 @@ DH_VERBOSE=1 DEB_BUILD_OPTIONS="parallel=$(nproc)" gbp buildpackage --git-dist=s
 ```
 $ sudo cowbuilder --login --basepath /var/cache/pbuilder/base-sid.cow/ --bindmounts $HOME
 # apt update && apt install -y lintian
-# lintian -viI mongo-cxx-driver_3.7.1-1_amd64.changes
+# lintian -viI mongo-cxx-driver_3.7.2-1_amd64.changes
 ```
 
 - You may need to update to the latest Debian policy, which you can do the
