@@ -175,6 +175,11 @@ functions:
                     git clone git@github.com:mongodb-labs/drivers-evergreen-tools.git
                 fi
                 cd drivers-evergreen-tools
+                # The legacy shell is only present in server 5.0 builds and earlier,
+                # but there is no 5.0 build for RHEL9, so we have to avoid it
+                if [[ "${build_variant}" =~ "rhel9" ]]; then
+                    export SKIP_LEGACY_SHELL=1
+                fi
                 export DRIVERS_TOOLS=$(pwd)
                 if [ "Windows_NT" == "$OS" ]; then
                     export DRIVERS_TOOLS=$(cygpath -m $DRIVERS_TOOLS)
@@ -351,6 +356,7 @@ functions:
           params:
               shell: bash
               working_dir: "mongo-cxx-driver"
+              include_expansions_in_env: ["distro_id"]
               script: |
                   set -o errexit
                   set -o pipefail
@@ -367,13 +373,20 @@ functions:
                       ADDL_OPTS="$ADDL_OPTS -DENABLE_TESTS=OFF"
                   fi
 
+                  if [[ -n "${REQUIRED_CXX_STANDARD}" ]]; then
+                      ADDL_OPTS="$ADDL_OPTS -DCMAKE_CXX_STANDARD=${REQUIRED_CXX_STANDARD} -DCMAKE_CXX_STANDARD_REQUIRED=ON"
+                  fi
+
                   MONGOC_PREFIX="$(pwd)/../mongoc"
                   echo "MONGOC_PREFIX=$MONGOC_PREFIX"
 
-                  if [ "Windows_NT" == "$OS" ]; then
+                  if [[ "$OSTYPE" =~ cygwin ]]; then
                       MONGOC_PREFIX=$(cygpath -m "$MONGOC_PREFIX")
                   fi
-                  export CMAKE=${cmake}
+                  . "$MONGOC_PREFIX/.evergreen/scripts/find-cmake-latest.sh"
+                  declare cmake_binary
+                  export cmake_binary="$(find_cmake_latest)"
+                  command -v "$cmake_binary"
 
                   if [ ! -d ../drivers-evergreen-tools ]; then
                     git clone --depth 1 git@github.com:mongodb-labs/drivers-evergreen-tools.git ../drivers-evergreen-tools
@@ -398,6 +411,7 @@ functions:
           params:
               shell: bash
               working_dir: "mongo-cxx-driver"
+              include_expansions_in_env: ["distro_id"]
               script: |
                   set -o errexit
                   set -o pipefail
@@ -405,7 +419,7 @@ functions:
                   # Grabs the mongocryptd path
                   pushd ..
                   export MONGOCRYPTD_PATH=$(pwd)/
-                  if [ "Windows_NT" == "$OS" ]; then
+                  if [[ "$OSTYPE" =~ cygwin ]]; then
                      export MONGOCRYPTD_PATH=$(cygpath -m $MONGOCRYPTD_PATH)
                   fi
                   popd # ..
@@ -453,7 +467,7 @@ functions:
 
                   pushd ../../drivers-evergreen-tools
                   export DRIVERS_TOOLS=$(pwd)
-                  if [ "Windows_NT" == "$OS" ]; then
+                  if [[ "$OSTYPE" =~ cygwin ]]; then
                       export DRIVERS_TOOLS=$(cygpath -m $DRIVERS_TOOLS)
                   fi
                   popd # ../../drivers-evergreen-tools
@@ -514,7 +528,7 @@ functions:
                       register_ca_cert() {
                           local OS=$(uname -s | tr '[:upper:]' '[:lower:]')
                           echo "register_ca_cert: OS: $OS"
-                          case "$OS" in
+                          case "$OSTYPE" in
                               cygwin*)
                                   certutil.exe -addstore "Root" "$DRIVERS_TOOLS\.evergreen\x509gen\ca.pem"
                                   ;;
@@ -559,7 +573,7 @@ functions:
                       echo "Waiting for mock KMS servers to start... done."
                   fi
 
-                  if [ "Windows_NT" == "$OS" ]; then
+                  if [[ "$OSTYPE" =~ cygwin ]]; then
                       CTEST_OUTPUT_ON_FAILURE=1 MSBuild.exe /p:Configuration=${build_type} /verbosity:minimal RUN_TESTS.vcxproj
                       # Only run examples if MONGODB_API_VERSION is unset. We do not append
                       # API version to example clients, so examples will fail when requireApiVersion
@@ -660,8 +674,7 @@ functions:
                   export CC="${example_projects_cc}"
                   export CXX="${example_projects_cxx}"
                   export CXX_STANDARD="${example_projects_cxx_standard}"
-                  export CMAKE=${cmake}
-                  if [ "Windows_NT" == "$OS" ]; then
+                  if [[ "$OSTYPE" =~ cygwin ]]; then
                       export MSVC=1
                   elif [ "$(uname -s | tr '[:upper:]' '[:lower:]')" == "darwin" ]; then
                       export DYLD_LIBRARY_PATH="$(pwd)/build/install/lib:$DYLD_LIBRARY_PATH"
@@ -680,6 +693,10 @@ functions:
                   # is true.
                   if [[ -z "$MONGODB_API_VERSION" ]]; then
                     echo "Building example projects..."
+                    . "$PREFIX/.evergreen/scripts/find-cmake-latest.sh"
+                    declare cmake_binary
+                    export cmake_binary="$(find_cmake_latest)"
+                    command -v "$cmake_binary"
                     .evergreen/build_example_projects.sh
                     echo "Building example projects... done."
                   fi
@@ -847,6 +864,39 @@ tasks:
         - func: "clone_drivers-evergreen-tools"
         - func: "run_kms_servers"
         - func: "test"
+
+    - name: compile_and_test_with_shared_libs_cxx20
+      commands:
+        - func: "setup"
+        - func: "start_mongod"
+        - func: "install_c_driver"
+        - func: "compile"
+          vars:
+              RUN_DISTCHECK: 1
+              REQUIRED_CXX_STANDARD: 20
+        - func: "clone_drivers-evergreen-tools"
+        - func: "run_kms_servers"
+        - func: "test"
+          vars:
+              REQUIRED_CXX_STANDARD: 20
+              example_projects_cxx_standard: 20
+
+    - name: compile_and_test_with_shared_libs_extra_alignment_cxx20
+      commands:
+        - func: "setup"
+        - func: "start_mongod"
+        - func: "install_c_driver"
+          vars:
+              BSON_EXTRA_ALIGNMENT: 1
+        - func: "compile"
+          vars:
+              REQUIRED_CXX_STANDARD: 20
+        - func: "clone_drivers-evergreen-tools"
+        - func: "run_kms_servers"
+        - func: "test"
+          vars:
+              REQUIRED_CXX_STANDARD: 20
+              example_projects_cxx_standard: 20
 
     - name: compile_with_shared_libs
       commands:
@@ -1169,6 +1219,52 @@ buildvariants:
     #######################################
     #         Linux Buildvariants         #
     #######################################
+    - name: rhel9-release-latest
+      display_name: "RHEL 9 Release (MongoDB Latest)"
+      expansions:
+          build_type: "Release"
+          tar_options: *linux_tar_options
+          extra_path: *linux_extra_path
+          cmake_flags: *linux_cmake_flags
+          mongodb_version: *version_latest
+          lib_dir: "lib64"
+      run_on:
+          - rhel90-large
+      tasks:
+          - name: compile_and_test_with_shared_libs
+          - name: compile_and_test_with_shared_libs_extra_alignment
+          - name: compile_and_test_with_shared_libs_cxx20
+          - name: compile_and_test_with_shared_libs_extra_alignment_cxx20
+          - name: compile_and_test_with_static_libs
+          - name: compile_and_test_with_static_libs_extra_alignment
+          - name: compile_and_test_with_shared_libs_replica_set
+          - name: build_example_with_add_subdirectory
+            distros:
+            - rhel90-large
+
+    - name: arm-rhel9-release-latest
+      display_name: "arm64 RHEL 9 Release (MongoDB Latest)"
+      expansions:
+          build_type: "Release"
+          tar_options: *linux_tar_options
+          extra_path: *linux_extra_path
+          cmake_flags: *linux_cmake_flags
+          mongodb_version: *version_latest
+          lib_dir: "lib64"
+      run_on:
+          - rhel90-arm64-large
+      tasks:
+          - name: compile_and_test_with_shared_libs
+          - name: compile_and_test_with_shared_libs_extra_alignment
+          - name: compile_and_test_with_shared_libs_cxx20
+          - name: compile_and_test_with_shared_libs_extra_alignment_cxx20
+          - name: compile_and_test_with_static_libs
+          - name: compile_and_test_with_static_libs_extra_alignment
+          - name: compile_and_test_with_shared_libs_replica_set
+          - name: build_example_with_add_subdirectory
+            distros:
+            - rhel90-arm64-large
+
     - name: debian11-release-latest
       display_name: "Debian 11 Release (MongoDB Latest)"
       expansions:
@@ -1182,6 +1278,8 @@ buildvariants:
       tasks:
           - name: compile_and_test_with_shared_libs
           - name: compile_and_test_with_shared_libs_extra_alignment
+          - name: compile_and_test_with_shared_libs_cxx20
+          - name: compile_and_test_with_shared_libs_extra_alignment_cxx20
           - name: compile_and_test_with_static_libs
           - name: compile_and_test_with_static_libs_extra_alignment
           - name: compile_and_test_with_shared_libs_replica_set
@@ -1203,6 +1301,8 @@ buildvariants:
       tasks:
           - name: compile_and_test_with_shared_libs
           - name: compile_and_test_with_shared_libs_extra_alignment
+          - name: compile_and_test_with_shared_libs_cxx20
+          - name: compile_and_test_with_shared_libs_extra_alignment_cxx20
           - name: compile_and_test_with_static_libs
           - name: compile_and_test_with_static_libs_extra_alignment
           - name: compile_and_test_with_shared_libs_replica_set

@@ -42,7 +42,7 @@ add_executable(hello_mongocxx ../../hello_mongocxx.cpp)
 
 # Visual Studio pre 2017 requires boost polyfill.
 if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-    if (CXX_STANDARD LESS 17)
+    if (CMAKE_CXX_STANDARD LESS 17)
         find_package(Boost 1.56.0 REQUIRED)
         if (CMAKE_VERSION VERSION_LESS 3.15.0)
             target_include_directories(hello_mongocxx PRIVATE ${Boost_INCLUDE_DIRS})

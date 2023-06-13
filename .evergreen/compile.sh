@@ -49,14 +49,12 @@ case "$OS" in
       ;;
 esac
 
-. .evergreen/find_cmake.sh
-
 cd build
-"$CMAKE" -G "$GENERATOR" "-DCMAKE_BUILD_TYPE=${BUILD_TYPE}" -DMONGOCXX_ENABLE_SLOW_TESTS=ON -DENABLE_UNINSTALL=ON "$@" ..
-"$CMAKE" --build . --config $BUILD_TYPE -- $CMAKE_BUILD_OPTS
-"$CMAKE" --build . --config $BUILD_TYPE --target install -- $CMAKE_BUILD_OPTS
-"$CMAKE" --build . --config $BUILD_TYPE --target $CMAKE_EXAMPLES_TARGET -- $CMAKE_BUILD_OPTS
+"${cmake_binary}" -G "$GENERATOR" "-DCMAKE_BUILD_TYPE=${BUILD_TYPE}" -DMONGOCXX_ENABLE_SLOW_TESTS=ON -DENABLE_UNINSTALL=ON "$@" ..
+"${cmake_binary}" --build . --config $BUILD_TYPE -- $CMAKE_BUILD_OPTS
+"${cmake_binary}" --build . --config $BUILD_TYPE --target install -- $CMAKE_BUILD_OPTS
+"${cmake_binary}" --build . --config $BUILD_TYPE --target $CMAKE_EXAMPLES_TARGET -- $CMAKE_BUILD_OPTS
 
 if [ "$_RUN_DISTCHECK" ]; then
-   DISTCHECK_BUILD_OPTS="-j$CONCURRENCY" "$CMAKE" --build . --config $BUILD_TYPE --target distcheck
+   DISTCHECK_BUILD_OPTS="-j$CONCURRENCY" "${cmake_binary}" --build . --config $BUILD_TYPE --target distcheck
 fi
