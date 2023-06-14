@@ -297,10 +297,6 @@ functions:
 
                 echo "SETTING CMAKE"
                 export CMAKE="$(find_cmake_latest)"
-      - command: expansions.update
-        params:
-          type: setup
-          file: drivers-evergreen-tools/mo-expansion.yml
 
     "lint":
         - command: shell.exec
