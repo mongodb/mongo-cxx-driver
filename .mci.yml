@@ -290,7 +290,7 @@ functions:
                 set -o pipefail
 
                 echo "CLONING C DRIVER"
-                git clone --depth 1 https://github.com/mongodb/mongo-c-driver
+                git clone --depth 1 https://github.com/mongodb/mongo-c-driver mongoc
 
                 echo "SOURCING find-cmake-latest.sh"
                 . ./mongo-c-driver/.evergreen/scripts/find-cmake-latest.sh
