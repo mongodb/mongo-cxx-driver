@@ -280,6 +280,19 @@ functions:
             add_expansions_to_env: true
             script: mongo-cxx-driver/.evergreen/install_c_driver.sh
 
+    "fetch_latest_cmake":
+      - command: shell.exec
+        params:
+            shell: bash
+            working_dir: "."
+            script: |
+                git clone --depth 1 https://github.com/mongodb/mongo-c-driver
+                . ./mongo-c-driver/.evergreen/scripts/find-cmake-latest.sh
+      - command: expansions.update
+        params:
+          type: setup
+          file: drivers-evergreen-tools/mo-expansion.yml
+
     "lint":
         - command: shell.exec
           params:
@@ -836,6 +849,7 @@ tasks:
       commands:
         - func: "setup"
         - func: "start_mongod"
+        - func: "fetch_latest_cmake"
         - func: "compile"
           vars:
               RUN_DISTCHECK: 1
