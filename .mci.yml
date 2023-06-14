@@ -383,7 +383,7 @@ functions:
                   if [[ "$OSTYPE" =~ cygwin ]]; then
                       MONGOC_PREFIX=$(cygpath -m "$MONGOC_PREFIX")
                   fi
-                  . ./.evergreen/scripts/find-cmake-latest.sh"
+                  . ./.evergreen/scripts/find-cmake-latest.sh
                   declare cmake_binary
                   export cmake_binary="$(find_cmake_latest)"
                   command -v "$cmake_binary"
