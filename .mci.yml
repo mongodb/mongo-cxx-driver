@@ -836,7 +836,6 @@ tasks:
       commands:
         - func: "setup"
         - func: "start_mongod"
-        - func: "install_c_driver"
         - func: "compile"
           vars:
               RUN_DISTCHECK: 1
