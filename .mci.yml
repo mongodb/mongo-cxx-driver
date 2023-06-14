@@ -286,8 +286,17 @@ functions:
             shell: bash
             working_dir: "."
             script: |
+                set -o errexit
+                set -o pipefail
+
+                echo "CLONING C DRIVER"
                 git clone --depth 1 https://github.com/mongodb/mongo-c-driver
+
+                echo "SOURCING find-cmake-latest.sh"
                 . ./mongo-c-driver/.evergreen/scripts/find-cmake-latest.sh
+
+                echo "SETTING CMAKE"
+                export CMAKE="$(find_cmake_latest)"
       - command: expansions.update
         params:
           type: setup
