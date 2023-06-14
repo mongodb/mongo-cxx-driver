@@ -850,7 +850,7 @@ tasks:
     - name: clang-tidy
       commands:
         - func: "setup"
-        - func: "install_c_driver"
+        - func: "fetch_latest_cmake"
         - func: "compile"
         - func: "clang-tidy"
 
@@ -870,7 +870,7 @@ tasks:
       commands:
         - func: "setup"
         - func: "start_mongod"
-        - func: "install_c_driver"
+        - func: "fetch_latest_cmake"
           vars:
               BSON_EXTRA_ALIGNMENT: 1
         - func: "compile"
@@ -882,7 +882,7 @@ tasks:
       commands:
         - func: "setup"
         - func: "start_mongod"
-        - func: "install_c_driver"
+        - func: "fetch_latest_cmake"
         - func: "compile"
           vars:
               RUN_DISTCHECK: 1
@@ -898,7 +898,7 @@ tasks:
       commands:
         - func: "setup"
         - func: "start_mongod"
-        - func: "install_c_driver"
+        - func: "fetch_latest_cmake"
           vars:
               BSON_EXTRA_ALIGNMENT: 1
         - func: "compile"
@@ -915,13 +915,13 @@ tasks:
       commands:
       - func: "setup"
       - func: "start_mongod"
-      - func: "install_c_driver"
+      - func: "fetch_latest_cmake"
       - func: "compile"
 
     - name: compile_without_tests
       commands:
       - func: "setup"
-      - func: "install_c_driver"
+      - func: "fetch_latest_cmake"
       - func: "compile"
         vars:
             ENABLE_TESTS: OFF
@@ -932,7 +932,7 @@ tasks:
         - func: "start_mongod"
           vars:
               AUTH: auth
-        - func: "install_c_driver"
+        - func: "fetch_latest_cmake"
         - func: "compile"
         - func: "test auth"
         - func: "test atlas connectivity"
@@ -941,7 +941,7 @@ tasks:
       commands:
         - func: "setup"
         - func: "start_mongod"
-        - func: "install_c_driver"
+        - func: "fetch_latest_cmake"
         - func: "compile"
           vars:
               USE_STATIC_LIBS: 1
@@ -956,7 +956,7 @@ tasks:
       commands:
         - func: "setup"
         - func: "start_mongod"
-        - func: "install_c_driver"
+        - func: "fetch_latest_cmake"
           vars:
               BSON_EXTRA_ALIGNMENT: 1
         - func: "compile"
@@ -974,7 +974,7 @@ tasks:
         - func: "start_mongod"
           vars:
               TOPOLOGY: "replica_set"
-        - func: "install_c_driver"
+        - func: "fetch_latest_cmake"
         - func: "compile"
           vars:
               RUN_DISTCHECK: 1
@@ -985,7 +985,7 @@ tasks:
     - name: uninstall_check
       commands:
       - func: "setup"
-      - func: "install_c_driver"
+      - func: "fetch_latest_cmake"
       - func: "compile"
       - command: expansions.update
         params:
@@ -1005,7 +1005,7 @@ tasks:
     - name: uninstall_check_windows
       commands:
       - func: "setup"
-      - func: "install_c_driver"
+      - func: "fetch_latest_cmake"
       - func: "compile"
       - command: expansions.update
         params:
@@ -1116,7 +1116,7 @@ tasks:
     - name: test_mongohouse
       commands:
         - func: "setup"
-        - func: "install_c_driver"
+        - func: "fetch_latest_cmake"
         - func: "compile"
         - func: "build_mongohouse"
         - func: "run_mongohouse"
@@ -1131,7 +1131,7 @@ tasks:
               # Authentication with versioned API should already be tested
               # in the C driver.
               AUTH: noauth
-        - func: "install_c_driver"
+        - func: "fetch_latest_cmake"
         - func: "compile"
         - func: "clone_drivers-evergreen-tools"
         - func: "run_kms_servers"
@@ -1146,7 +1146,7 @@ tasks:
           vars:
               ORCHESTRATION_FILE: versioned-api-testing.json
               AUTH: noauth
-        - func: "install_c_driver"
+        - func: "fetch_latest_cmake"
         - func: "compile"
         - func: "clone_drivers-evergreen-tools"
         - func: "run_kms_servers"
