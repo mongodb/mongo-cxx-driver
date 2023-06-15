@@ -13,6 +13,7 @@ cd build
 if [ -z "$MSVC" ]; then
     printf "\n\nLISTING INSTALL DIR\n\n"
     pwd
+    find ../build/install
     printf "\n\nDONE LISTING INSTALL DIR\n\n"
 
     "$CMAKE" -DCMAKE_BUILD_TYPE="${BUILD_TYPE}" -DCMAKE_CXX_STANDARD="${CXX_STANDARD}" -DCMAKE_INSTALL_PREFIX="../build/install" ..
