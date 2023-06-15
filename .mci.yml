@@ -1358,7 +1358,7 @@ buildvariants:
           - name: compile_and_test_with_shared_libs_extra_alignment
           - name: compile_and_test_with_static_libs
           - name: compile_and_test_with_static_libs_extra_alignment
-          - name: compile_and_test_with_shared_libs_replica_set
+          - name: compile_and_test_with_shared_libs_replica_set_with_libmongocrypt
           - name: build_example_with_add_subdirectory
             distros:
             - debian10-large
