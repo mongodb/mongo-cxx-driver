@@ -11,6 +11,9 @@ CMAKE=${cmake_binary:-cmake}
 rm -rf build/*
 cd build
 if [ -z "$MSVC" ]; then
+    printf "\n\nLISTING INSTALL DIR\n\n"
+    find install
+    printf "\n\nDONE LISTING INSTALL DIR\n\n"
     "$CMAKE" -DCMAKE_BUILD_TYPE="${BUILD_TYPE}" -DCMAKE_CXX_STANDARD="${CXX_STANDARD}" -DCMAKE_INSTALL_PREFIX=install ..
     "$CMAKE" --build . --target run
 else
