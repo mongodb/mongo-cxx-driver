@@ -14,7 +14,6 @@ cd examples/projects
 
 for project in bsoncxx mongocxx; do
 (
-    printf "\n\nRUNNING PROJECT: %s\n\n" $project
     cd $project
 
     if ! ( cd cmake/$DIR && ./build.sh >|output.txt 2>&1); then
