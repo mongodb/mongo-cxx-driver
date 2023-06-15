@@ -970,6 +970,25 @@ tasks:
         - func: "run_kms_servers"
         - func: "test"
 
+    # Temporary workaround:
+    # Auto downloading the C driver in the C++ build does not currently include
+    # support for libmongocrypt, therefore it is not configured with
+    # -DENABLE_CLIENT_SIDE_ENCRYPTION=ON. For now, CSFLE tests will need to have
+    # a manually configured C driver, hence the need to seperate this task.
+    - name: compile_and_test_with_shared_libs_replica_set_csfle
+      commands:
+        - func: "setup"
+        - func: "start_mongod"
+          vars:
+              TOPOLOGY: "replica_set"
+        - func: "install_c_driver"
+        - func: "compile"
+          vars:
+              RUN_DISTCHECK: 1
+        - func: "clone_drivers-evergreen-tools"
+        - func: "run_kms_servers"
+        - func: "test"
+
     - name: uninstall_check
       commands:
       - func: "setup"
@@ -1214,7 +1233,7 @@ buildvariants:
       matrix_spec: {os: "ubuntu-1804", mongodb_version: "*"}
       display_name: "${os} replica set (MongoDB ${mongodb_version})"
       tasks:
-        - name: compile_and_test_with_shared_libs_replica_set
+        - name: compile_and_test_with_shared_libs_replica_set_csfle
 
     - matrix_name: "auth"
       matrix_spec: {os: "*", mongodb_version: "latest"}
@@ -1250,7 +1269,7 @@ buildvariants:
           - name: compile_and_test_with_shared_libs_extra_alignment_cxx20
           - name: compile_and_test_with_static_libs
           - name: compile_and_test_with_static_libs_extra_alignment
-          - name: compile_and_test_with_shared_libs_replica_set
+          - name: compile_and_test_with_shared_libs_replica_set_csfle
           - name: build_example_with_add_subdirectory
             distros:
             - rhel90-large
@@ -1273,7 +1292,7 @@ buildvariants:
           - name: compile_and_test_with_shared_libs_extra_alignment_cxx20
           - name: compile_and_test_with_static_libs
           - name: compile_and_test_with_static_libs_extra_alignment
-          - name: compile_and_test_with_shared_libs_replica_set
+          - name: compile_and_test_with_shared_libs_replica_set_csfle
           - name: build_example_with_add_subdirectory
             distros:
             - rhel90-arm64-large
@@ -1295,7 +1314,7 @@ buildvariants:
           - name: compile_and_test_with_shared_libs_extra_alignment_cxx20
           - name: compile_and_test_with_static_libs
           - name: compile_and_test_with_static_libs_extra_alignment
-          - name: compile_and_test_with_shared_libs_replica_set
+          - name: compile_and_test_with_shared_libs_replica_set_csfle
           - name: build_example_with_add_subdirectory
             distros:
             - debian11-large
