@@ -10,6 +10,7 @@
 
 set -o errexit
 set -o pipefail
+set -x
 
 if [ "$BUILD_TYPE" != "Debug" -a "$BUILD_TYPE" != "Release" ]; then
     echo "$0: expected BUILD_TYPE environment variable to be set to 'Debug' or 'Release'" >&2
@@ -48,6 +49,8 @@ case "$OS" in
       exit 2
       ;;
 esac
+
+printf "\n\nBUILDING THE DRIVER\n\n"
 
 cd build
 "${cmake_binary}" -G "$GENERATOR" "-DCMAKE_BUILD_TYPE=${BUILD_TYPE}" -DMONGOCXX_ENABLE_SLOW_TESTS=ON -DENABLE_UNINSTALL=ON "$@" ..
