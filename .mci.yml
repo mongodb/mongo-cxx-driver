@@ -414,7 +414,7 @@ functions:
                       ignore_deprecated=-Wno-deprecated-declarations
                   fi
 
-                  .evergreen/compile.sh -DCMAKE_PREFIX_PATH="$MONGOC_PREFIX" ${cmake_flags} ${poly_flags} $ADDL_OPTS -DCMAKE_INSTALL_PREFIX=install
+                  .evergreen/compile.sh ${cmake_flags} ${poly_flags} $ADDL_OPTS -DCMAKE_INSTALL_PREFIX=install
 
     "test":
         - command: shell.exec
