@@ -36,7 +36,7 @@ endif()
 
 # NOTE: For this to work, the CMAKE_PREFIX_PATH variable must be set to point to the directory that
 # was used as the argument to CMAKE_INSTALL_PREFIX when building libbsoncxx.
-# find_package(bsoncxx REQUIRED)
+find_package(bsoncxx REQUIRED)
 
 add_executable(hello_bsoncxx ../../hello_bsoncxx.cpp)
 
