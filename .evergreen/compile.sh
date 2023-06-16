@@ -53,6 +53,8 @@ esac
 printf "\n\nBUILDING THE DRIVER\n\n"
 
 cd build
+pwd
+ls
 "${cmake_binary}" -G "$GENERATOR" "-DCMAKE_BUILD_TYPE=${BUILD_TYPE}" -DMONGOCXX_ENABLE_SLOW_TESTS=ON -DENABLE_UNINSTALL=ON "$@" ..
 "${cmake_binary}" --build . --config $BUILD_TYPE -- $CMAKE_BUILD_OPTS
 "${cmake_binary}" --build . --config $BUILD_TYPE --target install -- $CMAKE_BUILD_OPTS
