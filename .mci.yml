@@ -957,6 +957,7 @@ tasks:
               USE_STATIC_LIBS: 1
         - func: "clone_drivers-evergreen-tools"
         - func: "run_kms_servers"
+        - func: "install_c_driver"
         - func: "test"
           vars:
               USE_STATIC_LIBS: 1
@@ -973,6 +974,7 @@ tasks:
               RUN_DISTCHECK: 1
         - func: "clone_drivers-evergreen-tools"
         - func: "run_kms_servers"
+        - func: "install_c_driver"
         - func: "test"
 
     # Temporary workaround:
