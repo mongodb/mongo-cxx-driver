@@ -865,6 +865,7 @@ tasks:
         - func: "compile"
         - func: "clone_drivers-evergreen-tools"
         - func: "run_kms_servers"
+        - func: "install_c_driver"
         - func: "test"
 
     - name: compile_and_test_with_shared_libs_cxx20
@@ -878,6 +879,7 @@ tasks:
               REQUIRED_CXX_STANDARD: 20
         - func: "clone_drivers-evergreen-tools"
         - func: "run_kms_servers"
+        - func: "install_c_driver"
         - func: "test"
           vars:
               REQUIRED_CXX_STANDARD: 20
@@ -895,6 +897,7 @@ tasks:
               REQUIRED_CXX_STANDARD: 20
         - func: "clone_drivers-evergreen-tools"
         - func: "run_kms_servers"
+        - func: "install_c_driver"
         - func: "test"
           vars:
               REQUIRED_CXX_STANDARD: 20
@@ -937,6 +940,7 @@ tasks:
               RUN_DISTCHECK: 1
         - func: "clone_drivers-evergreen-tools"
         - func: "run_kms_servers"
+        - func: "install_c_driver"
         - func: "test"
           vars:
               USE_STATIC_LIBS: 1
