@@ -15,7 +15,7 @@ if [ -z "$MSVC" ]; then
     pwd
     find ../../../../../../build/install
     printf "\n\nDONE LISTING INSTALL DIR\n\n"
-    ../../../../../../install_c_driver.sh
+    ../../../../../../.evergreen/install_c_driver.sh
 
     "$CMAKE" -DCMAKE_BUILD_TYPE="${BUILD_TYPE}" -DCMAKE_CXX_STANDARD="${CXX_STANDARD}" -DCMAKE_INSTALL_PREFIX="../../../../../../build/install" ..
     "$CMAKE" --build . --target run
