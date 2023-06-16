@@ -1401,7 +1401,7 @@ buildvariants:
       display_name: "${os} (MongoDB ${mongodb_version}) with mongocryptd"
       tasks:
           - name: compile_and_test_with_shared_libs
-          - name: compile_and_test_with_shared_libs_replica_set
+          - name: compile_and_test_with_shared_libs_replica_set_with_libmongocrypt
       expansions:
         use_mongocryptd: true
 
