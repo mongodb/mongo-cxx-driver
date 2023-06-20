@@ -116,6 +116,62 @@ TEST_CASE("CXX-1246: Canonical Extended JSON") {
         R"({ "number" : { "$numberInt" : "42" }, "bin" : { "$binary" : { "base64" : "ZGVhZGJlZWY=", "subType" : "04" } } })");
 }
 
+TEST_CASE("CXX-1712: Overloaded to_json Legacy (Implicit)") {
+    using namespace bsoncxx;
+    using namespace builder::basic;
+
+    types::b_binary bin_val{
+        binary_sub_type::k_uuid, 8, reinterpret_cast<const uint8_t*>("deadbeef")};
+    auto arr = make_array(make_document(kvp("foo", 42), kvp("bar", "A"), kvp("baz", bin_val)));
+    auto output = bsoncxx::to_json(arr.view());
+
+    REQUIRE(
+        output ==
+        R"([ { "foo" : 42, "bar" : "A", "baz" : { "$binary" : "ZGVhZGJlZWY=", "$type" : "04" } } ])");
+}
+
+TEST_CASE("CXX-1712: Overloaded to_json Legacy (Explicit)") {
+    using namespace bsoncxx;
+    using namespace builder::basic;
+
+    types::b_binary bin_val{
+        binary_sub_type::k_uuid, 8, reinterpret_cast<const uint8_t*>("deadbeef")};
+    auto arr = make_array(make_document(kvp("foo", 42), kvp("bar", "A"), kvp("baz", bin_val)));
+    auto output = to_json(arr.view(), ExtendedJsonMode::k_legacy);
+
+    REQUIRE(
+        output ==
+        R"([ { "foo" : 42, "bar" : "A", "baz" : { "$binary" : "ZGVhZGJlZWY=", "$type" : "04" } } ])");
+}
+
+TEST_CASE("CXX-1712: Overloaded to_json Relaxed") {
+    using namespace bsoncxx;
+    using namespace builder::basic;
+
+    types::b_binary bin_val{
+        binary_sub_type::k_uuid, 8, reinterpret_cast<const uint8_t*>("deadbeef")};
+    auto arr = make_array(make_document(kvp("foo", 42), kvp("bar", "A"), kvp("baz", bin_val)));
+    auto output = to_json(arr.view(), ExtendedJsonMode::k_relaxed);
+
+    REQUIRE(
+        output ==
+        R"([ { "foo" : 42, "bar" : "A", "baz" : { "$binary" : { "base64" : "ZGVhZGJlZWY=", "subType" : "04" } } } ])");
+}
+
+TEST_CASE("CXX-1712: Overloaded to_json Canonical") {
+    using namespace bsoncxx;
+    using namespace builder::basic;
+
+    types::b_binary bin_val{
+        binary_sub_type::k_uuid, 8, reinterpret_cast<const uint8_t*>("deadbeef")};
+    auto arr = make_array(make_document(kvp("foo", 42), kvp("bar", "A"), kvp("baz", bin_val)));
+    auto output = to_json(arr.view(), ExtendedJsonMode::k_canonical);
+
+    REQUIRE(
+        output ==
+        R"([ { "foo" : { "$numberInt" : "42" }, "bar" : "A", "baz" : { "$binary" : { "base64" : "ZGVhZGJlZWY=", "subType" : "04" } } } ])");
+}
+
 TEST_CASE("UDL _bson works like from_json()") {
     using namespace bsoncxx;
 
