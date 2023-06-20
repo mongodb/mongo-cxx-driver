@@ -69,7 +69,7 @@ std::string BSONCXX_CALL to_json(document::view view, ExtendedJsonMode mode) {
     BSONCXX_UNREACHABLE;
 }
 
-std::string BSONCXX_CALL to_json(bsoncxx::array::view view, ExtendedJsonMode mode) {
+std::string BSONCXX_CALL to_json(array::view view, ExtendedJsonMode mode) {
     switch (mode) {
         case ExtendedJsonMode::k_legacy:
             return to_json_helper(view, bson_array_as_json);

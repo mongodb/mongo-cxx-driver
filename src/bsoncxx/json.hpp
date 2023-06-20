@@ -16,6 +16,7 @@
 
 #include <string>
 
+#include <bsoncxx/array/view.hpp>
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/stdx/optional.hpp>
@@ -56,7 +57,7 @@ enum class ExtendedJsonMode : std::uint8_t {
 BSONCXX_API std::string BSONCXX_CALL to_json(document::view view,
                                              ExtendedJsonMode mode = ExtendedJsonMode::k_legacy);
 
-BSONCXX_API std::string BSONCXX_CALL to_json(bsoncxx::array::view view,
+BSONCXX_API std::string BSONCXX_CALL to_json(array::view view,
                                              ExtendedJsonMode mode = ExtendedJsonMode::k_legacy);
 
 ///
