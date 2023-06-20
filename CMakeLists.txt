@@ -73,6 +73,8 @@ if(NEED_DOWNLOAD_C_DRIVER)
     include(FetchContent)
     include(ExternalProject)
 
+    set(CMAKE_POSITION_INDEPENDENT_CODE ON)
+
     set(BUILD_SHARED_LIBS_WITH_STATIC_MONGOC ON CACHE INTERNAL "")
 
     # Declare mongo-c-driver as a dependency
