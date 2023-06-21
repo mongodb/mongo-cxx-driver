@@ -47,6 +47,7 @@ import click # pip install Click
 from git import Repo # pip install GitPython
 from github import Github # pip install PyGithub
 from jira import JIRA # pip install jira
+import oauthlib.oauth1
 
 if sys.version_info < (3, 0, 0):
     raise RuntimeError("This script requires Python 3 or higher")
@@ -425,6 +426,11 @@ def read_jira_oauth_creds(jira_creds_file):
             oauth_dict['consumer_key'] = creds_match.group(3)
             # Fix the double-backslash created by the decode() call above
             oauth_dict['key_cert'] = creds_match.group(4).replace("\\n", "\n")
+            # Use signature algorithm `SIGNATURE_RSA` to override `jira` default of `SIGNATURE_HMAC_SHA1`.
+            # `jira` 3.5.1 changed the default signature algorithm to `SIGNATURE_HMAC_SHA1`.
+            # MongoDB Jira servers do not appear to support `SIGNATURE_HMAC_SHA1`. Using `SIGNATURE_HMAC_SHA1` results in `signature_method_rejected`` error.
+            # See https://github.com/pycontribs/jira/pull/1664
+            oauth_dict["signature_method"] = oauthlib.oauth1.SIGNATURE_RSA
 
     return oauth_dict
 
