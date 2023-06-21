@@ -167,7 +167,7 @@ pushed.
 
 - Checkout the master branch.
 - Edit `etc/apidocmenu.md` and add the released version in the `mongocxx` column
-  following the established pattern. If this is a major release (x.y.0), revise
+  following the established pattern. If this is a minor release (x.y.0), revise
   the entire document as needed.
 - Edit `docs/content/_index.md` and `README.md` to match.
 - Edit `etc/generate-all-apidocs.pl` and add the new release version to the
