@@ -11,6 +11,7 @@ title = "Windows"
 
 The mongocxx driver builds on top of the MongoDB C driver.
 
+* For mongocxx-3.8.x, libmongoc 1.24.0 or later is required.
 * For mongocxx-3.7.x, libmongoc 1.22.1 or later is required.
 * For mongocxx-3.6.x, libmongoc 1.17.0 or later is required.
 * For mongocxx-3.5.x, libmongoc 1.15.0 or later is required.
@@ -80,12 +81,12 @@ release tarball.
 
 The [mongocxx releases](https://github.com/mongodb/mongo-cxx-driver/releases)
 page will have links to the release tarball for the version you wish you install.  For
-example, to download version 3.7.2:
+example, to download version 3.8.0:
 
 ```sh
-curl -OL https://github.com/mongodb/mongo-cxx-driver/releases/download/r3.7.2/mongo-cxx-driver-r3.7.2.tar.gz
-tar -xzf mongo-cxx-driver-r3.7.2.tar.gz
-cd mongo-cxx-driver-r3.7.2/build
+curl -OL https://github.com/mongodb/mongo-cxx-driver/releases/download/r3.8.0/mongo-cxx-driver-r3.8.0.tar.gz
+tar -xzf mongo-cxx-driver-r3.8.0.tar.gz
+cd mongo-cxx-driver-r3.8.0/build
 ```
 
 Make sure you change to the `build` directory of whatever source tree you
