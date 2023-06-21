@@ -38,7 +38,8 @@ Currently, no drivers guarantee API or ABI stability.
 | Family/version       | Stability   | Development         | Purpose                             |
 | -------------------- | ----------- | ------------------- | ----------------------------------- |
 | (repo master branch) | Unstable    | Active development  | New feature development             |
-| mongocxx 3.7.x       | Stable      | Bug fixes only      | Current stable C++ driver release   |
+| mongocxx 3.8.x       | Stable      | Bug fixes only      | Current stable C++ driver release   |
+| mongocxx 3.7.x       | Stable      | None                | Previous stable C++ driver release  |
 | mongocxx 3.6.x       | Stable      | None                | Previous stable C++ driver release  |
 | mongocxx 3.5.x       | Stable      | None                | Previous stable C++ driver release  |
 | mongocxx 3.4.x       | Stable      | None                | Previous stable C++ driver release  |
@@ -49,7 +50,7 @@ Currently, no drivers guarantee API or ABI stability.
 
 ## MongoDB compatibility
 
-Compatibility of each C++ driver version with each MongoDB server is documented in the [MongoDB C++ Driver Documentation](https://www.mongodb.com/docs/drivers/cxx/#mongodb-compatibility).
+Compatibility of each C++ driver version with each MongoDB server is documented in the [MongoDB manual](https://docs.mongodb.com/drivers/cxx#mongodb-compatibility).
 
 ## Bugs and issues
 
