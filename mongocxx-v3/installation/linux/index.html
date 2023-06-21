@@ -1283,6 +1283,7 @@
 <h3 id="step-1-install-the-latest-version-of-the-mongodb-c-driver">Step 1: Install the latest version of the MongoDB C driver.</h3>
 <p>The mongocxx driver builds on top of the MongoDB C driver.</p>
 <ul>
+<li>For mongocxx-3.8.x, libmongoc 1.24.0 or later is required.</li>
 <li>For mongocxx-3.7.x, libmongoc 1.22.1 or later is required.</li>
 <li>For mongocxx-3.6.x, libmongoc 1.17.0 or later is required.</li>
 <li>For mongocxx-3.5.x, libmongoc 1.15.0 or later is required.</li>
@@ -1337,11 +1338,11 @@ stable binary interface.</p>
 release tarball.</p>
 <p>The <a href="https://github.com/mongodb/mongo-cxx-driver/releases">mongocxx releases</a>
 page will have links to the release tarball for the version you wish you install.  For
-example, to download version 3.7.2:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">curl -OL https://github.com/mongodb/mongo-cxx-driver/releases/download/r3.7.2/mongo-cxx-driver-r3.7.2.tar.gz
-tar -xzf mongo-cxx-driver-r3.7.2.tar.gz
-cd mongo-cxx-driver-r3.7.2/build
-</code></pre></div><p>Make sure you change to the <code>build</code> directory of whatever source tree you
+example, to download version 3.8.0:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>curl -OL https://github.com/mongodb/mongo-cxx-driver/releases/download/r3.8.0/mongo-cxx-driver-r3.8.0.tar.gz
+</span></span><span style="display:flex;"><span>tar -xzf mongo-cxx-driver-r3.8.0.tar.gz
+</span></span><span style="display:flex;"><span>cd mongo-cxx-driver-r3.8.0/build
+</span></span></code></pre></div><p>Make sure you change to the <code>build</code> directory of whatever source tree you
 obtain.</p>
 <h3 id="step-4-configure-the-driver">Step 4: Configure the driver</h3>
 <p>On Unix systems, <code>libmongoc</code> installs into <code>/usr/local</code> by default. Without additional
@@ -1353,27 +1354,27 @@ from source. To configure <code>mongocxx</code> for installation into <code>/usr
     -DCMAKE_INSTALL_PREFIX=/usr/local
 </code></pre><p>These options can be freely mixed with a C++17 polyfill option. For instance, this is how a user
 would run the command above with the Boost polyfill option:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">cmake ..                                            <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>    -DCMAKE_BUILD_TYPE<span style="color:#f92672">=</span>Release                      <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>    -DBSONCXX_POLY_USE_BOOST<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>                      <span style="color:#ae81ff">\
-</span><span style="color:#ae81ff"></span>    -DCMAKE_INSTALL_PREFIX<span style="color:#f92672">=</span>/usr/local
-</code></pre></div><h3 id="step-5-build-and-install-the-driver">Step 5: Build and install the driver</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>cmake ..                                            <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DCMAKE_BUILD_TYPE<span style="color:#f92672">=</span>Release                      <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DBSONCXX_POLY_USE_BOOST<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>                      <span style="color:#ae81ff">\
+</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DCMAKE_INSTALL_PREFIX<span style="color:#f92672">=</span>/usr/local
+</span></span></code></pre></div><h3 id="step-5-build-and-install-the-driver">Step 5: Build and install the driver</h3>
 <p>If you are using the default MNMLSTC polyfill and are installing to a
 directory requiring root permissions, you should install the polyfill with
 <code>sudo</code> before building the rest of mongocxx so you don&rsquo;t have to run
 the entire build with <code>sudo</code>:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#75715e"># Only for MNMLSTC polyfill</span>
-sudo cmake --build . --target EP_mnmlstc_core
-</code></pre></div><p>Once MNMLSTC is installed, or if you are using a different polyfill,
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># Only for MNMLSTC polyfill</span>
+</span></span><span style="display:flex;"><span>sudo cmake --build . --target EP_mnmlstc_core
+</span></span></code></pre></div><p>Once MNMLSTC is installed, or if you are using a different polyfill,
 build and install the driver:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">cmake --build .
-sudo cmake --build . --target install
-</code></pre></div><p>The driver can be uninstalled at a later time in one of two ways.  First,
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>cmake --build .
+</span></span><span style="display:flex;"><span>sudo cmake --build . --target install
+</span></span></code></pre></div><p>The driver can be uninstalled at a later time in one of two ways.  First,
 the uninstall target can be called:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">sudo cmake --build . --target uninstall
-</code></pre></div><p>Second, the uninstall script can be called:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">sudo &lt;install-dir&gt;/share/mongo-cxx-driver/uninstall.sh
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>sudo cmake --build . --target uninstall
+</span></span></code></pre></div><p>Second, the uninstall script can be called:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>sudo &lt;install-dir&gt;/share/mongo-cxx-driver/uninstall.sh
+</span></span></code></pre></div>
 
 
 

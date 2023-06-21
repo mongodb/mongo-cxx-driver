@@ -1522,17 +1522,17 @@ remove a feature without replacing it, this third option will not be available.<
 </ol>
 <p>In the following release, the original feature marked with <code>MONGOCXX_DEPRECATED</code> and its
 suffixed <code>_deprecated</code> equivalent will be removed.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#75715e">// release 1 with a supported feature
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">do_thing</span>();
-
-<span style="color:#75715e">// release 2 where the feature is deprecated in favor of a new feature
-</span><span style="color:#75715e"></span>MONGOCXX_DEPRECATED <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">do_thing</span>();
-<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">do_thing_deprecated</span>();
-<span style="color:#66d9ef">void</span> <span style="color:#a6e22e">do_new_thing</span>();
-
-<span style="color:#75715e">// release 3 where the original feature is removed
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">do_new_thing</span>();
-</code></pre></div><p>In the case of a feature rename we do not offer a suffixed <code>_deprecated</code> variant,
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#75715e">// release 1 with a supported feature
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">do_thing</span>();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// release 2 where the feature is deprecated in favor of a new feature
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>MONGOCXX_DEPRECATED <span style="color:#66d9ef">void</span> <span style="color:#a6e22e">do_thing</span>();
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">do_thing_deprecated</span>();
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">do_new_thing</span>();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// release 3 where the original feature is removed
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">do_new_thing</span>();
+</span></span></code></pre></div><p>In the case of a feature rename we do not offer a suffixed <code>_deprecated</code> variant,
 as one can simply switch to using the new name with the same amount of effort.</p>
 <pre tabindex="0"><code>// release 1 with a supported feature
 void do_thing();

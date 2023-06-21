@@ -1628,8 +1628,8 @@ to D:\local\boost-1.55. When I invoked scons as <code>scons --mute --64 --extrap
 boost headers. The build gives the following configure output</em>:</p>
 <pre tabindex="0"><code>Checking whether the C++ compiler works yes
 Checking whether the C compiler works yes
-Checking if C++ compiler &quot;$CC&quot; is MSVC... yes
-Checking if C compiler &quot;cl&quot; is MSVC... yes
+Checking if C++ compiler &#34;$CC&#34; is MSVC... yes
+Checking if C compiler &#34;cl&#34; is MSVC... yes
 Checking if we are using libstdc++... no
 WARNING: Cannot disable C++11 features when using MSVC
 Checking if we are on a POSIX system... no
@@ -1657,8 +1657,8 @@ linked into boost matches that linked into the driver.</li>
 <h3 id="get-the-source-code">Get the Source Code</h3>
 <p>To get a repository that you can build, you can clone the sources, and then
 check out the branch or tag that you are interested in:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">git clone -b releases/legacy https://github.com/mongodb/mongo-cxx-driver.git
-</code></pre></div><p>Alternatively, see the
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>git clone -b releases/legacy https://github.com/mongodb/mongo-cxx-driver.git
+</span></span></code></pre></div><p>Alternatively, see the
 <a href="https://github.com/mongodb/mongo-cxx-driver/releases">releases</a> page for
 downloadable tarball files containing the files associated with each
 released tag.</p>
@@ -1756,49 +1756,49 @@ Additional Dependencies. Add ws2_32.lib.</p>
 <h3 id="example-c-driver-compilations">Example C++ Driver Compilations</h3>
 <p>The following are examples of building the C++ driver.</p>
 <p>The following example installs the driver to <code>$HOME/mongo-client-install</code>:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">scons --prefix<span style="color:#f92672">=</span>$HOME/mongo-client-install install
-</code></pre></div><p>To enable SSL, add the <code>--ssl</code> option:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">scons --prefix<span style="color:#f92672">=</span>$HOME/mongo-client-install --ssl install
-</code></pre></div><p>To enable SASL support for use with Kerberos authentication on MongoDB Enterprise, add the <code>--use-sasl-client</code> option:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">scons --prefix<span style="color:#f92672">=</span>$HOME/mongo-client-install --use-sasl-client install
-</code></pre></div><p>To build a shared library version of the driver, along with the normal static library, use the <code>--sharedclient</code> option:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">scons --prefix<span style="color:#f92672">=</span>$HOME/mongo-client-install --sharedclient install
-</code></pre></div><p>To use a custom version of boost installed to /dev/boost, use the <code>--extrapath=&lt;path-to-boost&gt;</code> option:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">scons --prefix<span style="color:#f92672">=</span>$HOME/mongo-client-install --extrapath<span style="color:#f92672">=</span>/dev/boost install
-</code></pre></div><p>To target OS X 10.9 Mavericks (and default to using <code>libc++</code>), use the <code>--osx-version-min=&lt;version&gt;</code> option:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">scons --prefix<span style="color:#f92672">=</span>$HOME/mongo-client-install --osx-version-min<span style="color:#f92672">=</span>10.9 install
-</code></pre></div><h5 id="debug-builds">Debug Builds</h5>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>scons --prefix<span style="color:#f92672">=</span>$HOME/mongo-client-install install
+</span></span></code></pre></div><p>To enable SSL, add the <code>--ssl</code> option:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>scons --prefix<span style="color:#f92672">=</span>$HOME/mongo-client-install --ssl install
+</span></span></code></pre></div><p>To enable SASL support for use with Kerberos authentication on MongoDB Enterprise, add the <code>--use-sasl-client</code> option:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>scons --prefix<span style="color:#f92672">=</span>$HOME/mongo-client-install --use-sasl-client install
+</span></span></code></pre></div><p>To build a shared library version of the driver, along with the normal static library, use the <code>--sharedclient</code> option:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>scons --prefix<span style="color:#f92672">=</span>$HOME/mongo-client-install --sharedclient install
+</span></span></code></pre></div><p>To use a custom version of boost installed to /dev/boost, use the <code>--extrapath=&lt;path-to-boost&gt;</code> option:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>scons --prefix<span style="color:#f92672">=</span>$HOME/mongo-client-install --extrapath<span style="color:#f92672">=</span>/dev/boost install
+</span></span></code></pre></div><p>To target OS X 10.9 Mavericks (and default to using <code>libc++</code>), use the <code>--osx-version-min=&lt;version&gt;</code> option:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>scons --prefix<span style="color:#f92672">=</span>$HOME/mongo-client-install --osx-version-min<span style="color:#f92672">=</span>10.9 install
+</span></span></code></pre></div><h5 id="debug-builds">Debug Builds</h5>
 <p>To build a version of the library with debugging enabled, use <code>--dbg=on</code>.
 This turns off optimization, which is on by default. To enable both
 debugging and optimization, pass <code>--dbg=on --opt=on</code>:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">scons --prefix<span style="color:#f92672">=</span>$HOME/mongo-client-install --dbg<span style="color:#f92672">=</span>on --opt<span style="color:#f92672">=</span>on install
-</code></pre></div><p>To override the default compiler to a newer GCC installed in <code>/opt/local/gcc-4.8</code>, use the <code>--cc</code> and <code>--cxx</code> options:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">scons --prefix<span style="color:#f92672">=</span>$HOME/mongo-client-install --cc<span style="color:#f92672">=</span>&lt;path-to-gcc&gt; --cxx<span style="color:#f92672">=</span>&lt;path-to-g++&gt; install
-</code></pre></div><h5 id="building-on-windows">Building on Windows</h5>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>scons --prefix<span style="color:#f92672">=</span>$HOME/mongo-client-install --dbg<span style="color:#f92672">=</span>on --opt<span style="color:#f92672">=</span>on install
+</span></span></code></pre></div><p>To override the default compiler to a newer GCC installed in <code>/opt/local/gcc-4.8</code>, use the <code>--cc</code> and <code>--cxx</code> options:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>scons --prefix<span style="color:#f92672">=</span>$HOME/mongo-client-install --cc<span style="color:#f92672">=</span>&lt;path-to-gcc&gt; --cxx<span style="color:#f92672">=</span>&lt;path-to-g++&gt; install
+</span></span></code></pre></div><h5 id="building-on-windows">Building on Windows</h5>
 <h6 id="building-against-the-pre-built-boost-binaries">Building against the pre-built boost binaries.</h6>
 <p>Building boost from source can be challenging on Windows. If appropriate for your situation, we recommend using the <a href="http://sourceforge.net/projects/boost/files/boost-binaries/">pre built boost Windows binaries</a>. Please note that you must select a download that properly reflects your target architecture (i.e. 32-bit or 64-bit) and toolchain revision (MSVC 10, 11, etc. Note that this is the VC version <strong>not</strong> the Visual Studio version).</p>
 <p>Due to the layout of the boost installation in the pre-built binaries, you cannot use the <code>--extrapath</code> SCons flag to inform the build of the installation path for the boost binaries. Instead, you should use the <code>--cpppath</code> flag to point to the root of the chosen boost installation path, and <code>--libpath</code> to point into the appropriately named library subdirectory of the boost installation. For example, if you have installed the 64-bit boost 1.55 libraries for MSVC11 into <code>D:\local\boost_1_55_0_msvc11</code>, then you would add</p>
 <pre tabindex="0"><code>--cpppath=d:\local\boost_1_55_0_msvc --libpath=d:\local\boost_1_55_0_msvc11\lib64-msvc-11.0
 </code></pre><p>to your SCons invocation.</p>
 <h6 id="building-a-dll-new-in-version-255">Building a DLL (New in version 2.5.5)</h6>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">scons
-    &lt;--64 or --32&gt;
-    --sharedclient
-    --dynamic-windows
-    --prefix<span style="color:#f92672">=</span>&lt;install-path&gt;
-    --cpppath<span style="color:#f92672">=</span>&lt;path-to-boost-headers&gt;
-    --libpath<span style="color:#f92672">=</span>&lt;path-to-boost-libs&gt;
-    install
-</code></pre></div><h6 id="the-following-example-will-build-and-install-the-c-driver-in-a-powershell">The following example will build and install the C++ driver, in a PowerShell:</h6>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">scons
-    --64
-    --sharedclient
-    --dynamic-windows
-    --prefix<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;%HOME%\mongo-client-install&#34;</span>
-    --cpppath<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;C:\local\boost_1_55_0\include&#34;</span>
-    --libpath<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;C:\local\boost_1_55_0\lib64-msvc-12.0&#34;</span>
-    install
-</code></pre></div><h6 id="building-multiple-windows-library-variants">Building multiple Windows library variants:</h6>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>scons
+</span></span><span style="display:flex;"><span>    &lt;--64 or --32&gt;
+</span></span><span style="display:flex;"><span>    --sharedclient
+</span></span><span style="display:flex;"><span>    --dynamic-windows
+</span></span><span style="display:flex;"><span>    --prefix<span style="color:#f92672">=</span>&lt;install-path&gt;
+</span></span><span style="display:flex;"><span>    --cpppath<span style="color:#f92672">=</span>&lt;path-to-boost-headers&gt;
+</span></span><span style="display:flex;"><span>    --libpath<span style="color:#f92672">=</span>&lt;path-to-boost-libs&gt;
+</span></span><span style="display:flex;"><span>    install
+</span></span></code></pre></div><h6 id="the-following-example-will-build-and-install-the-c-driver-in-a-powershell">The following example will build and install the C++ driver, in a PowerShell:</h6>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>scons
+</span></span><span style="display:flex;"><span>    --64
+</span></span><span style="display:flex;"><span>    --sharedclient
+</span></span><span style="display:flex;"><span>    --dynamic-windows
+</span></span><span style="display:flex;"><span>    --prefix<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;%HOME%\mongo-client-install&#34;</span>
+</span></span><span style="display:flex;"><span>    --cpppath<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;C:\local\boost_1_55_0\include&#34;</span>
+</span></span><span style="display:flex;"><span>    --libpath<span style="color:#f92672">=</span><span style="color:#e6db74">&#34;C:\local\boost_1_55_0\lib64-msvc-12.0&#34;</span>
+</span></span><span style="display:flex;"><span>    install
+</span></span></code></pre></div><h6 id="building-multiple-windows-library-variants">Building multiple Windows library variants:</h6>
 <p>As of legacy-0.8, the Windows libraries are now tagged with boost-like ABI tags (see <a href="http://www.boost.org/doc/libs/1_55_0/more/getting_started/windows.html#library-naming)">http://www.boost.org/doc/libs/1_55_0/more/getting_started/windows.html#library-naming)</a>, so it is possible to build several different variants (debug vs retail, static vs dynamic runtime) and install them to the same location. We have added support for autolib, so the selection of the appropriate library is handled automatically (see <a href="https://jira.mongodb.org/browse/CXX-200)">https://jira.mongodb.org/browse/CXX-200)</a>. To build all of the different driver variants, repeatedly invoke scons as follows:</p>
 <pre tabindex="0"><code>scons $ARGS install
 scons $ARGS install --dbg=on

@@ -1604,26 +1604,26 @@ passing a default constructed <code>mongo::client::Options</code> object.</p>
 <p>Because the <code>mongo::client::Options</code> class has setters returning a
 <code>mongo::client::Options&amp;</code> you can chain together options to easily
 configure them at the call site:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#66d9ef">using</span> mongo<span style="color:#f92672">::</span>client<span style="color:#f92672">::</span>initialize;
-<span style="color:#66d9ef">using</span> mongo<span style="color:#f92672">::</span>client<span style="color:#f92672">::</span>Options;
-
-<span style="color:#75715e">// Configure the mongo C++ client driver, enabling SSL and setting
-</span><span style="color:#75715e">// the SSL Certificate Authority file to &#34;mycafile&#34;.
-</span><span style="color:#75715e"></span>Status status <span style="color:#f92672">=</span> initialize(
-    Options().setSSLMode(Options<span style="color:#f92672">::</span>kSSLRequired).setSSLCAFile(<span style="color:#e6db74">&#34;mycafile&#34;</span>)
-);
-
-<span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>status.isOK()) {
-    <span style="color:#75715e">// deal with errors
-</span><span style="color:#75715e"></span>} <span style="color:#66d9ef">else</span> {
-    <span style="color:#75715e">// Driver is up in SSL mode.
-</span><span style="color:#75715e"></span>}
-</code></pre></div><h3 id="available-options">Available Options</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#66d9ef">using</span> mongo<span style="color:#f92672">::</span>client<span style="color:#f92672">::</span>initialize;
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">using</span> mongo<span style="color:#f92672">::</span>client<span style="color:#f92672">::</span>Options;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// Configure the mongo C++ client driver, enabling SSL and setting
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// the SSL Certificate Authority file to &#34;mycafile&#34;.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>Status status <span style="color:#f92672">=</span> initialize(
+</span></span><span style="display:flex;"><span>    Options().setSSLMode(Options<span style="color:#f92672">::</span>kSSLRequired).setSSLCAFile(<span style="color:#e6db74">&#34;mycafile&#34;</span>)
+</span></span><span style="display:flex;"><span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> (<span style="color:#f92672">!</span>status.isOK()) {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// deal with errors
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>} <span style="color:#66d9ef">else</span> {
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Driver is up in SSL mode.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span></code></pre></div><h3 id="available-options">Available Options</h3>
 <h4 id="optionscallshutdownatexit-and-optionssetcallshutdownatexit"><code>Options::callShutdownAtExit</code> and <code>Options::setCallShutdownAtExit</code></h4>
 <ul>
 <li>Type: <code>bool</code></li>
 <li>Default: <code>false</code></li>
-<li>Semantics: If this option is &lsquo;true&rsquo;, then a successful call to
+<li>Semantics: If this option is &rsquo;true&rsquo;, then a successful call to
 <code>mongo::client::initialize</code> will schedule a call to
 <code>mongo::client::terminate</code> with <code>atexit</code>. The call to
 <code>mongo::client::terminate</code> will be made with the value of
@@ -1726,7 +1726,7 @@ can be found
 <a href="https://github.com/mongodb/mongo-cxx-driver/blob/legacy/src/mongo/client/examples/loggingTest.cpp">here</a>.
 You may only configure one appender through startup options.</li>
 </ul>
-<h4 id="optionssetminloggedseverity-and-optionsminloggedseverity"><code>Options::setMinLoggedSeverity</code> and `Options::minLoggedSeverity'</h4>
+<h4 id="optionssetminloggedseverity-and-optionsminloggedseverity"><code>Options::setMinLoggedSeverity</code> and `Options::minLoggedSeverity&rsquo;</h4>
 <ul>
 <li>Type: <code>logger::LogSeverity</code></li>
 <li>Default: <code>LogSeverity::Log()</code></li>
