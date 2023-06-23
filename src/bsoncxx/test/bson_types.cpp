@@ -366,4 +366,15 @@ TEST_CASE("bson_value::view with inequality for non-value and value",
     b_int64 int64_val{100};
     REQUIRE(int64_val != bson_value::view{b_int64{200}});
 }
+
+TEST_CASE("get_string from uninitialized element throws an exception", "") {
+    using bsoncxx::builder::basic::kvp;
+    using bsoncxx::builder::basic::make_document;
+    bsoncxx::document::value doc = make_document(kvp("foo", "bar"));
+
+    REQUIRE_THROWS_WITH(
+        doc["doesnotexist"].get_string().value,
+        Catch::Contains(
+            "cannot get string from an uninitialized element: unset document::element"));
+}
 }  // namespace
