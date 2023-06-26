@@ -425,6 +425,7 @@ functions:
               script: |
                   set -o errexit
                   set -o pipefail
+                  set -x
 
                   # Grabs the mongocryptd path
                   pushd ..
