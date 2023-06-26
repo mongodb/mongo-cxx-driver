@@ -372,9 +372,12 @@ TEST_CASE("get_string from uninitialized element throws an exception", "") {
     using bsoncxx::builder::basic::make_document;
     bsoncxx::document::value doc = make_document(kvp("foo", "bar"));
 
-    REQUIRE_THROWS_WITH(
-        doc["doesnotexist"].get_string().value,
-        Catch::Contains(
-            "cannot get string from an uninitialized element: unset document::element"));
+    REQUIRE_THROWS_WITH(doc["doesnotexist"].get_string().value,
+                        Catch::Contains("cannot get string from an uninitialized element with key "
+                                        "\"doesnotexist\": unset document::element"));
+
+    REQUIRE_THROWS_WITH(doc["alsodoesnotexist"].get_value(),
+                        Catch::Contains("cannot return the type of uninitialized element with key "
+                                        "\"alsodoesnotexist\": unset document::element"));
 }
 }  // namespace
