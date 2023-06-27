@@ -54,7 +54,11 @@ echo "Test next minor version ... begin"
 {
     CURRENT_SHORTREF=$(git rev-parse --revs-only --short=10 HEAD)
     got=$(python calc_release_version_test.py --next-minor)
-    # The expected output may need to be updated after a release.
+    # XXX NOTE XXX NOTE XXX
+    # If you find yourself looking at this line because the assertion below
+    # failed, then it is probably because a new major/minor release was made.
+    # Update the expected output to represent the correct next version.
+    # XXX NOTE XXX NOTE XXX
     assert_eq "$got" "3.8.0-$DATE+git$CURRENT_SHORTREF"
 }
 echo "Test next minor version ... end"
