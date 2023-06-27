@@ -112,7 +112,8 @@ view::const_iterator view::end() const {
 view::const_iterator view::find(stdx::string_view key) const {
     bson_t b;
     if (!bson_init_static(&b, _data, _length)) {
-        return cend();
+        // return invalid element with key to provide more helpful exception message.
+        return const_iterator(element(key));
     }
 
     bson_iter_t iter;

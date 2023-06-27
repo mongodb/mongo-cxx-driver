@@ -412,9 +412,9 @@ class BSONCXX_API element {
     std::uint32_t _length;
     std::uint32_t _offset;
     std::uint32_t _keylen;
-    // _key will only exist when a process attempts to find a key in the BSON but is unsuccessful.
+    // _key will only exist when a caller attempts to find a key in the BSON but is unsuccessful.
     // The key is stored for a more helpful error message if the user tries to access the value of
-    // the key that does not exist.
+    // a key that does not exist.
     stdx::optional<stdx::string_view> _key;
 };
 
