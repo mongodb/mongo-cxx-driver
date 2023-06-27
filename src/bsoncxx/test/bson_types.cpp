@@ -379,5 +379,15 @@ TEST_CASE("get_string from uninitialized element throws an exception", "") {
     REQUIRE_THROWS_WITH(doc["alsodoesnotexist"].get_value(),
                         Catch::Contains("cannot return the type of uninitialized element with key "
                                         "\"alsodoesnotexist\": unset document::element"));
+
+    // Ensure a non-existing element evaluates to false.
+    REQUIRE(!doc["doesnotexist"]);
+    // Ensure finding a non-existing element results in an end iterator.
+    REQUIRE(doc.find("doesnotexist") == doc.cend());
+    // Ensure getting a key from a non-existing element results in an exception.
+    REQUIRE_THROWS_WITH(
+        doc["doesnotexist"].key(),
+        Catch::Contains("cannot return the key from an uninitialized element with key "
+                        "\"doesnotexist\": unset document::element"));
 }
 }  // namespace
