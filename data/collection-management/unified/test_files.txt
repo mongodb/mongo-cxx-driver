@@ -1,0 +1,4 @@
+clustered-indexes.json
+createCollection-pre_and_post_images.json
+modifyCollection-pre_and_post_images.json
+timeseries-collection.json
