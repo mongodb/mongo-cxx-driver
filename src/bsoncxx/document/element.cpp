@@ -42,7 +42,7 @@ element::element(const std::uint8_t* raw,
     : _raw(raw), _length(length), _offset(offset), _keylen(keylen) {}
 
 element::element(const stdx::string_view key)
-    : _key(key), _raw(nullptr), _length(0), _offset(0), _keylen(0) {}
+    : _raw(nullptr), _length(0), _offset(0), _keylen(0), _key(key) {}
 
 const std::uint8_t* element::raw() const {
     return _raw;
