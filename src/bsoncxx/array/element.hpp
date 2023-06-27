@@ -87,6 +87,8 @@ class BSONCXX_API element : private document::element {
                                      std::uint32_t length,
                                      std::uint32_t offset,
                                      std::uint32_t keylen);
+
+    BSONCXX_PRIVATE explicit element(const stdx::string_view key);
 };
 
 ///

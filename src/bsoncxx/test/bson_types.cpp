@@ -367,7 +367,7 @@ TEST_CASE("bson_value::view with inequality for non-value and value",
     REQUIRE(int64_val != bson_value::view{b_int64{200}});
 }
 
-TEST_CASE("get_string from uninitialized element throws an exception", "") {
+TEST_CASE("document uninitialized element throws exceptions", "") {
     using bsoncxx::builder::basic::kvp;
     using bsoncxx::builder::basic::make_document;
     bsoncxx::document::value doc = make_document(kvp("foo", "bar"));
@@ -389,5 +389,24 @@ TEST_CASE("get_string from uninitialized element throws an exception", "") {
         doc["doesnotexist"].key(),
         Catch::Contains("cannot return the key from an uninitialized element with key "
                         "\"doesnotexist\": unset document::element"));
+}
+
+TEST_CASE("array uninitialized element throws exceptions", "") {
+    using bsoncxx::builder::basic::kvp;
+    using bsoncxx::builder::basic::make_array;
+    bsoncxx::array::value arr = make_array("a", "b", "c");
+
+    REQUIRE_THROWS_WITH(arr.view()[3].get_string().value,
+                        Catch::Contains("cannot get string from an uninitialized element with key "
+                                        "\"3\": unset document::element"));
+    // Ensure a non-existing element evaluates to false.
+    REQUIRE(!arr.view()[3]);
+    // Ensure finding a non-existing element results in an end iterator.
+    REQUIRE(arr.view().find(3) == arr.view().cend());
+    // Ensure getting a key from a non-existing element results in an exception.
+    REQUIRE_THROWS_WITH(
+        arr.view()[3].key(),
+        Catch::Contains("cannot return the key from an uninitialized element with key "
+                        "\"3\": unset document::element"));
 }
 }  // namespace
