@@ -61,36 +61,6 @@ python3 -m venv ~/virtualenv
 pip install -r etc/requirements.txt
 ```
 
-## Update .evergreen/calc_release_version_selftest.sh
-
-If doing a minor release (e.g. releasing r3.8.0), then update
-`.evergreen/calc_release_version_selftest.sh`. If doing a patch release (e.g.
-releasing r3.7.3), skip the rest of this step and proceed to the next step.
-
-Change the assertion around line 59 to reflect the **next** minor version after
-the release you are preparing (by changing, in this instance, 3.8.0 to 3.9.0).
-
-```
-diff --git a/.evergreen/calc_release_version_selftest.sh b/.evergreen/calc_release_version_selftest.sh
-index d4fc1c908..c1e97adc4 100644
---- a/.evergreen/calc_release_version_selftest.sh
-+++ b/.evergreen/calc_release_version_selftest.sh
-@@ -56,7 +56,7 @@ echo "Test next minor version ... begin"
-     CURRENT_SHORTREF=$(git rev-parse --revs-only --short=10 HEAD)
-     got=$(python calc_release_version_test.py --next-minor)
-     # The expected output may need to be updated after a release.
--    assert_eq "$got" "3.8.0-$DATE+git$CURRENT_SHORTREF"
-+    assert_eq "$got" "3.9.0-$DATE+git$CURRENT_SHORTREF"
- }
- echo "Test next minor version ... end"
-```
-
-Commit the change.
-
-```
-git commit -a -m 'update .evergreen/calc_release_version_selftest.sh'
-```
-
 ## Tag the release
 
 If doing a minor release (e.g. releasing r3.8.0), stay on the master branch. You
