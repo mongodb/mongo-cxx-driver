@@ -92,8 +92,14 @@ if(NEED_DOWNLOAD_C_DRIVER)
 
     FetchContent_GetProperties(mongo-c-driver)
     if(NOT mongo-c-driver_POPULATED)
-      FetchContent_Populate(mongo-c-driver)
-      add_subdirectory(${mongo-c-driver_SOURCE_DIR} ${mongo-c-driver_BINARY_DIR} EXCLUDE_FROM_ALL)
+        FetchContent_Populate(mongo-c-driver)
+        # Set ENABLE_TESTS to OFF to disable the test-libmongoc target in the C driver.
+        # This prevents the LoadTests.cmake script from attempting to execute test-libmongoc.
+        # test-libmongoc is not built with the "all" target.
+        # Attempting to execute test-libmongoc results in an error: "Unable to find executable: NOT_FOUND"
+        set(ENABLE_TESTS OFF)
+        add_subdirectory(${mongo-c-driver_SOURCE_DIR} ${mongo-c-driver_BINARY_DIR} EXCLUDE_FROM_ALL)
+        set(ENABLE_TESTS ON)
     endif()
 endif()
 
