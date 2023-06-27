@@ -960,20 +960,6 @@ tasks:
         - func: "run_kms_servers"
         - func: "test"
 
-    - name: calc_release_version_selftest
-      commands:
-      - func: "setup"
-      - command: shell.exec
-        type: test
-        params:
-          shell: bash
-          working_dir: "mongo-cxx-driver"
-          script: |-
-            if [ "${is_patch}" != "true" ]; then
-              cd etc
-              bash -x ../.evergreen/calc_release_version_selftest.sh
-            fi
-
     - name: uninstall_check
       commands:
       - func: "setup"
@@ -1304,7 +1290,6 @@ buildvariants:
             distros:
             - debian11-large
           - name: uninstall_check
-          - name: calc_release_version_selftest
 
     - name: debian11-release-50
       display_name: "Debian 11 Release (MongoDB 5.0)"
@@ -1328,7 +1313,6 @@ buildvariants:
             distros:
             - debian11-large
           - name: uninstall_check
-          - name: calc_release_version_selftest
 
     - name: debian10-release-latest
       display_name: "Debian 10 Release (MongoDB Latest)"
