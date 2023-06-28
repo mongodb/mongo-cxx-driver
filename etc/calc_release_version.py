@@ -28,7 +28,7 @@ current Git commit.
 # This is done by starting in the directory containing this script and then
 # executing a separate self-test script, like this:
 #
-# $ bash ../.evergreen/calc_release_version_selftest.sh
+# $ bash ./calc_release_version_selftest.sh
 #
 # The self-test script will emit diagnostic output. If tracing of the execution
 # of each command is desired, then add the -x option to the bash invocation.
