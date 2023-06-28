@@ -98,8 +98,10 @@ if(NEED_DOWNLOAD_C_DRIVER)
         # test-libmongoc is not built with the "all" target.
         # Attempting to execute test-libmongoc results in an error: "Unable to find executable: NOT_FOUND"
         set(ENABLE_TESTS OFF)
+        set(BUILD_TESTING OFF)
         add_subdirectory(${mongo-c-driver_SOURCE_DIR} ${mongo-c-driver_BINARY_DIR} EXCLUDE_FROM_ALL)
         set(ENABLE_TESTS ON)
+        set(BUILD_TESTING ON)
     endif()
 endif()
 
