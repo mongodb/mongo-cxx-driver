@@ -2,5 +2,8 @@
 Click
 GitPython
 PyGithub
-jira
+# Pin `jira` to apply fix of https://github.com/pycontribs/jira/commit/010223289eb66663aaafb70447397038efb2d40d.
+# This avoids the `signature_method_rejected` error described in https://github.com/pycontribs/jira/pull/1643.
+# TODO: replace the following line with `jira` once there is a release of `jira` containing the fix.
+git+https://github.com/pycontribs/jira.git@010223289eb66663aaafb70447397038efb2d40d
 cryptography

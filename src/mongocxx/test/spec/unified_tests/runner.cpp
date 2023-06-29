@@ -263,7 +263,7 @@ bool compatible_with_server(const bsoncxx::array::element& requirement) {
             throw e;
         }
 
-        for (const auto kvp : server_params.get_document().view()) {
+        for (const auto& kvp : server_params.get_document().view()) {
             const auto param = kvp.key();
             const auto value = kvp.get_value();
             // If actual parameter is unset or unequal to requirement, skip test.
@@ -954,7 +954,7 @@ void assert_outcome(const array::element& test) {
     if (!test["outcome"])
         return;
 
-    for (const auto outcome : test["outcome"].get_array().value) {
+    for (const auto& outcome : test["outcome"].get_array().value) {
         CAPTURE(to_json(outcome.get_document()));
 
         const auto db_name = outcome["databaseName"].get_string().value;
@@ -1033,7 +1033,7 @@ const std::map<std::pair<mongocxx::stdx::string_view, mongocxx::stdx::string_vie
 void run_tests(mongocxx::stdx::string_view test_description, document::view test) {
     REQUIRE(test["tests"]);
 
-    for (const auto ele : test["tests"].get_array().value) {
+    for (const auto& ele : test["tests"].get_array().value) {
         const auto description = string::to_string(ele["description"].get_string().value);
         SECTION(description) {
             {
@@ -1066,7 +1066,7 @@ void run_tests(mongocxx::stdx::string_view test_description, document::view test
 
             operations::state state;
 
-            for (const auto ops : ele["operations"].get_array().value) {
+            for (const auto& ops : ele["operations"].get_array().value) {
                 const auto ignore_result_and_error = [&]() -> bool {
                     const auto elem = ops["ignoreResultAndError"];
                     return elem && elem.get_bool().value;

@@ -7,12 +7,12 @@
 #######################################
 variables:
 
-    mongoc_version_default: &mongoc_version_default "98995b5d9e31768ae02be265e3debe43ec35cff8" # TODO: update to 1.24.0 once released.
+    mongoc_version_default: &mongoc_version_default "1.24.0"
 
     # If updating mongoc_version_minimum, also update:
     # - the default value of --c-driver-build-ref in etc/make_release.py
     # - LIBMONGOC_REQUIRED_VERSION in src/mongocxx/CMakeLists.txt
-    mongoc_version_minimum: &mongoc_version_minimum "98995b5d9e31768ae02be265e3debe43ec35cff8" # TODO: update to 1.24.0 once released.
+    mongoc_version_minimum: &mongoc_version_minimum "1.24.0"
 
     mongodb_version:
         version_latest: &version_latest "latest"
@@ -1650,8 +1650,8 @@ buildvariants:
         - name: clang-tidy
         - name: compile_without_tests
 
-    - name: ubuntu1404-debug-gcc
-      display_name: "Ubuntu 14.04 Debug (g++ 4.8)"
+    - name: ubuntu2204-debug-gcc
+      display_name: "Ubuntu 22.04 Debug (GCC)"
       expansions:
         build_type: "Debug"
         tar_options: *linux_tar_options
@@ -1659,12 +1659,12 @@ buildvariants:
         mongodb_version: *version_latest
         compiler: g++
       run_on:
-        - ubuntu1404-small
+        - ubuntu2204-small
       tasks:
         - name: compile_without_tests
 
-    - name: ubuntu1404-debug-clang
-      display_name: "Ubuntu 14.04 Debug (clang++ 3.4)"
+    - name: ubuntu2204-debug-clang
+      display_name: "Ubuntu 22.04 Debug (Clang)"
       expansions:
         build_type: "Debug"
         tar_options: *linux_tar_options
@@ -1672,7 +1672,7 @@ buildvariants:
         mongodb_version: *version_latest
         compiler: clang++
       run_on:
-        - ubuntu1404-small
+        - ubuntu2204-small
       tasks:
         - name: compile_without_tests
 
@@ -1835,7 +1835,7 @@ buildvariants:
     #######################################
     #         Mac and Windows             #
     #######################################
-    - name: macos-1014-latest
+    - name: macos-1014-latest # CXX-2661: remove in favor of macos-1100.
       display_name: "MacOS 10.14 Release (Boost) (MongoDB Latest)"
       expansions:
           build_type: "Release"
@@ -1851,7 +1851,7 @@ buildvariants:
           - name: compile_and_test_with_static_libs
           - name: compile_and_test_with_static_libs_extra_alignment
 
-    - name: macos-1014-50
+    - name: macos-1014-50 # CXX-2661: remove in favor of macos-1100.
       display_name: "MacOS 10.14 Release (Boost) (MongoDB 5.0)"
       expansions:
           build_type: "Release"
@@ -1867,7 +1867,7 @@ buildvariants:
           - name: compile_and_test_with_static_libs
           - name: compile_and_test_with_static_libs_extra_alignment
 
-    - name: macos-1014-versioned-api
+    - name: macos-1014-versioned-api # CXX-2661: remove in favor of macos-1100.
       display_name: "MacOS 10.14 Release Versioned API"
       expansions:
           build_type: "Release"
@@ -1877,6 +1877,52 @@ buildvariants:
           mongodb_version: *version_latest
       run_on:
           - macos-1014
+      tasks:
+          - name: test_versioned_api
+          - name: test_versioned_api_accept_version_two
+
+    - name: macos-1100-latest
+      display_name: "MacOS 11.0 Release (Boost) (MongoDB Latest)"
+      expansions:
+          build_type: "Release"
+          extra_path: *macos_extra_path
+          cmake_flags: *macos_cmake_flags
+          poly_flags: *poly_boost_flags
+          mongodb_version: *version_latest
+      run_on:
+          - macos-1100
+      tasks:
+          - name: compile_and_test_with_shared_libs
+          - name: compile_and_test_with_shared_libs_extra_alignment
+          - name: compile_and_test_with_static_libs
+          - name: compile_and_test_with_static_libs_extra_alignment
+
+    - name: macos-1100-50
+      display_name: "MacOS 11.0 Release (Boost) (MongoDB 5.0)"
+      expansions:
+          build_type: "Release"
+          extra_path: *macos_extra_path
+          cmake_flags: *macos_cmake_flags
+          poly_flags: *poly_boost_flags
+          mongodb_version: *version_50
+      run_on:
+          - macos-1100
+      tasks:
+          - name: compile_and_test_with_shared_libs
+          - name: compile_and_test_with_shared_libs_extra_alignment
+          - name: compile_and_test_with_static_libs
+          - name: compile_and_test_with_static_libs_extra_alignment
+
+    - name: macos-1100-versioned-api
+      display_name: "MacOS 11.0 Release Versioned API"
+      expansions:
+          build_type: "Release"
+          extra_path: *macos_extra_path
+          cmake_flags: *macos_cmake_flags
+          poly_flags: *poly_boost_flags
+          mongodb_version: *version_latest
+      run_on:
+          - macos-1100
       tasks:
           - name: test_versioned_api
           - name: test_versioned_api_accept_version_two
@@ -1938,4 +1984,4 @@ buildvariants:
          - name: debian-package-build-mnmlstc
          - name: rpm-package-build
            distros:
-           - rhel82-arm64-small
+           - rhel90-arm64-small
