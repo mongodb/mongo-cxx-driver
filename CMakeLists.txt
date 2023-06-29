@@ -92,6 +92,9 @@ if(NEED_DOWNLOAD_C_DRIVER)
 
     FetchContent_GetProperties(mongo-c-driver)
     if(NOT mongo-c-driver_POPULATED)
+        set(OLD_ENABLE_TESTS ${ENABLE_TESTS})
+        set(OLD_BUILD_TESTING ${BUILD_TESTING})
+
         FetchContent_Populate(mongo-c-driver)
         # Set ENABLE_TESTS to OFF to disable the test-libmongoc target in the C driver.
         # This prevents the LoadTests.cmake script from attempting to execute test-libmongoc.
@@ -100,8 +103,8 @@ if(NEED_DOWNLOAD_C_DRIVER)
         set(ENABLE_TESTS OFF)
         set(BUILD_TESTING OFF)
         add_subdirectory(${mongo-c-driver_SOURCE_DIR} ${mongo-c-driver_BINARY_DIR} EXCLUDE_FROM_ALL)
-        set(ENABLE_TESTS ON)
-        set(BUILD_TESTING ON)
+        set(ENABLE_TESTS OLD_ENABLE_TESTS)
+        set(BUILD_TESTING OLD_BUILD_TESTING)
     endif()
 endif()
 
