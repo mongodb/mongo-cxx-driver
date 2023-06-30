@@ -88,7 +88,7 @@ class instance::impl {
             // The libmongoc namespace mocking system doesn't play well with varargs
             // functions, so we use a bare mongoc_log call here.
             mongoc_log(MONGOC_LOG_LEVEL_INFO, "mongocxx", "libmongoc logging callback enabled");
-            std::cerr << "*\n*\n*\n*\n*\n*\n*\n*\nSET USER LOGGER\n*\n*\n*\n*\n*\n*\n*\n*\n" << std::endl;
+            std::fprintf(stderr, "*\n*\n*\n*\n*\n*\n*\n*\nSET USER LOGGER: '%p'\n*\n*\n*\n*\n*\n*\n*\n*\n", (void *)user_log_handler);
         } else {
             libmongoc::log_set_handler(null_log_handler, nullptr);
             std::cerr << "*\n*\n*\n*\n*\n*\n*\n*\nDID NOT SET USER LOGGER\n*\n*\n*\n*\n*\n*\n*\n*\n" << std::endl;
