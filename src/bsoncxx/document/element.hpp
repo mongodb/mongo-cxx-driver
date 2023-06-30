@@ -17,6 +17,7 @@
 #include <cstddef>
 #include <cstdint>
 
+#include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 
 #include <bsoncxx/config/prelude.hpp>
@@ -401,6 +402,9 @@ class BSONCXX_API element {
                                      std::uint32_t offset,
                                      std::uint32_t keylen);
 
+    // Construct an invalid element with a key. Useful for exceptions.
+    BSONCXX_PRIVATE explicit element(const stdx::string_view key);
+
     friend class view;
     friend class array::element;
 
@@ -408,6 +412,10 @@ class BSONCXX_API element {
     std::uint32_t _length;
     std::uint32_t _offset;
     std::uint32_t _keylen;
+    // _key will only exist when a caller attempts to find a key in the BSON but is unsuccessful.
+    // The key is stored for a more helpful error message if the user tries to access the value of
+    // a key that does not exist.
+    stdx::optional<stdx::string_view> _key;
 };
 
 ///
