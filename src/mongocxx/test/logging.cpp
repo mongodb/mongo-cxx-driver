@@ -33,6 +33,7 @@ class test_log_handler : public logger {
                     stdx::string_view domain,
                     stdx::string_view message) noexcept final {
         fprintf(stderr, "*\n*\n*\n*\nCALLED OPERATOR()\n*\n*\n");
+        fprintf(stderr, "\n***ERROR LEVEL: %d***\n", static_cast<int>(level));
         if (level == log_level::k_error) {
             _events->emplace_back(level, std::string(domain), std::string(message));
             fprintf(stderr, "*\n*\n*\n*\nEVENTS SIZE: %zu\n*\n*\n", _events->size());
@@ -61,6 +62,7 @@ TEST_CASE("a user-provided log handler will be used for logging output", "[insta
     // The libmongoc namespace mocking system doesn't play well with varargs
     // functions, so we use a bare mongoc_log call here.
     mongoc_log(::MONGOC_LOG_LEVEL_ERROR, "foo", "bar");
+    fprintf(stderr, "\n***LOGGED ERROR: %d***\n", ::MONGOC_LOG_LEVEL_ERROR);
 
     REQUIRE(events.size() == 1);
     REQUIRE(events[0] == std::make_tuple(log_level::k_error, "foo", "bar"));
