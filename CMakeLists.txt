@@ -74,7 +74,9 @@ if(NEED_DOWNLOAD_C_DRIVER)
     include(ExternalProject)
 
     set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-    set(ENABLE_EXTRA_ALIGNMENT OFF)
+    if(not WIN32)
+        set(ENABLE_EXTRA_ALIGNMENT OFF)
+    endif()
     add_compile_definitions(ENABLE_EXTRA_ALIGNMENT=OFF)
 
     set(BUILD_SHARED_LIBS_WITH_STATIC_MONGOC ON CACHE INTERNAL "")
