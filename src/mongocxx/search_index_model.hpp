@@ -4,7 +4,6 @@
 
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
-#include <stdx/optional.hpp>
 
 #include <mongocxx/config/prelude.hpp>
 
