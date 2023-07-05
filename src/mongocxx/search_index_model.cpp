@@ -9,7 +9,7 @@ search_index_model::search_index_model(const bsoncxx::document::view_or_value& d
     : search_index_model("default", document) {}
 search_index_model::search_index_model(const std::string name,
                                        const bsoncxx::document::view_or_value& document)
-    : _name(name), _document(document) {}
+    : _name(name), _document(document.view()) {}
 
 search_index_model::search_index_model(search_index_model&&) noexcept = default;
 

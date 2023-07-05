@@ -121,6 +121,8 @@ set(mongocxx_sources
     hint.cpp
     index_model.cpp
     index_view.cpp
+    search_index_model.cpp
+    search_index_view.cpp
     instance.cpp
     logger.cpp
     model/delete_many.cpp
@@ -153,6 +155,7 @@ set(mongocxx_sources
     options/gridfs/upload.cpp
     options/index.cpp
     options/index_view.cpp
+    options/search_index_view.cpp
     options/insert.cpp
     options/pool.cpp
     options/range.cpp
@@ -334,6 +337,10 @@ set_local_dist (src_mongocxx_DIST_local
    index_model.hpp
    index_view.cpp
    index_view.hpp
+   search_index_model.cpp
+   search_index_model.hpp
+   search_index_view.cpp
+   search_index_view.hpp
    instance.cpp
    instance.hpp
    logger.cpp
@@ -399,6 +406,8 @@ set_local_dist (src_mongocxx_DIST_local
    options/index.hpp
    options/index_view.cpp
    options/index_view.hpp
+   options/search_index_view.cpp
+   options/search_index_view.hpp
    options/insert.cpp
    options/insert.hpp
    options/pool.cpp

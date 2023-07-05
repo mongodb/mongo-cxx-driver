@@ -32,6 +32,7 @@ set(test_driver_sources
     gridfs/uploader.cpp
     hint.cpp
     index_view.cpp
+    search_index_view.cpp
     model/delete_many.cpp
     model/delete_one.cpp
     model/insert_one.cpp
@@ -298,6 +299,7 @@ set_dist_list (src_mongocxx_test_DIST
    gridfs/uploader.cpp
    hint.cpp
    index_view.cpp
+   search_index_view.cpp
    instance.cpp
    logging.cpp
    model/delete_many.cpp
