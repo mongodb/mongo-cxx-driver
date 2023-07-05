@@ -71,6 +71,7 @@ void user_log_handler(::mongoc_log_level_t mongoc_log_level,
                       const char* log_domain,
                       const char* message,
                       void* user_data) {
+    fprintf(stderr, "\n\nCALLED: user_log_handler\n\n");
     (*static_cast<logger*>(user_data))(convert_log_level(mongoc_log_level),
                                        stdx::string_view{log_domain},
                                        stdx::string_view{message});
