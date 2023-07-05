@@ -56,6 +56,7 @@
 #include <mongocxx/result/insert_one.hpp>
 #include <mongocxx/result/replace_one.hpp>
 #include <mongocxx/result/update.hpp>
+#include <mongocxx/search_index_view.hpp>
 #include <mongocxx/write_concern.hpp>
 
 #include <mongocxx/config/prelude.hpp>
@@ -1843,6 +1844,10 @@ class MONGOCXX_API collection {
     change_stream watch(const client_session& session,
                         const pipeline& pipe,
                         const options::change_stream& options = {});
+
+    ///
+    /// Gets an search_index_view to the collection.
+    search_index_view search_indexes();
 
     ///
     /// @}

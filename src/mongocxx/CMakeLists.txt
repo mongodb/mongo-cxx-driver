@@ -446,6 +446,7 @@ set_local_dist (src_mongocxx_DIST_local
    private/cursor.hh
    private/database.hh
    private/index_view.hh
+   private/search_index_view.hh
    private/libbson.cpp
    private/libbson.hh
    private/libmongoc.cpp

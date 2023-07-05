@@ -16,6 +16,7 @@
 
 #include <catch.hpp>
 #include <sstream>
+#include <vector>
 
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/json.hpp>
@@ -1794,6 +1795,36 @@ document::value create_find_cursor(entity::map& map,
     return make_document();
 }
 
+document::value create_search_index(collection& coll, const document::view& operation) {
+    auto arguments = operation["arguments"];
+
+    auto raw_model = arguments["model"];
+
+    search_index_model model =
+        raw_model["name"] ? search_index_model(raw_model["name"].get_string().value.to_string(),
+                                               raw_model["definition"].get_document().value)
+                          : search_index_model(raw_model["definition"].get_document().value);
+
+    return make_document(kvp("result", coll.search_indexes().create_one(model)));
+}
+
+document::value create_search_indexes(collection& coll, const document::view& operation) {
+    auto arguments = operation["arguments"];
+
+    auto raw_models = arguments["models"].get_array().value;
+    std::vector<search_index_model> models;
+
+    for (auto&& m : raw_models) {
+        search_index_model model =
+            m["name"] ? search_index_model(m["name"].get_string().value.to_string(),
+                                           m["definition"].get_document().value)
+                      : search_index_model(m["definition"].get_document().value);
+        models.push_back(model);
+    }
+    coll.search_indexes().create_many(models);
+    return make_document(kvp("result", "TEST"));
+}
+
 document::value operations::run(entity::map& entity_map,
                                 std::unordered_map<std::string, spec::apm_checker>& apm_map,
                                 const array::element& op,
@@ -2128,6 +2159,16 @@ document::value operations::run(entity::map& entity_map,
     }
     if (name == "removeKeyAltName") {
         return remove_key_alt_name(entity_map, object, op_view);
+    }
+    if (name == "createSearchIndex") {
+        auto& coll = entity_map.get_collection(object);
+
+        return create_search_index(coll, op_view);
+    }
+    if (name == "createSearchIndexes") {
+        auto& coll = entity_map.get_collection(object);
+
+        return create_search_indexes(coll, op_view);
     }
 
     throw std::logic_error{"unsupported operation: " + name};
