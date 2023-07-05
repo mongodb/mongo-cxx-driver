@@ -36,22 +36,31 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace {
 
 log_level convert_log_level(::mongoc_log_level_t mongoc_log_level) {
+    fprintf(stderr, "CONVERTING THE LOG LEVEL OF '%d' ", mongoc_log_level);
     switch (mongoc_log_level) {
         case MONGOC_LOG_LEVEL_ERROR:
+            fprintf(stderr, "to k_error\n");
             return log_level::k_error;
         case MONGOC_LOG_LEVEL_CRITICAL:
+            fprintf(stderr, "to k_critical\n");
             return log_level::k_critical;
         case MONGOC_LOG_LEVEL_WARNING:
+            fprintf(stderr, "to k_warning\n");
             return log_level::k_warning;
         case MONGOC_LOG_LEVEL_MESSAGE:
+            fprintf(stderr, "to k_message\n");
             return log_level::k_message;
         case MONGOC_LOG_LEVEL_INFO:
+            fprintf(stderr, "to k_info\n");
             return log_level::k_info;
         case MONGOC_LOG_LEVEL_DEBUG:
+            fprintf(stderr, "to k_debug\n");
             return log_level::k_debug;
         case MONGOC_LOG_LEVEL_TRACE:
+            fprintf(stderr, "to k_trace\n");
             return log_level::k_trace;
         default:
+            fprintf(stderr, "to unreachable\n");
             MONGOCXX_UNREACHABLE;
     }
 }
