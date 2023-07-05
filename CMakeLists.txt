@@ -41,7 +41,7 @@ else()
 endif()
 
 set(LIBMONGOC_REQUIRED_VERSION 1.22.1) # TODO (CXX-2696): update to 1.24.0 once released.
-set(LIBMONGOC_DOWNLOAD_VERSION 49f2ef6d1c8dcdf2c867560d245fa49e6fda32ee) # TODO (CXX-2696): update to 1.24.0 once released.
+set(LIBMONGOC_DOWNLOAD_VERSION 47877401bf47713287eafd4e5a0935660132f80b) # TODO (CXX-2696): update to 1.24.0 once released.
 set(LIBMONGOC_REQUIRED_ABI_VERSION 1.0)
 
 set(NEED_DOWNLOAD_C_DRIVER false)
