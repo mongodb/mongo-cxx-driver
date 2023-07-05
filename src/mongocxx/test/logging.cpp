@@ -38,6 +38,9 @@ class test_log_handler : public logger {
             _events->emplace_back(level, std::string(domain), std::string(message));
             fprintf(stderr, "*\n*\n*\n*\nEVENTS SIZE: %zu\n*\n*\n", _events->size());
         }
+        if (level == log_level::k_info) {
+            fprintf(stderr, "THIS IS AN INFO LEVEL LOG WHEN IT SHOULD BE AN ERROR LEVEL LOG\n");
+        }
     }
 
    private:
