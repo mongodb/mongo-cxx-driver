@@ -19,8 +19,8 @@ class MONGOCXX_API search_index_model {
     ///
     /// Initializes a new search_index_model over a mongocxx::collection.
     ///
-    search_index_model(const bsoncxx::document::view_or_value& document);
-    search_index_model(const std::string name, const bsoncxx::document::view_or_value& document);
+    search_index_model(const bsoncxx::document::view_or_value& definition);
+    search_index_model(const std::string name, const bsoncxx::document::view_or_value& definition);
 
     search_index_model() = delete;
 
@@ -52,13 +52,13 @@ class MONGOCXX_API search_index_model {
     bsoncxx::stdx::optional<std::string> get_name() const;
 
     ///
-    /// Retrieves document of a search_index_model.
+    /// Retrieves definition of a search_index_model.
     ///
-    bsoncxx::document::view get_document() const;
+    bsoncxx::document::view get_definition() const;
 
    private:
     bsoncxx::stdx::optional<std::string> _name;
-    bsoncxx::document::value _document;
+    bsoncxx::document::value _definition;
 };
 
 MONGOCXX_INLINE_NAMESPACE_END

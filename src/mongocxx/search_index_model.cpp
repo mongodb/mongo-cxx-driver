@@ -5,11 +5,11 @@
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
-search_index_model::search_index_model(const bsoncxx::document::view_or_value& document)
-    : _document(document.view()) {}
+search_index_model::search_index_model(const bsoncxx::document::view_or_value& definition)
+    : _definition(definition.view()) {}
 search_index_model::search_index_model(const std::string name,
-                                       const bsoncxx::document::view_or_value& document)
-    : _name(name), _document(document.view()) {}
+                                       const bsoncxx::document::view_or_value& definition)
+    : _name(name), _definition(definition.view()) {}
 
 search_index_model::search_index_model(search_index_model&&) noexcept = default;
 
@@ -23,8 +23,8 @@ bsoncxx::stdx::optional<std::string> search_index_model::get_name() const {
     return _name;
 }
 
-bsoncxx::document::view search_index_model::get_document() const {
-    return _document.view();
+bsoncxx::document::view search_index_model::get_definition() const {
+    return _definition.view();
 }
 
 MONGOCXX_INLINE_NAMESPACE_END
