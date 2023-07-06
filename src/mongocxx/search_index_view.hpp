@@ -19,6 +19,7 @@
 
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
+#include <bsoncxx/stdx/optional.hpp>
 #include <mongocxx/client_session.hpp>
 #include <mongocxx/cursor.hpp>
 #include <mongocxx/options/search_index_view.hpp>
@@ -65,7 +66,7 @@ class MONGOCXX_API search_index_view {
      * @return The name of the created search index.
      *
      */
-    std::string create_one(
+    bsoncxx::stdx::optional<std::string> create_one(
         const std::string name,
         const bsoncxx::document::view_or_value& definition,
         const options::search_index_view& options = options::search_index_view{});
@@ -79,7 +80,7 @@ class MONGOCXX_API search_index_view {
      * @return The name of the created index.
      *
      */
-    std::string create_one(
+    bsoncxx::stdx::optional<std::string> create_one(
         const search_index_model& model,
         const options::search_index_view& options = options::search_index_view{});
 

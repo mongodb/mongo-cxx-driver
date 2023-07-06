@@ -1805,7 +1805,7 @@ document::value create_search_index(collection& coll, const document::view& oper
                                                raw_model["definition"].get_document().value)
                           : search_index_model(raw_model["definition"].get_document().value);
 
-    return make_document(kvp("result", coll.search_indexes().create_one(model)));
+    return make_document(kvp("result", coll.search_indexes().create_one(model).value()));
 }
 
 document::value create_search_indexes(collection& coll, const document::view& operation) {

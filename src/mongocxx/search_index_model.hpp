@@ -4,6 +4,7 @@
 
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
+#include <bsoncxx/stdx/optional.hpp>
 
 #include <mongocxx/config/prelude.hpp>
 
@@ -48,7 +49,7 @@ class MONGOCXX_API search_index_model {
     ///
     /// Retrieves name of a search_index_model.
     ///
-    std::string get_name() const;
+    bsoncxx::stdx::optional<std::string> get_name() const;
 
     ///
     /// Retrieves document of a search_index_model.
@@ -56,7 +57,7 @@ class MONGOCXX_API search_index_model {
     bsoncxx::document::view get_document() const;
 
    private:
-    std::string _name;
+    bsoncxx::stdx::optional<std::string> _name;
     bsoncxx::document::value _document;
 };
 
