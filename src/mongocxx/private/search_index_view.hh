@@ -97,7 +97,7 @@ class search_index_view::impl {
         for (auto&& model : search_indexes) {
             builder::basic::document search_index_doc;
             const stdx::optional<std::string> name = model.get_name();
-            const bsoncxx::document::view& definition = model.get_document();
+            const bsoncxx::document::view& definition = model.get_definition();
 
             if (name) {
                 search_index_doc.append(kvp("name", name.value()));
@@ -128,78 +128,46 @@ class search_index_view::impl {
         return reply.steal();
     }
 
-    // void drop_one(const client_session* session,
-    //               bsoncxx::stdx::string_view name,
-    //               const options::index_view& options) {
-    //     if (name == bsoncxx::stdx::string_view{"*"}) {
-    //         throw logic_error(error_code::k_invalid_parameter);
-    //     }
+    void drop_one(const std::string name, const options::search_index_view& options) {
+        bsoncxx::builder::basic::document opts_doc;
 
-    //     bsoncxx::builder::basic::document opts_doc;
+        bsoncxx::document::value command = make_document(
+            kvp("dropSearchIndex", libmongoc::collection_get_name(_coll)), kvp("name", name));
 
-    //     if (options.max_time()) {
-    //         opts_doc.append(kvp("maxTimeMS",
-    //         bsoncxx::types::b_int64{options.max_time()->count()}));
-    //     }
+        libbson::scoped_bson_t reply;
+        libbson::scoped_bson_t command_bson{command.view()};
+        libbson::scoped_bson_t opts_bson{opts_doc.view()};
+        bson_error_t error;
 
-    //     if (options.write_concern()) {
-    //         opts_doc.append(kvp("writeConcern", options.write_concern()->to_document()));
-    //     }
+        bool result = libmongoc::collection_write_command_with_opts(
+            _coll, command_bson.bson(), opts_bson.bson(), reply.bson_for_init(), &error);
 
-    //     if (session) {
-    //         opts_doc.append(bsoncxx::builder::concatenate_doc{session->_get_impl().to_document()});
-    //     }
+        if (!result) {
+            throw_exception<operation_exception>(reply.steal(), error);
+        }
+    }
 
-    //     bsoncxx::document::value command = make_document(
-    //         kvp("dropIndexes", libmongoc::collection_get_name(_coll)), kvp("index", name));
+    void update_one(const std::string name,
+                    const bsoncxx::document::view_or_value& definition,
+                    const options::search_index_view& options) {
+        bsoncxx::builder::basic::document opts_doc;
+        bsoncxx::document::value command =
+            make_document(kvp("updateSearchIndex", libmongoc::collection_get_name(_coll)),
+                          kvp("name", name),
+                          kvp("definition", definition.view()));
 
-    //     libbson::scoped_bson_t reply;
-    //     libbson::scoped_bson_t command_bson{command.view()};
-    //     libbson::scoped_bson_t opts_bson{opts_doc.view()};
-    //     bson_error_t error;
+        libbson::scoped_bson_t reply;
+        libbson::scoped_bson_t command_bson{command.view()};
+        libbson::scoped_bson_t opts_bson{opts_doc.view()};
+        bson_error_t error;
 
-    //     bool result = libmongoc::collection_write_command_with_opts(
-    //         _coll, command_bson.bson(), opts_bson.bson(), reply.bson_for_init(), &error);
+        bool result = libmongoc::collection_write_command_with_opts(
+            _coll, command_bson.bson(), opts_bson.bson(), reply.bson_for_init(), &error);
 
-    //     if (!result) {
-    //         throw_exception<operation_exception>(reply.steal(), error);
-    //     }
-    // }
-
-    // MONGOCXX_INLINE void drop_all(const client_session* session,
-    //                               const options::index_view& options) {
-    //     bsoncxx::document::value command = make_document(
-    //         kvp("dropIndexes", libmongoc::collection_get_name(_coll)), kvp("index", "*"));
-
-    //     libbson::scoped_bson_t reply;
-    //     bson_error_t error;
-
-    //     libbson::scoped_bson_t command_bson{command.view()};
-
-    //     bsoncxx::builder::basic::document opts_doc;
-
-    //     if (options.max_time()) {
-    //         opts_doc.append(kvp("maxTimeMS",
-    //         bsoncxx::types::b_int64{options.max_time()->count()}));
-    //     }
-
-    //     if (options.write_concern()) {
-    //         opts_doc.append(kvp("writeConcern", options.write_concern()->to_document()));
-    //     }
-
-    //     if (session) {
-    //         opts_doc.append(bsoncxx::builder::concatenate_doc{session->_get_impl().to_document()});
-    //     }
-
-    //     libbson::scoped_bson_t opts_bson{opts_doc.view()};
-
-    //     bool result = libmongoc::collection_write_command_with_opts(
-    //         _coll, command_bson.bson(), opts_bson.bson(), reply.bson_for_init(), &error);
-
-    //     if (!result) {
-    //         throw_exception<operation_exception>(reply.steal(), error);
-    //     }
-    // }
+        if (!result) {
+            throw_exception<operation_exception>(reply.steal(), error);
+        }
+    }
 
     mongoc_collection_t* _coll;
     mongoc_client_t* _client;

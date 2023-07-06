@@ -50,13 +50,13 @@ std::vector<std::string> search_index_view::create_many(
 
 void search_index_view::drop_one(const std::string name,
                                  const options::search_index_view& options) {
-    throw "IMPLEMENT ME - drop_one";
+    _get_impl().drop_one(name, options);
 }
 
 void search_index_view::update_one(std::string name,
                                    const bsoncxx::document::view_or_value& definition,
                                    const options::search_index_view& options) {
-    throw "IMPLEMENT ME - update_one";
+    _get_impl().update_one(name, definition, options);
 }
 
 search_index_view::impl& search_index_view::_get_impl() {
