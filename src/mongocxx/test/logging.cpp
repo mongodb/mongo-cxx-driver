@@ -68,6 +68,7 @@ TEST_CASE("a user-provided log handler will be used for logging output", "[insta
     fprintf(stderr, "\n\nNOW LOGGING ERROR: %d\n\n", ::MONGOC_LOG_LEVEL_ERROR);
     mongoc_log(::MONGOC_LOG_LEVEL_ERROR, "foo", "bar");
 
+    REQUIRE(&mongocxx::instance::current() == &driver);
     REQUIRE(events.size() == 1);
     REQUIRE(events[0] == std::make_tuple(log_level::k_error, "foo", "bar"));
 }
