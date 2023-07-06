@@ -59,7 +59,9 @@ TEST_CASE("a user-provided log handler will be used for logging output", "[insta
     // reset_log_handler_when_done rlhwd;
 
     std::vector<test_log_handler::event> events;
+    fprintf(stderr, "\n\nSETTING USER LOG HANDLER IN UNIT TEST\n\n");
     mongocxx::instance driver{stdx::make_unique<test_log_handler>(&events)};
+    fprintf(stderr, "\n\nDONE SETTING USER LOG HANDLER IN UNIT TEST\n\n");
 
     REQUIRE(&mongocxx::instance::current() == &driver);
 
