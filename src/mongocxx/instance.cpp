@@ -94,14 +94,14 @@ class instance::impl {
     impl(std::unique_ptr<logger> logger) : _user_logger(std::move(logger)) {
         libmongoc::init();
         if (_user_logger) {
+            std::fprintf(stderr, "*\n*\n*\n*\n*\n*\n*\n*\nSETTING USER LOGGER: '%p'\n*\n*\n*\n*\n*\n*\n*\n*\n", (void *)user_log_handler);
             libmongoc::log_set_handler(user_log_handler, _user_logger.get());
             // The libmongoc namespace mocking system doesn't play well with varargs
             // functions, so we use a bare mongoc_log call here.
             mongoc_log(MONGOC_LOG_LEVEL_INFO, "mongocxx", "libmongoc logging callback enabled");
-            std::fprintf(stderr, "*\n*\n*\n*\n*\n*\n*\n*\nSET USER LOGGER: '%p'\n*\n*\n*\n*\n*\n*\n*\n*\n", (void *)user_log_handler);
         } else {
+            std::cerr << "*\n*\n*\n*\n*\n*\n*\n*\nWILL NOT SET USER LOGGER\n*\n*\n*\n*\n*\n*\n*\n*\n" << std::endl;
             libmongoc::log_set_handler(null_log_handler, nullptr);
-            std::cerr << "*\n*\n*\n*\n*\n*\n*\n*\nDID NOT SET USER LOGGER\n*\n*\n*\n*\n*\n*\n*\n*\n" << std::endl;
         }
 
         // Despite the name, mongoc_handshake_data_append *prepends* the platform string.
