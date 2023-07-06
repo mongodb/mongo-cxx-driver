@@ -1822,6 +1822,34 @@ document::value create_search_indexes(collection& coll, const document::view& op
         models.push_back(model);
     }
     coll.search_indexes().create_many(models);
+    // TODO: Loop through the result of ^ and add to the return document
+    return make_document(kvp("result", "TEST"));
+}
+
+document::value drop_search_index(collection& coll, const document::view& operation) {
+    auto arguments = operation["arguments"];
+
+    auto name = arguments["name"].get_string().value.to_string();
+
+    coll.search_indexes().drop_one(name);
+
+    return make_document(kvp("result", "TEST"));
+}
+
+document::value list_search_indexes(collection& coll, const document::view& operation) {
+    coll.search_indexes().list();
+
+    return make_document(kvp("result", "TEST"));
+}
+
+document::value update_search_index(collection& coll, const document::view& operation) {
+    auto arguments = operation["arguments"];
+
+    auto name = arguments["name"].get_string().value.to_string();
+    auto definition = arguments["definition"].get_document().value;
+
+    coll.search_indexes().update_one(name, definition);
+
     return make_document(kvp("result", "TEST"));
 }
 
@@ -2169,6 +2197,21 @@ document::value operations::run(entity::map& entity_map,
         auto& coll = entity_map.get_collection(object);
 
         return create_search_indexes(coll, op_view);
+    }
+    if (name == "dropSearchIndex") {
+        auto& coll = entity_map.get_collection(object);
+
+        return drop_search_index(coll, op_view);
+    }
+    if (name == "listSearchIndexes") {
+        auto& coll = entity_map.get_collection(object);
+
+        return list_search_indexes(coll, op_view);
+    }
+    if (name == "updateSearchIndex") {
+        auto& coll = entity_map.get_collection(object);
+
+        return update_search_index(coll, op_view);
     }
 
     throw std::logic_error{"unsupported operation: " + name};

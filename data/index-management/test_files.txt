@@ -1,2 +1,5 @@
 createSearchIndex.json
 createSearchIndexes.json
+dropSearchIndex.json
+listSearchIndexes.json
+updateSearchIndex.json

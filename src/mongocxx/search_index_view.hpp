@@ -109,14 +109,13 @@ class MONGOCXX_API search_index_view {
     /**
      * Updates a single search index from the collection by the index name.
      *
-     * NOTE: The spec doesn't have any other parameters for this function but I think that there
-     * should be a "definition" parameter holding a document
      *
      * @param name
      *    The name of the search index to update.
      *
      */
     void update_one(std::string name,
+                    const bsoncxx::document::view_or_value& definition,
                     const options::search_index_view& options = options::search_index_view{});
 
    private:
