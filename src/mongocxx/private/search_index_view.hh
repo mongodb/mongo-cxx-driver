@@ -73,103 +73,60 @@ class search_index_view::impl {
     //     return libmongoc::collection_find_indexes_with_opts(_coll, nullptr);
     // }
 
-    // bsoncxx::stdx::optional<std::string> create_one(const client_session* session,
-    //                                                 const index_model& model,
-    //                                                 const options::index_view& options) {
-    //     bsoncxx::document::value result =
-    //         create_many(session, std::vector<index_model>{model}, options);
-    //     bsoncxx::document::view result_view = result.view();
+    bsoncxx::stdx::optional<std::string> create_one(const search_index_model& model,
+                                                    const options::search_index_view& options) {
+        bsoncxx::document::value result =
+            create_many(std::vector<search_index_model>{model}, options);
+        bsoncxx::document::view result_view = result.view();
 
-    //     if (result_view["note"] &&
-    //         bsoncxx::string::to_string(result_view["note"].get_string().value) ==
-    //             "all indexes already exist") {
-    //         return bsoncxx::stdx::nullopt;
-    //     }
+        return bsoncxx::stdx::make_optional(result_view["indexesCreated"]
+                                                .get_array()
+                                                .value.begin()
+                                                ->get_document()
+                                                .value["name"]
+                                                .get_string()
+                                                .value.to_string());
+    }
 
-    //     if (auto name = model.options()["name"]) {
-    //         return bsoncxx::stdx::make_optional(
-    //             bsoncxx::string::to_string(name.get_value().get_string().value));
-    //     }
+    bsoncxx::document::value create_many(const std::vector<search_index_model>& search_indexes,
+                                         const options::search_index_view& options) {
+        using namespace bsoncxx;
 
-    //     return bsoncxx::stdx::make_optional(get_index_name_from_keys(model.keys()));
-    // }
+        builder::basic::array search_index_arr;
 
-    // bsoncxx::document::value create_many(const client_session* session,
-    //                                      const std::vector<index_model>& indexes,
-    //                                      const options::index_view& options) {
-    //     using namespace bsoncxx;
-    //     using builder::basic::concatenate;
+        for (auto&& model : search_indexes) {
+            builder::basic::document search_index_doc;
+            const stdx::optional<std::string> name = model.get_name();
+            const bsoncxx::document::view& definition = model.get_document();
 
-    //     builder::basic::array index_arr;
+            if (name) {
+                search_index_doc.append(kvp("name", name.value()));
+            }
+            search_index_doc.append(kvp("definition", definition));
+            search_index_arr.append(search_index_doc.view());
+        }
 
-    //     for (auto&& model : indexes) {
-    //         builder::basic::document index_doc;
-    //         const bsoncxx::document::view& opts_view = model.options();
-    //         const bsoncxx::document::view& keys = model.keys();
+        document::view_or_value command =
+            make_document(kvp("createSearchIndexes", libmongoc::collection_get_name(_coll)),
+                          kvp("indexes", search_index_arr.view()));
 
-    //         if (!opts_view["name"]) {
-    //             index_doc.append(kvp("name", get_index_name_from_keys(keys)));
-    //         }
+        libbson::scoped_bson_t reply;
+        bson_error_t error;
 
-    //         index_doc.append(kvp("key", keys), concatenate(opts_view));
-    //         index_arr.append(index_doc.view());
-    //     }
+        builder::basic::document opts_doc;
 
-    //     document::view_or_value command =
-    //         make_document(kvp("createIndexes", libmongoc::collection_get_name(_coll)),
-    //                       kvp("indexes", index_arr.view()));
+        libbson::scoped_bson_t command_bson{command};
+        libbson::scoped_bson_t opts_bson{opts_doc.view()};
 
-    //     libbson::scoped_bson_t reply;
-    //     bson_error_t error;
+        auto result = libmongoc::collection_write_command_with_opts(
+            _coll, command_bson.bson(), opts_bson.bson(), reply.bson_for_init(), &error);
 
-    //     builder::basic::document opts_doc;
+        if (!result) {
+            throw_exception<operation_exception>(reply.steal(), error);
+        }
 
-    //     if (options.max_time()) {
-    //         opts_doc.append(kvp("maxTimeMS",
-    //         bsoncxx::types::b_int64{options.max_time()->count()}));
-    //     }
-
-    //     if (options.write_concern()) {
-    //         opts_doc.append(kvp("writeConcern", options.write_concern()->to_document()));
-    //     }
-
-    //     if (session) {
-    //         opts_doc.append(bsoncxx::builder::concatenate_doc{session->_get_impl().to_document()});
-    //     }
-
-    //     if (options.commit_quorum()) {
-    //         auto server_description = scoped_server_description(libmongoc::client_select_server(
-    //             _client, true /* for_writes */, nullptr /* read_prefs */, &error));
-    //         if (!server_description.sd)
-    //             throw_exception<write_exception>(error);
-
-    //         auto hello = libmongoc::server_description_hello_response(server_description.sd);
-
-    //         bson_iter_t iter;
-    //         if (!bson_iter_init_find(&iter, hello, "maxWireVersion") ||
-    //             bson_iter_int32(&iter) < 9) {
-    //             throw write_exception{
-    //                 error_code::k_invalid_parameter,
-    //                 "option 'commitQuorum' not available on the current server version"};
-    //         }
-
-    //         command =
-    //             make_document(concatenate(command),
-    //             concatenate(options.commit_quorum()->view()));
-    //     }
-
-    //     libbson::scoped_bson_t command_bson{command};
-    //     libbson::scoped_bson_t opts_bson{opts_doc.view()};
-
-    //     auto result = libmongoc::collection_write_command_with_opts(
-    //         _coll, command_bson.bson(), opts_bson.bson(), reply.bson_for_init(), &error);
-
-    //     if (!result) {
-    //         throw_exception<operation_exception>(reply.steal(), error);
-    //     }
-
-    //     return reply.steal();
-    // }
+        return reply.steal();
+    }
 
     // void drop_one(const client_session* session,
     //               bsoncxx::stdx::string_view name,

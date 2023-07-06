@@ -25,22 +25,27 @@ cursor search_index_view::list(const client_session& session) {
     // return _get_impl().list(&session);
 }
 
-std::string search_index_view::create_one(const std::string name,
-                                          const bsoncxx::document::view_or_value& definition,
-                                          const options::search_index_view& options) {
+bsoncxx::stdx::optional<std::string> search_index_view::create_one(
+    const std::string name,
+    const bsoncxx::document::view_or_value& definition,
+    const options::search_index_view& options) {
     return create_one(search_index_model(name, definition), options);
 }
 
-std::string search_index_view::create_one(const search_index_model& model,
-                                          const options::search_index_view& options) {
-    throw "IMPLEMENT ME - create_one";
-    return "";
+bsoncxx::stdx::optional<std::string> search_index_view::create_one(
+    const search_index_model& model, const options::search_index_view& options) {
+    return _get_impl().create_one(model, options);
 }
 
 std::vector<std::string> search_index_view::create_many(
     const std::vector<search_index_model>& models, const options::search_index_view& options) {
-    throw "IMPLEMENT ME - create_many";
-    return {};
+    std::vector<std::string> search_index_names;
+    auto response = _get_impl().create_many(models, options);
+    for (auto&& index : response["indexesCreated"].get_array().value) {
+        search_index_names.push_back(
+            index.get_document().value["name"].get_string().value.to_string());
+    }
+    return search_index_names;
 }
 
 void search_index_view::drop_one(const std::string name,
