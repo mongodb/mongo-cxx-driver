@@ -15,6 +15,7 @@
 #include <mongocxx/logger.hpp>
 
 #include <mongocxx/config/private/prelude.hh>
+#include <mongocxx/private/libmongoc.hh>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
@@ -42,6 +43,10 @@ stdx::string_view MONGOCXX_CALL to_string(log_level level) {
 
 logger::logger() = default;
 logger::~logger() = default;
+
+void log_msg(log_level level, const char *log_domain, const char *format) {
+    mongoc_log(static_cast<mongoc_log_level_t>(level), log_domain, format);
+}
 
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
