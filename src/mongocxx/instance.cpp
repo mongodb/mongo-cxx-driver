@@ -36,31 +36,22 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace {
 
 log_level convert_log_level(::mongoc_log_level_t mongoc_log_level) {
-    fprintf(stderr, "CONVERTING THE LOG LEVEL OF '%d' ", mongoc_log_level);
     switch (mongoc_log_level) {
         case MONGOC_LOG_LEVEL_ERROR:
-            fprintf(stderr, "to k_error\n");
             return log_level::k_error;
         case MONGOC_LOG_LEVEL_CRITICAL:
-            fprintf(stderr, "to k_critical\n");
             return log_level::k_critical;
         case MONGOC_LOG_LEVEL_WARNING:
-            fprintf(stderr, "to k_warning\n");
             return log_level::k_warning;
         case MONGOC_LOG_LEVEL_MESSAGE:
-            fprintf(stderr, "to k_message\n");
             return log_level::k_message;
         case MONGOC_LOG_LEVEL_INFO:
-            fprintf(stderr, "to k_info\n");
             return log_level::k_info;
         case MONGOC_LOG_LEVEL_DEBUG:
-            fprintf(stderr, "to k_debug\n");
             return log_level::k_debug;
         case MONGOC_LOG_LEVEL_TRACE:
-            fprintf(stderr, "to k_trace\n");
             return log_level::k_trace;
         default:
-            fprintf(stderr, "to unreachable\n");
             MONGOCXX_UNREACHABLE;
     }
 }
@@ -71,7 +62,6 @@ void user_log_handler(::mongoc_log_level_t mongoc_log_level,
                       const char* log_domain,
                       const char* message,
                       void* user_data) {
-    fprintf(stderr, "\n\nCALLED: user_log_handler\n\n");
     (*static_cast<logger*>(user_data))(convert_log_level(mongoc_log_level),
                                        stdx::string_view{log_domain},
                                        stdx::string_view{message});
@@ -94,14 +84,11 @@ class instance::impl {
     impl(std::unique_ptr<logger> logger) : _user_logger(std::move(logger)) {
         libmongoc::init();
         if (_user_logger) {
-            std::fprintf(stderr, "*\n*\n*\n*\n*\n*\n*\n*\nSETTING USER LOGGER: '%p'\n*\n*\n*\n*\n*\n*\n*\n*\n", (void *)user_log_handler);
             libmongoc::log_set_handler(user_log_handler, _user_logger.get());
             // The libmongoc namespace mocking system doesn't play well with varargs
             // functions, so we use a bare mongoc_log call here.
-            fprintf(stderr, "\n%s: mongoc_log is at address: '%p'\n", __FUNCTION__, (void *)mongoc_log);
             log_msg(log_level::k_info, "mongocxx", "libmongoc logging callback enabled");
         } else {
-            std::cerr << "*\n*\n*\n*\n*\n*\n*\n*\nWILL NOT SET USER LOGGER\n*\n*\n*\n*\n*\n*\n*\n*\n" << std::endl;
             libmongoc::log_set_handler(null_log_handler, nullptr);
         }
 

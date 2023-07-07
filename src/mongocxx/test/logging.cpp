@@ -32,14 +32,8 @@ class test_log_handler : public logger {
     void operator()(log_level level,
                     stdx::string_view domain,
                     stdx::string_view message) noexcept final {
-        fprintf(stderr, "*\n*\n*\n*\nCALLED OPERATOR()\n*\n*\n");
-        fprintf(stderr, "\n***ERROR LEVEL: %d***\n", static_cast<int>(level));
         if (level == log_level::k_error) {
             _events->emplace_back(level, std::string(domain), std::string(message));
-            fprintf(stderr, "*\n*\n*\n*\nEVENTS SIZE: %zu\n*\n*\n", _events->size());
-        }
-        if (level == log_level::k_info) {
-            fprintf(stderr, "THIS IS AN INFO LEVEL LOG WHEN IT SHOULD BE AN ERROR LEVEL LOG\n");
         }
     }
 
@@ -50,7 +44,6 @@ class test_log_handler : public logger {
 class reset_log_handler_when_done {
    public:
     ~reset_log_handler_when_done() {
-        fprintf(stderr, "\n\nRESETTING LOG HANDLER\n\n");
         libmongoc::log_set_handler(::mongoc_log_default_handler, nullptr);
     }
 };
@@ -59,16 +52,12 @@ TEST_CASE("a user-provided log handler will be used for logging output", "[insta
     reset_log_handler_when_done rlhwd;
 
     std::vector<test_log_handler::event> events;
-    fprintf(stderr, "\n\nSETTING USER LOG HANDLER IN UNIT TEST\n\n");
     mongocxx::instance driver{stdx::make_unique<test_log_handler>(&events)};
-    fprintf(stderr, "\n\nDONE SETTING USER LOG HANDLER IN UNIT TEST\n\n");
 
     REQUIRE(&mongocxx::instance::current() == &driver);
 
     // The libmongoc namespace mocking system doesn't play well with varargs
     // functions, so we use a bare mongoc_log call here.
-    fprintf(stderr, "\n%s: mongoc_log is at address: '%p'\n", __FUNCTION__, (void *)mongoc_log);
-    fprintf(stderr, "\n\nNOW LOGGING ERROR: %d\n\n", ::MONGOC_LOG_LEVEL_ERROR);
     log_msg(log_level::k_error, "foo", "bar");
     // ::mongoc_log(::MONGOC_LOG_LEVEL_ERROR, "foo", "bar");
 
