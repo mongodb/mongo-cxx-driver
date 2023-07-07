@@ -1821,9 +1821,14 @@ document::value create_search_indexes(collection& coll, const document::view& op
                       : search_index_model(m["definition"].get_document().value);
         models.push_back(model);
     }
-    coll.search_indexes().create_many(models);
-    // TODO: Loop through the result of ^ and add to the return document
-    return make_document(kvp("result", "TEST"));
+
+    std::vector<std::string> created_indexes = coll.search_indexes().create_many(models);
+    builder::basic::array result;
+    for (auto s : created_indexes) {
+        result.append(s);
+    }
+
+    return make_document(kvp("result", result.view()));
 }
 
 document::value drop_search_index(collection& coll, const document::view& operation) {
@@ -1833,7 +1838,7 @@ document::value drop_search_index(collection& coll, const document::view& operat
 
     coll.search_indexes().drop_one(name);
 
-    return make_document(kvp("result", "TEST"));
+    return make_document();
 }
 
 document::value list_search_indexes(collection& coll, const document::view& operation) {
@@ -1867,7 +1872,7 @@ document::value update_search_index(collection& coll, const document::view& oper
 
     coll.search_indexes().update_one(name, definition);
 
-    return make_document(kvp("result", "TEST"));
+    return make_document();
 }
 
 document::value operations::run(entity::map& entity_map,
