@@ -45,7 +45,8 @@ logger::logger() = default;
 logger::~logger() = default;
 
 void log_msg(log_level level, const char *log_domain, const char *format) {
-    mongoc_log(static_cast<mongoc_log_level_t>(level), log_domain, format);
+    void (*alias)(mongoc_log_level_t, const char*, const char*, ...) = mongoc_log;
+    alias(static_cast<mongoc_log_level_t>(level), log_domain, format);
 }
 
 MONGOCXX_INLINE_NAMESPACE_END
