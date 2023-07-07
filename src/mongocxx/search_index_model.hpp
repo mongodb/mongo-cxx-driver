@@ -12,7 +12,7 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 ///
-/// Class representing an index on a MongoDB server.
+/// Class representing a search index on a MongoDB server.
 ///
 class MONGOCXX_API search_index_model {
    public:

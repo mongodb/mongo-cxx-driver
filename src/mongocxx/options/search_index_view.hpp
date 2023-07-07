@@ -1,7 +1,5 @@
 #pragma once
 
-#include <bsoncxx/stdx/optional.hpp>
-
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {

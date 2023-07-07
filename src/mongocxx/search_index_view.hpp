@@ -1,17 +1,3 @@
-// Copyright 2017 MongoDB Inc.
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
 #pragma once
 
 #include <string>
@@ -31,7 +17,7 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 ///
-/// Class representing a MongoDB index view.
+/// Class representing a MongoDB search index view.
 ///
 class MONGOCXX_API search_index_view {
    public:
@@ -51,7 +37,7 @@ class MONGOCXX_API search_index_view {
                 const bsoncxx::document::view& aggregation_opts = bsoncxx::document::view{});
 
     /**
-     * This is a convenience method for creating a single serach index.
+     * This is a convenience method for creating a single search index.
      *
      * @param name
      *    The name of the search index to create.
@@ -67,7 +53,7 @@ class MONGOCXX_API search_index_view {
         const options::search_index_view& options = options::search_index_view{});
 
     /**
-     * This is a convenience method for creating a single index.
+     * This is a convenience method for creating a single search index.
      *
      * @param model
      *    The search index model to create.
@@ -103,11 +89,14 @@ class MONGOCXX_API search_index_view {
                   const options::search_index_view& options = options::search_index_view{});
 
     /**
-     * Updates a single search index from the collection by the index name.
+     * Updates a single search index from the collection by the search index name.
      *
      *
      * @param name
      *    The name of the search index to update.
+     *
+     * @param definition
+     *    The definition to update the search index to.
      *
      */
     void update_one(std::string name,

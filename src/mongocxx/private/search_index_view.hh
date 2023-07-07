@@ -1,17 +1,3 @@
-// Copyright 2017 MongoDB Inc.
-//
-// Licensed under the Apache License, Version 2.0 (the "License");
-// you may not use this file except in compliance with the License.
-// You may obtain a copy of the License at
-//
-// http://www.apache.org/licenses/LICENSE-2.0
-//
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-// See the License for the specific language governing permissions and
-// limitations under the License.
-
 #pragma once
 
 #include <vector>
@@ -21,10 +7,7 @@
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/string/to_string.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
-#include <mongocxx/exception/error_code.hpp>
-#include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
-#include <mongocxx/exception/write_exception.hpp>
 #include <mongocxx/options/search_index_view.hpp>
 #include <mongocxx/private/client_session.hh>
 #include <mongocxx/private/libbson.hh>
@@ -97,6 +80,7 @@ class search_index_view::impl {
 
         for (auto&& model : search_indexes) {
             builder::basic::document search_index_doc;
+            // model may or may not have a name attached to it (even though the server will)
             const stdx::optional<std::string> name = model.get_name();
             const bsoncxx::document::view& definition = model.get_definition();
 
@@ -172,15 +156,6 @@ class search_index_view::impl {
 
     mongoc_collection_t* _coll;
     mongoc_client_t* _client;
-
-    class scoped_server_description {
-       public:
-        explicit scoped_server_description(mongoc_server_description_t* sd) : sd(sd) {}
-        ~scoped_server_description() {
-            mongoc_server_description_destroy(sd);
-        }
-        mongoc_server_description_t* sd;
-    };
 };
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx

@@ -1823,6 +1823,7 @@ document::value create_search_indexes(collection& coll, const document::view& op
     }
 
     std::vector<std::string> created_indexes = coll.search_indexes().create_many(models);
+
     builder::basic::array result;
     for (auto s : created_indexes) {
         result.append(s);
@@ -1838,6 +1839,7 @@ document::value drop_search_index(collection& coll, const document::view& operat
 
     coll.search_indexes().drop_one(name);
 
+    // no return value from drop_one
     return make_document();
 }
 
@@ -1853,6 +1855,7 @@ document::value list_search_indexes(collection& coll, const document::view& oper
                                                 aggregation_options)
                    : coll.search_indexes().list(aggregation_options);
 
+    // we must loop over the resulting cursor to trigger server events for the spec tests
     auto result = bsoncxx::builder::basic::document{};
     result.append(
         bsoncxx::builder::basic::kvp("result", [&c](bsoncxx::builder::basic::sub_array array) {
@@ -1872,6 +1875,7 @@ document::value update_search_index(collection& coll, const document::view& oper
 
     coll.search_indexes().update_one(name, definition);
 
+    // no return value from update_one
     return make_document();
 }
 
