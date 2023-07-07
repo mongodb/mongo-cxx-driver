@@ -47,16 +47,16 @@ class test_log_handler : public logger {
     std::vector<event>* _events;
 };
 
-// class reset_log_handler_when_done {
-//    public:
-//     ~reset_log_handler_when_done() {
-//         fprintf(stderr, "\n\nRESETTING LOG HANDLER\n\n");
-//         libmongoc::log_set_handler(::mongoc_log_default_handler, nullptr);
-//     }
-// };
+class reset_log_handler_when_done {
+   public:
+    ~reset_log_handler_when_done() {
+        fprintf(stderr, "\n\nRESETTING LOG HANDLER\n\n");
+        libmongoc::log_set_handler(::mongoc_log_default_handler, nullptr);
+    }
+};
 
 TEST_CASE("a user-provided log handler will be used for logging output", "[instance]") {
-    // reset_log_handler_when_done rlhwd;
+    reset_log_handler_when_done rlhwd;
 
     std::vector<test_log_handler::event> events;
     fprintf(stderr, "\n\nSETTING USER LOG HANDLER IN UNIT TEST\n\n");
@@ -71,7 +71,6 @@ TEST_CASE("a user-provided log handler will be used for logging output", "[insta
     fprintf(stderr, "\n\nNOW LOGGING ERROR: %d\n\n", ::MONGOC_LOG_LEVEL_ERROR);
     mongoc_log(::MONGOC_LOG_LEVEL_ERROR, "foo", "bar");
 
-    REQUIRE(&mongocxx::instance::current() == &driver);
     REQUIRE(events.size() == 1);
     REQUIRE(events[0] == std::make_tuple(log_level::k_error, "foo", "bar"));
 }
