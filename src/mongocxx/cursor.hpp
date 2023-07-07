@@ -84,6 +84,7 @@ class MONGOCXX_API cursor {
     friend class client_encryption;
     friend class database;
     friend class index_view;
+    friend class search_index_view;
     friend class cursor::iterator;
 
     MONGOCXX_PRIVATE cursor(void* cursor_ptr,

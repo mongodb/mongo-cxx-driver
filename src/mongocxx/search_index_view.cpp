@@ -15,14 +15,13 @@ search_index_view::search_index_view(search_index_view&&) noexcept = default;
 search_index_view& search_index_view::operator=(search_index_view&&) noexcept = default;
 search_index_view::~search_index_view() = default;
 
-cursor search_index_view::list() {
-    throw "IMPLEMENT ME - list";
-    // return _get_impl().list(nullptr);
+cursor search_index_view::list(const bsoncxx::document::view& aggregation_opts) {
+    return _get_impl().list(aggregation_opts);
 }
 
-cursor search_index_view::list(const client_session& session) {
-    throw "IMPLEMENT ME - list";
-    // return _get_impl().list(&session);
+cursor search_index_view::list(const std::string name,
+                               const bsoncxx::document::view& aggregation_opts) {
+    return _get_impl().list(name, aggregation_opts);
 }
 
 bsoncxx::stdx::optional<std::string> search_index_view::create_one(

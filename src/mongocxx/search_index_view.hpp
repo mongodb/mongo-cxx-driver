@@ -45,15 +45,10 @@ class MONGOCXX_API search_index_view {
     ///
     /// Returns a cursor over all the search indexes.
     ///
-    cursor list();
+    cursor list(const bsoncxx::document::view& aggregation_opts = bsoncxx::document::view{});
 
-    ///
-    /// Returns a cursor over all the search indexes.
-    ///
-    /// @param session
-    ///   The mongocxx::client_session with which to perform the list operation.
-    ///
-    cursor list(const client_session& session);
+    cursor list(const std::string name,
+                const bsoncxx::document::view& aggregation_opts = bsoncxx::document::view{});
 
     /**
      * This is a convenience method for creating a single serach index.

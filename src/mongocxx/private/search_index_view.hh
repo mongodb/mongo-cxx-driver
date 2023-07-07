@@ -51,27 +51,28 @@ class search_index_view::impl {
 
     impl& operator=(const impl& i) = default;
 
-    // std::string get_index_name_from_keys(bsoncxx::document::view_or_value keys) {
-    //     libbson::scoped_bson_t keys_bson{keys};
+    cursor list(const std::string name, const bsoncxx::document::view& aggregation_opts) {
+        pipeline pipeline{};
+        pipeline.append_stage(
+            make_document(kvp("$listSearchIndexes", make_document(kvp("name", name)))));
+        return list(pipeline, aggregation_opts);
+    }
 
-    //     auto name_from_keys = libmongoc::collection_keys_to_index_string(keys_bson.bson());
-    //     std::string result{name_from_keys};
-    //     bson_free(name_from_keys);
+    cursor list(const bsoncxx::document::view& aggregation_opts) {
+        pipeline pipeline{};
+        pipeline.append_stage(make_document(kvp("$listSearchIndexes", make_document())));
+        return list(pipeline, aggregation_opts);
+    }
 
-    //     return result;
-    // }
+    cursor list(const pipeline& pipeline, const bsoncxx::document::view& aggregation_opts) {
+        libbson::scoped_bson_t opts_bson{aggregation_opts};
+        libbson::scoped_bson_t stages(bsoncxx::document::view(pipeline.view_array()));
+        bson_error_t error;
+        const mongoc_read_prefs_t* rp_ptr = NULL;
 
-    // cursor list(const client_session* session) {
-    //     if (session) {
-    //         bsoncxx::builder::basic::document options_builder;
-    //         options_builder.append(
-    //             bsoncxx::builder::concatenate_doc{session->_get_impl().to_document()});
-    //         libbson::scoped_bson_t bson_options(options_builder.extract());
-    //         return libmongoc::collection_find_indexes_with_opts(_coll, bson_options.bson());
-    //     }
-
-    //     return libmongoc::collection_find_indexes_with_opts(_coll, nullptr);
-    // }
+        return libmongoc::collection_aggregate(
+            _coll, static_cast<::mongoc_query_flags_t>(0), stages.bson(), opts_bson.bson(), rp_ptr);
+    }
 
     bsoncxx::stdx::optional<std::string> create_one(const search_index_model& model,
                                                     const options::search_index_view& options) {

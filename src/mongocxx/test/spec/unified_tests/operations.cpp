@@ -1837,9 +1837,26 @@ document::value drop_search_index(collection& coll, const document::view& operat
 }
 
 document::value list_search_indexes(collection& coll, const document::view& operation) {
-    coll.search_indexes().list();
+    auto arguments = operation["arguments"];
+    bsoncxx::document::view aggregation_options;
+    if (arguments["aggregationOptions"]) {
+        aggregation_options = arguments["aggregationOptions"].get_document().view();
+    }
 
-    return make_document(kvp("result", "TEST"));
+    cursor c = arguments["name"]
+                   ? coll.search_indexes().list(arguments["name"].get_string().value.to_string(),
+                                                aggregation_options)
+                   : coll.search_indexes().list(aggregation_options);
+
+    auto result = bsoncxx::builder::basic::document{};
+    result.append(
+        bsoncxx::builder::basic::kvp("result", [&c](bsoncxx::builder::basic::sub_array array) {
+            for (auto&& document : c) {
+                array.append(document);
+            }
+        }));
+
+    return result.extract();
 }
 
 document::value update_search_index(collection& coll, const document::view& operation) {
