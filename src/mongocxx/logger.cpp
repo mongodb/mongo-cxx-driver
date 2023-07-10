@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <cstdarg>
+
 #include <mongocxx/logger.hpp>
 #include <mongocxx/private/libmongoc.hh>
 
@@ -44,9 +46,11 @@ stdx::string_view MONGOCXX_CALL to_string(log_level level) {
 logger::logger() = default;
 logger::~logger() = default;
 
-void log_msg(log_level level, const char* log_domain, const char* format) {
-    void (*alias)(mongoc_log_level_t, const char*, const char*, ...) = mongoc_log;
-    alias(static_cast<mongoc_log_level_t>(level), log_domain, format);
+void log_msg(log_level level, const char* log_domain, const char* format, ...) {
+    std::va_list args;
+    va_start (args, format);
+    mongoc_vlog(static_cast<mongoc_log_level_t>(level), log_domain, format, args);
+    va_end(args);
 }
 
 MONGOCXX_INLINE_NAMESPACE_END
