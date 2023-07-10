@@ -46,11 +46,16 @@ stdx::string_view MONGOCXX_CALL to_string(log_level level) {
 logger::logger() = default;
 logger::~logger() = default;
 
-void log_msg(log_level level, const char* log_domain, const char* format, ...) {
-    std::va_list args;
-    va_start (args, format);
-    libmongoc::vlog(static_cast<mongoc_log_level_t>(level), log_domain, format, args);
-    va_end(args);
+// void log_msg(log_level level, const char* log_domain, const char* format, ...) {
+//     std::va_list args;
+//     va_start (args, format);
+//     libmongoc::vlog(static_cast<mongoc_log_level_t>(level), log_domain, format, args);
+//     va_end(args);
+// }
+
+void log_msg(log_level level, const char* log_domain, const char* format) {
+    void (*alias)(mongoc_log_level_t, const char*, const char*, ...) = mongoc_log;
+    alias(static_cast<mongoc_log_level_t>(level), log_domain, format);
 }
 
 MONGOCXX_INLINE_NAMESPACE_END
