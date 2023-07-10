@@ -49,7 +49,7 @@ logger::~logger() = default;
 void log_msg(log_level level, const char* log_domain, const char* format, ...) {
     std::va_list args;
     va_start (args, format);
-    mongoc_vlog(static_cast<mongoc_log_level_t>(level), log_domain, format, args);
+    libmongoc::vlog(static_cast<mongoc_log_level_t>(level), log_domain, format, args);
     va_end(args);
 }
 
