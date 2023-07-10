@@ -1,5 +1,8 @@
 #!/bin/sh
 set -o errexit  # Exit the script with error if any of the commands fail
+set -x
+
+echo "RUNNING UNINSTALL CHECK"
 
 BUILD_DIR=$(pwd)/build
 INSTALL_DIR=$BUILD_DIR/install
