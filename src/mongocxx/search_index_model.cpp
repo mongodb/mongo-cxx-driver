@@ -13,7 +13,7 @@ search_index_model::search_index_model(const std::string name,
 
 search_index_model::search_index_model(search_index_model&&) noexcept = default;
 
-search_index_model& search_index_model::operator=(search_index_model&&) noexcept = default;
+search_index_model& search_index_model::operator=(search_index_model&&) = default;
 
 search_index_model::search_index_model(const search_index_model&) = default;
 
