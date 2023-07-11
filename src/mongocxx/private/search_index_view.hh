@@ -30,9 +30,9 @@ class search_index_view::impl {
 
     impl(impl&& i) = default;
 
-    ~impl() = default;
+    ~impl() noexcept = default;
 
-    impl& operator=(const impl& i) = default;
+    impl& operator=(const impl& i) noexcept = default;
 
     cursor list(const std::string name, const bsoncxx::document::view& aggregation_opts) {
         pipeline pipeline{};
