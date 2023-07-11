@@ -50,7 +50,6 @@ class search_index_view::impl {
     cursor list(const pipeline& pipeline, const bsoncxx::document::view& aggregation_opts) {
         libbson::scoped_bson_t opts_bson{aggregation_opts};
         libbson::scoped_bson_t stages(bsoncxx::document::view(pipeline.view_array()));
-        bson_error_t error;
         const mongoc_read_prefs_t* rp_ptr = NULL;
 
         return libmongoc::collection_aggregate(
@@ -63,13 +62,13 @@ class search_index_view::impl {
             create_many(std::vector<search_index_model>{model}, options);
         bsoncxx::document::view result_view = result.view();
 
-        return bsoncxx::stdx::make_optional(result_view["indexesCreated"]
-                                                .get_array()
-                                                .value.begin()
-                                                ->get_document()
-                                                .value["name"]
-                                                .get_string()
-                                                .value.to_string());
+        return bsoncxx::stdx::make_optional(bsoncxx::string::to_string(result_view["indexesCreated"]
+                                                                           .get_array()
+                                                                           .value.begin()
+                                                                           ->get_document()
+                                                                           .value["name"]
+                                                                           .get_string()
+                                                                           .value));
     }
 
     bsoncxx::document::value create_many(const std::vector<search_index_model>& search_indexes,

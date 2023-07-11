@@ -42,7 +42,7 @@ std::vector<std::string> search_index_view::create_many(
     auto response = _get_impl().create_many(models, options);
     for (auto&& index : response["indexesCreated"].get_array().value) {
         search_index_names.push_back(
-            index.get_document().value["name"].get_string().value.to_string());
+            bsoncxx::string::to_string(index.get_document().value["name"].get_string().value));
     }
     return search_index_names;
 }
