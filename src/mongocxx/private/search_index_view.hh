@@ -73,6 +73,8 @@ class search_index_view::impl {
 
     bsoncxx::document::value create_many(const std::vector<search_index_model>& search_indexes,
                                          const options::search_index_view& options) {
+        BSON_UNUSED(options);
+
         using namespace bsoncxx;
 
         builder::basic::array search_index_arr;
@@ -113,6 +115,8 @@ class search_index_view::impl {
     }
 
     void drop_one(const std::string name, const options::search_index_view& options) {
+        BSON_UNUSED(options);
+
         bsoncxx::builder::basic::document opts_doc;
 
         bsoncxx::document::value command = make_document(
@@ -134,6 +138,8 @@ class search_index_view::impl {
     void update_one(const std::string name,
                     const bsoncxx::document::view_or_value& definition,
                     const options::search_index_view& options) {
+        BSON_UNUSED(options);
+
         bsoncxx::builder::basic::document opts_doc;
         bsoncxx::document::value command =
             make_document(kvp("updateSearchIndex", libmongoc::collection_get_name(_coll)),
