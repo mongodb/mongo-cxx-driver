@@ -462,6 +462,7 @@ functions:
                   export URI_OPTIONS_TESTS_PATH="$(pwd)/../data/uri-options"
                   export VERSIONED_API_TESTS_PATH=$(pwd)/../data/versioned-api
                   export WITH_TRANSACTION_TESTS_PATH="$(pwd)/../data/with_transaction"
+                  export INDEX_MANAGEMENT_TESTS_PATH=$(pwd)/../data/index-management
 
                   export MONGODB_API_VERSION="${MONGODB_API_VERSION}"
 
