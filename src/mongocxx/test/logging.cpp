@@ -57,6 +57,7 @@ TEST_CASE("a user-provided log handler will be used for logging output", "[insta
 
     // The libmongoc namespace mocking system doesn't play well with varargs
     // functions, so we use a bare mongoc_log call here.
+    fprintf(stderr, "%s:%s: mongoc_log is at address: '%p'\n", __FILE__, __FUNCTION__, (void *)mongoc_log);
     mongoc_log(::MONGOC_LOG_LEVEL_ERROR, "foo", "bar");
 
     REQUIRE(events.size() == 1);
