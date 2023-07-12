@@ -18,6 +18,7 @@
 #include "helpers.hpp"
 #include <bsoncxx/test_util/catch.hh>
 #include <mongocxx/client.hpp>
+#include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/tls.hpp>
 #include <mongocxx/pool.hpp>
@@ -166,5 +167,12 @@ TEST_CASE(
         auto client = p.try_acquire();
         REQUIRE(!client);
     }
+}
+
+TEST_CASE("a pool is created with an invalid connection string", "[pool]") {
+    instance::current();
+    std::string uristr = "mongodb+srv://foo.bar.baz";
+
+    REQUIRE_THROWS_AS(pool{mongocxx::uri(uristr)}, operation_exception);
 }
 }  // namespace

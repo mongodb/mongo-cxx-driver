@@ -43,7 +43,7 @@ void pool::_release(client* client) {
 pool::~pool() = default;
 
 pool::pool(const uri& uri, const options::pool& options)
-    : _impl{stdx::make_unique<impl>(libmongoc::client_pool_new(uri._impl->uri_t))} {
+    : _impl{stdx::make_unique<impl>((mongoc_client_pool_t*)construct_client_pool(uri))} {
 #if defined(MONGOCXX_ENABLE_SSL) && defined(MONGOC_ENABLE_SSL)
     if (options.client_opts().tls_opts()) {
         if (!uri.tls())
@@ -130,6 +130,17 @@ stdx::optional<pool::entry> pool::try_acquire() {
 
     return entry(
         entry::unique_client(new client(cli), [this](client* client) { _release(client); }));
+}
+
+void* pool::construct_client_pool(const uri& uri) {
+    bson_error_t error;
+    auto temp_impl = libmongoc::client_pool_new_with_error(uri._impl->uri_t, &error);
+    if (!temp_impl) {
+        // If constructing a client pool failed, throw an exception from the bson_error_t.
+        throw_exception<operation_exception>(error);
+    }
+
+    return temp_impl;
 }
 
 MONGOCXX_INLINE_NAMESPACE_END

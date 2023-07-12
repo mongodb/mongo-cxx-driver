@@ -109,6 +109,9 @@ class MONGOCXX_API pool {
     ///
     stdx::optional<entry> try_acquire();
 
+    // Attempts to create a new client pool using the uri. Throws an exception upon error.
+    void* construct_client_pool(const uri& uri);
+
    private:
     friend class options::auto_encryption;
 
