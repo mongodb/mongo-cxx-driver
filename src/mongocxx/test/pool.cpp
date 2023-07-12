@@ -46,7 +46,7 @@ TEST_CASE("a pool is created with the correct MongoDB URI", "[pool]") {
     client_pool_new_with_error->interpose([&](const mongoc_uri_t* uri, bson_error_t* error) {
         new_called = true;
         actual_uri = mongoc_uri_get_string(uri);
-        error = {};
+        error->code = 0;
         return nullptr;
     });
 
