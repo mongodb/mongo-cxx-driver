@@ -56,8 +56,10 @@ MONGOCXX_INLINE_NAMESPACE_END
     }
 
 #define MOCK_POOL_NOSSL                                                                        \
-    auto client_pool_new = libmongoc::client_pool_new.create_instance();                       \
-    client_pool_new->interpose([](const mongoc_uri_t*) { return nullptr; }).forever();         \
+    auto client_pool_new_with_error = libmongoc::client_pool_new_with_error.create_instance(); \
+    client_pool_new_with_error                                                                 \
+        ->interpose([](const mongoc_uri_t*, bson_error_t*) { return nullptr; })                \
+        .forever();                                                                            \
     auto client_pool_destroy = libmongoc::client_pool_destroy.create_instance();               \
     client_pool_destroy->interpose([&](::mongoc_client_pool_t*) {}).forever();                 \
     auto client_pool_pop = libmongoc::client_pool_pop.create_instance();                       \
@@ -77,10 +79,7 @@ MONGOCXX_INLINE_NAMESPACE_END
 #endif
 
 #define MOCK_CLIENT_NOSSL                                                                       \
-    auto client_pool_new_with_error = libmongoc::client_pool_new_with_error.create_instance();  \
-    client_pool_new_with_error                                                                  \
-        ->interpose([](const mongoc_uri_t*, bson_error_t*) { return nullptr; })                 \
-        .forever();                                                                             \
+    auto client_new = libmongoc::client_new_from_uri.create_instance();                         \
     auto client_destroy = libmongoc::client_destroy.create_instance();                          \
     auto client_set_read_concern = libmongoc::client_set_read_concern.create_instance();        \
     auto client_set_preference = libmongoc::client_set_read_prefs.create_instance();            \
