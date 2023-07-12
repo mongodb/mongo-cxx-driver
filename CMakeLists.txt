@@ -20,6 +20,8 @@ endif()
 
 project(MONGO_CXX_DRIVER LANGUAGES CXX)
 
+set(BUILD_SHARED_LIBS_WITH_STATIC_MONGOC ON CACHE INTERNAL "")
+
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
   if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "4.8.2")
     message(FATAL_ERROR "Insufficient GCC version - GCC 4.8.2+ required")
@@ -80,10 +82,10 @@ option(BUILD_SHARED_AND_STATIC_LIBS "Build static libraries" OFF)
 
 # Allow the user to decide whether to use shared libraries or static libraries
 # for the mongo-c-driver
-option(BUILD_SHARED_LIBS_WITH_STATIC_MONGOC
-       "Use static mongo-c-driver libraries with shared mongo-cxx-driver libraries"
-        OFF
-)
+# option(BUILD_SHARED_LIBS_WITH_STATIC_MONGOC
+#        "Use static mongo-c-driver libraries with shared mongo-cxx-driver libraries"
+#         OFF
+# )
 
 option (ENABLE_UNINSTALL "Enable creation of uninstall script and associated uninstall build target." ON)
 
