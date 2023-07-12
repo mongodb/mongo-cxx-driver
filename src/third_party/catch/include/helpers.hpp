@@ -29,7 +29,7 @@ namespace test_util {
 class mongocxx_exception_matcher : public Catch::MatcherBase<mongocxx::exception> {
     std::string expected_msg;
 
-   public:
+public:
     mongocxx_exception_matcher(std::string msg) : expected_msg(msg) {}
 
     bool match(const mongocxx::exception& exc) const override {
@@ -37,14 +37,13 @@ class mongocxx_exception_matcher : public Catch::MatcherBase<mongocxx::exception
     }
 
     std::string describe() const override {
-        return std::string("mongocxx::exception was expected to contain the message: \"") +
-               expected_msg + "\"";
+        return std::string("mongocxx::exception was expected to contain the message: \"") + expected_msg + "\"";
     }
 };
-}  // namespace test_util
+} // namespace test_util
 
 MONGOCXX_INLINE_NAMESPACE_END
-}  // namespace mongocxx
+} // namespace mongocxx
 
 #define CHECK_OPTIONAL_ARGUMENT(OBJECT, NAME, VALUE) \
     SECTION("has NAME disengaged") {                 \
@@ -57,10 +56,8 @@ MONGOCXX_INLINE_NAMESPACE_END
     }
 
 #define MOCK_POOL_NOSSL                                                                        \
-    auto client_pool_new_with_error = libmongoc::client_pool_new_with_error.create_instance(); \
-    client_pool_new_with_error                                                                 \
-        ->interpose([](const mongoc_uri_t*, bson_error_t*) { return nullptr; })                \
-        .forever();                                                                            \
+    auto client_pool_new = libmongoc::client_pool_new.create_instance();                       \
+    client_pool_new->interpose([](const mongoc_uri_t*) { return nullptr; }).forever();         \
     auto client_pool_destroy = libmongoc::client_pool_destroy.create_instance();               \
     client_pool_destroy->interpose([&](::mongoc_client_pool_t*) {}).forever();                 \
     auto client_pool_pop = libmongoc::client_pool_pop.create_instance();                       \
@@ -80,7 +77,10 @@ MONGOCXX_INLINE_NAMESPACE_END
 #endif
 
 #define MOCK_CLIENT_NOSSL                                                                       \
-    auto client_new = libmongoc::client_new_from_uri.create_instance();                         \
+    auto client_pool_new_with_error = libmongoc::client_pool_new_with_error.create_instance();  \
+    client_pool_new_with_error                                                                  \
+        ->interpose([](const mongoc_uri_t*, bson_error_t*) { return nullptr; })                 \
+        .forever();                                                                             \
     auto client_destroy = libmongoc::client_destroy.create_instance();                          \
     auto client_set_read_concern = libmongoc::client_set_read_concern.create_instance();        \
     auto client_set_preference = libmongoc::client_set_read_prefs.create_instance();            \
@@ -166,12 +166,12 @@ MONGOCXX_INLINE_NAMESPACE_END
     auto collection_find_and_modify_with_opts =                                                   \
         libmongoc::collection_find_and_modify_with_opts.create_instance();
 
-#define MOCK_CHANGE_STREAM                                                           \
-    auto collection_watch = libmongoc::collection_watch.create_instance();           \
-    auto database_watch = libmongoc::database_watch.create_instance();               \
-    auto client_watch = libmongoc::client_watch.create_instance();                   \
-    auto change_stream_destroy = libmongoc::change_stream_destroy.create_instance(); \
-    auto change_stream_next = libmongoc::change_stream_next.create_instance();       \
+#define MOCK_CHANGE_STREAM                                                                          \
+    auto collection_watch = libmongoc::collection_watch.create_instance();                          \
+    auto database_watch = libmongoc::database_watch.create_instance();                              \
+    auto client_watch = libmongoc::client_watch.create_instance();                                  \
+    auto change_stream_destroy = libmongoc::change_stream_destroy.create_instance();                \
+    auto change_stream_next = libmongoc::change_stream_next.create_instance();                      \
     auto change_stream_error_document = libmongoc::change_stream_error_document.create_instance();
 
 #define MOCK_FAM                                                                                   \
@@ -192,42 +192,38 @@ MONGOCXX_INLINE_NAMESPACE_END
     bsoncxx::document::view expected_find_and_modify_opts_fields;                                  \
     auto find_and_modify_opts_set_fields =                                                         \
         libmongoc::find_and_modify_opts_set_fields.create_instance();                              \
-    find_and_modify_opts_set_fields->interpose(                                                    \
-        [&expected_find_and_modify_opts_fields](mongoc_find_and_modify_opts_t*,                    \
-                                                const ::bson_t* fields) {                          \
-            auto fields_view = bsoncxx::helpers::view_from_bson_t(fields);                         \
-            REQUIRE(fields_view == expected_find_and_modify_opts_fields);                          \
-            return true;                                                                           \
-        });                                                                                        \
+    find_and_modify_opts_set_fields->interpose([&expected_find_and_modify_opts_fields](            \
+        mongoc_find_and_modify_opts_t*, const ::bson_t* fields) {                                  \
+        auto fields_view = bsoncxx::helpers::view_from_bson_t(fields);                             \
+        REQUIRE(fields_view == expected_find_and_modify_opts_fields);                              \
+        return true;                                                                               \
+    });                                                                                            \
     ::mongoc_find_and_modify_flags_t expected_find_and_modify_opts_flags;                          \
     auto find_and_modify_opts_set_flags =                                                          \
         libmongoc::find_and_modify_opts_set_flags.create_instance();                               \
-    find_and_modify_opts_set_flags->interpose(                                                     \
-        [&expected_find_and_modify_opts_flags](mongoc_find_and_modify_opts_t*,                     \
-                                               const ::mongoc_find_and_modify_flags_t flags) {     \
-            REQUIRE(flags == expected_find_and_modify_opts_flags);                                 \
-            return true;                                                                           \
-        });                                                                                        \
+    find_and_modify_opts_set_flags->interpose([&expected_find_and_modify_opts_flags](              \
+        mongoc_find_and_modify_opts_t*, const ::mongoc_find_and_modify_flags_t flags) {            \
+        REQUIRE(flags == expected_find_and_modify_opts_flags);                                     \
+        return true;                                                                               \
+    });                                                                                            \
     bsoncxx::document::view expected_find_and_modify_opts_sort;                                    \
     auto find_and_modify_opts_set_sort =                                                           \
         libmongoc::find_and_modify_opts_set_sort.create_instance();                                \
-    find_and_modify_opts_set_sort->interpose(                                                      \
-        [&expected_find_and_modify_opts_sort](mongoc_find_and_modify_opts_t*,                      \
-                                              const ::bson_t* sort) {                              \
-            auto sort_view = bsoncxx::helpers::view_from_bson_t(sort);                             \
-            REQUIRE(sort_view == expected_find_and_modify_opts_sort);                              \
-            return true;                                                                           \
-        });                                                                                        \
+    find_and_modify_opts_set_sort->interpose([&expected_find_and_modify_opts_sort](                \
+        mongoc_find_and_modify_opts_t*, const ::bson_t* sort) {                                    \
+        auto sort_view = bsoncxx::helpers::view_from_bson_t(sort);                                 \
+        REQUIRE(sort_view == expected_find_and_modify_opts_sort);                                  \
+        return true;                                                                               \
+    });                                                                                            \
     bsoncxx::document::view expected_find_and_modify_opts_update;                                  \
     auto find_and_modify_opts_set_update =                                                         \
         libmongoc::find_and_modify_opts_set_update.create_instance();                              \
-    find_and_modify_opts_set_update->interpose(                                                    \
-        [&expected_find_and_modify_opts_update](mongoc_find_and_modify_opts_t*,                    \
-                                                const ::bson_t* update) {                          \
-            auto update_view = bsoncxx::helpers::view_from_bson_t(update);                         \
-            REQUIRE(update_view == expected_find_and_modify_opts_update);                          \
-            return true;                                                                           \
-        });
+    find_and_modify_opts_set_update->interpose([&expected_find_and_modify_opts_update](            \
+        mongoc_find_and_modify_opts_t*, const ::bson_t* update) {                                  \
+        auto update_view = bsoncxx::helpers::view_from_bson_t(update);                             \
+        REQUIRE(update_view == expected_find_and_modify_opts_update);                              \
+        return true;                                                                               \
+    });
 
 #define MOCK_CURSOR                                                    \
     auto cursor_destroy = libmongoc::cursor_destroy.create_instance(); \
