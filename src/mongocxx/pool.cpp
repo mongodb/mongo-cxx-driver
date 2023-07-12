@@ -133,9 +133,10 @@ stdx::optional<pool::entry> pool::try_acquire() {
 }
 
 void* pool::construct_client_pool(const uri& uri) {
-    bson_error_t error;
-    auto temp_impl = libmongoc::client_pool_new_with_error(uri._impl->uri_t, &error);
-    if (!temp_impl) {
+    bson_error_t error = {0};
+    mongoc_client_pool_t* temp_impl =
+        libmongoc::client_pool_new_with_error(uri._impl->uri_t, &error);
+    if (error.code) {
         // If constructing a client pool failed, throw an exception from the bson_error_t.
         throw_exception<operation_exception>(error);
     }
