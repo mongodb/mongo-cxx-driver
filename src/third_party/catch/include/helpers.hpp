@@ -57,17 +57,10 @@ MONGOCXX_INLINE_NAMESPACE_END
 
 #define MOCK_POOL_NOSSL                                                                        \
     auto client_pool_new_with_error = libmongoc::client_pool_new_with_error.create_instance(); \
-    client_pool_new_with_error                                                                 \
-        ->interpose([](const mongoc_uri_t*, bson_error_t*) { return nullptr; })                \
-        .forever();                                                                            \
     auto client_pool_destroy = libmongoc::client_pool_destroy.create_instance();               \
-    client_pool_destroy->interpose([&](::mongoc_client_pool_t*) {}).forever();                 \
     auto client_pool_pop = libmongoc::client_pool_pop.create_instance();                       \
-    client_pool_pop->interpose([](::mongoc_client_pool_t*) { return nullptr; }).forever();     \
     auto client_pool_push = libmongoc::client_pool_push.create_instance();                     \
-    client_pool_push->interpose([](::mongoc_client_pool_t*, ::mongoc_client_t*) {}).forever(); \
     auto client_pool_try_pop = libmongoc::client_pool_try_pop.create_instance();               \
-    client_pool_try_pop->interpose([](::mongoc_client_pool_t*) { return nullptr; }).forever();
 
 #if defined(MONGOCXX_ENABLE_SSL) && defined(MONGOC_ENABLE_SSL)
 #define MOCK_POOL                                                                          \

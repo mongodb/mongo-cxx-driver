@@ -37,7 +37,7 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 static mongoc_client_pool_t* construct_client_pool(mongoc_uri_t* uri) {
     bson_error_t error;
     auto pool = libmongoc::client_pool_new_with_error(uri, &error);
-    if (error.code) {
+    if (!pool) {
         // If constructing a client pool failed, throw an exception from the bson_error_t.
         throw_exception<operation_exception>(error);
     }

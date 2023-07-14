@@ -35,7 +35,7 @@ TEST_CASE("a pool is created with the correct MongoDB URI", "[pool]") {
     instance::current();
 
     bool destroy_called = false;
-    client_pool_destroy->interpose([&](::mongoc_client_pool_t*) { destroy_called = true; });
+    client_pool_destroy->visit([&](::mongoc_client_pool_t*) { destroy_called = true; });
 
     std::string expected_uri("mongodb://mongodb.example.com:9999");
     uri mongodb_uri{expected_uri};
@@ -43,7 +43,7 @@ TEST_CASE("a pool is created with the correct MongoDB URI", "[pool]") {
     std::string actual_uri{};
     bool new_called = false;
 
-    client_pool_new_with_error->interpose([&](const mongoc_uri_t* uri, bson_error_t* error) {
+    client_pool_new_with_error->visit([&](const mongoc_uri_t* uri, bson_error_t* error) {
         new_called = true;
         actual_uri = mongoc_uri_get_string(uri);
         error->code = 0;
@@ -89,11 +89,10 @@ TEST_CASE(
 
     ::mongoc_ssl_opt_t interposed = {};
 
-    client_pool_set_ssl_opts->interpose(
-        [&](::mongoc_client_pool_t*, const ::mongoc_ssl_opt_t* opts) {
-            set_tls_opts_called = true;
-            interposed = *opts;
-        });
+    client_pool_set_ssl_opts->visit([&](::mongoc_client_pool_t*, const ::mongoc_ssl_opt_t* opts) {
+        set_tls_opts_called = true;
+        interposed = *opts;
+    });
 
     pool p{uri{"mongodb://mongodb.example.com:9999/?tls=true"},
            options::client().tls_opts(tls_opts)};
@@ -114,13 +113,13 @@ TEST_CASE("calling acquire on a pool returns an entry that manages its client", 
     instance::current();
 
     bool pop_called = false;
-    client_pool_pop->interpose([&](::mongoc_client_pool_t*) {
+    client_pool_pop->visit([&](::mongoc_client_pool_t*) {
         pop_called = true;
         return nullptr;
     });
 
     bool push_called = false;
-    client_pool_push->interpose(
+    client_pool_push->visit(
         [&](::mongoc_client_pool_t*, ::mongoc_client_t*) { push_called = true; });
 
     SECTION("entry releases its client at end of scope") {
