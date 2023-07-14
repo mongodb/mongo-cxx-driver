@@ -6,6 +6,7 @@
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/string/to_string.hpp>
+#include <bsoncxx/string/view_or_value.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/options/search_index_view.hpp>
@@ -82,7 +83,7 @@ class search_index_view::impl {
         for (auto&& model : search_indexes) {
             builder::basic::document search_index_doc;
             // model may or may not have a name attached to it (even though the server will)
-            const stdx::optional<std::string> name = model.get_name();
+            const stdx::optional<bsoncxx::string::view_or_value> name = model.get_name();
             const bsoncxx::document::view& definition = model.get_definition();
 
             if (name) {

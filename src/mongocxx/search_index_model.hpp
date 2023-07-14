@@ -5,6 +5,7 @@
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
+#include <bsoncxx/string/view_or_value.hpp>
 
 #include <mongocxx/config/prelude.hpp>
 
@@ -20,7 +21,8 @@ class MONGOCXX_API search_index_model {
     /// Initializes a new search_index_model over a mongocxx::collection.
     ///
     search_index_model(const bsoncxx::document::view_or_value& definition);
-    search_index_model(const std::string name, const bsoncxx::document::view_or_value& definition);
+    search_index_model(const bsoncxx::string::view_or_value name,
+                       const bsoncxx::document::view_or_value& definition);
 
     search_index_model() = delete;
 
@@ -49,7 +51,7 @@ class MONGOCXX_API search_index_model {
     ///
     /// Retrieves name of a search_index_model.
     ///
-    bsoncxx::stdx::optional<std::string> get_name() const;
+    bsoncxx::stdx::optional<bsoncxx::string::view_or_value> get_name() const;
 
     ///
     /// Retrieves definition of a search_index_model.
@@ -57,8 +59,8 @@ class MONGOCXX_API search_index_model {
     bsoncxx::document::view get_definition() const;
 
    private:
-    bsoncxx::stdx::optional<std::string> _name;
-    bsoncxx::document::value _definition;
+    bsoncxx::stdx::optional<bsoncxx::string::view_or_value> _name;
+    bsoncxx::document::view_or_value _definition;
 };
 
 MONGOCXX_INLINE_NAMESPACE_END
