@@ -87,7 +87,7 @@ class instance::impl {
             libmongoc::log_set_handler(user_log_handler, _user_logger.get());
             // The libmongoc namespace mocking system doesn't play well with varargs
             // functions, so we use a bare mongoc_log call here.
-            log_msg(log_level::k_info, "mongocxx", "libmongoc logging callback enabled");
+            mongoc_log(MONGOC_LOG_LEVEL_INFO, "mongocxx", "libmongoc logging callback enabled");
         } else {
             libmongoc::log_set_handler(null_log_handler, nullptr);
         }
