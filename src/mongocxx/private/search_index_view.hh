@@ -34,10 +34,11 @@ class search_index_view::impl {
 
     impl& operator=(const impl& i) = default;
 
-    cursor list(const std::string name, const bsoncxx::document::view& aggregation_opts) {
+    cursor list(bsoncxx::string::view_or_value name,
+                const bsoncxx::document::view& aggregation_opts) {
         pipeline pipeline{};
         pipeline.append_stage(
-            make_document(kvp("$listSearchIndexes", make_document(kvp("name", name)))));
+            make_document(kvp("$listSearchIndexes", make_document(kvp("name", name.view())))));
         return list(pipeline, aggregation_opts);
     }
 
@@ -56,17 +57,19 @@ class search_index_view::impl {
             _coll, static_cast<::mongoc_query_flags_t>(0), stages.bson(), opts_bson.bson(), rp_ptr);
     }
 
-    bsoncxx::stdx::optional<std::string> create_one(const search_index_model& model) {
+    bsoncxx::stdx::optional<bsoncxx::string::view_or_value> create_one(
+        const search_index_model& model) {
         bsoncxx::document::value result = create_many(std::vector<search_index_model>{model});
         bsoncxx::document::view result_view = result.view();
 
-        return bsoncxx::stdx::make_optional(bsoncxx::string::to_string(result_view["indexesCreated"]
-                                                                           .get_array()
-                                                                           .value.begin()
-                                                                           ->get_document()
-                                                                           .value["name"]
-                                                                           .get_string()
-                                                                           .value));
+        return bsoncxx::stdx::make_optional(
+            bsoncxx::string::view_or_value(result_view["indexesCreated"]
+                                               .get_array()
+                                               .value.begin()
+                                               ->get_document()
+                                               .value["name"]
+                                               .get_string()
+                                               .value));
     }
 
     bsoncxx::document::value create_many(const std::vector<search_index_model>& search_indexes) {
@@ -76,9 +79,10 @@ class search_index_view::impl {
 
         for (auto&& model : search_indexes) {
             builder::basic::document search_index_doc;
-            // model may or may not have a name attached to it (even though the server will)
-            const stdx::optional<bsoncxx::string::view_or_value> name = model.get_name();
-            const bsoncxx::document::view& definition = model.get_definition();
+            // model may or may not have a name attached to it. The server will create the name if
+            // it is not set.
+            const stdx::optional<bsoncxx::string::view_or_value> name = model.name();
+            const bsoncxx::document::view& definition = model.definition();
 
             if (name) {
                 search_index_doc.append(kvp("name", name.value()));
@@ -109,11 +113,12 @@ class search_index_view::impl {
         return reply.steal();
     }
 
-    void drop_one(const std::string name) {
+    void drop_one(bsoncxx::string::view_or_value name) {
         bsoncxx::builder::basic::document opts_doc;
 
-        bsoncxx::document::value command = make_document(
-            kvp("dropSearchIndex", libmongoc::collection_get_name(_coll)), kvp("name", name));
+        bsoncxx::document::value command =
+            make_document(kvp("dropSearchIndex", libmongoc::collection_get_name(_coll)),
+                          kvp("name", name.view()));
 
         libbson::scoped_bson_t reply;
         libbson::scoped_bson_t command_bson{command.view()};
@@ -128,11 +133,12 @@ class search_index_view::impl {
         }
     }
 
-    void update_one(const std::string name, const bsoncxx::document::view_or_value& definition) {
+    void update_one(bsoncxx::string::view_or_value name,
+                    const bsoncxx::document::view_or_value& definition) {
         bsoncxx::builder::basic::document opts_doc;
         bsoncxx::document::value command =
             make_document(kvp("updateSearchIndex", libmongoc::collection_get_name(_coll)),
-                          kvp("name", name),
+                          kvp("name", name.view()),
                           kvp("definition", definition.view()));
 
         libbson::scoped_bson_t reply;

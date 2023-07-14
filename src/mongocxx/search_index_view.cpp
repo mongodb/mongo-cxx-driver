@@ -19,24 +19,24 @@ cursor search_index_view::list(const bsoncxx::document::view& aggregation_opts) 
     return _get_impl().list(aggregation_opts);
 }
 
-cursor search_index_view::list(const std::string name,
+cursor search_index_view::list(bsoncxx::string::view_or_value name,
                                const bsoncxx::document::view& aggregation_opts) {
     return _get_impl().list(name, aggregation_opts);
 }
 
-bsoncxx::stdx::optional<std::string> search_index_view::create_one(
-    const std::string name, const bsoncxx::document::view_or_value& definition) {
+bsoncxx::stdx::optional<bsoncxx::string::view_or_value> search_index_view::create_one(
+    bsoncxx::string::view_or_value name, const bsoncxx::document::view_or_value& definition) {
     return create_one(search_index_model(name, definition));
 }
 
-bsoncxx::stdx::optional<std::string> search_index_view::create_one(
+bsoncxx::stdx::optional<bsoncxx::string::view_or_value> search_index_view::create_one(
     const search_index_model& model) {
     return _get_impl().create_one(model);
 }
 
-std::vector<std::string> search_index_view::create_many(
+std::vector<bsoncxx::string::view_or_value> search_index_view::create_many(
     const std::vector<search_index_model>& models) {
-    std::vector<std::string> search_index_names;
+    std::vector<bsoncxx::string::view_or_value> search_index_names;
     auto response = _get_impl().create_many(models);
     for (auto&& index : response["indexesCreated"].get_array().value) {
         search_index_names.push_back(
@@ -45,11 +45,11 @@ std::vector<std::string> search_index_view::create_many(
     return search_index_names;
 }
 
-void search_index_view::drop_one(const std::string name) {
+void search_index_view::drop_one(bsoncxx::string::view_or_value name) {
     _get_impl().drop_one(name);
 }
 
-void search_index_view::update_one(std::string name,
+void search_index_view::update_one(bsoncxx::string::view_or_value name,
                                    const bsoncxx::document::view_or_value& definition) {
     _get_impl().update_one(name, definition);
 }

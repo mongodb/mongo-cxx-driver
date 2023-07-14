@@ -7,7 +7,7 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 search_index_model::search_index_model(const bsoncxx::document::view_or_value& definition)
     : _definition(definition.view()) {}
-search_index_model::search_index_model(const bsoncxx::string::view_or_value name,
+search_index_model::search_index_model(bsoncxx::string::view_or_value name,
                                        const bsoncxx::document::view_or_value& definition)
     : _name(name), _definition(definition.view()) {}
 
@@ -21,11 +21,11 @@ search_index_model& search_index_model::operator=(const search_index_model&) = d
 
 search_index_model::~search_index_model() = default;
 
-bsoncxx::stdx::optional<bsoncxx::string::view_or_value> search_index_model::get_name() const {
+bsoncxx::stdx::optional<bsoncxx::string::view_or_value> search_index_model::name() const {
     return _name;
 }
 
-bsoncxx::document::view search_index_model::get_definition() const {
+bsoncxx::document::view search_index_model::definition() const {
     return _definition.view();
 }
 

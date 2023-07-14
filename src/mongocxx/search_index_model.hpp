@@ -21,7 +21,7 @@ class MONGOCXX_API search_index_model {
     /// Initializes a new search_index_model over a mongocxx::collection.
     ///
     search_index_model(const bsoncxx::document::view_or_value& definition);
-    search_index_model(const bsoncxx::string::view_or_value name,
+    search_index_model(bsoncxx::string::view_or_value name,
                        const bsoncxx::document::view_or_value& definition);
 
     search_index_model() = delete;
@@ -54,12 +54,12 @@ class MONGOCXX_API search_index_model {
     ///
     /// Retrieves name of a search_index_model.
     ///
-    bsoncxx::stdx::optional<bsoncxx::string::view_or_value> get_name() const;
+    bsoncxx::stdx::optional<bsoncxx::string::view_or_value> name() const;
 
     ///
     /// Retrieves definition of a search_index_model.
     ///
-    bsoncxx::document::view get_definition() const;
+    bsoncxx::document::view definition() const;
 
    private:
     bsoncxx::stdx::optional<bsoncxx::string::view_or_value> _name;
