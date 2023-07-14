@@ -17,6 +17,8 @@ search_index_model& search_index_model::operator=(search_index_model&&) = defaul
 
 search_index_model::search_index_model(const search_index_model&) = default;
 
+search_index_model& search_index_model::operator=(const search_index_model&) = default;
+
 search_index_model::~search_index_model() = default;
 
 bsoncxx::stdx::optional<bsoncxx::string::view_or_value> search_index_model::get_name() const {

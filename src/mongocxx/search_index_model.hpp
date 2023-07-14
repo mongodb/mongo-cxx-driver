@@ -41,7 +41,10 @@ class MONGOCXX_API search_index_model {
     ///
     search_index_model(const search_index_model&);
 
-    search_index_model& operator=(const search_index_model&) = delete;
+    ///
+    /// Copy assigns a search_index_model.
+    ///
+    search_index_model& operator=(const search_index_model&);
 
     ///
     /// Destroys a search_index_model.
