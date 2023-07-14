@@ -73,14 +73,6 @@ if(NEED_DOWNLOAD_C_DRIVER)
     include(FetchContent)
     include(ExternalProject)
 
-    set(CMAKE_POSITION_INDEPENDENT_CODE ON)
-    if(NOT WIN32)
-        set(ENABLE_EXTRA_ALIGNMENT OFF)
-    endif()
-    add_compile_definitions(ENABLE_EXTRA_ALIGNMENT=OFF)
-
-    set(BUILD_SHARED_LIBS_WITH_STATIC_MONGOC ON CACHE INTERNAL "")
-
     # Declare mongo-c-driver as a dependency
     FetchContent_Declare(
       mongo-c-driver
