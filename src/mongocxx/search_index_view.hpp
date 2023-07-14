@@ -3,11 +3,8 @@
 #include <string>
 #include <vector>
 
-#include <bsoncxx/document/value.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
-#include <bsoncxx/string/to_string.hpp>
-#include <mongocxx/client_session.hpp>
 #include <mongocxx/cursor.hpp>
 #include <mongocxx/search_index_model.hpp>
 
