@@ -9,7 +9,6 @@
 #include <bsoncxx/string/to_string.hpp>
 #include <mongocxx/client_session.hpp>
 #include <mongocxx/cursor.hpp>
-#include <mongocxx/options/search_index_view.hpp>
 #include <mongocxx/search_index_model.hpp>
 
 #include <mongocxx/config/prelude.hpp>
@@ -49,9 +48,7 @@ class MONGOCXX_API search_index_view {
      *
      */
     bsoncxx::stdx::optional<std::string> create_one(
-        const std::string name,
-        const bsoncxx::document::view_or_value& definition,
-        const options::search_index_view& options = options::search_index_view{});
+        const std::string name, const bsoncxx::document::view_or_value& definition);
 
     /**
      * This is a convenience method for creating a single search index.
@@ -62,9 +59,7 @@ class MONGOCXX_API search_index_view {
      * @return The name of the created index.
      *
      */
-    bsoncxx::stdx::optional<std::string> create_one(
-        const search_index_model& model,
-        const options::search_index_view& options = options::search_index_view{});
+    bsoncxx::stdx::optional<std::string> create_one(const search_index_model& model);
 
     /**
      * Creates multiple search indexes in the collection.
@@ -75,9 +70,7 @@ class MONGOCXX_API search_index_view {
      * @return The names of the created indexes.
      *
      */
-    std::vector<std::string> create_many(
-        const std::vector<search_index_model>& models,
-        const options::search_index_view& options = options::search_index_view{});
+    std::vector<std::string> create_many(const std::vector<search_index_model>& models);
 
     /**
      * Drops a single search index from the collection by the index name.
@@ -86,8 +79,7 @@ class MONGOCXX_API search_index_view {
      *    The name of the search index to drop.
      *
      */
-    void drop_one(const std::string name,
-                  const options::search_index_view& options = options::search_index_view{});
+    void drop_one(const std::string name);
 
     /**
      * Updates a single search index from the collection by the search index name.
@@ -100,9 +92,7 @@ class MONGOCXX_API search_index_view {
      *    The definition to update the search index to.
      *
      */
-    void update_one(std::string name,
-                    const bsoncxx::document::view_or_value& definition,
-                    const options::search_index_view& options = options::search_index_view{});
+    void update_one(std::string name, const bsoncxx::document::view_or_value& definition);
 
    private:
     friend class collection;

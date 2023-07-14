@@ -9,7 +9,6 @@
 #include <bsoncxx/string/view_or_value.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
-#include <mongocxx/options/search_index_view.hpp>
 #include <mongocxx/private/client_session.hh>
 #include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/libmongoc.hh>
@@ -57,10 +56,8 @@ class search_index_view::impl {
             _coll, static_cast<::mongoc_query_flags_t>(0), stages.bson(), opts_bson.bson(), rp_ptr);
     }
 
-    bsoncxx::stdx::optional<std::string> create_one(const search_index_model& model,
-                                                    const options::search_index_view& options) {
-        bsoncxx::document::value result =
-            create_many(std::vector<search_index_model>{model}, options);
+    bsoncxx::stdx::optional<std::string> create_one(const search_index_model& model) {
+        bsoncxx::document::value result = create_many(std::vector<search_index_model>{model});
         bsoncxx::document::view result_view = result.view();
 
         return bsoncxx::stdx::make_optional(bsoncxx::string::to_string(result_view["indexesCreated"]
@@ -72,10 +69,7 @@ class search_index_view::impl {
                                                                            .value));
     }
 
-    bsoncxx::document::value create_many(const std::vector<search_index_model>& search_indexes,
-                                         const options::search_index_view& options) {
-        BSON_UNUSED(options);
-
+    bsoncxx::document::value create_many(const std::vector<search_index_model>& search_indexes) {
         using namespace bsoncxx;
 
         builder::basic::array search_index_arr;
@@ -115,9 +109,7 @@ class search_index_view::impl {
         return reply.steal();
     }
 
-    void drop_one(const std::string name, const options::search_index_view& options) {
-        BSON_UNUSED(options);
-
+    void drop_one(const std::string name) {
         bsoncxx::builder::basic::document opts_doc;
 
         bsoncxx::document::value command = make_document(
@@ -136,11 +128,7 @@ class search_index_view::impl {
         }
     }
 
-    void update_one(const std::string name,
-                    const bsoncxx::document::view_or_value& definition,
-                    const options::search_index_view& options) {
-        BSON_UNUSED(options);
-
+    void update_one(const std::string name, const bsoncxx::document::view_or_value& definition) {
         bsoncxx::builder::basic::document opts_doc;
         bsoncxx::document::value command =
             make_document(kvp("updateSearchIndex", libmongoc::collection_get_name(_coll)),
