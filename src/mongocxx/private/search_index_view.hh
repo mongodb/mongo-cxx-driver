@@ -36,28 +36,73 @@ class search_index_view::impl {
 
     cursor list(const client_session* session,
                 bsoncxx::string::view_or_value name,
-                const bsoncxx::document::view& aggregation_opts) {
+                const options::aggregate& options) {
         pipeline pipeline{};
         pipeline.append_stage(
             make_document(kvp("$listSearchIndexes", make_document(kvp("name", name.view())))));
-        return list(session, pipeline, aggregation_opts);
+        return list(session, pipeline, options);
     }
 
-    cursor list(const client_session* session, const bsoncxx::document::view& aggregation_opts) {
+    cursor list(const client_session* session, const options::aggregate& options) {
         pipeline pipeline{};
         pipeline.append_stage(make_document(kvp("$listSearchIndexes", make_document())));
-        return list(session, pipeline, aggregation_opts);
+        return list(session, pipeline, options);
     }
 
     cursor list(const client_session* session,
                 const pipeline& pipeline,
-                const bsoncxx::document::view& aggregation_opts) {
-        libbson::scoped_bson_t opts_bson{aggregation_opts};
+                const options::aggregate& options) {
+        bsoncxx::builder::basic::document opts_doc;
         libbson::scoped_bson_t stages(bsoncxx::document::view(pipeline.view_array()));
         const mongoc_read_prefs_t* rp_ptr = NULL;
 
-        if (session) {
+        if (const auto& allow_disk_use = options.allow_disk_use()) {
+            opts_doc.append(kvp("allowDiskUse", *allow_disk_use));
         }
+
+        if (const auto& collation = options.collation()) {
+            opts_doc.append(kvp("collation", *collation));
+        }
+
+        if (const auto& let = options.let()) {
+            opts_doc.append(kvp("let", *let));
+        }
+
+        if (const auto& max_time = options.max_time()) {
+            opts_doc.append(kvp("maxTimeMS", bsoncxx::types::b_int64{max_time->count()}));
+        }
+
+        if (const auto& bypass_document_validation = options.bypass_document_validation()) {
+            opts_doc.append(kvp("bypassDocumentValidation", *bypass_document_validation));
+        }
+
+        if (const auto& hint = options.hint()) {
+            opts_doc.append(kvp("hint", hint->to_value()));
+        }
+
+        if (const auto& read_concern = options.read_concern()) {
+            opts_doc.append(kvp("readConcern", read_concern->to_document()));
+        }
+
+        if (const auto& write_concern = options.write_concern()) {
+            opts_doc.append(kvp("writeConcern", write_concern->to_document()));
+        }
+
+        if (const auto& batch_size = options.batch_size()) {
+            opts_doc.append(kvp("batchSize", *batch_size));
+        }
+
+        if (const auto& comment = options.comment()) {
+            opts_doc.append(kvp("comment", *comment));
+        }
+
+        // Set read preference
+
+        if (session) {
+            opts_doc.append(bsoncxx::builder::concatenate_doc{session->_get_impl().to_document()});
+        }
+
+        libbson::scoped_bson_t opts_bson(opts_doc.view());
 
         return libmongoc::collection_aggregate(
             _coll, static_cast<::mongoc_query_flags_t>(0), stages.bson(), opts_bson.bson(), rp_ptr);

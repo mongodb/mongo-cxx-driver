@@ -1848,14 +1848,18 @@ document::value drop_search_index(collection& coll, const document::view& operat
 document::value list_search_indexes(collection& coll, const document::view& operation) {
     auto arguments = operation["arguments"];
     bsoncxx::document::view aggregation_options;
+    options::aggregate options;
     if (arguments["aggregationOptions"]) {
         aggregation_options = arguments["aggregationOptions"].get_document().view();
+        // search index spec tests only set batchSize, so if aggregation options exist then it must
+        // be batch size.
+        options.batch_size(aggregation_options["batchSize"].get_int32().value);
     }
 
-    cursor c = arguments["name"] ? coll.search_indexes().list(
-                                       string::to_string(arguments["name"].get_string().value),
-                                       aggregation_options)
-                                 : coll.search_indexes().list(aggregation_options);
+    cursor c = arguments["name"]
+                   ? coll.search_indexes().list(
+                         string::to_string(arguments["name"].get_string().value), options)
+                   : coll.search_indexes().list(options);
 
     // we must loop over the resulting cursor to trigger server events for the spec tests
     auto result = bsoncxx::builder::basic::document{};

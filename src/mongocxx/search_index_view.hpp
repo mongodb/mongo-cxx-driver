@@ -33,7 +33,7 @@ class MONGOCXX_API search_index_view {
     ///
     /// @return A cursor to the list of the search indexes returned.
     ///
-    cursor list(const bsoncxx::document::view& aggregation_opts = bsoncxx::document::view{});
+    cursor list(const options::aggregate& options = options::aggregate());
 
     ///
     /// Returns a cursor over all the search indexes.
@@ -46,7 +46,7 @@ class MONGOCXX_API search_index_view {
     /// @return A cursor to the list of the search indexes returned.
     ///
     cursor list(const client_session& session,
-                const bsoncxx::document::view& aggregation_opts = bsoncxx::document::view{});
+                const options::aggregate& options = options::aggregate());
 
     ///
     /// Returns a cursor over all the search indexes.
@@ -59,7 +59,7 @@ class MONGOCXX_API search_index_view {
     /// @return A cursor to the list of the search indexes returned.
     ///
     cursor list(bsoncxx::string::view_or_value name,
-                const bsoncxx::document::view& aggregation_opts = bsoncxx::document::view{});
+                const options::aggregate& options = options::aggregate());
 
     ///
     /// Returns a cursor over all the search indexes.
@@ -75,7 +75,7 @@ class MONGOCXX_API search_index_view {
     ///
     cursor list(const client_session& session,
                 bsoncxx::string::view_or_value name,
-                const bsoncxx::document::view& aggregation_opts = bsoncxx::document::view{});
+                const options::aggregate& options = options::aggregate());
 
     ///
     /// @}

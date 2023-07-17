@@ -15,24 +15,23 @@ search_index_view::search_index_view(search_index_view&&) noexcept = default;
 search_index_view& search_index_view::operator=(search_index_view&&) noexcept = default;
 search_index_view::~search_index_view() = default;
 
-cursor search_index_view::list(const bsoncxx::document::view& aggregation_opts) {
-    return _get_impl().list(nullptr, aggregation_opts);
+cursor search_index_view::list(const options::aggregate& options) {
+    return _get_impl().list(nullptr, options);
 }
 
-cursor search_index_view::list(const client_session& session,
-                               const bsoncxx::document::view& aggregation_opts) {
-    return _get_impl().list(&session, aggregation_opts);
+cursor search_index_view::list(const client_session& session, const options::aggregate& options) {
+    return _get_impl().list(&session, options);
 }
 
 cursor search_index_view::list(bsoncxx::string::view_or_value name,
-                               const bsoncxx::document::view& aggregation_opts) {
-    return _get_impl().list(nullptr, name, aggregation_opts);
+                               const options::aggregate& options) {
+    return _get_impl().list(nullptr, name, options);
 }
 
 cursor search_index_view::list(const client_session& session,
                                bsoncxx::string::view_or_value name,
-                               const bsoncxx::document::view& aggregation_opts) {
-    return _get_impl().list(&session, name, aggregation_opts);
+                               const options::aggregate& options) {
+    return _get_impl().list(&session, name, options);
 }
 
 bsoncxx::stdx::optional<bsoncxx::string::view_or_value> search_index_view::create_one(
