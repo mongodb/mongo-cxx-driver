@@ -91,6 +91,8 @@ if(NEED_DOWNLOAD_C_DRIVER)
         set(OLD_CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
         set(OLD_CMAKE_C_FLAGS ${CMAKE_C_FLAGS})
 
+        add_compile_definitions(ENABLE_EXTRA_ALIGNMENT=OFF)
+
         FetchContent_Populate(mongo-c-driver)
         # Set ENABLE_TESTS to OFF to disable the test-libmongoc target in the C driver.
         # This prevents the LoadTests.cmake script from attempting to execute test-libmongoc.
