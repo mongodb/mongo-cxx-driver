@@ -9,6 +9,7 @@
 #include <bsoncxx/string/view_or_value.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
+#include <mongocxx/private/append_aggregate_options.hh>
 #include <mongocxx/private/client_session.hh>
 #include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/libmongoc.hh>
@@ -56,50 +57,14 @@ class search_index_view::impl {
         libbson::scoped_bson_t stages(bsoncxx::document::view(pipeline.view_array()));
         const mongoc_read_prefs_t* rp_ptr = NULL;
 
-        if (const auto& allow_disk_use = options.allow_disk_use()) {
-            opts_doc.append(kvp("allowDiskUse", *allow_disk_use));
-        }
-
-        if (const auto& collation = options.collation()) {
-            opts_doc.append(kvp("collation", *collation));
-        }
-
-        if (const auto& let = options.let()) {
-            opts_doc.append(kvp("let", *let));
-        }
-
-        if (const auto& max_time = options.max_time()) {
-            opts_doc.append(kvp("maxTimeMS", bsoncxx::types::b_int64{max_time->count()}));
-        }
-
-        if (const auto& bypass_document_validation = options.bypass_document_validation()) {
-            opts_doc.append(kvp("bypassDocumentValidation", *bypass_document_validation));
-        }
-
-        if (const auto& hint = options.hint()) {
-            opts_doc.append(kvp("hint", hint->to_value()));
-        }
-
-        if (const auto& read_concern = options.read_concern()) {
-            opts_doc.append(kvp("readConcern", read_concern->to_document()));
-        }
-
-        if (const auto& write_concern = options.write_concern()) {
-            opts_doc.append(kvp("writeConcern", write_concern->to_document()));
-        }
-
-        if (const auto& batch_size = options.batch_size()) {
-            opts_doc.append(kvp("batchSize", *batch_size));
-        }
-
-        if (const auto& comment = options.comment()) {
-            opts_doc.append(kvp("comment", *comment));
-        }
-
-        // Set read preference
+        append_aggregate_options(options, opts_doc);
 
         if (session) {
             opts_doc.append(bsoncxx::builder::concatenate_doc{session->_get_impl().to_document()});
+        }
+
+        if (options.read_preference()) {
+            rp_ptr = options.read_preference()->_impl->read_preference_t;
         }
 
         libbson::scoped_bson_t opts_bson(opts_doc.view());

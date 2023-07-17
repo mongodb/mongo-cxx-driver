@@ -457,6 +457,7 @@ set_local_dist (src_mongocxx_DIST_local
    private/read_preference.hh
    private/uri.hh
    private/write_concern.hh
+   private/append_aggregate_options.hh
    read_concern.cpp
    read_concern.hpp
    read_preference.cpp

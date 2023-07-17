@@ -14,6 +14,7 @@
 
 #include <bsoncxx/builder/basic/document.hpp>
 #include <mongocxx/options/aggregate.hpp>
+#include <mongocxx/private/append_aggregate_options.hh>
 #include <mongocxx/private/read_preference.hh>
 
 #include <mongocxx/config/private/prelude.hh>
@@ -30,45 +31,7 @@ aggregate& aggregate::allow_disk_use(bool allow_disk_use) {
 }
 
 void aggregate::append(bsoncxx::builder::basic::document& builder) const {
-    if (const auto& allow_disk_use = this->allow_disk_use()) {
-        builder.append(kvp("allowDiskUse", *allow_disk_use));
-    }
-
-    if (const auto& collation = this->collation()) {
-        builder.append(kvp("collation", *collation));
-    }
-
-    if (const auto& let = this->let()) {
-        builder.append(kvp("let", *let));
-    }
-
-    if (const auto& max_time = this->max_time()) {
-        builder.append(kvp("maxTimeMS", bsoncxx::types::b_int64{max_time->count()}));
-    }
-
-    if (const auto& bypass_document_validation = this->bypass_document_validation()) {
-        builder.append(kvp("bypassDocumentValidation", *bypass_document_validation));
-    }
-
-    if (const auto& hint = this->hint()) {
-        builder.append(kvp("hint", hint->to_value()));
-    }
-
-    if (const auto& read_concern = this->read_concern()) {
-        builder.append(kvp("readConcern", read_concern->to_document()));
-    }
-
-    if (const auto& write_concern = this->write_concern()) {
-        builder.append(kvp("writeConcern", write_concern->to_document()));
-    }
-
-    if (const auto& batch_size = this->batch_size()) {
-        builder.append(kvp("batchSize", *batch_size));
-    }
-
-    if (const auto& comment = this->comment()) {
-        builder.append(kvp("comment", *comment));
-    }
+    append_aggregate_options(*this, builder);
 }
 
 aggregate& aggregate::collation(bsoncxx::document::view_or_value collation) {
