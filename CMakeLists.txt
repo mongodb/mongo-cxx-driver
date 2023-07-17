@@ -91,6 +91,7 @@ if(NEED_DOWNLOAD_C_DRIVER)
         set(OLD_CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
         set(OLD_CMAKE_C_FLAGS ${CMAKE_C_FLAGS})
 
+        set(ENABLE_EXTRA_ALIGNMENT OFF)
         add_compile_definitions(ENABLE_EXTRA_ALIGNMENT=OFF)
 
         FetchContent_Populate(mongo-c-driver)
