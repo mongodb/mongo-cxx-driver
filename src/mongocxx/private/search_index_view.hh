@@ -34,32 +34,39 @@ class search_index_view::impl {
 
     impl& operator=(const impl& i) = default;
 
-    cursor list(bsoncxx::string::view_or_value name,
+    cursor list(const client_session* session,
+                bsoncxx::string::view_or_value name,
                 const bsoncxx::document::view& aggregation_opts) {
         pipeline pipeline{};
         pipeline.append_stage(
             make_document(kvp("$listSearchIndexes", make_document(kvp("name", name.view())))));
-        return list(pipeline, aggregation_opts);
+        return list(session, pipeline, aggregation_opts);
     }
 
-    cursor list(const bsoncxx::document::view& aggregation_opts) {
+    cursor list(const client_session* session, const bsoncxx::document::view& aggregation_opts) {
         pipeline pipeline{};
         pipeline.append_stage(make_document(kvp("$listSearchIndexes", make_document())));
-        return list(pipeline, aggregation_opts);
+        return list(session, pipeline, aggregation_opts);
     }
 
-    cursor list(const pipeline& pipeline, const bsoncxx::document::view& aggregation_opts) {
+    cursor list(const client_session* session,
+                const pipeline& pipeline,
+                const bsoncxx::document::view& aggregation_opts) {
         libbson::scoped_bson_t opts_bson{aggregation_opts};
         libbson::scoped_bson_t stages(bsoncxx::document::view(pipeline.view_array()));
         const mongoc_read_prefs_t* rp_ptr = NULL;
+
+        if (session) {
+        }
 
         return libmongoc::collection_aggregate(
             _coll, static_cast<::mongoc_query_flags_t>(0), stages.bson(), opts_bson.bson(), rp_ptr);
     }
 
     bsoncxx::stdx::optional<bsoncxx::string::view_or_value> create_one(
-        const search_index_model& model) {
-        bsoncxx::document::value result = create_many(std::vector<search_index_model>{model});
+        const client_session* session, const search_index_model& model) {
+        bsoncxx::document::value result =
+            create_many(session, std::vector<search_index_model>{model});
         bsoncxx::document::view result_view = result.view();
 
         return bsoncxx::stdx::make_optional(
@@ -72,7 +79,8 @@ class search_index_view::impl {
                                                .value));
     }
 
-    bsoncxx::document::value create_many(const std::vector<search_index_model>& search_indexes) {
+    bsoncxx::document::value create_many(const client_session* session,
+                                         const std::vector<search_index_model>& search_indexes) {
         using namespace bsoncxx;
 
         builder::basic::array search_index_arr;
@@ -100,6 +108,10 @@ class search_index_view::impl {
 
         builder::basic::document opts_doc;
 
+        if (session) {
+            opts_doc.append(bsoncxx::builder::concatenate_doc{session->_get_impl().to_document()});
+        }
+
         libbson::scoped_bson_t command_bson{command};
         libbson::scoped_bson_t opts_bson{opts_doc.view()};
 
@@ -113,12 +125,16 @@ class search_index_view::impl {
         return reply.steal();
     }
 
-    void drop_one(bsoncxx::string::view_or_value name) {
+    void drop_one(const client_session* session, bsoncxx::string::view_or_value name) {
         bsoncxx::builder::basic::document opts_doc;
 
         bsoncxx::document::value command =
             make_document(kvp("dropSearchIndex", libmongoc::collection_get_name(_coll)),
                           kvp("name", name.view()));
+
+        if (session) {
+            opts_doc.append(bsoncxx::builder::concatenate_doc{session->_get_impl().to_document()});
+        }
 
         libbson::scoped_bson_t reply;
         libbson::scoped_bson_t command_bson{command.view()};
@@ -133,13 +149,18 @@ class search_index_view::impl {
         }
     }
 
-    void update_one(bsoncxx::string::view_or_value name,
+    void update_one(const client_session* session,
+                    bsoncxx::string::view_or_value name,
                     const bsoncxx::document::view_or_value& definition) {
         bsoncxx::builder::basic::document opts_doc;
         bsoncxx::document::value command =
             make_document(kvp("updateSearchIndex", libmongoc::collection_get_name(_coll)),
                           kvp("name", name.view()),
                           kvp("definition", definition.view()));
+
+        if (session) {
+            opts_doc.append(bsoncxx::builder::concatenate_doc{session->_get_impl().to_document()});
+        }
 
         libbson::scoped_bson_t reply;
         libbson::scoped_bson_t command_bson{command.view()};
