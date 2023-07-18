@@ -1851,9 +1851,14 @@ document::value list_search_indexes(collection& coll, const document::view& oper
     options::aggregate options;
     if (arguments["aggregationOptions"]) {
         aggregation_options = arguments["aggregationOptions"].get_document().view();
-        // search index spec tests only set batchSize, so if aggregation options exist then it must
-        // be batch size.
-        options.batch_size(aggregation_options["batchSize"].get_int32().value);
+        for (auto&& element : aggregation_options) {
+            if (element.key() == "batchSize") {
+                options.batch_size(element.get_int32().value);
+            } else {
+                throw std::logic_error{"unsupported aggregateOptions field: " +
+                                       std::string(element.key())};
+            }
+        }
     }
 
     cursor c = arguments["name"]
