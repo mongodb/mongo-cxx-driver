@@ -1057,7 +1057,7 @@ tasks:
             export CMAKE="$(find_cmake_latest)"
             cd build
             $CMAKE ..
-            $CMAKE --build . -- -j 8
+            $CMAKE --build . -- -j $(nproc)
             ./hello_mongocxx
 
     - name: debian-package-build
