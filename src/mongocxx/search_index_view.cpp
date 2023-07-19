@@ -97,8 +97,17 @@ void search_index_view::update_one(const client_session& session,
     _get_impl().update_one(&session, name, definition);
 }
 
-search_index_view::impl& search_index_view::_get_impl() {
+const search_index_view::impl& search_index_view::_get_impl() const {
+    if (!_impl) {
+        throw logic_error{error_code::k_invalid_client_object};
+    }
     return *_impl;
 }
+
+search_index_view::impl& search_index_view::_get_impl() {
+    auto cthis = const_cast<const search_index_view*>(this);
+    return const_cast<search_index_view::impl&>(cthis->_get_impl());
+}
+
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx

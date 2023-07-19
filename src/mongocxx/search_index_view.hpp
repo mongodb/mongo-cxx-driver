@@ -235,6 +235,8 @@ class MONGOCXX_API search_index_view {
     MONGOCXX_PRIVATE std::vector<bsoncxx::string::view_or_value> _create_many_helper(
         bsoncxx::array::view created_indexes);
 
+    MONGOCXX_PRIVATE const impl& _get_impl() const;
+
     MONGOCXX_PRIVATE impl& _get_impl();
 
    private:
