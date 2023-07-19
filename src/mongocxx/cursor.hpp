@@ -25,6 +25,7 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 class collection;
+class search_index_view;
 
 ///
 /// Class representing a pointer to the result set of a query on a MongoDB server.
