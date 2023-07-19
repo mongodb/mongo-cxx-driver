@@ -1801,10 +1801,9 @@ document::value create_search_index(collection& coll, const document::view& oper
     auto raw_model = arguments["model"];
 
     search_index_model model =
-        raw_model["name"]
-            ? search_index_model(string::to_string(raw_model["name"].get_string().value),
-                                 raw_model["definition"].get_document().value)
-            : search_index_model(raw_model["definition"].get_document().value);
+        raw_model["name"] ? search_index_model(raw_model["name"].get_string().value,
+                                               raw_model["definition"].get_document().value)
+                          : search_index_model(raw_model["definition"].get_document().value);
 
     return make_document(kvp("result", coll.search_indexes().create_one(model).value()));
 }
@@ -1816,10 +1815,10 @@ document::value create_search_indexes(collection& coll, const document::view& op
     std::vector<search_index_model> models;
 
     for (auto&& m : raw_models) {
-        search_index_model model =
-            m["name"] ? search_index_model(string::to_string(m["name"].get_string().value),
-                                           m["definition"].get_document().value)
-                      : search_index_model(m["definition"].get_document().value);
+        search_index_model model = m["name"]
+                                       ? search_index_model(m["name"].get_string().value,
+                                                            m["definition"].get_document().value)
+                                       : search_index_model(m["definition"].get_document().value);
         models.push_back(model);
     }
 
@@ -1837,7 +1836,7 @@ document::value create_search_indexes(collection& coll, const document::view& op
 document::value drop_search_index(collection& coll, const document::view& operation) {
     auto arguments = operation["arguments"];
 
-    auto name = string::to_string(arguments["name"].get_string().value);
+    auto name = arguments["name"].get_string().value;
 
     coll.search_indexes().drop_one(name);
 
@@ -1852,7 +1851,7 @@ document::value list_search_indexes(collection& coll, const document::view& oper
     if (arguments["aggregationOptions"]) {
         aggregation_options = arguments["aggregationOptions"].get_document().view();
         for (auto&& element : aggregation_options) {
-            if (element.key() == "batchSize") {
+            if (element.key() == stdx::string_view("batchSize")) {
                 options.batch_size(element.get_int32().value);
             } else {
                 throw std::logic_error{"unsupported aggregateOptions field: " +
@@ -1862,8 +1861,7 @@ document::value list_search_indexes(collection& coll, const document::view& oper
     }
 
     cursor c = arguments["name"]
-                   ? coll.search_indexes().list(
-                         string::to_string(arguments["name"].get_string().value), options)
+                   ? coll.search_indexes().list(arguments["name"].get_string().value, options)
                    : coll.search_indexes().list(options);
 
     // we must loop over the resulting cursor to trigger server events for the spec tests
@@ -1881,7 +1879,7 @@ document::value list_search_indexes(collection& coll, const document::view& oper
 document::value update_search_index(collection& coll, const document::view& operation) {
     auto arguments = operation["arguments"];
 
-    auto name = string::to_string(arguments["name"].get_string().value);
+    auto name = arguments["name"].get_string().value;
     auto definition = arguments["definition"].get_document().value;
 
     coll.search_indexes().update_one(name, definition);

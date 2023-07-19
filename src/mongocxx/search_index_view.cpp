@@ -72,8 +72,7 @@ std::vector<bsoncxx::string::view_or_value> search_index_view::_create_many_help
     bsoncxx::array::view created_indexes) {
     std::vector<bsoncxx::string::view_or_value> search_index_names;
     for (auto&& index : created_indexes) {
-        search_index_names.push_back(
-            bsoncxx::string::to_string(index.get_document().value["name"].get_string().value));
+        search_index_names.push_back(index.get_document().value["name"].get_string().value);
     }
     return search_index_names;
 }
