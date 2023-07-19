@@ -8,10 +8,10 @@
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
-using bsoncxx::builder::basic::kvp;
+MONGOCXX_INLINE void append_aggregate_options(bsoncxx::builder::basic::document& builder,
+                                              const options::aggregate& options) {
+    using bsoncxx::builder::basic::kvp;
 
-MONGOCXX_INLINE void append_aggregate_options(const options::aggregate& options,
-                                              bsoncxx::builder::basic::document& builder) {
     if (const auto& allow_disk_use = options.allow_disk_use()) {
         builder.append(kvp("allowDiskUse", *allow_disk_use));
     }

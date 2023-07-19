@@ -56,7 +56,7 @@ class search_index_view::impl {
         libbson::scoped_bson_t stages(bsoncxx::document::view(pipeline.view_array()));
         const mongoc_read_prefs_t* rp_ptr = NULL;
 
-        append_aggregate_options(options, opts_doc);
+        append_aggregate_options(opts_doc, options);
 
         if (session) {
             opts_doc.append(bsoncxx::builder::concatenate_doc{session->_get_impl().to_document()});

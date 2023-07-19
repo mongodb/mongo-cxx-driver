@@ -31,7 +31,7 @@ aggregate& aggregate::allow_disk_use(bool allow_disk_use) {
 }
 
 void aggregate::append(bsoncxx::builder::basic::document& builder) const {
-    append_aggregate_options(*this, builder);
+    append_aggregate_options(builder, *this);
 }
 
 aggregate& aggregate::collation(bsoncxx::document::view_or_value collation) {
