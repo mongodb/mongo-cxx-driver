@@ -160,7 +160,7 @@ class search_index_view::impl {
 
     void update_one(const client_session* session,
                     bsoncxx::string::view_or_value name,
-                    const bsoncxx::document::view_or_value& definition) {
+                    bsoncxx::document::view_or_value definition) {
         bsoncxx::builder::basic::document opts_doc;
         bsoncxx::document::value command =
             make_document(kvp("updateSearchIndex", libmongoc::collection_get_name(_coll)),

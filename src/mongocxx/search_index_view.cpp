@@ -35,14 +35,14 @@ cursor search_index_view::list(const client_session& session,
 }
 
 bsoncxx::stdx::optional<bsoncxx::string::view_or_value> search_index_view::create_one(
-    bsoncxx::string::view_or_value name, const bsoncxx::document::view_or_value& definition) {
+    bsoncxx::string::view_or_value name, bsoncxx::document::view_or_value definition) {
     return create_one(search_index_model(name, definition));
 }
 
 bsoncxx::stdx::optional<bsoncxx::string::view_or_value> search_index_view::create_one(
     const client_session& session,
     bsoncxx::string::view_or_value name,
-    const bsoncxx::document::view_or_value& definition) {
+    bsoncxx::document::view_or_value definition) {
     return create_one(session, search_index_model(name, definition));
 }
 
@@ -87,13 +87,13 @@ void search_index_view::drop_one(const client_session& session,
 }
 
 void search_index_view::update_one(bsoncxx::string::view_or_value name,
-                                   const bsoncxx::document::view_or_value& definition) {
+                                   bsoncxx::document::view_or_value definition) {
     _get_impl().update_one(nullptr, name, definition);
 }
 
 void search_index_view::update_one(const client_session& session,
                                    bsoncxx::string::view_or_value name,
-                                   const bsoncxx::document::view_or_value& definition) {
+                                   bsoncxx::document::view_or_value definition) {
     _get_impl().update_one(&session, name, definition);
 }
 

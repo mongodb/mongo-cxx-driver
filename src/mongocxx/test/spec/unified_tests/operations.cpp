@@ -1795,20 +1795,19 @@ document::value create_find_cursor(entity::map& map,
     return make_document();
 }
 
-document::value create_search_index(collection& coll, const document::view& operation) {
-    auto arguments = operation["arguments"];
+document::value create_search_index(collection& coll, document::view operation) {
+    const auto arguments = operation["arguments"];
+    const auto raw_model = arguments["model"];
+    const auto name = raw_model["name"];
+    const auto definition = raw_model["definition"].get_document().value;
 
-    auto raw_model = arguments["model"];
-
-    search_index_model model =
-        raw_model["name"] ? search_index_model(raw_model["name"].get_string().value,
-                                               raw_model["definition"].get_document().value)
-                          : search_index_model(raw_model["definition"].get_document().value);
+    const auto model = name ? search_index_model(name.get_string().value, definition)
+                            : search_index_model(definition);
 
     return make_document(kvp("result", coll.search_indexes().create_one(model).value()));
 }
 
-document::value create_search_indexes(collection& coll, const document::view& operation) {
+document::value create_search_indexes(collection& coll, document::view operation) {
     auto arguments = operation["arguments"];
 
     auto raw_models = arguments["models"].get_array().value;
@@ -1833,7 +1832,7 @@ document::value create_search_indexes(collection& coll, const document::view& op
     return make_document(kvp("result", result.view()));
 }
 
-document::value drop_search_index(collection& coll, const document::view& operation) {
+document::value drop_search_index(collection& coll, document::view operation) {
     auto arguments = operation["arguments"];
 
     auto name = arguments["name"].get_string().value;
@@ -1844,12 +1843,11 @@ document::value drop_search_index(collection& coll, const document::view& operat
     return make_document();
 }
 
-document::value list_search_indexes(collection& coll, const document::view& operation) {
+document::value list_search_indexes(collection& coll, document::view operation) {
     auto arguments = operation["arguments"];
-    bsoncxx::document::view aggregation_options;
     options::aggregate options;
     if (arguments["aggregationOptions"]) {
-        aggregation_options = arguments["aggregationOptions"].get_document().view();
+        const auto aggregation_options = arguments["aggregationOptions"].get_document().view();
         for (auto&& element : aggregation_options) {
             if (element.key() == stdx::string_view("batchSize")) {
                 options.batch_size(element.get_int32().value);
@@ -1876,7 +1874,7 @@ document::value list_search_indexes(collection& coll, const document::view& oper
     return result.extract();
 }
 
-document::value update_search_index(collection& coll, const document::view& operation) {
+document::value update_search_index(collection& coll, document::view operation) {
     auto arguments = operation["arguments"];
 
     auto name = arguments["name"].get_string().value;

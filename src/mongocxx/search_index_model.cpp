@@ -5,10 +5,10 @@
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
-search_index_model::search_index_model(const bsoncxx::document::view_or_value& definition)
+search_index_model::search_index_model(bsoncxx::document::view_or_value definition)
     : _definition(definition.view()) {}
 search_index_model::search_index_model(bsoncxx::string::view_or_value name,
-                                       const bsoncxx::document::view_or_value& definition)
+                                       bsoncxx::document::view_or_value definition)
     : _name(name), _definition(definition.view()) {}
 
 search_index_model::search_index_model(search_index_model&&) noexcept = default;

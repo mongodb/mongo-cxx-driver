@@ -94,7 +94,7 @@ class MONGOCXX_API search_index_view {
     /// @return The name of the created search index.
     ///
     bsoncxx::stdx::optional<bsoncxx::string::view_or_value> create_one(
-        bsoncxx::string::view_or_value name, const bsoncxx::document::view_or_value& definition);
+        bsoncxx::string::view_or_value name, bsoncxx::document::view_or_value definition);
 
     ///
     /// This is a convenience method for creating a single search index.
@@ -111,7 +111,7 @@ class MONGOCXX_API search_index_view {
     bsoncxx::stdx::optional<bsoncxx::string::view_or_value> create_one(
         const client_session& session,
         bsoncxx::string::view_or_value name,
-        const bsoncxx::document::view_or_value& definition);
+        bsoncxx::document::view_or_value definition);
 
     ///
     /// This is a convenience method for creating a single search index.
@@ -206,7 +206,7 @@ class MONGOCXX_API search_index_view {
     ///   The definition to update the search index to.
     ///
     void update_one(bsoncxx::string::view_or_value name,
-                    const bsoncxx::document::view_or_value& definition);
+                    bsoncxx::document::view_or_value definition);
 
     ///
     /// Updates a single search index from the collection by the search index name.
@@ -220,7 +220,7 @@ class MONGOCXX_API search_index_view {
     ///
     void update_one(const client_session& session,
                     bsoncxx::string::view_or_value name,
-                    const bsoncxx::document::view_or_value& definition);
+                    bsoncxx::document::view_or_value definition);
 
     ///
     /// @}

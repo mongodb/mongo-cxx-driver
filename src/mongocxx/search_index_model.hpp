@@ -20,9 +20,9 @@ class MONGOCXX_API search_index_model {
     ///
     /// Initializes a new search_index_model over a mongocxx::collection.
     ///
-    search_index_model(const bsoncxx::document::view_or_value& definition);
+    search_index_model(bsoncxx::document::view_or_value definition);
     search_index_model(bsoncxx::string::view_or_value name,
-                       const bsoncxx::document::view_or_value& definition);
+                       bsoncxx::document::view_or_value definition);
 
     search_index_model() = delete;
 
