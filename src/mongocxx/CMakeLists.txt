@@ -121,8 +121,6 @@ set(mongocxx_sources
     hint.cpp
     index_model.cpp
     index_view.cpp
-    search_index_model.cpp
-    search_index_view.cpp
     instance.cpp
     logger.cpp
     model/delete_many.cpp
@@ -180,6 +178,8 @@ set(mongocxx_sources
     result/replace_one.cpp
     result/rewrap_many_datakey.cpp
     result/update.cpp
+    search_index_model.cpp
+    search_index_view.cpp
     uri.cpp
     validation_criteria.cpp
     write_concern.cpp
@@ -336,10 +336,6 @@ set_local_dist (src_mongocxx_DIST_local
    index_model.hpp
    index_view.cpp
    index_view.hpp
-   search_index_model.cpp
-   search_index_model.hpp
-   search_index_view.cpp
-   search_index_view.hpp
    instance.cpp
    instance.hpp
    logger.cpp
@@ -443,7 +439,6 @@ set_local_dist (src_mongocxx_DIST_local
    private/cursor.hh
    private/database.hh
    private/index_view.hh
-   private/search_index_view.hh
    private/libbson.cpp
    private/libbson.hh
    private/libmongoc.cpp
@@ -455,6 +450,7 @@ set_local_dist (src_mongocxx_DIST_local
    private/pool.hh
    private/read_concern.hh
    private/read_preference.hh
+   private/search_index_view.hh
    private/uri.hh
    private/write_concern.hh
    private/append_aggregate_options.hh
@@ -478,6 +474,10 @@ set_local_dist (src_mongocxx_DIST_local
    result/rewrap_many_datakey.hpp
    result/update.cpp
    result/update.hpp
+   search_index_model.cpp
+   search_index_model.hpp
+   search_index_view.cpp
+   search_index_view.hpp
    stdx.hpp
    test_util/client_helpers.cpp
    test_util/client_helpers.hh
