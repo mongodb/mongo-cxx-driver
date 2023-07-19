@@ -41,7 +41,7 @@ else()
 endif()
 
 set(LIBMONGOC_REQUIRED_VERSION 1.24.0) # TODO (CXX-2696): update to 1.24.0 once released.
-set(LIBMONGOC_DOWNLOAD_VERSION 1d861dc83d25f0f17d927e86e16d1019ca11abb4) # TODO (CXX-2696): update to 1.24.0 once released.
+set(LIBMONGOC_DOWNLOAD_VERSION 0888350f9a63c8641f3f4262347232bdba1d4fd5) # TODO (CXX-2696): update to 1.24.0 once released.
 set(LIBMONGOC_REQUIRED_ABI_VERSION 1.0)
 
 set(NEED_DOWNLOAD_C_DRIVER false)
@@ -86,6 +86,7 @@ if(NEED_DOWNLOAD_C_DRIVER)
 
     FetchContent_GetProperties(mongo-c-driver)
     if(NOT mongo-c-driver_POPULATED)
+        set(MONGOC_UNINSTALL_TARGET "mongoc_uninstall")
         set(OLD_ENABLE_TESTS ${ENABLE_TESTS})
         set(OLD_BUILD_TESTING ${BUILD_TESTING})
         set(OLD_CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
@@ -425,7 +426,8 @@ if(NOT (TARGET bson_shared OR TARGET mongoc_shared))
    )
 endif()
 
-if(ENABLE_UNINSTALL AND NOT (TARGET bson_shared OR TARGET mongoc_shared))
+# if(ENABLE_UNINSTALL AND NOT (TARGET bson_shared OR TARGET mongoc_shared))
+if(ENABLE_UNINSTALL)
     if(WIN32)
         set(UNINSTALL_PROG "uninstall.cmd")
     else()
