@@ -425,7 +425,6 @@ functions:
               script: |
                   set -o errexit
                   set -o pipefail
-                  set -x
 
                   # Grabs the mongocryptd path
                   pushd ..
@@ -530,7 +529,6 @@ functions:
 
                       set -o errexit
                   fi
-                  set -x
 
                   if [ "$(uname -m)" == "ppc64le" ]; then
                       echo "Skipping CSFLE test setup (CDRIVER-4246/CXX-2423)"

@@ -1,6 +1,4 @@
 #!/bin/bash
-
-set -x
 set -o errexit
 set -o pipefail
 

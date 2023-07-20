@@ -7,7 +7,6 @@
 #   IS_PATCH    If "true", this is an Evergreen patch build.
 
 set -o errexit
-set -x
 
 on_exit () {
   if [ -e ./unstable-chroot/debootstrap/debootstrap.log ]; then

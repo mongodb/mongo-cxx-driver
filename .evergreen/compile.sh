@@ -10,7 +10,6 @@
 
 set -o errexit
 set -o pipefail
-set -x
 
 if [ "$BUILD_TYPE" != "Debug" -a "$BUILD_TYPE" != "Release" ]; then
     echo "$0: expected BUILD_TYPE environment variable to be set to 'Debug' or 'Release'" >&2
@@ -50,17 +49,11 @@ case "$OS" in
       ;;
 esac
 
-printf "\n\nBUILDING THE DRIVER\n\n"
-
 cd build
-pwd
-ls
 "${cmake_binary}" -G "$GENERATOR" "-DCMAKE_BUILD_TYPE=${BUILD_TYPE}" -DMONGOCXX_ENABLE_SLOW_TESTS=ON -DENABLE_UNINSTALL=ON "$@" ..
 "${cmake_binary}" --build . --config $BUILD_TYPE -- $CMAKE_BUILD_OPTS
 "${cmake_binary}" --build . --config $BUILD_TYPE --target install -- $CMAKE_BUILD_OPTS
-echo "BUILDING EXAMPLES"
 "${cmake_binary}" --build . --config $BUILD_TYPE --target $CMAKE_EXAMPLES_TARGET -- $CMAKE_BUILD_OPTS
-echo "DONE BUILDING EXAMPLES"
 
 if [ "$_RUN_DISTCHECK" ]; then
    DISTCHECK_BUILD_OPTS="-j$CONCURRENCY" "${cmake_binary}" --build . --config $BUILD_TYPE --target distcheck

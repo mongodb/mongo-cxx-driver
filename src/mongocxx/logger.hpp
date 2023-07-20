@@ -75,9 +75,6 @@ class MONGOCXX_API logger {
     logger();
 };
 
-MONGOCXX_API void log_msg(log_level level, const char* log_domain, const char* format, ...);
-// MONGOCXX_API void log_msg(log_level level, const char* log_domain, const char* format);
-
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
 

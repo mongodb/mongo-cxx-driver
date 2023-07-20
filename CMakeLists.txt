@@ -426,7 +426,6 @@ if(NOT (TARGET bson_shared OR TARGET mongoc_shared))
    )
 endif()
 
-# if(ENABLE_UNINSTALL AND NOT (TARGET bson_shared OR TARGET mongoc_shared))
 if(ENABLE_UNINSTALL)
     if(WIN32)
         set(UNINSTALL_PROG "uninstall.cmd")

@@ -32,9 +32,8 @@ class test_log_handler : public logger {
     void operator()(log_level level,
                     stdx::string_view domain,
                     stdx::string_view message) noexcept final {
-        if (level == log_level::k_error) {
+        if (level == log_level::k_error)
             _events->emplace_back(level, std::string(domain), std::string(message));
-        }
     }
 
    private:
