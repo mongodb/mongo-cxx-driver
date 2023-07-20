@@ -450,6 +450,7 @@ set_local_dist (src_mongocxx_DIST_local
    private/pool.hh
    private/read_concern.hh
    private/read_preference.hh
+   private/search_index_model.hh
    private/search_index_view.hh
    private/uri.hh
    private/write_concern.hh

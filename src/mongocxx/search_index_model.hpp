@@ -62,8 +62,14 @@ class MONGOCXX_API search_index_model {
     bsoncxx::document::view definition() const;
 
    private:
-    bsoncxx::stdx::optional<bsoncxx::string::view_or_value> _name;
-    bsoncxx::document::view_or_value _definition;
+    class MONGOCXX_PRIVATE impl;
+
+    MONGOCXX_PRIVATE const impl& _get_impl() const;
+
+    MONGOCXX_PRIVATE impl& _get_impl();
+
+   private:
+    std::unique_ptr<impl> _impl;
 };
 
 MONGOCXX_INLINE_NAMESPACE_END
