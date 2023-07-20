@@ -1195,6 +1195,11 @@ axes:
             variables:
                 mongodb_version: *version_40
 
+    - id: with_mongocryptd
+      values:
+          - id: "yes"
+            variables: {use_mongocryptd: true}
+
 
 #######################################
 #           Buildvariants             #
@@ -1229,6 +1234,15 @@ buildvariants:
       tasks:
           - name: test_versioned_api
           - name: test_versioned_api_accept_version_two
+
+    # Add matrix for specification test requirement of mongocryptd:
+    # "Drivers MUST run all tests with mongocryptd on at least one platform for all tested server versions (4.2+)."
+    - matrix_name: "mongocryptd"
+      matrix_spec: {os: "ubuntu-1804", mongodb_version: ["4.2", "4.4", "5.0", "latest"], with_mongocryptd: "yes"}
+      display_name: "${os} (MongoDB ${mongodb_version}) with mongocryptd"
+      tasks:
+          - name: compile_and_test_with_shared_libs
+          - name: compile_and_test_with_shared_libs_replica_set
 
     #######################################
     #         Linux Buildvariants         #
@@ -1366,19 +1380,6 @@ buildvariants:
             distros:
             - debian10-large
           - name: uninstall_check
-
-    # Add matrix for specification test requirement of mongocryptd:
-    # "Drivers MUST run all tests with mongocryptd on at least one platform for all tested server versions (4.2+)."
-    - matrix_name: "mongocryptd"
-      matrix_spec:
-        os: "ubuntu-1804"
-        mongodb_version: ["4.2", "4.4", "5.0", "latest"]
-      display_name: "${os} (MongoDB ${mongodb_version}) with mongocryptd"
-      tasks:
-          - name: compile_and_test_with_shared_libs
-          - name: compile_and_test_with_shared_libs_replica_set
-      expansions:
-        use_mongocryptd: true
 
     - name: ubuntu2004-release-latest
       display_name: "Ubuntu 20.04 Release (MongoDB Latest)"
