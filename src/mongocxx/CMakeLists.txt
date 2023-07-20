@@ -428,6 +428,7 @@ set_local_dist (src_mongocxx_DIST_local
    pipeline.hpp
    pool.cpp
    pool.hpp
+   private/append_aggregate_options.hh
    private/bulk_write.hh
    private/change_stream.hh
    private/client.hh
@@ -454,7 +455,6 @@ set_local_dist (src_mongocxx_DIST_local
    private/search_index_view.hh
    private/uri.hh
    private/write_concern.hh
-   private/append_aggregate_options.hh
    read_concern.cpp
    read_concern.hpp
    read_preference.cpp

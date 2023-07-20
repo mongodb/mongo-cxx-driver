@@ -6,9 +6,6 @@
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/string/to_string.hpp>
-#include <bsoncxx/string/view_or_value.hpp>
-#include <bsoncxx/types/bson_value/view.hpp>
-#include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/private/append_aggregate_options.hh>
 #include <mongocxx/private/client_session.hh>
 #include <mongocxx/private/libbson.hh>

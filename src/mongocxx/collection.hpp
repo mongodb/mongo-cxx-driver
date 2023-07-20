@@ -1846,12 +1846,12 @@ class MONGOCXX_API collection {
                         const options::change_stream& options = {});
 
     ///
-    /// Gets a search_index_view to the collection.
-    search_index_view search_indexes();
-
-    ///
     /// @}
     ///
+
+    ///
+    /// Gets a search_index_view to the collection.
+    search_index_view search_indexes();
 
    private:
     friend mongocxx::bulk_write;
