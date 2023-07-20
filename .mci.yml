@@ -1611,7 +1611,7 @@ buildvariants:
           - name: compile_and_test_with_static_libs
 
     - name: ubuntu1804-debug
-      display_name: "Ubuntu 18.04 Debug (MongoDB Latest)"
+      display_name: "Ubuntu 18.04 Debug (MongoDB Latest) (Extra)"
       expansions:
         build_type: "Debug"
         tar_options: *linux_tar_options
