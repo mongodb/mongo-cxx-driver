@@ -52,7 +52,6 @@ class search_index_view::impl {
                 const options::aggregate& options) {
         bsoncxx::builder::basic::document opts_doc;
         libbson::scoped_bson_t stages(bsoncxx::document::view(pipeline.view_array()));
-        const mongoc_read_prefs_t* rp_ptr = NULL;
 
         append_aggregate_options(opts_doc, options);
 
@@ -60,30 +59,26 @@ class search_index_view::impl {
             opts_doc.append(bsoncxx::builder::concatenate_doc{session->_get_impl().to_document()});
         }
 
-        if (options.read_preference()) {
-            rp_ptr = options.read_preference()->_impl->read_preference_t;
-        }
+        const mongoc_read_prefs_t* const rp_ptr =
+            options.read_preference() ? options.read_preference()->_impl->read_preference_t
+                                      : nullptr;
 
         libbson::scoped_bson_t opts_bson(opts_doc.view());
 
         return libmongoc::collection_aggregate(
-            _coll, static_cast<::mongoc_query_flags_t>(0), stages.bson(), opts_bson.bson(), rp_ptr);
+            _coll, mongoc_query_flags_t(), stages.bson(), opts_bson.bson(), rp_ptr);
     }
 
-    bsoncxx::stdx::optional<bsoncxx::string::view_or_value> create_one(
-        const client_session* session, const search_index_model& model) {
-        bsoncxx::document::value result =
-            create_many(session, std::vector<search_index_model>{model});
-        bsoncxx::document::view result_view = result.view();
-
-        return bsoncxx::stdx::make_optional(
-            bsoncxx::string::view_or_value(result_view["indexesCreated"]
-                                               .get_array()
-                                               .value.begin()
-                                               ->get_document()
-                                               .value["name"]
-                                               .get_string()
-                                               .value));
+    bsoncxx::string::view_or_value create_one(const client_session* session,
+                                              const search_index_model& model) {
+        const auto result = create_many(session, std::vector<search_index_model>{model});
+        return bsoncxx::string::view_or_value(result["indexesCreated"]
+                                                  .get_array()
+                                                  .value.begin()
+                                                  ->get_document()
+                                                  .value["name"]
+                                                  .get_string()
+                                                  .value);
     }
 
     bsoncxx::document::value create_many(const client_session* session,
