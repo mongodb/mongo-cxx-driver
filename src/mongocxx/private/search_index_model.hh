@@ -1,9 +1,7 @@
 #pragma once
 
 #include <bsoncxx/document/view_or_value.hpp>
-#include <mongocxx/private/client_session.hh>
-#include <mongocxx/private/libbson.hh>
-#include <mongocxx/private/libmongoc.hh>
+#include <mongocxx/search_index_model.hpp>
 
 #include <mongocxx/config/private/prelude.hh>
 

@@ -1,4 +1,6 @@
 #include <bsoncxx/stdx/make_unique.hpp>
+#include <mongocxx/exception/error_code.hpp>
+#include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/private/search_index_view.hh>
 #include <mongocxx/search_index_view.hpp>
 
@@ -106,7 +108,7 @@ void search_index_view::update_one(const client_session& session,
 
 const search_index_view::impl& search_index_view::_get_impl() const {
     if (!_impl) {
-        throw logic_error{error_code::k_invalid_search_index_view};
+        throw mongocxx::logic_error{error_code::k_invalid_search_index_view};
     }
     return *_impl;
 }
