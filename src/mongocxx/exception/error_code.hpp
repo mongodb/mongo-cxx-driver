@@ -94,6 +94,9 @@ enum class error_code : std::int32_t {
     // A resource (server API handle, etc.) could not be created:
     k_create_resource_fail,
 
+    // A default-constructed or moved-from mongocxx::search_index_model object has been used.
+    k_invalid_search_index_model,
+
     // Add new constant string message to error_code.cpp as well!
 };
 

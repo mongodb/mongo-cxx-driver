@@ -13,6 +13,15 @@ search_index_view::search_index_view(void* coll, void* client)
 
 search_index_view::search_index_view(search_index_view&&) noexcept = default;
 search_index_view& search_index_view::operator=(search_index_view&&) noexcept = default;
+
+search_index_view::search_index_view(const search_index_view& other)
+    : _impl(stdx::make_unique<impl>(other._get_impl())) {}
+
+search_index_view& search_index_view::operator=(const search_index_view& other) {
+    _get_impl() = other._get_impl();
+    return *this;
+}
+
 search_index_view::~search_index_view() = default;
 
 cursor search_index_view::list(const options::aggregate& options) {

@@ -24,12 +24,6 @@ class search_index_view::impl {
     impl(mongoc_collection_t* collection, mongoc_client_t* client)
         : _coll{collection}, _client{client} {}
 
-    ~impl() = default;
-    impl(impl&& i) = delete;
-    impl& operator=(impl&& i) = delete;
-    impl(const impl& i) = delete;
-    impl& operator=(const impl& i) = delete;
-
     cursor list(const client_session* session,
                 bsoncxx::string::view_or_value name,
                 const options::aggregate& options) {

@@ -34,7 +34,7 @@ class MONGOCXX_API search_index_model {
     ///
     /// Move assigns a search_index_model.
     ///
-    search_index_model& operator=(search_index_model&&);
+    search_index_model& operator=(search_index_model&&) noexcept;
 
     ///
     /// Copy constructs a search_index_model.

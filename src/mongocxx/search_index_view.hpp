@@ -21,6 +21,9 @@ class MONGOCXX_API search_index_view {
     search_index_view(search_index_view&&) noexcept;
     search_index_view& operator=(search_index_view&&) noexcept;
 
+    search_index_view(const search_index_view&);
+    search_index_view& operator=(const search_index_view&);
+
     ~search_index_view();
 
     ///

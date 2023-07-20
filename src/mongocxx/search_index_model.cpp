@@ -15,34 +15,29 @@ search_index_model::search_index_model(bsoncxx::string::view_or_value name,
 
 search_index_model::search_index_model(search_index_model&&) noexcept = default;
 
-search_index_model& search_index_model::operator=(search_index_model&&) = default;
+search_index_model& search_index_model::operator=(search_index_model&&) noexcept = default;
 
 search_index_model::search_index_model(const search_index_model& other)
-    : _impl(bsoncxx::stdx::make_unique<impl>(*other._impl)) {}
+    : _impl(bsoncxx::stdx::make_unique<impl>(other._get_impl())) {}
 
 search_index_model& search_index_model::operator=(const search_index_model& other) {
-    assert(other._impl);
-    if (_impl) {
-        *_impl = *other._impl;
-    } else {
-        _impl = bsoncxx::stdx::make_unique<impl>(*other._impl);
-    }
+    _get_impl() = other._get_impl();
     return *this;
 }
 
 search_index_model::~search_index_model() = default;
 
 bsoncxx::stdx::optional<bsoncxx::string::view_or_value> search_index_model::name() const {
-    return _get_impl().name();
+    return _get_impl()._name;
 }
 
 bsoncxx::document::view search_index_model::definition() const {
-    return _get_impl().definition();
+    return _get_impl()._definition.view();
 }
 
 const search_index_model::impl& search_index_model::_get_impl() const {
     if (!_impl) {
-        throw logic_error{error_code::k_invalid_client_object};
+        throw logic_error{error_code::k_invalid_search_index_model};
     }
     return *_impl;
 }
