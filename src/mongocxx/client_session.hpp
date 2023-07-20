@@ -191,6 +191,7 @@ class MONGOCXX_API client_session {
     friend class collection;
     friend class database;
     friend class index_view;
+    friend class search_index_view;
 
     class MONGOCXX_PRIVATE impl;
 

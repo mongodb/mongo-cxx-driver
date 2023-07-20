@@ -56,6 +56,7 @@
 #include <mongocxx/result/insert_one.hpp>
 #include <mongocxx/result/replace_one.hpp>
 #include <mongocxx/result/update.hpp>
+#include <mongocxx/search_index_view.hpp>
 #include <mongocxx/write_concern.hpp>
 
 #include <mongocxx/config/prelude.hpp>
@@ -1847,6 +1848,10 @@ class MONGOCXX_API collection {
     ///
     /// @}
     ///
+
+    ///
+    /// Gets a search_index_view to the collection.
+    search_index_view search_indexes();
 
    private:
     friend mongocxx::bulk_write;

@@ -178,6 +178,8 @@ set(mongocxx_sources
     result/replace_one.cpp
     result/rewrap_many_datakey.cpp
     result/update.cpp
+    search_index_model.cpp
+    search_index_view.cpp
     uri.cpp
     validation_criteria.cpp
     write_concern.cpp
@@ -426,6 +428,7 @@ set_local_dist (src_mongocxx_DIST_local
    pipeline.hpp
    pool.cpp
    pool.hpp
+   private/append_aggregate_options.hh
    private/bulk_write.hh
    private/change_stream.hh
    private/client.hh
@@ -448,6 +451,8 @@ set_local_dist (src_mongocxx_DIST_local
    private/pool.hh
    private/read_concern.hh
    private/read_preference.hh
+   private/search_index_model.hh
+   private/search_index_view.hh
    private/uri.hh
    private/write_concern.hh
    read_concern.cpp
@@ -470,6 +475,10 @@ set_local_dist (src_mongocxx_DIST_local
    result/rewrap_many_datakey.hpp
    result/update.cpp
    result/update.hpp
+   search_index_model.cpp
+   search_index_model.hpp
+   search_index_view.cpp
+   search_index_view.hpp
    stdx.hpp
    test_util/client_helpers.cpp
    test_util/client_helpers.hh
