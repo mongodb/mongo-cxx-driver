@@ -13,7 +13,7 @@ search_index_model::search_index_model(bsoncxx::string::view_or_value name,
                                        bsoncxx::document::view_or_value definition)
     : _impl{bsoncxx::stdx::make_unique<impl>(name, definition)} {}
 
-search_index_model::search_index_model(search_index_model&& other) noexcept = default;
+search_index_model::search_index_model(search_index_model&&) noexcept = default;
 
 search_index_model& search_index_model::operator=(search_index_model&&) = default;
 
