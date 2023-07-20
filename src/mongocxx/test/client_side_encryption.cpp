@@ -2501,12 +2501,12 @@ TEST_CASE("Create Encrypted Collection", "[client_side_encryption]") {
     }
 
     if (!test_util::newer_than(conn, "7.0")) {
-        std::cerr << "Explicit Encryption tests require MongoDB server 7.0+." << std::endl;
+        WARN("Explicit Encryption tests require MongoDB server 7.0+.");
         return;
     }
 
     if (test_util::get_topology(conn) == "single") {
-        std::cerr << "Explicit Encryption tests must not run against a standalone." << std::endl;
+        WARN("Explicit Encryption tests must not run against a standalone.");
         return;
     }
 
