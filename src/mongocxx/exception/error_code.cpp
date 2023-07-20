@@ -89,6 +89,9 @@ class error_category final : public std::error_category {
             case error_code::k_invalid_search_index_model:
                 return "invalid use of default constructed or moved-from "
                        "mongocxx::search_index_model object";
+            case error_code::k_invalid_search_index_view:
+                return "invalid use of default constructed or moved-from "
+                       "mongocxx::search_index_view object";
             default:
                 return "unknown mongocxx error";
         }

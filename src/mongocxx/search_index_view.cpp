@@ -106,7 +106,7 @@ void search_index_view::update_one(const client_session& session,
 
 const search_index_view::impl& search_index_view::_get_impl() const {
     if (!_impl) {
-        throw logic_error{error_code::k_invalid_client_object};
+        throw logic_error{error_code::k_invalid_search_index_view};
     }
     return *_impl;
 }
