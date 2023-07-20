@@ -977,7 +977,6 @@ tasks:
         - func: "install_c_driver"
         - func: "test"
 
-    # Temporary workaround:
     # Auto downloading the C driver in the C++ build does not currently include
     # support for libmongocrypt, therefore it is not configured with
     # -DENABLE_CLIENT_SIDE_ENCRYPTION=ON. For now, CSFLE tests will need to have
