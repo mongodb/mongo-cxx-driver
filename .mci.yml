@@ -1195,10 +1195,9 @@ axes:
             variables:
                 mongodb_version: *version_40
 
-    - id: with_mongocryptd
+    - id: use_mongocryptd
       values:
-          - id: "yes"
-            variables: {use_mongocryptd: true}
+          - id: "true"
 
 
 #######################################
@@ -1238,7 +1237,7 @@ buildvariants:
     # Add matrix for specification test requirement of mongocryptd:
     # "Drivers MUST run all tests with mongocryptd on at least one platform for all tested server versions (4.2+)."
     - matrix_name: "mongocryptd"
-      matrix_spec: {os: "ubuntu-1804", mongodb_version: ["4.2", "4.4", "5.0", "latest"], with_mongocryptd: "yes"}
+      matrix_spec: {os: "ubuntu-1804", mongodb_version: ["4.2", "4.4", "5.0", "latest"], use_mongocryptd: "true"}
       display_name: "${os} (MongoDB ${mongodb_version}) with mongocryptd"
       tasks:
           - name: compile_and_test_with_shared_libs
