@@ -53,7 +53,7 @@ cp -a mongo-cxx-driver ./unstable-chroot/tmp/
 sudo DEB_BUILD_PROFILES="${DEB_BUILD_PROFILES}" chroot ./unstable-chroot /bin/bash -c "
   (apt-get install -y build-essential git-buildpackage fakeroot debhelper cmake curl ca-certificates libboost-dev libsasl2-dev libicu-dev doxygen ${MNMLSTC_DEPS} && \
   mkdir /tmp/mongo-c-driver && \
-  curl -o deb.tar.gz -L https://kylekloberdanz.com/deb.tar.gz && \
+  curl -o deb.tar.gz -L https://s3.amazonaws.com/mciuploads/mongo-c-driver/master/mongo-c-driver-debian-packages-latest.tar.gz && \
   tar zxvf deb.tar.gz && \
   apt-get install -y ./*.deb && \
   chown -R root:root /tmp/mongo-cxx-driver && \
