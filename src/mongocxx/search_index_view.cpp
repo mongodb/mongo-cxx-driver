@@ -34,24 +34,23 @@ cursor search_index_view::list(const client_session& session,
     return _get_impl().list(&session, name, options);
 }
 
-bsoncxx::string::view_or_value search_index_view::create_one(
-    bsoncxx::string::view_or_value name, bsoncxx::document::view_or_value definition) {
+std::string search_index_view::create_one(bsoncxx::string::view_or_value name,
+                                          bsoncxx::document::view_or_value definition) {
     return create_one(search_index_model(name, definition));
 }
 
-bsoncxx::string::view_or_value search_index_view::create_one(
-    const client_session& session,
-    bsoncxx::string::view_or_value name,
-    bsoncxx::document::view_or_value definition) {
+std::string search_index_view::create_one(const client_session& session,
+                                          bsoncxx::string::view_or_value name,
+                                          bsoncxx::document::view_or_value definition) {
     return create_one(session, search_index_model(name, definition));
 }
 
-bsoncxx::string::view_or_value search_index_view::create_one(const search_index_model& model) {
+std::string search_index_view::create_one(const search_index_model& model) {
     return _get_impl().create_one(nullptr, model);
 }
 
-bsoncxx::string::view_or_value search_index_view::create_one(const client_session& session,
-                                                             const search_index_model& model) {
+std::string search_index_view::create_one(const client_session& session,
+                                          const search_index_model& model) {
     return _get_impl().create_one(&session, model);
 }
 

@@ -5,6 +5,7 @@
 #include <bsoncxx/builder/basic/array.hpp>
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
+#include <bsoncxx/string/to_string.hpp>
 #include <bsoncxx/string/view_or_value.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
@@ -69,16 +70,15 @@ class search_index_view::impl {
             _coll, mongoc_query_flags_t(), stages.bson(), opts_bson.bson(), rp_ptr);
     }
 
-    bsoncxx::string::view_or_value create_one(const client_session* session,
-                                              const search_index_model& model) {
+    std::string create_one(const client_session* session, const search_index_model& model) {
         const auto result = create_many(session, std::vector<search_index_model>{model});
-        return bsoncxx::string::view_or_value(result["indexesCreated"]
-                                                  .get_array()
-                                                  .value.begin()
-                                                  ->get_document()
-                                                  .value["name"]
-                                                  .get_string()
-                                                  .value);
+        return bsoncxx::string::to_string(result["indexesCreated"]
+                                              .get_array()
+                                              .value.begin()
+                                              ->get_document()
+                                              .value["name"]
+                                              .get_string()
+                                              .value);
     }
 
     bsoncxx::document::value create_many(const client_session* session,

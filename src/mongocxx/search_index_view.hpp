@@ -93,8 +93,8 @@ class MONGOCXX_API search_index_view {
     ///
     /// @return The name of the created search index.
     ///
-    bsoncxx::string::view_or_value create_one(bsoncxx::string::view_or_value name,
-                                              bsoncxx::document::view_or_value definition);
+    std::string create_one(bsoncxx::string::view_or_value name,
+                           bsoncxx::document::view_or_value definition);
 
     ///
     /// This is a convenience method for creating a single search index.
@@ -108,9 +108,9 @@ class MONGOCXX_API search_index_view {
     ///
     /// @return The name of the created search index.
     ///
-    bsoncxx::string::view_or_value create_one(const client_session& session,
-                                              bsoncxx::string::view_or_value name,
-                                              bsoncxx::document::view_or_value definition);
+    std::string create_one(const client_session& session,
+                           bsoncxx::string::view_or_value name,
+                           bsoncxx::document::view_or_value definition);
 
     ///
     /// This is a convenience method for creating a single search index.
@@ -120,7 +120,7 @@ class MONGOCXX_API search_index_view {
     ///
     /// @return The name of the created index.
     ///
-    bsoncxx::string::view_or_value create_one(const search_index_model& model);
+    std::string create_one(const search_index_model& model);
 
     ///
     /// This is a convenience method for creating a single search index.
@@ -132,8 +132,7 @@ class MONGOCXX_API search_index_view {
     ///
     /// @return The name of the created index.
     ///
-    bsoncxx::string::view_or_value create_one(const client_session& session,
-                                              const search_index_model& model);
+    std::string create_one(const client_session& session, const search_index_model& model);
 
     ///
     /// @}
