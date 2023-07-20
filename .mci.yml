@@ -1809,52 +1809,6 @@ buildvariants:
     #######################################
     #         Mac and Windows             #
     #######################################
-    - name: macos-1014-latest # CXX-2661: remove in favor of macos-1100.
-      display_name: "MacOS 10.14 Release (Boost) (MongoDB Latest)"
-      expansions:
-          build_type: "Release"
-          extra_path: *macos_extra_path
-          cmake_flags: *macos_cmake_flags
-          poly_flags: *poly_boost_flags
-          mongodb_version: *version_latest
-      run_on:
-          - macos-1014
-      tasks:
-          - name: compile_and_test_with_shared_libs
-          - name: compile_and_test_with_shared_libs_extra_alignment
-          - name: compile_and_test_with_static_libs
-          - name: compile_and_test_with_static_libs_extra_alignment
-
-    - name: macos-1014-50 # CXX-2661: remove in favor of macos-1100.
-      display_name: "MacOS 10.14 Release (Boost) (MongoDB 5.0)"
-      expansions:
-          build_type: "Release"
-          extra_path: *macos_extra_path
-          cmake_flags: *macos_cmake_flags
-          poly_flags: *poly_boost_flags
-          mongodb_version: *version_50
-      run_on:
-          - macos-1014
-      tasks:
-          - name: compile_and_test_with_shared_libs
-          - name: compile_and_test_with_shared_libs_extra_alignment
-          - name: compile_and_test_with_static_libs
-          - name: compile_and_test_with_static_libs_extra_alignment
-
-    - name: macos-1014-versioned-api # CXX-2661: remove in favor of macos-1100.
-      display_name: "MacOS 10.14 Release Versioned API"
-      expansions:
-          build_type: "Release"
-          extra_path: *macos_extra_path
-          cmake_flags: *macos_cmake_flags
-          poly_flags: *poly_boost_flags
-          mongodb_version: *version_latest
-      run_on:
-          - macos-1014
-      tasks:
-          - name: test_versioned_api
-          - name: test_versioned_api_accept_version_two
-
     - name: macos-1100-latest
       display_name: "MacOS 11.0 Release (Boost) (MongoDB Latest)"
       expansions:
