@@ -40,13 +40,13 @@ find_package(libmongocxx-static REQUIRED)
 
 add_executable(hello_mongocxx ../../hello_mongocxx.cpp)
 
-# Visual Studio pre 2017 requires boost polyfill.
-if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-    if (CMAKE_CXX_STANDARD LESS 17)
-        find_package(Boost 1.56.0 REQUIRED)
-        target_link_libraries(hello_mongocxx PRIVATE Boost::boost)
-        target_compile_definitions(hello_mongocxx PRIVATE BSONCXX_POLY_USE_BOOST=ON)
-    endif ()
+# Deprecated libbsoncxx CMake config does not automatically handle the Boost polyfill dependency.
+include(CheckCXXSymbolExists)
+set(CMAKE_REQUIRED_INCLUDES ${LIBMONGOCXX_STATIC_INCLUDE_DIRS})
+check_cxx_symbol_exists(BSONCXX_POLY_USE_BOOST "bsoncxx/config/config.hpp" NEEDS_BOOST_POLYFILL)
+if (NEEDS_BOOST_POLYFILL)
+    find_package(Boost 1.56.0 REQUIRED)
+    target_link_libraries(hello_mongocxx PRIVATE Boost::boost)
 endif()
 
 target_include_directories(hello_mongocxx

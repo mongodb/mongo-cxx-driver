@@ -22,6 +22,18 @@ branch and/or recent tags in history) to assign to a tarball generated from the
 current Git commit.
 """
 
+# XXX NOTE XXX NOTE XXX NOTE XXX
+# After modifying this script it is advisable to execute the self-test.
+#
+# This is done by starting in the directory containing this script and then
+# executing a separate self-test script, like this:
+#
+# $ bash ./calc_release_version_selftest.sh
+#
+# The self-test script will emit diagnostic output. If tracing of the execution
+# of each command is desired, then add the -x option to the bash invocation.
+# XXX NOTE XXX NOTE XXX NOTE XXX
+
 import datetime
 import re
 import subprocess

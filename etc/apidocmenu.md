@@ -8,7 +8,8 @@ Currently, no drivers guarantee API or ABI stability.
 | Family/version       | Stability   | Development         | Purpose                               |
 | -------------------- | ----------- | ------------------- | ------------------------------------- |
 | (repo master branch) | Unstable    | Active development  | New feature development               |
-| mongocxx 3.7.x       | Stable      | Bug fixes only      | Current stable C++ driver release     |
+| mongocxx 3.8.x       | Stable      | Bug fixes only      | Current stable C++ driver release     |
+| mongocxx 3.7.x       | Stable      | None                | Previous stable C++ driver release    |
 | mongocxx 3.6.x       | Stable      | None                | Previous stable C++ driver release    |
 | mongocxx 3.5.x       | Stable      | None                | Previous stable C++ driver release    |
 | mongocxx 3.4.x       | Stable      | None                | Previous stable C++ driver release    |
@@ -21,6 +22,7 @@ Currently, no drivers guarantee API or ABI stability.
 
 | mongocxx                                     |
 | ---------------------------------------------|
+| [mongocxx-3.8.0](../mongocxx-3.8.0)          |
 | [mongocxx-3.7.2](../mongocxx-3.7.2)          |
 | [mongocxx-3.7.1](../mongocxx-3.7.1)          |
 | [mongocxx-3.7.0](../mongocxx-3.7.0)          |
@@ -54,21 +56,7 @@ Currently, no drivers guarantee API or ABI stability.
 
 ## MongoDB compatibility
 
-The following compatibility table specifies the driver version(s)
-recommended for different versions of MongoDB.  The mongocxx series
-is recommended for all new development.
-
-| Family/version | MongoDB 3.0 | MongoDB 3.2 | MongoDB 3.4 | MongoDB 3.6 | MongoDB 4.0 | MongoDB 4.2 | MongoDB 4.4 | MongoDB 5.0 |
-| -------------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- | ----------- |
-| mongocxx 3.7.x | ✓           | ✓           | ✓           | ✓           | ✓           | ✓           | ✓           | ✓           |
-| mongocxx 3.6.x | ✓           | ✓           | ✓           | ✓           | ✓           | ✓           | ✓           |             |
-| mongocxx 3.5.x | ✓           | ✓           | ✓           | ✓           | ✓           | Partial     |             |             |
-| mongocxx 3.4.x | ✓           | ✓           | ✓           | ✓           | ✓           |             |             |             |
-| mongocxx 3.3.x | ✓           | ✓           | ✓           | ✓           |             |             |             |             |
-| mongocxx 3.2.x | ✓           | ✓           | ✓           | Partial     |             |             |             |             |
-| mongocxx 3.1.x | ✓           | ✓           | ✓           |             |             |             |             |             |
-| mongocxx 3.0.x | ✓           | ✓           |             |             |             |             |             |             |
-
+Compatibility of each C++ driver version with each MongoDB server is documented in the [MongoDB manual](https://docs.mongodb.com/drivers/cxx#mongodb-compatibility).
 
 ## Resources
 

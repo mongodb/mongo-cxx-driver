@@ -1617,7 +1617,7 @@ int main() {
             snapshot_example2(conn);
         }
         if (should_run_client_side_encryption_test() && is_replica_set(conn) &&
-            version_at_least(db, 6)) {
+            version_at_least(db, 7)) {
             queryable_encryption_api(conn);
         }
     } catch (const std::logic_error& e) {

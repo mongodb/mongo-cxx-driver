@@ -167,7 +167,7 @@ pushed.
 
 - Checkout the master branch.
 - Edit `etc/apidocmenu.md` and add the released version in the `mongocxx` column
-  following the established pattern. If this is a major release (x.y.0), revise
+  following the established pattern. If this is a minor release (x.y.0), revise
   the entire document as needed.
 - Edit `docs/content/_index.md` and `README.md` to match.
 - Edit `etc/generate-all-apidocs.pl` and add the new release version to the
@@ -221,13 +221,13 @@ If this is a stable release, update the [mongo-cxx-driver](https://github.com/Ho
 Example:
 `brew bump-formula-pr mongo-cxx-driver --url https://github.com/mongodb/mongo-cxx-driver/releases/download/r3.7.3/mongo-cxx-driver-r3.7.3.tar.gz`
 
-## File a DOCSP ticket if needed
+## Comment on the generated DOCSP ticket
 
-Add a comment to the generated DOCSP ticket describing if the
+Minor releases generate a DOCSP ticket. Add a comment to the generated DOCSP ticket describing if the
 [MongoDB Compatibility Table](https://www.mongodb.com/docs/drivers/cxx/#mongodb-compatibility)
 or [Language Compatibility Table](https://www.mongodb.com/docs/drivers/cxx/#language-compatibility)
 should be updated. Generally, only a minor release will require updates.
-(See DOCSP-3504 for an example.)
+(See [DOCSP-30876](https://jira.mongodb.org/browse/DOCSP-30876) for an example.)
 
 ## Announce on Community Forums
 

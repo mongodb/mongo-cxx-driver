@@ -29,6 +29,9 @@ message ("mongocxx version: ${MONGOCXX_VERSION}")
 set(MONGOCXX_INLINE_NAMESPACE "v${MONGOCXX_ABI_VERSION}")
 set(MONGOCXX_HEADER_INSTALL_DIR "${CMAKE_INSTALL_INCLUDEDIR}/mongocxx/${MONGOCXX_INLINE_NAMESPACE}" CACHE INTERNAL "")
 
+set(LIBMONGOC_REQUIRED_VERSION 1.24.0)
+set(LIBMONGOC_REQUIRED_ABI_VERSION 1.0)
+
 set(mongocxx_pkg_dep "")
 
 if(TARGET mongoc_shared OR TARGET mongoc_static)
@@ -173,6 +176,8 @@ set(mongocxx_sources
     result/replace_one.cpp
     result/rewrap_many_datakey.cpp
     result/update.cpp
+    search_index_model.cpp
+    search_index_view.cpp
     uri.cpp
     validation_criteria.cpp
     write_concern.cpp
@@ -421,6 +426,7 @@ set_local_dist (src_mongocxx_DIST_local
    pipeline.hpp
    pool.cpp
    pool.hpp
+   private/append_aggregate_options.hh
    private/bulk_write.hh
    private/change_stream.hh
    private/client.hh
@@ -443,6 +449,8 @@ set_local_dist (src_mongocxx_DIST_local
    private/pool.hh
    private/read_concern.hh
    private/read_preference.hh
+   private/search_index_model.hh
+   private/search_index_view.hh
    private/uri.hh
    private/write_concern.hh
    read_concern.cpp
@@ -465,6 +473,10 @@ set_local_dist (src_mongocxx_DIST_local
    result/rewrap_many_datakey.hpp
    result/update.cpp
    result/update.hpp
+   search_index_model.cpp
+   search_index_model.hpp
+   search_index_view.cpp
+   search_index_view.hpp
    stdx.hpp
    test_util/client_helpers.cpp
    test_util/client_helpers.hh

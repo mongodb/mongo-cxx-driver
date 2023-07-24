@@ -16,6 +16,7 @@
 
 #include <catch.hpp>
 #include <sstream>
+#include <vector>
 
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/json.hpp>
@@ -1794,6 +1795,97 @@ document::value create_find_cursor(entity::map& map,
     return make_document();
 }
 
+document::value create_search_index(collection& coll, document::view operation) {
+    const auto arguments = operation["arguments"];
+    const auto raw_model = arguments["model"];
+    const auto name = raw_model["name"];
+    const auto definition = raw_model["definition"].get_document().value;
+
+    const auto model = name ? search_index_model(name.get_string().value, definition)
+                            : search_index_model(definition);
+
+    return make_document(kvp("result", coll.search_indexes().create_one(model)));
+}
+
+document::value create_search_indexes(collection& coll, document::view operation) {
+    auto arguments = operation["arguments"];
+
+    auto raw_models = arguments["models"].get_array().value;
+    std::vector<search_index_model> models;
+
+    for (auto&& m : raw_models) {
+        search_index_model model = m["name"]
+                                       ? search_index_model(m["name"].get_string().value,
+                                                            m["definition"].get_document().value)
+                                       : search_index_model(m["definition"].get_document().value);
+        models.push_back(model);
+    }
+
+    std::vector<bsoncxx::string::view_or_value> created_indexes =
+        coll.search_indexes().create_many(models);
+
+    builder::basic::array result;
+    for (auto s : created_indexes) {
+        result.append(s);
+    }
+
+    return make_document(kvp("result", result.view()));
+}
+
+document::value drop_search_index(collection& coll, document::view operation) {
+    auto arguments = operation["arguments"];
+
+    auto name = arguments["name"].get_string().value;
+
+    coll.search_indexes().drop_one(name);
+
+    // no return value from drop_one
+    return make_document();
+}
+
+document::value list_search_indexes(collection& coll, document::view operation) {
+    auto arguments = operation["arguments"];
+    options::aggregate options;
+    if (arguments["aggregationOptions"]) {
+        const auto aggregation_options = arguments["aggregationOptions"].get_document().view();
+        for (auto&& element : aggregation_options) {
+            if (element.key() == stdx::string_view("batchSize")) {
+                options.batch_size(element.get_int32().value);
+            } else {
+                throw std::logic_error{"unsupported aggregateOptions field: " +
+                                       std::string(element.key())};
+            }
+        }
+    }
+
+    cursor c = arguments["name"]
+                   ? coll.search_indexes().list(arguments["name"].get_string().value, options)
+                   : coll.search_indexes().list(options);
+
+    // we must loop over the resulting cursor to trigger server events for the spec tests
+    auto result = bsoncxx::builder::basic::document{};
+    result.append(
+        bsoncxx::builder::basic::kvp("result", [&c](bsoncxx::builder::basic::sub_array array) {
+            for (auto&& document : c) {
+                array.append(document);
+            }
+        }));
+
+    return result.extract();
+}
+
+document::value update_search_index(collection& coll, document::view operation) {
+    auto arguments = operation["arguments"];
+
+    auto name = arguments["name"].get_string().value;
+    auto definition = arguments["definition"].get_document().value;
+
+    coll.search_indexes().update_one(name, definition);
+
+    // no return value from update_one
+    return make_document();
+}
+
 document::value operations::run(entity::map& entity_map,
                                 std::unordered_map<std::string, spec::apm_checker>& apm_map,
                                 const array::element& op,
@@ -2128,6 +2220,31 @@ document::value operations::run(entity::map& entity_map,
     }
     if (name == "removeKeyAltName") {
         return remove_key_alt_name(entity_map, object, op_view);
+    }
+    if (name == "createSearchIndex") {
+        auto& coll = entity_map.get_collection(object);
+
+        return create_search_index(coll, op_view);
+    }
+    if (name == "createSearchIndexes") {
+        auto& coll = entity_map.get_collection(object);
+
+        return create_search_indexes(coll, op_view);
+    }
+    if (name == "dropSearchIndex") {
+        auto& coll = entity_map.get_collection(object);
+
+        return drop_search_index(coll, op_view);
+    }
+    if (name == "listSearchIndexes") {
+        auto& coll = entity_map.get_collection(object);
+
+        return list_search_indexes(coll, op_view);
+    }
+    if (name == "updateSearchIndex") {
+        auto& coll = entity_map.get_collection(object);
+
+        return update_search_index(coll, op_view);
     }
 
     throw std::logic_error{"unsupported operation: " + name};
