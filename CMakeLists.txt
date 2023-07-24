@@ -40,8 +40,8 @@ else()
   message(WARNING "Unknown compiler... recklessly proceeding without a version check")
 endif()
 
-set(LIBMONGOC_REQUIRED_VERSION 1.22.1) # TODO (CXX-2696): update to 1.24.0 once released.
-set(LIBMONGOC_DOWNLOAD_VERSION b9ca36ff8c64f12330326f080c725c5502294834) # TODO (CXX-2696): update to 1.24.0 once released.
+set(LIBMONGOC_REQUIRED_VERSION 1.24.0) # TODO (CXX-2696): update to 1.24.0 once released.
+set(LIBMONGOC_DOWNLOAD_VERSION b80c88377636f385391ff2ca899654b3ce54d1c9) # TODO (CXX-2696): update to 1.24.0 once released.
 set(LIBMONGOC_REQUIRED_ABI_VERSION 1.0)
 
 set(NEED_DOWNLOAD_C_DRIVER false)
@@ -73,19 +73,41 @@ if(NEED_DOWNLOAD_C_DRIVER)
     include(FetchContent)
     include(ExternalProject)
 
-    set(BUILD_SHARED_LIBS_WITH_STATIC_MONGOC ON CACHE INTERNAL "")
-
     # Declare mongo-c-driver as a dependency
     FetchContent_Declare(
       mongo-c-driver
-      GIT_REPOSITORY https://github.com/mongodb/mongo-c-driver.git
+      GIT_REPOSITORY https://github.com/kkloberdanz/mongo-c-driver.git
       GIT_TAG ${LIBMONGOC_DOWNLOAD_VERSION}
     )
 
+    if(NOT CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
+        set(CMAKE_C_FLAGS -Wno-error)
+    endif()
+
     FetchContent_GetProperties(mongo-c-driver)
     if(NOT mongo-c-driver_POPULATED)
-      FetchContent_Populate(mongo-c-driver)
-      add_subdirectory(${mongo-c-driver_SOURCE_DIR} ${mongo-c-driver_BINARY_DIR} EXCLUDE_FROM_ALL)
+        set(OLD_ENABLE_TESTS ${ENABLE_TESTS})
+        set(OLD_BUILD_TESTING ${BUILD_TESTING})
+        set(OLD_CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
+        set(OLD_CMAKE_C_FLAGS ${CMAKE_C_FLAGS})
+
+        set(ENABLE_EXTRA_ALIGNMENT OFF)
+        add_compile_definitions(ENABLE_EXTRA_ALIGNMENT=OFF)
+
+        FetchContent_Populate(mongo-c-driver)
+        # Set ENABLE_TESTS to OFF to disable the test-libmongoc target in the C driver.
+        # This prevents the LoadTests.cmake script from attempting to execute test-libmongoc.
+        # test-libmongoc is not built with the "all" target.
+        # Attempting to execute test-libmongoc results in an error: "Unable to find executable: NOT_FOUND"
+        set(ENABLE_TESTS OFF)
+        set(BUILD_TESTING OFF)
+        string(REPLACE " -Werror" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+        string(REPLACE " -Werror" "" CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
+        add_subdirectory(${mongo-c-driver_SOURCE_DIR} ${mongo-c-driver_BINARY_DIR})
+        set(CMAKE_CXX_FLAGS ${OLD_CMAKE_CXX_FLAGS})
+        set(CMAKE_C_FLAGS ${OLD_CMAKE_C_FLAGS})
+        set(ENABLE_TESTS OLD_ENABLE_TESTS)
+        set(BUILD_TESTING OLD_BUILD_TESTING)
     endif()
 endif()
 
@@ -403,7 +425,7 @@ if(NOT (TARGET bson_shared OR TARGET mongoc_shared))
    )
 endif()
 
-if(ENABLE_UNINSTALL AND NOT (TARGET bson_shared OR TARGET mongoc_shared))
+if(ENABLE_UNINSTALL)
     if(WIN32)
         set(UNINSTALL_PROG "uninstall.cmd")
     else()
