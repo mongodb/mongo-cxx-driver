@@ -2,6 +2,8 @@
 #      CXX Driver Config for MCI      #
 #######################################
 
+exec_timeout_secs: 3600
+
 #######################################
 #            Variables                #
 #######################################
@@ -473,6 +475,7 @@ functions:
                   export URI_OPTIONS_TESTS_PATH="$(pwd)/../data/uri-options"
                   export VERSIONED_API_TESTS_PATH=$(pwd)/../data/versioned-api
                   export WITH_TRANSACTION_TESTS_PATH="$(pwd)/../data/with_transaction"
+                  export INDEX_MANAGEMENT_TESTS_PATH="$(pwd)/../data/index-management"
 
                   export MONGODB_API_VERSION="${MONGODB_API_VERSION}"
 
@@ -1228,6 +1231,10 @@ axes:
             variables:
                 mongodb_version: *version_40
 
+    - id: use_mongocryptd
+      values:
+          - id: "true"
+
 
 #######################################
 #           Buildvariants             #
@@ -1262,6 +1269,15 @@ buildvariants:
       tasks:
           - name: test_versioned_api
           - name: test_versioned_api_accept_version_two
+
+    # Add matrix for specification test requirement of mongocryptd:
+    # "Drivers MUST run all tests with mongocryptd on at least one platform for all tested server versions (4.2+)."
+    - matrix_name: "mongocryptd"
+      matrix_spec: {os: "ubuntu-1804", mongodb_version: ["4.2", "4.4", "5.0", "latest"], use_mongocryptd: "true"}
+      display_name: "${os} (MongoDB ${mongodb_version}) with mongocryptd"
+      tasks:
+          - name: compile_and_test_with_shared_libs
+          - name: compile_and_test_with_shared_libs_replica_set
 
     #######################################
     #         Linux Buildvariants         #
@@ -1644,7 +1660,7 @@ buildvariants:
           - name: compile_and_test_with_static_libs
 
     - name: ubuntu1804-debug
-      display_name: "Ubuntu 18.04 Debug (MongoDB Latest)"
+      display_name: "Ubuntu 18.04 Debug (MongoDB Latest) (Extra)"
       expansions:
         build_type: "Debug"
         tar_options: *linux_tar_options
@@ -1841,52 +1857,6 @@ buildvariants:
     #######################################
     #         Mac and Windows             #
     #######################################
-    - name: macos-1014-latest # CXX-2661: remove in favor of macos-1100.
-      display_name: "MacOS 10.14 Release (Boost) (MongoDB Latest)"
-      expansions:
-          build_type: "Release"
-          extra_path: *macos_extra_path
-          cmake_flags: *macos_cmake_flags
-          poly_flags: *poly_boost_flags
-          mongodb_version: *version_latest
-      run_on:
-          - macos-1014
-      tasks:
-          - name: compile_and_test_with_shared_libs
-          - name: compile_and_test_with_shared_libs_extra_alignment
-          - name: compile_and_test_with_static_libs
-          - name: compile_and_test_with_static_libs_extra_alignment
-
-    - name: macos-1014-50 # CXX-2661: remove in favor of macos-1100.
-      display_name: "MacOS 10.14 Release (Boost) (MongoDB 5.0)"
-      expansions:
-          build_type: "Release"
-          extra_path: *macos_extra_path
-          cmake_flags: *macos_cmake_flags
-          poly_flags: *poly_boost_flags
-          mongodb_version: *version_50
-      run_on:
-          - macos-1014
-      tasks:
-          - name: compile_and_test_with_shared_libs
-          - name: compile_and_test_with_shared_libs_extra_alignment
-          - name: compile_and_test_with_static_libs
-          - name: compile_and_test_with_static_libs_extra_alignment
-
-    - name: macos-1014-versioned-api # CXX-2661: remove in favor of macos-1100.
-      display_name: "MacOS 10.14 Release Versioned API"
-      expansions:
-          build_type: "Release"
-          extra_path: *macos_extra_path
-          cmake_flags: *macos_cmake_flags
-          poly_flags: *poly_boost_flags
-          mongodb_version: *version_latest
-      run_on:
-          - macos-1014
-      tasks:
-          - name: test_versioned_api
-          - name: test_versioned_api_accept_version_two
-
     - name: macos-1100-latest
       display_name: "MacOS 11.0 Release (Boost) (MongoDB Latest)"
       expansions:
