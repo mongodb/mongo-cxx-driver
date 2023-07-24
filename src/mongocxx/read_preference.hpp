@@ -34,6 +34,7 @@ class client;
 class collection;
 class database;
 class uri;
+class search_index_view;
 
 namespace events {
 class topology_description;
@@ -289,6 +290,7 @@ class MONGOCXX_API read_preference {
     /// \relates mongocxx::events::topology_description
     friend mongocxx::events::topology_description;
     friend uri;
+    friend search_index_view;
 
     ///
     /// @{
