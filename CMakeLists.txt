@@ -409,16 +409,18 @@ add_custom_command (OUTPUT ${DIST_FILE}
       ${ALL_DIST} ${dist_generated_depends}
 )
 
-add_custom_target (dist DEPENDS ${DIST_FILE})
+if(NOT (TARGET distcheck))
+    add_custom_target (dist DEPENDS ${DIST_FILE})
 
-add_custom_target (distcheck DEPENDS dist
-   COMMAND ${CMAKE_COMMAND}
-      -D CMAKE_MODULE_PATH=${PROJECT_SOURCE_DIR}/cmake/make_dist
-      -D CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}
-      -D PACKAGE_PREFIX=${PACKAGE_PREFIX}
-      -D CMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS}
-      -P ${PROJECT_SOURCE_DIR}/cmake/make_dist/MakeDistCheck.cmake
-)
+    add_custom_target (distcheck DEPENDS dist
+       COMMAND ${CMAKE_COMMAND}
+          -D CMAKE_MODULE_PATH=${PROJECT_SOURCE_DIR}/cmake/make_dist
+          -D CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}
+          -D PACKAGE_PREFIX=${PACKAGE_PREFIX}
+          -D CMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS}
+          -P ${PROJECT_SOURCE_DIR}/cmake/make_dist/MakeDistCheck.cmake
+    )
+endif()
 
 if(ENABLE_UNINSTALL)
     if(WIN32)
