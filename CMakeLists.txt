@@ -41,7 +41,7 @@ else()
 endif()
 
 set(LIBMONGOC_REQUIRED_VERSION 1.24.0)
-set(LIBMONGOC_DOWNLOAD_VERSION b80c88377636f385391ff2ca899654b3ce54d1c9)
+set(LIBMONGOC_DOWNLOAD_VERSION ba5ab6de26a874d33b0abc3d2b46961a69380e7a)
 set(LIBMONGOC_REQUIRED_ABI_VERSION 1.0)
 
 set(NEED_DOWNLOAD_C_DRIVER false)
@@ -76,7 +76,7 @@ if(NEED_DOWNLOAD_C_DRIVER)
     # Declare mongo-c-driver as a dependency
     FetchContent_Declare(
       mongo-c-driver
-      GIT_REPOSITORY https://github.com/kkloberdanz/mongo-c-driver.git
+      GIT_REPOSITORY https://github.com/mongodb/mongo-c-driver.git
       GIT_TAG ${LIBMONGOC_DOWNLOAD_VERSION}
     )
 
