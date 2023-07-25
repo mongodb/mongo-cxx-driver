@@ -409,7 +409,7 @@ add_custom_command (OUTPUT ${DIST_FILE}
       ${ALL_DIST} ${dist_generated_depends}
 )
 
-# if(NOT (TARGET bson_shared OR TARGET mongoc_shared))
+if(NOT (TARGET distcheck))
    # If these targets exist, then libbson/libmongoc have already been included
    # as a project sub-directory; the 'dist' and 'distcheck' targets here would
    # collide with those declared in the mongo-c-driver project
@@ -423,7 +423,7 @@ add_custom_command (OUTPUT ${DIST_FILE}
          -D CMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS}
          -P ${PROJECT_SOURCE_DIR}/cmake/make_dist/MakeDistCheck.cmake
    )
-# endif()
+endif()
 
 if(ENABLE_UNINSTALL)
     if(WIN32)
