@@ -130,9 +130,12 @@ To build static libraries only, set both BUILD_SHARED_LIBS and BUILD_SHARED_AND_
 endif()
 
 
-# If the user did not customize the install prefix,
-# set it to live under build so we don't inadvertently pollute /usr/local
-if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT)
+option(USE_DEFAULT_INSTALL_PATH "Override the CMake default installation path" OFF)
+if(NOT CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT AND USE_DEFAULT_INSTALL_PATH)
+    message(FATAL_ERROR "You cannot set both CMAKE_INSTALL_PREFIX and USE_DEFAULT_INSTALL_PATH")
+endif()
+if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT AND NOT USE_DEFAULT_INSTALL_PATH)
+    message(WARNING "the CMake default install path is being overriden. This behavior will not be the default in a future release. Build with -DUSE_DEFAULT_INSTALL_PATH=ON to opt into what will be the default behavior in a future release")
     set (CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/install" CACHE PATH "default install path" FORCE)
 endif()
 
