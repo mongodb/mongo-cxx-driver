@@ -110,6 +110,7 @@ if(NEED_DOWNLOAD_C_DRIVER)
         set(ENABLE_TESTS OLD_ENABLE_TESTS)
         set(BUILD_TESTING OLD_BUILD_TESTING)
     endif()
+    message(STATUS "Download and configure C driver version ${LIBMONGOC_DOWNLOAD_VERSION} ... end")
 endif()
 
 # All of our target compilers support the deprecated
