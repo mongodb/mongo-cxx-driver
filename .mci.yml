@@ -1057,7 +1057,7 @@ tasks:
             . ./mongo-c-driver/.evergreen/scripts/find-cmake-latest.sh
             export CMAKE="$(find_cmake_latest)"
             cd build
-            $CMAKE .. -DENABLE_UNINSTALL=OFF
+            $CMAKE ..
             $CMAKE --build . -- -j $(nproc)
             ./hello_mongocxx
 
