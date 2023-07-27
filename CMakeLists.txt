@@ -411,7 +411,7 @@ add_custom_command (OUTPUT ${DIST_FILE}
       ${ALL_DIST} ${dist_generated_depends}
 )
 
-if(NOT (TARGET distcheck))
+if(NOT (TARGET dist OR TARGET distcheck))
     add_custom_target (dist DEPENDS ${DIST_FILE})
 
     add_custom_target (distcheck DEPENDS dist
