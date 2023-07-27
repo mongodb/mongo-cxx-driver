@@ -135,7 +135,7 @@ if(NOT CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT AND USE_DEFAULT_INSTALL_PATH)
     message(FATAL_ERROR "You cannot set both CMAKE_INSTALL_PREFIX and USE_DEFAULT_INSTALL_PATH")
 endif()
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT AND NOT USE_DEFAULT_INSTALL_PATH)
-    message(WARNING "the CMake default install path is being overriden. This behavior will not be the default in a future release. Build with -DUSE_DEFAULT_INSTALL_PATH=ON to opt into what will be the default behavior in a future release")
+    message(WARNING "the CMake default install path is being overridden to the build directory. This behavior will not be the default in a future release. Build with -DUSE_DEFAULT_INSTALL_PATH=ON to opt into what will be the default behavior in a future release. Setting install path to: ${CMAKE_BINARY_DIR}/install")
     set (CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/install" CACHE PATH "default install path" FORCE)
 endif()
 
