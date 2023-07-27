@@ -21,7 +21,7 @@ The above command would produce libraries named `libcustom_bsoncxx.so` and `libc
 
 ## Installing the MongoDB C driver.
 
-The mongocxx driver builds on top of the MongoDB C driver.
+The mongocxx driver builds on top of the [MongoDB C driver](https://www.mongodb.com/docs/drivers/c/).
 
 The build of mongocxx-3.8.0 automatically installs the C driver if the C driver is not detected.
 To use an existing install of the C driver, set `CMAKE_PREFIX_PATH` to the directory containing the C driver install.
