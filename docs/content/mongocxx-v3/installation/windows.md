@@ -69,14 +69,12 @@ On Windows, the C++ driver is configured as follows (adjusting the path of the C
 'C:\Program Files (x86)\CMake\bin\cmake.exe' .. \
      -G "Visual Studio 14 2015 Win64"           \
     -DBOOST_ROOT=C:\local\boost_1_60_0          \
-    -DCMAKE_PREFIX_PATH=C:\mongo-c-driver       \
     -DCMAKE_INSTALL_PREFIX=C:\mongo-cxx-driver
 ```
 
 The example above assumes:
 
 * Boost is found in `C:\local\boost_1_60_0`.
-* `libmongoc` is found in `C:\mongo-c-driver`.
 * `mongocxx` is to be installed into `C:\mongo-cxx-driver`.
 
 To build with Visual Studio 2017 without a C++17 polyfill, configure as follows:
@@ -85,12 +83,8 @@ To build with Visual Studio 2017 without a C++17 polyfill, configure as follows:
 'C:\Program Files (x86)\CMake\bin\cmake.exe' .. \
     -G "Visual Studio 15 2017 Win64"            \
     -DCMAKE_CXX_STANDARD=17                     \
-    -DCMAKE_PREFIX_PATH=C:\mongo-c-driver       \
     -DCMAKE_INSTALL_PREFIX=C:\mongo-cxx-driver  \
 ```
-
-For details on how to install libmongoc for Windows, see the
-[mongoc Windows installation instructions](http://mongoc.org/libmongoc/current/installing.html#building-windows).
 
 #### Configuring with `mongocxx` 3.7.0 and older
 
@@ -103,20 +97,15 @@ To build versions 3.7.0 and older without a C++17 polyfill, it is necessary to c
     -G "Visual Studio 15 2017 Win64"            \
     -DCMAKE_CXX_STANDARD=17                     \
     -DCMAKE_CXX_FLAGS="/Zc:__cplusplus /EHsc"   \
-    -DCMAKE_PREFIX_PATH=C:\mongo-c-driver       \
     -DCMAKE_INSTALL_PREFIX=C:\mongo-cxx-driver  \
 ```
 
 #### Configuring with `mongocxx` 3.1.x or 3.0.x
 
-Instead of the `-DCMAKE_PREFIX_PATH` option, users must specify the `libmongoc` installation
-directory by using the `-DLIBMONGOC_DIR` and `-DLIBBSON_DIR` options:
-
 ```sh
 cmake ..                                            \
     -DCMAKE_BUILD_TYPE=Release                      \
     -DLIBMONGOC_DIR=C:\mongo-c-driver               \
-    -DLIBBSON_DIR=C:\mongo-c-driver                 \
     -DCMAKE_INSTALL_PREFIX=C:\mongo-cxx-driver
 ```
 
