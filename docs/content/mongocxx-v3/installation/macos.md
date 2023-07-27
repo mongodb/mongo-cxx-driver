@@ -63,7 +63,7 @@ obtain.
 
 ### Step 3: Configure the driver
 
-On Unix systems, `libmongoc` installs into `/usr/local` by default. Without additional
+Without additional
 configuration, `mongocxx` installs into its local build directory as a courtesy to those who build
 from source. To configure `mongocxx` for installation into `/usr/local` as well, use the following
 `cmake` command:
