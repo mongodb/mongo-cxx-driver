@@ -101,8 +101,8 @@ if(NEED_DOWNLOAD_C_DRIVER)
         add_subdirectory(${mongo-c-driver_SOURCE_DIR} ${mongo-c-driver_BINARY_DIR})
 
         # Disable all warnings for compiling the C driver
-        target_compile_options (mongo::mongoc_shared PRIVATE -w)
-        target_compile_options (mongo::mongoc_static PRIVATE -w)
+        target_compile_options (mongoc_shared PRIVATE -w)
+        target_compile_options (mongoc_static PRIVATE -w)
 
         set(CMAKE_CXX_FLAGS ${OLD_CMAKE_CXX_FLAGS})
         set(CMAKE_C_FLAGS ${OLD_CMAKE_C_FLAGS})
