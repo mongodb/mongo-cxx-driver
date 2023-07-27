@@ -89,12 +89,6 @@ To build with Visual Studio 2017 without a C++17 polyfill, configure as follows:
     -DCMAKE_INSTALL_PREFIX=C:\mongo-cxx-driver  \
 ```
 
-If CMake is unable to find an existing C driver installation, then it will
-automatically download a C driver release from the internet and include it in
-the build. If you wish to override this behavior with your preferred
-installation, then please refer to the `Installing the MongoDB C driver` section
-in the `advanced.md` document for the instructions for how to do so.
-
 For details on how to install libmongoc for Windows, see the
 [mongoc Windows installation instructions](http://mongoc.org/libmongoc/current/installing.html#building-windows).
 
