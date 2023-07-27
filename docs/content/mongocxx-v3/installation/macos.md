@@ -99,7 +99,7 @@ from source. To configure `mongocxx` for installation into `/usr/local` as well,
 ```
 cmake ..                                \
     -DCMAKE_BUILD_TYPE=Release          \
-    -DCMAKE_INSTALL_PREFIX=/usr/local
+    -DUSE_DEFAULT_INSTALL_PATH=ON
 ```
 
 These options can be freely mixed with a C++17 polyfill option. For instance, this is how a user
@@ -108,7 +108,7 @@ would run the command above with the Boost polyfill option:
 cmake ..                                            \
     -DCMAKE_BUILD_TYPE=Release                      \
     -DBSONCXX_POLY_USE_BOOST=1                      \
-    -DCMAKE_INSTALL_PREFIX=/usr/local
+    -DUSE_DEFAULT_INSTALL_PATH=ON
 ```
 
 ### Step 5: Build and install the driver
