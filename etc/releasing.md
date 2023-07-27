@@ -211,7 +211,7 @@ pushed.
 - Edit `docs/content/mongocxx-v3/installation/linux.md`,
   `docs/content/mongocxx-v3/installation/macos.md` and
   `docs/content/mongocxx-v3/installation/windows.md`.
-   If the release was not a release candidate, update `Step 3` to reflect the
+   If the release was not a release candidate, update `Step 2` to reflect the
    new latest stable version to download.
 
 ## Homebrew
