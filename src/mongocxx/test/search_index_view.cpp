@@ -33,15 +33,20 @@ bool does_search_index_exist_on_cursor(cursor& c, search_index_model& model, boo
     return false;
 }
 
-void wait_for_search_index(search_index_view& siv,
+bool wait_for_search_index(search_index_view& siv,
                            search_index_model& model,
                            bool to_exist,
                            bool with_status) {
     auto c = siv.list();
-    while (does_search_index_exist_on_cursor(c, model, with_status) == !to_exist) {
+
+    // 5 minutes before timeout
+    for (int i = 0; i < 60; ++i) {
+        if (does_search_index_exist_on_cursor(c, model, with_status) == to_exist)
+            return true;
         std::this_thread::sleep_for(std::chrono::seconds(5));
         c = siv.list();
     }
+    return false;
 }
 
 TEST_CASE("atlas search indexes prose tests", "") {
@@ -80,7 +85,7 @@ TEST_CASE("atlas search indexes prose tests", "") {
 
         REQUIRE(siv.create_one(name, definition.view()) == "test-search-index");
 
-        wait_for_search_index(siv, model, true, false);
+        REQUIRE(wait_for_search_index(siv, model, true, false));
 
         std::cout << "create one with name and definition SUCCESS" << std::endl;
     }
@@ -102,7 +107,7 @@ TEST_CASE("atlas search indexes prose tests", "") {
 
         REQUIRE(siv.create_one(model) == "test-search-index");
 
-        wait_for_search_index(siv, model, true, false);
+        REQUIRE(wait_for_search_index(siv, model, true, false));
 
         std::cout << "create one with model SUCCESS" << std::endl;
     }
@@ -138,8 +143,8 @@ TEST_CASE("atlas search indexes prose tests", "") {
         std::vector<std::string> expected = {"test-search-index-1", "test-search-index-2"};
         REQUIRE(result == expected);
 
-        wait_for_search_index(siv, model1, true, false);
-        wait_for_search_index(siv, model2, true, false);
+        REQUIRE(wait_for_search_index(siv, model1, true, false));
+        REQUIRE(wait_for_search_index(siv, model2, true, false));
 
         std::cout << "create many SUCCESS" << std::endl;
     }
@@ -161,11 +166,11 @@ TEST_CASE("atlas search indexes prose tests", "") {
 
         REQUIRE(siv.create_one(model) == "test-search-index");
 
-        wait_for_search_index(siv, model, true, false);
+        REQUIRE(wait_for_search_index(siv, model, true, false));
 
         siv.drop_one(name);
 
-        wait_for_search_index(siv, model, false, false);
+        REQUIRE(wait_for_search_index(siv, model, false, false));
 
         std::cout << "drop one SUCCESS" << std::endl;
     }
@@ -187,7 +192,7 @@ TEST_CASE("atlas search indexes prose tests", "") {
 
         REQUIRE(siv.create_one(model) == "test-search-index");
 
-        wait_for_search_index(siv, model, true, false);
+        REQUIRE(wait_for_search_index(siv, model, true, false));
 
         // definition : {
         //   mappings : { dynamic: true }
@@ -196,7 +201,7 @@ TEST_CASE("atlas search indexes prose tests", "") {
         auto new_model = search_index_model(name, new_definition.view());
         siv.update_one(name, new_definition.view());
 
-        wait_for_search_index(siv, new_model, true, true);
+        REQUIRE(wait_for_search_index(siv, new_model, true, true));
 
         std::cout << "update one SUCCESS" << std::endl;
     }
