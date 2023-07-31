@@ -81,10 +81,6 @@ if(NEED_DOWNLOAD_C_DRIVER)
       GIT_TAG ${LIBMONGOC_DOWNLOAD_VERSION}
     )
 
-    if(NOT CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-        set(CMAKE_C_FLAGS -Wno-error)
-    endif()
-
     FetchContent_GetProperties(mongo-c-driver)
     if(NOT mongo-c-driver_POPULATED)
         set(OLD_ENABLE_TESTS ${ENABLE_TESTS})
