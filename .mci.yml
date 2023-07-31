@@ -390,7 +390,8 @@ functions:
                       ADDL_OPTS="$ADDL_OPTS -DCMAKE_CXX_STANDARD=${REQUIRED_CXX_STANDARD} -DCMAKE_CXX_STANDARD_REQUIRED=ON"
                   fi
 
-                  find . -name "find-cmake.sh"
+                  echo "FINDING SCRIPT: find-cmake.sh"
+                  find .. -name "find-cmake.sh"
 
                   MONGOC_PREFIX="$(pwd)/../mongoc"
                   echo "MONGOC_PREFIX=$MONGOC_PREFIX"
