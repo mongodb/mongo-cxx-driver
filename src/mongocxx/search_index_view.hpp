@@ -151,8 +151,7 @@ class MONGOCXX_API search_index_view {
     ///
     /// @return The names of the created indexes.
     ///
-    std::vector<bsoncxx::string::view_or_value> create_many(
-        const std::vector<search_index_model>& models);
+    std::vector<std::string> create_many(const std::vector<search_index_model>& models);
 
     ///
     /// Creates multiple search indexes in the collection.
@@ -164,8 +163,8 @@ class MONGOCXX_API search_index_view {
     ///
     /// @return The names of the created indexes.
     ///
-    std::vector<bsoncxx::string::view_or_value> create_many(
-        const client_session& session, const std::vector<search_index_model>& models);
+    std::vector<std::string> create_many(const client_session& session,
+                                         const std::vector<search_index_model>& models);
 
     ///
     /// @}
@@ -232,7 +231,7 @@ class MONGOCXX_API search_index_view {
 
     MONGOCXX_PRIVATE search_index_view(void* coll, void* client);
 
-    MONGOCXX_PRIVATE std::vector<bsoncxx::string::view_or_value> _create_many_helper(
+    MONGOCXX_PRIVATE std::vector<std::string> _create_many_helper(
         bsoncxx::array::view created_indexes);
 
     MONGOCXX_PRIVATE const impl& _get_impl() const;
