@@ -89,6 +89,27 @@ class MONGOCXX_API search_index_view {
     ///
     /// This is a convenience method for creating a single search index.
     ///
+    /// @param definition
+    ///    The document describing the search index to be created.
+    ///
+    /// @return The name of the created search index.
+    ///
+    std::string create_one(bsoncxx::document::view_or_value definition);
+
+    ///
+    /// This is a convenience method for creating a single search index.
+    ///
+    /// @param definition
+    ///    The document describing the search index to be created.
+    ///
+    /// @return The name of the created search index.
+    ///
+    std::string create_one(const client_session& session,
+                           bsoncxx::document::view_or_value definition);
+
+    ///
+    /// This is a convenience method for creating a single search index.
+    ///
     /// @param name
     ///    The name of the search index to create.
     /// @param definition
