@@ -34,7 +34,7 @@ if (NOT CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Werror")
 endif()
 
-message(STATUS "DONE RUNNING find_package(libmongocxx-static REQUIRED)")
+message(STATUS "ABOUT TO RUN find_package(libmongocxx-static REQUIRED)")
 # NOTE: For this to work, the CMAKE_PREFIX_PATH variable must be set to point to the directory that
 # was used as the argument to CMAKE_INSTALL_PREFIX when building libbsoncxx.
 find_package(libbsoncxx-static REQUIRED)
