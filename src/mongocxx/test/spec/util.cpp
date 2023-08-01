@@ -608,7 +608,8 @@ void run_transaction_operations(document::view test,
             // Do a case insensitive check.
             auto error_contains =
                 test_util::tolowercase(op["result"]["errorContains"].get_string().value);
-            REQUIRE(test_util::tolowercase(error_msg).find(error_contains) < error_msg.length());
+
+            REQUIRE_THAT(error_msg, Catch::Contains(error_contains, Catch::CaseSensitive::No));
         }
 
         // "If the result document has an 'errorCodeName' field, verify that the method threw a
