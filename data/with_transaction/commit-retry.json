@@ -293,7 +293,7 @@
       }
     },
     {
-      "description": "commit is retried after commitTransaction UnknownTransactionCommitResult (NotMaster)",
+      "description": "commit is retried after commitTransaction UnknownTransactionCommitResult (NotWritablePrimary)",
       "failPoint": {
         "configureFailPoint": "failCommand",
         "mode": {
@@ -304,6 +304,9 @@
             "commitTransaction"
           ],
           "errorCode": 10107,
+          "errorLabels": [
+            "RetryableWriteError"
+          ],
           "closeConnection": false
         }
       },
