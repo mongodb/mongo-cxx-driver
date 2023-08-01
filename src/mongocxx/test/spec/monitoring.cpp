@@ -145,12 +145,12 @@ bool apm_checker::should_ignore(stdx::string_view command_name) const {
                        [command_name](stdx::string_view cmp) { return command_name == cmp; });
 }
 
-std::string apm_checker::print_all() {
+std::string apm_checker::print_all() const {
     std::ostringstream output;
     output << "\n\n";
     output << "APM Checker contents:\n";
     for (const auto& event : _events) {
-        output << "APM event: " << bsoncxx::to_json(event) << '\n';
+        output << "APM event: " << bsoncxx::to_json(event) << "\n\n";
     }
     return std::move(output).str();
 }
