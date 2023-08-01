@@ -570,10 +570,6 @@ BSONCXX_INLINE bool operator==(const b_int32& lhs, const b_int32& rhs) {
 ///
 /// A BSON replication timestamp value.
 ///
-/// @warning
-///   This BSON type is used internally by the MongoDB server - use by clients
-///   is discouraged.
-///
 struct BSONCXX_API b_timestamp {
     static constexpr auto type_id = type::k_timestamp;
 
