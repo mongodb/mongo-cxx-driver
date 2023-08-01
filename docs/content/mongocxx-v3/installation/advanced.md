@@ -37,7 +37,7 @@ To use an existing install of the C driver, set `CMAKE_PREFIX_PATH` to the direc
 * For mongocxx-3.1.[0-3], libmongoc 1.5.0 or later is required.
 * For mongocxx-3.0.x, we recommend the last 1.4.x version of libmongoc
 
-Unless you know that your package manager offers a high enough version, you
+Unless you know that your package manager offers a sufficiently recent version, you
 will need to download and build from the source code. Get a tarball from
 the [C Driver releases](https://github.com/mongodb/mongo-c-driver/releases)
 page.

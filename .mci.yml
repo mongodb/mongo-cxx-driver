@@ -283,7 +283,8 @@ functions:
             add_expansions_to_env: true
             script: mongo-cxx-driver/.evergreen/install_c_driver.sh
 
-    "fetch_latest_cmake":
+    # This function may be used to fetch CI scripts in the C driver
+    "fetch_c_driver_source":
       - command: shell.exec
         params:
             shell: bash
@@ -842,7 +843,7 @@ tasks:
     - name: clang-tidy
       commands:
         - func: "setup"
-        - func: "fetch_latest_cmake"
+        - func: "fetch_c_driver_source"
         - func: "compile"
         - func: "clang-tidy"
 
@@ -850,7 +851,7 @@ tasks:
       commands:
         - func: "setup"
         - func: "start_mongod"
-        - func: "fetch_latest_cmake"
+        - func: "fetch_c_driver_source"
         - func: "compile"
           vars:
               RUN_DISTCHECK: 1
@@ -862,7 +863,7 @@ tasks:
       commands:
         - func: "setup"
         - func: "start_mongod"
-        - func: "fetch_latest_cmake"
+        - func: "fetch_c_driver_source"
           vars:
               BSON_EXTRA_ALIGNMENT: 1
         - func: "compile"
@@ -874,7 +875,7 @@ tasks:
       commands:
         - func: "setup"
         - func: "start_mongod"
-        - func: "fetch_latest_cmake"
+        - func: "fetch_c_driver_source"
         - func: "compile"
           vars:
               RUN_DISTCHECK: 1
@@ -890,7 +891,7 @@ tasks:
       commands:
         - func: "setup"
         - func: "start_mongod"
-        - func: "fetch_latest_cmake"
+        - func: "fetch_c_driver_source"
           vars:
               BSON_EXTRA_ALIGNMENT: 1
         - func: "compile"
@@ -907,13 +908,13 @@ tasks:
       commands:
       - func: "setup"
       - func: "start_mongod"
-      - func: "fetch_latest_cmake"
+      - func: "fetch_c_driver_source"
       - func: "compile"
 
     - name: compile_without_tests
       commands:
       - func: "setup"
-      - func: "fetch_latest_cmake"
+      - func: "fetch_c_driver_source"
       - func: "compile"
         vars:
             ENABLE_TESTS: OFF
@@ -924,7 +925,7 @@ tasks:
         - func: "start_mongod"
           vars:
               AUTH: auth
-        - func: "fetch_latest_cmake"
+        - func: "fetch_c_driver_source"
         - func: "compile"
         - func: "test auth"
         - func: "test atlas connectivity"
@@ -933,7 +934,7 @@ tasks:
       commands:
         - func: "setup"
         - func: "start_mongod"
-        - func: "fetch_latest_cmake"
+        - func: "fetch_c_driver_source"
         - func: "compile"
           vars:
               USE_STATIC_LIBS: 1
@@ -948,7 +949,7 @@ tasks:
       commands:
         - func: "setup"
         - func: "start_mongod"
-        - func: "fetch_latest_cmake"
+        - func: "fetch_c_driver_source"
           vars:
               BSON_EXTRA_ALIGNMENT: 1
         - func: "compile"
@@ -966,7 +967,7 @@ tasks:
         - func: "start_mongod"
           vars:
               TOPOLOGY: "replica_set"
-        - func: "fetch_latest_cmake"
+        - func: "fetch_c_driver_source"
         - func: "compile"
           vars:
               RUN_DISTCHECK: 1
@@ -995,7 +996,7 @@ tasks:
     - name: uninstall_check
       commands:
       - func: "setup"
-      - func: "fetch_latest_cmake"
+      - func: "fetch_c_driver_source"
       - func: "compile"
       - command: expansions.update
         params:
@@ -1015,7 +1016,7 @@ tasks:
     - name: uninstall_check_windows
       commands:
       - func: "setup"
-      - func: "fetch_latest_cmake"
+      - func: "fetch_c_driver_source"
       - func: "compile"
       - command: expansions.update
         params:
@@ -1050,7 +1051,7 @@ tasks:
             . ./mongo-c-driver/.evergreen/scripts/find-cmake-latest.sh
             export CMAKE="$(find_cmake_latest)"
             cd build
-            $CMAKE .. -DENABLE_UNINSTALL=OFF
+            $CMAKE ..
             $CMAKE --build . -- -j $(nproc)
             ./hello_mongocxx
 
@@ -1126,7 +1127,7 @@ tasks:
     - name: test_mongohouse
       commands:
         - func: "setup"
-        - func: "fetch_latest_cmake"
+        - func: "fetch_c_driver_source"
         - func: "compile"
         - func: "build_mongohouse"
         - func: "run_mongohouse"
@@ -1141,7 +1142,7 @@ tasks:
               # Authentication with versioned API should already be tested
               # in the C driver.
               AUTH: noauth
-        - func: "fetch_latest_cmake"
+        - func: "fetch_c_driver_source"
         - func: "compile"
         - func: "clone_drivers-evergreen-tools"
         - func: "run_kms_servers"
@@ -1156,7 +1157,7 @@ tasks:
           vars:
               ORCHESTRATION_FILE: versioned-api-testing.json
               AUTH: noauth
-        - func: "fetch_latest_cmake"
+        - func: "fetch_c_driver_source"
         - func: "compile"
         - func: "clone_drivers-evergreen-tools"
         - func: "run_kms_servers"

@@ -9,7 +9,7 @@ CMAKE=${cmake_binary:-cmake}
 rm -rf build/*
 cd build
 if [ -z "$MSVC" ]; then
-    "$CMAKE" -DCMAKE_BUILD_TYPE="${BUILD_TYPE}" -DCMAKE_CXX_STANDARD="${CXX_STANDARD}" -DCMAKE_INSTALL_PREFIX="../../../../../../build/install" ..
+    "$CMAKE" -DCMAKE_BUILD_TYPE="${BUILD_TYPE}" -DCMAKE_CXX_STANDARD="${CXX_STANDARD}" ..
     "$CMAKE" --build . --target run
 else
     if [ "$CXX_STANDARD" = "17" ]; then
