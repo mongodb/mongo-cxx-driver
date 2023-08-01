@@ -528,6 +528,7 @@ void run_transaction_operations(document::view test,
                                 client_session* session0,
                                 client_session* session1,
                                 bool* fail_point_enabled,
+                                const apm_checker& apm_checker,
                                 bool throw_on_error = false) {
     auto operations = test["operations"].get_array().value;
 
@@ -569,6 +570,7 @@ void run_transaction_operations(document::view test,
                                            session0,
                                            session1,
                                            fail_point_enabled,
+                                           apm_checker,
                                            true);
             };
 
@@ -595,6 +597,8 @@ void run_transaction_operations(document::view test,
                 ec = e.code();
             }
         }
+
+        CAPTURE(apm_checker.print_all());
 
         // "If the result document has an 'errorContains' field, verify that the method threw an
         // exception or returned an error, and that the value of the 'errorContains' field
@@ -746,7 +750,8 @@ void run_transactions_tests_in_file(const std::string& test_path) {
                                        coll_name,
                                        &session0,
                                        &session1,
-                                       &fail_point_enabled);
+                                       &fail_point_enabled,
+                                       apm_checker);
 
             // Step 10. "Call session0.endSession() and session1.endSession." (done in destructors).
         }
