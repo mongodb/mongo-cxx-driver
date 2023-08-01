@@ -736,6 +736,10 @@ void run_transactions_tests_in_file(const std::string& test_path) {
             // Step 9. Perform the operations.
             apm_checker.clear();
 
+            // The test runner MUST also ensure that the configureFailPoint command is excluded from
+            // the list of observed command monitoring events for this client (if applicable).
+            apm_checker.set_ignore_command_monitoring_event("configureFailPoint");
+
             run_transaction_operations(test.get_document().value,
                                        &client,
                                        db_name,

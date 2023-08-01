@@ -376,13 +376,10 @@ std::string get_hostnames(document::view object) {
     return hostnames;
 }
 
-void add_observe_events(options::apm& apm_opts, document::view object) {
-    using types::bson_value::value;
-    if (!object["observeEvents"])
+void add_observe_events(spec::apm_checker& apm, options::apm& apm_opts, document::view object) {
+    if (!object["observeEvents"]) {
         return;
-
-    const auto name = string::to_string(object["id"].get_string().value);
-    auto& apm = get_apm_map()[name];
+    }
 
     const auto observe_sensitive = object["observeSensitiveCommands"];
     apm.observe_sensitive_events = observe_sensitive && observe_sensitive.get_bool();
@@ -403,13 +400,13 @@ void add_observe_events(options::apm& apm_opts, document::view object) {
     }
 }
 
-void add_ignore_command_monitoring_events(document::view object) {
-    if (!object["ignoreCommandMonitoringEvents"])
+void add_ignore_command_monitoring_events(spec::apm_checker& apm, document::view object) {
+    if (!object["ignoreCommandMonitoringEvents"]) {
         return;
+    }
+
     for (auto cme : object["ignoreCommandMonitoringEvents"].get_array().value) {
         CAPTURE(cme.get_string());
-        const auto name = string::to_string(object["id"].get_string().value);
-        auto& apm = get_apm_map()[name];
         apm.set_ignore_command_monitoring_event(string::to_string(cme.get_string().value));
     }
 }
@@ -646,8 +643,14 @@ client create_client(document::view object) {
         client_opts = test_util::add_test_server_api();
     }
 
-    add_observe_events(apm_opts, object);
-    add_ignore_command_monitoring_events(object);
+    auto& apm = get_apm_map()[string::to_string(object["id"].get_string().value)];
+
+    add_observe_events(apm, apm_opts, object);
+    add_ignore_command_monitoring_events(apm, object);
+
+    // The test runner MUST also ensure that the configureFailPoint command is excluded from the
+    // list of observed command monitoring events for this client (if applicable).
+    apm.set_ignore_command_monitoring_event("configureFailPoint");
 
     CAPTURE(conn);
     return client{uri{conn}, client_opts.apm_opts(apm_opts)};
