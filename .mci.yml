@@ -460,7 +460,7 @@ functions:
                   export RETRYABLE_READS_UNIFIED_TESTS_PATH="$(pwd)/../data/retryable-reads/unified"
                   export RETRYABLE_WRITES_UNIFIED_TESTS_PATH="$(pwd)/../data/retryable-writes/unified"
                   export SESSION_UNIFIED_TESTS_PATH="$(pwd)/../data/sessions/unified"
-                  export TRANSACTIONS_TESTS_PATH="$(pwd)/../data/transactions"
+                  export TRANSACTIONS_LEGACY_TESTS_PATH="$(pwd)/../data/transactions/legacy"
                   export UNIFIED_FORMAT_TESTS_PATH=$(pwd)/../data/unified-format
                   export URI_OPTIONS_TESTS_PATH="$(pwd)/../data/uri-options"
                   export VERSIONED_API_TESTS_PATH=$(pwd)/../data/versioned-api

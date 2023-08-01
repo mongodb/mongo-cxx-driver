@@ -255,7 +255,7 @@ set_tests_properties(command_monitoring_specs PROPERTIES
     ENVIRONMENT "COMMAND_MONITORING_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/command-monitoring")
 
 set_tests_properties(transactions_specs PROPERTIES
-  ENVIRONMENT "TRANSACTIONS_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/transactions")
+  ENVIRONMENT "TRANSACTIONS_LEGACY_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/transactions/legacy")
 set_property(TEST transactions_specs
   APPEND PROPERTY ENVIRONMENT "WITH_TRANSACTION_TESTS_PATH=${PROJECT_SOURCE_DIR}/../../data/with_transaction")
 
