@@ -218,14 +218,10 @@ bool equals_server_topology(const document::element& topologies) {
 
     // The server's topology will not change during the test. No need to make a round-trip for every
     // test file.
-    const static std::string actual = test_util::get_topology();
-    const auto equals = [&](const bsoncxx::array::element& expected) {
-        return expected == value(actual) ||
-               (expected == value("sharded") && actual == "sharded-replicaset");
-    };
+    const static auto actual = value(test_util::get_topology());
 
     const auto t = topologies.get_array().value;
-    return std::end(t) != std::find_if(std::begin(t), std::end(t), equals);
+    return std::end(t) != std::find(std::begin(t), std::end(t), actual);
 }
 
 bool compatible_with_server(const bsoncxx::array::element& requirement) {

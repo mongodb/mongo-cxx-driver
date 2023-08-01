@@ -243,20 +243,26 @@ std::string replica_set_name(const client& client) {
     return "";
 }
 
-bool is_replica_set(const client& client) {
-    auto reply = get_is_master(client);
-    return static_cast<bool>(reply.view()["setName"]);
+static bool is_replica_set(document::view reply) {
+    return static_cast<bool>(reply["setName"]);
 }
 
-bool is_sharded_cluster(const client& client) {
-    const auto reply = get_is_master(client);
-    const auto msg = reply.view()["msg"];
+bool is_replica_set(const client& client) {
+    return is_replica_set(get_is_master(client));
+}
+
+static bool is_sharded_cluster(document::view reply) {
+    const auto msg = reply["msg"];
 
     if (!msg) {
         return false;
     }
 
     return msg.get_string().value.compare("isdbgrid") == 0;
+}
+
+bool is_sharded_cluster(const client& client) {
+    return is_sharded_cluster(get_is_master(client));
 }
 
 std::string get_hosts(const client& client) {
@@ -267,18 +273,13 @@ std::string get_hosts(const client& client) {
 }
 
 std::string get_topology(const client& client) {
-    if (is_replica_set(client))
-        return "replicaset";
+    const auto reply = get_is_master(client);
 
-    // from: https://docs.mongodb.com/manual/reference/config-database/#config.shards
-    // If the shard is a replica set, the host field displays the name of the replica set, then a
-    // slash, then a comma-separated list of the hostnames of each member of the replica set, as in
-    // the following example:
-    //      { ... , "host" : "shard0001/localhost:27018,localhost:27019,localhost:27020", ... }
-    auto host = get_hosts(client);
-    if (!host.empty()) {
-        if (std::find(std::begin(host), std::end(host), '/') != std::end(host))
-            return "sharded-replicaset";
+    if (is_replica_set(reply)) {
+        return "replicaset";
+    }
+
+    if (is_sharded_cluster(reply)) {
         return "sharded";
     }
 
