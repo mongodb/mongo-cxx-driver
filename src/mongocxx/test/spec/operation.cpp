@@ -1375,6 +1375,29 @@ document::value operation_runner::run(document::view operation) {
         REQUIRE(session);
         REQUIRE(session->server_id() == 0);
         return empty_document;
+    } else if (key.compare("assertSessionTransactionState") == 0) {
+        const auto arguments = operation["arguments"].get_document().value;
+        const client_session* session = _lookup_session(arguments);
+        REQUIRE(session);
+        const auto state = arguments["state"].get_string().value;
+        switch (session->get_transaction_state()) {
+            case client_session::transaction_state::k_transaction_none:
+                REQUIRE(state == stdx::string_view("none"));
+                break;
+            case client_session::transaction_state::k_transaction_starting:
+                REQUIRE(state == stdx::string_view("starting"));
+                break;
+            case client_session::transaction_state::k_transaction_in_progress:
+                REQUIRE(state == stdx::string_view("in_progress"));
+                break;
+            case client_session::transaction_state::k_transaction_committed:
+                REQUIRE(state == stdx::string_view("committed"));
+                break;
+            case client_session::transaction_state::k_transaction_aborted:
+                REQUIRE(state == stdx::string_view("aborted"));
+                break;
+        }
+        return empty_document;
     } else if (key.compare("watch") == 0) {
         if (object.compare("collection") == 0) {
             _coll->watch();
