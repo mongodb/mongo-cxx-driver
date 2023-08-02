@@ -25,7 +25,7 @@ namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
 // Requirements for concept Iterator:
-// http://en.cppreference.com/w/cpp/concept/Iterator
+// https://en.cppreference.com/w/cpp/named_req/Iterator
 static_assert(std::is_copy_constructible<change_stream::iterator>::value, "");
 static_assert(std::is_copy_assignable<change_stream::iterator>::value, "");
 static_assert(std::is_destructible<change_stream::iterator>::value, "");
