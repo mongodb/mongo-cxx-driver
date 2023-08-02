@@ -1963,6 +1963,36 @@ document::value operations::run(entity::map& entity_map,
         auto key = string::to_string(op["arguments"]["client"].get_string().value);
         return fail_point(entity_map, apm_map[key], op_view);
     }
+    if (name == "targetedFailPoint") {
+        REQUIRE(object == "testRunner");
+
+        const auto arguments = op_view["arguments"];
+
+        const auto fail_point = arguments["failPoint"].get_document().value;
+        REQUIRE(!fail_point.empty());
+
+        auto* const session_ptr = get_session(op_view, entity_map);
+        REQUIRE(session_ptr);
+        auto& session = *session_ptr;
+        const auto server_id = session.server_id();
+
+        // Test runners MUST error if the session is not pinned to a mongos server at the time
+        // this operation is executed.
+        if (server_id == 0) {
+            FAIL("session object is not pinned to a mongos server");
+        }
+
+        auto& client = session.client();
+
+        // If the driver exposes an API to target a specific server for a command, the test runner
+        // SHOULD use the client entity associated with the session to execute the
+        // configureFailPoint command.
+        client["admin"].run_command(fail_point, server_id);
+
+        return make_document(kvp("uri", client.uri().to_string()),
+                             kvp("failPoint", fail_point["configureFailPoint"].get_string()),
+                             kvp("serverId", static_cast<std::int64_t>(server_id)));
+    }
     if (name == "findOneAndDelete")
         return find_one_and_delete(
             entity_map.get_collection(object), get_session(op_view, entity_map), op_view);
