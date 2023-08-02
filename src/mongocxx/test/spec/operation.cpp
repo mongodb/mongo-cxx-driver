@@ -1243,22 +1243,6 @@ document::value operation_runner::_run_run_command(bsoncxx::document::view opera
     return result.extract();
 }
 
-document::value operation_runner::_run_configure_fail_point(bsoncxx::document::view operation) {
-    auto arguments = operation["arguments"].get_document().value;
-    auto command = arguments["failPoint"].get_document().value;
-
-    const client_session* session = _lookup_session(arguments);
-
-    read_preference rp;
-    uint32_t server_id = session->server_id();
-    stdx::optional<document::value> reply = (*_client)["admin"].run_command(command, server_id);
-
-    auto result = builder::basic::document{};
-    result.append(builder::basic::kvp("result", *reply));
-
-    return result.extract();
-}
-
 document::value operation_runner::_create_index(const document::view& operation) {
     auto arguments = operation["arguments"];
     auto session = _lookup_session(arguments.get_document().value);
@@ -1378,8 +1362,6 @@ document::value operation_runner::run(document::view operation) {
         return _run_abort_transaction(operation);
     } else if (key.compare("runCommand") == 0) {
         return _run_run_command(operation);
-    } else if (key.compare("targetedFailPoint") == 0) {
-        return _run_configure_fail_point(operation);
     } else if (key.compare("assertSessionPinned") == 0) {
         const client_session* session =
             _lookup_session(operation["arguments"].get_document().value);
