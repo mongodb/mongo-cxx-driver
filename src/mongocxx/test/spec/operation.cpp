@@ -1482,6 +1482,26 @@ document::value operation_runner::run(document::view operation) {
                              }));
 
         return empty_document;
+    } else if (key.compare("targetedFailPoint") == 0) {
+        REQUIRE(object == stdx::string_view("testRunner"));
+
+        const auto arguments = operation["arguments"].get_document().value;
+
+        const auto session_ptr = _lookup_session(arguments);
+        REQUIRE(session_ptr);
+        auto& session = *session_ptr;
+        const auto server_id = session.server_id();
+
+        if (server_id == 0) {
+            FAIL("session object is not pinned to a mongos server");
+        }
+
+        const auto command = arguments["failPoint"].get_document().value;
+        REQUIRE(!command.empty());
+
+        session.client()["admin"].run_command(command, server_id);
+
+        return empty_document;
     } else {
         throw std::logic_error{"unsupported operation: " + string::to_string(key)};
     }
