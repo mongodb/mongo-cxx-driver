@@ -45,7 +45,7 @@ namespace libmongoc {
 #ifdef MONGOCXX_TESTING
 
 #if defined(__GNUC__) && (__GNUC__ >= 6) && !defined(__clang__)
-// See https://jira.mongodb.org/browse/CXX-1453 and
+// See https://jira.mongodb.com/browse/CXX-1453 and
 // https://gcc.gnu.org/bugzilla/show_bug.cgi?id=81605 The basic issue
 // is that GCC sees the visibility attributes on the mongoc functions,
 // and considers them part of the type, and then emits a silly

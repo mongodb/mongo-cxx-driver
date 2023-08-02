@@ -1485,7 +1485,7 @@ static bool version_at_least(mongocxx::v_noabi::database& db, int minimum_major)
     return server_major >= minimum_major;
 }
 
-// https://jira.mongodb.org/browse/CXX-2505
+// https://jira.mongodb.com/browse/CXX-2505
 static void queryable_encryption_api(mongocxx::client& client) {
     // Start Queryable Encryption Example
     using namespace mongocxx;

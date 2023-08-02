@@ -67,7 +67,7 @@ Compatibility of each C++ driver version with each MongoDB server is documented 
 
 ## Bugs and issues
 
-See our [JIRA project](http://jira.mongodb.org/browse/CXX).
+See our [JIRA project](http://jira.mongodb.com/browse/CXX).
 
 ## License
 

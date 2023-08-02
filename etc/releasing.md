@@ -26,7 +26,7 @@ versions of libmongoc.
 ## Check fixVersions in Jira
 
 Ensure that all tickets under the
-[version to be released](https://jira.mongodb.org/projects/CXX?selectedItem=com.atlassian.jira.jira-projects-plugin%3Arelease-page&status=unreleased)
+[version to be released](https://jira.mongodb.com/projects/CXX?selectedItem=com.atlassian.jira.jira-projects-plugin%3Arelease-page&status=unreleased)
 are in `Closed` status on the C++ Driver releases page. If not, bulk change open
 tickets that will NOT be in the release to a new version (create it if
 necessary).
@@ -34,7 +34,7 @@ necessary).
 For a patch release, check that all tickets for the version to be released have
 changes cherry-picked onto the release branch. This is indicated by a comment on
 the ticket. Here is an
-[example comment](https://jira.mongodb.org/browse/CXX-2650?focusedCommentId=5271981&page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel#comment-5271981).
+[example comment](https://jira.mongodb.com/browse/CXX-2650?focusedCommentId=5271981&page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel#comment-5271981).
 
 ## Audit Jira ticket titles and types for use in release notes
 
@@ -141,7 +141,7 @@ Edit -> Publish Release
 ## Release the Version in Jira
 
 Navigate to the
-[fixVersions page on Jira](https://jira.mongodb.org/plugins/servlet/project-config/CXX/versions?status=unreleased).
+[fixVersions page on Jira](https://jira.mongodb.com/plugins/servlet/project-config/CXX/versions?status=unreleased).
 Click the "..." next to the version you are about to release and select
 "Release".
 
@@ -219,7 +219,7 @@ Minor releases generate a DOCSP ticket. Add a comment to the generated DOCSP tic
 [MongoDB Compatibility Table](https://www.mongodb.com/docs/drivers/cxx/#mongodb-compatibility)
 or [Language Compatibility Table](https://www.mongodb.com/docs/drivers/cxx/#language-compatibility)
 should be updated. Generally, only a minor release will require updates.
-(See [DOCSP-30876](https://jira.mongodb.org/browse/DOCSP-30876) for an example.)
+(See [DOCSP-30876](https://jira.mongodb.com/browse/DOCSP-30876) for an example.)
 
 ## Announce on Community Forums
 

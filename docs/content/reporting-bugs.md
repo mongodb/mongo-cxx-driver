@@ -7,11 +7,11 @@ title = "Reporting Bugs"
 +++
 
 If you think you have found a bug or want to see a new feature in the
-C++ driver, please open an issue in [JIRA](https://jira.mongodb.org/):
+C++ driver, please open an issue in [JIRA](https://jira.mongodb.com/):
 
-1. [Create a Jira account and login](https://jira.mongodb.org/).
+1. [Create a Jira account and login](https://jira.mongodb.com/).
 
-2. Navigate to the [CXX project](https://jira.mongodb.org/browse/CXX).
+2. Navigate to the [CXX project](https://jira.mongodb.com/browse/CXX).
 
 3. Click **Create Issue**. Provide as much information as possible about
    the issue and the steps to reproduce it.

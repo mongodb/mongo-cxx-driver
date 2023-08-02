@@ -324,7 +324,7 @@ scons
 
 ###### Building multiple Windows library variants:
 
-As of legacy-0.8, the Windows libraries are now tagged with boost-like ABI tags (see http://www.boost.org/doc/libs/1_55_0/more/getting_started/windows.html#library-naming), so it is possible to build several different variants (debug vs retail, static vs dynamic runtime) and install them to the same location. We have added support for autolib, so the selection of the appropriate library is handled automatically (see https://jira.mongodb.org/browse/CXX-200). To build all of the different driver variants, repeatedly invoke scons as follows:
+As of legacy-0.8, the Windows libraries are now tagged with boost-like ABI tags (see http://www.boost.org/doc/libs/1_55_0/more/getting_started/windows.html#library-naming), so it is possible to build several different variants (debug vs retail, static vs dynamic runtime) and install them to the same location. We have added support for autolib, so the selection of the appropriate library is handled automatically (see https://jira.mongodb.com/browse/CXX-200). To build all of the different driver variants, repeatedly invoke scons as follows:
 
 ```
 scons $ARGS install
