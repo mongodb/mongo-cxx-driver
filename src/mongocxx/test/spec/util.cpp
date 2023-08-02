@@ -545,16 +545,22 @@ void run_transaction_operations(document::view test,
         std::error_code ec;
         INFO("Operation: " << bsoncxx::to_json(op.get_document().value));
 
-        auto operation = op.get_document().value;
+        const auto operation = op.get_document().value;
 
         // Handle with_transaction separately.
         if (operation["name"].get_string().value.compare("withTransaction") == 0) {
-            auto session = [&]() {
-                if (operation["object"].get_string().value.compare("session0") == 0) {
+            const auto session = [&]() -> mongocxx::client_session* {
+                const auto object = operation["object"].get_string().value;
+                if (object.compare("session0") == 0) {
                     return session0;
-                } else {
+                }
+
+                if (object.compare("session1") == 0) {
                     return session1;
                 }
+
+                FAIL("unexpected session object: " << object);
+                return nullptr;  // -Wreturn-type
             }();
 
             auto with_txn_test_cb = [&](client_session*) {

@@ -125,7 +125,9 @@ bsoncxx::stdx::optional<read_preference> lookup_read_preference(document::view d
 client_session* operation_runner::_lookup_session(stdx::string_view key) {
     if (key.compare("session0") == 0) {
         return _session0;
-    } else {
+    }
+
+    if (key.compare("session1") == 0) {
         return _session1;
     }
 
@@ -134,8 +136,7 @@ client_session* operation_runner::_lookup_session(stdx::string_view key) {
 
 client_session* operation_runner::_lookup_session(document::view doc) {
     if (doc["session"]) {
-        stdx::string_view session_name = doc["session"].get_string().value;
-        return _lookup_session(session_name);
+        return _lookup_session(doc["session"].get_string().value);
     }
     return nullptr;
 }
