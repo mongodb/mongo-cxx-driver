@@ -107,7 +107,7 @@ class MONGOCXX_API update_one {
     ///   The new collation.
     ///
     /// @see
-    ///   https://docs.mongodb.com/manual/reference/collation/
+    ///   https://www.mongodb.com/docs/manual/reference/collation/
     ///
     update_one& collation(bsoncxx::document::view_or_value collation);
 
@@ -118,7 +118,7 @@ class MONGOCXX_API update_one {
     ///   The optional value of the collation option.
     ///
     /// @see
-    ///   https://docs.mongodb.com/manual/reference/collation/
+    ///   https://www.mongodb.com/docs/manual/reference/collation/
     ///
     const stdx::optional<bsoncxx::document::view_or_value>& collation() const;
 
@@ -172,7 +172,7 @@ class MONGOCXX_API update_one {
     /// @param array_filters
     ///   Array representing filters determining which array elements to modify.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/command/update/
+    /// @see https://www.mongodb.com/docs/manual/reference/command/update/
     ///
     update_one& array_filters(bsoncxx::array::view_or_value array_filters);
 
@@ -182,7 +182,7 @@ class MONGOCXX_API update_one {
     /// @return
     ///   The current array filters.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/command/update/
+    /// @see https://www.mongodb.com/docs/manual/reference/command/update/
     ///
     const stdx::optional<bsoncxx::array::view_or_value>& array_filters() const;
 

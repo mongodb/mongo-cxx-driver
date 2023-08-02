@@ -112,7 +112,7 @@ class MONGOCXX_API client {
     /// @param rc
     ///   The new @c read_concern
     ///
-    /// @see https://docs.mongodb.com/manual/reference/read-concern/
+    /// @see https://www.mongodb.com/docs/manual/reference/read-concern/
     ///
     MONGOCXX_DEPRECATED void read_concern(class read_concern rc);
     void read_concern_deprecated(class read_concern rc);
@@ -138,7 +138,7 @@ class MONGOCXX_API client {
     /// @param rp
     ///   The new @c read_preference
     ///
-    /// @see https://docs.mongodb.com/manual/core/read-preference/
+    /// @see https://www.mongodb.com/docs/manual/core/read-preference/
     ///
     MONGOCXX_DEPRECATED void read_preference(class read_preference rp);
     void read_preference_deprecated(class read_preference rp);
@@ -148,7 +148,7 @@ class MONGOCXX_API client {
     ///
     /// @return The current @c read_preference
     ///
-    /// @see https://docs.mongodb.com/manual/core/read-preference/
+    /// @see https://www.mongodb.com/docs/manual/core/read-preference/
     ///
     class read_preference read_preference() const;
 
@@ -222,7 +222,7 @@ class MONGOCXX_API client {
     ///
     /// @throws mongocxx::operation_exception if the underlying 'listDatabases' command fails.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/command/listDatabases
+    /// @see https://www.mongodb.com/docs/manual/reference/command/listDatabases
     ///
     cursor list_databases() const;
 
@@ -240,7 +240,7 @@ class MONGOCXX_API client {
     ///
     /// @throws mongocxx::operation_exception if the underlying 'listDatabases' command fails.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/command/listDatabases
+    /// @see https://www.mongodb.com/docs/manual/reference/command/listDatabases
     ///
     cursor list_databases(const client_session& session) const;
 
@@ -258,7 +258,7 @@ class MONGOCXX_API client {
     ///
     /// @throws mongocxx::operation_exception if the underlying 'listDatabases' command fails.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/command/listDatabases
+    /// @see https://www.mongodb.com/docs/manual/reference/command/listDatabases
     ///
     cursor list_databases(const bsoncxx::document::view_or_value opts) const;
 
@@ -279,7 +279,7 @@ class MONGOCXX_API client {
     ///
     /// @throws mongocxx::operation_exception if the underlying 'listDatabases' command fails.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/command/listDatabases
+    /// @see https://www.mongodb.com/docs/manual/reference/command/listDatabases
     ///
     cursor list_databases(const client_session& session,
                           const bsoncxx::document::view_or_value opts) const;
@@ -295,7 +295,7 @@ class MONGOCXX_API client {
     /// @throws mongocxx::operation_exception if the underlying 'listDatabases'
     /// command fails.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/command/listDatabases
+    /// @see https://www.mongodb.com/docs/manual/reference/command/listDatabases
     ///
     std::vector<std::string> list_database_names(
         const bsoncxx::document::view_or_value filter = {}) const;
@@ -314,7 +314,7 @@ class MONGOCXX_API client {
     /// @throws mongocxx::operation_exception if the underlying 'listDatabases'
     /// command fails.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/command/listDatabases
+    /// @see https://www.mongodb.com/docs/manual/reference/command/listDatabases
     ///
     std::vector<std::string> list_database_names(
         const client_session& session, const bsoncxx::document::view_or_value filter = {}) const;
@@ -346,7 +346,7 @@ class MONGOCXX_API client {
     /// @return
     ///  A change stream on this client.
     ///
-    /// @see https://docs.mongodb.com/manual/changeStreams/
+    /// @see https://www.mongodb.com/docs/manual/changeStreams/
     ///
     change_stream watch(const options::change_stream& options = {});
 
@@ -359,7 +359,7 @@ class MONGOCXX_API client {
     /// @return
     ///  A change stream on this client.
     ///
-    /// @see https://docs.mongodb.com/manual/changeStreams/
+    /// @see https://www.mongodb.com/docs/manual/changeStreams/
     ///
     change_stream watch(const client_session& session, const options::change_stream& options = {});
 
@@ -377,7 +377,7 @@ class MONGOCXX_API client {
     /// @return
     ///  A change stream on this client.
     ///
-    /// @see https://docs.mongodb.com/manual/changeStreams/
+    /// @see https://www.mongodb.com/docs/manual/changeStreams/
     ///
     change_stream watch(const pipeline& pipe, const options::change_stream& options = {});
 
@@ -394,7 +394,7 @@ class MONGOCXX_API client {
     /// @return
     ///  A change stream on this client.
     ///
-    /// @see https://docs.mongodb.com/manual/changeStreams/
+    /// @see https://www.mongodb.com/docs/manual/changeStreams/
     ///
     change_stream watch(const client_session& session,
                         const pipeline& pipe,

@@ -49,14 +49,14 @@ class uri;
 /// a single document. Note that writes must be made with majority write concern in order for reads
 /// to be linearizable.
 ///
-/// @see https://docs.mongodb.com/manual/reference/read-concern/
+/// @see https://www.mongodb.com/docs/manual/reference/read-concern/
 ///
 class MONGOCXX_API read_concern {
    public:
     ///
     /// A class to represent the read concern level.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/read-concern/#read-concern-levels
+    /// @see https://www.mongodb.com/docs/manual/reference/read-concern/#read-concern-levels
     ///
     enum class level {
         k_local,

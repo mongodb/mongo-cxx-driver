@@ -26,7 +26,7 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 ///
 /// Class representing criteria for document validation, to be applied to a collection.
 ///
-/// @see https://docs.mongodb.com/manual/core/document-validation/
+/// @see https://www.mongodb.com/docs/manual/core/document-validation/
 ///
 class MONGOCXX_API validation_criteria {
    public:

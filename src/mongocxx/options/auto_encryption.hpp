@@ -54,7 +54,7 @@ class MONGOCXX_API auto_encryption {
     /// @return
     ///   A reference to this object to facilitate method chaining.
     ///
-    /// @see https://docs.mongodb.com/manual/core/security-client-side-encryption/
+    /// @see https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
     auto_encryption& key_vault_client(client* client);
 
@@ -84,7 +84,7 @@ class MONGOCXX_API auto_encryption {
     /// @return
     ///   A reference to this object to facilitate method chaining.
     ///
-    /// @see https://docs.mongodb.com/manual/core/security-client-side-encryption/
+    /// @see https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
     auto_encryption& key_vault_pool(pool* pool);
 
@@ -110,7 +110,7 @@ class MONGOCXX_API auto_encryption {
     /// @return
     ///   A reference to this object to facilitate method chaining.
     ///
-    /// @see https://docs.mongodb.com/manual/core/security-client-side-encryption/
+    /// @see https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
     using ns_pair = std::pair<std::string, std::string>;
     auto_encryption& key_vault_namespace(ns_pair ns);
@@ -163,7 +163,7 @@ class MONGOCXX_API auto_encryption {
     /// @return
     ///   A reference to this object to facilitate method chaining.
     ///
-    /// @see https://docs.mongodb.com/manual/core/security-client-side-encryption/
+    /// @see https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
     auto_encryption& kms_providers(bsoncxx::document::view_or_value kms_providers);
 
@@ -193,7 +193,7 @@ class MONGOCXX_API auto_encryption {
     /// @return
     ///   A reference to this object to facilitate method chaining.
     ///
-    /// @see https://docs.mongodb.com/manual/core/security-client-side-encryption/
+    /// @see https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
     auto_encryption& tls_opts(bsoncxx::document::view_or_value tls_opts);
 
@@ -225,7 +225,7 @@ class MONGOCXX_API auto_encryption {
     /// @return
     ///   A reference to this object to facilitate method chaining.
     ///
-    /// @see https://docs.mongodb.com/manual/core/security-client-side-encryption/
+    /// @see https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
     auto_encryption& schema_map(bsoncxx::document::view_or_value schema_map);
 
@@ -247,12 +247,12 @@ class MONGOCXX_API auto_encryption {
     /// @param encrypted_fields_map
     ///   The mapping of which fields to encrypt.
     ///
-    /// @see https://docs.mongodb.com/manual/core/security-client-side-encryption/
+    /// @see https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
     /// @return
     ///   A reference to this object to facilitate method chaining.
     ///
-    /// @see https://docs.mongodb.com/manual/core/security-client-side-encryption/
+    /// @see https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
     auto_encryption& encrypted_fields_map(bsoncxx::document::view_or_value encrypted_fields_map);
 
@@ -274,7 +274,7 @@ class MONGOCXX_API auto_encryption {
     /// @return
     ///   A reference to this object to facilitate method chaining.
     ///
-    /// @see https://docs.mongodb.com/manual/core/security-client-side-encryption/
+    /// @see https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
     auto_encryption& bypass_auto_encryption(bool should_bypass);
 
@@ -296,7 +296,7 @@ class MONGOCXX_API auto_encryption {
     /// @return
     ///   A reference to this object to facilitate method chaining.
     ///
-    /// @see https://docs.mongodb.com/manual/core/security-client-side-encryption/
+    /// @see https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
     auto_encryption& bypass_query_analysis(bool should_bypass);
 
@@ -355,7 +355,7 @@ class MONGOCXX_API auto_encryption {
     /// @return
     ///   A reference to this object to facilitate method chaining.
     ///
-    /// @see https://docs.mongodb.com/manual/core/security-client-side-encryption/
+    /// @see https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
     auto_encryption& extra_options(bsoncxx::document::view_or_value extra);
 

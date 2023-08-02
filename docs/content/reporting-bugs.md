@@ -20,4 +20,4 @@ Be aware that bug reports in JIRA for the C++ driver are public.
 
 If you identify a security vulnerability in a driver or any other
 MongoDB project, please report it according to the instructions found in
-[Create a Vulnerability Report](https://docs.mongodb.com/manual/tutorial/create-a-vulnerability-report).
+[Create a Vulnerability Report](https://www.mongodb.com/docs/manual/tutorial/create-a-vulnerability-report).

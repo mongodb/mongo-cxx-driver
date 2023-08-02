@@ -10,5 +10,5 @@ homepage = "http://mongodb.github.io/mongo-cxx-driver"
 
 [original]
   name = "MongoDB Docs"
-  homepage = "http://docs.mongodb.org"
+  homepage = "https:/www.mongodb.com/docs"
   repo = "https://github.com/mongodb/docs"

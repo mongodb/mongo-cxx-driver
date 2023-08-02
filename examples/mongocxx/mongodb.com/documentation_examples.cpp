@@ -34,7 +34,7 @@
 #include <mongocxx/uri.hpp>
 
 // NOTE: Any time this file is modified, a DOCS ticket should be opened to sync the changes with the
-// corresponding page on docs.mongodb.com. See CXX-1249 and DRIVERS-356 for more info.
+// corresponding page on mongodb.com/docs. See CXX-1249 and DRIVERS-356 for more info.
 
 template <typename T>
 void check_field(const T& document, const char* field, bool should_have, int example_no) {
