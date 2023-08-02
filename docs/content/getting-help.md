@@ -8,7 +8,7 @@ title = "Getting help"
 
 Often, the quickest way to get support for general questions is through
 the
-[MongoDB Community Forums](https://community.mongodb.com/tags/c/drivers-odms-connectors/7/cxx-driver)
+[MongoDB Community Forums](https://www.mongodb.com/community/forums/tag/cxx)
 or through
 [Stack Overflow](https://stackoverflow.com/questions/tagged/mongodb%20c%2b%2b).
 

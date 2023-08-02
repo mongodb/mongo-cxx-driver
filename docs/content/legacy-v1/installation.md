@@ -39,7 +39,7 @@ title = "Installing the legacy driver"
 ### How to ask for Help
 
 If you are having difficulty building the driver after reading the below
-instructions, please post on the [MongoDB Community Forums](https://community.mongodb.com/tags/c/drivers-odms-connectors/7/cxx-driver) to ask for
+instructions, please post on the [MongoDB Community Forums](https://www.mongodb.com/community/forums/tag/cxx) to ask for
 help. Please include in your post **all** of the following information:
 
  - The version of the driver you are trying to build (branch or tag).
