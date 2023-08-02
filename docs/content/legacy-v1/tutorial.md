@@ -20,7 +20,7 @@ details.
 Next, you may wish to take a look at the [MongoDB
 Manual](https://www.mongodb.com/docs/manual/) for a language independent look at
 how to use MongoDB. Also, we suggest some basic familiarity with the [mongo
-shell](https://www.mongodb.com/docs/manual/mongo/) – the shell is the primary
+shell](https://www.mongodb.com/docs/mongodb-shell/) – the shell is the primary
 database administration tool and is useful for manually inspecting the
 contents of a database after your C++ program runs.
 
@@ -336,5 +336,5 @@ This overview just touches on the basics of using MongoDB from C++. There
 are many more capabilities. For further exploration:
 
  - See the language-independent [MongoDB Manual](https://www.mongodb.com/docs/manual/)
- - Experiment with the [mongo shell](https://www.mongodb.com/docs/manual/mongo/)
+ - Experiment with the [mongo shell](https://www.mongodb.com/docs/mongodb-shell/)
  - Review the [API docs](https://mongodb.github.io/api/1.0.2)
