@@ -346,34 +346,65 @@ std::string uri_options_to_string(document::view object) {
     return opts;
 }
 
-std::string get_hostnames(document::view object) {
-    const auto default_uri = std::string{"localhost:27017"};
+std::string get_hostnames(bsoncxx::document::view object) {
+    const auto uri0 = mongocxx::uri("mongodb://localhost:27017");
 
-    // Spec: This [useMultipleMongoses] option has no effect for non-sharded topologies.
-    if (!test_util::is_sharded_cluster()) {
-        return default_uri;
+    // All test topologies should have either a mongod or mongos on localhost:27017.
+    const mongocxx::client client0{uri0, test_util::add_test_server_api()};
+    REQUIRE_NOTHROW(client0.list_databases().begin());
+
+    // The topology must be consistent with what was set up by the test environment.
+    static constexpr auto one = "localhost:27017";
+    static constexpr auto two = "localhost:27017,localhost:27018";
+    static constexpr auto three = "localhost:27017,localhost:27018,localhost:27019";
+
+    const auto topology = test_util::get_topology(client0);
+
+    if (topology == "single") {
+        return one;  // Single mongod.
     }
 
-    // Spec: If true and the topology is a sharded cluster, the test runner MUST assert that this
-    // MongoClient connects to multiple mongos hosts (e.g. by inspecting the connection string).
-    if (!object["useMultipleMongoses"] || !object["useMultipleMongoses"].get_bool())
-        return default_uri;
+    if (topology == "replicaset") {
+        return three;  // Three replset members.
+    }
 
-    // from: https://docs.mongodb.com/manual/reference/config-database/#config.shards
-    // If the shard is a replica set, the host field displays the name of the replica set, then a
-    // slash, then a comma-separated list of the hostnames of each member of the replica set, as in
-    // the following example:
-    //      { ... , "host" : "shard0001/localhost:27018,localhost:27019,localhost:27020", ... }
-    const auto host = test_util::get_hosts();
-    const auto after_slash = ++std::find(std::begin(host), std::end(host), '/');
-    REQUIRE(after_slash < std::end(host));
+    if (topology == "sharded") {
+        const auto use_multiple_mongoses = object["useMultipleMongoses"];
 
-    const auto hostnames = std::string{after_slash, std::end(host)};
-    CAPTURE(host, hostnames);
+        if (use_multiple_mongoses) {
+            const auto value = use_multiple_mongoses.get_bool().value;
 
-    // require multiple mongos hosts
-    REQUIRE(std::end(hostnames) != std::find(std::begin(hostnames), std::end(hostnames), ','));
-    return hostnames;
+            if (value) {
+                const auto uri1 = mongocxx::uri("mongodb://localhost:27018");
+
+                // If true and the topology is a sharded cluster, the test runner MUST assert that
+                // this MongoClient connects to multiple mongos hosts (e.g. by inspecting the
+                // connection string).
+                const mongocxx::client client1{uri1, test_util::add_test_server_api()};
+
+                REQUIRE(client0["config"].has_collection("shards"));
+                REQUIRE(client1["config"].has_collection("shards"));
+
+                return two;  // Two mongoses.
+            } else {
+                // If false and the topology is a sharded cluster, the test runner MUST ensure that
+                // this MongoClient connects to only a single mongos host (e.g. by modifying the
+                // connection string).
+                return one;  // Single mongos.
+            }
+        } else {
+            // If this option is not specified and the topology is a sharded cluster, the test
+            // runner MUST NOT enforce any limit on the number of mongos hosts in the connection
+            // string and any tests using this client SHOULD NOT depend on a particular number of
+            // mongos hosts.
+
+            // But we still only support exactly two mongoses.
+            return two;  // Two mongoses.
+        }
+    }
+
+    FAIL("unexpected topology: " << topology);
+    return {};  // -Wreturn-type
 }
 
 void add_observe_events(spec::apm_checker& apm, options::apm& apm_opts, document::view object) {
