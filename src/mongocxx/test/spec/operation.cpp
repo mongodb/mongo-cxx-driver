@@ -1367,7 +1367,7 @@ document::value operation_runner::run(document::view operation) {
             _lookup_session(operation["arguments"].get_document().value);
         REQUIRE(session->server_id());
         return empty_document;
-    } else if (key.compare("operationassertSessionUnpinned") == 0) {
+    } else if (key.compare("assertSessionUnpinned") == 0) {
         const client_session* session =
             _lookup_session(operation["arguments"].get_document().value);
         REQUIRE(!session->server_id());
