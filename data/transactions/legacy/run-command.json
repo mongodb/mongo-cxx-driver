@@ -248,7 +248,6 @@
     },
     {
       "description": "run command fails with explicit secondary read preference",
-      "skipReason": "read preferences in database::run_command are not supported",
       "operations": [
         {
           "name": "startTransaction",
