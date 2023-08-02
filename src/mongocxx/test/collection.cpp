@@ -2769,6 +2769,12 @@ TEST_CASE("Ensure that the WriteConcernError 'errInfo' object is propagated", "[
 
     client mongodb_client{uri{}, test_util::add_test_server_api()};
 
+    if (test_util::get_topology(mongodb_client) == "sharded" &&
+        test_util::get_server_version(mongodb_client) < "4.1.0") {
+        WARN("Skipping - failCommand on mongos requires 4.1+");
+        return;
+    }
+
     using bsoncxx::builder::basic::sub_document;
     auto err_info = builder::basic::document{};
     err_info.append(kvp("writeConcern", [](sub_document sub_doc) {
