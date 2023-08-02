@@ -131,7 +131,7 @@ Note that the "@" symbol in the URI must be escaped to "%40" as shown in the exa
 
 ### LDAP
 
-[MongoDB Enterprise](http://www.mongodb.com/products/mongodb-enterprise)
+[MongoDB Enterprise](https://www.mongodb.com/products/mongodb-enterprise)
 supports proxy authentication through a Lightweight Directory Access
 Protocol (LDAP) service. To create a credential of type LDAP use a
 connection string specifying the user as well as parameters specifying

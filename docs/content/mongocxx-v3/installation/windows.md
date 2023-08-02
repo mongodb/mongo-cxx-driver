@@ -28,7 +28,7 @@ the [C Driver releases](https://github.com/mongodb/mongo-c-driver/releases)
 page.
 
 Follow the instructions for building from a tarball at
-[Installing libmongoc](http://mongoc.org/libmongoc/current/installing.html).
+[Installing libmongoc](https://mongoc.org/libmongoc/current/installing.html).
 
 Industry best practices and some regulations require the use of TLS 1.1
 or newer. The MongoDB C Driver supports TLS 1.1 on Linux if OpenSSL is
@@ -121,7 +121,7 @@ To build with Visual Studio 2017 without a C++17 polyfill, configure as follows:
 ```
 
 For details on how to install libmongoc for Windows, see the
-[mongoc Windows installation instructions](http://mongoc.org/libmongoc/current/installing.html#building-windows).
+[mongoc Windows installation instructions](https://mongoc.org/libmongoc/current/installing.html#building-windows).
 
 #### Configuring with `mongocxx` 3.7.0 and older
 

@@ -43,7 +43,7 @@ The C++ driver includes several classes for managing collections under the paren
  - `DBClientConnection` is the connection class for connecting to a single MongoDB database server (or mongos)
  - `DBClientReplicaSet` is the connection class for connecting to a replica set.
 
-See the [API documentation](http://mongodb.github.io/api/1.0.2/) for
+See the [API documentation](https://mongodb.github.io/api/1.0.2/) for
 details on each of the above classes.
 
 #### A simple program that connects to the database
@@ -337,4 +337,4 @@ are many more capabilities. For further exploration:
 
  - See the language-independent [MongoDB Manual](https://www.mongodb.com/docs/manual/)
  - Experiment with the [mongo shell](https://www.mongodb.com/docs/manual/mongo/)
- - Review the [API docs](http://mongodb.github.io/api/1.0.2)
+ - Review the [API docs](https://mongodb.github.io/api/1.0.2)

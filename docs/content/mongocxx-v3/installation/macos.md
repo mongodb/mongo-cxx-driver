@@ -28,7 +28,7 @@ the [C Driver releases](https://github.com/mongodb/mongo-c-driver/releases)
 page.
 
 Follow the instructions for building from a tarball at
-[Installing libmongoc](http://mongoc.org/libmongoc/current/installing.html).
+[Installing libmongoc](https://mongoc.org/libmongoc/current/installing.html).
 
 Industry best practices and some regulations require the use of TLS 1.1
 or newer. The MongoDB C Driver supports TLS 1.1 on Linux if OpenSSL is

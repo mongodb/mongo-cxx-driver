@@ -76,7 +76,7 @@ You must specify the host to connect to using a
 and pass that into the `mongocxx::client` constructor.  For details regarding
 supported URI options see the documentation for the version of libmongoc used
 to build the C++ driver or for the [latest libmongoc release](
-http://mongoc.org/libmongoc/current/mongoc_uri_t.html)
+https://mongoc.org/libmongoc/current/mongoc_uri_t.html)
 
 The default `mongocxx::uri` constructor will connect to a
 server running on localhost on port `27017`:
