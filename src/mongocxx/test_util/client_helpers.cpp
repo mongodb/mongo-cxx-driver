@@ -443,17 +443,43 @@ std::string tolowercase(stdx::string_view view) {
 }
 
 void check_outcome_collection(mongocxx::collection* coll, bsoncxx::document::view expected) {
+    REQUIRE(coll);
+
+    read_preference rp;
+    rp.mode(read_preference::read_mode::k_primary);
+
     read_concern rc;
     rc.acknowledge_level(read_concern::level::k_local);
-    auto old_rc = coll->read_concern();
+
+    struct coll_state_guard_type {
+        mongocxx::collection& coll;
+        read_preference old_rp;
+        read_concern old_rc;
+
+        coll_state_guard_type(mongocxx::collection& coll) : coll(coll) {
+            old_rp = coll.read_preference();
+            old_rc = coll.read_concern();
+        }
+
+        ~coll_state_guard_type() {
+            try {
+                coll.read_preference(old_rp);
+                coll.read_concern(old_rc);
+            } catch (...) {
+            }
+        }
+    } coll_state_guard(*coll);
+
+    // Ensure this find reads the latest data by using primary read preference with local read
+    // concern even when the MongoClient is configured with another read preference or read concern.
+    coll->read_preference(rp);
     coll->read_concern(rc);
 
-    options::find options{};
-    options.sort(make_document(kvp("_id", 1)));
-
     using namespace std;
-    cursor actual = coll->find({}, options);
-    auto expected_data = expected["data"].get_array().value;
+
+    const auto expected_data = expected["data"].get_array().value;
+    auto actual = coll->find({}, options::find().sort(make_document(kvp("_id", 1))));
+
     REQUIRE(equal(begin(expected_data),
                   end(expected_data),
                   begin(actual),
@@ -462,7 +488,6 @@ void check_outcome_collection(mongocxx::collection* coll, bsoncxx::document::vie
                       return true;
                   }));
     REQUIRE(begin(actual) == end(actual));
-    coll->read_concern(old_rc);
 }
 
 bool server_has_sessions(const client& conn) {
