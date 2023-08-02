@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include <iostream>
+#include <unordered_set>
 
 #include <bsoncxx/test_util/catch.hh>
 #include <mongocxx/client.hpp>
@@ -434,6 +435,72 @@ TEST_CASE("Transactions Documentation Examples", "[transactions]") {
             throw oe;
         }
         // End Transactions Retry Example 3
+    }
+}
+
+TEST_CASE("Transactions Mongos Pinning Prose Tests", "[transactions]") {
+    instance::current();
+
+    if (test_util::get_server_version() < "4.1.6") {
+        WARN("Skipping - requires server 4.1.6+");
+        return;
+    }
+
+    if (test_util::get_topology() != "sharded") {
+        WARN("Skipping - requires sharded cluster topology");
+        return;
+    }
+
+    // @require_mongos_count_at_least(2)
+    {
+        mongocxx::client client{mongocxx::uri{"mongodb://localhost:27017"}};
+        REQUIRE(client["config"].has_collection("shards"));
+    };
+    {
+        mongocxx::client client{mongocxx::uri{"mongodb://localhost:27018"}};
+        REQUIRE(client["config"].has_collection("shards"));
+    };
+
+    const auto uri =
+        mongocxx::uri("mongodb://localhost:27017,localhost:27018/?localThresholdMS=1000");
+
+    std::unordered_set<std::uint16_t> ports;
+
+    options::apm apm_opts;
+    apm_opts.on_command_started(
+        [&](const events::command_started_event& event) { ports.insert(event.port()); });
+    options::client client_opts;
+    client_opts.apm_opts(apm_opts);
+    mongocxx::client client{uri, client_opts};
+
+    auto test = client["test"]["test"];
+    test.insert_one(make_document());
+
+    auto s = client.start_session();
+    s.start_transaction();
+    test.insert_one(s, make_document());
+    s.commit_transaction();
+
+    // Prose Test 1
+    SECTION("Unpin for next transaction") {
+        for (int i = 0; i < 50; ++i) {
+            s.start_transaction();
+            auto cursor = test.find(s, {});
+            REQUIRE(cursor.begin() != cursor.end());
+            s.commit_transaction();
+        }
+
+        REQUIRE(ports.size() > 1u);
+    }
+
+    // Prose Test 2
+    SECTION("Unpin for non-transaction operation") {
+        for (int i = 0; i < 50; ++i) {
+            auto cursor = test.find(s, {});
+            REQUIRE(cursor.begin() != cursor.end());
+        }
+
+        REQUIRE(ports.size() > 1u);
     }
 }
 
