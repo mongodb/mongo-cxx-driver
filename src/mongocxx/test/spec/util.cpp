@@ -587,6 +587,12 @@ void run_transaction_operations(document::view test,
                 server_error = e.raw_server_error();
                 exception = e;
                 ec = e.code();
+            } catch (const mongocxx::logic_error& e) {
+                // CXX-1679: some tests trigger client errors that are thrown as logic_error rather
+                // than operation_exception (i.e. update without $ operator).
+                error_msg = e.what();
+                exception.emplace(make_error_code(mongocxx::error_code(0)));
+                ec = e.code();
             }
         } else {
             try {
@@ -600,6 +606,12 @@ void run_transaction_operations(document::view test,
                 error_msg = e.what();
                 server_error = e.raw_server_error();
                 exception = e;
+                ec = e.code();
+            } catch (const mongocxx::logic_error& e) {
+                // CXX-1679: some tests trigger client errors that are thrown as logic_error rather
+                // than operation_exception (i.e. update without $ operator).
+                error_msg = e.what();
+                exception.emplace(make_error_code(mongocxx::error_code(0)));
                 ec = e.code();
             }
         }
