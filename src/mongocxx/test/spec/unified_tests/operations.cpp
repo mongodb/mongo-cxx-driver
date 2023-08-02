@@ -2071,6 +2071,18 @@ document::value operations::run(entity::map& entity_map,
         auto& session = entity_map.get_client_session(session_name);
         return assert_session_transaction_state(session, op_view);
     }
+    if (name == "assertSessionPinned") {
+        auto& session = entity_map.get_client_session(
+            string::to_string(op["arguments"]["session"].get_string().value));
+        REQUIRE(session.server_id() != 0);
+        return make_document();
+    }
+    if (name == "assertSessionUnpinned") {
+        auto& session = entity_map.get_client_session(
+            string::to_string(op["arguments"]["session"].get_string().value));
+        REQUIRE(session.server_id() == 0);
+        return make_document();
+    }
     if (name == "dropCollection") {
         auto coll_name = string::to_string(op["arguments"]["collection"].get_string().value);
         auto& db = entity_map.get_database(object);
