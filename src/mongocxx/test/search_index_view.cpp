@@ -52,18 +52,15 @@ bool wait_for_search_index(search_index_view& siv,
 TEST_CASE("atlas search indexes prose tests", "") {
     instance::current();
 
-    // TODO: have evergreen set this env variable
-    auto uri_getenv = std::getenv("ATLAS_SEARCH_INDEXES_URI");
+    auto uri_getenv = std::getenv("MONGODB_URI");
     if (!uri_getenv) {
-        WARN("Skipping - Test requires the environment variable: ATLAS_SEARCH_INDEXES_URI");
+        WARN("Skipping - Test requires the environment variable: MONGODB_URI");
         return;
     }
 
     client mongodb_client{uri{uri_getenv}};
-    // TODO: have evergreen get the name of the cluster created and insert here (cluster name is
-    // generated in setup-atlas-cluster so I guess we could modify setup-atlas-cluster and hardcode
-    // it)
-    database db = mongodb_client["dbx-cxx-lambda-cd9542cb"];
+
+    database db = mongodb_client[std::getenv("FUNCTION_NAME")];
 
     SECTION("create one with name and definition") {
         // use a randomly generated collection name as there's a server side limitation that
