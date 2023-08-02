@@ -2676,9 +2676,9 @@ TEST_CASE("Cursor iteration", "[collection][cursor]") {
         type_str = "k_tailable_await";
 
         // Improve execution time by reducing the amount of time the server waits for new
-        // results
-        // for this cursor.
-        opts.max_await_time(std::chrono::milliseconds{1});
+        // results for this cursor. Note: may cause flaky test failures if the duration is too
+        // short.
+        opts.max_await_time(std::chrono::milliseconds{10});
 
         run_test();
     }
