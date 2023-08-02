@@ -283,7 +283,8 @@ functions:
             add_expansions_to_env: true
             script: mongo-cxx-driver/.evergreen/install_c_driver.sh
 
-    # This function may be used to fetch CI scripts in the C driver
+    # fetch_c_driver_source may be used to fetch the C driver source without installing the C driver.
+    # This can be used when only CI scripts are needed.
     "fetch_c_driver_source":
       - command: shell.exec
         params:
