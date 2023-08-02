@@ -857,6 +857,7 @@ tasks:
               RUN_DISTCHECK: 1
         - func: "clone_drivers-evergreen-tools"
         - func: "run_kms_servers"
+        # Call "install_c_driver" before "test" to build static C driver libraries. Example projects require static C driver libraries.
         - func: "install_c_driver"
         - func: "test"
 
