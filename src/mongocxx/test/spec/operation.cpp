@@ -1365,12 +1365,14 @@ document::value operation_runner::run(document::view operation) {
     } else if (key.compare("assertSessionPinned") == 0) {
         const client_session* session =
             _lookup_session(operation["arguments"].get_document().value);
-        REQUIRE(session->server_id());
+        REQUIRE(session);
+        REQUIRE(session->server_id() != 0);
         return empty_document;
     } else if (key.compare("assertSessionUnpinned") == 0) {
         const client_session* session =
             _lookup_session(operation["arguments"].get_document().value);
-        REQUIRE(!session->server_id());
+        REQUIRE(session);
+        REQUIRE(session->server_id() == 0);
         return empty_document;
     } else if (key.compare("watch") == 0) {
         if (object.compare("collection") == 0) {
