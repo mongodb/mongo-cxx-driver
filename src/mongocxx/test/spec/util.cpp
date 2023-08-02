@@ -93,7 +93,11 @@ bool should_skip_spec_test(const client& client, document::view test) {
         "Deprecated count with collation",
         "Deprecated count without a filter",
         "Deprecated count with a filter",
-        "Deprecated count with skip and limit"};
+        "Deprecated count with skip and limit",
+
+        // CXX-2678: missing required runCommand interface to set readPreference.
+        "run command fails with explicit secondary read preference",
+    };
 
     if (test["description"]) {
         std::string description = std::string(test["description"].get_string().value);
