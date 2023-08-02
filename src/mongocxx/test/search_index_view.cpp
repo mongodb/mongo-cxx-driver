@@ -21,11 +21,9 @@ bool does_search_index_exist_on_cursor(cursor& c, search_index_model& model, boo
         // check the name, that the index is queryable, and that the definition matches.
         if (doc["name"].get_string().value == *model.name() && doc["queryable"].get_bool().value &&
             doc["latestDefinition"].get_document().view() == model.definition()) {
-            // additional check needed if we also need to check the status
-            if (with_status &&
-                bsoncxx::string::to_string(doc["status"].get_string().value) == "READY") {
-                return true;
-            } else if (!with_status) {
+            // optional addition check needed if with_status is set
+            if (!with_status || (with_status && bsoncxx::string::to_string(
+                                                    doc["status"].get_string().value) == "READY")) {
                 return true;
             }
         }
