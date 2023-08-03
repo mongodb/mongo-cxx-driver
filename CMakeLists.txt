@@ -182,7 +182,10 @@ if(BUILD_VERSION STREQUAL "0.0.0")
     endif()
 endif()
 
-if(NOT CMAKE_BUILD_TYPE)
+get_property(isMultiConfig GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
+
+if(NOT CMAKE_BUILD_TYPE AND NOT isMultiConfig)
+    # Do not override CMAKE_BUILD_TYPE if generator is multi config. CMAKE_BUILD_TYPE is ignored for multi-config generators.
     message(STATUS "No build type selected, default is Release")
     set(CMAKE_BUILD_TYPE "Release")
 endif()
