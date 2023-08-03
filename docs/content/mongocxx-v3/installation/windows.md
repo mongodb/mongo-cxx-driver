@@ -145,7 +145,6 @@ directory by using the `-DLIBMONGOC_DIR` and `-DLIBBSON_DIR` options:
 
 ```sh
 cmake ..                                            \
-    -DCMAKE_BUILD_TYPE=Release                      \
     -DLIBMONGOC_DIR=C:\mongo-c-driver               \
     -DLIBBSON_DIR=C:\mongo-c-driver                 \
     -DCMAKE_INSTALL_PREFIX=C:\mongo-cxx-driver
