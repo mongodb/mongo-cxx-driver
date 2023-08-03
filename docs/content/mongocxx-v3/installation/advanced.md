@@ -19,6 +19,37 @@ cmake ..                                            \
 
 The above command would produce libraries named `libcustom_bsoncxx.so` and `libcustom_mongocxx.so` (or with the extension appropriate for the build platform).  Those libraries could be placed in a standard system directory or in an alternate location and could be linked to by specifying something like `-lcustom_mongocxx -lcustom_bsoncxx` on the linker command line (possibly adjusting the specific flags to those required by your linker).
 
+## Installing the MongoDB C driver.
+
+The mongocxx driver builds on top of the [MongoDB C driver](https://www.mongodb.com/docs/drivers/c/).
+
+The build of mongocxx-3.8.0 automatically downloads and installs the C driver if the C driver is not detected.
+To use an existing install of the C driver, set `CMAKE_PREFIX_PATH` to the directory containing the C driver install.
+
+* For mongocxx-3.8.x, libmongoc 1.24.0 or later is required.
+* For mongocxx-3.7.x, libmongoc 1.22.1 or later is required.
+* For mongocxx-3.6.x, libmongoc 1.17.0 or later is required.
+* For mongocxx-3.5.x, libmongoc 1.15.0 or later is required.
+* For mongocxx-3.4.x, libmongoc 1.13.0 or later is required.
+* For mongocxx-3.3.x, libmongoc 1.10.1 or later is required.
+* For mongocxx-3.2.x, libmongoc 1.9.2 or later is required.
+* For mongocxx-3.1.4+, libmongoc 1.7.0 or later is required.
+* For mongocxx-3.1.[0-3], libmongoc 1.5.0 or later is required.
+* For mongocxx-3.0.x, we recommend the last 1.4.x version of libmongoc
+
+Unless you know that your package manager offers a sufficiently recent version, you
+will need to download and build from the source code. Get a tarball from
+the [C Driver releases](https://github.com/mongodb/mongo-c-driver/releases)
+page.
+
+Follow the instructions for building from a tarball at
+[Installing libmongoc](http://mongoc.org/libmongoc/current/installing.html).
+
+Industry best practices and some regulations require the use of TLS 1.1
+or newer. The MongoDB C Driver supports TLS 1.1 on Linux if OpenSSL is
+at least version 1.0.1. On macOS and Windows, the C Driver uses native
+TLS implementations that support TLS 1.1.
+
 ## Advanced configuration (static configurations)
 
 The following sub-sections detail advanced options for configuring the C++ driver and/or its
