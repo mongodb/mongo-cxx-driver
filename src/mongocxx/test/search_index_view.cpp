@@ -216,10 +216,10 @@ TEST_CASE("atlas search indexes prose tests", "") {
         std::cout << "update one SUCCESS" << std::endl;
     }
 
-    // SECTION("drop one suppress namespace not found") {
-    //     bsoncxx::oid id;
-    //     auto coll = db[id.to_string()];
-    //     coll.search_indexes().drop_one("apples");
-    // }
+    SECTION("drop one suppress namespace not found") {
+        bsoncxx::oid id;
+        auto coll = db[id.to_string()];
+        coll.search_indexes().drop_one("apples");
+    }
 }
 }  // namespace
