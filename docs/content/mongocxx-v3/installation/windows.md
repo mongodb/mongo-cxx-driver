@@ -152,11 +152,11 @@ cmake ..                                            \
 
 ### Step 5: Build and install the driver
 
-Build and install the driver:
+Build and install the driver. Use `--config` to select a build configuration (e.g. `Debug`, `RelWithDebInfo`, `Release`):
 
 ```sh
-cmake --build .
-cmake --build . --target install
+cmake --build . --config RelWithDebInfo
+cmake --build . --target install --config RelWithDebInfo
 ```
 
 The driver can be uninstalled at a later time in one of two ways.  First,
