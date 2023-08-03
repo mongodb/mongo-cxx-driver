@@ -68,6 +68,7 @@ set(test_driver_sources
     result/insert_one.cpp
     result/replace_one.cpp
     result/update.cpp
+    search_index_view.cpp
     sdam-monitoring.cpp
     spec/initial_dns_seedlist_discovery.cpp
     spec/monitoring.cpp
@@ -337,6 +338,7 @@ set_dist_list (src_mongocxx_test_DIST
    result/insert_one.cpp
    result/replace_one.cpp
    result/update.cpp
+   search_index_view.cpp
    sdam-monitoring.cpp
    spec/client_side_encryption.cpp
    spec/command_monitoring.cpp

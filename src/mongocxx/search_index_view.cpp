@@ -45,6 +45,15 @@ cursor search_index_view::list(const client_session& session,
     return _get_impl().list(&session, name, options);
 }
 
+std::string search_index_view::create_one(bsoncxx::document::view_or_value definition) {
+    return create_one(search_index_model(definition));
+}
+
+std::string search_index_view::create_one(const client_session& session,
+                                          bsoncxx::document::view_or_value definition) {
+    return create_one(session, search_index_model(definition));
+}
+
 std::string search_index_view::create_one(bsoncxx::string::view_or_value name,
                                           bsoncxx::document::view_or_value definition) {
     return create_one(search_index_model(name, definition));
@@ -65,23 +74,24 @@ std::string search_index_view::create_one(const client_session& session,
     return _get_impl().create_one(&session, model);
 }
 
-std::vector<bsoncxx::string::view_or_value> search_index_view::create_many(
+std::vector<std::string> search_index_view::create_many(
     const std::vector<search_index_model>& models) {
     auto response = _get_impl().create_many(nullptr, models);
     return _create_many_helper(response["indexesCreated"].get_array().value);
 }
 
-std::vector<bsoncxx::string::view_or_value> search_index_view::create_many(
+std::vector<std::string> search_index_view::create_many(
     const client_session& session, const std::vector<search_index_model>& models) {
     auto response = _get_impl().create_many(&session, models);
     return _create_many_helper(response["indexesCreated"].get_array().value);
 }
 
-std::vector<bsoncxx::string::view_or_value> search_index_view::_create_many_helper(
+std::vector<std::string> search_index_view::_create_many_helper(
     bsoncxx::array::view created_indexes) {
-    std::vector<bsoncxx::string::view_or_value> search_index_names;
+    std::vector<std::string> search_index_names;
     for (auto&& index : created_indexes) {
-        search_index_names.push_back(index.get_document().value["name"].get_string().value);
+        search_index_names.push_back(
+            bsoncxx::string::to_string(index.get_document().value["name"].get_string().value));
     }
     return search_index_names;
 }
