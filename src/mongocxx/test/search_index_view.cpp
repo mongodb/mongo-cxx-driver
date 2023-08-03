@@ -220,6 +220,8 @@ TEST_CASE("atlas search indexes prose tests", "") {
         bsoncxx::oid id;
         auto coll = db[id.to_string()];
         coll.search_indexes().drop_one("apples");
+
+        std::cout << "drop one supress namespace not found SUCCESS" << std::endl;
     }
 }
 }  // namespace
