@@ -1148,7 +1148,6 @@ tasks:
             working_dir: mongo-cxx-driver
             script: |
               export MONGODB_URI=${MONGODB_URI}
-              export FUNCTION_NAME=${LAMBDA_STACK_NAME}-$(git rev-parse --short HEAD)
 
               if [ -n "${lib_dir}" ]; then
                   export LD_LIBRARY_PATH=$(pwd)/../mongoc/${lib_dir}/

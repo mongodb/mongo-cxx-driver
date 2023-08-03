@@ -31,20 +31,18 @@ bool does_search_index_exist_on_cursor(cursor& c, search_index_model& model, boo
     return false;
 }
 
-bool wait_for_search_index(search_index_view& siv,
-                           search_index_model& model,
-                           bool to_exist,
-                           bool with_status) {
-    auto c = siv.list();
-
-    // 5 minutes before timeout
-    for (int i = 0; i < 60; ++i) {
-        if (does_search_index_exist_on_cursor(c, model, with_status) == to_exist)
-            return true;
+// `assert_soon` repeatedly calls `fn` and asserts `fn` eventually returns true.
+// `fn` is called every five seconds. Fails if `fn` does not return true within five minutes.
+void assert_soon(std::function<bool()> fn) {
+    auto start = std::chrono::high_resolution_clock::now();
+    while (std::chrono::high_resolution_clock::now() - start < std::chrono::minutes(5)) {
+        if (fn()) {
+            return;
+        }
         std::this_thread::sleep_for(std::chrono::seconds(5));
-        c = siv.list();
     }
-    return false;
+
+    FAIL("Expected function to return true within five minutes, but did not");
 }
 
 TEST_CASE("atlas search indexes prose tests", "") {
@@ -58,15 +56,14 @@ TEST_CASE("atlas search indexes prose tests", "") {
 
     client mongodb_client{uri{uri_getenv}};
 
-    database db = mongodb_client[std::getenv("FUNCTION_NAME")];
+    database db = mongodb_client["test"];
 
     SECTION("create one with name and definition") {
         // use a randomly generated collection name as there's a server side limitation that
         // prevents multiple search indexes with the same name, definition and collection name
         // from being created.
         bsoncxx::oid id;
-        db.create_collection(id.to_string());
-        collection coll = db[id.to_string()];
+        auto coll = db.create_collection(id.to_string());
         auto siv = coll.search_indexes();
         // {
         //   name: 'test-search-index',
@@ -80,15 +77,17 @@ TEST_CASE("atlas search indexes prose tests", "") {
 
         REQUIRE(siv.create_one(name, definition.view()) == "test-search-index");
 
-        REQUIRE(wait_for_search_index(siv, model, true, false));
+        assert_soon([&siv, &model](void) -> bool {
+            auto cursor = siv.list();
+            return does_search_index_exist_on_cursor(cursor, model, false);
+        });
 
         std::cout << "create one with name and definition SUCCESS" << std::endl;
     }
 
     SECTION("create one with model") {
         bsoncxx::oid id;
-        db.create_collection(id.to_string());
-        collection coll = db[id.to_string()];
+        auto coll = db.create_collection(id.to_string());
         auto siv = coll.search_indexes();
         // {
         //   name: 'test-search-index',
@@ -102,15 +101,17 @@ TEST_CASE("atlas search indexes prose tests", "") {
 
         REQUIRE(siv.create_one(model) == "test-search-index");
 
-        REQUIRE(wait_for_search_index(siv, model, true, false));
+        assert_soon([&siv, &model](void) -> bool {
+            auto cursor = siv.list();
+            return does_search_index_exist_on_cursor(cursor, model, false);
+        });
 
         std::cout << "create one with model SUCCESS" << std::endl;
     }
 
     SECTION("create many") {
         bsoncxx::oid id;
-        db.create_collection(id.to_string());
-        collection coll = db[id.to_string()];
+        auto coll = db.create_collection(id.to_string());
         auto siv = coll.search_indexes();
         // {
         //   name: 'test-search-index-1',
@@ -138,16 +139,18 @@ TEST_CASE("atlas search indexes prose tests", "") {
         std::vector<std::string> expected = {"test-search-index-1", "test-search-index-2"};
         REQUIRE(result == expected);
 
-        REQUIRE(wait_for_search_index(siv, model1, true, false));
-        REQUIRE(wait_for_search_index(siv, model2, true, false));
+        assert_soon([&siv, &model1, &model2](void) -> bool {
+            auto cursor = siv.list();
+            return does_search_index_exist_on_cursor(cursor, model1, false) &&
+                   does_search_index_exist_on_cursor(cursor, model2, false);
+        });
 
         std::cout << "create many SUCCESS" << std::endl;
     }
 
     SECTION("drop one") {
         bsoncxx::oid id;
-        db.create_collection(id.to_string());
-        collection coll = db[id.to_string()];
+        auto coll = db.create_collection(id.to_string());
         auto siv = coll.search_indexes();
         // {
         //   name: 'test-search-index',
@@ -161,19 +164,25 @@ TEST_CASE("atlas search indexes prose tests", "") {
 
         REQUIRE(siv.create_one(model) == "test-search-index");
 
-        REQUIRE(wait_for_search_index(siv, model, true, false));
+        assert_soon([&siv, &model](void) -> bool {
+            auto cursor = siv.list();
+            return does_search_index_exist_on_cursor(cursor, model, false);
+        });
 
         siv.drop_one(name);
 
-        REQUIRE(wait_for_search_index(siv, model, false, false));
+        assert_soon([&siv](void) -> bool {
+            auto cursor = siv.list();
+            // Return true if empty results are returned.
+            return cursor.begin() == cursor.end();
+        });
 
         std::cout << "drop one SUCCESS" << std::endl;
     }
 
     SECTION("update one") {
         bsoncxx::oid id;
-        db.create_collection(id.to_string());
-        collection coll = db[id.to_string()];
+        auto coll = db.create_collection(id.to_string());
         auto siv = coll.search_indexes();
         // {
         //   name: 'test-search-index',
@@ -187,7 +196,10 @@ TEST_CASE("atlas search indexes prose tests", "") {
 
         REQUIRE(siv.create_one(model) == "test-search-index");
 
-        REQUIRE(wait_for_search_index(siv, model, true, false));
+        assert_soon([&siv, &model](void) -> bool {
+            auto cursor = siv.list();
+            return does_search_index_exist_on_cursor(cursor, model, false);
+        });
 
         // definition : {
         //   mappings : { dynamic: true }
@@ -196,15 +208,17 @@ TEST_CASE("atlas search indexes prose tests", "") {
         auto new_model = search_index_model(name, new_definition.view());
         siv.update_one(name, new_definition.view());
 
-        REQUIRE(wait_for_search_index(siv, new_model, true, true));
+        assert_soon([&siv, &new_model](void) -> bool {
+            auto cursor = siv.list();
+            return does_search_index_exist_on_cursor(cursor, new_model, true);
+        });
 
         std::cout << "update one SUCCESS" << std::endl;
     }
 
     // SECTION("drop one suppress namespace not found") {
     //     bsoncxx::oid id;
-    //     collection coll;
-    //     coll.rename("fake-collection");
+    //     auto coll = db[id.to_string()];
     //     coll.search_indexes().drop_one("apples");
     // }
 }

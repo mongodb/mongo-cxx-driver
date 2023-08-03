@@ -87,7 +87,7 @@ class MONGOCXX_API search_index_view {
     ///
     /// @{
     ///
-    /// This is a convenience method for creating a single search index.
+    /// This is a convenience method for creating a single search index with a default name.
     ///
     /// @param definition
     ///    The document describing the search index to be created.
@@ -97,7 +97,7 @@ class MONGOCXX_API search_index_view {
     std::string create_one(bsoncxx::document::view_or_value definition);
 
     ///
-    /// This is a convenience method for creating a single search index.
+    /// This is a convenience method for creating a single search index with a default name.
     ///
     /// @param definition
     ///    The document describing the search index to be created.
