@@ -950,8 +950,15 @@ void assert_outcome(const array::element& test) {
     using std::end;
     using std::equal;
 
-    if (!test["outcome"])
+    if (!test["outcome"]) {
         return;
+    }
+
+    read_preference rp;
+    rp.mode(read_preference::read_mode::k_primary);
+
+    read_concern rc;
+    rc.acknowledge_level(read_concern::level::k_local);
 
     for (const auto& outcome : test["outcome"].get_array().value) {
         CAPTURE(to_json(outcome.get_document()));
@@ -962,6 +969,31 @@ void assert_outcome(const array::element& test) {
 
         const auto db = get_entity_map().get_database_by_name(db_name);
         auto coll = db.collection(coll_name);
+
+        struct coll_state_guard_type {
+            mongocxx::collection& coll;
+            read_preference old_rp;
+            read_concern old_rc;
+
+            coll_state_guard_type(mongocxx::collection& coll) : coll(coll) {
+                old_rp = coll.read_preference();
+                old_rc = coll.read_concern();
+            }
+
+            ~coll_state_guard_type() {
+                try {
+                    coll.read_preference(old_rp);
+                    coll.read_concern(old_rc);
+                } catch (...) {
+                }
+            }
+        } coll_state_guard(coll);
+
+        // The test runner MUST query each collection using the internal MongoClient, an ascending
+        // sort order on the `_id` field (i.e. `{ _id: 1 }`), a "primary" read preference, and a
+        // "local" read concern.
+        coll.read_preference(rp);
+        coll.read_concern(rc);
 
         auto results = coll.find({}, options::find{}.sort(make_document(kvp("_id", 1))));
 
