@@ -283,6 +283,18 @@ functions:
             add_expansions_to_env: true
             script: mongo-cxx-driver/.evergreen/install_c_driver.sh
 
+    # fetch_c_driver_source may be used to fetch the C driver source without installing the C driver.
+    # This can be used when only CI scripts are needed.
+    "fetch_c_driver_source":
+      - command: shell.exec
+        params:
+            shell: bash
+            working_dir: "."
+            script: |
+                set -o errexit
+                set -o pipefail
+                git clone --depth 1 https://github.com/mongodb/mongo-c-driver mongoc
+
     "lint":
         - command: shell.exec
           params:
@@ -312,7 +324,11 @@ functions:
             if [ ! -d "drivers-evergreen-tools" ]; then
                 git clone git@github.com:mongodb-labs/drivers-evergreen-tools.git --depth=1
             fi
-
+            echo "DRIVERS_TOOLS: $(pwd)/drivers-evergreen-tools" > det-expansion.yml
+      # Set DRIVERS_TOOLS expansion.
+      - command: expansions.update
+        params:
+          file: det-expansion.yml
     "run_kms_servers":
       - command: shell.exec
         params:
@@ -832,7 +848,7 @@ tasks:
     - name: clang-tidy
       commands:
         - func: "setup"
-        - func: "install_c_driver"
+        - func: "fetch_c_driver_source"
         - func: "compile"
         - func: "clang-tidy"
 
@@ -840,37 +856,41 @@ tasks:
       commands:
         - func: "setup"
         - func: "start_mongod"
-        - func: "install_c_driver"
+        - func: "fetch_c_driver_source"
         - func: "compile"
           vars:
               RUN_DISTCHECK: 1
         - func: "clone_drivers-evergreen-tools"
         - func: "run_kms_servers"
+        # Call "install_c_driver" before "test" to build static C driver libraries. Example projects require static C driver libraries.
+        - func: "install_c_driver"
         - func: "test"
 
     - name: compile_and_test_with_shared_libs_extra_alignment
       commands:
         - func: "setup"
         - func: "start_mongod"
-        - func: "install_c_driver"
+        - func: "fetch_c_driver_source"
           vars:
               BSON_EXTRA_ALIGNMENT: 1
         - func: "compile"
         - func: "clone_drivers-evergreen-tools"
         - func: "run_kms_servers"
+        - func: "install_c_driver"
         - func: "test"
 
     - name: compile_and_test_with_shared_libs_cxx20
       commands:
         - func: "setup"
         - func: "start_mongod"
-        - func: "install_c_driver"
+        - func: "fetch_c_driver_source"
         - func: "compile"
           vars:
               RUN_DISTCHECK: 1
               REQUIRED_CXX_STANDARD: 20
         - func: "clone_drivers-evergreen-tools"
         - func: "run_kms_servers"
+        - func: "install_c_driver"
         - func: "test"
           vars:
               REQUIRED_CXX_STANDARD: 20
@@ -880,7 +900,7 @@ tasks:
       commands:
         - func: "setup"
         - func: "start_mongod"
-        - func: "install_c_driver"
+        - func: "fetch_c_driver_source"
           vars:
               BSON_EXTRA_ALIGNMENT: 1
         - func: "compile"
@@ -888,6 +908,7 @@ tasks:
               REQUIRED_CXX_STANDARD: 20
         - func: "clone_drivers-evergreen-tools"
         - func: "run_kms_servers"
+        - func: "install_c_driver"
         - func: "test"
           vars:
               REQUIRED_CXX_STANDARD: 20
@@ -897,13 +918,13 @@ tasks:
       commands:
       - func: "setup"
       - func: "start_mongod"
-      - func: "install_c_driver"
+      - func: "fetch_c_driver_source"
       - func: "compile"
 
     - name: compile_without_tests
       commands:
       - func: "setup"
-      - func: "install_c_driver"
+      - func: "fetch_c_driver_source"
       - func: "compile"
         vars:
             ENABLE_TESTS: OFF
@@ -914,7 +935,7 @@ tasks:
         - func: "start_mongod"
           vars:
               AUTH: auth
-        - func: "install_c_driver"
+        - func: "fetch_c_driver_source"
         - func: "compile"
         - func: "test auth"
         - func: "test atlas connectivity"
@@ -923,13 +944,14 @@ tasks:
       commands:
         - func: "setup"
         - func: "start_mongod"
-        - func: "install_c_driver"
+        - func: "fetch_c_driver_source"
         - func: "compile"
           vars:
               USE_STATIC_LIBS: 1
               RUN_DISTCHECK: 1
         - func: "clone_drivers-evergreen-tools"
         - func: "run_kms_servers"
+        - func: "install_c_driver"
         - func: "test"
           vars:
               USE_STATIC_LIBS: 1
@@ -938,7 +960,7 @@ tasks:
       commands:
         - func: "setup"
         - func: "start_mongod"
-        - func: "install_c_driver"
+        - func: "fetch_c_driver_source"
           vars:
               BSON_EXTRA_ALIGNMENT: 1
         - func: "compile"
@@ -946,11 +968,31 @@ tasks:
               USE_STATIC_LIBS: 1
         - func: "clone_drivers-evergreen-tools"
         - func: "run_kms_servers"
+        - func: "install_c_driver"
         - func: "test"
           vars:
               USE_STATIC_LIBS: 1
 
     - name: compile_and_test_with_shared_libs_replica_set
+      commands:
+        - func: "setup"
+        - func: "start_mongod"
+          vars:
+              TOPOLOGY: "replica_set"
+        - func: "fetch_c_driver_source"
+        - func: "compile"
+          vars:
+              RUN_DISTCHECK: 1
+        - func: "clone_drivers-evergreen-tools"
+        - func: "run_kms_servers"
+        - func: "install_c_driver"
+        - func: "test"
+
+    # Auto downloading the C driver in the C++ build does not currently include
+    # support for libmongocrypt, therefore it is not configured with
+    # -DENABLE_CLIENT_SIDE_ENCRYPTION=ON. For now, CSFLE tests will need to have
+    # a manually configured C driver, hence the need to seperate this task.
+    - name: compile_and_test_with_shared_libs_replica_set_with_libmongocrypt
       commands:
         - func: "setup"
         - func: "start_mongod"
@@ -967,7 +1009,7 @@ tasks:
     - name: uninstall_check
       commands:
       - func: "setup"
-      - func: "install_c_driver"
+      - func: "fetch_c_driver_source"
       - func: "compile"
       - command: expansions.update
         params:
@@ -987,7 +1029,7 @@ tasks:
     - name: uninstall_check_windows
       commands:
       - func: "setup"
-      - func: "install_c_driver"
+      - func: "fetch_c_driver_source"
       - func: "compile"
       - command: expansions.update
         params:
@@ -1023,7 +1065,7 @@ tasks:
             export CMAKE="$(find_cmake_latest)"
             cd build
             $CMAKE ..
-            $CMAKE --build . -- -j 8
+            $CMAKE --build . -- -j $(nproc)
             ./hello_mongocxx
 
     - name: debian-package-build
@@ -1098,7 +1140,7 @@ tasks:
     - name: test_mongohouse
       commands:
         - func: "setup"
-        - func: "install_c_driver"
+        - func: "fetch_c_driver_source"
         - func: "compile"
         - func: "build_mongohouse"
         - func: "run_mongohouse"
@@ -1113,7 +1155,7 @@ tasks:
               # Authentication with versioned API should already be tested
               # in the C driver.
               AUTH: noauth
-        - func: "install_c_driver"
+        - func: "fetch_c_driver_source"
         - func: "compile"
         - func: "clone_drivers-evergreen-tools"
         - func: "run_kms_servers"
@@ -1128,11 +1170,61 @@ tasks:
           vars:
               ORCHESTRATION_FILE: versioned-api-testing.json
               AUTH: noauth
-        - func: "install_c_driver"
+        - func: "fetch_c_driver_source"
         - func: "compile"
         - func: "clone_drivers-evergreen-tools"
         - func: "run_kms_servers"
         - func: "test"
+
+    - name: test_search_index_helpers
+      commands:
+        - func: "install_c_driver"
+        - func: "compile"
+        - command: shell.exec
+          params:
+            shell: bash
+            working_dir: mongo-cxx-driver
+            script: |
+              export MONGODB_URI=${MONGODB_URI}
+
+              if [ -n "${lib_dir}" ]; then
+                  export LD_LIBRARY_PATH=$(pwd)/../mongoc/${lib_dir}/
+                else
+                  export LD_LIBRARY_PATH=$(pwd)/../mongoc/lib/
+              fi
+
+              ./build/src/mongocxx/test/test_driver "atlas search indexes prose tests"
+
+task_groups:
+  - name: test_atlas_task_group_search_indexes
+    setup_group:
+      - func: "setup"
+      - func: "clone_drivers-evergreen-tools"
+      - command: subprocess.exec
+        params:
+          working_dir: mongo-cxx-driver
+          binary: bash
+          add_expansions_to_env: true
+          env:
+            MONGODB_VERSION: '7.0'
+          args:
+            - ${DRIVERS_TOOLS}/.evergreen/atlas/setup-atlas-cluster.sh
+      - command: expansions.update
+        # Expected to set MONGODB_URI expansion.
+        params:
+          file: mongo-cxx-driver/atlas-expansion.yml
+    teardown_group:
+      - command: subprocess.exec
+        params:
+          working_dir: mongo-cxx-driver
+          binary: bash
+          add_expansions_to_env: true
+          args:
+            - ${DRIVERS_TOOLS}/.evergreen/atlas/teardown-atlas-cluster.sh
+    setup_group_can_fail_task: true
+    setup_group_timeout_secs: 1800
+    tasks:
+      - test_search_index_helpers
 
 #######################################
 #           MongoDB Version Matrix    #
@@ -1220,7 +1312,7 @@ buildvariants:
       matrix_spec: {os: "ubuntu-1804", mongodb_version: "*"}
       display_name: "${os} replica set (MongoDB ${mongodb_version})"
       tasks:
-        - name: compile_and_test_with_shared_libs_replica_set
+        - name: compile_and_test_with_shared_libs_replica_set_with_libmongocrypt
 
     - matrix_name: "auth"
       matrix_spec: {os: "*", mongodb_version: "latest"}
@@ -1265,7 +1357,7 @@ buildvariants:
           - name: compile_and_test_with_shared_libs_extra_alignment_cxx20
           - name: compile_and_test_with_static_libs
           - name: compile_and_test_with_static_libs_extra_alignment
-          - name: compile_and_test_with_shared_libs_replica_set
+          - name: compile_and_test_with_shared_libs_replica_set_with_libmongocrypt
           - name: build_example_with_add_subdirectory
             distros:
             - rhel90-large
@@ -1288,7 +1380,7 @@ buildvariants:
           - name: compile_and_test_with_shared_libs_extra_alignment_cxx20
           - name: compile_and_test_with_static_libs
           - name: compile_and_test_with_static_libs_extra_alignment
-          - name: compile_and_test_with_shared_libs_replica_set
+          - name: compile_and_test_with_shared_libs_replica_set_with_libmongocrypt
           - name: build_example_with_add_subdirectory
             distros:
             - rhel90-arm64-large
@@ -1310,7 +1402,7 @@ buildvariants:
           - name: compile_and_test_with_shared_libs_extra_alignment_cxx20
           - name: compile_and_test_with_static_libs
           - name: compile_and_test_with_static_libs_extra_alignment
-          - name: compile_and_test_with_shared_libs_replica_set
+          - name: compile_and_test_with_shared_libs_replica_set_with_libmongocrypt
           - name: build_example_with_add_subdirectory
             distros:
             - debian11-large
@@ -1354,7 +1446,7 @@ buildvariants:
           - name: compile_and_test_with_shared_libs_extra_alignment
           - name: compile_and_test_with_static_libs
           - name: compile_and_test_with_static_libs_extra_alignment
-          - name: compile_and_test_with_shared_libs_replica_set
+          - name: compile_and_test_with_shared_libs_replica_set_with_libmongocrypt
           - name: build_example_with_add_subdirectory
             distros:
             - debian10-large
@@ -1381,6 +1473,18 @@ buildvariants:
             - debian10-large
           - name: uninstall_check
 
+    # Add matrix for specification test requirement of mongocryptd:
+    # "Drivers MUST run all tests with mongocryptd on at least one platform for all tested server versions (4.2+)."
+    - matrix_name: "mongocryptd"
+      matrix_spec:
+        os: "ubuntu-1804"
+        mongodb_version: ["4.2", "4.4", "5.0", "latest"]
+      display_name: "${os} (MongoDB ${mongodb_version}) with mongocryptd"
+      tasks:
+          - name: compile_and_test_with_shared_libs_replica_set_with_libmongocrypt
+      expansions:
+        use_mongocryptd: true
+
     - name: ubuntu2004-release-latest
       display_name: "Ubuntu 20.04 Release (MongoDB Latest)"
       expansions:
@@ -1396,7 +1500,7 @@ buildvariants:
           - name: compile_and_test_with_shared_libs_extra_alignment
           - name: compile_and_test_with_static_libs
           - name: compile_and_test_with_static_libs_extra_alignment
-          - name: compile_and_test_with_shared_libs_replica_set
+          - name: compile_and_test_with_shared_libs_replica_set_with_libmongocrypt
           - name: build_example_with_add_subdirectory
             distros:
             - ubuntu2004-large
@@ -1439,7 +1543,7 @@ buildvariants:
           - name: compile_and_test_with_shared_libs_extra_alignment
           - name: compile_and_test_with_static_libs
           - name: compile_and_test_with_static_libs_extra_alignment
-          - name: compile_and_test_with_shared_libs_replica_set
+          - name: compile_and_test_with_shared_libs_replica_set_with_libmongocrypt
           - name: build_example_with_add_subdirectory
             distros:
             - ubuntu1804-build
@@ -1623,6 +1727,7 @@ buildvariants:
       tasks:
         - name: clang-tidy
         - name: compile_without_tests
+        - name: test_atlas_task_group_search_indexes
 
     - name: ubuntu2204-debug-gcc
       display_name: "Ubuntu 22.04 Debug (GCC)"

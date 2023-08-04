@@ -7,38 +7,7 @@ title = "Windows"
   weight = 31
 +++
 
-### Step 1: Install the latest version of the MongoDB C driver.
-
-The mongocxx driver builds on top of the MongoDB C driver.
-
-* For mongocxx-3.8.x, libmongoc 1.24.0 or later is required.
-* For mongocxx-3.7.x, libmongoc 1.22.1 or later is required.
-* For mongocxx-3.6.x, libmongoc 1.17.0 or later is required.
-* For mongocxx-3.5.x, libmongoc 1.15.0 or later is required.
-* For mongocxx-3.4.x, libmongoc 1.13.0 or later is required.
-* For mongocxx-3.3.x, libmongoc 1.10.1 or later is required.
-* For mongocxx-3.2.x, libmongoc 1.9.2 or later is required.
-* For mongocxx-3.1.4+, libmongoc 1.7.0 or later is required.
-* For mongocxx-3.1.[0-3], libmongoc 1.5.0 or later is required.
-* For mongocxx-3.0.x, we recommend the last 1.4.x version of libmongoc
-
-Unless you know that your package manager offers a high enough version, you
-will need to download and build from the source code. Get a tarball from
-the [C Driver releases](https://github.com/mongodb/mongo-c-driver/releases)
-page.
-
-Follow the instructions for building from a tarball at
-[Installing libmongoc](https://mongoc.org/libmongoc/current/installing.html).
-
-Industry best practices and some regulations require the use of TLS 1.1
-or newer. The MongoDB C Driver supports TLS 1.1 on Linux if OpenSSL is
-at least version 1.0.1. On macOS and Windows, the C Driver uses native
-TLS implementations that support TLS 1.1.
-
-If you are compiling on Windows, you should disable extra alignment with
-`-DENABLE_EXTRA_ALIGNMENT=0` when configuring the C driver.
-
-### Step 2: Choose a C++17 polyfill
+### Step 1: Choose a C++17 polyfill
 
 The mongocxx driver uses the C++17 features `std::optional` and
 `std::string_view`. To compile the mongocxx driver for pre-C++17, you
@@ -74,7 +43,7 @@ against the same library.
 **DO NOT** change your project's polyfill if you need to create a
 stable binary interface.
 
-### Step 3: Download the latest version of the mongocxx driver.
+### Step 2: Download the latest version of the mongocxx driver.
 
 The most reliable starting point for building the mongocxx driver is the latest
 release tarball.
@@ -92,7 +61,7 @@ cd mongo-cxx-driver-r3.8.0/build
 Make sure you change to the `build` directory of whatever source tree you
 obtain.
 
-### Step 4: Configure the driver
+### Step 3: Configure the driver
 
 On Windows, the C++ driver is configured as follows (adjusting the path of the CMake executable as appropriate to your system):
 
@@ -100,14 +69,12 @@ On Windows, the C++ driver is configured as follows (adjusting the path of the C
 'C:\Program Files (x86)\CMake\bin\cmake.exe' .. \
      -G "Visual Studio 14 2015 Win64"           \
     -DBOOST_ROOT=C:\local\boost_1_60_0          \
-    -DCMAKE_PREFIX_PATH=C:\mongo-c-driver       \
     -DCMAKE_INSTALL_PREFIX=C:\mongo-cxx-driver
 ```
 
 The example above assumes:
 
 * Boost is found in `C:\local\boost_1_60_0`.
-* `libmongoc` is found in `C:\mongo-c-driver`.
 * `mongocxx` is to be installed into `C:\mongo-cxx-driver`.
 
 To build with Visual Studio 2017 without a C++17 polyfill, configure as follows:
@@ -116,12 +83,8 @@ To build with Visual Studio 2017 without a C++17 polyfill, configure as follows:
 'C:\Program Files (x86)\CMake\bin\cmake.exe' .. \
     -G "Visual Studio 15 2017 Win64"            \
     -DCMAKE_CXX_STANDARD=17                     \
-    -DCMAKE_PREFIX_PATH=C:\mongo-c-driver       \
     -DCMAKE_INSTALL_PREFIX=C:\mongo-cxx-driver  \
 ```
-
-For details on how to install libmongoc for Windows, see the
-[mongoc Windows installation instructions](https://mongoc.org/libmongoc/current/installing.html#building-windows).
 
 #### Configuring with `mongocxx` 3.7.0 and older
 
@@ -134,24 +97,19 @@ To build versions 3.7.0 and older without a C++17 polyfill, it is necessary to c
     -G "Visual Studio 15 2017 Win64"            \
     -DCMAKE_CXX_STANDARD=17                     \
     -DCMAKE_CXX_FLAGS="/Zc:__cplusplus /EHsc"   \
-    -DCMAKE_PREFIX_PATH=C:\mongo-c-driver       \
     -DCMAKE_INSTALL_PREFIX=C:\mongo-cxx-driver  \
 ```
 
 #### Configuring with `mongocxx` 3.1.x or 3.0.x
 
-Instead of the `-DCMAKE_PREFIX_PATH` option, users must specify the `libmongoc` installation
-directory by using the `-DLIBMONGOC_DIR` and `-DLIBBSON_DIR` options:
-
 ```sh
 cmake ..                                            \
     -DCMAKE_BUILD_TYPE=Release                      \
     -DLIBMONGOC_DIR=C:\mongo-c-driver               \
-    -DLIBBSON_DIR=C:\mongo-c-driver                 \
     -DCMAKE_INSTALL_PREFIX=C:\mongo-cxx-driver
 ```
 
-### Step 5: Build and install the driver
+### Step 4: Build and install the driver
 
 Build and install the driver:
 
