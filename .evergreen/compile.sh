@@ -49,8 +49,9 @@ case "$OS" in
       ;;
 esac
 
+
 cd build
-"${cmake_binary}" -G "$GENERATOR" "-DCMAKE_BUILD_TYPE=${BUILD_TYPE}" -DMONGOCXX_ENABLE_SLOW_TESTS=ON -DENABLE_UNINSTALL=ON "$@" ..
+"${cmake_binary}" -G "$GENERATOR" "-DCMAKE_BUILD_TYPE=${BUILD_TYPE}" -DENABLE_TESTS=ON -DMONGOCXX_ENABLE_SLOW_TESTS=ON -DENABLE_UNINSTALL=ON "$@" ..
 "${cmake_binary}" --build . --config $BUILD_TYPE -- $CMAKE_BUILD_OPTS
 "${cmake_binary}" --build . --config $BUILD_TYPE --target install -- $CMAKE_BUILD_OPTS
 "${cmake_binary}" --build . --config $BUILD_TYPE --target $CMAKE_EXAMPLES_TARGET -- $CMAKE_BUILD_OPTS
