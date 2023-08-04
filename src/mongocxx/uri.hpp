@@ -37,8 +37,8 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 /// change getters that return a std::string to return a string_view since a copy is not necessary.
 ///
 /// @see https://www.mongodb.com/docs/manual/reference/connection-string/
-/// @see https://mongoc.org/libmongoc/current/mongoc_uri_t.html for more information on supported URI
-/// options.
+/// @see https://mongoc.org/libmongoc/current/mongoc_uri_t.html for more information on supported
+/// URI options.
 ///
 class MONGOCXX_API uri {
    public:
