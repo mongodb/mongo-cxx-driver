@@ -104,18 +104,17 @@ To build versions 3.7.0 and older without a C++17 polyfill, it is necessary to c
 
 ```sh
 cmake ..                                            \
-    -DCMAKE_BUILD_TYPE=Release                      \
     -DLIBMONGOC_DIR=C:\mongo-c-driver               \
     -DCMAKE_INSTALL_PREFIX=C:\mongo-cxx-driver
 ```
 
 ### Step 4: Build and install the driver
 
-Build and install the driver:
+Build and install the driver. Use `--config` to select a build configuration (e.g. `Debug`, `RelWithDebInfo`, `Release`):
 
 ```sh
-cmake --build .
-cmake --build . --target install
+cmake --build . --config RelWithDebInfo
+cmake --build . --target install --config RelWithDebInfo
 ```
 
 The driver can be uninstalled at a later time in one of two ways.  First,
