@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-if (${ENABLE_TESTS})
+if (BUILD_TESTING)
 
     include_directories(
         ${THIRD_PARTY_SOURCE_DIR}/catch/include
