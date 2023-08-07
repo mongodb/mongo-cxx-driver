@@ -74,7 +74,7 @@ class map {
     // client must outlive the objects created from it, the client objects are held in a separate
     // map and declared first.
     //
-    // @see: http://mongoc.org/libmongoc/current/lifecycle.html#object-lifecycle
+    // @see: https://mongoc.org/libmongoc/current/lifecycle.html#object-lifecycle
     // @see: https://isocpp.org/wiki/faq/dtors#order-dtors-for-members
     std::unordered_map<key_type, client> _client_map;
     std::unordered_map<key_type, mongocxx::database> _database_map;

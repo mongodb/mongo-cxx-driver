@@ -36,7 +36,7 @@ namespace options {
 ///
 /// Class representing the optional arguments to a MongoDB create index operation.
 ///
-/// @see https://docs.mongodb.com/manual/reference/command/createIndexes
+/// @see https://www.mongodb.com/docs/manual/reference/command/createIndexes
 ///
 class MONGOCXX_API index {
    public:
@@ -93,7 +93,7 @@ class MONGOCXX_API index {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://docs.mongodb.com/manual/tutorial/build-indexes-in-the-background/
+    /// @see https://www.mongodb.com/docs/manual/tutorial/build-indexes-in-the-background/
     ///
     index& background(bool background);
 
@@ -115,7 +115,7 @@ class MONGOCXX_API index {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://docs.mongodb.com/manual/core/index-unique/
+    /// @see https://www.mongodb.com/docs/manual/core/index-unique/
     ///
     index& unique(bool unique);
 
@@ -137,7 +137,7 @@ class MONGOCXX_API index {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://docs.mongodb.com/manual/core/index-hidden/
+    /// @see https://www.mongodb.com/docs/manual/core/index-hidden/
     ///
     index& hidden(bool hidden);
 
@@ -178,7 +178,7 @@ class MONGOCXX_API index {
     ///   method chaining.
     ///
     /// @see
-    ///   https://docs.mongodb.com/manual/reference/collation/
+    ///   https://www.mongodb.com/docs/manual/reference/collation/
     ///
     index& collation(bsoncxx::document::view collation);
 
@@ -189,7 +189,7 @@ class MONGOCXX_API index {
     ///   The current collation.
     ///
     /// @see
-    ///   https://docs.mongodb.com/manual/reference/collation/
+    ///   https://www.mongodb.com/docs/manual/reference/collation/
     ///
     const stdx::optional<bsoncxx::document::view>& collation() const;
 
@@ -204,7 +204,7 @@ class MONGOCXX_API index {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://docs.mongodb.com/manual/core/index-sparse/
+    /// @see https://www.mongodb.com/docs/manual/core/index-sparse/
     ///
     index& sparse(bool sparse);
 
@@ -248,7 +248,7 @@ class MONGOCXX_API index {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://docs.mongodb.com/manual/core/index-ttl/
+    /// @see https://www.mongodb.com/docs/manual/core/index-ttl/
     ///
     index& expire_after(std::chrono::seconds seconds);
 
@@ -438,7 +438,7 @@ class MONGOCXX_API index {
     /// values; i.e. group in the same bucket those location values that are within the specified
     /// number of units to each other.
     ///
-    /// @see https://docs.mongodb.com/manual/core/geohaystack/
+    /// @see https://www.mongodb.com/docs/manual/core/geohaystack/
     ///
     /// @param haystack_bucket_size
     ///   The geoHaystack bucket size.

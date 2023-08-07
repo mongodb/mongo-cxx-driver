@@ -42,7 +42,7 @@ class MONGOCXX_API delete_options {
     ///   method chaining.
     ///
     /// @see
-    ///   https://docs.mongodb.com/manual/reference/collation/
+    ///   https://www.mongodb.com/docs/manual/reference/collation/
     ///
     delete_options& collation(bsoncxx::document::view_or_value collation);
 
@@ -53,7 +53,7 @@ class MONGOCXX_API delete_options {
     ///   The current collation.
     ///
     /// @see
-    ///   https://docs.mongodb.com/manual/reference/collation/
+    ///   https://www.mongodb.com/docs/manual/reference/collation/
     ///
     const stdx::optional<bsoncxx::document::view_or_value>& collation() const;
 
@@ -67,7 +67,7 @@ class MONGOCXX_API delete_options {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://docs.mongodb.com/manual/core/write-concern/
+    /// @see https://www.mongodb.com/docs/manual/core/write-concern/
     ///
     delete_options& write_concern(write_concern wc);
 
@@ -77,7 +77,7 @@ class MONGOCXX_API delete_options {
     /// @return
     ///   The current write_concern.
     ///
-    /// @see https://docs.mongodb.com/manual/core/write-concern/
+    /// @see https://www.mongodb.com/docs/manual/core/write-concern/
     ///
     ///
     const stdx::optional<class write_concern>& write_concern() const;

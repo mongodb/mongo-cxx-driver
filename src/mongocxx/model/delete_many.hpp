@@ -56,7 +56,7 @@ class MONGOCXX_API delete_many {
     ///   method chaining.
     ///
     /// @see
-    ///   https://docs.mongodb.com/manual/reference/collation/
+    ///   https://www.mongodb.com/docs/manual/reference/collation/
     ///
     delete_many& collation(bsoncxx::document::view_or_value collation);
 
@@ -67,7 +67,7 @@ class MONGOCXX_API delete_many {
     ///   The optional value of the collation option.
     ///
     /// @see
-    ///   https://docs.mongodb.com/manual/reference/collation/
+    ///   https://www.mongodb.com/docs/manual/reference/collation/
     ///
     const stdx::optional<bsoncxx::document::view_or_value>& collation() const;
 

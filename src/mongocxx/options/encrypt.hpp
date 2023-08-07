@@ -48,7 +48,7 @@ class MONGOCXX_API encrypt {
     /// @return
     ///   A reference to this object to facilitate method chaining.
     ///
-    /// @see https://docs.mongodb.com/manual/core/security-client-side-encryption/
+    /// @see https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
     encrypt& key_id(bsoncxx::types::bson_value::view_or_value key_id);
 
@@ -70,7 +70,7 @@ class MONGOCXX_API encrypt {
     /// @return
     ///   A reference to this obejct to facilitate method chaining.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/method/getClientEncryption/
+    /// @see https://www.mongodb.com/docs/manual/reference/method/getClientEncryption/
     ///
     encrypt& key_alt_name(std::string name);
 
@@ -144,7 +144,7 @@ class MONGOCXX_API encrypt {
     /// mongocxx::options::auto_encryption::bypass_auto_encryption must be false.
     ///
     /// @see
-    /// https://docs.mongodb.com/manual/core/security-client-side-encryption/#encryption-algorithms
+    /// https://www.mongodb.com/docs/manual/core/security-client-side-encryption/#encryption-algorithms
     ///
     encrypt& algorithm(encryption_algorithm algorithm);
 

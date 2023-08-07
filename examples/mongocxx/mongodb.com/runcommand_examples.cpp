@@ -20,7 +20,7 @@
 #include <mongocxx/instance.hpp>
 
 // NOTE: Any time this file is modified, a DOCS ticket should be opened to sync the changes with the
-// corresponding page on docs.mongodb.com. See CXX-1514, CXX-1249, and DRIVERS-356 for more info.
+// corresponding page on mongodb.com/docs. See CXX-1514, CXX-1249, and DRIVERS-356 for more info.
 
 void runcommand_examples(mongocxx::database& db) {
     {

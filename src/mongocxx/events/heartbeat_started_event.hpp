@@ -30,7 +30,7 @@ namespace events {
 /// status of a server.
 ///
 /// @see "ServerHeartbeatStartedEvent" in
-/// https://github.com/mongodb/specifications/blob/master/source/server-discovery-and-monitoring/server-discovery-and-monitoring-monitoring.rst
+/// https://github.com/mongodb/specifications/blob/master/source/server-discovery-and-monitoring/server-discovery-and-monitoring.rst
 ///
 class MONGOCXX_API heartbeat_started_event {
    public:

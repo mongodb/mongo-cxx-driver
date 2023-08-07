@@ -363,7 +363,7 @@ std::string get_hostnames(document::view object) {
     if (!object["useMultipleMongoses"] || !object["useMultipleMongoses"].get_bool())
         return default_uri;
 
-    // from: https://docs.mongodb.com/manual/reference/config-database/#config.shards
+    // from: https://www.mongodb.com/docs/manual/reference/config-database/#config.shards
     // If the shard is a replica set, the host field displays the name of the replica set, then a
     // slash, then a comma-separated list of the hostnames of each member of the replica set, as in
     // the following example:

@@ -44,7 +44,7 @@ class MONGOCXX_API client_encryption {
     /// @param opts
     ///   An object representing encryption options.
     ///
-    /// @see https://docs.mongodb.com/ecosystem/use-cases/client-side-field-level-encryption-guide
+    /// @see https://www.mongodb.com/docs/ecosystem/use-cases/client-side-field-level-encryption-guide
     ///
     client_encryption(options::client_encryption opts);
 
@@ -81,7 +81,7 @@ class MONGOCXX_API client_encryption {
     /// @throws mongocxx::exception if there is an error creating the key.
     ///
     /// @see
-    /// https://docs.mongodb.com/ecosystem/use-cases/client-side-field-level-encryption-guide/#b-create-a-data-encryption-key
+    /// https://www.mongodb.com/docs/ecosystem/use-cases/client-side-field-level-encryption-guide/#b-create-a-data-encryption-key
     ///
     bsoncxx::types::bson_value::value create_data_key(std::string kms_provider,
                                                       const options::data_key& opts = {});
@@ -122,7 +122,7 @@ class MONGOCXX_API client_encryption {
     /// @throws mongocxx::exception if there is an error encrypting the value.
     ///
     /// @see
-    /// https://docs.mongodb.com/manual/reference/method/ClientEncryption.encrypt/#ClientEncryption.encrypt
+    /// https://www.mongodb.com/docs/manual/reference/method/ClientEncryption.encrypt/#ClientEncryption.encrypt
     ///
     bsoncxx::types::bson_value::value encrypt(bsoncxx::types::bson_value::view value,
                                               const options::encrypt& opts);
@@ -154,7 +154,7 @@ class MONGOCXX_API client_encryption {
     /// @throws mongocxx::exception if there is an error decrypting the value.
     ///
     /// @see
-    /// https://docs.mongodb.com/manual/reference/method/ClientEncryption.decrypt/#ClientEncryption.decrypt
+    /// https://www.mongodb.com/docs/manual/reference/method/ClientEncryption.decrypt/#ClientEncryption.decrypt
     ///
     bsoncxx::types::bson_value::value decrypt(bsoncxx::types::bson_value::view value);
 
