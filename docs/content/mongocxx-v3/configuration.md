@@ -7,7 +7,7 @@ title = "Configuring the mongocxx driver"
 +++
 
 In the mongocxx driver, most configuration is done via the [connection
-URI](https://docs.mongodb.com/manual/reference/connection-string/).  Some
+URI](https://www.mongodb.com/docs/manual/reference/connection-string/).  Some
 additional connection options are possible via the
 [mongocxx::options::client]({{< api3ref classmongocxx_1_1options_1_1client
 >}}) class.
@@ -86,7 +86,7 @@ will use an authentication mechanism compatible with your server.
 
 ### X.509
 
-The [X.509](https://www.mongodb.org/dochub/core/x509)
+The [X.509](https://www.mongodb.com/docs/manual/core/security-x.509/)
 mechanism authenticates a user whose name is derived from the distinguished
 subject name of the X.509 certificate presented by the driver during TLS
 negotiation. This authentication method requires the use of TLS
@@ -105,7 +105,7 @@ auto client = mongocxx::client{
 ```
 
 See the MongoDB server
-[X.509 tutorial](https://www.mongodb.org/dochub/core/x509-subject-name)
+[X.509 tutorial](https://www.mongodb.com/docs/manual/tutorial/configure-x509-client-authentication/)
 for more information about determining the subject name from the
 certificate.
 
@@ -115,7 +115,7 @@ The PEM file can also be specified using the [mongocxx::options::tls]({{< api3re
 
 [MongoDB Enterprise](https://www.mongodb.com/products/mongodb-enterprise)
 supports proxy authentication through Kerberos service. To create a
-credential of type [Kerberos (GSSAPI)](https://www.mongodb.org/dochub/core/kerberos)
+credential of type [Kerberos (GSSAPI)](https://www.mongodb.com/docs/manual/core/kerberos/)
 use a connection string with the username and realm in the URI as well as
 a parameter specifying the authentication mechanism as "GSSAPI":
 
@@ -131,7 +131,7 @@ Note that the "@" symbol in the URI must be escaped to "%40" as shown in the exa
 
 ### LDAP
 
-[MongoDB Enterprise](http://www.mongodb.com/products/mongodb-enterprise)
+[MongoDB Enterprise](https://www.mongodb.com/products/mongodb-enterprise)
 supports proxy authentication through a Lightweight Directory Access
 Protocol (LDAP) service. To create a credential of type LDAP use a
 connection string specifying the user as well as parameters specifying

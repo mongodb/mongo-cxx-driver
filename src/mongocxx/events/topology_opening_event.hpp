@@ -28,7 +28,7 @@ namespace events {
 /// An event notification sent when the driver initializes a server topology.
 ///
 /// @see "TopologyOpeningEvent" in
-/// https://github.com/mongodb/specifications/blob/master/source/server-discovery-and-monitoring/server-discovery-and-monitoring-monitoring.rst
+/// https://github.com/mongodb/specifications/blob/master/source/server-discovery-and-monitoring/server-discovery-and-monitoring.rst
 ///
 class MONGOCXX_API topology_opening_event {
    public:

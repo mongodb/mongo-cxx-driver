@@ -52,7 +52,7 @@ class MONGOCXX_API delete_one {
     ///   The new collation.
     ///
     /// @see
-    ///   https://docs.mongodb.com/manual/reference/collation/
+    ///   https://www.mongodb.com/docs/manual/reference/collation/
     ///
     delete_one& collation(bsoncxx::document::view_or_value collation);
 
@@ -63,7 +63,7 @@ class MONGOCXX_API delete_one {
     ///   The optional value of the collation option.
     ///
     /// @see
-    ///   https://docs.mongodb.com/manual/reference/collation/
+    ///   https://www.mongodb.com/docs/manual/reference/collation/
     ///
     const stdx::optional<bsoncxx::document::view_or_value>& collation() const;
 

@@ -67,7 +67,7 @@ class MONGOCXX_API index_view {
     ///    A document containing the index keys and their corresponding index types.
     /// @param index_options
     ///    A document containing set of options that controls the creation of the index. See
-    ///    https://docs.mongodb.com/manual/reference/method/db.collection.createIndex/.
+    ///    https://www.mongodb.com/docs/manual/reference/method/db.collection.createIndex/.
     /// @param options
     ///    Optional arguments for the overall operation, see mongocxx::options::index_view.
     ///
@@ -79,7 +79,7 @@ class MONGOCXX_API index_view {
     ///    Throws operation_exception for any errors encountered by the server or if max_time_ms
     ///    option is present and the operation exceeds the time limit.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/method/db.collection.createIndex/
+    /// @see https://www.mongodb.com/docs/manual/reference/method/db.collection.createIndex/
     ///
     stdx::optional<std::string> create_one(
         const bsoncxx::document::view_or_value& keys,
@@ -95,7 +95,7 @@ class MONGOCXX_API index_view {
     ///    A document containing the index keys and their corresponding index types.
     /// @param index_options
     ///    A document containing set of options that controls the creation of the index. See
-    ///    https://docs.mongodb.com/manual/reference/method/db.collection.createIndex/.
+    ///    https://www.mongodb.com/docs/manual/reference/method/db.collection.createIndex/.
     /// @param options
     ///    Optional arguments for the overall operation, see mongocxx::options::index_view.
     ///
@@ -107,7 +107,7 @@ class MONGOCXX_API index_view {
     ///    Throws operation_exception for any errors encountered by the server or if max_time_ms
     ///    option is present and the operation exceeds the time limit.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/method/db.collection.createIndex/
+    /// @see https://www.mongodb.com/docs/manual/reference/method/db.collection.createIndex/
     ///
     stdx::optional<std::string> create_one(
         const client_session& session,
@@ -137,7 +137,7 @@ class MONGOCXX_API index_view {
     ///    Throws operation_exception for any errors encountered by the server or if max_time_ms
     ///    option is present and the operation exceeds the time limit.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/method/cursor.maxTimeMS/
+    /// @see https://www.mongodb.com/docs/manual/reference/method/cursor.maxTimeMS/
     ///
     stdx::optional<std::string> create_one(
         const index_model& index, const options::index_view& options = options::index_view{});
@@ -160,7 +160,7 @@ class MONGOCXX_API index_view {
     ///    Throws operation_exception for any errors encountered by the server or if max_time_ms
     ///    option is present and the operation exceeds the time limit.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/method/cursor.maxTimeMS/
+    /// @see https://www.mongodb.com/docs/manual/reference/method/cursor.maxTimeMS/
     ///
     stdx::optional<std::string> create_one(
         const client_session& session,
@@ -189,7 +189,7 @@ class MONGOCXX_API index_view {
     ///     Throws operation_exception for any errors encountered by the server or if max_time_ms
     ///     option is present and the operation exceeds the time limit.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/method/cursor.maxTimeMS/
+    /// @see https://www.mongodb.com/docs/manual/reference/method/cursor.maxTimeMS/
     ///
     bsoncxx::document::value create_many(
         const std::vector<index_model>& indexes,
@@ -213,7 +213,7 @@ class MONGOCXX_API index_view {
     ///     Throws operation_exception for any errors encountered by the server or if max_time_ms
     ///     option is present and the operation exceeds the time limit.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/method/cursor.maxTimeMS/
+    /// @see https://www.mongodb.com/docs/manual/reference/method/cursor.maxTimeMS/
     ///
     bsoncxx::document::value create_many(
         const client_session& session,
@@ -240,7 +240,7 @@ class MONGOCXX_API index_view {
     /// @exception
     ///   Throws logic_error if "*" is passed in for the index name.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/method/cursor.maxTimeMS/
+    /// @see https://www.mongodb.com/docs/manual/reference/method/cursor.maxTimeMS/
     ///
     void drop_one(stdx::string_view name,
                   const options::index_view& options = options::index_view{});
@@ -261,7 +261,7 @@ class MONGOCXX_API index_view {
     /// @exception
     ///   Throws logic_error if "*" is passed in for the index name.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/method/cursor.maxTimeMS/
+    /// @see https://www.mongodb.com/docs/manual/reference/method/cursor.maxTimeMS/
     ///
     void drop_one(const client_session& session,
                   stdx::string_view name,
@@ -293,7 +293,7 @@ class MONGOCXX_API index_view {
     /// @exception
     ///   Throws logic_error if "*" is passed in for the index name
     ///
-    /// @see https://docs.mongodb.com/manual/reference/method/cursor.maxTimeMS/
+    /// @see https://www.mongodb.com/docs/manual/reference/method/cursor.maxTimeMS/
     ///
     void drop_one(const bsoncxx::document::view_or_value& keys,
                   const bsoncxx::document::view_or_value& index_options = {},
@@ -321,7 +321,7 @@ class MONGOCXX_API index_view {
     /// @exception
     ///   Throws logic_error if "*" is passed in for the index name
     ///
-    /// @see https://docs.mongodb.com/manual/reference/method/cursor.maxTimeMS/
+    /// @see https://www.mongodb.com/docs/manual/reference/method/cursor.maxTimeMS/
     ///
     void drop_one(const client_session& session,
                   const bsoncxx::document::view_or_value& keys,
@@ -350,7 +350,7 @@ class MONGOCXX_API index_view {
     /// @exception
     ///   Throws logic_error if "*" is passed in for the index name
     ///
-    /// @see https://docs.mongodb.com/manual/reference/method/cursor.maxTimeMS/
+    /// @see https://www.mongodb.com/docs/manual/reference/method/cursor.maxTimeMS/
     ///
     void drop_one(const index_model& index,
                   const options::index_view& options = options::index_view{});
@@ -373,7 +373,7 @@ class MONGOCXX_API index_view {
     /// @exception
     ///   Throws logic_error if "*" is passed in for the index name
     ///
-    /// @see https://docs.mongodb.com/manual/reference/method/cursor.maxTimeMS/
+    /// @see https://www.mongodb.com/docs/manual/reference/method/cursor.maxTimeMS/
     ///
     void drop_one(const client_session& session,
                   const index_model& index,
@@ -395,7 +395,7 @@ class MONGOCXX_API index_view {
     ///   Throws operation_exception for any errors encountered by the server or if max_time_ms
     ///   option is present and the operation exceeds the time limit.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/method/cursor.maxTimeMS/
+    /// @see https://www.mongodb.com/docs/manual/reference/method/cursor.maxTimeMS/
     ///
     void drop_all(const options::index_view& options = options::index_view{});
 
@@ -411,7 +411,7 @@ class MONGOCXX_API index_view {
     ///   Throws operation_exception for any errors encountered by the server or if max_time_ms
     ///   option is present and the operation exceeds the time limit.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/method/cursor.maxTimeMS/
+    /// @see https://www.mongodb.com/docs/manual/reference/method/cursor.maxTimeMS/
     ///
     void drop_all(const client_session& session,
                   const options::index_view& options = options::index_view{});

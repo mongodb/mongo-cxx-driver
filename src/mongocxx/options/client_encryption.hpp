@@ -46,7 +46,7 @@ class MONGOCXX_API client_encryption {
     /// @return
     ///   A reference to this object to facilitate method chaining.
     ///
-    /// @see https://docs.mongodb.com/manual/core/security-client-side-encryption/
+    /// @see https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
     client_encryption& key_vault_client(mongocxx::client* client);
 
@@ -72,7 +72,7 @@ class MONGOCXX_API client_encryption {
     /// @return
     ///   A reference to this object to facilitate method chaining.
     ///
-    /// @see https://docs.mongodb.com/manual/core/security-client-side-encryption/
+    /// @see https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
     using ns_pair = std::pair<std::string, std::string>;
     client_encryption& key_vault_namespace(ns_pair ns);
@@ -125,7 +125,7 @@ class MONGOCXX_API client_encryption {
     /// @return
     ///   A reference to this object to facilitate method chaining.
     ///
-    /// @see https://docs.mongodb.com/manual/core/security-client-side-encryption/
+    /// @see https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
     client_encryption& kms_providers(bsoncxx::document::view_or_value kms_providers);
 
@@ -155,7 +155,7 @@ class MONGOCXX_API client_encryption {
     /// @return
     ///   A reference to this object to facilitate method chaining.
     ///
-    /// @see https://docs.mongodb.com/manual/core/security-client-side-encryption/
+    /// @see https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
     client_encryption& tls_opts(bsoncxx::document::view_or_value tls_opts);
 

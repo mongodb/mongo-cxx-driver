@@ -86,7 +86,7 @@ class MONGOCXX_API data_key {
     /// @return
     ///   A reference to this object.
     ///
-    /// @see https://docs.mongodb.com/manual/core/security-client-side-encryption-key-management/
+    /// @see https://www.mongodb.com/docs/manual/core/security-client-side-encryption-key-management/
     ///
     data_key& master_key(bsoncxx::document::view_or_value master_key);
 
@@ -109,7 +109,7 @@ class MONGOCXX_API data_key {
     /// @return
     ///   A reference to this object.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/method/getClientEncryption/
+    /// @see https://www.mongodb.com/docs/manual/reference/method/getClientEncryption/
     ///
     data_key& key_alt_names(std::vector<std::string> key_alt_names);
 

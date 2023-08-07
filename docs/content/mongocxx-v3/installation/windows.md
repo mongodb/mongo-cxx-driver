@@ -126,7 +126,7 @@ For details on how to install libmongoc for Windows, see the
 #### Configuring with `mongocxx` 3.7.0 and older
 
 To build versions 3.7.0 and older without a C++17 polyfill, it is necessary to configure with additional options:
-- `/Zc:__cplusplus` to opt into the correct definition of `__cplusplus` ([problem described here](https://blogs.msdn.microsoft.com/vcblog/2018/04/09/msvc-now-correctly-reports-__cplusplus/))
+- `/Zc:__cplusplus` to opt into the correct definition of `__cplusplus` ([problem described here](https://devblogs.microsoft.com/cppblog/msvc-now-correctly-reports-__cplusplus/))
 - `/EHsc` to enable recommended [exception handling behavior](https://learn.microsoft.com/en-us/cpp/build/reference/eh-exception-handling-model?view=msvc-170).
 
 ```sh

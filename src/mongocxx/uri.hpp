@@ -36,9 +36,9 @@ MONGOCXX_INLINE_NAMESPACE_BEGIN
 /// a case of an empty option explicitly present in the URI and the option being omitted. Also
 /// change getters that return a std::string to return a string_view since a copy is not necessary.
 ///
-/// @see https://docs.mongodb.com/manual/reference/connection-string/
-/// @see http://mongoc.org/libmongoc/current/mongoc_uri_t.html for more information on supported URI
-/// options.
+/// @see https://www.mongodb.com/docs/manual/reference/connection-string/
+/// @see https://mongoc.org/libmongoc/current/mongoc_uri_t.html for more information on supported
+/// URI options.
 ///
 class MONGOCXX_API uri {
    public:
@@ -57,7 +57,7 @@ class MONGOCXX_API uri {
     ///
     /// @see The documentation for the version of libmongoc used for the list of supported
     ///   URI options. For the latest libmongoc release:
-    ///   http://mongoc.org/libmongoc/current/mongoc_uri_t.html
+    ///   https://mongoc.org/libmongoc/current/mongoc_uri_t.html
     ///
     /// @param uri_string
     ///   String representing a MongoDB connection string URI, defaults to k_default_uri.

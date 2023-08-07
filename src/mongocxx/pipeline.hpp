@@ -40,7 +40,7 @@ class MONGOCXX_API pipeline {
     ///
     /// Creates a new aggregation pipeline.
     ///
-    /// @see https://docs.mongodb.com/manual/core/aggregation-pipeline/
+    /// @see https://www.mongodb.com/docs/manual/core/aggregation-pipeline/
     ///
     pipeline();
 
@@ -62,7 +62,7 @@ class MONGOCXX_API pipeline {
     ///
     /// Adds new fields to documents.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/operator/aggregation/addFields/
+    /// @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/addFields/
     ///
     /// @param fields_to_add
     ///   A document specifying the fields to add.  For each field specified in this parameter, a
@@ -79,7 +79,7 @@ class MONGOCXX_API pipeline {
     /// Categorizes documents into groups, called buckets, based on a specified expression and
     /// bucket boundaries.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/operator/aggregation/bucket/
+    /// @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/bucket/
     ///
     /// @param bucket_args
     ///   The specification for the bucket operation.  The required fields `groupBy` and
@@ -96,7 +96,7 @@ class MONGOCXX_API pipeline {
     /// specified expression.  Bucket boundaries are automatically determined in an attempt to
     /// evenly distribute the documents into the specified number of buckets.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/operator/aggregation/bucketAuto/
+    /// @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/bucketAuto/
     ///
     /// @param bucket_auto_args
     ///   The specification for the bucket_auto operation.  This required fields `groupBy` and
@@ -111,7 +111,7 @@ class MONGOCXX_API pipeline {
     ///
     /// Returns statistics regarding a collection or view.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/operator/aggregation/collStats/
+    /// @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/collStats/
     ///
     /// @param coll_stats_args
     ///   The specification for the coll_stats operation.  See link above for a list of valid
@@ -127,7 +127,7 @@ class MONGOCXX_API pipeline {
     ///
     /// Returns a document containing a count of the number of documents input to the stage.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/operator/aggregation/count/
+    /// @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/count/
     ///
     /// @param field
     ///   Name of the field for the count to be written to.
@@ -145,7 +145,7 @@ class MONGOCXX_API pipeline {
     ///
     /// This stage must be used with database aggregate on the 'admin' database.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/operator/aggregation/currentOp/
+    /// @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/currentOp/
     ///
     /// @param current_op_args
     ///   A document containing the arguments for the current_op operation.
@@ -159,7 +159,7 @@ class MONGOCXX_API pipeline {
     /// Processes multiple aggregation pipelines within a single stage on the same set of input
     /// documents.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/operator/aggregation/facet/
+    /// @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/facet/
     ///
     /// @param facet_args
     ///   The specification for the facet operation.  Each field in the the provided document should
@@ -208,7 +208,7 @@ class MONGOCXX_API pipeline {
     ///
     /// Outputs documents in order of nearest to farthest from a specified point.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/operator/aggregation/geoNear/
+    /// @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/geoNear/
     ///
     /// @param geo_near_args
     ///   The specification for the geo_near operation.  The required fields `near` and
@@ -223,7 +223,7 @@ class MONGOCXX_API pipeline {
     ///
     /// Performs a recursive search on a collection.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/operator/aggregation/graphLookup/
+    /// @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/graphLookup/
     ///
     /// @param graph_lookup_args
     ///   The specification for the graph_lookup operation.  The required fields `from`,
@@ -244,7 +244,7 @@ class MONGOCXX_API pipeline {
     ///
     /// @note group does not order output documents.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/operator/aggregation/group/
+    /// @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/group/
     ///
     /// @param group_args
     ///   The specification for the group operation.  The required field `_id` must be included.
@@ -262,14 +262,14 @@ class MONGOCXX_API pipeline {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/operator/aggregation/indexStats/
+    /// @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/indexStats/
     ///
     pipeline& index_stats();
 
     ///
     /// Limits the number of documents passed to the next stage in the pipeline.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/operator/aggregation/limit/
+    /// @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/limit/
     ///
     /// @param limit
     ///   The number of documents to which output should be limited.
@@ -285,7 +285,7 @@ class MONGOCXX_API pipeline {
     ///
     /// This option must be used with database aggregate.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/operator/aggregation/listLocalSessions/
+    /// @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/listLocalSessions/
     ///
     /// @param list_local_sessions_args
     ///   A document containing the arguments for list_local_sessions.
@@ -299,7 +299,7 @@ class MONGOCXX_API pipeline {
     /// Lists all sessions stored in the system.sessions collection in the config database.
     /// These sessions are visible to all members of the MongoDB deployment.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/operator/aggregation/listSessions/
+    /// @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/listSessions/
     ///
     /// @param list_sessions_args
     ///   A document containing the arguments for list_sessions.
@@ -313,7 +313,7 @@ class MONGOCXX_API pipeline {
     /// Performs a left outer join to an unsharded collection in the same database to filter in
     /// documents from the "joined" collection for processing.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/operator/aggregation/lookup/
+    /// @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/lookup/
     ///
     /// @param lookup_args
     ///   The specification for the lookup operation.  The required fields `from`, `localField`,
@@ -329,7 +329,7 @@ class MONGOCXX_API pipeline {
     /// Filters the documents. Only the documents that match the condition(s) specified by the
     /// `filter` will continue to the next pipeline stage.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/operator/aggregation/match/
+    /// @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/match/
     ///
     /// @param filter
     ///   The filter.
@@ -343,7 +343,7 @@ class MONGOCXX_API pipeline {
     ///
     /// Outputs the aggregation results to a collection.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/operator/aggregation/merge/
+    /// @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/merge/
     ///
     /// @param merge_args
     ///   The specification for the merge options. Must include an `into` field that
@@ -360,7 +360,7 @@ class MONGOCXX_API pipeline {
     /// collection. This stage must be the last stage in the pipeline. The out operator lets the
     /// aggregation framework return result sets of any size.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/operator/aggregation/out/
+    /// @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/out/
     ///
     /// @param collection_name
     ///   The name of the collection where the output documents should go.
@@ -374,7 +374,7 @@ class MONGOCXX_API pipeline {
     ///
     /// Projects a subset of the fields in the documents to the next stage of the pipeline.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/operator/aggregation/project/
+    /// @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/project/
     ///
     /// @param projection
     ///   The projection specification.
@@ -389,7 +389,7 @@ class MONGOCXX_API pipeline {
     /// Restricts the contents of the documents based on information stored in the documents
     /// themselves.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/operator/aggregation/redact/
+    /// @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/redact/
     ///
     /// @param restrictions
     ///   The document restrictions.
@@ -403,7 +403,7 @@ class MONGOCXX_API pipeline {
     ///
     /// Promotes a specified document to the top level and replaces all other fields.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/operator/aggregation/replaceRoot/
+    /// @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceRoot/
     ///
     /// @param replace_root_args
     ///   The specification for the replace_root operation.  The required field `newRoot` must be
@@ -419,7 +419,7 @@ class MONGOCXX_API pipeline {
     /// Randomly selects the specified number of documents that pass into the stage and passes the
     /// remaining documents to the next stage in the pipeline.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/operator/aggregation/sample/
+    /// @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/sample/
     ///
     /// @param size
     ///   The number of input documents to select.
@@ -434,7 +434,7 @@ class MONGOCXX_API pipeline {
     /// Skips over the specified number of documents that pass into the stage and passes the
     /// remaining documents to the next stage in the pipeline.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/operator/aggregation/skip/
+    /// @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/skip/
     ///
     /// @param docs_to_skip
     ///   The number of input documents to skip.
@@ -448,7 +448,7 @@ class MONGOCXX_API pipeline {
     ///
     /// Sorts all input documents and returns them to the pipeline in sorted order.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/operator/aggregation/sort/
+    /// @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/sort/
     ///
     /// @param ordering
     ///   Document specifying the ordering by which the documents are sorted.
@@ -463,7 +463,7 @@ class MONGOCXX_API pipeline {
     /// Groups incoming documents based on the value of a specified expression, then computes the
     /// count of documents in each distinct group.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/operator/aggregation/sortByCount/
+    /// @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/sortByCount/
     ///
     /// @param field_expression
     ///   The expression to group by, as an object.  The expression can not evaluate to an object.
@@ -482,7 +482,7 @@ class MONGOCXX_API pipeline {
     /// Groups incoming documents based on the value of a specified expression, then computes the
     /// count of documents in each distinct group.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/operator/aggregation/sortByCount/
+    /// @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/sortByCount/
     ///
     /// @param field_expression
     ///   The expression to group by, as a string.  To specify a field path, prefix the field path
@@ -503,7 +503,7 @@ class MONGOCXX_API pipeline {
     /// Each output document is an input document with the value of its array field replaced by
     /// an element from the unwound array.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/operator/aggregation/unwind/
+    /// @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/unwind/
     ///
     /// @param unwind_args
     ///   The specification for the unwind operation.  The required field path must be included.
@@ -523,7 +523,7 @@ class MONGOCXX_API pipeline {
     /// Each output document is an input document with the value of its array field replaced by
     /// an element from the unwound array.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/operator/aggregation/unwind/
+    /// @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/unwind/
     ///
     /// @param field_name
     ///   The name of the field to unwind.

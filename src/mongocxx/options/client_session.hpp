@@ -45,7 +45,7 @@ class MONGOCXX_API client_session {
     ///   method chaining.
     ///
     /// @see
-    /// https://docs.mongodb.com/manual/core/read-isolation-consistency-recency/#causal-consistency
+    /// https://www.mongodb.com/docs/manual/core/read-isolation-consistency-recency/#causal-consistency
     ///
     client_session& causal_consistency(bool causal_consistency) noexcept;
 
@@ -63,7 +63,7 @@ class MONGOCXX_API client_session {
     ///   method chaining.
     ///
     /// @see
-    /// https://docs.mongodb.com/manual/reference/read-concern-snapshot/
+    /// https://www.mongodb.com/docs/manual/reference/read-concern-snapshot/
     ///
     /// @note Snapshot reads and causal consistency are mutually exclusive: only one or the
     /// other may be active at a time. Attempting to do so will result in an error being thrown

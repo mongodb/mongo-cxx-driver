@@ -97,7 +97,7 @@ class MONGOCXX_API database {
     /// the cursor throws mongocxx::query_exception when the returned cursor
     /// is iterated.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/command/aggregate/#dbcmd.aggregate
+    /// @see https://www.mongodb.com/docs/manual/reference/command/aggregate/#dbcmd.aggregate
     ///
     /// @note
     ///   In order to pass a read concern to this, you must use the
@@ -123,7 +123,7 @@ class MONGOCXX_API database {
     /// the cursor throws mongocxx::query_exception when the returned cursor
     /// is iterated.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/command/aggregate/#dbcmd.aggregate
+    /// @see https://www.mongodb.com/docs/manual/reference/command/aggregate/#dbcmd.aggregate
     ///
     /// @note
     ///   In order to pass a read concern to this, you must use the
@@ -142,7 +142,7 @@ class MONGOCXX_API database {
     ///
     /// Runs a command against this database.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/method/db.runCommand/
+    /// @see https://www.mongodb.com/docs/manual/reference/method/db.runCommand/
     ///
     /// @param command document representing the command to be run.
     /// @return the result of executing the command.
@@ -154,7 +154,7 @@ class MONGOCXX_API database {
     ///
     /// Runs a command against this database.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/method/db.runCommand/
+    /// @see https://www.mongodb.com/docs/manual/reference/method/db.runCommand/
     ///
     /// @param session The mongocxx::client_session with which to run the command.
     /// @param command document representing the command to be run.
@@ -168,7 +168,7 @@ class MONGOCXX_API database {
     ///
     /// Executes a command on a specific server using this database.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/method/db.runCommand/
+    /// @see https://www.mongodb.com/docs/manual/reference/method/db.runCommand/
     ///
     /// @param command document representing the command to be run.
     /// @param server_id specifying which server to use.
@@ -188,10 +188,10 @@ class MONGOCXX_API database {
     /// Explicitly creates a collection in this database with the specified options.
     ///
     /// @see
-    ///   https://docs.mongodb.com/manual/reference/command/create/
+    ///   https://www.mongodb.com/docs/manual/reference/command/create/
     ///
     /// @note This function can also be used to create a Time Series Collection. See:
-    /// https://docs.mongodb.com/manual/core/timeseries-collections/
+    /// https://www.mongodb.com/docs/manual/core/timeseries-collections/
     ///
     /// @param name
     ///   the new collection's name.
@@ -212,10 +212,10 @@ class MONGOCXX_API database {
     /// Explicitly creates a collection in this database with the specified options.
     ///
     /// @see
-    ///   https://docs.mongodb.com/manual/reference/command/create/
+    ///   https://www.mongodb.com/docs/manual/reference/command/create/
     ///
     /// @note This function can also be used to create a Time Series Collection. See:
-    /// https://docs.mongodb.com/manual/core/timeseries-collections/
+    /// https://www.mongodb.com/docs/manual/core/timeseries-collections/
     ///
     /// @param session
     ///   The mongocxx::client_session with which to perform the create operation.
@@ -243,7 +243,7 @@ class MONGOCXX_API database {
     ///   bsoncxx::document::view_or_value collection_options instead.
     ///
     /// @see
-    ///   https://docs.mongodb.com/manual/reference/command/create/
+    ///   https://www.mongodb.com/docs/manual/reference/command/create/
     ///
     /// @param name
     ///   the new collection's name.
@@ -276,7 +276,7 @@ class MONGOCXX_API database {
     ///   bsoncxx::document::view_or_value collection_options instead.
     ///
     /// @see
-    ///   https://docs.mongodb.com/manual/reference/command/create/
+    ///   https://www.mongodb.com/docs/manual/reference/command/create/
     ///
     /// @param session
     ///   The mongocxx::client_session with which to perform the create operation.
@@ -307,7 +307,7 @@ class MONGOCXX_API database {
     ///   bsoncxx::document::view_or_value collection_options instead.
     ///
     /// @see
-    ///   https://docs.mongodb.com/manual/reference/command/create/
+    ///   https://www.mongodb.com/docs/manual/reference/command/create/
     ///
     /// @param session
     ///   The mongocxx::client_session with which to perform the create operation.
@@ -345,7 +345,7 @@ class MONGOCXX_API database {
     ///   mongocxx::operation_exception if the operation fails.
     ///
     /// @see
-    ///   https://docs.mongodb.com/manual/reference/command/dropDatabase/
+    ///   https://www.mongodb.com/docs/manual/reference/command/dropDatabase/
     ///
     void drop(const bsoncxx::stdx::optional<mongocxx::write_concern>& write_concern = {});
 
@@ -362,7 +362,7 @@ class MONGOCXX_API database {
     ///   mongocxx::operation_exception if the operation fails.
     ///
     /// @see
-    ///   https://docs.mongodb.com/manual/reference/command/dropDatabase/
+    ///   https://www.mongodb.com/docs/manual/reference/command/dropDatabase/
     ///
     void drop(const client_session& session,
               const bsoncxx::stdx::optional<mongocxx::write_concern>& write_concern = {});
@@ -392,7 +392,7 @@ class MONGOCXX_API database {
     ///
     /// @return mongocxx::cursor containing the collection information.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/command/listCollections/
+    /// @see https://www.mongodb.com/docs/manual/reference/command/listCollections/
     ///
     cursor list_collections(bsoncxx::document::view_or_value filter = {});
 
@@ -406,7 +406,7 @@ class MONGOCXX_API database {
     ///
     /// @return mongocxx::cursor containing the collection information.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/command/listCollections/
+    /// @see https://www.mongodb.com/docs/manual/reference/command/listCollections/
     ///
     cursor list_collections(const client_session& session,
                             bsoncxx::document::view_or_value filter = {});
@@ -422,7 +422,7 @@ class MONGOCXX_API database {
     /// @throws mongocxx::operation_exception if the underlying 'listCollections'
     /// command fails.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/command/listCollections/
+    /// @see https://www.mongodb.com/docs/manual/reference/command/listCollections/
     ///
     std::vector<std::string> list_collection_names(bsoncxx::document::view_or_value filter = {});
 
@@ -439,7 +439,7 @@ class MONGOCXX_API database {
     /// @throws mongocxx::operation_exception if the underlying 'listCollections'
     /// command fails.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/command/listCollections/
+    /// @see https://www.mongodb.com/docs/manual/reference/command/listCollections/
     ///
     std::vector<std::string> list_collection_names(const client_session& session,
                                                    bsoncxx::document::view_or_value filter = {});
@@ -465,7 +465,7 @@ class MONGOCXX_API database {
     /// @param rc
     ///   The new @c read_concern
     ///
-    /// @see https://docs.mongodb.com/manual/reference/read-concern/
+    /// @see https://www.mongodb.com/docs/manual/reference/read-concern/
     ///
     void read_concern(class read_concern rc);
 
@@ -486,7 +486,7 @@ class MONGOCXX_API database {
     /// from this database, but do affect new ones. New collections will receive a copy of the
     /// new read_preference for this database upon instantiation.
     ///
-    /// @see https://docs.mongodb.com/manual/core/read-preference/
+    /// @see https://www.mongodb.com/docs/manual/core/read-preference/
     ///
     /// @param rp the new read_preference.
     ///
@@ -495,7 +495,7 @@ class MONGOCXX_API database {
     ///
     /// The current read preference for this database.
     ///
-    /// @see https://docs.mongodb.com/manual/core/read-preference/
+    /// @see https://www.mongodb.com/docs/manual/core/read-preference/
     ///
     /// @return the current read_preference
     ///
@@ -565,7 +565,7 @@ class MONGOCXX_API database {
     /// @return
     ///  A change stream on this database.
     ///
-    /// @see https://docs.mongodb.com/manual/changeStreams/
+    /// @see https://www.mongodb.com/docs/manual/changeStreams/
     ///
     change_stream watch(const options::change_stream& options = {});
 
@@ -578,7 +578,7 @@ class MONGOCXX_API database {
     /// @return
     ///  A change stream on this database.
     ///
-    /// @see https://docs.mongodb.com/manual/changeStreams/
+    /// @see https://www.mongodb.com/docs/manual/changeStreams/
     ///
     change_stream watch(const client_session& session, const options::change_stream& options = {});
 
@@ -596,7 +596,7 @@ class MONGOCXX_API database {
     /// @return
     ///  A change stream on this database.
     ///
-    /// @see https://docs.mongodb.com/manual/changeStreams/
+    /// @see https://www.mongodb.com/docs/manual/changeStreams/
     ///
     change_stream watch(const pipeline& pipe, const options::change_stream& options = {});
 
@@ -613,7 +613,7 @@ class MONGOCXX_API database {
     /// @return
     ///  A change stream on this database.
     ///
-    /// @see https://docs.mongodb.com/manual/changeStreams/
+    /// @see https://www.mongodb.com/docs/manual/changeStreams/
     ///
     change_stream watch(const client_session& session,
                         const pipeline& pipe,
