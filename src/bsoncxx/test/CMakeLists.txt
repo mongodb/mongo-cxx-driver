@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-if (${ENABLE_TESTS})
+if (ENABLE_TESTS)
 
     include_directories(
         ${MONGO_CXX_DRIVER_SOURCE_DIR}/src/third_party/catch/include
