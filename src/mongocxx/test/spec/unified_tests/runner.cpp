@@ -1039,17 +1039,54 @@ void assert_outcome(const array::element& test) {
     }
 }
 
-struct disable_fail_point {
+struct fail_point_guard_type {
     std::vector<std::pair<std::string, std::string>> fail_points;
 
-    void add_fail_point(const std::string& uri, const std::string& command) {
-        fail_points.emplace_back(uri, command);
+    fail_point_guard_type() = default;
+
+    ~fail_point_guard_type() {
+        try {
+            for (const auto& f : fail_points) {
+                spec::disable_fail_point(f.first, {}, f.second);
+            }
+        } catch (...) {
+        }
     }
 
-    void operator()() const {
-        for (auto&& f : fail_points) {
-            spec::disable_fail_point(f.first, {}, f.second);
+    void add_fail_point(std::string uri, std::string command) {
+        fail_points.emplace_back(std::move(uri), std::move(command));
+    }
+};
+
+void disable_targeted_fail_point(mongocxx::stdx::string_view uri,
+                                 std::uint32_t server_id,
+                                 mongocxx::stdx::string_view fail_point) {
+    const auto command_owner =
+        make_document(kvp("configureFailPoint", fail_point), kvp("mode", "off"));
+    const auto command = command_owner.view();
+
+    // Unlike in the legacy test runner, there are no tests (at time of writing) that require
+    // multiple attempts to disable a targetedFailPoint, so only one attempt should suffice.
+    mongocxx::client client = {mongocxx::uri{uri}, test_util::add_test_server_api()};
+    client["admin"].run_command(command, server_id);
+}
+
+struct targeted_fail_point_guard_type {
+    std::vector<std::tuple<std::string, std::uint32_t, std::string>> fail_points;
+
+    targeted_fail_point_guard_type() = default;
+
+    ~targeted_fail_point_guard_type() {
+        try {
+            for (const auto& f : fail_points) {
+                disable_targeted_fail_point(std::get<0>(f), std::get<1>(f), std::get<2>(f));
+            }
+        } catch (...) {
         }
+    }
+
+    void add_fail_point(std::string uri, std::uint32_t server_id, std::string command) {
+        fail_points.emplace_back(std::move(uri), server_id, std::move(command));
     }
 };
 
@@ -1120,7 +1157,8 @@ void run_tests(mongocxx::stdx::string_view test_description, document::view test
                 continue;
             }
 
-            disable_fail_point disable_fail_point_fn{};
+            fail_point_guard_type fail_point_guard;
+            targeted_fail_point_guard_type targeted_fail_point_guard;
 
             for (auto&& apm : get_apm_map()) {
                 apm.second.clear_events();
@@ -1135,13 +1173,22 @@ void run_tests(mongocxx::stdx::string_view test_description, document::view test
                 }();
 
                 try {
-                    auto result = bsoncxx::builder::basic::make_document();
-                    result = operations::run(get_entity_map(), get_apm_map(), ops, state);
+                    const auto result =
+                        operations::run(get_entity_map(), get_apm_map(), ops, state);
 
                     if (string::to_string(ops["object"].get_string().value) == "testRunner") {
-                        if (string::to_string(ops["name"].get_string().value) == "failPoint") {
-                            disable_fail_point_fn.add_fail_point(
+                        const auto op_name = string::to_string(ops["name"].get_string().value);
+
+                        if (op_name == "failPoint") {
+                            fail_point_guard.add_fail_point(
                                 string::to_string(result["uri"].get_string().value),
+                                string::to_string(result["failPoint"].get_string().value));
+                        }
+
+                        if (op_name == "targetedFailPoint") {
+                            targeted_fail_point_guard.add_fail_point(
+                                string::to_string(result["uri"].get_string().value),
+                                static_cast<std::uint32_t>(result["serverId"].get_int64().value),
                                 string::to_string(result["failPoint"].get_string().value));
                         }
 
@@ -1187,7 +1234,6 @@ void run_tests(mongocxx::stdx::string_view test_description, document::view test
                     }
                 }
             }
-            disable_fail_point_fn();
 
             assert_events(ele);
             assert_outcome(ele);
