@@ -12,28 +12,28 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-if (BUILD_TESTING)
-
-    include_directories(
-        ${MONGO_CXX_DRIVER_SOURCE_DIR}/src/third_party/catch/include
-    )
-
-    file (GLOB src_bsoncxx_test_DIST_cpps RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.cpp)
-
-    add_executable(test_bson
-        ${THIRD_PARTY_SOURCE_DIR}/catch/main.cpp
-        ${src_bsoncxx_test_DIST_cpps}
-    )
-
-    target_link_libraries(test_bson bsoncxx_testing ${libbson_target})
-    target_include_directories(test_bson PRIVATE ${libbson_include_directories})
-    target_compile_definitions(test_bson PRIVATE ${libbson_definitions})
-
-    add_test(bson test_bson)
-
-    set_dist_list (src_bsoncxx_test_DIST
-       CMakeLists.txt
-       ${src_bsoncxx_test_DIST_cpps}
-    )
-
+if(NOT BUILD_TESTING)
+  set_property(DIRECTORY PROPERTY EXCLUDE_FROM_ALL TRUE)
 endif()
+
+include_directories(
+    ${MONGO_CXX_DRIVER_SOURCE_DIR}/src/third_party/catch/include
+)
+
+file (GLOB src_bsoncxx_test_DIST_cpps RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.cpp)
+
+add_executable(test_bson
+    ${THIRD_PARTY_SOURCE_DIR}/catch/main.cpp
+    ${src_bsoncxx_test_DIST_cpps}
+)
+
+target_link_libraries(test_bson bsoncxx_testing ${libbson_target})
+target_include_directories(test_bson PRIVATE ${libbson_include_directories})
+target_compile_definitions(test_bson PRIVATE ${libbson_definitions})
+
+add_test(bson test_bson)
+
+set_dist_list (src_bsoncxx_test_DIST
+   CMakeLists.txt
+   ${src_bsoncxx_test_DIST_cpps}
+)
