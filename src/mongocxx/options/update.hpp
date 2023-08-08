@@ -68,7 +68,7 @@ class MONGOCXX_API update {
     ///   method chaining.
     ///
     /// @see
-    ///   https://docs.mongodb.com/manual/reference/collation/
+    ///   https://www.mongodb.com/docs/manual/reference/collation/
     ///
     update& collation(bsoncxx::document::view_or_value collation);
 
@@ -79,7 +79,7 @@ class MONGOCXX_API update {
     ///   The current collation.
     ///
     /// @see
-    ///   https://docs.mongodb.com/manual/reference/collation/
+    ///   https://www.mongodb.com/docs/manual/reference/collation/
     ///
     const stdx::optional<bsoncxx::document::view_or_value>& collation() const;
 
@@ -180,7 +180,7 @@ class MONGOCXX_API update {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://docs.mongodb.com/manual/core/write-concern/
+    /// @see https://www.mongodb.com/docs/manual/core/write-concern/
     ///
     update& write_concern(class write_concern wc);
 
@@ -190,7 +190,7 @@ class MONGOCXX_API update {
     /// @return
     ///   The current write_concern
     ///
-    /// @see https://docs.mongodb.com/manual/core/write-concern/
+    /// @see https://www.mongodb.com/docs/manual/core/write-concern/
     ///
     const stdx::optional<class write_concern>& write_concern() const;
 
@@ -204,7 +204,7 @@ class MONGOCXX_API update {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/command/update/
+    /// @see https://www.mongodb.com/docs/manual/reference/command/update/
     ///
     update& array_filters(bsoncxx::array::view_or_value array_filters);
 
@@ -214,7 +214,7 @@ class MONGOCXX_API update {
     /// @return
     ///   The current array filters.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/command/update/
+    /// @see https://www.mongodb.com/docs/manual/reference/command/update/
     ///
     const stdx::optional<bsoncxx::array::view_or_value>& array_filters() const;
 

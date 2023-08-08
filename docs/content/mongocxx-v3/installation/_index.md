@@ -16,7 +16,7 @@ title = "Installing the mongocxx driver"
 
 If you encounter build failures or other problems with a platform configuration
 that meets the above prerequisites, please file a bug report via
-[JIRA](https://jira.mongodb.org/browse/CXX/).
+[JIRA](https://jira.mongodb.com/browse/CXX/).
 
 ## Installation
 

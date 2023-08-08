@@ -49,7 +49,7 @@ class MONGOCXX_API aggregate {
     ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/command/aggregate/
+    /// @see https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
     aggregate& allow_disk_use(bool allow_disk_use);
 
@@ -58,7 +58,7 @@ class MONGOCXX_API aggregate {
     ///
     /// @return Whether disk use is allowed.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/command/aggregate/
+    /// @see https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
     const stdx::optional<bool>& allow_disk_use() const;
 
@@ -72,7 +72,7 @@ class MONGOCXX_API aggregate {
     ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/command/aggregate/
+    /// @see https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
     aggregate& batch_size(std::int32_t batch_size);
 
@@ -81,7 +81,7 @@ class MONGOCXX_API aggregate {
     ///
     /// @return The current batch size.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/command/aggregate/
+    /// @see https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
     const stdx::optional<std::int32_t>& batch_size() const;
 
@@ -95,7 +95,7 @@ class MONGOCXX_API aggregate {
     ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/command/aggregate/
+    /// @see https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
     aggregate& collation(bsoncxx::document::view_or_value collation);
 
@@ -105,7 +105,7 @@ class MONGOCXX_API aggregate {
     /// @return
     ///   The current collation.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/command/aggregate/
+    /// @see https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
     const stdx::optional<bsoncxx::document::view_or_value>& collation() const;
 
@@ -119,7 +119,7 @@ class MONGOCXX_API aggregate {
     ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/command/aggregate/
+    /// @see https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
     aggregate& let(bsoncxx::document::view_or_value let);
 
@@ -129,7 +129,7 @@ class MONGOCXX_API aggregate {
     /// @return
     ///   The current variable mapping.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/command/aggregate/
+    /// @see https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
     const stdx::optional<bsoncxx::document::view_or_value>& let() const;
 
@@ -143,7 +143,7 @@ class MONGOCXX_API aggregate {
     ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/command/aggregate/
+    /// @see https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
     aggregate& max_time(std::chrono::milliseconds max_time);
 
@@ -153,7 +153,7 @@ class MONGOCXX_API aggregate {
     /// @return
     ///   The current max time (in milliseconds).
     ///
-    /// @see https://docs.mongodb.com/manual/reference/command/aggregate/
+    /// @see https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
     const stdx::optional<std::chrono::milliseconds>& max_time() const;
 
@@ -166,7 +166,7 @@ class MONGOCXX_API aggregate {
     ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/command/aggregate/
+    /// @see https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
     aggregate& read_preference(class read_preference rp);
 
@@ -175,7 +175,7 @@ class MONGOCXX_API aggregate {
     ///
     /// @return the current read_preference
     ///
-    /// @see https://docs.mongodb.com/manual/reference/command/aggregate/
+    /// @see https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
     const stdx::optional<class read_preference>& read_preference() const;
 
@@ -195,14 +195,14 @@ class MONGOCXX_API aggregate {
     ///
     /// @return the current bypass_document_validation setting
     ///
-    /// @see https://docs.mongodb.com/manual/reference/command/aggregate/
+    /// @see https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
     const stdx::optional<bool>& bypass_document_validation() const;
 
     ///
     /// Sets the index to use for this operation.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/command/aggregate/
+    /// @see https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
     /// @note if the server already has a cached shape for this query, it may
     /// ignore a hint.
@@ -221,7 +221,7 @@ class MONGOCXX_API aggregate {
     ///
     /// @return The current hint, if one is set.
     ///
-    /// @see https://docs.mongodb.com/manual/reference/command/aggregate/
+    /// @see https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
     const stdx::optional<class hint>& hint() const;
 
@@ -230,7 +230,7 @@ class MONGOCXX_API aggregate {
     /// the pipeline.
     ///
     /// @see
-    ///   https://docs.mongodb.com/manual/reference/command/aggregate/
+    ///   https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
     /// @param write_concern
     ///   Object representing the write_concern.
@@ -248,7 +248,7 @@ class MONGOCXX_API aggregate {
     ///   The current write concern, if it is set.
     ///
     /// @see
-    ///   https://docs.mongodb.com/manual/reference/command/aggregate/
+    ///   https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
     const stdx::optional<class write_concern>& write_concern() const;
 
@@ -256,7 +256,7 @@ class MONGOCXX_API aggregate {
     /// Sets the read concern to use for this operation.
     ///
     /// @see
-    ///   https://docs.mongodb.com/manual/reference/command/aggregate/
+    ///   https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
     /// @param read_concern
     ///   Object representing the read_concern.
@@ -273,7 +273,7 @@ class MONGOCXX_API aggregate {
     ///   The current read concern, if it is set.
     ///
     /// @see
-    ///   https://docs.mongodb.com/manual/reference/command/aggregate/
+    ///   https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
     const stdx::optional<class read_concern>& read_concern() const;
 
@@ -281,7 +281,7 @@ class MONGOCXX_API aggregate {
     /// Sets the comment to use for this operation.
     ///
     /// @see
-    ///   https://docs.mongodb.com/manual/reference/command/aggregate/
+    ///   https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
     /// @param comment
     ///   Object representing the comment.
@@ -298,7 +298,7 @@ class MONGOCXX_API aggregate {
     ///   The current comment, if it is set.
     ///
     /// @see
-    ///   https://docs.mongodb.com/manual/reference/command/aggregate/
+    ///   https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
     const stdx::optional<bsoncxx::types::bson_value::view_or_value>& comment() const;
 

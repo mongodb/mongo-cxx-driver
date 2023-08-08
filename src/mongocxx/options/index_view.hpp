@@ -43,7 +43,7 @@ class MONGOCXX_API index_view {
     ///   method chaining.
     ///
     /// @see
-    ///   https://docs.mongodb.com/manual/reference/command/findAndModify/
+    ///   https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
     index_view& max_time(std::chrono::milliseconds max_time);
 
@@ -54,7 +54,7 @@ class MONGOCXX_API index_view {
     ///   The current max allowed running time (in milliseconds).
     ///
     /// @see
-    ///   https://docs.mongodb.com/manual/reference/command/findAndModify/
+    ///   https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
     const bsoncxx::stdx::optional<std::chrono::milliseconds>& max_time() const;
 
@@ -69,7 +69,7 @@ class MONGOCXX_API index_view {
     ///   method chaining.
     ///
     /// @see
-    ///   https://docs.mongodb.com/manual/reference/command/findAndModify/
+    ///   https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
     index_view& write_concern(mongocxx::write_concern write_concern);
 
@@ -80,7 +80,7 @@ class MONGOCXX_API index_view {
     ///   The current write concern.
     ///
     /// @see
-    ///   https://docs.mongodb.com/manual/reference/command/findAndModify/
+    ///   https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
     const bsoncxx::stdx::optional<mongocxx::write_concern>& write_concern() const;
 
@@ -99,7 +99,7 @@ class MONGOCXX_API index_view {
     ///   method chaining.
     ///
     /// @see
-    ///   https://docs.mongodb.com/manual/reference/command/createIndexes
+    ///   https://www.mongodb.com/docs/manual/reference/command/createIndexes
     ///
     index_view& commit_quorum(std::int32_t commit_quorum);
 
@@ -118,7 +118,7 @@ class MONGOCXX_API index_view {
     ///   method chaining.
     ///
     /// @see
-    ///   https://docs.mongodb.com/manual/reference/command/createIndexes
+    ///   https://www.mongodb.com/docs/manual/reference/command/createIndexes
     ///
     index_view& commit_quorum(std::string commit_quorum);
 
@@ -131,7 +131,7 @@ class MONGOCXX_API index_view {
     ///   The current commitQuorum setting.
     ///
     /// @see
-    ///   https://docs.mongodb.com/manual/reference/command/createIndexes
+    ///   https://www.mongodb.com/docs/manual/reference/command/createIndexes
     ///
     const stdx::optional<bsoncxx::document::value> commit_quorum() const;
 

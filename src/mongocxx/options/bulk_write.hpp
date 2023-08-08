@@ -71,7 +71,7 @@ class MONGOCXX_API bulk_write {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://docs.mongodb.com/manual/core/write-concern/
+    /// @see https://www.mongodb.com/docs/manual/core/write-concern/
     ///
     bulk_write& write_concern(class write_concern wc);
 
@@ -81,7 +81,7 @@ class MONGOCXX_API bulk_write {
     /// @return
     ///   The current write_concern.
     ///
-    /// @see https://docs.mongodb.com/manual/core/write-concern/
+    /// @see https://www.mongodb.com/docs/manual/core/write-concern/
     ///
     const stdx::optional<class write_concern>& write_concern() const;
 

@@ -31,7 +31,7 @@ namespace events {
 /// from the topology description.
 ///
 /// @see "ServerClosedEvent" in
-/// https://github.com/mongodb/specifications/blob/master/source/server-discovery-and-monitoring/server-discovery-and-monitoring-monitoring.rst
+/// https://github.com/mongodb/specifications/blob/master/source/server-discovery-and-monitoring/server-discovery-and-monitoring.rst
 ///
 class MONGOCXX_API server_closed_event {
    public:

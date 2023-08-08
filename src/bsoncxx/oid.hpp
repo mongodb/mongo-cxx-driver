@@ -33,7 +33,7 @@ BSONCXX_INLINE_NAMESPACE_BEGIN
 /// @note we use 'oid' to refer to this concrete class. We use 'ObjectId' to refer
 /// to the BSON type.
 ///
-/// @see https://docs.mongodb.com/manual/reference/object-id/
+/// @see https://www.mongodb.com/docs/manual/reference/object-id/
 ///
 class BSONCXX_API oid {
    public:
