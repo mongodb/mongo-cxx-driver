@@ -86,7 +86,8 @@ class MONGOCXX_API data_key {
     /// @return
     ///   A reference to this object.
     ///
-    /// @see https://www.mongodb.com/docs/manual/core/security-client-side-encryption-key-management/
+    /// @see
+    /// https://www.mongodb.com/docs/manual/core/security-client-side-encryption-key-management/
     ///
     data_key& master_key(bsoncxx::document::view_or_value master_key);
 
