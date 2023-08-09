@@ -167,7 +167,7 @@ int main() {
     const mongocxx::client conn{mongocxx::uri{}};
     auto const db = conn["documentation_examples"];
 
-    // Ensure the database exists for consistent behavior with sharded clusters.
+    // SERVER-79306: Ensure the database exists for consistent behavior with sharded clusters.
     conn["documentation_examples"].create_collection("dummy");
 
     try {
