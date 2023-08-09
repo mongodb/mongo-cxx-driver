@@ -27,14 +27,6 @@
 
 namespace {
 
-std::string get_server_version(const mongocxx::client& client) {
-    bsoncxx::builder::basic::document server_status{};
-    server_status.append(bsoncxx::builder::basic::kvp("serverStatus", 1));
-    bsoncxx::document::value output = client["test"].run_command(server_status.extract());
-
-    return bsoncxx::string::to_string(output.view()["version"].get_string().value);
-}
-
 // watch_forever iterates the change stream until an error occurs.
 void watch_forever(mongocxx::collection& collection) {
     mongocxx::options::change_stream options;
