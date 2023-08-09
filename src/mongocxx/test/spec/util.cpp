@@ -494,6 +494,20 @@ uri get_uri(document::view test) {
             // initialized with multiple mongos seed addresses. If false or omitted, only a single
             // mongos address should be specified.
             uri_string = "mongodb://localhost:27017,localhost:27018/?";
+
+            // Verify that both mongos are actually present.
+            const mongocxx::client client0 = {uri{"mongodb://localhost:27017"},
+                                              test_util::add_test_server_api()};
+            const mongocxx::client client1 = {uri{"mongodb://localhost:27018"},
+                                              test_util::add_test_server_api()};
+
+            if (!client0["config"].has_collection("shards")) {
+                FAIL("missing required mongos on port 27017 with useMultipleMongoses=true");
+            }
+
+            if (!client1["config"].has_collection("shards")) {
+                FAIL("missing required mongos on port 27018 with useMultipleMongoses=true");
+            }
         }
     }
 
