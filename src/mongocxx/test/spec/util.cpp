@@ -738,6 +738,9 @@ void run_transaction_operations(
                     REQUIRE(arguments["failPoint"]["configureFailPoint"].get_string().value ==
                             stdx::string_view("failCommand"));
 
+                    // We expect at most one targetedFailPoint operation per test case.
+                    REQUIRE(!targeted_fail_point_guard);
+
                     // When executing this operation, the test runner MUST keep a record of both the
                     // fail point and pinned mongos server so that the fail point can be disabled on
                     // the same mongos server after the test.
