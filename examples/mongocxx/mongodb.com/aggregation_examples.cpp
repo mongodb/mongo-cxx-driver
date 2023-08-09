@@ -31,7 +31,7 @@
 
 using namespace mongocxx;
 
-void aggregation_examples(const mongocxx::client& client, const mongocxx::database& db) {
+void aggregation_examples(const mongocxx::database& db) {
     {
         // Start Aggregation Example 1
         using namespace bsoncxx::builder::basic;
@@ -156,7 +156,7 @@ int main() {
     conn["documentation_examples"].create_collection("dummy");
 
     try {
-        aggregation_examples(conn, db);
+        aggregation_examples(db);
     } catch (const std::logic_error& e) {
         std::cerr << e.what() << std::endl;
         return EXIT_FAILURE;
