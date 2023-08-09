@@ -14,15 +14,15 @@
 
 cmake_minimum_required(VERSION 3.2 FATAL_ERROR)
 
-if(NOT DEFINED BUILD_TESTING)
-  set(BUILD_TESTING OFF)  # Set this to OFF by default
-endif()
-
 if(POLICY CMP0025)
   cmake_policy(SET CMP0025 NEW)
 endif()
 
 project(MONGO_CXX_DRIVER LANGUAGES CXX)
+
+if(NOT DEFINED BUILD_TESTING)
+  set(BUILD_TESTING OFF)  # Set this to OFF by default
+endif()
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
   if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "4.8.2")
