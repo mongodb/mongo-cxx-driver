@@ -107,11 +107,6 @@ int main(int argc, char* argv[]) {
         auto entry = pool.acquire();
         auto collection = (*entry)[db][coll];
 
-        if (get_server_version(*entry) < "3.6") {
-            std::cerr << "Change streams are only supported on Mongo versions >= 3.6." << std::endl;
-            return EXIT_FAILURE;
-        }
-
         std::cout << "Watching for notifications on the collection " << db << "." << coll
                   << std::endl;
         std::cout << "To observe a notification, try inserting a document." << std::endl;
