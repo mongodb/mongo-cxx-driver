@@ -34,7 +34,7 @@
 #include <mongocxx/uri.hpp>
 
 // NOTE: Any time this file is modified, a DOCS ticket should be opened to sync the changes with the
-// corresponding page on docs.mongodb.com. See CXX-1249 and DRIVERS-356 for more info.
+// corresponding page on mongodb.com/docs. See CXX-1249 and DRIVERS-356 for more info.
 
 template <typename T>
 void check_field(const T& document, const char* field, bool should_have, int example_no) {
@@ -1485,7 +1485,7 @@ static bool version_at_least(mongocxx::v_noabi::database& db, int minimum_major)
     return server_major >= minimum_major;
 }
 
-// https://jira.mongodb.org/browse/CXX-2505
+// https://jira.mongodb.com/browse/CXX-2505
 static void queryable_encryption_api(mongocxx::client& client) {
     // Start Queryable Encryption Example
     using namespace mongocxx;

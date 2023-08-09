@@ -83,7 +83,7 @@ int main(int, char**) {
 
         // We can compare the error_code to a known server side error
         // code number. Please see
-        // https://github.com/mongodb/mongo/blob/master/src/mongo/base/error_codes.err
+        // https://github.com/mongodb/mongo/blob/master/src/mongo/base/error_codes.yml
         // for details on the sort of error codes the server might
         // return. In this case, 26 means 'NamespaceNotFound'.
         //

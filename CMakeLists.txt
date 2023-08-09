@@ -40,6 +40,74 @@ else()
   message(WARNING "Unknown compiler... recklessly proceeding without a version check")
 endif()
 
+set(LIBMONGOC_REQUIRED_VERSION 1.24.0)
+set(LIBMONGOC_DOWNLOAD_VERSION ba5ab6de26a874d33b0abc3d2b46961a69380e7a) # TODO: update to 1.25.0 once C driver 1.25.0 is released.
+set(LIBMONGOC_REQUIRED_ABI_VERSION 1.0)
+
+set(NEED_DOWNLOAD_C_DRIVER false)
+if(TARGET mongoc_shared OR TARGET mongoc_static)
+  # If these targets exist, then libmongoc has already been included as a project
+  # sub-directory
+  message (STATUS "Found libmongoc targets declared in current build scope; version not checked")
+
+  if(NOT MONGOCXX_LINK_WITH_STATIC_MONGOC)
+    set(libmongoc_target mongoc_shared)
+  else()
+    set(libmongoc_target mongoc_static)
+  endif()
+
+  if(MONGOCXX_BUILD_STATIC)
+    set(mongocxx_pkg_dep "find_dependency(mongoc-1.0 REQUIRED)")
+  endif()
+else()
+    find_package(mongoc-${LIBMONGOC_REQUIRED_ABI_VERSION} ${LIBMONGOC_REQUIRED_VERSION} QUIET)
+    if(mongoc-${LIBMONGOC_REQUIRED_ABI_VERSION}_FOUND)
+        message(STATUS "Found libmongoc ${mongoc-${LIBMONGOC_REQUIRED_ABI_VERSION}_VERSION}, don't need to download it.")
+    else()
+        set(NEED_DOWNLOAD_C_DRIVER true CACHE INTERNAL "")
+    endif()
+endif()
+
+if(NEED_DOWNLOAD_C_DRIVER)
+    message(STATUS "No Mongo C Driver path provided via CMAKE_PREFIX_PATH, will download C driver version ${LIBMONGOC_DOWNLOAD_VERSION} from the internet.")
+    message(STATUS "Download and configure C driver version ${LIBMONGOC_DOWNLOAD_VERSION} ... begin")
+    include(FetchContent)
+    include(ExternalProject)
+
+    # Declare mongo-c-driver as a dependency
+    FetchContent_Declare(
+      mongo-c-driver
+      GIT_REPOSITORY https://github.com/mongodb/mongo-c-driver.git
+      GIT_TAG ${LIBMONGOC_DOWNLOAD_VERSION}
+    )
+
+    FetchContent_GetProperties(mongo-c-driver)
+    if(NOT mongo-c-driver_POPULATED)
+        set(OLD_ENABLE_TESTS ${ENABLE_TESTS})
+        set(OLD_BUILD_TESTING ${BUILD_TESTING})
+        set(OLD_CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
+        set(OLD_CMAKE_C_FLAGS ${CMAKE_C_FLAGS})
+
+        set(ENABLE_EXTRA_ALIGNMENT OFF)
+
+        FetchContent_Populate(mongo-c-driver)
+        # Set ENABLE_TESTS to OFF to disable the test-libmongoc target in the C driver.
+        # This prevents the LoadTests.cmake script from attempting to execute test-libmongoc.
+        # test-libmongoc is not built with the "all" target.
+        # Attempting to execute test-libmongoc results in an error: "Unable to find executable: NOT_FOUND"
+        set(ENABLE_TESTS OFF)
+        set(BUILD_TESTING OFF)
+        string(REPLACE " -Werror" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+        string(REPLACE " -Werror" "" CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
+        add_subdirectory(${mongo-c-driver_SOURCE_DIR} ${mongo-c-driver_BINARY_DIR})
+        set(CMAKE_CXX_FLAGS ${OLD_CMAKE_CXX_FLAGS})
+        set(CMAKE_C_FLAGS ${OLD_CMAKE_C_FLAGS})
+        set(ENABLE_TESTS OLD_ENABLE_TESTS)
+        set(BUILD_TESTING OLD_BUILD_TESTING)
+    endif()
+    message(STATUS "Download and configure C driver version ${LIBMONGOC_DOWNLOAD_VERSION} ... end")
+endif()
+
 # All of our target compilers support the deprecated
 # attribute. Normally, we would just let the GenerateExportHeader
 # subsystem do this via configure check, but there appears to be a
@@ -182,7 +250,10 @@ if(BUILD_VERSION STREQUAL "0.0.0")
     endif()
 endif()
 
-if(NOT CMAKE_BUILD_TYPE)
+get_property(isMultiConfig GLOBAL PROPERTY GENERATOR_IS_MULTI_CONFIG)
+
+if(NOT CMAKE_BUILD_TYPE AND NOT isMultiConfig)
+    # Do not override CMAKE_BUILD_TYPE if generator is multi config. CMAKE_BUILD_TYPE is ignored for multi-config generators.
     message(STATUS "No build type selected, default is Release")
     set(CMAKE_BUILD_TYPE "Release")
 endif()
@@ -341,23 +412,20 @@ add_custom_command (OUTPUT ${DIST_FILE}
       ${ALL_DIST} ${dist_generated_depends}
 )
 
-if(NOT (TARGET bson_shared OR TARGET mongoc_shared))
-   # If these targets exist, then libbson/libmongoc have already been included
-   # as a project sub-directory; the 'dist' and 'distcheck' targets here would
-   # collide with those declared in the mongo-c-driver project
-   add_custom_target (dist DEPENDS ${DIST_FILE})
+if(NOT (TARGET dist OR TARGET distcheck))
+    add_custom_target (dist DEPENDS ${DIST_FILE})
 
-   add_custom_target (distcheck DEPENDS dist
-      COMMAND ${CMAKE_COMMAND}
-         -D CMAKE_MODULE_PATH=${PROJECT_SOURCE_DIR}/cmake/make_dist
-         -D CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}
-         -D PACKAGE_PREFIX=${PACKAGE_PREFIX}
-         -D CMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS}
-         -P ${PROJECT_SOURCE_DIR}/cmake/make_dist/MakeDistCheck.cmake
-   )
+    add_custom_target (distcheck DEPENDS dist
+       COMMAND ${CMAKE_COMMAND}
+          -D CMAKE_MODULE_PATH=${PROJECT_SOURCE_DIR}/cmake/make_dist
+          -D CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}
+          -D PACKAGE_PREFIX=${PACKAGE_PREFIX}
+          -D CMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS}
+          -P ${PROJECT_SOURCE_DIR}/cmake/make_dist/MakeDistCheck.cmake
+    )
 endif()
 
-if(ENABLE_UNINSTALL AND NOT (TARGET bson_shared OR TARGET mongoc_shared))
+if(ENABLE_UNINSTALL)
     if(WIN32)
         set(UNINSTALL_PROG "uninstall.cmd")
     else()

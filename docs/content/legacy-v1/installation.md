@@ -39,7 +39,7 @@ title = "Installing the legacy driver"
 ### How to ask for Help
 
 If you are having difficulty building the driver after reading the below
-instructions, please post on the [MongoDB Community Forums](https://community.mongodb.com/tags/c/drivers-odms-connectors/7/cxx-driver) to ask for
+instructions, please post on the [MongoDB Community Forums](https://www.mongodb.com/community/forums/tag/cxx) to ask for
 help. Please include in your post **all** of the following information:
 
  - The version of the driver you are trying to build (branch or tag).
@@ -169,7 +169,7 @@ have linked against libstdc++.
 There are several targets you can build, but the most common target for users of the library is `install`, which will build the driver, and install the driver and headers to the location specified with the `--prefix` argument. If no prefix is specified, `--prefix` defaults to a directory named ```build/install``` under the current source directory.
 
 ##### Client Feature Options
- - `--ssl` Enables SSL support. You will need a compatible version of the SSL libraries available.The default authorization mechanism since MongoDB version 3.0 is [SCRAM-SHA-1](https://docs.mongodb.com/manual/reference/program/mongo/). If you want to use standard MongoDB authentication, you should compile with --ssl option for SCRAM-SHA-1 mechanism support.
+ - `--ssl` Enables SSL support. You will need a compatible version of the SSL libraries available.The default authorization mechanism since MongoDB version 3.0 is [SCRAM-SHA-1](https://www.mongodb.com/docs/manual/core/security-scram/). If you want to use standard MongoDB authentication, you should compile with --ssl option for SCRAM-SHA-1 mechanism support.
  - `--use-sasl-client` Enables SASL, which MongoDB uses for the Kerberos authentication available on MongoDB Enterprise. You will need a compatible version of the SASL implementation libraries available. The Cyrus SASL libraries are what we test with, and are recommended.
  - `--sharedclient` Builds a shared library version of the client driver alongside the static library. If applicable for your application, prefer using the shared client.
 
@@ -324,7 +324,7 @@ scons
 
 ###### Building multiple Windows library variants:
 
-As of legacy-0.8, the Windows libraries are now tagged with boost-like ABI tags (see http://www.boost.org/doc/libs/1_55_0/more/getting_started/windows.html#library-naming), so it is possible to build several different variants (debug vs retail, static vs dynamic runtime) and install them to the same location. We have added support for autolib, so the selection of the appropriate library is handled automatically (see https://jira.mongodb.org/browse/CXX-200). To build all of the different driver variants, repeatedly invoke scons as follows:
+As of legacy-0.8, the Windows libraries are now tagged with boost-like ABI tags (see http://www.boost.org/doc/libs/1_55_0/more/getting_started/windows.html#library-naming), so it is possible to build several different variants (debug vs retail, static vs dynamic runtime) and install them to the same location. We have added support for autolib, so the selection of the appropriate library is handled automatically (see https://jira.mongodb.com/browse/CXX-200). To build all of the different driver variants, repeatedly invoke scons as follows:
 
 ```
 scons $ARGS install

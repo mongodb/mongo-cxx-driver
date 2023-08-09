@@ -1821,8 +1821,7 @@ document::value create_search_indexes(collection& coll, document::view operation
         models.push_back(model);
     }
 
-    std::vector<bsoncxx::string::view_or_value> created_indexes =
-        coll.search_indexes().create_many(models);
+    std::vector<std::string> created_indexes = coll.search_indexes().create_many(models);
 
     builder::basic::array result;
     for (auto s : created_indexes) {

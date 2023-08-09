@@ -58,7 +58,7 @@ namespace gridfs {
 ///
 /// See also the method documentation for `mongocxx::database::gridfs_bucket()`.
 ///
-/// @see http://www.mongodb.org/display/DOCS/GridFS
+/// @see https://www.mongodb.com/display/DOCS/GridFS
 ///
 class MONGOCXX_API bucket {
    public:

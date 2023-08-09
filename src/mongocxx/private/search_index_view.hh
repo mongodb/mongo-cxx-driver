@@ -137,6 +137,14 @@ class search_index_view::impl {
         bool result = libmongoc::collection_write_command_with_opts(
             _coll, command_bson.bson(), opts_bson.bson(), reply.bson_for_init(), &error);
 
+        const uint32_t serverErrorNamespaceNotFound = 26;
+        if (error.domain == MONGOC_ERROR_QUERY && error.code == serverErrorNamespaceNotFound) {
+            // Ignore NamespaceNotFound error.
+            // NamespaceNotFound server error code is documented in server code:
+            // https://github.com/mongodb/mongo/blob/07e852967e936adbc255518ebaa9c116937becc4/src/mongo/base/error_codes.yml#L64
+            return;
+        }
+
         if (!result) {
             throw_exception<operation_exception>(reply.steal(), error);
         }

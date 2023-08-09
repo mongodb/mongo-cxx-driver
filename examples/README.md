@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-* `libmongoc` (see the [installation guide](http://mongoc.org/libmongoc/current/installing.html))
+* `libmongoc` (see the [installation guide](https://mongoc.org/libmongoc/current/installing.html))
 
 ## Building code examples
 

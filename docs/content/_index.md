@@ -33,7 +33,7 @@ Currently, no drivers guarantee API or ABI stability.
 
 ## MongoDB compatibility
 
-Compatibility of each C++ driver version with each MongoDB server is documented in the [MongoDB manual](https://docs.mongodb.com/drivers/cxx#mongodb-compatibility).
+Compatibility of each C++ driver version with each MongoDB server is documented in the [MongoDB manual](https://www.mongodb.com/docs/drivers/cxx#mongodb-compatibility).
 
 ## License
 
