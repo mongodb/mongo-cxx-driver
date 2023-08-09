@@ -441,7 +441,7 @@ TEST_CASE("Transactions Documentation Examples", "[transactions]") {
 TEST_CASE("Transactions Mongos Pinning Prose Tests", "[transactions]") {
     instance::current();
 
-    if (test_util::get_server_version() < "4.1.6") {
+    if (test_util::compare_versions(test_util::get_server_version(), "4.1.6") < 0) {
         WARN("Skipping - requires server 4.1.6+");
         return;
     }

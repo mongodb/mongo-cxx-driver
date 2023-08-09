@@ -855,7 +855,7 @@ TEST_CASE("with_transaction", "[session]") {
     SECTION("prose tests for with_transaction") {
         SECTION("callback raises a custom error") {
             // Multi-document transactions require server 4.2+.
-            if (get_server_version(test.client) < "4.2") {
+            if (compare_versions(get_server_version(test.client), "4.2") < 0) {
                 WARN("Skipping - MongoDB server 4.2 or newer required");
                 return;
             }
