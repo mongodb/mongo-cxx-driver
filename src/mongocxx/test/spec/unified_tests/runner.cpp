@@ -382,8 +382,13 @@ std::string get_hostnames(bsoncxx::document::view object) {
                 // connection string).
                 const mongocxx::client client1{uri1, test_util::add_test_server_api()};
 
-                REQUIRE(client0["config"].has_collection("shards"));
-                REQUIRE(client1["config"].has_collection("shards"));
+                if (!client0["config"].has_collection("shards")) {
+                    FAIL("missing required mongos on port 27017 with useMultipleMongoses=true");
+                }
+
+                if (!client1["config"].has_collection("shards")) {
+                    FAIL("missing required mongos on port 27018 with useMultipleMongoses=true");
+                }
 
                 return two;  // Two mongoses.
             } else {
