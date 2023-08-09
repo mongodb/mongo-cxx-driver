@@ -20,6 +20,10 @@ endif()
 
 project(MONGO_CXX_DRIVER LANGUAGES CXX)
 
+if(NOT DEFINED BUILD_TESTING)
+  set(BUILD_TESTING OFF)  # Set this to OFF by default
+endif()
+
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
   if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "4.8.2")
     message(FATAL_ERROR "Insufficient GCC version - GCC 4.8.2+ required")
@@ -102,8 +106,8 @@ if(NEED_DOWNLOAD_C_DRIVER)
         add_subdirectory(${mongo-c-driver_SOURCE_DIR} ${mongo-c-driver_BINARY_DIR})
         set(CMAKE_CXX_FLAGS ${OLD_CMAKE_CXX_FLAGS})
         set(CMAKE_C_FLAGS ${OLD_CMAKE_C_FLAGS})
-        set(ENABLE_TESTS OLD_ENABLE_TESTS)
-        set(BUILD_TESTING OLD_BUILD_TESTING)
+        set(ENABLE_TESTS ${OLD_ENABLE_TESTS})
+        set(BUILD_TESTING ${OLD_BUILD_TESTING})
     endif()
     message(STATUS "Download and configure C driver version ${LIBMONGOC_DOWNLOAD_VERSION} ... end")
 endif()

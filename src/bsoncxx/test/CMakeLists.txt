@@ -12,6 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+if(NOT BUILD_TESTING)
+  set_property(DIRECTORY PROPERTY EXCLUDE_FROM_ALL TRUE)
+endif()
+
 include_directories(
     ${MONGO_CXX_DRIVER_SOURCE_DIR}/src/third_party/catch/include
 )
