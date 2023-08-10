@@ -44,7 +44,8 @@ class MONGOCXX_API client_encryption {
     /// @param opts
     ///   An object representing encryption options.
     ///
-    /// @see https://www.mongodb.com/docs/ecosystem/use-cases/client-side-field-level-encryption-guide
+    /// @see
+    /// https://www.mongodb.com/docs/ecosystem/use-cases/client-side-field-level-encryption-guide
     ///
     client_encryption(options::client_encryption opts);
 

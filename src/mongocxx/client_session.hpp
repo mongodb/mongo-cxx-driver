@@ -35,7 +35,8 @@ class client;
 /// Note that client_session is not thread-safe. See
 /// https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/thread-safety/ for more details.
 ///
-/// @see https://www.mongodb.com/docs/manual/core/read-isolation-consistency-recency/#causal-consistency
+/// @see
+/// https://www.mongodb.com/docs/manual/core/read-isolation-consistency-recency/#causal-consistency
 ///
 class MONGOCXX_API client_session {
    public:
