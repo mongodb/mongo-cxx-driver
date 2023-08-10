@@ -39,7 +39,7 @@ RUN wget https://github.com/mongodb/mongo-c-driver/releases/download/${MONGOC_VE
 RUN wget https://github.com/mongodb/mongo-cxx-driver/releases/download/r${MONGOCXX_VERSION}/mongo-cxx-driver-r${MONGOCXX_VERSION}.tar.gz && \
     tar xf mongo-cxx-driver-r${MONGOCXX_VERSION}.tar.gz && \
     cd mongo-cxx-driver-r${MONGOCXX_VERSION}/build && \
-    cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=17 -DCMAKE_INSTALL_PREFIX=/usr/local -DCMAKE_INSTALL_PREFIX=/install -DCMAKE_PREFIX_PATH=/install && \
+    cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_STANDARD=17 -DCMAKE_INSTALL_PREFIX=/install -DCMAKE_PREFIX_PATH=/install && \
     make -j $(nproc) && \
     make install -j $(nproc)
 
