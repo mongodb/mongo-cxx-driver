@@ -963,7 +963,7 @@ void run_transactions_tests_in_file(const std::string& test_path) {
                                 return test_util::match_action::k_not_equal;
                             }
                             return test_util::match_action::k_skip;
-                        } else if (key.compare("upsert") == 0 || key.compare("multi")) {
+                        } else if (key.compare("upsert") == 0 || key.compare("multi") == 0) {
                             // libmongoc includes `multi: false` and `upsert: false`.
                             // Some tests do not include `multi: false` and `upsert: false`
                             // in expectations. See DRIVERS-2271 and DRIVERS-976.
