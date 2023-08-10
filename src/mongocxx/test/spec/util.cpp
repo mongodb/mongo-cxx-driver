@@ -606,19 +606,27 @@ static void test_setup(document::view test, document::view test_spec) {
 void parse_session_opts(document::view session_opts, options::client_session* out) {
     options::transaction txn_opts;
     if (session_opts["defaultTransactionOptions"]) {
-        auto rc = lookup_read_concern(session_opts["defaultTransactionOptions"].get_document());
-        if (rc) {
+        if (auto rc =
+                lookup_read_concern(session_opts["defaultTransactionOptions"].get_document())) {
             txn_opts.read_concern(*rc);
         }
 
-        auto wc = lookup_write_concern(session_opts["defaultTransactionOptions"].get_document());
-        if (wc) {
+        if (auto wc =
+                lookup_write_concern(session_opts["defaultTransactionOptions"].get_document())) {
             txn_opts.write_concern(*wc);
         }
 
-        auto rp = lookup_read_preference(session_opts["defaultTransactionOptions"].get_document());
-        if (rp) {
+        if (auto rp =
+                lookup_read_preference(session_opts["defaultTransactionOptions"].get_document())) {
             txn_opts.read_preference(*rp);
+        }
+
+        if (auto cc = session_opts["causalConsistency"]) {
+            out->causal_consistency(cc.get_bool());
+        }
+
+        if (auto mct = session_opts["maxCommitTimeMS"]) {
+            txn_opts.max_commit_time_ms(std::chrono::milliseconds(mct.get_int64()));
         }
     }
 
