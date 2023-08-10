@@ -823,6 +823,31 @@ functions:
             # perl: filter verbose "Found" list and "Processing" messages.
             ./codecov -Zgt "${codecov_token}" | perl -lne 'print if not m|(^.*\.gcov(\.\.\.)?$)|'
 
+    "docker-image-build":
+      - command: shell.exec
+        params:
+          shell: bash
+          working_dir: "mongo-cxx-driver"
+          script: |
+            set -o errexit
+            set -o pipefail
+            set -x
+            echo "Building Alpine Docker image"
+            pushd extras/docker/alpine3.18
+            make cleanbuild
+            make test
+            popd
+            echo "Building Debian Docker image"
+            pushd extras/docker/bookworm
+            make cleanbuild
+            make test
+            popd
+            echo "Building Red Hat UBI Docker image"
+            pushd extras/docker/redhat-ubi-9.2
+            make cleanbuild
+            make test
+            popd
+
 #######################################
 #              Post Task              #
 #######################################
@@ -1176,6 +1201,19 @@ tasks:
         - func: "run_kms_servers"
         - func: "test"
 
+    - name: docker_build
+      run_on: &docker-distros
+        - ubuntu2004-small
+        - ubuntu2004
+        - ubuntu1804
+        - ubuntu1804-medium
+        - debian10
+        - debian11
+        - amazon2
+      commands:
+         - func: "setup"
+         - func: "docker-image-build"
+
     - name: test_search_index_helpers
       commands:
         - func: "install_c_driver"
@@ -1339,6 +1377,11 @@ buildvariants:
     #######################################
     #         Linux Buildvariants         #
     #######################################
+    - name: docker-builder
+      display_name: "Docker builder"
+      tasks:
+          - name: docker_build
+
     - name: rhel9-release-latest
       display_name: "RHEL 9 Release (MongoDB Latest)"
       expansions:

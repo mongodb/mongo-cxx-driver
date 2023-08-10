@@ -1,0 +1,17 @@
+FROM mongo-cxx-driver:3.8.0-bookworm
+
+WORKDIR /build
+
+RUN apt update && apt install -y build-essential
+
+COPY test.cpp /build/
+
+RUN g++ \
+    -o test \
+    test.cpp \
+    -I/usr/local/include/bsoncxx/v_noabi/ \
+    -I/usr/local/include/mongocxx/v_noabi/ \
+    -lmongocxx \
+    -lbsoncxx
+
+CMD /build/test
