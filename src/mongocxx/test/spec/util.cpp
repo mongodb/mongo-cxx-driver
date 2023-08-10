@@ -957,6 +957,7 @@ void run_transactions_tests_in_file(const std::string& test_path) {
                                 REQUIRE(
                                     test_util::matches(session_lsid1, main->get_document().value));
                             }
+                            return test_util::match_action::k_skip;
                         } else if (pattern.type() == type::k_null) {
                             if (main) {
                                 return test_util::match_action::k_not_equal;
@@ -968,7 +969,7 @@ void run_transactions_tests_in_file(const std::string& test_path) {
                             // in expectations. See DRIVERS-2271 and DRIVERS-976.
                             return test_util::match_action::k_skip;
                         }
-                        return test_util::match_action::k_proceed;
+                        return test_util::match_action::k_skip;
                     };
 
                 if (test["expectations"]) {
