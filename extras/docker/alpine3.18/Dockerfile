@@ -14,7 +14,7 @@ RUN apk add --no-cache \
 
 RUN mkdir /install
 
-RUN git clone https://github.com/mongodb/libmongocrypt.git --branch ${MONGOCRYPT_VERSION} && \
+RUN git clone https://github.com/mongodb/libmongocrypt.git --branch ${MONGOCRYPT_BRANCH} && \
     cd libmongocrypt && \
     mkdir cmake-build && \
     cd cmake-build && \

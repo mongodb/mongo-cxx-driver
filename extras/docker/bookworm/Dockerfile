@@ -2,7 +2,7 @@ FROM debian:12-slim AS builder
 
 ARG MONGOCXX_VERSION
 ARG MONGOC_VERSION=1.24.2
-ARG MONGOCRYPT_VERSION=r1.8
+ARG MONGOCRYPT_BRANCH=r1.8
 
 WORKDIR /build
 
@@ -16,7 +16,7 @@ RUN apt update && apt install -y \
 
 RUN mkdir /install
 
-RUN git clone https://github.com/mongodb/libmongocrypt.git --branch ${MONGOCRYPT_VERSION} && \
+RUN git clone https://github.com/mongodb/libmongocrypt.git --branch ${MONGOCRYPT_BRANCH} && \
     cd libmongocrypt && \
     mkdir cmake-build && \
     cd cmake-build && \
