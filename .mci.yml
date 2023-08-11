@@ -833,20 +833,11 @@ functions:
             set -o pipefail
             set -x
             echo "Building Alpine Docker image"
-            pushd extras/docker/alpine3.18
-            make cleanbuild
-            make test
-            popd
+            make -C extras/docker/alpine3.18 cleanbuild test
             echo "Building Debian Docker image"
-            pushd extras/docker/bookworm
-            make cleanbuild
-            make test
-            popd
+            make -C extras/docker/bookworm cleanbuild test
             echo "Building Red Hat UBI Docker image"
-            pushd extras/docker/redhat-ubi-9.2
-            make cleanbuild
-            make test
-            popd
+            make -C extras/docker/redhat-ubi-9.2 cleanbuild test
 
 #######################################
 #              Post Task              #
