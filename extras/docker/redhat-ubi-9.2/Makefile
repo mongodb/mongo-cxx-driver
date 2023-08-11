@@ -9,8 +9,8 @@ build:
 		-t mongo-cxx-driver:$(MONGOCXX_VERSION)-redhat-ubi-9.2 \
 		--build-arg="MONGOCXX_VERSION=$(MONGOCXX_VERSION)"
 
-.PHONY: cleanbuild
-cleanbuild:
+.PHONY: nocachebuild
+nocachebuild:
 	docker build . \
 		--no-cache \
 		-t mongo-cxx-driver:$(MONGOCXX_VERSION)-redhat-ubi-9.2 \

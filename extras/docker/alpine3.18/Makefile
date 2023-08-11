@@ -9,8 +9,8 @@ build:
 		-t mongo-cxx-driver:$(MONGOCXX_VERSION)-alpine3.18 \
 		--build-arg="MONGOCXX_VERSION=$(MONGOCXX_VERSION)"
 
-.PHONY: cleanbuild
-cleanbuild:
+.PHONY: nocachebuild
+nocachebuild:
 	docker build . \
 		--no-cache \
 		-t mongo-cxx-driver:$(MONGOCXX_VERSION)-alpine3.18 \
