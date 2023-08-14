@@ -14,11 +14,12 @@ RUN apk add --no-cache \
 
 RUN mkdir /install
 
-RUN git clone https://github.com/mongodb/libmongocrypt.git --branch ${MONGOCRYPT_VERSION} && \
-    cd libmongocrypt && \
+RUN wget https://github.com/mongodb/libmongocrypt/archive/refs/tags/${MONGOCRYPT_VERSION}/libmongocrypt-${MONGOCRYPT_VERSION}.tar.gz -O libmongocrypt-${MONGOCRYPT_VERSION}.tar.gz && \
+    tar xf libmongocrypt-${MONGOCRYPT_VERSION}.tar.gz && \
+    cd libmongocrypt-${MONGOCRYPT_VERSION} && \
     mkdir cmake-build && \
     cd cmake-build && \
-    cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_INSTALL_PREFIX=/install && \
+    cmake .. -DBUILD_VERSION=${MONGOCRYPT_VERSION} -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_INSTALL_PREFIX=/install && \
     make -j $(nproc) && \
     make install -j $(nproc)
 
@@ -31,10 +32,10 @@ RUN wget https://github.com/mongodb/mongo-c-driver/archive/refs/tags/${MONGOC_VE
     make -j $(nproc) && \
     make install -j $(nproc)
 
-RUN wget https://github.com/mongodb/mongo-cxx-driver/releases/download/r${MONGOCXX_VERSION}/mongo-cxx-driver-r${MONGOCXX_VERSION}.tar.gz && \
-    tar xf mongo-cxx-driver-r${MONGOCXX_VERSION}.tar.gz && \
+RUN wget https://github.com/mongodb/mongo-cxx-driver/archive/refs/tags/r${MONGOCXX_VERSION}/mongo-cxx-driver-${MONGOCXX_VERSION}.tar.gz -O mongo-cxx-driver-${MONGOCXX_VERSION}.tar.gz && \
+    tar xf mongo-cxx-driver-${MONGOCXX_VERSION}.tar.gz && \
     cd mongo-cxx-driver-r${MONGOCXX_VERSION}/build && \
-    cmake .. -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_CXX_STANDARD=17 -DCMAKE_INSTALL_PREFIX=/install -DCMAKE_PREFIX_PATH=/install && \
+    cmake .. -DBUILD_VERSION=${MONGOCXX_VERSION} -DCMAKE_BUILD_TYPE=RelWithDebInfo -DCMAKE_CXX_STANDARD=17 -DCMAKE_INSTALL_PREFIX=/install -DCMAKE_PREFIX_PATH=/install && \
     make -j $(nproc) && \
     make install -j $(nproc)
 
