@@ -2,23 +2,24 @@
 # This file was auto generated from the template file Makefile.j2 using the generate.py script
 
 MONGOCXX_VERSION=3.8.0
+DOCKER=docker
 
 .PHONY: build
 build:
-	docker build . \
+	$(DOCKER) build . \
 		-t mongo-cxx-driver:$(MONGOCXX_VERSION)-jammy
 
 .PHONY: nocachebuild
 nocachebuild:
-	docker build . \
+	$(DOCKER) build . \
 		--no-cache \
 		-t mongo-cxx-driver:$(MONGOCXX_VERSION)-jammy
 
 .PHONY: run
 run:
-	docker run --rm -it mongo-cxx-driver:$(MONGOCXX_VERSION)-jammy
+	$(DOCKER) run --rm -it mongo-cxx-driver:$(MONGOCXX_VERSION)-jammy
 
 .PHONY: test
 test:
-	docker build . --no-cache -f TestDockerfile -t test-mongocxx-driver-image:$(MONGOCXX_VERSION)-jammy
-	docker run test-mongocxx-driver-image:$(MONGOCXX_VERSION)-jammy
+	$(DOCKER) build . --no-cache -f TestDockerfile -t test-mongocxx-driver-image:$(MONGOCXX_VERSION)-jammy
+	$(DOCKER) run test-mongocxx-driver-image:$(MONGOCXX_VERSION)-jammy
