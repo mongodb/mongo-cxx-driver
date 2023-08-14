@@ -2,7 +2,7 @@ FROM alpine:3.18 AS builder
 
 ARG MONGOCXX_VERSION
 ARG MONGOC_VERSION=1.24.2
-ARG MONGOCRYPT_BRANCH=r1.8
+ARG MONGOCRYPT_VERSION=1.8.1
 
 WORKDIR /build
 
@@ -14,7 +14,7 @@ RUN apk add --no-cache \
 
 RUN mkdir /install
 
-RUN git clone https://github.com/mongodb/libmongocrypt.git --branch ${MONGOCRYPT_BRANCH} && \
+RUN git clone https://github.com/mongodb/libmongocrypt.git --branch ${MONGOCRYPT_VERSION} && \
     cd libmongocrypt && \
     mkdir cmake-build && \
     cd cmake-build && \

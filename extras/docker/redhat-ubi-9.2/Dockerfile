@@ -2,7 +2,7 @@ FROM registry.access.redhat.com/ubi9/ubi-minimal:9.2 AS builder
 
 ARG MONGOCXX_VERSION
 ARG MONGOC_VERSION=1.24.2
-ARG MONGOCRYPT_BRANCH=r1.8
+ARG MONGOCRYPT_VERSION=1.8.1
 
 WORKDIR /build
 
@@ -19,7 +19,7 @@ RUN microdnf install -y \
 
 RUN mkdir /install
 
-RUN git clone https://github.com/mongodb/libmongocrypt.git --branch ${MONGOCRYPT_BRANCH} && \
+RUN git clone https://github.com/mongodb/libmongocrypt.git --branch ${MONGOCRYPT_VERSION} && \
     cd libmongocrypt && \
     mkdir cmake-build && \
     cd cmake-build && \
