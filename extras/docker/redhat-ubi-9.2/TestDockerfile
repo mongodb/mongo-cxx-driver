@@ -5,7 +5,7 @@ FROM mongo-cxx-driver:3.8.0-redhat-ubi-9.2
 
 WORKDIR /build
 
-RUN microdnf install -y g++
+RUN microdnf upgrade -y && microdnf install -y g++
 
 COPY test.cpp /build/
 

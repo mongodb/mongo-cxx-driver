@@ -5,7 +5,7 @@ FROM mongo-cxx-driver:3.8.0-alpine3.18
 
 WORKDIR /build
 
-RUN apk add alpine-sdk
+RUN apk update && apk upgrade && apk add --no-cache alpine-sdk
 
 COPY test.cpp /build/
 

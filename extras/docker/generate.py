@@ -4,6 +4,11 @@ from jinja2 import Environment
 from jinja2 import FileSystemLoader
 
 
+MONGOCXX_VERSION = "3.8.0"
+MONGOC_VERSION = "1.24.2"
+MONGOCRYPT_VERSION = "1.8.1"
+
+
 def render_template(template_filename, context):
     env = Environment(loader=FileSystemLoader("."))
     template = env.get_template(template_filename)
@@ -16,16 +21,42 @@ if __name__ == "__main__":
         ("Makefile.j2", "Makefile"),
         ("TestDockerfile.j2", "TestDockerfile"),
         ("test.cpp.j2", "test.cpp"),
+        ("Dockerfile.j2", "Dockerfile"),
     ]
     distros = [
         "alpine3.18",
         "bookworm",
         "redhat-ubi-9.2",
     ]
+    base_image = {
+        "alpine3.18": "alpine:3.18",
+        "bookworm": "debian:12-slim",
+        "redhat-ubi-9.2": "registry.access.redhat.com/ubi9/ubi-minimal:9.2",
+    }
     test_dependency_install_command = {
-        "alpine3.18": "apk add alpine-sdk",
-        "bookworm": "apt update && apt install -y build-essential",
-        "redhat-ubi-9.2": "microdnf install -y g++",
+        "alpine3.18": "apk update && apk upgrade && apk add --no-cache alpine-sdk",
+        "bookworm": "apt update && apt upgrade -y && apt install -y build-essential",
+        "redhat-ubi-9.2": "microdnf upgrade -y && microdnf install -y g++",
+    }
+    build_dependencies_install_command = {
+        "alpine3.18": "apk update && apk upgrade && apk add --no-cache alpine-sdk cmake openssl-dev python3",
+        "bookworm": "apt update && apt upgrade -y && apt install -y build-essential cmake git libssl-dev python3 wget",
+        "redhat-ubi-9.2": "microdnf upgrade -y && microdnf install -y gcc g++ git gzip tar wget cmake openssl-devel python3",
+    }
+    runtime_dependencies_install_command = {
+        "alpine3.18": "apk update && apk upgrade && apk add --no-cache openssl3 libstdc++ libc6-compat",
+        "bookworm": "apt update && apt upgrade -y && apt install -y libssl3 && rm -rf /var/lib/apt/lists/*",
+        "redhat-ubi-9.2": "microdnf upgrade -y && microdnf install -y openssl",
+    }
+    post_install_commands = {
+        "alpine3.18": "",
+        "bookworm": "\nRUN ldconfig\n",
+        "redhat-ubi-9.2": (
+            "\n"
+            "RUN ldconfig\n"
+            "\n"
+            'ENV LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:/usr/local/lib64/"\n'
+        ),
     }
     for template, output_filename in templates:
         if output_filename.endswith(".cpp"):
@@ -41,6 +72,17 @@ if __name__ == "__main__":
             context = {
                 "distro": distro,
                 "install_test_dependencies": test_dependency_install_command[distro],
+                "install_build_dependencies": build_dependencies_install_command[
+                    distro
+                ],
+                "install_runtime_dependencies": runtime_dependencies_install_command[
+                    distro
+                ],
+                "post_install_commands": post_install_commands[distro],
+                "base_image": base_image[distro],
+                "mongoc_version": MONGOC_VERSION,
+                "mongocxx_version": MONGOCXX_VERSION,
+                "mongocrypt_version": MONGOCRYPT_VERSION,
             }
 
             rendered = render_template(template, context)
