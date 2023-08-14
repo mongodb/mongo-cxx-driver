@@ -20,6 +20,7 @@
 Make a release of the C++ Driver, including steps associated with the CXX
 project in Jira, and with the mongodb/mongo-cxx-driver GitHub repository.
 See releasing.md for complete release instructions.
+When editing this file, consider running `test_make_release.py` to validate changes.
 """
 
 # CXX Project ID - 11980
@@ -36,6 +37,7 @@ See releasing.md for complete release instructions.
 # | Task        | 3      |
 # ------------------------
 
+import textwrap
 import re
 from distutils.version import LooseVersion
 import os
@@ -534,6 +536,67 @@ def generate_release_notes(issues, release_version):
     improvement_filter = lambda i: i.fields.issuetype.id == ISSUE_TYPE_ID['Improvement']
     release_notes += print_issues(list(filter(improvement_filter, issues)))
     release_notes += '</ul>\n'
+
+    return release_notes
+
+
+def generate_release_notes_v2(release_version: str, changelog_contents: str) -> str:
+    lines = []
+    adding_to_lines = False
+    for line in changelog_contents.splitlines(keepends=True):
+        # Check for a version title. Example: `## 3.9.0`.
+        match = re.match(r"^## (.*?)\s(.*)$".format(release_version), line)
+        if match:
+            matched_version = match.group(1)
+            if matched_version == release_version:
+                # Found matching version.
+                extra = match.group(2)
+                if extra != "":
+                    raise click.ClickException(
+                        "Unexpected extra characters in CHANGELOG: {}. Is the CHANGELOG updated?".format(extra))
+                if adding_to_lines:
+                    raise click.ClickException(
+                        "Unexpected second changelog entry matching version: {}: {}".format(release_version), line)
+                # Begin adding lines to `lines` list.
+                adding_to_lines = True
+                continue
+            # End adding lines when another title is seen.
+            else:
+                adding_to_lines = False
+                break
+
+        if adding_to_lines:
+            # Reduce title by one.
+            if line.startswith("#"):
+                lines.append(line[1:])
+            else:
+                lines.append(line)
+
+    # Removing beginning empty lines.
+    while len(lines) > 0 and lines[0] == "\n":
+        lines = lines[1:]
+
+    # Remove trailing empty lines.
+    while len(lines) > 0 and lines[-1] == "\n":
+        lines = lines[0:-1]
+
+    if lines == []:
+        raise click.ClickException(
+            "Failed to find changelog contents for {}".format(release_version))
+
+    footer = textwrap.dedent("""
+    ## Feedback
+    To report a bug or request a feature, please open a ticket in the MongoDB issue management tool Jira:
+
+    - [Create an account](https://jira.mongodb.org) and login.
+    - Navigate to the [CXX project](https://jira.mongodb.org/browse/CXX)
+    - Click `Create`.
+    """).lstrip()
+
+    release_notes = "".join(lines) + "\n"
+    release_notes += "See the [full list of changes in Jira](https://jira.mongodb.org/issues/?jql=project%20%3D%20CXX%20AND%20fixVersion%20%3D%20{}).\n\n".format(
+        release_version)
+    release_notes += footer
 
     return release_notes
 
