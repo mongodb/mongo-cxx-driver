@@ -1194,13 +1194,7 @@ tasks:
 
     - name: docker_build
       run_on: &docker-distros
-        - ubuntu2004-small
         - ubuntu2004
-        - ubuntu1804
-        - ubuntu1804-medium
-        - debian10
-        - debian11
-        - amazon2
       commands:
          - func: "setup"
          - func: "docker-image-build"
