@@ -42,10 +42,10 @@ if __name__ == "__main__":
         "redhat-ubi-9.2": "microdnf upgrade -y && microdnf install -y g++",
     }
     build_dependencies_install_command = {
-        "alpine3.18": "apk update && apk upgrade && apk add --no-cache alpine-sdk cmake openssl-dev python3",
-        "bookworm": "apt update && apt upgrade -y && apt install -y build-essential cmake git libssl-dev python3 wget",
-        "jammy": "apt update && apt upgrade -y && apt install -y build-essential cmake git libssl-dev python3 wget",
-        "redhat-ubi-9.2": "microdnf upgrade -y && microdnf install -y gcc g++ git gzip tar wget cmake openssl-devel python3",
+        "alpine3.18": "apk update && apk upgrade && apk add --no-cache alpine-sdk ninja cmake openssl-dev python3",
+        "bookworm": "apt update && apt upgrade -y && apt install -y ninja-build build-essential cmake git libssl-dev python3 wget",
+        "jammy": "apt update && apt upgrade -y && apt install -y ninja-build build-essential cmake git libssl-dev python3 wget",
+        "redhat-ubi-9.2": "microdnf upgrade -y && microdnf install -y ninja-build gcc g++ git gzip tar wget cmake openssl-devel python3",
     }
     runtime_dependencies_install_command = {
         "alpine3.18": "apk update && apk upgrade && apk add --no-cache openssl3 libstdc++ libc6-compat",
