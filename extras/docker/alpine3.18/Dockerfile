@@ -22,12 +22,12 @@ RUN git clone https://github.com/mongodb/libmongocrypt.git --branch ${MONGOCRYPT
     make -j $(nproc) && \
     make install -j $(nproc)
 
-RUN wget https://github.com/mongodb/mongo-c-driver/releases/download/${MONGOC_VERSION}/mongo-c-driver-${MONGOC_VERSION}.tar.gz && \
+RUN wget https://github.com/mongodb/mongo-c-driver/archive/refs/tags/${MONGOC_VERSION}/mongo-c-driver-${MONGOC_VERSION}.tar.gz -O mongo-c-driver-${MONGOC_VERSION}.tar.gz && \
     tar xzf mongo-c-driver-${MONGOC_VERSION}.tar.gz && \
     cd mongo-c-driver-${MONGOC_VERSION} && \
     mkdir cmake-build && \
     cd cmake-build && \
-    cmake -DCMAKE_BUILD_TYPE=RelWithDebInfo -DENABLE_AUTOMATIC_INIT_AND_CLEANUP=OFF -DMONGOC_ENABLE_CLIENT_SIDE_ENCRYPTION=ON -DCMAKE_INSTALL_PREFIX=/install -DCMAKE_PREFIX_PATH=/install .. && \
+    cmake -DBUILD_VERSION=${MONGOC_VERSION} -DCMAKE_BUILD_TYPE=RelWithDebInfo -DENABLE_AUTOMATIC_INIT_AND_CLEANUP=OFF -DMONGOC_ENABLE_CLIENT_SIDE_ENCRYPTION=ON -DCMAKE_INSTALL_PREFIX=/install -DCMAKE_PREFIX_PATH=/install .. && \
     make -j $(nproc) && \
     make install -j $(nproc)
 
