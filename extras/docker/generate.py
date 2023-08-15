@@ -26,8 +26,8 @@ if __name__ == "__main__":
     distros = [
         "alpine3.18",
         "bookworm",
-        "redhat-ubi-9.2",
         "jammy",
+        "redhat-ubi-9.2",
     ]
     base_image = {
         "alpine3.18": "alpine:3.18",
