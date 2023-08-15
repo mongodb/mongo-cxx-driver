@@ -16,10 +16,10 @@ nocachebuild:
 		-t mongo-cxx-driver:$(MONGOCXX_VERSION)-redhat-ubi-9.2
 
 .PHONY: run
-run:
+run: | $(filter nocachebuild build, $(MAKECMDGOALS))
 	$(DOCKER) run --rm -it mongo-cxx-driver:$(MONGOCXX_VERSION)-redhat-ubi-9.2
 
 .PHONY: test
-test:
+test: | $(filter nocachebuild build, $(MAKECMDGOALS))
 	$(DOCKER) build . --no-cache -f TestDockerfile -t test-mongocxx-driver-image:$(MONGOCXX_VERSION)-redhat-ubi-9.2
 	$(DOCKER) run test-mongocxx-driver-image:$(MONGOCXX_VERSION)-redhat-ubi-9.2

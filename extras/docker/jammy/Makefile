@@ -16,10 +16,10 @@ nocachebuild:
 		-t mongo-cxx-driver:$(MONGOCXX_VERSION)-jammy
 
 .PHONY: run
-run:
+run: | $(filter nocachebuild build, $(MAKECMDGOALS))
 	$(DOCKER) run --rm -it mongo-cxx-driver:$(MONGOCXX_VERSION)-jammy
 
 .PHONY: test
-test:
+test: | $(filter nocachebuild build, $(MAKECMDGOALS))
 	$(DOCKER) build . --no-cache -f TestDockerfile -t test-mongocxx-driver-image:$(MONGOCXX_VERSION)-jammy
 	$(DOCKER) run test-mongocxx-driver-image:$(MONGOCXX_VERSION)-jammy
