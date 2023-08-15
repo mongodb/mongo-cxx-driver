@@ -44,7 +44,7 @@ else()
   message(WARNING "Unknown compiler... recklessly proceeding without a version check")
 endif()
 
-set(LIBMONGOC_REQUIRED_VERSION 1.24.2)
+set(LIBMONGOC_REQUIRED_VERSION 1.24.0)
 set(LIBMONGOC_DOWNLOAD_VERSION ba5ab6de26a874d33b0abc3d2b46961a69380e7a) # TODO: update to 1.25.0 once C driver 1.25.0 is released.
 set(LIBMONGOC_REQUIRED_ABI_VERSION 1.0)
 
