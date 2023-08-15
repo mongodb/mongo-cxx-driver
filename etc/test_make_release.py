@@ -5,7 +5,7 @@ import click
 
 
 class TestMakeRelease(unittest.TestCase):
-    def test_generate_release_notes_v2(self):
+    def test_generate_release_notes(self):
         # Test can generate.
         changelog = textwrap.dedent("""
         # Changelog
@@ -44,19 +44,19 @@ class TestMakeRelease(unittest.TestCase):
         - Click `Create`.
         """).lstrip()
 
-        got = make_release.generate_release_notes_v2("3.9.0", changelog)
+        got = make_release.generate_release_notes("3.9.0", changelog)
         self.assertEqual(got, expected_release_notes)
 
         # Test exception occurs if CHANGELOG includes extra characters in title.
         with self.assertRaises(click.ClickException) as ctx:
-            make_release.generate_release_notes_v2(
+            make_release.generate_release_notes(
                 "3.9.0", "## 3.9.0 [Unreleased]")
         self.assertIn("Unexpected extra characters",
                       str(ctx.exception.message))
 
         # Test exception occurs if CHANGELOG does not include matching entry.
         with self.assertRaises(click.ClickException) as ctx:
-            make_release.generate_release_notes_v2(
+            make_release.generate_release_notes(
                 "3.9.0", "## 3.8.0")
         self.assertIn("Failed to find", str(ctx.exception.message))
 

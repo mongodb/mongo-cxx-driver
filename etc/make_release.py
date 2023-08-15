@@ -203,7 +203,9 @@ def release(jira_creds_file,
         # all_issues_closed() has already produced an error message
         sys.exit(1)
 
-    release_notes_text = generate_release_notes(issues, release_version)
+    with open ("CHANGELOG.md", "r") as changelog:
+        changelog_contents = changelog.read()
+    release_notes_text = generate_release_notes(release_version, changelog_contents)
 
     gh_repo = auth_gh.get_repo('mongodb/mongo-cxx-driver')
     gh_release_dict = get_github_releases(gh_repo)
@@ -514,33 +516,7 @@ def all_issues_closed(issues):
 
     return True
 
-def generate_release_notes(issues, release_version):
-    """
-    Produce HTML release notes which can be used as part of the project release
-    announcement.
-    """
-
-    release_notes = '<h1>Release Notes - C++ Driver - Version {}</h1>\n'.format(release_version)
-    release_notes += '<h2>Bug</h2>\n'
-    release_notes += '<ul>\n'
-    bug_filter = lambda i: i.fields.issuetype.id == ISSUE_TYPE_ID['Bug']
-    release_notes += print_issues(list(filter(bug_filter, issues)))
-    release_notes += '</ul>\n'
-    release_notes += '<h2>New Feature</h2>\n'
-    release_notes += '<ul>\n'
-    new_feature_filter = lambda i: i.fields.issuetype.id == ISSUE_TYPE_ID['New Feature']
-    release_notes += print_issues(list(filter(new_feature_filter, issues)))
-    release_notes += '</ul>\n'
-    release_notes += '<h2>Improvement</h2>\n'
-    release_notes += '<ul>\n'
-    improvement_filter = lambda i: i.fields.issuetype.id == ISSUE_TYPE_ID['Improvement']
-    release_notes += print_issues(list(filter(improvement_filter, issues)))
-    release_notes += '</ul>\n'
-
-    return release_notes
-
-
-def generate_release_notes_v2(release_version: str, changelog_contents: str) -> str:
+def generate_release_notes(release_version: str, changelog_contents: str) -> str:
     lines = []
     adding_to_lines = False
     for line in changelog_contents.splitlines(keepends=True):
