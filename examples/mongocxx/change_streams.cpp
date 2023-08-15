@@ -27,14 +27,6 @@
 
 namespace {
 
-std::string get_server_version(const mongocxx::client& client) {
-    bsoncxx::builder::basic::document server_status{};
-    server_status.append(bsoncxx::builder::basic::kvp("serverStatus", 1));
-    bsoncxx::document::value output = client["test"].run_command(server_status.extract());
-
-    return bsoncxx::string::to_string(output.view()["version"].get_string().value);
-}
-
 // watch_forever iterates the change stream until an error occurs.
 void watch_forever(mongocxx::collection& collection) {
     mongocxx::options::change_stream options;
@@ -106,11 +98,6 @@ int main(int argc, char* argv[]) {
     try {
         auto entry = pool.acquire();
         auto collection = (*entry)[db][coll];
-
-        if (get_server_version(*entry) < "3.6") {
-            std::cerr << "Change streams are only supported on Mongo versions >= 3.6." << std::endl;
-            return EXIT_FAILURE;
-        }
 
         std::cout << "Watching for notifications on the collection " << db << "." << coll
                   << std::endl;

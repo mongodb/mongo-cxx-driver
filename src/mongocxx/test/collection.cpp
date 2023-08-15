@@ -2676,9 +2676,9 @@ TEST_CASE("Cursor iteration", "[collection][cursor]") {
         type_str = "k_tailable_await";
 
         // Improve execution time by reducing the amount of time the server waits for new
-        // results
-        // for this cursor.
-        opts.max_await_time(std::chrono::milliseconds{1});
+        // results for this cursor. Note: may cause flaky test failures if the duration is too
+        // short.
+        opts.max_await_time(std::chrono::milliseconds{10});
 
         run_test();
     }
@@ -2768,6 +2768,12 @@ TEST_CASE("Ensure that the WriteConcernError 'errInfo' object is propagated", "[
     instance::current();
 
     client mongodb_client{uri{}, test_util::add_test_server_api()};
+
+    if (test_util::get_topology(mongodb_client) == "sharded" &&
+        test_util::compare_versions(test_util::get_server_version(mongodb_client), "4.1.0") < 0) {
+        WARN("Skipping - failCommand on mongos requires 4.1+");
+        return;
+    }
 
     using bsoncxx::builder::basic::sub_document;
     auto err_info = builder::basic::document{};

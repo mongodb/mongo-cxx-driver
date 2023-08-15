@@ -29,7 +29,10 @@
 #include <mongocxx/client.hpp>
 #include <mongocxx/collection.hpp>
 #include <mongocxx/database.hpp>
+#include <mongocxx/exception/error_code.hpp>
+#include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
+#include <mongocxx/exception/server_error_code.hpp>
 #include <mongocxx/options/distinct.hpp>
 #include <mongocxx/options/find_one_and_delete.hpp>
 #include <mongocxx/pipeline.hpp>
@@ -93,7 +96,11 @@ bool should_skip_spec_test(const client& client, document::view test) {
         "Deprecated count with collation",
         "Deprecated count without a filter",
         "Deprecated count with a filter",
-        "Deprecated count with skip and limit"};
+        "Deprecated count with skip and limit",
+
+        // CXX-2678: missing required runCommand interface to set readPreference.
+        "run command fails with explicit secondary read preference",
+    };
 
     if (test["description"]) {
         std::string description = std::string(test["description"].get_string().value);
@@ -205,12 +212,70 @@ void disable_fail_point(const client& client, stdx::string_view fail_point) {
     }
 }
 
+struct fail_point_guard_type {
+    mongocxx::client& client;
+    std::string name;
+
+    fail_point_guard_type(mongocxx::client& client, std::string name)
+        : client(client), name(std::move(name)) {}
+
+    ~fail_point_guard_type() {
+        disable_fail_point(client, name);
+    }
+
+    fail_point_guard_type(const fail_point_guard_type&) = delete;
+    fail_point_guard_type& operator=(const fail_point_guard_type&) = delete;
+    fail_point_guard_type(fail_point_guard_type&&) = delete;
+    fail_point_guard_type& operator=(fail_point_guard_type&&) = delete;
+};
+
 void disable_fail_point(std::string uri_string,
                         options::client client_opts,
                         stdx::string_view fail_point) {
     mongocxx::client client = {uri{uri_string}, client_opts};
     disable_fail_point(client, fail_point);
 }
+
+void disable_targeted_fail_point(std::uint32_t server_id) {
+    const auto command_owner =
+        make_document(kvp("configureFailPoint", "failCommand"), kvp("mode", "off"));
+    const auto command = command_owner.view();
+
+    // Some transactions tests have a failCommand for "hello" repeat seven times.
+    for (int i = 0; i < kMaxHelloFailCommands; i++) {
+        try {
+            // Create a new client for every attempt to force server discovery from scratch to
+            // guarantee the hello or isMaster fail points are actually triggered on the required
+            // mongos.
+            mongocxx::client client = {uri{"mongodb://localhost:27017,localhost:27018"},
+                                       test_util::add_test_server_api()};
+            client["admin"].run_command(command, server_id);
+            break;
+        } catch (...) {
+            continue;
+        }
+    }
+}
+
+struct targeted_fail_point_guard_type {
+    std::uint32_t server_id;
+
+    targeted_fail_point_guard_type(std::uint32_t server_id) : server_id(server_id) {
+        REQUIRE(server_id != 0);
+    }
+
+    ~targeted_fail_point_guard_type() {
+        try {
+            disable_targeted_fail_point(server_id);
+        } catch (...) {
+        }
+    }
+
+    targeted_fail_point_guard_type(const targeted_fail_point_guard_type&) = delete;
+    targeted_fail_point_guard_type& operator=(const targeted_fail_point_guard_type&) = delete;
+    targeted_fail_point_guard_type(targeted_fail_point_guard_type&&) = delete;
+    targeted_fail_point_guard_type& operator=(targeted_fail_point_guard_type&&) = delete;
+};
 
 void set_up_collection(const client& client,
                        document::view test,
@@ -219,42 +284,51 @@ void set_up_collection(const client& client,
     write_concern wc_majority;
     wc_majority.acknowledge_level(write_concern::level::k_majority);
 
-    auto db = client[test[database_name].get_string().value];
-    db.drop();
+    const auto db_name = test[database_name].get_string().value;
+    const auto coll_name = test[collection_name].get_string().value;
 
+    // Create a collection object from the MongoClient, using the `database_name` and
+    // `collection_name` fields of the YAML file.
+    auto db = client[db_name];
+    auto coll = db[coll_name];
+
+    // For compatibility with Client Side Encryption tests.
     bsoncxx::builder::basic::document opts;
     if (const auto ef = test["encrypted_fields"]) {
         opts.append(kvp("encryptedFields", ef.get_document().value));
     }
 
-    auto coll_name = test[collection_name].get_string().value;
-    auto coll = db[coll_name];
-
+    // Drop the test collection, using writeConcern "majority".
     coll.drop(wc_majority, opts.view());
-    coll = db.create_collection(coll_name, opts.view(), wc_majority);
 
-    // Set up JSON schema, if we have one
+    // For compatibility with Client Side Encryption tests.
     if (test["json_schema"]) {
-        validation_criteria validation{};
-        validation.rule(test["json_schema"].get_document().value);
-
-        auto cmd = bsoncxx::builder::basic::document{};
-        cmd.append(kvp("collMod", coll_name));
-        cmd.append(kvp("validator", [&](bsoncxx::builder::basic::sub_document subdoc) {
-            subdoc.append(kvp("$jsonSchema", test["json_schema"].get_document().value));
-        }));
-
-        db.run_command(cmd.extract());
+        opts.append(
+            kvp("validator",
+                make_document(kvp("$jsonSchema", test["json_schema"].get_document().value))));
     }
 
+    // Execute the "create" command to recreate the collection, using writeConcern "majority".
+    coll = db.create_collection(coll_name, opts.view(), wc_majority);
+
     // Seed collection with data, if we have it
-    if (test["data"]) {
+    if (const auto data = test["data"]) {
         options::insert insert_opts;
         insert_opts.write_concern(wc_majority);
 
-        for (auto&& doc : test["data"].get_array().value) {
+        for (auto&& doc : data.get_array().value) {
             coll.insert_one(doc.get_document().value, insert_opts);
         }
+    }
+
+    // When testing against a sharded cluster run a `distinct` command on the newly created
+    // collection on all mongoses.
+    if (test_util::is_sharded_cluster(client)) {
+        auto s0 = mongocxx::client(uri("mongodb://localhost:27017"));
+        auto s1 = mongocxx::client(uri("mongodb://localhost:27018"));
+
+        s0[db_name][coll_name].distinct("x", {});
+        s1[db_name][coll_name].distinct("x", {});
     }
 }
 
@@ -411,7 +485,32 @@ void run_operation_check_result(document::view op, make_op_runner_fn make_op_run
 }
 
 uri get_uri(document::view test) {
-    std::string uri_string = "mongodb://localhost/?";
+    std::string uri_string = "mongodb://localhost:27017/?";
+
+    if (test_util::is_sharded_cluster()) {
+        const auto use_multiple_mongoses = test["useMultipleMongoses"];
+        if (use_multiple_mongoses && use_multiple_mongoses.get_bool().value) {
+            // If true, and the topology type is Sharded, the MongoClient for this test should be
+            // initialized with multiple mongos seed addresses. If false or omitted, only a single
+            // mongos address should be specified.
+            uri_string = "mongodb://localhost:27017,localhost:27018/?";
+
+            // Verify that both mongos are actually present.
+            const mongocxx::client client0 = {uri{"mongodb://localhost:27017"},
+                                              test_util::add_test_server_api()};
+            const mongocxx::client client1 = {uri{"mongodb://localhost:27018"},
+                                              test_util::add_test_server_api()};
+
+            if (!client0["config"].has_collection("shards")) {
+                FAIL("missing required mongos on port 27017 with useMultipleMongoses=true");
+            }
+
+            if (!client1["config"].has_collection("shards")) {
+                FAIL("missing required mongos on port 27018 with useMultipleMongoses=true");
+            }
+        }
+    }
+
     auto add_opt = [&uri_string](std::string opt) {
         if (uri_string.back() != '?') {
             uri_string += '&';
@@ -483,37 +582,51 @@ void run_tests_in_suite(std::string ev, test_runner cb) {
     run_tests_in_suite(ev, cb, empty);
 }
 
-void test_setup(document::view test, document::view test_spec) {
-    // Step 1. "clean up any open transactions from previous test failures"
-    client client{uri{}, test_util::add_test_server_api()};
+static void test_setup(document::view test, document::view test_spec) {
+    // Step 2: Create a MongoClient and call `client.admin.runCommand({killAllSessions: []})` to
+    // clean up any open transactions from previous test failures.
+    client client{get_uri(test), test_util::add_test_server_api()};
     try {
         client["admin"].run_command(make_document(kvp("killAllSessions", make_array())));
-    } catch (const operation_exception& e) {
+    } catch (const mongocxx::exception& e) {
+        // Ignore a command failure with error code 11601 ("Interrupted") to work around
+        // SERVER-38335.
+        if (e.code() != server_error_code(11601)) {
+            FAIL("unexpected exception during killAllSessions: " << e.what());
+        }
     }
 
-    // Steps 2 - 5, set up new collection
+    // Steps 2-7.
     set_up_collection(client, test_spec);
 
-    // Step 6. "If failPoint is specified, its value is a configureFailPoint command"
+    // Step 8: If failPoint is specified, its value is a configureFailPoint command.
     configure_fail_point(client, test);
 }
 
 void parse_session_opts(document::view session_opts, options::client_session* out) {
     options::transaction txn_opts;
     if (session_opts["defaultTransactionOptions"]) {
-        auto rc = lookup_read_concern(session_opts["defaultTransactionOptions"].get_document());
-        if (rc) {
+        if (auto rc =
+                lookup_read_concern(session_opts["defaultTransactionOptions"].get_document())) {
             txn_opts.read_concern(*rc);
         }
 
-        auto wc = lookup_write_concern(session_opts["defaultTransactionOptions"].get_document());
-        if (wc) {
+        if (auto wc =
+                lookup_write_concern(session_opts["defaultTransactionOptions"].get_document())) {
             txn_opts.write_concern(*wc);
         }
 
-        auto rp = lookup_read_preference(session_opts["defaultTransactionOptions"].get_document());
-        if (rp) {
+        if (auto rp =
+                lookup_read_preference(session_opts["defaultTransactionOptions"].get_document())) {
             txn_opts.read_preference(*rp);
+        }
+
+        if (auto cc = session_opts["causalConsistency"]) {
+            out->causal_consistency(cc.get_bool());
+        }
+
+        if (auto mct = session_opts["maxCommitTimeMS"]) {
+            txn_opts.max_commit_time_ms(std::chrono::milliseconds(mct.get_int64()));
         }
     }
 
@@ -521,22 +634,23 @@ void parse_session_opts(document::view session_opts, options::client_session* ou
 }
 
 using bsoncxx::stdx::string_view;
-void run_transaction_operations(document::view test,
-                                client* client,
-                                string_view db_name,
-                                string_view coll_name,
-                                client_session* session0,
-                                client_session* session1,
-                                bool* fail_point_enabled,
-                                bool throw_on_error = false) {
+void run_transaction_operations(
+    document::view test,
+    client* client,
+    string_view db_name,
+    string_view coll_name,
+    client_session* session0,
+    client_session* session1,
+    stdx::optional<targeted_fail_point_guard_type>* targeted_fail_point_guard,
+    const apm_checker& apm_checker,
+    bool throw_on_error = false) {
     auto operations = test["operations"].get_array().value;
 
     REQUIRE(session0);
     REQUIRE(session1);
+    REQUIRE(targeted_fail_point_guard);
 
     for (auto&& op : operations) {
-        *fail_point_enabled =
-            *fail_point_enabled || op.get_document().value["arguments"]["failPoint"];
         std::string error_msg;
         optional<document::value> server_error;
         optional<operation_exception> exception;
@@ -544,16 +658,22 @@ void run_transaction_operations(document::view test,
         std::error_code ec;
         INFO("Operation: " << bsoncxx::to_json(op.get_document().value));
 
-        auto operation = op.get_document().value;
+        const auto operation = op.get_document().value;
 
         // Handle with_transaction separately.
         if (operation["name"].get_string().value.compare("withTransaction") == 0) {
-            auto session = [&]() {
-                if (operation["object"].get_string().value.compare("session0") == 0) {
+            const auto session = [&]() -> mongocxx::client_session* {
+                const auto object = operation["object"].get_string().value;
+                if (object.compare("session0") == 0) {
                     return session0;
-                } else {
+                }
+
+                if (object.compare("session1") == 0) {
                     return session1;
                 }
+
+                FAIL("unexpected session object: " << object);
+                return nullptr;  // -Wreturn-type
             }();
 
             auto with_txn_test_cb = [&](client_session*) {
@@ -568,7 +688,8 @@ void run_transaction_operations(document::view test,
                                            coll_name,
                                            session0,
                                            session1,
-                                           fail_point_enabled,
+                                           targeted_fail_point_guard,
+                                           apm_checker,
                                            true);
             };
 
@@ -579,22 +700,78 @@ void run_transaction_operations(document::view test,
                 server_error = e.raw_server_error();
                 exception = e;
                 ec = e.code();
+            } catch (const mongocxx::logic_error& e) {
+                // CXX-1679: some tests trigger client errors that are thrown as logic_error rather
+                // than operation_exception (i.e. update without $ operator).
+                error_msg = e.what();
+                exception.emplace(make_error_code(mongocxx::error_code(0)));
+                ec = e.code();
             }
         } else {
             try {
-                database db = client->database(db_name);
+                // Create a Database object from the MongoClient, using the `database_name` field at
+                // the top level of the test file.
+                auto db = client->database(db_name);
                 parse_database_options(operation, &db);
-                collection coll = db[coll_name];
+
+                // Create a Collection object from the Database, using the `collection_name` field
+                // at the top level of the test file. If collectionOptions or databaseOptions is
+                // present, create the Collection or Database object with the provided options,
+                // respectively. Otherwise create the object with the default options.
+                auto coll = db[coll_name];
                 parse_collection_options(operation, &coll);
-                operation_runner op_runner{&db, &coll, session0, session1, client};
-                actual_result = op_runner.run(operation);
+
+                // Set the targetedFailPoint guard early to account for the possibility of an
+                // exception being thrown after the targetedFailPoint operation but before
+                // activating the disable guard. There is no harm attempting to disable a fail point
+                // that hasn't been set.
+                if (operation["name"] && operation["name"].get_string().value ==
+                                             stdx::string_view("targetedFailPoint")) {
+                    const auto arguments = operation["arguments"];
+
+                    const auto session = [&]() -> mongocxx::client_session* {
+                        const auto value = arguments["session"].get_string().value;
+                        if (value == stdx::string_view("session0")) {
+                            return session0;
+                        }
+                        if (value == stdx::string_view("session1")) {
+                            return session1;
+                        }
+                        FAIL("unexpected session name: " << value);
+                        return nullptr;  // -Wreturn-type
+                    }();
+
+                    // We expect and assume the name of the fail point is always "failCommand". To
+                    // date, *all* legacy spec tests use "failCommand" as the fail point name.
+                    REQUIRE(arguments["failPoint"]["configureFailPoint"].get_string().value ==
+                            stdx::string_view("failCommand"));
+
+                    // We expect at most one targetedFailPoint operation per test case.
+                    REQUIRE(!(*targeted_fail_point_guard));
+
+                    // When executing this operation, the test runner MUST keep a record of both the
+                    // fail point and pinned mongos server so that the fail point can be disabled on
+                    // the same mongos server after the test.
+                    targeted_fail_point_guard->emplace(session->server_id());
+                }
+
+                actual_result =
+                    operation_runner{&db, &coll, session0, session1, client}.run(operation);
             } catch (const operation_exception& e) {
                 error_msg = e.what();
                 server_error = e.raw_server_error();
                 exception = e;
                 ec = e.code();
+            } catch (const mongocxx::logic_error& e) {
+                // CXX-1679: some tests trigger client errors that are thrown as logic_error rather
+                // than operation_exception (i.e. update without $ operator).
+                error_msg = e.what();
+                exception.emplace(make_error_code(mongocxx::error_code(0)));
+                ec = e.code();
             }
         }
+
+        CAPTURE(apm_checker.print_all());
 
         // "If the result document has an 'errorContains' field, verify that the method threw an
         // exception or returned an error, and that the value of the 'errorContains' field
@@ -604,7 +781,8 @@ void run_transaction_operations(document::view test,
             // Do a case insensitive check.
             auto error_contains =
                 test_util::tolowercase(op["result"]["errorContains"].get_string().value);
-            REQUIRE(test_util::tolowercase(error_msg).find(error_contains) < error_msg.length());
+
+            REQUIRE_THAT(error_msg, Catch::Contains(error_contains, Catch::CaseSensitive::No));
         }
 
         // "If the result document has an 'errorCodeName' field, verify that the method threw a
@@ -665,134 +843,162 @@ void run_transaction_operations(document::view test,
 
 void run_transactions_tests_in_file(const std::string& test_path) {
     INFO("Test path: " << test_path);
-    auto test_spec = test_util::parse_test_file(test_path);
+
+    const auto test_spec = test_util::parse_test_file(test_path);
     REQUIRE(test_spec);
-    auto test_spec_view = test_spec->view();
-    auto db_name = test_spec_view["database_name"].get_string().value;
-    auto coll_name = test_spec_view["collection_name"].get_string().value;
-    auto tests = test_spec_view["tests"].get_array().value;
+
+    const auto test_spec_view = test_spec->view();
+    const auto db_name = test_spec_view["database_name"].get_string().value;
+    const auto coll_name = test_spec_view["collection_name"].get_string().value;
+    const auto tests = test_spec_view["tests"].get_array().value;
 
     /* we may not have a supported topology */
-    if (should_skip_spec_test(client{uri{}, test_util::add_test_server_api()}, test_spec_view)) {
+    if (should_skip_spec_test({uri{}, test_util::add_test_server_api()}, test_spec_view)) {
         WARN("File skipped - " + test_path);
         return;
     }
 
     for (auto&& test : tests) {
-        bool fail_point_enabled = (bool)test["failPoint"];
-        auto description = test["description"].get_string().value;
-        INFO("Test description: " << description);
-        if (should_skip_spec_test(client{uri{}, test_util::add_test_server_api()},
-                                  test.get_document().value)) {
-            continue;
-        }
+        const auto description = string::to_string(test["description"].get_string().value);
 
-        // Steps 1-6.
-        test_setup(test.get_document().value, test_spec_view);
+        SECTION(description) {
+            client setup_client{get_uri(test.get_document().value),
+                                test_util::add_test_server_api()};
 
-        // Step 7. "Create a new MongoClient client, with Command Monitoring listeners enabled."
-        options::client client_opts;
-        apm_checker apm_checker;
-        client_opts.apm_opts(apm_checker.get_apm_opts(true /* command_started_events_only */));
-        client_opts = test_util::add_test_server_api(client_opts);
-        client client;
-        if (test["useMultipleMongoses"]) {
-            client = {uri{"mongodb://localhost:27017,localhost:27018"}, client_opts};
-        } else {
-            client = {get_uri(test.get_document().value), client_opts};
-        }
+            // Step 1: If the `skipReason` field is present, skip this test completely.
+            if (should_skip_spec_test(setup_client, test.get_document().value)) {
+                continue;
+            }
 
-        /* individual test may contain a skipReason */
-        if (should_skip_spec_test(client, test.get_document())) {
-            continue;
-        }
+            // Steps 2-8.
+            test_setup(test.get_document().value, test_spec_view);
 
-        options::client_session session0_opts;
-        options::client_session session1_opts;
-
-        // Step 8: "Call client.startSession twice to create ClientSession objects"
-        if (test["sessionOptions"] && test["sessionOptions"]["session0"]) {
-            parse_session_opts(test["sessionOptions"]["session0"].get_document().value,
-                               &session0_opts);
-        }
-        if (test["sessionOptions"] && test["sessionOptions"]["session1"]) {
-            parse_session_opts(test["sessionOptions"]["session1"].get_document().value,
-                               &session1_opts);
-        }
-
-        document::value session_lsid0{{}};
-        document::value session_lsid1{{}};
-
-        // We wrap this section in its own scope as a way to control when the client_session
-        // objects created inside get destroyed. On destruction, client_sessions can send
-        // an abortTransaction that some of the spec tests look for.
-
-        {
-            client_session session0 = client.start_session(session0_opts);
-            client_session session1 = client.start_session(session1_opts);
-            session_lsid0.reset(session0.id());
-            session_lsid1.reset(session1.id());
-
-            // Step 9. Perform the operations.
-            apm_checker.clear();
-
-            run_transaction_operations(test.get_document().value,
-                                       &client,
-                                       db_name,
-                                       coll_name,
-                                       &session0,
-                                       &session1,
-                                       &fail_point_enabled);
-
-            // Step 10. "Call session0.endSession() and session1.endSession." (done in destructors).
-        }
-
-        // Step 11. Compare APM events.
-        test_util::match_visitor visitor =
-            [&](bsoncxx::stdx::string_view key,
-                bsoncxx::stdx::optional<bsoncxx::types::bson_value::view> main,
-                bsoncxx::types::bson_value::view pattern) {
-                if (key.compare("lsid") == 0) {
-                    REQUIRE(pattern.type() == type::k_string);
-                    REQUIRE(main);
-                    REQUIRE(main->type() == type::k_document);
-                    auto session_name = pattern.get_string().value;
-                    if (session_name.compare("session0") == 0) {
-                        REQUIRE(test_util::matches(session_lsid0, main->get_document().value));
-                    } else {
-                        REQUIRE(test_util::matches(session_lsid1, main->get_document().value));
-                    }
-                    return test_util::match_action::k_skip;
-                } else if (pattern.type() == type::k_null) {
-                    if (main) {
-                        return test_util::match_action::k_not_equal;
-                    }
-                    return test_util::match_action::k_skip;
+            {
+                stdx::optional<fail_point_guard_type> fail_point_guard;
+                if (test["failPoint"]) {
+                    const auto fail_point_name = string::to_string(
+                        test["failPoint"]["configureFailPoint"].get_string().value);
+                    fail_point_guard.emplace(setup_client, fail_point_name);
                 }
-                return test_util::match_action::k_skip;
-            };
 
-        if (test["expectations"]) {
-            apm_checker.compare(test["expectations"].get_array().value, false, visitor);
-        }
+                // Step 9: Create a new MongoClient `client`, with Command Monitoring listeners
+                // enabled. (Using a new MongoClient for each test ensures a fresh session pool that
+                // hasn't executed any transactions previously, so the tests can assert actual
+                // txnNumbers, starting from 1.) Pass this test's `clientOptions` if present
+                // (handled by `get_uri()`).
+                options::client client_opts;
+                apm_checker apm_checker;
+                client_opts.apm_opts(
+                    apm_checker.get_apm_opts(true /* command_started_events_only */));
+                client_opts = test_util::add_test_server_api(client_opts);
+                client client = {get_uri(test.get_document().value), client_opts};
 
-        // Step 12. Disable the failpoint.
-        if (fail_point_enabled) {
-            disable_fail_point("mongodb://localhost:27017", client_opts);
-            if (test["useMultipleMongoses"]) {
-                disable_fail_point("mongodb://localhost:27018", client_opts);
+                options::client_session session0_opts;
+                options::client_session session1_opts;
+
+                if (const auto session_opts = test["sessionOptions"]) {
+                    if (session_opts["session0"]) {
+                        parse_session_opts(test["sessionOptions"]["session0"].get_document().value,
+                                           &session0_opts);
+                    }
+                    if (session_opts["session1"]) {
+                        parse_session_opts(test["sessionOptions"]["session1"].get_document().value,
+                                           &session1_opts);
+                    }
+                }
+
+                document::value session_lsid0{{}};
+                document::value session_lsid1{{}};
+
+                {
+                    // Step 10: Call client.startSession twice to create ClientSession objects
+                    // `session0` and `session1`, using the test's "sessionOptions" if they are
+                    // present.
+                    client_session session0 = client.start_session(session0_opts);
+                    client_session session1 = client.start_session(session1_opts);
+
+                    // Save their lsids so they are available after calling `endSession`.
+                    session_lsid0.reset(session0.id());
+                    session_lsid1.reset(session1.id());
+
+                    // The test runner MUST also ensure that the configureFailPoint command is
+                    // excluded from the list of observed command monitoring events for this client
+                    // (if applicable).
+                    apm_checker.clear();
+                    apm_checker.set_ignore_command_monitoring_event("configureFailPoint");
+
+                    // If a test uses `targetedFailPoint`, disable the fail point after running all
+                    // `operations` to avoid spurious failures in subsequent tests.
+                    stdx::optional<targeted_fail_point_guard_type> targeted_fail_point_guard;
+
+                    // Step 11. Perform the operations.
+                    run_transaction_operations(test.get_document().value,
+                                               &client,
+                                               db_name,
+                                               coll_name,
+                                               &session0,
+                                               &session1,
+                                               &targeted_fail_point_guard,
+                                               apm_checker);
+
+                    // Step 12: Call session0.endSession() and session1.endSession (via
+                    // client_session dtors).
+                }
+
+                // Step 13. If the test includes a list of command-started events in expectations,
+                // compare them to the actual command-started events using the same logic as the
+                // legacy Command Monitoring Spec Tests runner, plus the rules in the
+                // Command-Started Events instructions.
+                test_util::match_visitor visitor =
+                    [&](bsoncxx::stdx::string_view key,
+                        bsoncxx::stdx::optional<bsoncxx::types::bson_value::view> main,
+                        bsoncxx::types::bson_value::view pattern) {
+                        if (key.compare("lsid") == 0) {
+                            REQUIRE(pattern.type() == type::k_string);
+                            REQUIRE(main);
+                            REQUIRE(main->type() == type::k_document);
+                            auto session_name = pattern.get_string().value;
+                            if (session_name.compare("session0") == 0) {
+                                REQUIRE(
+                                    test_util::matches(session_lsid0, main->get_document().value));
+                            } else {
+                                REQUIRE(
+                                    test_util::matches(session_lsid1, main->get_document().value));
+                            }
+                            return test_util::match_action::k_skip;
+                        } else if (pattern.type() == type::k_null) {
+                            if (main) {
+                                return test_util::match_action::k_not_equal;
+                            }
+                            return test_util::match_action::k_skip;
+                        } else if (key.compare("upsert") == 0 || key.compare("multi") == 0) {
+                            // libmongoc includes `multi: false` and `upsert: false`.
+                            // Some tests do not include `multi: false` and `upsert: false`
+                            // in expectations. See DRIVERS-2271 and DRIVERS-976.
+                            return test_util::match_action::k_skip;
+                        }
+                        return test_util::match_action::k_skip;
+                    };
+
+                if (test["expectations"]) {
+                    apm_checker.compare(test["expectations"].get_array().value, false, visitor);
+                }
+
+                // Step 14: If failPoint is specified, disable the fail point to avoid spurious
+                // failures in subsequent tests (fail_point_guard dtor).
             }
-        }
 
-        // Step 13. Compare the collection outcomes
-        if (test["outcome"] && test["outcome"]["collection"]) {
-            auto outcome_coll_name = coll_name;
-            if (test["outcome"]["collection"]["name"]) {
-                outcome_coll_name = test["outcome"]["collection"]["name"].get_string().value;
+            // Step 15: For each element in outcome: ...
+            if (test["outcome"] && test["outcome"]["collection"]) {
+                auto outcome_coll_name = coll_name;
+                if (test["outcome"]["collection"]["name"]) {
+                    outcome_coll_name = test["outcome"]["collection"]["name"].get_string().value;
+                }
+                client client{get_uri(test.get_document().value), test_util::add_test_server_api()};
+                auto coll = client[db_name][outcome_coll_name];
+                test_util::check_outcome_collection(
+                    &coll, test["outcome"]["collection"].get_document().value);
             }
-            auto coll = client[db_name][outcome_coll_name];
-            test_util::check_outcome_collection(&coll,
-                                                test["outcome"]["collection"].get_document().value);
         }
     }
 }
@@ -853,6 +1059,13 @@ void run_crud_tests_in_file(const std::string& test_path, uri test_uri) {
             }
 
             configure_fail_point(client, test.get_document().value);
+
+            stdx::optional<fail_point_guard_type> fail_point_guard;
+            if (test["failPoint"]) {
+                const auto fail_point_name =
+                    string::to_string(test["failPoint"]["configureFailPoint"].get_string().value);
+                fail_point_guard.emplace(client, fail_point_name);
+            }
 
             apm_checker.clear();
             auto perform_op =
@@ -918,11 +1131,6 @@ void run_crud_tests_in_file(const std::string& test_path, uri test_uri) {
                 } else {
                     REQUIRE(test["expectations"].get_document().view().empty());
                 }
-            }
-
-            if (test["failPoint"]) {
-                disable_fail_point(client,
-                                   test["failPoint"]["configureFailPoint"].get_string().value);
             }
         }
     }

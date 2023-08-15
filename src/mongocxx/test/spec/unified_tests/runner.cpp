@@ -218,14 +218,10 @@ bool equals_server_topology(const document::element& topologies) {
 
     // The server's topology will not change during the test. No need to make a round-trip for every
     // test file.
-    const static std::string actual = test_util::get_topology();
-    const auto equals = [&](const bsoncxx::array::element& expected) {
-        return expected == value(actual) ||
-               (expected == value("sharded") && actual == "sharded-replicaset");
-    };
+    const static auto actual = value(test_util::get_topology());
 
     const auto t = topologies.get_array().value;
-    return std::end(t) != std::find_if(std::begin(t), std::end(t), equals);
+    return std::end(t) != std::find(std::begin(t), std::end(t), actual);
 }
 
 bool compatible_with_server(const bsoncxx::array::element& requirement) {
@@ -350,43 +346,76 @@ std::string uri_options_to_string(document::view object) {
     return opts;
 }
 
-std::string get_hostnames(document::view object) {
-    const auto default_uri = std::string{"localhost:27017"};
+std::string get_hostnames(bsoncxx::document::view object) {
+    const auto uri0 = mongocxx::uri("mongodb://localhost:27017");
 
-    // Spec: This [useMultipleMongoses] option has no effect for non-sharded topologies.
-    if (!test_util::is_sharded_cluster()) {
-        return default_uri;
+    // All test topologies should have either a mongod or mongos on localhost:27017.
+    const mongocxx::client client0{uri0, test_util::add_test_server_api()};
+    REQUIRE_NOTHROW(client0.list_databases().begin());
+
+    // The topology must be consistent with what was set up by the test environment.
+    static constexpr auto one = "localhost:27017";
+    static constexpr auto two = "localhost:27017,localhost:27018";
+    static constexpr auto three = "localhost:27017,localhost:27018,localhost:27019";
+
+    const auto topology = test_util::get_topology(client0);
+
+    if (topology == "single") {
+        return one;  // Single mongod.
     }
 
-    // Spec: If true and the topology is a sharded cluster, the test runner MUST assert that this
-    // MongoClient connects to multiple mongos hosts (e.g. by inspecting the connection string).
-    if (!object["useMultipleMongoses"] || !object["useMultipleMongoses"].get_bool())
-        return default_uri;
+    if (topology == "replicaset") {
+        return three;  // Three replset members.
+    }
 
-    // from: https://www.mongodb.com/docs/manual/reference/config-database/#config.shards
-    // If the shard is a replica set, the host field displays the name of the replica set, then a
-    // slash, then a comma-separated list of the hostnames of each member of the replica set, as in
-    // the following example:
-    //      { ... , "host" : "shard0001/localhost:27018,localhost:27019,localhost:27020", ... }
-    const auto host = test_util::get_hosts();
-    const auto after_slash = ++std::find(std::begin(host), std::end(host), '/');
-    REQUIRE(after_slash < std::end(host));
+    if (topology == "sharded") {
+        const auto use_multiple_mongoses = object["useMultipleMongoses"];
 
-    const auto hostnames = std::string{after_slash, std::end(host)};
-    CAPTURE(host, hostnames);
+        if (use_multiple_mongoses) {
+            const auto value = use_multiple_mongoses.get_bool().value;
 
-    // require multiple mongos hosts
-    REQUIRE(std::end(hostnames) != std::find(std::begin(hostnames), std::end(hostnames), ','));
-    return hostnames;
+            if (value) {
+                const auto uri1 = mongocxx::uri("mongodb://localhost:27018");
+
+                // If true and the topology is a sharded cluster, the test runner MUST assert that
+                // this MongoClient connects to multiple mongos hosts (e.g. by inspecting the
+                // connection string).
+                const mongocxx::client client1{uri1, test_util::add_test_server_api()};
+
+                if (!client0["config"].has_collection("shards")) {
+                    FAIL("missing required mongos on port 27017 with useMultipleMongoses=true");
+                }
+
+                if (!client1["config"].has_collection("shards")) {
+                    FAIL("missing required mongos on port 27018 with useMultipleMongoses=true");
+                }
+
+                return two;  // Two mongoses.
+            } else {
+                // If false and the topology is a sharded cluster, the test runner MUST ensure that
+                // this MongoClient connects to only a single mongos host (e.g. by modifying the
+                // connection string).
+                return one;  // Single mongos.
+            }
+        } else {
+            // If this option is not specified and the topology is a sharded cluster, the test
+            // runner MUST NOT enforce any limit on the number of mongos hosts in the connection
+            // string and any tests using this client SHOULD NOT depend on a particular number of
+            // mongos hosts.
+
+            // But we still only support exactly two mongoses.
+            return two;  // Two mongoses.
+        }
+    }
+
+    FAIL("unexpected topology: " << topology);
+    return {};  // -Wreturn-type
 }
 
-void add_observe_events(options::apm& apm_opts, document::view object) {
-    using types::bson_value::value;
-    if (!object["observeEvents"])
+void add_observe_events(spec::apm_checker& apm, options::apm& apm_opts, document::view object) {
+    if (!object["observeEvents"]) {
         return;
-
-    const auto name = string::to_string(object["id"].get_string().value);
-    auto& apm = get_apm_map()[name];
+    }
 
     const auto observe_sensitive = object["observeSensitiveCommands"];
     apm.observe_sensitive_events = observe_sensitive && observe_sensitive.get_bool();
@@ -407,13 +436,13 @@ void add_observe_events(options::apm& apm_opts, document::view object) {
     }
 }
 
-void add_ignore_command_monitoring_events(document::view object) {
-    if (!object["ignoreCommandMonitoringEvents"])
+void add_ignore_command_monitoring_events(spec::apm_checker& apm, document::view object) {
+    if (!object["ignoreCommandMonitoringEvents"]) {
         return;
+    }
+
     for (auto cme : object["ignoreCommandMonitoringEvents"].get_array().value) {
         CAPTURE(cme.get_string());
-        const auto name = string::to_string(object["id"].get_string().value);
-        auto& apm = get_apm_map()[name];
         apm.set_ignore_command_monitoring_event(string::to_string(cme.get_string().value));
     }
 }
@@ -650,8 +679,14 @@ client create_client(document::view object) {
         client_opts = test_util::add_test_server_api();
     }
 
-    add_observe_events(apm_opts, object);
-    add_ignore_command_monitoring_events(object);
+    auto& apm = get_apm_map()[string::to_string(object["id"].get_string().value)];
+
+    add_observe_events(apm, apm_opts, object);
+    add_ignore_command_monitoring_events(apm, object);
+
+    // The test runner MUST also ensure that the configureFailPoint command is excluded from the
+    // list of observed command monitoring events for this client (if applicable).
+    apm.set_ignore_command_monitoring_event("configureFailPoint");
 
     CAPTURE(conn);
     return client{uri{conn}, client_opts.apm_opts(apm_opts)};
@@ -951,8 +986,15 @@ void assert_outcome(const array::element& test) {
     using std::end;
     using std::equal;
 
-    if (!test["outcome"])
+    if (!test["outcome"]) {
         return;
+    }
+
+    read_preference rp;
+    rp.mode(read_preference::read_mode::k_primary);
+
+    read_concern rc;
+    rc.acknowledge_level(read_concern::level::k_local);
 
     for (const auto& outcome : test["outcome"].get_array().value) {
         CAPTURE(to_json(outcome.get_document()));
@@ -963,6 +1005,31 @@ void assert_outcome(const array::element& test) {
 
         const auto db = get_entity_map().get_database_by_name(db_name);
         auto coll = db.collection(coll_name);
+
+        struct coll_state_guard_type {
+            mongocxx::collection& coll;
+            read_preference old_rp;
+            read_concern old_rc;
+
+            coll_state_guard_type(mongocxx::collection& coll) : coll(coll) {
+                old_rp = coll.read_preference();
+                old_rc = coll.read_concern();
+            }
+
+            ~coll_state_guard_type() {
+                try {
+                    coll.read_preference(old_rp);
+                    coll.read_concern(old_rc);
+                } catch (...) {
+                }
+            }
+        } coll_state_guard(coll);
+
+        // The test runner MUST query each collection using the internal MongoClient, an ascending
+        // sort order on the `_id` field (i.e. `{ _id: 1 }`), a "primary" read preference, and a
+        // "local" read concern.
+        coll.read_preference(rp);
+        coll.read_concern(rc);
 
         auto results = coll.find({}, options::find{}.sort(make_document(kvp("_id", 1))));
 
@@ -977,17 +1044,54 @@ void assert_outcome(const array::element& test) {
     }
 }
 
-struct disable_fail_point {
+struct fail_point_guard_type {
     std::vector<std::pair<std::string, std::string>> fail_points;
 
-    void add_fail_point(const std::string& uri, const std::string& command) {
-        fail_points.emplace_back(uri, command);
+    fail_point_guard_type() = default;
+
+    ~fail_point_guard_type() {
+        try {
+            for (const auto& f : fail_points) {
+                spec::disable_fail_point(f.first, {}, f.second);
+            }
+        } catch (...) {
+        }
     }
 
-    void operator()() const {
-        for (auto&& f : fail_points) {
-            spec::disable_fail_point(f.first, {}, f.second);
+    void add_fail_point(std::string uri, std::string command) {
+        fail_points.emplace_back(std::move(uri), std::move(command));
+    }
+};
+
+void disable_targeted_fail_point(mongocxx::stdx::string_view uri,
+                                 std::uint32_t server_id,
+                                 mongocxx::stdx::string_view fail_point) {
+    const auto command_owner =
+        make_document(kvp("configureFailPoint", fail_point), kvp("mode", "off"));
+    const auto command = command_owner.view();
+
+    // Unlike in the legacy test runner, there are no tests (at time of writing) that require
+    // multiple attempts to disable a targetedFailPoint, so only one attempt should suffice.
+    mongocxx::client client = {mongocxx::uri{uri}, test_util::add_test_server_api()};
+    client["admin"].run_command(command, server_id);
+}
+
+struct targeted_fail_point_guard_type {
+    std::vector<std::tuple<std::string, std::uint32_t, std::string>> fail_points;
+
+    targeted_fail_point_guard_type() = default;
+
+    ~targeted_fail_point_guard_type() {
+        try {
+            for (const auto& f : fail_points) {
+                disable_targeted_fail_point(std::get<0>(f), std::get<1>(f), std::get<2>(f));
+            }
+        } catch (...) {
         }
+    }
+
+    void add_fail_point(std::string uri, std::uint32_t server_id, std::string command) {
+        fail_points.emplace_back(std::move(uri), server_id, std::move(command));
     }
 };
 
@@ -1058,7 +1162,8 @@ void run_tests(mongocxx::stdx::string_view test_description, document::view test
                 continue;
             }
 
-            disable_fail_point disable_fail_point_fn{};
+            fail_point_guard_type fail_point_guard;
+            targeted_fail_point_guard_type targeted_fail_point_guard;
 
             for (auto&& apm : get_apm_map()) {
                 apm.second.clear_events();
@@ -1073,13 +1178,22 @@ void run_tests(mongocxx::stdx::string_view test_description, document::view test
                 }();
 
                 try {
-                    auto result = bsoncxx::builder::basic::make_document();
-                    result = operations::run(get_entity_map(), get_apm_map(), ops, state);
+                    const auto result =
+                        operations::run(get_entity_map(), get_apm_map(), ops, state);
 
                     if (string::to_string(ops["object"].get_string().value) == "testRunner") {
-                        if (string::to_string(ops["name"].get_string().value) == "failPoint") {
-                            disable_fail_point_fn.add_fail_point(
+                        const auto op_name = string::to_string(ops["name"].get_string().value);
+
+                        if (op_name == "failPoint") {
+                            fail_point_guard.add_fail_point(
                                 string::to_string(result["uri"].get_string().value),
+                                string::to_string(result["failPoint"].get_string().value));
+                        }
+
+                        if (op_name == "targetedFailPoint") {
+                            targeted_fail_point_guard.add_fail_point(
+                                string::to_string(result["uri"].get_string().value),
+                                static_cast<std::uint32_t>(result["serverId"].get_int64().value),
                                 string::to_string(result["failPoint"].get_string().value));
                         }
 
@@ -1125,7 +1239,6 @@ void run_tests(mongocxx::stdx::string_view test_description, document::view test
                     }
                 }
             }
-            disable_fail_point_fn();
 
             assert_events(ele);
             assert_outcome(ele);
@@ -1229,6 +1342,10 @@ TEST_CASE("retryable reads unified format spec automated tests", "[unified_forma
 
 TEST_CASE("retryable writes unified format spec automated tests", "[unified_format_spec]") {
     CHECK(run_unified_format_tests_in_env_dir("RETRYABLE_WRITES_UNIFIED_TESTS_PATH"));
+}
+
+TEST_CASE("transactions unified format spec automated tests", "[unified_format_spec]") {
+    CHECK(run_unified_format_tests_in_env_dir("TRANSACTIONS_UNIFIED_TESTS_PATH"));
 }
 
 TEST_CASE("versioned API spec automated tests", "[unified_format_spec]") {

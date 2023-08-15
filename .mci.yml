@@ -476,7 +476,8 @@ functions:
                   export RETRYABLE_READS_UNIFIED_TESTS_PATH="$(pwd)/../data/retryable-reads/unified"
                   export RETRYABLE_WRITES_UNIFIED_TESTS_PATH="$(pwd)/../data/retryable-writes/unified"
                   export SESSION_UNIFIED_TESTS_PATH="$(pwd)/../data/sessions/unified"
-                  export TRANSACTIONS_TESTS_PATH="$(pwd)/../data/transactions"
+                  export TRANSACTIONS_LEGACY_TESTS_PATH="$(pwd)/../data/transactions/legacy"
+                  export TRANSACTIONS_UNIFIED_TESTS_PATH="$(pwd)/../data/transactions/unified"
                   export UNIFIED_FORMAT_TESTS_PATH=$(pwd)/../data/unified-format
                   export URI_OPTIONS_TESTS_PATH="$(pwd)/../data/uri-options"
                   export VERSIONED_API_TESTS_PATH=$(pwd)/../data/versioned-api
@@ -988,6 +989,21 @@ tasks:
         - func: "install_c_driver"
         - func: "test"
 
+    - name: compile_and_test_with_shared_libs_sharded_cluster
+      commands:
+        - func: "setup"
+        - func: "start_mongod"
+          vars:
+              TOPOLOGY: "sharded_cluster"
+        - func: "fetch_c_driver_source"
+        - func: "compile"
+          vars:
+              RUN_DISTCHECK: 1
+        - func: "clone_drivers-evergreen-tools"
+        - func: "run_kms_servers"
+        - func: "install_c_driver"
+        - func: "test"
+
     # Auto downloading the C driver in the C++ build does not currently include
     # support for libmongocrypt, therefore it is not configured with
     # -DENABLE_CLIENT_SIDE_ENCRYPTION=ON. For now, CSFLE tests will need to have
@@ -998,6 +1014,20 @@ tasks:
         - func: "start_mongod"
           vars:
               TOPOLOGY: "replica_set"
+        - func: "install_c_driver"
+        - func: "compile"
+          vars:
+              RUN_DISTCHECK: 1
+        - func: "clone_drivers-evergreen-tools"
+        - func: "run_kms_servers"
+        - func: "test"
+
+    - name: compile_and_test_with_shared_libs_sharded_cluster_with_libmongocrypt
+      commands:
+        - func: "setup"
+        - func: "start_mongod"
+          vars:
+              TOPOLOGY: "sharded_cluster"
         - func: "install_c_driver"
         - func: "compile"
           vars:
@@ -1314,6 +1344,12 @@ buildvariants:
       tasks:
         - name: compile_and_test_with_shared_libs_replica_set_with_libmongocrypt
 
+    - matrix_name: "integration (sharded cluster)"
+      matrix_spec: {os: "ubuntu-1804", mongodb_version: "*"}
+      display_name: "${os} sharded cluster (MongoDB ${mongodb_version})"
+      tasks:
+        - name: compile_and_test_with_shared_libs_sharded_cluster_with_libmongocrypt
+
     - matrix_name: "auth"
       matrix_spec: {os: "*", mongodb_version: "latest"}
       display_name: "${os} ${mongodb_version} Auth"
@@ -1326,15 +1362,6 @@ buildvariants:
       tasks:
           - name: test_versioned_api
           - name: test_versioned_api_accept_version_two
-
-    # Add matrix for specification test requirement of mongocryptd:
-    # "Drivers MUST run all tests with mongocryptd on at least one platform for all tested server versions (4.2+)."
-    - matrix_name: "mongocryptd"
-      matrix_spec: {os: "ubuntu-1804", mongodb_version: ["4.2", "4.4", "5.0", "latest"], use_mongocryptd: "true"}
-      display_name: "${os} (MongoDB ${mongodb_version}) with mongocryptd"
-      tasks:
-          - name: compile_and_test_with_shared_libs
-          - name: compile_and_test_with_shared_libs_replica_set
 
     #######################################
     #         Linux Buildvariants         #
@@ -1358,6 +1385,7 @@ buildvariants:
           - name: compile_and_test_with_static_libs
           - name: compile_and_test_with_static_libs_extra_alignment
           - name: compile_and_test_with_shared_libs_replica_set_with_libmongocrypt
+          - name: compile_and_test_with_shared_libs_sharded_cluster_with_libmongocrypt
           - name: build_example_with_add_subdirectory
             distros:
             - rhel90-large
@@ -1381,6 +1409,7 @@ buildvariants:
           - name: compile_and_test_with_static_libs
           - name: compile_and_test_with_static_libs_extra_alignment
           - name: compile_and_test_with_shared_libs_replica_set_with_libmongocrypt
+          - name: compile_and_test_with_shared_libs_sharded_cluster_with_libmongocrypt
           - name: build_example_with_add_subdirectory
             distros:
             - rhel90-arm64-large
@@ -1403,6 +1432,7 @@ buildvariants:
           - name: compile_and_test_with_static_libs
           - name: compile_and_test_with_static_libs_extra_alignment
           - name: compile_and_test_with_shared_libs_replica_set_with_libmongocrypt
+          - name: compile_and_test_with_shared_libs_sharded_cluster_with_libmongocrypt
           - name: build_example_with_add_subdirectory
             distros:
             - debian11-large
@@ -1426,6 +1456,7 @@ buildvariants:
           - name: compile_and_test_with_static_libs
           - name: compile_and_test_with_static_libs_extra_alignment
           - name: compile_and_test_with_shared_libs_replica_set
+          - name: compile_and_test_with_shared_libs_sharded_cluster
           - name: build_example_with_add_subdirectory
             distros:
             - debian11-large
@@ -1447,6 +1478,7 @@ buildvariants:
           - name: compile_and_test_with_static_libs
           - name: compile_and_test_with_static_libs_extra_alignment
           - name: compile_and_test_with_shared_libs_replica_set_with_libmongocrypt
+          - name: compile_and_test_with_shared_libs_sharded_cluster_with_libmongocrypt
           - name: build_example_with_add_subdirectory
             distros:
             - debian10-large
@@ -1468,6 +1500,7 @@ buildvariants:
           - name: compile_and_test_with_static_libs
           - name: compile_and_test_with_static_libs_extra_alignment
           - name: compile_and_test_with_shared_libs_replica_set
+          - name: compile_and_test_with_shared_libs_sharded_cluster
           - name: build_example_with_add_subdirectory
             distros:
             - debian10-large
@@ -1479,11 +1512,11 @@ buildvariants:
       matrix_spec:
         os: "ubuntu-1804"
         mongodb_version: ["4.2", "4.4", "5.0", "latest"]
+        use_mongocryptd: "true"
       display_name: "${os} (MongoDB ${mongodb_version}) with mongocryptd"
       tasks:
           - name: compile_and_test_with_shared_libs_replica_set_with_libmongocrypt
-      expansions:
-        use_mongocryptd: true
+          - name: compile_and_test_with_shared_libs_sharded_cluster_with_libmongocrypt
 
     - name: ubuntu2004-release-latest
       display_name: "Ubuntu 20.04 Release (MongoDB Latest)"
@@ -1501,6 +1534,7 @@ buildvariants:
           - name: compile_and_test_with_static_libs
           - name: compile_and_test_with_static_libs_extra_alignment
           - name: compile_and_test_with_shared_libs_replica_set_with_libmongocrypt
+          - name: compile_and_test_with_shared_libs_sharded_cluster_with_libmongocrypt
           - name: build_example_with_add_subdirectory
             distros:
             - ubuntu2004-large
@@ -1522,6 +1556,7 @@ buildvariants:
           - name: compile_and_test_with_static_libs
           - name: compile_and_test_with_static_libs_extra_alignment
           - name: compile_and_test_with_shared_libs_replica_set
+          - name: compile_and_test_with_shared_libs_sharded_cluster
           - name: build_example_with_add_subdirectory
             distros:
             - ubuntu2004-large
@@ -1544,6 +1579,7 @@ buildvariants:
           - name: compile_and_test_with_static_libs
           - name: compile_and_test_with_static_libs_extra_alignment
           - name: compile_and_test_with_shared_libs_replica_set_with_libmongocrypt
+          - name: compile_and_test_with_shared_libs_sharded_cluster_with_libmongocrypt
           - name: build_example_with_add_subdirectory
             distros:
             - ubuntu1804-build
@@ -1565,6 +1601,7 @@ buildvariants:
           - name: compile_and_test_with_static_libs
           - name: compile_and_test_with_static_libs_extra_alignment
           - name: compile_and_test_with_shared_libs_replica_set
+          - name: compile_and_test_with_shared_libs_sharded_cluster
           - name: build_example_with_add_subdirectory
             distros:
             - ubuntu1804-build

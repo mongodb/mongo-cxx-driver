@@ -49,7 +49,7 @@ class apm_checker {
     void clear();
     void clear_events();
 
-    std::string print_all();
+    std::string print_all() const;
 
     using event_vector = std::vector<bsoncxx::document::value>;
     using iterator = event_vector::iterator;

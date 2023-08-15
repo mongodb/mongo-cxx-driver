@@ -4,7 +4,8 @@
       "minServerVersion": "4.1.8",
       "topology": [
         "sharded"
-      ]
+      ],
+      "serverless": "forbid"
     }
   ],
   "database_name": "transaction-tests",
@@ -875,7 +876,7 @@
                 "failCommands": [
                   "commitTransaction"
                 ],
-                "errorCode": 50
+                "errorCode": 51
               }
             }
           }
@@ -887,7 +888,7 @@
             "errorLabelsOmit": [
               "TransientTransactionError"
             ],
-            "errorCode": 50
+            "errorCode": 51
           }
         },
         {
@@ -1106,7 +1107,8 @@
               "data": {
                 "failCommands": [
                   "insert",
-                  "isMaster"
+                  "isMaster",
+                  "hello"
                 ],
                 "closeConnection": true
               }

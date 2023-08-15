@@ -76,13 +76,31 @@ class index_view::impl {
     bsoncxx::stdx::optional<std::string> create_one(const client_session* session,
                                                     const index_model& model,
                                                     const options::index_view& options) {
-        bsoncxx::document::value result =
-            create_many(session, std::vector<index_model>{model}, options);
-        bsoncxx::document::view result_view = result.view();
+        const auto result = create_many(session, std::vector<index_model>{model}, options);
+        auto result_view = result.view();
 
-        if (result_view["note"] &&
-            bsoncxx::string::to_string(result_view["note"].get_string().value) ==
-                "all indexes already exist") {
+        // SERVER-78611: sharded clusters may place fields in a raw response document instead of in
+        // the top-level document.
+        if (const auto raw = result_view["raw"]) {
+            // There should only be a single field in the raw response with the shard connection
+            // string as the key. e.g.:
+            //   {
+            //     'raw': {
+            //       'shard01/localhost:27018,27019,27020': {
+            //         ... # Raw response fields.
+            //       }
+            //     }
+            //   }
+            // Using a for loop for convenience.
+            for (const auto& shard_response : raw.get_document().view()) {
+                result_view = shard_response.get_document().view();
+            }
+        }
+
+        const auto note = result_view["note"];
+
+        if (note &&
+            bsoncxx::string::to_string(note.get_string().value) == "all indexes already exist") {
             return bsoncxx::stdx::nullopt;
         }
 

@@ -120,13 +120,20 @@ void apm_checker::compare(bsoncxx::array::view expectations,
     CAPTURE(print_all());
     for (auto expectation : expectations) {
         auto expected = expectation.get_document().view();
-        REQUIRE(events_iter != _events.end());
+        if (events_iter == _events.end()) {
+            FAIL("Not enough events occurred: expected exactly "
+                 << std::distance(expectations.begin(), expectations.end()) << " events, but got "
+                 << _events.size() << " events");
+        }
         REQUIRE_BSON_MATCHES_V(*events_iter, expected, match_visitor);
         events_iter++;
     }
 
-    if (!allow_extra)
-        REQUIRE(events_iter == _events.end());
+    if (!allow_extra && events_iter != _events.end()) {
+        FAIL_CHECK("Too many events occurred: expected exactly "
+                   << std::distance(expectations.begin(), expectations.end()) << " events, but got "
+                   << _events.size() << " events");
+    }
 }
 
 void apm_checker::has(bsoncxx::array::view expectations) {
@@ -145,12 +152,12 @@ bool apm_checker::should_ignore(stdx::string_view command_name) const {
                        [command_name](stdx::string_view cmp) { return command_name == cmp; });
 }
 
-std::string apm_checker::print_all() {
+std::string apm_checker::print_all() const {
     std::ostringstream output;
     output << "\n\n";
     output << "APM Checker contents:\n";
     for (const auto& event : _events) {
-        output << "APM event: " << bsoncxx::to_json(event) << '\n';
+        output << "APM event: " << bsoncxx::to_json(event) << "\n\n";
     }
     return std::move(output).str();
 }

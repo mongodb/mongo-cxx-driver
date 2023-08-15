@@ -243,20 +243,26 @@ std::string replica_set_name(const client& client) {
     return "";
 }
 
-bool is_replica_set(const client& client) {
-    auto reply = get_is_master(client);
-    return static_cast<bool>(reply.view()["setName"]);
+static bool is_replica_set(document::view reply) {
+    return static_cast<bool>(reply["setName"]);
 }
 
-bool is_sharded_cluster(const client& client) {
-    const auto reply = get_is_master(client);
-    const auto msg = reply.view()["msg"];
+bool is_replica_set(const client& client) {
+    return is_replica_set(get_is_master(client));
+}
+
+static bool is_sharded_cluster(document::view reply) {
+    const auto msg = reply["msg"];
 
     if (!msg) {
         return false;
     }
 
     return msg.get_string().value.compare("isdbgrid") == 0;
+}
+
+bool is_sharded_cluster(const client& client) {
+    return is_sharded_cluster(get_is_master(client));
 }
 
 std::string get_hosts(const client& client) {
@@ -267,18 +273,13 @@ std::string get_hosts(const client& client) {
 }
 
 std::string get_topology(const client& client) {
-    if (is_replica_set(client))
-        return "replicaset";
+    const auto reply = get_is_master(client);
 
-    // from: https://www.mongodb.com/docs/manual/reference/config-database/#config.shards
-    // If the shard is a replica set, the host field displays the name of the replica set, then a
-    // slash, then a comma-separated list of the hostnames of each member of the replica set, as in
-    // the following example:
-    //      { ... , "host" : "shard0001/localhost:27018,localhost:27019,localhost:27020", ... }
-    auto host = get_hosts(client);
-    if (!host.empty()) {
-        if (std::find(std::begin(host), std::end(host), '/') != std::end(host))
-            return "sharded-replicaset";
+    if (is_replica_set(reply)) {
+        return "replicaset";
+    }
+
+    if (is_sharded_cluster(reply)) {
         return "sharded";
     }
 
@@ -442,17 +443,43 @@ std::string tolowercase(stdx::string_view view) {
 }
 
 void check_outcome_collection(mongocxx::collection* coll, bsoncxx::document::view expected) {
+    REQUIRE(coll);
+
+    read_preference rp;
+    rp.mode(read_preference::read_mode::k_primary);
+
     read_concern rc;
     rc.acknowledge_level(read_concern::level::k_local);
-    auto old_rc = coll->read_concern();
+
+    struct coll_state_guard_type {
+        mongocxx::collection& coll;
+        read_preference old_rp;
+        read_concern old_rc;
+
+        coll_state_guard_type(mongocxx::collection& coll) : coll(coll) {
+            old_rp = coll.read_preference();
+            old_rc = coll.read_concern();
+        }
+
+        ~coll_state_guard_type() {
+            try {
+                coll.read_preference(old_rp);
+                coll.read_concern(old_rc);
+            } catch (...) {
+            }
+        }
+    } coll_state_guard(*coll);
+
+    // Ensure this find reads the latest data by using primary read preference with local read
+    // concern even when the MongoClient is configured with another read preference or read concern.
+    coll->read_preference(rp);
     coll->read_concern(rc);
 
-    options::find options{};
-    options.sort(make_document(kvp("_id", 1)));
-
     using namespace std;
-    cursor actual = coll->find({}, options);
-    auto expected_data = expected["data"].get_array().value;
+
+    const auto expected_data = expected["data"].get_array().value;
+    auto actual = coll->find({}, options::find().sort(make_document(kvp("_id", 1))));
+
     REQUIRE(equal(begin(expected_data),
                   end(expected_data),
                   begin(actual),
@@ -461,7 +488,6 @@ void check_outcome_collection(mongocxx::collection* coll, bsoncxx::document::vie
                       return true;
                   }));
     REQUIRE(begin(actual) == end(actual));
-    coll->read_concern(old_rc);
 }
 
 bool server_has_sessions(const client& conn) {

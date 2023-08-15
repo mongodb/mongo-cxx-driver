@@ -7,6 +7,7 @@ create-collection.json
 create-index.json
 delete.json
 error-labels.json
+errors-client.json
 errors.json
 findOneAndDelete.json
 findOneAndReplace.json
@@ -25,7 +26,7 @@ retryable-commit-errorLabels.json
 retryable-commit.json
 retryable-writes.json
 run-command.json
-transaction-options.json
 transaction-options-repl.json
+transaction-options.json
 update.json
 write-concern.json

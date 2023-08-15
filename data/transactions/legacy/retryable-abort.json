@@ -18,7 +18,7 @@
   "data": [],
   "tests": [
     {
-      "description": "commitTransaction fails after two errors",
+      "description": "abortTransaction only performs a single retry",
       "clientOptions": {
         "retryWrites": false
       },
@@ -29,7 +29,7 @@
         },
         "data": {
           "failCommands": [
-            "commitTransaction"
+            "abortTransaction"
           ],
           "closeConnection": true
         }
@@ -53,20 +53,7 @@
           }
         },
         {
-          "name": "commitTransaction",
-          "object": "session0",
-          "result": {
-            "errorLabelsContain": [
-              "RetryableWriteError",
-              "UnknownTransactionCommitResult"
-            ],
-            "errorLabelsOmit": [
-              "TransientTransactionError"
-            ]
-          }
-        },
-        {
-          "name": "commitTransaction",
+          "name": "abortTransaction",
           "object": "session0"
         }
       ],
@@ -97,7 +84,7 @@
         {
           "command_started_event": {
             "command": {
-              "commitTransaction": 1,
+              "abortTransaction": 1,
               "lsid": "session0",
               "txnNumber": {
                 "$numberLong": "1"
@@ -106,218 +93,35 @@
               "autocommit": false,
               "writeConcern": null
             },
-            "command_name": "commitTransaction",
+            "command_name": "abortTransaction",
             "database_name": "admin"
           }
         },
         {
           "command_started_event": {
             "command": {
-              "commitTransaction": 1,
+              "abortTransaction": 1,
               "lsid": "session0",
               "txnNumber": {
                 "$numberLong": "1"
               },
               "startTransaction": null,
-              "autocommit": false,
-              "writeConcern": {
-                "w": "majority",
-                "wtimeout": 10000
-              }
-            },
-            "command_name": "commitTransaction",
-            "database_name": "admin"
-          }
-        },
-        {
-          "command_started_event": {
-            "command": {
-              "commitTransaction": 1,
-              "lsid": "session0",
-              "txnNumber": {
-                "$numberLong": "1"
-              },
-              "startTransaction": null,
-              "autocommit": false,
-              "writeConcern": {
-                "w": "majority",
-                "wtimeout": 10000
-              }
-            },
-            "command_name": "commitTransaction",
-            "database_name": "admin"
-          }
-        }
-      ],
-      "outcome": {
-        "collection": {
-          "data": [
-            {
-              "_id": 1
-            }
-          ]
-        }
-      }
-    },
-    {
-      "description": "commitTransaction applies majority write concern on retries",
-      "clientOptions": {
-        "retryWrites": false
-      },
-      "failPoint": {
-        "configureFailPoint": "failCommand",
-        "mode": {
-          "times": 2
-        },
-        "data": {
-          "failCommands": [
-            "commitTransaction"
-          ],
-          "closeConnection": true
-        }
-      },
-      "operations": [
-        {
-          "name": "startTransaction",
-          "object": "session0",
-          "arguments": {
-            "options": {
-              "writeConcern": {
-                "w": 2,
-                "j": true,
-                "wtimeout": 5000
-              }
-            }
-          }
-        },
-        {
-          "name": "insertOne",
-          "object": "collection",
-          "arguments": {
-            "session": "session0",
-            "document": {
-              "_id": 1
-            }
-          },
-          "result": {
-            "insertedId": 1
-          }
-        },
-        {
-          "name": "commitTransaction",
-          "object": "session0",
-          "result": {
-            "errorLabelsContain": [
-              "RetryableWriteError",
-              "UnknownTransactionCommitResult"
-            ],
-            "errorLabelsOmit": [
-              "TransientTransactionError"
-            ]
-          }
-        },
-        {
-          "name": "commitTransaction",
-          "object": "session0"
-        }
-      ],
-      "expectations": [
-        {
-          "command_started_event": {
-            "command": {
-              "insert": "test",
-              "documents": [
-                {
-                  "_id": 1
-                }
-              ],
-              "ordered": true,
-              "readConcern": null,
-              "lsid": "session0",
-              "txnNumber": {
-                "$numberLong": "1"
-              },
-              "startTransaction": true,
               "autocommit": false,
               "writeConcern": null
             },
-            "command_name": "insert",
-            "database_name": "transaction-tests"
-          }
-        },
-        {
-          "command_started_event": {
-            "command": {
-              "commitTransaction": 1,
-              "lsid": "session0",
-              "txnNumber": {
-                "$numberLong": "1"
-              },
-              "startTransaction": null,
-              "autocommit": false,
-              "writeConcern": {
-                "w": 2,
-                "j": true,
-                "wtimeout": 5000
-              }
-            },
-            "command_name": "commitTransaction",
-            "database_name": "admin"
-          }
-        },
-        {
-          "command_started_event": {
-            "command": {
-              "commitTransaction": 1,
-              "lsid": "session0",
-              "txnNumber": {
-                "$numberLong": "1"
-              },
-              "startTransaction": null,
-              "autocommit": false,
-              "writeConcern": {
-                "w": "majority",
-                "j": true,
-                "wtimeout": 5000
-              }
-            },
-            "command_name": "commitTransaction",
-            "database_name": "admin"
-          }
-        },
-        {
-          "command_started_event": {
-            "command": {
-              "commitTransaction": 1,
-              "lsid": "session0",
-              "txnNumber": {
-                "$numberLong": "1"
-              },
-              "startTransaction": null,
-              "autocommit": false,
-              "writeConcern": {
-                "w": "majority",
-                "j": true,
-                "wtimeout": 5000
-              }
-            },
-            "command_name": "commitTransaction",
+            "command_name": "abortTransaction",
             "database_name": "admin"
           }
         }
       ],
       "outcome": {
         "collection": {
-          "data": [
-            {
-              "_id": 1
-            }
-          ]
+          "data": []
         }
       }
     },
     {
-      "description": "commitTransaction fails after Interrupted",
+      "description": "abortTransaction does not retry after Interrupted",
       "failPoint": {
         "configureFailPoint": "failCommand",
         "mode": {
@@ -325,7 +129,7 @@
         },
         "data": {
           "failCommands": [
-            "commitTransaction"
+            "abortTransaction"
           ],
           "errorCode": 11601,
           "closeConnection": false
@@ -350,16 +154,8 @@
           }
         },
         {
-          "name": "commitTransaction",
-          "object": "session0",
-          "result": {
-            "errorCodeName": "Interrupted",
-            "errorLabelsOmit": [
-              "RetryableWriteError",
-              "TransientTransactionError",
-              "UnknownTransactionCommitResult"
-            ]
-          }
+          "name": "abortTransaction",
+          "object": "session0"
         }
       ],
       "expectations": [
@@ -389,7 +185,7 @@
         {
           "command_started_event": {
             "command": {
-              "commitTransaction": 1,
+              "abortTransaction": 1,
               "lsid": "session0",
               "txnNumber": {
                 "$numberLong": "1"
@@ -398,7 +194,7 @@
               "autocommit": false,
               "writeConcern": null
             },
-            "command_name": "commitTransaction",
+            "command_name": "abortTransaction",
             "database_name": "admin"
           }
         }
@@ -410,7 +206,7 @@
       }
     },
     {
-      "description": "commitTransaction is not retried after UnsatisfiableWriteConcern error",
+      "description": "abortTransaction does not retry after WriteConcernError Interrupted",
       "failPoint": {
         "configureFailPoint": "failCommand",
         "mode": {
@@ -418,11 +214,11 @@
         },
         "data": {
           "failCommands": [
-            "commitTransaction"
+            "abortTransaction"
           ],
           "writeConcernError": {
-            "code": 100,
-            "errmsg": "Not enough data-bearing nodes"
+            "code": 11601,
+            "errmsg": "operation was interrupted"
           }
         }
       },
@@ -452,15 +248,8 @@
           }
         },
         {
-          "name": "commitTransaction",
-          "object": "session0",
-          "result": {
-            "errorLabelsOmit": [
-              "RetryableWriteError",
-              "TransientTransactionError",
-              "UnknownTransactionCommitResult"
-            ]
-          }
+          "name": "abortTransaction",
+          "object": "session0"
         }
       ],
       "expectations": [
@@ -490,7 +279,7 @@
         {
           "command_started_event": {
             "command": {
-              "commitTransaction": 1,
+              "abortTransaction": 1,
               "lsid": "session0",
               "txnNumber": {
                 "$numberLong": "1"
@@ -501,23 +290,19 @@
                 "w": "majority"
               }
             },
-            "command_name": "commitTransaction",
+            "command_name": "abortTransaction",
             "database_name": "admin"
           }
         }
       ],
       "outcome": {
         "collection": {
-          "data": [
-            {
-              "_id": 1
-            }
-          ]
+          "data": []
         }
       }
     },
     {
-      "description": "commitTransaction succeeds after connection error",
+      "description": "abortTransaction succeeds after connection error",
       "failPoint": {
         "configureFailPoint": "failCommand",
         "mode": {
@@ -525,7 +310,7 @@
         },
         "data": {
           "failCommands": [
-            "commitTransaction"
+            "abortTransaction"
           ],
           "closeConnection": true
         }
@@ -549,7 +334,7 @@
           }
         },
         {
-          "name": "commitTransaction",
+          "name": "abortTransaction",
           "object": "session0"
         }
       ],
@@ -580,7 +365,7 @@
         {
           "command_started_event": {
             "command": {
-              "commitTransaction": 1,
+              "abortTransaction": 1,
               "lsid": "session0",
               "txnNumber": {
                 "$numberLong": "1"
@@ -589,42 +374,35 @@
               "autocommit": false,
               "writeConcern": null
             },
-            "command_name": "commitTransaction",
+            "command_name": "abortTransaction",
             "database_name": "admin"
           }
         },
         {
           "command_started_event": {
             "command": {
-              "commitTransaction": 1,
+              "abortTransaction": 1,
               "lsid": "session0",
               "txnNumber": {
                 "$numberLong": "1"
               },
               "startTransaction": null,
               "autocommit": false,
-              "writeConcern": {
-                "w": "majority",
-                "wtimeout": 10000
-              }
+              "writeConcern": null
             },
-            "command_name": "commitTransaction",
+            "command_name": "abortTransaction",
             "database_name": "admin"
           }
         }
       ],
       "outcome": {
         "collection": {
-          "data": [
-            {
-              "_id": 1
-            }
-          ]
+          "data": []
         }
       }
     },
     {
-      "description": "commitTransaction succeeds after NotMaster",
+      "description": "abortTransaction succeeds after NotWritablePrimary",
       "failPoint": {
         "configureFailPoint": "failCommand",
         "mode": {
@@ -632,7 +410,7 @@
         },
         "data": {
           "failCommands": [
-            "commitTransaction"
+            "abortTransaction"
           ],
           "errorCode": 10107,
           "errorLabels": [
@@ -660,7 +438,7 @@
           }
         },
         {
-          "name": "commitTransaction",
+          "name": "abortTransaction",
           "object": "session0"
         }
       ],
@@ -691,7 +469,7 @@
         {
           "command_started_event": {
             "command": {
-              "commitTransaction": 1,
+              "abortTransaction": 1,
               "lsid": "session0",
               "txnNumber": {
                 "$numberLong": "1"
@@ -700,42 +478,35 @@
               "autocommit": false,
               "writeConcern": null
             },
-            "command_name": "commitTransaction",
+            "command_name": "abortTransaction",
             "database_name": "admin"
           }
         },
         {
           "command_started_event": {
             "command": {
-              "commitTransaction": 1,
+              "abortTransaction": 1,
               "lsid": "session0",
               "txnNumber": {
                 "$numberLong": "1"
               },
               "startTransaction": null,
               "autocommit": false,
-              "writeConcern": {
-                "w": "majority",
-                "wtimeout": 10000
-              }
+              "writeConcern": null
             },
-            "command_name": "commitTransaction",
+            "command_name": "abortTransaction",
             "database_name": "admin"
           }
         }
       ],
       "outcome": {
         "collection": {
-          "data": [
-            {
-              "_id": 1
-            }
-          ]
+          "data": []
         }
       }
     },
     {
-      "description": "commitTransaction succeeds after NotMasterOrSecondary",
+      "description": "abortTransaction succeeds after NotPrimaryOrSecondary",
       "failPoint": {
         "configureFailPoint": "failCommand",
         "mode": {
@@ -743,7 +514,7 @@
         },
         "data": {
           "failCommands": [
-            "commitTransaction"
+            "abortTransaction"
           ],
           "errorCode": 13436,
           "errorLabels": [
@@ -771,7 +542,7 @@
           }
         },
         {
-          "name": "commitTransaction",
+          "name": "abortTransaction",
           "object": "session0"
         }
       ],
@@ -802,7 +573,7 @@
         {
           "command_started_event": {
             "command": {
-              "commitTransaction": 1,
+              "abortTransaction": 1,
               "lsid": "session0",
               "txnNumber": {
                 "$numberLong": "1"
@@ -811,42 +582,35 @@
               "autocommit": false,
               "writeConcern": null
             },
-            "command_name": "commitTransaction",
+            "command_name": "abortTransaction",
             "database_name": "admin"
           }
         },
         {
           "command_started_event": {
             "command": {
-              "commitTransaction": 1,
+              "abortTransaction": 1,
               "lsid": "session0",
               "txnNumber": {
                 "$numberLong": "1"
               },
               "startTransaction": null,
               "autocommit": false,
-              "writeConcern": {
-                "w": "majority",
-                "wtimeout": 10000
-              }
+              "writeConcern": null
             },
-            "command_name": "commitTransaction",
+            "command_name": "abortTransaction",
             "database_name": "admin"
           }
         }
       ],
       "outcome": {
         "collection": {
-          "data": [
-            {
-              "_id": 1
-            }
-          ]
+          "data": []
         }
       }
     },
     {
-      "description": "commitTransaction succeeds after NotMasterNoSlaveOk",
+      "description": "abortTransaction succeeds after NotPrimaryNoSecondaryOk",
       "failPoint": {
         "configureFailPoint": "failCommand",
         "mode": {
@@ -854,7 +618,7 @@
         },
         "data": {
           "failCommands": [
-            "commitTransaction"
+            "abortTransaction"
           ],
           "errorCode": 13435,
           "errorLabels": [
@@ -882,7 +646,7 @@
           }
         },
         {
-          "name": "commitTransaction",
+          "name": "abortTransaction",
           "object": "session0"
         }
       ],
@@ -913,7 +677,7 @@
         {
           "command_started_event": {
             "command": {
-              "commitTransaction": 1,
+              "abortTransaction": 1,
               "lsid": "session0",
               "txnNumber": {
                 "$numberLong": "1"
@@ -922,42 +686,35 @@
               "autocommit": false,
               "writeConcern": null
             },
-            "command_name": "commitTransaction",
+            "command_name": "abortTransaction",
             "database_name": "admin"
           }
         },
         {
           "command_started_event": {
             "command": {
-              "commitTransaction": 1,
+              "abortTransaction": 1,
               "lsid": "session0",
               "txnNumber": {
                 "$numberLong": "1"
               },
               "startTransaction": null,
               "autocommit": false,
-              "writeConcern": {
-                "w": "majority",
-                "wtimeout": 10000
-              }
+              "writeConcern": null
             },
-            "command_name": "commitTransaction",
+            "command_name": "abortTransaction",
             "database_name": "admin"
           }
         }
       ],
       "outcome": {
         "collection": {
-          "data": [
-            {
-              "_id": 1
-            }
-          ]
+          "data": []
         }
       }
     },
     {
-      "description": "commitTransaction succeeds after InterruptedDueToReplStateChange",
+      "description": "abortTransaction succeeds after InterruptedDueToReplStateChange",
       "failPoint": {
         "configureFailPoint": "failCommand",
         "mode": {
@@ -965,7 +722,7 @@
         },
         "data": {
           "failCommands": [
-            "commitTransaction"
+            "abortTransaction"
           ],
           "errorCode": 11602,
           "errorLabels": [
@@ -993,7 +750,7 @@
           }
         },
         {
-          "name": "commitTransaction",
+          "name": "abortTransaction",
           "object": "session0"
         }
       ],
@@ -1024,7 +781,7 @@
         {
           "command_started_event": {
             "command": {
-              "commitTransaction": 1,
+              "abortTransaction": 1,
               "lsid": "session0",
               "txnNumber": {
                 "$numberLong": "1"
@@ -1033,42 +790,35 @@
               "autocommit": false,
               "writeConcern": null
             },
-            "command_name": "commitTransaction",
+            "command_name": "abortTransaction",
             "database_name": "admin"
           }
         },
         {
           "command_started_event": {
             "command": {
-              "commitTransaction": 1,
+              "abortTransaction": 1,
               "lsid": "session0",
               "txnNumber": {
                 "$numberLong": "1"
               },
               "startTransaction": null,
               "autocommit": false,
-              "writeConcern": {
-                "w": "majority",
-                "wtimeout": 10000
-              }
+              "writeConcern": null
             },
-            "command_name": "commitTransaction",
+            "command_name": "abortTransaction",
             "database_name": "admin"
           }
         }
       ],
       "outcome": {
         "collection": {
-          "data": [
-            {
-              "_id": 1
-            }
-          ]
+          "data": []
         }
       }
     },
     {
-      "description": "commitTransaction succeeds after InterruptedAtShutdown",
+      "description": "abortTransaction succeeds after InterruptedAtShutdown",
       "failPoint": {
         "configureFailPoint": "failCommand",
         "mode": {
@@ -1076,7 +826,7 @@
         },
         "data": {
           "failCommands": [
-            "commitTransaction"
+            "abortTransaction"
           ],
           "errorCode": 11600,
           "errorLabels": [
@@ -1104,7 +854,7 @@
           }
         },
         {
-          "name": "commitTransaction",
+          "name": "abortTransaction",
           "object": "session0"
         }
       ],
@@ -1135,7 +885,7 @@
         {
           "command_started_event": {
             "command": {
-              "commitTransaction": 1,
+              "abortTransaction": 1,
               "lsid": "session0",
               "txnNumber": {
                 "$numberLong": "1"
@@ -1144,42 +894,35 @@
               "autocommit": false,
               "writeConcern": null
             },
-            "command_name": "commitTransaction",
+            "command_name": "abortTransaction",
             "database_name": "admin"
           }
         },
         {
           "command_started_event": {
             "command": {
-              "commitTransaction": 1,
+              "abortTransaction": 1,
               "lsid": "session0",
               "txnNumber": {
                 "$numberLong": "1"
               },
               "startTransaction": null,
               "autocommit": false,
-              "writeConcern": {
-                "w": "majority",
-                "wtimeout": 10000
-              }
+              "writeConcern": null
             },
-            "command_name": "commitTransaction",
+            "command_name": "abortTransaction",
             "database_name": "admin"
           }
         }
       ],
       "outcome": {
         "collection": {
-          "data": [
-            {
-              "_id": 1
-            }
-          ]
+          "data": []
         }
       }
     },
     {
-      "description": "commitTransaction succeeds after PrimarySteppedDown",
+      "description": "abortTransaction succeeds after PrimarySteppedDown",
       "failPoint": {
         "configureFailPoint": "failCommand",
         "mode": {
@@ -1187,7 +930,7 @@
         },
         "data": {
           "failCommands": [
-            "commitTransaction"
+            "abortTransaction"
           ],
           "errorCode": 189,
           "errorLabels": [
@@ -1215,7 +958,7 @@
           }
         },
         {
-          "name": "commitTransaction",
+          "name": "abortTransaction",
           "object": "session0"
         }
       ],
@@ -1246,7 +989,7 @@
         {
           "command_started_event": {
             "command": {
-              "commitTransaction": 1,
+              "abortTransaction": 1,
               "lsid": "session0",
               "txnNumber": {
                 "$numberLong": "1"
@@ -1255,42 +998,35 @@
               "autocommit": false,
               "writeConcern": null
             },
-            "command_name": "commitTransaction",
+            "command_name": "abortTransaction",
             "database_name": "admin"
           }
         },
         {
           "command_started_event": {
             "command": {
-              "commitTransaction": 1,
+              "abortTransaction": 1,
               "lsid": "session0",
               "txnNumber": {
                 "$numberLong": "1"
               },
               "startTransaction": null,
               "autocommit": false,
-              "writeConcern": {
-                "w": "majority",
-                "wtimeout": 10000
-              }
+              "writeConcern": null
             },
-            "command_name": "commitTransaction",
+            "command_name": "abortTransaction",
             "database_name": "admin"
           }
         }
       ],
       "outcome": {
         "collection": {
-          "data": [
-            {
-              "_id": 1
-            }
-          ]
+          "data": []
         }
       }
     },
     {
-      "description": "commitTransaction succeeds after ShutdownInProgress",
+      "description": "abortTransaction succeeds after ShutdownInProgress",
       "failPoint": {
         "configureFailPoint": "failCommand",
         "mode": {
@@ -1298,7 +1034,7 @@
         },
         "data": {
           "failCommands": [
-            "commitTransaction"
+            "abortTransaction"
           ],
           "errorCode": 91,
           "errorLabels": [
@@ -1326,7 +1062,7 @@
           }
         },
         {
-          "name": "commitTransaction",
+          "name": "abortTransaction",
           "object": "session0"
         }
       ],
@@ -1357,7 +1093,7 @@
         {
           "command_started_event": {
             "command": {
-              "commitTransaction": 1,
+              "abortTransaction": 1,
               "lsid": "session0",
               "txnNumber": {
                 "$numberLong": "1"
@@ -1366,42 +1102,35 @@
               "autocommit": false,
               "writeConcern": null
             },
-            "command_name": "commitTransaction",
+            "command_name": "abortTransaction",
             "database_name": "admin"
           }
         },
         {
           "command_started_event": {
             "command": {
-              "commitTransaction": 1,
+              "abortTransaction": 1,
               "lsid": "session0",
               "txnNumber": {
                 "$numberLong": "1"
               },
               "startTransaction": null,
               "autocommit": false,
-              "writeConcern": {
-                "w": "majority",
-                "wtimeout": 10000
-              }
+              "writeConcern": null
             },
-            "command_name": "commitTransaction",
+            "command_name": "abortTransaction",
             "database_name": "admin"
           }
         }
       ],
       "outcome": {
         "collection": {
-          "data": [
-            {
-              "_id": 1
-            }
-          ]
+          "data": []
         }
       }
     },
     {
-      "description": "commitTransaction succeeds after HostNotFound",
+      "description": "abortTransaction succeeds after HostNotFound",
       "failPoint": {
         "configureFailPoint": "failCommand",
         "mode": {
@@ -1409,7 +1138,7 @@
         },
         "data": {
           "failCommands": [
-            "commitTransaction"
+            "abortTransaction"
           ],
           "errorCode": 7,
           "errorLabels": [
@@ -1437,7 +1166,7 @@
           }
         },
         {
-          "name": "commitTransaction",
+          "name": "abortTransaction",
           "object": "session0"
         }
       ],
@@ -1468,7 +1197,7 @@
         {
           "command_started_event": {
             "command": {
-              "commitTransaction": 1,
+              "abortTransaction": 1,
               "lsid": "session0",
               "txnNumber": {
                 "$numberLong": "1"
@@ -1477,42 +1206,35 @@
               "autocommit": false,
               "writeConcern": null
             },
-            "command_name": "commitTransaction",
+            "command_name": "abortTransaction",
             "database_name": "admin"
           }
         },
         {
           "command_started_event": {
             "command": {
-              "commitTransaction": 1,
+              "abortTransaction": 1,
               "lsid": "session0",
               "txnNumber": {
                 "$numberLong": "1"
               },
               "startTransaction": null,
               "autocommit": false,
-              "writeConcern": {
-                "w": "majority",
-                "wtimeout": 10000
-              }
+              "writeConcern": null
             },
-            "command_name": "commitTransaction",
+            "command_name": "abortTransaction",
             "database_name": "admin"
           }
         }
       ],
       "outcome": {
         "collection": {
-          "data": [
-            {
-              "_id": 1
-            }
-          ]
+          "data": []
         }
       }
     },
     {
-      "description": "commitTransaction succeeds after HostUnreachable",
+      "description": "abortTransaction succeeds after HostUnreachable",
       "failPoint": {
         "configureFailPoint": "failCommand",
         "mode": {
@@ -1520,7 +1242,7 @@
         },
         "data": {
           "failCommands": [
-            "commitTransaction"
+            "abortTransaction"
           ],
           "errorCode": 6,
           "errorLabels": [
@@ -1548,7 +1270,7 @@
           }
         },
         {
-          "name": "commitTransaction",
+          "name": "abortTransaction",
           "object": "session0"
         }
       ],
@@ -1579,7 +1301,7 @@
         {
           "command_started_event": {
             "command": {
-              "commitTransaction": 1,
+              "abortTransaction": 1,
               "lsid": "session0",
               "txnNumber": {
                 "$numberLong": "1"
@@ -1588,42 +1310,35 @@
               "autocommit": false,
               "writeConcern": null
             },
-            "command_name": "commitTransaction",
+            "command_name": "abortTransaction",
             "database_name": "admin"
           }
         },
         {
           "command_started_event": {
             "command": {
-              "commitTransaction": 1,
+              "abortTransaction": 1,
               "lsid": "session0",
               "txnNumber": {
                 "$numberLong": "1"
               },
               "startTransaction": null,
               "autocommit": false,
-              "writeConcern": {
-                "w": "majority",
-                "wtimeout": 10000
-              }
+              "writeConcern": null
             },
-            "command_name": "commitTransaction",
+            "command_name": "abortTransaction",
             "database_name": "admin"
           }
         }
       ],
       "outcome": {
         "collection": {
-          "data": [
-            {
-              "_id": 1
-            }
-          ]
+          "data": []
         }
       }
     },
     {
-      "description": "commitTransaction succeeds after SocketException",
+      "description": "abortTransaction succeeds after SocketException",
       "failPoint": {
         "configureFailPoint": "failCommand",
         "mode": {
@@ -1631,7 +1346,7 @@
         },
         "data": {
           "failCommands": [
-            "commitTransaction"
+            "abortTransaction"
           ],
           "errorCode": 9001,
           "errorLabels": [
@@ -1659,7 +1374,7 @@
           }
         },
         {
-          "name": "commitTransaction",
+          "name": "abortTransaction",
           "object": "session0"
         }
       ],
@@ -1690,7 +1405,7 @@
         {
           "command_started_event": {
             "command": {
-              "commitTransaction": 1,
+              "abortTransaction": 1,
               "lsid": "session0",
               "txnNumber": {
                 "$numberLong": "1"
@@ -1699,42 +1414,35 @@
               "autocommit": false,
               "writeConcern": null
             },
-            "command_name": "commitTransaction",
+            "command_name": "abortTransaction",
             "database_name": "admin"
           }
         },
         {
           "command_started_event": {
             "command": {
-              "commitTransaction": 1,
+              "abortTransaction": 1,
               "lsid": "session0",
               "txnNumber": {
                 "$numberLong": "1"
               },
               "startTransaction": null,
               "autocommit": false,
-              "writeConcern": {
-                "w": "majority",
-                "wtimeout": 10000
-              }
+              "writeConcern": null
             },
-            "command_name": "commitTransaction",
+            "command_name": "abortTransaction",
             "database_name": "admin"
           }
         }
       ],
       "outcome": {
         "collection": {
-          "data": [
-            {
-              "_id": 1
-            }
-          ]
+          "data": []
         }
       }
     },
     {
-      "description": "commitTransaction succeeds after NetworkTimeout",
+      "description": "abortTransaction succeeds after NetworkTimeout",
       "failPoint": {
         "configureFailPoint": "failCommand",
         "mode": {
@@ -1742,7 +1450,7 @@
         },
         "data": {
           "failCommands": [
-            "commitTransaction"
+            "abortTransaction"
           ],
           "errorCode": 89,
           "errorLabels": [
@@ -1770,7 +1478,7 @@
           }
         },
         {
-          "name": "commitTransaction",
+          "name": "abortTransaction",
           "object": "session0"
         }
       ],
@@ -1801,7 +1509,7 @@
         {
           "command_started_event": {
             "command": {
-              "commitTransaction": 1,
+              "abortTransaction": 1,
               "lsid": "session0",
               "txnNumber": {
                 "$numberLong": "1"
@@ -1810,42 +1518,35 @@
               "autocommit": false,
               "writeConcern": null
             },
-            "command_name": "commitTransaction",
+            "command_name": "abortTransaction",
             "database_name": "admin"
           }
         },
         {
           "command_started_event": {
             "command": {
-              "commitTransaction": 1,
+              "abortTransaction": 1,
               "lsid": "session0",
               "txnNumber": {
                 "$numberLong": "1"
               },
               "startTransaction": null,
               "autocommit": false,
-              "writeConcern": {
-                "w": "majority",
-                "wtimeout": 10000
-              }
+              "writeConcern": null
             },
-            "command_name": "commitTransaction",
+            "command_name": "abortTransaction",
             "database_name": "admin"
           }
         }
       ],
       "outcome": {
         "collection": {
-          "data": [
-            {
-              "_id": 1
-            }
-          ]
+          "data": []
         }
       }
     },
     {
-      "description": "commitTransaction succeeds after WriteConcernError InterruptedAtShutdown",
+      "description": "abortTransaction succeeds after WriteConcernError InterruptedAtShutdown",
       "failPoint": {
         "configureFailPoint": "failCommand",
         "mode": {
@@ -1853,13 +1554,13 @@
         },
         "data": {
           "failCommands": [
-            "commitTransaction"
+            "abortTransaction"
+          ],
+          "errorLabels": [
+            "RetryableWriteError"
           ],
           "writeConcernError": {
             "code": 11600,
-            "errorLabels": [
-              "RetryableWriteError"
-            ],
             "errmsg": "Replication is being shut down"
           }
         }
@@ -1890,7 +1591,7 @@
           }
         },
         {
-          "name": "commitTransaction",
+          "name": "abortTransaction",
           "object": "session0"
         }
       ],
@@ -1921,7 +1622,7 @@
         {
           "command_started_event": {
             "command": {
-              "commitTransaction": 1,
+              "abortTransaction": 1,
               "lsid": "session0",
               "txnNumber": {
                 "$numberLong": "1"
@@ -1932,14 +1633,14 @@
                 "w": "majority"
               }
             },
-            "command_name": "commitTransaction",
+            "command_name": "abortTransaction",
             "database_name": "admin"
           }
         },
         {
           "command_started_event": {
             "command": {
-              "commitTransaction": 1,
+              "abortTransaction": 1,
               "lsid": "session0",
               "txnNumber": {
                 "$numberLong": "1"
@@ -1947,27 +1648,22 @@
               "startTransaction": null,
               "autocommit": false,
               "writeConcern": {
-                "w": "majority",
-                "wtimeout": 10000
+                "w": "majority"
               }
             },
-            "command_name": "commitTransaction",
+            "command_name": "abortTransaction",
             "database_name": "admin"
           }
         }
       ],
       "outcome": {
         "collection": {
-          "data": [
-            {
-              "_id": 1
-            }
-          ]
+          "data": []
         }
       }
     },
     {
-      "description": "commitTransaction succeeds after WriteConcernError InterruptedDueToReplStateChange",
+      "description": "abortTransaction succeeds after WriteConcernError InterruptedDueToReplStateChange",
       "failPoint": {
         "configureFailPoint": "failCommand",
         "mode": {
@@ -1975,13 +1671,13 @@
         },
         "data": {
           "failCommands": [
-            "commitTransaction"
+            "abortTransaction"
+          ],
+          "errorLabels": [
+            "RetryableWriteError"
           ],
           "writeConcernError": {
             "code": 11602,
-            "errorLabels": [
-              "RetryableWriteError"
-            ],
             "errmsg": "Replication is being shut down"
           }
         }
@@ -2012,7 +1708,7 @@
           }
         },
         {
-          "name": "commitTransaction",
+          "name": "abortTransaction",
           "object": "session0"
         }
       ],
@@ -2043,7 +1739,7 @@
         {
           "command_started_event": {
             "command": {
-              "commitTransaction": 1,
+              "abortTransaction": 1,
               "lsid": "session0",
               "txnNumber": {
                 "$numberLong": "1"
@@ -2054,14 +1750,14 @@
                 "w": "majority"
               }
             },
-            "command_name": "commitTransaction",
+            "command_name": "abortTransaction",
             "database_name": "admin"
           }
         },
         {
           "command_started_event": {
             "command": {
-              "commitTransaction": 1,
+              "abortTransaction": 1,
               "lsid": "session0",
               "txnNumber": {
                 "$numberLong": "1"
@@ -2069,27 +1765,22 @@
               "startTransaction": null,
               "autocommit": false,
               "writeConcern": {
-                "w": "majority",
-                "wtimeout": 10000
+                "w": "majority"
               }
             },
-            "command_name": "commitTransaction",
+            "command_name": "abortTransaction",
             "database_name": "admin"
           }
         }
       ],
       "outcome": {
         "collection": {
-          "data": [
-            {
-              "_id": 1
-            }
-          ]
+          "data": []
         }
       }
     },
     {
-      "description": "commitTransaction succeeds after WriteConcernError PrimarySteppedDown",
+      "description": "abortTransaction succeeds after WriteConcernError PrimarySteppedDown",
       "failPoint": {
         "configureFailPoint": "failCommand",
         "mode": {
@@ -2097,13 +1788,13 @@
         },
         "data": {
           "failCommands": [
-            "commitTransaction"
+            "abortTransaction"
+          ],
+          "errorLabels": [
+            "RetryableWriteError"
           ],
           "writeConcernError": {
             "code": 189,
-            "errorLabels": [
-              "RetryableWriteError"
-            ],
             "errmsg": "Replication is being shut down"
           }
         }
@@ -2134,7 +1825,7 @@
           }
         },
         {
-          "name": "commitTransaction",
+          "name": "abortTransaction",
           "object": "session0"
         }
       ],
@@ -2165,7 +1856,7 @@
         {
           "command_started_event": {
             "command": {
-              "commitTransaction": 1,
+              "abortTransaction": 1,
               "lsid": "session0",
               "txnNumber": {
                 "$numberLong": "1"
@@ -2176,14 +1867,14 @@
                 "w": "majority"
               }
             },
-            "command_name": "commitTransaction",
+            "command_name": "abortTransaction",
             "database_name": "admin"
           }
         },
         {
           "command_started_event": {
             "command": {
-              "commitTransaction": 1,
+              "abortTransaction": 1,
               "lsid": "session0",
               "txnNumber": {
                 "$numberLong": "1"
@@ -2191,27 +1882,22 @@
               "startTransaction": null,
               "autocommit": false,
               "writeConcern": {
-                "w": "majority",
-                "wtimeout": 10000
+                "w": "majority"
               }
             },
-            "command_name": "commitTransaction",
+            "command_name": "abortTransaction",
             "database_name": "admin"
           }
         }
       ],
       "outcome": {
         "collection": {
-          "data": [
-            {
-              "_id": 1
-            }
-          ]
+          "data": []
         }
       }
     },
     {
-      "description": "commitTransaction succeeds after WriteConcernError ShutdownInProgress",
+      "description": "abortTransaction succeeds after WriteConcernError ShutdownInProgress",
       "failPoint": {
         "configureFailPoint": "failCommand",
         "mode": {
@@ -2219,13 +1905,13 @@
         },
         "data": {
           "failCommands": [
-            "commitTransaction"
+            "abortTransaction"
+          ],
+          "errorLabels": [
+            "RetryableWriteError"
           ],
           "writeConcernError": {
             "code": 91,
-            "errorLabels": [
-              "RetryableWriteError"
-            ],
             "errmsg": "Replication is being shut down"
           }
         }
@@ -2256,7 +1942,7 @@
           }
         },
         {
-          "name": "commitTransaction",
+          "name": "abortTransaction",
           "object": "session0"
         }
       ],
@@ -2287,7 +1973,7 @@
         {
           "command_started_event": {
             "command": {
-              "commitTransaction": 1,
+              "abortTransaction": 1,
               "lsid": "session0",
               "txnNumber": {
                 "$numberLong": "1"
@@ -2298,14 +1984,14 @@
                 "w": "majority"
               }
             },
-            "command_name": "commitTransaction",
+            "command_name": "abortTransaction",
             "database_name": "admin"
           }
         },
         {
           "command_started_event": {
             "command": {
-              "commitTransaction": 1,
+              "abortTransaction": 1,
               "lsid": "session0",
               "txnNumber": {
                 "$numberLong": "1"
@@ -2313,22 +1999,17 @@
               "startTransaction": null,
               "autocommit": false,
               "writeConcern": {
-                "w": "majority",
-                "wtimeout": 10000
+                "w": "majority"
               }
             },
-            "command_name": "commitTransaction",
+            "command_name": "abortTransaction",
             "database_name": "admin"
           }
         }
       ],
       "outcome": {
         "collection": {
-          "data": [
-            {
-              "_id": 1
-            }
-          ]
+          "data": []
         }
       }
     }
