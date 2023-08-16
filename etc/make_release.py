@@ -233,18 +233,9 @@ def check_docker_file_versions(mongo_cxx_release_ver: str):
     Checks that `MONGOCXX_VERSION` defined in Docker Makefiles matches version to be released: `mongo_cxx_release_ver`.
     """
 
-    dockerfiles = [
-        "./extras/docker/alpine3.18/Dockerfile",
-        "./extras/docker/bookworm/Dockerfile",
-        "./extras/docker/jammy/Dockerfile",
-        "./extras/docker/redhat-ubi-9.2/Dockerfile",
-    ]
-    makefiles = [
-        "./extras/docker/alpine3.18/Makefile",
-        "./extras/docker/bookworm/Makefile",
-        "./extras/docker/jammy/Makefile",
-        "./extras/docker/redhat-ubi-9.2/Makefile",
-    ]
+    extras_docker = pathlib.Path("./extras/docker")
+    dockerfiles = extras_docker.rglob("Dockerfile")
+    makefiles = extras_docker.rglob("Makefile")
 
     # Get LIBMONGOC_REQUIRED_VERSION from CMakeLists.txt.
     got_LIBMONGOC_REQUIRED_VERSION = None
