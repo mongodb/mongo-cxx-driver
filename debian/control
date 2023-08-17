@@ -8,10 +8,11 @@ Build-Depends: debhelper (>= 11),
                git <pkg.mongo-cxx-driver.mnmlstc>,
                ca-certificates <pkg.mongo-cxx-driver.mnmlstc>,
                cmake,
+               pkg-config,
                libmongoc-dev (>= 1.24.0),
                libboost-dev,
                libsasl2-dev,
-               libicu-dev,
+               libutf8proc-dev,
                doxygen
 Standards-Version: 4.6.2
 Section: libs
@@ -27,6 +28,7 @@ Depends: libmongocxx-noabi (= ${binary:Version}),
          libssl-dev,
          zlib1g-dev,
          libsnappy-dev,
+         libutf8proc-dev,
          ${misc:Depends}
 Description: MongoDB C++ client library - dev files
  libmongocxx is the officially supported MongoDB client library for C++
