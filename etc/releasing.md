@@ -23,6 +23,14 @@ In particular, check that the "Ubuntu 18.04 with minimum libmongoc" variant is
 passing to ensure that backports have not introduced a dependency on later
 versions of libmongoc.
 
+## Check driver versions are correct for the Docker images
+
+In `extras/docker/generate.py` check that the versions are correct and if
+appropriate, bump the version numbers for:
+- `MONGOCXX_VERSION`
+- `MONGOC_VERSION`
+- `MONGOCRYPT_VERSION`
+
 ## Check fixVersions in Jira
 
 Ensure that all tickets under the
