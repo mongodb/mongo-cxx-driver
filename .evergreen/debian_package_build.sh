@@ -51,7 +51,7 @@ export DEBOOTSTRAP_DIR=`pwd`/debootstrap.git
 sudo -E ./debootstrap.git/debootstrap unstable ./unstable-chroot/ http://cdn-aws.deb.debian.org/debian
 cp -a mongo-cxx-driver ./unstable-chroot/tmp/
 sudo DEB_BUILD_PROFILES="${DEB_BUILD_PROFILES}" chroot ./unstable-chroot /bin/bash -c "
-  (apt-get install -y build-essential git-buildpackage fakeroot debhelper cmake curl ca-certificates libboost-dev libsasl2-dev libicu-dev doxygen ${MNMLSTC_DEPS} && \
+  (apt-get install -y build-essential git-buildpackage fakeroot debhelper pkg-config cmake curl ca-certificates libboost-dev libsasl2-dev libutf8proc-dev doxygen ${MNMLSTC_DEPS} && \
   mkdir /tmp/mongo-c-driver && \
   curl -o deb.tar.gz -L https://s3.amazonaws.com/mciuploads/mongo-c-driver/master/mongo-c-driver-debian-packages-latest.tar.gz && \
   tar zxvf deb.tar.gz && \
