@@ -1194,7 +1194,7 @@ tasks:
 
     - name: docker_build
       run_on: &docker-distros
-        - ubuntu2204
+        - ubuntu2204-small
       commands:
          - func: "setup"
          - func: "docker-image-build"
