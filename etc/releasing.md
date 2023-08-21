@@ -44,13 +44,16 @@ changes cherry-picked onto the release branch. This is indicated by a comment on
 the ticket. Here is an
 [example comment](https://jira.mongodb.com/browse/CXX-2650?focusedCommentId=5271981&page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel#comment-5271981).
 
-## Audit Jira ticket titles and types for use in release notes
+## Audit Jira ticket titles and types
 
-From the releases page click the "Release Notes" link to see a summary of
-tickets to be included in release notes. Update the ticket type and title as
-appropriate. User-facing issues should generally be either "Bug" or
-"New Feature". Non-user facing issues should generally be "Task" tickets (and
-will be omitted later, so you can ignore them here).
+Update Jira ticket types and titles as appropriate.
+User-facing issues should generally be either "Bug" or "New Feature".
+Non-user facing issues should generally be "Task" tickets.
+
+## Update CHANGELOG.md
+
+Check Jira for tickets closed in this fix version. Consider updating CHANGELOG.md
+with notable changes not already mentioned.
 
 ## Clone and set up environment
 
