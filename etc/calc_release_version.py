@@ -219,7 +219,7 @@ def get_branch_tags(active_branch_name):  # type: (str) -> list[str]
             debug('Got tags: {0}'.format(got))
             return got
     # No tags
-    print('(No tags found for this branch)')
+    debug('(No tags found for this branch)')
     return []
 
 
@@ -232,9 +232,9 @@ def iter_tag_lines():
     output = check_output(['git', 'tag', '--list', '--format=%(*objectname)|%(objectname)|%(refname:strip=2)'])
     lines = output.splitlines()
     for l in lines:
-        obj, tag = l.split('|', 1)
+        obj, tagobj, tag = l.split('|', 2)
         if re.match(r'r\d+\.\d+', tag):
-            yield obj, tag
+            yield obj, tagobj, tag
 
 
 def get_object_tags():  # type: () -> dict[str, list[str]]
@@ -243,8 +243,10 @@ def get_object_tags():  # type: () -> dict[str, list[str]]
     that commit. Untagged commits will not be included in the resulting map.
     """
     ret = {}  # type: dict[str, list[str]]
-    for obj, tag in iter_tag_lines():
-        ret.setdefault(obj, []).append(tag)
+    for obj, tagobj, tag in iter_tag_lines():
+        if obj:
+            ret.setdefault(obj, []).append(tag)
+        ret.setdefault(tagobj, []).append(tag)
     return ret
 
 
