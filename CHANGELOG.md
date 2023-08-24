@@ -7,9 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 3.9.0 [Unreleased]
 
-### Added 
+### Added
 
-- Add CMake option `USE_DEFAULT_INSTALL_PATH`.
+- Add CMake option `MONGOCXX_OVERRIDE_DEFAULT_INSTALL_PREFIX` (default is `TRUE`
+  for backwards-compatibility).
 - Add API to manage Atlas Search Indexes.
 - Automatically download C driver dependency if not provided.
 
