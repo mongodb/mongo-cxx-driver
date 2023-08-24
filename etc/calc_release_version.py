@@ -204,7 +204,7 @@ def get_branch_tags(active_branch_name):  # type: (str) -> list[str]
     release_branch_match = RELEASE_BRANCH_RE.match(active_branch_name)
     if release_branch_match:
         # This is a release branch, so look for tags only on this branch
-        tag_glob = 'r'+  release_branch_match.group('vermaj') + '.' \
+        tag_glob = 'r' + release_branch_match.group('vermaj') + '.' \
                 + release_branch_match.group('vermin') + '.*'
         got = check_output(['git', 'tag', '--list', tag_glob]).splitlines()
         debug('Got tags: {0}'.format(got))
@@ -255,9 +255,9 @@ def process_and_sort_tags(tags):  # type: (list[str]) -> list[str]
     Given a string (as returned from get_branch_tags), return a sorted list of
     zero or more tags (sorted based on the Version comparison) which meet
     the following criteria:
-        - a final release tag (i.e., 1.x.y without any pre-release suffix)
+        - a final release tag (i.e., r3.x.y without any pre-release suffix)
         - a pre-release tag which is not superseded by a release tag (i.e.,
-          1.x.y-preX iff 1.x.y does not already exist)
+          r3.x.y-preX iff r3.x.y does not already exist)
     """
 
     processed_and_sorted_tags = []  # type: list[str]
