@@ -1,6 +1,7 @@
 # Directories that are generated
 /tags
 cmake-build*
+_build/
 
 # Filetypes
 *~

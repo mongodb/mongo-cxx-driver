@@ -202,12 +202,14 @@ To build static libraries only, set both BUILD_SHARED_LIBS and BUILD_SHARED_AND_
 endif()
 
 
-option(USE_DEFAULT_INSTALL_PATH "Override the CMake default installation path" OFF)
-if(NOT CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT AND USE_DEFAULT_INSTALL_PATH)
-    message(FATAL_ERROR "You cannot set both CMAKE_INSTALL_PREFIX and USE_DEFAULT_INSTALL_PATH")
-endif()
-if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT AND NOT USE_DEFAULT_INSTALL_PATH)
-    message(WARNING "the CMake default install path is being overridden to the build directory. This behavior will not be the default in a future release. Build with -DUSE_DEFAULT_INSTALL_PATH=ON to opt into what will be the default behavior in a future release. Setting install path to: ${CMAKE_BINARY_DIR}/install")
+option(MONGOCXX_OVERRIDE_DEFAULT_INSTALL_PREFIX "If enabled, mongocxx will set a default CMAKE_INSTALL_PREFIX if one is not already defined" TRUE)
+if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT AND MONGOCXX_OVERRIDE_DEFAULT_INSTALL_PREFIX)
+    message(WARNING
+        "mongocxx: The default CMAKE_INSTALL_PREFIX is being overridden to the "
+        "build directory. This behavior will not be the default in a future "
+        "release. Build with 'MONGOCXX_OVERRIDE_DEFAULT_INSTALL_PREFIX=ON' to opt "
+        "into what will be the default behavior in a future release. Setting install "
+        "path to: ${CMAKE_BINARY_DIR}/install")
     set (CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/install" CACHE PATH "default install path" FORCE)
 endif()
 

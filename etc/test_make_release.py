@@ -19,7 +19,8 @@ class TestMakeRelease(unittest.TestCase):
 
         ### Added
 
-        - Add CMake option `USE_DEFAULT_INSTALL_PATH`.
+        - Add CMake option `MONGOCXX_OVERRIDE_DEFAULT_INSTALL_PREFIX` (default is `TRUE`
+          for backwards-compatibility).
         - Add API to manage Atlas Search Indexes.
                                     
         ## 3.8.0
@@ -31,7 +32,8 @@ class TestMakeRelease(unittest.TestCase):
         expected_release_notes = textwrap.dedent("""
         ## Added
 
-        - Add CMake option `USE_DEFAULT_INSTALL_PATH`.
+        - Add CMake option `MONGOCXX_OVERRIDE_DEFAULT_INSTALL_PREFIX` (default is `TRUE`
+          for backwards-compatibility).
         - Add API to manage Atlas Search Indexes.
 
         See the [full list of changes in Jira](https://jira.mongodb.org/issues/?jql=project%20%3D%20CXX%20AND%20fixVersion%20%3D%203.9.0).
