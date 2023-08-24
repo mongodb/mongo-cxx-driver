@@ -40,7 +40,7 @@ cp calc_release_version.py calc_release_version_test.py
 echo "Test a tagged commit ... begin"
 {
     git checkout r3.7.2 --quiet
-    got=$("${PYTHON_INTERP}" calc_release_version_test.py)
+    got=$("${PYTHON_INTERP}" calc_release_version_test.py --debug)
     assert_eq "$got" "3.7.2"
     git checkout - --quiet
 }
@@ -51,7 +51,7 @@ echo "Test an untagged commit ... begin"
 {
     # 15756bff8640435b8647fe2eccf8d9c1f6d78816 is commit before r3.7.2
     git checkout 15756bff8640435b8647fe2eccf8d9c1f6d78816 --quiet
-    got=$("${PYTHON_INTERP}" calc_release_version_test.py)
+    got=$("${PYTHON_INTERP}" calc_release_version_test.py --debug)
     assert_eq "$got" "3.7.2-$DATE+git15756bff86"
     git checkout - --quiet
 }
@@ -60,7 +60,7 @@ echo "Test an untagged commit ... end"
 echo "Test next minor version ... begin"
 {
     CURRENT_SHORTREF=$(git rev-parse --revs-only --short=10 HEAD)
-    got=$("${PYTHON_INTERP}" calc_release_version_test.py --next-minor)
+    got=$("${PYTHON_INTERP}" calc_release_version_test.py --next-minor --debug)
     # XXX NOTE XXX NOTE XXX
     # If you find yourself looking at this line because the assertion below
     # failed, then it is probably because a new major/minor release was made.
