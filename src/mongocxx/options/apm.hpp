@@ -44,6 +44,9 @@ class MONGOCXX_API apm {
     /// Set the command started monitoring callback. The callback takes a reference to a
     /// command_started_event which will only contain valid data for the duration of the callback.
     ///
+    /// @warning
+    ///   If the callback throws an exception, the behavior is undefined.
+    ///
     /// @param command_started
     ///   The command started monitoring callback.
     ///
@@ -65,6 +68,9 @@ class MONGOCXX_API apm {
     ///
     /// Set the command failed monitoring callback. The callback takes a reference to a
     /// command_failed_event which will only contain valid data for the duration of the callback.
+    ///
+    /// @warning
+    ///   If the callback throws an exception, the behavior is undefined.
     ///
     /// @param command_failed
     ///   The command failed monitoring callback.
@@ -88,6 +94,9 @@ class MONGOCXX_API apm {
     /// Set the command succeeded monitoring callback. The callback takes a reference to a
     /// command_succeeded_event which will only contain valid data for the duration of the callback.
     ///
+    /// @warning
+    ///   If the callback throws an exception, the behavior is undefined.
+    ///
     /// @param command_succeeded
     ///   The command succeeded monitoring callback.
     ///
@@ -109,6 +118,9 @@ class MONGOCXX_API apm {
     ///
     /// Set the server opening monitoring callback. The callback takes a reference to a
     /// server_opening_event which will only contain valid data for the duration of the callback.
+    ///
+    /// @warning
+    ///   If the callback throws an exception, the behavior is undefined.
     ///
     /// @param server_opening
     ///   The server opening monitoring callback.
@@ -132,6 +144,9 @@ class MONGOCXX_API apm {
     /// Set the server closed monitoring callback. The callback takes a reference to a
     /// server_closed_event which will only contain valid data for the duration of the callback.
     ///
+    /// @warning
+    ///   If the callback throws an exception, the behavior is undefined.
+    ///
     /// @param server_closed
     ///   The server closed monitoring callback.
     ///
@@ -153,6 +168,9 @@ class MONGOCXX_API apm {
     /// Set the server description changed monitoring callback. The callback takes a reference to a
     /// server_changed_event which will only contain valid data for the duration of the
     /// callback.
+    ///
+    /// @warning
+    ///   If the callback throws an exception, the behavior is undefined.
     ///
     /// @param server_changed
     ///   The server description changed monitoring callback.
@@ -176,6 +194,9 @@ class MONGOCXX_API apm {
     /// Set the topology_opening monitoring callback. The callback takes a reference to a
     /// topology_opening_event which will only contain valid data for the duration of the callback.
     ///
+    /// @warning
+    ///   If the callback throws an exception, the behavior is undefined.
+    ///
     /// @param topology_opening
     ///   The topology_opening monitoring callback.
     ///
@@ -198,6 +219,9 @@ class MONGOCXX_API apm {
     /// Set the topology closed monitoring callback. The callback takes a reference to a
     /// topology_closed_event which will only contain valid data for the duration of the callback.
     ///
+    /// @warning
+    ///   If the callback throws an exception, the behavior is undefined.
+    ///
     /// @param topology_closed
     ///   The topology closed monitoring callback.
     ///
@@ -218,9 +242,11 @@ class MONGOCXX_API apm {
 
     ///
     /// Set the topology description changed monitoring callback. The callback takes a reference to
-    /// a
-    /// topology_changed_event which will only contain valid data for the duration of
+    /// a topology_changed_event which will only contain valid data for the duration of
     /// the callback.
+    ///
+    /// @warning
+    ///   If the callback throws an exception, the behavior is undefined.
     ///
     /// @param topology_changed
     ///   The topology description changed monitoring callback.
@@ -244,6 +270,9 @@ class MONGOCXX_API apm {
     /// Set the heartbeat started monitoring callback. The callback takes a reference to a
     /// heartbeat_started_event which will only contain valid data for the duration of the callback.
     ///
+    /// @warning
+    ///   If the callback throws an exception, the behavior is undefined.
+    ///
     /// @param heartbeat_started
     ///   The heartbeat started monitoring callback.
     ///
@@ -265,6 +294,9 @@ class MONGOCXX_API apm {
     ///
     /// Set the heartbeat failed monitoring callback. The callback takes a reference to a
     /// heartbeat_failed_event which will only contain valid data for the duration of the callback.
+    ///
+    /// @warning
+    ///   If the callback throws an exception, the behavior is undefined.
     ///
     /// @param heartbeat_failed
     ///   The heartbeat failed monitoring callback.
@@ -288,6 +320,9 @@ class MONGOCXX_API apm {
     /// Set the heartbeat succeeded monitoring callback. The callback takes a reference to a
     /// heartbeat_succeeded_event which will only contain valid data for the duration of the
     /// callback.
+    ///
+    /// @warning
+    ///   If the callback throws an exception, the behavior is undefined.
     ///
     /// @param heartbeat_succeeded
     ///   The heartbeat succeeded monitoring callback.

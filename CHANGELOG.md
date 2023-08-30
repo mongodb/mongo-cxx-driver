@@ -16,3 +16,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Do not build tests as part of `all` target. Configure with `BUILD_TESTING=ON` to build tests.
+
+### Fixed
+- Explicitly document that throwing an exception from an APM callback is undefined behavior.
