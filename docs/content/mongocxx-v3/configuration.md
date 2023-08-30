@@ -169,3 +169,11 @@ auto pool = mongocxx::pool{uri{"mongodb://host1/?minPoolSize=3&maxPoolSize=5"}};
 ```
  
 See [connection pool documentation](../connection-pools) for more details.
+
+## Compressing data to and from MongoDB
+
+MongoDB 3.4 added Snappy compression support, while zlib compression was added
+in 3.6, and zstd compression in 4.2.
+
+Data compression can be enabled with the appropriate URI options, as documented
+in [the C driver](https://mongoc.org/libmongoc/current/data-compression.html).
