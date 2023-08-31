@@ -30,3 +30,13 @@ To configure and install the driver, follow the instructions for your platform:
 
 * [Advanced Configuration and Installation Options]({{< ref "/mongocxx-v3/installation/advanced" >}})
 
+## Package Managers
+
+The Mongo C++ driver is available in the following package managers.
+- [Vcpkg](https://vcpkg.io/) (search for mongo-cxx-driver)
+- [Conan](https://conan.io/center/recipes/mongo-cxx-driver)
+
+## Docker Image
+
+You can find a pre-built docker image for the C++ driver in
+[Docker Hub](https://hub.docker.com/r/mongodb/mongo-cxx-driver).
