@@ -37,7 +37,7 @@ static void exception_guard(const char* source, Fn fn) noexcept {
     } catch (...) {
         std::cerr << "fatal error: APM callback " << source << " exited via an exception"
                   << std::endl;
-        throw;
+        std::terminate();
     }
 }
 
