@@ -5,54 +5,55 @@
 Stability indicates whether this driver is recommended for production use.
 Currently, no drivers guarantee API or ABI stability.
 
-| Family/version       | Stability   | Development         | Purpose                               |
-| -------------------- | ----------- | ------------------- | ------------------------------------- |
-| (repo master branch) | Unstable    | Active development  | New feature development               |
-| mongocxx 3.8.x       | Stable      | Bug fixes only      | Current stable C++ driver release     |
-| mongocxx 3.7.x       | Stable      | None                | Previous stable C++ driver release    |
-| mongocxx 3.6.x       | Stable      | None                | Previous stable C++ driver release    |
-| mongocxx 3.5.x       | Stable      | None                | Previous stable C++ driver release    |
-| mongocxx 3.4.x       | Stable      | None                | Previous stable C++ driver release    |
-| mongocxx 3.3.x       | Stable      | None                | Previous stable C++ driver release    |
-| mongocxx 3.2.x       | Stable      | None                | Previous stable C++ driver release    |
-| mongocxx 3.1.x       | Stable      | None                | Previous stable C++ driver release    |
-| mongocxx 3.0.x       | Stable      | None                | Previous stable C++ driver release    |
+| Family/version       | Stability | Development        | Purpose                            |
+| -------------------- | --------- | ------------------ | ---------------------------------- |
+| (repo master branch) | Unstable  | Active development | New feature development            |
+| mongocxx 3.8.x       | Stable    | Bug fixes only     | Current stable C++ driver release  |
+| mongocxx 3.7.x       | Stable    | None               | Previous stable C++ driver release |
+| mongocxx 3.6.x       | Stable    | None               | Previous stable C++ driver release |
+| mongocxx 3.5.x       | Stable    | None               | Previous stable C++ driver release |
+| mongocxx 3.4.x       | Stable    | None               | Previous stable C++ driver release |
+| mongocxx 3.3.x       | Stable    | None               | Previous stable C++ driver release |
+| mongocxx 3.2.x       | Stable    | None               | Previous stable C++ driver release |
+| mongocxx 3.1.x       | Stable    | None               | Previous stable C++ driver release |
+| mongocxx 3.0.x       | Stable    | None               | Previous stable C++ driver release |
 
 ## Documentation versions available
 
-| mongocxx                                     |
-| ---------------------------------------------|
-| [mongocxx-3.8.0](../mongocxx-3.8.0)          |
-| [mongocxx-3.7.2](../mongocxx-3.7.2)          |
-| [mongocxx-3.7.1](../mongocxx-3.7.1)          |
-| [mongocxx-3.7.0](../mongocxx-3.7.0)          |
-| [mongocxx-3.6.7](../mongocxx-3.6.7)          |
-| [mongocxx-3.6.6](../mongocxx-3.6.6)          |
-| [mongocxx-3.6.5](../mongocxx-3.6.5)          |
-| [mongocxx-3.6.4](../mongocxx-3.6.4)          |
-| [mongocxx-3.6.3](../mongocxx-3.6.3)          |
-| [mongocxx-3.6.2](../mongocxx-3.6.2)          |
-| [mongocxx-3.6.1](../mongocxx-3.6.1)          |
-| [mongocxx-3.6.0](../mongocxx-3.6.0)          |
-| [mongocxx-3.5.1](../mongocxx-3.5.1)          |
-| [mongocxx-3.5.0](../mongocxx-3.5.0)          |
-| [mongocxx-3.4.2](../mongocxx-3.4.2)          |
-| [mongocxx-3.4.1](../mongocxx-3.4.1)          |
-| [mongocxx-3.4.0](../mongocxx-3.4.0)          |
-| [mongocxx-3.3.2](../mongocxx-3.3.2)          |
-| [mongocxx-3.3.1](../mongocxx-3.3.1)          |
-| [mongocxx-3.3.0](../mongocxx-3.3.0)          |
-| [mongocxx-3.2.1](../mongocxx-3.2.1)          |
-| [mongocxx-3.2.0](../mongocxx-3.2.0)          |
-| [mongocxx-3.1.4](../mongocxx-3.1.4/)         |
-| [mongocxx-3.1.3](../mongocxx-3.1.3/)         |
-| [mongocxx-3.1.2](../mongocxx-3.1.2/)         |
-| [mongocxx-3.1.1](../mongocxx-3.1.1/)         |
-| [mongocxx-3.1.0](../mongocxx-3.1.0/)         |
-| [mongocxx-3.0.3](../mongocxx-3.0.3/)         |
-| [mongocxx-3.0.2](../mongocxx-3.0.2/)         |
-| [mongocxx-3.0.1](../mongocxx-3.0.1/)         |
-| [mongocxx-3.0.0](../mongocxx-3.0.0/)         |
+| mongocxx                             |
+| ------------------------------------ |
+| [mongocxx-3.8.1](../mongocxx-3.8.1)  |
+| [mongocxx-3.8.0](../mongocxx-3.8.0)  |
+| [mongocxx-3.7.2](../mongocxx-3.7.2)  |
+| [mongocxx-3.7.1](../mongocxx-3.7.1)  |
+| [mongocxx-3.7.0](../mongocxx-3.7.0)  |
+| [mongocxx-3.6.7](../mongocxx-3.6.7)  |
+| [mongocxx-3.6.6](../mongocxx-3.6.6)  |
+| [mongocxx-3.6.5](../mongocxx-3.6.5)  |
+| [mongocxx-3.6.4](../mongocxx-3.6.4)  |
+| [mongocxx-3.6.3](../mongocxx-3.6.3)  |
+| [mongocxx-3.6.2](../mongocxx-3.6.2)  |
+| [mongocxx-3.6.1](../mongocxx-3.6.1)  |
+| [mongocxx-3.6.0](../mongocxx-3.6.0)  |
+| [mongocxx-3.5.1](../mongocxx-3.5.1)  |
+| [mongocxx-3.5.0](../mongocxx-3.5.0)  |
+| [mongocxx-3.4.2](../mongocxx-3.4.2)  |
+| [mongocxx-3.4.1](../mongocxx-3.4.1)  |
+| [mongocxx-3.4.0](../mongocxx-3.4.0)  |
+| [mongocxx-3.3.2](../mongocxx-3.3.2)  |
+| [mongocxx-3.3.1](../mongocxx-3.3.1)  |
+| [mongocxx-3.3.0](../mongocxx-3.3.0)  |
+| [mongocxx-3.2.1](../mongocxx-3.2.1)  |
+| [mongocxx-3.2.0](../mongocxx-3.2.0)  |
+| [mongocxx-3.1.4](../mongocxx-3.1.4/) |
+| [mongocxx-3.1.3](../mongocxx-3.1.3/) |
+| [mongocxx-3.1.2](../mongocxx-3.1.2/) |
+| [mongocxx-3.1.1](../mongocxx-3.1.1/) |
+| [mongocxx-3.1.0](../mongocxx-3.1.0/) |
+| [mongocxx-3.0.3](../mongocxx-3.0.3/) |
+| [mongocxx-3.0.2](../mongocxx-3.0.2/) |
+| [mongocxx-3.0.1](../mongocxx-3.0.1/) |
+| [mongocxx-3.0.0](../mongocxx-3.0.0/) |
 
 ## MongoDB compatibility
 
