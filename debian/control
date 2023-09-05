@@ -12,7 +12,9 @@ Build-Depends: debhelper (>= 11),
                libboost-dev,
                libsasl2-dev,
                libicu-dev,
-               doxygen
+               doxygen,
+               libutf8proc-dev,
+               pkg-config
 Standards-Version: 4.6.2
 Section: libs
 Homepage: http://mongocxx.org/
