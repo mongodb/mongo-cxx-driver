@@ -73,6 +73,25 @@ message ("bsoncxx version: ${BSONCXX_VERSION}")
 set(BSONCXX_INLINE_NAMESPACE "v${BSONCXX_ABI_VERSION}")
 set(BSONCXX_HEADER_INSTALL_DIR "${CMAKE_INSTALL_INCLUDEDIR}/bsoncxx/${BSONCXX_INLINE_NAMESPACE}" CACHE INTERNAL "")
 
+set (BSONCXX_POLY_MNMLSTC_DEPRECATED_INCLUDE_DIRS "")
+if (BSONCXX_POLY_USE_MNMLSTC AND NOT BSONCXX_POLY_USE_SYSTEM_MNMLSTC)
+    # For deprecated CMake package config files.
+    set(BSONCXX_POLY_MNMLSTC_DEPRECATED_INCLUDE_DIRS
+        "list(PREPEND LIBBSONCXX_INCLUDE_DIRS \"\${PACKAGE_PREFIX_DIR}/include/bsoncxx/v_noabi/bsoncxx/third_party/mnmlstc\")"
+    )
+    set(BSONCXX_POLY_MNMLSTC_DEPRECATED_STATIC_INCLUDE_DIRS
+    "list(PREPEND LIBBSONCXX_STATIC_INCLUDE_DIRS \"\${PACKAGE_PREFIX_DIR}/include/bsoncxx/v_noabi/bsoncxx/third_party/mnmlstc\")"
+    )
+
+    # For pkg-config files. Trailing space to separate cflags.
+    set(BSONCXX_POLY_MNMLSTC_PKGCONFIG_INCLUDE_DIRS
+        "-I\${includedir}/bsoncxx/v_noabi/bsoncxx/third_party/mnmlstc "
+    )
+    set(BSONCXX_POLY_MNMLSTC_PKGCONFIG_STATIC_INCLUDE_DIRS
+        "-I\${includedir}/bsoncxx/v_noabi/bsoncxx/third_party/mnmlstc "
+    )
+endif ()
+
 set(LIBBSON_REQUIRED_VERSION 1.24.0)
 set(LIBBSON_REQUIRED_ABI_VERSION 1.0)
 

@@ -20,5 +20,5 @@ Name: libbsoncxx
 Description: The MongoDB C++11 BSON Library
 URL: http://github.com/mongodb/mongo-cxx-driver
 Version: @BSONCXX_VERSION@
-Cflags: -I${includedir}/bsoncxx/@BSONCXX_INLINE_NAMESPACE@
+Cflags: @BSONCXX_POLY_MNMLSTC_PKGCONFIG_INCLUDE_DIRS@-I${includedir}/bsoncxx/@BSONCXX_INLINE_NAMESPACE@
 Libs: -L${libdir} -lbsoncxx

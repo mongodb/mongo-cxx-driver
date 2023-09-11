@@ -50,10 +50,6 @@ ifneq (,$(filter pkg.mongo-cxx-driver.mnmlstc,$(DEB_BUILD_PROFILES)))
 	mv $(CURDIR)/debian/tmp-mnmlstc/usr/include/bsoncxx/v_noabi/bsoncxx/third_party \
 	   $(CURDIR)/debian/tmp/usr/include/bsoncxx/v_noabi/bsoncxx/
 	rm -rf $(CURDIR)/debian/tmp-mnmlstc
-	# Fix MNMLSTC headers; handle the CMake external project step patched out
-	# by debian/patches/0002_skip_mnmlstc_extra_step.patch
-	( cd $(CURDIR)/debian/tmp/usr/include/bsoncxx/v_noabi/bsoncxx/third_party/mnmlstc; \
-	   find . -type f | xargs perl -pi -e "s|#include <core|#include <bsoncxx/third_party/mnmlstc/core|g" )
 endif
 
 override_dh_auto_test:
@@ -61,4 +57,3 @@ override_dh_auto_test:
 
 override_dh_missing:
 	dh_missing --fail-missing
-

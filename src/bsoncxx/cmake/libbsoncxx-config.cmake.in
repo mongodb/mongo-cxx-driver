@@ -22,6 +22,7 @@ set(LIBBSONCXX_PACKAGE_VERSION @BSONCXX_VERSION@)
 @PACKAGE_INIT@
 
 set_and_check(LIBBSONCXX_INCLUDE_DIRS "${PACKAGE_PREFIX_DIR}/@PACKAGE_INCLUDE_INSTALL_DIRS@")
+@BSONCXX_POLY_MNMLSTC_DEPRECATED_INCLUDE_DIRS@
 
 # We want to provide an absolute path to the library and we know the
 # directory and the base name, but not the suffix, so we use CMake's
