@@ -85,18 +85,7 @@ cmake ..                                            \
 
 ### Step 4: Build and install the driver
 
-If you are using the default MNMLSTC polyfill and are installing to a
-directory requiring root permissions, you should install the polyfill with
-`sudo` before building the rest of mongocxx so you don't have to run
-the entire build with `sudo`:
-
-```sh
-# Only for MNMLSTC polyfill
-sudo cmake --build . --target EP_mnmlstc_core
-```
-
-Once MNMLSTC is installed, or if you are using a different polyfill,
-build and install the driver:
+Build and install the driver:
 
 ```sh
 cmake --build .
