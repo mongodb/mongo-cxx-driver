@@ -19,14 +19,6 @@ if (WIN32)
       "${CMAKE_INSTALL_PREFIX}"
    )
    install (CODE "
-      if (EXISTS \${CMAKE_BINARY_DIR}/src/bsoncxx/third_party/EP_mnmlstc_core-prefix/src/EP_mnmlstc_core-build/install_manifest.txt)
-         file (
-            STRINGS
-               \${CMAKE_BINARY_DIR}/src/bsoncxx/third_party/EP_mnmlstc_core-prefix/src/EP_mnmlstc_core-build/install_manifest.txt
-               ADDL_MANIFEST_FILES
-         )
-         list (APPEND CMAKE_INSTALL_MANIFEST_FILES \${ADDL_MANIFEST_FILES})
-      endif ()
       string(REPLACE \";\" \"\\n\" MONGOCXX_INSTALL_MANIFEST_CONTENT
          \"\${CMAKE_INSTALL_MANIFEST_FILES}\")
       string(REPLACE \"/\" \"\\\\\" MONGOCXX_INSTALL_MANIFEST_CONTENT_WIN32
@@ -59,14 +51,6 @@ if (WIN32)
    )
 else ()
    install (CODE "
-      if (EXISTS \${CMAKE_BINARY_DIR}/src/bsoncxx/third_party/EP_mnmlstc_core-prefix/src/EP_mnmlstc_core-build/install_manifest.txt)
-         file (
-            STRINGS
-               \${CMAKE_BINARY_DIR}/src/bsoncxx/third_party/EP_mnmlstc_core-prefix/src/EP_mnmlstc_core-build/install_manifest.txt
-               ADDL_MANIFEST_FILES
-         )
-         list (APPEND CMAKE_INSTALL_MANIFEST_FILES \${ADDL_MANIFEST_FILES})
-      endif ()
       string(REPLACE \";\" \"\\n\" MONGOCXX_INSTALL_MANIFEST_CONTENT
          \"\${CMAKE_INSTALL_MANIFEST_FILES}\")
       file(WRITE \"mongocxx_install_manifest.txt\"
