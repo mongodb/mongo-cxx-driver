@@ -222,11 +222,13 @@ set(CMAKE_MODULE_PATH
 include(GNUInstallDirs)
 include (ParseVersion)
 
+set(MONGOCXX_CURRENT_VERSION_FILE "")
 if(BUILD_VERSION STREQUAL "0.0.0")
     if(EXISTS ${CMAKE_BINARY_DIR}/VERSION_CURRENT)
         file(STRINGS ${CMAKE_BINARY_DIR}/VERSION_CURRENT BUILD_VERSION)
     elseif(EXISTS ${PROJECT_SOURCE_DIR}/build/VERSION_CURRENT)
-        file(STRINGS ${PROJECT_SOURCE_DIR}/build/VERSION_CURRENT BUILD_VERSION)
+        set(MONGOCXX_CURRENT_VERSION_FILE ${PROJECT_SOURCE_DIR}/build/VERSION_CURRENT)
+        file(STRINGS ${MONGOCXX_CURRENT_VERSION_FILE} BUILD_VERSION)
     else()
         find_package(PythonInterp)
         if(PYTHONINTERP_FOUND)
@@ -377,7 +379,7 @@ set (top_DIST_local
    README.md
    THIRD-PARTY-NOTICES
    build/.gitignore
-   build/VERSION_CURRENT
+   ${MONGOCXX_CURRENT_VERSION_FILE}
    # This sub-directory is added later, so manually include here
    generate_uninstall/CMakeLists.txt
 )
@@ -458,4 +460,3 @@ endif ()
 if (CMAKE_GENERATOR_TOOLSET)
    message (STATUS "\tinstance: ${CMAKE_GENERATOR_TOOLSET}")
 endif ()
-
