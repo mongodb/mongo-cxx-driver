@@ -80,7 +80,7 @@ if (BSONCXX_POLY_USE_MNMLSTC AND NOT BSONCXX_POLY_USE_SYSTEM_MNMLSTC)
         "list(PREPEND LIBBSONCXX_INCLUDE_DIRS \"\${PACKAGE_PREFIX_DIR}/include/bsoncxx/v_noabi/bsoncxx/third_party/mnmlstc\")"
     )
     set(BSONCXX_POLY_MNMLSTC_DEPRECATED_STATIC_INCLUDE_DIRS
-    "list(PREPEND LIBBSONCXX_STATIC_INCLUDE_DIRS \"\${PACKAGE_PREFIX_DIR}/include/bsoncxx/v_noabi/bsoncxx/third_party/mnmlstc\")"
+        "list(PREPEND LIBBSONCXX_STATIC_INCLUDE_DIRS \"\${PACKAGE_PREFIX_DIR}/include/bsoncxx/v_noabi/bsoncxx/third_party/mnmlstc\")"
     )
 
     # For pkg-config files. Trailing space to separate cflags.
