@@ -17,9 +17,7 @@ function (RUN_DIST_CHECK PACKAGE_PREFIX EXT)
    endif ()
 
    set (MY_CMAKE_COMMAND "")
-   if (${CMAKE_VERSION} VERSION_GREATER 3.1)
-      set (MY_CMAKE_COMMAND ${CMAKE_COMMAND} -E env)
-   endif ()
+   set (MY_CMAKE_COMMAND ${CMAKE_COMMAND} -E env)
 
    find_program (MAKE_COMMAND NAMES make gmake)
    if (${MAKE_COMMAND} STREQUAL "MAKE_COMMAND-NOTFOUND")
