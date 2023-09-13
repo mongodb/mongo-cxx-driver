@@ -16,7 +16,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Do not build tests as part of `all` target. Configure with `BUILD_TESTING=ON` to build tests.
-- Bump minimum required CMake version to 3.11 to support the FetchContent module.
+- Bump minimum required CMake version to 3.15 to support the FetchContent module and for consistency with the C Driver.
 - Improve handling of downloaded (non-system) mnmlstc/core as the polyfill library.
   - Use `FetchContent` instead of `ExternalProject` to download and build the library.
   - Do not patch include directives in mnmlstc/core headers.
