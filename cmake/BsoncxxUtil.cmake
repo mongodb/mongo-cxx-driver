@@ -82,10 +82,11 @@ function(bsoncxx_install BSONCXX_TARGET_LIST BSONCXX_PKG_DEP BSONCXX_BOOST_PKG_D
         @ONLY
     )
 
-    export(EXPORT bsoncxx_targets
-        NAMESPACE mongo::
-        FILE "${CMAKE_CURRENT_BINARY_DIR}/bsoncxx_targets.cmake"
-    )
+    # CXX-2748
+    # export(EXPORT bsoncxx_targets
+    #     NAMESPACE mongo::
+    #     FILE "${CMAKE_CURRENT_BINARY_DIR}/bsoncxx_targets.cmake"
+    # )
 
     install(EXPORT bsoncxx_targets
         NAMESPACE mongo::
