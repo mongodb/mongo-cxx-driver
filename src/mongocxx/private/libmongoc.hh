@@ -24,7 +24,7 @@
 // TODO: CXX-1366 Disable MSVC warnings for libmongoc
 #endif
 
-#include <mongoc.h>
+#include <mongoc/mongoc.h>
 
 #if defined(__clang__)
 #pragma clang diagnostic pop
