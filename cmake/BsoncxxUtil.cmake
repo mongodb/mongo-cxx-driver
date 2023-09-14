@@ -25,7 +25,7 @@ function(bsoncxx_add_library TARGET OUTPUT_NAME LINK_TYPE)
     endif()
 
     if(LINK_TYPE STREQUAL "STATIC")
-        target_compile_definitions(bsoncxx_static PUBLIC BSONCXX_STATIC)
+        target_compile_definitions(${TARGET} PUBLIC BSONCXX_STATIC)
     endif()
 
     if(BSONCXX_POLY_USE_MNMLSTC AND NOT BSONCXX_POLY_USE_SYSTEM_MNMLSTC)
