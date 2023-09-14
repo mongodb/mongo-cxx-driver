@@ -420,6 +420,7 @@ functions:
 
                   export GENERATOR="${generator}"
 
+                  ignore_deprecated=""
                   if [ "$(echo ${branch_name} | cut -f2 -d'/')" != "${branch_name}" ]; then
                       # ignore deprecation warnings when building on a release branch
                       ignore_deprecated=-Wno-deprecated-declarations
