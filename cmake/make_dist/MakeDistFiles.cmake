@@ -1,8 +1,3 @@
-
-if (${CMAKE_VERSION} VERSION_LESS 3.3)
-   include (CMakeParseArguments)
-endif ()
-
 function (SET_LOCAL_DIST output)
    set (dist_files "")
    foreach (file ${ARGN})

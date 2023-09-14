@@ -45,7 +45,6 @@ flags = [
     '-x', 'c++',
     '-Isrc',
     '-Ibuild/src',
-    '-Ibuild/src/bsoncxx/third_party/EP_mnmlstc_core-prefix/src/EP_mnmlstc_core/include',
     '-Isrc/third_party/catch/include',
     '-I/usr/local/include/libmongoc-1.0',
     '-I/usr/local/include/libbson-1.0',

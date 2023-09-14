@@ -29,21 +29,15 @@ function(bsoncxx_add_library TARGET OUTPUT_NAME LINK_TYPE)
     endif()
 
     if(BSONCXX_POLY_USE_MNMLSTC AND NOT BSONCXX_POLY_USE_SYSTEM_MNMLSTC)
-        add_dependencies(${TARGET} EP_mnmlstc_core)
-        ExternalProject_Get_Property(EP_mnmlstc_core source_dir)
         target_include_directories(
             ${TARGET}
             PUBLIC
-                $<BUILD_INTERFACE:${source_dir}/include>
-                $<BUILD_INTERFACE:${CMAKE_INSTALL_PREFIX}/${BSONCXX_HEADER_INSTALL_DIR}>
+                $<BUILD_INTERFACE:${CORE_INCLUDE_DIR}>
+                $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/bsoncxx/v_noabi/bsoncxx/third_party/mnmlstc>
         )
     elseif(BSONCXX_POLY_USE_BOOST)
         find_package(Boost 1.56.0 REQUIRED)
-        if(CMAKE_VERSION VERSION_LESS 3.15.0)
-            target_include_directories(${TARGET} PUBLIC ${Boost_INCLUDE_DIRS})
-        else()
-            target_link_libraries(${TARGET} PUBLIC Boost::boost)
-        endif()
+        target_link_libraries(${TARGET} PUBLIC Boost::boost)
     endif()
 
     target_link_libraries(${TARGET} PRIVATE ${libbson_target})

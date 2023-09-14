@@ -17,9 +17,7 @@ include (MakeDistFiles)
 function (MAKE_DIST PACKAGE_PREFIX MONGOCXX_SOURCE_DIR BUILD_SOURCE_DIR)
 
    set (CMAKE_COMMAND_TMP "")
-   if (${CMAKE_VERSION} VERSION_GREATER 3.1)
-      set (CMAKE_COMMAND_TMP ${CMAKE_COMMAND} -E env)
-   endif ()
+   set (CMAKE_COMMAND_TMP ${CMAKE_COMMAND} -E env)
 
    # -- Remove any existing packaging directory.
 
