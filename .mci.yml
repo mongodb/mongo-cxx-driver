@@ -402,9 +402,11 @@ functions:
                   if [[ "$OSTYPE" =~ cygwin ]]; then
                       MONGOC_PREFIX=$(cygpath -m "$MONGOC_PREFIX")
                   fi
-                  . "$MONGOC_PREFIX/.evergreen/scripts/find-cmake-latest.sh"
-                  declare cmake_binary
-                  export cmake_binary="$(find_cmake_latest)"
+
+                  # TODO: revert to using find-cmake-latest once `mongoc_version_minimum` contains commit 6a23bd37.
+                  . "$MONGOC_PREFIX/.evergreen/scripts/find-cmake-version.sh"
+                  export cmake_binary
+                  cmake_binary="$(find_cmake_version 3 25 3)"
                   command -v "$cmake_binary"
 
                   if [ ! -d ../drivers-evergreen-tools ]; then
@@ -714,9 +716,10 @@ functions:
                   # is true.
                   if [[ -z "$MONGODB_API_VERSION" ]]; then
                     echo "Building example projects..."
-                    . "$PREFIX/.evergreen/scripts/find-cmake-latest.sh"
-                    declare cmake_binary
-                    export cmake_binary="$(find_cmake_latest)"
+                    # TODO: revert to using find-cmake-latest once `mongoc_version_minimum` contains commit 6a23bd37.
+                    . "$PREFIX/.evergreen/scripts/find-cmake-version.sh"
+                    export cmake_binary
+                    cmake_binary="$(find_cmake_version 3 25 3)"
                     command -v "$cmake_binary"
                     .evergreen/build_example_projects.sh
                     echo "Building example projects... done."
@@ -1113,8 +1116,10 @@ tasks:
             [ -d mongo-c-driver ] || git clone --depth 1 https://github.com/mongodb/mongo-c-driver
             rsync -aq --exclude='examples/add_subdirectory' $(readlink -f ../..) .
             [ -d build ] || mkdir build
-            . ./mongo-c-driver/.evergreen/scripts/find-cmake-latest.sh
-            export CMAKE="$(find_cmake_latest)"
+            # TODO: revert to using find-cmake-latest once `mongoc_version_minimum` contains commit 6a23bd37.
+            . ./mongo-c-driver/.evergreen/scripts/find-cmake-version.sh
+            export CMAKE
+            CMAKE="$(find_cmake_version 3 25 3)"
             cd build
             $CMAKE ..
             $CMAKE --build . -- -j $(nproc)
