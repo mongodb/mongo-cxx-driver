@@ -84,10 +84,10 @@ if (BSONCXX_POLY_USE_MNMLSTC AND NOT BSONCXX_POLY_USE_SYSTEM_MNMLSTC)
 
     # For pkg-config files. Trailing space to separate cflags.
     set(BSONCXX_POLY_MNMLSTC_PKGCONFIG_INCLUDE_DIRS
-        [[-I${includedir}/bsoncxx/v_noabi/bsoncxx/third_party/mnmlstc "]]
+        [[-I${includedir}/bsoncxx/v_noabi/bsoncxx/third_party/mnmlstc ]]
     )
     set(BSONCXX_POLY_MNMLSTC_PKGCONFIG_STATIC_INCLUDE_DIRS
-        [[-I${includedir}/bsoncxx/v_noabi/bsoncxx/third_party/mnmlstc "]]
+        [[-I${includedir}/bsoncxx/v_noabi/bsoncxx/third_party/mnmlstc ]]
     )
 endif ()
 
