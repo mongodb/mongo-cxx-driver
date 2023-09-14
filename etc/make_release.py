@@ -315,6 +315,10 @@ def check_libmongoc_version():
         click.echo("Expected LIBMONGOC_REQUIRED_VERSION to match: {}, got: {}".format(
             libmongoc_version_pattern, got_LIBMONGOC_REQUIRED_VERSION))
         sys.exit(1)
+    if got_LIBMONGOC_DOWNLOAD_VERSION != got_LIBMONGOC_REQUIRED_VERSION:
+        click.echo("Expected LIBMONGOC_DOWNLOAD_VERSION({}) to match LIBMONGOC_REQUIRED_VERSION({})".format(
+            got_LIBMONGOC_DOWNLOAD_VERSION, got_LIBMONGOC_REQUIRED_VERSION))
+        sys.exit(1)
 
 
 # pylint: enable=too-many-arguments,too-many-locals,too-many-branches,too-many-statements
