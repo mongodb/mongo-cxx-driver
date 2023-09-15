@@ -1123,7 +1123,7 @@ tasks:
             CMAKE="$(find_cmake_version 3 25 3)"
             $CMAKE -S . -B build -DENABLE_AUTOMATIC_INIT_AND_CLEANUP=OFF
             $CMAKE --build build
-            ./hello_mongocxx
+            ./build/hello_mongocxx
 
     - name: debian-package-build
       commands:
