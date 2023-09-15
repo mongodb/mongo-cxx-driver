@@ -1121,9 +1121,8 @@ tasks:
             . ./mongo-c-driver/.evergreen/scripts/find-cmake-version.sh
             export CMAKE
             CMAKE="$(find_cmake_version 3 25 3)"
-            cd build
-            $CMAKE ..
-            $CMAKE --build . -- -j $(nproc)
+            $CMAKE -S . -B build -DENABLE_AUTOMATIC_INIT_AND_CLEANUP=OFF
+            $CMAKE --build build
             ./hello_mongocxx
 
     - name: debian-package-build
