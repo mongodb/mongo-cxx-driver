@@ -316,7 +316,7 @@ def check_libmongoc_version():
             libmongoc_version_pattern, got_LIBMONGOC_REQUIRED_VERSION))
         sys.exit(1)
     if got_LIBMONGOC_DOWNLOAD_VERSION != got_LIBMONGOC_REQUIRED_VERSION:
-        click.echo("Expected LIBMONGOC_DOWNLOAD_VERSION({}) to match LIBMONGOC_REQUIRED_VERSION({})".format(
+        click.echo("Expected LIBMONGOC_DOWNLOAD_VERSION ({}) to match LIBMONGOC_REQUIRED_VERSION ({})".format(
             got_LIBMONGOC_DOWNLOAD_VERSION, got_LIBMONGOC_REQUIRED_VERSION))
         sys.exit(1)
 
