@@ -53,16 +53,6 @@ if(TARGET mongoc_shared OR TARGET mongoc_static)
   # If these targets exist, then libmongoc has already been included as a project
   # sub-directory
   message (STATUS "Found libmongoc targets declared in current build scope; version not checked")
-
-  if(NOT MONGOCXX_LINK_WITH_STATIC_MONGOC)
-    set(libmongoc_target mongoc_shared)
-  else()
-    set(libmongoc_target mongoc_static)
-  endif()
-
-  if(MONGOCXX_BUILD_STATIC)
-    set(mongocxx_pkg_dep "find_dependency(mongoc-1.0 REQUIRED)")
-  endif()
 else()
     find_package(mongoc-${LIBMONGOC_REQUIRED_ABI_VERSION} ${LIBMONGOC_REQUIRED_VERSION} QUIET)
     if(mongoc-${LIBMONGOC_REQUIRED_ABI_VERSION}_FOUND)
