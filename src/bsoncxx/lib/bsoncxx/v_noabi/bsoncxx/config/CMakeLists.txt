@@ -15,75 +15,60 @@
 set (libdir "\${prefix}/${CMAKE_INSTALL_LIBDIR}")
 
 configure_file(
-    ${CMAKE_CURRENT_SOURCE_DIR}/version.hpp.in
-    ${CMAKE_CURRENT_BINARY_DIR}/version.hpp
-)
-
-configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/config.hpp.in
     ${CMAKE_CURRENT_BINARY_DIR}/config.hpp
 )
-
-if (DEFINED CMAKE_CXX_COMPILER_ID)
-    set (MONGOCXX_COMPILER_ID "${CMAKE_CXX_COMPILER_ID}")
-else ()
-    set (MONGOCXX_COMPILER_ID "Unknown")
-endif ()
-
-if (DEFINED CMAKE_CXX_COMPILER_VERSION)
-    set (MONGOCXX_COMPILER_VERSION "${CMAKE_CXX_COMPILER_VERSION}")
-else ()
-    set (MONGOCXX_COMPILER_VERSION "Unknown")
-endif ()
 
 configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/private/config.hh.in
     ${CMAKE_CURRENT_BINARY_DIR}/private/config.hh
 )
 
+configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/version.hpp.in
+    ${CMAKE_CURRENT_BINARY_DIR}/version.hpp
+)
+
 install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/config.hpp
     ${CMAKE_CURRENT_BINARY_DIR}/version.hpp
-    DESTINATION ${MONGOCXX_HEADER_INSTALL_DIR}/mongocxx/config
+    DESTINATION ${BSONCXX_HEADER_INSTALL_DIR}/bsoncxx/config
     COMPONENT dev
 )
 
-if(MONGOCXX_BUILD_SHARED)
+if(BSONCXX_BUILD_SHARED)
     configure_file(
-        ${CMAKE_CURRENT_SOURCE_DIR}/libmongocxx.pc.in
-        ${CMAKE_CURRENT_BINARY_DIR}/libmongocxx.pc
+        ${CMAKE_CURRENT_SOURCE_DIR}/libbsoncxx.pc.in
+        ${CMAKE_CURRENT_BINARY_DIR}/libbsoncxx.pc
         @ONLY
     )
 
     install(FILES
-        "${CMAKE_CURRENT_BINARY_DIR}/libmongocxx.pc"
+        "${CMAKE_CURRENT_BINARY_DIR}/libbsoncxx.pc"
         DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
         COMPONENT dev
     )
 endif()
 
-if(MONGOCXX_BUILD_STATIC)
+if(BSONCXX_BUILD_STATIC)
     configure_file(
-        ${CMAKE_CURRENT_SOURCE_DIR}/libmongocxx-static.pc.in
-        ${CMAKE_CURRENT_BINARY_DIR}/libmongocxx-static.pc
+        ${CMAKE_CURRENT_SOURCE_DIR}/libbsoncxx-static.pc.in
+        ${CMAKE_CURRENT_BINARY_DIR}/libbsoncxx-static.pc
         @ONLY
     )
 
     install(FILES
-        "${CMAKE_CURRENT_BINARY_DIR}/libmongocxx-static.pc"
+        "${CMAKE_CURRENT_BINARY_DIR}/libbsoncxx-static.pc"
         DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
         COMPONENT dev
     )
 endif()
 
-set_dist_list (src_mongocxx_config_DIST
+set_dist_list (src_bsoncxx_config_DIST
    CMakeLists.txt
-   compiler.hpp
    config.hpp.in
-   libmongocxx-static.pc.in
-   libmongocxx.pc.in
-   postlude.hpp
-   prelude.hpp
+   libbsoncxx-static.pc.in
+   libbsoncxx.pc.in
    private/config.hh.in
    private/postlude.hh
    private/prelude.hh

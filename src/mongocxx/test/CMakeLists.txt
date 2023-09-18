@@ -93,8 +93,10 @@ set(spec_test_common
     spec/util.cpp
 )
 
+set(client_helpers_cpp ${PROJECT_SOURCE_DIR}/lib/mongocxx/v_noabi/mongocxx/test_util/client_helpers.cpp)
+
 add_executable(test_driver
-    ${PROJECT_SOURCE_DIR}/test_util/client_helpers.cpp
+    ${client_helpers_cpp}
     ${THIRD_PARTY_SOURCE_DIR}/catch/main.cpp
     ${test_driver_sources}
 )
@@ -114,63 +116,63 @@ add_executable(test_instance
 )
 
 add_executable(test_crud_specs
-    ${PROJECT_SOURCE_DIR}/test_util/client_helpers.cpp
+    ${client_helpers_cpp}
     ${THIRD_PARTY_SOURCE_DIR}/catch/main.cpp
     spec/crud.cpp
     ${spec_test_common}
 )
 
 add_executable(test_gridfs_specs
-    ${PROJECT_SOURCE_DIR}/test_util/client_helpers.cpp
+    ${client_helpers_cpp}
     ${THIRD_PARTY_SOURCE_DIR}/catch/main.cpp
     spec/gridfs.cpp
     ${spec_test_common}
 )
 
 add_executable(test_client_side_encryption_specs
-  ${PROJECT_SOURCE_DIR}/test_util/client_helpers.cpp
+  ${client_helpers_cpp}
   ${THIRD_PARTY_SOURCE_DIR}/catch/main.cpp
   spec/client_side_encryption.cpp
   ${spec_test_common}
 )
 
 add_executable(test_command_monitoring_specs
-    ${PROJECT_SOURCE_DIR}/test_util/client_helpers.cpp
+    ${client_helpers_cpp}
     ${THIRD_PARTY_SOURCE_DIR}/catch/main.cpp
     spec/command_monitoring.cpp
     ${spec_test_common}
 )
 
 add_executable(test_transactions_specs
-    ${PROJECT_SOURCE_DIR}/test_util/client_helpers.cpp
+    ${client_helpers_cpp}
     ${THIRD_PARTY_SOURCE_DIR}/catch/main.cpp
     spec/transactions.cpp
     ${spec_test_common}
 )
 
 add_executable(test_retryable_reads_specs
-    ${PROJECT_SOURCE_DIR}/test_util/client_helpers.cpp
+    ${client_helpers_cpp}
     ${THIRD_PARTY_SOURCE_DIR}/catch/main.cpp
     spec/retryable-reads.cpp
     ${spec_test_common}
 )
 
 add_executable(test_read_write_concern_specs
-    ${PROJECT_SOURCE_DIR}/test_util/client_helpers.cpp
+    ${client_helpers_cpp}
     ${THIRD_PARTY_SOURCE_DIR}/catch/main.cpp
     spec/read_write_concern.cpp
     ${spec_test_common}
 )
 
 add_executable(test_mongohouse_specs
-    ${PROJECT_SOURCE_DIR}/test_util/client_helpers.cpp
+    ${client_helpers_cpp}
     ${THIRD_PARTY_SOURCE_DIR}/catch/main.cpp
     spec/mongohouse.cpp
     ${spec_test_common}
 )
 
 add_executable(test_unified_format_spec
-    ${PROJECT_SOURCE_DIR}/test_util/client_helpers.cpp
+    ${client_helpers_cpp}
     ${THIRD_PARTY_SOURCE_DIR}/catch/main.cpp
     spec/unified_tests/operations.cpp
     spec/unified_tests/runner.cpp
@@ -178,7 +180,7 @@ add_executable(test_unified_format_spec
 )
 
 add_executable(test_versioned_api
-    ${PROJECT_SOURCE_DIR}/test_util/client_helpers.cpp
+    ${client_helpers_cpp}
     ${THIRD_PARTY_SOURCE_DIR}/catch/main.cpp
     versioned_api.cpp
     ${spec_test_common}
