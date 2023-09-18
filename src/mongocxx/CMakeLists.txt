@@ -227,6 +227,36 @@ set(PACKAGE_LIBRARIES mongocxx)
 
 include(CMakePackageConfigHelpers)
 
+set (libdir "\${prefix}/${CMAKE_INSTALL_LIBDIR}")
+
+if(MONGOCXX_BUILD_SHARED)
+    configure_file(
+        ${CMAKE_CURRENT_SOURCE_DIR}/cmake/libmongocxx.pc.in
+        ${CMAKE_CURRENT_BINARY_DIR}/cmake/libmongocxx.pc
+        @ONLY
+    )
+
+    install(FILES
+        "${CMAKE_CURRENT_BINARY_DIR}/cmake/libmongocxx.pc"
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
+        COMPONENT dev
+    )
+endif()
+
+if(MONGOCXX_BUILD_STATIC)
+    configure_file(
+        ${CMAKE_CURRENT_SOURCE_DIR}/cmake/libmongocxx-static.pc.in
+        ${CMAKE_CURRENT_BINARY_DIR}/cmake/libmongocxx-static.pc
+        @ONLY
+    )
+
+    install(FILES
+        "${CMAKE_CURRENT_BINARY_DIR}/cmake/libmongocxx-static.pc"
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
+        COMPONENT dev
+    )
+endif()
+
 set(mongocxx_target_list "")
 if(MONGOCXX_BUILD_SHARED)
     mongocxx_install_deprecated_cmake(mongocxx)
@@ -253,6 +283,8 @@ set_local_dist (src_mongocxx_lib_v_noabi_DIST_local
    cmake/mongocxx-config.cmake.in
    cmake/libmongocxx-config.cmake.in
    cmake/libmongocxx-static-config.cmake.in
+   cmake/libmongocxx-static.pc.in
+   cmake/libmongocxx.pc.in
    lib/mongocxx/v_noabi/mongocxx/collection.cpp
    lib/mongocxx/v_noabi/mongocxx/cursor.cpp
    lib/mongocxx/v_noabi/mongocxx/database.cpp

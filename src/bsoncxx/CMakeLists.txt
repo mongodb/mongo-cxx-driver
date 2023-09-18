@@ -194,6 +194,35 @@ if(ENABLE_TESTS)
   target_compile_definitions(bsoncxx_testing PUBLIC BSONCXX_TESTING)
 endif()
 
+set (libdir "\${prefix}/${CMAKE_INSTALL_LIBDIR}")
+
+if(BSONCXX_BUILD_SHARED)
+    configure_file(
+        cmake/libbsoncxx.pc.in
+        cmake/libbsoncxx.pc
+        @ONLY
+    )
+
+    install(FILES
+        ${CMAKE_CURRENT_BINARY_DIR}/cmake/libbsoncxx.pc
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
+        COMPONENT dev
+    )
+endif()
+
+if(BSONCXX_BUILD_STATIC)
+    configure_file(
+        cmake/libbsoncxx-static.pc.in
+        cmake/libbsoncxx-static.pc
+        @ONLY
+    )
+
+    install(FILES
+        ${CMAKE_CURRENT_BINARY_DIR}/cmake/libbsoncxx-static.pc
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
+        COMPONENT dev
+    )
+endif()
 
 install(DIRECTORY include/
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
@@ -242,6 +271,8 @@ set_local_dist (src_bsoncxx_lib_v_noabi_DIST_local
    cmake/bsoncxx-config.cmake.in
    cmake/libbsoncxx-config.cmake.in
    cmake/libbsoncxx-static-config.cmake.in
+   cmake/libbsoncxx-static.pc.in
+   cmake/libbsoncxx.pc.in
    lib/bsoncxx/v_noabi/bsoncxx/decimal128.cpp
    lib/bsoncxx/v_noabi/bsoncxx/document/element.cpp
    lib/bsoncxx/v_noabi/bsoncxx/document/value.cpp

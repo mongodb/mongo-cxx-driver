@@ -12,8 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set (libdir "\${prefix}/${CMAKE_INSTALL_LIBDIR}")
-
 configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/config.hpp.in
     ${CMAKE_CURRENT_BINARY_DIR}/config.hpp
@@ -36,39 +34,9 @@ install(FILES
     COMPONENT dev
 )
 
-if(BSONCXX_BUILD_SHARED)
-    configure_file(
-        ${CMAKE_CURRENT_SOURCE_DIR}/libbsoncxx.pc.in
-        ${CMAKE_CURRENT_BINARY_DIR}/libbsoncxx.pc
-        @ONLY
-    )
-
-    install(FILES
-        "${CMAKE_CURRENT_BINARY_DIR}/libbsoncxx.pc"
-        DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
-        COMPONENT dev
-    )
-endif()
-
-if(BSONCXX_BUILD_STATIC)
-    configure_file(
-        ${CMAKE_CURRENT_SOURCE_DIR}/libbsoncxx-static.pc.in
-        ${CMAKE_CURRENT_BINARY_DIR}/libbsoncxx-static.pc
-        @ONLY
-    )
-
-    install(FILES
-        "${CMAKE_CURRENT_BINARY_DIR}/libbsoncxx-static.pc"
-        DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
-        COMPONENT dev
-    )
-endif()
-
 set_dist_list (src_bsoncxx_config_DIST
    CMakeLists.txt
    config.hpp.in
-   libbsoncxx-static.pc.in
-   libbsoncxx.pc.in
    private/config.hh.in
    private/postlude.hh
    private/prelude.hh

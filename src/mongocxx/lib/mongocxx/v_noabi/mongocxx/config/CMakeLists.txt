@@ -12,8 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set (libdir "\${prefix}/${CMAKE_INSTALL_LIBDIR}")
-
 configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/version.hpp.in
     ${CMAKE_CURRENT_BINARY_DIR}/version.hpp
@@ -48,39 +46,9 @@ install(FILES
     COMPONENT dev
 )
 
-if(MONGOCXX_BUILD_SHARED)
-    configure_file(
-        ${CMAKE_CURRENT_SOURCE_DIR}/libmongocxx.pc.in
-        ${CMAKE_CURRENT_BINARY_DIR}/libmongocxx.pc
-        @ONLY
-    )
-
-    install(FILES
-        "${CMAKE_CURRENT_BINARY_DIR}/libmongocxx.pc"
-        DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
-        COMPONENT dev
-    )
-endif()
-
-if(MONGOCXX_BUILD_STATIC)
-    configure_file(
-        ${CMAKE_CURRENT_SOURCE_DIR}/libmongocxx-static.pc.in
-        ${CMAKE_CURRENT_BINARY_DIR}/libmongocxx-static.pc
-        @ONLY
-    )
-
-    install(FILES
-        "${CMAKE_CURRENT_BINARY_DIR}/libmongocxx-static.pc"
-        DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
-        COMPONENT dev
-    )
-endif()
-
 set_dist_list (src_mongocxx_config_DIST
    CMakeLists.txt
    config.hpp.in
-   libmongocxx-static.pc.in
-   libmongocxx.pc.in
    private/config.hh.in
    private/postlude.hh
    private/prelude.hh
