@@ -14,7 +14,6 @@
 
 #include "operations.hh"
 
-#include <catch.hpp>
 #include <sstream>
 #include <vector>
 
@@ -25,6 +24,7 @@
 #include <mongocxx/collection.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/test/spec/monitoring.hh>
+#include <third_party/catch/include/catch.hpp>
 
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN

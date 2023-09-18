@@ -13,7 +13,6 @@
 // limitations under the License.
 
 #include <fstream>
-#include <helpers.hpp>
 #include <sstream>
 #include <string>
 #include <tuple>
@@ -42,6 +41,7 @@
 #include <mongocxx/test_util/client_helpers.hh>
 #include <mongocxx/uri.hpp>
 #include <mongocxx/write_concern.hpp>
+#include <third_party/catch/include/helpers.hpp>
 
 namespace {
 const auto kLocalMasterKey =

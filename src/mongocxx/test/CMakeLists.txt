@@ -16,9 +16,8 @@ if(NOT BUILD_TESTING)
   set_property(DIRECTORY PROPERTY EXCLUDE_FROM_ALL TRUE)
 endif()
 
-include_directories(
-    ${THIRD_PARTY_SOURCE_DIR}/catch/include
-)
+# Allow `#include <third_party/catch/include/...>`
+include_directories(${THIRD_PARTY_SOURCE_DIR}/..)
 
 set(test_driver_sources
     CMakeLists.txt

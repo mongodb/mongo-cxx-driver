@@ -12,10 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include "helpers.hpp"
 #include <bsoncxx/test_util/catch.hh>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/bulk_write.hpp>
+#include <third_party/catch/include/helpers.hpp>
 
 namespace {
 using namespace mongocxx;

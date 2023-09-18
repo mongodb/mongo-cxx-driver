@@ -13,4 +13,4 @@
 // limitations under the License.
 
 #define CATCH_CONFIG_MAIN
-#include "catch.hpp"
+#include <third_party/catch/include/catch.hpp>

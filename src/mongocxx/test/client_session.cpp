@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <helpers.hpp>
 #include <sstream>
 
 #include <bsoncxx/private/helpers.hh>
@@ -25,6 +24,7 @@
 #include <mongocxx/instance.hpp>
 #include <mongocxx/private/libmongoc.hh>
 #include <mongocxx/test_util/client_helpers.hh>
+#include <third_party/catch/include/helpers.hpp>
 
 namespace {
 using bsoncxx::from_json;

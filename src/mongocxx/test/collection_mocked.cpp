@@ -15,7 +15,6 @@
 #include <chrono>
 #include <string>
 
-#include "helpers.hpp"
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/document/element.hpp>
 #include <bsoncxx/json.hpp>
@@ -35,6 +34,7 @@
 #include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/libmongoc.hh>
 #include <mongocxx/read_preference.hpp>
+#include <third_party/catch/include/helpers.hpp>
 
 namespace {
 using namespace mongocxx;
