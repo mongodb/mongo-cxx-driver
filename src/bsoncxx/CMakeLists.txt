@@ -76,10 +76,7 @@ set(BSONCXX_HEADER_INSTALL_DIR "${CMAKE_INSTALL_INCLUDEDIR}/bsoncxx/${BSONCXX_IN
 if (BSONCXX_POLY_USE_MNMLSTC AND NOT BSONCXX_POLY_USE_SYSTEM_MNMLSTC)
     # For deprecated CMake package config files.
     set(BSONCXX_POLY_MNMLSTC_DEPRECATED_INCLUDE_DIRS
-        [[list(PREPEND LIBBSONCXX_INCLUDE_DIRS "${PACKAGE_PREFIX_DIR}/include/bsoncxx/v_noabi/bsoncxx/third_party/mnmlstc")]]
-    )
-    set(BSONCXX_POLY_MNMLSTC_DEPRECATED_STATIC_INCLUDE_DIRS
-        [[list(PREPEND LIBBSONCXX_STATIC_INCLUDE_DIRS "${PACKAGE_PREFIX_DIR}/include/bsoncxx/v_noabi/bsoncxx/third_party/mnmlstc")]]
+        "${CMAKE_INSTALL_INCLUDEDIR}/bsoncxx/v_noabi/bsoncxx/third_party/mnmlstc"
     )
 
     # For pkg-config files. Trailing space to separate cflags.
@@ -237,7 +234,10 @@ install(FILES
     COMPONENT dev
 )
 
-set(PACKAGE_INCLUDE_INSTALL_DIRS ${BSONCXX_HEADER_INSTALL_DIR})
+set(PACKAGE_INCLUDE_INSTALL_DIRS
+    ${BSONCXX_HEADER_INSTALL_DIR}
+    ${BSONCXX_POLY_MNMLSTC_DEPRECATED_INCLUDE_DIRS}
+)
 set(PACKAGE_LIBRARY_INSTALL_DIRS ${CMAKE_INSTALL_LIBDIR})
 set(PACKAGE_LIBRARIES bsoncxx)
 

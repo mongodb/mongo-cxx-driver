@@ -27,8 +27,11 @@ find_package(libbson-static-@LIBBSON_REQUIRED_ABI_VERSION@ @LIBBSON_REQUIRED_VER
 
 @PACKAGE_INIT@
 
-set_and_check(LIBBSONCXX_STATIC_INCLUDE_DIRS "${PACKAGE_PREFIX_DIR}/@PACKAGE_INCLUDE_INSTALL_DIRS@")
-@BSONCXX_POLY_MNMLSTC_DEPRECATED_STATIC_INCLUDE_DIRS@
+set(LIBBSONCXX_STATIC_INCLUDE_DIRS "")
+foreach(_INCLUDE_DIR @PACKAGE_INCLUDE_INSTALL_DIRS@)
+    set_and_check(_INCLUDE_DIR "${PACKAGE_PREFIX_DIR}/${_INCLUDE_DIR}")
+    list(APPEND LIBBSONCXX_STATIC_INCLUDE_DIRS "${_INCLUDE_DIR}")
+endforeach()
 
 # We want to provide an absolute path to the library and we know the directory and the base name,
 # but not the suffix, so we use CMake's find_library() to pick that up.
