@@ -24,3 +24,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Explicitly document that throwing an exception from an APM callback is undefined behavior.
 - Do not prematurely install mnmlstc/core headers during the CMake build step.
+
+### Removed
+- Remove support for generation of a CMake build tree targets file.
