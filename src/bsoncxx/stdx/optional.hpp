@@ -18,11 +18,7 @@
 
 #if defined(BSONCXX_POLY_USE_MNMLSTC)
 
-#if defined(MONGO_CXX_DRIVER_COMPILING) || defined(BSONCXX_POLY_USE_SYSTEM_MNMLSTC)
 #include <core/optional.hpp>
-#else
-#include <bsoncxx/third_party/mnmlstc/core/optional.hpp>
-#endif
 
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN

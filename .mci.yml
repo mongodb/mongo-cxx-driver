@@ -1119,10 +1119,9 @@ tasks:
             export CMAKE
             CMAKE="$(find_cmake_latest)"
             command -v "$CMAKE"
-            cd build
-            $CMAKE ..
-            $CMAKE --build . -- -j $(nproc)
-            ./hello_mongocxx
+            $CMAKE -S . -B build -DENABLE_AUTOMATIC_INIT_AND_CLEANUP=OFF
+            $CMAKE --build build
+            ./build/hello_mongocxx
 
     - name: debian-package-build
       commands:

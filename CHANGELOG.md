@@ -24,3 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Explicitly document that throwing an exception from an APM callback is undefined behavior.
 - Do not prematurely install mnmlstc/core headers during the CMake build step.
+- Require a C Driver CMake package is found via `find_dependency()` for all installed CXX Driver package configurations.
+
+### Removed
+- Remove support for exported targets from the CMake project build tree.

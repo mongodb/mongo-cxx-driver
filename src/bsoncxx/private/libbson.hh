@@ -24,7 +24,7 @@
 // TODO: CXX-1366 Disable MSVC warnings for libbson
 #endif
 
-#include <bson.h>
+#include <bson/bson.h>
 
 #if defined(__clang__)
 #pragma clang diagnostic pop

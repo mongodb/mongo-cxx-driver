@@ -71,11 +71,6 @@ function(mongocxx_install MONGOCXX_TARGET_LIST MONGOCXX_PKG_DEP)
         @ONLY
     )
 
-    export(EXPORT mongocxx_targets
-        NAMESPACE mongo::
-        FILE "${CMAKE_CURRENT_BINARY_DIR}/mongocxx_targets.cmake"
-    )
-
     install(EXPORT mongocxx_targets
         NAMESPACE mongo::
         FILE mongocxx_targets.cmake

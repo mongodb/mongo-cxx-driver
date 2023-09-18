@@ -25,7 +25,7 @@ function(bsoncxx_add_library TARGET OUTPUT_NAME LINK_TYPE)
     endif()
 
     if(LINK_TYPE STREQUAL "STATIC")
-        target_compile_definitions(bsoncxx_static PUBLIC BSONCXX_STATIC)
+        target_compile_definitions(${TARGET} PUBLIC BSONCXX_STATIC)
     endif()
 
     if(BSONCXX_POLY_USE_MNMLSTC AND NOT BSONCXX_POLY_USE_SYSTEM_MNMLSTC)
@@ -80,11 +80,6 @@ function(bsoncxx_install BSONCXX_TARGET_LIST BSONCXX_PKG_DEP BSONCXX_BOOST_PKG_D
     configure_file(cmake/bsoncxx-config.cmake.in
         "${CMAKE_CURRENT_BINARY_DIR}/bsoncxx-config.cmake"
         @ONLY
-    )
-
-    export(EXPORT bsoncxx_targets
-        NAMESPACE mongo::
-        FILE "${CMAKE_CURRENT_BINARY_DIR}/bsoncxx_targets.cmake"
     )
 
     install(EXPORT bsoncxx_targets
