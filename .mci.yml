@@ -403,10 +403,9 @@ functions:
                       MONGOC_PREFIX=$(cygpath -m "$MONGOC_PREFIX")
                   fi
 
-                  # TODO: revert to using find-cmake-latest once `mongoc_version_minimum` contains commit 6a23bd37.
-                  . "$MONGOC_PREFIX/.evergreen/scripts/find-cmake-version.sh"
+                  . "$MONGOC_PREFIX/.evergreen/scripts/find-cmake-latest.sh"
                   export cmake_binary
-                  cmake_binary="$(find_cmake_version 3 25 3)"
+                  cmake_binary="$(find_cmake_latest)"
                   command -v "$cmake_binary"
 
                   if [ ! -d ../drivers-evergreen-tools ]; then
@@ -717,10 +716,9 @@ functions:
                   # is true.
                   if [[ -z "$MONGODB_API_VERSION" ]]; then
                     echo "Building example projects..."
-                    # TODO: revert to using find-cmake-latest once `mongoc_version_minimum` contains commit 6a23bd37.
-                    . "$PREFIX/.evergreen/scripts/find-cmake-version.sh"
+                    . "$PREFIX/.evergreen/scripts/find-cmake-latest.sh"
                     export cmake_binary
-                    cmake_binary="$(find_cmake_version 3 25 3)"
+                    cmake_binary="$(find_cmake_latest)"
                     command -v "$cmake_binary"
                     .evergreen/build_example_projects.sh
                     echo "Building example projects... done."
@@ -1117,10 +1115,10 @@ tasks:
             [ -d mongo-c-driver ] || git clone --depth 1 https://github.com/mongodb/mongo-c-driver
             rsync -aq --exclude='examples/add_subdirectory' $(readlink -f ../..) .
             [ -d build ] || mkdir build
-            # TODO: revert to using find-cmake-latest once `mongoc_version_minimum` contains commit 6a23bd37.
-            . ./mongo-c-driver/.evergreen/scripts/find-cmake-version.sh
+            . ./mongo-c-driver/.evergreen/scripts/find-cmake-latest.sh
             export CMAKE
-            CMAKE="$(find_cmake_version 3 25 3)"
+            CMAKE="$(find_cmake_latest)"
+            command -v "$CMAKE"
             $CMAKE -S . -B build -DENABLE_AUTOMATIC_INIT_AND_CLEANUP=OFF
             $CMAKE --build build
             ./build/hello_mongocxx
