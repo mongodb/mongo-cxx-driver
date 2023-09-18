@@ -30,7 +30,7 @@ configure_file(
 install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/config.hpp
     ${CMAKE_CURRENT_BINARY_DIR}/version.hpp
-    DESTINATION ${BSONCXX_HEADER_INSTALL_DIR}/bsoncxx/config
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/bsoncxx/v_noabi/bsoncxx/config
     COMPONENT dev
 )
 

@@ -20,7 +20,7 @@ function(bsoncxx_add_library TARGET OUTPUT_NAME LINK_TYPE)
         set_target_properties(${TARGET} PROPERTIES
             CXX_VISIBILITY_PRESET hidden
             VISIBILITY_INLINES_HIDDEN ON
-            SOVERSION ${BSONCXX_ABI_VERSION}
+            SOVERSION _noabi
         )
     endif()
 
@@ -69,7 +69,7 @@ function(bsoncxx_install BSONCXX_TARGET_LIST BSONCXX_PKG_DEP BSONCXX_BOOST_PKG_D
         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT runtime
         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT runtime
         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT dev
-        INCLUDES DESTINATION ${BSONCXX_HEADER_INSTALL_DIR}
+        INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/bsoncxx/v_noabi
     )
 
     write_basic_package_version_file(

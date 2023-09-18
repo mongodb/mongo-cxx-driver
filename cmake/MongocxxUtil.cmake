@@ -20,7 +20,7 @@ function(mongocxx_add_library TARGET OUTPUT_NAME LINK_TYPE)
         set_target_properties (${TARGET} PROPERTIES
             CXX_VISIBILITY_PRESET hidden
             VISIBILITY_INLINES_HIDDEN ON
-            SOVERSION ${MONGOCXX_ABI_VERSION}
+            SOVERSION _noabi
         )
     endif()
 
@@ -57,7 +57,7 @@ function(mongocxx_install MONGOCXX_TARGET_LIST MONGOCXX_PKG_DEP)
         RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT runtime
         LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT runtime
         ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT dev
-        INCLUDES DESTINATION ${MONGOCXX_HEADER_INSTALL_DIR}
+        INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/mongocxx/v_noabi
     )
 
     write_basic_package_version_file(
