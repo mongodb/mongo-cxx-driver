@@ -63,11 +63,10 @@ else
   echo "${build_version}" >|"${mongoc_dir}/VERSION_CURRENT"
 fi
 
-# TODO: revert to using find-cmake-latest once `mongoc_version_minimum` contains commit 6a23bd37.
 # shellcheck source=/dev/null
-. "${mongoc_dir}/.evergreen/scripts/find-cmake-version.sh"
+. "${mongoc_dir}/.evergreen/scripts/find-cmake-latest.sh"
 declare cmake_binary
-cmake_binary="$(find_cmake_version 3 25 3)"
+cmake_binary="$(find_cmake_latest)"
 command -v "${cmake_binary:?}"
 
 # Install libmongocrypt.
