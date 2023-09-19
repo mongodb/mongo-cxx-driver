@@ -26,11 +26,6 @@ if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Gv")
 endif()
 
-include_directories(
-    ${CMAKE_INSTALL_PREFIX}/${BSONCXX_HEADER_INSTALL_DIR}
-    ${CMAKE_INSTALL_PREFIX}/${MONGOCXX_HEADER_INSTALL_DIR}
-)
-
 set(BENCHMARK_LIBRARY
     bson/bson_decoding.hpp
     bson/bson_encoding.hpp
@@ -63,4 +58,12 @@ set_dist_list (benchmark_DIST
 add_executable(microbenchmarks ${BENCHMARK_LIBRARY})
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
-target_link_libraries(microbenchmarks mongocxx bsoncxx Threads::Threads)
+target_link_libraries(microbenchmarks PRIVATE Threads::Threads)
+
+if(MONGOCXX_BUILD_SHARED)
+    target_link_libraries(microbenchmarks PRIVATE mongocxx_shared)
+endif()
+
+if(MONGOCXX_BUILD_STATIC)
+    target_link_libraries(microbenchmarks PRIVATE mongocxx_static)
+endif()
