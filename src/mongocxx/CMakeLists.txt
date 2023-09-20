@@ -211,8 +211,6 @@ endif()
 install(DIRECTORY include/
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
     COMPONENT dev
-    FILES_MATCHING
-        PATTERN "*.hpp"
 )
 
 install(FILES
