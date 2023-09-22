@@ -122,30 +122,12 @@ else()
     endif()
 endif()
 
+set(bsoncxx_sources "") # Required by bsoncxx_add_library().
+
 add_subdirectory(cmake)
 add_subdirectory(include)
+add_subdirectory(lib)
 add_subdirectory(third_party)
-add_subdirectory(lib/bsoncxx/v_noabi/bsoncxx/config)
-
-set(bsoncxx_sources
-    lib/bsoncxx/v_noabi/bsoncxx/array/element.cpp
-    lib/bsoncxx/v_noabi/bsoncxx/array/value.cpp
-    lib/bsoncxx/v_noabi/bsoncxx/array/view.cpp
-    lib/bsoncxx/v_noabi/bsoncxx/builder/core.cpp
-    lib/bsoncxx/v_noabi/bsoncxx/decimal128.cpp
-    lib/bsoncxx/v_noabi/bsoncxx/document/element.cpp
-    lib/bsoncxx/v_noabi/bsoncxx/document/value.cpp
-    lib/bsoncxx/v_noabi/bsoncxx/document/view.cpp
-    lib/bsoncxx/v_noabi/bsoncxx/exception/error_code.cpp
-    lib/bsoncxx/v_noabi/bsoncxx/json.cpp
-    lib/bsoncxx/v_noabi/bsoncxx/oid.cpp
-    lib/bsoncxx/v_noabi/bsoncxx/private/itoa.cpp
-    lib/bsoncxx/v_noabi/bsoncxx/string/view_or_value.cpp
-    lib/bsoncxx/v_noabi/bsoncxx/types.cpp
-    lib/bsoncxx/v_noabi/bsoncxx/types/bson_value/value.cpp
-    lib/bsoncxx/v_noabi/bsoncxx/types/bson_value/view.cpp
-    lib/bsoncxx/v_noabi/bsoncxx/validate.cpp
-)
 
 include(BsoncxxUtil)
 
@@ -228,43 +210,15 @@ if(ENABLE_TESTS)
     add_subdirectory(test)
 endif()
 
-set_local_dist(src_bsoncxx_lib_v_noabi_DIST_local
+set_local_dist(src_bsoncxx_DIST_local
     CMakeLists.txt
-    lib/bsoncxx/v_noabi/bsoncxx/array/element.cpp
-    lib/bsoncxx/v_noabi/bsoncxx/array/value.cpp
-    lib/bsoncxx/v_noabi/bsoncxx/array/view.cpp
-    lib/bsoncxx/v_noabi/bsoncxx/builder/core.cpp
-    lib/bsoncxx/v_noabi/bsoncxx/decimal128.cpp
-    lib/bsoncxx/v_noabi/bsoncxx/document/element.cpp
-    lib/bsoncxx/v_noabi/bsoncxx/document/value.cpp
-    lib/bsoncxx/v_noabi/bsoncxx/document/view.cpp
-    lib/bsoncxx/v_noabi/bsoncxx/exception/error_code.cpp
-    lib/bsoncxx/v_noabi/bsoncxx/json.cpp
-    lib/bsoncxx/v_noabi/bsoncxx/oid.cpp
-    lib/bsoncxx/v_noabi/bsoncxx/private/b64_ntop.hh
-    lib/bsoncxx/v_noabi/bsoncxx/private/helpers.hh
-    lib/bsoncxx/v_noabi/bsoncxx/private/itoa.cpp
-    lib/bsoncxx/v_noabi/bsoncxx/private/itoa.hh
-    lib/bsoncxx/v_noabi/bsoncxx/private/libbson.hh
-    lib/bsoncxx/v_noabi/bsoncxx/private/stack.hh
-    lib/bsoncxx/v_noabi/bsoncxx/private/suppress_deprecation_warnings.hh
-    lib/bsoncxx/v_noabi/bsoncxx/string/view_or_value.cpp
-    lib/bsoncxx/v_noabi/bsoncxx/test_util/catch.hh
-    lib/bsoncxx/v_noabi/bsoncxx/test_util/export_for_testing.hh
-    lib/bsoncxx/v_noabi/bsoncxx/test_util/to_string.hh
-    lib/bsoncxx/v_noabi/bsoncxx/types.cpp
-    lib/bsoncxx/v_noabi/bsoncxx/types/private/convert.hh
-    lib/bsoncxx/v_noabi/bsoncxx/types/bson_value/private/value.hh
-    lib/bsoncxx/v_noabi/bsoncxx/types/bson_value/value.cpp
-    lib/bsoncxx/v_noabi/bsoncxx/types/bson_value/view.cpp
-    lib/bsoncxx/v_noabi/bsoncxx/validate.cpp
 )
 
 set(src_bsoncxx_DIST
+    ${src_bsoncxx_DIST_local}
     ${src_bsoncxx_cmake_DIST}
     ${src_bsoncxx_include_DIST}
-    ${src_bsoncxx_lib_v_noabi_DIST_local}
-    ${src_bsoncxx_config_DIST}
+    ${src_bsoncxx_lib_DIST}
     ${src_bsoncxx_third_party_DIST}
     ${src_bsoncxx_test_DIST}
     PARENT_SCOPE

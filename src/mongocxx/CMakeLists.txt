@@ -71,105 +71,11 @@ else()
     endif()
 endif()
 
+set(mongocxx_sources "") # Required by mongocxx_add_library().
+
 add_subdirectory(cmake)
 add_subdirectory(include)
-add_subdirectory(lib/mongocxx/v_noabi/mongocxx/config)
-
-set(mongocxx_sources
-    lib/mongocxx/v_noabi/mongocxx/bulk_write.cpp
-    lib/mongocxx/v_noabi/mongocxx/client.cpp
-    lib/mongocxx/v_noabi/mongocxx/client_encryption.cpp
-    lib/mongocxx/v_noabi/mongocxx/client_session.cpp
-    lib/mongocxx/v_noabi/mongocxx/change_stream.cpp
-    lib/mongocxx/v_noabi/mongocxx/collection.cpp
-    lib/mongocxx/v_noabi/mongocxx/cursor.cpp
-    lib/mongocxx/v_noabi/mongocxx/database.cpp
-    lib/mongocxx/v_noabi/mongocxx/events/command_failed_event.cpp
-    lib/mongocxx/v_noabi/mongocxx/events/command_started_event.cpp
-    lib/mongocxx/v_noabi/mongocxx/events/command_succeeded_event.cpp
-    lib/mongocxx/v_noabi/mongocxx/events/heartbeat_failed_event.cpp
-    lib/mongocxx/v_noabi/mongocxx/events/heartbeat_started_event.cpp
-    lib/mongocxx/v_noabi/mongocxx/events/heartbeat_succeeded_event.cpp
-    lib/mongocxx/v_noabi/mongocxx/events/server_changed_event.cpp
-    lib/mongocxx/v_noabi/mongocxx/events/server_closed_event.cpp
-    lib/mongocxx/v_noabi/mongocxx/events/server_description.cpp
-    lib/mongocxx/v_noabi/mongocxx/events/server_opening_event.cpp
-    lib/mongocxx/v_noabi/mongocxx/events/topology_changed_event.cpp
-    lib/mongocxx/v_noabi/mongocxx/events/topology_closed_event.cpp
-    lib/mongocxx/v_noabi/mongocxx/events/topology_description.cpp
-    lib/mongocxx/v_noabi/mongocxx/events/topology_opening_event.cpp
-    lib/mongocxx/v_noabi/mongocxx/exception/error_code.cpp
-    lib/mongocxx/v_noabi/mongocxx/exception/operation_exception.cpp
-    lib/mongocxx/v_noabi/mongocxx/exception/server_error_code.cpp
-    lib/mongocxx/v_noabi/mongocxx/gridfs/bucket.cpp
-    lib/mongocxx/v_noabi/mongocxx/gridfs/downloader.cpp
-    lib/mongocxx/v_noabi/mongocxx/gridfs/uploader.cpp
-    lib/mongocxx/v_noabi/mongocxx/hint.cpp
-    lib/mongocxx/v_noabi/mongocxx/index_model.cpp
-    lib/mongocxx/v_noabi/mongocxx/index_view.cpp
-    lib/mongocxx/v_noabi/mongocxx/instance.cpp
-    lib/mongocxx/v_noabi/mongocxx/logger.cpp
-    lib/mongocxx/v_noabi/mongocxx/model/delete_many.cpp
-    lib/mongocxx/v_noabi/mongocxx/model/delete_one.cpp
-    lib/mongocxx/v_noabi/mongocxx/model/insert_one.cpp
-    lib/mongocxx/v_noabi/mongocxx/model/replace_one.cpp
-    lib/mongocxx/v_noabi/mongocxx/model/update_many.cpp
-    lib/mongocxx/v_noabi/mongocxx/model/update_one.cpp
-    lib/mongocxx/v_noabi/mongocxx/model/write.cpp
-    lib/mongocxx/v_noabi/mongocxx/options/aggregate.cpp
-    lib/mongocxx/v_noabi/mongocxx/options/apm.cpp
-    lib/mongocxx/v_noabi/mongocxx/options/auto_encryption.cpp
-    lib/mongocxx/v_noabi/mongocxx/options/bulk_write.cpp
-    lib/mongocxx/v_noabi/mongocxx/options/change_stream.cpp
-    lib/mongocxx/v_noabi/mongocxx/options/client.cpp
-    lib/mongocxx/v_noabi/mongocxx/options/client_encryption.cpp
-    lib/mongocxx/v_noabi/mongocxx/options/client_session.cpp
-    lib/mongocxx/v_noabi/mongocxx/options/count.cpp
-    lib/mongocxx/v_noabi/mongocxx/options/estimated_document_count.cpp
-    lib/mongocxx/v_noabi/mongocxx/options/create_collection.cpp
-    lib/mongocxx/v_noabi/mongocxx/options/data_key.cpp
-    lib/mongocxx/v_noabi/mongocxx/options/delete.cpp
-    lib/mongocxx/v_noabi/mongocxx/options/distinct.cpp
-    lib/mongocxx/v_noabi/mongocxx/options/encrypt.cpp
-    lib/mongocxx/v_noabi/mongocxx/options/find_one_and_delete.cpp
-    lib/mongocxx/v_noabi/mongocxx/options/find_one_and_replace.cpp
-    lib/mongocxx/v_noabi/mongocxx/options/find_one_and_update.cpp
-    lib/mongocxx/v_noabi/mongocxx/options/find.cpp
-    lib/mongocxx/v_noabi/mongocxx/options/gridfs/bucket.cpp
-    lib/mongocxx/v_noabi/mongocxx/options/gridfs/upload.cpp
-    lib/mongocxx/v_noabi/mongocxx/options/index.cpp
-    lib/mongocxx/v_noabi/mongocxx/options/index_view.cpp
-    lib/mongocxx/v_noabi/mongocxx/options/insert.cpp
-    lib/mongocxx/v_noabi/mongocxx/options/pool.cpp
-    lib/mongocxx/v_noabi/mongocxx/options/range.cpp
-    lib/mongocxx/v_noabi/mongocxx/options/replace.cpp
-    lib/mongocxx/v_noabi/mongocxx/options/rewrap_many_datakey.cpp
-    lib/mongocxx/v_noabi/mongocxx/options/server_api.cpp
-    lib/mongocxx/v_noabi/mongocxx/options/tls.cpp
-    lib/mongocxx/v_noabi/mongocxx/options/transaction.cpp
-    lib/mongocxx/v_noabi/mongocxx/options/update.cpp
-    lib/mongocxx/v_noabi/mongocxx/pipeline.cpp
-    lib/mongocxx/v_noabi/mongocxx/pool.cpp
-    lib/mongocxx/v_noabi/mongocxx/private/conversions.cpp
-    lib/mongocxx/v_noabi/mongocxx/private/libbson.cpp
-    lib/mongocxx/v_noabi/mongocxx/private/libmongoc.cpp
-    lib/mongocxx/v_noabi/mongocxx/private/numeric_casting.cpp
-    lib/mongocxx/v_noabi/mongocxx/read_concern.cpp
-    lib/mongocxx/v_noabi/mongocxx/read_preference.cpp
-    lib/mongocxx/v_noabi/mongocxx/result/bulk_write.cpp
-    lib/mongocxx/v_noabi/mongocxx/result/delete.cpp
-    lib/mongocxx/v_noabi/mongocxx/result/gridfs/upload.cpp
-    lib/mongocxx/v_noabi/mongocxx/result/insert_many.cpp
-    lib/mongocxx/v_noabi/mongocxx/result/insert_one.cpp
-    lib/mongocxx/v_noabi/mongocxx/result/replace_one.cpp
-    lib/mongocxx/v_noabi/mongocxx/result/rewrap_many_datakey.cpp
-    lib/mongocxx/v_noabi/mongocxx/result/update.cpp
-    lib/mongocxx/v_noabi/mongocxx/search_index_model.cpp
-    lib/mongocxx/v_noabi/mongocxx/search_index_view.cpp
-    lib/mongocxx/v_noabi/mongocxx/uri.cpp
-    lib/mongocxx/v_noabi/mongocxx/validation_criteria.cpp
-    lib/mongocxx/v_noabi/mongocxx/write_concern.cpp
-)
+add_subdirectory(lib)
 
 include(MongocxxUtil)
 
@@ -259,143 +165,15 @@ if(ENABLE_TESTS)
     add_subdirectory(test)
 endif()
 
-set_local_dist(src_mongocxx_lib_v_noabi_DIST_local
+set_local_dist(src_mongocxx_DIST_local
     CMakeLists.txt
-    lib/mongocxx/v_noabi/mongocxx/bulk_write.cpp
-    lib/mongocxx/v_noabi/mongocxx/change_stream.cpp
-    lib/mongocxx/v_noabi/mongocxx/client.cpp
-    lib/mongocxx/v_noabi/mongocxx/client_encryption.cpp
-    lib/mongocxx/v_noabi/mongocxx/client_session.cpp
-    lib/mongocxx/v_noabi/mongocxx/collection.cpp
-    lib/mongocxx/v_noabi/mongocxx/cursor.cpp
-    lib/mongocxx/v_noabi/mongocxx/database.cpp
-    lib/mongocxx/v_noabi/mongocxx/events/command_failed_event.cpp
-    lib/mongocxx/v_noabi/mongocxx/events/command_started_event.cpp
-    lib/mongocxx/v_noabi/mongocxx/events/command_succeeded_event.cpp
-    lib/mongocxx/v_noabi/mongocxx/events/heartbeat_failed_event.cpp
-    lib/mongocxx/v_noabi/mongocxx/events/heartbeat_started_event.cpp
-    lib/mongocxx/v_noabi/mongocxx/events/heartbeat_succeeded_event.cpp
-    lib/mongocxx/v_noabi/mongocxx/events/server_changed_event.cpp
-    lib/mongocxx/v_noabi/mongocxx/events/server_closed_event.cpp
-    lib/mongocxx/v_noabi/mongocxx/events/server_description.cpp
-    lib/mongocxx/v_noabi/mongocxx/events/server_opening_event.cpp
-    lib/mongocxx/v_noabi/mongocxx/events/topology_changed_event.cpp
-    lib/mongocxx/v_noabi/mongocxx/events/topology_closed_event.cpp
-    lib/mongocxx/v_noabi/mongocxx/events/topology_description.cpp
-    lib/mongocxx/v_noabi/mongocxx/events/topology_opening_event.cpp
-    lib/mongocxx/v_noabi/mongocxx/exception/error_code.cpp
-    lib/mongocxx/v_noabi/mongocxx/exception/operation_exception.cpp
-    lib/mongocxx/v_noabi/mongocxx/exception/private/mongoc_error.hh
-    lib/mongocxx/v_noabi/mongocxx/exception/server_error_code.cpp
-    lib/mongocxx/v_noabi/mongocxx/gridfs/bucket.cpp
-    lib/mongocxx/v_noabi/mongocxx/gridfs/downloader.cpp
-    lib/mongocxx/v_noabi/mongocxx/gridfs/private/bucket.hh
-    lib/mongocxx/v_noabi/mongocxx/gridfs/private/downloader.hh
-    lib/mongocxx/v_noabi/mongocxx/gridfs/private/uploader.hh
-    lib/mongocxx/v_noabi/mongocxx/gridfs/uploader.cpp
-    lib/mongocxx/v_noabi/mongocxx/hint.cpp
-    lib/mongocxx/v_noabi/mongocxx/index_model.cpp
-    lib/mongocxx/v_noabi/mongocxx/index_view.cpp
-    lib/mongocxx/v_noabi/mongocxx/instance.cpp
-    lib/mongocxx/v_noabi/mongocxx/logger.cpp
-    lib/mongocxx/v_noabi/mongocxx/model/delete_many.cpp
-    lib/mongocxx/v_noabi/mongocxx/model/delete_one.cpp
-    lib/mongocxx/v_noabi/mongocxx/model/insert_one.cpp
-    lib/mongocxx/v_noabi/mongocxx/model/replace_one.cpp
-    lib/mongocxx/v_noabi/mongocxx/model/update_many.cpp
-    lib/mongocxx/v_noabi/mongocxx/model/update_one.cpp
-    lib/mongocxx/v_noabi/mongocxx/model/write.cpp
-    lib/mongocxx/v_noabi/mongocxx/options/aggregate.cpp
-    lib/mongocxx/v_noabi/mongocxx/options/apm.cpp
-    lib/mongocxx/v_noabi/mongocxx/options/auto_encryption.cpp
-    lib/mongocxx/v_noabi/mongocxx/options/bulk_write.cpp
-    lib/mongocxx/v_noabi/mongocxx/options/change_stream.cpp
-    lib/mongocxx/v_noabi/mongocxx/options/client.cpp
-    lib/mongocxx/v_noabi/mongocxx/options/client_encryption.cpp
-    lib/mongocxx/v_noabi/mongocxx/options/client_session.cpp
-    lib/mongocxx/v_noabi/mongocxx/options/count.cpp
-    lib/mongocxx/v_noabi/mongocxx/options/create_collection.cpp
-    lib/mongocxx/v_noabi/mongocxx/options/data_key.cpp
-    lib/mongocxx/v_noabi/mongocxx/options/delete.cpp
-    lib/mongocxx/v_noabi/mongocxx/options/distinct.cpp
-    lib/mongocxx/v_noabi/mongocxx/options/encrypt.cpp
-    lib/mongocxx/v_noabi/mongocxx/options/estimated_document_count.cpp
-    lib/mongocxx/v_noabi/mongocxx/options/find.cpp
-    lib/mongocxx/v_noabi/mongocxx/options/find_one_and_delete.cpp
-    lib/mongocxx/v_noabi/mongocxx/options/find_one_and_replace.cpp
-    lib/mongocxx/v_noabi/mongocxx/options/find_one_and_update.cpp
-    lib/mongocxx/v_noabi/mongocxx/options/gridfs/bucket.cpp
-    lib/mongocxx/v_noabi/mongocxx/options/gridfs/upload.cpp
-    lib/mongocxx/v_noabi/mongocxx/options/index.cpp
-    lib/mongocxx/v_noabi/mongocxx/options/index_view.cpp
-    lib/mongocxx/v_noabi/mongocxx/options/insert.cpp
-    lib/mongocxx/v_noabi/mongocxx/options/pool.cpp
-    lib/mongocxx/v_noabi/mongocxx/options/private/apm.hh
-    lib/mongocxx/v_noabi/mongocxx/options/private/server_api.hh
-    lib/mongocxx/v_noabi/mongocxx/options/private/ssl.hh
-    lib/mongocxx/v_noabi/mongocxx/options/private/transaction.hh
-    lib/mongocxx/v_noabi/mongocxx/options/range.cpp
-    lib/mongocxx/v_noabi/mongocxx/options/replace.cpp
-    lib/mongocxx/v_noabi/mongocxx/options/rewrap_many_datakey.cpp
-    lib/mongocxx/v_noabi/mongocxx/options/server_api.cpp
-    lib/mongocxx/v_noabi/mongocxx/options/tls.cpp
-    lib/mongocxx/v_noabi/mongocxx/options/transaction.cpp
-    lib/mongocxx/v_noabi/mongocxx/options/update.cpp
-    lib/mongocxx/v_noabi/mongocxx/pipeline.cpp
-    lib/mongocxx/v_noabi/mongocxx/pool.cpp
-    lib/mongocxx/v_noabi/mongocxx/private/append_aggregate_options.hh
-    lib/mongocxx/v_noabi/mongocxx/private/bulk_write.hh
-    lib/mongocxx/v_noabi/mongocxx/private/change_stream.hh
-    lib/mongocxx/v_noabi/mongocxx/private/client.hh
-    lib/mongocxx/v_noabi/mongocxx/private/client_encryption.hh
-    lib/mongocxx/v_noabi/mongocxx/private/client_session.hh
-    lib/mongocxx/v_noabi/mongocxx/private/collection.hh
-    lib/mongocxx/v_noabi/mongocxx/private/conversions.cpp
-    lib/mongocxx/v_noabi/mongocxx/private/conversions.hh
-    lib/mongocxx/v_noabi/mongocxx/private/cursor.hh
-    lib/mongocxx/v_noabi/mongocxx/private/database.hh
-    lib/mongocxx/v_noabi/mongocxx/private/index_view.hh
-    lib/mongocxx/v_noabi/mongocxx/private/libbson.cpp
-    lib/mongocxx/v_noabi/mongocxx/private/libbson.hh
-    lib/mongocxx/v_noabi/mongocxx/private/libmongoc.cpp
-    lib/mongocxx/v_noabi/mongocxx/private/libmongoc.hh
-    lib/mongocxx/v_noabi/mongocxx/private/libmongoc_symbols.hh
-    lib/mongocxx/v_noabi/mongocxx/private/numeric_casting.cpp
-    lib/mongocxx/v_noabi/mongocxx/private/numeric_casting.hh
-    lib/mongocxx/v_noabi/mongocxx/private/pipeline.hh
-    lib/mongocxx/v_noabi/mongocxx/private/pool.hh
-    lib/mongocxx/v_noabi/mongocxx/private/read_concern.hh
-    lib/mongocxx/v_noabi/mongocxx/private/read_preference.hh
-    lib/mongocxx/v_noabi/mongocxx/private/search_index_model.hh
-    lib/mongocxx/v_noabi/mongocxx/private/search_index_view.hh
-    lib/mongocxx/v_noabi/mongocxx/private/uri.hh
-    lib/mongocxx/v_noabi/mongocxx/private/write_concern.hh
-    lib/mongocxx/v_noabi/mongocxx/read_concern.cpp
-    lib/mongocxx/v_noabi/mongocxx/read_preference.cpp
-    lib/mongocxx/v_noabi/mongocxx/result/bulk_write.cpp
-    lib/mongocxx/v_noabi/mongocxx/result/delete.cpp
-    lib/mongocxx/v_noabi/mongocxx/result/gridfs/upload.cpp
-    lib/mongocxx/v_noabi/mongocxx/result/insert_many.cpp
-    lib/mongocxx/v_noabi/mongocxx/result/insert_one.cpp
-    lib/mongocxx/v_noabi/mongocxx/result/replace_one.cpp
-    lib/mongocxx/v_noabi/mongocxx/result/rewrap_many_datakey.cpp
-    lib/mongocxx/v_noabi/mongocxx/result/update.cpp
-    lib/mongocxx/v_noabi/mongocxx/search_index_model.cpp
-    lib/mongocxx/v_noabi/mongocxx/search_index_view.cpp
-    lib/mongocxx/v_noabi/mongocxx/test_util/client_helpers.cpp
-    lib/mongocxx/v_noabi/mongocxx/test_util/client_helpers.hh
-    lib/mongocxx/v_noabi/mongocxx/test_util/export_for_testing.hh
-    lib/mongocxx/v_noabi/mongocxx/test_util/mock.hh
-    lib/mongocxx/v_noabi/mongocxx/uri.cpp
-    lib/mongocxx/v_noabi/mongocxx/validation_criteria.cpp
-    lib/mongocxx/v_noabi/mongocxx/write_concern.cpp
 )
 
 set(src_mongocxx_DIST
+    ${src_mongocxx_DIST_local}
     ${src_mongocxx_cmake_DIST}
     ${src_mongocxx_include_DIST}
-    ${src_mongocxx_lib_v_noabi_DIST_local}
-    ${src_mongocxx_config_DIST}
+    ${src_mongocxx_lib_DIST}
     ${src_mongocxx_test_DIST}
     PARENT_SCOPE
 )
