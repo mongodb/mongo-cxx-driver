@@ -16,14 +16,14 @@ project(MONGOCXX)
 
 ParseVersion (${BUILD_VERSION} MONGOCXX)
 
+set(MONGOCXX_VERSION_NO_EXTRA ${MONGOCXX_VERSION_MAJOR}.${MONGOCXX_VERSION_MINOR}.${MONGOCXX_VERSION_PATCH})
+set(MONGOCXX_VERSION ${MONGOCXX_VERSION_NO_EXTRA}${MONGOCXX_VERSION_EXTRA})
+message ("mongocxx version: ${MONGOCXX_VERSION}")
+
 option(MONGOCXX_ENABLE_SSL "Enable SSL - if the underlying C driver offers it" ON)
 option(MONGOCXX_ENABLE_SLOW_TESTS "Run slow tests when invoking the the test target" OFF)
 
 set(MONGOCXX_OUTPUT_BASENAME "mongocxx" CACHE STRING "Output mongocxx library base name")
-
-set(MONGOCXX_VERSION_NO_EXTRA ${MONGOCXX_VERSION_MAJOR}.${MONGOCXX_VERSION_MINOR}.${MONGOCXX_VERSION_PATCH})
-set(MONGOCXX_VERSION ${MONGOCXX_VERSION_NO_EXTRA}${MONGOCXX_VERSION_EXTRA})
-message ("mongocxx version: ${MONGOCXX_VERSION}")
 
 set(mongocxx_pkg_dep "")
 
