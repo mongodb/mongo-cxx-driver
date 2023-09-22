@@ -25,7 +25,7 @@ option(MONGOCXX_ENABLE_SLOW_TESTS "Run slow tests when invoking the the test tar
 
 set(MONGOCXX_OUTPUT_BASENAME "mongocxx" CACHE STRING "Output mongocxx library base name")
 
-set(mongocxx_pkg_dep "")
+set(MONGOCXX_PKG_DEP "") # Required by bsoncxx-config.cmake.in.
 
 if(TARGET mongoc_shared OR TARGET mongoc_static)
     # If these targets exist, then libmongoc has already been included as a project
@@ -38,7 +38,7 @@ if(TARGET mongoc_shared OR TARGET mongoc_static)
         set(libmongoc_target mongoc_static)
     endif()
 
-    set(mongocxx_pkg_dep "find_dependency(mongoc-${LIBMONGOC_REQUIRED_ABI_VERSION} REQUIRED)")
+    set(MONGOCXX_PKG_DEP "find_dependency(mongoc-${LIBMONGOC_REQUIRED_ABI_VERSION} REQUIRED)")
 else()
     # Attempt to find libmongoc by new package name (without lib).
     find_package(mongoc-${LIBMONGOC_REQUIRED_ABI_VERSION} ${LIBMONGOC_REQUIRED_VERSION} QUIET)
@@ -52,7 +52,7 @@ else()
             set(libmongoc_target mongo::mongoc_static)
         endif()
 
-        set(mongocxx_pkg_dep "find_dependency(mongoc-${LIBMONGOC_REQUIRED_ABI_VERSION} REQUIRED)")
+        set(MONGOCXX_PKG_DEP "find_dependency(mongoc-${LIBMONGOC_REQUIRED_ABI_VERSION} REQUIRED)")
     else()
         # Require package of old libmongoc name (with lib).
         if(NOT MONGOCXX_LINK_WITH_STATIC_MONGOC)
@@ -60,17 +60,18 @@ else()
             message("found libmongoc version ${MONGOC_VERSION}")
             set(libmongoc_target ${MONGOC_LIBRARIES})
             set(libmongoc_definitions ${MONGOC_DEFINITIONS})
-            set(mongocxx_pkg_dep "find_dependency(libmongoc-${LIBMONGOC_REQUIRED_ABI_VERSION} REQUIRED)")
+            set(MONGOCXX_PKG_DEP "find_dependency(libmongoc-${LIBMONGOC_REQUIRED_ABI_VERSION} REQUIRED)")
         else()
             find_package(libmongoc-static-${LIBMONGOC_REQUIRED_ABI_VERSION} ${LIBMONGOC_REQUIRED_VERSION} REQUIRED)
             message("found libmongoc version ${MONGOC_STATIC_VERSION}")
             set(libmongoc_target ${MONGOC_STATIC_LIBRARIES})
             set(libmongoc_definitions ${MONGOC_STATIC_DEFINITIONS})
-            set(mongocxx_pkg_dep "find_dependency(libmongoc-static-${LIBMONGOC_REQUIRED_ABI_VERSION} REQUIRED)")
+            set(MONGOCXX_PKG_DEP "find_dependency(libmongoc-static-${LIBMONGOC_REQUIRED_ABI_VERSION} REQUIRED)")
         endif()
     endif()
 endif()
 
+add_subdirectory(cmake)
 add_subdirectory(lib/mongocxx/v_noabi/mongocxx/config)
 
 set(mongocxx_sources
@@ -169,20 +170,20 @@ set(mongocxx_sources
     lib/mongocxx/v_noabi/mongocxx/write_concern.cpp
 )
 
-# We define both the normal libraries and the testing-only library.  The testing-only
-# library does not get installed, but the tests link against it instead of the normal library.  The
-# only difference between the libraries is that MONGOCXX_TESTING is defined in the testing-only
-# library (this define enables special testing-only behavior).
 include(MongocxxUtil)
+
+set(mongocxx_target_list "")
 
 if(MONGOCXX_BUILD_SHARED)
     mongocxx_add_library(mongocxx_shared "${MONGOCXX_OUTPUT_BASENAME}" SHARED)
     target_link_libraries(mongocxx_shared PUBLIC bsoncxx_shared)
+    list(APPEND mongocxx_target_list mongocxx_shared)
 endif()
 
 if(MONGOCXX_BUILD_STATIC)
     mongocxx_add_library(mongocxx_static "${MONGOCXX_OUTPUT_BASENAME}-static" STATIC)
     target_link_libraries(mongocxx_static PUBLIC bsoncxx_static)
+    list(APPEND mongocxx_target_list mongocxx_static)
 endif()
 
 if(MONGOCXX_BUILD_SHARED)
@@ -219,55 +220,23 @@ install(FILES
     COMPONENT dev
 )
 
-set(PACKAGE_INCLUDE_INSTALL_DIRS ${CMAKE_INSTALL_INCLUDEDIR}/mongocxx/v_noabi)
-set(PACKAGE_LIBRARY_INSTALL_DIRS ${CMAKE_INSTALL_LIBDIR})
-set(PACKAGE_LIBRARIES mongocxx)
-
-include(CMakePackageConfigHelpers)
-
-set(libdir "\${prefix}/${CMAKE_INSTALL_LIBDIR}")
-
-if(MONGOCXX_BUILD_SHARED)
-    configure_file(
-        ${CMAKE_CURRENT_SOURCE_DIR}/cmake/libmongocxx.pc.in
-        ${CMAKE_CURRENT_BINARY_DIR}/cmake/libmongocxx.pc
-        @ONLY
+# Generate and install the modern CMake package install targets file.
+if(1)
+    install(TARGETS
+        ${mongocxx_target_list}
+        EXPORT mongocxx_targets
+        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT runtime
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT runtime
+        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT dev
+        INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/mongocxx/v_noabi
     )
 
-    install(FILES
-        "${CMAKE_CURRENT_BINARY_DIR}/cmake/libmongocxx.pc"
-        DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
-        COMPONENT dev
+    install(EXPORT mongocxx_targets
+        NAMESPACE mongo::
+        FILE mongocxx_targets.cmake
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/mongocxx-${MONGOCXX_VERSION}
     )
 endif()
-
-if(MONGOCXX_BUILD_STATIC)
-    configure_file(
-        ${CMAKE_CURRENT_SOURCE_DIR}/cmake/libmongocxx-static.pc.in
-        ${CMAKE_CURRENT_BINARY_DIR}/cmake/libmongocxx-static.pc
-        @ONLY
-    )
-
-    install(FILES
-        "${CMAKE_CURRENT_BINARY_DIR}/cmake/libmongocxx-static.pc"
-        DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
-        COMPONENT dev
-    )
-endif()
-
-set(mongocxx_target_list "")
-
-if(MONGOCXX_BUILD_SHARED)
-    mongocxx_install_deprecated_cmake(mongocxx)
-    list(APPEND mongocxx_target_list mongocxx_shared)
-endif()
-
-if(MONGOCXX_BUILD_STATIC)
-    mongocxx_install_deprecated_cmake(mongocxx-static)
-    list(APPEND mongocxx_target_list mongocxx_static)
-endif()
-
-mongocxx_install("${mongocxx_target_list}" "${mongocxx_pkg_dep}")
 
 if(ENABLE_TESTS)
     add_subdirectory(test)
@@ -280,11 +249,6 @@ set_local_dist(src_mongocxx_lib_v_noabi_DIST_local
     lib/mongocxx/v_noabi/mongocxx/client.cpp
     lib/mongocxx/v_noabi/mongocxx/client_encryption.cpp
     lib/mongocxx/v_noabi/mongocxx/client_session.cpp
-    cmake/mongocxx-config.cmake.in
-    cmake/libmongocxx-config.cmake.in
-    cmake/libmongocxx-static-config.cmake.in
-    cmake/libmongocxx-static.pc.in
-    cmake/libmongocxx.pc.in
     lib/mongocxx/v_noabi/mongocxx/collection.cpp
     lib/mongocxx/v_noabi/mongocxx/cursor.cpp
     lib/mongocxx/v_noabi/mongocxx/database.cpp
@@ -517,6 +481,7 @@ set_local_dist(src_mongocxx_include_v_noabi_DIST_local
 )
 
 set(src_mongocxx_DIST
+    ${src_mongocxx_cmake_DIST}
     ${src_mongocxx_lib_v_noabi_DIST_local}
     ${src_mongocxx_include_v_noabi_DIST_local}
     ${src_mongocxx_config_DIST}

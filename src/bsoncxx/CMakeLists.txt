@@ -68,27 +68,13 @@ if(BSONCXX_POLY_USE_STD_EXPERIMENTAL AND CMAKE_CXX_STANDARD LESS 14)
     message(FATAL_ERROR "Can only use BSONCXX_POLY_USE_STD_EXPERIMENTAL if CMAKE_CXX_STANDARD is 14 or higher")
 endif()
 
-set(BSONCXX_POLY_MNMLSTC_DEPRECATED_INCLUDE_DIRS "")
-set(BSONCXX_POLY_MNMLSTC_PKGCONFIG_INCLUDE_DIRS "")
-set(BSONCXX_POLY_MNMLSTC_PKGCONFIG_STATIC_INCLUDE_DIRS "")
+set(BSONCXX_BOOST_PKG_DEP "") # Required by bsoncxx-config.cmake.in.
 
-if(BSONCXX_POLY_USE_MNMLSTC AND NOT BSONCXX_POLY_USE_SYSTEM_MNMLSTC)
-    # For deprecated CMake package config files.
-    set(BSONCXX_POLY_MNMLSTC_DEPRECATED_INCLUDE_DIRS
-        "${CMAKE_INSTALL_INCLUDEDIR}/bsoncxx/v_noabi/bsoncxx/third_party/mnmlstc"
-    )
-
-    # For pkg-config files. Trailing space to separate cflags.
-    set(BSONCXX_POLY_MNMLSTC_PKGCONFIG_INCLUDE_DIRS
-        [[-I${includedir}/bsoncxx/v_noabi/bsoncxx/third_party/mnmlstc ]]
-    )
-    set(BSONCXX_POLY_MNMLSTC_PKGCONFIG_STATIC_INCLUDE_DIRS
-        [[-I${includedir}/bsoncxx/v_noabi/bsoncxx/third_party/mnmlstc ]]
-    )
+if(BSONCXX_POLY_USE_BOOST)
+    set(BSONCXX_BOOST_PKG_DEP "find_dependency(Boost 1.56.0 REQUIRED)")
 endif()
 
-set(bsoncxx_pkg_dep "")
-set(bsoncxx_boost_pkg_dep "")
+set(BSONCXX_PKG_DEP "") # Required by bsoncxx-config.cmake.in.
 
 if(TARGET bson_shared OR TARGET bson_static)
     # If these targets exist, then libbson has already been included as a project
@@ -101,7 +87,7 @@ if(TARGET bson_shared OR TARGET bson_static)
         set(libbson_target bson_static)
     endif()
 
-    set(bsoncxx_pkg_dep "find_dependency(bson-${LIBBSON_REQUIRED_ABI_VERSION} REQUIRED)")
+    set(BSONCXX_PKG_DEP "find_dependency(bson-${LIBBSON_REQUIRED_ABI_VERSION} REQUIRED)")
 else()
     # Attempt to find libbson by new package name (without lib).
     find_package(bson-${LIBBSON_REQUIRED_ABI_VERSION} ${LIBBSON_REQUIRED_VERSION} QUIET)
@@ -115,7 +101,7 @@ else()
             set(libbson_target mongo::bson_static)
         endif()
 
-        set(bsoncxx_pkg_dep "find_dependency(bson-${LIBBSON_REQUIRED_ABI_VERSION} REQUIRED)")
+        set(BSONCXX_PKG_DEP "find_dependency(bson-${LIBBSON_REQUIRED_ABI_VERSION} REQUIRED)")
     else()
         # Require package of old libbson name (with lib).
         if(NOT BSONCXX_LINK_WITH_STATIC_MONGOC)
@@ -124,18 +110,19 @@ else()
             set(libbson_target ${BSON_LIBRARIES})
             set(libbson_include_directories ${BSON_INCLUDE_DIRS})
             set(libbson_definitions ${BSON_DEFINITIONS})
-            set(bsoncxx_pkg_dep "find_dependency(libbson-${LIBBSON_REQUIRED_ABI_VERSION} REQUIRED)")
+            set(BSONCXX_PKG_DEP "find_dependency(libbson-${LIBBSON_REQUIRED_ABI_VERSION} REQUIRED)")
         else()
             find_package(libbson-static-${LIBBSON_REQUIRED_ABI_VERSION} ${LIBBSON_REQUIRED_VERSION} REQUIRED)
             message("found libbson version ${BSON_STATIC_VERSION}")
             set(libbson_target ${BSON_STATIC_LIBRARIES})
             set(libbson_include_directories ${BSON_STATIC_INCLUDE_DIRS})
             set(libbson_definitions ${BSON_STATIC_DEFINITIONS})
-            set(bsoncxx_pkg_dep "find_dependency(libbson-static-${LIBBSON_REQUIRED_ABI_VERSION} REQUIRED)")
+            set(BSONCXX_PKG_DEP "find_dependency(libbson-static-${LIBBSON_REQUIRED_ABI_VERSION} REQUIRED)")
         endif()
     endif()
 endif()
 
+add_subdirectory(cmake)
 add_subdirectory(third_party)
 add_subdirectory(lib/bsoncxx/v_noabi/bsoncxx/config)
 
@@ -159,18 +146,18 @@ set(bsoncxx_sources
     lib/bsoncxx/v_noabi/bsoncxx/validate.cpp
 )
 
-# We define both the normal libraries and the testing-only library.  The testing-only
-# library does not get installed, but the tests link against it instead of the normal library.  The
-# only difference between the libraries is that BSONCXX_TESTING is defined in the testing-only
-# library (this define enables special testing-only behavior).
 include(BsoncxxUtil)
+
+set(bsoncxx_target_list "")
 
 if(BSONCXX_BUILD_SHARED)
     bsoncxx_add_library(bsoncxx_shared "${BSONCXX_OUTPUT_BASENAME}" SHARED)
+    list(APPEND bsoncxx_target_list bsoncxx_shared)
 endif()
 
 if(BSONCXX_BUILD_STATIC)
     bsoncxx_add_library(bsoncxx_static "${BSONCXX_OUTPUT_BASENAME}-static" STATIC)
+    list(APPEND bsoncxx_target_list bsoncxx_static)
 endif()
 
 if(BSONCXX_BUILD_SHARED)
@@ -191,36 +178,6 @@ if(ENABLE_TESTS)
     target_compile_definitions(bsoncxx_testing PUBLIC BSONCXX_TESTING)
 endif()
 
-set(libdir "\${prefix}/${CMAKE_INSTALL_LIBDIR}")
-
-if(BSONCXX_BUILD_SHARED)
-    configure_file(
-        cmake/libbsoncxx.pc.in
-        cmake/libbsoncxx.pc
-        @ONLY
-    )
-
-    install(FILES
-        ${CMAKE_CURRENT_BINARY_DIR}/cmake/libbsoncxx.pc
-        DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
-        COMPONENT dev
-    )
-endif()
-
-if(BSONCXX_BUILD_STATIC)
-    configure_file(
-        cmake/libbsoncxx-static.pc.in
-        cmake/libbsoncxx-static.pc
-        @ONLY
-    )
-
-    install(FILES
-        ${CMAKE_CURRENT_BINARY_DIR}/cmake/libbsoncxx-static.pc
-        DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
-        COMPONENT dev
-    )
-endif()
-
 install(DIRECTORY include/
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
     COMPONENT dev
@@ -232,32 +189,23 @@ install(FILES
     COMPONENT dev
 )
 
-set(PACKAGE_INCLUDE_INSTALL_DIRS
-    ${CMAKE_INSTALL_INCLUDEDIR}/bsoncxx/v_noabi
-    ${BSONCXX_POLY_MNMLSTC_DEPRECATED_INCLUDE_DIRS}
-)
-set(PACKAGE_LIBRARY_INSTALL_DIRS ${CMAKE_INSTALL_LIBDIR})
-set(PACKAGE_LIBRARIES bsoncxx)
+# Generate and install the modern CMake install package targets file.
+if(1)
+    install(TARGETS
+        ${bsoncxx_target_list}
+        EXPORT bsoncxx_targets
+        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT runtime
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT runtime
+        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT dev
+        INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/bsoncxx/v_noabi
+    )
 
-include(CMakePackageConfigHelpers)
-
-set(bsoncxx_target_list "")
-
-if(BSONCXX_BUILD_SHARED)
-    bsoncxx_install_deprecated_cmake(bsoncxx)
-    list(APPEND bsoncxx_target_list bsoncxx_shared)
+    install(EXPORT bsoncxx_targets
+        NAMESPACE mongo::
+        FILE bsoncxx_targets.cmake
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/bsoncxx-${BSONCXX_VERSION}
+    )
 endif()
-
-if(BSONCXX_BUILD_STATIC)
-    bsoncxx_install_deprecated_cmake(bsoncxx-static)
-    list(APPEND bsoncxx_target_list bsoncxx_static)
-endif()
-
-if(BSONCXX_POLY_USE_BOOST)
-    set(bsoncxx_boost_pkg_dep "find_dependency(Boost 1.56.0 REQUIRED)")
-endif()
-
-bsoncxx_install("${bsoncxx_target_list}" "${bsoncxx_pkg_dep}" "${bsoncxx_boost_pkg_dep}")
 
 if(ENABLE_TESTS)
     add_subdirectory(test)
@@ -269,11 +217,6 @@ set_local_dist(src_bsoncxx_lib_v_noabi_DIST_local
     lib/bsoncxx/v_noabi/bsoncxx/array/value.cpp
     lib/bsoncxx/v_noabi/bsoncxx/array/view.cpp
     lib/bsoncxx/v_noabi/bsoncxx/builder/core.cpp
-    cmake/bsoncxx-config.cmake.in
-    cmake/libbsoncxx-config.cmake.in
-    cmake/libbsoncxx-static-config.cmake.in
-    cmake/libbsoncxx-static.pc.in
-    cmake/libbsoncxx.pc.in
     lib/bsoncxx/v_noabi/bsoncxx/decimal128.cpp
     lib/bsoncxx/v_noabi/bsoncxx/document/element.cpp
     lib/bsoncxx/v_noabi/bsoncxx/document/value.cpp
@@ -354,6 +297,7 @@ set_local_dist(src_bsoncxx_include_v_noabi_DIST_local
 )
 
 set(src_bsoncxx_DIST
+    ${src_bsoncxx_cmake_DIST}
     ${src_bsoncxx_lib_v_noabi_DIST_local}
     ${src_bsoncxx_include_v_noabi_DIST_local}
     ${src_bsoncxx_config_DIST}
