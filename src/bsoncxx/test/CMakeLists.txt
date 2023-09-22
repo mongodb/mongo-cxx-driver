@@ -13,13 +13,13 @@
 # limitations under the License.
 
 if(NOT BUILD_TESTING)
-  set_property(DIRECTORY PROPERTY EXCLUDE_FROM_ALL TRUE)
+    set_property(DIRECTORY PROPERTY EXCLUDE_FROM_ALL TRUE)
 endif()
 
 # Allow `#include <third_party/catch/include/...>`
 include_directories(${THIRD_PARTY_SOURCE_DIR}/..)
 
-file (GLOB src_bsoncxx_test_DIST_cpps RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.cpp)
+file(GLOB src_bsoncxx_test_DIST_cpps RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.cpp)
 
 add_executable(test_bson
     ${THIRD_PARTY_SOURCE_DIR}/catch/main.cpp
@@ -32,7 +32,7 @@ target_compile_definitions(test_bson PRIVATE ${libbson_definitions})
 
 add_test(bson test_bson)
 
-set_dist_list (src_bsoncxx_test_DIST
-   CMakeLists.txt
-   ${src_bsoncxx_test_DIST_cpps}
+set_dist_list(src_bsoncxx_test_DIST
+    CMakeLists.txt
+    ${src_bsoncxx_test_DIST_cpps}
 )

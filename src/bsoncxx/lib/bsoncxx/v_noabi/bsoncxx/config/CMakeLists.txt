@@ -34,11 +34,11 @@ install(FILES
     COMPONENT dev
 )
 
-set_dist_list (src_bsoncxx_config_DIST
-   CMakeLists.txt
-   config.hpp.in
-   private/config.hh.in
-   private/postlude.hh
-   private/prelude.hh
-   version.hpp.in
+set_dist_list(src_bsoncxx_config_DIST
+    CMakeLists.txt
+    config.hpp.in
+    private/config.hh.in
+    private/postlude.hh
+    private/prelude.hh
+    version.hpp.in
 )
