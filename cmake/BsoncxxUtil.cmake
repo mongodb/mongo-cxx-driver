@@ -50,12 +50,4 @@ function(bsoncxx_add_library TARGET OUTPUT_NAME LINK_TYPE)
         $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/lib/bsoncxx/v_noabi>
     )
     target_compile_definitions(${TARGET} PRIVATE ${libbson_definitions})
-
-    generate_export_header(${TARGET}
-        BASE_NAME BSONCXX
-        EXPORT_MACRO_NAME BSONCXX_API
-        NO_EXPORT_MACRO_NAME BSONCXX_PRIVATE
-        EXPORT_FILE_NAME ${PROJECT_BINARY_DIR}/lib/bsoncxx/v_noabi/bsoncxx/config/export.hpp
-        STATIC_DEFINE BSONCXX_STATIC
-    )
 endfunction(bsoncxx_add_library)

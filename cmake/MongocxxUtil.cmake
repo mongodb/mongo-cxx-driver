@@ -38,12 +38,4 @@ function(mongocxx_add_library TARGET OUTPUT_NAME LINK_TYPE)
         $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/lib/mongocxx/v_noabi>
     )
     target_compile_definitions(${TARGET} PRIVATE ${libmongoc_definitions})
-
-    generate_export_header(${TARGET}
-        BASE_NAME MONGOCXX
-        EXPORT_MACRO_NAME MONGOCXX_API
-        NO_EXPORT_MACRO_NAME MONGOCXX_PRIVATE
-        EXPORT_FILE_NAME ${PROJECT_BINARY_DIR}/lib/mongocxx/v_noabi/mongocxx/config/export.hpp
-        STATIC_DEFINE MONGOCXX_STATIC
-    )
 endfunction(mongocxx_add_library)

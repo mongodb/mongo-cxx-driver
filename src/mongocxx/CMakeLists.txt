@@ -72,6 +72,7 @@ else()
 endif()
 
 add_subdirectory(cmake)
+add_subdirectory(include)
 add_subdirectory(lib/mongocxx/v_noabi/mongocxx/config)
 
 set(mongocxx_sources
@@ -209,16 +210,32 @@ if(ENABLE_TESTS)
     endif()
 endif()
 
-install(DIRECTORY include/
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-    COMPONENT dev
-)
+# Generate and install the export header.
+if(1)
+    function(mongocxx_install_export_header TARGET)
+        generate_export_header(${TARGET}
+            BASE_NAME MONGOCXX
+            EXPORT_MACRO_NAME MONGOCXX_API
+            NO_EXPORT_MACRO_NAME MONGOCXX_PRIVATE
+            EXPORT_FILE_NAME ${PROJECT_BINARY_DIR}/lib/mongocxx/v_noabi/mongocxx/config/export.hpp
+            STATIC_DEFINE MONGOCXX_STATIC
+        )
 
-install(FILES
-    ${PROJECT_BINARY_DIR}/lib/mongocxx/v_noabi/mongocxx/config/export.hpp
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/mongocxx/v_noabi/mongocxx/config
-    COMPONENT dev
-)
+        install(FILES
+            ${PROJECT_BINARY_DIR}/lib/mongocxx/v_noabi/mongocxx/config/export.hpp
+            DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/mongocxx/v_noabi/mongocxx/config
+            COMPONENT dev
+        )
+    endfunction()
+
+    # Ensure the export header is generated *at most* once.
+    # Give priority to the shared library target which sets visibility properties.
+    if(MONGOCXX_BUILD_SHARED)
+        mongocxx_install_export_header(mongocxx_shared)
+    elseif(MONGOCXX_BUILD_STATIC)
+        mongocxx_install_export_header(mongocxx_static)
+    endif()
+endif()
 
 # Generate and install the modern CMake package install targets file.
 if(1)
@@ -374,116 +391,10 @@ set_local_dist(src_mongocxx_lib_v_noabi_DIST_local
     lib/mongocxx/v_noabi/mongocxx/write_concern.cpp
 )
 
-set_local_dist(src_mongocxx_include_v_noabi_DIST_local
-    include/mongocxx/v_noabi/mongocxx/bulk_write.hpp
-    include/mongocxx/v_noabi/mongocxx/change_stream.hpp
-    include/mongocxx/v_noabi/mongocxx/client_encryption.hpp
-    include/mongocxx/v_noabi/mongocxx/client_session.hpp
-    include/mongocxx/v_noabi/mongocxx/client.hpp
-    include/mongocxx/v_noabi/mongocxx/collection.hpp
-    include/mongocxx/v_noabi/mongocxx/config/compiler.hpp
-    include/mongocxx/v_noabi/mongocxx/config/postlude.hpp
-    include/mongocxx/v_noabi/mongocxx/config/prelude.hpp
-    include/mongocxx/v_noabi/mongocxx/cursor.hpp
-    include/mongocxx/v_noabi/mongocxx/database.hpp
-    include/mongocxx/v_noabi/mongocxx/events/command_failed_event.hpp
-    include/mongocxx/v_noabi/mongocxx/events/command_started_event.hpp
-    include/mongocxx/v_noabi/mongocxx/events/command_succeeded_event.hpp
-    include/mongocxx/v_noabi/mongocxx/events/heartbeat_failed_event.hpp
-    include/mongocxx/v_noabi/mongocxx/events/heartbeat_started_event.hpp
-    include/mongocxx/v_noabi/mongocxx/events/heartbeat_succeeded_event.hpp
-    include/mongocxx/v_noabi/mongocxx/events/server_changed_event.hpp
-    include/mongocxx/v_noabi/mongocxx/events/server_closed_event.hpp
-    include/mongocxx/v_noabi/mongocxx/events/server_description.hpp
-    include/mongocxx/v_noabi/mongocxx/events/server_opening_event.hpp
-    include/mongocxx/v_noabi/mongocxx/events/topology_changed_event.hpp
-    include/mongocxx/v_noabi/mongocxx/events/topology_closed_event.hpp
-    include/mongocxx/v_noabi/mongocxx/events/topology_description.hpp
-    include/mongocxx/v_noabi/mongocxx/events/topology_opening_event.hpp
-    include/mongocxx/v_noabi/mongocxx/exception/authentication_exception.hpp
-    include/mongocxx/v_noabi/mongocxx/exception/bulk_write_exception.hpp
-    include/mongocxx/v_noabi/mongocxx/exception/error_code.hpp
-    include/mongocxx/v_noabi/mongocxx/exception/exception.hpp
-    include/mongocxx/v_noabi/mongocxx/exception/gridfs_exception.hpp
-    include/mongocxx/v_noabi/mongocxx/exception/logic_error.hpp
-    include/mongocxx/v_noabi/mongocxx/exception/operation_exception.hpp
-    include/mongocxx/v_noabi/mongocxx/exception/query_exception.hpp
-    include/mongocxx/v_noabi/mongocxx/exception/server_error_code.hpp
-    include/mongocxx/v_noabi/mongocxx/exception/write_exception.hpp
-    include/mongocxx/v_noabi/mongocxx/gridfs/bucket.hpp
-    include/mongocxx/v_noabi/mongocxx/gridfs/downloader.hpp
-    include/mongocxx/v_noabi/mongocxx/gridfs/uploader.hpp
-    include/mongocxx/v_noabi/mongocxx/hint.hpp
-    include/mongocxx/v_noabi/mongocxx/index_model.hpp
-    include/mongocxx/v_noabi/mongocxx/index_view.hpp
-    include/mongocxx/v_noabi/mongocxx/instance.hpp
-    include/mongocxx/v_noabi/mongocxx/logger.hpp
-    include/mongocxx/v_noabi/mongocxx/model/delete_many.hpp
-    include/mongocxx/v_noabi/mongocxx/model/delete_one.hpp
-    include/mongocxx/v_noabi/mongocxx/model/insert_one.hpp
-    include/mongocxx/v_noabi/mongocxx/model/replace_one.hpp
-    include/mongocxx/v_noabi/mongocxx/model/update_many.hpp
-    include/mongocxx/v_noabi/mongocxx/model/update_one.hpp
-    include/mongocxx/v_noabi/mongocxx/model/write.hpp
-    include/mongocxx/v_noabi/mongocxx/options/aggregate.hpp
-    include/mongocxx/v_noabi/mongocxx/options/apm.hpp
-    include/mongocxx/v_noabi/mongocxx/options/auto_encryption.hpp
-    include/mongocxx/v_noabi/mongocxx/options/bulk_write.hpp
-    include/mongocxx/v_noabi/mongocxx/options/change_stream.hpp
-    include/mongocxx/v_noabi/mongocxx/options/client_encryption.hpp
-    include/mongocxx/v_noabi/mongocxx/options/client_session.hpp
-    include/mongocxx/v_noabi/mongocxx/options/client.hpp
-    include/mongocxx/v_noabi/mongocxx/options/count.hpp
-    include/mongocxx/v_noabi/mongocxx/options/create_collection.hpp
-    include/mongocxx/v_noabi/mongocxx/options/data_key.hpp
-    include/mongocxx/v_noabi/mongocxx/options/delete.hpp
-    include/mongocxx/v_noabi/mongocxx/options/distinct.hpp
-    include/mongocxx/v_noabi/mongocxx/options/encrypt.hpp
-    include/mongocxx/v_noabi/mongocxx/options/estimated_document_count.hpp
-    include/mongocxx/v_noabi/mongocxx/options/find_one_and_delete.hpp
-    include/mongocxx/v_noabi/mongocxx/options/find_one_and_replace.hpp
-    include/mongocxx/v_noabi/mongocxx/options/find_one_and_update.hpp
-    include/mongocxx/v_noabi/mongocxx/options/find_one_common_options.hpp
-    include/mongocxx/v_noabi/mongocxx/options/find.hpp
-    include/mongocxx/v_noabi/mongocxx/options/gridfs/bucket.hpp
-    include/mongocxx/v_noabi/mongocxx/options/gridfs/upload.hpp
-    include/mongocxx/v_noabi/mongocxx/options/index_view.hpp
-    include/mongocxx/v_noabi/mongocxx/options/index.hpp
-    include/mongocxx/v_noabi/mongocxx/options/insert.hpp
-    include/mongocxx/v_noabi/mongocxx/options/pool.hpp
-    include/mongocxx/v_noabi/mongocxx/options/range.hpp
-    include/mongocxx/v_noabi/mongocxx/options/replace.hpp
-    include/mongocxx/v_noabi/mongocxx/options/rewrap_many_datakey.hpp
-    include/mongocxx/v_noabi/mongocxx/options/server_api.hpp
-    include/mongocxx/v_noabi/mongocxx/options/ssl.hpp
-    include/mongocxx/v_noabi/mongocxx/options/tls.hpp
-    include/mongocxx/v_noabi/mongocxx/options/transaction.hpp
-    include/mongocxx/v_noabi/mongocxx/options/update.hpp
-    include/mongocxx/v_noabi/mongocxx/pipeline.hpp
-    include/mongocxx/v_noabi/mongocxx/pool.hpp
-    include/mongocxx/v_noabi/mongocxx/read_concern.hpp
-    include/mongocxx/v_noabi/mongocxx/read_preference.hpp
-    include/mongocxx/v_noabi/mongocxx/result/bulk_write.hpp
-    include/mongocxx/v_noabi/mongocxx/result/delete.hpp
-    include/mongocxx/v_noabi/mongocxx/result/gridfs/upload.hpp
-    include/mongocxx/v_noabi/mongocxx/result/insert_many.hpp
-    include/mongocxx/v_noabi/mongocxx/result/insert_one.hpp
-    include/mongocxx/v_noabi/mongocxx/result/replace_one.hpp
-    include/mongocxx/v_noabi/mongocxx/result/rewrap_many_datakey.hpp
-    include/mongocxx/v_noabi/mongocxx/result/update.hpp
-    include/mongocxx/v_noabi/mongocxx/search_index_model.hpp
-    include/mongocxx/v_noabi/mongocxx/search_index_view.hpp
-    include/mongocxx/v_noabi/mongocxx/stdx.hpp
-    include/mongocxx/v_noabi/mongocxx/uri.hpp
-    include/mongocxx/v_noabi/mongocxx/validation_criteria.hpp
-    include/mongocxx/v_noabi/mongocxx/write_concern.hpp
-    include/mongocxx/v_noabi/mongocxx/write_type.hpp
-)
-
 set(src_mongocxx_DIST
     ${src_mongocxx_cmake_DIST}
+    ${src_mongocxx_include_DIST}
     ${src_mongocxx_lib_v_noabi_DIST_local}
-    ${src_mongocxx_include_v_noabi_DIST_local}
     ${src_mongocxx_config_DIST}
     ${src_mongocxx_test_DIST}
     PARENT_SCOPE

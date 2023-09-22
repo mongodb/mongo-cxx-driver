@@ -123,6 +123,7 @@ else()
 endif()
 
 add_subdirectory(cmake)
+add_subdirectory(include)
 add_subdirectory(third_party)
 add_subdirectory(lib/bsoncxx/v_noabi/bsoncxx/config)
 
@@ -178,16 +179,32 @@ if(ENABLE_TESTS)
     target_compile_definitions(bsoncxx_testing PUBLIC BSONCXX_TESTING)
 endif()
 
-install(DIRECTORY include/
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
-    COMPONENT dev
-)
+# Generate and install the export header.
+if(1)
+    function(bsoncxx_install_export_header TARGET)
+        generate_export_header(${TARGET}
+            BASE_NAME BSONCXX
+            EXPORT_MACRO_NAME BSONCXX_API
+            NO_EXPORT_MACRO_NAME BSONCXX_PRIVATE
+            EXPORT_FILE_NAME ${PROJECT_BINARY_DIR}/lib/bsoncxx/v_noabi/bsoncxx/config/export.hpp
+            STATIC_DEFINE BSONCXX_STATIC
+        )
 
-install(FILES
-    ${PROJECT_BINARY_DIR}/lib/bsoncxx/v_noabi/bsoncxx/config/export.hpp
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/bsoncxx/v_noabi/bsoncxx/config
-    COMPONENT dev
-)
+        install(FILES
+            ${PROJECT_BINARY_DIR}/lib/bsoncxx/v_noabi/bsoncxx/config/export.hpp
+            DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/bsoncxx/v_noabi/bsoncxx/config
+            COMPONENT dev
+        )
+    endfunction()
+
+    # Ensure the export header is generated *at most* once.
+    # Give priority to the shared library target which sets visibility properties.
+    if(BSONCXX_BUILD_SHARED)
+        bsoncxx_install_export_header(bsoncxx_shared)
+    elseif(BSONCXX_BUILD_STATIC)
+        bsoncxx_install_export_header(bsoncxx_static)
+    endif()
+endif()
 
 # Generate and install the modern CMake install package targets file.
 if(1)
@@ -243,63 +260,10 @@ set_local_dist(src_bsoncxx_lib_v_noabi_DIST_local
     lib/bsoncxx/v_noabi/bsoncxx/validate.cpp
 )
 
-set_local_dist(src_bsoncxx_include_v_noabi_DIST_local
-    include/bsoncxx/v_noabi/bsoncxx/array/element.hpp
-    include/bsoncxx/v_noabi/bsoncxx/array/value.hpp
-    include/bsoncxx/v_noabi/bsoncxx/array/view_or_value.hpp
-    include/bsoncxx/v_noabi/bsoncxx/array/view.hpp
-    include/bsoncxx/v_noabi/bsoncxx/builder/basic/array.hpp
-    include/bsoncxx/v_noabi/bsoncxx/builder/basic/document.hpp
-    include/bsoncxx/v_noabi/bsoncxx/builder/basic/helpers.hpp
-    include/bsoncxx/v_noabi/bsoncxx/builder/basic/impl.hpp
-    include/bsoncxx/v_noabi/bsoncxx/builder/basic/kvp.hpp
-    include/bsoncxx/v_noabi/bsoncxx/builder/basic/sub_array.hpp
-    include/bsoncxx/v_noabi/bsoncxx/builder/basic/sub_document.hpp
-    include/bsoncxx/v_noabi/bsoncxx/builder/concatenate.hpp
-    include/bsoncxx/v_noabi/bsoncxx/builder/core.hpp
-    include/bsoncxx/v_noabi/bsoncxx/builder/list.hpp
-    include/bsoncxx/v_noabi/bsoncxx/builder/stream/array_context.hpp
-    include/bsoncxx/v_noabi/bsoncxx/builder/stream/array.hpp
-    include/bsoncxx/v_noabi/bsoncxx/builder/stream/closed_context.hpp
-    include/bsoncxx/v_noabi/bsoncxx/builder/stream/document.hpp
-    include/bsoncxx/v_noabi/bsoncxx/builder/stream/helpers.hpp
-    include/bsoncxx/v_noabi/bsoncxx/builder/stream/key_context.hpp
-    include/bsoncxx/v_noabi/bsoncxx/builder/stream/single_context.hpp
-    include/bsoncxx/v_noabi/bsoncxx/builder/stream/value_context.hpp
-    include/bsoncxx/v_noabi/bsoncxx/config/compiler.hpp
-    include/bsoncxx/v_noabi/bsoncxx/config/postlude.hpp
-    include/bsoncxx/v_noabi/bsoncxx/config/prelude.hpp
-    include/bsoncxx/v_noabi/bsoncxx/decimal128.hpp
-    include/bsoncxx/v_noabi/bsoncxx/document/element.hpp
-    include/bsoncxx/v_noabi/bsoncxx/document/value.hpp
-    include/bsoncxx/v_noabi/bsoncxx/document/view_or_value.hpp
-    include/bsoncxx/v_noabi/bsoncxx/document/view.hpp
-    include/bsoncxx/v_noabi/bsoncxx/enums/binary_sub_type.hpp
-    include/bsoncxx/v_noabi/bsoncxx/enums/type.hpp
-    include/bsoncxx/v_noabi/bsoncxx/exception/error_code.hpp
-    include/bsoncxx/v_noabi/bsoncxx/exception/exception.hpp
-    include/bsoncxx/v_noabi/bsoncxx/json.hpp
-    include/bsoncxx/v_noabi/bsoncxx/oid.hpp
-    include/bsoncxx/v_noabi/bsoncxx/stdx/make_unique.hpp
-    include/bsoncxx/v_noabi/bsoncxx/stdx/optional.hpp
-    include/bsoncxx/v_noabi/bsoncxx/stdx/string_view.hpp
-    include/bsoncxx/v_noabi/bsoncxx/string/to_string.hpp
-    include/bsoncxx/v_noabi/bsoncxx/string/view_or_value.hpp
-    include/bsoncxx/v_noabi/bsoncxx/types.hpp
-    include/bsoncxx/v_noabi/bsoncxx/types/bson_value/make_value.hpp
-    include/bsoncxx/v_noabi/bsoncxx/types/bson_value/value.hpp
-    include/bsoncxx/v_noabi/bsoncxx/types/bson_value/view_or_value.hpp
-    include/bsoncxx/v_noabi/bsoncxx/types/bson_value/view.hpp
-    include/bsoncxx/v_noabi/bsoncxx/types/value.hpp
-    include/bsoncxx/v_noabi/bsoncxx/util/functor.hpp
-    include/bsoncxx/v_noabi/bsoncxx/validate.hpp
-    include/bsoncxx/v_noabi/bsoncxx/view_or_value.hpp
-)
-
 set(src_bsoncxx_DIST
     ${src_bsoncxx_cmake_DIST}
+    ${src_bsoncxx_include_DIST}
     ${src_bsoncxx_lib_v_noabi_DIST_local}
-    ${src_bsoncxx_include_v_noabi_DIST_local}
     ${src_bsoncxx_config_DIST}
     ${src_bsoncxx_third_party_DIST}
     ${src_bsoncxx_test_DIST}
