@@ -144,14 +144,10 @@ if(BSONCXX_BUILD_STATIC)
 endif()
 
 if(BSONCXX_BUILD_SHARED)
-    set(BSONCXX_LIBRARY_FOR_EXAMPLES "bsoncxx_shared" CACHE INTERNAL "")
-
     if(ENABLE_TESTS)
         bsoncxx_add_library(bsoncxx_testing "bsoncxx-testing" SHARED)
     endif()
 else()
-    set(BSONCXX_LIBRARY_FOR_EXAMPLES "bsoncxx_static" CACHE INTERNAL "")
-
     if(ENABLE_TESTS)
         bsoncxx_add_library(bsoncxx_testing "bsoncxx-testing" STATIC)
     endif()

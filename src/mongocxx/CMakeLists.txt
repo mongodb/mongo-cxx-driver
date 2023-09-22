@@ -94,14 +94,10 @@ if(MONGOCXX_BUILD_STATIC)
 endif()
 
 if(MONGOCXX_BUILD_SHARED)
-    set(MONGOCXX_LIBRARY_FOR_EXAMPLES "mongocxx_shared" CACHE INTERNAL "")
-
     if(ENABLE_TESTS)
         mongocxx_add_library(mongocxx_mocked "mongocxx-mocked" SHARED)
     endif()
 else()
-    set(MONGOCXX_LIBRARY_FOR_EXAMPLES "mongocxx_static" CACHE INTERNAL "")
-
     if(ENABLE_TESTS)
         mongocxx_add_library(mongocxx_mocked "mongocxx-mocked" STATIC)
     endif()
