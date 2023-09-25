@@ -15,7 +15,7 @@
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/document/element.hpp>
 #include <bsoncxx/string/to_string.hpp>
-#include <bsoncxx/test_util/catch.hh>
+#include <bsoncxx/test/catch.hh>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/validation_criteria.hpp>
 #include <third_party/catch/include/helpers.hpp>

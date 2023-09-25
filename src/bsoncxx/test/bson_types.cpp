@@ -18,7 +18,7 @@
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/document/element.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
-#include <bsoncxx/test_util/catch.hh>
+#include <bsoncxx/test/catch.hh>
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
 

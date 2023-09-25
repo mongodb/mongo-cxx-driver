@@ -16,7 +16,7 @@
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/private/suppress_deprecation_warnings.hh>
 #include <bsoncxx/string/to_string.hpp>
-#include <bsoncxx/test_util/catch.hh>
+#include <bsoncxx/test/catch.hh>
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
 #include <mongocxx/instance.hpp>

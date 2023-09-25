@@ -21,7 +21,7 @@
 
 #include <bsoncxx/oid.hpp>
 #include <bsoncxx/private/libbson.hh>
-#include <bsoncxx/test_util/catch.hh>
+#include <bsoncxx/test/catch.hh>
 
 using namespace bsoncxx;
 

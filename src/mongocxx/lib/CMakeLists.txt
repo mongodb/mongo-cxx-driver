@@ -278,8 +278,6 @@ set_dist_list(src_mongocxx_lib_DIST
     mongocxx/v_noabi/mongocxx/result/update.cpp
     mongocxx/v_noabi/mongocxx/search_index_model.cpp
     mongocxx/v_noabi/mongocxx/search_index_view.cpp
-    mongocxx/v_noabi/mongocxx/test_util/client_helpers.cpp
-    mongocxx/v_noabi/mongocxx/test_util/client_helpers.hh
     mongocxx/v_noabi/mongocxx/test_util/export_for_testing.hh
     mongocxx/v_noabi/mongocxx/test_util/mock.hh
     mongocxx/v_noabi/mongocxx/uri.cpp
