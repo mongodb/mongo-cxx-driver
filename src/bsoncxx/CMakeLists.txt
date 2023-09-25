@@ -143,20 +143,6 @@ if(BSONCXX_BUILD_STATIC)
     list(APPEND bsoncxx_target_list bsoncxx_static)
 endif()
 
-if(BSONCXX_BUILD_SHARED)
-    if(ENABLE_TESTS)
-        bsoncxx_add_library(bsoncxx_testing "bsoncxx-testing" SHARED)
-    endif()
-else()
-    if(ENABLE_TESTS)
-        bsoncxx_add_library(bsoncxx_testing "bsoncxx-testing" STATIC)
-    endif()
-endif()
-
-if(ENABLE_TESTS)
-    target_compile_definitions(bsoncxx_testing PUBLIC BSONCXX_TESTING)
-endif()
-
 # Generate and install the export header.
 if(1)
     function(bsoncxx_install_export_header TARGET)

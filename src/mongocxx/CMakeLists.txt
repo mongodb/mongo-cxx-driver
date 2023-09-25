@@ -93,25 +93,6 @@ if(MONGOCXX_BUILD_STATIC)
     list(APPEND mongocxx_target_list mongocxx_static)
 endif()
 
-if(MONGOCXX_BUILD_SHARED)
-    if(ENABLE_TESTS)
-        mongocxx_add_library(mongocxx_mocked "mongocxx-mocked" SHARED)
-    endif()
-else()
-    if(ENABLE_TESTS)
-        mongocxx_add_library(mongocxx_mocked "mongocxx-mocked" STATIC)
-    endif()
-endif()
-
-if(ENABLE_TESTS)
-    target_link_libraries(mongocxx_mocked PUBLIC bsoncxx_testing)
-    target_compile_definitions(mongocxx_mocked PUBLIC MONGOCXX_TESTING)
-
-    if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-        target_compile_options(mongocxx_mocked PRIVATE /bigobj)
-    endif()
-endif()
-
 # Generate and install the export header.
 if(1)
     function(mongocxx_install_export_header TARGET)

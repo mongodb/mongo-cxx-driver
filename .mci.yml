@@ -461,7 +461,12 @@ functions:
                      export LD_LIBRARY_PATH=.:$PREFIX/lib/
                      export DYLD_LIBRARY_PATH=.:$PREFIX/lib/
                   fi
-                  export PATH=$(pwd)/src/bsoncxx/${build_type}:$(pwd)/src/mongocxx/${build_type}:$PREFIX/bin:$(pwd)/install/bin:$PATH
+                  PATH="$(pwd)/src/mongocxx/test/${build_type}:$PATH"
+                  PATH="$(pwd)/src/bsoncxx/test/${build_type}:$PATH"
+                  PATH="$(pwd)/src/mongocxx/${build_type}:$PATH"
+                  PATH="$(pwd)/src/bsoncxx/${build_type}:$PATH"
+                  PATH="$PREFIX/bin:$PATH"
+                  PATH="$(pwd)/install/bin:$PATH"
 
                   export CHANGE_STREAMS_UNIFIED_TESTS_PATH="$(pwd)/../data/change-streams/unified"
                   export CLIENT_SIDE_ENCRYPTION_LEGACY_TESTS_PATH="$(pwd)/../data/client_side_encryption/legacy"
