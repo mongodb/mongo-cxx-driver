@@ -46,8 +46,11 @@ function(bsoncxx_add_library TARGET OUTPUT_NAME LINK_TYPE)
         ${TARGET}
         PUBLIC
         $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include/bsoncxx/v_noabi>
+        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>
         $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/lib/bsoncxx/v_noabi>
+        $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/lib>
         $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/lib/bsoncxx/v_noabi>
+        $<BUILD_INTERFACE:${PROJECT_BINARY_DIR}/lib>
     )
     target_compile_definitions(${TARGET} PRIVATE ${libbson_definitions})
 endfunction(bsoncxx_add_library)

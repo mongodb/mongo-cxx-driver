@@ -21,5 +21,5 @@ Description: The MongoDB C++11 Driver Library
 URL: http://github.com/mongodb/mongo-cxx-driver
 Version: @MONGOCXX_VERSION@
 Requires: libbsoncxx >= @MONGOCXX_VERSION@
-Cflags: -I${includedir}/mongocxx/v_noabi
+Cflags: -I${includedir}/mongocxx/v_noabi -I${includedir}
 Libs: -L${libdir} -lmongocxx
