@@ -18,7 +18,7 @@ ParseVersion(${BUILD_VERSION} BSONCXX)
 
 set(BSONCXX_VERSION_NO_EXTRA ${BSONCXX_VERSION_MAJOR}.${BSONCXX_VERSION_MINOR}.${BSONCXX_VERSION_PATCH})
 set(BSONCXX_VERSION ${BSONCXX_VERSION_NO_EXTRA}${BSONCXX_VERSION_EXTRA})
-message("bsoncxx version: ${BSONCXX_VERSION}")
+message(STATUS "bsoncxx version: ${BSONCXX_VERSION}")
 
 option(BSONCXX_POLY_USE_MNMLSTC "Use MNMLSTC/core for stdx polyfills" OFF)
 option(BSONCXX_POLY_USE_STD_EXPERIMENTAL "Use std::experimental for stdx polyfills" OFF)
@@ -79,7 +79,7 @@ set(BSONCXX_PKG_DEP "") # Required by bsoncxx-config.cmake.in.
 if(TARGET bson_shared OR TARGET bson_static)
     # If these targets exist, then libbson has already been included as a project
     # sub-directory
-    message("found libbson targets declared in current build scope; version not checked")
+    message(STATUS "found libbson targets declared in current build scope; version not checked")
 
     if(NOT BSONCXX_LINK_WITH_STATIC_MONGOC)
         set(libbson_target bson_shared)
@@ -93,7 +93,7 @@ else()
     find_package(bson-${LIBBSON_REQUIRED_ABI_VERSION} ${LIBBSON_REQUIRED_VERSION} QUIET)
 
     if(bson-${LIBBSON_REQUIRED_ABI_VERSION}_FOUND)
-        message("found libbson version ${bson-${LIBBSON_REQUIRED_ABI_VERSION}_VERSION}")
+        message(STATUS "found libbson version ${bson-${LIBBSON_REQUIRED_ABI_VERSION}_VERSION}")
 
         if(NOT BSONCXX_LINK_WITH_STATIC_MONGOC)
             set(libbson_target mongo::bson_shared)
@@ -106,14 +106,14 @@ else()
         # Require package of old libbson name (with lib).
         if(NOT BSONCXX_LINK_WITH_STATIC_MONGOC)
             find_package(libbson-${LIBBSON_REQUIRED_ABI_VERSION} ${LIBBSON_REQUIRED_VERSION} REQUIRED)
-            message("found libbson version ${BSON_VERSION}")
+            message(STATUS "found libbson version ${BSON_VERSION}")
             set(libbson_target ${BSON_LIBRARIES})
             set(libbson_include_directories ${BSON_INCLUDE_DIRS})
             set(libbson_definitions ${BSON_DEFINITIONS})
             set(BSONCXX_PKG_DEP "find_dependency(libbson-${LIBBSON_REQUIRED_ABI_VERSION} REQUIRED)")
         else()
             find_package(libbson-static-${LIBBSON_REQUIRED_ABI_VERSION} ${LIBBSON_REQUIRED_VERSION} REQUIRED)
-            message("found libbson version ${BSON_STATIC_VERSION}")
+            message(STATUS "found libbson version ${BSON_STATIC_VERSION}")
             set(libbson_target ${BSON_STATIC_LIBRARIES})
             set(libbson_include_directories ${BSON_STATIC_INCLUDE_DIRS})
             set(libbson_definitions ${BSON_STATIC_DEFINITIONS})
