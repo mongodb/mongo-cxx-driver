@@ -167,3 +167,5 @@ class MONGOCXX_API downloader {
 }  // namespace gridfs
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
+
+#include <mongocxx/config/postlude.hpp>

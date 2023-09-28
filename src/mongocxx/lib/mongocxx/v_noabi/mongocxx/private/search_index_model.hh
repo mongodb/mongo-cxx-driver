@@ -20,3 +20,5 @@ class search_index_model::impl {
 
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
+
+#include <mongocxx/config/private/postlude.hh>

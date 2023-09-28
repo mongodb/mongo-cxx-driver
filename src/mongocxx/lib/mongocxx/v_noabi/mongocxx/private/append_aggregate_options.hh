@@ -54,3 +54,5 @@ MONGOCXX_INLINE void append_aggregate_options(bsoncxx::builder::basic::document&
 }
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
+
+#include <mongocxx/config/private/postlude.hh>

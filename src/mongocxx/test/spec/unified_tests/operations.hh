@@ -51,3 +51,5 @@ bsoncxx::stdx::optional<read_preference> lookup_read_preference(bsoncxx::documen
 
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
+
+#include <mongocxx/config/private/postlude.hh>

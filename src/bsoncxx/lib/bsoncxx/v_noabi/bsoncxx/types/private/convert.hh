@@ -330,3 +330,5 @@ BSONCXX_INLINE void convert_from_libbson(bson_value_t* v, bsoncxx::types::b_arra
 }  // namespace types
 BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bsoncxx
+
+#include <bsoncxx/config/private/postlude.hh>

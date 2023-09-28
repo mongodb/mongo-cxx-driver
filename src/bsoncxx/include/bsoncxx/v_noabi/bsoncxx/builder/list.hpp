@@ -186,3 +186,5 @@ class array : public list {
 }  // namespace builder
 BSONCXX_INLINE_NAMESPACE_END
 }  // namespace bsoncxx
+
+#include <bsoncxx/config/postlude.hpp>

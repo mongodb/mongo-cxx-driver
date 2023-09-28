@@ -166,3 +166,5 @@ class MONGOCXX_API data_key {
 
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
+
+#include <mongocxx/config/postlude.hpp>

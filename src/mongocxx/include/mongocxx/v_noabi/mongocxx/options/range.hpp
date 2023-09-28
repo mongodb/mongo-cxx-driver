@@ -82,3 +82,5 @@ class MONGOCXX_API range {
 
 MONGOCXX_INLINE_NAMESPACE_END
 }  // namespace mongocxx
+
+#include <mongocxx/config/postlude.hpp>
