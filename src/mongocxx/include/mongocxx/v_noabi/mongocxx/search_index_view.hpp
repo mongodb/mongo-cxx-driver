@@ -6,6 +6,7 @@
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <mongocxx/cursor.hpp>
+#include <mongocxx/options/aggregate.hpp>
 #include <mongocxx/search_index_model.hpp>
 
 #include <mongocxx/config/prelude.hpp>

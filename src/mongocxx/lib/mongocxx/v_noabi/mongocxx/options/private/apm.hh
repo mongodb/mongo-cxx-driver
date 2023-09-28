@@ -113,6 +113,7 @@ static void heartbeat_succeeded(const mongoc_apm_server_heartbeat_succeeded_t* e
     exception_guard(__func__, [&] { context->heartbeat_succeeded()(succeeded_event); });
 }
 
+BSON_MAYBE_UNUSED
 static apm_unique_callbacks make_apm_callbacks(const apm& apm_opts) {
     mongoc_apm_callbacks_t* callbacks = libmongoc::apm_callbacks_new();
 
