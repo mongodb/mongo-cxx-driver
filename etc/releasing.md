@@ -295,7 +295,7 @@ $ cd mongo-cxx-driver/extras/docker/redhat-ubi-9.2
 $ make nocachebuild
 ```
 
-Then, test the image that it works as expected:
+Then, test that the image works as expected:
 ```
 $ cd redhat-ubi-9.2/
 $ make test
