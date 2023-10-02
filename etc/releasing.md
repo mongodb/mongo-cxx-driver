@@ -275,7 +275,7 @@ We maintain the docker images found in the
 Docker Hub repo.
 
 To publish a new image here, you will need the password for the following
-service account: `svcmongodbcxxdriverdockerbo219`. Kevin Albertson can share
+service account: `svcmongodbcxxdriverdockerbo219`. The team lead can share
 this password with you as needed.
 
 First, in `mongo-cxx-driver/extras/docker/generate.py` bump the following
