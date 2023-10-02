@@ -18,6 +18,8 @@
 
 #include <bsoncxx/string/to_string.hpp>
 
+#include <mongocxx/config/prelude.hpp>
+
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 namespace entity {

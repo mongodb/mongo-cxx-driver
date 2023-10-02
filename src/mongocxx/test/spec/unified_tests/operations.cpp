@@ -26,6 +26,8 @@
 #include <mongocxx/test/spec/monitoring.hh>
 #include <third_party/catch/include/catch.hpp>
 
+#include <mongocxx/config/prelude.hpp>
+
 namespace mongocxx {
 MONGOCXX_INLINE_NAMESPACE_BEGIN
 
