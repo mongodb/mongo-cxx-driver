@@ -285,6 +285,10 @@ version numbers as appropriate:
 - MONGOCRYPT_VERSION
 
 Next, build the image. Prefer doing a no-cache-build with a clean docker cache.
+
+> As of now, company policy only allows for redhat-ubi images, so only build and
+> push the redhat-ubi based image.
+
 ```
 $ yes | docker system prune -a
 $ cd mongo-cxx-driver/extras/docker/redhat-ubi-9.2
