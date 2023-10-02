@@ -263,7 +263,7 @@ class client_encryption::impl {
         // refers to this as "nRemoved". Make a new document with the field name
         // changed to get around this.
         //
-        // See: mongo-cxx-driver/src/mongocxx/result/bulk_write.cpp
+        // See: mongocxx/v_noabi/mongocxx/result/bulk_write.cpp
         // Function: std::int32_t bulk_write::deleted_count() const {
         //     return view()["nRemoved"].get_int32();
         // }

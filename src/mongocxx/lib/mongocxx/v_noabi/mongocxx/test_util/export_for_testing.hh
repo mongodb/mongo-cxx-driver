@@ -16,8 +16,8 @@
 
 #include <mongocxx/config/private/prelude.hh>
 
-// See comment at src/bsoncxx/test_util/export_for_testing.hh for an explanation of the purpose of
-// this header.
+// See src/bsoncxx/lib/bsoncxx/v_noabi/bsoncxx/test_util/export_for_testing.hh for an explanation of
+// the purpose of this header.
 
 #ifdef MONGOCXX_TESTING
 #define MONGOCXX_TEST_API MONGOCXX_API
