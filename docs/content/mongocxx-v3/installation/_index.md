@@ -46,14 +46,14 @@ $ cd vcpkg
 $ ./bootstrap-vcpkg.sh
 ```
 
-Install the driver.
-```
-$ ./vcpkg install mongo-cxx-driver
-```
-
 Optionally, to install with Visual Studio integration:
 ```
 vcpkg integrate install
+```
+
+Install the driver.
+```
+$ ./vcpkg install mongo-cxx-driver
 ```
 
 You can find the header files in:
