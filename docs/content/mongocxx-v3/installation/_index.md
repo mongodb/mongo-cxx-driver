@@ -51,7 +51,7 @@ Install the driver.
 $ ./vcpkg install mongo-cxx-driver
 ```
 
-Alternatively, to install with Visual Studio integration:
+Optionally, to install with Visual Studio integration:
 ```
 vcpkg integrate install
 ```
