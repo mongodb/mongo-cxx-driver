@@ -36,6 +36,59 @@ The Mongo C++ driver is available in the following package managers.
 - [Vcpkg](https://vcpkg.io/) (search for mongo-cxx-driver)
 - [Conan](https://conan.io/center/recipes/mongo-cxx-driver)
 
+### Vcpkg Install Instructions
+
+If you do not already have Vcpkg installed, install it with the following
+command:
+```
+$ git clone https://github.com/Microsoft/vcpkg.git
+$ cd vcpkg
+$ ./bootstrap-vcpkg.sh
+```
+
+Install the driver.
+```
+$ ./vcpkg install mongo-cxx-driver
+```
+
+You can find the header files in:
+```
+vcpkg/installed/<CPU ARCHITECTURE>-<OPERATING SYSTEM>/include/
+```
+
+The library files are in:
+```
+vcpkg/installed/<CPU ARCHITECTURE>-<OPERATING SYSTEM>/lib/
+```
+
+### Conan Install Instructions
+
+If you do not already have Conan installed, then install it and run the Conan
+initalization command below:
+```
+$ pip install conan
+$ conan profile detect --force
+```
+
+Add the following to your `conanfile.txt`
+```
+[requires]
+mongo-cxx-driver/3.8.0
+[generators]
+CMakeDeps
+CMakeToolchain
+```
+
+Install the driver via Conan, and build your project:
+```
+$ conan install conanfile.txt --output-folder=build --build=missing
+$ cmake \
+	-B build \
+	-DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake \
+	-DCMAKE_BUILD_TYPE=Release
+$ cmake --build build
+```
+
 ## Docker Image
 
 You can find a pre-built docker image for the C++ driver in
