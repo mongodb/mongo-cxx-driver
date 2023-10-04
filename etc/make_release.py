@@ -126,7 +126,7 @@ def release(jira_creds_file,
 
     # Read Jira credentials and GitHub token first, to check that
     # user has proper credentials before embarking on lengthy builds.
-    jira_options = {'server': 'https://jira.mongodb.com'}
+    jira_options = {'server': 'https://jira.mongodb.org'}
     jira_oauth_dict = read_jira_oauth_creds(jira_creds_file)
     auth_jira = JIRA(jira_options, oauth=jira_oauth_dict)
 
