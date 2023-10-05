@@ -42,11 +42,12 @@ import os
 import subprocess
 import sys
 import tempfile
+from typing import Iterable
 
-import click # pip install Click
-from git import Repo # pip install GitPython
-from github import Github # pip install PyGithub
-from jira import JIRA # pip install jira
+import click  # pip install Click
+from git import Repo  # pip install GitPython
+from github import Github  # pip install PyGithub
+from jira import JIRA, resources  # pip install jira
 import oauthlib.oauth1
 
 if sys.version_info < (3, 0, 0):
@@ -454,21 +455,26 @@ def get_all_issues_for_version(auth_jira, release_version):
             .format(str(CXX_PROJ_ID), release_version)
     return auth_jira.search_issues(jql_query, maxResults=0)
 
-def all_issues_closed(issues):
+def all_issues_closed(issues: Iterable[resources.Issue]) -> bool:
     """
     Check to ensure that all issues are 'Closed'.  Produce appropriate error
     message(s) and return False if any open issues are found.
     """
 
-    status_set = set(i.fields.status.name for i in issues)
+    open_nonrelease_tickets = {
+        iss
+        for iss in issues
+        # Don't include "release", as those are open until the release is done
+        if "release" not in iss.fields.labels
+        # Only include issues that are not marked as "closed"
+        and iss.fields.status.name != "Closed"
+    }
 
-    if status_set.difference({'Closed'}):
-        msg = 'Open tickets found.  Cannot release!'
-        msg += '\nThe following open tickets were found:'
+    if open_nonrelease_tickets:
+        msg = "Open tickets found.  Cannot release!"
+        msg += "\nThe following open tickets were found:"
         click.echo(msg, err=True)
-        open_filter = lambda x: x.fields.status.name != 'Closed'
-        open_issues = [i.key for i in filter(open_filter, issues)]
-        click.echo('{}'.format(", ".join(open_issues)), err=True)
+        click.echo("\n".join(f" - {iss.key}" for iss in open_nonrelease_tickets), err=True)
         return False
 
     return True
