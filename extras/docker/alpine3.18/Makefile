@@ -7,17 +7,17 @@ DOCKER=docker
 .PHONY: build
 build:
 	$(DOCKER) build . \
-		-t mongo-cxx-driver:$(MONGOCXX_VERSION)-alpine3.18
+		-t mongodb/mongo-cxx-driver:$(MONGOCXX_VERSION)-alpine3.18
 
 .PHONY: nocachebuild
 nocachebuild:
 	$(DOCKER) build . \
 		--no-cache \
-		-t mongo-cxx-driver:$(MONGOCXX_VERSION)-alpine3.18
+		-t mongodb/mongo-cxx-driver:$(MONGOCXX_VERSION)-alpine3.18
 
 .PHONY: run
 run: | $(filter nocachebuild build, $(MAKECMDGOALS))
-	$(DOCKER) run --rm -it mongo-cxx-driver:$(MONGOCXX_VERSION)-alpine3.18
+	$(DOCKER) run --rm -it mongodb/mongo-cxx-driver:$(MONGOCXX_VERSION)-alpine3.18
 
 .PHONY: test
 test: | $(filter nocachebuild build, $(MAKECMDGOALS))

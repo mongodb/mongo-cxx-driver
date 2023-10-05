@@ -7,17 +7,17 @@ DOCKER=docker
 .PHONY: build
 build:
 	$(DOCKER) build . \
-		-t mongo-cxx-driver:$(MONGOCXX_VERSION)-bookworm
+		-t mongodb/mongo-cxx-driver:$(MONGOCXX_VERSION)-bookworm
 
 .PHONY: nocachebuild
 nocachebuild:
 	$(DOCKER) build . \
 		--no-cache \
-		-t mongo-cxx-driver:$(MONGOCXX_VERSION)-bookworm
+		-t mongodb/mongo-cxx-driver:$(MONGOCXX_VERSION)-bookworm
 
 .PHONY: run
 run: | $(filter nocachebuild build, $(MAKECMDGOALS))
-	$(DOCKER) run --rm -it mongo-cxx-driver:$(MONGOCXX_VERSION)-bookworm
+	$(DOCKER) run --rm -it mongodb/mongo-cxx-driver:$(MONGOCXX_VERSION)-bookworm
 
 .PHONY: test
 test: | $(filter nocachebuild build, $(MAKECMDGOALS))
