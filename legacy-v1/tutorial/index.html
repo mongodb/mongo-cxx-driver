@@ -1574,11 +1574,11 @@
 <p>This is an introduction to usage of the MongoDB database from a C++ program.</p>
 <p>NOTE: this tutorial is for the legacy and 26compat versions of the C++ driver.</p>
 <p>First, install MongoDB – see the
-<a href="https://docs.mongodb.com/manual/installation/">installation</a> page for
+<a href="https://www.mongodb.com/docs/manual/installation/">installation</a> page for
 details.</p>
-<p>Next, you may wish to take a look at the <a href="https://docs.mongodb.com/manual/">MongoDB
+<p>Next, you may wish to take a look at the <a href="https://www.mongodb.com/docs/manual/">MongoDB
 Manual</a> for a language independent look at
-how to use MongoDB. Also, we suggest some basic familiarity with the <a href="https://docs.mongodb.com/manual/mongo/">mongo
+how to use MongoDB. Also, we suggest some basic familiarity with the <a href="https://www.mongodb.com/docs/mongodb-shell/">mongo
 shell</a> – the shell is the primary
 database administration tool and is useful for manually inspecting the
 contents of a database after your C++ program runs.</p>
@@ -1595,12 +1595,12 @@ instructions on how to properly initialize and terminate the driver:</p>
 <li><code>DBClientConnection</code> is the connection class for connecting to a single MongoDB database server (or mongos)</li>
 <li><code>DBClientReplicaSet</code> is the connection class for connecting to a replica set.</li>
 </ul>
-<p>See the <a href="http://mongodb.github.io/api/1.0.2/">API documentation</a> for
+<p>See the <a href="https://mongodb.github.io/api/1.0.2/">API documentation</a> for
 details on each of the above classes.</p>
 <h4 id="a-simple-program-that-connects-to-the-database">A simple program that connects to the database</h4>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;cstdlib&gt;</span><span style="color:#75715e">
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;iostream&gt;</span><span style="color:#75715e">
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&#34;mongo/client/dbclient.h&#34; // for the driver</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&#34;mongo/client/dbclient.h&#34;</span><span style="color:#75715e"> </span><span style="color:#75715e">// for the driver
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">void</span> <span style="color:#a6e22e">run</span>() {
 </span></span><span style="display:flex;"><span>  mongo<span style="color:#f92672">::</span>DBClientConnection c;
@@ -1680,7 +1680,7 @@ add an _id automatically if it is not included explicitly.</p>
 </span></span></span></code></pre></div><p>Get the full last error object:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>BSONObj DBClientWithCommands<span style="color:#f92672">::</span>getLastErrorDetailed();
 </span></span></code></pre></div><p>For an example, see <a href="https://github.com/mongodb/mongo-cxx-driver/blob/legacy/src/mongo/client/examples/simple_client_demo.cpp">this demo</a>.</p>
-<p>For additional background information on getLastError see the <a href="https://docs.mongodb.com/manual/core/write-operations/#write-concern">write
+<p>For additional background information on getLastError see the <a href="https://www.mongodb.com/docs/manual/core/write-operations/#write-concern">write
 operations documentation</a>.</p>
 <h3 id="count">Count</h3>
 <p>Let’s now fetch all objects from the persons collection, and display them. We’ll also show here how to use count().</p>
@@ -1734,7 +1734,7 @@ creation on the server, it will cause an extra network round-trip and
 server operation for each call. It&rsquo;s best practice to use this method
 sparingly, for example once at the beginning of your code, or perhaps in an
 external setup script that configures the database for your application.
-For more information about indexing, see the <a href="https://docs.mongodb.com/manual/indexes/">MongoDB Indexing
+For more information about indexing, see the <a href="https://www.mongodb.com/docs/manual/indexes/">MongoDB Indexing
 docs</a>.</p>
 <h3 id="sorting">Sorting</h3>
 <p>Let’s now make the results from printIfAge sorted alphabetically by name.
@@ -1758,7 +1758,7 @@ following update in the mongo shell:</p>
 </span></span><span style="display:flex;"><span>);
 </span></span></code></pre></div><p>The <code>update()</code> method can be used to modify specific fields, replace the
 entire existing document, insert new documents or update multiple
-documents.  In the MongoDB Manual, examples are provided in the <a href="https://docs.mongodb.com/manual/tutorial/modify-documents/">Modify
+documents.  In the MongoDB Manual, examples are provided in the <a href="https://www.mongodb.com/docs/manual/tutorial/modify-documents/">Modify
 Documents Tutorial</a>.</p>
 <h3 id="arrays">Arrays</h3>
 <p>A simple example illustrating usage of BSON arrays and the <code>$nin</code> operator
@@ -1767,9 +1767,9 @@ is available <a href="https://github.com/mongodb/mongo-cxx-driver/blob/legacy/sr
 <p>This overview just touches on the basics of using MongoDB from C++. There
 are many more capabilities. For further exploration:</p>
 <ul>
-<li>See the language-independent <a href="https://docs.mongodb.com/manual/">MongoDB Manual</a></li>
-<li>Experiment with the <a href="https://docs.mongodb.com/manual/mongo/">mongo shell</a></li>
-<li>Review the <a href="http://mongodb.github.io/api/1.0.2">API docs</a></li>
+<li>See the language-independent <a href="https://www.mongodb.com/docs/manual/">MongoDB Manual</a></li>
+<li>Experiment with the <a href="https://www.mongodb.com/docs/mongodb-shell/">mongo shell</a></li>
+<li>Review the <a href="https://mongodb.github.io/api/1.0.2">API docs</a></li>
 </ul>
 
 

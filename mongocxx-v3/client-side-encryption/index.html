@@ -1350,12 +1350,12 @@
 
 <h1>Client-Side Field Level Encryption with mongocxx</h1>
 <h2 id="client-side-field-level-encryption">Client-Side Field Level Encryption</h2>
-<p>New in MongoDB 4.2 <a href="https://docs.mongodb.com/drivers/use-cases/client-side-field-level-encryption-guide">Client-Side Field Level Encryption (CSFLE)</a> allows administrators and developers to encrypt specific data fields in addition to other MongoDB encryption features.</p>
+<p>New in MongoDB 4.2 <a href="https://www.mongodb.com/docs/drivers/use-cases/client-side-field-level-encryption-guide">Client-Side Field Level Encryption (CSFLE)</a> allows administrators and developers to encrypt specific data fields in addition to other MongoDB encryption features.</p>
 <p>With CSFLE, developers can encrypt fields client side without any server-side configuration or directives. Client-Side Field Level Encryption supports workloads where applications must guarantee that unauthorized parties, including server administrators, cannot read the encrypted data.</p>
-<p>For an overview of CSFLE, please read <a href="https://docs.mongodb.com/manual/core/security-client-side-encryption/">the official MongoDB documentation in the manual</a>.</p>
+<p>For an overview of CSFLE, please read <a href="https://www.mongodb.com/docs/manual/core/security-client-side-encryption/">the official MongoDB documentation in the manual</a>.</p>
 <h2 id="installation">Installation</h2>
 <h3 id="libmongocrypt">libmongocrypt</h3>
-<p>Client-Side Field Level Encryption relies on a C library called <code>libmongocrypt</code> to do the heavy lifting encryption work. This dependency is managed by the C driver.  As long as the C driver installation is 1.16.0 or higher, and has been compiled with Client-Side Field Level Encryption support, this dependency should be managed internally.  See the C driver&rsquo;s <a href="http://mongoc.org/libmongoc/current/using_client_side_encryption.html">Using Client-Side Field Level Encryption</a> for more information.</p>
+<p>Client-Side Field Level Encryption relies on a C library called <code>libmongocrypt</code> to do the heavy lifting encryption work. This dependency is managed by the C driver.  As long as the C driver installation is 1.16.0 or higher, and has been compiled with Client-Side Field Level Encryption support, this dependency should be managed internally.  See the C driver&rsquo;s <a href="https://mongoc.org/libmongoc/current/client-side-field-level-encryption.html">Using Client-Side Field Level Encryption</a> for more information.</p>
 <h3 id="mongocryptd">mongocryptd</h3>
 <p>Automatic CSFLE relies upon a new binary called <code>mongocryptd</code> running as a daemon while the driver operates.  This binary is only available with MongoDB Enterprise.</p>
 <p><code>mongocryptd</code> can either be started separately from the driver, or left to spawn automatically when encryption is used.</p>
@@ -1376,7 +1376,7 @@
 <p>Automatic client-side field level encryption requires MongoDB 4.2 enterprise or a MongoDB 4.2 Atlas cluster. The community version of the server supports automatic decryption as well as explicit client-side field level encryption.</p>
 <!-- raw HTML omitted -->
 <h3 id="providing-local-automatic-encryption-rules">Providing Local Automatic Encryption Rules</h3>
-<p>The following example shows how to specify automatic encryption rules via the schema_map option. The automatic encryption rules are expressed using a <a href="https://docs.mongodb.com/manual/reference/security-client-side-automatic-json-schema/">strict subset of the JSON Schema syntax</a>.</p>
+<p>The following example shows how to specify automatic encryption rules via the schema_map option. The automatic encryption rules are expressed using a <a href="https://www.mongodb.com/docs/manual/reference/security-client-side-automatic-json-schema/">strict subset of the JSON Schema syntax</a>.</p>
 <p>Supplying a <code>schema_map</code> provides more security than relying on JSON Schemas obtained from the server. It protects against a malicious server advertising a false JSON Schema, which could trick the client into sending unencrypted data that should be encrypted.</p>
 <p>JSON Schemas supplied in the <code>schema_map</code> only apply to configuring automatic client-side field level encryption. Other validation rules in the JSON schema will not be enforced by the driver and will result in an error.</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#75715e">//
@@ -1400,7 +1400,7 @@
 </span></span></span></code></pre></div><p>Please see <a href="https://github.com/mongodb/mongo-cxx-driver/blob/master/examples/mongocxx/automatic_client_side_field_level_encryption.cpp"><code>examples/mongocxx/automatic_client_side_field_level_encryption.cpp</code></a> for a full example of how to set a json schema for automatic encryption.</p>
 <h3 id="server-side-field-level-encryption-enforcement">Server-Side Field Level Encryption Enforcement</h3>
 <p>The MongoDB 4.2 server supports using schema validation to enforce encryption of specific fields in a collection. This schema validation will prevent an application from inserting unencrypted values for any fields marked with the <code>&quot;encrypt&quot;</code> JSON schema keyword.</p>
-<p>It is possible to set up automatic client-side field level encryption using the <code>mongocxx::client_encryption</code> to create a new encryption data key and create a collection with the <a href="https://docs.mongodb.com/manual/reference/security-client-side-automatic-json-schema/">Automatic Encryption JSON Schema Syntax</a>.</p>
+<p>It is possible to set up automatic client-side field level encryption using the <code>mongocxx::client_encryption</code> to create a new encryption data key and create a collection with the <a href="https://www.mongodb.com/docs/manual/reference/security-client-side-automatic-json-schema/">Automatic Encryption JSON Schema Syntax</a>.</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#75715e">// Please see the linked example below for full json_schema construction.
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>bsoncxx<span style="color:#f92672">::</span>document<span style="color:#f92672">::</span>value json_schema{};
 </span></span><span style="display:flex;"><span>

@@ -1325,7 +1325,7 @@
 
 
 <h1>Configuring the mongocxx driver</h1>
-<p>In the mongocxx driver, most configuration is done via the <a href="https://docs.mongodb.com/manual/reference/connection-string/">connection
+<p>In the mongocxx driver, most configuration is done via the <a href="https://www.mongodb.com/docs/manual/reference/connection-string/">connection
 URI</a>.  Some
 additional connection options are possible via the
 <a href="https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1options_1_1client.html
@@ -1385,7 +1385,7 @@ mechanism as &ldquo;SCRAM-SHA-1&rdquo;:</p>
 <p>The MONGODB-CR authMechanism is deprecated and will no longer function in MongoDB 4.0. Instead, specify no authMechanism and the driver
 will use an authentication mechanism compatible with your server.</p>
 <h3 id="x509">X.509</h3>
-<p>The <a href="https://www.mongodb.org/dochub/core/x509">X.509</a>
+<p>The <a href="https://www.mongodb.com/docs/manual/core/security-x.509/">X.509</a>
 mechanism authenticates a user whose name is derived from the distinguished
 subject name of the X.509 certificate presented by the driver during TLS
 negotiation. This authentication method requires the use of TLS
@@ -1400,7 +1400,7 @@ and certificate, and that has TLS enabled:</p>
 </span></span><span style="display:flex;"><span><span style="color:#66d9ef">auto</span> client <span style="color:#f92672">=</span> mongocxx<span style="color:#f92672">::</span>client{
 </span></span><span style="display:flex;"><span>    uri{<span style="color:#e6db74">&#34;mongodb://host1/?authMechanism=MONGODB-X509&amp;tlsCertificateFile=client.pem&amp;tls=true&#34;</span>}};
 </span></span></code></pre></div><p>See the MongoDB server
-<a href="https://www.mongodb.org/dochub/core/x509-subject-name">X.509 tutorial</a>
+<a href="https://www.mongodb.com/docs/manual/tutorial/configure-x509-client-authentication/">X.509 tutorial</a>
 for more information about determining the subject name from the
 certificate.</p>
 <p>The PEM file can also be specified using the <a href="https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1options_1_1tls.html
@@ -1408,7 +1408,7 @@ certificate.</p>
 <h3 id="kerberos-gssapi">Kerberos (GSSAPI)</h3>
 <p><a href="https://www.mongodb.com/products/mongodb-enterprise">MongoDB Enterprise</a>
 supports proxy authentication through Kerberos service. To create a
-credential of type <a href="https://www.mongodb.org/dochub/core/kerberos">Kerberos (GSSAPI)</a>
+credential of type <a href="https://www.mongodb.com/docs/manual/core/kerberos/">Kerberos (GSSAPI)</a>
 use a connection string with the username and realm in the URI as well as
 a parameter specifying the authentication mechanism as &ldquo;GSSAPI&rdquo;:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;mongocxx/client.hpp&gt;</span><span style="color:#75715e">
@@ -1418,7 +1418,7 @@ a parameter specifying the authentication mechanism as &ldquo;GSSAPI&rdquo;:</p>
 </span></span><span style="display:flex;"><span>    uri{<span style="color:#e6db74">&#34;mongodb://username%40REALM.COM@host1/?authMechanism=GSSAPI&#34;</span>}};
 </span></span></code></pre></div><p>Note that the &ldquo;@&rdquo; symbol in the URI must be escaped to &ldquo;%40&rdquo; as shown in the example above.</p>
 <h3 id="ldap">LDAP</h3>
-<p><a href="http://www.mongodb.com/products/mongodb-enterprise">MongoDB Enterprise</a>
+<p><a href="https://www.mongodb.com/products/mongodb-enterprise">MongoDB Enterprise</a>
 supports proxy authentication through a Lightweight Directory Access
 Protocol (LDAP) service. To create a credential of type LDAP use a
 connection string specifying the user as well as parameters specifying
@@ -1447,6 +1447,11 @@ scope.</p>
 </span></span><span style="display:flex;"><span>    <span style="color:#75715e">// The client is returned to the pool when it goes out of scope.
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
 </span></span></code></pre></div><p>See <a href="../connection-pools">connection pool documentation</a> for more details.</p>
+<h2 id="compressing-data-to-and-from-mongodb">Compressing data to and from MongoDB</h2>
+<p>MongoDB 3.4 added Snappy compression support, while zlib compression was added
+in 3.6, and zstd compression in 4.2.</p>
+<p>Data compression can be enabled with the appropriate URI options, as documented
+in <a href="https://mongoc.org/libmongoc/current/data-compression.html">the C driver</a>.</p>
 
 
 
@@ -1491,6 +1496,7 @@ scope.</p>
       </ul>
     </li>
     <li><a href="#configuring-a-connection-pool">Configuring a connection pool</a></li>
+    <li><a href="#compressing-data-to-and-from-mongodb">Compressing data to and from MongoDB</a></li>
   </ul>
 </nav>
   </div>

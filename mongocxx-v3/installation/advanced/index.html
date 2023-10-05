@@ -1310,6 +1310,32 @@
 </span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DBSONCXX_OUTPUT_BASENAME<span style="color:#f92672">=</span>custom_bsoncxx        <span style="color:#ae81ff">\
 </span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DMONGOCXX_OUTPUT_BASENAME<span style="color:#f92672">=</span>custom_mongocxx
 </span></span></code></pre></div><p>The above command would produce libraries named <code>libcustom_bsoncxx.so</code> and <code>libcustom_mongocxx.so</code> (or with the extension appropriate for the build platform).  Those libraries could be placed in a standard system directory or in an alternate location and could be linked to by specifying something like <code>-lcustom_mongocxx -lcustom_bsoncxx</code> on the linker command line (possibly adjusting the specific flags to those required by your linker).</p>
+<h2 id="installing-the-mongodb-c-driver">Installing the MongoDB C driver.</h2>
+<p>The mongocxx driver builds on top of the <a href="https://www.mongodb.com/docs/drivers/c/">MongoDB C driver</a>.</p>
+<p>The build of mongocxx-3.8.0 automatically downloads and installs the C driver if the C driver is not detected.
+To use an existing install of the C driver, set <code>CMAKE_PREFIX_PATH</code> to the directory containing the C driver install.</p>
+<ul>
+<li>For mongocxx-3.8.x, libmongoc 1.24.0 or later is required.</li>
+<li>For mongocxx-3.7.x, libmongoc 1.22.1 or later is required.</li>
+<li>For mongocxx-3.6.x, libmongoc 1.17.0 or later is required.</li>
+<li>For mongocxx-3.5.x, libmongoc 1.15.0 or later is required.</li>
+<li>For mongocxx-3.4.x, libmongoc 1.13.0 or later is required.</li>
+<li>For mongocxx-3.3.x, libmongoc 1.10.1 or later is required.</li>
+<li>For mongocxx-3.2.x, libmongoc 1.9.2 or later is required.</li>
+<li>For mongocxx-3.1.4+, libmongoc 1.7.0 or later is required.</li>
+<li>For mongocxx-3.1.[0-3], libmongoc 1.5.0 or later is required.</li>
+<li>For mongocxx-3.0.x, we recommend the last 1.4.x version of libmongoc</li>
+</ul>
+<p>Unless you know that your package manager offers a sufficiently recent version, you
+will need to download and build from the source code. Get a tarball from
+the <a href="https://github.com/mongodb/mongo-c-driver/releases">C Driver releases</a>
+page.</p>
+<p>Follow the instructions for building from a tarball at
+<a href="http://mongoc.org/libmongoc/current/installing.html">Installing libmongoc</a>.</p>
+<p>Industry best practices and some regulations require the use of TLS 1.1
+or newer. The MongoDB C Driver supports TLS 1.1 on Linux if OpenSSL is
+at least version 1.0.1. On macOS and Windows, the C Driver uses native
+TLS implementations that support TLS 1.1.</p>
 <h2 id="advanced-configuration-static-configurations">Advanced configuration (static configurations)</h2>
 <p>The following sub-sections detail advanced options for configuring the C++ driver and/or its
 dependencies as static libraries rather than the typical shared libraries.  These options will
@@ -1512,6 +1538,7 @@ directory by using the <code>-DLIBMONGOC_DIR</code> and <code>-DLIBBSON_DIR</cod
     <nav id="TableOfContents">
   <ul>
     <li><a href="#additional-options-for-integrators">Additional Options for Integrators</a></li>
+    <li><a href="#installing-the-mongodb-c-driver">Installing the MongoDB C driver.</a></li>
     <li><a href="#advanced-configuration-static-configurations">Advanced configuration (static configurations)</a>
       <ul>
         <li><a href="#configuring-with-mongocxx-32x-or-newer">Configuring with <code>mongocxx</code> 3.2.x or newer</a></li>
