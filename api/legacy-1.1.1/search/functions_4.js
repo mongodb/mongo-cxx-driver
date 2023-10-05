@@ -9,7 +9,7 @@ var searchData=
   ['dbclientreplicaset_6',['DBClientReplicaSet',['../classmongo_1_1DBClientReplicaSet.html#a21993bdf6cb273f0b7911384e1dc34fd',1,'mongo::DBClientReplicaSet']]],
   ['decouple_7',['decouple',['../classmongo_1_1DBClientCursor.html#ad10b2afa75b0be3b8d50212d8602afa5',1,'mongo::DBClientCursor']]],
   ['detachappender_8',['detachAppender',['../classmongo_1_1logger_1_1LogDomain.html#a8ec1ceb91a5e7384f943412ef8235468',1,'mongo::logger::LogDomain']]],
-  ['dimensionality_9',['dimensionality',['../classmongo_1_1geo_1_1Coordinates2D.html#a0e705269ce1392416af40f7f1dec80f3',1,'mongo::geo::Coordinates2D::dimensionality()'],['../classmongo_1_1geo_1_1Coordinates2DGeographic.html#a990aafbea2421d4a059b9f5f96ba6ad8',1,'mongo::geo::Coordinates2DGeographic::dimensionality()']]],
+  ['dimensionality_9',['dimensionality',['../classmongo_1_1geo_1_1Coordinates2DGeographic.html#a990aafbea2421d4a059b9f5f96ba6ad8',1,'mongo::geo::Coordinates2DGeographic::dimensionality()'],['../classmongo_1_1geo_1_1Coordinates2D.html#a0e705269ce1392416af40f7f1dec80f3',1,'mongo::geo::Coordinates2D::dimensionality()']]],
   ['distinct_10',['distinct',['../classmongo_1_1DBClientWithCommands.html#a18a9f8d39b1bd46753d0510fd0cc0490',1,'mongo::DBClientWithCommands']]],
   ['done_11',['done',['../classmongo_1_1BSONObjBuilder.html#ae1a64ea2deb887012b7d1d7c5ae47a79',1,'mongo::BSONObjBuilder']]],
   ['dosslhandshake_12',['doSSLHandshake',['../classmongo_1_1Socket.html#ae6c9349524d952655fc6b02af4957fb3',1,'mongo::Socket']]],

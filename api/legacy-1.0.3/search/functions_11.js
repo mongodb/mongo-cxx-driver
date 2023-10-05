@@ -15,12 +15,12 @@ var searchData=
   ['removeone_12',['removeOne',['../classmongo_1_1BulkUpdateBuilder.html#a0a25a551192a83a50cd3a3fee4d8b5d4',1,'mongo::BulkUpdateBuilder']]],
   ['repairdatabase_13',['repairDatabase',['../classmongo_1_1DBClientWithCommands.html#a4029b9b7cdc42e0ec62043aa1f7ea5f4',1,'mongo::DBClientWithCommands']]],
   ['replacefieldnames_14',['replaceFieldNames',['../classmongo_1_1BSONObj.html#a841976a28f2f8d074884aa321a2b32c6',1,'mongo::BSONObj']]],
-  ['replaceone_15',['replaceOne',['../classmongo_1_1BulkUpdateBuilder.html#ab3da681571886e161309bb588880a8a1',1,'mongo::BulkUpdateBuilder::replaceOne()'],['../classmongo_1_1BulkUpsertBuilder.html#ad317eaf891a28652a4107b199355249f',1,'mongo::BulkUpsertBuilder::replaceOne()']]],
-  ['replicasetmonitor_16',['ReplicaSetMonitor',['../classmongo_1_1ReplicaSetMonitor.html#aa31cc064ed6f97cca5190304bfb47812',1,'mongo::ReplicaSetMonitor::ReplicaSetMonitor(StringData name, const std::set&lt; HostAndPort &gt; &amp;seeds)'],['../classmongo_1_1ReplicaSetMonitor.html#a1c6fe3d573f781d6bfcaf2e048eea024',1,'mongo::ReplicaSetMonitor::ReplicaSetMonitor(const SetStatePtr &amp;initialState)']]],
+  ['replaceone_15',['replaceone',['../classmongo_1_1BulkUpdateBuilder.html#ab3da681571886e161309bb588880a8a1',1,'mongo::BulkUpdateBuilder::replaceOne()'],['../classmongo_1_1BulkUpsertBuilder.html#ad317eaf891a28652a4107b199355249f',1,'mongo::BulkUpsertBuilder::replaceOne()']]],
+  ['replicasetmonitor_16',['replicasetmonitor',['../classmongo_1_1ReplicaSetMonitor.html#aa31cc064ed6f97cca5190304bfb47812',1,'mongo::ReplicaSetMonitor::ReplicaSetMonitor(StringData name, const std::set&lt; HostAndPort &gt; &amp;seeds)'],['../classmongo_1_1ReplicaSetMonitor.html#a1c6fe3d573f781d6bfcaf2e048eea024',1,'mongo::ReplicaSetMonitor::ReplicaSetMonitor(const SetStatePtr &amp;initialState)']]],
   ['requiresconfirmation_17',['requiresConfirmation',['../classmongo_1_1WriteConcern.html#ac78a816701563793cb9dcece9139d23c',1,'mongo::WriteConcern']]],
   ['reservebytes_18',['reserveBytes',['../classmongo_1_1__BufBuilder.html#a20242870553ff3f6e13b1434a5fff0e2',1,'mongo::_BufBuilder']]],
   ['reset_19',['reset',['../classmongo_1_1DBClientReplicaSet.html#aeed17f91ea20fa29dafbbc213f591c59',1,'mongo::DBClientReplicaSet']]],
   ['reseterror_20',['resetError',['../classmongo_1_1DBClientWithCommands.html#ae979625de44e7cdafb2b1574a6eaf735',1,'mongo::DBClientWithCommands']]],
   ['run_21',['run',['../classmongo_1_1BackgroundJob.html#ada59e8d7e8e993947475a815ade1167c',1,'mongo::BackgroundJob']]],
-  ['runcommand_22',['runCommand',['../classmongo_1_1DBClientWithCommands.html#abf5d3460d983fbd491c081bb556c5b49',1,'mongo::DBClientWithCommands::runCommand()'],['../classmongo_1_1DBClientConnection.html#a0282d7967b2a3ef0d81684b1a1c072bf',1,'mongo::DBClientConnection::runCommand()']]]
+  ['runcommand_22',['runcommand',['../classmongo_1_1DBClientWithCommands.html#abf5d3460d983fbd491c081bb556c5b49',1,'mongo::DBClientWithCommands::runCommand()'],['../classmongo_1_1DBClientConnection.html#a0282d7967b2a3ef0d81684b1a1c072bf',1,'mongo::DBClientConnection::runCommand()']]]
 ];

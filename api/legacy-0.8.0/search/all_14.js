@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['tagset_0',['TagSet',['../classmongo_1_1TagSet.html',1,'mongo::TagSet'],['../classmongo_1_1TagSet.html#af5202471813ea9fc398b2bcc3b2f2664',1,'mongo::TagSet::TagSet()'],['../classmongo_1_1TagSet.html#aac03e27ded273ff3797d0b9276a633ea',1,'mongo::TagSet::TagSet(const BSONArray &amp;tags)']]],
+  ['tagset_0',['tagset',['../classmongo_1_1TagSet.html#af5202471813ea9fc398b2bcc3b2f2664',1,'mongo::TagSet::TagSet()'],['../classmongo_1_1TagSet.html#aac03e27ded273ff3797d0b9276a633ea',1,'mongo::TagSet::TagSet(const BSONArray &amp;tags)'],['../classmongo_1_1TagSet.html',1,'mongo::TagSet']]],
   ['tengen_1',['TenGen',['../namespacemongo.html#a2767df491e3691937fa3b671ad3248a8a1654be879bfd46407e9f7dd7f721c700',1,'mongo']]],
   ['threadlocalvalue_2',['ThreadLocalValue',['../classmongo_1_1ThreadLocalValue.html',1,'mongo']]],
   ['threadsafestring_3',['ThreadSafeString',['../classmongo_1_1ThreadSafeString.html',1,'mongo']]],

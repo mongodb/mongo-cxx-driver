@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['next_0',['next',['../classmongo_1_1DBClientCursor.html#a4832323eea432a34d055d0ea0b9fd1e9',1,'mongo::DBClientCursor::next()'],['../classmongo_1_1BSONObjIterator.html#ad1ef360c31c59326c812493ae9339260',1,'mongo::BSONObjIterator::next()'],['../classmongo_1_1StringSplitter.html#a06cdc5ef09d750efead333b72a07e73f',1,'mongo::StringSplitter::next()']]],
+  ['next_0',['next',['../classmongo_1_1BSONObjIterator.html#ad1ef360c31c59326c812493ae9339260',1,'mongo::BSONObjIterator::next()'],['../classmongo_1_1StringSplitter.html#a06cdc5ef09d750efead333b72a07e73f',1,'mongo::StringSplitter::next()'],['../classmongo_1_1DBClientCursor.html#a4832323eea432a34d055d0ea0b9fd1e9',1,'mongo::DBClientCursor::next()']]],
   ['nextsafe_1',['nextSafe',['../classmongo_1_1DBClientCursor.html#ab1b319c3a74d5d1b3b3df012e9892d9e',1,'mongo::DBClientCursor']]],
   ['nfields_2',['nFields',['../classmongo_1_1BSONObj.html#ae521ab2b7234888e1e419a45110f5ccf',1,'mongo::BSONObj']]],
   ['ninserted_3',['nInserted',['../classmongo_1_1WriteResult.html#aca55c28de33fc3f23104fc47b2a09600',1,'mongo::WriteResult']]],

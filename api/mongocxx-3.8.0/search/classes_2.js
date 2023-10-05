@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['change_5fstream_0',['change_stream',['../classmongocxx_1_1change__stream.html',1,'mongocxx::change_stream'],['../classmongocxx_1_1options_1_1change__stream.html',1,'mongocxx::options::change_stream']]],
+  ['change_5fstream_0',['change_stream',['../classmongocxx_1_1options_1_1change__stream.html',1,'mongocxx::options::change_stream'],['../classmongocxx_1_1change__stream.html',1,'mongocxx::change_stream']]],
   ['chunks_5fand_5fbytes_5foffset_1',['chunks_and_bytes_offset',['../structmongocxx_1_1gridfs_1_1chunks__and__bytes__offset.html',1,'mongocxx::gridfs']]],
   ['client_2',['client',['../classmongocxx_1_1client.html',1,'mongocxx::client'],['../classmongocxx_1_1options_1_1client.html',1,'mongocxx::options::client']]],
   ['client_5fencryption_3',['client_encryption',['../classmongocxx_1_1client__encryption.html',1,'mongocxx::client_encryption'],['../classmongocxx_1_1options_1_1client__encryption.html',1,'mongocxx::options::client_encryption']]],

@@ -8,7 +8,7 @@ var searchData=
   ['partialfilterexpression_5',['partialFilterExpression',['../classmongo_1_1IndexSpec.html#a584eae033a3d8bbcd804ecf15434fc2d',1,'mongo::IndexSpec']]],
   ['peek_6',['peek',['../classmongo_1_1DBClientCursor.html#afb51fd25035b1e5e140dd3cdfdb9b329',1,'mongo::DBClientCursor']]],
   ['peekerror_7',['peekError',['../classmongo_1_1DBClientCursor.html#ade02a00ef7a9c56cf8999558ad350447',1,'mongo::DBClientCursor']]],
-  ['point_8',['Point',['../classmongo_1_1geo_1_1Point.html#a325e1a996ab0d26833fa8ecab3757e98',1,'mongo::geo::Point::Point(const BSONObj &amp;bson)'],['../classmongo_1_1geo_1_1Point.html#a48c6613da3276bb2bcf87bbb2c29f9e8',1,'mongo::geo::Point::Point(const TCoordinates &amp;coords)']]],
-  ['polygon_9',['Polygon',['../classmongo_1_1geo_1_1Polygon.html#a7de6d562975917b78d8a8ddb405e5e34',1,'mongo::geo::Polygon::Polygon(const BSONObj &amp;bson)'],['../classmongo_1_1geo_1_1Polygon.html#a5f779fc604fe8d65f89c3b8823a4549e',1,'mongo::geo::Polygon::Polygon(const std::vector&lt; LineString&lt; TCoordinates &gt; &gt; &amp;linearRings)']]],
+  ['point_8',['point',['../classmongo_1_1geo_1_1Point.html#a325e1a996ab0d26833fa8ecab3757e98',1,'mongo::geo::Point::Point(const BSONObj &amp;bson)'],['../classmongo_1_1geo_1_1Point.html#a48c6613da3276bb2bcf87bbb2c29f9e8',1,'mongo::geo::Point::Point(const TCoordinates &amp;coords)']]],
+  ['polygon_9',['polygon',['../classmongo_1_1geo_1_1Polygon.html#a7de6d562975917b78d8a8ddb405e5e34',1,'mongo::geo::Polygon::Polygon(const BSONObj &amp;bson)'],['../classmongo_1_1geo_1_1Polygon.html#a5f779fc604fe8d65f89c3b8823a4549e',1,'mongo::geo::Polygon::Polygon(const std::vector&lt; LineString&lt; TCoordinates &gt; &gt; &amp;linearRings)']]],
   ['putback_10',['putBack',['../classmongo_1_1DBClientCursor.html#af7c9c00b52087844c9a67305339ecf9b',1,'mongo::DBClientCursor']]]
 ];
