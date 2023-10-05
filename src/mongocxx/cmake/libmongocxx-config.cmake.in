@@ -23,9 +23,12 @@ find_package(libbsoncxx @MONGOCXX_VERSION_NO_EXTRA@ REQUIRED)
 
 @PACKAGE_INIT@
 
-set_and_check(LIBMONGOCXX_INCLUDE_DIRS "${PACKAGE_PREFIX_DIR}/@PACKAGE_INCLUDE_INSTALL_DIRS@")
-
-set(LIBMONGOCXX_INCLUDE_DIRS ${LIBMONGOCXX_INCLUDE_DIRS} ${LIBBSONCXX_INCLUDE_DIRS})
+set(LIBMONGOCXX_INCLUDE_DIRS "")
+foreach(_INCLUDE_DIR @PACKAGE_INCLUDE_INSTALL_DIRS@)
+    set_and_check(_INCLUDE_DIR "${PACKAGE_PREFIX_DIR}/${_INCLUDE_DIR}")
+    list(APPEND LIBMONGOCXX_INCLUDE_DIRS "${_INCLUDE_DIR}")
+endforeach()
+list(APPEND LIBMONGOCXX_INCLUDE_DIRS ${LIBBSONCXX_INCLUDE_DIRS})
 
 # We want to provide an absolute path to the library and we know the
 # directory and the base name, but not the suffix, so we use CMake's

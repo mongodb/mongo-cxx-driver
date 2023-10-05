@@ -14,7 +14,6 @@
 
 #include <set>
 
-#include "helpers.hpp"
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/string/to_string.hpp>
 #include <bsoncxx/test_util/catch.hh>
@@ -29,6 +28,7 @@
 #include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/libmongoc.hh>
 #include <mongocxx/test_util/client_helpers.hh>
+#include <third_party/catch/include/helpers.hpp>
 
 namespace {
 using namespace mongocxx;

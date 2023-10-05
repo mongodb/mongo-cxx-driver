@@ -16,9 +16,8 @@ if(NOT BUILD_TESTING)
   set_property(DIRECTORY PROPERTY EXCLUDE_FROM_ALL TRUE)
 endif()
 
-include_directories(
-    ${MONGO_CXX_DRIVER_SOURCE_DIR}/src/third_party/catch/include
-)
+# Allow `#include <third_party/catch/include/...>`
+include_directories(${THIRD_PARTY_SOURCE_DIR}/..)
 
 file (GLOB src_bsoncxx_test_DIST_cpps RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.cpp)
 

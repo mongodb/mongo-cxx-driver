@@ -15,7 +15,6 @@
 #include <cstddef>
 #include <string>
 
-#include "helpers.hpp"
 #include <bsoncxx/test_util/catch.hh>
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
@@ -23,6 +22,7 @@
 #include <mongocxx/options/tls.hpp>
 #include <mongocxx/pool.hpp>
 #include <mongocxx/private/libmongoc.hh>
+#include <third_party/catch/include/helpers.hpp>
 
 #include <mongocxx/config/private/prelude.hh>
 
