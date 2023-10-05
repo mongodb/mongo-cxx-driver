@@ -268,6 +268,60 @@ The new branch should be continuously tested on Evergreen. Create a BUILD ticket
 to request the build team create new Evergreen project to track the
 `releases/vx.y` branch (see BUILD-5666 for an example).
 
+## Docker Image Build and Publish
+
+We maintain the docker images found in the
+[mongodb/mongo-cxx-driver](https://hub.docker.com/r/mongodb/mongo-cxx-driver/)
+Docker Hub repo.
+
+To publish a new image here, you will need the password for the following
+service account: `svcmongodbcxxdriverdockerbo219`. The team lead can share
+this password with you as needed.
+
+First, in `mongo-cxx-driver/extras/docker/generate.py` bump the following
+version numbers as appropriate:
+- MONGOCXX_VERSION
+- MONGOC_VERSION
+- MONGOCRYPT_VERSION
+
+Next, build the image. Prefer doing a no-cache-build with a clean docker cache.
+
+> As of now, company policy only allows for redhat-ubi images, so only build and
+> push the redhat-ubi based image.
+
+```
+$ yes | docker system prune -a
+$ cd mongo-cxx-driver/extras/docker/redhat-ubi-9.2
+$ make nocachebuild
+```
+
+Then, test that the image works as expected:
+```
+$ cd redhat-ubi-9.2/
+$ make test
+```
+
+If the test passes, you will see the following output with the version number
+of the driver that you are currently releasing:
+```
+mongo-cxx-driver version: 3.8.0
+THE redhat-ubi-9.2 IMAGE WORKS!
+```
+
+If the test passes, then check in the bumped version numbers, and get it merged
+into master.
+
+Once the Evergreen docker tests pass, login to the service account:
+```
+$ docker login --username svcmongodbcxxdriverdockerbo219
+Password: <INSERT PASSWORD HERE>
+```
+
+Finally, push the image:
+```
+$ docker push mongodb/mongo-cxx-driver:<VERSION NUMBER>-redhat-ubi-9.2
+```
+
 ## Handle Linux Distribution Packages
 
 Note: updates to these instructions should be synced to the corresponding C
