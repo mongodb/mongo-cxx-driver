@@ -184,11 +184,6 @@ pushed.
 - Edit `docs/content/_index.md` and `README.md` to match.
 - Edit `etc/generate-all-apidocs.pl` and add the new release version to the
   `@DOC_TAGS` array, following the established pattern.
-- Edit `docs/content/mongocxx-v3/installation/linux.md`,
-  `docs/content/mongocxx-v3/installation/macos.md` and
-  `docs/content/mongocxx-v3/installation/windows.md` and update `Step 1` to
-  reflect to libmongoc requirements. If the release was not a release candidate,
-  update `Step 3` to reflect the new latest stable version to download.
 - Commit these changes:
   `git commit -am "Prepare to generate r1.2.3 release documentation"`
 - Ensure you have `doxygen` and `hugo` installed and up to date.
