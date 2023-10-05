@@ -182,6 +182,14 @@ pushed.
   following the established pattern. If this is a minor release (x.y.0), revise
   the entire document as needed.
 - Edit `docs/content/_index.md` and `README.md` to match.
+- Edit the `Installing the MongoDB C driver` section of
+  `docs/content/mongocxx-v3/installation/advanced.md` to reflect libmongoc
+  requirements.
+- Edit `docs/content/mongocxx-v3/installation/linux.md`,
+  `docs/content/mongocxx-v3/installation/macos.md` and
+  `docs/content/mongocxx-v3/installation/windows.md`.
+   If the release was not a release candidate, update `Step 2` to reflect the
+   new latest stable version to download.
 - Edit `etc/generate-all-apidocs.pl` and add the new release version to the
   `@DOC_TAGS` array, following the established pattern.
 - Commit these changes:
@@ -212,14 +220,6 @@ pushed.
 - Checkout the master branch. Push the commit containing changes to `etc/` and
   `docs/`. This may require pushing the commit to a fork of the C++ Driver
   repository and creating a pull request.
-- Edit the `Installing the MongoDB C driver` section of
-  `docs/content/mongocxx-v3/installation/advanced.md` to reflect libmongoc
-  requirements.
-- Edit `docs/content/mongocxx-v3/installation/linux.md`,
-  `docs/content/mongocxx-v3/installation/macos.md` and
-  `docs/content/mongocxx-v3/installation/windows.md`.
-   If the release was not a release candidate, update `Step 2` to reflect the
-   new latest stable version to download.
 
 ## Homebrew
 This requires a macOS machine.
