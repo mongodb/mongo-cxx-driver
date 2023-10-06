@@ -41,6 +41,7 @@ if [ "${IS_PATCH}" = "true" ]; then
 fi
 if [ "${DEB_BUILD_PROFILES#*pkg.mongo-cxx-driver.mnmlstc}" != "${DEB_BUILD_PROFILES}" ]; then
    MNMLSTC_DEPS="git ca-certificates"
+   MNMLSTC_INCLUDE="-I/usr/include/bsoncxx/v_noabi/bsoncxx/third_party/mnmlstc "
 fi
 
 
@@ -66,10 +67,10 @@ sudo DEB_BUILD_PROFILES="${DEB_BUILD_PROFILES}" chroot ./unstable-chroot /bin/ba
   LANG=C /bin/bash -x ./debian/build_snapshot.sh && \
   debc ../*.changes && \
   dpkg -i ../*.deb && \
-  /usr/bin/g++ -I/usr/include/bsoncxx/v_noabi -I/usr/include/mongocxx/v_noabi -o runcommand_examples examples/mongocxx/mongodb.com/runcommand_examples.cpp -lmongocxx -lbsoncxx && \
-  /usr/bin/g++ -I/usr/include/bsoncxx/v_noabi -I/usr/include/mongocxx/v_noabi -o aggregation_examples examples/mongocxx/mongodb.com/aggregation_examples.cpp -lmongocxx -lbsoncxx && \
-  /usr/bin/g++ -I/usr/include/bsoncxx/v_noabi -I/usr/include/mongocxx/v_noabi -o index_examples examples/mongocxx/mongodb.com/index_examples.cpp -lmongocxx -lbsoncxx && \
-  /usr/bin/g++ -I/usr/include/bsoncxx/v_noabi -I/usr/include/mongocxx/v_noabi -o documentation_examples examples/mongocxx/mongodb.com/documentation_examples.cpp -lmongocxx -lbsoncxx )"
+  /usr/bin/g++ ${MNMLSTC_INCLUDE:-}-I/usr/include/bsoncxx/v_noabi -I/usr/include/mongocxx/v_noabi -o runcommand_examples examples/mongocxx/mongodb.com/runcommand_examples.cpp -lmongocxx -lbsoncxx && \
+  /usr/bin/g++ ${MNMLSTC_INCLUDE:-}-I/usr/include/bsoncxx/v_noabi -I/usr/include/mongocxx/v_noabi -o aggregation_examples examples/mongocxx/mongodb.com/aggregation_examples.cpp -lmongocxx -lbsoncxx && \
+  /usr/bin/g++ ${MNMLSTC_INCLUDE:-}-I/usr/include/bsoncxx/v_noabi -I/usr/include/mongocxx/v_noabi -o index_examples examples/mongocxx/mongodb.com/index_examples.cpp -lmongocxx -lbsoncxx && \
+  /usr/bin/g++ ${MNMLSTC_INCLUDE:-}-I/usr/include/bsoncxx/v_noabi -I/usr/include/mongocxx/v_noabi -o documentation_examples examples/mongocxx/mongodb.com/documentation_examples.cpp -lmongocxx -lbsoncxx )"
 
 [ -e ./unstable-chroot/tmp/mongo-cxx-driver/runcommand_examples ] || (echo "Example 'runcommand_examples' was not built!" ; exit 1)
 [ -e ./unstable-chroot/tmp/mongo-cxx-driver/aggregation_examples ] || (echo "Example 'aggregation_examples' was not built!" ; exit 1)
