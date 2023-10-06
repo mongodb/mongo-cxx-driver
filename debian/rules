@@ -46,12 +46,6 @@ override_dh_auto_install:
 	dh_auto_install -B$(CURDIR)/build
 	find $(CURDIR)/debian/tmp -type d -empty -delete
 	rm -f $(CURDIR)/debian/tmp/usr/share/mongo-cxx-driver/LICENSE
-ifneq (,$(filter pkg.mongo-cxx-driver.mnmlstc,$(DEB_BUILD_PROFILES)))
-	# Drop MNMLSTC headers in a location where dh_install will pick them up
-	mv $(CURDIR)/debian/tmp-mnmlstc/usr/include/bsoncxx/v_noabi/bsoncxx/third_party \
-	   $(CURDIR)/debian/tmp/usr/include/bsoncxx/v_noabi/bsoncxx/
-	rm -rf $(CURDIR)/debian/tmp-mnmlstc
-endif
 
 override_dh_auto_test:
 	# do nothing
