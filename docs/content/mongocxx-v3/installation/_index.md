@@ -68,6 +68,8 @@ vcpkg/installed/<CPU ARCHITECTURE>-<OPERATING SYSTEM>/lib/
 
 ### Conan Install Instructions
 
+Package Specifier: `mongo-cxx-driver/3.8.0`
+
 If you do not already have Conan installed, then install it and run the Conan
 initalization command below:
 ```
