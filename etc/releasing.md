@@ -74,21 +74,22 @@ pip install -r etc/requirements.txt
 
 ## Tag the release
 
-If doing a minor release (e.g. releasing r3.8.0), stay on the master branch. You
-will create a new `releases/v3.8` branch later in the instructions. If doing a
-patch release (e.g. releasing r3.7.3), check out the corresponding release
-branch, which should be the existing `releases/v3.7` branch.
+If doing a minor release (e.g. releasing r1.2.0, with a zero patch component),
+stay on the master branch. You will create a new `releases/vX.Y` branch later in
+the instructions. If doing a patch release (e.g. releasing rX.Y.Z with non-zero
+`Z`), check out the corresponding release branch, which should be an existing
+`releases/vX.Y` branch.
 
 Create a tag for the commit to serve as the release (or release candidate):
 
 ```
-git tag r3.8.0
+git tag r1.2.3
 ```
 
 ## Run make_release.py
 
 `make_release.py` creates the distribution tarball
-(e.g. mongo-cxx-driver-r3.8.0.tar.gz), interacts with Jira, and drafts the
+(e.g. mongo-cxx-driver-r1.2.3.tar.gz), interacts with Jira, and drafts the
 release on GitHub.
 
 To see all available options, run with `--help`
@@ -113,7 +114,7 @@ python ./etc/make_release.py \
     --dry-run \
     --jira-creds-file ~/.secrets/jira_creds.txt \
     --github-token-file ~/.secrets/github_token.txt \
-    r3.8.0 
+    r1.2.3
 ```
 
 If all goes well, run the command again without `--dry-run`, which should build
@@ -130,15 +131,15 @@ follows:
 - Use `--skip-distcheck` to bypass time consuming checks when building the
   distribution tarball.
 - If the script succeeded at creating the distribution tarball, pass it directly
-  with `--dist-file ./build/mongo-cxx-driver-r3.8.0.tar.gz`.
+  with `--dist-file ./build/mongo-cxx-driver-r1.2.3.tar.gz`.
 
 ## Push the tag
 
 Review the build output and, assuming the distcheck target is successful, push
-the tag:
+the tag into the main remote:
 
 ```
-git push origin r3.8.0
+git push git@github.com:mongodb/mongo-cxx-driver.git refs/tags/r1.2.3
 ```
 
 ### Release the Version in GitHub
@@ -167,7 +168,7 @@ to the repo:
 
 ```
 git checkout releases/stable
-git reset --hard r3.8.0
+git reset --hard r1.2.3
 git push -f origin releases/stable
 ```
 
@@ -181,15 +182,18 @@ pushed.
   following the established pattern. If this is a minor release (x.y.0), revise
   the entire document as needed.
 - Edit `docs/content/_index.md` and `README.md` to match.
-- Edit `etc/generate-all-apidocs.pl` and add the new release version to the
-  `@DOC_TAGS` array, following the established pattern.
+- Edit the `Installing the MongoDB C driver` section of
+  `docs/content/mongocxx-v3/installation/advanced.md` to reflect libmongoc
+  requirements.
 - Edit `docs/content/mongocxx-v3/installation/linux.md`,
   `docs/content/mongocxx-v3/installation/macos.md` and
-  `docs/content/mongocxx-v3/installation/windows.md` and update `Step 1` to
-  reflect to libmongoc requirements. If the release was not a release candidate,
-  update `Step 3` to reflect the new latest stable version to download.
+  `docs/content/mongocxx-v3/installation/windows.md`.
+   If the release was not a release candidate, update `Step 2` to reflect the
+   new latest stable version to download.
+- Edit `etc/generate-all-apidocs.pl` and add the new release version to the
+  `@DOC_TAGS` array, following the established pattern.
 - Commit these changes:
-  `git commit -am "Prepare to generate r3.8.0 release documentation"`
+  `git commit -am "Prepare to generate r1.2.3 release documentation"`
 - Ensure you have `doxygen` and `hugo` installed and up to date.
 - Run `git clean -dxf` to clear out all extraneous files.
 - Configure with `cmake` in the `build` directory as you usually would.
@@ -206,27 +210,19 @@ pushed.
   - `cmake --build ./build --target doxygen-deploy`
 - If the release was not a release candidate, update symlinks
   - Check out the `gh-pages` branch and git pull the deployed docs.
-  - Update the `api/mongocxx-v3` symlink to point to the newly released
-    version. If a major version bump has occurred, revise the symlink structure
-    as needed. Make sure `current` always points to a symlink tracking the
-    latest stable release branch.
+  - Update the `api/mongocxx-v3` symlink to point to the newly released version.
+    If a minor version bump has occurred, revise the symlink structure as
+    needed. Make sure `current` always points to a symlink tracking the latest
+    stable release branch.
   - Commit and push the symlink change:
-    `git commit -am "Update symlink for r3.8.0"`
+    `git commit -am "Update symlink for r1.2.3"`
 - Wait a few minutes and verify mongocxx.org has updated.
 - Checkout the master branch. Push the commit containing changes to `etc/` and
   `docs/`. This may require pushing the commit to a fork of the C++ Driver
   repository and creating a pull request.
-- Edit the `Installing the MongoDB C driver` section of
-  `docs/content/mongocxx-v3/installation/advanced.md` to reflect libmongoc
-  requirements.
-- Edit `docs/content/mongocxx-v3/installation/linux.md`,
-  `docs/content/mongocxx-v3/installation/macos.md` and
-  `docs/content/mongocxx-v3/installation/windows.md`.
-   If the release was not a release candidate, update `Step 2` to reflect the
-   new latest stable version to download.
 
 ## Homebrew
-This requires a macOS machine. 
+This requires a macOS machine.
 If this is a stable release, update the [mongo-cxx-driver](https://github.com/Homebrew/homebrew-core/blob/master/Formula/mongo-cxx-driver.rb) homebrew formula, using: `brew bump-formula-pr --url <tarball url>`
 
 Example:
@@ -255,7 +251,7 @@ of a release candidate of 3.6.0.
 
 ## Branch if necessary
 
-If doing a new minor release `x.y` (e.g. a `3.8.0` release), create branch
+If doing a new minor release `x.y.0` (e.g. a `1.2.0` release), create branch
 `releases/vx.y`  (e.g `releases/v3.8`).
 
 Push the new branch:
@@ -452,12 +448,11 @@ patch --dry-run -d .evergreen -p0 -i spec.patch
 ```
 
 - If the patch command fails, rebase the patch
-- For a new major release (e.g., 3.6.0, 3.7.0, etc.), then ensure that the patch
-  updates the `up_version` to be the NEXT major version
-  (e.g., when releasing 3.7.0, the spec patch should update `up_version` to 3.8.0);
-  this is necessary to ensure that the spec file matches the tarball created by
-  the dist target; if this is wrong, then the `rpm-package-build` task will fail
-  in the next step
+- For a new minor release (e.g., 3.6.0, 3.7.0, etc.), then ensure that the patch
+  updates the `up_version` to be the NEXT minor version (e.g., when releasing
+  1.2.0, the spec patch should update `up_version` to 1.3.0); this is necessary
+  to ensure that the spec file matches the tarball created by the dist target;
+  if this is wrong, then the `rpm-package-build` task will fail in the next step
 - Additionally, ensure that any changes made on the release branch vis-a-vis the
   spec file are also replicated on the `master` or `main` branch
 - Test the build with something like this:
