@@ -15,8 +15,6 @@
 project(MONGOCXX)
 
 ParseVersion (${BUILD_VERSION} MONGOCXX)
-# TODO: read from file
-set(MONGOCXX_ABI_VERSION _noabi)
 
 option(MONGOCXX_ENABLE_SSL "Enable SSL - if the underlying C driver offers it" ON)
 option(MONGOCXX_ENABLE_SLOW_TESTS "Run slow tests when invoking the the test target" OFF)
@@ -26,8 +24,6 @@ set(MONGOCXX_OUTPUT_BASENAME "mongocxx" CACHE STRING "Output mongocxx library ba
 set(MONGOCXX_VERSION_NO_EXTRA ${MONGOCXX_VERSION_MAJOR}.${MONGOCXX_VERSION_MINOR}.${MONGOCXX_VERSION_PATCH})
 set(MONGOCXX_VERSION ${MONGOCXX_VERSION_NO_EXTRA}${MONGOCXX_VERSION_EXTRA})
 message ("mongocxx version: ${MONGOCXX_VERSION}")
-set(MONGOCXX_INLINE_NAMESPACE "v${MONGOCXX_ABI_VERSION}")
-set(MONGOCXX_HEADER_INSTALL_DIR "${CMAKE_INSTALL_INCLUDEDIR}/mongocxx/${MONGOCXX_INLINE_NAMESPACE}" CACHE INTERNAL "")
 
 set(mongocxx_pkg_dep "")
 
@@ -215,11 +211,11 @@ install(DIRECTORY include/
 
 install(FILES
     ${PROJECT_BINARY_DIR}/lib/mongocxx/v_noabi/mongocxx/config/export.hpp
-    DESTINATION ${MONGOCXX_HEADER_INSTALL_DIR}/mongocxx/config
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/mongocxx/v_noabi/mongocxx/config
     COMPONENT dev
 )
 
-set(PACKAGE_INCLUDE_INSTALL_DIRS ${MONGOCXX_HEADER_INSTALL_DIR})
+set(PACKAGE_INCLUDE_INSTALL_DIRS ${CMAKE_INSTALL_INCLUDEDIR}/mongocxx/v_noabi)
 set(PACKAGE_LIBRARY_INSTALL_DIRS ${CMAKE_INSTALL_LIBDIR})
 set(PACKAGE_LIBRARIES mongocxx)
 

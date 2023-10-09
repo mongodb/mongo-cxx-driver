@@ -18,6 +18,6 @@
 #cmakedefine BSONCXX_POLY_USE_BOOST
 #cmakedefine BSONCXX_POLY_USE_STD
 
-#define BSONCXX_INLINE_NAMESPACE_BEGIN inline namespace @BSONCXX_INLINE_NAMESPACE@ {
+#define BSONCXX_INLINE_NAMESPACE_BEGIN inline namespace v_noabi {
 
-#define BSONCXX_INLINE_NAMESPACE_END }  // namespace @BSONCXX_INLINE_NAMESPACE@
+#define BSONCXX_INLINE_NAMESPACE_END }  // namespace v_noabi

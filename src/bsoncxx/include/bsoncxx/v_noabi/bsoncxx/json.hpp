@@ -29,11 +29,6 @@
 namespace bsoncxx {
 BSONCXX_INLINE_NAMESPACE_BEGIN
 
-// Placing this variable between the `BSONCXX_INLINE_NAMESPACE_BEGIN` and the Doxygen documentation
-// for `to_json` suppressed the macro name from being shown as part of the return type in the
-// generated documentation pages.
-extern const bool k_silence_doxygen;
-
 ///
 /// An enumeration of the types of Extended JSON that the to_json function accepts
 enum class ExtendedJsonMode : std::uint8_t {

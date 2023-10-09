@@ -42,7 +42,7 @@ configure_file(
 install(FILES
     ${CMAKE_CURRENT_BINARY_DIR}/config.hpp
     ${CMAKE_CURRENT_BINARY_DIR}/version.hpp
-    DESTINATION ${MONGOCXX_HEADER_INSTALL_DIR}/mongocxx/config
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/mongocxx/v_noabi/mongocxx/config
     COMPONENT dev
 )
 
