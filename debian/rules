@@ -36,11 +36,7 @@ else
 endif
 
 override_dh_auto_build:
-ifneq (,$(filter pkg.mongo-cxx-driver.mnmlstc,$(DEB_BUILD_PROFILES)))
-	dh_auto_build -B$(CURDIR)/build -- all doxygen-current DESTDIR=$(CURDIR)/debian/tmp-mnmlstc
-else
 	dh_auto_build -B$(CURDIR)/build -- all doxygen-current
-endif
 
 override_dh_auto_install:
 	dh_auto_install -B$(CURDIR)/build
