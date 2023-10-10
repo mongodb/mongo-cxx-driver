@@ -52,9 +52,16 @@ Optionally, to install with Visual Studio integration:
 vcpkg integrate install
 ```
 
-Install the driver.
+Install the driver. (You may need to `git pull` to get the latest version of the
+driver)
 ```
 $ ./vcpkg install mongo-cxx-driver
+```
+
+You can use the toolchain file, `vcpkg.cmake`, to instruct CMake where to find
+the development files, for example:
+```
+-DCMAKE_TOOLCHAIN_FILE=/<path to vcpkg repo>/vcpkg/scripts/buildsystems/vcpkg.cmake
 ```
 
 You can find the header files in:
