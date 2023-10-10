@@ -35,6 +35,7 @@ To configure and install the driver, follow the instructions for your platform:
 The Mongo C++ driver is available in the following package managers.
 - [Vcpkg](https://vcpkg.io/) (search for mongo-cxx-driver)
 - [Conan](https://conan.io/center/recipes/mongo-cxx-driver)
+- [Homebrew](https://formulae.brew.sh/formula/mongo-cxx-driver)
 
 ### Vcpkg Install Instructions
 
@@ -94,6 +95,25 @@ $ cmake \
 	-DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake \
 	-DCMAKE_BUILD_TYPE=Release
 $ cmake --build build
+```
+
+### Homebrew
+
+For MacOS users, homebrew is a convienent way to install the C++ driver.
+
+```
+brew install mongo-cxx-driver
+```
+
+Headers can be found in:
+```
+/opt/homebrew/include/mongocxx/v_noabi/
+/opt/homebrew/include/bsoncxx/v_noabi/
+```
+
+Library files can be found in:
+```
+/opt/homebrew/lib/
 ```
 
 ## Docker Image
