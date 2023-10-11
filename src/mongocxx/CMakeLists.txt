@@ -25,7 +25,7 @@ option(MONGOCXX_ENABLE_SLOW_TESTS "Run slow tests when invoking the the test tar
 
 set(MONGOCXX_OUTPUT_BASENAME "mongocxx" CACHE STRING "Output mongocxx library base name")
 
-set(MONGOCXX_PKG_DEP "") # Required by bsoncxx-config.cmake.in.
+set(MONGOCXX_PKG_DEP "") # Required by mongocxx-config.cmake.in.
 
 if(TARGET mongoc_shared OR TARGET mongoc_static)
     # If these targets exist, then libmongoc has already been included as a project
