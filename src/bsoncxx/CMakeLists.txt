@@ -188,6 +188,7 @@ else()
 endif()
 if(ENABLE_TESTS)
   target_compile_definitions(bsoncxx_testing PUBLIC BSONCXX_TESTING)
+  add_library(bsoncxx::testing ALIAS bsoncxx_testing)
 endif()
 
 set (libdir "\${prefix}/${CMAKE_INSTALL_LIBDIR}")

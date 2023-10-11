@@ -103,7 +103,7 @@ add_executable(test_driver
 
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
-target_link_libraries(test_driver Threads::Threads)
+target_link_libraries(test_driver PRIVATE Threads::Threads)
 
 add_executable(test_logging
   ${THIRD_PARTY_SOURCE_DIR}/catch/main.cpp
@@ -186,19 +186,24 @@ add_executable(test_versioned_api
     ${spec_test_common}
     )
 
-target_link_libraries(test_driver mongocxx_mocked ${libmongoc_target})
-target_link_libraries(test_logging mongocxx_mocked ${libmongoc_target})
-target_link_libraries(test_instance mongocxx_mocked ${libmongoc_target})
-target_link_libraries(test_client_side_encryption_specs mongocxx_mocked ${libmongoc_target})
-target_link_libraries(test_crud_specs mongocxx_mocked ${libmongoc_target})
-target_link_libraries(test_gridfs_specs mongocxx_mocked ${libmongoc_target})
-target_link_libraries(test_command_monitoring_specs mongocxx_mocked ${libmongoc_target})
-target_link_libraries(test_transactions_specs mongocxx_mocked ${libmongoc_target})
-target_link_libraries(test_retryable_reads_specs mongocxx_mocked ${libmongoc_target})
-target_link_libraries(test_read_write_concern_specs mongocxx_mocked ${libmongoc_target})
-target_link_libraries(test_mongohouse_specs mongocxx_mocked ${libmongoc_target})
-target_link_libraries(test_unified_format_spec mongocxx_mocked ${libmongoc_target})
-target_link_libraries(test_versioned_api mongocxx_mocked ${libmongoc_target})
+set_property(
+  TARGET
+    test_driver
+    test_logging
+    test_instance
+    test_client_side_encryption_specs
+    test_crud_specs
+    test_gridfs_specs
+    test_command_monitoring_specs
+    test_transactions_specs
+    test_retryable_reads_specs
+    test_read_write_concern_specs
+    test_mongohouse_specs
+    test_unified_format_spec
+    test_versioned_api
+  APPEND PROPERTY LINK_LIBRARIES
+  mongocxx::mocked ${libmongoc_target}
+)
 
 target_include_directories(test_driver PRIVATE ${libmongoc_include_directories})
 target_include_directories(test_logging PRIVATE ${libmongoc_include_directories})
