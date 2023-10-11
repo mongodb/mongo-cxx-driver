@@ -112,6 +112,8 @@ For MacOS users, homebrew is a convienent way to install the C++ driver.
 brew install mongo-cxx-driver
 ```
 
+#### For an Apple Silicon Mac
+
 Headers can be found in:
 ```
 /opt/homebrew/include/mongocxx/v_noabi/
@@ -121,6 +123,19 @@ Headers can be found in:
 Library files can be found in:
 ```
 /opt/homebrew/lib/
+```
+
+#### For an Intel Mac
+
+Headers can be found in:
+```
+/usr/local/include/mongocxx/v_noabi/
+/usr/local/include/bsoncxx/v_noabi/
+```
+
+Library files can be found in:
+```
+/usr/local/lib/
 ```
 
 ## Docker Image
