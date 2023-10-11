@@ -280,6 +280,9 @@ version numbers as appropriate:
 - MONGOC_VERSION
 - MONGOCRYPT_VERSION
 
+**Make sure you run `python3 generate.py` to generate the files for building the
+images!**
+
 Next, build the image. Prefer doing a no-cache-build with a clean docker cache.
 
 > As of now, company policy only allows for redhat-ubi images, so only build and
