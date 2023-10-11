@@ -73,7 +73,6 @@ endif()
 
 set(mongocxx_sources "") # Required by mongocxx_add_library().
 
-add_subdirectory(cmake)
 add_subdirectory(include)
 add_subdirectory(lib)
 
@@ -120,23 +119,7 @@ if(1)
     endif()
 endif()
 
-# Generate and install the modern CMake package install targets file.
-if(1)
-    install(TARGETS
-        ${mongocxx_target_list}
-        EXPORT mongocxx_targets
-        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT runtime
-        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT runtime
-        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT dev
-        INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/mongocxx/v_noabi
-    )
-
-    install(EXPORT mongocxx_targets
-        NAMESPACE mongo::
-        FILE mongocxx_targets.cmake
-        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/mongocxx-${MONGOCXX_VERSION}
-    )
-endif()
+add_subdirectory(cmake)
 
 if(ENABLE_TESTS)
     add_subdirectory(test)

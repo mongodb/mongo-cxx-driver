@@ -124,7 +124,6 @@ endif()
 
 set(bsoncxx_sources "") # Required by bsoncxx_add_library().
 
-add_subdirectory(cmake)
 add_subdirectory(include)
 add_subdirectory(lib)
 add_subdirectory(third_party)
@@ -170,23 +169,7 @@ if(1)
     endif()
 endif()
 
-# Generate and install the modern CMake install package targets file.
-if(1)
-    install(TARGETS
-        ${bsoncxx_target_list}
-        EXPORT bsoncxx_targets
-        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT runtime
-        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT runtime
-        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT dev
-        INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/bsoncxx/v_noabi
-    )
-
-    install(EXPORT bsoncxx_targets
-        NAMESPACE mongo::
-        FILE bsoncxx_targets.cmake
-        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/bsoncxx-${BSONCXX_VERSION}
-    )
-endif()
+add_subdirectory(cmake)
 
 if(ENABLE_TESTS)
     add_subdirectory(test)

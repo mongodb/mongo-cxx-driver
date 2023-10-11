@@ -48,6 +48,21 @@ if(1)
         @ONLY
     )
 
+    install(TARGETS
+        ${bsoncxx_target_list}
+        EXPORT bsoncxx_targets
+        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT runtime
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT runtime
+        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT dev
+        INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/bsoncxx/v_noabi
+    )
+
+    install(EXPORT bsoncxx_targets
+        NAMESPACE mongo::
+        FILE bsoncxx_targets.cmake
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/bsoncxx-${BSONCXX_VERSION}
+    )
+
     install(
         FILES
         ${CMAKE_CURRENT_BINARY_DIR}/bsoncxx-config-version.cmake

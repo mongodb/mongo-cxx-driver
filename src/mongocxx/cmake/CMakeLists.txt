@@ -28,6 +28,21 @@ if(1)
         @ONLY
     )
 
+    install(TARGETS
+        ${mongocxx_target_list}
+        EXPORT mongocxx_targets
+        RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR} COMPONENT runtime
+        LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT runtime
+        ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR} COMPONENT dev
+        INCLUDES DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/mongocxx/v_noabi
+    )
+
+    install(EXPORT mongocxx_targets
+        NAMESPACE mongo::
+        FILE mongocxx_targets.cmake
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/mongocxx-${MONGOCXX_VERSION}
+    )
+
     install(
         FILES
         ${CMAKE_CURRENT_BINARY_DIR}/mongocxx-config-version.cmake
