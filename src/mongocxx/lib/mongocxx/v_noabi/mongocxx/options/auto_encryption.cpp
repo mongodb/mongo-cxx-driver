@@ -25,7 +25,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
+inline namespace v_noabi {
 namespace options {
 
 auto_encryption::auto_encryption() noexcept : _bypass(false), _bypass_query_analysis(false) {}
@@ -190,5 +190,5 @@ void* auto_encryption::convert() const {
 }
 
 }  // namespace options
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx

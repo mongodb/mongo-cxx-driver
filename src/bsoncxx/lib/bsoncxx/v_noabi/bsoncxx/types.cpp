@@ -17,8 +17,7 @@
 #include <bsoncxx/config/private/prelude.hh>
 
 namespace bsoncxx {
-BSONCXX_INLINE_NAMESPACE_BEGIN
-
+inline namespace v_noabi {
 #define BSONCXX_ENUM(name, val) constexpr type types::b_##name::type_id;
 #include <bsoncxx/enums/type.hpp>
 #undef BSONCXX_ENUM
@@ -50,5 +49,5 @@ std::string BSONCXX_CALL to_string(binary_sub_type rhs) {
 }
 
 namespace types {}  // namespace types
-BSONCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace bsoncxx

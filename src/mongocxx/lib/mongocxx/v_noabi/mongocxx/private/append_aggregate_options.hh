@@ -6,8 +6,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
-
+inline namespace v_noabi {
 MONGOCXX_INLINE void append_aggregate_options(bsoncxx::builder::basic::document& builder,
                                               const options::aggregate& options) {
     using bsoncxx::builder::basic::kvp;
@@ -52,5 +51,5 @@ MONGOCXX_INLINE void append_aggregate_options(bsoncxx::builder::basic::document&
         builder.append(kvp("comment", *comment));
     }
 }
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx

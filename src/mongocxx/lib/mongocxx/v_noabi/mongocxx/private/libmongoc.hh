@@ -39,7 +39,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
+inline namespace v_noabi {
 namespace libmongoc {
 
 #ifdef MONGOCXX_TESTING
@@ -70,7 +70,7 @@ namespace libmongoc {
 #endif
 
 }  // namespace libmongoc
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

@@ -21,7 +21,7 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-BSONCXX_INLINE_NAMESPACE_BEGIN
+inline namespace v_noabi {
 namespace types {
 namespace bson_value {
 
@@ -37,7 +37,7 @@ BSONCXX_INLINE bson_value::value make_value(T&& t) {
 
 }  // namespace bson_value
 }  // namespace types
-BSONCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

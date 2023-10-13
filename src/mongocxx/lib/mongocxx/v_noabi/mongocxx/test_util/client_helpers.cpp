@@ -41,7 +41,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
+inline namespace v_noabi {
 namespace test_util {
 
 namespace {
@@ -552,5 +552,5 @@ std::string getenv_or_fail(const std::string env_name) {
 }
 
 }  // namespace test_util
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx

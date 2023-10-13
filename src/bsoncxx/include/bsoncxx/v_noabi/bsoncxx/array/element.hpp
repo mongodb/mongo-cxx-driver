@@ -22,8 +22,7 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-BSONCXX_INLINE_NAMESPACE_BEGIN
-
+inline namespace v_noabi {
 namespace types {
 namespace bson_value {
 class view;
@@ -123,7 +122,7 @@ BSONCXX_API bool BSONCXX_CALL operator!=(const types::bson_value::view& v, const
 
 }  // namespace array
 
-BSONCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

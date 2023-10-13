@@ -24,7 +24,7 @@
 #include <bsoncxx/config/private/prelude.hh>
 
 namespace bsoncxx {
-BSONCXX_INLINE_NAMESPACE_BEGIN
+inline namespace v_noabi {
 namespace types {
 
 BSONCXX_INLINE char* make_copy_for_libbson(stdx::string_view s, uint32_t* len_out = nullptr) {
@@ -328,5 +328,5 @@ BSONCXX_INLINE void convert_from_libbson(bson_value_t* v, bsoncxx::types::b_arra
 }
 
 }  // namespace types
-BSONCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace bsoncxx

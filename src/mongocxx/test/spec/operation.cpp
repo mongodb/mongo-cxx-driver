@@ -45,7 +45,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
+inline namespace v_noabi {
 namespace spec {
 
 using namespace mongocxx;
@@ -1508,7 +1508,7 @@ document::value operation_runner::run(document::view operation) {
 }
 
 }  // namespace spec
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

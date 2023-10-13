@@ -26,8 +26,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
-
+inline namespace v_noabi {
 namespace {
 
 // Some of the 'uri_get_*' string accessors may return nullptr.  Check for this case and convert to
@@ -299,5 +298,5 @@ stdx::optional<std::int32_t> uri::zlib_compression_level() const {
     return _int32_option(_impl->uri_t, "zlibCompressionLevel");
 }
 
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx

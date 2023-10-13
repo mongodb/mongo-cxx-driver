@@ -23,8 +23,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
-
+inline namespace v_noabi {
 cursor::cursor(void* cursor_ptr, bsoncxx::stdx::optional<cursor::type> cursor_type)
     : _impl(stdx::make_unique<impl>(static_cast<mongoc_cursor_t*>(cursor_ptr), cursor_type)) {}
 
@@ -109,5 +108,5 @@ bool MONGOCXX_CALL operator!=(const cursor::iterator& lhs, const cursor::iterato
     return !(lhs == rhs);
 }
 
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx

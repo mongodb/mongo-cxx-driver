@@ -62,8 +62,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
-
+inline namespace v_noabi {
 class client;
 class database;
 class client_encryption;
@@ -2082,7 +2081,7 @@ MONGOCXX_INLINE stdx::optional<result::insert_many> collection::insert_many(
     return _insert_many(&session, begin, end, options);
 }
 
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

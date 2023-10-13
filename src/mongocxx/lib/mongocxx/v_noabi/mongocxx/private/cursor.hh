@@ -22,8 +22,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
-
+inline namespace v_noabi {
 class cursor::impl {
    public:
     // States represent a one-way, ordered lifecycle of a cursor. k_started means that
@@ -82,7 +81,7 @@ class cursor::impl {
     bool tailable;
 };
 
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

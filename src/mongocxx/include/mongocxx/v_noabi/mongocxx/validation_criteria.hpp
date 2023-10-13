@@ -21,8 +21,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
-
+inline namespace v_noabi {
 ///
 /// Class representing criteria for document validation, to be applied to a collection.
 ///
@@ -151,7 +150,7 @@ MONGOCXX_INLINE validation_criteria::operator bsoncxx::document::value() const {
     return to_document_deprecated();
 }
 
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

@@ -23,8 +23,7 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-BSONCXX_INLINE_NAMESPACE_BEGIN
-
+inline namespace v_noabi {
 ///
 /// Represents a MongoDB ObjectId. As this BSON type is used within the MongoDB server
 /// as a primary key for each document, it is useful for representing a 'pointer'
@@ -120,7 +119,7 @@ class BSONCXX_API oid {
     std::array<char, k_oid_length> _bytes;
 };
 
-BSONCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

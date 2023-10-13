@@ -21,7 +21,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
+inline namespace v_noabi {
 namespace spec {
 
 using namespace mongocxx;
@@ -87,6 +87,6 @@ class apm_checker {
 };
 
 }  // namespace spec
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx
 #include <mongocxx/config/private/postlude.hh>

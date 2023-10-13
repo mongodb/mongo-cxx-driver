@@ -21,13 +21,13 @@
 #include <core/memory.hpp>
 
 namespace bsoncxx {
-BSONCXX_INLINE_NAMESPACE_BEGIN
+inline namespace v_noabi {
 namespace stdx {
 
 using ::core::make_unique;
 
 }  // namespace stdx
-BSONCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace bsoncxx
 
 #elif defined(BSONCXX_POLY_USE_BOOST)
@@ -35,13 +35,13 @@ BSONCXX_INLINE_NAMESPACE_END
 #include <boost/smart_ptr/make_unique.hpp>
 
 namespace bsoncxx {
-BSONCXX_INLINE_NAMESPACE_BEGIN
+inline namespace v_noabi {
 namespace stdx {
 
 using ::boost::make_unique;
 
 }  // namespace stdx
-BSONCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace bsoncxx
 
 #elif __cplusplus >= 201402L || (defined(_MSVC_LANG) && _MSVC_LANG >= 201402L)
@@ -49,13 +49,13 @@ BSONCXX_INLINE_NAMESPACE_END
 #include <memory>
 
 namespace bsoncxx {
-BSONCXX_INLINE_NAMESPACE_BEGIN
+inline namespace v_noabi {
 namespace stdx {
 
 using ::std::make_unique;
 
 }  // namespace stdx
-BSONCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace bsoncxx
 
 #else

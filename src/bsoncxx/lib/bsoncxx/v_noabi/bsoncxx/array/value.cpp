@@ -19,7 +19,7 @@
 #include <bsoncxx/config/private/prelude.hh>
 
 namespace bsoncxx {
-BSONCXX_INLINE_NAMESPACE_BEGIN
+inline namespace v_noabi {
 namespace array {
 
 value::value(std::uint8_t* data, std::size_t length, deleter_type dtor)
@@ -54,5 +54,5 @@ value::unique_ptr_type value::release() {
 }
 
 }  // namespace array
-BSONCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace bsoncxx

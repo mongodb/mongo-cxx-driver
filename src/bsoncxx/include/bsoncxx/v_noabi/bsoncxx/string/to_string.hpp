@@ -22,7 +22,7 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-BSONCXX_INLINE_NAMESPACE_BEGIN
+inline namespace v_noabi {
 namespace string {
 
 template <class CharT,
@@ -34,7 +34,7 @@ BSONCXX_INLINE std::basic_string<CharT, Traits, Allocator> to_string(
 }
 
 }  // namespace string
-BSONCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

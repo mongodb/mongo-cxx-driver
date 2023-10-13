@@ -17,7 +17,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
+inline namespace v_noabi {
 namespace result {
 
 bulk_write::bulk_write(bsoncxx::document::value raw_response)
@@ -68,5 +68,5 @@ bool MONGOCXX_CALL operator!=(const bulk_write& lhs, const bulk_write& rhs) {
 }
 
 }  // namespace result
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx

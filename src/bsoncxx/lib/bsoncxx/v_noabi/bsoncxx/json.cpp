@@ -28,8 +28,7 @@
 #include <bsoncxx/config/private/prelude.hh>
 
 namespace bsoncxx {
-BSONCXX_INLINE_NAMESPACE_BEGIN
-
+inline namespace v_noabi {
 namespace {
 
 void bson_free_deleter(std::uint8_t* ptr) {
@@ -103,5 +102,5 @@ document::value BSONCXX_CALL operator"" _bson(const char* str, size_t len) {
     return from_json(stdx::string_view{str, len});
 }
 
-BSONCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace bsoncxx

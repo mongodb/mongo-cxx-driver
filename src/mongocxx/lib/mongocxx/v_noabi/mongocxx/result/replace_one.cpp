@@ -17,7 +17,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
+inline namespace v_noabi {
 namespace result {
 
 replace_one::replace_one(result::bulk_write result) : _result(std::move(result)) {}
@@ -49,5 +49,5 @@ bool MONGOCXX_CALL operator!=(const replace_one& lhs, const replace_one& rhs) {
 }
 
 }  // namespace result
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx

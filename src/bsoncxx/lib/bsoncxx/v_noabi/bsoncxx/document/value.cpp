@@ -19,7 +19,7 @@
 #include <bsoncxx/config/private/prelude.hh>
 
 namespace bsoncxx {
-BSONCXX_INLINE_NAMESPACE_BEGIN
+inline namespace v_noabi {
 namespace document {
 
 value::value(std::uint8_t* data, std::size_t length, deleter_type dtor)
@@ -97,5 +97,5 @@ void value::reset(document::view view) {
 }
 
 }  // namespace document
-BSONCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace bsoncxx
