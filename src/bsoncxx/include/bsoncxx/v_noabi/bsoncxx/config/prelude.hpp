@@ -72,3 +72,16 @@
 #pragma push_macro("BSONCXX_UNREACHABLE")
 #undef BSONCXX_UNREACHABLE
 #define BSONCXX_UNREACHABLE std::abort()
+
+// Doxygen does not account for generated header files.
+// Document globally applicable macros and namespaces here.
+
+///
+/// @namespace bsoncxx
+/// The top-level namespace for bsoncxx library entities.
+///
+
+///
+/// @namespace bsoncxx::v_noabi
+/// Entities declared in this namespace do not have a stable ABI.
+///

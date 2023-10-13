@@ -29,9 +29,6 @@
 
 #include <mongocxx/config/prelude.hpp>
 
-///
-/// Top level namespace for the MongoDB C++ driver.
-///
 namespace mongocxx {
 inline namespace v_noabi {
 class client_session;

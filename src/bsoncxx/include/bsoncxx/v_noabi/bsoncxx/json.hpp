@@ -23,9 +23,6 @@
 
 #include <bsoncxx/config/prelude.hpp>
 
-///
-/// Top level namespace for MongoDB C++ BSON functionality.
-///
 namespace bsoncxx {
 inline namespace v_noabi {
 ///
