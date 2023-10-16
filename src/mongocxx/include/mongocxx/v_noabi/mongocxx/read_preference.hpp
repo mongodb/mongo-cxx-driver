@@ -180,7 +180,7 @@ class MONGOCXX_API read_preference {
     ///
     /// Sets or updates the tag set list for this read_preference.
     ///
-    /// @param tags
+    /// @param tag_set_list
     ///   Document representing the tag set list.
     ///
     /// @see https://www.mongodb.com/docs/manual/core/read-preference-tags/
@@ -194,7 +194,7 @@ class MONGOCXX_API read_preference {
     ///
     /// Sets or updates the tag set list for this read_preference.
     ///
-    /// @param tags
+    /// @param tag_set_list
     ///   Array of tag sets.
     ///
     /// @see https://www.mongodb.com/docs/manual/core/read-preference-tags/

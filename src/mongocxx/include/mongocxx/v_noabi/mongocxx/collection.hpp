@@ -691,6 +691,9 @@ class MONGOCXX_API collection {
     ///   The write concern to use for this operation. Defaults to the collection wide write
     ///   concern if none is provided.
     ///
+    /// @param collection_options (optional)
+    ///   Collection options to use for this operation.
+    ///
     /// @exception
     ///   mongocxx::operation_exception if the operation fails.
     ///
@@ -711,6 +714,8 @@ class MONGOCXX_API collection {
     /// @param write_concern (optional)
     ///   The write concern to use for this operation. Defaults to the collection wide write
     ///   concern if none is provided.
+    /// @param collection_options (optional)
+    ///   Collection options to use for this operation.
     ///
     /// @exception
     ///   mongocxx::operation_exception if the operation fails.

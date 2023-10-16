@@ -98,6 +98,8 @@ class MONGOCXX_API search_index_view {
     ///
     /// This is a convenience method for creating a single search index with a default name.
     ///
+    /// @param session
+    ///   The mongocxx::client_session with which to perform the operation.
     /// @param definition
     ///    The document describing the search index to be created.
     ///
