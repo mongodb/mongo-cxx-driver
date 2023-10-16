@@ -88,8 +88,7 @@ class value_context {
     ///
     /// << operator for opening a new subdocument in the core builder.
     ///
-    /// @param _
-    ///   An open_document_type token
+    /// The argument must be an open_document_type token (it is otherwise ignored).
     ///
     BSONCXX_INLINE key_context<base> operator<<(const open_document_type) {
         _core->open_document();
@@ -99,8 +98,7 @@ class value_context {
     ///
     /// << operator for opening a new subarray in the core builder.
     ///
-    /// @param _
-    ///   An open_array_type token
+    /// The argument must be an open_array_type token (it is otherwise ignored).
     ///
     BSONCXX_INLINE array_context<base> operator<<(const open_array_type) {
         _core->open_array();

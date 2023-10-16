@@ -121,8 +121,7 @@ class key_context {
     /// This operation finishes all processing necessary to fully encode the
     /// bson bytes and returns an owning value.
     ///
-    /// @param _
-    ///   A finalize_type token
+    /// The argument must be a finalize_type token (it is otherwise ignored).
     ///
     /// @return A value type which holds the complete bson document.
     ///
@@ -154,8 +153,7 @@ class key_context {
     ///
     /// << operator for closing a subdocument in the core builder.
     ///
-    /// @param _
-    ///   A close_document_type token
+    /// The argument must be a close_document_type token (it is otherwise ignored).
     ///
     BSONCXX_INLINE base operator<<(const close_document_type) {
         _core->close_document();
