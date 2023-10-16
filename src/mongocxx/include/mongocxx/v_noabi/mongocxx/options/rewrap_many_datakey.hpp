@@ -28,6 +28,9 @@ class client_encryption;
 
 namespace options {
 
+///
+/// Class representing options for a rewrap many datakey operation.
+///
 class MONGOCXX_API rewrap_many_datakey {
    public:
     ///
