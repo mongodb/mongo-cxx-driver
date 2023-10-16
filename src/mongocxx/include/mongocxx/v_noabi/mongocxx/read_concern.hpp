@@ -156,7 +156,6 @@ class MONGOCXX_API read_concern {
     friend client;
     friend collection;
     friend database;
-    /// \relates mongocxx::options::transaction
     friend mongocxx::options::transaction;
     friend uri;
 

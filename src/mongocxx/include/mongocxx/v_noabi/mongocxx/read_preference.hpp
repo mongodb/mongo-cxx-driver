@@ -284,9 +284,7 @@ class MONGOCXX_API read_preference {
     friend client;
     friend collection;
     friend database;
-    /// \relates mongocxx::options::transaction
     friend mongocxx::options::transaction;
-    /// \relates mongocxx::events::topology_description
     friend mongocxx::events::topology_description;
     friend uri;
     friend search_index_view;
