@@ -263,8 +263,87 @@ using true_t = std::true_type;
 template <typename... Ts>
 using requires_t = enable_if_t<conjunction<Ts...>::value, int>;
 
-}  // namespace type_traits
+/**
+ * @brief If any of `Ts::value` is 'true', this type is undefined, otherwise
+ * yields the type `int`.
+ *
+ * Use this to perform enable-if template contraints.
+ */
+template <typename... Ts>
+using requires_not_t = requires_t<negation<disjunction<Ts...>>>;
 
+// Impl: invoke/is_invocable
+namespace detail {
+
+#pragma push_macro("RETURNS")
+#define RETURNS(...)                                         \
+    noexcept(noexcept(__VA_ARGS__))->decltype(__VA_ARGS__) { \
+        return __VA_ARGS__;                                  \
+    }                                                        \
+    static_assert(true, "")
+
+template <bool IsMemberObject, bool IsMemberFunction>
+struct invoker {
+    template <typename F, typename... Args>
+    constexpr static auto apply(F&& fun, Args&&... args)
+        RETURNS(static_cast<F&&>(fun)(static_cast<Args&&>(args)...));
+};
+
+template <>
+struct invoker<false, true> {
+    template <typename F, typename Self, typename... Args>
+    constexpr static auto apply(F&& fun, Self&& self, Args&&... args)
+        RETURNS((static_cast<Self&&>(self).*fun)(static_cast<Args&&>(args)...));
+};
+
+template <>
+struct invoker<true, false> {
+    template <typename F, typename Self>
+    constexpr static auto apply(F&& fun, Self&& self) RETURNS(static_cast<Self&&>(self).*fun);
+};
+
+}  // namespace detail
+
+/**
+ * @brief Invoke the given object with the given arguments.
+ *
+ * @param fn An invocable: A callable, member object pointer, or member function pointer.
+ * @param args The arguments to use for invocation.
+ */
+template <typename F, typename... Args, typename Fd = remove_cvref_t<F>>
+constexpr auto invoke(F&& fn, Args&&... args) RETURNS(
+    detail::invoker<std::is_member_object_pointer<Fd>{},
+                    std::is_member_function_pointer<Fd>{}>::apply(static_cast<F&&>(fn),
+                                                                  static_cast<Args&&>(args)...));
+
+/**
+ * @brief Yields the type that would result from invoking F with the given arguments.
+ *
+ * @tparam Fun A invocable: A function pointer or callable object, or a member pointer
+ * @tparam Args The arguments to apply
+ */
+template <typename F, typename... Args>
+using invoke_result_t = decltype(stdx::invoke(std::declval<F>(), std::declval<Args>()...));
+
+/**
+ * @brief Trait type to detect if the given object can be "invoked" using the given arguments.
+ *
+ * @tparam Fun A invocable: A function pointer or callable object, or a member pointer
+ * @tparam Args The arguments to match against
+ */
+template <typename Fun, typename... Args>
+struct is_invocable : is_detected<invoke_result_t, Fun, Args...> {};
+
+/**
+ * @brief Trait detects whether the given types are the same after the removal
+ * of top-level CV-ref qualifiers
+ */
+template <typename T, typename U>
+using is_alike = std::is_same<remove_cvref_t<T>, remove_cvref_t<U>>;
+
+#pragma pop_macro("RETURNS")
+
+}  // namespace type_traits
 
 }  // namespace stdx
 BSONCXX_INLINE_NAMESPACE_END

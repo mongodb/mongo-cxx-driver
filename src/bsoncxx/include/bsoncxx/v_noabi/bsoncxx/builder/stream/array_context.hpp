@@ -19,7 +19,7 @@
 #include <bsoncxx/builder/core.hpp>
 #include <bsoncxx/builder/stream/closed_context.hpp>
 #include <bsoncxx/builder/stream/helpers.hpp>
-#include <bsoncxx/util/functor.hpp>
+#include <bsoncxx/stdx/type_traits.hpp>
 
 #include <bsoncxx/config/prelude.hpp>
 
@@ -66,13 +66,11 @@ class array_context {
     /// @param t
     ///   The value to append
     ///
-    template <class T>
-    BSONCXX_INLINE typename std::enable_if<
-        !(util::is_functor<T, void(array_context<>)>::value ||
-          util::is_functor<T, void(single_context)>::value ||
-          std::is_same<typename std::remove_reference<T>::type, const finalize_type>::value),
-        array_context>::type&
-    operator<<(T&& t) {
+    template <class T,
+              stdx::requires_not_t<stdx::is_invocable<T, array_context<>>,
+                                   stdx::is_invocable<T, single_context>,
+                                   stdx::is_alike<T, finalize_type>> = 0>
+    BSONCXX_INLINE array_context& operator<<(T&& t) {
         _core->append(std::forward<T>(t));
         return *this;
     }
@@ -85,12 +83,11 @@ class array_context {
     /// @param func
     ///   The callback to invoke
     ///
-    template <typename Func>
-    BSONCXX_INLINE typename std::enable_if<(util::is_functor<Func, void(array_context<>)>::value ||
-                                            util::is_functor<Func, void(single_context)>::value),
-                                           array_context>::type&
-    operator<<(Func&& func) {
-        func(*this);
+    template <typename Func,
+              stdx::requires_t<stdx::disjunction<stdx::is_invocable<Func, array_context<>>,
+                                                 stdx::is_invocable<Func, single_context>>> = 0>
+    BSONCXX_INLINE array_context& operator<<(Func&& func) {
+        stdx::invoke(std::forward<Func>(func), *this);
         return *this;
     }
 
@@ -105,14 +102,14 @@ class array_context {
     ///
     /// @return A value type which holds the complete bson document.
     ///
-    template <typename T>
-    BSONCXX_INLINE typename std::enable_if<
-        std::is_same<base, closed_context>::value &&
-            std::is_same<typename std::remove_reference<T>::type, const finalize_type>::value,
+    template <
+        typename T,
+        stdx::requires_t<std::is_same<base, closed_context>, stdx::is_alike<T, finalize_type>> = 0>
+    BSONCXX_INLINE
         // TODO(MSVC): This should just be 'array::value', but
         // VS2015U1 can't resolve the name.
-        bsoncxx::array::value>::type
-    operator<<(T&&) {
+        bsoncxx::array::value
+        operator<<(T&&) {
         return _core->extract_array();
     }
 

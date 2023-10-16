@@ -123,4 +123,59 @@ TEST_CASE("requires_t") {
     CHECK(add_one(std::string("twenty-")) == "twenty-one");
 }
 
+struct something {
+    int value;
+
+    int memfn(int, std::string);
+};
+
+static_assert(tt::is_detected<tt::invoke_result_t, decltype(&something::value), something>::value,
+              "fail");
+
+static_assert(
+    std::is_same<tt::invoke_result_t<decltype(&something::value), something&>, int&>::value,
+    "fail");
+
+static_assert(
+    std::is_same<tt::invoke_result_t<decltype(&something::value), something&&>, int&&>::value,
+    "fail");
+
+static_assert(std::is_same<tt::invoke_result_t<decltype(&something::value), const something&>,
+                           const int&>::value,
+              "fail");
+
+static_assert(
+    std::is_same<tt::invoke_result_t<decltype(&something::memfn), something&&, int, const char*>,
+                 int>::value,
+    "fail");
+
+// invoke_result_t disappears when given wrong argument types:
+static_assert(
+    !tt::is_detected<tt::invoke_result_t, decltype(&something::memfn), something&&, int, int>::
+        value,
+    "fail");
+
+struct constrained_callable {
+    // Viable only if F is callable as F(int, Arg)
+    template <typename F, typename Arg, tt::requires_t<tt::is_invocable<F, int, Arg>> = 0>
+    double operator()(F&&, Arg) const;
+};
+
+static_assert(!tt::is_detected<tt::invoke_result_t,
+                               constrained_callable,
+                               void (*)(int, std::string),
+                               double>::value,
+              "fail");
+
+static_assert(tt::is_detected<tt::invoke_result_t,
+                              constrained_callable,
+                              void (*)(int, std::string),
+                              const char*>::value,
+              "fail");
+
+static_assert(
+    tt::is_detected<tt::invoke_result_t, constrained_callable, void (*)(int, double), double>::
+        value,
+    "fail");
+
 }  // namespace
