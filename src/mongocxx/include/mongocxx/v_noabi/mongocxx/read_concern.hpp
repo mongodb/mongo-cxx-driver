@@ -31,6 +31,10 @@ class collection;
 class database;
 class uri;
 
+namespace options {
+class transaction;
+}
+
 ///
 /// A class to represent the read concern. Read concern can be set at the client, database, or
 /// collection level. The read concern can also be provided via connection string, and will be
@@ -153,11 +157,12 @@ class MONGOCXX_API read_concern {
     bsoncxx::document::value to_document() const;
 
    private:
-    friend client;
-    friend collection;
-    friend database;
-    friend mongocxx::options::transaction;
-    friend uri;
+    friend class client;
+    friend class collection;
+    friend class database;
+    friend class uri;
+
+    friend class options::transaction;
 
     ///
     /// @{

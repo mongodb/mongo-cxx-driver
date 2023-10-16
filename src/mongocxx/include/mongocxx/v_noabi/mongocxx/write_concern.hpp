@@ -35,6 +35,10 @@ class collection;
 class database;
 class uri;
 
+namespace options {
+class transaction;
+}
+
 ///
 /// Class representing the server-side requirement for reporting the success of a write
 /// operation. The strength of the write concern setting determines the level of guarantees
@@ -241,12 +245,13 @@ class MONGOCXX_API write_concern {
     bsoncxx::document::value to_document() const;
 
    private:
-    friend bulk_write;
-    friend client;
-    friend collection;
-    friend database;
-    friend mongocxx::options::transaction;
-    friend uri;
+    friend class bulk_write;
+    friend class client;
+    friend class collection;
+    friend class database;
+    friend class uri;
+
+    friend class options::transaction;
 
     ///
     /// @{

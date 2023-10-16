@@ -22,6 +22,8 @@
 
 namespace mongocxx {
 inline namespace v_noabi {
+class client_session;
+
 namespace options {
 
 ///
@@ -97,7 +99,7 @@ class MONGOCXX_API client_session {
 
    private:
     // Allow the implementation of client_session to see these:
-    friend mongocxx::client_session;
+    friend class mongocxx::client_session;
 
     stdx::optional<bool> _causal_consistency;
     stdx::optional<bool> _enable_snapshot_reads;

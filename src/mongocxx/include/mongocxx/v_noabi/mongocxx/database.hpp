@@ -31,8 +31,9 @@
 
 namespace mongocxx {
 inline namespace v_noabi {
-class client;
 class client_encryption;
+class client;
+class collection;
 
 ///
 /// Class representing a MongoDB database.
@@ -623,9 +624,9 @@ class MONGOCXX_API database {
     ///
 
    private:
-    friend mongocxx::client;
-    friend mongocxx::collection;
-    friend mongocxx::client_encryption;
+    friend class client_encryption;
+    friend class client;
+    friend class collection;
 
     MONGOCXX_PRIVATE database(const class client& client, bsoncxx::string::view_or_value name);
 

@@ -32,11 +32,15 @@ inline namespace v_noabi {
 class client;
 class collection;
 class database;
-class uri;
 class search_index_view;
+class uri;
 
 namespace events {
 class topology_description;
+}
+
+namespace options {
+class transaction;
 }
 
 ///
@@ -281,13 +285,14 @@ class MONGOCXX_API read_preference {
     const stdx::optional<bsoncxx::document::view> hedge() const;
 
    private:
-    friend client;
-    friend collection;
-    friend database;
-    friend mongocxx::options::transaction;
-    friend mongocxx::events::topology_description;
-    friend uri;
-    friend search_index_view;
+    friend class client;
+    friend class collection;
+    friend class database;
+    friend class search_index_view;
+    friend class uri;
+
+    friend class events::topology_description;
+    friend class options::transaction;
 
     ///
     /// @{

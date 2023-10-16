@@ -63,9 +63,10 @@
 
 namespace mongocxx {
 inline namespace v_noabi {
+class bulk_write;
+class client_encryption;
 class client;
 class database;
-class client_encryption;
 
 ///
 /// Class representing server side document groupings within a MongoDB database.
@@ -1858,9 +1859,9 @@ class MONGOCXX_API collection {
     search_index_view search_indexes();
 
    private:
-    friend mongocxx::bulk_write;
-    friend mongocxx::database;
-    friend mongocxx::client_encryption;
+    friend class bulk_write;
+    friend class client_encryption;
+    friend class database;
 
     MONGOCXX_PRIVATE collection(const database& database,
                                 bsoncxx::string::view_or_value collection_name);
