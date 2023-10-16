@@ -19,7 +19,7 @@ endif()
 # Allow `#include <third_party/catch/include/...>`
 include_directories(${THIRD_PARTY_SOURCE_DIR}/..)
 
-file (GLOB src_bsoncxx_test_DIST_cpps RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.cpp)
+file (GLOB src_bsoncxx_test_DIST_cpps CONFIGURE_DEPENDS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.cpp)
 
 add_executable(test_bson
     ${THIRD_PARTY_SOURCE_DIR}/catch/main.cpp

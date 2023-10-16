@@ -336,6 +336,7 @@ set_local_dist (src_bsoncxx_include_v_noabi_DIST_local
     include/bsoncxx/v_noabi/bsoncxx/stdx/make_unique.hpp
     include/bsoncxx/v_noabi/bsoncxx/stdx/optional.hpp
     include/bsoncxx/v_noabi/bsoncxx/stdx/string_view.hpp
+    include/bsoncxx/v_noabi/bsoncxx/stdx/type_traits.hpp
     include/bsoncxx/v_noabi/bsoncxx/string/to_string.hpp
     include/bsoncxx/v_noabi/bsoncxx/string/view_or_value.hpp
     include/bsoncxx/v_noabi/bsoncxx/types.hpp
