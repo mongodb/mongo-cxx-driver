@@ -92,6 +92,7 @@ class MONGOCXX_API client_encryption {
     /// "aws", "azure", "gcp", "kmip", and "local". The kmsProviders map values differ
     /// by provider:
     ///
+    /// @code{.unparsed}
     ///    aws: {
     ///      accessKeyId: String,
     ///      secretAccessKey: String
@@ -117,6 +118,7 @@ class MONGOCXX_API client_encryption {
     ///    local: {
     ///      key: byte[96] // The master key used to encrypt/decrypt data keys.
     ///    }
+    /// @endcode
     ///
     /// @param kms_providers
     ///   A document containing the KMS providers.
@@ -142,11 +144,13 @@ class MONGOCXX_API client_encryption {
     /// Multiple KMS providers may be specified. Supported KMS providers are "aws", "azure", "gcp",
     /// and "kmip". The map value has the same form for all supported providers:
     ///
+    /// @code{.unparsed}
     ///    <KMS provider name>: {
     ///        tlsCaFile: Optional<String>
     ///        tlsCertificateKeyFile: Optional<String>
     ///        tlsCertificateKeyFilePassword: Optional<String>
     ///    }
+    /// @endcode
     ///
     /// @param tls_opts
     ///   A document containing the TLS options.
