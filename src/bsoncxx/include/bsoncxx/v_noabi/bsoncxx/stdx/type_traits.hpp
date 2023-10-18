@@ -8,9 +8,7 @@ namespace bsoncxx {
 
 BSONCXX_INLINE_NAMESPACE_BEGIN
 namespace stdx {
-
 inline namespace type_traits {
-
 #define bsoncxx_ttparam \
     template <class...> \
     class
