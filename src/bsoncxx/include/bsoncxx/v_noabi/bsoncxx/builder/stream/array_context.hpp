@@ -67,9 +67,9 @@ class array_context {
     ///   The value to append
     ///
     template <class T,
-              stdx::requires_not_t<stdx::is_invocable<T, array_context<>>,
-                                   stdx::is_invocable<T, single_context>,
-                                   stdx::is_alike<T, finalize_type>> = 0>
+              typename = stdx::requires_not_t<stdx::is_invocable<T, array_context<>>,
+                                              stdx::is_invocable<T, single_context>,
+                                              stdx::is_alike<T, finalize_type>>>
     BSONCXX_INLINE array_context& operator<<(T&& t) {
         _core->append(std::forward<T>(t));
         return *this;
@@ -83,9 +83,11 @@ class array_context {
     /// @param func
     ///   The callback to invoke
     ///
-    template <typename Func,
-              stdx::requires_t<stdx::disjunction<stdx::is_invocable<Func, array_context<>>,
-                                                 stdx::is_invocable<Func, single_context>>> = 0>
+    template <
+        typename Func,
+        typename = void,
+        typename = stdx::requires_t<stdx::disjunction<stdx::is_invocable<Func, array_context<>>,
+                                                      stdx::is_invocable<Func, single_context>>>>
     BSONCXX_INLINE array_context& operator<<(Func&& func) {
         stdx::invoke(std::forward<Func>(func), *this);
         return *this;
@@ -102,9 +104,11 @@ class array_context {
     ///
     /// @return A value type which holds the complete bson document.
     ///
-    template <
-        typename T,
-        stdx::requires_t<std::is_same<base, closed_context>, stdx::is_alike<T, finalize_type>> = 0>
+    template <typename T,
+              typename = void,
+              typename = void,
+              typename = stdx::requires_t<std::is_same<base, closed_context>,
+                                          stdx::is_alike<T, finalize_type>>>
     BSONCXX_INLINE
         // TODO(MSVC): This should just be 'array::value', but
         // VS2015U1 can't resolve the name.

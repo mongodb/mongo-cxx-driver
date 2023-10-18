@@ -261,7 +261,7 @@ using true_t = std::true_type;
  * Use this to perform enable-if style template constraints.
  */
 template <typename... Ts>
-using requires_t = enable_if_t<conjunction<Ts...>::value, int>;
+using requires_t = enable_if_t<conjunction<Ts...>::value>;
 
 /**
  * @brief If any of `Ts::value` is 'true', this type is undefined, otherwise
@@ -311,10 +311,10 @@ struct invoker<true, false> {
  * @param args The arguments to use for invocation.
  */
 template <typename F, typename... Args, typename Fd = remove_cvref_t<F>>
-constexpr auto invoke(F&& fn, Args&&... args) RETURNS(
-    detail::invoker<std::is_member_object_pointer<Fd>{},
-                    std::is_member_function_pointer<Fd>{}>::apply(static_cast<F&&>(fn),
-                                                                  static_cast<Args&&>(args)...));
+constexpr auto invoke(F&& fn, Args&&... args)
+    RETURNS(detail::invoker<std::is_member_object_pointer<Fd>::value,
+                            std::is_member_function_pointer<Fd>::value>  //
+            ::apply(static_cast<F&&>(fn), static_cast<Args&&>(args)...));
 
 /**
  * @brief Yields the type that would result from invoking F with the given arguments.
@@ -332,7 +332,7 @@ using invoke_result_t = decltype(stdx::invoke(std::declval<F>(), std::declval<Ar
  * @tparam Args The arguments to match against
  */
 template <typename Fun, typename... Args>
-struct is_invocable : is_detected<invoke_result_t, Fun, Args...> {};
+using is_invocable = is_detected<invoke_result_t, Fun, Args...>;
 
 /**
  * @brief Trait detects whether the given types are the same after the removal

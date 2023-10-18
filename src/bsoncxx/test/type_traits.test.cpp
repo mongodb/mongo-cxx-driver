@@ -1,3 +1,4 @@
+#include <string>
 #include <type_traits>
 
 #include <bsoncxx/stdx/type_traits.hpp>
@@ -108,12 +109,12 @@ static_assert(
     ::value,
     "fail");
 
-template <typename T, tt::requires_t<std::is_integral<T>> = 0>
+template <typename T, typename = tt::requires_t<std::is_integral<T>>>
 T add_one(T v) {
     return v + 1;
 }
 
-template <typename T, tt::requires_t<tt::negation<std::is_integral<T>>> = 0>
+template <typename T, int = 0, typename = tt::requires_t<tt::negation<std::is_integral<T>>>>
 T add_one(T other) {
     return other + "one";
 }
@@ -157,7 +158,7 @@ static_assert(
 
 struct constrained_callable {
     // Viable only if F is callable as F(int, Arg)
-    template <typename F, typename Arg, tt::requires_t<tt::is_invocable<F, int, Arg>> = 0>
+    template <typename F, typename Arg, typename = tt::requires_t<tt::is_invocable<F, int, Arg>>>
     double operator()(F&&, Arg) const;
 };
 

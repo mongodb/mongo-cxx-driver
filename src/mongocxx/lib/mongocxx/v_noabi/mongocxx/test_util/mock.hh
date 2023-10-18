@@ -26,6 +26,8 @@
 #include <unordered_map>
 #include <vector>
 
+#include "bsoncxx/stdx/type_traits.hpp"
+
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
@@ -85,8 +87,8 @@ class mock<R (*)(Args...)> {
             return _callbacks.top();
         }
 
-        template <typename T, typename... U>
-        typename std::enable_if<std::is_same<T, R>::value, rule&>::type interpose(T r, U... rs) {
+        template <typename T, typename... U, bsoncxx::stdx::requires_t<std::is_same<T, R>> = 0>
+        rule& interpose(T r, U... rs) {
             std::array<R, sizeof...(rs) + 1> vec = {r, rs...};
             std::size_t i = 0;
 
