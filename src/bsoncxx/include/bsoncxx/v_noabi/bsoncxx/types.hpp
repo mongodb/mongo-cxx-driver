@@ -29,6 +29,7 @@
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/oid.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
+#include <bsoncxx/stdx/type_traits.hpp>
 
 #include <bsoncxx/config/prelude.hpp>
 
@@ -128,9 +129,7 @@ struct BSONCXX_API b_string {
     /// @param t
     ///   The value to wrap.
     ///
-    template <typename T,
-              typename std::enable_if<!std::is_same<b_string, typename std::decay<T>::type>::value,
-                                      int>::type = 0>
+    template <typename T, stdx::requires_not_t<int, stdx::is_alike<b_string, T>> = 0>
     BSONCXX_INLINE explicit b_string(T&& t) : value(std::forward<T>(t)) {}
 
     stdx::string_view value;
@@ -391,8 +390,7 @@ struct BSONCXX_API b_regex {
     ///
     template <typename T,
               typename U = stdx::string_view,
-              typename std::enable_if<!std::is_same<b_regex, typename std::decay<T>::type>::value,
-                                      int>::type = 0>
+              stdx::requires_not_t<int, stdx::is_alike<b_regex, T>> = 0>
     BSONCXX_INLINE explicit b_regex(T&& regex, U&& options = U{})
         : regex(std::forward<T>(regex)), options(std::forward<U>(options)) {}
 
@@ -443,9 +441,7 @@ struct BSONCXX_API b_code {
     /// @param t
     ///   The js code
     ///
-    template <typename T,
-              typename std::enable_if<!std::is_same<b_code, typename std::decay<T>::type>::value,
-                                      int>::type = 0>
+    template <typename T, stdx::requires_not_t<int, stdx::is_alike<b_code, T>> = 0>
     BSONCXX_INLINE explicit b_code(T&& t) : code(std::forward<T>(t)) {}
 
     stdx::string_view code;
@@ -482,9 +478,7 @@ struct BSONCXX_API b_symbol {
     /// @param t
     ///   The symbol.
     ///
-    template <typename T,
-              typename std::enable_if<!std::is_same<b_symbol, typename std::decay<T>::type>::value,
-                                      int>::type = 0>
+    template <typename T, stdx::requires_not_t<int, stdx::is_alike<b_symbol, T>> = 0>
     BSONCXX_INLINE explicit b_symbol(T&& t) : symbol(std::forward<T>(t)) {}
 
     stdx::string_view symbol;
@@ -521,11 +515,9 @@ struct BSONCXX_API b_codewscope {
     /// @param scope
     ///   A bson document view holding the scope environment.
     ///
-    template <
-        typename T,
-        typename U,
-        typename std::enable_if<!std::is_same<b_codewscope, typename std::decay<T>::type>::value,
-                                int>::type = 0>
+    template <typename T,
+              typename U,
+              stdx::requires_not_t<int, stdx::is_alike<b_codewscope, T>> = 0>
     BSONCXX_INLINE explicit b_codewscope(T&& code, U&& scope)
         : code(std::forward<T>(code)), scope(std::forward<U>(scope)) {}
 
@@ -625,10 +617,7 @@ struct BSONCXX_API b_decimal128 {
     /// @param t
     ///   The value to wrap.
     ///
-    template <
-        typename T,
-        typename std::enable_if<!std::is_same<b_decimal128, typename std::decay<T>::type>::value,
-                                int>::type = 0>
+    template <typename T, stdx::requires_not_t<int, stdx::is_alike<b_decimal128, T>> = 0>
     BSONCXX_INLINE explicit b_decimal128(T&& t) : value(std::forward<T>(t)) {}
 };
 

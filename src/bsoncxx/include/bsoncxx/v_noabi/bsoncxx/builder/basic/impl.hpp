@@ -34,7 +34,7 @@ generic_append(core* core, T&& func) {
     core->close_document();
 }
 
-template <typename T>
+template <typename T, typename Placeholder = void>  // placeholder 'void' for VS2015 compat
 BSONCXX_INLINE stdx::requires_t<void, stdx::is_invocable<T, sub_array>>  //
 generic_append(core* core, T&& func) {
     core->open_array();
@@ -42,8 +42,8 @@ generic_append(core* core, T&& func) {
     core->close_array();
 }
 
-template <typename T, typename Placeholder = void>  // placeholder 'void' for VS2015 compat
-BSONCXX_INLINE stdx::requires_not_t<void,           //
+template <typename T, typename = void, typename = void>
+BSONCXX_INLINE stdx::requires_not_t<void,  //
                                     stdx::is_invocable<T, sub_document>,
                                     stdx::is_invocable<T, sub_array>>
 generic_append(core* core, T&& t) {
