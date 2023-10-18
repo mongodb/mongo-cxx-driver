@@ -323,7 +323,7 @@ $ docker push mongodb/mongo-cxx-driver:<VERSION NUMBER>-redhat-ubi-9.2
 
 Update the `Tags` section of the Docker Hub
 [Overview](https://hub.docker.com/r/mongodb/mongo-cxx-driver) to list the latest
-tag and link it to the corresponding `Dockerfile` in Github.
+tag and link it to the corresponding `Dockerfile` in Github. This requires privileged access to DockerHub. Ask other team members to update if you do not have access.
 
 Update the `FROM` lines in each Dockerfile example such that they would pull
 from the latest Docker Hub image release.
