@@ -109,13 +109,13 @@ static_assert(
     ::value,
     "fail");
 
-template <typename T, typename = tt::requires_t<std::is_integral<T>>>
-T add_one(T v) {
+template <typename T>
+tt::requires_t<T, std::is_integral<T>> add_one(T v) {
     return v + 1;
 }
 
-template <typename T, int = 0, typename = tt::requires_t<tt::negation<std::is_integral<T>>>>
-T add_one(T other) {
+template <typename T>
+tt::requires_t<T, tt::negation<std::is_integral<T>>> add_one(T other) {
     return other + "one";
 }
 
@@ -158,8 +158,8 @@ static_assert(
 
 struct constrained_callable {
     // Viable only if F is callable as F(int, Arg)
-    template <typename F, typename Arg, typename = tt::requires_t<tt::is_invocable<F, int, Arg>>>
-    double operator()(F&&, Arg) const;
+    template <typename F, typename Arg>
+    tt::requires_t<double, tt::is_invocable<F, int, Arg>> operator()(F&&, Arg) const;
 };
 
 static_assert(!tt::is_detected<tt::invoke_result_t,

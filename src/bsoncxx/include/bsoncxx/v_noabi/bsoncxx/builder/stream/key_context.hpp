@@ -107,8 +107,9 @@ class key_context {
     /// @param func
     ///   The callback to invoke
     ///
-    template <typename T, typename = stdx::requires_t<stdx::is_invocable<T, key_context>>>
-    BSONCXX_INLINE key_context& operator<<(T&& func) {
+    template <typename T>
+    BSONCXX_INLINE stdx::requires_t<key_context&, stdx::is_invocable<T, key_context>>  //
+    operator<<(T&& func) {
         stdx::invoke(std::forward<T>(func), *this);
         return *this;
     }
@@ -124,15 +125,11 @@ class key_context {
     ///
     /// @return A value type which holds the complete bson document.
     ///
-    template <typename T,
-              typename = void,
-              typename = stdx::requires_t<std::is_same<base, closed_context>,
-                                          stdx::is_alike<T, finalize_type>>>
-    BSONCXX_INLINE
-        // TODO(MSVC): This should just be 'document::value', but
-        // VS2015U1 can't resolve the name.
-        bsoncxx::document::value
-        operator<<(T&&) {
+    template <typename T>
+    BSONCXX_INLINE stdx::requires_t<bsoncxx::document::value,
+                                    std::is_same<base, closed_context>,
+                                    stdx::is_alike<T, finalize_type>>
+    operator<<(T&&) {
         return _core->extract_document();
     }
 

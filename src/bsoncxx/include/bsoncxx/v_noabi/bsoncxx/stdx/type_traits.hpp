@@ -255,22 +255,28 @@ template <typename...>
 using true_t = std::true_type;
 
 /**
- * @brief If none of `Ts::value is 'false'`, yields the type `int`, otherwise
+ * @brief If none of `Ts::value is 'false'`, yields the type `Type`, otherwise
  * this type is undefined.
  *
  * Use this to perform enable-if style template constraints.
+ *
+ * @tparam Type The type to return upon success
+ * @tparam Traits A list of type traits with nested ::value members
  */
-template <typename... Ts>
-using requires_t = enable_if_t<conjunction<Ts...>::value>;
+template <typename Type, typename... Traits>
+using requires_t = enable_if_t<conjunction<Traits...>::value, Type>;
 
 /**
  * @brief If any of `Ts::value` is 'true', this type is undefined, otherwise
- * yields the type `int`.
+ * yields the type `Type`.
  *
  * Use this to perform enable-if template contraints.
+ *
+ * @tparam Type The type to return upon success
+ * @tparam Traits A list of type traits with nested ::value members
  */
-template <typename... Ts>
-using requires_not_t = requires_t<negation<disjunction<Ts...>>>;
+template <typename Type, typename... Traits>
+using requires_not_t = requires_t<Type, negation<disjunction<Traits...>>>;
 
 // Impl: invoke/is_invocable
 namespace detail {

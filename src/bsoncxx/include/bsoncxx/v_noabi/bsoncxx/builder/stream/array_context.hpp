@@ -66,11 +66,12 @@ class array_context {
     /// @param t
     ///   The value to append
     ///
-    template <class T,
-              typename = stdx::requires_not_t<stdx::is_invocable<T, array_context<>>,
-                                              stdx::is_invocable<T, single_context>,
-                                              stdx::is_alike<T, finalize_type>>>
-    BSONCXX_INLINE array_context& operator<<(T&& t) {
+    template <class T>
+    BSONCXX_INLINE stdx::requires_not_t<array_context&,
+                                        stdx::is_invocable<T, array_context<>>,
+                                        stdx::is_invocable<T, single_context>,
+                                        stdx::is_alike<T, finalize_type>>
+    operator<<(T&& t) {
         _core->append(std::forward<T>(t));
         return *this;
     }
@@ -83,12 +84,11 @@ class array_context {
     /// @param func
     ///   The callback to invoke
     ///
-    template <
-        typename Func,
-        typename = void,
-        typename = stdx::requires_t<stdx::disjunction<stdx::is_invocable<Func, array_context<>>,
-                                                      stdx::is_invocable<Func, single_context>>>>
-    BSONCXX_INLINE array_context& operator<<(Func&& func) {
+    template <typename Func>
+    BSONCXX_INLINE stdx::requires_t<array_context&,
+                                    stdx::disjunction<stdx::is_invocable<Func, array_context>,
+                                                      stdx::is_invocable<Func, single_context>>>
+    operator<<(Func&& func) {
         stdx::invoke(std::forward<Func>(func), *this);
         return *this;
     }
@@ -104,16 +104,12 @@ class array_context {
     ///
     /// @return A value type which holds the complete bson document.
     ///
-    template <typename T,
-              typename = void,
-              typename = void,
-              typename = stdx::requires_t<std::is_same<base, closed_context>,
-                                          stdx::is_alike<T, finalize_type>>>
-    BSONCXX_INLINE
-        // TODO(MSVC): This should just be 'array::value', but
-        // VS2015U1 can't resolve the name.
-        bsoncxx::array::value
-        operator<<(T&&) {
+    template <typename T>
+    BSONCXX_INLINE stdx::requires_t<bsoncxx::array::value,
+                                    std::is_same<base, closed_context>,
+                                    stdx::is_alike<T, finalize_type>>
+    // VS2015U1 can't resolve the name.
+    operator<<(T&&) {
         return _core->extract_array();
     }
 

@@ -62,8 +62,9 @@ class value_context {
     /// @param t
     ///   The value to append
     ///
-    template <class T, typename = stdx::requires_not_t<stdx::is_invocable<T, single_context>>>
-    BSONCXX_INLINE base operator<<(T&& t) {
+    template <class T>
+    BSONCXX_INLINE stdx::requires_not_t<base, stdx::is_invocable<T, single_context>>  //
+    operator<<(T&& t) {
         _core->append(std::forward<T>(t));
         return unwrap();
     }
@@ -75,10 +76,9 @@ class value_context {
     /// @param func
     ///   The callback to invoke
     ///
-    template <typename T,
-              typename = void,
-              typename = stdx::requires_t<stdx::is_invocable<T, single_context>>>
-    BSONCXX_INLINE base operator<<(T&& func) {
+    template <typename T>
+    BSONCXX_INLINE stdx::requires_t<base, stdx::is_invocable<T, single_context>>  //
+    operator<<(T&& func) {
         stdx::invoke(std::forward<T>(func), *this);
         return unwrap();
     }

@@ -26,28 +26,27 @@ namespace builder {
 namespace basic {
 namespace impl {
 
-template <typename T, typename = stdx::requires_t<stdx::is_invocable<T, sub_document>>>
-BSONCXX_INLINE void generic_append(core* core, T&& func) {
+template <typename T>
+BSONCXX_INLINE stdx::requires_t<void, stdx::is_invocable<T, sub_document>>  //
+generic_append(core* core, T&& func) {
     core->open_document();
     stdx::invoke(std::forward<T>(func), sub_document(core));
     core->close_document();
 }
 
-template <typename T,
-          typename = void,
-          typename = stdx::requires_t<stdx::is_invocable<T, sub_array>>>
-BSONCXX_INLINE void generic_append(core* core, T&& func) {
+template <typename T>
+BSONCXX_INLINE stdx::requires_t<void, stdx::is_invocable<T, sub_array>>  //
+generic_append(core* core, T&& func) {
     core->open_array();
     stdx::invoke(std::forward<T>(func), sub_array(core));
     core->close_array();
 }
 
-template <typename T,
-          typename = void,
-          typename = void,
-          typename = stdx::requires_not_t<stdx::is_invocable<T, sub_document>,
-                                          stdx::is_invocable<T, sub_array>>>
-BSONCXX_INLINE void generic_append(core* core, T&& t) {
+template <typename T>
+BSONCXX_INLINE stdx::requires_not_t<void,  //
+                                    stdx::is_invocable<T, sub_document>,
+                                    stdx::is_invocable<T, sub_array>>
+generic_append(core* core, T&& t) {
     core->append(std::forward<T>(t));
 }
 
