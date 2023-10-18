@@ -193,7 +193,7 @@ int main(void) {
     mongoc_server_api_t *api = NULL;
     mongoc_database_t *database = NULL;
     bson_t *command = NULL;
-    bson_t reply;
+    bson_t reply = BSON_INITIALIZER;
     int rc = 0;
     bool ok = true;
 
