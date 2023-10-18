@@ -117,7 +117,7 @@ std::unique_ptr<T> make_unique(Args&&... args) {
  * the length of the array to allocate.
  *
  * Requires:
- * - T must be value-initializable
+ * - T must be default-initializable
  * - If T is an array of unknown bounds, then args... must be a single size_t
  * - Otherwise, if T is a non-array object type, args... must be empty
  * - Otherwise, this function is excluded from overload resolution
