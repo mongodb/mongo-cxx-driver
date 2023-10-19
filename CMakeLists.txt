@@ -15,46 +15,51 @@
 cmake_minimum_required(VERSION 3.15)
 
 if(POLICY CMP0025)
-  cmake_policy(SET CMP0025 NEW)
+    cmake_policy(SET CMP0025 NEW)
 endif()
 
 project(MONGO_CXX_DRIVER LANGUAGES CXX)
 
 if(NOT DEFINED BUILD_TESTING)
-  set(BUILD_TESTING OFF)  # Set this to OFF by default
+    set(BUILD_TESTING OFF) # Set this to OFF by default
 endif()
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
-  if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "4.8.2")
-    message(FATAL_ERROR "Insufficient GCC version - GCC 4.8.2+ required")
-  endif()
+    if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "4.8.2")
+        message(FATAL_ERROR "Insufficient GCC version - GCC 4.8.2+ required")
+    endif()
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-  if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "19.0.23506")
-    message(FATAL_ERROR "Insufficient Microsoft Visual C++ version - MSVC 2015 Update 1+ required")
-  endif()
+    if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "19.0.23506")
+        message(FATAL_ERROR "Insufficient Microsoft Visual C++ version - MSVC 2015 Update 1+ required")
+    endif()
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL "AppleClang")
-  if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "5.1")
-    message(FATAL_ERROR "Insufficient Apple clang version - XCode 5.1+ required")
-  endif()
+    if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "5.1")
+        message(FATAL_ERROR "Insufficient Apple clang version - XCode 5.1+ required")
+    endif()
 elseif(CMAKE_CXX_COMPILER_ID STREQUAL "Clang")
-  if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "3.5")
-    message(FATAL_ERROR "Insufficient clang version - clang 3.5+ required")
-  endif()
+    if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "3.5")
+        message(FATAL_ERROR "Insufficient clang version - clang 3.5+ required")
+    endif()
 else()
-  message(WARNING "Unknown compiler... recklessly proceeding without a version check")
+    message(WARNING "Unknown compiler... recklessly proceeding without a version check")
 endif()
+
+set(LIBBSON_REQUIRED_VERSION 1.24.0)
+set(LIBBSON_REQUIRED_ABI_VERSION 1.0)
 
 set(LIBMONGOC_REQUIRED_VERSION 1.24.0)
 set(LIBMONGOC_DOWNLOAD_VERSION ba5ab6de26a874d33b0abc3d2b46961a69380e7a) # TODO: update to 1.25.0 once C driver 1.25.0 is released.
 set(LIBMONGOC_REQUIRED_ABI_VERSION 1.0)
 
 set(NEED_DOWNLOAD_C_DRIVER false)
+
 if(TARGET mongoc_shared OR TARGET mongoc_static)
-  # If these targets exist, then libmongoc has already been included as a project
-  # sub-directory
-  message (STATUS "Found libmongoc targets declared in current build scope; version not checked")
+    # If these targets exist, then libmongoc has already been included as a project
+    # sub-directory
+    message(STATUS "Found libmongoc targets declared in current build scope; version not checked")
 else()
     find_package(mongoc-${LIBMONGOC_REQUIRED_ABI_VERSION} ${LIBMONGOC_REQUIRED_VERSION} QUIET)
+
     if(mongoc-${LIBMONGOC_REQUIRED_ABI_VERSION}_FOUND)
         message(STATUS "Found libmongoc ${mongoc-${LIBMONGOC_REQUIRED_ABI_VERSION}_VERSION}, don't need to download it.")
     else()
@@ -70,12 +75,13 @@ if(NEED_DOWNLOAD_C_DRIVER)
 
     # Declare mongo-c-driver as a dependency
     FetchContent_Declare(
-      mongo-c-driver
-      GIT_REPOSITORY https://github.com/mongodb/mongo-c-driver.git
-      GIT_TAG ${LIBMONGOC_DOWNLOAD_VERSION}
+        mongo-c-driver
+        GIT_REPOSITORY https://github.com/mongodb/mongo-c-driver.git
+        GIT_TAG ${LIBMONGOC_DOWNLOAD_VERSION}
     )
 
     FetchContent_GetProperties(mongo-c-driver)
+
     if(NOT mongo-c-driver_POPULATED)
         set(OLD_ENABLE_TESTS ${ENABLE_TESTS})
         set(OLD_BUILD_TESTING ${BUILD_TESTING})
@@ -85,6 +91,7 @@ if(NEED_DOWNLOAD_C_DRIVER)
         set(ENABLE_EXTRA_ALIGNMENT OFF)
 
         FetchContent_Populate(mongo-c-driver)
+
         # Set ENABLE_TESTS to OFF to disable the test-libmongoc target in the C driver.
         # This prevents the LoadTests.cmake script from attempting to execute test-libmongoc.
         # test-libmongoc is not built with the "all" target.
@@ -99,6 +106,7 @@ if(NEED_DOWNLOAD_C_DRIVER)
         set(ENABLE_TESTS ${OLD_ENABLE_TESTS})
         set(BUILD_TESTING ${OLD_BUILD_TESTING})
     endif()
+
     message(STATUS "Download and configure C driver version ${LIBMONGOC_DOWNLOAD_VERSION} ... end")
 endif()
 
@@ -111,14 +119,15 @@ endif()
 # errors. Instead, since we know all our platforms offer the feature,
 # just hard enable it here.
 if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-  set(COMPILER_HAS_DEPRECATED true)
+    set(COMPILER_HAS_DEPRECATED true)
 else()
-  set(COMPILER_HAS_DEPRECATED_ATTR true)
+    set(COMPILER_HAS_DEPRECATED_ATTR true)
 endif()
 
-set (CMAKE_SKIP_BUILD_RPATH false)
-set (CMAKE_BUILD_WITH_INSTALL_RPATH false)
-set (CMAKE_INSTALL_RPATH_USE_LINK_PATH true)
+set(CMAKE_SKIP_BUILD_RPATH false)
+set(CMAKE_BUILD_WITH_INSTALL_RPATH false)
+set(CMAKE_INSTALL_RPATH_USE_LINK_PATH true)
+
 # Ensure that RPATH is used on OSX
 set(CMAKE_MACOSX_RPATH 1)
 
@@ -143,14 +152,14 @@ option(BUILD_SHARED_AND_STATIC_LIBS "Build static libraries" OFF)
 # Allow the user to decide whether to use shared libraries or static libraries
 # for the mongo-c-driver
 option(BUILD_SHARED_LIBS_WITH_STATIC_MONGOC
-       "Use static mongo-c-driver libraries with shared mongo-cxx-driver libraries"
-        OFF
+    "Use static mongo-c-driver libraries with shared mongo-cxx-driver libraries"
+    OFF
 )
 
-option (ENABLE_UNINSTALL "Enable creation of uninstall script and associated uninstall build target." ON)
+option(ENABLE_UNINSTALL "Enable creation of uninstall script and associated uninstall build target." ON)
 
 # Allow the user to enable code coverage
-option (ENABLE_CODE_COVERAGE "Enable code coverage." OFF)
+option(ENABLE_CODE_COVERAGE "Enable code coverage." OFF)
 
 # Disambiguate our options into clear flags
 if(BUILD_SHARED_LIBS)
@@ -176,7 +185,7 @@ else()
     # Give a fatal error if we have a non-sensical combination
     if(BUILD_SHARED_AND_STATIC_LIBS)
         message(FATAL_ERROR
-                "BUILD_SHARED_LIBS is OFF but BUILD_SHARED_AND_STATIC_LIBS is ON. \
+            "BUILD_SHARED_LIBS is OFF but BUILD_SHARED_AND_STATIC_LIBS is ON. \
 To build static libraries only, set both BUILD_SHARED_LIBS and BUILD_SHARED_AND_STATIC_LIBS to OFF"
         )
     endif()
@@ -191,8 +200,8 @@ To build static libraries only, set both BUILD_SHARED_LIBS and BUILD_SHARED_AND_
     set(MONGOCXX_LINK_WITH_STATIC_MONGOC ON CACHE INTERNAL "")
 endif()
 
-
 option(MONGOCXX_OVERRIDE_DEFAULT_INSTALL_PREFIX "If enabled, mongocxx will set a default CMAKE_INSTALL_PREFIX if one is not already defined" TRUE)
+
 if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT AND MONGOCXX_OVERRIDE_DEFAULT_INSTALL_PREFIX)
     message(WARNING
         "mongocxx: The default CMAKE_INSTALL_PREFIX is being overridden to the "
@@ -200,19 +209,20 @@ if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT AND MONGOCXX_OVERRIDE_DEFAULT_INS
         "release. Build with 'MONGOCXX_OVERRIDE_DEFAULT_INSTALL_PREFIX=ON' to opt "
         "into what will be the default behavior in a future release. Setting install "
         "path to: ${CMAKE_BINARY_DIR}/install")
-    set (CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/install" CACHE PATH "default install path" FORCE)
+    set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/install" CACHE PATH "default install path" FORCE)
 endif()
 
 set(CMAKE_MODULE_PATH
-   ${CMAKE_MODULE_PATH}
-   ${PROJECT_SOURCE_DIR}/cmake
-   ${PROJECT_SOURCE_DIR}/cmake/make_dist
+    ${CMAKE_MODULE_PATH}
+    ${PROJECT_SOURCE_DIR}/cmake
+    ${PROJECT_SOURCE_DIR}/cmake/make_dist
 )
 
 include(GNUInstallDirs)
-include (ParseVersion)
+include(ParseVersion)
 
 set(MONGOCXX_CURRENT_VERSION_FILE "")
+
 if(BUILD_VERSION STREQUAL "0.0.0")
     if(EXISTS ${CMAKE_BINARY_DIR}/VERSION_CURRENT)
         file(STRINGS ${CMAKE_BINARY_DIR}/VERSION_CURRENT BUILD_VERSION)
@@ -221,6 +231,7 @@ if(BUILD_VERSION STREQUAL "0.0.0")
         file(STRINGS ${MONGOCXX_CURRENT_VERSION_FILE} BUILD_VERSION)
     else()
         find_package(PythonInterp)
+
         if(PYTHONINTERP_FOUND)
             execute_process(
                 COMMAND ${PYTHON_EXECUTABLE} etc/calc_release_version.py
@@ -229,10 +240,11 @@ if(BUILD_VERSION STREQUAL "0.0.0")
                 RESULT_VARIABLE CALC_RELEASE_VERSION_RESULT
                 OUTPUT_STRIP_TRAILING_WHITESPACE
             )
+
             if(NOT CALC_RELEASE_VERSION_RESULT STREQUAL 0)
                 # If python failed above, stderr would tell the user about it
                 message(FATAL_ERROR
-                   "BUILD_VERSION not specified and could not be calculated\
+                    "BUILD_VERSION not specified and could not be calculated\
  (script invocation failed); specify in CMake command, -DBUILD_VERSION=<version>"
                 )
             else()
@@ -241,7 +253,7 @@ if(BUILD_VERSION STREQUAL "0.0.0")
             endif()
         else()
             message(FATAL_ERROR
-               "BUILD_VERSION not specified and could not be calculated\
+                "BUILD_VERSION not specified and could not be calculated\
  (Python was not found on the system); specify in CMake command, -DBUILD_VERSION=<version>"
             )
         endif()
@@ -256,10 +268,11 @@ if(NOT CMAKE_BUILD_TYPE AND NOT isMultiConfig)
     set(CMAKE_BUILD_TYPE "Release")
 endif()
 
-if (ENABLE_CODE_COVERAGE)
+if(ENABLE_CODE_COVERAGE)
     if(NOT CMAKE_BUILD_TYPE STREQUAL "Debug")
         message(WARNING "Code coverage results with an optimized (non-Debug) build may be misleading")
     endif()
+
     if(CMAKE_CXX_COMPILER_ID MATCHES "GNU")
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0 -g --coverage")
     elseif(CMAKE_CXX_COMPILER_ID MATCHES "(Apple)?[Cc]lang")
@@ -271,12 +284,12 @@ endif()
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-unset (dist_generated CACHE)
-unset (dist_generated_depends CACHE)
+unset(dist_generated CACHE)
+unset(dist_generated_depends CACHE)
 
-set (BUILD_SOURCE_DIR ${CMAKE_BINARY_DIR})
+set(BUILD_SOURCE_DIR ${CMAKE_BINARY_DIR})
 
-include (MakeDistFiles)
+include(MakeDistFiles)
 
 add_custom_target(hugo_dir
     COMMAND ${CMAKE_COMMAND} -E make_directory hugo
@@ -335,12 +348,13 @@ add_custom_target(docs
 )
 
 set(THIRD_PARTY_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/third_party)
+set(DATA_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/data)
 
-option (ENABLE_TESTS "Build MongoDB C++ Driver tests." ON)
+option(ENABLE_TESTS "Build MongoDB C++ Driver tests." ON)
 
-if (ENABLE_TESTS)
+if(ENABLE_TESTS)
     enable_testing()
-endif ()
+endif()
 
 add_subdirectory(src)
 
@@ -352,74 +366,74 @@ add_subdirectory(benchmark EXCLUDE_FROM_ALL)
 #
 # CMake does not implement anything like 'dist' from autotools.
 # This implementation is based on the one in GnuCash.
+add_subdirectory(cmake)
+add_subdirectory(data)
+add_subdirectory(docs)
+add_subdirectory(etc)
 
-add_subdirectory (cmake)
-add_subdirectory (data)
-add_subdirectory (docs)
-add_subdirectory (etc)
+set(PACKAGE_PREFIX "mongo-cxx-driver-r${BUILD_VERSION}")
+set(DIST_FILE "${PACKAGE_PREFIX}.tar.gz")
 
-set (PACKAGE_PREFIX "mongo-cxx-driver-r${BUILD_VERSION}")
-set (DIST_FILE "${PACKAGE_PREFIX}.tar.gz")
+set(top_DIST_local
+    CMakeLists.txt
+    CONTRIBUTING.md
+    CREDITS.json
+    LICENSE
+    README.md
+    THIRD-PARTY-NOTICES
+    build/.gitignore
+    ${MONGOCXX_CURRENT_VERSION_FILE}
 
-set (top_DIST_local
-   CMakeLists.txt
-   CONTRIBUTING.md
-   CREDITS.json
-   LICENSE
-   README.md
-   THIRD-PARTY-NOTICES
-   build/.gitignore
-   ${MONGOCXX_CURRENT_VERSION_FILE}
-   # This sub-directory is added later, so manually include here
-   generate_uninstall/CMakeLists.txt
+    # This sub-directory is added later, so manually include here
+    generate_uninstall/CMakeLists.txt
 )
 
-set_local_dist (top_DIST ${top_DIST_local})
+set_local_dist(top_DIST ${top_DIST_local})
 
-set (ALL_DIST
-   ${top_DIST}
-   ${benchmark_DIST}
-   ${cmake_DIST}
-   ${docs_DIST}
-   ${data_DIST}
-   ${etc_DIST}
-   ${examples_DIST}
-   ${src_DIST}
+set(ALL_DIST
+    ${top_DIST}
+    ${benchmark_DIST}
+    ${cmake_DIST}
+    ${docs_DIST}
+    ${data_DIST}
+    ${etc_DIST}
+    ${examples_DIST}
+    ${src_DIST}
 )
 
 # Write a dist manifest
-string (REPLACE ";" "\n" ALL_DIST_LINES "${ALL_DIST}")
-file (WRITE ${CMAKE_BINARY_DIR}/dist_manifest.txt ${ALL_DIST_LINES})
+string(REPLACE ";" "\n" ALL_DIST_LINES "${ALL_DIST}")
+file(WRITE ${CMAKE_BINARY_DIR}/dist_manifest.txt ${ALL_DIST_LINES})
 
-install (FILES LICENSE README.md THIRD-PARTY-NOTICES
-   DESTINATION ${CMAKE_INSTALL_DATADIR}/mongo-cxx-driver
+install(FILES LICENSE README.md THIRD-PARTY-NOTICES
+    DESTINATION ${CMAKE_INSTALL_DATADIR}/mongo-cxx-driver
 )
 
 # This is the command that produces the distribution tarball
-add_custom_command (OUTPUT ${DIST_FILE}
-   COMMAND ${CMAKE_COMMAND}
-      -D CMAKE_MODULE_PATH=${PROJECT_SOURCE_DIR}/cmake/make_dist
-      -D PACKAGE_PREFIX=${PACKAGE_PREFIX}
-      -D MONGOCXX_SOURCE_DIR=${CMAKE_SOURCE_DIR}
-      -D BUILD_SOURCE_DIR=${BUILD_SOURCE_DIR}
-      -D SHELL=${SHELL}
-      "-Ddist_generated=\"${dist_generated}\""
-      -P ${PROJECT_SOURCE_DIR}/cmake/make_dist/MakeDist.cmake
+add_custom_command(OUTPUT ${DIST_FILE}
+    COMMAND ${CMAKE_COMMAND}
+    -D CMAKE_MODULE_PATH=${PROJECT_SOURCE_DIR}/cmake/make_dist
+    -D PACKAGE_PREFIX=${PACKAGE_PREFIX}
+    -D MONGOCXX_SOURCE_DIR=${CMAKE_SOURCE_DIR}
+    -D BUILD_SOURCE_DIR=${BUILD_SOURCE_DIR}
+    -D SHELL=${SHELL}
+    "-Ddist_generated=\"${dist_generated}\""
+    -P ${PROJECT_SOURCE_DIR}/cmake/make_dist/MakeDist.cmake
 
-   DEPENDS
-      ${ALL_DIST} ${dist_generated_depends}
+    DEPENDS
+    ${ALL_DIST} ${dist_generated_depends}
 )
 
-if(NOT (TARGET dist OR TARGET distcheck))
-    add_custom_target (dist DEPENDS ${DIST_FILE})
+if(NOT(TARGET dist OR TARGET distcheck))
+    add_custom_target(dist DEPENDS ${DIST_FILE})
 
-    add_custom_target (distcheck DEPENDS dist
-       COMMAND ${CMAKE_COMMAND}
-          -D CMAKE_MODULE_PATH=${PROJECT_SOURCE_DIR}/cmake/make_dist
-          -D CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}
-          -D PACKAGE_PREFIX=${PACKAGE_PREFIX}
-          -D CMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS}
-          -P ${PROJECT_SOURCE_DIR}/cmake/make_dist/MakeDistCheck.cmake
+    add_custom_target(distcheck DEPENDS dist
+        COMMAND ${CMAKE_COMMAND}
+        -D CMAKE_MODULE_PATH=${PROJECT_SOURCE_DIR}/cmake/make_dist
+        -D CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}
+        -D PACKAGE_PREFIX=${PACKAGE_PREFIX}
+        -D CMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS}
+        -P ${PROJECT_SOURCE_DIR}/cmake/make_dist/MakeDistCheck.cmake
     )
 endif()
 
@@ -429,6 +443,7 @@ if(ENABLE_UNINSTALL)
     else()
         set(UNINSTALL_PROG "uninstall.sh")
     endif()
+
     set(UNINSTALL_PROG_DIR "${CMAKE_INSTALL_DATADIR}/mongo-cxx-driver")
 
     # Create uninstall program and associated uninstall target
@@ -439,14 +454,17 @@ if(ENABLE_UNINSTALL)
 endif()
 
 # Spit out some information regarding the generated build system
-message (STATUS "Build files generated for:")
-message (STATUS "\tbuild system: ${CMAKE_GENERATOR}")
-if (CMAKE_GENERATOR_INSTANCE)
-   message (STATUS "\tinstance: ${CMAKE_GENERATOR_INSTANCE}")
-endif ()
-if (CMAKE_GENERATOR_PLATFORM)
-   message (STATUS "\tinstance: ${CMAKE_GENERATOR_PLATFORM}")
-endif ()
-if (CMAKE_GENERATOR_TOOLSET)
-   message (STATUS "\tinstance: ${CMAKE_GENERATOR_TOOLSET}")
-endif ()
+message(STATUS "Build files generated for:")
+message(STATUS "\tbuild system: ${CMAKE_GENERATOR}")
+
+if(CMAKE_GENERATOR_INSTANCE)
+    message(STATUS "\tinstance: ${CMAKE_GENERATOR_INSTANCE}")
+endif()
+
+if(CMAKE_GENERATOR_PLATFORM)
+    message(STATUS "\tinstance: ${CMAKE_GENERATOR_PLATFORM}")
+endif()
+
+if(CMAKE_GENERATOR_TOOLSET)
+    message(STATUS "\tinstance: ${CMAKE_GENERATOR_TOOLSET}")
+endif()

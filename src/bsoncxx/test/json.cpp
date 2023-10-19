@@ -19,7 +19,7 @@
 #include <bsoncxx/exception/exception.hpp>
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/private/libbson.hh>
-#include <bsoncxx/test_util/catch.hh>
+#include <bsoncxx/test/catch.hh>
 
 namespace {
 using bsoncxx::builder::basic::kvp;

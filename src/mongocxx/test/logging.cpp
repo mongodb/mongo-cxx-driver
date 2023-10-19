@@ -15,7 +15,7 @@
 #include <vector>
 
 #include <bsoncxx/stdx/make_unique.hpp>
-#include <bsoncxx/test_util/catch.hh>
+#include <bsoncxx/test/catch.hh>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/logger.hpp>
 #include <mongocxx/private/libmongoc.hh>

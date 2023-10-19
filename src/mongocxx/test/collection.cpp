@@ -24,7 +24,7 @@
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/string/to_string.hpp>
-#include <bsoncxx/test_util/catch.hh>
+#include <bsoncxx/test/catch.hh>
 #include <bsoncxx/types.hpp>
 #include <mongocxx/client.hpp>
 #include <mongocxx/collection.hpp>
@@ -38,7 +38,7 @@
 #include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/libmongoc.hh>
 #include <mongocxx/read_concern.hpp>
-#include <mongocxx/test_util/client_helpers.hh>
+#include <mongocxx/test/client_helpers.hh>
 #include <mongocxx/write_concern.hpp>
 
 namespace {

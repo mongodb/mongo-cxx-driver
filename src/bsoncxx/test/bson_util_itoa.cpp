@@ -13,7 +13,7 @@
 // limitations under the License.
 
 #include <bsoncxx/private/itoa.hh>
-#include <bsoncxx/test_util/catch.hh>
+#include <bsoncxx/test/catch.hh>
 
 namespace {
 TEST_CASE("util::itoa is equivalent to to_string(int)", "[bsoncxx::util::itoa]") {

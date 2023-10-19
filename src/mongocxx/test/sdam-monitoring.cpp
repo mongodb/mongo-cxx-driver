@@ -16,12 +16,12 @@
 
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/string/to_string.hpp>
-#include <bsoncxx/test_util/catch.hh>
+#include <bsoncxx/test/catch.hh>
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/exception.hpp>
 #include <mongocxx/instance.hpp>
+#include <mongocxx/test/client_helpers.hh>
 #include <mongocxx/test/spec/operation.hh>
-#include <mongocxx/test_util/client_helpers.hh>
 
 // Don't use SDAM Monitoring spec tests, we'd need libmongoc internals to send hello replies.
 

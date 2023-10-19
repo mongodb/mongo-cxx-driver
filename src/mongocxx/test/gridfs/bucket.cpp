@@ -26,7 +26,7 @@
 #include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/oid.hpp>
-#include <bsoncxx/test_util/catch.hh>
+#include <bsoncxx/test/catch.hh>
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
 #include <mongocxx/client.hpp>
@@ -38,7 +38,7 @@
 #include <mongocxx/options/find.hpp>
 #include <mongocxx/options/gridfs/upload.hpp>
 #include <mongocxx/options/index.hpp>
-#include <mongocxx/test_util/client_helpers.hh>
+#include <mongocxx/test/client_helpers.hh>
 #include <mongocxx/uri.hpp>
 
 namespace {

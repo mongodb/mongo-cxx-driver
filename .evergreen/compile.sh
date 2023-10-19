@@ -19,18 +19,18 @@ fi
 OS=$(uname -s | tr '[:upper:]' '[:lower:]')
 
 if [ -f /proc/cpuinfo ]; then
-    CONCURRENCY=$(grep -c ^processor /proc/cpuinfo)
+    CMAKE_BUILD_PARALLEL_LEVEL=$(grep -c ^processor /proc/cpuinfo)
 elif which sysctl; then
-    CONCURRENCY=$(sysctl -n hw.logicalcpu)
+    CMAKE_BUILD_PARALLEL_LEVEL=$(sysctl -n hw.logicalcpu)
 else
-    echo "$0: can't figure out what value of -j to pass to 'make'" >&2
+    echo "$0: can't figure out what build parallel level to use" >&2
     exit 1
 fi
+export CMAKE_BUILD_PARALLEL_LEVEL
 
 case "$OS" in
    darwin|linux)
       GENERATOR=${GENERATOR:-"Unix Makefiles"}
-      CMAKE_BUILD_OPTS="-j $CONCURRENCY"
       CMAKE_EXAMPLES_TARGET=examples
       if [ "$RUN_DISTCHECK" ]; then
          _RUN_DISTCHECK=$RUN_DISTCHECK
@@ -39,7 +39,7 @@ case "$OS" in
 
    cygwin*)
       GENERATOR=${GENERATOR:-"Visual Studio 14 2015 Win64"}
-      CMAKE_BUILD_OPTS="/verbosity:minimal /maxcpucount:$CONCURRENCY"
+      CMAKE_BUILD_OPTS="/verbosity:minimal"
       CMAKE_EXAMPLES_TARGET=examples/examples
       ;;
 

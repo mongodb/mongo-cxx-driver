@@ -26,16 +26,16 @@
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/string/to_string.hpp>
-#include <bsoncxx/test_util/catch.hh>
+#include <bsoncxx/test/catch.hh>
 #include <bsoncxx/types/bson_value/value.hpp>
 #include <mongocxx/client_encryption.hpp>
 #include <mongocxx/exception/bulk_write_exception.hpp>
 #include <mongocxx/exception/exception.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/instance.hpp>
+#include <mongocxx/test/client_helpers.hh>
 #include <mongocxx/test/spec/monitoring.hh>
 #include <mongocxx/test/spec/util.hh>
-#include <mongocxx/test_util/client_helpers.hh>
 
 namespace {
 

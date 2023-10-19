@@ -16,7 +16,7 @@
 
 #include <bsoncxx/builder/basic/array.hpp>
 #include <bsoncxx/builder/basic/document.hpp>
-#include <bsoncxx/test_util/catch.hh>
+#include <bsoncxx/test/catch.hh>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/find_one_and_update.hpp>
 #include <third_party/catch/include/helpers.hpp>

@@ -4,12 +4,12 @@
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/oid.hpp>
-#include <bsoncxx/test_util/catch.hh>
+#include <bsoncxx/test/catch.hh>
 #include <mongocxx/client.hpp>
 #include <mongocxx/cursor.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/search_index_view.hpp>
-#include <mongocxx/test_util/client_helpers.hh>
+#include <mongocxx/test/client_helpers.hh>
 
 namespace {
 using bsoncxx::builder::basic::kvp;

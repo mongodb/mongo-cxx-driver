@@ -14,7 +14,7 @@
 
 #pragma once
 
-#include <bsoncxx/test_util/catch.hh>
+#include <bsoncxx/test/catch.hh>
 #include <mongocxx/exception/exception.hpp>
 #include <mongocxx/private/libmongoc.hh>
 
