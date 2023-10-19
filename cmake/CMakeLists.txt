@@ -16,6 +16,7 @@ add_subdirectory(make_dist)
 
 set(cmake_MODULES
     ParseVersion.cmake
+    MacroGuardTest.cmake
     BsoncxxUtil.cmake
     MongocxxUtil.cmake
 )

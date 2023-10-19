@@ -65,10 +65,13 @@ add_test(NAME bson COMMAND test_bson)
 
 # Generate test to ensure macro guards behave properly.
 if(ENABLE_MACRO_GUARD_TESTS)
-    set(BSONCXX_GUARDED_MACROS "")
+    include(MacroGuardTest)
 
-    # Public macros.
-    list(APPEND BSONCXX_GUARDED_MACROS
+    add_macro_guard_test(
+        PROJECT_NAME bsoncxx
+        PROJECT_TEST_PROPERTIES bsoncxx_test_properties
+
+        GUARDED_MACROS
 
         # compiler.hpp
         BSONCXX_INLINE
@@ -100,117 +103,29 @@ if(ENABLE_MACRO_GUARD_TESTS)
 
         # prelude.hpp
         BSONCXX_UNREACHABLE
+
+        INCLUDE_FILTERS
+
+        # Public headers.
+        "include/**/*.hpp"
+
+        # Private headers.
+        "lib/**/*.hh"
+
+        # Test headers.
+        "test/**/*.hh"
+
+        EXCLUDE_FILTERS
+
+        # Exclude config headers.
+        ".*/(include|lib)/bsoncxx/v.*/config/.*"
+
+        # Exclude X macro headers.
+        ".*/include/bsoncxx/v_noabi/bsoncxx/enums/.*"
+
+        # Exclude symbol headers.
+        ".*/.*_symbols.hh"
     )
-
-    # Private macros (currently, none).
-    list(APPEND BSONCXX_GUARDED_MACROS)
-
-    # Public bsoncxx headers.
-    file(GLOB_RECURSE BSONCXX_GUARDED_PUBLIC_HEADERS
-        LIST_DIRECTORIES false
-        RELATIVE ${PROJECT_SOURCE_DIR}
-        "${PROJECT_SOURCE_DIR}/include/**/*.hpp"
-    )
-
-    # Private bsoncxx headers.
-    file(GLOB_RECURSE BSONCXX_GUARDED_PRIVATE_HEADERS
-        LIST_DIRECTORIES false
-        RELATIVE ${PROJECT_SOURCE_DIR}
-        "${PROJECT_SOURCE_DIR}/lib/**/*.hh"
-    )
-
-    # Test bsoncxx headers.
-    file(GLOB_RECURSE BSONCXX_GUARDED_TEST_HEADERS
-        LIST_DIRECTORIES false
-        RELATIVE ${PROJECT_SOURCE_DIR}
-        "${PROJECT_SOURCE_DIR}/test/**/*.hh"
-    )
-
-    # Exclude config headers.
-    list(FILTER BSONCXX_GUARDED_PUBLIC_HEADERS EXCLUDE REGEX ".*/bsoncxx/config/.*")
-    list(FILTER BSONCXX_GUARDED_PRIVATE_HEADERS EXCLUDE REGEX ".*/bsoncxx/config/.*")
-
-    # Exclude X macro headers.
-    list(FILTER BSONCXX_GUARDED_PUBLIC_HEADERS EXCLUDE REGEX ".*/bsoncxx/enums/.*")
-
-    # Exclude symbol headers.
-    list(FILTER BSONCXX_GUARDED_PRIVATE_HEADERS EXCLUDE REGEX ".*/.*_symbols.hh")
-
-    set(BSONCXX_GUARDED_HEADERS
-        ${BSONCXX_GUARDED_PUBLIC_HEADERS}
-        ${BSONCXX_GUARDED_PRIVATE_HEADERS}
-        ${BSONCXX_GUARDED_TEST_HEADERS}
-    )
-
-    set(BSONCXX_MACRO_GUARD_TEST_PRELUDE "")
-
-    # Check and set initial state.
-    foreach(macro ${BSONCXX_GUARDED_MACROS})
-        string(APPEND BSONCXX_MACRO_GUARD_TEST_PRELUDE
-            "#if defined(${macro})\n"
-            "#error \"${macro} is already defined\"\n"
-            "#endif\n"
-            "#define ${macro} macro guard test\n"
-            "\n"
-        )
-    endforeach()
-
-    # Implement as recursive algorithm for C++11 compatibility.
-    string(APPEND BSONCXX_MACRO_GUARD_TEST_PRELUDE
-        "static constexpr bool compare_equal(const char* lhs, const char* rhs) {\n"
-        "    return (*lhs == *rhs) && (*lhs == '\\0' || compare_equal(lhs + 1, rhs + 1));\n"
-        "}\n"
-        "\n"
-        "static_assert(compare_equal(\"abc\", \"abc\"), \"compare_equal() sanity check failed\");\n"
-        "static_assert(!compare_equal(\"abc\", \"def\"), \"compare_equal() sanity check failed\");\n"
-        "\n"
-        "#define _TO_STR(x) #x\n"
-        "#define TO_STR(x) _TO_STR(x)\n"
-        "\n"
-    )
-
-    add_custom_target(test_bsoncxx_macro_guards)
-
-    # Test each header individually.
-    foreach(header ${BSONCXX_GUARDED_HEADERS})
-        set(BSONCXX_MACRO_GUARD_TEST "${BSONCXX_MACRO_GUARD_TEST_PRELUDE}")
-
-        # Strip the subdir.
-        string(REGEX REPLACE "^(include|lib|test)/(.*)$" "\\1" subdir "${header}")
-        string(REGEX REPLACE "^(include|lib|test)/(.*)$" "\\2" header ${header})
-
-        # Apply include prefix to test headers.
-        if("${subdir}" STREQUAL "test")
-            set(relheader "bsoncxx/test/${header}")
-        else()
-            set(relheader "${header}")
-        endif()
-
-        # The include directive.
-        string(APPEND BSONCXX_MACRO_GUARD_TEST "#include <${relheader}>\n\n")
-
-        # Test all guarded macros have been properly restored.
-        foreach(macro ${BSONCXX_GUARDED_MACROS})
-            string(APPEND BSONCXX_MACRO_GUARD_TEST
-                "static_assert(\n"
-                "    compare_equal(TO_STR(${macro}),\"macro guard test\"),\n"
-                "    \"${macro} was not correctly restored by <${relheader}>\"\n"
-                ");\n"
-                "\n"
-            )
-        endforeach()
-
-        # bsoncxx/v_noabi/bsoncxx/config/config.hpp -> bsoncxx-v_noabi-bsoncxx-config-config
-        string(REPLACE "/" "-" test_name "${header}")
-        string(REGEX REPLACE "^(.*)\\.(hh|hpp)$" "\\1" test_name "${test_name}")
-        configure_file(test_macro_guards.cpp.in macro_guards/${subdir}/${test_name}.cpp)
-
-        # Prefix library name to reduce potential for target conflicts.
-        add_library(test-macro_guards-${subdir}-${test_name} STATIC EXCLUDE_FROM_ALL ${CMAKE_CURRENT_BINARY_DIR}/macro_guards/${subdir}/${test_name}.cpp)
-        target_link_libraries(test-macro_guards-${subdir}-${test_name} PRIVATE bsoncxx_test_properties)
-
-        add_dependencies(test_bsoncxx_macro_guards test-macro_guards-${subdir}-${test_name})
-    endforeach()
 endif()
 
 set_dist_list(src_bsoncxx_test_DIST
