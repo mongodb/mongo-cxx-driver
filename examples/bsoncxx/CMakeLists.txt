@@ -27,6 +27,12 @@ set(BSONCXX_EXAMPLES
     view_and_value.cpp
 )
 
+if(BSONCXX_BUILD_SHARED)
+    set(BSONCXX_LIBRARY_FOR_EXAMPLES bsoncxx_shared)
+else()
+    set(BSONCXX_LIBRARY_FOR_EXAMPLES bsoncxx_static)
+endif()
+
 foreach(EXAMPLE_SRC ${BSONCXX_EXAMPLES})
     get_filename_component(EXAMPLE_TARGET ${EXAMPLE_SRC} NAME_WE)
     add_executable(${EXAMPLE_TARGET} ${EXAMPLE_SRC})

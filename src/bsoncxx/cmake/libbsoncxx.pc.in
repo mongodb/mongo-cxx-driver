@@ -13,8 +13,8 @@
 # limitations under the License.
 
 prefix=@CMAKE_INSTALL_PREFIX@
-includedir=${prefix}/include
-libdir=@libdir@
+includedir=${prefix}/@CMAKE_INSTALL_INCLUDEDIR@
+libdir=${prefix}/@CMAKE_INSTALL_LIBDIR@
 
 Name: libbsoncxx
 Description: The MongoDB C++11 BSON Library
