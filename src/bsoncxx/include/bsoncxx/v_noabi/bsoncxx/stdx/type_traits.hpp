@@ -176,9 +176,17 @@ struct conditional<false> {
 
 }  // namespace detail
 
+/**
+ * @brief Pick one of two types based on a boolean
+ *
+ * @tparam B A boolean value
+ * @tparam T If `B` is true, pick this type
+ * @tparam F If `B` is false, pick this type
+ */
 template <bool B, typename T, typename F>
 using conditional_t = typename detail::conditional<B>::template f<T, F>;
 
+// impl for conjunction+disjunction
 namespace detail {
 
 template <typename FalseType, typename Opers>
@@ -308,17 +316,22 @@ struct invoker<true, false> {
 
 }  // namespace detail
 
-/**
- * @brief Invoke the given object with the given arguments.
- *
- * @param fn An invocable: A callable, member object pointer, or member function pointer.
- * @param args The arguments to use for invocation.
- */
-template <typename F, typename... Args, typename Fd = remove_cvref_t<F>>
-constexpr auto invoke(F&& fn, Args&&... args)
-    RETURNS(detail::invoker<std::is_member_object_pointer<Fd>::value,
-                            std::is_member_function_pointer<Fd>::value>  //
-            ::apply(static_cast<F&&>(fn), static_cast<Args&&>(args)...));
+static constexpr struct invoke_fn {
+    /**
+     * @brief Invoke the given object with the given arguments.
+     *
+     * @param fn An invocable: A callable, member object pointer, or member function pointer.
+     * @param args The arguments to use for invocation.
+     */
+
+    template <typename F, typename... Args, typename Fd = remove_cvref_t<F>>
+    constexpr auto operator()(F&& fn, Args&&... args) const
+        RETURNS(detail::invoker<std::is_member_object_pointer<Fd>::value,
+                                std::is_member_function_pointer<Fd>::value>  //
+                ::apply(static_cast<F&&>(fn), static_cast<Args&&>(args)...));
+} invoke;
+
+#pragma pop_macro("RETURNS")
 
 /**
  * @brief Yields the type that would result from invoking F with the given arguments.
@@ -344,8 +357,6 @@ using is_invocable = is_detected<invoke_result_t, Fun, Args...>;
  */
 template <typename T, typename U>
 using is_alike = std::is_same<remove_cvref_t<T>, remove_cvref_t<U>>;
-
-#pragma pop_macro("RETURNS")
 
 }  // namespace type_traits
 
