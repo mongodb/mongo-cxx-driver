@@ -29,9 +29,6 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     target_compile_options(mongocxx_mocked PRIVATE /bigobj)
 endif()
 
-# Allow `#include <third_party/catch/include/...>`
-target_include_directories(mongocxx_mocked PUBLIC ${THIRD_PARTY_SOURCE_DIR}/..)
-
 set(spec_test_common
     spec/operation.cpp
     spec/unified_tests/entity.cpp
@@ -40,11 +37,10 @@ set(spec_test_common
     spec/util.cpp
 )
 
-set(client_helpers_cpp ${PROJECT_SOURCE_DIR}/lib/mongocxx/v_noabi/mongocxx/test_util/client_helpers.cpp)
-
 add_executable(test_driver
     bulk_write.cpp
     change_streams.cpp
+    client_helpers.cpp
     client_session.cpp
     client_side_encryption.cpp
     client.cpp
@@ -105,7 +101,6 @@ add_executable(test_driver
     uri.cpp
     validation_criteria.cpp
     write_concern.cpp
-    ${client_helpers_cpp}
 )
 
 add_executable(test_logging
@@ -119,69 +114,75 @@ add_executable(test_instance
 add_executable(test_crud_specs
     spec/crud.cpp
     ${spec_test_common}
-    ${client_helpers_cpp}
+    client_helpers.cpp
 )
 
 add_executable(test_gridfs_specs
     spec/gridfs.cpp
     ${spec_test_common}
-    ${client_helpers_cpp}
+    client_helpers.cpp
 )
 
 add_executable(test_client_side_encryption_specs
     spec/client_side_encryption.cpp
     ${spec_test_common}
-    ${client_helpers_cpp}
+    client_helpers.cpp
 )
 
 add_executable(test_command_monitoring_specs
     spec/command_monitoring.cpp
     ${spec_test_common}
-    ${client_helpers_cpp}
+    client_helpers.cpp
 )
 
 add_executable(test_transactions_specs
     spec/transactions.cpp
     ${spec_test_common}
-    ${client_helpers_cpp}
+    client_helpers.cpp
 )
 
 add_executable(test_retryable_reads_specs
     spec/retryable-reads.cpp
     ${spec_test_common}
-    ${client_helpers_cpp}
+    client_helpers.cpp
 )
 
 add_executable(test_read_write_concern_specs
     spec/read_write_concern.cpp
     ${spec_test_common}
-    ${client_helpers_cpp}
+    client_helpers.cpp
 )
 
 add_executable(test_mongohouse_specs
     spec/mongohouse.cpp
     ${spec_test_common}
-    ${client_helpers_cpp}
+    client_helpers.cpp
 )
 
 add_executable(test_unified_format_spec
     spec/unified_tests/operations.cpp
     spec/unified_tests/runner.cpp
     ${spec_test_common}
-    ${client_helpers_cpp}
+    client_helpers.cpp
 )
 
 add_executable(test_versioned_api
     versioned_api.cpp
     ${spec_test_common}
-    ${client_helpers_cpp}
+    client_helpers.cpp
 )
 
 # Common target properties for test executables.
 add_library(mongocxx_test_properties INTERFACE)
 target_sources(mongocxx_test_properties INTERFACE ${THIRD_PARTY_SOURCE_DIR}/catch/main.cpp)
 target_link_libraries(mongocxx_test_properties INTERFACE mongocxx_mocked ${libmongoc_target})
-target_include_directories(mongocxx_test_properties INTERFACE ${libmongoc_include_directories})
+target_include_directories(mongocxx_test_properties INTERFACE
+    # Allow `#include <mongoc/mongoc.h>`
+    ${libmongoc_include_directories}
+
+    # Allow `#include <mongocxx/test/...>` and `#include <third_party/...>`.
+    ${CMAKE_CURRENT_SOURCE_DIR}/../..
+)
 
 target_link_libraries(test_driver PRIVATE mongocxx_test_properties)
 target_link_libraries(test_logging PRIVATE mongocxx_test_properties)
@@ -289,6 +290,8 @@ set_dist_list(src_mongocxx_test_DIST
     CMakeLists.txt
     bulk_write.cpp
     change_streams.cpp
+    client_helpers.cpp
+    client_helpers.hh
     client_session.cpp
     client_side_encryption.cpp
     client.cpp

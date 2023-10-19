@@ -15,7 +15,7 @@
 #include <chrono>
 
 #include <bsoncxx/builder/basic/document.hpp>
-#include <bsoncxx/test_util/catch.hh>
+#include <bsoncxx/test/catch.hh>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/count.hpp>
 #include <third_party/catch/include/helpers.hpp>

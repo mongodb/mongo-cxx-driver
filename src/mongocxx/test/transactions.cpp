@@ -15,12 +15,12 @@
 #include <iostream>
 #include <unordered_set>
 
-#include <bsoncxx/test_util/catch.hh>
+#include <bsoncxx/test/catch.hh>
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/instance.hpp>
-#include <mongocxx/test_util/client_helpers.hh>
+#include <mongocxx/test/client_helpers.hh>
 
 namespace {
 using namespace mongocxx;

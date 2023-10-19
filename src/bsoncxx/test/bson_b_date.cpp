@@ -14,7 +14,7 @@
 
 #include <chrono>
 
-#include <bsoncxx/test_util/catch.hh>
+#include <bsoncxx/test/catch.hh>
 #include <bsoncxx/types.hpp>
 
 namespace {

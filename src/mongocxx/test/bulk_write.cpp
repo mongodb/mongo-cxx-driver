@@ -13,7 +13,7 @@
 // limitations under the License.
 
 #include <bsoncxx/builder/basic/document.hpp>
-#include <bsoncxx/test_util/catch.hh>
+#include <bsoncxx/test/catch.hh>
 #include <bsoncxx/types.hpp>
 #include <mongocxx/bulk_write.hpp>
 #include <mongocxx/client.hpp>
