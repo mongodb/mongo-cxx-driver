@@ -37,11 +37,10 @@ set(spec_test_common
     spec/util.cpp
 )
 
-set(client_helpers_cpp client_helpers.cpp)
-
 add_executable(test_driver
     bulk_write.cpp
     change_streams.cpp
+    client_helpers.cpp
     client_session.cpp
     client_side_encryption.cpp
     client.cpp
@@ -102,7 +101,6 @@ add_executable(test_driver
     uri.cpp
     validation_criteria.cpp
     write_concern.cpp
-    ${client_helpers_cpp}
 )
 
 add_executable(test_logging
@@ -116,62 +114,62 @@ add_executable(test_instance
 add_executable(test_crud_specs
     spec/crud.cpp
     ${spec_test_common}
-    ${client_helpers_cpp}
+    client_helpers.cpp
 )
 
 add_executable(test_gridfs_specs
     spec/gridfs.cpp
     ${spec_test_common}
-    ${client_helpers_cpp}
+    client_helpers.cpp
 )
 
 add_executable(test_client_side_encryption_specs
     spec/client_side_encryption.cpp
     ${spec_test_common}
-    ${client_helpers_cpp}
+    client_helpers.cpp
 )
 
 add_executable(test_command_monitoring_specs
     spec/command_monitoring.cpp
     ${spec_test_common}
-    ${client_helpers_cpp}
+    client_helpers.cpp
 )
 
 add_executable(test_transactions_specs
     spec/transactions.cpp
     ${spec_test_common}
-    ${client_helpers_cpp}
+    client_helpers.cpp
 )
 
 add_executable(test_retryable_reads_specs
     spec/retryable-reads.cpp
     ${spec_test_common}
-    ${client_helpers_cpp}
+    client_helpers.cpp
 )
 
 add_executable(test_read_write_concern_specs
     spec/read_write_concern.cpp
     ${spec_test_common}
-    ${client_helpers_cpp}
+    client_helpers.cpp
 )
 
 add_executable(test_mongohouse_specs
     spec/mongohouse.cpp
     ${spec_test_common}
-    ${client_helpers_cpp}
+    client_helpers.cpp
 )
 
 add_executable(test_unified_format_spec
     spec/unified_tests/operations.cpp
     spec/unified_tests/runner.cpp
     ${spec_test_common}
-    ${client_helpers_cpp}
+    client_helpers.cpp
 )
 
 add_executable(test_versioned_api
     versioned_api.cpp
     ${spec_test_common}
-    ${client_helpers_cpp}
+    client_helpers.cpp
 )
 
 # Common target properties for test executables.
