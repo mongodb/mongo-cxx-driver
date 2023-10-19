@@ -87,7 +87,7 @@ class mock<R (*)(Args...)> {
             return _callbacks.top();
         }
 
-        template <typename T, typename... U, bsoncxx::stdx::requires_t<std::is_same<T, R>> = 0>
+        template <typename T, typename... U, bsoncxx::stdx::requires_t<int, std::is_same<T, R>> = 0>
         rule& interpose(T r, U... rs) {
             std::array<R, sizeof...(rs) + 1> vec = {r, rs...};
             std::size_t i = 0;
