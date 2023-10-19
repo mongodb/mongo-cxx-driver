@@ -3,7 +3,7 @@
 #include <new>
 
 #include <bsoncxx/stdx/make_unique.hpp>
-#include <bsoncxx/test_util/catch.hh>
+#include <bsoncxx/test/catch.hh>
 
 namespace {
 

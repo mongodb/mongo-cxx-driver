@@ -12,21 +12,21 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-add_subdirectory (make_dist)
+add_subdirectory(make_dist)
 
-set (cmake_MODULES
-   ParseVersion.cmake
-   BsoncxxUtil.cmake
-   MongocxxUtil.cmake
+set(cmake_MODULES
+    ParseVersion.cmake
+    BsoncxxUtil.cmake
+    MongocxxUtil.cmake
 )
 
-set_local_dist (cmake_DIST_local
-   CMakeLists.txt
-   ${cmake_MODULES}
+set_local_dist(cmake_DIST_local
+    CMakeLists.txt
+    ${cmake_MODULES}
 )
 
-set (cmake_DIST
-   ${cmake_DIST_local}
-   ${cmake_make_dist_DIST}
-   PARENT_SCOPE
+set(cmake_DIST
+    ${cmake_DIST_local}
+    ${cmake_make_dist_DIST}
+    PARENT_SCOPE
 )

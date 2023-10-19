@@ -13,26 +13,65 @@
 # limitations under the License.
 
 if(NOT BUILD_TESTING)
-  set_property(DIRECTORY PROPERTY EXCLUDE_FROM_ALL TRUE)
+    set_property(DIRECTORY PROPERTY EXCLUDE_FROM_ALL TRUE)
 endif()
 
-# Allow `#include <third_party/catch/include/...>`
-include_directories(${THIRD_PARTY_SOURCE_DIR}/..)
+if(BSONCXX_BUILD_SHARED)
+    bsoncxx_add_library(bsoncxx_testing "bsoncxx-testing" SHARED)
+else()
+    bsoncxx_add_library(bsoncxx_testing "bsoncxx-testing" STATIC)
+endif()
 
-file (GLOB src_bsoncxx_test_DIST_cpps CONFIGURE_DEPENDS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.cpp)
+target_compile_definitions(bsoncxx_testing PUBLIC BSONCXX_TESTING)
 
 add_executable(test_bson
-    ${THIRD_PARTY_SOURCE_DIR}/catch/main.cpp
-    ${src_bsoncxx_test_DIST_cpps}
+    array.cpp
+    bson_b_date.cpp
+    bson_builder.cpp
+    bson_get_values.cpp
+    bson_serialization.cpp
+    bson_types.cpp
+    bson_util_itoa.cpp
+    bson_validate.cpp
+    bson_value.cpp
+    json.cpp
+    oid.cpp
+    view_or_value.cpp
+    make_unique.test.cpp
 )
 
-target_link_libraries(test_bson PRIVATE bsoncxx::testing ${libbson_target})
-target_include_directories(test_bson PRIVATE ${libbson_include_directories})
-target_compile_definitions(test_bson PRIVATE ${libbson_definitions})
+# Common target properties for test executables.
+add_library(bsoncxx_test_properties INTERFACE)
+target_sources(bsoncxx_test_properties INTERFACE ${THIRD_PARTY_SOURCE_DIR}/catch/main.cpp)
+target_link_libraries(bsoncxx_test_properties INTERFACE bsoncxx_testing ${libbson_target})
+target_include_directories(bsoncxx_test_properties INTERFACE
+    # Allow `#include <bson/bson.h>`
+    ${libbson_include_directories}
 
-add_test(bson test_bson)
+    # Allow `#include <bsoncxx/test/...>` and `#include <third_party/...>`.
+    ${CMAKE_CURRENT_SOURCE_DIR}/../..
+)
+target_compile_definitions(bsoncxx_test_properties INTERFACE ${libbson_definitions})
 
-set_dist_list (src_bsoncxx_test_DIST
-   CMakeLists.txt
-   ${src_bsoncxx_test_DIST_cpps}
+target_link_libraries(test_bson PRIVATE bsoncxx_test_properties)
+
+add_test(NAME bson COMMAND test_bson)
+
+set_dist_list(src_bsoncxx_test_DIST
+    CMakeLists.txt
+    array.cpp
+    bson_b_date.cpp
+    bson_builder.cpp
+    bson_get_values.cpp
+    bson_serialization.cpp
+    bson_types.cpp
+    bson_util_itoa.cpp
+    bson_validate.cpp
+    bson_value.cpp
+    catch.hh
+    json.cpp
+    oid.cpp
+    to_string.hh
+    view_or_value.cpp
+    make_unique.test.cpp
 )

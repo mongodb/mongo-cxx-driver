@@ -16,7 +16,7 @@
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/string/to_string.hpp>
-#include <bsoncxx/test_util/catch.hh>
+#include <bsoncxx/test/catch.hh>
 #include <mongocxx/hint.hpp>
 #include <mongocxx/instance.hpp>
 

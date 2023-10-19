@@ -12,14 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set (cmake_make_dist_MODULES
-   MakeDist.cmake
-   MakeDistCheck.cmake
-   MakeDistFiles.cmake
+set(cmake_make_dist_MODULES
+    MakeDist.cmake
+    MakeDistCheck.cmake
+    MakeDistFiles.cmake
 )
 
-set_dist_list (cmake_make_dist_DIST
-   CMakeLists.txt
-   COPYING-CMAKE-SCRIPTS.txt
-   ${cmake_make_dist_MODULES}
+set_dist_list(cmake_make_dist_DIST
+    CMakeLists.txt
+    COPYING-CMAKE-SCRIPTS.txt
+    ${cmake_make_dist_MODULES}
 )
