@@ -57,7 +57,7 @@ constexpr check_cases<  //
     tt::remove_cvref_t,
     Case<int, int&&>,
     Case<int, const int&&>,
-    Case<int(int), int (&&)(int)>,
+    Case<int(int), int(&&)(int)>,
     Case<int(int), int (&)(int)>,
     Case<int[42], const int (&)[42]>,
     Case<int[42], const int[42]>,
