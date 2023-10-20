@@ -85,3 +85,8 @@
 /// @namespace bsoncxx::v_noabi
 /// Entities declared in this namespace do not have a stable ABI.
 ///
+
+///
+/// @namespace bsoncxx::v_noabi::stdx
+/// Declares polyfills for C++17 forward compatibility.
+///
