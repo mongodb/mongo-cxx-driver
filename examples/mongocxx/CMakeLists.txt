@@ -51,6 +51,12 @@ set(MONGOCXX_EXAMPLES
     with_transaction.cpp
 )
 
+if(MONGOCXX_BUILD_SHARED)
+    set(MONGOCXX_LIBRARY_FOR_EXAMPLES mongocxx_shared)
+else()
+    set(MONGOCXX_LIBRARY_FOR_EXAMPLES mongocxx_static)
+endif()
+
 foreach(EXAMPLE_SRC ${MONGOCXX_EXAMPLES})
     get_filename_component(EXAMPLE_TARGET ${EXAMPLE_SRC} NAME_WE)
     add_executable(${EXAMPLE_TARGET} ${EXAMPLE_SRC})

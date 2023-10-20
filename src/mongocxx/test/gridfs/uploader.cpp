@@ -14,7 +14,7 @@
 
 #include <cstdint>
 
-#include <bsoncxx/test_util/catch.hh>
+#include <bsoncxx/test/catch.hh>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/gridfs/uploader.hpp>
 

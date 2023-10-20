@@ -35,7 +35,7 @@
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/private/libmongoc.hh>
-#include <mongocxx/test_util/client_helpers.hh>
+#include <mongocxx/test/client_helpers.hh>
 #include <third_party/catch/include/catch.hpp>
 
 #include <mongocxx/config/private/prelude.hh>

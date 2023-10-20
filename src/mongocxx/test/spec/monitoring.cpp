@@ -17,11 +17,11 @@
 
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/json.hpp>
-#include <bsoncxx/test_util/to_string.hh>
+#include <bsoncxx/test/to_string.hh>
 #include <mongocxx/exception/error_code.hpp>
+#include <mongocxx/test/client_helpers.hh>
 #include <mongocxx/test/spec/monitoring.hh>
 #include <mongocxx/test/spec/unified_tests/assert.hh>
-#include <mongocxx/test_util/client_helpers.hh>
 #include <third_party/catch/include/catch.hpp>
 
 #include <mongocxx/config/private/prelude.hh>

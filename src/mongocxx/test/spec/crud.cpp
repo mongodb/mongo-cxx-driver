@@ -14,7 +14,7 @@
 
 #include <fstream>
 
-#include <bsoncxx/test_util/catch.hh>
+#include <bsoncxx/test/catch.hh>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/test/spec/util.hh>
 
