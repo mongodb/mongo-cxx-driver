@@ -73,4 +73,5 @@ set_dist_list(src_bsoncxx_test_DIST
     oid.cpp
     to_string.hh
     view_or_value.cpp
+    type_traits.test.cpp
 )
