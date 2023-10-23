@@ -102,9 +102,23 @@ struct make_unique_impl<T&&> {};
 template <typename T,
           typename... Args,
           typename Impl = detail::make_unique_impl<T>,
-          typename = decltype(Impl::make(std::true_type{}, std::declval<Args>()...))>
+          typename std::enable_if<!std::is_array<T>::value,
+                                  decltype(Impl::make(std::true_type{}, std::declval<Args>()...),
+                                           void())>::type* = nullptr>
 std::unique_ptr<T> make_unique(Args&&... args) {
     return Impl::make(std::true_type{}, std::forward<Args>(args)...);
+}
+
+/**
+ * @copydoc bsoncxx::v_noabi::stdx::make_unique
+ */
+template <typename T,
+          typename Impl = detail::make_unique_impl<T>,
+          typename std::enable_if<std::is_array<T>::value,
+                                  decltype(Impl::make(std::true_type{}, std::declval<std::size_t>()),
+                                           void())>::type* = nullptr>
+std::unique_ptr<T> make_unique(std::size_t count) {
+    return Impl::make(std::true_type{}, count);
 }
 
 /**
@@ -125,9 +139,23 @@ std::unique_ptr<T> make_unique(Args&&... args) {
 template <typename T,
           typename... Args,
           typename Impl = detail::make_unique_impl<T>,
-          typename = decltype(Impl::make(std::false_type{}, std::declval<Args>()...))>
+          typename std::enable_if<!std::is_array<T>::value,
+                                  decltype(Impl::make(std::false_type{}, std::declval<Args>()...),
+                                           void())>::type* = nullptr>
 std::unique_ptr<T> make_unique_for_overwrite(Args&&... args) {
     return Impl::make(std::false_type{}, std::forward<Args>(args)...);
+}
+
+/**
+ * @copydoc bsoncxx::v_noabi::stdx::make_unique_for_overwrite
+ */
+template <typename T,
+          typename Impl = detail::make_unique_impl<T>,
+          typename std::enable_if<std::is_array<T>::value,
+                                  decltype(Impl::make(std::false_type{}, std::declval<std::size_t>()),
+                                           void())>::type* = nullptr>
+std::unique_ptr<T> make_unique_for_overwrite(std::size_t count) {
+    return Impl::make(std::false_type{}, count);
 }
 
 }  // namespace stdx
