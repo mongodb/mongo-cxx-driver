@@ -36,10 +36,6 @@ variables:
         # power8_cmake_flags includes -Wno-maybe-uninitialized to ignore a warning from the std::optional implementation of MNMLSTC.
         power8_cmake_flags: &power8_cmake_flags -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-missing-field-initializers $ignore_deprecated" -DCMAKE_CXX_FLAGS="-Wall -Wextra -Wconversion -Wnarrowing -Wno-expansion-to-defined -pedantic -Werror -Wno-missing-field-initializers -Wno-aligned-new $ignore_deprecated -Wno-error=maybe-uninitialized"
 
-    poly_flags:
-        poly_boost_flags: &poly_boost_flags -DBSONCXX_POLY_USE_BOOST=ON
-        poly_std_experimental_flags: &poly_std_experimental_flags -DBSONCXX_POLY_USE_STD_EXPERIMENTAL=ON -DCMAKE_CXX_STANDARD=14
-
     ## test parameters
     test_params:
         asan_test_params: &asan_test_params PATH="/usr/lib/llvm-3.8/bin" ASAN_OPTIONS="detect_leaks=1"
@@ -1846,7 +1842,7 @@ buildvariants:
           build_type: "Debug"
           extra_path: *linux_extra_path
           cmake_flags: *linux_cmake_flags
-          poly_flags: *poly_std_experimental_flags
+          poly_flags: -DBSONCXX_POLY_USE_STD_EXPERIMENTAL=ON -DCMAKE_CXX_STANDARD=14
           mongodb_version: "4.4"
           example_projects_cxx_standard: 14
           use_mongocryptd: true  # crypt_shared is not available for Ubuntu 16.04
@@ -2172,7 +2168,7 @@ buildvariants:
           build_type: "Release"
           extra_path: *macos_extra_path
           cmake_flags: *macos_cmake_flags
-          poly_flags: *poly_boost_flags
+          poly_flags: -DBSONCXX_POLY_USE_BOOST=ON
           mongodb_version: "latest"
       run_on:
           - macos-1100
@@ -2188,7 +2184,7 @@ buildvariants:
           build_type: "Release"
           extra_path: *macos_extra_path
           cmake_flags: *macos_cmake_flags
-          poly_flags: *poly_boost_flags
+          poly_flags: -DBSONCXX_POLY_USE_BOOST=ON
           mongodb_version: "5.0"
       run_on:
           - macos-1100
@@ -2204,7 +2200,7 @@ buildvariants:
           build_type: "Release"
           extra_path: *macos_extra_path
           cmake_flags: *macos_cmake_flags
-          poly_flags: *poly_boost_flags
+          poly_flags: -DBSONCXX_POLY_USE_BOOST=ON
           mongodb_version: "latest"
       run_on:
           - macos-1100
