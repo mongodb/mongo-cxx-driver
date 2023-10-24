@@ -14,15 +14,6 @@ variables:
     # - LIBMONGOC_REQUIRED_VERSION in src/mongocxx/CMakeLists.txt
     mongoc_version_minimum: &mongoc_version_minimum "1.24.0"
 
-    mongodb_version:
-        version_latest: &version_latest "latest"
-        version_70: &version_70 "7.0"
-        version_60: &version_60 "6.0"
-        version_50: &version_50 "5.0"
-        version_44: &version_44 "4.4"
-        version_42: &version_42 "4.2"
-        version_40: &version_40 "4.0"
-
     ## cmake path variables
     extra_path:
         linux_extra_path: &linux_extra_path /opt/cmake/bin
@@ -1653,7 +1644,7 @@ buildvariants:
           build_type: "Release"
           extra_path: *linux_extra_path
           cmake_flags: *linux_cmake_flags
-          mongodb_version: *version_latest
+          mongodb_version: "latest"
           lib_dir: "lib64"
       run_on:
           - rhel90-large
@@ -1676,7 +1667,7 @@ buildvariants:
           build_type: "Release"
           extra_path: *linux_extra_path
           cmake_flags: *linux_cmake_flags
-          mongodb_version: *version_latest
+          mongodb_version: "latest"
           lib_dir: "lib64"
       run_on:
           - rhel90-arm64-large
@@ -1699,7 +1690,7 @@ buildvariants:
           build_type: "Release"
           extra_path: *linux_extra_path
           cmake_flags: *linux_cmake_flags
-          mongodb_version: *version_latest
+          mongodb_version: "latest"
       run_on:
           - debian11-large
       tasks:
@@ -1722,7 +1713,7 @@ buildvariants:
           build_type: "Release"
           extra_path: *linux_extra_path
           cmake_flags: *linux_cmake_flags
-          mongodb_version: *version_50
+          mongodb_version: "5.0"
       run_on:
           - debian11-large
       tasks:
@@ -1745,7 +1736,7 @@ buildvariants:
           build_type: "Release"
           extra_path: *linux_extra_path
           cmake_flags: *linux_cmake_flags
-          mongodb_version: *version_latest
+          mongodb_version: "latest"
       run_on:
           - debian10-large
       tasks:
@@ -1766,7 +1757,7 @@ buildvariants:
           build_type: "Release"
           extra_path: *linux_extra_path
           cmake_flags: *linux_cmake_flags
-          mongodb_version: *version_50
+          mongodb_version: "5.0"
       run_on:
           - debian10-large
       tasks:
@@ -1787,7 +1778,7 @@ buildvariants:
           build_type: "Release"
           extra_path: *linux_extra_path
           cmake_flags: *linux_cmake_flags
-          mongodb_version: *version_latest
+          mongodb_version: "latest"
       run_on:
           - ubuntu2004-large
       tasks:
@@ -1808,7 +1799,7 @@ buildvariants:
           build_type: "Release"
           extra_path: *linux_extra_path
           cmake_flags: *linux_cmake_flags
-          mongodb_version: *version_50
+          mongodb_version: "5.0"
       run_on:
           - ubuntu2004-large
       tasks:
@@ -1829,7 +1820,7 @@ buildvariants:
           build_type: "Release"
           extra_path: *linux_extra_path
           cmake_flags: *linux_cmake_flags
-          mongodb_version: *version_latest
+          mongodb_version: "latest"
       run_on:
           - ubuntu1804-build
       tasks:
@@ -1851,7 +1842,7 @@ buildvariants:
           build_type: "Release"
           extra_path: *linux_extra_path
           cmake_flags: *linux_cmake_flags
-          mongodb_version: *version_50
+          mongodb_version: "5.0"
       run_on:
           - ubuntu1804-build
       tasks:
@@ -1875,7 +1866,7 @@ buildvariants:
           extra_path: *linux_extra_path
           cmake_flags: *linux_cmake_flags
           poly_flags: *poly_std_experimental_flags
-          mongodb_version: *version_44
+          mongodb_version: "4.4"
           example_projects_cxx_standard: *std_experimental_cxx_standard
           use_mongocryptd: true  # crypt_shared is not available for Ubuntu 16.04
       run_on:
@@ -1893,7 +1884,7 @@ buildvariants:
           extra_path: *linux_extra_path
           cmake_flags: *linux_cmake_flags
           test_params: *valgrind_test_params
-          mongodb_version: *version_latest
+          mongodb_version: "latest"
           disable_slow_tests: 1
           use_mongocryptd: true  # false positives arise from the crypt_shared library
       run_on:
@@ -1911,7 +1902,7 @@ buildvariants:
           extra_path: *linux_extra_path
           cmake_flags: *linux_cmake_flags
           test_params: *valgrind_test_params
-          mongodb_version: *version_50
+          mongodb_version: "5.0"
           disable_slow_tests: 1
           use_mongocryptd: true
       run_on:
@@ -1929,7 +1920,7 @@ buildvariants:
           extra_path: *linux_extra_path
           cmake_flags: *asan_cmake_flags
           test_params: *asan_test_params
-          mongodb_version: *version_latest
+          mongodb_version: "latest"
           example_projects_cc: *asan_cc_path
           example_projects_cxx: *asan_cxx_path
           example_projects_cxxflags: *asan_cxxflags
@@ -1949,7 +1940,7 @@ buildvariants:
           extra_path: *linux_extra_path
           cmake_flags: *asan_cmake_flags
           test_params: *asan_test_params
-          mongodb_version: *version_50
+          mongodb_version: "5.0"
           example_projects_cc: *asan_cc_path
           example_projects_cxx: *asan_cxx_path
           example_projects_cxxflags: *asan_cxxflags
@@ -1969,7 +1960,7 @@ buildvariants:
           extra_path: *linux_extra_path
           cmake_flags: *ubsan_cmake_flags
           test_params: *ubsan_test_params
-          mongodb_version: *version_latest
+          mongodb_version: "latest"
           example_projects_cc: *ubsan_cc_path
           example_projects_cxx: *ubsan_cxx_path
           example_projects_cxxflags: *ubsan_cxxflags
@@ -1990,7 +1981,7 @@ buildvariants:
           extra_path: *linux_extra_path
           cmake_flags: *ubsan_cmake_flags
           test_params: *ubsan_test_params
-          mongodb_version: *version_50
+          mongodb_version: "5.0"
           example_projects_cc: *ubsan_cc_path
           example_projects_cxx: *ubsan_cxx_path
           example_projects_cxxflags: *ubsan_cxxflags
@@ -2009,7 +2000,7 @@ buildvariants:
       expansions:
         build_type: "Debug"
         cmake_flags: *linux_cmake_flags
-        mongodb_version: *version_latest
+        mongodb_version: "latest"
       run_on:
         - ubuntu1804-build
       tasks:
@@ -2023,7 +2014,7 @@ buildvariants:
       expansions:
         build_type: "Debug"
         cmake_flags: *linux_cmake_flags
-        mongodb_version: *version_latest
+        mongodb_version: "latest"
         compiler: g++
       run_on:
         - ubuntu2204-small
@@ -2036,7 +2027,7 @@ buildvariants:
       expansions:
         build_type: "Debug"
         cmake_flags: *linux_cmake_flags
-        mongodb_version: *version_latest
+        mongodb_version: "latest"
         compiler: clang++
       run_on:
         - ubuntu2204-small
@@ -2049,7 +2040,7 @@ buildvariants:
       expansions:
           build_type: "Release"
           cmake_flags: *linux_cmake_flags
-          mongodb_version: *version_latest
+          mongodb_version: "latest"
       run_on: ubuntu1804-test
       tasks:
           - name: test_mongohouse
@@ -2060,7 +2051,7 @@ buildvariants:
       expansions:
           build_type: "Release"
           cmake_flags: *linux_cmake_flags
-          mongodb_version: *version_latest
+          mongodb_version: "latest"
           cmake: "cmake"
           lib_dir: "lib64"
       run_on:
@@ -2078,7 +2069,7 @@ buildvariants:
       expansions:
           build_type: "Release"
           cmake_flags: *linux_cmake_flags
-          mongodb_version: *version_60
+          mongodb_version: "6.0"
           cmake: "cmake"
           lib_dir: "lib64"
       run_on:
@@ -2096,7 +2087,7 @@ buildvariants:
       expansions:
           build_type: "Release"
           cmake_flags: *linux_cmake_flags
-          mongodb_version: *version_50
+          mongodb_version: "5.0"
           cmake: "cmake"
           lib_dir: "lib64"
       run_on:
@@ -2114,7 +2105,7 @@ buildvariants:
       expansions:
           build_type: "Release"
           cmake_flags: *power8_cmake_flags
-          mongodb_version: *version_latest
+          mongodb_version: "latest"
           cmake: "cmake"
           lib_dir: "lib64"
       run_on:
@@ -2132,7 +2123,7 @@ buildvariants:
       expansions:
           build_type: "Release"
           cmake_flags: *power8_cmake_flags
-          mongodb_version: *version_50
+          mongodb_version: "5.0"
           cmake: "cmake"
           lib_dir: "lib64"
       run_on:
@@ -2150,7 +2141,7 @@ buildvariants:
       expansions:
           build_type: "Release"
           cmake_flags: *linux_cmake_flags
-          mongodb_version: *version_latest
+          mongodb_version: "latest"
       run_on:
           - ubuntu1804-arm64-build
       tasks:
@@ -2165,7 +2156,7 @@ buildvariants:
       expansions:
           build_type: "Release"
           cmake_flags: *linux_cmake_flags
-          mongodb_version: *version_50
+          mongodb_version: "5.0"
       run_on:
           - ubuntu1804-arm64-build
       tasks:
@@ -2181,7 +2172,7 @@ buildvariants:
       expansions:
           build_type: "Debug"
           cmake_flags: *linux_cmake_flags
-          mongodb_version: *version_latest
+          mongodb_version: "latest"
           mongoc_version: *mongoc_version_minimum
       run_on:
           - ubuntu1804-build
@@ -2201,7 +2192,7 @@ buildvariants:
           extra_path: *macos_extra_path
           cmake_flags: *macos_cmake_flags
           poly_flags: *poly_boost_flags
-          mongodb_version: *version_latest
+          mongodb_version: "latest"
       run_on:
           - macos-1100
       tasks:
@@ -2217,7 +2208,7 @@ buildvariants:
           extra_path: *macos_extra_path
           cmake_flags: *macos_cmake_flags
           poly_flags: *poly_boost_flags
-          mongodb_version: *version_50
+          mongodb_version: "5.0"
       run_on:
           - macos-1100
       tasks:
@@ -2233,7 +2224,7 @@ buildvariants:
           extra_path: *macos_extra_path
           cmake_flags: *macos_cmake_flags
           poly_flags: *poly_boost_flags
-          mongodb_version: *version_latest
+          mongodb_version: "latest"
       run_on:
           - macos-1100
       tasks:
@@ -2246,7 +2237,7 @@ buildvariants:
           build_type: "Release"
           extra_path: *msvc2015_extra_path
           cmake_flags: *msvc2015_cmake_flags
-          mongodb_version: *version_42
+          mongodb_version: "4.2"
           generator: *msvc2015_generator
       run_on:
           - windows-64-vs2015-compile
@@ -2263,7 +2254,7 @@ buildvariants:
           build_type: "Debug"
           extra_path: *msvc2015_extra_path
           cmake_flags: *msvc2015_cmake_flags
-          mongodb_version: *version_42
+          mongodb_version: "4.2"
           generator: *msvc2015_generator
       run_on:
           - windows-64-vs2015-compile
@@ -2279,7 +2270,7 @@ buildvariants:
           extra_path: *msvc2015_extra_path
           cmake_flags: *msvc2015_cmake_flags
           generator: *msvc2015_generator
-          mongodb_version: *version_42
+          mongodb_version: "4.2"
       run_on:
          - windows-64-vs2015-compile
       tasks:
