@@ -36,25 +36,6 @@ variables:
         # power8_cmake_flags includes -Wno-maybe-uninitialized to ignore a warning from the std::optional implementation of MNMLSTC.
         power8_cmake_flags: &power8_cmake_flags -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-missing-field-initializers $ignore_deprecated" -DCMAKE_CXX_FLAGS="-Wall -Wextra -Wconversion -Wnarrowing -Wno-expansion-to-defined -pedantic -Werror -Wno-missing-field-initializers -Wno-aligned-new $ignore_deprecated -Wno-error=maybe-uninitialized"
 
-    example_projects_cc:
-        asan_cc_path: &asan_cc_path /usr/bin/clang
-        ubsan_cc_path: &ubsan_cc_path /usr/bin/clang
-
-    example_projects_cxx:
-        asan_cxx_path: &asan_cxx_path /usr/bin/clang++
-        ubsan_cxx_path: &ubsan_cxx_path /usr/bin/clang++
-
-    example_projects_cxxflags:
-        asan_cxxflags: &asan_cxxflags -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
-        ubsan_cxxflags: &ubsan_cxxflags -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer
-
-    example_projects_ldflags:
-        asan_ldflags: &asan_ldflags -fsanitize=address
-        ubsan_ldflags: &ubsan_ldflags -fsanitize=undefined -fno-sanitize-recover=undefined
-
-    example_projects_cxx_standard:
-        std_experimental_cxx_standard: &std_experimental_cxx_standard 14
-
     poly_flags:
         poly_boost_flags: &poly_boost_flags -DBSONCXX_POLY_USE_BOOST=ON
         poly_std_experimental_flags: &poly_std_experimental_flags -DBSONCXX_POLY_USE_STD_EXPERIMENTAL=ON -DCMAKE_CXX_STANDARD=14
@@ -1867,7 +1848,7 @@ buildvariants:
           cmake_flags: *linux_cmake_flags
           poly_flags: *poly_std_experimental_flags
           mongodb_version: "4.4"
-          example_projects_cxx_standard: *std_experimental_cxx_standard
+          example_projects_cxx_standard: 14
           use_mongocryptd: true  # crypt_shared is not available for Ubuntu 16.04
       run_on:
           - ubuntu1604-build
@@ -1921,10 +1902,10 @@ buildvariants:
           cmake_flags: *asan_cmake_flags
           test_params: *asan_test_params
           mongodb_version: "latest"
-          example_projects_cc: *asan_cc_path
-          example_projects_cxx: *asan_cxx_path
-          example_projects_cxxflags: *asan_cxxflags
-          example_projects_ldflags: *asan_ldflags
+          example_projects_cc: /usr/bin/clang
+          example_projects_cxx: /usr/bin/clang++
+          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
+          example_projects_ldflags: -fsanitize=address
       run_on:
           - ubuntu1804-build
       tasks:
@@ -1941,10 +1922,10 @@ buildvariants:
           cmake_flags: *asan_cmake_flags
           test_params: *asan_test_params
           mongodb_version: "5.0"
-          example_projects_cc: *asan_cc_path
-          example_projects_cxx: *asan_cxx_path
-          example_projects_cxxflags: *asan_cxxflags
-          example_projects_ldflags: *asan_ldflags
+          example_projects_cc: /usr/bin/clang
+          example_projects_cxx: /usr/bin/clang++
+          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
+          example_projects_ldflags: -fsanitize=address
       run_on:
           - ubuntu1804-build
       tasks:
@@ -1961,10 +1942,10 @@ buildvariants:
           cmake_flags: *ubsan_cmake_flags
           test_params: *ubsan_test_params
           mongodb_version: "latest"
-          example_projects_cc: *ubsan_cc_path
-          example_projects_cxx: *ubsan_cxx_path
-          example_projects_cxxflags: *ubsan_cxxflags
-          example_projects_ldflags: *ubsan_ldflags
+          example_projects_cc: /usr/bin/clang
+          example_projects_cxx: /usr/bin/clang++
+          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer
+          example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined
       run_on:
           - ubuntu1804-build
       tasks:
@@ -1982,10 +1963,10 @@ buildvariants:
           cmake_flags: *ubsan_cmake_flags
           test_params: *ubsan_test_params
           mongodb_version: "5.0"
-          example_projects_cc: *ubsan_cc_path
-          example_projects_cxx: *ubsan_cxx_path
-          example_projects_cxxflags: *ubsan_cxxflags
-          example_projects_ldflags: *ubsan_ldflags
+          example_projects_cc: /usr/bin/clang
+          example_projects_cxx: /usr/bin/clang++
+          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer
+          example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined
       run_on:
           - ubuntu1804-build
       tasks:
