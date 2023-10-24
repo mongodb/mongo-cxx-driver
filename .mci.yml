@@ -24,7 +24,6 @@ variables:
         msvc2015_generator: &msvc2015_generator Visual Studio 14 2015 Win64
         msvc2017_cmake_flags: &msvc2017_cmake_flags -DCMAKE_CXX_STANDARD=17
         msvc2017_generator: &msvc2017_generator Visual Studio 15 2017 Win64
-        code_coverage_cmake_flags: &code_coverage_cmake_flags -DENABLE_CODE_COVERAGE=ON
 
         # power8_cmake_flags includes -Wno-maybe-uninitialized to ignore a warning from the std::optional implementation of MNMLSTC.
         power8_cmake_flags: &power8_cmake_flags -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-missing-field-initializers $ignore_deprecated" -DCMAKE_CXX_FLAGS="-Wall -Wextra -Wconversion -Wnarrowing -Wno-expansion-to-defined -pedantic -Werror -Wno-missing-field-initializers -Wno-aligned-new $ignore_deprecated -Wno-error=maybe-uninitialized"
@@ -55,7 +54,7 @@ variables:
         integration_matrix_expansions_linux: &integration_matrix_expansions_linux
             build_type: "Debug"
             cmake_flags: *linux_cmake_flags
-            code_coverage_cmake_flags: *code_coverage_cmake_flags
+            ENABLE_CODE_COVERAGE: ON
         integration_matrix_expansions_windows: &integration_matrix_expansions_windows
             cmake_flags: *msvc2017_cmake_flags
             build_type: "Debug" # Same for Windows and Linux
@@ -376,7 +375,12 @@ functions:
                   fi
                   export PATH
 
-                  ADDL_OPTS=${code_coverage_cmake_flags}
+                  ADDL_OPTS=""
+
+                  if [[ "${ENABLE_CODE_COVERAGE}" == "ON" ]]; then
+                      ADDL_OPTS+="-DENABLE_CODE_COVERAGE=ON"
+                  fi
+
                   if [ "${USE_STATIC_LIBS}" ]; then
                       ADDL_OPTS="$ADDL_OPTS -DBUILD_SHARED_LIBS=OFF"
                   fi
@@ -831,7 +835,7 @@ functions:
             set -o pipefail
 
             # Nothing to do if code coverage was not enabled.
-            if [[ -z "${code_coverage_cmake_flags}" ]]; then
+            if [[ "${ENABLE_CODE_COVERAGE}" != "ON" ]]; then
               exit 0
             fi
 
