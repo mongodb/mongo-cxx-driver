@@ -74,6 +74,40 @@ variables:
         ubsan_test_params: &ubsan_test_params PATH="/usr/lib/llvm-3.8/bin" UBSAN_OPTIONS="print_stacktrace=1"
         valgrind_test_params: &valgrind_test_params valgrind --leak-check=full --track-origins=yes --num-callers=50 --error-exitcode=1 --error-limit=no --read-var-info=yes --suppressions=../etc/memcheck.suppressions
 
+    integration_matrix:
+        integration_matrix_tasks_single: &integration_matrix_tasks_single
+            tasks:
+                - name: compile_and_test_with_shared_libs
+                - name: compile_and_test_with_shared_libs_extra_alignment
+        integration_matrix_tasks_replica: &integration_matrix_tasks_replica
+            tasks:
+                - name: compile_and_test_with_shared_libs_replica_set_with_libmongocrypt
+        integration_matrix_tasks_sharded: &integration_matrix_tasks_sharded
+            tasks:
+                - name: compile_and_test_with_shared_libs_sharded_cluster_with_libmongocrypt
+        integration_matrix_auth_tasks_single: &integration_matrix_auth_tasks_single
+            tasks:
+                - name: compile_and_test_auth_with_shared_libs
+        integration_matrix_versioned_api_tasks_single: &integration_matrix_versioned_api_tasks_single
+            tasks:
+                - name: test_versioned_api
+                - name: test_versioned_api_accept_version_two
+        # "Drivers MUST run all tests with mongocryptd on at least one platform for all tested server versions (4.2+)."
+        integration_matrix_mongocryptd_tasks: &integration_matrix_mongocryptd_tasks
+            tasks:
+                - name: compile_and_test_with_shared_libs_replica_set_with_libmongocrypt
+                - name: compile_and_test_with_shared_libs_sharded_cluster_with_libmongocrypt
+        integration_matrix_expansions_linux: &integration_matrix_expansions_linux
+            build_type: "Debug"
+            cmake_flags: *linux_cmake_flags
+            code_coverage_cmake_flags: *code_coverage_cmake_flags
+            extra_path: *linux_extra_path
+        integration_matrix_expansions_windows: &integration_matrix_expansions_windows
+            extra_path: *msvc2017_extra_path
+            cmake_flags: *msvc2017_cmake_flags
+            build_type: "Debug" # Same for Windows and Linux
+            generator: *msvc2017_generator
+            example_projects_cxx_standard: 17
 
 #######################################
 #            Functions                #
@@ -1303,70 +1337,6 @@ task_groups:
     tasks:
       - test_search_index_helpers
 
-#######################################
-#           MongoDB Version Matrix    #
-#######################################
-
-axes:
-    - id: os
-      display_name: "OS"
-      values:
-          - id: "ubuntu-1804"
-            display_name: "Ubuntu 18.04 Debug"
-            variables:
-                extra_path: *linux_extra_path
-                cmake_flags: *linux_cmake_flags
-                build_type: "Debug"
-                code_coverage_cmake_flags: *code_coverage_cmake_flags
-            run_on:
-                - ubuntu1804-build
-          - id: "windows-2k8"
-            display_name: "Windows (VS 2017) Debug"
-            variables:
-                extra_path: *msvc2017_extra_path
-                cmake_flags: *msvc2017_cmake_flags
-                build_type: "Debug" # Same for Windows and Linux
-                generator: *msvc2017_generator
-                example_projects_cxx_standard: 17
-            run_on:
-                - windows-64-vs2017-compile
-
-    - id: mongodb_version
-      display_name: "MongoDB Version"
-      values:
-          - id: "latest"
-            display_name: "Latest"
-            variables:
-                mongodb_version: *version_latest
-          - id: "7.0"
-            display_name: "7.0"
-            variables:
-                mongodb_version: *version_70
-          - id: "6.0"
-            display_name: "6.0"
-            variables:
-                mongodb_version: *version_60
-          - id: "5.0"
-            display_name: "5.0"
-            variables:
-                mongodb_version: *version_50
-          - id: "4.4"
-            display_name: "4.4"
-            variables:
-                mongodb_version: *version_44
-          - id: "4.2"
-            display_name: "4.2"
-            variables:
-                mongodb_version: *version_42
-          - id: "4.0"
-            display_name: "4.0"
-            variables:
-                mongodb_version: *version_40
-
-    - id: use_mongocryptd
-      values:
-          - id: "true"
-
 
 #######################################
 #           Buildvariants             #
@@ -1376,37 +1346,297 @@ buildvariants:
     #######################################
     #  Standard MongoDB Integration Tests #
     #######################################
-    - matrix_name: "integration"
-      matrix_spec: {os: "*", mongodb_version: "*"}
-      display_name: "${os} (MongoDB ${mongodb_version})"
-      tasks:
-          - name: compile_and_test_with_shared_libs
-          - name: compile_and_test_with_shared_libs_extra_alignment
+    - name: integration-ubuntu1804-latest-single
+      display_name: "Ubuntu 18.04 Debug (MongoDB Latest)"
+      run_on: ubuntu1804-large
+      expansions:
+          mongodb_version: "latest"
+          <<: *integration_matrix_expansions_linux
+      <<: *integration_matrix_tasks_single
 
-    - matrix_name: "integration (replica set)"
-      matrix_spec: {os: "ubuntu-1804", mongodb_version: "*"}
-      display_name: "${os} replica set (MongoDB ${mongodb_version})"
-      tasks:
-        - name: compile_and_test_with_shared_libs_replica_set_with_libmongocrypt
+    - name: integration-ubuntu1804-7.0-single
+      display_name: "Ubuntu 18.04 Debug (MongoDB 7.0)"
+      run_on: ubuntu1804-large
+      expansions:
+          mongodb_version: "7.0"
+          <<: *integration_matrix_expansions_linux
+      <<: *integration_matrix_tasks_single
 
-    - matrix_name: "integration (sharded cluster)"
-      matrix_spec: {os: "ubuntu-1804", mongodb_version: "*"}
-      display_name: "${os} sharded cluster (MongoDB ${mongodb_version})"
-      tasks:
-        - name: compile_and_test_with_shared_libs_sharded_cluster_with_libmongocrypt
+    - name: integration-ubuntu1804-6.0-single
+      display_name: "Ubuntu 18.04 Debug (MongoDB 6.0)"
+      run_on: ubuntu1804-large
+      expansions:
+          mongodb_version: "6.0"
+          <<: *integration_matrix_expansions_linux
+      <<: *integration_matrix_tasks_single
 
-    - matrix_name: "auth"
-      matrix_spec: {os: "*", mongodb_version: "latest"}
-      display_name: "${os} ${mongodb_version} Auth"
-      tasks:
-          - name: compile_and_test_auth_with_shared_libs
+    - name: integration-ubuntu1804-5.0-single
+      display_name: "Ubuntu 18.04 Debug (MongoDB 5.0)"
+      run_on: ubuntu1804-large
+      expansions:
+          mongodb_version: "5.0"
+          <<: *integration_matrix_expansions_linux
+      <<: *integration_matrix_tasks_single
 
-    - matrix_name: "versioned api"
-      matrix_spec: {os: "*", mongodb_version: "latest"}
-      display_name: "${os} ${mongodb_version} Versioned API"
-      tasks:
-          - name: test_versioned_api
-          - name: test_versioned_api_accept_version_two
+    - name: integration-ubuntu1804-4.4-single
+      display_name: "Ubuntu 18.04 Debug (MongoDB 4.4)"
+      run_on: ubuntu1804-large
+      expansions:
+          mongodb_version: "4.4"
+          <<: *integration_matrix_expansions_linux
+      <<: *integration_matrix_tasks_single
+
+    - name: integration-ubuntu1804-4.2-single
+      display_name: "Ubuntu 18.04 Debug (MongoDB 4.2)"
+      run_on: ubuntu1804-large
+      expansions:
+          mongodb_version: "4.2"
+          <<: *integration_matrix_expansions_linux
+      <<: *integration_matrix_tasks_single
+
+    - name: integration-ubuntu1804-4.0-single
+      display_name: "Ubuntu 18.04 Debug (MongoDB 4.0)"
+      run_on: ubuntu1804-large
+      expansions:
+          mongodb_version: "4.0"
+          <<: *integration_matrix_expansions_linux
+      <<: *integration_matrix_tasks_single
+
+    - name: integration-vs2017-latest-single
+      display_name: "Windows (VS 2017) Debug (MongoDB Latest)"
+      run_on: windows-64-vs2017-large
+      expansions:
+          mongodb_version: "latest"
+          <<: *integration_matrix_expansions_windows
+      <<: *integration_matrix_tasks_single
+
+    - name: integration-vs2017-7.0-single
+      display_name: "Windows (VS 2017) Debug (MongoDB 7.0)"
+      run_on: windows-64-vs2017-large
+      expansions:
+          mongodb_version: "7.0"
+          <<: *integration_matrix_expansions_windows
+      <<: *integration_matrix_tasks_single
+
+    - name: integration-vs2017-6.0-single
+      display_name: "Windows (VS 2017) Debug (MongoDB 6.0)"
+      run_on: windows-64-vs2017-large
+      expansions:
+          mongodb_version: "6.0"
+          <<: *integration_matrix_expansions_windows
+      <<: *integration_matrix_tasks_single
+
+    - name: integration-vs2017-5.0-single
+      display_name: "Windows (VS 2017) Debug (MongoDB 5.0)"
+      run_on: windows-64-vs2017-large
+      expansions:
+          mongodb_version: "5.0"
+          <<: *integration_matrix_expansions_windows
+      <<: *integration_matrix_tasks_single
+
+    - name: integration-vs2017-4.4-single
+      display_name: "Windows (VS 2017) Debug (MongoDB 4.4)"
+      run_on: windows-64-vs2017-large
+      expansions:
+          mongodb_version: "4.4"
+          <<: *integration_matrix_expansions_windows
+      <<: *integration_matrix_tasks_single
+
+    - name: integration-vs2017-4.2-single
+      display_name: "Windows (VS 2017) Debug (MongoDB 4.2)"
+      run_on: windows-64-vs2017-large
+      expansions:
+          mongodb_version: "4.2"
+          <<: *integration_matrix_expansions_windows
+      <<: *integration_matrix_tasks_single
+
+    - name: integration-vs2017-4.0-single
+      display_name: "Windows (VS 2017) Debug (MongoDB 4.0)"
+      run_on: windows-64-vs2017-large
+      expansions:
+          mongodb_version: "4.0"
+          <<: *integration_matrix_expansions_windows
+      <<: *integration_matrix_tasks_single
+
+    - name: integration-ubuntu1804-latest-replica
+      display_name: "Ubuntu 18.04 Debug replica set (MongoDB Latest)"
+      run_on: ubuntu1804-large
+      expansions:
+          mongodb_version: "latest"
+          <<: *integration_matrix_expansions_linux
+      <<: *integration_matrix_tasks_replica
+
+    - name: integration-ubuntu1804-7.0-replica
+      display_name: "Ubuntu 18.04 Debug replica set (MongoDB 7.0)"
+      run_on: ubuntu1804-large
+      expansions:
+          mongodb_version: "7.0"
+          <<: *integration_matrix_expansions_linux
+      <<: *integration_matrix_tasks_replica
+
+    - name: integration-ubuntu1804-6.0-replica
+      display_name: "Ubuntu 18.04 Debug replica set (MongoDB 6.0)"
+      run_on: ubuntu1804-large
+      expansions:
+          mongodb_version: "6.0"
+          <<: *integration_matrix_expansions_linux
+      <<: *integration_matrix_tasks_replica
+
+    - name: integration-ubuntu1804-5.0-replica
+      display_name: "Ubuntu 18.04 Debug replica set (MongoDB 5.0)"
+      run_on: ubuntu1804-large
+      expansions:
+          mongodb_version: "5.0"
+          <<: *integration_matrix_expansions_linux
+      <<: *integration_matrix_tasks_replica
+
+    - name: integration-ubuntu1804-4.4-replica
+      display_name: "Ubuntu 18.04 Debug replica set (MongoDB 4.4)"
+      run_on: ubuntu1804-large
+      expansions:
+          mongodb_version: "4.4"
+          <<: *integration_matrix_expansions_linux
+      <<: *integration_matrix_tasks_replica
+
+    - name: integration-ubuntu1804-4.2-replica
+      display_name: "Ubuntu 18.04 Debug replica set (MongoDB 4.2)"
+      run_on: ubuntu1804-large
+      expansions:
+          mongodb_version: "4.2"
+          <<: *integration_matrix_expansions_linux
+      <<: *integration_matrix_tasks_replica
+
+    - name: integration-ubuntu1804-4.0-replica
+      display_name: "Ubuntu 18.04 Debug replica set (MongoDB 4.0)"
+      run_on: ubuntu1804-large
+      expansions:
+          mongodb_version: "4.0"
+          <<: *integration_matrix_expansions_linux
+      <<: *integration_matrix_tasks_replica
+
+    - name: integration-ubuntu1804-latest-sharded
+      display_name: "Ubuntu 18.04 Debug sharded cluster (MongoDB Latest)"
+      run_on: ubuntu1804-large
+      expansions:
+          mongodb_version: "latest"
+          <<: *integration_matrix_expansions_linux
+      <<: *integration_matrix_tasks_sharded
+
+    - name: integration-ubuntu1804-7.0-sharded
+      display_name: "Ubuntu 18.04 Debug sharded cluster (MongoDB 7.0)"
+      run_on: ubuntu1804-large
+      expansions:
+          mongodb_version: "7.0"
+          <<: *integration_matrix_expansions_linux
+      <<: *integration_matrix_tasks_sharded
+
+    - name: integration-ubuntu1804-6.0-sharded
+      display_name: "Ubuntu 18.04 Debug sharded cluster (MongoDB 6.0)"
+      run_on: ubuntu1804-large
+      expansions:
+          mongodb_version: "6.0"
+          <<: *integration_matrix_expansions_linux
+      <<: *integration_matrix_tasks_sharded
+
+    - name: integration-ubuntu1804-5.0-sharded
+      display_name: "Ubuntu 18.04 Debug sharded cluster (MongoDB 5.0)"
+      run_on: ubuntu1804-large
+      expansions:
+          mongodb_version: "5.0"
+          <<: *integration_matrix_expansions_linux
+      <<: *integration_matrix_tasks_sharded
+
+    - name: integration-ubuntu1804-4.4-sharded
+      display_name: "Ubuntu 18.04 Debug sharded cluster (MongoDB 4.4)"
+      run_on: ubuntu1804-large
+      expansions:
+          mongodb_version: "4.4"
+          <<: *integration_matrix_expansions_linux
+      <<: *integration_matrix_tasks_sharded
+
+    - name: integration-ubuntu1804-4.2-sharded
+      display_name: "Ubuntu 18.04 Debug sharded cluster (MongoDB 4.2)"
+      run_on: ubuntu1804-large
+      expansions:
+          mongodb_version: "4.2"
+          <<: *integration_matrix_expansions_linux
+      <<: *integration_matrix_tasks_sharded
+
+    - name: integration-ubuntu1804-4.0-sharded
+      display_name: "Ubuntu 18.04 Debug sharded cluster (MongoDB 4.0)"
+      run_on: ubuntu1804-large
+      expansions:
+          mongodb_version: "4.0"
+          <<: *integration_matrix_expansions_linux
+      <<: *integration_matrix_tasks_sharded
+
+    - name: integration-auth-ubuntu1804-latest-single
+      display_name: "Ubuntu 18.04 Debug Latest Auth"
+      run_on: ubuntu1804-large
+      expansions:
+          mongodb_version: "latest"
+          <<: *integration_matrix_expansions_linux
+      <<: *integration_matrix_auth_tasks_single
+
+    - name: integration-auth-vs2017-latest-single
+      display_name: "Windows (VS 2017) Debug Latest Auth"
+      run_on: windows-64-vs2017-large
+      expansions:
+          mongodb_version: "latest"
+          <<: *integration_matrix_expansions_windows
+      <<: *integration_matrix_auth_tasks_single
+
+    - name: integration-versioned-api-ubuntu1804-latest-single
+      display_name: "Ubuntu 18.04 Debug Latest Versioned API"
+      run_on: ubuntu1804-large
+      expansions:
+          mongodb_version: "latest"
+          <<: *integration_matrix_expansions_linux
+      <<: *integration_matrix_versioned_api_tasks_single
+
+    - name: integration-versioned-api-vs2017-latest-single
+      display_name: "Windows (VS 2017) Debug Latest Versioned API"
+      run_on: windows-64-vs2017-large
+      expansions:
+          mongodb_version: "latest"
+          <<: *integration_matrix_expansions_windows
+      <<: *integration_matrix_versioned_api_tasks_single
+
+    - name: integration-mongocryptd-ubuntu1804-latest
+      display_name: "Ubuntu 18.04 Debug (MongoDB Latest) with mongocryptd"
+      run_on: ubuntu1804-large
+      expansions:
+          mongodb_version: "latest"
+          use_mongocryptd: true
+          <<: *integration_matrix_expansions_linux
+      <<: *integration_matrix_mongocryptd_tasks
+
+    - name: integration-mongocryptd-ubuntu1804-5.0
+      display_name: "Ubuntu 18.04 Debug (MongoDB 5.0) with mongocryptd"
+      run_on: ubuntu1804-large
+      expansions:
+          mongodb_version: "5.0"
+          use_mongocryptd: true
+          <<: *integration_matrix_expansions_linux
+      <<: *integration_matrix_mongocryptd_tasks
+
+    - name: integration-mongocryptd-ubuntu1804-4.4
+      display_name: "Ubuntu 18.04 Debug (MongoDB 4.4) with mongocryptd"
+      run_on: ubuntu1804-large
+      expansions:
+          mongodb_version: "4.4"
+          use_mongocryptd: true
+          <<: *integration_matrix_expansions_linux
+      <<: *integration_matrix_mongocryptd_tasks
+
+    - name: integration-mongocryptd-ubuntu1804-4.2
+      display_name: "Ubuntu 18.04 Debug (MongoDB 4.2) with mongocryptd"
+      run_on: ubuntu1804-large
+      expansions:
+          mongodb_version: "4.2"
+          use_mongocryptd: true
+          <<: *integration_matrix_expansions_linux
+      <<: *integration_matrix_mongocryptd_tasks
 
     #######################################
     #         Linux Buildvariants         #
@@ -1550,18 +1780,6 @@ buildvariants:
             distros:
             - debian10-large
           - name: uninstall_check
-
-    # Add matrix for specification test requirement of mongocryptd:
-    # "Drivers MUST run all tests with mongocryptd on at least one platform for all tested server versions (4.2+)."
-    - matrix_name: "mongocryptd"
-      matrix_spec:
-        os: "ubuntu-1804"
-        mongodb_version: ["4.2", "4.4", "5.0", "latest"]
-        use_mongocryptd: "true"
-      display_name: "${os} (MongoDB ${mongodb_version}) with mongocryptd"
-      tasks:
-          - name: compile_and_test_with_shared_libs_replica_set_with_libmongocrypt
-          - name: compile_and_test_with_shared_libs_sharded_cluster_with_libmongocrypt
 
     - name: ubuntu2004-release-latest
       display_name: "Ubuntu 20.04 Release (MongoDB Latest)"
