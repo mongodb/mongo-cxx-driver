@@ -69,7 +69,6 @@ variables:
     poly_flags:
         poly_boost_flags: &poly_boost_flags -DBSONCXX_POLY_USE_BOOST=ON
         poly_std_experimental_flags: &poly_std_experimental_flags -DBSONCXX_POLY_USE_STD_EXPERIMENTAL=ON -DCMAKE_CXX_STANDARD=14
-        poly_mnmlstc: &poly_mnmlstc -DBSONCXX_POLY_USE_MNMLSTC=ON
 
     ## test parameters
     test_params:
