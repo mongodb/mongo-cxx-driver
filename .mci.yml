@@ -32,10 +32,6 @@ variables:
         msvc2015_extra_path: &msvc2015_extra_path "/cygdrive/c/cmake/bin:/cygdrive/c/Program Files (x86)/MSBuild/14.0/Bin"
         msvc2017_extra_path: &msvc2017_extra_path "/cygdrive/c/cmake/bin:/cygdrive/c/Program Files (x86)/Microsoft Visual Studio/2017/Professional/MSBuild/15.0/Bin"
 
-    ## tar options variables
-    tar_options:
-        linux_tar_options: &linux_tar_options --wildcards --no-anchored
-
     ## cmake flag variables
     cmake_flags:
         linux_cmake_flags: &linux_cmake_flags -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-missing-field-initializers $ignore_deprecated" -DCMAKE_CXX_FLAGS="-Wall -Wextra -Wconversion -Wnarrowing -Wno-expansion-to-defined -pedantic -Werror -Wno-missing-field-initializers -Wno-aligned-new $ignore_deprecated"
@@ -1324,7 +1320,6 @@ axes:
                 extra_path: *linux_extra_path
                 cmake_flags: *linux_cmake_flags
                 build_type: "Debug"
-                tar_options: *linux_tar_options
                 code_coverage_cmake_flags: *code_coverage_cmake_flags
             run_on:
                 - ubuntu1804-build
@@ -1333,8 +1328,7 @@ axes:
             variables:
                 extra_path: *msvc2017_extra_path
                 cmake_flags: *msvc2017_cmake_flags
-                build_type: "Debug"
-                tar_options: *linux_tar_options # Same for Windows and Linux
+                build_type: "Debug" # Same for Windows and Linux
                 generator: *msvc2017_generator
                 example_projects_cxx_standard: 17
             run_on:
@@ -1430,7 +1424,6 @@ buildvariants:
       display_name: "RHEL 9 Release (MongoDB Latest)"
       expansions:
           build_type: "Release"
-          tar_options: *linux_tar_options
           extra_path: *linux_extra_path
           cmake_flags: *linux_cmake_flags
           mongodb_version: *version_latest
@@ -1454,7 +1447,6 @@ buildvariants:
       display_name: "arm64 RHEL 9 Release (MongoDB Latest)"
       expansions:
           build_type: "Release"
-          tar_options: *linux_tar_options
           extra_path: *linux_extra_path
           cmake_flags: *linux_cmake_flags
           mongodb_version: *version_latest
@@ -1478,7 +1470,6 @@ buildvariants:
       display_name: "Debian 11 Release (MongoDB Latest)"
       expansions:
           build_type: "Release"
-          tar_options: *linux_tar_options
           extra_path: *linux_extra_path
           cmake_flags: *linux_cmake_flags
           mongodb_version: *version_latest
@@ -1502,7 +1493,6 @@ buildvariants:
       display_name: "Debian 11 Release (MongoDB 5.0)"
       expansions:
           build_type: "Release"
-          tar_options: *linux_tar_options
           extra_path: *linux_extra_path
           cmake_flags: *linux_cmake_flags
           mongodb_version: *version_50
@@ -1526,7 +1516,6 @@ buildvariants:
       display_name: "Debian 10 Release (MongoDB Latest)"
       expansions:
           build_type: "Release"
-          tar_options: *linux_tar_options
           extra_path: *linux_extra_path
           cmake_flags: *linux_cmake_flags
           mongodb_version: *version_latest
@@ -1548,7 +1537,6 @@ buildvariants:
       display_name: "Debian 10 Release (MongoDB 5.0)"
       expansions:
           build_type: "Release"
-          tar_options: *linux_tar_options
           extra_path: *linux_extra_path
           cmake_flags: *linux_cmake_flags
           mongodb_version: *version_50
@@ -1582,7 +1570,6 @@ buildvariants:
       display_name: "Ubuntu 20.04 Release (MongoDB Latest)"
       expansions:
           build_type: "Release"
-          tar_options: *linux_tar_options
           extra_path: *linux_extra_path
           cmake_flags: *linux_cmake_flags
           mongodb_version: *version_latest
@@ -1604,7 +1591,6 @@ buildvariants:
       display_name: "Ubuntu 20.04 Release (MongoDB 5.0)"
       expansions:
           build_type: "Release"
-          tar_options: *linux_tar_options
           extra_path: *linux_extra_path
           cmake_flags: *linux_cmake_flags
           mongodb_version: *version_50
@@ -1626,7 +1612,6 @@ buildvariants:
       display_name: "Ubuntu 18.04 Release (MongoDB Latest)"
       expansions:
           build_type: "Release"
-          tar_options: *linux_tar_options
           extra_path: *linux_extra_path
           cmake_flags: *linux_cmake_flags
           mongodb_version: *version_latest
@@ -1649,7 +1634,6 @@ buildvariants:
       display_name: "Ubuntu 18.04 Release (MongoDB 5.0)"
       expansions:
           build_type: "Release"
-          tar_options: *linux_tar_options
           extra_path: *linux_extra_path
           cmake_flags: *linux_cmake_flags
           mongodb_version: *version_50
@@ -1673,7 +1657,6 @@ buildvariants:
       display_name: "Ubuntu 16.04 Debug (std::experimental) (MongoDB 4.4)"
       expansions:
           build_type: "Debug"
-          tar_options: *linux_tar_options
           extra_path: *linux_extra_path
           cmake_flags: *linux_cmake_flags
           poly_flags: *poly_std_experimental_flags
@@ -1692,7 +1675,6 @@ buildvariants:
       display_name: "Valgrind Ubuntu 18.04 Debug (MongoDB Latest)"
       expansions:
           build_type: "Debug"
-          tar_options: *linux_tar_options
           extra_path: *linux_extra_path
           cmake_flags: *linux_cmake_flags
           test_params: *valgrind_test_params
@@ -1711,7 +1693,6 @@ buildvariants:
       display_name: "Valgrind Ubuntu 18.04 Debug (MongoDB 5.0)"
       expansions:
           build_type: "Debug"
-          tar_options: *linux_tar_options
           extra_path: *linux_extra_path
           cmake_flags: *linux_cmake_flags
           test_params: *valgrind_test_params
@@ -1730,7 +1711,6 @@ buildvariants:
       display_name: "ASAN Ubuntu 18.04 Debug (MongoDB Latest)"
       expansions:
           build_type: "Debug"
-          tar_options: *linux_tar_options
           extra_path: *linux_extra_path
           cmake_flags: *asan_cmake_flags
           test_params: *asan_test_params
@@ -1751,7 +1731,6 @@ buildvariants:
       display_name: "ASAN Ubuntu 18.04 Debug (MongoDB 5.0)"
       expansions:
           build_type: "Debug"
-          tar_options: *linux_tar_options
           extra_path: *linux_extra_path
           cmake_flags: *asan_cmake_flags
           test_params: *asan_test_params
@@ -1772,7 +1751,6 @@ buildvariants:
       display_name: "UBSAN Ubuntu 18.04 Debug (MongoDB Latest)"
       expansions:
           build_type: "Debug"
-          tar_options: *linux_tar_options
           extra_path: *linux_extra_path
           cmake_flags: *ubsan_cmake_flags
           test_params: *ubsan_test_params
@@ -1794,7 +1772,6 @@ buildvariants:
       display_name: "UBSAN Ubuntu 18.04 Debug (MongoDB 5.0)"
       expansions:
           build_type: "Debug"
-          tar_options: *linux_tar_options
           extra_path: *linux_extra_path
           cmake_flags: *ubsan_cmake_flags
           test_params: *ubsan_test_params
@@ -1816,7 +1793,6 @@ buildvariants:
       display_name: "Ubuntu 18.04 Debug (MongoDB Latest) (Extra)"
       expansions:
         build_type: "Debug"
-        tar_options: *linux_tar_options
         cmake_flags: *linux_cmake_flags
         mongodb_version: *version_latest
       run_on:
@@ -1831,7 +1807,6 @@ buildvariants:
       display_name: "Ubuntu 22.04 Debug (GCC)"
       expansions:
         build_type: "Debug"
-        tar_options: *linux_tar_options
         cmake_flags: *linux_cmake_flags
         mongodb_version: *version_latest
         compiler: g++
@@ -1845,7 +1820,6 @@ buildvariants:
       display_name: "Ubuntu 22.04 Debug (Clang)"
       expansions:
         build_type: "Debug"
-        tar_options: *linux_tar_options
         cmake_flags: *linux_cmake_flags
         mongodb_version: *version_latest
         compiler: clang++
@@ -1859,7 +1833,6 @@ buildvariants:
       display_name: "Mongohouse Test"
       expansions:
           build_type: "Release"
-          tar_options: *linux_tar_options
           cmake_flags: *linux_cmake_flags
           mongodb_version: *version_latest
       run_on: ubuntu1804-test
@@ -1871,7 +1844,6 @@ buildvariants:
       batchtime: 1440 # 1 day
       expansions:
           build_type: "Release"
-          tar_options: *linux_tar_options
           cmake_flags: *linux_cmake_flags
           mongodb_version: *version_latest
           cmake: "cmake"
@@ -1890,7 +1862,6 @@ buildvariants:
       batchtime: 1440 # 1 day
       expansions:
           build_type: "Release"
-          tar_options: *linux_tar_options
           cmake_flags: *linux_cmake_flags
           mongodb_version: *version_60
           cmake: "cmake"
@@ -1909,7 +1880,6 @@ buildvariants:
       batchtime: 1440 # 1 day
       expansions:
           build_type: "Release"
-          tar_options: *linux_tar_options
           cmake_flags: *linux_cmake_flags
           mongodb_version: *version_50
           cmake: "cmake"
@@ -1928,7 +1898,6 @@ buildvariants:
       batchtime: 1440 # 1 day
       expansions:
           build_type: "Release"
-          tar_options: *linux_tar_options
           cmake_flags: *power8_cmake_flags
           mongodb_version: *version_latest
           cmake: "cmake"
@@ -1947,7 +1916,6 @@ buildvariants:
       batchtime: 1440 # 1 day
       expansions:
           build_type: "Release"
-          tar_options: *linux_tar_options
           cmake_flags: *power8_cmake_flags
           mongodb_version: *version_50
           cmake: "cmake"
@@ -1966,7 +1934,6 @@ buildvariants:
       batchtime: 1440 # 1 day
       expansions:
           build_type: "Release"
-          tar_options: *linux_tar_options
           cmake_flags: *linux_cmake_flags
           mongodb_version: *version_latest
       run_on:
@@ -1982,7 +1949,6 @@ buildvariants:
       batchtime: 1440 # 1 day
       expansions:
           build_type: "Release"
-          tar_options: *linux_tar_options
           cmake_flags: *linux_cmake_flags
           mongodb_version: *version_50
       run_on:
@@ -1999,7 +1965,6 @@ buildvariants:
       batchtime: 1440 # 1 day
       expansions:
           build_type: "Debug"
-          tar_options: *linux_tar_options
           cmake_flags: *linux_cmake_flags
           mongodb_version: *version_latest
           mongoc_version: *mongoc_version_minimum
@@ -2064,7 +2029,6 @@ buildvariants:
       display_name: "Windows (VS 2015) Release (MongoDB 4.2)"
       expansions:
           build_type: "Release"
-          tar_options: *linux_tar_options
           extra_path: *msvc2015_extra_path
           cmake_flags: *msvc2015_cmake_flags
           mongodb_version: *version_42
@@ -2082,7 +2046,6 @@ buildvariants:
       display_name: "Windows (VS 2015) Debug Static (MongoDB 4.2)"
       expansions:
           build_type: "Debug"
-          tar_options: *linux_tar_options
           extra_path: *msvc2015_extra_path
           cmake_flags: *msvc2015_cmake_flags
           mongodb_version: *version_42
@@ -2098,7 +2061,6 @@ buildvariants:
       display_name: "Windows (VS 2015) Debug (MongoDB 4.2)"
       expansions:
           build_type: "Debug"
-          tar_options: *linux_tar_options
           extra_path: *msvc2015_extra_path
           cmake_flags: *msvc2015_cmake_flags
           generator: *msvc2015_generator
