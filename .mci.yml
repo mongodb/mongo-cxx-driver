@@ -9,8 +9,6 @@ exec_timeout_secs: 3600
 #######################################
 variables:
 
-    mongoc_version_default: &mongoc_version_default "1.24.0"
-
     # If updating mongoc_version_minimum, also update:
     # - the default value of --c-driver-build-ref in etc/make_release.py
     # - LIBMONGOC_REQUIRED_VERSION in src/mongocxx/CMakeLists.txt
@@ -269,8 +267,8 @@ functions:
         type: setup
         params:
           updates:
-            - key: mongoc_version_default
-              value: *mongoc_version_default
+            - key: mongoc_version_minimum
+              value: *mongoc_version_minimum
       - command: shell.exec
         type: setup
         params:
