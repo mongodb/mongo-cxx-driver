@@ -22,7 +22,7 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-BSONCXX_INLINE_NAMESPACE_BEGIN
+inline namespace v_noabi {
 namespace builder {
 namespace stream {
 
@@ -46,8 +46,7 @@ class single_context {
     ///
     /// << operator for opening a new subdocument in the core builder.
     ///
-    /// @param _
-    ///   An open_document_type token
+    /// The argument must be an open_document_type token (it is otherwise ignored).
     ///
     BSONCXX_INLINE key_context<> operator<<(open_document_type) {
         _core->open_document();
@@ -58,8 +57,7 @@ class single_context {
     ///
     /// << operator for opening a new subarray in the core builder.
     ///
-    /// @param _
-    ///   An open_array_type token
+    /// The argument must be an open_array_type token (it is otherwise ignored).
     ///
     BSONCXX_INLINE array_context<> operator<<(open_array_type) {
         _core->open_array();
@@ -109,7 +107,7 @@ BSONCXX_INLINE value_context<T>::operator single_context() {
 
 }  // namespace stream
 }  // namespace builder
-BSONCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

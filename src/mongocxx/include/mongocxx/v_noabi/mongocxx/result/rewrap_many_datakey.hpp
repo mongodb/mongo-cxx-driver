@@ -21,7 +21,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
+inline namespace v_noabi {
 namespace result {
 
 /// Class representing the result of a MongoDB rewrap_many_datakey operation.
@@ -43,7 +43,7 @@ class MONGOCXX_API rewrap_many_datakey {
 };
 
 }  // namespace result
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

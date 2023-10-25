@@ -20,7 +20,7 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-BSONCXX_INLINE_NAMESPACE_BEGIN
+inline namespace v_noabi {
 namespace builder {
 
 ///
@@ -116,7 +116,7 @@ BSONCXX_INLINE concatenate_array concatenate(array::view_or_value array) {
 }
 
 }  // namespace builder
-BSONCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

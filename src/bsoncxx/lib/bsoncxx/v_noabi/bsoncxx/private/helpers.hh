@@ -22,8 +22,7 @@
 #include <bsoncxx/config/private/prelude.hh>
 
 namespace bsoncxx {
-BSONCXX_INLINE_NAMESPACE_BEGIN
-
+inline namespace v_noabi {
 namespace helpers {
 
 inline document::view view_from_bson_t(const bson_t* bson) {
@@ -48,7 +47,7 @@ inline bsoncxx::oid make_oid(const bson_oid_t* bson_oid) {
 }
 
 }  // namespace helpers
-BSONCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/private/postlude.hh>

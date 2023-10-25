@@ -22,7 +22,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
+inline namespace v_noabi {
 namespace options {
 namespace gridfs {
 
@@ -73,5 +73,5 @@ const stdx::optional<class write_concern>& bucket::write_concern() const {
 
 }  // namespace gridfs
 }  // namespace options
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx

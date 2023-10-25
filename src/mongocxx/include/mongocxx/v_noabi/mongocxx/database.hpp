@@ -30,10 +30,10 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
-
-class client;
+inline namespace v_noabi {
 class client_encryption;
+class client;
+class collection;
 
 ///
 /// Class representing a MongoDB database.
@@ -624,9 +624,9 @@ class MONGOCXX_API database {
     ///
 
    private:
-    friend mongocxx::client;
-    friend mongocxx::collection;
-    friend mongocxx::client_encryption;
+    friend class client_encryption;
+    friend class client;
+    friend class collection;
 
     MONGOCXX_PRIVATE database(const class client& client, bsoncxx::string::view_or_value name);
 
@@ -675,7 +675,7 @@ MONGOCXX_INLINE collection database::operator[](bsoncxx::string::view_or_value n
     return collection(name);
 }
 
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

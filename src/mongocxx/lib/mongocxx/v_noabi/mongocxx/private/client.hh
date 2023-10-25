@@ -23,8 +23,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
-
+inline namespace v_noabi {
 class client::impl {
    public:
     impl(mongoc_client_t* client) : client_t(client) {}
@@ -38,7 +37,7 @@ class client::impl {
     options::apm listeners;
 };
 
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

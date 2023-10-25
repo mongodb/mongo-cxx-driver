@@ -24,7 +24,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
+inline namespace v_noabi {
 namespace options {
 
 encrypt& encrypt::key_id(bsoncxx::types::bson_value::view_or_value key_id) {
@@ -257,5 +257,5 @@ void* encrypt::convert() const {
 }
 
 }  // namespace options
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx

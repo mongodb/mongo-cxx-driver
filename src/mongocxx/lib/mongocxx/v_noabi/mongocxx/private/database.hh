@@ -23,8 +23,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
-
+inline namespace v_noabi {
 class database::impl {
    public:
     impl(mongoc_database_t* db, const class client::impl* client, std::string name)
@@ -55,7 +54,7 @@ class database::impl {
     std::string name;
 };
 
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

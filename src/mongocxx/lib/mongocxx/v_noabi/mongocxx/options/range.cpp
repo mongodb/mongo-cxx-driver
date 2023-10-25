@@ -17,7 +17,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
+inline namespace v_noabi {
 namespace options {
 
 range& range::min(bsoncxx::types::bson_value::view_or_value value) {
@@ -57,5 +57,5 @@ const stdx::optional<std::int32_t>& range::precision() const {
 }
 
 }  // namespace options
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx

@@ -24,8 +24,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
-
+inline namespace v_noabi {
 namespace entity {
 
 class map {
@@ -87,7 +86,7 @@ class map {
     std::unordered_map<key_type, mongocxx::client_encryption> _client_encryption_map;
 };
 }  // namespace entity
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

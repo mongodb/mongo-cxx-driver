@@ -20,8 +20,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
-
+inline namespace v_noabi {
 ///
 /// Class representing an exception during authentication.
 ///
@@ -32,7 +31,7 @@ class MONGOCXX_API authentication_exception : public operation_exception {
     using operation_exception::operation_exception;
 };
 
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

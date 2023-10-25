@@ -31,8 +31,7 @@
 #endif
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
-
+inline namespace v_noabi {
 namespace {
 
 log_level convert_log_level(::mongoc_log_level_t mongoc_log_level) {
@@ -163,5 +162,5 @@ instance& instance::current() {
     return *curr;
 }
 
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx

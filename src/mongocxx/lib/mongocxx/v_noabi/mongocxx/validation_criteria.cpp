@@ -50,8 +50,7 @@ std::string validation_action_to_string(mongocxx::validation_criteria::validatio
 }  // namespace
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
-
+inline namespace v_noabi {
 validation_criteria& validation_criteria::rule(bsoncxx::document::view_or_value rule) {
     _rule = std::move(rule);
     return *this;
@@ -111,5 +110,5 @@ MONGOCXX_API bool MONGOCXX_CALL operator!=(const validation_criteria& lhs,
     return !(lhs == rhs);
 }
 
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx

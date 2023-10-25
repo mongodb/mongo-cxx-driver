@@ -22,8 +22,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
-
+inline namespace v_noabi {
 ///
 /// Class representing an exception received from a MongoDB server.  It includes the server-provided
 /// error code, if one was available.
@@ -75,7 +74,7 @@ class MONGOCXX_API operation_exception : public exception {
     stdx::optional<bsoncxx::document::value> _raw_server_error;
 };
 
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

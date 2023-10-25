@@ -21,14 +21,14 @@
 #include <core/string.hpp>
 
 namespace bsoncxx {
-BSONCXX_INLINE_NAMESPACE_BEGIN
+inline namespace v_noabi {
 namespace stdx {
 
 using ::core::basic_string_view;
 using ::core::string_view;
 
 }  // namespace stdx
-BSONCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace bsoncxx
 
 #elif defined(BSONCXX_POLY_USE_BOOST)
@@ -40,14 +40,14 @@ BSONCXX_INLINE_NAMESPACE_END
 #include <boost/utility/string_view.hpp>
 
 namespace bsoncxx {
-BSONCXX_INLINE_NAMESPACE_BEGIN
+inline namespace v_noabi {
 namespace stdx {
 
 using ::boost::basic_string_view;
 using ::boost::string_view;
 
 }  // namespace stdx
-BSONCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace bsoncxx
 
 #else
@@ -55,7 +55,7 @@ BSONCXX_INLINE_NAMESPACE_END
 #include <boost/utility/string_ref.hpp>
 
 namespace bsoncxx {
-BSONCXX_INLINE_NAMESPACE_BEGIN
+inline namespace v_noabi {
 namespace stdx {
 
 template <typename charT, typename traits = std::char_traits<charT>>
@@ -63,7 +63,7 @@ using basic_string_view = ::boost::basic_string_ref<charT, traits>;
 using string_view = ::boost::string_ref;
 
 }  // namespace stdx
-BSONCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace bsoncxx
 
 #endif
@@ -73,14 +73,14 @@ BSONCXX_INLINE_NAMESPACE_END
 #include <experimental/string_view>
 
 namespace bsoncxx {
-BSONCXX_INLINE_NAMESPACE_BEGIN
+inline namespace v_noabi {
 namespace stdx {
 
 using ::std::experimental::basic_string_view;
 using ::std::experimental::string_view;
 
 }  // namespace stdx
-BSONCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace bsoncxx
 
 #elif defined(BSONCXX_POLY_USE_STD)
@@ -88,14 +88,14 @@ BSONCXX_INLINE_NAMESPACE_END
 #include <string_view>
 
 namespace bsoncxx {
-BSONCXX_INLINE_NAMESPACE_BEGIN
+inline namespace v_noabi {
 namespace stdx {
 
 using ::std::basic_string_view;
 using ::std::string_view;
 
 }  // namespace stdx
-BSONCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace bsoncxx
 
 #else

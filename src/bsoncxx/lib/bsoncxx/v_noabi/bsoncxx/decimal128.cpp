@@ -22,8 +22,7 @@
 #include <bsoncxx/config/private/prelude.hh>
 
 namespace bsoncxx {
-BSONCXX_INLINE_NAMESPACE_BEGIN
-
+inline namespace v_noabi {
 decimal128::decimal128(stdx::string_view str) {
     bson_decimal128_t d128;
     if (!bson_decimal128_from_string(string::to_string(str).c_str(), &d128)) {
@@ -50,5 +49,5 @@ bool BSONCXX_CALL operator!=(const decimal128& lhs, const decimal128& rhs) {
     return !(lhs == rhs);
 }
 
-BSONCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace bsoncxx

@@ -17,8 +17,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
-
+inline namespace v_noabi {
 stdx::string_view MONGOCXX_CALL to_string(log_level level) {
     switch (level) {
         case log_level::k_error:
@@ -43,5 +42,5 @@ stdx::string_view MONGOCXX_CALL to_string(log_level level) {
 logger::logger() = default;
 logger::~logger() = default;
 
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx

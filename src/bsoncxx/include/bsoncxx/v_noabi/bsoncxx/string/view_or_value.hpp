@@ -22,7 +22,7 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-BSONCXX_INLINE_NAMESPACE_BEGIN
+inline namespace v_noabi {
 namespace string {
 
 ///
@@ -117,7 +117,7 @@ BSONCXX_INLINE bool operator!=(const char* lhs, const view_or_value& rhs) {
 ///
 
 }  // namespace string
-BSONCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

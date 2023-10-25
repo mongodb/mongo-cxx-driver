@@ -20,8 +20,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
-
+inline namespace v_noabi {
 ///
 /// Enum representing the various error types that can occur during driver usage.
 ///
@@ -121,7 +120,7 @@ MONGOCXX_INLINE std::error_code make_error_code(error_code error) {
     return {static_cast<int>(error), error_category()};
 }
 
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

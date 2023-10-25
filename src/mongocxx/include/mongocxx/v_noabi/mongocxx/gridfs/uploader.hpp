@@ -31,7 +31,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
+inline namespace v_noabi {
 namespace gridfs {
 
 ///
@@ -166,5 +166,5 @@ class MONGOCXX_API uploader {
 };
 
 }  // namespace gridfs
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx
