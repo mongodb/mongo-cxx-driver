@@ -328,9 +328,9 @@ if(ENABLE_MACRO_GUARD_TESTS)
             MONGOCXX_COMPILER_ID
             MONGOCXX_COMPILER_VERSION
         INCLUDE_PATTERNS
-            "include/**/*.hpp" # Public headers.
-            "lib/**/*.hh" # Private headers.
-            "test/**/*.hh" # Test headers.
+            "include/*.hpp" # Public headers.
+            "lib/*.hh" # Private headers.
+            "test/*.hh" # Test headers.
         EXCLUDE_REGEXES
             "(include|lib)/mongocxx/v.*/config/.*" # Config headers.
             ".*_symbols.hh" # Symbol headers.

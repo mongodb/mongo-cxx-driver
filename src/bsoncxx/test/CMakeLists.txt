@@ -93,9 +93,9 @@ if(ENABLE_MACRO_GUARD_TESTS)
             BSONCXX_NO_DEPRECATED
             BSONCXX_UNREACHABLE # prelude.hpp
         INCLUDE_PATTERNS
-            "include/**/*.hpp" # Public headers.
-            "lib/**/*.hh" # Private headers.
-            "test/**/*.hh" # Test headers.
+            "include/*.hpp" # Public headers.
+            "lib/*.hh" # Private headers.
+            "test/*.hh" # Test headers.
         EXCLUDE_REGEXES
             "(include|lib)/bsoncxx/v.*/config/.*" # Config headers.
             "include/bsoncxx/v_noabi/bsoncxx/enums/.*" # X macro headers.
