@@ -47,16 +47,12 @@ function(add_macro_guard_test)
         endif()
     endforeach()
 
-    set(GUARDED_HEADERS "")
-
-    foreach(filter ${PARSED_INCLUDE_FILTERS})
-        file(GLOB_RECURSE headers
-            LIST_DIRECTORIES false
-            RELATIVE ${PROJECT_SOURCE_DIR}
-            "${PROJECT_SOURCE_DIR}/${filter}"
-        )
-        list(APPEND GUARDED_HEADERS ${headers})
-    endforeach()
+    list(TRANSFORM PARSED_INCLUDE_FILTERS PREPEND "${PROJECT_SOURCE_DIR}/")
+    file(GLOB_RECURSE GUARDED_HEADERS
+        LIST_DIRECTORIES false
+        RELATIVE ${PROJECT_SOURCE_DIR}
+        ${PARSED_INCLUDE_FILTERS}
+    )
 
     foreach(filter ${PARSED_EXCLUDE_FILTERS})
         list(FILTER GUARDED_HEADERS EXCLUDE REGEX "${filter}")
