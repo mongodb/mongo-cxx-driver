@@ -191,19 +191,24 @@ add_library(mongocxx_test_properties_with_main INTERFACE)
 target_sources(mongocxx_test_properties_with_main INTERFACE $<TARGET_OBJECTS:mongocxx_catch_main>)
 target_link_libraries(mongocxx_test_properties_with_main INTERFACE mongocxx_test_properties)
 
-target_link_libraries(test_driver PRIVATE mongocxx_test_properties_with_main)
-target_link_libraries(test_logging PRIVATE mongocxx_test_properties_with_main)
-target_link_libraries(test_instance PRIVATE mongocxx_test_properties_with_main)
-target_link_libraries(test_client_side_encryption_specs PRIVATE mongocxx_test_properties_with_main)
-target_link_libraries(test_crud_specs PRIVATE mongocxx_test_properties_with_main)
-target_link_libraries(test_gridfs_specs PRIVATE mongocxx_test_properties_with_main)
-target_link_libraries(test_command_monitoring_specs PRIVATE mongocxx_test_properties_with_main)
-target_link_libraries(test_transactions_specs PRIVATE mongocxx_test_properties_with_main)
-target_link_libraries(test_retryable_reads_specs PRIVATE mongocxx_test_properties_with_main)
-target_link_libraries(test_read_write_concern_specs PRIVATE mongocxx_test_properties_with_main)
-target_link_libraries(test_mongohouse_specs PRIVATE mongocxx_test_properties_with_main)
-target_link_libraries(test_unified_format_spec PRIVATE mongocxx_test_properties_with_main)
-target_link_libraries(test_versioned_api PRIVATE mongocxx_test_properties_with_main)
+set_property(
+    TARGET
+        test_driver
+        test_logging
+        test_instance
+        test_client_side_encryption_specs
+        test_crud_specs
+        test_gridfs_specs
+        test_command_monitoring_specs
+        test_transactions_specs
+        test_retryable_reads_specs
+        test_read_write_concern_specs
+        test_mongohouse_specs
+        test_unified_format_spec
+        test_versioned_api
+    APPEND PROPERTY LINK_LIBRARIES
+        mongocxx_test_properties_with_main
+)
 
 target_compile_definitions(test_driver PRIVATE ${libmongoc_definitions})
 target_compile_definitions(test_logging PRIVATE ${libmongoc_definitions})

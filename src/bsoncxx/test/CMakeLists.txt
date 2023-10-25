@@ -59,7 +59,7 @@ add_library(bsoncxx_test_properties_with_main INTERFACE)
 target_sources(bsoncxx_test_properties_with_main INTERFACE $<TARGET_OBJECTS:bsoncxx_catch_main>)
 target_link_libraries(bsoncxx_test_properties_with_main INTERFACE bsoncxx_test_properties)
 
-target_link_libraries(test_bson PRIVATE bsoncxx_test_properties_with_main)
+set_property(TARGET test_bson APPEND PROPERTY LINK_LIBRARIES bsoncxx_test_properties_with_main)
 
 add_test(NAME bson COMMAND test_bson)
 
