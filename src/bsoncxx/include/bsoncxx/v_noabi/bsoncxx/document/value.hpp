@@ -23,7 +23,7 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-BSONCXX_INLINE_NAMESPACE_BEGIN
+inline namespace v_noabi {
 namespace document {
 
 ///
@@ -267,7 +267,7 @@ BSONCXX_INLINE bool operator!=(const value& lhs, const value& rhs) {
 ///
 
 }  // namespace document
-BSONCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

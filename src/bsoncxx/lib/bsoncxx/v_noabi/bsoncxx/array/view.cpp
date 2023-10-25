@@ -24,7 +24,7 @@
 #include <bsoncxx/config/private/prelude.hh>
 
 namespace bsoncxx {
-BSONCXX_INLINE_NAMESPACE_BEGIN
+inline namespace v_noabi {
 namespace array {
 
 namespace {
@@ -168,5 +168,5 @@ bool BSONCXX_CALL operator!=(view lhs, view rhs) {
 }
 
 }  // namespace array
-BSONCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace bsoncxx

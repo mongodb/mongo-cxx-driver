@@ -28,13 +28,16 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
-
+inline namespace v_noabi {
 class bulk_write;
 class client;
 class collection;
 class database;
 class uri;
+
+namespace options {
+class transaction;
+}
 
 ///
 /// Class representing the server-side requirement for reporting the success of a write
@@ -242,13 +245,13 @@ class MONGOCXX_API write_concern {
     bsoncxx::document::value to_document() const;
 
    private:
-    friend bulk_write;
-    friend client;
-    friend collection;
-    friend database;
-    /// \relates mongocxx::options::transaction
-    friend mongocxx::options::transaction;
-    friend uri;
+    friend class bulk_write;
+    friend class client;
+    friend class collection;
+    friend class database;
+    friend class uri;
+
+    friend class options::transaction;
 
     ///
     /// @{
@@ -270,7 +273,7 @@ class MONGOCXX_API write_concern {
     std::unique_ptr<impl> _impl;
 };
 
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

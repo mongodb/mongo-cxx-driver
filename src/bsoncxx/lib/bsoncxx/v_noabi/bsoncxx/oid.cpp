@@ -22,8 +22,7 @@
 #include <bsoncxx/config/private/prelude.hh>
 
 namespace bsoncxx {
-BSONCXX_INLINE_NAMESPACE_BEGIN
-
+inline namespace v_noabi {
 oid::oid() {
     bson_oid_t oid;
     bson_oid_init(&oid, nullptr);
@@ -102,5 +101,5 @@ bool BSONCXX_CALL operator!=(const oid& lhs, const oid& rhs) {
     return oid_compare(lhs, rhs) != 0;
 }
 
-BSONCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace bsoncxx

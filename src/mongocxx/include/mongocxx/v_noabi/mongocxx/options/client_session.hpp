@@ -21,7 +21,9 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
+inline namespace v_noabi {
+class client_session;
+
 namespace options {
 
 ///
@@ -97,7 +99,7 @@ class MONGOCXX_API client_session {
 
    private:
     // Allow the implementation of client_session to see these:
-    friend mongocxx::client_session;
+    friend class mongocxx::client_session;
 
     stdx::optional<bool> _causal_consistency;
     stdx::optional<bool> _enable_snapshot_reads;
@@ -106,7 +108,7 @@ class MONGOCXX_API client_session {
 };
 
 }  // namespace options
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

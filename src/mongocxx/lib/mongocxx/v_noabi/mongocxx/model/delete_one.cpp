@@ -17,7 +17,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
+inline namespace v_noabi {
 namespace model {
 
 delete_one::delete_one(bsoncxx::document::view_or_value filter) : _filter(std::move(filter)) {}
@@ -45,5 +45,5 @@ const stdx::optional<class hint>& delete_one::hint() const {
 }
 
 }  // namespace model
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx

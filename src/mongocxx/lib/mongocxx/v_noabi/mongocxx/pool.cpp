@@ -31,8 +31,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
-
+inline namespace v_noabi {
 // Attempts to create a new client pool using the uri. Throws an exception upon error.
 static mongoc_client_pool_t* construct_client_pool(mongoc_uri_t* uri) {
     bson_error_t error;
@@ -144,5 +143,5 @@ stdx::optional<pool::entry> pool::try_acquire() {
         entry::unique_client(new client(cli), [this](client* client) { _release(client); }));
 }
 
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx

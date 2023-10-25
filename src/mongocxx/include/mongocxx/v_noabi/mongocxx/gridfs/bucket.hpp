@@ -34,8 +34,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
-
+inline namespace v_noabi {
 class database;
 
 namespace gridfs {
@@ -500,6 +499,13 @@ class MONGOCXX_API bucket {
     ///   re-thrown.
     ///
     void download_to_stream(bsoncxx::types::bson_value::view id, std::ostream* destination);
+
+    ///
+    /// @copydoc download_to_stream(bsoncxx::types::bson_value::view id, std::ostream* destination)
+    ///
+    /// @param start The byte offset to the beginning of content to download.
+    /// @param end The byte offset to the end of content to download.
+    ///
     void download_to_stream(bsoncxx::types::bson_value::view id,
                             std::ostream* destination,
                             std::size_t start,
@@ -531,6 +537,15 @@ class MONGOCXX_API bucket {
     void download_to_stream(const client_session& session,
                             bsoncxx::types::bson_value::view id,
                             std::ostream* destination);
+
+    // clang-format off
+    ///
+    /// @copydoc download_to_stream(const client_session& session, bsoncxx::types::bson_value::view id, std::ostream* destination)
+    ///
+    /// @param start The byte offset to the beginning of content to download.
+    /// @param end The byte offset to the end of content to download.
+    ///
+    // clang-format on
     void download_to_stream(const client_session& session,
                             bsoncxx::types::bson_value::view id,
                             std::ostream* destination,
@@ -675,7 +690,7 @@ class MONGOCXX_API bucket {
 };
 
 }  // namespace gridfs
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

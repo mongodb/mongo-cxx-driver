@@ -23,12 +23,14 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
-
+inline namespace v_noabi {
 class client_encryption;
 
 namespace options {
 
+///
+/// Class representing options for a rewrap many datakey operation.
+///
 class MONGOCXX_API rewrap_many_datakey {
    public:
     ///
@@ -103,7 +105,7 @@ class MONGOCXX_API rewrap_many_datakey {
 };
 
 }  // namespace options
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

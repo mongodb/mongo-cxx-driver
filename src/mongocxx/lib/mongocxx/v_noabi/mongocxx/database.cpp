@@ -41,8 +41,7 @@ using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_document;
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
-
+inline namespace v_noabi {
 namespace {
 class collection_names {
    public:
@@ -524,5 +523,5 @@ database::impl& database::_get_impl() {
     return const_cast<database::impl&>(cthis->_get_impl());
 }
 
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx

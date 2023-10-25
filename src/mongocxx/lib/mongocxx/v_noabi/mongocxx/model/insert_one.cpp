@@ -17,7 +17,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
+inline namespace v_noabi {
 namespace model {
 
 insert_one::insert_one(bsoncxx::document::view_or_value document)
@@ -28,5 +28,5 @@ const bsoncxx::document::view_or_value& insert_one::document() const {
 }
 
 }  // namespace model
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx

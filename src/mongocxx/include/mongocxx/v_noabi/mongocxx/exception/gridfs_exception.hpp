@@ -19,8 +19,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
-
+inline namespace v_noabi {
 ///
 /// Class representing an error encountered when attempting to perform the requested GridFS
 /// operation.
@@ -32,7 +31,7 @@ class MONGOCXX_API gridfs_exception : public exception {
     using exception::exception;
 };
 
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

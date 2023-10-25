@@ -19,8 +19,7 @@
 #include <bsoncxx/config/private/prelude.hh>
 
 namespace bsoncxx {
-BSONCXX_INLINE_NAMESPACE_BEGIN
-
+inline namespace v_noabi {
 namespace {
 
 class error_category_impl final : public std::error_category {
@@ -92,5 +91,5 @@ const std::error_category& BSONCXX_CALL error_category() {
     return instance;
 }
 
-BSONCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace bsoncxx

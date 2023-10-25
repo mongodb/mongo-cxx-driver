@@ -22,7 +22,7 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-BSONCXX_INLINE_NAMESPACE_BEGIN
+inline namespace v_noabi {
 namespace stdx {
 
 namespace detail {
@@ -161,7 +161,7 @@ std::unique_ptr<T> make_unique_for_overwrite(std::size_t count) {
 }
 
 }  // namespace stdx
-BSONCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

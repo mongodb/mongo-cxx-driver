@@ -17,7 +17,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
+inline namespace v_noabi {
 namespace libmongoc {
 namespace conversions {
 
@@ -57,5 +57,5 @@ read_preference::read_mode read_mode_from_read_mode_t(mongoc_read_mode_t read_mo
 
 }  // namespace conversions
 }  // namespace libmongoc
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx

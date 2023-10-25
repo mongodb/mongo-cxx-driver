@@ -19,8 +19,7 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-BSONCXX_INLINE_NAMESPACE_BEGIN
-
+inline namespace v_noabi {
 namespace types {
 
 ///
@@ -33,7 +32,7 @@ BSONCXX_DEPRECATED typedef types::bson_value::view value;
 
 }  // namespace types
 
-BSONCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

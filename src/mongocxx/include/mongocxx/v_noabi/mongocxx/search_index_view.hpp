@@ -11,8 +11,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
-
+inline namespace v_noabi {
 ///
 /// Class representing a MongoDB search index view.
 ///
@@ -99,6 +98,8 @@ class MONGOCXX_API search_index_view {
     ///
     /// This is a convenience method for creating a single search index with a default name.
     ///
+    /// @param session
+    ///   The mongocxx::client_session with which to perform the operation.
     /// @param definition
     ///    The document describing the search index to be created.
     ///
@@ -263,7 +264,7 @@ class MONGOCXX_API search_index_view {
     std::unique_ptr<impl> _impl;
 };
 
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

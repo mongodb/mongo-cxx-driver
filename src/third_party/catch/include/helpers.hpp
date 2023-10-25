@@ -21,7 +21,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
+inline namespace v_noabi {
 
 namespace test_util {
 // Check that an error message includes a substring, case-insensitively. Use like:
@@ -42,7 +42,7 @@ public:
 };
 } // namespace test_util
 
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 } // namespace mongocxx
 
 #define CHECK_OPTIONAL_ARGUMENT(OBJECT, NAME, VALUE) \

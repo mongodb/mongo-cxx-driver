@@ -13,5 +13,4 @@
 // limitations under the License.
 
 #define MONGOCXX_INLINE_NAMESPACE_BEGIN inline namespace v_noabi {
-
 #define MONGOCXX_INLINE_NAMESPACE_END }  // namespace v_noabi

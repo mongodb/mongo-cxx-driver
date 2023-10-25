@@ -17,7 +17,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
+inline namespace v_noabi {
 namespace model {
 
 replace_one::replace_one(bsoncxx::document::view_or_value filter,
@@ -60,5 +60,5 @@ const stdx::optional<class hint>& replace_one::hint() const {
     return _hint;
 }
 }  // namespace model
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx

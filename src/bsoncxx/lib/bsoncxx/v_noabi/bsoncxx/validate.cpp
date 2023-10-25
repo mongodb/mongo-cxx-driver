@@ -19,8 +19,7 @@
 #include <bsoncxx/config/private/prelude.hh>
 
 namespace bsoncxx {
-BSONCXX_INLINE_NAMESPACE_BEGIN
-
+inline namespace v_noabi {
 struct validator::impl {
     bool _check_utf8{false};
     bool _check_utf8_allow_null{false};
@@ -105,5 +104,5 @@ stdx::optional<document::view> BSONCXX_CALL validate(const std::uint8_t* data,
     return document::view{data, length};
 }
 
-BSONCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace bsoncxx
