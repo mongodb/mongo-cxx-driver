@@ -27,7 +27,7 @@ BEGIN
             VALUE "FileDescription", "MongoDB Client Library for C++"
             VALUE "FileVersion", MONGOCXX_VERSION_STR
             VALUE "InternalName", "mongocxx"
-            VALUE "OriginalFilename", "mongocxx.dll"
+            VALUE "OriginalFilename", MONGOCXX_OUTPUT_BASENAME ".dll"
             VALUE "ProductName", "MongoDB C++ Driver"
             VALUE "ProductVersion", MONGOCXX_VERSION_STR
             VALUE "LegalCopyright", "Copyright (C) 2023-present MongoDB, Inc."

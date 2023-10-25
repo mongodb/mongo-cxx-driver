@@ -87,7 +87,10 @@ if(MONGOCXX_BUILD_SHARED)
     if(WIN32)
         # Add resource-definition script for Windows shared library (.dll).
         set_property(TARGET mongocxx_shared APPEND PROPERTY SOURCES mongocxx.rc)
-        set_source_files_properties (mongocxx.rc PROPERTIES COMPILE_DEFINITIONS MONGOCXX_VERSION_STR="${MONGOCXX_VERSION}")
+        set (mongocxx_rc_definitions "")
+        list (APPEND mongocxx_rc_definitions MONGOCXX_VERSION_STR="${MONGOCXX_VERSION}")
+        list (APPEND mongocxx_rc_definitions MONGOCXX_OUTPUT_BASENAME="${MONGOCXX_OUTPUT_BASENAME}")
+        set_source_files_properties (mongocxx.rc PROPERTIES COMPILE_DEFINITIONS "${mongocxx_rc_definitions}")
     endif()
 endif()
 

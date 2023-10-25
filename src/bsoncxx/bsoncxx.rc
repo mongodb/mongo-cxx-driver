@@ -27,7 +27,7 @@ BEGIN
             VALUE "FileDescription", "A BSON Library for C++"
             VALUE "FileVersion", BSONCXX_VERSION_STR
             VALUE "InternalName", "bsoncxx"
-            VALUE "OriginalFilename", "bsoncxx.dll"
+            VALUE "OriginalFilename", BSONCXX_OUTPUT_BASENAME ".dll"
             VALUE "ProductName", "MongoDB C++ Driver"
             VALUE "ProductVersion", BSONCXX_VERSION_STR
             VALUE "LegalCopyright", "Copyright (C) 2023-present MongoDB, Inc."

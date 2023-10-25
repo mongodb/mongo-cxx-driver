@@ -138,7 +138,10 @@ if(BSONCXX_BUILD_SHARED)
     if(WIN32)
         # Add resource-definition script for Windows shared library (.dll).
         set_property(TARGET bsoncxx_shared APPEND PROPERTY SOURCES bsoncxx.rc)
-        set_source_files_properties (bsoncxx.rc PROPERTIES COMPILE_DEFINITIONS BSONCXX_VERSION_STR="${BSONCXX_VERSION}")
+        set (bsoncxx_rc_definitions "")
+        list (APPEND bsoncxx_rc_definitions BSONCXX_VERSION_STR="${BSONCXX_VERSION}")
+        list (APPEND bsoncxx_rc_definitions BSONCXX_OUTPUT_BASENAME="${BSONCXX_OUTPUT_BASENAME}")
+        set_source_files_properties (bsoncxx.rc PROPERTIES COMPILE_DEFINITIONS "${bsoncxx_rc_definitions}")
     endif()
 endif()
 
