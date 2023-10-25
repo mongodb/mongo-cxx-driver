@@ -1,8 +1,35 @@
-# PROJECT_NAME: bsoncxx or mongocxx.
-# PROJECT_TEST_PROPERTIES_TARGET: the (bsoncxx|mongocxx)_test_properties target to be linked with.
-# GUARDED_MACROS: list of macros that should be guarded by prelude/postlude headers.
-# INCLUDE_FILTERS: list of regex filters for headers to be added to the tests (must be relative to PROJECT_SOURCE_DIR).
-# EXCLUDE_FILTERS: list of regex filters for headers to be excluded (applied after INCLUDE_FILTERS).
+#[==[
+	Define a build-time static library target whose compilation asserts that
+    header files are properly guarding config macros using inclusion of
+    prelude/postlude headers.
+
+    Usage:
+	
+	    add_macro_guard_test(
+	        PROJECT_NAME <name>
+	        PROJECT_TEST_PROPERTIES_TARGET <target>
+	        INCLUDE_FILTERS [pattern...]
+	        [EXCLUDE_FILTERS [pattern...]]
+	        GUARDED_MACROS [macro...]
+	    )
+	
+	PROJECT_NAME
+	    Either "bsoncxx" or "mongocxx".
+	
+	PROJECT_TEST_PROPERTIES_TARGET
+	    Either the bsoncxx_test_properties or mongocxx_test_properties target.
+	
+	GUARDED_MACROS
+	    List of macros that should be guarded by prelude/postlude headers.
+	
+	INCLUDE_FILTERS
+	    List of regex filters for headers to be added to the tests. Must be
+        relative to PROJECT_SOURCE_DIR.
+	
+	EXCLUDE_FILTERS
+	    List of regex filters for headers to be excluded. Applied after
+        INCLUDE_FILTERS.
+]==]
 function(add_macro_guard_test)
     set(opt_args "")
     set(single_args "PROJECT_NAME;PROJECT_TEST_PROPERTIES_TARGET")
