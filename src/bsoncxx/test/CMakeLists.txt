@@ -51,15 +51,14 @@ target_include_directories(bsoncxx_test_properties INTERFACE
     ${CMAKE_CURRENT_SOURCE_DIR}/../..
 )
 target_compile_definitions(bsoncxx_test_properties INTERFACE ${libbson_definitions})
+add_library(bsoncxx::test_properties ALIAS bsoncxx_test_properties)
 
 # Avoid redundant recompilation of catch/main.cpp.
-add_library(bsoncxx_catch_main OBJECT ${THIRD_PARTY_SOURCE_DIR}/catch/main.cpp)
-target_link_libraries(bsoncxx_catch_main PRIVATE bsoncxx_test_properties)
-add_library(bsoncxx_test_properties_with_main INTERFACE)
-target_sources(bsoncxx_test_properties_with_main INTERFACE $<TARGET_OBJECTS:bsoncxx_catch_main>)
-target_link_libraries(bsoncxx_test_properties_with_main INTERFACE bsoncxx_test_properties)
+add_library(bsoncxx_test_properties_with_main STATIC EXCLUDE_FROM_ALL ${THIRD_PARTY_SOURCE_DIR}/catch/main.cpp)
+target_link_libraries(bsoncxx_test_properties_with_main PUBLIC bsoncxx::test_properties)
+add_library(bsoncxx::test_properties_with_main ALIAS bsoncxx_test_properties_with_main)
 
-set_property(TARGET test_bson APPEND PROPERTY LINK_LIBRARIES bsoncxx_test_properties_with_main)
+set_property(TARGET test_bson APPEND PROPERTY LINK_LIBRARIES bsoncxx::test_properties_with_main)
 
 add_test(NAME bson COMMAND test_bson)
 
@@ -69,7 +68,7 @@ if(ENABLE_MACRO_GUARD_TESTS)
 
     add_macro_guard_test(
         PROJECT_NAME bsoncxx
-        PROJECT_TEST_PROPERTIES_TARGET bsoncxx_test_properties
+        PROJECT_TEST_PROPERTIES_TARGET bsoncxx::test_properties
         GUARDED_MACROS
             BSONCXX_INLINE # compiler.hpp
             BSONCXX_CALL

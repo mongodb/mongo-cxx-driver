@@ -183,13 +183,12 @@ target_include_directories(mongocxx_test_properties INTERFACE
     # Allow `#include <mongocxx/test/...>` and `#include <third_party/...>`.
     ${CMAKE_CURRENT_SOURCE_DIR}/../..
 )
+add_library(mongocxx::test_properties ALIAS mongocxx_test_properties)
 
 # Avoid redundant recompilation of catch/main.cpp.
-add_library(mongocxx_catch_main OBJECT ${THIRD_PARTY_SOURCE_DIR}/catch/main.cpp)
-target_link_libraries(mongocxx_catch_main PRIVATE mongocxx_test_properties)
-add_library(mongocxx_test_properties_with_main INTERFACE)
-target_sources(mongocxx_test_properties_with_main INTERFACE $<TARGET_OBJECTS:mongocxx_catch_main>)
-target_link_libraries(mongocxx_test_properties_with_main INTERFACE mongocxx_test_properties)
+add_library(mongocxx_test_properties_with_main STATIC EXCLUDE_FROM_ALL ${THIRD_PARTY_SOURCE_DIR}/catch/main.cpp)
+target_link_libraries(mongocxx_test_properties_with_main PUBLIC mongocxx::test_properties)
+add_library(mongocxx::test_properties_with_main ALIAS mongocxx_test_properties_with_main)
 
 set_property(
     TARGET
@@ -207,7 +206,7 @@ set_property(
         test_unified_format_spec
         test_versioned_api
     APPEND PROPERTY LINK_LIBRARIES
-        mongocxx_test_properties_with_main
+        mongocxx::test_properties_with_main
 )
 
 target_compile_definitions(test_driver PRIVATE ${libmongoc_definitions})
@@ -304,7 +303,7 @@ if(ENABLE_MACRO_GUARD_TESTS)
 
     add_macro_guard_test(
         PROJECT_NAME mongocxx
-        PROJECT_TEST_PROPERTIES_TARGET mongocxx_test_properties
+        PROJECT_TEST_PROPERTIES_TARGET mongocxx::test_properties
         GUARDED_MACROS
             MONGOCXX_INLINE # compiler.hpp
             MONGOCXX_CALL
