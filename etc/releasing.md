@@ -316,9 +316,16 @@ $ docker login --username svcmongodbcxxdriverdockerbo219
 Password: <INSERT PASSWORD HERE>
 ```
 
-Finally, push the image:
+We now need to perform a multi-arch build. We currently support both AMD64
+(x86_64) and ARM64 (aarch64). You will need to have `qemu` installed in order to
+emulate non-native architectures in Docker. The following commands will setup a
+buildx builder, build the images for both AMD64 and ARM64, then push those
+images to Docker Hub. To say this again, the `--push` flag below means that the
+images will be pushed to the public Docker Hub repository, so **only run these
+commands when you are ready to push the images!**
 ```
-$ docker push mongodb/mongo-cxx-driver:<VERSION NUMBER>-redhat-ubi-9.2
+$ docker buildx create --name mybuilder --use --bootstrap
+$ docker buildx build --push --platform linux/amd64,linux/arm64 --tag mongodb/mongo-cxx-driver:3.8.1-redhat-ubi-9.2 .
 ```
 
 Update the `Tags` section of the Docker Hub
