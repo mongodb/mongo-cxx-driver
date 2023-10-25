@@ -84,6 +84,11 @@ if(MONGOCXX_BUILD_SHARED)
     mongocxx_add_library(mongocxx_shared "${MONGOCXX_OUTPUT_BASENAME}" SHARED)
     target_link_libraries(mongocxx_shared PUBLIC bsoncxx_shared)
     list(APPEND mongocxx_target_list mongocxx_shared)
+    if(WIN32)
+        # Add resource-definition script for Windows shared library (.dll).
+        set_property(TARGET mongocxx_shared APPEND PROPERTY SOURCES mongocxx.rc)
+        set_source_files_properties (mongocxx.rc PROPERTIES COMPILE_DEFINITIONS MONGOCXX_VERSION_STR="${MONGOCXX_VERSION}")
+    endif()
 endif()
 
 if(MONGOCXX_BUILD_STATIC)

@@ -135,6 +135,11 @@ set(bsoncxx_target_list "")
 if(BSONCXX_BUILD_SHARED)
     bsoncxx_add_library(bsoncxx_shared "${BSONCXX_OUTPUT_BASENAME}" SHARED)
     list(APPEND bsoncxx_target_list bsoncxx_shared)
+    if(WIN32)
+        # Add resource-definition script for Windows shared library (.dll).
+        set_property(TARGET bsoncxx_shared APPEND PROPERTY SOURCES bsoncxx.rc)
+        set_source_files_properties (bsoncxx.rc PROPERTIES COMPILE_DEFINITIONS BSONCXX_VERSION_STR="${BSONCXX_VERSION}")
+    endif()
 endif()
 
 if(BSONCXX_BUILD_STATIC)
