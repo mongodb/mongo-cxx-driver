@@ -85,7 +85,8 @@ function(add_macro_guard_test)
         "\n"
     )
 
-    add_custom_target(test_${PARSED_PROJECT_NAME}_macro_guards)
+    add_library(test_${PARSED_PROJECT_NAME}_macro_guards STATIC EXCLUDE_FROM_ALL)
+    target_link_libraries(test_${PARSED_PROJECT_NAME}_macro_guards PRIVATE ${PARSED_PROJECT_TEST_PROPERTIES_TARGET})
 
     # Test each header individually.
     foreach(header ${GUARDED_HEADERS})
@@ -116,15 +117,15 @@ function(add_macro_guard_test)
             )
         endforeach()
 
-        # e.g. bsoncxx/v_noabi/bsoncxx/document/view.hpp -> bsoncxx-v_noabi-bsoncxx-document-view
+        # e.g. bsoncxx/v_noabi/bsoncxx/document/view.hpp -> bsoncxx-v_noabi-bsoncxx-document-view.cpp
         string(REPLACE "/" "-" test_name "${header}")
         string(REGEX REPLACE "^(.*)\\.(hh|hpp)$" "\\1" test_name "${test_name}")
+
+        # e.g. macro_guards/(include|lib|test)/bsoncxx-v_noabi-bsoncxx-document-view.cpp
         configure_file(test_macro_guards.cpp.in macro_guards/${subdir}/${test_name}.cpp)
 
-        # Prefix library name to reduce potential for target conflicts.
-        add_library(test-macro_guards-${subdir}-${test_name} STATIC EXCLUDE_FROM_ALL ${CMAKE_CURRENT_BINARY_DIR}/macro_guards/${subdir}/${test_name}.cpp)
-        target_link_libraries(test-macro_guards-${subdir}-${test_name} PRIVATE ${PARSED_PROJECT_TEST_PROPERTIES_TARGET})
-
-        add_dependencies(test_${PARSED_PROJECT_NAME}_macro_guards test-macro_guards-${subdir}-${test_name})
+        target_sources(test_${PARSED_PROJECT_NAME}_macro_guards PRIVATE
+            ${CMAKE_CURRENT_BINARY_DIR}/macro_guards/${subdir}/${test_name}.cpp
+        )
     endforeach()
 endfunction()
