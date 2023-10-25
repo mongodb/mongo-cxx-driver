@@ -350,10 +350,10 @@ if(ENABLE_MACRO_GUARD_TESTS)
         EXCLUDE_REGEXES
 
         # Exclude config headers.
-        ".*/(include|lib)/mongocxx/v.*/config/.*"
+        "(include|lib)/mongocxx/v.*/config/.*"
 
         # Exclude symbol headers.
-        ".*/.*_symbols.hh"
+        ".*_symbols.hh"
     )
 endif()
 

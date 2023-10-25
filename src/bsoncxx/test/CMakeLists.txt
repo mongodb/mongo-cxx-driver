@@ -118,13 +118,13 @@ if(ENABLE_MACRO_GUARD_TESTS)
         EXCLUDE_REGEXES
 
         # Exclude config headers.
-        ".*/(include|lib)/bsoncxx/v.*/config/.*"
+        "(include|lib)/bsoncxx/v.*/config/.*"
 
         # Exclude X macro headers.
-        ".*/include/bsoncxx/v_noabi/bsoncxx/enums/.*"
+        "include/bsoncxx/v_noabi/bsoncxx/enums/.*"
 
         # Exclude symbol headers.
-        ".*/.*_symbols.hh"
+        ".*_symbols.hh"
     )
 endif()
 
