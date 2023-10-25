@@ -299,7 +299,7 @@ if(ENABLE_MACRO_GUARD_TESTS)
 
     add_macro_guard_test(
         PROJECT_NAME mongocxx
-        PROJECT_TEST_PROPERTIES mongocxx_test_properties
+        PROJECT_TEST_PROPERTIES_TARGET mongocxx_test_properties
 
         GUARDED_MACROS
 

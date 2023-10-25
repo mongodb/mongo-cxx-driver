@@ -69,7 +69,7 @@ if(ENABLE_MACRO_GUARD_TESTS)
 
     add_macro_guard_test(
         PROJECT_NAME bsoncxx
-        PROJECT_TEST_PROPERTIES bsoncxx_test_properties
+        PROJECT_TEST_PROPERTIES_TARGET bsoncxx_test_properties
 
         GUARDED_MACROS
 

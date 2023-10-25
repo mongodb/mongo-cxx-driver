@@ -1,11 +1,11 @@
 # PROJECT_NAME: bsoncxx or mongocxx.
+# PROJECT_TEST_PROPERTIES_TARGET: the (bsoncxx|mongocxx)_test_properties target to be linked with.
 # GUARDED_MACROS: list of macros that should be guarded by prelude/postlude headers.
 # INCLUDE_FILTERS: list of regex filters for headers to be added to the tests (must be relative to PROJECT_SOURCE_DIR).
 # EXCLUDE_FILTERS: list of regex filters for headers to be excluded (applied after INCLUDE_FILTERS).
-# PROJECT_TEST_PROPERTIES: the (bsoncxx|mongocxx)_test_properties target to be linked with.
 function(add_macro_guard_test)
     set(opt_args "")
-    set(single_args "PROJECT_NAME;PROJECT_TEST_PROPERTIES")
+    set(single_args "PROJECT_NAME;PROJECT_TEST_PROPERTIES_TARGET")
     set(multi_args "GUARDED_MACROS;INCLUDE_FILTERS;EXCLUDE_FILTERS")
 
     cmake_parse_arguments(PARSED "${opt_args}" "${single_args}" "${multi_args}" ${ARGN})
@@ -14,7 +14,7 @@ function(add_macro_guard_test)
         message(FATAL_ERROR "unrecognized argument: ${PARSED_UNPARSED_ARGUMENTS}")
     endif()
 
-    foreach(required_arg PROJECT_NAME PROJECT_TEST_PROPERTIES GUARDED_MACROS INCLUDE_FILTERS)
+    foreach(required_arg PROJECT_NAME PROJECT_TEST_PROPERTIES_TARGET GUARDED_MACROS INCLUDE_FILTERS)
         if("${PARSED_${required_arg}}" STREQUAL "")
             message(FATAL_ERROR "missing required argument: ${required_arg}")
         endif()
@@ -100,7 +100,7 @@ function(add_macro_guard_test)
 
         # Prefix library name to reduce potential for target conflicts.
         add_library(test-macro_guards-${subdir}-${test_name} STATIC EXCLUDE_FROM_ALL ${CMAKE_CURRENT_BINARY_DIR}/macro_guards/${subdir}/${test_name}.cpp)
-        target_link_libraries(test-macro_guards-${subdir}-${test_name} PRIVATE ${PARSED_PROJECT_TEST_PROPERTIES})
+        target_link_libraries(test-macro_guards-${subdir}-${test_name} PRIVATE ${PARSED_PROJECT_TEST_PROPERTIES_TARGET})
 
         add_dependencies(test_${PARSED_PROJECT_NAME}_macro_guards test-macro_guards-${subdir}-${test_name})
     endforeach()
