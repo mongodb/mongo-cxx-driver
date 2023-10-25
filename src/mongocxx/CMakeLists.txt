@@ -132,6 +132,7 @@ endif()
 
 set_local_dist(src_mongocxx_DIST_local
     CMakeLists.txt
+    mongocxx.rc
 )
 
 set(src_mongocxx_DIST

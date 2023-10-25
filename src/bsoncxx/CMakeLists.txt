@@ -182,6 +182,7 @@ endif()
 
 set_local_dist(src_bsoncxx_DIST_local
     CMakeLists.txt
+    bsoncxx.rc
 )
 
 set(src_bsoncxx_DIST
