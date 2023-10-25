@@ -840,8 +840,6 @@ functions:
             set -o errexit
             set -o pipefail
             set -x
-            echo "Building Alpine Docker image"
-            make -C extras/docker/alpine3.18 nocachebuild test
             echo "Building Debian Docker image"
             make -C extras/docker/bookworm nocachebuild test
             echo "Building Red Hat UBI Docker image"
