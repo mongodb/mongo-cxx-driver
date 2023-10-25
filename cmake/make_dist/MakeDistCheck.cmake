@@ -16,14 +16,6 @@ function (RUN_DIST_CHECK PACKAGE_PREFIX EXT)
       set (TAR_OPTION "jxf")
    endif ()
 
-   set (MY_CMAKE_COMMAND "")
-   set (MY_CMAKE_COMMAND ${CMAKE_COMMAND} -E env)
-
-   find_program (MAKE_COMMAND NAMES make gmake)
-   if (${MAKE_COMMAND} STREQUAL "MAKE_COMMAND-NOTFOUND")
-      message (FATAL_ERROR "Can't find the 'make' or 'gmake' program.")
-   endif ()
-
    execute_process_and_check_result (
       COMMAND ${CMAKE_COMMAND} -E tar ${TAR_OPTION} ${tarball}
       WORKING_DIRECTORY .
@@ -56,7 +48,7 @@ function (RUN_DIST_CHECK PACKAGE_PREFIX EXT)
    endif ()
    separate_arguments (build_opts)
    execute_process_and_check_result (
-      COMMAND ${MY_CMAKE_COMMAND} ${MAKE_COMMAND} ${build_opts}
+      COMMAND ${CMAKE_COMMAND} --build . -- ${build_opts}
       WORKING_DIRECTORY ${BUILD_DIR}
       ERROR_MSG "Make build failed."
    )
@@ -65,14 +57,14 @@ function (RUN_DIST_CHECK PACKAGE_PREFIX EXT)
    set (install_opts $ENV{DISTCHECK_INSTALL_OPTS})
    separate_arguments (install_opts)
    execute_process_and_check_result (
-      COMMAND ${MY_CMAKE_COMMAND} ${MAKE_COMMAND} install ${install_opts}
+      COMMAND ${CMAKE_COMMAND} --build . --target install -- ${install_opts}
       WORKING_DIRECTORY ${BUILD_DIR}
       ERROR_MSG "Make install failed."
    )
 
    # Run make dist
    execute_process_and_check_result (
-      COMMAND ${MY_CMAKE_COMMAND} ${MAKE_COMMAND} dist
+      COMMAND ${CMAKE_COMMAND} --build . --target dist
       WORKING_DIRECTORY ${BUILD_DIR}
       ERROR_MSG "Make dist failed."
    )
