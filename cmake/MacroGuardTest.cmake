@@ -103,6 +103,10 @@ function(add_macro_guard_test)
             set(relheader "${header}")
         endif()
 
+        # CXX-2770: workaround missing postlude header includes.
+        string(TOUPPER "${PARSED_PROJECT_NAME}" project_name_upper)
+        string(APPEND MACRO_GUARD_TEST "#define ${project_name_upper}_TEST_MACRO_GUARDS_FIX_MISSING_POSTLUDE\n\n")
+
         # The include directive.
         string(APPEND MACRO_GUARD_TEST "#include <${relheader}>\n\n")
 

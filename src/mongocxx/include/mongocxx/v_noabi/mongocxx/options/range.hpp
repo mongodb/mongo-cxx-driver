@@ -82,4 +82,7 @@ class MONGOCXX_API range {
 }  // namespace v_noabi
 }  // namespace mongocxx
 
+// CXX-2770: missing include of postlude header.
+#if defined(MONGOCXX_TEST_MACRO_GUARDS_FIX_MISSING_POSTLUDE)
 #include <mongocxx/config/postlude.hpp>
+#endif
