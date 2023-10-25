@@ -66,3 +66,9 @@
 // prelude.hpp
 #undef BSONCXX_UNREACHABLE
 #pragma pop_macro("BSONCXX_UNREACHABLE")
+
+// CXX-2769: out-of-place, but remains for backward compatibility.
+#ifdef BSONCXX_ENUM
+static_assert(false, "BSONCXX_ENUM must be undef'ed");
+#endif
+#pragma pop_macro("BSONCXX_ENUM")

@@ -69,6 +69,10 @@
 #undef BSONCXX_UNREACHABLE
 #define BSONCXX_UNREACHABLE std::abort()
 
+// CXX-2769: out-of-place, but remains for backward compatibility.
+#pragma push_macro("BSONCXX_ENUM")
+#undef BSONCXX_ENUM
+
 // Doxygen does not account for generated header files.
 // Document globally applicable macros and namespaces here.
 
