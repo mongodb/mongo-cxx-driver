@@ -65,5 +65,5 @@ fi
 "${cmake_binary}" --build . --config $BUILD_TYPE --target $CMAKE_EXAMPLES_TARGET -- $CMAKE_BUILD_OPTS
 
 if [ "$_RUN_DISTCHECK" ]; then
-   DISTCHECK_BUILD_OPTS="-j$CONCURRENCY" "${cmake_binary}" --build . --config $BUILD_TYPE --target distcheck
+  "${cmake_binary}" --build . --config $BUILD_TYPE --target distcheck
 fi

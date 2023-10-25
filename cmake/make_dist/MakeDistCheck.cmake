@@ -28,36 +28,46 @@ function (RUN_DIST_CHECK PACKAGE_PREFIX EXT)
 
    file (MAKE_DIRECTORY ${BUILD_DIR} ${INSTALL_DIR})
 
+   # Ensure distcheck inherits polyfill library selection.
+   set(polyfill_flags "")
+   if (NOT "${CMAKE_CXX_STANDARD}" STREQUAL "")
+      list(APPEND polyfill_flags "-DCMAKE_CXX_STANDARD=${CMAKE_CXX_STANDARD}")
+   endif ()
+   if (NOT "${BOOST_ROOT}" STREQUAL "")
+      list(APPEND polyfill_flags "-DBOOST_ROOT=${BOOST_ROOT}")
+   endif ()
+
+   execute_process_and_check_result (
+      COMMAND ${CMAKE_COMMAND} -E echo "Configuring distcheck with CMake flags: ${polyfill_flags}"
+      WORKING_DIRECTORY .
+      ERROR_MSG "Failed to echo polyfill flags"
+   )
+
    execute_process_and_check_result (
       COMMAND ${CMAKE_COMMAND}
+         -S ../${PACKAGE_PREFIX}
+         -B .
          -DCMAKE_BUILD_TYPE=Release
          -DMONGOCXX_ENABLE_SLOW_TESTS=ON
          -DCMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}
          -DCMAKE_INSTALL_PREFIX=../${INSTALL_DIR}
-         -DMONGOCXX_ENABLE_SLOW_TESTS=ON
-         ../${PACKAGE_PREFIX}
+         ${polyfill_flags}
+
       WORKING_DIRECTORY ${BUILD_DIR}
       ERROR_MSG "CMake configure command failed."
    )
 
    # Run make in the build directory
-   if (DEFINED ENV{DISTCHECK_BUILD_OPTS})
-      set (build_opts $ENV{DISTCHECK_BUILD_OPTS})
-   else ()
-      set (build_opts "-j 8")
-   endif ()
    separate_arguments (build_opts)
    execute_process_and_check_result (
-      COMMAND ${CMAKE_COMMAND} --build . -- ${build_opts}
+      COMMAND ${CMAKE_COMMAND} --build .
       WORKING_DIRECTORY ${BUILD_DIR}
       ERROR_MSG "Make build failed."
    )
 
    # Run make install
-   set (install_opts $ENV{DISTCHECK_INSTALL_OPTS})
-   separate_arguments (install_opts)
    execute_process_and_check_result (
-      COMMAND ${CMAKE_COMMAND} --build . --target install -- ${install_opts}
+      COMMAND ${CMAKE_COMMAND} --build . --target install
       WORKING_DIRECTORY ${BUILD_DIR}
       ERROR_MSG "Make install failed."
    )
