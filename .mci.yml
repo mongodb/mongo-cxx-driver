@@ -1234,6 +1234,13 @@ tasks:
         - func: "run_kms_servers"
         - func: "test"
 
+    - name: docker_build_arm
+      run_on: &docker-distros
+        - ubuntu2004-arm64-small
+      commands:
+         - func: "setup"
+         - func: "docker-image-build"
+
     - name: docker_build
       run_on: &docker-distros
         - ubuntu2204-small
@@ -1405,6 +1412,11 @@ buildvariants:
       display_name: "Docker builder"
       tasks:
           - name: docker_build
+
+    - name: docker-arm-builder
+      display_name: "Docker ARM builder"
+      tasks:
+          - name: docker_build_arm
 
     - name: rhel9-release-latest
       display_name: "RHEL 9 Release (MongoDB Latest)"
