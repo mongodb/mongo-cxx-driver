@@ -42,8 +42,8 @@ function(add_macro_guard_test)
     endif()
 
     foreach(required_arg PROJECT_NAME PROJECT_TEST_PROPERTIES_TARGET GUARDED_MACROS INCLUDE_FILTERS)
-        if("${PARSED_${required_arg}}" STREQUAL "")
-            message(FATAL_ERROR "missing required argument: ${required_arg}")
+        if("${required_arg}" IN_LIST PARSED_KEYWORDS_MISSING_VALUES)
+            message(FATAL_ERROR "missing value for required argument ${required_arg}")
         endif()
     endforeach()
 
