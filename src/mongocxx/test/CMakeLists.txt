@@ -336,7 +336,7 @@ if(ENABLE_MACRO_GUARD_TESTS)
         MONGOCXX_COMPILER_ID
         MONGOCXX_COMPILER_VERSION
 
-        INCLUDE_FILTERS
+        INCLUDE_PATTERNS
 
         # Public headers.
         "include/**/*.hpp"
@@ -347,7 +347,7 @@ if(ENABLE_MACRO_GUARD_TESTS)
         # Test headers.
         "test/**/*.hh"
 
-        EXCLUDE_FILTERS
+        EXCLUDE_REGEXES
 
         # Exclude config headers.
         ".*/(include|lib)/mongocxx/v.*/config/.*"

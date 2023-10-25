@@ -104,7 +104,7 @@ if(ENABLE_MACRO_GUARD_TESTS)
         # prelude.hpp
         BSONCXX_UNREACHABLE
 
-        INCLUDE_FILTERS
+        INCLUDE_PATTERNS
 
         # Public headers.
         "include/**/*.hpp"
@@ -115,7 +115,7 @@ if(ENABLE_MACRO_GUARD_TESTS)
         # Test headers.
         "test/**/*.hh"
 
-        EXCLUDE_FILTERS
+        EXCLUDE_REGEXES
 
         # Exclude config headers.
         ".*/(include|lib)/bsoncxx/v.*/config/.*"

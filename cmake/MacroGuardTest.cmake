@@ -8,8 +8,8 @@
 	    add_macro_guard_test(
 	        PROJECT_NAME <name>
 	        PROJECT_TEST_PROPERTIES_TARGET <target>
-	        INCLUDE_FILTERS [pattern...]
-	        [EXCLUDE_FILTERS [pattern...]]
+	        INCLUDE_PATTERNS [pattern...]
+	        [EXCLUDE_REGEXES [pattern...]]
 	        GUARDED_MACROS [macro...]
 	    )
 	
@@ -22,18 +22,18 @@
 	GUARDED_MACROS
 	    List of macros that should be guarded by prelude/postlude headers.
 	
-	INCLUDE_FILTERS
+	INCLUDE_PATTERNS
 	    List of regex filters for headers to be added to the tests. Must be
         relative to PROJECT_SOURCE_DIR.
 	
-	EXCLUDE_FILTERS
+	EXCLUDE_REGEXES
 	    List of regex filters for headers to be excluded. Applied after
-        INCLUDE_FILTERS.
+        INCLUDE_PATTERNS.
 ]==]
 function(add_macro_guard_test)
     set(opt_args "")
     set(single_args "PROJECT_NAME;PROJECT_TEST_PROPERTIES_TARGET")
-    set(multi_args "GUARDED_MACROS;INCLUDE_FILTERS;EXCLUDE_FILTERS")
+    set(multi_args "GUARDED_MACROS;INCLUDE_PATTERNS;EXCLUDE_REGEXES")
 
     cmake_parse_arguments(PARSED "${opt_args}" "${single_args}" "${multi_args}" ${ARGN})
 
@@ -41,20 +41,20 @@ function(add_macro_guard_test)
         message(FATAL_ERROR "unrecognized argument: ${PARSED_UNPARSED_ARGUMENTS}")
     endif()
 
-    foreach(required_arg PROJECT_NAME PROJECT_TEST_PROPERTIES_TARGET GUARDED_MACROS INCLUDE_FILTERS)
+    foreach(required_arg PROJECT_NAME PROJECT_TEST_PROPERTIES_TARGET GUARDED_MACROS INCLUDE_PATTERNS)
         if("${required_arg}" IN_LIST PARSED_KEYWORDS_MISSING_VALUES)
             message(FATAL_ERROR "missing value for required argument ${required_arg}")
         endif()
     endforeach()
 
-    list(TRANSFORM PARSED_INCLUDE_FILTERS PREPEND "${PROJECT_SOURCE_DIR}/")
+    list(TRANSFORM PARSED_INCLUDE_PATTERNS PREPEND "${PROJECT_SOURCE_DIR}/")
     file(GLOB_RECURSE GUARDED_HEADERS
         LIST_DIRECTORIES false
         RELATIVE ${PROJECT_SOURCE_DIR}
-        ${PARSED_INCLUDE_FILTERS}
+        ${PARSED_INCLUDE_PATTERNS}
     )
 
-    foreach(filter ${PARSED_EXCLUDE_FILTERS})
+    foreach(filter ${PARSED_EXCLUDE_REGEXES})
         list(FILTER GUARDED_HEADERS EXCLUDE REGEX "${filter}")
     endforeach()
 
