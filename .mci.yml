@@ -18,8 +18,8 @@ variables:
     cmake_flags:
         linux_cmake_flags: &linux_cmake_flags -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-missing-field-initializers $ignore_deprecated" -DCMAKE_CXX_FLAGS="-Wall -Wextra -Wconversion -Wnarrowing -Wno-expansion-to-defined -pedantic -Werror -Wno-missing-field-initializers $ignore_deprecated"
         macos_cmake_flags: &macos_cmake_flags -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-missing-field-initializers $ignore_deprecated" -DCMAKE_CXX_FLAGS="-stdlib=libc++ -Wall -Wextra -Wconversion -Wnarrowing -pedantic -Werror $ignore_deprecated"
-        asan_cmake_flags: &asan_cmake_flags -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-missing-field-initializers $ignore_deprecated" -DCMAKE_CXX_COMPILER="/usr/bin/clang++" -DCMAKE_CXX_FLAGS="-D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -O1 -g -fno-omit-frame-pointer -Wall -Wextra -Wconversion -Wnarrowing -pedantic -Werror $ignore_deprecated"
-        ubsan_cmake_flags: &ubsan_cmake_flags -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-missing-field-initializers $ignore_deprecated" -DCMAKE_CXX_COMPILER="/usr/bin/clang++" -DCMAKE_CXX_FLAGS="-D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=undefined -fsanitize-blacklist=$(pwd)/etc/ubsan.ignorelist -fno-sanitize-recover=undefined -O1 -g -fno-omit-frame-pointer -Wall -Wextra -Wconversion -Wnarrowing -pedantic -Werror $ignore_deprecated"
+        asan_cmake_flags: &asan_cmake_flags -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-missing-field-initializers $ignore_deprecated" -DCMAKE_CXX_FLAGS="-D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -O1 -g -fno-omit-frame-pointer -Wall -Wextra -Wconversion -Wnarrowing -pedantic -Werror $ignore_deprecated"
+        ubsan_cmake_flags: &ubsan_cmake_flags -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-missing-field-initializers $ignore_deprecated" -DCMAKE_CXX_FLAGS="-D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=undefined -fsanitize-blacklist=$(pwd)/etc/ubsan.ignorelist -fno-sanitize-recover=undefined -O1 -g -fno-omit-frame-pointer -Wall -Wextra -Wconversion -Wnarrowing -pedantic -Werror $ignore_deprecated"
         msvc2015_cmake_flags: &msvc2015_cmake_flags -DBOOST_ROOT=c:/local/boost_1_60_0
         msvc2015_generator: &msvc2015_generator Visual Studio 14 2015 Win64
         msvc2017_cmake_flags: &msvc2017_cmake_flags -DCMAKE_CXX_STANDARD=17
@@ -357,6 +357,9 @@ functions:
               shell: bash
               working_dir: "mongo-cxx-driver"
               include_expansions_in_env: ["distro_id"]
+              env:
+                  CC: ${cc_compiler}
+                  CXX: ${cxx_compiler}
               script: |
                   set -o errexit
                   set -o pipefail
@@ -1871,11 +1874,13 @@ buildvariants:
       display_name: "ASAN Ubuntu 20.04 Debug (MongoDB Latest)"
       expansions:
           build_type: "Debug"
+          cc_compiler: clang
+          cxx_compiler: clang++
           cmake_flags: *asan_cmake_flags
           TEST_WITH_ASAN: "ON"
           mongodb_version: "latest"
-          example_projects_cc: /usr/bin/clang
-          example_projects_cxx: /usr/bin/clang++
+          example_projects_cc: clang
+          example_projects_cxx: clang++
           example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=address
       run_on:
@@ -1890,11 +1895,13 @@ buildvariants:
       display_name: "ASAN Ubuntu 18.04 Debug (MongoDB 5.0)"
       expansions:
           build_type: "Debug"
+          cc_compiler: clang
+          cxx_compiler: clang++
           cmake_flags: *asan_cmake_flags
           TEST_WITH_ASAN: "ON"
           mongodb_version: "5.0"
-          example_projects_cc: /usr/bin/clang
-          example_projects_cxx: /usr/bin/clang++
+          example_projects_cc: clang
+          example_projects_cxx: clang++
           example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=address
       run_on:
@@ -1909,11 +1916,13 @@ buildvariants:
       display_name: "UBSAN Ubuntu 20.04 Debug (MongoDB Latest)"
       expansions:
           build_type: "Debug"
+          cc_compiler: clang
+          cxx_compiler: clang++
           cmake_flags: *ubsan_cmake_flags
           TEST_WITH_UBSAN: "ON"
           mongodb_version: "latest"
-          example_projects_cc: /usr/bin/clang
-          example_projects_cxx: /usr/bin/clang++
+          example_projects_cc: clang
+          example_projects_cxx: clang++
           example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined
       run_on:
@@ -1929,11 +1938,13 @@ buildvariants:
       display_name: "UBSAN Ubuntu 18.04 Debug (MongoDB 5.0)"
       expansions:
           build_type: "Debug"
+          cc_compiler: clang
+          cxx_compiler: clang++
           cmake_flags: *ubsan_cmake_flags
           TEST_WITH_UBSAN: "ON"
           mongodb_version: "5.0"
-          example_projects_cc: /usr/bin/clang
-          example_projects_cxx: /usr/bin/clang++
+          example_projects_cc: clang
+          example_projects_cxx: clang++
           example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined
       run_on:
@@ -1964,7 +1975,8 @@ buildvariants:
         build_type: "Debug"
         cmake_flags: *linux_cmake_flags
         mongodb_version: "latest"
-        compiler: g++
+        cc_compiler: gcc
+        cxx_compiler: g++
       run_on:
         - ubuntu2204-small
       tasks:
@@ -1977,7 +1989,8 @@ buildvariants:
         build_type: "Debug"
         cmake_flags: *linux_cmake_flags
         mongodb_version: "latest"
-        compiler: clang++
+        cc_compiler: clang
+        cxx_compiler: clang++
       run_on:
         - ubuntu2204-small
       tasks:
