@@ -1159,6 +1159,7 @@ tasks:
             ./build/hello_mongocxx
 
     - name: debian-package-build
+      run_on: ubuntu1804-test
       commands:
       - func: "setup"
       - command: shell.exec
@@ -1182,6 +1183,7 @@ tasks:
           display_name: "deb.tar.gz"
 
     - name: debian-package-build-mnmlstc
+      run_on: ubuntu1804-test
       commands:
       - func: "setup"
       - command: shell.exec
@@ -1206,6 +1208,7 @@ tasks:
           display_name: "deb.tar.gz"
 
     - name: rpm-package-build
+      run_on: rhel90-arm64-small
       commands:
       - func: "setup"
       - command: shell.exec
@@ -1659,8 +1662,6 @@ buildvariants:
           - name: compile_and_test_with_shared_libs_replica_set_with_libmongocrypt
           - name: compile_and_test_with_shared_libs_sharded_cluster_with_libmongocrypt
           - name: build_example_with_add_subdirectory
-            distros:
-            - rhel90-large
 
     - name: arm-rhel9-release-latest
       display_name: "arm64 RHEL 9 Release (MongoDB Latest)"
@@ -1681,8 +1682,6 @@ buildvariants:
           - name: compile_and_test_with_shared_libs_replica_set_with_libmongocrypt
           - name: compile_and_test_with_shared_libs_sharded_cluster_with_libmongocrypt
           - name: build_example_with_add_subdirectory
-            distros:
-            - rhel90-arm64-large
 
     - name: debian11-release-latest
       display_name: "Debian 11 Release (MongoDB Latest)"
@@ -1702,8 +1701,6 @@ buildvariants:
           - name: compile_and_test_with_shared_libs_replica_set_with_libmongocrypt
           - name: compile_and_test_with_shared_libs_sharded_cluster_with_libmongocrypt
           - name: build_example_with_add_subdirectory
-            distros:
-            - debian11-large
           - name: uninstall_check
 
     - name: debian11-release-50
@@ -1724,8 +1721,6 @@ buildvariants:
           - name: compile_and_test_with_shared_libs_replica_set
           - name: compile_and_test_with_shared_libs_sharded_cluster
           - name: build_example_with_add_subdirectory
-            distros:
-            - debian11-large
           - name: uninstall_check
 
     - name: debian10-release-latest
@@ -1744,8 +1739,6 @@ buildvariants:
           - name: compile_and_test_with_shared_libs_replica_set_with_libmongocrypt
           - name: compile_and_test_with_shared_libs_sharded_cluster_with_libmongocrypt
           - name: build_example_with_add_subdirectory
-            distros:
-            - debian10-large
           - name: uninstall_check
 
     - name: debian10-release-50
@@ -1764,8 +1757,6 @@ buildvariants:
           - name: compile_and_test_with_shared_libs_replica_set
           - name: compile_and_test_with_shared_libs_sharded_cluster
           - name: build_example_with_add_subdirectory
-            distros:
-            - debian10-large
           - name: uninstall_check
 
     - name: ubuntu2004-release-latest
@@ -1784,8 +1775,6 @@ buildvariants:
           - name: compile_and_test_with_shared_libs_replica_set_with_libmongocrypt
           - name: compile_and_test_with_shared_libs_sharded_cluster_with_libmongocrypt
           - name: build_example_with_add_subdirectory
-            distros:
-            - ubuntu2004-large
           - name: uninstall_check
 
     - name: ubuntu2004-release-50
@@ -1804,8 +1793,6 @@ buildvariants:
           - name: compile_and_test_with_shared_libs_replica_set
           - name: compile_and_test_with_shared_libs_sharded_cluster
           - name: build_example_with_add_subdirectory
-            distros:
-            - ubuntu2004-large
           - name: uninstall_check
 
     - name: ubuntu1804-release-50
@@ -1824,8 +1811,6 @@ buildvariants:
           - name: compile_and_test_with_shared_libs_replica_set
           - name: compile_and_test_with_shared_libs_sharded_cluster
           - name: build_example_with_add_subdirectory
-            distros:
-            - ubuntu1804-build
           - name: uninstall_check
 
     # TODO CXX-2260 Upgrade std::experimental tasks to use Ubuntu 18.04 and mongodb_latest
@@ -2237,13 +2222,10 @@ buildvariants:
 
     - name: packaging
       display_name: Linux Distro Packaging
-      run_on: ubuntu1804-test
       tasks:
          - name: debian-package-build
          - name: debian-package-build-mnmlstc
          - name: rpm-package-build
-           distros:
-           - rhel90-arm64-small
 
     - name: lint
       display_name: Lint
