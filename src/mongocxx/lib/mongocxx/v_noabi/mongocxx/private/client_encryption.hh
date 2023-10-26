@@ -37,8 +37,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
-
+inline namespace v_noabi {
 class client_encryption::impl {
    private:
     using scoped_bson_t = mongocxx::libbson::scoped_bson_t;
@@ -398,7 +397,7 @@ class client_encryption::impl {
     std::unique_ptr<mongoc_client_encryption_t, encryption_deleter> _client_encryption;
 };
 
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

@@ -28,9 +28,12 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
+inline namespace v_noabi {
 namespace gridfs {
 
+///
+/// Class used to specify the offset from which to start reading the chunks of the file.
+///
 struct chunks_and_bytes_offset {
     std::int32_t chunks_offset = 0;
     std::int32_t bytes_offset = 0;
@@ -165,7 +168,7 @@ class MONGOCXX_API downloader {
 };
 
 }  // namespace gridfs
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

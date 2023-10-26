@@ -21,7 +21,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
+inline namespace v_noabi {
 namespace entity {
 
 template <typename Key, typename Entity, typename Map>
@@ -153,5 +153,5 @@ void map::erase(const key_type& key) {
 }
 
 }  // namespace entity
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx

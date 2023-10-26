@@ -20,8 +20,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
-
+inline namespace v_noabi {
 ///
 /// Enum representing the various errors types that can be returned from the server. As this list
 /// changes over time, this is just a placeholder for an Int32 error code value from the server.
@@ -48,7 +47,7 @@ MONGOCXX_INLINE std::error_code make_error_code(server_error_code error) {
     return {static_cast<int>(error), server_error_category()};
 }
 
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

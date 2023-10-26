@@ -17,7 +17,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
+inline namespace v_noabi {
 namespace options {
 
 tls& tls::pem_file(bsoncxx::string::view_or_value pem_file) {
@@ -75,5 +75,5 @@ const stdx::optional<bool>& tls::allow_invalid_certificates() const {
 }
 
 }  // namespace options
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx

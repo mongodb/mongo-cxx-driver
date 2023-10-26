@@ -22,7 +22,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
+inline namespace v_noabi {
 namespace options {
 
 change_stream::change_stream() = default;
@@ -147,5 +147,5 @@ bsoncxx::document::value change_stream::as_bson() const {
 }
 
 }  // namespace options
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx

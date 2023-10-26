@@ -22,8 +22,7 @@
 #include <bsoncxx/config/private/prelude.hh>
 
 namespace bsoncxx {
-BSONCXX_INLINE_NAMESPACE_BEGIN
-
+inline namespace v_noabi {
 class BSONCXX_TEST_API itoa {
    public:
     explicit itoa(uint32_t i = 0);
@@ -58,7 +57,7 @@ inline std::size_t itoa::length() const {
     return _len;
 }
 
-BSONCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/private/postlude.hh>

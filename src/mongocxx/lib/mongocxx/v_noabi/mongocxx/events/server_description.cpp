@@ -18,7 +18,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
+inline namespace v_noabi {
 namespace events {
 
 server_description::server_description(const void* sd) : _sd(sd) {}
@@ -59,5 +59,5 @@ std::uint16_t server_description::port() const {
 }
 
 }  // namespace events
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx

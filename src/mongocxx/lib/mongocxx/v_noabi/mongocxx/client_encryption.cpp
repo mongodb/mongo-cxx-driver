@@ -20,8 +20,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
-
+inline namespace v_noabi {
 using mongocxx::libbson::scoped_bson_t;
 
 client_encryption::client_encryption(options::client_encryption opts)
@@ -96,5 +95,5 @@ stdx::optional<bsoncxx::document::value> client_encryption::remove_key_alt_name(
     return _impl->remove_key_alt_name(id, key_alt_name);
 }
 
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx

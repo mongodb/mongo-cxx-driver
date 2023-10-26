@@ -14,8 +14,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
-
+inline namespace v_noabi {
 using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_document;
 
@@ -179,7 +178,7 @@ class search_index_view::impl {
     mongoc_collection_t* _coll;
     mongoc_client_t* _client;
 };
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

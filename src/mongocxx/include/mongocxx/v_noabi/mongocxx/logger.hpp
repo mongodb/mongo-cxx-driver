@@ -22,8 +22,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
-
+inline namespace v_noabi {
 ///
 /// The log level of a message passed to a mongocxx::logger.
 ///
@@ -75,7 +74,7 @@ class MONGOCXX_API logger {
     logger();
 };
 
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

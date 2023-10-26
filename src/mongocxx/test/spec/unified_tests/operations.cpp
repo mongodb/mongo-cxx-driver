@@ -29,8 +29,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
-
+inline namespace v_noabi {
 using namespace bsoncxx;
 
 using builder::basic::kvp;
@@ -2293,5 +2292,5 @@ document::value operations::run(entity::map& entity_map,
     throw std::logic_error{"unsupported operation: " + name};
 }
 
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx

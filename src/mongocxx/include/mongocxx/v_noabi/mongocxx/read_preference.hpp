@@ -28,16 +28,19 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
-
+inline namespace v_noabi {
 class client;
 class collection;
 class database;
-class uri;
 class search_index_view;
+class uri;
 
 namespace events {
 class topology_description;
+}
+
+namespace options {
+class transaction;
 }
 
 ///
@@ -181,7 +184,7 @@ class MONGOCXX_API read_preference {
     ///
     /// Sets or updates the tag set list for this read_preference.
     ///
-    /// @param tags
+    /// @param tag_set_list
     ///   Document representing the tag set list.
     ///
     /// @see https://www.mongodb.com/docs/manual/core/read-preference-tags/
@@ -195,7 +198,7 @@ class MONGOCXX_API read_preference {
     ///
     /// Sets or updates the tag set list for this read_preference.
     ///
-    /// @param tags
+    /// @param tag_set_list
     ///   Array of tag sets.
     ///
     /// @see https://www.mongodb.com/docs/manual/core/read-preference-tags/
@@ -282,15 +285,14 @@ class MONGOCXX_API read_preference {
     const stdx::optional<bsoncxx::document::view> hedge() const;
 
    private:
-    friend client;
-    friend collection;
-    friend database;
-    /// \relates mongocxx::options::transaction
-    friend mongocxx::options::transaction;
-    /// \relates mongocxx::events::topology_description
-    friend mongocxx::events::topology_description;
-    friend uri;
-    friend search_index_view;
+    friend class client;
+    friend class collection;
+    friend class database;
+    friend class search_index_view;
+    friend class uri;
+
+    friend class events::topology_description;
+    friend class options::transaction;
 
     ///
     /// @{
@@ -314,7 +316,7 @@ class MONGOCXX_API read_preference {
     std::unique_ptr<impl> _impl;
 };
 
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

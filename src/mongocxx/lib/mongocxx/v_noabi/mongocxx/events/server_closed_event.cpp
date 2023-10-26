@@ -18,7 +18,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
+inline namespace v_noabi {
 namespace events {
 
 server_closed_event::server_closed_event(const void* event) : _event(event) {}
@@ -46,5 +46,5 @@ const bsoncxx::oid server_closed_event::topology_id() const {
 }
 
 }  // namespace events
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx

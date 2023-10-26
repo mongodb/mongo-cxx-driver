@@ -20,8 +20,7 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-BSONCXX_INLINE_NAMESPACE_BEGIN
-
+inline namespace v_noabi {
 ///
 /// Enum representing the various error types that can occur while operating on BSON values.
 ///
@@ -117,7 +116,7 @@ BSONCXX_INLINE std::error_code make_error_code(error_code error) {
     return {static_cast<int>(error), error_category()};
 }
 
-BSONCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

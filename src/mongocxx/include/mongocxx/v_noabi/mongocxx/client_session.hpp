@@ -24,8 +24,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
-
+inline namespace v_noabi {
 class client;
 
 ///
@@ -206,7 +205,7 @@ class MONGOCXX_API client_session {
     std::unique_ptr<impl> _impl;
 };
 
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

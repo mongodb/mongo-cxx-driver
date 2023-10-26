@@ -17,7 +17,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
+inline namespace v_noabi {
 namespace options {
 
 client_session& client_session::causal_consistency(bool causal_consistency) noexcept {
@@ -52,5 +52,5 @@ const stdx::optional<transaction>& client_session::default_transaction_opts() co
 }
 
 }  // namespace options
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx

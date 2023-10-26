@@ -26,7 +26,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
+inline namespace v_noabi {
 namespace options {
 
 class transaction::impl {
@@ -131,7 +131,7 @@ class transaction::impl {
 };
 
 }  // namespace options
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

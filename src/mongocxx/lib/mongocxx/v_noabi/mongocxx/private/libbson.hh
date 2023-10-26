@@ -25,7 +25,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
+inline namespace v_noabi {
 namespace libbson {
 
 //
@@ -135,7 +135,7 @@ class MONGOCXX_TEST_API scoped_bson_t {
 };
 
 }  // namespace libbson
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

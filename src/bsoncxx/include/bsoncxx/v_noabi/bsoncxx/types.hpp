@@ -37,8 +37,7 @@
 #endif
 
 namespace bsoncxx {
-BSONCXX_INLINE_NAMESPACE_BEGIN
-
+inline namespace v_noabi {
 ///
 /// An enumeration of each BSON type.
 /// These x-macros will expand to be of the form:
@@ -685,7 +684,7 @@ BSONCXX_INLINE bool operator==(const b_maxkey&, const b_maxkey&) {
 #undef BSONCXX_ENUM
 
 }  // namespace types
-BSONCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace bsoncxx
 
 #if defined(__clang__)

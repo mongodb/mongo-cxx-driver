@@ -18,7 +18,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
+inline namespace v_noabi {
 namespace options {
 namespace gridfs {
 
@@ -42,5 +42,5 @@ const stdx::optional<bsoncxx::document::view_or_value>& upload::metadata() const
 
 }  // namespace gridfs
 }  // namespace options
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx

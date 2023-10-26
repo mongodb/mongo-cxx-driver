@@ -25,8 +25,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
-
+inline namespace v_noabi {
 class change_stream::impl {
    public:
     // lifecycle of the cursor
@@ -119,7 +118,7 @@ class change_stream::impl {
     bool exhausted_;
 };
 
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

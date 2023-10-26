@@ -24,8 +24,7 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-BSONCXX_INLINE_NAMESPACE_BEGIN
-
+inline namespace v_noabi {
 namespace types {
 namespace bson_value {
 class view;
@@ -194,7 +193,7 @@ class BSONCXX_API view::const_iterator {
 };
 
 }  // namespace array
-BSONCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
