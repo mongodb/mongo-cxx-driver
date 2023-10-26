@@ -436,7 +436,7 @@ functions:
               working_dir: "mongo-cxx-driver"
               include_expansions_in_env:
                   - build_type
-                  - CRYPT_SHARED_LIB_PATH
+                  - CRYPT_SHARED_LIB_PATH # Set by run-orchestration.sh in "start_mongod".
                   - cse_aws_access_key_id
                   - cse_aws_secret_access_key
                   - cse_azure_client_id
