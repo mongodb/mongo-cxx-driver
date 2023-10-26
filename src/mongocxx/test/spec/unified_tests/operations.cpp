@@ -26,6 +26,8 @@
 #include <mongocxx/test/spec/monitoring.hh>
 #include <third_party/catch/include/catch.hpp>
 
+#include <mongocxx/config/prelude.hpp>
+
 namespace mongocxx {
 inline namespace v_noabi {
 using namespace bsoncxx;

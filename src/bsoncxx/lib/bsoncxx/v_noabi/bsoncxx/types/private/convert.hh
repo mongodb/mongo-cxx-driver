@@ -330,3 +330,5 @@ BSONCXX_INLINE void convert_from_libbson(bson_value_t* v, bsoncxx::types::b_arra
 }  // namespace types
 }  // namespace v_noabi
 }  // namespace bsoncxx
+
+#include <bsoncxx/config/private/postlude.hh>

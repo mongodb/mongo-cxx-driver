@@ -22,6 +22,7 @@
 
 #include <bsoncxx/exception/error_code.hpp>
 #include <bsoncxx/exception/exception.hpp>
+#include <bsoncxx/json.hpp>
 #include <bsoncxx/string/to_string.hpp>
 #include <bsoncxx/types/bson_value/view_or_value.hpp>
 

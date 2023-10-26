@@ -16,6 +16,13 @@
 
 #include <mongocxx/config/prelude.hpp>
 
+// "Forward-declare" the `bsoncxx::stdx` namespace to permit the using-declaration below.
+namespace bsoncxx {
+inline namespace v_noabi {
+namespace stdx {}
+}  // namespace v_noabi
+}  // namespace bsoncxx
+
 namespace mongocxx {
 inline namespace v_noabi {
 namespace stdx {

@@ -43,6 +43,8 @@
 #include <mongocxx/write_concern.hpp>
 #include <third_party/catch/include/helpers.hpp>
 
+#include <mongocxx/config/prelude.hpp>
+
 namespace {
 const auto kLocalMasterKey =
     "\x32\x78\x34\x34\x2b\x78\x64\x75\x54\x61\x42\x42\x6b\x59\x31\x36\x45\x72"

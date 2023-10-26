@@ -380,6 +380,7 @@ functions:
                   set -o errexit
                   set -o pipefail
                   export BUILD_TYPE=${build_type}
+                  export COMPILE_MACRO_GUARD_TESTS=${COMPILE_MACRO_GUARD_TESTS}
                   export PATH="${extra_path}:$PATH"
                   export RUN_DISTCHECK=${RUN_DISTCHECK}
 
@@ -956,6 +957,14 @@ tasks:
       - func: "compile"
         vars:
             ENABLE_TESTS: OFF
+
+    - name: compile_macro_guard_tests
+      commands:
+      - func: "setup"
+      - func: "fetch_c_driver_source"
+      - func: "compile"
+        vars:
+            COMPILE_MACRO_GUARD_TESTS: ON
 
     - name: compile_and_test_auth_with_shared_libs
       commands:
@@ -1806,6 +1815,7 @@ buildvariants:
       tasks:
         - name: clang-tidy
         - name: compile_without_tests
+        - name: compile_macro_guard_tests
         - name: test_atlas_task_group_search_indexes
 
     - name: ubuntu2204-debug-gcc
@@ -1820,6 +1830,7 @@ buildvariants:
         - ubuntu2204-small
       tasks:
         - name: compile_without_tests
+        - name: compile_macro_guard_tests
 
     - name: ubuntu2204-debug-clang
       display_name: "Ubuntu 22.04 Debug (Clang)"
@@ -1833,6 +1844,7 @@ buildvariants:
         - ubuntu2204-small
       tasks:
         - name: compile_without_tests
+        - name: compile_macro_guard_tests
 
     - name: mongohouse-ubuntu
       display_name: "Mongohouse Test"

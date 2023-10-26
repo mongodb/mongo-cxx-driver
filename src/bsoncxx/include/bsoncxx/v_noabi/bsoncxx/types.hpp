@@ -13,13 +13,6 @@
 // limitations under the License.
 
 #pragma once
-#if defined(__clang__)
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wfloat-equal"
-#elif defined(__GNUC__)
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wfloat-equal"
-#endif
 
 #include <chrono>
 #include <cstring>
@@ -31,6 +24,17 @@
 #include <bsoncxx/stdx/string_view.hpp>
 
 #include <bsoncxx/config/prelude.hpp>
+
+#pragma push_macro("BSONCXX_ENUM")
+#undef BSONCXX_ENUM
+
+#if defined(__clang__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wfloat-equal"
+#elif defined(__GNUC__)
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wfloat-equal"
+#endif
 
 namespace bsoncxx {
 inline namespace v_noabi {
@@ -683,10 +687,15 @@ BSONCXX_INLINE bool operator==(const b_maxkey&, const b_maxkey&) {
 }  // namespace v_noabi
 }  // namespace bsoncxx
 
-#include <bsoncxx/config/postlude.hpp>
-
 #if defined(__clang__)
 #pragma clang diagnostic pop
 #elif defined(__GNUC__)
 #pragma GCC diagnostic pop
 #endif
+
+#ifdef BSONCXX_ENUM
+static_assert(false, "BSONCXX_ENUM must be undef'ed");
+#endif
+#pragma pop_macro("BSONCXX_ENUM")
+
+#include <bsoncxx/config/postlude.hpp>

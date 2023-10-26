@@ -351,6 +351,7 @@ set(THIRD_PARTY_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/third_party)
 set(DATA_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/data)
 
 option(ENABLE_TESTS "Build MongoDB C++ Driver tests." ON)
+option(ENABLE_MACRO_GUARD_TESTS "Enable targets for macro guard compile tests." OFF)
 
 if(ENABLE_TESTS)
     enable_testing()

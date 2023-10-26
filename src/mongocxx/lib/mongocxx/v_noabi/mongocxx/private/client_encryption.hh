@@ -24,6 +24,7 @@
 #include <bsoncxx/types/bson_value/view.hpp>
 #include <bsoncxx/types/private/convert.hh>
 #include <mongocxx/client.hpp>
+#include <mongocxx/client_encryption.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/exception/private/mongoc_error.hh>
 #include <mongocxx/options/client_encryption.hpp>

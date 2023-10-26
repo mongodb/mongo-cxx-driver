@@ -18,6 +18,8 @@
 
 #include <bsoncxx/string/to_string.hpp>
 
+#include <mongocxx/config/prelude.hpp>
+
 namespace mongocxx {
 inline namespace v_noabi {
 namespace entity {

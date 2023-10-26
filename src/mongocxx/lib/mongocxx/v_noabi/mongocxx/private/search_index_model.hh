@@ -19,3 +19,5 @@ class search_index_model::impl {
 
 }  // namespace v_noabi
 }  // namespace mongocxx
+
+#include <mongocxx/config/private/postlude.hh>

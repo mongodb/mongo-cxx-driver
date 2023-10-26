@@ -180,3 +180,5 @@ class search_index_view::impl {
 };
 }  // namespace v_noabi
 }  // namespace mongocxx
+
+#include <mongocxx/config/private/postlude.hh>

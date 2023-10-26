@@ -53,3 +53,5 @@ MONGOCXX_INLINE void append_aggregate_options(bsoncxx::builder::basic::document&
 }
 }  // namespace v_noabi
 }  // namespace mongocxx
+
+#include <mongocxx/config/private/postlude.hh>

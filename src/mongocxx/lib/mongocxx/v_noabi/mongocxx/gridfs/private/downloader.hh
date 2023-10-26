@@ -15,7 +15,9 @@
 #pragma once
 
 #include <cstdlib>
+#include <sstream>
 
+#include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/gridfs_exception.hpp>
 #include <mongocxx/gridfs/downloader.hpp>
 

@@ -186,3 +186,8 @@ class array : public list {
 }  // namespace builder
 }  // namespace v_noabi
 }  // namespace bsoncxx
+
+// CXX-2770: missing include of postlude header.
+#if defined(BSONCXX_TEST_MACRO_GUARDS_FIX_MISSING_POSTLUDE)
+#include <bsoncxx/config/postlude.hpp>
+#endif
