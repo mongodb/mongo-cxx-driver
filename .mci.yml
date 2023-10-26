@@ -886,6 +886,7 @@ post:
 
 tasks:
     - name: lint
+      run_on: ubuntu1804-large
       commands:
         - func: "setup"
         - func: "lint"
@@ -1338,17 +1339,17 @@ buildvariants:
     #######################################
     #  Standard MongoDB Integration Tests #
     #######################################
-    - name: integration-ubuntu1804-latest-single
-      display_name: "Ubuntu 18.04 Debug (MongoDB Latest)"
-      run_on: ubuntu1804-large
+    - name: integration-ubuntu2004-latest-single
+      display_name: "Ubuntu 20.04 Debug (MongoDB Latest)"
+      run_on: ubuntu2004-large
       expansions:
           mongodb_version: "latest"
           <<: *integration_matrix_expansions_linux
       <<: *integration_matrix_tasks_single
 
-    - name: integration-ubuntu1804-7.0-single
-      display_name: "Ubuntu 18.04 Debug (MongoDB 7.0)"
-      run_on: ubuntu1804-large
+    - name: integration-ubuntu2004-7.0-single
+      display_name: "Ubuntu 20.04 Debug (MongoDB 7.0)"
+      run_on: ubuntu2004-large
       expansions:
           mongodb_version: "7.0"
           <<: *integration_matrix_expansions_linux
@@ -1450,17 +1451,17 @@ buildvariants:
           <<: *integration_matrix_expansions_windows
       <<: *integration_matrix_tasks_single
 
-    - name: integration-ubuntu1804-latest-replica
-      display_name: "Ubuntu 18.04 Debug replica set (MongoDB Latest)"
-      run_on: ubuntu1804-large
+    - name: integration-ubuntu2004-latest-replica
+      display_name: "Ubuntu 20.04 Debug replica set (MongoDB Latest)"
+      run_on: ubuntu2004-large
       expansions:
           mongodb_version: "latest"
           <<: *integration_matrix_expansions_linux
       <<: *integration_matrix_tasks_replica
 
-    - name: integration-ubuntu1804-7.0-replica
-      display_name: "Ubuntu 18.04 Debug replica set (MongoDB 7.0)"
-      run_on: ubuntu1804-large
+    - name: integration-ubuntu2004-7.0-replica
+      display_name: "Ubuntu 20.04 Debug replica set (MongoDB 7.0)"
+      run_on: ubuntu2004-large
       expansions:
           mongodb_version: "7.0"
           <<: *integration_matrix_expansions_linux
@@ -1506,17 +1507,17 @@ buildvariants:
           <<: *integration_matrix_expansions_linux
       <<: *integration_matrix_tasks_replica
 
-    - name: integration-ubuntu1804-latest-sharded
-      display_name: "Ubuntu 18.04 Debug sharded cluster (MongoDB Latest)"
-      run_on: ubuntu1804-large
+    - name: integration-ubuntu2004-latest-sharded
+      display_name: "Ubuntu 20.04 Debug sharded cluster (MongoDB Latest)"
+      run_on: ubuntu2004-large
       expansions:
           mongodb_version: "latest"
           <<: *integration_matrix_expansions_linux
       <<: *integration_matrix_tasks_sharded
 
-    - name: integration-ubuntu1804-7.0-sharded
-      display_name: "Ubuntu 18.04 Debug sharded cluster (MongoDB 7.0)"
-      run_on: ubuntu1804-large
+    - name: integration-ubuntu2004-7.0-sharded
+      display_name: "Ubuntu 20.04 Debug sharded cluster (MongoDB 7.0)"
+      run_on: ubuntu2004-large
       expansions:
           mongodb_version: "7.0"
           <<: *integration_matrix_expansions_linux
@@ -1562,9 +1563,9 @@ buildvariants:
           <<: *integration_matrix_expansions_linux
       <<: *integration_matrix_tasks_sharded
 
-    - name: integration-auth-ubuntu1804-latest-single
-      display_name: "Ubuntu 18.04 Debug Latest Auth"
-      run_on: ubuntu1804-large
+    - name: integration-auth-ubuntu2004-latest-single
+      display_name: "Ubuntu 20.04 Debug Latest Auth"
+      run_on: ubuntu2004-large
       expansions:
           mongodb_version: "latest"
           <<: *integration_matrix_expansions_linux
@@ -1578,9 +1579,9 @@ buildvariants:
           <<: *integration_matrix_expansions_windows
       <<: *integration_matrix_auth_tasks_single
 
-    - name: integration-versioned-api-ubuntu1804-latest-single
-      display_name: "Ubuntu 18.04 Debug Latest Versioned API"
-      run_on: ubuntu1804-large
+    - name: integration-versioned-api-ubuntu2004-latest-single
+      display_name: "Ubuntu 20.04 Debug Latest Versioned API"
+      run_on: ubuntu2004-large
       expansions:
           mongodb_version: "latest"
           <<: *integration_matrix_expansions_linux
@@ -1594,9 +1595,9 @@ buildvariants:
           <<: *integration_matrix_expansions_windows
       <<: *integration_matrix_versioned_api_tasks_single
 
-    - name: integration-mongocryptd-ubuntu1804-latest
-      display_name: "Ubuntu 18.04 Debug (MongoDB Latest) with mongocryptd"
-      run_on: ubuntu1804-large
+    - name: integration-mongocryptd-ubuntu2004-latest
+      display_name: "Ubuntu 20.04 Debug (MongoDB Latest) with mongocryptd"
+      run_on: ubuntu2004-large
       expansions:
           mongodb_version: "latest"
           use_mongocryptd: true
@@ -1807,27 +1808,6 @@ buildvariants:
             - ubuntu2004-large
           - name: uninstall_check
 
-    - name: ubuntu1804-release-latest
-      display_name: "Ubuntu 18.04 Release (MongoDB Latest)"
-      expansions:
-          build_type: "Release"
-          cmake_flags: *linux_cmake_flags
-          mongodb_version: "latest"
-      run_on:
-          - ubuntu1804-build
-      tasks:
-          - name: lint
-          - name: compile_and_test_with_shared_libs
-          - name: compile_and_test_with_shared_libs_extra_alignment
-          - name: compile_and_test_with_static_libs
-          - name: compile_and_test_with_static_libs_extra_alignment
-          - name: compile_and_test_with_shared_libs_replica_set_with_libmongocrypt
-          - name: compile_and_test_with_shared_libs_sharded_cluster_with_libmongocrypt
-          - name: build_example_with_add_subdirectory
-            distros:
-            - ubuntu1804-build
-          - name: uninstall_check
-
     - name: ubuntu1804-release-50
       display_name: "Ubuntu 18.04 Release (MongoDB 5.0)"
       expansions:
@@ -1867,8 +1847,8 @@ buildvariants:
           - name: compile_and_test_with_static_libs
           - name: compile_and_test_with_static_libs_extra_alignment
 
-    - name: ubuntu1804-debug-valgrind-latest
-      display_name: "Valgrind Ubuntu 18.04 Debug (MongoDB Latest)"
+    - name: ubuntu2004-debug-valgrind-latest
+      display_name: "Valgrind Ubuntu 20.04 Debug (MongoDB Latest)"
       expansions:
           build_type: "Debug"
           cmake_flags: *linux_cmake_flags
@@ -1877,7 +1857,7 @@ buildvariants:
           disable_slow_tests: 1
           use_mongocryptd: true  # false positives arise from the crypt_shared library
       run_on:
-          - ubuntu1804-build
+          - ubuntu2004-build
       tasks:
           - name: compile_and_test_with_shared_libs
           - name: compile_and_test_with_shared_libs_extra_alignment
@@ -1901,8 +1881,8 @@ buildvariants:
           - name: compile_and_test_with_static_libs
           - name: compile_and_test_with_static_libs_extra_alignment
 
-    - name: ubuntu1804-debug-asan-latest
-      display_name: "ASAN Ubuntu 18.04 Debug (MongoDB Latest)"
+    - name: ubuntu2004-debug-asan-latest
+      display_name: "ASAN Ubuntu 20.04 Debug (MongoDB Latest)"
       expansions:
           build_type: "Debug"
           cmake_flags: *asan_cmake_flags
@@ -1913,7 +1893,7 @@ buildvariants:
           example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=address
       run_on:
-          - ubuntu1804-build
+          - ubuntu2004-build
       tasks:
           - name: compile_and_test_with_shared_libs
           - name: compile_and_test_with_shared_libs_extra_alignment
@@ -1939,8 +1919,8 @@ buildvariants:
           - name: compile_and_test_with_static_libs
           - name: compile_and_test_with_static_libs_extra_alignment
 
-    - name: ubuntu1804-debug-ubsan-latest
-      display_name: "UBSAN Ubuntu 18.04 Debug (MongoDB Latest)"
+    - name: ubuntu2004-debug-ubsan-latest
+      display_name: "UBSAN Ubuntu 20.04 Debug (MongoDB Latest)"
       expansions:
           build_type: "Debug"
           cmake_flags: *ubsan_cmake_flags
@@ -1951,7 +1931,7 @@ buildvariants:
           example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined
       run_on:
-          - ubuntu1804-build
+          - ubuntu2004-build
       tasks:
           # We currently don't run UBSAN on the shared library due to issues with UBSAN reporting
           # numerous false positive instances of undefined behavior in the mock tests, when the
@@ -1979,14 +1959,14 @@ buildvariants:
           # signature.
           - name: compile_and_test_with_static_libs
 
-    - name: ubuntu1804-debug
-      display_name: "Ubuntu 18.04 Debug (MongoDB Latest) (Extra)"
+    - name: ubuntu2004-debug
+      display_name: "Ubuntu 20.04 Debug (MongoDB Latest) (Extra)"
       expansions:
         build_type: "Debug"
         cmake_flags: *linux_cmake_flags
         mongodb_version: "latest"
       run_on:
-        - ubuntu1804-build
+        - ubuntu2004-build
       tasks:
         - name: clang-tidy
         - name: compile_without_tests
@@ -2025,7 +2005,7 @@ buildvariants:
           build_type: "Release"
           cmake_flags: *linux_cmake_flags
           mongodb_version: "latest"
-      run_on: ubuntu1804-test
+      run_on: ubuntu2004-test
       tasks:
           - name: test_mongohouse
 
@@ -2119,15 +2099,15 @@ buildvariants:
           - name: compile_and_test_with_static_libs
           - name: compile_and_test_with_static_libs_extra_alignment
 
-    - name: arm-ubuntu1804-latest
-      display_name: "arm64 Ubuntu 18.04 (MongoDB Latest)"
+    - name: arm-ubuntu2004-latest
+      display_name: "arm64 Ubuntu 20.04 (MongoDB Latest)"
       batchtime: 1440 # 1 day
       expansions:
           build_type: "Release"
           cmake_flags: *linux_cmake_flags
           mongodb_version: "latest"
       run_on:
-          - ubuntu1804-arm64-build
+          - ubuntu2004-arm64-build
       tasks:
           - name: compile_and_test_with_shared_libs
           - name: compile_and_test_with_shared_libs_extra_alignment
@@ -2150,8 +2130,8 @@ buildvariants:
           - name: compile_and_test_with_static_libs_extra_alignment
 
     # Test that we actually support building against the minimum required C version claimed.
-    - name: ubuntu1804-min-libmongoc
-      display_name: "Ubuntu 18.04 with minimum libmongoc (MongoDB Latest)"
+    - name: ubuntu2004-min-libmongoc
+      display_name: "Ubuntu 20.04 with minimum libmongoc (MongoDB Latest)"
       batchtime: 1440 # 1 day
       expansions:
           build_type: "Debug"
@@ -2159,7 +2139,7 @@ buildvariants:
           mongodb_version: "latest"
           mongoc_version: *mongoc_version_minimum
       run_on:
-          - ubuntu1804-build
+          - ubuntu2004-build
       tasks:
           - name: compile_and_test_with_shared_libs
           - name: compile_and_test_with_shared_libs_extra_alignment
@@ -2264,3 +2244,7 @@ buildvariants:
          - name: rpm-package-build
            distros:
            - rhel90-arm64-small
+
+    - name: lint
+      display_name: Lint
+      tasks: [lint]
