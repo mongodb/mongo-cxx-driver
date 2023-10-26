@@ -840,6 +840,9 @@ functions:
             set -o errexit
             set -o pipefail
             set -x
+            # TODO: Re-enable Alpine test once MONGOCRYPT-601 is released.
+            # echo "Building Alpine Docker image"
+            # make -C extras/docker/alpine3.18 nocachebuild test
             echo "Building Debian Docker image"
             make -C extras/docker/bookworm nocachebuild test
             echo "Building Red Hat UBI Docker image"
@@ -1235,14 +1238,14 @@ tasks:
         - func: "test"
 
     - name: docker_build_arm
-      run_on: &docker-distros
-        - ubuntu2004-arm64-small
+      run_on:
+        - ubuntu2204-arm64-small
       commands:
          - func: "setup"
          - func: "docker-image-build"
 
     - name: docker_build
-      run_on: &docker-distros
+      run_on:
         - ubuntu2204-small
       commands:
          - func: "setup"
@@ -1412,10 +1415,6 @@ buildvariants:
       display_name: "Docker builder"
       tasks:
           - name: docker_build
-
-    - name: docker-arm-builder
-      display_name: "Docker ARM builder"
-      tasks:
           - name: docker_build_arm
 
     - name: rhel9-release-latest
