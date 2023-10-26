@@ -1969,8 +1969,8 @@ buildvariants:
         - name: compile_macro_guard_tests
         - name: test_atlas_task_group_search_indexes
 
-    - name: ubuntu2204-debug-gcc
-      display_name: "Ubuntu 22.04 Debug (GCC)"
+    - name: ubuntu2004-debug-gcc
+      display_name: "Ubuntu 20.04 Debug (GCC)"
       expansions:
         build_type: "Debug"
         cmake_flags: *linux_cmake_flags
@@ -1978,13 +1978,13 @@ buildvariants:
         cc_compiler: gcc
         cxx_compiler: g++
       run_on:
-        - ubuntu2204-small
+        - ubuntu2004-small
       tasks:
         - name: compile_without_tests
         - name: compile_macro_guard_tests
 
-    - name: ubuntu2204-debug-clang
-      display_name: "Ubuntu 22.04 Debug (Clang)"
+    - name: ubuntu2004-debug-clang
+      display_name: "Ubuntu 20.04 Debug (Clang)"
       expansions:
         build_type: "Debug"
         cmake_flags: *linux_cmake_flags
@@ -1992,7 +1992,7 @@ buildvariants:
         cc_compiler: clang
         cxx_compiler: clang++
       run_on:
-        - ubuntu2204-small
+        - ubuntu2004-small
       tasks:
         - name: clang-tidy
         - name: compile_without_tests
