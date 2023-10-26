@@ -1954,7 +1954,6 @@ buildvariants:
       run_on:
         - ubuntu2004-build
       tasks:
-        - name: clang-tidy
         - name: compile_without_tests
         - name: compile_macro_guard_tests
         - name: test_atlas_task_group_search_indexes
@@ -1982,6 +1981,7 @@ buildvariants:
       run_on:
         - ubuntu2204-small
       tasks:
+        - name: clang-tidy
         - name: compile_without_tests
         - name: compile_macro_guard_tests
 

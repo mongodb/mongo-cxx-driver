@@ -32,8 +32,7 @@ cmake_config_flags=(
 "${cmake_binary:?}" -S . -B build "${cmake_config_flags[@]}"
 
 # Some files (i.e. headers) may need to be generated during the build step.
-CMAKE_BUILD_PARALLEL_LEVEL="$(nproc)" \
-  "${cmake_binary:?}" --build build
+CMAKE_BUILD_PARALLEL_LEVEL="$(nproc)" "${cmake_binary:?}" --build build
 
 #
 # Each check has a name and the checks to run can be chosen using the -checks= option, which specifies a comma-separated
