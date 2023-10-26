@@ -289,10 +289,12 @@ functions:
         params:
           shell: bash
           working_dir: "mongo-cxx-driver"
-          script: |
-            set -o errexit
-            set -o pipefail
-            ./etc/run-clang-tidy.sh
+          include_expansions_in_env:
+            - distro_id
+          env:
+            CC: ${cc_compiler}
+            CXX: ${cxx_compiler}
+          script: ./etc/run-clang-tidy.sh
 
     "clone_drivers-evergreen-tools":
       - command: shell.exec
@@ -894,8 +896,7 @@ tasks:
     - name: clang-tidy
       commands:
         - func: "setup"
-        - func: "fetch_c_driver_source"
-        - func: "compile"
+        - func: "install_c_driver"
         - func: "clang-tidy"
 
     - name: compile_and_test_with_shared_libs
