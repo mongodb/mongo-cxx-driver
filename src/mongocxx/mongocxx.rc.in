@@ -3,7 +3,7 @@
 #include <winver.h> // Defines VS_VERSION_INFO
 #include <mongocxx/config/version.hpp> // Defines MONGOCXX_VERSION_MAJOR and other version macros.
 
-#define MONGOCXX_VERSION_STR "@MONGOCXX_VERSION_STR@"
+#define MONGOCXX_VERSION "@MONGOCXX_VERSION@"
 #define MONGOCXX_OUTPUT_BASENAME "@MONGOCXX_OUTPUT_BASENAME@"
 
 VS_VERSION_INFO VERSIONINFO
@@ -28,11 +28,11 @@ BEGIN
         BEGIN
             VALUE "CompanyName", "MongoDB, Inc"
             VALUE "FileDescription", "MongoDB Client Library for C++"
-            VALUE "FileVersion", MONGOCXX_VERSION_STR
+            VALUE "FileVersion", MONGOCXX_VERSION
             VALUE "InternalName", "mongocxx"
             VALUE "OriginalFilename", MONGOCXX_OUTPUT_BASENAME ".dll"
             VALUE "ProductName", "MongoDB C++ Driver"
-            VALUE "ProductVersion", MONGOCXX_VERSION_STR
+            VALUE "ProductVersion", MONGOCXX_VERSION
             VALUE "LegalCopyright", "Copyright (C) 2014-present MongoDB, Inc."
         END
     END

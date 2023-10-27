@@ -87,8 +87,6 @@ if(MONGOCXX_BUILD_SHARED)
 
     if(WIN32)
         # Add resource-definition script for Windows shared library (.dll).
-        set(MONGOCXX_VERSION_STR "${MONGOCXX_VERSION}")
-        set(MONGOCXX_OUTPUT_BASENAME "${MONGOCXX_OUTPUT_BASENAME}")
         configure_file(mongocxx.rc.in mongocxx.rc)
         set_property(TARGET mongocxx_shared APPEND PROPERTY SOURCES ${CMAKE_CURRENT_BINARY_DIR}/mongocxx.rc)
     endif()
