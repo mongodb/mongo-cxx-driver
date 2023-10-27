@@ -29,7 +29,7 @@ BEGIN
             VALUE "CompanyName", "MongoDB, Inc"
             VALUE "FileDescription", "MongoDB Client Library for C++"
             VALUE "FileVersion", MONGOCXX_VERSION
-            VALUE "InternalName", "mongocxx"
+            VALUE "InternalName", MONGOCXX_OUTPUT_BASENAME
             VALUE "OriginalFilename", MONGOCXX_OUTPUT_BASENAME ".dll"
             VALUE "ProductName", "MongoDB C++ Driver"
             VALUE "ProductVersion", MONGOCXX_VERSION

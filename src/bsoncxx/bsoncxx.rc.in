@@ -29,7 +29,7 @@ BEGIN
             VALUE "CompanyName", "MongoDB, Inc"
             VALUE "FileDescription", "A BSON Library for C++"
             VALUE "FileVersion", BSONCXX_VERSION
-            VALUE "InternalName", "bsoncxx"
+            VALUE "InternalName", BSONCXX_OUTPUT_BASENAME
             VALUE "OriginalFilename", BSONCXX_OUTPUT_BASENAME ".dll"
             VALUE "ProductName", "MongoDB C++ Driver"
             VALUE "ProductVersion", BSONCXX_VERSION
