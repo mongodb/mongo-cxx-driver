@@ -841,8 +841,9 @@ functions:
             set -o errexit
             set -o pipefail
             set -x
-            echo "Building Alpine Docker image"
-            make -C extras/docker/alpine3.18 nocachebuild test
+            # TODO: Re-enable Alpine test once MONGOCRYPT-601 is released.
+            # echo "Building Alpine Docker image"
+            # make -C extras/docker/alpine3.18 nocachebuild test
             echo "Building Debian Docker image"
             make -C extras/docker/bookworm nocachebuild test
             echo "Building Red Hat UBI Docker image"
@@ -1245,8 +1246,15 @@ tasks:
         - func: "run_kms_servers"
         - func: "test"
 
+    - name: docker_build_arm
+      run_on:
+        - ubuntu2204-arm64-small
+      commands:
+         - func: "setup"
+         - func: "docker-image-build"
+
     - name: docker_build
-      run_on: &docker-distros
+      run_on:
         - ubuntu2204-small
       commands:
          - func: "setup"
@@ -1416,6 +1424,7 @@ buildvariants:
       display_name: "Docker builder"
       tasks:
           - name: docker_build
+          - name: docker_build_arm
 
     - name: rhel9-release-latest
       display_name: "RHEL 9 Release (MongoDB Latest)"
