@@ -139,7 +139,7 @@ if(BSONCXX_BUILD_SHARED)
     if(WIN32)
         # Add resource-definition script for Windows shared library (.dll).
         configure_file(bsoncxx.rc.in bsoncxx.rc)
-        set_property(TARGET bsoncxx_shared APPEND PROPERTY SOURCES ${CMAKE_CURRENT_BINARY_DIR}/bsoncxx.rc)
+        target_sources(bsoncxx_shared PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/bsoncxx.rc)
     endif()
 endif()
 
