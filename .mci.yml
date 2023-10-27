@@ -14,20 +14,6 @@ variables:
     # - LIBMONGOC_REQUIRED_VERSION in src/mongocxx/CMakeLists.txt
     mongoc_version_minimum: &mongoc_version_minimum "1.24.0"
 
-    ## cmake flag variables
-    cmake_flags:
-        linux_cmake_flags: &linux_cmake_flags -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-missing-field-initializers $ignore_deprecated" -DCMAKE_CXX_FLAGS="-Wall -Wextra -Wconversion -Wnarrowing -Wno-expansion-to-defined -pedantic -Werror -Wno-missing-field-initializers $ignore_deprecated"
-        macos_cmake_flags: &macos_cmake_flags -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-missing-field-initializers $ignore_deprecated" -DCMAKE_CXX_FLAGS="-stdlib=libc++ -Wall -Wextra -Wconversion -Wnarrowing -pedantic -Werror $ignore_deprecated"
-        asan_cmake_flags: &asan_cmake_flags -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-missing-field-initializers $ignore_deprecated" -DCMAKE_CXX_FLAGS="-D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -O1 -g -fno-omit-frame-pointer -Wall -Wextra -Wconversion -Wnarrowing -pedantic -Werror $ignore_deprecated"
-        ubsan_cmake_flags: &ubsan_cmake_flags -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-missing-field-initializers $ignore_deprecated" -DCMAKE_CXX_FLAGS="-D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=undefined -fsanitize-blacklist=$(pwd)/etc/ubsan.ignorelist -fno-sanitize-recover=undefined -O1 -g -fno-omit-frame-pointer -Wall -Wextra -Wconversion -Wnarrowing -pedantic -Werror $ignore_deprecated"
-        msvc2015_cmake_flags: &msvc2015_cmake_flags -DBOOST_ROOT=c:/local/boost_1_60_0
-        msvc2015_generator: &msvc2015_generator Visual Studio 14 2015 Win64
-        msvc2017_cmake_flags: &msvc2017_cmake_flags -DCMAKE_CXX_STANDARD=17
-        msvc2017_generator: &msvc2017_generator Visual Studio 15 2017 Win64
-
-        # power8_cmake_flags includes -Wno-maybe-uninitialized to ignore a warning from the std::optional implementation of MNMLSTC.
-        power8_cmake_flags: &power8_cmake_flags -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-missing-field-initializers $ignore_deprecated" -DCMAKE_CXX_FLAGS="-Wall -Wextra -Wconversion -Wnarrowing -Wno-expansion-to-defined -pedantic -Werror -Wno-missing-field-initializers $ignore_deprecated -Wno-error=maybe-uninitialized"
-
     integration_matrix:
         integration_matrix_tasks_single: &integration_matrix_tasks_single
             tasks:
@@ -53,12 +39,10 @@ variables:
                 - name: compile_and_test_with_shared_libs_sharded_cluster_with_libmongocrypt
         integration_matrix_expansions_linux: &integration_matrix_expansions_linux
             build_type: "Debug"
-            cmake_flags: *linux_cmake_flags
             ENABLE_CODE_COVERAGE: ON
         integration_matrix_expansions_windows: &integration_matrix_expansions_windows
-            cmake_flags: *msvc2017_cmake_flags
             build_type: "Debug" # Same for Windows and Linux
-            generator: *msvc2017_generator
+            generator: Visual Studio 15 2017 Win64
             example_projects_cxx_standard: 17
 
 #######################################
@@ -356,7 +340,14 @@ functions:
           params:
               shell: bash
               working_dir: "mongo-cxx-driver"
-              include_expansions_in_env: ["distro_id"]
+              include_expansions_in_env:
+                  - branch_name
+                  - distro_id
+                  - generator
+                  - USE_POLYFILL_BOOST
+                  - USE_POLYFILL_STD_EXPERIMENTAL
+                  - USE_SANITIZER_ASAN
+                  - USE_SANITIZER_UBSAN
               env:
                   CC: ${cc_compiler}
                   CXX: ${cxx_compiler}
@@ -419,15 +410,7 @@ functions:
                   venvcreate "$(find_python3)" venv
                   python -m pip install GitPython
 
-                  export GENERATOR="${generator}"
-
-                  ignore_deprecated=""
-                  if [ "$(echo ${branch_name} | cut -f2 -d'/')" != "${branch_name}" ]; then
-                      # ignore deprecation warnings when building on a release branch
-                      ignore_deprecated=-Wno-deprecated-declarations
-                  fi
-
-                  .evergreen/compile.sh -DCMAKE_PREFIX_PATH="$MONGOC_PREFIX" ${cmake_flags} ${poly_flags} $ADDL_OPTS -DCMAKE_INSTALL_PREFIX=install
+                  ADDL_OPTS="$ADDL_OPTS" MONGOC_PREFIX="$MONGOC_PREFIX" .evergreen/compile.sh
 
     "test":
         - command: shell.exec
@@ -1357,7 +1340,6 @@ buildvariants:
       display_name: "RHEL 9 Release (MongoDB Latest)"
       expansions:
           build_type: "Release"
-          cmake_flags: *linux_cmake_flags
           mongodb_version: "latest"
           lib_dir: "lib64"
       run_on:
@@ -1377,7 +1359,6 @@ buildvariants:
       display_name: "arm64 RHEL 9 Release (MongoDB Latest)"
       expansions:
           build_type: "Release"
-          cmake_flags: *linux_cmake_flags
           mongodb_version: "latest"
           lib_dir: "lib64"
       run_on:
@@ -1397,7 +1378,6 @@ buildvariants:
       display_name: "Debian 11 Release (MongoDB Latest)"
       expansions:
           build_type: "Release"
-          cmake_flags: *linux_cmake_flags
           mongodb_version: "latest"
       run_on:
           - debian11-large
@@ -1417,7 +1397,6 @@ buildvariants:
       display_name: "Debian 11 Release (MongoDB 5.0)"
       expansions:
           build_type: "Release"
-          cmake_flags: *linux_cmake_flags
           mongodb_version: "5.0"
       run_on:
           - debian11-large
@@ -1437,7 +1416,6 @@ buildvariants:
       display_name: "Debian 10 Release (MongoDB Latest)"
       expansions:
           build_type: "Release"
-          cmake_flags: *linux_cmake_flags
           mongodb_version: "latest"
       run_on:
           - debian10-large
@@ -1455,7 +1433,6 @@ buildvariants:
       display_name: "Debian 10 Release (MongoDB 5.0)"
       expansions:
           build_type: "Release"
-          cmake_flags: *linux_cmake_flags
           mongodb_version: "5.0"
       run_on:
           - debian10-large
@@ -1473,7 +1450,6 @@ buildvariants:
       display_name: "Ubuntu 20.04 Release (MongoDB Latest)"
       expansions:
           build_type: "Release"
-          cmake_flags: *linux_cmake_flags
           mongodb_version: "latest"
       run_on:
           - ubuntu2004-large
@@ -1491,7 +1467,6 @@ buildvariants:
       display_name: "Ubuntu 20.04 Release (MongoDB 5.0)"
       expansions:
           build_type: "Release"
-          cmake_flags: *linux_cmake_flags
           mongodb_version: "5.0"
       run_on:
           - ubuntu2004-large
@@ -1509,7 +1484,6 @@ buildvariants:
       display_name: "Ubuntu 18.04 Release (MongoDB 5.0)"
       expansions:
           build_type: "Release"
-          cmake_flags: *linux_cmake_flags
           mongodb_version: "5.0"
       run_on:
           - ubuntu1804-build
@@ -1529,8 +1503,7 @@ buildvariants:
       display_name: "Ubuntu 16.04 Debug (std::experimental) (MongoDB 4.4)"
       expansions:
           build_type: "Debug"
-          cmake_flags: *linux_cmake_flags
-          poly_flags: -DBSONCXX_POLY_USE_STD_EXPERIMENTAL=ON -DCMAKE_CXX_STANDARD=14
+          USE_POLYFILL_STD_EXPERIMENTAL: ON
           mongodb_version: "4.4"
           example_projects_cxx_standard: 14
           use_mongocryptd: true  # crypt_shared is not available for Ubuntu 16.04
@@ -1546,7 +1519,6 @@ buildvariants:
       display_name: "Valgrind Ubuntu 20.04 Debug (MongoDB Latest)"
       expansions:
           build_type: "Debug"
-          cmake_flags: *linux_cmake_flags
           TEST_WITH_VALGRIND: "ON"
           mongodb_version: "latest"
           disable_slow_tests: 1
@@ -1563,7 +1535,6 @@ buildvariants:
       display_name: "Valgrind Ubuntu 18.04 Debug (MongoDB 5.0)"
       expansions:
           build_type: "Debug"
-          cmake_flags: *linux_cmake_flags
           TEST_WITH_VALGRIND: "ON"
           mongodb_version: "5.0"
           disable_slow_tests: 1
@@ -1582,7 +1553,7 @@ buildvariants:
           build_type: "Debug"
           cc_compiler: clang
           cxx_compiler: clang++
-          cmake_flags: *asan_cmake_flags
+          USE_SANITIZER_ASAN: ON
           TEST_WITH_ASAN: "ON"
           mongodb_version: "latest"
           example_projects_cc: clang
@@ -1603,7 +1574,7 @@ buildvariants:
           build_type: "Debug"
           cc_compiler: clang
           cxx_compiler: clang++
-          cmake_flags: *asan_cmake_flags
+          USE_SANITIZER_ASAN: ON
           TEST_WITH_ASAN: "ON"
           mongodb_version: "5.0"
           example_projects_cc: clang
@@ -1624,7 +1595,7 @@ buildvariants:
           build_type: "Debug"
           cc_compiler: clang
           cxx_compiler: clang++
-          cmake_flags: *ubsan_cmake_flags
+          USE_SANITIZER_UBSAN: ON
           TEST_WITH_UBSAN: "ON"
           mongodb_version: "latest"
           example_projects_cc: clang
@@ -1646,7 +1617,7 @@ buildvariants:
           build_type: "Debug"
           cc_compiler: clang
           cxx_compiler: clang++
-          cmake_flags: *ubsan_cmake_flags
+          USE_SANITIZER_UBSAN: ON
           TEST_WITH_UBSAN: "ON"
           mongodb_version: "5.0"
           example_projects_cc: clang
@@ -1666,7 +1637,6 @@ buildvariants:
       display_name: "Ubuntu 20.04 Debug (MongoDB Latest) (Extra)"
       expansions:
         build_type: "Debug"
-        cmake_flags: *linux_cmake_flags
         mongodb_version: "latest"
       run_on:
         - ubuntu2004-build
@@ -1679,7 +1649,6 @@ buildvariants:
       display_name: "Ubuntu 20.04 Debug (GCC)"
       expansions:
         build_type: "Debug"
-        cmake_flags: *linux_cmake_flags
         mongodb_version: "latest"
         cc_compiler: gcc
         cxx_compiler: g++
@@ -1693,7 +1662,6 @@ buildvariants:
       display_name: "Ubuntu 20.04 Debug (Clang)"
       expansions:
         build_type: "Debug"
-        cmake_flags: *linux_cmake_flags
         mongodb_version: "latest"
         cc_compiler: clang
         cxx_compiler: clang++
@@ -1708,7 +1676,6 @@ buildvariants:
       display_name: "Mongohouse Test"
       expansions:
           build_type: "Release"
-          cmake_flags: *linux_cmake_flags
           mongodb_version: "latest"
       run_on: ubuntu2004-test
       tasks:
@@ -1719,7 +1686,6 @@ buildvariants:
       batchtime: 1440 # 1 day
       expansions:
           build_type: "Release"
-          cmake_flags: *linux_cmake_flags
           mongodb_version: "latest"
           cmake: "cmake"
           lib_dir: "lib64"
@@ -1737,7 +1703,6 @@ buildvariants:
       batchtime: 1440 # 1 day
       expansions:
           build_type: "Release"
-          cmake_flags: *linux_cmake_flags
           mongodb_version: "6.0"
           cmake: "cmake"
           lib_dir: "lib64"
@@ -1755,7 +1720,6 @@ buildvariants:
       batchtime: 1440 # 1 day
       expansions:
           build_type: "Release"
-          cmake_flags: *linux_cmake_flags
           mongodb_version: "5.0"
           cmake: "cmake"
           lib_dir: "lib64"
@@ -1773,7 +1737,6 @@ buildvariants:
       batchtime: 1440 # 1 day
       expansions:
           build_type: "Release"
-          cmake_flags: *power8_cmake_flags
           mongodb_version: "latest"
           cmake: "cmake"
           lib_dir: "lib64"
@@ -1791,7 +1754,6 @@ buildvariants:
       batchtime: 1440 # 1 day
       expansions:
           build_type: "Release"
-          cmake_flags: *power8_cmake_flags
           mongodb_version: "5.0"
           cmake: "cmake"
           lib_dir: "lib64"
@@ -1809,7 +1771,6 @@ buildvariants:
       batchtime: 1440 # 1 day
       expansions:
           build_type: "Release"
-          cmake_flags: *linux_cmake_flags
           mongodb_version: "latest"
       run_on:
           - ubuntu2004-arm64-build
@@ -1824,7 +1785,6 @@ buildvariants:
       batchtime: 1440 # 1 day
       expansions:
           build_type: "Release"
-          cmake_flags: *linux_cmake_flags
           mongodb_version: "5.0"
       run_on:
           - ubuntu1804-arm64-build
@@ -1840,7 +1800,6 @@ buildvariants:
       batchtime: 1440 # 1 day
       expansions:
           build_type: "Debug"
-          cmake_flags: *linux_cmake_flags
           mongodb_version: "latest"
           mongoc_version: *mongoc_version_minimum
       run_on:
@@ -1858,8 +1817,7 @@ buildvariants:
       display_name: "MacOS 11.0 Release (Boost) (MongoDB Latest)"
       expansions:
           build_type: "Release"
-          cmake_flags: *macos_cmake_flags
-          poly_flags: -DBSONCXX_POLY_USE_BOOST=ON
+          USE_POLYFILL_BOOST: ON
           mongodb_version: "latest"
       run_on:
           - macos-1100
@@ -1873,8 +1831,7 @@ buildvariants:
       display_name: "MacOS 11.0 Release (Boost) (MongoDB 5.0)"
       expansions:
           build_type: "Release"
-          cmake_flags: *macos_cmake_flags
-          poly_flags: -DBSONCXX_POLY_USE_BOOST=ON
+          USE_POLYFILL_BOOST: ON
           mongodb_version: "5.0"
       run_on:
           - macos-1100
@@ -1888,8 +1845,7 @@ buildvariants:
       display_name: "MacOS 11.0 Release Versioned API"
       expansions:
           build_type: "Release"
-          cmake_flags: *macos_cmake_flags
-          poly_flags: -DBSONCXX_POLY_USE_BOOST=ON
+          USE_POLYFILL_BOOST: ON
           mongodb_version: "latest"
       run_on:
           - macos-1100
@@ -1901,9 +1857,8 @@ buildvariants:
       display_name: "Windows (VS 2015) Release (MongoDB 4.2)"
       expansions:
           build_type: "Release"
-          cmake_flags: *msvc2015_cmake_flags
           mongodb_version: "4.2"
-          generator: *msvc2015_generator
+          generator: Visual Studio 14 2015 Win64
       run_on:
           - windows-64-vs2015-compile
       tasks:
@@ -1917,9 +1872,8 @@ buildvariants:
       display_name: "Windows (VS 2015) Debug Static (MongoDB 4.2)"
       expansions:
           build_type: "Debug"
-          cmake_flags: *msvc2015_cmake_flags
           mongodb_version: "4.2"
-          generator: *msvc2015_generator
+          generator: Visual Studio 14 2015 Win64
       run_on:
           - windows-64-vs2015-compile
       tasks:
@@ -1931,8 +1885,7 @@ buildvariants:
       display_name: "Windows (VS 2015) Debug (MongoDB 4.2)"
       expansions:
           build_type: "Debug"
-          cmake_flags: *msvc2015_cmake_flags
-          generator: *msvc2015_generator
+          generator: Visual Studio 14 2015 Win64
           mongodb_version: "4.2"
       run_on:
          - windows-64-vs2015-compile
