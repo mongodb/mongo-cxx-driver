@@ -84,6 +84,12 @@ if(MONGOCXX_BUILD_SHARED)
     mongocxx_add_library(mongocxx_shared "${MONGOCXX_OUTPUT_BASENAME}" SHARED)
     target_link_libraries(mongocxx_shared PUBLIC bsoncxx_shared)
     list(APPEND mongocxx_target_list mongocxx_shared)
+
+    if(WIN32)
+        # Add resource-definition script for Windows shared library (.dll).
+        configure_file(mongocxx.rc.in mongocxx.rc)
+        target_sources(mongocxx_shared PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/mongocxx.rc)
+    endif()
 endif()
 
 if(MONGOCXX_BUILD_STATIC)
@@ -127,6 +133,7 @@ endif()
 
 set_local_dist(src_mongocxx_DIST_local
     CMakeLists.txt
+    mongocxx.rc.in
 )
 
 set(src_mongocxx_DIST
