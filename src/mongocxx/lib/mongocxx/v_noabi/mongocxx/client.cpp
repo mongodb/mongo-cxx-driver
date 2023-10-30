@@ -35,8 +35,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
-
+inline namespace v_noabi {
 using namespace libbson;
 using bsoncxx::builder::basic::kvp;
 
@@ -335,5 +334,5 @@ client::impl& client::_get_impl() {
     return const_cast<client::impl&>(cthis->_get_impl());
 }
 
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx

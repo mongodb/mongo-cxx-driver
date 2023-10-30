@@ -22,14 +22,14 @@
 
 #include <bsoncxx/exception/error_code.hpp>
 #include <bsoncxx/exception/exception.hpp>
+#include <bsoncxx/json.hpp>
 #include <bsoncxx/string/to_string.hpp>
 #include <bsoncxx/types/bson_value/view_or_value.hpp>
 
 #include <bsoncxx/config/private/prelude.hh>
 
 namespace bsoncxx {
-BSONCXX_INLINE_NAMESPACE_BEGIN
-
+inline namespace v_noabi {
 inline std::string to_string(types::bson_value::view_or_value val) {
     switch (val.view().type()) {
         case bsoncxx::type::k_string:
@@ -90,7 +90,7 @@ inline std::string to_string(types::bson_value::view_or_value val) {
     }
 }
 
-BSONCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/private/postlude.hh>

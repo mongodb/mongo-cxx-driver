@@ -20,8 +20,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
-
+inline namespace v_noabi {
 class pipeline::impl {
    public:
     bsoncxx::builder::basic::array& sink() {
@@ -43,7 +42,7 @@ class pipeline::impl {
     bsoncxx::builder::basic::array _builder;
 };
 
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

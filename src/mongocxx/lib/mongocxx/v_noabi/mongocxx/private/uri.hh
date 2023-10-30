@@ -20,8 +20,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
-
+inline namespace v_noabi {
 class uri::impl {
    public:
     impl(mongoc_uri_t* uri) : uri_t(uri) {}
@@ -31,7 +30,7 @@ class uri::impl {
     mongoc_uri_t* uri_t;
 };
 
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

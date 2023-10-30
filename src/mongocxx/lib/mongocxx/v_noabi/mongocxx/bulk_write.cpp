@@ -30,8 +30,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
-
+inline namespace v_noabi {
 using namespace libbson;
 using bsoncxx::builder::basic::kvp;
 
@@ -227,5 +226,5 @@ bulk_write::bulk_write(const collection& coll,
     }
 }
 
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx

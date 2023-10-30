@@ -25,12 +25,15 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
-
+inline namespace v_noabi {
 class client;
 class collection;
 class database;
 class uri;
+
+namespace options {
+class transaction;
+}
 
 ///
 /// A class to represent the read concern. Read concern can be set at the client, database, or
@@ -154,12 +157,12 @@ class MONGOCXX_API read_concern {
     bsoncxx::document::value to_document() const;
 
    private:
-    friend client;
-    friend collection;
-    friend database;
-    /// \relates mongocxx::options::transaction
-    friend mongocxx::options::transaction;
-    friend uri;
+    friend class client;
+    friend class collection;
+    friend class database;
+    friend class uri;
+
+    friend class options::transaction;
 
     ///
     /// @{
@@ -181,7 +184,7 @@ class MONGOCXX_API read_concern {
     std::unique_ptr<impl> _impl;
 };
 
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

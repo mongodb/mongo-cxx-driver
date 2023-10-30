@@ -24,6 +24,7 @@
 #include <bsoncxx/types/bson_value/view.hpp>
 #include <bsoncxx/types/private/convert.hh>
 #include <mongocxx/client.hpp>
+#include <mongocxx/client_encryption.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/exception/private/mongoc_error.hh>
 #include <mongocxx/options/client_encryption.hpp>
@@ -36,8 +37,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
-
+inline namespace v_noabi {
 class client_encryption::impl {
    private:
     using scoped_bson_t = mongocxx::libbson::scoped_bson_t;
@@ -397,7 +397,7 @@ class client_encryption::impl {
     std::unique_ptr<mongoc_client_encryption_t, encryption_deleter> _client_encryption;
 };
 
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

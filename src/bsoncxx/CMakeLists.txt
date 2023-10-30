@@ -135,6 +135,12 @@ set(bsoncxx_target_list "")
 if(BSONCXX_BUILD_SHARED)
     bsoncxx_add_library(bsoncxx_shared "${BSONCXX_OUTPUT_BASENAME}" SHARED)
     list(APPEND bsoncxx_target_list bsoncxx_shared)
+
+    if(WIN32)
+        # Add resource-definition script for Windows shared library (.dll).
+        configure_file(bsoncxx.rc.in bsoncxx.rc)
+        target_sources(bsoncxx_shared PRIVATE ${CMAKE_CURRENT_BINARY_DIR}/bsoncxx.rc)
+    endif()
 endif()
 
 if(BSONCXX_BUILD_STATIC)
@@ -177,6 +183,7 @@ endif()
 
 set_local_dist(src_bsoncxx_DIST_local
     CMakeLists.txt
+    bsoncxx.rc.in
 )
 
 set(src_bsoncxx_DIST

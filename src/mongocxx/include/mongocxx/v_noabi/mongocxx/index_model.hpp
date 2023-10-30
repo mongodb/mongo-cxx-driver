@@ -21,8 +21,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
-
+inline namespace v_noabi {
 ///
 /// Class representing an index on a MongoDB server.
 ///
@@ -73,7 +72,7 @@ class MONGOCXX_API index_model {
     bsoncxx::document::value _options;
 };
 
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

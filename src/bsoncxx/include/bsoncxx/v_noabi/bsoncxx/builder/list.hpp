@@ -24,7 +24,7 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-BSONCXX_INLINE_NAMESPACE_BEGIN
+inline namespace v_noabi {
 namespace builder {
 using namespace bsoncxx::types;
 
@@ -184,5 +184,10 @@ class array : public list {
     array(initializer_list_t init) : list(init, false, true) {}
 };
 }  // namespace builder
-BSONCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace bsoncxx
+
+// CXX-2770: missing include of postlude header.
+#if defined(BSONCXX_TEST_MACRO_GUARDS_FIX_MISSING_POSTLUDE)
+#include <bsoncxx/config/postlude.hpp>
+#endif

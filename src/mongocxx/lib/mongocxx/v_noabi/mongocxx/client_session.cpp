@@ -21,8 +21,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
-
+inline namespace v_noabi {
 // Private constructors.
 client_session::client_session(const class client* client,
                                const mongocxx::options::client_session& options)
@@ -101,5 +100,5 @@ client_session::impl& client_session::_get_impl() {
     return const_cast<client_session::impl&>(cthis->_get_impl());
 }
 
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx

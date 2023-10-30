@@ -53,9 +53,9 @@ General structure:
  - System Headers `<vector>` (alphabetical order)
  - Driver Headers `<path/to/header.hpp>` (alphabetical order)
  - Open Namespace mongocxx
- - `MONGOCXX_INLINE_NAMESPACE_BEGIN`
+ - `inline namespace v_noabi {`
  -    Code
- - `MONGOCXX_INLINE_NAMESPACE_END`
+ - `}  // namespace v_noabi`
  - Close Namespace mongocxx
  - Header Postlude
 
@@ -85,13 +85,13 @@ Example:
 #include <driver/blah.hpp>
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
+inline namespace v_noabi {
 
 // Declarations
 
 // Inline Implementations
 
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx
 
 #include <driver/config/postlude.hpp>

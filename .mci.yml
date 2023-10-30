@@ -380,6 +380,7 @@ functions:
                   set -o errexit
                   set -o pipefail
                   export BUILD_TYPE=${build_type}
+                  export COMPILE_MACRO_GUARD_TESTS=${COMPILE_MACRO_GUARD_TESTS}
                   export PATH="${extra_path}:$PATH"
                   export RUN_DISTCHECK=${RUN_DISTCHECK}
 
@@ -840,8 +841,9 @@ functions:
             set -o errexit
             set -o pipefail
             set -x
-            echo "Building Alpine Docker image"
-            make -C extras/docker/alpine3.18 nocachebuild test
+            # TODO: Re-enable Alpine test once MONGOCRYPT-601 is released.
+            # echo "Building Alpine Docker image"
+            # make -C extras/docker/alpine3.18 nocachebuild test
             echo "Building Debian Docker image"
             make -C extras/docker/bookworm nocachebuild test
             echo "Building Red Hat UBI Docker image"
@@ -956,6 +958,14 @@ tasks:
       - func: "compile"
         vars:
             ENABLE_TESTS: OFF
+
+    - name: compile_macro_guard_tests
+      commands:
+      - func: "setup"
+      - func: "fetch_c_driver_source"
+      - func: "compile"
+        vars:
+            COMPILE_MACRO_GUARD_TESTS: ON
 
     - name: compile_and_test_auth_with_shared_libs
       commands:
@@ -1236,8 +1246,15 @@ tasks:
         - func: "run_kms_servers"
         - func: "test"
 
+    - name: docker_build_arm
+      run_on:
+        - ubuntu2204-arm64-small
+      commands:
+         - func: "setup"
+         - func: "docker-image-build"
+
     - name: docker_build
-      run_on: &docker-distros
+      run_on:
         - ubuntu2204-small
       commands:
          - func: "setup"
@@ -1407,6 +1424,7 @@ buildvariants:
       display_name: "Docker builder"
       tasks:
           - name: docker_build
+          - name: docker_build_arm
 
     - name: rhel9-release-latest
       display_name: "RHEL 9 Release (MongoDB Latest)"
@@ -1806,6 +1824,7 @@ buildvariants:
       tasks:
         - name: clang-tidy
         - name: compile_without_tests
+        - name: compile_macro_guard_tests
         - name: test_atlas_task_group_search_indexes
 
     - name: ubuntu2204-debug-gcc
@@ -1820,6 +1839,7 @@ buildvariants:
         - ubuntu2204-small
       tasks:
         - name: compile_without_tests
+        - name: compile_macro_guard_tests
 
     - name: ubuntu2204-debug-clang
       display_name: "Ubuntu 22.04 Debug (Clang)"
@@ -1833,6 +1853,7 @@ buildvariants:
         - ubuntu2204-small
       tasks:
         - name: compile_without_tests
+        - name: compile_macro_guard_tests
 
     - name: mongohouse-ubuntu
       display_name: "Mongohouse Test"

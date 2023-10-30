@@ -14,19 +14,22 @@
 
 #pragma once
 
+#include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/options/apm.hpp>
+#include <mongocxx/options/server_api.hpp>
 #include <mongocxx/private/libmongoc.hh>
 
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
+inline namespace v_noabi {
 namespace options {
 
 using unique_server_api =
     std::unique_ptr<mongoc_server_api_t, decltype(libmongoc::server_api_destroy)>;
 
+BSON_MAYBE_UNUSED
 static unique_server_api make_server_api(const server_api& opts) {
     mongoc_server_api_version_t mongoc_api_version;
 
@@ -57,7 +60,7 @@ static unique_server_api make_server_api(const server_api& opts) {
 }
 
 }  // namespace options
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

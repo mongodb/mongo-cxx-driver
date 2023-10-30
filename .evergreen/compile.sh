@@ -51,6 +51,15 @@ esac
 
 cd build
 "${cmake_binary}" -G "$GENERATOR" "-DCMAKE_BUILD_TYPE=${BUILD_TYPE}" -DBUILD_TESTING=ON -DMONGOCXX_ENABLE_SLOW_TESTS=ON -DENABLE_UNINSTALL=ON "$@" ..
+
+if [[ "${COMPILE_MACRO_GUARD_TESTS:-"OFF"}" == "ON" ]]; then
+   # We only need to compile the macro guard tests.
+   "${cmake_binary}" -DENABLE_MACRO_GUARD_TESTS=ON ..
+   "${cmake_binary}" --build . --config $BUILD_TYPE --target test_bsoncxx_macro_guards test_mongocxx_macro_guards -- $CMAKE_BUILD_OPTS
+   exit # Nothing else to be done.
+fi
+
+# Regular build and install routine.
 "${cmake_binary}" --build . --config $BUILD_TYPE -- $CMAKE_BUILD_OPTS
 "${cmake_binary}" --build . --config $BUILD_TYPE --target install -- $CMAKE_BUILD_OPTS
 "${cmake_binary}" --build . --config $BUILD_TYPE --target $CMAKE_EXAMPLES_TARGET -- $CMAKE_BUILD_OPTS

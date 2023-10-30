@@ -21,7 +21,7 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-BSONCXX_INLINE_NAMESPACE_BEGIN
+inline namespace v_noabi {
 namespace types {
 namespace bson_value {
 
@@ -29,7 +29,7 @@ using view_or_value = bsoncxx::view_or_value<bson_value::view, bson_value::value
 
 }  // namespace bson_value
 }  // namespace types
-BSONCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

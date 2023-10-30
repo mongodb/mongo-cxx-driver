@@ -20,8 +20,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
-
+inline namespace v_noabi {
 namespace options {
 
 transaction::transaction() : _impl{stdx::make_unique<impl>()} {}
@@ -88,7 +87,7 @@ transaction::impl& transaction::_get_impl() {
 }
 
 }  // namespace options
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

@@ -21,8 +21,7 @@
 #include <bsoncxx/config/private/prelude.hh>
 
 namespace bsoncxx {
-BSONCXX_INLINE_NAMESPACE_BEGIN
-
+inline namespace v_noabi {
 // Note: This stack is only intended for use with the 'frame' type in
 // builder core.cpp.
 template <typename T, std::size_t size>
@@ -155,7 +154,7 @@ class stack {
     }
 };
 
-BSONCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/private/postlude.hh>

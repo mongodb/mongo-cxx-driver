@@ -19,8 +19,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
-
+inline namespace v_noabi {
 namespace {
 
 //
@@ -44,5 +43,5 @@ const std::error_category& MONGOCXX_CALL server_error_category() {
     return category;
 }
 
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx

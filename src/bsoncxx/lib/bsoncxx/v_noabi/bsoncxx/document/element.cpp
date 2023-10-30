@@ -30,7 +30,7 @@
     bson_iter_init_from_data_at_offset(&iter, _raw, _length, _offset, _keylen);
 
 namespace bsoncxx {
-BSONCXX_INLINE_NAMESPACE_BEGIN
+inline namespace v_noabi {
 namespace document {
 
 element::element() : element(nullptr, 0, 0, 0) {}
@@ -164,5 +164,5 @@ bool BSONCXX_CALL operator!=(const types::bson_value::view& v, const element& el
 }
 
 }  // namespace document
-BSONCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace bsoncxx

@@ -24,8 +24,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
-
+inline namespace v_noabi {
 ///
 /// Class representing a hint to be passed to a database operation.
 ///
@@ -141,7 +140,7 @@ MONGOCXX_INLINE hint::operator bsoncxx::types::bson_value::view() const {
     return to_value();
 }
 
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

@@ -25,8 +25,7 @@ using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::sub_document;
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
-
+inline namespace v_noabi {
 pipeline::pipeline() : _impl(stdx::make_unique<impl>()) {}
 
 pipeline::pipeline(pipeline&&) noexcept = default;
@@ -255,5 +254,5 @@ bsoncxx::array::view pipeline::view_array() const {
     return _impl->view_array();
 }
 
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx

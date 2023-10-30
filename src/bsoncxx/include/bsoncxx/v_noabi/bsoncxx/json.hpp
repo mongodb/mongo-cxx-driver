@@ -23,12 +23,8 @@
 
 #include <bsoncxx/config/prelude.hpp>
 
-///
-/// Top level namespace for MongoDB C++ BSON functionality.
-///
 namespace bsoncxx {
-BSONCXX_INLINE_NAMESPACE_BEGIN
-
+inline namespace v_noabi {
 ///
 /// An enumeration of the types of Extended JSON that the to_json function accepts
 enum class ExtendedJsonMode : std::uint8_t {
@@ -83,7 +79,7 @@ BSONCXX_API document::value BSONCXX_CALL from_json(stdx::string_view json);
 ///
 BSONCXX_API document::value BSONCXX_CALL operator"" _bson(const char* json, size_t len);
 
-BSONCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

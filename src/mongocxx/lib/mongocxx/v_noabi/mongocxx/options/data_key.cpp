@@ -19,7 +19,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
+inline namespace v_noabi {
 namespace options {
 
 data_key& data_key::master_key(bsoncxx::document::view_or_value master_key) {
@@ -83,5 +83,5 @@ const stdx::optional<data_key::key_material_type>& data_key::key_material() {
 }
 
 }  // namespace options
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx

@@ -24,7 +24,7 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-BSONCXX_INLINE_NAMESPACE_BEGIN
+inline namespace v_noabi {
 namespace builder {
 namespace stream {
 
@@ -99,8 +99,7 @@ class array_context {
     /// This operation finishes all processing necessary to fully encode the
     /// bson bytes and returns an owning value.
     ///
-    /// @param _
-    ///   A finalize_type token
+    /// The argument must be a finalize_type token (it is otherwise ignored).
     ///
     /// @return A value type which holds the complete bson document.
     ///
@@ -116,8 +115,7 @@ class array_context {
     ///
     /// << operator for opening a new subdocument in the core builder.
     ///
-    /// @param _
-    ///   An open_document_type token
+    /// The argument must be an open_document_type token (it is otherwise ignored).
     ///
     BSONCXX_INLINE key_context<array_context> operator<<(const open_document_type) {
         _core->open_document();
@@ -141,8 +139,7 @@ class array_context {
     ///
     /// << operator for opening a new subarray in the core builder.
     ///
-    /// @param _
-    ///   An open_document_type token
+    /// The argument must be an open_document_type token (it is otherwise ignored).
     ///
     BSONCXX_INLINE array_context<array_context> operator<<(const open_array_type) {
         _core->open_array();
@@ -152,8 +149,7 @@ class array_context {
     ///
     /// << operator for closing a subarray in the core builder.
     ///
-    /// @param _
-    ///   A close_array_type token
+    /// The argument must be a close_array_type token (it is otherwise ignored).
     ///
     BSONCXX_INLINE base operator<<(const close_array_type) {
         _core->close_array();
@@ -193,7 +189,7 @@ class array_context {
 
 }  // namespace stream
 }  // namespace builder
-BSONCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

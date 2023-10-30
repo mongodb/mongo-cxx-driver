@@ -29,12 +29,8 @@
 
 #include <mongocxx/config/prelude.hpp>
 
-///
-/// Top level namespace for the MongoDB C++ driver.
-///
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
-
+inline namespace v_noabi {
 class client_session;
 
 ///
@@ -447,7 +443,7 @@ MONGOCXX_INLINE database client::operator[](bsoncxx::string::view_or_value name)
     return database(name);
 }
 
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

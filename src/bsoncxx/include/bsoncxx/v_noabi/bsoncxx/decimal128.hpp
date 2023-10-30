@@ -22,8 +22,7 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-BSONCXX_INLINE_NAMESPACE_BEGIN
-
+inline namespace v_noabi {
 ///
 /// Represents an IEEE 754-2008 BSON Decimal128 value in a platform-independent way.
 ///
@@ -94,7 +93,7 @@ class BSONCXX_API decimal128 {
     uint64_t _low = 0;
 };
 
-BSONCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

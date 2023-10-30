@@ -16,15 +16,22 @@
 
 #include <mongocxx/config/prelude.hpp>
 
+// "Forward-declare" the `bsoncxx::stdx` namespace to permit the using-declaration below.
+namespace bsoncxx {
+inline namespace v_noabi {
+namespace stdx {}
+}  // namespace v_noabi
+}  // namespace bsoncxx
+
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
+inline namespace v_noabi {
 namespace stdx {
 
 // We adopt all the bsoncxx polyfills
 using namespace ::bsoncxx::stdx;
 
 }  // namespace stdx
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

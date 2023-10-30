@@ -23,8 +23,7 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-BSONCXX_INLINE_NAMESPACE_BEGIN
-
+inline namespace v_noabi {
 enum class type : std::uint8_t;
 enum class binary_sub_type : std::uint8_t;
 
@@ -450,7 +449,7 @@ BSONCXX_API bool BSONCXX_CALL operator!=(const types::bson_value::view& v, const
 
 }  // namespace document
 
-BSONCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

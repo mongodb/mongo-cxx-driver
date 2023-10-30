@@ -31,7 +31,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
+inline namespace v_noabi {
 namespace test_util {
 
 template <typename T>
@@ -187,7 +187,7 @@ class mock<R (*)(Args...)> {
 };
 
 }  // namespace test_util
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

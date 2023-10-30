@@ -27,8 +27,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
-
+inline namespace v_noabi {
 class collection::impl {
    public:
     impl(mongoc_collection_t* collection,
@@ -62,7 +61,7 @@ class collection::impl {
     const class client::impl* client_impl;
 };
 
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

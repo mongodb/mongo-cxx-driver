@@ -24,8 +24,7 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-BSONCXX_INLINE_NAMESPACE_BEGIN
-
+inline namespace v_noabi {
 namespace document {
 class element;
 }  // namespace document
@@ -341,7 +340,7 @@ operator!=(T&& lhs, const bson_value::view& rhs) {
 }  // namespace bson_value
 }  // namespace types
 
-BSONCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

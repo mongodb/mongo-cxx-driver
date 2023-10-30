@@ -24,8 +24,7 @@ using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::sub_document;
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
-
+inline namespace v_noabi {
 hint::hint(bsoncxx::document::view_or_value index) : _index_doc(std::move(index)) {}
 
 hint::hint(bsoncxx::string::view_or_value index) : _index_string(std::move(index)) {}
@@ -70,5 +69,5 @@ bool MONGOCXX_CALL operator!=(bsoncxx::document::view index, const hint& index_h
     return !(index_hint == index);
 }
 
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx

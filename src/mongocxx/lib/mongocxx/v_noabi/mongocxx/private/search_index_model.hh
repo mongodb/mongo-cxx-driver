@@ -6,8 +6,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
-
+inline namespace v_noabi {
 class search_index_model::impl {
    public:
     impl(bsoncxx::document::view_or_value definition) : _definition(definition.view()) {}
@@ -18,5 +17,7 @@ class search_index_model::impl {
     bsoncxx::document::view_or_value _definition;
 };
 
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx
+
+#include <mongocxx/config/private/postlude.hh>
