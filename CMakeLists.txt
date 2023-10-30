@@ -428,12 +428,36 @@ add_custom_command(OUTPUT ${DIST_FILE}
 if(NOT(TARGET dist OR TARGET distcheck))
     add_custom_target(dist DEPENDS ${DIST_FILE})
 
+    # Ensure distcheck inherits polyfill library selection.
+    set(polyfill_flags "")
+    if (NOT "${CMAKE_CXX_STANDARD}" STREQUAL "")
+       list(APPEND polyfill_flags "-DCMAKE_CXX_STANDARD=${CMAKE_CXX_STANDARD}")
+    endif ()
+    if (NOT "${BOOST_ROOT}" STREQUAL "")
+       list(APPEND polyfill_flags "-DBOOST_ROOT=${BOOST_ROOT}")
+    endif ()
+    if (NOT "${BSONCXX_POLY_USE_MNMLSTC}" STREQUAL "")
+       list(APPEND polyfill_flags "-DBSONCXX_POLY_USE_MNMLSTC=${BSONCXX_POLY_USE_MNMLSTC}")
+    endif()
+    if (NOT "${BSONCXX_POLY_USE_STD_EXPERIMENTAL}" STREQUAL "")
+       list(APPEND polyfill_flags "-DBSONCXX_POLY_USE_STD_EXPERIMENTAL=${BSONCXX_POLY_USE_STD_EXPERIMENTAL}")
+    endif()
+    if (NOT "${BSONCXX_POLY_USE_SYSTEM_MNMLSTC}" STREQUAL "")
+       list(APPEND polyfill_flags "-DBSONCXX_POLY_USE_SYSTEM_MNMLSTC=${BSONCXX_POLY_USE_SYSTEM_MNMLSTC}")
+    endif()
+    if (NOT "${BSONCXX_POLY_USE_BOOST}" STREQUAL "")
+       list(APPEND polyfill_flags "-DBSONCXX_POLY_USE_BOOST=${BSONCXX_POLY_USE_BOOST}")
+    endif()
+    if (NOT "${BSONCXX_POLY_USE_STD}" STREQUAL "")
+       list(APPEND polyfill_flags "-DBSONCXX_POLY_USE_STD=${BSONCXX_POLY_USE_STD}")
+    endif()
+
     add_custom_target(distcheck DEPENDS dist
         COMMAND ${CMAKE_COMMAND}
         -D CMAKE_MODULE_PATH=${PROJECT_SOURCE_DIR}/cmake/make_dist
         -D CMAKE_PREFIX_PATH=${CMAKE_PREFIX_PATH}
         -D PACKAGE_PREFIX=${PACKAGE_PREFIX}
-        -D CMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS}
+        ${polyfill_flags}
         -P ${PROJECT_SOURCE_DIR}/cmake/make_dist/MakeDistCheck.cmake
     )
 endif()
