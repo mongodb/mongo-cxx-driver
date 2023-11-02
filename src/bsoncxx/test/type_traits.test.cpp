@@ -11,7 +11,7 @@
 #endif
 
 namespace {
-namespace tt = bsoncxx::stdx::type_traits;
+namespace tt = bsoncxx::_traits;
 
 template <typename Result, typename Expect>
 struct assert_same {
