@@ -1742,22 +1742,6 @@ buildvariants:
           - name: compile_and_test_with_static_libs
           - name: compile_and_test_with_static_libs_extra_alignment
 
-    # Test that we actually support building against the minimum required C version claimed.
-    - name: ubuntu2004-min-libmongoc
-      display_name: "Ubuntu 20.04 with minimum libmongoc (MongoDB Latest)"
-      batchtime: 1440 # 1 day
-      expansions:
-          build_type: "Debug"
-          mongodb_version: "latest"
-          mongoc_version: *mongoc_version_minimum
-      run_on:
-          - ubuntu2004-build
-      tasks:
-          - name: compile_and_test_with_shared_libs
-          - name: compile_and_test_with_shared_libs_extra_alignment
-          - name: compile_and_test_with_static_libs
-          - name: compile_and_test_with_static_libs_extra_alignment
-
     #######################################
     #         Mac and Windows             #
     #######################################
