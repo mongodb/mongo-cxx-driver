@@ -36,6 +36,10 @@ if [[ "${OSTYPE:?}" == "cygwin" ]]; then
   *2017*)
     PATH="/cygdrive/c/cmake/bin:/cygdrive/c/Program Files (x86)/Microsoft Visual Studio/2017/Professional/MSBuild/15.0/Bin:$PATH"
     ;;
+  *)
+    echo "missing explicit CMake Generator on Windows distro" 1>&2
+    exit 1
+    ;;
   esac
 fi
 export PATH
@@ -121,7 +125,7 @@ cygwin)
   *2015*) cmake_flags+=("-DBOOST_ROOT=C:/local/boost_1_60_0") ;;
   *2017*) cmake_flags+=("-DCMAKE_CXX_STANDARD=17") ;;
   *)
-    echo "missing CMake Generator on Windows distro" 1>&2
+    echo "missing explicit CMake Generator on Windows distro" 1>&2
     exit 1
     ;;
   esac
