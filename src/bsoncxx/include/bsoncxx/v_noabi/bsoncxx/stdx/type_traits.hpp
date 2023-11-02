@@ -7,8 +7,7 @@
 namespace bsoncxx {
 
 BSONCXX_INLINE_NAMESPACE_BEGIN
-namespace stdx {
-inline namespace type_traits {
+namespace _traits {
 #define bsoncxx_ttparam \
     template <class...> \
     class
@@ -22,7 +21,7 @@ template <typename T>
 using value_type_t = typename T::value_type;
 
 template <bool B, typename T = void>
-using enable_if_t = type_t<std::enable_if<B, T>>;
+using enable_if_t = typename std::enable_if<B, T>::type;
 
 #pragma push_macro("DECL_ALIAS")
 #define DECL_ALIAS(Name)  \
@@ -76,7 +75,7 @@ template <typename...>
 struct mp_list;
 
 /// ## Implementation of the C++11 detection idiom
-namespace detail {
+namespace tt_detail {
 
 // Implementation of detection idiom for is_detected: true case
 template <
@@ -114,7 +113,7 @@ struct detection<std::true_type> {
     using f = Oper<Args...>;
 };
 
-}  // namespace detail
+}  // namespace tt_detail
 
 /**
  * @brief The type yielded by detected_t if the given type operator does not
@@ -130,7 +129,8 @@ struct nonesuch;
  * @tparam Args Some number of arguments to apply to Oper
  */
 template <template <class...> class Oper, typename... Args>
-using is_detected = decltype(detail::is_detected_f<Oper>(static_cast<mp_list<Args...>*>(nullptr)));
+using is_detected =
+    decltype(tt_detail::is_detected_f<Oper>(static_cast<mp_list<Args...>*>(nullptr)));
 
 /**
  * @brief If Oper<Args...> evaluates to a type, yields that type. Otherwise, yields
@@ -142,7 +142,7 @@ using is_detected = decltype(detail::is_detected_f<Oper>(static_cast<mp_list<Arg
  */
 template <typename Dflt, template <class...> class Oper, typename... Args>
 using detected_or =
-    typename detail::detection<is_detected<Oper, Args...>>::template f<Dflt, Oper, Args...>;
+    typename tt_detail::detection<is_detected<Oper, Args...>>::template f<Dflt, Oper, Args...>;
 
 /**
  * @brief If Oper<Args...> evaluates to a type, yields that type. Otherwise, yields
@@ -160,7 +160,7 @@ using detected_t = detected_or<nonesuch, Oper, Args...>;
  * Separating the boolean from the type arguments results in significant speedup to compilation
  * due to type memoization
  */
-namespace detail {
+namespace tt_detail {
 
 template <bool B>
 struct conditional {
@@ -174,7 +174,7 @@ struct conditional<false> {
     using f = IfFalse;
 };
 
-}  // namespace detail
+}  // namespace tt_detail
 
 /**
  * @brief Pick one of two types based on a boolean
@@ -184,10 +184,10 @@ struct conditional<false> {
  * @tparam F If `B` is false, pick this type
  */
 template <bool B, typename T, typename F>
-using conditional_t = typename detail::conditional<B>::template f<T, F>;
+using conditional_t = typename tt_detail::conditional<B>::template f<T, F>;
 
 // impl for conjunction+disjunction
-namespace detail {
+namespace tt_detail {
 
 template <typename FalseType, typename Opers>
 struct conj;
@@ -219,7 +219,7 @@ struct disj<std::true_type, mp_list<H>> : H {};
 template <>
 struct disj<std::true_type, mp_list<>> : std::false_type {};
 
-}  // namespace detail
+}  // namespace tt_detail
 
 /**
  * @brief inherits unambiguously from the first of `Ts...` for which
@@ -230,7 +230,7 @@ struct disj<std::true_type, mp_list<>> : std::false_type {};
  * If any of `Ts::value == false`, then no subsequent `Ts::value` will be instantiated.
  */
 template <typename... Cond>
-struct conjunction : detail::conj<std::false_type, mp_list<Cond...>> {};
+struct conjunction : tt_detail::conj<std::false_type, mp_list<Cond...>> {};
 
 /**
  * @brief Inherits unambiguous from the first of `Ts...` where `Ts::value` is `true`,
@@ -241,7 +241,7 @@ struct conjunction : detail::conj<std::false_type, mp_list<Cond...>> {};
  * If any of `Ts::value == true`, then no subsequent `Ts::value` will be instantiated.
  */
 template <typename... Cond>
-struct disjunction : detail::disj<std::true_type, mp_list<Cond...>> {};
+struct disjunction : tt_detail::disj<std::true_type, mp_list<Cond...>> {};
 
 /**
  * @brief Given a boolean type trait, returns a type trait which is the logical negation thereof
@@ -260,6 +260,9 @@ struct negation : bool_constant<!T::value> {};
 template <typename...>
 using true_t = std::true_type;
 
+template <typename R, typename B, enable_if_t<B::value, int> = 0>
+R _requires_f(B);
+
 /**
  * @brief If none of `Ts::value is 'false'`, yields the type `Type`, otherwise
  * this type is undefined.
@@ -270,7 +273,7 @@ using true_t = std::true_type;
  * @tparam Traits A list of type traits with nested ::value members
  */
 template <typename Type, typename... Traits>
-using requires_t = enable_if_t<conjunction<Traits...>::value, Type>;
+using requires_t = decltype(_requires_f<Type>(conjunction<Traits...>{}));
 
 /**
  * @brief If any of `Ts::value` is 'true', this type is undefined, otherwise
@@ -358,9 +361,8 @@ using is_invocable = is_detected<invoke_result_t, Fun, Args...>;
 template <typename T, typename U>
 using is_alike = std::is_same<remove_cvref_t<T>, remove_cvref_t<U>>;
 
-}  // namespace type_traits
+}  // namespace _traits
 
-}  // namespace stdx
 BSONCXX_INLINE_NAMESPACE_END
 
 }  // namespace bsoncxx

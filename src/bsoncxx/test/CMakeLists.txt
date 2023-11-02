@@ -39,6 +39,7 @@ add_executable(test_bson
     oid.cpp
     view_or_value.cpp
     make_unique.test.cpp
+    type_traits.test.cpp
 )
 
 # Common target properties for test executables.

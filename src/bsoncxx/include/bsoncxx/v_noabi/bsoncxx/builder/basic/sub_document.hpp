@@ -60,7 +60,7 @@ class sub_document {
     // Appends a basic::kvp where the key is a non-owning string view.
     //
     template <typename K, typename V>
-    BSONCXX_INLINE stdx::requires_t<void, stdx::is_alike<K, stdx::string_view>>  //
+    BSONCXX_INLINE _traits::requires_t<void, _traits::is_alike<K, stdx::string_view>>  //
     append_(std::tuple<K, V>&& t) {
         _core->key_view(std::forward<K>(std::get<0>(t)));
         impl::value_append(_core, std::forward<V>(std::get<1>(t)));
@@ -70,7 +70,7 @@ class sub_document {
     // Appends a basic::kvp where the key is an owning STL string.
     //
     template <typename K, typename V>
-    BSONCXX_INLINE stdx::requires_t<void, stdx::is_alike<K, std::string>>  //
+    BSONCXX_INLINE _traits::requires_t<void, _traits::is_alike<K, std::string>>  //
     append_(std::tuple<K, V>&& t) {
         _core->key_owned(std::forward<K>(std::get<0>(t)));
         impl::value_append(_core, std::forward<V>(std::get<1>(t)));

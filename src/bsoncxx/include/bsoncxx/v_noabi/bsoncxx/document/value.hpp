@@ -86,7 +86,7 @@ class BSONCXX_API value {
     /// @param t
     ///   A user-defined object to serialize into a BSON object.
     ///
-    template <typename T, stdx::requires_not_t<int, std::is_same<T, array::view>> = 0>
+    template <typename T, _traits::requires_not_t<int, std::is_same<T, array::view>> = 0>
     explicit value(const T& t) : value({}) {
         to_bson(t, *this);
     }

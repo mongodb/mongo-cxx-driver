@@ -67,10 +67,10 @@ class array_context {
     ///   The value to append
     ///
     template <class T>
-    BSONCXX_INLINE stdx::requires_not_t<array_context&,
-                                        stdx::is_invocable<T, array_context<>>,
-                                        stdx::is_invocable<T, single_context>,
-                                        stdx::is_alike<T, finalize_type>>
+    BSONCXX_INLINE _traits::requires_not_t<array_context&,
+                                           _traits::is_invocable<T, array_context<>>,
+                                           _traits::is_invocable<T, single_context>,
+                                           _traits::is_alike<T, finalize_type>>
     operator<<(T&& t) {
         _core->append(std::forward<T>(t));
         return *this;
@@ -85,11 +85,12 @@ class array_context {
     ///   The callback to invoke
     ///
     template <typename Func>
-    BSONCXX_INLINE stdx::requires_t<array_context&,
-                                    stdx::disjunction<stdx::is_invocable<Func, array_context>,
-                                                      stdx::is_invocable<Func, single_context>>>
-    operator<<(Func&& func) {
-        stdx::invoke(std::forward<Func>(func), *this);
+    BSONCXX_INLINE
+        _traits::requires_t<array_context&,
+                            _traits::disjunction<_traits::is_invocable<Func, array_context>,
+                                                 _traits::is_invocable<Func, single_context>>>
+        operator<<(Func&& func) {
+        _traits::invoke(std::forward<Func>(func), *this);
         return *this;
     }
 
@@ -104,9 +105,9 @@ class array_context {
     /// @return A value type which holds the complete bson document.
     ///
     template <typename T>
-    BSONCXX_INLINE stdx::requires_t<bsoncxx::array::value,
-                                    std::is_same<base, closed_context>,
-                                    stdx::is_alike<T, finalize_type>>
+    BSONCXX_INLINE _traits::requires_t<bsoncxx::array::value,
+                                       std::is_same<base, closed_context>,
+                                       _traits::is_alike<T, finalize_type>>
     // VS2015U1 can't resolve the name.
     operator<<(T&&) {
         return _core->extract_array();

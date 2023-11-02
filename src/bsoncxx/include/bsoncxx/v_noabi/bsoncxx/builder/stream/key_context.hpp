@@ -108,9 +108,9 @@ class key_context {
     ///   The callback to invoke
     ///
     template <typename T>
-    BSONCXX_INLINE stdx::requires_t<key_context&, stdx::is_invocable<T, key_context>>  //
+    BSONCXX_INLINE _traits::requires_t<key_context&, _traits::is_invocable<T, key_context>>  //
     operator<<(T&& func) {
-        stdx::invoke(std::forward<T>(func), *this);
+        _traits::invoke(std::forward<T>(func), *this);
         return *this;
     }
 
@@ -125,9 +125,9 @@ class key_context {
     /// @return A value type which holds the complete bson document.
     ///
     template <typename T>
-    BSONCXX_INLINE stdx::requires_t<bsoncxx::document::value,
-                                    std::is_same<base, closed_context>,
-                                    stdx::is_alike<T, finalize_type>>
+    BSONCXX_INLINE _traits::requires_t<bsoncxx::document::value,
+                                       std::is_same<base, closed_context>,
+                                       _traits::is_alike<T, finalize_type>>
     operator<<(T&&) {
         return _core->extract_document();
     }

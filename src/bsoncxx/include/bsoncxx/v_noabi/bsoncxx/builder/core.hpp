@@ -509,7 +509,7 @@ class BSONCXX_API core {
     ///
     template <typename T>
     BSONCXX_INLINE core& append(T* v) {
-        static_assert(stdx::is_alike<T, char>::value,
+        static_assert(_traits::is_alike<T, char>::value,
                       "append is disabled for non-char pointer types");
         append(types::b_string{v});
 
