@@ -155,13 +155,13 @@ if(1)
             BASE_NAME BSONCXX
             EXPORT_MACRO_NAME BSONCXX_API
             NO_EXPORT_MACRO_NAME BSONCXX_PRIVATE
-            EXPORT_FILE_NAME ${PROJECT_BINARY_DIR}/lib/bsoncxx/v_noabi/bsoncxx/config/export.hpp
+            EXPORT_FILE_NAME ${PROJECT_BINARY_DIR}/lib/bsoncxx/v1/bsoncxx/config/export.hpp
             STATIC_DEFINE BSONCXX_STATIC
         )
 
         install(FILES
-            ${PROJECT_BINARY_DIR}/lib/bsoncxx/v_noabi/bsoncxx/config/export.hpp
-            DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/bsoncxx/v_noabi/bsoncxx/config
+            ${PROJECT_BINARY_DIR}/lib/bsoncxx/v1/bsoncxx/config/export.hpp
+            DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/bsoncxx/v1/bsoncxx/config
             COMPONENT dev
         )
     endfunction()

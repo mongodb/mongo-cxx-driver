@@ -17,6 +17,7 @@ list(APPEND bsoncxx_sources
     bsoncxx/v_noabi/bsoncxx/array/value.cpp
     bsoncxx/v_noabi/bsoncxx/array/view.cpp
     bsoncxx/v_noabi/bsoncxx/builder/core.cpp
+    bsoncxx/v_noabi/bsoncxx/config/export.cpp
     bsoncxx/v_noabi/bsoncxx/decimal128.cpp
     bsoncxx/v_noabi/bsoncxx/document/element.cpp
     bsoncxx/v_noabi/bsoncxx/document/value.cpp
@@ -30,6 +31,7 @@ list(APPEND bsoncxx_sources
     bsoncxx/v_noabi/bsoncxx/types/bson_value/value.cpp
     bsoncxx/v_noabi/bsoncxx/types/bson_value/view.cpp
     bsoncxx/v_noabi/bsoncxx/validate.cpp
+    bsoncxx/v1/bsoncxx/config/export.cpp
 )
 list(TRANSFORM bsoncxx_sources PREPEND "${CMAKE_CURRENT_SOURCE_DIR}/")
 set(bsoncxx_sources "${bsoncxx_sources}" PARENT_SCOPE)
@@ -69,6 +71,7 @@ set_dist_list(src_bsoncxx_lib_DIST
     bsoncxx/v_noabi/bsoncxx/array/view.cpp
     bsoncxx/v_noabi/bsoncxx/builder/core.cpp
     bsoncxx/v_noabi/bsoncxx/config/config.hpp.in
+    bsoncxx/v_noabi/bsoncxx/config/export.cpp
     bsoncxx/v_noabi/bsoncxx/config/private/config.hh.in
     bsoncxx/v_noabi/bsoncxx/config/private/postlude.hh
     bsoncxx/v_noabi/bsoncxx/config/private/prelude.hh
@@ -95,4 +98,5 @@ set_dist_list(src_bsoncxx_lib_DIST
     bsoncxx/v_noabi/bsoncxx/types/bson_value/view.cpp
     bsoncxx/v_noabi/bsoncxx/types/private/convert.hh
     bsoncxx/v_noabi/bsoncxx/validate.cpp
+    bsoncxx/v1/bsoncxx/config/export.cpp
 )

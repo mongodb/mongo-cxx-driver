@@ -43,6 +43,7 @@ set_dist_list(src_bsoncxx_include_DIST
     bsoncxx/v_noabi/bsoncxx/builder/stream/single_context.hpp
     bsoncxx/v_noabi/bsoncxx/builder/stream/value_context.hpp
     bsoncxx/v_noabi/bsoncxx/config/compiler.hpp
+    bsoncxx/v_noabi/bsoncxx/config/export.hpp
     bsoncxx/v_noabi/bsoncxx/config/postlude.hpp
     bsoncxx/v_noabi/bsoncxx/config/prelude.hpp
     bsoncxx/v_noabi/bsoncxx/decimal128.hpp

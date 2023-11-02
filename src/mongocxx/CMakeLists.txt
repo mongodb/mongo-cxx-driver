@@ -105,13 +105,13 @@ if(1)
             BASE_NAME MONGOCXX
             EXPORT_MACRO_NAME MONGOCXX_API
             NO_EXPORT_MACRO_NAME MONGOCXX_PRIVATE
-            EXPORT_FILE_NAME ${PROJECT_BINARY_DIR}/lib/mongocxx/v_noabi/mongocxx/config/export.hpp
+            EXPORT_FILE_NAME ${PROJECT_BINARY_DIR}/lib/mongocxx/v1/mongocxx/config/export.hpp
             STATIC_DEFINE MONGOCXX_STATIC
         )
 
         install(FILES
-            ${PROJECT_BINARY_DIR}/lib/mongocxx/v_noabi/mongocxx/config/export.hpp
-            DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/mongocxx/v_noabi/mongocxx/config
+            ${PROJECT_BINARY_DIR}/lib/mongocxx/v1/mongocxx/config/export.hpp
+            DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/mongocxx/v1/mongocxx/config
             COMPONENT dev
         )
     endfunction()
