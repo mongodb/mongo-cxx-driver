@@ -314,6 +314,9 @@ using is_bson_view_compatible = _traits::conjunction<
                                            _traits::is_alike<T, bson_value::value>>>>;
 
 template <typename T>
+using not_view = is_bson_view_compatible<T>;
+
+template <typename T>
 BSONCXX_INLINE _traits::requires_t<bool, is_bson_view_compatible<T>>  //
 operator==(const bson_value::view& lhs, T&& rhs) {
     return lhs == bson_value::view{std::forward<T>(rhs)};
