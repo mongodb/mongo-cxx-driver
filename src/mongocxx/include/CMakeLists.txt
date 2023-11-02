@@ -123,4 +123,6 @@ set_dist_list(src_mongocxx_include_DIST
     mongocxx/v_noabi/mongocxx/validation_criteria.hpp
     mongocxx/v_noabi/mongocxx/write_concern.hpp
     mongocxx/v_noabi/mongocxx/write_type.hpp
+    mongocxx/v1/mongocxx/config/postlude.hpp
+    mongocxx/v1/mongocxx/config/prelude.hpp
 )

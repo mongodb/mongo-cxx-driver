@@ -12,6 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+///
+/// @file mongocxx/v_noabi/mongocxx/config/prelude.hpp
+///
+/// Macro guard prelude header for mongocxx.
+///
+/// Guards config macros defined and used by v_noabi headers.
+///
+/// @note For backward compatibility, correct include of macro guard headers is not enforced (e.g.
+/// missing include of the postlude header prior to a another include of the prelude header).
+///
+/// @sa mongocxx/v1/mongocxx/config/prelude.hpp
+///
+/// @par Includes
+/// @li mongocxx/v_noabi/mongocxx/config/compiler.hpp
+/// @li mongocxx/v_noabi/mongocxx/config/config.hpp
+/// @li mongocxx/v_noabi/mongocxx/config/export.hpp
+/// @li mongocxx/v_noabi/mongocxx/config/version.hpp
+///
+
 // compiler.hpp
 #pragma push_macro("MONGOCXX_INLINE")
 #undef MONGOCXX_INLINE
@@ -67,12 +86,5 @@
 // Doxygen does not account for generated header files.
 // Document globally applicable macros and namespaces here.
 
-///
-/// @namespace mongocxx
-/// The top-level namespace for mongocxx library entities.
-///
-
-///
 /// @namespace mongocxx::v_noabi
 /// Entities declared in this namespace do not have a stable ABI.
-///

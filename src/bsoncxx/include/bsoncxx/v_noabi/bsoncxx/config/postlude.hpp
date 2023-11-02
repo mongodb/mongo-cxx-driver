@@ -12,6 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+///
+/// @file bsoncxx/v_noabi/bsoncxx/config/postlude.hpp
+///
+/// Macro guard postlude header for bsoncxx.
+///
+/// Guards config macros defined and used by v_noabi headers.
+///
+/// @sa bsoncxx/v1/bsoncxx/config/postlude.hpp
+///
+
 // compiler.hpp
 #undef BSONCXX_INLINE
 #pragma pop_macro("BSONCXX_INLINE")

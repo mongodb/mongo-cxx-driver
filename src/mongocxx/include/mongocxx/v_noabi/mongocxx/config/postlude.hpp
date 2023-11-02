@@ -12,6 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+///
+/// @file mongocxx/v_noabi/mongocxx/config/postlude.hpp
+///
+/// Macro guard postlude header for mongocxx.
+///
+/// Guards config macros defined and used by v_noabi headers.
+///
+/// @sa mongocxx/v1/mongocxx/config/postlude.hpp
+///
+
 // compiler.hpp
 #undef MONGOCXX_INLINE
 #pragma pop_macro("MONGOCXX_INLINE")

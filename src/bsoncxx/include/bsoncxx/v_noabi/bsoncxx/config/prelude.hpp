@@ -12,6 +12,25 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+///
+/// @file bsoncxx/v_noabi/bsoncxx/config/prelude.hpp
+///
+/// Macro guard prelude header for bsoncxx.
+///
+/// Guards config macros defined and used by v_noabi headers.
+///
+/// @note For backward compatibility, correct include of macro guard headers is not enforced (e.g.
+/// missing include of the postlude header prior to a another include of the prelude header).
+///
+/// @sa bsoncxx/v1/bsoncxx/config/prelude.hpp
+///
+/// @par Includes
+/// @li bsoncxx/v_noabi/bsoncxx/config/compiler.hpp
+/// @li bsoncxx/v_noabi/bsoncxx/config/config.hpp
+/// @li bsoncxx/v_noabi/bsoncxx/config/export.hpp
+/// @li bsoncxx/v_noabi/bsoncxx/config/version.hpp
+///
+
 // compiler.hpp
 #pragma push_macro("BSONCXX_INLINE")
 #undef BSONCXX_INLINE
@@ -76,17 +95,8 @@
 // Doxygen does not account for generated header files.
 // Document globally applicable macros and namespaces here.
 
-///
-/// @namespace bsoncxx
-/// The top-level namespace for bsoncxx library entities.
-///
-
-///
 /// @namespace bsoncxx::v_noabi
 /// Entities declared in this namespace do not have a stable ABI.
-///
 
-///
 /// @namespace bsoncxx::v_noabi::stdx
 /// Declares polyfills for C++17 forward compatibility.
-///
