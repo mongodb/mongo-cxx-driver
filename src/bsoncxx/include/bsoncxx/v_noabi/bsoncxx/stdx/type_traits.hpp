@@ -78,7 +78,7 @@ template <typename...>
 struct mp_list;
 
 /// ## Implementation of the C++11 detection idiom
-namespace tt_detail {
+namespace detail {
 
 // Implementation of detection idiom for is_detected: true case
 template <
@@ -93,7 +93,7 @@ template <
 std::true_type is_detected_f(mp_list<Args...>*);
 
 // Failure case for is_detected. Because this function takes an elipsis, this is
-// less preferred that the above overload that accepts a pointer type directly.
+// less preferred than the above overload that accepts a pointer type directly.
 template <bsoncxx_ttparam Oper, typename... Args>
 std::false_type is_detected_f(...);
 
@@ -116,7 +116,7 @@ struct detection<true> {
     using f = Oper<Args...>;
 };
 
-}  // namespace tt_detail
+}  // namespace detail
 
 /**
  * @brief The type yielded by detected_t if the given type operator does not
@@ -133,7 +133,7 @@ struct nonesuch;
  */
 template <template <class...> class Oper, typename... Args>
 struct is_detected
-    : decltype(tt_detail::is_detected_f<Oper>(static_cast<mp_list<Args...>*>(nullptr))) {};
+    : decltype(detail::is_detected_f<Oper>(static_cast<mp_list<Args...>*>(nullptr))) {};
 
 /**
  * @brief If Oper<Args...> evaluates to a type, yields that type. Otherwise, yields
@@ -144,8 +144,8 @@ struct is_detected
  * @tparam Args The arguments to give to the Oper metafunction
  */
 template <typename Dflt, template <class...> class Oper, typename... Args>
-using detected_or = typename tt_detail::detection<
-    is_detected<Oper, Args...>::value>::template f<Dflt, Oper, Args...>;
+using detected_or =
+    typename detail::detection<is_detected<Oper, Args...>::value>::template f<Dflt, Oper, Args...>;
 
 /**
  * @brief If Oper<Args...> evaluates to a type, yields that type. Otherwise, yields
@@ -163,7 +163,7 @@ using detected_t = detected_or<nonesuch, Oper, Args...>;
  * Separating the boolean from the type arguments results in significant speedup to compilation
  * due to type memoization
  */
-namespace tt_detail {
+namespace detail {
 
 template <bool B>
 struct conditional {
@@ -177,7 +177,7 @@ struct conditional<false> {
     using f = IfFalse;
 };
 
-}  // namespace tt_detail
+}  // namespace detail
 
 /**
  * @brief Pick one of two types based on a boolean
@@ -187,10 +187,10 @@ struct conditional<false> {
  * @tparam F If `B` is false, pick this type
  */
 template <bool B, typename T, typename F>
-using conditional_t = typename tt_detail::conditional<B>::template f<T, F>;
+using conditional_t = typename detail::conditional<B>::template f<T, F>;
 
 // impl for conjunction+disjunction
-namespace tt_detail {
+namespace detail {
 
 template <typename FalseType, typename Opers>
 struct conj;
@@ -222,7 +222,7 @@ struct disj<std::true_type, mp_list<H>> : H {};
 template <>
 struct disj<std::true_type, mp_list<>> : std::false_type {};
 
-}  // namespace tt_detail
+}  // namespace detail
 
 /**
  * @brief inherits unambiguously from the first of `Ts...` for which
@@ -233,7 +233,7 @@ struct disj<std::true_type, mp_list<>> : std::false_type {};
  * If any of `Ts::value == false`, then no subsequent `Ts::value` will be instantiated.
  */
 template <typename... Cond>
-struct conjunction : tt_detail::conj<std::false_type, mp_list<Cond...>> {};
+struct conjunction : detail::conj<std::false_type, mp_list<Cond...>> {};
 
 /**
  * @brief Inherits unambiguous from the first of `Ts...` where `Ts::value` is `true`,
@@ -244,7 +244,7 @@ struct conjunction : tt_detail::conj<std::false_type, mp_list<Cond...>> {};
  * If any of `Ts::value == true`, then no subsequent `Ts::value` will be instantiated.
  */
 template <typename... Cond>
-struct disjunction : tt_detail::disj<std::true_type, mp_list<Cond...>> {};
+struct disjunction : detail::disj<std::true_type, mp_list<Cond...>> {};
 
 /**
  * @brief Given a boolean type trait, returns a type trait which is the logical negation thereof
