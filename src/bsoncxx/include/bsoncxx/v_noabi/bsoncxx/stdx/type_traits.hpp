@@ -343,7 +343,7 @@ static constexpr struct invoke_fn {
  * @tparam Args The arguments to apply
  */
 template <typename F, typename... Args>
-using invoke_result_t = decltype(stdx::invoke(std::declval<F>(), std::declval<Args>()...));
+using invoke_result_t = decltype(_traits::invoke(std::declval<F>(), std::declval<Args>()...));
 
 /**
  * @brief Trait type to detect if the given object can be "invoked" using the given arguments.
