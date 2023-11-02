@@ -40,6 +40,9 @@ DECL_ALIAS(add_lvalue_reference);
 DECL_ALIAS(add_rvalue_reference);
 #pragma pop_macro("DECL_ALIAS")
 
+template <typename... Ts>
+using common_type_t = type_t<std::common_type<Ts...>>;
+
 /**
  * @brief Remove top-level const+volatile+reference qualifiers from the given type.
  */
@@ -95,12 +98,12 @@ template <bsoncxx_ttparam Oper, typename... Args>
 std::false_type is_detected_f(...);
 
 // Provides the detected_or impl
-template <typename IsDetected>
+template <bool IsDetected>
 struct detection;
 
 // Non-detected case:
 template <>
-struct detection<std::false_type> {
+struct detection<false> {
     // We just return the default, since the metafunction will not apply
     template <typename Default, bsoncxx_ttparam, typename...>
     using f = Default;
@@ -108,7 +111,7 @@ struct detection<std::false_type> {
 
 // Detected case:
 template <>
-struct detection<std::true_type> {
+struct detection<true> {
     template <typename, bsoncxx_ttparam Oper, typename... Args>
     using f = Oper<Args...>;
 };
@@ -129,8 +132,8 @@ struct nonesuch;
  * @tparam Args Some number of arguments to apply to Oper
  */
 template <template <class...> class Oper, typename... Args>
-using is_detected =
-    decltype(tt_detail::is_detected_f<Oper>(static_cast<mp_list<Args...>*>(nullptr)));
+struct is_detected
+    : decltype(tt_detail::is_detected_f<Oper>(static_cast<mp_list<Args...>*>(nullptr))) {};
 
 /**
  * @brief If Oper<Args...> evaluates to a type, yields that type. Otherwise, yields
@@ -141,8 +144,8 @@ using is_detected =
  * @tparam Args The arguments to give to the Oper metafunction
  */
 template <typename Dflt, template <class...> class Oper, typename... Args>
-using detected_or =
-    typename tt_detail::detection<is_detected<Oper, Args...>>::template f<Dflt, Oper, Args...>;
+using detected_or = typename tt_detail::detection<
+    is_detected<Oper, Args...>::value>::template f<Dflt, Oper, Args...>;
 
 /**
  * @brief If Oper<Args...> evaluates to a type, yields that type. Otherwise, yields
@@ -260,6 +263,52 @@ struct negation : bool_constant<!T::value> {};
 template <typename...>
 using true_t = std::true_type;
 
+namespace requires_detail {
+
+template <typename R>
+R norm_conjunction(...);
+
+template <typename R, typename... Cs>
+conjunction<Cs...> norm_conjunction(const conjunction<Cs...>&);
+
+template <typename T>
+using norm_conjunction_t = decltype(norm_conjunction<T>(std::declval<const T&>()));
+
+template <typename Constraint, typename = void>
+struct requirement;
+
+template <typename FailingRequirement>
+struct failed_requirement {
+    failed_requirement(int) = delete;
+
+    template <typename T>
+    static T explain(failed_requirement);
+};
+
+template <typename... SubRequirements>
+struct failed_requirement<conjunction<SubRequirements...>> {
+    failed_requirement(int) = delete;
+
+    template <typename T>
+    static auto explain(int)
+        -> common_type_t<decltype(requirement<SubRequirements>::test::template explain<T>(0))...>;
+};
+
+template <typename Constraint, typename>
+struct requirement {
+    using test = failed_requirement<requires_detail::norm_conjunction_t<Constraint>>;
+};
+
+template <typename Constraint>
+struct requirement<Constraint, enable_if_t<Constraint::value>> {
+    struct test {
+        template <typename T>
+        static T explain(int);
+    };
+};
+
+}  // namespace requires_detail
+
 /**
  * @brief If none of `Ts::value is 'false'`, yields the type `Type`, otherwise
  * this type is undefined.
@@ -270,7 +319,14 @@ using true_t = std::true_type;
  * @tparam Traits A list of type traits with nested ::value members
  */
 template <typename Type, typename... Traits>
+#if defined _MSC_VER && _MSC_VER < 1910
+// VS 2015 has trouble with expression SFINAE.
 using requires_t = enable_if_t<conjunction<Traits...>::value, Type>;
+#else
+// Generates better error messages in case of substitution failure than a plain enable_if_t:
+using requires_t =
+    decltype(requires_detail::requirement<conjunction<Traits...>>::test::template explain<Type>(0));
+#endif
 
 /**
  * @brief If any of `Ts::value` is 'true', this type is undefined, otherwise
@@ -349,7 +405,12 @@ using invoke_result_t = decltype(_traits::invoke(std::declval<F>(), std::declval
  * @tparam Args The arguments to match against
  */
 template <typename Fun, typename... Args>
+#if defined(_MSC_VER) && _MSC_VER < 1910
 using is_invocable = is_detected<invoke_result_t, Fun, Args...>;
+#else
+struct is_invocable : is_detected<invoke_result_t, Fun, Args...> {
+};
+#endif
 
 /**
  * @brief Trait detects whether the given types are the same after the removal
