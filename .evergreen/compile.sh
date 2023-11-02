@@ -13,7 +13,7 @@ set -o pipefail
 
 : "${branch_name:?}"
 : "${build_type:?}"
-: "${distro_id:?}"
+: "${distro_id:?}" # Required by find-cmake-latest.sh.
 
 : "${COMPILE_MACRO_GUARD_TESTS:-}"
 : "${ENABLE_CODE_COVERAGE:-}"

@@ -11,7 +11,7 @@ set -o pipefail
 : "${cse_azure_tenant_id:?}"
 : "${cse_gcp_email:?}"
 : "${cse_gcp_privatekey:?}"
-: "${distro_id:?}"
+: "${distro_id:?}" # Required by find-cmake-latest.sh.
 
 : "${CRYPT_SHARED_LIB_PATH:-}"
 : "${disable_slow_tests:-}"
