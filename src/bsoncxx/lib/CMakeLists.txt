@@ -18,6 +18,7 @@ list(APPEND bsoncxx_sources
     bsoncxx/v_noabi/bsoncxx/array/view.cpp
     bsoncxx/v_noabi/bsoncxx/builder/core.cpp
     bsoncxx/v_noabi/bsoncxx/config/export.cpp
+    bsoncxx/v_noabi/bsoncxx/config/version.cpp
     bsoncxx/v_noabi/bsoncxx/decimal128.cpp
     bsoncxx/v_noabi/bsoncxx/document/element.cpp
     bsoncxx/v_noabi/bsoncxx/document/value.cpp
@@ -32,6 +33,7 @@ list(APPEND bsoncxx_sources
     bsoncxx/v_noabi/bsoncxx/types/bson_value/view.cpp
     bsoncxx/v_noabi/bsoncxx/validate.cpp
     bsoncxx/v1/bsoncxx/config/export.cpp
+    bsoncxx/v1/bsoncxx/config/version.cpp
 )
 list(TRANSFORM bsoncxx_sources PREPEND "${CMAKE_CURRENT_SOURCE_DIR}/")
 set(bsoncxx_sources "${bsoncxx_sources}" PARENT_SCOPE)
@@ -52,14 +54,19 @@ if(1)
     )
 
     configure_file(
-        bsoncxx/v_noabi/bsoncxx/config/version.hpp.in
-        bsoncxx/v_noabi/bsoncxx/config/version.hpp
+        bsoncxx/v1/bsoncxx/config/version.hpp.in
+        bsoncxx/v1/bsoncxx/config/version.hpp
     )
 
     install(FILES
         ${CMAKE_CURRENT_BINARY_DIR}/bsoncxx/v_noabi/bsoncxx/config/config.hpp
-        ${CMAKE_CURRENT_BINARY_DIR}/bsoncxx/v_noabi/bsoncxx/config/version.hpp
         DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/bsoncxx/v_noabi/bsoncxx/config
+        COMPONENT dev
+    )
+
+    install(FILES
+        ${CMAKE_CURRENT_BINARY_DIR}/bsoncxx/v1/bsoncxx/config/version.hpp
+        DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/bsoncxx/v1/bsoncxx/config
         COMPONENT dev
     )
 endif()
@@ -75,7 +82,7 @@ set_dist_list(src_bsoncxx_lib_DIST
     bsoncxx/v_noabi/bsoncxx/config/private/config.hh.in
     bsoncxx/v_noabi/bsoncxx/config/private/postlude.hh
     bsoncxx/v_noabi/bsoncxx/config/private/prelude.hh
-    bsoncxx/v_noabi/bsoncxx/config/version.hpp.in
+    bsoncxx/v_noabi/bsoncxx/config/version.cpp
     bsoncxx/v_noabi/bsoncxx/decimal128.cpp
     bsoncxx/v_noabi/bsoncxx/document/element.cpp
     bsoncxx/v_noabi/bsoncxx/document/value.cpp
@@ -99,4 +106,6 @@ set_dist_list(src_bsoncxx_lib_DIST
     bsoncxx/v_noabi/bsoncxx/types/private/convert.hh
     bsoncxx/v_noabi/bsoncxx/validate.cpp
     bsoncxx/v1/bsoncxx/config/export.cpp
+    bsoncxx/v1/bsoncxx/config/version.cpp
+    bsoncxx/v1/bsoncxx/config/version.hpp.in
 )

@@ -30,6 +30,7 @@ set_dist_list(src_mongocxx_include_DIST
     mongocxx/v_noabi/mongocxx/config/export.hpp
     mongocxx/v_noabi/mongocxx/config/postlude.hpp
     mongocxx/v_noabi/mongocxx/config/prelude.hpp
+    mongocxx/v_noabi/mongocxx/config/version.hpp
     mongocxx/v_noabi/mongocxx/cursor.hpp
     mongocxx/v_noabi/mongocxx/database.hpp
     mongocxx/v_noabi/mongocxx/events/command_failed_event.hpp
