@@ -56,6 +56,103 @@ variables:
 #######################################
 
 functions:
+    "abi-compliance-check":
+        - command: subprocess.exec
+          type: setup
+          params:
+            binary: bash
+            args: [mongo-cxx-driver/.evergreen/abi-compliance-check-setup.sh]
+        - command: subprocess.exec
+          type: test
+          params:
+            binary: bash
+            args: [mongo-cxx-driver/.evergreen/abi-compliance-check-test.sh]
+        - command: s3.put
+          type: system
+          params:
+            aws_key: ${aws_key}
+            aws_secret: ${aws_secret}
+            bucket: mciuploads
+            content_type: text/html
+            display_name: "ABI Compliance Check (Stable): "
+            local_files_include_filter: cxx-abi/compat_reports/**/compat_report.html
+            permissions: public-read
+            remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${execution}/abi-compliance-check/abi/
+        - command: s3.put
+          type: system
+          params:
+            aws_key: ${aws_key}
+            aws_secret: ${aws_secret}
+            bucket: mciuploads
+            content_type: text/plain
+            display_name: "ABI Compliance Check (Stable): "
+            local_files_include_filter: cxx-abi/logs/**/log.txt
+            permissions: public-read
+            remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${execution}/abi-compliance-check/abi/
+        - command: s3.put
+          type: system
+          params:
+            aws_key: ${aws_key}
+            aws_secret: ${aws_secret}
+            bucket: mciuploads
+            content_type: text/html
+            display_name: "ABI Compliance Check (Unstable): "
+            local_files_include_filter: cxx-noabi/compat_reports/**/compat_report.html
+            permissions: public-read
+            remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${execution}/abi-compliance-check/noabi/
+        - command: s3.put
+          type: system
+          params:
+            aws_key: ${aws_key}
+            aws_secret: ${aws_secret}
+            bucket: mciuploads
+            content_type: text/plain
+            display_name: "ABI Compliance Check (Unstable): "
+            local_files_include_filter: cxx-noabi/logs/**/log.txt
+            permissions: public-read
+            remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${execution}/abi-compliance-check/noabi/
+
+    "abidiff":
+        - command: subprocess.exec
+          type: setup
+          params:
+            binary: bash
+            args: [mongo-cxx-driver/.evergreen/abidiff-setup.sh]
+        - command: subprocess.exec
+          type: test
+          params:
+            binary: bash
+            args: [mongo-cxx-driver/.evergreen/abidiff-test.sh]
+        - command: s3.put
+          type: system
+          params:
+            aws_key: ${aws_key}
+            aws_secret: ${aws_secret}
+            bucket: mciuploads
+            content_type: text/plain
+            display_name: "abidiff (Stable): "
+            local_files_include_filter: cxx-abi/*.txt
+            permissions: public-read
+            remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${execution}/abidiff/abi/
+        - command: s3.put
+          type: system
+          params:
+            aws_key: ${aws_key}
+            aws_secret: ${aws_secret}
+            bucket: mciuploads
+            content_type: text/plain
+            display_name: "abidiff (Unstable): "
+            local_files_include_filter: cxx-noabi/*.txt
+            permissions: public-read
+            remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${execution}/abidiff/noabi/
+
+    "abi-prohibited-symbols":
+        - command: subprocess.exec
+          type: test
+          params:
+            binary: bash
+            args: [mongo-cxx-driver/.evergreen/abi-prohibited-symbols-test.sh]
+
     "setup":
         - command: shell.exec
           params:
@@ -563,6 +660,22 @@ post:
 #######################################
 
 tasks:
+    - name: abi-compliance-check
+      tags: ["abi-stability", "abi-compliance-check"]
+      run_on: "ubuntu2204-large"
+      commands:
+        - func: "abi-compliance-check"
+    - name: abidiff
+      tags: ["abi-stability", "abidiff"]
+      run_on: "ubuntu2204-large"
+      commands:
+        - func: "abidiff"
+    - name: abi-prohibited-symbols
+      tags: ["abi-stability", "abi-prohibited-symbols"]
+      run_on: "ubuntu2204-large"
+      commands:
+        - func: "abi-prohibited-symbols"
+
     - name: lint
       run_on: ubuntu1804-large
       commands:
@@ -987,6 +1100,27 @@ tasks:
               ./build/src/mongocxx/test/test_driver "atlas search indexes prose tests"
 
 task_groups:
+  - name: tg-abi-stability
+    max_hosts: -1
+    setup_task_can_fail_task: true
+    setup_task:
+      - command: git.get_project
+        params:
+          directory: "mongo-cxx-driver"
+      - func: install_c_driver
+      - command: subprocess.exec
+        params:
+          binary: bash
+          args: [mongo-cxx-driver/.evergreen/abi-stability-setup.sh]
+          include_expansions_in_env: [cxx_standard]
+    tasks: [".abi-stability"]
+    teardown_task_can_fail_task: true
+    teardown_task:
+      - command: subprocess.exec
+        params:
+          binary: bash
+          args: [-c, rm -rf *]
+
   - name: test_atlas_task_group_search_indexes
     setup_group:
       - func: "setup"
@@ -1023,6 +1157,29 @@ task_groups:
 #######################################
 
 buildvariants:
+    ##########################
+    #  ABI Stability Checks  #
+    ##########################
+    - name: abi-stability-polyfill
+      display_name: "ABI Stability Checks (polyfill)"
+      expansions:
+        cxx_standard: 11 # Use a polyfill library.
+      tasks:
+        - "tg-abi-stability"
+      display_tasks:
+        - name: "ABI Stability Checks (polyfill)"
+          execution_tasks: [".abi-stability"]
+
+    - name: abi-stability-stdlib
+      display_name: "ABI Stability Checks (stdlib)"
+      expansions:
+        cxx_standard: 17 # Use the stdlib.
+      tasks:
+        - "tg-abi-stability"
+      display_tasks:
+        - name: "ABI Stability Checks (stdlib)"
+          execution_tasks: [".abi-stability"]
+
     #######################################
     #  Standard MongoDB Integration Tests #
     #######################################
