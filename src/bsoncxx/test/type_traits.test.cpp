@@ -89,7 +89,7 @@ constexpr check_cases<  //
 constexpr assert_same<std::true_type, tt::bool_constant<true>> t;
 constexpr assert_same<std::false_type, tt::bool_constant<false>> f;
 
-static_assert(tt::is_detected<tt::remove_cvref_t, int>::value, "huh");
+static_assert(tt::is_detected<tt::remove_cvref_t, int>::value, "fail");
 
 template <typename T>
 struct hard_error {
