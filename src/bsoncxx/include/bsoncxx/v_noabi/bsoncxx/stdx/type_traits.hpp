@@ -260,9 +260,6 @@ struct negation : bool_constant<!T::value> {};
 template <typename...>
 using true_t = std::true_type;
 
-template <typename R, typename B, enable_if_t<B::value, int> = 0>
-R _requires_f(B);
-
 /**
  * @brief If none of `Ts::value is 'false'`, yields the type `Type`, otherwise
  * this type is undefined.
@@ -273,7 +270,7 @@ R _requires_f(B);
  * @tparam Traits A list of type traits with nested ::value members
  */
 template <typename Type, typename... Traits>
-using requires_t = decltype(_requires_f<Type>(conjunction<Traits...>{}));
+using requires_t = enable_if_t<conjunction<Traits...>::value, Type>;
 
 /**
  * @brief If any of `Ts::value` is 'true', this type is undefined, otherwise
