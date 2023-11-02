@@ -159,11 +159,7 @@ else
   export MONGOCXX_TEST_GCP_PRIVATEKEY="${cse_gcp_privatekey:?}"
 
   set -o errexit
-fi
 
-if [ "$(uname -m)" == "ppc64le" ]; then
-  echo "Skipping CSFLE test setup (CDRIVER-4246/CXX-2423)"
-else
   # Register CA certificate required by KMS TLS connections.
   echo "Registering CA certificate for KMS TLS tests..."
   register_ca_cert() {
