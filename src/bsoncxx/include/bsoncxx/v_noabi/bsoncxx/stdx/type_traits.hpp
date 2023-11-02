@@ -319,7 +319,7 @@ struct requirement<Constraint, enable_if_t<Constraint::value>> {
  * @tparam Traits A list of type traits with nested ::value members
  */
 template <typename Type, typename... Traits>
-#if defined _MSC_VER && _MSC_VER < 1910
+#if defined _MSC_VER && _MSC_VER < 1920
 // VS 2015 has trouble with expression SFINAE.
 using requires_t = enable_if_t<conjunction<Traits...>::value, Type>;
 #else
