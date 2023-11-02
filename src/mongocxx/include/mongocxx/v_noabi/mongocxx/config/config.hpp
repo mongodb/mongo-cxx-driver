@@ -12,11 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#cmakedefine BSONCXX_POLY_USE_STD_EXPERIMENTAL
-#cmakedefine BSONCXX_POLY_USE_MNMLSTC
-#cmakedefine BSONCXX_POLY_USE_SYSTEM_MNMLSTC
-#cmakedefine BSONCXX_POLY_USE_BOOST
-#cmakedefine BSONCXX_POLY_USE_STD
+///
+/// @file mongocxx/v_noabi/mongocxx/config/config.hpp
+///
+/// Remains for backward compatibility.
+///
 
-#define BSONCXX_INLINE_NAMESPACE_BEGIN inline namespace v_noabi {
-#define BSONCXX_INLINE_NAMESPACE_END }  // namespace v_noabi
+///
+/// Begins the declaration of entities in the unstable ABI namespace `v_noabi`.
+/// @deprecated This macro is no longer used to declare the `v_noabi` namespace.
+///
+#define MONGOCXX_INLINE_NAMESPACE_BEGIN inline namespace v_noabi {
+///
+/// Ends the declaration of entities in the unstable ABI namespace `v_noabi`.
+/// @deprecated This macro is no longer used to declare the `v_noabi` namespace.
+///
+#define MONGOCXX_INLINE_NAMESPACE_END }  // namespace v_noabi
