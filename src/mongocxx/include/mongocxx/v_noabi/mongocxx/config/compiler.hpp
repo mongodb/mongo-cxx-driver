@@ -12,23 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// TODO: DRY this definition with the one from bsoncxx/config/compiler.hpp per discussion
-//       here - https://github.com/mongodb/mongo-cxx-driver/pull/374#issuecomment-158179295
-#if defined(_MSC_VER)
+///
+/// @file mongocxx/v_noabi/mongocxx/config/compiler.hpp
+///
+/// Remains for backward compatibility.
+///
+/// @par Includes
+/// @li mongocxx/v1/mongocxx/config/compiler.hpp
+///
 
-// Disable MSVC warnings that cause a lot of noise related to DLL visibility
-// for types that we don't control (like std::unique_ptr).
-#pragma warning(push)
-#pragma warning(disable : 4251 4275)
-
-#define MONGOCXX_INLINE inline MONGOCXX_PRIVATE
-
-#define MONGOCXX_CALL __cdecl
-
-#else
-
-#define MONGOCXX_INLINE inline MONGOCXX_PRIVATE
-
-#define MONGOCXX_CALL
-
-#endif
+#include <mongocxx/v1/mongocxx/config/compiler.hpp>

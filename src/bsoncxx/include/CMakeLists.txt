@@ -73,6 +73,7 @@ set_dist_list(src_bsoncxx_include_DIST
     bsoncxx/v_noabi/bsoncxx/util/functor.hpp
     bsoncxx/v_noabi/bsoncxx/validate.hpp
     bsoncxx/v_noabi/bsoncxx/view_or_value.hpp
+    bsoncxx/v1/bsoncxx/config/compiler.hpp
     bsoncxx/v1/bsoncxx/config/postlude.hpp
     bsoncxx/v1/bsoncxx/config/prelude.hpp
 )

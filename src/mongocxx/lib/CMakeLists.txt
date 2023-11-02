@@ -20,6 +20,7 @@ list(APPEND mongocxx_sources
     mongocxx/v_noabi/mongocxx/client_session.cpp
     mongocxx/v_noabi/mongocxx/collection.cpp
     mongocxx/v_noabi/mongocxx/cursor.cpp
+    mongocxx/v_noabi/mongocxx/config/compiler.cpp
     mongocxx/v_noabi/mongocxx/config/export.cpp
     mongocxx/v_noabi/mongocxx/config/version.cpp
     mongocxx/v_noabi/mongocxx/database.cpp
@@ -108,6 +109,7 @@ list(APPEND mongocxx_sources
     mongocxx/v_noabi/mongocxx/uri.cpp
     mongocxx/v_noabi/mongocxx/validation_criteria.cpp
     mongocxx/v_noabi/mongocxx/write_concern.cpp
+    mongocxx/v1/mongocxx/config/compiler.cpp
     mongocxx/v1/mongocxx/config/export.cpp
     mongocxx/v1/mongocxx/config/version.cpp
 )
@@ -156,6 +158,7 @@ set_dist_list(src_mongocxx_lib_DIST
     mongocxx/v_noabi/mongocxx/client_session.cpp
     mongocxx/v_noabi/mongocxx/client.cpp
     mongocxx/v_noabi/mongocxx/collection.cpp
+    mongocxx/v_noabi/mongocxx/config/compiler.cpp
     mongocxx/v_noabi/mongocxx/config/config.cpp
     mongocxx/v_noabi/mongocxx/config/export.cpp
     mongocxx/v_noabi/mongocxx/config/private/config.hh.in
@@ -282,6 +285,7 @@ set_dist_list(src_mongocxx_lib_DIST
     mongocxx/v_noabi/mongocxx/uri.cpp
     mongocxx/v_noabi/mongocxx/validation_criteria.cpp
     mongocxx/v_noabi/mongocxx/write_concern.cpp
+    mongocxx/v1/mongocxx/config/compiler.cpp
     mongocxx/v1/mongocxx/config/export.cpp
     mongocxx/v1/mongocxx/config/version.cpp
     mongocxx/v1/mongocxx/config/version.hpp.in

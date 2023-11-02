@@ -1,4 +1,4 @@
-// Copyright 2015 MongoDB Inc.
+// Copyright 2023 MongoDB Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,13 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-///
-/// @file bsoncxx/v_noabi/bsoncxx/config/compiler.hpp
-///
-/// Remains for backward compatibility.
-///
-/// @par Includes
-/// @li bsoncxx/v1/bsoncxx/config/compiler.hpp
-///
+#include <mongocxx/v1/mongocxx/config/compiler.hpp>
 
-#include <bsoncxx/v1/bsoncxx/config/compiler.hpp>
+#if !defined(MONGOCXX_INLINE)
+#error "MONGOCXX_INLINE is not defined!"
+#endif
+
+#if !defined(MONGOCXX_CALL)
+#error "MONGOCXX_CALL is not defined!"
+#endif

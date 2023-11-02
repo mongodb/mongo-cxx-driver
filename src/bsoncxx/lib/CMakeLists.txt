@@ -17,6 +17,7 @@ list(APPEND bsoncxx_sources
     bsoncxx/v_noabi/bsoncxx/array/value.cpp
     bsoncxx/v_noabi/bsoncxx/array/view.cpp
     bsoncxx/v_noabi/bsoncxx/builder/core.cpp
+    bsoncxx/v_noabi/bsoncxx/config/compiler.cpp
     bsoncxx/v_noabi/bsoncxx/config/config.cpp
     bsoncxx/v_noabi/bsoncxx/config/export.cpp
     bsoncxx/v_noabi/bsoncxx/config/version.cpp
@@ -33,6 +34,7 @@ list(APPEND bsoncxx_sources
     bsoncxx/v_noabi/bsoncxx/types/bson_value/value.cpp
     bsoncxx/v_noabi/bsoncxx/types/bson_value/view.cpp
     bsoncxx/v_noabi/bsoncxx/validate.cpp
+    bsoncxx/v1/bsoncxx/config/compiler.cpp
     bsoncxx/v1/bsoncxx/config/config.cpp
     bsoncxx/v1/bsoncxx/config/export.cpp
     bsoncxx/v1/bsoncxx/config/version.cpp
@@ -74,6 +76,7 @@ set_dist_list(src_bsoncxx_lib_DIST
     bsoncxx/v_noabi/bsoncxx/array/value.cpp
     bsoncxx/v_noabi/bsoncxx/array/view.cpp
     bsoncxx/v_noabi/bsoncxx/builder/core.cpp
+    bsoncxx/v_noabi/bsoncxx/config/compiler.cpp
     bsoncxx/v_noabi/bsoncxx/config/config.cpp
     bsoncxx/v_noabi/bsoncxx/config/export.cpp
     bsoncxx/v_noabi/bsoncxx/config/private/config.hh.in
@@ -102,6 +105,7 @@ set_dist_list(src_bsoncxx_lib_DIST
     bsoncxx/v_noabi/bsoncxx/types/bson_value/view.cpp
     bsoncxx/v_noabi/bsoncxx/types/private/convert.hh
     bsoncxx/v_noabi/bsoncxx/validate.cpp
+    bsoncxx/v1/bsoncxx/config/compiler.cpp
     bsoncxx/v1/bsoncxx/config/config.cpp
     bsoncxx/v1/bsoncxx/config/config.hpp.in
     bsoncxx/v1/bsoncxx/config/export.cpp
