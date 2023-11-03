@@ -107,13 +107,11 @@ std::unique_ptr<T> make_unique(std::size_t count) {
 
 /// Equivalent to `std::make_unique_for_overwrite<T>()` where `T` is a non-array type.
 template <typename T,
-          typename... Args,
           typename Impl = detail::make_unique_impl<T>,
           typename std::enable_if<!std::is_array<T>::value,
-                                  decltype(Impl::make(std::false_type{}, std::declval<Args>()...),
-                                           void())>::type* = nullptr>
-std::unique_ptr<T> make_unique_for_overwrite(Args&&... args) {
-    return Impl::make(std::false_type{}, std::forward<Args>(args)...);
+                                  decltype(Impl::make(std::false_type{}), void())>::type* = nullptr>
+std::unique_ptr<T> make_unique_for_overwrite() {
+    return Impl::make(std::false_type{});
 }
 
 /// Equivalent to `std::make_unique_for_overwrite<T>(count)` where `T` is an array type.
