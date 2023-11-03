@@ -363,6 +363,13 @@ DEBEMAIL='my-email@mongodb.com' DEBFULLNAME='FIRSTNAME LASTNAME' dch -v VERSION
 - Make any other necessary changes to the Debian packaging components
   (e.g., update to standards version, dependencies, descriptions, etc.) and make
   relevant entries in `debian/changelog` as needed
+- If this release fixes any Debian bugs that are tracked in the Debian bug
+  tracking system (links below in [Post Build](#post-build)), then note that
+  the bug is closed with this release in `debian/changelog`, for example:
+```
+  * New upstream release (Closes: #1042682)
+```
+
 - Use `git add` to stage the changed files for commit (only files in the
   `debian/` directory should be committed), then commit them (the `debcommit`
   utility is helpful here). A common commit message for this stage is:
