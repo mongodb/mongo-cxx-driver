@@ -5,8 +5,7 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-
-BSONCXX_INLINE_NAMESPACE_BEGIN
+inline namespace v_noabi {
 namespace detail {
 
 #define bsoncxx_ttparam \
@@ -423,7 +422,7 @@ struct is_alike : std::is_same<remove_cvref_t<T>, remove_cvref_t<U>> {};
 
 }  // namespace detail
 
-BSONCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 
 }  // namespace bsoncxx
 
