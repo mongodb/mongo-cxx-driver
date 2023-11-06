@@ -19,6 +19,8 @@
 #include <type_traits>
 #include <utility>
 
+#include "./type_traits.hpp"
+
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {

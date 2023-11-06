@@ -27,25 +27,25 @@ namespace basic {
 namespace impl {
 
 template <typename T>
-BSONCXX_INLINE _traits::requires_t<void, _traits::is_invocable<T, sub_document>>  //
+BSONCXX_INLINE detail::requires_t<void, detail::is_invocable<T, sub_document>>  //
 generic_append(core* core, T&& func) {
     core->open_document();
-    _traits::invoke(std::forward<T>(func), sub_document(core));
+    detail::invoke(std::forward<T>(func), sub_document(core));
     core->close_document();
 }
 
 template <typename T, typename Placeholder = void>  // placeholder 'void' for VS2015 compat
-BSONCXX_INLINE _traits::requires_t<void, _traits::is_invocable<T, sub_array>>  //
+BSONCXX_INLINE detail::requires_t<void, detail::is_invocable<T, sub_array>>  //
 generic_append(core* core, T&& func) {
     core->open_array();
-    _traits::invoke(std::forward<T>(func), sub_array(core));
+    detail::invoke(std::forward<T>(func), sub_array(core));
     core->close_array();
 }
 
 template <typename T, typename = void, typename = void>
-BSONCXX_INLINE _traits::requires_not_t<void,  //
-                                       _traits::is_invocable<T, sub_document>,
-                                       _traits::is_invocable<T, sub_array>>
+BSONCXX_INLINE detail::requires_not_t<void,  //
+                                      detail::is_invocable<T, sub_document>,
+                                      detail::is_invocable<T, sub_array>>
 generic_append(core* core, T&& t) {
     core->append(std::forward<T>(t));
 }

@@ -7,7 +7,8 @@
 namespace bsoncxx {
 
 BSONCXX_INLINE_NAMESPACE_BEGIN
-namespace _traits {
+namespace detail {
+
 #define bsoncxx_ttparam \
     template <class...> \
     class
@@ -78,7 +79,7 @@ template <typename...>
 struct mp_list;
 
 /// ## Implementation of the C++11 detection idiom
-namespace detail {
+namespace impl_detection {
 
 // Implementation of detection idiom for is_detected: true case
 template <
@@ -116,13 +117,17 @@ struct detection<true> {
     using f = Oper<Args...>;
 };
 
-}  // namespace detail
+}  // namespace impl_detection
 
 /**
  * @brief The type yielded by detected_t if the given type operator does not
  * yield a type.
  */
-struct nonesuch;
+struct nonesuch {
+    ~nonesuch() = delete;
+    nonesuch(nonesuch const&) = delete;
+    void operator=(nonesuch const&) = delete;
+};
 
 /**
  * @brief Results in true_type if the given metafunction yields a valid type when applied to the
@@ -133,7 +138,7 @@ struct nonesuch;
  */
 template <template <class...> class Oper, typename... Args>
 struct is_detected
-    : decltype(detail::is_detected_f<Oper>(static_cast<mp_list<Args...>*>(nullptr))) {};
+    : decltype(impl_detection::is_detected_f<Oper>(static_cast<mp_list<Args...>*>(nullptr))) {};
 
 /**
  * @brief If Oper<Args...> evaluates to a type, yields that type. Otherwise, yields
@@ -144,8 +149,8 @@ struct is_detected
  * @tparam Args The arguments to give to the Oper metafunction
  */
 template <typename Dflt, template <class...> class Oper, typename... Args>
-using detected_or =
-    typename detail::detection<is_detected<Oper, Args...>::value>::template f<Dflt, Oper, Args...>;
+using detected_or = typename impl_detection::detection<decltype(impl_detection::is_detected_f<Oper>(
+    static_cast<mp_list<Args...>*>(nullptr)))::value>::template f<Dflt, Oper, Args...>;
 
 /**
  * @brief If Oper<Args...> evaluates to a type, yields that type. Otherwise, yields
@@ -163,7 +168,6 @@ using detected_t = detected_or<nonesuch, Oper, Args...>;
  * Separating the boolean from the type arguments results in significant speedup to compilation
  * due to type memoization
  */
-namespace detail {
 
 template <bool B>
 struct conditional {
@@ -177,8 +181,6 @@ struct conditional<false> {
     using f = IfFalse;
 };
 
-}  // namespace detail
-
 /**
  * @brief Pick one of two types based on a boolean
  *
@@ -187,10 +189,10 @@ struct conditional<false> {
  * @tparam F If `B` is false, pick this type
  */
 template <bool B, typename T, typename F>
-using conditional_t = typename detail::conditional<B>::template f<T, F>;
+using conditional_t = typename conditional<B>::template f<T, F>;
 
 // impl for conjunction+disjunction
-namespace detail {
+namespace impl_logic {
 
 template <typename FalseType, typename Opers>
 struct conj;
@@ -222,7 +224,7 @@ struct disj<std::true_type, mp_list<H>> : H {};
 template <>
 struct disj<std::true_type, mp_list<>> : std::false_type {};
 
-}  // namespace detail
+}  // namespace impl_logic
 
 /**
  * @brief inherits unambiguously from the first of `Ts...` for which
@@ -233,7 +235,7 @@ struct disj<std::true_type, mp_list<>> : std::false_type {};
  * If any of `Ts::value == false`, then no subsequent `Ts::value` will be instantiated.
  */
 template <typename... Cond>
-struct conjunction : detail::conj<std::false_type, mp_list<Cond...>> {};
+struct conjunction : impl_logic::conj<std::false_type, mp_list<Cond...>> {};
 
 /**
  * @brief Inherits unambiguous from the first of `Ts...` where `Ts::value` is `true`,
@@ -244,7 +246,7 @@ struct conjunction : detail::conj<std::false_type, mp_list<Cond...>> {};
  * If any of `Ts::value == true`, then no subsequent `Ts::value` will be instantiated.
  */
 template <typename... Cond>
-struct disjunction : detail::disj<std::true_type, mp_list<Cond...>> {};
+struct disjunction : impl_logic::disj<std::true_type, mp_list<Cond...>> {};
 
 /**
  * @brief Given a boolean type trait, returns a type trait which is the logical negation thereof
@@ -263,7 +265,7 @@ struct negation : bool_constant<!T::value> {};
 template <typename...>
 using true_t = std::true_type;
 
-namespace requires_detail {
+namespace impl_requires {
 
 template <typename R>
 R norm_conjunction(...);
@@ -296,7 +298,7 @@ struct failed_requirement<conjunction<SubRequirements...>> {
 
 template <typename Constraint, typename>
 struct requirement {
-    using test = failed_requirement<requires_detail::norm_conjunction_t<Constraint>>;
+    using test = failed_requirement<impl_requires::norm_conjunction_t<Constraint>>;
 };
 
 template <typename Constraint>
@@ -307,7 +309,7 @@ struct requirement<Constraint, enable_if_t<Constraint::value>> {
     };
 };
 
-}  // namespace requires_detail
+}  // namespace impl_requires
 
 /**
  * @brief If none of `Ts::value is 'false'`, yields the type `Type`, otherwise
@@ -325,7 +327,7 @@ using requires_t = enable_if_t<conjunction<Traits...>::value, Type>;
 #else
 // Generates better error messages in case of substitution failure than a plain enable_if_t:
 using requires_t =
-    decltype(requires_detail::requirement<conjunction<Traits...>>::test::template explain<Type>(0));
+    decltype(impl_requires::requirement<conjunction<Traits...>>::test::template explain<Type>(0));
 #endif
 
 /**
@@ -341,7 +343,7 @@ template <typename Type, typename... Traits>
 using requires_not_t = requires_t<Type, negation<disjunction<Traits...>>>;
 
 // Impl: invoke/is_invocable
-namespace detail {
+namespace impl_invoke {
 
 #pragma push_macro("RETURNS")
 #define RETURNS(...)                                         \
@@ -370,7 +372,7 @@ struct invoker<true, false> {
     constexpr static auto apply(F&& fun, Self&& self) RETURNS(static_cast<Self&&>(self).*fun);
 };
 
-}  // namespace detail
+}  // namespace impl_invoke
 
 static constexpr struct invoke_fn {
     /**
@@ -382,8 +384,8 @@ static constexpr struct invoke_fn {
 
     template <typename F, typename... Args, typename Fd = remove_cvref_t<F>>
     constexpr auto operator()(F&& fn, Args&&... args) const
-        RETURNS(detail::invoker<std::is_member_object_pointer<Fd>::value,
-                                std::is_member_function_pointer<Fd>::value>  //
+        RETURNS(impl_invoke::invoker<std::is_member_object_pointer<Fd>::value,
+                                     std::is_member_function_pointer<Fd>::value>  //
                 ::apply(static_cast<F&&>(fn), static_cast<Args&&>(args)...));
 } invoke;
 
@@ -396,7 +398,7 @@ static constexpr struct invoke_fn {
  * @tparam Args The arguments to apply
  */
 template <typename F, typename... Args>
-using invoke_result_t = decltype(_traits::invoke(std::declval<F>(), std::declval<Args>()...));
+using invoke_result_t = decltype(invoke(std::declval<F>(), std::declval<Args>()...));
 
 /**
  * @brief Trait type to detect if the given object can be "invoked" using the given arguments.
@@ -417,9 +419,9 @@ struct is_invocable : is_detected<invoke_result_t, Fun, Args...> {
  * of top-level CV-ref qualifiers
  */
 template <typename T, typename U>
-using is_alike = std::is_same<remove_cvref_t<T>, remove_cvref_t<U>>;
+struct is_alike : std::is_same<remove_cvref_t<T>, remove_cvref_t<U>> {};
 
-}  // namespace _traits
+}  // namespace detail
 
 BSONCXX_INLINE_NAMESPACE_END
 

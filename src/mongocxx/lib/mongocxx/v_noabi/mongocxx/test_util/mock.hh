@@ -89,7 +89,7 @@ class mock<R (*)(Args...)> {
 
         template <typename T,
                   typename... U,
-                  bsoncxx::_traits::requires_t<int, std::is_same<T, R>> = 0>
+                  bsoncxx::detail::requires_t<int, std::is_same<T, R>> = 0>
         rule& interpose(T r, U... rs) {
             std::array<R, sizeof...(rs) + 1> vec = {r, rs...};
             std::size_t i = 0;

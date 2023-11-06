@@ -63,7 +63,7 @@ class value_context {
     ///   The value to append
     ///
     template <class T>
-    BSONCXX_INLINE _traits::requires_not_t<base, _traits::is_invocable<T, single_context>>  //
+    BSONCXX_INLINE detail::requires_not_t<base, detail::is_invocable<T, single_context>>  //
     operator<<(T&& t) {
         _core->append(std::forward<T>(t));
         return unwrap();
@@ -77,9 +77,9 @@ class value_context {
     ///   The callback to invoke
     ///
     template <typename T>
-    BSONCXX_INLINE _traits::requires_t<base, _traits::is_invocable<T, single_context>>  //
+    BSONCXX_INLINE detail::requires_t<base, detail::is_invocable<T, single_context>>  //
     operator<<(T&& func) {
-        _traits::invoke(std::forward<T>(func), *this);
+        detail::invoke(std::forward<T>(func), *this);
         return unwrap();
     }
 

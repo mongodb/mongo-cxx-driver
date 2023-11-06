@@ -308,34 +308,34 @@ class BSONCXX_API view {
 };
 
 template <typename T>
-using is_bson_view_compatible = _traits::conjunction<
+using is_bson_view_compatible = detail::conjunction<
     std::is_constructible<bson_value::view, T>,
-    _traits::negation<_traits::disjunction<_traits::is_alike<T, bson_value::view>,
-                                           _traits::is_alike<T, bson_value::value>>>>;
+    detail::negation<detail::disjunction<detail::is_alike<T, bson_value::view>,
+                                         detail::is_alike<T, bson_value::value>>>>;
 
 template <typename T>
 using not_view = is_bson_view_compatible<T>;
 
 template <typename T>
-BSONCXX_INLINE _traits::requires_t<bool, is_bson_view_compatible<T>>  //
+BSONCXX_INLINE detail::requires_t<bool, is_bson_view_compatible<T>>  //
 operator==(const bson_value::view& lhs, T&& rhs) {
     return lhs == bson_value::view{std::forward<T>(rhs)};
 }
 
 template <typename T>
-BSONCXX_INLINE _traits::requires_t<bool, is_bson_view_compatible<T>>  //
+BSONCXX_INLINE detail::requires_t<bool, is_bson_view_compatible<T>>  //
 operator==(T&& lhs, const bson_value::view& rhs) {
     return bson_value::view{std::forward<T>(lhs)} == rhs;
 }
 
 template <typename T>
-BSONCXX_INLINE _traits::requires_t<bool, is_bson_view_compatible<T>>  //
+BSONCXX_INLINE detail::requires_t<bool, is_bson_view_compatible<T>>  //
 operator!=(const bson_value::view& lhs, T&& rhs) {
     return lhs != bson_value::view{std::forward<T>(rhs)};
 }
 
 template <typename T>
-BSONCXX_INLINE _traits::requires_t<bool, is_bson_view_compatible<T>>  //
+BSONCXX_INLINE detail::requires_t<bool, is_bson_view_compatible<T>>  //
 operator!=(T&& lhs, const bson_value::view& rhs) {
     return bson_value::view{std::forward<T>(lhs)} != rhs;
 }
