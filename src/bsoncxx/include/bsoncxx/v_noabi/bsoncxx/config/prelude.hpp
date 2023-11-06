@@ -22,6 +22,8 @@
 /// @note For backward compatibility, correct include of macro guard headers is not enforced (e.g.
 /// missing include of the postlude header prior to a another include of the prelude header).
 ///
+/// @note For backward compatibility, the `BSONCXX_ENUM` X macro is also guarded.
+///
 /// @sa bsoncxx/v1/bsoncxx/config/prelude.hpp
 ///
 /// @par Includes
