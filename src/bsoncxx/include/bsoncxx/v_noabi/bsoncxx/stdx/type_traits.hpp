@@ -136,7 +136,7 @@ struct nonesuch {
  * @tparam Oper A template that evaluates to a type
  * @tparam Args Some number of arguments to apply to Oper
  */
-template <template <class...> class Oper, typename... Args>
+template <bsoncxx_ttparam Oper, typename... Args>
 struct is_detected
     : decltype(impl_detection::is_detected_f<Oper>(static_cast<mp_list<Args...>*>(nullptr))) {};
 
@@ -148,9 +148,9 @@ struct is_detected
  * @tparam Oper A metafunction to speculatively apply
  * @tparam Args The arguments to give to the Oper metafunction
  */
-template <typename Dflt, template <class...> class Oper, typename... Args>
-using detected_or = typename impl_detection::detection<decltype(impl_detection::is_detected_f<Oper>(
-    static_cast<mp_list<Args...>*>(nullptr)))::value>::template f<Dflt, Oper, Args...>;
+template <typename Dflt, bsoncxx_ttparam Oper, typename... Args>
+using detected_or = typename impl_detection::detection<
+    is_detected<Oper, Args...>::value>::template f<Dflt, Oper, Args...>;
 
 /**
  * @brief If Oper<Args...> evaluates to a type, yields that type. Otherwise, yields
@@ -159,7 +159,7 @@ using detected_or = typename impl_detection::detection<decltype(impl_detection::
  * @tparam Oper A metafunction to try to apply
  * @tparam Args The metafunction arguments to apply to Oper
  */
-template <template <class...> class Oper, typename... Args>
+template <bsoncxx_ttparam Oper, typename... Args>
 using detected_t = detected_or<nonesuch, Oper, Args...>;
 
 /**
