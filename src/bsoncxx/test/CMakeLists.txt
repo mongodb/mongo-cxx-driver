@@ -22,7 +22,6 @@ else()
     bsoncxx_add_library(bsoncxx_testing "bsoncxx-testing" STATIC)
 endif()
 
-file(GLOB src_bsoncxx_test_DIST_cpps CONFIGURE_DEPENDS RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.cpp)
 target_compile_definitions(bsoncxx_testing PUBLIC BSONCXX_TESTING)
 
 add_executable(test_bson
