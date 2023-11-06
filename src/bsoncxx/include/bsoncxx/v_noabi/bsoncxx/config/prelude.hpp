@@ -86,6 +86,7 @@
 
 #pragma push_macro("BSONCXX_UNREACHABLE")
 #undef BSONCXX_UNREACHABLE
+/// Call `std::abort()` if control flow enters this code path.
 #define BSONCXX_UNREACHABLE std::abort()
 
 // CXX-2769: out-of-place, but remains for backward compatibility.

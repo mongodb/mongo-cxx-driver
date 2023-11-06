@@ -81,6 +81,7 @@
 // TODO: Find a way to DRY this with BSONCXX_UNREACHABLE
 #pragma push_macro("MONGOCXX_UNREACHABLE")
 #undef MONGOCXX_UNREACHABLE
+/// Call `std::abort()` if control flow enters this code path.
 #define MONGOCXX_UNREACHABLE std::abort()
 
 // Doxygen does not account for generated header files.
