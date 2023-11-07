@@ -9,78 +9,41 @@ exec_timeout_secs: 3600
 #######################################
 variables:
 
-    mongoc_version_default: &mongoc_version_default "1.24.0"
-
     # If updating mongoc_version_minimum, also update:
     # - the default value of --c-driver-build-ref in etc/make_release.py
     # - LIBMONGOC_REQUIRED_VERSION in src/mongocxx/CMakeLists.txt
     mongoc_version_minimum: &mongoc_version_minimum "1.24.0"
 
-    mongodb_version:
-        version_latest: &version_latest "latest"
-        version_70: &version_70 "7.0"
-        version_60: &version_60 "6.0"
-        version_50: &version_50 "5.0"
-        version_44: &version_44 "4.4"
-        version_42: &version_42 "4.2"
-        version_40: &version_40 "4.0"
-
-    ## cmake path variables
-    extra_path:
-        linux_extra_path: &linux_extra_path /opt/cmake/bin
-        macos_extra_path: &macos_extra_path /Applications/Cmake.app/Contents/bin
-        msvc2015_extra_path: &msvc2015_extra_path "/cygdrive/c/cmake/bin:/cygdrive/c/Program Files (x86)/MSBuild/14.0/Bin"
-        msvc2017_extra_path: &msvc2017_extra_path "/cygdrive/c/cmake/bin:/cygdrive/c/Program Files (x86)/Microsoft Visual Studio/2017/Professional/MSBuild/15.0/Bin"
-
-    ## tar options variables
-    tar_options:
-        linux_tar_options: &linux_tar_options --wildcards --no-anchored
-
-    ## cmake flag variables
-    cmake_flags:
-        linux_cmake_flags: &linux_cmake_flags -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-missing-field-initializers $ignore_deprecated" -DCMAKE_CXX_FLAGS="-Wall -Wextra -Wconversion -Wnarrowing -Wno-expansion-to-defined -pedantic -Werror -Wno-missing-field-initializers -Wno-aligned-new $ignore_deprecated"
-        macos_cmake_flags: &macos_cmake_flags -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-missing-field-initializers $ignore_deprecated" -DCMAKE_CXX_FLAGS="-stdlib=libc++ -Wall -Wextra -Wconversion -Wnarrowing -pedantic -Werror $ignore_deprecated"
-        asan_cmake_flags: &asan_cmake_flags -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-missing-field-initializers $ignore_deprecated" -DCMAKE_CXX_COMPILER="/usr/bin/clang++" -DCMAKE_CXX_FLAGS="-D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -O1 -g -fno-omit-frame-pointer -Wall -Wextra -Wconversion -Wnarrowing -pedantic -Werror $ignore_deprecated"
-        ubsan_cmake_flags: &ubsan_cmake_flags -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-missing-field-initializers $ignore_deprecated" -DCMAKE_CXX_COMPILER="/usr/bin/clang++" -DCMAKE_CXX_FLAGS="-D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=undefined -fsanitize-blacklist=$(pwd)/etc/ubsan.ignorelist -fno-sanitize-recover=undefined -O1 -g -fno-omit-frame-pointer -Wall -Wextra -Wconversion -Wnarrowing -pedantic -Werror $ignore_deprecated"
-        msvc2015_cmake_flags: &msvc2015_cmake_flags -DBOOST_ROOT=c:/local/boost_1_60_0
-        msvc2015_generator: &msvc2015_generator Visual Studio 14 2015 Win64
-        msvc2017_cmake_flags: &msvc2017_cmake_flags -DCMAKE_CXX_STANDARD=17
-        msvc2017_generator: &msvc2017_generator Visual Studio 15 2017 Win64
-        code_coverage_cmake_flags: &code_coverage_cmake_flags -DENABLE_CODE_COVERAGE=ON
-
-        # power8_cmake_flags includes -Wno-maybe-uninitialized to ignore a warning from the std::optional implementation of MNMLSTC.
-        power8_cmake_flags: &power8_cmake_flags -DCMAKE_C_FLAGS="-Wall -Wextra -Wno-attributes -Werror -Wno-missing-field-initializers $ignore_deprecated" -DCMAKE_CXX_FLAGS="-Wall -Wextra -Wconversion -Wnarrowing -Wno-expansion-to-defined -pedantic -Werror -Wno-missing-field-initializers -Wno-aligned-new $ignore_deprecated -Wno-error=maybe-uninitialized"
-
-    example_projects_cc:
-        asan_cc_path: &asan_cc_path /usr/bin/clang
-        ubsan_cc_path: &ubsan_cc_path /usr/bin/clang
-
-    example_projects_cxx:
-        asan_cxx_path: &asan_cxx_path /usr/bin/clang++
-        ubsan_cxx_path: &ubsan_cxx_path /usr/bin/clang++
-
-    example_projects_cxxflags:
-        asan_cxxflags: &asan_cxxflags -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
-        ubsan_cxxflags: &ubsan_cxxflags -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer
-
-    example_projects_ldflags:
-        asan_ldflags: &asan_ldflags -fsanitize=address
-        ubsan_ldflags: &ubsan_ldflags -fsanitize=undefined -fno-sanitize-recover=undefined
-
-    example_projects_cxx_standard:
-        std_experimental_cxx_standard: &std_experimental_cxx_standard 14
-
-    poly_flags:
-        poly_boost_flags: &poly_boost_flags -DBSONCXX_POLY_USE_BOOST=ON
-        poly_std_experimental_flags: &poly_std_experimental_flags -DBSONCXX_POLY_USE_STD_EXPERIMENTAL=ON -DCMAKE_CXX_STANDARD=14
-        poly_mnmlstc: &poly_mnmlstc -DBSONCXX_POLY_USE_MNMLSTC=ON
-
-    ## test parameters
-    test_params:
-        asan_test_params: &asan_test_params PATH="/usr/lib/llvm-3.8/bin" ASAN_OPTIONS="detect_leaks=1"
-        ubsan_test_params: &ubsan_test_params PATH="/usr/lib/llvm-3.8/bin" UBSAN_OPTIONS="print_stacktrace=1"
-        valgrind_test_params: &valgrind_test_params valgrind --leak-check=full --track-origins=yes --num-callers=50 --error-exitcode=1 --error-limit=no --read-var-info=yes --suppressions=../etc/memcheck.suppressions
-
+    integration_matrix:
+        integration_matrix_tasks_single: &integration_matrix_tasks_single
+            tasks:
+                - name: compile_and_test_with_shared_libs
+                - name: compile_and_test_with_shared_libs_extra_alignment
+        integration_matrix_tasks_replica: &integration_matrix_tasks_replica
+            tasks:
+                - name: compile_and_test_with_shared_libs_replica_set_with_libmongocrypt
+        integration_matrix_tasks_sharded: &integration_matrix_tasks_sharded
+            tasks:
+                - name: compile_and_test_with_shared_libs_sharded_cluster_with_libmongocrypt
+        integration_matrix_auth_tasks_single: &integration_matrix_auth_tasks_single
+            tasks:
+                - name: compile_and_test_auth_with_shared_libs
+        integration_matrix_versioned_api_tasks_single: &integration_matrix_versioned_api_tasks_single
+            tasks:
+                - name: test_versioned_api
+                - name: test_versioned_api_accept_version_two
+        # "Drivers MUST run all tests with mongocryptd on at least one platform for all tested server versions (4.2+)."
+        integration_matrix_mongocryptd_tasks: &integration_matrix_mongocryptd_tasks
+            tasks:
+                - name: compile_and_test_with_shared_libs_replica_set_with_libmongocrypt
+                - name: compile_and_test_with_shared_libs_sharded_cluster_with_libmongocrypt
+        integration_matrix_expansions_linux: &integration_matrix_expansions_linux
+            build_type: "Debug"
+            ENABLE_CODE_COVERAGE: ON
+        integration_matrix_expansions_windows: &integration_matrix_expansions_windows
+            build_type: "Debug" # Same for Windows and Linux
+            generator: Visual Studio 15 2017 Win64
+            example_projects_cxx_standard: 17
 
 #######################################
 #            Functions                #
@@ -274,8 +237,8 @@ functions:
         type: setup
         params:
           updates:
-            - key: mongoc_version_default
-              value: *mongoc_version_default
+            - key: mongoc_version_minimum
+              value: *mongoc_version_minimum
       - command: shell.exec
         type: setup
         params:
@@ -310,10 +273,12 @@ functions:
         params:
           shell: bash
           working_dir: "mongo-cxx-driver"
-          script: |
-            set -o errexit
-            set -o pipefail
-            ./etc/run-clang-tidy.sh
+          include_expansions_in_env:
+            - distro_id
+          env:
+            CC: ${cc_compiler}
+            CXX: ${cxx_compiler}
+          script: ./etc/run-clang-tidy.sh
 
     "clone_drivers-evergreen-tools":
       - command: shell.exec
@@ -375,361 +340,57 @@ functions:
           params:
               shell: bash
               working_dir: "mongo-cxx-driver"
-              include_expansions_in_env: ["distro_id"]
-              script: |
-                  set -o errexit
-                  set -o pipefail
-                  export BUILD_TYPE=${build_type}
-                  export COMPILE_MACRO_GUARD_TESTS=${COMPILE_MACRO_GUARD_TESTS}
-                  export PATH="${extra_path}:$PATH"
-                  export RUN_DISTCHECK=${RUN_DISTCHECK}
-
-                  ADDL_OPTS=${code_coverage_cmake_flags}
-                  if [ "${USE_STATIC_LIBS}" ]; then
-                      ADDL_OPTS="$ADDL_OPTS -DBUILD_SHARED_LIBS=OFF"
-                  fi
-
-                  if [ "${ENABLE_TESTS}" = "OFF" ]; then
-                      ADDL_OPTS="$ADDL_OPTS -DENABLE_TESTS=OFF"
-                  fi
-
-                  if [[ -n "${REQUIRED_CXX_STANDARD}" ]]; then
-                      ADDL_OPTS="$ADDL_OPTS -DCMAKE_CXX_STANDARD=${REQUIRED_CXX_STANDARD} -DCMAKE_CXX_STANDARD_REQUIRED=ON"
-                  fi
-
-                  MONGOC_PREFIX="$(pwd)/../mongoc"
-                  echo "MONGOC_PREFIX=$MONGOC_PREFIX"
-
-                  if [[ "$OSTYPE" =~ cygwin ]]; then
-                      MONGOC_PREFIX=$(cygpath -m "$MONGOC_PREFIX")
-                  fi
-
-                  . "$MONGOC_PREFIX/.evergreen/scripts/find-cmake-latest.sh"
-                  export cmake_binary
-                  cmake_binary="$(find_cmake_latest)"
-                  command -v "$cmake_binary"
-
-                  if [ ! -d ../drivers-evergreen-tools ]; then
-                    git clone --depth 1 git@github.com:mongodb-labs/drivers-evergreen-tools.git ../drivers-evergreen-tools
-                  fi
-                  . ../drivers-evergreen-tools/.evergreen/find-python3.sh
-                  . ../drivers-evergreen-tools/.evergreen/venv-utils.sh
-
-                  venvcreate "$(find_python3)" venv
-                  python -m pip install GitPython
-
-                  export GENERATOR="${generator}"
-
-                  ignore_deprecated=""
-                  if [ "$(echo ${branch_name} | cut -f2 -d'/')" != "${branch_name}" ]; then
-                      # ignore deprecation warnings when building on a release branch
-                      ignore_deprecated=-Wno-deprecated-declarations
-                  fi
-
-                  .evergreen/compile.sh -DCMAKE_PREFIX_PATH="$MONGOC_PREFIX" ${cmake_flags} ${poly_flags} $ADDL_OPTS -DCMAKE_INSTALL_PREFIX=install
+              include_expansions_in_env:
+                  - branch_name
+                  - build_type
+                  - COMPILE_MACRO_GUARD_TESTS
+                  - distro_id
+                  - ENABLE_CODE_COVERAGE
+                  - ENABLE_TESTS
+                  - generator
+                  - REQUIRED_CXX_STANDARD
+                  - RUN_DISTCHECK
+                  - USE_POLYFILL_BOOST
+                  - USE_POLYFILL_STD_EXPERIMENTAL
+                  - USE_SANITIZER_ASAN
+                  - USE_SANITIZER_UBSAN
+                  - USE_STATIC_LIBS
+              env:
+                  CC: ${cc_compiler}
+                  CXX: ${cxx_compiler}
+              script: .evergreen/compile.sh
 
     "test":
         - command: shell.exec
           params:
               shell: bash
               working_dir: "mongo-cxx-driver"
-              include_expansions_in_env: ["distro_id"]
-              script: |
-                  set -o errexit
-                  set -o pipefail
-
-                  # Grabs the mongocryptd path
-                  pushd ..
-                  export MONGOCRYPTD_PATH=$(pwd)/
-                  if [[ "$OSTYPE" =~ cygwin ]]; then
-                     export MONGOCRYPTD_PATH=$(cygpath -m $MONGOCRYPTD_PATH)
-                  fi
-                  popd # ..
-
-                  export PATH="${extra_path}:$PATH"
-
-                  pushd build
-                  export PREFIX=$(pwd)/../../mongoc
-
-                  # Use PATH / LD_LIBRARY_PATH / DYLD_LIBRARY_PATH to inform the tests where to find
-                  # mongoc library dependencies on Windows / Linux / Mac OS, respectively.
-                  # Additionally, on Windows, we also need to inform the tests where to find
-                  # mongocxx library dependencies.
-                  if [ -n "${lib_dir}" ]; then
-                     export LD_LIBRARY_PATH=.:$PREFIX/${lib_dir}/
-                     export DYLD_LIBRARY_PATH=.:$PREFIX/${lib_dir}/
-                  else
-                     export LD_LIBRARY_PATH=.:$PREFIX/lib/
-                     export DYLD_LIBRARY_PATH=.:$PREFIX/lib/
-                  fi
-                  PATH="$(pwd)/src/mongocxx/test/${build_type}:$PATH"
-                  PATH="$(pwd)/src/bsoncxx/test/${build_type}:$PATH"
-                  PATH="$(pwd)/src/mongocxx/${build_type}:$PATH"
-                  PATH="$(pwd)/src/bsoncxx/${build_type}:$PATH"
-                  PATH="$PREFIX/bin:$PATH"
-                  PATH="$(pwd)/install/bin:$PATH"
-
-                  export CHANGE_STREAMS_UNIFIED_TESTS_PATH="$(pwd)/../data/change-streams/unified"
-                  export CLIENT_SIDE_ENCRYPTION_LEGACY_TESTS_PATH="$(pwd)/../data/client_side_encryption/legacy"
-                  export CLIENT_SIDE_ENCRYPTION_TESTS_PATH="$(pwd)/../data/client_side_encryption"
-                  export CLIENT_SIDE_ENCRYPTION_UNIFIED_TESTS_PATH="$(pwd)/../data/client_side_encryption/unified"
-                  export COLLECTION_MANAGEMENT_TESTS_PATH="$(pwd)/../data/collection-management"
-                  export COMMAND_MONITORING_TESTS_PATH="$(pwd)/../data/command-monitoring"
-                  export CRUD_LEGACY_TESTS_PATH="$(pwd)/../data/crud/legacy"
-                  export CRUD_UNIFIED_TESTS_PATH="$(pwd)/../data/crud/unified"
-                  export GRIDFS_TESTS_PATH="$(pwd)/../data/gridfs"
-                  export INITIAL_DNS_SEEDLIST_DISCOVERY_TESTS_PATH="$(pwd)/../data/initial_dns_seedlist_discovery"
-                  export READ_WRITE_CONCERN_OPERATION_TESTS_PATH="$(pwd)/../data/read-write-concern/operation"
-                  export RETRYABLE_READS_LEGACY_TESTS_PATH="$(pwd)/../data/retryable-reads/legacy"
-                  export RETRYABLE_READS_UNIFIED_TESTS_PATH="$(pwd)/../data/retryable-reads/unified"
-                  export RETRYABLE_WRITES_UNIFIED_TESTS_PATH="$(pwd)/../data/retryable-writes/unified"
-                  export SESSION_UNIFIED_TESTS_PATH="$(pwd)/../data/sessions/unified"
-                  export TRANSACTIONS_LEGACY_TESTS_PATH="$(pwd)/../data/transactions/legacy"
-                  export TRANSACTIONS_UNIFIED_TESTS_PATH="$(pwd)/../data/transactions/unified"
-                  export UNIFIED_FORMAT_TESTS_PATH=$(pwd)/../data/unified-format
-                  export URI_OPTIONS_TESTS_PATH="$(pwd)/../data/uri-options"
-                  export VERSIONED_API_TESTS_PATH=$(pwd)/../data/versioned-api
-                  export WITH_TRANSACTION_TESTS_PATH="$(pwd)/../data/with_transaction"
-                  export INDEX_MANAGEMENT_TESTS_PATH="$(pwd)/../data/index-management"
-
-                  export MONGODB_API_VERSION="${MONGODB_API_VERSION}"
-
-                  pushd ../../drivers-evergreen-tools
-                  export DRIVERS_TOOLS=$(pwd)
-                  if [[ "$OSTYPE" =~ cygwin ]]; then
-                      export DRIVERS_TOOLS=$(cygpath -m $DRIVERS_TOOLS)
-                  fi
-                  popd # ../../drivers-evergreen-tools
-
-                  export MONGOCXX_TEST_TLS_CA_FILE="$DRIVERS_TOOLS/.evergreen/x509gen/ca.pem"
-
-                  if [ "$(uname -m)" == "ppc64le" ]; then
-                      echo "Skipping CSFLE test setup (CDRIVER-4246/CXX-2423)"
-                  else
-                      # export environment variables for encryption tests
-                      set +o errexit
-
-                      # Avoid printing credentials in logs.
-                      set +o xtrace
-
-                      echo "Setting temporary credentials..."
-                      pushd "$DRIVERS_TOOLS/.evergreen/csfle"
-                      export AWS_SECRET_ACCESS_KEY="${cse_aws_secret_access_key}"
-                      export AWS_ACCESS_KEY_ID="${cse_aws_access_key_id}"
-                      export AWS_DEFAULT_REGION="us-east-1"
-                      echo "Running activate-kmstlsvenv.sh..."
-                      . ./activate-kmstlsvenv.sh
-                      echo "Running activate-kmstlsvenv.sh... done."
-                      echo "Running set-temp-creds.sh..."
-                      . ./set-temp-creds.sh
-                      echo "Running set-temp-creds.sh... done."
-                      deactivate
-                      popd # "$DRIVERS_TOOLS/.evergreen/csfle"
-                      echo "Setting temporary credentials... done."
-
-                      # Ensure temporary credentials were properly set.
-                      if [ -z "$CSFLE_AWS_TEMP_ACCESS_KEY_ID" ]; then
-                        echo "Failed to set temporary credentials!"
-                        exit 1
-                      fi
-
-                      export MONGOCXX_TEST_CSFLE_TLS_CA_FILE=$DRIVERS_TOOLS/.evergreen/x509gen/ca.pem
-                      export MONGOCXX_TEST_CSFLE_TLS_CERTIFICATE_KEY_FILE=$DRIVERS_TOOLS/.evergreen/x509gen/client.pem
-                      export MONGOCXX_TEST_AWS_TEMP_ACCESS_KEY_ID="$CSFLE_AWS_TEMP_ACCESS_KEY_ID"
-                      export MONGOCXX_TEST_AWS_TEMP_SECRET_ACCESS_KEY="$CSFLE_AWS_TEMP_SECRET_ACCESS_KEY"
-                      export MONGOCXX_TEST_AWS_TEMP_SESSION_TOKEN="$CSFLE_AWS_TEMP_SESSION_TOKEN"
-                      export MONGOCXX_TEST_AWS_SECRET_ACCESS_KEY="${cse_aws_secret_access_key}"
-                      export MONGOCXX_TEST_AWS_ACCESS_KEY_ID="${cse_aws_access_key_id}"
-                      export MONGOCXX_TEST_AZURE_TENANT_ID="${cse_azure_tenant_id}"
-                      export MONGOCXX_TEST_AZURE_CLIENT_ID="${cse_azure_client_id}"
-                      export MONGOCXX_TEST_AZURE_CLIENT_SECRET="${cse_azure_client_secret}"
-                      export MONGOCXX_TEST_GCP_EMAIL="${cse_gcp_email}"
-                      export MONGOCXX_TEST_GCP_PRIVATEKEY="${cse_gcp_privatekey}"
-
-                      set -o errexit
-                  fi
-
-                  if [ "$(uname -m)" == "ppc64le" ]; then
-                      echo "Skipping CSFLE test setup (CDRIVER-4246/CXX-2423)"
-                  else
-                      # Register CA certificate required by KMS TLS connections.
-                      echo "Registering CA certificate for KMS TLS tests..."
-                      register_ca_cert() {
-                          local OS=$(uname -s | tr '[:upper:]' '[:lower:]')
-                          echo "register_ca_cert: OS: $OS"
-                          case "$OSTYPE" in
-                              cygwin*)
-                                  certutil.exe -addstore "Root" "$DRIVERS_TOOLS\.evergreen\x509gen\ca.pem"
-                                  ;;
-                              darwin*)
-                                  sudo security add-trusted-cert -d -r trustRoot -k /Library/Keychains/System.keychain $DRIVERS_TOOLS/.evergreen/x509gen/ca.pem
-                                  ;;
-                              *)
-                                  if [ -f /etc/redhat-release ]; then
-                                      # CSE KMS TLS tests are disabled on RHEL due to sudo permissions. See BUILD-14068.
-                                      # sudo cp -v $DRIVERS_TOOLS/.evergreen/x509gen/ca.pem /usr/share/pki/ca-trust-source/anchors/cdriver.crt
-                                      # sudo update-ca-trust extract --verbose
-                                      export MONGOCXX_TEST_SKIP_KMS_TLS_TESTS=1
-                                  else
-                                      sudo cp -v $DRIVERS_TOOLS/.evergreen/x509gen/ca.pem /usr/local/share/ca-certificates/cdriver.crt
-                                      sudo update-ca-certificates --verbose
-                                  fi
-                                  ;;
-                          esac
-                      } >/dev/null
-                      register_ca_cert
-                      echo "Registering CA certificate for KMS TLS tests... done."
-
-                      # Ensure mock KMS servers are running before starting tests.
-                      wait_for_kms_server() {
-                          for i in $(seq 60); do
-                              # Exit code 7: "Failed to connect to host".
-                              if curl -s "localhost:$1"; (($? != 7)); then
-                                  return 0
-                              else
-                                  sleep 1
-                              fi
-                          done
-                          echo "Could not detect mock KMS server on port $1"
-                          return 1
-                      }
-                      echo "Waiting for mock KMS servers to start..."
-                      wait_for_kms_server 8999
-                      wait_for_kms_server 9000
-                      wait_for_kms_server 9001
-                      wait_for_kms_server 9002
-                      wait_for_kms_server 5698
-                      echo "Waiting for mock KMS servers to start... done."
-                  fi
-
-                  if [[ "$OSTYPE" =~ cygwin ]]; then
-                      CTEST_OUTPUT_ON_FAILURE=1 MSBuild.exe /p:Configuration=${build_type} /verbosity:minimal RUN_TESTS.vcxproj
-                      # Only run examples if MONGODB_API_VERSION is unset. We do not append
-                      # API version to example clients, so examples will fail when requireApiVersion
-                      # is true.
-                      if [[ -z "$MONGODB_API_VERSION" ]]; then
-                        echo "Running examples..."
-                        if ! CTEST_OUTPUT_ON_FAILURE=1 MSBuild.exe /p:Configuration=${build_type} /verbosity:minimal examples/run-examples.vcxproj >|output.txt 2>&1; then
-                          # Only emit output on failure.
-                          cat output.txt 1>&2
-                          exit 1
-                        fi
-                        echo "Running examples... done."
-                      fi
-                  else
-                      # ENABLE_SLOW_TESTS is required to run the slow tests that are disabled by default. The slow tests should not be run if explicitly disabled.
-                      if [ -z "${disable_slow_tests}" ]; then
-                          export MONGOCXX_ENABLE_SLOW_TESTS=1
-                      fi
-
-                      ulimit -c unlimited || true
-
-                      if [ "${use_mongocryptd}" = "true" ]; then
-                          echo "Will run tests using mongocryptd (instead of crypt_shared library)"
-                      else
-                          echo "Will run tests using crypt_shared library (instead of mongocryptd)"
-                          # Set by run-orchestration.sh in "start_mongod".
-                          export CRYPT_SHARED_LIB_PATH="${CRYPT_SHARED_LIB_PATH}"
-                          echo "CRYPT_SHARED_LIB_PATH=$CRYPT_SHARED_LIB_PATH"
-                      fi
-
-                      # Run tests and examples 1-by-1 with "test_params" so we can run them with valgrind.
-                      ${test_params} ./src/bsoncxx/test/test_bson
-                      ${test_params} ./src/mongocxx/test/test_driver
-                      ${test_params} ./src/mongocxx/test/test_client_side_encryption_specs
-                      ${test_params} ./src/mongocxx/test/test_crud_specs
-                      ${test_params} ./src/mongocxx/test/test_gridfs_specs
-                      ${test_params} ./src/mongocxx/test/test_command_monitoring_specs
-                      ${test_params} ./src/mongocxx/test/test_instance
-                      ${test_params} ./src/mongocxx/test/test_transactions_specs
-                      ${test_params} ./src/mongocxx/test/test_logging
-                      ${test_params} ./src/mongocxx/test/test_retryable_reads_specs
-                      ${test_params} ./src/mongocxx/test/test_read_write_concern_specs
-                      ${test_params} ./src/mongocxx/test/test_unified_format_spec
-
-
-                      # Some platforms like OS X don't support the /mode syntax to the -perm option
-                      # of find(1), and some platforms like Ubuntu 16.04 don't support the +mode
-                      # syntax, so we use Perl to help us find executable files.
-                      EXAMPLES=$(find examples -type f | sort | perl -nlwe 'print if -x')
-
-                      # Only run examples if MONGODB_API_VERSION is unset. We do not append
-                      # API version to example clients, so examples will fail when requireApiVersion
-                      # is true.
-                      if [[ -z "$MONGODB_API_VERSION" ]]; then
-                          for test in $EXAMPLES; do
-                            echo "Running $test"
-                            case "$test" in
-                              *encryption*)
-                                echo " - Skipping client side encryption example"
-                                ;;
-                              *change_stream*)
-                                echo " - TODO CXX-1201, enable for servers that support change streams"
-                                ;;
-                              *client_session*)
-                                echo " - TODO CXX-1201, enable for servers that support change streams"
-                                ;;
-                              *with_transaction*)
-                                echo " - TODO CXX-1201, enable for servers that support transactions"
-                                ;;
-                              *causal_consistency*)
-                                echo " - TODO CXX-1201, enable for servers that support transactions"
-                                ;;
-                              *)
-                                if ! ${test_params} $test >|output.txt 2>&1; then
-                                  # Only emit output on failure.
-                                  cat output.txt 1>&2
-                                  exit 1
-                                fi
-                                ;;
-                            esac
-                          done
-                      fi
-                  fi
-
-                  popd # ./build
-
-                  export CMAKE_PREFIX_PATH=$PREFIX:$(pwd)/build/install
-                  if [ -n "${lib_dir}" ]; then
-                     export PKG_CONFIG_PATH=$PREFIX/${lib_dir}/pkgconfig:$(pwd)/build/install/${lib_dir}/pkgconfig
-                  else
-                     export PKG_CONFIG_PATH=$PREFIX/lib/pkgconfig:$(pwd)/build/install/lib/pkgconfig
-                  fi
-                  export USE_STATIC_LIBS="${USE_STATIC_LIBS}"
-                  export BUILD_TYPE="${build_type}"
-
-                  export CXXFLAGS="${example_projects_cxxflags}"
-                  export LDFLAGS="${example_projects_ldflags}"
-                  export CC="${example_projects_cc}"
-                  export CXX="${example_projects_cxx}"
-                  export CXX_STANDARD="${example_projects_cxx_standard}"
-                  if [[ "$OSTYPE" =~ cygwin ]]; then
-                      export MSVC=1
-                  elif [ "$(uname -s | tr '[:upper:]' '[:lower:]')" == "darwin" ]; then
-                      export DYLD_LIBRARY_PATH="$(pwd)/build/install/lib:$DYLD_LIBRARY_PATH"
-                  else
-                      if [ -n "${lib_dir}" ]; then # only needed on Linux
-                          export LD_LIBRARY_PATH="$(pwd)/build/install/${lib_dir}:$LD_LIBRARY_PATH"
-                      else
-                          export LD_LIBRARY_PATH="$(pwd)/build/install/lib:$LD_LIBRARY_PATH"
-                      fi
-                  fi
-                  # The example projects never run under valgrind, since we haven't added execution
-                  # logic to handle ${test_params}.
-                  #
-                  # Only run example projects if MONGODB_API_VERSION is unset. We do not append
-                  # API version to example clients, so example projects will fail when requireApiVersion
-                  # is true.
-                  if [[ -z "$MONGODB_API_VERSION" ]]; then
-                    echo "Building example projects..."
-                    . "$PREFIX/.evergreen/scripts/find-cmake-latest.sh"
-                    export cmake_binary
-                    cmake_binary="$(find_cmake_latest)"
-                    command -v "$cmake_binary"
-                    .evergreen/build_example_projects.sh
-                    echo "Building example projects... done."
-                  fi
-                  unset MONGODB_API_VERSION
+              include_expansions_in_env:
+                  - build_type
+                  - CRYPT_SHARED_LIB_PATH # Set by run-orchestration.sh in "start_mongod".
+                  - cse_aws_access_key_id
+                  - cse_aws_secret_access_key
+                  - cse_azure_client_id
+                  - cse_azure_client_secret
+                  - cse_azure_tenant_id
+                  - cse_gcp_email
+                  - cse_gcp_privatekey
+                  - disable_slow_tests
+                  - distro_id
+                  - example_projects_cc
+                  - example_projects_cxx
+                  - example_projects_cxx_standard
+                  - example_projects_cxxflags
+                  - example_projects_ldflags
+                  - generator
+                  - lib_dir
+                  - MONGODB_API_VERSION
+                  - TEST_WITH_ASAN
+                  - TEST_WITH_UBSAN
+                  - TEST_WITH_VALGRIND
+                  - use_mongocryptd
+                  - USE_STATIC_LIBS
+              script: .evergreen/test.sh
 
     "test auth":
         - command: shell.exec
@@ -816,7 +477,7 @@ functions:
             set -o pipefail
 
             # Nothing to do if code coverage was not enabled.
-            if [[ -z "${code_coverage_cmake_flags}" ]]; then
+            if [[ "${ENABLE_CODE_COVERAGE}" != "ON" ]]; then
               exit 0
             fi
 
@@ -867,6 +528,7 @@ post:
 
 tasks:
     - name: lint
+      run_on: ubuntu1804-large
       commands:
         - func: "setup"
         - func: "lint"
@@ -874,8 +536,7 @@ tasks:
     - name: clang-tidy
       commands:
         - func: "setup"
-        - func: "fetch_c_driver_source"
-        - func: "compile"
+        - func: "install_c_driver"
         - func: "clang-tidy"
 
     - name: compile_and_test_with_shared_libs
@@ -1139,6 +800,7 @@ tasks:
             ./build/hello_mongocxx
 
     - name: debian-package-build
+      run_on: ubuntu1804-test
       commands:
       - func: "setup"
       - command: shell.exec
@@ -1162,6 +824,7 @@ tasks:
           display_name: "deb.tar.gz"
 
     - name: debian-package-build-mnmlstc
+      run_on: ubuntu1804-test
       commands:
       - func: "setup"
       - command: shell.exec
@@ -1186,6 +849,7 @@ tasks:
           display_name: "deb.tar.gz"
 
     - name: rpm-package-build
+      run_on: rhel90-arm64-small
       commands:
       - func: "setup"
       - command: shell.exec
@@ -1310,72 +974,6 @@ task_groups:
     tasks:
       - test_search_index_helpers
 
-#######################################
-#           MongoDB Version Matrix    #
-#######################################
-
-axes:
-    - id: os
-      display_name: "OS"
-      values:
-          - id: "ubuntu-1804"
-            display_name: "Ubuntu 18.04 Debug"
-            variables:
-                extra_path: *linux_extra_path
-                cmake_flags: *linux_cmake_flags
-                build_type: "Debug"
-                tar_options: *linux_tar_options
-                code_coverage_cmake_flags: *code_coverage_cmake_flags
-            run_on:
-                - ubuntu1804-build
-          - id: "windows-2k8"
-            display_name: "Windows (VS 2017) Debug"
-            variables:
-                extra_path: *msvc2017_extra_path
-                cmake_flags: *msvc2017_cmake_flags
-                build_type: "Debug"
-                tar_options: *linux_tar_options # Same for Windows and Linux
-                generator: *msvc2017_generator
-                example_projects_cxx_standard: 17
-            run_on:
-                - windows-64-vs2017-compile
-
-    - id: mongodb_version
-      display_name: "MongoDB Version"
-      values:
-          - id: "latest"
-            display_name: "Latest"
-            variables:
-                mongodb_version: *version_latest
-          - id: "7.0"
-            display_name: "7.0"
-            variables:
-                mongodb_version: *version_70
-          - id: "6.0"
-            display_name: "6.0"
-            variables:
-                mongodb_version: *version_60
-          - id: "5.0"
-            display_name: "5.0"
-            variables:
-                mongodb_version: *version_50
-          - id: "4.4"
-            display_name: "4.4"
-            variables:
-                mongodb_version: *version_44
-          - id: "4.2"
-            display_name: "4.2"
-            variables:
-                mongodb_version: *version_42
-          - id: "4.0"
-            display_name: "4.0"
-            variables:
-                mongodb_version: *version_40
-
-    - id: use_mongocryptd
-      values:
-          - id: "true"
-
 
 #######################################
 #           Buildvariants             #
@@ -1385,37 +983,297 @@ buildvariants:
     #######################################
     #  Standard MongoDB Integration Tests #
     #######################################
-    - matrix_name: "integration"
-      matrix_spec: {os: "*", mongodb_version: "*"}
-      display_name: "${os} (MongoDB ${mongodb_version})"
-      tasks:
-          - name: compile_and_test_with_shared_libs
-          - name: compile_and_test_with_shared_libs_extra_alignment
+    - name: integration-ubuntu2004-latest-single
+      display_name: "Ubuntu 20.04 Debug (MongoDB Latest)"
+      run_on: ubuntu2004-large
+      expansions:
+          mongodb_version: "latest"
+          <<: *integration_matrix_expansions_linux
+      <<: *integration_matrix_tasks_single
 
-    - matrix_name: "integration (replica set)"
-      matrix_spec: {os: "ubuntu-1804", mongodb_version: "*"}
-      display_name: "${os} replica set (MongoDB ${mongodb_version})"
-      tasks:
-        - name: compile_and_test_with_shared_libs_replica_set_with_libmongocrypt
+    - name: integration-ubuntu2004-7.0-single
+      display_name: "Ubuntu 20.04 Debug (MongoDB 7.0)"
+      run_on: ubuntu2004-large
+      expansions:
+          mongodb_version: "7.0"
+          <<: *integration_matrix_expansions_linux
+      <<: *integration_matrix_tasks_single
 
-    - matrix_name: "integration (sharded cluster)"
-      matrix_spec: {os: "ubuntu-1804", mongodb_version: "*"}
-      display_name: "${os} sharded cluster (MongoDB ${mongodb_version})"
-      tasks:
-        - name: compile_and_test_with_shared_libs_sharded_cluster_with_libmongocrypt
+    - name: integration-ubuntu1804-6.0-single
+      display_name: "Ubuntu 18.04 Debug (MongoDB 6.0)"
+      run_on: ubuntu1804-large
+      expansions:
+          mongodb_version: "6.0"
+          <<: *integration_matrix_expansions_linux
+      <<: *integration_matrix_tasks_single
 
-    - matrix_name: "auth"
-      matrix_spec: {os: "*", mongodb_version: "latest"}
-      display_name: "${os} ${mongodb_version} Auth"
-      tasks:
-          - name: compile_and_test_auth_with_shared_libs
+    - name: integration-ubuntu1804-5.0-single
+      display_name: "Ubuntu 18.04 Debug (MongoDB 5.0)"
+      run_on: ubuntu1804-large
+      expansions:
+          mongodb_version: "5.0"
+          <<: *integration_matrix_expansions_linux
+      <<: *integration_matrix_tasks_single
 
-    - matrix_name: "versioned api"
-      matrix_spec: {os: "*", mongodb_version: "latest"}
-      display_name: "${os} ${mongodb_version} Versioned API"
-      tasks:
-          - name: test_versioned_api
-          - name: test_versioned_api_accept_version_two
+    - name: integration-ubuntu1804-4.4-single
+      display_name: "Ubuntu 18.04 Debug (MongoDB 4.4)"
+      run_on: ubuntu1804-large
+      expansions:
+          mongodb_version: "4.4"
+          <<: *integration_matrix_expansions_linux
+      <<: *integration_matrix_tasks_single
+
+    - name: integration-ubuntu1804-4.2-single
+      display_name: "Ubuntu 18.04 Debug (MongoDB 4.2)"
+      run_on: ubuntu1804-large
+      expansions:
+          mongodb_version: "4.2"
+          <<: *integration_matrix_expansions_linux
+      <<: *integration_matrix_tasks_single
+
+    - name: integration-ubuntu1804-4.0-single
+      display_name: "Ubuntu 18.04 Debug (MongoDB 4.0)"
+      run_on: ubuntu1804-large
+      expansions:
+          mongodb_version: "4.0"
+          <<: *integration_matrix_expansions_linux
+      <<: *integration_matrix_tasks_single
+
+    - name: integration-vs2017-latest-single
+      display_name: "Windows (VS 2017) Debug (MongoDB Latest)"
+      run_on: windows-64-vs2017-large
+      expansions:
+          mongodb_version: "latest"
+          <<: *integration_matrix_expansions_windows
+      <<: *integration_matrix_tasks_single
+
+    - name: integration-vs2017-7.0-single
+      display_name: "Windows (VS 2017) Debug (MongoDB 7.0)"
+      run_on: windows-64-vs2017-large
+      expansions:
+          mongodb_version: "7.0"
+          <<: *integration_matrix_expansions_windows
+      <<: *integration_matrix_tasks_single
+
+    - name: integration-vs2017-6.0-single
+      display_name: "Windows (VS 2017) Debug (MongoDB 6.0)"
+      run_on: windows-64-vs2017-large
+      expansions:
+          mongodb_version: "6.0"
+          <<: *integration_matrix_expansions_windows
+      <<: *integration_matrix_tasks_single
+
+    - name: integration-vs2017-5.0-single
+      display_name: "Windows (VS 2017) Debug (MongoDB 5.0)"
+      run_on: windows-64-vs2017-large
+      expansions:
+          mongodb_version: "5.0"
+          <<: *integration_matrix_expansions_windows
+      <<: *integration_matrix_tasks_single
+
+    - name: integration-vs2017-4.4-single
+      display_name: "Windows (VS 2017) Debug (MongoDB 4.4)"
+      run_on: windows-64-vs2017-large
+      expansions:
+          mongodb_version: "4.4"
+          <<: *integration_matrix_expansions_windows
+      <<: *integration_matrix_tasks_single
+
+    - name: integration-vs2017-4.2-single
+      display_name: "Windows (VS 2017) Debug (MongoDB 4.2)"
+      run_on: windows-64-vs2017-large
+      expansions:
+          mongodb_version: "4.2"
+          <<: *integration_matrix_expansions_windows
+      <<: *integration_matrix_tasks_single
+
+    - name: integration-vs2017-4.0-single
+      display_name: "Windows (VS 2017) Debug (MongoDB 4.0)"
+      run_on: windows-64-vs2017-large
+      expansions:
+          mongodb_version: "4.0"
+          <<: *integration_matrix_expansions_windows
+      <<: *integration_matrix_tasks_single
+
+    - name: integration-ubuntu2004-latest-replica
+      display_name: "Ubuntu 20.04 Debug replica set (MongoDB Latest)"
+      run_on: ubuntu2004-large
+      expansions:
+          mongodb_version: "latest"
+          <<: *integration_matrix_expansions_linux
+      <<: *integration_matrix_tasks_replica
+
+    - name: integration-ubuntu2004-7.0-replica
+      display_name: "Ubuntu 20.04 Debug replica set (MongoDB 7.0)"
+      run_on: ubuntu2004-large
+      expansions:
+          mongodb_version: "7.0"
+          <<: *integration_matrix_expansions_linux
+      <<: *integration_matrix_tasks_replica
+
+    - name: integration-ubuntu1804-6.0-replica
+      display_name: "Ubuntu 18.04 Debug replica set (MongoDB 6.0)"
+      run_on: ubuntu1804-large
+      expansions:
+          mongodb_version: "6.0"
+          <<: *integration_matrix_expansions_linux
+      <<: *integration_matrix_tasks_replica
+
+    - name: integration-ubuntu1804-5.0-replica
+      display_name: "Ubuntu 18.04 Debug replica set (MongoDB 5.0)"
+      run_on: ubuntu1804-large
+      expansions:
+          mongodb_version: "5.0"
+          <<: *integration_matrix_expansions_linux
+      <<: *integration_matrix_tasks_replica
+
+    - name: integration-ubuntu1804-4.4-replica
+      display_name: "Ubuntu 18.04 Debug replica set (MongoDB 4.4)"
+      run_on: ubuntu1804-large
+      expansions:
+          mongodb_version: "4.4"
+          <<: *integration_matrix_expansions_linux
+      <<: *integration_matrix_tasks_replica
+
+    - name: integration-ubuntu1804-4.2-replica
+      display_name: "Ubuntu 18.04 Debug replica set (MongoDB 4.2)"
+      run_on: ubuntu1804-large
+      expansions:
+          mongodb_version: "4.2"
+          <<: *integration_matrix_expansions_linux
+      <<: *integration_matrix_tasks_replica
+
+    - name: integration-ubuntu1804-4.0-replica
+      display_name: "Ubuntu 18.04 Debug replica set (MongoDB 4.0)"
+      run_on: ubuntu1804-large
+      expansions:
+          mongodb_version: "4.0"
+          <<: *integration_matrix_expansions_linux
+      <<: *integration_matrix_tasks_replica
+
+    - name: integration-ubuntu2004-latest-sharded
+      display_name: "Ubuntu 20.04 Debug sharded cluster (MongoDB Latest)"
+      run_on: ubuntu2004-large
+      expansions:
+          mongodb_version: "latest"
+          <<: *integration_matrix_expansions_linux
+      <<: *integration_matrix_tasks_sharded
+
+    - name: integration-ubuntu2004-7.0-sharded
+      display_name: "Ubuntu 20.04 Debug sharded cluster (MongoDB 7.0)"
+      run_on: ubuntu2004-large
+      expansions:
+          mongodb_version: "7.0"
+          <<: *integration_matrix_expansions_linux
+      <<: *integration_matrix_tasks_sharded
+
+    - name: integration-ubuntu1804-6.0-sharded
+      display_name: "Ubuntu 18.04 Debug sharded cluster (MongoDB 6.0)"
+      run_on: ubuntu1804-large
+      expansions:
+          mongodb_version: "6.0"
+          <<: *integration_matrix_expansions_linux
+      <<: *integration_matrix_tasks_sharded
+
+    - name: integration-ubuntu1804-5.0-sharded
+      display_name: "Ubuntu 18.04 Debug sharded cluster (MongoDB 5.0)"
+      run_on: ubuntu1804-large
+      expansions:
+          mongodb_version: "5.0"
+          <<: *integration_matrix_expansions_linux
+      <<: *integration_matrix_tasks_sharded
+
+    - name: integration-ubuntu1804-4.4-sharded
+      display_name: "Ubuntu 18.04 Debug sharded cluster (MongoDB 4.4)"
+      run_on: ubuntu1804-large
+      expansions:
+          mongodb_version: "4.4"
+          <<: *integration_matrix_expansions_linux
+      <<: *integration_matrix_tasks_sharded
+
+    - name: integration-ubuntu1804-4.2-sharded
+      display_name: "Ubuntu 18.04 Debug sharded cluster (MongoDB 4.2)"
+      run_on: ubuntu1804-large
+      expansions:
+          mongodb_version: "4.2"
+          <<: *integration_matrix_expansions_linux
+      <<: *integration_matrix_tasks_sharded
+
+    - name: integration-ubuntu1804-4.0-sharded
+      display_name: "Ubuntu 18.04 Debug sharded cluster (MongoDB 4.0)"
+      run_on: ubuntu1804-large
+      expansions:
+          mongodb_version: "4.0"
+          <<: *integration_matrix_expansions_linux
+      <<: *integration_matrix_tasks_sharded
+
+    - name: integration-auth-ubuntu2004-latest-single
+      display_name: "Ubuntu 20.04 Debug Latest Auth"
+      run_on: ubuntu2004-large
+      expansions:
+          mongodb_version: "latest"
+          <<: *integration_matrix_expansions_linux
+      <<: *integration_matrix_auth_tasks_single
+
+    - name: integration-auth-vs2017-latest-single
+      display_name: "Windows (VS 2017) Debug Latest Auth"
+      run_on: windows-64-vs2017-large
+      expansions:
+          mongodb_version: "latest"
+          <<: *integration_matrix_expansions_windows
+      <<: *integration_matrix_auth_tasks_single
+
+    - name: integration-versioned-api-ubuntu2004-latest-single
+      display_name: "Ubuntu 20.04 Debug Latest Versioned API"
+      run_on: ubuntu2004-large
+      expansions:
+          mongodb_version: "latest"
+          <<: *integration_matrix_expansions_linux
+      <<: *integration_matrix_versioned_api_tasks_single
+
+    - name: integration-versioned-api-vs2017-latest-single
+      display_name: "Windows (VS 2017) Debug Latest Versioned API"
+      run_on: windows-64-vs2017-large
+      expansions:
+          mongodb_version: "latest"
+          <<: *integration_matrix_expansions_windows
+      <<: *integration_matrix_versioned_api_tasks_single
+
+    - name: integration-mongocryptd-ubuntu2004-latest
+      display_name: "Ubuntu 20.04 Debug (MongoDB Latest) with mongocryptd"
+      run_on: ubuntu2004-large
+      expansions:
+          mongodb_version: "latest"
+          use_mongocryptd: true
+          <<: *integration_matrix_expansions_linux
+      <<: *integration_matrix_mongocryptd_tasks
+
+    - name: integration-mongocryptd-ubuntu1804-5.0
+      display_name: "Ubuntu 18.04 Debug (MongoDB 5.0) with mongocryptd"
+      run_on: ubuntu1804-large
+      expansions:
+          mongodb_version: "5.0"
+          use_mongocryptd: true
+          <<: *integration_matrix_expansions_linux
+      <<: *integration_matrix_mongocryptd_tasks
+
+    - name: integration-mongocryptd-ubuntu1804-4.4
+      display_name: "Ubuntu 18.04 Debug (MongoDB 4.4) with mongocryptd"
+      run_on: ubuntu1804-large
+      expansions:
+          mongodb_version: "4.4"
+          use_mongocryptd: true
+          <<: *integration_matrix_expansions_linux
+      <<: *integration_matrix_mongocryptd_tasks
+
+    - name: integration-mongocryptd-ubuntu1804-4.2
+      display_name: "Ubuntu 18.04 Debug (MongoDB 4.2) with mongocryptd"
+      run_on: ubuntu1804-large
+      expansions:
+          mongodb_version: "4.2"
+          use_mongocryptd: true
+          <<: *integration_matrix_expansions_linux
+      <<: *integration_matrix_mongocryptd_tasks
 
     #######################################
     #         Linux Buildvariants         #
@@ -1430,10 +1288,7 @@ buildvariants:
       display_name: "RHEL 9 Release (MongoDB Latest)"
       expansions:
           build_type: "Release"
-          tar_options: *linux_tar_options
-          extra_path: *linux_extra_path
-          cmake_flags: *linux_cmake_flags
-          mongodb_version: *version_latest
+          mongodb_version: "latest"
           lib_dir: "lib64"
       run_on:
           - rhel90-large
@@ -1447,17 +1302,12 @@ buildvariants:
           - name: compile_and_test_with_shared_libs_replica_set_with_libmongocrypt
           - name: compile_and_test_with_shared_libs_sharded_cluster_with_libmongocrypt
           - name: build_example_with_add_subdirectory
-            distros:
-            - rhel90-large
 
     - name: arm-rhel9-release-latest
       display_name: "arm64 RHEL 9 Release (MongoDB Latest)"
       expansions:
           build_type: "Release"
-          tar_options: *linux_tar_options
-          extra_path: *linux_extra_path
-          cmake_flags: *linux_cmake_flags
-          mongodb_version: *version_latest
+          mongodb_version: "latest"
           lib_dir: "lib64"
       run_on:
           - rhel90-arm64-large
@@ -1471,17 +1321,12 @@ buildvariants:
           - name: compile_and_test_with_shared_libs_replica_set_with_libmongocrypt
           - name: compile_and_test_with_shared_libs_sharded_cluster_with_libmongocrypt
           - name: build_example_with_add_subdirectory
-            distros:
-            - rhel90-arm64-large
 
     - name: debian11-release-latest
       display_name: "Debian 11 Release (MongoDB Latest)"
       expansions:
           build_type: "Release"
-          tar_options: *linux_tar_options
-          extra_path: *linux_extra_path
-          cmake_flags: *linux_cmake_flags
-          mongodb_version: *version_latest
+          mongodb_version: "latest"
       run_on:
           - debian11-large
       tasks:
@@ -1494,18 +1339,13 @@ buildvariants:
           - name: compile_and_test_with_shared_libs_replica_set_with_libmongocrypt
           - name: compile_and_test_with_shared_libs_sharded_cluster_with_libmongocrypt
           - name: build_example_with_add_subdirectory
-            distros:
-            - debian11-large
           - name: uninstall_check
 
     - name: debian11-release-50
       display_name: "Debian 11 Release (MongoDB 5.0)"
       expansions:
           build_type: "Release"
-          tar_options: *linux_tar_options
-          extra_path: *linux_extra_path
-          cmake_flags: *linux_cmake_flags
-          mongodb_version: *version_50
+          mongodb_version: "5.0"
       run_on:
           - debian11-large
       tasks:
@@ -1518,18 +1358,13 @@ buildvariants:
           - name: compile_and_test_with_shared_libs_replica_set
           - name: compile_and_test_with_shared_libs_sharded_cluster
           - name: build_example_with_add_subdirectory
-            distros:
-            - debian11-large
           - name: uninstall_check
 
     - name: debian10-release-latest
       display_name: "Debian 10 Release (MongoDB Latest)"
       expansions:
           build_type: "Release"
-          tar_options: *linux_tar_options
-          extra_path: *linux_extra_path
-          cmake_flags: *linux_cmake_flags
-          mongodb_version: *version_latest
+          mongodb_version: "latest"
       run_on:
           - debian10-large
       tasks:
@@ -1540,18 +1375,13 @@ buildvariants:
           - name: compile_and_test_with_shared_libs_replica_set_with_libmongocrypt
           - name: compile_and_test_with_shared_libs_sharded_cluster_with_libmongocrypt
           - name: build_example_with_add_subdirectory
-            distros:
-            - debian10-large
           - name: uninstall_check
 
     - name: debian10-release-50
       display_name: "Debian 10 Release (MongoDB 5.0)"
       expansions:
           build_type: "Release"
-          tar_options: *linux_tar_options
-          extra_path: *linux_extra_path
-          cmake_flags: *linux_cmake_flags
-          mongodb_version: *version_50
+          mongodb_version: "5.0"
       run_on:
           - debian10-large
       tasks:
@@ -1562,30 +1392,13 @@ buildvariants:
           - name: compile_and_test_with_shared_libs_replica_set
           - name: compile_and_test_with_shared_libs_sharded_cluster
           - name: build_example_with_add_subdirectory
-            distros:
-            - debian10-large
           - name: uninstall_check
-
-    # Add matrix for specification test requirement of mongocryptd:
-    # "Drivers MUST run all tests with mongocryptd on at least one platform for all tested server versions (4.2+)."
-    - matrix_name: "mongocryptd"
-      matrix_spec:
-        os: "ubuntu-1804"
-        mongodb_version: ["4.2", "4.4", "5.0", "latest"]
-        use_mongocryptd: "true"
-      display_name: "${os} (MongoDB ${mongodb_version}) with mongocryptd"
-      tasks:
-          - name: compile_and_test_with_shared_libs_replica_set_with_libmongocrypt
-          - name: compile_and_test_with_shared_libs_sharded_cluster_with_libmongocrypt
 
     - name: ubuntu2004-release-latest
       display_name: "Ubuntu 20.04 Release (MongoDB Latest)"
       expansions:
           build_type: "Release"
-          tar_options: *linux_tar_options
-          extra_path: *linux_extra_path
-          cmake_flags: *linux_cmake_flags
-          mongodb_version: *version_latest
+          mongodb_version: "latest"
       run_on:
           - ubuntu2004-large
       tasks:
@@ -1596,18 +1409,13 @@ buildvariants:
           - name: compile_and_test_with_shared_libs_replica_set_with_libmongocrypt
           - name: compile_and_test_with_shared_libs_sharded_cluster_with_libmongocrypt
           - name: build_example_with_add_subdirectory
-            distros:
-            - ubuntu2004-large
           - name: uninstall_check
 
     - name: ubuntu2004-release-50
       display_name: "Ubuntu 20.04 Release (MongoDB 5.0)"
       expansions:
           build_type: "Release"
-          tar_options: *linux_tar_options
-          extra_path: *linux_extra_path
-          cmake_flags: *linux_cmake_flags
-          mongodb_version: *version_50
+          mongodb_version: "5.0"
       run_on:
           - ubuntu2004-large
       tasks:
@@ -1618,41 +1426,13 @@ buildvariants:
           - name: compile_and_test_with_shared_libs_replica_set
           - name: compile_and_test_with_shared_libs_sharded_cluster
           - name: build_example_with_add_subdirectory
-            distros:
-            - ubuntu2004-large
-          - name: uninstall_check
-
-    - name: ubuntu1804-release-latest
-      display_name: "Ubuntu 18.04 Release (MongoDB Latest)"
-      expansions:
-          build_type: "Release"
-          tar_options: *linux_tar_options
-          extra_path: *linux_extra_path
-          cmake_flags: *linux_cmake_flags
-          mongodb_version: *version_latest
-      run_on:
-          - ubuntu1804-build
-      tasks:
-          - name: lint
-          - name: compile_and_test_with_shared_libs
-          - name: compile_and_test_with_shared_libs_extra_alignment
-          - name: compile_and_test_with_static_libs
-          - name: compile_and_test_with_static_libs_extra_alignment
-          - name: compile_and_test_with_shared_libs_replica_set_with_libmongocrypt
-          - name: compile_and_test_with_shared_libs_sharded_cluster_with_libmongocrypt
-          - name: build_example_with_add_subdirectory
-            distros:
-            - ubuntu1804-build
           - name: uninstall_check
 
     - name: ubuntu1804-release-50
       display_name: "Ubuntu 18.04 Release (MongoDB 5.0)"
       expansions:
           build_type: "Release"
-          tar_options: *linux_tar_options
-          extra_path: *linux_extra_path
-          cmake_flags: *linux_cmake_flags
-          mongodb_version: *version_50
+          mongodb_version: "5.0"
       run_on:
           - ubuntu1804-build
       tasks:
@@ -1663,8 +1443,6 @@ buildvariants:
           - name: compile_and_test_with_shared_libs_replica_set
           - name: compile_and_test_with_shared_libs_sharded_cluster
           - name: build_example_with_add_subdirectory
-            distros:
-            - ubuntu1804-build
           - name: uninstall_check
 
     # TODO CXX-2260 Upgrade std::experimental tasks to use Ubuntu 18.04 and mongodb_latest
@@ -1673,12 +1451,9 @@ buildvariants:
       display_name: "Ubuntu 16.04 Debug (std::experimental) (MongoDB 4.4)"
       expansions:
           build_type: "Debug"
-          tar_options: *linux_tar_options
-          extra_path: *linux_extra_path
-          cmake_flags: *linux_cmake_flags
-          poly_flags: *poly_std_experimental_flags
-          mongodb_version: *version_44
-          example_projects_cxx_standard: *std_experimental_cxx_standard
+          USE_POLYFILL_STD_EXPERIMENTAL: ON
+          mongodb_version: "4.4"
+          example_projects_cxx_standard: 14
           use_mongocryptd: true  # crypt_shared is not available for Ubuntu 16.04
       run_on:
           - ubuntu1604-build
@@ -1688,19 +1463,16 @@ buildvariants:
           - name: compile_and_test_with_static_libs
           - name: compile_and_test_with_static_libs_extra_alignment
 
-    - name: ubuntu1804-debug-valgrind-latest
-      display_name: "Valgrind Ubuntu 18.04 Debug (MongoDB Latest)"
+    - name: ubuntu2004-debug-valgrind-latest
+      display_name: "Valgrind Ubuntu 20.04 Debug (MongoDB Latest)"
       expansions:
           build_type: "Debug"
-          tar_options: *linux_tar_options
-          extra_path: *linux_extra_path
-          cmake_flags: *linux_cmake_flags
-          test_params: *valgrind_test_params
-          mongodb_version: *version_latest
+          TEST_WITH_VALGRIND: "ON"
+          mongodb_version: "latest"
           disable_slow_tests: 1
           use_mongocryptd: true  # false positives arise from the crypt_shared library
       run_on:
-          - ubuntu1804-build
+          - ubuntu2004-build
       tasks:
           - name: compile_and_test_with_shared_libs
           - name: compile_and_test_with_shared_libs_extra_alignment
@@ -1711,11 +1483,8 @@ buildvariants:
       display_name: "Valgrind Ubuntu 18.04 Debug (MongoDB 5.0)"
       expansions:
           build_type: "Debug"
-          tar_options: *linux_tar_options
-          extra_path: *linux_extra_path
-          cmake_flags: *linux_cmake_flags
-          test_params: *valgrind_test_params
-          mongodb_version: *version_50
+          TEST_WITH_VALGRIND: "ON"
+          mongodb_version: "5.0"
           disable_slow_tests: 1
           use_mongocryptd: true
       run_on:
@@ -1726,21 +1495,21 @@ buildvariants:
           - name: compile_and_test_with_static_libs
           - name: compile_and_test_with_static_libs_extra_alignment
 
-    - name: ubuntu1804-debug-asan-latest
-      display_name: "ASAN Ubuntu 18.04 Debug (MongoDB Latest)"
+    - name: ubuntu2004-debug-asan-latest
+      display_name: "ASAN Ubuntu 20.04 Debug (MongoDB Latest)"
       expansions:
           build_type: "Debug"
-          tar_options: *linux_tar_options
-          extra_path: *linux_extra_path
-          cmake_flags: *asan_cmake_flags
-          test_params: *asan_test_params
-          mongodb_version: *version_latest
-          example_projects_cc: *asan_cc_path
-          example_projects_cxx: *asan_cxx_path
-          example_projects_cxxflags: *asan_cxxflags
-          example_projects_ldflags: *asan_ldflags
+          cc_compiler: clang
+          cxx_compiler: clang++
+          USE_SANITIZER_ASAN: ON
+          TEST_WITH_ASAN: "ON"
+          mongodb_version: "latest"
+          example_projects_cc: clang
+          example_projects_cxx: clang++
+          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
+          example_projects_ldflags: -fsanitize=address
       run_on:
-          - ubuntu1804-build
+          - ubuntu2004-build
       tasks:
           - name: compile_and_test_with_shared_libs
           - name: compile_and_test_with_shared_libs_extra_alignment
@@ -1751,15 +1520,15 @@ buildvariants:
       display_name: "ASAN Ubuntu 18.04 Debug (MongoDB 5.0)"
       expansions:
           build_type: "Debug"
-          tar_options: *linux_tar_options
-          extra_path: *linux_extra_path
-          cmake_flags: *asan_cmake_flags
-          test_params: *asan_test_params
-          mongodb_version: *version_50
-          example_projects_cc: *asan_cc_path
-          example_projects_cxx: *asan_cxx_path
-          example_projects_cxxflags: *asan_cxxflags
-          example_projects_ldflags: *asan_ldflags
+          cc_compiler: clang
+          cxx_compiler: clang++
+          USE_SANITIZER_ASAN: ON
+          TEST_WITH_ASAN: "ON"
+          mongodb_version: "5.0"
+          example_projects_cc: clang
+          example_projects_cxx: clang++
+          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
+          example_projects_ldflags: -fsanitize=address
       run_on:
           - ubuntu1804-build
       tasks:
@@ -1768,21 +1537,21 @@ buildvariants:
           - name: compile_and_test_with_static_libs
           - name: compile_and_test_with_static_libs_extra_alignment
 
-    - name: ubuntu1804-debug-ubsan-latest
-      display_name: "UBSAN Ubuntu 18.04 Debug (MongoDB Latest)"
+    - name: ubuntu2004-debug-ubsan-latest
+      display_name: "UBSAN Ubuntu 20.04 Debug (MongoDB Latest)"
       expansions:
           build_type: "Debug"
-          tar_options: *linux_tar_options
-          extra_path: *linux_extra_path
-          cmake_flags: *ubsan_cmake_flags
-          test_params: *ubsan_test_params
-          mongodb_version: *version_latest
-          example_projects_cc: *ubsan_cc_path
-          example_projects_cxx: *ubsan_cxx_path
-          example_projects_cxxflags: *ubsan_cxxflags
-          example_projects_ldflags: *ubsan_ldflags
+          cc_compiler: clang
+          cxx_compiler: clang++
+          USE_SANITIZER_UBSAN: ON
+          TEST_WITH_UBSAN: "ON"
+          mongodb_version: "latest"
+          example_projects_cc: clang
+          example_projects_cxx: clang++
+          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer
+          example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined
       run_on:
-          - ubuntu1804-build
+          - ubuntu2004-build
       tasks:
           # We currently don't run UBSAN on the shared library due to issues with UBSAN reporting
           # numerous false positive instances of undefined behavior in the mock tests, when the
@@ -1794,15 +1563,15 @@ buildvariants:
       display_name: "UBSAN Ubuntu 18.04 Debug (MongoDB 5.0)"
       expansions:
           build_type: "Debug"
-          tar_options: *linux_tar_options
-          extra_path: *linux_extra_path
-          cmake_flags: *ubsan_cmake_flags
-          test_params: *ubsan_test_params
-          mongodb_version: *version_50
-          example_projects_cc: *ubsan_cc_path
-          example_projects_cxx: *ubsan_cxx_path
-          example_projects_cxxflags: *ubsan_cxxflags
-          example_projects_ldflags: *ubsan_ldflags
+          cc_compiler: clang
+          cxx_compiler: clang++
+          USE_SANITIZER_UBSAN: ON
+          TEST_WITH_UBSAN: "ON"
+          mongodb_version: "5.0"
+          example_projects_cc: clang
+          example_projects_cxx: clang++
+          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer
+          example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined
       run_on:
           - ubuntu1804-build
       tasks:
@@ -1812,46 +1581,42 @@ buildvariants:
           # signature.
           - name: compile_and_test_with_static_libs
 
-    - name: ubuntu1804-debug
-      display_name: "Ubuntu 18.04 Debug (MongoDB Latest) (Extra)"
+    - name: ubuntu2004-debug
+      display_name: "Ubuntu 20.04 Debug (MongoDB Latest) (Extra)"
       expansions:
         build_type: "Debug"
-        tar_options: *linux_tar_options
-        cmake_flags: *linux_cmake_flags
-        mongodb_version: *version_latest
+        mongodb_version: "latest"
       run_on:
-        - ubuntu1804-build
+        - ubuntu2004-build
       tasks:
-        - name: clang-tidy
         - name: compile_without_tests
         - name: compile_macro_guard_tests
         - name: test_atlas_task_group_search_indexes
 
-    - name: ubuntu2204-debug-gcc
-      display_name: "Ubuntu 22.04 Debug (GCC)"
+    - name: ubuntu2004-debug-gcc
+      display_name: "Ubuntu 20.04 Debug (GCC)"
       expansions:
         build_type: "Debug"
-        tar_options: *linux_tar_options
-        cmake_flags: *linux_cmake_flags
-        mongodb_version: *version_latest
-        compiler: g++
+        mongodb_version: "latest"
+        cc_compiler: gcc
+        cxx_compiler: g++
       run_on:
-        - ubuntu2204-small
+        - ubuntu2004-small
       tasks:
         - name: compile_without_tests
         - name: compile_macro_guard_tests
 
-    - name: ubuntu2204-debug-clang
-      display_name: "Ubuntu 22.04 Debug (Clang)"
+    - name: ubuntu2004-debug-clang
+      display_name: "Ubuntu 20.04 Debug (Clang)"
       expansions:
         build_type: "Debug"
-        tar_options: *linux_tar_options
-        cmake_flags: *linux_cmake_flags
-        mongodb_version: *version_latest
-        compiler: clang++
+        mongodb_version: "latest"
+        cc_compiler: clang
+        cxx_compiler: clang++
       run_on:
-        - ubuntu2204-small
+        - ubuntu2004-small
       tasks:
+        - name: clang-tidy
         - name: compile_without_tests
         - name: compile_macro_guard_tests
 
@@ -1859,10 +1624,8 @@ buildvariants:
       display_name: "Mongohouse Test"
       expansions:
           build_type: "Release"
-          tar_options: *linux_tar_options
-          cmake_flags: *linux_cmake_flags
-          mongodb_version: *version_latest
-      run_on: ubuntu1804-test
+          mongodb_version: "latest"
+      run_on: ubuntu2004-test
       tasks:
           - name: test_mongohouse
 
@@ -1871,9 +1634,7 @@ buildvariants:
       batchtime: 1440 # 1 day
       expansions:
           build_type: "Release"
-          tar_options: *linux_tar_options
-          cmake_flags: *linux_cmake_flags
-          mongodb_version: *version_latest
+          mongodb_version: "latest"
           cmake: "cmake"
           lib_dir: "lib64"
       run_on:
@@ -1890,9 +1651,7 @@ buildvariants:
       batchtime: 1440 # 1 day
       expansions:
           build_type: "Release"
-          tar_options: *linux_tar_options
-          cmake_flags: *linux_cmake_flags
-          mongodb_version: *version_60
+          mongodb_version: "6.0"
           cmake: "cmake"
           lib_dir: "lib64"
       run_on:
@@ -1909,9 +1668,7 @@ buildvariants:
       batchtime: 1440 # 1 day
       expansions:
           build_type: "Release"
-          tar_options: *linux_tar_options
-          cmake_flags: *linux_cmake_flags
-          mongodb_version: *version_50
+          mongodb_version: "5.0"
           cmake: "cmake"
           lib_dir: "lib64"
       run_on:
@@ -1928,9 +1685,7 @@ buildvariants:
       batchtime: 1440 # 1 day
       expansions:
           build_type: "Release"
-          tar_options: *linux_tar_options
-          cmake_flags: *power8_cmake_flags
-          mongodb_version: *version_latest
+          mongodb_version: "latest"
           cmake: "cmake"
           lib_dir: "lib64"
       run_on:
@@ -1947,9 +1702,7 @@ buildvariants:
       batchtime: 1440 # 1 day
       expansions:
           build_type: "Release"
-          tar_options: *linux_tar_options
-          cmake_flags: *power8_cmake_flags
-          mongodb_version: *version_50
+          mongodb_version: "5.0"
           cmake: "cmake"
           lib_dir: "lib64"
       run_on:
@@ -1961,16 +1714,14 @@ buildvariants:
           - name: compile_and_test_with_static_libs
           - name: compile_and_test_with_static_libs_extra_alignment
 
-    - name: arm-ubuntu1804-latest
-      display_name: "arm64 Ubuntu 18.04 (MongoDB Latest)"
+    - name: arm-ubuntu2004-latest
+      display_name: "arm64 Ubuntu 20.04 (MongoDB Latest)"
       batchtime: 1440 # 1 day
       expansions:
           build_type: "Release"
-          tar_options: *linux_tar_options
-          cmake_flags: *linux_cmake_flags
-          mongodb_version: *version_latest
+          mongodb_version: "latest"
       run_on:
-          - ubuntu1804-arm64-build
+          - ubuntu2004-arm64-build
       tasks:
           - name: compile_and_test_with_shared_libs
           - name: compile_and_test_with_shared_libs_extra_alignment
@@ -1982,29 +1733,9 @@ buildvariants:
       batchtime: 1440 # 1 day
       expansions:
           build_type: "Release"
-          tar_options: *linux_tar_options
-          cmake_flags: *linux_cmake_flags
-          mongodb_version: *version_50
+          mongodb_version: "5.0"
       run_on:
           - ubuntu1804-arm64-build
-      tasks:
-          - name: compile_and_test_with_shared_libs
-          - name: compile_and_test_with_shared_libs_extra_alignment
-          - name: compile_and_test_with_static_libs
-          - name: compile_and_test_with_static_libs_extra_alignment
-
-    # Test that we actually support building against the minimum required C version claimed.
-    - name: ubuntu1804-min-libmongoc
-      display_name: "Ubuntu 18.04 with minimum libmongoc (MongoDB Latest)"
-      batchtime: 1440 # 1 day
-      expansions:
-          build_type: "Debug"
-          tar_options: *linux_tar_options
-          cmake_flags: *linux_cmake_flags
-          mongodb_version: *version_latest
-          mongoc_version: *mongoc_version_minimum
-      run_on:
-          - ubuntu1804-build
       tasks:
           - name: compile_and_test_with_shared_libs
           - name: compile_and_test_with_shared_libs_extra_alignment
@@ -2018,10 +1749,8 @@ buildvariants:
       display_name: "MacOS 11.0 Release (Boost) (MongoDB Latest)"
       expansions:
           build_type: "Release"
-          extra_path: *macos_extra_path
-          cmake_flags: *macos_cmake_flags
-          poly_flags: *poly_boost_flags
-          mongodb_version: *version_latest
+          USE_POLYFILL_BOOST: ON
+          mongodb_version: "latest"
       run_on:
           - macos-1100
       tasks:
@@ -2034,10 +1763,8 @@ buildvariants:
       display_name: "MacOS 11.0 Release (Boost) (MongoDB 5.0)"
       expansions:
           build_type: "Release"
-          extra_path: *macos_extra_path
-          cmake_flags: *macos_cmake_flags
-          poly_flags: *poly_boost_flags
-          mongodb_version: *version_50
+          USE_POLYFILL_BOOST: ON
+          mongodb_version: "5.0"
       run_on:
           - macos-1100
       tasks:
@@ -2050,10 +1777,8 @@ buildvariants:
       display_name: "MacOS 11.0 Release Versioned API"
       expansions:
           build_type: "Release"
-          extra_path: *macos_extra_path
-          cmake_flags: *macos_cmake_flags
-          poly_flags: *poly_boost_flags
-          mongodb_version: *version_latest
+          USE_POLYFILL_BOOST: ON
+          mongodb_version: "latest"
       run_on:
           - macos-1100
       tasks:
@@ -2064,11 +1789,8 @@ buildvariants:
       display_name: "Windows (VS 2015) Release (MongoDB 4.2)"
       expansions:
           build_type: "Release"
-          tar_options: *linux_tar_options
-          extra_path: *msvc2015_extra_path
-          cmake_flags: *msvc2015_cmake_flags
-          mongodb_version: *version_42
-          generator: *msvc2015_generator
+          mongodb_version: "4.2"
+          generator: Visual Studio 14 2015 Win64
       run_on:
           - windows-64-vs2015-compile
       tasks:
@@ -2082,11 +1804,8 @@ buildvariants:
       display_name: "Windows (VS 2015) Debug Static (MongoDB 4.2)"
       expansions:
           build_type: "Debug"
-          tar_options: *linux_tar_options
-          extra_path: *msvc2015_extra_path
-          cmake_flags: *msvc2015_cmake_flags
-          mongodb_version: *version_42
-          generator: *msvc2015_generator
+          mongodb_version: "4.2"
+          generator: Visual Studio 14 2015 Win64
       run_on:
           - windows-64-vs2015-compile
       tasks:
@@ -2098,11 +1817,8 @@ buildvariants:
       display_name: "Windows (VS 2015) Debug (MongoDB 4.2)"
       expansions:
           build_type: "Debug"
-          tar_options: *linux_tar_options
-          extra_path: *msvc2015_extra_path
-          cmake_flags: *msvc2015_cmake_flags
-          generator: *msvc2015_generator
-          mongodb_version: *version_42
+          generator: Visual Studio 14 2015 Win64
+          mongodb_version: "4.2"
       run_on:
          - windows-64-vs2015-compile
       tasks:
@@ -2111,10 +1827,11 @@ buildvariants:
 
     - name: packaging
       display_name: Linux Distro Packaging
-      run_on: ubuntu1804-test
       tasks:
          - name: debian-package-build
          - name: debian-package-build-mnmlstc
          - name: rpm-package-build
-           distros:
-           - rhel90-arm64-small
+
+    - name: lint
+      display_name: Lint
+      tasks: [lint]

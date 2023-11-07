@@ -3,7 +3,7 @@
 set -o errexit
 set -o pipefail
 
-declare -r mongoc_version="${mongoc_version:-"${mongoc_version_default:?"missing mongoc version"}"}"
+declare -r mongoc_version="${mongoc_version:-"${mongoc_version_minimum:?"missing mongoc version"}"}"
 : "${mongoc_version:?}"
 
 # Usage:
