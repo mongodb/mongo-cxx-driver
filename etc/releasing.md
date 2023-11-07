@@ -344,6 +344,8 @@ driver process documentation Google doc.
 
 ### Debian
 
+#### Build
+
 - Checkout the appropriate release branch.
 - For the first Debian package release on a new release branch, edit
   `debian/gbp.conf` and update the `upstream-branch` and `debian-branch`
@@ -361,6 +363,13 @@ DEBEMAIL='my-email@mongodb.com' DEBFULLNAME='FIRSTNAME LASTNAME' dch -v VERSION
 - Make any other necessary changes to the Debian packaging components
   (e.g., update to standards version, dependencies, descriptions, etc.) and make
   relevant entries in `debian/changelog` as needed
+- If this release fixes any Debian bugs that are tracked in the Debian bug
+  tracking system (links below in [Post Build](#post-build)), then note that
+  the bug is closed with this release in `debian/changelog`, for example:
+```
+  * New upstream release (Closes: #1042682)
+```
+
 - Use `git add` to stage the changed files for commit (only files in the
   `debian/` directory should be committed), then commit them (the `debcommit`
   utility is helpful here). A common commit message for this stage is:
@@ -449,6 +458,28 @@ $ DEBEMAIL='my-email@mongodb.com' DEBFULLNAME='FIRSTNAME LASTNAME' dch -r -D exp
   touch only the Debian packaging (this will ensure that the packaging and
   especially the changelog on the master remain up to date)
 - Open a PR with the cherry-picks and use the `Rebase and merge` merge strategy.
+
+#### Post Build
+
+After the package has been accepted into Debian, make sure to check if there are
+any bugs or build failures. Debian tests builds on more architectures than we
+officially support and test on in Evergreen, so there are occasionally
+surprising build failures on exotic architectures.
+
+Bug tracking can be found here for the following projects:
+- [libmongocrypt](https://bugs.debian.org/cgi-bin/pkgreport.cgi?src=libmongocrypt)
+- [mongo-c-driver](https://bugs.debian.org/cgi-bin/pkgreport.cgi?src=mongo-c-driver)
+- [mongo-cxx-driver](https://bugs.debian.org/cgi-bin/pkgreport.cgi?src=mongo-cxx-driver)
+
+Build logs can be found here:
+- [libmongocrypt](https://buildd.debian.org/status/package.php?p=libmongocrypt)
+- [mongo-c-driver](https://buildd.debian.org/status/package.php?p=mongo-c-driver)
+- [mongo-cxx-driver](https://buildd.debian.org/status/package.php?p=mongo-cxx-driver)
+
+Tracking the status of the following projects can be found here:
+- [libmongocrypt](https://tracker.debian.org/pkg/libmongocrypt)
+- [mongo-c-driver](https://tracker.debian.org/pkg/mongo-c-driver)
+- [mongo-cxx-driver](https://tracker.debian.org/pkg/mongo-cxx-driver)
 
 ### Fedora
 

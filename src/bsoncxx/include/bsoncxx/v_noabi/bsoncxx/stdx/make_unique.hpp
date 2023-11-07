@@ -85,22 +85,7 @@ struct make_unique_impl<T&&> {};
 
 }  // namespace detail
 
-/**
- * @brief Create a new std::unique_ptr that points-to the given type, direct-initialized based on
- * the given arguments.
- *
- * @tparam T Any non-array object type or any array of unknown bound.
- * @param args If T is a non-array object type, these are the constructor arguments used to
- * direct-initialize the object. If T is an array of unknown bound, then the sole argument must be a
- * single std::size_t that specifies the number of objects to allocate in the array.
- *
- * Requires:
- * - If T is an array of unknown bounds, then args... must be a single size_t and the element type
- * of T must be value-initializable.
- * - Otherwise, if T is a non-array object type, then T must be direct-initializable with arguments
- * `args...`
- * - Otherwise, this function is excluded from overload resolution.
- */
+/// Equivalent to `std::make_unique<T>(args...)` where `T` is a non-array type.
 template <typename T,
           typename... Args,
           typename Impl = detail::make_unique_impl<T>,
@@ -111,9 +96,7 @@ std::unique_ptr<T> make_unique(Args&&... args) {
     return Impl::make(std::true_type{}, std::forward<Args>(args)...);
 }
 
-/**
- * @copydoc bsoncxx::v_noabi::stdx::make_unique
- */
+/// Equivalent to `std::make_unique<T>(count)` where `T` is an array type.
 template <
     typename T,
     typename Impl = detail::make_unique_impl<T>,
@@ -124,34 +107,16 @@ std::unique_ptr<T> make_unique(std::size_t count) {
     return Impl::make(std::true_type{}, count);
 }
 
-/**
- * @brief Create a new std::unique_ptr that points-to a default-initialized instance of the given
- * type.
- *
- * @tparam T A non-array object type or an array of unknown bound
- * @param args If T is an object type, then args... must no arguments are allowed.
- * If T is an array of unknown bound, then args... must be a single size_t specifying
- * the length of the array to allocate.
- *
- * Requires:
- * - T must be default-initializable
- * - If T is an array of unknown bounds, then args... must be a single size_t
- * - Otherwise, if T is a non-array object type, args... must be empty
- * - Otherwise, this function is excluded from overload resolution
- */
+/// Equivalent to `std::make_unique_for_overwrite<T>()` where `T` is a non-array type.
 template <typename T,
-          typename... Args,
           typename Impl = detail::make_unique_impl<T>,
           typename std::enable_if<!std::is_array<T>::value,
-                                  decltype(Impl::make(std::false_type{}, std::declval<Args>()...),
-                                           void())>::type* = nullptr>
-std::unique_ptr<T> make_unique_for_overwrite(Args&&... args) {
-    return Impl::make(std::false_type{}, std::forward<Args>(args)...);
+                                  decltype(Impl::make(std::false_type{}), void())>::type* = nullptr>
+std::unique_ptr<T> make_unique_for_overwrite() {
+    return Impl::make(std::false_type{});
 }
 
-/**
- * @copydoc bsoncxx::v_noabi::stdx::make_unique_for_overwrite
- */
+/// Equivalent to `std::make_unique_for_overwrite<T>(count)` where `T` is an array type.
 template <
     typename T,
     typename Impl = detail::make_unique_impl<T>,
