@@ -206,7 +206,7 @@ if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT AND MONGOCXX_OVERRIDE_DEFAULT_INS
     message(WARNING
         "mongocxx: The default CMAKE_INSTALL_PREFIX is being overridden to the "
         "build directory. This behavior will not be the default in a future "
-        "release. Build with 'MONGOCXX_OVERRIDE_DEFAULT_INSTALL_PREFIX=ON' to opt "
+        "release. Build with 'MONGOCXX_OVERRIDE_DEFAULT_INSTALL_PREFIX=OFF' to opt "
         "into what will be the default behavior in a future release. Setting install "
         "path to: ${CMAKE_BINARY_DIR}/install")
     set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/install" CACHE PATH "default install path" FORCE)
