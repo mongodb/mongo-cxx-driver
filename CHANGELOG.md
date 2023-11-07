@@ -32,3 +32,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 - Remove support for exported targets from the CMake project build tree.
+- Drop support for the following operating systems:
+  - macOS 10.14 and 10.15
+  - Ubuntu 14.04
