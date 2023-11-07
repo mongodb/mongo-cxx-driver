@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   for backwards-compatibility).
 - Add API to manage [Atlas Search Indexes](https://www.mongodb.com/docs/atlas/atlas-search/).
 - Automatically download C driver dependency if not provided.
+- Add VERSIONINFO resource to bsoncxx.dll and mongocxx.dll.
 
 ### Changed
 - Do not build tests as part of `all` target. Configure with `BUILD_TESTING=ON` to build tests.
