@@ -26,7 +26,7 @@
 #include <unordered_map>
 #include <vector>
 
-#include "bsoncxx/stdx/type_traits.hpp"
+#include <bsoncxx/stdx/type_traits.hpp>
 
 #include <mongocxx/config/private/prelude.hh>
 
