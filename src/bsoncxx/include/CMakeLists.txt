@@ -59,6 +59,7 @@ set_dist_list(src_bsoncxx_include_DIST
     bsoncxx/v_noabi/bsoncxx/stdx/make_unique.hpp
     bsoncxx/v_noabi/bsoncxx/stdx/optional.hpp
     bsoncxx/v_noabi/bsoncxx/stdx/string_view.hpp
+    bsoncxx/v_noabi/bsoncxx/stdx/type_traits.hpp
     bsoncxx/v_noabi/bsoncxx/string/to_string.hpp
     bsoncxx/v_noabi/bsoncxx/string/view_or_value.hpp
     bsoncxx/v_noabi/bsoncxx/types.hpp

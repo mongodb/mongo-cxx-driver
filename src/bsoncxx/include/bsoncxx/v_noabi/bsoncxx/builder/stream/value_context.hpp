@@ -18,7 +18,7 @@
 #include <bsoncxx/builder/stream/array_context.hpp>
 #include <bsoncxx/builder/stream/closed_context.hpp>
 #include <bsoncxx/builder/stream/helpers.hpp>
-#include <bsoncxx/util/functor.hpp>
+#include <bsoncxx/stdx/type_traits.hpp>
 
 #include <bsoncxx/config/prelude.hpp>
 
@@ -63,9 +63,8 @@ class value_context {
     ///   The value to append
     ///
     template <class T>
-    BSONCXX_INLINE
-        typename std::enable_if<!util::is_functor<T, void(single_context)>::value, base>::type
-        operator<<(T&& t) {
+    BSONCXX_INLINE detail::requires_not_t<base, detail::is_invocable<T, single_context>>  //
+    operator<<(T&& t) {
         _core->append(std::forward<T>(t));
         return unwrap();
     }
@@ -78,10 +77,9 @@ class value_context {
     ///   The callback to invoke
     ///
     template <typename T>
-    BSONCXX_INLINE
-        typename std::enable_if<util::is_functor<T, void(single_context)>::value, base>::type
-        operator<<(T&& func) {
-        func(*this);
+    BSONCXX_INLINE detail::requires_t<base, detail::is_invocable<T, single_context>>  //
+    operator<<(T&& func) {
+        detail::invoke(std::forward<T>(func), *this);
         return unwrap();
     }
 

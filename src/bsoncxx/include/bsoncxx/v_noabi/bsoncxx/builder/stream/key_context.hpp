@@ -19,7 +19,7 @@
 #include <bsoncxx/builder/stream/closed_context.hpp>
 #include <bsoncxx/builder/stream/value_context.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
-#include <bsoncxx/util/functor.hpp>
+#include <bsoncxx/stdx/type_traits.hpp>
 
 #include <bsoncxx/config/prelude.hpp>
 
@@ -108,10 +108,9 @@ class key_context {
     ///   The callback to invoke
     ///
     template <typename T>
-    BSONCXX_INLINE
-        typename std::enable_if<util::is_functor<T, void(key_context<>)>::value, key_context>::type&
-        operator<<(T&& func) {
-        func(*this);
+    BSONCXX_INLINE detail::requires_t<key_context&, detail::is_invocable<T, key_context>>  //
+    operator<<(T&& func) {
+        detail::invoke(std::forward<T>(func), *this);
         return *this;
     }
 
@@ -126,12 +125,9 @@ class key_context {
     /// @return A value type which holds the complete bson document.
     ///
     template <typename T>
-    BSONCXX_INLINE typename std::enable_if<
-        std::is_same<base, closed_context>::value &&
-            std::is_same<typename std::remove_reference<T>::type, const finalize_type>::value,
-        // TODO(MSVC): This should just be 'document::value', but
-        // VS2015U1 can't resolve the name.
-        bsoncxx::document::value>::type
+    BSONCXX_INLINE detail::requires_t<bsoncxx::document::value,
+                                      std::is_same<base, closed_context>,
+                                      detail::is_alike<T, finalize_type>>
     operator<<(T&&) {
         return _core->extract_document();
     }

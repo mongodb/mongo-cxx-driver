@@ -38,6 +38,7 @@ add_executable(test_bson
     oid.cpp
     view_or_value.cpp
     make_unique.test.cpp
+    type_traits.test.cpp
 )
 
 # Common target properties for test executables.
@@ -120,5 +121,6 @@ set_dist_list(src_bsoncxx_test_DIST
     test_macro_guards.cpp.in
     to_string.hh
     view_or_value.cpp
+    type_traits.test.cpp
     make_unique.test.cpp
 )

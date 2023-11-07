@@ -18,6 +18,7 @@
 #include <stdexcept>
 #include <type_traits>
 
+#include "bsoncxx/stdx/type_traits.hpp"
 #include <bsoncxx/array/value.hpp>
 #include <bsoncxx/array/view.hpp>
 #include <bsoncxx/document/value.hpp>
@@ -508,7 +509,7 @@ class BSONCXX_API core {
     ///
     template <typename T>
     BSONCXX_INLINE core& append(T* v) {
-        static_assert(std::is_same<typename std::remove_const<T>::type, char>::value,
+        static_assert(detail::is_alike<T, char>::value,
                       "append is disabled for non-char pointer types");
         append(types::b_string{v});
 

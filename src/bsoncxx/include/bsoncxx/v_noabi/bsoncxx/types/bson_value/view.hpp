@@ -18,6 +18,7 @@
 #include <cstdint>
 #include <type_traits>
 
+#include <bsoncxx/stdx/type_traits.hpp>
 #include <bsoncxx/types.hpp>
 
 #include <bsoncxx/config/prelude.hpp>
@@ -306,32 +307,36 @@ class BSONCXX_API view {
     };
 };
 
-// sfinae in the bool return to avoid competing with the value == value
-// operators.
 template <typename T>
-using not_view = typename std::enable_if<
-    std::is_constructible<bson_value::view, T>::value &&
-        !std::is_same<typename std::decay<T>::type, bson_value::view>::value &&
-        !std::is_same<typename std::decay<T>::type, bson_value::value>::value,
-    bool>::type;
+using is_bson_view_compatible = detail::conjunction<
+    std::is_constructible<bson_value::view, T>,
+    detail::negation<detail::disjunction<detail::is_alike<T, bson_value::view>,
+                                         detail::is_alike<T, bson_value::value>>>>;
 
 template <typename T>
-BSONCXX_INLINE not_view<T> operator==(const bson_value::view& lhs, T&& rhs) {
+using not_view = is_bson_view_compatible<T>;
+
+template <typename T>
+BSONCXX_INLINE detail::requires_t<bool, is_bson_view_compatible<T>>  //
+operator==(const bson_value::view& lhs, T&& rhs) {
     return lhs == bson_value::view{std::forward<T>(rhs)};
 }
 
 template <typename T>
-BSONCXX_INLINE not_view<T> operator==(T&& lhs, const bson_value::view& rhs) {
+BSONCXX_INLINE detail::requires_t<bool, is_bson_view_compatible<T>>  //
+operator==(T&& lhs, const bson_value::view& rhs) {
     return bson_value::view{std::forward<T>(lhs)} == rhs;
 }
 
 template <typename T>
-BSONCXX_INLINE not_view<T> operator!=(const bson_value::view& lhs, T&& rhs) {
+BSONCXX_INLINE detail::requires_t<bool, is_bson_view_compatible<T>>  //
+operator!=(const bson_value::view& lhs, T&& rhs) {
     return lhs != bson_value::view{std::forward<T>(rhs)};
 }
 
 template <typename T>
-BSONCXX_INLINE not_view<T> operator!=(T&& lhs, const bson_value::view& rhs) {
+BSONCXX_INLINE detail::requires_t<bool, is_bson_view_compatible<T>>  //
+operator!=(T&& lhs, const bson_value::view& rhs) {
     return bson_value::view{std::forward<T>(lhs)} != rhs;
 }
 

@@ -16,7 +16,9 @@
 
 #include <cstdlib>
 #include <memory>
+#include <type_traits>
 
+#include "bsoncxx/stdx/type_traits.hpp"
 #include <bsoncxx/array/view.hpp>
 #include <bsoncxx/document/view.hpp>
 
@@ -84,8 +86,7 @@ class BSONCXX_API value {
     /// @param t
     ///   A user-defined object to serialize into a BSON object.
     ///
-    template <typename T,
-              typename std::enable_if<!std::is_same<T, typename array::view>::value, int>::type = 0>
+    template <typename T, detail::requires_not_t<int, std::is_same<T, array::view>> = 0>
     explicit value(const T& t) : value({}) {
         to_bson(t, *this);
     }
