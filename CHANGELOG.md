@@ -22,7 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Improve handling of downloaded (non-system) mnmlstc/core as the polyfill library.
   - Use `FetchContent` instead of `ExternalProject` to download and build the library.
   - Do not patch include directives in mnmlstc/core headers.
-- Bump minimum C Driver (libmongoc) version to [1.25.0](https://github.com/mongodb/mongo-c-driver/releases/tag/1.25.0).
+- Bump minimum C Driver version to [1.25.0](https://github.com/mongodb/mongo-c-driver/releases/tag/1.25.0).
 
 ### Fixed
 - Explicitly document that throwing an exception from an APM callback is undefined behavior.
