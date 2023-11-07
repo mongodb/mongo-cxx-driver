@@ -18,9 +18,9 @@
 #include <memory>
 #include <type_traits>
 
-#include "bsoncxx/stdx/type_traits.hpp"
 #include <bsoncxx/array/view.hpp>
 #include <bsoncxx/document/view.hpp>
+#include <bsoncxx/stdx/type_traits.hpp>
 
 #include <bsoncxx/config/prelude.hpp>
 

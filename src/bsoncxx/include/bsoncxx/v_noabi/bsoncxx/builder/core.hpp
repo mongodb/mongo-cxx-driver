@@ -18,12 +18,12 @@
 #include <stdexcept>
 #include <type_traits>
 
-#include "bsoncxx/stdx/type_traits.hpp"
 #include <bsoncxx/array/value.hpp>
 #include <bsoncxx/array/view.hpp>
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
+#include <bsoncxx/stdx/type_traits.hpp>
 #include <bsoncxx/types.hpp>
 
 #include <bsoncxx/config/prelude.hpp>
