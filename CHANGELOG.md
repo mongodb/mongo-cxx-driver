@@ -7,8 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## 3.9.0 [Unreleased]
 
+
 ### Added
 
+- The C++ driver container image is now available on [Docker hub](https://hub.docker.com/r/mongodb/mongo-cxx-driver).
 - Add CMake option `MONGOCXX_OVERRIDE_DEFAULT_INSTALL_PREFIX` (default is `TRUE`
   for backwards-compatibility).
 - Add API to manage [Atlas Search Indexes](https://www.mongodb.com/docs/atlas/atlas-search/).
