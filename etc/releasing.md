@@ -9,7 +9,7 @@ and select the version "Pre CXX-584".
 Ensure the latest commit has run tests on the Evergreen waterfall.
 
 For a minor release this should be the
-[waterfall](https://evergreen.mongodb.com/waterfall/cxx-driver) tracking the
+[waterfall](https://spruce.mongodb.com/commits/cxx-driver) tracking the
 master branch (requires auth).
 For a patch release this is the waterfall tracking that branch. E.g. if you are
 releasing 3.7.3, then refer to the the waterfall tracking
