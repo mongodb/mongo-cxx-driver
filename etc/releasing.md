@@ -19,14 +19,6 @@ releasing 3.7.3, then refer to the the waterfall tracking
 If there are test failures, ensure they are at least expected or not introduced
 by changes in the new release.
 
-## Check driver versions are correct for the Docker images
-
-In `extras/docker/generate.py` check that the versions are correct and if
-appropriate, bump the version numbers for:
-- `MONGOCXX_VERSION`
-- `MONGOC_VERSION`
-- `MONGOCRYPT_VERSION`
-
 ## Check fixVersions in Jira
 
 Ensure that all tickets under the
