@@ -18,6 +18,30 @@ inline namespace v_noabi {
 using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_document;
 
+struct collection_deleter {
+    void operator()(mongoc_collection_t* ptr) noexcept {
+        libmongoc::collection_destroy(ptr);
+    }
+};
+
+using collection_ptr = std::unique_ptr<mongoc_collection_t, collection_deleter>;
+
+// `copy_and_apply_default_rw_concerns` copies the mongoc_collection_t and applies a default
+// readConcern and writeConcern. Used to prevent sending a readConcern or writeConcern.
+static collection_ptr copy_and_apply_default_rw_concerns(mongoc_collection_t* coll) {
+    auto* wc_default = libmongoc::write_concern_new();
+    auto* rc_default = libmongoc::read_concern_new();
+    auto coll_copy = libmongoc::collection_copy(coll);
+
+    mongoc_collection_set_read_concern(coll_copy, rc_default);
+    mongoc_collection_set_write_concern(coll_copy, wc_default);
+
+    libmongoc::read_concern_destroy(rc_default);
+    libmongoc::write_concern_destroy(wc_default);
+
+    return collection_ptr(coll_copy);
+}
+
 class search_index_view::impl {
    public:
     impl(mongoc_collection_t* collection, mongoc_client_t* client)
@@ -56,8 +80,9 @@ class search_index_view::impl {
 
         libbson::scoped_bson_t opts_bson(opts_doc.view());
 
+        auto coll_copy = copy_and_apply_default_rw_concerns(_coll);
         return libmongoc::collection_aggregate(
-            _coll, mongoc_query_flags_t(), stages.bson(), opts_bson.bson(), rp_ptr);
+            coll_copy.get(), mongoc_query_flags_t(), stages.bson(), opts_bson.bson(), rp_ptr);
     }
 
     std::string create_one(const client_session* session, const search_index_model& model) {
@@ -107,8 +132,9 @@ class search_index_view::impl {
         libbson::scoped_bson_t command_bson{command};
         libbson::scoped_bson_t opts_bson{opts_doc.view()};
 
+        auto coll_copy = copy_and_apply_default_rw_concerns(_coll);
         auto result = libmongoc::collection_write_command_with_opts(
-            _coll, command_bson.bson(), opts_bson.bson(), reply.bson_for_init(), &error);
+            coll_copy.get(), command_bson.bson(), opts_bson.bson(), reply.bson_for_init(), &error);
 
         if (!result) {
             throw_exception<operation_exception>(reply.steal(), error);
@@ -133,8 +159,9 @@ class search_index_view::impl {
         libbson::scoped_bson_t opts_bson{opts_doc.view()};
         bson_error_t error;
 
+        auto coll_copy = copy_and_apply_default_rw_concerns(_coll);
         bool result = libmongoc::collection_write_command_with_opts(
-            _coll, command_bson.bson(), opts_bson.bson(), reply.bson_for_init(), &error);
+            coll_copy.get(), command_bson.bson(), opts_bson.bson(), reply.bson_for_init(), &error);
 
         const uint32_t serverErrorNamespaceNotFound = 26;
         if (error.domain == MONGOC_ERROR_QUERY && error.code == serverErrorNamespaceNotFound) {
@@ -167,8 +194,9 @@ class search_index_view::impl {
         libbson::scoped_bson_t opts_bson{opts_doc.view()};
         bson_error_t error;
 
+        auto coll_copy = copy_and_apply_default_rw_concerns(_coll);
         bool result = libmongoc::collection_write_command_with_opts(
-            _coll, command_bson.bson(), opts_bson.bson(), reply.bson_for_init(), &error);
+            coll_copy.get(), command_bson.bson(), opts_bson.bson(), reply.bson_for_init(), &error);
 
         if (!result) {
             throw_exception<operation_exception>(reply.steal(), error);
