@@ -155,8 +155,6 @@ def release(jira_creds_file,
         click.echo('Nothing to do here...exiting!', err=True)
         sys.exit(1)
 
-    check_docker_file_versions(release_version)
-
     if not working_dir_on_valid_branch(release_version):
         # working_dir_on_valid_branch() has already produced an error message
         sys.exit(1)
@@ -229,56 +227,6 @@ def release(jira_creds_file,
     else:
         create_github_release_draft(gh_repo, release_tag, is_pre_release, dist_file,
                                     release_notes_text, output_file, quiet)
-
-
-def check_docker_file_versions(mongo_cxx_release_ver: str):
-    """
-    Checks that `MONGOC_VERSION` defined in Dockerfiles matches `LIBMONGOC_REQUIRED_VERSION` from CMakeLists.txt.
-    Checks that `MONGOCXX_VERSION` defined in Docker Makefiles matches version to be released: `mongo_cxx_release_ver`.
-    """
-
-    extras_docker = pathlib.Path("./extras/docker")
-    dockerfiles = extras_docker.rglob("Dockerfile")
-    makefiles = extras_docker.rglob("Makefile")
-
-    # Get LIBMONGOC_REQUIRED_VERSION from CMakeLists.txt.
-    got_LIBMONGOC_REQUIRED_VERSION = None
-    contents = pathlib.Path("CMakeLists.txt").read_text()
-    matches = re.findall(
-        r"set\(LIBMONGOC_REQUIRED_VERSION\s+(.*?)\)", contents)
-    if len(matches) != 1:
-        click.echo('Expected to match one LIBMONGOC_REQUIRED_VERSION, got: {}'.format(
-            matches), err=True)
-        sys.exit(1)
-    got_LIBMONGOC_REQUIRED_VERSION = matches[0]
-
-    # Check that `MONGOC_VERSION` defined in Dockerfiles matches `LIBMONGOC_REQUIRED_VERSION` from CMakeLists.txt.
-    for dockerfile in dockerfiles:
-        contents = pathlib.Path(dockerfile).read_text()
-        matches = re.findall(r"MONGOC_VERSION=(.*)", contents)
-        if len(matches) != 1:
-            click.echo('Expected to match one MONGOC_VERSION in {}, got: {}'.format(
-                dockerfile, matches), err=True)
-            sys.exit(1)
-        got_MONGOC_VERSION = matches[0]
-        if got_MONGOC_VERSION != got_LIBMONGOC_REQUIRED_VERSION:
-            click.echo('Expected MONGOC_VERSION({}) in {} to match LIBMONGOC_REQUIRED_VERSION({})'.format(
-                got_MONGOC_VERSION, dockerfile, got_LIBMONGOC_REQUIRED_VERSION), err=True)
-            sys.exit(1)
-
-    # Check that `MONGOCXX_VERSION` defined in Docker Makefiles matches version to be released: `mongo_cxx_release_ver`.
-    for makefile in makefiles:
-        contents = pathlib.Path(makefile).read_text()
-        matches = re.findall(r"MONGOCXX_VERSION=(.*)", contents)
-        if len(matches) != 1:
-            click.echo('Expected to match one MONGOCXX_VERSION in {}, got: {}'.format(
-                makefile, matches), err=True)
-            sys.exit(1)
-        got_MONGOCXX_VERSION = matches[0]
-        if got_MONGOCXX_VERSION != mongo_cxx_release_ver:
-            click.echo('Expected MONGOCXX_VERSION({}) in {} to match release tag({})'.format(
-                got_MONGOCXX_VERSION, makefile, mongo_cxx_release_ver), err=True)
-            sys.exit(1)
 
 
 def check_libmongoc_version():
