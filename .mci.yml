@@ -12,7 +12,7 @@ variables:
     # If updating mongoc_version_minimum, also update:
     # - the default value of --c-driver-build-ref in etc/make_release.py
     # - LIBMONGOC_REQUIRED_VERSION in src/mongocxx/CMakeLists.txt
-    mongoc_version_minimum: &mongoc_version_minimum "1.24.0"
+    mongoc_version_minimum: &mongoc_version_minimum "1.25.0"
 
     integration_matrix:
         integration_matrix_tasks_single: &integration_matrix_tasks_single
