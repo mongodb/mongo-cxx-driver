@@ -45,7 +45,7 @@ Files: src/third_party/catch/main.cpp
 Copyright: 2016 MongoDB, Inc.
 License: Apache-2.0
 
-Files: src/bsoncxx/private/b64_ntop.hh
+Files: src/bsoncxx/lib/bsoncxx/v_noabi/bsoncxx/private/b64_ntop.hh
 Copyright: 1996, 1998 Internet Software Consortium
            1995 International Business Machines, Inc.
 License: ISC or Other-IBM
