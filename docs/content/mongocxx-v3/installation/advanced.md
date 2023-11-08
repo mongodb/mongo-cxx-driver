@@ -26,6 +26,7 @@ The mongocxx driver builds on top of the [MongoDB C driver](https://www.mongodb.
 The build of mongocxx-3.9.0 automatically downloads and installs the C driver if the C driver is not detected.
 To use an existing install of the C driver, set `CMAKE_PREFIX_PATH` to the directory containing the C driver install.
 
+* For mongocxx-3.9.x, libmongoc 1.25.0 or later is required.
 * For mongocxx-3.8.x, libmongoc 1.24.0 or later is required.
 * For mongocxx-3.7.x, libmongoc 1.22.1 or later is required.
 * For mongocxx-3.6.x, libmongoc 1.17.0 or later is required.

@@ -50,12 +50,12 @@ release tarball.
 
 The [mongocxx releases](https://github.com/mongodb/mongo-cxx-driver/releases)
 page will have links to the release tarball for the version you wish you install.  For
-example, to download version 3.8.1:
+example, to download version 3.9.0:
 
 ```sh
-curl -OL https://github.com/mongodb/mongo-cxx-driver/releases/download/r3.8.1/mongo-cxx-driver-r3.8.1.tar.gz
-tar -xzf mongo-cxx-driver-r3.8.1.tar.gz
-cd mongo-cxx-driver-r3.8.1/build
+curl -OL https://github.com/mongodb/mongo-cxx-driver/releases/download/r3.9.0/mongo-cxx-driver-r3.9.0.tar.gz
+tar -xzf mongo-cxx-driver-r3.9.0.tar.gz
+cd mongo-cxx-driver-r3.9.0/build
 ```
 
 Make sure you change to the `build` directory of whatever source tree you
