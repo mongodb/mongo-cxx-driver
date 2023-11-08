@@ -238,12 +238,8 @@ Announce Post to the [developer community forum](https://community.mongodb.com)
 under `Product & Driver Announcements` with the tag `cxx`.
 
 See this
-[example announcement](https://www.mongodb.com/community/forums/t/mongodb-c-11-driver-3-7-0-released/190601)
-of the stable release of 3.7.0.
-
-See this
-[example announcement](https://developer.mongodb.com/community/forums/t/mongodb-c-11-driver-3-6-0-rc0-released/6960)
-of a release candidate of 3.6.0.
+[example announcement](https://www.mongodb.com/community/forums/t/mongodb-c-11-driver-3-9-0-released/252724)
+of the stable release of 3.9.0.
 
 ## Branch if necessary
 
