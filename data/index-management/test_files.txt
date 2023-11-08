@@ -3,3 +3,4 @@ createSearchIndexes.json
 dropSearchIndex.json
 listSearchIndexes.json
 updateSearchIndex.json
+searchIndexIgnoresReadWriteConcern.json
