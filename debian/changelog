@@ -1,3 +1,9 @@
+mongo-cxx-driver (3.9.0-1) UNRELEASED; urgency=medium
+
+  * New upstream release
+
+ -- Kyle Kloberdanz <kyle.kloberdanz@mongodb.com>  Wed, 08 Nov 2023 14:43:58 -0600
+
 mongo-cxx-driver (3.8.1-1) experimental; urgency=medium
 
   * New upstream release
