@@ -508,7 +508,7 @@ functions:
             echo "Building Debian Docker image"
             make -C extras/docker/bookworm nocachebuild test
             echo "Building Red Hat UBI Docker image"
-            make -C extras/docker/redhat-ubi-9.2 nocachebuild test
+            make -C extras/docker/redhat-ubi-9.3 nocachebuild test
 
 #######################################
 #              Post Task              #
