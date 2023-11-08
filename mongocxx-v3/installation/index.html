@@ -1228,8 +1228,61 @@ that meets the above prerequisites, please file a bug report via
 <ul>
 <li><a href="https://vcpkg.io/">Vcpkg</a> (search for mongo-cxx-driver)</li>
 <li><a href="https://conan.io/center/recipes/mongo-cxx-driver">Conan</a></li>
+<li><a href="https://formulae.brew.sh/formula/mongo-cxx-driver">Homebrew</a></li>
 </ul>
-<h2 id="docker-image">Docker Image</h2>
+<h3 id="vcpkg-install-instructions">Vcpkg Install Instructions</h3>
+<p>If you do not already have Vcpkg installed, install it with the following
+command:</p>
+<pre tabindex="0"><code>$ git clone https://github.com/Microsoft/vcpkg.git
+$ cd vcpkg
+$ ./bootstrap-vcpkg.sh
+</code></pre><p>Optionally, to install with Visual Studio integration:</p>
+<pre tabindex="0"><code>vcpkg integrate install
+</code></pre><p>Install the driver. (You may need to <code>git pull</code> to get the latest version of the
+driver)</p>
+<pre tabindex="0"><code>$ ./vcpkg install mongo-cxx-driver
+</code></pre><p>You can use the toolchain file, <code>vcpkg.cmake</code>, to instruct CMake where to find
+the development files, for example:</p>
+<pre tabindex="0"><code>-DCMAKE_TOOLCHAIN_FILE=/&lt;path to vcpkg repo&gt;/vcpkg/scripts/buildsystems/vcpkg.cmake
+</code></pre><p>You can find the header files in:</p>
+<pre tabindex="0"><code>vcpkg/installed/&lt;CPU ARCHITECTURE&gt;-&lt;OPERATING SYSTEM&gt;/include/
+</code></pre><p>The library files are in:</p>
+<pre tabindex="0"><code>vcpkg/installed/&lt;CPU ARCHITECTURE&gt;-&lt;OPERATING SYSTEM&gt;/lib/
+</code></pre><h3 id="conan-install-instructions">Conan Install Instructions</h3>
+<p>Package Specifier: <code>mongo-cxx-driver/3.8.0</code></p>
+<p>If you do not already have Conan installed, then install it and run the Conan
+initalization command below:</p>
+<pre tabindex="0"><code>$ pip install conan
+$ conan profile detect --force
+</code></pre><p>Add the following to your <code>conanfile.txt</code></p>
+<pre tabindex="0"><code>[requires]
+mongo-cxx-driver/3.8.0
+[generators]
+CMakeDeps
+CMakeToolchain
+</code></pre><p>Install the driver via Conan, and build your project:</p>
+<pre tabindex="0"><code>$ conan install conanfile.txt --output-folder=build --build=missing
+$ cmake \
+	-B build \
+	-DCMAKE_TOOLCHAIN_FILE=conan_toolchain.cmake \
+	-DCMAKE_BUILD_TYPE=Release
+$ cmake --build build
+</code></pre><h3 id="homebrew">Homebrew</h3>
+<p>For MacOS users, homebrew is a convienent way to install the C++ driver.</p>
+<pre tabindex="0"><code>brew install mongo-cxx-driver
+</code></pre><h4 id="for-an-apple-silicon-mac">For an Apple Silicon Mac</h4>
+<p>Headers can be found in:</p>
+<pre tabindex="0"><code>/opt/homebrew/include/mongocxx/v_noabi/
+/opt/homebrew/include/bsoncxx/v_noabi/
+</code></pre><p>Library files can be found in:</p>
+<pre tabindex="0"><code>/opt/homebrew/lib/
+</code></pre><h4 id="for-an-intel-mac">For an Intel Mac</h4>
+<p>Headers can be found in:</p>
+<pre tabindex="0"><code>/usr/local/include/mongocxx/v_noabi/
+/usr/local/include/bsoncxx/v_noabi/
+</code></pre><p>Library files can be found in:</p>
+<pre tabindex="0"><code>/usr/local/lib/
+</code></pre><h2 id="docker-image">Docker Image</h2>
 <p>You can find a pre-built docker image for the C++ driver in
 <a href="https://hub.docker.com/r/mongodb/mongo-cxx-driver">Docker Hub</a>.</p>
 

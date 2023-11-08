@@ -1770,9 +1770,9 @@ suffix.</p>
 <li>System Headers <code>&lt;vector&gt;</code> (alphabetical order)</li>
 <li>Driver Headers <code>&lt;path/to/header.hpp&gt;</code> (alphabetical order)</li>
 <li>Open Namespace mongocxx</li>
-<li><code>MONGOCXX_INLINE_NAMESPACE_BEGIN</code></li>
+<li><code>inline namespace v_noabi {</code></li>
 <li>Code</li>
-<li><code>MONGOCXX_INLINE_NAMESPACE_END</code></li>
+<li><code>}  // namespace v_noabi</code></li>
 <li>Close Namespace mongocxx</li>
 <li>Header Postlude</li>
 </ul>
@@ -1800,13 +1800,13 @@ suffix.</p>
 #include &lt;driver/blah.hpp&gt;
 
 namespace mongocxx {
-MONGOCXX_INLINE_NAMESPACE_BEGIN
+inline namespace v_noabi {
 
 // Declarations
 
 // Inline Implementations
 
-MONGOCXX_INLINE_NAMESPACE_END
+}  // namespace v_noabi
 }  // namespace mongocxx
 
 #include &lt;driver/config/postlude.hpp&gt;

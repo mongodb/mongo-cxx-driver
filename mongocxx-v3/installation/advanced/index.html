@@ -1312,9 +1312,10 @@
 </span></span></code></pre></div><p>The above command would produce libraries named <code>libcustom_bsoncxx.so</code> and <code>libcustom_mongocxx.so</code> (or with the extension appropriate for the build platform).  Those libraries could be placed in a standard system directory or in an alternate location and could be linked to by specifying something like <code>-lcustom_mongocxx -lcustom_bsoncxx</code> on the linker command line (possibly adjusting the specific flags to those required by your linker).</p>
 <h2 id="installing-the-mongodb-c-driver">Installing the MongoDB C driver.</h2>
 <p>The mongocxx driver builds on top of the <a href="https://www.mongodb.com/docs/drivers/c/">MongoDB C driver</a>.</p>
-<p>The build of mongocxx-3.8.1 automatically downloads and installs the C driver if the C driver is not detected.
+<p>The build of mongocxx-3.9.0 automatically downloads and installs the C driver if the C driver is not detected.
 To use an existing install of the C driver, set <code>CMAKE_PREFIX_PATH</code> to the directory containing the C driver install.</p>
 <ul>
+<li>For mongocxx-3.9.x, libmongoc 1.25.0 or later is required.</li>
 <li>For mongocxx-3.8.x, libmongoc 1.24.0 or later is required.</li>
 <li>For mongocxx-3.7.x, libmongoc 1.22.1 or later is required.</li>
 <li>For mongocxx-3.6.x, libmongoc 1.17.0 or later is required.</li>
