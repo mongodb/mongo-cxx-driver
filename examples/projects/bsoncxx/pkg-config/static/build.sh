@@ -13,5 +13,6 @@ CXX_STANDARD=${CXX_STANDARD:-11}
 rm -rf build/*
 cd build
 $CXX $CXXFLAGS -Wall -Wextra -Werror -std="c++${CXX_STANDARD}" -c -o hello_bsoncxx.o ../../../hello_bsoncxx.cpp $(pkg-config --cflags libbsoncxx-static)
-$CXX $LDFLAGS -std="c++${CXX_STANDARD}" -o hello_bsoncxx hello_bsoncxx.o $(pkg-config --libs libbsoncxx-static)
+# TODO: remove `-pthread` once CDRIVER-4776 is resolved.
+$CXX $LDFLAGS -pthread -std="c++${CXX_STANDARD}" -o hello_bsoncxx hello_bsoncxx.o $(pkg-config --libs libbsoncxx-static)
 ./hello_bsoncxx

@@ -15,5 +15,6 @@ CXX_STANDARD=${CXX_STANDARD:-11}
 rm -rf build/*
 cd build
 $CXX $CXXFLAGS -Wall -Wextra -Werror -std="c++${CXX_STANDARD}" -c -o hello_mongocxx.o ../../../hello_mongocxx.cpp $(pkg-config --cflags libmongocxx-static) $PKGCONFIG_EXTRA_OPTS
-$CXX $LDFLAGS -std="c++${CXX_STANDARD}" -o hello_mongocxx hello_mongocxx.o $(pkg-config --libs libmongocxx-static) $PKGCONFIG_EXTRA_OPTS
+# TODO: remove `-pthread` once CDRIVER-4776 is resolved.
+$CXX $LDFLAGS -pthread -std="c++${CXX_STANDARD}" -o hello_mongocxx hello_mongocxx.o $(pkg-config --libs libmongocxx-static) $PKGCONFIG_EXTRA_OPTS
 ./hello_mongocxx
