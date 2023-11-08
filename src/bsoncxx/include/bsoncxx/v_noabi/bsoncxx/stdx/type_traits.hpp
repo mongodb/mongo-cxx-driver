@@ -34,6 +34,7 @@ DECL_ALIAS(remove_reference);
 DECL_ALIAS(remove_const);
 DECL_ALIAS(remove_volatile);
 DECL_ALIAS(remove_cv);
+DECL_ALIAS(add_pointer);
 DECL_ALIAS(add_const);
 DECL_ALIAS(add_volatile);
 DECL_ALIAS(add_lvalue_reference);
@@ -411,6 +412,34 @@ struct is_invocable : is_detected<invoke_result_t, Fun, Args...> {
  */
 template <typename T, typename U>
 struct is_alike : std::is_same<remove_cvref_t<T>, remove_cvref_t<U>> {};
+
+/**
+ * @brief Tag type for creating ranked overloads to force disambiguation.
+ *
+ * @tparam N The ranking of the overload. A higher value is ranked greater than
+ * lower values.
+ */
+template <std::size_t N>
+struct rank : rank<N - 1> {};
+
+template <>
+struct rank<0> {};
+
+struct _decay_copy_fn {
+    template <typename T>
+    constexpr auto operator()(T&& arg) const
+        noexcept(std::is_nothrow_constructible<decay_t<T>, T&&>{})
+            -> requires_t<decay_t<T>, std::is_constructible<decay_t<T>, T&&>> {
+        return static_cast<decay_t<T>>(static_cast<T&&>(arg));
+    }
+};
+
+/**
+ * @brief Perform a decay-copy on the given value.
+ *
+ * Equivalent to the C++23 `auto()` expression.
+ */
+static constexpr _decay_copy_fn decay_copy;
 
 }  // namespace detail
 
