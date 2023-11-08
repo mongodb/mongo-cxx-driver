@@ -223,5 +223,36 @@ TEST_CASE("atlas search indexes prose tests", "") {
 
         std::cout << "drop one supress namespace not found SUCCESS" << std::endl;
     }
+
+    SECTION("create and list search indexes with non-default readConcern and writeConcern") {
+        bsoncxx::oid id;
+        auto coll = db.create_collection(id.to_string());
+
+        // Apply non-default write concern.
+        auto nondefault_wc = mongocxx::write_concern();
+        nondefault_wc.nodes(1);
+        coll.write_concern(nondefault_wc);
+
+        // Apply non-default read concern.
+        auto nondefault_rc = mongocxx::read_concern();
+        nondefault_rc.acknowledge_level(mongocxx::read_concern::level::k_local);
+        coll.read_concern(nondefault_rc);
+
+        auto siv = coll.search_indexes();
+        auto name = "test-search-index-case6";
+        auto definition = make_document(kvp("mappings", make_document(kvp("dynamic", false))));
+        auto model = search_index_model(name, definition.view());
+
+        REQUIRE(siv.create_one(name, definition.view()) == "test-search-index-case6");
+
+        assert_soon([&siv, &model](void) -> bool {
+            auto cursor = siv.list();
+            return does_search_index_exist_on_cursor(cursor, model, false);
+        });
+
+        std::cout << "create and list search indexes with non-default readConcern and writeConcern "
+                     "SUCCESS"
+                  << std::endl;
+    }
 }
 }  // namespace
