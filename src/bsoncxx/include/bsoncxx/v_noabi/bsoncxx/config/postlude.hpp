@@ -67,6 +67,9 @@
 #undef BSONCXX_UNREACHABLE
 #pragma pop_macro("BSONCXX_UNREACHABLE")
 
+#pragma pop_macro("mongo_cxx14_constexpr")
+#pragma pop_macro("bsoncxx_returns")
+
 // CXX-2769: out-of-place, but remains for backward compatibility.
 #ifdef BSONCXX_ENUM
 static_assert(false, "BSONCXX_ENUM must be undef'ed");

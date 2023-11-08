@@ -90,3 +90,20 @@
 /// @namespace bsoncxx::v_noabi::stdx
 /// Declares polyfills for C++17 forward compatibility.
 ///
+
+#pragma push_macro("mongo_cxx14_constexpr")
+#if __cplusplus >= 201402L
+#define mongo_cxx14_constexpr constexpr
+#else
+#define mongo_cxx14_constexpr inline
+#endif
+
+#pragma push_macro("bsoncxx_returns")
+/**
+ * @brief Add a trailing noexcept, decltype-return, and return-body to a function definition.
+ */
+#define bsoncxx_returns(...)                                 \
+    noexcept(noexcept(__VA_ARGS__))->decltype(__VA_ARGS__) { \
+        return __VA_ARGS__;                                  \
+    }                                                        \
+    static_assert(true, "")

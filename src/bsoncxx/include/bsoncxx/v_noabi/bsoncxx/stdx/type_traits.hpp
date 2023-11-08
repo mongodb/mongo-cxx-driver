@@ -344,31 +344,25 @@ using requires_not_t = requires_t<Type, negation<disjunction<Traits...>>>;
 // Impl: invoke/is_invocable
 namespace impl_invoke {
 
-#pragma push_macro("RETURNS")
-#define RETURNS(...)                                         \
-    noexcept(noexcept(__VA_ARGS__))->decltype(__VA_ARGS__) { \
-        return __VA_ARGS__;                                  \
-    }                                                        \
-    static_assert(true, "")
-
 template <bool IsMemberObject, bool IsMemberFunction>
 struct invoker {
     template <typename F, typename... Args>
     constexpr static auto apply(F&& fun, Args&&... args)
-        RETURNS(static_cast<F&&>(fun)(static_cast<Args&&>(args)...));
+        bsoncxx_returns(static_cast<F&&>(fun)(static_cast<Args&&>(args)...));
 };
 
 template <>
 struct invoker<false, true> {
     template <typename F, typename Self, typename... Args>
     constexpr static auto apply(F&& fun, Self&& self, Args&&... args)
-        RETURNS((static_cast<Self&&>(self).*fun)(static_cast<Args&&>(args)...));
+        bsoncxx_returns((static_cast<Self&&>(self).*fun)(static_cast<Args&&>(args)...));
 };
 
 template <>
 struct invoker<true, false> {
     template <typename F, typename Self>
-    constexpr static auto apply(F&& fun, Self&& self) RETURNS(static_cast<Self&&>(self).*fun);
+    constexpr static auto apply(F&& fun, Self&& self)
+        bsoncxx_returns(static_cast<Self&&>(self).*fun);
 };
 
 }  // namespace impl_invoke
@@ -383,12 +377,10 @@ static constexpr struct invoke_fn {
 
     template <typename F, typename... Args, typename Fd = remove_cvref_t<F>>
     constexpr auto operator()(F&& fn, Args&&... args) const
-        RETURNS(impl_invoke::invoker<std::is_member_object_pointer<Fd>::value,
-                                     std::is_member_function_pointer<Fd>::value>  //
-                ::apply(static_cast<F&&>(fn), static_cast<Args&&>(args)...));
+        bsoncxx_returns(impl_invoke::invoker<std::is_member_object_pointer<Fd>::value,
+                                             std::is_member_function_pointer<Fd>::value>  //
+                        ::apply(static_cast<F&&>(fn), static_cast<Args&&>(args)...));
 } invoke;
-
-#pragma pop_macro("RETURNS")
 
 /**
  * @brief Yields the type that would result from invoking F with the given arguments.
