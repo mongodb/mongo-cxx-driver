@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['incrementalsize_0',['incrementalsize',['../classmongo_1_1DeleteWriteOperation.html#a9031fc2bb8cfc27380d17599dc1f5e4c',1,'mongo::DeleteWriteOperation::incrementalSize()'],['../classmongo_1_1InsertWriteOperation.html#a988e6e6c6d6fa5c2384dbcfca66937c7',1,'mongo::InsertWriteOperation::incrementalSize()'],['../classmongo_1_1UpdateWriteOperation.html#a9eeab05dc4b2a135e9d9a661d64177e2',1,'mongo::UpdateWriteOperation::incrementalSize()'],['../classmongo_1_1WriteOperation.html#ac6c2181124df8523b507ff40e53ec208',1,'mongo::WriteOperation::incrementalSize()']]],
-  ['indexspec_1',['indexspec',['../classmongo_1_1IndexSpec.html',1,'mongo::IndexSpec'],['../classmongo_1_1IndexSpec.html#a5c672cfdfc38d7d0823ee4d966866f74',1,'mongo::IndexSpec::IndexSpec()']]],
+  ['incrementalsize_0',['incrementalSize',['../classmongo_1_1DeleteWriteOperation.html#a9031fc2bb8cfc27380d17599dc1f5e4c',1,'mongo::DeleteWriteOperation::incrementalSize()'],['../classmongo_1_1InsertWriteOperation.html#a988e6e6c6d6fa5c2384dbcfca66937c7',1,'mongo::InsertWriteOperation::incrementalSize()'],['../classmongo_1_1UpdateWriteOperation.html#a9eeab05dc4b2a135e9d9a661d64177e2',1,'mongo::UpdateWriteOperation::incrementalSize()'],['../classmongo_1_1WriteOperation.html#ac6c2181124df8523b507ff40e53ec208',1,'mongo::WriteOperation::incrementalSize()']]],
+  ['indexspec_1',['IndexSpec',['../classmongo_1_1IndexSpec.html#a5c672cfdfc38d7d0823ee4d966866f74',1,'mongo::IndexSpec::IndexSpec()'],['../classmongo_1_1IndexSpec.html',1,'mongo::IndexSpec']]],
   ['init_2',['init',['../classmongo_1_1DBClientCursor.html#a53e1ac27b3676bf6fba3bf79945b4df9',1,'mongo::DBClientCursor::init()'],['../classmongo_1_1OID.html#af639460487ebd4289fe38f8632b3b595',1,'mongo::OID::init()'],['../classmongo_1_1OID.html#ac2e25900b83a6c25aec137356ff62bf5',1,'mongo::OID::init(const std::string &amp;s)'],['../classmongo_1_1OID.html#a1508fed447642efafdc82fe65c299c5d',1,'mongo::OID::init(Date_t date, bool max=false)']]],
   ['initcommand_3',['initCommand',['../classmongo_1_1DBClientCursor.html#aaf856762ad264a3308d2327aaab09353',1,'mongo::DBClientCursor']]],
   ['initialize_4',['initialize',['../namespacemongo_1_1client.html#aad4213a224b92333d2395839e4c81498',1,'mongo::client::initialize()'],['../classmongo_1_1SaslClientSession.html#a11541ef09de1fc801e9e046aa153bdb1',1,'mongo::SaslClientSession::initialize()']]],
@@ -35,8 +35,7 @@ var searchData=
   ['isprimary_32',['isPrimary',['../classmongo_1_1ReplicaSetMonitor.html#a0f4616bbd03ab8cd6b9e38f43cbb80a3',1,'mongo::ReplicaSetMonitor']]],
   ['issecondaryquery_33',['isSecondaryQuery',['../classmongo_1_1DBClientReplicaSet.html#a124e0f87b29927661d08f7eec4056ee3',1,'mongo::DBClientReplicaSet']]],
   ['issimpletype_34',['isSimpleType',['../classmongo_1_1BSONElement.html#a08a30e3f1d7f6d01f6bfb84273368aa7',1,'mongo::BSONElement']]],
-  ['isstillconnected_35',['isstillconnected',['../classmongo_1_1DBClientBase.html#ad586808120363ff2b40d9cafe5497085',1,'mongo::DBClientBase::isStillConnected()'],['../classmongo_1_1DBClientConnection.html#a662718ef003f66283609ebc4cb644f74',1,'mongo::DBClientConnection::isStillConnected()'],['../classmongo_1_1DBClientReplicaSet.html#a972fc597c73fbeb820f4257980fbe299',1,'mongo::DBClientReplicaSet::isStillConnected()']]],
-  ['issues_36',['Bugs and issues',['../index.html#autotoc_md5',1,'']]],
-  ['isvalid_37',['isValid',['../classmongo_1_1BSONObj.html#a7fce465c24677bc67c45427dd9f49c75',1,'mongo::BSONObj']]],
-  ['itcount_38',['itcount',['../classmongo_1_1DBClientCursor.html#a64cc53092d0c5d14fa43397761bbe02b',1,'mongo::DBClientCursor']]]
+  ['isstillconnected_35',['isStillConnected',['../classmongo_1_1DBClientReplicaSet.html#a972fc597c73fbeb820f4257980fbe299',1,'mongo::DBClientReplicaSet::isStillConnected()'],['../classmongo_1_1DBClientBase.html#ad586808120363ff2b40d9cafe5497085',1,'mongo::DBClientBase::isStillConnected()'],['../classmongo_1_1DBClientConnection.html#a662718ef003f66283609ebc4cb644f74',1,'mongo::DBClientConnection::isStillConnected()']]],
+  ['isvalid_36',['isValid',['../classmongo_1_1BSONObj.html#a7fce465c24677bc67c45427dd9f49c75',1,'mongo::BSONObj']]],
+  ['itcount_37',['itcount',['../classmongo_1_1DBClientCursor.html#a64cc53092d0c5d14fa43397761bbe02b',1,'mongo::DBClientCursor']]]
 ];

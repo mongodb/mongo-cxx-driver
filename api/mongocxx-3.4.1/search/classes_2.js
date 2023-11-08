@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['change_5fstream_0',['change_stream',['../classmongocxx_1_1options_1_1change__stream.html',1,'mongocxx::options::change_stream'],['../classmongocxx_1_1change__stream.html',1,'mongocxx::change_stream']]],
+  ['change_5fstream_0',['change_stream',['../classmongocxx_1_1change__stream.html',1,'mongocxx::change_stream'],['../classmongocxx_1_1options_1_1change__stream.html',1,'mongocxx::options::change_stream']]],
   ['client_1',['client',['../classmongocxx_1_1client.html',1,'mongocxx::client'],['../classmongocxx_1_1options_1_1client.html',1,'mongocxx::options::client']]],
   ['client_5fsession_2',['client_session',['../classmongocxx_1_1client__session.html',1,'mongocxx::client_session'],['../classmongocxx_1_1options_1_1client__session.html',1,'mongocxx::options::client_session']]],
   ['close_5farray_5ftype_3',['close_array_type',['../structbsoncxx_1_1builder_1_1stream_1_1close__array__type.html',1,'bsoncxx::builder::stream']]],

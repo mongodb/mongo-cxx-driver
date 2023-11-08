@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['call_0',['call',['../classmongo_1_1DBConnector.html#aa866696833445489b7aa3f70fc0565b2',1,'mongo::DBConnector::call()'],['../classmongo_1_1DBClientConnection.html#ac6d2a684a9151776606a13d471ed120e',1,'mongo::DBClientConnection::call()'],['../classmongo_1_1DBClientReplicaSet.html#ac30879cbd5bcbe5dd740235d8b14a91a',1,'mongo::DBClientReplicaSet::call()']]],
+  ['call_0',['call',['../classmongo_1_1DBClientReplicaSet.html#ac30879cbd5bcbe5dd740235d8b14a91a',1,'mongo::DBClientReplicaSet::call()'],['../classmongo_1_1DBConnector.html#aa866696833445489b7aa3f70fc0565b2',1,'mongo::DBConnector::call()'],['../classmongo_1_1DBClientConnection.html#ac6d2a684a9151776606a13d471ed120e',1,'mongo::DBClientConnection::call()']]],
   ['cancel_1',['cancel',['../classmongo_1_1BackgroundJob.html#a915bcd20d27f5f4062dbea317c085cfc',1,'mongo::BackgroundJob']]],
   ['canonicalizebsontype_2',['canonicalizeBSONType',['../namespacemongo.html#a31db553f5d15b1a5bcb79f0fc91afe29',1,'mongo']]],
   ['canonicalizesslserveroptions_3',['canonicalizeSSLServerOptions',['../namespacemongo.html#a7afd363634ce3f2f8d27175e2d118f8e',1,'mongo']]],
@@ -13,7 +13,7 @@ var searchData=
   ['codewscopecodelen_10',['codeWScopeCodeLen',['../classmongo_1_1BSONElement.html#abe594446f3acf7d22ce3ba79796854c8',1,'mongo::BSONElement']]],
   ['codewscopescopedataunsafe_11',['codeWScopeScopeDataUnsafe',['../classmongo_1_1BSONElement.html#a2926ae2f1449146292aed64c262087ed',1,'mongo::BSONElement']]],
   ['conn_12',['conn',['../classmongo_1_1ScopedDbConnection.html#a6e4f1791293dbf3fbe22fb809bcd1593',1,'mongo::ScopedDbConnection']]],
-  ['connect_13',['connect',['../classmongo_1_1DBClientConnection.html#a593336b811768ed8a39653aa3dcc3013',1,'mongo::DBClientConnection::connect(const char *hostname, std::string &amp;errmsg)'],['../classmongo_1_1DBClientConnection.html#ae9338c15189be24dae3a760fcaf183a9',1,'mongo::DBClientConnection::connect(const std::string &amp;serverHostname)'],['../classmongo_1_1DBClientConnection.html#a2d03f11e5355d3b4b3e0b0d28f2a21ab',1,'mongo::DBClientConnection::connect(const HostAndPort &amp;server, std::string &amp;errmsg)'],['../classmongo_1_1DBClientReplicaSet.html#a0061f2a5431ea117c4fb4699a14e072f',1,'mongo::DBClientReplicaSet::connect()']]],
+  ['connect_13',['connect',['../classmongo_1_1DBClientReplicaSet.html#a0061f2a5431ea117c4fb4699a14e072f',1,'mongo::DBClientReplicaSet::connect()'],['../classmongo_1_1DBClientConnection.html#a593336b811768ed8a39653aa3dcc3013',1,'mongo::DBClientConnection::connect(const char *hostname, std::string &amp;errmsg)'],['../classmongo_1_1DBClientConnection.html#a2d03f11e5355d3b4b3e0b0d28f2a21ab',1,'mongo::DBClientConnection::connect(const HostAndPort &amp;server, std::string &amp;errmsg)'],['../classmongo_1_1DBClientConnection.html#ae9338c15189be24dae3a760fcaf183a9',1,'mongo::DBClientConnection::connect(const std::string &amp;serverHostname)']]],
   ['constructutf8windowscommandline_14',['constructUtf8WindowsCommandLine',['../namespacemongo.html#a83e8d48bf51a005fb71de9cce9b5084a',1,'mongo']]],
   ['contains_15',['contains',['../classmongo_1_1ReplicaSetMonitor.html#a46a91e681ab7df8233c37f9daa5bb153',1,'mongo::ReplicaSetMonitor']]],
   ['copy_16',['copy',['../classmongo_1_1BSONObj.html#afa50f469ecf2162b1e9be5c125abec84',1,'mongo::BSONObj']]],

@@ -10,5 +10,5 @@ var searchData=
   ['hasresultflag_7',['hasResultFlag',['../classmongo_1_1DBClientCursor.html#a5667736b3879320abe9a7ee756944371',1,'mongo::DBClientCursor']]],
   ['hexdump_8',['hexDump',['../classmongo_1_1BSONObj.html#ae61d5e7795dab1b5770f8bfa1b75981f',1,'mongo::BSONObj']]],
   ['hint_9',['hint',['../classmongo_1_1Query.html#a6c3e89311c30ae8710eae8971a5d642c',1,'mongo::Query']]],
-  ['hostandport_10',['hostandport',['../structmongo_1_1HostAndPort.html#ab9c2f14249fb1ba6cf8af2f673950d52',1,'mongo::HostAndPort::HostAndPort(const std::string &amp;s)'],['../structmongo_1_1HostAndPort.html#ac717099a1f059c55d0e2d27c53736ff2',1,'mongo::HostAndPort::HostAndPort(const std::string &amp;h, int p)']]]
+  ['hostandport_10',['HostAndPort',['../structmongo_1_1HostAndPort.html#ab9c2f14249fb1ba6cf8af2f673950d52',1,'mongo::HostAndPort::HostAndPort(const std::string &amp;s)'],['../structmongo_1_1HostAndPort.html#ac717099a1f059c55d0e2d27c53736ff2',1,'mongo::HostAndPort::HostAndPort(const std::string &amp;h, int p)']]]
 ];

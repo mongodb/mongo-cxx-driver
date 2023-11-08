@@ -10,5 +10,6 @@ var searchData=
   ['is_5ferror_5fcode_5fenum_3c_20bsoncxx_3a_3aerror_5fcode_20_3e_7',['is_error_code_enum&lt; bsoncxx::error_code &gt;',['../structstd_1_1is__error__code__enum_3_01bsoncxx_1_1error__code_01_4.html',1,'std']]],
   ['is_5ferror_5fcode_5fenum_3c_20mongocxx_3a_3aerror_5fcode_20_3e_8',['is_error_code_enum&lt; mongocxx::error_code &gt;',['../structstd_1_1is__error__code__enum_3_01mongocxx_1_1error__code_01_4.html',1,'std']]],
   ['is_5ferror_5fcode_5fenum_3c_20mongocxx_3a_3aserver_5ferror_5fcode_20_3e_9',['is_error_code_enum&lt; mongocxx::server_error_code &gt;',['../structstd_1_1is__error__code__enum_3_01mongocxx_1_1server__error__code_01_4.html',1,'std']]],
-  ['iterator_10',['iterator',['../classbsoncxx_1_1array_1_1view_1_1iterator.html',1,'bsoncxx::array::view::iterator'],['../classbsoncxx_1_1document_1_1view_1_1iterator.html',1,'bsoncxx::document::view::iterator'],['../classmongocxx_1_1cursor_1_1iterator.html',1,'mongocxx::cursor::iterator']]]
+  ['iterator_10',['iterator',['../classbsoncxx_1_1array_1_1view_1_1iterator.html',1,'bsoncxx::array::view::iterator'],['../classbsoncxx_1_1document_1_1view_1_1iterator.html',1,'bsoncxx::document::view::iterator'],['../classmongocxx_1_1cursor_1_1iterator.html',1,'mongocxx::cursor::iterator']]],
+  ['itoa_11',['itoa',['../classbsoncxx_1_1itoa.html',1,'bsoncxx']]]
 ];

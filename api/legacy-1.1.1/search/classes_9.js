@@ -13,5 +13,8 @@ var searchData=
   ['integraltypemap_3c_20signed_20char_20_3e_10',['IntegralTypeMap&lt; signed char &gt;',['../structmongo_1_1endian_1_1IntegralTypeMap_3_01signed_01char_01_4.html',1,'mongo::endian']]],
   ['integraltypemap_3c_20unsigned_20char_20_3e_11',['IntegralTypeMap&lt; unsigned char &gt;',['../structmongo_1_1endian_1_1IntegralTypeMap_3_01unsigned_01char_01_4.html',1,'mongo::endian']]],
   ['integraltypemap_3c_20unsigned_20long_20long_20_3e_12',['IntegralTypeMap&lt; unsigned long long &gt;',['../structmongo_1_1endian_1_1IntegralTypeMap_3_01unsigned_01long_01long_01_4.html',1,'mongo::endian']]],
-  ['ismasterreply_13',['IsMasterReply',['../structmongo_1_1ReplicaSetMonitor_1_1IsMasterReply.html',1,'mongo::ReplicaSetMonitor']]]
+  ['interlockedimpl64_13',['InterlockedImpl64',['../structmongo_1_1details_1_1InterlockedImpl64.html',1,'mongo::details']]],
+  ['interlockedimpl64_3c_20t_2c_20false_20_3e_14',['InterlockedImpl64&lt; T, false &gt;',['../structmongo_1_1details_1_1InterlockedImpl64_3_01T_00_01false_01_4.html',1,'mongo::details']]],
+  ['interlockedimpl64_3c_20t_2c_20true_20_3e_15',['InterlockedImpl64&lt; T, true &gt;',['../structmongo_1_1details_1_1InterlockedImpl64_3_01T_00_01true_01_4.html',1,'mongo::details']]],
+  ['ismasterreply_16',['IsMasterReply',['../structmongo_1_1ReplicaSetMonitor_1_1IsMasterReply.html',1,'mongo::ReplicaSetMonitor']]]
 ];

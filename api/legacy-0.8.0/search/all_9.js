@@ -28,8 +28,7 @@ var searchData=
   ['isprimary_25',['isPrimary',['../classmongo_1_1ReplicaSetMonitor.html#a0f4616bbd03ab8cd6b9e38f43cbb80a3',1,'mongo::ReplicaSetMonitor']]],
   ['issecondaryquery_26',['isSecondaryQuery',['../classmongo_1_1DBClientReplicaSet.html#a124e0f87b29927661d08f7eec4056ee3',1,'mongo::DBClientReplicaSet']]],
   ['issimpletype_27',['isSimpleType',['../classmongo_1_1BSONElement.html#a08a30e3f1d7f6d01f6bfb84273368aa7',1,'mongo::BSONElement']]],
-  ['isstillconnected_28',['isstillconnected',['../classmongo_1_1DBClientReplicaSet.html#a972fc597c73fbeb820f4257980fbe299',1,'mongo::DBClientReplicaSet::isStillConnected()'],['../classmongo_1_1DBClientBase.html#ad586808120363ff2b40d9cafe5497085',1,'mongo::DBClientBase::isStillConnected()'],['../classmongo_1_1DBClientConnection.html#a662718ef003f66283609ebc4cb644f74',1,'mongo::DBClientConnection::isStillConnected()']]],
-  ['issues_29',['Bugs and issues',['../index.html#autotoc_md5',1,'']]],
-  ['isvalid_30',['isValid',['../classmongo_1_1BSONObj.html#a7fce465c24677bc67c45427dd9f49c75',1,'mongo::BSONObj']]],
-  ['itcount_31',['itcount',['../classmongo_1_1DBClientCursor.html#a64cc53092d0c5d14fa43397761bbe02b',1,'mongo::DBClientCursor']]]
+  ['isstillconnected_28',['isStillConnected',['../classmongo_1_1DBClientReplicaSet.html#a972fc597c73fbeb820f4257980fbe299',1,'mongo::DBClientReplicaSet::isStillConnected()'],['../classmongo_1_1DBClientBase.html#ad586808120363ff2b40d9cafe5497085',1,'mongo::DBClientBase::isStillConnected()'],['../classmongo_1_1DBClientConnection.html#a662718ef003f66283609ebc4cb644f74',1,'mongo::DBClientConnection::isStillConnected()']]],
+  ['isvalid_29',['isValid',['../classmongo_1_1BSONObj.html#a7fce465c24677bc67c45427dd9f49c75',1,'mongo::BSONObj']]],
+  ['itcount_30',['itcount',['../classmongo_1_1DBClientCursor.html#a64cc53092d0c5d14fa43397761bbe02b',1,'mongo::DBClientCursor']]]
 ];

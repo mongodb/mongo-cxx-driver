@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['elems_0',['elems',['../classmongo_1_1BSONObj.html#a82f14677a9ba3a84718588855dfd17d0',1,'mongo::BSONObj::elems(std::list&lt; BSONElement &gt; &amp;) const'],['../classmongo_1_1BSONObj.html#aa20579e40bc553884a5668672f127be5',1,'mongo::BSONObj::elems(std::vector&lt; BSONElement &gt; &amp;) const']]],
+  ['elems_0',['elems',['../classmongo_1_1BSONObj.html#aa20579e40bc553884a5668672f127be5',1,'mongo::BSONObj::elems(std::vector&lt; BSONElement &gt; &amp;) const'],['../classmongo_1_1BSONObj.html#a82f14677a9ba3a84718588855dfd17d0',1,'mongo::BSONObj::elems(std::list&lt; BSONElement &gt; &amp;) const']]],
   ['embeddedobject_1',['embeddedObject',['../classmongo_1_1BSONElement.html#ac9cd2c2f156655d7871d906f4e3f5783',1,'mongo::BSONElement']]],
   ['empty_2',['empty',['../structmongo_1_1HostAndPort.html#a76a68f7dca20ae65111d8a754fa3f83b',1,'mongo::HostAndPort']]],
   ['endswith_3',['endsWith',['../classmongo_1_1StringData.html#adf3722782c7625baccaa92d539653071',1,'mongo::StringData']]],
@@ -8,7 +8,7 @@ var searchData=
   ['enumeratecollections_5',['enumerateCollections',['../classmongo_1_1DBClientWithCommands.html#adeb20ecc6fc5d47d18dc9b2f5d75af9b',1,'mongo::DBClientWithCommands']]],
   ['eoo_6',['eoo',['../classmongo_1_1BSONElement.html#ad2b134ff6c9cff00baf7a02e9dce5389',1,'mongo::BSONElement']]],
   ['equalcaseinsensitive_7',['equalCaseInsensitive',['../classmongo_1_1StringData.html#a850f3ffbf768a804cbf104f10f252f3d',1,'mongo::StringData']]],
-  ['erase_8',['erase',['../classmongo_1_1UnorderedFastKeyTable.html#ac0ab204129825f4fbc8279f6d419b647',1,'mongo::UnorderedFastKeyTable::erase()'],['../classmongo_1_1OwnedPointerVector.html#a383535b1f3ff88e29b4ca332332bc1dc',1,'mongo::OwnedPointerVector::erase()']]],
+  ['erase_8',['erase',['../classmongo_1_1OwnedPointerVector.html#a383535b1f3ff88e29b4ca332332bc1dc',1,'mongo::OwnedPointerVector::erase()'],['../classmongo_1_1UnorderedFastKeyTable.html#ac0ab204129825f4fbc8279f6d419b647',1,'mongo::UnorderedFastKeyTable::erase()']]],
   ['errnowithprefix_9',['errnoWithPrefix',['../namespacemongo.html#a82ced22f67b26f4f92cbb65e7111b3bf',1,'mongo']]],
   ['eval_10',['eval',['../classmongo_1_1DBClientWithCommands.html#a73e162ec7a3446a3c5e6a523a7958179',1,'mongo::DBClientWithCommands']]],
   ['execute_11',['execute',['../classmongo_1_1Initializer.html#a7df1065c75b3dc40f1c2a9a6a6b56705',1,'mongo::Initializer::execute()'],['../classmongo_1_1BulkOperationBuilder.html#a5c68b307d6a1757c51f490fe507b9da1',1,'mongo::BulkOperationBuilder::execute()']]],

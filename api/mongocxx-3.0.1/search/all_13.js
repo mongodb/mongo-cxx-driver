@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['tag_0',['tag',['../classmongocxx_1_1write__concern.html#a592df40f157c42a9f5fff2c56b6bab97',1,'mongocxx::write_concern::tag() const'],['../classmongocxx_1_1write__concern.html#a0f385c9305221e8f74f478898b661ede',1,'mongocxx::write_concern::tag(stdx::string_view tag)']]],
+  ['tag_0',['tag',['../classmongocxx_1_1write__concern.html#a0f385c9305221e8f74f478898b661ede',1,'mongocxx::write_concern::tag(stdx::string_view tag)'],['../classmongocxx_1_1write__concern.html#a592df40f157c42a9f5fff2c56b6bab97',1,'mongocxx::write_concern::tag() const']]],
   ['tags_1',['tags',['../classmongocxx_1_1read__preference.html#a8c7fc0a960d78271f5db0bca69e8c1d5',1,'mongocxx::read_preference::tags(bsoncxx::document::view_or_value tags)'],['../classmongocxx_1_1read__preference.html#a9fdf1b355f5763ddca133125c1ae1cb9',1,'mongocxx::read_preference::tags() const']]],
   ['terminated_2',['terminated',['../classbsoncxx_1_1string_1_1view__or__value.html#a48f497188e60b77221f7952c00d501f2',1,'bsoncxx::string::view_or_value']]],
   ['timeout_3',['timeout',['../classmongocxx_1_1write__concern.html#a6b78606c40af1da22c003e32d001fb02',1,'mongocxx::write_concern::timeout(std::chrono::milliseconds timeout)'],['../classmongocxx_1_1write__concern.html#a4161905fb6fc2eba737045cb0ad5137a',1,'mongocxx::write_concern::timeout() const']]],
