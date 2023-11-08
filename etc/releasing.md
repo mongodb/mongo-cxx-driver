@@ -216,6 +216,14 @@ If this is a stable release, update the [mongo-cxx-driver](https://github.com/Ho
 Example:
 `brew bump-formula-pr mongo-cxx-driver --url https://github.com/mongodb/mongo-cxx-driver/releases/download/r3.7.3/mongo-cxx-driver-r3.7.3.tar.gz`
 
+## vcpkg
+Submit a PR or create an issue to update the vc-pkg file for mongo-c-driver.
+To submit an issue, follow: https://github.com/microsoft/vcpkg/issues/new/choose. Example: https://github.com/microsoft/vcpkg/issues/34984
+
+## Conan
+Submit a PR or create an issue to update the Conan recipe for mongo-c-driver.
+To submit an issue, follow: https://github.com/conan-io/conan-center-index/issues/new/choose/. Example: https://github.com/conan-io/conan-center-index/issues/21006
+
 ## Comment on the generated DOCSP ticket
 
 Minor releases generate a DOCSP ticket. Add a comment to the generated DOCSP ticket describing if the
