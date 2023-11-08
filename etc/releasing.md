@@ -19,10 +19,6 @@ releasing 3.7.3, then refer to the the waterfall tracking
 If there are test failures, ensure they are at least expected or not introduced
 by changes in the new release.
 
-In particular, check that the "Ubuntu 18.04 with minimum libmongoc" variant is
-passing to ensure that backports have not introduced a dependency on later
-versions of libmongoc.
-
 ## Check driver versions are correct for the Docker images
 
 In `extras/docker/generate.py` check that the versions are correct and if
