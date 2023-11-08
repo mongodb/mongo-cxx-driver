@@ -250,7 +250,9 @@ TEST_CASE("atlas search indexes prose tests", "") {
             return does_search_index_exist_on_cursor(cursor, model, false);
         });
 
-        std::cout << "create one with name and definition SUCCESS" << std::endl;
+        std::cout << "create and list search indexes with non-default readConcern and writeConcern "
+                     "SUCCESS"
+                  << std::endl;
     }
 }
 }  // namespace
