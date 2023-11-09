@@ -33,6 +33,7 @@ DECL_ALIAS(make_unsigned);
 DECL_ALIAS(remove_reference);
 DECL_ALIAS(remove_const);
 DECL_ALIAS(remove_volatile);
+DECL_ALIAS(remove_pointer);
 DECL_ALIAS(remove_cv);
 DECL_ALIAS(add_pointer);
 DECL_ALIAS(add_const);
@@ -56,13 +57,25 @@ using remove_cvref_t = remove_cv_t<remove_reference_t<T>>;
 template <typename T>
 using const_reference_t = add_lvalue_reference_t<const remove_cvref_t<T>>;
 
+// Workaround for CWG issue 1558
+template <typename...>
+struct _just_void_ {
+    using type = void;
+};
 /**
  * @brief A "do-nothing" alias template that always evaluates to void
  *
  * @tparam Ts Zero or more type arguments, all discarded
  */
 template <typename... Ts>
-using void_t = void;
+using void_t =
+#if defined(_MSC_VER) && _MSC_VER < 1910
+    // Old MSVC requires that the type parameters actually be "used" to trigger SFINAE at caller.
+    // This was resolved by CWG issue 1558
+    typename _just_void_<Ts...>::type;
+#else
+    void;
+#endif
 
 /**
  * @brief Alias for integral_constant<bool, B>
@@ -95,7 +108,7 @@ std::true_type is_detected_f(mp_list<Args...>*);
 
 // Failure case for is_detected. Because this function takes an elipsis, this is
 // less preferred than the above overload that accepts a pointer type directly.
-template <bsoncxx_ttparam Oper, typename... Args>
+template <bsoncxx_ttparam Oper>
 std::false_type is_detected_f(...);
 
 // Provides the detected_or impl
@@ -115,6 +128,18 @@ template <>
 struct detection<true> {
     template <typename, bsoncxx_ttparam Oper, typename... Args>
     using f = Oper<Args...>;
+};
+
+/// Workaround: MSVC 14.0 forgets whether a type resulting from the evaluation
+/// of a template-template parameter to an alias template is a reference.
+template <typename Dflt, typename Void, bsoncxx_ttparam Oper, typename... Args>
+struct vc140_detection {
+    using type = Dflt;
+};
+
+template <typename Dflt, bsoncxx_ttparam Oper, typename... Args>
+struct vc140_detection<Dflt, void_t<Oper<Args...>>, Oper, Args...> {
+    using type = Oper<Args...>;
 };
 
 }  // namespace impl_detection
@@ -149,8 +174,14 @@ struct is_detected
  * @tparam Args The arguments to give to the Oper metafunction
  */
 template <typename Dflt, bsoncxx_ttparam Oper, typename... Args>
-using detected_or = typename impl_detection::detection<
-    is_detected<Oper, Args...>::value>::template f<Dflt, Oper, Args...>;
+using detected_or =
+#if defined(_MSC_VER) && _MSC_VER < 1910
+    typename impl_detection::vc140_detection<Dflt, void, Oper, Args...>::type
+#else
+    typename impl_detection::detection<
+        is_detected<Oper, Args...>::value>::template f<Dflt, Oper, Args...>
+#endif
+    ;
 
 /**
  * @brief If Oper<Args...> evaluates to a type, yields that type. Otherwise, yields

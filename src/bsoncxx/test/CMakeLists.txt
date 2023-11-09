@@ -39,6 +39,7 @@ add_executable(test_bson
     view_or_value.cpp
     make_unique.test.cpp
     type_traits.test.cpp
+    iterator.test.cpp
 )
 
 # Common target properties for test executables.
@@ -123,4 +124,5 @@ set_dist_list(src_bsoncxx_test_DIST
     view_or_value.cpp
     type_traits.test.cpp
     make_unique.test.cpp
+    iterator.test.cpp
 )
