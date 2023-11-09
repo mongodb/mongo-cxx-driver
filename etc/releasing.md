@@ -9,7 +9,7 @@ and select the version "Pre CXX-584".
 Ensure the latest commit has run tests on the Evergreen waterfall.
 
 For a minor release this should be the
-[waterfall](https://evergreen.mongodb.com/waterfall/cxx-driver) tracking the
+[waterfall](https://spruce.mongodb.com/commits/cxx-driver) tracking the
 master branch (requires auth).
 For a patch release this is the waterfall tracking that branch. E.g. if you are
 releasing 3.7.3, then refer to the the waterfall tracking
@@ -216,6 +216,14 @@ If this is a stable release, update the [mongo-cxx-driver](https://github.com/Ho
 Example:
 `brew bump-formula-pr mongo-cxx-driver --url https://github.com/mongodb/mongo-cxx-driver/releases/download/r3.7.3/mongo-cxx-driver-r3.7.3.tar.gz`
 
+## vcpkg
+Submit a PR or create an issue to update the vc-pkg file for mongo-c-driver.
+To submit an issue, follow: https://github.com/microsoft/vcpkg/issues/new/choose. Example: https://github.com/microsoft/vcpkg/issues/34984
+
+## Conan
+Submit a PR or create an issue to update the Conan recipe for mongo-c-driver.
+To submit an issue, follow: https://github.com/conan-io/conan-center-index/issues/new/choose/. Example: https://github.com/conan-io/conan-center-index/issues/21006
+
 ## Comment on the generated DOCSP ticket
 
 Minor releases generate a DOCSP ticket. Add a comment to the generated DOCSP ticket describing if the
@@ -230,12 +238,8 @@ Announce Post to the [developer community forum](https://community.mongodb.com)
 under `Product & Driver Announcements` with the tag `cxx`.
 
 See this
-[example announcement](https://www.mongodb.com/community/forums/t/mongodb-c-11-driver-3-7-0-released/190601)
-of the stable release of 3.7.0.
-
-See this
-[example announcement](https://developer.mongodb.com/community/forums/t/mongodb-c-11-driver-3-6-0-rc0-released/6960)
-of a release candidate of 3.6.0.
+[example announcement](https://www.mongodb.com/community/forums/t/mongodb-c-11-driver-3-9-0-released/252724)
+of the stable release of 3.9.0.
 
 ## Branch if necessary
 
