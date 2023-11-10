@@ -159,7 +159,7 @@ class BSONCXX_API core {
     /// @throws
     ///   bsoncxx::exception if one of the keys fails to append.
     ///
-    core& concatenate(const document::view& view);
+    core& concatenate(const bsoncxx::document::view& view);
 
     ///
     /// Appends a BSON double.
@@ -605,7 +605,7 @@ class BSONCXX_API core {
     ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
     ///   appended to start a new key/value pair.
     ///
-    core& append(document::view view);
+    core& append(bsoncxx::document::view view);
 
     ///
     /// Appends the given array view.
@@ -618,7 +618,7 @@ class BSONCXX_API core {
     ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
     ///   appended to start a new key/value pair.
     ///
-    core& append(array::view view);
+    core& append(bsoncxx::array::view view);
 
     ///
     /// Gets a view over the document.
@@ -632,7 +632,7 @@ class BSONCXX_API core {
     ///
     /// @throws bsoncxx::exception if the precondition is violated.
     ///
-    document::view view_document() const;
+    bsoncxx::document::view view_document() const;
 
     ///
     /// Gets a view over the array.
@@ -645,7 +645,7 @@ class BSONCXX_API core {
     ///
     /// @throws bsoncxx::exception if the precondition is violated.
     ///
-    array::view view_array() const;
+    bsoncxx::array::view view_array() const;
 
     ///
     /// Transfers ownership of the underlying document to the caller.
@@ -663,7 +663,7 @@ class BSONCXX_API core {
     ///   After calling extract_document() it is illegal to call any methods on this class, unless
     ///   it is subsequenly moved into.
     ///
-    document::value extract_document();
+    bsoncxx::document::value extract_document();
 
     ///
     /// Transfers ownership of the underlying document to the caller.
@@ -680,7 +680,7 @@ class BSONCXX_API core {
     ///   After calling extract_array() it is illegal to call any methods on this class, unless it
     ///   is subsequenly moved into.
     ///
-    array::value extract_array();
+    bsoncxx::array::value extract_array();
 
     ///
     /// Deletes the contents of the underlying BSON datum. After calling clear(), the state of this
