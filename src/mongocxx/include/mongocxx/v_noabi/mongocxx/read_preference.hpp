@@ -22,6 +22,7 @@
 #include <mongocxx/client-fwd.hpp>
 #include <mongocxx/collection-fwd.hpp>
 #include <mongocxx/database-fwd.hpp>
+#include <mongocxx/read_preference-fwd.hpp>
 #include <mongocxx/search_index_view-fwd.hpp>
 #include <mongocxx/uri-fwd.hpp>
 
@@ -64,7 +65,7 @@ class transaction;
 ///
 /// @see https://www.mongodb.com/docs/manual/core/read-preference/
 ///
-class MONGOCXX_API read_preference {
+class read_preference {
    public:
     ///
     /// Determines which members in a replica set are acceptable to read from.

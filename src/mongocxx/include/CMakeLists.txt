@@ -116,6 +116,7 @@ set_dist_list(src_mongocxx_include_DIST
     mongocxx/v_noabi/mongocxx/pool.hpp
     mongocxx/v_noabi/mongocxx/read_concern-fwd.hpp
     mongocxx/v_noabi/mongocxx/read_concern.hpp
+    mongocxx/v_noabi/mongocxx/read_preference-fwd.hpp
     mongocxx/v_noabi/mongocxx/read_preference.hpp
     mongocxx/v_noabi/mongocxx/result/bulk_write.hpp
     mongocxx/v_noabi/mongocxx/result/delete.hpp
