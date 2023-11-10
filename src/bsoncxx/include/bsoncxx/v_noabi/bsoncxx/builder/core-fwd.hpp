@@ -1,4 +1,4 @@
-// Copyright 2014 MongoDB Inc.
+// Copyright 2023 MongoDB Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,27 +14,14 @@
 
 #pragma once
 
-#include <bsoncxx/builder/core-fwd.hpp>
-
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
 inline namespace v_noabi {
 namespace builder {
-namespace stream {
 
-///
-/// The closed_context, when used as a template parameter for array_context,
-/// value_context or key_context, indicates that the document cannot be closed
-/// further. This could indicate that the document is the root, or that the type
-/// stack has been intentionally erased, as is the case when using callbacks in
-/// the stream api.
-///
-struct closed_context {
-    closed_context(core*) {}
-};
+class BSONCXX_API core;
 
-}  // namespace stream
 }  // namespace builder
 }  // namespace v_noabi
 }  // namespace bsoncxx

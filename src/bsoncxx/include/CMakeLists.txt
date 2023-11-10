@@ -35,6 +35,7 @@ set_dist_list(src_bsoncxx_include_DIST
     bsoncxx/v_noabi/bsoncxx/builder/basic/sub_array.hpp
     bsoncxx/v_noabi/bsoncxx/builder/basic/sub_document.hpp
     bsoncxx/v_noabi/bsoncxx/builder/concatenate.hpp
+    bsoncxx/v_noabi/bsoncxx/builder/core-fwd.hpp
     bsoncxx/v_noabi/bsoncxx/builder/core.hpp
     bsoncxx/v_noabi/bsoncxx/builder/list-fwd.hpp
     bsoncxx/v_noabi/bsoncxx/builder/list.hpp

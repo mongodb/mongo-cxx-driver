@@ -18,6 +18,8 @@
 #include <stdexcept>
 #include <type_traits>
 
+#include <bsoncxx/builder/core-fwd.hpp>
+
 #include <bsoncxx/array/value.hpp>
 #include <bsoncxx/array/view.hpp>
 #include <bsoncxx/document/value.hpp>
@@ -40,7 +42,7 @@ namespace builder {
 ///   using this class directly. However, developers who wish to write their own abstractions may
 ///   find this class useful.
 ///
-class BSONCXX_API core {
+class core {
    public:
     class BSONCXX_PRIVATE impl;
 
