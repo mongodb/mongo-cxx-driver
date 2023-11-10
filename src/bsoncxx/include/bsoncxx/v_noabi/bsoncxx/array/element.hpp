@@ -17,18 +17,14 @@
 #include <cstddef>
 #include <cstdint>
 
+#include <bsoncxx/types/bson_value/view-fwd.hpp>
+
 #include <bsoncxx/document/element.hpp>
 
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
 inline namespace v_noabi {
-namespace types {
-namespace bson_value {
-class view;
-}  // namespace bson_value
-}  // namespace types
-
 namespace array {
 
 ///
@@ -121,7 +117,6 @@ BSONCXX_API bool BSONCXX_CALL operator!=(const types::bson_value::view& v, const
 ///
 
 }  // namespace array
-
 }  // namespace v_noabi
 }  // namespace bsoncxx
 

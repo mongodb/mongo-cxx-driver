@@ -19,6 +19,7 @@
 #include <type_traits>
 
 #include <bsoncxx/types/bson_value/value-fwd.hpp>
+#include <bsoncxx/types/bson_value/view-fwd.hpp>
 
 #include <bsoncxx/stdx/type_traits.hpp>
 #include <bsoncxx/types.hpp>
@@ -40,7 +41,7 @@ namespace bson_value {
 ///   Calling the wrong get_<type> method will cause an exception
 ///   to be thrown.
 ///
-class BSONCXX_API view {
+class view {
    public:
 ///
 /// Construct a bson_value::view from any of the various BSON types. Defines

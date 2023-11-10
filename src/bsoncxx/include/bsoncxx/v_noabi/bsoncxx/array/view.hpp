@@ -18,6 +18,8 @@
 #include <cstdint>
 #include <iterator>
 
+#include <bsoncxx/types/bson_value/view-fwd.hpp>
+
 #include <bsoncxx/array/element.hpp>
 #include <bsoncxx/document/view.hpp>
 
@@ -25,12 +27,6 @@
 
 namespace bsoncxx {
 inline namespace v_noabi {
-namespace types {
-namespace bson_value {
-class view;
-}  // namespace bson_value
-}  // namespace types
-
 namespace array {
 
 ///
