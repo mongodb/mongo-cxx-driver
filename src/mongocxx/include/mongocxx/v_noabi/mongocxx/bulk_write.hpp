@@ -14,6 +14,7 @@
 
 #pragma once
 
+#include <mongocxx/bulk_write-fwd.hpp>
 #include <mongocxx/collection-fwd.hpp>
 
 #include <mongocxx/client_session.hpp>
@@ -39,7 +40,7 @@ inline namespace v_noabi {
 /// @see https://www.mongodb.com/docs/manual/core/crud/
 /// @see https://www.mongodb.com/docs/manual/core/bulk-write-operations/
 ///
-class MONGOCXX_API bulk_write {
+class bulk_write {
    public:
     ///
     /// Move constructs a bulk write operation.

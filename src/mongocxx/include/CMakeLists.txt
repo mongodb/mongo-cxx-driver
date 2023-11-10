@@ -20,6 +20,7 @@ install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/
 
 set_dist_list(src_mongocxx_include_DIST
     CMakeLists.txt
+    mongocxx/v_noabi/mongocxx/bulk_write-fwd.hpp
     mongocxx/v_noabi/mongocxx/bulk_write.hpp
     mongocxx/v_noabi/mongocxx/change_stream.hpp
     mongocxx/v_noabi/mongocxx/client_encryption-fwd.hpp

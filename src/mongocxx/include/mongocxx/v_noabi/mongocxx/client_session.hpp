@@ -17,6 +17,7 @@
 #include <functional>
 #include <memory>
 
+#include <mongocxx/bulk_write-fwd.hpp>
 #include <mongocxx/client-fwd.hpp>
 #include <mongocxx/client_session-fwd.hpp>
 #include <mongocxx/collection-fwd.hpp>
@@ -189,10 +190,10 @@ class client_session {
     void with_transaction(with_transaction_cb cb, options::transaction opts = {});
 
    private:
+    friend class ::mongocxx::v_noabi::bulk_write;
     friend class ::mongocxx::v_noabi::client;
     friend class ::mongocxx::v_noabi::collection;
     friend class ::mongocxx::v_noabi::database;
-    friend class bulk_write;
     friend class index_view;
     friend class search_index_view;
 
