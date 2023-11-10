@@ -18,6 +18,7 @@
 #include <cstdint>
 #include <iterator>
 
+#include <bsoncxx/array/view-fwd.hpp>
 #include <bsoncxx/types/bson_value/view-fwd.hpp>
 
 #include <bsoncxx/array/element.hpp>
@@ -32,7 +33,7 @@ namespace array {
 ///
 /// A read-only, non-owning view of a BSON document.
 ///
-class BSONCXX_API view {
+class view {
    public:
     class BSONCXX_API const_iterator;
     using iterator = const_iterator;

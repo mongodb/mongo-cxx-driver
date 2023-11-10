@@ -18,6 +18,7 @@
 #include <cstdint>
 
 #include <bsoncxx/array/element-fwd.hpp>
+#include <bsoncxx/array/view-fwd.hpp>
 #include <bsoncxx/types/bson_value/view-fwd.hpp>
 
 #include <bsoncxx/document/element.hpp>
@@ -77,7 +78,7 @@ class element : private document::element {
     using document::element::raw;
 
    private:
-    friend class view;
+    friend class ::bsoncxx::v_noabi::array::view;
 
     BSONCXX_PRIVATE explicit element(const std::uint8_t* raw,
                                      std::uint32_t length,
