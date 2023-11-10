@@ -65,7 +65,6 @@ namespace mongocxx {
 inline namespace v_noabi {
 class bulk_write;
 class client_encryption;
-class client;
 class database;
 
 ///

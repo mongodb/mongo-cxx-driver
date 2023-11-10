@@ -37,7 +37,6 @@
 
 namespace mongocxx {
 inline namespace v_noabi {
-class client;
 
 namespace test_util {
 //
