@@ -47,6 +47,7 @@ set_dist_list(src_bsoncxx_include_DIST
     bsoncxx/v_noabi/bsoncxx/config/postlude.hpp
     bsoncxx/v_noabi/bsoncxx/config/prelude.hpp
     bsoncxx/v_noabi/bsoncxx/decimal128.hpp
+    bsoncxx/v_noabi/bsoncxx/document/element-fwd.hpp
     bsoncxx/v_noabi/bsoncxx/document/element.hpp
     bsoncxx/v_noabi/bsoncxx/document/value.hpp
     bsoncxx/v_noabi/bsoncxx/document/view_or_value.hpp

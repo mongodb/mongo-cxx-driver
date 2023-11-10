@@ -18,6 +18,7 @@
 #include <cstdint>
 
 #include <bsoncxx/array/element-fwd.hpp>
+#include <bsoncxx/document/element-fwd.hpp>
 #include <bsoncxx/types-fwd.hpp>
 #include <bsoncxx/types/bson_value/value-fwd.hpp>
 #include <bsoncxx/types/bson_value/view-fwd.hpp>
@@ -40,7 +41,7 @@ namespace document {
 ///
 /// @relatesalso array::element
 ///
-class BSONCXX_API element {
+class element {
    public:
     ///
     /// Construct an invalid element.

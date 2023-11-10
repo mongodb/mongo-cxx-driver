@@ -18,6 +18,7 @@
 #include <memory>
 #include <vector>
 
+#include <bsoncxx/document/element-fwd.hpp>
 #include <bsoncxx/types/bson_value/value-fwd.hpp>
 
 #include <bsoncxx/array/view_or_value.hpp>
@@ -257,7 +258,7 @@ class value {
     operator bson_value::view() const noexcept;
 
    private:
-    friend class bsoncxx::document::element;
+    friend class ::bsoncxx::v_noabi::document::element;
 
     value(const std::uint8_t* raw,
           std::uint32_t length,
