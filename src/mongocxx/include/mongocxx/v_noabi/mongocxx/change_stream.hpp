@@ -16,6 +16,8 @@
 
 #include <memory>
 
+#include <mongocxx/client-fwd.hpp>
+
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 
@@ -23,7 +25,6 @@
 
 namespace mongocxx {
 inline namespace v_noabi {
-class client;
 class collection;
 class database;
 
@@ -107,7 +108,7 @@ class MONGOCXX_API change_stream {
     bsoncxx::stdx::optional<bsoncxx::document::view> get_resume_token() const;
 
    private:
-    friend class client;
+    friend class ::mongocxx::v_noabi::client;
     friend class collection;
     friend class database;
     friend class change_stream::iterator;

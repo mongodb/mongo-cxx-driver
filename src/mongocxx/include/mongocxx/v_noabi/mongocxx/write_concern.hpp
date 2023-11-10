@@ -19,6 +19,8 @@
 #include <memory>
 #include <stdexcept>
 
+#include <mongocxx/client-fwd.hpp>
+
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
@@ -30,7 +32,6 @@
 namespace mongocxx {
 inline namespace v_noabi {
 class bulk_write;
-class client;
 class collection;
 class database;
 class uri;
@@ -245,8 +246,8 @@ class MONGOCXX_API write_concern {
     bsoncxx::document::value to_document() const;
 
    private:
+    friend class ::mongocxx::v_noabi::client;
     friend class bulk_write;
-    friend class client;
     friend class collection;
     friend class database;
     friend class uri;

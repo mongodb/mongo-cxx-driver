@@ -17,6 +17,8 @@
 #include <functional>
 #include <memory>
 
+#include <mongocxx/client-fwd.hpp>
+
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <mongocxx/options/client_session.hpp>
@@ -25,8 +27,6 @@
 
 namespace mongocxx {
 inline namespace v_noabi {
-class client;
-
 ///
 /// Use a session for a sequence of operations, optionally with either causal consistency
 /// or snapshots.
@@ -186,8 +186,8 @@ class MONGOCXX_API client_session {
     void with_transaction(with_transaction_cb cb, options::transaction opts = {});
 
    private:
+    friend class ::mongocxx::v_noabi::client;
     friend class bulk_write;
-    friend class client;
     friend class collection;
     friend class database;
     friend class index_view;

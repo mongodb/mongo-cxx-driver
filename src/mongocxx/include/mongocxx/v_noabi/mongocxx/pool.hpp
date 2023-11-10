@@ -17,6 +17,8 @@
 #include <functional>
 #include <memory>
 
+#include <mongocxx/client-fwd.hpp>
+
 #include <bsoncxx/stdx/optional.hpp>
 #include <mongocxx/options/pool.hpp>
 #include <mongocxx/stdx.hpp>
@@ -26,8 +28,6 @@
 
 namespace mongocxx {
 inline namespace v_noabi {
-class client;
-
 ///
 /// A pool of @c client objects associated with a MongoDB deployment.
 ///

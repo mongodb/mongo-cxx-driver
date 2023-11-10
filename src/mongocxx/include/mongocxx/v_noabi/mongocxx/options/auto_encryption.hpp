@@ -16,6 +16,8 @@
 
 #include <string>
 
+#include <mongocxx/client-fwd.hpp>
+
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <mongocxx/stdx.hpp>
@@ -24,7 +26,6 @@
 
 namespace mongocxx {
 inline namespace v_noabi {
-class client;
 class pool;
 
 namespace options {
@@ -371,7 +372,7 @@ class MONGOCXX_API auto_encryption {
     const stdx::optional<bsoncxx::document::view_or_value>& extra_options() const;
 
    private:
-    friend class mongocxx::client;
+    friend class ::mongocxx::v_noabi::client;
     friend class mongocxx::pool;
 
     MONGOCXX_PRIVATE void* convert() const;

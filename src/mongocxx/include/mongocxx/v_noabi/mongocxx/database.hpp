@@ -17,6 +17,8 @@
 #include <memory>
 #include <string>
 
+#include <mongocxx/client-fwd.hpp>
+
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/string/view_or_value.hpp>
 #include <mongocxx/client_session.hpp>
@@ -32,7 +34,6 @@
 namespace mongocxx {
 inline namespace v_noabi {
 class client_encryption;
-class client;
 class collection;
 
 ///
@@ -624,8 +625,8 @@ class MONGOCXX_API database {
     ///
 
    private:
+    friend class ::mongocxx::v_noabi::client;
     friend class client_encryption;
-    friend class client;
     friend class collection;
 
     MONGOCXX_PRIVATE database(const class client& client, bsoncxx::string::view_or_value name);

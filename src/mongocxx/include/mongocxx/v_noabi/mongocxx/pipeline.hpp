@@ -18,6 +18,8 @@
 #include <memory>
 #include <string>
 
+#include <mongocxx/client-fwd.hpp>
+
 #include <bsoncxx/array/view.hpp>
 #include <bsoncxx/array/view_or_value.hpp>
 #include <bsoncxx/document/view.hpp>
@@ -27,7 +29,6 @@
 
 namespace mongocxx {
 inline namespace v_noabi {
-class client;
 class collection;
 class database;
 
@@ -543,7 +544,7 @@ class MONGOCXX_API pipeline {
     bsoncxx::array::view view_array() const;
 
    private:
-    friend class client;
+    friend class ::mongocxx::v_noabi::client;
     friend class collection;
     friend class database;
 

@@ -16,6 +16,8 @@
 
 #include <memory>
 
+#include <mongocxx/client-fwd.hpp>
+
 #include <mongocxx/client_session.hpp>
 #include <mongocxx/database.hpp>
 #include <mongocxx/options/client.hpp>
@@ -51,7 +53,7 @@ class client_session;
 ///
 /// Note that client is not thread-safe. See
 /// https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/thread-safety/ for more details.
-class MONGOCXX_API client {
+class client {
    public:
     ///
     /// Default constructs a new client. The client is not connected and is equivalent to the

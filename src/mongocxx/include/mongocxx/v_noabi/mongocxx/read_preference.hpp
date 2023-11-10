@@ -19,6 +19,8 @@
 #include <memory>
 #include <string>
 
+#include <mongocxx/client-fwd.hpp>
+
 #include <bsoncxx/array/view_or_value.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
@@ -29,7 +31,6 @@
 
 namespace mongocxx {
 inline namespace v_noabi {
-class client;
 class collection;
 class database;
 class search_index_view;
@@ -285,7 +286,7 @@ class MONGOCXX_API read_preference {
     const stdx::optional<bsoncxx::document::view> hedge() const;
 
    private:
-    friend class client;
+    friend class ::mongocxx::v_noabi::client;
     friend class collection;
     friend class database;
     friend class search_index_view;

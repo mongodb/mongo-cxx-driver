@@ -16,6 +16,8 @@
 
 #include <memory>
 
+#include <mongocxx/client-fwd.hpp>
+
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 
@@ -79,8 +81,8 @@ class MONGOCXX_API cursor {
     iterator end();
 
    private:
+    friend class ::mongocxx::v_noabi::client;
     friend class collection;
-    friend class client;
     friend class client_encryption;
     friend class database;
     friend class index_view;

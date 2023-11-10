@@ -18,6 +18,8 @@
 #include <string>
 #include <vector>
 
+#include <mongocxx/client-fwd.hpp>
+
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/string/view_or_value.hpp>
 #include <mongocxx/read_concern.hpp>
@@ -360,7 +362,7 @@ class MONGOCXX_API uri {
     stdx::optional<std::int32_t> zlib_compression_level() const;
 
    private:
-    friend class client;
+    friend class ::mongocxx::v_noabi::client;
     friend class pool;
 
     class MONGOCXX_PRIVATE impl;
