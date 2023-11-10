@@ -82,6 +82,7 @@ set_dist_list(src_mongocxx_include_DIST
     mongocxx/v_noabi/mongocxx/model/write.hpp
     mongocxx/v_noabi/mongocxx/options/aggregate.hpp
     mongocxx/v_noabi/mongocxx/options/apm.hpp
+    mongocxx/v_noabi/mongocxx/options/auto_encryption-fwd.hpp
     mongocxx/v_noabi/mongocxx/options/auto_encryption.hpp
     mongocxx/v_noabi/mongocxx/options/bulk_write.hpp
     mongocxx/v_noabi/mongocxx/options/change_stream.hpp

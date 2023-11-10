@@ -17,6 +17,7 @@
 #include <string>
 
 #include <mongocxx/client-fwd.hpp>
+#include <mongocxx/options/auto_encryption-fwd.hpp>
 #include <mongocxx/pool-fwd.hpp>
 
 #include <bsoncxx/document/view_or_value.hpp>
@@ -32,7 +33,7 @@ namespace options {
 ///
 /// Class representing options for automatic client-side encryption.
 ///
-class MONGOCXX_API auto_encryption {
+class auto_encryption {
    public:
     ///
     /// Default constructs a new auto_encryption object.

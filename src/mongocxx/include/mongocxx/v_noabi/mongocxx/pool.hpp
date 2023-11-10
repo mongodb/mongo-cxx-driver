@@ -18,6 +18,7 @@
 #include <memory>
 
 #include <mongocxx/client-fwd.hpp>
+#include <mongocxx/options/auto_encryption-fwd.hpp>
 #include <mongocxx/pool-fwd.hpp>
 
 #include <bsoncxx/stdx/optional.hpp>
@@ -110,7 +111,7 @@ class pool {
     stdx::optional<entry> try_acquire();
 
    private:
-    friend class options::auto_encryption;
+    friend class ::mongocxx::v_noabi::options::auto_encryption;
 
     MONGOCXX_PRIVATE void _release(client* client);
 
