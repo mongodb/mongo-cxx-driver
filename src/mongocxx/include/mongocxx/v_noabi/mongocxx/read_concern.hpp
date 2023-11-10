@@ -19,6 +19,7 @@
 #include <mongocxx/client-fwd.hpp>
 #include <mongocxx/collection-fwd.hpp>
 #include <mongocxx/database-fwd.hpp>
+#include <mongocxx/read_concern-fwd.hpp>
 #include <mongocxx/uri-fwd.hpp>
 
 #include <bsoncxx/document/value.hpp>
@@ -54,7 +55,7 @@ class transaction;
 ///
 /// @see https://www.mongodb.com/docs/manual/reference/read-concern/
 ///
-class MONGOCXX_API read_concern {
+class read_concern {
    public:
     ///
     /// A class to represent the read concern level.
