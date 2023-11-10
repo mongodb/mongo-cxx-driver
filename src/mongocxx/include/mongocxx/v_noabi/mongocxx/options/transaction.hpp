@@ -17,6 +17,8 @@
 #include <chrono>
 #include <memory>
 
+#include <mongocxx/client_session-fwd.hpp>
+
 #include <bsoncxx/stdx/optional.hpp>
 #include <mongocxx/stdx.hpp>
 
@@ -24,7 +26,6 @@
 
 namespace mongocxx {
 inline namespace v_noabi {
-class client_session;
 class read_concern;
 class write_concern;
 class read_preference;
@@ -146,7 +147,7 @@ class MONGOCXX_API transaction {
     stdx::optional<std::chrono::milliseconds> max_commit_time_ms() const;
 
    private:
-    friend class ::mongocxx::client_session;
+    friend class ::mongocxx::v_noabi::client_session;
 
     class MONGOCXX_PRIVATE impl;
 

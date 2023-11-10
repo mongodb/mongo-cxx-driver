@@ -17,6 +17,7 @@
 #include <memory>
 
 #include <mongocxx/client-fwd.hpp>
+#include <mongocxx/client_session-fwd.hpp>
 #include <mongocxx/collection-fwd.hpp>
 #include <mongocxx/database-fwd.hpp>
 
@@ -35,8 +36,6 @@
 
 namespace mongocxx {
 inline namespace v_noabi {
-class client_session;
-
 ///
 /// Class representing a client connection to MongoDB.
 ///
@@ -422,10 +421,10 @@ class client {
     void reset();
 
    private:
+    friend class ::mongocxx::v_noabi::client_session;
     friend class ::mongocxx::v_noabi::collection;
     friend class ::mongocxx::v_noabi::database;
     friend class pool;
-    friend class client_session;
     friend class options::auto_encryption;
     friend class options::client_encryption;
 

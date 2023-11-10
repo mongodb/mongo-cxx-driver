@@ -18,6 +18,7 @@
 #include <memory>
 
 #include <mongocxx/client-fwd.hpp>
+#include <mongocxx/client_session-fwd.hpp>
 #include <mongocxx/collection-fwd.hpp>
 #include <mongocxx/database-fwd.hpp>
 
@@ -39,7 +40,7 @@ inline namespace v_noabi {
 /// @see
 /// https://www.mongodb.com/docs/manual/core/read-isolation-consistency-recency/#causal-consistency
 ///
-class MONGOCXX_API client_session {
+class client_session {
    public:
     enum class transaction_state {
         k_transaction_none,
