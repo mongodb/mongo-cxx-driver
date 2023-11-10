@@ -18,6 +18,8 @@
 #include <cstdint>
 #include <memory>
 
+#include <mongocxx/gridfs/bucket-fwd.hpp>
+
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/stdx/optional.hpp>
@@ -130,7 +132,7 @@ class MONGOCXX_API downloader {
     bsoncxx::document::view files_document() const;
 
    private:
-    friend class bucket;
+    friend class ::mongocxx::v_noabi::gridfs::bucket;
 
     //
     // Constructs a new downloader stream.

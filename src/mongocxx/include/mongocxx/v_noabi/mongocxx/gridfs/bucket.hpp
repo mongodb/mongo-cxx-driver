@@ -19,6 +19,7 @@
 #include <ostream>
 
 #include <mongocxx/database-fwd.hpp>
+#include <mongocxx/gridfs/bucket-fwd.hpp>
 
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
@@ -59,7 +60,7 @@ namespace gridfs {
 ///
 /// @see https://www.mongodb.com/display/DOCS/GridFS
 ///
-class MONGOCXX_API bucket {
+class bucket {
    public:
     ///
     /// Default constructs a bucket object. The bucket is equivalent to the state of a moved from

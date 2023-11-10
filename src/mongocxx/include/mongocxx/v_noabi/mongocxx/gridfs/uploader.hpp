@@ -18,6 +18,8 @@
 #include <cstdint>
 #include <memory>
 
+#include <mongocxx/gridfs/bucket-fwd.hpp>
+
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
@@ -123,7 +125,7 @@ class MONGOCXX_API uploader {
     std::int32_t chunk_size() const;
 
    private:
-    friend class bucket;
+    friend class ::mongocxx::v_noabi::gridfs::bucket;
 
     //
     // Constructs a new uploader stream.

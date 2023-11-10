@@ -62,6 +62,7 @@ set_dist_list(src_mongocxx_include_DIST
     mongocxx/v_noabi/mongocxx/exception/query_exception.hpp
     mongocxx/v_noabi/mongocxx/exception/server_error_code.hpp
     mongocxx/v_noabi/mongocxx/exception/write_exception.hpp
+    mongocxx/v_noabi/mongocxx/gridfs/bucket-fwd.hpp
     mongocxx/v_noabi/mongocxx/gridfs/bucket.hpp
     mongocxx/v_noabi/mongocxx/gridfs/downloader.hpp
     mongocxx/v_noabi/mongocxx/gridfs/uploader.hpp
