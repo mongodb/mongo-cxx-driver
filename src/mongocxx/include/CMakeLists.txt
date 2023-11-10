@@ -49,6 +49,7 @@ set_dist_list(src_mongocxx_include_DIST
     mongocxx/v_noabi/mongocxx/events/server_opening_event.hpp
     mongocxx/v_noabi/mongocxx/events/topology_changed_event.hpp
     mongocxx/v_noabi/mongocxx/events/topology_closed_event.hpp
+    mongocxx/v_noabi/mongocxx/events/topology_description-fwd.hpp
     mongocxx/v_noabi/mongocxx/events/topology_description.hpp
     mongocxx/v_noabi/mongocxx/events/topology_opening_event.hpp
     mongocxx/v_noabi/mongocxx/exception/authentication_exception.hpp

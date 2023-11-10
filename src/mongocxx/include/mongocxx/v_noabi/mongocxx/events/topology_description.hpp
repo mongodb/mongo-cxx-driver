@@ -16,6 +16,8 @@
 
 #include <vector>
 
+#include <mongocxx/events/topology_description-fwd.hpp>
+
 #include <bsoncxx/stdx/string_view.hpp>
 #include <mongocxx/events/server_description.hpp>
 #include <mongocxx/read_preference.hpp>
@@ -32,7 +34,7 @@ using mongocxx::read_preference;
 /// Class representing what the driver knows about a topology of MongoDB servers: either a
 /// standalone, a replica set, or a sharded cluster.
 ///
-class MONGOCXX_API topology_description {
+class topology_description {
    public:
     ///
     /// An array of server_description instances.
@@ -100,9 +102,11 @@ class MONGOCXX_API topology_description {
         std::size_t size() const noexcept;
 
        private:
-        friend topology_description;
+        friend class ::mongocxx::v_noabi::events::topology_description;
+
         MONGOCXX_PRIVATE explicit server_descriptions(void* sds, std::size_t size);
         MONGOCXX_PRIVATE void swap(server_descriptions& other) noexcept;
+
         container _container;
         void* _sds;
         std::size_t _size;
