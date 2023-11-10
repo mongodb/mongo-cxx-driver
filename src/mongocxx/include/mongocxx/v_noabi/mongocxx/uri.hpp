@@ -19,6 +19,7 @@
 #include <vector>
 
 #include <mongocxx/client-fwd.hpp>
+#include <mongocxx/pool-fwd.hpp>
 #include <mongocxx/uri-fwd.hpp>
 
 #include <bsoncxx/document/view.hpp>
@@ -364,7 +365,7 @@ class uri {
 
    private:
     friend class ::mongocxx::v_noabi::client;
-    friend class pool;
+    friend class ::mongocxx::v_noabi::pool;
 
     class MONGOCXX_PRIVATE impl;
 

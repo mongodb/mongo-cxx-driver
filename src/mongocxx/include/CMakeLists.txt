@@ -112,6 +112,7 @@ set_dist_list(src_mongocxx_include_DIST
     mongocxx/v_noabi/mongocxx/options/transaction.hpp
     mongocxx/v_noabi/mongocxx/options/update.hpp
     mongocxx/v_noabi/mongocxx/pipeline.hpp
+    mongocxx/v_noabi/mongocxx/pool-fwd.hpp
     mongocxx/v_noabi/mongocxx/pool.hpp
     mongocxx/v_noabi/mongocxx/read_concern.hpp
     mongocxx/v_noabi/mongocxx/read_preference.hpp

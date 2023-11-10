@@ -18,6 +18,7 @@
 #include <memory>
 
 #include <mongocxx/client-fwd.hpp>
+#include <mongocxx/pool-fwd.hpp>
 
 #include <bsoncxx/stdx/optional.hpp>
 #include <mongocxx/options/pool.hpp>
@@ -43,7 +44,7 @@ inline namespace v_noabi {
 /// to check the status of the cluster. Because of this, if multiple threads are available, a
 /// connection pool should be used even if the application itself is single-threaded.
 ///
-class MONGOCXX_API pool {
+class pool {
    public:
     ///
     /// Creates a pool associated with a connection string.
@@ -87,7 +88,7 @@ class MONGOCXX_API pool {
         explicit operator bool() const noexcept;
 
        private:
-        friend class pool;
+        friend class ::mongocxx::v_noabi::pool;
 
         using unique_client = std::unique_ptr<client, std::function<void MONGOCXX_CALL(client*)>>;
 

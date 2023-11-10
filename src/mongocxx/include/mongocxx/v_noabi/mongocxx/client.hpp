@@ -20,6 +20,7 @@
 #include <mongocxx/client_session-fwd.hpp>
 #include <mongocxx/collection-fwd.hpp>
 #include <mongocxx/database-fwd.hpp>
+#include <mongocxx/pool-fwd.hpp>
 
 #include <mongocxx/client_session.hpp>
 #include <mongocxx/database.hpp>
@@ -424,7 +425,7 @@ class client {
     friend class ::mongocxx::v_noabi::client_session;
     friend class ::mongocxx::v_noabi::collection;
     friend class ::mongocxx::v_noabi::database;
-    friend class pool;
+    friend class ::mongocxx::v_noabi::pool;
     friend class options::auto_encryption;
     friend class options::client_encryption;
 
