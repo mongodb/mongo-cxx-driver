@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/collection-fwd.hpp>
+
 #include <bsoncxx/types/bson_value/value.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
 #include <mongocxx/cursor.hpp>
@@ -30,7 +32,6 @@
 namespace mongocxx {
 inline namespace v_noabi {
 class database;
-class collection;
 
 ///
 /// Class supporting operations for MongoDB Client-Side Field Level Encryption.

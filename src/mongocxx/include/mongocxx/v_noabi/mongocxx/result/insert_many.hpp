@@ -17,6 +17,8 @@
 #include <cstdint>
 #include <map>
 
+#include <mongocxx/collection-fwd.hpp>
+
 #include <bsoncxx/array/value.hpp>
 #include <bsoncxx/types.hpp>
 #include <mongocxx/result/bulk_write.hpp>
@@ -25,8 +27,6 @@
 
 namespace mongocxx {
 inline namespace v_noabi {
-class collection;
-
 namespace result {
 
 ///
@@ -69,7 +69,7 @@ class MONGOCXX_API insert_many {
     id_map inserted_ids() const;
 
    private:
-    friend collection;
+    friend class ::mongocxx::v_noabi::collection;
 
     // Construct _inserted_ids from _inserted_ids_owned
     MONGOCXX_PRIVATE void _buildInsertedIds();

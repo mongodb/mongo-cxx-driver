@@ -17,6 +17,8 @@
 #include <chrono>
 #include <cstdint>
 
+#include <mongocxx/collection-fwd.hpp>
+
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
@@ -303,8 +305,8 @@ class MONGOCXX_API aggregate {
     const stdx::optional<bsoncxx::types::bson_value::view_or_value>& comment() const;
 
    private:
+    friend class ::mongocxx::v_noabi::collection;
     friend class ::mongocxx::database;
-    friend class ::mongocxx::collection;
 
     void append(bsoncxx::builder::basic::document& builder) const;
 

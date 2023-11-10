@@ -17,6 +17,7 @@
 #include <chrono>
 
 #include <mongocxx/client-fwd.hpp>
+#include <mongocxx/collection-fwd.hpp>
 
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/string/view_or_value.hpp>
@@ -28,7 +29,6 @@
 
 namespace mongocxx {
 inline namespace v_noabi {
-class collection;
 class database;
 
 namespace options {
@@ -259,7 +259,7 @@ class MONGOCXX_API change_stream {
 
    private:
     friend class ::mongocxx::v_noabi::client;
-    friend class ::mongocxx::collection;
+    friend class ::mongocxx::v_noabi::collection;
     friend class ::mongocxx::database;
 
     bsoncxx::document::value as_bson() const;

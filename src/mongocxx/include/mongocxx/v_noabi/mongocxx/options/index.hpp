@@ -17,6 +17,8 @@
 #include <chrono>
 #include <memory>
 
+#include <mongocxx/collection-fwd.hpp>
+
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
@@ -28,8 +30,6 @@
 
 namespace mongocxx {
 inline namespace v_noabi {
-class collection;
-
 namespace options {
 
 ///
@@ -74,8 +74,10 @@ class MONGOCXX_API index {
         const stdx::optional<bsoncxx::string::view_or_value>& config_string() const;
 
        private:
-        friend collection;
+        friend class ::mongocxx::v_noabi::collection;
+
         MONGOCXX_PRIVATE int type() const override;
+
         stdx::optional<bsoncxx::string::view_or_value> _config_string;
     };
 
@@ -473,7 +475,7 @@ class MONGOCXX_API index {
     operator bsoncxx::document::view_or_value();
 
    private:
-    friend collection;
+    friend class ::mongocxx::v_noabi::collection;
 
     stdx::optional<bool> _background;
     stdx::optional<bool> _unique;

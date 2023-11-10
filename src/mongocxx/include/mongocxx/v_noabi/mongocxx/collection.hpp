@@ -17,6 +17,8 @@
 #include <algorithm>
 #include <string>
 
+#include <mongocxx/collection-fwd.hpp>
+
 #include <bsoncxx/builder/basic/array.hpp>
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>
@@ -81,7 +83,7 @@ class database;
 ///   auto coll = mongo_client["database"]["collection"];
 /// @endcode
 ///
-class MONGOCXX_API collection {
+class collection {
     //
     // Utility class supporting the convenience of {} meaning an empty bsoncxx::document.
     //

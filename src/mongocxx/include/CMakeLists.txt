@@ -26,6 +26,7 @@ set_dist_list(src_mongocxx_include_DIST
     mongocxx/v_noabi/mongocxx/client_session.hpp
     mongocxx/v_noabi/mongocxx/client-fwd.hpp
     mongocxx/v_noabi/mongocxx/client.hpp
+    mongocxx/v_noabi/mongocxx/collection-fwd.hpp
     mongocxx/v_noabi/mongocxx/collection.hpp
     mongocxx/v_noabi/mongocxx/config/compiler.hpp
     mongocxx/v_noabi/mongocxx/config/postlude.hpp

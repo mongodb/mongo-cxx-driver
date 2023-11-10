@@ -17,6 +17,7 @@
 #include <memory>
 
 #include <mongocxx/client-fwd.hpp>
+#include <mongocxx/collection-fwd.hpp>
 
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/stdx/optional.hpp>
@@ -25,7 +26,6 @@
 
 namespace mongocxx {
 inline namespace v_noabi {
-class collection;
 class search_index_view;
 
 ///
@@ -82,7 +82,7 @@ class MONGOCXX_API cursor {
 
    private:
     friend class ::mongocxx::v_noabi::client;
-    friend class collection;
+    friend class ::mongocxx::v_noabi::collection;
     friend class client_encryption;
     friend class database;
     friend class index_view;

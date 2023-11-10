@@ -19,6 +19,7 @@
 #include <string>
 
 #include <mongocxx/client-fwd.hpp>
+#include <mongocxx/collection-fwd.hpp>
 
 #include <bsoncxx/array/view.hpp>
 #include <bsoncxx/array/view_or_value.hpp>
@@ -29,7 +30,6 @@
 
 namespace mongocxx {
 inline namespace v_noabi {
-class collection;
 class database;
 
 ///
@@ -545,7 +545,7 @@ class MONGOCXX_API pipeline {
 
    private:
     friend class ::mongocxx::v_noabi::client;
-    friend class collection;
+    friend class ::mongocxx::v_noabi::collection;
     friend class database;
 
     class MONGOCXX_PRIVATE impl;

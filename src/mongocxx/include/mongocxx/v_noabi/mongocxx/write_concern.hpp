@@ -20,6 +20,7 @@
 #include <stdexcept>
 
 #include <mongocxx/client-fwd.hpp>
+#include <mongocxx/collection-fwd.hpp>
 
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
@@ -32,7 +33,6 @@
 namespace mongocxx {
 inline namespace v_noabi {
 class bulk_write;
-class collection;
 class database;
 class uri;
 
@@ -247,8 +247,8 @@ class MONGOCXX_API write_concern {
 
    private:
     friend class ::mongocxx::v_noabi::client;
+    friend class ::mongocxx::v_noabi::collection;
     friend class bulk_write;
-    friend class collection;
     friend class database;
     friend class uri;
 

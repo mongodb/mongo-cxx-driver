@@ -18,6 +18,7 @@
 #include <memory>
 
 #include <mongocxx/client-fwd.hpp>
+#include <mongocxx/collection-fwd.hpp>
 
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/stdx/optional.hpp>
@@ -187,8 +188,8 @@ class MONGOCXX_API client_session {
 
    private:
     friend class ::mongocxx::v_noabi::client;
+    friend class ::mongocxx::v_noabi::collection;
     friend class bulk_write;
-    friend class collection;
     friend class database;
     friend class index_view;
     friend class search_index_view;

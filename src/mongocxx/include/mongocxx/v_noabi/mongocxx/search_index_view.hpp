@@ -3,6 +3,8 @@
 #include <string>
 #include <vector>
 
+#include <mongocxx/collection-fwd.hpp>
+
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <mongocxx/cursor.hpp>
@@ -249,7 +251,8 @@ class MONGOCXX_API search_index_view {
     ///
 
    private:
-    friend class collection;
+    friend class ::mongocxx::v_noabi::collection;
+
     class MONGOCXX_PRIVATE impl;
 
     MONGOCXX_PRIVATE search_index_view(void* coll, void* client);
