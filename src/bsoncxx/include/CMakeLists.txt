@@ -45,6 +45,7 @@ set_dist_list(src_bsoncxx_include_DIST
     bsoncxx/v_noabi/bsoncxx/builder/stream/closed_context.hpp
     bsoncxx/v_noabi/bsoncxx/builder/stream/document.hpp
     bsoncxx/v_noabi/bsoncxx/builder/stream/helpers.hpp
+    bsoncxx/v_noabi/bsoncxx/builder/stream/key_context-fwd.hpp
     bsoncxx/v_noabi/bsoncxx/builder/stream/key_context.hpp
     bsoncxx/v_noabi/bsoncxx/builder/stream/single_context.hpp
     bsoncxx/v_noabi/bsoncxx/builder/stream/value_context.hpp

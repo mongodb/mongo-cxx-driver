@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <bsoncxx/builder/stream/key_context-fwd.hpp>
+
 #include <bsoncxx/array/value.hpp>
 #include <bsoncxx/builder/concatenate.hpp>
 #include <bsoncxx/builder/core.hpp>
@@ -27,9 +29,6 @@ namespace bsoncxx {
 inline namespace v_noabi {
 namespace builder {
 namespace stream {
-
-template <class T>
-class key_context;
 
 class single_context;
 

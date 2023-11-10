@@ -15,8 +15,10 @@
 
 #pragma once
 
+#include <bsoncxx/builder/stream/closed_context-fwd.hpp>
+#include <bsoncxx/builder/stream/key_context-fwd.hpp>
+
 #include <bsoncxx/builder/core.hpp>
-#include <bsoncxx/builder/stream/closed_context.hpp>
 #include <bsoncxx/builder/stream/value_context.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/stdx/type_traits.hpp>
@@ -45,7 +47,7 @@ namespace stream {
 /// I.e.
 /// builder << key_context << value_context << key_context << ...
 ///
-template <class base = closed_context>
+template <class base>
 class key_context {
    public:
     ///
