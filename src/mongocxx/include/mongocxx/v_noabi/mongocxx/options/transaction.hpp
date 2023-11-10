@@ -19,6 +19,7 @@
 
 #include <mongocxx/client_session-fwd.hpp>
 #include <mongocxx/read_concern-fwd.hpp>
+#include <mongocxx/write_concern-fwd.hpp>
 
 #include <bsoncxx/stdx/optional.hpp>
 #include <mongocxx/stdx.hpp>
@@ -27,7 +28,6 @@
 
 namespace mongocxx {
 inline namespace v_noabi {
-class write_concern;
 class read_preference;
 
 namespace options {

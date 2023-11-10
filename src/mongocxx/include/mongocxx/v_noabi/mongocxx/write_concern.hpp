@@ -24,6 +24,7 @@
 #include <mongocxx/collection-fwd.hpp>
 #include <mongocxx/database-fwd.hpp>
 #include <mongocxx/uri-fwd.hpp>
+#include <mongocxx/write_concern-fwd.hpp>
 
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
@@ -56,7 +57,7 @@ class transaction;
 ///
 /// @see https://www.mongodb.com/docs/manual/core/write-concern/
 ///
-class MONGOCXX_API write_concern {
+class write_concern {
    public:
     ///
     /// A class to represent the special case values for write_concern::nodes.

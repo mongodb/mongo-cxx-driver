@@ -132,6 +132,7 @@ set_dist_list(src_mongocxx_include_DIST
     mongocxx/v_noabi/mongocxx/uri-fwd.hpp
     mongocxx/v_noabi/mongocxx/uri.hpp
     mongocxx/v_noabi/mongocxx/validation_criteria.hpp
+    mongocxx/v_noabi/mongocxx/write_concern-fwd.hpp
     mongocxx/v_noabi/mongocxx/write_concern.hpp
     mongocxx/v_noabi/mongocxx/write_type.hpp
 )
