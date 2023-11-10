@@ -76,6 +76,7 @@ set_dist_list(src_bsoncxx_include_DIST
     bsoncxx/v_noabi/bsoncxx/types/bson_value/view.hpp
     bsoncxx/v_noabi/bsoncxx/types/value.hpp
     bsoncxx/v_noabi/bsoncxx/util/functor.hpp
+    bsoncxx/v_noabi/bsoncxx/validate-fwd.hpp
     bsoncxx/v_noabi/bsoncxx/validate.hpp
     bsoncxx/v_noabi/bsoncxx/view_or_value.hpp
 )

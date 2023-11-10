@@ -17,6 +17,8 @@
 #include <cstdint>
 #include <memory>
 
+#include <bsoncxx/validate-fwd.hpp>
+
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 
@@ -24,8 +26,6 @@
 
 namespace bsoncxx {
 inline namespace v_noabi {
-class validator;
-
 ///
 /// Validates a BSON document. This is a simplified overload that will
 /// only do the bare minimum validation of document structure, and does
@@ -72,7 +72,7 @@ validate(const std::uint8_t* data,
 /// A validator is used to enable or disable specific checks that can be
 /// performed during BSON validation.
 ///
-class BSONCXX_API validator {
+class validator {
    public:
     ///
     /// Constructs a validator.
