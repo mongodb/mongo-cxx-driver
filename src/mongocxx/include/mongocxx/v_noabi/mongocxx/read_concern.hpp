@@ -155,11 +155,11 @@ class read_concern {
     bsoncxx::document::value to_document() const;
 
    private:
-    friend class ::mongocxx::v_noabi::client;
-    friend class ::mongocxx::v_noabi::collection;
-    friend class ::mongocxx::v_noabi::database;
-    friend class ::mongocxx::v_noabi::options::transaction;
-    friend class ::mongocxx::v_noabi::uri;
+    friend ::mongocxx::v_noabi::client;
+    friend ::mongocxx::v_noabi::collection;
+    friend ::mongocxx::v_noabi::database;
+    friend ::mongocxx::v_noabi::options::transaction;
+    friend ::mongocxx::v_noabi::uri;
 
     ///
     /// @{

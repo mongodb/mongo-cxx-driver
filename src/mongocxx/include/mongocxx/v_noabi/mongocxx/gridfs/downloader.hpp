@@ -133,7 +133,7 @@ class downloader {
     bsoncxx::document::view files_document() const;
 
    private:
-    friend class ::mongocxx::v_noabi::gridfs::bucket;
+    friend ::mongocxx::v_noabi::gridfs::bucket;
 
     //
     // Constructs a new downloader stream.

@@ -364,8 +364,8 @@ class uri {
     stdx::optional<std::int32_t> zlib_compression_level() const;
 
    private:
-    friend class ::mongocxx::v_noabi::client;
-    friend class ::mongocxx::v_noabi::pool;
+    friend ::mongocxx::v_noabi::client;
+    friend ::mongocxx::v_noabi::pool;
 
     class MONGOCXX_PRIVATE impl;
 

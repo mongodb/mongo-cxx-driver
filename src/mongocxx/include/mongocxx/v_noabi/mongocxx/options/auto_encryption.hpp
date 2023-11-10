@@ -372,8 +372,8 @@ class auto_encryption {
     const stdx::optional<bsoncxx::document::view_or_value>& extra_options() const;
 
    private:
-    friend class ::mongocxx::v_noabi::client;
-    friend class ::mongocxx::v_noabi::pool;
+    friend ::mongocxx::v_noabi::client;
+    friend ::mongocxx::v_noabi::pool;
 
     MONGOCXX_PRIVATE void* convert() const;
 

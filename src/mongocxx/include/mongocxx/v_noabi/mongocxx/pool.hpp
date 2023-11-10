@@ -89,7 +89,7 @@ class pool {
         explicit operator bool() const noexcept;
 
        private:
-        friend class ::mongocxx::v_noabi::pool;
+        friend ::mongocxx::v_noabi::pool;
 
         using unique_client = std::unique_ptr<client, std::function<void MONGOCXX_CALL(client*)>>;
 
@@ -111,7 +111,7 @@ class pool {
     stdx::optional<entry> try_acquire();
 
    private:
-    friend class ::mongocxx::v_noabi::options::auto_encryption;
+    friend ::mongocxx::v_noabi::options::auto_encryption;
 
     MONGOCXX_PRIVATE void _release(client* client);
 

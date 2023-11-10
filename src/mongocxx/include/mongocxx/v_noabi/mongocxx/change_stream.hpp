@@ -108,11 +108,11 @@ class change_stream {
     bsoncxx::stdx::optional<bsoncxx::document::view> get_resume_token() const;
 
    private:
-    friend class ::mongocxx::v_noabi::client;
-    friend class ::mongocxx::v_noabi::collection;
-    friend class ::mongocxx::v_noabi::database;
+    friend ::mongocxx::v_noabi::client;
+    friend ::mongocxx::v_noabi::collection;
+    friend ::mongocxx::v_noabi::database;
 
-    friend class ::mongocxx::v_noabi::change_stream::iterator;
+    friend ::mongocxx::v_noabi::change_stream::iterator;
 
     MONGOCXX_PRIVATE change_stream(void* change_stream_ptr);
 
@@ -186,7 +186,7 @@ class change_stream::iterator {
     void operator++(int);
 
    private:
-    friend class ::mongocxx::v_noabi::change_stream;
+    friend ::mongocxx::v_noabi::change_stream;
 
     enum class iter_type { k_tracking, k_default_constructed, k_end };
 

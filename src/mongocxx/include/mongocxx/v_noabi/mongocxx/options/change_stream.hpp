@@ -258,9 +258,9 @@ class change_stream {
     change_stream& start_at_operation_time(bsoncxx::types::b_timestamp timestamp);
 
    private:
-    friend class ::mongocxx::v_noabi::client;
-    friend class ::mongocxx::v_noabi::collection;
-    friend class ::mongocxx::v_noabi::database;
+    friend ::mongocxx::v_noabi::client;
+    friend ::mongocxx::v_noabi::collection;
+    friend ::mongocxx::v_noabi::database;
 
     bsoncxx::document::value as_bson() const;
     stdx::optional<bsoncxx::string::view_or_value> _full_document;

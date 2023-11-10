@@ -544,9 +544,9 @@ class pipeline {
     bsoncxx::array::view view_array() const;
 
    private:
-    friend class ::mongocxx::v_noabi::client;
-    friend class ::mongocxx::v_noabi::collection;
-    friend class ::mongocxx::v_noabi::database;
+    friend ::mongocxx::v_noabi::client;
+    friend ::mongocxx::v_noabi::collection;
+    friend ::mongocxx::v_noabi::database;
 
     class MONGOCXX_PRIVATE impl;
     std::unique_ptr<impl> _impl;

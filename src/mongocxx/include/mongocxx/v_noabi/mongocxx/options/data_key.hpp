@@ -154,7 +154,7 @@ class data_key {
     const stdx::optional<key_material_type>& key_material();
 
    private:
-    friend class ::mongocxx::v_noabi::client_encryption;
+    friend ::mongocxx::v_noabi::client_encryption;
 
     MONGOCXX_PRIVATE void* convert() const;
 

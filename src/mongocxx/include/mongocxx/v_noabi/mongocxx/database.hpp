@@ -625,9 +625,9 @@ class database {
     ///
 
    private:
-    friend class ::mongocxx::v_noabi::client_encryption;
-    friend class ::mongocxx::v_noabi::client;
-    friend class ::mongocxx::v_noabi::collection;
+    friend ::mongocxx::v_noabi::client_encryption;
+    friend ::mongocxx::v_noabi::client;
+    friend ::mongocxx::v_noabi::collection;
 
     MONGOCXX_PRIVATE database(const class client& client, bsoncxx::string::view_or_value name);
 

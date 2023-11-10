@@ -70,7 +70,7 @@ class insert_many {
     id_map inserted_ids() const;
 
    private:
-    friend class ::mongocxx::v_noabi::collection;
+    friend ::mongocxx::v_noabi::collection;
 
     // Construct _inserted_ids from _inserted_ids_owned
     MONGOCXX_PRIVATE void _buildInsertedIds();

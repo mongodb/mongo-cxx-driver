@@ -106,8 +106,8 @@ class list {
    private:
     bson_value::value val;
 
-    friend class ::bsoncxx::v_noabi::builder::document;
-    friend class ::bsoncxx::v_noabi::builder::array;
+    friend ::bsoncxx::v_noabi::builder::document;
+    friend ::bsoncxx::v_noabi::builder::array;
 
     list(initializer_list_t init, bool type_deduction, bool is_array) : val{nullptr} {
         std::stringstream err_msg{"cannot construct document"};

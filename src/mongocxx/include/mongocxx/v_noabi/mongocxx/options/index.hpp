@@ -48,7 +48,7 @@ class index {
         virtual ~base_storage_options();
 
        private:
-        friend class ::mongocxx::v_noabi::options::index;
+        friend ::mongocxx::v_noabi::options::index;
 
         MONGOCXX_PRIVATE virtual int type() const = 0;
     };
@@ -76,7 +76,7 @@ class index {
         const stdx::optional<bsoncxx::string::view_or_value>& config_string() const;
 
        private:
-        friend class ::mongocxx::v_noabi::collection;
+        friend ::mongocxx::v_noabi::collection;
 
         MONGOCXX_PRIVATE int type() const override;
 
@@ -477,7 +477,7 @@ class index {
     operator bsoncxx::document::view_or_value();
 
    private:
-    friend class ::mongocxx::v_noabi::collection;
+    friend ::mongocxx::v_noabi::collection;
 
     stdx::optional<bool> _background;
     stdx::optional<bool> _unique;

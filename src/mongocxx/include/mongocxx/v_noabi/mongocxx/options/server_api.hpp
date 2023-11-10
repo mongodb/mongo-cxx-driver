@@ -128,8 +128,8 @@ class server_api {
     version get_version() const;
 
    private:
-    friend class ::mongocxx::v_noabi::client;
-    friend class ::mongocxx::v_noabi::pool;
+    friend ::mongocxx::v_noabi::client;
+    friend ::mongocxx::v_noabi::pool;
 
     version _version;
     stdx::optional<bool> _strict;

@@ -192,12 +192,12 @@ class client_session {
     void with_transaction(with_transaction_cb cb, options::transaction opts = {});
 
    private:
-    friend class ::mongocxx::v_noabi::bulk_write;
-    friend class ::mongocxx::v_noabi::client;
-    friend class ::mongocxx::v_noabi::collection;
-    friend class ::mongocxx::v_noabi::database;
-    friend class ::mongocxx::v_noabi::index_view;
-    friend class ::mongocxx::v_noabi::search_index_view;
+    friend ::mongocxx::v_noabi::bulk_write;
+    friend ::mongocxx::v_noabi::client;
+    friend ::mongocxx::v_noabi::collection;
+    friend ::mongocxx::v_noabi::database;
+    friend ::mongocxx::v_noabi::index_view;
+    friend ::mongocxx::v_noabi::search_index_view;
 
     class MONGOCXX_PRIVATE impl;
 

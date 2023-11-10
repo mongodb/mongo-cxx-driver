@@ -1859,9 +1859,9 @@ class collection {
     search_index_view search_indexes();
 
    private:
-    friend class ::mongocxx::v_noabi::bulk_write;
-    friend class ::mongocxx::v_noabi::client_encryption;
-    friend class ::mongocxx::v_noabi::database;
+    friend ::mongocxx::v_noabi::bulk_write;
+    friend ::mongocxx::v_noabi::client_encryption;
+    friend ::mongocxx::v_noabi::database;
 
     MONGOCXX_PRIVATE collection(const database& database,
                                 bsoncxx::string::view_or_value collection_name);

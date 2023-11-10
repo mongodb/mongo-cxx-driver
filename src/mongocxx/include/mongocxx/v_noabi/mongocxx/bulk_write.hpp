@@ -93,7 +93,7 @@ class bulk_write {
     stdx::optional<result::bulk_write> execute() const;
 
    private:
-    friend class ::mongocxx::v_noabi::collection;
+    friend ::mongocxx::v_noabi::collection;
 
     class MONGOCXX_PRIVATE impl;
 

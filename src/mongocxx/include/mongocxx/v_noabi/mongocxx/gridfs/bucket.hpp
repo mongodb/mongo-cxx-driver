@@ -650,7 +650,7 @@ class bucket {
     stdx::string_view bucket_name() const;
 
    private:
-    friend class ::mongocxx::v_noabi::database;
+    friend ::mongocxx::v_noabi::database;
 
     // Constructs a new GridFS bucket.  Throws if options are invalid.
     MONGOCXX_PRIVATE bucket(const database& db, const options::gridfs::bucket& options);

@@ -102,7 +102,7 @@ class topology_description {
         std::size_t size() const noexcept;
 
        private:
-        friend class ::mongocxx::v_noabi::events::topology_description;
+        friend ::mongocxx::v_noabi::events::topology_description;
 
         MONGOCXX_PRIVATE explicit server_descriptions(void* sds, std::size_t size);
         MONGOCXX_PRIVATE void swap(server_descriptions& other) noexcept;

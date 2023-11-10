@@ -280,13 +280,13 @@ class read_preference {
     const stdx::optional<bsoncxx::document::view> hedge() const;
 
    private:
-    friend class ::mongocxx::v_noabi::client;
-    friend class ::mongocxx::v_noabi::collection;
-    friend class ::mongocxx::v_noabi::database;
-    friend class ::mongocxx::v_noabi::events::topology_description;
-    friend class ::mongocxx::v_noabi::options::transaction;
-    friend class ::mongocxx::v_noabi::search_index_view;
-    friend class ::mongocxx::v_noabi::uri;
+    friend ::mongocxx::v_noabi::client;
+    friend ::mongocxx::v_noabi::collection;
+    friend ::mongocxx::v_noabi::database;
+    friend ::mongocxx::v_noabi::events::topology_description;
+    friend ::mongocxx::v_noabi::options::transaction;
+    friend ::mongocxx::v_noabi::search_index_view;
+    friend ::mongocxx::v_noabi::uri;
 
     ///
     /// @{

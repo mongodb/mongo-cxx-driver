@@ -126,7 +126,7 @@ class uploader {
     std::int32_t chunk_size() const;
 
    private:
-    friend class ::mongocxx::v_noabi::gridfs::bucket;
+    friend ::mongocxx::v_noabi::gridfs::bucket;
 
     //
     // Constructs a new uploader stream.

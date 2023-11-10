@@ -424,12 +424,12 @@ class client {
     void reset();
 
    private:
-    friend class ::mongocxx::v_noabi::client_session;
-    friend class ::mongocxx::v_noabi::collection;
-    friend class ::mongocxx::v_noabi::database;
-    friend class ::mongocxx::v_noabi::options::auto_encryption;
-    friend class ::mongocxx::v_noabi::options::client_encryption;
-    friend class ::mongocxx::v_noabi::pool;
+    friend ::mongocxx::v_noabi::client_session;
+    friend ::mongocxx::v_noabi::collection;
+    friend ::mongocxx::v_noabi::database;
+    friend ::mongocxx::v_noabi::options::auto_encryption;
+    friend ::mongocxx::v_noabi::options::client_encryption;
+    friend ::mongocxx::v_noabi::pool;
 
     MONGOCXX_PRIVATE explicit client(void* implementation);
 

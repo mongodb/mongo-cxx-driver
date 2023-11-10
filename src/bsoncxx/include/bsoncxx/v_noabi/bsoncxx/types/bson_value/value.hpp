@@ -258,7 +258,7 @@ class value {
     operator bson_value::view() const noexcept;
 
    private:
-    friend class ::bsoncxx::v_noabi::document::element;
+    friend ::bsoncxx::v_noabi::document::element;
 
     value(const std::uint8_t* raw,
           std::uint32_t length,
