@@ -550,7 +550,7 @@ class MONGOCXX_API database {
     ///
     /// @throws mongocxx::logic_error if `options` are invalid.
     ///
-    class gridfs::bucket gridfs_bucket(
+    class mongocxx::gridfs::bucket gridfs_bucket(
         const options::gridfs::bucket& options = options::gridfs::bucket()) const;
 
     ///
