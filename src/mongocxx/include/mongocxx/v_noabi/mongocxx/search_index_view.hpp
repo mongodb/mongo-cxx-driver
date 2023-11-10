@@ -4,6 +4,7 @@
 #include <vector>
 
 #include <mongocxx/collection-fwd.hpp>
+#include <mongocxx/search_index_view-fwd.hpp>
 
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
@@ -18,7 +19,7 @@ inline namespace v_noabi {
 ///
 /// Class representing a MongoDB search index view.
 ///
-class MONGOCXX_API search_index_view {
+class search_index_view {
    public:
     search_index_view(search_index_view&&) noexcept;
     search_index_view& operator=(search_index_view&&) noexcept;

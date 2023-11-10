@@ -22,6 +22,7 @@
 #include <mongocxx/client_session-fwd.hpp>
 #include <mongocxx/collection-fwd.hpp>
 #include <mongocxx/database-fwd.hpp>
+#include <mongocxx/search_index_view-fwd.hpp>
 
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/stdx/optional.hpp>
@@ -194,8 +195,8 @@ class client_session {
     friend class ::mongocxx::v_noabi::client;
     friend class ::mongocxx::v_noabi::collection;
     friend class ::mongocxx::v_noabi::database;
+    friend class ::mongocxx::v_noabi::search_index_view;
     friend class index_view;
-    friend class search_index_view;
 
     class MONGOCXX_PRIVATE impl;
 

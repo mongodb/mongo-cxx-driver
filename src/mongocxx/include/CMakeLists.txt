@@ -123,6 +123,7 @@ set_dist_list(src_mongocxx_include_DIST
     mongocxx/v_noabi/mongocxx/result/rewrap_many_datakey.hpp
     mongocxx/v_noabi/mongocxx/result/update.hpp
     mongocxx/v_noabi/mongocxx/search_index_model.hpp
+    mongocxx/v_noabi/mongocxx/search_index_view-fwd.hpp
     mongocxx/v_noabi/mongocxx/search_index_view.hpp
     mongocxx/v_noabi/mongocxx/stdx.hpp
     mongocxx/v_noabi/mongocxx/uri-fwd.hpp

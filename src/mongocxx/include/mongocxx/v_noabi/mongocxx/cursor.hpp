@@ -20,6 +20,7 @@
 #include <mongocxx/client_encryption-fwd.hpp>
 #include <mongocxx/collection-fwd.hpp>
 #include <mongocxx/database-fwd.hpp>
+#include <mongocxx/search_index_view-fwd.hpp>
 
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/stdx/optional.hpp>
@@ -28,8 +29,6 @@
 
 namespace mongocxx {
 inline namespace v_noabi {
-class search_index_view;
-
 ///
 /// Class representing a pointer to the result set of a query on a MongoDB server.
 ///
@@ -87,8 +86,8 @@ class MONGOCXX_API cursor {
     friend class ::mongocxx::v_noabi::client;
     friend class ::mongocxx::v_noabi::collection;
     friend class ::mongocxx::v_noabi::database;
+    friend class ::mongocxx::v_noabi::search_index_view;
     friend class index_view;
-    friend class search_index_view;
     friend class cursor::iterator;
 
     MONGOCXX_PRIVATE cursor(void* cursor_ptr,
