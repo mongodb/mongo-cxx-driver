@@ -18,6 +18,8 @@
 #include <memory>
 #include <ostream>
 
+#include <mongocxx/database-fwd.hpp>
+
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
@@ -35,8 +37,6 @@
 
 namespace mongocxx {
 inline namespace v_noabi {
-class database;
-
 namespace gridfs {
 
 ///
@@ -649,7 +649,7 @@ class MONGOCXX_API bucket {
     stdx::string_view bucket_name() const;
 
    private:
-    friend class mongocxx::database;
+    friend class ::mongocxx::v_noabi::database;
 
     // Constructs a new GridFS bucket.  Throws if options are invalid.
     MONGOCXX_PRIVATE bucket(const database& db, const options::gridfs::bucket& options);

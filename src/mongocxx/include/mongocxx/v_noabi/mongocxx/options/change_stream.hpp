@@ -18,6 +18,7 @@
 
 #include <mongocxx/client-fwd.hpp>
 #include <mongocxx/collection-fwd.hpp>
+#include <mongocxx/database-fwd.hpp>
 
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/string/view_or_value.hpp>
@@ -29,8 +30,6 @@
 
 namespace mongocxx {
 inline namespace v_noabi {
-class database;
-
 namespace options {
 
 ///
@@ -260,7 +259,7 @@ class MONGOCXX_API change_stream {
    private:
     friend class ::mongocxx::v_noabi::client;
     friend class ::mongocxx::v_noabi::collection;
-    friend class ::mongocxx::database;
+    friend class ::mongocxx::v_noabi::database;
 
     bsoncxx::document::value as_bson() const;
     stdx::optional<bsoncxx::string::view_or_value> _full_document;

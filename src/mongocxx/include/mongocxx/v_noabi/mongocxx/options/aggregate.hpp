@@ -18,6 +18,7 @@
 #include <cstdint>
 
 #include <mongocxx/collection-fwd.hpp>
+#include <mongocxx/database-fwd.hpp>
 
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
@@ -306,7 +307,7 @@ class MONGOCXX_API aggregate {
 
    private:
     friend class ::mongocxx::v_noabi::collection;
-    friend class ::mongocxx::database;
+    friend class ::mongocxx::v_noabi::database;
 
     void append(bsoncxx::builder::basic::document& builder) const;
 

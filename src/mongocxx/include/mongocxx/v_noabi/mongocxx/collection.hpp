@@ -18,6 +18,7 @@
 #include <string>
 
 #include <mongocxx/collection-fwd.hpp>
+#include <mongocxx/database-fwd.hpp>
 
 #include <bsoncxx/builder/basic/array.hpp>
 #include <bsoncxx/builder/basic/document.hpp>
@@ -67,7 +68,6 @@ namespace mongocxx {
 inline namespace v_noabi {
 class bulk_write;
 class client_encryption;
-class database;
 
 ///
 /// Class representing server side document groupings within a MongoDB database.
@@ -1860,9 +1860,9 @@ class collection {
     search_index_view search_indexes();
 
    private:
+    friend class ::mongocxx::v_noabi::database;
     friend class bulk_write;
     friend class client_encryption;
-    friend class database;
 
     MONGOCXX_PRIVATE collection(const database& database,
                                 bsoncxx::string::view_or_value collection_name);

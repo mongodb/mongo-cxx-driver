@@ -18,6 +18,7 @@
 
 #include <mongocxx/client-fwd.hpp>
 #include <mongocxx/collection-fwd.hpp>
+#include <mongocxx/database-fwd.hpp>
 
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/stdx/optional.hpp>
@@ -26,8 +27,6 @@
 
 namespace mongocxx {
 inline namespace v_noabi {
-class database;
-
 ///
 /// Class representing a MongoDB change stream.
 ///
@@ -110,7 +109,7 @@ class MONGOCXX_API change_stream {
    private:
     friend class ::mongocxx::v_noabi::client;
     friend class ::mongocxx::v_noabi::collection;
-    friend class database;
+    friend class ::mongocxx::v_noabi::database;
     friend class change_stream::iterator;
 
     MONGOCXX_PRIVATE change_stream(void* change_stream_ptr);

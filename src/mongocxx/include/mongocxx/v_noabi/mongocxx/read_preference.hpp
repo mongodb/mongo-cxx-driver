@@ -21,6 +21,7 @@
 
 #include <mongocxx/client-fwd.hpp>
 #include <mongocxx/collection-fwd.hpp>
+#include <mongocxx/database-fwd.hpp>
 
 #include <bsoncxx/array/view_or_value.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
@@ -32,7 +33,6 @@
 
 namespace mongocxx {
 inline namespace v_noabi {
-class database;
 class search_index_view;
 class uri;
 
@@ -288,7 +288,7 @@ class MONGOCXX_API read_preference {
    private:
     friend class ::mongocxx::v_noabi::client;
     friend class ::mongocxx::v_noabi::collection;
-    friend class database;
+    friend class ::mongocxx::v_noabi::database;
     friend class search_index_view;
     friend class uri;
 

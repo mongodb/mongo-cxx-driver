@@ -19,6 +19,7 @@
 
 #include <mongocxx/client-fwd.hpp>
 #include <mongocxx/collection-fwd.hpp>
+#include <mongocxx/database-fwd.hpp>
 
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/string/view_or_value.hpp>
@@ -42,7 +43,7 @@ class client_encryption;
 /// Acts as a gateway for accessing collections that are contained within a database. It inherits
 /// all of its default settings from the client that creates it.
 ///
-class MONGOCXX_API database {
+class database {
    public:
     ///
     /// Default constructs a new database. The database is not valid for use and is equivalent

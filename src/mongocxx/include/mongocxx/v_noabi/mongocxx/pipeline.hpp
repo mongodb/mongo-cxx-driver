@@ -20,6 +20,7 @@
 
 #include <mongocxx/client-fwd.hpp>
 #include <mongocxx/collection-fwd.hpp>
+#include <mongocxx/database-fwd.hpp>
 
 #include <bsoncxx/array/view.hpp>
 #include <bsoncxx/array/view_or_value.hpp>
@@ -30,8 +31,6 @@
 
 namespace mongocxx {
 inline namespace v_noabi {
-class database;
-
 ///
 /// Class representing a MongoDB aggregation pipeline.
 ///
@@ -546,7 +545,7 @@ class MONGOCXX_API pipeline {
    private:
     friend class ::mongocxx::v_noabi::client;
     friend class ::mongocxx::v_noabi::collection;
-    friend class database;
+    friend class ::mongocxx::v_noabi::database;
 
     class MONGOCXX_PRIVATE impl;
     std::unique_ptr<impl> _impl;

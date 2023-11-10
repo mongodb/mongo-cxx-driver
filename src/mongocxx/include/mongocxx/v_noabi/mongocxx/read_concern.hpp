@@ -18,6 +18,7 @@
 
 #include <mongocxx/client-fwd.hpp>
 #include <mongocxx/collection-fwd.hpp>
+#include <mongocxx/database-fwd.hpp>
 
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
@@ -29,7 +30,6 @@
 
 namespace mongocxx {
 inline namespace v_noabi {
-class database;
 class uri;
 
 namespace options {
@@ -160,7 +160,7 @@ class MONGOCXX_API read_concern {
    private:
     friend class ::mongocxx::v_noabi::client;
     friend class ::mongocxx::v_noabi::collection;
-    friend class database;
+    friend class ::mongocxx::v_noabi::database;
     friend class uri;
 
     friend class options::transaction;
