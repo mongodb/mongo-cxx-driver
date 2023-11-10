@@ -55,7 +55,7 @@ class MONGOCXX_API auto_encryption {
     ///
     /// @see https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
-    auto_encryption& key_vault_client(client* client);
+    auto_encryption& key_vault_client(mongocxx::client* client);
 
     ///
     /// Gets the key vault client.
@@ -63,7 +63,7 @@ class MONGOCXX_API auto_encryption {
     /// @return
     ///   An optional pointer to the key vault client.
     ///
-    const stdx::optional<client*>& key_vault_client() const;
+    const stdx::optional<mongocxx::client*>& key_vault_client() const;
 
     ///
     /// When the key vault collection is on a separate MongoDB cluster,
