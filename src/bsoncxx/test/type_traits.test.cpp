@@ -4,11 +4,10 @@
 #include <bsoncxx/stdx/type_traits.hpp>
 #include <third_party/catch/include/catch.hpp>
 
-#if __GNUC__
+#include <bsoncxx/config/prelude.hpp>
+
 // We declare variables that are only used for compilation checking
-// (applies to Clang as well)
-#pragma GCC diagnostic ignored "-Wunused"
-#endif
+bsoncxx_disable_warning(GNU("-Wunused"));
 
 namespace {
 namespace tt = bsoncxx::detail;

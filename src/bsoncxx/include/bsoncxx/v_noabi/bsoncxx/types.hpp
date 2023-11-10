@@ -29,13 +29,8 @@
 #pragma push_macro("BSONCXX_ENUM")
 #undef BSONCXX_ENUM
 
-#if defined(__clang__)
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wfloat-equal"
-#elif defined(__GNUC__)
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wfloat-equal"
-#endif
+bsoncxx_push_warnings();
+bsoncxx_disable_warning(GNU("-Wfloat-equal"));
 
 namespace bsoncxx {
 inline namespace v_noabi {
@@ -676,11 +671,7 @@ BSONCXX_INLINE bool operator==(const b_maxkey&, const b_maxkey&) {
 }  // namespace v_noabi
 }  // namespace bsoncxx
 
-#if defined(__clang__)
-#pragma clang diagnostic pop
-#elif defined(__GNUC__)
-#pragma GCC diagnostic pop
-#endif
+bsoncxx_pop_warnings();
 
 #ifdef BSONCXX_ENUM
 static_assert(false, "BSONCXX_ENUM must be undef'ed");

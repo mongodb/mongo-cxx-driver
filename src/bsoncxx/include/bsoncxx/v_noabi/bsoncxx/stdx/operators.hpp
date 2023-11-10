@@ -94,13 +94,7 @@ class strong_ordering {
 #undef DEFOP
 };
 
-#ifdef __GNUC__
-#define psuedo_inline [[gnu::weak]]
-#elif defined _MSC_VER
-#define psuedo_inline __declspec(selectany)
-#else
-#define pseudo_inline
-#endif
+#define psuedo_inline bsoncxx_if_gnu_like([[gnu::weak]]) bsoncxx_if_msvc(__declspec(selectany))
 
 psuedo_inline const strong_ordering strong_ordering::less =
     strong_ordering(strong_ordering::_construct{}, -1);

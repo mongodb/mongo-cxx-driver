@@ -106,4 +106,102 @@
     noexcept(noexcept(__VA_ARGS__))->decltype(__VA_ARGS__) { \
         return __VA_ARGS__;                                  \
     }                                                        \
-    static_assert(true, "")
+    bsoncxx_force_semicolon
+
+// clang-format off
+
+#pragma push_macro("bsoncxx_if_msvc")
+#define bsoncxx_if_msvc(...)
+#pragma push_macro("bsoncxx_if_gcc")
+#define bsoncxx_if_gcc(...)
+#pragma push_macro("bsoncxx_if_clang")
+#define bsoncxx_if_clang(...)
+#pragma push_macro("bsoncxx_if_gnu_like")
+#define bsoncxx_if_gnu_like(...) \
+    bsoncxx_if_gcc(__VA_ARGS__) \
+    bsoncxx_if_clang(__VA_ARGS__)
+
+#ifdef __GNUC__
+    #ifdef __clang__
+        #undef bsoncxx_if_clang
+        #define bsoncxx_if_clang(...) __VA_ARGS__
+    #else
+        #undef bsoncxx_if_gcc
+        #define bsoncxx_if_gcc(...) __VA_ARGS__
+    #endif
+#elif defined(_MSC_VER)
+    #undef bsoncxx_if_msvc
+    #undef bsoncxx_if_msvc(...) __VA_ARGS__
+#endif
+
+#pragma push_macro("bsoncxx_stringify")
+#pragma push_macro("bsoncxx_stringify_impl")
+#define bsoncxx_stringify(...) bsoncxx_stringify_impl(__VA_ARGS__)
+#define bsoncxx_stringify_impl(...) #__VA_ARGS__
+
+#pragma push_macro("bsoncxx_pragma")
+#define bsoncxx_pragma(...) _Pragma(bsoncxx_stringify(__VA_ARGS__))
+
+#pragma push_macro("bsoncxx_force_semicolon")
+/**
+ * @brief Use in a declaration position to force the appearence of a semicolon as the next token
+ */
+#define bsoncxx_force_semicolon static_assert(true, "")
+
+#pragma push_macro("bsoncxx_concat")
+#pragma push_macro("bsoncxx_concat_impl")
+#define bsoncxx_concat(A, ...) bsoncxx_concat_impl(A, __VA_ARGS__)
+#define bsoncxx_concat_impl(A, ...) A##__VA_ARGS__
+
+#pragma push_macro("bsoncxx_disable_warning")
+/**
+ * @brief Disable a warning for a particular compiler.
+ *
+ * The argument should be of the form:
+ *
+ * - Clang(<flag-string>)
+ * - GCC(<flag-string>)
+ * - GNU(<flag-string>)
+ * - MSVC(<id-integer>)
+ */
+#define bsoncxx_disable_warning(Spec) bsoncxx_concat(BSONCXX_DISABLE_WARNING_IMPL_, Spec)
+
+#pragma push_macro("bsoncxx_push_warnings")
+/**
+ * @brief Push the current compiler diagnostics settings state
+ */
+#define bsoncxx_push_warnings() \
+    bsoncxx_if_gnu_like(bsoncxx_pragma(GCC diagnostic push);) \
+    bsoncxx_if_msvc(bsoncxx_pragma(warning(push));) \
+    bsoncxx_force_semicolon
+
+#pragma push_macro("bsoncxx_pop_warnings")
+/**
+ * @brief Restore prior compiler diagnostics settings from before the most
+ * recent bsoncxx_push_warnings()
+ */
+#define bsoncxx_pop_warnings() \
+    bsoncxx_if_gnu_like(bsoncxx_pragma(GCC diagnostic pop);) \
+    bsoncxx_if_msvc(bsoncxx_pragma(warning(pop));) \
+    bsoncxx_force_semicolon
+
+#pragma push_macro("BSONCXX_DISABLE_WARNING_IMPL_GCC")
+#define BSONCXX_DISABLE_WARNING_IMPL_GCC(...) \
+    bsoncxx_if_gcc(bsoncxx_pragma(GCC diagnostic ignored __VA_ARGS__);) \
+    bsoncxx_force_semicolon
+
+#pragma push_macro("BSONCXX_DISABLE_WARNING_IMPL_Clang")
+#define BSONCXX_DISABLE_WARNING_IMPL_Clang(...) \
+    bsoncxx_if_clang(bsoncxx_pragma(GCC diagnostic ignored __VA_ARGS__);) \
+    bsoncxx_force_semicolon
+
+#pragma push_macro("BSONCXX_DISABLE_WARNING_IMPL_GNU")
+#define BSONCXX_DISABLE_WARNING_IMPL_GNU(...) \
+    BSONCXX_DISABLE_WARNING_IMPL_GCC(__VA_ARGS__); \
+    BSONCXX_DISABLE_WARNING_IMPL_Clang(__VA_ARGS__)
+
+#pragma push_macro("BSONCXX_DISABLE_WARNING_IMPL_MSVC")
+#define BSONCXX_DISABLE_WARNING_IMPL_MSVC(...) \
+    bsoncxx_if_msvc(warning(disable : __VA_ARGS__))
+
+// clang-format on

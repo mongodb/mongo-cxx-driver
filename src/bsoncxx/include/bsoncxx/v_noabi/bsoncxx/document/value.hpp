@@ -232,17 +232,13 @@ class BSONCXX_API value {
     std::size_t _length{0};
 };
 
-#if !defined(__clang__) && defined(__GNUC__) && (__cplusplus >= 201709L)
-// Silence false positive with g++ 10.2.1 on Debian 11.
-#pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wmaybe-uninitialized"
-#endif
 BSONCXX_INLINE document::view value::view() const noexcept {
+    // Silence false positive with g++ 10.2.1 on Debian 11.
+    bsoncxx_push_warnings();
+    bsoncxx_disable_warning(GCC("-Wmaybe-uninitialized"));
     return document::view{static_cast<uint8_t*>(_data.get()), _length};
+    bsoncxx_pop_warnings();
 }
-#if !defined(__clang__) && defined(__GNUC__) && (__cplusplus >= 201709L)
-#pragma GCC diagnostic pop
-#endif
 
 BSONCXX_INLINE value::operator document::view() const noexcept {
     return view();

@@ -75,3 +75,25 @@
 static_assert(false, "BSONCXX_ENUM must be undef'ed");
 #endif
 #pragma pop_macro("BSONCXX_ENUM")
+
+#pragma pop_macro("bsoncxx_push_warnings")
+#pragma pop_macro("bsoncxx_pop_warnings")
+#pragma pop_macro("bsoncxx_disable_warning")
+
+#pragma pop_macro("BSONCXX_DISABLE_WARNING_IMPL_MSVC")
+#pragma pop_macro("BSONCXX_DISABLE_WARNING_IMPL_GCC")
+#pragma pop_macro("BSONCXX_DISABLE_WARNING_IMPL_GNU")
+#pragma pop_macro("BSONCXX_DISABLE_WARNING_IMPL_Clang")
+
+#pragma pop_macro("bsoncxx_concat")
+#pragma pop_macro("bsoncxx_concat_impl")
+
+#pragma pop_macro("bsoncxx_pragma")
+#pragma pop_macro("bsoncxx_stringify_impl")
+#pragma pop_macro("bsoncxx_stringify")
+#pragma pop_macro("bsoncxx_force_semicolon")
+
+#pragma pop_macro("bsoncxx_if_msvc")
+#pragma pop_macro("bsoncxx_if_gcc")
+#pragma pop_macro("bsoncxx_if_clang")
+#pragma pop_macro("bsoncxx_if_gnu_like")
