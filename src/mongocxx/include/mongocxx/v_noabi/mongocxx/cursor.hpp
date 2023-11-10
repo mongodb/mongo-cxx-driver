@@ -20,6 +20,7 @@
 #include <mongocxx/client_encryption-fwd.hpp>
 #include <mongocxx/collection-fwd.hpp>
 #include <mongocxx/database-fwd.hpp>
+#include <mongocxx/index_view-fwd.hpp>
 #include <mongocxx/search_index_view-fwd.hpp>
 
 #include <bsoncxx/document/view.hpp>
@@ -86,8 +87,8 @@ class MONGOCXX_API cursor {
     friend class ::mongocxx::v_noabi::client;
     friend class ::mongocxx::v_noabi::collection;
     friend class ::mongocxx::v_noabi::database;
+    friend class ::mongocxx::v_noabi::index_view;
     friend class ::mongocxx::v_noabi::search_index_view;
-    friend class index_view;
     friend class cursor::iterator;
 
     MONGOCXX_PRIVATE cursor(void* cursor_ptr,
