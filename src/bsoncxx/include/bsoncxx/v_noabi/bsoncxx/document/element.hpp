@@ -18,6 +18,7 @@
 #include <cstdint>
 
 #include <bsoncxx/types-fwd.hpp>
+#include <bsoncxx/types/bson_value/value-fwd.hpp>
 
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
@@ -29,7 +30,6 @@ inline namespace v_noabi {
 namespace types {
 
 namespace bson_value {
-class value;
 class view;
 }  // namespace bson_value
 

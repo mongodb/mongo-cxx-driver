@@ -18,6 +18,8 @@
 #include <cstdint>
 #include <type_traits>
 
+#include <bsoncxx/types/bson_value/value-fwd.hpp>
+
 #include <bsoncxx/stdx/type_traits.hpp>
 #include <bsoncxx/types.hpp>
 
@@ -31,9 +33,6 @@ class element;
 
 namespace types {
 namespace bson_value {
-
-class value;
-
 ///
 /// A view-only variant that can contain any BSON type.
 ///
@@ -271,8 +270,8 @@ class BSONCXX_API view {
     const b_maxkey& get_maxkey() const;
 
    private:
+    friend class ::bsoncxx::v_noabi::types::bson_value::value;
     friend class document::element;
-    friend class bson_value::value;
 
     view(const std::uint8_t* raw, std::uint32_t length, std::uint32_t offset, std::uint32_t keylen);
     view(void* internal_value) noexcept;

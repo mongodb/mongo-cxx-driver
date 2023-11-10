@@ -18,6 +18,8 @@
 #include <memory>
 #include <vector>
 
+#include <bsoncxx/types/bson_value/value-fwd.hpp>
+
 #include <bsoncxx/array/view_or_value.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/make_unique.hpp>
@@ -40,7 +42,7 @@ namespace bson_value {
 ///
 /// @relatesalso bson_value::view
 ///
-class BSONCXX_API value {
+class value {
    public:
 ///
 /// Constructor for each BSON type.
