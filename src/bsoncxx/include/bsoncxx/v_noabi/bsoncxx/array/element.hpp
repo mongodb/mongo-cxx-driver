@@ -17,6 +17,7 @@
 #include <cstddef>
 #include <cstdint>
 
+#include <bsoncxx/array/element-fwd.hpp>
 #include <bsoncxx/types/bson_value/view-fwd.hpp>
 
 #include <bsoncxx/document/element.hpp>
@@ -34,7 +35,7 @@ namespace array {
 /// interrogated by calling type() and a specific value can be extracted through
 /// get_X() accessors.
 ///
-class BSONCXX_API element : private document::element {
+class element : private document::element {
    public:
     element();
 

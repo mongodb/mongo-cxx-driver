@@ -20,6 +20,7 @@ install(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/
 
 set_dist_list(src_bsoncxx_include_DIST
     CMakeLists.txt
+    bsoncxx/v_noabi/bsoncxx/array/element-fwd.hpp
     bsoncxx/v_noabi/bsoncxx/array/element.hpp
     bsoncxx/v_noabi/bsoncxx/array/value.hpp
     bsoncxx/v_noabi/bsoncxx/array/view_or_value.hpp

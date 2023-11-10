@@ -17,6 +17,7 @@
 #include <cstddef>
 #include <cstdint>
 
+#include <bsoncxx/array/element-fwd.hpp>
 #include <bsoncxx/types-fwd.hpp>
 #include <bsoncxx/types/bson_value/value-fwd.hpp>
 #include <bsoncxx/types/bson_value/view-fwd.hpp>
@@ -28,10 +29,6 @@
 
 namespace bsoncxx {
 inline namespace v_noabi {
-namespace array {
-class element;
-}  // namespace array
-
 namespace document {
 
 ///
@@ -374,8 +371,8 @@ class BSONCXX_API element {
     // Construct an invalid element with a key. Useful for exceptions.
     BSONCXX_PRIVATE explicit element(const stdx::string_view key);
 
+    friend class ::bsoncxx::v_noabi::array::element;
     friend class view;
-    friend class array::element;
 
     const std::uint8_t* _raw;
     std::uint32_t _length;
@@ -418,7 +415,6 @@ BSONCXX_API bool BSONCXX_CALL operator!=(const types::bson_value::view& v, const
 ///
 
 }  // namespace document
-
 }  // namespace v_noabi
 }  // namespace bsoncxx
 
