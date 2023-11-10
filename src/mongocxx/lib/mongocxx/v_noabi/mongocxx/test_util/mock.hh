@@ -45,7 +45,7 @@ class mock<R (*)(Args...)> {
     using conditional = std::function<bool(Args...)>;
 
     class rule {
-        friend ::mongocxx::v_noabi::test_util::mock<R (*)(Args...)>;
+        friend mock;
 
        public:
         rule(callback callback) : _callback(std::move(callback)) {
@@ -70,7 +70,7 @@ class mock<R (*)(Args...)> {
     };
 
     class instance {
-        friend ::mongocxx::v_noabi::test_util::mock<R (*)(Args...)>;
+        friend mock;
 
        public:
         instance(const instance&) = delete;
@@ -130,7 +130,7 @@ class mock<R (*)(Args...)> {
         std::stack<rule> _callbacks;
     };
 
-    friend ::mongocxx::v_noabi::test_util::mock<R (*)(Args...)>::instance;
+    friend instance;
 
     mock(underlying_ptr func) : _func(std::move(func)) {}
     mock(mock&&) = delete;
