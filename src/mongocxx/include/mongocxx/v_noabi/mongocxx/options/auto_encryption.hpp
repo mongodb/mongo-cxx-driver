@@ -85,7 +85,7 @@ class MONGOCXX_API auto_encryption {
     ///
     /// @see https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
-    auto_encryption& key_vault_pool(pool* pool);
+    auto_encryption& key_vault_pool(mongocxx::pool* pool);
 
     ///
     /// Gets the key vault pool.
@@ -93,7 +93,7 @@ class MONGOCXX_API auto_encryption {
     /// @return
     ///   An optional pointer to the key vault pool.
     ///
-    const stdx::optional<pool*>& key_vault_pool() const;
+    const stdx::optional<mongocxx::pool*>& key_vault_pool() const;
 
     ///
     /// Sets the namespace to use to access the key vault collection, which
