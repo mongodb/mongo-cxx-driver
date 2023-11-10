@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/client_encryption-fwd.hpp>
+
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/string/view_or_value.hpp>
 #include <bsoncxx/types.hpp>
@@ -24,8 +26,6 @@
 
 namespace mongocxx {
 inline namespace v_noabi {
-class client_encryption;
-
 namespace options {
 
 ///
@@ -99,7 +99,8 @@ class MONGOCXX_API rewrap_many_datakey {
     const stdx::optional<bsoncxx::document::view_or_value>& master_key() const;
 
    private:
-    friend class mongocxx::client_encryption;
+    friend class ::mongocxx::v_noabi::client_encryption;
+
     bsoncxx::string::view_or_value _provider;
     stdx::optional<bsoncxx::document::view_or_value> _master_key;
 };

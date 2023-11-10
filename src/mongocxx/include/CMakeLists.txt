@@ -22,6 +22,7 @@ set_dist_list(src_mongocxx_include_DIST
     CMakeLists.txt
     mongocxx/v_noabi/mongocxx/bulk_write.hpp
     mongocxx/v_noabi/mongocxx/change_stream.hpp
+    mongocxx/v_noabi/mongocxx/client_encryption-fwd.hpp
     mongocxx/v_noabi/mongocxx/client_encryption.hpp
     mongocxx/v_noabi/mongocxx/client_session-fwd.hpp
     mongocxx/v_noabi/mongocxx/client_session.hpp

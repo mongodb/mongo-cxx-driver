@@ -17,6 +17,7 @@
 #include <memory>
 
 #include <mongocxx/client-fwd.hpp>
+#include <mongocxx/client_encryption-fwd.hpp>
 #include <mongocxx/collection-fwd.hpp>
 #include <mongocxx/database-fwd.hpp>
 
@@ -82,10 +83,10 @@ class MONGOCXX_API cursor {
     iterator end();
 
    private:
+    friend class ::mongocxx::v_noabi::client_encryption;
     friend class ::mongocxx::v_noabi::client;
     friend class ::mongocxx::v_noabi::collection;
     friend class ::mongocxx::v_noabi::database;
-    friend class client_encryption;
     friend class index_view;
     friend class search_index_view;
     friend class cursor::iterator;

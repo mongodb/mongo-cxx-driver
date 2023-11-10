@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/client_encryption-fwd.hpp>
+
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/bson_value/view_or_value.hpp>
@@ -24,8 +26,6 @@
 
 namespace mongocxx {
 inline namespace v_noabi {
-class client_encryption;
-
 namespace options {
 
 ///
@@ -217,7 +217,8 @@ class MONGOCXX_API encrypt {
     const stdx::optional<options::range>& range_opts() const;
 
    private:
-    friend class mongocxx::client_encryption;
+    friend class ::mongocxx::v_noabi::client_encryption;
+
     MONGOCXX_PRIVATE void* convert() const;
 
     stdx::optional<bsoncxx::types::bson_value::view_or_value> _key_id;

@@ -18,6 +18,7 @@
 #include <string>
 
 #include <mongocxx/client-fwd.hpp>
+#include <mongocxx/client_encryption-fwd.hpp>
 #include <mongocxx/collection-fwd.hpp>
 #include <mongocxx/database-fwd.hpp>
 
@@ -35,8 +36,6 @@
 
 namespace mongocxx {
 inline namespace v_noabi {
-class client_encryption;
-
 ///
 /// Class representing a MongoDB database.
 ///
@@ -626,9 +625,9 @@ class database {
     ///
 
    private:
+    friend class ::mongocxx::v_noabi::client_encryption;
     friend class ::mongocxx::v_noabi::client;
     friend class ::mongocxx::v_noabi::collection;
-    friend class client_encryption;
 
     MONGOCXX_PRIVATE database(const class client& client, bsoncxx::string::view_or_value name);
 

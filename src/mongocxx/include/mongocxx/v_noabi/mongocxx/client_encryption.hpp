@@ -14,6 +14,7 @@
 
 #pragma once
 
+#include <mongocxx/client_encryption-fwd.hpp>
 #include <mongocxx/collection-fwd.hpp>
 #include <mongocxx/database-fwd.hpp>
 
@@ -35,7 +36,7 @@ inline namespace v_noabi {
 ///
 /// Class supporting operations for MongoDB Client-Side Field Level Encryption.
 ///
-class MONGOCXX_API client_encryption {
+class client_encryption {
    public:
     ///
     /// Creates a client_encryption object.
