@@ -18,6 +18,8 @@
 #include <cstdint>
 #include <iterator>
 
+#include <bsoncxx/document/view-fwd.hpp>
+
 #include <bsoncxx/document/element.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 
@@ -30,7 +32,7 @@ namespace document {
 ///
 /// A read-only, non-owning view of a BSON document.
 ///
-class BSONCXX_API view {
+class view {
    public:
     class BSONCXX_API const_iterator;
     using iterator = const_iterator;

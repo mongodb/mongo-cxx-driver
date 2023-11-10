@@ -19,6 +19,7 @@
 
 #include <bsoncxx/array/element-fwd.hpp>
 #include <bsoncxx/document/element-fwd.hpp>
+#include <bsoncxx/document/view-fwd.hpp>
 #include <bsoncxx/types-fwd.hpp>
 #include <bsoncxx/types/bson_value/value-fwd.hpp>
 #include <bsoncxx/types/bson_value/view-fwd.hpp>
@@ -373,7 +374,7 @@ class element {
     BSONCXX_PRIVATE explicit element(const stdx::string_view key);
 
     friend class ::bsoncxx::v_noabi::array::element;
-    friend class view;
+    friend class ::bsoncxx::v_noabi::document::view;
 
     const std::uint8_t* _raw;
     std::uint32_t _length;

@@ -58,6 +58,7 @@ set_dist_list(src_bsoncxx_include_DIST
     bsoncxx/v_noabi/bsoncxx/document/element.hpp
     bsoncxx/v_noabi/bsoncxx/document/value.hpp
     bsoncxx/v_noabi/bsoncxx/document/view_or_value.hpp
+    bsoncxx/v_noabi/bsoncxx/document/view-fwd.hpp
     bsoncxx/v_noabi/bsoncxx/document/view.hpp
     bsoncxx/v_noabi/bsoncxx/enums/binary_sub_type.hpp
     bsoncxx/v_noabi/bsoncxx/enums/type.hpp
