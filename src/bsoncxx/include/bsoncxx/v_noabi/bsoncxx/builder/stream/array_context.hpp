@@ -15,6 +15,7 @@
 #pragma once
 
 #include <bsoncxx/builder/stream/key_context-fwd.hpp>
+#include <bsoncxx/builder/stream/single_context-fwd.hpp>
 
 #include <bsoncxx/array/value.hpp>
 #include <bsoncxx/builder/concatenate.hpp>
@@ -29,8 +30,6 @@ namespace bsoncxx {
 inline namespace v_noabi {
 namespace builder {
 namespace stream {
-
-class single_context;
 
 ///
 /// A stream context which expects any number of values.
