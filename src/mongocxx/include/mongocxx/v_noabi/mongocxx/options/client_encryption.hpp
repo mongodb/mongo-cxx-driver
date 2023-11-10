@@ -18,6 +18,7 @@
 
 #include <mongocxx/client-fwd.hpp>
 #include <mongocxx/client_encryption-fwd.hpp>
+#include <mongocxx/options/client_encryption-fwd.hpp>
 
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
@@ -32,7 +33,7 @@ namespace options {
 ///
 /// Class representing options for the object managing explicit client-side encryption.
 ///
-class MONGOCXX_API client_encryption {
+class client_encryption {
    public:
     ///
     /// When the key vault collection is on a separate MongoDB cluster,

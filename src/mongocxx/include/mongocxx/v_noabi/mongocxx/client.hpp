@@ -21,6 +21,7 @@
 #include <mongocxx/collection-fwd.hpp>
 #include <mongocxx/database-fwd.hpp>
 #include <mongocxx/options/auto_encryption-fwd.hpp>
+#include <mongocxx/options/client_encryption-fwd.hpp>
 #include <mongocxx/pool-fwd.hpp>
 
 #include <mongocxx/client_session.hpp>
@@ -427,8 +428,8 @@ class client {
     friend class ::mongocxx::v_noabi::collection;
     friend class ::mongocxx::v_noabi::database;
     friend class ::mongocxx::v_noabi::options::auto_encryption;
+    friend class ::mongocxx::v_noabi::options::client_encryption;
     friend class ::mongocxx::v_noabi::pool;
-    friend class options::client_encryption;
 
     MONGOCXX_PRIVATE explicit client(void* implementation);
 
