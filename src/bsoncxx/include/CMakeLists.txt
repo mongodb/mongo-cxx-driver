@@ -62,6 +62,7 @@ set_dist_list(src_bsoncxx_include_DIST
     bsoncxx/v_noabi/bsoncxx/stdx/type_traits.hpp
     bsoncxx/v_noabi/bsoncxx/string/to_string.hpp
     bsoncxx/v_noabi/bsoncxx/string/view_or_value.hpp
+    bsoncxx/v_noabi/bsoncxx/types-fwd.hpp
     bsoncxx/v_noabi/bsoncxx/types.hpp
     bsoncxx/v_noabi/bsoncxx/types/bson_value/make_value.hpp
     bsoncxx/v_noabi/bsoncxx/types/bson_value/value.hpp

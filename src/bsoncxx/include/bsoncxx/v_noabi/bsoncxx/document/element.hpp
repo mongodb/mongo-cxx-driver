@@ -17,6 +17,8 @@
 #include <cstddef>
 #include <cstdint>
 
+#include <bsoncxx/types-fwd.hpp>
+
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 
@@ -24,32 +26,7 @@
 
 namespace bsoncxx {
 inline namespace v_noabi {
-enum class type : std::uint8_t;
-enum class binary_sub_type : std::uint8_t;
-
 namespace types {
-struct b_eod;
-struct b_double;
-struct b_string;
-struct b_document;
-struct b_array;
-struct b_binary;
-struct b_undefined;
-struct b_oid;
-struct b_bool;
-struct b_date;
-struct b_null;
-struct b_regex;
-struct b_dbpointer;
-struct b_code;
-struct b_symbol;
-struct b_codewscope;
-struct b_int32;
-struct b_timestamp;
-struct b_int64;
-struct b_decimal128;
-struct b_minkey;
-struct b_maxkey;
 
 namespace bson_value {
 class value;
