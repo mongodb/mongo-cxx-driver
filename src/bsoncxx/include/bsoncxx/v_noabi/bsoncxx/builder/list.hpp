@@ -16,6 +16,8 @@
 
 #include <sstream>
 
+#include <bsoncxx/builder/basic/array-fwd.hpp>
+
 #include <bsoncxx/builder/core.hpp>
 #include <bsoncxx/exception/error_code.hpp>
 #include <bsoncxx/exception/exception.hpp>

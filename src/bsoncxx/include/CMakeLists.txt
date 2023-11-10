@@ -25,6 +25,7 @@ set_dist_list(src_bsoncxx_include_DIST
     bsoncxx/v_noabi/bsoncxx/array/value.hpp
     bsoncxx/v_noabi/bsoncxx/array/view_or_value.hpp
     bsoncxx/v_noabi/bsoncxx/array/view.hpp
+    bsoncxx/v_noabi/bsoncxx/builder/basic/array-fwd.hpp
     bsoncxx/v_noabi/bsoncxx/builder/basic/array.hpp
     bsoncxx/v_noabi/bsoncxx/builder/basic/document.hpp
     bsoncxx/v_noabi/bsoncxx/builder/basic/helpers.hpp

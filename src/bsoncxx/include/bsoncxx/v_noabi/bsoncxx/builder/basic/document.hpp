@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <bsoncxx/builder/basic/array-fwd.hpp>
+
 #include <bsoncxx/builder/basic/impl.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/builder/basic/sub_document.hpp>
@@ -27,8 +29,6 @@ namespace bsoncxx {
 inline namespace v_noabi {
 namespace builder {
 namespace basic {
-
-class array;
 
 ///
 /// A traditional builder-style interface for constructing
