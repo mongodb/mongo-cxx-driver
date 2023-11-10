@@ -151,7 +151,7 @@ class BSONCXX_API view {
 /// This iterator type provides a const forward iterator interface to array
 /// view elements.
 ///
-class BSONCXX_API view::const_iterator {
+class view::const_iterator {
    public:
     ///
     /// std::iterator_traits
