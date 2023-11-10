@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/validation_criteria-fwd.hpp>
+
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <mongocxx/stdx.hpp>
@@ -27,7 +29,7 @@ inline namespace v_noabi {
 ///
 /// @see https://www.mongodb.com/docs/manual/core/document-validation/
 ///
-class MONGOCXX_API validation_criteria {
+class validation_criteria {
    public:
     ///
     /// Sets a validation rule for this validation object.

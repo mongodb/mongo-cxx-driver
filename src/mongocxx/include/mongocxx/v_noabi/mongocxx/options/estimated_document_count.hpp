@@ -16,6 +16,8 @@
 
 #include <chrono>
 
+#include <mongocxx/options/estimated_document_count-fwd.hpp>
+
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/types/bson_value/view_or_value.hpp>
 #include <mongocxx/read_preference.hpp>
@@ -29,7 +31,7 @@ namespace options {
 ///
 /// Class representing the optional arguments to mongocxx::collection::estimated_document_count
 ///
-class MONGOCXX_API estimated_document_count {
+class estimated_document_count {
    public:
     ///
     /// Sets the maximum amount of time for this operation to run (server-side) in milliseconds.

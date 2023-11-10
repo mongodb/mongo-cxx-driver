@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/options/find_one_common_options-fwd.hpp>
+
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {

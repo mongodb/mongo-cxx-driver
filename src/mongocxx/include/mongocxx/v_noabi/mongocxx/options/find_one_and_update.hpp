@@ -17,6 +17,8 @@
 #include <chrono>
 #include <cstdint>
 
+#include <mongocxx/options/find_one_and_update-fwd.hpp>
+
 #include <bsoncxx/array/view_or_value.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
@@ -35,7 +37,7 @@ namespace options {
 ///
 /// Class representing the optional arguments to a MongoDB find_and_modify update operation.
 ///
-class MONGOCXX_API find_one_and_update {
+class find_one_and_update {
    public:
     /// Sets the collation for this operation.
     ///

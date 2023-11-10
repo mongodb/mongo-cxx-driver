@@ -19,6 +19,7 @@
 #include <mongocxx/client-fwd.hpp>
 #include <mongocxx/client_encryption-fwd.hpp>
 #include <mongocxx/collection-fwd.hpp>
+#include <mongocxx/cursor-fwd.hpp>
 #include <mongocxx/database-fwd.hpp>
 #include <mongocxx/index_view-fwd.hpp>
 #include <mongocxx/search_index_view-fwd.hpp>
@@ -37,7 +38,7 @@ inline namespace v_noabi {
 ///
 /// @note By default, cursors timeout after 10 minutes of inactivity.
 ///
-class MONGOCXX_API cursor {
+class cursor {
    public:
     enum class type { k_non_tailable, k_tailable, k_tailable_await };
 
@@ -89,7 +90,8 @@ class MONGOCXX_API cursor {
     friend class ::mongocxx::v_noabi::database;
     friend class ::mongocxx::v_noabi::index_view;
     friend class ::mongocxx::v_noabi::search_index_view;
-    friend class cursor::iterator;
+
+    friend class ::mongocxx::v_noabi::cursor::iterator;
 
     MONGOCXX_PRIVATE cursor(void* cursor_ptr,
                             bsoncxx::stdx::optional<type> cursor_type = bsoncxx::stdx::nullopt);
@@ -152,7 +154,7 @@ class cursor::iterator {
     void operator++(int);
 
    private:
-    friend class cursor;
+    friend class ::mongocxx::v_noabi::cursor;
 
     ///
     /// @{

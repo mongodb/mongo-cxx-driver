@@ -17,6 +17,8 @@
 #include <chrono>
 #include <cstdint>
 
+#include <mongocxx/options/find_one_and_delete-fwd.hpp>
+
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/types/bson_value/view_or_value.hpp>
@@ -32,7 +34,7 @@ namespace options {
 ///
 /// Class representing the optional arguments to a MongoDB find_and_modify delete operation
 ///
-class MONGOCXX_API find_one_and_delete {
+class find_one_and_delete {
    public:
     /// Sets the collation for this operation.
     ///

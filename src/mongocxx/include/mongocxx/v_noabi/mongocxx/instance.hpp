@@ -16,6 +16,7 @@
 
 #include <memory>
 
+#include <mongocxx/instance-fwd.hpp>
 #include <mongocxx/logger-fwd.hpp>
 
 #include <mongocxx/config/prelude.hpp>
@@ -75,7 +76,7 @@ inline namespace v_noabi {
 /// For examples of more advanced usage of instance, see
 /// `examples/mongocxx/instance_management.cpp`.
 ///
-class MONGOCXX_API instance {
+class instance {
    public:
     ///
     /// Creates an instance of the driver.

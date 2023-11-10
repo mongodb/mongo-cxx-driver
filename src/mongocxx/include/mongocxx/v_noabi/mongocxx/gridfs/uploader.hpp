@@ -19,6 +19,7 @@
 #include <memory>
 
 #include <mongocxx/gridfs/bucket-fwd.hpp>
+#include <mongocxx/gridfs/uploader-fwd.hpp>
 
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
@@ -39,7 +40,7 @@ namespace gridfs {
 ///
 /// Class used to upload a GridFS file.
 ///
-class MONGOCXX_API uploader {
+class uploader {
    public:
     ///
     /// Default constructs an uploader object. The uploader is equivalent to the state of a moved

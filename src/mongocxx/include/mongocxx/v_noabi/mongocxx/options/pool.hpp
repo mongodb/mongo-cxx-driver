@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/options/pool-fwd.hpp>
+
 #include <mongocxx/options/client.hpp>
 
 #include <mongocxx/config/prelude.hpp>
@@ -26,7 +28,7 @@ namespace options {
 /// Class representing the optional arguments to a MongoDB driver pool object. Pool options
 /// logically extend client options.
 ///
-class MONGOCXX_API pool {
+class pool {
    public:
     ///
     /// Constructs a new pool options object. Note that options::pool is implictly convertible from

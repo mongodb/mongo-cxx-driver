@@ -17,6 +17,7 @@
 #include <string>
 
 #include <mongocxx/client-fwd.hpp>
+#include <mongocxx/options/server_api-fwd.hpp>
 #include <mongocxx/pool-fwd.hpp>
 
 #include <bsoncxx/stdx/optional.hpp>
@@ -32,7 +33,7 @@ namespace options {
 ///
 /// Class representing options for server API.
 ///
-class MONGOCXX_API server_api {
+class server_api {
    public:
     ///
     /// Enum representing the possible values for server API version.

@@ -15,6 +15,7 @@
 #pragma once
 
 #include <mongocxx/client_session-fwd.hpp>
+#include <mongocxx/options/client_session-fwd.hpp>
 
 #include <bsoncxx/stdx/optional.hpp>
 #include <mongocxx/options/transaction.hpp>
@@ -29,7 +30,7 @@ namespace options {
 ///
 /// Class representing the optional arguments to mongocxx::client::start_session.
 ///
-class MONGOCXX_API client_session {
+class client_session {
    public:
     ///
     /// Sets the causal_consistency option.

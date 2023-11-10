@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/index_model-fwd.hpp>
+
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
 #include <mongocxx/options/index.hpp>
@@ -25,7 +27,7 @@ inline namespace v_noabi {
 ///
 /// Class representing an index on a MongoDB server.
 ///
-class MONGOCXX_API index_model {
+class index_model {
    public:
     ///
     /// Initializes a new index_model over a mongocxx::collection.

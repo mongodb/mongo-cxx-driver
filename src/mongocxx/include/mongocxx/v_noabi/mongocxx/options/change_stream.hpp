@@ -19,6 +19,7 @@
 #include <mongocxx/client-fwd.hpp>
 #include <mongocxx/collection-fwd.hpp>
 #include <mongocxx/database-fwd.hpp>
+#include <mongocxx/options/change_stream-fwd.hpp>
 
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/string/view_or_value.hpp>
@@ -35,7 +36,7 @@ namespace options {
 ///
 /// Class representing MongoDB change stream options.
 ///
-class MONGOCXX_API change_stream {
+class change_stream {
    public:
     change_stream();
 

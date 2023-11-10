@@ -16,6 +16,8 @@
 
 #include <cstdint>
 
+#include <mongocxx/options/range-fwd.hpp>
+
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/bson_value/view_or_value.hpp>
 #include <mongocxx/stdx.hpp>
@@ -38,7 +40,7 @@ namespace options {
 ///
 /// @warning The Range algorithm is experimental only. It is not intended for public use. It is
 /// subject to breaking changes.
-class MONGOCXX_API range {
+class range {
    public:
     /// @brief Sets `RangeOpts.min`.
     /// @note Required if @ref precision is set.
@@ -78,7 +80,6 @@ class MONGOCXX_API range {
 };
 
 }  // namespace options
-
 }  // namespace v_noabi
 }  // namespace mongocxx
 

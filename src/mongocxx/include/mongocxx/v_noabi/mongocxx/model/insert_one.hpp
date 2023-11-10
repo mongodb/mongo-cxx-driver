@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/model/insert_one-fwd.hpp>
+
 #include <bsoncxx/document/view_or_value.hpp>
 
 #include <mongocxx/config/prelude.hpp>
@@ -25,7 +27,7 @@ namespace model {
 ///
 /// Class representing a MongoDB insert operation that creates a single document.
 ///
-class MONGOCXX_API insert_one {
+class insert_one {
    public:
     ///
     /// Constructs an insert operation that will create a single document.

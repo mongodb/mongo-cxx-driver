@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/model/update_one-fwd.hpp>
+
 #include <bsoncxx/array/view_or_value.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
@@ -30,7 +32,7 @@ namespace model {
 ///
 /// Class representing a MongoDB update operation that modifies a single document.
 ///
-class MONGOCXX_API update_one {
+class update_one {
     //
     // Utility class supporting the convenience of {} meaning an empty bsoncxx::document.
     //

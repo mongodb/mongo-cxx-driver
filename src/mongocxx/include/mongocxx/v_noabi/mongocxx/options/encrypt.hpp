@@ -15,6 +15,7 @@
 #pragma once
 
 #include <mongocxx/client_encryption-fwd.hpp>
+#include <mongocxx/options/encrypt-fwd.hpp>
 
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/types.hpp>
@@ -31,7 +32,7 @@ namespace options {
 ///
 /// Class representing options for explicit client-side encryption.
 ///
-class MONGOCXX_API encrypt {
+class encrypt {
    public:
     ///
     /// Sets the key to use for this encryption operation. A key id can be used instead

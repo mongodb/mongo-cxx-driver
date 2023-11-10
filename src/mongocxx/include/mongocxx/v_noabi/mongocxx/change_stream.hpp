@@ -16,6 +16,7 @@
 
 #include <memory>
 
+#include <mongocxx/change_stream-fwd.hpp>
 #include <mongocxx/client-fwd.hpp>
 #include <mongocxx/collection-fwd.hpp>
 #include <mongocxx/database-fwd.hpp>
@@ -30,7 +31,7 @@ inline namespace v_noabi {
 ///
 /// Class representing a MongoDB change stream.
 ///
-class MONGOCXX_API change_stream {
+class change_stream {
    public:
     /// A change stream iterator.
     class MONGOCXX_API iterator;
@@ -110,7 +111,8 @@ class MONGOCXX_API change_stream {
     friend class ::mongocxx::v_noabi::client;
     friend class ::mongocxx::v_noabi::collection;
     friend class ::mongocxx::v_noabi::database;
-    friend class change_stream::iterator;
+
+    friend class ::mongocxx::v_noabi::change_stream::iterator;
 
     MONGOCXX_PRIVATE change_stream(void* change_stream_ptr);
 
@@ -184,7 +186,8 @@ class change_stream::iterator {
     void operator++(int);
 
    private:
-    friend class change_stream;
+    friend class ::mongocxx::v_noabi::change_stream;
+
     enum class iter_type { k_tracking, k_default_constructed, k_end };
 
     MONGOCXX_PRIVATE explicit iterator(iter_type type, const change_stream* change_stream);

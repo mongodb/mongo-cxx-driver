@@ -16,6 +16,8 @@
 
 #include <chrono>
 
+#include <mongocxx/options/index_view-fwd.hpp>
+
 #include <bsoncxx/stdx/optional.hpp>
 #include <mongocxx/write_concern.hpp>
 
@@ -28,7 +30,7 @@ namespace options {
 ///
 /// Class representing optional arguments to IndexView operations
 ///
-class MONGOCXX_API index_view {
+class index_view {
    public:
     index_view();
 

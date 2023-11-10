@@ -17,6 +17,8 @@
 #include <chrono>
 #include <cstdint>
 
+#include <mongocxx/options/find-fwd.hpp>
+
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/string/view_or_value.hpp>
@@ -34,7 +36,7 @@ namespace options {
 ///
 /// Class representing the optional arguments to a MongoDB query.
 ///
-class MONGOCXX_API find {
+class find {
    public:
     ///
     /// Enables writing to temporary files on the server. When set to true, the server

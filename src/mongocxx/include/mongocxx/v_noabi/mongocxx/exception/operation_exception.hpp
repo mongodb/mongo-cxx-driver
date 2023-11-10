@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/exception/operation_exception-fwd.hpp>
+
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <mongocxx/exception/exception.hpp>
@@ -29,7 +31,7 @@ inline namespace v_noabi {
 ///
 /// @see mongocxx::exception
 ///
-class MONGOCXX_API operation_exception : public exception {
+class operation_exception : public exception {
    public:
     using exception::exception;
 

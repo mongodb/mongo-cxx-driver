@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/model/delete_many-fwd.hpp>
+
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <mongocxx/hint.hpp>
@@ -28,7 +30,7 @@ namespace model {
 ///
 /// Class representing a MongoDB delete operation that removes multiple documents.
 ///
-class MONGOCXX_API delete_many {
+class delete_many {
    public:
     ///
     /// Constructs a delete operation that will delete all documents matching the filter.

@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/exception/write_exception-fwd.hpp>
+
 #include <mongocxx/exception/operation_exception.hpp>
 
 #include <mongocxx/config/prelude.hpp>
@@ -25,7 +27,7 @@ inline namespace v_noabi {
 ///
 /// @see mongocxx::operation_exception
 ///
-class MONGOCXX_API write_exception : public operation_exception {
+class write_exception : public operation_exception {
    public:
     using operation_exception::operation_exception;
 };

@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/options/bulk_write-fwd.hpp>
+
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/types/bson_value/view_or_value.hpp>
@@ -28,7 +30,7 @@ namespace options {
 ///
 /// Class representing the optional arguments to a MongoDB bulk write
 ///
-class MONGOCXX_API bulk_write {
+class bulk_write {
    public:
     ///
     /// Constructs a new bulk_write object. By default, bulk writes are considered ordered

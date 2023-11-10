@@ -18,6 +18,8 @@
 #include <cstdint>
 #include <string>
 
+#include <mongocxx/options/count-fwd.hpp>
+
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/types/bson_value/view_or_value.hpp>
@@ -33,7 +35,7 @@ namespace options {
 ///
 /// Class representing the optional arguments to mongocxx::collection::count_documents
 ///
-class MONGOCXX_API count {
+class count {
    public:
     ///
     /// Sets the collation for this operation.

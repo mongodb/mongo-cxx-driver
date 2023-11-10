@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/model/delete_one-fwd.hpp>
+
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <mongocxx/hint.hpp>
@@ -28,7 +30,7 @@ namespace model {
 ///
 /// Class representing a MongoDB delete operation that removes a single document.
 ///
-class MONGOCXX_API delete_one {
+class delete_one {
    public:
     ///
     /// Constructs a delete operation that will delete the first document matching the filter.

@@ -17,6 +17,8 @@
 #include <cstdint>
 #include <system_error>
 
+#include <mongocxx/exception/server_error_code-fwd.hpp>
+
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {

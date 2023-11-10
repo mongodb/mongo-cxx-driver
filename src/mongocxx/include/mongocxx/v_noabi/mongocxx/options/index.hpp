@@ -18,6 +18,7 @@
 #include <memory>
 
 #include <mongocxx/collection-fwd.hpp>
+#include <mongocxx/options/index-fwd.hpp>
 
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/document/view.hpp>
@@ -37,7 +38,7 @@ namespace options {
 ///
 /// @see https://www.mongodb.com/docs/manual/reference/command/createIndexes
 ///
-class MONGOCXX_API index {
+class index {
    public:
     ///
     /// Base class representing the optional storage engine options for indexes.
@@ -47,7 +48,8 @@ class MONGOCXX_API index {
         virtual ~base_storage_options();
 
        private:
-        friend class options::index;
+        friend class ::mongocxx::v_noabi::options::index;
+
         MONGOCXX_PRIVATE virtual int type() const = 0;
     };
 

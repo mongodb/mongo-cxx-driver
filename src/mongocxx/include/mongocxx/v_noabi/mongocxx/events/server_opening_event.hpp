@@ -16,6 +16,8 @@
 
 #include <cstdint>
 
+#include <mongocxx/events/server_opening_event-fwd.hpp>
+
 #include <bsoncxx/oid.hpp>
 
 #include <mongocxx/config/prelude.hpp>
@@ -31,7 +33,7 @@ namespace events {
 /// @see "ServerOpeningEvent" in
 /// https://github.com/mongodb/specifications/blob/master/source/server-discovery-and-monitoring/server-discovery-and-monitoring.rst
 ///
-class MONGOCXX_API server_opening_event {
+class server_opening_event {
    public:
     MONGOCXX_PRIVATE explicit server_opening_event(const void* event);
 

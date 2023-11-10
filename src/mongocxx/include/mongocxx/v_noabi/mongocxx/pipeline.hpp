@@ -21,6 +21,7 @@
 #include <mongocxx/client-fwd.hpp>
 #include <mongocxx/collection-fwd.hpp>
 #include <mongocxx/database-fwd.hpp>
+#include <mongocxx/pipeline-fwd.hpp>
 
 #include <bsoncxx/array/view.hpp>
 #include <bsoncxx/array/view_or_value.hpp>
@@ -34,7 +35,7 @@ inline namespace v_noabi {
 ///
 /// Class representing a MongoDB aggregation pipeline.
 ///
-class MONGOCXX_API pipeline {
+class pipeline {
    public:
     ///
     /// Creates a new aggregation pipeline.

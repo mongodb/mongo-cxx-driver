@@ -16,6 +16,8 @@
 
 #include <string>
 
+#include <mongocxx/options/gridfs/bucket-fwd.hpp>
+
 #include <bsoncxx/stdx/optional.hpp>
 #include <mongocxx/read_concern.hpp>
 #include <mongocxx/read_preference.hpp>
@@ -32,7 +34,7 @@ namespace gridfs {
 ///
 /// Class representing the optional arguments to a MongoDB GridFS bucket creation operation.
 ///
-class MONGOCXX_API bucket {
+class bucket {
    public:
     ///
     /// Sets the name of the bucket. Defaults to 'fs'.

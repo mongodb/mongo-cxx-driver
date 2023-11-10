@@ -18,6 +18,7 @@
 #include <vector>
 
 #include <mongocxx/client_encryption-fwd.hpp>
+#include <mongocxx/options/data_key-fwd.hpp>
 
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
@@ -32,7 +33,7 @@ namespace options {
 ///
 /// Class representing options for data key generation for encryption.
 ///
-class MONGOCXX_API data_key {
+class data_key {
    public:
     ///
     /// Sets a KMS-specific key used to encrypt the new data key.

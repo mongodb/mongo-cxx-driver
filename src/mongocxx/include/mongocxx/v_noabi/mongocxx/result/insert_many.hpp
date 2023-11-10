@@ -18,6 +18,7 @@
 #include <map>
 
 #include <mongocxx/collection-fwd.hpp>
+#include <mongocxx/result/insert_many-fwd.hpp>
 
 #include <bsoncxx/array/value.hpp>
 #include <bsoncxx/types.hpp>
@@ -33,7 +34,7 @@ namespace result {
 /// Class representing the result of a MongoDB insert many operation
 /// (executed as a bulk write).
 ///
-class MONGOCXX_API insert_many {
+class insert_many {
    public:
     using id_map = std::map<std::size_t, bsoncxx::document::element>;
 

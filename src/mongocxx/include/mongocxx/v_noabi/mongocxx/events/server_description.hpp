@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/events/server_description-fwd.hpp>
+
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 
@@ -26,7 +28,7 @@ namespace events {
 ///
 /// Class representing what the driver knows about a MongoDB server.
 ///
-class MONGOCXX_API server_description {
+class server_description {
    public:
     MONGOCXX_PRIVATE explicit server_description(const void* event);
 

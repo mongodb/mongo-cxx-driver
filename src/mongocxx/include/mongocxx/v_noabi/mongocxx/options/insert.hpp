@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/options/insert-fwd.hpp>
+
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/types/bson_value/view_or_value.hpp>
@@ -29,7 +31,7 @@ namespace options {
 ///
 /// Class representing the optional arguments to a MongoDB insert operation
 ///
-class MONGOCXX_API insert {
+class insert {
    public:
     ///
     /// Sets the bypass_document_validation option.

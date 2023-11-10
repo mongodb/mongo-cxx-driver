@@ -19,6 +19,7 @@
 
 #include <mongocxx/collection-fwd.hpp>
 #include <mongocxx/database-fwd.hpp>
+#include <mongocxx/options/aggregate-fwd.hpp>
 
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
@@ -39,7 +40,7 @@ namespace options {
 ///
 /// Class representing the optional arguments to a MongoDB aggregation operation.
 ///
-class MONGOCXX_API aggregate {
+class aggregate {
    public:
     ///
     /// Enables writing to temporary files. When set to @c true, aggregation stages can write data

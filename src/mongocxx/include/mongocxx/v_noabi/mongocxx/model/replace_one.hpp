@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/model/replace_one-fwd.hpp>
+
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <mongocxx/hint.hpp>
@@ -28,7 +30,7 @@ namespace model {
 ///
 /// Class representing a MongoDB update operation that replaces a single document.
 ///
-class MONGOCXX_API replace_one {
+class replace_one {
    public:
     ///
     /// Constructs an update operation that will replace a single document matching the filter.

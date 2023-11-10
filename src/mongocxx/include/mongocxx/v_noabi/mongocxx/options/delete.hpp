@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/options/delete-fwd.hpp>
+
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/types/bson_value/view_or_value.hpp>
@@ -29,7 +31,7 @@ namespace options {
 ///
 /// Class representing the optional arguments to a MongoDB delete operation
 ///
-class MONGOCXX_API delete_options {
+class delete_options {
    public:
     ///
     /// Sets the collation for this operation.

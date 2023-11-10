@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/options/replace-fwd.hpp>
+
 #include <bsoncxx/array/view_or_value.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
@@ -31,7 +33,7 @@ namespace options {
 ///
 /// Class representing the optional arguments to a MongoDB replace operation.
 ///
-class MONGOCXX_API replace {
+class replace {
    public:
     ///
     /// Sets the bypass_document_validation option.

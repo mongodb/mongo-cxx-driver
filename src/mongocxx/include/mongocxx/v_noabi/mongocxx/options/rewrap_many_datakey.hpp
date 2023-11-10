@@ -15,6 +15,7 @@
 #pragma once
 
 #include <mongocxx/client_encryption-fwd.hpp>
+#include <mongocxx/options/rewrap_many_datakey-fwd.hpp>
 
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/string/view_or_value.hpp>
@@ -31,7 +32,7 @@ namespace options {
 ///
 /// Class representing options for a rewrap many datakey operation.
 ///
-class MONGOCXX_API rewrap_many_datakey {
+class rewrap_many_datakey {
    public:
     ///
     /// Set the optional KMS provider use to encrypt the data keys. Do not set to use the current
