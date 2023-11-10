@@ -14,6 +14,7 @@
 
 #pragma once
 
+#include <bsoncxx/builder/stream/array_context-fwd.hpp>
 #include <bsoncxx/builder/stream/key_context-fwd.hpp>
 #include <bsoncxx/builder/stream/single_context-fwd.hpp>
 
@@ -46,7 +47,7 @@ namespace stream {
 ///
 /// This builds a bson array with successively higher index keys
 ///
-template <class base = closed_context>
+template <class base>
 class array_context {
    public:
     ///

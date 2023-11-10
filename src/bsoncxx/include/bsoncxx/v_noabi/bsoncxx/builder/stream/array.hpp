@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <bsoncxx/builder/stream/array-fwd.hpp>
+
 #include <bsoncxx/array/value.hpp>
 #include <bsoncxx/array/view.hpp>
 #include <bsoncxx/builder/core.hpp>

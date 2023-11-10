@@ -29,7 +29,7 @@ using bsoncxx::builder::concatenate;
 ///
 /// The type of a stream manipulator to open a subdocument.
 ///
-struct BSONCXX_API open_document_type {
+struct open_document_type {
     constexpr open_document_type() {}
 };
 
@@ -41,7 +41,7 @@ constexpr open_document_type open_document;
 ///
 /// The type of a stream manipulator to close a subdocument.
 ///
-struct BSONCXX_API close_document_type {
+struct close_document_type {
     constexpr close_document_type() {}
 };
 
@@ -53,7 +53,7 @@ constexpr close_document_type close_document;
 ///
 /// The type of a stream manipulator to open a subarray.
 ///
-struct BSONCXX_API open_array_type {
+struct open_array_type {
     constexpr open_array_type() {}
 };
 
@@ -68,7 +68,7 @@ constexpr open_array_type open_array;
 ///
 /// The type of a stream manipulator to close a subarray.
 ///
-struct BSONCXX_API close_array_type {
+struct close_array_type {
     constexpr close_array_type() {}
 };
 
@@ -80,7 +80,7 @@ constexpr close_array_type close_array;
 ///
 /// The type of a stream manipulator to finalize a document.
 ///
-struct BSONCXX_API finalize_type {
+struct finalize_type {
     constexpr finalize_type() {}
 };
 

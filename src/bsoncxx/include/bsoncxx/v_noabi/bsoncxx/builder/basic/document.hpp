@@ -15,6 +15,7 @@
 #pragma once
 
 #include <bsoncxx/builder/basic/array-fwd.hpp>
+#include <bsoncxx/builder/basic/document-fwd.hpp>
 
 #include <bsoncxx/builder/basic/impl.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>

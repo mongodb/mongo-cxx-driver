@@ -1,4 +1,4 @@
-// Copyright 2015 MongoDB Inc.
+// Copyright 2023 MongoDB Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,22 +14,18 @@
 
 #pragma once
 
-#include <system_error>
-
-#include <bsoncxx/exception/exception-fwd.hpp>
-
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
 inline namespace v_noabi {
-///
-/// Class representing any exceptions emitted from the bsoncxx library or
-/// its underlying implementation.
-///
-class exception : public std::system_error {
-    using std::system_error::system_error;
-};
+namespace builder {
+namespace stream {
 
+template <class base>
+class value_context;
+
+}  // namespace stream
+}  // namespace builder
 }  // namespace v_noabi
 }  // namespace bsoncxx
 

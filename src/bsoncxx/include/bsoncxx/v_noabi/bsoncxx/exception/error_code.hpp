@@ -17,6 +17,8 @@
 #include <cstdint>
 #include <system_error>
 
+#include <bsoncxx/exception/error_code-fwd.hpp>
+
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
@@ -122,7 +124,9 @@ BSONCXX_INLINE std::error_code make_error_code(error_code error) {
 #include <bsoncxx/config/postlude.hpp>
 
 namespace std {
+
 // Specialize is_error_code_enum so we get simpler std::error_code construction
 template <>
 struct is_error_code_enum<bsoncxx::error_code> : public true_type {};
+
 }  // namespace std
