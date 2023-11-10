@@ -18,6 +18,7 @@
 #include <memory>
 
 #include <mongocxx/client_session-fwd.hpp>
+#include <mongocxx/options/transaction-fwd.hpp>
 #include <mongocxx/read_concern-fwd.hpp>
 #include <mongocxx/read_preference-fwd.hpp>
 #include <mongocxx/write_concern-fwd.hpp>
@@ -34,7 +35,7 @@ namespace options {
 ///
 /// Class representing the optional arguments for a transaction.
 ///
-class MONGOCXX_API transaction {
+class transaction {
    public:
     transaction();
 

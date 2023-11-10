@@ -23,6 +23,7 @@
 #include <mongocxx/client-fwd.hpp>
 #include <mongocxx/collection-fwd.hpp>
 #include <mongocxx/database-fwd.hpp>
+#include <mongocxx/options/transaction-fwd.hpp>
 #include <mongocxx/uri-fwd.hpp>
 #include <mongocxx/write_concern-fwd.hpp>
 
@@ -36,10 +37,6 @@
 
 namespace mongocxx {
 inline namespace v_noabi {
-namespace options {
-class transaction;
-}
-
 ///
 /// Class representing the server-side requirement for reporting the success of a write
 /// operation. The strength of the write concern setting determines the level of guarantees
@@ -250,9 +247,8 @@ class write_concern {
     friend class ::mongocxx::v_noabi::client;
     friend class ::mongocxx::v_noabi::collection;
     friend class ::mongocxx::v_noabi::database;
+    friend class ::mongocxx::v_noabi::options::transaction;
     friend class ::mongocxx::v_noabi::uri;
-
-    friend class options::transaction;
 
     ///
     /// @{

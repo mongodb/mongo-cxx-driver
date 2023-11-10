@@ -23,6 +23,7 @@
 #include <mongocxx/collection-fwd.hpp>
 #include <mongocxx/database-fwd.hpp>
 #include <mongocxx/events/topology_description-fwd.hpp>
+#include <mongocxx/options/transaction-fwd.hpp>
 #include <mongocxx/read_preference-fwd.hpp>
 #include <mongocxx/search_index_view-fwd.hpp>
 #include <mongocxx/uri-fwd.hpp>
@@ -37,10 +38,6 @@
 
 namespace mongocxx {
 inline namespace v_noabi {
-namespace options {
-class transaction;
-}
-
 ///
 /// Class representing a preference for how the driver routes read operations to members of a
 /// replica set or to a sharded cluster.
@@ -287,10 +284,9 @@ class read_preference {
     friend class ::mongocxx::v_noabi::collection;
     friend class ::mongocxx::v_noabi::database;
     friend class ::mongocxx::v_noabi::events::topology_description;
+    friend class ::mongocxx::v_noabi::options::transaction;
     friend class ::mongocxx::v_noabi::search_index_view;
     friend class ::mongocxx::v_noabi::uri;
-
-    friend class options::transaction;
 
     ///
     /// @{

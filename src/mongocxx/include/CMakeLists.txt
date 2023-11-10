@@ -110,6 +110,7 @@ set_dist_list(src_mongocxx_include_DIST
     mongocxx/v_noabi/mongocxx/options/server_api.hpp
     mongocxx/v_noabi/mongocxx/options/ssl.hpp
     mongocxx/v_noabi/mongocxx/options/tls.hpp
+    mongocxx/v_noabi/mongocxx/options/transaction-fwd.hpp
     mongocxx/v_noabi/mongocxx/options/transaction.hpp
     mongocxx/v_noabi/mongocxx/options/update.hpp
     mongocxx/v_noabi/mongocxx/pipeline.hpp
