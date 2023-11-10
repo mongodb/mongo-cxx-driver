@@ -17,6 +17,7 @@
 #include <sstream>
 
 #include <bsoncxx/builder/basic/array-fwd.hpp>
+#include <bsoncxx/builder/list-fwd.hpp>
 
 #include <bsoncxx/builder/core.hpp>
 #include <bsoncxx/exception/error_code.hpp>
@@ -105,8 +106,8 @@ class list {
    private:
     bson_value::value val;
 
-    friend class document;
-    friend class array;
+    friend class ::bsoncxx::v_noabi::builder::document;
+    friend class ::bsoncxx::v_noabi::builder::array;
 
     list(initializer_list_t init, bool type_deduction, bool is_array) : val{nullptr} {
         std::stringstream err_msg{"cannot construct document"};
