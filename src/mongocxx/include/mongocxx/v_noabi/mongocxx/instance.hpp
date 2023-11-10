@@ -16,12 +16,12 @@
 
 #include <memory>
 
+#include <mongocxx/logger-fwd.hpp>
+
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
 inline namespace v_noabi {
-class logger;
-
 ///
 /// Class representing an instance of the MongoDB driver.
 ///

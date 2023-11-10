@@ -68,6 +68,7 @@ set_dist_list(src_mongocxx_include_DIST
     mongocxx/v_noabi/mongocxx/index_model.hpp
     mongocxx/v_noabi/mongocxx/index_view.hpp
     mongocxx/v_noabi/mongocxx/instance.hpp
+    mongocxx/v_noabi/mongocxx/logger-fwd.hpp
     mongocxx/v_noabi/mongocxx/logger.hpp
     mongocxx/v_noabi/mongocxx/model/delete_many.hpp
     mongocxx/v_noabi/mongocxx/model/delete_one.hpp
