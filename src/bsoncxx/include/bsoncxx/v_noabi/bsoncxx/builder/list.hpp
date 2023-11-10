@@ -28,7 +28,16 @@
 namespace bsoncxx {
 inline namespace v_noabi {
 namespace builder {
+
 using namespace bsoncxx::types;
+
+}  // namespace builder
+}  // namespace v_noabi
+}  // namespace bsoncxx
+
+namespace bsoncxx {
+inline namespace v_noabi {
+namespace builder {
 
 ///
 /// A JSON-like builder for creating documents and arrays.
