@@ -112,7 +112,7 @@ class MONGOCXX_API cursor {
 /// exhausted iterator so that it no longer compares equal to the
 /// end-iterator.
 ///
-class MONGOCXX_API cursor::iterator {
+class cursor::iterator {
    public:
     ///
     /// std::iterator_traits

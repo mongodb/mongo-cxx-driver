@@ -121,7 +121,7 @@ class MONGOCXX_API change_stream {
 ///
 /// Class representing a MongoDB change stream iterator.
 ///
-class MONGOCXX_API change_stream::iterator {
+class change_stream::iterator {
    public:
     // Support input-iterator (caveat of post-increment returning void)
     using difference_type = std::int64_t;
