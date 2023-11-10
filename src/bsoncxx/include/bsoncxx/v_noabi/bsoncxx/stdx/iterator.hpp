@@ -66,8 +66,11 @@ using to_address_t = decltype(to_address(std::declval<T&>()));
 /**
  * @brief The result of applying unary operator* to the given object, if valid
  */
+bsoncxx_push_warnings();
+bsoncxx_disable_warning(Clang("-Wvoid-ptr-dereference"));
 template <typename I>
 using dereference_t = decltype(*std::declval<I>());
+bsoncxx_pop_warnings();
 
 /**
  * @brief Detect a type that can be dereferenced (like a pointer) and the result
