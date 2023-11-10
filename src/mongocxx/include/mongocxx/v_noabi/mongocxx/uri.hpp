@@ -19,6 +19,7 @@
 #include <vector>
 
 #include <mongocxx/client-fwd.hpp>
+#include <mongocxx/uri-fwd.hpp>
 
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/string/view_or_value.hpp>
@@ -41,7 +42,7 @@ inline namespace v_noabi {
 /// @see https://mongoc.org/libmongoc/current/mongoc_uri_t.html for more information on supported
 /// URI options.
 ///
-class MONGOCXX_API uri {
+class uri {
    public:
     /// A host.
     struct host {
