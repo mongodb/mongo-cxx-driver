@@ -15,9 +15,7 @@
 // compiler.hpp
 #undef BSONCXX_INLINE
 #pragma pop_macro("BSONCXX_INLINE")
-#if defined(_MSC_VER)
-#pragma warning(pop)
-#endif
+bsoncxx_pop_warnings();
 #undef BSONCXX_CALL
 #pragma pop_macro("BSONCXX_CALL")
 
@@ -67,7 +65,7 @@
 #undef BSONCXX_UNREACHABLE
 #pragma pop_macro("BSONCXX_UNREACHABLE")
 
-#pragma pop_macro("mongo_cxx14_constexpr")
+#pragma pop_macro("bsoncxx_cxx14_constexpr")
 #pragma pop_macro("bsoncxx_returns")
 
 // CXX-2769: out-of-place, but remains for backward compatibility.
@@ -76,19 +74,21 @@ static_assert(false, "BSONCXX_ENUM must be undef'ed");
 #endif
 #pragma pop_macro("BSONCXX_ENUM")
 
+// util.hpp
 #pragma pop_macro("bsoncxx_push_warnings")
 #pragma pop_macro("bsoncxx_pop_warnings")
 #pragma pop_macro("bsoncxx_disable_warning")
 
-#pragma pop_macro("BSONCXX_DISABLE_WARNING_IMPL_MSVC")
-#pragma pop_macro("BSONCXX_DISABLE_WARNING_IMPL_GCC")
-#pragma pop_macro("BSONCXX_DISABLE_WARNING_IMPL_GNU")
-#pragma pop_macro("BSONCXX_DISABLE_WARNING_IMPL_Clang")
+#pragma pop_macro("_bsoncxxDisableWarningImpl_for_MSVC")
+#pragma pop_macro("_bsoncxxDisableWarningImpl_for_GCC")
+#pragma pop_macro("_bsoncxxDisableWarningImpl_for_GNU")
+#pragma pop_macro("_bsoncxxDisableWarningImpl_for_Clang")
 
 #pragma pop_macro("bsoncxx_concat")
 #pragma pop_macro("bsoncxx_concat_impl")
 
 #pragma pop_macro("bsoncxx_pragma")
+#pragma pop_macro("_bsoncxxPragma")
 #pragma pop_macro("bsoncxx_stringify_impl")
 #pragma pop_macro("bsoncxx_stringify")
 #pragma pop_macro("bsoncxx_force_semicolon")

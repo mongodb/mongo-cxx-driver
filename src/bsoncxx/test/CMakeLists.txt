@@ -94,10 +94,10 @@ if(ENABLE_MACRO_GUARD_TESTS)
             DEFINE_NO_DEPRECATED
             BSONCXX_NO_DEPRECATED
             BSONCXX_UNREACHABLE # prelude.hpp
-            BSONCXX_DISABLE_WARNING_IMPL_GCC
-            BSONCXX_DISABLE_WARNING_IMPL_GNU
-            BSONCXX_DISABLE_WARNING_IMPL_MSVC
-            BSONCXX_DISABLE_WARNING_IMPL_Clang
+            _bsoncxxDisableWarningImpl_for_GCC
+            _bsoncxxDisableWarningImpl_for_GNU
+            _bsoncxxDisableWarningImpl_for_MSVC
+            _bsoncxxDisableWarningImpl_for_Clang
             bsoncxx_push_warnings
             bsoncxx_pop_warnings
             bsoncxx_disable_warning
@@ -105,12 +105,14 @@ if(ENABLE_MACRO_GUARD_TESTS)
             bsoncxx_concat_impl
             bsoncxx_force_semicolon
             bsoncxx_pragma
+            _bsoncxxPragma
             bsoncxx_stringify
             bsoncxx_stringify_impl
             bsoncxx_if_msvc
             bsoncxx_if_gcc
             bsoncxx_if_clang
             bsoncxx_if_gnu
+            bsoncxx_returns
         INCLUDE_PATTERNS
             "include/*.hpp" # Public headers.
             "lib/*.hh" # Private headers.

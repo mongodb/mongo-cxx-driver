@@ -21,3 +21,5 @@ NamespaceIndentation: None
 SpaceBeforeAssignmentOperators: true
 Standard: Cpp11
 UseTab: Never
+WhitespaceSensitiveMacros:
+  - bsoncxx_pragma
