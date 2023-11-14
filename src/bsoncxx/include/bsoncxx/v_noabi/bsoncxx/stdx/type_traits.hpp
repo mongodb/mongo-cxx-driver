@@ -459,8 +459,7 @@ struct rank<0> {};
 struct _decay_copy_fn {
     template <typename T>
     constexpr auto operator()(T&& arg) const
-        noexcept(std::is_nothrow_constructible<decay_t<T>, T&&>{})
-            -> requires_t<decay_t<T>, std::is_constructible<decay_t<T>, T&&>> {
+        noexcept(noexcept(static_cast<decay_t<T>>(static_cast<T&&>(arg)))) -> decay_t<T> {
         return static_cast<decay_t<T>>(static_cast<T&&>(arg));
     }
 };
