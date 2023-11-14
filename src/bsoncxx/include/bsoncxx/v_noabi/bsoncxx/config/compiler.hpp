@@ -31,7 +31,7 @@
     #endif
 #elif defined(_MSC_VER)
     #undef bsoncxx_if_msvc
-    #undef bsoncxx_if_msvc(...) __VA_ARGS__
+    #define bsoncxx_if_msvc(...) __VA_ARGS__
 #endif
 
 // clang-format on

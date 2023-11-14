@@ -29,7 +29,7 @@
 #define bsoncxx_pragma(...) _bsoncxxPragma(__VA_ARGS__)
 #ifdef _MSC_VER
 // Old MSVC doesn't recognize C++11 _Pragma(), but it always recognized __pragma
-#define _bsoncxxPragma(...) __pragma(bsoncxx_stringify(__VA_ARGS__))
+#define _bsoncxxPragma(...) __pragma(__VA_ARGS__)
 #else
 #define _bsoncxxPragma(...) _Pragma(bsoncxx_stringify(__VA_ARGS__))
 #endif
@@ -122,4 +122,4 @@
     _bsoncxxDisableWarningImpl_for_Clang(__VA_ARGS__)
 
 #define _bsoncxxDisableWarningImpl_for_MSVC(...) \
-    bsoncxx_if_msvc(warning(disable : __VA_ARGS__))
+    bsoncxx_if_msvc(bsoncxx_pragma(warning(disable : __VA_ARGS__)))
