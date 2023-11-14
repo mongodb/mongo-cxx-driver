@@ -14,92 +14,423 @@
 
 #pragma once
 
+#include <cstddef>
+#include <ios>
+#include <iosfwd>
+#include <iterator>
+#include <limits>
+#include <stdexcept>
+#include <string>
+#include <utility>
+
+#include "./iterator.hpp"
+#include "./operators.hpp"
+#include "./ranges.hpp"
+#include "./type_traits.hpp"
+
 #include <bsoncxx/config/prelude.hpp>
 
-#if defined(BSONCXX_POLY_USE_MNMLSTC)
-
-#include <core/string.hpp>
-
 namespace bsoncxx {
 inline namespace v_noabi {
 namespace stdx {
 
-using ::core::basic_string_view;
-using ::core::string_view;
+namespace detail {
+
+using namespace bsoncxx::detail;
+
+[[noreturn]] BSONCXX_API void string_view_oob_terminate(const char* msg,
+                                                        std::size_t length,
+                                                        std::ptrdiff_t offset) noexcept;
+
+// Detects a c_str() method (to detect string-like types)
+template <typename S>
+using c_str_t = decltype(std::declval<S>().c_str());
+
+}  // namespace detail
+
+/**
+ * @brief Implementation of std::string_view-like class template
+ */
+template <typename Char, typename Traits = std::char_traits<Char>>
+class basic_string_view : detail::equality_operators, detail::ordering_operators {
+   public:
+    // Pointer to (non-const) character type
+    using pointer = Char*;
+    // Pointer to const-character type
+    using const_pointer = const Char*;
+    // Type representing the size of a string
+    using size_type = std::size_t;
+    // Type representing the offset within a string
+    using difference_type = std::ptrdiff_t;
+    // The type of the string character
+    using value_type = Char;
+
+    // Constant sentinel value to represent an impossible/invalid string position
+    static constexpr size_type npos = static_cast<size_type>(-1);
+
+   private:
+    // Pointer to the beginning of the string being viewed
+    const_pointer _begin = nullptr;
+    // The size of the array that is being viewed via `_begin`
+    size_type _size = 0;
+    // Alias of our own type
+    using self_type = basic_string_view;
+
+    /**
+     * @brief If R is a type for which we want to permit from-range construction,
+     * evaluates to the type `int`. Otherwise, is a substitution failure.
+     */
+    template <typename R>
+    using _enable_range_constructor =
+        detail::requires_t<int,
+                           // Must be a contiguous range
+                           detail::is_contiguous_range<R>,
+                           // Don't eat our own copy/move constructor:
+                           detail::negation<detail::is_alike<R, self_type>>,
+                           // Don't handle character arrays (we use a different constructor for
+                           // that)
+                           detail::negation<std::is_convertible<R, const_pointer>>,
+                           // The range's value must be the same as our character type
+                           std::is_same<detail::detected_t<detail::range_value_t, R>, value_type>>;
+
+   public:
+    using traits_type = Traits;
+    using reference = Char&;
+    using const_reference = const Char&;
+    using iterator = const_pointer;
+    using const_iterator = iterator;
+    using reverse_iterator = std::reverse_iterator<iterator>;
+    using const_reverse_iterator = std::reverse_iterator<const_iterator>;
+
+    /**
+     * @brief Default constructor. Constructs to an empty/null string view
+     */
+    constexpr basic_string_view() = default;
+
+    /// Default copy/move/assign/destroy
+
+    /**
+     * @brief Construct a new string view from a pointer-to-character and an
+     * array length.
+     */
+    constexpr basic_string_view(const_pointer s, size_type count) noexcept
+        : _begin(s), _size(count) {}
+
+    /**
+     * @brief Construct a new string view from a C-style null-terminated character array.
+     *
+     * The string size is inferred as-if by strlen()
+     */
+    constexpr basic_string_view(const_pointer s) noexcept
+        : _begin(s), _size(traits_type::length(s)) {}
+
+    /**
+     * Iterator pair range constructor
+     *
+     * Requires that `Iterator` be a contiguous iterator, that `Sentinel` be a sized sentinel for
+     * `Iterator`, and that the value-type of `Iterator` is the character type of the string.
+     */
+    template <
+        typename Iterator,
+        typename Sentinel,
+        detail::requires_t<int, detail::is_sized_sentinel_for<Sentinel, Iterator>> = 0,
+        // Requires: The iterator value_type be the same as our value_type
+        detail::requires_t<int, std::is_same<detail::iter_value_t<Iterator>, value_type>> = 0,
+        // Requires: We can get a pointer from the iterator via to_address:
+        detail::requires_t<int, detail::is_contiguous_iterator<iterator>> = 0,
+        // Requires: "Sentinel" is *not* convertible to std::size_t
+        // (prevents ambiguity with the pointer+size constructor)
+        detail::requires_t<int, detail::negation<std::is_convertible<Sentinel, std::size_t>>> = 0>
+    constexpr basic_string_view(Iterator iter, Sentinel stop) noexcept
+        : _begin(detail::to_address(iter)), _size(static_cast<size_type>(stop - iter)) {}
+
+    /**
+     * @brief From-range constructor for non-string-like types. This is an explicit constructor.
+     *
+     * Requires that `Range` is a non-array contiguous range with the same value
+     * type as the string view.
+     */
+    template <typename Range,
+              _enable_range_constructor<Range> = 0,
+              detail::requires_t<int, detail::negation<detail::is_detected<detail::c_str_t, Range>>>
+                  RequiresNotString = 0>
+    constexpr explicit basic_string_view(Range&& rng)
+        : _begin(detail::data(rng)), _size(detail::size(rng)) {}
+
+    /**
+     * @brief From-range constructor, but is an implicit conversion accepting string-like ranges.
+     * (Seeks a .c_str() member)
+     *
+     * Requires that `Range` is a non-array contiguous range with the same value type
+     * as the string view, and is a std::string-like value.
+     */
+    template <
+        typename Range,
+        _enable_range_constructor<Range> = 0,
+        detail::requires_t<int, detail::is_detected<detail::c_str_t, Range>> RequiresStringLike = 0>
+    constexpr basic_string_view(Range&& rng) noexcept
+        : _begin(detail::data(rng)), _size(detail::size(rng)) {}
+
+    // Construction from a null pointer is deleted
+    basic_string_view(std::nullptr_t) = delete;
+
+    constexpr iterator begin() const noexcept {
+        return iterator(_begin);
+    }
+    constexpr iterator end() const noexcept {
+        return begin() + size();
+    }
+    constexpr iterator cbegin() const noexcept {
+        return begin();
+    }
+    constexpr iterator cend() const noexcept {
+        return end();
+    }
+
+    constexpr reverse_iterator rbegin() const noexcept {
+        return reverse_iterator{end()};
+    }
+
+    constexpr reverse_iterator rend() const noexcept {
+        return reverse_iterator{begin()};
+    }
+
+    constexpr const_reverse_iterator crbegin() const noexcept {
+        return const_reverse_iterator{cend()};
+    }
+
+    constexpr const_reverse_iterator crend() const noexcept {
+        return const_reverse_iterator{crbegin()};
+    }
+
+    /**
+     * @brief Access the Nth element of the referred-to string
+     *
+     * @param offset A zero-based offset within the string to access. Must be less
+     * than size()
+     */
+    constexpr const_reference operator[](size_type offset) const noexcept {
+        return (_assert_inbounds(offset, for_access, "basic_string_view::operator[]"),
+                _begin[offset]);
+    }
+
+    /**
+     * @brief Access the Nth element of the referred-to string.
+     *
+     * @param pos A zero-based offset within the string to access. If not less
+     * than size(), throws std::out_of_range
+     */
+    bsoncxx_cxx14_constexpr const_reference at(size_type pos) const {
+        if (pos >= size()) {
+            throw std::out_of_range{"string_view::at()"};
+        }
+        return _begin[pos];
+    }
+    /// Access the first character in the string
+    constexpr const_reference front() const noexcept {
+        return (_assert_inbounds(0, for_access, "basic_string_view::front()"), (*this)[0]);
+    }
+    /// Access the last character in the string
+    constexpr const_reference back() const noexcept {
+        return (_assert_inbounds(size() - 1, for_access, "basic_string_view::back()"),
+                (*this)[size() - 1]);
+    }
+
+    /// Obtain a pointer to the beginning of the referred-to character array
+    constexpr const_pointer data() const noexcept {
+        return _begin;
+    }
+    /// Obtain a pointer to the beginning of the referred-to character array
+    constexpr const_pointer c_str() const noexcept {
+        return _begin;
+    }
+    /// Obtain the length of the referred-to string, in number of characters
+    constexpr size_type size() const noexcept {
+        return _size;
+    }
+    /// Obtain the length of the referred-to string, in number of characters
+    constexpr size_type length() const noexcept {
+        return size();
+    }
+    /// Return `true` if size() == 0, otherwise `false`
+    constexpr bool empty() const noexcept {
+        return size() == 0;
+    }
+    /// Return the maximum value that could be returned by size()
+    constexpr size_type max_size() const noexcept {
+        return static_cast<size_type>(std::numeric_limits<difference_type>::max());
+    }
+
+    /**
+     * @brief In-place modify the string_view to view N fewer characters from the beginning
+     *
+     * @param n The number of characters to remove from the beginning. Must be less than size()
+     */
+    bsoncxx_cxx14_constexpr void remove_prefix(size_type n) noexcept {
+        _assert_inbounds(n, for_offset, "basic_string_view::remove_prefix()");
+        _begin += n;
+        _size -= n;
+    }
+
+    /**
+     * @brief In-place modify the string_view to view N fewer characters from the end
+     *
+     * @param n The number of characters to remove from the end. Must be less than size()
+     */
+    bsoncxx_cxx14_constexpr void remove_suffix(size_type n) noexcept {
+        _assert_inbounds(n, for_offset, "basic_string_view::remove_suffix()");
+        _size -= n;
+    }
+
+    /**
+     * @brief Swap the reference with another string_view
+     */
+    bsoncxx_cxx14_constexpr void swap(basic_string_view& other) noexcept {
+        std::swap(_begin, other._begin);
+        std::swap(_size, other._size);
+    }
+
+    /**
+     * @brief Copy the contents of the viewed string into the given output destination.
+     *
+     * @param dest The destination at which to write characters
+     * @param count The maximum number of characters to copy.
+     * @param pos The offset within the viewed string to begin copying from.
+     * @returns The number of characters that were copied to `dest`. The number
+     * of copied characters is always the lesser of `size()-pos` and `count`
+     *
+     * @throws std::out_of_range if pos > size()
+     */
+    bsoncxx_cxx14_constexpr size_type copy(pointer dest, size_type count, size_type pos = 0) const {
+        if (pos > size()) {
+            throw std::out_of_range{"basic_string_view::copy()"};
+        }
+        count = (std::min)(count, size() - pos);
+        Traits::copy(dest, data() + pos, count);
+        return count;
+    }
+
+    bsoncxx_cxx14_constexpr self_type substr(size_type pos, size_type count = npos) const {
+        if (pos > size()) {
+            throw std::out_of_range{"basic_string_view::substr()"};
+        }
+        return self_type(_begin + pos, (std::min)(count, size() - pos));
+    }
+
+    /**
+     * @brief Compare two strings lexicographically
+     *
+     * @param other The "right hand" operand of the comparison
+     * @retval 0 If *this == other
+     * @retval n : n < 0 if *this is "less than" other.
+     * @retval n : n > 0 if *this is "greater than" other.
+     */
+    constexpr int compare(self_type other) const noexcept {
+        // Another level of indirection to support restricted C++11 constexpr
+        return _compare2(Traits::compare(data(), other.data(), (std::min)(size(), other.size())),
+                         other);
+    }
+
+    /**
+     * @brief Compare a substring of *this with `other`
+     *
+     * @returns substr(po1, count1).compare(other)
+     */
+    constexpr int compare(size_type pos1, size_type count1, self_type other) const noexcept {
+        return substr(pos1, count1).compare(other);
+    }
+
+    /**
+     * @brief Compare a substring of *this with a substring of `other`
+     *
+     * @returns substr(pos1, count1).compare(other.substr(pos2, count2))
+     */
+    constexpr int compare(size_type pos1,
+                          size_type count1,
+                          self_type other,
+                          size_type pos2,
+                          size_type count2) const noexcept {
+        return substr(pos1, count1).compare(other.substr(pos2, count2));
+    }
+
+    /**
+     * @brief Compare a substring of *this with a string viewed through the given pointer+size
+     *
+     * @returns substr(pos1, count1).compare(basic_string_view(str, count2))
+     */
+    constexpr int compare(size_type pos1,
+                          size_type count1,
+                          const_pointer str,
+                          size_type count2) const noexcept {
+        return substr(pos1, count1).compare(self_type(str, count2));
+    }
+
+    /**
+     * @brief Test whether the string starts-with the given prefix string
+     */
+    constexpr bool starts_with(self_type pfx) const noexcept {
+        return size() >= pfx.size() && std::equal(begin(), begin() + pfx.size(), pfx.begin());
+    }
+
+    /**
+     * @brief Test whether the string ends-with the given suffix string
+     */
+    constexpr bool ends_with(self_type sfx) const noexcept {
+        return size() >= sfx.size() && std::equal(rbegin(), rbegin() + sfx.size(), sfx.rbegin());
+    }
+
+    /**
+     * @brief Explicit-conversion to a std::basic_string
+     */
+    template <typename Allocator>
+    constexpr explicit operator std::basic_string<Char, Traits, Allocator>() const {
+        return std::basic_string<Char, Traits, Allocator>(data(), size());
+    }
+
+   private:
+    /// If the given 'pos' is out of bounds, terminates the program with an error message on stderr
+    enum bounds_check { for_access, for_offset };
+    void _assert_inbounds(size_type pos, bounds_check kind, const char* what) const noexcept {
+        const auto bound = kind == for_access ? _size + 1 : _size;
+        if (bound < pos) {
+            stdx::detail::string_view_oob_terminate(what, _size, static_cast<std::ptrdiff_t>(pos));
+        }
+    }
+
+    // Additional level-of-indirection for constexpr compare()
+    constexpr int _compare2(int diff, self_type other) const noexcept {
+        // "diff" is the diff according to Traits::cmp
+        return diff ? diff : static_cast<int>(size() - other.size());
+    }
+
+    // Implementation of equality comparison
+    constexpr friend bool tag_invoke(detail::equal_to, self_type left, self_type right) noexcept {
+        return left.size() == right.size() &&
+               std::equal(
+                   left.begin(),
+                   left.end(),
+                   right.begin(),
+                   [](value_type l, value_type r) noexcept -> bool { return Traits::eq(l, r); });
+    }
+
+    // Implementation of a three-way-comparison
+    constexpr friend detail::strong_ordering tag_invoke(detail::compare_three_way cmp,
+                                                        self_type left,
+                                                        self_type right) noexcept {
+        return cmp(left.compare(right), 0);
+    }
+
+    friend std::basic_ostream<Char, Traits>& operator<<(std::basic_ostream<Char, Traits>& out,
+                                                        self_type self) {
+        out.write(self.data(), static_cast<std::streamsize>(self.size()));
+        return out;
+    }
+};
+
+using string_view = basic_string_view<char>;
 
 }  // namespace stdx
 }  // namespace v_noabi
 }  // namespace bsoncxx
-
-#elif defined(BSONCXX_POLY_USE_BOOST)
-
-#include <boost/version.hpp>
-
-#if BOOST_VERSION >= 106100
-
-#include <boost/utility/string_view.hpp>
-
-namespace bsoncxx {
-inline namespace v_noabi {
-namespace stdx {
-
-using ::boost::basic_string_view;
-using ::boost::string_view;
-
-}  // namespace stdx
-}  // namespace v_noabi
-}  // namespace bsoncxx
-
-#else
-
-#include <boost/utility/string_ref.hpp>
-
-namespace bsoncxx {
-inline namespace v_noabi {
-namespace stdx {
-
-template <typename charT, typename traits = std::char_traits<charT>>
-using basic_string_view = ::boost::basic_string_ref<charT, traits>;
-using string_view = ::boost::string_ref;
-
-}  // namespace stdx
-}  // namespace v_noabi
-}  // namespace bsoncxx
-
-#endif
-
-#elif defined(BSONCXX_POLY_USE_STD_EXPERIMENTAL)
-
-#include <experimental/string_view>
-
-namespace bsoncxx {
-inline namespace v_noabi {
-namespace stdx {
-
-using ::std::experimental::basic_string_view;
-using ::std::experimental::string_view;
-
-}  // namespace stdx
-}  // namespace v_noabi
-}  // namespace bsoncxx
-
-#elif defined(BSONCXX_POLY_USE_STD)
-
-#include <string_view>
-
-namespace bsoncxx {
-inline namespace v_noabi {
-namespace stdx {
-
-using ::std::basic_string_view;
-using ::std::string_view;
-
-}  // namespace stdx
-}  // namespace v_noabi
-}  // namespace bsoncxx
-
-#else
-#error "Cannot find a valid polyfill for string_view"
-#endif
 
 #include <bsoncxx/config/postlude.hpp>

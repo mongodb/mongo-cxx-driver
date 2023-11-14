@@ -39,6 +39,7 @@ add_executable(test_bson
     view_or_value.cpp
     make_unique.test.cpp
     ranges.test.cpp
+    string_view.test.cpp
     type_traits.test.cpp
     iterator.test.cpp
 )
@@ -146,4 +147,5 @@ set_dist_list(src_bsoncxx_test_DIST
     make_unique.test.cpp
     iterator.test.cpp
     ranges.test.cpp
+    string_view.test.cpp
 )
