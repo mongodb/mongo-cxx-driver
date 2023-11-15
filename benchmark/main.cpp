@@ -12,24 +12,34 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <chrono>
 #include <iostream>
 
 #include "benchmark_runner.hpp"
+#include <bsoncxx/stdx/string_view.hpp>
+#include <mongocxx/instance.hpp>
 
 using namespace benchmark;
 
 int main(int argc, char* argv[]) {
+    mongocxx::instance instance{};
     std::set<benchmark_type> types;
 
     if (argc > 1) {
-        for (int x = 1; x < argc; ++x) {
-            std::string type{argv[x]};
-            auto it = names_types.find(type);
+        if (bsoncxx::stdx::string_view(argv[1]) == "all") {
+            for (const auto& [name, type] : names_types) {
+                types.insert(type);
+            }
+        } else {
+            for (int x = 1; x < argc; ++x) {
+                std::string type{argv[x]};
+                auto it = names_types.find(type);
 
-            if (it != names_types.end()) {
-                types.insert(it->second);
-            } else {
-                std::cerr << "Invalid benchmark: " << type << std::endl;
+                if (it != names_types.end()) {
+                    types.insert(it->second);
+                } else {
+                    std::cerr << "Invalid benchmark: " << type << std::endl;
+                }
             }
         }
 
@@ -40,6 +50,8 @@ int main(int argc, char* argv[]) {
     }
 
     benchmark_runner runner{types};
+
+    const auto start_time = std::chrono::system_clock::now();
     runner.run_microbenches();
-    runner.print_scores();
+    runner.write_scores(start_time);
 }

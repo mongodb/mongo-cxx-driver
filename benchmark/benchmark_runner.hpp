@@ -14,10 +14,11 @@
 
 #pragma once
 
-#include <bsoncxx/stdx/optional.hpp>
-#include <mongocxx/instance.hpp>
+#include <chrono>
 
 #include "microbench.hpp"
+#include <bsoncxx/stdx/optional.hpp>
+#include <mongocxx/instance.hpp>
 
 namespace benchmark {
 
@@ -27,7 +28,7 @@ class benchmark_runner {
 
     void run_microbenches();
 
-    void print_scores();
+    void write_scores(const std::chrono::time_point<std::chrono::system_clock> start_time);
 
     double calculate_bson_bench_score();
 

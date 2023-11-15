@@ -360,6 +360,16 @@ functions:
                   CXX: ${cxx_compiler}
               script: .evergreen/compile.sh
 
+    "compile_benchmarks":
+      - command: shell.exec
+        params:
+          shell: bash
+          working_dir: "mongo-cxx-driver"
+          script: |
+            cd build
+            cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH="$(pwd)/../mongoc" -DCMAKE_CXX_STANDARD=20 ..
+            make microbenchmarks -j64
+
     "test":
         - command: shell.exec
           params:
@@ -510,6 +520,30 @@ functions:
             echo "Building Red Hat UBI Docker image"
             make -C extras/docker/redhat-ubi-9.3 nocachebuild test
 
+    "download benchmark data":
+      - command: shell.exec
+        params:
+          shell: bash
+          working_dir: "mongo-cxx-driver"
+          script: |
+            ./etc/microbenchmark-test-data.sh
+
+    "run benchmarks":
+      - command: shell.exec
+        params:
+          shell: bash
+          working_dir: "mongo-cxx-driver"
+          script: |
+            echo "Starting benchmarks"
+            ./build/benchmark/microbenchmarks all
+
+    "send benchmarks":
+      - command: perf.send
+        params:
+          name: perf
+          file: mongo-cxx-driver/results.json
+
+
 #######################################
 #              Post Task              #
 #######################################
@@ -619,6 +653,16 @@ tasks:
       - func: "compile"
         vars:
             ENABLE_TESTS: OFF
+
+    - name: compile_and_run_benchmarks
+      commands:
+      - func: "setup"
+      - func: "start_mongod"
+      - func: "fetch_c_driver_source"
+      - func: "compile_benchmarks"
+      - func: "download benchmark data"
+      - func: "run benchmarks"
+      - func: "send benchmarks"
 
     - name: compile_macro_guard_tests
       commands:
@@ -1302,6 +1346,15 @@ buildvariants:
           - name: compile_and_test_with_shared_libs_replica_set_with_libmongocrypt
           - name: compile_and_test_with_shared_libs_sharded_cluster_with_libmongocrypt
           - name: build_example_with_add_subdirectory
+
+    - name: benchmarks-rhel9
+      display_name: "Benchmarks (RHEL 9.2)"
+      expansions:
+          mongodb_version: "v6.0-perf"
+      run_on:
+          - rhel90-dbx-perf-large
+      tasks:
+          - name: compile_and_run_benchmarks
 
     - name: arm-rhel9-release-latest
       display_name: "arm64 RHEL 9 Release (MongoDB Latest)"
