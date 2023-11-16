@@ -285,21 +285,13 @@ collection& collection::operator=(const collection& c) {
     return *this;
 }
 
-bulk_write collection::create_bulk_write(const options::bulk_write& options) {
-    class bulk_write writes {
-        *this, options
-    };
-
-    return writes;
+mongocxx::bulk_write collection::create_bulk_write(const options::bulk_write& options) {
+    return mongocxx::bulk_write{*this, options};
 }
 
-bulk_write collection::create_bulk_write(const client_session& session,
-                                         const options::bulk_write& options) {
-    class bulk_write writes {
-        *this, options, &session
-    };
-
-    return writes;
+mongocxx::bulk_write collection::create_bulk_write(const client_session& session,
+                                                   const options::bulk_write& options) {
+    return mongocxx::bulk_write{*this, options, &session};
 }
 
 namespace {
@@ -526,9 +518,7 @@ stdx::optional<result::insert_one> collection::_insert_one(const client_session*
         bulk_opts.comment(*comment);
     }
 
-    class bulk_write bulk_op {
-        *this, bulk_opts, session
-    };
+    mongocxx::bulk_write bulk_op{*this, bulk_opts, session};
     bsoncxx::document::element oid{};
     bsoncxx::builder::basic::document new_document;
 
@@ -1395,8 +1385,8 @@ class search_index_view collection::search_indexes() {
     return search_index_view{_get_impl().collection_t, _get_impl().client_impl->client_t};
 }
 
-class bulk_write collection::_init_insert_many(const options::insert& options,
-                                               const client_session* session) {
+mongocxx::bulk_write collection::_init_insert_many(const options::insert& options,
+                                                   const client_session* session) {
     options::bulk_write bulk_write_options;
 
     bulk_write_options.ordered(options.ordered().value_or(true));
@@ -1420,7 +1410,7 @@ class bulk_write collection::_init_insert_many(const options::insert& options,
     return create_bulk_write(bulk_write_options);
 }
 
-void collection::_insert_many_doc_handler(class bulk_write& writes,
+void collection::_insert_many_doc_handler(mongocxx::bulk_write& writes,
                                           bsoncxx::builder::basic::array& inserted_ids,
                                           bsoncxx::document::view doc) const {
     bsoncxx::builder::basic::document id_doc;
@@ -1438,7 +1428,7 @@ void collection::_insert_many_doc_handler(class bulk_write& writes,
 }
 
 stdx::optional<result::insert_many> collection::_exec_insert_many(
-    class bulk_write& writes, bsoncxx::builder::basic::array& inserted_ids) {
+    mongocxx::bulk_write& writes, bsoncxx::builder::basic::array& inserted_ids) {
     auto result = writes.execute();
     if (!result) {
         return stdx::nullopt;

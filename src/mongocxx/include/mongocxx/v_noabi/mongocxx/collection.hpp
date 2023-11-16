@@ -203,7 +203,7 @@ class collection {
     /// @return
     ///    The newly-created bulk write.
     ///
-    class bulk_write create_bulk_write(const options::bulk_write& options = {});
+    mongocxx::bulk_write create_bulk_write(const options::bulk_write& options = {});
 
     ///
     /// Creates a new bulk operation to be executed against this collection.
@@ -217,8 +217,8 @@ class collection {
     /// @return
     ///    The newly-created bulk write.
     ///
-    class bulk_write create_bulk_write(const client_session& session,
-                                       const options::bulk_write& options = {});
+    mongocxx::bulk_write create_bulk_write(const client_session& session,
+                                           const options::bulk_write& options = {});
     ///
     /// @}
     ///
@@ -1971,15 +1971,15 @@ class collection {
                                           const options::change_stream& options);
 
     // Helpers for the insert_many method templates.
-    class bulk_write _init_insert_many(const options::insert& options,
-                                       const client_session* session);
+    mongocxx::bulk_write _init_insert_many(const options::insert& options,
+                                           const client_session* session);
 
-    void _insert_many_doc_handler(class bulk_write& writes,
+    void _insert_many_doc_handler(mongocxx::bulk_write& writes,
                                   bsoncxx::builder::basic::array& inserted_ids,
                                   bsoncxx::document::view doc) const;
 
     stdx::optional<result::insert_many> _exec_insert_many(
-        class bulk_write& writes, bsoncxx::builder::basic::array& inserted_ids);
+        mongocxx::bulk_write& writes, bsoncxx::builder::basic::array& inserted_ids);
 
     template <typename document_view_iterator_type>
     MONGOCXX_PRIVATE stdx::optional<result::insert_many> _insert_many(
