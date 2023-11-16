@@ -194,8 +194,8 @@ class client {
     ///
     /// @return The database
     ///
-    class database database(bsoncxx::string::view_or_value name) const&;
-    class database database(bsoncxx::string::view_or_value name) const&& = delete;
+    mongocxx::database database(bsoncxx::string::view_or_value name) const&;
+    mongocxx::database database(bsoncxx::string::view_or_value name) const&& = delete;
 
     ///
     /// Allows the syntax @c client["db_name"] as a convenient shorthand for the client::database()
@@ -208,8 +208,9 @@ class client {
     ///
     /// @return Client side representation of a server side database
     ///
-    MONGOCXX_INLINE class database operator[](bsoncxx::string::view_or_value name) const&;
-    MONGOCXX_INLINE class database operator[](bsoncxx::string::view_or_value name) const&& = delete;
+    MONGOCXX_INLINE mongocxx::database operator[](bsoncxx::string::view_or_value name) const&;
+    MONGOCXX_INLINE mongocxx::database operator[](bsoncxx::string::view_or_value name) const&& =
+        delete;
 
     ///
     /// @{
@@ -445,7 +446,7 @@ class client {
     std::unique_ptr<impl> _impl;
 };
 
-MONGOCXX_INLINE database client::operator[](bsoncxx::string::view_or_value name) const& {
+MONGOCXX_INLINE mongocxx::database client::operator[](bsoncxx::string::view_or_value name) const& {
     return database(name);
 }
 
