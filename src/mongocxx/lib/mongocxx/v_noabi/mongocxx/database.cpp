@@ -468,8 +468,8 @@ collection database::collection(bsoncxx::string::view_or_value name) const {
     return mongocxx::collection(*this, std::move(name));
 }
 
-gridfs::bucket database::gridfs_bucket(const options::gridfs::bucket& options) const {
-    return gridfs::bucket{*this, options};
+mongocxx::gridfs::bucket database::gridfs_bucket(const options::gridfs::bucket& options) const {
+    return mongocxx::gridfs::bucket{*this, options};
 }
 
 change_stream database::watch(const options::change_stream& options) {

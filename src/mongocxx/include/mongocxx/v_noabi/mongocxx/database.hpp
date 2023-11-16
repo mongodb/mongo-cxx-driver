@@ -551,7 +551,7 @@ class database {
     ///
     /// @throws mongocxx::logic_error if `options` are invalid.
     ///
-    class mongocxx::gridfs::bucket gridfs_bucket(
+    mongocxx::gridfs::bucket gridfs_bucket(
         const options::gridfs::bucket& options = options::gridfs::bucket()) const;
 
     ///
@@ -672,7 +672,8 @@ class database {
     std::unique_ptr<impl> _impl;
 };
 
-MONGOCXX_INLINE mongocxx::collection database::operator[](bsoncxx::string::view_or_value name) const {
+MONGOCXX_INLINE mongocxx::collection database::operator[](
+    bsoncxx::string::view_or_value name) const {
     return collection(name);
 }
 
