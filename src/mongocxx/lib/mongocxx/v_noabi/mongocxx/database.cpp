@@ -365,14 +365,14 @@ collection database::_create_collection_deprecated(
     return _create_collection(session, name, options_builder.view(), write_concern);
 }
 
-class collection database::create_collection(
+mongocxx::collection database::create_collection(
     stdx::string_view name,
     bsoncxx::document::view_or_value collection_options,
     const stdx::optional<class write_concern>& write_concern) {
     return _create_collection(nullptr, name, collection_options, write_concern);
 }
 
-class collection database::create_collection(
+mongocxx::collection database::create_collection(
     const client_session& session,
     stdx::string_view name,
     bsoncxx::document::view_or_value collection_options,
@@ -380,14 +380,14 @@ class collection database::create_collection(
     return _create_collection(&session, name, collection_options, write_concern);
 }
 
-class collection database::create_collection_deprecated(
+mongocxx::collection database::create_collection_deprecated(
     bsoncxx::string::view_or_value name,
     const options::create_collection_deprecated& collection_options,
     const stdx::optional<class write_concern>& write_concern) {
     return _create_collection_deprecated(nullptr, name, collection_options, write_concern);
 }
 
-class collection database::create_collection_deprecated(
+mongocxx::collection database::create_collection_deprecated(
     const client_session& session,
     bsoncxx::string::view_or_value name,
     const options::create_collection_deprecated& collection_options,
