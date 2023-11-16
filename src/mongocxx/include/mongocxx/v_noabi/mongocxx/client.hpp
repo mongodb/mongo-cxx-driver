@@ -77,7 +77,7 @@ class client {
     /// @throws mongocxx::exception if invalid options are provided
     /// (whether from the URI or provided client options).
     ///
-    client(const class uri& mongodb_uri, const options::client& options = options::client());
+    client(const mongocxx::uri& mongodb_uri, const options::client& options = options::client());
 
     ///
     /// Move constructs a client.
@@ -159,7 +159,7 @@ class client {
     ///
     /// @return The @c uri that this client was created with.
     ///
-    class uri uri() const;
+    mongocxx::uri uri() const;
 
     ///
     /// Sets the write concern for this client.

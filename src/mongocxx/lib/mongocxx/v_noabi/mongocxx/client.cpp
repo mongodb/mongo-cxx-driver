@@ -70,7 +70,7 @@ class database_names {
 
 client::client() noexcept = default;
 
-client::client(const class uri& uri, const options::client& options) {
+client::client(const mongocxx::uri& uri, const options::client& options) {
 #if defined(MONGOCXX_ENABLE_SSL) && defined(MONGOC_ENABLE_SSL)
     if (options.tls_opts()) {
         if (!uri.tls())
@@ -177,8 +177,8 @@ mongocxx::read_preference client::read_preference() const {
     return rp;
 }
 
-class uri client::uri() const {
-    class uri connection_string(stdx::make_unique<uri::impl>(
+mongocxx::uri client::uri() const {
+    mongocxx::uri connection_string(stdx::make_unique<uri::impl>(
         libmongoc::uri_copy(libmongoc::client_get_uri(_get_impl().client_t))));
     return connection_string;
 }
