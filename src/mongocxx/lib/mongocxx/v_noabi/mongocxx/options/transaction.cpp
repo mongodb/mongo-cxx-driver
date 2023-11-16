@@ -56,12 +56,12 @@ stdx::optional<class write_concern> transaction::write_concern() const {
     return _impl->write_concern();
 }
 
-transaction& transaction::read_preference(const class read_preference& rp) {
+transaction& transaction::read_preference(const mongocxx::read_preference& rp) {
     _impl->read_preference(rp);
     return *this;
 }
 
-stdx::optional<class read_preference> transaction::read_preference() const {
+stdx::optional<mongocxx::read_preference> transaction::read_preference() const {
     return _impl->read_preference();
 }
 

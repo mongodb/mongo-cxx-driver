@@ -188,7 +188,7 @@ class count {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    count& read_preference(class read_preference rp);
+    count& read_preference(mongocxx::read_preference rp);
 
     ///
     /// The current read_preference for this operation.
@@ -197,7 +197,7 @@ class count {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    const stdx::optional<class read_preference>& read_preference() const;
+    const stdx::optional<mongocxx::read_preference>& read_preference() const;
 
    private:
     stdx::optional<bsoncxx::document::view_or_value> _collation;
@@ -206,7 +206,7 @@ class count {
     stdx::optional<std::int64_t> _limit;
     stdx::optional<std::chrono::milliseconds> _max_time;
     stdx::optional<std::int64_t> _skip;
-    stdx::optional<class read_preference> _read_preference;
+    stdx::optional<mongocxx::read_preference> _read_preference;
 };
 
 }  // namespace options

@@ -1317,13 +1317,14 @@ mongocxx::read_concern collection::read_concern() const {
     return {stdx::make_unique<read_concern::impl>(libmongoc::read_concern_copy(rc))};
 }
 
-void collection::read_preference(class read_preference rp) {
+void collection::read_preference(mongocxx::read_preference rp) {
     libmongoc::collection_set_read_prefs(_get_impl().collection_t, rp._impl->read_preference_t);
 }
 
-class read_preference collection::read_preference() const {
-    class read_preference rp(stdx::make_unique<read_preference::impl>(libmongoc::read_prefs_copy(
-        libmongoc::collection_get_read_prefs(_get_impl().collection_t))));
+mongocxx::read_preference collection::read_preference() const {
+    mongocxx::read_preference rp(
+        stdx::make_unique<read_preference::impl>(libmongoc::read_prefs_copy(
+            libmongoc::collection_get_read_prefs(_get_impl().collection_t))));
     return rp;
 }
 

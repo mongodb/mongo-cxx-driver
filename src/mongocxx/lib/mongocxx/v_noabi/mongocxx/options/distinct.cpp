@@ -36,7 +36,7 @@ distinct& distinct::comment(bsoncxx::types::bson_value::view_or_value comment) {
     return *this;
 }
 
-distinct& distinct::read_preference(class read_preference rp) {
+distinct& distinct::read_preference(mongocxx::read_preference rp) {
     _read_preference = std::move(rp);
     return *this;
 }
@@ -53,7 +53,7 @@ const stdx::optional<bsoncxx::types::bson_value::view_or_value>& distinct::comme
     return _comment;
 }
 
-const stdx::optional<class read_preference>& distinct::read_preference() const {
+const stdx::optional<mongocxx::read_preference>& distinct::read_preference() const {
     return _read_preference;
 }
 

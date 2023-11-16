@@ -100,9 +100,9 @@ mongocxx::read_concern uri::read_concern() const {
         stdx::make_unique<read_concern::impl>(libmongoc::read_concern_copy(rc)));
 }
 
-class read_preference uri::read_preference() const {
+mongocxx::read_preference uri::read_preference() const {
     auto rp = libmongoc::uri_get_read_prefs_t(_impl->uri_t);
-    return (class read_preference)(
+    return (mongocxx::read_preference)(
         stdx::make_unique<read_preference::impl>(libmongoc::read_prefs_copy(rp)));
 }
 

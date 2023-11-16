@@ -1380,7 +1380,7 @@ class collection {
     ///
     /// @see https://www.mongodb.com/docs/manual/core/read-preference/
     ///
-    void read_preference(class read_preference rp);
+    void read_preference(mongocxx::read_preference rp);
 
     ///
     /// Gets the read_preference for the collection.
@@ -1389,7 +1389,7 @@ class collection {
     ///
     /// @see https://www.mongodb.com/docs/manual/core/read-preference/
     ///
-    class read_preference read_preference() const;
+    mongocxx::read_preference read_preference() const;
 
     ///
     /// @{

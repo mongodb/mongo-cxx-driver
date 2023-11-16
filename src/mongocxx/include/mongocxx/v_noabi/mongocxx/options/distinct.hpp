@@ -118,7 +118,7 @@ class distinct {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/distinct/
     ///
-    distinct& read_preference(class read_preference rp);
+    distinct& read_preference(mongocxx::read_preference rp);
 
     ///
     /// The current read_preference for this operation.
@@ -127,13 +127,13 @@ class distinct {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/distinct/
     ///
-    const stdx::optional<class read_preference>& read_preference() const;
+    const stdx::optional<mongocxx::read_preference>& read_preference() const;
 
    private:
     stdx::optional<bsoncxx::document::view_or_value> _collation;
     stdx::optional<std::chrono::milliseconds> _max_time;
     stdx::optional<bsoncxx::types::bson_value::view_or_value> _comment;
-    stdx::optional<class read_preference> _read_preference;
+    stdx::optional<mongocxx::read_preference> _read_preference;
 };
 
 }  // namespace options

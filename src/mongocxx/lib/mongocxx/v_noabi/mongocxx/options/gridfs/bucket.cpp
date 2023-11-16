@@ -53,12 +53,12 @@ const stdx::optional<mongocxx::read_concern>& bucket::read_concern() const {
     return _read_concern;
 }
 
-bucket& bucket::read_preference(class read_preference read_preference) {
+bucket& bucket::read_preference(mongocxx::read_preference read_preference) {
     _read_preference = std::move(read_preference);
     return *this;
 }
 
-const stdx::optional<class read_preference>& bucket::read_preference() const {
+const stdx::optional<mongocxx::read_preference>& bucket::read_preference() const {
     return _read_preference;
 }
 

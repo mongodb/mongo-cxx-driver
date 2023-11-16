@@ -445,7 +445,7 @@ class find {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    find& read_preference(class read_preference rp);
+    find& read_preference(mongocxx::read_preference rp);
 
     ///
     /// The current read_preference for this operation.
@@ -455,7 +455,7 @@ class find {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    const stdx::optional<class read_preference>& read_preference() const;
+    const stdx::optional<mongocxx::read_preference>& read_preference() const;
 
     ///
     /// Sets whether to return the index keys associated with the query results, instead of the
@@ -574,7 +574,7 @@ class find {
     stdx::optional<bsoncxx::document::view_or_value> _min;
     stdx::optional<bool> _no_cursor_timeout;
     stdx::optional<bsoncxx::document::view_or_value> _projection;
-    stdx::optional<class read_preference> _read_preference;
+    stdx::optional<mongocxx::read_preference> _read_preference;
     stdx::optional<bool> _return_key;
     stdx::optional<bool> _show_record_id;
     stdx::optional<std::int64_t> _skip;

@@ -142,8 +142,8 @@ class client {
     ///
     /// @see https://www.mongodb.com/docs/manual/core/read-preference/
     ///
-    MONGOCXX_DEPRECATED void read_preference(class read_preference rp);
-    void read_preference_deprecated(class read_preference rp);
+    MONGOCXX_DEPRECATED void read_preference(mongocxx::read_preference rp);
+    void read_preference_deprecated(mongocxx::read_preference rp);
 
     ///
     /// Returns the current read preference for this client.
@@ -152,7 +152,7 @@ class client {
     ///
     /// @see https://www.mongodb.com/docs/manual/core/read-preference/
     ///
-    class read_preference read_preference() const;
+    mongocxx::read_preference read_preference() const;
 
     ///
     /// Returns the current uri for this client.
