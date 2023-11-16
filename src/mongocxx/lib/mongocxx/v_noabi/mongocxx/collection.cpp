@@ -1377,7 +1377,7 @@ change_stream collection::_watch(const client_session* session,
         _get_impl().collection_t, pipeline_bson.bson(), options_bson.bson())};
 }
 
-class index_view collection::indexes() {
+index_view collection::indexes() {
     return index_view{_get_impl().collection_t, _get_impl().client_impl->client_t};
 }
 
