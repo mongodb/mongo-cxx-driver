@@ -275,7 +275,7 @@ std::vector<std::string> client::list_database_names(
     return res;
 }
 
-class client_session client::start_session(const mongocxx::options::client_session& options) {
+mongocxx::client_session client::start_session(const mongocxx::options::client_session& options) {
     return client_session(this, options);
 }
 
@@ -283,28 +283,27 @@ void client::reset() {
     libmongoc::client_reset(_get_impl().client_t);
 }
 
-class change_stream client::watch(const options::change_stream& options) {
+change_stream client::watch(const options::change_stream& options) {
     return watch(pipeline{}, options);
 }
 
-class change_stream client::watch(const client_session& session,
-                                  const options::change_stream& options) {
+change_stream client::watch(const client_session& session, const options::change_stream& options) {
     return _watch(&session, pipeline{}, options);
 }
 
-class change_stream client::watch(const pipeline& pipe, const options::change_stream& options) {
+change_stream client::watch(const pipeline& pipe, const options::change_stream& options) {
     return _watch(nullptr, pipe, options);
 }
 
-class change_stream client::watch(const client_session& session,
-                                  const pipeline& pipe,
-                                  const options::change_stream& options) {
+change_stream client::watch(const client_session& session,
+                            const pipeline& pipe,
+                            const options::change_stream& options) {
     return _watch(&session, pipe, options);
 }
 
-class change_stream client::_watch(const client_session* session,
-                                   const pipeline& pipe,
-                                   const options::change_stream& options) {
+change_stream client::_watch(const client_session* session,
+                             const pipeline& pipe,
+                             const options::change_stream& options) {
     bsoncxx::builder::basic::document container;
     container.append(bsoncxx::builder::basic::kvp("pipeline", pipe._impl->view_array()));
     scoped_bson_t pipeline_bson{container.view()};

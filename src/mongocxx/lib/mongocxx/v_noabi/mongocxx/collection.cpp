@@ -1337,28 +1337,28 @@ class write_concern collection::write_concern() const {
     return wc;
 }
 
-class change_stream collection::watch(const options::change_stream& options) {
+change_stream collection::watch(const options::change_stream& options) {
     return watch(pipeline{}, options);
 }
 
-class change_stream collection::watch(const client_session& session,
-                                      const options::change_stream& options) {
+change_stream collection::watch(const client_session& session,
+                                const options::change_stream& options) {
     return _watch(&session, pipeline{}, options);
 }
 
-class change_stream collection::watch(const pipeline& pipe, const options::change_stream& options) {
+change_stream collection::watch(const pipeline& pipe, const options::change_stream& options) {
     return _watch(nullptr, pipe, options);
 }
 
-class change_stream collection::watch(const client_session& session,
-                                      const pipeline& pipe,
-                                      const options::change_stream& options) {
+change_stream collection::watch(const client_session& session,
+                                const pipeline& pipe,
+                                const options::change_stream& options) {
     return _watch(&session, pipe, options);
 }
 
-class change_stream collection::_watch(const client_session* session,
-                                       const pipeline& pipe,
-                                       const options::change_stream& options) {
+change_stream collection::_watch(const client_session* session,
+                                 const pipeline& pipe,
+                                 const options::change_stream& options) {
     bsoncxx::builder::basic::document container;
     container.append(kvp("pipeline", pipe._impl->view_array()));
     scoped_bson_t pipeline_bson{container.view()};

@@ -472,28 +472,28 @@ gridfs::bucket database::gridfs_bucket(const options::gridfs::bucket& options) c
     return gridfs::bucket{*this, options};
 }
 
-class change_stream database::watch(const options::change_stream& options) {
+change_stream database::watch(const options::change_stream& options) {
     return watch(pipeline{}, options);
 }
 
-class change_stream database::watch(const client_session& session,
-                                    const options::change_stream& options) {
+change_stream database::watch(const client_session& session,
+                              const options::change_stream& options) {
     return _watch(&session, pipeline{}, options);
 }
 
-class change_stream database::watch(const pipeline& pipe, const options::change_stream& options) {
+change_stream database::watch(const pipeline& pipe, const options::change_stream& options) {
     return _watch(nullptr, pipe, options);
 }
 
-class change_stream database::watch(const client_session& session,
-                                    const pipeline& pipe,
-                                    const options::change_stream& options) {
+change_stream database::watch(const client_session& session,
+                              const pipeline& pipe,
+                              const options::change_stream& options) {
     return _watch(&session, pipe, options);
 }
 
-class change_stream database::_watch(const client_session* session,
-                                     const pipeline& pipe,
-                                     const options::change_stream& options) {
+change_stream database::_watch(const client_session* session,
+                               const pipeline& pipe,
+                               const options::change_stream& options) {
     bsoncxx::builder::basic::document container;
     container.append(kvp("pipeline", pipe._impl->view_array()));
     scoped_bson_t pipeline_bson{container.view()};
