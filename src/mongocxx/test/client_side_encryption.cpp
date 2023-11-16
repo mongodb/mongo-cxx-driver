@@ -906,9 +906,7 @@ void _run_corpus_test(bool use_schema_map) {
     cse_opts.tls_opts(_make_tls_opts());
     cse_opts.key_vault_client(&client);
     cse_opts.key_vault_namespace({"keyvault", "datakeys"});
-    class client_encryption client_encryption {
-        std::move(cse_opts)
-    };
+    mongocxx::client_encryption client_encryption{std::move(cse_opts)};
 
     // Load corpus/corpus.json to a variable named corpus.
     auto corpus = _doc_from_file("/corpus/corpus.json");
@@ -1134,7 +1132,7 @@ TEST_CASE("Corpus", "[client_side_encryption]") {
     _run_corpus_test(false);
 }
 
-void _round_trip(class client_encryption* client_encryption,
+void _round_trip(mongocxx::client_encryption* client_encryption,
                  bsoncxx::types::bson_value::view datakey) {
     auto to_encrypt = make_value("test");
 
