@@ -44,12 +44,12 @@ const stdx::optional<std::int32_t>& bucket::chunk_size_bytes() const {
     return _chunk_size_bytes;
 }
 
-bucket& bucket::read_concern(class read_concern read_concern) {
+bucket& bucket::read_concern(mongocxx::read_concern read_concern) {
     _read_concern = read_concern;
     return *this;
 }
 
-const stdx::optional<class read_concern>& bucket::read_concern() const {
+const stdx::optional<mongocxx::read_concern>& bucket::read_concern() const {
     return _read_concern;
 }
 

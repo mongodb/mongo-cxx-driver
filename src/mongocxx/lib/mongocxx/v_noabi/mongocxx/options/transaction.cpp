@@ -38,12 +38,12 @@ transaction& transaction::operator=(const transaction& other) {
 
 transaction::~transaction() noexcept = default;
 
-transaction& transaction::read_concern(const class read_concern& rc) {
+transaction& transaction::read_concern(const mongocxx::read_concern& rc) {
     _impl->read_concern(rc);
     return *this;
 }
 
-stdx::optional<class read_concern> transaction::read_concern() const {
+stdx::optional<mongocxx::read_concern> transaction::read_concern() const {
     return _impl->read_concern();
 }
 

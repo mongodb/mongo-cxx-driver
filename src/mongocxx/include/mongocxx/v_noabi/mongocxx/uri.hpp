@@ -133,7 +133,7 @@ class uri {
     ///
     /// @return A read_concern that represents what was specified in the uri.
     ///
-    class read_concern read_concern() const;
+    mongocxx::read_concern read_concern() const;
 
     ///
     /// Returns the read preference from the uri.

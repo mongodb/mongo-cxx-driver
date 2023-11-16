@@ -116,15 +116,15 @@ class client {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/read-concern/
     ///
-    MONGOCXX_DEPRECATED void read_concern(class read_concern rc);
-    void read_concern_deprecated(class read_concern rc);
+    MONGOCXX_DEPRECATED void read_concern(mongocxx::read_concern rc);
+    void read_concern_deprecated(mongocxx::read_concern rc);
 
     ///
     /// Returns the current read concern for this client.
     ///
     /// @return The current @c read_concern
     ///
-    class read_concern read_concern() const;
+    mongocxx::read_concern read_concern() const;
 
     ///
     /// Sets the read preference for this client.

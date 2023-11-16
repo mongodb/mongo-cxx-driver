@@ -88,7 +88,7 @@ class bucket {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    bucket& read_concern(class read_concern read_concern);
+    bucket& read_concern(mongocxx::read_concern read_concern);
 
     ///
     /// Gets the read concern of the bucket.
@@ -96,7 +96,7 @@ class bucket {
     /// @return
     ///   The read concern of the bucket.
     ///
-    const stdx::optional<class read_concern>& read_concern() const;
+    const stdx::optional<mongocxx::read_concern>& read_concern() const;
 
     ///
     /// Sets the read preference to be used when reading from the GridFS bucket. Defaults to the
@@ -149,7 +149,7 @@ class bucket {
    private:
     stdx::optional<std::string> _bucket_name;
     stdx::optional<std::int32_t> _chunk_size_bytes;
-    stdx::optional<class read_concern> _read_concern;
+    stdx::optional<mongocxx::read_concern> _read_concern;
     stdx::optional<class read_preference> _read_preference;
     stdx::optional<class write_concern> _write_concern;
 };

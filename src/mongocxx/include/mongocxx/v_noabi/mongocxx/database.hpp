@@ -468,7 +468,7 @@ class database {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/read-concern/
     ///
-    void read_concern(class read_concern rc);
+    void read_concern(mongocxx::read_concern rc);
 
     ///
     /// The current read concern for this database.
@@ -478,7 +478,7 @@ class database {
     ///
     /// @return the current read_concern
     ///
-    class read_concern read_concern() const;
+    mongocxx::read_concern read_concern() const;
 
     ///
     /// Sets the read_preference for this database.
