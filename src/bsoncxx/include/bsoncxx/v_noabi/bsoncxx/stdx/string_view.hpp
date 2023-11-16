@@ -14,6 +14,7 @@
 
 #pragma once
 
+#include <algorithm>
 #include <cstddef>
 #include <ios>
 #include <iosfwd>
@@ -369,14 +370,14 @@ class basic_string_view : detail::equality_operators, detail::ordering_operators
      * @brief Test whether the string starts-with the given prefix string
      */
     constexpr bool starts_with(self_type pfx) const noexcept {
-        return size() >= pfx.size() && std::equal(begin(), begin() + pfx.size(), pfx.begin());
+        return pfx == substr(0, pfx.size());
     }
 
     /**
      * @brief Test whether the string ends-with the given suffix string
      */
     constexpr bool ends_with(self_type sfx) const noexcept {
-        return size() >= sfx.size() && std::equal(rbegin(), rbegin() + sfx.size(), sfx.rbegin());
+        return size() >= sfx.size() && substr(size() - sfx.size()) == sfx;
     }
 
     /**
@@ -405,12 +406,7 @@ class basic_string_view : detail::equality_operators, detail::ordering_operators
 
     // Implementation of equality comparison
     constexpr friend bool tag_invoke(detail::equal_to, self_type left, self_type right) noexcept {
-        return left.size() == right.size() &&
-               std::equal(
-                   left.begin(),
-                   left.end(),
-                   right.begin(),
-                   [](value_type l, value_type r) noexcept -> bool { return Traits::eq(l, r); });
+        return left.size() == right.size() && left.compare(right) == 0;
     }
 
     // Implementation of a three-way-comparison
