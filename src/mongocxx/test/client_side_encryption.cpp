@@ -178,7 +178,7 @@ void _add_client_encrypted_opts(options::client* client_opts,
                                 bsoncxx::document::view_or_value schema_map,
                                 bsoncxx::document::view_or_value kms_doc,
                                 bsoncxx::document::view_or_value tls_opts,
-                                class client* key_vault_client = nullptr) {
+                                mongocxx::client* key_vault_client = nullptr) {
     options::auto_encryption auto_encrypt_opts{};
 
     // KMS
@@ -220,7 +220,7 @@ void _add_client_encrypted_opts(options::client* client_opts,
 }
 
 void _add_cse_opts(options::client_encryption* opts,
-                   class client* client,
+                   mongocxx::client* client,
                    bool include_aws = true) {
     // KMS providers
     opts->kms_providers(_make_kms_doc(include_aws));
@@ -346,9 +346,7 @@ TEST_CASE("Datakey and double encryption", "[client_side_encryption]") {
     spec::apm_checker apm_checker;
     client_opts.apm_opts(apm_checker.get_apm_opts(true /* command_started_events_only */));
 
-    class client setup_client {
-        uri{}, test_util::add_test_server_api(client_opts)
-    };
+    mongocxx::client setup_client{uri{}, test_util::add_test_server_api(client_opts)};
 
     if (!mongocxx::test_util::should_run_client_side_encryption_test()) {
         return;
@@ -380,8 +378,9 @@ TEST_CASE("Datakey and double encryption", "[client_side_encryption]") {
         _make_kms_doc(),
         _make_tls_opts());
 
-    class client client_encrypted {
-        uri{}, test_util::add_test_server_api(encrypted_client_opts),
+    mongocxx::client client_encrypted{
+        uri{},
+        test_util::add_test_server_api(encrypted_client_opts),
     };
 
     // Configure both with aws and local KMS providers, and schema map
@@ -489,13 +488,15 @@ TEST_CASE("Datakey and double encryption", "[client_side_encryption]") {
 }
 
 void run_external_key_vault_test(bool with_external_key_vault) {
-    class client external_key_vault_client {
-        uri{"mongodb://fake-user:fake-pwd@localhost:27017"}, test_util::add_test_server_api(),
+    mongocxx::client external_key_vault_client{
+        uri{"mongodb://fake-user:fake-pwd@localhost:27017"},
+        test_util::add_test_server_api(),
     };
 
     // Create a MongoClient without encryption enabled (referred to as client).
-    class client client {
-        uri{}, test_util::add_test_server_api(),
+    mongocxx::client client{
+        uri{},
+        test_util::add_test_server_api(),
     };
 
     // Using client, drop the collections keyvault.datakeys and db.coll.
@@ -530,8 +531,9 @@ void run_external_key_vault_test(bool with_external_key_vault) {
             &encrypted_client_opts, std::move(schema_map), _make_kms_doc(false), _make_tls_opts());
     }
 
-    class client client_encrypted {
-        uri{}, test_util::add_test_server_api(encrypted_client_opts),
+    mongocxx::client client_encrypted{
+        uri{},
+        test_util::add_test_server_api(encrypted_client_opts),
     };
 
     // A ClientEncryption object (referred to as client_encryption) that is configured with an
@@ -583,8 +585,9 @@ TEST_CASE("External key vault", "[client_side_encryption]") {
         return;
     }
 
-    class client setup_client {
-        uri{}, test_util::add_test_server_api(),
+    mongocxx::client setup_client{
+        uri{},
+        test_util::add_test_server_api(),
     };
 
     if (test_util::get_max_wire_version(setup_client) < 8) {
@@ -605,8 +608,9 @@ TEST_CASE("BSON size limits and batch splitting", "[client_side_encryption]") {
     }
 
     // Create a MongoClient without encryption enabled (referred to as client).
-    class client client {
-        uri{}, test_util::add_test_server_api(),
+    mongocxx::client client{
+        uri{},
+        test_util::add_test_server_api(),
     };
 
     if (test_util::get_max_wire_version(client) < 8) {
@@ -657,9 +661,7 @@ TEST_CASE("BSON size limits and batch splitting", "[client_side_encryption]") {
 
     client_encrypted_opts.apm_opts(apm_opts);
 
-    class client client_encrypted {
-        uri{}, test_util::add_test_server_api(client_encrypted_opts)
-    };
+    mongocxx::client client_encrypted{uri{}, test_util::add_test_server_api(client_encrypted_opts)};
 
     // Using client_encrypted perform the following operations:
     // Insert { "_id": "over_2mib_under_16mib",
@@ -768,8 +770,9 @@ TEST_CASE("Views are prohibited", "[client_side_encryption]") {
     }
 
     // Create a MongoClient without encryption enabled (referred to as client).
-    class client client {
-        uri{}, test_util::add_test_server_api(),
+    mongocxx::client client{
+        uri{},
+        test_util::add_test_server_api(),
     };
 
     if (test_util::get_max_wire_version(client) < 8) {
@@ -792,9 +795,7 @@ TEST_CASE("Views are prohibited", "[client_side_encryption]") {
     // Configure with the keyVaultNamespace set to keyvault.datakeys.
     options::client opts;
     _add_client_encrypted_opts(&opts, {}, _make_kms_doc(), _make_tls_opts());
-    class client client_encrypted {
-        uri{}, test_util::add_test_server_api(opts)
-    };
+    mongocxx::client client_encrypted{uri{}, test_util::add_test_server_api(opts)};
 
     // Using client_encrypted, attempt to insert a document into db.view.
     // Expect an exception to be thrown containing the message: "cannot auto encrypt a view".
@@ -809,8 +810,9 @@ void _run_corpus_test(bool use_schema_map) {
     // which MUST be decoded and encoded as subtype 4. Run the test as follows.
 
     // Create a MongoClient without encryption enabled (referred to as client).
-    class client client {
-        uri{}, test_util::add_test_server_api(),
+    mongocxx::client client{
+        uri{},
+        test_util::add_test_server_api(),
     };
 
     auto corpus_schema = _doc_from_file("/corpus/corpus-schema.json");
@@ -893,8 +895,9 @@ void _run_corpus_test(bool use_schema_map) {
         _add_client_encrypted_opts(&client_encrypted_opts, {}, _make_kms_doc(), _make_tls_opts());
     }
 
-    class client client_encrypted {
-        uri{}, test_util::add_test_server_api(client_encrypted_opts),
+    mongocxx::client client_encrypted{
+        uri{},
+        test_util::add_test_server_api(client_encrypted_opts),
     };
 
     // A ClientEncryption object (referred to as client_encryption)
@@ -1117,8 +1120,9 @@ TEST_CASE("Corpus", "[client_side_encryption]") {
         return;
     }
 
-    class client setup_client {
-        uri{}, test_util::add_test_server_api(),
+    mongocxx::client setup_client{
+        uri{},
+        test_util::add_test_server_api(),
     };
 
     if (test_util::get_max_wire_version(setup_client) < 8) {
@@ -1246,8 +1250,9 @@ TEST_CASE("Custom endpoint", "[client_side_encryption]") {
         return;
     }
 
-    class client setup_client {
-        uri{}, test_util::add_test_server_api(),
+    mongocxx::client setup_client{
+        uri{},
+        test_util::add_test_server_api(),
     };
 
     if (test_util::get_max_wire_version(setup_client) < 8) {
@@ -1562,8 +1567,9 @@ void bypass_mongocrypt_via_shared_library(const std::string& shared_lib_path,
     options::client client_encrypted_opts;
     client_encrypted_opts.auto_encryption_opts(std::move(auto_encrypt_opts));
 
-    class client client_encrypted {
-        uri{}, test_util::add_test_server_api(client_encrypted_opts),
+    mongocxx::client client_encrypted{
+        uri{},
+        test_util::add_test_server_api(client_encrypted_opts),
     };
 
     // 2. Use client_encrypted to insert the document {"unencrypted": "test"} into db.coll.
@@ -1574,9 +1580,9 @@ void bypass_mongocrypt_via_shared_library(const std::string& shared_lib_path,
     // 3. Validate that mongocryptd was not spawned. Create a MongoClient to localhost:27021 (or
     // whatever was passed via --port) with serverSelectionTimeoutMS=1000. Run a handshake
     // command and ensure it fails with a server selection timeout.
-    class client ping_client {
+    mongocxx::client ping_client{
         uri{"mongodb://localhost:27021/?serverSelectionTimeoutMS=1000"},
-            test_util::add_test_server_api(),
+        test_util::add_test_server_api(),
     };
     REQUIRE_THROWS(ping_client["admin"].run_command(make_document(kvp("ping", 1))));
 
@@ -1597,8 +1603,9 @@ TEST_CASE("Bypass spawning mongocryptd", "[client_side_encryption]") {
         return;
     }
 
-    class client setup_client {
-        uri{}, test_util::add_test_server_api(),
+    mongocxx::client setup_client{
+        uri{},
+        test_util::add_test_server_api(),
     };
 
     if (test_util::get_max_wire_version(setup_client) < 8) {
@@ -1655,9 +1662,7 @@ TEST_CASE("Bypass spawning mongocryptd", "[client_side_encryption]") {
     auto_encrypt_opts.extra_options({extra.view()});
     client_encrypted_opts.auto_encryption_opts(std::move(auto_encrypt_opts));
 
-    class client client_encrypted {
-        uri{}, test_util::add_test_server_api(client_encrypted_opts)
-    };
+    mongocxx::client client_encrypted{uri{}, test_util::add_test_server_api(client_encrypted_opts)};
 
     // Use client_encrypted to insert the document {"encrypted": "test"} into db.coll.
     // Expect a server selection error propagated from the internal MongoClient failing to
@@ -1694,9 +1699,8 @@ TEST_CASE("Bypass spawning mongocryptd", "[client_side_encryption]") {
     auto_encrypt_opts2.extra_options({extra2.view()});
     client_encrypted_opts2.auto_encryption_opts(std::move(auto_encrypt_opts2));
 
-    class client client_encrypted2 {
-        uri{}, test_util::add_test_server_api(client_encrypted_opts2)
-    };
+    mongocxx::client client_encrypted2{uri{},
+                                       test_util::add_test_server_api(client_encrypted_opts2)};
 
     // Use client_encrypted to insert the document {"unencrypted": "test"} into db.coll.
     // Expect this to succeed.
@@ -1708,9 +1712,9 @@ TEST_CASE("Bypass spawning mongocryptd", "[client_side_encryption]") {
     // command and ensure it fails with a server selection timeout.
     options::client ping_client_opts;
 
-    class client ping_client {
+    mongocxx::client ping_client{
         uri{"mongodb://localhost:27021/?serverSelectionTimeoutMS=1000"},
-            test_util::add_test_server_api(),
+        test_util::add_test_server_api(),
     };
     REQUIRE_THROWS(ping_client["admin"].run_command(make_document(kvp("ping", 1))));
 }
@@ -1740,9 +1744,7 @@ TEST_CASE("KMS TLS expired certificate", "[client_side_encryption]") {
     // Create a mongoclient without encryption.
     options::client client_opts;
 
-    class client setup_client {
-        uri{}, test_util::add_test_server_api(client_opts)
-    };
+    mongocxx::client setup_client{uri{}, test_util::add_test_server_api(client_opts)};
 
     // Support for detailed certificate verify failure messages required by this test are only
     // available in libmongoc 1.20.0 and newer (CDRIVER-3927).
@@ -1804,9 +1806,7 @@ TEST_CASE("KMS TLS wrong host certificate", "[client_side_encryption]") {
     // Create a mongoclient without encryption.
     options::client client_opts;
 
-    class client setup_client {
-        uri{}, test_util::add_test_server_api(client_opts)
-    };
+    mongocxx::client setup_client{uri{}, test_util::add_test_server_api(client_opts)};
 
     // Support for detailed certificate verify failure messages required by this test are only
     // available in libmongoc 1.20.0 and newer (CDRIVER-3927).
@@ -2105,8 +2105,9 @@ TEST_CASE("KMS TLS Options Tests", "[client_side_encryption][!mayfail]") {
 // https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.rst#test-setup
 std::tuple<mongocxx::client_encryption, mongocxx::client> _setup_explicit_encryption(
     bsoncxx::document::view key1_document, mongocxx::client* key_vault_client) {
-    class client client {
-        uri{}, test_util::add_test_server_api(),
+    mongocxx::client client{
+        uri{},
+        test_util::add_test_server_api(),
     };
 
     // Load the file encryptedFields.json as encryptedFields.
@@ -2177,8 +2178,9 @@ std::tuple<mongocxx::client_encryption, mongocxx::client> _setup_explicit_encryp
     auto_encrypt_opts.bypass_query_analysis(true);
     options::client encrypted_client_opts;
     encrypted_client_opts.auto_encryption_opts(std::move(auto_encrypt_opts));
-    class client encrypted_client {
-        uri{}, test_util::add_test_server_api(encrypted_client_opts),
+    mongocxx::client encrypted_client{
+        uri{},
+        test_util::add_test_server_api(encrypted_client_opts),
     };
 
     return std::make_tuple(std::move(client_encryption), std::move(encrypted_client));
@@ -2192,8 +2194,9 @@ TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
         return;
     }
 
-    class client conn {
-        mongocxx::uri{}, test_util::add_test_server_api(),
+    mongocxx::client conn{
+        mongocxx::uri{},
+        test_util::add_test_server_api(),
     };
 
     if (!test_util::newer_than(conn, "7.0")) {
@@ -2218,8 +2221,9 @@ TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
     std::string plain_text_unindexed = "encrypted unindexed value";
     bsoncxx::types::bson_value::value plain_text_unindexed_value(plain_text_unindexed);
 
-    class client key_vault_client {
-        uri{}, test_util::add_test_server_api(),
+    mongocxx::client key_vault_client{
+        uri{},
+        test_util::add_test_server_api(),
     };
     auto tpl = _setup_explicit_encryption(key1_document, &key_vault_client);
 
@@ -2494,9 +2498,7 @@ TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
 
 TEST_CASE("Create Encrypted Collection", "[client_side_encryption]") {
     instance::current();
-    class client conn {
-        mongocxx::uri{}, test_util::add_test_server_api()
-    };
+    mongocxx::client conn{mongocxx::uri{}, test_util::add_test_server_api()};
 
     if (!mongocxx::test_util::should_run_client_side_encryption_test()) {
         return;

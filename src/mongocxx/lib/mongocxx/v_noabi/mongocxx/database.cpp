@@ -75,7 +75,7 @@ database& database::operator=(database&&) noexcept = default;
 
 database::~database() = default;
 
-database::database(const class client& client, bsoncxx::string::view_or_value name)
+database::database(const mongocxx::client& client, bsoncxx::string::view_or_value name)
     : _impl(stdx::make_unique<impl>(
           libmongoc::client_get_database(client._get_impl().client_t, name.terminated().data()),
           &client._get_impl(),

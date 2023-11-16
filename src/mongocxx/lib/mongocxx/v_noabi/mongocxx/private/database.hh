@@ -26,7 +26,7 @@ namespace mongocxx {
 inline namespace v_noabi {
 class database::impl {
    public:
-    impl(mongoc_database_t* db, const class client::impl* client, std::string name)
+    impl(mongoc_database_t* db, const mongocxx::client::impl* client, std::string name)
         : database_t(db), client_impl(client), name(std::move(name)) {}
 
     impl(const impl& i)
@@ -50,7 +50,7 @@ class database::impl {
     }
 
     mongoc_database_t* database_t;
-    const class client::impl* client_impl;
+    const mongocxx::client::impl* client_impl;
     std::string name;
 };
 

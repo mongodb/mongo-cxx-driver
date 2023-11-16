@@ -70,7 +70,7 @@ bool with_transaction_cpp_cb(mongoc_client_session_t*,
 
 class client_session::impl {
    public:
-    impl(const class client* client, const options::client_session& session_options)
+    impl(const mongocxx::client* client, const options::client_session& session_options)
         : _client(client), _options(session_options), _session_t(nullptr, nullptr) {
         // Create a mongoc_session_opts_t from session_options.
         std::unique_ptr<mongoc_session_opt_t, decltype(libmongoc::session_opts_destroy)> opt_t{
@@ -102,7 +102,7 @@ class client_session::impl {
             s, [](mongoc_client_session_t* cs) { libmongoc::client_session_destroy(cs); }};
     }
 
-    const class client& client() const noexcept {
+    const mongocxx::client& client() const noexcept {
         return *_client;
     }
 
@@ -237,7 +237,7 @@ class client_session::impl {
     }
 
    private:
-    const class client* _client;
+    const mongocxx::client* _client;
     options::client_session _options;
 
     using unique_session =

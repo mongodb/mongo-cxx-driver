@@ -23,7 +23,7 @@
 namespace mongocxx {
 inline namespace v_noabi {
 // Private constructors.
-client_session::client_session(const class client* client,
+client_session::client_session(const mongocxx::client* client,
                                const mongocxx::options::client_session& options)
     : _impl(stdx::make_unique<impl>(client, options)) {}
 

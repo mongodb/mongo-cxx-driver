@@ -629,7 +629,7 @@ class database {
     friend ::mongocxx::v_noabi::client;
     friend ::mongocxx::v_noabi::collection;
 
-    MONGOCXX_PRIVATE database(const class client& client, bsoncxx::string::view_or_value name);
+    MONGOCXX_PRIVATE database(const mongocxx::client& client, bsoncxx::string::view_or_value name);
 
     MONGOCXX_PRIVATE cursor _aggregate(const client_session* session,
                                        const pipeline& pipeline,

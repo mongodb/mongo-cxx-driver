@@ -74,7 +74,7 @@ class client_session {
     ///
     /// Gets the client that started this session.
     ///
-    const class client& client() const noexcept;
+    const mongocxx::client& client() const noexcept;
 
     ///
     /// Gets the options this session was created with.
@@ -201,8 +201,7 @@ class client_session {
 
     class MONGOCXX_PRIVATE impl;
 
-    // "class client" distinguishes from client() method above.
-    MONGOCXX_PRIVATE client_session(const class client* client,
+    MONGOCXX_PRIVATE client_session(const mongocxx::client* client,
                                     const options::client_session& options);
 
     MONGOCXX_PRIVATE impl& _get_impl();
