@@ -175,14 +175,14 @@ class client {
     /// @param wc
     ///   The new write concern
     ///
-    MONGOCXX_DEPRECATED void write_concern(class write_concern wc);
-    void write_concern_deprecated(class write_concern wc);
+    MONGOCXX_DEPRECATED void write_concern(mongocxx::write_concern wc);
+    void write_concern_deprecated(mongocxx::write_concern wc);
 
     ///
     /// Returns the current write concern for this client.
     ///
     /// @return the current @c write_concern
-    class write_concern write_concern() const;
+    mongocxx::write_concern write_concern() const;
 
     ///
     /// Obtains a database that represents a logical grouping of collections on a MongoDB server.

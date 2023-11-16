@@ -1771,14 +1771,14 @@ class collection {
     /// @param wc
     ///   The new write_concern to use.
     ///
-    void write_concern(class write_concern wc);
+    void write_concern(mongocxx::write_concern wc);
 
     ///
     /// Gets the write_concern for the collection.
     ///
     /// @return The current write_concern.
     ///
-    class write_concern write_concern() const;
+    mongocxx::write_concern write_concern() const;
 
     ///
     /// Gets an index_view to the collection.
@@ -1941,7 +1941,7 @@ class collection {
         const client_session* session,
         bsoncxx::string::view_or_value new_name,
         bool drop_target_before_rename,
-        const bsoncxx::stdx::optional<class write_concern>& write_concern);
+        const bsoncxx::stdx::optional<mongocxx::write_concern>& write_concern);
 
     MONGOCXX_PRIVATE stdx::optional<result::replace_one> _replace_one(
         const client_session* session,

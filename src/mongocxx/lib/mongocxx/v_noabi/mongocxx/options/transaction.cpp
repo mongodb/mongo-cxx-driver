@@ -47,12 +47,12 @@ stdx::optional<mongocxx::read_concern> transaction::read_concern() const {
     return _impl->read_concern();
 }
 
-transaction& transaction::write_concern(const class write_concern& wc) {
+transaction& transaction::write_concern(const mongocxx::write_concern& wc) {
     _impl->write_concern(wc);
     return *this;
 }
 
-stdx::optional<class write_concern> transaction::write_concern() const {
+stdx::optional<mongocxx::write_concern> transaction::write_concern() const {
     return _impl->write_concern();
 }
 

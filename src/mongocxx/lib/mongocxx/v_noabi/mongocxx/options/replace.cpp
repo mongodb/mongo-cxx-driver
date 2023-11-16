@@ -51,7 +51,7 @@ replace& replace::upsert(bool upsert) {
     return *this;
 }
 
-replace& replace::write_concern(class write_concern wc) {
+replace& replace::write_concern(mongocxx::write_concern wc) {
     _write_concern = std::move(wc);
     return *this;
 }
@@ -80,7 +80,7 @@ const stdx::optional<bool>& replace::upsert() const {
     return _upsert;
 }
 
-const stdx::optional<class write_concern>& replace::write_concern() const {
+const stdx::optional<mongocxx::write_concern>& replace::write_concern() const {
     return _write_concern;
 }
 

@@ -74,7 +74,7 @@ aggregate& aggregate::read_concern(mongocxx::read_concern read_concern) {
     return *this;
 }
 
-aggregate& aggregate::write_concern(class write_concern write_concern) {
+aggregate& aggregate::write_concern(mongocxx::write_concern write_concern) {
     _write_concern = std::move(write_concern);
     return *this;
 }
@@ -120,7 +120,7 @@ const stdx::optional<mongocxx::read_concern>& aggregate::read_concern() const {
     return _read_concern;
 }
 
-const stdx::optional<class write_concern>& aggregate::write_concern() const {
+const stdx::optional<mongocxx::write_concern>& aggregate::write_concern() const {
     return _write_concern;
 }
 

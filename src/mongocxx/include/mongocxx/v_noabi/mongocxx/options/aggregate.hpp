@@ -243,7 +243,7 @@ class aggregate {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    aggregate& write_concern(class write_concern write_concern);
+    aggregate& write_concern(mongocxx::write_concern write_concern);
 
     ///
     /// Gets the current write concern.
@@ -254,7 +254,7 @@ class aggregate {
     /// @see
     ///   https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    const stdx::optional<class write_concern>& write_concern() const;
+    const stdx::optional<mongocxx::write_concern>& write_concern() const;
 
     ///
     /// Sets the read concern to use for this operation.
@@ -320,7 +320,7 @@ class aggregate {
     stdx::optional<mongocxx::read_preference> _read_preference;
     stdx::optional<bool> _bypass_document_validation;
     stdx::optional<mongocxx::hint> _hint;
-    stdx::optional<class write_concern> _write_concern;
+    stdx::optional<mongocxx::write_concern> _write_concern;
     stdx::optional<mongocxx::read_concern> _read_concern;
     stdx::optional<bsoncxx::types::bson_value::view_or_value> _comment;
 };

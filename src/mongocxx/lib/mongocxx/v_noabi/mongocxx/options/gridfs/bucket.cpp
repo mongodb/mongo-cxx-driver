@@ -62,12 +62,12 @@ const stdx::optional<mongocxx::read_preference>& bucket::read_preference() const
     return _read_preference;
 }
 
-bucket& bucket::write_concern(class write_concern write_concern) {
+bucket& bucket::write_concern(mongocxx::write_concern write_concern) {
     _write_concern = std::move(write_concern);
     return *this;
 }
 
-const stdx::optional<class write_concern>& bucket::write_concern() const {
+const stdx::optional<mongocxx::write_concern>& bucket::write_concern() const {
     return _write_concern;
 }
 

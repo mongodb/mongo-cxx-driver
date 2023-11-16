@@ -262,10 +262,11 @@ bsoncxx::document::value database::run_command(bsoncxx::document::view_or_value 
     return reply_bson.steal();
 }
 
-collection database::_create_collection(const client_session* session,
-                                        stdx::string_view name,
-                                        bsoncxx::document::view_or_value collection_options,
-                                        const stdx::optional<class write_concern>& write_concern) {
+collection database::_create_collection(
+    const client_session* session,
+    stdx::string_view name,
+    bsoncxx::document::view_or_value collection_options,
+    const stdx::optional<mongocxx::write_concern>& write_concern) {
     bsoncxx::builder::basic::document options_builder;
     bson_error_t error;
 
@@ -295,7 +296,7 @@ collection database::_create_collection_deprecated(
     const client_session* session,
     bsoncxx::string::view_or_value name,
     const options::create_collection_deprecated& collection_options,
-    const stdx::optional<class write_concern>& write_concern) {
+    const stdx::optional<mongocxx::write_concern>& write_concern) {
     bsoncxx::builder::basic::document options_builder;
 
     if (collection_options.capped()) {
@@ -368,7 +369,7 @@ collection database::_create_collection_deprecated(
 mongocxx::collection database::create_collection(
     stdx::string_view name,
     bsoncxx::document::view_or_value collection_options,
-    const stdx::optional<class write_concern>& write_concern) {
+    const stdx::optional<mongocxx::write_concern>& write_concern) {
     return _create_collection(nullptr, name, collection_options, write_concern);
 }
 
@@ -376,14 +377,14 @@ mongocxx::collection database::create_collection(
     const client_session& session,
     stdx::string_view name,
     bsoncxx::document::view_or_value collection_options,
-    const stdx::optional<class write_concern>& write_concern) {
+    const stdx::optional<mongocxx::write_concern>& write_concern) {
     return _create_collection(&session, name, collection_options, write_concern);
 }
 
 mongocxx::collection database::create_collection_deprecated(
     bsoncxx::string::view_or_value name,
     const options::create_collection_deprecated& collection_options,
-    const stdx::optional<class write_concern>& write_concern) {
+    const stdx::optional<mongocxx::write_concern>& write_concern) {
     return _create_collection_deprecated(nullptr, name, collection_options, write_concern);
 }
 
@@ -391,7 +392,7 @@ mongocxx::collection database::create_collection_deprecated(
     const client_session& session,
     bsoncxx::string::view_or_value name,
     const options::create_collection_deprecated& collection_options,
-    const stdx::optional<class write_concern>& write_concern) {
+    const stdx::optional<mongocxx::write_concern>& write_concern) {
     return _create_collection_deprecated(&session, name, collection_options, write_concern);
 }
 
@@ -454,12 +455,12 @@ mongocxx::read_preference database::read_preference() const {
     return rp;
 }
 
-void database::write_concern(class write_concern wc) {
+void database::write_concern(mongocxx::write_concern wc) {
     libmongoc::database_set_write_concern(_get_impl().database_t, wc._impl->write_concern_t);
 }
 
-class write_concern database::write_concern() const {
-    class write_concern wc(stdx::make_unique<write_concern::impl>(libmongoc::write_concern_copy(
+mongocxx::write_concern database::write_concern() const {
+    mongocxx::write_concern wc(stdx::make_unique<write_concern::impl>(libmongoc::write_concern_copy(
         libmongoc::database_get_write_concern(_get_impl().database_t))));
     return wc;
 }

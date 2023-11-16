@@ -1328,12 +1328,12 @@ mongocxx::read_preference collection::read_preference() const {
     return rp;
 }
 
-void collection::write_concern(class write_concern wc) {
+void collection::write_concern(mongocxx::write_concern wc) {
     libmongoc::collection_set_write_concern(_get_impl().collection_t, wc._impl->write_concern_t);
 }
 
-class write_concern collection::write_concern() const {
-    class write_concern wc(stdx::make_unique<write_concern::impl>(libmongoc::write_concern_copy(
+mongocxx::write_concern collection::write_concern() const {
+    mongocxx::write_concern wc(stdx::make_unique<write_concern::impl>(libmongoc::write_concern_copy(
         libmongoc::collection_get_write_concern(_get_impl().collection_t))));
     return wc;
 }

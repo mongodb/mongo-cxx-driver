@@ -69,19 +69,19 @@ class transaction::impl {
         return stdx::optional<mongocxx::read_concern>(std::move(rci));
     }
 
-    void write_concern(const class write_concern& wc) {
+    void write_concern(const mongocxx::write_concern& wc) {
         libmongoc::transaction_opts_set_write_concern(_transaction_opt_t.get(),
                                                       wc._impl->write_concern_t);
     }
 
-    stdx::optional<class write_concern> write_concern() const {
+    stdx::optional<mongocxx::write_concern> write_concern() const {
         auto wc = libmongoc::transaction_opts_get_write_concern(_transaction_opt_t.get());
         if (!wc) {
             return {};
         }
-        class write_concern wci(
+        mongocxx::write_concern wci(
             stdx::make_unique<write_concern::impl>(libmongoc::write_concern_copy(wc)));
-        return stdx::optional<class write_concern>(std::move(wci));
+        return stdx::optional<mongocxx::write_concern>(std::move(wci));
     }
 
     void read_preference(const mongocxx::read_preference& rp) {
