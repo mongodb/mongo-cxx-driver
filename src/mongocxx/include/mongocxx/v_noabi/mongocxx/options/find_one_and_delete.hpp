@@ -170,14 +170,14 @@ class find_one_and_delete {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    find_one_and_delete& hint(class hint index_hint);
+    find_one_and_delete& hint(mongocxx::hint index_hint);
 
     ///
     /// Gets the current hint.
     ///
     /// @return The current hint, if one is set.
     ///
-    const stdx::optional<class hint>& hint() const;
+    const stdx::optional<mongocxx::hint>& hint() const;
 
     ///
     /// Set the value of the let option.
@@ -225,7 +225,7 @@ class find_one_and_delete {
     stdx::optional<bsoncxx::document::view_or_value> _projection;
     stdx::optional<bsoncxx::document::view_or_value> _ordering;
     stdx::optional<mongocxx::write_concern> _write_concern;
-    stdx::optional<class hint> _hint;
+    stdx::optional<mongocxx::hint> _hint;
     stdx::optional<bsoncxx::document::view_or_value> _let;
     stdx::optional<bsoncxx::types::bson_value::view_or_value> _comment;
 };

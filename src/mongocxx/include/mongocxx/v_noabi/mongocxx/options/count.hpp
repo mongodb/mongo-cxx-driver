@@ -73,7 +73,7 @@ class count {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    count& hint(class hint index_hint);
+    count& hint(mongocxx::hint index_hint);
 
     ///
     /// Gets the current hint.
@@ -82,7 +82,7 @@ class count {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    const stdx::optional<class hint>& hint() const;
+    const stdx::optional<mongocxx::hint>& hint() const;
 
     ///
     /// Set the value of the comment option.
@@ -201,7 +201,7 @@ class count {
 
    private:
     stdx::optional<bsoncxx::document::view_or_value> _collation;
-    stdx::optional<class hint> _hint;
+    stdx::optional<mongocxx::hint> _hint;
     stdx::optional<bsoncxx::types::bson_value::view_or_value> _comment;
     stdx::optional<std::int64_t> _limit;
     stdx::optional<std::chrono::milliseconds> _max_time;
