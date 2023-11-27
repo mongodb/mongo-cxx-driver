@@ -22,7 +22,7 @@
 using namespace benchmark;
 
 int main(int argc, char* argv[]) {
-    mongocxx::instance instance{};
+    mongocxx::instance instance;
     std::set<benchmark_type> types;
 
     if (argc > 1) {

@@ -80,6 +80,7 @@ benchmark_runner::benchmark_runner(std::set<benchmark_type> types) : _types{type
     // Parallel microbenchmarks
     _microbenches.push_back(make_unique<json_multi_import>("parallel/ldjson_multi"));
     _microbenches.push_back(make_unique<json_multi_export>("parallel/ldjson_multi"));
+    // CXX-2794: Disable GridFS benchmarks due to long runtime
     // _microbenches.push_back(make_unique<gridfs_multi_import>("parallel/gridfs_multi"));
     // _microbenches.push_back(make_unique<gridfs_multi_export>("parallel/gridfs_multi"));
 
@@ -169,7 +170,7 @@ void benchmark_runner::write_scores(
 
     auto doc = builder::basic::document{};
     doc.append(kvp("info", [](sub_document subdoc) {
-        subdoc.append(kvp("test_name", "C++ microbenchmarks"));
+        subdoc.append(kvp("test_name", "C++ Driver microbenchmarks"));
     }));
 
     auto write_time =

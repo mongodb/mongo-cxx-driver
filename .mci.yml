@@ -362,6 +362,7 @@ functions:
 
     "compile_benchmarks":
       - command: shell.exec
+        type: setup
         params:
           shell: bash
           working_dir: "mongo-cxx-driver"
@@ -522,20 +523,19 @@ functions:
 
     "download benchmark data":
       - command: shell.exec
+        type: setup
         params:
           shell: bash
           working_dir: "mongo-cxx-driver"
-          script: |
-            ./etc/microbenchmark-test-data.sh
+          script: ./etc/microbenchmark-test-data.sh
 
     "run benchmarks":
       - command: shell.exec
+        type: test
         params:
           shell: bash
           working_dir: "mongo-cxx-driver"
-          script: |
-            echo "Starting benchmarks"
-            ./build/benchmark/microbenchmarks all
+          script: ./build/benchmark/microbenchmarks all
 
     "send benchmarks":
       - command: perf.send
@@ -1351,8 +1351,7 @@ buildvariants:
       display_name: "Benchmarks (RHEL 9.2)"
       expansions:
           mongodb_version: "v6.0-perf"
-      run_on:
-          - rhel90-dbx-perf-large
+      run_on: rhel90-dbx-perf-large
       tasks:
           - name: compile_and_run_benchmarks
 
