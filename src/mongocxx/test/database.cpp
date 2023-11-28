@@ -344,7 +344,8 @@ TEST_CASE("Database integration tests", "[database]") {
                 return;
             }
 
-            // SERVER-79306: Ensure the database exists for consistent behavior with sharded clusters.
+            // SERVER-79306: Ensure the database exists for consistent behavior with sharded
+            // clusters.
             database.create_collection("dummy");
 
             auto session1 = mongo_client.start_session();
