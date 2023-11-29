@@ -72,7 +72,7 @@
  * Use this on functions that can only be constexpr in C++14 or newer, including
  * non-const member functions.
  */
-#if __cplusplus >= 201402L
+#if __cplusplus >= 201402L || (defined(_MSVC_LANG) && _MSVC_LANG >= 201402L)
 #define bsoncxx_cxx14_constexpr constexpr
 #else
 #define bsoncxx_cxx14_constexpr inline
