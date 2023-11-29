@@ -91,6 +91,10 @@ using bool_constant = std::integral_constant<bool, B>;
 template <typename...>
 struct mp_list;
 
+// Like std::declval, but does not generate a hard error if used.
+template <typename T>
+extern add_rvalue_reference_t<T> soft_declval() noexcept;
+
 /// ## Implementation of the C++11 detection idiom
 namespace impl_detection {
 

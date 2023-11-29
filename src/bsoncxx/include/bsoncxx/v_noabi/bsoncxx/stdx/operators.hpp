@@ -12,23 +12,26 @@ namespace bsoncxx {
 inline namespace v_noabi {
 namespace detail {
 
+template <typename L, typename R>
+auto is_equality_comparable_f(...) -> std::false_type;
+
+template <typename L, typename R>
+auto is_equality_comparable_f(int,
+                              bool b = false,
+                              const_reference_t<L> l = soft_declval<L&>(),
+                              const_reference_t<R> r = soft_declval<R&>())
+    -> true_t<decltype((l == r) ? 0 : 0,  //
+                       (r == l) ? 0 : 0,
+                       (l != r) ? 0 : 0,
+                       (r != l) ? 0 : 0)>;
+
 /**
  * @brief Detect whether two types are equality-comparable.
  *
  * Requires L == R, L != R, R == L, and R != L
  */
 template <typename L, typename R, typename = void>
-struct is_equality_comparable : std::false_type {};
-
-template <typename L, typename R>
-struct is_equality_comparable<
-    L,
-    R,
-    void_t<decltype(std::declval<const_reference_t<L>>() == std::declval<const_reference_t<R>>()),
-           decltype(std::declval<const_reference_t<L>>() != std::declval<const_reference_t<R>>()),
-           decltype(std::declval<const_reference_t<R>>() == std::declval<const_reference_t<L>>()),
-           decltype(std::declval<const_reference_t<R>>() != std::declval<const_reference_t<L>>())>>
-    : std::true_type {};
+struct is_equality_comparable : decltype(is_equality_comparable_f<L, R>(0)) {};
 
 /**
  * @brief Callable object and tag type for equality comparison
