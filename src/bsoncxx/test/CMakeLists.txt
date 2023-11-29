@@ -105,6 +105,7 @@ if(ENABLE_MACRO_GUARD_TESTS)
             bsoncxx_disable_warning
             bsoncxx_concat
             bsoncxx_concat_impl
+            bsoncxx_cxx14_constexpr
             bsoncxx_force_semicolon
             bsoncxx_pragma
             _bsoncxxPragma
@@ -113,7 +114,7 @@ if(ENABLE_MACRO_GUARD_TESTS)
             bsoncxx_if_msvc
             bsoncxx_if_gcc
             bsoncxx_if_clang
-            bsoncxx_if_gnu
+            bsoncxx_if_gnu_like
             bsoncxx_returns
         INCLUDE_PATTERNS
             "include/*.hpp" # Public headers.

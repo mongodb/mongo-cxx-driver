@@ -87,7 +87,7 @@ struct is_dereferencable : conjunction<is_detected<dereference_t, I>,
  * @brief Obtain the value type of the given iterator.
  *
  * This is only a very rough approximation for our use cases. A more thorough
- * C++20 impl requiers additional traits
+ * C++20 impl requires additional traits
  */
 template <typename Iter>
 using iter_value_t =
@@ -182,7 +182,7 @@ template <typename I>
 struct is_input_iterator : is_iterator_kind<I, std::input_iterator_tag> {};
 
 template <typename I>
-struct is_forwrd_iterator : is_iterator_kind<I, std::forward_iterator_tag> {};
+struct is_forward_iterator : is_iterator_kind<I, std::forward_iterator_tag> {};
 
 template <typename I>
 struct is_bidirectional_iterator : is_iterator_kind<I, std::bidirectional_iterator_tag> {};

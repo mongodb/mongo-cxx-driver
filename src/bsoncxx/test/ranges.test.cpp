@@ -28,6 +28,7 @@ TEST_CASE("Range from vector") {
     std::vector<int> nums = {1, 2, 3, 4};
     auto it = ranges::begin(nums);
     REQUIRE(it != ranges::end(nums));
+    REQUIRE((it + 4) == ranges::end(nums));
     static_assert(std::is_same<decltype(it), std::vector<int>::iterator>::value, "fail");
     CHECK(*it == 1);
     ++it;
