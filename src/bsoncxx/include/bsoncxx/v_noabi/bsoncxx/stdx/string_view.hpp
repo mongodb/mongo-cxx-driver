@@ -43,9 +43,24 @@ using namespace bsoncxx::detail;
                                                         std::size_t length,
                                                         std::ptrdiff_t offset) noexcept;
 
-// Detects a c_str() method (to detect string-like types)
 template <typename S>
-using c_str_t = decltype(std::declval<S>().c_str());
+auto detect_string_f(...) -> std::false_type;
+
+template <typename S>
+auto detect_string_f(int,  //
+                     const S& s = soft_declval<S>(),
+                     S& mut = soft_declval<S&>())
+    -> true_t<typename S::traits_type::char_type,
+              decltype(s.length()),
+              decltype(mut = s),
+              decltype(s.compare(s)),
+              decltype(s.substr(0, s.size())),
+              requires_t<void, is_equality_comparable<S, S>, is_range<S>>>;
+
+// Heuristic detection of std::string-like types. Not perfect, but should reasonably
+// handle most cases.
+template <typename S>
+struct is_string_like : decltype(detect_string_f<remove_cvref_t<S>>(0)) {};
 
 }  // namespace detail
 
@@ -153,22 +168,20 @@ class basic_string_view : detail::equality_operators, detail::ordering_operators
      */
     template <typename Range,
               _enable_range_constructor<Range> = 0,
-              detail::requires_t<int, detail::negation<detail::is_detected<detail::c_str_t, Range>>>
+              detail::requires_t<int, detail::negation<detail::is_string_like<Range>>>
                   RequiresNotString = 0>
     constexpr explicit basic_string_view(Range&& rng)
         : _begin(detail::data(rng)), _size(detail::size(rng)) {}
 
     /**
      * @brief From-range constructor, but is an implicit conversion accepting string-like ranges.
-     * (Seeks a .c_str() member)
      *
      * Requires that `Range` is a non-array contiguous range with the same value type
      * as the string view, and is a std::string-like value.
      */
-    template <
-        typename Range,
-        _enable_range_constructor<Range> = 0,
-        detail::requires_t<int, detail::is_detected<detail::c_str_t, Range>> RequiresStringLike = 0>
+    template <typename Range,
+              _enable_range_constructor<Range> = 0,
+              detail::requires_t<int, detail::is_string_like<Range>> RequiresStringLike = 0>
     constexpr basic_string_view(Range&& rng) noexcept
         : _begin(detail::data(rng)), _size(detail::size(rng)) {}
 
@@ -239,10 +252,6 @@ class basic_string_view : detail::equality_operators, detail::ordering_operators
 
     /// Obtain a pointer to the beginning of the referred-to character array
     constexpr const_pointer data() const noexcept {
-        return _begin;
-    }
-    /// Obtain a pointer to the beginning of the referred-to character array
-    constexpr const_pointer c_str() const noexcept {
         return _begin;
     }
     /// Obtain the length of the referred-to string, in number of characters
