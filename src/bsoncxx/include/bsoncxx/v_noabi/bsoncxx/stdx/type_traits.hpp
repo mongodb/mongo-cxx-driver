@@ -460,21 +460,6 @@ struct rank : rank<N - 1> {};
 template <>
 struct rank<0> {};
 
-struct _decay_copy_fn {
-    template <typename T>
-    constexpr auto operator()(T&& arg) const
-        noexcept(noexcept(static_cast<decay_t<T>>(static_cast<T&&>(arg)))) -> decay_t<T> {
-        return static_cast<decay_t<T>>(static_cast<T&&>(arg));
-    }
-};
-
-/**
- * @brief Perform a decay-copy on the given value.
- *
- * Equivalent to the C++23 `auto()` expression.
- */
-static constexpr _decay_copy_fn decay_copy;
-
 }  // namespace detail
 
 }  // namespace v_noabi
