@@ -189,7 +189,6 @@ using range_difference_t = iter_difference_t<iterator_t<R>>;
  *
  * Returns the first valid of:
  * - `rng.data()` if such expression yields a pointer type
- * - `data(rng)` if such expression is visible via ADL and returns a pointer type
  * - `to_address(begin(rng))` if such expression is valid and iterator_t<R> is
  *   a contiguous_iterator.
  */
