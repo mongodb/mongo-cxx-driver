@@ -24,7 +24,7 @@ static_assert(bsoncxx::detail::is_contiguous_range<string_view>::value, "fail");
 static_assert(bsoncxx::detail::is_contiguous_range<string_view&>::value, "fail");
 static_assert(bsoncxx::detail::is_contiguous_range<string_view const&>::value, "fail");
 
-TEST_CASE("Default constructor") {
+TEST_CASE("string_view: Default constructor") {
     (void)string_view();
     string_view s;
     CHECK(s.size() == 0);
@@ -36,7 +36,7 @@ TEST_CASE("Default constructor") {
 }
 
 static const char HELLO[] = "Hello, string_view!";
-TEST_CASE("Pointer+size construct") {
+TEST_CASE("string_view: Pointer+size construct") {
     auto s = string_view(HELLO, sizeof HELLO - 1);
     CHECK(s.length() == s.size());
     CHECK(s.data() == HELLO + 0);
@@ -52,7 +52,7 @@ TEST_CASE("Pointer+size construct") {
     CHECK_FALSE(s != "string_view");
 }
 
-TEST_CASE("Pointer construct") {
+TEST_CASE("string_view: Pointer construct") {
     string_view s = "hello";
     CHECK(s.size() == 5);
     CHECK(s[4] == 'o');
@@ -63,7 +63,7 @@ TEST_CASE("Pointer construct") {
     CHECK_FALSE(s < s);
 }
 
-TEST_CASE("Range construct") {
+TEST_CASE("string_view: Range construct") {
     std::vector<char> cs = {'a', 'b', 'c', 'd'};
     auto sv = string_view(cs);
     CHECK(sv == "abcd");
@@ -78,7 +78,7 @@ TEST_CASE("Range construct") {
     CHECK_FALSE(s2 != sv);
 }
 
-TEST_CASE("Reversal") {
+TEST_CASE("string_view: Reversal") {
     string_view string = "Hello!";
     auto rit = string.rbegin();
     CHECK(*rit++ == '!');
@@ -90,7 +90,7 @@ TEST_CASE("Reversal") {
     CHECK(rit == string.rend());
 }
 
-TEST_CASE("Get chars") {
+TEST_CASE("string_view: Get chars") {
     string_view string = "Hello, world";
     CHECK(string[0] == 'H');
     CHECK(string[0] == string.at(0));
@@ -103,7 +103,7 @@ TEST_CASE("Get chars") {
     CHECK(string.back() == string[11]);
 }
 
-TEST_CASE("Substrings") {
+TEST_CASE("string_view: Substrings") {
     string_view str = "0123456789";
     CHECK(str.substr(0) == str);
     CHECK(str.substr(1) == "123456789");
@@ -144,7 +144,7 @@ TEST_CASE("Substrings") {
     CHECK(dup.empty());
 }
 
-TEST_CASE("Compare") {
+TEST_CASE("string_view: Compare") {
     string_view str = "abc";
     CHECK(str == "abc");
     CHECK_FALSE(str < "abc");
@@ -153,7 +153,7 @@ TEST_CASE("Compare") {
     CHECK(str.compare("abcd") < 0);
 }
 
-TEST_CASE("Overloading safety") {
+TEST_CASE("string_view: Overloading safety") {
     std::vector<string_view> vec;
     CHECK(vec == vec);
 }
