@@ -21,6 +21,19 @@
 
 namespace bsoncxx {
 inline namespace v_noabi {
+
+namespace detailx {
+// Workarounds for MSVC 19.10 doing bad: An invocable object with name `n` should not be visible
+// within its own call operator. We need to "hide" the ADL name lookup out here in a different
+// namespace to prevent them from finding the invocable objects.
+template <typename T>
+constexpr auto adl_size(T&& t) bsoncxx_returns(size((T&&)t));
+template <typename T>
+constexpr auto adl_begin(T&& t) bsoncxx_returns(begin((T&&)t));
+template <typename T>
+constexpr auto adl_end(T&& t) bsoncxx_returns(end((T&&)t));
+}  // namespace detailx
+
 namespace detail {
 
 /**
@@ -42,7 +55,7 @@ constexpr requires_t<I, is_iterator<I>> _decay_iterator(I i) noexcept {
 }
 
 template <typename I, typename S>
-constexpr requires_t<S, is_sentinel_for<I, S>> _decay_sentinel(S s) noexcept {
+constexpr requires_t<S, is_sentinel_for<S, I>> _decay_sentinel(S s) noexcept {
     return s;
 }
 
@@ -74,7 +87,8 @@ static constexpr struct _begin_fn {
 
     // 3: Object has an ADL-visible begin(x) returning an iterator
     template <typename R>
-    static constexpr auto impl(R& rng, rank<3>) bsoncxx_returns(_decay_iterator(begin(rng)));
+    static constexpr auto impl(R& rng, rank<3>)
+        bsoncxx_returns(_decay_iterator(detailx::adl_begin(rng)));
 
     template <typename R>
     constexpr auto operator()(R&& rng) const bsoncxx_returns((impl)(rng, rank<10>{}));
@@ -106,7 +120,8 @@ static constexpr struct _end_fn {
 
     // 3: Range has ADL-found end(x) returning a valid sentinel
     template <typename Iter, typename R>
-    static constexpr auto impl(R& r, rank<3>) bsoncxx_returns(_decay_sentinel<Iter>(end(r)));
+    static constexpr auto impl(R& r, rank<3>)
+        bsoncxx_returns(_decay_sentinel<Iter>(detailx::adl_end(r)));
 
     template <typename R>
     constexpr auto operator()(R&& rng) const bsoncxx_returns((impl<iterator_t<R>>)(rng, rank<5>{}));
@@ -140,7 +155,8 @@ static constexpr struct _size_fn {
 
     // 3: Range with ADL-found size(x)
     template <typename R>
-    static constexpr auto impl(R& rng, rank<3>) bsoncxx_returns(_decay_integral(size(rng)));
+    static constexpr auto impl(R& rng, rank<3>)
+        bsoncxx_returns(_decay_integral(detailx::adl_size(rng)));
 
     // 4: Range is a forward-range and has a sized sentinel type
     template <

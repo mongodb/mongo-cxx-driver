@@ -49,3 +49,29 @@ TEST_CASE("Range from array") {
     CHECK(ranges::ssize(array) == 4);
     CHECK(ranges::data(array) == ranges::begin(array));
 }
+
+namespace stuff {
+
+class custom_vector_wrapper {
+    using vec = std::vector<int>;
+    vec numbers = {1, 2, 3, 4, 5};
+
+    friend vec::iterator begin(custom_vector_wrapper& self) {
+        return self.numbers.begin();
+    }
+
+    friend vec::iterator end(custom_vector_wrapper& self) {
+        return self.numbers.end();
+    }
+};
+
+}  // namespace stuff
+
+TEST_CASE("ADL-only range") {
+    stuff::custom_vector_wrapper vec;
+    static_assert(bsoncxx::detail::is_range<stuff::custom_vector_wrapper>{}, "fail");
+    auto it = ranges::begin(vec);
+    CHECK(*it == 1);
+    CHECK(bsoncxx::detail::size(vec) == 5u);
+    CHECK(bsoncxx::detail::ssize(vec) == 5);
+}
