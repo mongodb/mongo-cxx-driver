@@ -50,13 +50,19 @@ struct equal_to {
  * an ADL-only tag_invoke(equal_to, l, r)
  */
 class equality_operators {
+    template <typename L, typename R>
+    constexpr static auto impl(rank<1>, L& l, R& r) bsoncxx_returns(tag_invoke(equal_to{}, l, r));
+
+    template <typename L, typename R>
+    constexpr static auto impl(rank<0>, L& l, R& r) bsoncxx_returns(tag_invoke(equal_to{}, r, l));
+
     template <typename Left, typename Other>
     constexpr friend auto operator==(const Left& self, const Other& other)
-        bsoncxx_returns(tag_invoke(equal_to{}, self, other));
+        bsoncxx_returns(equality_operators::impl(rank<1>{}, self, other));
 
     template <typename Left, typename Other>
     constexpr friend auto operator!=(const Left& self, const Other& other)
-        bsoncxx_returns(!tag_invoke(equal_to{}, self, other));
+        bsoncxx_returns(!equality_operators::impl(rank<1>{}, self, other));
 };
 
 /**

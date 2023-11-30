@@ -15,6 +15,7 @@
 #include <utility>
 
 #include <bsoncxx/stdx/iterator.hpp>
+#include <bsoncxx/stdx/operators.hpp>
 #include <bsoncxx/stdx/type_traits.hpp>
 
 #include <bsoncxx/config/prelude.hpp>
@@ -233,6 +234,9 @@ template <typename R>
 using range_value_t = iter_value_t<iterator_t<R>>;
 
 template <typename R>
+using range_reference_t = iter_reference_t<iterator_t<R>>;
+
+template <typename R>
 using range_concept_t = iterator_concept_t<iterator_t<R>>;
 
 /**
@@ -253,6 +257,15 @@ struct is_range : conjunction<is_detected<iterator_t, R>, is_detected<sentinel_t
 template <typename R>
 struct is_contiguous_range
     : conjunction<is_range<R>, is_detected<range_data_t, R>, is_detected<range_size_t, R>> {};
+
+static constexpr struct unreachable_sentinel_t : equality_operators {
+    template <typename I>
+    constexpr friend requires_t<bool, is_iterator<I>> tag_invoke(equal_to,
+                                                                 unreachable_sentinel_t,
+                                                                 I) noexcept {
+        return false;
+    }
+} unreachable_sentinel;
 
 }  // namespace detail
 }  // namespace v_noabi
