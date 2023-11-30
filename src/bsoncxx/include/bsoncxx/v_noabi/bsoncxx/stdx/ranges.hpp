@@ -159,17 +159,16 @@ static constexpr struct _size_fn {
         bsoncxx_returns(_decay_integral(detailx::adl_size(rng)));
 
     // 4: Range is a forward-range and has a sized sentinel type
-    template <
-        typename R,
-        typename Iter = iterator_t<R>,
-        typename Sentinel = sentinel_t<R>,
-        // Require a forward iterator:
-        requires_t<int, std::is_base_of<std::forward_iterator_tag, iterator_concept_t<Iter>>> = 0,
-        // Require a sized sentinel:
-        requires_t<int, is_sized_sentinel_for<Sentinel, Iter>> = 0,
-        // We cast to an unsigned type from the difference type:
-        typename Sz = make_unsigned_t<difference_t<Sentinel, Iter>>>
-    static constexpr auto impl(R& rng, rank<3>)
+    template <typename R,
+              typename Iter = iterator_t<R>,
+              typename Sentinel = sentinel_t<R>,
+              // Require a forward iterator:
+              requires_t<int, is_forward_iterator<Iter>> = 0,
+              // Require a sized sentinel:
+              requires_t<int, is_sized_sentinel_for<Sentinel, Iter>> = 0,
+              // We cast to an unsigned type from the difference type:
+              typename Sz = make_unsigned_t<difference_t<Sentinel, Iter>>>
+    static constexpr auto impl(R& rng, rank<2>)
         bsoncxx_returns(static_cast<Sz>(end(rng) - begin(rng)));
 
     template <typename R>
