@@ -285,21 +285,13 @@ collection& collection::operator=(const collection& c) {
     return *this;
 }
 
-bulk_write collection::create_bulk_write(const options::bulk_write& options) {
-    class bulk_write writes {
-        *this, options
-    };
-
-    return writes;
+mongocxx::bulk_write collection::create_bulk_write(const options::bulk_write& options) {
+    return mongocxx::bulk_write{*this, options};
 }
 
-bulk_write collection::create_bulk_write(const client_session& session,
-                                         const options::bulk_write& options) {
-    class bulk_write writes {
-        *this, options, &session
-    };
-
-    return writes;
+mongocxx::bulk_write collection::create_bulk_write(const client_session& session,
+                                                   const options::bulk_write& options) {
+    return mongocxx::bulk_write{*this, options, &session};
 }
 
 namespace {
@@ -526,9 +518,7 @@ stdx::optional<result::insert_one> collection::_insert_one(const client_session*
         bulk_opts.comment(*comment);
     }
 
-    class bulk_write bulk_op {
-        *this, bulk_opts, session
-    };
+    mongocxx::bulk_write bulk_op{*this, bulk_opts, session};
     bsoncxx::document::element oid{};
     bsoncxx::builder::basic::document new_document;
 
@@ -1318,57 +1308,58 @@ void collection::drop(const client_session& session,
     return _drop(&session, wc, collection_options);
 }
 
-void collection::read_concern(class read_concern rc) {
+void collection::read_concern(mongocxx::read_concern rc) {
     libmongoc::collection_set_read_concern(_get_impl().collection_t, rc._impl->read_concern_t);
 }
 
-class read_concern collection::read_concern() const {
+mongocxx::read_concern collection::read_concern() const {
     auto rc = libmongoc::collection_get_read_concern(_get_impl().collection_t);
     return {stdx::make_unique<read_concern::impl>(libmongoc::read_concern_copy(rc))};
 }
 
-void collection::read_preference(class read_preference rp) {
+void collection::read_preference(mongocxx::read_preference rp) {
     libmongoc::collection_set_read_prefs(_get_impl().collection_t, rp._impl->read_preference_t);
 }
 
-class read_preference collection::read_preference() const {
-    class read_preference rp(stdx::make_unique<read_preference::impl>(libmongoc::read_prefs_copy(
-        libmongoc::collection_get_read_prefs(_get_impl().collection_t))));
+mongocxx::read_preference collection::read_preference() const {
+    mongocxx::read_preference rp(
+        stdx::make_unique<read_preference::impl>(libmongoc::read_prefs_copy(
+            libmongoc::collection_get_read_prefs(_get_impl().collection_t))));
     return rp;
 }
 
-void collection::write_concern(class write_concern wc) {
+void collection::write_concern(mongocxx::write_concern wc) {
     libmongoc::collection_set_write_concern(_get_impl().collection_t, wc._impl->write_concern_t);
 }
 
-class write_concern collection::write_concern() const {
-    class write_concern wc(stdx::make_unique<write_concern::impl>(libmongoc::write_concern_copy(
+mongocxx::write_concern collection::write_concern() const {
+    mongocxx::write_concern wc(stdx::make_unique<write_concern::impl>(libmongoc::write_concern_copy(
         libmongoc::collection_get_write_concern(_get_impl().collection_t))));
     return wc;
 }
 
-class change_stream collection::watch(const options::change_stream& options) {
+change_stream collection::watch(const options::change_stream& options) {
     return watch(pipeline{}, options);
 }
 
-class change_stream collection::watch(const client_session& session,
-                                      const options::change_stream& options) {
+change_stream collection::watch(const client_session& session,
+                                const options::change_stream& options) {
     return _watch(&session, pipeline{}, options);
 }
 
-class change_stream collection::watch(const pipeline& pipe, const options::change_stream& options) {
+change_stream collection::watch(const pipeline& pipe, const options::change_stream& options) {
     return _watch(nullptr, pipe, options);
 }
 
-class change_stream collection::watch(const client_session& session,
-                                      const pipeline& pipe,
-                                      const options::change_stream& options) {
+change_stream collection::watch(const client_session& session,
+                                const pipeline& pipe,
+                                const options::change_stream& options) {
     return _watch(&session, pipe, options);
 }
 
-class change_stream collection::_watch(const client_session* session,
-                                       const pipeline& pipe,
-                                       const options::change_stream& options) {
+change_stream collection::_watch(const client_session* session,
+                                 const pipeline& pipe,
+                                 const options::change_stream& options) {
     bsoncxx::builder::basic::document container;
     container.append(kvp("pipeline", pipe._impl->view_array()));
     scoped_bson_t pipeline_bson{container.view()};
@@ -1387,16 +1378,16 @@ class change_stream collection::_watch(const client_session* session,
         _get_impl().collection_t, pipeline_bson.bson(), options_bson.bson())};
 }
 
-class index_view collection::indexes() {
+index_view collection::indexes() {
     return index_view{_get_impl().collection_t, _get_impl().client_impl->client_t};
 }
 
-class search_index_view collection::search_indexes() {
+search_index_view collection::search_indexes() {
     return search_index_view{_get_impl().collection_t, _get_impl().client_impl->client_t};
 }
 
-class bulk_write collection::_init_insert_many(const options::insert& options,
-                                               const client_session* session) {
+mongocxx::bulk_write collection::_init_insert_many(const options::insert& options,
+                                                   const client_session* session) {
     options::bulk_write bulk_write_options;
 
     bulk_write_options.ordered(options.ordered().value_or(true));
@@ -1420,7 +1411,7 @@ class bulk_write collection::_init_insert_many(const options::insert& options,
     return create_bulk_write(bulk_write_options);
 }
 
-void collection::_insert_many_doc_handler(class bulk_write& writes,
+void collection::_insert_many_doc_handler(mongocxx::bulk_write& writes,
                                           bsoncxx::builder::basic::array& inserted_ids,
                                           bsoncxx::document::view doc) const {
     bsoncxx::builder::basic::document id_doc;
@@ -1438,7 +1429,7 @@ void collection::_insert_many_doc_handler(class bulk_write& writes,
 }
 
 stdx::optional<result::insert_many> collection::_exec_insert_many(
-    class bulk_write& writes, bsoncxx::builder::basic::array& inserted_ids) {
+    mongocxx::bulk_write& writes, bsoncxx::builder::basic::array& inserted_ids) {
     auto result = writes.execute();
     if (!result) {
         return stdx::nullopt;

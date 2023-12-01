@@ -16,6 +16,8 @@
 
 #include <type_traits>
 
+#include <bsoncxx/view_or_value-fwd.hpp>
+
 #include <bsoncxx/stdx/optional.hpp>
 
 #include <bsoncxx/config/prelude.hpp>

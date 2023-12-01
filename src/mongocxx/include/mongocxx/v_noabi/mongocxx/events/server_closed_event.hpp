@@ -16,6 +16,8 @@
 
 #include <cstdint>
 
+#include <mongocxx/events/server_closed_event-fwd.hpp>
+
 #include <bsoncxx/oid.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 
@@ -32,7 +34,7 @@ namespace events {
 /// @see "ServerClosedEvent" in
 /// https://github.com/mongodb/specifications/blob/master/source/server-discovery-and-monitoring/server-discovery-and-monitoring.rst
 ///
-class MONGOCXX_API server_closed_event {
+class server_closed_event {
    public:
     MONGOCXX_PRIVATE explicit server_closed_event(const void* event);
 

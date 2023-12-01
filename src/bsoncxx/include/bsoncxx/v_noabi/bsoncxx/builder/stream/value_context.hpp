@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <bsoncxx/builder/stream/value_context-fwd.hpp>
+
 #include <bsoncxx/builder/core.hpp>
 #include <bsoncxx/builder/stream/array_context.hpp>
 #include <bsoncxx/builder/stream/closed_context.hpp>

@@ -18,6 +18,10 @@
 #include <cstdint>
 #include <type_traits>
 
+#include <bsoncxx/document/element-fwd.hpp>
+#include <bsoncxx/types/bson_value/value-fwd.hpp>
+#include <bsoncxx/types/bson_value/view-fwd.hpp>
+
 #include <bsoncxx/stdx/type_traits.hpp>
 #include <bsoncxx/types.hpp>
 
@@ -25,15 +29,8 @@
 
 namespace bsoncxx {
 inline namespace v_noabi {
-namespace document {
-class element;
-}  // namespace document
-
 namespace types {
 namespace bson_value {
-
-class value;
-
 ///
 /// A view-only variant that can contain any BSON type.
 ///
@@ -41,7 +38,7 @@ class value;
 ///   Calling the wrong get_<type> method will cause an exception
 ///   to be thrown.
 ///
-class BSONCXX_API view {
+class view {
    public:
 ///
 /// Construct a bson_value::view from any of the various BSON types. Defines
@@ -271,8 +268,8 @@ class BSONCXX_API view {
     const b_maxkey& get_maxkey() const;
 
    private:
-    friend class document::element;
-    friend class bson_value::value;
+    friend ::bsoncxx::v_noabi::types::bson_value::value;
+    friend ::bsoncxx::v_noabi::document::element;
 
     view(const std::uint8_t* raw, std::uint32_t length, std::uint32_t offset, std::uint32_t keylen);
     view(void* internal_value) noexcept;
@@ -342,7 +339,6 @@ operator!=(T&& lhs, const bson_value::view& rhs) {
 
 }  // namespace bson_value
 }  // namespace types
-
 }  // namespace v_noabi
 }  // namespace bsoncxx
 

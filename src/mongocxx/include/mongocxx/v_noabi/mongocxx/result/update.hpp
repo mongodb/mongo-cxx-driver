@@ -16,6 +16,8 @@
 
 #include <cstdint>
 
+#include <mongocxx/result/update-fwd.hpp>
+
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/types.hpp>
 #include <mongocxx/result/bulk_write.hpp>
@@ -28,7 +30,7 @@ inline namespace v_noabi {
 namespace result {
 
 /// Class representing the result of a MongoDB update operation.
-class MONGOCXX_API update {
+class update {
    public:
     // This constructor is public for testing purposes only
     explicit update(result::bulk_write result);

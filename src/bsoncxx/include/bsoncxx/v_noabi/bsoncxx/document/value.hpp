@@ -18,6 +18,8 @@
 #include <memory>
 #include <type_traits>
 
+#include <bsoncxx/document/value-fwd.hpp>
+
 #include <bsoncxx/array/view.hpp>
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/stdx/type_traits.hpp>
@@ -33,7 +35,7 @@ namespace document {
 /// out of scope, the underlying buffer is freed. Generally this class should be used
 /// sparingly; document::view should be used instead wherever possible.
 ///
-class BSONCXX_API value {
+class value {
    public:
     using deleter_type = void (*)(std::uint8_t*);
     using unique_ptr_type = std::unique_ptr<uint8_t[], deleter_type>;

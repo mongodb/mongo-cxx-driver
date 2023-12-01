@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/events/topology_changed_event-fwd.hpp>
+
 #include <bsoncxx/oid.hpp>
 #include <mongocxx/events/topology_description.hpp>
 
@@ -30,7 +32,7 @@ namespace events {
 /// @see "TopologyDescriptionChangedEvent" in
 /// https://github.com/mongodb/specifications/blob/master/source/server-discovery-and-monitoring/server-discovery-and-monitoring.rst
 ///
-class MONGOCXX_API topology_changed_event {
+class topology_changed_event {
    public:
     MONGOCXX_PRIVATE explicit topology_changed_event(const void* event);
 

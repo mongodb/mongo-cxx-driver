@@ -17,6 +17,11 @@
 #include <algorithm>
 #include <string>
 
+#include <mongocxx/bulk_write-fwd.hpp>
+#include <mongocxx/client_encryption-fwd.hpp>
+#include <mongocxx/collection-fwd.hpp>
+#include <mongocxx/database-fwd.hpp>
+
 #include <bsoncxx/builder/basic/array.hpp>
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>
@@ -63,11 +68,6 @@
 
 namespace mongocxx {
 inline namespace v_noabi {
-class bulk_write;
-class client_encryption;
-class client;
-class database;
-
 ///
 /// Class representing server side document groupings within a MongoDB database.
 ///
@@ -82,7 +82,7 @@ class database;
 ///   auto coll = mongo_client["database"]["collection"];
 /// @endcode
 ///
-class MONGOCXX_API collection {
+class collection {
     //
     // Utility class supporting the convenience of {} meaning an empty bsoncxx::document.
     //
@@ -203,7 +203,7 @@ class MONGOCXX_API collection {
     /// @return
     ///    The newly-created bulk write.
     ///
-    class bulk_write create_bulk_write(const options::bulk_write& options = {});
+    mongocxx::bulk_write create_bulk_write(const options::bulk_write& options = {});
 
     ///
     /// Creates a new bulk operation to be executed against this collection.
@@ -217,8 +217,8 @@ class MONGOCXX_API collection {
     /// @return
     ///    The newly-created bulk write.
     ///
-    class bulk_write create_bulk_write(const client_session& session,
-                                       const options::bulk_write& options = {});
+    mongocxx::bulk_write create_bulk_write(const client_session& session,
+                                           const options::bulk_write& options = {});
     ///
     /// @}
     ///
@@ -1359,7 +1359,7 @@ class MONGOCXX_API collection {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/read-concern/
     ///
-    void read_concern(class read_concern rc);
+    void read_concern(mongocxx::read_concern rc);
 
     ///
     /// Gets the read_concern for the collection.
@@ -1369,7 +1369,7 @@ class MONGOCXX_API collection {
     ///
     /// @return The current read_concern.
     ///
-    class read_concern read_concern() const;
+    mongocxx::read_concern read_concern() const;
 
     ///
     /// Sets the read_preference for this collection. Changes will not have any effect on existing
@@ -1380,7 +1380,7 @@ class MONGOCXX_API collection {
     ///
     /// @see https://www.mongodb.com/docs/manual/core/read-preference/
     ///
-    void read_preference(class read_preference rp);
+    void read_preference(mongocxx::read_preference rp);
 
     ///
     /// Gets the read_preference for the collection.
@@ -1389,7 +1389,7 @@ class MONGOCXX_API collection {
     ///
     /// @see https://www.mongodb.com/docs/manual/core/read-preference/
     ///
-    class read_preference read_preference() const;
+    mongocxx::read_preference read_preference() const;
 
     ///
     /// @{
@@ -1771,14 +1771,14 @@ class MONGOCXX_API collection {
     /// @param wc
     ///   The new write_concern to use.
     ///
-    void write_concern(class write_concern wc);
+    void write_concern(mongocxx::write_concern wc);
 
     ///
     /// Gets the write_concern for the collection.
     ///
     /// @return The current write_concern.
     ///
-    class write_concern write_concern() const;
+    mongocxx::write_concern write_concern() const;
 
     ///
     /// Gets an index_view to the collection.
@@ -1859,9 +1859,9 @@ class MONGOCXX_API collection {
     search_index_view search_indexes();
 
    private:
-    friend class bulk_write;
-    friend class client_encryption;
-    friend class database;
+    friend ::mongocxx::v_noabi::bulk_write;
+    friend ::mongocxx::v_noabi::client_encryption;
+    friend ::mongocxx::v_noabi::database;
 
     MONGOCXX_PRIVATE collection(const database& database,
                                 bsoncxx::string::view_or_value collection_name);
@@ -1941,7 +1941,7 @@ class MONGOCXX_API collection {
         const client_session* session,
         bsoncxx::string::view_or_value new_name,
         bool drop_target_before_rename,
-        const bsoncxx::stdx::optional<class write_concern>& write_concern);
+        const bsoncxx::stdx::optional<mongocxx::write_concern>& write_concern);
 
     MONGOCXX_PRIVATE stdx::optional<result::replace_one> _replace_one(
         const client_session* session,
@@ -1971,15 +1971,15 @@ class MONGOCXX_API collection {
                                           const options::change_stream& options);
 
     // Helpers for the insert_many method templates.
-    class bulk_write _init_insert_many(const options::insert& options,
-                                       const client_session* session);
+    mongocxx::bulk_write _init_insert_many(const options::insert& options,
+                                           const client_session* session);
 
-    void _insert_many_doc_handler(class bulk_write& writes,
+    void _insert_many_doc_handler(mongocxx::bulk_write& writes,
                                   bsoncxx::builder::basic::array& inserted_ids,
                                   bsoncxx::document::view doc) const;
 
     stdx::optional<result::insert_many> _exec_insert_many(
-        class bulk_write& writes, bsoncxx::builder::basic::array& inserted_ids);
+        mongocxx::bulk_write& writes, bsoncxx::builder::basic::array& inserted_ids);
 
     template <typename document_view_iterator_type>
     MONGOCXX_PRIVATE stdx::optional<result::insert_many> _insert_many(

@@ -18,6 +18,10 @@
 #include <string>
 #include <vector>
 
+#include <mongocxx/client-fwd.hpp>
+#include <mongocxx/pool-fwd.hpp>
+#include <mongocxx/uri-fwd.hpp>
+
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/string/view_or_value.hpp>
 #include <mongocxx/read_concern.hpp>
@@ -39,7 +43,7 @@ inline namespace v_noabi {
 /// @see https://mongoc.org/libmongoc/current/mongoc_uri_t.html for more information on supported
 /// URI options.
 ///
-class MONGOCXX_API uri {
+class uri {
    public:
     /// A host.
     struct host {
@@ -129,14 +133,14 @@ class MONGOCXX_API uri {
     ///
     /// @return A read_concern that represents what was specified in the uri.
     ///
-    class read_concern read_concern() const;
+    mongocxx::read_concern read_concern() const;
 
     ///
     /// Returns the read preference from the uri.
     ///
     /// @return A read_preference that represents what was specified in the uri.
     ///
-    class read_preference read_preference() const;
+    mongocxx::read_preference read_preference() const;
 
     ///
     /// Returns the replica set specified in the uri.
@@ -180,7 +184,7 @@ class MONGOCXX_API uri {
     ///
     /// @return A write_concern that represents what was specified in the uri.
     ///
-    class write_concern write_concern() const;
+    mongocxx::write_concern write_concern() const;
 
     ///
     /// Returns the value of the option "appname" if present in the uri.
@@ -360,8 +364,8 @@ class MONGOCXX_API uri {
     stdx::optional<std::int32_t> zlib_compression_level() const;
 
    private:
-    friend class client;
-    friend class pool;
+    friend ::mongocxx::v_noabi::client;
+    friend ::mongocxx::v_noabi::pool;
 
     class MONGOCXX_PRIVATE impl;
 

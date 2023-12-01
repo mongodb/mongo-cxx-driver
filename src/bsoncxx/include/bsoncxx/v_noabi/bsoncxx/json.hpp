@@ -16,6 +16,8 @@
 
 #include <string>
 
+#include <bsoncxx/json-fwd.hpp>
+
 #include <bsoncxx/array/view.hpp>
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/document/view.hpp>

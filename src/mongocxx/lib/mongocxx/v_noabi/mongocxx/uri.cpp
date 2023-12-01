@@ -94,15 +94,15 @@ std::string uri::password() const {
     return to_string_null_safe(libmongoc::uri_get_password(_impl->uri_t));
 }
 
-class read_concern uri::read_concern() const {
+mongocxx::read_concern uri::read_concern() const {
     auto rc = libmongoc::uri_get_read_concern(_impl->uri_t);
-    return (class read_concern)(
+    return mongocxx::read_concern(
         stdx::make_unique<read_concern::impl>(libmongoc::read_concern_copy(rc)));
 }
 
-class read_preference uri::read_preference() const {
+mongocxx::read_preference uri::read_preference() const {
     auto rp = libmongoc::uri_get_read_prefs_t(_impl->uri_t);
-    return (class read_preference)(
+    return (mongocxx::read_preference)(
         stdx::make_unique<read_preference::impl>(libmongoc::read_prefs_copy(rp)));
 }
 
@@ -126,9 +126,9 @@ std::string uri::username() const {
     return to_string_null_safe(libmongoc::uri_get_username(_impl->uri_t));
 }
 
-class write_concern uri::write_concern() const {
+mongocxx::write_concern uri::write_concern() const {
     auto wc = libmongoc::uri_get_write_concern(_impl->uri_t);
-    return (class write_concern)(
+    return mongocxx::write_concern(
         stdx::make_unique<write_concern::impl>(libmongoc::write_concern_copy(wc)));
 }
 

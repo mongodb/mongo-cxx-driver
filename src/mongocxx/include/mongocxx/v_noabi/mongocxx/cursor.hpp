@@ -16,6 +16,14 @@
 
 #include <memory>
 
+#include <mongocxx/client-fwd.hpp>
+#include <mongocxx/client_encryption-fwd.hpp>
+#include <mongocxx/collection-fwd.hpp>
+#include <mongocxx/cursor-fwd.hpp>
+#include <mongocxx/database-fwd.hpp>
+#include <mongocxx/index_view-fwd.hpp>
+#include <mongocxx/search_index_view-fwd.hpp>
+
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 
@@ -23,9 +31,6 @@
 
 namespace mongocxx {
 inline namespace v_noabi {
-class collection;
-class search_index_view;
-
 ///
 /// Class representing a pointer to the result set of a query on a MongoDB server.
 ///
@@ -33,7 +38,7 @@ class search_index_view;
 ///
 /// @note By default, cursors timeout after 10 minutes of inactivity.
 ///
-class MONGOCXX_API cursor {
+class cursor {
    public:
     enum class type { k_non_tailable, k_tailable, k_tailable_await };
 
@@ -79,13 +84,14 @@ class MONGOCXX_API cursor {
     iterator end();
 
    private:
-    friend class collection;
-    friend class client;
-    friend class client_encryption;
-    friend class database;
-    friend class index_view;
-    friend class search_index_view;
-    friend class cursor::iterator;
+    friend ::mongocxx::v_noabi::client_encryption;
+    friend ::mongocxx::v_noabi::client;
+    friend ::mongocxx::v_noabi::collection;
+    friend ::mongocxx::v_noabi::database;
+    friend ::mongocxx::v_noabi::index_view;
+    friend ::mongocxx::v_noabi::search_index_view;
+
+    friend ::mongocxx::v_noabi::cursor::iterator;
 
     MONGOCXX_PRIVATE cursor(void* cursor_ptr,
                             bsoncxx::stdx::optional<type> cursor_type = bsoncxx::stdx::nullopt);
@@ -112,7 +118,7 @@ class MONGOCXX_API cursor {
 /// exhausted iterator so that it no longer compares equal to the
 /// end-iterator.
 ///
-class MONGOCXX_API cursor::iterator {
+class cursor::iterator {
    public:
     ///
     /// std::iterator_traits
@@ -148,7 +154,7 @@ class MONGOCXX_API cursor::iterator {
     void operator++(int);
 
    private:
-    friend class cursor;
+    friend ::mongocxx::v_noabi::cursor;
 
     ///
     /// @{

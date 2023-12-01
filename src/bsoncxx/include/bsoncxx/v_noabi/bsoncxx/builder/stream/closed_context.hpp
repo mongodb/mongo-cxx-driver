@@ -14,14 +14,14 @@
 
 #pragma once
 
+#include <bsoncxx/builder/core-fwd.hpp>
+#include <bsoncxx/builder/stream/closed_context-fwd.hpp>
+
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
 inline namespace v_noabi {
 namespace builder {
-
-class core;
-
 namespace stream {
 
 ///

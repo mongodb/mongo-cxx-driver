@@ -16,6 +16,8 @@
 
 #include <string>
 
+#include <mongocxx/options/tls-fwd.hpp>
+
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/string/view_or_value.hpp>
 #include <mongocxx/stdx.hpp>
@@ -29,7 +31,7 @@ namespace options {
 ///
 /// Class representing the optional arguments to a MongoDB driver client (TLS)
 ///
-class MONGOCXX_API tls {
+class tls {
    public:
     ///
     /// The path to the .pem file containing a public key certificate and its associated private

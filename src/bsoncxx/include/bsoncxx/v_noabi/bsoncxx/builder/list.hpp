@@ -16,6 +16,9 @@
 
 #include <sstream>
 
+#include <bsoncxx/builder/basic/array-fwd.hpp>
+#include <bsoncxx/builder/list-fwd.hpp>
+
 #include <bsoncxx/builder/core.hpp>
 #include <bsoncxx/exception/error_code.hpp>
 #include <bsoncxx/exception/exception.hpp>
@@ -26,7 +29,16 @@
 namespace bsoncxx {
 inline namespace v_noabi {
 namespace builder {
+
 using namespace bsoncxx::types;
+
+}  // namespace builder
+}  // namespace v_noabi
+}  // namespace bsoncxx
+
+namespace bsoncxx {
+inline namespace v_noabi {
+namespace builder {
 
 ///
 /// A JSON-like builder for creating documents and arrays.
@@ -94,8 +106,8 @@ class list {
    private:
     bson_value::value val;
 
-    friend class document;
-    friend class array;
+    friend ::bsoncxx::v_noabi::builder::document;
+    friend ::bsoncxx::v_noabi::builder::array;
 
     list(initializer_list_t init, bool type_deduction, bool is_array) : val{nullptr} {
         std::stringstream err_msg{"cannot construct document"};

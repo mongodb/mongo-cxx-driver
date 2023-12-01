@@ -16,6 +16,8 @@
 
 #include <functional>
 
+#include <mongocxx/options/apm-fwd.hpp>
+
 #include <mongocxx/events/command_failed_event.hpp>
 #include <mongocxx/events/command_started_event.hpp>
 #include <mongocxx/events/command_succeeded_event.hpp>
@@ -38,7 +40,7 @@ namespace options {
 ///
 /// Class representing MongoDB application performance monitoring.
 ///
-class MONGOCXX_API apm {
+class apm {
    public:
     ///
     /// Set the command started monitoring callback. The callback takes a reference to a

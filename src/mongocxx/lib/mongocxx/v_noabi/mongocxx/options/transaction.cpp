@@ -38,30 +38,30 @@ transaction& transaction::operator=(const transaction& other) {
 
 transaction::~transaction() noexcept = default;
 
-transaction& transaction::read_concern(const class read_concern& rc) {
+transaction& transaction::read_concern(const mongocxx::read_concern& rc) {
     _impl->read_concern(rc);
     return *this;
 }
 
-stdx::optional<class read_concern> transaction::read_concern() const {
+stdx::optional<mongocxx::read_concern> transaction::read_concern() const {
     return _impl->read_concern();
 }
 
-transaction& transaction::write_concern(const class write_concern& wc) {
+transaction& transaction::write_concern(const mongocxx::write_concern& wc) {
     _impl->write_concern(wc);
     return *this;
 }
 
-stdx::optional<class write_concern> transaction::write_concern() const {
+stdx::optional<mongocxx::write_concern> transaction::write_concern() const {
     return _impl->write_concern();
 }
 
-transaction& transaction::read_preference(const class read_preference& rp) {
+transaction& transaction::read_preference(const mongocxx::read_preference& rp) {
     _impl->read_preference(rp);
     return *this;
 }
 
-stdx::optional<class read_preference> transaction::read_preference() const {
+stdx::optional<mongocxx::read_preference> transaction::read_preference() const {
     return _impl->read_preference();
 }
 

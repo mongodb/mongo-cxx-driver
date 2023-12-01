@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/exception/gridfs_exception-fwd.hpp>
+
 #include <mongocxx/exception/exception.hpp>
 
 #include <mongocxx/config/prelude.hpp>
@@ -26,7 +28,7 @@ inline namespace v_noabi {
 ///
 /// @see mongocxx::exception
 ///
-class MONGOCXX_API gridfs_exception : public exception {
+class gridfs_exception : public exception {
    public:
     using exception::exception;
 };

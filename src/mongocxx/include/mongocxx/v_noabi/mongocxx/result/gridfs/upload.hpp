@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/result/gridfs/upload-fwd.hpp>
+
 #include <bsoncxx/array/value.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
 
@@ -25,7 +27,7 @@ namespace result {
 namespace gridfs {
 
 /// Class representing the result of a GridFS upload operation.
-class MONGOCXX_API upload {
+class upload {
    public:
     upload(bsoncxx::types::bson_value::view id);
 

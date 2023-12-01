@@ -16,6 +16,8 @@
 
 #include <system_error>
 
+#include <bsoncxx/exception/exception-fwd.hpp>
+
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
@@ -24,7 +26,7 @@ inline namespace v_noabi {
 /// Class representing any exceptions emitted from the bsoncxx library or
 /// its underlying implementation.
 ///
-class BSONCXX_API exception : public std::system_error {
+class exception : public std::system_error {
     using std::system_error::system_error;
 };
 

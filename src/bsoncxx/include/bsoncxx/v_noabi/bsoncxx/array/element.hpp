@@ -17,18 +17,16 @@
 #include <cstddef>
 #include <cstdint>
 
+#include <bsoncxx/array/element-fwd.hpp>
+#include <bsoncxx/array/view-fwd.hpp>
+#include <bsoncxx/types/bson_value/view-fwd.hpp>
+
 #include <bsoncxx/document/element.hpp>
 
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
 inline namespace v_noabi {
-namespace types {
-namespace bson_value {
-class view;
-}  // namespace bson_value
-}  // namespace types
-
 namespace array {
 
 ///
@@ -38,7 +36,7 @@ namespace array {
 /// interrogated by calling type() and a specific value can be extracted through
 /// get_X() accessors.
 ///
-class BSONCXX_API element : private document::element {
+class element : private document::element {
    public:
     element();
 
@@ -80,7 +78,7 @@ class BSONCXX_API element : private document::element {
     using document::element::raw;
 
    private:
-    friend class view;
+    friend ::bsoncxx::v_noabi::array::view;
 
     BSONCXX_PRIVATE explicit element(const std::uint8_t* raw,
                                      std::uint32_t length,
@@ -121,7 +119,6 @@ BSONCXX_API bool BSONCXX_CALL operator!=(const types::bson_value::view& v, const
 ///
 
 }  // namespace array
-
 }  // namespace v_noabi
 }  // namespace bsoncxx
 

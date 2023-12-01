@@ -54,49 +54,49 @@ class transaction::impl {
     impl(impl&&) noexcept = default;
     impl& operator=(impl&&) noexcept = default;
 
-    void read_concern(const class read_concern& rc) {
+    void read_concern(const mongocxx::read_concern& rc) {
         libmongoc::transaction_opts_set_read_concern(_transaction_opt_t.get(),
                                                      rc._impl->read_concern_t);
     }
 
-    stdx::optional<class read_concern> read_concern() const {
+    stdx::optional<mongocxx::read_concern> read_concern() const {
         auto rc = libmongoc::transaction_opts_get_read_concern(_transaction_opt_t.get());
         if (!rc) {
             return {};
         }
-        class read_concern rci(
+        mongocxx::read_concern rci(
             stdx::make_unique<read_concern::impl>(libmongoc::read_concern_copy(rc)));
-        return stdx::optional<class read_concern>(std::move(rci));
+        return stdx::optional<mongocxx::read_concern>(std::move(rci));
     }
 
-    void write_concern(const class write_concern& wc) {
+    void write_concern(const mongocxx::write_concern& wc) {
         libmongoc::transaction_opts_set_write_concern(_transaction_opt_t.get(),
                                                       wc._impl->write_concern_t);
     }
 
-    stdx::optional<class write_concern> write_concern() const {
+    stdx::optional<mongocxx::write_concern> write_concern() const {
         auto wc = libmongoc::transaction_opts_get_write_concern(_transaction_opt_t.get());
         if (!wc) {
             return {};
         }
-        class write_concern wci(
+        mongocxx::write_concern wci(
             stdx::make_unique<write_concern::impl>(libmongoc::write_concern_copy(wc)));
-        return stdx::optional<class write_concern>(std::move(wci));
+        return stdx::optional<mongocxx::write_concern>(std::move(wci));
     }
 
-    void read_preference(const class read_preference& rp) {
+    void read_preference(const mongocxx::read_preference& rp) {
         libmongoc::transaction_opts_set_read_prefs(_transaction_opt_t.get(),
                                                    rp._impl->read_preference_t);
     }
 
-    stdx::optional<class read_preference> read_preference() const {
+    stdx::optional<mongocxx::read_preference> read_preference() const {
         auto rp = libmongoc::transaction_opts_get_read_prefs(_transaction_opt_t.get());
         if (!rp) {
             return {};
         }
-        class read_preference rpi(
+        mongocxx::read_preference rpi(
             stdx::make_unique<read_preference::impl>(libmongoc::read_prefs_copy(rp)));
-        return stdx::optional<class read_preference>(std::move(rpi));
+        return stdx::optional<mongocxx::read_preference>(std::move(rpi));
     }
 
     void max_commit_time_ms(std::chrono::milliseconds ms) {

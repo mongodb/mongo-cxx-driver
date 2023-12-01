@@ -18,6 +18,8 @@
 #include <map>
 #include <vector>
 
+#include <mongocxx/result/bulk_write-fwd.hpp>
+
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/types.hpp>
@@ -31,7 +33,7 @@ namespace result {
 ///
 /// Class representing the result of a MongoDB bulk write operation.
 ///
-class MONGOCXX_API bulk_write {
+class bulk_write {
    public:
     using id_map = std::map<std::size_t, bsoncxx::document::element>;
 

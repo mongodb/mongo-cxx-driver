@@ -26,7 +26,7 @@ count& count::collation(bsoncxx::document::view_or_value collation) {
     return *this;
 }
 
-count& count::hint(class hint index_hint) {
+count& count::hint(mongocxx::hint index_hint) {
     _hint = std::move(index_hint);
     return *this;
 }
@@ -51,7 +51,7 @@ count& count::skip(std::int64_t skip) {
     return *this;
 }
 
-count& count::read_preference(class read_preference rp) {
+count& count::read_preference(mongocxx::read_preference rp) {
     _read_preference = std::move(rp);
     return *this;
 }
@@ -60,7 +60,7 @@ const stdx::optional<bsoncxx::document::view_or_value>& count::collation() const
     return _collation;
 }
 
-const stdx::optional<class hint>& count::hint() const {
+const stdx::optional<mongocxx::hint>& count::hint() const {
     return _hint;
 }
 
