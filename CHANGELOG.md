@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 3.10.0 [Unreleased]
+
+### Added
+
+- Forward headers providing non-defining declarations of bsoncxx and mongocxx class types.
+  - Note: user-defined forward declarations of any library entity has not been, and is still not, supported.
+    To obtain the declaration or definition of a library entity, always include the corresponding header.
+
 ## 3.9.0
 
 ### Added
@@ -16,9 +24,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add API to manage [Atlas Search Indexes](https://www.mongodb.com/docs/atlas/atlas-search/).
 - Automatically download C driver dependency if not provided.
 - Add VERSIONINFO resource to bsoncxx.dll and mongocxx.dll.
-- Add forward headers providing non-defining declarations of bsoncxx and mongocxx class types.
-  - Note: user-defined forward declarations of library entities has not been, and is still not, supported.
-    To obtain the declaration a bsoncxx or mongocxx entity, include the corresponding (forward) header.
 
 ### Changed
 - Do not build tests as part of `all` target. Configure with `BUILD_TESTING=ON` to build tests.
