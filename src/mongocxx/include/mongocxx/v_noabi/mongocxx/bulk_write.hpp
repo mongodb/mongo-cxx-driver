@@ -14,6 +14,9 @@
 
 #pragma once
 
+#include <mongocxx/bulk_write-fwd.hpp>
+#include <mongocxx/collection-fwd.hpp>
+
 #include <mongocxx/client_session.hpp>
 #include <mongocxx/model/write.hpp>
 #include <mongocxx/options/bulk_write.hpp>
@@ -23,8 +26,6 @@
 
 namespace mongocxx {
 inline namespace v_noabi {
-class collection;
-
 ///
 /// Class representing a batch of write operations that can be sent to the server as a group.
 ///
@@ -39,7 +40,7 @@ class collection;
 /// @see https://www.mongodb.com/docs/manual/core/crud/
 /// @see https://www.mongodb.com/docs/manual/core/bulk-write-operations/
 ///
-class MONGOCXX_API bulk_write {
+class bulk_write {
    public:
     ///
     /// Move constructs a bulk write operation.
@@ -92,7 +93,7 @@ class MONGOCXX_API bulk_write {
     stdx::optional<result::bulk_write> execute() const;
 
    private:
-    friend class collection;
+    friend ::mongocxx::v_noabi::collection;
 
     class MONGOCXX_PRIVATE impl;
 

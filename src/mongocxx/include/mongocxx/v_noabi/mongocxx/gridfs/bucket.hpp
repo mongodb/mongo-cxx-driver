@@ -18,6 +18,9 @@
 #include <memory>
 #include <ostream>
 
+#include <mongocxx/database-fwd.hpp>
+#include <mongocxx/gridfs/bucket-fwd.hpp>
+
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
@@ -35,8 +38,6 @@
 
 namespace mongocxx {
 inline namespace v_noabi {
-class database;
-
 namespace gridfs {
 
 ///
@@ -59,7 +60,7 @@ namespace gridfs {
 ///
 /// @see https://www.mongodb.com/display/DOCS/GridFS
 ///
-class MONGOCXX_API bucket {
+class bucket {
    public:
     ///
     /// Default constructs a bucket object. The bucket is equivalent to the state of a moved from
@@ -649,7 +650,7 @@ class MONGOCXX_API bucket {
     stdx::string_view bucket_name() const;
 
    private:
-    friend class mongocxx::database;
+    friend ::mongocxx::v_noabi::database;
 
     // Constructs a new GridFS bucket.  Throws if options are invalid.
     MONGOCXX_PRIVATE bucket(const database& db, const options::gridfs::bucket& options);

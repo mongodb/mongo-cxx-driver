@@ -17,6 +17,8 @@
 #include <cstdint>
 #include <string>
 
+#include <bsoncxx/decimal128-fwd.hpp>
+
 #include <bsoncxx/stdx/string_view.hpp>
 
 #include <bsoncxx/config/prelude.hpp>
@@ -26,7 +28,7 @@ inline namespace v_noabi {
 ///
 /// Represents an IEEE 754-2008 BSON Decimal128 value in a platform-independent way.
 ///
-class BSONCXX_API decimal128 {
+class decimal128 {
    public:
     ///
     /// Constructs a BSON Decimal128 value representing zero.

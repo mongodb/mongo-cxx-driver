@@ -37,8 +37,6 @@
 
 namespace mongocxx {
 inline namespace v_noabi {
-class client;
-
 namespace test_util {
 //
 // Compares to version number strings (i.e. positive integers separated by periods). Comparisons are

@@ -17,6 +17,8 @@
 #include <chrono>
 #include <cstdint>
 
+#include <mongocxx/options/find_one_and_replace-fwd.hpp>
+
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/types/bson_value/view_or_value.hpp>
@@ -34,7 +36,7 @@ namespace options {
 ///
 /// Class representing the optional arguments to a MongoDB find_and_modify replace operation
 ///
-class MONGOCXX_API find_one_and_replace {
+class find_one_and_replace {
    public:
     /// Sets the collation for this operation.
     ///
@@ -99,14 +101,14 @@ class MONGOCXX_API find_one_and_replace {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    find_one_and_replace& hint(class hint index_hint);
+    find_one_and_replace& hint(mongocxx::hint index_hint);
 
     ///
     /// Gets the current hint.
     ///
     /// @return The current hint, if one is set.
     ///
-    const stdx::optional<class hint>& hint() const;
+    const stdx::optional<mongocxx::hint>& hint() const;
 
     ///
     /// Set the value of the let option.
@@ -300,7 +302,7 @@ class MONGOCXX_API find_one_and_replace {
    private:
     stdx::optional<bool> _bypass_document_validation;
     stdx::optional<bsoncxx::document::view_or_value> _collation;
-    stdx::optional<class hint> _hint;
+    stdx::optional<mongocxx::hint> _hint;
     stdx::optional<bsoncxx::document::view_or_value> _let;
     stdx::optional<bsoncxx::types::bson_value::view_or_value> _comment;
     stdx::optional<std::chrono::milliseconds> _max_time;

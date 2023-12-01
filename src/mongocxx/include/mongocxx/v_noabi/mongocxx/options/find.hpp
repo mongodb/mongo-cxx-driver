@@ -17,6 +17,8 @@
 #include <chrono>
 #include <cstdint>
 
+#include <mongocxx/options/find-fwd.hpp>
+
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/string/view_or_value.hpp>
@@ -34,7 +36,7 @@ namespace options {
 ///
 /// Class representing the optional arguments to a MongoDB query.
 ///
-class MONGOCXX_API find {
+class find {
    public:
     ///
     /// Enables writing to temporary files on the server. When set to true, the server
@@ -201,7 +203,7 @@ class MONGOCXX_API find {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    find& hint(class hint index_hint);
+    find& hint(mongocxx::hint index_hint);
 
     ///
     /// Gets the current hint.
@@ -210,7 +212,7 @@ class MONGOCXX_API find {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    const stdx::optional<class hint>& hint() const;
+    const stdx::optional<mongocxx::hint>& hint() const;
 
     ///
     /// Set the value of the let option.
@@ -443,7 +445,7 @@ class MONGOCXX_API find {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    find& read_preference(class read_preference rp);
+    find& read_preference(mongocxx::read_preference rp);
 
     ///
     /// The current read_preference for this operation.
@@ -453,7 +455,7 @@ class MONGOCXX_API find {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    const stdx::optional<class read_preference>& read_preference() const;
+    const stdx::optional<mongocxx::read_preference>& read_preference() const;
 
     ///
     /// Sets whether to return the index keys associated with the query results, instead of the
@@ -562,7 +564,7 @@ class MONGOCXX_API find {
     stdx::optional<bsoncxx::document::view_or_value> _collation;
     stdx::optional<bsoncxx::string::view_or_value> _comment;
     stdx::optional<cursor::type> _cursor_type;
-    stdx::optional<class hint> _hint;
+    stdx::optional<mongocxx::hint> _hint;
     stdx::optional<bsoncxx::document::view_or_value> _let;
     stdx::optional<bsoncxx::types::bson_value::view_or_value> _comment_option;
     stdx::optional<std::int64_t> _limit;
@@ -572,7 +574,7 @@ class MONGOCXX_API find {
     stdx::optional<bsoncxx::document::view_or_value> _min;
     stdx::optional<bool> _no_cursor_timeout;
     stdx::optional<bsoncxx::document::view_or_value> _projection;
-    stdx::optional<class read_preference> _read_preference;
+    stdx::optional<mongocxx::read_preference> _read_preference;
     stdx::optional<bool> _return_key;
     stdx::optional<bool> _show_record_id;
     stdx::optional<std::int64_t> _skip;

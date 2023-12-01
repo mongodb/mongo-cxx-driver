@@ -51,7 +51,7 @@ find& find::cursor_type(cursor::type cursor_type) {
     return *this;
 }
 
-find& find::hint(class hint index_hint) {
+find& find::hint(mongocxx::hint index_hint) {
     _hint = std::move(index_hint);
     return *this;
 }
@@ -101,7 +101,7 @@ find& find::projection(bsoncxx::document::view_or_value projection) {
     return *this;
 }
 
-find& find::read_preference(class read_preference rp) {
+find& find::read_preference(mongocxx::read_preference rp) {
     _read_preference = std::move(rp);
     return *this;
 }
@@ -150,7 +150,7 @@ const stdx::optional<cursor::type>& find::cursor_type() const {
     return _cursor_type;
 }
 
-const stdx::optional<class hint>& find::hint() const {
+const stdx::optional<mongocxx::hint>& find::hint() const {
     return _hint;
 }
 
@@ -206,7 +206,7 @@ const stdx::optional<bsoncxx::document::view_or_value>& find::sort() const {
     return _ordering;
 }
 
-const stdx::optional<class read_preference>& find::read_preference() const {
+const stdx::optional<mongocxx::read_preference>& find::read_preference() const {
     return _read_preference;
 }
 

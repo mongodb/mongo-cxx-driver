@@ -32,7 +32,7 @@ class collection::impl {
    public:
     impl(mongoc_collection_t* collection,
          stdx::string_view database_name,
-         const class client::impl* client)
+         const mongocxx::client::impl* client)
         : collection_t(collection), database_name(std::move(database_name)), client_impl(client) {}
 
     impl(const impl& i)
@@ -58,7 +58,7 @@ class collection::impl {
 
     mongoc_collection_t* collection_t;
     std::string database_name;
-    const class client::impl* client_impl;
+    const mongocxx::client::impl* client_impl;
 };
 
 }  // namespace v_noabi

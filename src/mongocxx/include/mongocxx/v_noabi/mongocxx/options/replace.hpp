@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/options/replace-fwd.hpp>
+
 #include <bsoncxx/array/view_or_value.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
@@ -31,7 +33,7 @@ namespace options {
 ///
 /// Class representing the optional arguments to a MongoDB replace operation.
 ///
-class MONGOCXX_API replace {
+class replace {
    public:
     ///
     /// Sets the bypass_document_validation option.
@@ -120,7 +122,7 @@ class MONGOCXX_API replace {
     ///
     /// @see https://www.mongodb.com/docs/manual/core/write-concern/
     ///
-    replace& write_concern(class write_concern wc);
+    replace& write_concern(mongocxx::write_concern wc);
 
     ///
     /// The current write_concern for this operation.
@@ -130,7 +132,7 @@ class MONGOCXX_API replace {
     ///
     /// @see https://www.mongodb.com/docs/manual/core/write-concern/
     ///
-    const stdx::optional<class write_concern>& write_concern() const;
+    const stdx::optional<mongocxx::write_concern>& write_concern() const;
 
     ///
     /// Sets the index to use for this operation.
@@ -145,14 +147,14 @@ class MONGOCXX_API replace {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    replace& hint(class hint index_hint);
+    replace& hint(mongocxx::hint index_hint);
 
     ///
     /// Gets the current hint.
     ///
     /// @return The current hint, if one is set.
     ///
-    const stdx::optional<class hint>& hint() const;
+    const stdx::optional<mongocxx::hint>& hint() const;
 
     ///
     /// Set the value of the let option.
@@ -198,8 +200,8 @@ class MONGOCXX_API replace {
     stdx::optional<bool> _bypass_document_validation;
     stdx::optional<bsoncxx::document::view_or_value> _collation;
     stdx::optional<bool> _upsert;
-    stdx::optional<class write_concern> _write_concern;
-    stdx::optional<class hint> _hint;
+    stdx::optional<mongocxx::write_concern> _write_concern;
+    stdx::optional<mongocxx::hint> _hint;
     stdx::optional<bsoncxx::document::view_or_value> _let;
     stdx::optional<bsoncxx::types::bson_value::view_or_value> _comment;
 };

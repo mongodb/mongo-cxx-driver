@@ -17,6 +17,8 @@
 #include <string>
 #include <system_error>
 
+#include <mongocxx/exception/exception-fwd.hpp>
+
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
@@ -24,7 +26,7 @@ inline namespace v_noabi {
 ///
 /// A class to be used as the base class for all mongocxx exceptions.
 ///
-class MONGOCXX_API exception : public std::system_error {
+class exception : public std::system_error {
     using system_error::system_error;
 };
 

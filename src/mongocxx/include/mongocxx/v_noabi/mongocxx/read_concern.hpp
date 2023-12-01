@@ -16,6 +16,13 @@
 
 #include <memory>
 
+#include <mongocxx/client-fwd.hpp>
+#include <mongocxx/collection-fwd.hpp>
+#include <mongocxx/database-fwd.hpp>
+#include <mongocxx/options/transaction-fwd.hpp>
+#include <mongocxx/read_concern-fwd.hpp>
+#include <mongocxx/uri-fwd.hpp>
+
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
@@ -26,15 +33,6 @@
 
 namespace mongocxx {
 inline namespace v_noabi {
-class client;
-class collection;
-class database;
-class uri;
-
-namespace options {
-class transaction;
-}
-
 ///
 /// A class to represent the read concern. Read concern can be set at the client, database, or
 /// collection level. The read concern can also be provided via connection string, and will be
@@ -54,7 +52,7 @@ class transaction;
 ///
 /// @see https://www.mongodb.com/docs/manual/reference/read-concern/
 ///
-class MONGOCXX_API read_concern {
+class read_concern {
    public:
     ///
     /// A class to represent the read concern level.
@@ -157,12 +155,11 @@ class MONGOCXX_API read_concern {
     bsoncxx::document::value to_document() const;
 
    private:
-    friend class client;
-    friend class collection;
-    friend class database;
-    friend class uri;
-
-    friend class options::transaction;
+    friend ::mongocxx::v_noabi::client;
+    friend ::mongocxx::v_noabi::collection;
+    friend ::mongocxx::v_noabi::database;
+    friend ::mongocxx::v_noabi::options::transaction;
+    friend ::mongocxx::v_noabi::uri;
 
     ///
     /// @{

@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/events/heartbeat_succeeded_event-fwd.hpp>
+
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 
@@ -30,7 +32,7 @@ namespace events {
 /// @see "ServerHeartbeatSucceededEvent" in
 /// https://github.com/mongodb/specifications/blob/master/source/server-discovery-and-monitoring/server-discovery-and-monitoring.rst
 ///
-class MONGOCXX_API heartbeat_succeeded_event {
+class heartbeat_succeeded_event {
    public:
     MONGOCXX_PRIVATE explicit heartbeat_succeeded_event(const void* event);
 

@@ -17,6 +17,10 @@
 #include <functional>
 #include <memory>
 
+#include <mongocxx/client-fwd.hpp>
+#include <mongocxx/options/auto_encryption-fwd.hpp>
+#include <mongocxx/pool-fwd.hpp>
+
 #include <bsoncxx/stdx/optional.hpp>
 #include <mongocxx/options/pool.hpp>
 #include <mongocxx/stdx.hpp>
@@ -26,8 +30,6 @@
 
 namespace mongocxx {
 inline namespace v_noabi {
-class client;
-
 ///
 /// A pool of @c client objects associated with a MongoDB deployment.
 ///
@@ -43,7 +45,7 @@ class client;
 /// to check the status of the cluster. Because of this, if multiple threads are available, a
 /// connection pool should be used even if the application itself is single-threaded.
 ///
-class MONGOCXX_API pool {
+class pool {
    public:
     ///
     /// Creates a pool associated with a connection string.
@@ -87,7 +89,7 @@ class MONGOCXX_API pool {
         explicit operator bool() const noexcept;
 
        private:
-        friend class pool;
+        friend ::mongocxx::v_noabi::pool;
 
         using unique_client = std::unique_ptr<client, std::function<void MONGOCXX_CALL(client*)>>;
 
@@ -109,7 +111,7 @@ class MONGOCXX_API pool {
     stdx::optional<entry> try_acquire();
 
    private:
-    friend class options::auto_encryption;
+    friend ::mongocxx::v_noabi::options::auto_encryption;
 
     MONGOCXX_PRIVATE void _release(client* client);
 

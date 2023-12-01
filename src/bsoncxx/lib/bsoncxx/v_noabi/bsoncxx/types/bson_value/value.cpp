@@ -219,7 +219,7 @@ value::value(void* internal_value)
 
 value::value(const value& rhs) : value(&rhs._impl->_value) {}
 
-value::value(const class view& bson_view) {
+value::value(const bson_value::view& bson_view) {
     _impl = stdx::make_unique<impl>();
     convert_to_libbson(&_impl->_value, bson_view);
 }

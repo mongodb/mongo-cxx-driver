@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/options/bulk_write-fwd.hpp>
+
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/types/bson_value/view_or_value.hpp>
@@ -28,7 +30,7 @@ namespace options {
 ///
 /// Class representing the optional arguments to a MongoDB bulk write
 ///
-class MONGOCXX_API bulk_write {
+class bulk_write {
    public:
     ///
     /// Constructs a new bulk_write object. By default, bulk writes are considered ordered
@@ -73,7 +75,7 @@ class MONGOCXX_API bulk_write {
     ///
     /// @see https://www.mongodb.com/docs/manual/core/write-concern/
     ///
-    bulk_write& write_concern(class write_concern wc);
+    bulk_write& write_concern(mongocxx::write_concern wc);
 
     ///
     /// The current write_concern for this operation.
@@ -83,7 +85,7 @@ class MONGOCXX_API bulk_write {
     ///
     /// @see https://www.mongodb.com/docs/manual/core/write-concern/
     ///
-    const stdx::optional<class write_concern>& write_concern() const;
+    const stdx::optional<mongocxx::write_concern>& write_concern() const;
 
     ///
     /// Set whether or not to bypass document validation for this operation.
@@ -147,7 +149,7 @@ class MONGOCXX_API bulk_write {
 
    private:
     bool _ordered;
-    stdx::optional<class write_concern> _write_concern;
+    stdx::optional<mongocxx::write_concern> _write_concern;
     stdx::optional<bool> _bypass_document_validation;
     stdx::optional<bsoncxx::document::view_or_value> _let;
     stdx::optional<bsoncxx::types::bson_value::view_or_value> _comment;

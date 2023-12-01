@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/result/insert_one-fwd.hpp>
+
 #include <bsoncxx/array/value.hpp>
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
@@ -26,7 +28,7 @@ inline namespace v_noabi {
 namespace result {
 
 /// Class representing the result of a MongoDB insert operation.
-class MONGOCXX_API insert_one {
+class insert_one {
    public:
     // This constructor is public for testing purposes only
     insert_one(result::bulk_write result, bsoncxx::types::bson_value::view inserted_id);

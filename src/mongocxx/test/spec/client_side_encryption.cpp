@@ -215,8 +215,9 @@ void run_encryption_tests_in_file(const std::string& test_path) {
         return;
     }
 
-    class client setup_client {
-        uri{}, test_util::add_test_server_api(),
+    mongocxx::client setup_client{
+        uri{},
+        test_util::add_test_server_api(),
     };
 
     write_concern wc_majority;
@@ -253,8 +254,9 @@ void run_encryption_tests_in_file(const std::string& test_path) {
                 check_results_logging = true;
             }
 
-            class client client {
-                get_uri(test.get_document().value), test_util::add_test_server_api(client_opts),
+            mongocxx::client client{
+                get_uri(test.get_document().value),
+                test_util::add_test_server_api(client_opts),
             };
 
             auto db = client[db_name];
@@ -298,8 +300,9 @@ void run_encryption_tests_in_file(const std::string& test_path) {
             }
 
             if (test["outcome"] && test["outcome"]["collection"]) {
-                class client plaintext_client {
-                    uri{}, test_util::add_test_server_api(),
+                mongocxx::client plaintext_client{
+                    uri{},
+                    test_util::add_test_server_api(),
                 };
 
                 read_preference rp;

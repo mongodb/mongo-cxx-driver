@@ -16,6 +16,8 @@
 
 #include <cstdint>
 
+#include <mongocxx/events/heartbeat_started_event-fwd.hpp>
+
 #include <bsoncxx/stdx/string_view.hpp>
 
 #include <mongocxx/config/prelude.hpp>
@@ -31,7 +33,7 @@ namespace events {
 /// @see "ServerHeartbeatStartedEvent" in
 /// https://github.com/mongodb/specifications/blob/master/source/server-discovery-and-monitoring/server-discovery-and-monitoring.rst
 ///
-class MONGOCXX_API heartbeat_started_event {
+class heartbeat_started_event {
    public:
     MONGOCXX_PRIVATE explicit heartbeat_started_event(const void* event);
 

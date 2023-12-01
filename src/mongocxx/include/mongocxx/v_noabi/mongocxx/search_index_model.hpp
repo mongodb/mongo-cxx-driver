@@ -2,6 +2,8 @@
 
 #include <string>
 
+#include <mongocxx/search_index_model-fwd.hpp>
+
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
@@ -14,7 +16,7 @@ inline namespace v_noabi {
 ///
 /// Class representing a search index on a MongoDB server.
 ///
-class MONGOCXX_API search_index_model {
+class search_index_model {
    public:
     ///
     /// Initializes a new search_index_model over a mongocxx::collection.

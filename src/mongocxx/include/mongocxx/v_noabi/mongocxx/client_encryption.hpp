@@ -14,6 +14,10 @@
 
 #pragma once
 
+#include <mongocxx/client_encryption-fwd.hpp>
+#include <mongocxx/collection-fwd.hpp>
+#include <mongocxx/database-fwd.hpp>
+
 #include <bsoncxx/types/bson_value/value.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
 #include <mongocxx/cursor.hpp>
@@ -29,13 +33,10 @@
 
 namespace mongocxx {
 inline namespace v_noabi {
-class database;
-class collection;
-
 ///
 /// Class supporting operations for MongoDB Client-Side Field Level Encryption.
 ///
-class MONGOCXX_API client_encryption {
+class client_encryption {
    public:
     ///
     /// Creates a client_encryption object.

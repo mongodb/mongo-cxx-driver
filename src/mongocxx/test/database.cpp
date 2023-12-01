@@ -457,7 +457,7 @@ TEST_CASE("Database integration tests", "[database]") {
     }
 
     SECTION("list_collections returns a correct result") {
-        class database db = mongo_client["list_collections"];
+        mongocxx::database db = mongo_client["list_collections"];
         db.drop();
 
         collection default_collection = db.create_collection("list_collections_default");
@@ -484,7 +484,7 @@ TEST_CASE("Database integration tests", "[database]") {
     }
 
     SECTION("list_collection_names returns a correct result") {
-        class database db = mongo_client["list_collection_names"];
+        mongocxx::database db = mongo_client["list_collection_names"];
         db.drop();
 
         std::set<std::string> expected_colls;

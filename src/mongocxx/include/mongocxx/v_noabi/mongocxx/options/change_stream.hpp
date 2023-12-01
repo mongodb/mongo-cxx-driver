@@ -16,6 +16,11 @@
 
 #include <chrono>
 
+#include <mongocxx/client-fwd.hpp>
+#include <mongocxx/collection-fwd.hpp>
+#include <mongocxx/database-fwd.hpp>
+#include <mongocxx/options/change_stream-fwd.hpp>
+
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/string/view_or_value.hpp>
 #include <bsoncxx/types.hpp>
@@ -26,16 +31,12 @@
 
 namespace mongocxx {
 inline namespace v_noabi {
-class client;
-class collection;
-class database;
-
 namespace options {
 
 ///
 /// Class representing MongoDB change stream options.
 ///
-class MONGOCXX_API change_stream {
+class change_stream {
    public:
     change_stream();
 
@@ -257,9 +258,9 @@ class MONGOCXX_API change_stream {
     change_stream& start_at_operation_time(bsoncxx::types::b_timestamp timestamp);
 
    private:
-    friend class ::mongocxx::client;
-    friend class ::mongocxx::collection;
-    friend class ::mongocxx::database;
+    friend ::mongocxx::v_noabi::client;
+    friend ::mongocxx::v_noabi::collection;
+    friend ::mongocxx::v_noabi::database;
 
     bsoncxx::document::value as_bson() const;
     stdx::optional<bsoncxx::string::view_or_value> _full_document;

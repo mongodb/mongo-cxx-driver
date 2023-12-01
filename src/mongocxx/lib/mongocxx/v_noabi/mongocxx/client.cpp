@@ -70,7 +70,7 @@ class database_names {
 
 client::client() noexcept = default;
 
-client::client(const class uri& uri, const options::client& options) {
+client::client(const mongocxx::uri& uri, const options::client& options) {
 #if defined(MONGOCXX_ENABLE_SSL) && defined(MONGOC_ENABLE_SSL)
     if (options.tls_opts()) {
         if (!uri.tls())
@@ -149,55 +149,55 @@ client::operator bool() const noexcept {
     return static_cast<bool>(_impl);
 }
 
-void client::read_concern_deprecated(class read_concern rc) {
+void client::read_concern_deprecated(mongocxx::read_concern rc) {
     auto client_t = _get_impl().client_t;
     libmongoc::client_set_read_concern(client_t, rc._impl->read_concern_t);
 }
 
-void client::read_concern(class read_concern rc) {
+void client::read_concern(mongocxx::read_concern rc) {
     return read_concern_deprecated(std::move(rc));
 }
 
-class read_concern client::read_concern() const {
+mongocxx::read_concern client::read_concern() const {
     auto rc = libmongoc::client_get_read_concern(_get_impl().client_t);
     return {stdx::make_unique<read_concern::impl>(libmongoc::read_concern_copy(rc))};
 }
 
-void client::read_preference_deprecated(class read_preference rp) {
+void client::read_preference_deprecated(mongocxx::read_preference rp) {
     libmongoc::client_set_read_prefs(_get_impl().client_t, rp._impl->read_preference_t);
 }
 
-void client::read_preference(class read_preference rp) {
+void client::read_preference(mongocxx::read_preference rp) {
     return read_preference_deprecated(std::move(rp));
 }
 
-class read_preference client::read_preference() const {
-    class read_preference rp(stdx::make_unique<read_preference::impl>(
+mongocxx::read_preference client::read_preference() const {
+    mongocxx::read_preference rp(stdx::make_unique<read_preference::impl>(
         libmongoc::read_prefs_copy(libmongoc::client_get_read_prefs(_get_impl().client_t))));
     return rp;
 }
 
-class uri client::uri() const {
-    class uri connection_string(stdx::make_unique<uri::impl>(
+mongocxx::uri client::uri() const {
+    mongocxx::uri connection_string(stdx::make_unique<uri::impl>(
         libmongoc::uri_copy(libmongoc::client_get_uri(_get_impl().client_t))));
     return connection_string;
 }
 
-void client::write_concern_deprecated(class write_concern wc) {
+void client::write_concern_deprecated(mongocxx::write_concern wc) {
     libmongoc::client_set_write_concern(_get_impl().client_t, wc._impl->write_concern_t);
 }
 
-void client::write_concern(class write_concern wc) {
+void client::write_concern(mongocxx::write_concern wc) {
     return write_concern_deprecated(std::move(wc));
 }
 
-class write_concern client::write_concern() const {
-    class write_concern wc(stdx::make_unique<write_concern::impl>(
+mongocxx::write_concern client::write_concern() const {
+    mongocxx::write_concern wc(stdx::make_unique<write_concern::impl>(
         libmongoc::write_concern_copy(libmongoc::client_get_write_concern(_get_impl().client_t))));
     return wc;
 }
 
-class database client::database(bsoncxx::string::view_or_value name) const& {
+mongocxx::database client::database(bsoncxx::string::view_or_value name) const& {
     return mongocxx::database(*this, std::move(name));
 }
 
@@ -275,7 +275,7 @@ std::vector<std::string> client::list_database_names(
     return res;
 }
 
-class client_session client::start_session(const mongocxx::options::client_session& options) {
+mongocxx::client_session client::start_session(const mongocxx::options::client_session& options) {
     return client_session(this, options);
 }
 
@@ -283,28 +283,27 @@ void client::reset() {
     libmongoc::client_reset(_get_impl().client_t);
 }
 
-class change_stream client::watch(const options::change_stream& options) {
+change_stream client::watch(const options::change_stream& options) {
     return watch(pipeline{}, options);
 }
 
-class change_stream client::watch(const client_session& session,
-                                  const options::change_stream& options) {
+change_stream client::watch(const client_session& session, const options::change_stream& options) {
     return _watch(&session, pipeline{}, options);
 }
 
-class change_stream client::watch(const pipeline& pipe, const options::change_stream& options) {
+change_stream client::watch(const pipeline& pipe, const options::change_stream& options) {
     return _watch(nullptr, pipe, options);
 }
 
-class change_stream client::watch(const client_session& session,
-                                  const pipeline& pipe,
-                                  const options::change_stream& options) {
+change_stream client::watch(const client_session& session,
+                            const pipeline& pipe,
+                            const options::change_stream& options) {
     return _watch(&session, pipe, options);
 }
 
-class change_stream client::_watch(const client_session* session,
-                                   const pipeline& pipe,
-                                   const options::change_stream& options) {
+change_stream client::_watch(const client_session* session,
+                             const pipeline& pipe,
+                             const options::change_stream& options) {
     bsoncxx::builder::basic::document container;
     container.append(bsoncxx::builder::basic::kvp("pipeline", pipe._impl->view_array()));
     scoped_bson_t pipeline_bson{container.view()};

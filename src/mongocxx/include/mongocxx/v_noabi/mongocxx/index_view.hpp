@@ -17,6 +17,9 @@
 #include <string>
 #include <vector>
 
+#include <mongocxx/collection-fwd.hpp>
+#include <mongocxx/index_view-fwd.hpp>
+
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <mongocxx/client_session.hpp>
@@ -31,7 +34,7 @@ inline namespace v_noabi {
 ///
 /// Class representing a MongoDB index view.
 ///
-class MONGOCXX_API index_view {
+class index_view {
    public:
     index_view(index_view&&) noexcept;
     index_view& operator=(index_view&&) noexcept;
@@ -420,7 +423,7 @@ class MONGOCXX_API index_view {
     ///
 
    private:
-    friend class collection;
+    friend ::mongocxx::v_noabi::collection;
     class MONGOCXX_PRIVATE impl;
 
     MONGOCXX_PRIVATE index_view(void* coll, void* client);

@@ -16,6 +16,8 @@
 
 #include <chrono>
 
+#include <mongocxx/options/estimated_document_count-fwd.hpp>
+
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/types/bson_value/view_or_value.hpp>
 #include <mongocxx/read_preference.hpp>
@@ -29,7 +31,7 @@ namespace options {
 ///
 /// Class representing the optional arguments to mongocxx::collection::estimated_document_count
 ///
-class MONGOCXX_API estimated_document_count {
+class estimated_document_count {
    public:
     ///
     /// Sets the maximum amount of time for this operation to run (server-side) in milliseconds.
@@ -89,7 +91,7 @@ class MONGOCXX_API estimated_document_count {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/count/
     ///
-    estimated_document_count& read_preference(class read_preference rp);
+    estimated_document_count& read_preference(mongocxx::read_preference rp);
 
     ///
     /// The current read_preference for this operation.
@@ -98,12 +100,12 @@ class MONGOCXX_API estimated_document_count {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/count/
     ///
-    const bsoncxx::stdx::optional<class read_preference>& read_preference() const;
+    const bsoncxx::stdx::optional<mongocxx::read_preference>& read_preference() const;
 
    private:
     bsoncxx::stdx::optional<std::chrono::milliseconds> _max_time;
     bsoncxx::stdx::optional<bsoncxx::types::bson_value::view_or_value> _comment;
-    bsoncxx::stdx::optional<class read_preference> _read_preference;
+    bsoncxx::stdx::optional<mongocxx::read_preference> _read_preference;
 };
 
 }  // namespace options

@@ -44,30 +44,30 @@ const stdx::optional<std::int32_t>& bucket::chunk_size_bytes() const {
     return _chunk_size_bytes;
 }
 
-bucket& bucket::read_concern(class read_concern read_concern) {
+bucket& bucket::read_concern(mongocxx::read_concern read_concern) {
     _read_concern = read_concern;
     return *this;
 }
 
-const stdx::optional<class read_concern>& bucket::read_concern() const {
+const stdx::optional<mongocxx::read_concern>& bucket::read_concern() const {
     return _read_concern;
 }
 
-bucket& bucket::read_preference(class read_preference read_preference) {
+bucket& bucket::read_preference(mongocxx::read_preference read_preference) {
     _read_preference = std::move(read_preference);
     return *this;
 }
 
-const stdx::optional<class read_preference>& bucket::read_preference() const {
+const stdx::optional<mongocxx::read_preference>& bucket::read_preference() const {
     return _read_preference;
 }
 
-bucket& bucket::write_concern(class write_concern write_concern) {
+bucket& bucket::write_concern(mongocxx::write_concern write_concern) {
     _write_concern = std::move(write_concern);
     return *this;
 }
 
-const stdx::optional<class write_concern>& bucket::write_concern() const {
+const stdx::optional<mongocxx::write_concern>& bucket::write_concern() const {
     return _write_concern;
 }
 

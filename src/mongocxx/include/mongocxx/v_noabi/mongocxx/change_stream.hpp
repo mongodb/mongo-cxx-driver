@@ -16,6 +16,11 @@
 
 #include <memory>
 
+#include <mongocxx/change_stream-fwd.hpp>
+#include <mongocxx/client-fwd.hpp>
+#include <mongocxx/collection-fwd.hpp>
+#include <mongocxx/database-fwd.hpp>
+
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 
@@ -23,14 +28,10 @@
 
 namespace mongocxx {
 inline namespace v_noabi {
-class client;
-class collection;
-class database;
-
 ///
 /// Class representing a MongoDB change stream.
 ///
-class MONGOCXX_API change_stream {
+class change_stream {
    public:
     /// A change stream iterator.
     class MONGOCXX_API iterator;
@@ -107,10 +108,11 @@ class MONGOCXX_API change_stream {
     bsoncxx::stdx::optional<bsoncxx::document::view> get_resume_token() const;
 
    private:
-    friend class client;
-    friend class collection;
-    friend class database;
-    friend class change_stream::iterator;
+    friend ::mongocxx::v_noabi::client;
+    friend ::mongocxx::v_noabi::collection;
+    friend ::mongocxx::v_noabi::database;
+
+    friend ::mongocxx::v_noabi::change_stream::iterator;
 
     MONGOCXX_PRIVATE change_stream(void* change_stream_ptr);
 
@@ -121,7 +123,7 @@ class MONGOCXX_API change_stream {
 ///
 /// Class representing a MongoDB change stream iterator.
 ///
-class MONGOCXX_API change_stream::iterator {
+class change_stream::iterator {
    public:
     // Support input-iterator (caveat of post-increment returning void)
     using difference_type = std::int64_t;
@@ -184,7 +186,8 @@ class MONGOCXX_API change_stream::iterator {
     void operator++(int);
 
    private:
-    friend class change_stream;
+    friend ::mongocxx::v_noabi::change_stream;
+
     enum class iter_type { k_tracking, k_default_constructed, k_end };
 
     MONGOCXX_PRIVATE explicit iterator(iter_type type, const change_stream* change_stream);

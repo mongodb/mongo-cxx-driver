@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/options/insert-fwd.hpp>
+
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/types/bson_value/view_or_value.hpp>
@@ -29,7 +31,7 @@ namespace options {
 ///
 /// Class representing the optional arguments to a MongoDB insert operation
 ///
-class MONGOCXX_API insert {
+class insert {
    public:
     ///
     /// Sets the bypass_document_validation option.
@@ -67,7 +69,7 @@ class MONGOCXX_API insert {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    insert& write_concern(class write_concern wc);
+    insert& write_concern(mongocxx::write_concern wc);
 
     ///
     /// The current write_concern for this operation.
@@ -76,7 +78,7 @@ class MONGOCXX_API insert {
     ///
     /// @see https://www.mongodb.com/docs/manual/core/write-concern/
     ///
-    const stdx::optional<class write_concern>& write_concern() const;
+    const stdx::optional<mongocxx::write_concern>& write_concern() const;
 
     ///
     /// @note: This applies only to insert_many and is ignored for insert_one.
@@ -130,7 +132,7 @@ class MONGOCXX_API insert {
     const stdx::optional<bsoncxx::types::bson_value::view_or_value>& comment() const;
 
    private:
-    stdx::optional<class write_concern> _write_concern;
+    stdx::optional<mongocxx::write_concern> _write_concern;
     stdx::optional<bool> _ordered;
     stdx::optional<bool> _bypass_document_validation;
     stdx::optional<bsoncxx::types::bson_value::view_or_value> _comment;

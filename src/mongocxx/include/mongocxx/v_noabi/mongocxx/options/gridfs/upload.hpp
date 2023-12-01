@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/options/gridfs/upload-fwd.hpp>
+
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <mongocxx/stdx.hpp>
@@ -28,7 +30,7 @@ namespace gridfs {
 ///
 /// Class representing the optional arguments to a MongoDB GridFS upload operation.
 ///
-class MONGOCXX_API upload {
+class upload {
    public:
     ///
     /// Sets the chunk size of the GridFS file being uploaded. Defaults to the chunk size specified

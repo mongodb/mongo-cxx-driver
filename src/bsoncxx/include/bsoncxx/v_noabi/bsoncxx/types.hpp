@@ -17,6 +17,8 @@
 #include <chrono>
 #include <cstring>
 
+#include <bsoncxx/types-fwd.hpp>
+
 #include <bsoncxx/array/view.hpp>
 #include <bsoncxx/decimal128.hpp>
 #include <bsoncxx/document/view.hpp>
@@ -98,7 +100,7 @@ namespace types {
 ///
 /// A BSON double value.
 ///
-struct BSONCXX_API b_double {
+struct b_double {
     static constexpr auto type_id = type::k_double;
 
     double value;
@@ -123,7 +125,7 @@ BSONCXX_INLINE bool operator==(const b_double& lhs, const b_double& rhs) {
 ///
 /// A BSON UTF-8 encoded string value.
 ///
-struct BSONCXX_API b_string {
+struct b_string {
     static constexpr auto type_id = type::k_string;
 
     ///
@@ -164,7 +166,7 @@ BSONCXX_DEPRECATED typedef b_string b_utf8;
 ///
 /// A BSON document value.
 ///
-struct BSONCXX_API b_document {
+struct b_document {
     static constexpr auto type_id = type::k_document;
 
     document::view value;
@@ -196,7 +198,7 @@ BSONCXX_INLINE bool operator==(const b_document& lhs, const b_document& rhs) {
 ///
 /// A BSON array value.
 ///
-struct BSONCXX_API b_array {
+struct b_array {
     static constexpr auto type_id = type::k_array;
 
     array::view value;
@@ -221,7 +223,7 @@ BSONCXX_INLINE bool operator==(const b_array& lhs, const b_array& rhs) {
 ///
 /// A BSON binary data value.
 ///
-struct BSONCXX_API b_binary {
+struct b_binary {
     static constexpr auto type_id = type::k_binary;
 
     binary_sub_type sub_type;
@@ -245,7 +247,7 @@ BSONCXX_INLINE bool operator==(const b_binary& lhs, const b_binary& rhs) {
 /// @deprecated
 ///   This BSON type is deprecated and use by clients is discouraged.
 ///
-struct BSONCXX_API b_undefined {
+struct b_undefined {
     static constexpr auto type_id = type::k_undefined;
 };
 
@@ -261,7 +263,7 @@ BSONCXX_INLINE bool operator==(const b_undefined&, const b_undefined&) {
 ///
 /// A BSON ObjectId value.
 ///
-struct BSONCXX_API b_oid {
+struct b_oid {
     static constexpr auto type_id = type::k_oid;
 
     oid value;
@@ -279,7 +281,7 @@ BSONCXX_INLINE bool operator==(const b_oid& lhs, const b_oid& rhs) {
 ///
 /// A BSON boolean value.
 ///
-struct BSONCXX_API b_bool {
+struct b_bool {
     static constexpr auto type_id = type::k_bool;
 
     bool value;
@@ -304,7 +306,7 @@ BSONCXX_INLINE bool operator==(const b_bool& lhs, const b_bool& rhs) {
 ///
 /// A BSON date value.
 ///
-struct BSONCXX_API b_date {
+struct b_date {
     static constexpr auto type_id = type::k_date;
 
     ///
@@ -363,7 +365,7 @@ BSONCXX_INLINE bool operator==(const b_date& lhs, const b_date& rhs) {
 ///
 /// A BSON null value.
 ///
-struct BSONCXX_API b_null {
+struct b_null {
     static constexpr auto type_id = type::k_null;
 };
 
@@ -379,7 +381,7 @@ BSONCXX_INLINE bool operator==(const b_null&, const b_null&) {
 ///
 /// A BSON regex value.
 ///
-struct BSONCXX_API b_regex {
+struct b_regex {
     static constexpr auto type_id = type::k_regex;
 
     ///
@@ -416,7 +418,7 @@ BSONCXX_INLINE bool operator==(const b_regex& lhs, const b_regex& rhs) {
 /// @deprecated
 ///   A BSON DBPointer (aka DBRef) is still supported but deprecated.
 ///
-struct BSONCXX_API b_dbpointer {
+struct b_dbpointer {
     static constexpr auto type_id = type::k_dbpointer;
 
     stdx::string_view collection;
@@ -435,7 +437,7 @@ BSONCXX_INLINE bool operator==(const b_dbpointer& lhs, const b_dbpointer& rhs) {
 ///
 /// A BSON JavaScript code value.
 ///
-struct BSONCXX_API b_code {
+struct b_code {
     static constexpr auto type_id = type::k_code;
 
     ///
@@ -472,7 +474,7 @@ BSONCXX_INLINE bool operator==(const b_code& lhs, const b_code& rhs) {
 /// @deprecated
 ///   This BSON type is deprecated and use by clients is discouraged.
 ///
-struct BSONCXX_API b_symbol {
+struct b_symbol {
     static constexpr auto type_id = type::k_symbol;
 
     ///
@@ -506,7 +508,7 @@ BSONCXX_INLINE bool operator==(const b_symbol& lhs, const b_symbol& rhs) {
 ///
 /// A BSON JavaScript code with scope value.
 ///
-struct BSONCXX_API b_codewscope {
+struct b_codewscope {
     static constexpr auto type_id = type::k_codewscope;
 
     ///
@@ -540,7 +542,7 @@ BSONCXX_INLINE bool operator==(const b_codewscope& lhs, const b_codewscope& rhs)
 ///
 /// A BSON signed 32-bit integer value.
 ///
-struct BSONCXX_API b_int32 {
+struct b_int32 {
     static constexpr auto type_id = type::k_int32;
 
     int32_t value;
@@ -565,7 +567,7 @@ BSONCXX_INLINE bool operator==(const b_int32& lhs, const b_int32& rhs) {
 ///
 /// A BSON replication timestamp value.
 ///
-struct BSONCXX_API b_timestamp {
+struct b_timestamp {
     static constexpr auto type_id = type::k_timestamp;
 
     uint32_t increment;
@@ -584,7 +586,7 @@ BSONCXX_INLINE bool operator==(const b_timestamp& lhs, const b_timestamp& rhs) {
 ///
 /// A BSON 64-bit signed integer value.
 ///
-struct BSONCXX_API b_int64 {
+struct b_int64 {
     static constexpr auto type_id = type::k_int64;
 
     int64_t value;
@@ -609,7 +611,7 @@ BSONCXX_INLINE bool operator==(const b_int64& lhs, const b_int64& rhs) {
 ///
 /// A BSON Decimal128 value.
 ///
-struct BSONCXX_API b_decimal128 {
+struct b_decimal128 {
     static constexpr auto type_id = type::k_decimal128;
 
     decimal128 value;
@@ -636,7 +638,7 @@ BSONCXX_INLINE bool operator==(const b_decimal128& lhs, const b_decimal128& rhs)
 ///
 /// A BSON min-key value.
 ///
-struct BSONCXX_API b_minkey {
+struct b_minkey {
     static constexpr auto type_id = type::k_minkey;
 };
 
@@ -652,7 +654,7 @@ BSONCXX_INLINE bool operator==(const b_minkey&, const b_minkey&) {
 ///
 /// A BSON max-key value.
 ///
-struct BSONCXX_API b_maxkey {
+struct b_maxkey {
     static constexpr auto type_id = type::k_maxkey;
 };
 

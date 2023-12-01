@@ -18,6 +18,9 @@
 #include <cstdint>
 #include <iterator>
 
+#include <bsoncxx/array/view-fwd.hpp>
+#include <bsoncxx/types/bson_value/view-fwd.hpp>
+
 #include <bsoncxx/array/element.hpp>
 #include <bsoncxx/document/view.hpp>
 
@@ -25,18 +28,12 @@
 
 namespace bsoncxx {
 inline namespace v_noabi {
-namespace types {
-namespace bson_value {
-class view;
-}  // namespace bson_value
-}  // namespace types
-
 namespace array {
 
 ///
 /// A read-only, non-owning view of a BSON document.
 ///
-class BSONCXX_API view {
+class view {
    public:
     class BSONCXX_API const_iterator;
     using iterator = const_iterator;
@@ -155,7 +152,7 @@ class BSONCXX_API view {
 /// This iterator type provides a const forward iterator interface to array
 /// view elements.
 ///
-class BSONCXX_API view::const_iterator {
+class view::const_iterator {
    public:
     ///
     /// std::iterator_traits

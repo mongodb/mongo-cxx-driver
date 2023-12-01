@@ -16,6 +16,10 @@
 
 #include <string>
 
+#include <mongocxx/client-fwd.hpp>
+#include <mongocxx/options/server_api-fwd.hpp>
+#include <mongocxx/pool-fwd.hpp>
+
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 #include <mongocxx/stdx.hpp>
@@ -24,15 +28,12 @@
 
 namespace mongocxx {
 inline namespace v_noabi {
-class client;
-class pool;
-
 namespace options {
 
 ///
 /// Class representing options for server API.
 ///
-class MONGOCXX_API server_api {
+class server_api {
    public:
     ///
     /// Enum representing the possible values for server API version.
@@ -127,8 +128,8 @@ class MONGOCXX_API server_api {
     version get_version() const;
 
    private:
-    friend class mongocxx::client;
-    friend class mongocxx::pool;
+    friend ::mongocxx::v_noabi::client;
+    friend ::mongocxx::v_noabi::pool;
 
     version _version;
     stdx::optional<bool> _strict;

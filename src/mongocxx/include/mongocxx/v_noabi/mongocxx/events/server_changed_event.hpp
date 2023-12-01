@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/events/server_changed_event-fwd.hpp>
+
 #include <bsoncxx/oid.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 #include <mongocxx/events/server_description.hpp>
@@ -31,7 +33,7 @@ namespace events {
 /// @see "ServerDescriptionChangedEvent" in
 /// https://github.com/mongodb/specifications/blob/master/source/server-discovery-and-monitoring/server-discovery-and-monitoring.rst
 ///
-class MONGOCXX_API server_changed_event {
+class server_changed_event {
    public:
     MONGOCXX_PRIVATE explicit server_changed_event(const void* event);
 

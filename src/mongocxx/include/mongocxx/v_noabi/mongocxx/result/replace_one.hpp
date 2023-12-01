@@ -16,6 +16,8 @@
 
 #include <cstdint>
 
+#include <mongocxx/result/replace_one-fwd.hpp>
+
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/types.hpp>
 #include <mongocxx/result/bulk_write.hpp>
@@ -28,7 +30,7 @@ inline namespace v_noabi {
 namespace result {
 
 /// Class representing the result of a MongoDB replace_one operation.
-class MONGOCXX_API replace_one {
+class replace_one {
    public:
     // This constructor is public for testing purposes only
     explicit replace_one(result::bulk_write result);

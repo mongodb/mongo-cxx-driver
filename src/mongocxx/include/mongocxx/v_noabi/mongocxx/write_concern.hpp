@@ -19,6 +19,14 @@
 #include <memory>
 #include <stdexcept>
 
+#include <mongocxx/bulk_write-fwd.hpp>
+#include <mongocxx/client-fwd.hpp>
+#include <mongocxx/collection-fwd.hpp>
+#include <mongocxx/database-fwd.hpp>
+#include <mongocxx/options/transaction-fwd.hpp>
+#include <mongocxx/uri-fwd.hpp>
+#include <mongocxx/write_concern-fwd.hpp>
+
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
@@ -29,16 +37,6 @@
 
 namespace mongocxx {
 inline namespace v_noabi {
-class bulk_write;
-class client;
-class collection;
-class database;
-class uri;
-
-namespace options {
-class transaction;
-}
-
 ///
 /// Class representing the server-side requirement for reporting the success of a write
 /// operation. The strength of the write concern setting determines the level of guarantees
@@ -56,7 +54,7 @@ class transaction;
 ///
 /// @see https://www.mongodb.com/docs/manual/core/write-concern/
 ///
-class MONGOCXX_API write_concern {
+class write_concern {
    public:
     ///
     /// A class to represent the special case values for write_concern::nodes.
@@ -245,13 +243,12 @@ class MONGOCXX_API write_concern {
     bsoncxx::document::value to_document() const;
 
    private:
-    friend class bulk_write;
-    friend class client;
-    friend class collection;
-    friend class database;
-    friend class uri;
-
-    friend class options::transaction;
+    friend ::mongocxx::v_noabi::bulk_write;
+    friend ::mongocxx::v_noabi::client;
+    friend ::mongocxx::v_noabi::collection;
+    friend ::mongocxx::v_noabi::database;
+    friend ::mongocxx::v_noabi::options::transaction;
+    friend ::mongocxx::v_noabi::uri;
 
     ///
     /// @{

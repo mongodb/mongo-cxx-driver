@@ -17,6 +17,10 @@
 #include <chrono>
 #include <cstdint>
 
+#include <mongocxx/collection-fwd.hpp>
+#include <mongocxx/database-fwd.hpp>
+#include <mongocxx/options/aggregate-fwd.hpp>
+
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
@@ -36,7 +40,7 @@ namespace options {
 ///
 /// Class representing the optional arguments to a MongoDB aggregation operation.
 ///
-class MONGOCXX_API aggregate {
+class aggregate {
    public:
     ///
     /// Enables writing to temporary files. When set to @c true, aggregation stages can write data
@@ -168,7 +172,7 @@ class MONGOCXX_API aggregate {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    aggregate& read_preference(class read_preference rp);
+    aggregate& read_preference(mongocxx::read_preference rp);
 
     ///
     /// The current read_preference for this operation.
@@ -177,7 +181,7 @@ class MONGOCXX_API aggregate {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    const stdx::optional<class read_preference>& read_preference() const;
+    const stdx::optional<mongocxx::read_preference>& read_preference() const;
 
     ///
     /// Sets whether the $out stage should bypass document validation.
@@ -214,7 +218,7 @@ class MONGOCXX_API aggregate {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    aggregate& hint(class hint index_hint);
+    aggregate& hint(mongocxx::hint index_hint);
 
     ///
     /// Gets the current hint.
@@ -223,7 +227,7 @@ class MONGOCXX_API aggregate {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    const stdx::optional<class hint>& hint() const;
+    const stdx::optional<mongocxx::hint>& hint() const;
 
     ///
     /// Sets the write concern to use for this operation. Only has an effect if $out is a part of
@@ -239,7 +243,7 @@ class MONGOCXX_API aggregate {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    aggregate& write_concern(class write_concern write_concern);
+    aggregate& write_concern(mongocxx::write_concern write_concern);
 
     ///
     /// Gets the current write concern.
@@ -250,7 +254,7 @@ class MONGOCXX_API aggregate {
     /// @see
     ///   https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    const stdx::optional<class write_concern>& write_concern() const;
+    const stdx::optional<mongocxx::write_concern>& write_concern() const;
 
     ///
     /// Sets the read concern to use for this operation.
@@ -264,7 +268,7 @@ class MONGOCXX_API aggregate {
     /// @return
     ///   A reference to the object on which this member function is being called.
     ///
-    aggregate& read_concern(class read_concern read_concern);
+    aggregate& read_concern(mongocxx::read_concern read_concern);
 
     ///
     /// Gets the current read concern.
@@ -275,7 +279,7 @@ class MONGOCXX_API aggregate {
     /// @see
     ///   https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    const stdx::optional<class read_concern>& read_concern() const;
+    const stdx::optional<mongocxx::read_concern>& read_concern() const;
 
     ///
     /// Sets the comment to use for this operation.
@@ -303,8 +307,8 @@ class MONGOCXX_API aggregate {
     const stdx::optional<bsoncxx::types::bson_value::view_or_value>& comment() const;
 
    private:
-    friend class ::mongocxx::database;
-    friend class ::mongocxx::collection;
+    friend ::mongocxx::v_noabi::collection;
+    friend ::mongocxx::v_noabi::database;
 
     void append(bsoncxx::builder::basic::document& builder) const;
 
@@ -313,11 +317,11 @@ class MONGOCXX_API aggregate {
     stdx::optional<bsoncxx::document::view_or_value> _collation;
     stdx::optional<bsoncxx::document::view_or_value> _let;
     stdx::optional<std::chrono::milliseconds> _max_time;
-    stdx::optional<class read_preference> _read_preference;
+    stdx::optional<mongocxx::read_preference> _read_preference;
     stdx::optional<bool> _bypass_document_validation;
-    stdx::optional<class hint> _hint;
-    stdx::optional<class write_concern> _write_concern;
-    stdx::optional<class read_concern> _read_concern;
+    stdx::optional<mongocxx::hint> _hint;
+    stdx::optional<mongocxx::write_concern> _write_concern;
+    stdx::optional<mongocxx::read_concern> _read_concern;
     stdx::optional<bsoncxx::types::bson_value::view_or_value> _comment;
 };
 

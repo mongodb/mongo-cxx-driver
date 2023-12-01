@@ -14,6 +14,9 @@
 
 #pragma once
 
+#include <mongocxx/client_session-fwd.hpp>
+#include <mongocxx/options/client_session-fwd.hpp>
+
 #include <bsoncxx/stdx/optional.hpp>
 #include <mongocxx/options/transaction.hpp>
 #include <mongocxx/stdx.hpp>
@@ -22,14 +25,12 @@
 
 namespace mongocxx {
 inline namespace v_noabi {
-class client_session;
-
 namespace options {
 
 ///
 /// Class representing the optional arguments to mongocxx::client::start_session.
 ///
-class MONGOCXX_API client_session {
+class client_session {
    public:
     ///
     /// Sets the causal_consistency option.
@@ -98,8 +99,7 @@ class MONGOCXX_API client_session {
     const stdx::optional<transaction>& default_transaction_opts() const;
 
    private:
-    // Allow the implementation of client_session to see these:
-    friend class mongocxx::client_session;
+    friend ::mongocxx::v_noabi::client_session;
 
     stdx::optional<bool> _causal_consistency;
     stdx::optional<bool> _enable_snapshot_reads;

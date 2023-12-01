@@ -14,6 +14,10 @@
 
 #pragma once
 
+#include <bsoncxx/builder/stream/array_context-fwd.hpp>
+#include <bsoncxx/builder/stream/key_context-fwd.hpp>
+#include <bsoncxx/builder/stream/single_context-fwd.hpp>
+
 #include <bsoncxx/array/value.hpp>
 #include <bsoncxx/builder/concatenate.hpp>
 #include <bsoncxx/builder/core.hpp>
@@ -27,11 +31,6 @@ namespace bsoncxx {
 inline namespace v_noabi {
 namespace builder {
 namespace stream {
-
-template <class T>
-class key_context;
-
-class single_context;
 
 ///
 /// A stream context which expects any number of values.
@@ -48,7 +47,7 @@ class single_context;
 ///
 /// This builds a bson array with successively higher index keys
 ///
-template <class base = closed_context>
+template <class base>
 class array_context {
    public:
     ///
