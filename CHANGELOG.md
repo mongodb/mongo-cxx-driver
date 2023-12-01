@@ -16,6 +16,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add API to manage [Atlas Search Indexes](https://www.mongodb.com/docs/atlas/atlas-search/).
 - Automatically download C driver dependency if not provided.
 - Add VERSIONINFO resource to bsoncxx.dll and mongocxx.dll.
+- Add forward headers providing non-defining declarations of bsoncxx and mongocxx class types.
+  - Note: user-defined forward declarations of library entities has not been, and is still not, supported.
+    To obtain the declaration a bsoncxx or mongocxx entity, include the corresponding (forward) header.
 
 ### Changed
 - Do not build tests as part of `all` target. Configure with `BUILD_TESTING=ON` to build tests.
