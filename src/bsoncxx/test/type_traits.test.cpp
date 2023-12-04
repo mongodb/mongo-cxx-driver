@@ -11,6 +11,7 @@
 #endif
 
 namespace {
+
 namespace tt = bsoncxx::detail;
 
 template <typename Result, typename Expect>
