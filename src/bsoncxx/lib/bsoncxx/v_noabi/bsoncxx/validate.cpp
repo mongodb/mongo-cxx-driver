@@ -19,7 +19,8 @@
 #include <bsoncxx/config/private/prelude.hh>
 
 namespace bsoncxx {
-inline namespace wip {
+namespace v_noabi {
+
 struct validator::impl {
     bool _check_utf8{false};
     bool _check_utf8_allow_null{false};
@@ -104,5 +105,5 @@ stdx::optional<document::view> BSONCXX_CALL validate(const std::uint8_t* data,
     return document::view{data, length};
 }
 
-}  // namespace wip
+}  // namespace v_noabi
 }  // namespace bsoncxx
