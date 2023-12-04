@@ -44,8 +44,7 @@ int main(int argc, char* argv[]) {
         }
 
         if (types.empty()) {
-            std::cerr << "No valid benchmarks specified. Exiting." << std::endl;
-            return 1;
+            throw std::runtime_error("No valid benchmarks specified");
         }
     }
 
