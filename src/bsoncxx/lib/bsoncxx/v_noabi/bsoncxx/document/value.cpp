@@ -19,7 +19,7 @@
 #include <bsoncxx/config/private/prelude.hh>
 
 namespace bsoncxx {
-inline namespace wip {
+namespace v_noabi {
 namespace document {
 
 value::value(std::uint8_t* data, std::size_t length, deleter_type dtor)
@@ -97,5 +97,5 @@ void value::reset(document::view view) {
 }
 
 }  // namespace document
-}  // namespace wip
+}  // namespace v_noabi
 }  // namespace bsoncxx

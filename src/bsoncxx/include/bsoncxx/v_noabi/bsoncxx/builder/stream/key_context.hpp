@@ -127,7 +127,7 @@ class key_context {
     /// @return A value type which holds the complete bson document.
     ///
     template <typename T>
-    BSONCXX_INLINE detail::requires_t<bsoncxx::document::value,
+    BSONCXX_INLINE detail::requires_t<bsoncxx::v_noabi::document::value,
                                       std::is_same<base, closed_context>,
                                       detail::is_alike<T, finalize_type>>
     operator<<(T&&) {

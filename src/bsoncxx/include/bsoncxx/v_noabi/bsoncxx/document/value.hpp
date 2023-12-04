@@ -27,7 +27,7 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-inline namespace wip {
+namespace v_noabi {
 namespace document {
 
 ///
@@ -83,7 +83,8 @@ class value {
 
     ///
     /// Constructor used for serialization of user objects. This uses argument-dependent lookup
-    /// to find the function declaration `void to_bson(T& t, bsoncxx::document::value doc)`.
+    /// to find the function declaration
+    /// `void to_bson(T& t, bsoncxx::v_noabi::document::value doc)`.
     ///
     /// @param t
     ///   A user-defined object to serialize into a BSON object.
@@ -270,7 +271,16 @@ BSONCXX_INLINE bool operator!=(const value& lhs, const value& rhs) {
 ///
 
 }  // namespace document
-}  // namespace wip
+}  // namespace v_noabi
+}  // namespace bsoncxx
+
+namespace bsoncxx {
+namespace document {
+
+using ::bsoncxx::v_noabi::document::operator==;
+using ::bsoncxx::v_noabi::document::operator!=;
+
+}  // namespace document
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

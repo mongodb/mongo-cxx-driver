@@ -67,7 +67,7 @@ class document : public key_context<> {
     ///  After calling extract() it is illegal to call any methods
     ///  on this class, unless it is subsequenly moved into.
     ///
-    BSONCXX_INLINE bsoncxx::document::value extract() {
+    BSONCXX_INLINE bsoncxx::v_noabi::document::value extract() {
         return _core.extract_document();
     }
 

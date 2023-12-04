@@ -82,7 +82,7 @@ class document : public sub_document {
     ///  After calling extract() it is illegal to call any methods
     ///  on this class, unless it is subsequently moved into.
     ///
-    BSONCXX_INLINE bsoncxx::document::value extract() {
+    BSONCXX_INLINE bsoncxx::v_noabi::document::value extract() {
         return _core.extract_document();
     }
 
@@ -105,13 +105,12 @@ class document : public sub_document {
 ///   builder::basic::sub_document::append accepts.
 ///
 /// @return
-///   A bsoncxx::document::value containing the elements.
+///   A bsoncxx::v_noabi::document::value containing the elements.
 ///
 template <typename... Args>
-bsoncxx::document::value BSONCXX_CALL make_document(Args&&... args) {
-    basic::document document;
+bsoncxx::v_noabi::document::value BSONCXX_CALL make_document(Args&&... args) {
+    document document;
     document.append(std::forward<Args>(args)...);
-
     return document.extract();
 }
 

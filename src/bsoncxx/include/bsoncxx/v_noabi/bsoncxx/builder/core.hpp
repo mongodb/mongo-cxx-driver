@@ -665,7 +665,7 @@ class core {
     ///   After calling extract_document() it is illegal to call any methods on this class, unless
     ///   it is subsequenly moved into.
     ///
-    bsoncxx::document::value extract_document();
+    bsoncxx::v_noabi::document::value extract_document();
 
     ///
     /// Transfers ownership of the underlying document to the caller.

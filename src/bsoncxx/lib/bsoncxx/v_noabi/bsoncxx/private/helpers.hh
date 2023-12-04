@@ -29,8 +29,8 @@ inline document::view view_from_bson_t(const bson_t* bson) {
     return {::bson_get_data(bson), bson->len};
 }
 
-inline document::value value_from_bson_t(const bson_t* bson) {
-    return document::value{view_from_bson_t(bson)};
+inline bsoncxx::v_noabi::document::value value_from_bson_t(const bson_t* bson) {
+    return bsoncxx::v_noabi::document::value{view_from_bson_t(bson)};
 }
 
 /*
