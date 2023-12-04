@@ -1,5 +1,6 @@
 // clang-format off
 /**
+ * @internal
  * @brief Convert the given macro argument to a string literal, after macro expansion
  */
 #define bsoncxx_stringify(...) bsoncxx_stringify_impl(__VA_ARGS__)
@@ -12,6 +13,7 @@
 #define bsoncxx_concat_impl(A, ...) A##__VA_ARGS__
 
 /**
+ * @internal
  * @brief Expands to a _Pragma() preprocessor directive, after macro expansion
  *
  * The arguments an arbitrary "token soup", and should not be quoted like a regular
@@ -35,6 +37,7 @@
 #endif
 
 /**
+ * @internal
  * @brief Use in a declaration position to force the appearence of a semicolon
  * as the next token. Use this for statement-like or declaration-like macros to
  * enforce that their call sites are followed by a semicolon
@@ -42,6 +45,7 @@
 #define bsoncxx_force_semicolon static_assert(true, "")
 
 /**
+ * @internal
  * @brief Add a trailing noexcept, decltype-return, and return-body to a
  * function definition. (Not compatible with lambda expressions.)
  *
@@ -65,6 +69,7 @@
     bsoncxx_force_semicolon
 
 /**
+ * @internal
  * @macro mongocxx_cxx14_constexpr
  * @brief Expands to `constexpr` if compiling as c++14 or greater, otherwise
  * expands to `inline`.
@@ -79,6 +84,7 @@
 #endif
 
 /**
+ * @internal
  * @brief Disable a warning for a particular compiler.
  *
  * The argument should be of the form:
@@ -95,6 +101,7 @@
     bsoncxx_force_semicolon
 
 /**
+ * @internal
  * @brief Push the current compiler diagnostics settings state
  */
 #define bsoncxx_push_warnings() \
@@ -103,6 +110,7 @@
     bsoncxx_force_semicolon
 
 /**
+ * @internal
  * @brief Restore prior compiler diagnostics settings from before the most
  * recent bsoncxx_push_warnings()
  */
