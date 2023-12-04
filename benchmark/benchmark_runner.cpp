@@ -105,6 +105,7 @@ benchmark_runner::benchmark_runner(std::set<benchmark_type> types) : _types{type
 }
 
 void benchmark_runner::run_microbenches() {
+    _start_time = std::chrono::system_clock::now();
     for (std::unique_ptr<microbench>& bench : _microbenches) {
         std::cout << "Starting " << bench->get_name() << "..." << std::endl;
 
@@ -159,8 +160,7 @@ double benchmark_runner::calculate_driver_bench_score() {
     return (calculate_read_bench_score() + calculate_write_bench_score()) / 2.0;
 }
 
-void benchmark_runner::write_scores(
-    const std::chrono::time_point<std::chrono::system_clock> start_time) {
+void benchmark_runner::write_scores() {
     double read = -1;
     double write = -1;
     const auto end_time = std::chrono::system_clock::now();
@@ -180,7 +180,7 @@ void benchmark_runner::write_scores(
         oss << std::put_time(std::gmtime(&t1), "%Y-%m-%dT%H:%M:%S") << "+00:00";
         return oss.str();
     };
-    doc.append(kvp("created_at", write_time(start_time)));
+    doc.append(kvp("created_at", write_time(_start_time)));
     doc.append(kvp("completed_at", write_time(end_time)));
     doc.append(kvp("artifacts", builder::basic::make_array()));
 
