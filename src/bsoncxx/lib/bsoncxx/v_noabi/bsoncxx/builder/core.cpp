@@ -619,7 +619,7 @@ core& core::open_array() {
     return *this;
 }
 
-core& core::concatenate(const bsoncxx::document::view& view) {
+core& core::concatenate(const bsoncxx::v_noabi::document::view& view) {
     if (_impl->is_array()) {
         bson_iter_t iter;
         if (!bson_iter_init_from_data(&iter, view.data(), view.length())) {
@@ -685,13 +685,13 @@ core& core::close_array() {
     return *this;
 }
 
-bsoncxx::document::view core::view_document() const {
+bsoncxx::v_noabi::document::view core::view_document() const {
     if (!_impl->is_viewable()) {
         throw bsoncxx::exception{error_code::k_unmatched_key_in_builder};
     }
 
-    return bsoncxx::document::view(bson_get_data(_impl->root_document()),
-                                   _impl->root_document()->len);
+    return bsoncxx::v_noabi::document::view(bson_get_data(_impl->root_document()),
+                                            _impl->root_document()->len);
 }
 
 bsoncxx::v_noabi::document::value core::extract_document() {

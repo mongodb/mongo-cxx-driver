@@ -188,7 +188,7 @@ class value {
     ///
     /// Constructs an object of type T from this document object. This method uses
     /// argument-dependent lookup to find the function declaration
-    /// `void from_bson(T& t, const bsoncxx::document::view& doc)`.
+    /// `void from_bson(T& t, const bsoncxx::v_noabi::document::view& doc)`.
     ///
     /// @note Type T must be default-constructible. Otherwise, use `void get(T& t)`.
     ///
@@ -202,7 +202,7 @@ class value {
     ///
     /// Constructs an object of type T from this document object. This method uses
     /// argument-dependent lookup to find the function declaration
-    /// `void from_bson(T& t, const bsoncxx::document::view& doc)`.
+    /// `void from_bson(T& t, const bsoncxx::v_noabi::document::view& doc)`.
     ///
     /// @param t
     ///   The object to construct. The contents of the document object will be deserialized

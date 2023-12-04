@@ -374,7 +374,7 @@ class element {
     BSONCXX_PRIVATE explicit element(const stdx::string_view key);
 
     friend ::bsoncxx::v_noabi::array::element;
-    friend ::bsoncxx::wip::document::view;
+    friend ::bsoncxx::v_noabi::document::view;
 
     const std::uint8_t* _raw;
     std::uint32_t _length;

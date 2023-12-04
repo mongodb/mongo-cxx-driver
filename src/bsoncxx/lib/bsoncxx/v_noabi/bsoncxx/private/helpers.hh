@@ -25,7 +25,7 @@ namespace bsoncxx {
 inline namespace wip {
 namespace helpers {
 
-inline document::view view_from_bson_t(const bson_t* bson) {
+inline bsoncxx::v_noabi::document::view view_from_bson_t(const bson_t* bson) {
     return {::bson_get_data(bson), bson->len};
 }
 

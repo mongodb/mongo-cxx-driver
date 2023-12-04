@@ -161,7 +161,7 @@ class core {
     /// @throws
     ///   bsoncxx::exception if one of the keys fails to append.
     ///
-    core& concatenate(const bsoncxx::document::view& view);
+    core& concatenate(const bsoncxx::v_noabi::document::view& view);
 
     ///
     /// Appends a BSON double.
@@ -607,7 +607,7 @@ class core {
     ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
     ///   appended to start a new key/value pair.
     ///
-    core& append(bsoncxx::document::view view);
+    core& append(bsoncxx::v_noabi::document::view view);
 
     ///
     /// Appends the given array view.
@@ -634,7 +634,7 @@ class core {
     ///
     /// @throws bsoncxx::exception if the precondition is violated.
     ///
-    bsoncxx::document::view view_document() const;
+    bsoncxx::v_noabi::document::view view_document() const;
 
     ///
     /// Gets a view over the array.

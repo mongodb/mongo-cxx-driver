@@ -116,7 +116,7 @@ class value {
     ///
     /// Constructs a BSON document value.
     ///
-    value(bsoncxx::document::view v);
+    value(bsoncxx::v_noabi::document::view v);
 
     ///
     /// Constructs a BSON array value.
@@ -166,7 +166,7 @@ class value {
     /// @param scope
     ///     a bson document view holding the scope environment
     ///
-    value(stdx::string_view code, bsoncxx::document::view_or_value scope);
+    value(stdx::string_view code, bsoncxx::v_noabi::document::view_or_value scope);
 
     ///
     /// Constructs a BSON regex value with options.

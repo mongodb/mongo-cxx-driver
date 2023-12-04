@@ -22,15 +22,17 @@
 #include <bsoncxx/config/private/prelude.hh>
 
 namespace bsoncxx {
-inline namespace wip {
+namespace v_noabi {
 namespace document {
 
 namespace {
+
 bson_iter_t to_bson_iter_t(element e) {
     bson_iter_t iter{};
     bson_iter_init_from_data_at_offset(&iter, e.raw(), e.length(), e.offset(), e.keylen());
     return iter;
 }
+
 }  // namespace
 
 view::const_iterator::const_iterator() {}
@@ -174,5 +176,5 @@ bool BSONCXX_CALL operator!=(view lhs, view rhs) {
 }
 
 }  // namespace document
-}  // namespace wip
+}  // namespace v_noabi
 }  // namespace bsoncxx

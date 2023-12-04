@@ -1458,12 +1458,11 @@ document::value operation_runner::run(document::view operation) {
         client client{uri{}};
         auto cursor = client[_db->name()][_coll->name()].list_indexes();
 
-        REQUIRE(cursor.end() ==
-                std::find_if(
-                    cursor.begin(), cursor.end(), [operation](bsoncxx::wip::document::view doc) {
-                        return (doc["name"].get_string() ==
-                                operation["arguments"]["index"].get_string());
-                    }));
+        REQUIRE(
+            cursor.end() ==
+            std::find_if(cursor.begin(), cursor.end(), [operation](bsoncxx::document::view doc) {
+                return (doc["name"].get_string() == operation["arguments"]["index"].get_string());
+            }));
 
         return empty_document;
     } else if (key.compare("assertIndexExists") == 0) {
@@ -1472,12 +1471,11 @@ document::value operation_runner::run(document::view operation) {
         auto collection = operation["arguments"]["collection"].get_string().value;
         auto cursor = client[db][collection].list_indexes();
 
-        REQUIRE(cursor.end() !=
-                std::find_if(
-                    cursor.begin(), cursor.end(), [operation](bsoncxx::wip::document::view doc) {
-                        return (doc["name"].get_string() ==
-                                operation["arguments"]["index"].get_string());
-                    }));
+        REQUIRE(
+            cursor.end() !=
+            std::find_if(cursor.begin(), cursor.end(), [operation](bsoncxx::document::view doc) {
+                return (doc["name"].get_string() == operation["arguments"]["index"].get_string());
+            }));
 
         return empty_document;
     } else if (key.compare("targetedFailPoint") == 0) {
