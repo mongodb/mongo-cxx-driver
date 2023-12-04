@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+static_assert(__cplusplus >= 201703L, "requires C++17 or higher");
+
 #include <chrono>
 #include <iostream>
 #include <stdexcept>
