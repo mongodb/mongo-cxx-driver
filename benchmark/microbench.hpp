@@ -36,7 +36,7 @@ enum class benchmark_type {
     run_command_bench,
 };
 
-const std::unordered_map<benchmark_type, std::string> type_names = {
+static const std::unordered_map<benchmark_type, std::string> type_names = {
     {benchmark_type::bson_bench, "BSONBench"},
     {benchmark_type::single_bench, "SingleBench"},
     {benchmark_type::multi_bench, "MultiBench"},
@@ -45,7 +45,7 @@ const std::unordered_map<benchmark_type, std::string> type_names = {
     {benchmark_type::write_bench, "WriteBench"},
     {benchmark_type::run_command_bench, "RunCommandBench"}};
 
-const std::unordered_map<std::string, benchmark_type> names_types = {
+static const std::unordered_map<std::string, benchmark_type> names_types = {
     {"BSONBench", benchmark_type::bson_bench},
     {"SingleBench", benchmark_type::single_bench},
     {"MultiBench", benchmark_type::multi_bench},
@@ -68,6 +68,7 @@ class microbench {
         : _score{task_size}, _tags{tags}, _name{std::move(name)} {}
 
     virtual ~microbench() = default;
+
     void run();
 
     std::string get_name() {
