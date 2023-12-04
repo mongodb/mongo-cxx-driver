@@ -14,6 +14,7 @@
 
 #include <chrono>
 #include <iostream>
+#include <stdexcept>
 
 #include "benchmark_runner.hpp"
 #include <bsoncxx/stdx/string_view.hpp>
@@ -35,11 +36,10 @@ int main(int argc, char* argv[]) {
                 std::string type{argv[x]};
                 auto it = names_types.find(type);
 
-                if (it != names_types.end()) {
-                    types.insert(it->second);
-                } else {
-                    std::cerr << "Invalid benchmark: " << type << std::endl;
+                if (it == names_types.end()) {
+                    throw std::runtime_error("Invalid benchmark: " + type);
                 }
+                types.insert(it->second);
             }
         }
 
