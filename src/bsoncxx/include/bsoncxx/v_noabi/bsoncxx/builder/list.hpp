@@ -54,13 +54,13 @@ class list {
 
     ///
     /// Creates a bsoncxx::builder::list from a value of type T. T must be a
-    /// bsoncxx::types::bson_value::value or implicitly convertible to a
-    /// bsoncxx::types::bson_value::value.
+    /// bsoncxx::v_noabi::types::bson_value::value or implicitly convertible to a
+    /// bsoncxx::v_noabi::types::bson_value::value.
     ///
     /// @param value
     ///     the BSON value
     ///
-    /// @see bsoncxx::types::bson_value::value.
+    /// @see bsoncxx::v_noabi::types::bson_value::value.
     ///
     template <typename T>
     list(T value) : val{value} {}

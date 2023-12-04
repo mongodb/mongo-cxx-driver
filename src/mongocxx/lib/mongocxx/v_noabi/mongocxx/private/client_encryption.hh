@@ -143,7 +143,7 @@ class client_encryption::impl {
             throw_exception<operation_exception>(error);
         }
 
-        return bsoncxx::types::bson_value::make_owning_bson(keyid.get());
+        return bsoncxx::v_noabi::types::bson_value::make_owning_bson(keyid.get());
     }
 
     bsoncxx::types::bson_value::value encrypt(bsoncxx::types::bson_value::view value,
@@ -162,7 +162,7 @@ class client_encryption::impl {
             throw_exception<operation_exception>(error);
         }
 
-        return bsoncxx::types::bson_value::make_owning_bson(ciphertext.get());
+        return bsoncxx::v_noabi::types::bson_value::make_owning_bson(ciphertext.get());
     }
 
     bsoncxx::document::value encrypt_expression(bsoncxx::document::view_or_value expr,
@@ -195,7 +195,7 @@ class client_encryption::impl {
             throw_exception<operation_exception>(error);
         }
 
-        return bsoncxx::types::bson_value::make_owning_bson(decrypted_value.get());
+        return bsoncxx::v_noabi::types::bson_value::make_owning_bson(decrypted_value.get());
     }
 
     result::rewrap_many_datakey rewrap_many_datakey(bsoncxx::document::view_or_value filter,

@@ -268,7 +268,7 @@ class view {
     const b_maxkey& get_maxkey() const;
 
    private:
-    friend ::bsoncxx::wip::types::bson_value::value;
+    friend ::bsoncxx::v_noabi::types::bson_value::value;
     friend ::bsoncxx::wip::document::element;
 
     view(const std::uint8_t* raw, std::uint32_t length, std::uint32_t offset, std::uint32_t keylen);

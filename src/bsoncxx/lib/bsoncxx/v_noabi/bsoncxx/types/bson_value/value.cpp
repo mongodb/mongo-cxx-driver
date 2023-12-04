@@ -22,7 +22,7 @@
 #include <bsoncxx/config/private/prelude.hh>
 
 namespace bsoncxx {
-inline namespace wip {
+namespace v_noabi {
 namespace types {
 namespace bson_value {
 
@@ -241,6 +241,5 @@ value::operator bson_value::view() const noexcept {
 
 }  // namespace bson_value
 }  // namespace types
-
-}  // namespace wip
+}  // namespace v_noabi
 }  // namespace bsoncxx
