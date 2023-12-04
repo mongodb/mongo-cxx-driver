@@ -30,7 +30,7 @@ oid::oid() {
     std::memcpy(_bytes.data(), oid.bytes, sizeof(oid.bytes));
 }
 
-oid::oid(const bsoncxx::stdx::string_view& str) {
+oid::oid(const bsoncxx::v_noabi::stdx::string_view& str) {
     if (!bson_oid_is_valid(str.data(), str.size())) {
         throw bsoncxx::exception{error_code::k_invalid_oid};
     }

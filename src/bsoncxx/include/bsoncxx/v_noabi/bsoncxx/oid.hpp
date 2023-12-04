@@ -66,7 +66,7 @@ class oid {
     /// @throws bsoncxx::exception if the string isn't an OID-sized hex
     /// string.
     ///
-    explicit oid(const bsoncxx::stdx::string_view& str);
+    explicit oid(const bsoncxx::v_noabi::stdx::string_view& str);
 
     ///
     /// Converts this oid to a hexadecimal string.

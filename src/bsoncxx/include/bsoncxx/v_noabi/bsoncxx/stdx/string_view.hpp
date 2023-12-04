@@ -21,14 +21,14 @@
 #include <core/string.hpp>
 
 namespace bsoncxx {
-inline namespace wip {
+namespace v_noabi {
 namespace stdx {
 
 using ::core::basic_string_view;
 using ::core::string_view;
 
 }  // namespace stdx
-}  // namespace wip
+}  // namespace v_noabi
 }  // namespace bsoncxx
 
 #elif defined(BSONCXX_POLY_USE_BOOST)
@@ -40,14 +40,14 @@ using ::core::string_view;
 #include <boost/utility/string_view.hpp>
 
 namespace bsoncxx {
-inline namespace wip {
+namespace v_noabi {
 namespace stdx {
 
 using ::boost::basic_string_view;
 using ::boost::string_view;
 
 }  // namespace stdx
-}  // namespace wip
+}  // namespace v_noabi
 }  // namespace bsoncxx
 
 #else
@@ -55,7 +55,7 @@ using ::boost::string_view;
 #include <boost/utility/string_ref.hpp>
 
 namespace bsoncxx {
-inline namespace wip {
+namespace v_noabi {
 namespace stdx {
 
 template <typename charT, typename traits = std::char_traits<charT>>
@@ -63,7 +63,7 @@ using basic_string_view = ::boost::basic_string_ref<charT, traits>;
 using string_view = ::boost::string_ref;
 
 }  // namespace stdx
-}  // namespace wip
+}  // namespace v_noabi
 }  // namespace bsoncxx
 
 #endif
@@ -73,14 +73,14 @@ using string_view = ::boost::string_ref;
 #include <experimental/string_view>
 
 namespace bsoncxx {
-inline namespace wip {
+namespace v_noabi {
 namespace stdx {
 
 using ::std::experimental::basic_string_view;
 using ::std::experimental::string_view;
 
 }  // namespace stdx
-}  // namespace wip
+}  // namespace v_noabi
 }  // namespace bsoncxx
 
 #elif defined(BSONCXX_POLY_USE_STD)
@@ -88,14 +88,14 @@ using ::std::experimental::string_view;
 #include <string_view>
 
 namespace bsoncxx {
-inline namespace wip {
+namespace v_noabi {
 namespace stdx {
 
 using ::std::basic_string_view;
 using ::std::string_view;
 
 }  // namespace stdx
-}  // namespace wip
+}  // namespace v_noabi
 }  // namespace bsoncxx
 
 #else
@@ -103,3 +103,12 @@ using ::std::string_view;
 #endif
 
 #include <bsoncxx/config/postlude.hpp>
+
+namespace bsoncxx {
+namespace stdx {
+
+using ::bsoncxx::v_noabi::stdx::basic_string_view;
+using ::bsoncxx::v_noabi::stdx::string_view;
+
+}  // namespace stdx
+}  // namespace bsoncxx

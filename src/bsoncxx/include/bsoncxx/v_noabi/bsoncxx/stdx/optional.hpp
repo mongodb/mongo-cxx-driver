@@ -21,7 +21,7 @@
 #include <core/optional.hpp>
 
 namespace bsoncxx {
-inline namespace wip {
+namespace v_noabi {
 namespace stdx {
 
 using ::core::make_optional;
@@ -30,7 +30,7 @@ using ::core::nullopt_t;
 using ::core::optional;
 
 }  // namespace stdx
-}  // namespace wip
+}  // namespace v_noabi
 }  // namespace bsoncxx
 
 #elif defined(BSONCXX_POLY_USE_BOOST)
@@ -40,7 +40,7 @@ using ::core::optional;
 #include <boost/optional/optional_io.hpp>
 
 namespace bsoncxx {
-inline namespace wip {
+namespace v_noabi {
 namespace stdx {
 
 using ::boost::optional;
@@ -51,7 +51,7 @@ const nullopt_t nullopt{::boost::none};
 using ::boost::make_optional;
 
 }  // namespace stdx
-}  // namespace wip
+}  // namespace v_noabi
 }  // namespace bsoncxx
 
 #elif defined(BSONCXX_POLY_USE_STD_EXPERIMENTAL)
@@ -59,7 +59,7 @@ using ::boost::make_optional;
 #include <experimental/optional>
 
 namespace bsoncxx {
-inline namespace wip {
+namespace v_noabi {
 namespace stdx {
 
 using ::std::experimental::make_optional;
@@ -68,7 +68,7 @@ using ::std::experimental::nullopt_t;
 using ::std::experimental::optional;
 
 }  // namespace stdx
-}  // namespace wip
+}  // namespace v_noabi
 }  // namespace bsoncxx
 
 #elif defined(BSONCXX_POLY_USE_STD)
@@ -76,7 +76,7 @@ using ::std::experimental::optional;
 #include <optional>
 
 namespace bsoncxx {
-inline namespace wip {
+namespace v_noabi {
 namespace stdx {
 
 using ::std::make_optional;
@@ -85,7 +85,7 @@ using ::std::nullopt_t;
 using ::std::optional;
 
 }  // namespace stdx
-}  // namespace wip
+}  // namespace v_noabi
 }  // namespace bsoncxx
 
 #else
@@ -93,3 +93,14 @@ using ::std::optional;
 #endif
 
 #include <bsoncxx/config/postlude.hpp>
+
+namespace bsoncxx {
+namespace stdx {
+
+using ::bsoncxx::v_noabi::stdx::make_optional;
+using ::bsoncxx::v_noabi::stdx::nullopt;
+using ::bsoncxx::v_noabi::stdx::nullopt_t;
+using ::bsoncxx::v_noabi::stdx::optional;
+
+}  // namespace stdx
+}  // namespace bsoncxx
