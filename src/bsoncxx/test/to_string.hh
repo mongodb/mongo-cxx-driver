@@ -29,22 +29,24 @@
 #include <bsoncxx/config/private/prelude.hh>
 
 namespace bsoncxx {
-inline namespace wip {
-inline std::string to_string(types::bson_value::view_or_value val) {
+
+inline std::string to_string(bsoncxx::v_noabi::types::bson_value::view_or_value val) {
+    using type = bsoncxx::v_noabi::type;
+
     switch (val.view().type()) {
-        case bsoncxx::type::k_string:
+        case type::k_string:
             return string::to_string(val.view().get_string().value);
-        case bsoncxx::type::k_int32:
+        case type::k_int32:
             return std::to_string(val.view().get_int32().value);
-        case bsoncxx::type::k_int64:
+        case type::k_int64:
             return std::to_string(val.view().get_int64().value);
-        case bsoncxx::type::k_document:
+        case type::k_document:
             return to_json(val.view().get_document().value);
-        case bsoncxx::type::k_array:
+        case type::k_array:
             return to_json(val.view().get_array().value);
-        case bsoncxx::type::k_oid:
+        case type::k_oid:
             return val.view().get_oid().value.to_string();
-        case bsoncxx::type::k_binary: {
+        case type::k_binary: {
             const auto& binary = val.view().get_binary();
             std::stringstream ss;
             ss << std::hex;
@@ -54,43 +56,42 @@ inline std::string to_string(types::bson_value::view_or_value val) {
             }
             return ss.str();
         }
-        case bsoncxx::type::k_bool:
+        case type::k_bool:
             return val.view().get_bool().value ? "true" : "false";
-        case bsoncxx::type::k_code:
+        case type::k_code:
             return string::to_string(val.view().get_code().code);
-        case bsoncxx::type::k_codewscope:
+        case type::k_codewscope:
             return "code={" + string::to_string(val.view().get_codewscope().code) + "}, scope={" +
                    to_json(val.view().get_codewscope().scope) + "}";
-        case bsoncxx::type::k_date:
+        case type::k_date:
             return std::to_string(val.view().get_date().value.count());
-        case bsoncxx::type::k_double:
+        case type::k_double:
             return std::to_string(val.view().get_double());
-        case bsoncxx::type::k_null:
+        case type::k_null:
             return "null";
-        case bsoncxx::type::k_undefined:
+        case type::k_undefined:
             return "undefined";
-        case bsoncxx::type::k_timestamp:
+        case type::k_timestamp:
             return "timestamp={" + std::to_string(val.view().get_timestamp().timestamp) +
                    "}, increment={" + std::to_string(val.view().get_timestamp().increment) + "}";
-        case bsoncxx::type::k_regex:
+        case type::k_regex:
             return "regex={" + string::to_string(val.view().get_regex().regex) + "}, options={" +
                    string::to_string(val.view().get_regex().options) + "}";
-        case bsoncxx::type::k_minkey:
+        case type::k_minkey:
             return "minkey";
-        case bsoncxx::type::k_maxkey:
+        case type::k_maxkey:
             return "maxkey";
-        case bsoncxx::type::k_decimal128:
+        case type::k_decimal128:
             return val.view().get_decimal128().value.to_string();
-        case bsoncxx::type::k_symbol:
+        case type::k_symbol:
             return string::to_string(val.view().get_symbol().symbol);
-        case bsoncxx::type::k_dbpointer:
+        case type::k_dbpointer:
             return val.view().get_dbpointer().value.to_string();
         default:
             return "?";  // Match bsoncxx::v_noabi::to_string(bsoncxx::v_noabi::type) behavior.
     }
 }
 
-}  // namespace wip
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/private/postlude.hh>

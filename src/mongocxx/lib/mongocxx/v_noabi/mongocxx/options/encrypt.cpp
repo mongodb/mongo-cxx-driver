@@ -100,9 +100,9 @@ struct scoped_bson_value {
     auto convert(const T& value)
         // Use trailing return type syntax to SFINAE without triggering GCC -Wignored-attributes
         // warnings due to using decltype within template parameters.
-        -> decltype(::bsoncxx::types::convert_to_libbson(std::declval<const T&>(),
-                                                         std::declval<bson_value_t*>())) {
-        ::bsoncxx::types::convert_to_libbson(value, &this->value);
+        -> decltype(bsoncxx::v_noabi::types::convert_to_libbson(std::declval<const T&>(),
+                                                                std::declval<bson_value_t*>())) {
+        bsoncxx::v_noabi::types::convert_to_libbson(value, &this->value);
     }
 
     template <typename T>
@@ -112,7 +112,7 @@ struct scoped_bson_value {
 
     explicit scoped_bson_value(const bsoncxx::types::bson_value::view& view) {
         // Argument order is reversed for bsoncxx::types::bson_value::view.
-        ::bsoncxx::types::convert_to_libbson(&this->value, view);
+        bsoncxx::v_noabi::types::convert_to_libbson(&this->value, view);
     }
 
     ~scoped_bson_value() {

@@ -48,7 +48,6 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-inline namespace wip {
 namespace b64 {
 
 #define BSONCXX_B64_ASSERT(Cond) \
@@ -120,10 +119,10 @@ const char Pad64 = '=';
  *    characters followed by one "=" padding character.
  */
 
-BSONCXX_INLINE int ntop(std::uint8_t const* src,
-                        std::size_t srclength,
-                        char* target,
-                        std::size_t targsize) {
+inline int ntop(std::uint8_t const* src,
+                std::size_t srclength,
+                char* target,
+                std::size_t targsize) {
     std::size_t datalength = 0;
     std::uint8_t input[3];
     std::uint8_t output[4];
@@ -190,7 +189,6 @@ BSONCXX_INLINE int ntop(std::uint8_t const* src,
 }
 
 }  // namespace b64
-}  // namespace wip
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

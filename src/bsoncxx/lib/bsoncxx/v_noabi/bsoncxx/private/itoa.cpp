@@ -17,7 +17,7 @@
 #include <bsoncxx/config/private/prelude.hh>
 
 namespace bsoncxx {
-inline namespace wip {
+
 namespace {
 
 constexpr char kIndexTable[] =
@@ -1060,5 +1060,4 @@ void itoa::_init() {
     }
 }
 
-}  // namespace wip
 }  // namespace bsoncxx

@@ -144,10 +144,10 @@ void view::_init(void* internal_value) noexcept {
     _type = static_cast<bsoncxx::v_noabi::type>(v->value_type);
 
     switch (_type) {
-#define BSONCXX_ENUM(name, val)                                \
-    case bsoncxx::v_noabi::type::k_##name: {                   \
-        ::bsoncxx::types::convert_from_libbson(v, &_b_##name); \
-        break;                                                 \
+#define BSONCXX_ENUM(name, val)                                         \
+    case bsoncxx::v_noabi::type::k_##name: {                            \
+        ::bsoncxx::v_noabi::types::convert_from_libbson(v, &_b_##name); \
+        break;                                                          \
     }
 #include <bsoncxx/enums/type.hpp>
 #undef BSONCXX_ENUM

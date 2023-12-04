@@ -22,7 +22,6 @@
 #include <bsoncxx/config/private/prelude.hh>
 
 namespace bsoncxx {
-inline namespace wip {
 namespace helpers {
 
 inline bsoncxx::v_noabi::document::view view_from_bson_t(const bson_t* bson) {
@@ -48,7 +47,6 @@ inline bsoncxx::v_noabi::oid make_oid(const bson_oid_t* bson_oid) {
 }
 
 }  // namespace helpers
-}  // namespace wip
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/private/postlude.hh>

@@ -22,7 +22,7 @@
 #include <bsoncxx/config/private/prelude.hh>
 
 namespace bsoncxx {
-inline namespace wip {
+
 class BSONCXX_TEST_API itoa {
    public:
     explicit itoa(uint32_t i = 0);
@@ -57,7 +57,6 @@ inline std::size_t itoa::length() const {
     return _len;
 }
 
-}  // namespace wip
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/private/postlude.hh>
