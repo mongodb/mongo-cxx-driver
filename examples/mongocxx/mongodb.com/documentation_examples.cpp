@@ -1467,7 +1467,7 @@ static void snapshot_example2(mongocxx::client& client) {
     }
 }
 
-static bool version_at_least(mongocxx::v_noabi::database& db, int minimum_major) {
+static bool version_at_least(mongocxx::database& db, int minimum_major) {
     using bsoncxx::builder::basic::kvp;
     using bsoncxx::builder::basic::make_document;
 
