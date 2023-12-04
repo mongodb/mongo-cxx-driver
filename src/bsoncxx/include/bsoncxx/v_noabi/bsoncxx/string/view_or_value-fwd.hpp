@@ -17,13 +17,21 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-inline namespace wip {
+namespace v_noabi {
 namespace string {
 
 class BSONCXX_API view_or_value;
 
 }  // namespace string
-}  // namespace wip
+}  // namespace v_noabi
+}  // namespace bsoncxx
+
+namespace bsoncxx {
+namespace string {
+
+using ::bsoncxx::v_noabi::string::view_or_value;
+
+}  // namespace string
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

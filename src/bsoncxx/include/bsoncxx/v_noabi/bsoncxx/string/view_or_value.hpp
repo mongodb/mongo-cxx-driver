@@ -24,7 +24,7 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-inline namespace wip {
+namespace v_noabi {
 namespace string {
 
 ///
@@ -119,7 +119,16 @@ BSONCXX_INLINE bool operator!=(const char* lhs, const view_or_value& rhs) {
 ///
 
 }  // namespace string
-}  // namespace wip
+}  // namespace v_noabi
+}  // namespace bsoncxx
+
+namespace bsoncxx {
+namespace string {
+
+using ::bsoncxx::v_noabi::string::operator==;
+using ::bsoncxx::v_noabi::string::operator!=;
+
+}  // namespace string
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
