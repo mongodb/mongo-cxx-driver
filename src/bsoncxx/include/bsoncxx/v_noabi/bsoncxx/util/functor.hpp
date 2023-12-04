@@ -20,7 +20,7 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-inline namespace wip {
+namespace v_noabi {
 namespace util {
 
 // TODO(MSVC): VS2015U1 Completely falls apart trying to honor the
@@ -108,7 +108,7 @@ struct is_functor : functor::is_functor_impl<C, S, std::is_class<C>::value> {};
 #endif
 
 }  // namespace util
-}  // namespace wip
+}  // namespace v_noabi
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
