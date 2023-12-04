@@ -100,7 +100,7 @@ class core::impl {
     }
 
     // Throws bsoncxx::exception if the top-level BSON datum is a document.
-    bsoncxx::array::value steal_array() {
+    bsoncxx::v_noabi::array::value steal_array() {
         if (!_root_is_array) {
             throw bsoncxx::exception{error_code::k_cannot_perform_array_operation_on_document};
         }
@@ -109,7 +109,7 @@ class core::impl {
         uint8_t* buf_ptr = bson_destroy_with_steal(_root.get(), true, &buf_len);
         bson_init(_root.get());
 
-        return bsoncxx::array::value{buf_ptr, buf_len, bson_free_deleter};
+        return bsoncxx::v_noabi::array::value{buf_ptr, buf_len, bson_free_deleter};
     }
 
     bson_t* back() {
@@ -702,15 +702,16 @@ bsoncxx::document::value core::extract_document() {
     return _impl->steal_document();
 }
 
-bsoncxx::array::view core::view_array() const {
+bsoncxx::v_noabi::array::view core::view_array() const {
     if (!_impl->is_viewable()) {
         throw bsoncxx::exception{error_code::k_unmatched_key_in_builder};
     }
 
-    return bsoncxx::array::view(bson_get_data(_impl->root_array()), _impl->root_array()->len);
+    return bsoncxx::v_noabi::array::view(bson_get_data(_impl->root_array()),
+                                         _impl->root_array()->len);
 }
 
-bsoncxx::array::value core::extract_array() {
+bsoncxx::v_noabi::array::value core::extract_array() {
     if (!_impl->is_viewable()) {
         throw bsoncxx::exception{error_code::k_unmatched_key_in_builder};
     }

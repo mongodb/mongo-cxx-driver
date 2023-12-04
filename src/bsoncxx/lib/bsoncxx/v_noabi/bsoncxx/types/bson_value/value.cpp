@@ -191,7 +191,7 @@ value::value(bsoncxx::document::view v) : _impl{stdx::make_unique<impl>()} {
 }
 
 value::value(b_array v) : value(v.value) {}
-value::value(bsoncxx::array::view v) : _impl{stdx::make_unique<impl>()} {
+value::value(bsoncxx::v_noabi::array::view v) : _impl{stdx::make_unique<impl>()} {
     _impl->_value.value_type = BSON_TYPE_ARRAY;
     _impl->_value.value.v_doc.data_len = (uint32_t)v.length();
     _impl->_value.value.v_doc.data = (uint8_t*)bson_malloc(v.length());

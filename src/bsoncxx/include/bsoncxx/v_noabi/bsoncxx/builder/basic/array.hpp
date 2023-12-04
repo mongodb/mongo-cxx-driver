@@ -57,7 +57,7 @@ class array : public sub_array {
     ///
     /// @return A view of the BSON array.
     ///
-    BSONCXX_INLINE bsoncxx::array::view view() const {
+    BSONCXX_INLINE bsoncxx::v_noabi::array::view view() const {
         return _core.view_array();
     }
 
@@ -67,7 +67,7 @@ class array : public sub_array {
     ///
     /// @return A view of the current builder contents.
     ///
-    BSONCXX_INLINE operator bsoncxx::array::view() const {
+    BSONCXX_INLINE operator bsoncxx::v_noabi::array::view() const {
         return view();
     }
 

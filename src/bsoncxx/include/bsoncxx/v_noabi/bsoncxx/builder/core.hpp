@@ -620,7 +620,7 @@ class core {
     ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
     ///   appended to start a new key/value pair.
     ///
-    core& append(bsoncxx::array::view view);
+    core& append(bsoncxx::v_noabi::array::view view);
 
     ///
     /// Gets a view over the document.
@@ -647,7 +647,7 @@ class core {
     ///
     /// @throws bsoncxx::exception if the precondition is violated.
     ///
-    bsoncxx::array::view view_array() const;
+    bsoncxx::v_noabi::array::view view_array() const;
 
     ///
     /// Transfers ownership of the underlying document to the caller.

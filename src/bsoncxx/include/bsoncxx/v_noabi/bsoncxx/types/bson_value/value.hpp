@@ -121,7 +121,7 @@ class value {
     ///
     /// Constructs a BSON array value.
     ///
-    value(bsoncxx::array::view v);
+    value(bsoncxx::v_noabi::array::view v);
 
     ///
     /// Constructs a BSON binary data value.

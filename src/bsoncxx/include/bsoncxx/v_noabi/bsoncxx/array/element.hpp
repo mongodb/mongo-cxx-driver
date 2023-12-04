@@ -78,7 +78,7 @@ class element : private document::element {
     using document::element::raw;
 
    private:
-    friend ::bsoncxx::wip::array::view;
+    friend ::bsoncxx::v_noabi::array::view;
 
     BSONCXX_PRIVATE explicit element(const std::uint8_t* raw,
                                      std::uint32_t length,
