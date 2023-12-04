@@ -23,10 +23,10 @@ inline namespace wip {
 namespace types {
 
 ///
-/// The bsoncxx::types::bson_value::view class has been renamed to
-/// bsoncxx::types::bson_value::view.
+/// The bsoncxx::v_noabi::types::bson_value::view class has been renamed to
+/// bsoncxx::v_noabi::types::bson_value::view.
 ///
-/// @deprecated use bsoncxx::types::bson_value::view instead.
+/// @deprecated use bsoncxx::v_noabi::types::bson_value::view instead.
 ///
 BSONCXX_DEPRECATED typedef types::bson_value::view value;
 

@@ -28,7 +28,7 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-inline namespace wip {
+namespace v_noabi {
 namespace types {
 namespace bson_value {
 ///
@@ -340,7 +340,18 @@ operator!=(T&& lhs, const bson_value::view& rhs) {
 
 }  // namespace bson_value
 }  // namespace types
-}  // namespace wip
+}  // namespace v_noabi
+}  // namespace bsoncxx
+
+namespace bsoncxx {
+namespace types {
+namespace bson_value {
+
+using ::bsoncxx::v_noabi::types::bson_value::operator==;
+using ::bsoncxx::v_noabi::types::bson_value::operator!=;
+
+}  // namespace bson_value
+}  // namespace types
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

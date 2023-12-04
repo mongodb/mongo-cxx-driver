@@ -35,7 +35,7 @@
     } while (0)
 
 namespace bsoncxx {
-inline namespace wip {
+namespace v_noabi {
 namespace types {
 namespace bson_value {
 
@@ -190,5 +190,5 @@ void view::destroy() noexcept {
 
 }  // namespace bson_value
 }  // namespace types
-}  // namespace wip
+}  // namespace v_noabi
 }  // namespace bsoncxx

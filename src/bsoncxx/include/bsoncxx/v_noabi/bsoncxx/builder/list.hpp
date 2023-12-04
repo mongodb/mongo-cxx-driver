@@ -88,7 +88,7 @@ class list {
     ///
     /// Provides a view of the underlying BSON value.
     ///
-    /// @see bsoncxx::types::bson_value::view.
+    /// @see bsoncxx::v_noabi::types::bson_value::view.
     ///
     operator bson_value::view() {
         return view();
@@ -97,7 +97,7 @@ class list {
     ///
     /// Provides a view of the underlying BSON value.
     ///
-    /// @see bsoncxx::types::bson_value::view.
+    /// @see bsoncxx::v_noabi::types::bson_value::view.
     ///
     bson_value::view view() {
         return val.view();
