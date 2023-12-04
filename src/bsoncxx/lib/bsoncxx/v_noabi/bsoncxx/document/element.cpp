@@ -59,7 +59,7 @@ std::uint32_t element::keylen() const {
     return _keylen;
 }
 
-bsoncxx::type element::type() const {
+bsoncxx::v_noabi::type element::type() const {
     if (_raw == nullptr) {
         throw bsoncxx::exception{
             error_code::k_unset_element,
@@ -68,7 +68,7 @@ bsoncxx::type element::type() const {
     }
 
     BSONCXX_CITER;
-    return static_cast<bsoncxx::type>(bson_iter_type(&iter));
+    return static_cast<bsoncxx::v_noabi::type>(bson_iter_type(&iter));
 }
 
 stdx::string_view element::key() const {
@@ -130,14 +130,14 @@ types::bson_value::value element::get_owning_value() const {
 }
 
 element element::operator[](stdx::string_view key) const {
-    if (_raw == nullptr || type() != bsoncxx::type::k_document)
+    if (_raw == nullptr || type() != bsoncxx::v_noabi::type::k_document)
         return element();
     document::view doc = get_document();
     return doc[key];
 }
 
 array::element element::operator[](std::uint32_t i) const {
-    if (_raw == nullptr || type() != bsoncxx::type::k_array)
+    if (_raw == nullptr || type() != bsoncxx::v_noabi::type::k_array)
         return array::element();
     array::view arr = get_array();
     return arr[i];

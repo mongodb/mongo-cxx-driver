@@ -86,7 +86,7 @@ inline std::string to_string(types::bson_value::view_or_value val) {
         case bsoncxx::type::k_dbpointer:
             return val.view().get_dbpointer().value.to_string();
         default:
-            return "?";  // Match bsoncxx::to_string(bsoncxx::type) behavior.
+            return "?";  // Match bsoncxx::v_noabi::to_string(bsoncxx::v_noabi::type) behavior.
     }
 }
 

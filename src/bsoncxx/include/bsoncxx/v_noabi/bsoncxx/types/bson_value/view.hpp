@@ -87,7 +87,7 @@ class view {
     ///
     /// @return The type of the underlying BSON value stored in this object.
     ///
-    bsoncxx::type type() const;
+    bsoncxx::v_noabi::type type() const;
 
     ///
     /// @return The underlying BSON double value.
@@ -278,7 +278,8 @@ class view {
 
     void BSONCXX_PRIVATE destroy() noexcept;
 
-    bsoncxx::type _type;
+    bsoncxx::v_noabi::type _type;
+
     union {
         struct b_double _b_double;
         struct b_string _b_string;

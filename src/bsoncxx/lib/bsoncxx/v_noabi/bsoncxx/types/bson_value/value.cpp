@@ -49,7 +49,7 @@ value::value(std::string v) : value(stdx::string_view{v}) {}
 value::value(b_string v) : value(v.value) {}
 value::value(stdx::string_view v) : _impl{stdx::make_unique<impl>()} {
     _impl->_value.value_type = BSON_TYPE_UTF8;
-    _impl->_value.value.v_utf8.str = make_copy_for_libbson(v);
+    _impl->_value.value.v_utf8.str = ::bsoncxx::types::make_copy_for_libbson(v);
     _impl->_value.value.v_utf8.len = (uint32_t)v.size();
 }
 
@@ -99,8 +99,9 @@ value::value(b_regex v) : value(v.regex, v.options) {}
 value::value(stdx::string_view regex, stdx::string_view options)
     : _impl{stdx::make_unique<impl>()} {
     _impl->_value.value_type = BSON_TYPE_REGEX;
-    _impl->_value.value.v_regex.regex = make_copy_for_libbson(regex);
-    _impl->_value.value.v_regex.options = options.empty() ? NULL : make_copy_for_libbson(options);
+    _impl->_value.value.v_regex.regex = ::bsoncxx::types::make_copy_for_libbson(regex);
+    _impl->_value.value.v_regex.options =
+        options.empty() ? NULL : ::bsoncxx::types::make_copy_for_libbson(options);
 }
 
 value::value(b_code v) : value(v.type_id, v) {}
@@ -109,17 +110,17 @@ value::value(const type id, stdx::string_view v) : _impl{stdx::make_unique<impl>
     switch (id) {
         case type::k_regex:
             _impl->_value.value_type = BSON_TYPE_REGEX;
-            _impl->_value.value.v_regex.regex = make_copy_for_libbson(v);
+            _impl->_value.value.v_regex.regex = ::bsoncxx::types::make_copy_for_libbson(v);
             _impl->_value.value.v_regex.options = NULL;
             break;
         case type::k_code:
             _impl->_value.value_type = BSON_TYPE_CODE;
-            _impl->_value.value.v_code.code = make_copy_for_libbson(v);
+            _impl->_value.value.v_code.code = ::bsoncxx::types::make_copy_for_libbson(v);
             _impl->_value.value.v_code.code_len = (uint32_t)v.length();
             break;
         case type::k_symbol:
             _impl->_value.value_type = BSON_TYPE_SYMBOL;
-            _impl->_value.value.v_symbol.symbol = make_copy_for_libbson(v);
+            _impl->_value.value.v_symbol.symbol = ::bsoncxx::types::make_copy_for_libbson(v);
             _impl->_value.value.v_symbol.len = (uint32_t)v.length();
             break;
         default:
@@ -150,7 +151,8 @@ value::value(type id, uint64_t a, uint64_t b) : _impl{stdx::make_unique<impl>()}
 value::value(b_dbpointer v) : value(v.collection, v.value) {}
 value::value(stdx::string_view collection, oid value) : _impl{stdx::make_unique<impl>()} {
     _impl->_value.value_type = BSON_TYPE_DBPOINTER;
-    _impl->_value.value.v_dbpointer.collection = make_copy_for_libbson(collection);
+    _impl->_value.value.v_dbpointer.collection =
+        ::bsoncxx::types::make_copy_for_libbson(collection);
     _impl->_value.value.v_dbpointer.collection_len = (uint32_t)collection.length();
     std::memcpy(_impl->_value.value.v_dbpointer.oid.bytes, value.bytes(), value.k_oid_length);
 }
@@ -159,7 +161,7 @@ value::value(b_codewscope v) : value(v.code, v.scope) {}
 value::value(stdx::string_view code, bsoncxx::document::view_or_value scope)
     : _impl{stdx::make_unique<impl>()} {
     _impl->_value.value_type = BSON_TYPE_CODEWSCOPE;
-    _impl->_value.value.v_codewscope.code = make_copy_for_libbson(code);
+    _impl->_value.value.v_codewscope.code = ::bsoncxx::types::make_copy_for_libbson(code);
     _impl->_value.value.v_codewscope.code_len = (uint32_t)code.length();
     _impl->_value.value.v_codewscope.scope_len = (uint32_t)scope.view().length();
     _impl->_value.value.v_codewscope.scope_data = (uint8_t*)bson_malloc(scope.view().length());
@@ -221,7 +223,7 @@ value::value(const value& rhs) : value(&rhs._impl->_value) {}
 
 value::value(const bson_value::view& bson_view) {
     _impl = stdx::make_unique<impl>();
-    convert_to_libbson(&_impl->_value, bson_view);
+    ::bsoncxx::types::convert_to_libbson(&_impl->_value, bson_view);
 }
 
 value& value::operator=(const value& rhs) {

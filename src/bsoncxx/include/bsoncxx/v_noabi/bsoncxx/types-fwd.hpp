@@ -19,10 +19,16 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-inline namespace wip {
+namespace v_noabi {
+
 enum class type : std::uint8_t;
 enum class binary_sub_type : std::uint8_t;
 
+}  // namespace v_noabi
+}  // namespace bsoncxx
+
+namespace bsoncxx {
+namespace v_noabi {
 namespace types {
 
 #pragma push_macro("BSONCXX_ENUM")
@@ -33,8 +39,27 @@ namespace types {
 #pragma pop_macro("BSONCXX_ENUM")
 
 }  // namespace types
+}  // namespace v_noabi
+}  // namespace bsoncxx
 
-}  // namespace wip
+namespace bsoncxx {
+
+using ::bsoncxx::v_noabi::binary_sub_type;
+using ::bsoncxx::v_noabi::type;
+
+}  // namespace bsoncxx
+
+namespace bsoncxx {
+namespace types {
+
+#pragma push_macro("BSONCXX_ENUM")
+#undef BSONCXX_ENUM
+#define BSONCXX_ENUM(name, val) using ::bsoncxx::v_noabi::types::b_##name;
+#include <bsoncxx/enums/type.hpp>
+#undef BSONCXX_ENUM
+#pragma pop_macro("BSONCXX_ENUM")
+
+}  // namespace types
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

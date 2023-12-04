@@ -86,7 +86,7 @@ class element {
     ///
     /// @throws bsoncxx::exception if this element is invalid.
     ///
-    bsoncxx::type type() const;
+    bsoncxx::v_noabi::type type() const;
 
     ///
     /// Getter for the element's key.
