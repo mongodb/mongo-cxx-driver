@@ -24,7 +24,7 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-inline namespace v_noabi {
+inline namespace wip {
 ///
 /// Represents an IEEE 754-2008 BSON Decimal128 value in a platform-independent way.
 ///
@@ -95,7 +95,7 @@ class decimal128 {
     uint64_t _low = 0;
 };
 
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

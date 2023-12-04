@@ -17,7 +17,7 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-inline namespace v_noabi {
+inline namespace wip {
 namespace types {
 namespace bson_value {
 
@@ -25,7 +25,7 @@ class BSONCXX_API view;
 
 }  // namespace bson_value
 }  // namespace types
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

@@ -29,7 +29,7 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-inline namespace v_noabi {
+inline namespace wip {
 namespace types {
 namespace bson_value {
 
@@ -258,7 +258,7 @@ class value {
     operator bson_value::view() const noexcept;
 
    private:
-    friend ::bsoncxx::v_noabi::document::element;
+    friend ::bsoncxx::wip::document::element;
 
     value(const std::uint8_t* raw,
           std::uint32_t length,
@@ -323,7 +323,7 @@ BSONCXX_INLINE bool operator!=(const view& lhs, const value& rhs) {
 }  // namespace bson_value
 }  // namespace types
 
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

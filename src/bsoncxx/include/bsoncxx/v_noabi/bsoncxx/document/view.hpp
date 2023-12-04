@@ -26,7 +26,7 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-inline namespace v_noabi {
+inline namespace wip {
 namespace document {
 
 ///
@@ -190,7 +190,7 @@ class view::const_iterator {
 };
 
 }  // namespace document
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

@@ -15,12 +15,12 @@
 #pragma once
 
 namespace bsoncxx {
-inline namespace v_noabi {
+inline namespace wip {
 namespace builder {
 
 struct concatenate_doc;
 struct concatenate_array;
 
 }  // namespace builder
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace bsoncxx

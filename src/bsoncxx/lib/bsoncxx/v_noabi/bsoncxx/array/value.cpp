@@ -19,7 +19,7 @@
 #include <bsoncxx/config/private/prelude.hh>
 
 namespace bsoncxx {
-inline namespace v_noabi {
+inline namespace wip {
 namespace array {
 
 value::value(std::uint8_t* data, std::size_t length, deleter_type dtor)
@@ -54,5 +54,5 @@ value::unique_ptr_type value::release() {
 }
 
 }  // namespace array
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace bsoncxx

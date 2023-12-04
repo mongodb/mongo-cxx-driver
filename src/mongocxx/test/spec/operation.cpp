@@ -318,7 +318,7 @@ document::value operation_runner::_run_delete_many(document::view operation) {
     }
 
     if (arguments["hint"]) {
-        if (arguments["hint"].type() == bsoncxx::v_noabi::type::k_string)
+        if (arguments["hint"].type() == bsoncxx::wip::type::k_string)
             options.hint(hint{arguments["hint"].get_string().value});
         else
             options.hint(hint{arguments["hint"].get_document().value});
@@ -355,7 +355,7 @@ document::value operation_runner::_run_delete_one(document::view operation) {
     }
 
     if (arguments["hint"]) {
-        if (arguments["hint"].type() == bsoncxx::v_noabi::type::k_string)
+        if (arguments["hint"].type() == bsoncxx::wip::type::k_string)
             options.hint(hint{arguments["hint"].get_string().value});
         else
             options.hint(hint{arguments["hint"].get_document().value});
@@ -392,14 +392,14 @@ document::value operation_runner::_run_find_one_and_delete(document::view operat
     }
 
     if (arguments["hint"]) {
-        if (arguments["hint"].type() == bsoncxx::v_noabi::type::k_string)
+        if (arguments["hint"].type() == bsoncxx::wip::type::k_string)
             options.hint(hint{arguments["hint"].get_string().value});
         else
             options.hint(hint{arguments["hint"].get_document().value});
     }
 
     if (arguments["hint"]) {
-        if (arguments["hint"].type() == bsoncxx::v_noabi::type::k_string)
+        if (arguments["hint"].type() == bsoncxx::wip::type::k_string)
             options.hint(hint{arguments["hint"].get_string().value});
         else
             options.hint(hint{arguments["hint"].get_document().value});
@@ -461,7 +461,7 @@ document::value operation_runner::_run_find_one_and_replace(document::view opera
     }
 
     if (arguments["hint"]) {
-        if (arguments["hint"].type() == bsoncxx::v_noabi::type::k_string)
+        if (arguments["hint"].type() == bsoncxx::wip::type::k_string)
             options.hint(hint{arguments["hint"].get_string().value});
         else
             options.hint(hint{arguments["hint"].get_document().value});
@@ -521,7 +521,7 @@ document::value operation_runner::_run_find_one_and_update(document::view operat
     }
 
     if (arguments["hint"]) {
-        if (arguments["hint"].type() == bsoncxx::v_noabi::type::k_string)
+        if (arguments["hint"].type() == bsoncxx::wip::type::k_string)
             options.hint(hint{arguments["hint"].get_string().value});
         else
             options.hint(hint{arguments["hint"].get_document().value});
@@ -677,7 +677,7 @@ document::value operation_runner::_run_replace_one(document::view operation) {
     }
 
     if (arguments["hint"]) {
-        if (arguments["hint"].type() == bsoncxx::v_noabi::type::k_string)
+        if (arguments["hint"].type() == bsoncxx::wip::type::k_string)
             options.hint(hint{arguments["hint"].get_string().value});
         else
             options.hint(hint{arguments["hint"].get_document().value});
@@ -745,7 +745,7 @@ document::value operation_runner::_run_update_many(document::view operation) {
     }
 
     if (arguments["hint"]) {
-        if (arguments["hint"].type() == bsoncxx::v_noabi::type::k_string)
+        if (arguments["hint"].type() == bsoncxx::wip::type::k_string)
             options.hint(hint{arguments["hint"].get_string().value});
         else
             options.hint(hint{arguments["hint"].get_document().value});
@@ -837,7 +837,7 @@ document::value operation_runner::_run_update_one(document::view operation) {
     }
 
     if (arguments["hint"]) {
-        if (arguments["hint"].type() == bsoncxx::v_noabi::type::k_string)
+        if (arguments["hint"].type() == bsoncxx::wip::type::k_string)
             options.hint(hint{arguments["hint"].get_string().value});
         else
             options.hint(hint{arguments["hint"].get_document().value});
@@ -996,7 +996,7 @@ document::value operation_runner::_run_bulk_write(document::view operation) {
             auto update_one = _build_update_model<model::update_one>(request_arguments);
 
             if (request_arguments["hint"]) {
-                if (request_arguments["hint"].type() == bsoncxx::v_noabi::type::k_string)
+                if (request_arguments["hint"].type() == bsoncxx::wip::type::k_string)
                     update_one.hint(hint{request_arguments["hint"].get_string().value});
                 else
                     update_one.hint(hint{request_arguments["hint"].get_document().value});
@@ -1019,7 +1019,7 @@ document::value operation_runner::_run_bulk_write(document::view operation) {
             auto update_many = _build_update_model<model::update_many>(request_arguments);
 
             if (request_arguments["hint"]) {
-                if (request_arguments["hint"].type() == bsoncxx::v_noabi::type::k_string)
+                if (request_arguments["hint"].type() == bsoncxx::wip::type::k_string)
                     update_many.hint(hint{request_arguments["hint"].get_string().value});
                 else
                     update_many.hint(hint{request_arguments["hint"].get_document().value});
@@ -1043,7 +1043,7 @@ document::value operation_runner::_run_bulk_write(document::view operation) {
             document::view replacement = request_arguments["replacement"].get_document().value;
             model::replace_one replace_one(filter, replacement);
             if (request_arguments["hint"]) {
-                if (request_arguments["hint"].type() == bsoncxx::v_noabi::type::k_string)
+                if (request_arguments["hint"].type() == bsoncxx::wip::type::k_string)
                     replace_one.hint(hint{request_arguments["hint"].get_string().value});
                 else
                     replace_one.hint(hint{request_arguments["hint"].get_document().value});
@@ -1066,7 +1066,7 @@ document::value operation_runner::_run_bulk_write(document::view operation) {
             document::view filter = request_arguments["filter"].get_document().value;
             model::delete_one delete_one(filter);
             if (request_arguments["hint"]) {
-                if (request_arguments["hint"].type() == bsoncxx::v_noabi::type::k_string)
+                if (request_arguments["hint"].type() == bsoncxx::wip::type::k_string)
                     delete_one.hint(hint{request_arguments["hint"].get_string().value});
                 else
                     delete_one.hint(hint{request_arguments["hint"].get_document().value});
@@ -1081,7 +1081,7 @@ document::value operation_runner::_run_bulk_write(document::view operation) {
             document::view filter = request_arguments["filter"].get_document().value;
             model::delete_many delete_many(filter);
             if (request_arguments["hint"]) {
-                if (request_arguments["hint"].type() == bsoncxx::v_noabi::type::k_string)
+                if (request_arguments["hint"].type() == bsoncxx::wip::type::k_string)
                     delete_many.hint(hint{request_arguments["hint"].get_string().value});
                 else
                     delete_many.hint(hint{request_arguments["hint"].get_document().value});
@@ -1459,12 +1459,11 @@ document::value operation_runner::run(document::view operation) {
         auto cursor = client[_db->name()][_coll->name()].list_indexes();
 
         REQUIRE(cursor.end() ==
-                std::find_if(cursor.begin(),
-                             cursor.end(),
-                             [operation](bsoncxx::v_noabi::document::view doc) {
-                                 return (doc["name"].get_string() ==
-                                         operation["arguments"]["index"].get_string());
-                             }));
+                std::find_if(
+                    cursor.begin(), cursor.end(), [operation](bsoncxx::wip::document::view doc) {
+                        return (doc["name"].get_string() ==
+                                operation["arguments"]["index"].get_string());
+                    }));
 
         return empty_document;
     } else if (key.compare("assertIndexExists") == 0) {
@@ -1474,12 +1473,11 @@ document::value operation_runner::run(document::view operation) {
         auto cursor = client[db][collection].list_indexes();
 
         REQUIRE(cursor.end() !=
-                std::find_if(cursor.begin(),
-                             cursor.end(),
-                             [operation](bsoncxx::v_noabi::document::view doc) {
-                                 return (doc["name"].get_string() ==
-                                         operation["arguments"]["index"].get_string());
-                             }));
+                std::find_if(
+                    cursor.begin(), cursor.end(), [operation](bsoncxx::wip::document::view doc) {
+                        return (doc["name"].get_string() ==
+                                operation["arguments"]["index"].get_string());
+                    }));
 
         return empty_document;
     } else if (key.compare("targetedFailPoint") == 0) {

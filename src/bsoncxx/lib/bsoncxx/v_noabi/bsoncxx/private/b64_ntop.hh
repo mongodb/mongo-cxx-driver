@@ -48,7 +48,7 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-inline namespace v_noabi {
+inline namespace wip {
 namespace b64 {
 
 #define BSONCXX_B64_ASSERT(Cond) \
@@ -190,7 +190,7 @@ BSONCXX_INLINE int ntop(std::uint8_t const* src,
 }
 
 }  // namespace b64
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

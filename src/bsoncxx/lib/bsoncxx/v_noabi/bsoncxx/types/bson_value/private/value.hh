@@ -21,7 +21,7 @@
 #include <bsoncxx/config/private/prelude.hh>
 
 namespace bsoncxx {
-inline namespace v_noabi {
+inline namespace wip {
 namespace types {
 namespace bson_value {
 
@@ -62,7 +62,7 @@ BSONCXX_INLINE bson_value::value make_owning_bson(void* internal_value) {
 }  // namespace bson_value
 }  // namespace types
 
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/private/postlude.hh>

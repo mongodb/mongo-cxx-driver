@@ -17,7 +17,7 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-inline namespace v_noabi {
+inline namespace wip {
 namespace builder {
 namespace stream {
 
@@ -26,7 +26,7 @@ class value_context;
 
 }  // namespace stream
 }  // namespace builder
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

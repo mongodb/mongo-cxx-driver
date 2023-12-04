@@ -30,7 +30,7 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-inline namespace v_noabi {
+inline namespace wip {
 namespace document {
 
 ///
@@ -373,8 +373,8 @@ class element {
     // Construct an invalid element with a key. Useful for exceptions.
     BSONCXX_PRIVATE explicit element(const stdx::string_view key);
 
-    friend ::bsoncxx::v_noabi::array::element;
-    friend ::bsoncxx::v_noabi::document::view;
+    friend ::bsoncxx::wip::array::element;
+    friend ::bsoncxx::wip::document::view;
 
     const std::uint8_t* _raw;
     std::uint32_t _length;
@@ -417,7 +417,7 @@ BSONCXX_API bool BSONCXX_CALL operator!=(const types::bson_value::view& v, const
 ///
 
 }  // namespace document
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

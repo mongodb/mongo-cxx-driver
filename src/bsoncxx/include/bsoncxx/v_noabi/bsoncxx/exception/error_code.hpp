@@ -22,7 +22,7 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-inline namespace v_noabi {
+inline namespace wip {
 ///
 /// Enum representing the various error types that can occur while operating on BSON values.
 ///
@@ -118,7 +118,7 @@ BSONCXX_INLINE std::error_code make_error_code(error_code error) {
     return {static_cast<int>(error), error_category()};
 }
 
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

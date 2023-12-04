@@ -21,7 +21,7 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-inline namespace v_noabi {
+inline namespace wip {
 ///
 /// Class representing any exceptions emitted from the bsoncxx library or
 /// its underlying implementation.
@@ -30,7 +30,7 @@ class exception : public std::system_error {
     using std::system_error::system_error;
 };
 
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

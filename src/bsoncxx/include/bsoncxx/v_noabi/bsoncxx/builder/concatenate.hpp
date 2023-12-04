@@ -22,7 +22,7 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-inline namespace v_noabi {
+inline namespace wip {
 namespace builder {
 
 ///
@@ -118,7 +118,7 @@ BSONCXX_INLINE concatenate_array concatenate(array::view_or_value array) {
 }
 
 }  // namespace builder
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

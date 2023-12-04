@@ -19,7 +19,7 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-inline namespace v_noabi {
+inline namespace wip {
 namespace builder {
 namespace basic {
 
@@ -34,7 +34,7 @@ BSONCXX_INLINE std::tuple<T&&, U&&> kvp(T&& t, U&& u) {
 
 }  // namespace basic
 }  // namespace builder
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

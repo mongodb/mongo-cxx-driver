@@ -18,9 +18,9 @@
 
 // "Forward-declare" the `bsoncxx::stdx` namespace to permit the using-declaration below.
 namespace bsoncxx {
-inline namespace v_noabi {
+inline namespace wip {
 namespace stdx {}
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace bsoncxx
 
 namespace mongocxx {

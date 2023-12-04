@@ -22,13 +22,13 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-inline namespace v_noabi {
+inline namespace wip {
 namespace array {
 
 using view_or_value = bsoncxx::view_or_value<array::view, array::value>;
 
 }  // namespace array
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

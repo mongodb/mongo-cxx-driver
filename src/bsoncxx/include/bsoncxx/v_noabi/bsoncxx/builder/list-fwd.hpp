@@ -15,7 +15,7 @@
 #pragma once
 
 namespace bsoncxx {
-inline namespace v_noabi {
+inline namespace wip {
 namespace builder {
 
 class list;
@@ -23,5 +23,5 @@ class document;
 class array;
 
 }  // namespace builder
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace bsoncxx

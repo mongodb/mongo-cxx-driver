@@ -19,7 +19,7 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-inline namespace v_noabi {
+inline namespace wip {
 enum class type : std::uint8_t;
 enum class binary_sub_type : std::uint8_t;
 
@@ -34,7 +34,7 @@ namespace types {
 
 }  // namespace types
 
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

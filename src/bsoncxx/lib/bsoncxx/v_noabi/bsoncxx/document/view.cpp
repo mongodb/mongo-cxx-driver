@@ -22,7 +22,7 @@
 #include <bsoncxx/config/private/prelude.hh>
 
 namespace bsoncxx {
-inline namespace v_noabi {
+inline namespace wip {
 namespace document {
 
 namespace {
@@ -174,5 +174,5 @@ bool BSONCXX_CALL operator!=(view lhs, view rhs) {
 }
 
 }  // namespace document
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace bsoncxx

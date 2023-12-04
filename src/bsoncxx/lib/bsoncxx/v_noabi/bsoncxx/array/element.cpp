@@ -20,7 +20,7 @@
 #include <bsoncxx/config/private/prelude.hh>
 
 namespace bsoncxx {
-inline namespace v_noabi {
+inline namespace wip {
 namespace array {
 
 element::element() : document::element() {}
@@ -50,5 +50,5 @@ bool BSONCXX_CALL operator!=(const types::bson_value::view& v, const element& el
 }
 
 }  // namespace array
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace bsoncxx

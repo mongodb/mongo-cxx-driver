@@ -26,7 +26,7 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-inline namespace v_noabi {
+inline namespace wip {
 namespace array {
 
 ///
@@ -78,7 +78,7 @@ class element : private document::element {
     using document::element::raw;
 
    private:
-    friend ::bsoncxx::v_noabi::array::view;
+    friend ::bsoncxx::wip::array::view;
 
     BSONCXX_PRIVATE explicit element(const std::uint8_t* raw,
                                      std::uint32_t length,
@@ -119,7 +119,7 @@ BSONCXX_API bool BSONCXX_CALL operator!=(const types::bson_value::view& v, const
 ///
 
 }  // namespace array
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

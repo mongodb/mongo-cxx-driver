@@ -17,7 +17,7 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-inline namespace v_noabi { class BSONCXX_API decimal128; }  // namespace v_noabi
+inline namespace wip { class BSONCXX_API decimal128; }  // namespace wip
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

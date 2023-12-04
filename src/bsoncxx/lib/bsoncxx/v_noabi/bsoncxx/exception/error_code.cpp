@@ -19,7 +19,7 @@
 #include <bsoncxx/config/private/prelude.hh>
 
 namespace bsoncxx {
-inline namespace v_noabi {
+inline namespace wip {
 namespace {
 
 class error_category_impl final : public std::error_category {
@@ -91,5 +91,5 @@ const std::error_category& BSONCXX_CALL error_category() {
     return instance;
 }
 
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace bsoncxx

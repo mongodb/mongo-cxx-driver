@@ -22,7 +22,7 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-inline namespace v_noabi {
+inline namespace wip {
 namespace string {
 
 template <class CharT,
@@ -34,7 +34,7 @@ BSONCXX_INLINE std::basic_string<CharT, Traits, Allocator> to_string(
 }
 
 }  // namespace string
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

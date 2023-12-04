@@ -18,7 +18,7 @@
 #include <bsoncxx/config/private/prelude.hh>
 
 namespace bsoncxx {
-inline namespace v_noabi {
+inline namespace wip {
 namespace string {
 
 view_or_value view_or_value::terminated() const {
@@ -37,5 +37,5 @@ const char* view_or_value::data() const {
 }
 
 }  // namespace string
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace bsoncxx

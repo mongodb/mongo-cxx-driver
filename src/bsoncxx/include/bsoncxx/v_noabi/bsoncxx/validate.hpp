@@ -25,7 +25,7 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-inline namespace v_noabi {
+inline namespace wip {
 ///
 /// Validates a BSON document. This is a simplified overload that will
 /// only do the bare minimum validation of document structure, and does
@@ -155,7 +155,7 @@ class validator {
     std::unique_ptr<impl> _impl;
 };
 
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

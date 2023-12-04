@@ -24,7 +24,7 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-inline namespace v_noabi {
+inline namespace wip {
 namespace stdx {
 
 namespace detail {
@@ -128,7 +128,7 @@ std::unique_ptr<T> make_unique_for_overwrite(std::size_t count) {
 }
 
 }  // namespace stdx
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

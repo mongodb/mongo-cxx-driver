@@ -19,7 +19,7 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-inline namespace v_noabi {
+inline namespace wip {
 namespace types {
 
 ///
@@ -32,7 +32,7 @@ BSONCXX_DEPRECATED typedef types::bson_value::view value;
 
 }  // namespace types
 
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

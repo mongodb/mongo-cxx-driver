@@ -27,17 +27,17 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-inline namespace v_noabi {
+inline namespace wip {
 namespace builder {
 
 using namespace bsoncxx::types;
 
 }  // namespace builder
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace bsoncxx
 
 namespace bsoncxx {
-inline namespace v_noabi {
+inline namespace wip {
 namespace builder {
 
 ///
@@ -106,8 +106,8 @@ class list {
    private:
     bson_value::value val;
 
-    friend ::bsoncxx::v_noabi::builder::document;
-    friend ::bsoncxx::v_noabi::builder::array;
+    friend ::bsoncxx::wip::builder::document;
+    friend ::bsoncxx::wip::builder::array;
 
     list(initializer_list_t init, bool type_deduction, bool is_array) : val{nullptr} {
         std::stringstream err_msg{"cannot construct document"};
@@ -196,7 +196,7 @@ class array : public list {
     array(initializer_list_t init) : list(init, false, true) {}
 };
 }  // namespace builder
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace bsoncxx
 
 // CXX-2770: missing include of postlude header.

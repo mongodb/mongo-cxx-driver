@@ -29,7 +29,7 @@
 #include <bsoncxx/config/private/prelude.hh>
 
 namespace bsoncxx {
-inline namespace v_noabi {
+inline namespace wip {
 inline std::string to_string(types::bson_value::view_or_value val) {
     switch (val.view().type()) {
         case bsoncxx::type::k_string:
@@ -90,7 +90,7 @@ inline std::string to_string(types::bson_value::view_or_value val) {
     }
 }
 
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/private/postlude.hh>

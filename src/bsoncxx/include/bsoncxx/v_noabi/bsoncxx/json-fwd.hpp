@@ -17,5 +17,5 @@
 #include <cstdint>
 
 namespace bsoncxx {
-inline namespace v_noabi { enum class ExtendedJsonMode : std::uint8_t; }  // namespace v_noabi
+inline namespace wip { enum class ExtendedJsonMode : std::uint8_t; }  // namespace wip
 }  // namespace bsoncxx

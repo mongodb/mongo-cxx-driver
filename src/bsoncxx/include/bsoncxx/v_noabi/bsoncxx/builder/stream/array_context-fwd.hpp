@@ -17,7 +17,7 @@
 #include <bsoncxx/builder/stream/closed_context-fwd.hpp>
 
 namespace bsoncxx {
-inline namespace v_noabi {
+inline namespace wip {
 namespace builder {
 namespace stream {
 
@@ -26,5 +26,5 @@ class array_context;
 
 }  // namespace stream
 }  // namespace builder
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace bsoncxx
