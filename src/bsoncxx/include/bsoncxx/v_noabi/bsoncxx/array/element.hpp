@@ -26,7 +26,7 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-inline namespace wip {
+namespace v_noabi {
 namespace array {
 
 ///
@@ -119,7 +119,16 @@ BSONCXX_API bool BSONCXX_CALL operator!=(const types::bson_value::view& v, const
 ///
 
 }  // namespace array
-}  // namespace wip
+}  // namespace v_noabi
+}  // namespace bsoncxx
+
+namespace bsoncxx {
+namespace array {
+
+using ::bsoncxx::v_noabi::array::operator==;
+using ::bsoncxx::v_noabi::array::operator!=;
+
+}  // namespace array
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

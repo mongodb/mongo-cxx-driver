@@ -373,7 +373,7 @@ class element {
     // Construct an invalid element with a key. Useful for exceptions.
     BSONCXX_PRIVATE explicit element(const stdx::string_view key);
 
-    friend ::bsoncxx::wip::array::element;
+    friend ::bsoncxx::v_noabi::array::element;
     friend ::bsoncxx::wip::document::view;
 
     const std::uint8_t* _raw;
