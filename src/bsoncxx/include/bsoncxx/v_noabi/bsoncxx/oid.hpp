@@ -25,7 +25,8 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-inline namespace wip {
+namespace v_noabi {
+
 ///
 /// Represents a MongoDB ObjectId. As this BSON type is used within the MongoDB server
 /// as a primary key for each document, it is useful for representing a 'pointer'
@@ -121,7 +122,7 @@ class oid {
     std::array<char, k_oid_length> _bytes;
 };
 
-}  // namespace wip
+}  // namespace v_noabi
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
