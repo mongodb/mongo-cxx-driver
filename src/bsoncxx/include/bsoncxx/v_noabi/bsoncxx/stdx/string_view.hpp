@@ -14,16 +14,14 @@
 
 #pragma once
 
-#include <algorithm>
 #include <cstddef>
 #include <ios>
-#include <iosfwd>
-#include <iterator>
 #include <limits>
 #include <stdexcept>
 #include <string>
 #include <utility>
 
+#include "./algorithm.hpp"
 #include "./iterator.hpp"
 #include "./operators.hpp"
 #include "./ranges.hpp"
@@ -82,7 +80,7 @@ class basic_string_view : detail::equality_operators, detail::ordering_operators
     using value_type = Char;
 
     // Constant sentinel value to represent an impossible/invalid string position
-    static constexpr size_type npos = static_cast<size_type>(-1);
+    static constexpr const size_type npos = static_cast<size_type>(-1);
 
    private:
     // Pointer to the beginning of the string being viewed
@@ -320,6 +318,15 @@ class basic_string_view : detail::equality_operators, detail::ordering_operators
         return count;
     }
 
+    /**
+     * @brief Obtain a substring of this string
+     *
+     * @param pos The zero-based index at which to start the new string.
+     * @param count The number of characters to include following `pos` in the new string.
+     * Automatically clamped to the available size
+     *
+     * @throws std::out_of_range if `pos` is greater than this->size()
+     */
     bsoncxx_cxx14_constexpr self_type substr(size_type pos, size_type count = npos) const {
         if (pos > size()) {
             throw std::out_of_range{"basic_string_view::substr()"};
@@ -376,6 +383,82 @@ class basic_string_view : detail::equality_operators, detail::ordering_operators
     }
 
     /**
+     * @brief Find the zero-based index of the left-most occurrence of the given substring
+     */
+    bsoncxx_cxx14_constexpr size_type find(self_type infix, size_type pos = 0) const noexcept {
+        self_type sub = this->substr((std::min)(pos, size()));
+        detail::subrange<iterator> found = detail::search(sub, infix);
+        if (detail::distance(found) != static_cast<difference_type>(infix.size())) {
+            return npos;
+        }
+        return _iter_to_pos(found.begin());
+    }
+
+    /**
+     * @brief Find the zero-based index of the right-box occurrence of the given substring
+     */
+    bsoncxx_cxx14_constexpr size_type rfind(self_type infix, size_type pos = npos) const noexcept {
+        self_type sub = this->substr(0, pos);
+        detail::reversed_t<self_type> found =
+            detail::search(detail::make_reversed_view(sub), detail::make_reversed_view(infix));
+        if (detail::distance(found) != static_cast<difference_type>(infix.size())) {
+            return npos;
+        }
+        return _iter_to_pos(found.end());
+    }
+
+    /**
+     * @brief Find the zero-based index of the left-most occurrence of any character of the given
+     * set
+     */
+    constexpr size_type find_first_of(self_type set, size_type pos = 0) const noexcept {
+        return _find_if(pos, detail::equal_to_any_of(set));
+    }
+
+    /**
+     * @brief Find the zero-based index of the right-most occurrence of any character of the given
+     * set
+     */
+    constexpr size_type find_last_of(self_type set, size_type pos = npos) const noexcept {
+        return _rfind_if(pos, detail::equal_to_any_of(set));
+    }
+
+    /**
+     * @brief Find the zero-based index of the left-most occurrence of any character that
+     * is NOT a member of the given set of characters
+     */
+    constexpr size_type find_first_not_of(self_type set, size_type pos = 0) const noexcept {
+        return _find_if(pos, detail::not_fn(detail::equal_to_any_of(set)));
+    }
+
+    /**
+     * @brief Find the zero-based index of the right-most occurrence of any character that
+     * is NOT a member of the given set of characters
+     */
+    constexpr size_type find_last_not_of(self_type set, size_type pos = npos) const noexcept {
+        return _rfind_if(pos, detail::not_fn(detail::equal_to_any_of(set)));
+    }
+
+#define DECL_FINDERS(Name, DefaultPos)                                                            \
+    constexpr size_type Name(value_type chr, size_type pos = DefaultPos) const noexcept {         \
+        return Name(self_type(&chr, 1), pos);                                                     \
+    }                                                                                             \
+    constexpr size_type Name(const_pointer cstr, size_type pos, size_type count) const noexcept { \
+        return Name(self_type(cstr, count), pos);                                                 \
+    }                                                                                             \
+    constexpr size_type Name(const_pointer cstr, size_type pos = DefaultPos) const noexcept {     \
+        return Name(self_type(cstr), pos);                                                        \
+    }                                                                                             \
+    bsoncxx_force_semicolon
+    DECL_FINDERS(find, 0);
+    DECL_FINDERS(rfind, npos);
+    DECL_FINDERS(find_first_of, 0);
+    DECL_FINDERS(find_last_of, npos);
+    DECL_FINDERS(find_first_not_of, 0);
+    DECL_FINDERS(find_last_not_of, npos);
+#undef DECL_FINDERS
+
+    /**
      * @brief Test whether the string starts-with the given prefix string
      */
     constexpr bool starts_with(self_type pfx) const noexcept {
@@ -387,6 +470,21 @@ class basic_string_view : detail::equality_operators, detail::ordering_operators
      */
     constexpr bool ends_with(self_type sfx) const noexcept {
         return size() >= sfx.size() && substr(size() - sfx.size()) == sfx;
+    }
+
+    /**
+     * @brief Test whether the string contains any occurrence of the given substring
+     */
+    constexpr bool contains(self_type infix) const noexcept {
+        return find(infix) != npos;
+    }
+
+    constexpr bool contains(value_type chr) const noexcept {
+        return contains(string_view(&chr, 1));
+    }
+
+    constexpr bool contains(const_pointer cstr) const noexcept {
+        return contains(self_type(cstr));
     }
 
     /**
@@ -430,7 +528,42 @@ class basic_string_view : detail::equality_operators, detail::ordering_operators
         out.write(self.data(), static_cast<std::streamsize>(self.size()));
         return out;
     }
+
+    // Find the first index I where the given predicate returns true for substr(I)
+    template <typename F>
+    bsoncxx_cxx14_constexpr size_type _find_if(size_type pos, F pred) const noexcept {
+        const iterator found = detail::find_if(substr(pos), pred);
+        if (found == end()) {
+            return npos;
+        }
+        return _iter_to_pos(found);
+    }
+
+    // Find the last index I where the given predicate returns true for substr(0, I)
+    template <typename F>
+    bsoncxx_cxx14_constexpr size_type _rfind_if(size_type pos, F pred) const noexcept {
+        const const_reverse_iterator found =
+            detail::find_if(detail::make_reversed_view(substr(0, pos)), pred);
+        if (found == rend()) {
+            return npos;
+        }
+        return _iter_to_pos(found);
+    }
+
+    // Convert an iterator to a zero-based index
+    constexpr size_type _iter_to_pos(const_iterator it) const noexcept {
+        return static_cast<size_type>(it - begin());
+    }
+
+    // Convert a reverse-iterator to a zero-based index
+    constexpr size_type _iter_to_pos(const_reverse_iterator it) const noexcept {
+        return static_cast<size_type>(rend() - it);
+    }
 };
+
+// Required to define this here for C++≤14 compatibility. Can be removed in C++≥17
+template <typename C, typename Tr>
+const std::size_t basic_string_view<C, Tr>::npos;
 
 using string_view = basic_string_view<char>;
 

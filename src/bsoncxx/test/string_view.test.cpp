@@ -157,3 +157,48 @@ TEST_CASE("string_view: Overloading safety") {
     std::vector<string_view> vec;
     CHECK(vec == vec);
 }
+
+TEST_CASE("string_view: find") {
+    string_view s1 = "abc123abc123";
+    auto pos = s1.find("abc");
+    CHECK(pos == 0);
+    pos = s1.find("bc1");
+    CHECK(pos == 1);
+    pos = s1.find("bc1", 1);
+    CHECK(pos == 1);
+    pos = s1.find("bc1", 2);
+    CHECK(pos == 7);
+    pos = s1.find("", 4);
+    CHECK(pos == 4);
+    CHECK(s1.find("") == 0);
+    CHECK(s1.find("nowhere") == s1.npos);
+    CHECK(s1.rfind("nowhere") == s1.npos);
+    CHECK(s1.find("123") == 3);
+    CHECK(s1.rfind("123") == 9);
+    CHECK(s1.rfind("abc", 8) == 0);
+    CHECK(s1.rfind("") == 12);
+
+    CHECK(s1.find_first_of("54321") == 3);
+    CHECK(s1.find_first_of("nope") == s1.npos);
+    CHECK(s1.find_last_of("fedcba") == 9);
+    CHECK(s1.find_last_of("nope") == s1.npos);
+
+    CHECK(s1.find_first_of("54321", 5) == 5);
+    CHECK(s1.find_first_of("nope", 5) == s1.npos);
+    CHECK(s1.find_last_of("fedcba", 5) == 3);
+    CHECK(s1.find_last_of("nope", 5) == s1.npos);
+
+    CHECK(s1.find_first_not_of("abcdef") == 3);
+    CHECK(s1.find_first_not_of("123456") == 0);
+    CHECK(s1.find_last_not_of("abcdef") == 12);
+    CHECK(s1.find_last_not_of("123456") == 9);
+    CHECK(s1.find_first_not_of("abcdef123456") == s1.npos);
+    CHECK(s1.find_last_not_of("abcdef123456") == s1.npos);
+
+    CHECK(s1.find_first_not_of("abcdef", 5) == 5);
+    CHECK(s1.find_first_not_of("123456", 5) == 6);
+    CHECK(s1.find_last_not_of("abcdef", 5) == 5);
+    CHECK(s1.find_last_not_of("123456", 5) == 3);
+    CHECK(s1.find_first_not_of("abcdef123456", 5) == s1.npos);
+    CHECK(s1.find_last_not_of("abcdef123456", 5) == s1.npos);
+}

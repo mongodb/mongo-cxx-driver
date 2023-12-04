@@ -41,11 +41,11 @@ TEST_CASE("Algorithm: equal()") {
 TEST_CASE("Algorithm: Simple search") {
     auto arr = {1, 2, 3, 4};
     auto needle = {2, 3};
-    auto ss = ranges::ssize(ranges::make_subrange(arr.begin(), arr.end()));
     auto searcher =
         bsoncxx::detail::default_searcher<const int*, const int*, bsoncxx::detail::equal_to>{
             bsoncxx::detail::begin(needle), bsoncxx::detail::end(needle), {}};
     auto found = searcher(bsoncxx::detail::begin(arr), bsoncxx::detail::end(arr));
     CHECK(found.first == bsoncxx::detail::begin(arr) + 1);
     auto found2 = bsoncxx::detail::search(arr, needle);
+    CHECK(found2.begin() == bsoncxx::detail::begin(arr) + 1);
 }

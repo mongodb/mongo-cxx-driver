@@ -40,6 +40,7 @@ add_executable(test_bson
     make_unique.test.cpp
     ranges.test.cpp
     string_view.test.cpp
+    algorithm.test.cpp
     type_traits.test.cpp
     iterator.test.cpp
 )
@@ -144,6 +145,7 @@ set_dist_list(src_bsoncxx_test_DIST
     test_macro_guards.cpp.in
     to_string.hh
     view_or_value.cpp
+    algorithm.test.cpp
     type_traits.test.cpp
     make_unique.test.cpp
     iterator.test.cpp

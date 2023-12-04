@@ -214,6 +214,12 @@ struct is_sized_sentinel_for
           std::is_convertible<detected_t<difference_t, Iter, Sentinel>, iter_difference_t<Iter>>> {
 };
 
+template <typename I>
+constexpr auto make_reverse_iterator(I it) noexcept
+    -> requires_t<std::reverse_iterator<I>, is_iterator<I>> {
+    return std::reverse_iterator<I>(it);
+}
+
 }  // namespace detail
 }  // namespace v_noabi
 }  // namespace bsoncxx

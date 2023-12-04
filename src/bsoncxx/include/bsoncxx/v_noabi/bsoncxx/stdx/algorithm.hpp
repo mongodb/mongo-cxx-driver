@@ -31,13 +31,6 @@ namespace detail {
  */
 static constexpr struct _advance_fn {
     template <typename I, typename S>
-    constexpr auto operator()(I& iter, S bound) const bsoncxx_returns(impl(iter, 1, bound));
-
-    template <typename I, typename S>
-    constexpr auto operator()(I& iter, iter_difference_t<I> off, S bound) const
-        bsoncxx_returns(impl(iter, off, bound));
-
-    template <typename I, typename S>
     bsoncxx_cxx14_constexpr static auto impl(I& iter,
                                              iter_difference_t<I> off,
                                              S bound)  //
@@ -53,6 +46,13 @@ static constexpr struct _advance_fn {
         return shift;
     }
 
+    template <typename I, typename S>
+    constexpr auto operator()(I& iter, S bound) const bsoncxx_returns(impl(iter, 1, bound));
+
+    template <typename I, typename S>
+    constexpr auto operator()(I& iter, iter_difference_t<I> off, S bound) const
+        bsoncxx_returns(impl(iter, off, bound));
+
     // Handle bidirectional iterators and negative offsets
     template <typename I, typename S>
     bsoncxx_cxx14_constexpr static requires_t<void, is_bidirectional_iterator<I>>  //
@@ -60,7 +60,7 @@ static constexpr struct _advance_fn {
                     iter_difference_t<I> off,
                     S bound,
                     iter_difference_t<I>& shift) noexcept(noexcept(--iter)) {
-        while (off < 0) {
+        while (off < 0 && iter != bound) {
             --iter;
             ++off;
             --shift;
@@ -161,7 +161,7 @@ using reversed_t = subrange<
 template <typename R>
 constexpr reversed_t<R>  //
 make_reversed_view(R&& rng) noexcept {
-    return {std::make_reverse_iterator(end(rng)), std::make_reverse_iterator(begin(rng))};
+    return {detail::make_reverse_iterator(end(rng)), detail::make_reverse_iterator(begin(rng))};
 }
 
 /**
@@ -173,16 +173,12 @@ make_reversed_view(R&& rng) noexcept {
  * if available, otherwise counts iterator increments.
  */
 static constexpr struct _distance_fn {
-    template <typename I, typename S>
-    constexpr auto operator()(I i, S s) const bsoncxx_returns(impl(rank<2>{}, make_subrange(i, s)));
     template <typename R>
-    constexpr auto operator()(R&& rng) const bsoncxx_returns(impl(rank<2>{}, rng));
+    constexpr static auto impl(rank<2>, R&& rng) bsoncxx_returns(ssize(rng));
 
     template <typename R>
-    constexpr static auto impl(rank<2>, R& rng) bsoncxx_returns(ssize(rng));
-
-    template <typename R>
-    constexpr static auto impl(rank<1>, R& rng) -> requires_t<range_difference_t<R>, is_range<R>> {
+    bsoncxx_cxx14_constexpr static auto impl(rank<1>, R&& rng)
+        -> requires_t<range_difference_t<R>, is_range<R>> {
         range_difference_t<R> count = 0;
         auto i = begin(rng);
         auto s = end(rng);
@@ -191,6 +187,11 @@ static constexpr struct _distance_fn {
         }
         return count;
     }
+
+    template <typename I, typename S>
+    constexpr auto operator()(I i, S s) const bsoncxx_returns(impl(rank<2>{}, make_subrange(i, s)));
+    template <typename R>
+    constexpr auto operator()(R&& rng) const bsoncxx_returns(impl(rank<2>{}, rng));
 } distance;
 
 /**
@@ -247,9 +248,9 @@ static constexpr struct _equal_fn {
     constexpr static auto definitely_different_sizes(rank<1>, L& l, R& r)
         bsoncxx_returns(ssize(l) != ssize(r));
     template <typename L, typename R>
-    constexpr static auto definitely_different_sizes(rank<0>, L&, R&) noexcept {
+    constexpr static bool definitely_different_sizes(rank<0>, L&, R&) noexcept {
         return false;
-    };
+    }
 } equal;
 
 /**
