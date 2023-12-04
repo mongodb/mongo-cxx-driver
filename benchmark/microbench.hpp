@@ -67,6 +67,7 @@ class microbench {
     microbench(std::string&& name, double task_size, std::set<benchmark_type> tags = {})
         : _score{task_size}, _tags{tags}, _name{std::move(name)} {}
 
+    virtual ~microbench() = default;
     void run();
 
     std::string get_name() {
