@@ -519,29 +519,24 @@ functions:
             make -C extras/docker/bookworm nocachebuild test
             echo "Building Red Hat UBI Docker image"
             make -C extras/docker/redhat-ubi-9.3 nocachebuild test
-
-    "download benchmark data":
+    
+    "run benchmarks":
       - command: shell.exec
         type: setup
         params:
           shell: bash
           working_dir: "mongo-cxx-driver"
           script: ./etc/microbenchmark-test-data.sh
-
-    "run benchmarks":
       - command: shell.exec
         type: test
         params:
           shell: bash
           working_dir: "mongo-cxx-driver"
           script: ./build/benchmark/microbenchmarks all
-
-    "send benchmarks":
       - command: perf.send
         params:
           name: perf
           file: mongo-cxx-driver/results.json
-
 
 #######################################
 #              Post Task              #
@@ -659,9 +654,7 @@ tasks:
       - func: "start_mongod"
       - func: "fetch_c_driver_source"
       - func: "compile_benchmarks"
-      - func: "download benchmark data"
       - func: "run benchmarks"
-      - func: "send benchmarks"
 
     - name: compile_macro_guard_tests
       commands:
