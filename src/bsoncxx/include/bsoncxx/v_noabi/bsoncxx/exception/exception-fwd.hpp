@@ -17,7 +17,17 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-inline namespace wip { class BSONCXX_API exception; }  // namespace wip
+namespace v_noabi {
+
+class BSONCXX_API exception;
+
+}  // namespace v_noabi
+}  // namespace bsoncxx
+
+namespace bsoncxx {
+
+using ::bsoncxx::v_noabi::exception;
+
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

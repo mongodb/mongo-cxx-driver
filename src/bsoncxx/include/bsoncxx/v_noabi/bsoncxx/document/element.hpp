@@ -84,7 +84,7 @@ class element {
     ///
     /// @return the element's type.
     ///
-    /// @throws bsoncxx::exception if this element is invalid.
+    /// @throws bsoncxx::v_noabi::exception if this element is invalid.
     ///
     bsoncxx::v_noabi::type type() const;
 
@@ -93,7 +93,7 @@ class element {
     ///
     /// @return the element's key.
     ///
-    /// @throws bsoncxx::exception if this element is invalid.
+    /// @throws bsoncxx::v_noabi::exception if this element is invalid.
     ///
     stdx::string_view key() const;
 
@@ -107,7 +107,7 @@ class element {
     ///
     /// Getter for elements of the b_double type.
     ///
-    /// @throws bsoncxx::exception if this element is not a b_double.
+    /// @throws bsoncxx::v_noabi::exception if this element is not a b_double.
     ///
     /// @return the element's value.
     ///
@@ -118,7 +118,7 @@ class element {
     ///
     /// @deprecated use document::element::get_string() instead.
     ///
-    /// @throws bsoncxx::exception if this element is not a b_string.
+    /// @throws bsoncxx::v_noabi::exception if this element is not a b_string.
     ///
     /// @return the element's value.
     ///
@@ -127,7 +127,7 @@ class element {
     ///
     /// Getter for elements of the b_string type.
     ///
-    /// @throws bsoncxx::exception if this element is not a b_string.
+    /// @throws bsoncxx::v_noabi::exception if this element is not a b_string.
     ///
     /// @return the element's value.
     ///
@@ -136,7 +136,7 @@ class element {
     ///
     /// Getter for elements of the b_document type.
     ///
-    /// @throws bsoncxx::exception if this element is not a b_document.
+    /// @throws bsoncxx::v_noabi::exception if this element is not a b_document.
     ///
     /// @return the element's value.
     ///
@@ -145,7 +145,7 @@ class element {
     ///
     /// Getter for elements of the b_array type.
     ///
-    /// @throws bsoncxx::exception if this element is not a b_array.
+    /// @throws bsoncxx::v_noabi::exception if this element is not a b_array.
     ///
     /// @return the element's value.
     ///
@@ -154,7 +154,7 @@ class element {
     ///
     /// Getter for elements of the b_binary type.
     ///
-    /// @throws bsoncxx::exception if this element is not a b_binary.
+    /// @throws bsoncxx::v_noabi::exception if this element is not a b_binary.
     ///
     /// @return the element's value.
     ///
@@ -163,7 +163,7 @@ class element {
     ///
     /// Getter for elements of the b_undefined type.
     ///
-    /// @throws bsoncxx::exception if this element is not a b_undefined.
+    /// @throws bsoncxx::v_noabi::exception if this element is not a b_undefined.
     ///
     /// @return the element's value.
     ///
@@ -172,7 +172,7 @@ class element {
     ///
     /// Getter for elements of the b_oid type.
     ///
-    /// @throws bsoncxx::exception if this element is not a b_oid.
+    /// @throws bsoncxx::v_noabi::exception if this element is not a b_oid.
     ///
     /// @return the element's value.
     ///
@@ -181,7 +181,7 @@ class element {
     ///
     /// Getter for elements of the b_bool type.
     ///
-    /// @throws bsoncxx::exception if this element is not a b_bool.
+    /// @throws bsoncxx::v_noabi::exception if this element is not a b_bool.
     ///
     /// @return the element's value.
     ///
@@ -190,7 +190,7 @@ class element {
     ///
     /// Getter for elements of the b_date type.
     ///
-    /// @throws bsoncxx::exception if this element is not a b_date.
+    /// @throws bsoncxx::v_noabi::exception if this element is not a b_date.
     ///
     /// @return the element's value.
     ///
@@ -199,7 +199,7 @@ class element {
     ///
     /// Getter for elements of the b_null type.
     ///
-    /// @throws bsoncxx::exception if this element is not a b_null.
+    /// @throws bsoncxx::v_noabi::exception if this element is not a b_null.
     ///
     /// @return the element's value.
     ///
@@ -208,7 +208,7 @@ class element {
     ///
     /// Getter for elements of the b_regex type.
     ///
-    /// @throws bsoncxx::exception if this element is not a b_regex.
+    /// @throws bsoncxx::v_noabi::exception if this element is not a b_regex.
     ///
     /// @return the element's value.
     ///
@@ -217,7 +217,7 @@ class element {
     ///
     /// Getter for elements of the b_dbpointer type.
     ///
-    /// @throws bsoncxx::exception if this element is not a b_dbpointer.
+    /// @throws bsoncxx::v_noabi::exception if this element is not a b_dbpointer.
     ///
     /// @return the element's value.
     ///
@@ -226,7 +226,7 @@ class element {
     ///
     /// Getter for elements of the b_code type.
     ///
-    /// @throws bsoncxx::exception if this element is not a b_code.
+    /// @throws bsoncxx::v_noabi::exception if this element is not a b_code.
     ///
     /// @return the element's value.
     ///
@@ -235,7 +235,7 @@ class element {
     ///
     /// Getter for elements of the b_symbol type.
     ///
-    /// @throws bsoncxx::exception if this element is not a b_symbol.
+    /// @throws bsoncxx::v_noabi::exception if this element is not a b_symbol.
     ///
     /// @return the element's value.
     ///
@@ -244,7 +244,7 @@ class element {
     ///
     /// Getter for elements of the b_codewscope type.
     ///
-    /// @throws bsoncxx::exception if this element is not a b_codewscope.
+    /// @throws bsoncxx::v_noabi::exception if this element is not a b_codewscope.
     ///
     /// @return the element's value.
     ///
@@ -253,7 +253,7 @@ class element {
     ///
     /// Getter for elements of the b_int32 type.
     ///
-    /// @throws bsoncxx::exception if this element is not a b_int32.
+    /// @throws bsoncxx::v_noabi::exception if this element is not a b_int32.
     ///
     /// @return the element's value.
     ///
@@ -262,7 +262,7 @@ class element {
     ///
     /// Getter for elements of the b_timestamp type.
     ///
-    /// @throws bsoncxx::exception if this element is not a b_timestamp.
+    /// @throws bsoncxx::v_noabi::exception if this element is not a b_timestamp.
     ///
     /// @return the element's value.
     ///
@@ -271,7 +271,7 @@ class element {
     ///
     /// Getter for elements of the b_int64 type.
     ///
-    /// @throws bsoncxx::exception if this element is not a b_int64.
+    /// @throws bsoncxx::v_noabi::exception if this element is not a b_int64.
     ///
     /// @return the element's value.
     ///
@@ -280,7 +280,7 @@ class element {
     ///
     /// Getter for elements of the b_decimal128 type.
     ///
-    /// @throws bsoncxx::exception if this element is not a b_decimal128.
+    /// @throws bsoncxx::v_noabi::exception if this element is not a b_decimal128.
     ///
     /// @return the element's value.
     ///
@@ -289,7 +289,7 @@ class element {
     ///
     /// Getter for elements of the b_minkey type.
     ///
-    /// @throws bsoncxx::exception if this element is not a b_minkey.
+    /// @throws bsoncxx::v_noabi::exception if this element is not a b_minkey.
     ///
     /// @return the element's value.
     ///
@@ -298,7 +298,7 @@ class element {
     ///
     /// Getter for elements of the b_maxkey type.
     ///
-    /// @throws bsoncxx::exception if this element is not a b_maxkey.
+    /// @throws bsoncxx::v_noabi::exception if this element is not a b_maxkey.
     ///
     /// @return the element's value.
     ///

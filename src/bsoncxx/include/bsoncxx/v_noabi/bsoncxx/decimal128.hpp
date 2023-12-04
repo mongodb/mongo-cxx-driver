@@ -52,7 +52,7 @@ class decimal128 {
     /// @param str
     ///     A string representation of a decimal number.
     ///
-    /// @throws bsoncxx::exception if the string isn't a valid BSON Decimal128
+    /// @throws bsoncxx::v_noabi::exception if the string isn't a valid BSON Decimal128
     /// representation.
     ///
     explicit decimal128(stdx::string_view str);

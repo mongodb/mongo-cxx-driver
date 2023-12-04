@@ -190,7 +190,7 @@ class value {
     ///     the symbol, JavaScript code, or regex pattern for the BSON symbol, code, or regex value
     ///     respectively.
     ///
-    /// @throws bsoncxx::exception if the type's value is not k_code, k_regex, or k_symbol.
+    /// @throws bsoncxx::v_noabi::exception if the type's value is not k_code, k_regex, or k_symbol.
     ///
     /// @deprecated
     ///   The BSON symbol type is deprecated and use by clients is discouraged.
@@ -208,7 +208,8 @@ class value {
     /// @param id
     ///     the type of BSON value to construct.
     ///
-    /// @throws bsoncxx::exception if the type's value is not k_maxkey, k_minkey, or k_undefined.
+    /// @throws bsoncxx::v_noabi::exception if the type's value is not k_maxkey, k_minkey, or
+    /// k_undefined.
     ///
     value(const type id);
 
@@ -226,7 +227,7 @@ class value {
     ///     If a BSON decimal128 value is to be constructed, this is the low value.
     ///     If a BSON timestamp value is to be constructed, this is the timestamp.
     ///
-    /// @throws bsoncxx::exception if the specified type is missing its required arguments.
+    /// @throws bsoncxx::v_noabi::exception if the specified type is missing its required arguments.
     ///
     /// @warning
     ///   The BSON timestamp type is used internally by the MongoDB server - use by clients

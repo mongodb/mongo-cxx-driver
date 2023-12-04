@@ -91,7 +91,7 @@ value::value(const type id) : _impl{stdx::make_unique<impl>()} {
             _impl->_value.value_type = BSON_TYPE_UNDEFINED;
             break;
         default:
-            throw bsoncxx::exception(error_code::k_invalid_bson_type_id);
+            throw bsoncxx::v_noabi::exception(error_code::k_invalid_bson_type_id);
     }
 }
 
@@ -124,7 +124,7 @@ value::value(const type id, stdx::string_view v) : _impl{stdx::make_unique<impl>
             _impl->_value.value.v_symbol.len = (uint32_t)v.length();
             break;
         default:
-            throw bsoncxx::exception(error_code::k_invalid_bson_type_id);
+            throw bsoncxx::v_noabi::exception(error_code::k_invalid_bson_type_id);
     }
 }
 
@@ -144,7 +144,7 @@ value::value(type id, uint64_t a, uint64_t b) : _impl{stdx::make_unique<impl>()}
             _impl->_value.value.v_timestamp.timestamp = (uint32_t)b;
             break;
         default:
-            throw bsoncxx::exception(error_code::k_invalid_bson_type_id);
+            throw bsoncxx::v_noabi::exception(error_code::k_invalid_bson_type_id);
     }
 }
 

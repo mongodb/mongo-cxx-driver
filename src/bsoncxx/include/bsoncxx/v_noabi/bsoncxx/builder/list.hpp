@@ -144,7 +144,8 @@ class list {
                 _core.append(ele.val);
             val = bson_value::value(_core.extract_array());
         } else {
-            throw bsoncxx::exception{error_code::k_unmatched_key_in_builder, err_msg.str()};
+            throw bsoncxx::v_noabi::exception{error_code::k_unmatched_key_in_builder,
+                                              err_msg.str()};
         }
     }
 };

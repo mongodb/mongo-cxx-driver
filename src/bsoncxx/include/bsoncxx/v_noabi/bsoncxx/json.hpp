@@ -43,7 +43,7 @@ enum class ExtendedJsonMode : std::uint8_t {
 /// @param mode
 ///   An optional JSON representation mode.
 ///
-/// @throws bsoncxx::exception with error details if the conversion failed.
+/// @throws bsoncxx::v_noabi::exception with error details if the conversion failed.
 ///
 /// @returns An extended JSON string.
 ///
@@ -61,7 +61,7 @@ BSONCXX_API std::string BSONCXX_CALL to_json(array::view view,
 ///
 /// @returns A document::value if conversion worked.
 ///
-/// @throws bsoncxx::exception with error details if the conversion failed.
+/// @throws bsoncxx::v_noabi::exception with error details if the conversion failed.
 ///
 BSONCXX_API document::value BSONCXX_CALL from_json(stdx::string_view json);
 
@@ -77,7 +77,7 @@ BSONCXX_API document::value BSONCXX_CALL from_json(stdx::string_view json);
 ///
 /// @returns A document::value if conversion worked.
 ///
-/// @throws bsoncxx::exception with error details if the conversion failed.
+/// @throws bsoncxx::v_noabi::exception with error details if the conversion failed.
 ///
 BSONCXX_API document::value BSONCXX_CALL operator"" _bson(const char* json, size_t len);
 

@@ -33,7 +33,7 @@ oid::oid() {
 
 oid::oid(const bsoncxx::v_noabi::stdx::string_view& str) {
     if (!bson_oid_is_valid(str.data(), str.size())) {
-        throw bsoncxx::exception{error_code::k_invalid_oid};
+        throw bsoncxx::v_noabi::exception{error_code::k_invalid_oid};
     }
     bson_oid_t oid;
     bson_oid_init_from_string(&oid, str.data());
@@ -42,7 +42,7 @@ oid::oid(const bsoncxx::v_noabi::stdx::string_view& str) {
 
 oid::oid(const char* bytes, std::size_t len) {
     if (len != this->size()) {
-        throw bsoncxx::exception{error_code::k_invalid_oid};
+        throw bsoncxx::v_noabi::exception{error_code::k_invalid_oid};
     }
     std::memcpy(_bytes.data(), bytes, _bytes.size());
 }

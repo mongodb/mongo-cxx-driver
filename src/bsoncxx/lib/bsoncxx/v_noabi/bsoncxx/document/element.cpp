@@ -61,7 +61,7 @@ std::uint32_t element::keylen() const {
 
 bsoncxx::v_noabi::type element::type() const {
     if (_raw == nullptr) {
-        throw bsoncxx::exception{
+        throw bsoncxx::v_noabi::exception{
             error_code::k_unset_element,
             "cannot return the type of uninitialized element" +
                 std::string(_key ? " with key \"" + std::string(_key.value().data()) + "\"" : "")};
@@ -73,7 +73,7 @@ bsoncxx::v_noabi::type element::type() const {
 
 stdx::string_view element::key() const {
     if (_raw == nullptr) {
-        throw bsoncxx::exception{
+        throw bsoncxx::v_noabi::exception{
             error_code::k_unset_element,
             "cannot return the key from an uninitialized element" +
                 std::string(_key ? " with key \"" + std::string(_key.value().data()) + "\"" : "")};
@@ -89,7 +89,7 @@ stdx::string_view element::key() const {
 #define BSONCXX_ENUM(name, val)                                                                 \
     types::b_##name element::get_##name() const {                                               \
         if (_raw == nullptr) {                                                                  \
-            throw bsoncxx::exception{                                                           \
+            throw bsoncxx::v_noabi::exception{                                                  \
                 error_code::k_unset_element,                                                    \
                 "cannot get " #name " from an uninitialized element" +                          \
                     std::string(_key ? " with key \"" + std::string(_key.value().data()) + "\"" \
@@ -103,7 +103,7 @@ stdx::string_view element::key() const {
 
 types::b_string element::get_utf8() const {
     if (_raw == nullptr) {
-        throw bsoncxx::exception{
+        throw bsoncxx::v_noabi::exception{
             error_code::k_unset_element,
             "cannot get string from an uninitialized element" +
                 std::string(_key ? " with key \"" + std::string(_key.value().data()) + "\"" : "")};

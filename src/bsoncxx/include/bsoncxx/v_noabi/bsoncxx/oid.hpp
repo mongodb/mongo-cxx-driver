@@ -54,7 +54,7 @@ class oid {
     /// @param len
     ///   The length of the buffer. Should be equal to oid::size().
     ///
-    /// @throws bsoncxx::exception if the length is not equal to oid::size().
+    /// @throws bsoncxx::v_noabi::exception if the length is not equal to oid::size().
     ///
     explicit oid(const char* bytes, std::size_t len);
 
@@ -64,7 +64,7 @@ class oid {
     /// @param str
     ///   A string of a hexadecimal representation of a valid ObjectId.
     ///
-    /// @throws bsoncxx::exception if the string isn't an OID-sized hex
+    /// @throws bsoncxx::v_noabi::exception if the string isn't an OID-sized hex
     /// string.
     ///
     explicit oid(const bsoncxx::v_noabi::stdx::string_view& str);

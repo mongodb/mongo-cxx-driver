@@ -27,11 +27,11 @@
     bson_iter_t iter; \
     bson_iter_init_from_data_at_offset(&iter, raw, length, offset, keylen);
 
-#define BSONCXX_TYPE_CHECK(name)                                                \
-    do {                                                                        \
-        if (type() != bsoncxx::v_noabi::type::k_##name) {                       \
-            throw bsoncxx::exception{error_code::k_need_element_type_k_##name}; \
-        }                                                                       \
+#define BSONCXX_TYPE_CHECK(name)                                                         \
+    do {                                                                                 \
+        if (type() != bsoncxx::v_noabi::type::k_##name) {                                \
+            throw bsoncxx::v_noabi::exception{error_code::k_need_element_type_k_##name}; \
+        }                                                                                \
     } while (0)
 
 namespace bsoncxx {

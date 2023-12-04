@@ -76,8 +76,8 @@ class core {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @throws bsoncxx::exception if the current BSON datum is an array or if the previous value
-    /// appended to the builder was also a key.
+    /// @throws bsoncxx::v_noabi::exception if the current BSON datum is an array or if the previous
+    /// value appended to the builder was also a key.
     ///
     core& key_view(stdx::string_view key);
 
@@ -91,8 +91,8 @@ class core {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @throws bsoncxx::exception if the current BSON datum is an array or if the previous value
-    /// appended to the builder was a key.
+    /// @throws bsoncxx::v_noabi::exception if the current BSON datum is an array or if the previous
+    /// value appended to the builder was a key.
     ///
     core& key_owned(std::string key);
 
@@ -104,8 +104,8 @@ class core {
     ///   method chaining.
     ///
     /// @throws
-    ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
-    ///   appended to start a new key/value pair.
+    ///   bsoncxx::v_noabi::exception if the current BSON datum is a document that is waiting for a
+    ///   key to be appended to start a new key/value pair.
     ///
     core& open_document();
 
@@ -117,8 +117,8 @@ class core {
     ///   method chaining.
     ///
     /// @throws
-    ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
-    ///   appended to start a new key/value pair.
+    ///   bsoncxx::v_noabi::exception if the current BSON datum is a document that is waiting for a
+    ///   key to be appended to start a new key/value pair.
     ///
     core& open_array();
 
@@ -129,7 +129,7 @@ class core {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @throws bsoncxx::exception if the current BSON datum is not an open sub-document.
+    /// @throws bsoncxx::v_noabi::exception if the current BSON datum is not an open sub-document.
     ///
     core& close_document();
 
@@ -140,7 +140,7 @@ class core {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @throws bsoncxx::exception if the current BSON datum is not an open sub-array.
+    /// @throws bsoncxx::v_noabi::exception if the current BSON datum is not an open sub-array.
     ///
     core& close_array();
 
@@ -159,7 +159,7 @@ class core {
     ///   method chaining.
     ///
     /// @throws
-    ///   bsoncxx::exception if one of the keys fails to append.
+    ///   bsoncxx::v_noabi::exception if one of the keys fails to append.
     ///
     core& concatenate(const bsoncxx::v_noabi::document::view& view);
 
@@ -171,9 +171,9 @@ class core {
     ///   method chaining.
     ///
     /// @throws
-    ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
-    ///   appended to start a new key/value pair.
-    ///   bsoncxx::exception if the double fails to append.
+    ///   bsoncxx::v_noabi::exception if the current BSON datum is a document that is waiting for a
+    ///   key to be appended to start a new key/value pair.
+    ///   bsoncxx::v_noabi::exception if the double fails to append.
     ///
     core& append(const types::b_double& value);
 
@@ -185,9 +185,9 @@ class core {
     ///   method chaining.
     ///
     /// @throws
-    ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
-    ///   appended to start a new key/value pair.
-    ///   bsoncxx::exception if the string fails to append.
+    ///   bsoncxx::v_noabi::exception if the current BSON datum is a document that is waiting for a
+    ///   key to be appended to start a new key/value pair.
+    ///   bsoncxx::v_noabi::exception if the string fails to append.
     ///
     core& append(const types::b_string& value);
 
@@ -199,9 +199,9 @@ class core {
     ///   method chaining.
     ///
     /// @throws
-    ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
-    ///   appended to start a new key/value pair.
-    ///   bsoncxx::exception if the document fails to append.
+    ///   bsoncxx::v_noabi::exception if the current BSON datum is a document that is waiting for a
+    ///   key to be appended to start a new key/value pair.
+    ///   bsoncxx::v_noabi::exception if the document fails to append.
     ///
     core& append(const types::b_document& value);
 
@@ -213,9 +213,9 @@ class core {
     ///   method chaining.
     ///
     /// @throws
-    ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
-    ///   appended to start a new key/value pair.
-    ///   bsoncxx::exception if the array fails to append.
+    ///   bsoncxx::v_noabi::exception if the current BSON datum is a document that is waiting for a
+    ///   key to be appended to start a new key/value pair.
+    ///   bsoncxx::v_noabi::exception if the array fails to append.
     ///
     core& append(const types::b_array& value);
 
@@ -227,9 +227,9 @@ class core {
     ///   method chaining.
     ///
     /// @throws
-    ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
-    ///   appended to start a new key/value pair.
-    ///   bsoncxx::exception if the binary fails to append.
+    ///   bsoncxx::v_noabi::exception if the current BSON datum is a document that is waiting for a
+    ///   key to be appended to start a new key/value pair.
+    ///   bsoncxx::v_noabi::exception if the binary fails to append.
     ///
     core& append(const types::b_binary& value);
 
@@ -241,9 +241,9 @@ class core {
     ///   method chaining.
     ///
     /// @throws
-    ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
-    ///   appended to start a new key/value pair.
-    ///   bsoncxx::exception if undefined fails to append.
+    ///   bsoncxx::v_noabi::exception if the current BSON datum is a document that is waiting for a
+    ///   key to be appended to start a new key/value pair.
+    ///   bsoncxx::v_noabi::exception if undefined fails to append.
     ///
     core& append(const types::b_undefined& value);
 
@@ -255,9 +255,9 @@ class core {
     ///   method chaining.
     ///
     /// @throws
-    ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
-    ///   appended to start a new key/value pair.
-    ///   bsoncxx::exception if the ObjectId fails to append.
+    ///   bsoncxx::v_noabi::exception if the current BSON datum is a document that is waiting for a
+    ///   key to be appended to start a new key/value pair.
+    ///   bsoncxx::v_noabi::exception if the ObjectId fails to append.
     ///
     core& append(const types::b_oid& value);
 
@@ -269,9 +269,9 @@ class core {
     ///   method chaining.
     ///
     /// @throws
-    ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
-    ///   appended to start a new key/value pair.
-    ///   bsoncxx::exception if the boolean fails to append.
+    ///   bsoncxx::v_noabi::exception if the current BSON datum is a document that is waiting for a
+    ///   key to be appended to start a new key/value pair.
+    ///   bsoncxx::v_noabi::exception if the boolean fails to append.
     ///
     core& append(const types::b_bool& value);
 
@@ -283,9 +283,9 @@ class core {
     ///   method chaining.
     ///
     /// @throws
-    ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
-    ///   appended to start a new key/value pair.
-    ///   bsoncxx::exception if the date fails to append.
+    ///   bsoncxx::v_noabi::exception if the current BSON datum is a document that is waiting for a
+    ///   key to be appended to start a new key/value pair.
+    ///   bsoncxx::v_noabi::exception if the date fails to append.
     ///
     core& append(const types::b_date& value);
 
@@ -297,9 +297,9 @@ class core {
     ///   method chaining.
     ///
     /// @throws
-    ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
-    ///   appended to start a new key/value pair.
-    ///   bsoncxx::exception if null fails to append.
+    ///   bsoncxx::v_noabi::exception if the current BSON datum is a document that is waiting for a
+    ///   key to be appended to start a new key/value pair.
+    ///   bsoncxx::v_noabi::exception if null fails to append.
     ///
     core& append(const types::b_null& value);
 
@@ -311,9 +311,9 @@ class core {
     ///   method chaining.
     ///
     /// @throws
-    ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
-    ///   appended to start a new key/value pair.
-    ///   bsoncxx::exception if the regex fails to append.
+    ///   bsoncxx::v_noabi::exception if the current BSON datum is a document that is waiting for a
+    ///   key to be appended to start a new key/value pair.
+    ///   bsoncxx::v_noabi::exception if the regex fails to append.
     ///
     core& append(const types::b_regex& value);
 
@@ -325,9 +325,9 @@ class core {
     ///   method chaining.
     ///
     /// @throws
-    ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
-    ///   appended to start a new key/value pair.
-    ///   bsoncxx::exception if the DBPointer fails to append.
+    ///   bsoncxx::v_noabi::exception if the current BSON datum is a document that is waiting for a
+    ///   key to be appended to start a new key/value pair.
+    ///   bsoncxx::v_noabi::exception if the DBPointer fails to append.
     ///
     core& append(const types::b_dbpointer& value);
 
@@ -339,9 +339,9 @@ class core {
     ///   method chaining.
     ///
     /// @throws
-    ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
-    ///   appended to start a new key/value pair.
-    ///   bsoncxx::exception if the JavaScript code fails to append.
+    ///   bsoncxx::v_noabi::exception if the current BSON datum is a document that is waiting for a
+    ///   key to be appended to start a new key/value pair.
+    ///   bsoncxx::v_noabi::exception if the JavaScript code fails to append.
     ///
     core& append(const types::b_code& value);
 
@@ -353,9 +353,9 @@ class core {
     ///   method chaining.
     ///
     /// @throws
-    ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
-    ///   appended to start a new key/value pair.
-    ///   bsoncxx::exception if the symbol fails to append.
+    ///   bsoncxx::v_noabi::exception if the current BSON datum is a document that is waiting for a
+    ///   key to be appended to start a new key/value pair.
+    ///   bsoncxx::v_noabi::exception if the symbol fails to append.
     ///
     core& append(const types::b_symbol& value);
 
@@ -367,9 +367,9 @@ class core {
     ///   method chaining.
     ///
     /// @throws
-    ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
-    ///   appended to start a new key/value pair.
-    ///   bsoncxx::exception if the JavaScript code with scope fails to append.
+    ///   bsoncxx::v_noabi::exception if the current BSON datum is a document that is waiting for a
+    ///   key to be appended to start a new key/value pair.
+    ///   bsoncxx::v_noabi::exception if the JavaScript code with scope fails to append.
     ///
     core& append(const types::b_codewscope& value);
 
@@ -381,9 +381,9 @@ class core {
     ///   method chaining.
     ///
     /// @throws
-    ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
-    ///   appended to start a new key/value pair.
-    ///   bsoncxx::exception if the 32-bit signed integer fails to append.
+    ///   bsoncxx::v_noabi::exception if the current BSON datum is a document that is waiting for a
+    ///   key to be appended to start a new key/value pair.
+    ///   bsoncxx::v_noabi::exception if the 32-bit signed integer fails to append.
     ///
     core& append(const types::b_int32& value);
 
@@ -395,9 +395,9 @@ class core {
     ///   method chaining.
     ///
     /// @throws
-    ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
-    ///   appended to start a new key/value pair.
-    ///   bsoncxx::exception if the timestamp fails to append.
+    ///   bsoncxx::v_noabi::exception if the current BSON datum is a document that is waiting for a
+    ///   key to be appended to start a new key/value pair.
+    ///   bsoncxx::v_noabi::exception if the timestamp fails to append.
     ///
     core& append(const types::b_timestamp& value);
 
@@ -409,9 +409,9 @@ class core {
     ///   method chaining.
     ///
     /// @throws
-    ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
-    ///   appended to start a new key/value pair.
-    ///   bsoncxx::exception if the 64-bit signed integer fails to append.
+    ///   bsoncxx::v_noabi::exception if the current BSON datum is a document that is waiting for a
+    ///   key to be appended to start a new key/value pair.
+    ///   bsoncxx::v_noabi::exception if the 64-bit signed integer fails to append.
     ///
     core& append(const types::b_int64& value);
 
@@ -423,9 +423,9 @@ class core {
     ///   method chaining.
     ///
     /// @throws
-    ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
-    ///   appended to start a new key/value pair.
-    ///   bsoncxx::exception if the Decimal128 fails to append.
+    ///   bsoncxx::v_noabi::exception if the current BSON datum is a document that is waiting for a
+    ///   key to be appended to start a new key/value pair.
+    ///   bsoncxx::v_noabi::exception if the Decimal128 fails to append.
     ///
     core& append(const types::b_decimal128& value);
 
@@ -437,9 +437,9 @@ class core {
     ///   method chaining.
     ///
     /// @throws
-    ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
-    ///   appended to start a new key/value pair.
-    ///   bsoncxx::exception if the min-key fails to append.
+    ///   bsoncxx::v_noabi::exception if the current BSON datum is a document that is waiting for a
+    ///   key to be appended to start a new key/value pair.
+    ///   bsoncxx::v_noabi::exception if the min-key fails to append.
     ///
     core& append(const types::b_minkey& value);
 
@@ -451,9 +451,9 @@ class core {
     ///   method chaining.
     ///
     /// @throws
-    ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
-    ///   appended to start a new key/value pair.
-    ///   bsoncxx::exception if the max-key fails to append.
+    ///   bsoncxx::v_noabi::exception if the current BSON datum is a document that is waiting for a
+    ///   key to be appended to start a new key/value pair.
+    ///   bsoncxx::v_noabi::exception if the max-key fails to append.
     ///
     core& append(const types::b_maxkey& value);
 
@@ -465,8 +465,8 @@ class core {
     ///   method chaining.
     ///
     /// @throws
-    ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
-    ///   appended to start a new key/value pair.
+    ///   bsoncxx::v_noabi::exception if the current BSON datum is a document that is waiting for a
+    ///   key to be appended to start a new key/value pair.
     ///
     core& append(const types::bson_value::view& value);
 
@@ -478,8 +478,8 @@ class core {
     ///   method chaining.
     ///
     /// @throws
-    ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
-    ///   appended to start a new key/value pair.
+    ///   bsoncxx::v_noabi::exception if the current BSON datum is a document that is waiting for a
+    ///   key to be appended to start a new key/value pair.
     ///
     core& append(std::string str);
 
@@ -491,8 +491,8 @@ class core {
     ///   method chaining.
     ///
     /// @throws
-    ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
-    ///   appended to start a new key/value pair.
+    ///   bsoncxx::v_noabi::exception if the current BSON datum is a document that is waiting for a
+    ///   key to be appended to start a new key/value pair.
     ///
     core& append(stdx::string_view str);
 
@@ -506,8 +506,8 @@ class core {
     ///   method chaining.
     ///
     /// @throws
-    ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
-    ///   appended to start a new key/value pair.
+    ///   bsoncxx::v_noabi::exception if the current BSON datum is a document that is waiting for a
+    ///   key to be appended to start a new key/value pair.
     ///
     template <typename T>
     BSONCXX_INLINE core& append(T* v) {
@@ -526,8 +526,8 @@ class core {
     ///   method chaining.
     ///
     /// @throws
-    ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
-    ///   appended to start a new key/value pair.
+    ///   bsoncxx::v_noabi::exception if the current BSON datum is a document that is waiting for a
+    ///   key to be appended to start a new key/value pair.
     ///
     core& append(bool value);
 
@@ -539,8 +539,8 @@ class core {
     ///   method chaining.
     ///
     /// @throws
-    ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
-    ///   appended to start a new key/value pair.
+    ///   bsoncxx::v_noabi::exception if the current BSON datum is a document that is waiting for a
+    ///   key to be appended to start a new key/value pair.
     ///
     core& append(double value);
 
@@ -552,8 +552,8 @@ class core {
     ///   method chaining.
     ///
     /// @throws
-    ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
-    ///   appended to start a new key/value pair.
+    ///   bsoncxx::v_noabi::exception if the current BSON datum is a document that is waiting for a
+    ///   key to be appended to start a new key/value pair.
     ///
     core& append(std::int32_t value);
 
@@ -565,8 +565,8 @@ class core {
     ///   method chaining.
     ///
     /// @throws
-    ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
-    ///   appended to start a new key/value pair.
+    ///   bsoncxx::v_noabi::exception if the current BSON datum is a document that is waiting for a
+    ///   key to be appended to start a new key/value pair.
     ///
     core& append(std::int64_t value);
 
@@ -578,8 +578,8 @@ class core {
     ///   method chaining.
     ///
     /// @throws
-    ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
-    ///   appended to start a new key/value pair.
+    ///   bsoncxx::v_noabi::exception if the current BSON datum is a document that is waiting for a
+    ///   key to be appended to start a new key/value pair.
     ///
     core& append(const oid& value);
 
@@ -591,8 +591,8 @@ class core {
     ///   method chaining.
     ///
     /// @throws
-    ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
-    ///   appended to start a new key/value pair.
+    ///   bsoncxx::v_noabi::exception if the current BSON datum is a document that is waiting for a
+    ///   key to be appended to start a new key/value pair.
     ///
     core& append(decimal128 value);
 
@@ -604,8 +604,8 @@ class core {
     ///   method chaining.
     ///
     /// @throws
-    ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
-    ///   appended to start a new key/value pair.
+    ///   bsoncxx::v_noabi::exception if the current BSON datum is a document that is waiting for a
+    ///   key to be appended to start a new key/value pair.
     ///
     core& append(bsoncxx::v_noabi::document::view view);
 
@@ -617,8 +617,8 @@ class core {
     ///   method chaining.
     ///
     /// @throws
-    ///   bsoncxx::exception if the current BSON datum is a document that is waiting for a key to be
-    ///   appended to start a new key/value pair.
+    ///   bsoncxx::v_noabi::exception if the current BSON datum is a document that is waiting for a
+    ///   key to be appended to start a new key/value pair.
     ///
     core& append(bsoncxx::v_noabi::array::view view);
 
@@ -632,7 +632,7 @@ class core {
     ///    appended to start a new key/value pair, and does contain any open sub-documents or open
     ///    sub-arrays.
     ///
-    /// @throws bsoncxx::exception if the precondition is violated.
+    /// @throws bsoncxx::v_noabi::exception if the precondition is violated.
     ///
     bsoncxx::v_noabi::document::view view_document() const;
 
@@ -645,7 +645,7 @@ class core {
     ///    The top-level BSON datum should be an array that does not contain any open sub-documents
     ///    or open sub-arrays.
     ///
-    /// @throws bsoncxx::exception if the precondition is violated.
+    /// @throws bsoncxx::v_noabi::exception if the precondition is violated.
     ///
     bsoncxx::v_noabi::array::view view_array() const;
 
@@ -659,7 +659,7 @@ class core {
     ///    appended to start a new key/value pair, and does not contain any open sub-documents or
     ///    open sub-arrays.
     ///
-    /// @throws bsoncxx::exception if the precondition is violated.
+    /// @throws bsoncxx::v_noabi::exception if the precondition is violated.
     ///
     /// @warning
     ///   After calling extract_document() it is illegal to call any methods on this class, unless
@@ -676,7 +676,7 @@ class core {
     ///    The top-level BSON datum should be an array that does not contain any open sub-documents
     ///    or open sub-arrays.
     ///
-    /// @throws bsoncxx::exception if the precondition is violated.
+    /// @throws bsoncxx::v_noabi::exception if the precondition is violated.
     ///
     /// @warning
     ///   After calling extract_array() it is illegal to call any methods on this class, unless it
