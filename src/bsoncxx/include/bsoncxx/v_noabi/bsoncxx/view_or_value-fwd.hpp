@@ -17,11 +17,18 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-inline namespace wip {
+namespace v_noabi {
+
 template <typename View, typename Value>
 class view_or_value;
 
-}  // namespace wip
+}  // namespace v_noabi
+}  // namespace bsoncxx
+
+namespace bsoncxx {
+
+using ::bsoncxx::v_noabi::view_or_value;
+
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

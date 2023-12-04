@@ -23,7 +23,8 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-inline namespace wip {
+namespace v_noabi {
+
 ///
 /// Class representing a view-or-value variant type.
 ///
@@ -210,7 +211,14 @@ BSONCXX_INLINE bool operator!=(const Value& lhs, const view_or_value<View, Value
 /// @}
 ///
 
-}  // namespace wip
+}  // namespace v_noabi
+}  // namespace bsoncxx
+
+namespace bsoncxx {
+
+using ::bsoncxx::v_noabi::operator==;
+using ::bsoncxx::v_noabi::operator!=;
+
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
