@@ -367,9 +367,8 @@ functions:
           shell: bash
           working_dir: "mongo-cxx-driver"
           script: |
-            cd build
-            cmake -G "Unix Makefiles" -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH="$(pwd)/../mongoc" -DCMAKE_CXX_STANDARD=20 ..
-            make microbenchmarks -j64
+            cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH="$(pwd)/../mongoc" -DCMAKE_CXX_STANDARD=20
+            cmake --build build --target microbenchmarks --parallel 64
 
     "test":
         - command: shell.exec
