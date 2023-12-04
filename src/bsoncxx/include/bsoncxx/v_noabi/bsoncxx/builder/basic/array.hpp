@@ -26,7 +26,7 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-inline namespace wip {
+namespace v_noabi {
 namespace builder {
 namespace basic {
 
@@ -114,7 +114,17 @@ bsoncxx::v_noabi::array::value BSONCXX_CALL make_array(Args&&... args) {
 
 }  // namespace basic
 }  // namespace builder
-}  // namespace wip
+}  // namespace v_noabi
+}  // namespace bsoncxx
+
+namespace bsoncxx {
+namespace builder {
+namespace basic {
+
+using ::bsoncxx::v_noabi::builder::basic::make_array;
+
+}  // namespace basic
+}  // namespace builder
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

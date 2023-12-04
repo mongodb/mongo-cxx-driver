@@ -20,7 +20,7 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-inline namespace wip {
+namespace v_noabi {
 namespace builder {
 namespace stream {
 
@@ -37,7 +37,7 @@ struct closed_context {
 
 }  // namespace stream
 }  // namespace builder
-}  // namespace wip
+}  // namespace v_noabi
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

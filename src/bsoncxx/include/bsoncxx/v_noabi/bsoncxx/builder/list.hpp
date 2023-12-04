@@ -27,17 +27,17 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-inline namespace wip {
+namespace v_noabi {
 namespace builder {
 
-using namespace bsoncxx::types;
+using namespace ::bsoncxx::v_noabi::types;  // Deprecated.
 
 }  // namespace builder
-}  // namespace wip
+}  // namespace v_noabi
 }  // namespace bsoncxx
 
 namespace bsoncxx {
-inline namespace wip {
+namespace v_noabi {
 namespace builder {
 
 ///
@@ -53,7 +53,7 @@ class list {
     list() : list({}) {}
 
     ///
-    /// Creates a bsoncxx::builder::list from a value of type T. T must be a
+    /// Creates a bsoncxx::v_noabi::builder::list from a value of type T. T must be a
     /// bsoncxx::v_noabi::types::bson_value::value or implicitly convertible to a
     /// bsoncxx::v_noabi::types::bson_value::value.
     ///
@@ -77,11 +77,12 @@ class list {
     ///     the initializer list used to construct the BSON document or array
     ///
     /// @note
-    ///     to enforce the creation of a BSON document or array use the bsoncxx::builder::document
-    ///     or bsoncxx::builder::array constructor, respectively.
+    ///     to enforce the creation of a BSON document or array use the
+    ///     bsoncxx::v_noabi::builder::document or bsoncxx::v_noabi::builder::array constructor,
+    ///     respectively.
     ///
-    /// @see bsoncxx::builder::document
-    /// @see bsoncxx::builder::array
+    /// @see bsoncxx::v_noabi::builder::document
+    /// @see bsoncxx::v_noabi::builder::array
     ///
     list(initializer_list_t init) : list(init, true, true) {}
 
@@ -106,8 +107,8 @@ class list {
    private:
     bson_value::value val;
 
-    friend ::bsoncxx::wip::builder::document;
-    friend ::bsoncxx::wip::builder::array;
+    friend ::bsoncxx::v_noabi::builder::document;
+    friend ::bsoncxx::v_noabi::builder::array;
 
     list(initializer_list_t init, bool type_deduction, bool is_array) : val{nullptr} {
         std::stringstream err_msg{"cannot construct document"};
@@ -166,8 +167,8 @@ class document : public list {
     /// @param init
     ///     the initializer list used to construct the BSON document
     ///
-    /// @see bsoncxx::builder::list
-    /// @see bsoncxx::builder::array
+    /// @see bsoncxx::v_noabi::builder::list
+    /// @see bsoncxx::v_noabi::builder::array
     ///
     document(initializer_list_t init) : list(init, false, false) {}
 };
@@ -190,13 +191,21 @@ class array : public list {
     /// @param init
     ///     the initializer list used to construct the BSON array
     ///
-    /// @see bsoncxx::builder::list
-    /// @see bsoncxx::builder::document
+    /// @see bsoncxx::v_noabi::builder::list
+    /// @see bsoncxx::v_noabi::builder::document
     ///
     array(initializer_list_t init) : list(init, false, true) {}
 };
 }  // namespace builder
-}  // namespace wip
+}  // namespace v_noabi
+}  // namespace bsoncxx
+
+namespace bsoncxx {
+namespace builder {
+
+using namespace ::bsoncxx::v_noabi::types;  // Deprecated.
+
+}  // namespace builder
 }  // namespace bsoncxx
 
 // CXX-2770: missing include of postlude header.

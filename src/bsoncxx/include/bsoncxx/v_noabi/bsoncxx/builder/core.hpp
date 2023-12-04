@@ -31,7 +31,7 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-inline namespace wip {
+namespace v_noabi {
 namespace builder {
 
 ///
@@ -695,7 +695,7 @@ class core {
 };
 
 }  // namespace builder
-}  // namespace wip
+}  // namespace v_noabi
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

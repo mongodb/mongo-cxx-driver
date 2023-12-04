@@ -23,7 +23,7 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-inline namespace wip {
+namespace v_noabi {
 namespace builder {
 namespace basic {
 
@@ -82,7 +82,7 @@ class sub_array {
 
 }  // namespace basic
 }  // namespace builder
-}  // namespace wip
+}  // namespace v_noabi
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

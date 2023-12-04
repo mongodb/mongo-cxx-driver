@@ -15,7 +15,7 @@
 #pragma once
 
 namespace bsoncxx {
-inline namespace wip {
+namespace v_noabi {
 namespace builder {
 namespace basic {
 
@@ -23,5 +23,15 @@ class sub_array;
 
 }  // namespace basic
 }  // namespace builder
-}  // namespace wip
+}  // namespace v_noabi
+}  // namespace bsoncxx
+
+namespace bsoncxx {
+namespace builder {
+namespace basic {
+
+using ::bsoncxx::v_noabi::builder::basic::sub_array;
+
+}  // namespace basic
+}  // namespace builder
 }  // namespace bsoncxx

@@ -21,7 +21,7 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-inline namespace wip {
+namespace v_noabi {
 namespace builder {
 namespace basic {
 namespace impl {
@@ -58,7 +58,7 @@ BSONCXX_INLINE void value_append(core* core, T&& t) {
 }  // namespace impl
 }  // namespace basic
 }  // namespace builder
-}  // namespace wip
+}  // namespace v_noabi
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

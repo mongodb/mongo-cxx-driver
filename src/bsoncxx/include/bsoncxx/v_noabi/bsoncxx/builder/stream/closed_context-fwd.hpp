@@ -15,7 +15,7 @@
 #pragma once
 
 namespace bsoncxx {
-inline namespace wip {
+namespace v_noabi {
 namespace builder {
 namespace stream {
 
@@ -23,5 +23,15 @@ struct closed_context;
 
 }  // namespace stream
 }  // namespace builder
-}  // namespace wip
+}  // namespace v_noabi
+}  // namespace bsoncxx
+
+namespace bsoncxx {
+namespace builder {
+namespace stream {
+
+using ::bsoncxx::v_noabi::builder::stream::closed_context;
+
+}  // namespace stream
+}  // namespace builder
 }  // namespace bsoncxx
