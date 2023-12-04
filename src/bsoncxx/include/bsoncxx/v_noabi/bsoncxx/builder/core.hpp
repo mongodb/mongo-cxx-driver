@@ -682,7 +682,7 @@ class core {
     ///   After calling extract_array() it is illegal to call any methods on this class, unless it
     ///   is subsequenly moved into.
     ///
-    bsoncxx::array::value extract_array();
+    bsoncxx::v_noabi::array::value extract_array();
 
     ///
     /// Deletes the contents of the underlying BSON datum. After calling clear(), the state of this

@@ -80,7 +80,7 @@ class array : public sub_array {
     ///  After calling extract() it is illegal to call any methods
     ///  on this class, unless it is subsequenly moved into.
     ///
-    BSONCXX_INLINE bsoncxx::array::value extract() {
+    BSONCXX_INLINE bsoncxx::v_noabi::array::value extract() {
         return _core.extract_array();
     }
 
@@ -103,13 +103,12 @@ class array : public sub_array {
 ///   builder::basic::sub_array::append accepts.
 ///
 /// @return
-///   A bsoncxx::array::value containing the elements.
+///   A bsoncxx::v_noabi::array::value containing the elements.
 ///
 template <typename... Args>
-bsoncxx::array::value BSONCXX_CALL make_array(Args&&... args) {
-    basic::array array;
+bsoncxx::v_noabi::array::value BSONCXX_CALL make_array(Args&&... args) {
+    array array;
     array.append(std::forward<Args>(args)...);
-
     return array.extract();
 }
 

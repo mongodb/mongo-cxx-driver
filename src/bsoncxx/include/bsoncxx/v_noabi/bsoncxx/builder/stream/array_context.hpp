@@ -104,7 +104,7 @@ class array_context {
     /// @return A value type which holds the complete bson document.
     ///
     template <typename T>
-    BSONCXX_INLINE detail::requires_t<bsoncxx::array::value,
+    BSONCXX_INLINE detail::requires_t<bsoncxx::v_noabi::array::value,
                                       std::is_same<base, closed_context>,
                                       detail::is_alike<T, finalize_type>>
     // VS2015U1 can't resolve the name.
