@@ -5,6 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 3.10.0 [Unreleased]
+
+### Added
+
+- Forward headers providing non-defining declarations of bsoncxx and mongocxx class types.
+  - Note: user-defined forward declarations of any library entity has not been, and is still not, supported.
+    To obtain the declaration or definition of a library entity, always include the corresponding header.
+
 ## 3.9.0
 
 ### Added

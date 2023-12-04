@@ -17,6 +17,13 @@
 #include <cstddef>
 #include <cstdint>
 
+#include <bsoncxx/array/element-fwd.hpp>
+#include <bsoncxx/document/element-fwd.hpp>
+#include <bsoncxx/document/view-fwd.hpp>
+#include <bsoncxx/types-fwd.hpp>
+#include <bsoncxx/types/bson_value/value-fwd.hpp>
+#include <bsoncxx/types/bson_value/view-fwd.hpp>
+
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 
@@ -24,44 +31,6 @@
 
 namespace bsoncxx {
 inline namespace v_noabi {
-enum class type : std::uint8_t;
-enum class binary_sub_type : std::uint8_t;
-
-namespace types {
-struct b_eod;
-struct b_double;
-struct b_string;
-struct b_document;
-struct b_array;
-struct b_binary;
-struct b_undefined;
-struct b_oid;
-struct b_bool;
-struct b_date;
-struct b_null;
-struct b_regex;
-struct b_dbpointer;
-struct b_code;
-struct b_symbol;
-struct b_codewscope;
-struct b_int32;
-struct b_timestamp;
-struct b_int64;
-struct b_decimal128;
-struct b_minkey;
-struct b_maxkey;
-
-namespace bson_value {
-class value;
-class view;
-}  // namespace bson_value
-
-}  // namespace types
-
-namespace array {
-class element;
-}  // namespace array
-
 namespace document {
 
 ///
@@ -73,7 +42,7 @@ namespace document {
 ///
 /// @relatesalso array::element
 ///
-class BSONCXX_API element {
+class element {
    public:
     ///
     /// Construct an invalid element.
@@ -404,8 +373,8 @@ class BSONCXX_API element {
     // Construct an invalid element with a key. Useful for exceptions.
     BSONCXX_PRIVATE explicit element(const stdx::string_view key);
 
-    friend class view;
-    friend class array::element;
+    friend ::bsoncxx::v_noabi::array::element;
+    friend ::bsoncxx::v_noabi::document::view;
 
     const std::uint8_t* _raw;
     std::uint32_t _length;
@@ -448,7 +417,6 @@ BSONCXX_API bool BSONCXX_CALL operator!=(const types::bson_value::view& v, const
 ///
 
 }  // namespace document
-
 }  // namespace v_noabi
 }  // namespace bsoncxx
 

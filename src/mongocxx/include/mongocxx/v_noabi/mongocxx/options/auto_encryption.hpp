@@ -16,6 +16,10 @@
 
 #include <string>
 
+#include <mongocxx/client-fwd.hpp>
+#include <mongocxx/options/auto_encryption-fwd.hpp>
+#include <mongocxx/pool-fwd.hpp>
+
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <mongocxx/stdx.hpp>
@@ -24,15 +28,12 @@
 
 namespace mongocxx {
 inline namespace v_noabi {
-class client;
-class pool;
-
 namespace options {
 
 ///
 /// Class representing options for automatic client-side encryption.
 ///
-class MONGOCXX_API auto_encryption {
+class auto_encryption {
    public:
     ///
     /// Default constructs a new auto_encryption object.
@@ -55,7 +56,7 @@ class MONGOCXX_API auto_encryption {
     ///
     /// @see https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
-    auto_encryption& key_vault_client(client* client);
+    auto_encryption& key_vault_client(mongocxx::client* client);
 
     ///
     /// Gets the key vault client.
@@ -63,7 +64,7 @@ class MONGOCXX_API auto_encryption {
     /// @return
     ///   An optional pointer to the key vault client.
     ///
-    const stdx::optional<client*>& key_vault_client() const;
+    const stdx::optional<mongocxx::client*>& key_vault_client() const;
 
     ///
     /// When the key vault collection is on a separate MongoDB cluster,
@@ -85,7 +86,7 @@ class MONGOCXX_API auto_encryption {
     ///
     /// @see https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
-    auto_encryption& key_vault_pool(pool* pool);
+    auto_encryption& key_vault_pool(mongocxx::pool* pool);
 
     ///
     /// Gets the key vault pool.
@@ -93,7 +94,7 @@ class MONGOCXX_API auto_encryption {
     /// @return
     ///   An optional pointer to the key vault pool.
     ///
-    const stdx::optional<pool*>& key_vault_pool() const;
+    const stdx::optional<mongocxx::pool*>& key_vault_pool() const;
 
     ///
     /// Sets the namespace to use to access the key vault collection, which
@@ -371,8 +372,8 @@ class MONGOCXX_API auto_encryption {
     const stdx::optional<bsoncxx::document::view_or_value>& extra_options() const;
 
    private:
-    friend class mongocxx::client;
-    friend class mongocxx::pool;
+    friend ::mongocxx::v_noabi::client;
+    friend ::mongocxx::v_noabi::pool;
 
     MONGOCXX_PRIVATE void* convert() const;
 

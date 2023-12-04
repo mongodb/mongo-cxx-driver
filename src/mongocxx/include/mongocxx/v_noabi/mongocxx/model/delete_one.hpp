@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/model/delete_one-fwd.hpp>
+
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <mongocxx/hint.hpp>
@@ -28,7 +30,7 @@ namespace model {
 ///
 /// Class representing a MongoDB delete operation that removes a single document.
 ///
-class MONGOCXX_API delete_one {
+class delete_one {
    public:
     ///
     /// Constructs a delete operation that will delete the first document matching the filter.
@@ -80,20 +82,20 @@ class MONGOCXX_API delete_one {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    delete_one& hint(class hint index_hint);
+    delete_one& hint(mongocxx::hint index_hint);
 
     ///
     /// Gets the current hint.
     ///
     /// @return The current hint, if one is set.
     ///
-    const stdx::optional<class hint>& hint() const;
+    const stdx::optional<mongocxx::hint>& hint() const;
 
    private:
     bsoncxx::document::view_or_value _filter;
 
     stdx::optional<bsoncxx::document::view_or_value> _collation;
-    stdx::optional<class hint> _hint;
+    stdx::optional<mongocxx::hint> _hint;
 };
 
 }  // namespace model

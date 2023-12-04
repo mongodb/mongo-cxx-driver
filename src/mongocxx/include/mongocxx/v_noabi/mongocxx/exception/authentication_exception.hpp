@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/exception/authentication_exception-fwd.hpp>
+
 #include <bsoncxx/document/value.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
 
@@ -26,7 +28,7 @@ inline namespace v_noabi {
 ///
 /// @see mongocxx::operation_exception
 ///
-class MONGOCXX_API authentication_exception : public operation_exception {
+class authentication_exception : public operation_exception {
    public:
     using operation_exception::operation_exception;
 };

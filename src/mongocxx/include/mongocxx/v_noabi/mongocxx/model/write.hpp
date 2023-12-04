@@ -16,6 +16,8 @@
 
 #include <cstdint>
 
+#include <mongocxx/model/write-fwd.hpp>
+
 #include <bsoncxx/stdx/optional.hpp>
 #include <mongocxx/model/delete_many.hpp>
 #include <mongocxx/model/delete_one.hpp>
@@ -34,7 +36,7 @@ namespace model {
 ///
 /// Models a single write operation within a mongocxx::bulk_write.
 ///
-class MONGOCXX_API write {
+class write {
    public:
     ///
     /// Constructs a write from a model::insert_one.

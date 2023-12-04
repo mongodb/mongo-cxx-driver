@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/write_type-fwd.hpp>
+
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {

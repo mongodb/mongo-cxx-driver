@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/events/topology_closed_event-fwd.hpp>
+
 #include <bsoncxx/oid.hpp>
 
 #include <mongocxx/config/prelude.hpp>
@@ -29,7 +31,7 @@ namespace events {
 /// @see "TopologyClosedEvent" in
 /// https://github.com/mongodb/specifications/blob/master/source/server-discovery-and-monitoring/server-discovery-and-monitoring.rst
 ///
-class MONGOCXX_API topology_closed_event {
+class topology_closed_event {
    public:
     MONGOCXX_PRIVATE explicit topology_closed_event(const void* event);
 

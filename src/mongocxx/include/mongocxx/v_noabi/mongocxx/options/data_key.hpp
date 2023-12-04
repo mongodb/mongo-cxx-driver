@@ -17,6 +17,9 @@
 #include <string>
 #include <vector>
 
+#include <mongocxx/client_encryption-fwd.hpp>
+#include <mongocxx/options/data_key-fwd.hpp>
+
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <mongocxx/stdx.hpp>
@@ -25,14 +28,12 @@
 
 namespace mongocxx {
 inline namespace v_noabi {
-class client_encryption;
-
 namespace options {
 
 ///
 /// Class representing options for data key generation for encryption.
 ///
-class MONGOCXX_API data_key {
+class data_key {
    public:
     ///
     /// Sets a KMS-specific key used to encrypt the new data key.
@@ -153,7 +154,8 @@ class MONGOCXX_API data_key {
     const stdx::optional<key_material_type>& key_material();
 
    private:
-    friend class mongocxx::client_encryption;
+    friend ::mongocxx::v_noabi::client_encryption;
+
     MONGOCXX_PRIVATE void* convert() const;
 
     stdx::optional<bsoncxx::document::view_or_value> _master_key;
@@ -162,7 +164,6 @@ class MONGOCXX_API data_key {
 };
 
 }  // namespace options
-
 }  // namespace v_noabi
 }  // namespace mongocxx
 

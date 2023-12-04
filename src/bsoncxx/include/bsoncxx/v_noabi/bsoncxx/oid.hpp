@@ -18,6 +18,8 @@
 #include <ctime>
 #include <string>
 
+#include <bsoncxx/oid-fwd.hpp>
+
 #include <bsoncxx/stdx/string_view.hpp>
 
 #include <bsoncxx/config/prelude.hpp>
@@ -34,7 +36,7 @@ inline namespace v_noabi {
 ///
 /// @see https://www.mongodb.com/docs/manual/reference/object-id/
 ///
-class BSONCXX_API oid {
+class oid {
    public:
     static constexpr std::size_t k_oid_length = 12;
 

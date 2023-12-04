@@ -17,6 +17,12 @@
 #include <chrono>
 #include <memory>
 
+#include <mongocxx/client_session-fwd.hpp>
+#include <mongocxx/options/transaction-fwd.hpp>
+#include <mongocxx/read_concern-fwd.hpp>
+#include <mongocxx/read_preference-fwd.hpp>
+#include <mongocxx/write_concern-fwd.hpp>
+
 #include <bsoncxx/stdx/optional.hpp>
 #include <mongocxx/stdx.hpp>
 
@@ -24,17 +30,12 @@
 
 namespace mongocxx {
 inline namespace v_noabi {
-class client_session;
-class read_concern;
-class write_concern;
-class read_preference;
-
 namespace options {
 
 ///
 /// Class representing the optional arguments for a transaction.
 ///
-class MONGOCXX_API transaction {
+class transaction {
    public:
     transaction();
 
@@ -73,7 +74,7 @@ class MONGOCXX_API transaction {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    transaction& read_concern(const class read_concern& rc);
+    transaction& read_concern(const mongocxx::read_concern& rc);
 
     ///
     /// Gets the current transaction read concern.
@@ -81,7 +82,7 @@ class MONGOCXX_API transaction {
     /// @return
     ///    An optional containing the read concern. If the read concern has not been set, a
     ///    disengaged optional is returned.
-    stdx::optional<class read_concern> read_concern() const;
+    stdx::optional<mongocxx::read_concern> read_concern() const;
 
     ///
     /// Sets the transaction write concern.
@@ -93,7 +94,7 @@ class MONGOCXX_API transaction {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    transaction& write_concern(const class write_concern& wc);
+    transaction& write_concern(const mongocxx::write_concern& wc);
 
     ///
     /// Gets the current transaction write concern.
@@ -103,7 +104,7 @@ class MONGOCXX_API transaction {
     /// @return
     ///    An optional containing the write concern. If the write concern has not been set, a
     ///    disengaged optional is returned.
-    stdx::optional<class write_concern> write_concern() const;
+    stdx::optional<mongocxx::write_concern> write_concern() const;
 
     ///
     /// Sets the transaction read preference.
@@ -115,7 +116,7 @@ class MONGOCXX_API transaction {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    transaction& read_preference(const class read_preference& rp);
+    transaction& read_preference(const mongocxx::read_preference& rp);
 
     ///
     /// Gets the current transaction read preference.
@@ -123,7 +124,7 @@ class MONGOCXX_API transaction {
     /// @return
     ///    An optional containing the read preference. If the read preference has not been set, a
     ///    disengaged optional is returned.
-    stdx::optional<class read_preference> read_preference() const;
+    stdx::optional<mongocxx::read_preference> read_preference() const;
 
     ///
     /// Sets the transaction's max commit time, in milliseconds.
@@ -146,7 +147,7 @@ class MONGOCXX_API transaction {
     stdx::optional<std::chrono::milliseconds> max_commit_time_ms() const;
 
    private:
-    friend class ::mongocxx::client_session;
+    friend ::mongocxx::v_noabi::client_session;
 
     class MONGOCXX_PRIVATE impl;
 

@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/events/topology_opening_event-fwd.hpp>
+
 #include <bsoncxx/oid.hpp>
 #include <mongocxx/events/topology_description.hpp>
 
@@ -29,7 +31,7 @@ namespace events {
 /// @see "TopologyOpeningEvent" in
 /// https://github.com/mongodb/specifications/blob/master/source/server-discovery-and-monitoring/server-discovery-and-monitoring.rst
 ///
-class MONGOCXX_API topology_opening_event {
+class topology_opening_event {
    public:
     MONGOCXX_PRIVATE explicit topology_opening_event(const void* event);
 

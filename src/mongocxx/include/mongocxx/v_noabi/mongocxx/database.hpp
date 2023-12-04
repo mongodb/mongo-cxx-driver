@@ -17,6 +17,11 @@
 #include <memory>
 #include <string>
 
+#include <mongocxx/client-fwd.hpp>
+#include <mongocxx/client_encryption-fwd.hpp>
+#include <mongocxx/collection-fwd.hpp>
+#include <mongocxx/database-fwd.hpp>
+
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/string/view_or_value.hpp>
 #include <mongocxx/client_session.hpp>
@@ -31,17 +36,13 @@
 
 namespace mongocxx {
 inline namespace v_noabi {
-class client_encryption;
-class client;
-class collection;
-
 ///
 /// Class representing a MongoDB database.
 ///
 /// Acts as a gateway for accessing collections that are contained within a database. It inherits
 /// all of its default settings from the client that creates it.
 ///
-class MONGOCXX_API database {
+class database {
    public:
     ///
     /// Default constructs a new database. The database is not valid for use and is equivalent
@@ -204,9 +205,9 @@ class MONGOCXX_API database {
     /// @exception
     ///   mongocxx::operation_exception if the operation fails.
     ///
-    class collection create_collection(stdx::string_view name,
-                                       bsoncxx::document::view_or_value collection_options = {},
-                                       const stdx::optional<write_concern>& write_concern = {});
+    mongocxx::collection create_collection(stdx::string_view name,
+                                           bsoncxx::document::view_or_value collection_options = {},
+                                           const stdx::optional<write_concern>& write_concern = {});
 
     ///
     /// Explicitly creates a collection in this database with the specified options.
@@ -230,10 +231,10 @@ class MONGOCXX_API database {
     /// @exception
     ///   mongocxx::operation_exception if the operation fails.
     ///
-    class collection create_collection(const client_session& session,
-                                       stdx::string_view name,
-                                       bsoncxx::document::view_or_value collection_options = {},
-                                       const stdx::optional<write_concern>& write_concern = {});
+    mongocxx::collection create_collection(const client_session& session,
+                                           stdx::string_view name,
+                                           bsoncxx::document::view_or_value collection_options = {},
+                                           const stdx::optional<write_concern>& write_concern = {});
 
     ///
     /// Explicitly creates a collection in this database with the specified options.
@@ -256,14 +257,14 @@ class MONGOCXX_API database {
     /// @exception
     ///   mongocxx::operation_exception if the operation fails.
     ///
-    MONGOCXX_DEPRECATED class collection create_collection(
+    MONGOCXX_DEPRECATED mongocxx::collection create_collection(
         bsoncxx::string::view_or_value name,
         const options::create_collection_deprecated& collection_options,
         const stdx::optional<write_concern>& write_concern = {}) {
         return create_collection_deprecated(name, collection_options, write_concern);
     }
 
-    class collection create_collection_deprecated(
+    mongocxx::collection create_collection_deprecated(
         bsoncxx::string::view_or_value name,
         const options::create_collection_deprecated& collection_options,
         const stdx::optional<write_concern>& write_concern = {});
@@ -291,7 +292,7 @@ class MONGOCXX_API database {
     /// @exception
     ///   mongocxx::operation_exception if the operation fails.
     ///
-    MONGOCXX_DEPRECATED class collection create_collection(
+    MONGOCXX_DEPRECATED mongocxx::collection create_collection(
         const client_session& session,
         bsoncxx::string::view_or_value name,
         const options::create_collection_deprecated& collection_options,
@@ -322,7 +323,7 @@ class MONGOCXX_API database {
     /// @exception
     ///   mongocxx::operation_exception if the operation fails.
     ///
-    class collection create_collection_deprecated(
+    mongocxx::collection create_collection_deprecated(
         const client_session& session,
         bsoncxx::string::view_or_value name,
         const options::create_collection_deprecated& collection_options,
@@ -467,7 +468,7 @@ class MONGOCXX_API database {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/read-concern/
     ///
-    void read_concern(class read_concern rc);
+    void read_concern(mongocxx::read_concern rc);
 
     ///
     /// The current read concern for this database.
@@ -477,7 +478,7 @@ class MONGOCXX_API database {
     ///
     /// @return the current read_concern
     ///
-    class read_concern read_concern() const;
+    mongocxx::read_concern read_concern() const;
 
     ///
     /// Sets the read_preference for this database.
@@ -490,7 +491,7 @@ class MONGOCXX_API database {
     ///
     /// @param rp the new read_preference.
     ///
-    void read_preference(class read_preference rp);
+    void read_preference(mongocxx::read_preference rp);
 
     ///
     /// The current read preference for this database.
@@ -499,7 +500,7 @@ class MONGOCXX_API database {
     ///
     /// @return the current read_preference
     ///
-    class read_preference read_preference() const;
+    mongocxx::read_preference read_preference() const;
 
     ///
     /// Sets the write_concern for this database.
@@ -508,14 +509,14 @@ class MONGOCXX_API database {
     /// from this database, but do affect new ones as new collections will receive a copy of the
     /// write_concern of this database upon instantiation.
     ///
-    void write_concern(class write_concern wc);
+    void write_concern(mongocxx::write_concern wc);
 
     ///
     /// The current write_concern for this database.
     ///
     /// @return the current write_concern
     ///
-    class write_concern write_concern() const;
+    mongocxx::write_concern write_concern() const;
 
     ///
     /// Access a collection (logical grouping of documents) within this database.
@@ -524,7 +525,7 @@ class MONGOCXX_API database {
     ///
     /// @return the collection.
     ///
-    class collection collection(bsoncxx::string::view_or_value name) const;
+    mongocxx::collection collection(bsoncxx::string::view_or_value name) const;
 
     ///
     /// Allows the db["collection_name"] syntax to be used to access a collection within this
@@ -534,7 +535,7 @@ class MONGOCXX_API database {
     ///
     /// @return the collection.
     ///
-    MONGOCXX_INLINE class collection operator[](bsoncxx::string::view_or_value name) const;
+    MONGOCXX_INLINE mongocxx::collection operator[](bsoncxx::string::view_or_value name) const;
 
     ///
     /// Access a GridFS bucket within this database.
@@ -550,7 +551,7 @@ class MONGOCXX_API database {
     ///
     /// @throws mongocxx::logic_error if `options` are invalid.
     ///
-    class gridfs::bucket gridfs_bucket(
+    mongocxx::gridfs::bucket gridfs_bucket(
         const options::gridfs::bucket& options = options::gridfs::bucket()) const;
 
     ///
@@ -624,11 +625,11 @@ class MONGOCXX_API database {
     ///
 
    private:
-    friend class client_encryption;
-    friend class client;
-    friend class collection;
+    friend ::mongocxx::v_noabi::client_encryption;
+    friend ::mongocxx::v_noabi::client;
+    friend ::mongocxx::v_noabi::collection;
 
-    MONGOCXX_PRIVATE database(const class client& client, bsoncxx::string::view_or_value name);
+    MONGOCXX_PRIVATE database(const mongocxx::client& client, bsoncxx::string::view_or_value name);
 
     MONGOCXX_PRIVATE cursor _aggregate(const client_session* session,
                                        const pipeline& pipeline,
@@ -637,17 +638,17 @@ class MONGOCXX_API database {
     MONGOCXX_PRIVATE bsoncxx::document::value _run_command(
         const client_session* session, bsoncxx::document::view_or_value command);
 
-    MONGOCXX_PRIVATE class collection _create_collection(
+    MONGOCXX_PRIVATE mongocxx::collection _create_collection(
         const client_session* session,
         stdx::string_view name,
         bsoncxx::document::view_or_value collection_options,
-        const stdx::optional<class write_concern>& write_concern);
+        const stdx::optional<mongocxx::write_concern>& write_concern);
 
-    MONGOCXX_PRIVATE class collection _create_collection_deprecated(
+    MONGOCXX_PRIVATE mongocxx::collection _create_collection_deprecated(
         const client_session* session,
         bsoncxx::string::view_or_value name,
         const options::create_collection_deprecated& collection_options,
-        const stdx::optional<class write_concern>& write_concern);
+        const stdx::optional<mongocxx::write_concern>& write_concern);
 
     MONGOCXX_PRIVATE cursor _list_collections(const client_session* session,
                                               bsoncxx::document::view_or_value filter);
@@ -671,7 +672,8 @@ class MONGOCXX_API database {
     std::unique_ptr<impl> _impl;
 };
 
-MONGOCXX_INLINE collection database::operator[](bsoncxx::string::view_or_value name) const {
+MONGOCXX_INLINE mongocxx::collection database::operator[](
+    bsoncxx::string::view_or_value name) const {
     return collection(name);
 }
 

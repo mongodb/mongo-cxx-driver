@@ -17,6 +17,9 @@
 #include <chrono>
 #include <memory>
 
+#include <mongocxx/collection-fwd.hpp>
+#include <mongocxx/options/index-fwd.hpp>
+
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
@@ -28,8 +31,6 @@
 
 namespace mongocxx {
 inline namespace v_noabi {
-class collection;
-
 namespace options {
 
 ///
@@ -37,7 +38,7 @@ namespace options {
 ///
 /// @see https://www.mongodb.com/docs/manual/reference/command/createIndexes
 ///
-class MONGOCXX_API index {
+class index {
    public:
     ///
     /// Base class representing the optional storage engine options for indexes.
@@ -47,7 +48,8 @@ class MONGOCXX_API index {
         virtual ~base_storage_options();
 
        private:
-        friend class options::index;
+        friend ::mongocxx::v_noabi::options::index;
+
         MONGOCXX_PRIVATE virtual int type() const = 0;
     };
 
@@ -74,8 +76,10 @@ class MONGOCXX_API index {
         const stdx::optional<bsoncxx::string::view_or_value>& config_string() const;
 
        private:
-        friend collection;
+        friend ::mongocxx::v_noabi::collection;
+
         MONGOCXX_PRIVATE int type() const override;
+
         stdx::optional<bsoncxx::string::view_or_value> _config_string;
     };
 
@@ -473,7 +477,7 @@ class MONGOCXX_API index {
     operator bsoncxx::document::view_or_value();
 
    private:
-    friend collection;
+    friend ::mongocxx::v_noabi::collection;
 
     stdx::optional<bool> _background;
     stdx::optional<bool> _unique;

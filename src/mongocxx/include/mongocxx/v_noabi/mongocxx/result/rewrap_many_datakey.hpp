@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/result/rewrap_many_datakey-fwd.hpp>
+
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <mongocxx/bulk_write.hpp>
@@ -25,7 +27,7 @@ inline namespace v_noabi {
 namespace result {
 
 /// Class representing the result of a MongoDB rewrap_many_datakey operation.
-class MONGOCXX_API rewrap_many_datakey {
+class rewrap_many_datakey {
    public:
     rewrap_many_datakey() = default;
 

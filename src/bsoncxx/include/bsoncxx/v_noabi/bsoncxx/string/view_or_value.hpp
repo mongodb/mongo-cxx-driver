@@ -16,6 +16,8 @@
 
 #include <string>
 
+#include <bsoncxx/string/view_or_value-fwd.hpp>
+
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/view_or_value.hpp>
 
@@ -33,7 +35,7 @@ namespace string {
 /// - a constructor overload for std::string by l-value reference
 /// - a safe c_str() operation to return null-terminated c-style strings.
 ///
-class BSONCXX_API view_or_value : public bsoncxx::view_or_value<stdx::string_view, std::string> {
+class view_or_value : public bsoncxx::view_or_value<stdx::string_view, std::string> {
    public:
     ///
     /// Forward all bsoncxx::view_or_value constructors.

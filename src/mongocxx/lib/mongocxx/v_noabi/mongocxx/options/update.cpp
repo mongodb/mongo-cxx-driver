@@ -32,7 +32,7 @@ update& update::collation(bsoncxx::document::view_or_value collation) {
     return *this;
 }
 
-update& update::hint(class hint index_hint) {
+update& update::hint(mongocxx::hint index_hint) {
     _hint = std::move(index_hint);
     return *this;
 }
@@ -52,7 +52,7 @@ update& update::upsert(bool upsert) {
     return *this;
 }
 
-update& update::write_concern(class write_concern wc) {
+update& update::write_concern(mongocxx::write_concern wc) {
     _write_concern = std::move(wc);
     return *this;
 }
@@ -65,7 +65,7 @@ const stdx::optional<bsoncxx::document::view_or_value>& update::collation() cons
     return _collation;
 }
 
-const stdx::optional<class hint>& update::hint() const {
+const stdx::optional<mongocxx::hint>& update::hint() const {
     return _hint;
 }
 
@@ -81,7 +81,7 @@ const stdx::optional<bool>& update::upsert() const {
     return _upsert;
 }
 
-const stdx::optional<class write_concern>& update::write_concern() const {
+const stdx::optional<mongocxx::write_concern>& update::write_concern() const {
     return _write_concern;
 }
 

@@ -194,9 +194,7 @@ static void run_srv_max_hosts_test_file(const initial_dns_seedlist_test& test) {
 
     try {
         mongocxx::uri my_uri{test.uri};
-        class client client {
-            my_uri, test_util::add_test_server_api(client_options)
-        };
+        mongocxx::client client{my_uri, test_util::add_test_server_api(client_options)};
         bool using_tls = client.uri().tls();
         if (!using_tls) {
             return;
@@ -240,10 +238,8 @@ static void assert_tls_enabled(void) {
     client_options.tls_opts(tls_options);
 
     try {
-        class mongocxx::client client {
-            uri{"mongodb://localhost:27017/?tls=true"},
-                test_util::add_test_server_api(client_options)
-        };
+        mongocxx::client client{uri{"mongodb://localhost:27017/?tls=true"},
+                                test_util::add_test_server_api(client_options)};
 
         auto admin = client["admin"];
         auto result = admin.run_command(make_document(kvp("ping", 1)));

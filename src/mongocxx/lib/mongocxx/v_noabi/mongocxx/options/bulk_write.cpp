@@ -31,12 +31,12 @@ bool bulk_write::ordered() const {
     return _ordered;
 }
 
-bulk_write& bulk_write::write_concern(class write_concern wc) {
+bulk_write& bulk_write::write_concern(mongocxx::write_concern wc) {
     _write_concern = std::move(wc);
     return *this;
 }
 
-const stdx::optional<class write_concern>& bulk_write::write_concern() const {
+const stdx::optional<mongocxx::write_concern>& bulk_write::write_concern() const {
     return _write_concern;
 }
 

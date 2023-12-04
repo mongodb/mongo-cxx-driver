@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/options/delete-fwd.hpp>
+
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/types/bson_value/view_or_value.hpp>
@@ -29,7 +31,7 @@ namespace options {
 ///
 /// Class representing the optional arguments to a MongoDB delete operation
 ///
-class MONGOCXX_API delete_options {
+class delete_options {
    public:
     ///
     /// Sets the collation for this operation.
@@ -80,7 +82,7 @@ class MONGOCXX_API delete_options {
     /// @see https://www.mongodb.com/docs/manual/core/write-concern/
     ///
     ///
-    const stdx::optional<class write_concern>& write_concern() const;
+    const stdx::optional<mongocxx::write_concern>& write_concern() const;
 
     ///
     /// Sets the index to use for this operation.
@@ -95,14 +97,14 @@ class MONGOCXX_API delete_options {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    delete_options& hint(class hint index_hint);
+    delete_options& hint(mongocxx::hint index_hint);
 
     ///
     /// Gets the current hint.
     ///
     /// @return The current hint, if one is set.
     ///
-    const stdx::optional<class hint>& hint() const;
+    const stdx::optional<mongocxx::hint>& hint() const;
 
     ///
     /// Set the value of the let option.
@@ -146,8 +148,8 @@ class MONGOCXX_API delete_options {
 
    private:
     stdx::optional<bsoncxx::document::view_or_value> _collation;
-    stdx::optional<class write_concern> _write_concern;
-    stdx::optional<class hint> _hint;
+    stdx::optional<mongocxx::write_concern> _write_concern;
+    stdx::optional<mongocxx::hint> _hint;
     stdx::optional<bsoncxx::document::view_or_value> _let;
     stdx::optional<bsoncxx::types::bson_value::view_or_value> _comment;
 };

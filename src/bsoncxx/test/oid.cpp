@@ -104,8 +104,8 @@ TEST_CASE("oid", "[bsoncxx::oid]") {
            process creation operation, the "random number unique to a machine and
            process" is no longer the same as the parent process that created
            the new process. */
-        class oid oid1 {};
-        class oid oid2 {};
+        bsoncxx::oid oid1{};
+        bsoncxx::oid oid2{};
         auto parsed1 = parse_oid(oid1);
         auto parsed2 = parse_oid(oid2);
 

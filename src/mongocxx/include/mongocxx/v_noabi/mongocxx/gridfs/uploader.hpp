@@ -18,6 +18,9 @@
 #include <cstdint>
 #include <memory>
 
+#include <mongocxx/gridfs/bucket-fwd.hpp>
+#include <mongocxx/gridfs/uploader-fwd.hpp>
+
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
@@ -37,7 +40,7 @@ namespace gridfs {
 ///
 /// Class used to upload a GridFS file.
 ///
-class MONGOCXX_API uploader {
+class uploader {
    public:
     ///
     /// Default constructs an uploader object. The uploader is equivalent to the state of a moved
@@ -123,7 +126,7 @@ class MONGOCXX_API uploader {
     std::int32_t chunk_size() const;
 
    private:
-    friend class bucket;
+    friend ::mongocxx::v_noabi::gridfs::bucket;
 
     //
     // Constructs a new uploader stream.

@@ -16,6 +16,8 @@
 
 #include <memory>
 
+#include <mongocxx/events/command_started_event-fwd.hpp>
+
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/oid.hpp>
 #include <bsoncxx/stdx/optional.hpp>
@@ -32,7 +34,7 @@ namespace events {
 /// @see "CommandStartedEvent" in
 /// https://github.com/mongodb/specifications/blob/master/source/command-logging-and-monitoring/command-logging-and-monitoring.rst
 ///
-class MONGOCXX_API command_started_event {
+class command_started_event {
    public:
     MONGOCXX_PRIVATE explicit command_started_event(const void* event);
 

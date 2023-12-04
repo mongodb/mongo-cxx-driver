@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/exception/logic_error-fwd.hpp>
+
 #include <mongocxx/exception/exception.hpp>
 
 #include <mongocxx/config/prelude.hpp>
@@ -25,7 +27,7 @@ inline namespace v_noabi {
 ///
 /// @see mongocxx::exception
 ///
-class MONGOCXX_API logic_error : public exception {
+class logic_error : public exception {
    public:
     using exception::exception;
 };

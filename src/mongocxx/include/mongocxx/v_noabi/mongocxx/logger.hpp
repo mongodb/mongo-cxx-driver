@@ -16,6 +16,8 @@
 
 #include <memory>
 
+#include <mongocxx/logger-fwd.hpp>
+
 #include <bsoncxx/stdx/string_view.hpp>
 #include <mongocxx/stdx.hpp>
 
@@ -49,7 +51,7 @@ MONGOCXX_API stdx::string_view MONGOCXX_CALL to_string(log_level level);
 ///
 /// The interface that all user-defined loggers must implement.
 ///
-class MONGOCXX_API logger {
+class logger {
    public:
     virtual ~logger();
 

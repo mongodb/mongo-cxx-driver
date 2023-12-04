@@ -19,6 +19,15 @@
 #include <memory>
 #include <string>
 
+#include <mongocxx/client-fwd.hpp>
+#include <mongocxx/collection-fwd.hpp>
+#include <mongocxx/database-fwd.hpp>
+#include <mongocxx/events/topology_description-fwd.hpp>
+#include <mongocxx/options/transaction-fwd.hpp>
+#include <mongocxx/read_preference-fwd.hpp>
+#include <mongocxx/search_index_view-fwd.hpp>
+#include <mongocxx/uri-fwd.hpp>
+
 #include <bsoncxx/array/view_or_value.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
@@ -29,20 +38,6 @@
 
 namespace mongocxx {
 inline namespace v_noabi {
-class client;
-class collection;
-class database;
-class search_index_view;
-class uri;
-
-namespace events {
-class topology_description;
-}
-
-namespace options {
-class transaction;
-}
-
 ///
 /// Class representing a preference for how the driver routes read operations to members of a
 /// replica set or to a sharded cluster.
@@ -64,7 +59,7 @@ class transaction;
 ///
 /// @see https://www.mongodb.com/docs/manual/core/read-preference/
 ///
-class MONGOCXX_API read_preference {
+class read_preference {
    public:
     ///
     /// Determines which members in a replica set are acceptable to read from.
@@ -285,14 +280,13 @@ class MONGOCXX_API read_preference {
     const stdx::optional<bsoncxx::document::view> hedge() const;
 
    private:
-    friend class client;
-    friend class collection;
-    friend class database;
-    friend class search_index_view;
-    friend class uri;
-
-    friend class events::topology_description;
-    friend class options::transaction;
+    friend ::mongocxx::v_noabi::client;
+    friend ::mongocxx::v_noabi::collection;
+    friend ::mongocxx::v_noabi::database;
+    friend ::mongocxx::v_noabi::events::topology_description;
+    friend ::mongocxx::v_noabi::options::transaction;
+    friend ::mongocxx::v_noabi::search_index_view;
+    friend ::mongocxx::v_noabi::uri;
 
     ///
     /// @{

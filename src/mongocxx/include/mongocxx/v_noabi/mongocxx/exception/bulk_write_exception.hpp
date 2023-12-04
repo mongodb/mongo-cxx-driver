@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/exception/bulk_write_exception-fwd.hpp>
+
 #include <bsoncxx/document/value.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
 
@@ -26,7 +28,7 @@ inline namespace v_noabi {
 ///
 /// @see mongocxx::operation_exception
 ///
-class MONGOCXX_API bulk_write_exception : public operation_exception {
+class bulk_write_exception : public operation_exception {
    public:
     using operation_exception::operation_exception;
 };

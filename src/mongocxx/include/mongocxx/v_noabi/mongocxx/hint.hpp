@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <mongocxx/hint-fwd.hpp>
+
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
@@ -28,7 +30,7 @@ inline namespace v_noabi {
 ///
 /// Class representing a hint to be passed to a database operation.
 ///
-class MONGOCXX_API hint {
+class hint {
    public:
     ///
     /// Constructs a new hint.

@@ -186,7 +186,7 @@ BSONCXX_INLINE void convert_to_libbson(const bsoncxx::types::b_array& arr, bson_
 //
 // Helper to convert without caller being aware of the underlying bson type.
 //
-BSONCXX_INLINE void convert_to_libbson(bson_value_t* v, const class bson_value::view& bson_view) {
+BSONCXX_INLINE void convert_to_libbson(bson_value_t* v, const bson_value::view& bson_view) {
     switch (bson_view.type()) {
 #define BSONCXX_ENUM(name, val)              \
     case bsoncxx::type::k_##name: {          \

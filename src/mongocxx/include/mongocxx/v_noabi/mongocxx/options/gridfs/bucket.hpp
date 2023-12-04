@@ -16,6 +16,8 @@
 
 #include <string>
 
+#include <mongocxx/options/gridfs/bucket-fwd.hpp>
+
 #include <bsoncxx/stdx/optional.hpp>
 #include <mongocxx/read_concern.hpp>
 #include <mongocxx/read_preference.hpp>
@@ -32,7 +34,7 @@ namespace gridfs {
 ///
 /// Class representing the optional arguments to a MongoDB GridFS bucket creation operation.
 ///
-class MONGOCXX_API bucket {
+class bucket {
    public:
     ///
     /// Sets the name of the bucket. Defaults to 'fs'.
@@ -86,7 +88,7 @@ class MONGOCXX_API bucket {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    bucket& read_concern(class read_concern read_concern);
+    bucket& read_concern(mongocxx::read_concern read_concern);
 
     ///
     /// Gets the read concern of the bucket.
@@ -94,7 +96,7 @@ class MONGOCXX_API bucket {
     /// @return
     ///   The read concern of the bucket.
     ///
-    const stdx::optional<class read_concern>& read_concern() const;
+    const stdx::optional<mongocxx::read_concern>& read_concern() const;
 
     ///
     /// Sets the read preference to be used when reading from the GridFS bucket. Defaults to the
@@ -113,7 +115,7 @@ class MONGOCXX_API bucket {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    bucket& read_preference(class read_preference read_preference);
+    bucket& read_preference(mongocxx::read_preference read_preference);
 
     ///
     /// Gets the read preference of the bucket.
@@ -121,7 +123,7 @@ class MONGOCXX_API bucket {
     /// @return
     ///   The read preference of the bucket.
     ///
-    const stdx::optional<class read_preference>& read_preference() const;
+    const stdx::optional<mongocxx::read_preference>& read_preference() const;
 
     ///
     /// Sets the write concern to be used when writing to the GridFS bucket. Defaults to the write
@@ -134,7 +136,7 @@ class MONGOCXX_API bucket {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    bucket& write_concern(class write_concern write_concern);
+    bucket& write_concern(mongocxx::write_concern write_concern);
 
     ///
     /// Gets the write concern of the bucket.
@@ -142,14 +144,14 @@ class MONGOCXX_API bucket {
     /// @return
     ///   The write concern of the bucket.
     ///
-    const stdx::optional<class write_concern>& write_concern() const;
+    const stdx::optional<mongocxx::write_concern>& write_concern() const;
 
    private:
     stdx::optional<std::string> _bucket_name;
     stdx::optional<std::int32_t> _chunk_size_bytes;
-    stdx::optional<class read_concern> _read_concern;
-    stdx::optional<class read_preference> _read_preference;
-    stdx::optional<class write_concern> _write_concern;
+    stdx::optional<mongocxx::read_concern> _read_concern;
+    stdx::optional<mongocxx::read_preference> _read_preference;
+    stdx::optional<mongocxx::write_concern> _write_concern;
 };
 
 }  // namespace gridfs

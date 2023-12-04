@@ -17,6 +17,14 @@
 #include <functional>
 #include <memory>
 
+#include <mongocxx/bulk_write-fwd.hpp>
+#include <mongocxx/client-fwd.hpp>
+#include <mongocxx/client_session-fwd.hpp>
+#include <mongocxx/collection-fwd.hpp>
+#include <mongocxx/database-fwd.hpp>
+#include <mongocxx/index_view-fwd.hpp>
+#include <mongocxx/search_index_view-fwd.hpp>
+
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <mongocxx/options/client_session.hpp>
@@ -25,8 +33,6 @@
 
 namespace mongocxx {
 inline namespace v_noabi {
-class client;
-
 ///
 /// Use a session for a sequence of operations, optionally with either causal consistency
 /// or snapshots.
@@ -37,7 +43,7 @@ class client;
 /// @see
 /// https://www.mongodb.com/docs/manual/core/read-isolation-consistency-recency/#causal-consistency
 ///
-class MONGOCXX_API client_session {
+class client_session {
    public:
     enum class transaction_state {
         k_transaction_none,
@@ -68,7 +74,7 @@ class MONGOCXX_API client_session {
     ///
     /// Gets the client that started this session.
     ///
-    const class client& client() const noexcept;
+    const mongocxx::client& client() const noexcept;
 
     ///
     /// Gets the options this session was created with.
@@ -186,17 +192,16 @@ class MONGOCXX_API client_session {
     void with_transaction(with_transaction_cb cb, options::transaction opts = {});
 
    private:
-    friend class bulk_write;
-    friend class client;
-    friend class collection;
-    friend class database;
-    friend class index_view;
-    friend class search_index_view;
+    friend ::mongocxx::v_noabi::bulk_write;
+    friend ::mongocxx::v_noabi::client;
+    friend ::mongocxx::v_noabi::collection;
+    friend ::mongocxx::v_noabi::database;
+    friend ::mongocxx::v_noabi::index_view;
+    friend ::mongocxx::v_noabi::search_index_view;
 
     class MONGOCXX_PRIVATE impl;
 
-    // "class client" distinguishes from client() method above.
-    MONGOCXX_PRIVATE client_session(const class client* client,
+    MONGOCXX_PRIVATE client_session(const mongocxx::client* client,
                                     const options::client_session& options);
 
     MONGOCXX_PRIVATE impl& _get_impl();

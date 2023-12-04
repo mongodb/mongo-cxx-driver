@@ -18,6 +18,9 @@
 #include <cstdint>
 #include <memory>
 
+#include <mongocxx/gridfs/bucket-fwd.hpp>
+#include <mongocxx/gridfs/downloader-fwd.hpp>
+
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/stdx/optional.hpp>
@@ -42,7 +45,7 @@ struct chunks_and_bytes_offset {
 ///
 /// Class used to download a GridFS file.
 ///
-class MONGOCXX_API downloader {
+class downloader {
    public:
     ///
     /// Default constructs a downloader object. The downloader is equivalent to the state of a moved
@@ -130,7 +133,7 @@ class MONGOCXX_API downloader {
     bsoncxx::document::view files_document() const;
 
    private:
-    friend class bucket;
+    friend ::mongocxx::v_noabi::gridfs::bucket;
 
     //
     // Constructs a new downloader stream.

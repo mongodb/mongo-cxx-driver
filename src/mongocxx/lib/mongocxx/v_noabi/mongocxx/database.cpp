@@ -75,7 +75,7 @@ database& database::operator=(database&&) noexcept = default;
 
 database::~database() = default;
 
-database::database(const class client& client, bsoncxx::string::view_or_value name)
+database::database(const mongocxx::client& client, bsoncxx::string::view_or_value name)
     : _impl(stdx::make_unique<impl>(
           libmongoc::client_get_database(client._get_impl().client_t, name.terminated().data()),
           &client._get_impl(),
@@ -262,10 +262,11 @@ bsoncxx::document::value database::run_command(bsoncxx::document::view_or_value 
     return reply_bson.steal();
 }
 
-collection database::_create_collection(const client_session* session,
-                                        stdx::string_view name,
-                                        bsoncxx::document::view_or_value collection_options,
-                                        const stdx::optional<class write_concern>& write_concern) {
+collection database::_create_collection(
+    const client_session* session,
+    stdx::string_view name,
+    bsoncxx::document::view_or_value collection_options,
+    const stdx::optional<mongocxx::write_concern>& write_concern) {
     bsoncxx::builder::basic::document options_builder;
     bson_error_t error;
 
@@ -295,7 +296,7 @@ collection database::_create_collection_deprecated(
     const client_session* session,
     bsoncxx::string::view_or_value name,
     const options::create_collection_deprecated& collection_options,
-    const stdx::optional<class write_concern>& write_concern) {
+    const stdx::optional<mongocxx::write_concern>& write_concern) {
     bsoncxx::builder::basic::document options_builder;
 
     if (collection_options.capped()) {
@@ -365,33 +366,33 @@ collection database::_create_collection_deprecated(
     return _create_collection(session, name, options_builder.view(), write_concern);
 }
 
-class collection database::create_collection(
+mongocxx::collection database::create_collection(
     stdx::string_view name,
     bsoncxx::document::view_or_value collection_options,
-    const stdx::optional<class write_concern>& write_concern) {
+    const stdx::optional<mongocxx::write_concern>& write_concern) {
     return _create_collection(nullptr, name, collection_options, write_concern);
 }
 
-class collection database::create_collection(
+mongocxx::collection database::create_collection(
     const client_session& session,
     stdx::string_view name,
     bsoncxx::document::view_or_value collection_options,
-    const stdx::optional<class write_concern>& write_concern) {
+    const stdx::optional<mongocxx::write_concern>& write_concern) {
     return _create_collection(&session, name, collection_options, write_concern);
 }
 
-class collection database::create_collection_deprecated(
+mongocxx::collection database::create_collection_deprecated(
     bsoncxx::string::view_or_value name,
     const options::create_collection_deprecated& collection_options,
-    const stdx::optional<class write_concern>& write_concern) {
+    const stdx::optional<mongocxx::write_concern>& write_concern) {
     return _create_collection_deprecated(nullptr, name, collection_options, write_concern);
 }
 
-class collection database::create_collection_deprecated(
+mongocxx::collection database::create_collection_deprecated(
     const client_session& session,
     bsoncxx::string::view_or_value name,
     const options::create_collection_deprecated& collection_options,
-    const stdx::optional<class write_concern>& write_concern) {
+    const stdx::optional<mongocxx::write_concern>& write_concern) {
     return _create_collection_deprecated(&session, name, collection_options, write_concern);
 }
 
@@ -424,16 +425,16 @@ void database::drop(const client_session& session,
     return _drop(&session, write_concern);
 }
 
-void database::read_concern(class read_concern rc) {
+void database::read_concern(mongocxx::read_concern rc) {
     libmongoc::database_set_read_concern(_get_impl().database_t, rc._impl->read_concern_t);
 }
 
-class read_concern database::read_concern() const {
+mongocxx::read_concern database::read_concern() const {
     auto rc = libmongoc::database_get_read_concern(_get_impl().database_t);
     return {stdx::make_unique<read_concern::impl>(libmongoc::read_concern_copy(rc))};
 }
 
-void database::read_preference(class read_preference rp) {
+void database::read_preference(mongocxx::read_preference rp) {
     libmongoc::database_set_read_prefs(_get_impl().database_t, rp._impl->read_preference_t);
 }
 
@@ -448,18 +449,18 @@ bool database::has_collection(bsoncxx::string::view_or_value name) const {
     return result;
 }
 
-class read_preference database::read_preference() const {
-    class read_preference rp(stdx::make_unique<read_preference::impl>(
+mongocxx::read_preference database::read_preference() const {
+    mongocxx::read_preference rp(stdx::make_unique<read_preference::impl>(
         libmongoc::read_prefs_copy(libmongoc::database_get_read_prefs(_get_impl().database_t))));
     return rp;
 }
 
-void database::write_concern(class write_concern wc) {
+void database::write_concern(mongocxx::write_concern wc) {
     libmongoc::database_set_write_concern(_get_impl().database_t, wc._impl->write_concern_t);
 }
 
-class write_concern database::write_concern() const {
-    class write_concern wc(stdx::make_unique<write_concern::impl>(libmongoc::write_concern_copy(
+mongocxx::write_concern database::write_concern() const {
+    mongocxx::write_concern wc(stdx::make_unique<write_concern::impl>(libmongoc::write_concern_copy(
         libmongoc::database_get_write_concern(_get_impl().database_t))));
     return wc;
 }
@@ -468,32 +469,32 @@ collection database::collection(bsoncxx::string::view_or_value name) const {
     return mongocxx::collection(*this, std::move(name));
 }
 
-gridfs::bucket database::gridfs_bucket(const options::gridfs::bucket& options) const {
-    return gridfs::bucket{*this, options};
+mongocxx::gridfs::bucket database::gridfs_bucket(const options::gridfs::bucket& options) const {
+    return mongocxx::gridfs::bucket{*this, options};
 }
 
-class change_stream database::watch(const options::change_stream& options) {
+change_stream database::watch(const options::change_stream& options) {
     return watch(pipeline{}, options);
 }
 
-class change_stream database::watch(const client_session& session,
-                                    const options::change_stream& options) {
+change_stream database::watch(const client_session& session,
+                              const options::change_stream& options) {
     return _watch(&session, pipeline{}, options);
 }
 
-class change_stream database::watch(const pipeline& pipe, const options::change_stream& options) {
+change_stream database::watch(const pipeline& pipe, const options::change_stream& options) {
     return _watch(nullptr, pipe, options);
 }
 
-class change_stream database::watch(const client_session& session,
-                                    const pipeline& pipe,
-                                    const options::change_stream& options) {
+change_stream database::watch(const client_session& session,
+                              const pipeline& pipe,
+                              const options::change_stream& options) {
     return _watch(&session, pipe, options);
 }
 
-class change_stream database::_watch(const client_session* session,
-                                     const pipeline& pipe,
-                                     const options::change_stream& options) {
+change_stream database::_watch(const client_session* session,
+                               const pipeline& pipe,
+                               const options::change_stream& options) {
     bsoncxx::builder::basic::document container;
     container.append(kvp("pipeline", pipe._impl->view_array()));
     scoped_bson_t pipeline_bson{container.view()};

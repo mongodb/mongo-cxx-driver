@@ -195,7 +195,7 @@ class MONGOCXX_API create_collection_deprecated {
     ///
     /// @see https://www.mongodb.com/docs/manual/core/document-validation/
     ///
-    create_collection_deprecated& validation_criteria(class validation_criteria validation);
+    create_collection_deprecated& validation_criteria(mongocxx::validation_criteria validation);
 
     ///
     /// Gets the current validation criteria for this collection.
@@ -205,7 +205,7 @@ class MONGOCXX_API create_collection_deprecated {
     ///
     /// @see https://www.mongodb.com/docs/manual/core/document-validation/
     ///
-    const stdx::optional<class validation_criteria>& validation_criteria() const;
+    const stdx::optional<mongocxx::validation_criteria>& validation_criteria() const;
 
     ///
     /// Return a bson document representing the options set on this object.
@@ -233,7 +233,7 @@ class MONGOCXX_API create_collection_deprecated {
     stdx::optional<std::int64_t> _max_size;
     stdx::optional<bool> _no_padding;
     stdx::optional<bsoncxx::document::view_or_value> _storage_engine_opts;
-    stdx::optional<class validation_criteria> _validation;
+    stdx::optional<mongocxx::validation_criteria> _validation;
 };
 
 MONGOCXX_DEPRECATED typedef create_collection_deprecated create_collection;

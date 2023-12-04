@@ -17,6 +17,9 @@
 #include <cstdint>
 #include <map>
 
+#include <mongocxx/collection-fwd.hpp>
+#include <mongocxx/result/insert_many-fwd.hpp>
+
 #include <bsoncxx/array/value.hpp>
 #include <bsoncxx/types.hpp>
 #include <mongocxx/result/bulk_write.hpp>
@@ -25,15 +28,13 @@
 
 namespace mongocxx {
 inline namespace v_noabi {
-class collection;
-
 namespace result {
 
 ///
 /// Class representing the result of a MongoDB insert many operation
 /// (executed as a bulk write).
 ///
-class MONGOCXX_API insert_many {
+class insert_many {
    public:
     using id_map = std::map<std::size_t, bsoncxx::document::element>;
 
@@ -69,7 +70,7 @@ class MONGOCXX_API insert_many {
     id_map inserted_ids() const;
 
    private:
-    friend collection;
+    friend ::mongocxx::v_noabi::collection;
 
     // Construct _inserted_ids from _inserted_ids_owned
     MONGOCXX_PRIVATE void _buildInsertedIds();
