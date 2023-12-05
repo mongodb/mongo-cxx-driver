@@ -282,21 +282,21 @@ Next, build the image. Prefer doing a no-cache-build with a clean docker cache.
 
 ```
 $ yes | docker system prune -a
-$ cd mongo-cxx-driver/extras/docker/redhat-ubi-9.2
+$ cd mongo-cxx-driver/extras/docker/redhat-ubi-9.3
 $ make nocachebuild
 ```
 
 Then, test that the image works as expected:
 ```
-$ cd redhat-ubi-9.2/
+$ cd redhat-ubi-9.3/
 $ make test
 ```
 
 If the test passes, you will see the following output with the version number
 of the driver that you are currently releasing:
 ```
-mongo-cxx-driver version: 3.8.0
-THE redhat-ubi-9.2 IMAGE WORKS!
+mongo-cxx-driver version: 3.9.0
+THE redhat-ubi-9.3 IMAGE WORKS!
 ```
 
 If the test passes, then check in the bumped version numbers, and get it merged
@@ -317,7 +317,7 @@ images will be pushed to the public Docker Hub repository, so **only run these
 commands when you are ready to push the images!**
 ```
 $ docker buildx create --name mybuilder --use --bootstrap
-$ docker buildx build --push --platform linux/amd64,linux/arm64 --tag mongodb/mongo-cxx-driver:<VERSION NUMBER>-redhat-ubi-9.2 .
+$ docker buildx build --push --platform linux/amd64,linux/arm64 --tag mongodb/mongo-cxx-driver:<VERSION NUMBER>-redhat-ubi-9.3 .
 ```
 
 Update the `Tags` section of the Docker Hub
