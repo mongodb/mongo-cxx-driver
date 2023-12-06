@@ -1,11 +1,10 @@
-#include "bsoncxx/stdx/iterator.hpp"
-
 #include <deque>
 #include <iterator>
 #include <list>
 #include <type_traits>
 
-#include "bsoncxx/stdx/type_traits.hpp"
+#include <bsoncxx/stdx/iterator.hpp>
+#include <bsoncxx/stdx/type_traits.hpp>
 #include <third_party/catch/include/catch.hpp>
 
 namespace {

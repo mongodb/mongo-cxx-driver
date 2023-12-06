@@ -1,14 +1,13 @@
-#include "bsoncxx/stdx/string_view.hpp"
-
 #include <initializer_list>
 #include <list>
 #include <stdexcept>
 #include <string>
 #include <type_traits>
 
-#include "bsoncxx/stdx/iterator.hpp"
-#include "bsoncxx/stdx/operators.hpp"
-#include "bsoncxx/stdx/type_traits.hpp"
+#include <bsoncxx/stdx/iterator.hpp>
+#include <bsoncxx/stdx/operators.hpp>
+#include <bsoncxx/stdx/string_view.hpp>
+#include <bsoncxx/stdx/type_traits.hpp>
 #include <third_party/catch/include/catch.hpp>
 
 namespace stdx = bsoncxx::stdx;

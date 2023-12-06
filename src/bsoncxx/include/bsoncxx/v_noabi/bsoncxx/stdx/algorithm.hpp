@@ -11,9 +11,7 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-
 inline namespace v_noabi {
-
 namespace detail {
 
 /**
@@ -422,9 +420,7 @@ constexpr not_fn_t<F> not_fn(F&& fn) {
 }
 
 }  // namespace detail
-
 }  // namespace v_noabi
-
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

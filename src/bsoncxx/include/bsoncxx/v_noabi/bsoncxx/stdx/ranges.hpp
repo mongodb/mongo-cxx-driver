@@ -22,8 +22,8 @@
 
 namespace bsoncxx {
 inline namespace v_noabi {
-
 namespace detailx {
+// clang-format off
 // Workarounds for MSVC 19.10 doing bad: An invocable object with name `n` should not be visible
 // within its own call operator. We need to "hide" the ADL name lookup out here in a different
 // namespace to prevent them from finding the invocable objects.
@@ -34,6 +34,7 @@ constexpr auto adl_begin(T&& t) bsoncxx_returns(begin((T&&)t));
 template <typename T>
 constexpr auto adl_end(T&& t) bsoncxx_returns(end((T&&)t));
 }  // namespace detailx
+// clang-format on
 
 namespace detail {
 

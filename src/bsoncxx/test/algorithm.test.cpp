@@ -1,14 +1,13 @@
-#include "bsoncxx/stdx/algorithm.hpp"
-
 #include <iterator>
 #include <type_traits>
 #include <vector>
 
-#include "bsoncxx/stdx/iterator.hpp"
-#include "bsoncxx/stdx/operators.hpp"
-#include "bsoncxx/stdx/ranges.hpp"
-#include "bsoncxx/stdx/string_view.hpp"
-#include "bsoncxx/stdx/type_traits.hpp"
+#include <bsoncxx/stdx/algorithm.hpp>
+#include <bsoncxx/stdx/iterator.hpp>
+#include <bsoncxx/stdx/operators.hpp>
+#include <bsoncxx/stdx/ranges.hpp>
+#include <bsoncxx/stdx/string_view.hpp>
+#include <bsoncxx/stdx/type_traits.hpp>
 #include <third_party/catch/include/catch.hpp>
 
 namespace ranges = bsoncxx::detail;
