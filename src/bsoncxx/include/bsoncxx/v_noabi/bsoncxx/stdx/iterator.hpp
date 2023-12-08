@@ -27,8 +27,8 @@
 #endif
 #endif
 
-#include "./operators.hpp"
-#include "./type_traits.hpp"
+#include <bsoncxx/stdx/operators.hpp>
+#include <bsoncxx/stdx/type_traits.hpp>
 
 #include <bsoncxx/config/prelude.hpp>
 

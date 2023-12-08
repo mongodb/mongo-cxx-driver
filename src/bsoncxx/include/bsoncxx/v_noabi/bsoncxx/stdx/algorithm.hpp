@@ -16,11 +16,10 @@
 
 #include <algorithm>
 
-#include "./algorithm.hpp"
-#include "./iterator.hpp"
-#include "./operators.hpp"
-#include "./ranges.hpp"
-#include "./type_traits.hpp"
+#include <bsoncxx/stdx/iterator.hpp>
+#include <bsoncxx/stdx/operators.hpp>
+#include <bsoncxx/stdx/ranges.hpp>
+#include <bsoncxx/stdx/type_traits.hpp>
 
 #include <bsoncxx/config/prelude.hpp>
 
