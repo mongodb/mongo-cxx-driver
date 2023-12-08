@@ -168,16 +168,14 @@ using ITER_TRAITS = typename ITER_TRAITS_impl<I>::type;
 
 // Get the iterator concept tag from the given iterator-like type
 struct calc_iterator_concept {
-    struct impl {
-        template <typename I>
-        static auto x(I*, rank<3>) BSONCXX_RETURNS(contiguous_iterator_tag{});
-        template <typename I>
-        static auto x(I, rank<2>) BSONCXX_RETURNS(typename ITER_TRAITS<I>::iterator_concept{});
-        template <typename I>
-        static auto x(I, rank<1>) BSONCXX_RETURNS(typename ITER_TRAITS<I>::iterator_category{});
-    };
     template <typename I>
-    auto operator()(I) -> decltype(impl::x(I{}, rank<10>{}));
+    static auto impl(I*, rank<3>) -> contiguous_iterator_tag;
+    template <typename I>
+    static auto impl(I, rank<2>) -> typename ITER_TRAITS<I>::iterator_concept;
+    template <typename I>
+    static auto impl(I, rank<1>) -> typename ITER_TRAITS<I>::iterator_category;
+    template <typename I>
+    auto operator()(I) -> decltype(impl(I{}, rank<10>{}));
 };
 
 /**
