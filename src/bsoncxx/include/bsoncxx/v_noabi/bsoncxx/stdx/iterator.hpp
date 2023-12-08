@@ -91,11 +91,12 @@ bsoncxx_pop_warnings();
  * type is non-void
  */
 template <typename I>
-struct is_dereferencable : conjunction<is_detected<dereference_t, I>,
-                                       // Clang supports dereferencing void*, and we can't detect
-                                       // that easily. Refuse if I is (cv-)void*
-                                       negation<std::is_void<remove_pointer_t<I>>>,
-                                       negation<std::is_void<detected_t<dereference_t, I>>>> {};
+struct is_dereferencable
+    : conjunction<is_detected<dereference_t, add_lvalue_reference_t<I>>,
+                  // Clang supports dereferencing void*, and we can't detect
+                  // that easily. Refuse if I is (cv-)void*
+                  negation<std::is_void<remove_pointer_t<I>>>,
+                  negation<std::is_void<detected_t<dereference_t, add_lvalue_reference_t<I>>>>> {};
 
 /**
  * @brief Obtain the value type of the given iterator.
