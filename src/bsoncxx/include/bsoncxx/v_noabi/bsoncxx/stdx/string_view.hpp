@@ -35,26 +35,27 @@ namespace stdx {
 
 namespace detail {
 
-using namespace bsoncxx::detail;
-
 template <typename S>
 auto detect_string_f(...) -> std::false_type;
 
 template <typename S>
 auto detect_string_f(int,  //
-                     const S& s = soft_declval<S>(),
-                     S& mut = soft_declval<S&>())
-    -> true_t<typename S::traits_type::char_type,
-              decltype(s.length()),
-              decltype(mut = s),
-              decltype(s.compare(s)),
-              decltype(s.substr(0, s.size())),
-              requires_t<void, is_equality_comparable<S, S>, is_range<S>>>;
+                     const S& s = bsoncxx::detail::soft_declval<S>(),
+                     S& mut = bsoncxx::detail::soft_declval<S&>())
+    -> bsoncxx::detail::true_t<
+        typename S::traits_type::char_type,
+        decltype(s.length()),
+        decltype(mut = s),
+        decltype(s.compare(s)),
+        decltype(s.substr(0, s.size())),
+        bsoncxx::detail::requires_t<void,
+                                    bsoncxx::detail::is_equality_comparable<S, S>,
+                                    bsoncxx::detail::is_range<S>>>;
 
 // Heuristic detection of std::string-like types. Not perfect, but should reasonably
 // handle most cases.
 template <typename S>
-struct is_string_like : decltype(detect_string_f<remove_cvref_t<S>>(0)) {};
+struct is_string_like : decltype(detect_string_f<bsoncxx::detail::remove_cvref_t<S>>(0)) {};
 
 }  // namespace detail
 
@@ -62,7 +63,7 @@ struct is_string_like : decltype(detect_string_f<remove_cvref_t<S>>(0)) {};
  * @brief Implementation of std::string_view-like class template
  */
 template <typename Char, typename Traits = std::char_traits<Char>>
-class basic_string_view : detail::equality_operators, detail::ordering_operators {
+class basic_string_view : bsoncxx::detail::equality_operators, bsoncxx::detail::ordering_operators {
    public:
     // Pointer to (non-const) character type
     using pointer = Char*;
@@ -91,17 +92,17 @@ class basic_string_view : detail::equality_operators, detail::ordering_operators
      * evaluates to the type `int`. Otherwise, is a substitution failure.
      */
     template <typename R>
-    using _enable_range_constructor =
-        detail::requires_t<int,
-                           // Must be a contiguous range
-                           detail::is_contiguous_range<R>,
-                           // Don't eat our own copy/move constructor:
-                           detail::negation<detail::is_alike<R, self_type>>,
-                           // Don't handle character arrays (we use a different constructor for
-                           // that)
-                           detail::negation<std::is_convertible<R, const_pointer>>,
-                           // The range's value must be the same as our character type
-                           std::is_same<detail::detected_t<detail::range_value_t, R>, value_type>>;
+    using _enable_range_constructor = bsoncxx::detail::requires_t<
+        int,
+        // Must be a contiguous range
+        bsoncxx::detail::is_contiguous_range<R>,
+        // Don't eat our own copy/move constructor:
+        bsoncxx::detail::negation<bsoncxx::detail::is_alike<R, self_type>>,
+        // Don't handle character arrays (we use a different constructor for
+        // that)
+        bsoncxx::detail::negation<std::is_convertible<R, const_pointer>>,
+        // The range's value must be the same as our character type
+        std::is_same<bsoncxx::detail::detected_t<bsoncxx::detail::range_value_t, R>, value_type>>;
 
    public:
     using traits_type = Traits;
@@ -143,16 +144,20 @@ class basic_string_view : detail::equality_operators, detail::ordering_operators
     template <
         typename Iterator,
         typename Sentinel,
-        detail::requires_t<int, detail::is_sized_sentinel_for<Sentinel, Iterator>> = 0,
+        bsoncxx::detail::requires_t<int,
+                                    bsoncxx::detail::is_sized_sentinel_for<Sentinel, Iterator>> = 0,
         // Requires: The iterator value_type be the same as our value_type
-        detail::requires_t<int, std::is_same<detail::iter_value_t<Iterator>, value_type>> = 0,
+        bsoncxx::detail::
+            requires_t<int, std::is_same<bsoncxx::detail::iter_value_t<Iterator>, value_type>> = 0,
         // Requires: We can get a pointer from the iterator via to_address:
-        detail::requires_t<int, detail::is_contiguous_iterator<iterator>> = 0,
+        bsoncxx::detail::requires_t<int, bsoncxx::detail::is_contiguous_iterator<iterator>> = 0,
         // Requires: "Sentinel" is *not* convertible to std::size_t
         // (prevents ambiguity with the pointer+size constructor)
-        detail::requires_t<int, detail::negation<std::is_convertible<Sentinel, std::size_t>>> = 0>
+        bsoncxx::detail::requires_t<
+            int,
+            bsoncxx::detail::negation<std::is_convertible<Sentinel, std::size_t>>> = 0>
     constexpr basic_string_view(Iterator iter, Sentinel stop) noexcept
-        : _begin(detail::to_address(iter)), _size(static_cast<size_type>(stop - iter)) {}
+        : _begin(bsoncxx::detail::to_address(iter)), _size(static_cast<size_type>(stop - iter)) {}
 
     /**
      * @brief From-range constructor for non-string-like types. This is an explicit constructor.
@@ -160,12 +165,13 @@ class basic_string_view : detail::equality_operators, detail::ordering_operators
      * Requires that `Range` is a non-array contiguous range with the same value
      * type as the string view.
      */
-    template <typename Range,
-              _enable_range_constructor<Range> = 0,
-              detail::requires_t<int, detail::negation<detail::is_string_like<Range>>>
-                  RequiresNotString = 0>
+    template <
+        typename Range,
+        _enable_range_constructor<Range> = 0,
+        bsoncxx::detail::requires_t<int, bsoncxx::detail::negation<detail::is_string_like<Range>>>
+            RequiresNotString = 0>
     constexpr explicit basic_string_view(Range&& rng)
-        : _begin(detail::data(rng)), _size(detail::size(rng)) {}
+        : _begin(bsoncxx::detail::data(rng)), _size(bsoncxx::detail::size(rng)) {}
 
     /**
      * @brief From-range constructor, but is an implicit conversion accepting string-like ranges.
@@ -173,11 +179,12 @@ class basic_string_view : detail::equality_operators, detail::ordering_operators
      * Requires that `Range` is a non-array contiguous range with the same value type
      * as the string view, and is a std::string-like value.
      */
-    template <typename Range,
-              _enable_range_constructor<Range> = 0,
-              detail::requires_t<int, detail::is_string_like<Range>> RequiresStringLike = 0>
+    template <
+        typename Range,
+        _enable_range_constructor<Range> = 0,
+        bsoncxx::detail::requires_t<int, detail::is_string_like<Range>> RequiresStringLike = 0>
     constexpr basic_string_view(Range&& rng) noexcept
-        : _begin(detail::data(rng)), _size(detail::size(rng)) {}
+        : _begin(bsoncxx::detail::data(rng)), _size(bsoncxx::detail::size(rng)) {}
 
     // Construction from a null pointer is deleted
     basic_string_view(std::nullptr_t) = delete;
@@ -379,8 +386,8 @@ class basic_string_view : detail::equality_operators, detail::ordering_operators
      */
     bsoncxx_cxx14_constexpr size_type find(self_type infix, size_type pos = 0) const noexcept {
         self_type sub = this->substr((std::min)(pos, size()));
-        detail::subrange<iterator> found = detail::search(sub, infix);
-        if (detail::distance(found) != static_cast<difference_type>(infix.size())) {
+        bsoncxx::detail::subrange<iterator> found = bsoncxx::detail::search(sub, infix);
+        if (bsoncxx::detail::distance(found) != static_cast<difference_type>(infix.size())) {
             return npos;
         }
         return _iter_to_pos(found.begin());
@@ -391,9 +398,9 @@ class basic_string_view : detail::equality_operators, detail::ordering_operators
      */
     bsoncxx_cxx14_constexpr size_type rfind(self_type infix, size_type pos = npos) const noexcept {
         self_type sub = this->substr(0, pos);
-        detail::reversed_t<self_type> found =
-            detail::search(detail::make_reversed_view(sub), detail::make_reversed_view(infix));
-        if (detail::distance(found) != static_cast<difference_type>(infix.size())) {
+        bsoncxx::detail::reversed_t<self_type> found = bsoncxx::detail::search(
+            bsoncxx::detail::make_reversed_view(sub), bsoncxx::detail::make_reversed_view(infix));
+        if (bsoncxx::detail::distance(found) != static_cast<difference_type>(infix.size())) {
             return npos;
         }
         return _iter_to_pos(found.end());
@@ -404,7 +411,7 @@ class basic_string_view : detail::equality_operators, detail::ordering_operators
      * set
      */
     constexpr size_type find_first_of(self_type set, size_type pos = 0) const noexcept {
-        return _find_if(pos, detail::equal_to_any_of(set));
+        return _find_if(pos, bsoncxx::detail::equal_to_any_of(set));
     }
 
     /**
@@ -412,7 +419,7 @@ class basic_string_view : detail::equality_operators, detail::ordering_operators
      * set
      */
     constexpr size_type find_last_of(self_type set, size_type pos = npos) const noexcept {
-        return _rfind_if(pos, detail::equal_to_any_of(set));
+        return _rfind_if(pos, bsoncxx::detail::equal_to_any_of(set));
     }
 
     /**
@@ -420,7 +427,7 @@ class basic_string_view : detail::equality_operators, detail::ordering_operators
      * is NOT a member of the given set of characters
      */
     constexpr size_type find_first_not_of(self_type set, size_type pos = 0) const noexcept {
-        return _find_if(pos, detail::not_fn(detail::equal_to_any_of(set)));
+        return _find_if(pos, bsoncxx::detail::not_fn(bsoncxx::detail::equal_to_any_of(set)));
     }
 
     /**
@@ -428,7 +435,7 @@ class basic_string_view : detail::equality_operators, detail::ordering_operators
      * is NOT a member of the given set of characters
      */
     constexpr size_type find_last_not_of(self_type set, size_type pos = npos) const noexcept {
-        return _rfind_if(pos, detail::not_fn(detail::equal_to_any_of(set)));
+        return _rfind_if(pos, bsoncxx::detail::not_fn(bsoncxx::detail::equal_to_any_of(set)));
     }
 
 #pragma push_macro("DECL_FINDERS")
@@ -497,14 +504,15 @@ class basic_string_view : detail::equality_operators, detail::ordering_operators
     }
 
     // Implementation of equality comparison
-    constexpr friend bool tag_invoke(detail::equal_to, self_type left, self_type right) noexcept {
+    constexpr friend bool tag_invoke(bsoncxx::detail::equal_to,
+                                     self_type left,
+                                     self_type right) noexcept {
         return left.size() == right.size() && left.compare(right) == 0;
     }
 
     // Implementation of a three-way-comparison
-    constexpr friend detail::strong_ordering tag_invoke(detail::compare_three_way cmp,
-                                                        self_type left,
-                                                        self_type right) noexcept {
+    constexpr friend bsoncxx::detail::strong_ordering tag_invoke(
+        bsoncxx::detail::compare_three_way cmp, self_type left, self_type right) noexcept {
         return cmp(left.compare(right), 0);
     }
 
@@ -517,7 +525,7 @@ class basic_string_view : detail::equality_operators, detail::ordering_operators
     // Find the first index I where the given predicate returns true for substr(I)
     template <typename F>
     bsoncxx_cxx14_constexpr size_type _find_if(size_type pos, F pred) const noexcept {
-        const iterator found = detail::find_if(substr(pos), pred);
+        const iterator found = bsoncxx::detail::find_if(substr(pos), pred);
         if (found == end()) {
             return npos;
         }
@@ -528,7 +536,7 @@ class basic_string_view : detail::equality_operators, detail::ordering_operators
     template <typename F>
     bsoncxx_cxx14_constexpr size_type _rfind_if(size_type pos, F pred) const noexcept {
         const const_reverse_iterator found =
-            detail::find_if(detail::make_reversed_view(substr(0, pos)), pred);
+            bsoncxx::detail::find_if(bsoncxx::detail::make_reversed_view(substr(0, pos)), pred);
         if (found == rend()) {
             return npos;
         }
