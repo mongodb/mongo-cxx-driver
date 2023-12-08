@@ -101,22 +101,22 @@ if(ENABLE_MACRO_GUARD_TESTS)
             _bsoncxxDisableWarningImpl_for_GNU
             _bsoncxxDisableWarningImpl_for_MSVC
             _bsoncxxDisableWarningImpl_for_Clang
-            bsoncxx_push_warnings
-            bsoncxx_pop_warnings
-            bsoncxx_disable_warning
-            bsoncxx_concat
-            bsoncxx_concat_impl
+            BSONCXX_PUSH_WARNINGS
+            BSONCXX_POP_WARNINGS
+            BSONCXX_DISABLE_WARNING
+            BSONCXX_CONCAT
+            BSONCXX_CONCAT_IMPL
             bsoncxx_cxx14_constexpr
-            bsoncxx_force_semicolon
-            bsoncxx_pragma
+            BSONCXX_FORCE_SEMICOLON
+            BSONCXX_PRAGMA
             _bsoncxxPragma
-            bsoncxx_stringify
-            bsoncxx_stringify_impl
-            bsoncxx_if_msvc
-            bsoncxx_if_gcc
-            bsoncxx_if_clang
-            bsoncxx_if_gnu_like
-            bsoncxx_returns
+            BSONCXX_STRINGIFY
+            BSONCXX_STRINGIFY_IMPL
+            BSONCXX_IF_MSVC
+            BSONCXX_IF_GCC
+            BSONCXX_IF_CLANG
+            BSONCXX_IF_GNU_LIKE
+            BSONCXX_RETURNS
         INCLUDE_PATTERNS
             "include/*.hpp" # Public headers.
             "lib/*.hh" # Private headers.
