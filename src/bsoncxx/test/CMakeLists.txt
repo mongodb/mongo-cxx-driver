@@ -37,12 +37,12 @@ add_executable(test_bson
     json.cpp
     oid.cpp
     view_or_value.cpp
+    algorithm.test.cpp
+    iterator.test.cpp
     make_unique.test.cpp
     ranges.test.cpp
     string_view.test.cpp
-    algorithm.test.cpp
     type_traits.test.cpp
-    iterator.test.cpp
 )
 
 # Common target properties for test executables.
@@ -146,9 +146,9 @@ set_dist_list(src_bsoncxx_test_DIST
     to_string.hh
     view_or_value.cpp
     algorithm.test.cpp
-    type_traits.test.cpp
-    make_unique.test.cpp
     iterator.test.cpp
+    make_unique.test.cpp
     ranges.test.cpp
     string_view.test.cpp
+    type_traits.test.cpp
 )
