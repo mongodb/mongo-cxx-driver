@@ -25,7 +25,6 @@ list(APPEND bsoncxx_sources
     bsoncxx/v_noabi/bsoncxx/json.cpp
     bsoncxx/v_noabi/bsoncxx/oid.cpp
     bsoncxx/v_noabi/bsoncxx/private/itoa.cpp
-    bsoncxx/v_noabi/bsoncxx/stdx/string_view.cpp
     bsoncxx/v_noabi/bsoncxx/string/view_or_value.cpp
     bsoncxx/v_noabi/bsoncxx/types.cpp
     bsoncxx/v_noabi/bsoncxx/types/bson_value/value.cpp
@@ -88,7 +87,6 @@ set_dist_list(src_bsoncxx_lib_DIST
     bsoncxx/v_noabi/bsoncxx/private/libbson.hh
     bsoncxx/v_noabi/bsoncxx/private/stack.hh
     bsoncxx/v_noabi/bsoncxx/private/suppress_deprecation_warnings.hh
-    bsoncxx/v_noabi/bsoncxx/stdx/string_view.cpp
     bsoncxx/v_noabi/bsoncxx/string/view_or_value.cpp
     bsoncxx/v_noabi/bsoncxx/test_util/export_for_testing.hh
     bsoncxx/v_noabi/bsoncxx/types.cpp

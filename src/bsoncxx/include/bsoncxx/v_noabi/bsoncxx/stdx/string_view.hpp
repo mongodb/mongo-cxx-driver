@@ -37,10 +37,6 @@ namespace detail {
 
 using namespace bsoncxx::detail;
 
-[[noreturn]] BSONCXX_API void string_view_oob_terminate(const char* msg,
-                                                        std::size_t length,
-                                                        std::ptrdiff_t offset) noexcept;
-
 template <typename S>
 auto detect_string_f(...) -> std::false_type;
 
@@ -222,8 +218,7 @@ class basic_string_view : detail::equality_operators, detail::ordering_operators
      * than size()
      */
     constexpr const_reference operator[](size_type offset) const noexcept {
-        return (_assert_inbounds(offset, for_access, "basic_string_view::operator[]"),
-                _begin[offset]);
+        return _begin[offset];
     }
 
     /**
@@ -240,12 +235,11 @@ class basic_string_view : detail::equality_operators, detail::ordering_operators
     }
     /// Access the first character in the string
     constexpr const_reference front() const noexcept {
-        return (_assert_inbounds(0, for_access, "basic_string_view::front()"), (*this)[0]);
+        return (*this)[0];
     }
     /// Access the last character in the string
     constexpr const_reference back() const noexcept {
-        return (_assert_inbounds(size() - 1, for_access, "basic_string_view::back()"),
-                (*this)[size() - 1]);
+        return (*this)[size() - 1];
     }
 
     /// Obtain a pointer to the beginning of the referred-to character array
@@ -275,7 +269,6 @@ class basic_string_view : detail::equality_operators, detail::ordering_operators
      * @param n The number of characters to remove from the beginning. Must be less than size()
      */
     bsoncxx_cxx14_constexpr void remove_prefix(size_type n) noexcept {
-        _assert_inbounds(n, for_offset, "basic_string_view::remove_prefix()");
         _begin += n;
         _size -= n;
     }
@@ -286,7 +279,6 @@ class basic_string_view : detail::equality_operators, detail::ordering_operators
      * @param n The number of characters to remove from the end. Must be less than size()
      */
     bsoncxx_cxx14_constexpr void remove_suffix(size_type n) noexcept {
-        _assert_inbounds(n, for_offset, "basic_string_view::remove_suffix()");
         _size -= n;
     }
 
@@ -496,15 +488,6 @@ class basic_string_view : detail::equality_operators, detail::ordering_operators
     }
 
    private:
-    /// If the given 'pos' is out of bounds, terminates the program with an error message on stderr
-    enum bounds_check { for_access, for_offset };
-    void _assert_inbounds(size_type pos, bounds_check kind, const char* what) const noexcept {
-        const auto bound = kind == for_access ? _size + 1 : _size;
-        if (bound < pos) {
-            stdx::detail::string_view_oob_terminate(what, _size, static_cast<std::ptrdiff_t>(pos));
-        }
-    }
-
     // Additional level-of-indirection for constexpr compare()
     constexpr int _compare2(int diff, self_type other) const noexcept {
         // "diff" is the diff according to Traits::cmp
