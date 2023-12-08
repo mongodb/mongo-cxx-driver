@@ -20,6 +20,7 @@
 #include <type_traits>
 #include <utility>
 #include <vector>
+// We want to detect stdlib C++20 support. See remarks on contiguous_iterator_tag.
 #if defined(__has_include)
 #if __has_include(<version>)
 #include <version>
@@ -145,8 +146,14 @@ struct is_iterator : conjunction<is_weakly_incrementable<T>,
 // We want contiguous_iterator_tag. We can't get the full functionality without
 // stdlib support, but we can get reasonable approximation for our purposes
 #if defined(__cpp_lib_ranges)
+// If the C++20 is available, then our iterator_concept_t will pull the I::iterator_concept
+// tag from an iterator, which could be std::contiguous_iterator_tag. For compatibility
+// with the standard library in that case, use the same iterator tag class exactly:
 using std::contiguous_iterator_tag;
 #else
+// We are compiling without C++20 stdlib support, so we can't use std::contiguous_iterator_tag.
+// In this case, define our own tag type that we can use to detect known pre-c++20 contiguous
+// iterators.
 struct contiguous_iterator_tag : std::random_access_iterator_tag {};
 #endif
 
