@@ -59,11 +59,11 @@ static constexpr struct _advance_fn {
     }
 
     template <typename I, typename S>
-    constexpr auto operator()(I& iter, S bound) const bsoncxx_returns(impl(iter, 1, bound));
+    constexpr auto operator()(I& iter, S bound) const BSONCXX_RETURNS(impl(iter, 1, bound));
 
     template <typename I, typename S>
     constexpr auto operator()(I& iter, iter_difference_t<I> off, S bound) const
-        bsoncxx_returns(impl(iter, off, bound));
+        BSONCXX_RETURNS(impl(iter, off, bound));
 
     // Handle bidirectional iterators and negative offsets
     template <typename I, typename S>
@@ -186,7 +186,7 @@ make_reversed_view(R&& rng) noexcept {
  */
 static constexpr struct _distance_fn {
     template <typename R>
-    constexpr static auto impl(rank<2>, R&& rng) bsoncxx_returns(ssize(rng));
+    constexpr static auto impl(rank<2>, R&& rng) BSONCXX_RETURNS(ssize(rng));
 
     template <typename R>
     bsoncxx_cxx14_constexpr static auto impl(rank<1>, R&& rng)
@@ -201,9 +201,9 @@ static constexpr struct _distance_fn {
     }
 
     template <typename I, typename S>
-    constexpr auto operator()(I i, S s) const bsoncxx_returns(impl(rank<2>{}, make_subrange(i, s)));
+    constexpr auto operator()(I i, S s) const BSONCXX_RETURNS(impl(rank<2>{}, make_subrange(i, s)));
     template <typename R>
-    constexpr auto operator()(R&& rng) const bsoncxx_returns(impl(rank<2>{}, rng));
+    constexpr auto operator()(R&& rng) const BSONCXX_RETURNS(impl(rank<2>{}, rng));
 } distance;
 
 /**
@@ -258,7 +258,7 @@ static constexpr struct _equal_fn {
 
     template <typename L, typename R>
     constexpr static auto definitely_different_sizes(rank<1>, L& l, R& r)
-        bsoncxx_returns(ssize(l) != ssize(r));
+        BSONCXX_RETURNS(ssize(l) != ssize(r));
     template <typename L, typename R>
     constexpr static bool definitely_different_sizes(rank<0>, L&, R&) noexcept {
         return false;
@@ -302,12 +302,12 @@ static constexpr struct _search_fn {
 
     template <typename Hay, typename Needle, typename Compare = equal_to>
     constexpr auto operator()(Hay&& hay, Needle&& ndl, Compare&& cmp = {}) const
-        bsoncxx_returns((impl)(hay,
+        BSONCXX_RETURNS((impl)(hay,
                                default_searcher<iterator_t<Needle>, sentinel_t<Needle>, Compare>{
                                    begin(ndl), end(ndl), static_cast<Compare&&>(cmp)}));
 
     template <typename Hay, typename Searcher>
-    constexpr auto operator()(Hay&& hay, Searcher&& srch) const bsoncxx_returns(impl(hay, srch));
+    constexpr auto operator()(Hay&& hay, Searcher&& srch) const BSONCXX_RETURNS(impl(hay, srch));
 } search;
 
 template <typename NeedleIter, typename NeedleStop, typename Compare>
@@ -351,7 +351,7 @@ template <typename T>
 struct equal_to_value_t {
     T value;
     template <typename U>
-    constexpr auto operator()(U&& u) const bsoncxx_returns(u == value);
+    constexpr auto operator()(U&& u) const BSONCXX_RETURNS(u == value);
 };
 
 /**
@@ -390,7 +390,7 @@ static constexpr struct _find_if_fn {
 static constexpr struct _find_fn {
     template <typename R, typename T, typename Project = identity>
     constexpr auto operator()(R&& rng, const T& value, Project&& proj = {}) const
-        bsoncxx_returns(find_if(rng, equal_to_value(value), proj));
+        BSONCXX_RETURNS(find_if(rng, equal_to_value(value), proj));
 } find;
 
 template <typename T>
@@ -398,7 +398,7 @@ struct equal_to_any_of_t {
     T range;
 
     template <typename U>
-    constexpr auto operator()(U&& value) const bsoncxx_returns(find(range, value) != end(range));
+    constexpr auto operator()(U&& value) const BSONCXX_RETURNS(find(range, value) != end(range));
 };
 
 /**
@@ -417,10 +417,10 @@ struct not_fn_t {
     F func;
     template <typename... Args>
     bsoncxx_cxx14_constexpr auto operator()(Args&&... args)
-        bsoncxx_returns(!invoke(func, static_cast<Args&&>(args)...));
+        BSONCXX_RETURNS(!invoke(func, static_cast<Args&&>(args)...));
     template <typename... Args>
     constexpr auto operator()(Args&&... args) const
-        bsoncxx_returns(!invoke(func, static_cast<Args&&>(args)...));
+        BSONCXX_RETURNS(!invoke(func, static_cast<Args&&>(args)...));
 };
 
 /**

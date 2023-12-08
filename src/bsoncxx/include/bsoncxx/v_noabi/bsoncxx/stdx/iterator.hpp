@@ -54,16 +54,16 @@ struct pointer_traits<T*> : std::pointer_traits<T*> {
 struct _to_address_fn {
     template <typename FancyPointer>
     static constexpr auto impl(FancyPointer fp, rank<3>)
-        bsoncxx_returns(pointer_traits<FancyPointer>::to_address(fp));
+        BSONCXX_RETURNS(pointer_traits<FancyPointer>::to_address(fp));
 
     template <typename Iterator>
-    static constexpr auto impl(Iterator iter, rank<2>) bsoncxx_returns(iter.operator->());
+    static constexpr auto impl(Iterator iter, rank<2>) BSONCXX_RETURNS(iter.operator->());
 
     template <typename T>
-    static constexpr auto impl(T* p, rank<1>) bsoncxx_returns(p);
+    static constexpr auto impl(T* p, rank<1>) BSONCXX_RETURNS(p);
 
     template <typename Iterator>
-    constexpr auto operator()(Iterator iter) const bsoncxx_returns((impl)(iter, rank<10>{}));
+    constexpr auto operator()(Iterator iter) const BSONCXX_RETURNS((impl)(iter, rank<10>{}));
 };
 
 /**
@@ -80,11 +80,11 @@ using to_address_t = decltype(to_address(std::declval<T&>()));
 /**
  * @brief The result of applying unary operator* to the given object, if valid
  */
-bsoncxx_push_warnings();
-bsoncxx_disable_warning(Clang("-Wvoid-ptr-dereference"));
+BSONCXX_PUSH_WARNINGS();
+BSONCXX_DISABLE_WARNING(Clang("-Wvoid-ptr-dereference"));
 template <typename I>
 using dereference_t = decltype(*std::declval<I>());
-bsoncxx_pop_warnings();
+BSONCXX_POP_WARNINGS();
 
 /**
  * @brief Detect a type that can be dereferenced (like a pointer) and the result
@@ -170,11 +170,11 @@ using ITER_TRAITS = typename ITER_TRAITS_impl<I>::type;
 struct calc_iterator_concept {
     struct impl {
         template <typename I>
-        static auto x(I*, rank<3>) bsoncxx_returns(contiguous_iterator_tag{});
+        static auto x(I*, rank<3>) BSONCXX_RETURNS(contiguous_iterator_tag{});
         template <typename I>
-        static auto x(I, rank<2>) bsoncxx_returns(typename ITER_TRAITS<I>::iterator_concept{});
+        static auto x(I, rank<2>) BSONCXX_RETURNS(typename ITER_TRAITS<I>::iterator_concept{});
         template <typename I>
-        static auto x(I, rank<1>) bsoncxx_returns(typename ITER_TRAITS<I>::iterator_category{});
+        static auto x(I, rank<1>) BSONCXX_RETURNS(typename ITER_TRAITS<I>::iterator_category{});
     };
     template <typename I>
     auto operator()(I) -> decltype(impl::x(I{}, rank<10>{}));

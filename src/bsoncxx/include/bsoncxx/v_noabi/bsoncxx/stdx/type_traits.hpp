@@ -398,21 +398,21 @@ template <bool IsMemberObject, bool IsMemberFunction>
 struct invoker {
     template <typename F, typename... Args>
     constexpr static auto apply(F&& fun, Args&&... args)
-        bsoncxx_returns(static_cast<F&&>(fun)(static_cast<Args&&>(args)...));
+        BSONCXX_RETURNS(static_cast<F&&>(fun)(static_cast<Args&&>(args)...));
 };
 
 template <>
 struct invoker<false, true> {
     template <typename F, typename Self, typename... Args>
     constexpr static auto apply(F&& fun, Self&& self, Args&&... args)
-        bsoncxx_returns((static_cast<Self&&>(self).*fun)(static_cast<Args&&>(args)...));
+        BSONCXX_RETURNS((static_cast<Self&&>(self).*fun)(static_cast<Args&&>(args)...));
 };
 
 template <>
 struct invoker<true, false> {
     template <typename F, typename Self>
     constexpr static auto apply(F&& fun, Self&& self)
-        bsoncxx_returns(static_cast<Self&&>(self).*fun);
+        BSONCXX_RETURNS(static_cast<Self&&>(self).*fun);
 };
 
 }  // namespace impl_invoke
@@ -427,7 +427,7 @@ static constexpr struct invoke_fn {
 
     template <typename F, typename... Args, typename Fd = remove_cvref_t<F>>
     constexpr auto operator()(F&& fn, Args&&... args) const
-        bsoncxx_returns(impl_invoke::invoker<std::is_member_object_pointer<Fd>::value,
+        BSONCXX_RETURNS(impl_invoke::invoker<std::is_member_object_pointer<Fd>::value,
                                              std::is_member_function_pointer<Fd>::value>  //
                         ::apply(static_cast<F&&>(fn), static_cast<Args&&>(args)...));
 } invoke;

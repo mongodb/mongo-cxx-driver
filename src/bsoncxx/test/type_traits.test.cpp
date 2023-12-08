@@ -7,7 +7,7 @@
 #include <bsoncxx/config/prelude.hpp>
 
 // We declare variables that are only used for compilation checking
-bsoncxx_disable_warning(GNU("-Wunused"));
+BSONCXX_DISABLE_WARNING(GNU("-Wunused"));
 
 namespace {
 namespace tt = bsoncxx::detail;

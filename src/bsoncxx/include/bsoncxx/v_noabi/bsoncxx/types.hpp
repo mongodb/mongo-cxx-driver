@@ -31,8 +31,8 @@
 #pragma push_macro("BSONCXX_ENUM")
 #undef BSONCXX_ENUM
 
-bsoncxx_push_warnings();
-bsoncxx_disable_warning(GNU("-Wfloat-equal"));
+BSONCXX_PUSH_WARNINGS();
+BSONCXX_DISABLE_WARNING(GNU("-Wfloat-equal"));
 
 namespace bsoncxx {
 inline namespace v_noabi {
@@ -673,7 +673,7 @@ BSONCXX_INLINE bool operator==(const b_maxkey&, const b_maxkey&) {
 }  // namespace v_noabi
 }  // namespace bsoncxx
 
-bsoncxx_pop_warnings();
+BSONCXX_POP_WARNINGS();
 
 #ifdef BSONCXX_ENUM
 static_assert(false, "BSONCXX_ENUM must be undef'ed");

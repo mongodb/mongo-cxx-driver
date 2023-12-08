@@ -65,18 +65,18 @@ struct equal_to {
  */
 class equality_operators {
     template <typename L, typename R>
-    constexpr static auto impl(rank<1>, L& l, R& r) bsoncxx_returns(tag_invoke(equal_to{}, l, r));
+    constexpr static auto impl(rank<1>, L& l, R& r) BSONCXX_RETURNS(tag_invoke(equal_to{}, l, r));
 
     template <typename L, typename R>
-    constexpr static auto impl(rank<0>, L& l, R& r) bsoncxx_returns(tag_invoke(equal_to{}, r, l));
+    constexpr static auto impl(rank<0>, L& l, R& r) BSONCXX_RETURNS(tag_invoke(equal_to{}, r, l));
 
     template <typename Left, typename Other>
     constexpr friend auto operator==(const Left& self, const Other& other)
-        bsoncxx_returns(equality_operators::impl(rank<1>{}, self, other));
+        BSONCXX_RETURNS(equality_operators::impl(rank<1>{}, self, other));
 
     template <typename Left, typename Other>
     constexpr friend auto operator!=(const Left& self, const Other& other)
-        bsoncxx_returns(!equality_operators::impl(rank<1>{}, self, other));
+        BSONCXX_RETURNS(!equality_operators::impl(rank<1>{}, self, other));
 };
 
 /**
@@ -120,7 +120,7 @@ class strong_ordering {
 
 #pragma push_macro("INLINE_VAR")
 #undef INLINE_VAR
-#define INLINE_VAR bsoncxx_if_gnu_like([[gnu::weak]]) bsoncxx_if_msvc(__declspec(selectany))
+#define INLINE_VAR BSONCXX_IF_GNU_LIKE([[gnu::weak]]) BSONCXX_IF_MSVC(__declspec(selectany))
 
 INLINE_VAR const strong_ordering strong_ordering::less =
     strong_ordering(strong_ordering::_construct{}, -1);
@@ -159,7 +159,7 @@ struct compare_three_way {
 
     template <typename L, typename R>
     constexpr auto operator()(L const& l, R const& r) const
-        bsoncxx_returns((impl)(l, r, rank<2>{}));
+        BSONCXX_RETURNS((impl)(l, r, rank<2>{}));
 };
 
 /**
@@ -172,7 +172,7 @@ struct ordering_operators {
 #define DEFOP(Oper)                                             \
     template <typename L, typename R>                           \
     constexpr friend auto operator Oper(const L& l, const R& r) \
-        bsoncxx_returns(tag_invoke(compare_three_way{}, l, r) Oper 0)
+        BSONCXX_RETURNS(tag_invoke(compare_three_way{}, l, r) Oper 0)
     DEFOP(<);
     DEFOP(>);
     DEFOP(<=);

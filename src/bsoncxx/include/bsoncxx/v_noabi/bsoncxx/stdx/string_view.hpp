@@ -443,7 +443,7 @@ class basic_string_view : detail::equality_operators, detail::ordering_operators
     constexpr size_type Name(const_pointer cstr, size_type pos = DefaultPos) const noexcept {     \
         return Name(self_type(cstr), pos);                                                        \
     }                                                                                             \
-    bsoncxx_force_semicolon
+    BSONCXX_FORCE_SEMICOLON
     DECL_FINDERS(find, 0);
     DECL_FINDERS(rfind, npos);
     DECL_FINDERS(find_first_of, 0);

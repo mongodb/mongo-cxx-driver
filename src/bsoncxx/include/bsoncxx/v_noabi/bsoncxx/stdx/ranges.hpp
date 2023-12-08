@@ -34,11 +34,11 @@ namespace detailx {
 // within its own call operator. We need to "hide" the ADL name lookup out here in a different
 // namespace to prevent them from finding the invocable objects.
 template <typename T>
-constexpr auto adl_size(T&& t) bsoncxx_returns(size((T&&)t));
+constexpr auto adl_size(T&& t) BSONCXX_RETURNS(size((T&&)t));
 template <typename T>
-constexpr auto adl_begin(T&& t) bsoncxx_returns(begin((T&&)t));
+constexpr auto adl_begin(T&& t) BSONCXX_RETURNS(begin((T&&)t));
 template <typename T>
-constexpr auto adl_end(T&& t) bsoncxx_returns(end((T&&)t));
+constexpr auto adl_end(T&& t) BSONCXX_RETURNS(end((T&&)t));
 }  // namespace detailx
 // clang-format on
 
@@ -87,19 +87,19 @@ constexpr requires_t<P, std::is_pointer<P>> _decay_copy_pointer(P p) noexcept {
 static constexpr struct _begin_fn {
     // 1: Object is an array
     template <typename El, std::size_t N>
-    static constexpr auto impl(El (&arr)[N], rank<5>) bsoncxx_returns(arr + 0);
+    static constexpr auto impl(El (&arr)[N], rank<5>) BSONCXX_RETURNS(arr + 0);
 
     // 2: Object has member .begin() returning an iterator
     template <typename R>
-    static constexpr auto impl(R& rng, rank<4>) bsoncxx_returns(_decay_iterator(rng.begin()));
+    static constexpr auto impl(R& rng, rank<4>) BSONCXX_RETURNS(_decay_iterator(rng.begin()));
 
     // 3: Object has an ADL-visible begin(x) returning an iterator
     template <typename R>
     static constexpr auto impl(R& rng, rank<3>)
-        bsoncxx_returns(_decay_iterator(detailx::adl_begin(rng)));
+        BSONCXX_RETURNS(_decay_iterator(detailx::adl_begin(rng)));
 
     template <typename R>
-    constexpr auto operator()(R&& rng) const bsoncxx_returns((impl)(rng, rank<10>{}));
+    constexpr auto operator()(R&& rng) const BSONCXX_RETURNS((impl)(rng, rank<10>{}));
 } begin;
 
 /**
@@ -120,19 +120,19 @@ using iterator_t = decltype(begin(std::declval<R&>()));
 static constexpr struct _end_fn {
     // 1: Range is an array
     template <typename Iter, typename El, std::size_t N>
-    static constexpr auto impl(El (&arr)[N], rank<5>) bsoncxx_returns(arr + N);
+    static constexpr auto impl(El (&arr)[N], rank<5>) BSONCXX_RETURNS(arr + N);
 
     // 2: Range has member .end() returning a valid sentinel
     template <typename Iter, typename R>
-    static constexpr auto impl(R& rng, rank<4>) bsoncxx_returns(_decay_sentinel<Iter>(rng.end()));
+    static constexpr auto impl(R& rng, rank<4>) BSONCXX_RETURNS(_decay_sentinel<Iter>(rng.end()));
 
     // 3: Range has ADL-found end(x) returning a valid sentinel
     template <typename Iter, typename R>
     static constexpr auto impl(R& r, rank<3>)
-        bsoncxx_returns(_decay_sentinel<Iter>(detailx::adl_end(r)));
+        BSONCXX_RETURNS(_decay_sentinel<Iter>(detailx::adl_end(r)));
 
     template <typename R>
-    constexpr auto operator()(R&& rng) const bsoncxx_returns((impl<iterator_t<R>>)(rng, rank<5>{}));
+    constexpr auto operator()(R&& rng) const BSONCXX_RETURNS((impl<iterator_t<R>>)(rng, rank<5>{}));
 } end;
 
 /**
@@ -155,16 +155,16 @@ using sentinel_t = decltype(end(std::declval<R&>()));
 static constexpr struct _size_fn {
     // 1: Array of known bound
     template <typename Element, std::size_t N>
-    static constexpr auto impl(Element (&)[N], rank<5>) bsoncxx_returns(N);
+    static constexpr auto impl(Element (&)[N], rank<5>) BSONCXX_RETURNS(N);
 
     // 2: Range with member .size()
     template <typename R>
-    static constexpr auto impl(R& rng, rank<4>) bsoncxx_returns(_decay_integral(rng.size()));
+    static constexpr auto impl(R& rng, rank<4>) BSONCXX_RETURNS(_decay_integral(rng.size()));
 
     // 3: Range with ADL-found size(x)
     template <typename R>
     static constexpr auto impl(R& rng, rank<3>)
-        bsoncxx_returns(_decay_integral(detailx::adl_size(rng)));
+        BSONCXX_RETURNS(_decay_integral(detailx::adl_size(rng)));
 
     // 4: Range is a forward-range and has a sized sentinel type
     template <typename R,
@@ -177,10 +177,10 @@ static constexpr struct _size_fn {
               // We cast to an unsigned type from the difference type:
               typename Sz = make_unsigned_t<difference_t<Sentinel, Iter>>>
     static constexpr auto impl(R& rng, rank<2>)
-        bsoncxx_returns(static_cast<Sz>(end(rng) - begin(rng)));
+        BSONCXX_RETURNS(static_cast<Sz>(end(rng) - begin(rng)));
 
     template <typename R>
-    constexpr auto operator()(R&& rng) const bsoncxx_returns((impl)(rng, rank<10>{}));
+    constexpr auto operator()(R&& rng) const BSONCXX_RETURNS((impl)(rng, rank<10>{}));
 } size;
 
 /**
@@ -198,7 +198,7 @@ static constexpr struct _ssize_fn {
               typename Signed = make_signed_t<Unsigned>,
               typename RetDiff =
                   conditional_t<(sizeof(Signed) > sizeof(std::ptrdiff_t)), Signed, std::ptrdiff_t>>
-    constexpr auto operator()(R&& rng) const bsoncxx_returns(static_cast<RetDiff>(size(rng)));
+    constexpr auto operator()(R&& rng) const BSONCXX_RETURNS(static_cast<RetDiff>(size(rng)));
 } ssize;
 
 /**
@@ -217,13 +217,13 @@ using range_difference_t = iter_difference_t<iterator_t<R>>;
  */
 static constexpr struct _data_fn {
     template <typename R>
-    static constexpr auto impl(R&& rng, rank<2>) bsoncxx_returns(_decay_copy_pointer(rng.data()));
+    static constexpr auto impl(R&& rng, rank<2>) BSONCXX_RETURNS(_decay_copy_pointer(rng.data()));
 
     template <typename R, requires_t<int, is_contiguous_iterator<iterator_t<R>>> = 0>
-    static constexpr auto impl(R&& rng, rank<1>) bsoncxx_returns(to_address(begin(rng)));
+    static constexpr auto impl(R&& rng, rank<1>) BSONCXX_RETURNS(to_address(begin(rng)));
 
     template <typename R>
-    constexpr auto operator()(R&& rng) const bsoncxx_returns((impl)(rng, rank<10>{}));
+    constexpr auto operator()(R&& rng) const BSONCXX_RETURNS((impl)(rng, rank<10>{}));
 } data;
 
 /**

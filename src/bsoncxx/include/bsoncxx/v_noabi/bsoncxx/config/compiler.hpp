@@ -14,33 +14,33 @@
 
 // clang-format off
 
-#define bsoncxx_if_msvc(...)
-#define bsoncxx_if_gcc(...)
-#define bsoncxx_if_clang(...)
-#define bsoncxx_if_gnu_like(...) \
-    bsoncxx_if_gcc(__VA_ARGS__) \
-    bsoncxx_if_clang(__VA_ARGS__)
+#define BSONCXX_IF_MSVC(...)
+#define BSONCXX_IF_GCC(...)
+#define BSONCXX_IF_CLANG(...)
+#define BSONCXX_IF_GNU_LIKE(...) \
+    BSONCXX_IF_GCC(__VA_ARGS__) \
+    BSONCXX_IF_CLANG(__VA_ARGS__)
 
 #ifdef __GNUC__
     #ifdef __clang__
-        #undef bsoncxx_if_clang
-        #define bsoncxx_if_clang(...) __VA_ARGS__
+        #undef BSONCXX_IF_CLANG
+        #define BSONCXX_IF_CLANG(...) __VA_ARGS__
     #else
-        #undef bsoncxx_if_gcc
-        #define bsoncxx_if_gcc(...) __VA_ARGS__
+        #undef BSONCXX_IF_GCC
+        #define BSONCXX_IF_GCC(...) __VA_ARGS__
     #endif
 #elif defined(_MSC_VER)
-    #undef bsoncxx_if_msvc
-    #define bsoncxx_if_msvc(...) __VA_ARGS__
+    #undef BSONCXX_IF_MSVC
+    #define BSONCXX_IF_MSVC(...) __VA_ARGS__
 #endif
 
 // clang-format on
 
 // Disable MSVC warnings that cause a lot of noise related to DLL visibility
 // for types that we don't control (like std::unique_ptr).
-bsoncxx_push_warnings();
-bsoncxx_disable_warning(MSVC(4251));
-bsoncxx_disable_warning(MSVC(5275));
+BSONCXX_PUSH_WARNINGS();
+BSONCXX_DISABLE_WARNING(MSVC(4251));
+BSONCXX_DISABLE_WARNING(MSVC(5275));
 
 #define BSONCXX_INLINE inline BSONCXX_PRIVATE
-#define BSONCXX_CALL bsoncxx_if_msvc(__cdecl)
+#define BSONCXX_CALL BSONCXX_IF_MSVC(__cdecl)
