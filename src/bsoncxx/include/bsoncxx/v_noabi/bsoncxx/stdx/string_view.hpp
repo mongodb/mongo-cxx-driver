@@ -431,6 +431,8 @@ class basic_string_view : detail::equality_operators, detail::ordering_operators
         return _rfind_if(pos, detail::not_fn(detail::equal_to_any_of(set)));
     }
 
+#pragma push_macro("DECL_FINDERS")
+#undef DECL_FINDERS
 #define DECL_FINDERS(Name, DefaultPos)                                                            \
     constexpr size_type Name(value_type chr, size_type pos = DefaultPos) const noexcept {         \
         return Name(self_type(&chr, 1), pos);                                                     \
@@ -448,7 +450,7 @@ class basic_string_view : detail::equality_operators, detail::ordering_operators
     DECL_FINDERS(find_last_of, npos);
     DECL_FINDERS(find_first_not_of, 0);
     DECL_FINDERS(find_last_not_of, npos);
-#undef DECL_FINDERS
+#pragma pop_macro("DECL_FINDERS")
 
     /**
      * @brief Test whether the string starts-with the given prefix string

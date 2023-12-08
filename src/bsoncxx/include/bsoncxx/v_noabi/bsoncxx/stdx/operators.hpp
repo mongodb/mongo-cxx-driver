@@ -104,7 +104,8 @@ class strong_ordering {
     constexpr bool operator!=(strong_ordering o) const noexcept {
         return !(*this == o);
     }
-
+#pragma push_macro("DEFOP")
+#undef DEFOP
 #define DEFOP(Op)                                               \
     constexpr bool operator Op(std::nullptr_t) const noexcept { \
         return _c Op 0;                                         \
@@ -114,21 +115,23 @@ class strong_ordering {
     DEFOP(>);
     DEFOP(<=);
     DEFOP(>=);
-#undef DEFOP
+#pragma pop_macro("DEFOP")
 };
 
-#define psuedo_inline bsoncxx_if_gnu_like([[gnu::weak]]) bsoncxx_if_msvc(__declspec(selectany))
+#pragma push_macro("INLINE_VAR")
+#undef INLINE_VAR
+#define INLINE_VAR bsoncxx_if_gnu_like([[gnu::weak]]) bsoncxx_if_msvc(__declspec(selectany))
 
-psuedo_inline const strong_ordering strong_ordering::less =
+INLINE_VAR const strong_ordering strong_ordering::less =
     strong_ordering(strong_ordering::_construct{}, -1);
-psuedo_inline const strong_ordering strong_ordering::greater =
+INLINE_VAR const strong_ordering strong_ordering::greater =
     strong_ordering(strong_ordering::_construct{}, 1);
-psuedo_inline const strong_ordering strong_ordering::equivalent =
+INLINE_VAR const strong_ordering strong_ordering::equivalent =
     strong_ordering(strong_ordering::_construct{}, 0);
-psuedo_inline const strong_ordering strong_ordering::equal =
+INLINE_VAR const strong_ordering strong_ordering::equal =
     strong_ordering(strong_ordering::_construct{}, 0);
 
-#undef psuedo_inline
+#pragma pop_macro("INLINE_VAR")
 
 /**
  * @brief Implements a three-way comparison between two objects. That is, in
@@ -164,6 +167,8 @@ struct compare_three_way {
  * implementation of tag_invoke(compare_three_way, l, r)
  */
 struct ordering_operators {
+#pragma push_macro("DEFOP")
+#undef DEFOP
 #define DEFOP(Oper)                                             \
     template <typename L, typename R>                           \
     constexpr friend auto operator Oper(const L& l, const R& r) \
@@ -172,7 +177,7 @@ struct ordering_operators {
     DEFOP(>);
     DEFOP(<=);
     DEFOP(>=);
-#undef DEFOP
+#pragma pop_macro("DEFOP")
 };
 
 }  // namespace detail
