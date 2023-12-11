@@ -141,46 +141,53 @@ TEST_CASE("string_view: Overloading safety") {
 }
 
 TEST_CASE("string_view: find") {
-    string_view s1 = "abc123abc123";
-    auto pos = s1.find("abc");
+    string_view sv = "abc123abc123";
+    std::string str{sv};
+    auto pos = sv.find("abc");
     CHECK(pos == 0);
-    pos = s1.find("bc1");
+    pos = sv.find("bc1");
     CHECK(pos == 1);
-    pos = s1.find("bc1", 1);
+    pos = sv.find("bc1", 1);
     CHECK(pos == 1);
-    pos = s1.find("bc1", 2);
+    pos = sv.find("bc1", 2);
     CHECK(pos == 7);
-    pos = s1.find("", 4);
+    pos = sv.find("", 4);
     CHECK(pos == 4);
-    CHECK(s1.find("") == 0);
-    CHECK(s1.find("nowhere") == s1.npos);
-    CHECK(s1.rfind("nowhere") == s1.npos);
-    CHECK(s1.find("123") == 3);
-    CHECK(s1.rfind("123") == 9);
-    CHECK(s1.rfind("abc", 8) == 0);
-    CHECK(s1.rfind("") == 12);
+    CHECK(sv.find("") == str.find(""));
+    CHECK(sv.find("nowhere") == sv.npos);
+    CHECK(sv.rfind("nowhere") == str.rfind("nowhere"));
+    CHECK(sv.find("123") == str.find("123"));
+    CHECK(sv.find("123", 88888) == str.find("123", 88888));
+    CHECK(sv.rfind("123") == str.rfind("123"));
+    CHECK(sv.rfind("abc", 8) == str.rfind("abc", 8));
+    CHECK(sv.rfind("abc", 888888) == str.rfind("abc", 888888));
+    CHECK(sv.rfind("") == str.rfind(""));
 
-    CHECK(s1.find_first_of("54321") == 3);
-    CHECK(s1.find_first_of("nope") == s1.npos);
-    CHECK(s1.find_last_of("fedcba") == 9);
-    CHECK(s1.find_last_of("nope") == s1.npos);
+    CHECK(string_view("").find("") == std::string("").find(""));
+    CHECK(string_view("").rfind("") == std::string("").rfind(""));
 
-    CHECK(s1.find_first_of("54321", 5) == 5);
-    CHECK(s1.find_first_of("nope", 5) == s1.npos);
-    CHECK(s1.find_last_of("fedcba", 5) == 3);
-    CHECK(s1.find_last_of("nope", 5) == s1.npos);
+    CHECK(sv.find_first_of("54321") == str.find_first_of("54321"));
+    CHECK(sv.find_first_of("nope") == str.find_first_of("nope"));
+    CHECK(sv.find_last_of("fedcba") == str.find_last_of("fedcba"));
+    CHECK(sv.find_last_of("nope") == str.find_last_of("nope"));
 
-    CHECK(s1.find_first_not_of("abcdef") == 3);
-    CHECK(s1.find_first_not_of("123456") == 0);
-    CHECK(s1.find_last_not_of("abcdef") == 12);
-    CHECK(s1.find_last_not_of("123456") == 9);
-    CHECK(s1.find_first_not_of("abcdef123456") == s1.npos);
-    CHECK(s1.find_last_not_of("abcdef123456") == s1.npos);
+    CHECK(sv.find_first_of("54321", 5) == str.find_first_of("54321", 5));
+    CHECK(sv.find_first_of("nope", 5) == str.find_first_of("nope", 5));
+    CHECK(sv.find_last_of("fedcba", 5) == str.find_last_of("fedcba", 5));
+    CHECK(sv.find_last_of("fedcba", 2) == str.find_last_of("fedcba", 2));
+    CHECK(sv.find_last_of("nope", 5) == str.find_last_of("nope", 5));
 
-    CHECK(s1.find_first_not_of("abcdef", 5) == 5);
-    CHECK(s1.find_first_not_of("123456", 5) == 6);
-    CHECK(s1.find_last_not_of("abcdef", 5) == 5);
-    CHECK(s1.find_last_not_of("123456", 5) == 3);
-    CHECK(s1.find_first_not_of("abcdef123456", 5) == s1.npos);
-    CHECK(s1.find_last_not_of("abcdef123456", 5) == s1.npos);
+    CHECK(sv.find_first_not_of("abcdef") == str.find_first_not_of("abcdef"));
+    CHECK(sv.find_first_not_of("123456") == str.find_first_not_of("123456"));
+    CHECK(sv.find_last_not_of("abcdef") == str.find_last_not_of("abcdef"));
+    CHECK(sv.find_last_not_of("123456") == str.find_last_not_of("123456"));
+    CHECK(sv.find_first_not_of("abcdef123456") == str.find_first_not_of("abcdef123456"));
+    CHECK(sv.find_last_not_of("abcdef123456") == str.find_last_not_of("abcdef123456"));
+
+    CHECK(sv.find_first_not_of("abcdef", 5) == str.find_first_not_of("abcdef", 5));
+    CHECK(sv.find_first_not_of("123456", 5) == str.find_first_not_of("123456", 5));
+    CHECK(sv.find_last_not_of("abcdef", 5) == str.find_last_not_of("abcdef", 5));
+    CHECK(sv.find_last_not_of("123456", 5) == str.find_last_not_of("123456", 5));
+    CHECK(sv.find_first_not_of("abcdef123456", 5) == str.find_first_not_of("abcdef123456", 5));
+    CHECK(sv.find_last_not_of("abcdef123456", 5) == str.find_last_not_of("abcdef123456", 5));
 }

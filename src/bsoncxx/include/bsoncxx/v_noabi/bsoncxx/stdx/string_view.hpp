@@ -344,7 +344,8 @@ class basic_string_view : bsoncxx::detail::equality_operators, bsoncxx::detail::
     }
 
     /**
-     * @brief Find the zero-based index of the left-most occurrence of the given substring
+     * @brief Find the zero-based offset of the left-most occurrence of the given infix,
+     * starting with pos. If infix does not occur, returns npos.
      */
     bsoncxx_cxx14_constexpr size_type find(self_type infix, size_type pos = 0) const noexcept {
         self_type sub = this->substr((std::min)(pos, size()));
@@ -352,33 +353,37 @@ class basic_string_view : bsoncxx::detail::equality_operators, bsoncxx::detail::
         if (bsoncxx::detail::distance(found) != static_cast<difference_type>(infix.size())) {
             return npos;
         }
-        return _iter_to_pos(found.begin());
+        return static_cast<size_type>(found.begin() - begin());
     }
 
     /**
-     * @brief Find the zero-based index of the right-most occurrence of the given substring
+     * @brief Find the zero-based offset of the right-most occurrence of the given infix,
+     * starting with (and including) pos. If infix does not occur, returns npos.
      */
     bsoncxx_cxx14_constexpr size_type rfind(self_type infix, size_type pos = npos) const noexcept {
-        self_type sub = this->substr(0, pos);
-        bsoncxx::detail::reversed_t<self_type> found = bsoncxx::detail::search(
-            bsoncxx::detail::make_reversed_view(sub), bsoncxx::detail::make_reversed_view(infix));
+        // Calc the endpos where searching should begin, which includes the infix size
+        const size_type endpos = pos != npos ? pos + infix.size() : pos;
+        self_type searched = this->substr(0, endpos);
+        bsoncxx::detail::reversed_t<self_type> found =
+            bsoncxx::detail::search(bsoncxx::detail::make_reversed_view(searched),
+                                    bsoncxx::detail::make_reversed_view(infix));
         if (bsoncxx::detail::distance(found) != static_cast<difference_type>(infix.size())) {
             return npos;
         }
-        return _iter_to_pos(found.end());
+        return static_cast<size_type>(rend() - found.end());
     }
 
     /**
      * @brief Find the zero-based index of the left-most occurrence of any character of the given
-     * set
+     * set, starting at pos
      */
     constexpr size_type find_first_of(self_type set, size_type pos = 0) const noexcept {
         return _find_if(pos, bsoncxx::detail::equal_to_any_of(set));
     }
 
     /**
-     * @brief Find the zero-based index of the right-most occurrence of any character of the given
-     * set
+     * @brief Find the zero-based index of the right-most occurrence of any character of the
+     * given set, starting at (and including) pos
      */
     constexpr size_type find_last_of(self_type set, size_type pos = npos) const noexcept {
         return _rfind_if(pos, bsoncxx::detail::equal_to_any_of(set));
@@ -394,7 +399,7 @@ class basic_string_view : bsoncxx::detail::equality_operators, bsoncxx::detail::
 
     /**
      * @brief Find the zero-based index of the right-most occurrence of any character that
-     * is NOT a member of the given set of characters
+     * is NOT a member of the given set of characters, starting at (and including) pos
      */
     constexpr size_type find_last_not_of(self_type set, size_type pos = npos) const noexcept {
         return _rfind_if(pos, bsoncxx::detail::not_fn(bsoncxx::detail::equal_to_any_of(set)));
@@ -455,35 +460,32 @@ class basic_string_view : bsoncxx::detail::equality_operators, bsoncxx::detail::
         return out;
     }
 
-    // Find the first index I where the given predicate returns true for substr(I)
+    // Find the first in-bounds index I in [pos, size()) where the given predicate
+    // returns true for substr(I). If no index exists, returns npos
     template <typename F>
     bsoncxx_cxx14_constexpr size_type _find_if(size_type pos, F pred) const noexcept {
         const iterator found = bsoncxx::detail::find_if(substr(pos), pred);
         if (found == end()) {
             return npos;
         }
-        return _iter_to_pos(found);
+        return static_cast<size_type>(found - begin());
     }
 
-    // Find the last index I where the given predicate returns true for substr(0, I)
+    // Find the LAST index I in [0, pos] where the given predicate returns true for
+    // substr(0, I). If no such index exists, returns npos.
     template <typename F>
     bsoncxx_cxx14_constexpr size_type _rfind_if(size_type pos, F pred) const noexcept {
+        // Adjust 'pos' for an inclusive range in substr()
+        const auto rpos = pos == npos ? npos : pos + 1;
+        // The substring that will be searched:
+        const auto prefix = substr(0, rpos);
         const const_reverse_iterator found =
-            bsoncxx::detail::find_if(bsoncxx::detail::make_reversed_view(substr(0, pos)), pred);
+            bsoncxx::detail::find_if(bsoncxx::detail::make_reversed_view(prefix), pred);
         if (found == rend()) {
             return npos;
         }
-        return _iter_to_pos(found);
-    }
-
-    // Convert an iterator to a zero-based index
-    constexpr size_type _iter_to_pos(const_iterator it) const noexcept {
-        return static_cast<size_type>(it - begin());
-    }
-
-    // Convert a reverse-iterator to a zero-based index
-    constexpr size_type _iter_to_pos(const_reverse_iterator it) const noexcept {
-        return static_cast<size_type>(rend() - it);
+        // Adjust by 1 to account for reversed-ness
+        return static_cast<size_type>(rend() - found) - 1u;
     }
 };
 
