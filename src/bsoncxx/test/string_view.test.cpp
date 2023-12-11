@@ -13,9 +13,7 @@
 namespace stdx = bsoncxx::stdx;
 using stdx::string_view;
 
-static_assert(std::is_constructible<string_view, std::vector<char>>::value, "fail");
 static_assert(!std::is_constructible<string_view, std::vector<int>>::value, "fail");
-static_assert(std::is_constructible<string_view, std::initializer_list<char>>::value, "fail");
 static_assert(!std::is_constructible<string_view, double>::value, "fail");
 static_assert(std::is_constructible<string_view, std::string>::value, "fail");
 static_assert(std::is_constructible<std::string, string_view>::value, "fail");
@@ -60,21 +58,6 @@ TEST_CASE("string_view: Pointer construct") {
     CHECK_FALSE(s != s);
     CHECK("hello" == s);
     CHECK_FALSE(s < s);
-}
-
-TEST_CASE("string_view: Range construct") {
-    std::vector<char> cs = {'a', 'b', 'c', 'd'};
-    auto sv = string_view(cs);
-    CHECK(sv == "abcd");
-
-    cs = {'a', 'b', 0, 'd'};
-    sv = string_view(cs);
-    CHECK(sv == string_view("ab\0d", 4));
-
-    // Copying is okay
-    string_view s2(sv);
-    CHECK(s2 == sv);
-    CHECK_FALSE(s2 != sv);
 }
 
 TEST_CASE("string_view: Reversal") {

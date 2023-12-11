@@ -136,45 +136,7 @@ class basic_string_view : bsoncxx::detail::equality_operators, bsoncxx::detail::
         : _begin(s), _size(traits_type::length(s)) {}
 
     /**
-     * Iterator pair range constructor
-     *
-     * Requires that `Iterator` be a contiguous iterator, that `Sentinel` be a sized sentinel for
-     * `Iterator`, and that the value-type of `Iterator` is the character type of the string.
-     */
-    template <
-        typename Iterator,
-        typename Sentinel,
-        bsoncxx::detail::requires_t<int,
-                                    bsoncxx::detail::is_sized_sentinel_for<Sentinel, Iterator>> = 0,
-        // Requires: The iterator value_type be the same as our value_type
-        bsoncxx::detail::
-            requires_t<int, std::is_same<bsoncxx::detail::iter_value_t<Iterator>, value_type>> = 0,
-        // Requires: We can get a pointer from the iterator via to_address:
-        bsoncxx::detail::requires_t<int, bsoncxx::detail::is_contiguous_iterator<iterator>> = 0,
-        // Requires: "Sentinel" is *not* convertible to std::size_t
-        // (prevents ambiguity with the pointer+size constructor)
-        bsoncxx::detail::requires_t<
-            int,
-            bsoncxx::detail::negation<std::is_convertible<Sentinel, std::size_t>>> = 0>
-    constexpr basic_string_view(Iterator iter, Sentinel stop) noexcept
-        : _begin(bsoncxx::detail::to_address(iter)), _size(static_cast<size_type>(stop - iter)) {}
-
-    /**
-     * @brief From-range constructor for non-string-like types. This is an explicit constructor.
-     *
-     * Requires that `Range` is a non-array contiguous range with the same value
-     * type as the string view.
-     */
-    template <
-        typename Range,
-        _enable_range_constructor<Range> = 0,
-        bsoncxx::detail::requires_t<int, bsoncxx::detail::negation<detail::is_string_like<Range>>>
-            RequiresNotString = 0>
-    constexpr explicit basic_string_view(Range&& rng)
-        : _begin(bsoncxx::detail::data(rng)), _size(bsoncxx::detail::size(rng)) {}
-
-    /**
-     * @brief From-range constructor, but is an implicit conversion accepting string-like ranges.
+     * @brief From-range conversion accepting string-like ranges.
      *
      * Requires that `Range` is a non-array contiguous range with the same value type
      * as the string view, and is a std::string-like value.
@@ -458,35 +420,6 @@ class basic_string_view : bsoncxx::detail::equality_operators, bsoncxx::detail::
     DECL_FINDERS(find_first_not_of, 0);
     DECL_FINDERS(find_last_not_of, npos);
 #pragma pop_macro("DECL_FINDERS")
-
-    /**
-     * @brief Test whether the string starts-with the given prefix string
-     */
-    constexpr bool starts_with(self_type pfx) const noexcept {
-        return pfx == substr(0, pfx.size());
-    }
-
-    /**
-     * @brief Test whether the string ends-with the given suffix string
-     */
-    constexpr bool ends_with(self_type sfx) const noexcept {
-        return size() >= sfx.size() && substr(size() - sfx.size()) == sfx;
-    }
-
-    /**
-     * @brief Test whether the string contains any occurrence of the given substring
-     */
-    constexpr bool contains(self_type infix) const noexcept {
-        return find(infix) != npos;
-    }
-
-    constexpr bool contains(value_type chr) const noexcept {
-        return contains(string_view(&chr, 1));
-    }
-
-    constexpr bool contains(const_pointer cstr) const noexcept {
-        return contains(self_type(cstr));
-    }
 
     /**
      * @brief Explicit-conversion to a std::basic_string
