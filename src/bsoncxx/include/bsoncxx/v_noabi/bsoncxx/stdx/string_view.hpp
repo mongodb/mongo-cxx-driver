@@ -236,7 +236,7 @@ class basic_string_view : bsoncxx::detail::equality_operators, bsoncxx::detail::
      */
     bsoncxx_cxx14_constexpr const_reference at(size_type pos) const {
         if (pos >= size()) {
-            throw std::out_of_range{"string_view::at()"};
+            throw std::out_of_range{"bsoncxx::stdx::basic_string_view::at()"};
         }
         return _begin[pos];
     }
@@ -310,7 +310,7 @@ class basic_string_view : bsoncxx::detail::equality_operators, bsoncxx::detail::
      */
     bsoncxx_cxx14_constexpr size_type copy(pointer dest, size_type count, size_type pos = 0) const {
         if (pos > size()) {
-            throw std::out_of_range{"basic_string_view::copy()"};
+            throw std::out_of_range{"bsoncxx::stdx::basic_string_view::substr()"};
         }
         count = (std::min)(count, size() - pos);
         Traits::copy(dest, data() + pos, count);
@@ -328,7 +328,7 @@ class basic_string_view : bsoncxx::detail::equality_operators, bsoncxx::detail::
      */
     bsoncxx_cxx14_constexpr self_type substr(size_type pos, size_type count = npos) const {
         if (pos > size()) {
-            throw std::out_of_range{"basic_string_view::substr()"};
+            throw std::out_of_range{"bsoncxx::stdx::basic_string_view::substr()"};
         }
         return self_type(_begin + pos, (std::min)(count, size() - pos));
     }
@@ -394,7 +394,7 @@ class basic_string_view : bsoncxx::detail::equality_operators, bsoncxx::detail::
     }
 
     /**
-     * @brief Find the zero-based index of the right-box occurrence of the given substring
+     * @brief Find the zero-based index of the right-most occurrence of the given substring
      */
     bsoncxx_cxx14_constexpr size_type rfind(self_type infix, size_type pos = npos) const noexcept {
         self_type sub = this->substr(0, pos);
