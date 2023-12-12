@@ -545,7 +545,7 @@ class pipeline {
 
    private:
     friend ::mongocxx::v_noabi::client;
-    friend ::mongocxx::wip::collection;
+    friend ::mongocxx::v_noabi::collection;
     friend ::mongocxx::wip::database;
 
     class MONGOCXX_PRIVATE impl;

@@ -252,7 +252,7 @@ class search_index_view {
     ///
 
    private:
-    friend ::mongocxx::wip::collection;
+    friend ::mongocxx::v_noabi::collection;
 
     class MONGOCXX_PRIVATE impl;
 

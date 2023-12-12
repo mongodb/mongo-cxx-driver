@@ -616,7 +616,7 @@ class bucket {
     /// @throws mongocxx::v_noabi::logic_error if the options are invalid, or if the unsupported
     /// option modifiers "$query" or "$explain" are used.
     ///
-    /// @see mongocxx::collection::find.
+    /// @see mongocxx::v_noabi::collection::find.
     ///
     cursor find(bsoncxx::document::view_or_value filter, const options::find& options = {});
 
@@ -640,7 +640,7 @@ class bucket {
     /// @throws mongocxx::v_noabi::logic_error if the options are invalid, or if the unsupported
     /// option modifiers "$query" or "$explain" are used.
     ///
-    /// @see mongocxx::collection::find.
+    /// @see mongocxx::v_noabi::collection::find.
     ///
     cursor find(const client_session& session,
                 bsoncxx::document::view_or_value filter,

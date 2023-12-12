@@ -307,7 +307,7 @@ class aggregate {
     const stdx::optional<bsoncxx::types::bson_value::view_or_value>& comment() const;
 
    private:
-    friend ::mongocxx::wip::collection;
+    friend ::mongocxx::v_noabi::collection;
     friend ::mongocxx::wip::database;
 
     void append(bsoncxx::builder::basic::document& builder) const;

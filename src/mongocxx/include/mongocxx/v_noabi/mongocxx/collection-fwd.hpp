@@ -17,7 +17,17 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace wip { class MONGOCXX_API collection; }  // namespace wip
+namespace v_noabi {
+
+class MONGOCXX_API collection;
+
+}  // namespace v_noabi
+}  // namespace mongocxx
+
+namespace mongocxx {
+
+using ::mongocxx::v_noabi::collection;
+
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

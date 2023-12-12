@@ -259,7 +259,7 @@ class change_stream {
 
    private:
     friend ::mongocxx::v_noabi::client;
-    friend ::mongocxx::wip::collection;
+    friend ::mongocxx::v_noabi::collection;
     friend ::mongocxx::wip::database;
 
     bsoncxx::document::value as_bson() const;

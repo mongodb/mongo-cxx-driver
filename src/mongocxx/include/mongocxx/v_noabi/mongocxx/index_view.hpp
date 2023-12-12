@@ -423,7 +423,7 @@ class index_view {
     ///
 
    private:
-    friend ::mongocxx::wip::collection;
+    friend ::mongocxx::v_noabi::collection;
     class MONGOCXX_PRIVATE impl;
 
     MONGOCXX_PRIVATE index_view(void* coll, void* client);

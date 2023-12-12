@@ -38,7 +38,8 @@ class error_category final : public std::error_category {
                 return "invalid use of default constructed or moved-from mongocxx::v_noabi::client "
                        "object";
             case error_code::k_invalid_collection_object:
-                return "invalid use of default constructed or moved-from mongocxx::collection "
+                return "invalid use of default constructed or moved-from "
+                       "mongocxx::v_noabi::collection "
                        "object";
             case error_code::k_invalid_database_object:
                 return "invalid use of default constructed or moved-from mongocxx::database object";

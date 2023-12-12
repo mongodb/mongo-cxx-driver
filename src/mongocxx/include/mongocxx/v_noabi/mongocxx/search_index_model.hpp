@@ -19,7 +19,7 @@ inline namespace wip {
 class search_index_model {
    public:
     ///
-    /// Initializes a new search_index_model over a mongocxx::collection.
+    /// Initializes a new search_index_model over a mongocxx::v_noabi::collection.
     ///
     search_index_model(bsoncxx::document::view_or_value definition);
     search_index_model(bsoncxx::string::view_or_value name,

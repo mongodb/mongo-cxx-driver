@@ -76,7 +76,7 @@ class index {
         const stdx::optional<bsoncxx::string::view_or_value>& config_string() const;
 
        private:
-        friend ::mongocxx::wip::collection;
+        friend ::mongocxx::v_noabi::collection;
 
         MONGOCXX_PRIVATE int type() const override;
 
@@ -478,7 +478,7 @@ class index {
     operator bsoncxx::document::view_or_value();
 
    private:
-    friend ::mongocxx::wip::collection;
+    friend ::mongocxx::v_noabi::collection;
 
     stdx::optional<bool> _background;
     stdx::optional<bool> _unique;

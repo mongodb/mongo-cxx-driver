@@ -289,7 +289,7 @@ collection database::_create_collection(
         throw_exception<operation_exception>(error);
     }
 
-    return mongocxx::collection(*this, result);
+    return mongocxx::v_noabi::collection(*this, result);
 }
 
 collection database::_create_collection_deprecated(
@@ -366,14 +366,14 @@ collection database::_create_collection_deprecated(
     return _create_collection(session, name, options_builder.view(), write_concern);
 }
 
-mongocxx::collection database::create_collection(
+mongocxx::v_noabi::collection database::create_collection(
     stdx::string_view name,
     bsoncxx::document::view_or_value collection_options,
     const stdx::optional<mongocxx::write_concern>& write_concern) {
     return _create_collection(nullptr, name, collection_options, write_concern);
 }
 
-mongocxx::collection database::create_collection(
+mongocxx::v_noabi::collection database::create_collection(
     const client_session& session,
     stdx::string_view name,
     bsoncxx::document::view_or_value collection_options,
@@ -381,14 +381,14 @@ mongocxx::collection database::create_collection(
     return _create_collection(&session, name, collection_options, write_concern);
 }
 
-mongocxx::collection database::create_collection_deprecated(
+mongocxx::v_noabi::collection database::create_collection_deprecated(
     bsoncxx::string::view_or_value name,
     const options::create_collection_deprecated& collection_options,
     const stdx::optional<mongocxx::write_concern>& write_concern) {
     return _create_collection_deprecated(nullptr, name, collection_options, write_concern);
 }
 
-mongocxx::collection database::create_collection_deprecated(
+mongocxx::v_noabi::collection database::create_collection_deprecated(
     const client_session& session,
     bsoncxx::string::view_or_value name,
     const options::create_collection_deprecated& collection_options,
@@ -466,7 +466,7 @@ mongocxx::write_concern database::write_concern() const {
 }
 
 collection database::collection(bsoncxx::string::view_or_value name) const {
-    return mongocxx::collection(*this, std::move(name));
+    return mongocxx::v_noabi::collection(*this, std::move(name));
 }
 
 gridfs::bucket database::gridfs_bucket(const options::gridfs::bucket& options) const {

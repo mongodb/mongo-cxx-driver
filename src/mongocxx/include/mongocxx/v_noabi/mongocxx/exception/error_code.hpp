@@ -34,7 +34,7 @@ enum class error_code : std::int32_t {
     /// A default-constructed or moved-from mongocxx::v_noabi::client object has been used.
     k_invalid_client_object,
 
-    /// A default-constructed or moved-from mongocxx::collection object has been used.
+    /// A default-constructed or moved-from mongocxx::v_noabi::collection object has been used.
     k_invalid_collection_object,
 
     /// A default-constructed or moved-from mongocxx::database object has been used.

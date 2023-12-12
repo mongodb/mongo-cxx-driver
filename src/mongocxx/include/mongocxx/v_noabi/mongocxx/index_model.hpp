@@ -30,7 +30,7 @@ inline namespace wip {
 class index_model {
    public:
     ///
-    /// Initializes a new index_model over a mongocxx::collection.
+    /// Initializes a new index_model over a mongocxx::v_noabi::collection.
     ///
     index_model(const bsoncxx::document::view_or_value& keys,
                 const bsoncxx::document::view_or_value& options = {});
