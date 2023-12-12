@@ -22,7 +22,8 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace wip {
+namespace v_noabi {
+
 ///
 /// Class representing an instance of the MongoDB driver.
 ///
@@ -44,7 +45,7 @@ inline namespace wip {
 /// #include <mongocxx/uri.hpp>
 ///
 /// int main() {
-///     mongocxx::instance inst{};
+///     mongocxx::v_noabi::instance inst{};
 ///     mongocxx::v_noabi::client conn{mongocxx::uri{}};
 ///     ...
 /// }
@@ -60,7 +61,7 @@ inline namespace wip {
 /// #include <mongocxx/uri.hpp>
 ///
 /// client get_client() {
-///     mongocxx::instance inst{};
+///     mongocxx::v_noabi::instance inst{};
 ///     mongocxx::v_noabi::client conn{mongocxx::uri{}};
 ///
 ///     return client;
@@ -128,7 +129,7 @@ class instance {
     std::unique_ptr<impl> _impl;
 };
 
-}  // namespace wip
+}  // namespace v_noabi
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

@@ -28,7 +28,7 @@ namespace v_noabi {
 /// Enum representing the various error types that can occur during driver usage.
 ///
 enum class error_code : std::int32_t {
-    /// More than one mongocxx::instance has been created.
+    /// More than one mongocxx::v_noabi::instance has been created.
     k_cannot_recreate_instance = 1,
 
     /// A default-constructed or moved-from mongocxx::v_noabi::client object has been used.
@@ -84,7 +84,7 @@ enum class error_code : std::int32_t {
     /// A GridFS file being operated on was discovered to be corrupted.
     k_gridfs_file_corrupted,
 
-    /// The mongocxx::instance has been destroyed.
+    /// The mongocxx::v_noabi::instance has been destroyed.
     k_instance_destroyed,
 
     /// mongocxx::v_noabi::client.create_session failed to create a

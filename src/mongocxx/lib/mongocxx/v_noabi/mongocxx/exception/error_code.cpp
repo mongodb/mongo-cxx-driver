@@ -53,7 +53,8 @@ class error_category final : public std::error_category {
             case error_code::k_unknown_write_concern:
                 return "invalid attempt to set an unknown write concern level";
             case error_code::k_cannot_recreate_instance:
-                return "cannot create a mongocxx::instance object if one has already been created";
+                return "cannot create a mongocxx::v_noabi::instance object if one has already been "
+                       "created";
             case error_code::k_server_response_malformed:
                 return "the response from the server was malformed";
             case error_code::k_invalid_uri:

@@ -31,7 +31,8 @@
 #endif
 
 namespace mongocxx {
-inline namespace wip {
+namespace v_noabi {
+
 namespace {
 
 log_level convert_log_level(::mongoc_log_level_t mongoc_log_level) {
@@ -162,5 +163,5 @@ instance& instance::current() {
     return *curr;
 }
 
-}  // namespace wip
+}  // namespace v_noabi
 }  // namespace mongocxx
