@@ -23,7 +23,8 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace wip {
+namespace v_noabi {
+
 class database::impl {
    public:
     impl(mongoc_database_t* db, const mongocxx::v_noabi::client::impl* client, std::string name)
@@ -54,7 +55,7 @@ class database::impl {
     std::string name;
 };
 
-}  // namespace wip
+}  // namespace v_noabi
 }  // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

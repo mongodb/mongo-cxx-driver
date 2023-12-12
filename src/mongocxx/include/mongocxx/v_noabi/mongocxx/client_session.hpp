@@ -196,7 +196,7 @@ class client_session {
     friend ::mongocxx::v_noabi::bulk_write;
     friend ::mongocxx::v_noabi::client;
     friend ::mongocxx::v_noabi::collection;
-    friend ::mongocxx::wip::database;
+    friend ::mongocxx::v_noabi::database;
     friend ::mongocxx::wip::index_view;
     friend ::mongocxx::wip::search_index_view;
 

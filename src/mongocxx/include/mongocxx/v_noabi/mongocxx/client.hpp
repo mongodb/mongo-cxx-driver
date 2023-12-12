@@ -195,8 +195,8 @@ class client {
     ///
     /// @return The database
     ///
-    mongocxx::database database(bsoncxx::string::view_or_value name) const&;
-    mongocxx::database database(bsoncxx::string::view_or_value name) const&& = delete;
+    mongocxx::v_noabi::database database(bsoncxx::string::view_or_value name) const&;
+    mongocxx::v_noabi::database database(bsoncxx::string::view_or_value name) const&& = delete;
 
     ///
     /// Allows the syntax @c client["db_name"] as a convenient shorthand for the client::database()
@@ -209,9 +209,10 @@ class client {
     ///
     /// @return Client side representation of a server side database
     ///
-    MONGOCXX_INLINE mongocxx::database operator[](bsoncxx::string::view_or_value name) const&;
-    MONGOCXX_INLINE mongocxx::database operator[](bsoncxx::string::view_or_value name) const&& =
-        delete;
+    MONGOCXX_INLINE mongocxx::v_noabi::database operator[](
+        bsoncxx::string::view_or_value name) const&;
+    MONGOCXX_INLINE mongocxx::v_noabi::database operator[](
+        bsoncxx::string::view_or_value name) const&& = delete;
 
     ///
     /// @{
@@ -433,7 +434,7 @@ class client {
    private:
     friend ::mongocxx::v_noabi::client_session;
     friend ::mongocxx::v_noabi::collection;
-    friend ::mongocxx::wip::database;
+    friend ::mongocxx::v_noabi::database;
     friend ::mongocxx::v_noabi::options::auto_encryption;
     friend ::mongocxx::v_noabi::options::client_encryption;
     friend ::mongocxx::wip::pool;
@@ -452,7 +453,8 @@ class client {
     std::unique_ptr<impl> _impl;
 };
 
-MONGOCXX_INLINE mongocxx::database client::operator[](bsoncxx::string::view_or_value name) const& {
+MONGOCXX_INLINE mongocxx::v_noabi::database client::operator[](
+    bsoncxx::string::view_or_value name) const& {
     return database(name);
 }
 

@@ -157,7 +157,7 @@ class read_concern {
    private:
     friend ::mongocxx::v_noabi::client;
     friend ::mongocxx::v_noabi::collection;
-    friend ::mongocxx::wip::database;
+    friend ::mongocxx::v_noabi::database;
     friend ::mongocxx::v_noabi::options::transaction;
     friend ::mongocxx::wip::uri;
 

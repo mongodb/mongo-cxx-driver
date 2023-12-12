@@ -42,7 +42,8 @@ class error_category final : public std::error_category {
                        "mongocxx::v_noabi::collection "
                        "object";
             case error_code::k_invalid_database_object:
-                return "invalid use of default constructed or moved-from mongocxx::database object";
+                return "invalid use of default constructed or moved-from "
+                       "mongocxx::v_noabi::database object";
             case error_code::k_invalid_parameter:
                 return "an invalid or out-of-bounds parameter was provided";
             case error_code::k_ssl_not_supported:

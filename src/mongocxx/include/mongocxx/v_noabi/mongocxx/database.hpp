@@ -35,7 +35,8 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace wip {
+namespace v_noabi {
+
 ///
 /// Class representing a MongoDB database.
 ///
@@ -681,7 +682,7 @@ MONGOCXX_INLINE mongocxx::v_noabi::collection database::operator[](
     return collection(name);
 }
 
-}  // namespace wip
+}  // namespace v_noabi
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

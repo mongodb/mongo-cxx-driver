@@ -56,7 +56,7 @@ namespace gridfs {
 ///   auto gridfs_bucket = mongo_client["database"].gridfs_bucket();
 /// @endcode
 ///
-/// See also the method documentation for `mongocxx::database::gridfs_bucket()`.
+/// See also the method documentation for `mongocxx::v_noabi::database::gridfs_bucket()`.
 ///
 /// @see https://www.mongodb.com/display/DOCS/GridFS
 ///
@@ -658,7 +658,7 @@ class bucket {
     stdx::string_view bucket_name() const;
 
    private:
-    friend ::mongocxx::wip::database;
+    friend ::mongocxx::v_noabi::database;
 
     // Constructs a new GridFS bucket.  Throws if options are invalid.
     MONGOCXX_PRIVATE bucket(const database& db, const options::gridfs::bucket& options);

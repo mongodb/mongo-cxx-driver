@@ -546,7 +546,7 @@ class pipeline {
    private:
     friend ::mongocxx::v_noabi::client;
     friend ::mongocxx::v_noabi::collection;
-    friend ::mongocxx::wip::database;
+    friend ::mongocxx::v_noabi::database;
 
     class MONGOCXX_PRIVATE impl;
     std::unique_ptr<impl> _impl;

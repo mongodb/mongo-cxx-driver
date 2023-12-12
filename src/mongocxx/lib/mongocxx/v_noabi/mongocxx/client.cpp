@@ -198,8 +198,8 @@ mongocxx::write_concern client::write_concern() const {
     return wc;
 }
 
-mongocxx::database client::database(bsoncxx::string::view_or_value name) const& {
-    return mongocxx::database(*this, std::move(name));
+mongocxx::v_noabi::database client::database(bsoncxx::string::view_or_value name) const& {
+    return mongocxx::v_noabi::database(*this, std::move(name));
 }
 
 cursor client::list_databases() const {

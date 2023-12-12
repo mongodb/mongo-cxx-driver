@@ -308,7 +308,7 @@ class aggregate {
 
    private:
     friend ::mongocxx::v_noabi::collection;
-    friend ::mongocxx::wip::database;
+    friend ::mongocxx::v_noabi::database;
 
     void append(bsoncxx::builder::basic::document& builder) const;
 

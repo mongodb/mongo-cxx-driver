@@ -41,8 +41,10 @@ using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_document;
 
 namespace mongocxx {
-inline namespace wip {
+namespace v_noabi {
+
 namespace {
+
 class collection_names {
    public:
     explicit collection_names(char** names) {
@@ -64,6 +66,7 @@ class collection_names {
    private:
     char** _names;
 };
+
 }  // namespace
 
 using namespace libbson;
@@ -524,5 +527,5 @@ database::impl& database::_get_impl() {
     return const_cast<database::impl&>(cthis->_get_impl());
 }
 
-}  // namespace wip
+}  // namespace v_noabi
 }  // namespace mongocxx
