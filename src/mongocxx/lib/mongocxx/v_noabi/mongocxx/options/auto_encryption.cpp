@@ -39,12 +39,12 @@ const stdx::optional<mongocxx::v_noabi::client*>& auto_encryption::key_vault_cli
     return _key_vault_client;
 }
 
-auto_encryption& auto_encryption::key_vault_pool(mongocxx::pool* pool) {
+auto_encryption& auto_encryption::key_vault_pool(mongocxx::v_noabi::pool* pool) {
     _key_vault_pool = pool;
     return *this;
 }
 
-const stdx::optional<mongocxx::pool*>& auto_encryption::key_vault_pool() const {
+const stdx::optional<mongocxx::v_noabi::pool*>& auto_encryption::key_vault_pool() const {
     return _key_vault_pool;
 }
 

@@ -437,7 +437,7 @@ class client {
     friend ::mongocxx::v_noabi::database;
     friend ::mongocxx::v_noabi::options::auto_encryption;
     friend ::mongocxx::v_noabi::options::client_encryption;
-    friend ::mongocxx::wip::pool;
+    friend ::mongocxx::v_noabi::pool;
 
     MONGOCXX_PRIVATE explicit client(void* implementation);
 

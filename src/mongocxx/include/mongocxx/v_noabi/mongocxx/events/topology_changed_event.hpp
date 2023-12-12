@@ -42,7 +42,8 @@ class topology_changed_event {
     ~topology_changed_event();
 
     ///
-    /// An opaque id, unique to this topology for this mongocxx::v_noabi::client or mongocxx::pool.
+    /// An opaque id, unique to this topology for this mongocxx::v_noabi::client or
+    /// mongocxx::v_noabi::pool.
     ///
     /// @return The id.
     ///

@@ -129,7 +129,7 @@ class server_api {
 
    private:
     friend ::mongocxx::v_noabi::client;
-    friend ::mongocxx::wip::pool;
+    friend ::mongocxx::v_noabi::pool;
 
     version _version;
     stdx::optional<bool> _strict;

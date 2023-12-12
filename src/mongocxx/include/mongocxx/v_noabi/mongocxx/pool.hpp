@@ -29,7 +29,8 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace wip {
+namespace v_noabi {
+
 ///
 /// A pool of @c client objects associated with a MongoDB deployment.
 ///
@@ -90,7 +91,7 @@ class pool {
         explicit operator bool() const noexcept;
 
        private:
-        friend ::mongocxx::wip::pool;
+        friend ::mongocxx::v_noabi::pool;
 
         using unique_client = std::unique_ptr<client, std::function<void MONGOCXX_CALL(client*)>>;
 
@@ -120,7 +121,7 @@ class pool {
     const std::unique_ptr<impl> _impl;
 };
 
-}  // namespace wip
+}  // namespace v_noabi
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

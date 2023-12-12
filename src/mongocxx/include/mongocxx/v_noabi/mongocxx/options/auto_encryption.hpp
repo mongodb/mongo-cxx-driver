@@ -86,7 +86,7 @@ class auto_encryption {
     ///
     /// @see https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
-    auto_encryption& key_vault_pool(mongocxx::pool* pool);
+    auto_encryption& key_vault_pool(mongocxx::v_noabi::pool* pool);
 
     ///
     /// Gets the key vault pool.
@@ -94,7 +94,7 @@ class auto_encryption {
     /// @return
     ///   An optional pointer to the key vault pool.
     ///
-    const stdx::optional<mongocxx::pool*>& key_vault_pool() const;
+    const stdx::optional<mongocxx::v_noabi::pool*>& key_vault_pool() const;
 
     ///
     /// Sets the namespace to use to access the key vault collection, which
@@ -373,14 +373,14 @@ class auto_encryption {
 
    private:
     friend ::mongocxx::v_noabi::client;
-    friend ::mongocxx::wip::pool;
+    friend ::mongocxx::v_noabi::pool;
 
     MONGOCXX_PRIVATE void* convert() const;
 
     bool _bypass;
     bool _bypass_query_analysis;
     stdx::optional<mongocxx::v_noabi::client*> _key_vault_client;
-    stdx::optional<mongocxx::pool*> _key_vault_pool;
+    stdx::optional<mongocxx::v_noabi::pool*> _key_vault_pool;
     stdx::optional<ns_pair> _key_vault_namespace;
     stdx::optional<bsoncxx::document::view_or_value> _kms_providers;
     stdx::optional<bsoncxx::document::view_or_value> _tls_opts;

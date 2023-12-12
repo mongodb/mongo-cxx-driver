@@ -57,7 +57,8 @@ class server_changed_event {
     std::uint16_t port() const;
 
     ///
-    /// An opaque id, unique to this topology for this mongocxx::v_noabi::client or mongocxx::pool.
+    /// An opaque id, unique to this topology for this mongocxx::v_noabi::client or
+    /// mongocxx::v_noabi::pool.
     ///
     /// @return The id.
     ///
