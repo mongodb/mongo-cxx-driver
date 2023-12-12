@@ -36,6 +36,7 @@ add_executable(test_bson
     bson_value.cpp
     json.cpp
     oid.cpp
+    optional.test.cpp
     view_or_value.cpp
     make_unique.test.cpp
     string_view.test.cpp
@@ -139,6 +140,7 @@ set_dist_list(src_bsoncxx_test_DIST
     catch.hh
     json.cpp
     oid.cpp
+    optional.test.cpp
     test_macro_guards.cpp.in
     to_string.hh
     view_or_value.cpp
