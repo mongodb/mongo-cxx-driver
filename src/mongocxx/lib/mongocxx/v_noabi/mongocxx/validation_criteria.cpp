@@ -22,13 +22,14 @@ namespace {
 using bsoncxx::builder::basic::kvp;
 
 // Convert validation levels to strings.
-std::string validation_level_to_string(mongocxx::validation_criteria::validation_level level) {
+std::string validation_level_to_string(
+    mongocxx::v_noabi::validation_criteria::validation_level level) {
     switch (level) {
-        case mongocxx::validation_criteria::validation_level::k_off:
+        case mongocxx::v_noabi::validation_criteria::validation_level::k_off:
             return "off";
-        case mongocxx::validation_criteria::validation_level::k_moderate:
+        case mongocxx::v_noabi::validation_criteria::validation_level::k_moderate:
             return "moderate";
-        case mongocxx::validation_criteria::validation_level::k_strict:
+        case mongocxx::v_noabi::validation_criteria::validation_level::k_strict:
             return "strict";
     }
 
@@ -36,11 +37,12 @@ std::string validation_level_to_string(mongocxx::validation_criteria::validation
 }
 
 // Convert validation actions to strings.
-std::string validation_action_to_string(mongocxx::validation_criteria::validation_action action) {
+std::string validation_action_to_string(
+    mongocxx::v_noabi::validation_criteria::validation_action action) {
     switch (action) {
-        case mongocxx::validation_criteria::validation_action::k_warn:
+        case mongocxx::v_noabi::validation_criteria::validation_action::k_warn:
             return "warn";
-        case mongocxx::validation_criteria::validation_action::k_error:
+        case mongocxx::v_noabi::validation_criteria::validation_action::k_error:
             return "error";
     }
 
@@ -50,7 +52,8 @@ std::string validation_action_to_string(mongocxx::validation_criteria::validatio
 }  // namespace
 
 namespace mongocxx {
-inline namespace wip {
+namespace v_noabi {
+
 validation_criteria& validation_criteria::rule(bsoncxx::document::view_or_value rule) {
     _rule = std::move(rule);
     return *this;
@@ -110,5 +113,5 @@ MONGOCXX_API bool MONGOCXX_CALL operator!=(const validation_criteria& lhs,
     return !(lhs == rhs);
 }
 
-}  // namespace wip
+}  // namespace v_noabi
 }  // namespace mongocxx

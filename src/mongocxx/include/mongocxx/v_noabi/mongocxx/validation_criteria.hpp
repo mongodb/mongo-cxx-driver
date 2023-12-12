@@ -23,7 +23,8 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace wip {
+namespace v_noabi {
+
 ///
 /// Class representing criteria for document validation, to be applied to a collection.
 ///
@@ -152,7 +153,14 @@ MONGOCXX_INLINE validation_criteria::operator bsoncxx::document::value() const {
     return to_document_deprecated();
 }
 
-}  // namespace wip
+}  // namespace v_noabi
+}  // namespace mongocxx
+
+namespace mongocxx {
+
+using ::mongocxx::v_noabi::operator==;
+using ::mongocxx::v_noabi::operator!=;
+
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

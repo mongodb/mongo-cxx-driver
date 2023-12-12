@@ -60,7 +60,7 @@ create_collection_deprecated& create_collection_deprecated::storage_engine(
 }
 
 create_collection_deprecated& create_collection_deprecated::validation_criteria(
-    mongocxx::validation_criteria validation) {
+    mongocxx::v_noabi::validation_criteria validation) {
     _validation = std::move(validation);
     return *this;
 }
@@ -91,7 +91,7 @@ create_collection_deprecated::storage_engine() const {
     return _storage_engine_opts;
 }
 
-const stdx::optional<mongocxx::validation_criteria>&
+const stdx::optional<mongocxx::v_noabi::validation_criteria>&
 create_collection_deprecated::validation_criteria() const {
     return _validation;
 }
