@@ -283,7 +283,7 @@ class read_preference {
     friend ::mongocxx::wip::client;
     friend ::mongocxx::wip::collection;
     friend ::mongocxx::wip::database;
-    friend ::mongocxx::wip::events::topology_description;
+    friend ::mongocxx::v_noabi::events::topology_description;
     friend ::mongocxx::wip::options::transaction;
     friend ::mongocxx::wip::search_index_view;
     friend ::mongocxx::wip::uri;

@@ -23,7 +23,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace wip {
+namespace v_noabi {
 namespace events {
 
 command_failed_event::command_failed_event(const void* event) : _failed_event(event) {}
@@ -79,5 +79,5 @@ std::uint16_t command_failed_event::port() const {
 }
 
 }  // namespace events
-}  // namespace wip
+}  // namespace v_noabi
 }  // namespace mongocxx

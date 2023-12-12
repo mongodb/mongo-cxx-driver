@@ -19,7 +19,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace wip {
+namespace v_noabi {
 namespace events {
 
 topology_description::server_descriptions::server_descriptions(
@@ -28,7 +28,7 @@ topology_description::server_descriptions::server_descriptions(
 }
 
 topology_description::server_descriptions& topology_description::server_descriptions::operator=(
-    mongocxx::events::topology_description::server_descriptions&& other) noexcept {
+    server_descriptions&& other) noexcept {
     swap(other);
     return *this;
 }
@@ -105,5 +105,5 @@ topology_description::server_descriptions topology_description::servers() const 
 }
 
 }  // namespace events
-}  // namespace wip
+}  // namespace v_noabi
 }  // namespace mongocxx

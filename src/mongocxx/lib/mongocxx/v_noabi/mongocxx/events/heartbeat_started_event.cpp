@@ -18,7 +18,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace wip {
+namespace v_noabi {
 namespace events {
 
 heartbeat_started_event::heartbeat_started_event(const void* event) : _started_event(event) {}
@@ -41,5 +41,5 @@ bool heartbeat_started_event::awaited() const {
 }
 
 }  // namespace events
-}  // namespace wip
+}  // namespace v_noabi
 }  // namespace mongocxx

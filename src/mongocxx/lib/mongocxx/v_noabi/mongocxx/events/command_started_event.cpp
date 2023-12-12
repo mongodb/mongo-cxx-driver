@@ -20,7 +20,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace wip {
+namespace v_noabi {
 namespace events {
 
 command_started_event::command_started_event(const void* event) : _started_event(event) {}
@@ -76,5 +76,5 @@ std::uint16_t command_started_event::port() const {
 }
 
 }  // namespace events
-}  // namespace wip
+}  // namespace v_noabi
 }  // namespace mongocxx

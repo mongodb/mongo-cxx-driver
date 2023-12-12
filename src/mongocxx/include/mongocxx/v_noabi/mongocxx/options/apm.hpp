@@ -57,15 +57,14 @@ class apm {
     ///   method chaining.
     ///
     apm& on_command_started(
-        std::function<void(const mongocxx::events::command_started_event&)> command_started);
+        std::function<void(const events::command_started_event&)> command_started);
 
     ///
     /// Retrieves the command started monitoring callback.
     ///
     /// @return The command started monitoring callback.
     ///
-    const std::function<void(const mongocxx::events::command_started_event&)>& command_started()
-        const;
+    const std::function<void(const events::command_started_event&)>& command_started() const;
 
     ///
     /// Set the command failed monitoring callback. The callback takes a reference to a
@@ -81,16 +80,14 @@ class apm {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    apm& on_command_failed(
-        std::function<void(const mongocxx::events::command_failed_event&)> command_failed);
+    apm& on_command_failed(std::function<void(const events::command_failed_event&)> command_failed);
 
     ///
     /// Retrieves the command failed monitoring callback.
     ///
     /// @return The command failed monitoring callback.
     ///
-    const std::function<void(const mongocxx::events::command_failed_event&)>& command_failed()
-        const;
+    const std::function<void(const events::command_failed_event&)>& command_failed() const;
 
     ///
     /// Set the command succeeded monitoring callback. The callback takes a reference to a
@@ -107,15 +104,14 @@ class apm {
     ///   method chaining.
     ///
     apm& on_command_succeeded(
-        std::function<void(const mongocxx::events::command_succeeded_event&)> command_succeeded);
+        std::function<void(const events::command_succeeded_event&)> command_succeeded);
 
     ///
     /// Retrieves the command succeeded monitoring callback.
     ///
     /// @return The command succeeded monitoring callback.
     ///
-    const std::function<void(const mongocxx::events::command_succeeded_event&)>& command_succeeded()
-        const;
+    const std::function<void(const events::command_succeeded_event&)>& command_succeeded() const;
 
     ///
     /// Set the server opening monitoring callback. The callback takes a reference to a
@@ -131,16 +127,14 @@ class apm {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    apm& on_server_opening(
-        std::function<void(const mongocxx::events::server_opening_event&)> server_opening);
+    apm& on_server_opening(std::function<void(const events::server_opening_event&)> server_opening);
 
     ///
     /// Retrieves the server opening monitoring callback.
     ///
     /// @return The server opening monitoring callback.
     ///
-    const std::function<void(const mongocxx::events::server_opening_event&)>& server_opening()
-        const;
+    const std::function<void(const events::server_opening_event&)>& server_opening() const;
 
     ///
     /// Set the server closed monitoring callback. The callback takes a reference to a
@@ -156,15 +150,14 @@ class apm {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    apm& on_server_closed(
-        std::function<void(const mongocxx::events::server_closed_event&)> server_closed);
+    apm& on_server_closed(std::function<void(const events::server_closed_event&)> server_closed);
 
     ///
     /// Retrieves the server closed monitoring callback.
     ///
     /// @return The server closed monitoring callback.
     ///
-    const std::function<void(const mongocxx::events::server_closed_event&)>& server_closed() const;
+    const std::function<void(const events::server_closed_event&)>& server_closed() const;
 
     ///
     /// Set the server description changed monitoring callback. The callback takes a reference to a
@@ -181,16 +174,14 @@ class apm {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    apm& on_server_changed(
-        std::function<void(const mongocxx::events::server_changed_event&)> server_changed);
+    apm& on_server_changed(std::function<void(const events::server_changed_event&)> server_changed);
 
     ///
     /// Retrieves the server description changed monitoring callback.
     ///
     /// @return The server description changed monitoring callback.
     ///
-    const std::function<void(const mongocxx::events::server_changed_event&)>& server_changed()
-        const;
+    const std::function<void(const events::server_changed_event&)>& server_changed() const;
 
     ///
     /// Set the topology_opening monitoring callback. The callback takes a reference to a
@@ -207,15 +198,14 @@ class apm {
     ///   method chaining.
     ///
     apm& on_topology_opening(
-        std::function<void(const mongocxx::events::topology_opening_event&)> topology_opening);
+        std::function<void(const events::topology_opening_event&)> topology_opening);
 
     ///
     /// Retrieves the topology_opening monitoring callback.
     ///
     /// @return The topology_opening monitoring callback.
     ///
-    const std::function<void(const mongocxx::events::topology_opening_event&)>& topology_opening()
-        const;
+    const std::function<void(const events::topology_opening_event&)>& topology_opening() const;
 
     ///
     /// Set the topology closed monitoring callback. The callback takes a reference to a
@@ -232,15 +222,14 @@ class apm {
     ///   method chaining.
     ///
     apm& on_topology_closed(
-        std::function<void(const mongocxx::events::topology_closed_event&)> topology_closed);
+        std::function<void(const events::topology_closed_event&)> topology_closed);
 
     ///
     /// Retrieves the topology closed monitoring callback.
     ///
     /// @return The topology closed monitoring callback.
     ///
-    const std::function<void(const mongocxx::events::topology_closed_event&)>& topology_closed()
-        const;
+    const std::function<void(const events::topology_closed_event&)>& topology_closed() const;
 
     ///
     /// Set the topology description changed monitoring callback. The callback takes a reference to
@@ -258,15 +247,14 @@ class apm {
     ///   method chaining.
     ///
     apm& on_topology_changed(
-        std::function<void(const mongocxx::events::topology_changed_event&)> topology_changed);
+        std::function<void(const events::topology_changed_event&)> topology_changed);
 
     ///
     /// Retrieves the topology description changed monitoring callback.
     ///
     /// @return The topology description changed monitoring callback.
     ///
-    const std::function<void(const mongocxx::events::topology_changed_event&)>& topology_changed()
-        const;
+    const std::function<void(const events::topology_changed_event&)>& topology_changed() const;
 
     ///
     /// Set the heartbeat started monitoring callback. The callback takes a reference to a
@@ -283,15 +271,14 @@ class apm {
     ///   method chaining.
     ///
     apm& on_heartbeat_started(
-        std::function<void(const mongocxx::events::heartbeat_started_event&)> heartbeat_started);
+        std::function<void(const events::heartbeat_started_event&)> heartbeat_started);
 
     ///
     /// Retrieves the heartbeat started monitoring callback.
     ///
     /// @return The heartbeat started monitoring callback.
     ///
-    const std::function<void(const mongocxx::events::heartbeat_started_event&)>& heartbeat_started()
-        const;
+    const std::function<void(const events::heartbeat_started_event&)>& heartbeat_started() const;
 
     ///
     /// Set the heartbeat failed monitoring callback. The callback takes a reference to a
@@ -308,15 +295,14 @@ class apm {
     ///   method chaining.
     ///
     apm& on_heartbeat_failed(
-        std::function<void(const mongocxx::events::heartbeat_failed_event&)> heartbeat_failed);
+        std::function<void(const events::heartbeat_failed_event&)> heartbeat_failed);
 
     ///
     /// Retrieves the heartbeat failed monitoring callback.
     ///
     /// @return The heartbeat failed monitoring callback.
     ///
-    const std::function<void(const mongocxx::events::heartbeat_failed_event&)>& heartbeat_failed()
-        const;
+    const std::function<void(const events::heartbeat_failed_event&)>& heartbeat_failed() const;
 
     ///
     /// Set the heartbeat succeeded monitoring callback. The callback takes a reference to a
@@ -334,30 +320,29 @@ class apm {
     ///   method chaining.
     ///
     apm& on_heartbeat_succeeded(
-        std::function<void(const mongocxx::events::heartbeat_succeeded_event&)>
-            heartbeat_succeeded);
+        std::function<void(const events::heartbeat_succeeded_event&)> heartbeat_succeeded);
 
     ///
     /// Retrieves the heartbeat succeeded monitoring callback.
     ///
     /// @return The heartbeat succeeded monitoring callback.
     ///
-    const std::function<void(const mongocxx::events::heartbeat_succeeded_event&)>&
-    heartbeat_succeeded() const;
+    const std::function<void(const events::heartbeat_succeeded_event&)>& heartbeat_succeeded()
+        const;
 
    private:
-    std::function<void(const mongocxx::events::command_started_event&)> _command_started;
-    std::function<void(const mongocxx::events::command_failed_event&)> _command_failed;
-    std::function<void(const mongocxx::events::command_succeeded_event&)> _command_succeeded;
-    std::function<void(const mongocxx::events::server_closed_event&)> _server_closed;
-    std::function<void(const mongocxx::events::server_changed_event&)> _server_changed;
-    std::function<void(const mongocxx::events::server_opening_event&)> _server_opening;
-    std::function<void(const mongocxx::events::topology_closed_event&)> _topology_closed;
-    std::function<void(const mongocxx::events::topology_changed_event&)> _topology_changed;
-    std::function<void(const mongocxx::events::topology_opening_event&)> _topology_opening;
-    std::function<void(const mongocxx::events::heartbeat_started_event&)> _heartbeat_started;
-    std::function<void(const mongocxx::events::heartbeat_failed_event&)> _heartbeat_failed;
-    std::function<void(const mongocxx::events::heartbeat_succeeded_event&)> _heartbeat_succeeded;
+    std::function<void(const events::command_started_event&)> _command_started;
+    std::function<void(const events::command_failed_event&)> _command_failed;
+    std::function<void(const events::command_succeeded_event&)> _command_succeeded;
+    std::function<void(const events::server_closed_event&)> _server_closed;
+    std::function<void(const events::server_changed_event&)> _server_changed;
+    std::function<void(const events::server_opening_event&)> _server_opening;
+    std::function<void(const events::topology_closed_event&)> _topology_closed;
+    std::function<void(const events::topology_changed_event&)> _topology_changed;
+    std::function<void(const events::topology_opening_event&)> _topology_opening;
+    std::function<void(const events::heartbeat_started_event&)> _heartbeat_started;
+    std::function<void(const events::heartbeat_failed_event&)> _heartbeat_failed;
+    std::function<void(const events::heartbeat_succeeded_event&)> _heartbeat_succeeded;
 };
 
 }  // namespace options
