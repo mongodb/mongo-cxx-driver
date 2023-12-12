@@ -23,7 +23,8 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace wip {
+namespace v_noabi {
+
 class client::impl {
    public:
     impl(mongoc_client_t* client) : client_t(client) {}
@@ -37,7 +38,7 @@ class client::impl {
     options::apm listeners;
 };
 
-}  // namespace wip
+}  // namespace v_noabi
 }  // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

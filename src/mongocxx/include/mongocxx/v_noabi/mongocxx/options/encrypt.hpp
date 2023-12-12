@@ -138,7 +138,7 @@ class encrypt {
     /// @param algorithm
     ///   An algorithm, either deterministic, random, indexed, or unindexed to use for encryption.
     ///
-    /// @note To insert or query with an indexed encrypted payload, use a mongocxx::client
+    /// @note To insert or query with an indexed encrypted payload, use a mongocxx::v_noabi::client
     /// configured with mongocxx::v_noabi::options::auto_encryption.
     /// mongocxx::v_noabi::options::auto_encryption::bypass_query_analysis may be true.
     /// mongocxx::v_noabi::options::auto_encryption::bypass_auto_encryption must be false.

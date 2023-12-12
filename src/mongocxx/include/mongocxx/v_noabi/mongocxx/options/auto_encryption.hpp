@@ -56,7 +56,7 @@ class auto_encryption {
     ///
     /// @see https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
-    auto_encryption& key_vault_client(mongocxx::client* client);
+    auto_encryption& key_vault_client(mongocxx::v_noabi::client* client);
 
     ///
     /// Gets the key vault client.
@@ -64,7 +64,7 @@ class auto_encryption {
     /// @return
     ///   An optional pointer to the key vault client.
     ///
-    const stdx::optional<mongocxx::client*>& key_vault_client() const;
+    const stdx::optional<mongocxx::v_noabi::client*>& key_vault_client() const;
 
     ///
     /// When the key vault collection is on a separate MongoDB cluster,
@@ -372,14 +372,14 @@ class auto_encryption {
     const stdx::optional<bsoncxx::document::view_or_value>& extra_options() const;
 
    private:
-    friend ::mongocxx::wip::client;
+    friend ::mongocxx::v_noabi::client;
     friend ::mongocxx::wip::pool;
 
     MONGOCXX_PRIVATE void* convert() const;
 
     bool _bypass;
     bool _bypass_query_analysis;
-    stdx::optional<mongocxx::client*> _key_vault_client;
+    stdx::optional<mongocxx::v_noabi::client*> _key_vault_client;
     stdx::optional<mongocxx::pool*> _key_vault_pool;
     stdx::optional<ns_pair> _key_vault_namespace;
     stdx::optional<bsoncxx::document::view_or_value> _kms_providers;

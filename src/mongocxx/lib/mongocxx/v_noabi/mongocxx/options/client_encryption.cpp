@@ -24,12 +24,12 @@ namespace mongocxx {
 namespace v_noabi {
 namespace options {
 
-client_encryption& client_encryption::key_vault_client(mongocxx::client* client) {
+client_encryption& client_encryption::key_vault_client(mongocxx::v_noabi::client* client) {
     _key_vault_client = client;
     return *this;
 }
 
-const stdx::optional<mongocxx::client*>& client_encryption::key_vault_client() const {
+const stdx::optional<mongocxx::v_noabi::client*>& client_encryption::key_vault_client() const {
     return _key_vault_client;
 }
 

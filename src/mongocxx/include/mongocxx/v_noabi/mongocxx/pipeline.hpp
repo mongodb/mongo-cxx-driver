@@ -544,7 +544,7 @@ class pipeline {
     bsoncxx::array::view view_array() const;
 
    private:
-    friend ::mongocxx::wip::client;
+    friend ::mongocxx::v_noabi::client;
     friend ::mongocxx::wip::collection;
     friend ::mongocxx::wip::database;
 

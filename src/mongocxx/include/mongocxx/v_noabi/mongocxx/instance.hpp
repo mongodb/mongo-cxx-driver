@@ -45,7 +45,7 @@ inline namespace wip {
 ///
 /// int main() {
 ///     mongocxx::instance inst{};
-///     mongocxx::client conn{mongocxx::uri{}};
+///     mongocxx::v_noabi::client conn{mongocxx::uri{}};
 ///     ...
 /// }
 ///
@@ -61,13 +61,13 @@ inline namespace wip {
 ///
 /// client get_client() {
 ///     mongocxx::instance inst{};
-///     mongocxx::client conn{mongocxx::uri{}};
+///     mongocxx::v_noabi::client conn{mongocxx::uri{}};
 ///
 ///     return client;
 /// } // ERROR! The instance is no longer alive after this function returns.
 ///
 /// int main() {
-///     mongocxx::client conn = get_client();
+///     mongocxx::v_noabi::client conn = get_client();
 ///     ...
 /// }
 ///

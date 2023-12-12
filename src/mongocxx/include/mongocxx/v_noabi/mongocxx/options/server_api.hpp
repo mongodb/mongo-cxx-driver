@@ -128,7 +128,7 @@ class server_api {
     version get_version() const;
 
    private:
-    friend ::mongocxx::wip::client;
+    friend ::mongocxx::v_noabi::client;
     friend ::mongocxx::wip::pool;
 
     version _version;

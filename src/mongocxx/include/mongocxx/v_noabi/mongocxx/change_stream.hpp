@@ -109,7 +109,7 @@ class change_stream {
     bsoncxx::stdx::optional<bsoncxx::document::view> get_resume_token() const;
 
    private:
-    friend ::mongocxx::wip::client;
+    friend ::mongocxx::v_noabi::client;
     friend ::mongocxx::wip::collection;
     friend ::mongocxx::wip::database;
 

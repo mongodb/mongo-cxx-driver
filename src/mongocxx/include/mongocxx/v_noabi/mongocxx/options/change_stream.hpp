@@ -258,7 +258,7 @@ class change_stream {
     change_stream& start_at_operation_time(bsoncxx::types::b_timestamp timestamp);
 
    private:
-    friend ::mongocxx::wip::client;
+    friend ::mongocxx::v_noabi::client;
     friend ::mongocxx::wip::collection;
     friend ::mongocxx::wip::database;
 

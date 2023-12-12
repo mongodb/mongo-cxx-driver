@@ -30,12 +30,12 @@ namespace options {
 
 auto_encryption::auto_encryption() noexcept : _bypass(false), _bypass_query_analysis(false) {}
 
-auto_encryption& auto_encryption::key_vault_client(mongocxx::client* client) {
+auto_encryption& auto_encryption::key_vault_client(mongocxx::v_noabi::client* client) {
     _key_vault_client = client;
     return *this;
 }
 
-const stdx::optional<mongocxx::client*>& auto_encryption::key_vault_client() const {
+const stdx::optional<mongocxx::v_noabi::client*>& auto_encryption::key_vault_client() const {
     return _key_vault_client;
 }
 

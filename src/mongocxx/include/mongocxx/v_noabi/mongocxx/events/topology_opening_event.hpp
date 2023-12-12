@@ -41,7 +41,7 @@ class topology_opening_event {
     ~topology_opening_event();
 
     ///
-    /// An opaque id, unique to this topology for this mongocxx::client or mongocxx::pool.
+    /// An opaque id, unique to this topology for this mongocxx::v_noabi::client or mongocxx::pool.
     ///
     /// @return The id.
     ///

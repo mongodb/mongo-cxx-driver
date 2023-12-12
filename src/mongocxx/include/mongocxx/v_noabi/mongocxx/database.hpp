@@ -626,10 +626,11 @@ class database {
 
    private:
     friend ::mongocxx::v_noabi::client_encryption;
-    friend ::mongocxx::wip::client;
+    friend ::mongocxx::v_noabi::client;
     friend ::mongocxx::wip::collection;
 
-    MONGOCXX_PRIVATE database(const mongocxx::client& client, bsoncxx::string::view_or_value name);
+    MONGOCXX_PRIVATE database(const mongocxx::v_noabi::client& client,
+                              bsoncxx::string::view_or_value name);
 
     MONGOCXX_PRIVATE cursor _aggregate(const client_session* session,
                                        const pipeline& pipeline,

@@ -38,7 +38,7 @@ class server_description {
     ~server_description();
 
     ///
-    /// An opaque id, unique to this server for this mongocxx::client or mongocxx::pool.
+    /// An opaque id, unique to this server for this mongocxx::v_noabi::client or mongocxx::pool.
     ///
     /// @return The id.
     ///

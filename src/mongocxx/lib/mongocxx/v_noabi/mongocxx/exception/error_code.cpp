@@ -35,7 +35,8 @@ class error_category final : public std::error_category {
     std::string message(int code) const noexcept override {
         switch (static_cast<error_code>(code)) {
             case error_code::k_invalid_client_object:
-                return "invalid use of default constructed or moved-from mongocxx::client object";
+                return "invalid use of default constructed or moved-from mongocxx::v_noabi::client "
+                       "object";
             case error_code::k_invalid_collection_object:
                 return "invalid use of default constructed or moved-from mongocxx::collection "
                        "object";

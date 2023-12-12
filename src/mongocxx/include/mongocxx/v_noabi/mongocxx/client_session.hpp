@@ -75,7 +75,7 @@ class client_session {
     ///
     /// Gets the client that started this session.
     ///
-    const mongocxx::client& client() const noexcept;
+    const mongocxx::v_noabi::client& client() const noexcept;
 
     ///
     /// Gets the options this session was created with.
@@ -194,7 +194,7 @@ class client_session {
 
    private:
     friend ::mongocxx::v_noabi::bulk_write;
-    friend ::mongocxx::wip::client;
+    friend ::mongocxx::v_noabi::client;
     friend ::mongocxx::wip::collection;
     friend ::mongocxx::wip::database;
     friend ::mongocxx::wip::index_view;
@@ -202,7 +202,7 @@ class client_session {
 
     class MONGOCXX_PRIVATE impl;
 
-    MONGOCXX_PRIVATE client_session(const mongocxx::client* client,
+    MONGOCXX_PRIVATE client_session(const mongocxx::v_noabi::client* client,
                                     const options::client_session& options);
 
     MONGOCXX_PRIVATE impl& _get_impl();

@@ -155,7 +155,7 @@ class read_concern {
     bsoncxx::document::value to_document() const;
 
    private:
-    friend ::mongocxx::wip::client;
+    friend ::mongocxx::v_noabi::client;
     friend ::mongocxx::wip::collection;
     friend ::mongocxx::wip::database;
     friend ::mongocxx::v_noabi::options::transaction;

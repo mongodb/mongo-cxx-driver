@@ -280,7 +280,7 @@ class read_preference {
     const stdx::optional<bsoncxx::document::view> hedge() const;
 
    private:
-    friend ::mongocxx::wip::client;
+    friend ::mongocxx::v_noabi::client;
     friend ::mongocxx::wip::collection;
     friend ::mongocxx::wip::database;
     friend ::mongocxx::v_noabi::events::topology_description;

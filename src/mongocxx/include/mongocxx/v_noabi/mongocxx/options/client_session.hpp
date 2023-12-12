@@ -28,7 +28,7 @@ namespace v_noabi {
 namespace options {
 
 ///
-/// Class representing the optional arguments to mongocxx::client::start_session.
+/// Class representing the optional arguments to mongocxx::v_noabi::client::start_session.
 ///
 class client_session {
    public:
@@ -70,7 +70,7 @@ class client_session {
     ///
     /// @note Snapshot reads and causal consistency are mutually exclusive: only one or the
     /// other may be active at a time. Attempting to do so will result in an error being thrown
-    /// by mongocxx::client::start_session.
+    /// by mongocxx::v_noabi::client::start_session.
     ///
     client_session& snapshot(bool enable_snapshot_reads) noexcept;
 

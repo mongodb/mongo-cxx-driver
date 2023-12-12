@@ -38,7 +38,8 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace wip {
+namespace v_noabi {
+
 ///
 /// Class representing a client connection to MongoDB.
 ///
@@ -51,8 +52,8 @@ inline namespace wip {
 ///
 /// Example:
 /// @code
-///   mongocxx::client mongo_client{mongocxx::uri{}};
-///   mongocxx::client mongo_client{mongocxx::uri{"mongodb://localhost:27017"}};
+///   mongocxx::v_noabi::client mongo_client{mongocxx::uri{}};
+///   mongocxx::v_noabi::client mongo_client{mongocxx::uri{"mongodb://localhost:27017"}};
 /// @endcode
 ///
 /// Note that client is not thread-safe. See
@@ -455,7 +456,7 @@ MONGOCXX_INLINE mongocxx::database client::operator[](bsoncxx::string::view_or_v
     return database(name);
 }
 
-}  // namespace wip
+}  // namespace v_noabi
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

@@ -48,7 +48,7 @@ class client_encryption {
     ///
     /// @see https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
-    client_encryption& key_vault_client(mongocxx::client* client);
+    client_encryption& key_vault_client(mongocxx::v_noabi::client* client);
 
     ///
     /// Gets the key vault client.
@@ -56,7 +56,7 @@ class client_encryption {
     /// @return
     ///   An optional pointer to the key vault client.
     ///
-    const stdx::optional<mongocxx::client*>& key_vault_client() const;
+    const stdx::optional<mongocxx::v_noabi::client*>& key_vault_client() const;
 
     ///
     /// Sets the namespace to use to access the key vault collection, which
@@ -176,7 +176,7 @@ class client_encryption {
 
     MONGOCXX_PRIVATE void* convert() const;
 
-    stdx::optional<mongocxx::client*> _key_vault_client;
+    stdx::optional<mongocxx::v_noabi::client*> _key_vault_client;
     stdx::optional<ns_pair> _key_vault_namespace;
     stdx::optional<bsoncxx::document::view_or_value> _kms_providers;
     stdx::optional<bsoncxx::document::view_or_value> _tls_opts;

@@ -24,7 +24,7 @@ namespace mongocxx {
 namespace v_noabi {
 
 // Private constructors.
-client_session::client_session(const mongocxx::client* client,
+client_session::client_session(const mongocxx::v_noabi::client* client,
                                const mongocxx::v_noabi::options::client_session& options)
     : _impl(stdx::make_unique<impl>(client, options)) {}
 
@@ -34,7 +34,7 @@ client_session& client_session::operator=(client_session&&) noexcept = default;
 
 client_session::~client_session() noexcept = default;
 
-const mongocxx::client& client_session::client() const noexcept {
+const mongocxx::v_noabi::client& client_session::client() const noexcept {
     return _impl->client();
 }
 
