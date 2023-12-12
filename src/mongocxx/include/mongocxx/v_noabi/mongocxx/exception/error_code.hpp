@@ -87,10 +87,10 @@ enum class error_code : std::int32_t {
     /// The mongocxx::instance has been destroyed.
     k_instance_destroyed,
 
-    /// mongocxx::client.create_session failed to create a mongocxx::client_session.
+    /// mongocxx::client.create_session failed to create a mongocxx::v_noabi::client_session.
     k_cannot_create_session,
 
-    /// A failure attempting to pass a mongocxx::client_session to a method.
+    /// A failure attempting to pass a mongocxx::v_noabi::client_session to a method.
     k_invalid_session,
 
     /// A moved-from mongocxx::v_noabi::options::transaction object has been used.

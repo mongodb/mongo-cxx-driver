@@ -275,7 +275,7 @@ std::vector<std::string> client::list_database_names(
     return res;
 }
 
-mongocxx::client_session client::start_session(
+mongocxx::v_noabi::client_session client::start_session(
     const mongocxx::v_noabi::options::client_session& options) {
     return client_session(this, options);
 }

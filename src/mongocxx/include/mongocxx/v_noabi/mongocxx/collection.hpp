@@ -167,7 +167,7 @@ class collection {
     /// Runs an aggregation framework pipeline against this collection.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the aggregation.
+    ///   The mongocxx::v_noabi::client_session with which to perform the aggregation.
     /// @param pipeline
     ///   The pipeline of aggregation operations to perform.
     /// @param options
@@ -210,7 +210,7 @@ class collection {
     /// The lifetime of the bulk_write is independent of the collection.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the bulk operation.
+    ///   The mongocxx::v_noabi::client_session with which to perform the bulk operation.
     /// @param options
     ///   Optional arguments; see mongocxx::v_noabi::options::bulk_write.
     ///
@@ -252,7 +252,7 @@ class collection {
     /// Sends a write to the server as a bulk write operation.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the bulk operation.
+    ///   The mongocxx::v_noabi::client_session with which to perform the bulk operation.
     /// @param write
     ///   A model::write.
     /// @param options
@@ -313,7 +313,7 @@ class collection {
     ///   type of model::write.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the bulk operation.
+    ///   The mongocxx::v_noabi::client_session with which to perform the bulk operation.
     /// @param writes
     ///   A container of model::write.
     /// @param options
@@ -376,7 +376,7 @@ class collection {
     ///   type of model::write.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the bulk operation.
+    ///   The mongocxx::v_noabi::client_session with which to perform the bulk operation.
     /// @param begin
     ///   Iterator pointing to the first model::write to send.
     /// @param end
@@ -432,7 +432,7 @@ class collection {
     /// Counts the number of documents matching the provided filter.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the count.
+    ///   The mongocxx::v_noabi::client_session with which to perform the count.
     /// @param filter
     ///   The filter that documents must match in order to be counted.
     /// @param options
@@ -509,7 +509,7 @@ class collection {
     /// Creates an index over the collection for the provided keys with the provided options.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the index creation.
+    ///   The mongocxx::v_noabi::client_session with which to perform the index creation.
     /// @param keys
     ///   The keys for the index: @c {a: 1, b: -1}
     /// @param index_options
@@ -562,7 +562,7 @@ class collection {
     /// Deletes all matching documents from the collection.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the deletion.
+    ///   The mongocxx::v_noabi::client_session with which to perform the deletion.
     /// @param filter
     ///   Document view representing the data to be deleted.
     /// @param options
@@ -611,7 +611,7 @@ class collection {
     /// Deletes a single matching document from the collection.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the deletion.
+    ///   The mongocxx::v_noabi::client_session with which to perform the deletion.
     /// @param filter
     ///   Document view representing the data to be deleted.
     /// @param options
@@ -660,7 +660,7 @@ class collection {
     /// Finds the distinct values for a specified field across the collection.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the operation.
+    ///   The mongocxx::v_noabi::client_session with which to perform the operation.
     /// @param name
     ///   The field for which the distinct values will be found.
     /// @param filter
@@ -711,7 +711,7 @@ class collection {
     /// Drops this collection and all its contained documents from the database.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the drop.
+    ///   The mongocxx::v_noabi::client_session with which to perform the drop.
     /// @param write_concern (optional)
     ///   The write concern to use for this operation. Defaults to the collection wide write
     ///   concern if none is provided.
@@ -761,7 +761,7 @@ class collection {
     /// Finds the documents in this collection which match the provided filter.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the query.
+    ///   The mongocxx::v_noabi::client_session with which to perform the query.
     /// @param filter
     ///   Document view representing a document that should match the query.
     /// @param options
@@ -803,7 +803,7 @@ class collection {
     /// Finds a single document in this collection that match the provided filter.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the query.
+    ///   The mongocxx::v_noabi::client_session with which to perform the query.
     /// @param filter
     ///   Document view representing a document that should match the query.
     /// @param options
@@ -851,7 +851,7 @@ class collection {
     /// Finds a single document matching the filter, deletes it, and returns the original.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the operation.
+    ///   The mongocxx::v_noabi::client_session with which to perform the operation.
     /// @param filter
     ///   Document view representing a document that should be deleted.
     /// @param options
@@ -907,7 +907,7 @@ class collection {
     /// or the replacement document.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the operation.
+    ///   The mongocxx::v_noabi::client_session with which to perform the operation.
     /// @param filter
     ///   Document view representing a document that should be replaced.
     /// @param replacement
@@ -1016,7 +1016,7 @@ class collection {
     /// or the newly-updated document.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the operation.
+    ///   The mongocxx::v_noabi::client_session with which to perform the operation.
     /// @param filter
     ///   Document view representing a document that should be updated.
     /// @param update
@@ -1044,7 +1044,7 @@ class collection {
     /// or the newly-updated document.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the operation.
+    ///   The mongocxx::v_noabi::client_session with which to perform the operation.
     /// @param filter
     ///   Document view representing a document that should be updated.
     /// @param update
@@ -1072,7 +1072,7 @@ class collection {
     /// or the newly-updated document.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the operation.
+    ///   The mongocxx::v_noabi::client_session with which to perform the operation.
     /// @param filter
     ///   Document view representing a document that should be updated.
     /// @param update
@@ -1122,7 +1122,7 @@ class collection {
     /// (@c _id field) one will be generated for it.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the insert.
+    ///   The mongocxx::v_noabi::client_session with which to perform the insert.
     /// @param document
     ///   The document to insert.
     /// @param options
@@ -1178,7 +1178,7 @@ class collection {
     ///   type of model::write.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the inserts.
+    ///   The mongocxx::v_noabi::client_session with which to perform the inserts.
     /// @param container
     ///   Container of a documents to insert.
     /// @param options
@@ -1236,7 +1236,7 @@ class collection {
     ///   type of bsoncxx::document::view.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the inserts.
+    ///   The mongocxx::v_noabi::client_session with which to perform the inserts.
     /// @param begin
     ///   Iterator pointing to the first document to be inserted.
     /// @param end
@@ -1275,7 +1275,7 @@ class collection {
     /// Returns a list of the indexes currently on this collection.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the operation.
+    ///   The mongocxx::v_noabi::client_session with which to perform the operation.
     ///
     /// @return Cursor yielding the index specifications.
     ///
@@ -1324,7 +1324,7 @@ class collection {
     /// Rename this collection.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the rename.
+    ///   The mongocxx::v_noabi::client_session with which to perform the rename.
     /// @param new_name The new name to assign to the collection.
     /// @param drop_target_before_rename Whether to overwrite any
     ///   existing collections called new_name. The default is false.
@@ -1422,7 +1422,7 @@ class collection {
     /// Replaces a single document matching the provided filter in this collection.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the replace.
+    ///   The mongocxx::v_noabi::client_session with which to perform the replace.
     /// @param filter
     ///   Document representing the match criteria.
     /// @param replacement
@@ -1524,7 +1524,7 @@ class collection {
     /// Updates multiple documents matching the provided filter in this collection.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the update.
+    ///   The mongocxx::v_noabi::client_session with which to perform the update.
     /// @param filter
     ///   Document representing the match criteria.
     /// @param update
@@ -1551,7 +1551,7 @@ class collection {
     /// Updates multiple documents matching the provided filter in this collection.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the update.
+    ///   The mongocxx::v_noabi::client_session with which to perform the update.
     /// @param filter
     ///   Document representing the match criteria.
     /// @param update
@@ -1578,7 +1578,7 @@ class collection {
     /// Updates multiple documents matching the provided filter in this collection.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the update.
+    ///   The mongocxx::v_noabi::client_session with which to perform the update.
     /// @param filter
     ///   Document representing the match criteria.
     /// @param update
@@ -1683,7 +1683,7 @@ class collection {
     /// Updates a single document matching the provided filter in this collection.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the update.
+    ///   The mongocxx::v_noabi::client_session with which to perform the update.
     /// @param filter
     ///   Document representing the match criteria.
     /// @param update
@@ -1710,7 +1710,7 @@ class collection {
     /// Updates a single document matching the provided filter in this collection.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the update.
+    ///   The mongocxx::v_noabi::client_session with which to perform the update.
     /// @param filter
     ///   Document representing the match criteria.
     /// @param update
@@ -1737,7 +1737,7 @@ class collection {
     /// Updates a single document matching the provided filter in this collection.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the update.
+    ///   The mongocxx::v_noabi::client_session with which to perform the update.
     /// @param filter
     ///   Document representing the match criteria.
     /// @param update
@@ -1802,7 +1802,7 @@ class collection {
 
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the watch operation.
+    ///   The mongocxx::v_noabi::client_session with which to perform the watch operation.
     /// @param options
     ///   The options to use when creating the change stream.
     ///
@@ -1835,7 +1835,7 @@ class collection {
     /// Gets a change stream on this collection.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the watch operation.
+    ///   The mongocxx::v_noabi::client_session with which to perform the watch operation.
     /// @param pipe
     ///   The aggregation pipeline to be used on the change notifications.
     /// @param options

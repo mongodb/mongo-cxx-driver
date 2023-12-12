@@ -147,7 +147,7 @@ class transaction {
     stdx::optional<std::chrono::milliseconds> max_commit_time_ms() const;
 
    private:
-    friend ::mongocxx::wip::client_session;
+    friend ::mongocxx::v_noabi::client_session;
 
     class MONGOCXX_PRIVATE impl;
 

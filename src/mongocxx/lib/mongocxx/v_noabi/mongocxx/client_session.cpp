@@ -21,7 +21,8 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace wip {
+namespace v_noabi {
+
 // Private constructors.
 client_session::client_session(const mongocxx::client* client,
                                const mongocxx::v_noabi::options::client_session& options)
@@ -100,5 +101,5 @@ client_session::impl& client_session::_get_impl() {
     return const_cast<client_session::impl&>(cthis->_get_impl());
 }
 
-}  // namespace wip
+}  // namespace v_noabi
 }  // namespace mongocxx

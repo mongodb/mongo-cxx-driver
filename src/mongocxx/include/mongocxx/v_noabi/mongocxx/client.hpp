@@ -234,7 +234,7 @@ class client {
     /// Enumerates the databases in the client.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the aggregation.
+    ///   The mongocxx::v_noabi::client_session with which to perform the aggregation.
     ///
     /// @return A mongocxx::cursor containing a BSON document for each
     ///   database. Each document contains a name field with the database
@@ -272,7 +272,7 @@ class client {
     /// Enumerates the databases in the client.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the aggregation.
+    ///   The mongocxx::v_noabi::client_session with which to perform the aggregation.
     ///
     /// @param opts
     ///   Options passed directly to the 'listDatabases' command.
@@ -311,7 +311,7 @@ class client {
     /// Queries the MongoDB server for a list of known databases.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the aggregation.
+    ///   The mongocxx::v_noabi::client_session with which to perform the aggregation.
     ///
     /// @param filter
     ///   An optional query expression to filter the returned database names.
@@ -333,7 +333,8 @@ class client {
     ///
     /// Create a client session for a sequence of operations.
     ///
-    /// @return A client_session object. See `mongocxx::client_session` for more information.
+    /// @return A client_session object. See `mongocxx::v_noabi::client_session` for more
+    /// information.
     ///
     /// @throws mongocxx::v_noabi::operation_exception if the driver is not built with crypto
     /// support, if options is misconfigured, or if the session is configured with options that the
@@ -359,7 +360,7 @@ class client {
 
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the watch operation.
+    ///   The mongocxx::v_noabi::client_session with which to perform the watch operation.
     /// @param options
     ///   The options to use when creating the change stream.
     ///
@@ -392,7 +393,7 @@ class client {
     /// Gets a change stream on this client.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the watch operation.
+    ///   The mongocxx::v_noabi::client_session with which to perform the watch operation.
     /// @param pipe
     ///   The aggregation pipeline to be used on the change notifications.
     /// @param options
@@ -429,7 +430,7 @@ class client {
     void reset();
 
    private:
-    friend ::mongocxx::wip::client_session;
+    friend ::mongocxx::v_noabi::client_session;
     friend ::mongocxx::wip::collection;
     friend ::mongocxx::wip::database;
     friend ::mongocxx::v_noabi::options::auto_encryption;

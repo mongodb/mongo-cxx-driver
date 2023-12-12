@@ -114,7 +114,7 @@ class database {
     /// such as $currentOp and $listLocalSessions.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the aggregation.
+    ///   The mongocxx::v_noabi::client_session with which to perform the aggregation.
     /// @param pipeline
     ///   The pipeline of aggregation operations to perform.
     /// @param options
@@ -157,7 +157,7 @@ class database {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/method/db.runCommand/
     ///
-    /// @param session The mongocxx::client_session with which to run the command.
+    /// @param session The mongocxx::v_noabi::client_session with which to run the command.
     /// @param command document representing the command to be run.
     /// @return the result of executing the command.
     ///
@@ -219,7 +219,7 @@ class database {
     /// https://www.mongodb.com/docs/manual/core/timeseries-collections/
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the create operation.
+    ///   The mongocxx::v_noabi::client_session with which to perform the create operation.
     /// @param name
     ///   the new collection's name.
     /// @param collection_options
@@ -280,7 +280,7 @@ class database {
     ///   https://www.mongodb.com/docs/manual/reference/command/create/
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the create operation.
+    ///   The mongocxx::v_noabi::client_session with which to perform the create operation.
     /// @param name
     ///   the new collection's name.
     /// @param collection_options
@@ -311,7 +311,7 @@ class database {
     ///   https://www.mongodb.com/docs/manual/reference/command/create/
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the create operation.
+    ///   The mongocxx::v_noabi::client_session with which to perform the create operation.
     /// @param name
     ///   the new collection's name.
     /// @param collection_options
@@ -354,7 +354,7 @@ class database {
     /// Drops the database and all its collections.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the aggregation.
+    ///   The mongocxx::v_noabi::client_session with which to perform the aggregation.
     /// @param write_concern (optional)
     ///   The write concern to be used for this operation. If not passed here, the write concern
     ///   set on the database will be used.
@@ -401,7 +401,7 @@ class database {
     /// Enumerates the collections in this database.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the aggregation.
+    ///   The mongocxx::v_noabi::client_session with which to perform the aggregation.
     /// @param filter
     ///   An optional query expression to filter the returned collections.
     ///
@@ -431,7 +431,7 @@ class database {
     /// Enumerates the collection names in this database.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the aggregation.
+    ///   The mongocxx::v_noabi::client_session with which to perform the aggregation.
     /// @param filter
     ///   An optional query expression to filter the returned collection names.
     ///
@@ -572,7 +572,7 @@ class database {
 
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the watch operation.
+    ///   The mongocxx::v_noabi::client_session with which to perform the watch operation.
     /// @param options
     ///   The options to use when creating the change stream.
     ///
@@ -605,7 +605,7 @@ class database {
     /// Gets a change stream on this database.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the watch operation.
+    ///   The mongocxx::v_noabi::client_session with which to perform the watch operation.
     /// @param pipe
     ///   The aggregation pipeline to be used on the change notifications.
     /// @param options

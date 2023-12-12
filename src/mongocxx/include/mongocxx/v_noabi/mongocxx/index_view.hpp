@@ -52,7 +52,7 @@ class index_view {
     /// Returns a cursor over all the indexes.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the list operation.
+    ///   The mongocxx::v_noabi::client_session with which to perform the list operation.
     ///
     cursor list(const client_session& session);
 
@@ -92,7 +92,7 @@ class index_view {
     /// Creates an index. A convenience method that calls create_many.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the operation.
+    ///   The mongocxx::v_noabi::client_session with which to perform the operation.
     /// @param keys
     ///    A document containing the index keys and their corresponding index types.
     /// @param index_options
@@ -148,7 +148,7 @@ class index_view {
     /// Creates an index. A convenience method that calls create_many.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the operation.
+    ///   The mongocxx::v_noabi::client_session with which to perform the operation.
     /// @param index
     ///    Index_model describing the index being created.
     /// @param options
@@ -201,7 +201,7 @@ class index_view {
     /// Adds a container of indexes to the collection.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the operation.
+    ///   The mongocxx::v_noabi::client_session with which to perform the operation.
     /// @param indexes
     ///   std::vector containing index models describing the indexes being created.
     /// @param options
@@ -251,7 +251,7 @@ class index_view {
     /// Drops a single index by name.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the drop.
+    ///   The mongocxx::v_noabi::client_session with which to perform the drop.
     /// @param name
     ///    The name of the index being dropped.
     /// @param options
@@ -305,7 +305,7 @@ class index_view {
     /// Attempts to drop a single index from the collection given the keys and options.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the drop.
+    ///   The mongocxx::v_noabi::client_session with which to perform the drop.
     /// @param keys
     ///    A document containing the index keys and their corresponding index types. If no name
     ///    option is present in the options, a name based on the keys will be used.
@@ -361,7 +361,7 @@ class index_view {
     /// Attempts to drop a single index from the collection given an index model.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the drop.
+    ///   The mongocxx::v_noabi::client_session with which to perform the drop.
     /// @param index
     ///    An index model describing the index being dropped.
     /// @param options
@@ -405,7 +405,7 @@ class index_view {
     /// Drops all indexes in the collection.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the drop.
+    ///   The mongocxx::v_noabi::client_session with which to perform the drop.
     /// @param options
     ///    Optional arguments for the overall operation, see mongocxx::v_noabi::options::index_view.
     ///

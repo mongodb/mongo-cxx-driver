@@ -31,8 +31,10 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace wip {
+namespace v_noabi {
+
 namespace {
+
 struct with_transaction_ctx {
     client_session* parent;
     client_session::with_transaction_cb cb;
@@ -249,7 +251,7 @@ class client_session::impl {
     bson_t _empty_cluster_time = BSON_INITIALIZER;
 };
 
-}  // namespace wip
+}  // namespace v_noabi
 }  // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

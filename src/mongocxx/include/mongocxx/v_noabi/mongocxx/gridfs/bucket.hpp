@@ -135,8 +135,8 @@ class bucket {
     /// automatically generated as an ObjectId.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the upload. The client session must
-    ///   remain valid for the lifetime of the uploader.
+    ///   The mongocxx::v_noabi::client_session with which to perform the upload. The client session
+    ///   must remain valid for the lifetime of the uploader.
     ///
     /// @param filename
     ///   The name of the file to be uploaded. A bucket can contain multiple files with the same
@@ -205,8 +205,8 @@ class bucket {
     /// Opens a gridfs::uploader to create a new GridFS file.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the upload. The client session must
-    ///   remain valid for the lifetime of the uploader.
+    ///   The mongocxx::v_noabi::client_session with which to perform the upload. The client session
+    ///   must remain valid for the lifetime of the uploader.
     ///
     /// @param id
     ///   The unique id of the file being uploaded.
@@ -293,7 +293,7 @@ class bucket {
     /// be automatically generated as an ObjectId.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the upload.
+    ///   The mongocxx::v_noabi::client_session with which to perform the upload.
     ///
     /// @param filename
     ///   The name of the file to be uploaded. A bucket can contain multiple files with the same
@@ -393,7 +393,7 @@ class bucket {
     /// stream.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the upload.
+    ///   The mongocxx::v_noabi::client_session with which to perform the upload.
     ///
     /// @param id
     ///   A unique id for the file being uploaded.
@@ -464,8 +464,8 @@ class bucket {
     /// Opens a gridfs::downloader to read a GridFS file.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the download. The client session must
-    ///   remain valid for the lifetime of the downloader.
+    ///   The mongocxx::v_noabi::client_session with which to perform the download. The client
+    ///   session must remain valid for the lifetime of the downloader.
     ///
     /// @param id
     ///   The id of the file to read.
@@ -524,7 +524,7 @@ class bucket {
     /// Downloads the contents of a stored GridFS file from the bucket and writes it to a stream.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the download.
+    ///   The mongocxx::v_noabi::client_session with which to perform the download.
     ///
     /// @param id
     ///   The id of the file to read.
@@ -583,7 +583,7 @@ class bucket {
     /// Deletes a GridFS file from the bucket.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the delete.
+    ///   The mongocxx::v_noabi::client_session with which to perform the delete.
     ///
     /// @param id
     ///   The id of the file to be deleted.
@@ -624,8 +624,8 @@ class bucket {
     /// Finds the documents in the files collection of the bucket which match the provided filter.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the query. The client session must
-    ///   remain valid for the lifetime of the cursor.
+    ///   The mongocxx::v_noabi::client_session with which to perform the query. The client session
+    ///   must remain valid for the lifetime of the cursor.
     ///
     /// @param filter
     ///   Document view representing a document that should match the query.

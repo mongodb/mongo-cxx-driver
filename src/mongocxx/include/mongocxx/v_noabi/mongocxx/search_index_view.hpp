@@ -45,7 +45,7 @@ class search_index_view {
     /// Returns a cursor over all the search indexes.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the list operation.
+    ///   The mongocxx::v_noabi::client_session with which to perform the list operation.
     /// @param options
     ///   Options included in the aggregate operation.
     ///
@@ -71,7 +71,7 @@ class search_index_view {
     /// Returns a cursor over all the search indexes.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the list operation.
+    ///   The mongocxx::v_noabi::client_session with which to perform the list operation.
     /// @param name
     ///   The name of the search index to find.
     /// @param options
@@ -103,7 +103,7 @@ class search_index_view {
     /// This is a convenience method for creating a single search index with a default name.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the operation.
+    ///   The mongocxx::v_noabi::client_session with which to perform the operation.
     /// @param definition
     ///    The document describing the search index to be created.
     ///
@@ -129,7 +129,7 @@ class search_index_view {
     /// This is a convenience method for creating a single search index.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the operation.
+    ///   The mongocxx::v_noabi::client_session with which to perform the operation.
     /// @param name
     ///   The name of the search index to create.
     /// @param definition
@@ -155,7 +155,7 @@ class search_index_view {
     /// This is a convenience method for creating a single search index.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the operation.
+    ///   The mongocxx::v_noabi::client_session with which to perform the operation.
     /// @param model
     ///   The search index model to create.
     ///
@@ -183,7 +183,7 @@ class search_index_view {
     /// Creates multiple search indexes in the collection.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the operation.
+    ///   The mongocxx::v_noabi::client_session with which to perform the operation.
     /// @param models
     ///   The search index models to create.
     ///
@@ -210,7 +210,7 @@ class search_index_view {
     /// Drops a single search index from the collection by the index name.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the operation.
+    ///   The mongocxx::v_noabi::client_session with which to perform the operation.
     /// @param name
     ///   The name of the search index to drop.
     ///
@@ -237,7 +237,7 @@ class search_index_view {
     /// Updates a single search index from the collection by the search index name.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the operation.
+    ///   The mongocxx::v_noabi::client_session with which to perform the operation.
     /// @param name
     ///   The name of the search index to update.
     /// @param definition

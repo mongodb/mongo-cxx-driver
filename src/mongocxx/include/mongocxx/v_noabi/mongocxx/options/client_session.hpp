@@ -99,7 +99,7 @@ class client_session {
     const stdx::optional<transaction>& default_transaction_opts() const;
 
    private:
-    friend ::mongocxx::wip::client_session;
+    friend ::mongocxx::v_noabi::client_session;
 
     stdx::optional<bool> _causal_consistency;
     stdx::optional<bool> _enable_snapshot_reads;
