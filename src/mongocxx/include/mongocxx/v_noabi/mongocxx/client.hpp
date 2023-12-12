@@ -52,8 +52,8 @@ namespace v_noabi {
 ///
 /// Example:
 /// @code
-///   mongocxx::v_noabi::client mongo_client{mongocxx::uri{}};
-///   mongocxx::v_noabi::client mongo_client{mongocxx::uri{"mongodb://localhost:27017"}};
+///   mongocxx::v_noabi::client mongo_client{mongocxx::v_noabi::uri{}};
+///   mongocxx::v_noabi::client mongo_client{mongocxx::v_noabi::uri{"mongodb://localhost:27017"}};
 /// @endcode
 ///
 /// Note that client is not thread-safe. See
@@ -78,7 +78,8 @@ class client {
     /// @throws mongocxx::v_noabi::exception if invalid options are provided
     /// (whether from the URI or provided client options).
     ///
-    client(const mongocxx::uri& mongodb_uri, const options::client& options = options::client());
+    client(const mongocxx::v_noabi::uri& mongodb_uri,
+           const options::client& options = options::client());
 
     ///
     /// Move constructs a client.
@@ -160,7 +161,7 @@ class client {
     ///
     /// @return The @c uri that this client was created with.
     ///
-    mongocxx::uri uri() const;
+    mongocxx::v_noabi::uri uri() const;
 
     ///
     /// Sets the write concern for this client.

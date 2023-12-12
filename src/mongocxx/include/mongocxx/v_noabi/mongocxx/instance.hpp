@@ -46,7 +46,7 @@ namespace v_noabi {
 ///
 /// int main() {
 ///     mongocxx::v_noabi::instance inst{};
-///     mongocxx::v_noabi::client conn{mongocxx::uri{}};
+///     mongocxx::v_noabi::client conn{mongocxx::v_noabi::uri{}};
 ///     ...
 /// }
 ///
@@ -62,7 +62,7 @@ namespace v_noabi {
 ///
 /// client get_client() {
 ///     mongocxx::v_noabi::instance inst{};
-///     mongocxx::v_noabi::client conn{mongocxx::uri{}};
+///     mongocxx::v_noabi::client conn{mongocxx::v_noabi::uri{}};
 ///
 ///     return client;
 /// } // ERROR! The instance is no longer alive after this function returns.

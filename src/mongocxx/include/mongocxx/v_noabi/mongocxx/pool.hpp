@@ -59,7 +59,7 @@ class pool {
     /// @throws mongocxx::v_noabi::exception if invalid options are provided (whether from the URI
     /// or
     ///  provided client options).
-    explicit pool(const uri& mongodb_uri = mongocxx::uri(),
+    explicit pool(const uri& mongodb_uri = mongocxx::v_noabi::uri(),
                   const options::pool& options = options::pool());
 
     ///

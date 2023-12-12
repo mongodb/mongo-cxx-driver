@@ -52,7 +52,7 @@ namespace gridfs {
 ///
 /// Example of how obtain the default GridFS bucket for a given database:
 /// @code
-///   mongocxx::v_noabi::client mongo_client{mongocxx::uri{}};
+///   mongocxx::v_noabi::client mongo_client{mongocxx::v_noabi::uri{}};
 ///   auto gridfs_bucket = mongo_client["database"].gridfs_bucket();
 /// @endcode
 ///

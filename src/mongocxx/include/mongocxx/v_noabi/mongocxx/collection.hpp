@@ -79,7 +79,7 @@ namespace v_noabi {
 /// Example:
 /// @code
 ///   // Connect and get a collection.
-///   mongocxx::v_noabi::client mongo_client{mongocxx::uri{}};
+///   mongocxx::v_noabi::client mongo_client{mongocxx::v_noabi::uri{}};
 ///   auto coll = mongo_client["database"]["collection"];
 /// @endcode
 ///

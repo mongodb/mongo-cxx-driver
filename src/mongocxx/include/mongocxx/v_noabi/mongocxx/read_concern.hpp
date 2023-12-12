@@ -160,7 +160,7 @@ class read_concern {
     friend ::mongocxx::v_noabi::collection;
     friend ::mongocxx::v_noabi::database;
     friend ::mongocxx::v_noabi::options::transaction;
-    friend ::mongocxx::wip::uri;
+    friend ::mongocxx::v_noabi::uri;
 
     ///
     /// @{
