@@ -24,7 +24,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace wip {
+namespace v_noabi {
 namespace gridfs {
 
 class downloader::impl {
@@ -110,7 +110,7 @@ class downloader::impl {
 };
 
 }  // namespace gridfs
-}  // namespace wip
+}  // namespace v_noabi
 }  // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

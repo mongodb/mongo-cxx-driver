@@ -29,15 +29,17 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace {
+
 std::size_t chunks_collection_documents_max_length(std::size_t chunk_size) {
     // 16 * 1000 * 1000 is used instead of 16 * 1024 * 1024 to ensure that the command document sent
     // to the server has space for the other fields.
     return 16 * 1000 * 1000 / chunk_size;
 }
+
 }  // namespace
 
 namespace mongocxx {
-inline namespace wip {
+namespace v_noabi {
 namespace gridfs {
 
 uploader::uploader(const client_session* session,
@@ -210,5 +212,5 @@ uploader::impl& uploader::_get_impl() {
 }
 
 }  // namespace gridfs
-}  // namespace wip
+}  // namespace v_noabi
 }  // namespace mongocxx

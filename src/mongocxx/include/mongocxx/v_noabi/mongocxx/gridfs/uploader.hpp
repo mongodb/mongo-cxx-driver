@@ -34,7 +34,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace wip {
+namespace v_noabi {
 namespace gridfs {
 
 ///
@@ -126,7 +126,7 @@ class uploader {
     std::int32_t chunk_size() const;
 
    private:
-    friend ::mongocxx::wip::gridfs::bucket;
+    friend ::mongocxx::v_noabi::gridfs::bucket;
 
     //
     // Constructs a new uploader stream.
@@ -169,7 +169,7 @@ class uploader {
 };
 
 }  // namespace gridfs
-}  // namespace wip
+}  // namespace v_noabi
 }  // namespace mongocxx
 
 // CXX-2770: missing include of postlude header.

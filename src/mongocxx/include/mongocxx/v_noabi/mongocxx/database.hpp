@@ -551,7 +551,7 @@ class database {
     ///
     /// @throws mongocxx::v_noabi::logic_error if `options` are invalid.
     ///
-    mongocxx::gridfs::bucket gridfs_bucket(
+    gridfs::bucket gridfs_bucket(
         const options::gridfs::bucket& options = options::gridfs::bucket()) const;
 
     ///

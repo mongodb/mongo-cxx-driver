@@ -24,7 +24,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace wip {
+namespace v_noabi {
 namespace gridfs {
 
 class uploader::impl {
@@ -86,7 +86,7 @@ class uploader::impl {
 };
 
 }  // namespace gridfs
-}  // namespace wip
+}  // namespace v_noabi
 }  // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

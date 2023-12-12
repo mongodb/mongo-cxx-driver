@@ -35,10 +35,11 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace wip {
+namespace v_noabi {
 namespace gridfs {
 
 namespace {
+
 std::int32_t read_chunk_size_from_files_document(bsoncxx::document::view files_doc) {
     const std::int64_t k_max_document_size = 16 * 1024 * 1024;
     std::int64_t chunk_size;
@@ -105,6 +106,7 @@ std::int64_t read_length_from_files_document(const bsoncxx::document::view files
 
     return length;
 }
+
 }  // namespace
 
 bucket::bucket(const database& db, const options::gridfs::bucket& options) {
@@ -562,5 +564,5 @@ bucket::impl& bucket::_get_impl() {
 }
 
 }  // namespace gridfs
-}  // namespace wip
+}  // namespace v_noabi
 }  // namespace mongocxx
