@@ -71,7 +71,7 @@ class cursor {
     ///
     /// @return the cursor::iterator
     ///
-    /// @throws mongocxx::query_exception if the query failed
+    /// @throws mongocxx::v_noabi::query_exception if the query failed
     ///
     iterator begin();
 
@@ -142,14 +142,14 @@ class cursor::iterator {
     ///
     /// Pre-increments the iterator to move to the next document.
     ///
-    /// @throws mongocxx::query_exception if the query failed
+    /// @throws mongocxx::v_noabi::query_exception if the query failed
     ///
     iterator& operator++();
 
     ///
     /// Post-increments the iterator to move to the next document.
     ///
-    /// @throws mongocxx::query_exception if the query failed
+    /// @throws mongocxx::v_noabi::query_exception if the query failed
     ///
     void operator++(int);
 

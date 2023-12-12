@@ -150,7 +150,7 @@ class collection {
     ///   Optional arguments, see mongocxx::options::aggregate.
     ///
     /// @return A mongocxx::cursor with the results.  If the query fails,
-    /// the cursor throws mongocxx::query_exception when the returned cursor
+    /// the cursor throws mongocxx::v_noabi::query_exception when the returned cursor
     /// is iterated.
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/aggregate/
@@ -174,7 +174,7 @@ class collection {
     ///   Optional arguments, see mongocxx::options::aggregate.
     ///
     /// @return A mongocxx::cursor with the results.  If the query fails,
-    /// the cursor throws mongocxx::query_exception when the returned cursor
+    /// the cursor throws mongocxx::v_noabi::query_exception when the returned cursor
     /// is iterated.
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/aggregate/
@@ -239,7 +239,7 @@ class collection {
     ///   disengaged.
     ///
     /// @exception
-    ///   mongocxx::bulk_write_exception when there are errors processing
+    ///   mongocxx::v_noabi::bulk_write_exception when there are errors processing
     ///   the writes.
     ///
     /// @see mongocxx::bulk_write
@@ -264,7 +264,7 @@ class collection {
     ///   disengaged.
     ///
     /// @exception
-    ///   mongocxx::bulk_write_exception when there are errors processing
+    ///   mongocxx::v_noabi::bulk_write_exception when there are errors processing
     ///   the writes.
     ///
     /// @see mongocxx::bulk_write
@@ -296,7 +296,7 @@ class collection {
     /// If the write concern is unacknowledged, the optional will be
     /// disengaged.
     ///
-    /// @throws mongocxx::bulk_write_exception when there are errors processing the writes.
+    /// @throws mongocxx::v_noabi::bulk_write_exception when there are errors processing the writes.
     ///
     /// @see mongocxx::bulk_write
     /// @see https://www.mongodb.com/docs/manual/core/bulk-write-operations/
@@ -323,7 +323,7 @@ class collection {
     /// If the write concern is unacknowledged, the optional will be
     /// disengaged.
     ///
-    /// @throws mongocxx::bulk_write_exception when there are errors processing the writes.
+    /// @throws mongocxx::v_noabi::bulk_write_exception when there are errors processing the writes.
     ///
     /// @see mongocxx::bulk_write
     /// @see https://www.mongodb.com/docs/manual/core/bulk-write-operations/
@@ -356,7 +356,7 @@ class collection {
     ///
     /// @return The optional result of the bulk operation execution, a result::bulk_write.
     ///
-    /// @throws mongocxx::bulk_write_exception when there are errors processing the writes.
+    /// @throws mongocxx::v_noabi::bulk_write_exception when there are errors processing the writes.
     ///
     /// @see mongocxx::bulk_write
     /// @see https://www.mongodb.com/docs/manual/core/bulk-write-operations/
@@ -386,7 +386,7 @@ class collection {
     ///
     /// @return The optional result of the bulk operation execution, a result::bulk_write.
     ///
-    /// @throws mongocxx::bulk_write_exception when there are errors processing the writes.
+    /// @throws mongocxx::v_noabi::bulk_write_exception when there are errors processing the writes.
     ///
     /// @see mongocxx::bulk_write
     /// @see https://www.mongodb.com/docs/manual/core/bulk-write-operations/
@@ -413,7 +413,7 @@ class collection {
     ///
     /// @return The count of the documents that matched the filter.
     ///
-    /// @throws mongocxx::query_exception if the count operation fails.
+    /// @throws mongocxx::v_noabi::query_exception if the count operation fails.
     ///
     /// @note For a fast count of the total documents in a collection, see
     /// estimated_document_count().
@@ -440,7 +440,7 @@ class collection {
     ///
     /// @return The count of the documents that matched the filter.
     ///
-    /// @throws mongocxx::query_exception if the count operation fails.
+    /// @throws mongocxx::v_noabi::query_exception if the count operation fails.
     ///
     /// @note Due to an oversight in MongoDB server versions 5.0.0 through 5.0.7, the `count`
     /// command was not included in Stable API v1. Users of the Stable API with
@@ -466,7 +466,7 @@ class collection {
     ///
     /// @return The count of the documents that matched the filter.
     ///
-    /// @throws mongocxx::query_exception if the count operation fails.
+    /// @throws mongocxx::v_noabi::query_exception if the count operation fails.
     ///
     /// @note This function is implemented in terms of the count server command. See:
     /// https://www.mongodb.com/docs/manual/reference/command/count/#behavior for more information.
@@ -492,7 +492,7 @@ class collection {
     ///   Optional arguments for the overall operation, see mongocxx::options::index_view.
     ///
     /// @exception
-    ///   mongocxx::operation_exception if index creation fails.
+    ///   mongocxx::v_noabi::operation_exception if index creation fails.
     ///
     /// @see
     ///   https://www.mongodb.com/docs/manual/reference/command/createIndexes/
@@ -518,7 +518,7 @@ class collection {
     ///   Optional arguments for the overall operation, see mongocxx::options::index_view.
     ///
     /// @exception
-    ///   mongocxx::operation_exception if index creation fails.
+    ///   mongocxx::v_noabi::operation_exception if index creation fails.
     ///
     /// @see
     ///   https://www.mongodb.com/docs/manual/reference/command/createIndexes/
@@ -550,7 +550,7 @@ class collection {
     /// If the write concern is unacknowledged, the optional will be
     /// disengaged.
     ///
-    /// @throws mongocxx::bulk_write_exception if the delete fails.
+    /// @throws mongocxx::v_noabi::bulk_write_exception if the delete fails.
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/delete/
     ///
@@ -572,7 +572,7 @@ class collection {
     /// If the write concern is unacknowledged, the optional will be
     /// disengaged.
     ///
-    /// @throws mongocxx::bulk_write_exception if the delete fails.
+    /// @throws mongocxx::v_noabi::bulk_write_exception if the delete fails.
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/delete/
     ///
@@ -599,7 +599,7 @@ class collection {
     /// If the write concern is unacknowledged, the optional will be
     /// disengaged.
     ///
-    /// @throws mongocxx::bulk_write_exception if the delete fails.
+    /// @throws mongocxx::v_noabi::bulk_write_exception if the delete fails.
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/delete/
     ///
@@ -621,7 +621,7 @@ class collection {
     /// If the write concern is unacknowledged, the optional will be
     /// disengaged.
     ///
-    /// @throws mongocxx::bulk_write_exception if the delete fails.
+    /// @throws mongocxx::v_noabi::bulk_write_exception if the delete fails.
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/delete/
     ///
@@ -648,7 +648,7 @@ class collection {
 
     /// @return mongocxx::cursor having the distinct values for the specified
     /// field.  If the operation fails, the cursor throws
-    /// mongocxx::query_exception when the returned cursor is iterated.
+    /// mongocxx::v_noabi::query_exception when the returned cursor is iterated.
 
     /// @see https://www.mongodb.com/docs/manual/reference/command/distinct/
     ///
@@ -670,7 +670,7 @@ class collection {
 
     /// @return mongocxx::cursor having the distinct values for the specified
     /// field.  If the operation fails, the cursor throws
-    /// mongocxx::query_exception when the returned cursor is iterated.
+    /// mongocxx::v_noabi::query_exception when the returned cursor is iterated.
 
     /// @see https://www.mongodb.com/docs/manual/reference/command/distinct/
     ///
@@ -696,7 +696,7 @@ class collection {
     ///   Collection options to use for this operation.
     ///
     /// @exception
-    ///   mongocxx::operation_exception if the operation fails.
+    ///   mongocxx::v_noabi::operation_exception if the operation fails.
     ///
     /// @see
     ///   https://www.mongodb.com/docs/manual/reference/command/drop/
@@ -719,7 +719,7 @@ class collection {
     ///   Collection options to use for this operation.
     ///
     /// @exception
-    ///   mongocxx::operation_exception if the operation fails.
+    ///   mongocxx::v_noabi::operation_exception if the operation fails.
     ///
     /// @see
     ///   https://www.mongodb.com/docs/manual/reference/command/drop/
@@ -746,11 +746,11 @@ class collection {
     ///   Optional arguments, see options::find
     ///
     /// @return A mongocxx::cursor with the results.  If the query fails,
-    /// the cursor throws mongocxx::query_exception when the returned cursor
+    /// the cursor throws mongocxx::v_noabi::query_exception when the returned cursor
     /// is iterated.
     ///
-    /// @throws mongocxx::logic_error if the options are invalid, or if the unsupported option
-    /// modifiers "$query" or "$explain" are used.
+    /// @throws mongocxx::v_noabi::logic_error if the options are invalid, or if the unsupported
+    /// option modifiers "$query" or "$explain" are used.
     ///
     /// @see https://www.mongodb.com/docs/manual/core/read-operations-introduction/
     ///
@@ -768,11 +768,11 @@ class collection {
     ///   Optional arguments, see options::find
     ///
     /// @return A mongocxx::cursor with the results.  If the query fails,
-    /// the cursor throws mongocxx::query_exception when the returned cursor
+    /// the cursor throws mongocxx::v_noabi::query_exception when the returned cursor
     /// is iterated.
     ///
-    /// @throws mongocxx::logic_error if the options are invalid, or if the unsupported option
-    /// modifiers "$query" or "$explain" are used.
+    /// @throws mongocxx::v_noabi::logic_error if the options are invalid, or if the unsupported
+    /// option modifiers "$query" or "$explain" are used.
     ///
     /// @see https://www.mongodb.com/docs/manual/core/read-operations-introduction/
     ///
@@ -792,7 +792,7 @@ class collection {
     ///
     /// @return An optional document that matched the filter.
     ///
-    /// @throws mongocxx::query_exception if the operation fails.
+    /// @throws mongocxx::v_noabi::query_exception if the operation fails.
     ///
     /// @see https://www.mongodb.com/docs/manual/core/read-operations-introduction/
     ///
@@ -811,7 +811,7 @@ class collection {
     ///
     /// @return An optional document that matched the filter.
     ///
-    /// @throws mongocxx::query_exception if the operation fails.
+    /// @throws mongocxx::v_noabi::query_exception if the operation fails.
     ///
     /// @see https://www.mongodb.com/docs/manual/core/read-operations-introduction/
     ///
@@ -837,11 +837,11 @@ class collection {
     /// @return The document that was deleted.
     ///
     /// @exception
-    ///   Throws mongocxx::logic_error if the collation option is specified and an unacknowledged
-    ///   write concern is used.
+    ///   Throws mongocxx::v_noabi::logic_error if the collation option is specified and an
+    ///   unacknowledged write concern is used.
     ///
     /// @exception
-    ///   Throws mongocxx::write_exception if the operation fails.
+    ///   Throws mongocxx::v_noabi::write_exception if the operation fails.
     ///
     stdx::optional<bsoncxx::document::value> find_one_and_delete(
         bsoncxx::document::view_or_value filter,
@@ -860,11 +860,11 @@ class collection {
     /// @return The document that was deleted.
     ///
     /// @exception
-    ///   Throws mongocxx::logic_error if the collation option is specified and an unacknowledged
-    ///   write concern is used.
+    ///   Throws mongocxx::v_noabi::logic_error if the collation option is specified and an
+    ///   unacknowledged write concern is used.
     ///
     /// @exception
-    ///   Throws mongocxx::write_exception if the operation fails.
+    ///   Throws mongocxx::v_noabi::write_exception if the operation fails.
     ///
     stdx::optional<bsoncxx::document::value> find_one_and_delete(
         const client_session& session,
@@ -891,11 +891,11 @@ class collection {
     /// @return The original or replaced document.
     ///
     /// @exception
-    ///   Throws mongocxx::logic_error if the collation option is specified and an unacknowledged
-    ///   write concern is used.
+    ///   Throws mongocxx::v_noabi::logic_error if the collation option is specified and an
+    ///   unacknowledged write concern is used.
     ///
     /// @exception
-    ///   Throws mongocxx::write_exception if the operation fails.
+    ///   Throws mongocxx::v_noabi::write_exception if the operation fails.
     ///
     stdx::optional<bsoncxx::document::value> find_one_and_replace(
         bsoncxx::document::view_or_value filter,
@@ -918,11 +918,11 @@ class collection {
     /// @return The original or replaced document.
     ///
     /// @exception
-    ///   Throws mongocxx::logic_error if the collation option is specified and an unacknowledged
-    ///   write concern is used.
+    ///   Throws mongocxx::v_noabi::logic_error if the collation option is specified and an
+    ///   unacknowledged write concern is used.
     ///
     /// @exception
-    ///   Throws mongocxx::write_exception if the operation fails.
+    ///   Throws mongocxx::v_noabi::write_exception if the operation fails.
     ///
     stdx::optional<bsoncxx::document::value> find_one_and_replace(
         const client_session& session,
@@ -950,11 +950,11 @@ class collection {
     /// @return The original or updated document.
     ///
     /// @exception
-    ///   Throws mongocxx::logic_error if the collation option is specified and an unacknowledged
-    ///   write concern is used.
+    ///   Throws mongocxx::v_noabi::logic_error if the collation option is specified and an
+    ///   unacknowledged write concern is used.
     ///
     /// @exception
-    ///   Throws mongocxx::write_exception if the operation fails.
+    ///   Throws mongocxx::v_noabi::write_exception if the operation fails.
     ///
     stdx::optional<bsoncxx::document::value> find_one_and_update(
         bsoncxx::document::view_or_value filter,
@@ -975,11 +975,11 @@ class collection {
     /// @return The original or updated document.
     ///
     /// @exception
-    ///   Throws mongocxx::logic_error if the collation option is specified and an unacknowledged
-    ///   write concern is used.
+    ///   Throws mongocxx::v_noabi::logic_error if the collation option is specified and an
+    ///   unacknowledged write concern is used.
     ///
     /// @exception
-    ///   Throws mongocxx::write_exception if the operation fails.
+    ///   Throws mongocxx::v_noabi::write_exception if the operation fails.
     ///
     stdx::optional<bsoncxx::document::value> find_one_and_update(
         bsoncxx::document::view_or_value filter,
@@ -1000,11 +1000,11 @@ class collection {
     /// @return The original or updated document.
     ///
     /// @exception
-    ///   Throws mongocxx::logic_error if the collation option is specified and an unacknowledged
-    ///   write concern is used.
+    ///   Throws mongocxx::v_noabi::logic_error if the collation option is specified and an
+    ///   unacknowledged write concern is used.
     ///
     /// @exception
-    ///   Throws mongocxx::write_exception if the operation fails.
+    ///   Throws mongocxx::v_noabi::write_exception if the operation fails.
     ///
     stdx::optional<bsoncxx::document::value> find_one_and_update(
         bsoncxx::document::view_or_value filter,
@@ -1027,11 +1027,11 @@ class collection {
     /// @return The original or updated document.
     ///
     /// @exception
-    ///   Throws mongocxx::logic_error if the collation option is specified and an unacknowledged
-    ///   write concern is used.
+    ///   Throws mongocxx::v_noabi::logic_error if the collation option is specified and an
+    ///   unacknowledged write concern is used.
     ///
     /// @exception
-    ///   Throws mongocxx::write_exception if the operation fails.
+    ///   Throws mongocxx::v_noabi::write_exception if the operation fails.
     ///
     stdx::optional<bsoncxx::document::value> find_one_and_update(
         const client_session& session,
@@ -1055,11 +1055,11 @@ class collection {
     /// @return The original or updated document.
     ///
     /// @exception
-    ///   Throws mongocxx::logic_error if the collation option is specified and an unacknowledged
-    ///   write concern is used.
+    ///   Throws mongocxx::v_noabi::logic_error if the collation option is specified and an
+    ///   unacknowledged write concern is used.
     ///
     /// @exception
-    ///   Throws mongocxx::write_exception if the operation fails.
+    ///   Throws mongocxx::v_noabi::write_exception if the operation fails.
     ///
     stdx::optional<bsoncxx::document::value> find_one_and_update(
         const client_session& session,
@@ -1083,11 +1083,11 @@ class collection {
     /// @return The original or updated document.
     ///
     /// @exception
-    ///   Throws mongocxx::logic_error if the collation option is specified and an unacknowledged
-    ///   write concern is used.
+    ///   Throws mongocxx::v_noabi::logic_error if the collation option is specified and an
+    ///   unacknowledged write concern is used.
     ///
     /// @exception
-    ///   Throws mongocxx::write_exception if the operation fails.
+    ///   Throws mongocxx::v_noabi::write_exception if the operation fails.
     ///
     stdx::optional<bsoncxx::document::value> find_one_and_update(
         const client_session& session,
@@ -1114,7 +1114,7 @@ class collection {
     /// If the write concern is unacknowledged, the optional will be
     /// disengaged.
     ///
-    /// @throws mongocxx::bulk_write_exception if the operation fails.
+    /// @throws mongocxx::v_noabi::bulk_write_exception if the operation fails.
     stdx::optional<result::insert_one> insert_one(bsoncxx::document::view_or_value document,
                                                   const options::insert& options = {});
     ///
@@ -1132,7 +1132,7 @@ class collection {
     /// If the write concern is unacknowledged, the optional will be
     /// disengaged.
     ///
-    /// @throws mongocxx::bulk_write_exception if the operation fails.
+    /// @throws mongocxx::v_noabi::bulk_write_exception if the operation fails.
     stdx::optional<result::insert_one> insert_one(const client_session& session,
                                                   bsoncxx::document::view_or_value document,
                                                   const options::insert& options = {});
@@ -1163,7 +1163,7 @@ class collection {
     /// If the write concern is unacknowledged, the optional will be
     /// disengaged.
     ///
-    /// @throws mongocxx::bulk_write_exception when the operation fails.
+    /// @throws mongocxx::v_noabi::bulk_write_exception when the operation fails.
     ///
     template <typename container_type>
     MONGOCXX_INLINE stdx::optional<result::insert_many> insert_many(
@@ -1188,7 +1188,7 @@ class collection {
     /// If the write concern is unacknowledged, the optional will be
     /// disengaged.
     ///
-    /// @throws mongocxx::bulk_write_exception when the operation fails.
+    /// @throws mongocxx::v_noabi::bulk_write_exception when the operation fails.
     ///
     template <typename container_type>
     MONGOCXX_INLINE stdx::optional<result::insert_many> insert_many(
@@ -1219,7 +1219,7 @@ class collection {
     ///
     /// @return The result of attempting to performing the insert.
     ///
-    /// @throws mongocxx::bulk_write_exception if the operation fails.
+    /// @throws mongocxx::v_noabi::bulk_write_exception if the operation fails.
     ///
     template <typename document_view_iterator_type>
     MONGOCXX_INLINE stdx::optional<result::insert_many> insert_many(
@@ -1246,7 +1246,7 @@ class collection {
     ///
     /// @return The result of attempting to performing the insert.
     ///
-    /// @throws mongocxx::bulk_write_exception if the operation fails.
+    /// @throws mongocxx::v_noabi::bulk_write_exception if the operation fails.
     ///
     template <typename document_view_iterator_type>
     MONGOCXX_INLINE stdx::optional<result::insert_many> insert_many(
@@ -1265,7 +1265,7 @@ class collection {
     ///
     /// @return Cursor yielding the index specifications.
     ///
-    /// @throws mongocxx::operation_exception if the operation fails.
+    /// @throws mongocxx::v_noabi::operation_exception if the operation fails.
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/listIndexes/
     ///
@@ -1279,7 +1279,7 @@ class collection {
     ///
     /// @return Cursor yielding the index specifications.
     ///
-    /// @throws mongocxx::operation_exception if the operation fails.
+    /// @throws mongocxx::v_noabi::operation_exception if the operation fails.
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/listIndexes/
     ///
@@ -1308,7 +1308,7 @@ class collection {
     ///   concern if none is provided.
     ///
     /// @exception
-    ///   mongocxx::operation_exception if the operation fails.
+    ///   mongocxx::v_noabi::operation_exception if the operation fails.
     ///
     /// @see
     ///   https://www.mongodb.com/docs/manual/reference/command/renameCollection/
@@ -1333,7 +1333,7 @@ class collection {
     ///   concern if none is provided.
     ///
     /// @exception
-    ///   mongocxx::operation_exception if the operation fails.
+    ///   mongocxx::v_noabi::operation_exception if the operation fails.
     ///
     /// @see
     ///   https://www.mongodb.com/docs/manual/reference/command/renameCollection/
@@ -1408,8 +1408,8 @@ class collection {
     /// disengaged.
     ///
     /// @throws
-    ///   mongocxx::logic_error if the replacement is invalid, or mongocxx::bulk_write_exception if
-    ///   the operation fails.
+    ///   mongocxx::v_noabi::logic_error if the replacement is invalid, or
+    ///   mongocxx::v_noabi::bulk_write_exception if the operation fails.
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/update/
     ///
@@ -1435,8 +1435,8 @@ class collection {
     /// disengaged.
     ///
     /// @throws
-    ///   mongocxx::logic_error if the replacement is invalid, or mongocxx::bulk_write_exception if
-    ///   the operation fails.
+    ///   mongocxx::v_noabi::logic_error if the replacement is invalid, or
+    ///   mongocxx::v_noabi::bulk_write_exception if the operation fails.
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/update/
     ///
@@ -1463,8 +1463,8 @@ class collection {
     /// disengaged.
     ///
     /// @throws
-    ///   mongocxx::logic_error if the update is invalid, or mongocxx::bulk_write_exception if the
-    ///   operation fails.
+    ///   mongocxx::v_noabi::logic_error if the update is invalid, or
+    ///   mongocxx::v_noabi::bulk_write_exception if the operation fails.
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/update/
     ///
@@ -1487,8 +1487,8 @@ class collection {
     /// disengaged.
     ///
     /// @throws
-    ///   mongocxx::logic_error if the update is invalid, or mongocxx::bulk_write_exception if the
-    ///   operation fails.
+    ///   mongocxx::v_noabi::logic_error if the update is invalid, or
+    ///   mongocxx::v_noabi::bulk_write_exception if the operation fails.
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/update/
     ///
@@ -1511,8 +1511,8 @@ class collection {
     /// disengaged.
     ///
     /// @throws
-    ///   mongocxx::logic_error if the update is invalid, or mongocxx::bulk_write_exception if the
-    ///   operation fails.
+    ///   mongocxx::v_noabi::logic_error if the update is invalid, or
+    ///   mongocxx::v_noabi::bulk_write_exception if the operation fails.
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/update/
     ///
@@ -1537,8 +1537,8 @@ class collection {
     /// disengaged.
     ///
     /// @throws
-    ///   mongocxx::logic_error if the update is invalid, or mongocxx::bulk_write_exception if the
-    ///   operation fails.
+    ///   mongocxx::v_noabi::logic_error if the update is invalid, or
+    ///   mongocxx::v_noabi::bulk_write_exception if the operation fails.
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/update/
     ///
@@ -1564,8 +1564,8 @@ class collection {
     /// disengaged.
     ///
     /// @throws
-    ///   mongocxx::logic_error if the update is invalid, or mongocxx::bulk_write_exception if the
-    ///   operation fails.
+    ///   mongocxx::v_noabi::logic_error if the update is invalid, or
+    ///   mongocxx::v_noabi::bulk_write_exception if the operation fails.
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/update/
     ///
@@ -1591,8 +1591,8 @@ class collection {
     /// disengaged.
     ///
     /// @throws
-    ///   mongocxx::logic_error if the update is invalid, or mongocxx::bulk_write_exception if the
-    ///   operation fails.
+    ///   mongocxx::v_noabi::logic_error if the update is invalid, or
+    ///   mongocxx::v_noabi::bulk_write_exception if the operation fails.
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/update/
     ///
@@ -1622,8 +1622,8 @@ class collection {
     /// disengaged.
     ///
     /// @throws
-    ///   mongocxx::logic_error if the update is invalid, or mongocxx::bulk_write_exception if the
-    ///   operation fails.
+    ///   mongocxx::v_noabi::logic_error if the update is invalid, or
+    ///   mongocxx::v_noabi::bulk_write_exception if the operation fails.
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/update/
     ///
@@ -1646,8 +1646,8 @@ class collection {
     /// disengaged.
     ///
     /// @throws
-    ///   mongocxx::logic_error if the update is invalid, or mongocxx::bulk_write_exception if the
-    ///   operation fails.
+    ///   mongocxx::v_noabi::logic_error if the update is invalid, or
+    ///   mongocxx::v_noabi::bulk_write_exception if the operation fails.
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/update/
     ///
@@ -1670,8 +1670,8 @@ class collection {
     /// disengaged.
     ///
     /// @throws
-    ///   mongocxx::logic_error if the update is invalid, or mongocxx::bulk_write_exception if the
-    ///   operation fails.
+    ///   mongocxx::v_noabi::logic_error if the update is invalid, or
+    ///   mongocxx::v_noabi::bulk_write_exception if the operation fails.
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/update/
     ///
@@ -1696,8 +1696,8 @@ class collection {
     /// disengaged.
     ///
     /// @throws
-    ///   mongocxx::logic_error if the update is invalid, or mongocxx::bulk_write_exception if the
-    ///   operation fails.
+    ///   mongocxx::v_noabi::logic_error if the update is invalid, or
+    ///   mongocxx::v_noabi::bulk_write_exception if the operation fails.
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/update/
     ///
@@ -1723,8 +1723,8 @@ class collection {
     /// disengaged.
     ///
     /// @throws
-    ///   mongocxx::logic_error if the update is invalid, or mongocxx::bulk_write_exception if the
-    ///   operation fails.
+    ///   mongocxx::v_noabi::logic_error if the update is invalid, or
+    ///   mongocxx::v_noabi::bulk_write_exception if the operation fails.
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/update/
     ///
@@ -1750,8 +1750,8 @@ class collection {
     /// disengaged.
     ///
     /// @throws
-    ///   mongocxx::logic_error if the update is invalid, or mongocxx::bulk_write_exception if the
-    ///   operation fails.
+    ///   mongocxx::v_noabi::logic_error if the update is invalid, or
+    ///   mongocxx::v_noabi::bulk_write_exception if the operation fails.
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/update/
     ///

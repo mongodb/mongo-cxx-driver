@@ -18,12 +18,22 @@
 #include <system_error>
 
 namespace mongocxx {
-inline namespace wip { enum class error_code : std::int32_t; }  // namespace wip
+namespace v_noabi {
+
+enum class error_code : std::int32_t;
+
+}  // namespace v_noabi
+}  // namespace mongocxx
+
+namespace mongocxx {
+
+using ::mongocxx::v_noabi::error_code;
+
 }  // namespace mongocxx
 
 namespace std {
 
 template <>
-struct is_error_code_enum<mongocxx::error_code>;
+struct is_error_code_enum<::mongocxx::v_noabi::error_code>;
 
 }  // namespace std

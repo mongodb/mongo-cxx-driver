@@ -59,7 +59,7 @@ class server_api {
     /// @param version
     ///   The enum value to convert to a string.
     ///
-    /// @throws mongocxx::logic_error on an invalid argument
+    /// @throws mongocxx::v_noabi::logic_error on an invalid argument
     ///
     /// @return
     ///   The string value of the given enum value.
@@ -72,7 +72,7 @@ class server_api {
     /// @param version
     ///   The string to convert to an enum value.
     ///
-    /// @throws mongocxx::logic_error on an invalid argument
+    /// @throws mongocxx::v_noabi::logic_error on an invalid argument
     ///
     /// @return
     ///   The enum value of the given string.

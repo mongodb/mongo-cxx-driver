@@ -52,7 +52,7 @@ void write_concern::journal(bool journal) {
 
 void write_concern::nodes(std::int32_t confirm_from) {
     if (confirm_from < 0) {
-        throw mongocxx::logic_error{error_code::k_invalid_parameter};
+        throw mongocxx::v_noabi::logic_error{error_code::k_invalid_parameter};
     }
     libmongoc::write_concern_set_w(_impl->write_concern_t, confirm_from);
 }

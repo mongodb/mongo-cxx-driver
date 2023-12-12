@@ -37,15 +37,15 @@ static unique_server_api make_server_api(const server_api& opts) {
     auto result = libmongoc::server_api_version_from_string(
         server_api::version_to_string(opts.get_version()).c_str(), &mongoc_api_version);
     if (!result) {
-        throw mongocxx::logic_error{
-            mongocxx::error_code::k_invalid_parameter,
+        throw mongocxx::v_noabi::logic_error{
+            mongocxx::v_noabi::error_code::k_invalid_parameter,
             "invalid server API version" + server_api::version_to_string(opts.get_version())};
     }
 
     auto mongoc_server_api_opts = libmongoc::server_api_new(mongoc_api_version);
     if (!mongoc_server_api_opts) {
-        throw mongocxx::logic_error{mongocxx::error_code::k_create_resource_fail,
-                                    "could not create server API"};
+        throw mongocxx::v_noabi::logic_error{mongocxx::v_noabi::error_code::k_create_resource_fail,
+                                             "could not create server API"};
     }
 
     if (opts.strict().value_or(false)) {

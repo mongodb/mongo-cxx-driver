@@ -95,7 +95,7 @@ class database {
     ///   Optional arguments, see mongocxx::options::aggregate.
     ///
     /// @return A mongocxx::cursor with the results.  If the query fails,
-    /// the cursor throws mongocxx::query_exception when the returned cursor
+    /// the cursor throws mongocxx::v_noabi::query_exception when the returned cursor
     /// is iterated.
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/aggregate/#dbcmd.aggregate
@@ -121,7 +121,7 @@ class database {
     ///   Optional arguments, see mongocxx::options::aggregate.
     ///
     /// @return A mongocxx::cursor with the results.  If the query fails,
-    /// the cursor throws mongocxx::query_exception when the returned cursor
+    /// the cursor throws mongocxx::v_noabi::query_exception when the returned cursor
     /// is iterated.
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/aggregate/#dbcmd.aggregate
@@ -148,7 +148,7 @@ class database {
     /// @param command document representing the command to be run.
     /// @return the result of executing the command.
     ///
-    /// @throws mongocxx::operation_exception if the operation fails.
+    /// @throws mongocxx::v_noabi::operation_exception if the operation fails.
     ///
     bsoncxx::document::value run_command(bsoncxx::document::view_or_value command);
 
@@ -161,7 +161,7 @@ class database {
     /// @param command document representing the command to be run.
     /// @return the result of executing the command.
     ///
-    /// @throws mongocxx::operation_exception if the operation fails.
+    /// @throws mongocxx::v_noabi::operation_exception if the operation fails.
     ///
     bsoncxx::document::value run_command(const client_session& session,
                                          bsoncxx::document::view_or_value command);
@@ -175,7 +175,7 @@ class database {
     /// @param server_id specifying which server to use.
     /// @return the result of executing the command.
     ///
-    /// @throws mongocxx::operation_exception if the operation fails.
+    /// @throws mongocxx::v_noabi::operation_exception if the operation fails.
     ///
     bsoncxx::document::value run_command(bsoncxx::document::view_or_value command,
                                          uint32_t server_id);
@@ -203,7 +203,7 @@ class database {
     ///   set write concern if none passed here.
     ///
     /// @exception
-    ///   mongocxx::operation_exception if the operation fails.
+    ///   mongocxx::v_noabi::operation_exception if the operation fails.
     ///
     mongocxx::collection create_collection(stdx::string_view name,
                                            bsoncxx::document::view_or_value collection_options = {},
@@ -229,7 +229,7 @@ class database {
     ///   set write concern if none passed here.
     ///
     /// @exception
-    ///   mongocxx::operation_exception if the operation fails.
+    ///   mongocxx::v_noabi::operation_exception if the operation fails.
     ///
     mongocxx::collection create_collection(const client_session& session,
                                            stdx::string_view name,
@@ -255,7 +255,7 @@ class database {
     ///   set write concern if none passed here.
     ///
     /// @exception
-    ///   mongocxx::operation_exception if the operation fails.
+    ///   mongocxx::v_noabi::operation_exception if the operation fails.
     ///
     MONGOCXX_DEPRECATED mongocxx::collection create_collection(
         bsoncxx::string::view_or_value name,
@@ -290,7 +290,7 @@ class database {
     ///   set write concern if none passed here.
     ///
     /// @exception
-    ///   mongocxx::operation_exception if the operation fails.
+    ///   mongocxx::v_noabi::operation_exception if the operation fails.
     ///
     MONGOCXX_DEPRECATED mongocxx::collection create_collection(
         const client_session& session,
@@ -321,7 +321,7 @@ class database {
     ///   set write concern if none passed here.
     ///
     /// @exception
-    ///   mongocxx::operation_exception if the operation fails.
+    ///   mongocxx::v_noabi::operation_exception if the operation fails.
     ///
     mongocxx::collection create_collection_deprecated(
         const client_session& session,
@@ -343,7 +343,7 @@ class database {
     ///   set on the database will be used.
     ///
     /// @exception
-    ///   mongocxx::operation_exception if the operation fails.
+    ///   mongocxx::v_noabi::operation_exception if the operation fails.
     ///
     /// @see
     ///   https://www.mongodb.com/docs/manual/reference/command/dropDatabase/
@@ -360,7 +360,7 @@ class database {
     ///   set on the database will be used.
     ///
     /// @exception
-    ///   mongocxx::operation_exception if the operation fails.
+    ///   mongocxx::v_noabi::operation_exception if the operation fails.
     ///
     /// @see
     ///   https://www.mongodb.com/docs/manual/reference/command/dropDatabase/
@@ -378,7 +378,7 @@ class database {
     ///
     /// @return bool whether the collection exists in this database.
     ///
-    /// @throws mongocxx::operation_exception if the underlying 'listCollections'
+    /// @throws mongocxx::v_noabi::operation_exception if the underlying 'listCollections'
     /// command fails.
     ///
     bool has_collection(bsoncxx::string::view_or_value name) const;
@@ -420,7 +420,7 @@ class database {
     ///
     /// @return std::vector<std::string> containing the collection names.
     ///
-    /// @throws mongocxx::operation_exception if the underlying 'listCollections'
+    /// @throws mongocxx::v_noabi::operation_exception if the underlying 'listCollections'
     /// command fails.
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/listCollections/
@@ -437,7 +437,7 @@ class database {
     ///
     /// @return std::vector<std::string> containing the collection names.
     ///
-    /// @throws mongocxx::operation_exception if the underlying 'listCollections'
+    /// @throws mongocxx::v_noabi::operation_exception if the underlying 'listCollections'
     /// command fails.
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/listCollections/
@@ -549,7 +549,7 @@ class database {
     /// @note
     ///   See the class comment for `gridfs::bucket` for more information about GridFS.
     ///
-    /// @throws mongocxx::logic_error if `options` are invalid.
+    /// @throws mongocxx::v_noabi::logic_error if `options` are invalid.
     ///
     mongocxx::gridfs::bucket gridfs_bucket(
         const options::gridfs::bucket& options = options::gridfs::bucket()) const;

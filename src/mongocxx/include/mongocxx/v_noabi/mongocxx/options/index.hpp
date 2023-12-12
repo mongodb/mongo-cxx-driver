@@ -470,7 +470,8 @@ class index {
     ///
     /// Conversion operator that provides a view of the options in document form.
     ///
-    /// @exception mongocxx::logic_error if an invalid expireAfterSeconds field is provided.
+    /// @exception mongocxx::v_noabi::logic_error if an invalid expireAfterSeconds field is
+    /// provided.
     ///
     /// @return A view of the current builder contents.
     ///

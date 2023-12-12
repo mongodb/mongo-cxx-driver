@@ -144,26 +144,26 @@ class client_session {
     /// @param transaction_opts (optional)
     ///    The options to use in the transaction.
     ///
-    /// @throws mongocxx::operation_exception if the options are misconfigured, if there are network
-    /// or other transient failures, or if there are other errors such as a session with a
-    /// transaction already in progress.
+    /// @throws mongocxx::v_noabi::operation_exception if the options are misconfigured, if there
+    /// are network or other transient failures, or if there are other errors such as a session with
+    /// a transaction already in progress.
     ///
     void start_transaction(const stdx::optional<options::transaction>& transaction_opts = {});
 
     ///
     /// Commits a transaction on the current client session.
     ///
-    /// @throws mongocxx::operation_exception if the options are misconfigured, if there are network
-    /// or other transient failures, or if there are other errors such as a session with no
-    /// transaction in progress.
+    /// @throws mongocxx::v_noabi::operation_exception if the options are misconfigured, if there
+    /// are network or other transient failures, or if there are other errors such as a session with
+    /// no transaction in progress.
     ///
     void commit_transaction();
 
     ///
     /// Aborts a transaction on the current client session.
     ///
-    /// @throws mongocxx::operation_exception if the options are misconfigured or if there are
-    /// other errors such as a session with no transaction in progress.
+    /// @throws mongocxx::v_noabi::operation_exception if the options are misconfigured or if there
+    /// are other errors such as a session with no transaction in progress.
     ///
     void abort_transaction();
 
@@ -185,7 +185,7 @@ class client_session {
     /// @param opts (optional)
     ///   The options to use to run the transaction.
     ///
-    /// @throws mongocxx::operation_exception if there are errors completing the
+    /// @throws mongocxx::v_noabi::operation_exception if there are errors completing the
     /// transaction.
     ///
     using with_transaction_cb = std::function<void MONGOCXX_CALL(client_session*)>;

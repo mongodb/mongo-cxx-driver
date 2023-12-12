@@ -241,7 +241,7 @@ class read_preference {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @throws mongocxx::logic_error if the argument is invalid.
+    /// @throws mongocxx::v_noabi::logic_error if the argument is invalid.
     ///
     read_preference& max_staleness(std::chrono::seconds max_staleness);
 

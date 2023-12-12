@@ -92,11 +92,11 @@ class downloader {
     ///   The number of bytes actually read. If zero, the downloader has reached the end of the
     ///   file.
     ///
-    /// @throws mongocxx::logic_error if the download stream was already closed.
+    /// @throws mongocxx::v_noabi::logic_error if the download stream was already closed.
     ///
-    /// @throws mongocxx::gridfs_exception if the requested file has been corrupted.
+    /// @throws mongocxx::v_noabi::gridfs_exception if the requested file has been corrupted.
     ///
-    /// @throws mongocxx::query_exception
+    /// @throws mongocxx::v_noabi::query_exception
     ///   if an error occurs when reading chunk data from the database for the requested file.
     ///
     std::size_t read(std::uint8_t* buffer, std::size_t length);
@@ -104,7 +104,7 @@ class downloader {
     ///
     /// Closes the downloader stream.
     ///
-    /// @throws mongocxx::logic_error if the download stream was already closed.
+    /// @throws mongocxx::v_noabi::logic_error if the download stream was already closed.
     ///
     void close();
 

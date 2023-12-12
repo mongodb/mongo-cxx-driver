@@ -74,7 +74,7 @@ class client {
     /// @param options
     ///   Additional options that cannot be specified via the mongodb_uri
     ///
-    /// @throws mongocxx::exception if invalid options are provided
+    /// @throws mongocxx::v_noabi::exception if invalid options are provided
     /// (whether from the URI or provided client options).
     ///
     client(const mongocxx::uri& mongodb_uri, const options::client& options = options::client());
@@ -223,7 +223,8 @@ class client {
     ///   disk in bytes, and an empty field specifying whether the database
     ///   has any data.
     ///
-    /// @throws mongocxx::operation_exception if the underlying 'listDatabases' command fails.
+    /// @throws mongocxx::v_noabi::operation_exception if the underlying 'listDatabases' command
+    /// fails.
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/listDatabases
     ///
@@ -241,7 +242,8 @@ class client {
     ///   disk in bytes, and an empty field specifying whether the database
     ///   has any data.
     ///
-    /// @throws mongocxx::operation_exception if the underlying 'listDatabases' command fails.
+    /// @throws mongocxx::v_noabi::operation_exception if the underlying 'listDatabases' command
+    /// fails.
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/listDatabases
     ///
@@ -259,7 +261,8 @@ class client {
     ///   disk in bytes, and an empty field specifying whether the database
     ///   has any data.
     ///
-    /// @throws mongocxx::operation_exception if the underlying 'listDatabases' command fails.
+    /// @throws mongocxx::v_noabi::operation_exception if the underlying 'listDatabases' command
+    /// fails.
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/listDatabases
     ///
@@ -280,7 +283,8 @@ class client {
     ///   disk in bytes, and an empty field specifying whether the database
     ///   has any data.
     ///
-    /// @throws mongocxx::operation_exception if the underlying 'listDatabases' command fails.
+    /// @throws mongocxx::v_noabi::operation_exception if the underlying 'listDatabases' command
+    /// fails.
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/listDatabases
     ///
@@ -295,7 +299,7 @@ class client {
     ///
     /// @return std::vector<std::string> containing the database names.
     ///
-    /// @throws mongocxx::operation_exception if the underlying 'listDatabases'
+    /// @throws mongocxx::v_noabi::operation_exception if the underlying 'listDatabases'
     /// command fails.
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/listDatabases
@@ -314,7 +318,7 @@ class client {
     ///
     /// @return std::vector<std::string> containing the database names.
     ///
-    /// @throws mongocxx::operation_exception if the underlying 'listDatabases'
+    /// @throws mongocxx::v_noabi::operation_exception if the underlying 'listDatabases'
     /// command fails.
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/listDatabases
@@ -331,9 +335,9 @@ class client {
     ///
     /// @return A client_session object. See `mongocxx::client_session` for more information.
     ///
-    /// @throws mongocxx::operation_exception if the driver is not built with crypto support, if
-    /// options is misconfigured, or if the session is configured with options that the server does
-    /// not support.
+    /// @throws mongocxx::v_noabi::operation_exception if the driver is not built with crypto
+    /// support, if options is misconfigured, or if the session is configured with options that the
+    /// server does not support.
     ///
     client_session start_session(const options::client_session& options = {});
 

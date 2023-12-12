@@ -110,7 +110,7 @@ class read_concern {
     ///   Either k_local, k_majority, k_linearizable, or k_server_default.
     ///
     /// @throws
-    ///   mongocxx::exception if rc_level is not k_local, k_majority, k_linearizable, or
+    ///   mongocxx::v_noabi::exception if rc_level is not k_local, k_majority, k_linearizable, or
     ///   k_server_default.
     ///
     void acknowledge_level(level rc_level);

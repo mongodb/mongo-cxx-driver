@@ -102,7 +102,8 @@ mongocxx::stdx::optional<bsoncxx::document::value> find_and_modify(
     // Write concern, collation, and session are passed in "extra".
     if (const auto& wc = options.write_concern()) {
         if (!wc->is_acknowledged() && options.collation()) {
-            throw mongocxx::logic_error{mongocxx::error_code::k_invalid_parameter};
+            throw mongocxx::v_noabi::logic_error{
+                mongocxx::v_noabi::error_code::k_invalid_parameter};
         }
         extra.append(kvp("writeConcern", wc->to_document()));
     }
@@ -111,7 +112,8 @@ mongocxx::stdx::optional<bsoncxx::document::value> find_and_modify(
         bson_t bson = BSON_INITIALIZER;
         if (!mongocxx::libmongoc::client_session_append(session_t, &bson, &error)) {
             bson_destroy(&bson);
-            throw mongocxx::logic_error{mongocxx::error_code::k_invalid_session, error.message};
+            throw mongocxx::v_noabi::logic_error{mongocxx::v_noabi::error_code::k_invalid_session,
+                                                 error.message};
         }
 
         // document::value takes ownership of the bson buffer.
@@ -178,9 +180,9 @@ mongocxx::stdx::optional<bsoncxx::document::value> find_and_modify(
 
     if (!result) {
         if (!reply.view().empty()) {
-            mongocxx::throw_exception<mongocxx::write_exception>(reply.steal(), error);
+            mongocxx::throw_exception<mongocxx::v_noabi::write_exception>(reply.steal(), error);
         }
-        mongocxx::throw_exception<mongocxx::write_exception>(error);
+        mongocxx::throw_exception<mongocxx::v_noabi::write_exception>(error);
     }
 
     bsoncxx::document::view reply_view = reply.view();

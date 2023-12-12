@@ -22,7 +22,8 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace wip {
+namespace v_noabi {
+
 ///
 /// Enum representing the various error types that can occur during driver usage.
 ///
@@ -112,9 +113,9 @@ enum class error_code : std::int32_t {
 MONGOCXX_API const std::error_category& MONGOCXX_CALL error_category();
 
 ///
-/// Translate a mongocxx::error_code into a std::error_code.
+/// Translate a mongocxx::v_noabi::error_code into a std::error_code.
 ///
-/// @param error A mongocxx::error_code
+/// @param error A mongocxx::v_noabi::error_code
 ///
 /// @return A std::error_code
 ///
@@ -122,13 +123,22 @@ MONGOCXX_INLINE std::error_code make_error_code(error_code error) {
     return {static_cast<int>(error), error_category()};
 }
 
-}  // namespace wip
+}  // namespace v_noabi
+}  // namespace mongocxx
+
+namespace mongocxx {
+
+using ::mongocxx::v_noabi::error_category;
+using ::mongocxx::v_noabi::make_error_code;
+
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
 
 namespace std {
+
 // Specialize is_error_code_enum so we get simpler std::error_code construction
 template <>
-struct is_error_code_enum<mongocxx::error_code> : public true_type {};
+struct is_error_code_enum<::mongocxx::v_noabi::error_code> : std::true_type {};
+
 }  // namespace std

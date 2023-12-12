@@ -82,12 +82,12 @@ class uploader {
     /// @param length
     ///   The number of bytes to write.
     ///
-    /// @throws mongocxx::logic_error if the upload stream was already closed.
+    /// @throws mongocxx::v_noabi::logic_error if the upload stream was already closed.
     ///
-    /// @throws mongocxx::bulk_write_exception
+    /// @throws mongocxx::v_noabi::bulk_write_exception
     ///   if an error occurs when writing chunk data to the database.
     ///
-    /// @throws mongocxx::gridfs_exception
+    /// @throws mongocxx::v_noabi::gridfs_exception
     ///   if the uploader requires more than 2^31-1 chunks to store the file at the requested chunk
     ///   size.
     ///
@@ -96,12 +96,12 @@ class uploader {
     ///
     /// Closes the uploader stream.
     ///
-    /// @throws mongocxx::logic_error if the upload stream was already closed.
+    /// @throws mongocxx::v_noabi::logic_error if the upload stream was already closed.
     ///
-    /// @throws mongocxx::bulk_write_exception
+    /// @throws mongocxx::v_noabi::bulk_write_exception
     ///   if an error occurs when writing chunk data or file metadata to the database.
     ///
-    /// @throws mongocxx::gridfs_exception
+    /// @throws mongocxx::v_noabi::gridfs_exception
     ///   if the uploader requires more than 2^31-1 chunks to store the file at the requested chunk
     ///   size.
     ///
@@ -110,9 +110,9 @@ class uploader {
     ///
     /// Aborts uploading the file.
     ///
-    /// @throws mongocxx::logic_error if the upload stream was already closed.
+    /// @throws mongocxx::v_noabi::logic_error if the upload stream was already closed.
     ///
-    /// @throws mongocxx::bulk_write_exception
+    /// @throws mongocxx::v_noabi::bulk_write_exception
     ///   if an error occurs when removing chunk data from the database.
     ///
     void abort();

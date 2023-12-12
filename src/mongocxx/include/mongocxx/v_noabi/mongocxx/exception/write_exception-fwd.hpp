@@ -17,7 +17,17 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace wip { class MONGOCXX_API write_exception; }  // namespace wip
+namespace v_noabi {
+
+class MONGOCXX_API write_exception;
+
+}  // namespace v_noabi
+}  // namespace mongocxx
+
+namespace mongocxx {
+
+using ::mongocxx::v_noabi::write_exception;
+
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

@@ -119,12 +119,13 @@ class bucket {
     ///   If this GridFS bucket does not already exist in the database, it will be implicitly
     ///   created and initialized with GridFS indexes.
     ///
-    /// @throws mongocxx::logic_error if `options` are invalid.
+    /// @throws mongocxx::v_noabi::logic_error if `options` are invalid.
     ///
-    /// @throws mongocxx::query_exception
+    /// @throws mongocxx::v_noabi::query_exception
     ///   if an error occurs when reading from the files collection for this bucket.
     ///
-    /// @throws mongocxx::operation_exception if an error occurs when building GridFS indexes.
+    /// @throws mongocxx::v_noabi::operation_exception if an error occurs when building GridFS
+    /// indexes.
     ///
     uploader open_upload_stream(stdx::string_view filename,
                                 const options::gridfs::upload& options = {});
@@ -151,12 +152,13 @@ class bucket {
     ///   If this GridFS bucket does not already exist in the database, it will be implicitly
     ///   created and initialized with GridFS indexes.
     ///
-    /// @throws mongocxx::logic_error if `options` are invalid.
+    /// @throws mongocxx::v_noabi::logic_error if `options` are invalid.
     ///
-    /// @throws mongocxx::query_exception
+    /// @throws mongocxx::v_noabi::query_exception
     ///   if an error occurs when reading from the files collection for this bucket.
     ///
-    /// @throws mongocxx::operation_exception if an error occurs when building GridFS indexes.
+    /// @throws mongocxx::v_noabi::operation_exception if an error occurs when building GridFS
+    /// indexes.
     ///
     uploader open_upload_stream(const client_session& session,
                                 stdx::string_view filename,
@@ -187,12 +189,13 @@ class bucket {
     ///   If this GridFS bucket does not already exist in the database, it will be implicitly
     ///   created and initialized with GridFS indexes.
     ///
-    /// @throws mongocxx::logic_error if `options` are invalid.
+    /// @throws mongocxx::v_noabi::logic_error if `options` are invalid.
     ///
-    /// @throws mongocxx::query_exception
+    /// @throws mongocxx::v_noabi::query_exception
     ///   if an error occurs when reading from the files collection for this bucket.
     ///
-    /// @throws mongocxx::operation_exception if an error occurs when building GridFS indexes.
+    /// @throws mongocxx::v_noabi::operation_exception if an error occurs when building GridFS
+    /// indexes.
     ///
     uploader open_upload_stream_with_id(bsoncxx::types::bson_value::view id,
                                         stdx::string_view filename,
@@ -222,12 +225,13 @@ class bucket {
     ///   If this GridFS bucket does not already exist in the database, it will be implicitly
     ///   created and initialized with GridFS indexes.
     ///
-    /// @throws mongocxx::logic_error if `options` are invalid.
+    /// @throws mongocxx::v_noabi::logic_error if `options` are invalid.
     ///
-    /// @throws mongocxx::query_exception
+    /// @throws mongocxx::v_noabi::query_exception
     ///   if an error occurs when reading from the files collection for this bucket.
     ///
-    /// @throws mongocxx::operation_exception if an error occurs when building GridFS indexes.
+    /// @throws mongocxx::v_noabi::operation_exception if an error occurs when building GridFS
+    /// indexes.
     ///
     uploader open_upload_stream_with_id(const client_session& session,
                                         bsoncxx::types::bson_value::view id,
@@ -261,23 +265,24 @@ class bucket {
     ///   If this GridFS bucket does not already exist in the database, it will be implicitly
     ///   created and initialized with GridFS indexes.
     ///
-    /// @throws mongocxx::logic_error if `options` are invalid.
+    /// @throws mongocxx::v_noabi::logic_error if `options` are invalid.
     ///
-    /// @throws mongocxx::bulk_write_exception
+    /// @throws mongocxx::v_noabi::bulk_write_exception
     ///   if an error occurs when writing chunk data or file metadata to the database.
     ///
     /// @throws std::ios_base::failure
     ///   if reading from `source` fails. Any exception thrown during the execution of
     ///   `source::read()` will be re-thrown.
     ///
-    /// @throws mongocxx::gridfs_exception
+    /// @throws mongocxx::v_noabi::gridfs_exception
     ///   if the uploader requires more than 2^31-1 chunks to store the file at the requested chunk
     ///   size.
     ///
-    /// @throws mongocxx::query_exception
+    /// @throws mongocxx::v_noabi::query_exception
     ///   if an error occurs when reading from the files collection for this bucket.
     ///
-    /// @throws mongocxx::operation_exception if an error occurs when building GridFS indexes.
+    /// @throws mongocxx::v_noabi::operation_exception if an error occurs when building GridFS
+    /// indexes.
     ///
     result::gridfs::upload upload_from_stream(stdx::string_view filename,
                                               std::istream* source,
@@ -308,23 +313,24 @@ class bucket {
     ///   If this GridFS bucket does not already exist in the database, it will be implicitly
     ///   created and initialized with GridFS indexes.
     ///
-    /// @throws mongocxx::logic_error if `options` are invalid.
+    /// @throws mongocxx::v_noabi::logic_error if `options` are invalid.
     ///
-    /// @throws mongocxx::bulk_write_exception
+    /// @throws mongocxx::v_noabi::bulk_write_exception
     ///   if an error occurs when writing chunk data or file metadata to the database.
     ///
     /// @throws std::ios_base::failure
     ///   if reading from `source` fails. Any exception thrown during the execution of
     ///   `source::read()` will be re-thrown.
     ///
-    /// @throws mongocxx::gridfs_exception
+    /// @throws mongocxx::v_noabi::gridfs_exception
     ///   if the uploader requires more than 2^31-1 chunks to store the file at the requested chunk
     ///   size.
     ///
-    /// @throws mongocxx::query_exception
+    /// @throws mongocxx::v_noabi::query_exception
     ///   if an error occurs when reading from the files collection for this bucket.
     ///
-    /// @throws mongocxx::operation_exception if an error occurs when building GridFS indexes.
+    /// @throws mongocxx::v_noabi::operation_exception if an error occurs when building GridFS
+    /// indexes.
     ///
     result::gridfs::upload upload_from_stream(const client_session& session,
                                               stdx::string_view filename,
@@ -358,23 +364,24 @@ class bucket {
     ///   If this GridFS bucket does not already exist in the database, it will be implicitly
     ///   created and initialized with GridFS indexes.
     ///
-    /// @throws mongocxx::logic_error if `options` are invalid.
+    /// @throws mongocxx::v_noabi::logic_error if `options` are invalid.
     ///
-    /// @throws mongocxx::bulk_write_exception
+    /// @throws mongocxx::v_noabi::bulk_write_exception
     ///   if an error occurs when writing chunk data or file metadata to the database.
     ///
     /// @throws std::ios_base::failure
     ///   if reading from `source` fails. Any exception thrown during the execution of
     ///   `source::read()` will be re-thrown.
     ///
-    /// @throws mongocxx::gridfs_exception
+    /// @throws mongocxx::v_noabi::gridfs_exception
     ///   if the uploader requires more than 2^31-1 chunks to store the file at the requested chunk
     ///   size.
     ///
-    /// @throws mongocxx::query_exception
+    /// @throws mongocxx::v_noabi::query_exception
     ///   if an error occurs when reading from the files collection for this bucket.
     ///
-    /// @throws mongocxx::operation_exception if an error occurs when building GridFS indexes.
+    /// @throws mongocxx::v_noabi::operation_exception if an error occurs when building GridFS
+    /// indexes.
     ///
     void upload_from_stream_with_id(bsoncxx::types::bson_value::view id,
                                     stdx::string_view filename,
@@ -406,23 +413,24 @@ class bucket {
     ///   If this GridFS bucket does not already exist in the database, it will be implicitly
     ///   created and initialized with GridFS indexes.
     ///
-    /// @throws mongocxx::logic_error if `options` are invalid.
+    /// @throws mongocxx::v_noabi::logic_error if `options` are invalid.
     ///
-    /// @throws mongocxx::bulk_write_exception
+    /// @throws mongocxx::v_noabi::bulk_write_exception
     ///   if an error occurs when writing chunk data or file metadata to the database.
     ///
     /// @throws std::ios_base::failure
     ///   if reading from `source` fails. Any exception thrown during the execution of
     ///   `source::read()` will be re-thrown.
     ///
-    /// @throws mongocxx::gridfs_exception
+    /// @throws mongocxx::v_noabi::gridfs_exception
     ///   if the uploader requires more than 2^31-1 chunks to store the file at the requested chunk
     ///   size.
     ///
-    /// @throws mongocxx::query_exception
+    /// @throws mongocxx::v_noabi::query_exception
     ///   if an error occurs when reading from the files collection for this bucket.
     ///
-    /// @throws mongocxx::operation_exception if an error occurs when building GridFS indexes.
+    /// @throws mongocxx::v_noabi::operation_exception if an error occurs when building GridFS
+    /// indexes.
     ///
     void upload_from_stream_with_id(const client_session& session,
                                     bsoncxx::types::bson_value::view id,
@@ -444,10 +452,10 @@ class bucket {
     /// @return
     ///   The gridfs::downloader from which the GridFS file should be read.
     ///
-    /// @throws mongocxx::gridfs_exception
+    /// @throws mongocxx::v_noabi::gridfs_exception
     ///   if the requested file does not exist, or if the requested file has been corrupted.
     ///
-    /// @throws mongocxx::query_exception
+    /// @throws mongocxx::v_noabi::query_exception
     ///   if an error occurs when reading from the files collection for this bucket.
     ///
     downloader open_download_stream(bsoncxx::types::bson_value::view id);
@@ -465,10 +473,10 @@ class bucket {
     /// @return
     ///   The gridfs::downloader from which the GridFS file should be read.
     ///
-    /// @throws mongocxx::gridfs_exception
+    /// @throws mongocxx::v_noabi::gridfs_exception
     ///   if the requested file does not exist, or if the requested file has been corrupted.
     ///
-    /// @throws mongocxx::query_exception
+    /// @throws mongocxx::v_noabi::query_exception
     ///   if an error occurs when reading from the files collection for this bucket.
     ///
     downloader open_download_stream(const client_session& session,
@@ -488,10 +496,10 @@ class bucket {
     /// @param destination
     ///   The non-null stream to which the GridFS file should be written.
     ///
-    /// @throws mongocxx::gridfs_exception
+    /// @throws mongocxx::v_noabi::gridfs_exception
     ///   if the requested file does not exist, or if the requested file has been corrupted.
     ///
-    /// @throws mongocxx::query_exception
+    /// @throws mongocxx::v_noabi::query_exception
     ///   if an error occurs when reading from the files or chunks collections for this bucket.
     ///
     /// @throws std::ios_base::failure
@@ -524,10 +532,10 @@ class bucket {
     /// @param destination
     ///   The non-null stream to which the GridFS file should be written.
     ///
-    /// @throws mongocxx::gridfs_exception
+    /// @throws mongocxx::v_noabi::gridfs_exception
     ///   if the requested file does not exist, or if the requested file has been corrupted.
     ///
-    /// @throws mongocxx::query_exception
+    /// @throws mongocxx::v_noabi::query_exception
     ///   if an error occurs when reading from the files or chunks collections for this bucket.
     ///
     /// @throws std::ios_base::failure
@@ -564,9 +572,9 @@ class bucket {
     /// @param id
     ///   The id of the file to be deleted.
     ///
-    /// @throws mongocxx::gridfs_exception if the requested file does not exist.
+    /// @throws mongocxx::v_noabi::gridfs_exception if the requested file does not exist.
     ///
-    /// @throws mongocxx::bulk_write_exception
+    /// @throws mongocxx::v_noabi::bulk_write_exception
     ///   if an error occurs when removing file data or chunk data from the database.
     ///
     void delete_file(bsoncxx::types::bson_value::view id);
@@ -580,9 +588,9 @@ class bucket {
     /// @param id
     ///   The id of the file to be deleted.
     ///
-    /// @throws mongocxx::gridfs_exception if the requested file does not exist.
+    /// @throws mongocxx::v_noabi::gridfs_exception if the requested file does not exist.
     ///
-    /// @throws mongocxx::bulk_write_exception
+    /// @throws mongocxx::v_noabi::bulk_write_exception
     ///   if an error occurs when removing file data or chunk data from the database.
     ///
     void delete_file(const client_session& session, bsoncxx::types::bson_value::view id);
@@ -603,10 +611,10 @@ class bucket {
     ///
     /// @return
     ///   A mongocxx::cursor with the results. If the query fails, the cursor throws
-    ///   mongocxx::query_exception when the returned cursor is iterated.
+    ///   mongocxx::v_noabi::query_exception when the returned cursor is iterated.
     ///
-    /// @throws mongocxx::logic_error if the options are invalid, or if the unsupported option
-    /// modifiers "$query" or "$explain" are used.
+    /// @throws mongocxx::v_noabi::logic_error if the options are invalid, or if the unsupported
+    /// option modifiers "$query" or "$explain" are used.
     ///
     /// @see mongocxx::collection::find.
     ///
@@ -627,10 +635,10 @@ class bucket {
     ///
     /// @return
     ///   A mongocxx::cursor with the results. If the query fails, the cursor throws
-    ///   mongocxx::query_exception when the returned cursor is iterated.
+    ///   mongocxx::v_noabi::query_exception when the returned cursor is iterated.
     ///
-    /// @throws mongocxx::logic_error if the options are invalid, or if the unsupported option
-    /// modifiers "$query" or "$explain" are used.
+    /// @throws mongocxx::v_noabi::logic_error if the options are invalid, or if the unsupported
+    /// option modifiers "$query" or "$explain" are used.
     ///
     /// @see mongocxx::collection::find.
     ///

@@ -79,7 +79,7 @@ class client_encryption {
     /// @return The id of the created document as a bson_value::value containing
     ///   a UUID (BSON binary subtype 4).
     ///
-    /// @throws mongocxx::exception if there is an error creating the key.
+    /// @throws mongocxx::v_noabi::exception if there is an error creating the key.
     ///
     /// @see
     /// https://www.mongodb.com/docs/ecosystem/use-cases/client-side-field-level-encryption-guide/#b-create-a-data-encryption-key
@@ -120,7 +120,7 @@ class client_encryption {
     ///
     /// @return The encrypted value (BSON binary subtype 6).
     ///
-    /// @throws mongocxx::exception if there is an error encrypting the value.
+    /// @throws mongocxx::v_noabi::exception if there is an error encrypting the value.
     ///
     /// @see
     /// https://www.mongodb.com/docs/manual/reference/method/ClientEncryption.encrypt/#ClientEncryption.encrypt
@@ -152,7 +152,7 @@ class client_encryption {
     ///
     /// @return The original BSON value.
     ///
-    /// @throws mongocxx::exception if there is an error decrypting the value.
+    /// @throws mongocxx::v_noabi::exception if there is an error decrypting the value.
     ///
     /// @see
     /// https://www.mongodb.com/docs/manual/reference/method/ClientEncryption.decrypt/#ClientEncryption.decrypt
@@ -175,7 +175,7 @@ class client_encryption {
     ///
     /// @return a RewrapManyDataKeyResult.
     ///
-    /// @throws mongocxx::exception if there is an error rewrapping the key.
+    /// @throws mongocxx::v_noabi::exception if there is an error rewrapping the key.
     ///
     /// @see
     /// https://www.mongodb.com/docs/manual/reference/method/KeyVault.rewrapManyDataKey/
@@ -189,7 +189,7 @@ class client_encryption {
     ///
     /// @param id Binary id of which key to delete
     ///
-    /// @throws mongocxx::exception if there is an error deleting the key.
+    /// @throws mongocxx::v_noabi::exception if there is an error deleting the key.
     ///
     /// @return the result of the internal deleteOne() operation on the key vault collection.
     ///
@@ -202,7 +202,7 @@ class client_encryption {
     ///
     /// @param id Binary id of which key to delete
     ///
-    /// @throws mongocxx::exception if there is an error getting the key.
+    /// @throws mongocxx::v_noabi::exception if there is an error getting the key.
     ///
     /// @return The result of the internal find() operation on the key vault collection.
     ///
@@ -213,7 +213,7 @@ class client_encryption {
     ///
     /// Finds all documents in the key vault collection.
     ///
-    /// @throws mongocxx::exception if there is an error getting the keys.
+    /// @throws mongocxx::v_noabi::exception if there is an error getting the keys.
     ///
     /// @return the result of the internal find() operation on the key vault collection.
     ///
@@ -229,7 +229,7 @@ class client_encryption {
     ///
     /// @param key_alt_name String alternative name for the key
     ///
-    /// @throws mongocxx::exception if there is an error adding the key alt name.
+    /// @throws mongocxx::v_noabi::exception if there is an error adding the key alt name.
     ///
     /// @return the previous version of the key document.
     ///
@@ -246,7 +246,7 @@ class client_encryption {
     ///
     /// @param key_alt_name String alternative name for the key
     ///
-    /// @throws mongocxx::exception if there is an error removing the key alt name.
+    /// @throws mongocxx::v_noabi::exception if there is an error removing the key alt name.
     ///
     /// @return The previous version of the key document.
     ///
@@ -260,7 +260,7 @@ class client_encryption {
     ///
     /// @param key_alt_name String alternative name for the key
     ///
-    /// @throws mongocxx::exception if there is an error getting the key by alt name.
+    /// @throws mongocxx::v_noabi::exception if there is an error getting the key by alt name.
     ///
     /// @return A key document in the key vault collection with the given keyAltName.
     ///

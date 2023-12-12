@@ -69,7 +69,7 @@ class change_stream {
     /// @return
     ///   The change_stream::iterator
     /// @exception
-    ///   Throws mongocxx::query_exception if the query failed.
+    ///   Throws mongocxx::v_noabi::query_exception if the query failed.
     ///
     iterator begin() const;
 
@@ -166,7 +166,7 @@ class change_stream::iterator {
     /// If no notification is available, callers may call change_stream::begin() to check for more
     /// notifications.
     ///
-    /// @throws mongocxx::query_exception if the query failed
+    /// @throws mongocxx::v_noabi::query_exception if the query failed
     ///
     iterator& operator++();
 
@@ -181,7 +181,7 @@ class change_stream::iterator {
     /// If no notification is available, callers may call change_stream::begin() to check for more
     /// notifications.
     ///
-    /// @throws mongocxx::query_exception if the query failed
+    /// @throws mongocxx::v_noabi::query_exception if the query failed
     ///
     void operator++(int);
 

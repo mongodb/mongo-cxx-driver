@@ -19,7 +19,8 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace wip {
+namespace v_noabi {
+
 namespace {
 
 //
@@ -104,5 +105,5 @@ const std::error_category& MONGOCXX_CALL error_category() {
     return category;
 }
 
-}  // namespace wip
+}  // namespace v_noabi
 }  // namespace mongocxx
