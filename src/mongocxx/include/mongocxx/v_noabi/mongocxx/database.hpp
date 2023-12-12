@@ -625,7 +625,7 @@ class database {
     ///
 
    private:
-    friend ::mongocxx::wip::client_encryption;
+    friend ::mongocxx::v_noabi::client_encryption;
     friend ::mongocxx::wip::client;
     friend ::mongocxx::wip::collection;
 

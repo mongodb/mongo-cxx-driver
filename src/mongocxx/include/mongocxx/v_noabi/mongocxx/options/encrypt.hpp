@@ -218,7 +218,7 @@ class encrypt {
     const stdx::optional<options::range>& range_opts() const;
 
    private:
-    friend ::mongocxx::wip::client_encryption;
+    friend ::mongocxx::v_noabi::client_encryption;
 
     MONGOCXX_PRIVATE void* convert() const;
 

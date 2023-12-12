@@ -100,7 +100,7 @@ class rewrap_many_datakey {
     const stdx::optional<bsoncxx::document::view_or_value>& master_key() const;
 
    private:
-    friend ::mongocxx::wip::client_encryption;
+    friend ::mongocxx::v_noabi::client_encryption;
 
     bsoncxx::string::view_or_value _provider;
     stdx::optional<bsoncxx::document::view_or_value> _master_key;

@@ -1860,7 +1860,7 @@ class collection {
 
    private:
     friend ::mongocxx::v_noabi::bulk_write;
-    friend ::mongocxx::wip::client_encryption;
+    friend ::mongocxx::v_noabi::client_encryption;
     friend ::mongocxx::wip::database;
 
     MONGOCXX_PRIVATE collection(const database& database,
