@@ -24,7 +24,6 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace wip {
 namespace entity {
 
 class map {
@@ -85,8 +84,8 @@ class map {
     std::unordered_map<key_type, mongocxx::cursor> _cursor_map;
     std::unordered_map<key_type, mongocxx::client_encryption> _client_encryption_map;
 };
+
 }  // namespace entity
-}  // namespace wip
 }  // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

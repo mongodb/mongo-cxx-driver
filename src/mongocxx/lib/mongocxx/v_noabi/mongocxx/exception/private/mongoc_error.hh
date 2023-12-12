@@ -22,7 +22,8 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace wip {
+namespace v_noabi {
+
 inline std::error_code make_error_code(int code, int) {
     // Domain is ignored. We simply issue the code.
     return {code, server_error_category()};
@@ -62,7 +63,7 @@ void throw_exception(bsoncxx::document::value raw_server_error, const ::bson_err
     throw exception_type{make_error_code(error), std::move(raw_server_error), error.message};
 }
 
-}  // namespace wip
+}  // namespace v_noabi
 }  // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

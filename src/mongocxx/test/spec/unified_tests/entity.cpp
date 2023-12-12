@@ -21,7 +21,6 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace wip {
 namespace entity {
 
 template <typename Key, typename Entity, typename Map>
@@ -153,5 +152,4 @@ void map::erase(const key_type& key) {
 }
 
 }  // namespace entity
-}  // namespace wip
 }  // namespace mongocxx

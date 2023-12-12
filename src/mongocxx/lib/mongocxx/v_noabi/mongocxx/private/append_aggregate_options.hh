@@ -6,9 +6,10 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace wip {
-MONGOCXX_INLINE void append_aggregate_options(bsoncxx::builder::basic::document& builder,
-                                              const options::aggregate& options) {
+namespace v_noabi {
+
+inline void append_aggregate_options(bsoncxx::builder::basic::document& builder,
+                                     const options::aggregate& options) {
     using bsoncxx::builder::basic::kvp;
 
     if (const auto& allow_disk_use = options.allow_disk_use()) {
@@ -51,7 +52,7 @@ MONGOCXX_INLINE void append_aggregate_options(bsoncxx::builder::basic::document&
         builder.append(kvp("comment", *comment));
     }
 }
-}  // namespace wip
+}  // namespace v_noabi
 }  // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

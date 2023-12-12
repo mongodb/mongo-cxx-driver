@@ -17,7 +17,6 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace wip {
 namespace libbson {
 
 namespace {
@@ -126,5 +125,4 @@ bsoncxx::document::value scoped_bson_t::steal() {
 }
 
 }  // namespace libbson
-}  // namespace wip
 }  // namespace mongocxx

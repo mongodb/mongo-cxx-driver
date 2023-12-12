@@ -180,9 +180,10 @@ mongocxx::stdx::optional<bsoncxx::document::value> find_and_modify(
 
     if (!result) {
         if (!reply.view().empty()) {
-            mongocxx::throw_exception<mongocxx::v_noabi::write_exception>(reply.steal(), error);
+            mongocxx::v_noabi::throw_exception<mongocxx::v_noabi::write_exception>(reply.steal(),
+                                                                                   error);
         }
-        mongocxx::throw_exception<mongocxx::v_noabi::write_exception>(error);
+        mongocxx::v_noabi::throw_exception<mongocxx::v_noabi::write_exception>(error);
     }
 
     bsoncxx::document::view reply_view = reply.view();

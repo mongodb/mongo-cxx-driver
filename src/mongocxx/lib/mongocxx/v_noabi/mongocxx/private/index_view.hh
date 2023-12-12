@@ -224,8 +224,7 @@ class index_view::impl {
         }
     }
 
-    MONGOCXX_INLINE void drop_all(const client_session* session,
-                                  const options::index_view& options) {
+    inline void drop_all(const client_session* session, const options::index_view& options) {
         bsoncxx::document::value command = make_document(
             kvp("dropIndexes", libmongoc::collection_get_name(_coll)), kvp("index", "*"));
 
