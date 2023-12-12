@@ -1,5 +1,3 @@
-#include "bsoncxx/stdx/optional.hpp"
-
 #include <memory>
 #include <mutex>
 #include <string>
@@ -7,6 +5,7 @@
 
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/stdx/operators.hpp>
+#include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/stdx/type_traits.hpp>
 #include <third_party/catch/include/catch.hpp>
 
