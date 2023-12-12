@@ -25,7 +25,7 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace builder {
 namespace stream {
 
@@ -47,14 +47,14 @@ class document : public key_context<> {
     ///
     /// @return A view of the BSON document.
     ///
-    BSONCXX_INLINE bsoncxx::document::view view() const {
+    BSONCXX_INLINE bsoncxx::v_noabi::document::view view() const {
         return _core.view_document();
     }
 
     ///
     /// @return A view of the BSON document.
     ///
-    BSONCXX_INLINE operator bsoncxx::document::view() const {
+    BSONCXX_INLINE operator bsoncxx::v_noabi::document::view() const {
         return view();
     }
 
@@ -67,7 +67,7 @@ class document : public key_context<> {
     ///  After calling extract() it is illegal to call any methods
     ///  on this class, unless it is subsequenly moved into.
     ///
-    BSONCXX_INLINE bsoncxx::document::value extract() {
+    BSONCXX_INLINE bsoncxx::v_noabi::document::value extract() {
         return _core.extract_document();
     }
 

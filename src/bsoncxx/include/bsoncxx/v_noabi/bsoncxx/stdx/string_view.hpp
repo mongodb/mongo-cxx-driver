@@ -21,7 +21,7 @@
 #include <core/string.hpp>
 
 namespace bsoncxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace stdx {
 
 using ::core::basic_string_view;
@@ -40,7 +40,7 @@ using ::core::string_view;
 #include <boost/utility/string_view.hpp>
 
 namespace bsoncxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace stdx {
 
 using ::boost::basic_string_view;
@@ -55,7 +55,7 @@ using ::boost::string_view;
 #include <boost/utility/string_ref.hpp>
 
 namespace bsoncxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace stdx {
 
 template <typename charT, typename traits = std::char_traits<charT>>
@@ -73,7 +73,7 @@ using string_view = ::boost::string_ref;
 #include <experimental/string_view>
 
 namespace bsoncxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace stdx {
 
 using ::std::experimental::basic_string_view;
@@ -88,7 +88,7 @@ using ::std::experimental::string_view;
 #include <string_view>
 
 namespace bsoncxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace stdx {
 
 using ::std::basic_string_view;
@@ -103,3 +103,12 @@ using ::std::string_view;
 #endif
 
 #include <bsoncxx/config/postlude.hpp>
+
+namespace bsoncxx {
+namespace stdx {
+
+using ::bsoncxx::v_noabi::stdx::basic_string_view;
+using ::bsoncxx::v_noabi::stdx::string_view;
+
+}  // namespace stdx
+}  // namespace bsoncxx

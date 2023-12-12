@@ -26,7 +26,7 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace builder {
 namespace stream {
 
@@ -65,7 +65,8 @@ class key_context {
     /// @param v
     ///   The key to append
     ///
-    /// @throws bsoncxx::exception if the previous value appended to the builder was also a key.
+    /// @throws bsoncxx::v_noabi::exception if the previous value appended to the builder was also a
+    /// key.
     ///
     template <std::size_t n>
     BSONCXX_INLINE value_context<key_context> operator<<(const char (&v)[n]) {
@@ -80,7 +81,8 @@ class key_context {
     /// @param str
     ///   The key to append
     ///
-    /// @throws bsoncxx::exception if the previous value appended to the builder was also a key.
+    /// @throws bsoncxx::v_noabi::exception if the previous value appended to the builder was also a
+    /// key.
     ///
     BSONCXX_INLINE value_context<key_context> operator<<(std::string str) {
         _core->key_owned(std::move(str));
@@ -94,7 +96,8 @@ class key_context {
     /// @param str
     ///   The key to append
     ///
-    /// @throws bsoncxx::exception if the previous value appended to the builder was also a key.
+    /// @throws bsoncxx::v_noabi::exception if the previous value appended to the builder was also a
+    /// key.
     ///
     BSONCXX_INLINE value_context<key_context> operator<<(stdx::string_view str) {
         _core->key_view(std::move(str));
@@ -127,7 +130,7 @@ class key_context {
     /// @return A value type which holds the complete bson document.
     ///
     template <typename T>
-    BSONCXX_INLINE detail::requires_t<bsoncxx::document::value,
+    BSONCXX_INLINE detail::requires_t<bsoncxx::v_noabi::document::value,
                                       std::is_same<base, closed_context>,
                                       detail::is_alike<T, finalize_type>>
     operator<<(T&&) {

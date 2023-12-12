@@ -28,7 +28,7 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace types {
 namespace bson_value {
 ///
@@ -87,7 +87,7 @@ class view {
     ///
     /// @return The type of the underlying BSON value stored in this object.
     ///
-    bsoncxx::type type() const;
+    bsoncxx::v_noabi::type type() const;
 
     ///
     /// @return The underlying BSON double value.
@@ -278,7 +278,8 @@ class view {
 
     void BSONCXX_PRIVATE destroy() noexcept;
 
-    bsoncxx::type _type;
+    bsoncxx::v_noabi::type _type;
+
     union {
         struct b_double _b_double;
         struct b_string _b_string;
@@ -340,6 +341,17 @@ operator!=(T&& lhs, const bson_value::view& rhs) {
 }  // namespace bson_value
 }  // namespace types
 }  // namespace v_noabi
+}  // namespace bsoncxx
+
+namespace bsoncxx {
+namespace types {
+namespace bson_value {
+
+using ::bsoncxx::v_noabi::types::bson_value::operator==;
+using ::bsoncxx::v_noabi::types::bson_value::operator!=;
+
+}  // namespace bson_value
+}  // namespace types
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

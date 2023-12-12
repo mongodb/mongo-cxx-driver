@@ -5,7 +5,6 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-inline namespace v_noabi {
 namespace detail {
 
 #define bsoncxx_ttparam \
@@ -421,9 +420,6 @@ template <typename T, typename U>
 struct is_alike : std::is_same<remove_cvref_t<T>, remove_cvref_t<U>> {};
 
 }  // namespace detail
-
-}  // namespace v_noabi
-
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

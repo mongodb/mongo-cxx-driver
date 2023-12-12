@@ -19,7 +19,7 @@
 #include <bsoncxx/config/private/prelude.hh>
 
 namespace bsoncxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace document {
 
 value::value(std::uint8_t* data, std::size_t length, deleter_type dtor)

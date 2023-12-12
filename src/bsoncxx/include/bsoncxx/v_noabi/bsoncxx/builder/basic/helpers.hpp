@@ -19,15 +19,25 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace builder {
 namespace basic {
 
-using bsoncxx::builder::concatenate;
+using ::bsoncxx::v_noabi::builder::concatenate;
 
 }  // namespace basic
 }  // namespace builder
 }  // namespace v_noabi
+}  // namespace bsoncxx
+
+namespace bsoncxx {
+namespace builder {
+namespace basic {
+
+using ::bsoncxx::v_noabi::builder::basic::concatenate;
+
+}  // namespace basic
+}  // namespace builder
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

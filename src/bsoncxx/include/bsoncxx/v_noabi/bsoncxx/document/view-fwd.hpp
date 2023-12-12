@@ -17,13 +17,21 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace document {
 
 class BSONCXX_API view;
 
 }  // namespace document
 }  // namespace v_noabi
+}  // namespace bsoncxx
+
+namespace bsoncxx {
+namespace document {
+
+using ::bsoncxx::v_noabi::document::view;
+
+}  // namespace document
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

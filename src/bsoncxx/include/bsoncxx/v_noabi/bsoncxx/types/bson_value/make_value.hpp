@@ -21,7 +21,7 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace types {
 namespace bson_value {
 
@@ -38,6 +38,16 @@ BSONCXX_INLINE bson_value::value make_value(T&& t) {
 }  // namespace bson_value
 }  // namespace types
 }  // namespace v_noabi
+}  // namespace bsoncxx
+
+namespace bsoncxx {
+namespace types {
+namespace bson_value {
+
+using ::bsoncxx::v_noabi::types::bson_value::make_value;
+
+}  // namespace bson_value
+}  // namespace types
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

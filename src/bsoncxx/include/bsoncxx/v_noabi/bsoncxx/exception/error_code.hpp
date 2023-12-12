@@ -22,7 +22,8 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-inline namespace v_noabi {
+namespace v_noabi {
+
 ///
 /// Enum representing the various error types that can occur while operating on BSON values.
 ///
@@ -109,7 +110,7 @@ enum class error_code : std::int32_t {
 BSONCXX_API const std::error_category& BSONCXX_CALL error_category();
 
 ///
-/// Translate a bsoncxx::error_code into a std::error_code.
+/// Translate a bsoncxx::v_noabi::error_code into a std::error_code.
 ///
 /// @param error An error from bsoncxx
 /// @return An error_code
@@ -121,12 +122,19 @@ BSONCXX_INLINE std::error_code make_error_code(error_code error) {
 }  // namespace v_noabi
 }  // namespace bsoncxx
 
+namespace bsoncxx {
+
+using ::bsoncxx::v_noabi::error_category;
+using ::bsoncxx::v_noabi::make_error_code;
+
+}  // namespace bsoncxx
+
 #include <bsoncxx/config/postlude.hpp>
 
 namespace std {
 
 // Specialize is_error_code_enum so we get simpler std::error_code construction
 template <>
-struct is_error_code_enum<bsoncxx::error_code> : public true_type {};
+struct is_error_code_enum<bsoncxx::v_noabi::error_code> : public true_type {};
 
 }  // namespace std

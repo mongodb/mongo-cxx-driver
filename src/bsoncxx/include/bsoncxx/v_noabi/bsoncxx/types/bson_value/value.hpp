@@ -29,7 +29,7 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace types {
 namespace bson_value {
 
@@ -116,12 +116,12 @@ class value {
     ///
     /// Constructs a BSON document value.
     ///
-    value(bsoncxx::document::view v);
+    value(bsoncxx::v_noabi::document::view v);
 
     ///
     /// Constructs a BSON array value.
     ///
-    value(bsoncxx::array::view v);
+    value(bsoncxx::v_noabi::array::view v);
 
     ///
     /// Constructs a BSON binary data value.
@@ -166,7 +166,7 @@ class value {
     /// @param scope
     ///     a bson document view holding the scope environment
     ///
-    value(stdx::string_view code, bsoncxx::document::view_or_value scope);
+    value(stdx::string_view code, bsoncxx::v_noabi::document::view_or_value scope);
 
     ///
     /// Constructs a BSON regex value with options.
@@ -190,7 +190,7 @@ class value {
     ///     the symbol, JavaScript code, or regex pattern for the BSON symbol, code, or regex value
     ///     respectively.
     ///
-    /// @throws bsoncxx::exception if the type's value is not k_code, k_regex, or k_symbol.
+    /// @throws bsoncxx::v_noabi::exception if the type's value is not k_code, k_regex, or k_symbol.
     ///
     /// @deprecated
     ///   The BSON symbol type is deprecated and use by clients is discouraged.
@@ -208,7 +208,8 @@ class value {
     /// @param id
     ///     the type of BSON value to construct.
     ///
-    /// @throws bsoncxx::exception if the type's value is not k_maxkey, k_minkey, or k_undefined.
+    /// @throws bsoncxx::v_noabi::exception if the type's value is not k_maxkey, k_minkey, or
+    /// k_undefined.
     ///
     value(const type id);
 
@@ -226,7 +227,7 @@ class value {
     ///     If a BSON decimal128 value is to be constructed, this is the low value.
     ///     If a BSON timestamp value is to be constructed, this is the timestamp.
     ///
-    /// @throws bsoncxx::exception if the specified type is missing its required arguments.
+    /// @throws bsoncxx::v_noabi::exception if the specified type is missing its required arguments.
     ///
     /// @warning
     ///   The BSON timestamp type is used internally by the MongoDB server - use by clients
@@ -322,8 +323,18 @@ BSONCXX_INLINE bool operator!=(const view& lhs, const value& rhs) {
 
 }  // namespace bson_value
 }  // namespace types
-
 }  // namespace v_noabi
+}  // namespace bsoncxx
+
+namespace bsoncxx {
+namespace types {
+namespace bson_value {
+
+using ::bsoncxx::v_noabi::types::bson_value::operator==;
+using ::bsoncxx::v_noabi::types::bson_value::operator!=;
+
+}  // namespace bson_value
+}  // namespace types
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

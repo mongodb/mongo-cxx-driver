@@ -21,15 +21,25 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace types {
 namespace bson_value {
 
-using view_or_value = bsoncxx::view_or_value<bson_value::view, bson_value::value>;
+using view_or_value = bsoncxx::v_noabi::view_or_value<view, value>;
 
 }  // namespace bson_value
 }  // namespace types
 }  // namespace v_noabi
+}  // namespace bsoncxx
+
+namespace bsoncxx {
+namespace types {
+namespace bson_value {
+
+using ::bsoncxx::v_noabi::types::bson_value::view_or_value;
+
+}  // namespace bson_value
+}  // namespace types
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

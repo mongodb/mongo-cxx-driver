@@ -18,12 +18,22 @@
 #include <system_error>
 
 namespace bsoncxx {
-inline namespace v_noabi { enum class error_code : std::int32_t; }  // namespace v_noabi
+namespace v_noabi {
+
+enum class error_code : std::int32_t;
+
+}  // namespace v_noabi
+}  // namespace bsoncxx
+
+namespace bsoncxx {
+
+using ::bsoncxx::v_noabi::error_code;
+
 }  // namespace bsoncxx
 
 namespace std {
 
 template <>
-struct is_error_code_enum<bsoncxx::error_code>;
+struct is_error_code_enum<bsoncxx::v_noabi::error_code>;
 
 }  // namespace std

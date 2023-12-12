@@ -24,23 +24,23 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace string {
 
 ///
 /// Class representing a view-or-value variant type for strings.
 ///
-/// This class adds several string-specific methods to the bsoncxx::view_or_value template:
+/// This class adds several string-specific methods to the bsoncxx::v_noabi::view_or_value template:
 /// - a constructor overload for const char*
 /// - a constructor overload for std::string by l-value reference
 /// - a safe c_str() operation to return null-terminated c-style strings.
 ///
-class view_or_value : public bsoncxx::view_or_value<stdx::string_view, std::string> {
+class view_or_value : public bsoncxx::v_noabi::view_or_value<stdx::string_view, std::string> {
    public:
     ///
-    /// Forward all bsoncxx::view_or_value constructors.
+    /// Forward all bsoncxx::v_noabi::view_or_value constructors.
     ///
-    using bsoncxx::view_or_value<stdx::string_view, std::string>::view_or_value;
+    using bsoncxx::v_noabi::view_or_value<stdx::string_view, std::string>::view_or_value;
 
     ///
     /// Default constructor, equivalent to using an empty string.
@@ -55,7 +55,7 @@ class view_or_value : public bsoncxx::view_or_value<stdx::string_view, std::stri
     /// @param str A null-terminated string
     ///
     BSONCXX_INLINE view_or_value(const char* str)
-        : bsoncxx::view_or_value<stdx::string_view, std::string>(stdx::string_view(str)) {}
+        : bsoncxx::v_noabi::view_or_value<stdx::string_view, std::string>(stdx::string_view(str)) {}
 
     ///
     /// Allow construction with an l-value reference to a std::string. The resulting
@@ -68,7 +68,7 @@ class view_or_value : public bsoncxx::view_or_value<stdx::string_view, std::stri
     /// @param str A std::string l-value reference.
     ///
     BSONCXX_INLINE view_or_value(const std::string& str)
-        : bsoncxx::view_or_value<stdx::string_view, std::string>(stdx::string_view(str)) {}
+        : bsoncxx::v_noabi::view_or_value<stdx::string_view, std::string>(stdx::string_view(str)) {}
 
     ///
     /// Return a string_view_or_value that is guaranteed to hold a null-terminated
@@ -120,6 +120,15 @@ BSONCXX_INLINE bool operator!=(const char* lhs, const view_or_value& rhs) {
 
 }  // namespace string
 }  // namespace v_noabi
+}  // namespace bsoncxx
+
+namespace bsoncxx {
+namespace string {
+
+using ::bsoncxx::v_noabi::string::operator==;
+using ::bsoncxx::v_noabi::string::operator!=;
+
+}  // namespace string
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

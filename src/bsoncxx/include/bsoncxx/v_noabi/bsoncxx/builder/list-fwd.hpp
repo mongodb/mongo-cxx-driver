@@ -15,7 +15,7 @@
 #pragma once
 
 namespace bsoncxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace builder {
 
 class list;
@@ -24,4 +24,14 @@ class array;
 
 }  // namespace builder
 }  // namespace v_noabi
+}  // namespace bsoncxx
+
+namespace bsoncxx {
+namespace builder {
+
+using ::bsoncxx::v_noabi::builder::array;
+using ::bsoncxx::v_noabi::builder::document;
+using ::bsoncxx::v_noabi::builder::list;
+
+}  // namespace builder
 }  // namespace bsoncxx

@@ -27,15 +27,15 @@
     bson_iter_t iter; \
     bson_iter_init_from_data_at_offset(&iter, raw, length, offset, keylen);
 
-#define BSONCXX_TYPE_CHECK(name)                                                \
-    do {                                                                        \
-        if (type() != bsoncxx::type::k_##name) {                                \
-            throw bsoncxx::exception{error_code::k_need_element_type_k_##name}; \
-        }                                                                       \
+#define BSONCXX_TYPE_CHECK(name)                                                         \
+    do {                                                                                 \
+        if (type() != bsoncxx::v_noabi::type::k_##name) {                                \
+            throw bsoncxx::v_noabi::exception{error_code::k_need_element_type_k_##name}; \
+        }                                                                                \
     } while (0)
 
 namespace bsoncxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace types {
 namespace bson_value {
 
@@ -46,7 +46,7 @@ view::view() noexcept : view(nullptr) {}
 #if !defined(BSONCXX_POLY_USE_BOOST)
 #define BSONCXX_ENUM(name, val)                                                                \
     view::view(b_##name value) noexcept                                                        \
-        : _type(static_cast<bsoncxx::type>(val)), _b_##name(std::move(value)) {                \
+        : _type(static_cast<bsoncxx::v_noabi::type>(val)), _b_##name(std::move(value)) {       \
         static_assert(std::is_nothrow_copy_constructible<b_##name>::value, "Copy may throw");  \
         static_assert(std::is_nothrow_copy_assignable<b_##name>::value, "Copy may throw");     \
         static_assert(std::is_nothrow_destructible<b_##name>::value, "Destruction may throw"); \
@@ -54,7 +54,7 @@ view::view() noexcept : view(nullptr) {}
 #else
 #define BSONCXX_ENUM(name, val)                                                                \
     view::view(b_##name value) noexcept                                                        \
-        : _type(static_cast<bsoncxx::type>(val)), _b_##name(std::move(value)) {                \
+        : _type(static_cast<bsoncxx::v_noabi::type>(val)), _b_##name(std::move(value)) {       \
         static_assert(std::is_nothrow_destructible<b_##name>::value, "Destruction may throw"); \
     }
 #endif
@@ -101,7 +101,7 @@ view::~view() {
     destroy();
 }
 
-bsoncxx::type view::type() const {
+bsoncxx::v_noabi::type view::type() const {
     return _type;
 }
 
@@ -135,19 +135,19 @@ view::view(void* internal_value) noexcept {
 
 void view::_init(void* internal_value) noexcept {
     if (!internal_value) {
-        _type = bsoncxx::type::k_null;
-        _b_null = bsoncxx::types::b_null{};
+        _type = bsoncxx::v_noabi::type::k_null;
+        _b_null = bsoncxx::v_noabi::types::b_null{};
         return;
     }
 
     bson_value_t* v = (bson_value_t*)(internal_value);
-    _type = static_cast<bsoncxx::type>(v->value_type);
+    _type = static_cast<bsoncxx::v_noabi::type>(v->value_type);
 
     switch (_type) {
-#define BSONCXX_ENUM(name, val)              \
-    case bsoncxx::type::k_##name: {          \
-        convert_from_libbson(v, &_b_##name); \
-        break;                               \
+#define BSONCXX_ENUM(name, val)                                         \
+    case bsoncxx::v_noabi::type::k_##name: {                            \
+        ::bsoncxx::v_noabi::types::convert_from_libbson(v, &_b_##name); \
+        break;                                                          \
     }
 #include <bsoncxx/enums/type.hpp>
 #undef BSONCXX_ENUM

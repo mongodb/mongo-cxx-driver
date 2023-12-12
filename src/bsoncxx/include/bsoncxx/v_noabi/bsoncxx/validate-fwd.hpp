@@ -17,7 +17,17 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-inline namespace v_noabi { class BSONCXX_API validator; }  // namespace v_noabi
+namespace v_noabi {
+
+class BSONCXX_API validator;
+
+}  // namespace v_noabi
+}  // namespace bsoncxx
+
+namespace bsoncxx {
+
+using ::bsoncxx::v_noabi::validator;
+
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

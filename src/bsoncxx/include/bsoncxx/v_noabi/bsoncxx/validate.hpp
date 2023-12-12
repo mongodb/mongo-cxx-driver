@@ -25,7 +25,8 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-inline namespace v_noabi {
+namespace v_noabi {
+
 ///
 /// Validates a BSON document. This is a simplified overload that will
 /// only do the bare minimum validation of document structure, and does
@@ -68,6 +69,7 @@ validate(const std::uint8_t* data,
          std::size_t length,
          const validator& validator,
          std::size_t* invalid_offset = nullptr);
+
 ///
 /// A validator is used to enable or disable specific checks that can be
 /// performed during BSON validation.
@@ -156,6 +158,12 @@ class validator {
 };
 
 }  // namespace v_noabi
+}  // namespace bsoncxx
+
+namespace bsoncxx {
+
+using ::bsoncxx::v_noabi::validate;
+
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

@@ -19,7 +19,8 @@
 #include <bsoncxx/config/private/prelude.hh>
 
 namespace bsoncxx {
-inline namespace v_noabi {
+namespace v_noabi {
+
 namespace {
 
 class error_category_impl final : public std::error_category {

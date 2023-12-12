@@ -59,9 +59,9 @@ class client_encryption::impl {
         auto convert(const T& value)
             // Use trailing return type syntax to SFINAE without triggering GCC -Wignored-attributes
             // warnings due to using decltype within template parameters.
-            -> decltype(bsoncxx::types::convert_to_libbson(std::declval<const T&>(),
-                                                           std::declval<bson_value_t*>())) {
-            bsoncxx::types::convert_to_libbson(value, &this->value);
+            -> decltype(bsoncxx::v_noabi::types::convert_to_libbson(
+                std::declval<const T&>(), std::declval<bson_value_t*>())) {
+            bsoncxx::v_noabi::types::convert_to_libbson(value, &this->value);
         }
 
         template <typename T>
@@ -71,7 +71,7 @@ class client_encryption::impl {
 
         explicit scoped_bson_value(const bsoncxx::types::bson_value::view& view) {
             // Argument order is reversed for bsoncxx::types::bson_value::view.
-            bsoncxx::types::convert_to_libbson(&this->value, view);
+            bsoncxx::v_noabi::types::convert_to_libbson(&this->value, view);
         }
 
         ~scoped_bson_value() {
@@ -143,7 +143,7 @@ class client_encryption::impl {
             throw_exception<operation_exception>(error);
         }
 
-        return bsoncxx::types::bson_value::make_owning_bson(keyid.get());
+        return bsoncxx::v_noabi::types::bson_value::make_owning_bson(keyid.get());
     }
 
     bsoncxx::types::bson_value::value encrypt(bsoncxx::types::bson_value::view value,
@@ -162,7 +162,7 @@ class client_encryption::impl {
             throw_exception<operation_exception>(error);
         }
 
-        return bsoncxx::types::bson_value::make_owning_bson(ciphertext.get());
+        return bsoncxx::v_noabi::types::bson_value::make_owning_bson(ciphertext.get());
     }
 
     bsoncxx::document::value encrypt_expression(bsoncxx::document::view_or_value expr,
@@ -195,7 +195,7 @@ class client_encryption::impl {
             throw_exception<operation_exception>(error);
         }
 
-        return bsoncxx::types::bson_value::make_owning_bson(decrypted_value.get());
+        return bsoncxx::v_noabi::types::bson_value::make_owning_bson(decrypted_value.get());
     }
 
     result::rewrap_many_datakey rewrap_many_datakey(bsoncxx::document::view_or_value filter,

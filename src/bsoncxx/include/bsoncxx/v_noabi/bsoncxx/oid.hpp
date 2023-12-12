@@ -25,7 +25,8 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-inline namespace v_noabi {
+namespace v_noabi {
+
 ///
 /// Represents a MongoDB ObjectId. As this BSON type is used within the MongoDB server
 /// as a primary key for each document, it is useful for representing a 'pointer'
@@ -53,7 +54,7 @@ class oid {
     /// @param len
     ///   The length of the buffer. Should be equal to oid::size().
     ///
-    /// @throws bsoncxx::exception if the length is not equal to oid::size().
+    /// @throws bsoncxx::v_noabi::exception if the length is not equal to oid::size().
     ///
     explicit oid(const char* bytes, std::size_t len);
 
@@ -63,10 +64,10 @@ class oid {
     /// @param str
     ///   A string of a hexadecimal representation of a valid ObjectId.
     ///
-    /// @throws bsoncxx::exception if the string isn't an OID-sized hex
+    /// @throws bsoncxx::v_noabi::exception if the string isn't an OID-sized hex
     /// string.
     ///
-    explicit oid(const bsoncxx::stdx::string_view& str);
+    explicit oid(const stdx::string_view& str);
 
     ///
     /// Converts this oid to a hexadecimal string.

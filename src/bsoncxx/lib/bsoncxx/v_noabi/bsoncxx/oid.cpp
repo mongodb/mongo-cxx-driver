@@ -22,7 +22,8 @@
 #include <bsoncxx/config/private/prelude.hh>
 
 namespace bsoncxx {
-inline namespace v_noabi {
+namespace v_noabi {
+
 oid::oid() {
     bson_oid_t oid;
     bson_oid_init(&oid, nullptr);
@@ -30,9 +31,9 @@ oid::oid() {
     std::memcpy(_bytes.data(), oid.bytes, sizeof(oid.bytes));
 }
 
-oid::oid(const bsoncxx::stdx::string_view& str) {
+oid::oid(const stdx::string_view& str) {
     if (!bson_oid_is_valid(str.data(), str.size())) {
-        throw bsoncxx::exception{error_code::k_invalid_oid};
+        throw bsoncxx::v_noabi::exception{error_code::k_invalid_oid};
     }
     bson_oid_t oid;
     bson_oid_init_from_string(&oid, str.data());
@@ -41,7 +42,7 @@ oid::oid(const bsoncxx::stdx::string_view& str) {
 
 oid::oid(const char* bytes, std::size_t len) {
     if (len != this->size()) {
-        throw bsoncxx::exception{error_code::k_invalid_oid};
+        throw bsoncxx::v_noabi::exception{error_code::k_invalid_oid};
     }
     std::memcpy(_bytes.data(), bytes, _bytes.size());
 }

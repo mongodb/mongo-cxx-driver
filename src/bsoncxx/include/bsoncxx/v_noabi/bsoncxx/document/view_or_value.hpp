@@ -21,13 +21,21 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace document {
 
-using view_or_value = bsoncxx::view_or_value<document::view, document::value>;
+using view_or_value = bsoncxx::v_noabi::view_or_value<view, value>;
 
 }  // namespace document
 }  // namespace v_noabi
+}  // namespace bsoncxx
+
+namespace bsoncxx {
+namespace document {
+
+using ::bsoncxx::v_noabi::document::view_or_value;
+
+}  // namespace document
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

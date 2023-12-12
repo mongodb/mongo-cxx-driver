@@ -40,7 +40,8 @@
 #endif
 
 namespace bsoncxx {
-inline namespace v_noabi {
+namespace v_noabi {
+
 ///
 /// An enumeration of each BSON type.
 /// These x-macros will expand to be of the form:
@@ -676,6 +677,23 @@ BSONCXX_INLINE bool operator==(const b_maxkey&, const b_maxkey&) {
 
 }  // namespace types
 }  // namespace v_noabi
+}  // namespace bsoncxx
+
+namespace bsoncxx {
+
+using ::bsoncxx::v_noabi::to_string;
+
+}  // namespace bsoncxx
+
+namespace bsoncxx {
+namespace types {
+
+using ::bsoncxx::v_noabi::types::b_utf8;  // Deprecated.
+
+using ::bsoncxx::v_noabi::types::operator==;
+using ::bsoncxx::v_noabi::types::operator!=;
+
+}  // namespace types
 }  // namespace bsoncxx
 
 #if defined(__clang__)

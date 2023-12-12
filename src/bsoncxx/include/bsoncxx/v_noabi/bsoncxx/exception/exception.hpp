@@ -21,7 +21,8 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-inline namespace v_noabi {
+namespace v_noabi {
+
 ///
 /// Class representing any exceptions emitted from the bsoncxx library or
 /// its underlying implementation.

@@ -27,17 +27,17 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace builder {
 
-using namespace bsoncxx::types;
+using namespace ::bsoncxx::v_noabi::types;  // Deprecated.
 
 }  // namespace builder
 }  // namespace v_noabi
 }  // namespace bsoncxx
 
 namespace bsoncxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace builder {
 
 ///
@@ -53,14 +53,14 @@ class list {
     list() : list({}) {}
 
     ///
-    /// Creates a bsoncxx::builder::list from a value of type T. T must be a
-    /// bsoncxx::types::bson_value::value or implicitly convertible to a
-    /// bsoncxx::types::bson_value::value.
+    /// Creates a bsoncxx::v_noabi::builder::list from a value of type T. T must be a
+    /// bsoncxx::v_noabi::types::bson_value::value or implicitly convertible to a
+    /// bsoncxx::v_noabi::types::bson_value::value.
     ///
     /// @param value
     ///     the BSON value
     ///
-    /// @see bsoncxx::types::bson_value::value.
+    /// @see bsoncxx::v_noabi::types::bson_value::value.
     ///
     template <typename T>
     list(T value) : val{value} {}
@@ -77,18 +77,19 @@ class list {
     ///     the initializer list used to construct the BSON document or array
     ///
     /// @note
-    ///     to enforce the creation of a BSON document or array use the bsoncxx::builder::document
-    ///     or bsoncxx::builder::array constructor, respectively.
+    ///     to enforce the creation of a BSON document or array use the
+    ///     bsoncxx::v_noabi::builder::document or bsoncxx::v_noabi::builder::array constructor,
+    ///     respectively.
     ///
-    /// @see bsoncxx::builder::document
-    /// @see bsoncxx::builder::array
+    /// @see bsoncxx::v_noabi::builder::document
+    /// @see bsoncxx::v_noabi::builder::array
     ///
     list(initializer_list_t init) : list(init, true, true) {}
 
     ///
     /// Provides a view of the underlying BSON value.
     ///
-    /// @see bsoncxx::types::bson_value::view.
+    /// @see bsoncxx::v_noabi::types::bson_value::view.
     ///
     operator bson_value::view() {
         return view();
@@ -97,7 +98,7 @@ class list {
     ///
     /// Provides a view of the underlying BSON value.
     ///
-    /// @see bsoncxx::types::bson_value::view.
+    /// @see bsoncxx::v_noabi::types::bson_value::view.
     ///
     bson_value::view view() {
         return val.view();
@@ -143,7 +144,8 @@ class list {
                 _core.append(ele.val);
             val = bson_value::value(_core.extract_array());
         } else {
-            throw bsoncxx::exception{error_code::k_unmatched_key_in_builder, err_msg.str()};
+            throw bsoncxx::v_noabi::exception{error_code::k_unmatched_key_in_builder,
+                                              err_msg.str()};
         }
     }
 };
@@ -166,8 +168,8 @@ class document : public list {
     /// @param init
     ///     the initializer list used to construct the BSON document
     ///
-    /// @see bsoncxx::builder::list
-    /// @see bsoncxx::builder::array
+    /// @see bsoncxx::v_noabi::builder::list
+    /// @see bsoncxx::v_noabi::builder::array
     ///
     document(initializer_list_t init) : list(init, false, false) {}
 };
@@ -190,13 +192,21 @@ class array : public list {
     /// @param init
     ///     the initializer list used to construct the BSON array
     ///
-    /// @see bsoncxx::builder::list
-    /// @see bsoncxx::builder::document
+    /// @see bsoncxx::v_noabi::builder::list
+    /// @see bsoncxx::v_noabi::builder::document
     ///
     array(initializer_list_t init) : list(init, false, true) {}
 };
 }  // namespace builder
 }  // namespace v_noabi
+}  // namespace bsoncxx
+
+namespace bsoncxx {
+namespace builder {
+
+using namespace ::bsoncxx::v_noabi::types;  // Deprecated.
+
+}  // namespace builder
 }  // namespace bsoncxx
 
 // CXX-2770: missing include of postlude header.

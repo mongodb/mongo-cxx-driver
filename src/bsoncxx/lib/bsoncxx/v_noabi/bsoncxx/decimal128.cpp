@@ -22,11 +22,12 @@
 #include <bsoncxx/config/private/prelude.hh>
 
 namespace bsoncxx {
-inline namespace v_noabi {
+namespace v_noabi {
+
 decimal128::decimal128(stdx::string_view str) {
     bson_decimal128_t d128;
     if (!bson_decimal128_from_string(string::to_string(str).c_str(), &d128)) {
-        throw bsoncxx::exception{error_code::k_invalid_decimal128};
+        throw bsoncxx::v_noabi::exception{error_code::k_invalid_decimal128};
     }
     _high = d128.high;
     _low = d128.low;
