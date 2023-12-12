@@ -165,18 +165,55 @@ struct compare_three_way {
  * implementation of tag_invoke(compare_three_way, l, r)
  */
 struct ordering_operators {
+    template <typename L, typename R>
+    constexpr static auto impl(const L& l, const R& r, rank<1>)
+        BSONCXX_RETURNS(tag_invoke(compare_three_way{}, l, r));
+
+    template <typename L, typename R>
+    constexpr static auto impl(const L& l, const R& r, rank<0>)
+        BSONCXX_RETURNS(tag_invoke(compare_three_way{}, r, l));
+
 #pragma push_macro("DEFOP")
 #undef DEFOP
 #define DEFOP(Oper)                                             \
     template <typename L, typename R>                           \
     constexpr friend auto operator Oper(const L& l, const R& r) \
-        BSONCXX_RETURNS(tag_invoke(compare_three_way{}, l, r) Oper 0)
+        BSONCXX_RETURNS(ordering_operators::impl(l, r, rank<1>{}) Oper 0)
     DEFOP(<);
     DEFOP(>);
     DEFOP(<=);
     DEFOP(>=);
 #pragma pop_macro("DEFOP")
 };
+
+template <typename T, typename U>
+std::false_type is_partially_ordered_with_f(rank<0>);
+
+template <typename T, typename U>
+auto is_partially_ordered_with_f(rank<1>,
+                                 const T& l = soft_declval<T>(),
+                                 const U& r = soft_declval<U>())  //
+    -> true_t<decltype(l > r),
+              decltype(l < r),
+              decltype(l >= r),
+              decltype(l <= r),
+              decltype(r < l),
+              decltype(r > l),
+              decltype(r <= l),
+              decltype(r >= l)>;
+
+template <typename T, typename U>
+struct is_partially_ordered_with : decltype(is_partially_ordered_with_f<T, U>(rank<1>{})) {};
+
+template <typename T>
+struct is_totally_ordered
+    : conjunction<is_equality_comparable<T>, is_partially_ordered_with<T, T>> {};
+
+template <typename T, typename U>
+struct is_totally_ordered_with : conjunction<is_totally_ordered<T>,
+                                             is_totally_ordered<U>,
+                                             is_equality_comparable<T, U>,
+                                             is_partially_ordered_with<T, U>> {};
 
 }  // namespace detail
 }  // namespace bsoncxx
