@@ -7,7 +7,8 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace wip {
+namespace v_noabi {
+
 search_index_model::search_index_model(bsoncxx::document::view_or_value definition)
     : _impl{bsoncxx::stdx::make_unique<impl>(definition)} {}
 search_index_model::search_index_model(bsoncxx::string::view_or_value name,
@@ -48,5 +49,5 @@ search_index_model::impl& search_index_model::_get_impl() {
     return const_cast<search_index_model::impl&>(cthis->_get_impl());
 }
 
-}  // namespace wip
+}  // namespace v_noabi
 }  // namespace mongocxx
