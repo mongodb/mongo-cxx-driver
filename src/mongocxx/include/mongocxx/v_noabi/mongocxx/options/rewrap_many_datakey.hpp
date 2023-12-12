@@ -26,7 +26,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+inline namespace wip {
 namespace options {
 
 ///
@@ -100,14 +100,14 @@ class rewrap_many_datakey {
     const stdx::optional<bsoncxx::document::view_or_value>& master_key() const;
 
    private:
-    friend ::mongocxx::v_noabi::client_encryption;
+    friend ::mongocxx::wip::client_encryption;
 
     bsoncxx::string::view_or_value _provider;
     stdx::optional<bsoncxx::document::view_or_value> _master_key;
 };
 
 }  // namespace options
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

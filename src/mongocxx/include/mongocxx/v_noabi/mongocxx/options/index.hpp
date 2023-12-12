@@ -30,7 +30,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+inline namespace wip {
 namespace options {
 
 ///
@@ -48,7 +48,7 @@ class index {
         virtual ~base_storage_options();
 
        private:
-        friend ::mongocxx::v_noabi::options::index;
+        friend ::mongocxx::wip::options::index;
 
         MONGOCXX_PRIVATE virtual int type() const = 0;
     };
@@ -76,7 +76,7 @@ class index {
         const stdx::optional<bsoncxx::string::view_or_value>& config_string() const;
 
        private:
-        friend ::mongocxx::v_noabi::collection;
+        friend ::mongocxx::wip::collection;
 
         MONGOCXX_PRIVATE int type() const override;
 
@@ -477,7 +477,7 @@ class index {
     operator bsoncxx::document::view_or_value();
 
    private:
-    friend ::mongocxx::v_noabi::collection;
+    friend ::mongocxx::wip::collection;
 
     stdx::optional<bool> _background;
     stdx::optional<bool> _unique;
@@ -505,7 +505,7 @@ class index {
 };
 
 }  // namespace options
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

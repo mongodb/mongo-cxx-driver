@@ -17,7 +17,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+inline namespace wip {
 namespace options {
 
 range& range::min(bsoncxx::types::bson_value::view_or_value value) {
@@ -57,5 +57,5 @@ const stdx::optional<std::int32_t>& range::precision() const {
 }
 
 }  // namespace options
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace mongocxx

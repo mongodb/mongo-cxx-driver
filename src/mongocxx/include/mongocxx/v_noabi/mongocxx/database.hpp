@@ -35,7 +35,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+inline namespace wip {
 ///
 /// Class representing a MongoDB database.
 ///
@@ -625,9 +625,9 @@ class database {
     ///
 
    private:
-    friend ::mongocxx::v_noabi::client_encryption;
-    friend ::mongocxx::v_noabi::client;
-    friend ::mongocxx::v_noabi::collection;
+    friend ::mongocxx::wip::client_encryption;
+    friend ::mongocxx::wip::client;
+    friend ::mongocxx::wip::collection;
 
     MONGOCXX_PRIVATE database(const mongocxx::client& client, bsoncxx::string::view_or_value name);
 
@@ -677,7 +677,7 @@ MONGOCXX_INLINE mongocxx::collection database::operator[](
     return collection(name);
 }
 
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

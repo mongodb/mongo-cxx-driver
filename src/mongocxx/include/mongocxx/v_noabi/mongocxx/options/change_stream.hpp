@@ -30,7 +30,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+inline namespace wip {
 namespace options {
 
 ///
@@ -258,9 +258,9 @@ class change_stream {
     change_stream& start_at_operation_time(bsoncxx::types::b_timestamp timestamp);
 
    private:
-    friend ::mongocxx::v_noabi::client;
-    friend ::mongocxx::v_noabi::collection;
-    friend ::mongocxx::v_noabi::database;
+    friend ::mongocxx::wip::client;
+    friend ::mongocxx::wip::collection;
+    friend ::mongocxx::wip::database;
 
     bsoncxx::document::value as_bson() const;
     stdx::optional<bsoncxx::string::view_or_value> _full_document;
@@ -278,7 +278,7 @@ class change_stream {
     bool _start_at_operation_time_set = false;
 };
 }  // namespace options
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

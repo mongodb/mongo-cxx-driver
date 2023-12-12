@@ -24,7 +24,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+inline namespace wip {
 namespace options {
 
 ///
@@ -99,7 +99,7 @@ class client_session {
     const stdx::optional<transaction>& default_transaction_opts() const;
 
    private:
-    friend ::mongocxx::v_noabi::client_session;
+    friend ::mongocxx::wip::client_session;
 
     stdx::optional<bool> _causal_consistency;
     stdx::optional<bool> _enable_snapshot_reads;
@@ -108,7 +108,7 @@ class client_session {
 };
 
 }  // namespace options
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

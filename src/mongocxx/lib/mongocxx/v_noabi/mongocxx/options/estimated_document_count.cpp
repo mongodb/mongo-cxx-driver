@@ -18,7 +18,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
+inline namespace wip {
 namespace options {
 
 estimated_document_count& estimated_document_count::max_time(std::chrono::milliseconds max_time) {
@@ -51,5 +51,5 @@ const stdx::optional<read_preference>& estimated_document_count::read_preference
 }
 
 }  // namespace options
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace mongocxx

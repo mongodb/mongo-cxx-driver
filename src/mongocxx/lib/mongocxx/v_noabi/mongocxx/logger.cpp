@@ -17,7 +17,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
+inline namespace wip {
 stdx::string_view MONGOCXX_CALL to_string(log_level level) {
     switch (level) {
         case log_level::k_error:
@@ -42,5 +42,5 @@ stdx::string_view MONGOCXX_CALL to_string(log_level level) {
 logger::logger() = default;
 logger::~logger() = default;
 
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace mongocxx

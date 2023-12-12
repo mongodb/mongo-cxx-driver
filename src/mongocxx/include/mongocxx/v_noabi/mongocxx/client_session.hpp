@@ -32,7 +32,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+inline namespace wip {
 ///
 /// Use a session for a sequence of operations, optionally with either causal consistency
 /// or snapshots.
@@ -192,12 +192,12 @@ class client_session {
     void with_transaction(with_transaction_cb cb, options::transaction opts = {});
 
    private:
-    friend ::mongocxx::v_noabi::bulk_write;
-    friend ::mongocxx::v_noabi::client;
-    friend ::mongocxx::v_noabi::collection;
-    friend ::mongocxx::v_noabi::database;
-    friend ::mongocxx::v_noabi::index_view;
-    friend ::mongocxx::v_noabi::search_index_view;
+    friend ::mongocxx::wip::bulk_write;
+    friend ::mongocxx::wip::client;
+    friend ::mongocxx::wip::collection;
+    friend ::mongocxx::wip::database;
+    friend ::mongocxx::wip::index_view;
+    friend ::mongocxx::wip::search_index_view;
 
     class MONGOCXX_PRIVATE impl;
 
@@ -210,7 +210,7 @@ class client_session {
     std::unique_ptr<impl> _impl;
 };
 
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

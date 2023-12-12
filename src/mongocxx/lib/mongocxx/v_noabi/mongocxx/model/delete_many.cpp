@@ -17,7 +17,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
+inline namespace wip {
 namespace model {
 
 delete_many::delete_many(bsoncxx::document::view_or_value filter) : _filter(std::move(filter)) {}
@@ -45,5 +45,5 @@ const stdx::optional<bsoncxx::document::view_or_value>& delete_many::collation()
 }
 
 }  // namespace model
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace mongocxx

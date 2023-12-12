@@ -17,7 +17,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
+inline namespace wip {
 namespace options {
 
 insert& insert::bypass_document_validation(bool bypass_document_validation) {
@@ -57,5 +57,5 @@ const stdx::optional<bsoncxx::types::bson_value::view_or_value>& insert::comment
 }
 
 }  // namespace options
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace mongocxx

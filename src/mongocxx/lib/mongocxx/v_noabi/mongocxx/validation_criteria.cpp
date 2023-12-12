@@ -50,7 +50,7 @@ std::string validation_action_to_string(mongocxx::validation_criteria::validatio
 }  // namespace
 
 namespace mongocxx {
-inline namespace v_noabi {
+inline namespace wip {
 validation_criteria& validation_criteria::rule(bsoncxx::document::view_or_value rule) {
     _rule = std::move(rule);
     return *this;
@@ -110,5 +110,5 @@ MONGOCXX_API bool MONGOCXX_CALL operator!=(const validation_criteria& lhs,
     return !(lhs == rhs);
 }
 
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace mongocxx

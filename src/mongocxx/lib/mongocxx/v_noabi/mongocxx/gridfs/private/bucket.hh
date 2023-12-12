@@ -23,7 +23,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
+inline namespace wip {
 namespace gridfs {
 
 class bucket::impl {
@@ -55,7 +55,7 @@ class bucket::impl {
 };
 
 }  // namespace gridfs
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

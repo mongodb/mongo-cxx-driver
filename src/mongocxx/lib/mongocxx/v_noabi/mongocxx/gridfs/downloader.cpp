@@ -28,7 +28,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
+inline namespace wip {
 namespace gridfs {
 
 downloader::downloader(stdx::optional<cursor> chunks,
@@ -193,5 +193,5 @@ downloader::impl& downloader::_get_impl() {
 }
 
 }  // namespace gridfs
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace mongocxx

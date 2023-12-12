@@ -37,7 +37,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+inline namespace wip {
 namespace gridfs {
 
 ///
@@ -650,7 +650,7 @@ class bucket {
     stdx::string_view bucket_name() const;
 
    private:
-    friend ::mongocxx::v_noabi::database;
+    friend ::mongocxx::wip::database;
 
     // Constructs a new GridFS bucket.  Throws if options are invalid.
     MONGOCXX_PRIVATE bucket(const database& db, const options::gridfs::bucket& options);
@@ -691,7 +691,7 @@ class bucket {
 };
 
 }  // namespace gridfs
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

@@ -31,7 +31,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+inline namespace wip {
 ///
 /// Class representing a MongoDB connection string URI.
 ///
@@ -364,8 +364,8 @@ class uri {
     stdx::optional<std::int32_t> zlib_compression_level() const;
 
    private:
-    friend ::mongocxx::v_noabi::client;
-    friend ::mongocxx::v_noabi::pool;
+    friend ::mongocxx::wip::client;
+    friend ::mongocxx::wip::pool;
 
     class MONGOCXX_PRIVATE impl;
 
@@ -374,7 +374,7 @@ class uri {
     std::unique_ptr<impl> _impl;
 };
 
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

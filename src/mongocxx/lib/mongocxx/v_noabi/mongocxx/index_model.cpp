@@ -17,7 +17,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
+inline namespace wip {
 index_model::index_model(const bsoncxx::document::view_or_value& keys,
                          const bsoncxx::document::view_or_value& options)
     : _keys{keys.view()}, _options{options.view()} {}
@@ -38,5 +38,5 @@ bsoncxx::document::view index_model::options() const {
     return _options.view();
 }
 
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace mongocxx

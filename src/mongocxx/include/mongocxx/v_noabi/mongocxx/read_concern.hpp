@@ -32,7 +32,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+inline namespace wip {
 ///
 /// A class to represent the read concern. Read concern can be set at the client, database, or
 /// collection level. The read concern can also be provided via connection string, and will be
@@ -155,11 +155,11 @@ class read_concern {
     bsoncxx::document::value to_document() const;
 
    private:
-    friend ::mongocxx::v_noabi::client;
-    friend ::mongocxx::v_noabi::collection;
-    friend ::mongocxx::v_noabi::database;
-    friend ::mongocxx::v_noabi::options::transaction;
-    friend ::mongocxx::v_noabi::uri;
+    friend ::mongocxx::wip::client;
+    friend ::mongocxx::wip::collection;
+    friend ::mongocxx::wip::database;
+    friend ::mongocxx::wip::options::transaction;
+    friend ::mongocxx::wip::uri;
 
     ///
     /// @{
@@ -181,7 +181,7 @@ class read_concern {
     std::unique_ptr<impl> _impl;
 };
 
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

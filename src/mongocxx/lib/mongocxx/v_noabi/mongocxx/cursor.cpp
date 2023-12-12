@@ -23,7 +23,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
+inline namespace wip {
 cursor::cursor(void* cursor_ptr, bsoncxx::stdx::optional<cursor::type> cursor_type)
     : _impl(stdx::make_unique<impl>(static_cast<mongoc_cursor_t*>(cursor_ptr), cursor_type)) {}
 
@@ -108,5 +108,5 @@ bool MONGOCXX_CALL operator!=(const cursor::iterator& lhs, const cursor::iterato
     return !(lhs == rhs);
 }
 
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace mongocxx

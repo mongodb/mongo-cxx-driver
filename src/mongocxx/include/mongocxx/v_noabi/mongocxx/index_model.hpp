@@ -23,7 +23,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+inline namespace wip {
 ///
 /// Class representing an index on a MongoDB server.
 ///
@@ -74,7 +74,7 @@ class index_model {
     bsoncxx::document::value _options;
 };
 
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

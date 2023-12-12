@@ -27,7 +27,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+inline namespace wip {
 namespace options {
 
 ///
@@ -172,7 +172,7 @@ class client_encryption {
     const stdx::optional<bsoncxx::document::view_or_value>& tls_opts() const;
 
    private:
-    friend ::mongocxx::v_noabi::client_encryption;
+    friend ::mongocxx::wip::client_encryption;
 
     MONGOCXX_PRIVATE void* convert() const;
 
@@ -183,7 +183,7 @@ class client_encryption {
 };
 
 }  // namespace options
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

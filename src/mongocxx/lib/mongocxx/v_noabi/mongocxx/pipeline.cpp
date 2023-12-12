@@ -25,7 +25,7 @@ using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::sub_document;
 
 namespace mongocxx {
-inline namespace v_noabi {
+inline namespace wip {
 pipeline::pipeline() : _impl(stdx::make_unique<impl>()) {}
 
 pipeline::pipeline(pipeline&&) noexcept = default;
@@ -254,5 +254,5 @@ bsoncxx::array::view pipeline::view_array() const {
     return _impl->view_array();
 }
 
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace mongocxx

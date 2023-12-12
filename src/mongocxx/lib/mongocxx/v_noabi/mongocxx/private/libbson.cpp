@@ -17,7 +17,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
+inline namespace wip {
 namespace libbson {
 
 namespace {
@@ -126,5 +126,5 @@ bsoncxx::document::value scoped_bson_t::steal() {
 }
 
 }  // namespace libbson
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace mongocxx

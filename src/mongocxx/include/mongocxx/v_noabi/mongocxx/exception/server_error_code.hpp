@@ -22,7 +22,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+inline namespace wip {
 ///
 /// Enum representing the various errors types that can be returned from the server. As this list
 /// changes over time, this is just a placeholder for an Int32 error code value from the server.
@@ -49,7 +49,7 @@ MONGOCXX_INLINE std::error_code make_error_code(server_error_code error) {
     return {static_cast<int>(error), server_error_category()};
 }
 
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

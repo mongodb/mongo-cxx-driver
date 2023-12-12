@@ -34,7 +34,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+inline namespace wip {
 namespace options {
 
 ///
@@ -307,8 +307,8 @@ class aggregate {
     const stdx::optional<bsoncxx::types::bson_value::view_or_value>& comment() const;
 
    private:
-    friend ::mongocxx::v_noabi::collection;
-    friend ::mongocxx::v_noabi::database;
+    friend ::mongocxx::wip::collection;
+    friend ::mongocxx::wip::database;
 
     void append(bsoncxx::builder::basic::document& builder) const;
 
@@ -326,7 +326,7 @@ class aggregate {
 };
 
 }  // namespace options
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

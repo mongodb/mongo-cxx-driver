@@ -17,7 +17,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
+inline namespace wip {
 namespace model {
 
 insert_one::insert_one(bsoncxx::document::view_or_value document)
@@ -28,5 +28,5 @@ const bsoncxx::document::view_or_value& insert_one::document() const {
 }
 
 }  // namespace model
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace mongocxx

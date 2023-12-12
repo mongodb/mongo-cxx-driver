@@ -22,7 +22,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
+inline namespace wip {
 // size_t_to_int64_safe checks if @in is within the bounds of an int64_t.
 // If yes, it safely casts into @out and returns true.
 // If no, @out is not modified and returns false.
@@ -47,7 +47,7 @@ bool int32_to_size_t_safe(const int32_t in, std::size_t& out);
 MONGOCXX_TEST_API
 bool int64_to_size_t_safe(const int64_t in, std::size_t& out);
 
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

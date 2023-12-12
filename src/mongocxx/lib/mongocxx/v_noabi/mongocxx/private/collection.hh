@@ -27,7 +27,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
+inline namespace wip {
 class collection::impl {
    public:
     impl(mongoc_collection_t* collection,
@@ -61,7 +61,7 @@ class collection::impl {
     const mongocxx::client::impl* client_impl;
 };
 
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

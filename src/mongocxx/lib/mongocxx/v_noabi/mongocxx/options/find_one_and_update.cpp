@@ -18,7 +18,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
+inline namespace wip {
 namespace options {
 
 find_one_and_update& find_one_and_update::bypass_document_validation(
@@ -135,5 +135,5 @@ const stdx::optional<bsoncxx::array::view_or_value>& find_one_and_update::array_
 }
 
 }  // namespace options
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace mongocxx

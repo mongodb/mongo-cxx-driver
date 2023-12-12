@@ -41,7 +41,7 @@ using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_document;
 
 namespace mongocxx {
-inline namespace v_noabi {
+inline namespace wip {
 namespace {
 class collection_names {
    public:
@@ -524,5 +524,5 @@ database::impl& database::_get_impl() {
     return const_cast<database::impl&>(cthis->_get_impl());
 }
 
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace mongocxx

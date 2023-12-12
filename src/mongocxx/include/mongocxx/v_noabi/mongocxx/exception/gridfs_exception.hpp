@@ -21,7 +21,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+inline namespace wip {
 ///
 /// Class representing an error encountered when attempting to perform the requested GridFS
 /// operation.
@@ -33,7 +33,7 @@ class gridfs_exception : public exception {
     using exception::exception;
 };
 
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

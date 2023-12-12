@@ -19,7 +19,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
+inline namespace wip {
 namespace result {
 
 rewrap_many_datakey::rewrap_many_datakey(mongocxx::result::bulk_write bulk_write_result_doc) {
@@ -31,5 +31,5 @@ const bsoncxx::stdx::optional<mongocxx::result::bulk_write>& rewrap_many_datakey
 }
 
 }  // namespace result
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace mongocxx

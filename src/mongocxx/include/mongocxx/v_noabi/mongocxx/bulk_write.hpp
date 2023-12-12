@@ -25,7 +25,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+inline namespace wip {
 ///
 /// Class representing a batch of write operations that can be sent to the server as a group.
 ///
@@ -93,7 +93,7 @@ class bulk_write {
     stdx::optional<result::bulk_write> execute() const;
 
    private:
-    friend ::mongocxx::v_noabi::collection;
+    friend ::mongocxx::wip::collection;
 
     class MONGOCXX_PRIVATE impl;
 
@@ -105,7 +105,7 @@ class bulk_write {
     std::unique_ptr<impl> _impl;
 };
 
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

@@ -197,7 +197,7 @@ mongocxx::stdx::optional<bsoncxx::document::value> find_and_modify(
 }  // namespace
 
 namespace mongocxx {
-inline namespace v_noabi {
+inline namespace wip {
 using namespace libbson;
 
 collection::collection() noexcept = default;
@@ -1450,5 +1450,5 @@ collection::impl& collection::_get_impl() {
     return const_cast<collection::impl&>(cthis->_get_impl());
 }
 
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace mongocxx

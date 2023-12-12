@@ -22,7 +22,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+inline namespace wip {
 namespace result {
 namespace gridfs {
 
@@ -52,7 +52,7 @@ class upload {
 
 }  // namespace gridfs
 }  // namespace result
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

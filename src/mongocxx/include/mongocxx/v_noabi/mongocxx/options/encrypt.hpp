@@ -26,7 +26,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+inline namespace wip {
 namespace options {
 
 ///
@@ -218,7 +218,7 @@ class encrypt {
     const stdx::optional<options::range>& range_opts() const;
 
    private:
-    friend ::mongocxx::v_noabi::client_encryption;
+    friend ::mongocxx::wip::client_encryption;
 
     MONGOCXX_PRIVATE void* convert() const;
 
@@ -231,7 +231,7 @@ class encrypt {
 };
 
 }  // namespace options
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

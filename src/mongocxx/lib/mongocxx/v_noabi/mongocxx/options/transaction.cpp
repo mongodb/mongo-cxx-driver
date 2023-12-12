@@ -20,7 +20,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
+inline namespace wip {
 namespace options {
 
 transaction::transaction() : _impl{stdx::make_unique<impl>()} {}
@@ -87,7 +87,7 @@ transaction::impl& transaction::_get_impl() {
 }
 
 }  // namespace options
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

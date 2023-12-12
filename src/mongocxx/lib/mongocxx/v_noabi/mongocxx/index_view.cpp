@@ -23,7 +23,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
+inline namespace wip {
 index_view::index_view(void* coll, void* client)
     : _impl{stdx::make_unique<impl>(static_cast<mongoc_collection_t*>(coll),
                                     static_cast<mongoc_client_t*>(client))} {}
@@ -135,5 +135,5 @@ index_view::impl& index_view::_get_impl() {
     return *_impl;
 }
 
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace mongocxx

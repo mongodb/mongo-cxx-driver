@@ -21,7 +21,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
+inline namespace wip {
 namespace spec {
 
 using namespace mongocxx;
@@ -87,6 +87,6 @@ class apm_checker {
 };
 
 }  // namespace spec
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace mongocxx
 #include <mongocxx/config/private/postlude.hh>

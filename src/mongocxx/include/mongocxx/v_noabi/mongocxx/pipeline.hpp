@@ -31,7 +31,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+inline namespace wip {
 ///
 /// Class representing a MongoDB aggregation pipeline.
 ///
@@ -544,15 +544,15 @@ class pipeline {
     bsoncxx::array::view view_array() const;
 
    private:
-    friend ::mongocxx::v_noabi::client;
-    friend ::mongocxx::v_noabi::collection;
-    friend ::mongocxx::v_noabi::database;
+    friend ::mongocxx::wip::client;
+    friend ::mongocxx::wip::collection;
+    friend ::mongocxx::wip::database;
 
     class MONGOCXX_PRIVATE impl;
     std::unique_ptr<impl> _impl;
 };
 
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

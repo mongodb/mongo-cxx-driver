@@ -33,7 +33,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
+inline namespace wip {
 using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_document;
 
@@ -269,7 +269,7 @@ class index_view::impl {
         mongoc_server_description_t* sd;
     };
 };
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

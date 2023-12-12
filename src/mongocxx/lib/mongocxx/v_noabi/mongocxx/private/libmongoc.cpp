@@ -17,7 +17,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
+inline namespace wip {
 namespace libmongoc {
 
 #ifdef MONGOCXX_TESTING
@@ -41,5 +41,5 @@ namespace libmongoc {
 #endif  // MONGOCXX_TESTING
 
 }  // namespace libmongoc
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace mongocxx

@@ -18,7 +18,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
+inline namespace wip {
 namespace model {
 
 update_many::update_many(bsoncxx::document::view_or_value filter,
@@ -77,5 +77,5 @@ const stdx::optional<bsoncxx::array::view_or_value>& update_many::array_filters(
 }
 
 }  // namespace model
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace mongocxx

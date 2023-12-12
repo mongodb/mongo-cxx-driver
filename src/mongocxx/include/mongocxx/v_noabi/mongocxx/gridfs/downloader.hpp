@@ -31,7 +31,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+inline namespace wip {
 namespace gridfs {
 
 ///
@@ -133,7 +133,7 @@ class downloader {
     bsoncxx::document::view files_document() const;
 
    private:
-    friend ::mongocxx::v_noabi::gridfs::bucket;
+    friend ::mongocxx::wip::gridfs::bucket;
 
     //
     // Constructs a new downloader stream.
@@ -171,7 +171,7 @@ class downloader {
 };
 
 }  // namespace gridfs
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace mongocxx
 
 // CXX-2770: missing include of postlude header.

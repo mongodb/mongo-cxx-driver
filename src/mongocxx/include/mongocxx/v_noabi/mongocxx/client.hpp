@@ -38,7 +38,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+inline namespace wip {
 ///
 /// Class representing a client connection to MongoDB.
 ///
@@ -425,12 +425,12 @@ class client {
     void reset();
 
    private:
-    friend ::mongocxx::v_noabi::client_session;
-    friend ::mongocxx::v_noabi::collection;
-    friend ::mongocxx::v_noabi::database;
-    friend ::mongocxx::v_noabi::options::auto_encryption;
-    friend ::mongocxx::v_noabi::options::client_encryption;
-    friend ::mongocxx::v_noabi::pool;
+    friend ::mongocxx::wip::client_session;
+    friend ::mongocxx::wip::collection;
+    friend ::mongocxx::wip::database;
+    friend ::mongocxx::wip::options::auto_encryption;
+    friend ::mongocxx::wip::options::client_encryption;
+    friend ::mongocxx::wip::pool;
 
     MONGOCXX_PRIVATE explicit client(void* implementation);
 
@@ -450,7 +450,7 @@ MONGOCXX_INLINE mongocxx::database client::operator[](bsoncxx::string::view_or_v
     return database(name);
 }
 
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

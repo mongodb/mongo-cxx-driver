@@ -27,7 +27,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+inline namespace wip {
 namespace options {
 
 ///
@@ -154,7 +154,7 @@ class data_key {
     const stdx::optional<key_material_type>& key_material();
 
    private:
-    friend ::mongocxx::v_noabi::client_encryption;
+    friend ::mongocxx::wip::client_encryption;
 
     MONGOCXX_PRIVATE void* convert() const;
 
@@ -164,7 +164,7 @@ class data_key {
 };
 
 }  // namespace options
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace mongocxx
 
 // CXX-2770: missing include of postlude header.

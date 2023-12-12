@@ -36,7 +36,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+inline namespace wip {
 ///
 /// Class representing the server-side requirement for reporting the success of a write
 /// operation. The strength of the write concern setting determines the level of guarantees
@@ -243,12 +243,12 @@ class write_concern {
     bsoncxx::document::value to_document() const;
 
    private:
-    friend ::mongocxx::v_noabi::bulk_write;
-    friend ::mongocxx::v_noabi::client;
-    friend ::mongocxx::v_noabi::collection;
-    friend ::mongocxx::v_noabi::database;
-    friend ::mongocxx::v_noabi::options::transaction;
-    friend ::mongocxx::v_noabi::uri;
+    friend ::mongocxx::wip::bulk_write;
+    friend ::mongocxx::wip::client;
+    friend ::mongocxx::wip::collection;
+    friend ::mongocxx::wip::database;
+    friend ::mongocxx::wip::options::transaction;
+    friend ::mongocxx::wip::uri;
 
     ///
     /// @{
@@ -270,7 +270,7 @@ class write_concern {
     std::unique_ptr<impl> _impl;
 };
 
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

@@ -24,7 +24,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+inline namespace wip {
 ///
 /// Class representing an exception received from a MongoDB server.  It includes the server-provided
 /// error code, if one was available.
@@ -76,7 +76,7 @@ class operation_exception : public exception {
     stdx::optional<bsoncxx::document::value> _raw_server_error;
 };
 
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

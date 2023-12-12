@@ -29,7 +29,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+inline namespace wip {
 namespace options {
 
 ///
@@ -147,7 +147,7 @@ class transaction {
     stdx::optional<std::chrono::milliseconds> max_commit_time_ms() const;
 
    private:
-    friend ::mongocxx::v_noabi::client_session;
+    friend ::mongocxx::wip::client_session;
 
     class MONGOCXX_PRIVATE impl;
 
@@ -157,7 +157,7 @@ class transaction {
 };
 
 }  // namespace options
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

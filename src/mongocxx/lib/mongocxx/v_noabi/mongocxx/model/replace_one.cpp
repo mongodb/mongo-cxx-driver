@@ -17,7 +17,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
+inline namespace wip {
 namespace model {
 
 replace_one::replace_one(bsoncxx::document::view_or_value filter,
@@ -60,5 +60,5 @@ const stdx::optional<mongocxx::hint>& replace_one::hint() const {
     return _hint;
 }
 }  // namespace model
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace mongocxx

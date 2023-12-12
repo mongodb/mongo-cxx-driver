@@ -22,7 +22,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
+inline namespace wip {
 namespace options {
 
 using apm_unique_callbacks =
@@ -169,7 +169,7 @@ static apm_unique_callbacks make_apm_callbacks(const apm& apm_opts) {
 }
 
 }  // namespace options
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

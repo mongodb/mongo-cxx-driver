@@ -17,7 +17,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi { enum class write_type; }  // namespace v_noabi
+inline namespace wip { enum class write_type; }  // namespace wip
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

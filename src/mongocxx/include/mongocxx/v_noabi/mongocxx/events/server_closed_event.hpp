@@ -24,7 +24,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+inline namespace wip {
 namespace events {
 
 ///
@@ -69,7 +69,7 @@ class server_closed_event {
 };
 
 }  // namespace events
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

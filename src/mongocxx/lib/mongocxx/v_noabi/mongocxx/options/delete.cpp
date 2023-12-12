@@ -18,7 +18,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
+inline namespace wip {
 namespace options {
 
 delete_options& delete_options::collation(bsoncxx::document::view_or_value collation) {
@@ -67,5 +67,5 @@ const stdx::optional<bsoncxx::types::bson_value::view_or_value> delete_options::
 }
 
 }  // namespace options
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace mongocxx

@@ -17,7 +17,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi { class MONGOCXX_API client_session; }  // namespace v_noabi
+inline namespace wip { class MONGOCXX_API client_session; }  // namespace wip
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

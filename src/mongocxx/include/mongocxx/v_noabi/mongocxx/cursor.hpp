@@ -30,7 +30,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+inline namespace wip {
 ///
 /// Class representing a pointer to the result set of a query on a MongoDB server.
 ///
@@ -84,14 +84,14 @@ class cursor {
     iterator end();
 
    private:
-    friend ::mongocxx::v_noabi::client_encryption;
-    friend ::mongocxx::v_noabi::client;
-    friend ::mongocxx::v_noabi::collection;
-    friend ::mongocxx::v_noabi::database;
-    friend ::mongocxx::v_noabi::index_view;
-    friend ::mongocxx::v_noabi::search_index_view;
+    friend ::mongocxx::wip::client_encryption;
+    friend ::mongocxx::wip::client;
+    friend ::mongocxx::wip::collection;
+    friend ::mongocxx::wip::database;
+    friend ::mongocxx::wip::index_view;
+    friend ::mongocxx::wip::search_index_view;
 
-    friend ::mongocxx::v_noabi::cursor::iterator;
+    friend ::mongocxx::wip::cursor::iterator;
 
     MONGOCXX_PRIVATE cursor(void* cursor_ptr,
                             bsoncxx::stdx::optional<type> cursor_type = bsoncxx::stdx::nullopt);
@@ -154,7 +154,7 @@ class cursor::iterator {
     void operator++(int);
 
    private:
-    friend ::mongocxx::v_noabi::cursor;
+    friend ::mongocxx::wip::cursor;
 
     ///
     /// @{
@@ -178,7 +178,7 @@ class cursor::iterator {
     cursor* _cursor;
 };
 
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

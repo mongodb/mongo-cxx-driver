@@ -19,7 +19,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+inline namespace wip {
 namespace options {
 
 data_key& data_key::master_key(bsoncxx::document::view_or_value master_key) {
@@ -83,5 +83,5 @@ const stdx::optional<data_key::key_material_type>& data_key::key_material() {
 }
 
 }  // namespace options
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace mongocxx

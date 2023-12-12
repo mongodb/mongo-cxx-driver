@@ -36,7 +36,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
+inline namespace wip {
 namespace test_util {
 //
 // Compares to version number strings (i.e. positive integers separated by periods). Comparisons are
@@ -226,7 +226,7 @@ std::string getenv_or_fail(const std::string env_name);
 
 }  // namespace test_util
 
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

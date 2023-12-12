@@ -22,7 +22,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
+inline namespace wip {
 namespace options {
 
 rewrap_many_datakey& rewrap_many_datakey::provider(bsoncxx::string::view_or_value provider) {
@@ -44,5 +44,5 @@ const stdx::optional<bsoncxx::document::view_or_value>& rewrap_many_datakey::mas
 }
 
 }  // namespace options
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace mongocxx

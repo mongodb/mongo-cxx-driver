@@ -26,7 +26,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+inline namespace wip {
 ///
 /// Class representing a hint to be passed to a database operation.
 ///
@@ -142,7 +142,7 @@ MONGOCXX_INLINE hint::operator bsoncxx::types::bson_value::view() const {
     return to_value();
 }
 
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

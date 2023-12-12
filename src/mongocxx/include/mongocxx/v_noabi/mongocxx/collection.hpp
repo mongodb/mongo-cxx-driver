@@ -67,7 +67,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+inline namespace wip {
 ///
 /// Class representing server side document groupings within a MongoDB database.
 ///
@@ -1859,9 +1859,9 @@ class collection {
     search_index_view search_indexes();
 
    private:
-    friend ::mongocxx::v_noabi::bulk_write;
-    friend ::mongocxx::v_noabi::client_encryption;
-    friend ::mongocxx::v_noabi::database;
+    friend ::mongocxx::wip::bulk_write;
+    friend ::mongocxx::wip::client_encryption;
+    friend ::mongocxx::wip::database;
 
     MONGOCXX_PRIVATE collection(const database& database,
                                 bsoncxx::string::view_or_value collection_name);
@@ -2087,7 +2087,7 @@ MONGOCXX_INLINE stdx::optional<result::insert_many> collection::insert_many(
     return _insert_many(&session, begin, end, options);
 }
 
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

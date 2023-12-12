@@ -21,7 +21,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
+inline namespace wip {
 
 namespace test_util {
 // Check that an error message includes a substring, case-insensitively. Use like:

@@ -35,7 +35,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
+inline namespace wip {
 using namespace libbson;
 using bsoncxx::builder::basic::kvp;
 
@@ -333,5 +333,5 @@ client::impl& client::_get_impl() {
     return const_cast<client::impl&>(cthis->_get_impl());
 }
 
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace mongocxx

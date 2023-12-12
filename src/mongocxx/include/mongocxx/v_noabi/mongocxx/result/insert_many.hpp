@@ -27,7 +27,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+inline namespace wip {
 namespace result {
 
 ///
@@ -70,7 +70,7 @@ class insert_many {
     id_map inserted_ids() const;
 
    private:
-    friend ::mongocxx::v_noabi::collection;
+    friend ::mongocxx::wip::collection;
 
     // Construct _inserted_ids from _inserted_ids_owned
     MONGOCXX_PRIVATE void _buildInsertedIds();
@@ -89,7 +89,7 @@ class insert_many {
 };
 
 }  // namespace result
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

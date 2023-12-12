@@ -18,7 +18,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
+inline namespace wip {
 namespace options {
 
 count& count::collation(bsoncxx::document::view_or_value collation) {
@@ -85,5 +85,5 @@ const stdx::optional<read_preference>& count::read_preference() const {
 }
 
 }  // namespace options
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace mongocxx

@@ -20,7 +20,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
+inline namespace wip {
 class uri::impl {
    public:
     impl(mongoc_uri_t* uri) : uri_t(uri) {}
@@ -30,7 +30,7 @@ class uri::impl {
     mongoc_uri_t* uri_t;
 };
 
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

@@ -6,7 +6,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
+inline namespace wip {
 class search_index_model::impl {
    public:
     impl(bsoncxx::document::view_or_value definition) : _definition(definition.view()) {}
@@ -17,7 +17,7 @@ class search_index_model::impl {
     bsoncxx::document::view_or_value _definition;
 };
 
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

@@ -20,7 +20,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
+inline namespace wip {
 namespace options {
 
 using bsoncxx::builder::basic::kvp;
@@ -129,5 +129,5 @@ const stdx::optional<bsoncxx::types::bson_value::view_or_value>& aggregate::comm
 }
 
 }  // namespace options
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace mongocxx

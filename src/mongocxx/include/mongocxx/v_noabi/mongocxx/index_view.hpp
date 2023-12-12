@@ -30,7 +30,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+inline namespace wip {
 ///
 /// Class representing a MongoDB index view.
 ///
@@ -423,7 +423,7 @@ class index_view {
     ///
 
    private:
-    friend ::mongocxx::v_noabi::collection;
+    friend ::mongocxx::wip::collection;
     class MONGOCXX_PRIVATE impl;
 
     MONGOCXX_PRIVATE index_view(void* coll, void* client);
@@ -434,7 +434,7 @@ class index_view {
     std::unique_ptr<impl> _impl;
 };
 
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

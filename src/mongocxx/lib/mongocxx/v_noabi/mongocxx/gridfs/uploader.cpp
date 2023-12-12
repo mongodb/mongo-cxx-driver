@@ -37,7 +37,7 @@ std::size_t chunks_collection_documents_max_length(std::size_t chunk_size) {
 }  // namespace
 
 namespace mongocxx {
-inline namespace v_noabi {
+inline namespace wip {
 namespace gridfs {
 
 uploader::uploader(const client_session* session,
@@ -210,5 +210,5 @@ uploader::impl& uploader::_get_impl() {
 }
 
 }  // namespace gridfs
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace mongocxx

@@ -22,7 +22,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+inline namespace wip {
 ///
 /// Enum representing the various error types that can occur during driver usage.
 ///
@@ -122,7 +122,7 @@ MONGOCXX_INLINE std::error_code make_error_code(error_code error) {
     return {static_cast<int>(error), error_category()};
 }
 
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

@@ -25,7 +25,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
+inline namespace wip {
 read_preference::read_preference(read_preference&&) noexcept = default;
 read_preference& read_preference::operator=(read_preference&&) noexcept = default;
 
@@ -146,5 +146,5 @@ bool MONGOCXX_CALL operator!=(const read_preference& lhs, const read_preference&
     return !(lhs == rhs);
 }
 
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace mongocxx

@@ -27,7 +27,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+inline namespace wip {
 namespace options {
 
 ///
@@ -372,8 +372,8 @@ class auto_encryption {
     const stdx::optional<bsoncxx::document::view_or_value>& extra_options() const;
 
    private:
-    friend ::mongocxx::v_noabi::client;
-    friend ::mongocxx::v_noabi::pool;
+    friend ::mongocxx::wip::client;
+    friend ::mongocxx::wip::pool;
 
     MONGOCXX_PRIVATE void* convert() const;
 
@@ -390,7 +390,7 @@ class auto_encryption {
 };
 
 }  // namespace options
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace mongocxx
 
 // CXX-2770: missing include of postlude header.

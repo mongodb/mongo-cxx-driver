@@ -29,7 +29,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+inline namespace wip {
 ///
 /// A pool of @c client objects associated with a MongoDB deployment.
 ///
@@ -89,7 +89,7 @@ class pool {
         explicit operator bool() const noexcept;
 
        private:
-        friend ::mongocxx::v_noabi::pool;
+        friend ::mongocxx::wip::pool;
 
         using unique_client = std::unique_ptr<client, std::function<void MONGOCXX_CALL(client*)>>;
 
@@ -111,7 +111,7 @@ class pool {
     stdx::optional<entry> try_acquire();
 
    private:
-    friend ::mongocxx::v_noabi::options::auto_encryption;
+    friend ::mongocxx::wip::options::auto_encryption;
 
     MONGOCXX_PRIVATE void _release(client* client);
 
@@ -119,7 +119,7 @@ class pool {
     const std::unique_ptr<impl> _impl;
 };
 
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

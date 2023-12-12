@@ -23,7 +23,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
+inline namespace wip {
 operation_exception::operation_exception(std::error_code ec,
                                          bsoncxx::document::value&& raw_server_error,
                                          std::string what_arg)
@@ -47,5 +47,5 @@ bool operation_exception::has_error_label(stdx::string_view label) const {
     return libmongoc::error_has_label(error.bson(), label_str.c_str());
 }
 
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace mongocxx

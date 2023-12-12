@@ -17,7 +17,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
+inline namespace wip {
 namespace options {
 
 find_one_and_replace& find_one_and_replace::bypass_document_validation(
@@ -126,5 +126,5 @@ const stdx::optional<mongocxx::write_concern>& find_one_and_replace::write_conce
 }
 
 }  // namespace options
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace mongocxx

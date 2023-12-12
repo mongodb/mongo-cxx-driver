@@ -18,7 +18,7 @@
 #include <system_error>
 
 namespace mongocxx {
-inline namespace v_noabi { enum class error_code : std::int32_t; }  // namespace v_noabi
+inline namespace wip { enum class error_code : std::int32_t; }  // namespace wip
 }  // namespace mongocxx
 
 namespace std {

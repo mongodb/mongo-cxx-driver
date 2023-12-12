@@ -21,7 +21,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
+inline namespace wip {
 namespace libmongoc {
 namespace conversions {
 
@@ -33,7 +33,7 @@ MONGOCXX_TEST_API read_preference::read_mode read_mode_from_read_mode_t(
 
 }  // namespace conversions
 }  // namespace libmongoc
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

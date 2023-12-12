@@ -18,7 +18,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
+inline namespace wip {
 namespace events {
 
 topology_changed_event::topology_changed_event(const void* event) : _event(event) {}
@@ -46,5 +46,5 @@ topology_description topology_changed_event::new_description() const {
 }
 
 }  // namespace events
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace mongocxx

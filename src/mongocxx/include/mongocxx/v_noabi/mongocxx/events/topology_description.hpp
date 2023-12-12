@@ -25,7 +25,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+inline namespace wip {
 namespace events {
 
 using mongocxx::read_preference;
@@ -102,7 +102,7 @@ class topology_description {
         std::size_t size() const noexcept;
 
        private:
-        friend ::mongocxx::v_noabi::events::topology_description;
+        friend ::mongocxx::wip::events::topology_description;
 
         MONGOCXX_PRIVATE explicit server_descriptions(void* sds, std::size_t size);
         MONGOCXX_PRIVATE void swap(server_descriptions& other) noexcept;
@@ -162,7 +162,7 @@ class topology_description {
 };
 
 }  // namespace events
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

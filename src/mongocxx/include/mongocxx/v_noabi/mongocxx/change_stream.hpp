@@ -27,7 +27,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+inline namespace wip {
 ///
 /// Class representing a MongoDB change stream.
 ///
@@ -108,11 +108,11 @@ class change_stream {
     bsoncxx::stdx::optional<bsoncxx::document::view> get_resume_token() const;
 
    private:
-    friend ::mongocxx::v_noabi::client;
-    friend ::mongocxx::v_noabi::collection;
-    friend ::mongocxx::v_noabi::database;
+    friend ::mongocxx::wip::client;
+    friend ::mongocxx::wip::collection;
+    friend ::mongocxx::wip::database;
 
-    friend ::mongocxx::v_noabi::change_stream::iterator;
+    friend ::mongocxx::wip::change_stream::iterator;
 
     MONGOCXX_PRIVATE change_stream(void* change_stream_ptr);
 
@@ -186,7 +186,7 @@ class change_stream::iterator {
     void operator++(int);
 
    private:
-    friend ::mongocxx::v_noabi::change_stream;
+    friend ::mongocxx::wip::change_stream;
 
     enum class iter_type { k_tracking, k_default_constructed, k_end };
 
@@ -216,7 +216,7 @@ class change_stream::iterator {
     const change_stream* _change_stream;
 };
 
-}  // namespace v_noabi
+}  // namespace wip
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
