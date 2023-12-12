@@ -18,7 +18,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace wip {
+namespace v_noabi {
 namespace result {
 namespace gridfs {
 
@@ -38,5 +38,5 @@ bool MONGOCXX_CALL operator!=(const upload& lhs, const upload& rhs) {
 
 }  // namespace gridfs
 }  // namespace result
-}  // namespace wip
+}  // namespace v_noabi
 }  // namespace mongocxx

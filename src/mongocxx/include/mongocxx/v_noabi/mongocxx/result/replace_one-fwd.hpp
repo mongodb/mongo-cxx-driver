@@ -17,13 +17,21 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace wip {
+namespace v_noabi {
 namespace result {
 
 class MONGOCXX_API replace_one;
 
 }  // namespace result
-}  // namespace wip
+}  // namespace v_noabi
+}  // namespace mongocxx
+
+namespace mongocxx {
+namespace result {
+
+using ::mongocxx::v_noabi::result::replace_one;
+
+}  // namespace result
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

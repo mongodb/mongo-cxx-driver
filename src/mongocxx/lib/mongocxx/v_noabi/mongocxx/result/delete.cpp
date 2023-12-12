@@ -17,7 +17,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace wip {
+namespace v_noabi {
 namespace result {
 
 delete_result::delete_result(result::bulk_write result) : _result(std::move(result)) {}
@@ -38,5 +38,5 @@ bool MONGOCXX_CALL operator!=(const delete_result& lhs, const delete_result& rhs
 }
 
 }  // namespace result
-}  // namespace wip
+}  // namespace v_noabi
 }  // namespace mongocxx

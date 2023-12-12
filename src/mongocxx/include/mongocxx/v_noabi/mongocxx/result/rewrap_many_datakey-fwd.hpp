@@ -17,13 +17,21 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace wip {
+namespace v_noabi {
 namespace result {
 
 class MONGOCXX_API rewrap_many_datakey;
 
 }  // namespace result
-}  // namespace wip
+}  // namespace v_noabi
+}  // namespace mongocxx
+
+namespace mongocxx {
+namespace result {
+
+using ::mongocxx::v_noabi::result::rewrap_many_datakey;
+
+}  // namespace result
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

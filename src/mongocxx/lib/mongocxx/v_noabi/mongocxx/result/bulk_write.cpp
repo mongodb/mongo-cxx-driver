@@ -17,7 +17,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace wip {
+namespace v_noabi {
 namespace result {
 
 bulk_write::bulk_write(bsoncxx::document::value raw_response)
@@ -68,5 +68,5 @@ bool MONGOCXX_CALL operator!=(const bulk_write& lhs, const bulk_write& rhs) {
 }
 
 }  // namespace result
-}  // namespace wip
+}  // namespace v_noabi
 }  // namespace mongocxx

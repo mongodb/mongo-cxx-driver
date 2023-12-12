@@ -26,7 +26,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace wip {
+namespace v_noabi {
 namespace result {
 
 /// Class representing the result of a MongoDB update operation.
@@ -76,7 +76,7 @@ class update {
 };
 
 }  // namespace result
-}  // namespace wip
+}  // namespace v_noabi
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

@@ -18,7 +18,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace wip {
+namespace v_noabi {
 namespace result {
 
 insert_many::insert_many(result::bulk_write result, bsoncxx::array::value inserted_ids)
@@ -77,5 +77,5 @@ bool MONGOCXX_CALL operator!=(const insert_many& lhs, const insert_many& rhs) {
 }
 
 }  // namespace result
-}  // namespace wip
+}  // namespace v_noabi
 }  // namespace mongocxx

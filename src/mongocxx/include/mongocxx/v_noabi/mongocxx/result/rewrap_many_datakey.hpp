@@ -23,7 +23,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace wip {
+namespace v_noabi {
 namespace result {
 
 /// Class representing the result of a MongoDB rewrap_many_datakey operation.
@@ -45,7 +45,7 @@ class rewrap_many_datakey {
 };
 
 }  // namespace result
-}  // namespace wip
+}  // namespace v_noabi
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

@@ -18,7 +18,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace wip {
+namespace v_noabi {
 namespace result {
 
 insert_one::insert_one(result::bulk_write result, bsoncxx::types::bson_value::view inserted_id)
@@ -42,5 +42,5 @@ bool MONGOCXX_CALL operator!=(const insert_one& lhs, const insert_one& rhs) {
 }
 
 }  // namespace result
-}  // namespace wip
+}  // namespace v_noabi
 }  // namespace mongocxx
