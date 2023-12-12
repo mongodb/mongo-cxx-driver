@@ -104,7 +104,8 @@ enum class error_code : std::int32_t {
     // used.
     k_invalid_search_index_model,
 
-    // A default-constructed or moved-from mongocxx::search_index_view object has been used.
+    // A default-constructed or moved-from mongocxx::v_noabi::search_index_view object has been
+    // used.
     k_invalid_search_index_view,
 
     // Add new constant string message to error_code.cpp as well!

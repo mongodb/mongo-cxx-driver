@@ -14,7 +14,8 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace wip {
+namespace v_noabi {
+
 using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_document;
 
@@ -206,7 +207,8 @@ class search_index_view::impl {
     mongoc_collection_t* _coll;
     mongoc_client_t* _client;
 };
-}  // namespace wip
+
+}  // namespace v_noabi
 }  // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

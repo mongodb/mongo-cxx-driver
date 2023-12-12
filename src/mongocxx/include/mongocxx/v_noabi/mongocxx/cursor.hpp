@@ -90,7 +90,7 @@ class cursor {
     friend ::mongocxx::v_noabi::collection;
     friend ::mongocxx::v_noabi::database;
     friend ::mongocxx::v_noabi::index_view;
-    friend ::mongocxx::wip::search_index_view;
+    friend ::mongocxx::v_noabi::search_index_view;
 
     friend ::mongocxx::v_noabi::cursor::iterator;
 
