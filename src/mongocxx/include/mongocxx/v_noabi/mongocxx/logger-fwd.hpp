@@ -17,12 +17,21 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace wip {
+namespace v_noabi {
+
 enum class log_level;
 
 class MONGOCXX_API logger;
 
-}  // namespace wip
+}  // namespace v_noabi
+}  // namespace mongocxx
+
+namespace mongocxx {
+
+using ::mongocxx::v_noabi::log_level;
+
+using ::mongocxx::v_noabi::logger;
+
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
