@@ -44,15 +44,13 @@ auto detect_string_f(int,  //
                          bsoncxx::detail::soft_declval<void (*)(typename S::const_pointer)>(),
                      void (*conv_size)(typename S::size_type) =
                          bsoncxx::detail::soft_declval<void (*)(typename S::size_type)>())
-    -> bsoncxx::detail::true_t<
-        typename S::traits_type::char_type,
-        decltype(s.length()),
-        decltype(mut = s),
-        decltype(s.compare(s)),
-        decltype(s.substr(0, s.size())),
-        decltype(conv_cptr(s.data())),
-        decltype(conv_size(s.size())),
-        bsoncxx::detail::requires_t<void, bsoncxx::detail::is_equality_comparable<S>>>;
+    -> bsoncxx::detail::true_t<typename S::traits_type::char_type,
+                               decltype(s.length()),
+                               decltype(mut = s),
+                               decltype(s.compare(s)),
+                               decltype(s.substr(0, s.size())),
+                               decltype(conv_cptr(s.data())),
+                               decltype(conv_size(s.size()))>;
 
 // Heuristic detection of std::string-like types. Not perfect, but should reasonably
 // handle most cases.
