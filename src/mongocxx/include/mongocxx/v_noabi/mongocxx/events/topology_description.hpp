@@ -28,7 +28,7 @@ namespace mongocxx {
 namespace v_noabi {
 namespace events {
 
-using mongocxx::read_preference;
+using mongocxx::v_noabi::read_preference;
 
 ///
 /// Class representing what the driver knows about a topology of MongoDB servers: either a
@@ -136,7 +136,7 @@ class topology_description {
     ///
     /// @return Whether there is a readable server available.
     ///
-    bool has_readable_server(const mongocxx::read_preference& pref) const;
+    bool has_readable_server(const mongocxx::v_noabi::read_preference& pref) const;
 
     ///
     /// Determines if the topology has a writable server available, such as a

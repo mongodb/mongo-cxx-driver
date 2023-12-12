@@ -51,7 +51,7 @@ count& count::skip(std::int64_t skip) {
     return *this;
 }
 
-count& count::read_preference(mongocxx::read_preference rp) {
+count& count::read_preference(mongocxx::v_noabi::read_preference rp) {
     _read_preference = std::move(rp);
     return *this;
 }

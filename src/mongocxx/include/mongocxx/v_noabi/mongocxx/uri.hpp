@@ -140,7 +140,7 @@ class uri {
     ///
     /// @return A read_preference that represents what was specified in the uri.
     ///
-    mongocxx::read_preference read_preference() const;
+    mongocxx::v_noabi::read_preference read_preference() const;
 
     ///
     /// Returns the replica set specified in the uri.

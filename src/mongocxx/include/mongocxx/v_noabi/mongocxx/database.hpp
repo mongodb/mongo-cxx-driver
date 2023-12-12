@@ -494,7 +494,7 @@ class database {
     ///
     /// @param rp the new read_preference.
     ///
-    void read_preference(mongocxx::read_preference rp);
+    void read_preference(mongocxx::v_noabi::read_preference rp);
 
     ///
     /// The current read preference for this database.
@@ -503,7 +503,7 @@ class database {
     ///
     /// @return the current read_preference
     ///
-    mongocxx::read_preference read_preference() const;
+    mongocxx::v_noabi::read_preference read_preference() const;
 
     ///
     /// Sets the write_concern for this database.

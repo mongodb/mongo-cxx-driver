@@ -37,7 +37,8 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace wip {
+namespace v_noabi {
+
 ///
 /// Class representing a preference for how the driver routes read operations to members of a
 /// replica set or to a sharded cluster.
@@ -310,7 +311,7 @@ class read_preference {
     std::unique_ptr<impl> _impl;
 };
 
-}  // namespace wip
+}  // namespace v_noabi
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

@@ -84,19 +84,19 @@ class transaction::impl {
         return stdx::optional<mongocxx::write_concern>(std::move(wci));
     }
 
-    void read_preference(const mongocxx::read_preference& rp) {
+    void read_preference(const mongocxx::v_noabi::read_preference& rp) {
         libmongoc::transaction_opts_set_read_prefs(_transaction_opt_t.get(),
                                                    rp._impl->read_preference_t);
     }
 
-    stdx::optional<mongocxx::read_preference> read_preference() const {
+    stdx::optional<mongocxx::v_noabi::read_preference> read_preference() const {
         auto rp = libmongoc::transaction_opts_get_read_prefs(_transaction_opt_t.get());
         if (!rp) {
             return {};
         }
-        mongocxx::read_preference rpi(
+        mongocxx::v_noabi::read_preference rpi(
             stdx::make_unique<read_preference::impl>(libmongoc::read_prefs_copy(rp)));
-        return stdx::optional<mongocxx::read_preference>(std::move(rpi));
+        return stdx::optional<mongocxx::v_noabi::read_preference>(std::move(rpi));
     }
 
     void max_commit_time_ms(std::chrono::milliseconds ms) {

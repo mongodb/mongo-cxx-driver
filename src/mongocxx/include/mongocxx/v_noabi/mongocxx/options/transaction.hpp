@@ -116,7 +116,7 @@ class transaction {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    transaction& read_preference(const mongocxx::read_preference& rp);
+    transaction& read_preference(const mongocxx::v_noabi::read_preference& rp);
 
     ///
     /// Gets the current transaction read preference.
@@ -124,7 +124,7 @@ class transaction {
     /// @return
     ///    An optional containing the read preference. If the read preference has not been set, a
     ///    disengaged optional is returned.
-    stdx::optional<mongocxx::read_preference> read_preference() const;
+    stdx::optional<mongocxx::v_noabi::read_preference> read_preference() const;
 
     ///
     /// Sets the transaction's max commit time, in milliseconds.

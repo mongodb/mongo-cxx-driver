@@ -164,16 +164,16 @@ mongocxx::v_noabi::read_concern client::read_concern() const {
     return {stdx::make_unique<read_concern::impl>(libmongoc::read_concern_copy(rc))};
 }
 
-void client::read_preference_deprecated(mongocxx::read_preference rp) {
+void client::read_preference_deprecated(mongocxx::v_noabi::read_preference rp) {
     libmongoc::client_set_read_prefs(_get_impl().client_t, rp._impl->read_preference_t);
 }
 
-void client::read_preference(mongocxx::read_preference rp) {
+void client::read_preference(mongocxx::v_noabi::read_preference rp) {
     return read_preference_deprecated(std::move(rp));
 }
 
-mongocxx::read_preference client::read_preference() const {
-    mongocxx::read_preference rp(stdx::make_unique<read_preference::impl>(
+mongocxx::v_noabi::read_preference client::read_preference() const {
+    mongocxx::v_noabi::read_preference rp(stdx::make_unique<read_preference::impl>(
         libmongoc::read_prefs_copy(libmongoc::client_get_read_prefs(_get_impl().client_t))));
     return rp;
 }

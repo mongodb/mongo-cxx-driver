@@ -172,7 +172,7 @@ class aggregate {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    aggregate& read_preference(mongocxx::read_preference rp);
+    aggregate& read_preference(mongocxx::v_noabi::read_preference rp);
 
     ///
     /// The current read_preference for this operation.
@@ -181,7 +181,7 @@ class aggregate {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    const stdx::optional<mongocxx::read_preference>& read_preference() const;
+    const stdx::optional<mongocxx::v_noabi::read_preference>& read_preference() const;
 
     ///
     /// Sets whether the $out stage should bypass document validation.
@@ -317,7 +317,7 @@ class aggregate {
     stdx::optional<bsoncxx::document::view_or_value> _collation;
     stdx::optional<bsoncxx::document::view_or_value> _let;
     stdx::optional<std::chrono::milliseconds> _max_time;
-    stdx::optional<mongocxx::read_preference> _read_preference;
+    stdx::optional<mongocxx::v_noabi::read_preference> _read_preference;
     stdx::optional<bool> _bypass_document_validation;
     stdx::optional<mongocxx::v_noabi::hint> _hint;
     stdx::optional<mongocxx::write_concern> _write_concern;

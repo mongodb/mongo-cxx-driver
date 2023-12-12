@@ -437,7 +437,7 @@ mongocxx::v_noabi::read_concern database::read_concern() const {
     return {stdx::make_unique<read_concern::impl>(libmongoc::read_concern_copy(rc))};
 }
 
-void database::read_preference(mongocxx::read_preference rp) {
+void database::read_preference(mongocxx::v_noabi::read_preference rp) {
     libmongoc::database_set_read_prefs(_get_impl().database_t, rp._impl->read_preference_t);
 }
 
@@ -452,8 +452,8 @@ bool database::has_collection(bsoncxx::string::view_or_value name) const {
     return result;
 }
 
-mongocxx::read_preference database::read_preference() const {
-    mongocxx::read_preference rp(stdx::make_unique<read_preference::impl>(
+mongocxx::v_noabi::read_preference database::read_preference() const {
+    mongocxx::v_noabi::read_preference rp(stdx::make_unique<read_preference::impl>(
         libmongoc::read_prefs_copy(libmongoc::database_get_read_prefs(_get_impl().database_t))));
     return rp;
 }

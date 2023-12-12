@@ -101,7 +101,7 @@ find& find::projection(bsoncxx::document::view_or_value projection) {
     return *this;
 }
 
-find& find::read_preference(mongocxx::read_preference rp) {
+find& find::read_preference(mongocxx::v_noabi::read_preference rp) {
     _read_preference = std::move(rp);
     return *this;
 }
@@ -206,7 +206,7 @@ const stdx::optional<bsoncxx::document::view_or_value>& find::sort() const {
     return _ordering;
 }
 
-const stdx::optional<mongocxx::read_preference>& find::read_preference() const {
+const stdx::optional<mongocxx::v_noabi::read_preference>& find::read_preference() const {
     return _read_preference;
 }
 

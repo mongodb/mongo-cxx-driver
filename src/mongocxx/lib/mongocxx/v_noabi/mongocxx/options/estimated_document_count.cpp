@@ -26,7 +26,8 @@ estimated_document_count& estimated_document_count::max_time(std::chrono::millis
     return *this;
 }
 
-estimated_document_count& estimated_document_count::read_preference(mongocxx::read_preference rp) {
+estimated_document_count& estimated_document_count::read_preference(
+    mongocxx::v_noabi::read_preference rp) {
     _read_preference = std::move(rp);
     return *this;
 }

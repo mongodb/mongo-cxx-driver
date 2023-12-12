@@ -54,7 +54,7 @@ aggregate& aggregate::max_time(std::chrono::milliseconds max_time) {
     return *this;
 }
 
-aggregate& aggregate::read_preference(mongocxx::read_preference rp) {
+aggregate& aggregate::read_preference(mongocxx::v_noabi::read_preference rp) {
     _read_preference = std::move(rp);
     return *this;
 }
@@ -104,7 +104,7 @@ const stdx::optional<std::chrono::milliseconds>& aggregate::max_time() const {
     return _max_time;
 }
 
-const stdx::optional<mongocxx::read_preference>& aggregate::read_preference() const {
+const stdx::optional<mongocxx::v_noabi::read_preference>& aggregate::read_preference() const {
     return _read_preference;
 }
 

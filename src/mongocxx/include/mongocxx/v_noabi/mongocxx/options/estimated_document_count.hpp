@@ -92,7 +92,7 @@ class estimated_document_count {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/count/
     ///
-    estimated_document_count& read_preference(mongocxx::read_preference rp);
+    estimated_document_count& read_preference(mongocxx::v_noabi::read_preference rp);
 
     ///
     /// The current read_preference for this operation.
@@ -101,12 +101,12 @@ class estimated_document_count {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/count/
     ///
-    const bsoncxx::stdx::optional<mongocxx::read_preference>& read_preference() const;
+    const bsoncxx::stdx::optional<mongocxx::v_noabi::read_preference>& read_preference() const;
 
    private:
     bsoncxx::stdx::optional<std::chrono::milliseconds> _max_time;
     bsoncxx::stdx::optional<bsoncxx::types::bson_value::view_or_value> _comment;
-    bsoncxx::stdx::optional<mongocxx::read_preference> _read_preference;
+    bsoncxx::stdx::optional<mongocxx::v_noabi::read_preference> _read_preference;
 };
 
 }  // namespace options
