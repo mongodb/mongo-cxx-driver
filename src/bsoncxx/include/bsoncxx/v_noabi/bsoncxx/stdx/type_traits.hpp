@@ -316,7 +316,7 @@ using true_t = std::true_type;
 namespace impl_requires {
 
 template <typename R>
-R norm_conjunction(...);
+R norm_conjunction(const R&);
 
 template <typename R, typename... Cs>
 conjunction<Cs...> norm_conjunction(const conjunction<Cs...>&);
