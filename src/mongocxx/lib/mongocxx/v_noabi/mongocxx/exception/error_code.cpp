@@ -35,15 +35,12 @@ class error_category final : public std::error_category {
     std::string message(int code) const noexcept override {
         switch (static_cast<error_code>(code)) {
             case error_code::k_invalid_client_object:
-                return "invalid use of default constructed or moved-from mongocxx::v_noabi::client "
-                       "object";
+                return "invalid use of default constructed or moved-from mongocxx::client object";
             case error_code::k_invalid_collection_object:
-                return "invalid use of default constructed or moved-from "
-                       "mongocxx::v_noabi::collection "
+                return "invalid use of default constructed or moved-from mongocxx::collection "
                        "object";
             case error_code::k_invalid_database_object:
-                return "invalid use of default constructed or moved-from "
-                       "mongocxx::v_noabi::database object";
+                return "invalid use of default constructed or moved-from mongocxx::database object";
             case error_code::k_invalid_parameter:
                 return "an invalid or out-of-bounds parameter was provided";
             case error_code::k_ssl_not_supported:
@@ -53,8 +50,7 @@ class error_category final : public std::error_category {
             case error_code::k_unknown_write_concern:
                 return "invalid attempt to set an unknown write concern level";
             case error_code::k_cannot_recreate_instance:
-                return "cannot create a mongocxx::v_noabi::instance object if one has already been "
-                       "created";
+                return "cannot create a mongocxx::instance object if one has already been created";
             case error_code::k_server_response_malformed:
                 return "the response from the server was malformed";
             case error_code::k_invalid_uri:
@@ -92,10 +88,10 @@ class error_category final : public std::error_category {
                 return "could not create resource";
             case error_code::k_invalid_search_index_model:
                 return "invalid use of default constructed or moved-from "
-                       "mongocxx::v_noabi::search_index_model object";
+                       "mongocxx::search_index_model object";
             case error_code::k_invalid_search_index_view:
                 return "invalid use of default constructed or moved-from "
-                       "mongocxx::v_noabi::search_index_view object";
+                       "mongocxx::search_index_view object";
             default:
                 return "unknown mongocxx error";
         }
