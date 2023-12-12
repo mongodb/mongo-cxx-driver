@@ -20,7 +20,8 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace wip {
+namespace v_noabi {
+
 class bulk_write::impl {
    public:
     impl(mongoc_bulk_operation_t* op) : operation_t(op) {}
@@ -32,7 +33,7 @@ class bulk_write::impl {
     mongoc_bulk_operation_t* operation_t;
 };
 
-}  // namespace wip
+}  // namespace v_noabi
 }  // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

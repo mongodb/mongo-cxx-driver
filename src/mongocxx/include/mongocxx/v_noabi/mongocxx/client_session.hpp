@@ -192,7 +192,7 @@ class client_session {
     void with_transaction(with_transaction_cb cb, options::transaction opts = {});
 
    private:
-    friend ::mongocxx::wip::bulk_write;
+    friend ::mongocxx::v_noabi::bulk_write;
     friend ::mongocxx::wip::client;
     friend ::mongocxx::wip::collection;
     friend ::mongocxx::wip::database;

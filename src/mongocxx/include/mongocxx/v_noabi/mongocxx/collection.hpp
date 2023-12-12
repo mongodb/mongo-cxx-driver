@@ -203,7 +203,7 @@ class collection {
     /// @return
     ///    The newly-created bulk write.
     ///
-    mongocxx::bulk_write create_bulk_write(const options::bulk_write& options = {});
+    mongocxx::v_noabi::bulk_write create_bulk_write(const options::bulk_write& options = {});
 
     ///
     /// Creates a new bulk operation to be executed against this collection.
@@ -217,8 +217,8 @@ class collection {
     /// @return
     ///    The newly-created bulk write.
     ///
-    mongocxx::bulk_write create_bulk_write(const client_session& session,
-                                           const options::bulk_write& options = {});
+    mongocxx::v_noabi::bulk_write create_bulk_write(const client_session& session,
+                                                    const options::bulk_write& options = {});
     ///
     /// @}
     ///
@@ -242,7 +242,7 @@ class collection {
     ///   mongocxx::v_noabi::bulk_write_exception when there are errors processing
     ///   the writes.
     ///
-    /// @see mongocxx::bulk_write
+    /// @see mongocxx::v_noabi::bulk_write
     /// @see https://www.mongodb.com/docs/manual/core/bulk-write-operations/
     ///
     MONGOCXX_INLINE stdx::optional<result::bulk_write> write(
@@ -267,7 +267,7 @@ class collection {
     ///   mongocxx::v_noabi::bulk_write_exception when there are errors processing
     ///   the writes.
     ///
-    /// @see mongocxx::bulk_write
+    /// @see mongocxx::v_noabi::bulk_write
     /// @see https://www.mongodb.com/docs/manual/core/bulk-write-operations/
     ///
     MONGOCXX_INLINE stdx::optional<result::bulk_write> write(
@@ -298,7 +298,7 @@ class collection {
     ///
     /// @throws mongocxx::v_noabi::bulk_write_exception when there are errors processing the writes.
     ///
-    /// @see mongocxx::bulk_write
+    /// @see mongocxx::v_noabi::bulk_write
     /// @see https://www.mongodb.com/docs/manual/core/bulk-write-operations/
     ///
     template <typename container_type>
@@ -325,7 +325,7 @@ class collection {
     ///
     /// @throws mongocxx::v_noabi::bulk_write_exception when there are errors processing the writes.
     ///
-    /// @see mongocxx::bulk_write
+    /// @see mongocxx::v_noabi::bulk_write
     /// @see https://www.mongodb.com/docs/manual/core/bulk-write-operations/
     ///
     template <typename container_type>
@@ -358,7 +358,7 @@ class collection {
     ///
     /// @throws mongocxx::v_noabi::bulk_write_exception when there are errors processing the writes.
     ///
-    /// @see mongocxx::bulk_write
+    /// @see mongocxx::v_noabi::bulk_write
     /// @see https://www.mongodb.com/docs/manual/core/bulk-write-operations/
     ///
     template <typename write_model_iterator_type>
@@ -388,7 +388,7 @@ class collection {
     ///
     /// @throws mongocxx::v_noabi::bulk_write_exception when there are errors processing the writes.
     ///
-    /// @see mongocxx::bulk_write
+    /// @see mongocxx::v_noabi::bulk_write
     /// @see https://www.mongodb.com/docs/manual/core/bulk-write-operations/
     ///
     template <typename write_model_iterator_type>
@@ -1859,7 +1859,7 @@ class collection {
     search_index_view search_indexes();
 
    private:
-    friend ::mongocxx::wip::bulk_write;
+    friend ::mongocxx::v_noabi::bulk_write;
     friend ::mongocxx::wip::client_encryption;
     friend ::mongocxx::wip::database;
 
@@ -1971,15 +1971,15 @@ class collection {
                                           const options::change_stream& options);
 
     // Helpers for the insert_many method templates.
-    mongocxx::bulk_write _init_insert_many(const options::insert& options,
-                                           const client_session* session);
+    mongocxx::v_noabi::bulk_write _init_insert_many(const options::insert& options,
+                                                    const client_session* session);
 
-    void _insert_many_doc_handler(mongocxx::bulk_write& writes,
+    void _insert_many_doc_handler(mongocxx::v_noabi::bulk_write& writes,
                                   bsoncxx::builder::basic::array& inserted_ids,
                                   bsoncxx::document::view doc) const;
 
     stdx::optional<result::insert_many> _exec_insert_many(
-        mongocxx::bulk_write& writes, bsoncxx::builder::basic::array& inserted_ids);
+        mongocxx::v_noabi::bulk_write& writes, bsoncxx::builder::basic::array& inserted_ids);
 
     template <typename document_view_iterator_type>
     MONGOCXX_PRIVATE stdx::optional<result::insert_many> _insert_many(

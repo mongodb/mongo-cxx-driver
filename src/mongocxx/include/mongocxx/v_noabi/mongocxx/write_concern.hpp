@@ -244,7 +244,7 @@ class write_concern {
     bsoncxx::document::value to_document() const;
 
    private:
-    friend ::mongocxx::wip::bulk_write;
+    friend ::mongocxx::v_noabi::bulk_write;
     friend ::mongocxx::wip::client;
     friend ::mongocxx::wip::collection;
     friend ::mongocxx::wip::database;

@@ -34,7 +34,7 @@ namespace v_noabi {
 namespace model {
 
 ///
-/// Models a single write operation within a mongocxx::bulk_write.
+/// Models a single write operation within a mongocxx::v_noabi::bulk_write.
 ///
 class write {
    public:
