@@ -37,10 +37,7 @@ add_executable(test_bson
     json.cpp
     oid.cpp
     view_or_value.cpp
-    algorithm.test.cpp
-    iterator.test.cpp
     make_unique.test.cpp
-    ranges.test.cpp
     string_view.test.cpp
     type_traits.test.cpp
 )
@@ -145,10 +142,7 @@ set_dist_list(src_bsoncxx_test_DIST
     test_macro_guards.cpp.in
     to_string.hh
     view_or_value.cpp
-    algorithm.test.cpp
-    iterator.test.cpp
     make_unique.test.cpp
-    ranges.test.cpp
     string_view.test.cpp
     type_traits.test.cpp
 )

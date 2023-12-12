@@ -14,6 +14,7 @@
 
 #pragma once
 
+#include <algorithm>
 #include <cstddef>
 #include <ios>
 #include <limits>
@@ -21,10 +22,7 @@
 #include <string>
 #include <utility>
 
-#include <bsoncxx/stdx/algorithm.hpp>
-#include <bsoncxx/stdx/iterator.hpp>
 #include <bsoncxx/stdx/operators.hpp>
-#include <bsoncxx/stdx/ranges.hpp>
 #include <bsoncxx/stdx/type_traits.hpp>
 
 #include <bsoncxx/config/prelude.hpp>
@@ -41,16 +39,20 @@ auto detect_string_f(...) -> std::false_type;
 template <typename S>
 auto detect_string_f(int,  //
                      const S& s = bsoncxx::detail::soft_declval<S>(),
-                     S& mut = bsoncxx::detail::soft_declval<S&>())
+                     S& mut = bsoncxx::detail::soft_declval<S&>(),
+                     void (*conv_cptr)(typename S::const_pointer) =
+                         bsoncxx::detail::soft_declval<void (*)(typename S::const_pointer)>(),
+                     void (*conv_size)(typename S::size_type) =
+                         bsoncxx::detail::soft_declval<void (*)(typename S::size_type)>())
     -> bsoncxx::detail::true_t<
         typename S::traits_type::char_type,
         decltype(s.length()),
         decltype(mut = s),
         decltype(s.compare(s)),
         decltype(s.substr(0, s.size())),
-        bsoncxx::detail::requires_t<void,
-                                    bsoncxx::detail::is_equality_comparable<S, S>,
-                                    bsoncxx::detail::is_range<S>>>;
+        decltype(conv_cptr(s.data())),
+        decltype(conv_size(s.size())),
+        bsoncxx::detail::requires_t<void, bsoncxx::detail::is_equality_comparable<S>>>;
 
 // Heuristic detection of std::string-like types. Not perfect, but should reasonably
 // handle most cases.
@@ -88,21 +90,17 @@ class basic_string_view : bsoncxx::detail::equality_operators, bsoncxx::detail::
     using self_type = basic_string_view;
 
     /**
-     * @brief If R is a type for which we want to permit from-range construction,
+     * @brief If R is a type for which we want to permit implicit conversion,
      * evaluates to the type `int`. Otherwise, is a substitution failure.
      */
-    template <typename R>
-    using _enable_range_constructor = bsoncxx::detail::requires_t<
+    template <typename S>
+    using _enable_string_conversion = bsoncxx::detail::requires_t<
         int,
-        // Must be a contiguous range
-        bsoncxx::detail::is_contiguous_range<R>,
         // Don't eat our own copy/move constructor:
-        bsoncxx::detail::negation<bsoncxx::detail::is_alike<R, self_type>>,
-        // Don't handle character arrays (we use a different constructor for
-        // that)
-        bsoncxx::detail::negation<std::is_convertible<R, const_pointer>>,
+        bsoncxx::detail::negation<bsoncxx::detail::is_alike<S, self_type>>,
         // The range's value must be the same as our character type
-        std::is_same<bsoncxx::detail::detected_t<bsoncxx::detail::range_value_t, R>, value_type>>;
+        std::is_same<typename bsoncxx::detail::remove_reference_t<S>::value_type, value_type>,
+        detail::is_string_like<S>>;
 
    public:
     using traits_type = Traits;
@@ -136,17 +134,14 @@ class basic_string_view : bsoncxx::detail::equality_operators, bsoncxx::detail::
         : _begin(s), _size(traits_type::length(s)) {}
 
     /**
-     * @brief From-range conversion accepting string-like ranges.
+     * @brief Implicit conversion from string-like ranges.
      *
-     * Requires that `Range` is a non-array contiguous range with the same value type
-     * as the string view, and is a std::string-like value.
+     * Requires that `StringLike` is a non-array contiguous range with the same
+     * value type as this string view, and is a std::string-like value.
      */
-    template <
-        typename Range,
-        _enable_range_constructor<Range> = 0,
-        bsoncxx::detail::requires_t<int, detail::is_string_like<Range>> RequiresStringLike = 0>
-    constexpr basic_string_view(Range&& rng) noexcept
-        : _begin(bsoncxx::detail::data(rng)), _size(bsoncxx::detail::size(rng)) {}
+    template <typename StringLike, _enable_string_conversion<StringLike> = 0>
+    constexpr basic_string_view(StringLike&& str) noexcept
+        : _begin(str.data()), _size(str.size()) {}
 
     // Construction from a null pointer is deleted
     basic_string_view(std::nullptr_t) = delete;
@@ -299,9 +294,9 @@ class basic_string_view : bsoncxx::detail::equality_operators, bsoncxx::detail::
      * @brief Compare two strings lexicographically
      *
      * @param other The "right hand" operand of the comparison
-     * @retval 0 If *this == other
-     * @retval n : n < 0 if *this is "less than" other.
-     * @retval n : n > 0 if *this is "greater than" other.
+     * @returns `0` If *this == other
+     * @returns `n : n < 0` if *this is "less than" other.
+     * @returns `n : n > 0` if *this is "greater than" other.
      */
     constexpr int compare(self_type other) const noexcept {
         // Another level of indirection to support restricted C++11 constexpr
@@ -348,12 +343,19 @@ class basic_string_view : bsoncxx::detail::equality_operators, bsoncxx::detail::
      * starting with pos. If infix does not occur, returns npos.
      */
     bsoncxx_cxx14_constexpr size_type find(self_type infix, size_type pos = 0) const noexcept {
-        self_type sub = this->substr((std::min)(pos, size()));
-        bsoncxx::detail::subrange<iterator> found = bsoncxx::detail::search(sub, infix);
-        if (bsoncxx::detail::distance(found) != static_cast<difference_type>(infix.size())) {
+        if (pos > size()) {
             return npos;
         }
-        return static_cast<size_type>(found.begin() - begin());
+        self_type sub = this->substr(pos);
+        if (infix.empty()) {
+            // The empty string is always "present" at the beginning of any string
+            return pos;
+        }
+        const_iterator found = std::search(sub.begin(), sub.end(), infix.begin(), infix.end());
+        if (found == sub.end()) {
+            return npos;
+        }
+        return static_cast<size_type>(found - begin());
     }
 
     /**
@@ -362,15 +364,16 @@ class basic_string_view : bsoncxx::detail::equality_operators, bsoncxx::detail::
      */
     bsoncxx_cxx14_constexpr size_type rfind(self_type infix, size_type pos = npos) const noexcept {
         // Calc the endpos where searching should begin, which includes the infix size
-        const size_type endpos = pos != npos ? pos + infix.size() : pos;
-        self_type searched = this->substr(0, endpos);
-        bsoncxx::detail::reversed_t<self_type> found =
-            bsoncxx::detail::search(bsoncxx::detail::make_reversed_view(searched),
-                                    bsoncxx::detail::make_reversed_view(infix));
-        if (bsoncxx::detail::distance(found) != static_cast<difference_type>(infix.size())) {
+        const size_type substr_size = pos != npos ? pos + infix.size() : pos;
+        if (infix.empty()) {
+            return (std::min)(pos, size());
+        }
+        self_type searched = this->substr(0, substr_size);
+        auto f = std::search(searched.rbegin(), searched.rend(), infix.rbegin(), infix.rend());
+        if (f == searched.rend()) {
             return npos;
         }
-        return static_cast<size_type>(rend() - found.end());
+        return static_cast<size_type>(rend() - f) - infix.size();
     }
 
     /**
@@ -378,7 +381,7 @@ class basic_string_view : bsoncxx::detail::equality_operators, bsoncxx::detail::
      * set, starting at pos
      */
     constexpr size_type find_first_of(self_type set, size_type pos = 0) const noexcept {
-        return _find_if(pos, bsoncxx::detail::equal_to_any_of(set));
+        return _find_if(pos, [&](value_type chr) { return set.find(chr) != npos; });
     }
 
     /**
@@ -386,7 +389,7 @@ class basic_string_view : bsoncxx::detail::equality_operators, bsoncxx::detail::
      * given set, starting at (and including) pos
      */
     constexpr size_type find_last_of(self_type set, size_type pos = npos) const noexcept {
-        return _rfind_if(pos, bsoncxx::detail::equal_to_any_of(set));
+        return _rfind_if(pos, [&](value_type chr) { return set.find(chr) != npos; });
     }
 
     /**
@@ -394,7 +397,7 @@ class basic_string_view : bsoncxx::detail::equality_operators, bsoncxx::detail::
      * is NOT a member of the given set of characters
      */
     constexpr size_type find_first_not_of(self_type set, size_type pos = 0) const noexcept {
-        return _find_if(pos, bsoncxx::detail::not_fn(bsoncxx::detail::equal_to_any_of(set)));
+        return _find_if(pos, [&](value_type chr) { return set.find(chr) == npos; });
     }
 
     /**
@@ -402,7 +405,7 @@ class basic_string_view : bsoncxx::detail::equality_operators, bsoncxx::detail::
      * is NOT a member of the given set of characters, starting at (and including) pos
      */
     constexpr size_type find_last_not_of(self_type set, size_type pos = npos) const noexcept {
-        return _rfind_if(pos, bsoncxx::detail::not_fn(bsoncxx::detail::equal_to_any_of(set)));
+        return _rfind_if(pos, [&](value_type chr) { return set.find(chr) == npos; });
     }
 
 #pragma push_macro("DECL_FINDERS")
@@ -464,7 +467,8 @@ class basic_string_view : bsoncxx::detail::equality_operators, bsoncxx::detail::
     // returns true for substr(I). If no index exists, returns npos
     template <typename F>
     bsoncxx_cxx14_constexpr size_type _find_if(size_type pos, F pred) const noexcept {
-        const iterator found = bsoncxx::detail::find_if(substr(pos), pred);
+        const auto sub = substr(pos);
+        const iterator found = std::find_if(sub.begin(), sub.end(), pred);
         if (found == end()) {
             return npos;
         }
@@ -479,8 +483,7 @@ class basic_string_view : bsoncxx::detail::equality_operators, bsoncxx::detail::
         const auto rpos = pos == npos ? npos : pos + 1;
         // The substring that will be searched:
         const auto prefix = substr(0, rpos);
-        const const_reverse_iterator found =
-            bsoncxx::detail::find_if(bsoncxx::detail::make_reversed_view(prefix), pred);
+        const const_reverse_iterator found = std::find_if(prefix.rbegin(), prefix.rend(), pred);
         if (found == rend()) {
             return npos;
         }

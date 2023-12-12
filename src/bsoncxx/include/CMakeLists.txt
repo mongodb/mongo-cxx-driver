@@ -83,12 +83,9 @@ set_dist_list(src_bsoncxx_include_DIST
     bsoncxx/v_noabi/bsoncxx/json.hpp
     bsoncxx/v_noabi/bsoncxx/oid-fwd.hpp
     bsoncxx/v_noabi/bsoncxx/oid.hpp
-    bsoncxx/v_noabi/bsoncxx/stdx/algorithm.hpp
-    bsoncxx/v_noabi/bsoncxx/stdx/iterator.hpp
     bsoncxx/v_noabi/bsoncxx/stdx/make_unique.hpp
     bsoncxx/v_noabi/bsoncxx/stdx/operators.hpp
     bsoncxx/v_noabi/bsoncxx/stdx/optional.hpp
-    bsoncxx/v_noabi/bsoncxx/stdx/ranges.hpp
     bsoncxx/v_noabi/bsoncxx/stdx/string_view.hpp
     bsoncxx/v_noabi/bsoncxx/stdx/type_traits.hpp
     bsoncxx/v_noabi/bsoncxx/string/to_string.hpp

@@ -44,12 +44,11 @@ auto is_equality_comparable_f(int,
  *
  * Requires L == R, L != R, R == L, and R != L
  */
-template <typename L, typename R, typename = void>
+template <typename L, typename R = L>
 struct is_equality_comparable : decltype(is_equality_comparable_f<L, R>(0)) {};
 
 /**
  * @brief Callable object and tag type for equality comparison
- *
  */
 struct equal_to {
     template <typename L, typename R>

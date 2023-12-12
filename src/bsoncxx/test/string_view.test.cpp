@@ -4,7 +4,6 @@
 #include <string>
 #include <type_traits>
 
-#include <bsoncxx/stdx/iterator.hpp>
 #include <bsoncxx/stdx/operators.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/stdx/type_traits.hpp>
@@ -13,13 +12,12 @@
 namespace stdx = bsoncxx::stdx;
 using stdx::string_view;
 
+static_assert(bsoncxx::stdx::detail::is_string_like<std::string>::value, "fail");
+
 static_assert(!std::is_constructible<string_view, std::vector<int>>::value, "fail");
 static_assert(!std::is_constructible<string_view, double>::value, "fail");
 static_assert(std::is_constructible<string_view, std::string>::value, "fail");
 static_assert(std::is_constructible<std::string, string_view>::value, "fail");
-static_assert(bsoncxx::detail::is_contiguous_range<string_view>::value, "fail");
-static_assert(bsoncxx::detail::is_contiguous_range<string_view&>::value, "fail");
-static_assert(bsoncxx::detail::is_contiguous_range<string_view const&>::value, "fail");
 
 TEST_CASE("string_view: Default constructor") {
     (void)string_view();
@@ -154,6 +152,7 @@ TEST_CASE("string_view: find") {
     pos = sv.find("", 4);
     CHECK(pos == 4);
     CHECK(sv.find("") == str.find(""));
+    CHECK(sv.find("", 5000) == str.find("", 5000));
     CHECK(sv.find("nowhere") == sv.npos);
     CHECK(sv.rfind("nowhere") == str.rfind("nowhere"));
     CHECK(sv.find("123") == str.find("123"));
@@ -162,6 +161,7 @@ TEST_CASE("string_view: find") {
     CHECK(sv.rfind("abc", 8) == str.rfind("abc", 8));
     CHECK(sv.rfind("abc", 888888) == str.rfind("abc", 888888));
     CHECK(sv.rfind("") == str.rfind(""));
+    CHECK(sv.rfind("", 5000) == str.rfind("", 5000));
 
     CHECK(string_view("").find("") == std::string("").find(""));
     CHECK(string_view("").rfind("") == std::string("").rfind(""));
