@@ -69,7 +69,7 @@ aggregate& aggregate::hint(mongocxx::v_noabi::hint index_hint) {
     return *this;
 }
 
-aggregate& aggregate::read_concern(mongocxx::read_concern read_concern) {
+aggregate& aggregate::read_concern(mongocxx::v_noabi::read_concern read_concern) {
     _read_concern = std::move(read_concern);
     return *this;
 }
@@ -116,7 +116,7 @@ const stdx::optional<mongocxx::v_noabi::hint>& aggregate::hint() const {
     return _hint;
 }
 
-const stdx::optional<mongocxx::read_concern>& aggregate::read_concern() const {
+const stdx::optional<mongocxx::v_noabi::read_concern>& aggregate::read_concern() const {
     return _read_concern;
 }
 

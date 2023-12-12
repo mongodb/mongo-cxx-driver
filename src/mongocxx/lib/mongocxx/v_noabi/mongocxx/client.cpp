@@ -150,16 +150,16 @@ client::operator bool() const noexcept {
     return static_cast<bool>(_impl);
 }
 
-void client::read_concern_deprecated(mongocxx::read_concern rc) {
+void client::read_concern_deprecated(mongocxx::v_noabi::read_concern rc) {
     auto client_t = _get_impl().client_t;
     libmongoc::client_set_read_concern(client_t, rc._impl->read_concern_t);
 }
 
-void client::read_concern(mongocxx::read_concern rc) {
+void client::read_concern(mongocxx::v_noabi::read_concern rc) {
     return read_concern_deprecated(std::move(rc));
 }
 
-mongocxx::read_concern client::read_concern() const {
+mongocxx::v_noabi::read_concern client::read_concern() const {
     auto rc = libmongoc::client_get_read_concern(_get_impl().client_t);
     return {stdx::make_unique<read_concern::impl>(libmongoc::read_concern_copy(rc))};
 }

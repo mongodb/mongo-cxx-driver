@@ -20,7 +20,8 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace wip {
+namespace v_noabi {
+
 class read_concern::impl {
    public:
     impl(::mongoc_read_concern_t* read_concern) : read_concern_t{read_concern} {}
@@ -32,7 +33,7 @@ class read_concern::impl {
     ::mongoc_read_concern_t* read_concern_t;
 };
 
-}  // namespace wip
+}  // namespace v_noabi
 }  // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

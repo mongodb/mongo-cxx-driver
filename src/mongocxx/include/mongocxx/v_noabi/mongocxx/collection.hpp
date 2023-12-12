@@ -1360,7 +1360,7 @@ class collection {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/read-concern/
     ///
-    void read_concern(mongocxx::read_concern rc);
+    void read_concern(mongocxx::v_noabi::read_concern rc);
 
     ///
     /// Gets the read_concern for the collection.
@@ -1370,7 +1370,7 @@ class collection {
     ///
     /// @return The current read_concern.
     ///
-    mongocxx::read_concern read_concern() const;
+    mongocxx::v_noabi::read_concern read_concern() const;
 
     ///
     /// Sets the read_preference for this collection. Changes will not have any effect on existing

@@ -268,7 +268,7 @@ class aggregate {
     /// @return
     ///   A reference to the object on which this member function is being called.
     ///
-    aggregate& read_concern(mongocxx::read_concern read_concern);
+    aggregate& read_concern(mongocxx::v_noabi::read_concern read_concern);
 
     ///
     /// Gets the current read concern.
@@ -279,7 +279,7 @@ class aggregate {
     /// @see
     ///   https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    const stdx::optional<mongocxx::read_concern>& read_concern() const;
+    const stdx::optional<mongocxx::v_noabi::read_concern>& read_concern() const;
 
     ///
     /// Sets the comment to use for this operation.
@@ -321,7 +321,7 @@ class aggregate {
     stdx::optional<bool> _bypass_document_validation;
     stdx::optional<mongocxx::v_noabi::hint> _hint;
     stdx::optional<mongocxx::write_concern> _write_concern;
-    stdx::optional<mongocxx::read_concern> _read_concern;
+    stdx::optional<mongocxx::v_noabi::read_concern> _read_concern;
     stdx::optional<bsoncxx::types::bson_value::view_or_value> _comment;
 };
 

@@ -54,19 +54,19 @@ class transaction::impl {
     impl(impl&&) noexcept = default;
     impl& operator=(impl&&) noexcept = default;
 
-    void read_concern(const mongocxx::read_concern& rc) {
+    void read_concern(const mongocxx::v_noabi::read_concern& rc) {
         libmongoc::transaction_opts_set_read_concern(_transaction_opt_t.get(),
                                                      rc._impl->read_concern_t);
     }
 
-    stdx::optional<mongocxx::read_concern> read_concern() const {
+    stdx::optional<mongocxx::v_noabi::read_concern> read_concern() const {
         auto rc = libmongoc::transaction_opts_get_read_concern(_transaction_opt_t.get());
         if (!rc) {
             return {};
         }
-        mongocxx::read_concern rci(
+        mongocxx::v_noabi::read_concern rci(
             stdx::make_unique<read_concern::impl>(libmongoc::read_concern_copy(rc)));
-        return stdx::optional<mongocxx::read_concern>(std::move(rci));
+        return stdx::optional<mongocxx::v_noabi::read_concern>(std::move(rci));
     }
 
     void write_concern(const mongocxx::write_concern& wc) {

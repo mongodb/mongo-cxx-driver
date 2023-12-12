@@ -1311,11 +1311,11 @@ void collection::drop(const client_session& session,
     return _drop(&session, wc, collection_options);
 }
 
-void collection::read_concern(mongocxx::read_concern rc) {
+void collection::read_concern(mongocxx::v_noabi::read_concern rc) {
     libmongoc::collection_set_read_concern(_get_impl().collection_t, rc._impl->read_concern_t);
 }
 
-mongocxx::read_concern collection::read_concern() const {
+mongocxx::v_noabi::read_concern collection::read_concern() const {
     auto rc = libmongoc::collection_get_read_concern(_get_impl().collection_t);
     return {stdx::make_unique<read_concern::impl>(libmongoc::read_concern_copy(rc))};
 }

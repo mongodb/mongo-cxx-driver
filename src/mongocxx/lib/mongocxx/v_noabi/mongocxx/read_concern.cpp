@@ -24,7 +24,8 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace wip {
+namespace v_noabi {
+
 read_concern::read_concern() : _impl{stdx::make_unique<impl>(libmongoc::read_concern_new())} {}
 
 read_concern::read_concern(std::unique_ptr<impl>&& implementation)
@@ -130,5 +131,5 @@ bool MONGOCXX_CALL operator!=(const read_concern& lhs, const read_concern& rhs) 
     return !(lhs == rhs);
 }
 
-}  // namespace wip
+}  // namespace v_noabi
 }  // namespace mongocxx

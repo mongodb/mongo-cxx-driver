@@ -428,11 +428,11 @@ void database::drop(const client_session& session,
     return _drop(&session, write_concern);
 }
 
-void database::read_concern(mongocxx::read_concern rc) {
+void database::read_concern(mongocxx::v_noabi::read_concern rc) {
     libmongoc::database_set_read_concern(_get_impl().database_t, rc._impl->read_concern_t);
 }
 
-mongocxx::read_concern database::read_concern() const {
+mongocxx::v_noabi::read_concern database::read_concern() const {
     auto rc = libmongoc::database_get_read_concern(_get_impl().database_t);
     return {stdx::make_unique<read_concern::impl>(libmongoc::read_concern_copy(rc))};
 }

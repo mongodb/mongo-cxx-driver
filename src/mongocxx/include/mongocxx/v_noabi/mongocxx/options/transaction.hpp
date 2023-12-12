@@ -74,7 +74,7 @@ class transaction {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    transaction& read_concern(const mongocxx::read_concern& rc);
+    transaction& read_concern(const mongocxx::v_noabi::read_concern& rc);
 
     ///
     /// Gets the current transaction read concern.
@@ -82,7 +82,7 @@ class transaction {
     /// @return
     ///    An optional containing the read concern. If the read concern has not been set, a
     ///    disengaged optional is returned.
-    stdx::optional<mongocxx::read_concern> read_concern() const;
+    stdx::optional<mongocxx::v_noabi::read_concern> read_concern() const;
 
     ///
     /// Sets the transaction write concern.

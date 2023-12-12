@@ -94,9 +94,9 @@ std::string uri::password() const {
     return to_string_null_safe(libmongoc::uri_get_password(_impl->uri_t));
 }
 
-mongocxx::read_concern uri::read_concern() const {
+mongocxx::v_noabi::read_concern uri::read_concern() const {
     auto rc = libmongoc::uri_get_read_concern(_impl->uri_t);
-    return mongocxx::read_concern(
+    return mongocxx::v_noabi::read_concern(
         stdx::make_unique<read_concern::impl>(libmongoc::read_concern_copy(rc)));
 }
 
