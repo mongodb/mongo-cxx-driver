@@ -23,7 +23,7 @@ using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_document;
 
 namespace mongocxx {
-inline namespace wip {
+namespace v_noabi {
 namespace options {
 
 index_view::index_view() : _max_time(), _write_concern(), _commit_quorum() {}
@@ -61,7 +61,7 @@ index_view& index_view::commit_quorum(std::string commit_quorum) {
         make_document(kvp("commitQuorum", commit_quorum)));
     return *this;
 }
-}  // namespace options
 
-}  // namespace wip
+}  // namespace options
+}  // namespace v_noabi
 }  // namespace mongocxx

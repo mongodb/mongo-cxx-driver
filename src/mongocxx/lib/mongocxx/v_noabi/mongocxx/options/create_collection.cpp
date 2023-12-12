@@ -24,7 +24,7 @@ using bsoncxx::builder::concatenate;
 using bsoncxx::builder::basic::kvp;
 
 namespace mongocxx {
-inline namespace wip {
+namespace v_noabi {
 namespace options {
 
 create_collection_deprecated& create_collection_deprecated::capped(bool capped) {
@@ -135,5 +135,5 @@ bsoncxx::document::value create_collection_deprecated::to_document() const {
 }
 
 }  // namespace options
-}  // namespace wip
+}  // namespace v_noabi
 }  // namespace mongocxx

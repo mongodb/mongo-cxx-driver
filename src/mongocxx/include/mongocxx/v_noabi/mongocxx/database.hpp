@@ -92,7 +92,7 @@ class database {
     /// @param pipeline
     ///   The pipeline of aggregation operations to perform.
     /// @param options
-    ///   Optional arguments, see mongocxx::options::aggregate.
+    ///   Optional arguments, see mongocxx::v_noabi::options::aggregate.
     ///
     /// @return A mongocxx::cursor with the results.  If the query fails,
     /// the cursor throws mongocxx::v_noabi::query_exception when the returned cursor
@@ -118,7 +118,7 @@ class database {
     /// @param pipeline
     ///   The pipeline of aggregation operations to perform.
     /// @param options
-    ///   Optional arguments, see mongocxx::options::aggregate.
+    ///   Optional arguments, see mongocxx::v_noabi::options::aggregate.
     ///
     /// @return A mongocxx::cursor with the results.  If the query fails,
     /// the cursor throws mongocxx::v_noabi::query_exception when the returned cursor

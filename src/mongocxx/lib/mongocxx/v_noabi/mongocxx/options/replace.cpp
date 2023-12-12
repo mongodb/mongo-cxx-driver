@@ -18,7 +18,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace wip {
+namespace v_noabi {
 namespace options {
 
 replace& replace::bypass_document_validation(bool bypass_document_validation) {
@@ -85,5 +85,5 @@ const stdx::optional<mongocxx::write_concern>& replace::write_concern() const {
 }
 
 }  // namespace options
-}  // namespace wip
+}  // namespace v_noabi
 }  // namespace mongocxx

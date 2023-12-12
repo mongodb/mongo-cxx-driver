@@ -112,7 +112,7 @@ class pool {
     stdx::optional<entry> try_acquire();
 
    private:
-    friend ::mongocxx::wip::options::auto_encryption;
+    friend ::mongocxx::v_noabi::options::auto_encryption;
 
     MONGOCXX_PRIVATE void _release(client* client);
 

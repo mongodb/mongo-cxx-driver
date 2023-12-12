@@ -24,7 +24,7 @@ namespace mongocxx {
 inline namespace wip {
 // Private constructors.
 client_session::client_session(const mongocxx::client* client,
-                               const mongocxx::options::client_session& options)
+                               const mongocxx::v_noabi::options::client_session& options)
     : _impl(stdx::make_unique<impl>(client, options)) {}
 
 client_session::client_session(client_session&&) noexcept = default;
@@ -37,7 +37,7 @@ const mongocxx::client& client_session::client() const noexcept {
     return _impl->client();
 }
 
-const mongocxx::options::client_session& client_session::options() const noexcept {
+const mongocxx::v_noabi::options::client_session& client_session::options() const noexcept {
     return _impl->options();
 }
 

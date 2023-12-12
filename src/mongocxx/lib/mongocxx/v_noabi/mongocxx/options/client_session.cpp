@@ -17,7 +17,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace wip {
+namespace v_noabi {
 namespace options {
 
 client_session& client_session::causal_consistency(bool causal_consistency) noexcept {
@@ -52,5 +52,5 @@ const stdx::optional<transaction>& client_session::default_transaction_opts() co
 }
 
 }  // namespace options
-}  // namespace wip
+}  // namespace v_noabi
 }  // namespace mongocxx

@@ -17,7 +17,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace wip {
+namespace v_noabi {
 namespace options {
 
 find_one_and_delete& find_one_and_delete::collation(bsoncxx::document::view_or_value collation) {
@@ -95,5 +95,5 @@ const stdx::optional<bsoncxx::types::bson_value::view_or_value> find_one_and_del
 }
 
 }  // namespace options
-}  // namespace wip
+}  // namespace v_noabi
 }  // namespace mongocxx

@@ -71,7 +71,7 @@ class index_view {
     ///    A document containing set of options that controls the creation of the index. See
     ///    https://www.mongodb.com/docs/manual/reference/method/db.collection.createIndex/.
     /// @param options
-    ///    Optional arguments for the overall operation, see mongocxx::options::index_view.
+    ///    Optional arguments for the overall operation, see mongocxx::v_noabi::options::index_view.
     ///
     /// @return
     ///    An optional containing the name of the created index. If and index with the same keys
@@ -99,7 +99,7 @@ class index_view {
     ///    A document containing set of options that controls the creation of the index. See
     ///    https://www.mongodb.com/docs/manual/reference/method/db.collection.createIndex/.
     /// @param options
-    ///    Optional arguments for the overall operation, see mongocxx::options::index_view.
+    ///    Optional arguments for the overall operation, see mongocxx::v_noabi::options::index_view.
     ///
     /// @return
     ///    An optional containing the name of the created index. If and index with the same keys
@@ -129,7 +129,7 @@ class index_view {
     /// @param index
     ///    Index_model describing the index being created.
     /// @param options
-    ///    Optional arguments for the overall operation, see mongocxx::options::index_view.
+    ///    Optional arguments for the overall operation, see mongocxx::v_noabi::options::index_view.
     ///
     /// @return
     ///    An optional containing the name of the created index. If and index with the same keys
@@ -152,7 +152,7 @@ class index_view {
     /// @param index
     ///    Index_model describing the index being created.
     /// @param options
-    ///    Optional arguments for the overall operation, see mongocxx::options::index_view.
+    ///    Optional arguments for the overall operation, see mongocxx::v_noabi::options::index_view.
     ///
     /// @return
     ///    An optional containing the name of the created index. If and index with the same keys
@@ -181,7 +181,7 @@ class index_view {
     /// @param indexes
     ///   std::vector containing index models describing the indexes being created.
     /// @param options
-    ///    Optional arguments for the overall operation, see mongocxx::options::index_view.
+    ///    Optional arguments for the overall operation, see mongocxx::v_noabi::options::index_view.
     ///
     /// @return
     ///    The result document sent back by the server as if the createIndexes command was run from
@@ -205,7 +205,7 @@ class index_view {
     /// @param indexes
     ///   std::vector containing index models describing the indexes being created.
     /// @param options
-    ///    Optional arguments for the overall operation, see mongocxx::options::index_view.
+    ///    Optional arguments for the overall operation, see mongocxx::v_noabi::options::index_view.
     ///
     /// @return
     ///    The result document sent back by the server as if the createIndexes command was run from
@@ -234,7 +234,7 @@ class index_view {
     /// @param name
     ///    The name of the index being dropped.
     /// @param options
-    ///    Optional arguments for the overall operation, see mongocxx::options::index_view.
+    ///    Optional arguments for the overall operation, see mongocxx::v_noabi::options::index_view.
     ///
     /// @exception
     ///   Throws operation_exception for any errors encountered by the server or if max_time_ms
@@ -255,7 +255,7 @@ class index_view {
     /// @param name
     ///    The name of the index being dropped.
     /// @param options
-    ///    Optional arguments for the overall operation, see mongocxx::options::index_view.
+    ///    Optional arguments for the overall operation, see mongocxx::v_noabi::options::index_view.
     ///
     /// @exception
     ///   Throws operation_exception for any errors encountered by the server or if max_time_ms
@@ -285,7 +285,7 @@ class index_view {
     ///    A document containing set of options used to create the index. Only the name field will
     ///    be used from here, and if it is not included, a name based on they keys will be used.
     /// @param options
-    ///    Optional arguments for the overall operation, see mongocxx::options::index_view.
+    ///    Optional arguments for the overall operation, see mongocxx::v_noabi::options::index_view.
     ///
     /// @exception
     ///   Throws bsoncxx::exception if "name" key is present in options but is not a string.
@@ -313,7 +313,7 @@ class index_view {
     ///    A document containing set of options used to create the index. Only the name field will
     ///    be used from here, and if it is not included, a name based on they keys will be used.
     /// @param options
-    ///    Optional arguments for the overall operation, see mongocxx::options::index_view.
+    ///    Optional arguments for the overall operation, see mongocxx::v_noabi::options::index_view.
     ///
     /// @exception
     ///   Throws bsoncxx::exception if "name" key is present in options but is not a string.
@@ -342,7 +342,7 @@ class index_view {
     /// @param index
     ///    An index model describing the index being dropped.
     /// @param options
-    ///    Optional arguments for the overall operation, see mongocxx::options::index_view.
+    ///    Optional arguments for the overall operation, see mongocxx::v_noabi::options::index_view.
     ///
     /// @exception
     ///   Throws bsoncxx::exception if "name" key is present in options but is not a string.
@@ -365,7 +365,7 @@ class index_view {
     /// @param index
     ///    An index model describing the index being dropped.
     /// @param options
-    ///    Optional arguments for the overall operation, see mongocxx::options::index_view.
+    ///    Optional arguments for the overall operation, see mongocxx::v_noabi::options::index_view.
     ///
     /// @exception
     ///   Throws bsoncxx::exception if "name" key is present in options but is not a string.
@@ -391,7 +391,7 @@ class index_view {
     /// Drops all indexes in the collection.
     ///
     /// @param options
-    ///    Optional arguments for the overall operation, see mongocxx::options::index_view.
+    ///    Optional arguments for the overall operation, see mongocxx::v_noabi::options::index_view.
     ///
     /// @exception
     ///   Throws operation_exception for any errors encountered by the server or if max_time_ms
@@ -407,7 +407,7 @@ class index_view {
     /// @param session
     ///   The mongocxx::client_session with which to perform the drop.
     /// @param options
-    ///    Optional arguments for the overall operation, see mongocxx::options::index_view.
+    ///    Optional arguments for the overall operation, see mongocxx::v_noabi::options::index_view.
     ///
     /// @exception
     ///   Throws operation_exception for any errors encountered by the server or if max_time_ms

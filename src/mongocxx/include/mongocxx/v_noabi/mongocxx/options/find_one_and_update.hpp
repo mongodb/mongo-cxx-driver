@@ -31,7 +31,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace wip {
+namespace v_noabi {
 namespace options {
 
 ///
@@ -210,7 +210,7 @@ class find_one_and_update {
     ///   method chaining.
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/findAndModify/
-    /// @see mongocxx::options::return_document
+    /// @see mongocxx::v_noabi::options::return_document
     ///
     find_one_and_update& return_document(return_document return_document);
 
@@ -220,9 +220,9 @@ class find_one_and_update {
     /// @return Version of document to return, either original or updated.
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/findAndModify/
-    /// @see mongocxx::options::return_document
+    /// @see mongocxx::v_noabi::options::return_document
     ///
-    const stdx::optional<mongocxx::options::return_document>& return_document() const;
+    const stdx::optional<mongocxx::v_noabi::options::return_document>& return_document() const;
 
     ///
     /// Sets the order by which to search the collection for a matching document.
@@ -333,7 +333,7 @@ class find_one_and_update {
     stdx::optional<bsoncxx::types::bson_value::view_or_value> _comment;
     stdx::optional<std::chrono::milliseconds> _max_time;
     stdx::optional<bsoncxx::document::view_or_value> _projection;
-    stdx::optional<mongocxx::options::return_document> _return_document;
+    stdx::optional<mongocxx::v_noabi::options::return_document> _return_document;
     stdx::optional<bsoncxx::document::view_or_value> _ordering;
     stdx::optional<bool> _upsert;
     stdx::optional<mongocxx::write_concern> _write_concern;
@@ -341,7 +341,7 @@ class find_one_and_update {
 };
 
 }  // namespace options
-}  // namespace wip
+}  // namespace v_noabi
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

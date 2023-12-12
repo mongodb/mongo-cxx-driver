@@ -17,7 +17,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace wip {
+namespace v_noabi {
 namespace options {
 
 bulk_write::bulk_write() : _ordered(true) {}
@@ -68,5 +68,5 @@ const stdx::optional<bsoncxx::types::bson_value::view_or_value> bulk_write::comm
 }
 
 }  // namespace options
-}  // namespace wip
+}  // namespace v_noabi
 }  // namespace mongocxx

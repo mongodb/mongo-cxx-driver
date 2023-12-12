@@ -432,8 +432,8 @@ class client {
     friend ::mongocxx::wip::client_session;
     friend ::mongocxx::wip::collection;
     friend ::mongocxx::wip::database;
-    friend ::mongocxx::wip::options::auto_encryption;
-    friend ::mongocxx::wip::options::client_encryption;
+    friend ::mongocxx::v_noabi::options::auto_encryption;
+    friend ::mongocxx::v_noabi::options::client_encryption;
     friend ::mongocxx::wip::pool;
 
     MONGOCXX_PRIVATE explicit client(void* implementation);

@@ -284,7 +284,7 @@ class read_preference {
     friend ::mongocxx::wip::collection;
     friend ::mongocxx::wip::database;
     friend ::mongocxx::v_noabi::events::topology_description;
-    friend ::mongocxx::wip::options::transaction;
+    friend ::mongocxx::v_noabi::options::transaction;
     friend ::mongocxx::wip::search_index_view;
     friend ::mongocxx::wip::uri;
 

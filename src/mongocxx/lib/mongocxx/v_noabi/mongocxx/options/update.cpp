@@ -19,7 +19,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace wip {
+namespace v_noabi {
 namespace options {
 
 update& update::bypass_document_validation(bool bypass_document_validation) {
@@ -95,5 +95,5 @@ const stdx::optional<bsoncxx::array::view_or_value>& update::array_filters() con
 }
 
 }  // namespace options
-}  // namespace wip
+}  // namespace v_noabi
 }  // namespace mongocxx

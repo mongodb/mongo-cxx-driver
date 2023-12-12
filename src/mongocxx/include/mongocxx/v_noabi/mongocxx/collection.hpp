@@ -147,7 +147,7 @@ class collection {
     /// @param pipeline
     ///   The pipeline of aggregation operations to perform.
     /// @param options
-    ///   Optional arguments, see mongocxx::options::aggregate.
+    ///   Optional arguments, see mongocxx::v_noabi::options::aggregate.
     ///
     /// @return A mongocxx::cursor with the results.  If the query fails,
     /// the cursor throws mongocxx::v_noabi::query_exception when the returned cursor
@@ -171,7 +171,7 @@ class collection {
     /// @param pipeline
     ///   The pipeline of aggregation operations to perform.
     /// @param options
-    ///   Optional arguments, see mongocxx::options::aggregate.
+    ///   Optional arguments, see mongocxx::v_noabi::options::aggregate.
     ///
     /// @return A mongocxx::cursor with the results.  If the query fails,
     /// the cursor throws mongocxx::v_noabi::query_exception when the returned cursor
@@ -198,7 +198,7 @@ class collection {
     /// The lifetime of the bulk_write is independent of the collection.
     ///
     /// @param options
-    ///   Optional arguments; see mongocxx::options::bulk_write.
+    ///   Optional arguments; see mongocxx::v_noabi::options::bulk_write.
     ///
     /// @return
     ///    The newly-created bulk write.
@@ -212,7 +212,7 @@ class collection {
     /// @param session
     ///   The mongocxx::client_session with which to perform the bulk operation.
     /// @param options
-    ///   Optional arguments; see mongocxx::options::bulk_write.
+    ///   Optional arguments; see mongocxx::v_noabi::options::bulk_write.
     ///
     /// @return
     ///    The newly-created bulk write.
@@ -409,7 +409,7 @@ class collection {
     /// @param filter
     ///   The filter that documents must match in order to be counted.
     /// @param options
-    ///   Optional arguments, see mongocxx::options::count.
+    ///   Optional arguments, see mongocxx::v_noabi::options::count.
     ///
     /// @return The count of the documents that matched the filter.
     ///
@@ -436,7 +436,7 @@ class collection {
     /// @param filter
     ///   The filter that documents must match in order to be counted.
     /// @param options
-    ///   Optional arguments, see mongocxx::options::count.
+    ///   Optional arguments, see mongocxx::v_noabi::options::count.
     ///
     /// @return The count of the documents that matched the filter.
     ///
@@ -462,7 +462,7 @@ class collection {
     /// Returns an estimate of the number of documents in the collection.
     ///
     /// @param options
-    ///   Optional arguments, see mongocxx::options::count.
+    ///   Optional arguments, see mongocxx::v_noabi::options::count.
     ///
     /// @return The count of the documents that matched the filter.
     ///
@@ -489,7 +489,7 @@ class collection {
     /// @param index_options
     ///   A document containing optional arguments for creating the index.
     /// @param operation_options
-    ///   Optional arguments for the overall operation, see mongocxx::options::index_view.
+    ///   Optional arguments for the overall operation, see mongocxx::v_noabi::options::index_view.
     ///
     /// @exception
     ///   mongocxx::v_noabi::operation_exception if index creation fails.
@@ -515,7 +515,7 @@ class collection {
     /// @param index_options
     ///   A document containing optional arguments for creating the index.
     /// @param operation_options
-    ///   Optional arguments for the overall operation, see mongocxx::options::index_view.
+    ///   Optional arguments for the overall operation, see mongocxx::v_noabi::options::index_view.
     ///
     /// @exception
     ///   mongocxx::v_noabi::operation_exception if index creation fails.
@@ -544,7 +544,7 @@ class collection {
     /// @param filter
     ///   Document view representing the data to be deleted.
     /// @param options
-    ///   Optional arguments, see mongocxx::options::delete_options.
+    ///   Optional arguments, see mongocxx::v_noabi::options::delete_options.
     ///
     /// @return The optional result of performing the deletion.
     /// If the write concern is unacknowledged, the optional will be
@@ -566,7 +566,7 @@ class collection {
     /// @param filter
     ///   Document view representing the data to be deleted.
     /// @param options
-    ///   Optional arguments, see mongocxx::options::delete_options.
+    ///   Optional arguments, see mongocxx::v_noabi::options::delete_options.
     ///
     /// @return The optional result of performing the deletion.
     /// If the write concern is unacknowledged, the optional will be
@@ -593,7 +593,7 @@ class collection {
     /// @param filter
     ///   Document view representing the data to be deleted.
     /// @param options
-    ///   Optional arguments, see mongocxx::options::delete_options.
+    ///   Optional arguments, see mongocxx::v_noabi::options::delete_options.
     ///
     /// @return The optional result of performing the deletion.
     /// If the write concern is unacknowledged, the optional will be
@@ -615,7 +615,7 @@ class collection {
     /// @param filter
     ///   Document view representing the data to be deleted.
     /// @param options
-    ///   Optional arguments, see mongocxx::options::delete_options.
+    ///   Optional arguments, see mongocxx::v_noabi::options::delete_options.
     ///
     /// @return The optional result of performing the deletion.
     /// If the write concern is unacknowledged, the optional will be

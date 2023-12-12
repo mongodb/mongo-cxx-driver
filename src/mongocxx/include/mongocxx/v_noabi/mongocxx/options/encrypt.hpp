@@ -26,7 +26,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace wip {
+namespace v_noabi {
 namespace options {
 
 ///
@@ -139,9 +139,9 @@ class encrypt {
     ///   An algorithm, either deterministic, random, indexed, or unindexed to use for encryption.
     ///
     /// @note To insert or query with an indexed encrypted payload, use a mongocxx::client
-    /// configured with mongocxx::options::auto_encryption.
-    /// mongocxx::options::auto_encryption::bypass_query_analysis may be true.
-    /// mongocxx::options::auto_encryption::bypass_auto_encryption must be false.
+    /// configured with mongocxx::v_noabi::options::auto_encryption.
+    /// mongocxx::v_noabi::options::auto_encryption::bypass_query_analysis may be true.
+    /// mongocxx::v_noabi::options::auto_encryption::bypass_auto_encryption must be false.
     ///
     /// @see
     /// https://www.mongodb.com/docs/manual/core/security-client-side-encryption/#encryption-algorithms
@@ -231,7 +231,7 @@ class encrypt {
 };
 
 }  // namespace options
-}  // namespace wip
+}  // namespace v_noabi
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

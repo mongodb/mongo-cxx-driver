@@ -18,7 +18,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace wip {
+namespace v_noabi {
 namespace options {
 
 find& find::allow_disk_use(bool allow_disk_use) {
@@ -211,5 +211,5 @@ const stdx::optional<mongocxx::read_preference>& find::read_preference() const {
 }
 
 }  // namespace options
-}  // namespace wip
+}  // namespace v_noabi
 }  // namespace mongocxx
