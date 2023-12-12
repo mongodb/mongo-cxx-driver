@@ -20,7 +20,8 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace wip {
+namespace v_noabi {
+
 class pipeline::impl {
    public:
     bsoncxx::builder::basic::array& sink() {
@@ -42,7 +43,7 @@ class pipeline::impl {
     bsoncxx::builder::basic::array _builder;
 };
 
-}  // namespace wip
+}  // namespace v_noabi
 }  // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>
