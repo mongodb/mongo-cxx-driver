@@ -185,7 +185,7 @@ class uri {
     ///
     /// @return A write_concern that represents what was specified in the uri.
     ///
-    mongocxx::write_concern write_concern() const;
+    mongocxx::v_noabi::write_concern write_concern() const;
 
     ///
     /// Returns the value of the option "appname" if present in the uri.

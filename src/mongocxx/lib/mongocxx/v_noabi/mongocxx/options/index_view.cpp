@@ -28,7 +28,7 @@ namespace options {
 
 index_view::index_view() : _max_time(), _write_concern(), _commit_quorum() {}
 
-const bsoncxx::stdx::optional<mongocxx::write_concern>& index_view::write_concern() const {
+const bsoncxx::stdx::optional<mongocxx::v_noabi::write_concern>& index_view::write_concern() const {
     return _write_concern;
 }
 
@@ -45,7 +45,7 @@ index_view& index_view::max_time(std::chrono::milliseconds max_time) {
     return *this;
 }
 
-index_view& index_view::write_concern(mongocxx::write_concern write_concern) {
+index_view& index_view::write_concern(mongocxx::v_noabi::write_concern write_concern) {
     _write_concern = std::move(write_concern);
     return *this;
 }

@@ -39,9 +39,9 @@ class client_session {
     /// previous read or write operation. Set to false to disable causal consistency.
     ///
     /// Unacknowledged writes are not causally consistent. If you execute a write operation with an
-    /// unacknowledged write concern (a mongocxx::write_concern with
-    /// mongocxx::write_concern::acknowledge_level of @c k_unacknowledged), the write does not
-    /// participate in causal consistency.
+    /// unacknowledged write concern (a mongocxx::v_noabi::write_concern with
+    /// mongocxx::v_noabi::write_concern::acknowledge_level of @c k_unacknowledged), the write does
+    /// not participate in causal consistency.
     ///
     /// @return
     ///   A reference to the object on which this member function is being called.  This facilitates

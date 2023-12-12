@@ -40,7 +40,8 @@ find_one_and_delete& find_one_and_delete::sort(bsoncxx::document::view_or_value 
     return *this;
 }
 
-find_one_and_delete& find_one_and_delete::write_concern(mongocxx::write_concern write_concern) {
+find_one_and_delete& find_one_and_delete::write_concern(
+    mongocxx::v_noabi::write_concern write_concern) {
     _write_concern = std::move(write_concern);
     return *this;
 }
@@ -81,7 +82,7 @@ const stdx::optional<std::chrono::milliseconds>& find_one_and_delete::max_time()
     return _max_time;
 }
 
-const stdx::optional<mongocxx::write_concern>& find_one_and_delete::write_concern() const {
+const stdx::optional<mongocxx::v_noabi::write_concern>& find_one_and_delete::write_concern() const {
     return _write_concern;
 }
 

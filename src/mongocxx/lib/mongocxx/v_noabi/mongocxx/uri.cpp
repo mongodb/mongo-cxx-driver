@@ -127,9 +127,9 @@ std::string uri::username() const {
     return to_string_null_safe(libmongoc::uri_get_username(_impl->uri_t));
 }
 
-mongocxx::write_concern uri::write_concern() const {
+mongocxx::v_noabi::write_concern uri::write_concern() const {
     auto wc = libmongoc::uri_get_write_concern(_impl->uri_t);
-    return mongocxx::write_concern(
+    return mongocxx::v_noabi::write_concern(
         stdx::make_unique<write_concern::impl>(libmongoc::write_concern_copy(wc)));
 }
 

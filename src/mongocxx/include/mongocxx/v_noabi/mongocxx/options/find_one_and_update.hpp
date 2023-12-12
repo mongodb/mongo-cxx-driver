@@ -288,7 +288,7 @@ class find_one_and_update {
     /// @see
     ///   https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    find_one_and_update& write_concern(mongocxx::write_concern write_concern);
+    find_one_and_update& write_concern(mongocxx::v_noabi::write_concern write_concern);
 
     ///
     /// Gets the current write concern.
@@ -299,7 +299,7 @@ class find_one_and_update {
     /// @see
     ///   https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    const stdx::optional<mongocxx::write_concern>& write_concern() const;
+    const stdx::optional<mongocxx::v_noabi::write_concern>& write_concern() const;
 
     ///
     /// Set array filters for this operation.
@@ -336,7 +336,7 @@ class find_one_and_update {
     stdx::optional<mongocxx::v_noabi::options::return_document> _return_document;
     stdx::optional<bsoncxx::document::view_or_value> _ordering;
     stdx::optional<bool> _upsert;
-    stdx::optional<mongocxx::write_concern> _write_concern;
+    stdx::optional<mongocxx::v_noabi::write_concern> _write_concern;
     stdx::optional<bsoncxx::array::view_or_value> _array_filters;
 };
 

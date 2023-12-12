@@ -184,16 +184,16 @@ mongocxx::v_noabi::uri client::uri() const {
     return connection_string;
 }
 
-void client::write_concern_deprecated(mongocxx::write_concern wc) {
+void client::write_concern_deprecated(mongocxx::v_noabi::write_concern wc) {
     libmongoc::client_set_write_concern(_get_impl().client_t, wc._impl->write_concern_t);
 }
 
-void client::write_concern(mongocxx::write_concern wc) {
+void client::write_concern(mongocxx::v_noabi::write_concern wc) {
     return write_concern_deprecated(std::move(wc));
 }
 
-mongocxx::write_concern client::write_concern() const {
-    mongocxx::write_concern wc(stdx::make_unique<write_concern::impl>(
+mongocxx::v_noabi::write_concern client::write_concern() const {
+    mongocxx::v_noabi::write_concern wc(stdx::make_unique<write_concern::impl>(
         libmongoc::write_concern_copy(libmongoc::client_get_write_concern(_get_impl().client_t))));
     return wc;
 }

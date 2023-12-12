@@ -25,7 +25,7 @@ insert& insert::bypass_document_validation(bool bypass_document_validation) {
     return *this;
 }
 
-insert& insert::write_concern(mongocxx::write_concern wc) {
+insert& insert::write_concern(mongocxx::v_noabi::write_concern wc) {
     _write_concern = std::move(wc);
     return *this;
 }
@@ -44,7 +44,7 @@ const stdx::optional<bool>& insert::bypass_document_validation() const {
     return _bypass_document_validation;
 }
 
-const stdx::optional<mongocxx::write_concern>& insert::write_concern() const {
+const stdx::optional<mongocxx::v_noabi::write_concern>& insert::write_concern() const {
     return _write_concern;
 }
 

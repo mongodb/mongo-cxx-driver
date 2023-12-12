@@ -136,7 +136,7 @@ class bucket {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    bucket& write_concern(mongocxx::write_concern write_concern);
+    bucket& write_concern(mongocxx::v_noabi::write_concern write_concern);
 
     ///
     /// Gets the write concern of the bucket.
@@ -144,14 +144,14 @@ class bucket {
     /// @return
     ///   The write concern of the bucket.
     ///
-    const stdx::optional<mongocxx::write_concern>& write_concern() const;
+    const stdx::optional<mongocxx::v_noabi::write_concern>& write_concern() const;
 
    private:
     stdx::optional<std::string> _bucket_name;
     stdx::optional<std::int32_t> _chunk_size_bytes;
     stdx::optional<mongocxx::v_noabi::read_concern> _read_concern;
     stdx::optional<mongocxx::v_noabi::read_preference> _read_preference;
-    stdx::optional<mongocxx::write_concern> _write_concern;
+    stdx::optional<mongocxx::v_noabi::write_concern> _write_concern;
 };
 
 }  // namespace gridfs

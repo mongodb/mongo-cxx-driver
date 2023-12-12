@@ -26,7 +26,7 @@ delete_options& delete_options::collation(bsoncxx::document::view_or_value colla
     return *this;
 }
 
-delete_options& delete_options::write_concern(mongocxx::write_concern wc) {
+delete_options& delete_options::write_concern(mongocxx::v_noabi::write_concern wc) {
     _write_concern = std::move(wc);
     return *this;
 }
@@ -40,7 +40,7 @@ const stdx::optional<bsoncxx::document::view_or_value>& delete_options::collatio
     return _collation;
 }
 
-const stdx::optional<mongocxx::write_concern>& delete_options::write_concern() const {
+const stdx::optional<mongocxx::v_noabi::write_concern>& delete_options::write_concern() const {
     return _write_concern;
 }
 

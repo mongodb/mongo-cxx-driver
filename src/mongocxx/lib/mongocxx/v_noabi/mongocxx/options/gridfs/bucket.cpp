@@ -62,12 +62,12 @@ const stdx::optional<mongocxx::v_noabi::read_preference>& bucket::read_preferenc
     return _read_preference;
 }
 
-bucket& bucket::write_concern(mongocxx::write_concern write_concern) {
+bucket& bucket::write_concern(mongocxx::v_noabi::write_concern write_concern) {
     _write_concern = std::move(write_concern);
     return *this;
 }
 
-const stdx::optional<mongocxx::write_concern>& bucket::write_concern() const {
+const stdx::optional<mongocxx::v_noabi::write_concern>& bucket::write_concern() const {
     return _write_concern;
 }
 

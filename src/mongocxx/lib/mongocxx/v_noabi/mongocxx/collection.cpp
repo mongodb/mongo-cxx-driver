@@ -219,7 +219,7 @@ stdx::string_view collection::name() const {
 void collection::_rename(const client_session* session,
                          bsoncxx::string::view_or_value new_name,
                          bool drop_target_before_rename,
-                         const bsoncxx::stdx::optional<mongocxx::write_concern>& wc) {
+                         const bsoncxx::stdx::optional<mongocxx::v_noabi::write_concern>& wc) {
     bson_error_t error;
 
     bsoncxx::builder::basic::document opts_doc;
@@ -247,14 +247,14 @@ void collection::_rename(const client_session* session,
 
 void collection::rename(bsoncxx::string::view_or_value new_name,
                         bool drop_target_before_rename,
-                        const bsoncxx::stdx::optional<mongocxx::write_concern>& wc) {
+                        const bsoncxx::stdx::optional<mongocxx::v_noabi::write_concern>& wc) {
     return _rename(nullptr, new_name, drop_target_before_rename, wc);
 }
 
 void collection::rename(const client_session& session,
                         bsoncxx::string::view_or_value new_name,
                         bool drop_target_before_rename,
-                        const bsoncxx::stdx::optional<mongocxx::write_concern>& wc) {
+                        const bsoncxx::stdx::optional<mongocxx::v_noabi::write_concern>& wc) {
     return _rename(&session, new_name, drop_target_before_rename, wc);
 }
 
@@ -1270,7 +1270,7 @@ cursor collection::list_indexes(const client_session& session) const {
 }
 
 void collection::_drop(const client_session* session,
-                       const stdx::optional<mongocxx::write_concern>& wc,
+                       const stdx::optional<mongocxx::v_noabi::write_concern>& wc,
                        bsoncxx::document::view_or_value collection_options) {
     bson_error_t error;
 
@@ -1300,13 +1300,13 @@ void collection::_drop(const client_session* session,
     }
 }
 
-void collection::drop(const stdx::optional<mongocxx::write_concern>& wc,
+void collection::drop(const stdx::optional<mongocxx::v_noabi::write_concern>& wc,
                       bsoncxx::document::view_or_value collection_options) {
     return _drop(nullptr, wc, collection_options);
 }
 
 void collection::drop(const client_session& session,
-                      const stdx::optional<mongocxx::write_concern>& wc,
+                      const stdx::optional<mongocxx::v_noabi::write_concern>& wc,
                       bsoncxx::document::view_or_value collection_options) {
     return _drop(&session, wc, collection_options);
 }
@@ -1331,13 +1331,14 @@ mongocxx::v_noabi::read_preference collection::read_preference() const {
     return rp;
 }
 
-void collection::write_concern(mongocxx::write_concern wc) {
+void collection::write_concern(mongocxx::v_noabi::write_concern wc) {
     libmongoc::collection_set_write_concern(_get_impl().collection_t, wc._impl->write_concern_t);
 }
 
-mongocxx::write_concern collection::write_concern() const {
-    mongocxx::write_concern wc(stdx::make_unique<write_concern::impl>(libmongoc::write_concern_copy(
-        libmongoc::collection_get_write_concern(_get_impl().collection_t))));
+mongocxx::v_noabi::write_concern collection::write_concern() const {
+    mongocxx::v_noabi::write_concern wc(
+        stdx::make_unique<write_concern::impl>(libmongoc::write_concern_copy(
+            libmongoc::collection_get_write_concern(_get_impl().collection_t))));
     return wc;
 }
 

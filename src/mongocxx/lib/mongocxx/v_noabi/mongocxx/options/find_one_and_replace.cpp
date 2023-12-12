@@ -74,7 +74,8 @@ find_one_and_replace& find_one_and_replace::upsert(bool upsert) {
     return *this;
 }
 
-find_one_and_replace& find_one_and_replace::write_concern(mongocxx::write_concern write_concern) {
+find_one_and_replace& find_one_and_replace::write_concern(
+    mongocxx::v_noabi::write_concern write_concern) {
     _write_concern = std::move(write_concern);
     return *this;
 }
@@ -121,7 +122,8 @@ const stdx::optional<bool>& find_one_and_replace::upsert() const {
     return _upsert;
 }
 
-const stdx::optional<mongocxx::write_concern>& find_one_and_replace::write_concern() const {
+const stdx::optional<mongocxx::v_noabi::write_concern>& find_one_and_replace::write_concern()
+    const {
     return _write_concern;
 }
 

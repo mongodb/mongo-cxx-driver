@@ -351,7 +351,7 @@ class database {
     /// @see
     ///   https://www.mongodb.com/docs/manual/reference/command/dropDatabase/
     ///
-    void drop(const bsoncxx::stdx::optional<mongocxx::write_concern>& write_concern = {});
+    void drop(const bsoncxx::stdx::optional<mongocxx::v_noabi::write_concern>& write_concern = {});
 
     ///
     /// Drops the database and all its collections.
@@ -369,7 +369,7 @@ class database {
     ///   https://www.mongodb.com/docs/manual/reference/command/dropDatabase/
     ///
     void drop(const client_session& session,
-              const bsoncxx::stdx::optional<mongocxx::write_concern>& write_concern = {});
+              const bsoncxx::stdx::optional<mongocxx::v_noabi::write_concern>& write_concern = {});
     ///
     /// @}
     ///
@@ -512,14 +512,14 @@ class database {
     /// from this database, but do affect new ones as new collections will receive a copy of the
     /// write_concern of this database upon instantiation.
     ///
-    void write_concern(mongocxx::write_concern wc);
+    void write_concern(mongocxx::v_noabi::write_concern wc);
 
     ///
     /// The current write_concern for this database.
     ///
     /// @return the current write_concern
     ///
-    mongocxx::write_concern write_concern() const;
+    mongocxx::v_noabi::write_concern write_concern() const;
 
     ///
     /// Access a collection (logical grouping of documents) within this database.
@@ -647,13 +647,13 @@ class database {
         const client_session* session,
         stdx::string_view name,
         bsoncxx::document::view_or_value collection_options,
-        const stdx::optional<mongocxx::write_concern>& write_concern);
+        const stdx::optional<mongocxx::v_noabi::write_concern>& write_concern);
 
     MONGOCXX_PRIVATE mongocxx::v_noabi::collection _create_collection_deprecated(
         const client_session* session,
         bsoncxx::string::view_or_value name,
         const options::create_collection_deprecated& collection_options,
-        const stdx::optional<mongocxx::write_concern>& write_concern);
+        const stdx::optional<mongocxx::v_noabi::write_concern>& write_concern);
 
     MONGOCXX_PRIVATE cursor _list_collections(const client_session* session,
                                               bsoncxx::document::view_or_value filter);
@@ -663,7 +663,7 @@ class database {
 
     MONGOCXX_PRIVATE void _drop(
         const client_session* session,
-        const bsoncxx::stdx::optional<mongocxx::write_concern>& write_concern);
+        const bsoncxx::stdx::optional<mongocxx::v_noabi::write_concern>& write_concern);
 
     MONGOCXX_PRIVATE change_stream _watch(const client_session* session,
                                           const pipeline& pipe,

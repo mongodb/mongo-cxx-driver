@@ -286,7 +286,7 @@ class find_one_and_replace {
     /// @see
     ///   https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    find_one_and_replace& write_concern(mongocxx::write_concern write_concern);
+    find_one_and_replace& write_concern(mongocxx::v_noabi::write_concern write_concern);
 
     ///
     /// Gets the current write concern.
@@ -297,7 +297,7 @@ class find_one_and_replace {
     /// @see
     ///   https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    const stdx::optional<mongocxx::write_concern>& write_concern() const;
+    const stdx::optional<mongocxx::v_noabi::write_concern>& write_concern() const;
 
    private:
     stdx::optional<bool> _bypass_document_validation;
@@ -310,7 +310,7 @@ class find_one_and_replace {
     stdx::optional<mongocxx::v_noabi::options::return_document> _return_document;
     stdx::optional<bsoncxx::document::view_or_value> _ordering;
     stdx::optional<bool> _upsert;
-    stdx::optional<mongocxx::write_concern> _write_concern;
+    stdx::optional<mongocxx::v_noabi::write_concern> _write_concern;
 };
 
 }  // namespace options

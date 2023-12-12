@@ -705,7 +705,7 @@ class collection {
     /// @note
     ///   Write concern supported only for MongoDB 3.4+.
     ///
-    void drop(const bsoncxx::stdx::optional<mongocxx::write_concern>& write_concern = {},
+    void drop(const bsoncxx::stdx::optional<mongocxx::v_noabi::write_concern>& write_concern = {},
               bsoncxx::document::view_or_value collection_options = {});
 
     ///
@@ -729,7 +729,7 @@ class collection {
     ///   Write concern supported only for MongoDB 3.4+.
     ///
     void drop(const client_session& session,
-              const bsoncxx::stdx::optional<mongocxx::write_concern>& write_concern = {},
+              const bsoncxx::stdx::optional<mongocxx::v_noabi::write_concern>& write_concern = {},
               bsoncxx::document::view_or_value collection_options = {});
 
     ///
@@ -1772,14 +1772,14 @@ class collection {
     /// @param wc
     ///   The new write_concern to use.
     ///
-    void write_concern(mongocxx::write_concern wc);
+    void write_concern(mongocxx::v_noabi::write_concern wc);
 
     ///
     /// Gets the write_concern for the collection.
     ///
     /// @return The current write_concern.
     ///
-    mongocxx::write_concern write_concern() const;
+    mongocxx::v_noabi::write_concern write_concern() const;
 
     ///
     /// Gets an index_view to the collection.
@@ -1904,7 +1904,7 @@ class collection {
 
     MONGOCXX_PRIVATE void _drop(
         const client_session* session,
-        const bsoncxx::stdx::optional<mongocxx::write_concern>& write_concern,
+        const bsoncxx::stdx::optional<mongocxx::v_noabi::write_concern>& write_concern,
         bsoncxx::document::view_or_value collection_options);
 
     MONGOCXX_PRIVATE cursor _find(const client_session* session,
@@ -1942,7 +1942,7 @@ class collection {
         const client_session* session,
         bsoncxx::string::view_or_value new_name,
         bool drop_target_before_rename,
-        const bsoncxx::stdx::optional<mongocxx::write_concern>& write_concern);
+        const bsoncxx::stdx::optional<mongocxx::v_noabi::write_concern>& write_concern);
 
     MONGOCXX_PRIVATE stdx::optional<result::replace_one> _replace_one(
         const client_session* session,

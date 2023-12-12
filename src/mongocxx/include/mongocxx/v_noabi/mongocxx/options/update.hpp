@@ -184,7 +184,7 @@ class update {
     ///
     /// @see https://www.mongodb.com/docs/manual/core/write-concern/
     ///
-    update& write_concern(mongocxx::write_concern wc);
+    update& write_concern(mongocxx::v_noabi::write_concern wc);
 
     ///
     /// The current write_concern for this operation.
@@ -194,7 +194,7 @@ class update {
     ///
     /// @see https://www.mongodb.com/docs/manual/core/write-concern/
     ///
-    const stdx::optional<mongocxx::write_concern>& write_concern() const;
+    const stdx::optional<mongocxx::v_noabi::write_concern>& write_concern() const;
 
     ///
     /// Set array filters for this operation.
@@ -224,7 +224,7 @@ class update {
     stdx::optional<bool> _bypass_document_validation;
     stdx::optional<bsoncxx::document::view_or_value> _collation;
     stdx::optional<bool> _upsert;
-    stdx::optional<mongocxx::write_concern> _write_concern;
+    stdx::optional<mongocxx::v_noabi::write_concern> _write_concern;
     stdx::optional<bsoncxx::array::view_or_value> _array_filters;
     stdx::optional<mongocxx::v_noabi::hint> _hint;
     stdx::optional<bsoncxx::document::view_or_value> _let;
