@@ -48,6 +48,7 @@ class benchmark_runner {
     double calculate_average(benchmark_type);
 
     std::chrono::time_point<std::chrono::system_clock> _start_time;
+    std::chrono::time_point<std::chrono::system_clock> _end_time;
     std::vector<std::unique_ptr<microbench>> _microbenches;
     std::set<benchmark_type> _types;
 };

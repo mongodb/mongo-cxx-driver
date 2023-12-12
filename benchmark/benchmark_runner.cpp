@@ -118,6 +118,7 @@ void benchmark_runner::run_microbenches() {
                   << " second(s) | " << score.get_score() << " MB/s" << std::endl
                   << std::endl;
     }
+    _end_time = std::chrono::system_clock::now();
 }
 
 double benchmark_runner::calculate_average(benchmark_type tag) {
@@ -163,7 +164,6 @@ double benchmark_runner::calculate_driver_bench_score() {
 void benchmark_runner::write_scores() {
     double read = -1;
     double write = -1;
-    const auto end_time = std::chrono::system_clock::now();
 
     using namespace bsoncxx;
     using builder::basic::sub_document;
@@ -181,7 +181,7 @@ void benchmark_runner::write_scores() {
         return oss.str();
     };
     doc.append(kvp("created_at", write_time(_start_time)));
-    doc.append(kvp("completed_at", write_time(end_time)));
+    doc.append(kvp("completed_at", write_time(_end_time)));
     doc.append(kvp("artifacts", builder::basic::make_array()));
 
     auto metrics_array = builder::basic::array{};

@@ -52,7 +52,6 @@ int main(int argc, char* argv[]) {
 
     benchmark_runner runner{types};
 
-    const auto start_time = std::chrono::system_clock::now();
     runner.run_microbenches();
     runner.write_scores();
 }
