@@ -30,7 +30,8 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace wip {
+namespace v_noabi {
+
 ///
 /// Class representing a pointer to the result set of a query on a MongoDB server.
 ///
@@ -91,7 +92,7 @@ class cursor {
     friend ::mongocxx::wip::index_view;
     friend ::mongocxx::wip::search_index_view;
 
-    friend ::mongocxx::wip::cursor::iterator;
+    friend ::mongocxx::v_noabi::cursor::iterator;
 
     MONGOCXX_PRIVATE cursor(void* cursor_ptr,
                             bsoncxx::stdx::optional<type> cursor_type = bsoncxx::stdx::nullopt);
@@ -104,14 +105,14 @@ class cursor {
 /// Class representing an input iterator of documents in a MongoDB cursor
 /// result set.
 ///
-/// All non-end iterators derived from the same mongocxx::cursor move in
+/// All non-end iterators derived from the same mongocxx::v_noabi::cursor move in
 /// lock-step.  Dereferencing any non-end() iterator always gives the first
 /// remaining document in the cursor.  Incrementing one non-end iterator is
 /// equivalent to incrementing them all.
 ///
 /// An iterator is 'exhausted' when no documents are available. An
 /// end-iterator is always exhausted. A non-end iterator is exhausted when the
-/// originating mongocxx::cursor has no more documents.  When an iterator is
+/// originating mongocxx::v_noabi::cursor has no more documents.  When an iterator is
 /// exhausted, it must not be dereferenced or incremented.
 ///
 /// For iterators of a tailable cursor, calling cursor.begin() may revive an
@@ -154,7 +155,7 @@ class cursor::iterator {
     void operator++(int);
 
    private:
-    friend ::mongocxx::wip::cursor;
+    friend ::mongocxx::v_noabi::cursor;
 
     ///
     /// @{
@@ -178,7 +179,7 @@ class cursor::iterator {
     cursor* _cursor;
 };
 
-}  // namespace wip
+}  // namespace v_noabi
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

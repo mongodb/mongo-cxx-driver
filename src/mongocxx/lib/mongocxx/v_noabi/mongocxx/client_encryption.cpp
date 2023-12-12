@@ -77,7 +77,7 @@ stdx::optional<bsoncxx::document::value> client_encryption::get_key(
     return _impl->get_key(id);
 }
 
-mongocxx::cursor client_encryption::get_keys() {
+mongocxx::v_noabi::cursor client_encryption::get_keys() {
     return _impl->get_keys();
 }
 

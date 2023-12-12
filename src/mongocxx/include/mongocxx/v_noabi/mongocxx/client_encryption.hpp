@@ -220,7 +220,7 @@ class client_encryption {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/method/KeyVault.getKeys/
     ///
-    mongocxx::cursor get_keys();
+    mongocxx::v_noabi::cursor get_keys();
 
     ///
     /// Adds a keyAltName to the keyAltNames array of the key document in the

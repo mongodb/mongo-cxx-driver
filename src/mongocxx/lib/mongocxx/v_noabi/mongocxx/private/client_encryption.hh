@@ -287,7 +287,7 @@ class client_encryption::impl {
                                       : stdx::optional<bsoncxx::document::value>{key_doc.steal()};
     }
 
-    mongocxx::cursor get_keys() {
+    mongocxx::v_noabi::cursor get_keys() {
         bson_error_t error;
 
         mongoc_cursor_t* const cursor =
@@ -297,7 +297,7 @@ class client_encryption::impl {
             throw_exception<operation_exception>(error);
         }
 
-        return mongocxx::cursor(cursor);
+        return mongocxx::v_noabi::cursor(cursor);
     }
 
     stdx::optional<bsoncxx::document::value> add_key_alt_name(

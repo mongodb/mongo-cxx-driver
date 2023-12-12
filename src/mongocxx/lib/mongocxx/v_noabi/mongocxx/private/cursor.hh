@@ -22,7 +22,8 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace wip {
+namespace v_noabi {
+
 class cursor::impl {
    public:
     // States represent a one-way, ordered lifecycle of a cursor. k_started means that
@@ -81,7 +82,7 @@ class cursor::impl {
     bool tailable;
 };
 
-}  // namespace wip
+}  // namespace v_noabi
 }  // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

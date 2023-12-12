@@ -218,7 +218,7 @@ class client {
     ///
     /// Enumerates the databases in the client.
     ///
-    /// @return A mongocxx::cursor containing a BSON document for each
+    /// @return A mongocxx::v_noabi::cursor containing a BSON document for each
     ///   database. Each document contains a name field with the database
     ///   name, a sizeOnDisk field with the total size of the database file on
     ///   disk in bytes, and an empty field specifying whether the database
@@ -237,7 +237,7 @@ class client {
     /// @param session
     ///   The mongocxx::v_noabi::client_session with which to perform the aggregation.
     ///
-    /// @return A mongocxx::cursor containing a BSON document for each
+    /// @return A mongocxx::v_noabi::cursor containing a BSON document for each
     ///   database. Each document contains a name field with the database
     ///   name, a sizeOnDisk field with the total size of the database file on
     ///   disk in bytes, and an empty field specifying whether the database
@@ -256,7 +256,7 @@ class client {
     /// @param opts
     ///   Options passed directly to the 'listDatabases' command.
     ///
-    /// @return A mongocxx::cursor containing a BSON document for each
+    /// @return A mongocxx::v_noabi::cursor containing a BSON document for each
     ///   database. Each document contains a name field with the database
     ///   name, a sizeOnDisk field with the total size of the database file on
     ///   disk in bytes, and an empty field specifying whether the database
@@ -278,7 +278,7 @@ class client {
     /// @param opts
     ///   Options passed directly to the 'listDatabases' command.
     ///
-    /// @return A mongocxx::cursor containing a BSON document for each
+    /// @return A mongocxx::v_noabi::cursor containing a BSON document for each
     ///   database. Each document contains a name field with the database
     ///   name, a sizeOnDisk field with the total size of the database file on
     ///   disk in bytes, and an empty field specifying whether the database

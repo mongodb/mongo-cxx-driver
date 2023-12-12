@@ -94,7 +94,7 @@ class database {
     /// @param options
     ///   Optional arguments, see mongocxx::v_noabi::options::aggregate.
     ///
-    /// @return A mongocxx::cursor with the results.  If the query fails,
+    /// @return A mongocxx::v_noabi::cursor with the results.  If the query fails,
     /// the cursor throws mongocxx::v_noabi::query_exception when the returned cursor
     /// is iterated.
     ///
@@ -120,7 +120,7 @@ class database {
     /// @param options
     ///   Optional arguments, see mongocxx::v_noabi::options::aggregate.
     ///
-    /// @return A mongocxx::cursor with the results.  If the query fails,
+    /// @return A mongocxx::v_noabi::cursor with the results.  If the query fails,
     /// the cursor throws mongocxx::v_noabi::query_exception when the returned cursor
     /// is iterated.
     ///
@@ -393,7 +393,7 @@ class database {
     /// @param filter
     ///   An optional query expression to filter the returned collections.
     ///
-    /// @return mongocxx::cursor containing the collection information.
+    /// @return mongocxx::v_noabi::cursor containing the collection information.
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/listCollections/
     ///
@@ -407,7 +407,7 @@ class database {
     /// @param filter
     ///   An optional query expression to filter the returned collections.
     ///
-    /// @return mongocxx::cursor containing the collection information.
+    /// @return mongocxx::v_noabi::cursor containing the collection information.
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/listCollections/
     ///

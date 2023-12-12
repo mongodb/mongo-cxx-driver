@@ -610,7 +610,7 @@ class bucket {
     ///   Optional arguments; see options::find.
     ///
     /// @return
-    ///   A mongocxx::cursor with the results. If the query fails, the cursor throws
+    ///   A mongocxx::v_noabi::cursor with the results. If the query fails, the cursor throws
     ///   mongocxx::v_noabi::query_exception when the returned cursor is iterated.
     ///
     /// @throws mongocxx::v_noabi::logic_error if the options are invalid, or if the unsupported
@@ -634,7 +634,7 @@ class bucket {
     ///   Optional arguments; see options::find.
     ///
     /// @return
-    ///   A mongocxx::cursor with the results. If the query fails, the cursor throws
+    ///   A mongocxx::v_noabi::cursor with the results. If the query fails, the cursor throws
     ///   mongocxx::v_noabi::query_exception when the returned cursor is iterated.
     ///
     /// @throws mongocxx::v_noabi::logic_error if the options are invalid, or if the unsupported
