@@ -19,7 +19,8 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace wip {
+namespace v_noabi {
+
 ///
 /// Enum representing the the types of write operations that can be performed.
 ///
@@ -43,7 +44,7 @@ enum class write_type {
     k_replace_one,
 };
 
-}  // namespace wip
+}  // namespace v_noabi
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
