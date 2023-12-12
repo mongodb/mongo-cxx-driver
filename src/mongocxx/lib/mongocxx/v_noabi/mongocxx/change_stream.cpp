@@ -22,7 +22,8 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace wip {
+namespace v_noabi {
+
 // Requirements for concept Iterator:
 // https://en.cppreference.com/w/cpp/named_req/Iterator
 static_assert(std::is_copy_constructible<change_stream::iterator>::value, "");
@@ -126,5 +127,5 @@ bool change_stream::iterator::is_exhausted() const {
     return _change_stream->_impl->is_exhausted();
 }
 
-}  // namespace wip
+}  // namespace v_noabi
 }  // namespace mongocxx
