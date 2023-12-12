@@ -22,14 +22,22 @@ namespace stdx {}
 }  // namespace bsoncxx
 
 namespace mongocxx {
-inline namespace wip {
+namespace v_noabi {
+namespace stdx {
+
+using namespace bsoncxx::stdx;  // Deprecated.
+
+}  // namespace stdx
+}  // namespace v_noabi
+}  // namespace mongocxx
+
+namespace mongocxx {
 namespace stdx {
 
 // We adopt all the bsoncxx polyfills
 using namespace bsoncxx::stdx;
 
 }  // namespace stdx
-}  // namespace wip
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
