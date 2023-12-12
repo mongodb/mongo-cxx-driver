@@ -26,7 +26,7 @@ replace& replace::bypass_document_validation(bool bypass_document_validation) {
     return *this;
 }
 
-replace& replace::hint(mongocxx::hint index_hint) {
+replace& replace::hint(mongocxx::v_noabi::hint index_hint) {
     _hint = std::move(index_hint);
     return *this;
 }
@@ -56,7 +56,7 @@ replace& replace::write_concern(mongocxx::write_concern wc) {
     return *this;
 }
 
-const stdx::optional<mongocxx::hint>& replace::hint() const {
+const stdx::optional<mongocxx::v_noabi::hint>& replace::hint() const {
     return _hint;
 }
 

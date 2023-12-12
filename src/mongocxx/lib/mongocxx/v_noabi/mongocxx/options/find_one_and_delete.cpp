@@ -45,7 +45,7 @@ find_one_and_delete& find_one_and_delete::write_concern(mongocxx::write_concern 
     return *this;
 }
 
-find_one_and_delete& find_one_and_delete::hint(mongocxx::hint index_hint) {
+find_one_and_delete& find_one_and_delete::hint(mongocxx::v_noabi::hint index_hint) {
     _hint = std::move(index_hint);
     return *this;
 }
@@ -61,7 +61,7 @@ find_one_and_delete& find_one_and_delete::comment(
     return *this;
 }
 
-const stdx::optional<mongocxx::hint>& find_one_and_delete::hint() const {
+const stdx::optional<mongocxx::v_noabi::hint>& find_one_and_delete::hint() const {
     return _hint;
 }
 

@@ -32,7 +32,7 @@ update& update::collation(bsoncxx::document::view_or_value collation) {
     return *this;
 }
 
-update& update::hint(mongocxx::hint index_hint) {
+update& update::hint(mongocxx::v_noabi::hint index_hint) {
     _hint = std::move(index_hint);
     return *this;
 }
@@ -65,7 +65,7 @@ const stdx::optional<bsoncxx::document::view_or_value>& update::collation() cons
     return _collation;
 }
 
-const stdx::optional<mongocxx::hint>& update::hint() const {
+const stdx::optional<mongocxx::v_noabi::hint>& update::hint() const {
     return _hint;
 }
 

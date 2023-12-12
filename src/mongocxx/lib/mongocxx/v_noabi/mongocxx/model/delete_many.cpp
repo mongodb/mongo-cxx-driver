@@ -31,12 +31,12 @@ delete_many& delete_many::collation(bsoncxx::document::view_or_value collation) 
     return *this;
 }
 
-delete_many& delete_many::hint(mongocxx::hint index_hint) {
+delete_many& delete_many::hint(mongocxx::v_noabi::hint index_hint) {
     _hint = std::move(index_hint);
     return *this;
 }
 
-const stdx::optional<mongocxx::hint>& delete_many::hint() const {
+const stdx::optional<mongocxx::v_noabi::hint>& delete_many::hint() const {
     return _hint;
 }
 

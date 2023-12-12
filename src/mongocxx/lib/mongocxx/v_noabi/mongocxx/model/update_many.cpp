@@ -49,12 +49,12 @@ const stdx::optional<bsoncxx::document::view_or_value>& update_many::collation()
     return _collation;
 }
 
-update_many& update_many::hint(mongocxx::hint index_hint) {
+update_many& update_many::hint(mongocxx::v_noabi::hint index_hint) {
     _hint = std::move(index_hint);
     return *this;
 }
 
-const stdx::optional<mongocxx::hint>& update_many::hint() const {
+const stdx::optional<mongocxx::v_noabi::hint>& update_many::hint() const {
     return _hint;
 }
 

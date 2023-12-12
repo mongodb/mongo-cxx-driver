@@ -32,7 +32,7 @@ find_one_and_update& find_one_and_update::collation(bsoncxx::document::view_or_v
     return *this;
 }
 
-find_one_and_update& find_one_and_update::hint(mongocxx::hint index_hint) {
+find_one_and_update& find_one_and_update::hint(mongocxx::v_noabi::hint index_hint) {
     _hint = std::move(index_hint);
     return *this;
 }
@@ -87,7 +87,7 @@ const stdx::optional<bsoncxx::document::view_or_value>& find_one_and_update::col
     return _collation;
 }
 
-const stdx::optional<mongocxx::hint>& find_one_and_update::hint() const {
+const stdx::optional<mongocxx::v_noabi::hint>& find_one_and_update::hint() const {
     return _hint;
 }
 

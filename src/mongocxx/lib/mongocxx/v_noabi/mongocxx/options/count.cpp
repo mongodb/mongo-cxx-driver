@@ -26,7 +26,7 @@ count& count::collation(bsoncxx::document::view_or_value collation) {
     return *this;
 }
 
-count& count::hint(mongocxx::hint index_hint) {
+count& count::hint(mongocxx::v_noabi::hint index_hint) {
     _hint = std::move(index_hint);
     return *this;
 }
@@ -60,7 +60,7 @@ const stdx::optional<bsoncxx::document::view_or_value>& count::collation() const
     return _collation;
 }
 
-const stdx::optional<mongocxx::hint>& count::hint() const {
+const stdx::optional<mongocxx::v_noabi::hint>& count::hint() const {
     return _hint;
 }
 

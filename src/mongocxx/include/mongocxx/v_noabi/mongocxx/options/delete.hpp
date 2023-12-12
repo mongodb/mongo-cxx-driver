@@ -97,14 +97,14 @@ class delete_options {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    delete_options& hint(mongocxx::hint index_hint);
+    delete_options& hint(mongocxx::v_noabi::hint index_hint);
 
     ///
     /// Gets the current hint.
     ///
     /// @return The current hint, if one is set.
     ///
-    const stdx::optional<mongocxx::hint>& hint() const;
+    const stdx::optional<mongocxx::v_noabi::hint>& hint() const;
 
     ///
     /// Set the value of the let option.
@@ -149,7 +149,7 @@ class delete_options {
    private:
     stdx::optional<bsoncxx::document::view_or_value> _collation;
     stdx::optional<mongocxx::write_concern> _write_concern;
-    stdx::optional<mongocxx::hint> _hint;
+    stdx::optional<mongocxx::v_noabi::hint> _hint;
     stdx::optional<bsoncxx::document::view_or_value> _let;
     stdx::optional<bsoncxx::types::bson_value::view_or_value> _comment;
 };

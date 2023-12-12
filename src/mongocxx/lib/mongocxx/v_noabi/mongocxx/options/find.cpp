@@ -51,7 +51,7 @@ find& find::cursor_type(cursor::type cursor_type) {
     return *this;
 }
 
-find& find::hint(mongocxx::hint index_hint) {
+find& find::hint(mongocxx::v_noabi::hint index_hint) {
     _hint = std::move(index_hint);
     return *this;
 }
@@ -150,7 +150,7 @@ const stdx::optional<cursor::type>& find::cursor_type() const {
     return _cursor_type;
 }
 
-const stdx::optional<mongocxx::hint>& find::hint() const {
+const stdx::optional<mongocxx::v_noabi::hint>& find::hint() const {
     return _hint;
 }
 

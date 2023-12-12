@@ -218,7 +218,7 @@ class aggregate {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    aggregate& hint(mongocxx::hint index_hint);
+    aggregate& hint(mongocxx::v_noabi::hint index_hint);
 
     ///
     /// Gets the current hint.
@@ -227,7 +227,7 @@ class aggregate {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    const stdx::optional<mongocxx::hint>& hint() const;
+    const stdx::optional<mongocxx::v_noabi::hint>& hint() const;
 
     ///
     /// Sets the write concern to use for this operation. Only has an effect if $out is a part of
@@ -319,7 +319,7 @@ class aggregate {
     stdx::optional<std::chrono::milliseconds> _max_time;
     stdx::optional<mongocxx::read_preference> _read_preference;
     stdx::optional<bool> _bypass_document_validation;
-    stdx::optional<mongocxx::hint> _hint;
+    stdx::optional<mongocxx::v_noabi::hint> _hint;
     stdx::optional<mongocxx::write_concern> _write_concern;
     stdx::optional<mongocxx::read_concern> _read_concern;
     stdx::optional<bsoncxx::types::bson_value::view_or_value> _comment;

@@ -85,20 +85,20 @@ class delete_many {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    delete_many& hint(mongocxx::hint index_hint);
+    delete_many& hint(mongocxx::v_noabi::hint index_hint);
 
     ///
     /// Gets the current hint.
     ///
     /// @return The current hint, if one is set.
     ///
-    const stdx::optional<mongocxx::hint>& hint() const;
+    const stdx::optional<mongocxx::v_noabi::hint>& hint() const;
 
    private:
     bsoncxx::document::view_or_value _filter;
 
     stdx::optional<bsoncxx::document::view_or_value> _collation;
-    stdx::optional<mongocxx::hint> _hint;
+    stdx::optional<mongocxx::v_noabi::hint> _hint;
 };
 
 }  // namespace model

@@ -64,7 +64,7 @@ aggregate& aggregate::bypass_document_validation(bool bypass_document_validation
     return *this;
 }
 
-aggregate& aggregate::hint(mongocxx::hint index_hint) {
+aggregate& aggregate::hint(mongocxx::v_noabi::hint index_hint) {
     _hint = std::move(index_hint);
     return *this;
 }
@@ -112,7 +112,7 @@ const stdx::optional<bool>& aggregate::bypass_document_validation() const {
     return _bypass_document_validation;
 }
 
-const stdx::optional<mongocxx::hint>& aggregate::hint() const {
+const stdx::optional<mongocxx::v_noabi::hint>& aggregate::hint() const {
     return _hint;
 }
 

@@ -203,7 +203,7 @@ class find {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    find& hint(mongocxx::hint index_hint);
+    find& hint(mongocxx::v_noabi::hint index_hint);
 
     ///
     /// Gets the current hint.
@@ -212,7 +212,7 @@ class find {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    const stdx::optional<mongocxx::hint>& hint() const;
+    const stdx::optional<mongocxx::v_noabi::hint>& hint() const;
 
     ///
     /// Set the value of the let option.
@@ -564,7 +564,7 @@ class find {
     stdx::optional<bsoncxx::document::view_or_value> _collation;
     stdx::optional<bsoncxx::string::view_or_value> _comment;
     stdx::optional<cursor::type> _cursor_type;
-    stdx::optional<mongocxx::hint> _hint;
+    stdx::optional<mongocxx::v_noabi::hint> _hint;
     stdx::optional<bsoncxx::document::view_or_value> _let;
     stdx::optional<bsoncxx::types::bson_value::view_or_value> _comment_option;
     stdx::optional<std::int64_t> _limit;

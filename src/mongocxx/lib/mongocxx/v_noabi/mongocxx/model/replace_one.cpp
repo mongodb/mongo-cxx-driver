@@ -51,12 +51,12 @@ const stdx::optional<bool>& replace_one::upsert() const {
     return _upsert;
 }
 
-replace_one& replace_one::hint(mongocxx::hint index_hint) {
+replace_one& replace_one::hint(mongocxx::v_noabi::hint index_hint) {
     _hint = std::move(index_hint);
     return *this;
 }
 
-const stdx::optional<mongocxx::hint>& replace_one::hint() const {
+const stdx::optional<mongocxx::v_noabi::hint>& replace_one::hint() const {
     return _hint;
 }
 }  // namespace model

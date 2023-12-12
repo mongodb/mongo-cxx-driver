@@ -31,7 +31,7 @@ delete_options& delete_options::write_concern(mongocxx::write_concern wc) {
     return *this;
 }
 
-delete_options& delete_options::hint(mongocxx::hint index_hint) {
+delete_options& delete_options::hint(mongocxx::v_noabi::hint index_hint) {
     _hint = std::move(index_hint);
     return *this;
 }
@@ -44,7 +44,7 @@ const stdx::optional<mongocxx::write_concern>& delete_options::write_concern() c
     return _write_concern;
 }
 
-const stdx::optional<mongocxx::hint>& delete_options::hint() const {
+const stdx::optional<mongocxx::v_noabi::hint>& delete_options::hint() const {
     return _hint;
 }
 
