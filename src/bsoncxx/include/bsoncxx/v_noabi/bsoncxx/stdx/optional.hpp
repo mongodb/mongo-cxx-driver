@@ -22,7 +22,6 @@
 #include <utility>
 
 #include "./operators.hpp"
-#include "./string_view.hpp"
 #include "./type_traits.hpp"
 
 // Try to detect std::optional. We'll reuse some components from there for compatibility
@@ -308,56 +307,6 @@ class optional : detail::equality_operators,
             return static_cast<value_type>(BSONCXX_FWD(dflt));
         }
     }
-
-    // clang-format off
-#define MONADIC_MEMBERS(Qual, Self, Reference)                                    \
-    /* and_then(fn: (Ref) -> optional<T>) -> optional<T> */                       \
-    template <typename F, typename R = detail::invoke_result_t<F, Reference>>     \
-    bsoncxx_cxx14_constexpr auto and_then(F&& func) Qual                          \
-        -> detail::invoke_result_t<F, Reference>                                  \
-    {                                                                             \
-        if (this->has_value()) {                                                  \
-            return detail::invoke(BSONCXX_FWD(func), *static_cast<Self>(*this));  \
-        } else {                                                                  \
-            return R();                                                           \
-        }                                                                         \
-    }                                                                             \
-                                                                                  \
-    /* or_else(fn: () -> optional<T>) -> optional<T> */                           \
-    template <typename F>                                                         \
-    bsoncxx_cxx14_constexpr auto or_else(F&& func) Qual                           \
-        -> detail::requires_t<optional,                                           \
-                              std::is_constructible<optional, Self>,              \
-                              detail::is_invocable<F>>                            \
-    {                                                                             \
-        if (this->has_value()) {                                                  \
-            return static_cast<Self>(*this);                                      \
-        } else {                                                                  \
-            return invoke(BSONCXX_FWD(func));                                     \
-        }                                                                         \
-    }                                                                             \
-                                                                                  \
-    /* transform(fn: (T) -> U) -> optional<decay(U)> */                           \
-    template <typename F,                                                         \
-              typename U = detail::invoke_result_t<F, reference>>                 \
-    bsoncxx_cxx14_constexpr auto transform(F&& func) Qual                         \
-        -> optional<detail::remove_cvref_t<U>>                                    \
-    {                                                                             \
-        if (this->has_value()) {                                                  \
-            return detail::invoke(BSONCXX_FWD(func), *static_cast<Self>(*this));  \
-        } else {                                                                  \
-            return nullopt;                                                       \
-        }                                                                         \
-    }                                                                             \
-                                                                                  \
-    BSONCXX_FORCE_SEMICOLON
-
-    MONADIC_MEMBERS(&, optional&, reference);
-    MONADIC_MEMBERS(const&, optional const&, const_reference);
-    MONADIC_MEMBERS(&&, optional&&, rvalue_reference);
-    MONADIC_MEMBERS(const&&, optional const&&, const_rvalue_reference);
-#undef MONADIC_MEMBERS
-    // clang-format on
 
    private:
     bsoncxx_cxx14_constexpr void _assert_has_value(const char* msg) const noexcept {

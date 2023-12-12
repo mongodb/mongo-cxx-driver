@@ -232,14 +232,6 @@ TEST_CASE("Comparisons") {
     CHECK(dbl != a);
 }
 
-TEST_CASE("optional<T>::and_then()") {
-    auto opt = bsoncxx::stdx::make_optional(42);
-    auto val = opt.and_then([](int n) { return bsoncxx::stdx::make_optional(n * 2); });
-    CHECK(val == 84);
-    val = opt.transform([](int n) { return n + 4; });
-    CHECK(val == 46);
-}
-
 struct in_place_convertible {
     bool constructed_from_in_place = false;
     in_place_convertible() = default;
