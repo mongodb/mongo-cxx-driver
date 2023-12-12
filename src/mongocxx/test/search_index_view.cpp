@@ -235,7 +235,7 @@ TEST_CASE("atlas search indexes prose tests", "") {
 
         // Apply non-default read concern.
         auto nondefault_rc = mongocxx::read_concern();
-        nondefault_rc.acknowledge_level(mongocxx::read_concern::level::k_local);
+        nondefault_rc.acknowledge_level(mongocxx::read_concern::level::k_majority);
         coll.read_concern(nondefault_rc);
 
         auto siv = coll.search_indexes();
