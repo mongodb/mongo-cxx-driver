@@ -27,37 +27,19 @@
 
 #include <bsoncxx/config/prelude.hpp>
 
+#ifdef __has_include
+#if __has_include(<version>)
+#include <version>
+#endif
+#endif
+
+#ifdef __cpp_lib_string_view
+#include <string_view>
+#endif
+
 namespace bsoncxx {
 namespace v_noabi {
 namespace stdx {
-
-namespace detail {
-
-template <typename S>
-auto detect_string_f(...) -> std::false_type;
-
-template <typename S>
-auto detect_string_f(int,  //
-                     const S& s = bsoncxx::detail::soft_declval<S>(),
-                     S& mut = bsoncxx::detail::soft_declval<S&>(),
-                     void (*conv_cptr)(typename S::const_pointer) =
-                         bsoncxx::detail::soft_declval<void (*)(typename S::const_pointer)>(),
-                     void (*conv_size)(typename S::size_type) =
-                         bsoncxx::detail::soft_declval<void (*)(typename S::size_type)>())
-    -> bsoncxx::detail::true_t<typename S::traits_type::char_type,
-                               decltype(s.length()),
-                               decltype(mut = s),
-                               decltype(s.compare(s)),
-                               decltype(s.substr(0, s.size())),
-                               decltype(conv_cptr(s.data())),
-                               decltype(conv_size(s.size()))>;
-
-// Heuristic detection of std::string-like types. Not perfect, but should reasonably
-// handle most cases.
-template <typename S>
-struct is_string_like : decltype(detect_string_f<bsoncxx::detail::remove_cvref_t<S>>(0)) {};
-
-}  // namespace detail
 
 /**
  * @brief Implementation of std::string_view-like class template
@@ -84,19 +66,6 @@ class basic_string_view : bsoncxx::detail::equality_operators, bsoncxx::detail::
     const_pointer _begin = nullptr;
     // The size of the array that is being viewed via `_begin`
     size_type _size = 0;
-
-    /**
-     * @brief If S is a type for which we want to permit implicit conversion,
-     * evaluates to the type `int`. Otherwise, is a substitution failure.
-     */
-    template <typename S>
-    using _enable_string_conversion = bsoncxx::detail::requires_t<
-        int,
-        // Don't eat our own copy/move constructor:
-        bsoncxx::detail::negation<bsoncxx::detail::is_alike<S, basic_string_view>>,
-        // The range's value must be the same as our character type
-        std::is_same<typename bsoncxx::detail::remove_reference_t<S>::value_type, value_type>,
-        detail::is_string_like<S>>;
 
    public:
     using traits_type = Traits;
@@ -136,9 +105,15 @@ class basic_string_view : bsoncxx::detail::equality_operators, bsoncxx::detail::
      * Requires that `StringLike` is a non-array contiguous range with the same
      * value type as this string view, and is a std::string-like value.
      */
-    template <typename StringLike, _enable_string_conversion<StringLike> = 0>
-    constexpr basic_string_view(StringLike&& str) noexcept
+    template <typename Alloc>
+    constexpr basic_string_view(
+        const std::basic_string<value_type, traits_type, Alloc>& str) noexcept
         : _begin(str.data()), _size(str.size()) {}
+
+#if __cpp_lib_string_view
+    constexpr basic_string_view(std::basic_string_view<value_type, traits_type> sv) noexcept
+        : _begin(sv.data()), _size(sv.size()) {}
+#endif
 
     // Construction from a null pointer is deleted
     basic_string_view(std::nullptr_t) = delete;
@@ -455,6 +430,12 @@ class basic_string_view : bsoncxx::detail::equality_operators, bsoncxx::detail::
     explicit operator std::basic_string<Char, Traits, Allocator>() const {
         return std::basic_string<Char, Traits, Allocator>(data(), size());
     }
+
+#if __cpp_lib_string_view
+    explicit operator std::basic_string_view<value_type, traits_type>() const noexcept {
+        return std::basic_string_view<value_type, traits_type>(data(), size());
+    }
+#endif
 
    private:
     // Additional level-of-indirection for constexpr compare()

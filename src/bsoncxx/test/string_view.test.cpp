@@ -4,6 +4,16 @@
 #include <string>
 #include <type_traits>
 
+#ifdef __has_include
+#if __has_include(<version>)
+#include <version>
+#endif
+#endif
+
+#if __cpp_lib_string_view
+#include <string_view>
+#endif
+
 #include <bsoncxx/stdx/operators.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/stdx/type_traits.hpp>
@@ -12,11 +22,10 @@
 namespace stdx = bsoncxx::stdx;
 using stdx::string_view;
 
-static_assert(bsoncxx::v_noabi::stdx::detail::is_string_like<std::string>::value, "fail");
-
 static_assert(!std::is_constructible<string_view, std::vector<int>>::value, "fail");
 static_assert(!std::is_constructible<string_view, double>::value, "fail");
 static_assert(std::is_constructible<string_view, std::string>::value, "fail");
+static_assert(std::is_convertible<std::string, string_view>::value, "fail");
 static_assert(std::is_constructible<std::string, string_view>::value, "fail");
 
 TEST_CASE("string_view: Default constructor") {
@@ -191,3 +200,18 @@ TEST_CASE("string_view: find") {
     CHECK(sv.find_first_not_of("abcdef123456", 5) == str.find_first_not_of("abcdef123456", 5));
     CHECK(sv.find_last_not_of("abcdef123456", 5) == str.find_last_not_of("abcdef123456", 5));
 }
+
+#ifdef __cpp_lib_string_view
+static_assert(std::is_constructible<std::string_view, string_view>::value, "fail");
+
+TEST_CASE("Convert to/from std::string_view") {
+    std::string std_str = "Hello!";
+    string_view bson_sv = std_str;
+    std::string_view std_sv = std::string_view(bson_sv);
+    CHECK(bson_sv == std_str);
+    CHECK(std_sv == bson_sv);
+    CHECK(std_sv == std_str);
+    bson_sv = std_sv;
+    CHECK(bson_sv == std_sv);
+}
+#endif
