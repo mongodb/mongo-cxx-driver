@@ -48,21 +48,21 @@ class command_started_event {
     ///
     /// @return The command.
     ///
-    bsoncxx::document::view command() const;
+    bsoncxx::v_noabi::document::view command() const;
 
     ///
     /// Returns the name of the database.
     ///
     /// @return The database name.
     ///
-    bsoncxx::stdx::string_view database_name() const;
+    bsoncxx::v_noabi::stdx::string_view database_name() const;
 
     ///
     /// Returns the name of the command.
     ///
     /// @return The command name.
     ///
-    bsoncxx::stdx::string_view command_name() const;
+    bsoncxx::v_noabi::stdx::string_view command_name() const;
 
     ///
     /// Returns the request id.
@@ -83,14 +83,14 @@ class command_started_event {
     ///
     /// @return No contained value, or contains the service id if load balancing is enabled.
     ///
-    bsoncxx::stdx::optional<bsoncxx::oid> service_id() const;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::oid> service_id() const;
 
     ///
     /// Returns the host name.
     ///
     /// @return The host name.
     ///
-    bsoncxx::stdx::string_view host() const;
+    bsoncxx::v_noabi::stdx::string_view host() const;
 
     ///
     /// Returns the port.

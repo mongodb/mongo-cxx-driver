@@ -27,7 +27,8 @@ find_one_and_update& find_one_and_update::bypass_document_validation(
     return *this;
 }
 
-find_one_and_update& find_one_and_update::collation(bsoncxx::document::view_or_value collation) {
+find_one_and_update& find_one_and_update::collation(
+    bsoncxx::v_noabi::document::view_or_value collation) {
     _collation = std::move(collation);
     return *this;
 }
@@ -37,13 +38,13 @@ find_one_and_update& find_one_and_update::hint(mongocxx::v_noabi::hint index_hin
     return *this;
 }
 
-find_one_and_update& find_one_and_update::let(bsoncxx::document::view_or_value let) {
+find_one_and_update& find_one_and_update::let(bsoncxx::v_noabi::document::view_or_value let) {
     _let = let;
     return *this;
 }
 
 find_one_and_update& find_one_and_update::comment(
-    bsoncxx::types::bson_value::view_or_value comment) {
+    bsoncxx::v_noabi::types::bson_value::view_or_value comment) {
     _comment = std::move(comment);
     return *this;
 }
@@ -53,7 +54,8 @@ find_one_and_update& find_one_and_update::max_time(std::chrono::milliseconds max
     return *this;
 }
 
-find_one_and_update& find_one_and_update::projection(bsoncxx::document::view_or_value projection) {
+find_one_and_update& find_one_and_update::projection(
+    bsoncxx::v_noabi::document::view_or_value projection) {
     _projection = std::move(projection);
     return *this;
 }
@@ -64,7 +66,7 @@ find_one_and_update& find_one_and_update::return_document(
     return *this;
 }
 
-find_one_and_update& find_one_and_update::sort(bsoncxx::document::view_or_value ordering) {
+find_one_and_update& find_one_and_update::sort(bsoncxx::v_noabi::document::view_or_value ordering) {
     _ordering = std::move(ordering);
     return *this;
 }
@@ -84,7 +86,8 @@ const stdx::optional<bool>& find_one_and_update::bypass_document_validation() co
     return _bypass_document_validation;
 }
 
-const stdx::optional<bsoncxx::document::view_or_value>& find_one_and_update::collation() const {
+const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& find_one_and_update::collation()
+    const {
     return _collation;
 }
 
@@ -92,12 +95,12 @@ const stdx::optional<mongocxx::v_noabi::hint>& find_one_and_update::hint() const
     return _hint;
 }
 
-const stdx::optional<bsoncxx::document::view_or_value> find_one_and_update::let() const {
+const stdx::optional<bsoncxx::v_noabi::document::view_or_value> find_one_and_update::let() const {
     return _let;
 }
 
-const stdx::optional<bsoncxx::types::bson_value::view_or_value> find_one_and_update::comment()
-    const {
+const stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>
+find_one_and_update::comment() const {
     return _comment;
 }
 
@@ -105,7 +108,8 @@ const stdx::optional<std::chrono::milliseconds>& find_one_and_update::max_time()
     return _max_time;
 }
 
-const stdx::optional<bsoncxx::document::view_or_value>& find_one_and_update::projection() const {
+const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& find_one_and_update::projection()
+    const {
     return _projection;
 }
 
@@ -113,7 +117,7 @@ const stdx::optional<return_document>& find_one_and_update::return_document() co
     return _return_document;
 }
 
-const stdx::optional<bsoncxx::document::view_or_value>& find_one_and_update::sort() const {
+const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& find_one_and_update::sort() const {
     return _ordering;
 }
 
@@ -126,12 +130,13 @@ const stdx::optional<mongocxx::v_noabi::write_concern>& find_one_and_update::wri
 }
 
 find_one_and_update& find_one_and_update::array_filters(
-    bsoncxx::array::view_or_value array_filters) {
+    bsoncxx::v_noabi::array::view_or_value array_filters) {
     _array_filters = std::move(array_filters);
     return *this;
 }
 
-const stdx::optional<bsoncxx::array::view_or_value>& find_one_and_update::array_filters() const {
+const stdx::optional<bsoncxx::v_noabi::array::view_or_value>& find_one_and_update::array_filters()
+    const {
     return _array_filters;
 }
 

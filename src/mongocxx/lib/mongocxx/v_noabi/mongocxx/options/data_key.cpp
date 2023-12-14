@@ -22,12 +22,12 @@ namespace mongocxx {
 namespace v_noabi {
 namespace options {
 
-data_key& data_key::master_key(bsoncxx::document::view_or_value master_key) {
+data_key& data_key::master_key(bsoncxx::v_noabi::document::view_or_value master_key) {
     _master_key = std::move(master_key);
     return *this;
 }
 
-const stdx::optional<bsoncxx::document::view_or_value>& data_key::master_key() const {
+const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& data_key::master_key() const {
     return _master_key;
 }
 

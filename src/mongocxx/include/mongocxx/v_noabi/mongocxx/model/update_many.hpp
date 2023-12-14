@@ -34,12 +34,12 @@ namespace model {
 ///
 class update_many {
     //
-    // Utility class supporting the convenience of {} meaning an empty bsoncxx::document.
+    // Utility class supporting the convenience of {} meaning an empty bsoncxx::v_noabi::document.
     //
     // Users may not use this class directly.
     //
     // In places where driver methods take this class as a parameter, passing {} will
-    // translate to a default-constructed bsoncxx::document::view_or_value,
+    // translate to a default-constructed bsoncxx::v_noabi::document::view_or_value,
     // regardless of other overloads taking other default-constructible types
     // for that parameter. This class avoids compiler ambiguity with such overloads.
     //
@@ -60,7 +60,8 @@ class update_many {
     /// @param update
     ///   Document representing the modifications to be applied to matching documents.
     ///
-    update_many(bsoncxx::document::view_or_value filter, bsoncxx::document::view_or_value update);
+    update_many(bsoncxx::v_noabi::document::view_or_value filter,
+                bsoncxx::v_noabi::document::view_or_value update);
 
     ///
     /// Constructs an update operation that will modify all documents matching the filter.
@@ -70,7 +71,7 @@ class update_many {
     /// @param update
     ///   Pipeline representing the modifications to be applied to matching documents.
     ///
-    update_many(bsoncxx::document::view_or_value filter, const pipeline& update);
+    update_many(bsoncxx::v_noabi::document::view_or_value filter, const pipeline& update);
 
     ///
     /// Constructs an update operation that will modify all documents matching the filter.
@@ -80,7 +81,7 @@ class update_many {
     /// @param update
     ///   Supports the empty update {}.
     ///
-    update_many(bsoncxx::document::view_or_value filter,
+    update_many(bsoncxx::v_noabi::document::view_or_value filter,
                 std::initializer_list<_empty_doc_tag> update);
 
     ///
@@ -92,14 +93,14 @@ class update_many {
     ///
     /// @return The filter to be used for the update operation.
     ///
-    const bsoncxx::document::view_or_value& filter() const;
+    const bsoncxx::v_noabi::document::view_or_value& filter() const;
 
     ///
     /// Gets the update document.
     ///
     /// @return The modifications to be applied as part of the update.
     ///
-    const bsoncxx::document::view_or_value& update() const;
+    const bsoncxx::v_noabi::document::view_or_value& update() const;
 
     ///
     /// Sets the collation for this update operation.
@@ -110,7 +111,7 @@ class update_many {
     /// @see
     ///   https://www.mongodb.com/docs/manual/reference/collation/
     ///
-    update_many& collation(bsoncxx::document::view_or_value collation);
+    update_many& collation(bsoncxx::v_noabi::document::view_or_value collation);
 
     ///
     /// Gets the collation option for this update operation.
@@ -121,7 +122,7 @@ class update_many {
     /// @see
     ///   https://www.mongodb.com/docs/manual/reference/collation/
     ///
-    const stdx::optional<bsoncxx::document::view_or_value>& collation() const;
+    const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& collation() const;
 
     /// Sets the index to use for this operation.
     ///
@@ -174,7 +175,7 @@ class update_many {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/update/
     ///
-    update_many& array_filters(bsoncxx::array::view_or_value array_filters);
+    update_many& array_filters(bsoncxx::v_noabi::array::view_or_value array_filters);
 
     ///
     /// Get array filters for this operation.
@@ -184,14 +185,14 @@ class update_many {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/update/
     ///
-    const stdx::optional<bsoncxx::array::view_or_value>& array_filters() const;
+    const stdx::optional<bsoncxx::v_noabi::array::view_or_value>& array_filters() const;
 
    private:
-    bsoncxx::document::view_or_value _filter;
-    bsoncxx::document::view_or_value _update;
+    bsoncxx::v_noabi::document::view_or_value _filter;
+    bsoncxx::v_noabi::document::view_or_value _update;
 
-    stdx::optional<bsoncxx::document::view_or_value> _collation;
-    stdx::optional<bsoncxx::array::view_or_value> _array_filters;
+    stdx::optional<bsoncxx::v_noabi::document::view_or_value> _collation;
+    stdx::optional<bsoncxx::v_noabi::array::view_or_value> _array_filters;
     stdx::optional<bool> _upsert;
     stdx::optional<mongocxx::v_noabi::hint> _hint;
 };

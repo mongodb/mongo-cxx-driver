@@ -27,7 +27,7 @@ update& update::bypass_document_validation(bool bypass_document_validation) {
     return *this;
 }
 
-update& update::collation(bsoncxx::document::view_or_value collation) {
+update& update::collation(bsoncxx::v_noabi::document::view_or_value collation) {
     _collation = std::move(collation);
     return *this;
 }
@@ -37,12 +37,12 @@ update& update::hint(mongocxx::v_noabi::hint index_hint) {
     return *this;
 }
 
-update& update::let(bsoncxx::document::view_or_value let) {
+update& update::let(bsoncxx::v_noabi::document::view_or_value let) {
     _let = let;
     return *this;
 }
 
-update& update::comment(bsoncxx::types::bson_value::view_or_value comment) {
+update& update::comment(bsoncxx::v_noabi::types::bson_value::view_or_value comment) {
     _comment = std::move(comment);
     return *this;
 }
@@ -61,7 +61,7 @@ const stdx::optional<bool>& update::bypass_document_validation() const {
     return _bypass_document_validation;
 }
 
-const stdx::optional<bsoncxx::document::view_or_value>& update::collation() const {
+const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& update::collation() const {
     return _collation;
 }
 
@@ -69,11 +69,11 @@ const stdx::optional<mongocxx::v_noabi::hint>& update::hint() const {
     return _hint;
 }
 
-const stdx::optional<bsoncxx::document::view_or_value> update::let() const {
+const stdx::optional<bsoncxx::v_noabi::document::view_or_value> update::let() const {
     return _let;
 }
 
-const stdx::optional<bsoncxx::types::bson_value::view_or_value> update::comment() const {
+const stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> update::comment() const {
     return _comment;
 }
 
@@ -85,12 +85,12 @@ const stdx::optional<mongocxx::v_noabi::write_concern>& update::write_concern() 
     return _write_concern;
 }
 
-update& update::array_filters(bsoncxx::array::view_or_value array_filters) {
+update& update::array_filters(bsoncxx::v_noabi::array::view_or_value array_filters) {
     _array_filters = std::move(array_filters);
     return *this;
 }
 
-const stdx::optional<bsoncxx::array::view_or_value>& update::array_filters() const {
+const stdx::optional<bsoncxx::v_noabi::array::view_or_value>& update::array_filters() const {
     return _array_filters;
 }
 

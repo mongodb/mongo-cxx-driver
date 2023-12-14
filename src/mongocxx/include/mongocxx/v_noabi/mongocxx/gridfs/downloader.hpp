@@ -130,7 +130,7 @@ class downloader {
     /// @return
     ///    A view to the files collection document of the file being downloaded.
     ///
-    bsoncxx::document::view files_document() const;
+    bsoncxx::v_noabi::document::view files_document() const;
 
    private:
     friend ::mongocxx::v_noabi::gridfs::bucket;
@@ -158,7 +158,7 @@ class downloader {
                                 chunks_and_bytes_offset start,
                                 std::int32_t chunk_size,
                                 std::int64_t file_len,
-                                bsoncxx::document::value files_doc);
+                                bsoncxx::v_noabi::document::value files_doc);
 
     MONGOCXX_PRIVATE void fetch_chunk();
 

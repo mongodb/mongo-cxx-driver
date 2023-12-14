@@ -41,74 +41,76 @@ cursor index_view::list(const client_session& session) {
     return _get_impl().list(&session);
 }
 
-bsoncxx::stdx::optional<std::string> index_view::create_one(
-    const bsoncxx::document::view_or_value& keys,
-    const bsoncxx::document::view_or_value& index_options,
+bsoncxx::v_noabi::stdx::optional<std::string> index_view::create_one(
+    const bsoncxx::v_noabi::document::view_or_value& keys,
+    const bsoncxx::v_noabi::document::view_or_value& index_options,
     const options::index_view& options) {
     return create_one(index_model{keys, index_options}, options);
 }
 
-bsoncxx::stdx::optional<std::string> index_view::create_one(
+bsoncxx::v_noabi::stdx::optional<std::string> index_view::create_one(
     const client_session& session,
-    const bsoncxx::document::view_or_value& keys,
-    const bsoncxx::document::view_or_value& index_options,
+    const bsoncxx::v_noabi::document::view_or_value& keys,
+    const bsoncxx::v_noabi::document::view_or_value& index_options,
     const options::index_view& options) {
     return create_one(session, index_model{keys, index_options}, options);
 }
 
-bsoncxx::stdx::optional<std::string> index_view::create_one(const index_model& model,
-                                                            const options::index_view& options) {
+bsoncxx::v_noabi::stdx::optional<std::string> index_view::create_one(
+    const index_model& model, const options::index_view& options) {
     return _get_impl().create_one(nullptr, model, options);
 }
 
-bsoncxx::stdx::optional<std::string> index_view::create_one(const client_session& session,
-                                                            const index_model& model,
-                                                            const options::index_view& options) {
+bsoncxx::v_noabi::stdx::optional<std::string> index_view::create_one(
+    const client_session& session, const index_model& model, const options::index_view& options) {
     return _get_impl().create_one(&session, model, options);
 }
 
-bsoncxx::document::value index_view::create_many(const std::vector<index_model>& indexes,
-                                                 const options::index_view& options) {
+bsoncxx::v_noabi::document::value index_view::create_many(const std::vector<index_model>& indexes,
+                                                          const options::index_view& options) {
     return _get_impl().create_many(nullptr, indexes, options);
 }
 
-bsoncxx::document::value index_view::create_many(const client_session& session,
-                                                 const std::vector<index_model>& indexes,
-                                                 const options::index_view& options) {
+bsoncxx::v_noabi::document::value index_view::create_many(const client_session& session,
+                                                          const std::vector<index_model>& indexes,
+                                                          const options::index_view& options) {
     return _get_impl().create_many(&session, indexes, options);
 }
 
-void index_view::drop_one(bsoncxx::stdx::string_view name, const options::index_view& options) {
+void index_view::drop_one(bsoncxx::v_noabi::stdx::string_view name,
+                          const options::index_view& options) {
     return _get_impl().drop_one(nullptr, name, options);
 }
 
 void index_view::drop_one(const client_session& session,
-                          bsoncxx::stdx::string_view name,
+                          bsoncxx::v_noabi::stdx::string_view name,
                           const options::index_view& options) {
     return _get_impl().drop_one(&session, name, options);
 }
 
-void index_view::drop_one(const bsoncxx::document::view_or_value& keys,
-                          const bsoncxx::document::view_or_value& index_options,
+void index_view::drop_one(const bsoncxx::v_noabi::document::view_or_value& keys,
+                          const bsoncxx::v_noabi::document::view_or_value& index_options,
                           const options::index_view& options) {
-    bsoncxx::document::view opts_view = index_options.view();
+    bsoncxx::v_noabi::document::view opts_view = index_options.view();
 
     if (opts_view["name"]) {
-        drop_one(bsoncxx::string::to_string(opts_view["name"].get_string().value), options);
+        drop_one(bsoncxx::v_noabi::string::to_string(opts_view["name"].get_string().value),
+                 options);
     } else {
         drop_one(_get_impl().get_index_name_from_keys(keys), options);
     }
 }
 
 void index_view::drop_one(const client_session& session,
-                          const bsoncxx::document::view_or_value& keys,
-                          const bsoncxx::document::view_or_value& index_options,
+                          const bsoncxx::v_noabi::document::view_or_value& keys,
+                          const bsoncxx::v_noabi::document::view_or_value& index_options,
                           const options::index_view& options) {
-    bsoncxx::document::view opts_view = index_options.view();
+    bsoncxx::v_noabi::document::view opts_view = index_options.view();
 
     if (opts_view["name"]) {
-        drop_one(
-            session, bsoncxx::string::to_string(opts_view["name"].get_string().value), options);
+        drop_one(session,
+                 bsoncxx::v_noabi::string::to_string(opts_view["name"].get_string().value),
+                 options);
     } else {
         drop_one(session, _get_impl().get_index_name_from_keys(keys), options);
     }

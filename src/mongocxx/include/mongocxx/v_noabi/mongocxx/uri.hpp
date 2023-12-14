@@ -66,7 +66,7 @@ class uri {
     /// @param uri_string
     ///   String representing a MongoDB connection string URI, defaults to k_default_uri.
     ///
-    uri(bsoncxx::string::view_or_value uri_string = k_default_uri);
+    uri(bsoncxx::v_noabi::string::view_or_value uri_string = k_default_uri);
 
     ///
     /// Move constructs a uri.
@@ -120,7 +120,7 @@ class uri {
     ///
     /// @return A document view containing other options.
     ///
-    bsoncxx::document::view options() const;
+    bsoncxx::v_noabi::document::view options() const;
 
     ///
     /// Returns the password from the uri.
@@ -197,16 +197,16 @@ class uri {
     ///
     /// Returns the value of the option "authMechanismProperties" if present in the uri.
     ///
-    /// @return An optional bsoncxx::document::view
+    /// @return An optional bsoncxx::v_noabi::document::view
     ///
-    stdx::optional<bsoncxx::document::view> auth_mechanism_properties() const;
+    stdx::optional<bsoncxx::v_noabi::document::view> auth_mechanism_properties() const;
 
     ///
     /// Returns the value of the option credentials if present in the uri.
     ///
-    /// @return An optional bsoncxx::document::view
+    /// @return An optional bsoncxx::v_noabi::document::view
     ///
-    stdx::optional<bsoncxx::document::view> credentials();
+    stdx::optional<bsoncxx::v_noabi::document::view> credentials();
 
     ///
     /// Returns the value of the option "srvMaxHosts" if present in the uri.

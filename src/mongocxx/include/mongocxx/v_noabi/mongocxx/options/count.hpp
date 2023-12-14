@@ -49,7 +49,7 @@ class count {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    count& collation(bsoncxx::document::view_or_value collation);
+    count& collation(bsoncxx::v_noabi::document::view_or_value collation);
 
     ///
     /// Retrieves the current collation for this operation.
@@ -59,7 +59,7 @@ class count {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    const stdx::optional<bsoncxx::document::view_or_value>& collation() const;
+    const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& collation() const;
 
     ///
     /// Sets the index to use for this operation.
@@ -96,7 +96,7 @@ class count {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    count& comment(bsoncxx::types::bson_value::view_or_value comment);
+    count& comment(bsoncxx::v_noabi::types::bson_value::view_or_value comment);
 
     ///
     /// Gets the current value of the comment option.
@@ -105,7 +105,7 @@ class count {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    const stdx::optional<bsoncxx::types::bson_value::view_or_value>& comment() const;
+    const stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>& comment() const;
 
     ///
     /// Sets the maximum number of documents to count.
@@ -200,9 +200,9 @@ class count {
     const stdx::optional<mongocxx::v_noabi::read_preference>& read_preference() const;
 
    private:
-    stdx::optional<bsoncxx::document::view_or_value> _collation;
+    stdx::optional<bsoncxx::v_noabi::document::view_or_value> _collation;
     stdx::optional<mongocxx::v_noabi::hint> _hint;
-    stdx::optional<bsoncxx::types::bson_value::view_or_value> _comment;
+    stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> _comment;
     stdx::optional<std::int64_t> _limit;
     stdx::optional<std::chrono::milliseconds> _max_time;
     stdx::optional<std::int64_t> _skip;

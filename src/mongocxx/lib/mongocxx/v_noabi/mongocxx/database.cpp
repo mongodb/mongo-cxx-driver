@@ -36,9 +36,9 @@
 
 #include <mongocxx/config/private/prelude.hh>
 
-using bsoncxx::builder::concatenate;
-using bsoncxx::builder::basic::kvp;
-using bsoncxx::builder::basic::make_document;
+using bsoncxx::v_noabi::builder::concatenate;
+using bsoncxx::v_noabi::builder::basic::kvp;
+using bsoncxx::v_noabi::builder::basic::make_document;
 
 namespace mongocxx {
 namespace v_noabi {
@@ -78,7 +78,8 @@ database& database::operator=(database&&) noexcept = default;
 
 database::~database() = default;
 
-database::database(const mongocxx::v_noabi::client& client, bsoncxx::string::view_or_value name)
+database::database(const mongocxx::v_noabi::client& client,
+                   bsoncxx::v_noabi::string::view_or_value name)
     : _impl(stdx::make_unique<impl>(
           libmongoc::client_get_database(client._get_impl().client_t, name.terminated().data()),
           &client._get_impl(),
@@ -109,14 +110,14 @@ database::operator bool() const noexcept {
 cursor database::_aggregate(const client_session* session,
                             const pipeline& pipeline,
                             const options::aggregate& options) {
-    scoped_bson_t stages(bsoncxx::document::view(pipeline._impl->view_array()));
+    scoped_bson_t stages(bsoncxx::v_noabi::document::view(pipeline._impl->view_array()));
 
-    bsoncxx::builder::basic::document b;
+    bsoncxx::v_noabi::builder::basic::document b;
 
     options.append(b);
 
     if (session) {
-        b.append(bsoncxx::builder::concatenate_doc{session->_get_impl().to_document()});
+        b.append(bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
     }
 
     scoped_bson_t options_bson(b.view());
@@ -142,13 +143,13 @@ cursor database::aggregate(const client_session& session,
 }
 
 cursor database::_list_collections(const client_session* session,
-                                   bsoncxx::document::view_or_value filter) {
-    bsoncxx::builder::basic::document options_builder;
+                                   bsoncxx::v_noabi::document::view_or_value filter) {
+    bsoncxx::v_noabi::builder::basic::document options_builder;
     options_builder.append(kvp("filter", filter));
 
     if (session) {
         options_builder.append(
-            bsoncxx::builder::concatenate_doc{session->_get_impl().to_document()});
+            bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
     }
 
     scoped_bson_t options_bson(options_builder.extract());
@@ -157,23 +158,23 @@ cursor database::_list_collections(const client_session* session,
                                                           options_bson.bson());
 }
 
-cursor database::list_collections(bsoncxx::document::view_or_value filter) {
+cursor database::list_collections(bsoncxx::v_noabi::document::view_or_value filter) {
     return _list_collections(nullptr, filter);
 }
 
 cursor database::list_collections(const client_session& session,
-                                  bsoncxx::document::view_or_value filter) {
+                                  bsoncxx::v_noabi::document::view_or_value filter) {
     return _list_collections(&session, filter);
 }
 
-std::vector<std::string> database::_list_collection_names(const client_session* session,
-                                                          bsoncxx::document::view_or_value filter) {
-    bsoncxx::builder::basic::document options_builder;
+std::vector<std::string> database::_list_collection_names(
+    const client_session* session, bsoncxx::v_noabi::document::view_or_value filter) {
+    bsoncxx::v_noabi::builder::basic::document options_builder;
     options_builder.append(kvp("filter", filter));
 
     if (session) {
         options_builder.append(
-            bsoncxx::builder::concatenate_doc{session->_get_impl().to_document()});
+            bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
     }
 
     scoped_bson_t options_bson(options_builder.extract());
@@ -194,12 +195,13 @@ std::vector<std::string> database::_list_collection_names(const client_session* 
     return _names;
 }
 
-std::vector<std::string> database::list_collection_names(bsoncxx::document::view_or_value filter) {
+std::vector<std::string> database::list_collection_names(
+    bsoncxx::v_noabi::document::view_or_value filter) {
     return _list_collection_names(nullptr, filter);
 }
 
-std::vector<std::string> database::list_collection_names(const client_session& session,
-                                                         bsoncxx::document::view_or_value filter) {
+std::vector<std::string> database::list_collection_names(
+    const client_session& session, bsoncxx::v_noabi::document::view_or_value filter) {
     return _list_collection_names(&session, filter);
 }
 
@@ -207,16 +209,16 @@ stdx::string_view database::name() const {
     return _get_impl().name;
 }
 
-bsoncxx::document::value database::_run_command(const client_session* session,
-                                                bsoncxx::document::view_or_value command) {
+bsoncxx::v_noabi::document::value database::_run_command(
+    const client_session* session, bsoncxx::v_noabi::document::view_or_value command) {
     libbson::scoped_bson_t command_bson{command};
     libbson::scoped_bson_t reply_bson;
     bson_error_t error;
 
-    bsoncxx::builder::basic::document options_builder;
+    bsoncxx::v_noabi::builder::basic::document options_builder;
     if (session) {
         options_builder.append(
-            bsoncxx::builder::concatenate_doc{session->_get_impl().to_document()});
+            bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
     }
 
     scoped_bson_t options_bson(options_builder.extract());
@@ -234,17 +236,18 @@ bsoncxx::document::value database::_run_command(const client_session* session,
     return reply_bson.steal();
 }
 
-bsoncxx::document::value database::run_command(bsoncxx::document::view_or_value command) {
+bsoncxx::v_noabi::document::value database::run_command(
+    bsoncxx::v_noabi::document::view_or_value command) {
     return _run_command(nullptr, command);
 }
 
-bsoncxx::document::value database::run_command(const client_session& session,
-                                               bsoncxx::document::view_or_value command) {
+bsoncxx::v_noabi::document::value database::run_command(
+    const client_session& session, bsoncxx::v_noabi::document::view_or_value command) {
     return _run_command(&session, command);
 }
 
-bsoncxx::document::value database::run_command(bsoncxx::document::view_or_value command,
-                                               uint32_t server_id) {
+bsoncxx::v_noabi::document::value database::run_command(
+    bsoncxx::v_noabi::document::view_or_value command, uint32_t server_id) {
     libbson::scoped_bson_t command_bson{command};
     libbson::scoped_bson_t reply_bson;
     bson_error_t error;
@@ -268,12 +271,12 @@ bsoncxx::document::value database::run_command(bsoncxx::document::view_or_value 
 collection database::_create_collection(
     const client_session* session,
     stdx::string_view name,
-    bsoncxx::document::view_or_value collection_options,
+    bsoncxx::v_noabi::document::view_or_value collection_options,
     const stdx::optional<mongocxx::v_noabi::write_concern>& write_concern) {
-    bsoncxx::builder::basic::document options_builder;
+    bsoncxx::v_noabi::builder::basic::document options_builder;
     bson_error_t error;
 
-    options_builder.append(bsoncxx::builder::concatenate_doc{collection_options});
+    options_builder.append(bsoncxx::v_noabi::builder::concatenate_doc{collection_options});
 
     if (write_concern) {
         options_builder.append(kvp("writeConcern", write_concern->to_document()));
@@ -281,12 +284,15 @@ collection database::_create_collection(
 
     if (session) {
         options_builder.append(
-            bsoncxx::builder::concatenate_doc{session->_get_impl().to_document()});
+            bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
     }
 
     libbson::scoped_bson_t opts_bson{options_builder.view()};
-    auto result = libmongoc::database_create_collection(
-        _get_impl().database_t, bsoncxx::string::to_string(name).c_str(), opts_bson.bson(), &error);
+    auto result =
+        libmongoc::database_create_collection(_get_impl().database_t,
+                                              bsoncxx::v_noabi::string::to_string(name).c_str(),
+                                              opts_bson.bson(),
+                                              &error);
 
     if (!result) {
         throw_exception<operation_exception>(error);
@@ -297,10 +303,10 @@ collection database::_create_collection(
 
 collection database::_create_collection_deprecated(
     const client_session* session,
-    bsoncxx::string::view_or_value name,
+    bsoncxx::v_noabi::string::view_or_value name,
     const options::create_collection_deprecated& collection_options,
     const stdx::optional<mongocxx::v_noabi::write_concern>& write_concern) {
-    bsoncxx::builder::basic::document options_builder;
+    bsoncxx::v_noabi::builder::basic::document options_builder;
 
     if (collection_options.capped()) {
         options_builder.append(kvp("capped", *collection_options.capped()));
@@ -371,7 +377,7 @@ collection database::_create_collection_deprecated(
 
 mongocxx::v_noabi::collection database::create_collection(
     stdx::string_view name,
-    bsoncxx::document::view_or_value collection_options,
+    bsoncxx::v_noabi::document::view_or_value collection_options,
     const stdx::optional<mongocxx::v_noabi::write_concern>& write_concern) {
     return _create_collection(nullptr, name, collection_options, write_concern);
 }
@@ -379,13 +385,13 @@ mongocxx::v_noabi::collection database::create_collection(
 mongocxx::v_noabi::collection database::create_collection(
     const client_session& session,
     stdx::string_view name,
-    bsoncxx::document::view_or_value collection_options,
+    bsoncxx::v_noabi::document::view_or_value collection_options,
     const stdx::optional<mongocxx::v_noabi::write_concern>& write_concern) {
     return _create_collection(&session, name, collection_options, write_concern);
 }
 
 mongocxx::v_noabi::collection database::create_collection_deprecated(
-    bsoncxx::string::view_or_value name,
+    bsoncxx::v_noabi::string::view_or_value name,
     const options::create_collection_deprecated& collection_options,
     const stdx::optional<mongocxx::v_noabi::write_concern>& write_concern) {
     return _create_collection_deprecated(nullptr, name, collection_options, write_concern);
@@ -393,7 +399,7 @@ mongocxx::v_noabi::collection database::create_collection_deprecated(
 
 mongocxx::v_noabi::collection database::create_collection_deprecated(
     const client_session& session,
-    bsoncxx::string::view_or_value name,
+    bsoncxx::v_noabi::string::view_or_value name,
     const options::create_collection_deprecated& collection_options,
     const stdx::optional<mongocxx::v_noabi::write_concern>& write_concern) {
     return _create_collection_deprecated(&session, name, collection_options, write_concern);
@@ -401,16 +407,17 @@ mongocxx::v_noabi::collection database::create_collection_deprecated(
 
 void database::_drop(
     const client_session* session,
-    const bsoncxx::stdx::optional<mongocxx::v_noabi::write_concern>& write_concern) {
+    const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>& write_concern) {
     bson_error_t error;
 
-    bsoncxx::builder::basic::document opts_doc;
+    bsoncxx::v_noabi::builder::basic::document opts_doc;
     if (write_concern) {
         opts_doc.append(kvp("writeConcern", write_concern->to_document()));
     }
 
     if (session) {
-        opts_doc.append(bsoncxx::builder::concatenate_doc{session->_get_impl().to_document()});
+        opts_doc.append(
+            bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
     }
 
     libbson::scoped_bson_t opts_bson{opts_doc.view()};
@@ -421,13 +428,13 @@ void database::_drop(
 }
 
 void database::drop(
-    const bsoncxx::stdx::optional<mongocxx::v_noabi::write_concern>& write_concern) {
+    const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>& write_concern) {
     return _drop(nullptr, write_concern);
 }
 
 void database::drop(
     const client_session& session,
-    const bsoncxx::stdx::optional<mongocxx::v_noabi::write_concern>& write_concern) {
+    const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>& write_concern) {
     return _drop(&session, write_concern);
 }
 
@@ -444,7 +451,7 @@ void database::read_preference(mongocxx::v_noabi::read_preference rp) {
     libmongoc::database_set_read_prefs(_get_impl().database_t, rp._impl->read_preference_t);
 }
 
-bool database::has_collection(bsoncxx::string::view_or_value name) const {
+bool database::has_collection(bsoncxx::v_noabi::string::view_or_value name) const {
     bson_error_t error;
     auto result = libmongoc::database_has_collection(
         _get_impl().database_t, name.terminated().data(), &error);
@@ -472,7 +479,7 @@ mongocxx::v_noabi::write_concern database::write_concern() const {
     return wc;
 }
 
-collection database::collection(bsoncxx::string::view_or_value name) const {
+collection database::collection(bsoncxx::v_noabi::string::view_or_value name) const {
     return mongocxx::v_noabi::collection(*this, std::move(name));
 }
 
@@ -502,15 +509,15 @@ change_stream database::watch(const client_session& session,
 change_stream database::_watch(const client_session* session,
                                const pipeline& pipe,
                                const options::change_stream& options) {
-    bsoncxx::builder::basic::document container;
+    bsoncxx::v_noabi::builder::basic::document container;
     container.append(kvp("pipeline", pipe._impl->view_array()));
     scoped_bson_t pipeline_bson{container.view()};
 
-    bsoncxx::builder::basic::document options_builder;
-    options_builder.append(bsoncxx::builder::concatenate(options.as_bson()));
+    bsoncxx::v_noabi::builder::basic::document options_builder;
+    options_builder.append(bsoncxx::v_noabi::builder::concatenate(options.as_bson()));
     if (session) {
         options_builder.append(
-            bsoncxx::builder::concatenate_doc{session->_get_impl().to_document()});
+            bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
     }
 
     scoped_bson_t options_bson{options_builder.extract()};

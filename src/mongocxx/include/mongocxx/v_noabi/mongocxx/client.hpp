@@ -196,8 +196,9 @@ class client {
     ///
     /// @return The database
     ///
-    mongocxx::v_noabi::database database(bsoncxx::string::view_or_value name) const&;
-    mongocxx::v_noabi::database database(bsoncxx::string::view_or_value name) const&& = delete;
+    mongocxx::v_noabi::database database(bsoncxx::v_noabi::string::view_or_value name) const&;
+    mongocxx::v_noabi::database database(bsoncxx::v_noabi::string::view_or_value name) const&& =
+        delete;
 
     ///
     /// Allows the syntax @c client["db_name"] as a convenient shorthand for the client::database()
@@ -211,9 +212,9 @@ class client {
     /// @return Client side representation of a server side database
     ///
     MONGOCXX_INLINE mongocxx::v_noabi::database operator[](
-        bsoncxx::string::view_or_value name) const&;
+        bsoncxx::v_noabi::string::view_or_value name) const&;
     MONGOCXX_INLINE mongocxx::v_noabi::database operator[](
-        bsoncxx::string::view_or_value name) const&& = delete;
+        bsoncxx::v_noabi::string::view_or_value name) const&& = delete;
 
     ///
     /// @{
@@ -269,7 +270,7 @@ class client {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/listDatabases
     ///
-    cursor list_databases(const bsoncxx::document::view_or_value opts) const;
+    cursor list_databases(const bsoncxx::v_noabi::document::view_or_value opts) const;
 
     ///
     /// Enumerates the databases in the client.
@@ -292,7 +293,7 @@ class client {
     /// @see https://www.mongodb.com/docs/manual/reference/command/listDatabases
     ///
     cursor list_databases(const client_session& session,
-                          const bsoncxx::document::view_or_value opts) const;
+                          const bsoncxx::v_noabi::document::view_or_value opts) const;
 
     ///
     /// Queries the MongoDB server for a list of known databases.
@@ -308,7 +309,7 @@ class client {
     /// @see https://www.mongodb.com/docs/manual/reference/command/listDatabases
     ///
     std::vector<std::string> list_database_names(
-        const bsoncxx::document::view_or_value filter = {}) const;
+        const bsoncxx::v_noabi::document::view_or_value filter = {}) const;
 
     ///
     /// Queries the MongoDB server for a list of known databases.
@@ -327,7 +328,8 @@ class client {
     /// @see https://www.mongodb.com/docs/manual/reference/command/listDatabases
     ///
     std::vector<std::string> list_database_names(
-        const client_session& session, const bsoncxx::document::view_or_value filter = {}) const;
+        const client_session& session,
+        const bsoncxx::v_noabi::document::view_or_value filter = {}) const;
 
     ///
     /// @}
@@ -455,7 +457,7 @@ class client {
 };
 
 MONGOCXX_INLINE mongocxx::v_noabi::database client::operator[](
-    bsoncxx::string::view_or_value name) const& {
+    bsoncxx::v_noabi::string::view_or_value name) const& {
     return database(name);
 }
 

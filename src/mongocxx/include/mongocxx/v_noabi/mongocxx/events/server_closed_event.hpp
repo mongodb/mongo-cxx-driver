@@ -48,7 +48,7 @@ class server_closed_event {
     ///
     /// @return The host name.
     ///
-    bsoncxx::stdx::string_view host() const;
+    bsoncxx::v_noabi::stdx::string_view host() const;
 
     ///
     /// Returns the server port.
@@ -63,7 +63,7 @@ class server_closed_event {
     ///
     /// @return The id.
     ///
-    const bsoncxx::oid topology_id() const;
+    const bsoncxx::v_noabi::oid topology_id() const;
 
    private:
     const void* _event;

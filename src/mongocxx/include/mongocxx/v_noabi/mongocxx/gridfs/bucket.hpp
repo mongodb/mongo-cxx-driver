@@ -197,7 +197,7 @@ class bucket {
     /// @throws mongocxx::v_noabi::operation_exception if an error occurs when building GridFS
     /// indexes.
     ///
-    uploader open_upload_stream_with_id(bsoncxx::types::bson_value::view id,
+    uploader open_upload_stream_with_id(bsoncxx::v_noabi::types::bson_value::view id,
                                         stdx::string_view filename,
                                         const options::gridfs::upload& options = {});
 
@@ -234,7 +234,7 @@ class bucket {
     /// indexes.
     ///
     uploader open_upload_stream_with_id(const client_session& session,
-                                        bsoncxx::types::bson_value::view id,
+                                        bsoncxx::v_noabi::types::bson_value::view id,
                                         stdx::string_view filename,
                                         const options::gridfs::upload& options = {});
     ///
@@ -383,7 +383,7 @@ class bucket {
     /// @throws mongocxx::v_noabi::operation_exception if an error occurs when building GridFS
     /// indexes.
     ///
-    void upload_from_stream_with_id(bsoncxx::types::bson_value::view id,
+    void upload_from_stream_with_id(bsoncxx::v_noabi::types::bson_value::view id,
                                     stdx::string_view filename,
                                     std::istream* source,
                                     const options::gridfs::upload& options = {});
@@ -433,7 +433,7 @@ class bucket {
     /// indexes.
     ///
     void upload_from_stream_with_id(const client_session& session,
-                                    bsoncxx::types::bson_value::view id,
+                                    bsoncxx::v_noabi::types::bson_value::view id,
                                     stdx::string_view filename,
                                     std::istream* source,
                                     const options::gridfs::upload& options = {});
@@ -458,7 +458,7 @@ class bucket {
     /// @throws mongocxx::v_noabi::query_exception
     ///   if an error occurs when reading from the files collection for this bucket.
     ///
-    downloader open_download_stream(bsoncxx::types::bson_value::view id);
+    downloader open_download_stream(bsoncxx::v_noabi::types::bson_value::view id);
 
     ///
     /// Opens a gridfs::downloader to read a GridFS file.
@@ -480,7 +480,7 @@ class bucket {
     ///   if an error occurs when reading from the files collection for this bucket.
     ///
     downloader open_download_stream(const client_session& session,
-                                    bsoncxx::types::bson_value::view id);
+                                    bsoncxx::v_noabi::types::bson_value::view id);
     ///
     /// @}
     ///
@@ -507,15 +507,17 @@ class bucket {
     ///   `badbit`, any exception thrown during execution of `destination::write()` will be
     ///   re-thrown.
     ///
-    void download_to_stream(bsoncxx::types::bson_value::view id, std::ostream* destination);
+    void download_to_stream(bsoncxx::v_noabi::types::bson_value::view id,
+                            std::ostream* destination);
 
     ///
-    /// @copydoc download_to_stream(bsoncxx::types::bson_value::view id, std::ostream* destination)
+    /// @copydoc download_to_stream(bsoncxx::v_noabi::types::bson_value::view id, std::ostream*
+    /// destination)
     ///
     /// @param start The byte offset to the beginning of content to download.
     /// @param end The byte offset to the end of content to download.
     ///
-    void download_to_stream(bsoncxx::types::bson_value::view id,
+    void download_to_stream(bsoncxx::v_noabi::types::bson_value::view id,
                             std::ostream* destination,
                             std::size_t start,
                             std::size_t end);
@@ -544,19 +546,19 @@ class bucket {
     ///   re-thrown.
     ///
     void download_to_stream(const client_session& session,
-                            bsoncxx::types::bson_value::view id,
+                            bsoncxx::v_noabi::types::bson_value::view id,
                             std::ostream* destination);
 
     // clang-format off
     ///
-    /// @copydoc download_to_stream(const client_session& session, bsoncxx::types::bson_value::view id, std::ostream* destination)
+    /// @copydoc download_to_stream(const client_session& session, bsoncxx::v_noabi::types::bson_value::view id, std::ostream* destination)
     ///
     /// @param start The byte offset to the beginning of content to download.
     /// @param end The byte offset to the end of content to download.
     ///
     // clang-format on
     void download_to_stream(const client_session& session,
-                            bsoncxx::types::bson_value::view id,
+                            bsoncxx::v_noabi::types::bson_value::view id,
                             std::ostream* destination,
                             std::size_t start,
                             std::size_t end);
@@ -577,7 +579,7 @@ class bucket {
     /// @throws mongocxx::v_noabi::bulk_write_exception
     ///   if an error occurs when removing file data or chunk data from the database.
     ///
-    void delete_file(bsoncxx::types::bson_value::view id);
+    void delete_file(bsoncxx::v_noabi::types::bson_value::view id);
 
     ///
     /// Deletes a GridFS file from the bucket.
@@ -593,7 +595,7 @@ class bucket {
     /// @throws mongocxx::v_noabi::bulk_write_exception
     ///   if an error occurs when removing file data or chunk data from the database.
     ///
-    void delete_file(const client_session& session, bsoncxx::types::bson_value::view id);
+    void delete_file(const client_session& session, bsoncxx::v_noabi::types::bson_value::view id);
     ///
     /// @}
     ///
@@ -618,7 +620,8 @@ class bucket {
     ///
     /// @see mongocxx::v_noabi::collection::find.
     ///
-    cursor find(bsoncxx::document::view_or_value filter, const options::find& options = {});
+    cursor find(bsoncxx::v_noabi::document::view_or_value filter,
+                const options::find& options = {});
 
     ///
     /// Finds the documents in the files collection of the bucket which match the provided filter.
@@ -643,7 +646,7 @@ class bucket {
     /// @see mongocxx::v_noabi::collection::find.
     ///
     cursor find(const client_session& session,
-                bsoncxx::document::view_or_value filter,
+                bsoncxx::v_noabi::document::view_or_value filter,
                 const options::find& options = {});
     ///
     /// @}
@@ -665,30 +668,31 @@ class bucket {
 
     MONGOCXX_PRIVATE void create_indexes_if_nonexistent(const client_session* session);
 
-    MONGOCXX_PRIVATE uploader _open_upload_stream_with_id(const client_session* session,
-                                                          bsoncxx::types::bson_value::view id,
-                                                          stdx::string_view filename,
-                                                          const options::gridfs::upload& options);
+    MONGOCXX_PRIVATE uploader
+    _open_upload_stream_with_id(const client_session* session,
+                                bsoncxx::v_noabi::types::bson_value::view id,
+                                stdx::string_view filename,
+                                const options::gridfs::upload& options);
 
     MONGOCXX_PRIVATE void _upload_from_stream_with_id(const client_session* session,
-                                                      bsoncxx::types::bson_value::view id,
+                                                      bsoncxx::v_noabi::types::bson_value::view id,
                                                       stdx::string_view filename,
                                                       std::istream* source,
                                                       const options::gridfs::upload& options);
 
     MONGOCXX_PRIVATE downloader _open_download_stream(const client_session* session,
-                                                      bsoncxx::types::bson_value::view id,
+                                                      bsoncxx::v_noabi::types::bson_value::view id,
                                                       stdx::optional<std::size_t> start,
                                                       stdx::optional<std::size_t> end);
 
     MONGOCXX_PRIVATE void _download_to_stream(const client_session* session,
-                                              bsoncxx::types::bson_value::view id,
+                                              bsoncxx::v_noabi::types::bson_value::view id,
                                               std::ostream* destination,
                                               stdx::optional<std::size_t> start,
                                               stdx::optional<std::size_t> end);
 
     MONGOCXX_PRIVATE void _delete_file(const client_session* session,
-                                       bsoncxx::types::bson_value::view id);
+                                       bsoncxx::v_noabi::types::bson_value::view id);
 
     class MONGOCXX_PRIVATE impl;
 

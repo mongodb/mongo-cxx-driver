@@ -79,7 +79,7 @@ void read_concern::acknowledge_string(stdx::string_view rc_string) {
     // libmongoc uses a NULL level to mean "use the server's default read_concern."
     libmongoc::read_concern_set_level(
         _impl->read_concern_t,
-        rc_string.empty() ? NULL : bsoncxx::string::to_string(rc_string).data());
+        rc_string.empty() ? NULL : bsoncxx::v_noabi::string::to_string(rc_string).data());
 }
 
 read_concern::level read_concern::acknowledge_level() const {
@@ -110,12 +110,12 @@ stdx::string_view read_concern::acknowledge_string() const {
     return {stdx::string_view{level}};
 }
 
-bsoncxx::document::value read_concern::to_document() const {
-    using bsoncxx::builder::basic::kvp;
+bsoncxx::v_noabi::document::value read_concern::to_document() const {
+    using bsoncxx::v_noabi::builder::basic::kvp;
 
     auto level = libmongoc::read_concern_get_level(_impl->read_concern_t);
 
-    bsoncxx::builder::basic::document doc;
+    bsoncxx::v_noabi::builder::basic::document doc;
     if (level) {
         doc.append(kvp("level", level));
     };

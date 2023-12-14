@@ -42,12 +42,12 @@ index& index::hidden(bool hidden) {
     return *this;
 }
 
-index& index::name(bsoncxx::string::view_or_value name) {
+index& index::name(bsoncxx::v_noabi::string::view_or_value name) {
     _name = std::move(name);
     return *this;
 }
 
-index& index::collation(bsoncxx::document::view collation) {
+index& index::collation(bsoncxx::v_noabi::document::view collation) {
     _collation = collation;
     return *this;
 }
@@ -78,22 +78,23 @@ index& index::version(std::int32_t version) {
     return *this;
 }
 
-index& index::weights(bsoncxx::document::view weights) {
+index& index::weights(bsoncxx::v_noabi::document::view weights) {
     _weights = weights;
     return *this;
 }
 
-index& index::default_language(bsoncxx::string::view_or_value default_language) {
+index& index::default_language(bsoncxx::v_noabi::string::view_or_value default_language) {
     _default_language = std::move(default_language);
     return *this;
 }
 
-index& index::language_override(bsoncxx::string::view_or_value language_override) {
+index& index::language_override(bsoncxx::v_noabi::string::view_or_value language_override) {
     _language_override = std::move(language_override);
     return *this;
 }
 
-index& index::partial_filter_expression(bsoncxx::document::view partial_filter_expression) {
+index& index::partial_filter_expression(
+    bsoncxx::v_noabi::document::view partial_filter_expression) {
     _partial_filter_expression = partial_filter_expression;
     return *this;
 }
@@ -139,11 +140,11 @@ const stdx::optional<bool>& index::hidden() const {
     return _hidden;
 }
 
-const stdx::optional<bsoncxx::string::view_or_value>& index::name() const {
+const stdx::optional<bsoncxx::v_noabi::string::view_or_value>& index::name() const {
     return _name;
 }
 
-const stdx::optional<bsoncxx::document::view>& index::collation() const {
+const stdx::optional<bsoncxx::v_noabi::document::view>& index::collation() const {
     return _collation;
 }
 
@@ -163,19 +164,19 @@ const stdx::optional<std::int32_t>& index::version() const {
     return _version;
 }
 
-const stdx::optional<bsoncxx::document::view>& index::weights() const {
+const stdx::optional<bsoncxx::v_noabi::document::view>& index::weights() const {
     return _weights;
 }
 
-const stdx::optional<bsoncxx::string::view_or_value>& index::default_language() const {
+const stdx::optional<bsoncxx::v_noabi::string::view_or_value>& index::default_language() const {
     return _default_language;
 }
 
-const stdx::optional<bsoncxx::string::view_or_value>& index::language_override() const {
+const stdx::optional<bsoncxx::v_noabi::string::view_or_value>& index::language_override() const {
     return _language_override;
 }
 
-const stdx::optional<bsoncxx::document::view>& index::partial_filter_expression() const {
+const stdx::optional<bsoncxx::v_noabi::document::view>& index::partial_filter_expression() const {
     return _partial_filter_expression;
 }
 
@@ -203,7 +204,7 @@ const stdx::optional<double>& index::haystack_bucket_size() const {
     return haystack_bucket_size_deprecated();
 }
 
-index::operator bsoncxx::document::view_or_value() {
+index::operator bsoncxx::v_noabi::document::view_or_value() {
     using namespace bsoncxx;
     using builder::basic::kvp;
     using builder::basic::make_document;
@@ -285,7 +286,7 @@ index::operator bsoncxx::document::view_or_value() {
                 static_cast<const options::index::wiredtiger_storage_options*>(
                     _storage_options.get());
 
-            bsoncxx::document::view_or_value storage_doc;
+            bsoncxx::v_noabi::document::view_or_value storage_doc;
             if (wt_options->config_string()) {
                 storage_doc = make_document(
                     kvp("wiredTiger",
@@ -306,11 +307,11 @@ index::base_storage_options::~base_storage_options() = default;
 index::wiredtiger_storage_options::~wiredtiger_storage_options() = default;
 
 void index::wiredtiger_storage_options::config_string(
-    bsoncxx::string::view_or_value config_string) {
+    bsoncxx::v_noabi::string::view_or_value config_string) {
     _config_string = std::move(config_string);
 }
 
-const stdx::optional<bsoncxx::string::view_or_value>&
+const stdx::optional<bsoncxx::v_noabi::string::view_or_value>&
 index::wiredtiger_storage_options::config_string() const {
     return _config_string;
 }

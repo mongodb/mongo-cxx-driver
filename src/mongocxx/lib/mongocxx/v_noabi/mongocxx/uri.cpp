@@ -47,7 +47,7 @@ uri::uri(std::unique_ptr<impl>&& implementation) {
     _impl.reset(implementation.release());
 }
 
-uri::uri(bsoncxx::string::view_or_value uri_string) {
+uri::uri(bsoncxx::v_noabi::string::view_or_value uri_string) {
     bson_error_t error;
 
     _impl = stdx::make_unique<impl>(
@@ -86,9 +86,9 @@ std::vector<uri::host> uri::hosts() const {
     return result;
 }
 
-bsoncxx::document::view uri::options() const {
+bsoncxx::v_noabi::document::view uri::options() const {
     auto opts_bson = libmongoc::uri_get_options(_impl->uri_t);
-    return bsoncxx::document::view{::bson_get_data(opts_bson), opts_bson->len};
+    return bsoncxx::v_noabi::document::view{::bson_get_data(opts_bson), opts_bson->len};
 }
 
 std::string uri::password() const {
@@ -166,19 +166,19 @@ static stdx::optional<bool> _bool_option(mongoc_uri_t* uri, std::string opt_name
     return bson_iter_bool(&iter);
 }
 
-stdx::optional<bsoncxx::document::view> uri::credentials() {
+stdx::optional<bsoncxx::v_noabi::document::view> uri::credentials() {
     const bson_t* options_bson = libmongoc::uri_get_credentials(_impl->uri_t);
     const uint8_t* data = bson_get_data(options_bson);
 
-    return bsoncxx::document::view(data, options_bson->len);
+    return bsoncxx::v_noabi::document::view(data, options_bson->len);
 }
 
 stdx::optional<std::int32_t> uri::srv_max_hosts() const {
     return _int32_option(_impl->uri_t, MONGOC_URI_SRVMAXHOSTS);
 }
 
-static stdx::optional<bsoncxx::document::view> _credential_document_option(mongoc_uri_t* uri,
-                                                                           std::string opt_name) {
+static stdx::optional<bsoncxx::v_noabi::document::view> _credential_document_option(
+    mongoc_uri_t* uri, std::string opt_name) {
     bson_iter_t iter;
     const uint8_t* data;
     uint32_t len;
@@ -189,7 +189,7 @@ static stdx::optional<bsoncxx::document::view> _credential_document_option(mongo
         return {};
     }
     bson_iter_document(&iter, &len, &data);
-    return bsoncxx::document::view(data, len);
+    return bsoncxx::v_noabi::document::view(data, len);
 }
 
 stdx::optional<stdx::string_view> uri::appname() const {
@@ -197,7 +197,7 @@ stdx::optional<stdx::string_view> uri::appname() const {
 }
 
 // Special case. authMechanismProperties are stored as part of libmongoc's credentials.
-stdx::optional<bsoncxx::document::view> uri::auth_mechanism_properties() const {
+stdx::optional<bsoncxx::v_noabi::document::view> uri::auth_mechanism_properties() const {
     return _credential_document_option(_impl->uri_t, "authMechanismProperties");
 }
 

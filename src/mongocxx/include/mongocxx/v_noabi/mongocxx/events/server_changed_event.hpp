@@ -47,7 +47,7 @@ class server_changed_event {
     ///
     /// @return The host name.
     ///
-    bsoncxx::stdx::string_view host() const;
+    bsoncxx::v_noabi::stdx::string_view host() const;
 
     ///
     /// Returns the server port.
@@ -62,7 +62,7 @@ class server_changed_event {
     ///
     /// @return The id.
     ///
-    const bsoncxx::oid topology_id() const;
+    const bsoncxx::v_noabi::oid topology_id() const;
 
     ///
     /// The server's description before it changed.

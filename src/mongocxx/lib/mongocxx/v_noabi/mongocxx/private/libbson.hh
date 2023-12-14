@@ -60,14 +60,14 @@ class MONGOCXX_TEST_API scoped_bson_t {
     //
     // The internal bson_t is considered initialized.
     //
-    explicit scoped_bson_t(bsoncxx::document::view_or_value doc);
+    explicit scoped_bson_t(bsoncxx::v_noabi::document::view_or_value doc);
 
     //
     // Initializes a bson_t from the provided document.
     //
     // The internal bson_t is considered initialized.
     //
-    void init_from_static(bsoncxx::document::view_or_value doc);
+    void init_from_static(bsoncxx::v_noabi::document::view_or_value doc);
 #endif
 
     //
@@ -75,14 +75,16 @@ class MONGOCXX_TEST_API scoped_bson_t {
     //
     // The internal bson_t is initialized if the optional is populated.
     //
-    explicit scoped_bson_t(bsoncxx::stdx::optional<bsoncxx::document::view_or_value> doc);
+    explicit scoped_bson_t(
+        bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> doc);
 
     //
     // Initializes a bson_t from the provided optional document.
     //
     // The internal bson_t is initialized if the optional is populated.
     //
-    void init_from_static(bsoncxx::stdx::optional<bsoncxx::document::view_or_value> doc);
+    void init_from_static(
+        bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> doc);
 
     //
     // Initialize the internal bson_t.
@@ -122,15 +124,15 @@ class MONGOCXX_TEST_API scoped_bson_t {
     //
     bson_t* bson_for_init();
 
-    bsoncxx::document::view view();
-    bsoncxx::document::value steal();
+    bsoncxx::v_noabi::document::view view();
+    bsoncxx::v_noabi::document::value steal();
 
    private:
     bson_t _bson;
     bool _is_initialized;
 
     // If we are passed a value created on-the-fly, we'll need to own this.
-    bsoncxx::stdx::optional<bsoncxx::document::view_or_value> _doc;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _doc;
 };
 
 }  // namespace libbson

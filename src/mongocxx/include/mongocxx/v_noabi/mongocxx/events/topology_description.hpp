@@ -125,7 +125,7 @@ class topology_description {
     ///
     /// @return The type as a short-lived string view.
     ///
-    bsoncxx::stdx::string_view type() const;
+    bsoncxx::v_noabi::stdx::string_view type() const;
 
     ///
     /// Determines if the topology has a readable server available. Servers are

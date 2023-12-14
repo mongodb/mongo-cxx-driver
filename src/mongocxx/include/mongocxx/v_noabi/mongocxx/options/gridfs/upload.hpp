@@ -64,7 +64,7 @@ class upload {
     ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
-    upload& metadata(bsoncxx::document::view_or_value metadata);
+    upload& metadata(bsoncxx::v_noabi::document::view_or_value metadata);
 
     ///
     /// Gets the metadata of the GridFS file being uploaded.
@@ -72,11 +72,11 @@ class upload {
     /// @return
     ///   The metadata document of the GridFS file.
     ///
-    const stdx::optional<bsoncxx::document::view_or_value>& metadata() const;
+    const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& metadata() const;
 
    private:
     stdx::optional<std::int32_t> _chunk_size_bytes;
-    stdx::optional<bsoncxx::document::view_or_value> _metadata;
+    stdx::optional<bsoncxx::v_noabi::document::view_or_value> _metadata;
 };
 
 }  // namespace gridfs

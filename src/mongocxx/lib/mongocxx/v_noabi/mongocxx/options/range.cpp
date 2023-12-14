@@ -20,21 +20,21 @@ namespace mongocxx {
 namespace v_noabi {
 namespace options {
 
-range& range::min(bsoncxx::types::bson_value::view_or_value value) {
+range& range::min(bsoncxx::v_noabi::types::bson_value::view_or_value value) {
     _min = std::move(value);
     return *this;
 }
 
-const stdx::optional<bsoncxx::types::bson_value::view_or_value>& range::min() const {
+const stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>& range::min() const {
     return _min;
 }
 
-range& range::max(bsoncxx::types::bson_value::view_or_value value) {
+range& range::max(bsoncxx::v_noabi::types::bson_value::view_or_value value) {
     _max = std::move(value);
     return *this;
 }
 
-const stdx::optional<bsoncxx::types::bson_value::view_or_value>& range::max() const {
+const stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>& range::max() const {
     return _max;
 }
 

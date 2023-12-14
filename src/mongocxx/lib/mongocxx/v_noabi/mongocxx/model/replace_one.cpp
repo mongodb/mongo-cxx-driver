@@ -20,24 +20,24 @@ namespace mongocxx {
 namespace v_noabi {
 namespace model {
 
-replace_one::replace_one(bsoncxx::document::view_or_value filter,
-                         bsoncxx::document::view_or_value replacement)
+replace_one::replace_one(bsoncxx::v_noabi::document::view_or_value filter,
+                         bsoncxx::v_noabi::document::view_or_value replacement)
     : _filter(std::move(filter)), _replacement(std::move(replacement)) {}
 
-const bsoncxx::document::view_or_value& replace_one::filter() const {
+const bsoncxx::v_noabi::document::view_or_value& replace_one::filter() const {
     return _filter;
 }
 
-const bsoncxx::document::view_or_value& replace_one::replacement() const {
+const bsoncxx::v_noabi::document::view_or_value& replace_one::replacement() const {
     return _replacement;
 }
 
-replace_one& replace_one::collation(bsoncxx::document::view_or_value collation) {
+replace_one& replace_one::collation(bsoncxx::v_noabi::document::view_or_value collation) {
     _collation = collation;
     return *this;
 }
 
-const stdx::optional<bsoncxx::document::view_or_value>& replace_one::collation() const {
+const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& replace_one::collation() const {
     return _collation;
 }
 

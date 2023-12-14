@@ -85,8 +85,8 @@ class index_view {
     /// @see https://www.mongodb.com/docs/manual/reference/method/db.collection.createIndex/
     ///
     stdx::optional<std::string> create_one(
-        const bsoncxx::document::view_or_value& keys,
-        const bsoncxx::document::view_or_value& index_options = {},
+        const bsoncxx::v_noabi::document::view_or_value& keys,
+        const bsoncxx::v_noabi::document::view_or_value& index_options = {},
         const options::index_view& options = options::index_view{});
 
     ///
@@ -114,8 +114,8 @@ class index_view {
     ///
     stdx::optional<std::string> create_one(
         const client_session& session,
-        const bsoncxx::document::view_or_value& keys,
-        const bsoncxx::document::view_or_value& index_options = {},
+        const bsoncxx::v_noabi::document::view_or_value& keys,
+        const bsoncxx::v_noabi::document::view_or_value& index_options = {},
         const options::index_view& options = options::index_view{});
 
     ///
@@ -194,7 +194,7 @@ class index_view {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/method/cursor.maxTimeMS/
     ///
-    bsoncxx::document::value create_many(
+    bsoncxx::v_noabi::document::value create_many(
         const std::vector<index_model>& indexes,
         const options::index_view& options = options::index_view{});
 
@@ -218,7 +218,7 @@ class index_view {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/method/cursor.maxTimeMS/
     ///
-    bsoncxx::document::value create_many(
+    bsoncxx::v_noabi::document::value create_many(
         const client_session& session,
         const std::vector<index_model>& indexes,
         const options::index_view& options = options::index_view{});
@@ -289,7 +289,8 @@ class index_view {
     ///    Optional arguments for the overall operation, see mongocxx::v_noabi::options::index_view.
     ///
     /// @exception
-    ///   Throws bsoncxx::exception if "name" key is present in options but is not a string.
+    ///   Throws bsoncxx::v_noabi::exception if "name" key is present in options but is not a
+    ///   string.
     /// @exception
     ///   Throws operation_exception for any errors encountered by the server or if max_time_ms
     ///   option is present and the operation exceeds the time limit.
@@ -298,8 +299,8 @@ class index_view {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/method/cursor.maxTimeMS/
     ///
-    void drop_one(const bsoncxx::document::view_or_value& keys,
-                  const bsoncxx::document::view_or_value& index_options = {},
+    void drop_one(const bsoncxx::v_noabi::document::view_or_value& keys,
+                  const bsoncxx::v_noabi::document::view_or_value& index_options = {},
                   const options::index_view& options = options::index_view{});
 
     ///
@@ -317,7 +318,8 @@ class index_view {
     ///    Optional arguments for the overall operation, see mongocxx::v_noabi::options::index_view.
     ///
     /// @exception
-    ///   Throws bsoncxx::exception if "name" key is present in options but is not a string.
+    ///   Throws bsoncxx::v_noabi::exception if "name" key is present in options but is not a
+    ///   string.
     /// @exception
     ///   Throws operation_exception for any errors encountered by the server or if max_time_ms
     ///   option is present and the operation exceeds the time limit.
@@ -327,8 +329,8 @@ class index_view {
     /// @see https://www.mongodb.com/docs/manual/reference/method/cursor.maxTimeMS/
     ///
     void drop_one(const client_session& session,
-                  const bsoncxx::document::view_or_value& keys,
-                  const bsoncxx::document::view_or_value& index_options = {},
+                  const bsoncxx::v_noabi::document::view_or_value& keys,
+                  const bsoncxx::v_noabi::document::view_or_value& index_options = {},
                   const options::index_view& options = options::index_view{});
 
     ///
@@ -346,7 +348,8 @@ class index_view {
     ///    Optional arguments for the overall operation, see mongocxx::v_noabi::options::index_view.
     ///
     /// @exception
-    ///   Throws bsoncxx::exception if "name" key is present in options but is not a string.
+    ///   Throws bsoncxx::v_noabi::exception if "name" key is present in options but is not a
+    ///   string.
     /// @exception
     ///   Throws operation_exception for any errors encountered by the server or if max_time_ms
     ///   option is present and the operation exceeds the time limit.
@@ -369,7 +372,8 @@ class index_view {
     ///    Optional arguments for the overall operation, see mongocxx::v_noabi::options::index_view.
     ///
     /// @exception
-    ///   Throws bsoncxx::exception if "name" key is present in options but is not a string.
+    ///   Throws bsoncxx::v_noabi::exception if "name" key is present in options but is not a
+    ///   string.
     /// @exception
     ///   Throws operation_exception for any errors encountered by the server or if max_time_ms
     ///   option is present and the operation exceeds the time limit.

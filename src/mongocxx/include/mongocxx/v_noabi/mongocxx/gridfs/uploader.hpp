@@ -149,13 +149,14 @@ class uploader {
     // @param metadata
     //   Optional metadata field of the files collection document.
     //
-    MONGOCXX_PRIVATE uploader(const client_session* session,
-                              bsoncxx::types::bson_value::view id,
-                              stdx::string_view filename,
-                              collection files,
-                              collection chunks,
-                              std::int32_t chunk_size,
-                              stdx::optional<bsoncxx::document::view_or_value> metadata = {});
+    MONGOCXX_PRIVATE uploader(
+        const client_session* session,
+        bsoncxx::v_noabi::types::bson_value::view id,
+        stdx::string_view filename,
+        collection files,
+        collection chunks,
+        std::int32_t chunk_size,
+        stdx::optional<bsoncxx::v_noabi::document::view_or_value> metadata = {});
 
     MONGOCXX_PRIVATE void finish_chunk();
     MONGOCXX_PRIVATE void flush_chunks();

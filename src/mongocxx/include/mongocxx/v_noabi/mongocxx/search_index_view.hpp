@@ -65,7 +65,7 @@ class search_index_view {
     ///
     /// @return A cursor to the list of the search indexes returned.
     ///
-    cursor list(bsoncxx::string::view_or_value name,
+    cursor list(bsoncxx::v_noabi::string::view_or_value name,
                 const options::aggregate& options = options::aggregate());
 
     ///
@@ -81,7 +81,7 @@ class search_index_view {
     /// @return A cursor to the list of the search indexes returned.
     ///
     cursor list(const client_session& session,
-                bsoncxx::string::view_or_value name,
+                bsoncxx::v_noabi::string::view_or_value name,
                 const options::aggregate& options = options::aggregate());
 
     ///
@@ -98,7 +98,7 @@ class search_index_view {
     ///
     /// @return The name of the created search index.
     ///
-    std::string create_one(bsoncxx::document::view_or_value definition);
+    std::string create_one(bsoncxx::v_noabi::document::view_or_value definition);
 
     ///
     /// This is a convenience method for creating a single search index with a default name.
@@ -111,7 +111,7 @@ class search_index_view {
     /// @return The name of the created search index.
     ///
     std::string create_one(const client_session& session,
-                           bsoncxx::document::view_or_value definition);
+                           bsoncxx::v_noabi::document::view_or_value definition);
 
     ///
     /// This is a convenience method for creating a single search index.
@@ -123,8 +123,8 @@ class search_index_view {
     ///
     /// @return The name of the created search index.
     ///
-    std::string create_one(bsoncxx::string::view_or_value name,
-                           bsoncxx::document::view_or_value definition);
+    std::string create_one(bsoncxx::v_noabi::string::view_or_value name,
+                           bsoncxx::v_noabi::document::view_or_value definition);
 
     ///
     /// This is a convenience method for creating a single search index.
@@ -139,8 +139,8 @@ class search_index_view {
     /// @return The name of the created search index.
     ///
     std::string create_one(const client_session& session,
-                           bsoncxx::string::view_or_value name,
-                           bsoncxx::document::view_or_value definition);
+                           bsoncxx::v_noabi::string::view_or_value name,
+                           bsoncxx::v_noabi::document::view_or_value definition);
 
     ///
     /// This is a convenience method for creating a single search index.
@@ -205,7 +205,7 @@ class search_index_view {
     /// @param name
     ///    The name of the search index to drop.
     ///
-    void drop_one(bsoncxx::string::view_or_value name);
+    void drop_one(bsoncxx::v_noabi::string::view_or_value name);
 
     ///
     /// Drops a single search index from the collection by the index name.
@@ -215,7 +215,7 @@ class search_index_view {
     /// @param name
     ///   The name of the search index to drop.
     ///
-    void drop_one(const client_session& session, bsoncxx::string::view_or_value name);
+    void drop_one(const client_session& session, bsoncxx::v_noabi::string::view_or_value name);
 
     ///
     /// @}
@@ -231,8 +231,8 @@ class search_index_view {
     /// @param definition
     ///   The definition to update the search index to.
     ///
-    void update_one(bsoncxx::string::view_or_value name,
-                    bsoncxx::document::view_or_value definition);
+    void update_one(bsoncxx::v_noabi::string::view_or_value name,
+                    bsoncxx::v_noabi::document::view_or_value definition);
 
     ///
     /// Updates a single search index from the collection by the search index name.
@@ -245,8 +245,8 @@ class search_index_view {
     ///   The definition to update the search index to.
     ///
     void update_one(const client_session& session,
-                    bsoncxx::string::view_or_value name,
-                    bsoncxx::document::view_or_value definition);
+                    bsoncxx::v_noabi::string::view_or_value name,
+                    bsoncxx::v_noabi::document::view_or_value definition);
 
     ///
     /// @}
@@ -260,7 +260,7 @@ class search_index_view {
     MONGOCXX_PRIVATE search_index_view(void* coll, void* client);
 
     MONGOCXX_PRIVATE std::vector<std::string> _create_many_helper(
-        bsoncxx::array::view created_indexes);
+        bsoncxx::v_noabi::array::view created_indexes);
 
     MONGOCXX_PRIVATE const impl& _get_impl() const;
 

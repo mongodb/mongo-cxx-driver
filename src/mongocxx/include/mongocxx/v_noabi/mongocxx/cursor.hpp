@@ -94,8 +94,9 @@ class cursor {
 
     friend ::mongocxx::v_noabi::cursor::iterator;
 
-    MONGOCXX_PRIVATE cursor(void* cursor_ptr,
-                            bsoncxx::stdx::optional<type> cursor_type = bsoncxx::stdx::nullopt);
+    MONGOCXX_PRIVATE cursor(
+        void* cursor_ptr,
+        bsoncxx::v_noabi::stdx::optional<type> cursor_type = bsoncxx::v_noabi::stdx::nullopt);
 
     class MONGOCXX_PRIVATE impl;
     std::unique_ptr<impl> _impl;
@@ -124,21 +125,21 @@ class cursor::iterator {
     ///
     /// std::iterator_traits
     ///
-    using value_type = bsoncxx::document::view;
-    using reference = bsoncxx::document::view&;
-    using pointer = bsoncxx::document::view*;
+    using value_type = bsoncxx::v_noabi::document::view;
+    using reference = bsoncxx::v_noabi::document::view&;
+    using pointer = bsoncxx::v_noabi::document::view*;
     using iterator_category = std::input_iterator_tag;
     using difference_type = std::ptrdiff_t;
 
     ///
     /// Dereferences the view for the document currently being pointed to.
     ///
-    const bsoncxx::document::view& operator*() const;
+    const bsoncxx::v_noabi::document::view& operator*() const;
 
     ///
     /// Accesses a member of the dereferenced document currently being pointed to.
     ///
-    const bsoncxx::document::view* operator->() const;
+    const bsoncxx::v_noabi::document::view* operator->() const;
 
     ///
     /// Pre-increments the iterator to move to the next document.

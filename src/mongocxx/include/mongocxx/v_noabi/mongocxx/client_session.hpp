@@ -86,7 +86,7 @@ class client_session {
     /// Get the server-side "logical session ID" associated with this session, as a BSON document.
     /// This view is invalid after the session is destroyed.
     ///
-    bsoncxx::document::view id() const noexcept;
+    bsoncxx::v_noabi::document::view id() const noexcept;
 
     ///
     /// Get the session's clusterTime, as a BSON document. This is an opaque value suitable for
@@ -94,14 +94,14 @@ class client_session {
     /// not been used for any operation and you have not called advance_cluster_time().
     /// This view is invalid after the session is destroyed.
     ///
-    bsoncxx::document::view cluster_time() const noexcept;
+    bsoncxx::v_noabi::document::view cluster_time() const noexcept;
 
     ///
     /// Get the session's operationTime, as a BSON timestamp. This is an opaque value suitable for
     /// passing to advance_operation_time(). The timestamp is zero if the session has not been used
     /// for any operation and you have not called advance_operation_time().
     ///
-    bsoncxx::types::b_timestamp operation_time() const noexcept;
+    bsoncxx::v_noabi::types::b_timestamp operation_time() const noexcept;
 
     ///
     /// Get the server_id the session is pinned to. The server_id is zero if the session is not
@@ -127,7 +127,7 @@ class client_session {
     /// clusterTime from another session, ensuring subsequent operations in this session are
     /// causally consistent with the last operation in the other session.
     ///
-    void advance_cluster_time(const bsoncxx::document::view& cluster_time);
+    void advance_cluster_time(const bsoncxx::v_noabi::document::view& cluster_time);
 
     ///
     /// Advance the session's operation time, expressed as a BSON timestamp. Has an effect only if
@@ -137,7 +137,7 @@ class client_session {
     /// clusterTime from another session, ensuring subsequent operations in this session are
     /// causally consistent with the last operation in the other session.
     ///
-    void advance_operation_time(const bsoncxx::types::b_timestamp& operation_time);
+    void advance_operation_time(const bsoncxx::v_noabi::types::b_timestamp& operation_time);
 
     ///
     /// Starts a transaction on the current client session.

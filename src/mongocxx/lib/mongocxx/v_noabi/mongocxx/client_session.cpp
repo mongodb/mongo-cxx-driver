@@ -46,23 +46,24 @@ std::uint32_t client_session::server_id() const noexcept {
     return _impl->server_id();
 }
 
-bsoncxx::document::view client_session::id() const noexcept {
+bsoncxx::v_noabi::document::view client_session::id() const noexcept {
     return _impl->id();
 }
 
-bsoncxx::document::view client_session::cluster_time() const noexcept {
+bsoncxx::v_noabi::document::view client_session::cluster_time() const noexcept {
     return _impl->cluster_time();
 }
 
-bsoncxx::types::b_timestamp client_session::operation_time() const noexcept {
+bsoncxx::v_noabi::types::b_timestamp client_session::operation_time() const noexcept {
     return _impl->operation_time();
 }
 
-void client_session::advance_cluster_time(const bsoncxx::document::view& cluster_time) {
+void client_session::advance_cluster_time(const bsoncxx::v_noabi::document::view& cluster_time) {
     _impl->advance_cluster_time(cluster_time);
 }
 
-void client_session::advance_operation_time(const bsoncxx::types::b_timestamp& operation_time) {
+void client_session::advance_operation_time(
+    const bsoncxx::v_noabi::types::b_timestamp& operation_time) {
     _impl->advance_operation_time(operation_time);
 }
 

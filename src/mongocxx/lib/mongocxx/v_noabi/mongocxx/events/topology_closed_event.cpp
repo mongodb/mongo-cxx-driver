@@ -25,11 +25,11 @@ topology_closed_event::topology_closed_event(const void* event) : _event(event) 
 
 topology_closed_event::~topology_closed_event() = default;
 
-bsoncxx::oid topology_closed_event::topology_id() const {
+bsoncxx::v_noabi::oid topology_closed_event::topology_id() const {
     bson_oid_t boid;
     libmongoc::apm_topology_closed_get_topology_id(
         static_cast<const mongoc_apm_topology_closed_t*>(_event), &boid);
-    return bsoncxx::oid(reinterpret_cast<const char*>(boid.bytes), sizeof(boid.bytes));
+    return bsoncxx::v_noabi::oid(reinterpret_cast<const char*>(boid.bytes), sizeof(boid.bytes));
 }
 
 }  // namespace events

@@ -49,21 +49,22 @@ const stdx::optional<bool> bulk_write::bypass_document_validation() const {
     return _bypass_document_validation;
 }
 
-bulk_write& bulk_write::let(bsoncxx::document::view_or_value let) {
+bulk_write& bulk_write::let(bsoncxx::v_noabi::document::view_or_value let) {
     _let = let;
     return *this;
 }
 
-const stdx::optional<bsoncxx::document::view_or_value> bulk_write::let() const {
+const stdx::optional<bsoncxx::v_noabi::document::view_or_value> bulk_write::let() const {
     return _let;
 }
 
-bulk_write& bulk_write::comment(bsoncxx::types::bson_value::view_or_value comment) {
+bulk_write& bulk_write::comment(bsoncxx::v_noabi::types::bson_value::view_or_value comment) {
     _comment = std::move(comment);
     return *this;
 }
 
-const stdx::optional<bsoncxx::types::bson_value::view_or_value> bulk_write::comment() const {
+const stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> bulk_write::comment()
+    const {
     return _comment;
 }
 

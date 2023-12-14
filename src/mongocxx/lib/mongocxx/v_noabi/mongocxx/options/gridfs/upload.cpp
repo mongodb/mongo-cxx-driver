@@ -31,12 +31,12 @@ const stdx::optional<std::int32_t>& upload::chunk_size_bytes() const {
     return _chunk_size_bytes;
 }
 
-upload& upload::metadata(bsoncxx::document::view_or_value metadata) {
+upload& upload::metadata(bsoncxx::v_noabi::document::view_or_value metadata) {
     _metadata = std::move(metadata);
     return *this;
 }
 
-const stdx::optional<bsoncxx::document::view_or_value>& upload::metadata() const {
+const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& upload::metadata() const {
     return _metadata;
 }
 

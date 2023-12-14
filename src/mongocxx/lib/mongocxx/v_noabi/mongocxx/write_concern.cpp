@@ -87,7 +87,7 @@ void write_concern::acknowledge_level(write_concern::level confirm_level) {
 
 void write_concern::tag(stdx::string_view confirm_from) {
     libmongoc::write_concern_set_wtag(_impl->write_concern_t,
-                                      bsoncxx::string::to_string(confirm_from).data());
+                                      bsoncxx::v_noabi::string::to_string(confirm_from).data());
 }
 
 void write_concern::majority(std::chrono::milliseconds timeout) {
@@ -151,11 +151,11 @@ bool write_concern::is_acknowledged() const {
     return libmongoc::write_concern_is_acknowledged(_impl->write_concern_t);
 }
 
-bsoncxx::document::value write_concern::to_document() const {
-    using bsoncxx::builder::basic::kvp;
-    using bsoncxx::builder::basic::make_document;
+bsoncxx::v_noabi::document::value write_concern::to_document() const {
+    using bsoncxx::v_noabi::builder::basic::kvp;
+    using bsoncxx::v_noabi::builder::basic::make_document;
 
-    bsoncxx::builder::basic::document doc;
+    bsoncxx::v_noabi::builder::basic::document doc;
 
     if (auto ns = nodes()) {
         doc.append(kvp("w", *ns));
@@ -186,7 +186,7 @@ bsoncxx::document::value write_concern::to_document() const {
 
     std::int32_t count;
     if ((count = static_cast<std::int32_t>(timeout().count())) > 0) {
-        doc.append(kvp("wtimeout", bsoncxx::types::b_int32{count}));
+        doc.append(kvp("wtimeout", bsoncxx::v_noabi::types::b_int32{count}));
     }
 
     return doc.extract();

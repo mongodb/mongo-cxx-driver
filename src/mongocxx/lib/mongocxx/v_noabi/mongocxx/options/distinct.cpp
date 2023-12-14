@@ -21,7 +21,7 @@ namespace mongocxx {
 namespace v_noabi {
 namespace options {
 
-distinct& distinct::collation(bsoncxx::document::view_or_value collation) {
+distinct& distinct::collation(bsoncxx::v_noabi::document::view_or_value collation) {
     _collation = std::move(collation);
     return *this;
 }
@@ -31,7 +31,7 @@ distinct& distinct::max_time(std::chrono::milliseconds max_time) {
     return *this;
 }
 
-distinct& distinct::comment(bsoncxx::types::bson_value::view_or_value comment) {
+distinct& distinct::comment(bsoncxx::v_noabi::types::bson_value::view_or_value comment) {
     _comment = std::move(comment);
     return *this;
 }
@@ -41,7 +41,7 @@ distinct& distinct::read_preference(mongocxx::v_noabi::read_preference rp) {
     return *this;
 }
 
-const stdx::optional<bsoncxx::document::view_or_value>& distinct::collation() const {
+const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& distinct::collation() const {
     return _collation;
 }
 
@@ -49,7 +49,8 @@ const stdx::optional<std::chrono::milliseconds>& distinct::max_time() const {
     return _max_time;
 }
 
-const stdx::optional<bsoncxx::types::bson_value::view_or_value>& distinct::comment() const {
+const stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>& distinct::comment()
+    const {
     return _comment;
 }
 

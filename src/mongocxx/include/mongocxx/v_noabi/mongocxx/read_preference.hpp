@@ -130,8 +130,9 @@ class read_preference {
     ///
     /// @deprecated The tags() method should be used instead.
     ///
-    MONGOCXX_DEPRECATED read_preference(read_mode mode, bsoncxx::document::view_or_value tags);
-    read_preference(read_mode mode, bsoncxx::document::view_or_value tags, deprecated_tag);
+    MONGOCXX_DEPRECATED read_preference(read_mode mode,
+                                        bsoncxx::v_noabi::document::view_or_value tags);
+    read_preference(read_mode mode, bsoncxx::v_noabi::document::view_or_value tags, deprecated_tag);
 
     ///
     /// Copy constructs a read_preference.
@@ -189,7 +190,7 @@ class read_preference {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    read_preference& tags(bsoncxx::document::view_or_value tag_set_list);
+    read_preference& tags(bsoncxx::v_noabi::document::view_or_value tag_set_list);
 
     ///
     /// Sets or updates the tag set list for this read_preference.
@@ -203,7 +204,7 @@ class read_preference {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    read_preference& tags(bsoncxx::array::view_or_value tag_set_list);
+    read_preference& tags(bsoncxx::v_noabi::array::view_or_value tag_set_list);
 
     ///
     /// Sets or updates the tag set list for this read_preference.
@@ -212,7 +213,7 @@ class read_preference {
     ///
     /// @see https://www.mongodb.com/docs/manual/core/read-preference-tags/
     ///
-    stdx::optional<bsoncxx::document::view> tags() const;
+    stdx::optional<bsoncxx::v_noabi::document::view> tags() const;
 
     ///
     /// Sets the max staleness setting for this read_preference.  Secondary
@@ -271,14 +272,14 @@ class read_preference {
     /// @return A reference to the object on which this member function is being called. This
     /// facilitates method chaining.
     ///
-    read_preference& hedge(bsoncxx::document::view_or_value hedge);
+    read_preference& hedge(bsoncxx::v_noabi::document::view_or_value hedge);
 
     ///
     /// Gets the current hedge document to be used for the read preference.
     ///
     /// @return A hedge document if one was set.
     ///
-    const stdx::optional<bsoncxx::document::view> hedge() const;
+    const stdx::optional<bsoncxx::v_noabi::document::view> hedge() const;
 
    private:
     friend ::mongocxx::v_noabi::client;

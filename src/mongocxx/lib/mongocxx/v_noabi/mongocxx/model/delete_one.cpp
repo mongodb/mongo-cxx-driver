@@ -20,18 +20,19 @@ namespace mongocxx {
 namespace v_noabi {
 namespace model {
 
-delete_one::delete_one(bsoncxx::document::view_or_value filter) : _filter(std::move(filter)) {}
+delete_one::delete_one(bsoncxx::v_noabi::document::view_or_value filter)
+    : _filter(std::move(filter)) {}
 
-const bsoncxx::document::view_or_value& delete_one::filter() const {
+const bsoncxx::v_noabi::document::view_or_value& delete_one::filter() const {
     return _filter;
 }
 
-delete_one& delete_one::collation(bsoncxx::document::view_or_value collation) {
+delete_one& delete_one::collation(bsoncxx::v_noabi::document::view_or_value collation) {
     _collation = collation;
     return *this;
 }
 
-const stdx::optional<bsoncxx::document::view_or_value>& delete_one::collation() const {
+const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& delete_one::collation() const {
     return _collation;
 }
 

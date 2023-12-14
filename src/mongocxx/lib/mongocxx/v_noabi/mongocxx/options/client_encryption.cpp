@@ -43,21 +43,23 @@ const stdx::optional<client_encryption::ns_pair>& client_encryption::key_vault_n
 }
 
 client_encryption& client_encryption::kms_providers(
-    bsoncxx::document::view_or_value kms_providers) {
+    bsoncxx::v_noabi::document::view_or_value kms_providers) {
     _kms_providers = std::move(kms_providers);
     return *this;
 }
 
-const stdx::optional<bsoncxx::document::view_or_value>& client_encryption::kms_providers() const {
+const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& client_encryption::kms_providers()
+    const {
     return _kms_providers;
 }
 
-client_encryption& client_encryption::tls_opts(bsoncxx::document::view_or_value tls_opts) {
+client_encryption& client_encryption::tls_opts(bsoncxx::v_noabi::document::view_or_value tls_opts) {
     _tls_opts = std::move(tls_opts);
     return *this;
 }
 
-const stdx::optional<bsoncxx::document::view_or_value>& client_encryption::tls_opts() const {
+const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& client_encryption::tls_opts()
+    const {
     return _tls_opts;
 }
 

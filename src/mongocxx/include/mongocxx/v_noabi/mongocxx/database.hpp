@@ -151,7 +151,8 @@ class database {
     ///
     /// @throws mongocxx::v_noabi::operation_exception if the operation fails.
     ///
-    bsoncxx::document::value run_command(bsoncxx::document::view_or_value command);
+    bsoncxx::v_noabi::document::value run_command(
+        bsoncxx::v_noabi::document::view_or_value command);
 
     ///
     /// Runs a command against this database.
@@ -164,8 +165,8 @@ class database {
     ///
     /// @throws mongocxx::v_noabi::operation_exception if the operation fails.
     ///
-    bsoncxx::document::value run_command(const client_session& session,
-                                         bsoncxx::document::view_or_value command);
+    bsoncxx::v_noabi::document::value run_command(
+        const client_session& session, bsoncxx::v_noabi::document::view_or_value command);
 
     ///
     /// Executes a command on a specific server using this database.
@@ -178,8 +179,8 @@ class database {
     ///
     /// @throws mongocxx::v_noabi::operation_exception if the operation fails.
     ///
-    bsoncxx::document::value run_command(bsoncxx::document::view_or_value command,
-                                         uint32_t server_id);
+    bsoncxx::v_noabi::document::value run_command(bsoncxx::v_noabi::document::view_or_value command,
+                                                  uint32_t server_id);
     ///
     /// @}
     ///
@@ -208,7 +209,7 @@ class database {
     ///
     mongocxx::v_noabi::collection create_collection(
         stdx::string_view name,
-        bsoncxx::document::view_or_value collection_options = {},
+        bsoncxx::v_noabi::document::view_or_value collection_options = {},
         const stdx::optional<write_concern>& write_concern = {});
 
     ///
@@ -236,7 +237,7 @@ class database {
     mongocxx::v_noabi::collection create_collection(
         const client_session& session,
         stdx::string_view name,
-        bsoncxx::document::view_or_value collection_options = {},
+        bsoncxx::v_noabi::document::view_or_value collection_options = {},
         const stdx::optional<write_concern>& write_concern = {});
 
     ///
@@ -244,7 +245,7 @@ class database {
     ///
     /// @deprecated
     ///   This overload is deprecated. Call database::create_collection with a
-    ///   bsoncxx::document::view_or_value collection_options instead.
+    ///   bsoncxx::v_noabi::document::view_or_value collection_options instead.
     ///
     /// @see
     ///   https://www.mongodb.com/docs/manual/reference/command/create/
@@ -261,14 +262,14 @@ class database {
     ///   mongocxx::v_noabi::operation_exception if the operation fails.
     ///
     MONGOCXX_DEPRECATED mongocxx::v_noabi::collection create_collection(
-        bsoncxx::string::view_or_value name,
+        bsoncxx::v_noabi::string::view_or_value name,
         const options::create_collection_deprecated& collection_options,
         const stdx::optional<write_concern>& write_concern = {}) {
         return create_collection_deprecated(name, collection_options, write_concern);
     }
 
     mongocxx::v_noabi::collection create_collection_deprecated(
-        bsoncxx::string::view_or_value name,
+        bsoncxx::v_noabi::string::view_or_value name,
         const options::create_collection_deprecated& collection_options,
         const stdx::optional<write_concern>& write_concern = {});
 
@@ -277,7 +278,7 @@ class database {
     ///
     /// @deprecated
     ///   This overload is deprecated. Call database::create_collection with a
-    ///   bsoncxx::document::view_or_value collection_options instead.
+    ///   bsoncxx::v_noabi::document::view_or_value collection_options instead.
     ///
     /// @see
     ///   https://www.mongodb.com/docs/manual/reference/command/create/
@@ -297,7 +298,7 @@ class database {
     ///
     MONGOCXX_DEPRECATED mongocxx::v_noabi::collection create_collection(
         const client_session& session,
-        bsoncxx::string::view_or_value name,
+        bsoncxx::v_noabi::string::view_or_value name,
         const options::create_collection_deprecated& collection_options,
         const stdx::optional<write_concern>& write_concern = {}) {
         return create_collection_deprecated(session, name, collection_options, write_concern);
@@ -308,7 +309,7 @@ class database {
     ///
     /// @deprecated
     ///   This overload is deprecated. Call database::create_collection with a
-    ///   bsoncxx::document::view_or_value collection_options instead.
+    ///   bsoncxx::v_noabi::document::view_or_value collection_options instead.
     ///
     /// @see
     ///   https://www.mongodb.com/docs/manual/reference/command/create/
@@ -328,7 +329,7 @@ class database {
     ///
     mongocxx::v_noabi::collection create_collection_deprecated(
         const client_session& session,
-        bsoncxx::string::view_or_value name,
+        bsoncxx::v_noabi::string::view_or_value name,
         const options::create_collection_deprecated& collection_options,
         const stdx::optional<write_concern>& write_concern = {});
 
@@ -351,7 +352,8 @@ class database {
     /// @see
     ///   https://www.mongodb.com/docs/manual/reference/command/dropDatabase/
     ///
-    void drop(const bsoncxx::stdx::optional<mongocxx::v_noabi::write_concern>& write_concern = {});
+    void drop(const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>&
+                  write_concern = {});
 
     ///
     /// Drops the database and all its collections.
@@ -369,7 +371,8 @@ class database {
     ///   https://www.mongodb.com/docs/manual/reference/command/dropDatabase/
     ///
     void drop(const client_session& session,
-              const bsoncxx::stdx::optional<mongocxx::v_noabi::write_concern>& write_concern = {});
+              const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>&
+                  write_concern = {});
     ///
     /// @}
     ///
@@ -384,7 +387,7 @@ class database {
     /// @throws mongocxx::v_noabi::operation_exception if the underlying 'listCollections'
     /// command fails.
     ///
-    bool has_collection(bsoncxx::string::view_or_value name) const;
+    bool has_collection(bsoncxx::v_noabi::string::view_or_value name) const;
 
     ///
     /// @{
@@ -398,7 +401,7 @@ class database {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/listCollections/
     ///
-    cursor list_collections(bsoncxx::document::view_or_value filter = {});
+    cursor list_collections(bsoncxx::v_noabi::document::view_or_value filter = {});
 
     ///
     /// Enumerates the collections in this database.
@@ -413,7 +416,7 @@ class database {
     /// @see https://www.mongodb.com/docs/manual/reference/command/listCollections/
     ///
     cursor list_collections(const client_session& session,
-                            bsoncxx::document::view_or_value filter = {});
+                            bsoncxx::v_noabi::document::view_or_value filter = {});
 
     ///
     /// Enumerates the collection names in this database.
@@ -428,7 +431,8 @@ class database {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/listCollections/
     ///
-    std::vector<std::string> list_collection_names(bsoncxx::document::view_or_value filter = {});
+    std::vector<std::string> list_collection_names(
+        bsoncxx::v_noabi::document::view_or_value filter = {});
 
     ///
     /// Enumerates the collection names in this database.
@@ -445,8 +449,8 @@ class database {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/listCollections/
     ///
-    std::vector<std::string> list_collection_names(const client_session& session,
-                                                   bsoncxx::document::view_or_value filter = {});
+    std::vector<std::string> list_collection_names(
+        const client_session& session, bsoncxx::v_noabi::document::view_or_value filter = {});
 
     ///
     /// @}
@@ -528,7 +532,7 @@ class database {
     ///
     /// @return the collection.
     ///
-    mongocxx::v_noabi::collection collection(bsoncxx::string::view_or_value name) const;
+    mongocxx::v_noabi::collection collection(bsoncxx::v_noabi::string::view_or_value name) const;
 
     ///
     /// Allows the db["collection_name"] syntax to be used to access a collection within this
@@ -539,7 +543,7 @@ class database {
     /// @return the collection.
     ///
     MONGOCXX_INLINE mongocxx::v_noabi::collection operator[](
-        bsoncxx::string::view_or_value name) const;
+        bsoncxx::v_noabi::string::view_or_value name) const;
 
     ///
     /// Access a GridFS bucket within this database.
@@ -634,36 +638,36 @@ class database {
     friend ::mongocxx::v_noabi::collection;
 
     MONGOCXX_PRIVATE database(const mongocxx::v_noabi::client& client,
-                              bsoncxx::string::view_or_value name);
+                              bsoncxx::v_noabi::string::view_or_value name);
 
     MONGOCXX_PRIVATE cursor _aggregate(const client_session* session,
                                        const pipeline& pipeline,
                                        const options::aggregate& options);
 
-    MONGOCXX_PRIVATE bsoncxx::document::value _run_command(
-        const client_session* session, bsoncxx::document::view_or_value command);
+    MONGOCXX_PRIVATE bsoncxx::v_noabi::document::value _run_command(
+        const client_session* session, bsoncxx::v_noabi::document::view_or_value command);
 
     MONGOCXX_PRIVATE mongocxx::v_noabi::collection _create_collection(
         const client_session* session,
         stdx::string_view name,
-        bsoncxx::document::view_or_value collection_options,
+        bsoncxx::v_noabi::document::view_or_value collection_options,
         const stdx::optional<mongocxx::v_noabi::write_concern>& write_concern);
 
     MONGOCXX_PRIVATE mongocxx::v_noabi::collection _create_collection_deprecated(
         const client_session* session,
-        bsoncxx::string::view_or_value name,
+        bsoncxx::v_noabi::string::view_or_value name,
         const options::create_collection_deprecated& collection_options,
         const stdx::optional<mongocxx::v_noabi::write_concern>& write_concern);
 
     MONGOCXX_PRIVATE cursor _list_collections(const client_session* session,
-                                              bsoncxx::document::view_or_value filter);
+                                              bsoncxx::v_noabi::document::view_or_value filter);
 
     MONGOCXX_PRIVATE std::vector<std::string> _list_collection_names(
-        const client_session* session, bsoncxx::document::view_or_value filter);
+        const client_session* session, bsoncxx::v_noabi::document::view_or_value filter);
 
     MONGOCXX_PRIVATE void _drop(
         const client_session* session,
-        const bsoncxx::stdx::optional<mongocxx::v_noabi::write_concern>& write_concern);
+        const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>& write_concern);
 
     MONGOCXX_PRIVATE change_stream _watch(const client_session* session,
                                           const pipeline& pipe,
@@ -678,7 +682,7 @@ class database {
 };
 
 MONGOCXX_INLINE mongocxx::v_noabi::collection database::operator[](
-    bsoncxx::string::view_or_value name) const {
+    bsoncxx::v_noabi::string::view_or_value name) const {
     return collection(name);
 }
 

@@ -35,8 +35,8 @@
 namespace mongocxx {
 namespace v_noabi {
 
-using bsoncxx::builder::basic::kvp;
-using bsoncxx::builder::basic::make_document;
+using bsoncxx::v_noabi::builder::basic::kvp;
+using bsoncxx::v_noabi::builder::basic::make_document;
 
 class index_view::impl {
    public:
@@ -51,7 +51,7 @@ class index_view::impl {
 
     impl& operator=(const impl& i) = default;
 
-    std::string get_index_name_from_keys(bsoncxx::document::view_or_value keys) {
+    std::string get_index_name_from_keys(bsoncxx::v_noabi::document::view_or_value keys) {
         libbson::scoped_bson_t keys_bson{keys};
 
         auto name_from_keys = libmongoc::collection_keys_to_index_string(keys_bson.bson());
@@ -63,9 +63,9 @@ class index_view::impl {
 
     cursor list(const client_session* session) {
         if (session) {
-            bsoncxx::builder::basic::document options_builder;
+            bsoncxx::v_noabi::builder::basic::document options_builder;
             options_builder.append(
-                bsoncxx::builder::concatenate_doc{session->_get_impl().to_document()});
+                bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
             libbson::scoped_bson_t bson_options(options_builder.extract());
             return libmongoc::collection_find_indexes_with_opts(_coll, bson_options.bson());
         }
@@ -73,9 +73,9 @@ class index_view::impl {
         return libmongoc::collection_find_indexes_with_opts(_coll, nullptr);
     }
 
-    bsoncxx::stdx::optional<std::string> create_one(const client_session* session,
-                                                    const index_model& model,
-                                                    const options::index_view& options) {
+    bsoncxx::v_noabi::stdx::optional<std::string> create_one(const client_session* session,
+                                                             const index_model& model,
+                                                             const options::index_view& options) {
         const auto result = create_many(session, std::vector<index_model>{model}, options);
         auto result_view = result.view();
 
@@ -99,22 +99,22 @@ class index_view::impl {
 
         const auto note = result_view["note"];
 
-        if (note &&
-            bsoncxx::string::to_string(note.get_string().value) == "all indexes already exist") {
-            return bsoncxx::stdx::nullopt;
+        if (note && bsoncxx::v_noabi::string::to_string(note.get_string().value) ==
+                        "all indexes already exist") {
+            return bsoncxx::v_noabi::stdx::nullopt;
         }
 
         if (auto name = model.options()["name"]) {
-            return bsoncxx::stdx::make_optional(
-                bsoncxx::string::to_string(name.get_value().get_string().value));
+            return bsoncxx::v_noabi::stdx::make_optional(
+                bsoncxx::v_noabi::string::to_string(name.get_value().get_string().value));
         }
 
-        return bsoncxx::stdx::make_optional(get_index_name_from_keys(model.keys()));
+        return bsoncxx::v_noabi::stdx::make_optional(get_index_name_from_keys(model.keys()));
     }
 
-    bsoncxx::document::value create_many(const client_session* session,
-                                         const std::vector<index_model>& indexes,
-                                         const options::index_view& options) {
+    bsoncxx::v_noabi::document::value create_many(const client_session* session,
+                                                  const std::vector<index_model>& indexes,
+                                                  const options::index_view& options) {
         using namespace bsoncxx;
         using builder::basic::concatenate;
 
@@ -122,8 +122,8 @@ class index_view::impl {
 
         for (auto&& model : indexes) {
             builder::basic::document index_doc;
-            const bsoncxx::document::view& opts_view = model.options();
-            const bsoncxx::document::view& keys = model.keys();
+            const bsoncxx::v_noabi::document::view& opts_view = model.options();
+            const bsoncxx::v_noabi::document::view& keys = model.keys();
 
             if (!opts_view["name"]) {
                 index_doc.append(kvp("name", get_index_name_from_keys(keys)));
@@ -143,7 +143,8 @@ class index_view::impl {
         builder::basic::document opts_doc;
 
         if (options.max_time()) {
-            opts_doc.append(kvp("maxTimeMS", bsoncxx::types::b_int64{options.max_time()->count()}));
+            opts_doc.append(
+                kvp("maxTimeMS", bsoncxx::v_noabi::types::b_int64{options.max_time()->count()}));
         }
 
         if (options.write_concern()) {
@@ -151,7 +152,8 @@ class index_view::impl {
         }
 
         if (session) {
-            opts_doc.append(bsoncxx::builder::concatenate_doc{session->_get_impl().to_document()});
+            opts_doc.append(
+                bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
         }
 
         if (options.commit_quorum()) {
@@ -188,16 +190,17 @@ class index_view::impl {
     }
 
     void drop_one(const client_session* session,
-                  bsoncxx::stdx::string_view name,
+                  bsoncxx::v_noabi::stdx::string_view name,
                   const options::index_view& options) {
-        if (name == bsoncxx::stdx::string_view{"*"}) {
+        if (name == bsoncxx::v_noabi::stdx::string_view{"*"}) {
             throw logic_error(error_code::k_invalid_parameter);
         }
 
-        bsoncxx::builder::basic::document opts_doc;
+        bsoncxx::v_noabi::builder::basic::document opts_doc;
 
         if (options.max_time()) {
-            opts_doc.append(kvp("maxTimeMS", bsoncxx::types::b_int64{options.max_time()->count()}));
+            opts_doc.append(
+                kvp("maxTimeMS", bsoncxx::v_noabi::types::b_int64{options.max_time()->count()}));
         }
 
         if (options.write_concern()) {
@@ -205,10 +208,11 @@ class index_view::impl {
         }
 
         if (session) {
-            opts_doc.append(bsoncxx::builder::concatenate_doc{session->_get_impl().to_document()});
+            opts_doc.append(
+                bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
         }
 
-        bsoncxx::document::value command = make_document(
+        bsoncxx::v_noabi::document::value command = make_document(
             kvp("dropIndexes", libmongoc::collection_get_name(_coll)), kvp("index", name));
 
         libbson::scoped_bson_t reply;
@@ -225,7 +229,7 @@ class index_view::impl {
     }
 
     inline void drop_all(const client_session* session, const options::index_view& options) {
-        bsoncxx::document::value command = make_document(
+        bsoncxx::v_noabi::document::value command = make_document(
             kvp("dropIndexes", libmongoc::collection_get_name(_coll)), kvp("index", "*"));
 
         libbson::scoped_bson_t reply;
@@ -233,10 +237,11 @@ class index_view::impl {
 
         libbson::scoped_bson_t command_bson{command.view()};
 
-        bsoncxx::builder::basic::document opts_doc;
+        bsoncxx::v_noabi::builder::basic::document opts_doc;
 
         if (options.max_time()) {
-            opts_doc.append(kvp("maxTimeMS", bsoncxx::types::b_int64{options.max_time()->count()}));
+            opts_doc.append(
+                kvp("maxTimeMS", bsoncxx::v_noabi::types::b_int64{options.max_time()->count()}));
         }
 
         if (options.write_concern()) {
@@ -244,7 +249,8 @@ class index_view::impl {
         }
 
         if (session) {
-            opts_doc.append(bsoncxx::builder::concatenate_doc{session->_get_impl().to_document()});
+            opts_doc.append(
+                bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
         }
 
         libbson::scoped_bson_t opts_bson{opts_doc.view()};

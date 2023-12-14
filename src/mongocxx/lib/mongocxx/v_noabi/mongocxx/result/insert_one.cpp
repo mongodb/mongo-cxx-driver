@@ -21,16 +21,17 @@ namespace mongocxx {
 namespace v_noabi {
 namespace result {
 
-insert_one::insert_one(result::bulk_write result, bsoncxx::types::bson_value::view inserted_id)
+insert_one::insert_one(result::bulk_write result,
+                       bsoncxx::v_noabi::types::bson_value::view inserted_id)
     : _result(std::move(result)),
-      _inserted_id_owned(bsoncxx::builder::basic::make_array(inserted_id)),
+      _inserted_id_owned(bsoncxx::v_noabi::builder::basic::make_array(inserted_id)),
       _inserted_id(_inserted_id_owned.view()[0].get_value()) {}
 
 const result::bulk_write& insert_one::result() const {
     return _result;
 }
 
-const bsoncxx::types::bson_value::view& insert_one::inserted_id() const {
+const bsoncxx::v_noabi::types::bson_value::view& insert_one::inserted_id() const {
     return _inserted_id;
 }
 

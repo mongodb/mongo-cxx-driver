@@ -33,7 +33,7 @@ namespace mongocxx {
 namespace v_noabi {
 
 using namespace libbson;
-using bsoncxx::builder::basic::kvp;
+using bsoncxx::v_noabi::builder::basic::kvp;
 
 bulk_write::bulk_write(bulk_write&&) noexcept = default;
 bulk_write& bulk_write::operator=(bulk_write&&) noexcept = default;
@@ -56,7 +56,7 @@ bulk_write& bulk_write::append(const model::write& operation) {
             scoped_bson_t filter(operation.get_update_one().filter());
             scoped_bson_t update(operation.get_update_one().update());
 
-            bsoncxx::builder::basic::document options_builder;
+            bsoncxx::v_noabi::builder::basic::document options_builder;
             if (const auto collation = operation.get_update_one().collation()) {
                 options_builder.append(kvp("collation", *collation));
             }
@@ -83,7 +83,7 @@ bulk_write& bulk_write::append(const model::write& operation) {
             scoped_bson_t filter(operation.get_update_many().filter());
             scoped_bson_t update(operation.get_update_many().update());
 
-            bsoncxx::builder::basic::document options_builder;
+            bsoncxx::v_noabi::builder::basic::document options_builder;
             if (const auto collation = operation.get_update_many().collation()) {
                 options_builder.append(kvp("collation", *collation));
             }
@@ -109,7 +109,7 @@ bulk_write& bulk_write::append(const model::write& operation) {
         case write_type::k_delete_one: {
             scoped_bson_t filter(operation.get_delete_one().filter());
 
-            bsoncxx::builder::basic::document options_builder;
+            bsoncxx::v_noabi::builder::basic::document options_builder;
             if (const auto collation = operation.get_delete_one().collation()) {
                 options_builder.append(kvp("collation", *collation));
             }
@@ -129,7 +129,7 @@ bulk_write& bulk_write::append(const model::write& operation) {
         case write_type::k_delete_many: {
             scoped_bson_t filter(operation.get_delete_many().filter());
 
-            bsoncxx::builder::basic::document options_builder;
+            bsoncxx::v_noabi::builder::basic::document options_builder;
             if (const auto collation = operation.get_delete_many().collation()) {
                 options_builder.append(kvp("collation", *collation));
             }
@@ -150,7 +150,7 @@ bulk_write& bulk_write::append(const model::write& operation) {
             scoped_bson_t filter(operation.get_replace_one().filter());
             scoped_bson_t replace(operation.get_replace_one().replacement());
 
-            bsoncxx::builder::basic::document options_builder;
+            bsoncxx::v_noabi::builder::basic::document options_builder;
             if (const auto collation = operation.get_replace_one().collation()) {
                 options_builder.append(kvp("collation", *collation));
             }
@@ -198,7 +198,7 @@ bulk_write::bulk_write(const collection& coll,
                        const options::bulk_write& options,
                        const client_session* session)
     : _created_from_collection{true} {
-    bsoncxx::builder::basic::document options_builder;
+    bsoncxx::v_noabi::builder::basic::document options_builder;
     if (!options.ordered()) {
         // ordered is true by default. Only append it if set to false.
         options_builder.append(kvp("ordered", false));
@@ -214,7 +214,7 @@ bulk_write::bulk_write(const collection& coll,
     }
     if (session) {
         options_builder.append(
-            bsoncxx::builder::concatenate_doc{session->_get_impl().to_document()});
+            bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
     }
 
     scoped_bson_t bson_options(options_builder.extract());

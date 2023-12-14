@@ -47,7 +47,7 @@ class topology_changed_event {
     ///
     /// @return The id.
     ///
-    bsoncxx::oid topology_id() const;
+    bsoncxx::v_noabi::oid topology_id() const;
 
     ///
     /// The server's description before it changed.

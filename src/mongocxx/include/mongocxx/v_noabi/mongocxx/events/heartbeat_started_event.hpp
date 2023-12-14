@@ -47,7 +47,7 @@ class heartbeat_started_event {
     ///
     /// @return The host name.
     ///
-    bsoncxx::stdx::string_view host() const;
+    bsoncxx::v_noabi::stdx::string_view host() const;
 
     ///
     /// Returns the port.

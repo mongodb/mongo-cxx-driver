@@ -70,8 +70,8 @@ class client_encryption::impl {
             convert(value);
         }
 
-        explicit scoped_bson_value(const bsoncxx::types::bson_value::view& view) {
-            // Argument order is reversed for bsoncxx::types::bson_value::view.
+        explicit scoped_bson_value(const bsoncxx::v_noabi::types::bson_value::view& view) {
+            // Argument order is reversed for bsoncxx::v_noabi::types::bson_value::view.
             bsoncxx::v_noabi::types::convert_to_libbson(&this->value, view);
         }
 
@@ -119,8 +119,8 @@ class client_encryption::impl {
         }
     }
 
-    bsoncxx::types::bson_value::value create_data_key(std::string kms_provider,
-                                                      const options::data_key& opts) {
+    bsoncxx::v_noabi::types::bson_value::value create_data_key(std::string kms_provider,
+                                                               const options::data_key& opts) {
         using opts_type = mongoc_client_encryption_datakey_opts_t;
 
         struct opts_deleter {
@@ -147,8 +147,8 @@ class client_encryption::impl {
         return bsoncxx::v_noabi::types::bson_value::make_owning_bson(keyid.get());
     }
 
-    bsoncxx::types::bson_value::value encrypt(bsoncxx::types::bson_value::view value,
-                                              const options::encrypt& opts) {
+    bsoncxx::v_noabi::types::bson_value::value encrypt(
+        bsoncxx::v_noabi::types::bson_value::view value, const options::encrypt& opts) {
         const auto encrypt_opts =
             encrypt_opts_ptr(static_cast<mongoc_client_encryption_encrypt_opts_t*>(opts.convert()));
 
@@ -166,8 +166,8 @@ class client_encryption::impl {
         return bsoncxx::v_noabi::types::bson_value::make_owning_bson(ciphertext.get());
     }
 
-    bsoncxx::document::value encrypt_expression(bsoncxx::document::view_or_value expr,
-                                                const options::encrypt& opts) {
+    bsoncxx::v_noabi::document::value encrypt_expression(
+        bsoncxx::v_noabi::document::view_or_value expr, const options::encrypt& opts) {
         const auto encrypt_opts =
             encrypt_opts_ptr(static_cast<mongoc_client_encryption_encrypt_opts_t*>(opts.convert()));
 
@@ -185,7 +185,8 @@ class client_encryption::impl {
         return encrypted.steal();
     }
 
-    bsoncxx::types::bson_value::value decrypt(bsoncxx::types::bson_value::view value) {
+    bsoncxx::v_noabi::types::bson_value::value decrypt(
+        bsoncxx::v_noabi::types::bson_value::view value) {
         scoped_bson_value decrypted_value;
         bson_error_t error;
 
@@ -199,8 +200,9 @@ class client_encryption::impl {
         return bsoncxx::v_noabi::types::bson_value::make_owning_bson(decrypted_value.get());
     }
 
-    result::rewrap_many_datakey rewrap_many_datakey(bsoncxx::document::view_or_value filter,
-                                                    const options::rewrap_many_datakey& opts) {
+    result::rewrap_many_datakey rewrap_many_datakey(
+        bsoncxx::v_noabi::document::view_or_value filter,
+        const options::rewrap_many_datakey& opts) {
         using result_type = mongoc_client_encryption_rewrap_many_datakey_result_t;
 
         struct result_deleter {
@@ -238,17 +240,18 @@ class client_encryption::impl {
                 result.get());
 
         if (bulk_write_result) {
-            const auto doc =
-                bsoncxx::document::view(bson_get_data(bulk_write_result), bulk_write_result->len);
-            return result::rewrap_many_datakey(result::bulk_write(bsoncxx::document::value(doc)));
+            const auto doc = bsoncxx::v_noabi::document::view(bson_get_data(bulk_write_result),
+                                                              bulk_write_result->len);
+            return result::rewrap_many_datakey(
+                result::bulk_write(bsoncxx::v_noabi::document::value(doc)));
         } else {
             return result::rewrap_many_datakey();
         }
     }
 
-    result::delete_result delete_key(bsoncxx::types::bson_value::view_or_value id) {
-        using bsoncxx::builder::basic::kvp;
-        using bsoncxx::builder::basic::make_document;
+    result::delete_result delete_key(bsoncxx::v_noabi::types::bson_value::view_or_value id) {
+        using bsoncxx::v_noabi::builder::basic::kvp;
+        using bsoncxx::v_noabi::builder::basic::make_document;
 
         scoped_bson_t reply;
         bson_error_t error;
@@ -272,7 +275,8 @@ class client_encryption::impl {
             make_document(kvp("nRemoved", reply.view()["deletedCount"].get_int32()))));
     }
 
-    stdx::optional<bsoncxx::document::value> get_key(bsoncxx::types::bson_value::view_or_value id) {
+    stdx::optional<bsoncxx::v_noabi::document::value> get_key(
+        bsoncxx::v_noabi::types::bson_value::view_or_value id) {
         libbson::scoped_bson_t key_doc;
         bson_error_t error;
 
@@ -283,8 +287,9 @@ class client_encryption::impl {
             throw_exception<operation_exception>(error);
         }
 
-        return key_doc.view().empty() ? stdx::nullopt
-                                      : stdx::optional<bsoncxx::document::value>{key_doc.steal()};
+        return key_doc.view().empty()
+                   ? stdx::nullopt
+                   : stdx::optional<bsoncxx::v_noabi::document::value>{key_doc.steal()};
     }
 
     mongocxx::v_noabi::cursor get_keys() {
@@ -300,8 +305,9 @@ class client_encryption::impl {
         return mongocxx::v_noabi::cursor(cursor);
     }
 
-    stdx::optional<bsoncxx::document::value> add_key_alt_name(
-        bsoncxx::types::bson_value::view_or_value id, bsoncxx::string::view_or_value key_alt_name) {
+    stdx::optional<bsoncxx::v_noabi::document::value> add_key_alt_name(
+        bsoncxx::v_noabi::types::bson_value::view_or_value id,
+        bsoncxx::v_noabi::string::view_or_value key_alt_name) {
         scoped_bson_t key_doc;
         bson_error_t error;
 
@@ -313,12 +319,13 @@ class client_encryption::impl {
             throw_exception<operation_exception>(error);
         }
 
-        return key_doc.view().empty() ? stdx::nullopt
-                                      : stdx::optional<bsoncxx::document::value>{key_doc.steal()};
+        return key_doc.view().empty()
+                   ? stdx::nullopt
+                   : stdx::optional<bsoncxx::v_noabi::document::value>{key_doc.steal()};
     }
 
-    stdx::optional<bsoncxx::document::value> get_key_by_alt_name(
-        bsoncxx::string::view_or_value key_alt_name) {
+    stdx::optional<bsoncxx::v_noabi::document::value> get_key_by_alt_name(
+        bsoncxx::v_noabi::string::view_or_value key_alt_name) {
         scoped_bson_t key_doc;
         bson_error_t error;
 
@@ -329,12 +336,14 @@ class client_encryption::impl {
             throw_exception<operation_exception>(error);
         }
 
-        return key_doc.view().empty() ? stdx::nullopt
-                                      : stdx::optional<bsoncxx::document::value>{key_doc.steal()};
+        return key_doc.view().empty()
+                   ? stdx::nullopt
+                   : stdx::optional<bsoncxx::v_noabi::document::value>{key_doc.steal()};
     }
 
-    stdx::optional<bsoncxx::document::value> remove_key_alt_name(
-        bsoncxx::types::bson_value::view_or_value id, bsoncxx::string::view_or_value key_alt_name) {
+    stdx::optional<bsoncxx::v_noabi::document::value> remove_key_alt_name(
+        bsoncxx::v_noabi::types::bson_value::view_or_value id,
+        bsoncxx::v_noabi::string::view_or_value key_alt_name) {
         scoped_bson_t key_doc;
         bson_error_t error;
 
@@ -346,18 +355,19 @@ class client_encryption::impl {
             throw_exception<operation_exception>(error);
         }
 
-        return key_doc.view().empty() ? stdx::nullopt
-                                      : stdx::optional<bsoncxx::document::value>{key_doc.steal()};
+        return key_doc.view().empty()
+                   ? stdx::nullopt
+                   : stdx::optional<bsoncxx::v_noabi::document::value>{key_doc.steal()};
     }
 
     collection create_encrypted_collection(
         const database& dbcxx,
         mongoc_database_t* const db,
         const std::string& coll_name,
-        const bsoncxx::document::view opts,
-        bsoncxx::document::value& out_options,
+        const bsoncxx::v_noabi::document::view opts,
+        bsoncxx::v_noabi::document::value& out_options,
         const std::string& kms_provider,
-        const stdx::optional<bsoncxx::document::view>& masterkey) {
+        const stdx::optional<bsoncxx::v_noabi::document::view>& masterkey) {
         bson_error_t error = {};
         scoped_bson_t out_opts;
         out_opts.init();

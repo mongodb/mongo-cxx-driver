@@ -21,31 +21,31 @@ namespace mongocxx {
 namespace v_noabi {
 namespace model {
 
-update_many::update_many(bsoncxx::document::view_or_value filter,
-                         bsoncxx::document::view_or_value update)
+update_many::update_many(bsoncxx::v_noabi::document::view_or_value filter,
+                         bsoncxx::v_noabi::document::view_or_value update)
     : _filter(std::move(filter)), _update(std::move(update)) {}
 
-update_many::update_many(bsoncxx::document::view_or_value filter, const pipeline& update)
-    : _filter(std::move(filter)), _update(bsoncxx::document::value(update.view_array())) {}
+update_many::update_many(bsoncxx::v_noabi::document::view_or_value filter, const pipeline& update)
+    : _filter(std::move(filter)), _update(bsoncxx::v_noabi::document::value(update.view_array())) {}
 
-update_many::update_many(bsoncxx::document::view_or_value filter,
+update_many::update_many(bsoncxx::v_noabi::document::view_or_value filter,
                          std::initializer_list<_empty_doc_tag>)
     : _filter(std::move(filter)), _update() {}
 
-const bsoncxx::document::view_or_value& update_many::filter() const {
+const bsoncxx::v_noabi::document::view_or_value& update_many::filter() const {
     return _filter;
 }
 
-const bsoncxx::document::view_or_value& update_many::update() const {
+const bsoncxx::v_noabi::document::view_or_value& update_many::update() const {
     return _update;
 }
 
-update_many& update_many::collation(bsoncxx::document::view_or_value collation) {
+update_many& update_many::collation(bsoncxx::v_noabi::document::view_or_value collation) {
     _collation = collation;
     return *this;
 }
 
-const stdx::optional<bsoncxx::document::view_or_value>& update_many::collation() const {
+const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& update_many::collation() const {
     return _collation;
 }
 
@@ -67,12 +67,12 @@ const stdx::optional<bool>& update_many::upsert() const {
     return _upsert;
 }
 
-update_many& update_many::array_filters(bsoncxx::array::view_or_value array_filters) {
+update_many& update_many::array_filters(bsoncxx::v_noabi::array::view_or_value array_filters) {
     _array_filters = std::move(array_filters);
     return *this;
 }
 
-const stdx::optional<bsoncxx::array::view_or_value>& update_many::array_filters() const {
+const stdx::optional<bsoncxx::v_noabi::array::view_or_value>& update_many::array_filters() const {
     return _array_filters;
 }
 

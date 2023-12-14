@@ -48,14 +48,14 @@ class command_succeeded_event {
     ///
     /// @return The reply.
     ///
-    bsoncxx::document::view reply() const;
+    bsoncxx::v_noabi::document::view reply() const;
 
     ///
     /// Returns the name of the command.
     ///
     /// @return The command name.
     ///
-    bsoncxx::stdx::string_view command_name() const;
+    bsoncxx::v_noabi::stdx::string_view command_name() const;
 
     ///
     /// Returns the duration of the successful operation.
@@ -83,14 +83,14 @@ class command_succeeded_event {
     ///
     /// @return No contained value, or contains the service id if load balancing is enabled.
     ///
-    bsoncxx::stdx::optional<bsoncxx::oid> service_id() const;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::oid> service_id() const;
 
     ///
     /// Returns the host name.
     ///
     /// @return The host name.
     ///
-    bsoncxx::stdx::string_view host() const;
+    bsoncxx::v_noabi::stdx::string_view host() const;
 
     ///
     /// Returns the port.

@@ -73,7 +73,7 @@ class MONGOCXX_API create_collection_deprecated {
     /// @see
     ///   https://www.mongodb.com/docs/manual/reference/collation/
     ///
-    create_collection_deprecated& collation(bsoncxx::document::view_or_value collation);
+    create_collection_deprecated& collation(bsoncxx::v_noabi::document::view_or_value collation);
 
     ///
     /// Gets the default collation for this collection.
@@ -84,7 +84,7 @@ class MONGOCXX_API create_collection_deprecated {
     /// @see
     ///   https://www.mongodb.com/docs/manual/reference/collation/
     ///
-    const stdx::optional<bsoncxx::document::view_or_value>& collation() const;
+    const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& collation() const;
 
     ///
     /// The maximum number of documents allowed in the capped collection.
@@ -173,7 +173,7 @@ class MONGOCXX_API create_collection_deprecated {
     ///   method chaining.
     ///
     create_collection_deprecated& storage_engine(
-        bsoncxx::document::view_or_value storage_engine_opts);
+        bsoncxx::v_noabi::document::view_or_value storage_engine_opts);
 
     ///
     /// Gets the current storage engine configuration for this collection.
@@ -181,7 +181,7 @@ class MONGOCXX_API create_collection_deprecated {
     /// @return
     ///   Configuration options specific to the storage engine.
     ///
-    const stdx::optional<bsoncxx::document::view_or_value>& storage_engine() const;
+    const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& storage_engine() const;
 
     ///
     /// Specify validation criteria for this collection.
@@ -217,29 +217,29 @@ class MONGOCXX_API create_collection_deprecated {
     ///
     /// @return Options, as a document.
     ///
-    MONGOCXX_DEPRECATED bsoncxx::document::value to_document() const;
-    bsoncxx::document::value to_document_deprecated() const;
+    MONGOCXX_DEPRECATED bsoncxx::v_noabi::document::value to_document() const;
+    bsoncxx::v_noabi::document::value to_document_deprecated() const;
 
     ///
     /// @deprecated
     ///   This method is deprecated. To determine which options are set on this object, use the
     ///   provided accessors instead.
     ///
-    MONGOCXX_DEPRECATED MONGOCXX_INLINE operator bsoncxx::document::value() const;
+    MONGOCXX_DEPRECATED MONGOCXX_INLINE operator bsoncxx::v_noabi::document::value() const;
 
    private:
     stdx::optional<bool> _capped;
-    stdx::optional<bsoncxx::document::view_or_value> _collation;
+    stdx::optional<bsoncxx::v_noabi::document::view_or_value> _collation;
     stdx::optional<std::int64_t> _max_documents;
     stdx::optional<std::int64_t> _max_size;
     stdx::optional<bool> _no_padding;
-    stdx::optional<bsoncxx::document::view_or_value> _storage_engine_opts;
+    stdx::optional<bsoncxx::v_noabi::document::view_or_value> _storage_engine_opts;
     stdx::optional<mongocxx::v_noabi::validation_criteria> _validation;
 };
 
 MONGOCXX_DEPRECATED typedef create_collection_deprecated create_collection;
 
-MONGOCXX_INLINE create_collection_deprecated::operator bsoncxx::document::value() const {
+MONGOCXX_INLINE create_collection_deprecated::operator bsoncxx::v_noabi::document::value() const {
     return to_document_deprecated();
 }
 

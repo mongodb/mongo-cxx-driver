@@ -167,7 +167,7 @@ class auto_encryption {
     ///
     /// @see https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
-    auto_encryption& kms_providers(bsoncxx::document::view_or_value kms_providers);
+    auto_encryption& kms_providers(bsoncxx::v_noabi::document::view_or_value kms_providers);
 
     ///
     /// Gets the KMS providers.
@@ -175,7 +175,7 @@ class auto_encryption {
     /// @return
     ///   An optional document containing the KMS providers.
     ///
-    const stdx::optional<bsoncxx::document::view_or_value>& kms_providers() const;
+    const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& kms_providers() const;
 
     ///
     /// Sets the TLS options to use for client side encryption with a given KMS provider.
@@ -199,7 +199,7 @@ class auto_encryption {
     ///
     /// @see https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
-    auto_encryption& tls_opts(bsoncxx::document::view_or_value tls_opts);
+    auto_encryption& tls_opts(bsoncxx::v_noabi::document::view_or_value tls_opts);
 
     ///
     /// Gets the TLS options.
@@ -207,7 +207,7 @@ class auto_encryption {
     /// @return
     ///   An optional document containing the TLS options.
     ///
-    const stdx::optional<bsoncxx::document::view_or_value>& tls_opts() const;
+    const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& tls_opts() const;
 
     ///
     /// Sets a local JSON schema.
@@ -231,7 +231,7 @@ class auto_encryption {
     ///
     /// @see https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
-    auto_encryption& schema_map(bsoncxx::document::view_or_value schema_map);
+    auto_encryption& schema_map(bsoncxx::v_noabi::document::view_or_value schema_map);
 
     ///
     /// Gets the schema map.
@@ -239,7 +239,7 @@ class auto_encryption {
     /// @return
     ///   An optional document containing the schema map.
     ///
-    const stdx::optional<bsoncxx::document::view_or_value>& schema_map() const;
+    const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& schema_map() const;
 
     ///
     /// Sets the local encrypted fields map.
@@ -258,7 +258,8 @@ class auto_encryption {
     ///
     /// @see https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
-    auto_encryption& encrypted_fields_map(bsoncxx::document::view_or_value encrypted_fields_map);
+    auto_encryption& encrypted_fields_map(
+        bsoncxx::v_noabi::document::view_or_value encrypted_fields_map);
 
     ///
     /// Get encrypted fields map
@@ -266,7 +267,7 @@ class auto_encryption {
     /// @return
     ///   An optional document containing the encrypted fields map
     ///
-    const stdx::optional<bsoncxx::document::view_or_value>& encrypted_fields_map() const;
+    const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& encrypted_fields_map() const;
 
     ///
     /// Automatic encryption is disabled when the 'bypassAutoEncryption'
@@ -361,7 +362,7 @@ class auto_encryption {
     ///
     /// @see https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
-    auto_encryption& extra_options(bsoncxx::document::view_or_value extra);
+    auto_encryption& extra_options(bsoncxx::v_noabi::document::view_or_value extra);
 
     ///
     /// Gets extra options related to the mongocryptd process.
@@ -369,7 +370,7 @@ class auto_encryption {
     /// @return
     ///   An optional document containing the extra options.
     ///
-    const stdx::optional<bsoncxx::document::view_or_value>& extra_options() const;
+    const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& extra_options() const;
 
    private:
     friend ::mongocxx::v_noabi::client;
@@ -382,11 +383,11 @@ class auto_encryption {
     stdx::optional<mongocxx::v_noabi::client*> _key_vault_client;
     stdx::optional<mongocxx::v_noabi::pool*> _key_vault_pool;
     stdx::optional<ns_pair> _key_vault_namespace;
-    stdx::optional<bsoncxx::document::view_or_value> _kms_providers;
-    stdx::optional<bsoncxx::document::view_or_value> _tls_opts;
-    stdx::optional<bsoncxx::document::view_or_value> _schema_map;
-    stdx::optional<bsoncxx::document::view_or_value> _encrypted_fields_map;
-    stdx::optional<bsoncxx::document::view_or_value> _extra_options;
+    stdx::optional<bsoncxx::v_noabi::document::view_or_value> _kms_providers;
+    stdx::optional<bsoncxx::v_noabi::document::view_or_value> _tls_opts;
+    stdx::optional<bsoncxx::v_noabi::document::view_or_value> _schema_map;
+    stdx::optional<bsoncxx::v_noabi::document::view_or_value> _encrypted_fields_map;
+    stdx::optional<bsoncxx::v_noabi::document::view_or_value> _extra_options;
 };
 
 }  // namespace options

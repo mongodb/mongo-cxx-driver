@@ -125,7 +125,7 @@ class find {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    find& collation(bsoncxx::document::view_or_value collation);
+    find& collation(bsoncxx::v_noabi::document::view_or_value collation);
 
     ///
     /// Retrieves the current collation for this operation.
@@ -135,7 +135,7 @@ class find {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    const stdx::optional<bsoncxx::document::view_or_value>& collation() const;
+    const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& collation() const;
 
     ///
     /// Attaches a comment to the query. If $comment also exists in the modifiers document then
@@ -152,7 +152,7 @@ class find {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    find& comment(bsoncxx::string::view_or_value comment);
+    find& comment(bsoncxx::v_noabi::string::view_or_value comment);
 
     ///
     /// Gets the current comment attached to this query.
@@ -163,7 +163,7 @@ class find {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    const stdx::optional<bsoncxx::string::view_or_value>& comment() const;
+    const stdx::optional<bsoncxx::v_noabi::string::view_or_value>& comment() const;
 
     ///
     /// Indicates the type of cursor to use for this query.
@@ -226,7 +226,7 @@ class find {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    find& let(bsoncxx::document::view_or_value let);
+    find& let(bsoncxx::v_noabi::document::view_or_value let);
 
     ///
     /// Gets the current value of the let option.
@@ -236,7 +236,7 @@ class find {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    const stdx::optional<bsoncxx::document::view_or_value> let() const;
+    const stdx::optional<bsoncxx::v_noabi::document::view_or_value> let() const;
 
     ///
     /// Set the value of the comment option.
@@ -252,7 +252,7 @@ class find {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    find& comment_option(bsoncxx::types::bson_value::view_or_value comment);
+    find& comment_option(bsoncxx::v_noabi::types::bson_value::view_or_value comment);
 
     ///
     /// Gets the current value of the comment option.
@@ -264,7 +264,8 @@ class find {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    const stdx::optional<bsoncxx::types::bson_value::view_or_value>& comment_option() const;
+    const stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>& comment_option()
+        const;
 
     ///
     /// Sets maximum number of documents to return.
@@ -300,7 +301,7 @@ class find {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    find& max(bsoncxx::document::view_or_value max);
+    find& max(bsoncxx::v_noabi::document::view_or_value max);
 
     ///
     /// Sets the current exclusive upper bound for a specific index.
@@ -309,7 +310,7 @@ class find {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    const stdx::optional<bsoncxx::document::view_or_value>& max() const;
+    const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& max() const;
 
     ///
     /// The maximum amount of time for the server to wait on new documents to satisfy a tailable
@@ -375,7 +376,7 @@ class find {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    find& min(bsoncxx::document::view_or_value min);
+    find& min(bsoncxx::v_noabi::document::view_or_value min);
 
     ///
     /// Sets the current inclusive lower bound for a specific index.
@@ -384,7 +385,7 @@ class find {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    const stdx::optional<bsoncxx::document::view_or_value>& min() const;
+    const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& min() const;
 
     ///
     /// Sets the cursor flag to prevent cursor from timing out server-side due to a period of
@@ -422,7 +423,7 @@ class find {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    find& projection(bsoncxx::document::view_or_value projection);
+    find& projection(bsoncxx::v_noabi::document::view_or_value projection);
 
     ///
     /// Gets the current projection set on this query.
@@ -431,7 +432,7 @@ class find {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    const stdx::optional<bsoncxx::document::view_or_value>& projection() const;
+    const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& projection() const;
 
     ///
     /// Sets the read_preference for this operation.
@@ -546,7 +547,7 @@ class find {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    find& sort(bsoncxx::document::view_or_value ordering);
+    find& sort(bsoncxx::v_noabi::document::view_or_value ordering);
 
     ///
     /// Gets the current sort ordering for this query.
@@ -555,30 +556,30 @@ class find {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    const stdx::optional<bsoncxx::document::view_or_value>& sort() const;
+    const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& sort() const;
 
    private:
     stdx::optional<bool> _allow_disk_use;
     stdx::optional<bool> _allow_partial_results;
     stdx::optional<std::int32_t> _batch_size;
-    stdx::optional<bsoncxx::document::view_or_value> _collation;
-    stdx::optional<bsoncxx::string::view_or_value> _comment;
+    stdx::optional<bsoncxx::v_noabi::document::view_or_value> _collation;
+    stdx::optional<bsoncxx::v_noabi::string::view_or_value> _comment;
     stdx::optional<cursor::type> _cursor_type;
     stdx::optional<mongocxx::v_noabi::hint> _hint;
-    stdx::optional<bsoncxx::document::view_or_value> _let;
-    stdx::optional<bsoncxx::types::bson_value::view_or_value> _comment_option;
+    stdx::optional<bsoncxx::v_noabi::document::view_or_value> _let;
+    stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> _comment_option;
     stdx::optional<std::int64_t> _limit;
-    stdx::optional<bsoncxx::document::view_or_value> _max;
+    stdx::optional<bsoncxx::v_noabi::document::view_or_value> _max;
     stdx::optional<std::chrono::milliseconds> _max_await_time;
     stdx::optional<std::chrono::milliseconds> _max_time;
-    stdx::optional<bsoncxx::document::view_or_value> _min;
+    stdx::optional<bsoncxx::v_noabi::document::view_or_value> _min;
     stdx::optional<bool> _no_cursor_timeout;
-    stdx::optional<bsoncxx::document::view_or_value> _projection;
+    stdx::optional<bsoncxx::v_noabi::document::view_or_value> _projection;
     stdx::optional<mongocxx::v_noabi::read_preference> _read_preference;
     stdx::optional<bool> _return_key;
     stdx::optional<bool> _show_record_id;
     stdx::optional<std::int64_t> _skip;
-    stdx::optional<bsoncxx::document::view_or_value> _ordering;
+    stdx::optional<bsoncxx::v_noabi::document::view_or_value> _ordering;
 };
 
 }  // namespace options

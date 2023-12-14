@@ -74,7 +74,7 @@ class pipeline {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    pipeline& add_fields(bsoncxx::document::view_or_value fields_to_add);
+    pipeline& add_fields(bsoncxx::v_noabi::document::view_or_value fields_to_add);
 
     ///
     /// Categorizes documents into groups, called buckets, based on a specified expression and
@@ -90,7 +90,7 @@ class pipeline {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    pipeline& bucket(bsoncxx::document::view_or_value bucket_args);
+    pipeline& bucket(bsoncxx::v_noabi::document::view_or_value bucket_args);
 
     ///
     /// Categorizes documents into a specific number of groups, called buckets, based on a
@@ -107,7 +107,7 @@ class pipeline {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    pipeline& bucket_auto(bsoncxx::document::view_or_value bucket_auto_args);
+    pipeline& bucket_auto(bsoncxx::v_noabi::document::view_or_value bucket_auto_args);
 
     ///
     /// Returns statistics regarding a collection or view.
@@ -122,8 +122,8 @@ class pipeline {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    pipeline& coll_stats(
-        bsoncxx::document::view_or_value coll_stats_args = bsoncxx::document::view{});
+    pipeline& coll_stats(bsoncxx::v_noabi::document::view_or_value coll_stats_args =
+                             bsoncxx::v_noabi::document::view{});
 
     ///
     /// Returns a document containing a count of the number of documents input to the stage.
@@ -154,7 +154,7 @@ class pipeline {
     /// @return
     ///   A reference to the object on which this method is being called.
     ///
-    pipeline& current_op(bsoncxx::document::view_or_value current_op_args);
+    pipeline& current_op(bsoncxx::v_noabi::document::view_or_value current_op_args);
 
     ///
     /// Processes multiple aggregation pipelines within a single stage on the same set of input
@@ -170,7 +170,7 @@ class pipeline {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    pipeline& facet(bsoncxx::document::view_or_value facet_args);
+    pipeline& facet(bsoncxx::v_noabi::document::view_or_value facet_args);
 
     ///
     /// Appends a stage to this pipeline object.
@@ -187,7 +187,7 @@ class pipeline {
     /// @return
     ///   A reference to this object on which this member function is being called.
     ///
-    pipeline& append_stage(bsoncxx::document::view_or_value stage);
+    pipeline& append_stage(bsoncxx::v_noabi::document::view_or_value stage);
 
     ///
     /// Appends stages to this pipeline object from the given bson array.
@@ -204,7 +204,7 @@ class pipeline {
     /// @return
     ///   A reference to the object on which this member function is being called.
     ///
-    pipeline& append_stages(bsoncxx::array::view_or_value stages);
+    pipeline& append_stages(bsoncxx::v_noabi::array::view_or_value stages);
 
     ///
     /// Outputs documents in order of nearest to farthest from a specified point.
@@ -219,7 +219,7 @@ class pipeline {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    pipeline& geo_near(bsoncxx::document::view_or_value geo_near_args);
+    pipeline& geo_near(bsoncxx::v_noabi::document::view_or_value geo_near_args);
 
     ///
     /// Performs a recursive search on a collection.
@@ -234,7 +234,7 @@ class pipeline {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    pipeline& graph_lookup(bsoncxx::document::view_or_value graph_lookup_args);
+    pipeline& graph_lookup(bsoncxx::v_noabi::document::view_or_value graph_lookup_args);
 
     ///
     /// Groups documents by some specified expression and outputs to the next stage a
@@ -254,7 +254,7 @@ class pipeline {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    pipeline& group(bsoncxx::document::view_or_value group_args);
+    pipeline& group(bsoncxx::v_noabi::document::view_or_value group_args);
 
     ///
     /// Returns statistics regarding the use of each index for the collection.
@@ -294,7 +294,8 @@ class pipeline {
     /// @return
     ///   A reference to the object on which this method is being called.
     ///
-    pipeline& list_local_sessions(bsoncxx::document::view_or_value list_local_sessions_args);
+    pipeline& list_local_sessions(
+        bsoncxx::v_noabi::document::view_or_value list_local_sessions_args);
 
     ///
     /// Lists all sessions stored in the system.sessions collection in the config database.
@@ -308,7 +309,7 @@ class pipeline {
     /// @return
     ///   A reference to the object on which this method is being called.
     ///
-    pipeline& list_sessions(bsoncxx::document::view_or_value list_sessions_args);
+    pipeline& list_sessions(bsoncxx::v_noabi::document::view_or_value list_sessions_args);
 
     ///
     /// Performs a left outer join to an unsharded collection in the same database to filter in
@@ -324,7 +325,7 @@ class pipeline {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    pipeline& lookup(bsoncxx::document::view_or_value lookup_args);
+    pipeline& lookup(bsoncxx::v_noabi::document::view_or_value lookup_args);
 
     ///
     /// Filters the documents. Only the documents that match the condition(s) specified by the
@@ -339,7 +340,7 @@ class pipeline {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    pipeline& match(bsoncxx::document::view_or_value filter);
+    pipeline& match(bsoncxx::v_noabi::document::view_or_value filter);
 
     ///
     /// Outputs the aggregation results to a collection.
@@ -354,7 +355,7 @@ class pipeline {
     /// @return
     ///   A reference to the object on which this member function is being called.
     ///
-    pipeline& merge(bsoncxx::document::view_or_value merge_args);
+    pipeline& merge(bsoncxx::v_noabi::document::view_or_value merge_args);
 
     ///
     /// Takes documents returned by the aggregation pipeline and writes them to a specified
@@ -384,7 +385,7 @@ class pipeline {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    pipeline& project(bsoncxx::document::view_or_value projection);
+    pipeline& project(bsoncxx::v_noabi::document::view_or_value projection);
 
     ///
     /// Restricts the contents of the documents based on information stored in the documents
@@ -399,7 +400,7 @@ class pipeline {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    pipeline& redact(bsoncxx::document::view_or_value restrictions);
+    pipeline& redact(bsoncxx::v_noabi::document::view_or_value restrictions);
 
     ///
     /// Promotes a specified document to the top level and replaces all other fields.
@@ -414,7 +415,7 @@ class pipeline {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    pipeline& replace_root(bsoncxx::document::view_or_value replace_root_args);
+    pipeline& replace_root(bsoncxx::v_noabi::document::view_or_value replace_root_args);
 
     ///
     /// Randomly selects the specified number of documents that pass into the stage and passes the
@@ -458,7 +459,7 @@ class pipeline {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    pipeline& sort(bsoncxx::document::view_or_value ordering);
+    pipeline& sort(bsoncxx::v_noabi::document::view_or_value ordering);
 
     ///
     /// Groups incoming documents based on the value of a specified expression, then computes the
@@ -477,7 +478,7 @@ class pipeline {
     ///   This overload of sort_by_count() is intended to be used when the desired sort is over a
     ///   grouping of the result of a complex expression computed from the input documents.
     ///
-    pipeline& sort_by_count(bsoncxx::document::view_or_value field_expression);
+    pipeline& sort_by_count(bsoncxx::v_noabi::document::view_or_value field_expression);
 
     ///
     /// Groups incoming documents based on the value of a specified expression, then computes the
@@ -517,7 +518,7 @@ class pipeline {
     ///   This overload of unwind() is intended to be used when additional options other than the
     ///   field name need to be specified.
     ///
-    pipeline& unwind(bsoncxx::document::view_or_value unwind_args);
+    pipeline& unwind(bsoncxx::v_noabi::document::view_or_value unwind_args);
 
     ///
     /// Deconstructs an array field from the input documents to output a document for each element.
@@ -542,7 +543,7 @@ class pipeline {
     ///
     /// @return A view of the underlying BSON array this pipeline represents.
     ///
-    bsoncxx::array::view view_array() const;
+    bsoncxx::v_noabi::array::view view_array() const;
 
    private:
     friend ::mongocxx::v_noabi::client;

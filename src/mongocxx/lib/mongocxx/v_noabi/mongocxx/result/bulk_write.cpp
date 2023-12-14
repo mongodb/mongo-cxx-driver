@@ -20,7 +20,7 @@ namespace mongocxx {
 namespace v_noabi {
 namespace result {
 
-bulk_write::bulk_write(bsoncxx::document::value raw_response)
+bulk_write::bulk_write(bsoncxx::v_noabi::document::value raw_response)
     : _response(std::move(raw_response)) {}
 
 std::int32_t bulk_write::inserted_count() const {
@@ -56,7 +56,7 @@ bulk_write::id_map bulk_write::upserted_ids() const {
     return upserted_ids;
 }
 
-bsoncxx::document::view bulk_write::view() const {
+bsoncxx::v_noabi::document::view bulk_write::view() const {
     return _response.view();
 }
 

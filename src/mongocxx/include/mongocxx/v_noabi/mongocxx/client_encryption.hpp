@@ -85,8 +85,8 @@ class client_encryption {
     /// @see
     /// https://www.mongodb.com/docs/ecosystem/use-cases/client-side-field-level-encryption-guide/#b-create-a-data-encryption-key
     ///
-    bsoncxx::types::bson_value::value create_data_key(std::string kms_provider,
-                                                      const options::data_key& opts = {});
+    bsoncxx::v_noabi::types::bson_value::value create_data_key(std::string kms_provider,
+                                                               const options::data_key& opts = {});
 
     /**
      * @brief Create a collection with client-side-encryption enabled, automatically filling any
@@ -105,10 +105,10 @@ class client_encryption {
     collection create_encrypted_collection(
         const database& db,
         const std::string& coll_name,
-        const bsoncxx::document::view& options,
-        bsoncxx::document::value& out_options,
+        const bsoncxx::v_noabi::document::view& options,
+        bsoncxx::v_noabi::document::value& out_options,
         const std::string& kms_provider,
-        const stdx::optional<bsoncxx::document::view>& masterkey = stdx::nullopt);
+        const stdx::optional<bsoncxx::v_noabi::document::view>& masterkey = stdx::nullopt);
 
     ///
     /// Encrypts a BSON value with a given key and algorithm.
@@ -126,8 +126,8 @@ class client_encryption {
     /// @see
     /// https://www.mongodb.com/docs/manual/reference/method/ClientEncryption.encrypt/#ClientEncryption.encrypt
     ///
-    bsoncxx::types::bson_value::value encrypt(bsoncxx::types::bson_value::view value,
-                                              const options::encrypt& opts);
+    bsoncxx::v_noabi::types::bson_value::value encrypt(
+        bsoncxx::v_noabi::types::bson_value::view value, const options::encrypt& opts);
 
     ///
     /// Encrypts a Match Expression or Aggregate Expression to query a range index.
@@ -142,8 +142,8 @@ class client_encryption {
     ///
     /// @warning The Range algorithm is experimental only. It is not intended for public use. It is
     /// subject to breaking changes.
-    bsoncxx::document::value encrypt_expression(bsoncxx::document::view_or_value expr,
-                                                const options::encrypt& opts);
+    bsoncxx::v_noabi::document::value encrypt_expression(
+        bsoncxx::v_noabi::document::view_or_value expr, const options::encrypt& opts);
 
     ///
     /// Decrypts an encrypted value (BSON binary of subtype 6).
@@ -158,7 +158,8 @@ class client_encryption {
     /// @see
     /// https://www.mongodb.com/docs/manual/reference/method/ClientEncryption.decrypt/#ClientEncryption.decrypt
     ///
-    bsoncxx::types::bson_value::value decrypt(bsoncxx::types::bson_value::view value);
+    bsoncxx::v_noabi::types::bson_value::value decrypt(
+        bsoncxx::v_noabi::types::bson_value::view value);
 
     ///
     /// Decrypts multiple data keys and (re-)encrypts them with a new masterKey,
@@ -181,8 +182,8 @@ class client_encryption {
     /// @see
     /// https://www.mongodb.com/docs/manual/reference/method/KeyVault.rewrapManyDataKey/
     ///
-    result::rewrap_many_datakey rewrap_many_datakey(bsoncxx::document::view_or_value filter,
-                                                    const options::rewrap_many_datakey& opts);
+    result::rewrap_many_datakey rewrap_many_datakey(
+        bsoncxx::v_noabi::document::view_or_value filter, const options::rewrap_many_datakey& opts);
 
     ///
     /// Removes the key document with the given UUID (BSON binary subtype 0x04)
@@ -196,7 +197,7 @@ class client_encryption {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/method/KeyVault.deleteKey/
     ///
-    result::delete_result delete_key(bsoncxx::types::bson_value::view_or_value id);
+    result::delete_result delete_key(bsoncxx::v_noabi::types::bson_value::view_or_value id);
 
     ///
     /// Finds a single key document with the given UUID (BSON binary subtype 0x04).
@@ -209,7 +210,8 @@ class client_encryption {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/method/KeyVault.getKey/
     ///
-    stdx::optional<bsoncxx::document::value> get_key(bsoncxx::types::bson_value::view_or_value id);
+    stdx::optional<bsoncxx::v_noabi::document::value> get_key(
+        bsoncxx::v_noabi::types::bson_value::view_or_value id);
 
     ///
     /// Finds all documents in the key vault collection.
@@ -236,8 +238,9 @@ class client_encryption {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/method/KeyVault.addKeyAlternateName/
     ///
-    stdx::optional<bsoncxx::document::value> add_key_alt_name(
-        bsoncxx::types::bson_value::view_or_value id, bsoncxx::string::view_or_value key_alt_name);
+    stdx::optional<bsoncxx::v_noabi::document::value> add_key_alt_name(
+        bsoncxx::v_noabi::types::bson_value::view_or_value id,
+        bsoncxx::v_noabi::string::view_or_value key_alt_name);
 
     ///
     /// Removes a keyAltName from the keyAltNames array of the key document in
@@ -253,8 +256,9 @@ class client_encryption {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/method/KeyVault.removeKeyAlternateName/
     ///
-    stdx::optional<bsoncxx::document::value> remove_key_alt_name(
-        bsoncxx::types::bson_value::view_or_value id, bsoncxx::string::view_or_value key_alt_name);
+    stdx::optional<bsoncxx::v_noabi::document::value> remove_key_alt_name(
+        bsoncxx::v_noabi::types::bson_value::view_or_value id,
+        bsoncxx::v_noabi::string::view_or_value key_alt_name);
 
     ///
     /// Get the key document from the key vault collection with the provided name.
@@ -267,8 +271,8 @@ class client_encryption {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/method/KeyVault.getKeyByAltName/
     ///
-    stdx::optional<bsoncxx::document::value> get_key_by_alt_name(
-        bsoncxx::string::view_or_value key_alt_name);
+    stdx::optional<bsoncxx::v_noabi::document::value> get_key_by_alt_name(
+        bsoncxx::v_noabi::string::view_or_value key_alt_name);
 
    private:
     class MONGOCXX_PRIVATE impl;

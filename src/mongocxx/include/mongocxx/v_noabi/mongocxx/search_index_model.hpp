@@ -22,9 +22,9 @@ class search_index_model {
     ///
     /// Initializes a new search_index_model over a mongocxx::v_noabi::collection.
     ///
-    search_index_model(bsoncxx::document::view_or_value definition);
-    search_index_model(bsoncxx::string::view_or_value name,
-                       bsoncxx::document::view_or_value definition);
+    search_index_model(bsoncxx::v_noabi::document::view_or_value definition);
+    search_index_model(bsoncxx::v_noabi::string::view_or_value name,
+                       bsoncxx::v_noabi::document::view_or_value definition);
 
     search_index_model() = delete;
 
@@ -56,12 +56,12 @@ class search_index_model {
     ///
     /// Retrieves name of a search_index_model.
     ///
-    bsoncxx::stdx::optional<bsoncxx::string::view_or_value> name() const;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> name() const;
 
     ///
     /// Retrieves definition of a search_index_model.
     ///
-    bsoncxx::document::view definition() const;
+    bsoncxx::v_noabi::document::view definition() const;
 
    private:
     class MONGOCXX_PRIVATE impl;

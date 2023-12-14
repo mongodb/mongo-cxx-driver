@@ -9,18 +9,18 @@
 namespace mongocxx {
 namespace v_noabi {
 
-search_index_model::search_index_model(bsoncxx::document::view_or_value definition)
-    : _impl{bsoncxx::stdx::make_unique<impl>(definition)} {}
-search_index_model::search_index_model(bsoncxx::string::view_or_value name,
-                                       bsoncxx::document::view_or_value definition)
-    : _impl{bsoncxx::stdx::make_unique<impl>(name, definition)} {}
+search_index_model::search_index_model(bsoncxx::v_noabi::document::view_or_value definition)
+    : _impl{bsoncxx::v_noabi::stdx::make_unique<impl>(definition)} {}
+search_index_model::search_index_model(bsoncxx::v_noabi::string::view_or_value name,
+                                       bsoncxx::v_noabi::document::view_or_value definition)
+    : _impl{bsoncxx::v_noabi::stdx::make_unique<impl>(name, definition)} {}
 
 search_index_model::search_index_model(search_index_model&&) noexcept = default;
 
 search_index_model& search_index_model::operator=(search_index_model&&) noexcept = default;
 
 search_index_model::search_index_model(const search_index_model& other)
-    : _impl(bsoncxx::stdx::make_unique<impl>(other._get_impl())) {}
+    : _impl(bsoncxx::v_noabi::stdx::make_unique<impl>(other._get_impl())) {}
 
 search_index_model& search_index_model::operator=(const search_index_model& other) {
     _get_impl() = other._get_impl();
@@ -29,11 +29,12 @@ search_index_model& search_index_model::operator=(const search_index_model& othe
 
 search_index_model::~search_index_model() = default;
 
-bsoncxx::stdx::optional<bsoncxx::string::view_or_value> search_index_model::name() const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> search_index_model::name()
+    const {
     return _get_impl()._name;
 }
 
-bsoncxx::document::view search_index_model::definition() const {
+bsoncxx::v_noabi::document::view search_index_model::definition() const {
     return _get_impl()._definition.view();
 }
 

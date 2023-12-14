@@ -47,7 +47,7 @@ class operation_exception : public exception {
     ///   An optional message to be returned by `what`.
     ///
     operation_exception(std::error_code ec,
-                        bsoncxx::document::value&& raw_server_error,
+                        bsoncxx::v_noabi::document::value&& raw_server_error,
                         std::string what_arg = "");
 
     ///
@@ -57,8 +57,8 @@ class operation_exception : public exception {
     ///
     /// @returns The raw server error, if it is available.
     ///
-    const stdx::optional<bsoncxx::document::value>& raw_server_error() const;
-    stdx::optional<bsoncxx::document::value>& raw_server_error();
+    const stdx::optional<bsoncxx::v_noabi::document::value>& raw_server_error() const;
+    stdx::optional<bsoncxx::v_noabi::document::value>& raw_server_error();
     ///
     /// @}
     ///
@@ -74,7 +74,7 @@ class operation_exception : public exception {
     bool has_error_label(stdx::string_view label) const;
 
    private:
-    stdx::optional<bsoncxx::document::value> _raw_server_error;
+    stdx::optional<bsoncxx::v_noabi::document::value> _raw_server_error;
 };
 
 }  // namespace v_noabi

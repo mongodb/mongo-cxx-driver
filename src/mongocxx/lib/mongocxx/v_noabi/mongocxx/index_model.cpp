@@ -19,8 +19,8 @@
 namespace mongocxx {
 namespace v_noabi {
 
-index_model::index_model(const bsoncxx::document::view_or_value& keys,
-                         const bsoncxx::document::view_or_value& options)
+index_model::index_model(const bsoncxx::v_noabi::document::view_or_value& keys,
+                         const bsoncxx::v_noabi::document::view_or_value& options)
     : _keys{keys.view()}, _options{options.view()} {}
 
 index_model::index_model(index_model&&) noexcept = default;
@@ -31,11 +31,11 @@ index_model::index_model(const index_model&) = default;
 
 index_model::~index_model() = default;
 
-bsoncxx::document::view index_model::keys() const {
+bsoncxx::v_noabi::document::view index_model::keys() const {
     return _keys.view();
 }
 
-bsoncxx::document::view index_model::options() const {
+bsoncxx::v_noabi::document::view index_model::options() const {
     return _options.view();
 }
 

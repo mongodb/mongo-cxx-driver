@@ -35,7 +35,7 @@ insert& insert::ordered(bool ordered) {
     return *this;
 }
 
-insert& insert::comment(bsoncxx::types::bson_value::view_or_value comment) {
+insert& insert::comment(bsoncxx::v_noabi::types::bson_value::view_or_value comment) {
     _comment = std::move(comment);
     return *this;
 }
@@ -52,7 +52,7 @@ const stdx::optional<bool>& insert::ordered() const {
     return _ordered;
 }
 
-const stdx::optional<bsoncxx::types::bson_value::view_or_value>& insert::comment() const {
+const stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>& insert::comment() const {
     return _comment;
 }
 

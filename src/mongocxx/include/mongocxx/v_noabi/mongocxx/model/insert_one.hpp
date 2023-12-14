@@ -35,17 +35,17 @@ class insert_one {
     /// @param document
     ///   The document to insert.
     ///
-    insert_one(bsoncxx::document::view_or_value document);
+    insert_one(bsoncxx::v_noabi::document::view_or_value document);
 
     ///
     /// Gets the document to be inserted.
     ///
     /// @return The document to be inserted.
     ///
-    const bsoncxx::document::view_or_value& document() const;
+    const bsoncxx::v_noabi::document::view_or_value& document() const;
 
    private:
-    bsoncxx::document::view_or_value _document;
+    bsoncxx::v_noabi::document::view_or_value _document;
 };
 
 }  // namespace model

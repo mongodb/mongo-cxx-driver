@@ -46,7 +46,7 @@ class topology_opening_event {
     ///
     /// @return The id.
     ///
-    bsoncxx::oid topology_id() const;
+    bsoncxx::v_noabi::oid topology_id() const;
 
    private:
     const void* _event;

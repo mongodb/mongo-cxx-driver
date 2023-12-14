@@ -120,7 +120,7 @@ class insert {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    insert& comment(bsoncxx::types::bson_value::view_or_value comment);
+    insert& comment(bsoncxx::v_noabi::types::bson_value::view_or_value comment);
 
     ///
     /// The current comment for this operation.
@@ -129,13 +129,13 @@ class insert {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/insert/
     ///
-    const stdx::optional<bsoncxx::types::bson_value::view_or_value>& comment() const;
+    const stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>& comment() const;
 
    private:
     stdx::optional<mongocxx::v_noabi::write_concern> _write_concern;
     stdx::optional<bool> _ordered;
     stdx::optional<bool> _bypass_document_validation;
-    stdx::optional<bsoncxx::types::bson_value::view_or_value> _comment;
+    stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> _comment;
 };
 
 }  // namespace options

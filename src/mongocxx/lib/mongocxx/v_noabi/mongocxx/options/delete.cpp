@@ -21,7 +21,7 @@ namespace mongocxx {
 namespace v_noabi {
 namespace options {
 
-delete_options& delete_options::collation(bsoncxx::document::view_or_value collation) {
+delete_options& delete_options::collation(bsoncxx::v_noabi::document::view_or_value collation) {
     _collation = std::move(collation);
     return *this;
 }
@@ -36,7 +36,7 @@ delete_options& delete_options::hint(mongocxx::v_noabi::hint index_hint) {
     return *this;
 }
 
-const stdx::optional<bsoncxx::document::view_or_value>& delete_options::collation() const {
+const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& delete_options::collation() const {
     return _collation;
 }
 
@@ -48,21 +48,23 @@ const stdx::optional<mongocxx::v_noabi::hint>& delete_options::hint() const {
     return _hint;
 }
 
-delete_options& delete_options::let(bsoncxx::document::view_or_value let) {
+delete_options& delete_options::let(bsoncxx::v_noabi::document::view_or_value let) {
     _let = let;
     return *this;
 }
 
-const stdx::optional<bsoncxx::document::view_or_value> delete_options::let() const {
+const stdx::optional<bsoncxx::v_noabi::document::view_or_value> delete_options::let() const {
     return _let;
 }
 
-delete_options& delete_options::comment(bsoncxx::types::bson_value::view_or_value comment) {
+delete_options& delete_options::comment(
+    bsoncxx::v_noabi::types::bson_value::view_or_value comment) {
     _comment = std::move(comment);
     return *this;
 }
 
-const stdx::optional<bsoncxx::types::bson_value::view_or_value> delete_options::comment() const {
+const stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> delete_options::comment()
+    const {
     return _comment;
 }
 

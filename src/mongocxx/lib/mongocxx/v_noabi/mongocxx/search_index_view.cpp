@@ -34,34 +34,34 @@ cursor search_index_view::list(const client_session& session, const options::agg
     return _get_impl().list(&session, options);
 }
 
-cursor search_index_view::list(bsoncxx::string::view_or_value name,
+cursor search_index_view::list(bsoncxx::v_noabi::string::view_or_value name,
                                const options::aggregate& options) {
     return _get_impl().list(nullptr, name, options);
 }
 
 cursor search_index_view::list(const client_session& session,
-                               bsoncxx::string::view_or_value name,
+                               bsoncxx::v_noabi::string::view_or_value name,
                                const options::aggregate& options) {
     return _get_impl().list(&session, name, options);
 }
 
-std::string search_index_view::create_one(bsoncxx::document::view_or_value definition) {
+std::string search_index_view::create_one(bsoncxx::v_noabi::document::view_or_value definition) {
     return create_one(search_index_model(definition));
 }
 
 std::string search_index_view::create_one(const client_session& session,
-                                          bsoncxx::document::view_or_value definition) {
+                                          bsoncxx::v_noabi::document::view_or_value definition) {
     return create_one(session, search_index_model(definition));
 }
 
-std::string search_index_view::create_one(bsoncxx::string::view_or_value name,
-                                          bsoncxx::document::view_or_value definition) {
+std::string search_index_view::create_one(bsoncxx::v_noabi::string::view_or_value name,
+                                          bsoncxx::v_noabi::document::view_or_value definition) {
     return create_one(search_index_model(name, definition));
 }
 
 std::string search_index_view::create_one(const client_session& session,
-                                          bsoncxx::string::view_or_value name,
-                                          bsoncxx::document::view_or_value definition) {
+                                          bsoncxx::v_noabi::string::view_or_value name,
+                                          bsoncxx::v_noabi::document::view_or_value definition) {
     return create_one(session, search_index_model(name, definition));
 }
 
@@ -87,32 +87,32 @@ std::vector<std::string> search_index_view::create_many(
 }
 
 std::vector<std::string> search_index_view::_create_many_helper(
-    bsoncxx::array::view created_indexes) {
+    bsoncxx::v_noabi::array::view created_indexes) {
     std::vector<std::string> search_index_names;
     for (auto&& index : created_indexes) {
-        search_index_names.push_back(
-            bsoncxx::string::to_string(index.get_document().value["name"].get_string().value));
+        search_index_names.push_back(bsoncxx::v_noabi::string::to_string(
+            index.get_document().value["name"].get_string().value));
     }
     return search_index_names;
 }
 
-void search_index_view::drop_one(bsoncxx::string::view_or_value name) {
+void search_index_view::drop_one(bsoncxx::v_noabi::string::view_or_value name) {
     _get_impl().drop_one(nullptr, name);
 }
 
 void search_index_view::drop_one(const client_session& session,
-                                 bsoncxx::string::view_or_value name) {
+                                 bsoncxx::v_noabi::string::view_or_value name) {
     _get_impl().drop_one(&session, name);
 }
 
-void search_index_view::update_one(bsoncxx::string::view_or_value name,
-                                   bsoncxx::document::view_or_value definition) {
+void search_index_view::update_one(bsoncxx::v_noabi::string::view_or_value name,
+                                   bsoncxx::v_noabi::document::view_or_value definition) {
     _get_impl().update_one(nullptr, name, definition);
 }
 
 void search_index_view::update_one(const client_session& session,
-                                   bsoncxx::string::view_or_value name,
-                                   bsoncxx::document::view_or_value definition) {
+                                   bsoncxx::v_noabi::string::view_or_value name,
+                                   bsoncxx::v_noabi::document::view_or_value definition) {
     _get_impl().update_one(&session, name, definition);
 }
 

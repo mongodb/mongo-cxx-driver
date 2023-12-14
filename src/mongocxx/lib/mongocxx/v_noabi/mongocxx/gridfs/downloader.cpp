@@ -35,7 +35,7 @@ downloader::downloader(stdx::optional<cursor> chunks,
                        chunks_and_bytes_offset start,
                        std::int32_t chunk_size,
                        std::int64_t file_len,
-                       bsoncxx::document::value files_doc)
+                       bsoncxx::v_noabi::document::value files_doc)
     : _impl{stdx::make_unique<impl>(
           std::move(chunks), start, chunk_size, file_len, std::move(files_doc))} {}
 
@@ -95,7 +95,7 @@ std::int64_t downloader::file_length() const {
     return _get_impl().file_len;
 }
 
-bsoncxx::document::view downloader::files_document() const {
+bsoncxx::v_noabi::document::view downloader::files_document() const {
     return _get_impl().files_doc.view();
 }
 
@@ -115,10 +115,10 @@ void downloader::fetch_chunk() {
         chunks_seen = _get_impl().start.chunks_offset;
     }
 
-    bsoncxx::document::view chunk_doc = **_get_impl().chunks_curr;
+    bsoncxx::v_noabi::document::view chunk_doc = **_get_impl().chunks_curr;
 
     auto chunk_n_ele = chunk_doc["n"];
-    if (!chunk_n_ele || chunk_n_ele.type() != bsoncxx::type::k_int32 ||
+    if (!chunk_n_ele || chunk_n_ele.type() != bsoncxx::v_noabi::type::k_int32 ||
         chunk_n_ele.get_int32().value != chunks_seen) {
         std::ostringstream err;
         err << "chunk #" << chunks_seen << ": expected to find field \"n\" with k_int32 type";
@@ -130,7 +130,7 @@ void downloader::fetch_chunk() {
     }
 
     auto chunk_data_ele = chunk_doc["data"];
-    if (!chunk_data_ele || chunk_data_ele.type() != bsoncxx::type::k_binary) {
+    if (!chunk_data_ele || chunk_data_ele.type() != bsoncxx::v_noabi::type::k_binary) {
         std::ostringstream err;
         err << "chunk #" << chunks_seen << ": expected to find field \"data\" with k_binary type";
         throw gridfs_exception{error_code::k_gridfs_file_corrupted, err.str()};

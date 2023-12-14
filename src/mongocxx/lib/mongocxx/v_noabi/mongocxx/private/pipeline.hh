@@ -24,23 +24,23 @@ namespace v_noabi {
 
 class pipeline::impl {
    public:
-    bsoncxx::builder::basic::array& sink() {
+    bsoncxx::v_noabi::builder::basic::array& sink() {
         return _builder;
     }
 
-    bsoncxx::array::view view_array() {
+    bsoncxx::v_noabi::array::view view_array() {
         return _builder.view();
     }
 
     ///
     /// view() is deprecated. Use view_array() instead.
     ///
-    bsoncxx::document::view view() {
+    bsoncxx::v_noabi::document::view view() {
         return _builder.view();
     }
 
    private:
-    bsoncxx::builder::basic::array _builder;
+    bsoncxx::v_noabi::builder::basic::array _builder;
 };
 
 }  // namespace v_noabi

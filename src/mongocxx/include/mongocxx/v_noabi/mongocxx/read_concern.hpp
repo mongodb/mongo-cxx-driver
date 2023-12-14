@@ -153,7 +153,7 @@ class read_concern {
     /// @return
     ///   Document representation of this read_concern.
     ///
-    bsoncxx::document::value to_document() const;
+    bsoncxx::v_noabi::document::value to_document() const;
 
    private:
     friend ::mongocxx::v_noabi::client;

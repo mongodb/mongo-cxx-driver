@@ -37,7 +37,7 @@ std::int32_t update::upserted_count() const {
     return _result.upserted_count();
 }
 
-stdx::optional<bsoncxx::document::element> update::upserted_id() const {
+stdx::optional<bsoncxx::v_noabi::document::element> update::upserted_id() const {
     if (_result.upserted_ids().size() == 0) {
         return stdx::nullopt;
     }

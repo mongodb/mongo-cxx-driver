@@ -117,12 +117,12 @@ class client_session::impl {
     }
 
     // Get session id, also known as "logical session id" or "lsid".
-    bsoncxx::document::view id() const noexcept {
+    bsoncxx::v_noabi::document::view id() const noexcept {
         return bsoncxx::helpers::view_from_bson_t(
             libmongoc::client_session_get_lsid(_session_t.get()));
     }
 
-    bsoncxx::document::view cluster_time() const noexcept {
+    bsoncxx::v_noabi::document::view cluster_time() const noexcept {
         const bson_t* ct = libmongoc::client_session_get_cluster_time(_session_t.get());
         if (ct) {
             return bsoncxx::helpers::view_from_bson_t(ct);
@@ -131,20 +131,21 @@ class client_session::impl {
         return bsoncxx::helpers::view_from_bson_t(&_empty_cluster_time);
     }
 
-    bsoncxx::types::b_timestamp operation_time() const noexcept {
-        bsoncxx::types::b_timestamp ts;
+    bsoncxx::v_noabi::types::b_timestamp operation_time() const noexcept {
+        bsoncxx::v_noabi::types::b_timestamp ts;
         libmongoc::client_session_get_operation_time(
             _session_t.get(), &ts.timestamp, &ts.increment);
         return ts;
     }
 
-    void advance_cluster_time(const bsoncxx::document::view& cluster_time) noexcept {
+    void advance_cluster_time(const bsoncxx::v_noabi::document::view& cluster_time) noexcept {
         bson_t bson;
         bson_init_static(&bson, cluster_time.data(), cluster_time.length());
         libmongoc::client_session_advance_cluster_time(_session_t.get(), &bson);
     }
 
-    void advance_operation_time(const bsoncxx::types::b_timestamp& operation_time) noexcept {
+    void advance_operation_time(
+        const bsoncxx::v_noabi::types::b_timestamp& operation_time) noexcept {
         libmongoc::client_session_advance_operation_time(
             _session_t.get(), operation_time.timestamp, operation_time.increment);
     }
@@ -223,7 +224,7 @@ class client_session::impl {
         return libmongoc::client_session_get_dirty(_session_t.get());
     }
 
-    bsoncxx::document::value to_document() const {
+    bsoncxx::v_noabi::document::value to_document() const {
         bson_error_t error;
         bson_t bson = BSON_INITIALIZER;
         if (!libmongoc::client_session_append(_session_t.get(), &bson, &error)) {

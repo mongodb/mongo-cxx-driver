@@ -54,7 +54,7 @@ change_stream::iterator change_stream::end() const {
     return iterator{change_stream::iterator::iter_type::k_end, this};
 }
 
-stdx::optional<bsoncxx::document::view> change_stream::get_resume_token() const {
+stdx::optional<bsoncxx::v_noabi::document::view> change_stream::get_resume_token() const {
     return _impl->get_resume_token();
 }
 
@@ -65,11 +65,11 @@ change_stream::change_stream(void* change_stream_ptr)
 change_stream::iterator::iterator()
     : change_stream::iterator::iterator{iter_type::k_default_constructed, nullptr} {}
 
-const bsoncxx::document::view& change_stream::iterator::operator*() const {
+const bsoncxx::v_noabi::document::view& change_stream::iterator::operator*() const {
     return _change_stream->_impl->doc();
 }
 
-const bsoncxx::document::view* change_stream::iterator::operator->() const {
+const bsoncxx::v_noabi::document::view* change_stream::iterator::operator->() const {
     return std::addressof(_change_stream->_impl->doc());
 }
 
