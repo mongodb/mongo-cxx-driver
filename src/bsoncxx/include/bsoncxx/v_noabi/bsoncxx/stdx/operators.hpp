@@ -23,7 +23,6 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-inline namespace v_noabi {
 namespace detail {
 
 template <typename L, typename R>
@@ -180,7 +179,6 @@ struct ordering_operators {
 };
 
 }  // namespace detail
-}  // namespace v_noabi
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

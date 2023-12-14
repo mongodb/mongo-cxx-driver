@@ -12,7 +12,7 @@
 namespace stdx = bsoncxx::stdx;
 using stdx::string_view;
 
-static_assert(bsoncxx::stdx::detail::is_string_like<std::string>::value, "fail");
+static_assert(bsoncxx::v_noabi::stdx::detail::is_string_like<std::string>::value, "fail");
 
 static_assert(!std::is_constructible<string_view, std::vector<int>>::value, "fail");
 static_assert(!std::is_constructible<string_view, double>::value, "fail");
