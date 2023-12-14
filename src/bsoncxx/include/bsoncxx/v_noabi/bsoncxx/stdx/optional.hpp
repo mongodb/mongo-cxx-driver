@@ -21,7 +21,7 @@
 #include <core/optional.hpp>
 
 namespace bsoncxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace stdx {
 
 using ::core::make_optional;
@@ -40,7 +40,7 @@ using ::core::optional;
 #include <boost/optional/optional_io.hpp>
 
 namespace bsoncxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace stdx {
 
 using ::boost::optional;
@@ -59,7 +59,7 @@ using ::boost::make_optional;
 #include <experimental/optional>
 
 namespace bsoncxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace stdx {
 
 using ::std::experimental::make_optional;
@@ -76,7 +76,7 @@ using ::std::experimental::optional;
 #include <optional>
 
 namespace bsoncxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace stdx {
 
 using ::std::make_optional;
@@ -93,3 +93,14 @@ using ::std::optional;
 #endif
 
 #include <bsoncxx/config/postlude.hpp>
+
+namespace bsoncxx {
+namespace stdx {
+
+using ::bsoncxx::v_noabi::stdx::make_optional;
+using ::bsoncxx::v_noabi::stdx::nullopt;
+using ::bsoncxx::v_noabi::stdx::nullopt_t;
+using ::bsoncxx::v_noabi::stdx::optional;
+
+}  // namespace stdx
+}  // namespace bsoncxx

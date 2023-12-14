@@ -22,7 +22,7 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace string {
 
 template <class CharT,
@@ -35,6 +35,14 @@ BSONCXX_INLINE std::basic_string<CharT, Traits, Allocator> to_string(
 
 }  // namespace string
 }  // namespace v_noabi
+}  // namespace bsoncxx
+
+namespace bsoncxx {
+namespace string {
+
+using ::bsoncxx::v_noabi::string::to_string;
+
+}  // namespace string
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

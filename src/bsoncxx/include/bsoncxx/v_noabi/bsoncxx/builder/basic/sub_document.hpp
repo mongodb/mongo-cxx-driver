@@ -25,13 +25,15 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace builder {
 namespace basic {
 
 namespace impl {
+
 template <typename T>
 void value_append(core* core, T&& t);
+
 }  // namespace impl
 
 ///

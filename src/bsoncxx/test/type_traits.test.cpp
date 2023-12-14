@@ -10,6 +10,7 @@
 BSONCXX_DISABLE_WARNING(GNU("-Wunused"));
 
 namespace {
+
 namespace tt = bsoncxx::detail;
 
 template <typename Result, typename Expect>

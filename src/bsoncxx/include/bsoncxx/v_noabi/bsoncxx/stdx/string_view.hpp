@@ -28,7 +28,7 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace stdx {
 
 namespace detail {
@@ -77,7 +77,7 @@ class basic_string_view : bsoncxx::detail::equality_operators, bsoncxx::detail::
     using value_type = Char;
 
     // Constant sentinel value to represent an impossible/invalid string position
-    static constexpr const size_type npos = static_cast<size_type>(-1);
+    static constexpr size_type npos = static_cast<size_type>(-1);
 
    private:
     // Pointer to the beginning of the string being viewed
@@ -88,7 +88,7 @@ class basic_string_view : bsoncxx::detail::equality_operators, bsoncxx::detail::
     using self_type = basic_string_view;
 
     /**
-     * @brief If R is a type for which we want to permit implicit conversion,
+     * @brief If S is a type for which we want to permit implicit conversion,
      * evaluates to the type `int`. Otherwise, is a substitution failure.
      */
     template <typename S>
@@ -498,6 +498,15 @@ using string_view = basic_string_view<char>;
 
 }  // namespace stdx
 }  // namespace v_noabi
+}  // namespace bsoncxx
+
+namespace bsoncxx {
+namespace stdx {
+
+using ::bsoncxx::v_noabi::stdx::basic_string_view;
+using ::bsoncxx::v_noabi::stdx::string_view;
+
+}  // namespace stdx
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

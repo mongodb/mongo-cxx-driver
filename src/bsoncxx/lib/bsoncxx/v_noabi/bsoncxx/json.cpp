@@ -28,7 +28,8 @@
 #include <bsoncxx/config/private/prelude.hh>
 
 namespace bsoncxx {
-inline namespace v_noabi {
+namespace v_noabi {
+
 namespace {
 
 void bson_free_deleter(std::uint8_t* ptr) {

@@ -15,7 +15,7 @@
 #pragma once
 
 namespace bsoncxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace builder {
 namespace stream {
 
@@ -24,4 +24,14 @@ class array;
 }  // namespace stream
 }  // namespace builder
 }  // namespace v_noabi
+}  // namespace bsoncxx
+
+namespace bsoncxx {
+namespace builder {
+namespace stream {
+
+using ::bsoncxx::v_noabi::builder::stream::array;
+
+}  // namespace stream
+}  // namespace builder
 }  // namespace bsoncxx

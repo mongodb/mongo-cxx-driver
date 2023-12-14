@@ -24,7 +24,8 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-inline namespace v_noabi {
+namespace v_noabi {
+
 ///
 /// Represents an IEEE 754-2008 BSON Decimal128 value in a platform-independent way.
 ///
@@ -51,7 +52,7 @@ class decimal128 {
     /// @param str
     ///     A string representation of a decimal number.
     ///
-    /// @throws bsoncxx::exception if the string isn't a valid BSON Decimal128
+    /// @throws bsoncxx::v_noabi::exception if the string isn't a valid BSON Decimal128
     /// representation.
     ///
     explicit decimal128(stdx::string_view str);

@@ -20,7 +20,7 @@
 #include <bsoncxx/config/private/prelude.hh>
 
 namespace bsoncxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace array {
 
 element::element() : document::element() {}

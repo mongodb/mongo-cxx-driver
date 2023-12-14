@@ -20,7 +20,7 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace util {
 
 // TODO(MSVC): VS2015U1 Completely falls apart trying to honor the

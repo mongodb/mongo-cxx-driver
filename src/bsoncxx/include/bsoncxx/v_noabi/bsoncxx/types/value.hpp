@@ -19,20 +19,27 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace types {
 
 ///
-/// The bsoncxx::types::bson_value::view class has been renamed to
-/// bsoncxx::types::bson_value::view.
+/// The bsoncxx::v_noabi::types::bson_value::view class has been renamed to
+/// bsoncxx::v_noabi::types::bson_value::view.
 ///
-/// @deprecated use bsoncxx::types::bson_value::view instead.
+/// @deprecated use bsoncxx::v_noabi::types::bson_value::view instead.
 ///
 BSONCXX_DEPRECATED typedef types::bson_value::view value;
 
 }  // namespace types
-
 }  // namespace v_noabi
+}  // namespace bsoncxx
+
+namespace bsoncxx {
+namespace types {
+
+using ::bsoncxx::v_noabi::types::value;  // Deprecated
+
+}  // namespace types
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

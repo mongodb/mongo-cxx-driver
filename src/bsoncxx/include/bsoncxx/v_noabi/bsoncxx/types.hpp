@@ -35,7 +35,8 @@ BSONCXX_PUSH_WARNINGS();
 BSONCXX_DISABLE_WARNING(GNU("-Wfloat-equal"));
 
 namespace bsoncxx {
-inline namespace v_noabi {
+namespace v_noabi {
+
 ///
 /// An enumeration of each BSON type.
 /// These x-macros will expand to be of the form:
@@ -674,6 +675,22 @@ BSONCXX_INLINE bool operator==(const b_maxkey&, const b_maxkey&) {
 }  // namespace bsoncxx
 
 BSONCXX_POP_WARNINGS();
+namespace bsoncxx {
+
+using ::bsoncxx::v_noabi::to_string;
+
+}  // namespace bsoncxx
+
+namespace bsoncxx {
+namespace types {
+
+using ::bsoncxx::v_noabi::types::b_utf8;  // Deprecated.
+
+using ::bsoncxx::v_noabi::types::operator==;
+using ::bsoncxx::v_noabi::types::operator!=;
+
+}  // namespace types
+}  // namespace bsoncxx
 
 #ifdef BSONCXX_ENUM
 static_assert(false, "BSONCXX_ENUM must be undef'ed");

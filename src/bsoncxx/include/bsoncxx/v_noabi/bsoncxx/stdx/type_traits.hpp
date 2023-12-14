@@ -19,7 +19,6 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-inline namespace v_noabi {
 namespace detail {
 
 #define bsoncxx_ttparam \
@@ -475,9 +474,6 @@ template <>
 struct rank<0> {};
 
 }  // namespace detail
-
-}  // namespace v_noabi
-
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

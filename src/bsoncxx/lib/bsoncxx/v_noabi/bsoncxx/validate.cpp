@@ -19,7 +19,8 @@
 #include <bsoncxx/config/private/prelude.hh>
 
 namespace bsoncxx {
-inline namespace v_noabi {
+namespace v_noabi {
+
 struct validator::impl {
     bool _check_utf8{false};
     bool _check_utf8_allow_null{false};

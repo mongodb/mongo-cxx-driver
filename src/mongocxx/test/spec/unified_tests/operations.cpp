@@ -276,7 +276,7 @@ document::value list_indexes(entity::map& map, client_session* session, const st
 template <typename Model>
 void add_hint_to_model(Model model, document::view doc) {
     if (doc["hint"]) {
-        if (doc["hint"].type() == bsoncxx::v_noabi::type::k_string)
+        if (doc["hint"].type() == bsoncxx::type::k_string)
             model.hint(hint{doc["hint"].get_string().value});
         else
             model.hint(hint{doc["hint"].get_document().value});
@@ -308,7 +308,7 @@ T _build_update_model(document::view arguments) {
 
 template <typename Model>
 void set_hint(Model& model, const mongocxx::document::element& hint) {
-    if (hint.type() == bsoncxx::v_noabi::type::k_string) {
+    if (hint.type() == bsoncxx::type::k_string) {
         model.hint(mongocxx::hint(hint.get_string().value));
     } else {
         model.hint(mongocxx::hint(hint.get_document().value));
@@ -541,7 +541,7 @@ document::value replace_one(collection& coll, client_session* session, document:
     }
 
     if (const auto hint = arguments["hint"]) {
-        if (hint.type() == bsoncxx::v_noabi::type::k_string)
+        if (hint.type() == bsoncxx::type::k_string)
             options.hint(mongocxx::hint(hint.get_string().value));
         else
             options.hint(mongocxx::hint(hint.get_document().value));
@@ -824,7 +824,7 @@ document::value find_one_and_delete(collection& coll,
     }
 
     if (const auto hint = arguments["hint"]) {
-        if (hint.type() == bsoncxx::v_noabi::type::k_string)
+        if (hint.type() == bsoncxx::type::k_string)
             options.hint(mongocxx::hint(hint.get_string().value));
         else
             options.hint(mongocxx::hint(hint.get_document().value));
@@ -877,7 +877,7 @@ document::value find_one_and_replace(collection& coll,
     }
 
     if (const auto hint = arguments["hint"]) {
-        if (hint.type() == bsoncxx::v_noabi::type::k_string)
+        if (hint.type() == bsoncxx::type::k_string)
             options.hint(mongocxx::hint(hint.get_string().value));
         else
             options.hint(mongocxx::hint(hint.get_document().value));
@@ -947,7 +947,7 @@ document::value find_one_and_update(collection& coll,
     }
 
     if (const auto hint = arguments["hint"]) {
-        if (hint.type() == bsoncxx::v_noabi::type::k_string)
+        if (hint.type() == bsoncxx::type::k_string)
             options.hint(mongocxx::hint(hint.get_string().value));
         else
             options.hint(mongocxx::hint(hint.get_document().value));
@@ -1227,7 +1227,7 @@ document::value delete_one(collection& coll, client_session* session, document::
     }
 
     if (const auto hint = arguments["hint"]) {
-        if (hint.type() == bsoncxx::v_noabi::type::k_string)
+        if (hint.type() == bsoncxx::type::k_string)
             options.hint(mongocxx::hint(hint.get_string().value));
         else
             options.hint(mongocxx::hint(hint.get_document().value));
@@ -1272,7 +1272,7 @@ document::value delete_many(collection& coll, client_session* session, document:
     }
 
     if (const auto hint = arguments["hint"]) {
-        if (hint.type() == bsoncxx::v_noabi::type::k_string) {
+        if (hint.type() == bsoncxx::type::k_string) {
             options.hint(mongocxx::hint(hint.get_string().value));
         } else {
             options.hint(mongocxx::hint(hint.get_document().value));
@@ -1360,7 +1360,7 @@ document::value update_one(collection& coll, client_session* session, document::
     }
 
     if (const auto hint = arguments["hint"]) {
-        if (arguments["hint"].type() == bsoncxx::v_noabi::type::k_string)
+        if (arguments["hint"].type() == bsoncxx::type::k_string)
             options.hint(mongocxx::hint(hint.get_string().value));
         else
             options.hint(mongocxx::hint(hint.get_document().value));
@@ -1432,7 +1432,7 @@ document::value update_many(collection& coll, document::view operation) {
     }
 
     if (const auto hint = arguments["hint"]) {
-        if (hint.type() == bsoncxx::v_noabi::type::k_string)
+        if (hint.type() == bsoncxx::type::k_string)
             options.hint(mongocxx::hint(hint.get_string().value));
         else
             options.hint(mongocxx::hint(hint.get_document().value));
@@ -1518,7 +1518,7 @@ document::value count_documents(collection& coll,
     }
 
     if (const auto hint = arguments["hint"]) {
-        if (hint.type() == bsoncxx::v_noabi::type::k_string) {
+        if (hint.type() == bsoncxx::type::k_string) {
             options.hint(mongocxx::hint(hint.get_string().value));
         } else {
             options.hint(mongocxx::hint(hint.get_document().value));

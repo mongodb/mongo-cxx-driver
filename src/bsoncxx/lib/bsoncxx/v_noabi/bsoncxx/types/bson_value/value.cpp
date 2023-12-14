@@ -22,7 +22,7 @@
 #include <bsoncxx/config/private/prelude.hh>
 
 namespace bsoncxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace types {
 namespace bson_value {
 
@@ -91,7 +91,7 @@ value::value(const type id) : _impl{stdx::make_unique<impl>()} {
             _impl->_value.value_type = BSON_TYPE_UNDEFINED;
             break;
         default:
-            throw bsoncxx::exception(error_code::k_invalid_bson_type_id);
+            throw bsoncxx::v_noabi::exception(error_code::k_invalid_bson_type_id);
     }
 }
 
@@ -123,7 +123,7 @@ value::value(const type id, stdx::string_view v) : _impl{stdx::make_unique<impl>
             _impl->_value.value.v_symbol.len = (uint32_t)v.length();
             break;
         default:
-            throw bsoncxx::exception(error_code::k_invalid_bson_type_id);
+            throw bsoncxx::v_noabi::exception(error_code::k_invalid_bson_type_id);
     }
 }
 
@@ -143,7 +143,7 @@ value::value(type id, uint64_t a, uint64_t b) : _impl{stdx::make_unique<impl>()}
             _impl->_value.value.v_timestamp.timestamp = (uint32_t)b;
             break;
         default:
-            throw bsoncxx::exception(error_code::k_invalid_bson_type_id);
+            throw bsoncxx::v_noabi::exception(error_code::k_invalid_bson_type_id);
     }
 }
 
@@ -156,7 +156,7 @@ value::value(stdx::string_view collection, oid value) : _impl{stdx::make_unique<
 }
 
 value::value(b_codewscope v) : value(v.code, v.scope) {}
-value::value(stdx::string_view code, bsoncxx::document::view_or_value scope)
+value::value(stdx::string_view code, bsoncxx::v_noabi::document::view_or_value scope)
     : _impl{stdx::make_unique<impl>()} {
     _impl->_value.value_type = BSON_TYPE_CODEWSCOPE;
     _impl->_value.value.v_codewscope.code = make_copy_for_libbson(code);
@@ -181,7 +181,7 @@ value::value(const uint8_t* data, size_t size, const binary_sub_type sub_type)
 }
 
 value::value(b_document v) : value(v.view()) {}
-value::value(bsoncxx::document::view v) : _impl{stdx::make_unique<impl>()} {
+value::value(bsoncxx::v_noabi::document::view v) : _impl{stdx::make_unique<impl>()} {
     _impl->_value.value_type = BSON_TYPE_DOCUMENT;
     _impl->_value.value.v_doc.data_len = (uint32_t)v.length();
     _impl->_value.value.v_doc.data = (uint8_t*)bson_malloc(v.length());
@@ -189,7 +189,7 @@ value::value(bsoncxx::document::view v) : _impl{stdx::make_unique<impl>()} {
 }
 
 value::value(b_array v) : value(v.value) {}
-value::value(bsoncxx::array::view v) : _impl{stdx::make_unique<impl>()} {
+value::value(bsoncxx::v_noabi::array::view v) : _impl{stdx::make_unique<impl>()} {
     _impl->_value.value_type = BSON_TYPE_ARRAY;
     _impl->_value.value.v_doc.data_len = (uint32_t)v.length();
     _impl->_value.value.v_doc.data = (uint8_t*)bson_malloc(v.length());
@@ -239,6 +239,5 @@ value::operator bson_value::view() const noexcept {
 
 }  // namespace bson_value
 }  // namespace types
-
 }  // namespace v_noabi
 }  // namespace bsoncxx

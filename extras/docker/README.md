@@ -1,4 +1,4 @@
-# What is MongoDB? 
+# What is MongoDB?
 
 [MongoDB](https://hub.docker.com/r/mongodb/mongodb-community-server) is a
 cross-platform document-oriented NoSQL database. MongoDB uses JSON-like
@@ -16,7 +16,7 @@ is also known as
 
 ## Tags
 
-- [3.9.0-redhat-ubi-9.3](https://github.com/mongodb/mongo-cxx-driver/blob/ca6a89c3b4039b9b097a2945a2db1584d63a6b98/extras/docker/redhat-ubi-9.3/Dockerfile)
+- [3.9.0-redhat-ubi-9.3](https://github.com/mongodb/mongo-cxx-driver/blob/867e494d40448626f472cfeed00585a4932d79ba/extras/docker/redhat-ubi-9.3/Dockerfile)
 - [3.8.1-redhat-ubi-9.2](https://github.com/mongodb/mongo-cxx-driver/blob/5b1b515e1b355943003d72a04ae47a9e0e174374/extras/docker/redhat-ubi-9.2/Dockerfile)
 - [3.8.0-redhat-ubi-9.2](https://github.com/mongodb/mongo-cxx-driver/blob/cb9dc3e927299bb9d2f2dc04878234e32c129685/extras/docker/redhat-ubi-9.2/Dockerfile)
 

@@ -27,7 +27,7 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace document {
 
 ///
@@ -83,7 +83,8 @@ class value {
 
     ///
     /// Constructor used for serialization of user objects. This uses argument-dependent lookup
-    /// to find the function declaration `void to_bson(T& t, bsoncxx::document::value doc)`.
+    /// to find the function declaration
+    /// `void to_bson(T& t, bsoncxx::v_noabi::document::value doc)`.
     ///
     /// @param t
     ///   A user-defined object to serialize into a BSON object.
@@ -187,7 +188,7 @@ class value {
     ///
     /// Constructs an object of type T from this document object. This method uses
     /// argument-dependent lookup to find the function declaration
-    /// `void from_bson(T& t, const bsoncxx::document::view& doc)`.
+    /// `void from_bson(T& t, const bsoncxx::v_noabi::document::view& doc)`.
     ///
     /// @note Type T must be default-constructible. Otherwise, use `void get(T& t)`.
     ///
@@ -201,7 +202,7 @@ class value {
     ///
     /// Constructs an object of type T from this document object. This method uses
     /// argument-dependent lookup to find the function declaration
-    /// `void from_bson(T& t, const bsoncxx::document::view& doc)`.
+    /// `void from_bson(T& t, const bsoncxx::v_noabi::document::view& doc)`.
     ///
     /// @param t
     ///   The object to construct. The contents of the document object will be deserialized
@@ -267,6 +268,15 @@ BSONCXX_INLINE bool operator!=(const value& lhs, const value& rhs) {
 
 }  // namespace document
 }  // namespace v_noabi
+}  // namespace bsoncxx
+
+namespace bsoncxx {
+namespace document {
+
+using ::bsoncxx::v_noabi::document::operator==;
+using ::bsoncxx::v_noabi::document::operator!=;
+
+}  // namespace document
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>

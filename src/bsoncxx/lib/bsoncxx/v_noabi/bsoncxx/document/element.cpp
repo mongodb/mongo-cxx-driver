@@ -30,7 +30,7 @@
     bson_iter_init_from_data_at_offset(&iter, _raw, _length, _offset, _keylen);
 
 namespace bsoncxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace document {
 
 element::element() : element(nullptr, 0, 0, 0) {}
@@ -59,21 +59,21 @@ std::uint32_t element::keylen() const {
     return _keylen;
 }
 
-bsoncxx::type element::type() const {
+bsoncxx::v_noabi::type element::type() const {
     if (_raw == nullptr) {
-        throw bsoncxx::exception{
+        throw bsoncxx::v_noabi::exception{
             error_code::k_unset_element,
             "cannot return the type of uninitialized element" +
                 std::string(_key ? " with key \"" + std::string(_key.value().data()) + "\"" : "")};
     }
 
     BSONCXX_CITER;
-    return static_cast<bsoncxx::type>(bson_iter_type(&iter));
+    return static_cast<bsoncxx::v_noabi::type>(bson_iter_type(&iter));
 }
 
 stdx::string_view element::key() const {
     if (_raw == nullptr) {
-        throw bsoncxx::exception{
+        throw bsoncxx::v_noabi::exception{
             error_code::k_unset_element,
             "cannot return the key from an uninitialized element" +
                 std::string(_key ? " with key \"" + std::string(_key.value().data()) + "\"" : "")};
@@ -89,7 +89,7 @@ stdx::string_view element::key() const {
 #define BSONCXX_ENUM(name, val)                                                                 \
     types::b_##name element::get_##name() const {                                               \
         if (_raw == nullptr) {                                                                  \
-            throw bsoncxx::exception{                                                           \
+            throw bsoncxx::v_noabi::exception{                                                  \
                 error_code::k_unset_element,                                                    \
                 "cannot get " #name " from an uninitialized element" +                          \
                     std::string(_key ? " with key \"" + std::string(_key.value().data()) + "\"" \
@@ -103,7 +103,7 @@ stdx::string_view element::key() const {
 
 types::b_string element::get_utf8() const {
     if (_raw == nullptr) {
-        throw bsoncxx::exception{
+        throw bsoncxx::v_noabi::exception{
             error_code::k_unset_element,
             "cannot get string from an uninitialized element" +
                 std::string(_key ? " with key \"" + std::string(_key.value().data()) + "\"" : "")};
@@ -130,14 +130,14 @@ types::bson_value::value element::get_owning_value() const {
 }
 
 element element::operator[](stdx::string_view key) const {
-    if (_raw == nullptr || type() != bsoncxx::type::k_document)
+    if (_raw == nullptr || type() != bsoncxx::v_noabi::type::k_document)
         return element();
     document::view doc = get_document();
     return doc[key];
 }
 
 array::element element::operator[](std::uint32_t i) const {
-    if (_raw == nullptr || type() != bsoncxx::type::k_array)
+    if (_raw == nullptr || type() != bsoncxx::v_noabi::type::k_array)
         return array::element();
     array::view arr = get_array();
     return arr[i];
