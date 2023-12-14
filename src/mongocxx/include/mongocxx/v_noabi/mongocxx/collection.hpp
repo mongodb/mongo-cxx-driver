@@ -424,7 +424,7 @@ class collection {
     /// estimatedDocumentCount are recommended to upgrade their server version to 5.0.8 or newer, or
     /// set `apiStrict: false` to avoid encountering errors.
     ///
-    /// @see mongocxx::estimated_document_count
+    /// @see mongocxx::v_noabi::collection::estimated_document_count
     ///
     std::int64_t count_documents(bsoncxx::document::view_or_value filter,
                                  const options::count& options = options::count());
@@ -448,7 +448,7 @@ class collection {
     /// estimatedDocumentCount are recommended to upgrade their server version to 5.0.8 or newer, or
     /// set `apiStrict: false` to avoid encountering errors.
     ///
-    /// @see mongocxx::estimated_document_count
+    /// @see mongocxx::v_noabi::collection::estimated_document_count
     ///
     std::int64_t count_documents(const client_session& session,
                                  bsoncxx::document::view_or_value filter,
@@ -472,7 +472,7 @@ class collection {
     /// @note This function is implemented in terms of the count server command. See:
     /// https://www.mongodb.com/docs/manual/reference/command/count/#behavior for more information.
     ///
-    /// @see mongocxx::count_documents
+    /// @see mongocxx::v_noabi::collection::count_documents
     ///
     std::int64_t estimated_document_count(
         const options::estimated_document_count& options = options::estimated_document_count());
