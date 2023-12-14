@@ -18,14 +18,16 @@
 
 // "Forward-declare" the `bsoncxx::stdx` namespace to permit the using-declaration below.
 namespace bsoncxx {
+namespace v_noabi {
 namespace stdx {}
+}  // namespace v_noabi
 }  // namespace bsoncxx
 
 namespace mongocxx {
 namespace v_noabi {
 namespace stdx {
 
-using namespace bsoncxx::stdx;  // Deprecated.
+using namespace bsoncxx::v_noabi::stdx;
 
 }  // namespace stdx
 }  // namespace v_noabi
@@ -34,8 +36,7 @@ using namespace bsoncxx::stdx;  // Deprecated.
 namespace mongocxx {
 namespace stdx {
 
-// We adopt all the bsoncxx polyfills
-using namespace bsoncxx::stdx;
+using namespace mongocxx::v_noabi::stdx;
 
 }  // namespace stdx
 }  // namespace mongocxx
