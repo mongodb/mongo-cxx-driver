@@ -174,7 +174,7 @@ auto doc_value = make_document(
 
 This `bsoncxx::document::value` type is a read-only object owning
 its own memory. To use it, you must obtain a
-[`bsoncxx::document::view`]({{< api3ref classbsoncxx_1_1document_1_1view >}}) using
+[`bsoncxx::document::view`]({{< api3ref classbsoncxx_1_1v__noabi_1_1document_1_1view >}}) using
 the `view()` method:
 
 ```c++
@@ -183,7 +183,7 @@ auto doc_view = doc_value.view();
 
 You can access fields within this document view using `operator[]`,
 which will return a
-[`bsoncxx::document::element`]({{< api3ref classbsoncxx_1_1document_1_1element >}})
+[`bsoncxx::document::element`]({{< api3ref classbsoncxx_1_1v__noabi_1_1document_1_1element >}})
 instance. For example, the following will extract the `name` field whose
 value is a string:
 
@@ -197,7 +197,7 @@ assert(0 == name.compare("MongoDB"));
 If the value in the `name` field is not a string and you do not
 include a type guard as seen in the preceding example, this code will
 throw an instance of
-[`bsoncxx::exception`]({{< api3ref classbsoncxx_1_1exception >}}).
+[`bsoncxx::exception`]({{< api3ref classbsoncxx_1_1v__noabi_1_1exception >}}).
 
 ## Insert Documents
 
@@ -280,7 +280,7 @@ To query the collection, use the collection’s `find()` and
 `find()` will return an instance of
 [`mongocxx::cursor`]({{< api3ref classmongocxx_1_1v__noabi_1_1cursor >}}),
 while `find_one()` will return an instance of
-`std::optional<`[`bsoncxx::document::value`]({{< api3ref classbsoncxx_1_1document_1_1value >}})`>`
+`std::optional<`[`bsoncxx::document::value`]({{< api3ref classbsoncxx_1_1v__noabi_1_1document_1_1value >}})`>`
 
 You can call either method with an empty document to query all documents
 in a collection, or pass a filter to query for documents that match the
