@@ -675,6 +675,7 @@ BSONCXX_INLINE bool operator==(const b_maxkey&, const b_maxkey&) {
 }  // namespace bsoncxx
 
 BSONCXX_POP_WARNINGS();
+
 namespace bsoncxx {
 
 using ::bsoncxx::v_noabi::to_string;

@@ -84,8 +84,6 @@ class basic_string_view : bsoncxx::detail::equality_operators, bsoncxx::detail::
     bsoncxx_cxx14_constexpr basic_string_view& operator=(const basic_string_view&) noexcept =
         default;
 
-    /// Default copy/move/assign/destroy
-
     /**
      * @brief Construct a new string view from a pointer-to-character and an
      * array length.
@@ -204,7 +202,7 @@ class basic_string_view : bsoncxx::detail::equality_operators, bsoncxx::detail::
      *
      * @param n The number of characters to remove from the beginning. Must be less than size()
      */
-    bsoncxx_cxx14_constexpr void remove_prefix(size_type n) noexcept {
+    bsoncxx_cxx14_constexpr void remove_prefix(size_type n) {
         _begin += n;
         _size -= n;
     }
@@ -237,7 +235,7 @@ class basic_string_view : bsoncxx::detail::equality_operators, bsoncxx::detail::
      *
      * @throws std::out_of_range if pos > size()
      */
-    bsoncxx_cxx14_constexpr size_type copy(pointer dest, size_type count, size_type pos = 0) const {
+    size_type copy(pointer dest, size_type count, size_type pos = 0) const {
         if (pos > size()) {
             throw std::out_of_range{"bsoncxx::stdx::basic_string_view::substr()"};
         }
@@ -333,8 +331,8 @@ class basic_string_view : bsoncxx::detail::equality_operators, bsoncxx::detail::
      * @brief Find the zero-based offset of the left-most occurrence of the given infix,
      * starting with pos. If infix does not occur, returns npos.
      */
-    bsoncxx_cxx14_constexpr size_type find(basic_string_view infix,
-                                           size_type pos = 0) const noexcept {
+    bsoncxx_cxx14_constexpr size_type find(basic_string_view infix, size_type pos = 0) const
+        noexcept {
         if (pos > size()) {
             return npos;
         }
@@ -354,8 +352,8 @@ class basic_string_view : bsoncxx::detail::equality_operators, bsoncxx::detail::
      * @brief Find the zero-based offset of the right-most occurrence of the given infix,
      * starting with (and including) pos. If infix does not occur, returns npos.
      */
-    bsoncxx_cxx14_constexpr size_type rfind(basic_string_view infix,
-                                            size_type pos = npos) const noexcept {
+    bsoncxx_cxx14_constexpr size_type rfind(basic_string_view infix, size_type pos = npos) const
+        noexcept {
         // Calc the endpos where searching should begin, which includes the infix size
         const size_type substr_size = pos != npos ? pos + infix.size() : pos;
         if (infix.empty()) {
@@ -397,8 +395,8 @@ class basic_string_view : bsoncxx::detail::equality_operators, bsoncxx::detail::
      * @brief Find the zero-based index of the right-most occurrence of any character that
      * is NOT a member of the given set of characters, starting at (and including) pos
      */
-    constexpr size_type find_last_not_of(basic_string_view set,
-                                         size_type pos = npos) const noexcept {
+    constexpr size_type find_last_not_of(basic_string_view set, size_type pos = npos) const
+        noexcept {
         return _rfind_if(pos, [&](value_type chr) { return set.find(chr) == npos; });
     }
 
