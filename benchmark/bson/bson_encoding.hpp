@@ -16,10 +16,9 @@
 
 #include <iostream>
 
+#include "../microbench.hpp"
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/types.hpp>
-
-#include "../microbench.hpp"
 
 namespace benchmark {
 
@@ -58,7 +57,7 @@ void visit_document(bsoncxx::document::view doc) {
 
 // Mirroring mongo-c-driver's interpretation of the spec.
 void bson_encoding::task() {
-    for (std::uint32_t i = 0; i < 10000; i++) {
+    for (std::uint32_t i = 0; i < iterations; i++) {
         visit_document(_doc->view());
     }
 }

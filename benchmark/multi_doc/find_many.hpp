@@ -15,7 +15,6 @@
 #pragma once
 
 #include "../microbench.hpp"
-
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>
 #include <mongocxx/client.hpp>
@@ -56,7 +55,7 @@ void find_many::setup() {
     mongocxx::database db = _conn["perftest"];
     db.drop();
     auto coll = db["corpus"];
-    for (std::int32_t i = 0; i < 10000; i++) {
+    for (std::int32_t i = 0; i < iterations; i++) {
         coll.insert_one(doc.view());
     }
 }
@@ -70,7 +69,7 @@ void find_many::task() {
     auto cursor = coll.find({});
 
     // Iterate over the cursor.
-    for (auto&& doc : cursor) {
+    for ([[maybe_unused]] auto&& doc : cursor) {
     }
 }
 }  // namespace benchmark
