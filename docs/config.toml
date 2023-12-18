@@ -1,4 +1,4 @@
-baseurl = "http://mongocxx.org"
+baseurl = "https://mongocxx.org"
 languageCode = "en-us"
 title = "MongoDB C++ Driver Manual"
 theme = "mongodb"
