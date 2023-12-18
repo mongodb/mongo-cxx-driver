@@ -335,7 +335,7 @@ This feature is shown in more detail in [this example](https://github.com/mongod
 
 The [BSON specification](http://bsonspec.org/spec.html) provides a list
 of supported types.  These are represented in C++ using the
-[b_xxx](https://mongodb.github.io/mongo-cxx-driver/api/current/classes.html#letter_B)
+[b_xxx](https://mongocxx.org/api/current/classes.html#letter_B)
 type wrappers.
 
 Some BSON types don't necessarily have a native representation to wrap and
