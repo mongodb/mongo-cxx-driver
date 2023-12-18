@@ -212,7 +212,7 @@ auto insert_one_result = collection.insert_one(make_document(kvp("i", 0)));
 ```
 
 `insert_one_result` is an optional [`mongocxx::result::insert_one`]({{< api3ref
-classmongocxx_1_1v__noabi_1_1result_1_1insert_one >}}). In this example, `insert_one_result`
+classmongocxx_1_1v__noabi_1_1result_1_1insert__one >}}). In this example, `insert_one_result`
 is expected to be set. The default behavior for write operations is to wait for
 a reply from the server. This may be overriden by setting an unacknowledged
 [`mongocxx::write_concern`]({{< api3ref classmongocxx_1_1v__noabi_1_1write__concern >}}).
