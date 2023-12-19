@@ -8,15 +8,15 @@
 <meta name="keyword" content="">
 <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
 
-    <link rel="shortcut icon" href="http://mongocxx.org/img/favicon.png">
+    <link rel="shortcut icon" href="https://mongocxx.org/img/favicon.png">
 
     <title>Working with BSON</title>
 
-    <link rel="stylesheet" href="http://mongocxx.org/lib/bootstrap.css" type="text/css" />
-<link rel="stylesheet" href="http://mongocxx.org/lib/font-awesome/css/font-awesome.min.css" type="text/css" />
-<link rel="stylesheet" href="http://mongocxx.org/css/mongodb-docs.css" type="text/css" />
-<link rel="stylesheet" href="http://mongocxx.org/css/overrides.css" type="text/css" />
-<link rel="stylesheet" href="http://mongocxx.org/lib/highlight/styles/idea.css" />
+    <link rel="stylesheet" href="https://mongocxx.org/lib/bootstrap.css" type="text/css" />
+<link rel="stylesheet" href="https://mongocxx.org/lib/font-awesome/css/font-awesome.min.css" type="text/css" />
+<link rel="stylesheet" href="https://mongocxx.org/css/mongodb-docs.css" type="text/css" />
+<link rel="stylesheet" href="https://mongocxx.org/css/overrides.css" type="text/css" />
+<link rel="stylesheet" href="https://mongocxx.org/lib/highlight/styles/idea.css" />
 
   </head>
 
@@ -32,8 +32,8 @@
     </div>
     
     <div class="logo pull-left">
-      <a href="http://mongocxx.org">
-        <img src="http://mongocxx.org/img/logo-mongodb-header.png",
+      <a href="https://mongocxx.org">
+        <img src="https://mongocxx.org/img/logo-mongodb-header.png",
              alt="MongoDB C++ driver" />
       </a>
     </div>
@@ -43,7 +43,7 @@
   <div id="search">
 <form method="get" action="//www.google.com/search" target="_blank">
     <input type="text" name="searchQuery" size="20" value="" autocomplete="off" placeholder="Search">
-    <input type="hidden" name="site" value="http://mongocxx.org">
+    <input type="hidden" name="site" value="https://mongocxx.org">
     <input type="hidden" name="q" value="">
     <label for="searchQuery"><i class="fa fa-search fa-1"></i></label>
 </form>
@@ -62,7 +62,7 @@
     <div class="ssidebar nav-collapse">
       <div class="ssidebarwrapper">
         <h3>
-          <a class="index-link" href="http://mongocxx.org">MongoDB C&#43;&#43; Driver Manual</a>
+          <a class="index-link" href="https://mongocxx.org">MongoDB C&#43;&#43; Driver Manual</a>
         </h3>
 
         
@@ -1193,7 +1193,7 @@
 
 
     <li class="toctree-l1">
-    <a href="https://mongodb.github.io/mongo-cxx-driver/api/current">
+    <a href="https://mongocxx.org/api/current">
         <i class='fa fa-file-text-o'></i>
         API Documentation
     </a>
@@ -1461,8 +1461,8 @@ use each.  For more information and example code, see our
 <h2 id="builders">Document Builders</h2>
 <p>The bsoncxx library offers four interfaces for building BSON: one-off
 functions, a basic builder, a list builder and a stream-based builder.</p>
-<p><a href="https://github.com/mongodb/mongo-cxx-driver/blob/master/src/bsoncxx/builder/basic/document.hpp"><code>bsoncxx::builder::basic::document</code></a><!-- raw HTML omitted -->
-<a href="https://github.com/mongodb/mongo-cxx-driver/blob/master/src/bsoncxx/builder/stream/document.hpp"><code>bsoncxx::builder::stream::document</code></a></p>
+<p><a href="https://github.com/mongodb/mongo-cxx-driver/blob/master/src/bsoncxx/include/bsoncxx/v_noabi/bsoncxx/builder/basic/document.hpp"><code>bsoncxx::builder::basic::document</code></a><!-- raw HTML omitted -->
+<a href="https://github.com/mongodb/mongo-cxx-driver/blob/master/src/bsoncxx/include/bsoncxx/v_noabi/bsoncxx/builder/stream/document.hpp"><code>bsoncxx::builder::stream::document</code></a></p>
 <p>The various methods of creating BSON documents and arrays are all
 equivalent. All interfaces will provide the same results, the choice of
 which to use is entirely aesthetic.</p>
@@ -1569,7 +1569,7 @@ object, so that the loop restarts in a consistent state:</p>
     in_array = temp_state &lt;&lt; builder::stream::close_document;
 }
 </code></pre><h3 id="a-namevalueowning-bson-documents-valuesa"><!-- raw HTML omitted -->Owning BSON Documents (values)<!-- raw HTML omitted --></h3>
-<p><a href="https://github.com/mongodb/mongo-cxx-driver/blob/master/src/bsoncxx/document/value.hpp"><code>bsoncxx::document::value</code></a></p>
+<p><a href="https://github.com/mongodb/mongo-cxx-driver/blob/master/src/bsoncxx/include/bsoncxx/v_noabi/bsoncxx/document/value.hpp"><code>bsoncxx::document::value</code></a></p>
 <p>This type represents an actual BSON document, one that owns its buffer of
 data.  These documents can be constructed from a builder by calling
 <code>extract()</code>:</p>
@@ -1583,7 +1583,7 @@ the stream builder interface and the <code>finalize</code> token. <code>finalize
 <pre tabindex="0"><code>// { &#34;finalize&#34; : &#34;is nifty&#34; }
 bsoncxx::document::value one_line = bsoncxx::builder::stream::document{} &lt;&lt; &#34;finalize&#34; &lt;&lt; &#34;is nifty&#34; &lt;&lt; bsoncxx::builder::stream::finalize;
 </code></pre><h3 id="a-nameviewnon-owning-bson-documents-viewsa"><!-- raw HTML omitted -->Non-owning BSON Documents (views)<!-- raw HTML omitted --></h3>
-<p><a href="https://github.com/mongodb/mongo-cxx-driver/blob/master/src/bsoncxx/document/view.hpp"><code>bsoncxx::document::view</code></a></p>
+<p><a href="https://github.com/mongodb/mongo-cxx-driver/blob/master/src/bsoncxx/include/bsoncxx/v_noabi/bsoncxx/document/view.hpp"><code>bsoncxx::document::view</code></a></p>
 <p>This type is a view into an owning <code>bsoncxx::document::value</code>.</p>
 <pre tabindex="0"><code>bsoncxx::document::view document_view{document_value.view()};
 </code></pre><p>A <code>document::value</code> also implicitly converts to a <code>document::view</code>:</p>
@@ -1601,7 +1601,7 @@ auto cursor1 = collection1.find(query_value.view());
 auto collection2 = db[&#34;cookbooks&#34;];
 auto cursor2 = collection2.find(query_value.view());
 </code></pre><h3 id="a-nameview_or_valueoptionally-owning-bson-documents-view_or_valuea"><!-- raw HTML omitted -->Optionally-owning BSON Documents (view_or_value)<!-- raw HTML omitted --></h3>
-<p>Many driver methods take a document::view_or_value parameter, for example, <a href="https://github.com/mongodb/mongo-cxx-driver/blob/master/src/mongocxx/database.hpp#L83-L92"><code>run_command</code></a>:</p>
+<p>Many driver methods take a document::view_or_value parameter, for example, <a href="https://github.com/mongodb/mongo-cxx-driver/blob/master/src/mongocxx/include/mongocxx/v_noabi/mongocxx/database.hpp#L144-L153"><code>run_command</code></a>:</p>
 <pre tabindex="0"><code>bsoncxx::document::value run_command(bsoncxx::document::view_or_value command);
 </code></pre><p>Such methods can take either a <code>document::view</code> or a <code>document::value</code>. If
 a <code>document::value</code> is passed in, it must be passed by r-value reference, so
@@ -1643,12 +1643,12 @@ dangerous view object, because the temporary value returned from
 temp_builder &lt;&lt; &#34;oh&#34; &lt;&lt; &#34;no&#34;;
 bsoncxx::document::view dangling_view = temp_builder.extract().view(); // Bad!!
 </code></pre><h3 id="a-nameprintprinting-bson-documentsa"><!-- raw HTML omitted -->Printing BSON Documents<!-- raw HTML omitted --></h3>
-<p><a href="https://github.com/mongodb/mongo-cxx-driver/blob/master/src/bsoncxx/json.hpp#L28-L36"><code>bsoncxx::to_json()</code></a></p>
+<p><a href="https://github.com/mongodb/mongo-cxx-driver/blob/master/src/bsoncxx/include/bsoncxx/v_noabi/bsoncxx/json.hpp#L39-L55"><code>bsoncxx::to_json()</code></a></p>
 <p>The bsoncxx library comes with a convenience method to convert BSON
 documents to strings for easy inspection:</p>
 <pre tabindex="0"><code>bsoncxx::document::value = document{} &lt;&lt; &#34;I am&#34; &lt;&lt; &#34;a BSON document&#34; &lt;&lt; finalize;
 std::cout &lt;&lt; bsoncxx::to_json(doc.view()) &lt;&lt; std::endl;
-</code></pre><p>There is an analogous method, <a href="https://github.com/mongodb/mongo-cxx-driver/blob/master/src/bsoncxx/json.hpp#L60-L68">from_json()</a>, to build document::values out of existing JSON strings.</p>
+</code></pre><p>There is an analogous method, <a href="https://github.com/mongodb/mongo-cxx-driver/blob/master/src/bsoncxx/include/bsoncxx/v_noabi/bsoncxx/json.hpp#L57-L67">from_json()</a>, to build document::values out of existing JSON strings.</p>
 <h3 id="a-namefieldsgetting-fields-out-of-bson-documentsa"><!-- raw HTML omitted -->Getting Fields out of BSON Documents<!-- raw HTML omitted --></h3>
 <p>The [ ] operator reaches into a BSON document to retrieve values:</p>
 <pre tabindex="0"><code>// doc_view = { &#34;store&#34; : &#34;Key Foods&#34;, &#34;fruits&#34; : [ &#34;apple&#34;, &#34;banana&#34; ] }
@@ -1664,7 +1664,7 @@ if (store_ele) {
 <h3 id="bson-types">BSON Types</h3>
 <p>The <a href="http://bsonspec.org/spec.html">BSON specification</a> provides a list
 of supported types.  These are represented in C++ using the
-<a href="https://mongodb.github.io/mongo-cxx-driver/api/current/classes.html#letter_B">b_xxx</a>
+<a href="https://mongocxx.org/api/current/classes.html#letter_B">b_xxx</a>
 type wrappers.</p>
 <p>Some BSON types don&rsquo;t necessarily have a native representation to wrap and
 are implemented via special classes.</p>
@@ -1739,18 +1739,18 @@ to convert to a native decimal128 type.</p>
 
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
-   URL_ROOT:    "http://mongocxx.org",
+   URL_ROOT:    "https://mongocxx.org",
    VERSION:      null ,
    COLLAPSE_INDEX: false,
    FILE_SUFFIX: '.html',
    HAS_SOURCE:  true
   };
 </script>
-<script type="text/javascript" src="http://mongocxx.org/js/jquery.js"></script>
-<script type="text/javascript" src="http://mongocxx.org/lib/bootstrap.js"></script>
-<script type="text/javascript" src="http://mongocxx.org/js/navbar.js"></script>
-<script type="text/javascript" src="http://mongocxx.org/lib/highlight/highlight.pack.js"></script>
-<script type="text/javascript" src="http://mongocxx.org/js/scripts.js"></script>
+<script type="text/javascript" src="https://mongocxx.org/js/jquery.js"></script>
+<script type="text/javascript" src="https://mongocxx.org/lib/bootstrap.js"></script>
+<script type="text/javascript" src="https://mongocxx.org/js/navbar.js"></script>
+<script type="text/javascript" src="https://mongocxx.org/lib/highlight/highlight.pack.js"></script>
+<script type="text/javascript" src="https://mongocxx.org/js/scripts.js"></script>
 
 
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-JQHP"

@@ -2,35 +2,35 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>The mongocxx (v3) driver on MongoDB C&#43;&#43; Driver Manual</title>
-    <link>http://mongocxx.org/mongocxx-v3/</link>
+    <link>https://mongocxx.org/mongocxx-v3/</link>
     <description>Recent content in The mongocxx (v3) driver on MongoDB C&#43;&#43; Driver Manual</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 15 Aug 2016 16:11:58 +0530</lastBuildDate><atom:link href="http://mongocxx.org/mongocxx-v3/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 15 Aug 2016 16:11:58 +0530</lastBuildDate><atom:link href="https://mongocxx.org/mongocxx-v3/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Connection pools</title>
-      <link>http://mongocxx.org/mongocxx-v3/connection-pools/</link>
+      <link>https://mongocxx.org/mongocxx-v3/connection-pools/</link>
       <pubDate>Tue, 18 Apr 2017 13:39:39 -0400</pubDate>
       
-      <guid>http://mongocxx.org/mongocxx-v3/connection-pools/</guid>
+      <guid>https://mongocxx.org/mongocxx-v3/connection-pools/</guid>
       <description>mongocxx::client vs mongocxx::pool A standalone mongocxx::client uses a single-threaded algorithm to monitor the state of the cluster it&amp;rsquo;s connected to. When connected to a replica set, the thread &amp;ldquo;stops the world&amp;rdquo; every 60 seconds to check the status of the cluster. A mongocxx::pool, on the other hand, uses a separate background thread for each server in the cluster, each of which checks the status of the server it monitors every 10 seconds.</description>
     </item>
     
     <item>
       <title>API and ABI versioning</title>
-      <link>http://mongocxx.org/mongocxx-v3/api-abi-versioning/</link>
+      <link>https://mongocxx.org/mongocxx-v3/api-abi-versioning/</link>
       <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
       
-      <guid>http://mongocxx.org/mongocxx-v3/api-abi-versioning/</guid>
+      <guid>https://mongocxx.org/mongocxx-v3/api-abi-versioning/</guid>
       <description>API Versioning We use semantic versioning. bsoncxx and mongocxx both define corresponding CMake variables for MAJOR, MINOR, and PATCH. ABI Versioning Both bsoncxx and mongocxx both have a single scalar ABI version. Only bump ABI version on incompatible ABI change (not for ABI additions). We stay on ABI version _noabi (without bumping for incompatible changes) until ABI is stable. Parallel Header Installation For mongocxx, install all headers to $PREFIX/mongocxx/v$ABI/. For bsoncxx, install all headers to $PREFIX/bsoncxx/v$ABI/.</description>
     </item>
     
     <item>
       <title>Configuring the mongocxx driver</title>
-      <link>http://mongocxx.org/mongocxx-v3/configuration/</link>
+      <link>https://mongocxx.org/mongocxx-v3/configuration/</link>
       <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
       
-      <guid>http://mongocxx.org/mongocxx-v3/configuration/</guid>
+      <guid>https://mongocxx.org/mongocxx-v3/configuration/</guid>
       <description>In the mongocxx driver, most configuration is done via the connection URI. Some additional connection options are possible via the mongocxx::options::client class.
 Configuring TLS/SSL To enable TLS (SSL), set tls=true in the URI:
 mongodb://mongodb.example.com/?tls=true
@@ -39,10 +39,10 @@ By default, mongocxx will verify server certificates against the local system CA
     
     <item>
       <title>Thread and fork safety</title>
-      <link>http://mongocxx.org/mongocxx-v3/thread-safety/</link>
+      <link>https://mongocxx.org/mongocxx-v3/thread-safety/</link>
       <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
       
-      <guid>http://mongocxx.org/mongocxx-v3/thread-safety/</guid>
+      <guid>https://mongocxx.org/mongocxx-v3/thread-safety/</guid>
       <description>TLDR: Always give each thread its own mongocxx::client.
 In general each mongocxx::client object AND all of its child objects, including mongocxx::client_session, mongocxx::database, mongocxx::collection, and mongocxx::cursor, should be used by a single thread at a time. This is true even for clients acquired from a mongocxx::pool.
 Even if you create multiple child objects from a single client, and synchronize them individually, that is unsafe as they will concurrently modify internal structures of the client.</description>
@@ -50,10 +50,10 @@ Even if you create multiple child objects from a single client, and synchronize 
     
     <item>
       <title>Tutorial for mongocxx</title>
-      <link>http://mongocxx.org/mongocxx-v3/tutorial/</link>
+      <link>https://mongocxx.org/mongocxx-v3/tutorial/</link>
       <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
       
-      <guid>http://mongocxx.org/mongocxx-v3/tutorial/</guid>
+      <guid>https://mongocxx.org/mongocxx-v3/tutorial/</guid>
       <description>See the full code for this tutorial in tutorial.cpp.
 Prerequisites A mongod instance running on localhost on port 27017.
 The mongocxx Driver. See Installation for mongocxx.
@@ -63,20 +63,20 @@ The following statements at the top of your source file:
     
     <item>
       <title>Working with BSON</title>
-      <link>http://mongocxx.org/mongocxx-v3/working-with-bson/</link>
+      <link>https://mongocxx.org/mongocxx-v3/working-with-bson/</link>
       <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
       
-      <guid>http://mongocxx.org/mongocxx-v3/working-with-bson/</guid>
+      <guid>https://mongocxx.org/mongocxx-v3/working-with-bson/</guid>
       <description>The mongocxx driver ships with a new library, bsoncxx. This article will go over some of the different types in this library, and how and when to use each. For more information and example code, see our examples.
 Document Builders Owning BSON Documents (values) Non-owning BSON Documents (views) Optionally-owning BSON Documents(view_or_value) BSON Document Lifetime Printing BSON Documents Getting Fields out of BSON Documents Document Builders The bsoncxx library offers four interfaces for building BSON: one-off functions, a basic builder, a list builder and a stream-based builder.</description>
     </item>
     
     <item>
       <title>Client-Side Field Level Encryption with mongocxx</title>
-      <link>http://mongocxx.org/mongocxx-v3/client-side-encryption/</link>
+      <link>https://mongocxx.org/mongocxx-v3/client-side-encryption/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
-      <guid>http://mongocxx.org/mongocxx-v3/client-side-encryption/</guid>
+      <guid>https://mongocxx.org/mongocxx-v3/client-side-encryption/</guid>
       <description>Client-Side Field Level Encryption New in MongoDB 4.2 Client-Side Field Level Encryption (CSFLE) allows administrators and developers to encrypt specific data fields in addition to other MongoDB encryption features.
 With CSFLE, developers can encrypt fields client side without any server-side configuration or directives. Client-Side Field Level Encryption supports workloads where applications must guarantee that unauthorized parties, including server administrators, cannot read the encrypted data.
 For an overview of CSFLE, please read the official MongoDB documentation in the manual.</description>

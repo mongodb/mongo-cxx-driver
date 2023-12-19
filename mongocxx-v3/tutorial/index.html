@@ -8,15 +8,15 @@
 <meta name="keyword" content="">
 <meta http-equiv="Content-Security-Policy" content="upgrade-insecure-requests">
 
-    <link rel="shortcut icon" href="http://mongocxx.org/img/favicon.png">
+    <link rel="shortcut icon" href="https://mongocxx.org/img/favicon.png">
 
     <title>Tutorial for mongocxx</title>
 
-    <link rel="stylesheet" href="http://mongocxx.org/lib/bootstrap.css" type="text/css" />
-<link rel="stylesheet" href="http://mongocxx.org/lib/font-awesome/css/font-awesome.min.css" type="text/css" />
-<link rel="stylesheet" href="http://mongocxx.org/css/mongodb-docs.css" type="text/css" />
-<link rel="stylesheet" href="http://mongocxx.org/css/overrides.css" type="text/css" />
-<link rel="stylesheet" href="http://mongocxx.org/lib/highlight/styles/idea.css" />
+    <link rel="stylesheet" href="https://mongocxx.org/lib/bootstrap.css" type="text/css" />
+<link rel="stylesheet" href="https://mongocxx.org/lib/font-awesome/css/font-awesome.min.css" type="text/css" />
+<link rel="stylesheet" href="https://mongocxx.org/css/mongodb-docs.css" type="text/css" />
+<link rel="stylesheet" href="https://mongocxx.org/css/overrides.css" type="text/css" />
+<link rel="stylesheet" href="https://mongocxx.org/lib/highlight/styles/idea.css" />
 
   </head>
 
@@ -32,8 +32,8 @@
     </div>
     
     <div class="logo pull-left">
-      <a href="http://mongocxx.org">
-        <img src="http://mongocxx.org/img/logo-mongodb-header.png",
+      <a href="https://mongocxx.org">
+        <img src="https://mongocxx.org/img/logo-mongodb-header.png",
              alt="MongoDB C++ driver" />
       </a>
     </div>
@@ -43,7 +43,7 @@
   <div id="search">
 <form method="get" action="//www.google.com/search" target="_blank">
     <input type="text" name="searchQuery" size="20" value="" autocomplete="off" placeholder="Search">
-    <input type="hidden" name="site" value="http://mongocxx.org">
+    <input type="hidden" name="site" value="https://mongocxx.org">
     <input type="hidden" name="q" value="">
     <label for="searchQuery"><i class="fa fa-search fa-1"></i></label>
 </form>
@@ -62,7 +62,7 @@
     <div class="ssidebar nav-collapse">
       <div class="ssidebarwrapper">
         <h3>
-          <a class="index-link" href="http://mongocxx.org">MongoDB C&#43;&#43; Driver Manual</a>
+          <a class="index-link" href="https://mongocxx.org">MongoDB C&#43;&#43; Driver Manual</a>
         </h3>
 
         
@@ -1121,7 +1121,7 @@
 
 
     <li class="toctree-l1">
-    <a href="https://mongodb.github.io/mongo-cxx-driver/api/current">
+    <a href="https://mongocxx.org/api/current">
         <i class='fa fa-file-text-o'></i>
         API Documentation
     </a>
@@ -1382,7 +1382,7 @@
 instance running on localhost on port 27017.</p>
 </li>
 <li>
-<p>The mongocxx Driver. See <a href="http://mongocxx.org/mongocxx-v3/installation/">Installation for mongocxx</a>.</p>
+<p>The mongocxx Driver. See <a href="https://mongocxx.org/mongocxx-v3/installation/">Installation for mongocxx</a>.</p>
 </li>
 <li>
 <p>The following statements at the top of your source file:</p>
@@ -1418,15 +1418,15 @@ line in above expands to this:</p>
 </span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  -L/usr/local/lib -lmongocxx -lbsoncxx
 </span></span></code></pre></div><h2 id="make-a-connection">Make a Connection</h2>
 <p><strong>IMPORTANT</strong>: Before making any connections, you need to create one and only
-one instance of <a href="https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1instance.html
+one instance of <a href="https://mongocxx.org/api/mongocxx-v3/classmongocxx_1_1v__noabi_1_1instance.html
 "><code>mongocxx::instance</code></a>.
 This instance must exist for the entirety of your program.</p>
 <p>To connect to a running MongoDB instance, use the
-<a href="https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1client.html
+<a href="https://mongocxx.org/api/mongocxx-v3/classmongocxx_1_1v__noabi_1_1client.html
 "><code>mongocxx::client</code></a>
 class.</p>
 <p>You must specify the host to connect to using a
-<a href="https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1uri.html
+<a href="https://mongocxx.org/api/mongocxx-v3/classmongocxx_1_1v__noabi_1_1uri.html
 "><code>mongocxx::uri</code></a> instance containing a
 <a href="https://www.mongodb.com/docs/manual/reference/connection-string/">MongoDB URI</a>,
 and pass that into the <code>mongocxx::client</code> constructor.  For details regarding
@@ -1441,11 +1441,11 @@ server running on localhost on port <code>27017</code>:</p>
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>mongocxx<span style="color:#f92672">::</span>uri uri(<span style="color:#e6db74">&#34;mongodb://localhost:27017&#34;</span>);
 </span></span><span style="display:flex;"><span>mongocxx<span style="color:#f92672">::</span>client client(uri);
 </span></span></code></pre></div><h2 id="access-a-database">Access a Database</h2>
-<p>Once you have a <a href="https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1client.html
+<p>Once you have a <a href="https://mongocxx.org/api/mongocxx-v3/classmongocxx_1_1v__noabi_1_1client.html
 "><code>mongocxx::client</code></a>
 instance connected to a MongoDB deployment, use either the
 <code>database()</code> method or <code>operator[]</code> to obtain a
-<a href="https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1database.html
+<a href="https://mongocxx.org/api/mongocxx-v3/classmongocxx_1_1v__noabi_1_1database.html
 "><code>mongocxx::database</code></a>
 instance.</p>
 <p>If the database you request does not exist, MongoDB creates it when you
@@ -1454,10 +1454,10 @@ first store data.</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#66d9ef">auto</span> db <span style="color:#f92672">=</span> client[<span style="color:#e6db74">&#34;mydb&#34;</span>];
 </span></span></code></pre></div><h2 id="access-a-collection">Access a Collection</h2>
 <p>Once you have a
-<a href="https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1database.html
+<a href="https://mongocxx.org/api/mongocxx-v3/classmongocxx_1_1v__noabi_1_1database.html
 "><code>mongocxx::database</code></a>
 instance, use either the <code>collection()</code> method or <code>operator[]</code> to obtain a
-<a href="https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1collection.html
+<a href="https://mongocxx.org/api/mongocxx-v3/classmongocxx_1_1v__noabi_1_1collection.html
 "><code>mongocxx::collection</code></a>
 instance.</p>
 <p>If the collection you request does not exist, MongoDB creates it when
@@ -1497,13 +1497,13 @@ as follows:</p>
 </span></span><span style="display:flex;"><span>    kvp(<span style="color:#e6db74">&#34;info&#34;</span>, make_document(kvp(<span style="color:#e6db74">&#34;x&#34;</span>, <span style="color:#ae81ff">203</span>), kvp(<span style="color:#e6db74">&#34;y&#34;</span>, <span style="color:#ae81ff">102</span>))));
 </span></span></code></pre></div><p>This <code>bsoncxx::document::value</code> type is a read-only object owning
 its own memory. To use it, you must obtain a
-<a href="https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classbsoncxx_1_1document_1_1view.html
+<a href="https://mongocxx.org/api/mongocxx-v3/classbsoncxx_1_1v__noabi_1_1document_1_1view.html
 "><code>bsoncxx::document::view</code></a> using
 the <code>view()</code> method:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#66d9ef">auto</span> doc_view <span style="color:#f92672">=</span> doc_value.view();
 </span></span></code></pre></div><p>You can access fields within this document view using <code>operator[]</code>,
 which will return a
-<a href="https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classbsoncxx_1_1document_1_1element.html
+<a href="https://mongocxx.org/api/mongocxx-v3/classbsoncxx_1_1v__noabi_1_1document_1_1element.html
 "><code>bsoncxx::document::element</code></a>
 instance. For example, the following will extract the <code>name</code> field whose
 value is a string:</p>
@@ -1514,34 +1514,34 @@ value is a string:</p>
 </span></span></code></pre></div><p>If the value in the <code>name</code> field is not a string and you do not
 include a type guard as seen in the preceding example, this code will
 throw an instance of
-<a href="https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classbsoncxx_1_1exception.html
+<a href="https://mongocxx.org/api/mongocxx-v3/classbsoncxx_1_1v__noabi_1_1exception.html
 "><code>bsoncxx::exception</code></a>.</p>
 <h2 id="insert-documents">Insert Documents</h2>
 <h3 id="insert-one-document">Insert One Document</h3>
 <p>To insert a single document into the collection, use a
-<a href="https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1collection.html
+<a href="https://mongocxx.org/api/mongocxx-v3/classmongocxx_1_1v__noabi_1_1collection.html
 "><code>mongocxx::collection</code></a>
 instance&rsquo;s <code>insert_one()</code> method to insert <code>{ &quot;i&quot;: 0 }</code>:</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#66d9ef">auto</span> insert_one_result <span style="color:#f92672">=</span> collection.insert_one(make_document(kvp(<span style="color:#e6db74">&#34;i&#34;</span>, <span style="color:#ae81ff">0</span>)));
-</span></span></code></pre></div><p><code>insert_one_result</code> is an optional <a href="https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1result_1_1insert_one.html
+</span></span></code></pre></div><p><code>insert_one_result</code> is an optional <a href="https://mongocxx.org/api/mongocxx-v3/classmongocxx_1_1v__noabi_1_1result_1_1insert__one.html
 "><code>mongocxx::result::insert_one</code></a>. In this example, <code>insert_one_result</code>
 is expected to be set. The default behavior for write operations is to wait for
 a reply from the server. This may be overriden by setting an unacknowledged
-<a href="https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1write__concern.html
+<a href="https://mongocxx.org/api/mongocxx-v3/classmongocxx_1_1v__noabi_1_1write__concern.html
 "><code>mongocxx::write_concern</code></a>.</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span>assert(insert_one_result);  <span style="color:#75715e">// Acknowledged writes return results.
 </span></span></span></code></pre></div><p>If you do not specify a top-level <code>_id</code> field in the document,
 MongoDB automatically adds an <code>_id</code> field to the inserted document.</p>
 <p>You can obtain this value using the <code>inserted_id()</code> method of the
 returned
-<a href="https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1result_1_1insert__one.html
+<a href="https://mongocxx.org/api/mongocxx-v3/classmongocxx_1_1v__noabi_1_1result_1_1insert__one.html
 "><code>mongocxx::result::insert_one</code></a>
 instance.</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#66d9ef">auto</span> doc_id <span style="color:#f92672">=</span> insert_one_result<span style="color:#f92672">-&gt;</span>inserted_id();
 </span></span><span style="display:flex;"><span>assert(doc_id.type() <span style="color:#f92672">==</span> bsoncxx<span style="color:#f92672">::</span>type<span style="color:#f92672">::</span>k_oid);
 </span></span></code></pre></div><h3 id="insert-multiple-documents">Insert Multiple Documents</h3>
 <p>To insert multiple documents to the collection, use a
-<a href="https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1collection.html
+<a href="https://mongocxx.org/api/mongocxx-v3/classmongocxx_1_1v__noabi_1_1collection.html
 "><code>mongocxx::collection</code></a> instance&rsquo;s
 <code>insert_many()</code> method, which takes a list of documents to insert.</p>
 <p>The following example inserts the documents <code>{ &quot;i&quot;: 1 }</code> and <code>{ &quot;i&quot;: 2 }</code>.
@@ -1557,7 +1557,7 @@ to the <code>insert_many()</code> method.</p>
 MongoDB automatically adds a <code>_id</code> field to the inserted documents.</p>
 <p>You can obtain this value using the <code>inserted_ids()</code> method of the
 returned
-<a href="https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1result_1_1insert__many.html
+<a href="https://mongocxx.org/api/mongocxx-v3/classmongocxx_1_1v__noabi_1_1result_1_1insert__many.html
 "><code>mongocxx::result::insert_many</code></a>
 instance.</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#66d9ef">auto</span> doc0_id <span style="color:#f92672">=</span> insert_many_result<span style="color:#f92672">-&gt;</span>inserted_ids().at(<span style="color:#ae81ff">0</span>);
@@ -1568,10 +1568,10 @@ instance.</p>
 <p>To query the collection, use the collection’s <code>find()</code> and
 <code>find_one</code> methods.</p>
 <p><code>find()</code> will return an instance of
-<a href="https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1cursor.html
+<a href="https://mongocxx.org/api/mongocxx-v3/classmongocxx_1_1v__noabi_1_1cursor.html
 "><code>mongocxx::cursor</code></a>,
 while <code>find_one()</code> will return an instance of
-<code>std::optional&lt;</code><a href="https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classbsoncxx_1_1document_1_1value.html
+<code>std::optional&lt;</code><a href="https://mongocxx.org/api/mongocxx-v3/classbsoncxx_1_1v__noabi_1_1document_1_1value.html
 "><code>bsoncxx::document::value</code></a><code>&gt;</code></p>
 <p>You can call either method with an empty document to query all documents
 in a collection, or pass a filter to query for documents that match the
@@ -1591,7 +1591,7 @@ method without any parameters.</p>
 </span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    assert(doc[<span style="color:#e6db74">&#34;_id&#34;</span>].type() <span style="color:#f92672">==</span> bsoncxx<span style="color:#f92672">::</span>type<span style="color:#f92672">::</span>k_oid);
 </span></span><span style="display:flex;"><span>}
 </span></span></code></pre></div><h3 id="print-all-documents-in-a-collection">Print All Documents in a Collection</h3>
-<p>The <a href="https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/namespacebsoncxx.html
+<p>The <a href="https://mongocxx.org/api/mongocxx-v3/namespacebsoncxx.html
 "><code>bsoncxx::to_json</code></a> function converts a BSON document to a JSON string.</p>
 <div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#66d9ef">auto</span> cursor_all <span style="color:#f92672">=</span> collection.find({});
 </span></span><span style="display:flex;"><span>std<span style="color:#f92672">::</span>cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;collection &#34;</span> <span style="color:#f92672">&lt;&lt;</span> collection.name()
@@ -1629,7 +1629,7 @@ pass the document <code>{&quot;i&quot;: 0}</code> to specify the equality condit
 <p>To update documents in a collection, you can use the collection’s
 <code>update_one()</code> and <code>update_many()</code> methods.</p>
 <p>The update methods return an instance of
-<code>std::optional&lt;</code><a href="https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1result_1_1update.html
+<code>std::optional&lt;</code><a href="https://mongocxx.org/api/mongocxx-v3/classmongocxx_1_1v__noabi_1_1result_1_1update.html
 "><code>mongocxx::result::update</code></a><code>&gt;</code>,
 which provides information about the operation including the number of
 documents modified by the update.</p>
@@ -1656,7 +1656,7 @@ method.</p>
 <p>To delete documents from a collection, you can use a collection’s
 <code>delete_one()</code> and <code>delete_many()</code> methods.</p>
 <p>The delete methods return an instance of
-<code>std::optional&lt;</code><a href="https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1result_1_1delete__result.html
+<code>std::optional&lt;</code><a href="https://mongocxx.org/api/mongocxx-v3/classmongocxx_1_1v__noabi_1_1result_1_1delete__result.html
 "><code>mongocxx::result::delete</code></a><code>&gt;</code>,
 which contains the number of documents deleted.</p>
 <h3 id="delete-a-single-document">Delete a Single Document</h3>
@@ -1679,7 +1679,7 @@ which contains the number of documents deleted.</p>
 <p>To create an <a href="https://www.mongodb.com/docs/manual/indexes/">index</a> on a
 field or set of fields, pass an index specification document to the
 <code>create_index()</code> method of a
-<a href="https://mongodb.github.io/mongo-cxx-driver/api/mongocxx-v3/classmongocxx_1_1collection.html
+<a href="https://mongocxx.org/api/mongocxx-v3/classmongocxx_1_1v__noabi_1_1collection.html
 "><code>mongocxx::collection</code></a> instance. An
 index key specification document contains the fields to index and the
 index type for each field:</p>
@@ -1774,18 +1774,18 @@ index type for each field:</p>
 
 <script type="text/javascript">
   var DOCUMENTATION_OPTIONS = {
-   URL_ROOT:    "http://mongocxx.org",
+   URL_ROOT:    "https://mongocxx.org",
    VERSION:      null ,
    COLLAPSE_INDEX: false,
    FILE_SUFFIX: '.html',
    HAS_SOURCE:  true
   };
 </script>
-<script type="text/javascript" src="http://mongocxx.org/js/jquery.js"></script>
-<script type="text/javascript" src="http://mongocxx.org/lib/bootstrap.js"></script>
-<script type="text/javascript" src="http://mongocxx.org/js/navbar.js"></script>
-<script type="text/javascript" src="http://mongocxx.org/lib/highlight/highlight.pack.js"></script>
-<script type="text/javascript" src="http://mongocxx.org/js/scripts.js"></script>
+<script type="text/javascript" src="https://mongocxx.org/js/jquery.js"></script>
+<script type="text/javascript" src="https://mongocxx.org/lib/bootstrap.js"></script>
+<script type="text/javascript" src="https://mongocxx.org/js/navbar.js"></script>
+<script type="text/javascript" src="https://mongocxx.org/lib/highlight/highlight.pack.js"></script>
+<script type="text/javascript" src="https://mongocxx.org/js/scripts.js"></script>
 
 
 <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-JQHP"

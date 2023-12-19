@@ -2,47 +2,47 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Installing the mongocxx driver on MongoDB C&#43;&#43; Driver Manual</title>
-    <link>http://mongocxx.org/mongocxx-v3/installation/</link>
+    <link>https://mongocxx.org/mongocxx-v3/installation/</link>
     <description>Recent content in Installing the mongocxx driver on MongoDB C&#43;&#43; Driver Manual</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 26 Sep 2020 13:14:52 -0400</lastBuildDate><atom:link href="http://mongocxx.org/mongocxx-v3/installation/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 26 Sep 2020 13:14:52 -0400</lastBuildDate><atom:link href="https://mongocxx.org/mongocxx-v3/installation/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Windows</title>
-      <link>http://mongocxx.org/mongocxx-v3/installation/windows/</link>
+      <link>https://mongocxx.org/mongocxx-v3/installation/windows/</link>
       <pubDate>Sat, 26 Sep 2020 13:47:23 -0400</pubDate>
       
-      <guid>http://mongocxx.org/mongocxx-v3/installation/windows/</guid>
+      <guid>https://mongocxx.org/mongocxx-v3/installation/windows/</guid>
       <description>Step 1: Choose a C++17 polyfill The mongocxx driver uses the C++17 features std::optional and std::string_view. To compile the mongocxx driver for pre-C++17, you must choose one of the following implementations for these features:
 MNMLSTC/core (default for non-Windows platforms) Select with -DBSONCXX_POLY_USE_MNMLSTC=1. NOTE: This option vendors a header-only installation of MNMLSTC/core into the bsoncxx library installation and will therefore download MLNMLSTC from GitHub during the build process. If you already have an available version of MNMLSTC on your system, you can avoid the download step by using -DBSONCXX_POLY_USE_SYSTEM_MNMLSTC.</description>
     </item>
     
     <item>
       <title>macOS</title>
-      <link>http://mongocxx.org/mongocxx-v3/installation/macos/</link>
+      <link>https://mongocxx.org/mongocxx-v3/installation/macos/</link>
       <pubDate>Sat, 26 Sep 2020 13:47:18 -0400</pubDate>
       
-      <guid>http://mongocxx.org/mongocxx-v3/installation/macos/</guid>
+      <guid>https://mongocxx.org/mongocxx-v3/installation/macos/</guid>
       <description>Step 1: Choose a C++17 polyfill The mongocxx driver uses the C++17 features std::optional and std::string_view. To compile the mongocxx driver for pre-C++17, you must choose one of the following implementations for these features:
 MNMLSTC/core (default for non-Windows platforms) Select with -DBSONCXX_POLY_USE_MNMLSTC=1. NOTE: This option vendors a header-only installation of MNMLSTC/core into the bsoncxx library installation and will therefore download MLNMLSTC from GitHub during the build process. If you already have an available version of MNMLSTC on your system, you can avoid the download step by using -DBSONCXX_POLY_USE_SYSTEM_MNMLSTC.</description>
     </item>
     
     <item>
       <title>Linux</title>
-      <link>http://mongocxx.org/mongocxx-v3/installation/linux/</link>
+      <link>https://mongocxx.org/mongocxx-v3/installation/linux/</link>
       <pubDate>Sat, 26 Sep 2020 13:47:02 -0400</pubDate>
       
-      <guid>http://mongocxx.org/mongocxx-v3/installation/linux/</guid>
+      <guid>https://mongocxx.org/mongocxx-v3/installation/linux/</guid>
       <description>Step 1: Choose a C++17 polyfill The mongocxx driver uses the C++17 features std::optional and std::string_view. To compile the mongocxx driver for pre-C++17, you must choose one of the following implementations for these features:
 MNMLSTC/core (default for non-Windows platforms) Select with -DBSONCXX_POLY_USE_MNMLSTC=1. NOTE: This option vendors a header-only installation of MNMLSTC/core into the bsoncxx library installation and will therefore download MLNMLSTC from GitHub during the build process. If you already have an available version of MNMLSTC on your system, you can avoid the download step by using -DBSONCXX_POLY_USE_SYSTEM_MNMLSTC.</description>
     </item>
     
     <item>
       <title>Advanced Configuration and Installation Options</title>
-      <link>http://mongocxx.org/mongocxx-v3/installation/advanced/</link>
+      <link>https://mongocxx.org/mongocxx-v3/installation/advanced/</link>
       <pubDate>Sat, 26 Sep 2020 13:14:52 -0400</pubDate>
       
-      <guid>http://mongocxx.org/mongocxx-v3/installation/advanced/</guid>
+      <guid>https://mongocxx.org/mongocxx-v3/installation/advanced/</guid>
       <description>Additional Options for Integrators In the event that you are building the BSON C++ library and/or the C++ driver to embed with other components and you wish to avoid the potential for collision with components installed from a standard build or from a distribution package manager, you can make use of the BSONCXX_OUTPUT_BASENAME and MONGOCXX_OUTPUT_BASENAME options to cmake.
 cmake .. \ -DBSONCXX_OUTPUT_BASENAME=custom_bsoncxx \ -DMONGOCXX_OUTPUT_BASENAME=custom_mongocxx The above command would produce libraries named libcustom_bsoncxx.</description>
     </item>
