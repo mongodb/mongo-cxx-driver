@@ -9,7 +9,7 @@ title = "Configuring the mongocxx driver"
 In the mongocxx driver, most configuration is done via the [connection
 URI](https://www.mongodb.com/docs/manual/reference/connection-string/).  Some
 additional connection options are possible via the
-[mongocxx::options::client]({{< api3ref classmongocxx_1_1options_1_1client
+[mongocxx::options::client]({{< api3ref classmongocxx_1_1v__noabi_1_1options_1_1client
 >}}) class.
 
 ## Configuring TLS/SSL
@@ -21,7 +21,7 @@ To enable TLS (SSL), set `tls=true` in the URI:
 By default, mongocxx will verify server certificates against the local
 system CA list.  You can override that either by specifying different settings in
 the connection string, or by creating a
-[mongocxx::options::tls]({{< api3ref classmongocxx_1_1options_1_1tls >}})
+[mongocxx::options::tls]({{< api3ref classmongocxx_1_1v__noabi_1_1options_1_1tls >}})
 object and passing it to `tls_opts` on mongocxx::options::client.
 
 For example, to use a custom CA or to disable certificate validation,
@@ -109,7 +109,7 @@ See the MongoDB server
 for more information about determining the subject name from the
 certificate.
 
-The PEM file can also be specified using the [mongocxx::options::tls]({{< api3ref classmongocxx_1_1options_1_1tls >}}) class, see the first "Configuring TLS/SSL" example above.
+The PEM file can also be specified using the [mongocxx::options::tls]({{< api3ref classmongocxx_1_1v__noabi_1_1options_1_1tls >}}) class, see the first "Configuring TLS/SSL" example above.
 
 ### Kerberos (GSSAPI)
 

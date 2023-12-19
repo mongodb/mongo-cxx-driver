@@ -16,7 +16,7 @@ Build-Depends: debhelper (>= 11),
                doxygen
 Standards-Version: 4.6.2
 Section: libs
-Homepage: http://mongocxx.org/
+Homepage: https://mongocxx.org/
 Vcs-Git: https://github.com/mongodb/mongo-cxx-driver.git
 Vcs-Browser: https://github.com/mongodb/mongo-cxx-driver/tree/master
 
