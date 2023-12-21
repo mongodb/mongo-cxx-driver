@@ -38,6 +38,7 @@ add_executable(test_bson
     oid.cpp
     view_or_value.cpp
     make_unique.test.cpp
+    string_view.test.cpp
     type_traits.test.cpp
 )
 
@@ -93,6 +94,26 @@ if(ENABLE_MACRO_GUARD_TESTS)
             DEFINE_NO_DEPRECATED
             BSONCXX_NO_DEPRECATED
             BSONCXX_UNREACHABLE # prelude.hpp
+            _bsoncxxDisableWarningImpl_for_GCC
+            _bsoncxxDisableWarningImpl_for_GNU
+            _bsoncxxDisableWarningImpl_for_MSVC
+            _bsoncxxDisableWarningImpl_for_Clang
+            BSONCXX_PUSH_WARNINGS
+            BSONCXX_POP_WARNINGS
+            BSONCXX_DISABLE_WARNING
+            BSONCXX_CONCAT
+            BSONCXX_CONCAT_IMPL
+            bsoncxx_cxx14_constexpr
+            BSONCXX_FORCE_SEMICOLON
+            BSONCXX_PRAGMA
+            _bsoncxxPragma
+            BSONCXX_STRINGIFY
+            BSONCXX_STRINGIFY_IMPL
+            BSONCXX_IF_MSVC
+            BSONCXX_IF_GCC
+            BSONCXX_IF_CLANG
+            BSONCXX_IF_GNU_LIKE
+            BSONCXX_RETURNS
         INCLUDE_PATTERNS
             "include/*.hpp" # Public headers.
             "lib/*.hh" # Private headers.
@@ -121,6 +142,7 @@ set_dist_list(src_bsoncxx_test_DIST
     test_macro_guards.cpp.in
     to_string.hh
     view_or_value.cpp
-    type_traits.test.cpp
     make_unique.test.cpp
+    string_view.test.cpp
+    type_traits.test.cpp
 )

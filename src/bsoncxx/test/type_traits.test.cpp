@@ -4,11 +4,10 @@
 #include <bsoncxx/stdx/type_traits.hpp>
 #include <third_party/catch/include/catch.hpp>
 
-#if __GNUC__
+#include <bsoncxx/config/prelude.hpp>
+
 // We declare variables that are only used for compilation checking
-// (applies to Clang as well)
-#pragma GCC diagnostic ignored "-Wunused"
-#endif
+BSONCXX_DISABLE_WARNING(GNU("-Wunused"));
 
 namespace {
 
@@ -179,5 +178,22 @@ static_assert(
     tt::is_detected<tt::invoke_result_t, constrained_callable, void (*)(int, double), double>::
         value,
     "fail");
+
+struct rank_test {
+    template <typename T>
+    constexpr int val(T x, bsoncxx::detail::rank<0>) const {
+        return x.never_instantiated();
+    }
+    template <typename T>
+    constexpr int val(T x, bsoncxx::detail::rank<1>) const {
+        return x + 30;
+    }
+    template <typename T>
+    constexpr int operator()(T v) const {
+        return this->val(v, bsoncxx::detail::rank<20>{});
+    }
+};
+
+static_assert(rank_test{}(12) == 42, "fail");
 
 }  // namespace

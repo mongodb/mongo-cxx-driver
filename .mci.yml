@@ -636,7 +636,6 @@ tasks:
     - name: compile_with_shared_libs
       commands:
       - func: "setup"
-      - func: "start_mongod"
       - func: "fetch_c_driver_source"
       - func: "compile"
 
