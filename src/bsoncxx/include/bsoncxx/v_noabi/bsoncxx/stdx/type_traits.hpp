@@ -1,3 +1,17 @@
+// Copyright 2023 MongoDB Inc.
+//
+// Licensed under the Apache License, Version 2.0 (the "License");
+// you may not use this file except in compliance with the License.
+// You may obtain a copy of the License at
+//
+// http://www.apache.org/licenses/LICENSE-2.0
+//
+// Unless required by applicable law or agreed to in writing, software
+// distributed under the License is distributed on an "AS IS" BASIS,
+// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+// See the License for the specific language governing permissions and
+// limitations under the License.
+
 #pragma once
 
 #include <type_traits>
@@ -32,7 +46,9 @@ DECL_ALIAS(make_unsigned);
 DECL_ALIAS(remove_reference);
 DECL_ALIAS(remove_const);
 DECL_ALIAS(remove_volatile);
+DECL_ALIAS(remove_pointer);
 DECL_ALIAS(remove_cv);
+DECL_ALIAS(add_pointer);
 DECL_ALIAS(add_const);
 DECL_ALIAS(add_volatile);
 DECL_ALIAS(add_lvalue_reference);
@@ -54,13 +70,25 @@ using remove_cvref_t = remove_cv_t<remove_reference_t<T>>;
 template <typename T>
 using const_reference_t = add_lvalue_reference_t<const remove_cvref_t<T>>;
 
+// Workaround for CWG issue 1558
+template <typename...>
+struct _just_void_ {
+    using type = void;
+};
 /**
  * @brief A "do-nothing" alias template that always evaluates to void
  *
  * @tparam Ts Zero or more type arguments, all discarded
  */
 template <typename... Ts>
-using void_t = void;
+using void_t =
+#if defined(_MSC_VER) && _MSC_VER < 1910
+    // Old MSVC requires that the type parameters actually be "used" to trigger SFINAE at caller.
+    // This was resolved by CWG issue 1558
+    typename _just_void_<Ts...>::type;
+#else
+    void;
+#endif
 
 /**
  * @brief Alias for integral_constant<bool, B>
@@ -75,6 +103,10 @@ using bool_constant = std::integral_constant<bool, B>;
  */
 template <typename...>
 struct mp_list;
+
+// Like std::declval, but does not generate a hard error if used.
+template <typename T>
+extern add_rvalue_reference_t<T> soft_declval() noexcept;
 
 /// ## Implementation of the C++11 detection idiom
 namespace impl_detection {
@@ -93,7 +125,7 @@ std::true_type is_detected_f(mp_list<Args...>*);
 
 // Failure case for is_detected. Because this function takes an elipsis, this is
 // less preferred than the above overload that accepts a pointer type directly.
-template <bsoncxx_ttparam Oper, typename... Args>
+template <bsoncxx_ttparam Oper>
 std::false_type is_detected_f(...);
 
 // Provides the detected_or impl
@@ -113,6 +145,18 @@ template <>
 struct detection<true> {
     template <typename, bsoncxx_ttparam Oper, typename... Args>
     using f = Oper<Args...>;
+};
+
+/// Workaround: MSVC 14.0 forgets whether a type resulting from the evaluation
+/// of a template-template parameter to an alias template is a reference.
+template <typename Dflt, typename Void, bsoncxx_ttparam Oper, typename... Args>
+struct vc140_detection {
+    using type = Dflt;
+};
+
+template <typename Dflt, bsoncxx_ttparam Oper, typename... Args>
+struct vc140_detection<Dflt, void_t<Oper<Args...>>, Oper, Args...> {
+    using type = Oper<Args...>;
 };
 
 }  // namespace impl_detection
@@ -147,8 +191,14 @@ struct is_detected
  * @tparam Args The arguments to give to the Oper metafunction
  */
 template <typename Dflt, bsoncxx_ttparam Oper, typename... Args>
-using detected_or = typename impl_detection::detection<
-    is_detected<Oper, Args...>::value>::template f<Dflt, Oper, Args...>;
+using detected_or =
+#if defined(_MSC_VER) && _MSC_VER < 1910
+    typename impl_detection::vc140_detection<Dflt, void, Oper, Args...>::type
+#else
+    typename impl_detection::detection<
+        is_detected<Oper, Args...>::value>::template f<Dflt, Oper, Args...>
+#endif
+    ;
 
 /**
  * @brief If Oper<Args...> evaluates to a type, yields that type. Otherwise, yields
@@ -343,31 +393,25 @@ using requires_not_t = requires_t<Type, negation<disjunction<Traits...>>>;
 // Impl: invoke/is_invocable
 namespace impl_invoke {
 
-#pragma push_macro("RETURNS")
-#define RETURNS(...)                                         \
-    noexcept(noexcept(__VA_ARGS__))->decltype(__VA_ARGS__) { \
-        return __VA_ARGS__;                                  \
-    }                                                        \
-    static_assert(true, "")
-
 template <bool IsMemberObject, bool IsMemberFunction>
 struct invoker {
     template <typename F, typename... Args>
     constexpr static auto apply(F&& fun, Args&&... args)
-        RETURNS(static_cast<F&&>(fun)(static_cast<Args&&>(args)...));
+        BSONCXX_RETURNS(static_cast<F&&>(fun)(static_cast<Args&&>(args)...));
 };
 
 template <>
 struct invoker<false, true> {
     template <typename F, typename Self, typename... Args>
     constexpr static auto apply(F&& fun, Self&& self, Args&&... args)
-        RETURNS((static_cast<Self&&>(self).*fun)(static_cast<Args&&>(args)...));
+        BSONCXX_RETURNS((static_cast<Self&&>(self).*fun)(static_cast<Args&&>(args)...));
 };
 
 template <>
 struct invoker<true, false> {
     template <typename F, typename Self>
-    constexpr static auto apply(F&& fun, Self&& self) RETURNS(static_cast<Self&&>(self).*fun);
+    constexpr static auto apply(F&& fun, Self&& self)
+        BSONCXX_RETURNS(static_cast<Self&&>(self).*fun);
 };
 
 }  // namespace impl_invoke
@@ -382,12 +426,10 @@ static constexpr struct invoke_fn {
 
     template <typename F, typename... Args, typename Fd = remove_cvref_t<F>>
     constexpr auto operator()(F&& fn, Args&&... args) const
-        RETURNS(impl_invoke::invoker<std::is_member_object_pointer<Fd>::value,
-                                     std::is_member_function_pointer<Fd>::value>  //
-                ::apply(static_cast<F&&>(fn), static_cast<Args&&>(args)...));
+        BSONCXX_RETURNS(impl_invoke::invoker<std::is_member_object_pointer<Fd>::value,
+                                             std::is_member_function_pointer<Fd>::value>  //
+                        ::apply(static_cast<F&&>(fn), static_cast<Args&&>(args)...));
 } invoke;
-
-#pragma pop_macro("RETURNS")
 
 /**
  * @brief Yields the type that would result from invoking F with the given arguments.
@@ -418,6 +460,18 @@ struct is_invocable : is_detected<invoke_result_t, Fun, Args...> {
  */
 template <typename T, typename U>
 struct is_alike : std::is_same<remove_cvref_t<T>, remove_cvref_t<U>> {};
+
+/**
+ * @brief Tag type for creating ranked overloads to force disambiguation.
+ *
+ * @tparam N The ranking of the overload. A higher value is ranked greater than
+ * lower values.
+ */
+template <std::size_t N>
+struct rank : rank<N - 1> {};
+
+template <>
+struct rank<0> {};
 
 }  // namespace detail
 }  // namespace bsoncxx

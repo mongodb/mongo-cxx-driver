@@ -63,15 +63,15 @@ c++ --std=c++11 <input>.cpp
 ## Make a Connection
 
 **IMPORTANT**: Before making any connections, you need to create one and only
-one instance of [`mongocxx::instance`]({{< api3ref classmongocxx_1_1instance >}}).
+one instance of [`mongocxx::instance`]({{< api3ref classmongocxx_1_1v__noabi_1_1instance >}}).
 This instance must exist for the entirety of your program.
 
 To connect to a running MongoDB instance, use the
-[`mongocxx::client`]({{< api3ref classmongocxx_1_1client >}})
+[`mongocxx::client`]({{< api3ref classmongocxx_1_1v__noabi_1_1client >}})
 class.
 
 You must specify the host to connect to using a
-[`mongocxx::uri`]({{< api3ref classmongocxx_1_1uri >}}) instance containing a
+[`mongocxx::uri`]({{< api3ref classmongocxx_1_1v__noabi_1_1uri >}}) instance containing a
 [MongoDB URI](https://www.mongodb.com/docs/manual/reference/connection-string/),
 and pass that into the `mongocxx::client` constructor.  For details regarding
 supported URI options see the documentation for the version of libmongoc used
@@ -96,10 +96,10 @@ mongocxx::client client(uri);
 
 ## Access a Database
 
-Once you have a [`mongocxx::client`]({{< api3ref classmongocxx_1_1client >}})
+Once you have a [`mongocxx::client`]({{< api3ref classmongocxx_1_1v__noabi_1_1client >}})
 instance connected to a MongoDB deployment, use either the
 `database()` method or `operator[]` to obtain a
-[`mongocxx::database`]({{< api3ref classmongocxx_1_1database >}})
+[`mongocxx::database`]({{< api3ref classmongocxx_1_1v__noabi_1_1database >}})
 instance.
 
 If the database you request does not exist, MongoDB creates it when you
@@ -114,9 +114,9 @@ auto db = client["mydb"];
 ## Access a Collection
 
 Once you have a
-[`mongocxx::database`]({{< api3ref classmongocxx_1_1database >}})
+[`mongocxx::database`]({{< api3ref classmongocxx_1_1v__noabi_1_1database >}})
 instance, use either the `collection()` method or `operator[]` to obtain a
-[`mongocxx::collection`]({{< api3ref classmongocxx_1_1collection >}})
+[`mongocxx::collection`]({{< api3ref classmongocxx_1_1v__noabi_1_1collection >}})
 instance.
 
 If the collection you request does not exist, MongoDB creates it when
@@ -174,7 +174,7 @@ auto doc_value = make_document(
 
 This `bsoncxx::document::value` type is a read-only object owning
 its own memory. To use it, you must obtain a
-[`bsoncxx::document::view`]({{< api3ref classbsoncxx_1_1document_1_1view >}}) using
+[`bsoncxx::document::view`]({{< api3ref classbsoncxx_1_1v__noabi_1_1document_1_1view >}}) using
 the `view()` method:
 
 ```c++
@@ -183,7 +183,7 @@ auto doc_view = doc_value.view();
 
 You can access fields within this document view using `operator[]`,
 which will return a
-[`bsoncxx::document::element`]({{< api3ref classbsoncxx_1_1document_1_1element >}})
+[`bsoncxx::document::element`]({{< api3ref classbsoncxx_1_1v__noabi_1_1document_1_1element >}})
 instance. For example, the following will extract the `name` field whose
 value is a string:
 
@@ -197,14 +197,14 @@ assert(0 == name.compare("MongoDB"));
 If the value in the `name` field is not a string and you do not
 include a type guard as seen in the preceding example, this code will
 throw an instance of
-[`bsoncxx::exception`]({{< api3ref classbsoncxx_1_1exception >}}).
+[`bsoncxx::exception`]({{< api3ref classbsoncxx_1_1v__noabi_1_1exception >}}).
 
 ## Insert Documents
 
 ### Insert One Document
 
 To insert a single document into the collection, use a
-[`mongocxx::collection`]({{< api3ref classmongocxx_1_1collection >}})
+[`mongocxx::collection`]({{< api3ref classmongocxx_1_1v__noabi_1_1collection >}})
 instance's `insert_one()` method to insert `{ "i": 0 }`:
 
 ```c++
@@ -212,10 +212,10 @@ auto insert_one_result = collection.insert_one(make_document(kvp("i", 0)));
 ```
 
 `insert_one_result` is an optional [`mongocxx::result::insert_one`]({{< api3ref
-classmongocxx_1_1result_1_1insert_one >}}). In this example, `insert_one_result`
+classmongocxx_1_1v__noabi_1_1result_1_1insert__one >}}). In this example, `insert_one_result`
 is expected to be set. The default behavior for write operations is to wait for
 a reply from the server. This may be overriden by setting an unacknowledged
-[`mongocxx::write_concern`]({{< api3ref classmongocxx_1_1write__concern >}}).
+[`mongocxx::write_concern`]({{< api3ref classmongocxx_1_1v__noabi_1_1write__concern >}}).
 
 ```c++
 assert(insert_one_result);  // Acknowledged writes return results.
@@ -226,7 +226,7 @@ MongoDB automatically adds an `_id` field to the inserted document.
 
 You can obtain this value using the `inserted_id()` method of the
 returned
-[`mongocxx::result::insert_one`]({{< api3ref classmongocxx_1_1result_1_1insert__one >}})
+[`mongocxx::result::insert_one`]({{< api3ref classmongocxx_1_1v__noabi_1_1result_1_1insert__one >}})
 instance.
 
 ```c++
@@ -237,7 +237,7 @@ assert(doc_id.type() == bsoncxx::type::k_oid);
 ### Insert Multiple Documents
 
 To insert multiple documents to the collection, use a
-[`mongocxx::collection`]({{< api3ref classmongocxx_1_1collection >}}) instance's
+[`mongocxx::collection`]({{< api3ref classmongocxx_1_1v__noabi_1_1collection >}}) instance's
 `insert_many()` method, which takes a list of documents to insert.
 
 The following example inserts the documents `{ "i": 1 }` and `{ "i": 2 }`.
@@ -262,7 +262,7 @@ MongoDB automatically adds a `_id` field to the inserted documents.
 
 You can obtain this value using the `inserted_ids()` method of the
 returned
-[`mongocxx::result::insert_many`]({{< api3ref classmongocxx_1_1result_1_1insert__many >}})
+[`mongocxx::result::insert_many`]({{< api3ref classmongocxx_1_1v__noabi_1_1result_1_1insert__many >}})
 instance.
 
 ```c++
@@ -278,9 +278,9 @@ To query the collection, use the collection’s `find()` and
 `find_one` methods.
 
 `find()` will return an instance of
-[`mongocxx::cursor`]({{< api3ref classmongocxx_1_1cursor >}}),
+[`mongocxx::cursor`]({{< api3ref classmongocxx_1_1v__noabi_1_1cursor >}}),
 while `find_one()` will return an instance of
-`std::optional<`[`bsoncxx::document::value`]({{< api3ref classbsoncxx_1_1document_1_1value >}})`>`
+`std::optional<`[`bsoncxx::document::value`]({{< api3ref classbsoncxx_1_1v__noabi_1_1document_1_1value >}})`>`
 
 You can call either method with an empty document to query all documents
 in a collection, or pass a filter to query for documents that match the
@@ -369,7 +369,7 @@ To update documents in a collection, you can use the collection’s
 `update_one()` and `update_many()` methods.
 
 The update methods return an instance of
-`std::optional<`[`mongocxx::result::update`]({{< api3ref classmongocxx_1_1result_1_1update >}})`>`,
+`std::optional<`[`mongocxx::result::update`]({{< api3ref classmongocxx_1_1v__noabi_1_1result_1_1update >}})`>`,
 which provides information about the operation including the number of
 documents modified by the update.
 
@@ -411,7 +411,7 @@ To delete documents from a collection, you can use a collection’s
 `delete_one()` and `delete_many()` methods.
 
 The delete methods return an instance of
-`std::optional<`[`mongocxx::result::delete`]({{< api3ref classmongocxx_1_1result_1_1delete__result >}})`>`,
+`std::optional<`[`mongocxx::result::delete`]({{< api3ref classmongocxx_1_1v__noabi_1_1result_1_1delete__result >}})`>`,
 which contains the number of documents deleted.
 
 ### Delete a Single Document
@@ -447,7 +447,7 @@ assert(delete_many_result->deleted_count() == 2);
 To create an [index](https://www.mongodb.com/docs/manual/indexes/) on a
 field or set of fields, pass an index specification document to the
 `create_index()` method of a
-[`mongocxx::collection`]({{< api3ref classmongocxx_1_1collection >}}) instance. An
+[`mongocxx::collection`]({{< api3ref classmongocxx_1_1v__noabi_1_1collection >}}) instance. An
 index key specification document contains the fields to index and the
 index type for each field:
 

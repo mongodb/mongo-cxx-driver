@@ -25,8 +25,8 @@ use each.  For more information and example code, see our
 The bsoncxx library offers four interfaces for building BSON: one-off
 functions, a basic builder, a list builder and a stream-based builder.
 
-[`bsoncxx::builder::basic::document`](https://github.com/mongodb/mongo-cxx-driver/blob/master/src/bsoncxx/builder/basic/document.hpp)<br/>
-[`bsoncxx::builder::stream::document`](https://github.com/mongodb/mongo-cxx-driver/blob/master/src/bsoncxx/builder/stream/document.hpp)
+[`bsoncxx::builder::basic::document`](https://github.com/mongodb/mongo-cxx-driver/blob/master/src/bsoncxx/include/bsoncxx/v_noabi/bsoncxx/builder/basic/document.hpp)<br/>
+[`bsoncxx::builder::stream::document`](https://github.com/mongodb/mongo-cxx-driver/blob/master/src/bsoncxx/include/bsoncxx/v_noabi/bsoncxx/builder/stream/document.hpp)
 
 The various methods of creating BSON documents and arrays are all
 equivalent. All interfaces will provide the same results, the choice of
@@ -175,7 +175,7 @@ for (auto && e : {1, 2, 3}) {
 
 ### <a name="value">Owning BSON Documents (values)</a>
 
-[`bsoncxx::document::value`](https://github.com/mongodb/mongo-cxx-driver/blob/master/src/bsoncxx/document/value.hpp)
+[`bsoncxx::document::value`](https://github.com/mongodb/mongo-cxx-driver/blob/master/src/bsoncxx/include/bsoncxx/v_noabi/bsoncxx/document/value.hpp)
 
 This type represents an actual BSON document, one that owns its buffer of
 data.  These documents can be constructed from a builder by calling
@@ -200,7 +200,7 @@ bsoncxx::document::value one_line = bsoncxx::builder::stream::document{} << "fin
 
 ### <a name="view">Non-owning BSON Documents (views)</a>
 
-[`bsoncxx::document::view`](https://github.com/mongodb/mongo-cxx-driver/blob/master/src/bsoncxx/document/view.hpp)
+[`bsoncxx::document::view`](https://github.com/mongodb/mongo-cxx-driver/blob/master/src/bsoncxx/include/bsoncxx/v_noabi/bsoncxx/document/view.hpp)
 
 This type is a view into an owning `bsoncxx::document::value`.
 
@@ -232,7 +232,7 @@ auto cursor2 = collection2.find(query_value.view());
 
 ### <a name="view_or_value">Optionally-owning BSON Documents (view_or_value)</a>
 
-Many driver methods take a document::view_or_value parameter, for example, [`run_command`](https://github.com/mongodb/mongo-cxx-driver/blob/master/src/mongocxx/database.hpp#L83-L92):
+Many driver methods take a document::view_or_value parameter, for example, [`run_command`](https://github.com/mongodb/mongo-cxx-driver/blob/master/src/mongocxx/include/mongocxx/v_noabi/mongocxx/database.hpp#L144-L153):
 
 ```
 bsoncxx::document::value run_command(bsoncxx::document::view_or_value command);
@@ -297,7 +297,7 @@ bsoncxx::document::view dangling_view = temp_builder.extract().view(); // Bad!!
 
 ### <a name="print">Printing BSON Documents</a>
 
-[`bsoncxx::to_json()`](https://github.com/mongodb/mongo-cxx-driver/blob/master/src/bsoncxx/json.hpp#L28-L36)
+[`bsoncxx::to_json()`](https://github.com/mongodb/mongo-cxx-driver/blob/master/src/bsoncxx/include/bsoncxx/v_noabi/bsoncxx/json.hpp#L39-L55)
 
 The bsoncxx library comes with a convenience method to convert BSON
 documents to strings for easy inspection:
@@ -307,7 +307,7 @@ bsoncxx::document::value = document{} << "I am" << "a BSON document" << finalize
 std::cout << bsoncxx::to_json(doc.view()) << std::endl;
 ```
 
-There is an analogous method, [from_json()](https://github.com/mongodb/mongo-cxx-driver/blob/master/src/bsoncxx/json.hpp#L60-L68), to build document::values out of existing JSON strings.
+There is an analogous method, [from_json()](https://github.com/mongodb/mongo-cxx-driver/blob/master/src/bsoncxx/include/bsoncxx/v_noabi/bsoncxx/json.hpp#L57-L67), to build document::values out of existing JSON strings.
 
 ### <a name="fields">Getting Fields out of BSON Documents</a>
 
@@ -335,7 +335,7 @@ This feature is shown in more detail in [this example](https://github.com/mongod
 
 The [BSON specification](http://bsonspec.org/spec.html) provides a list
 of supported types.  These are represented in C++ using the
-[b_xxx](https://mongodb.github.io/mongo-cxx-driver/api/current/classes.html#letter_B)
+[b_xxx](https://mongocxx.org/api/current/classes.html#letter_B)
 type wrappers.
 
 Some BSON types don't necessarily have a native representation to wrap and

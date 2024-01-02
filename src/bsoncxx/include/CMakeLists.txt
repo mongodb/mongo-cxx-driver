@@ -63,6 +63,7 @@ set_dist_list(src_bsoncxx_include_DIST
     bsoncxx/v_noabi/bsoncxx/config/compiler.hpp
     bsoncxx/v_noabi/bsoncxx/config/postlude.hpp
     bsoncxx/v_noabi/bsoncxx/config/prelude.hpp
+    bsoncxx/v_noabi/bsoncxx/config/util.hpp
     bsoncxx/v_noabi/bsoncxx/decimal128-fwd.hpp
     bsoncxx/v_noabi/bsoncxx/decimal128.hpp
     bsoncxx/v_noabi/bsoncxx/document/element-fwd.hpp
@@ -83,6 +84,7 @@ set_dist_list(src_bsoncxx_include_DIST
     bsoncxx/v_noabi/bsoncxx/oid-fwd.hpp
     bsoncxx/v_noabi/bsoncxx/oid.hpp
     bsoncxx/v_noabi/bsoncxx/stdx/make_unique.hpp
+    bsoncxx/v_noabi/bsoncxx/stdx/operators.hpp
     bsoncxx/v_noabi/bsoncxx/stdx/optional.hpp
     bsoncxx/v_noabi/bsoncxx/stdx/string_view.hpp
     bsoncxx/v_noabi/bsoncxx/stdx/type_traits.hpp

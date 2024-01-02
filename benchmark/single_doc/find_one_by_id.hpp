@@ -15,7 +15,6 @@
 #pragma once
 
 #include "../microbench.hpp"
-
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>
 #include <mongocxx/client.hpp>
@@ -56,7 +55,7 @@ void find_one_by_id::setup() {
     mongocxx::database db = _conn["perftest"];
     db.drop();
     auto coll = db["corpus"];
-    for (std::int32_t i = 1; i <= 10000; i++) {
+    for (std::int32_t i = 0; i < iterations; i++) {
         bsoncxx::document::value insert =
             make_document(kvp("_id", bsoncxx::types::b_int32{i}), concatenate(doc.view()));
         coll.insert_one(insert.view());
@@ -65,11 +64,11 @@ void find_one_by_id::setup() {
 
 void find_one_by_id::task() {
     auto coll = _conn["perftest"]["corpus"];
-    for (std::int32_t i = 1; i <= 10000; i++) {
+    for (std::int32_t i = 0; i < iterations; i++) {
         auto cursor = coll.find(make_document(kvp("_id", bsoncxx::types::b_int32{i})));
 
         // Iterate over the cursor.
-        for (auto&& doc : cursor) {
+        for ([[maybe_unused]] auto&& doc : cursor) {
         }
     }
 }

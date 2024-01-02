@@ -14,20 +14,19 @@
 
 #pragma once
 
-#include "score_recorder.hpp"
-
 #include <algorithm>
 #include <set>
 #include <string>
 #include <unordered_map>
 #include <vector>
 
+#include "score_recorder.hpp"
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 
 namespace benchmark {
 
-enum benchmark_type {
+enum class benchmark_type {
     bson_bench,
     single_bench,
     multi_bench,
@@ -37,27 +36,29 @@ enum benchmark_type {
     run_command_bench,
 };
 
-const std::string type_names[] = {"BSONBench",
-                                  "SingleBench",
-                                  "MultiBench",
-                                  "ParallelBench",
-                                  "ReadBench",
-                                  "WriteBench",
-                                  "RunCommandBench"};
+static const std::unordered_map<benchmark_type, std::string> type_names = {
+    {benchmark_type::bson_bench, "BSONBench"},
+    {benchmark_type::single_bench, "SingleBench"},
+    {benchmark_type::multi_bench, "MultiBench"},
+    {benchmark_type::parallel_bench, "ParallelBench"},
+    {benchmark_type::read_bench, "ReadBench"},
+    {benchmark_type::write_bench, "WriteBench"},
+    {benchmark_type::run_command_bench, "RunCommandBench"}};
 
-const std::unordered_map<std::string, benchmark_type> names_types = {
-    {"BSONBench", bson_bench},
-    {"SingleBench", single_bench},
-    {"MultiBench", multi_bench},
-    {"ParallelBench", parallel_bench},
-    {"ReadBench", read_bench},
-    {"WriteBench", write_bench},
-    {"RunCommandBench", run_command_bench}};
+static const std::unordered_map<std::string, benchmark_type> names_types = {
+    {"BSONBench", benchmark_type::bson_bench},
+    {"SingleBench", benchmark_type::single_bench},
+    {"MultiBench", benchmark_type::multi_bench},
+    {"ParallelBench", benchmark_type::parallel_bench},
+    {"ReadBench", benchmark_type::read_bench},
+    {"WriteBench", benchmark_type::write_bench},
+    {"RunCommandBench", benchmark_type::run_command_bench}};
 
-const std::chrono::milliseconds mintime{60000};
-const std::chrono::milliseconds maxtime{300000};
+constexpr std::chrono::milliseconds mintime{60000};
+constexpr std::chrono::milliseconds maxtime{300000};
 
-const std::int32_t MAX_ITER = 100;
+constexpr std::int32_t max_iter = 100;
+constexpr std::int32_t iterations = 10000;
 
 class microbench {
    public:
@@ -65,6 +66,8 @@ class microbench {
 
     microbench(std::string&& name, double task_size, std::set<benchmark_type> tags = {})
         : _score{task_size}, _tags{tags}, _name{std::move(name)} {}
+
+    virtual ~microbench() = default;
 
     void run();
 
