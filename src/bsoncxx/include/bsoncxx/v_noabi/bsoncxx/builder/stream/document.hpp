@@ -34,7 +34,7 @@ namespace stream {
 /// a BSON document.
 ///
 /// @note Use of the stream builder is discouraged. See
-/// https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/working-with-bson/#stream-builder for
+/// https://mongocxx.org/mongocxx-v3/working-with-bson/#stream-builder for
 /// more details.
 ///
 class document : public key_context<> {

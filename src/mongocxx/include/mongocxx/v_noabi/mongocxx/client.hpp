@@ -56,7 +56,7 @@ inline namespace v_noabi {
 /// @endcode
 ///
 /// Note that client is not thread-safe. See
-/// https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/thread-safety/ for more details.
+/// https://mongocxx.org/mongocxx-v3/thread-safety/ for more details.
 class client {
    public:
     ///

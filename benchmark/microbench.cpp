@@ -23,7 +23,7 @@ namespace benchmark {
 
 bool finished_running(const std::chrono::duration<std::uint32_t, std::milli>& curr_time,
                       std::uint32_t iter) {
-    return (curr_time > maxtime || (curr_time > mintime && iter > MAX_ITER));
+    return (curr_time > maxtime || (curr_time > mintime && iter > max_iter));
 }
 
 void microbench::run() {

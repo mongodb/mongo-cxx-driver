@@ -14,11 +14,10 @@
 
 #pragma once
 
-#include "../microbench.hpp"
-
 #include <algorithm>
 #include <fstream>
 
+#include "../microbench.hpp"
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <mongocxx/client.hpp>
@@ -77,7 +76,7 @@ void gridfs_download::task() {
     auto buffer_size = std::min(file_length, static_cast<std::int64_t>(downloader.chunk_size()));
     auto buffer = make_unique<std::uint8_t[]>(static_cast<std::size_t>(buffer_size));
 
-    while (auto length_read =
+    while ([[maybe_unused]] auto length_read =
                downloader.read(buffer.get(), static_cast<std::size_t>(buffer_size))) {
     }
 }

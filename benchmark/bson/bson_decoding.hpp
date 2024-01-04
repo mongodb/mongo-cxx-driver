@@ -42,7 +42,7 @@ void bson_decoding::setup() {
 }
 
 void bson_decoding::task() {
-    for (std::uint32_t i = 0; i < 10000; i++) {
+    for (std::uint32_t i = 0; i < iterations; i++) {
         // TODO CXX-1241: call bson_as_extended json on _json.
     }
 }

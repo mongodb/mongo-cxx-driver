@@ -50,7 +50,7 @@ file (GLOB benchmark_DIST_hpps RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.hpp)
 
 set_dist_list (benchmark_DIST
    CMakeLists.txt
-   README.txt
+   README.md
    ${BENCHMARK_LIBRARY}
    ${benchmark_DIST_hpps}
 )

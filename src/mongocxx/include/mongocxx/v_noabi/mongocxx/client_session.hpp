@@ -38,7 +38,7 @@ inline namespace v_noabi {
 /// or snapshots.
 ///
 /// Note that client_session is not thread-safe. See
-/// https://mongodb.github.io/mongo-cxx-driver/mongocxx-v3/thread-safety/ for more details.
+/// https://mongocxx.org/mongocxx-v3/thread-safety/ for more details.
 ///
 /// @see
 /// https://www.mongodb.com/docs/manual/core/read-isolation-consistency-recency/#causal-consistency
