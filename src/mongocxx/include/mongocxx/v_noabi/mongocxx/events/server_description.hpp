@@ -22,7 +22,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace events {
 
 ///
@@ -38,7 +38,8 @@ class server_description {
     ~server_description();
 
     ///
-    /// An opaque id, unique to this server for this mongocxx::client or mongocxx::pool.
+    /// An opaque id, unique to this server for this mongocxx::v_noabi::client or
+    /// mongocxx::v_noabi::pool.
     ///
     /// @return The id.
     ///
@@ -57,14 +58,14 @@ class server_description {
     ///
     /// @return The type as a short-lived string view.
     ///
-    bsoncxx::stdx::string_view type() const;
+    bsoncxx::v_noabi::stdx::string_view type() const;
 
     ///
     /// @return The response as a short-lived document view.
     ///
     /// @deprecated use hello instead.
     ///
-    MONGOCXX_DEPRECATED bsoncxx::document::view is_master() const;
+    MONGOCXX_DEPRECATED bsoncxx::v_noabi::document::view is_master() const;
 
     ///
     /// The server's last response to the "hello" command, or an empty document if the driver
@@ -72,14 +73,14 @@ class server_description {
     ///
     /// @return The response as a short-lived document view.
     ///
-    bsoncxx::document::view hello() const;
+    bsoncxx::v_noabi::document::view hello() const;
 
     ///
     /// Returns the server host name.
     ///
     /// @return The host name.
     ///
-    bsoncxx::stdx::string_view host() const;
+    bsoncxx::v_noabi::stdx::string_view host() const;
 
     ///
     /// Returns the server port.

@@ -36,7 +36,8 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
+
 ///
 /// Class representing the server-side requirement for reporting the success of a write
 /// operation. The strength of the write concern setting determines the level of guarantees
@@ -139,7 +140,8 @@ class write_concern {
     ///   pre-5.0 servers.
     ///
     /// @exception
-    ///   Throws mongocxx::exception for setting a tag acknowledge level. Use tag() instead.
+    ///   Throws mongocxx::v_noabi::exception for setting a tag acknowledge level. Use tag()
+    ///   instead.
     ///
     void acknowledge_level(level confirm_level);
 
@@ -151,7 +153,7 @@ class write_concern {
     ///   The amount of time to wait before the write operation times out if it cannot reach
     ///   the majority of nodes in the replica set. If the value is zero, then no timeout is set.
     ///
-    /// @throws mongocxx::logic_error for an invalid timeout value.
+    /// @throws mongocxx::v_noabi::logic_error for an invalid timeout value.
     ///
     void majority(std::chrono::milliseconds timeout);
 
@@ -174,7 +176,7 @@ class write_concern {
     ///   The timeout (in milliseconds) for this write concern. If the value is zero, then no
     ///   timeout is set.
     ///
-    /// @throws mongocxx::logic_error for an invalid timeout value.
+    /// @throws mongocxx::v_noabi::logic_error for an invalid timeout value.
     ///
     void timeout(std::chrono::milliseconds timeout);
 
@@ -240,7 +242,7 @@ class write_concern {
     /// @return
     ///   Document representation of this write_concern.
     ///
-    bsoncxx::document::value to_document() const;
+    bsoncxx::v_noabi::document::value to_document() const;
 
    private:
     friend ::mongocxx::v_noabi::bulk_write;

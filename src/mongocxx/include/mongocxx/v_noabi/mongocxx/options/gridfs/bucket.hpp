@@ -27,7 +27,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace options {
 namespace gridfs {
 
@@ -88,7 +88,7 @@ class bucket {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    bucket& read_concern(mongocxx::read_concern read_concern);
+    bucket& read_concern(mongocxx::v_noabi::read_concern read_concern);
 
     ///
     /// Gets the read concern of the bucket.
@@ -96,7 +96,7 @@ class bucket {
     /// @return
     ///   The read concern of the bucket.
     ///
-    const stdx::optional<mongocxx::read_concern>& read_concern() const;
+    const stdx::optional<mongocxx::v_noabi::read_concern>& read_concern() const;
 
     ///
     /// Sets the read preference to be used when reading from the GridFS bucket. Defaults to the
@@ -115,7 +115,7 @@ class bucket {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    bucket& read_preference(mongocxx::read_preference read_preference);
+    bucket& read_preference(mongocxx::v_noabi::read_preference read_preference);
 
     ///
     /// Gets the read preference of the bucket.
@@ -123,7 +123,7 @@ class bucket {
     /// @return
     ///   The read preference of the bucket.
     ///
-    const stdx::optional<mongocxx::read_preference>& read_preference() const;
+    const stdx::optional<mongocxx::v_noabi::read_preference>& read_preference() const;
 
     ///
     /// Sets the write concern to be used when writing to the GridFS bucket. Defaults to the write
@@ -136,7 +136,7 @@ class bucket {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    bucket& write_concern(mongocxx::write_concern write_concern);
+    bucket& write_concern(mongocxx::v_noabi::write_concern write_concern);
 
     ///
     /// Gets the write concern of the bucket.
@@ -144,14 +144,14 @@ class bucket {
     /// @return
     ///   The write concern of the bucket.
     ///
-    const stdx::optional<mongocxx::write_concern>& write_concern() const;
+    const stdx::optional<mongocxx::v_noabi::write_concern>& write_concern() const;
 
    private:
     stdx::optional<std::string> _bucket_name;
     stdx::optional<std::int32_t> _chunk_size_bytes;
-    stdx::optional<mongocxx::read_concern> _read_concern;
-    stdx::optional<mongocxx::read_preference> _read_preference;
-    stdx::optional<mongocxx::write_concern> _write_concern;
+    stdx::optional<mongocxx::v_noabi::read_concern> _read_concern;
+    stdx::optional<mongocxx::v_noabi::read_preference> _read_preference;
+    stdx::optional<mongocxx::v_noabi::write_concern> _write_concern;
 };
 
 }  // namespace gridfs

@@ -26,7 +26,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace options {
 
 ///
@@ -50,7 +50,7 @@ class encrypt {
     ///
     /// @see https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
-    encrypt& key_id(bsoncxx::types::bson_value::view_or_value key_id);
+    encrypt& key_id(bsoncxx::v_noabi::types::bson_value::view_or_value key_id);
 
     ///
     /// Gets the key_id.
@@ -58,7 +58,7 @@ class encrypt {
     /// @return
     ///   An optional owning bson_value containing the key_id.
     ///
-    const stdx::optional<bsoncxx::types::bson_value::view_or_value>& key_id() const;
+    const stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>& key_id() const;
 
     ///
     /// Sets a name by which to lookup a key from the key vault collection to use
@@ -138,10 +138,10 @@ class encrypt {
     /// @param algorithm
     ///   An algorithm, either deterministic, random, indexed, or unindexed to use for encryption.
     ///
-    /// @note To insert or query with an indexed encrypted payload, use a mongocxx::client
-    /// configured with mongocxx::options::auto_encryption.
-    /// mongocxx::options::auto_encryption::bypass_query_analysis may be true.
-    /// mongocxx::options::auto_encryption::bypass_auto_encryption must be false.
+    /// @note To insert or query with an indexed encrypted payload, use a mongocxx::v_noabi::client
+    /// configured with mongocxx::v_noabi::options::auto_encryption.
+    /// mongocxx::v_noabi::options::auto_encryption::bypass_query_analysis may be true.
+    /// mongocxx::v_noabi::options::auto_encryption::bypass_auto_encryption must be false.
     ///
     /// @see
     /// https://www.mongodb.com/docs/manual/core/security-client-side-encryption/#encryption-algorithms
@@ -222,7 +222,7 @@ class encrypt {
 
     MONGOCXX_PRIVATE void* convert() const;
 
-    stdx::optional<bsoncxx::types::bson_value::view_or_value> _key_id;
+    stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> _key_id;
     stdx::optional<std::string> _key_alt_name;
     stdx::optional<encryption_algorithm> _algorithm;
     stdx::optional<int64_t> _contention_factor;

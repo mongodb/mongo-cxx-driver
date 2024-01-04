@@ -25,7 +25,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace options {
 
 ///
@@ -44,19 +44,19 @@ class range {
    public:
     /// @brief Sets `RangeOpts.min`.
     /// @note Required if @ref precision is set.
-    range& min(bsoncxx::types::bson_value::view_or_value value);
+    range& min(bsoncxx::v_noabi::types::bson_value::view_or_value value);
 
     /// @brief Gets `RangeOpts.min`.
     /// @note Required if @ref precision is set.
-    const stdx::optional<bsoncxx::types::bson_value::view_or_value>& min() const;
+    const stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>& min() const;
 
     /// @brief Sets `RangeOpts.max`.
     /// @note Required if @ref precision is set.
-    range& max(bsoncxx::types::bson_value::view_or_value value);
+    range& max(bsoncxx::v_noabi::types::bson_value::view_or_value value);
 
     /// @brief Gets `RangeOpts.max`.
     /// @note Required if @ref precision is set.
-    const stdx::optional<bsoncxx::types::bson_value::view_or_value>& max() const;
+    const stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>& max() const;
 
     /// @brief Sets `RangeOpts.sparsity`.
     range& sparsity(std::int64_t value);
@@ -73,8 +73,8 @@ class range {
     const stdx::optional<std::int32_t>& precision() const;
 
    private:
-    stdx::optional<bsoncxx::types::bson_value::view_or_value> _min;
-    stdx::optional<bsoncxx::types::bson_value::view_or_value> _max;
+    stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> _min;
+    stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> _max;
     stdx::optional<std::int64_t> _sparsity;
     stdx::optional<std::int32_t> _precision;
 };

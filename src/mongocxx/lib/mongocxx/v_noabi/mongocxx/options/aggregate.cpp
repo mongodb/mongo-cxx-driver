@@ -20,26 +20,26 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace options {
 
-using bsoncxx::builder::basic::kvp;
+using bsoncxx::v_noabi::builder::basic::kvp;
 
 aggregate& aggregate::allow_disk_use(bool allow_disk_use) {
     _allow_disk_use = allow_disk_use;
     return *this;
 }
 
-void aggregate::append(bsoncxx::builder::basic::document& builder) const {
+void aggregate::append(bsoncxx::v_noabi::builder::basic::document& builder) const {
     append_aggregate_options(builder, *this);
 }
 
-aggregate& aggregate::collation(bsoncxx::document::view_or_value collation) {
+aggregate& aggregate::collation(bsoncxx::v_noabi::document::view_or_value collation) {
     _collation = std::move(collation);
     return *this;
 }
 
-aggregate& aggregate::let(bsoncxx::document::view_or_value let) {
+aggregate& aggregate::let(bsoncxx::v_noabi::document::view_or_value let) {
     _let = std::move(let);
     return *this;
 }
@@ -54,7 +54,7 @@ aggregate& aggregate::max_time(std::chrono::milliseconds max_time) {
     return *this;
 }
 
-aggregate& aggregate::read_preference(mongocxx::read_preference rp) {
+aggregate& aggregate::read_preference(mongocxx::v_noabi::read_preference rp) {
     _read_preference = std::move(rp);
     return *this;
 }
@@ -64,22 +64,22 @@ aggregate& aggregate::bypass_document_validation(bool bypass_document_validation
     return *this;
 }
 
-aggregate& aggregate::hint(mongocxx::hint index_hint) {
+aggregate& aggregate::hint(mongocxx::v_noabi::hint index_hint) {
     _hint = std::move(index_hint);
     return *this;
 }
 
-aggregate& aggregate::read_concern(mongocxx::read_concern read_concern) {
+aggregate& aggregate::read_concern(mongocxx::v_noabi::read_concern read_concern) {
     _read_concern = std::move(read_concern);
     return *this;
 }
 
-aggregate& aggregate::write_concern(mongocxx::write_concern write_concern) {
+aggregate& aggregate::write_concern(mongocxx::v_noabi::write_concern write_concern) {
     _write_concern = std::move(write_concern);
     return *this;
 }
 
-aggregate& aggregate::comment(bsoncxx::types::bson_value::view_or_value comment) {
+aggregate& aggregate::comment(bsoncxx::v_noabi::types::bson_value::view_or_value comment) {
     _comment = std::move(comment);
     return *this;
 }
@@ -92,11 +92,11 @@ const stdx::optional<std::int32_t>& aggregate::batch_size() const {
     return _batch_size;
 }
 
-const stdx::optional<bsoncxx::document::view_or_value>& aggregate::collation() const {
+const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& aggregate::collation() const {
     return _collation;
 }
 
-const stdx::optional<bsoncxx::document::view_or_value>& aggregate::let() const {
+const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& aggregate::let() const {
     return _let;
 }
 
@@ -104,7 +104,7 @@ const stdx::optional<std::chrono::milliseconds>& aggregate::max_time() const {
     return _max_time;
 }
 
-const stdx::optional<mongocxx::read_preference>& aggregate::read_preference() const {
+const stdx::optional<mongocxx::v_noabi::read_preference>& aggregate::read_preference() const {
     return _read_preference;
 }
 
@@ -112,19 +112,20 @@ const stdx::optional<bool>& aggregate::bypass_document_validation() const {
     return _bypass_document_validation;
 }
 
-const stdx::optional<mongocxx::hint>& aggregate::hint() const {
+const stdx::optional<mongocxx::v_noabi::hint>& aggregate::hint() const {
     return _hint;
 }
 
-const stdx::optional<mongocxx::read_concern>& aggregate::read_concern() const {
+const stdx::optional<mongocxx::v_noabi::read_concern>& aggregate::read_concern() const {
     return _read_concern;
 }
 
-const stdx::optional<mongocxx::write_concern>& aggregate::write_concern() const {
+const stdx::optional<mongocxx::v_noabi::write_concern>& aggregate::write_concern() const {
     return _write_concern;
 }
 
-const stdx::optional<bsoncxx::types::bson_value::view_or_value>& aggregate::comment() const {
+const stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>& aggregate::comment()
+    const {
     return _comment;
 }
 

@@ -17,7 +17,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace options {
 namespace gridfs {
 
@@ -26,6 +26,16 @@ class MONGOCXX_API bucket;
 }  // namespace gridfs
 }  // namespace options
 }  // namespace v_noabi
+}  // namespace mongocxx
+
+namespace mongocxx {
+namespace options {
+namespace gridfs {
+
+using ::mongocxx::v_noabi::options::gridfs::bucket;
+
+}  // namespace gridfs
+}  // namespace options
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

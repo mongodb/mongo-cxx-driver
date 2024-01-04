@@ -22,7 +22,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace options {
 namespace gridfs {
 
@@ -44,30 +44,30 @@ const stdx::optional<std::int32_t>& bucket::chunk_size_bytes() const {
     return _chunk_size_bytes;
 }
 
-bucket& bucket::read_concern(mongocxx::read_concern read_concern) {
+bucket& bucket::read_concern(mongocxx::v_noabi::read_concern read_concern) {
     _read_concern = read_concern;
     return *this;
 }
 
-const stdx::optional<mongocxx::read_concern>& bucket::read_concern() const {
+const stdx::optional<mongocxx::v_noabi::read_concern>& bucket::read_concern() const {
     return _read_concern;
 }
 
-bucket& bucket::read_preference(mongocxx::read_preference read_preference) {
+bucket& bucket::read_preference(mongocxx::v_noabi::read_preference read_preference) {
     _read_preference = std::move(read_preference);
     return *this;
 }
 
-const stdx::optional<mongocxx::read_preference>& bucket::read_preference() const {
+const stdx::optional<mongocxx::v_noabi::read_preference>& bucket::read_preference() const {
     return _read_preference;
 }
 
-bucket& bucket::write_concern(mongocxx::write_concern write_concern) {
+bucket& bucket::write_concern(mongocxx::v_noabi::write_concern write_concern) {
     _write_concern = std::move(write_concern);
     return *this;
 }
 
-const stdx::optional<mongocxx::write_concern>& bucket::write_concern() const {
+const stdx::optional<mongocxx::v_noabi::write_concern>& bucket::write_concern() const {
     return _write_concern;
 }
 

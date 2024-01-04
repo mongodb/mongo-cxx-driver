@@ -24,9 +24,10 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
+
 ///
-/// The log level of a message passed to a mongocxx::logger.
+/// The log level of a message passed to a mongocxx::v_noabi::logger.
 ///
 enum class log_level {
     k_error,
@@ -77,6 +78,12 @@ class logger {
 };
 
 }  // namespace v_noabi
+}  // namespace mongocxx
+
+namespace mongocxx {
+
+using ::mongocxx::v_noabi::to_string;
+
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

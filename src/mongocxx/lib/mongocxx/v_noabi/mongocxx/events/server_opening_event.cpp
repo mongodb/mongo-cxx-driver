@@ -18,14 +18,14 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace events {
 
 server_opening_event::server_opening_event(const void* event) : _event(event) {}
 
 server_opening_event::~server_opening_event() = default;
 
-bsoncxx::stdx::string_view server_opening_event::host() const {
+bsoncxx::v_noabi::stdx::string_view server_opening_event::host() const {
     return libmongoc::apm_server_changed_get_host(
                static_cast<const mongoc_apm_server_changed_t*>(_event))
         ->host;
@@ -37,12 +37,12 @@ std::uint16_t server_opening_event::port() const {
         ->port;
 }
 
-const bsoncxx::oid server_opening_event::topology_id() const {
+const bsoncxx::v_noabi::oid server_opening_event::topology_id() const {
     bson_oid_t boid;
     libmongoc::apm_server_changed_get_topology_id(
         static_cast<const mongoc_apm_server_changed_t*>(_event), &boid);
 
-    return bsoncxx::oid{reinterpret_cast<const char*>(boid.bytes), sizeof(boid.bytes)};
+    return bsoncxx::v_noabi::oid{reinterpret_cast<const char*>(boid.bytes), sizeof(boid.bytes)};
 }
 
 }  // namespace events

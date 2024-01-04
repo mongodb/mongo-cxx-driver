@@ -18,14 +18,15 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace result {
 namespace gridfs {
 
-upload::upload(bsoncxx::types::bson_value::view id)
-    : _id_owned(bsoncxx::builder::basic::make_array(id)), _id(_id_owned.view()[0].get_value()) {}
+upload::upload(bsoncxx::v_noabi::types::bson_value::view id)
+    : _id_owned(bsoncxx::v_noabi::builder::basic::make_array(id)),
+      _id(_id_owned.view()[0].get_value()) {}
 
-const bsoncxx::types::bson_value::view& upload::id() const {
+const bsoncxx::v_noabi::types::bson_value::view& upload::id() const {
     return _id;
 }
 

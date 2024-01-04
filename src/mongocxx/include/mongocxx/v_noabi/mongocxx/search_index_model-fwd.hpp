@@ -17,7 +17,17 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi { class MONGOCXX_API search_index_model; }  // namespace v_noabi
+namespace v_noabi {
+
+class MONGOCXX_API search_index_model;
+
+}  // namespace v_noabi
+}  // namespace mongocxx
+
+namespace mongocxx {
+
+using ::mongocxx::v_noabi::search_index_model;
+
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

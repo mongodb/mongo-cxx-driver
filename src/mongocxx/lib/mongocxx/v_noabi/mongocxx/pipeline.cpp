@@ -21,18 +21,19 @@
 
 #include <mongocxx/config/private/prelude.hh>
 
-using bsoncxx::builder::basic::kvp;
-using bsoncxx::builder::basic::sub_document;
+using bsoncxx::v_noabi::builder::basic::kvp;
+using bsoncxx::v_noabi::builder::basic::sub_document;
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
+
 pipeline::pipeline() : _impl(stdx::make_unique<impl>()) {}
 
 pipeline::pipeline(pipeline&&) noexcept = default;
 pipeline& pipeline::operator=(pipeline&&) noexcept = default;
 pipeline::~pipeline() = default;
 
-pipeline& pipeline::add_fields(bsoncxx::document::view_or_value fields_to_add) {
+pipeline& pipeline::add_fields(bsoncxx::v_noabi::document::view_or_value fields_to_add) {
     _impl->sink().append([fields_to_add](sub_document sub_doc) {
         sub_doc.append(kvp("$addFields", fields_to_add));
     });
@@ -40,26 +41,26 @@ pipeline& pipeline::add_fields(bsoncxx::document::view_or_value fields_to_add) {
     return *this;
 }
 
-pipeline& pipeline::append_stage(bsoncxx::document::view_or_value stage) {
+pipeline& pipeline::append_stage(bsoncxx::v_noabi::document::view_or_value stage) {
     _impl->sink().append(std::move(stage));
     return *this;
 }
 
-pipeline& pipeline::append_stages(bsoncxx::array::view_or_value stages) {
+pipeline& pipeline::append_stages(bsoncxx::v_noabi::array::view_or_value stages) {
     for (auto&& stage : stages.view()) {
         _impl->sink().append(stage.get_document().value);
     }
     return *this;
 }
 
-pipeline& pipeline::bucket(bsoncxx::document::view_or_value bucket_args) {
+pipeline& pipeline::bucket(bsoncxx::v_noabi::document::view_or_value bucket_args) {
     _impl->sink().append(
         [bucket_args](sub_document sub_doc) { sub_doc.append(kvp("$bucket", bucket_args)); });
 
     return *this;
 }
 
-pipeline& pipeline::bucket_auto(bsoncxx::document::view_or_value bucket_auto_args) {
+pipeline& pipeline::bucket_auto(bsoncxx::v_noabi::document::view_or_value bucket_auto_args) {
     _impl->sink().append([bucket_auto_args](sub_document sub_doc) {
         sub_doc.append(kvp("$bucketAuto", bucket_auto_args));
     });
@@ -67,7 +68,7 @@ pipeline& pipeline::bucket_auto(bsoncxx::document::view_or_value bucket_auto_arg
     return *this;
 }
 
-pipeline& pipeline::coll_stats(bsoncxx::document::view_or_value coll_stats_args) {
+pipeline& pipeline::coll_stats(bsoncxx::v_noabi::document::view_or_value coll_stats_args) {
     _impl->sink().append([coll_stats_args](sub_document sub_doc) {
         sub_doc.append(kvp("$collStats", coll_stats_args));
     });
@@ -81,7 +82,7 @@ pipeline& pipeline::count(std::string field) {
     return *this;
 }
 
-pipeline& pipeline::current_op(bsoncxx::document::view_or_value current_op_args) {
+pipeline& pipeline::current_op(bsoncxx::v_noabi::document::view_or_value current_op_args) {
     _impl->sink().append([current_op_args](sub_document sub_doc) {
         sub_doc.append(kvp("$currentOp", current_op_args));
     });
@@ -89,21 +90,21 @@ pipeline& pipeline::current_op(bsoncxx::document::view_or_value current_op_args)
     return *this;
 }
 
-pipeline& pipeline::facet(bsoncxx::document::view_or_value facet_args) {
+pipeline& pipeline::facet(bsoncxx::v_noabi::document::view_or_value facet_args) {
     _impl->sink().append(
         [facet_args](sub_document sub_doc) { sub_doc.append(kvp("$facet", facet_args)); });
 
     return *this;
 }
 
-pipeline& pipeline::geo_near(bsoncxx::document::view_or_value geo_near_args) {
+pipeline& pipeline::geo_near(bsoncxx::v_noabi::document::view_or_value geo_near_args) {
     _impl->sink().append(
         [geo_near_args](sub_document sub_doc) { sub_doc.append(kvp("$geoNear", geo_near_args)); });
 
     return *this;
 }
 
-pipeline& pipeline::graph_lookup(bsoncxx::document::view_or_value graph_lookup_args) {
+pipeline& pipeline::graph_lookup(bsoncxx::v_noabi::document::view_or_value graph_lookup_args) {
     _impl->sink().append([graph_lookup_args](sub_document sub_doc) {
         sub_doc.append(kvp("$graphLookup", graph_lookup_args));
     });
@@ -111,7 +112,7 @@ pipeline& pipeline::graph_lookup(bsoncxx::document::view_or_value graph_lookup_a
     return *this;
 }
 
-pipeline& pipeline::group(bsoncxx::document::view_or_value group_args) {
+pipeline& pipeline::group(bsoncxx::v_noabi::document::view_or_value group_args) {
     _impl->sink().append(
         [group_args](sub_document sub_doc) { sub_doc.append(kvp("$group", group_args)); });
 
@@ -120,7 +121,7 @@ pipeline& pipeline::group(bsoncxx::document::view_or_value group_args) {
 
 pipeline& pipeline::index_stats() {
     _impl->sink().append([](sub_document sub_doc) {
-        sub_doc.append(kvp("$indexStats", bsoncxx::document::view{}));
+        sub_doc.append(kvp("$indexStats", bsoncxx::v_noabi::document::view{}));
     });
 
     return *this;
@@ -132,7 +133,8 @@ pipeline& pipeline::limit(std::int32_t limit) {
     return *this;
 }
 
-pipeline& pipeline::list_local_sessions(bsoncxx::document::view_or_value list_local_sessions_args) {
+pipeline& pipeline::list_local_sessions(
+    bsoncxx::v_noabi::document::view_or_value list_local_sessions_args) {
     _impl->sink().append([list_local_sessions_args](sub_document sub_doc) {
         sub_doc.append(kvp("$listLocalSessions", list_local_sessions_args));
     });
@@ -140,7 +142,7 @@ pipeline& pipeline::list_local_sessions(bsoncxx::document::view_or_value list_lo
     return *this;
 }
 
-pipeline& pipeline::list_sessions(bsoncxx::document::view_or_value list_sessions_args) {
+pipeline& pipeline::list_sessions(bsoncxx::v_noabi::document::view_or_value list_sessions_args) {
     _impl->sink().append([list_sessions_args](sub_document sub_doc) {
         sub_doc.append(kvp("$listSessions", list_sessions_args));
     });
@@ -148,20 +150,20 @@ pipeline& pipeline::list_sessions(bsoncxx::document::view_or_value list_sessions
     return *this;
 }
 
-pipeline& pipeline::lookup(bsoncxx::document::view_or_value lookup_args) {
+pipeline& pipeline::lookup(bsoncxx::v_noabi::document::view_or_value lookup_args) {
     _impl->sink().append(
         [lookup_args](sub_document sub_doc) { sub_doc.append(kvp("$lookup", lookup_args)); });
 
     return *this;
 }
 
-pipeline& pipeline::match(bsoncxx::document::view_or_value filter) {
+pipeline& pipeline::match(bsoncxx::v_noabi::document::view_or_value filter) {
     _impl->sink().append([filter](sub_document sub_doc) { sub_doc.append(kvp("$match", filter)); });
 
     return *this;
 }
 
-pipeline& pipeline::merge(bsoncxx::document::view_or_value merge_args) {
+pipeline& pipeline::merge(bsoncxx::v_noabi::document::view_or_value merge_args) {
     _impl->sink().append(
         [merge_args](sub_document sub_doc) { sub_doc.append(kvp("$merge", merge_args)); });
 
@@ -175,21 +177,21 @@ pipeline& pipeline::out(std::string collection_name) {
     return *this;
 }
 
-pipeline& pipeline::project(bsoncxx::document::view_or_value projection) {
+pipeline& pipeline::project(bsoncxx::v_noabi::document::view_or_value projection) {
     _impl->sink().append(
         [projection](sub_document sub_doc) { sub_doc.append(kvp("$project", projection)); });
 
     return *this;
 }
 
-pipeline& pipeline::redact(bsoncxx::document::view_or_value restrictions) {
+pipeline& pipeline::redact(bsoncxx::v_noabi::document::view_or_value restrictions) {
     _impl->sink().append(
         [restrictions](sub_document sub_doc) { sub_doc.append(kvp("$redact", restrictions)); });
 
     return *this;
 }
 
-pipeline& pipeline::replace_root(bsoncxx::document::view_or_value replace_root_args) {
+pipeline& pipeline::replace_root(bsoncxx::v_noabi::document::view_or_value replace_root_args) {
     _impl->sink().append([replace_root_args](sub_document sub_doc) {
         sub_doc.append(kvp("$replaceRoot", replace_root_args));
     });
@@ -213,14 +215,14 @@ pipeline& pipeline::skip(std::int32_t docs_to_skip) {
     return *this;
 }
 
-pipeline& pipeline::sort(bsoncxx::document::view_or_value ordering) {
+pipeline& pipeline::sort(bsoncxx::v_noabi::document::view_or_value ordering) {
     _impl->sink().append(
         [ordering](sub_document sub_doc) { sub_doc.append(kvp("$sort", ordering)); });
 
     return *this;
 }
 
-pipeline& pipeline::sort_by_count(bsoncxx::document::view_or_value field_expression) {
+pipeline& pipeline::sort_by_count(bsoncxx::v_noabi::document::view_or_value field_expression) {
     _impl->sink().append([field_expression](sub_document sub_doc) {
         sub_doc.append(kvp("$sortByCount", field_expression));
     });
@@ -236,7 +238,7 @@ pipeline& pipeline::sort_by_count(std::string field_expression) {
     return *this;
 }
 
-pipeline& pipeline::unwind(bsoncxx::document::view_or_value unwind_args) {
+pipeline& pipeline::unwind(bsoncxx::v_noabi::document::view_or_value unwind_args) {
     _impl->sink().append(
         [unwind_args](sub_document sub_doc) { sub_doc.append(kvp("$unwind", unwind_args)); });
 
@@ -250,7 +252,7 @@ pipeline& pipeline::unwind(std::string field_name) {
     return *this;
 }
 
-bsoncxx::array::view pipeline::view_array() const {
+bsoncxx::v_noabi::array::view pipeline::view_array() const {
     return _impl->view_array();
 }
 

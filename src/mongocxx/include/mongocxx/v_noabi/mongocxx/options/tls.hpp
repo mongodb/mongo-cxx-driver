@@ -25,7 +25,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace options {
 
 ///
@@ -44,14 +44,14 @@ class tls {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    tls& pem_file(bsoncxx::string::view_or_value pem_file);
+    tls& pem_file(bsoncxx::v_noabi::string::view_or_value pem_file);
 
     ///
     /// Retrieves the current path to the .pem file.
     ///
     /// @return The path to the .pem file.
     ///
-    const stdx::optional<bsoncxx::string::view_or_value>& pem_file() const;
+    const stdx::optional<bsoncxx::v_noabi::string::view_or_value>& pem_file() const;
 
     ///
     /// The pass phrase used to decrypt an encrypted PEM file.
@@ -63,14 +63,14 @@ class tls {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    tls& pem_password(bsoncxx::string::view_or_value pem_password);
+    tls& pem_password(bsoncxx::v_noabi::string::view_or_value pem_password);
 
     ///
     /// Retrieves the current decryption pass phrase.
     ///
     /// @return The pass phrase.
     ///
-    const stdx::optional<bsoncxx::string::view_or_value>& pem_password() const;
+    const stdx::optional<bsoncxx::v_noabi::string::view_or_value>& pem_password() const;
 
     ///
     /// The path to the .pem file that contains the root certificate chain from the Certificate
@@ -83,14 +83,14 @@ class tls {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    tls& ca_file(bsoncxx::string::view_or_value ca_file);
+    tls& ca_file(bsoncxx::v_noabi::string::view_or_value ca_file);
 
     ///
     /// Retrieves the current path to the CA file.
     ///
     /// @return The path to the CA file.
     ///
-    const stdx::optional<bsoncxx::string::view_or_value>& ca_file() const;
+    const stdx::optional<bsoncxx::v_noabi::string::view_or_value>& ca_file() const;
 
     ///
     /// The path to the Certificate Authority directory.
@@ -102,14 +102,14 @@ class tls {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    tls& ca_dir(bsoncxx::string::view_or_value ca_dir);
+    tls& ca_dir(bsoncxx::v_noabi::string::view_or_value ca_dir);
 
     ///
     /// Retrieves the current path to the CA directory.
     ///
     /// @return The path to the CA directory.
     ///
-    const stdx::optional<bsoncxx::string::view_or_value>& ca_dir() const;
+    const stdx::optional<bsoncxx::v_noabi::string::view_or_value>& ca_dir() const;
 
     ///
     /// The path to the .pem file that contains revoked certificates.
@@ -121,14 +121,14 @@ class tls {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    tls& crl_file(bsoncxx::string::view_or_value crl_file);
+    tls& crl_file(bsoncxx::v_noabi::string::view_or_value crl_file);
 
     ///
     /// Retrieves the current path to the .pem file that contains revoked certificates.
     ///
     /// @return The path to the revoked certificates file.
     ///
-    const stdx::optional<bsoncxx::string::view_or_value>& crl_file() const;
+    const stdx::optional<bsoncxx::v_noabi::string::view_or_value>& crl_file() const;
 
     ///
     /// If true, the driver will not verify the server's CA file.
@@ -150,11 +150,11 @@ class tls {
     const stdx::optional<bool>& allow_invalid_certificates() const;
 
    private:
-    stdx::optional<bsoncxx::string::view_or_value> _pem_file;
-    stdx::optional<bsoncxx::string::view_or_value> _pem_password;
-    stdx::optional<bsoncxx::string::view_or_value> _ca_file;
-    stdx::optional<bsoncxx::string::view_or_value> _ca_dir;
-    stdx::optional<bsoncxx::string::view_or_value> _crl_file;
+    stdx::optional<bsoncxx::v_noabi::string::view_or_value> _pem_file;
+    stdx::optional<bsoncxx::v_noabi::string::view_or_value> _pem_password;
+    stdx::optional<bsoncxx::v_noabi::string::view_or_value> _ca_file;
+    stdx::optional<bsoncxx::v_noabi::string::view_or_value> _ca_dir;
+    stdx::optional<bsoncxx::v_noabi::string::view_or_value> _crl_file;
     stdx::optional<bool> _allow_invalid_certificates;
 };
 

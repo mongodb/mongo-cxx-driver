@@ -17,13 +17,21 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace events {
 
 class MONGOCXX_API server_changed_event;
 
 }  // namespace events
 }  // namespace v_noabi
+}  // namespace mongocxx
+
+namespace mongocxx {
+namespace events {
+
+using ::mongocxx::v_noabi::events::server_changed_event;
+
+}  // namespace events
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

@@ -22,7 +22,8 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
+
 inline std::error_code make_error_code(int code, int) {
     // Domain is ignored. We simply issue the code.
     return {code, server_error_category()};
@@ -58,7 +59,8 @@ void throw_exception(const ::bson_error_t& error) {
 }
 
 template <typename exception_type>
-void throw_exception(bsoncxx::document::value raw_server_error, const ::bson_error_t& error) {
+void throw_exception(bsoncxx::v_noabi::document::value raw_server_error,
+                     const ::bson_error_t& error) {
     throw exception_type{make_error_code(error), std::move(raw_server_error), error.message};
 }
 

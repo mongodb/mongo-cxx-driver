@@ -22,7 +22,8 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
+
 ///
 /// Class representing an instance of the MongoDB driver.
 ///
@@ -44,8 +45,8 @@ inline namespace v_noabi {
 /// #include <mongocxx/uri.hpp>
 ///
 /// int main() {
-///     mongocxx::instance inst{};
-///     mongocxx::client conn{mongocxx::uri{}};
+///     mongocxx::v_noabi::instance inst{};
+///     mongocxx::v_noabi::client conn{mongocxx::v_noabi::uri{}};
 ///     ...
 /// }
 ///
@@ -60,14 +61,14 @@ inline namespace v_noabi {
 /// #include <mongocxx/uri.hpp>
 ///
 /// client get_client() {
-///     mongocxx::instance inst{};
-///     mongocxx::client conn{mongocxx::uri{}};
+///     mongocxx::v_noabi::instance inst{};
+///     mongocxx::v_noabi::client conn{mongocxx::v_noabi::uri{}};
 ///
 ///     return client;
 /// } // ERROR! The instance is no longer alive after this function returns.
 ///
 /// int main() {
-///     mongocxx::client conn = get_client();
+///     mongocxx::v_noabi::client conn = get_client();
 ///     ...
 /// }
 ///
@@ -87,7 +88,7 @@ class instance {
     /// Creates an instance of the driver with a user provided log handler.
     ///  @param logger The logger that the driver will direct log messages to.
     ///
-    /// @throws mongocxx::logic_error if an instance already exists.
+    /// @throws mongocxx::v_noabi::logic_error if an instance already exists.
     ///
     instance(std::unique_ptr<logger> logger);
 

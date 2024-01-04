@@ -19,7 +19,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
+
 bool size_t_to_int64_safe(const std::size_t in, int64_t& out) {
     if (sizeof(in) >= sizeof(int64_t)) {
         if (in > static_cast<std::size_t>(std::numeric_limits<int64_t>::max())) {
@@ -67,5 +67,4 @@ bool int64_to_size_t_safe(const int64_t in, std::size_t& out) {
     return true;
 }
 
-}  // namespace v_noabi
 }  // namespace mongocxx

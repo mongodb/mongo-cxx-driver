@@ -34,7 +34,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace options {
 
 ///
@@ -101,7 +101,7 @@ class aggregate {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    aggregate& collation(bsoncxx::document::view_or_value collation);
+    aggregate& collation(bsoncxx::v_noabi::document::view_or_value collation);
 
     ///
     /// Retrieves the current collation for this operation.
@@ -111,7 +111,7 @@ class aggregate {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    const stdx::optional<bsoncxx::document::view_or_value>& collation() const;
+    const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& collation() const;
 
     ///
     /// Sets the variable mapping for this operation.
@@ -125,7 +125,7 @@ class aggregate {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    aggregate& let(bsoncxx::document::view_or_value let);
+    aggregate& let(bsoncxx::v_noabi::document::view_or_value let);
 
     ///
     /// Retrieves the current variable mapping for this operation.
@@ -135,7 +135,7 @@ class aggregate {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    const stdx::optional<bsoncxx::document::view_or_value>& let() const;
+    const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& let() const;
 
     ///
     /// Sets the maximum amount of time for this operation to run server-side in milliseconds.
@@ -172,7 +172,7 @@ class aggregate {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    aggregate& read_preference(mongocxx::read_preference rp);
+    aggregate& read_preference(mongocxx::v_noabi::read_preference rp);
 
     ///
     /// The current read_preference for this operation.
@@ -181,7 +181,7 @@ class aggregate {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    const stdx::optional<mongocxx::read_preference>& read_preference() const;
+    const stdx::optional<mongocxx::v_noabi::read_preference>& read_preference() const;
 
     ///
     /// Sets whether the $out stage should bypass document validation.
@@ -218,7 +218,7 @@ class aggregate {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    aggregate& hint(mongocxx::hint index_hint);
+    aggregate& hint(mongocxx::v_noabi::hint index_hint);
 
     ///
     /// Gets the current hint.
@@ -227,7 +227,7 @@ class aggregate {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    const stdx::optional<mongocxx::hint>& hint() const;
+    const stdx::optional<mongocxx::v_noabi::hint>& hint() const;
 
     ///
     /// Sets the write concern to use for this operation. Only has an effect if $out is a part of
@@ -243,7 +243,7 @@ class aggregate {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    aggregate& write_concern(mongocxx::write_concern write_concern);
+    aggregate& write_concern(mongocxx::v_noabi::write_concern write_concern);
 
     ///
     /// Gets the current write concern.
@@ -254,7 +254,7 @@ class aggregate {
     /// @see
     ///   https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    const stdx::optional<mongocxx::write_concern>& write_concern() const;
+    const stdx::optional<mongocxx::v_noabi::write_concern>& write_concern() const;
 
     ///
     /// Sets the read concern to use for this operation.
@@ -268,7 +268,7 @@ class aggregate {
     /// @return
     ///   A reference to the object on which this member function is being called.
     ///
-    aggregate& read_concern(mongocxx::read_concern read_concern);
+    aggregate& read_concern(mongocxx::v_noabi::read_concern read_concern);
 
     ///
     /// Gets the current read concern.
@@ -279,7 +279,7 @@ class aggregate {
     /// @see
     ///   https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    const stdx::optional<mongocxx::read_concern>& read_concern() const;
+    const stdx::optional<mongocxx::v_noabi::read_concern>& read_concern() const;
 
     ///
     /// Sets the comment to use for this operation.
@@ -293,7 +293,7 @@ class aggregate {
     /// @return
     ///   A reference to the object on which this member function is being called.
     ///
-    aggregate& comment(bsoncxx::types::bson_value::view_or_value comment);
+    aggregate& comment(bsoncxx::v_noabi::types::bson_value::view_or_value comment);
 
     ///
     /// Gets the current comment.
@@ -304,25 +304,25 @@ class aggregate {
     /// @see
     ///   https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    const stdx::optional<bsoncxx::types::bson_value::view_or_value>& comment() const;
+    const stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>& comment() const;
 
    private:
     friend ::mongocxx::v_noabi::collection;
     friend ::mongocxx::v_noabi::database;
 
-    void append(bsoncxx::builder::basic::document& builder) const;
+    void append(bsoncxx::v_noabi::builder::basic::document& builder) const;
 
     stdx::optional<bool> _allow_disk_use;
     stdx::optional<std::int32_t> _batch_size;
-    stdx::optional<bsoncxx::document::view_or_value> _collation;
-    stdx::optional<bsoncxx::document::view_or_value> _let;
+    stdx::optional<bsoncxx::v_noabi::document::view_or_value> _collation;
+    stdx::optional<bsoncxx::v_noabi::document::view_or_value> _let;
     stdx::optional<std::chrono::milliseconds> _max_time;
-    stdx::optional<mongocxx::read_preference> _read_preference;
+    stdx::optional<mongocxx::v_noabi::read_preference> _read_preference;
     stdx::optional<bool> _bypass_document_validation;
-    stdx::optional<mongocxx::hint> _hint;
-    stdx::optional<mongocxx::write_concern> _write_concern;
-    stdx::optional<mongocxx::read_concern> _read_concern;
-    stdx::optional<bsoncxx::types::bson_value::view_or_value> _comment;
+    stdx::optional<mongocxx::v_noabi::hint> _hint;
+    stdx::optional<mongocxx::v_noabi::write_concern> _write_concern;
+    stdx::optional<mongocxx::v_noabi::read_concern> _read_concern;
+    stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> _comment;
 };
 
 }  // namespace options

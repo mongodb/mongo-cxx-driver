@@ -24,11 +24,11 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace options {
 
 ///
-/// Class representing the optional arguments to mongocxx::client::start_session.
+/// Class representing the optional arguments to mongocxx::v_noabi::client::start_session.
 ///
 class client_session {
    public:
@@ -39,9 +39,9 @@ class client_session {
     /// previous read or write operation. Set to false to disable causal consistency.
     ///
     /// Unacknowledged writes are not causally consistent. If you execute a write operation with an
-    /// unacknowledged write concern (a mongocxx::write_concern with
-    /// mongocxx::write_concern::acknowledge_level of @c k_unacknowledged), the write does not
-    /// participate in causal consistency.
+    /// unacknowledged write concern (a mongocxx::v_noabi::write_concern with
+    /// mongocxx::v_noabi::write_concern::acknowledge_level of @c k_unacknowledged), the write does
+    /// not participate in causal consistency.
     ///
     /// @return
     ///   A reference to the object on which this member function is being called.  This facilitates
@@ -70,7 +70,7 @@ class client_session {
     ///
     /// @note Snapshot reads and causal consistency are mutually exclusive: only one or the
     /// other may be active at a time. Attempting to do so will result in an error being thrown
-    /// by mongocxx::client::start_session.
+    /// by mongocxx::v_noabi::client::start_session.
     ///
     client_session& snapshot(bool enable_snapshot_reads) noexcept;
 

@@ -21,12 +21,13 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
+
 ///
 /// Class representing an error encountered when attempting to perform the requested GridFS
 /// operation.
 ///
-/// @see mongocxx::exception
+/// @see mongocxx::v_noabi::exception
 ///
 class gridfs_exception : public exception {
    public:

@@ -30,7 +30,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace options {
 
 ///
@@ -67,7 +67,7 @@ class change_stream {
     ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
-    change_stream& full_document(bsoncxx::string::view_or_value full_doc);
+    change_stream& full_document(bsoncxx::v_noabi::string::view_or_value full_doc);
 
     ///
     /// Gets the current fullDocument option.
@@ -75,7 +75,8 @@ class change_stream {
     /// @return
     ///   The current fullDocument option.
     ///
-    const bsoncxx::stdx::optional<bsoncxx::string::view_or_value>& full_document() const;
+    const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value>& full_document()
+        const;
 
     ///
     /// Sets the fullDocumentBeforeChange option for the $changeStream.
@@ -97,7 +98,7 @@ class change_stream {
     ///   method chaining.
     ///
     change_stream& full_document_before_change(
-        bsoncxx::string::view_or_value full_doc_before_change);
+        bsoncxx::v_noabi::string::view_or_value full_doc_before_change);
 
     ///
     /// Gets the current fullDocumentBeforeChange option.
@@ -105,8 +106,8 @@ class change_stream {
     /// @return
     ///   The current fullDocumentBeforeChange option.
     ///
-    const bsoncxx::stdx::optional<bsoncxx::string::view_or_value>& full_document_before_change()
-        const;
+    const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value>&
+    full_document_before_change() const;
 
     ///
     /// Sets the number of documents to return per batch.
@@ -138,7 +139,7 @@ class change_stream {
     ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
-    change_stream& comment(bsoncxx::types::bson_value::view_or_value comment);
+    change_stream& comment(bsoncxx::v_noabi::types::bson_value::view_or_value comment);
 
     ///
     /// Gets the current value of the comment option.
@@ -146,7 +147,7 @@ class change_stream {
     /// @return
     ///   The current comment option.
     ///
-    const stdx::optional<bsoncxx::types::bson_value::view_or_value>& comment() const;
+    const stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>& comment() const;
 
     ///
     /// Specifies the logical starting point for the new change stream.
@@ -163,7 +164,7 @@ class change_stream {
     ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
-    change_stream& resume_after(bsoncxx::document::view_or_value resume_after);
+    change_stream& resume_after(bsoncxx::v_noabi::document::view_or_value resume_after);
 
     ///
     /// Retrieves the current resumeToken for this change stream.
@@ -171,7 +172,7 @@ class change_stream {
     /// @return
     ///   The current resumeToken.
     ///
-    const stdx::optional<bsoncxx::document::view_or_value>& resume_after() const;
+    const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& resume_after() const;
 
     ///
     /// Specifies the logical starting point of the new change stream. The new stream will
@@ -190,7 +191,7 @@ class change_stream {
     /// @return
     ///   A reference to the object on which this function is being called.
     ///
-    change_stream& start_after(bsoncxx::document::view_or_value token);
+    change_stream& start_after(bsoncxx::v_noabi::document::view_or_value token);
 
     ///
     /// Retrieves the current startAfter token for this change stream.
@@ -198,7 +199,7 @@ class change_stream {
     /// @return
     ///   The current startAfter token.
     ///
-    const stdx::optional<bsoncxx::document::view_or_value>& start_after() const;
+    const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& start_after() const;
 
     ///
     /// Sets the collation for this operation.
@@ -210,7 +211,7 @@ class change_stream {
     ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
-    change_stream& collation(bsoncxx::document::view_or_value collation);
+    change_stream& collation(bsoncxx::v_noabi::document::view_or_value collation);
 
     ///
     /// Retrieves the current collation for this operation.
@@ -218,7 +219,7 @@ class change_stream {
     /// @return
     ///   The current collation.
     ///
-    const stdx::optional<bsoncxx::document::view_or_value>& collation() const;
+    const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& collation() const;
 
     ///
     /// Sets the maximum amount of time for for the server to wait on new documents to satisfy a
@@ -255,28 +256,29 @@ class change_stream {
     ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
-    change_stream& start_at_operation_time(bsoncxx::types::b_timestamp timestamp);
+    change_stream& start_at_operation_time(bsoncxx::v_noabi::types::b_timestamp timestamp);
 
    private:
     friend ::mongocxx::v_noabi::client;
     friend ::mongocxx::v_noabi::collection;
     friend ::mongocxx::v_noabi::database;
 
-    bsoncxx::document::value as_bson() const;
-    stdx::optional<bsoncxx::string::view_or_value> _full_document;
-    stdx::optional<bsoncxx::string::view_or_value> _full_document_before_change;
+    bsoncxx::v_noabi::document::value as_bson() const;
+    stdx::optional<bsoncxx::v_noabi::string::view_or_value> _full_document;
+    stdx::optional<bsoncxx::v_noabi::string::view_or_value> _full_document_before_change;
     stdx::optional<std::int32_t> _batch_size;
-    stdx::optional<bsoncxx::types::bson_value::view_or_value> _comment;
-    stdx::optional<bsoncxx::document::view_or_value> _collation;
-    stdx::optional<bsoncxx::document::view_or_value> _resume_after;
-    stdx::optional<bsoncxx::document::view_or_value> _start_after;
+    stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> _comment;
+    stdx::optional<bsoncxx::v_noabi::document::view_or_value> _collation;
+    stdx::optional<bsoncxx::v_noabi::document::view_or_value> _resume_after;
+    stdx::optional<bsoncxx::v_noabi::document::view_or_value> _start_after;
     stdx::optional<std::chrono::milliseconds> _max_await_time;
     // _start_at_operation_time is not wrapped in a stdx::optional because of a longstanding bug in
     // the MNMLSTC polyfill that has been fixed on master, but not in the latest release:
     // https://github.com/mnmlstc/core/pull/23
-    bsoncxx::types::b_timestamp _start_at_operation_time = {};
+    bsoncxx::v_noabi::types::b_timestamp _start_at_operation_time = {};
     bool _start_at_operation_time_set = false;
 };
+
 }  // namespace options
 }  // namespace v_noabi
 }  // namespace mongocxx

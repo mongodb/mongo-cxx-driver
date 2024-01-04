@@ -25,10 +25,10 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace events {
 
-using mongocxx::read_preference;
+using mongocxx::v_noabi::read_preference;
 
 ///
 /// Class representing what the driver knows about a topology of MongoDB servers: either a
@@ -125,7 +125,7 @@ class topology_description {
     ///
     /// @return The type as a short-lived string view.
     ///
-    bsoncxx::stdx::string_view type() const;
+    bsoncxx::v_noabi::stdx::string_view type() const;
 
     ///
     /// Determines if the topology has a readable server available. Servers are
@@ -136,7 +136,7 @@ class topology_description {
     ///
     /// @return Whether there is a readable server available.
     ///
-    bool has_readable_server(const mongocxx::read_preference& pref) const;
+    bool has_readable_server(const mongocxx::v_noabi::read_preference& pref) const;
 
     ///
     /// Determines if the topology has a writable server available, such as a
@@ -163,6 +163,14 @@ class topology_description {
 
 }  // namespace events
 }  // namespace v_noabi
+}  // namespace mongocxx
+
+namespace mongocxx {
+namespace events {
+
+using ::mongocxx::v_noabi::events::read_preference;  // Deprecated.
+
+}  // namespace events
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

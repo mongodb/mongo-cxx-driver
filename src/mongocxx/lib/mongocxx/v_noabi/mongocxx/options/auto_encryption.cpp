@@ -25,26 +25,26 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace options {
 
 auto_encryption::auto_encryption() noexcept : _bypass(false), _bypass_query_analysis(false) {}
 
-auto_encryption& auto_encryption::key_vault_client(mongocxx::client* client) {
+auto_encryption& auto_encryption::key_vault_client(mongocxx::v_noabi::client* client) {
     _key_vault_client = client;
     return *this;
 }
 
-const stdx::optional<mongocxx::client*>& auto_encryption::key_vault_client() const {
+const stdx::optional<mongocxx::v_noabi::client*>& auto_encryption::key_vault_client() const {
     return _key_vault_client;
 }
 
-auto_encryption& auto_encryption::key_vault_pool(mongocxx::pool* pool) {
+auto_encryption& auto_encryption::key_vault_pool(mongocxx::v_noabi::pool* pool) {
     _key_vault_pool = pool;
     return *this;
 }
 
-const stdx::optional<mongocxx::pool*>& auto_encryption::key_vault_pool() const {
+const stdx::optional<mongocxx::v_noabi::pool*>& auto_encryption::key_vault_pool() const {
     return _key_vault_pool;
 }
 
@@ -57,41 +57,44 @@ const stdx::optional<auto_encryption::ns_pair>& auto_encryption::key_vault_names
     return _key_vault_namespace;
 }
 
-auto_encryption& auto_encryption::kms_providers(bsoncxx::document::view_or_value kms_providers) {
+auto_encryption& auto_encryption::kms_providers(
+    bsoncxx::v_noabi::document::view_or_value kms_providers) {
     _kms_providers = std::move(kms_providers);
     return *this;
 }
 
-const stdx::optional<bsoncxx::document::view_or_value>& auto_encryption::kms_providers() const {
+const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& auto_encryption::kms_providers()
+    const {
     return _kms_providers;
 }
 
-auto_encryption& auto_encryption::tls_opts(bsoncxx::document::view_or_value tls_opts) {
+auto_encryption& auto_encryption::tls_opts(bsoncxx::v_noabi::document::view_or_value tls_opts) {
     _tls_opts = std::move(tls_opts);
     return *this;
 }
 
-const stdx::optional<bsoncxx::document::view_or_value>& auto_encryption::tls_opts() const {
+const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& auto_encryption::tls_opts() const {
     return _tls_opts;
 }
 
-auto_encryption& auto_encryption::schema_map(bsoncxx::document::view_or_value schema_map) {
+auto_encryption& auto_encryption::schema_map(bsoncxx::v_noabi::document::view_or_value schema_map) {
     _schema_map = std::move(schema_map);
     return *this;
 }
 
-const stdx::optional<bsoncxx::document::view_or_value>& auto_encryption::schema_map() const {
+const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& auto_encryption::schema_map()
+    const {
     return _schema_map;
 }
 
 auto_encryption& auto_encryption::encrypted_fields_map(
-    bsoncxx::document::view_or_value encrypted_fields_map) {
+    bsoncxx::v_noabi::document::view_or_value encrypted_fields_map) {
     _encrypted_fields_map = std::move(encrypted_fields_map);
     return *this;
 }
 
-const stdx::optional<bsoncxx::document::view_or_value>& auto_encryption::encrypted_fields_map()
-    const {
+const stdx::optional<bsoncxx::v_noabi::document::view_or_value>&
+auto_encryption::encrypted_fields_map() const {
     return _encrypted_fields_map;
 }
 
@@ -113,12 +116,13 @@ bool auto_encryption::bypass_query_analysis() const {
     return _bypass_query_analysis;
 }
 
-auto_encryption& auto_encryption::extra_options(bsoncxx::document::view_or_value extra) {
+auto_encryption& auto_encryption::extra_options(bsoncxx::v_noabi::document::view_or_value extra) {
     _extra_options = std::move(extra);
     return *this;
 }
 
-const stdx::optional<bsoncxx::document::view_or_value>& auto_encryption::extra_options() const {
+const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& auto_encryption::extra_options()
+    const {
     return _extra_options;
 }
 

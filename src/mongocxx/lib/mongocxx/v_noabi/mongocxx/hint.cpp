@@ -19,22 +19,25 @@
 
 #include <mongocxx/config/private/prelude.hh>
 
-using bsoncxx::builder::concatenate;
-using bsoncxx::builder::basic::kvp;
-using bsoncxx::builder::basic::sub_document;
+using bsoncxx::v_noabi::builder::concatenate;
+using bsoncxx::v_noabi::builder::basic::kvp;
+using bsoncxx::v_noabi::builder::basic::sub_document;
 
 namespace mongocxx {
-inline namespace v_noabi {
-hint::hint(bsoncxx::document::view_or_value index) : _index_doc(std::move(index)) {}
+namespace v_noabi {
 
-hint::hint(bsoncxx::string::view_or_value index) : _index_string(std::move(index)) {}
+hint::hint(bsoncxx::v_noabi::document::view_or_value index) : _index_doc(std::move(index)) {}
 
-bsoncxx::types::bson_value::view hint::to_value() const {
+hint::hint(bsoncxx::v_noabi::string::view_or_value index) : _index_string(std::move(index)) {}
+
+bsoncxx::v_noabi::types::bson_value::view hint::to_value() const {
     if (_index_doc) {
-        return bsoncxx::types::bson_value::view{bsoncxx::types::b_document{_index_doc->view()}};
+        return bsoncxx::v_noabi::types::bson_value::view{
+            bsoncxx::v_noabi::types::b_document{_index_doc->view()}};
     }
 
-    return bsoncxx::types::bson_value::view{bsoncxx::types::b_string{*_index_string}};
+    return bsoncxx::v_noabi::types::bson_value::view{
+        bsoncxx::v_noabi::types::b_string{*_index_string}};
 }
 
 bool MONGOCXX_CALL operator==(const hint& index_hint, std::string index) {
@@ -53,19 +56,19 @@ bool MONGOCXX_CALL operator!=(std::string index, const hint& index_hint) {
     return !(index_hint == index);
 }
 
-bool MONGOCXX_CALL operator==(const hint& index_hint, bsoncxx::document::view index) {
+bool MONGOCXX_CALL operator==(const hint& index_hint, bsoncxx::v_noabi::document::view index) {
     return index_hint._index_doc && index_hint._index_doc->view() == index;
 }
 
-bool MONGOCXX_CALL operator==(bsoncxx::document::view index, const hint& index_hint) {
+bool MONGOCXX_CALL operator==(bsoncxx::v_noabi::document::view index, const hint& index_hint) {
     return index_hint == index;
 }
 
-bool MONGOCXX_CALL operator!=(const hint& index_hint, bsoncxx::document::view index) {
+bool MONGOCXX_CALL operator!=(const hint& index_hint, bsoncxx::v_noabi::document::view index) {
     return !(index_hint == index);
 }
 
-bool MONGOCXX_CALL operator!=(bsoncxx::document::view index, const hint& index_hint) {
+bool MONGOCXX_CALL operator!=(bsoncxx::v_noabi::document::view index, const hint& index_hint) {
     return !(index_hint == index);
 }
 

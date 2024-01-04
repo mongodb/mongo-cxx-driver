@@ -17,7 +17,17 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi { class MONGOCXX_API index_view; }  // namespace v_noabi
+namespace v_noabi {
+
+class MONGOCXX_API index_view;
+
+}  // namespace v_noabi
+}  // namespace mongocxx
+
+namespace mongocxx {
+
+using ::mongocxx::v_noabi::index_view;
+
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

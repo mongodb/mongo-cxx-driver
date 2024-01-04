@@ -17,7 +17,17 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi { class MONGOCXX_API pipeline; }  // namespace v_noabi
+namespace v_noabi {
+
+class MONGOCXX_API pipeline;
+
+}  // namespace v_noabi
+}  // namespace mongocxx
+
+namespace mongocxx {
+
+using ::mongocxx::v_noabi::pipeline;
+
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

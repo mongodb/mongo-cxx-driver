@@ -19,16 +19,17 @@
 
 namespace {
 
-using bsoncxx::builder::basic::kvp;
+using bsoncxx::v_noabi::builder::basic::kvp;
 
 // Convert validation levels to strings.
-std::string validation_level_to_string(mongocxx::validation_criteria::validation_level level) {
+std::string validation_level_to_string(
+    mongocxx::v_noabi::validation_criteria::validation_level level) {
     switch (level) {
-        case mongocxx::validation_criteria::validation_level::k_off:
+        case mongocxx::v_noabi::validation_criteria::validation_level::k_off:
             return "off";
-        case mongocxx::validation_criteria::validation_level::k_moderate:
+        case mongocxx::v_noabi::validation_criteria::validation_level::k_moderate:
             return "moderate";
-        case mongocxx::validation_criteria::validation_level::k_strict:
+        case mongocxx::v_noabi::validation_criteria::validation_level::k_strict:
             return "strict";
     }
 
@@ -36,11 +37,12 @@ std::string validation_level_to_string(mongocxx::validation_criteria::validation
 }
 
 // Convert validation actions to strings.
-std::string validation_action_to_string(mongocxx::validation_criteria::validation_action action) {
+std::string validation_action_to_string(
+    mongocxx::v_noabi::validation_criteria::validation_action action) {
     switch (action) {
-        case mongocxx::validation_criteria::validation_action::k_warn:
+        case mongocxx::v_noabi::validation_criteria::validation_action::k_warn:
             return "warn";
-        case mongocxx::validation_criteria::validation_action::k_error:
+        case mongocxx::v_noabi::validation_criteria::validation_action::k_error:
             return "error";
     }
 
@@ -50,8 +52,9 @@ std::string validation_action_to_string(mongocxx::validation_criteria::validatio
 }  // namespace
 
 namespace mongocxx {
-inline namespace v_noabi {
-validation_criteria& validation_criteria::rule(bsoncxx::document::view_or_value rule) {
+namespace v_noabi {
+
+validation_criteria& validation_criteria::rule(bsoncxx::v_noabi::document::view_or_value rule) {
     _rule = std::move(rule);
     return *this;
 }
@@ -66,7 +69,7 @@ validation_criteria& validation_criteria::action(validation_criteria::validation
     return *this;
 }
 
-const stdx::optional<bsoncxx::document::view_or_value>& validation_criteria::rule() const {
+const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& validation_criteria::rule() const {
     return _rule;
 }
 
@@ -78,11 +81,11 @@ const stdx::optional<validation_criteria::validation_action>& validation_criteri
     return _action;
 }
 
-bsoncxx::document::value validation_criteria::to_document_deprecated() const {
-    bsoncxx::builder::basic::document doc;
+bsoncxx::v_noabi::document::value validation_criteria::to_document_deprecated() const {
+    bsoncxx::v_noabi::builder::basic::document doc;
 
     if (_rule) {
-        doc.append(kvp("validator", bsoncxx::types::b_document{*_rule}));
+        doc.append(kvp("validator", bsoncxx::v_noabi::types::b_document{*_rule}));
     }
 
     if (_level) {
@@ -96,7 +99,7 @@ bsoncxx::document::value validation_criteria::to_document_deprecated() const {
     return doc.extract();
 }
 
-bsoncxx::document::value validation_criteria::to_document() const {
+bsoncxx::v_noabi::document::value validation_criteria::to_document() const {
     return to_document_deprecated();
 }
 

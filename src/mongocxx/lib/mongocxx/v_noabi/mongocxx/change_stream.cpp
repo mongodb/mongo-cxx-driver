@@ -22,7 +22,8 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
+
 // Requirements for concept Iterator:
 // https://en.cppreference.com/w/cpp/named_req/Iterator
 static_assert(std::is_copy_constructible<change_stream::iterator>::value, "");
@@ -53,7 +54,7 @@ change_stream::iterator change_stream::end() const {
     return iterator{change_stream::iterator::iter_type::k_end, this};
 }
 
-stdx::optional<bsoncxx::document::view> change_stream::get_resume_token() const {
+stdx::optional<bsoncxx::v_noabi::document::view> change_stream::get_resume_token() const {
     return _impl->get_resume_token();
 }
 
@@ -64,11 +65,11 @@ change_stream::change_stream(void* change_stream_ptr)
 change_stream::iterator::iterator()
     : change_stream::iterator::iterator{iter_type::k_default_constructed, nullptr} {}
 
-const bsoncxx::document::view& change_stream::iterator::operator*() const {
+const bsoncxx::v_noabi::document::view& change_stream::iterator::operator*() const {
     return _change_stream->_impl->doc();
 }
 
-const bsoncxx::document::view* change_stream::iterator::operator->() const {
+const bsoncxx::v_noabi::document::view* change_stream::iterator::operator->() const {
     return std::addressof(_change_stream->_impl->doc());
 }
 

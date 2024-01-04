@@ -31,7 +31,8 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
+
 // Attempts to create a new client pool using the uri. Throws an exception upon error.
 static mongoc_client_pool_t* construct_client_pool(mongoc_uri_t* uri) {
     bson_error_t error;

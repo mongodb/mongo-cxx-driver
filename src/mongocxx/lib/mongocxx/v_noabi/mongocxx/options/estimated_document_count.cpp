@@ -18,7 +18,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace options {
 
 estimated_document_count& estimated_document_count::max_time(std::chrono::milliseconds max_time) {
@@ -26,13 +26,14 @@ estimated_document_count& estimated_document_count::max_time(std::chrono::millis
     return *this;
 }
 
-estimated_document_count& estimated_document_count::read_preference(mongocxx::read_preference rp) {
+estimated_document_count& estimated_document_count::read_preference(
+    mongocxx::v_noabi::read_preference rp) {
     _read_preference = std::move(rp);
     return *this;
 }
 
 estimated_document_count& estimated_document_count::comment(
-    bsoncxx::types::bson_value::view_or_value comment) {
+    bsoncxx::v_noabi::types::bson_value::view_or_value comment) {
     _comment = std::move(comment);
     return *this;
 }
@@ -41,8 +42,8 @@ const stdx::optional<std::chrono::milliseconds>& estimated_document_count::max_t
     return _max_time;
 }
 
-const stdx::optional<bsoncxx::types::bson_value::view_or_value>& estimated_document_count::comment()
-    const {
+const stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>&
+estimated_document_count::comment() const {
     return _comment;
 }
 

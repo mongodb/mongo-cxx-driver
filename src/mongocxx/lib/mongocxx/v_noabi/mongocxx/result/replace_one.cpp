@@ -17,7 +17,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace result {
 
 replace_one::replace_one(result::bulk_write result) : _result(std::move(result)) {}
@@ -34,7 +34,7 @@ std::int32_t replace_one::modified_count() const {
     return _result.modified_count();
 }
 
-stdx::optional<bsoncxx::document::element> replace_one::upserted_id() const {
+stdx::optional<bsoncxx::v_noabi::document::element> replace_one::upserted_id() const {
     if (_result.upserted_ids().size() == 0) {
         return stdx::nullopt;
     }

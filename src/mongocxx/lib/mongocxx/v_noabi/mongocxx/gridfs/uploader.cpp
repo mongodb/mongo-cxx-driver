@@ -29,33 +29,36 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace {
+
 std::size_t chunks_collection_documents_max_length(std::size_t chunk_size) {
     // 16 * 1000 * 1000 is used instead of 16 * 1024 * 1024 to ensure that the command document sent
     // to the server has space for the other fields.
     return 16 * 1000 * 1000 / chunk_size;
 }
+
 }  // namespace
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace gridfs {
 
 uploader::uploader(const client_session* session,
-                   bsoncxx::types::bson_value::view id,
+                   bsoncxx::v_noabi::types::bson_value::view id,
                    stdx::string_view filename,
                    collection files,
                    collection chunks,
                    std::int32_t chunk_size,
-                   stdx::optional<bsoncxx::document::view_or_value> metadata)
+                   stdx::optional<bsoncxx::v_noabi::document::view_or_value> metadata)
     : _impl{stdx::make_unique<impl>(session,
                                     id,
                                     filename,
                                     files,
                                     chunks,
                                     chunk_size,
-                                    metadata ? stdx::make_optional<bsoncxx::document::value>(
-                                                   bsoncxx::document::value{metadata->view()})
-                                             : stdx::nullopt)} {}
+                                    metadata
+                                        ? stdx::make_optional<bsoncxx::v_noabi::document::value>(
+                                              bsoncxx::v_noabi::document::value{metadata->view()})
+                                        : stdx::nullopt)} {}
 
 uploader::uploader() noexcept = default;
 uploader::uploader(uploader&&) noexcept = default;
@@ -88,7 +91,7 @@ void uploader::write(const std::uint8_t* bytes, std::size_t length) {
 }
 
 result::gridfs::upload uploader::close() {
-    using bsoncxx::builder::basic::kvp;
+    using bsoncxx::v_noabi::builder::basic::kvp;
 
     if (_get_impl().closed) {
         throw logic_error{error_code::k_gridfs_stream_not_open};
@@ -96,7 +99,7 @@ result::gridfs::upload uploader::close() {
 
     _get_impl().closed = true;
 
-    bsoncxx::builder::basic::document file;
+    bsoncxx::v_noabi::builder::basic::document file;
 
     std::int64_t bytes_uploaded = static_cast<std::int64_t>(_get_impl().chunks_written) *
                                   static_cast<std::int64_t>(_get_impl().chunk_size);
@@ -108,7 +111,8 @@ result::gridfs::upload uploader::close() {
     file.append(kvp("_id", _get_impl().result.id()));
     file.append(kvp("length", bytes_uploaded + leftover));
     file.append(kvp("chunkSize", _get_impl().chunk_size));
-    file.append(kvp("uploadDate", bsoncxx::types::b_date{std::chrono::system_clock::now()}));
+    file.append(
+        kvp("uploadDate", bsoncxx::v_noabi::types::b_date{std::chrono::system_clock::now()}));
     file.append(kvp("filename", _get_impl().filename));
 
     if (_get_impl().metadata) {
@@ -131,8 +135,8 @@ void uploader::abort() {
 
     _get_impl().closed = true;
 
-    bsoncxx::builder::basic::document filter;
-    filter.append(bsoncxx::builder::basic::kvp("files_id", _get_impl().result.id()));
+    bsoncxx::v_noabi::builder::basic::document filter;
+    filter.append(bsoncxx::v_noabi::builder::basic::kvp("files_id", _get_impl().result.id()));
 
     if (_get_impl().session) {
         _get_impl().chunks.delete_many(*_get_impl().session, filter.extract());
@@ -146,13 +150,13 @@ std::int32_t uploader::chunk_size() const {
 }
 
 void uploader::finish_chunk() {
-    using bsoncxx::builder::basic::kvp;
+    using bsoncxx::v_noabi::builder::basic::kvp;
 
     if (!_get_impl().buffer_off) {
         return;
     }
 
-    bsoncxx::builder::basic::document chunk;
+    bsoncxx::v_noabi::builder::basic::document chunk;
 
     std::size_t bytes_in_chunk = _get_impl().buffer_off;
 
@@ -165,9 +169,9 @@ void uploader::finish_chunk() {
 
     ++_get_impl().chunks_written;
 
-    bsoncxx::types::b_binary data{bsoncxx::binary_sub_type::k_binary,
-                                  static_cast<std::uint32_t>(bytes_in_chunk),
-                                  _get_impl().buffer.get()};
+    bsoncxx::v_noabi::types::b_binary data{bsoncxx::v_noabi::binary_sub_type::k_binary,
+                                           static_cast<std::uint32_t>(bytes_in_chunk),
+                                           _get_impl().buffer.get()};
 
     chunk.append(kvp("data", data));
     _get_impl().chunks_collection_documents.push_back(chunk.extract());

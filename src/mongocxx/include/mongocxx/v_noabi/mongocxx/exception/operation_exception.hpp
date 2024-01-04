@@ -24,12 +24,13 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
+
 ///
 /// Class representing an exception received from a MongoDB server.  It includes the server-provided
 /// error code, if one was available.
 ///
-/// @see mongocxx::exception
+/// @see mongocxx::v_noabi::exception
 ///
 class operation_exception : public exception {
    public:
@@ -46,7 +47,7 @@ class operation_exception : public exception {
     ///   An optional message to be returned by `what`.
     ///
     operation_exception(std::error_code ec,
-                        bsoncxx::document::value&& raw_server_error,
+                        bsoncxx::v_noabi::document::value&& raw_server_error,
                         std::string what_arg = "");
 
     ///
@@ -56,8 +57,8 @@ class operation_exception : public exception {
     ///
     /// @returns The raw server error, if it is available.
     ///
-    const stdx::optional<bsoncxx::document::value>& raw_server_error() const;
-    stdx::optional<bsoncxx::document::value>& raw_server_error();
+    const stdx::optional<bsoncxx::v_noabi::document::value>& raw_server_error() const;
+    stdx::optional<bsoncxx::v_noabi::document::value>& raw_server_error();
     ///
     /// @}
     ///
@@ -73,7 +74,7 @@ class operation_exception : public exception {
     bool has_error_label(stdx::string_view label) const;
 
    private:
-    stdx::optional<bsoncxx::document::value> _raw_server_error;
+    stdx::optional<bsoncxx::v_noabi::document::value> _raw_server_error;
 };
 
 }  // namespace v_noabi

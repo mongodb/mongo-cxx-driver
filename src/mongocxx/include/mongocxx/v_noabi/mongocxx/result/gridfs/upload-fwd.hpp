@@ -17,7 +17,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace result {
 namespace gridfs {
 
@@ -26,6 +26,16 @@ class MONGOCXX_API upload;
 }  // namespace gridfs
 }  // namespace result
 }  // namespace v_noabi
+}  // namespace mongocxx
+
+namespace mongocxx {
+namespace result {
+namespace gridfs {
+
+using ::mongocxx::v_noabi::result::gridfs::upload;
+
+}  // namespace gridfs
+}  // namespace result
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

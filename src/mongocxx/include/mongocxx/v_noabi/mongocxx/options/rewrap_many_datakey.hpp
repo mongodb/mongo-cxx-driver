@@ -26,7 +26,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace options {
 
 ///
@@ -50,7 +50,7 @@ class rewrap_many_datakey {
     /// @see
     /// https://www.mongodb.com/docs/manual/core/csfle/reference/kms-providers/#std-label-csfle-reference-kms-providers
     ///
-    rewrap_many_datakey& provider(bsoncxx::string::view_or_value provider);
+    rewrap_many_datakey& provider(bsoncxx::v_noabi::string::view_or_value provider);
 
     ///
     /// Get the KMS provider
@@ -65,7 +65,7 @@ class rewrap_many_datakey {
     /// @see
     /// https://www.mongodb.com/docs/manual/core/csfle/reference/kms-providers/#std-label-csfle-reference-kms-providers
     ///
-    bsoncxx::string::view_or_value provider() const;
+    bsoncxx::v_noabi::string::view_or_value provider() const;
 
     ///
     /// Set the masterKey option.
@@ -82,7 +82,7 @@ class rewrap_many_datakey {
     /// @see
     /// https://www.mongodb.com/docs/manual/core/csfle/reference/kms-providers/#std-label-csfle-reference-kms-providers-create-and-store
     ///
-    rewrap_many_datakey& master_key(bsoncxx::document::view_or_value master_key);
+    rewrap_many_datakey& master_key(bsoncxx::v_noabi::document::view_or_value master_key);
 
     ///
     /// Get the masterKey option.
@@ -97,13 +97,13 @@ class rewrap_many_datakey {
     /// @see
     /// https://www.mongodb.com/docs/manual/core/csfle/reference/kms-providers/#std-label-csfle-reference-kms-providers-create-and-store
     ///
-    const stdx::optional<bsoncxx::document::view_or_value>& master_key() const;
+    const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& master_key() const;
 
    private:
     friend ::mongocxx::v_noabi::client_encryption;
 
-    bsoncxx::string::view_or_value _provider;
-    stdx::optional<bsoncxx::document::view_or_value> _master_key;
+    bsoncxx::v_noabi::string::view_or_value _provider;
+    stdx::optional<bsoncxx::v_noabi::document::view_or_value> _master_key;
 };
 
 }  // namespace options

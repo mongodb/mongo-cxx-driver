@@ -30,7 +30,8 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
+
 ///
 /// Class representing a MongoDB index view.
 ///
@@ -52,7 +53,7 @@ class index_view {
     /// Returns a cursor over all the indexes.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the list operation.
+    ///   The mongocxx::v_noabi::client_session with which to perform the list operation.
     ///
     cursor list(const client_session& session);
 
@@ -71,7 +72,7 @@ class index_view {
     ///    A document containing set of options that controls the creation of the index. See
     ///    https://www.mongodb.com/docs/manual/reference/method/db.collection.createIndex/.
     /// @param options
-    ///    Optional arguments for the overall operation, see mongocxx::options::index_view.
+    ///    Optional arguments for the overall operation, see mongocxx::v_noabi::options::index_view.
     ///
     /// @return
     ///    An optional containing the name of the created index. If and index with the same keys
@@ -84,22 +85,22 @@ class index_view {
     /// @see https://www.mongodb.com/docs/manual/reference/method/db.collection.createIndex/
     ///
     stdx::optional<std::string> create_one(
-        const bsoncxx::document::view_or_value& keys,
-        const bsoncxx::document::view_or_value& index_options = {},
+        const bsoncxx::v_noabi::document::view_or_value& keys,
+        const bsoncxx::v_noabi::document::view_or_value& index_options = {},
         const options::index_view& options = options::index_view{});
 
     ///
     /// Creates an index. A convenience method that calls create_many.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the operation.
+    ///   The mongocxx::v_noabi::client_session with which to perform the operation.
     /// @param keys
     ///    A document containing the index keys and their corresponding index types.
     /// @param index_options
     ///    A document containing set of options that controls the creation of the index. See
     ///    https://www.mongodb.com/docs/manual/reference/method/db.collection.createIndex/.
     /// @param options
-    ///    Optional arguments for the overall operation, see mongocxx::options::index_view.
+    ///    Optional arguments for the overall operation, see mongocxx::v_noabi::options::index_view.
     ///
     /// @return
     ///    An optional containing the name of the created index. If and index with the same keys
@@ -113,8 +114,8 @@ class index_view {
     ///
     stdx::optional<std::string> create_one(
         const client_session& session,
-        const bsoncxx::document::view_or_value& keys,
-        const bsoncxx::document::view_or_value& index_options = {},
+        const bsoncxx::v_noabi::document::view_or_value& keys,
+        const bsoncxx::v_noabi::document::view_or_value& index_options = {},
         const options::index_view& options = options::index_view{});
 
     ///
@@ -129,7 +130,7 @@ class index_view {
     /// @param index
     ///    Index_model describing the index being created.
     /// @param options
-    ///    Optional arguments for the overall operation, see mongocxx::options::index_view.
+    ///    Optional arguments for the overall operation, see mongocxx::v_noabi::options::index_view.
     ///
     /// @return
     ///    An optional containing the name of the created index. If and index with the same keys
@@ -148,11 +149,11 @@ class index_view {
     /// Creates an index. A convenience method that calls create_many.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the operation.
+    ///   The mongocxx::v_noabi::client_session with which to perform the operation.
     /// @param index
     ///    Index_model describing the index being created.
     /// @param options
-    ///    Optional arguments for the overall operation, see mongocxx::options::index_view.
+    ///    Optional arguments for the overall operation, see mongocxx::v_noabi::options::index_view.
     ///
     /// @return
     ///    An optional containing the name of the created index. If and index with the same keys
@@ -181,7 +182,7 @@ class index_view {
     /// @param indexes
     ///   std::vector containing index models describing the indexes being created.
     /// @param options
-    ///    Optional arguments for the overall operation, see mongocxx::options::index_view.
+    ///    Optional arguments for the overall operation, see mongocxx::v_noabi::options::index_view.
     ///
     /// @return
     ///    The result document sent back by the server as if the createIndexes command was run from
@@ -193,7 +194,7 @@ class index_view {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/method/cursor.maxTimeMS/
     ///
-    bsoncxx::document::value create_many(
+    bsoncxx::v_noabi::document::value create_many(
         const std::vector<index_model>& indexes,
         const options::index_view& options = options::index_view{});
 
@@ -201,11 +202,11 @@ class index_view {
     /// Adds a container of indexes to the collection.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the operation.
+    ///   The mongocxx::v_noabi::client_session with which to perform the operation.
     /// @param indexes
     ///   std::vector containing index models describing the indexes being created.
     /// @param options
-    ///    Optional arguments for the overall operation, see mongocxx::options::index_view.
+    ///    Optional arguments for the overall operation, see mongocxx::v_noabi::options::index_view.
     ///
     /// @return
     ///    The result document sent back by the server as if the createIndexes command was run from
@@ -217,7 +218,7 @@ class index_view {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/method/cursor.maxTimeMS/
     ///
-    bsoncxx::document::value create_many(
+    bsoncxx::v_noabi::document::value create_many(
         const client_session& session,
         const std::vector<index_model>& indexes,
         const options::index_view& options = options::index_view{});
@@ -234,7 +235,7 @@ class index_view {
     /// @param name
     ///    The name of the index being dropped.
     /// @param options
-    ///    Optional arguments for the overall operation, see mongocxx::options::index_view.
+    ///    Optional arguments for the overall operation, see mongocxx::v_noabi::options::index_view.
     ///
     /// @exception
     ///   Throws operation_exception for any errors encountered by the server or if max_time_ms
@@ -251,11 +252,11 @@ class index_view {
     /// Drops a single index by name.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the drop.
+    ///   The mongocxx::v_noabi::client_session with which to perform the drop.
     /// @param name
     ///    The name of the index being dropped.
     /// @param options
-    ///    Optional arguments for the overall operation, see mongocxx::options::index_view.
+    ///    Optional arguments for the overall operation, see mongocxx::v_noabi::options::index_view.
     ///
     /// @exception
     ///   Throws operation_exception for any errors encountered by the server or if max_time_ms
@@ -285,10 +286,11 @@ class index_view {
     ///    A document containing set of options used to create the index. Only the name field will
     ///    be used from here, and if it is not included, a name based on they keys will be used.
     /// @param options
-    ///    Optional arguments for the overall operation, see mongocxx::options::index_view.
+    ///    Optional arguments for the overall operation, see mongocxx::v_noabi::options::index_view.
     ///
     /// @exception
-    ///   Throws bsoncxx::exception if "name" key is present in options but is not a string.
+    ///   Throws bsoncxx::v_noabi::exception if "name" key is present in options but is not a
+    ///   string.
     /// @exception
     ///   Throws operation_exception for any errors encountered by the server or if max_time_ms
     ///   option is present and the operation exceeds the time limit.
@@ -297,15 +299,15 @@ class index_view {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/method/cursor.maxTimeMS/
     ///
-    void drop_one(const bsoncxx::document::view_or_value& keys,
-                  const bsoncxx::document::view_or_value& index_options = {},
+    void drop_one(const bsoncxx::v_noabi::document::view_or_value& keys,
+                  const bsoncxx::v_noabi::document::view_or_value& index_options = {},
                   const options::index_view& options = options::index_view{});
 
     ///
     /// Attempts to drop a single index from the collection given the keys and options.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the drop.
+    ///   The mongocxx::v_noabi::client_session with which to perform the drop.
     /// @param keys
     ///    A document containing the index keys and their corresponding index types. If no name
     ///    option is present in the options, a name based on the keys will be used.
@@ -313,10 +315,11 @@ class index_view {
     ///    A document containing set of options used to create the index. Only the name field will
     ///    be used from here, and if it is not included, a name based on they keys will be used.
     /// @param options
-    ///    Optional arguments for the overall operation, see mongocxx::options::index_view.
+    ///    Optional arguments for the overall operation, see mongocxx::v_noabi::options::index_view.
     ///
     /// @exception
-    ///   Throws bsoncxx::exception if "name" key is present in options but is not a string.
+    ///   Throws bsoncxx::v_noabi::exception if "name" key is present in options but is not a
+    ///   string.
     /// @exception
     ///   Throws operation_exception for any errors encountered by the server or if max_time_ms
     ///   option is present and the operation exceeds the time limit.
@@ -326,8 +329,8 @@ class index_view {
     /// @see https://www.mongodb.com/docs/manual/reference/method/cursor.maxTimeMS/
     ///
     void drop_one(const client_session& session,
-                  const bsoncxx::document::view_or_value& keys,
-                  const bsoncxx::document::view_or_value& index_options = {},
+                  const bsoncxx::v_noabi::document::view_or_value& keys,
+                  const bsoncxx::v_noabi::document::view_or_value& index_options = {},
                   const options::index_view& options = options::index_view{});
 
     ///
@@ -342,10 +345,11 @@ class index_view {
     /// @param index
     ///    An index model describing the index being dropped.
     /// @param options
-    ///    Optional arguments for the overall operation, see mongocxx::options::index_view.
+    ///    Optional arguments for the overall operation, see mongocxx::v_noabi::options::index_view.
     ///
     /// @exception
-    ///   Throws bsoncxx::exception if "name" key is present in options but is not a string.
+    ///   Throws bsoncxx::v_noabi::exception if "name" key is present in options but is not a
+    ///   string.
     /// @exception
     ///   Throws operation_exception for any errors encountered by the server or if max_time_ms
     ///   option is present and the operation exceeds the time limit.
@@ -361,14 +365,15 @@ class index_view {
     /// Attempts to drop a single index from the collection given an index model.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the drop.
+    ///   The mongocxx::v_noabi::client_session with which to perform the drop.
     /// @param index
     ///    An index model describing the index being dropped.
     /// @param options
-    ///    Optional arguments for the overall operation, see mongocxx::options::index_view.
+    ///    Optional arguments for the overall operation, see mongocxx::v_noabi::options::index_view.
     ///
     /// @exception
-    ///   Throws bsoncxx::exception if "name" key is present in options but is not a string.
+    ///   Throws bsoncxx::v_noabi::exception if "name" key is present in options but is not a
+    ///   string.
     /// @exception
     ///   Throws operation_exception for any errors encountered by the server or if max_time_ms
     ///   option is present and the operation exceeds the time limit.
@@ -391,7 +396,7 @@ class index_view {
     /// Drops all indexes in the collection.
     ///
     /// @param options
-    ///    Optional arguments for the overall operation, see mongocxx::options::index_view.
+    ///    Optional arguments for the overall operation, see mongocxx::v_noabi::options::index_view.
     ///
     /// @exception
     ///   Throws operation_exception for any errors encountered by the server or if max_time_ms
@@ -405,9 +410,9 @@ class index_view {
     /// Drops all indexes in the collection.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the drop.
+    ///   The mongocxx::v_noabi::client_session with which to perform the drop.
     /// @param options
-    ///    Optional arguments for the overall operation, see mongocxx::options::index_view.
+    ///    Optional arguments for the overall operation, see mongocxx::v_noabi::options::index_view.
     ///
     /// @exception
     ///   Throws operation_exception for any errors encountered by the server or if max_time_ms

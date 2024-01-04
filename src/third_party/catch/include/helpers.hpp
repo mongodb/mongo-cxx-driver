@@ -21,9 +21,8 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
-
 namespace test_util {
+
 // Check that an error message includes a substring, case-insensitively. Use like:
 // REQUIRE_THROWS_MATCHES(function(), mongocxx::exception, mongocxx_exception_matcher("substring")
 class mongocxx_exception_matcher : public Catch::MatcherBase<mongocxx::exception> {
@@ -40,9 +39,8 @@ public:
         return std::string("mongocxx::exception was expected to contain the message: \"") + expected_msg + "\"";
     }
 };
-} // namespace test_util
 
-}  // namespace v_noabi
+} // namespace test_util
 } // namespace mongocxx
 
 #define CHECK_OPTIONAL_ARGUMENT(OBJECT, NAME, VALUE) \

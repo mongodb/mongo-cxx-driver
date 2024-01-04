@@ -17,27 +17,27 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace model {
 
-replace_one::replace_one(bsoncxx::document::view_or_value filter,
-                         bsoncxx::document::view_or_value replacement)
+replace_one::replace_one(bsoncxx::v_noabi::document::view_or_value filter,
+                         bsoncxx::v_noabi::document::view_or_value replacement)
     : _filter(std::move(filter)), _replacement(std::move(replacement)) {}
 
-const bsoncxx::document::view_or_value& replace_one::filter() const {
+const bsoncxx::v_noabi::document::view_or_value& replace_one::filter() const {
     return _filter;
 }
 
-const bsoncxx::document::view_or_value& replace_one::replacement() const {
+const bsoncxx::v_noabi::document::view_or_value& replace_one::replacement() const {
     return _replacement;
 }
 
-replace_one& replace_one::collation(bsoncxx::document::view_or_value collation) {
+replace_one& replace_one::collation(bsoncxx::v_noabi::document::view_or_value collation) {
     _collation = collation;
     return *this;
 }
 
-const stdx::optional<bsoncxx::document::view_or_value>& replace_one::collation() const {
+const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& replace_one::collation() const {
     return _collation;
 }
 
@@ -51,12 +51,12 @@ const stdx::optional<bool>& replace_one::upsert() const {
     return _upsert;
 }
 
-replace_one& replace_one::hint(mongocxx::hint index_hint) {
+replace_one& replace_one::hint(mongocxx::v_noabi::hint index_hint) {
     _hint = std::move(index_hint);
     return *this;
 }
 
-const stdx::optional<mongocxx::hint>& replace_one::hint() const {
+const stdx::optional<mongocxx::v_noabi::hint>& replace_one::hint() const {
     return _hint;
 }
 }  // namespace model

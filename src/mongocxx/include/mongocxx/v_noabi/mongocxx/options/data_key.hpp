@@ -27,7 +27,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace options {
 
 ///
@@ -89,7 +89,7 @@ class data_key {
     /// @see
     /// https://www.mongodb.com/docs/manual/core/security-client-side-encryption-key-management/
     ///
-    data_key& master_key(bsoncxx::document::view_or_value master_key);
+    data_key& master_key(bsoncxx::v_noabi::document::view_or_value master_key);
 
     ///
     /// Gets the master key.
@@ -97,7 +97,7 @@ class data_key {
     /// @return
     ///   An optional document containing the master key.
     ///
-    const stdx::optional<bsoncxx::document::view_or_value>& master_key() const;
+    const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& master_key() const;
 
     ///
     /// Sets an optional list of string alternate names used to reference the key.
@@ -158,7 +158,7 @@ class data_key {
 
     MONGOCXX_PRIVATE void* convert() const;
 
-    stdx::optional<bsoncxx::document::view_or_value> _master_key;
+    stdx::optional<bsoncxx::v_noabi::document::view_or_value> _master_key;
     std::vector<std::string> _key_alt_names;
     stdx::optional<key_material_type> _key_material;
 };

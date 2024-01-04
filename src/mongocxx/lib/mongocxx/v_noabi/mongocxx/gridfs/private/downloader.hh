@@ -24,7 +24,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace gridfs {
 
 class downloader::impl {
@@ -33,7 +33,7 @@ class downloader::impl {
          chunks_and_bytes_offset start_param,
          std::int32_t chunk_size_param,
          std::int64_t file_len_param,
-         bsoncxx::document::value files_doc_param)
+         bsoncxx::v_noabi::document::value files_doc_param)
         : files_doc{std::move(files_doc_param)},
           chunk_buffer_len{0},
           chunk_buffer_offset{0},
@@ -67,7 +67,7 @@ class downloader::impl {
     }
 
     // The files document for the file being downloaded.
-    bsoncxx::document::value files_doc;
+    bsoncxx::v_noabi::document::value files_doc;
 
     // The number of bytes in the current chunk.
     std::size_t chunk_buffer_len;

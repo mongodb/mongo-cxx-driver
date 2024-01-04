@@ -17,13 +17,21 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace result {
 
 class MONGOCXX_API bulk_write;
 
 }  // namespace result
 }  // namespace v_noabi
+}  // namespace mongocxx
+
+namespace mongocxx {
+namespace result {
+
+using ::mongocxx::v_noabi::result::bulk_write;
+
+}  // namespace result
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

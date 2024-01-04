@@ -22,29 +22,29 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace result {
 namespace gridfs {
 
 /// Class representing the result of a GridFS upload operation.
 class upload {
    public:
-    upload(bsoncxx::types::bson_value::view id);
+    upload(bsoncxx::v_noabi::types::bson_value::view id);
 
     ///
     /// Gets the id of the uploaded GridFS file.
     ///
     /// @return The id of the uploaded file.
     ///
-    const bsoncxx::types::bson_value::view& id() const;
+    const bsoncxx::v_noabi::types::bson_value::view& id() const;
 
    private:
     // Array with a single element, containing the value of the _id field for the inserted files
     // collection document.
-    bsoncxx::array::value _id_owned;
+    bsoncxx::v_noabi::array::value _id_owned;
 
     // Points into _id_owned.
-    bsoncxx::types::bson_value::view _id;
+    bsoncxx::v_noabi::types::bson_value::view _id;
 
     friend MONGOCXX_API bool MONGOCXX_CALL operator==(const upload&, const upload&);
     friend MONGOCXX_API bool MONGOCXX_CALL operator!=(const upload&, const upload&);

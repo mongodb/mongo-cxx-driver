@@ -15,7 +15,8 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
+
 ///
 /// Class representing a MongoDB search index view.
 ///
@@ -45,7 +46,7 @@ class search_index_view {
     /// Returns a cursor over all the search indexes.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the list operation.
+    ///   The mongocxx::v_noabi::client_session with which to perform the list operation.
     /// @param options
     ///   Options included in the aggregate operation.
     ///
@@ -64,14 +65,14 @@ class search_index_view {
     ///
     /// @return A cursor to the list of the search indexes returned.
     ///
-    cursor list(bsoncxx::string::view_or_value name,
+    cursor list(bsoncxx::v_noabi::string::view_or_value name,
                 const options::aggregate& options = options::aggregate());
 
     ///
     /// Returns a cursor over all the search indexes.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the list operation.
+    ///   The mongocxx::v_noabi::client_session with which to perform the list operation.
     /// @param name
     ///   The name of the search index to find.
     /// @param options
@@ -80,7 +81,7 @@ class search_index_view {
     /// @return A cursor to the list of the search indexes returned.
     ///
     cursor list(const client_session& session,
-                bsoncxx::string::view_or_value name,
+                bsoncxx::v_noabi::string::view_or_value name,
                 const options::aggregate& options = options::aggregate());
 
     ///
@@ -97,20 +98,20 @@ class search_index_view {
     ///
     /// @return The name of the created search index.
     ///
-    std::string create_one(bsoncxx::document::view_or_value definition);
+    std::string create_one(bsoncxx::v_noabi::document::view_or_value definition);
 
     ///
     /// This is a convenience method for creating a single search index with a default name.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the operation.
+    ///   The mongocxx::v_noabi::client_session with which to perform the operation.
     /// @param definition
     ///    The document describing the search index to be created.
     ///
     /// @return The name of the created search index.
     ///
     std::string create_one(const client_session& session,
-                           bsoncxx::document::view_or_value definition);
+                           bsoncxx::v_noabi::document::view_or_value definition);
 
     ///
     /// This is a convenience method for creating a single search index.
@@ -122,14 +123,14 @@ class search_index_view {
     ///
     /// @return The name of the created search index.
     ///
-    std::string create_one(bsoncxx::string::view_or_value name,
-                           bsoncxx::document::view_or_value definition);
+    std::string create_one(bsoncxx::v_noabi::string::view_or_value name,
+                           bsoncxx::v_noabi::document::view_or_value definition);
 
     ///
     /// This is a convenience method for creating a single search index.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the operation.
+    ///   The mongocxx::v_noabi::client_session with which to perform the operation.
     /// @param name
     ///   The name of the search index to create.
     /// @param definition
@@ -138,8 +139,8 @@ class search_index_view {
     /// @return The name of the created search index.
     ///
     std::string create_one(const client_session& session,
-                           bsoncxx::string::view_or_value name,
-                           bsoncxx::document::view_or_value definition);
+                           bsoncxx::v_noabi::string::view_or_value name,
+                           bsoncxx::v_noabi::document::view_or_value definition);
 
     ///
     /// This is a convenience method for creating a single search index.
@@ -155,7 +156,7 @@ class search_index_view {
     /// This is a convenience method for creating a single search index.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the operation.
+    ///   The mongocxx::v_noabi::client_session with which to perform the operation.
     /// @param model
     ///   The search index model to create.
     ///
@@ -183,7 +184,7 @@ class search_index_view {
     /// Creates multiple search indexes in the collection.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the operation.
+    ///   The mongocxx::v_noabi::client_session with which to perform the operation.
     /// @param models
     ///   The search index models to create.
     ///
@@ -204,17 +205,17 @@ class search_index_view {
     /// @param name
     ///    The name of the search index to drop.
     ///
-    void drop_one(bsoncxx::string::view_or_value name);
+    void drop_one(bsoncxx::v_noabi::string::view_or_value name);
 
     ///
     /// Drops a single search index from the collection by the index name.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the operation.
+    ///   The mongocxx::v_noabi::client_session with which to perform the operation.
     /// @param name
     ///   The name of the search index to drop.
     ///
-    void drop_one(const client_session& session, bsoncxx::string::view_or_value name);
+    void drop_one(const client_session& session, bsoncxx::v_noabi::string::view_or_value name);
 
     ///
     /// @}
@@ -230,22 +231,22 @@ class search_index_view {
     /// @param definition
     ///   The definition to update the search index to.
     ///
-    void update_one(bsoncxx::string::view_or_value name,
-                    bsoncxx::document::view_or_value definition);
+    void update_one(bsoncxx::v_noabi::string::view_or_value name,
+                    bsoncxx::v_noabi::document::view_or_value definition);
 
     ///
     /// Updates a single search index from the collection by the search index name.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the operation.
+    ///   The mongocxx::v_noabi::client_session with which to perform the operation.
     /// @param name
     ///   The name of the search index to update.
     /// @param definition
     ///   The definition to update the search index to.
     ///
     void update_one(const client_session& session,
-                    bsoncxx::string::view_or_value name,
-                    bsoncxx::document::view_or_value definition);
+                    bsoncxx::v_noabi::string::view_or_value name,
+                    bsoncxx::v_noabi::document::view_or_value definition);
 
     ///
     /// @}
@@ -259,7 +260,7 @@ class search_index_view {
     MONGOCXX_PRIVATE search_index_view(void* coll, void* client);
 
     MONGOCXX_PRIVATE std::vector<std::string> _create_many_helper(
-        bsoncxx::array::view created_indexes);
+        bsoncxx::v_noabi::array::view created_indexes);
 
     MONGOCXX_PRIVATE const impl& _get_impl() const;
 

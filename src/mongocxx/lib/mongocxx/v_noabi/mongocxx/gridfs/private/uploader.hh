@@ -24,7 +24,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace gridfs {
 
 class uploader::impl {
@@ -35,7 +35,7 @@ class uploader::impl {
          collection files,
          collection chunks,
          std::int32_t chunk_size,
-         stdx::optional<bsoncxx::document::value> metadata)
+         stdx::optional<bsoncxx::v_noabi::document::value> metadata)
         : session{session},
           buffer{stdx::make_unique<std::uint8_t[]>(static_cast<size_t>(chunk_size))},
           buffer_off{0},
@@ -43,7 +43,7 @@ class uploader::impl {
           chunk_size{chunk_size},
           chunks_written{0},
           closed{false},
-          filename{bsoncxx::string::to_string(filename)},
+          filename{bsoncxx::v_noabi::string::to_string(filename)},
           files{std::move(files)},
           metadata{std::move(metadata)},
           result{std::move(result)} {}
@@ -61,7 +61,7 @@ class uploader::impl {
     collection chunks;
 
     // Chunks that have been fully written but not yet uploaded to the server.
-    std::vector<bsoncxx::document::value> chunks_collection_documents;
+    std::vector<bsoncxx::v_noabi::document::value> chunks_collection_documents;
 
     // The size of a chunk in bytes.
     std::int32_t chunk_size;
@@ -79,7 +79,7 @@ class uploader::impl {
     collection files;
 
     // User-specified metadata for the file.
-    stdx::optional<bsoncxx::document::value> metadata;
+    stdx::optional<bsoncxx::v_noabi::document::value> metadata;
 
     // Contains the id of the file being written.
     result::gridfs::upload result;

@@ -26,7 +26,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace result {
 
 /// Class representing the result of a MongoDB update operation.
@@ -66,7 +66,7 @@ class update {
     ///
     /// @return The value of the _id field for upserted document.
     ///
-    stdx::optional<bsoncxx::document::element> upserted_id() const;
+    stdx::optional<bsoncxx::v_noabi::document::element> upserted_id() const;
 
    private:
     result::bulk_write _result;

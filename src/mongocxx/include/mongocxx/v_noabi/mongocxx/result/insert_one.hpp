@@ -24,14 +24,14 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace result {
 
 /// Class representing the result of a MongoDB insert operation.
 class insert_one {
    public:
     // This constructor is public for testing purposes only
-    insert_one(result::bulk_write result, bsoncxx::types::bson_value::view inserted_id);
+    insert_one(result::bulk_write result, bsoncxx::v_noabi::types::bson_value::view inserted_id);
 
     ///
     /// Returns the bulk write result for this insert operation.
@@ -45,16 +45,16 @@ class insert_one {
     ///
     /// @return The value of the _id field for the inserted document.
     ///
-    const bsoncxx::types::bson_value::view& inserted_id() const;
+    const bsoncxx::v_noabi::types::bson_value::view& inserted_id() const;
 
    private:
     result::bulk_write _result;
 
     // Array with a single element, containing the value of the _id field for the inserted document.
-    bsoncxx::array::value _inserted_id_owned;
+    bsoncxx::v_noabi::array::value _inserted_id_owned;
 
     // Points into _inserted_id_owned.
-    bsoncxx::types::bson_value::view _inserted_id;
+    bsoncxx::v_noabi::types::bson_value::view _inserted_id;
 
     friend MONGOCXX_API bool MONGOCXX_CALL operator==(const insert_one&, const insert_one&);
     friend MONGOCXX_API bool MONGOCXX_CALL operator!=(const insert_one&, const insert_one&);

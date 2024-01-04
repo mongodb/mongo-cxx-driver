@@ -22,7 +22,8 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
+
 ///
 /// A class to be used as the base class for all mongocxx exceptions.
 ///

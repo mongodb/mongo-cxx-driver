@@ -38,7 +38,8 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
+
 ///
 /// Class representing a client connection to MongoDB.
 ///
@@ -51,8 +52,8 @@ inline namespace v_noabi {
 ///
 /// Example:
 /// @code
-///   mongocxx::client mongo_client{mongocxx::uri{}};
-///   mongocxx::client mongo_client{mongocxx::uri{"mongodb://localhost:27017"}};
+///   mongocxx::v_noabi::client mongo_client{mongocxx::v_noabi::uri{}};
+///   mongocxx::v_noabi::client mongo_client{mongocxx::v_noabi::uri{"mongodb://localhost:27017"}};
 /// @endcode
 ///
 /// Note that client is not thread-safe. See
@@ -74,10 +75,11 @@ class client {
     /// @param options
     ///   Additional options that cannot be specified via the mongodb_uri
     ///
-    /// @throws mongocxx::exception if invalid options are provided
+    /// @throws mongocxx::v_noabi::exception if invalid options are provided
     /// (whether from the URI or provided client options).
     ///
-    client(const mongocxx::uri& mongodb_uri, const options::client& options = options::client());
+    client(const mongocxx::v_noabi::uri& mongodb_uri,
+           const options::client& options = options::client());
 
     ///
     /// Move constructs a client.
@@ -116,15 +118,15 @@ class client {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/read-concern/
     ///
-    MONGOCXX_DEPRECATED void read_concern(mongocxx::read_concern rc);
-    void read_concern_deprecated(mongocxx::read_concern rc);
+    MONGOCXX_DEPRECATED void read_concern(mongocxx::v_noabi::read_concern rc);
+    void read_concern_deprecated(mongocxx::v_noabi::read_concern rc);
 
     ///
     /// Returns the current read concern for this client.
     ///
     /// @return The current @c read_concern
     ///
-    mongocxx::read_concern read_concern() const;
+    mongocxx::v_noabi::read_concern read_concern() const;
 
     ///
     /// Sets the read preference for this client.
@@ -142,8 +144,8 @@ class client {
     ///
     /// @see https://www.mongodb.com/docs/manual/core/read-preference/
     ///
-    MONGOCXX_DEPRECATED void read_preference(mongocxx::read_preference rp);
-    void read_preference_deprecated(mongocxx::read_preference rp);
+    MONGOCXX_DEPRECATED void read_preference(mongocxx::v_noabi::read_preference rp);
+    void read_preference_deprecated(mongocxx::v_noabi::read_preference rp);
 
     ///
     /// Returns the current read preference for this client.
@@ -152,14 +154,14 @@ class client {
     ///
     /// @see https://www.mongodb.com/docs/manual/core/read-preference/
     ///
-    mongocxx::read_preference read_preference() const;
+    mongocxx::v_noabi::read_preference read_preference() const;
 
     ///
     /// Returns the current uri for this client.
     ///
     /// @return The @c uri that this client was created with.
     ///
-    mongocxx::uri uri() const;
+    mongocxx::v_noabi::uri uri() const;
 
     ///
     /// Sets the write concern for this client.
@@ -175,14 +177,14 @@ class client {
     /// @param wc
     ///   The new write concern
     ///
-    MONGOCXX_DEPRECATED void write_concern(mongocxx::write_concern wc);
-    void write_concern_deprecated(mongocxx::write_concern wc);
+    MONGOCXX_DEPRECATED void write_concern(mongocxx::v_noabi::write_concern wc);
+    void write_concern_deprecated(mongocxx::v_noabi::write_concern wc);
 
     ///
     /// Returns the current write concern for this client.
     ///
     /// @return the current @c write_concern
-    mongocxx::write_concern write_concern() const;
+    mongocxx::v_noabi::write_concern write_concern() const;
 
     ///
     /// Obtains a database that represents a logical grouping of collections on a MongoDB server.
@@ -194,8 +196,9 @@ class client {
     ///
     /// @return The database
     ///
-    mongocxx::database database(bsoncxx::string::view_or_value name) const&;
-    mongocxx::database database(bsoncxx::string::view_or_value name) const&& = delete;
+    mongocxx::v_noabi::database database(bsoncxx::v_noabi::string::view_or_value name) const&;
+    mongocxx::v_noabi::database database(bsoncxx::v_noabi::string::view_or_value name) const&& =
+        delete;
 
     ///
     /// Allows the syntax @c client["db_name"] as a convenient shorthand for the client::database()
@@ -208,22 +211,24 @@ class client {
     ///
     /// @return Client side representation of a server side database
     ///
-    MONGOCXX_INLINE mongocxx::database operator[](bsoncxx::string::view_or_value name) const&;
-    MONGOCXX_INLINE mongocxx::database operator[](bsoncxx::string::view_or_value name) const&& =
-        delete;
+    MONGOCXX_INLINE mongocxx::v_noabi::database operator[](
+        bsoncxx::v_noabi::string::view_or_value name) const&;
+    MONGOCXX_INLINE mongocxx::v_noabi::database operator[](
+        bsoncxx::v_noabi::string::view_or_value name) const&& = delete;
 
     ///
     /// @{
     ///
     /// Enumerates the databases in the client.
     ///
-    /// @return A mongocxx::cursor containing a BSON document for each
+    /// @return A mongocxx::v_noabi::cursor containing a BSON document for each
     ///   database. Each document contains a name field with the database
     ///   name, a sizeOnDisk field with the total size of the database file on
     ///   disk in bytes, and an empty field specifying whether the database
     ///   has any data.
     ///
-    /// @throws mongocxx::operation_exception if the underlying 'listDatabases' command fails.
+    /// @throws mongocxx::v_noabi::operation_exception if the underlying 'listDatabases' command
+    /// fails.
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/listDatabases
     ///
@@ -233,15 +238,16 @@ class client {
     /// Enumerates the databases in the client.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the aggregation.
+    ///   The mongocxx::v_noabi::client_session with which to perform the aggregation.
     ///
-    /// @return A mongocxx::cursor containing a BSON document for each
+    /// @return A mongocxx::v_noabi::cursor containing a BSON document for each
     ///   database. Each document contains a name field with the database
     ///   name, a sizeOnDisk field with the total size of the database file on
     ///   disk in bytes, and an empty field specifying whether the database
     ///   has any data.
     ///
-    /// @throws mongocxx::operation_exception if the underlying 'listDatabases' command fails.
+    /// @throws mongocxx::v_noabi::operation_exception if the underlying 'listDatabases' command
+    /// fails.
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/listDatabases
     ///
@@ -253,39 +259,41 @@ class client {
     /// @param opts
     ///   Options passed directly to the 'listDatabases' command.
     ///
-    /// @return A mongocxx::cursor containing a BSON document for each
+    /// @return A mongocxx::v_noabi::cursor containing a BSON document for each
     ///   database. Each document contains a name field with the database
     ///   name, a sizeOnDisk field with the total size of the database file on
     ///   disk in bytes, and an empty field specifying whether the database
     ///   has any data.
     ///
-    /// @throws mongocxx::operation_exception if the underlying 'listDatabases' command fails.
+    /// @throws mongocxx::v_noabi::operation_exception if the underlying 'listDatabases' command
+    /// fails.
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/listDatabases
     ///
-    cursor list_databases(const bsoncxx::document::view_or_value opts) const;
+    cursor list_databases(const bsoncxx::v_noabi::document::view_or_value opts) const;
 
     ///
     /// Enumerates the databases in the client.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the aggregation.
+    ///   The mongocxx::v_noabi::client_session with which to perform the aggregation.
     ///
     /// @param opts
     ///   Options passed directly to the 'listDatabases' command.
     ///
-    /// @return A mongocxx::cursor containing a BSON document for each
+    /// @return A mongocxx::v_noabi::cursor containing a BSON document for each
     ///   database. Each document contains a name field with the database
     ///   name, a sizeOnDisk field with the total size of the database file on
     ///   disk in bytes, and an empty field specifying whether the database
     ///   has any data.
     ///
-    /// @throws mongocxx::operation_exception if the underlying 'listDatabases' command fails.
+    /// @throws mongocxx::v_noabi::operation_exception if the underlying 'listDatabases' command
+    /// fails.
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/listDatabases
     ///
     cursor list_databases(const client_session& session,
-                          const bsoncxx::document::view_or_value opts) const;
+                          const bsoncxx::v_noabi::document::view_or_value opts) const;
 
     ///
     /// Queries the MongoDB server for a list of known databases.
@@ -295,32 +303,33 @@ class client {
     ///
     /// @return std::vector<std::string> containing the database names.
     ///
-    /// @throws mongocxx::operation_exception if the underlying 'listDatabases'
+    /// @throws mongocxx::v_noabi::operation_exception if the underlying 'listDatabases'
     /// command fails.
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/listDatabases
     ///
     std::vector<std::string> list_database_names(
-        const bsoncxx::document::view_or_value filter = {}) const;
+        const bsoncxx::v_noabi::document::view_or_value filter = {}) const;
 
     ///
     /// Queries the MongoDB server for a list of known databases.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the aggregation.
+    ///   The mongocxx::v_noabi::client_session with which to perform the aggregation.
     ///
     /// @param filter
     ///   An optional query expression to filter the returned database names.
     ///
     /// @return std::vector<std::string> containing the database names.
     ///
-    /// @throws mongocxx::operation_exception if the underlying 'listDatabases'
+    /// @throws mongocxx::v_noabi::operation_exception if the underlying 'listDatabases'
     /// command fails.
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/listDatabases
     ///
     std::vector<std::string> list_database_names(
-        const client_session& session, const bsoncxx::document::view_or_value filter = {}) const;
+        const client_session& session,
+        const bsoncxx::v_noabi::document::view_or_value filter = {}) const;
 
     ///
     /// @}
@@ -329,11 +338,12 @@ class client {
     ///
     /// Create a client session for a sequence of operations.
     ///
-    /// @return A client_session object. See `mongocxx::client_session` for more information.
+    /// @return A client_session object. See `mongocxx::v_noabi::client_session` for more
+    /// information.
     ///
-    /// @throws mongocxx::operation_exception if the driver is not built with crypto support, if
-    /// options is misconfigured, or if the session is configured with options that the server does
-    /// not support.
+    /// @throws mongocxx::v_noabi::operation_exception if the driver is not built with crypto
+    /// support, if options is misconfigured, or if the session is configured with options that the
+    /// server does not support.
     ///
     client_session start_session(const options::client_session& options = {});
 
@@ -355,7 +365,7 @@ class client {
 
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the watch operation.
+    ///   The mongocxx::v_noabi::client_session with which to perform the watch operation.
     /// @param options
     ///   The options to use when creating the change stream.
     ///
@@ -388,7 +398,7 @@ class client {
     /// Gets a change stream on this client.
     ///
     /// @param session
-    ///   The mongocxx::client_session with which to perform the watch operation.
+    ///   The mongocxx::v_noabi::client_session with which to perform the watch operation.
     /// @param pipe
     ///   The aggregation pipeline to be used on the change notifications.
     /// @param options
@@ -446,7 +456,8 @@ class client {
     std::unique_ptr<impl> _impl;
 };
 
-MONGOCXX_INLINE mongocxx::database client::operator[](bsoncxx::string::view_or_value name) const& {
+MONGOCXX_INLINE mongocxx::v_noabi::database client::operator[](
+    bsoncxx::v_noabi::string::view_or_value name) const& {
     return database(name);
 }
 
