@@ -30,7 +30,8 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
+
 ///
 /// Class representing a pointer to the result set of a query on a MongoDB server.
 ///
@@ -71,7 +72,7 @@ class cursor {
     ///
     /// @return the cursor::iterator
     ///
-    /// @throws mongocxx::query_exception if the query failed
+    /// @throws mongocxx::v_noabi::query_exception if the query failed
     ///
     iterator begin();
 
@@ -93,8 +94,9 @@ class cursor {
 
     friend ::mongocxx::v_noabi::cursor::iterator;
 
-    MONGOCXX_PRIVATE cursor(void* cursor_ptr,
-                            bsoncxx::stdx::optional<type> cursor_type = bsoncxx::stdx::nullopt);
+    MONGOCXX_PRIVATE cursor(
+        void* cursor_ptr,
+        bsoncxx::v_noabi::stdx::optional<type> cursor_type = bsoncxx::v_noabi::stdx::nullopt);
 
     class MONGOCXX_PRIVATE impl;
     std::unique_ptr<impl> _impl;
@@ -104,14 +106,14 @@ class cursor {
 /// Class representing an input iterator of documents in a MongoDB cursor
 /// result set.
 ///
-/// All non-end iterators derived from the same mongocxx::cursor move in
+/// All non-end iterators derived from the same mongocxx::v_noabi::cursor move in
 /// lock-step.  Dereferencing any non-end() iterator always gives the first
 /// remaining document in the cursor.  Incrementing one non-end iterator is
 /// equivalent to incrementing them all.
 ///
 /// An iterator is 'exhausted' when no documents are available. An
 /// end-iterator is always exhausted. A non-end iterator is exhausted when the
-/// originating mongocxx::cursor has no more documents.  When an iterator is
+/// originating mongocxx::v_noabi::cursor has no more documents.  When an iterator is
 /// exhausted, it must not be dereferenced or incremented.
 ///
 /// For iterators of a tailable cursor, calling cursor.begin() may revive an
@@ -123,33 +125,33 @@ class cursor::iterator {
     ///
     /// std::iterator_traits
     ///
-    using value_type = bsoncxx::document::view;
-    using reference = bsoncxx::document::view&;
-    using pointer = bsoncxx::document::view*;
+    using value_type = bsoncxx::v_noabi::document::view;
+    using reference = bsoncxx::v_noabi::document::view&;
+    using pointer = bsoncxx::v_noabi::document::view*;
     using iterator_category = std::input_iterator_tag;
     using difference_type = std::ptrdiff_t;
 
     ///
     /// Dereferences the view for the document currently being pointed to.
     ///
-    const bsoncxx::document::view& operator*() const;
+    const bsoncxx::v_noabi::document::view& operator*() const;
 
     ///
     /// Accesses a member of the dereferenced document currently being pointed to.
     ///
-    const bsoncxx::document::view* operator->() const;
+    const bsoncxx::v_noabi::document::view* operator->() const;
 
     ///
     /// Pre-increments the iterator to move to the next document.
     ///
-    /// @throws mongocxx::query_exception if the query failed
+    /// @throws mongocxx::v_noabi::query_exception if the query failed
     ///
     iterator& operator++();
 
     ///
     /// Post-increments the iterator to move to the next document.
     ///
-    /// @throws mongocxx::query_exception if the query failed
+    /// @throws mongocxx::v_noabi::query_exception if the query failed
     ///
     void operator++(int);
 

@@ -18,14 +18,14 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace events {
 
 heartbeat_started_event::heartbeat_started_event(const void* event) : _started_event(event) {}
 
 heartbeat_started_event::~heartbeat_started_event() = default;
 
-bsoncxx::stdx::string_view heartbeat_started_event::host() const {
+bsoncxx::v_noabi::stdx::string_view heartbeat_started_event::host() const {
     auto casted = static_cast<const mongoc_apm_server_heartbeat_started_t*>(_started_event);
     return libmongoc::apm_server_heartbeat_started_get_host(casted)->host;
 }

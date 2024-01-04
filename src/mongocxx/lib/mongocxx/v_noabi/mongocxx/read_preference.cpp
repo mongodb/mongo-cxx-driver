@@ -25,7 +25,8 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
+
 read_preference::read_preference(read_preference&&) noexcept = default;
 read_preference& read_preference::operator=(read_preference&&) noexcept = default;
 
@@ -52,11 +53,11 @@ read_preference::read_preference(read_mode mode, deprecated_tag)
     : _impl(stdx::make_unique<impl>(
           libmongoc::read_prefs_new(libmongoc::conversions::read_mode_t_from_read_mode(mode)))) {}
 
-read_preference::read_preference(read_mode mode, bsoncxx::document::view_or_value tags)
+read_preference::read_preference(read_mode mode, bsoncxx::v_noabi::document::view_or_value tags)
     : read_preference(mode, std::move(tags), deprecated_tag{}) {}
 
 read_preference::read_preference(read_mode mode,
-                                 bsoncxx::document::view_or_value tags,
+                                 bsoncxx::v_noabi::document::view_or_value tags,
                                  deprecated_tag)
     : read_preference(mode, deprecated_tag{}) {
     read_preference::tags(std::move(tags));
@@ -71,15 +72,15 @@ read_preference& read_preference::mode(read_mode mode) {
     return *this;
 }
 
-read_preference& read_preference::tags(bsoncxx::document::view_or_value tag_set_list) {
+read_preference& read_preference::tags(bsoncxx::v_noabi::document::view_or_value tag_set_list) {
     libbson::scoped_bson_t scoped_bson_tags(std::move(tag_set_list));
     libmongoc::read_prefs_set_tags(_impl->read_preference_t, scoped_bson_tags.bson());
 
     return *this;
 }
 
-read_preference& read_preference::tags(bsoncxx::array::view_or_value tag_set_list) {
-    libbson::scoped_bson_t scoped_bson_tags(bsoncxx::document::view(tag_set_list.view()));
+read_preference& read_preference::tags(bsoncxx::v_noabi::array::view_or_value tag_set_list) {
+    libbson::scoped_bson_t scoped_bson_tags(bsoncxx::v_noabi::document::view(tag_set_list.view()));
     libmongoc::read_prefs_set_tags(_impl->read_preference_t, scoped_bson_tags.bson());
 
     return *this;
@@ -90,13 +91,13 @@ read_preference::read_mode read_preference::mode() const {
         libmongoc::read_prefs_get_mode(_impl->read_preference_t));
 }
 
-stdx::optional<bsoncxx::document::view> read_preference::tags() const {
+stdx::optional<bsoncxx::v_noabi::document::view> read_preference::tags() const {
     const bson_t* bson_tags = libmongoc::read_prefs_get_tags(_impl->read_preference_t);
 
     if (bson_count_keys(bson_tags))
-        return bsoncxx::document::view(bson_get_data(bson_tags), bson_tags->len);
+        return bsoncxx::v_noabi::document::view(bson_get_data(bson_tags), bson_tags->len);
 
-    return stdx::optional<bsoncxx::document::view>{};
+    return stdx::optional<bsoncxx::v_noabi::document::view>{};
 }
 
 read_preference& read_preference::max_staleness(std::chrono::seconds max_staleness) {
@@ -120,21 +121,21 @@ stdx::optional<std::chrono::seconds> read_preference::max_staleness() const {
     return std::chrono::seconds{staleness};
 }
 
-read_preference& read_preference::hedge(bsoncxx::document::view_or_value hedge) {
+read_preference& read_preference::hedge(bsoncxx::v_noabi::document::view_or_value hedge) {
     libbson::scoped_bson_t hedge_bson{std::move(hedge)};
 
     libmongoc::read_prefs_set_hedge(_impl->read_preference_t, hedge_bson.bson());
     return *this;
 }
 
-const stdx::optional<bsoncxx::document::view> read_preference::hedge() const {
+const stdx::optional<bsoncxx::v_noabi::document::view> read_preference::hedge() const {
     const bson_t* hedge_bson = libmongoc::read_prefs_get_hedge(_impl->read_preference_t);
 
     if (!bson_empty(hedge_bson)) {
-        return bsoncxx::document::view(bson_get_data(hedge_bson), hedge_bson->len);
+        return bsoncxx::v_noabi::document::view(bson_get_data(hedge_bson), hedge_bson->len);
     }
 
-    return stdx::optional<bsoncxx::document::view>{};
+    return stdx::optional<bsoncxx::v_noabi::document::view>{};
 }
 
 bool MONGOCXX_CALL operator==(const read_preference& lhs, const read_preference& rhs) {

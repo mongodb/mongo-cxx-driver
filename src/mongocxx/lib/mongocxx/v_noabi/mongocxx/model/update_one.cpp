@@ -18,43 +18,43 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace model {
 
-update_one::update_one(bsoncxx::document::view_or_value filter,
-                       bsoncxx::document::view_or_value update)
+update_one::update_one(bsoncxx::v_noabi::document::view_or_value filter,
+                       bsoncxx::v_noabi::document::view_or_value update)
     : _filter(std::move(filter)), _update(std::move(update)) {}
 
-update_one::update_one(bsoncxx::document::view_or_value filter, const pipeline& update)
-    : _filter(std::move(filter)), _update(bsoncxx::document::value(update.view_array())) {}
+update_one::update_one(bsoncxx::v_noabi::document::view_or_value filter, const pipeline& update)
+    : _filter(std::move(filter)), _update(bsoncxx::v_noabi::document::value(update.view_array())) {}
 
-update_one::update_one(bsoncxx::document::view_or_value filter,
+update_one::update_one(bsoncxx::v_noabi::document::view_or_value filter,
                        std::initializer_list<_empty_doc_tag>)
     : _filter(std::move(filter)), _update() {}
 
-const bsoncxx::document::view_or_value& update_one::filter() const {
+const bsoncxx::v_noabi::document::view_or_value& update_one::filter() const {
     return _filter;
 }
 
-const bsoncxx::document::view_or_value& update_one::update() const {
+const bsoncxx::v_noabi::document::view_or_value& update_one::update() const {
     return _update;
 }
 
-update_one& update_one::collation(bsoncxx::document::view_or_value collation) {
+update_one& update_one::collation(bsoncxx::v_noabi::document::view_or_value collation) {
     _collation = collation;
     return *this;
 }
 
-const stdx::optional<bsoncxx::document::view_or_value>& update_one::collation() const {
+const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& update_one::collation() const {
     return _collation;
 }
 
-update_one& update_one::hint(mongocxx::hint index_hint) {
+update_one& update_one::hint(mongocxx::v_noabi::hint index_hint) {
     _hint = std::move(index_hint);
     return *this;
 }
 
-const stdx::optional<mongocxx::hint>& update_one::hint() const {
+const stdx::optional<mongocxx::v_noabi::hint>& update_one::hint() const {
     return _hint;
 }
 
@@ -67,12 +67,12 @@ const stdx::optional<bool>& update_one::upsert() const {
     return _upsert;
 }
 
-update_one& update_one::array_filters(bsoncxx::array::view_or_value array_filters) {
+update_one& update_one::array_filters(bsoncxx::v_noabi::array::view_or_value array_filters) {
     _array_filters = std::move(array_filters);
     return *this;
 }
 
-const stdx::optional<bsoncxx::array::view_or_value>& update_one::array_filters() const {
+const stdx::optional<bsoncxx::v_noabi::array::view_or_value>& update_one::array_filters() const {
     return _array_filters;
 }
 

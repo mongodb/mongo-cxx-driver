@@ -17,13 +17,21 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace options {
 
 class MONGOCXX_API client_encryption;
 
 }  // namespace options
 }  // namespace v_noabi
+}  // namespace mongocxx
+
+namespace mongocxx {
+namespace options {
+
+using ::mongocxx::v_noabi::options::client_encryption;
+
+}  // namespace options
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

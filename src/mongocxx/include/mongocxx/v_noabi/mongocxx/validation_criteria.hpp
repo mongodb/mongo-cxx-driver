@@ -23,7 +23,8 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
+
 ///
 /// Class representing criteria for document validation, to be applied to a collection.
 ///
@@ -41,7 +42,7 @@ class validation_criteria {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    validation_criteria& rule(bsoncxx::document::view_or_value rule);
+    validation_criteria& rule(bsoncxx::v_noabi::document::view_or_value rule);
 
     ///
     /// Gets the validation rule for this validation object.
@@ -49,7 +50,7 @@ class validation_criteria {
     /// @return
     ///   Document representing a validation rule.
     ///
-    const stdx::optional<bsoncxx::document::view_or_value>& rule() const;
+    const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& rule() const;
 
     ///
     /// A class to represent the different validation level options.
@@ -127,18 +128,18 @@ class validation_criteria {
     ///
     /// @return Validation criteria, as a document.
     ///
-    MONGOCXX_DEPRECATED bsoncxx::document::value to_document() const;
-    bsoncxx::document::value to_document_deprecated() const;
+    MONGOCXX_DEPRECATED bsoncxx::v_noabi::document::value to_document() const;
+    bsoncxx::v_noabi::document::value to_document_deprecated() const;
 
     ///
     /// @deprecated
     ///   This method is deprecated. To determine which options are set on this object, use the
     ///   provided accessors instead.
     ///
-    MONGOCXX_DEPRECATED MONGOCXX_INLINE operator bsoncxx::document::value() const;
+    MONGOCXX_DEPRECATED MONGOCXX_INLINE operator bsoncxx::v_noabi::document::value() const;
 
    private:
-    stdx::optional<bsoncxx::document::view_or_value> _rule;
+    stdx::optional<bsoncxx::v_noabi::document::view_or_value> _rule;
     stdx::optional<validation_level> _level;
     stdx::optional<validation_action> _action;
 };
@@ -148,11 +149,18 @@ MONGOCXX_API bool MONGOCXX_CALL operator==(const validation_criteria& lhs,
 MONGOCXX_API bool MONGOCXX_CALL operator!=(const validation_criteria& lhs,
                                            const validation_criteria& rhs);
 
-MONGOCXX_INLINE validation_criteria::operator bsoncxx::document::value() const {
+MONGOCXX_INLINE validation_criteria::operator bsoncxx::v_noabi::document::value() const {
     return to_document_deprecated();
 }
 
 }  // namespace v_noabi
+}  // namespace mongocxx
+
+namespace mongocxx {
+
+using ::mongocxx::v_noabi::operator==;
+using ::mongocxx::v_noabi::operator!=;
+
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

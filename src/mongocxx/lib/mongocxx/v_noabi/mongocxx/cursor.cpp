@@ -23,8 +23,9 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
-cursor::cursor(void* cursor_ptr, bsoncxx::stdx::optional<cursor::type> cursor_type)
+namespace v_noabi {
+
+cursor::cursor(void* cursor_ptr, bsoncxx::v_noabi::stdx::optional<cursor::type> cursor_type)
     : _impl(stdx::make_unique<impl>(static_cast<mongoc_cursor_t*>(cursor_ptr), cursor_type)) {}
 
 cursor::cursor(cursor&&) noexcept = default;
@@ -42,13 +43,13 @@ cursor::iterator& cursor::iterator::operator++() {
     bson_error_t error;
 
     if (libmongoc::cursor_next(_cursor->_impl->cursor_t, &out)) {
-        _cursor->_impl->doc = bsoncxx::document::view{bson_get_data(out), out->len};
+        _cursor->_impl->doc = bsoncxx::v_noabi::document::view{bson_get_data(out), out->len};
     } else if (libmongoc::cursor_error_document(
                    _cursor->_impl->cursor_t, &error, &error_document)) {
         _cursor->_impl->mark_dead();
         if (error_document) {
-            bsoncxx::document::value error_doc{
-                bsoncxx::document::view{bson_get_data(error_document), error_document->len}};
+            bsoncxx::v_noabi::document::value error_doc{bsoncxx::v_noabi::document::view{
+                bson_get_data(error_document), error_document->len}};
             throw_exception<query_exception>(error_doc, error);
         } else {
             throw_exception<query_exception>(error);
@@ -87,11 +88,11 @@ bool cursor::iterator::is_exhausted() const {
     return !_cursor || _cursor->_impl->is_exhausted();
 }
 
-const bsoncxx::document::view& cursor::iterator::operator*() const {
+const bsoncxx::v_noabi::document::view& cursor::iterator::operator*() const {
     return _cursor->_impl->doc;
 }
 
-const bsoncxx::document::view* cursor::iterator::operator->() const {
+const bsoncxx::v_noabi::document::view* cursor::iterator::operator->() const {
     return &_cursor->_impl->doc;
 }
 

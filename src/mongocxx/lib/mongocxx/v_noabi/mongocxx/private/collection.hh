@@ -27,12 +27,13 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
+
 class collection::impl {
    public:
     impl(mongoc_collection_t* collection,
          stdx::string_view database_name,
-         const mongocxx::client::impl* client)
+         const mongocxx::v_noabi::client::impl* client)
         : collection_t(collection), database_name(std::move(database_name)), client_impl(client) {}
 
     impl(const impl& i)
@@ -58,7 +59,7 @@ class collection::impl {
 
     mongoc_collection_t* collection_t;
     std::string database_name;
-    const mongocxx::client::impl* client_impl;
+    const mongocxx::v_noabi::client::impl* client_impl;
 };
 
 }  // namespace v_noabi

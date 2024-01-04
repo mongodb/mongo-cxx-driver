@@ -17,7 +17,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace options {
 
 client& client::tls_opts(tls tls_opts) {

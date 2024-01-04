@@ -26,7 +26,6 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
 namespace spec {
 
 using namespace bsoncxx;
@@ -85,6 +84,6 @@ class operation_runner {
 };
 
 }  // namespace spec
-}  // namespace v_noabi
 }  // namespace mongocxx
+
 #include <mongocxx/config/private/postlude.hh>

@@ -27,7 +27,8 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
+
 ///
 /// Class representing a MongoDB change stream.
 ///
@@ -69,7 +70,7 @@ class change_stream {
     /// @return
     ///   The change_stream::iterator
     /// @exception
-    ///   Throws mongocxx::query_exception if the query failed.
+    ///   Throws mongocxx::v_noabi::query_exception if the query failed.
     ///
     iterator begin() const;
 
@@ -105,7 +106,7 @@ class change_stream {
     /// @return
     ///   The token.
     ///
-    bsoncxx::stdx::optional<bsoncxx::document::view> get_resume_token() const;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> get_resume_token() const;
 
    private:
     friend ::mongocxx::v_noabi::client;
@@ -127,7 +128,7 @@ class change_stream::iterator {
    public:
     // Support input-iterator (caveat of post-increment returning void)
     using difference_type = std::int64_t;
-    using value_type = const bsoncxx::document::view;
+    using value_type = const bsoncxx::v_noabi::document::view;
     using pointer = std::add_pointer<value_type>::type;
     using reference = std::add_lvalue_reference<value_type>::type;
     using iterator_category = std::input_iterator_tag;
@@ -145,7 +146,7 @@ class change_stream::iterator {
     /// The returned document::view is valid until the iterator is incremented. The value may be
     /// copied to extend its lifetime.
     ///
-    const bsoncxx::document::view& operator*() const;
+    const bsoncxx::v_noabi::document::view& operator*() const;
 
     ///
     /// Accesses a member of the dereferenced document currently being pointed to.
@@ -153,7 +154,7 @@ class change_stream::iterator {
     /// The returned document::view is valid until the iterator is incremented. The value may be
     /// copied to extend its lifetime.
     ///
-    const bsoncxx::document::view* operator->() const;
+    const bsoncxx::v_noabi::document::view* operator->() const;
 
     ///
     /// Pre-increments the iterator to move to the next document.
@@ -166,7 +167,7 @@ class change_stream::iterator {
     /// If no notification is available, callers may call change_stream::begin() to check for more
     /// notifications.
     ///
-    /// @throws mongocxx::query_exception if the query failed
+    /// @throws mongocxx::v_noabi::query_exception if the query failed
     ///
     iterator& operator++();
 
@@ -181,7 +182,7 @@ class change_stream::iterator {
     /// If no notification is available, callers may call change_stream::begin() to check for more
     /// notifications.
     ///
-    /// @throws mongocxx::query_exception if the query failed
+    /// @throws mongocxx::v_noabi::query_exception if the query failed
     ///
     void operator++(int);
 

@@ -29,7 +29,8 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
+
 ///
 /// A pool of @c client objects associated with a MongoDB deployment.
 ///
@@ -55,9 +56,10 @@ class pool {
     /// @param options
     ///  Options to use when connecting to the MongoDB deployment.
     ///
-    /// @throws mongocxx::exception if invalid options are provided (whether from the URI or
+    /// @throws mongocxx::v_noabi::exception if invalid options are provided (whether from the URI
+    /// or
     ///  provided client options).
-    explicit pool(const uri& mongodb_uri = mongocxx::uri(),
+    explicit pool(const uri& mongodb_uri = mongocxx::v_noabi::uri(),
                   const options::pool& options = options::pool());
 
     ///

@@ -25,11 +25,12 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace options {
 
 ///
-/// Class representing the optional arguments to mongocxx::collection::estimated_document_count
+/// Class representing the optional arguments to
+/// mongocxx::v_noabi::collection::estimated_document_count
 ///
 class estimated_document_count {
    public:
@@ -54,7 +55,7 @@ class estimated_document_count {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/count/
     ///
-    const bsoncxx::stdx::optional<std::chrono::milliseconds>& max_time() const;
+    const bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds>& max_time() const;
 
     ///
     /// Sets the comment for this operation.
@@ -68,7 +69,7 @@ class estimated_document_count {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/count/
     ///
-    estimated_document_count& comment(bsoncxx::types::bson_value::view_or_value comment);
+    estimated_document_count& comment(bsoncxx::v_noabi::types::bson_value::view_or_value comment);
 
     ///
     /// The current comment for this operation.
@@ -77,7 +78,8 @@ class estimated_document_count {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/count/
     ///
-    const bsoncxx::stdx::optional<bsoncxx::types::bson_value::view_or_value>& comment() const;
+    const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>&
+    comment() const;
 
     ///
     /// Sets the read_preference for this operation.
@@ -91,7 +93,7 @@ class estimated_document_count {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/count/
     ///
-    estimated_document_count& read_preference(mongocxx::read_preference rp);
+    estimated_document_count& read_preference(mongocxx::v_noabi::read_preference rp);
 
     ///
     /// The current read_preference for this operation.
@@ -100,12 +102,13 @@ class estimated_document_count {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/count/
     ///
-    const bsoncxx::stdx::optional<mongocxx::read_preference>& read_preference() const;
+    const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_preference>& read_preference()
+        const;
 
    private:
-    bsoncxx::stdx::optional<std::chrono::milliseconds> _max_time;
-    bsoncxx::stdx::optional<bsoncxx::types::bson_value::view_or_value> _comment;
-    bsoncxx::stdx::optional<mongocxx::read_preference> _read_preference;
+    bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds> _max_time;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> _comment;
+    bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_preference> _read_preference;
 };
 
 }  // namespace options

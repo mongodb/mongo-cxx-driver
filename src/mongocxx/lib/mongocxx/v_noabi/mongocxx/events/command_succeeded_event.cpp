@@ -20,20 +20,20 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace events {
 
 command_succeeded_event::command_succeeded_event(const void* event) : _succeeded_event(event) {}
 
 command_succeeded_event::~command_succeeded_event() = default;
 
-bsoncxx::document::view command_succeeded_event::reply() const {
+bsoncxx::v_noabi::document::view command_succeeded_event::reply() const {
     auto reply = libmongoc::apm_command_succeeded_get_reply(
         static_cast<const mongoc_apm_command_succeeded_t*>(_succeeded_event));
     return {bson_get_data(reply), reply->len};
 }
 
-bsoncxx::stdx::string_view command_succeeded_event::command_name() const {
+bsoncxx::v_noabi::stdx::string_view command_succeeded_event::command_name() const {
     return libmongoc::apm_command_succeeded_get_command_name(
         static_cast<const mongoc_apm_command_succeeded_t*>(_succeeded_event));
 }
@@ -53,17 +53,18 @@ std::int64_t command_succeeded_event::operation_id() const {
         static_cast<const mongoc_apm_command_succeeded_t*>(_succeeded_event));
 }
 
-bsoncxx::stdx::optional<bsoncxx::oid> command_succeeded_event::service_id() const {
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::oid> command_succeeded_event::service_id()
+    const {
     const bson_oid_t* bson_oid = libmongoc::apm_command_succeeded_get_service_id(
         static_cast<const mongoc_apm_command_succeeded_t*>(_succeeded_event));
 
     if (nullptr == bson_oid)
-        return {bsoncxx::stdx::nullopt};
+        return {bsoncxx::v_noabi::stdx::nullopt};
 
     return {bsoncxx::helpers::make_oid(bson_oid)};
 }
 
-bsoncxx::stdx::string_view command_succeeded_event::host() const {
+bsoncxx::v_noabi::stdx::string_view command_succeeded_event::host() const {
     return libmongoc::apm_command_succeeded_get_host(
                static_cast<const mongoc_apm_command_succeeded_t*>(_succeeded_event))
         ->host;

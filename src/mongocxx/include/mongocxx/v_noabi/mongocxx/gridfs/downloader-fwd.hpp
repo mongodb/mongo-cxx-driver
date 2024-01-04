@@ -17,7 +17,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace gridfs {
 
 struct chunks_and_bytes_offset;
@@ -26,6 +26,16 @@ class MONGOCXX_API downloader;
 
 }  // namespace gridfs
 }  // namespace v_noabi
+}  // namespace mongocxx
+
+namespace mongocxx {
+namespace gridfs {
+
+using ::mongocxx::v_noabi::gridfs::chunks_and_bytes_offset;
+
+using ::mongocxx::v_noabi::gridfs::downloader;
+
+}  // namespace gridfs
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

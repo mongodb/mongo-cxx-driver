@@ -18,10 +18,10 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace result {
 
-insert_many::insert_many(result::bulk_write result, bsoncxx::array::value inserted_ids)
+insert_many::insert_many(result::bulk_write result, bsoncxx::v_noabi::array::value inserted_ids)
     : _result(std::move(result)), _inserted_ids_owned(std::move(inserted_ids)) {
     _buildInsertedIds();
 }

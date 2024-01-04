@@ -17,51 +17,51 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace options {
 
-tls& tls::pem_file(bsoncxx::string::view_or_value pem_file) {
+tls& tls::pem_file(bsoncxx::v_noabi::string::view_or_value pem_file) {
     _pem_file = std::move(pem_file);
     return *this;
 }
 
-const stdx::optional<bsoncxx::string::view_or_value>& tls::pem_file() const {
+const stdx::optional<bsoncxx::v_noabi::string::view_or_value>& tls::pem_file() const {
     return _pem_file;
 }
 
-tls& tls::pem_password(bsoncxx::string::view_or_value pem_password) {
+tls& tls::pem_password(bsoncxx::v_noabi::string::view_or_value pem_password) {
     _pem_password = std::move(pem_password);
     return *this;
 }
 
-const stdx::optional<bsoncxx::string::view_or_value>& tls::pem_password() const {
+const stdx::optional<bsoncxx::v_noabi::string::view_or_value>& tls::pem_password() const {
     return _pem_password;
 }
 
-tls& tls::ca_file(bsoncxx::string::view_or_value ca_file) {
+tls& tls::ca_file(bsoncxx::v_noabi::string::view_or_value ca_file) {
     _ca_file = std::move(ca_file);
     return *this;
 }
 
-const stdx::optional<bsoncxx::string::view_or_value>& tls::ca_file() const {
+const stdx::optional<bsoncxx::v_noabi::string::view_or_value>& tls::ca_file() const {
     return _ca_file;
 }
 
-tls& tls::ca_dir(bsoncxx::string::view_or_value ca_dir) {
+tls& tls::ca_dir(bsoncxx::v_noabi::string::view_or_value ca_dir) {
     _ca_dir = std::move(ca_dir);
     return *this;
 }
 
-const stdx::optional<bsoncxx::string::view_or_value>& tls::ca_dir() const {
+const stdx::optional<bsoncxx::v_noabi::string::view_or_value>& tls::ca_dir() const {
     return _ca_dir;
 }
 
-tls& tls::crl_file(bsoncxx::string::view_or_value crl_file) {
+tls& tls::crl_file(bsoncxx::v_noabi::string::view_or_value crl_file) {
     _crl_file = std::move(crl_file);
     return *this;
 }
 
-const stdx::optional<bsoncxx::string::view_or_value>& tls::crl_file() const {
+const stdx::optional<bsoncxx::v_noabi::string::view_or_value>& tls::crl_file() const {
     return _crl_file;
 }
 

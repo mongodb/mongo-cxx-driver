@@ -32,7 +32,8 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
+
 ///
 /// A class to represent the read concern. Read concern can be set at the client, database, or
 /// collection level. The read concern can also be provided via connection string, and will be
@@ -110,7 +111,7 @@ class read_concern {
     ///   Either k_local, k_majority, k_linearizable, or k_server_default.
     ///
     /// @throws
-    ///   mongocxx::exception if rc_level is not k_local, k_majority, k_linearizable, or
+    ///   mongocxx::v_noabi::exception if rc_level is not k_local, k_majority, k_linearizable, or
     ///   k_server_default.
     ///
     void acknowledge_level(level rc_level);
@@ -152,7 +153,7 @@ class read_concern {
     /// @return
     ///   Document representation of this read_concern.
     ///
-    bsoncxx::document::value to_document() const;
+    bsoncxx::v_noabi::document::value to_document() const;
 
    private:
     friend ::mongocxx::v_noabi::client;

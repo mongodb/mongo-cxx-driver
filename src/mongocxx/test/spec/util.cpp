@@ -45,7 +45,6 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
 namespace spec {
 
 using namespace bsoncxx;
@@ -1137,7 +1136,6 @@ void run_crud_tests_in_file(const std::string& test_path, uri test_uri) {
 }
 
 }  // namespace spec
-}  // namespace v_noabi
 }  // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

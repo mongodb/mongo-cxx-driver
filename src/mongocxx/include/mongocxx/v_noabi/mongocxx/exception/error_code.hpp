@@ -22,21 +22,22 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
+
 ///
 /// Enum representing the various error types that can occur during driver usage.
 ///
 enum class error_code : std::int32_t {
-    /// More than one mongocxx::instance has been created.
+    /// More than one mongocxx::v_noabi::instance has been created.
     k_cannot_recreate_instance = 1,
 
-    /// A default-constructed or moved-from mongocxx::client object has been used.
+    /// A default-constructed or moved-from mongocxx::v_noabi::client object has been used.
     k_invalid_client_object,
 
-    /// A default-constructed or moved-from mongocxx::collection object has been used.
+    /// A default-constructed or moved-from mongocxx::v_noabi::collection object has been used.
     k_invalid_collection_object,
 
-    /// A default-constructed or moved-from mongocxx::database object has been used.
+    /// A default-constructed or moved-from mongocxx::v_noabi::database object has been used.
     k_invalid_database_object,
 
     /// An invalid or out-of-bounds parameter was provided.
@@ -57,20 +58,23 @@ enum class error_code : std::int32_t {
     /// An invalid MongoDB URI was provided.
     k_invalid_uri,
 
-    /// A default-constructed or moved-from mongocxx::gridfs::bucket object has been used.
+    /// A default-constructed or moved-from mongocxx::v_noabi::gridfs::bucket object has been used.
     k_invalid_gridfs_bucket_object,
 
-    /// A default-constructed or moved-from mongocxx::gridfs::uploader object has been used.
+    /// A default-constructed or moved-from mongocxx::v_noabi::gridfs::uploader object has been
+    /// used.
     k_invalid_gridfs_uploader_object,
 
-    /// A default-constructed or moved-from mongocxx::gridfs::downloader object has been used.
+    /// A default-constructed or moved-from mongocxx::v_noabi::gridfs::downloader object has been
+    /// used.
     k_invalid_gridfs_downloader_object,
 
-    /// A mongocxx::gridfs::uploader object was not open for writing, or a
-    /// mongocxx::gridfs::downloader object was not open for reading.
+    /// A mongocxx::v_noabi::gridfs::uploader object was not open for writing, or a
+    /// mongocxx::v_noabi::gridfs::downloader object was not open for reading.
     k_gridfs_stream_not_open,
 
-    /// A mongocxx::gridfs::uploader object has exceeded the maximum number of allowable GridFS
+    /// A mongocxx::v_noabi::gridfs::uploader object has exceeded the maximum number of allowable
+    /// GridFS
     /// chunks when attempting to upload the requested file.
     k_gridfs_upload_requires_too_many_chunks,
 
@@ -80,25 +84,28 @@ enum class error_code : std::int32_t {
     /// A GridFS file being operated on was discovered to be corrupted.
     k_gridfs_file_corrupted,
 
-    /// The mongocxx::instance has been destroyed.
+    /// The mongocxx::v_noabi::instance has been destroyed.
     k_instance_destroyed,
 
-    /// mongocxx::client.create_session failed to create a mongocxx::client_session.
+    /// mongocxx::v_noabi::client.create_session failed to create a
+    /// mongocxx::v_noabi::client_session.
     k_cannot_create_session,
 
-    /// A failure attempting to pass a mongocxx::client_session to a method.
+    /// A failure attempting to pass a mongocxx::v_noabi::client_session to a method.
     k_invalid_session,
 
-    /// A moved-from mongocxx::options::transaction object has been used.
+    /// A moved-from mongocxx::v_noabi::options::transaction object has been used.
     k_invalid_transaction_options_object,
 
     // A resource (server API handle, etc.) could not be created:
     k_create_resource_fail,
 
-    // A default-constructed or moved-from mongocxx::search_index_model object has been used.
+    // A default-constructed or moved-from mongocxx::v_noabi::search_index_model object has been
+    // used.
     k_invalid_search_index_model,
 
-    // A default-constructed or moved-from mongocxx::search_index_view object has been used.
+    // A default-constructed or moved-from mongocxx::v_noabi::search_index_view object has been
+    // used.
     k_invalid_search_index_view,
 
     // Add new constant string message to error_code.cpp as well!
@@ -112,9 +119,9 @@ enum class error_code : std::int32_t {
 MONGOCXX_API const std::error_category& MONGOCXX_CALL error_category();
 
 ///
-/// Translate a mongocxx::error_code into a std::error_code.
+/// Translate a mongocxx::v_noabi::error_code into a std::error_code.
 ///
-/// @param error A mongocxx::error_code
+/// @param error A mongocxx::v_noabi::error_code
 ///
 /// @return A std::error_code
 ///
@@ -125,10 +132,19 @@ MONGOCXX_INLINE std::error_code make_error_code(error_code error) {
 }  // namespace v_noabi
 }  // namespace mongocxx
 
+namespace mongocxx {
+
+using ::mongocxx::v_noabi::error_category;
+using ::mongocxx::v_noabi::make_error_code;
+
+}  // namespace mongocxx
+
 #include <mongocxx/config/postlude.hpp>
 
 namespace std {
+
 // Specialize is_error_code_enum so we get simpler std::error_code construction
 template <>
-struct is_error_code_enum<mongocxx::error_code> : public true_type {};
+struct is_error_code_enum<::mongocxx::v_noabi::error_code> : std::true_type {};
+
 }  // namespace std

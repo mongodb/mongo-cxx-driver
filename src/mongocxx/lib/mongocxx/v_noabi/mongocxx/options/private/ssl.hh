@@ -22,14 +22,14 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace options {
 
 #if defined(MONGOCXX_ENABLE_SSL) && defined(MONGOC_ENABLE_SSL)
-inline std::pair<::mongoc_ssl_opt_t, std::list<bsoncxx::string::view_or_value>> make_tls_opts(
-    const tls& tls_opts) {
+inline std::pair<::mongoc_ssl_opt_t, std::list<bsoncxx::v_noabi::string::view_or_value>>
+make_tls_opts(const tls& tls_opts) {
     ::mongoc_ssl_opt_t out{};
-    std::list<bsoncxx::string::view_or_value> values;
+    std::list<bsoncxx::v_noabi::string::view_or_value> values;
 
     if (tls_opts.pem_file()) {
         out.pem_file = values.emplace(values.end(), tls_opts.pem_file()->terminated())->data();

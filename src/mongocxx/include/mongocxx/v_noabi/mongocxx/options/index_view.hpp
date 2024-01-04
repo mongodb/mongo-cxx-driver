@@ -24,7 +24,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace options {
 
 ///
@@ -58,7 +58,7 @@ class index_view {
     /// @see
     ///   https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    const bsoncxx::stdx::optional<std::chrono::milliseconds>& max_time() const;
+    const bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds>& max_time() const;
 
     ///
     /// Sets the write concern for this operation.
@@ -73,7 +73,7 @@ class index_view {
     /// @see
     ///   https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    index_view& write_concern(mongocxx::write_concern write_concern);
+    index_view& write_concern(mongocxx::v_noabi::write_concern write_concern);
 
     ///
     /// Gets the current write concern.
@@ -84,7 +84,7 @@ class index_view {
     /// @see
     ///   https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    const bsoncxx::stdx::optional<mongocxx::write_concern>& write_concern() const;
+    const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>& write_concern() const;
 
     ///
     /// Sets the commit quorum for this operation.
@@ -135,12 +135,12 @@ class index_view {
     /// @see
     ///   https://www.mongodb.com/docs/manual/reference/command/createIndexes
     ///
-    const stdx::optional<bsoncxx::document::value> commit_quorum() const;
+    const stdx::optional<bsoncxx::v_noabi::document::value> commit_quorum() const;
 
    private:
-    bsoncxx::stdx::optional<std::chrono::milliseconds> _max_time;
-    bsoncxx::stdx::optional<mongocxx::write_concern> _write_concern;
-    bsoncxx::stdx::optional<bsoncxx::document::value> _commit_quorum;
+    bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds> _max_time;
+    bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern> _write_concern;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> _commit_quorum;
 };
 
 }  // namespace options

@@ -20,7 +20,8 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
+
 class write_concern::impl {
    public:
     impl(mongoc_write_concern_t* write_concern) : write_concern_t(write_concern) {}

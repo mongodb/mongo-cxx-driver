@@ -22,7 +22,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace events {
 
 ///
@@ -42,11 +42,12 @@ class topology_changed_event {
     ~topology_changed_event();
 
     ///
-    /// An opaque id, unique to this topology for this mongocxx::client or mongocxx::pool.
+    /// An opaque id, unique to this topology for this mongocxx::v_noabi::client or
+    /// mongocxx::v_noabi::pool.
     ///
     /// @return The id.
     ///
-    bsoncxx::oid topology_id() const;
+    bsoncxx::v_noabi::oid topology_id() const;
 
     ///
     /// The server's description before it changed.

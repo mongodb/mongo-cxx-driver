@@ -31,7 +31,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace options {
 
 ///
@@ -50,7 +50,7 @@ class find_one_and_update {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    find_one_and_update& collation(bsoncxx::document::view_or_value collation);
+    find_one_and_update& collation(bsoncxx::v_noabi::document::view_or_value collation);
 
     ///
     /// Retrieves the current collation for this operation.
@@ -60,7 +60,7 @@ class find_one_and_update {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    const stdx::optional<bsoncxx::document::view_or_value>& collation() const;
+    const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& collation() const;
 
     ///
     /// Whether or not to bypass document validation for this operation.
@@ -103,14 +103,14 @@ class find_one_and_update {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    find_one_and_update& hint(mongocxx::hint index_hint);
+    find_one_and_update& hint(mongocxx::v_noabi::hint index_hint);
 
     ///
     /// Gets the current hint.
     ///
     /// @return The current hint, if one is set.
     ///
-    const stdx::optional<mongocxx::hint>& hint() const;
+    const stdx::optional<mongocxx::v_noabi::hint>& hint() const;
 
     ///
     /// Set the value of the let option.
@@ -122,7 +122,7 @@ class find_one_and_update {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    find_one_and_update& let(bsoncxx::document::view_or_value let);
+    find_one_and_update& let(bsoncxx::v_noabi::document::view_or_value let);
 
     ///
     /// Gets the current value of the let option.
@@ -130,7 +130,7 @@ class find_one_and_update {
     /// @return
     ///  The current let option.
     ///
-    const stdx::optional<bsoncxx::document::view_or_value> let() const;
+    const stdx::optional<bsoncxx::v_noabi::document::view_or_value> let() const;
 
     ///
     /// Set the value of the comment option.
@@ -142,7 +142,7 @@ class find_one_and_update {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    find_one_and_update& comment(bsoncxx::types::bson_value::view_or_value comment);
+    find_one_and_update& comment(bsoncxx::v_noabi::types::bson_value::view_or_value comment);
 
     ///
     /// Gets the current value of the comment option.
@@ -150,7 +150,7 @@ class find_one_and_update {
     /// @return
     ///  The current comment option.
     ///
-    const stdx::optional<bsoncxx::types::bson_value::view_or_value> comment() const;
+    const stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> comment() const;
 
     ///
     /// Sets the maximum amount of time for this operation to run (server-side) in milliseconds.
@@ -187,7 +187,7 @@ class find_one_and_update {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    find_one_and_update& projection(bsoncxx::document::view_or_value projection);
+    find_one_and_update& projection(bsoncxx::v_noabi::document::view_or_value projection);
 
     ///
     /// Gets the current projection for this operation.
@@ -196,7 +196,7 @@ class find_one_and_update {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    const stdx::optional<bsoncxx::document::view_or_value>& projection() const;
+    const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& projection() const;
 
     ///
     /// Set the desired version of the updated document to return, either the original
@@ -210,7 +210,7 @@ class find_one_and_update {
     ///   method chaining.
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/findAndModify/
-    /// @see mongocxx::options::return_document
+    /// @see mongocxx::v_noabi::options::return_document
     ///
     find_one_and_update& return_document(return_document return_document);
 
@@ -220,9 +220,9 @@ class find_one_and_update {
     /// @return Version of document to return, either original or updated.
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/findAndModify/
-    /// @see mongocxx::options::return_document
+    /// @see mongocxx::v_noabi::options::return_document
     ///
-    const stdx::optional<mongocxx::options::return_document>& return_document() const;
+    const stdx::optional<mongocxx::v_noabi::options::return_document>& return_document() const;
 
     ///
     /// Sets the order by which to search the collection for a matching document.
@@ -239,7 +239,7 @@ class find_one_and_update {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    find_one_and_update& sort(bsoncxx::document::view_or_value ordering);
+    find_one_and_update& sort(bsoncxx::v_noabi::document::view_or_value ordering);
 
     ///
     /// Gets the current sort ordering.
@@ -248,7 +248,7 @@ class find_one_and_update {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    const stdx::optional<bsoncxx::document::view_or_value>& sort() const;
+    const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& sort() const;
 
     ///
     /// Sets the upsert flag on the operation. When @c true, the operation creates a new document if
@@ -288,7 +288,7 @@ class find_one_and_update {
     /// @see
     ///   https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    find_one_and_update& write_concern(mongocxx::write_concern write_concern);
+    find_one_and_update& write_concern(mongocxx::v_noabi::write_concern write_concern);
 
     ///
     /// Gets the current write concern.
@@ -299,7 +299,7 @@ class find_one_and_update {
     /// @see
     ///   https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    const stdx::optional<mongocxx::write_concern>& write_concern() const;
+    const stdx::optional<mongocxx::v_noabi::write_concern>& write_concern() const;
 
     ///
     /// Set array filters for this operation.
@@ -313,7 +313,7 @@ class find_one_and_update {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    find_one_and_update& array_filters(bsoncxx::array::view_or_value array_filters);
+    find_one_and_update& array_filters(bsoncxx::v_noabi::array::view_or_value array_filters);
 
     ///
     /// Get array filters for this operation.
@@ -323,21 +323,21 @@ class find_one_and_update {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    const stdx::optional<bsoncxx::array::view_or_value>& array_filters() const;
+    const stdx::optional<bsoncxx::v_noabi::array::view_or_value>& array_filters() const;
 
    private:
     stdx::optional<bool> _bypass_document_validation;
-    stdx::optional<bsoncxx::document::view_or_value> _collation;
-    stdx::optional<mongocxx::hint> _hint;
-    stdx::optional<bsoncxx::document::view_or_value> _let;
-    stdx::optional<bsoncxx::types::bson_value::view_or_value> _comment;
+    stdx::optional<bsoncxx::v_noabi::document::view_or_value> _collation;
+    stdx::optional<mongocxx::v_noabi::hint> _hint;
+    stdx::optional<bsoncxx::v_noabi::document::view_or_value> _let;
+    stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> _comment;
     stdx::optional<std::chrono::milliseconds> _max_time;
-    stdx::optional<bsoncxx::document::view_or_value> _projection;
-    stdx::optional<mongocxx::options::return_document> _return_document;
-    stdx::optional<bsoncxx::document::view_or_value> _ordering;
+    stdx::optional<bsoncxx::v_noabi::document::view_or_value> _projection;
+    stdx::optional<mongocxx::v_noabi::options::return_document> _return_document;
+    stdx::optional<bsoncxx::v_noabi::document::view_or_value> _ordering;
     stdx::optional<bool> _upsert;
-    stdx::optional<mongocxx::write_concern> _write_concern;
-    stdx::optional<bsoncxx::array::view_or_value> _array_filters;
+    stdx::optional<mongocxx::v_noabi::write_concern> _write_concern;
+    stdx::optional<bsoncxx::v_noabi::array::view_or_value> _array_filters;
 };
 
 }  // namespace options

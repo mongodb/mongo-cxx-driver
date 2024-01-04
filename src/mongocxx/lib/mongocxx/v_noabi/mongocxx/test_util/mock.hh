@@ -31,7 +31,6 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
 namespace test_util {
 
 template <typename T>
@@ -189,7 +188,6 @@ class mock<R (*)(Args...)> {
 };
 
 }  // namespace test_util
-}  // namespace v_noabi
 }  // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

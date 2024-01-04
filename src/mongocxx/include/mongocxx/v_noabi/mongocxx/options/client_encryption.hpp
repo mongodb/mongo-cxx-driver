@@ -27,7 +27,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace options {
 
 ///
@@ -48,7 +48,7 @@ class client_encryption {
     ///
     /// @see https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
-    client_encryption& key_vault_client(mongocxx::client* client);
+    client_encryption& key_vault_client(mongocxx::v_noabi::client* client);
 
     ///
     /// Gets the key vault client.
@@ -56,7 +56,7 @@ class client_encryption {
     /// @return
     ///   An optional pointer to the key vault client.
     ///
-    const stdx::optional<mongocxx::client*>& key_vault_client() const;
+    const stdx::optional<mongocxx::v_noabi::client*>& key_vault_client() const;
 
     ///
     /// Sets the namespace to use to access the key vault collection, which
@@ -129,7 +129,7 @@ class client_encryption {
     ///
     /// @see https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
-    client_encryption& kms_providers(bsoncxx::document::view_or_value kms_providers);
+    client_encryption& kms_providers(bsoncxx::v_noabi::document::view_or_value kms_providers);
 
     ///
     /// Gets the KMS providers.
@@ -137,7 +137,7 @@ class client_encryption {
     /// @return
     ///   An optional document containing the KMS providers.
     ///
-    const stdx::optional<bsoncxx::document::view_or_value>& kms_providers() const;
+    const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& kms_providers() const;
 
     ///
     /// Sets the TLS options to use for client side encryption with a given KMS provider.
@@ -161,7 +161,7 @@ class client_encryption {
     ///
     /// @see https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
-    client_encryption& tls_opts(bsoncxx::document::view_or_value tls_opts);
+    client_encryption& tls_opts(bsoncxx::v_noabi::document::view_or_value tls_opts);
 
     ///
     /// Gets the TLS options.
@@ -169,17 +169,17 @@ class client_encryption {
     /// @return
     ///   An optional document containing the TLS options.
     ///
-    const stdx::optional<bsoncxx::document::view_or_value>& tls_opts() const;
+    const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& tls_opts() const;
 
    private:
     friend ::mongocxx::v_noabi::client_encryption;
 
     MONGOCXX_PRIVATE void* convert() const;
 
-    stdx::optional<mongocxx::client*> _key_vault_client;
+    stdx::optional<mongocxx::v_noabi::client*> _key_vault_client;
     stdx::optional<ns_pair> _key_vault_namespace;
-    stdx::optional<bsoncxx::document::view_or_value> _kms_providers;
-    stdx::optional<bsoncxx::document::view_or_value> _tls_opts;
+    stdx::optional<bsoncxx::v_noabi::document::view_or_value> _kms_providers;
+    stdx::optional<bsoncxx::v_noabi::document::view_or_value> _tls_opts;
 };
 
 }  // namespace options

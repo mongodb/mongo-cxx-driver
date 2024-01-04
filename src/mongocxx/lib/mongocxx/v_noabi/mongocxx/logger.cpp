@@ -17,7 +17,8 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
+
 stdx::string_view MONGOCXX_CALL to_string(log_level level) {
     switch (level) {
         case log_level::k_error:

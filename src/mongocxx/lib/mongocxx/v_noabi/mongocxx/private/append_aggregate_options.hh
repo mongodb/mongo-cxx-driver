@@ -6,10 +6,11 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
-MONGOCXX_INLINE void append_aggregate_options(bsoncxx::builder::basic::document& builder,
-                                              const options::aggregate& options) {
-    using bsoncxx::builder::basic::kvp;
+namespace v_noabi {
+
+inline void append_aggregate_options(bsoncxx::v_noabi::builder::basic::document& builder,
+                                     const options::aggregate& options) {
+    using bsoncxx::v_noabi::builder::basic::kvp;
 
     if (const auto& allow_disk_use = options.allow_disk_use()) {
         builder.append(kvp("allowDiskUse", *allow_disk_use));
@@ -24,7 +25,7 @@ MONGOCXX_INLINE void append_aggregate_options(bsoncxx::builder::basic::document&
     }
 
     if (const auto& max_time = options.max_time()) {
-        builder.append(kvp("maxTimeMS", bsoncxx::types::b_int64{max_time->count()}));
+        builder.append(kvp("maxTimeMS", bsoncxx::v_noabi::types::b_int64{max_time->count()}));
     }
 
     if (const auto& bypass_document_validation = options.bypass_document_validation()) {

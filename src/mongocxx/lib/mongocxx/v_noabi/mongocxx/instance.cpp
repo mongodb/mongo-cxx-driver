@@ -31,7 +31,8 @@
 #endif
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
+
 namespace {
 
 log_level convert_log_level(::mongoc_log_level_t mongoc_log_level) {

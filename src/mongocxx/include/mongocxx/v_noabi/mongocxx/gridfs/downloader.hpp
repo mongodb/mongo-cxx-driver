@@ -31,7 +31,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace gridfs {
 
 ///
@@ -92,11 +92,11 @@ class downloader {
     ///   The number of bytes actually read. If zero, the downloader has reached the end of the
     ///   file.
     ///
-    /// @throws mongocxx::logic_error if the download stream was already closed.
+    /// @throws mongocxx::v_noabi::logic_error if the download stream was already closed.
     ///
-    /// @throws mongocxx::gridfs_exception if the requested file has been corrupted.
+    /// @throws mongocxx::v_noabi::gridfs_exception if the requested file has been corrupted.
     ///
-    /// @throws mongocxx::query_exception
+    /// @throws mongocxx::v_noabi::query_exception
     ///   if an error occurs when reading chunk data from the database for the requested file.
     ///
     std::size_t read(std::uint8_t* buffer, std::size_t length);
@@ -104,7 +104,7 @@ class downloader {
     ///
     /// Closes the downloader stream.
     ///
-    /// @throws mongocxx::logic_error if the download stream was already closed.
+    /// @throws mongocxx::v_noabi::logic_error if the download stream was already closed.
     ///
     void close();
 
@@ -130,7 +130,7 @@ class downloader {
     /// @return
     ///    A view to the files collection document of the file being downloaded.
     ///
-    bsoncxx::document::view files_document() const;
+    bsoncxx::v_noabi::document::view files_document() const;
 
    private:
     friend ::mongocxx::v_noabi::gridfs::bucket;
@@ -158,7 +158,7 @@ class downloader {
                                 chunks_and_bytes_offset start,
                                 std::int32_t chunk_size,
                                 std::int64_t file_len,
-                                bsoncxx::document::value files_doc);
+                                bsoncxx::v_noabi::document::value files_doc);
 
     MONGOCXX_PRIVATE void fetch_chunk();
 

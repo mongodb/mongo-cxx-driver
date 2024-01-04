@@ -17,13 +17,21 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace model {
 
 class MONGOCXX_API update_many;
 
 }  // namespace model
 }  // namespace v_noabi
+}  // namespace mongocxx
+
+namespace mongocxx {
+namespace model {
+
+using ::mongocxx::v_noabi::model::update_many;
+
+}  // namespace model
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>

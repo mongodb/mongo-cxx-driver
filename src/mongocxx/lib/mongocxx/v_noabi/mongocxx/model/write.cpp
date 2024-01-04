@@ -19,7 +19,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace model {
 
 write::write(insert_one value) : _type(write_type::k_insert_one), _insert_one(std::move(value)) {

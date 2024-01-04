@@ -27,7 +27,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace result {
 
 ///
@@ -36,9 +36,9 @@ namespace result {
 ///
 class insert_many {
    public:
-    using id_map = std::map<std::size_t, bsoncxx::document::element>;
+    using id_map = std::map<std::size_t, bsoncxx::v_noabi::document::element>;
 
-    insert_many(result::bulk_write result, bsoncxx::array::value inserted_ids);
+    insert_many(result::bulk_write result, bsoncxx::v_noabi::array::value inserted_ids);
 
     insert_many(const insert_many&);
     insert_many(insert_many&&) = default;
@@ -79,7 +79,7 @@ class insert_many {
 
     // Array containing documents with the values of the _id field for the inserted documents. This
     // array is in the following format: [{"_id": ...}, {"_id": ...}, ...].
-    bsoncxx::array::value _inserted_ids_owned;
+    bsoncxx::v_noabi::array::value _inserted_ids_owned;
 
     // Points into _inserted_ids_owned.
     id_map _inserted_ids;

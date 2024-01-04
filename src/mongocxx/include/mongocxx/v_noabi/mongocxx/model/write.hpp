@@ -30,11 +30,11 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace model {
 
 ///
-/// Models a single write operation within a mongocxx::bulk_write.
+/// Models a single write operation within a mongocxx::v_noabi::bulk_write.
 ///
 class write {
    public:

@@ -17,7 +17,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace options {
 
 client_session& client_session::causal_consistency(bool causal_consistency) noexcept {

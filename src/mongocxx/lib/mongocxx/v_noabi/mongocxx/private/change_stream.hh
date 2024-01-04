@@ -25,7 +25,8 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
+
 class change_stream::impl {
    public:
     // lifecycle of the cursor
@@ -65,7 +66,7 @@ class change_stream::impl {
     }
 
     void mark_nothing_left() {
-        doc_ = bsoncxx::document::view{};
+        doc_ = bsoncxx::v_noabi::document::view{};
         exhausted_ = true;
         status_ = state::k_pending;
     }
@@ -80,7 +81,7 @@ class change_stream::impl {
 
         // Happy-case.
         if (libmongoc::change_stream_next(this->change_stream_, &out)) {
-            this->doc_ = bsoncxx::document::view{bson_get_data(out), out->len};
+            this->doc_ = bsoncxx::v_noabi::document::view{bson_get_data(out), out->len};
             return;
         }
 
@@ -88,7 +89,7 @@ class change_stream::impl {
         bson_error_t error;
         if (libmongoc::change_stream_error_document(this->change_stream_, &error, &out)) {
             this->mark_dead();
-            this->doc_ = bsoncxx::document::view{};
+            this->doc_ = bsoncxx::v_noabi::document::view{};
             mongocxx::libbson::scoped_bson_t scoped_error_reply{};
             bson_copy_to(out, scoped_error_reply.bson_for_init());
             throw_exception<query_exception>(scoped_error_reply.steal(), error);
@@ -98,22 +99,22 @@ class change_stream::impl {
         this->mark_nothing_left();
     }
 
-    bsoncxx::document::view& doc() {
+    bsoncxx::v_noabi::document::view& doc() {
         return this->doc_;
     }
 
-    stdx::optional<bsoncxx::document::view> get_resume_token() {
+    stdx::optional<bsoncxx::v_noabi::document::view> get_resume_token() {
         auto token = libmongoc::change_stream_get_resume_token(this->change_stream_);
         if (!token) {
             return {};
         }
 
-        return {bsoncxx::document::view{bson_get_data(token), token->len}};
+        return {bsoncxx::v_noabi::document::view{bson_get_data(token), token->len}};
     }
 
    private:
     mongoc_change_stream_t* const change_stream_;
-    bsoncxx::document::view doc_;
+    bsoncxx::v_noabi::document::view doc_;
     state status_;
     bool exhausted_;
 };

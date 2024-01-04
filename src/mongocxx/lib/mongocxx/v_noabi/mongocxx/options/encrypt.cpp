@@ -24,15 +24,15 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace options {
 
-encrypt& encrypt::key_id(bsoncxx::types::bson_value::view_or_value key_id) {
+encrypt& encrypt::key_id(bsoncxx::v_noabi::types::bson_value::view_or_value key_id) {
     _key_id = std::move(key_id);
     return *this;
 }
 
-const stdx::optional<bsoncxx::types::bson_value::view_or_value>& encrypt::key_id() const {
+const stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>& encrypt::key_id() const {
     return _key_id;
 }
 
@@ -110,8 +110,8 @@ struct scoped_bson_value {
         convert(value);
     }
 
-    explicit scoped_bson_value(const bsoncxx::types::bson_value::view& view) {
-        // Argument order is reversed for bsoncxx::types::bson_value::view.
+    explicit scoped_bson_value(const bsoncxx::v_noabi::types::bson_value::view& view) {
+        // Argument order is reversed for bsoncxx::v_noabi::types::bson_value::view.
         bsoncxx::v_noabi::types::convert_to_libbson(&this->value, view);
     }
 
@@ -147,13 +147,13 @@ void* encrypt::convert() const {
     // libmongoc will error if both key_id and key_alt_name are set, so no need to check here.
 
     if (_key_id) {
-        if (_key_id->view().type() != bsoncxx::type::k_binary) {
+        if (_key_id->view().type() != bsoncxx::v_noabi::type::k_binary) {
             throw exception{error_code::k_invalid_parameter, "key id myst be a binary value"};
         }
 
         auto key_id = _key_id->view().get_binary();
 
-        if (key_id.sub_type != bsoncxx::binary_sub_type::k_uuid) {
+        if (key_id.sub_type != bsoncxx::v_noabi::binary_sub_type::k_uuid) {
             throw exception{error_code::k_invalid_parameter,
                             "key id must be a binary value with subtype 4 (UUID)"};
         }

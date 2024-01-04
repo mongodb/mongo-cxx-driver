@@ -17,16 +17,15 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
 namespace libbson {
 
 namespace {
 
-void doc_to_bson_t(const bsoncxx::document::view& doc, bson_t* bson) {
+void doc_to_bson_t(const bsoncxx::v_noabi::document::view& doc, bson_t* bson) {
     // While bson_init_static is documented as returning false if the bson_t was unable to be
     // initialized, this only occurs when the length of the data passed in is less than five. We
-    // assume that the data from the bsoncxx::document::view is valid and that bson_init_static will
-    // not be changed to fail to initialize the bson_t in any other case.
+    // assume that the data from the bsoncxx::v_noabi::document::view is valid and that
+    // bson_init_static will not be changed to fail to initialize the bson_t in any other case.
     bson_init_static(bson, doc.data(), doc.length());
 }
 
@@ -41,7 +40,7 @@ scoped_bson_t::scoped_bson_t(bsoncxx::stdx::optional<bsoncxx::document::view_or_
 }
 
 void scoped_bson_t::init_from_static(
-    bsoncxx::stdx::optional<bsoncxx::document::view_or_value> doc) {
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> doc) {
     if (doc) {
         _is_initialized = true;
         _doc = std::move(doc);
@@ -76,17 +75,17 @@ bson_t* scoped_bson_t::bson_for_init() {
     return &_bson;
 }
 
-bsoncxx::document::view scoped_bson_t::view() {
+bsoncxx::v_noabi::document::view scoped_bson_t::view() {
     // if we were initialized with a view_or_value just use that view
     if (_doc) {
         return _doc->view();
     }
     // otherwise, if we were initialized from libmongoc, construct
     if (_is_initialized) {
-        return bsoncxx::document::view{bson_get_data(bson()), bson()->len};
+        return bsoncxx::v_noabi::document::view{bson_get_data(bson()), bson()->len};
     }
     // otherwise, return an empty view
-    return bsoncxx::document::view{};
+    return bsoncxx::v_noabi::document::view{};
 }
 
 namespace {
@@ -97,9 +96,9 @@ void bson_free_deleter(std::uint8_t* ptr) {
 
 }  // anonymous namespace
 
-bsoncxx::document::value scoped_bson_t::steal() {
+bsoncxx::v_noabi::document::value scoped_bson_t::steal() {
     if (!_is_initialized) {
-        return bsoncxx::document::value{bsoncxx::document::view()};
+        return bsoncxx::v_noabi::document::value{bsoncxx::v_noabi::document::view()};
     }
 
     std::uint32_t length;
@@ -107,9 +106,8 @@ bsoncxx::document::value scoped_bson_t::steal() {
 
     _is_initialized = false;
 
-    return bsoncxx::document::value(buff, length, bson_free_deleter);
+    return bsoncxx::v_noabi::document::value(buff, length, bson_free_deleter);
 }
 
 }  // namespace libbson
-}  // namespace v_noabi
 }  // namespace mongocxx

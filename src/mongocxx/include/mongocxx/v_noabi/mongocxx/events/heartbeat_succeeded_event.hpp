@@ -22,7 +22,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace events {
 
 ///
@@ -46,7 +46,7 @@ class heartbeat_succeeded_event {
     ///
     /// @return The reply.
     ///
-    bsoncxx::document::view reply() const;
+    bsoncxx::v_noabi::document::view reply() const;
 
     ///
     /// Returns the duration of the successful operation.
@@ -60,7 +60,7 @@ class heartbeat_succeeded_event {
     ///
     /// @return The host name.
     ///
-    bsoncxx::stdx::string_view host() const;
+    bsoncxx::v_noabi::stdx::string_view host() const;
 
     ///
     /// Returns the port.

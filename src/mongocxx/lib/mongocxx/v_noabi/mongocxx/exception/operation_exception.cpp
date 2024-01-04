@@ -23,17 +23,19 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
+
 operation_exception::operation_exception(std::error_code ec,
-                                         bsoncxx::document::value&& raw_server_error,
+                                         bsoncxx::v_noabi::document::value&& raw_server_error,
                                          std::string what_arg)
     : exception(ec, what_arg), _raw_server_error{std::move(raw_server_error)} {}
 
-const stdx::optional<bsoncxx::document::value>& operation_exception::raw_server_error() const {
+const stdx::optional<bsoncxx::v_noabi::document::value>& operation_exception::raw_server_error()
+    const {
     return _raw_server_error;
 }
 
-stdx::optional<bsoncxx::document::value>& operation_exception::raw_server_error() {
+stdx::optional<bsoncxx::v_noabi::document::value>& operation_exception::raw_server_error() {
     return _raw_server_error;
 }
 

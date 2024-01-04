@@ -22,11 +22,12 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
+
 ///
 /// Class representing an exception during authentication.
 ///
-/// @see mongocxx::operation_exception
+/// @see mongocxx::v_noabi::operation_exception
 ///
 class authentication_exception : public operation_exception {
    public:

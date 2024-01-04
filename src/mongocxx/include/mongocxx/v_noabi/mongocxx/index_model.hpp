@@ -23,17 +23,18 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
+
 ///
 /// Class representing an index on a MongoDB server.
 ///
 class index_model {
    public:
     ///
-    /// Initializes a new index_model over a mongocxx::collection.
+    /// Initializes a new index_model over a mongocxx::v_noabi::collection.
     ///
-    index_model(const bsoncxx::document::view_or_value& keys,
-                const bsoncxx::document::view_or_value& options = {});
+    index_model(const bsoncxx::v_noabi::document::view_or_value& keys,
+                const bsoncxx::v_noabi::document::view_or_value& options = {});
 
     index_model() = delete;
 
@@ -62,16 +63,16 @@ class index_model {
     ///
     /// Retrieves keys of an index_model.
     ///
-    bsoncxx::document::view keys() const;
+    bsoncxx::v_noabi::document::view keys() const;
 
     ///
     /// Retrieves options of an index_model.
     ///
-    bsoncxx::document::view options() const;
+    bsoncxx::v_noabi::document::view options() const;
 
    private:
-    bsoncxx::document::value _keys;
-    bsoncxx::document::value _options;
+    bsoncxx::v_noabi::document::value _keys;
+    bsoncxx::v_noabi::document::value _options;
 };
 
 }  // namespace v_noabi

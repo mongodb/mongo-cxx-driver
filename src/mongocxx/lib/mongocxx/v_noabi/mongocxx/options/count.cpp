@@ -18,20 +18,20 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace options {
 
-count& count::collation(bsoncxx::document::view_or_value collation) {
+count& count::collation(bsoncxx::v_noabi::document::view_or_value collation) {
     _collation = std::move(collation);
     return *this;
 }
 
-count& count::hint(mongocxx::hint index_hint) {
+count& count::hint(mongocxx::v_noabi::hint index_hint) {
     _hint = std::move(index_hint);
     return *this;
 }
 
-count& count::comment(bsoncxx::types::bson_value::view_or_value comment) {
+count& count::comment(bsoncxx::v_noabi::types::bson_value::view_or_value comment) {
     _comment = std::move(comment);
     return *this;
 }
@@ -51,20 +51,20 @@ count& count::skip(std::int64_t skip) {
     return *this;
 }
 
-count& count::read_preference(mongocxx::read_preference rp) {
+count& count::read_preference(mongocxx::v_noabi::read_preference rp) {
     _read_preference = std::move(rp);
     return *this;
 }
 
-const stdx::optional<bsoncxx::document::view_or_value>& count::collation() const {
+const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& count::collation() const {
     return _collation;
 }
 
-const stdx::optional<mongocxx::hint>& count::hint() const {
+const stdx::optional<mongocxx::v_noabi::hint>& count::hint() const {
     return _hint;
 }
 
-const stdx::optional<bsoncxx::types::bson_value::view_or_value>& count::comment() const {
+const stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>& count::comment() const {
     return _comment;
 }
 

@@ -23,7 +23,8 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
+
 class client::impl {
    public:
     impl(mongoc_client_t* client) : client_t(client) {}
@@ -33,7 +34,7 @@ class client::impl {
     }
 
     mongoc_client_t* client_t;
-    std::list<bsoncxx::string::view_or_value> tls_options;
+    std::list<bsoncxx::v_noabi::string::view_or_value> tls_options;
     options::apm listeners;
 };
 

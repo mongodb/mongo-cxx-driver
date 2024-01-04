@@ -20,7 +20,8 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
+
 class read_preference::impl {
    public:
     impl(mongoc_read_prefs_t* read_pref) : read_preference_t(read_pref) {}

@@ -25,7 +25,8 @@
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
+
 ///
 /// Class representing a batch of write operations that can be sent to the server as a group.
 ///
@@ -77,14 +78,14 @@ class bulk_write {
     ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
-    /// @throws mongocxx::logic_error if the given operation is invalid.
+    /// @throws mongocxx::v_noabi::logic_error if the given operation is invalid.
     ///
     bulk_write& append(const model::write& operation);
 
     ///
     /// Executes a bulk write.
     ///
-    /// @throws mongocxx::bulk_write_exception when there are errors processing the writes.
+    /// @throws mongocxx::v_noabi::bulk_write_exception when there are errors processing the writes.
     ///
     /// @return The optional result of the bulk operation execution, a result::bulk_write.
     ///

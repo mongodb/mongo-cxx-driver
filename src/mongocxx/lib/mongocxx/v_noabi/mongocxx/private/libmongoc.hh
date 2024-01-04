@@ -34,12 +34,12 @@
 // TODO: CXX-1366 Disable MSVC warnings for libmongoc
 #endif
 
+#include <mongocxx/test_util/export_for_testing.hh>
 #include <mongocxx/test_util/mock.hh>
 
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
 namespace libmongoc {
 
 #ifdef MONGOCXX_TESTING
@@ -55,7 +55,7 @@ namespace libmongoc {
 #endif
 
 #define MONGOCXX_LIBMONGOC_SYMBOL(name) \
-    extern MONGOCXX_API mongocxx::test_util::mock<decltype(&mongoc_##name)>& name;
+    extern MONGOCXX_TEST_API mongocxx::test_util::mock<decltype(&mongoc_##name)>& name;
 #include "libmongoc_symbols.hh"
 #undef MONGOCXX_LIBMONGOC_SYMBOL
 
@@ -64,13 +64,14 @@ namespace libmongoc {
 #endif
 
 #else
+
 #define MONGOCXX_LIBMONGOC_SYMBOL(name) constexpr auto name = mongoc_##name;
 #include "libmongoc_symbols.hh"
 #undef MONGOCXX_LIBMONGOC_SYMBOL
+
 #endif
 
 }  // namespace libmongoc
-}  // namespace v_noabi
 }  // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>

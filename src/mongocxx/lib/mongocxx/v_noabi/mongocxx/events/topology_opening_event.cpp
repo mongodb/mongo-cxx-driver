@@ -18,18 +18,18 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace events {
 
 topology_opening_event::topology_opening_event(const void* event) : _event(event) {}
 
 topology_opening_event::~topology_opening_event() = default;
 
-bsoncxx::oid topology_opening_event::topology_id() const {
+bsoncxx::v_noabi::oid topology_opening_event::topology_id() const {
     bson_oid_t boid;
     libmongoc::apm_topology_opening_get_topology_id(
         static_cast<const mongoc_apm_topology_opening_t*>(_event), &boid);
-    return bsoncxx::oid(reinterpret_cast<const char*>(boid.bytes), sizeof(boid.bytes));
+    return bsoncxx::v_noabi::oid(reinterpret_cast<const char*>(boid.bytes), sizeof(boid.bytes));
 }
 
 }  // namespace events

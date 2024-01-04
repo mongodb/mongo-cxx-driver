@@ -23,7 +23,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
+namespace v_noabi {
 namespace gridfs {
 
 class bucket::impl {

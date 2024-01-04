@@ -36,8 +36,8 @@
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
-inline namespace v_noabi {
 namespace test_util {
+
 //
 // Compares to version number strings (i.e. positive integers separated by periods). Comparisons are
 // done to the lesser precision of the two versions. For example, 3.2 is considered equal to 3.2.11,
@@ -225,8 +225,6 @@ bool should_run_client_side_encryption_test(void);
 std::string getenv_or_fail(const std::string env_name);
 
 }  // namespace test_util
-
-}  // namespace v_noabi
 }  // namespace mongocxx
 
 #include <mongocxx/config/private/postlude.hh>
