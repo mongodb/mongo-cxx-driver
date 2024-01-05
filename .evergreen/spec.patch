@@ -36,7 +36,7 @@
  %cmake \
      -DCMAKE_BUILD_TYPE=Release \
      -DBSONCXX_POLY_USE_BOOST=1 \
-+    -DBUILD_VERSION=3.10.0 \
++    -DBUILD_VERSION=3.9.1 \
 +    -DENABLE_UNINSTALL=OFF \
 +    -DENABLE_TESTS=OFF \
      .
