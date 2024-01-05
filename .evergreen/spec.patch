@@ -12,12 +12,13 @@
  Release:        1%{?dist}
  Summary:        A C++ Driver for MongoDB
  License:        ASL 2.0
-@@ -10,8 +12,7 @@
+@@ -10,8 +12,8 @@
  Source0:        https://github.com/mongodb/%{pkg_name}/archive/%{name}-r%{version}.tar.gz
  
  
 -Patch2:         mongo-cxx-driver-3.3.1_paths.patch
 -Patch3:         mongo-cxx-driver-catch-update.patch
++BuildRequires:  pkgconfig
 +BuildRequires:  pkgconfig(libutf8proc)
  BuildRequires:  boost-devel >= 1.49
  BuildRequires:  openssl-devel
