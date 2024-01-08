@@ -14,6 +14,7 @@
 
 #pragma once
 
+#include <cstdio>
 #include <exception>
 #include <initializer_list>
 #include <memory>
@@ -88,14 +89,17 @@ static constexpr struct in_place_t {
 namespace detail {
 
 // Terminates the program when an illegal use of optional<T> is attempted
-[[noreturn]] BSONCXX_API void BSONCXX_CALL terminate_disengaged_optional(const char* what) noexcept;
+[[noreturn]] inline void terminate_disengaged_optional(const char* what) noexcept {
+    (void)std::fprintf(stderr, "%s: Invalid attempted use of disengaged optional<T>\n", what);
+    std::terminate();
+}
 // Throws bad_optional_access for throwing optional<T> member functions
-[[noreturn]] BSONCXX_API void BSONCXX_CALL throw_bad_optional();
+[[noreturn]] inline void throw_bad_optional() {
+    throw bad_optional_access();
+}
 // Base class of std::optional. Implementation detail, defined later
 template <typename T>
 struct optional_base_class;
-// Pull bsoncxx::detail components
-using namespace bsoncxx::detail;
 
 // Base case: Things are not optionals.
 template <typename T>
