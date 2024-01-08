@@ -317,7 +317,7 @@ images will be pushed to the public Docker Hub repository, so **only run these
 commands when you are ready to push the images!**
 ```
 $ docker buildx create --name mybuilder --use --bootstrap
-$ docker buildx build --push --platform linux/amd64,linux/arm64 --tag mongodb/mongo-cxx-driver:<VERSION NUMBER>-redhat-ubi-9.3 .
+$ docker buildx build --push --platform linux/amd64,linux/arm64 --tag mongodb/mongo-cxx-driver:<VERSION NUMBER>-redhat-ubi-9.3 --tag mongodb/mongo-cxx-driver:latest .
 ```
 
 Update the `Tags` section of the Docker Hub
