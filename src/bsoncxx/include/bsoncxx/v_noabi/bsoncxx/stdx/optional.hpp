@@ -27,6 +27,8 @@
 
 // Try to detect std::optional. We'll reuse some components from there for compatibility
 // with C++17 users.
+#pragma push_macro("BSONCXX_HAVE_STDLIB_OPTIONAL")
+#undef BSONCXX_HAVE_STDLIB_OPTIONAL
 #define BSONCXX_HAVE_STDLIB_OPTIONAL 0
 
 #ifdef __has_include
@@ -669,3 +671,5 @@ using ::bsoncxx::v_noabi::stdx::optional;
 
 }  // namespace stdx
 }  // namespace bsoncxx
+
+#pragma pop_macro("BSONCXX_HAVE_STDLIB_OPTIONAL")
