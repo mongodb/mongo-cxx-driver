@@ -54,46 +54,6 @@ if(1)
     )
 endif()
 
-# Generate and install deprecated CMake package config files.
-if(1)
-    set(PACKAGE_INCLUDE_INSTALL_DIRS
-        ${CMAKE_INSTALL_INCLUDEDIR}/mongocxx/v_noabi
-        ${CMAKE_INSTALL_INCLUDEDIR}
-    )
-    set(PACKAGE_LIBRARY_INSTALL_DIRS ${CMAKE_INSTALL_LIBDIR})
-
-    function(mongocxx_install_deprecated_cmake NAME)
-        set(PKG "lib${NAME}")
-
-        configure_package_config_file(
-            ${PKG}-config.cmake.in
-            ${PKG}-config.cmake
-            INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PKG}-${MONGOCXX_VERSION}
-            PATH_VARS PACKAGE_INCLUDE_INSTALL_DIRS PACKAGE_LIBRARY_INSTALL_DIRS
-        )
-
-        write_basic_package_version_file(
-            ${PKG}-config-version.cmake
-            VERSION ${MONGOCXX_VERSION}
-            COMPATIBILITY SameMajorVersion
-        )
-
-        install(FILES
-            ${CMAKE_CURRENT_BINARY_DIR}/${PKG}-config.cmake
-            ${CMAKE_CURRENT_BINARY_DIR}/${PKG}-config-version.cmake
-            DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PKG}-${MONGOCXX_VERSION}
-        )
-    endfunction(mongocxx_install_deprecated_cmake)
-
-    if(MONGOCXX_BUILD_SHARED)
-        mongocxx_install_deprecated_cmake(mongocxx)
-    endif()
-
-    if(MONGOCXX_BUILD_STATIC)
-        mongocxx_install_deprecated_cmake(mongocxx-static)
-    endif()
-endif()
-
 # Generate and install pkg-config package config files.
 if(1)
     function(mongocxx_install_pkg_config NAME)
@@ -123,8 +83,6 @@ endif()
 
 set_dist_list(src_mongocxx_cmake_DIST
     CMakeLists.txt
-    libmongocxx-config.cmake.in
-    libmongocxx-static-config.cmake.in
     libmongocxx-static.pc.in
     libmongocxx.pc.in
     mongocxx-config.cmake.in
