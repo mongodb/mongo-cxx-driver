@@ -139,6 +139,7 @@ endif()
 set(CMAKE_CXX_EXTENSIONS OFF)
 
 # Include the required modules
+include(CMakeDependentOption)
 include(GenerateExportHeader)
 include(InstallRequiredSystemLibraries)
 
@@ -155,6 +156,12 @@ option(BUILD_SHARED_LIBS_WITH_STATIC_MONGOC
     "Use static mongo-c-driver libraries with shared mongo-cxx-driver libraries"
     OFF
 )
+
+# Allow user to disable embedding of ABI tag in library filenames (MSVC only).
+cmake_dependent_option(ENABLE_ABI_TAG_IN_LIBRARY_FILENAMES "Embed ABI tag in library filenames" ON "MSVC" OFF)
+
+# Allow user to enable embedding of ABI tag in pkg-config metadata filenames (MSVC only).
+cmake_dependent_option(ENABLE_ABI_TAG_IN_PKGCONFIG_FILENAMES "Embed ABI tag in pkg-config metadata filenames" OFF "ENABLE_ABI_TAG_IN_LIBRARY_FILENAMES" OFF)
 
 option(ENABLE_UNINSTALL "Enable creation of uninstall script and associated uninstall build target." ON)
 

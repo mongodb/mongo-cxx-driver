@@ -19,19 +19,13 @@ set(BSONCXX_POLY_MNMLSTC_DEPRECATED_INCLUDE_DIRS "")
 
 # Required by pkg-config package config files.
 set(BSONCXX_POLY_MNMLSTC_PKGCONFIG_INCLUDE_DIRS "")
-set(BSONCXX_POLY_MNMLSTC_PKGCONFIG_STATIC_INCLUDE_DIRS "")
 
 if(BSONCXX_POLY_USE_MNMLSTC AND NOT BSONCXX_POLY_USE_SYSTEM_MNMLSTC)
     set(BSONCXX_POLY_MNMLSTC_DEPRECATED_INCLUDE_DIRS
         "${CMAKE_INSTALL_INCLUDEDIR}/bsoncxx/v_noabi/bsoncxx/third_party/mnmlstc"
     )
 
-    set(BSONCXX_POLY_MNMLSTC_PKGCONFIG_INCLUDE_DIRS
-        [[-I${includedir}/bsoncxx/v_noabi/bsoncxx/third_party/mnmlstc ]]
-    )
-    set(BSONCXX_POLY_MNMLSTC_PKGCONFIG_STATIC_INCLUDE_DIRS
-        [[-I${includedir}/bsoncxx/v_noabi/bsoncxx/third_party/mnmlstc ]]
-    )
+    set(BSONCXX_POLY_MNMLSTC_ENABLED ON)
 endif()
 
 # Generate and install modern CMake package config files.
@@ -76,34 +70,70 @@ endif()
 
 # Generate and install pkg-config package config files.
 if(1)
-    function(bsoncxx_install_pkg_config NAME)
-        set(PKG "lib${NAME}")
+    function(bsoncxx_install_pkg_config TARGET LINK_TYPE)
+        get_target_property(output_name ${TARGET} OUTPUT_NAME)
 
-        configure_file(
-            ${PKG}.pc.in
-            ${PKG}.pc
-            @ONLY
+        set(pcfilename "${CMAKE_CURRENT_BINARY_DIR}/lib${output_name}.pc")
+
+        if(LINK_TYPE STREQUAL "STATIC")
+            set(is_static 1)
+        else()
+            set(is_static 0)
+        endif()
+
+        add_custom_command(
+            OUTPUT ${pcfilename}
+            COMMAND ${CMAKE_COMMAND}
+                -D src_dir="${CMAKE_CURRENT_SOURCE_DIR}"
+                -D bin_dir="${CMAKE_CURRENT_BINARY_DIR}"
+                -D prefix="${CMAKE_INSTALL_PREFIX}"
+                -D includedir="${CMAKE_INSTALL_INCLUDEDIR}"
+                -D libdir="${CMAKE_INSTALL_LIBDIR}"
+                -D output_name="${output_name}"
+                -D version="${BSONCXX_VERSION}"
+                -D is_static="${is_static}"
+                -D libbson_req_abi_ver="${LIBBSON_REQUIRED_ABI_VERSION}"
+                -D libbson_req_ver="${LIBBSON_REQUIRED_VERSION}"
+                -D mnmlstc_enabled="${BSONCXX_POLY_MNMLSTC_ENABLED}"
+                -P ${CMAKE_CURRENT_SOURCE_DIR}/generate-pc.cmake
+            MAIN_DEPENDENCY
+                ${CMAKE_CURRENT_SOURCE_DIR}/libbsoncxx.pc.in
+            DEPENDS
+                ${CMAKE_CURRENT_SOURCE_DIR}/generate-pc.cmake
         )
 
-        install(FILES
-            ${CMAKE_CURRENT_BINARY_DIR}/${PKG}.pc
-            DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
-            COMPONENT dev
-        )
+        add_custom_target(generate-lib${TARGET}-pc DEPENDS ${pcfilename})
+        add_dependencies(${TARGET} generate-lib${TARGET}-pc)
+
+        if(ENABLE_ABI_TAG_IN_PKGCONFIG_FILENAMES)
+            install(FILES ${pcfilename} DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
+        else()
+            if(is_static)
+                set(pkgname "lib${BSONCXX_OUTPUT_BASENAME}-static.pc")
+            else()
+                set(pkgname "lib${BSONCXX_OUTPUT_BASENAME}.pc")
+            endif()
+
+            install(
+                FILES ${pcfilename}
+                DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
+                RENAME ${pkgname}
+            )
+        endif()
     endfunction()
 
     if(BSONCXX_BUILD_SHARED)
-        bsoncxx_install_pkg_config(bsoncxx)
+        bsoncxx_install_pkg_config(bsoncxx_shared SHARED)
     endif()
 
     if(BSONCXX_BUILD_STATIC)
-        bsoncxx_install_pkg_config(bsoncxx-static)
+        bsoncxx_install_pkg_config(bsoncxx_static STATIC)
     endif()
 endif()
 
 set_dist_list(src_bsoncxx_cmake_DIST
     CMakeLists.txt
     bsoncxx-config.cmake.in
-    libbsoncxx-static.pc.in
+    generate-pc.cmake
     libbsoncxx.pc.in
 )
