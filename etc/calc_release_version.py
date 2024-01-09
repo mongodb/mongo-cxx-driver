@@ -27,15 +27,9 @@ includes RHEL 6, which uses Python 2.6!
 """
 
 # XXX NOTE XXX NOTE XXX NOTE XXX
-# After modifying this script it is advisable to execute the self-test.
-#
-# This is done by starting in the directory containing this script and then
-# executing a separate self-test script, like this:
-#
-# $ bash ./calc_release_version_selftest.sh
-#
-# The self-test script will emit diagnostic output. If tracing of the execution
-# of each command is desired, then add the -x option to the bash invocation.
+# After modifying this script it is advisable to execute the self-tests in this directory:
+# - calc_release_version_selftest.sh
+# - calc_release_version_selftest.py
 # XXX NOTE XXX NOTE XXX NOTE XXX
 
 # pyright: reportTypeCommentUsage=false
@@ -47,19 +41,46 @@ import subprocess
 import optparse  # No 'argparse' on Python 2.6
 import sys
 
-try:
-    # Prefer newer `packaging` over deprecated packages.
-    from packaging.version import Version as Version
-    from packaging.version import parse as parse_version
-except ImportError:
-    # Fallback to deprecated pkg_resources.
-    try:
-        from pkg_resources.extern.packaging.version import Version  # type: ignore
-        from pkg_resources import parse_version
-    except ImportError:
-        # Fallback to deprecated distutils.
-        from distutils.version import LooseVersion as Version
-        from distutils.version import LooseVersion as parse_version
+
+class Version:
+    def __init__(self, s):
+        pat = r'(\d+)\.(\d+)\.(\d+)(\-\S+)?'
+        match = re.match(pat, s)
+        assert match, "Unrecognized version string %s" % s
+        self.major, self.minor, self.micro = (
+            map(int, (match.group(1), match.group(2), match.group(3))))
+
+        if match.group(4):
+            self.prerelease = match.group(4)[1:]
+        else:
+            self.prerelease = ''
+
+    def __lt__(self, other):
+        if self.major != other.major:
+            return self.major < other.major
+        if self.minor != other.minor:
+            return self.minor < other.minor
+        if self.micro != other.micro:
+            return self.micro < other.micro
+        if self.prerelease != other.prerelease:
+            if self.prerelease != '' and other.prerelease == '':
+                # Consider a prerelease less than non-prerelease.
+                return True
+            # For simplicity, compare prerelease versions lexicographically.
+            return self.prerelease < other.prerelease
+
+        # Versions are equal.
+        return False
+
+    def __eq__(self, other):
+        self_tuple = self.major, self.minor, self.micro, self.prerelease
+        other_tuple = other.major, other.minor, other.micro, other.prerelease
+        return self_tuple == other_tuple
+
+
+def parse_version(ver):
+    return Version(ver)
+
 
 parser = optparse.OptionParser(description=__doc__)
 parser.add_option("--debug", "-d", action="store_true", help="Enable debug output")

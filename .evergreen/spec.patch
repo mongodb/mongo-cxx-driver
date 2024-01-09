@@ -8,16 +8,18 @@
 +
  Name:           mongo-cxx-driver
 -Version:        3.6.5
-+Version:        3.8.1
++Version:        3.9.1
  Release:        1%{?dist}
  Summary:        A C++ Driver for MongoDB
  License:        ASL 2.0
-@@ -10,8 +12,6 @@
+@@ -10,8 +12,8 @@
  Source0:        https://github.com/mongodb/%{pkg_name}/archive/%{name}-r%{version}.tar.gz
  
  
 -Patch2:         mongo-cxx-driver-3.3.1_paths.patch
 -Patch3:         mongo-cxx-driver-catch-update.patch
++BuildRequires:  pkgconfig
++BuildRequires:  pkgconfig(libutf8proc)
  BuildRequires:  boost-devel >= 1.49
  BuildRequires:  openssl-devel
  BuildRequires:  cmake
@@ -30,10 +32,11 @@
  
  
  %build
-@@ -79,6 +77,8 @@
+@@ -79,6 +77,9 @@
  %cmake \
      -DCMAKE_BUILD_TYPE=Release \
      -DBSONCXX_POLY_USE_BOOST=1 \
++    -DBUILD_VERSION=3.9.1 \
 +    -DENABLE_UNINSTALL=OFF \
 +    -DENABLE_TESTS=OFF \
      .

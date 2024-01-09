@@ -66,7 +66,7 @@ echo "Test next minor version ... begin"
     # failed, then it is probably because a new major/minor release was made.
     # Update the expected output to represent the correct next version.
     # XXX NOTE XXX NOTE XXX
-    assert_eq "$got" "3.9.0-$DATE+git$CURRENT_SHORTREF"
+    assert_eq "$got" "3.10.0-$DATE+git$CURRENT_SHORTREF"
 }
 echo "Test next minor version ... end"
 
