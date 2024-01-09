@@ -41,22 +41,5 @@
 +    -DENABLE_TESTS=OFF \
      .
  
- %cmake_build
-@@ -100,7 +100,7 @@
- %{_includedir}/mongocxx/
- %{_libdir}/libmongocxx.so
- %{_libdir}/pkgconfig/libmongocxx.pc
--%{_libdir}/cmake/libmongocxx*
-+%{_libdir}/cmake/*mongocxx*
- 
- %files bsoncxx
- %{_libdir}/libbsoncxx.so.*
-@@ -109,7 +109,7 @@
- %{_includedir}/bsoncxx
- %{_libdir}/libbsoncxx.so
- %{_libdir}/pkgconfig/libbsoncxx.pc
--%{_libdir}/cmake/libbsoncxx*
-+%{_libdir}/cmake/*bsoncxx*
- 
  %changelog
  * Mon Aug 09 2021 Honza Horak <hhorak@redhat.com> - 3.6.5-1
