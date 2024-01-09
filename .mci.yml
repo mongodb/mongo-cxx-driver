@@ -849,7 +849,7 @@ tasks:
           display_name: "deb.tar.gz"
 
     - name: rpm-package-build
-      run_on: rhel90-arm64-small
+      run_on: rhel92-arm64-small
       commands:
       - func: "setup"
       - command: shell.exec
