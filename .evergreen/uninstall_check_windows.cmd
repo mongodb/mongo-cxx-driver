@@ -24,18 +24,6 @@ if exist %INSTALL_DIR%\lib\pkgconfig\libbsoncxx.pc (
 ) else (
   echo libbsoncxx.pc check ok
 )
-if exist %INSTALL_DIR%\lib\cmake\libbsoncxx-%INSTALL_VERSION%\libbsoncxx-config.cmake (
-  echo libbsoncxx-config.cmake found!
-  exit /B 1
-) else (
-  echo libbsoncxx-config.cmake check ok
-)
-if exist %INSTALL_DIR%\lib\cmake\libbsoncxx-%INSTALL_VERSION%\libbsoncxx-config-version.cmake (
-  echo libbsoncxx-config-version.cmake found!
-  exit /B 1
-) else (
-  echo libbsoncxx-config-version.cmake check ok
-)
 if not exist %INSTALL_DIR%\lib\canary.txt (
   echo canary.txt not found!
   exit /B 1
@@ -53,18 +41,6 @@ if exist %INSTALL_DIR%\lib\pkgconfig\libmongocxx.pc (
   exit /B 1
 ) else (
   echo libmongocxx.pc check ok
-)
-if exist %INSTALL_DIR%\lib\cmake\libmongocxx-%INSTALL_VERSION%\libmongocxx-config.cmake (
-  echo libmongocxx-config.cmake found!
-  exit /B 1
-) else (
-  echo libmongocxx-config.cmake check ok
-)
-if exist %INSTALL_DIR%\lib\cmake\libmongocxx-%INSTALL_VERSION%\libmongocxx-config-version.cmake (
-  echo libmongocxx-config-version.cmake found!
-  exit /B 1
-) else (
-  echo libmongocxx-config-version.cmake check ok
 )
 if exist %INSTALL_DIR%\include\bsoncxx\v_noabi\bsoncxx\json.hpp (
   echo bsoncxx\json.hpp found!
