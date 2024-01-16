@@ -23,6 +23,7 @@ set -o pipefail
 : "${generator:-}"
 : "${lib_dir:-}"
 : "${MONGODB_API_VERSION:-}"
+: "${platform:-}"
 : "${TEST_WITH_ASAN:-}"
 : "${TEST_WITH_UBSAN:-}"
 : "${TEST_WITH_VALGRIND:-}"
@@ -313,6 +314,8 @@ fi
 export PKG_CONFIG_PATH
 
 # Environment variables used by example projects.
+export CMAKE_GENERATOR="${generator:-}"
+export CMAKE_GENERATOR_PLATFORM="${platform:-}"
 export BUILD_TYPE="${build_type:?}"
 export CXXFLAGS="${example_projects_cxxflags}"
 export LDFLAGS="${example_projects_ldflags}"
