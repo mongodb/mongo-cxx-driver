@@ -19,6 +19,7 @@ set -o pipefail
 : "${ENABLE_CODE_COVERAGE:-}"
 : "${ENABLE_TESTS:-}"
 : "${generator:-}"
+: "${platform:-}"
 : "${REQUIRED_CXX_STANDARD:-}"
 : "${RUN_DISTCHECK:-}"
 : "${USE_POLYFILL_BOOST:-}"
@@ -142,6 +143,7 @@ darwin* | linux*)
   ;;
 esac
 export CMAKE_GENERATOR="${generator:?}"
+export CMAKE_GENERATOR_PLATFORM="${platform:-}"
 
 if [[ "${USE_POLYFILL_STD_EXPERIMENTAL:-}" == "ON" ]]; then
   cmake_flags+=(

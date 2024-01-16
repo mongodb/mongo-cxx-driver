@@ -67,7 +67,7 @@ On Windows, the C++ driver is configured as follows (adjusting the path of the C
 
 ```sh
 'C:\Program Files (x86)\CMake\bin\cmake.exe' .. \
-     -G "Visual Studio 14 2015 Win64"           \
+     -G "Visual Studio 14 2015" -A "x64"        \
     -DBOOST_ROOT=C:\local\boost_1_60_0          \
     -DCMAKE_INSTALL_PREFIX=C:\mongo-cxx-driver
 ```
@@ -81,7 +81,7 @@ To build with Visual Studio 2017 without a C++17 polyfill, configure as follows:
 
 ```sh
 'C:\Program Files (x86)\CMake\bin\cmake.exe' .. \
-    -G "Visual Studio 15 2017 Win64"            \
+    -G "Visual Studio 15 2017" -A "x64"         \
     -DCMAKE_CXX_STANDARD=17                     \
     -DCMAKE_INSTALL_PREFIX=C:\mongo-cxx-driver  \
 ```
@@ -94,7 +94,7 @@ To build versions 3.7.0 and older without a C++17 polyfill, it is necessary to c
 
 ```sh
 'C:\Program Files (x86)\CMake\bin\cmake.exe' .. \
-    -G "Visual Studio 15 2017 Win64"            \
+    -G "Visual Studio 15 2017" -A "x64"         \
     -DCMAKE_CXX_STANDARD=17                     \
     -DCMAKE_CXX_FLAGS="/Zc:__cplusplus /EHsc"   \
     -DCMAKE_INSTALL_PREFIX=C:\mongo-cxx-driver  \

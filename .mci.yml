@@ -42,7 +42,8 @@ variables:
             ENABLE_CODE_COVERAGE: ON
         integration_matrix_expansions_windows: &integration_matrix_expansions_windows
             build_type: "Debug" # Same for Windows and Linux
-            generator: Visual Studio 15 2017 Win64
+            generator: Visual Studio 15 2017
+            platform: x64
             example_projects_cxx_standard: 17
 
 #######################################
@@ -348,6 +349,7 @@ functions:
                   - ENABLE_CODE_COVERAGE
                   - ENABLE_TESTS
                   - generator
+                  - platform
                   - REQUIRED_CXX_STANDARD
                   - RUN_DISTCHECK
                   - USE_POLYFILL_BOOST
@@ -1833,7 +1835,8 @@ buildvariants:
       expansions:
           build_type: "Release"
           mongodb_version: "4.2"
-          generator: Visual Studio 14 2015 Win64
+          generator: Visual Studio 14 2015
+          platform: x64
       run_on:
           - windows-64-vs2015-compile
       tasks:
@@ -1848,7 +1851,8 @@ buildvariants:
       expansions:
           build_type: "Debug"
           mongodb_version: "4.2"
-          generator: Visual Studio 14 2015 Win64
+          generator: Visual Studio 14 2015
+          platform: x64
       run_on:
           - windows-64-vs2015-compile
       tasks:
@@ -1860,7 +1864,8 @@ buildvariants:
       display_name: "Windows (VS 2015) Debug (MongoDB 4.2)"
       expansions:
           build_type: "Debug"
-          generator: Visual Studio 14 2015 Win64
+          generator: Visual Studio 14 2015
+          platform: x64
           mongodb_version: "4.2"
       run_on:
          - windows-64-vs2015-compile
