@@ -40,9 +40,15 @@ variables:
         integration_matrix_expansions_linux: &integration_matrix_expansions_linux
             build_type: "Debug"
             ENABLE_CODE_COVERAGE: ON
-        integration_matrix_expansions_windows: &integration_matrix_expansions_windows
+        integration_matrix_expansions_windows_vs2017: &integration_matrix_expansions_windows_vs2017
             build_type: "Debug" # Same for Windows and Linux
-            generator: Visual Studio 15 2017 Win64
+            generator: Visual Studio 15 2017
+            platform: x64
+            example_projects_cxx_standard: 17
+        integration_matrix_expansions_windows_vs2019: &integration_matrix_expansions_windows_vs2019
+            build_type: "Debug" # Same for Windows and Linux
+            generator: Visual Studio 16 2019
+            platform: x64
             example_projects_cxx_standard: 17
 
 #######################################
@@ -348,6 +354,7 @@ functions:
                   - ENABLE_CODE_COVERAGE
                   - ENABLE_TESTS
                   - generator
+                  - platform
                   - REQUIRED_CXX_STANDARD
                   - RUN_DISTCHECK
                   - USE_POLYFILL_BOOST
@@ -395,6 +402,7 @@ functions:
                   - generator
                   - lib_dir
                   - MONGODB_API_VERSION
+                  - platform
                   - TEST_WITH_ASAN
                   - TEST_WITH_UBSAN
                   - TEST_WITH_VALGRIND
@@ -1074,60 +1082,60 @@ buildvariants:
           <<: *integration_matrix_expansions_linux
       <<: *integration_matrix_tasks_single
 
-    - name: integration-vs2017-latest-single
-      display_name: "Windows (VS 2017) Debug (MongoDB Latest)"
-      run_on: windows-64-vs2017-large
+    - name: integration-vs2019-latest-single
+      display_name: "Windows (VS 2019) Debug (MongoDB Latest)"
+      run_on: windows-vsCurrent-large
       expansions:
           mongodb_version: "latest"
-          <<: *integration_matrix_expansions_windows
+          <<: *integration_matrix_expansions_windows_vs2019
       <<: *integration_matrix_tasks_single
 
-    - name: integration-vs2017-7.0-single
-      display_name: "Windows (VS 2017) Debug (MongoDB 7.0)"
-      run_on: windows-64-vs2017-large
+    - name: integration-vs2019-7.0-single
+      display_name: "Windows (VS 2019) Debug (MongoDB 7.0)"
+      run_on: windows-vsCurrent-large
       expansions:
           mongodb_version: "7.0"
-          <<: *integration_matrix_expansions_windows
+          <<: *integration_matrix_expansions_windows_vs2019
       <<: *integration_matrix_tasks_single
 
-    - name: integration-vs2017-6.0-single
-      display_name: "Windows (VS 2017) Debug (MongoDB 6.0)"
-      run_on: windows-64-vs2017-large
+    - name: integration-vs2019-6.0-single
+      display_name: "Windows (VS 2019) Debug (MongoDB 6.0)"
+      run_on: windows-vsCurrent-large
       expansions:
           mongodb_version: "6.0"
-          <<: *integration_matrix_expansions_windows
+          <<: *integration_matrix_expansions_windows_vs2019
       <<: *integration_matrix_tasks_single
 
-    - name: integration-vs2017-5.0-single
-      display_name: "Windows (VS 2017) Debug (MongoDB 5.0)"
-      run_on: windows-64-vs2017-large
+    - name: integration-vs2019-5.0-single
+      display_name: "Windows (VS 2019) Debug (MongoDB 5.0)"
+      run_on: windows-vsCurrent-large
       expansions:
           mongodb_version: "5.0"
-          <<: *integration_matrix_expansions_windows
+          <<: *integration_matrix_expansions_windows_vs2019
       <<: *integration_matrix_tasks_single
 
-    - name: integration-vs2017-4.4-single
-      display_name: "Windows (VS 2017) Debug (MongoDB 4.4)"
-      run_on: windows-64-vs2017-large
+    - name: integration-vs2019-4.4-single
+      display_name: "Windows (VS 2019) Debug (MongoDB 4.4)"
+      run_on: windows-vsCurrent-large
       expansions:
           mongodb_version: "4.4"
-          <<: *integration_matrix_expansions_windows
+          <<: *integration_matrix_expansions_windows_vs2019
       <<: *integration_matrix_tasks_single
 
-    - name: integration-vs2017-4.2-single
-      display_name: "Windows (VS 2017) Debug (MongoDB 4.2)"
-      run_on: windows-64-vs2017-large
+    - name: integration-vs2019-4.2-single
+      display_name: "Windows (VS 2019) Debug (MongoDB 4.2)"
+      run_on: windows-vsCurrent-large
       expansions:
           mongodb_version: "4.2"
-          <<: *integration_matrix_expansions_windows
+          <<: *integration_matrix_expansions_windows_vs2019
       <<: *integration_matrix_tasks_single
 
-    - name: integration-vs2017-4.0-single
-      display_name: "Windows (VS 2017) Debug (MongoDB 4.0)"
-      run_on: windows-64-vs2017-large
+    - name: integration-vs2019-4.0-single
+      display_name: "Windows (VS 2019) Debug (MongoDB 4.0)"
+      run_on: windows-vsCurrent-large
       expansions:
           mongodb_version: "4.0"
-          <<: *integration_matrix_expansions_windows
+          <<: *integration_matrix_expansions_windows_vs2019
       <<: *integration_matrix_tasks_single
 
     - name: integration-ubuntu2004-latest-replica
@@ -1252,10 +1260,18 @@ buildvariants:
 
     - name: integration-auth-vs2017-latest-single
       display_name: "Windows (VS 2017) Debug Latest Auth"
-      run_on: windows-64-vs2017-large
+      run_on: windows-vsCurrent-large
       expansions:
           mongodb_version: "latest"
-          <<: *integration_matrix_expansions_windows
+          <<: *integration_matrix_expansions_windows_vs2017
+      <<: *integration_matrix_auth_tasks_single
+
+    - name: integration-auth-vs2019-latest-single
+      display_name: "Windows (VS 2019) Debug Latest Auth"
+      run_on: windows-vsCurrent-large
+      expansions:
+          mongodb_version: "latest"
+          <<: *integration_matrix_expansions_windows_vs2019
       <<: *integration_matrix_auth_tasks_single
 
     - name: integration-versioned-api-ubuntu2004-latest-single
@@ -1266,12 +1282,12 @@ buildvariants:
           <<: *integration_matrix_expansions_linux
       <<: *integration_matrix_versioned_api_tasks_single
 
-    - name: integration-versioned-api-vs2017-latest-single
-      display_name: "Windows (VS 2017) Debug Latest Versioned API"
-      run_on: windows-64-vs2017-large
+    - name: integration-versioned-api-vs2019-latest-single
+      display_name: "Windows (VS 2019) Debug Latest Versioned API"
+      run_on: windows-vsCurrent-large
       expansions:
           mongodb_version: "latest"
-          <<: *integration_matrix_expansions_windows
+          <<: *integration_matrix_expansions_windows_vs2019
       <<: *integration_matrix_versioned_api_tasks_single
 
     - name: integration-mongocryptd-ubuntu2004-latest
@@ -1833,7 +1849,8 @@ buildvariants:
       expansions:
           build_type: "Release"
           mongodb_version: "4.2"
-          generator: Visual Studio 14 2015 Win64
+          generator: Visual Studio 14 2015
+          platform: x64
       run_on:
           - windows-64-vs2015-compile
       tasks:
@@ -1848,7 +1865,8 @@ buildvariants:
       expansions:
           build_type: "Debug"
           mongodb_version: "4.2"
-          generator: Visual Studio 14 2015 Win64
+          generator: Visual Studio 14 2015
+          platform: x64
       run_on:
           - windows-64-vs2015-compile
       tasks:
@@ -1860,7 +1878,8 @@ buildvariants:
       display_name: "Windows (VS 2015) Debug (MongoDB 4.2)"
       expansions:
           build_type: "Debug"
-          generator: Visual Studio 14 2015 Win64
+          generator: Visual Studio 14 2015
+          platform: x64
           mongodb_version: "4.2"
       run_on:
          - windows-64-vs2015-compile
