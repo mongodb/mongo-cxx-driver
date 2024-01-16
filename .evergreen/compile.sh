@@ -28,23 +28,6 @@ set -o pipefail
 : "${USE_SANITIZER_UBSAN:-}"
 : "${USE_STATIC_LIBS:-}"
 
-# Add MSBuild.exe to path.
-if [[ "${OSTYPE:?}" == "cygwin" ]]; then
-  case "${generator:-}" in
-  *2015*)
-    PATH="/cygdrive/c/cmake/bin:/cygdrive/c/Program Files (x86)/MSBuild/14.0/Bin:$PATH"
-    ;;
-  *2017*)
-    PATH="/cygdrive/c/cmake/bin:/cygdrive/c/Program Files (x86)/Microsoft Visual Studio/2017/Professional/MSBuild/15.0/Bin:$PATH"
-    ;;
-  *)
-    echo "missing explicit CMake Generator on Windows distro" 1>&2
-    exit 1
-    ;;
-  esac
-fi
-export PATH
-
 mongoc_prefix="$(pwd)/../mongoc"
 echo "mongoc_prefix=${mongoc_prefix:?}"
 

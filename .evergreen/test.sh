@@ -40,23 +40,6 @@ fi
 export MONGOCRYPTD_PATH
 popd # ..
 
-# Add MSBuild.exe to path.
-if [[ "$OSTYPE" == "cygwin" ]]; then
-  case "${generator}" in
-  *2015*)
-    PATH="/cygdrive/c/cmake/bin:/cygdrive/c/Program Files (x86)/MSBuild/14.0/Bin:$PATH"
-    ;;
-  *2017*)
-    PATH="/cygdrive/c/cmake/bin:/cygdrive/c/Program Files (x86)/Microsoft Visual Studio/2017/Professional/MSBuild/15.0/Bin:$PATH"
-    ;;
-  *)
-    echo "missing explicit CMake Generator on Windows distro" 1>&2
-    exit 1
-    ;;
-  esac
-fi
-export PATH
-
 mongoc_dir="${working_dir:?}/../mongoc"
 export mongoc_dir
 
@@ -110,6 +93,12 @@ if [[ "${OSTYPE:?}" =~ cygwin ]]; then
 fi
 export DRIVERS_TOOLS
 popd # "${working_dir:?}/../drivers-evergreen-tools"
+
+# shellcheck source=/dev/null
+. "${mongoc_dir:?}/.evergreen/scripts/find-cmake-latest.sh"
+export cmake_binary
+cmake_binary="$(find_cmake_latest)"
+command -v "${cmake_binary:?}"
 
 export MONGOCXX_TEST_TLS_CA_FILE="${DRIVERS_TOOLS:?}/.evergreen/x509gen/ca.pem"
 
@@ -215,13 +204,13 @@ fi
 pushd "${working_dir:?}/build"
 
 if [[ "${OSTYPE:?}" =~ cygwin ]]; then
-  CTEST_OUTPUT_ON_FAILURE=1 MSBuild.exe /p:Configuration="${build_type:?}" /verbosity:minimal RUN_TESTS.vcxproj
+  CTEST_OUTPUT_ON_FAILURE=1 "${cmake_binary:?}" --build . --target RUN_TESTS -- /p:Configuration="${build_type:?}" /verbosity:minimal
   # Only run examples if MONGODB_API_VERSION is unset. We do not append
   # API version to example clients, so examples will fail when requireApiVersion
   # is true.
   if [[ -z "$MONGODB_API_VERSION" ]]; then
     echo "Running examples..."
-    if ! CTEST_OUTPUT_ON_FAILURE=1 MSBuild.exe /p:Configuration="${build_type:?}" /verbosity:minimal examples/run-examples.vcxproj >|output.txt 2>&1; then
+    if ! CTEST_OUTPUT_ON_FAILURE=1 "${cmake_binary:?}" --build . --target examples/run-examples -- /p:Configuration="${build_type:?}" /verbosity:minimal >|output.txt 2>&1; then
       # Only emit output on failure.
       cat output.txt 1>&2
       exit 1
@@ -353,11 +342,6 @@ fi
 # is true.
 if [[ -z "${MONGODB_API_VERSION:-}" ]]; then
   echo "Building example projects..."
-  # shellcheck source=/dev/null
-  . "${mongoc_dir:?}/.evergreen/scripts/find-cmake-latest.sh"
-  export cmake_binary
-  cmake_binary="$(find_cmake_latest)"
-  command -v "${cmake_binary:?}"
   .evergreen/build_example_projects.sh
   echo "Building example projects... done."
 fi
