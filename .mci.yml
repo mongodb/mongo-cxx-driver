@@ -45,6 +45,11 @@ variables:
             generator: Visual Studio 15 2017
             platform: x64
             example_projects_cxx_standard: 17
+        integration_matrix_expansions_windows_vs2019: &integration_matrix_expansions_windows_vs2019
+            build_type: "Debug" # Same for Windows and Linux
+            generator: Visual Studio 16 2019
+            platform: x64
+            example_projects_cxx_standard: 17
 
 #######################################
 #            Functions                #
@@ -1132,6 +1137,62 @@ buildvariants:
           <<: *integration_matrix_expansions_windows_vs2017
       <<: *integration_matrix_tasks_single
 
+    - name: integration-vs2019-latest-single
+      display_name: "Windows (VS 2019) Debug (MongoDB Latest)"
+      run_on: windows-vsCurrent-large
+      expansions:
+          mongodb_version: "latest"
+          <<: *integration_matrix_expansions_windows_vs2019
+      <<: *integration_matrix_tasks_single
+
+    - name: integration-vs2019-7.0-single
+      display_name: "Windows (VS 2019) Debug (MongoDB 7.0)"
+      run_on: windows-vsCurrent-large
+      expansions:
+          mongodb_version: "7.0"
+          <<: *integration_matrix_expansions_windows_vs2019
+      <<: *integration_matrix_tasks_single
+
+    - name: integration-vs2019-6.0-single
+      display_name: "Windows (VS 2019) Debug (MongoDB 6.0)"
+      run_on: windows-vsCurrent-large
+      expansions:
+          mongodb_version: "6.0"
+          <<: *integration_matrix_expansions_windows_vs2019
+      <<: *integration_matrix_tasks_single
+
+    - name: integration-vs2019-5.0-single
+      display_name: "Windows (VS 2019) Debug (MongoDB 5.0)"
+      run_on: windows-vsCurrent-large
+      expansions:
+          mongodb_version: "5.0"
+          <<: *integration_matrix_expansions_windows_vs2019
+      <<: *integration_matrix_tasks_single
+
+    - name: integration-vs2019-4.4-single
+      display_name: "Windows (VS 2019) Debug (MongoDB 4.4)"
+      run_on: windows-vsCurrent-large
+      expansions:
+          mongodb_version: "4.4"
+          <<: *integration_matrix_expansions_windows_vs2019
+      <<: *integration_matrix_tasks_single
+
+    - name: integration-vs2019-4.2-single
+      display_name: "Windows (VS 2019) Debug (MongoDB 4.2)"
+      run_on: windows-vsCurrent-large
+      expansions:
+          mongodb_version: "4.2"
+          <<: *integration_matrix_expansions_windows_vs2019
+      <<: *integration_matrix_tasks_single
+
+    - name: integration-vs2019-4.0-single
+      display_name: "Windows (VS 2019) Debug (MongoDB 4.0)"
+      run_on: windows-vsCurrent-large
+      expansions:
+          mongodb_version: "4.0"
+          <<: *integration_matrix_expansions_windows_vs2019
+      <<: *integration_matrix_tasks_single
+
     - name: integration-ubuntu2004-latest-replica
       display_name: "Ubuntu 20.04 Debug replica set (MongoDB Latest)"
       run_on: ubuntu2004-large
@@ -1260,6 +1321,14 @@ buildvariants:
           <<: *integration_matrix_expansions_windows_vs2017
       <<: *integration_matrix_auth_tasks_single
 
+    - name: integration-auth-vs2019-latest-single
+      display_name: "Windows (VS 2019) Debug Latest Auth"
+      run_on: windows-vsCurrent-large
+      expansions:
+          mongodb_version: "latest"
+          <<: *integration_matrix_expansions_windows_vs2019
+      <<: *integration_matrix_auth_tasks_single
+
     - name: integration-versioned-api-ubuntu2004-latest-single
       display_name: "Ubuntu 20.04 Debug Latest Versioned API"
       run_on: ubuntu2004-large
@@ -1274,6 +1343,14 @@ buildvariants:
       expansions:
           mongodb_version: "latest"
           <<: *integration_matrix_expansions_windows_vs2017
+      <<: *integration_matrix_versioned_api_tasks_single
+
+    - name: integration-versioned-api-vs2019-latest-single
+      display_name: "Windows (VS 2019) Debug Latest Versioned API"
+      run_on: windows-vsCurrent-large
+      expansions:
+          mongodb_version: "latest"
+          <<: *integration_matrix_expansions_windows_vs2019
       <<: *integration_matrix_versioned_api_tasks_single
 
     - name: integration-mongocryptd-ubuntu2004-latest
