@@ -40,7 +40,7 @@ variables:
         integration_matrix_expansions_linux: &integration_matrix_expansions_linux
             build_type: "Debug"
             ENABLE_CODE_COVERAGE: ON
-        integration_matrix_expansions_windows: &integration_matrix_expansions_windows
+        integration_matrix_expansions_windows_vs2017: &integration_matrix_expansions_windows_vs2017
             build_type: "Debug" # Same for Windows and Linux
             generator: Visual Studio 15 2017
             platform: x64
@@ -1081,7 +1081,7 @@ buildvariants:
       run_on: windows-vsCurrent-large
       expansions:
           mongodb_version: "latest"
-          <<: *integration_matrix_expansions_windows
+          <<: *integration_matrix_expansions_windows_vs2017
       <<: *integration_matrix_tasks_single
 
     - name: integration-vs2017-7.0-single
@@ -1089,7 +1089,7 @@ buildvariants:
       run_on: windows-vsCurrent-large
       expansions:
           mongodb_version: "7.0"
-          <<: *integration_matrix_expansions_windows
+          <<: *integration_matrix_expansions_windows_vs2017
       <<: *integration_matrix_tasks_single
 
     - name: integration-vs2017-6.0-single
@@ -1097,7 +1097,7 @@ buildvariants:
       run_on: windows-vsCurrent-large
       expansions:
           mongodb_version: "6.0"
-          <<: *integration_matrix_expansions_windows
+          <<: *integration_matrix_expansions_windows_vs2017
       <<: *integration_matrix_tasks_single
 
     - name: integration-vs2017-5.0-single
@@ -1105,7 +1105,7 @@ buildvariants:
       run_on: windows-vsCurrent-large
       expansions:
           mongodb_version: "5.0"
-          <<: *integration_matrix_expansions_windows
+          <<: *integration_matrix_expansions_windows_vs2017
       <<: *integration_matrix_tasks_single
 
     - name: integration-vs2017-4.4-single
@@ -1113,7 +1113,7 @@ buildvariants:
       run_on: windows-vsCurrent-large
       expansions:
           mongodb_version: "4.4"
-          <<: *integration_matrix_expansions_windows
+          <<: *integration_matrix_expansions_windows_vs2017
       <<: *integration_matrix_tasks_single
 
     - name: integration-vs2017-4.2-single
@@ -1121,7 +1121,7 @@ buildvariants:
       run_on: windows-vsCurrent-large
       expansions:
           mongodb_version: "4.2"
-          <<: *integration_matrix_expansions_windows
+          <<: *integration_matrix_expansions_windows_vs2017
       <<: *integration_matrix_tasks_single
 
     - name: integration-vs2017-4.0-single
@@ -1129,7 +1129,7 @@ buildvariants:
       run_on: windows-vsCurrent-large
       expansions:
           mongodb_version: "4.0"
-          <<: *integration_matrix_expansions_windows
+          <<: *integration_matrix_expansions_windows_vs2017
       <<: *integration_matrix_tasks_single
 
     - name: integration-ubuntu2004-latest-replica
@@ -1257,7 +1257,7 @@ buildvariants:
       run_on: windows-vsCurrent-large
       expansions:
           mongodb_version: "latest"
-          <<: *integration_matrix_expansions_windows
+          <<: *integration_matrix_expansions_windows_vs2017
       <<: *integration_matrix_auth_tasks_single
 
     - name: integration-versioned-api-ubuntu2004-latest-single
@@ -1273,7 +1273,7 @@ buildvariants:
       run_on: windows-vsCurrent-large
       expansions:
           mongodb_version: "latest"
-          <<: *integration_matrix_expansions_windows
+          <<: *integration_matrix_expansions_windows_vs2017
       <<: *integration_matrix_versioned_api_tasks_single
 
     - name: integration-mongocryptd-ubuntu2004-latest
