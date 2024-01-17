@@ -13,6 +13,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Note: user-defined forward declarations of any library entity has not been, and is still not, supported.
     To obtain the declaration or definition of a library entity, always include the corresponding header.
 
+### Removed
+
+- Deprecated CMake package config files.
+  - `find_package(libbsoncxx)` and `find_package(libmongocxx)` are no longer supported.
+    Use `find_package(bsoncxx)` and `find_package(mongocxx)` instead.
+  - Accordingly, `LIBBSONCXX_*` and `LIBMONGOCXX_*` CMake variables provided by the legacy CMake package config files are no longer supported. Use the `mongo::bsoncxx_*` and `mongo::mongocxx_*` CMake targets instead.
+  - Note: manually setting compile definitions, include directories, and link libraries is unnecessary with target-based CMake. The former `LIBBSONCXX_*` and `LIBMONGOCXX_*` CMake variables are superseded by the `target_link_libraries()` CMake command, which automatically propagates the necessary compile definitions, include directories, and link libraries to dependent targets via `mongo::bsoncxx_*` and `mongo::mongocxx_*` interface properties.
+
 ## 3.9.0
 
 ### Added

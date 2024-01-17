@@ -37,12 +37,6 @@ add_subdirectory(mongo-cxx-driver)
 
 add_executable(hello_mongocxx hello_mongocxx.cpp)
 
-# Visual Studio pre 2017 requires boost polyfill.
-if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC" AND CMAKE_CXX_STANDARD LESS 17)
-  find_package(Boost 1.56.0 REQUIRED)
-  target_link_libraries(hello_mongocxx PRIVATE Boost::boost)
-endif()
-
 target_link_libraries(hello_mongocxx
   PRIVATE mongocxx_static
 )

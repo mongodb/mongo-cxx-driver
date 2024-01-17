@@ -46,15 +46,6 @@ endif()
 
 add_executable(hello_mongocxx ../../hello_mongocxx.cpp)
 
-# Visual Studio pre 2017 requires boost polyfill.
-if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-    if (CMAKE_CXX_STANDARD LESS 17)
-        find_package(Boost 1.56.0 REQUIRED)
-        target_link_libraries(hello_mongocxx PRIVATE Boost::boost)
-        target_compile_definitions(hello_mongocxx PRIVATE BSONCXX_POLY_USE_BOOST=ON)
-    endif ()
-endif()
-
 target_link_libraries(hello_mongocxx
   PRIVATE mongo::mongocxx_static
 )

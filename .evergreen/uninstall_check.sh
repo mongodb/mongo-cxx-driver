@@ -20,18 +20,6 @@ if test -f $INSTALL_DIR/lib/pkgconfig/libbsoncxx.pc; then
 else
   echo "libbsoncxx.pc check ok"
 fi
-if test -f $INSTALL_DIR/lib/cmake/libbsoncxx-$INSTALL_VERSION/libbsoncxx-config.cmake; then
-  echo "libbsoncxx-config.cmake found!"
-  exit 1
-else
-  echo "libbsoncxx-config.cmake check ok"
-fi
-if test -f $INSTALL_DIR/lib/cmake/libbsoncxx-$INSTALL_VERSION/libbsoncxx-config-version.cmake; then
-  echo "libbsoncxx-config-version.cmake found!"
-  exit 1
-else
-  echo "libbsoncxx-config-version.cmake check ok"
-fi
 if test ! -f $INSTALL_DIR/lib/canary.txt; then
   echo "canary.txt not found!"
   exit 1
@@ -49,18 +37,6 @@ if test -f $INSTALL_DIR/lib/pkgconfig/libmongocxx.pc; then
   exit 1
 else
   echo "libmongocxx.pc check ok"
-fi
-if test -f $INSTALL_DIR/lib/cmake/libmongocxx-$INSTALL_VERSION/libmongocxx-config.cmake; then
-  echo "libmongocxx-config.cmake found!"
-  exit 1
-else
-  echo "libmongocxx-config.cmake check ok"
-fi
-if test -f $INSTALL_DIR/lib/cmake/libmongocxx-$INSTALL_VERSION/libmongocxx-config-version.cmake; then
-  echo "libmongocxx-config-version.cmake found!"
-  exit 1
-else
-  echo "libmongocxx-config-version.cmake check ok"
 fi
 if test -f $INSTALL_DIR/include/bsoncxx/v_noabi/bsoncxx/json.hpp; then
   echo "bsoncxx/json.hpp found!"
@@ -110,4 +86,3 @@ if test -d $INSTALL_DIR/share/mongo-cxx-driver; then
 else
   echo "$INSTALL_DIR/share/mongo-cxx-driver check ok"
 fi
-

@@ -20,12 +20,6 @@ for project in bsoncxx mongocxx; do
         exit 1
     fi
 
-    if ! ( cd cmake-deprecated/$DIR && ./build.sh >|output.txt 2>&1); then
-        echo "Example $project/cmake-deprecated/$DIR failed" 1>&2
-        cat cmake-deprecated/$DIR/output.txt 1>&2
-        exit 1
-    fi
-
     if [[ ! ( "$OSTYPE" =~ cygwin ) ]]; then
         if ! ( cd pkg-config/$DIR && ./build.sh >|output.txt 2>&1); then
             echo "Example $project/pkg-config/$DIR failed" 1>&2

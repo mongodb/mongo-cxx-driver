@@ -83,14 +83,17 @@ if [[ "${OSTYPE}" == darwin* ]]; then
   }
 fi
 
+
 # Default CMake generator to use if not already provided.
-declare cmake_generator
+declare CMAKE_GENERATOR CMAKE_GENERATOR_PLATFORM
 if [[ "${OSTYPE:?}" == "cygwin" ]]; then
-  cmake_generator=${generator:-"Visual Studio 14 2015 Win64"}
+  CMAKE_GENERATOR="${generator:-"Visual Studio 14 2015"}"
+  CMAKE_GENERATOR_PLATFORM="${platform:-"x64"}"
 else
-  cmake_generator=${generator:-"Unix Makefiles"}
+  CMAKE_GENERATOR="${generator:-"Unix Makefiles"}"
+  CMAKE_GENERATOR_PLATFORM="${platform:-""}"
 fi
-: "${cmake_generator:?}"
+export CMAKE_GENERATOR CMAKE_GENERATOR_PLATFORM
 
 declare -a configure_flags=(
   "-DCMAKE_BUILD_TYPE=Debug"
@@ -131,7 +134,7 @@ fi
 # Install libmongoc.
 {
   echo "Installing C Driver into ${mongoc_dir}..." 1>&2
-  "${cmake_binary}" -S "${mongoc_idir}" -B "${mongoc_idir}" -G "${cmake_generator}" "${configure_flags[@]}"
+  "${cmake_binary}" -S "${mongoc_idir}" -B "${mongoc_idir}" "${configure_flags[@]}"
   "${cmake_binary}" --build "${mongoc_idir}" --config Debug --target install -- "${compile_flags[@]}"
   echo "Installing C Driver into ${mongoc_dir}... done." 1>&2
 } >/dev/null
