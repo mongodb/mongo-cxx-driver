@@ -41,16 +41,6 @@ struct immobile {
     std::mutex mtx;
 };
 
-template <int>
-struct noncopyable_item {
-    int value;
-
-    template <int N>
-    bool operator==(const noncopyable_item<N>& o) const noexcept {
-        return value == o.value;
-    }
-};
-
 struct not_ordered {};
 
 struct not_copyable {
@@ -181,8 +171,6 @@ TEST_CASE("optional: Nontrivial contents") {
     CHECK(str == "abcd1234");
     {
         auto dup = str;
-        bool b = dup == str;
-        (void)b;
         CHECK(dup == str);
     }
     CHECK(str == "abcd1234");
