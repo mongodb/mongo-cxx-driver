@@ -34,7 +34,6 @@ function(bsoncxx_add_library TARGET OUTPUT_NAME LINK_TYPE)
         # Build type:
         # - 'd' for debug.
         # - 'r' for release (including RelWithDebInfo and MinSizeRel).
-        # - 'u' for unknown.
         if(1)
             if(isMultiConfig)
                 set(build_type $<IF:$<CONFIG:Debug>,d,$<IF:$<OR:$<CONFIG:Release>,$<CONFIG:RelWithDebInfo>,$<CONFIG:MinSizeRel>>,r,u>>)
@@ -44,7 +43,7 @@ function(bsoncxx_add_library TARGET OUTPUT_NAME LINK_TYPE)
                 elseif(CMAKE_BUILD_TYPE STREQUAL "Release" OR CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo" OR CMAKE_BUILD_TYPE STREQUAL "MinSizeRel")
                     set(build_type "r")
                 else()
-                    set(build_type "u")
+                    message(FATAL_ERROR "could not determine build type: must be one of [dr]")
                 endif()
             endif()
 
@@ -84,7 +83,7 @@ function(bsoncxx_add_library TARGET OUTPUT_NAME LINK_TYPE)
             elseif(BSONCXX_POLY_USE_STD)
                 set(polyfill "s")
             else()
-                set(polyfill "u")
+                message(FATAL_ERROR "could not determine polyfill library: must be one of [mbxsi]")
             endif()
 
             set_target_properties(${TARGET} PROPERTIES INTERFACE_BSONCXX_ABI_TAG_POLYFILL_LIBRARY ${polyfill})
