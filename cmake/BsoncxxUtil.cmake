@@ -71,7 +71,7 @@ function(bsoncxx_add_library TARGET OUTPUT_NAME LINK_TYPE)
         # - 'm' for mnmlstc/core.
         # - 'b' for Boost.
         # - 'x' for experimental standard library.
-        # - 'i' for bsoncxx (re)implementations.
+        # - 'i' for bsoncxx implementations.
         # - 's' for standard library (no polyfill).
         if(1)
             if(BSONCXX_POLY_USE_MNMLSTC)
@@ -82,6 +82,8 @@ function(bsoncxx_add_library TARGET OUTPUT_NAME LINK_TYPE)
                 set(polyfill "x")
             elseif(BSONCXX_POLY_USE_STD)
                 set(polyfill "s")
+            elseif(0) # CXX-2796: reserved for bsoncxx implementations as polyfill.
+                set(polyfill "i")
             else()
                 message(FATAL_ERROR "could not determine polyfill library: must be one of [mbxsi]")
             endif()
