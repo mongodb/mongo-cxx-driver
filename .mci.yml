@@ -1112,9 +1112,7 @@ task_groups:
         params:
           binary: bash
           args: [mongo-cxx-driver/.evergreen/abi-stability-setup.sh]
-          include_expansions_in_env:
-            - cxx_standard
-            - is_patch
+          include_expansions_in_env: [cxx_standard]
     tasks: [".abi-stability"]
     teardown_task_can_fail_task: true
     teardown_task:
