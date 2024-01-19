@@ -52,7 +52,6 @@ if ! abidiff "${abi_flags[@]}" install/old/lib/libbsoncxx.so install/new/lib/lib
   declare status
   status='{"status":"failed", "type":"test", "should_continue":true, "desc":"abidiff returned an error for bsoncxx (stable)"}'
   curl -sS -d "${status:?}" -H "Content-Type: application/json" -X POST localhost:2285/task_status || true
-  :
 fi
 echo "Comparing stable ABI for bsoncxx... done."
 
@@ -62,7 +61,6 @@ if ! abidiff "${abi_flags[@]}" install/old/lib/libmongocxx.so install/new/lib/li
   declare status
   status='{"status":"failed", "type":"test", "should_continue":true, "desc":"abidiff returned an error for mongocxx (stable)"}'
   curl -sS -d "${status:?}" -H "Content-Type: application/json" -X POST localhost:2285/task_status || true
-  :
 fi
 echo "Comparing stable ABI for mongocxx... done."
 
