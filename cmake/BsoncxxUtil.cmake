@@ -34,21 +34,9 @@ function(bsoncxx_add_library TARGET OUTPUT_NAME LINK_TYPE)
         # Build type:
         # - 'd' for debug.
         # - 'r' for release (including RelWithDebInfo and MinSizeRel).
-        if(1)
-            if(isMultiConfig)
-                set(build_type $<IF:$<CONFIG:Debug>,d,$<IF:$<OR:$<CONFIG:Release>,$<CONFIG:RelWithDebInfo>,$<CONFIG:MinSizeRel>>,r,u>>)
-            else()
-                if(CMAKE_BUILD_TYPE STREQUAL "Debug")
-                    set(build_type "d")
-                elseif(CMAKE_BUILD_TYPE STREQUAL "Release" OR CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo" OR CMAKE_BUILD_TYPE STREQUAL "MinSizeRel")
-                    set(build_type "r")
-                else()
-                    message(FATAL_ERROR "could not determine build type: must be one of [dr]")
-                endif()
-            endif()
-
+        # - 'u' for unknown (e.g. to allow user-defined configurations).
+            set(build_type $<IF:$<CONFIG:Debug>,d,$<IF:$<OR:$<CONFIG:Release>,$<CONFIG:RelWithDebInfo>,$<CONFIG:MinSizeRel>>,r,u>>)
             set_target_properties(${TARGET} PROPERTIES INTERFACE_BSONCXX_ABI_TAG_BUILD_TYPE ${build_type})
-
             string(APPEND abi_tag "-${build_type}")
         endif()
 
