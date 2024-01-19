@@ -19,7 +19,6 @@ function(bsoncxx_add_library TARGET OUTPUT_NAME LINK_TYPE)
     if(1)
         # Enforce ABI compatibility in dependent targets.
         set_property(TARGET ${TARGET} APPEND PROPERTY COMPATIBLE_INTERFACE_STRING
-            BSONCXX_ABI_TAG_BUILD_TYPE
             BSONCXX_ABI_TAG_MONGOC_LINK_TYPE
             BSONCXX_ABI_TAG_POLYFILL_LIBRARY
         )
@@ -35,10 +34,8 @@ function(bsoncxx_add_library TARGET OUTPUT_NAME LINK_TYPE)
         # - 'd' for debug.
         # - 'r' for release (including RelWithDebInfo and MinSizeRel).
         # - 'u' for unknown (e.g. to allow user-defined configurations).
-            set(build_type $<IF:$<CONFIG:Debug>,d,$<IF:$<OR:$<CONFIG:Release>,$<CONFIG:RelWithDebInfo>,$<CONFIG:MinSizeRel>>,r,u>>)
-            set_target_properties(${TARGET} PROPERTIES INTERFACE_BSONCXX_ABI_TAG_BUILD_TYPE ${build_type})
-            string(APPEND abi_tag "-${build_type}")
-        endif()
+        # Compatibility is handled via CMake's IMPORTED_CONFIGURATIONS rather than interface properties.
+        string(APPEND abi_tag "-$<IF:$<CONFIG:Debug>,d,$<IF:$<OR:$<CONFIG:Release>,$<CONFIG:RelWithDebInfo>,$<CONFIG:MinSizeRel>>,r,u>>")
 
         # Link type with libmongoc.
         # - 'h' for shared.
