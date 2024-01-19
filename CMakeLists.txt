@@ -157,6 +157,16 @@ option(BUILD_SHARED_LIBS_WITH_STATIC_MONGOC
     OFF
 )
 
+if(DEFINED CACHE{ENABLE_ABI_TAG_IN_LIBRARY_FILENAMES} AND NOT MSVC)
+    message(WARNING "ENABLE_ABI_TAG_IN_LIBRARY_FILENAMES is an MSVC-only option and will be ignored by the current configuration")
+    unset(ENABLE_ABI_TAG_IN_LIBRARY_FILENAMES CACHE)
+endif()
+
+if(DEFINED CACHE{ENABLE_ABI_TAG_IN_PKGCONFIG_FILENAMES} AND NOT $CACHE{ENABLE_ABI_TAG_IN_LIBRARY_FILENAMES})
+    message(WARNING "ENABLE_ABI_TAG_IN_PKGCONFIG_FILENAMES requires ENABLE_ABI_TAG_IN_LIBRARY_FILENAMES=ON and will be ignored by the current configuration")
+    unset(ENABLE_ABI_TAG_IN_PKGCONFIG_FILENAMES CACHE)
+endif()
+
 # Allow user to disable embedding of ABI tag in library filenames (MSVC only).
 cmake_dependent_option(ENABLE_ABI_TAG_IN_LIBRARY_FILENAMES "Embed ABI tag in library filenames" ON "MSVC" OFF)
 
