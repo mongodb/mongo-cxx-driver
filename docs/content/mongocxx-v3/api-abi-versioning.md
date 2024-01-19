@@ -29,6 +29,38 @@ title = "API and ABI versioning"
 
 *DSO = Dynamic Shared Object, to use Ulrich Drepper's terminology*
 
+### Windows (MSVC only)
+
+Since version 3.10.0, the physical filename for CXX Driver libraries is different
+from other platforms when built with the MSVC toolchain on Windows
+(even when the CMake generator is not Visual Studio).
+To restore prior behavior, which is similar to other platforms, set `ENABLE_ABI_TAG_IN_LIBRARY_FILENAMES=OFF`.
+
+* Physical filename for a DSO is `mongocxx-$ABI-$TAG.dll`
+* Physical filename for a static library is `mongocxx-static-$TAG.lib`
+
+Where `$TAG` is a triplet of letters indicating:
+
+* Build Type
+* mongoc Link Type
+* Polyfill Library
+
+followed by a suffix describing the toolset and runtime library used to build the library.
+
+Some examples of common DSO filenames expected to be generated include:
+
+* mongocxx-v_noabi-rhs-x64-v142-md.dll (release build configuration)
+* mongocxx-v_noabi-dhs-x64-v142-mdd.dll (debug build configuration)
+* mongocxx-v_noabi-rts-x64-v142-md.dll (link with mongoc statically)
+* mongocxx-v_noabi-rhm-x64-v142-md.dll (mnmlstc/core polyfill library)
+* mongocxx-v_noabi-rhb-x64-v142-md.dll (Boost polyfill library)
+
+This allows libraries built with different build configurations (and different runtime library requirements) to be built and installed without conflicting with each other.
+
+See references to `ENABLE_ABI_TAG_IN_LIBRARY_FILENAMES` and related code in the CMake configuration for more details.
+
+### Other Platforms (Linux, MacOS)
+
 * Physical filename for a DSO is `libmongocxx.so.$MAJOR.$MINOR.$PATCH`
 
 Note that the physical filename is disconnected from ABI version/soname.
