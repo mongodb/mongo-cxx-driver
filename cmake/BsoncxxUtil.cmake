@@ -97,7 +97,7 @@ function(bsoncxx_add_library TARGET OUTPUT_NAME LINK_TYPE)
         if(MSVC)
             set(vs_suffix "")
 
-            # Include the target architecture if applicable (x86, x64, etc.).
+            # Include the target architecture if applicable (Win32, x64, etc.).
             if(CMAKE_VS_PLATFORM_NAME)
                 string(APPEND vs_suffix "-$<LOWER_CASE:${CMAKE_VS_PLATFORM_NAME}>")
             endif()
