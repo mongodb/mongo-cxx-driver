@@ -5,6 +5,8 @@ set -o pipefail
 
 : "${cxx_standard:?}" # Set by abi-stability-checks-* build variant definition.
 
+: "${is_patch:-}" # Set by EVG for patch builds.
+
 command -V git >/dev/null
 
 # Files prepared by EVG config.
@@ -71,7 +73,10 @@ CFLAGS="-g -Og"
 CXXFLAGS="-g -Og"
 
 # Build and install the base commit first.
-git -C mongo-cxx-driver stash push -u
+if [[ "${is_patch:-}" == "true" ]]; then
+  # Patch builds treat diffs relative to base commit as staged changes.
+  git -C mongo-cxx-driver stash push -u
+fi
 git -C mongo-cxx-driver reset --hard "${base:?}"
 
 # Install old (base) to install/old.
@@ -94,7 +99,9 @@ echo "Building old libraries... done."
 
 # Restore all pending changes.
 git -C mongo-cxx-driver reset --hard "HEAD@{1}"
-git -C mongo-cxx-driver stash pop
+if [[ "${is_patch:-}" == "true" ]]; then
+  git -C mongo-cxx-driver stash pop
+fi
 
 # Install new (current) to install/new.
 echo "Building new libraries..."
