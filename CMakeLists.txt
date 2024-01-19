@@ -447,26 +447,33 @@ if(NOT(TARGET dist OR TARGET distcheck))
 
     # Ensure distcheck inherits polyfill library selection.
     set(polyfill_flags "")
-    if (NOT "${CMAKE_CXX_STANDARD}" STREQUAL "")
-       list(APPEND polyfill_flags "-DCMAKE_CXX_STANDARD=${CMAKE_CXX_STANDARD}")
-    endif ()
-    if (NOT "${BOOST_ROOT}" STREQUAL "")
-       list(APPEND polyfill_flags "-DBOOST_ROOT=${BOOST_ROOT}")
-    endif ()
-    if (NOT "${BSONCXX_POLY_USE_MNMLSTC}" STREQUAL "")
-       list(APPEND polyfill_flags "-DBSONCXX_POLY_USE_MNMLSTC=${BSONCXX_POLY_USE_MNMLSTC}")
+
+    if(NOT "${CMAKE_CXX_STANDARD}" STREQUAL "")
+        list(APPEND polyfill_flags "-DCMAKE_CXX_STANDARD=${CMAKE_CXX_STANDARD}")
     endif()
-    if (NOT "${BSONCXX_POLY_USE_STD_EXPERIMENTAL}" STREQUAL "")
-       list(APPEND polyfill_flags "-DBSONCXX_POLY_USE_STD_EXPERIMENTAL=${BSONCXX_POLY_USE_STD_EXPERIMENTAL}")
+
+    if(NOT "${BOOST_ROOT}" STREQUAL "")
+        list(APPEND polyfill_flags "-DBOOST_ROOT=${BOOST_ROOT}")
     endif()
-    if (NOT "${BSONCXX_POLY_USE_SYSTEM_MNMLSTC}" STREQUAL "")
-       list(APPEND polyfill_flags "-DBSONCXX_POLY_USE_SYSTEM_MNMLSTC=${BSONCXX_POLY_USE_SYSTEM_MNMLSTC}")
+
+    if(NOT "${BSONCXX_POLY_USE_MNMLSTC}" STREQUAL "")
+        list(APPEND polyfill_flags "-DBSONCXX_POLY_USE_MNMLSTC=${BSONCXX_POLY_USE_MNMLSTC}")
     endif()
-    if (NOT "${BSONCXX_POLY_USE_BOOST}" STREQUAL "")
-       list(APPEND polyfill_flags "-DBSONCXX_POLY_USE_BOOST=${BSONCXX_POLY_USE_BOOST}")
+
+    if(NOT "${BSONCXX_POLY_USE_STD_EXPERIMENTAL}" STREQUAL "")
+        list(APPEND polyfill_flags "-DBSONCXX_POLY_USE_STD_EXPERIMENTAL=${BSONCXX_POLY_USE_STD_EXPERIMENTAL}")
     endif()
-    if (NOT "${BSONCXX_POLY_USE_STD}" STREQUAL "")
-       list(APPEND polyfill_flags "-DBSONCXX_POLY_USE_STD=${BSONCXX_POLY_USE_STD}")
+
+    if(NOT "${BSONCXX_POLY_USE_SYSTEM_MNMLSTC}" STREQUAL "")
+        list(APPEND polyfill_flags "-DBSONCXX_POLY_USE_SYSTEM_MNMLSTC=${BSONCXX_POLY_USE_SYSTEM_MNMLSTC}")
+    endif()
+
+    if(NOT "${BSONCXX_POLY_USE_BOOST}" STREQUAL "")
+        list(APPEND polyfill_flags "-DBSONCXX_POLY_USE_BOOST=${BSONCXX_POLY_USE_BOOST}")
+    endif()
+
+    if(NOT "${BSONCXX_POLY_USE_STD}" STREQUAL "")
+        list(APPEND polyfill_flags "-DBSONCXX_POLY_USE_STD=${BSONCXX_POLY_USE_STD}")
     endif()
 
     add_custom_target(distcheck DEPENDS dist
