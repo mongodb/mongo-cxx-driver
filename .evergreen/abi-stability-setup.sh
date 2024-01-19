@@ -81,7 +81,7 @@ git -C mongo-cxx-driver reset --hard "${base:?}"
 
 # Install old (base) to install/old.
 echo "Building old libraries..."
-[[ -d install/old ]] || {
+{
   "${cmake_binary:?}" \
     -S mongo-cxx-driver \
     -B build/old \
@@ -105,7 +105,7 @@ fi
 
 # Install new (current) to install/new.
 echo "Building new libraries..."
-[[ -d install/new ]] || {
+{
   "${cmake_binary:?}" \
     -S mongo-cxx-driver \
     -B build/new \
