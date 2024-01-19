@@ -5,6 +5,8 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+Changes prior to 3.9.0 are documented as [release notes on GitHub](https://github.com/mongodb/mongo-cxx-driver/releases).
+
 ## 3.10.0 [Unreleased]
 
 ### Added
@@ -15,6 +17,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- The `bsoncxx::v_noabi` and `mongocxx::v_noabi` namespaces are no longer declared `inline`.
+  - This change is *not* expected to break source or binary compatibility, but is nevertheless documented here due to its significance. If this change does inadvertently break source or binary compatibility, please submit a bug report.
+  - Root namespace declarations are still supported and expected to remain equivalent to their prior definitions (e.g. `bsoncxx::document` is still equivalent to `bsoncxx::v_noabi::document`, `mongocxx::client` is still equivalent to `mongocxx::v_noabi::client`, etc.). Argument-dependent lookup and template instantiations are expected to remain equivalent to their prior behavior.
+  - Note: user-defined forward declarations of any library entity has not been, and is still not, supported.
+    To obtain the declaration or definition of a library entity, always include the corresponding header.
 - Library filenames, when compiled with MSVC (as detected by [CMake's MSVC variable](https://cmake.org/cmake/help/v3.15/variable/MSVC.html)), are now embedded with an ABI tag string, e.g. `bsoncxx-v_noabi-rhs-x64-v142-md.lib`.
   - This new behavior is enabled by default; disable by setting `ENABLE_ABI_TAG_IN_LIBRARY_FILENAMES=OFF` when configuring the CXX Driver.
   - The ABI tag string can also be embedded in pkg-config metadata filenames, e.g. `libbsoncxx-v_noabi-rhs-x64-v142-md.pc`. This is disabled by default; enable by setting `ENABLE_ABI_TAG_IN_PKGCONFIG_FILENAMES=ON` (requires `ENABLE_ABI_TAG_IN_LIBRARY_FILENAMES=ON`).
