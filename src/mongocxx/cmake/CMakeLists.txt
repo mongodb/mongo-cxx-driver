@@ -56,34 +56,72 @@ endif()
 
 # Generate and install pkg-config package config files.
 if(1)
-    function(mongocxx_install_pkg_config NAME)
-        set(PKG "lib${NAME}")
+    function(mongocxx_install_pkg_config TARGET LINK_TYPE)
+        get_target_property(output_name ${TARGET} OUTPUT_NAME)
 
-        configure_file(
-            ${PKG}.pc.in
-            ${PKG}.pc
-            @ONLY
+        set(pcfilename "${CMAKE_CURRENT_BINARY_DIR}/lib${output_name}.pc")
+
+        if(LINK_TYPE STREQUAL "STATIC")
+            get_target_property(bsoncxx_name bsoncxx_static OUTPUT_NAME)
+            set(is_static 1)
+        else()
+            get_target_property(bsoncxx_name bsoncxx_shared OUTPUT_NAME)
+            set(is_static 0)
+        endif()
+
+        add_custom_command(
+            OUTPUT ${pcfilename}
+            COMMAND ${CMAKE_COMMAND}
+                -D src_dir="${CMAKE_CURRENT_SOURCE_DIR}"
+                -D bin_dir="${CMAKE_CURRENT_BINARY_DIR}"
+                -D prefix="${CMAKE_INSTALL_PREFIX}"
+                -D includedir="${CMAKE_INSTALL_INCLUDEDIR}"
+                -D libdir="${CMAKE_INSTALL_LIBDIR}"
+                -D output_name="${output_name}"
+                -D version="${MONGOCXX_VERSION}"
+                -D is_static="${is_static}"
+                -D bsoncxx_name="${bsoncxx_name}"
+                -D libmongoc_req_abi_ver="${LIBMONGOC_REQUIRED_ABI_VERSION}"
+                -D libmongoc_req_ver="${LIBMONGOC_REQUIRED_VERSION}"
+                -P ${CMAKE_CURRENT_SOURCE_DIR}/generate-pc.cmake
+            MAIN_DEPENDENCY
+                ${CMAKE_CURRENT_SOURCE_DIR}/libmongocxx.pc.in
+            DEPENDS
+                ${CMAKE_CURRENT_SOURCE_DIR}/generate-pc.cmake
         )
 
-        install(FILES
-            ${CMAKE_CURRENT_BINARY_DIR}/${PKG}.pc
-            DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
-            COMPONENT dev
-        )
+        add_custom_target(generate-lib${TARGET}-pc DEPENDS ${pcfilename})
+        add_dependencies(${TARGET} generate-lib${TARGET}-pc)
+
+        if(ENABLE_ABI_TAG_IN_PKGCONFIG_FILENAMES)
+            install(FILES ${pcfilename} DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig)
+        else()
+            if(is_static)
+                set(pkgname "lib${MONGOCXX_OUTPUT_BASENAME}-static.pc")
+            else()
+                set(pkgname "lib${MONGOCXX_OUTPUT_BASENAME}.pc")
+            endif()
+
+            install(
+                FILES ${pcfilename}
+                DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
+                RENAME ${pkgname}
+            )
+        endif()
     endfunction()
 
     if(MONGOCXX_BUILD_SHARED)
-        mongocxx_install_pkg_config(mongocxx)
+        mongocxx_install_pkg_config(mongocxx_shared SHARED)
     endif()
 
     if(MONGOCXX_BUILD_STATIC)
-        mongocxx_install_pkg_config(mongocxx-static)
+        mongocxx_install_pkg_config(mongocxx_static STATIC)
     endif()
 endif()
 
 set_dist_list(src_mongocxx_cmake_DIST
     CMakeLists.txt
-    libmongocxx-static.pc.in
+    generate-pc.cmake
     libmongocxx.pc.in
     mongocxx-config.cmake.in
 )

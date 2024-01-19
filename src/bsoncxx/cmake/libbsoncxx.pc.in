@@ -12,13 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-prefix=@CMAKE_INSTALL_PREFIX@
-includedir=${prefix}/@CMAKE_INSTALL_INCLUDEDIR@
-libdir=${prefix}/@CMAKE_INSTALL_LIBDIR@
+prefix=@prefix@
+includedir=${prefix}/@includedir@
+libdir=${prefix}/@libdir@
 
-Name: libbsoncxx
+Name: @pkgname@
 Description: The MongoDB C++11 BSON Library
 URL: http://github.com/mongodb/mongo-cxx-driver
-Version: @BSONCXX_VERSION@
-Cflags: @BSONCXX_POLY_MNMLSTC_PKGCONFIG_INCLUDE_DIRS@-I${includedir}/bsoncxx/v_noabi -I${includedir}
-Libs: -L${libdir} -lbsoncxx
+Version: @version@
+Requires: @requires@
+Cflags: @cflags@
+Libs: -L${libdir} -l@output_name@
