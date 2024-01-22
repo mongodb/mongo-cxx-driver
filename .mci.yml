@@ -193,18 +193,17 @@ functions:
                 cd drivers-evergreen-tools
                 export DRIVERS_TOOLS=$(pwd)
 
-                sh .evergreen/atlas_data_lake/build-mongohouse-local.sh
+                bash .evergreen/atlas_data_lake/pull-mongohouse-image.sh
 
     "run_mongohouse":
         command: shell.exec
         params:
             shell: bash
-            background: true
             script: |
                 cd drivers-evergreen-tools
                 export DRIVERS_TOOLS=$(pwd)
 
-                sh .evergreen/atlas_data_lake/run-mongohouse-local.sh
+                bash .evergreen/atlas_data_lake/run-mongohouse-image.sh
 
     "test_mongohouse":
         command: shell.exec
@@ -212,7 +211,21 @@ functions:
             shell: bash
             working_dir: "mongo-cxx-driver"
             script: |
-                echo "testing that mongohouse is running..."
+                echo "Waiting for mongohouse to start..."
+                wait_for_mongohouse() {
+                    for _ in $(seq 300); do
+                        # Exit code 7: "Failed to connect to host".
+                        if curl -s localhost:$1; (("$?" != 7)); then
+                            return 0
+                        else
+                            sleep 1
+                        fi
+                    done
+                    echo "Could not detect mongohouse on port $1" 1>&2
+                    return 1
+                }
+                wait_for_mongohouse 27017 || exit
+                echo "Waiting for mongohouse to start... done."
                 ps aux | grep mongohouse
 
                 cd build
@@ -227,6 +240,7 @@ functions:
                 fi
 
                 export MONGOHOUSE_TESTS_PATH="$(pwd)/../data/mongohouse"
+                export RUN_MONGOHOUSE_TESTS=ON
 
                 ulimit -c unlimited || true
 
@@ -1840,8 +1854,7 @@ buildvariants:
       display_name: "Mongohouse Test"
       expansions:
           build_type: "Release"
-          mongodb_version: "latest"
-      run_on: ubuntu2004-test
+      run_on: ubuntu2204-small
       tasks:
           - name: test_mongohouse
 
