@@ -193,18 +193,17 @@ functions:
                 cd drivers-evergreen-tools
                 export DRIVERS_TOOLS=$(pwd)
 
-                sh .evergreen/atlas_data_lake/build-mongohouse-local.sh
+                sh .evergreen/atlas_data_lake/pull-mongohouse-image.sh
 
     "run_mongohouse":
         command: shell.exec
         params:
             shell: bash
-            background: true
             script: |
                 cd drivers-evergreen-tools
                 export DRIVERS_TOOLS=$(pwd)
 
-                sh .evergreen/atlas_data_lake/run-mongohouse-local.sh
+                sh .evergreen/atlas_data_lake/run-mongohouse-image.sh
 
     "test_mongohouse":
         command: shell.exec
