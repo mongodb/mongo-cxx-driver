@@ -211,7 +211,21 @@ functions:
             shell: bash
             working_dir: "mongo-cxx-driver"
             script: |
-                echo "testing that mongohouse is running..."
+                echo "Waiting for mongohouse to start..."
+                wait_for_mongohouse() {
+                    for _ in $(seq 300); do
+                        # Exit code 7: "Failed to connect to host".
+                        if curl -s localhost:$1; (("$?" != 7)); then
+                            return 0
+                        else
+                            sleep 1
+                        fi
+                    done
+                    echo "Could not detect mongohouse on port $1" 1>&2
+                    return 1
+                }
+                wait_for_mongohouse 27017 || exit
+                echo "Waiting for mongohouse to start... done."
                 ps aux | grep mongohouse
 
                 cd build
