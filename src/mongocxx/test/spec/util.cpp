@@ -116,6 +116,13 @@ bool should_skip_spec_test(const client& client, document::view test) {
         return true;
     }
 
+    auto run_mongohouse_tests = std::getenv("RUN_MONGOHOUSE_TESTS");
+    if (run_mongohouse_tests && std::string(run_mongohouse_tests) == "ON") {
+        // mongohoused does not return `version` field in response to serverStatus.
+        // Exit early to run the test.
+        return false;
+    }
+
     std::string server_version;
     try {
         server_version = test_util::get_server_version(client);

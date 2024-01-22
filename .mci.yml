@@ -240,6 +240,7 @@ functions:
                 fi
 
                 export MONGOHOUSE_TESTS_PATH="$(pwd)/../data/mongohouse"
+                export RUN_MONGOHOUSE_TESTS=ON
 
                 ulimit -c unlimited || true
 
