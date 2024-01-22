@@ -193,7 +193,7 @@ functions:
                 cd drivers-evergreen-tools
                 export DRIVERS_TOOLS=$(pwd)
 
-                sh .evergreen/atlas_data_lake/pull-mongohouse-image.sh
+                bash .evergreen/atlas_data_lake/pull-mongohouse-image.sh
 
     "run_mongohouse":
         command: shell.exec
@@ -203,7 +203,7 @@ functions:
                 cd drivers-evergreen-tools
                 export DRIVERS_TOOLS=$(pwd)
 
-                sh .evergreen/atlas_data_lake/run-mongohouse-image.sh
+                bash .evergreen/atlas_data_lake/run-mongohouse-image.sh
 
     "test_mongohouse":
         command: shell.exec
