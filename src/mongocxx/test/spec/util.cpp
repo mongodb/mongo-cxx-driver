@@ -123,19 +123,7 @@ bool should_skip_spec_test(const client& client, document::view test) {
         return false;
     }
 
-    std::string server_version;
-    try {
-        server_version = test_util::get_server_version(client);
-    } catch (const operation_exception& e) {
-        // Mongohouse does not support serverStatus, so if we get an error from
-        // serverStatus, exit this logic early and run the test.
-        std::string message = e.what();
-        if (message.find("command serverStatus is unsupported") != std::string::npos) {
-            return false;
-        }
-
-        throw e;
-    }
+    std::string server_version = test_util::get_server_version(client);
 
     std::string topology = test_util::get_topology(client);
 
