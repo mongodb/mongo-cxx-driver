@@ -1853,7 +1853,6 @@ buildvariants:
       display_name: "Mongohouse Test"
       expansions:
           build_type: "Release"
-          mongodb_version: "latest"
       run_on: ubuntu2204-small
       tasks:
           - name: test_mongohouse
