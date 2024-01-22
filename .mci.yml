@@ -1854,7 +1854,7 @@ buildvariants:
       expansions:
           build_type: "Release"
           mongodb_version: "latest"
-      run_on: ubuntu2004-test
+      run_on: ubuntu2204-small
       tasks:
           - name: test_mongohouse
 
