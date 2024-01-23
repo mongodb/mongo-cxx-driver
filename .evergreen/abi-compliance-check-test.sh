@@ -22,11 +22,62 @@ command -V abi-compliance-checker >/dev/null
 
 mkdir cxx-abi cxx-noabi
 
-cat >cxx-abi/old.xml <<DOC
+# Generate XML descriptors with sections used by both old and new tests.
+if true; then
+  cat >old.xml <<DOC
 <version>
   ${old_ver:?}
 </version>
 
+<libs>
+  ../install/old/lib
+</libs>
+
+<add_include_paths>
+  ../install/old/include/
+</add_include_paths>
+
+DOC
+
+  cat >new.xml <<DOC
+<version>
+  ${new_ver:?}
+</version>
+
+<libs>
+  ../install/new/lib
+</libs>
+
+<add_include_paths>
+  ../install/new/include/
+</add_include_paths>
+
+DOC
+
+  {
+    cat <<DOC
+<skip_including>
+  bsoncxx/v_noabi/bsoncxx/enums/
+  bsoncxx/v_noabi/bsoncxx/config/
+</skip_including>
+
+<skip_namespaces>
+  bsoncxx::detail
+  bsoncxx::v_noabi::detail
+  bsoncxx::v_noabi::stdx::detail
+</skip_namespaces>
+
+DOC
+  } | tee -a old.xml new.xml >/dev/null
+
+  cat old.xml | tee cxx-abi/old.xml cxx-noabi/old.xml >/dev/null
+  cat new.xml | tee cxx-abi/new.xml cxx-noabi/new.xml >/dev/null
+  rm old.xml new.xml
+fi
+
+# Append sections specific to each ABI test.
+if true; then
+  cat >>cxx-abi/old.xml <<DOC
 <headers>
   ../install/old/include/bsoncxx/
   ../install/old/include/mongocxx/
@@ -35,26 +86,16 @@ cat >cxx-abi/old.xml <<DOC
 <skip_headers>
   /v_noabi/
 </skip_headers>
-
-<libs>
-  ../install/old/lib
-</libs>
-
-<add_include_paths>
-  ../install/old/include/
-</add_include_paths>
-
-<skip_including>
-  bsoncxx/enums/
-  /config/
-</skip_including>
 DOC
 
-cat >cxx-abi/new.xml <<DOC
-<version>
-  ${new_ver:?}
-</version>
+  cat >>cxx-noabi/old.xml <<DOC
+<headers>
+  ../install/old/include/bsoncxx/v_noabi
+  ../install/old/include/mongocxx/v_noabi
+</headers>
+DOC
 
+  cat >>cxx-abi/new.xml <<DOC
 <headers>
   ../install/new/include/mongocxx/
   ../install/new/include/bsoncxx/
@@ -63,68 +104,15 @@ cat >cxx-abi/new.xml <<DOC
 <skip_headers>
   /v_noabi/
 </skip_headers>
-
-<libs>
-  ../install/new/lib
-</libs>
-
-<add_include_paths>
-  ../install/new/include/
-</add_include_paths>
-
-<skip_including>
-  bsoncxx/enums/
-  /config/
-</skip_including>
 DOC
 
-cat >cxx-noabi/old.xml <<DOC
-<version>
-  ${old_ver:?}
-</version>
-
-<headers>
-  ../install/old/include/bsoncxx/v_noabi
-  ../install/old/include/mongocxx/v_noabi
-</headers>
-
-<libs>
-  ../install/old/lib
-</libs>
-
-<add_include_paths>
-  ../install/old/include/
-</add_include_paths>
-
-<skip_including>
-  bsoncxx/enums/
-  /config/
-</skip_including>
-DOC
-
-cat >cxx-noabi/new.xml <<DOC
-<version>
-  ${new_ver:?}
-</version>
-
+  cat >>cxx-noabi/new.xml <<DOC
 <headers>
   ../install/new/include/bsoncxx/v_noabi
   ../install/new/include/mongocxx/v_noabi
 </headers>
-
-<libs>
-  ../install/new/lib
-</libs>
-
-<add_include_paths>
-  ../install/new/include/
-</add_include_paths>
-
-<skip_including>
-  bsoncxx/enums/
-  /config/
-</skip_including>
 DOC
+fi
 
 # Allow task to upload the HTML report despite failed status.
 echo "Generating stable ABI report..."
