@@ -14,6 +14,8 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 - Forward headers providing non-defining declarations of bsoncxx and mongocxx class types.
   - Note: user-defined forward declarations of any library entity has not been, and is still not, supported.
     To obtain the declaration or definition of a library entity, always include the corresponding header.
+- The CMake option `ENABLE_BSONCXX_USE_POLY_IMPLS` (OFF by default) allows selecting bsoncxx implementations of C++17 polyfills by default when no polyfill library is requested.
+- The CMake option `BSONCXX_POLY_USE_IMPLS` (OFF by default) allows selecting bsoncxx implementations of C++17 polyfills instead of external libraries or the C++ standard library.
 
 ### Changed
 
