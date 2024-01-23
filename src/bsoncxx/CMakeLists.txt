@@ -55,11 +55,15 @@ elseif(BSONCXX_POLY_OPTIONS_SET EQUAL 0)
         # Otherwise, since MSVC can't handle MNMLSTC, default to boost
         set(BSONCXX_POLY_USE_BOOST ON)
         message(STATUS "Auto-configuring bsoncxx to use boost std library polyfills since C++17 is inactive and compiler is MSVC")
+        message(DEPRECATION "Default selection of external polyfill libraries is deprecated and will be removed in an upcoming major release. Set ENABLE_BSONCXX_POLY_USE_IMPLS=ON to enable recommended behavior.")
     else()
         # Otherwise, we are on a platform that can handle MNMLSTC
         set(BSONCXX_POLY_USE_MNMLSTC ON)
         message(STATUS "Auto-configuring bsoncxx to use MNMLSTC for polyfills since C++17 is inactive")
+        message(DEPRECATION "Default selection of external polyfill libraries is deprecated and will be removed in an upcoming major release. Set ENABLE_BSONCXX_POLY_USE_IMPLS=ON to enable recommended behavior.")
     endif()
+elseif(BSONCXX_POLY_USE_MNMLSTC OR BSONCXX_POLY_USE_BOOST)
+    message(DEPRECATION "Support for external polyfill libraries is deprecated and will be removed in an upcoming major release. Set BSONCXX_POLY_USE_IMPLS=ON (pre-C++17) or CMAKE_CXX_STANDARD=17 (or newer) instead.")
 endif()
 
 # It doesn't make sense to say we aren't using MNMLSTC but then
