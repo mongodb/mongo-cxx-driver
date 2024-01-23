@@ -20,6 +20,7 @@ set(BSONCXX_VERSION_NO_EXTRA ${BSONCXX_VERSION_MAJOR}.${BSONCXX_VERSION_MINOR}.$
 set(BSONCXX_VERSION ${BSONCXX_VERSION_NO_EXTRA}${BSONCXX_VERSION_EXTRA})
 message(STATUS "bsoncxx version: ${BSONCXX_VERSION}")
 
+option(BSONCXX_POLY_USE_IMPLS "Use bsoncxx implementations for stdx polyfills" OFF)
 option(BSONCXX_POLY_USE_MNMLSTC "Use MNMLSTC/core for stdx polyfills" OFF)
 option(BSONCXX_POLY_USE_STD_EXPERIMENTAL "Use std::experimental for stdx polyfills" OFF)
 option(BSONCXX_POLY_USE_SYSTEM_MNMLSTC "Obtain mnmlstc/core from system" OFF)
@@ -46,6 +47,10 @@ elseif(BSONCXX_POLY_OPTIONS_SET EQUAL 0)
         # If we are in C++17 mode, use the C++17 versions
         set(BSONCXX_POLY_USE_STD ON)
         message(STATUS "Auto-configuring bsoncxx to use C++17 std library polyfills since C++17 is active and user didn't specify otherwise")
+    elseif(ENABLE_BSONCXX_POLY_USE_IMPLS)
+        # If enabled, use bsoncxx implementations instead of external libraries.
+        set(BSONCXX_POLY_USE_IMPLS ON)
+        message(STATUS "Auto-configuring bsoncxx to use its own polyfill implementations since C++17 is inactive")
     elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
         # Otherwise, since MSVC can't handle MNMLSTC, default to boost
         set(BSONCXX_POLY_USE_BOOST ON)
