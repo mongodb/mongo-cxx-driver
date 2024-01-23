@@ -19,6 +19,8 @@
 #include <bsoncxx/stdx/type_traits.hpp>
 #include <third_party/catch/include/catch.hpp>
 
+#include <bsoncxx/config/prelude.hpp>
+
 namespace stdx = bsoncxx::stdx;
 using stdx::string_view;
 
@@ -27,6 +29,10 @@ static_assert(!std::is_constructible<string_view, double>::value, "fail");
 static_assert(std::is_constructible<string_view, std::string>::value, "fail");
 static_assert(std::is_convertible<std::string, string_view>::value, "fail");
 static_assert(std::is_constructible<std::string, string_view>::value, "fail");
+
+// Each polyfill library has some set of features that are not conformant with the standard
+// specification (inconsistent, missing, etc.). Limit testing to bsoncxx implementation and stdlib.
+#if defined(BSONCXX_POLY_USE_IMPLS) || defined(BSONCXX_POLY_USE_STD)
 
 TEST_CASE("string_view: Default constructor") {
     (void)string_view();
@@ -215,3 +221,5 @@ TEST_CASE("Convert to/from std::string_view") {
     CHECK(bson_sv == std_sv);
 }
 #endif
+
+#endif  // defined(BSONCXX_POLY_USE_IMPLS) || defined(BSONCXX_POLY_USE_STD)
