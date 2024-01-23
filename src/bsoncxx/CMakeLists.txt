@@ -63,7 +63,7 @@ elseif(BSONCXX_POLY_OPTIONS_SET EQUAL 0)
         message(DEPRECATION "Default selection of external polyfill libraries is deprecated and will be removed in an upcoming major release. Set ENABLE_BSONCXX_POLY_USE_IMPLS=ON to enable recommended behavior.")
     endif()
 elseif(BSONCXX_POLY_USE_MNMLSTC OR BSONCXX_POLY_USE_BOOST)
-    message(DEPRECATION "Support for external polyfill libraries is deprecated and will be removed in an upcoming major release. Set BSONCXX_POLY_USE_IMPLS=ON (pre-C++17) or CMAKE_CXX_STANDARD=17 (or newer) instead.")
+    message(DEPRECATION "Support for external polyfill libraries is deprecated and will be removed in an upcoming major release. Set BSONCXX_POLY_USE_IMPLS=ON (pre-C++17) or set CMAKE_CXX_STANDARD=17 (or newer) to select recommended behavior.")
 endif()
 
 # It doesn't make sense to say we aren't using MNMLSTC but then
