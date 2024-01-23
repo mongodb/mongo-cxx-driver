@@ -9,39 +9,65 @@ title = "macOS"
 
 ### Step 1: Choose a C++17 polyfill
 
-The mongocxx driver uses the C++17 features `std::optional` and
-`std::string_view`. To compile the mongocxx driver for pre-C++17, you
-must choose one of the following implementations for these features:
+The mongocxx driver uses C++17 features `std::optional` and `std::string_view`.
+To use the C++17 standard library implementations for these features, set
+the CMake configuration variable `CMAKE_CXX_STANDARD` to 17 or higher.
+Otherwise, to compile the mongocxx driver for pre-C++17 configurations, a
+polyfill library implementation must be selected from the following options
+(note: "default" refers to **pre-C++17** configurations when no polyfill library
+is explicitly selected):
 
-   MNMLSTC/core (*default for non-Windows platforms*)
-     Select with `-DBSONCXX_POLY_USE_MNMLSTC=1`.  **NOTE**: This option
-     vendors a header-only installation of MNMLSTC/core into the bsoncxx
-     library installation and will therefore download MLNMLSTC from GitHub
-     during the build process. If you already have an available version of
-     MNMLSTC on your system, you can avoid the download step by using
-     `-DBSONCXX_POLY_USE_SYSTEM_MNMLSTC`.
+* bsoncxx (*default only when `-DENABLE_BSONCXX_POLY_USE_IMPLS=ON`*)
 
-   Boost (*default for Windows platforms*)
-     Select with `-DBSONCXX_POLY_USE_BOOST=1`. This is currently the
-     only option if you are using a version of MSVC that does not support
-     C++17.
+  Select with `-DBSONCXX_POLY_USE_IMPLS=ON`. This option is most recommended, as
+  it does not require additional external library dependencies. To enable
+  selecting this option by default for pre-C++17 configurations when no other
+  options are specified, set `ENABLE_BSONCXX_POLY_USE_IMPLS=ON` (this option
+  will be set to ON by default in an upcoming major release).
 
-   `std::experimental`
-     Select with `-DBSONCXX_POLY_USE_STD_EXPERIMENTAL=1`. If your
-     toolchain's standard library provides `optional` and
-     `string_view` in the namespace `std::experimental`, you can use
-     this option. Be aware that your standard library's
-     `std::experimental` implementation may change over time,
-     breaking binary compatibility in unexpected ways. Note that this
-     polyfill is *not* recommended and is unsupported.
+* MNMLSTC/core (*default for non-Windows platforms*)
 
-Most users should be fine sticking with the default. However, if you
-have an existing application which makes heavy use of one of the
-available libraries, you may prefer to build the mongocxx driver
-against the same library.
+  **This option is deprecated and will be removed in an upcoming major release.**
+  Select with `-DBSONCXX_POLY_USE_MNMLSTC=1`. **NOTE**: This option vendors a
+  header-only installation of MNMLSTC/core into the bsoncxx library installation
+  and will therefore download MLNMLSTC from GitHub during the configuration
+  process. If you already have an available version of MNMLSTC on your system,
+  you can avoid the download step by using `-DBSONCXX_POLY_USE_SYSTEM_MNMLSTC`.
 
-**DO NOT** change your project's polyfill if you need to create a
-stable binary interface.
+* Boost (*default for Windows platforms*)
+
+  **This option is deprecated and will be removed in an upcoming major release.**
+  Select with `-DBSONCXX_POLY_USE_BOOST=1`. This is currently the only
+  non-bsoncxx option if you are using a version of MSVC that does not support
+  C++17.
+
+* `std::experimental`
+
+  **This option is deprecated and will be removed in an upcoming major release.**
+  Select with `-DBSONCXX_POLY_USE_STD_EXPERIMENTAL=1`. If your toolchain's
+  standard library provides `optional` and `string_view` in the namespace
+  `std::experimental`, you can use this option. Be aware that your standard
+  library's `std::experimental` implementation may change over time, breaking
+  binary compatibility in unexpected ways. Note that this polyfill is *not*
+  recommended and is unsupported.
+
+Most users should use the default polyfill selection behavior. However, if you
+have a preference for one of the external polyfill libraries (e.g. already a
+dependency being used by your application), you may prefer to explicitly select
+that external polyfill library rather than rely on default selection behavior.
+
+**NOTE**: C++ standard conformance and supported behavior of polyfill features
+may vary depending on the selected polyfill library. The purpose of these
+polyfills is to support pre-C++17 configurations by providing stand-ins for
+their C++17 equivalents. Therefore we recommend using the C++17 standard
+library whenever possible by setting `-DCMAKE_CXX_STANDARD=17` or newer.
+
+**WARNING**: the choice of polyfill library has a direct impact on the public
+API and ABI for the mongocxx library. Changing the polyfill can lead to both
+source-breaking changes (during compilation) and binary-breaking changes (during
+linking or execution). To limit reliance on polyfill-specific configuration or
+behavior, avoid using `stdx::string_view` and `stdx::optional<T>` with
+non-mongocxx library interfaces.
 
 ### Step 2: Download the latest version of the mongocxx driver.
 

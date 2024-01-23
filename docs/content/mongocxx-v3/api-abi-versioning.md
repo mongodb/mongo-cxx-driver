@@ -49,11 +49,12 @@ followed by a suffix describing the toolset and runtime library used to build th
 
 Some examples of common DSO filenames expected to be generated include:
 
-* mongocxx-v_noabi-rhs-x64-v142-md.dll (release build configuration)
-* mongocxx-v_noabi-dhs-x64-v142-mdd.dll (debug build configuration)
-* mongocxx-v_noabi-rts-x64-v142-md.dll (link with mongoc statically)
-* mongocxx-v_noabi-rhm-x64-v142-md.dll (mnmlstc/core polyfill library)
-* mongocxx-v_noabi-rhb-x64-v142-md.dll (Boost polyfill library)
+* `mongocxx-v_noabi-rhs-x64-v142-md.dll` (release build configuration)
+* `mongocxx-v_noabi-dhs-x64-v142-mdd.dll` (debug build configuration)
+* `mongocxx-v_noabi-rts-x64-v142-md.dll` (link with mongoc statically)
+* `mongocxx-v_noabi-rhi-x64-v142-md.dll` (bsoncxx polyfill library)
+* `mongocxx-v_noabi-rhm-x64-v142-md.dll` (mnmlstc/core polyfill library)
+* `mongocxx-v_noabi-rhb-x64-v142-md.dll` (Boost polyfill library)
 
 This allows libraries built with different build configurations (and different runtime library requirements) to be built and installed without conflicting with each other.
 
