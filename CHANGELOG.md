@@ -33,6 +33,7 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
     Use `find_package(bsoncxx)` and `find_package(mongocxx)` instead.
   - Accordingly, `LIBBSONCXX_*` and `LIBMONGOCXX_*` CMake variables provided by the legacy CMake package config files are no longer supported. Use the `mongo::bsoncxx_*` and `mongo::mongocxx_*` CMake targets instead.
   - Note: manually setting compile definitions, include directories, and link libraries is unnecessary with target-based CMake. The former `LIBBSONCXX_*` and `LIBMONGOCXX_*` CMake variables are superseded by the `target_link_libraries()` CMake command, which automatically propagates the necessary compile definitions, include directories, and link libraries to dependent targets via `mongo::bsoncxx_*` and `mongo::mongocxx_*` interface properties.
+- Experimental C++ standard library as a polyfill option via `BSONCXX_POLY_USE_STD_EXPERIMENTAL`.
 
 ## 3.9.0
 

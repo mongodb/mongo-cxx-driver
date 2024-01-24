@@ -21,7 +21,6 @@ set(BSONCXX_VERSION ${BSONCXX_VERSION_NO_EXTRA}${BSONCXX_VERSION_EXTRA})
 message(STATUS "bsoncxx version: ${BSONCXX_VERSION}")
 
 option(BSONCXX_POLY_USE_MNMLSTC "Use MNMLSTC/core for stdx polyfills" OFF)
-option(BSONCXX_POLY_USE_STD_EXPERIMENTAL "Use std::experimental for stdx polyfills" OFF)
 option(BSONCXX_POLY_USE_SYSTEM_MNMLSTC "Obtain mnmlstc/core from system" OFF)
 option(BSONCXX_POLY_USE_BOOST "Use boost for stdx polyfills" OFF)
 option(BSONCXX_POLY_USE_STD "Use C++17 std library for stdx polyfills" OFF)
@@ -31,7 +30,7 @@ set(BSONCXX_OUTPUT_BASENAME "bsoncxx" CACHE STRING "Output bsoncxx library base 
 # Count how many polyfill options are true-ish
 set(BSONCXX_POLY_OPTIONS_SET 0)
 
-foreach(BSONCXX_POLY_OPTION ${BSONCXX_POLY_USE_MNMLSTC} ${BSONCXX_POLY_USE_STD_EXPERIMENTAL} ${BSONCXX_POLY_USE_BOOST} ${BSONCXX_POLY_USE_STD})
+foreach(BSONCXX_POLY_OPTION ${BSONCXX_POLY_USE_MNMLSTC} ${BSONCXX_POLY_USE_BOOST} ${BSONCXX_POLY_USE_STD})
     if(${BSONCXX_POLY_OPTION})
         MATH(EXPR BSONCXX_POLY_OPTIONS_SET "${BSONCXX_POLY_OPTIONS_SET}+1")
     endif()
@@ -61,11 +60,6 @@ endif()
 # request the system version of it.
 if(NOT BSONCXX_POLY_USE_MNMLSTC AND BSONCXX_POLY_USE_SYSTEM_MNMLSTC)
     MESSAGE(FATAL_ERROR "Can't specify system mnmlstc when not using mnmlstc")
-endif()
-
-# Can only use STD_EXPERIMENTAL in C++14 mode
-if(BSONCXX_POLY_USE_STD_EXPERIMENTAL AND CMAKE_CXX_STANDARD LESS 14)
-    message(FATAL_ERROR "Can only use BSONCXX_POLY_USE_STD_EXPERIMENTAL if CMAKE_CXX_STANDARD is 14 or higher")
 endif()
 
 set(BSONCXX_BOOST_PKG_DEP "") # Required by bsoncxx-config.cmake.in.

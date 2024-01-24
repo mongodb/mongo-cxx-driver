@@ -54,23 +54,6 @@ using ::boost::make_optional;
 }  // namespace v_noabi
 }  // namespace bsoncxx
 
-#elif defined(BSONCXX_POLY_USE_STD_EXPERIMENTAL)
-
-#include <experimental/optional>
-
-namespace bsoncxx {
-namespace v_noabi {
-namespace stdx {
-
-using ::std::experimental::make_optional;
-using ::std::experimental::nullopt;
-using ::std::experimental::nullopt_t;
-using ::std::experimental::optional;
-
-}  // namespace stdx
-}  // namespace v_noabi
-}  // namespace bsoncxx
-
 #elif defined(BSONCXX_POLY_USE_STD)
 
 #include <optional>

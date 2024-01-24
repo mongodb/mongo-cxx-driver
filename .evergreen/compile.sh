@@ -23,7 +23,6 @@ set -o pipefail
 : "${REQUIRED_CXX_STANDARD:-}"
 : "${RUN_DISTCHECK:-}"
 : "${USE_POLYFILL_BOOST:-}"
-: "${USE_POLYFILL_STD_EXPERIMENTAL:-}"
 : "${USE_SANITIZER_ASAN:-}"
 : "${USE_SANITIZER_UBSAN:-}"
 : "${USE_STATIC_LIBS:-}"
@@ -135,13 +134,6 @@ darwin* | linux*)
 esac
 export CMAKE_GENERATOR="${generator:?}"
 export CMAKE_GENERATOR_PLATFORM="${platform:-}"
-
-if [[ "${USE_POLYFILL_STD_EXPERIMENTAL:-}" == "ON" ]]; then
-  cmake_flags+=(
-    "-DCMAKE_CXX_STANDARD=14"
-    "-DBSONCXX_POLY_USE_STD_EXPERIMENTAL=ON"
-  )
-fi
 
 if [[ "${USE_POLYFILL_BOOST:-}" == "ON" ]]; then
   cmake_flags+=("-DBSONCXX_POLY_USE_BOOST=ON")
