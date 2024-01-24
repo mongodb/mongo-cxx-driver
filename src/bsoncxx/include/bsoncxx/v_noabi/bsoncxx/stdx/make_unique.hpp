@@ -99,7 +99,8 @@ struct make_unique_impl<T&&> {};
 }  // namespace v_noabi
 }  // namespace bsoncxx
 
-#endif  // defined(BSONCXX_DETAIL_USE_IMPLS_MAKE_UNIQUE)
+#endif  // !defined(BSONCXX_DETAIL_USE_STD_MAKE_UNIQUE) ||
+        // !defined(__cpp_lib_smart_ptr_for_overwrite)
 
 namespace bsoncxx {
 namespace v_noabi {
