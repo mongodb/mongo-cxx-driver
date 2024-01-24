@@ -962,11 +962,21 @@ tasks:
             rsync -aq --exclude='examples/add_subdirectory' $(readlink -f ../..) .
             [ -d build ] || mkdir build
             . ./mongo-c-driver/.evergreen/scripts/find-cmake-latest.sh
-            export CMAKE
-            CMAKE="$(find_cmake_latest)"
-            command -v "$CMAKE"
-            $CMAKE -S . -B build -DENABLE_AUTOMATIC_INIT_AND_CLEANUP=OFF
-            $CMAKE --build build
+            export cmake_binary
+            cmake_binary="$(find_cmake_latest)"
+            # Use ccache if available.
+            if command -V ccache 2>/dev/null; then
+              export CMAKE_C_COMPILER_LAUNCHER=ccache
+              export CMAKE_CXX_COMPILER_LAUNCHER=ccache
+
+              # Allow reuse of ccache compilation results between different build directories.
+              export CCACHE_BASEDIR CCACHE_NOHASHDIR
+              CCACHE_BASEDIR="$(pwd)"
+              CCACHE_NOHASHDIR=1
+            fi
+            command -v "$cmake_binary"
+            "$cmake_binary" -S . -B build -DENABLE_AUTOMATIC_INIT_AND_CLEANUP=OFF
+            "$cmake_binary" --build build
             ./build/hello_mongocxx
 
     - name: debian-package-build
