@@ -67,10 +67,18 @@ CMAKE_BUILD_PARALLEL_LEVEL="$(nproc)"
 export CMAKE_BUILD_PARALLEL_LEVEL
 
 # Use ccache if available.
-if command -v ccache >/dev/null; then
-  echo "Enabling ccache as CMake compiler launcher"
-  export CMAKE_C_COMPILER_LAUNCHER=ccache
+if command -V ccache 2>/dev/null; then
   export CMAKE_CXX_COMPILER_LAUNCHER=ccache
+
+
+  # Allow reuse of ccache compilation results between different build directories.
+  export CCACHE_BASEDIR CCACHE_NOHASHDIR
+  CCACHE_BASEDIR="$(pwd)"
+  CCACHE_NOHASHDIR=1
+  # Allow reuse of ccache compilation results between different build directories.
+  export CCACHE_BASEDIR CCACHE_NOHASHDIR
+  CCACHE_BASEDIR="$(pwd)"
+  CCACHE_NOHASHDIR=1
 fi
 
 cmake_build_opts=()
