@@ -62,7 +62,7 @@ if command -V ccache 2>/dev/null; then
 
   # Allow reuse of ccache compilation results between different build directories.
   export CCACHE_BASEDIR CCACHE_NOHASHDIR
-  CCACHE_BASEDIR="$(pwd)"
+  CCACHE_BASEDIR="$(pwd)/mongo-cxx-driver"
   CCACHE_NOHASHDIR=1
 fi
 
