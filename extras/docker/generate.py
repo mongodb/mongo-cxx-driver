@@ -30,7 +30,7 @@ if __name__ == "__main__":
         "redhat-ubi-9.3",
     ]
     base_image = {
-        "alpine3.19": "alpine:3",
+        "alpine3.19": "alpine:3.19",
         "bookworm": "debian:12-slim",
         "jammy": "ubuntu:22.04",
         "redhat-ubi-9.3": "registry.access.redhat.com/ubi9/ubi-minimal:9.3",
