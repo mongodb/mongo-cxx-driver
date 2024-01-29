@@ -469,7 +469,6 @@ functions:
                   - REQUIRED_CXX_STANDARD
                   - RUN_DISTCHECK
                   - USE_POLYFILL_BOOST
-                  - USE_POLYFILL_STD_EXPERIMENTAL
                   - USE_SANITIZER_ASAN
                   - USE_SANITIZER_UBSAN
                   - USE_STATIC_LIBS
@@ -1684,24 +1683,6 @@ buildvariants:
           - name: compile_and_test_with_shared_libs_sharded_cluster
           - name: build_example_with_add_subdirectory
           - name: uninstall_check
-
-    # TODO CXX-2260 Upgrade std::experimental tasks to use Ubuntu 18.04 and mongodb_latest
-    # after bug fixes with newer g++ versions.
-    - name: ubuntu1604-debug-std-experimental
-      display_name: "Ubuntu 16.04 Debug (std::experimental) (MongoDB 4.4)"
-      expansions:
-          build_type: "Debug"
-          USE_POLYFILL_STD_EXPERIMENTAL: ON
-          mongodb_version: "4.4"
-          example_projects_cxx_standard: 14
-          use_mongocryptd: true  # crypt_shared is not available for Ubuntu 16.04
-      run_on:
-          - ubuntu1604-build
-      tasks:
-          - name: compile_and_test_with_shared_libs
-          - name: compile_and_test_with_shared_libs_extra_alignment
-          - name: compile_and_test_with_static_libs
-          - name: compile_and_test_with_static_libs_extra_alignment
 
     - name: ubuntu2004-debug-valgrind-latest
       display_name: "Valgrind Ubuntu 20.04 Debug (MongoDB Latest)"
