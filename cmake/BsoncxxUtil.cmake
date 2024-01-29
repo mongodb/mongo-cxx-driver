@@ -55,7 +55,6 @@ function(bsoncxx_add_library TARGET OUTPUT_NAME LINK_TYPE)
         # Library used for C++17 polyfills:
         # - 'm' for mnmlstc/core.
         # - 'b' for Boost.
-        # - 'x' for experimental standard library.
         # - 'i' for bsoncxx implementations.
         # - 's' for standard library (no polyfill).
         if(1)
