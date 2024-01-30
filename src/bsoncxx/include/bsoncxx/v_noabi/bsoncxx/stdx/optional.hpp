@@ -725,6 +725,31 @@ struct optional_base_class {
     using type = optional_assign_base<T>;
 };
 
+template <typename T, bool CanHash = std::is_default_constructible<std::hash<T>>::value>
+struct optional_hash;
+
+// Hash is "disabled" if the underlying type is not hashable (disabled = cannot construct the hash
+// invocable)
+template <typename T>
+struct optional_hash<T, false> {
+    optional_hash() = delete;
+    optional_hash(const optional_hash&) = delete;
+};
+
+template <typename T>
+struct optional_hash<T, true> {
+    constexpr std::size_t operator()(const optional<T>& opt) const
+        noexcept(noexcept(std::hash<T>()(std::declval<T const&>()))) {
+        // Hash(o: opt<T>) =
+        //   if   o.has_value()
+        //   then Hash(o.value) + 2
+        //   else Hash(nullptr as T*) + 4
+        // (Constant addends are arbitrary, just to not collide with underlying hash)
+        return opt.has_value() ? 2ull + std::hash<T>()(*opt)  //
+                               : 4ull + std::hash<T*>()(nullptr);
+    }
+};
+
 }  // namespace detail
 
 }  // namespace stdx
@@ -732,6 +757,14 @@ struct optional_base_class {
 }  // namespace v_noabi
 
 }  // namespace bsoncxx
+
+namespace std {
+
+template <typename T>
+struct hash<bsoncxx::v_noabi::stdx::optional<T>>
+    : bsoncxx::v_noabi::stdx::detail::optional_hash<T> {};
+
+}  // namespace std
 
 #include <bsoncxx/config/postlude.hpp>
 

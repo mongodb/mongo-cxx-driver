@@ -23,6 +23,11 @@ using value_t = decltype(std::declval<T>().value());
 template <typename T>
 using arrow_t = decltype(std::declval<T>().operator->());
 
+template <typename T>
+struct is_hashable
+    : bsoncxx::detail::conjunction<std::is_default_constructible<std::hash<T>>,
+                                   bsoncxx::detail::is_invocable<std::hash<T>, const T&>> {};
+
 struct not_default_constructible {
     explicit not_default_constructible(int);
 };
@@ -108,6 +113,7 @@ bool static_checks() {
     assert_sameness<std::is_copy_assignable, T>();
     assert_sameness<std::is_move_constructible, T>();
     assert_sameness<std::is_move_assignable, T>();
+    assert_sameness<is_hashable, T>();
     assert_sameness<bsoncxx::detail::is_equality_comparable, T>();
     assert_sameness<bsoncxx::detail::is_totally_ordered, T>();
     assert_sameness<std::is_trivially_destructible, T>();
@@ -143,6 +149,9 @@ bool static_checks() {
 static_assert(bsoncxx::detail::is_totally_ordered<std::string>{}, "fail");
 static_assert(bsoncxx::detail::is_totally_ordered<int>{}, "fail");
 static_assert(!bsoncxx::detail::is_totally_ordered<not_ordered>{}, "fail");
+
+static_assert(is_hashable<optional<int>>::value, "fail");
+static_assert(!is_hashable<optional<immobile>>::value, "fail");
 
 TEST_CASE("Trait checks") {
     CHECK(static_checks<int>());
