@@ -234,7 +234,7 @@ class optional : bsoncxx::detail::equality_operators,
     bsoncxx_cxx14_constexpr explicit optional(optional<U>&& other) noexcept(
         std::is_nothrow_constructible<T, bsoncxx::detail::add_lvalue_reference_t<U&&>>::value) {
         if (other.has_value()) {
-            this->emplace(*BSONCXX_FWD(*other));
+            this->emplace(*BSONCXX_FWD(other));
         }
     }
 
@@ -245,7 +245,7 @@ class optional : bsoncxx::detail::equality_operators,
     bsoncxx_cxx14_constexpr optional(optional<U>&& other) noexcept(
         std::is_nothrow_constructible<T, bsoncxx::detail::add_lvalue_reference_t<U&&>>::value) {
         if (other.has_value()) {
-            this->emplace(*BSONCXX_FWD(*other));
+            this->emplace(*BSONCXX_FWD(other));
         }
     }
 

@@ -235,4 +235,10 @@ TEST_CASE("optional<T> conversions") {
     optional<in_place_convertible> q(bsoncxx::stdx::in_place);
     REQUIRE(q.has_value());
     CHECK_FALSE(q->constructed_from_in_place);
+
+    optional<const char*> c_str = "foo";
+    optional<std::string> string = c_str;
+    optional<std::string> string2 = std::move(c_str);
+    CHECK(string == c_str);
+    CHECK(string2 == c_str);
 }
