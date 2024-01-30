@@ -619,9 +619,22 @@ class optional_common_base : operators_base {
      * a new value in-place using the given arguments.
      */
     template <typename... Args>
-    void emplace(Args&&... args) noexcept(noexcept((T(BSONCXX_FWD(args)...)))) {
+    T& emplace(Args&&... args) {
         this->reset();
         this->_emplace_construct_anew(BSONCXX_FWD(args)...);
+        return this->_storage.value;
+    }
+
+    /**
+     * @internal
+     * @brief If the optional is holding a value, destroy that value. Construct
+     * a new value in-place using the given arguments.
+     */
+    template <typename U, typename... Args>
+    T& emplace(std::initializer_list<U> il, Args&&... args) {
+        this->reset();
+        this->_emplace_construct_anew(il, BSONCXX_FWD(args)...);
+        return this->_storage.value;
     }
 
    private:
