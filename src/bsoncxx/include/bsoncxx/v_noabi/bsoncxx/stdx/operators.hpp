@@ -114,6 +114,11 @@ class strong_ordering {
     DEFOP(<=);
     DEFOP(>=);
 #pragma pop_macro("DEFOP")
+
+    // nonstd: Swap greater/less values
+    constexpr strong_ordering inverted() const noexcept {
+        return *this < 0 ? greater : *this > 0 ? less : *this;
+    }
 };
 
 #pragma push_macro("INLINE_VAR")
@@ -171,7 +176,7 @@ struct ordering_operators {
 
     template <typename L, typename R>
     constexpr static auto impl(const L& l, const R& r, rank<0>)
-        BSONCXX_RETURNS(tag_invoke(compare_three_way{}, r, l));
+        BSONCXX_RETURNS(tag_invoke(compare_three_way{}, r, l).inverted());
 
 #pragma push_macro("DEFOP")
 #undef DEFOP

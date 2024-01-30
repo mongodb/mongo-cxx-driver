@@ -211,6 +211,9 @@ TEST_CASE("Comparisons") {
     CHECK(a < b);
     CHECK(c < a);
     CHECK(c < b);
+    CHECK(c == nullopt);
+    CHECK(nullopt < a);
+    CHECK(nullopt == c);
     CHECK(a != b);
     CHECK(c != a);
     CHECK(c != b);

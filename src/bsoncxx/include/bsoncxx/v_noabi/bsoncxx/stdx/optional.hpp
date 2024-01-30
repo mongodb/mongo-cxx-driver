@@ -559,11 +559,9 @@ struct operators_base {
     }
 
     template <typename T>
-    constexpr friend bsoncxx::detail::strong_ordering tag_invoke(bsoncxx::detail::compare_three_way,
-                                                                 optional<T> const& left,
-                                                                 nullopt_t) {
-        return left.has_value() ? bsoncxx::detail::strong_ordering::greater
-                                : bsoncxx::detail::strong_ordering::equal;
+    constexpr friend bsoncxx::detail::strong_ordering tag_invoke(
+        bsoncxx::detail::compare_three_way compare, optional<T> const& left, nullopt_t) {
+        return compare(left.has_value(), false);
     }
 };
 
