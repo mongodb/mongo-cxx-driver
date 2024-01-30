@@ -26,15 +26,6 @@ must choose one of the following implementations for these features:
      only option if you are using a version of MSVC that does not support
      C++17.
 
-   `std::experimental`
-     Select with `-DBSONCXX_POLY_USE_STD_EXPERIMENTAL=1`. If your
-     toolchain's standard library provides `optional` and
-     `string_view` in the namespace `std::experimental`, you can use
-     this option. Be aware that your standard library's
-     `std::experimental` implementation may change over time,
-     breaking binary compatibility in unexpected ways. Note that this
-     polyfill is *not* recommended and is unsupported.
-
 Most users should be fine sticking with the default. However, if you
 have an existing application which makes heavy use of one of the
 available libraries, you may prefer to build the mongocxx driver

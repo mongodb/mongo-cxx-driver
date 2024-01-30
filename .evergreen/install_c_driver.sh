@@ -83,7 +83,6 @@ if [[ "${OSTYPE}" == darwin* ]]; then
   }
 fi
 
-
 # Default CMake generator to use if not already provided.
 declare CMAKE_GENERATOR CMAKE_GENERATOR_PLATFORM
 if [[ "${OSTYPE:?}" == "cygwin" ]]; then
@@ -129,6 +128,17 @@ if [[ "${BSON_EXTRA_ALIGNMENT:-}" == "1" ]]; then
   configure_flags+=("-DENABLE_EXTRA_ALIGNMENT=ON")
 else
   configure_flags+=("-DENABLE_EXTRA_ALIGNMENT=OFF")
+fi
+
+# Use ccache if available.
+if command -V ccache 2>/dev/null; then
+  export CMAKE_C_COMPILER_LAUNCHER=ccache
+  export CMAKE_CXX_COMPILER_LAUNCHER=ccache
+
+  # Allow reuse of ccache compilation results between different build directories.
+  export CCACHE_BASEDIR CCACHE_NOHASHDIR
+  CCACHE_BASEDIR="${mongoc_idir}"
+  CCACHE_NOHASHDIR=1
 fi
 
 # Install libmongoc.

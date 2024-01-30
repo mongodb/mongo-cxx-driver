@@ -56,6 +56,103 @@ variables:
 #######################################
 
 functions:
+    "abi-compliance-check":
+        - command: subprocess.exec
+          type: setup
+          params:
+            binary: bash
+            args: [mongo-cxx-driver/.evergreen/abi-compliance-check-setup.sh]
+        - command: subprocess.exec
+          type: test
+          params:
+            binary: bash
+            args: [mongo-cxx-driver/.evergreen/abi-compliance-check-test.sh]
+        - command: s3.put
+          type: system
+          params:
+            aws_key: ${aws_key}
+            aws_secret: ${aws_secret}
+            bucket: mciuploads
+            content_type: text/html
+            display_name: "ABI Compliance Check (Stable): "
+            local_files_include_filter: cxx-abi/compat_reports/**/compat_report.html
+            permissions: public-read
+            remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${execution}/abi-compliance-check/abi/
+        - command: s3.put
+          type: system
+          params:
+            aws_key: ${aws_key}
+            aws_secret: ${aws_secret}
+            bucket: mciuploads
+            content_type: text/plain
+            display_name: "ABI Compliance Check (Stable): "
+            local_files_include_filter: cxx-abi/logs/**/log.txt
+            permissions: public-read
+            remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${execution}/abi-compliance-check/abi/
+        - command: s3.put
+          type: system
+          params:
+            aws_key: ${aws_key}
+            aws_secret: ${aws_secret}
+            bucket: mciuploads
+            content_type: text/html
+            display_name: "ABI Compliance Check (Unstable): "
+            local_files_include_filter: cxx-noabi/compat_reports/**/compat_report.html
+            permissions: public-read
+            remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${execution}/abi-compliance-check/noabi/
+        - command: s3.put
+          type: system
+          params:
+            aws_key: ${aws_key}
+            aws_secret: ${aws_secret}
+            bucket: mciuploads
+            content_type: text/plain
+            display_name: "ABI Compliance Check (Unstable): "
+            local_files_include_filter: cxx-noabi/logs/**/log.txt
+            permissions: public-read
+            remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${execution}/abi-compliance-check/noabi/
+
+    "abidiff":
+        - command: subprocess.exec
+          type: setup
+          params:
+            binary: bash
+            args: [mongo-cxx-driver/.evergreen/abidiff-setup.sh]
+        - command: subprocess.exec
+          type: test
+          params:
+            binary: bash
+            args: [mongo-cxx-driver/.evergreen/abidiff-test.sh]
+        - command: s3.put
+          type: system
+          params:
+            aws_key: ${aws_key}
+            aws_secret: ${aws_secret}
+            bucket: mciuploads
+            content_type: text/plain
+            display_name: "abidiff (Stable): "
+            local_files_include_filter: cxx-abi/*.txt
+            permissions: public-read
+            remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${execution}/abidiff/abi/
+        - command: s3.put
+          type: system
+          params:
+            aws_key: ${aws_key}
+            aws_secret: ${aws_secret}
+            bucket: mciuploads
+            content_type: text/plain
+            display_name: "abidiff (Unstable): "
+            local_files_include_filter: cxx-noabi/*.txt
+            permissions: public-read
+            remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${execution}/abidiff/noabi/
+
+    "abi-prohibited-symbols":
+        - command: subprocess.exec
+          type: test
+          params:
+            binary: bash
+            args: [mongo-cxx-driver/.evergreen/abi-prohibited-symbols-test.sh]
+
     "setup":
         - command: shell.exec
           params:
@@ -96,18 +193,17 @@ functions:
                 cd drivers-evergreen-tools
                 export DRIVERS_TOOLS=$(pwd)
 
-                sh .evergreen/atlas_data_lake/build-mongohouse-local.sh
+                bash .evergreen/atlas_data_lake/pull-mongohouse-image.sh
 
     "run_mongohouse":
         command: shell.exec
         params:
             shell: bash
-            background: true
             script: |
                 cd drivers-evergreen-tools
                 export DRIVERS_TOOLS=$(pwd)
 
-                sh .evergreen/atlas_data_lake/run-mongohouse-local.sh
+                bash .evergreen/atlas_data_lake/run-mongohouse-image.sh
 
     "test_mongohouse":
         command: shell.exec
@@ -115,7 +211,21 @@ functions:
             shell: bash
             working_dir: "mongo-cxx-driver"
             script: |
-                echo "testing that mongohouse is running..."
+                echo "Waiting for mongohouse to start..."
+                wait_for_mongohouse() {
+                    for _ in $(seq 300); do
+                        # Exit code 7: "Failed to connect to host".
+                        if curl -s localhost:$1; (("$?" != 7)); then
+                            return 0
+                        else
+                            sleep 1
+                        fi
+                    done
+                    echo "Could not detect mongohouse on port $1" 1>&2
+                    return 1
+                }
+                wait_for_mongohouse 27017 || exit
+                echo "Waiting for mongohouse to start... done."
                 ps aux | grep mongohouse
 
                 cd build
@@ -130,6 +240,7 @@ functions:
                 fi
 
                 export MONGOHOUSE_TESTS_PATH="$(pwd)/../data/mongohouse"
+                export RUN_MONGOHOUSE_TESTS=ON
 
                 ulimit -c unlimited || true
 
@@ -358,7 +469,6 @@ functions:
                   - REQUIRED_CXX_STANDARD
                   - RUN_DISTCHECK
                   - USE_POLYFILL_BOOST
-                  - USE_POLYFILL_STD_EXPERIMENTAL
                   - USE_SANITIZER_ASAN
                   - USE_SANITIZER_UBSAN
                   - USE_STATIC_LIBS
@@ -522,7 +632,7 @@ functions:
             set -x
             # TODO: Re-enable Alpine test once MONGOCRYPT-601 is released.
             # echo "Building Alpine Docker image"
-            # make -C extras/docker/alpine3.18 nocachebuild test
+            # make -C extras/docker/alpine3 nocachebuild test
             echo "Building Debian Docker image"
             make -C extras/docker/bookworm nocachebuild test
             echo "Building Red Hat UBI Docker image"
@@ -563,6 +673,22 @@ post:
 #######################################
 
 tasks:
+    - name: abi-compliance-check
+      tags: ["abi-stability", "abi-compliance-check"]
+      run_on: "ubuntu2204-large"
+      commands:
+        - func: "abi-compliance-check"
+    - name: abidiff
+      tags: ["abi-stability", "abidiff"]
+      run_on: "ubuntu2204-large"
+      commands:
+        - func: "abidiff"
+    - name: abi-prohibited-symbols
+      tags: ["abi-stability", "abi-prohibited-symbols"]
+      run_on: "ubuntu2204-large"
+      commands:
+        - func: "abi-prohibited-symbols"
+
     - name: lint
       run_on: ubuntu1804-large
       commands:
@@ -835,11 +961,21 @@ tasks:
             rsync -aq --exclude='examples/add_subdirectory' $(readlink -f ../..) .
             [ -d build ] || mkdir build
             . ./mongo-c-driver/.evergreen/scripts/find-cmake-latest.sh
-            export CMAKE
-            CMAKE="$(find_cmake_latest)"
-            command -v "$CMAKE"
-            $CMAKE -S . -B build -DENABLE_AUTOMATIC_INIT_AND_CLEANUP=OFF
-            $CMAKE --build build
+            export cmake_binary
+            cmake_binary="$(find_cmake_latest)"
+            # Use ccache if available.
+            if command -V ccache 2>/dev/null; then
+              export CMAKE_C_COMPILER_LAUNCHER=ccache
+              export CMAKE_CXX_COMPILER_LAUNCHER=ccache
+
+              # Allow reuse of ccache compilation results between different build directories.
+              export CCACHE_BASEDIR CCACHE_NOHASHDIR
+              CCACHE_BASEDIR="$(pwd)"
+              CCACHE_NOHASHDIR=1
+            fi
+            command -v "$cmake_binary"
+            "$cmake_binary" -S . -B build -DENABLE_AUTOMATIC_INIT_AND_CLEANUP=OFF
+            "$cmake_binary" --build build
             ./build/hello_mongocxx
 
     - name: debian-package-build
@@ -987,6 +1123,27 @@ tasks:
               ./build/src/mongocxx/test/test_driver "atlas search indexes prose tests"
 
 task_groups:
+  - name: tg-abi-stability
+    max_hosts: -1
+    setup_task_can_fail_task: true
+    setup_task:
+      - command: git.get_project
+        params:
+          directory: "mongo-cxx-driver"
+      - func: install_c_driver
+      - command: subprocess.exec
+        params:
+          binary: bash
+          args: [mongo-cxx-driver/.evergreen/abi-stability-setup.sh]
+          include_expansions_in_env: [cxx_standard]
+    tasks: [".abi-stability"]
+    teardown_task_can_fail_task: true
+    teardown_task:
+      - command: subprocess.exec
+        params:
+          binary: bash
+          args: [-c, rm -rf *]
+
   - name: test_atlas_task_group_search_indexes
     setup_group:
       - func: "setup"
@@ -1023,6 +1180,29 @@ task_groups:
 #######################################
 
 buildvariants:
+    ##########################
+    #  ABI Stability Checks  #
+    ##########################
+    - name: abi-stability-polyfill
+      display_name: "ABI Stability Checks (polyfill)"
+      expansions:
+        cxx_standard: 11 # Use a polyfill library.
+      tasks:
+        - "tg-abi-stability"
+      display_tasks:
+        - name: "ABI Stability Checks (polyfill)"
+          execution_tasks: [".abi-stability"]
+
+    - name: abi-stability-stdlib
+      display_name: "ABI Stability Checks (stdlib)"
+      expansions:
+        cxx_standard: 17 # Use the stdlib.
+      tasks:
+        - "tg-abi-stability"
+      display_tasks:
+        - name: "ABI Stability Checks (stdlib)"
+          execution_tasks: [".abi-stability"]
+
     #######################################
     #  Standard MongoDB Integration Tests #
     #######################################
@@ -1504,24 +1684,6 @@ buildvariants:
           - name: build_example_with_add_subdirectory
           - name: uninstall_check
 
-    # TODO CXX-2260 Upgrade std::experimental tasks to use Ubuntu 18.04 and mongodb_latest
-    # after bug fixes with newer g++ versions.
-    - name: ubuntu1604-debug-std-experimental
-      display_name: "Ubuntu 16.04 Debug (std::experimental) (MongoDB 4.4)"
-      expansions:
-          build_type: "Debug"
-          USE_POLYFILL_STD_EXPERIMENTAL: ON
-          mongodb_version: "4.4"
-          example_projects_cxx_standard: 14
-          use_mongocryptd: true  # crypt_shared is not available for Ubuntu 16.04
-      run_on:
-          - ubuntu1604-build
-      tasks:
-          - name: compile_and_test_with_shared_libs
-          - name: compile_and_test_with_shared_libs_extra_alignment
-          - name: compile_and_test_with_static_libs
-          - name: compile_and_test_with_static_libs_extra_alignment
-
     - name: ubuntu2004-debug-valgrind-latest
       display_name: "Valgrind Ubuntu 20.04 Debug (MongoDB Latest)"
       expansions:
@@ -1683,8 +1845,7 @@ buildvariants:
       display_name: "Mongohouse Test"
       expansions:
           build_type: "Release"
-          mongodb_version: "latest"
-      run_on: ubuntu2004-test
+      run_on: ubuntu2204-small
       tasks:
           - name: test_mongohouse
 
