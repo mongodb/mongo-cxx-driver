@@ -176,11 +176,19 @@ class optional : bsoncxx::detail::equality_operators,
     optional& operator=(optional&&) = default;
     ~optional() = default;
 
-    // In-place constructor
+    // In-place constructors
     template <typename... Args>
     bsoncxx_cxx14_constexpr explicit optional(in_place_t, Args&&... args) noexcept(
         noexcept(T(BSONCXX_FWD(args)...))) {
         this->emplace(BSONCXX_FWD(args)...);
+    }
+
+    template <typename U, typename... Args>
+    bsoncxx_cxx14_constexpr explicit optional(
+        in_place_t,
+        std::initializer_list<U> il,
+        Args&&... args) noexcept(noexcept(T(il, BSONCXX_FWD(args)...))) {
+        this->emplace(il, BSONCXX_FWD(args)...);
     }
 
     // Explicit converting constructor. Only available if implicit conversion is
