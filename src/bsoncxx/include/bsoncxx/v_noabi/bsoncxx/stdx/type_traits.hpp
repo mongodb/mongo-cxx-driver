@@ -15,6 +15,7 @@
 #pragma once
 
 #include <type_traits>
+#include <utility>
 
 #include <bsoncxx/config/prelude.hpp>
 
@@ -472,6 +473,35 @@ struct rank : rank<N - 1> {};
 
 template <>
 struct rank<0> {};
+
+namespace swap_detection {
+
+using std::swap;
+
+template <typename T, typename U>
+auto is_swappable_f(rank<0>) -> std::false_type;
+
+template <typename T, typename U>
+auto is_swappable_f(rank<1>)                                       //
+    noexcept(noexcept(swap(std::declval<T>(), std::declval<U>()))  //
+                 && noexcept(swap(std::declval<U>(), std::declval<T>())))
+        -> true_t<decltype(swap(std::declval<T>(), std::declval<U>())),
+                  decltype(swap(std::declval<U>(), std::declval<T>()))>;
+
+}  // namespace swap_detection
+
+template <typename T, typename U>
+struct is_swappable_with : decltype(swap_detection::is_swappable_f<T, U>(rank<1>{})) {};
+
+template <typename T, typename U>
+struct is_nothrow_swappable_with
+    : bool_constant<noexcept(swap_detection::is_swappable_f<T, U>(rank<1>{}))> {};
+
+template <typename T>
+struct is_swappable : is_swappable_with<T&, T&> {};
+
+template <typename T>
+struct is_nothrow_swappable : is_nothrow_swappable_with<T&, T&> {};
 
 }  // namespace detail
 }  // namespace bsoncxx

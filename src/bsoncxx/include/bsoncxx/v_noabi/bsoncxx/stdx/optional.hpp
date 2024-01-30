@@ -577,13 +577,14 @@ struct optional_operators_base {
 };
 
 // An ADL-visible swap() should only be available for swappable objects
-template <typename T, bool IsSwappable = std::is_swappable<T>::value>
+template <typename T, bool IsSwappable = bsoncxx::detail::is_swappable<T>::value>
 struct optional_swap_mixin {};
 
 template <typename T>
 struct optional_swap_mixin<T, true> {
-    constexpr friend void swap(optional<T>& left, optional<T>& right) noexcept(noexcept(
-        std::is_nothrow_move_constructible<T>::value&& std::is_nothrow_swappable<T>::value)) {
+    bsoncxx_cxx14_constexpr friend void swap(optional<T>& left, optional<T>& right) noexcept(
+        noexcept(std::is_nothrow_move_constructible<T>::value&&
+                     bsoncxx::detail::is_nothrow_swappable<T>::value)) {
         left.swap(right);
     }
 };
