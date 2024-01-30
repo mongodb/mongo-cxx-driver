@@ -25,23 +25,6 @@
 #include "./operators.hpp"
 #include "./type_traits.hpp"
 
-// Try to detect std::optional. We'll reuse some components from there for compatibility
-// with C++17 users.
-#pragma push_macro("BSONCXX_HAVE_STDLIB_OPTIONAL")
-#undef BSONCXX_HAVE_STDLIB_OPTIONAL
-#define BSONCXX_HAVE_STDLIB_OPTIONAL 0
-
-#ifdef __has_include
-#if __has_include(<version>)
-#include <version>
-#if defined(__cpp_lib_optional) && __cpp_lib_optional >= 201606L
-#undef BSONCXX_HAVE_STDLIB_OPTIONAL
-#define BSONCXX_HAVE_STDLIB_OPTIONAL 1
-#include <optional>
-#endif
-#endif
-#endif
-
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
@@ -60,15 +43,6 @@ namespace stdx {
 template <typename T>
 class optional;
 
-#if BSONCXX_HAVE_STDLIB_OPTIONAL
-// If we have access to the stdlib component, re-use those so that users can use
-// the same types and constants defined in <optional>
-using std::bad_optional_access;
-using std::in_place;
-using std::in_place_t;
-using std::nullopt;
-using std::nullopt_t;
-#else
 /**
  * @brief Exception type thrown upon attempted access to a value-less optional<T>
  * via a throwing accessor API.
@@ -86,7 +60,6 @@ static constexpr nullopt_t nullopt{};
 /// Tag used to call the emplacement-constructor of optional<T>
 static constexpr struct in_place_t {
 } in_place;
-#endif
 
 namespace detail {
 
@@ -384,7 +357,7 @@ namespace detail {
 /**
  * @brief Union template that defines the storage for an optional's data.
  */
-template <typename T>
+template <typename T, bool = std::is_trivially_destructible<T>::value>
 union storage_for {
     // Placeholder member for disengaged optional
     char nothing;
@@ -397,10 +370,17 @@ union storage_for {
     // Empty special members allow the union to be used in semiregular contexts,
     // but it is the responsibility of the using class to implement them properly
     ~storage_for() {}
-    storage_for(const storage_for&) noexcept {}
-    storage_for& operator=(const storage_for&) noexcept {
-        return *this;
-    }
+    storage_for(const storage_for&) = delete;
+    storage_for& operator=(const storage_for&) = delete;
+};
+
+template <typename T>
+union storage_for<T, true /* Is trivially destructible */> {
+    char nothing;
+    T value;
+    storage_for() noexcept : nothing(0) {}
+    storage_for(const storage_for&) = delete;
+    storage_for& operator=(const storage_for&) = delete;
 };
 
 // Whether a type is copyable, moveable, or immobile
@@ -442,6 +422,13 @@ struct optional_construct_base;
 template <typename T, copymove_classification = classify_assignment<T>()>
 struct optional_assign_base;
 
+template <bool TrivialDestruct>
+struct optional_destruct_helper;
+
+template <typename T>
+using optional_destruct_base =
+    typename optional_destruct_helper<std::is_trivially_destructible<T>::value>::template base<T>;
+
 template <typename T>
 struct optional_assign_base<T, copyable> : optional_construct_base<T> {};
 
@@ -472,10 +459,10 @@ struct optional_assign_base<T, immobile> : optional_construct_base<T> {
 };
 
 template <typename T>
-struct optional_construct_base<T, copyable> : optional_common_base<T> {};
+struct optional_construct_base<T, copyable> : optional_destruct_base<T> {};
 
 template <typename T>
-struct optional_construct_base<T, movable> : optional_common_base<T> {
+struct optional_construct_base<T, movable> : optional_destruct_base<T> {
     optional_construct_base() = default;
 
     optional_construct_base(const optional_construct_base&) = delete;
@@ -485,15 +472,39 @@ struct optional_construct_base<T, movable> : optional_common_base<T> {
 };
 
 template <typename T>
-struct optional_construct_base<T, immobile> : optional_common_base<T> {
+struct optional_construct_base<T, immobile> : optional_destruct_base<T> {
     optional_construct_base() = default;
     optional_construct_base(const optional_construct_base&) = delete;
     optional_construct_base& operator=(const optional_construct_base&) = default;
     optional_construct_base& operator=(optional_construct_base&&) = default;
 };
 
+template <>
+struct optional_destruct_helper<false /* Non-trivial */> {
+    template <typename T>
+    struct base : optional_common_base<T> {
+        // Special members defer to base
+        base() = default;
+        base(base const&) = default;
+        base(base&&) = default;
+        base& operator=(const base&) = default;
+        base& operator=(base&&) = default;
+        ~base() {
+            // Here we destroy the contained object during destruction.
+            this->reset();
+        }
+    };
+};
+
+template <>
+struct optional_destruct_helper<true /* Trivial */> {
+    // Just fall-through to the common base, which has no special destructor
+    template <typename T>
+    using base = optional_common_base<T>;
+};
+
 // Optional's ADL-only operators live here:
-struct operators_base {
+struct optional_operators_base {
     template <typename T, typename U>
     friend bsoncxx_cxx14_constexpr auto tag_invoke(bsoncxx::detail::equal_to,
                                                    optional<T> const& left,
@@ -565,16 +576,26 @@ struct operators_base {
     }
 };
 
+// An ADL-visible swap() should only be available for swappable objects
+template <typename T, bool IsSwappable = std::is_swappable<T>::value>
+struct optional_swap_mixin {};
+
+template <typename T>
+struct optional_swap_mixin<T, true> {
+    constexpr friend void swap(optional<T>& left, optional<T>& right) noexcept(noexcept(
+        std::is_nothrow_move_constructible<T>::value&& std::is_nothrow_swappable<T>::value)) {
+        left.swap(right);
+    }
+};
+
 // Common base class of all optionals
 template <typename T>
-class optional_common_base : operators_base {
+class optional_common_base : optional_operators_base, optional_swap_mixin<T> {
     using storage_type = detail::storage_for<T>;
 
    public:
     optional_common_base() = default;
-    ~optional_common_base() {
-        this->reset();
-    }
+    ~optional_common_base() = default;
 
     optional_common_base(const optional_common_base& other) noexcept(
         std::is_nothrow_copy_constructible<T>::value) {
@@ -637,6 +658,29 @@ class optional_common_base : operators_base {
         return this->_storage.value;
     }
 
+    /**
+     * @internal
+     * @brief Special swap for optional values that removes need for a temporary
+     */
+    bsoncxx_cxx14_constexpr void swap(optional_common_base& other) {
+        if (other._has_value) {
+            if (this->_has_value) {
+                using std::swap;
+                // Defer to the underlying swap
+                swap(this->_storage.value, other._storage.value);
+            } else {
+                // "steal" the other's value
+                this->emplace(std::move(other._storage.value));
+                other.reset();
+            }
+        } else if (this->_has_value) {
+            _swap(other, *this);
+            other.swap(*this);
+        } else {
+            // Neither optional has a value, so do nothing
+        }
+    }
+
    private:
     friend optional<T>;
     storage_type _storage;
@@ -689,8 +733,6 @@ struct optional_base_class {
 
 }  // namespace bsoncxx
 
-#undef BSONCXX_HAVE_STDLIB_OPTIONAL
-
 #include <bsoncxx/config/postlude.hpp>
 
 namespace bsoncxx {
@@ -705,5 +747,3 @@ using ::bsoncxx::v_noabi::stdx::optional;
 
 }  // namespace stdx
 }  // namespace bsoncxx
-
-#pragma pop_macro("BSONCXX_HAVE_STDLIB_OPTIONAL")
