@@ -7,7 +7,7 @@
 #include <bsoncxx/stdx/operators.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/stdx/type_traits.hpp>
-#include <third_party/catch/include/catch.hpp>
+#include <bsoncxx/test/catch.hh>
 
 using bsoncxx::stdx::nullopt;
 using bsoncxx::stdx::optional;
@@ -110,6 +110,7 @@ bool static_checks() {
     assert_sameness<std::is_move_assignable, T>();
     assert_sameness<bsoncxx::detail::is_equality_comparable, T>();
     assert_sameness<bsoncxx::detail::is_totally_ordered, T>();
+    assert_sameness<std::is_trivially_destructible, T>();
     static_assert(bsoncxx::detail::is_equality_comparable<T, optional<T>>::value ==
                       bsoncxx::detail::is_equality_comparable<T>::value,
                   "fail");
