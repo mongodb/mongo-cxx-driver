@@ -23,10 +23,18 @@ using value_t = decltype(std::declval<T>().value());
 template <typename T>
 using arrow_t = decltype(std::declval<T>().operator->());
 
+#if !defined(_MSC_VER) || _MSC_VER >= 1910
 template <typename T>
 struct is_hashable
     : bsoncxx::detail::conjunction<std::is_default_constructible<std::hash<T>>,
                                    bsoncxx::detail::is_invocable<std::hash<T>, const T&>> {};
+#else
+/// ! Prior to LWG 2543, uttering the name of an invalid std::hash is ill-formed.
+/// ! This is fixed in C++11, but MSVC 2015 (19.00) didn't have the fix. As such,
+/// ! one cannot detect whether a type is hashable.
+template <typename T>
+struct is_hashable : std::false_type {};
+#endif
 
 struct not_default_constructible {
     explicit not_default_constructible(int);
@@ -150,8 +158,16 @@ static_assert(bsoncxx::detail::is_totally_ordered<std::string>{}, "fail");
 static_assert(bsoncxx::detail::is_totally_ordered<int>{}, "fail");
 static_assert(!bsoncxx::detail::is_totally_ordered<not_ordered>{}, "fail");
 
+#if !defined(_MSC_VER) || _MSC_VER >= 1910
 static_assert(is_hashable<optional<int>>::value, "fail");
 static_assert(!is_hashable<optional<immobile>>::value, "fail");
+#endif
+
+// Having this static_assert appear prior to static_checks<int> prevents a later static assert error
+// that occurs only on MSVC 19.29 (VS2019). Obviously.
+static_assert(bsoncxx::detail::is_totally_ordered<optional<int>>{}, "fail");
+// It's a useful check on its own, but now you are cursed with this knowledge just as I have been.
+// pain.
 
 TEST_CASE("Trait checks") {
     CHECK(static_checks<int>());

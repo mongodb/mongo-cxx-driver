@@ -478,6 +478,10 @@ namespace swap_detection {
 
 using std::swap;
 
+///! Declare an unusable variadic swap. If not present, MSVC 19.00 (VS2015) errors in
+///! this header and complains "'std::swap': function does not take 1 arguments" (???)
+void swap(...) = delete;
+
 template <typename T, typename U>
 auto is_swappable_f(rank<0>) -> std::false_type;
 
@@ -488,6 +492,14 @@ auto is_swappable_f(rank<1>)                                       //
         -> true_t<decltype(swap(std::declval<T>(), std::declval<U>())),
                   decltype(swap(std::declval<U>(), std::declval<T>()))>;
 
+template <typename T, typename U>
+auto is_nothrow_swappable_f(rank<0>) -> std::false_type;
+
+template <typename T, typename U>
+auto is_nothrow_swappable_f(rank<1>)  //
+    -> bool_constant<noexcept(swap(std::declval<T>(), std::declval<U>())) &&
+                     noexcept(swap(std::declval<U>(), std::declval<T>()))>;
+
 }  // namespace swap_detection
 
 template <typename T, typename U>
@@ -495,7 +507,7 @@ struct is_swappable_with : decltype(swap_detection::is_swappable_f<T, U>(rank<1>
 
 template <typename T, typename U>
 struct is_nothrow_swappable_with
-    : bool_constant<noexcept(swap_detection::is_swappable_f<T, U>(rank<1>{}))> {};
+    : decltype(swap_detection::is_nothrow_swappable_f<T, U>(rank<1>{})) {};
 
 template <typename T>
 struct is_swappable : is_swappable_with<T&, T&> {};
