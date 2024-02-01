@@ -12,6 +12,13 @@
 using bsoncxx::stdx::nullopt;
 using bsoncxx::stdx::optional;
 
+#if defined(_MSC_VER) && _MSC_VER < 1910 || defined(__apple_build_version__)
+/// ! Prior to LWG 2543, uttering the name of an invalid std::hash is ill-formed.
+/// ! This is fixed in C++11, but MSVC 2015 (19.00) and old AppleClang libc++ don't
+/// !have the fix. As such, one cannot detect whether a type is hashable.
+#define NO_LWG_2543
+#endif
+
 namespace {
 
 template <typename T>
@@ -23,15 +30,13 @@ using value_t = decltype(std::declval<T>().value());
 template <typename T>
 using arrow_t = decltype(std::declval<T>().operator->());
 
-#if !defined(_MSC_VER) || _MSC_VER >= 1910
+#ifndef NO_LWG_2543
 template <typename T>
 struct is_hashable
     : bsoncxx::detail::conjunction<std::is_default_constructible<std::hash<T>>,
                                    bsoncxx::detail::is_invocable<std::hash<T>, const T&>> {};
 #else
-/// ! Prior to LWG 2543, uttering the name of an invalid std::hash is ill-formed.
-/// ! This is fixed in C++11, but MSVC 2015 (19.00) didn't have the fix. As such,
-/// ! one cannot detect whether a type is hashable.
+
 template <typename T>
 struct is_hashable : std::false_type {};
 #endif
@@ -158,7 +163,7 @@ static_assert(bsoncxx::detail::is_totally_ordered<std::string>{}, "fail");
 static_assert(bsoncxx::detail::is_totally_ordered<int>{}, "fail");
 static_assert(!bsoncxx::detail::is_totally_ordered<not_ordered>{}, "fail");
 
-#if !defined(_MSC_VER) || _MSC_VER >= 1910
+#ifndef NO_LWG_2543
 static_assert(is_hashable<optional<int>>::value, "fail");
 static_assert(!is_hashable<optional<immobile>>::value, "fail");
 #endif
