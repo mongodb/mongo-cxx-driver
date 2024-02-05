@@ -14,6 +14,7 @@
 
 #pragma once
 
+#include <cstddef>
 #include <cstdio>
 #include <exception>
 #include <initializer_list>
@@ -54,9 +55,11 @@ class bad_optional_access : public std::exception {
     }
 };
 /// Tag type to represent an empty optional value
-struct nullopt_t {};
+struct nullopt_t {
+    explicit constexpr nullopt_t(std::nullptr_t) noexcept {}
+};
 /// Tag constant to construct or compare with an empty optional value
-static constexpr nullopt_t nullopt{};
+static constexpr nullopt_t nullopt{0};
 /// Tag used to call the emplacement-constructor of optional<T>
 static constexpr struct in_place_t {
 } in_place;
