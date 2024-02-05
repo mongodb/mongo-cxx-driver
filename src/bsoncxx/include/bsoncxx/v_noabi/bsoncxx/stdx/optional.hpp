@@ -677,7 +677,8 @@ class optional_common_base : optional_operators_base, optional_swap_mixin<T> {
                 other.reset();
             }
         } else if (this->_has_value) {
-            other.swap(*this);
+            other.emplace(std::move(this->_storage.value));
+            this->reset();
         } else {
             // Neither optional has a value, so do nothing
         }
