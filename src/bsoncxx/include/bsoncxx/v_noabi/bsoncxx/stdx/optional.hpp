@@ -727,7 +727,9 @@ struct optional_base_class {
     using type = optional_assign_base<T>;
 };
 
-template <typename T, bool CanHash = std::is_default_constructible<std::hash<T>>::value>
+template <typename T,
+          bool CanHash =
+              std::is_default_constructible<std::hash<bsoncxx::detail::remove_const_t<T>>>::value>
 struct optional_hash;
 
 // Hash is "disabled" if the underlying type is not hashable (disabled = cannot construct the hash
@@ -740,15 +742,11 @@ struct optional_hash<T, false> {
 
 template <typename T>
 struct optional_hash<T, true> {
+    using Td = bsoncxx::detail::remove_const_t<T>;
     constexpr std::size_t operator()(const optional<T>& opt) const
-        noexcept(noexcept(std::hash<T>()(std::declval<T const&>()))) {
-        // Hash(o: opt<T>) =
-        //   if   o.has_value()
-        //   then Hash(o.value) + 2
-        //   else Hash(nullptr as T*) + 4
-        // (Constant addends are arbitrary, just to not collide with underlying hash)
-        return opt.has_value() ? 2ull + std::hash<T>()(*opt)  //
-                               : 4ull + std::hash<T*>()(nullptr);
+        noexcept(noexcept(std::hash<Td>()(std::declval<Td const&>()))) {
+        return opt.has_value() ? std::hash<Td>()(*opt)  //
+                               : std::hash<Td*>()(nullptr);
     }
 };
 
