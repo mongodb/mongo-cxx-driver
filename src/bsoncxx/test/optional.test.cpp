@@ -6,6 +6,7 @@
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/stdx/operators.hpp>
 #include <bsoncxx/stdx/optional.hpp>
+#include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/stdx/type_traits.hpp>
 #include <bsoncxx/test/catch.hh>
 
@@ -252,6 +253,72 @@ TEST_CASE("Comparisons") {
 
     optional<double> dbl = 3.14;
     CHECK(dbl != a);
+}
+
+template <typename T, typename U>
+void check_ordered(T const& lesser, U const& greater, std::string desc) {
+    CAPTURE(__func__, desc);
+    CHECK(lesser < greater);
+    CHECK(greater > lesser);
+    CHECK(lesser <= greater);
+    CHECK(greater >= lesser);
+    CHECK_FALSE(greater < lesser);
+    CHECK_FALSE(lesser > greater);
+    CHECK(lesser != greater);
+    CHECK_FALSE(lesser == greater);
+}
+
+template <typename T, typename U>
+void check_equivalent(T const& a, U const& b, std::string desc) {
+    CAPTURE(__func__, desc);
+    CHECK(a == b);
+    CHECK(b == a);
+    CHECK_FALSE(a != b);
+    CHECK_FALSE(b != a);
+    CHECK(a <= b);
+    CHECK(b >= a);
+    CHECK_FALSE(a < b);
+    CHECK_FALSE(b > a);
+    CHECK_FALSE(b < a);
+    CHECK_FALSE(a > b);
+}
+
+template <typename T, typename U>
+void regular_cases(T low_value, U high_value) {
+    optional<T> a, b;
+    check_equivalent(a, b, "Null optionals");
+    check_equivalent(a, nullopt, "Compare with nullopt");
+    a = low_value;
+    check_equivalent(a, a, "Self-compare");
+    check_equivalent(a, low_value, "Engaged == value");
+    check_ordered(a, high_value, "low enganged < high value");
+    check_ordered(b, a, "Value > null optional");
+    check_ordered(nullopt, a, "Value > nullopt");
+    using std::swap;
+    swap(a, b);
+    check_equivalent(b, low_value, "low-value after swap");
+    check_ordered(b, high_value, "High-value compare after swap");
+    check_ordered(a, b, "Optional compare after swap");
+    swap(a, b);
+    b.emplace(high_value);
+    check_ordered(a, b, "Engaged compare");
+    swap(a, b);
+    check_ordered(b, a, "Engaged compare after swap");
+    swap(a, b);
+
+    a = b;
+    check_equivalent(a, b, "Equal after assignment");
+    check_equivalent(a, high_value, "'a' received high value");
+    check_ordered(low_value, a, "'a' is greater than high-value after assignment");
+}
+
+TEST_CASE("Optional: Cross-comparisons") {
+    regular_cases<int>(2, 4);
+    regular_cases<int>(2, 4.0);
+    regular_cases(std::string("abc"), std::string("xyz"));
+    regular_cases(std::string("abc"), "xyz");
+    regular_cases(std::string("abc"), bsoncxx::stdx::string_view("xyz"));
+    regular_cases(bsoncxx::stdx::string_view("abc"), std::string("xyz"));
 }
 
 struct in_place_convertible {

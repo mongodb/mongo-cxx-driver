@@ -675,7 +675,6 @@ class optional_common_base : optional_operators_base, optional_swap_mixin<T> {
                 other.reset();
             }
         } else if (this->_has_value) {
-            _swap(other, *this);
             other.swap(*this);
         } else {
             // Neither optional has a value, so do nothing
