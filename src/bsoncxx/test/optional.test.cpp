@@ -1,3 +1,5 @@
+#include <bsoncxx/stdx/optional.hpp>
+//
 #include <cstddef>
 #include <memory>
 #include <mutex>
@@ -6,7 +8,6 @@
 
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/stdx/operators.hpp>
-#include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/stdx/type_traits.hpp>
 #include <bsoncxx/test/catch.hh>
