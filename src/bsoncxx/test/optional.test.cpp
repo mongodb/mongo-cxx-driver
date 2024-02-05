@@ -1,3 +1,4 @@
+#include <cstddef>
 #include <memory>
 #include <mutex>
 #include <string>
@@ -10,6 +11,7 @@
 #include <bsoncxx/stdx/type_traits.hpp>
 #include <bsoncxx/test/catch.hh>
 
+using bsoncxx::stdx::in_place;
 using bsoncxx::stdx::nullopt;
 using bsoncxx::stdx::optional;
 
@@ -32,10 +34,10 @@ template <typename T>
 using arrow_t = decltype(std::declval<T>().operator->());
 
 #ifndef NO_LWG_2543
-template <typename T>
+template <typename T, typename Td = bsoncxx::detail::remove_const_t<T>>
 struct is_hashable
-    : bsoncxx::detail::conjunction<std::is_default_constructible<std::hash<T>>,
-                                   bsoncxx::detail::is_invocable<std::hash<T>, const T&>> {};
+    : bsoncxx::detail::conjunction<std::is_default_constructible<std::hash<Td>>,
+                                   bsoncxx::detail::is_invocable<std::hash<Td>, const T&>> {};
 #else
 
 template <typename T>
@@ -177,14 +179,24 @@ static_assert(bsoncxx::detail::is_totally_ordered<optional<int>>{}, "fail");
 
 TEST_CASE("Trait checks") {
     CHECK(static_checks<int>());
+    CHECK(static_checks<const int>());
     CHECK(static_checks<std::string>());
+    CHECK(static_checks<const std::string>());
     CHECK(static_checks<std::unique_ptr<int>>());
+    CHECK(static_checks<const std::unique_ptr<int>>());
     CHECK(static_checks<immobile>());
+    CHECK(static_checks<const immobile>());
     CHECK(static_checks<not_copyable>());
+    CHECK(static_checks<const not_copyable>());
     CHECK(static_checks<not_default_constructible>());
+    CHECK(static_checks<const not_default_constructible>());
     CHECK(static_checks<allows_moving_explicit_conversion>());
+    CHECK(static_checks<const allows_moving_explicit_conversion>());
     CHECK(static_checks<allows_moving_implicit_conversion>());
+    CHECK(static_checks<const allows_moving_implicit_conversion>());
     CHECK(check_conversions<int, int>());
+    CHECK(check_conversions<const int, int>());
+    CHECK(check_conversions<int, const int>());
     CHECK(check_conversions<int, double>());
     CHECK(check_conversions<double, std::string>());
     CHECK(check_conversions<std::string, double>());
@@ -193,9 +205,241 @@ TEST_CASE("Trait checks") {
     CHECK(check_conversions<int*, std::unique_ptr<int>>());
     CHECK(check_conversions<int, allows_moving_explicit_conversion>());
     CHECK(check_conversions<int, allows_moving_implicit_conversion>());
-    optional<int> v(21);
-    CHECK(*v == 21);
-    CHECK_FALSE(v < v);
+}
+
+TEST_CASE("optional constructors") {
+    // (1)
+    {
+        optional<int> opt = optional<int>();
+        CHECK_FALSE(opt);
+
+        optional<int> opt2 = optional<int>(nullopt);
+        CHECK_FALSE(opt2);
+    }
+    // (2)
+    {
+        optional<int> opt1 = optional<int>();
+        optional<int> opt2 = optional<int>(opt1);
+        CHECK_FALSE(opt2);
+    }
+
+    // (3)
+    {
+        optional<int> opt1 = optional<int>(123);
+        optional<int> opt2 = optional<int>(std::move(opt1));
+        CHECK(*opt2 == 123);
+    }
+
+    // (4)
+    {
+        struct Src {
+            int s;
+        };
+        struct Dest {
+            // Can construct a Dest from Src.
+            Dest(Src s) {
+                this->d = s.s;
+            }
+            int d;
+        };
+
+        Src s;
+        s.s = 123;
+        optional<Src> opt_src = optional<Src>(s);
+        optional<Dest> opt_dest = optional<Dest>(s);
+        CHECK(opt_dest->d == 123);
+    }
+
+    // (5)
+    {
+        struct Src {
+            int s;
+        };
+        struct Dest {
+            // Can construct a Dest from Src.
+            Dest(Src s) {
+                this->d = s.s;
+            }
+            int d;
+        };
+
+        Src s;
+        s.s = 123;
+        optional<Src> opt_src = optional<Src>(s);
+        optional<Dest> opt_dest = optional<Dest>(std::move(s));
+        CHECK(opt_dest->d == 123);
+    }
+
+    // (6)
+    {
+        struct Foo {
+            Foo(int a, int b) {
+                this->c = a + b;
+            }
+            int c;
+        };
+        optional<Foo> opt = optional<Foo>(in_place, 1, 2);
+        CHECK(opt->c == 3);
+    }
+
+    // (7)
+    {
+        struct Foo {
+            Foo(std::initializer_list<int> lst) {}
+        };
+        std::initializer_list<int> il = {1, 2};
+        optional<Foo> opt = optional<Foo>(in_place, il);
+    }
+
+    // (8)
+    {
+        struct Foo {
+            int f;
+        };
+        Foo f;
+        optional<Foo> opt = optional<Foo>(std::move(f));
+    }
+}
+
+TEST_CASE("optional assignment operator") {
+    // (1)
+    {
+        optional<int> foo;
+        optional<int>& ref = (foo = nullopt);
+        CHECK(!foo);
+        CHECK(!ref);
+    }
+
+    // (2)
+    {
+        optional<int> foo;
+        optional<int> other = 123;
+        optional<int>& ref = (foo = other);
+        CHECK(foo);
+        CHECK(*foo == 123);
+        CHECK(ref);
+        CHECK(*ref == 123);
+    }
+
+    // (3)
+    {
+        optional<int> foo;
+        optional<int> other = 123;
+        optional<int>& ref = (foo = std::move(other));
+        CHECK(foo);
+        CHECK(*foo == 123);
+        CHECK(ref);
+        CHECK(*ref == 123);
+    }
+
+    // (4)
+    {
+        optional<int> foo = 123;
+        CHECK(*foo == 123);
+    }
+
+    // (5)
+    {
+        struct Src {
+            int s;
+        };
+        struct Dest {
+            // Can construct a Dest from Src.
+            Dest(Src s) {
+                this->d = s.s;
+            }
+            int d;
+        };
+
+        Src s;
+        s.s = 123;
+        optional<Src> opt_src = optional<Src>(s);
+        optional<Dest> opt_dest = opt_src;
+        CHECK(opt_dest->d == 123);
+    }
+
+    // (6)
+    {
+        struct Src {};
+        struct Dest {
+            // Can construct a Dest from Src.
+            Dest(Src s) {}
+        };
+
+        Src s;
+        optional<Src> opt_src = optional<Src>(s);
+        optional<Dest> opt_dest = std::move(opt_src);
+    }
+}
+
+TEST_CASE("optional operator->") {
+    struct Foo {
+        int x;
+    };
+    optional<Foo> opt = Foo();
+    opt->x = 123;
+    CHECK(opt->x == 123);
+}
+
+TEST_CASE("optional operator bool") {
+    struct Foo {
+        int x;
+    };
+    optional<Foo> opt = Foo();
+    CHECK(opt);
+    CHECK(opt.has_value());
+    opt = nullopt;
+    CHECK(!opt);
+    CHECK(!opt.has_value());
+}
+
+TEST_CASE("optional value()") {
+    optional<int> opt = 123;
+    CHECK(opt.value() == 123);
+}
+
+TEST_CASE("optional value_or()") {
+    struct Src {
+        Src(int x) : x(x) {}
+        int x;
+    };
+    struct Dest {
+        // Can construct a Dest from Src.
+        Dest(Src s) : x(s.x) {}
+        int x;
+    };
+
+    optional<Dest> opt = nullopt;
+    Dest d = opt.value_or(Src(123));
+    CHECK(d.x == 123);
+}
+
+TEST_CASE("optional reset()") {
+    optional<int> opt = 123;
+    opt.reset();
+    CHECK(!opt);
+}
+
+TEST_CASE("optional emplace()") {
+    optional<int> opt = 123;
+    opt.emplace(456);
+    CHECK(*opt == 456);
+}
+
+TEST_CASE("make_optional") {
+    auto opt = bsoncxx::stdx::make_optional(123);
+    CHECK(opt);
+    CHECK(*opt == 123);
+}
+
+TEST_CASE("optional swap") {
+    optional<int> opt1 = 123;
+    optional<int> opt2 = nullopt;
+    CHECK(opt1.has_value());
+    CHECK(!opt2.has_value());
+    opt1.swap(opt2);
+    CHECK(!opt1.has_value());
+    CHECK(opt2.has_value());
 }
 
 TEST_CASE("optional: Nontrivial contents") {
@@ -319,6 +563,34 @@ TEST_CASE("Optional: Cross-comparisons") {
     regular_cases(std::string("abc"), "xyz");
     regular_cases(std::string("abc"), bsoncxx::stdx::string_view("xyz"));
     regular_cases(bsoncxx::stdx::string_view("abc"), std::string("xyz"));
+}
+
+template <typename T>
+std::size_t hashit(const T& what) {
+    return std::hash<T>{}(what);
+}
+
+TEST_CASE("Optional-of-const-T") {
+    optional<const int> a;
+    check_equivalent(a, nullopt, "Null of const");
+    a.emplace(21);
+    check_equivalent(a, 21, "Const 21");
+    CHECK(hashit(a) == hashit(21));
+    auto b = a;
+    CHECK(a == b);
+}
+
+TEST_CASE("Optional: Hashing") {
+    optional<int> a, b;
+    CHECK(hashit(a) == hashit(a));
+    CHECK(hashit(a) == hashit(b));
+    b.emplace(41);
+    CHECK(hashit(41) == hashit(b));
+    CHECK(hashit(a) != hashit(b));  // (Extremely probable, but not certain)
+    a.emplace(41);
+    CHECK(hashit(a) == hashit(b));
+    optional<const int> c = b;
+    CHECK(hashit(c) == hashit(a));
 }
 
 struct in_place_convertible {
