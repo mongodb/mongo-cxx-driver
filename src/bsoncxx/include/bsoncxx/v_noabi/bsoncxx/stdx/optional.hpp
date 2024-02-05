@@ -592,7 +592,7 @@ struct optional_swap_mixin<T, true> {
 // Common base class of all optionals
 template <typename T>
 class optional_common_base : optional_operators_base, optional_swap_mixin<T> {
-    using storage_type = detail::storage_for<T>;
+    using storage_type = detail::storage_for<bsoncxx::detail::remove_const_t<T>>;
 
    public:
     optional_common_base() = default;
