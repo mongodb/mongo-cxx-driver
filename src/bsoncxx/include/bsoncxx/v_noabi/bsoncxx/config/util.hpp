@@ -132,7 +132,5 @@
 #define _bsoncxxDisableWarningImpl_for_MSVC(...) \
     BSONCXX_IF_MSVC(BSONCXX_PRAGMA(warning(disable : __VA_ARGS__)))
 
-#pragma push_macro("BSONCXX_FWD")
-#undef BSONCXX_FWD
 #define BSONCXX_FWD(...) static_cast<decltype(__VA_ARGS__)&&>(__VA_ARGS__)
 
