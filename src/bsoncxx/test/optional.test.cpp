@@ -562,7 +562,7 @@ void regular_cases(T low_value, U high_value) {
 
 TEST_CASE("Optional: Cross-comparisons") {
     regular_cases<int>(2, 4);
-    regular_cases<int>(2, 4.0);
+    regular_cases<double>(2, 4.0);
     regular_cases(std::string("abc"), std::string("xyz"));
     regular_cases(std::string("abc"), "xyz");
     regular_cases(std::string("abc"), bsoncxx::stdx::string_view("xyz"));
