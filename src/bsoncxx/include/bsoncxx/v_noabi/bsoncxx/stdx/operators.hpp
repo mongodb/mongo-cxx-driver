@@ -156,8 +156,8 @@ struct compare_three_way {
               typename R,
               typename = decltype(tag_invoke(
                   std::declval<compare_three_way>(), std::declval<L>(), std::declval<R>()))>
-    constexpr strong_ordering impl(L const& l, R const& r, rank<2>) const {
-        return tag_invoke(*this, l, r);
+    constexpr static strong_ordering impl(L const& l, R const& r, rank<2>) {
+        return tag_invoke(compare_three_way{}, l, r);
     }
 
     template <typename L, typename R>
