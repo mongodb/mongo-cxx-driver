@@ -247,7 +247,7 @@ TEST_CASE("optional constructors") {
         Src s;
         s.s = 123;
         optional<Src> opt_src = optional<Src>(s);
-        optional<Dest> opt_dest = optional<Dest>(s);
+        optional<Dest> opt_dest = opt_src;
         CHECK(opt_dest->d == 123);
     }
 
@@ -267,7 +267,7 @@ TEST_CASE("optional constructors") {
         Src s;
         s.s = 123;
         optional<Src> opt_src = optional<Src>(s);
-        optional<Dest> opt_dest = optional<Dest>(std::move(s));
+        optional<Dest> opt_dest = std::move(opt_src);
         CHECK(opt_dest->d == 123);
     }
 
@@ -286,10 +286,11 @@ TEST_CASE("optional constructors") {
     // (7)
     {
         struct Foo {
-            Foo(std::initializer_list<int> lst) {}
+            Foo(std::initializer_list<int>) {}
         };
         std::initializer_list<int> il = {1, 2};
         optional<Foo> opt = optional<Foo>(in_place, il);
+        (void)opt;
     }
 
     // (8)
@@ -297,8 +298,9 @@ TEST_CASE("optional constructors") {
         struct Foo {
             int f;
         };
-        Foo f;
+        Foo f{0};
         optional<Foo> opt = optional<Foo>(std::move(f));
+        (void)opt;
     }
 }
 
@@ -364,12 +366,13 @@ TEST_CASE("optional assignment operator") {
         struct Src {};
         struct Dest {
             // Can construct a Dest from Src.
-            Dest(Src s) {}
+            Dest(Src) {}
         };
 
         Src s;
         optional<Src> opt_src = optional<Src>(s);
         optional<Dest> opt_dest = std::move(opt_src);
+        (void)opt_dest;
     }
 }
 
