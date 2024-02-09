@@ -632,7 +632,7 @@ functions:
             set -x
             # TODO: Re-enable Alpine test once MONGOCRYPT-601 is released.
             # echo "Building Alpine Docker image"
-            # make -C extras/docker/alpine3 nocachebuild test
+            # make -C extras/docker/alpine3.19 nocachebuild test
             echo "Building Debian Docker image"
             make -C extras/docker/bookworm nocachebuild test
             echo "Building Red Hat UBI Docker image"
