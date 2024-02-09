@@ -112,6 +112,7 @@ struct enable_opt_value_conversion   //
     : bsoncxx::detail::conjunction<  //
           std::is_constructible<To, From&&>,
           bsoncxx::detail::negation<bsoncxx::detail::is_alike<From, in_place_t>>,
+          bsoncxx::detail::negation<bsoncxx::detail::is_alike<From, optional<To>>>,
           bsoncxx::detail::disjunction<
               bsoncxx::detail::negation<bsoncxx::detail::is_alike<To, bool>>,  //
               detail::not_an_optional<bsoncxx::detail::remove_cvref_t<From>>>> {};
@@ -250,11 +251,11 @@ class optional : bsoncxx::detail::equality_operators,
         return this->_storage.value;
     }
     bsoncxx_cxx14_constexpr rvalue_reference operator*() && noexcept {
-        _assert_has_value("operator*() &");
+        _assert_has_value("operator*() &&");
         return static_cast<rvalue_reference>(**this);
     }
     bsoncxx_cxx14_constexpr const_rvalue_reference operator*() const&& noexcept {
-        _assert_has_value("operator*() const&");
+        _assert_has_value("operator*() const&&");
         return static_cast<const_rvalue_reference>(**this);
     }
 
@@ -750,7 +751,7 @@ struct optional_hash<T, true> {
     constexpr std::size_t operator()(const optional<T>& opt) const
         noexcept(noexcept(std::hash<Td>()(std::declval<Td const&>()))) {
         return opt.has_value() ? std::hash<Td>()(*opt)  //
-                               : std::hash<Td*>()(nullptr);
+                               : std::hash<void*>()(nullptr);
     }
 };
 
