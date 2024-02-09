@@ -123,7 +123,7 @@ else
 
     # DEVPROD-4630: use BASH_XTRACEFD instead:
     #     unset BASH_XTRACEFD
-    [[ "${old_trace_opt:-}" == 1 ]] && set -o xtrace
+    [[ "${is_xtrace_set:-}" == 1 ]] && set -o xtrace
   }
   echo "Running activate-kmstlsvenv.sh..."
   # shellcheck source=/dev/null
@@ -164,7 +164,7 @@ else
 
     # DEVPROD-4630: use BASH_XTRACEFD instead:
     #     unset BASH_XTRACEFD
-    [[ "${old_trace_opt:-}" == 1 ]] && set -o xtrace
+    [[ "${is_xtrace_set:-}" == 1 ]] && set -o xtrace
   }
 
   set -o errexit
