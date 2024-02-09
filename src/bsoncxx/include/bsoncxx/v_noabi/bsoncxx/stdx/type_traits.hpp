@@ -488,7 +488,7 @@ auto is_swappable_f(rank<0>) -> std::false_type;
 template <typename T, typename U>
 auto is_swappable_f(rank<1>)                                       //
     noexcept(noexcept(swap(std::declval<T>(), std::declval<U>()))  //
-                 && noexcept(swap(std::declval<U>(), std::declval<T>())))
+             && noexcept(swap(std::declval<U>(), std::declval<T>())))
         -> true_t<decltype(swap(std::declval<T>(), std::declval<U>())),
                   decltype(swap(std::declval<U>(), std::declval<T>()))>;
 
