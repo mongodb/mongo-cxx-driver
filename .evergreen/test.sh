@@ -109,14 +109,22 @@ else
   # export environment variables for encryption tests
   set +o errexit
 
-  # Avoid printing credentials in logs.
-  set +o xtrace
-
   echo "Setting temporary credentials..."
   pushd "${DRIVERS_TOOLS:?}/.evergreen/csfle"
-  export AWS_SECRET_ACCESS_KEY="${cse_aws_secret_access_key:?}"
-  export AWS_ACCESS_KEY_ID="${cse_aws_access_key_id:?}"
-  export AWS_DEFAULT_REGION="us-east-1"
+  {
+    # DEVPROD-4630: use BASH_XTRACEFD instead:
+    #     exec {BASH_XTRACEFD}>/dev/null
+    is_xtrace_set="$([[ "$-" == *x* ]] && echo 1)"
+    set +o xtrace
+
+    export AWS_SECRET_ACCESS_KEY="${cse_aws_secret_access_key:?}"
+    export AWS_ACCESS_KEY_ID="${cse_aws_access_key_id:?}"
+    export AWS_DEFAULT_REGION="us-east-1"
+
+    # DEVPROD-4630: use BASH_XTRACEFD instead:
+    #     unset BASH_XTRACEFD
+    [[ "${old_trace_opt:-}" == 1 ]] && set -o xtrace
+  }
   echo "Running activate-kmstlsvenv.sh..."
   # shellcheck source=/dev/null
   . ./activate-kmstlsvenv.sh
@@ -135,18 +143,29 @@ else
     exit 1
   fi
 
-  export MONGOCXX_TEST_CSFLE_TLS_CA_FILE=${DRIVERS_TOOLS:?}/.evergreen/x509gen/ca.pem
-  export MONGOCXX_TEST_CSFLE_TLS_CERTIFICATE_KEY_FILE=${DRIVERS_TOOLS:?}/.evergreen/x509gen/client.pem
-  export MONGOCXX_TEST_AWS_TEMP_ACCESS_KEY_ID="$CSFLE_AWS_TEMP_ACCESS_KEY_ID"
-  export MONGOCXX_TEST_AWS_TEMP_SECRET_ACCESS_KEY="$CSFLE_AWS_TEMP_SECRET_ACCESS_KEY"
-  export MONGOCXX_TEST_AWS_TEMP_SESSION_TOKEN="$CSFLE_AWS_TEMP_SESSION_TOKEN"
-  export MONGOCXX_TEST_AWS_SECRET_ACCESS_KEY="${cse_aws_secret_access_key:?}"
-  export MONGOCXX_TEST_AWS_ACCESS_KEY_ID="${cse_aws_access_key_id:?}"
-  export MONGOCXX_TEST_AZURE_TENANT_ID="${cse_azure_tenant_id:?}"
-  export MONGOCXX_TEST_AZURE_CLIENT_ID="${cse_azure_client_id:?}"
-  export MONGOCXX_TEST_AZURE_CLIENT_SECRET="${cse_azure_client_secret:?}"
-  export MONGOCXX_TEST_GCP_EMAIL="${cse_gcp_email:?}"
-  export MONGOCXX_TEST_GCP_PRIVATEKEY="${cse_gcp_privatekey:?}"
+  {
+    # DEVPROD-4630: use BASH_XTRACEFD instead:
+    #     exec {BASH_XTRACEFD}>/dev/null
+    is_xtrace_set="$([[ "$-" == *x* ]] && echo 1)"
+    set +o xtrace
+
+    export MONGOCXX_TEST_CSFLE_TLS_CA_FILE=${DRIVERS_TOOLS:?}/.evergreen/x509gen/ca.pem
+    export MONGOCXX_TEST_CSFLE_TLS_CERTIFICATE_KEY_FILE=${DRIVERS_TOOLS:?}/.evergreen/x509gen/client.pem
+    export MONGOCXX_TEST_AWS_TEMP_ACCESS_KEY_ID="$CSFLE_AWS_TEMP_ACCESS_KEY_ID"
+    export MONGOCXX_TEST_AWS_TEMP_SECRET_ACCESS_KEY="$CSFLE_AWS_TEMP_SECRET_ACCESS_KEY"
+    export MONGOCXX_TEST_AWS_TEMP_SESSION_TOKEN="$CSFLE_AWS_TEMP_SESSION_TOKEN"
+    export MONGOCXX_TEST_AWS_SECRET_ACCESS_KEY="${cse_aws_secret_access_key:?}"
+    export MONGOCXX_TEST_AWS_ACCESS_KEY_ID="${cse_aws_access_key_id:?}"
+    export MONGOCXX_TEST_AZURE_TENANT_ID="${cse_azure_tenant_id:?}"
+    export MONGOCXX_TEST_AZURE_CLIENT_ID="${cse_azure_client_id:?}"
+    export MONGOCXX_TEST_AZURE_CLIENT_SECRET="${cse_azure_client_secret:?}"
+    export MONGOCXX_TEST_GCP_EMAIL="${cse_gcp_email:?}"
+    export MONGOCXX_TEST_GCP_PRIVATEKEY="${cse_gcp_privatekey:?}"
+
+    # DEVPROD-4630: use BASH_XTRACEFD instead:
+    #     unset BASH_XTRACEFD
+    [[ "${old_trace_opt:-}" == 1 ]] && set -o xtrace
+  }
 
   set -o errexit
 
