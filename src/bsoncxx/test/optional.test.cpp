@@ -12,6 +12,12 @@
 #include <bsoncxx/stdx/type_traits.hpp>
 #include <bsoncxx/test/catch.hh>
 
+#include <bsoncxx/config/prelude.hpp>
+
+// Each polyfill library has some set of features that are not conformant with the standard
+// specification (inconsistent, missing, etc.). Limit testing to bsoncxx implementation and stdlib.
+#if defined(BSONCXX_POLY_USE_IMPLS) || defined(BSONCXX_POLY_USE_STD)
+
 using bsoncxx::stdx::in_place;
 using bsoncxx::stdx::nullopt;
 using bsoncxx::stdx::optional;
@@ -619,3 +625,5 @@ TEST_CASE("optional<T> conversions") {
     CHECK(string == c_str);
     CHECK(string2 == c_str);
 }
+
+#endif  // defined(BSONCXX_POLY_USE_IMPLS) || defined(BSONCXX_POLY_USE_STD)
