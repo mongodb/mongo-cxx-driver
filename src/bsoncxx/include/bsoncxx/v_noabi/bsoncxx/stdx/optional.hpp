@@ -45,8 +45,10 @@ namespace bsoncxx {
 namespace v_noabi {
 namespace stdx {
 
+#if BOOST_VERSION >= 106300
 using in_place_t = ::boost::in_place_init_t;
 const in_place_t in_place{::boost::in_place_init};
+#endif
 
 using ::boost::optional;
 using nullopt_t = ::boost::none_t;
@@ -843,8 +845,12 @@ struct hash<bsoncxx::v_noabi::stdx::optional<T>>
 namespace bsoncxx {
 namespace stdx {
 
+// Only Boost prior to 1.63 does not provide an `std::in_place` equivalent.
+#if !defined(BOOST_VERSION) || BOOST_VERSION >= 106300
 using ::bsoncxx::v_noabi::stdx::in_place;
 using ::bsoncxx::v_noabi::stdx::in_place_t;
+#endif
+
 using ::bsoncxx::v_noabi::stdx::make_optional;
 using ::bsoncxx::v_noabi::stdx::nullopt;
 using ::bsoncxx::v_noabi::stdx::nullopt_t;
