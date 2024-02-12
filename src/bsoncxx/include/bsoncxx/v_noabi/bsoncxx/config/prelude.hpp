@@ -45,6 +45,8 @@
 #undef _bsoncxxDisableWarningImpl_for_MSVC
 #pragma push_macro("_bsoncxxDisableWarningImpl_for_GNU")
 #undef _bsoncxxDisableWarningImpl_for_GNU
+#pragma push_macro("BSONCXX_FWD")
+#undef BSONCXX_FWD
 
 // compiler.hpp
 #pragma push_macro("BSONCXX_INLINE")

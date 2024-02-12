@@ -95,3 +95,5 @@ static_assert(false, "BSONCXX_ENUM must be undef'ed");
 #pragma pop_macro("BSONCXX_IF_GCC")
 #pragma pop_macro("BSONCXX_IF_CLANG")
 #pragma pop_macro("BSONCXX_IF_GNU_LIKE")
+
+#pragma pop_macro("BSONCXX_FWD")
