@@ -610,7 +610,10 @@ struct in_place_convertible {
 };
 
 TEST_CASE("optional<T> conversions") {
+    // Some stdlib implementations do not forbid this ctor correctly.
+#if defined(BSONCXX_POLY_USE_IMPLS)
     static_assert(!std::is_constructible<optional<bool>, optional<std::string>>{}, "fail");
+#endif  // defined(BSONCXX_POLY_USE_IMPLS)
 
     optional<std::string> s1(bsoncxx::stdx::in_place);
     CHECK(s1 == "");
