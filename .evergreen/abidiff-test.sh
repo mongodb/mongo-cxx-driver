@@ -13,7 +13,8 @@ declare -a common_flags
 common_flags=(
   --headers-dir1 install/old/include
   --headers-dir2 install/new/include
-  --fail-no-debug-info
+  --fail-no-debug-info      # Ensure debug info is present for our libs.
+  --no-unreferenced-symbols # Not interested in symbols not owned by our libs.
 )
 
 declare -a abi_flags=("${common_flags[@]:?}" --suppressions cxx-abi/abignore)
