@@ -36,13 +36,13 @@ DOC
 
 cat >cxx-noabi/abignore <<DOC
 [suppress_type]
-name_regexp = ^(bsoncxx|mongocxx)::v[[:digit:]]+::
+name_not_regexp = ^(bsoncxx|mongocxx)::v_noabi::
 
 [suppress_function]
-name_regexp = ^(bsoncxx|mongocxx)::v[[:digit:]]+::
+name_not_regexp = ^(bsoncxx|mongocxx)::v_noabi::
 
 [suppress_variable]
-name_regexp = ^(bsoncxx|mongocxx)::v[[:digit:]]+::
+name_not_regexp = ^(bsoncxx|mongocxx)::v_noabi::
 DOC
 
 # Ensure files have content even when abidiff produces no output.
