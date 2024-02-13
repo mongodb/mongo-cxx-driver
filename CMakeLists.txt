@@ -20,9 +20,7 @@ endif()
 
 project(MONGO_CXX_DRIVER LANGUAGES CXX)
 
-if(NOT DEFINED BUILD_TESTING)
-    set(BUILD_TESTING OFF) # Set this to OFF by default
-endif()
+option(BUILD_TESTING "Include test targets in the \"all\" target")
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "4.8.2")
