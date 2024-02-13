@@ -114,7 +114,7 @@ case "${OSTYPE:?}" in
 cygwin)
   case "${generator:-}" in
   *2015*) cmake_flags+=("-DBOOST_ROOT=C:/local/boost_1_60_0") ;;
-  *2017*|*2019*) cmake_flags+=("-DCMAKE_CXX_STANDARD=17") ;;
+  *2017* | *2019*) cmake_flags+=("-DCMAKE_CXX_STANDARD=17") ;;
   *)
     echo "missing explicit CMake Generator on Windows distro" 1>&2
     exit 1
