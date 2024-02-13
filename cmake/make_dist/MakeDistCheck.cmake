@@ -22,6 +22,11 @@ function (RUN_DIST_CHECK PACKAGE_PREFIX EXT)
       ERROR_MSG "Command to untar ${tarball} failed."
    )
 
+   # Ensure a VERSION_CURRENT file is present.
+   if(NOT EXISTS ${PACKAGE_PREFIX}/build/VERSION_CURRENT)
+      message (FATAL_ERROR "Expected tarball to include `build/VERSION_CURRENT` file but did not.")
+   endif ()
+
    set (BUILD_DIR "_cmake_build")
    set (INSTALL_DIR "_cmake_install")
    file (REMOVE_RECURSE ${BUILD_DIR} ${INSTALL_DIR})
