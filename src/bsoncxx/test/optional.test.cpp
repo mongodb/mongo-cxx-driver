@@ -81,38 +81,46 @@ struct not_copyable {
 #define STATIC_ASSERT_EXPR_EQUAL(a, b) static_assert((a) == (b), "expected: " #a " == " #b)
 #define STATIC_ASSERT_EXPR_IMPLIES(a, b) static_assert((!(a) || (b)), "expected: " #a " -> " #b)
 
+#if defined(BSONCXX_POLY_USE_STD)
+// Deliberately weaken assertions for stdlib implementations to accomodate for differences in
+// behavior.
+#define STATIC_ASSERT_EXPR_ALIKE(a, b) STATIC_ASSERT_EXPR_IMPLIES(a, b)
+#else
+#define STATIC_ASSERT_EXPR_ALIKE(a, b) STATIC_ASSERT_EXPR_EQUAL(a, b)
+#endif
+
 template <bsoncxx_ttparam Trait, typename T>
-bool assert_sameness() {
-    STATIC_ASSERT_EXPR_EQUAL(Trait<T>::value, Trait<optional<T>>::value);
+bool assert_alikeness() {
+    STATIC_ASSERT_EXPR_ALIKE(Trait<T>::value, Trait<optional<T>>::value);
     return true;
 }
 
 template <typename From1, typename To1, typename From2, typename To2>
 bool check_convert_alike() {
-    STATIC_ASSERT_EXPR_EQUAL((std::is_convertible<From1, To1>::value),
+    STATIC_ASSERT_EXPR_ALIKE((std::is_convertible<From1, To1>::value),
                              (std::is_convertible<From2, To2>::value));
-    STATIC_ASSERT_EXPR_EQUAL((std::is_convertible<From1&, To1>::value),
+    STATIC_ASSERT_EXPR_ALIKE((std::is_convertible<From1&, To1>::value),
                              (std::is_convertible<From2&, To2>::value));
-    STATIC_ASSERT_EXPR_EQUAL((std::is_convertible<From1 const&, To1>::value),
+    STATIC_ASSERT_EXPR_ALIKE((std::is_convertible<From1 const&, To1>::value),
                              (std::is_convertible<From2 const&, To2>::value));
-    STATIC_ASSERT_EXPR_EQUAL((std::is_convertible<From1&&, To1>::value),
+    STATIC_ASSERT_EXPR_ALIKE((std::is_convertible<From1&&, To1>::value),
                              (std::is_convertible<From2&&, To2>::value));
-    STATIC_ASSERT_EXPR_EQUAL((std::is_convertible<From1 const&&, To1>::value),
+    STATIC_ASSERT_EXPR_ALIKE((std::is_convertible<From1 const&&, To1>::value),
                              (std::is_convertible<From2 const&&, To2>::value));
     return true;
 }
 
 template <typename From1, typename To1, typename From2, typename To2>
 bool check_construct_alike() {
-    STATIC_ASSERT_EXPR_EQUAL((std::is_constructible<To1, From1>::value),
+    STATIC_ASSERT_EXPR_ALIKE((std::is_constructible<To1, From1>::value),
                              (std::is_constructible<To2, From2>::value));
-    STATIC_ASSERT_EXPR_EQUAL((std::is_constructible<To1, From1&>::value),
+    STATIC_ASSERT_EXPR_ALIKE((std::is_constructible<To1, From1&>::value),
                              (std::is_constructible<To2, From2&>::value));
-    STATIC_ASSERT_EXPR_EQUAL((std::is_constructible<To1, From1 const&>::value),
+    STATIC_ASSERT_EXPR_ALIKE((std::is_constructible<To1, From1 const&>::value),
                              (std::is_constructible<To2, From2 const&>::value));
-    STATIC_ASSERT_EXPR_EQUAL((std::is_constructible<To1, From1&&>::value),
+    STATIC_ASSERT_EXPR_ALIKE((std::is_constructible<To1, From1&&>::value),
                              (std::is_constructible<To2, From2&&>::value));
-    STATIC_ASSERT_EXPR_EQUAL((std::is_constructible<To1, From1 const&&>::value),
+    STATIC_ASSERT_EXPR_ALIKE((std::is_constructible<To1, From1 const&&>::value),
                              (std::is_constructible<To2, From2 const&&>::value));
     return true;
 }
@@ -127,20 +135,20 @@ bool check_conversions() {
 
 template <typename T>
 bool static_checks() {
-    assert_sameness<std::is_copy_constructible, T>();
-    assert_sameness<std::is_copy_assignable, T>();
-    assert_sameness<std::is_move_constructible, T>();
-    assert_sameness<std::is_move_assignable, T>();
-    assert_sameness<is_hashable, T>();
-    assert_sameness<bsoncxx::detail::is_equality_comparable, T>();
-    assert_sameness<bsoncxx::detail::is_totally_ordered, T>();
-    assert_sameness<std::is_trivially_destructible, T>();
-    STATIC_ASSERT_EXPR_EQUAL((bsoncxx::detail::is_equality_comparable<T, optional<T>>::value),
-                             (bsoncxx::detail::is_equality_comparable<T>::value));
-    STATIC_ASSERT_EXPR_EQUAL((bsoncxx::detail::is_totally_ordered_with<T, optional<T>>::value),
-                             (bsoncxx::detail::is_totally_ordered<optional<T>>::value));
-    STATIC_ASSERT_EXPR_EQUAL((std::is_constructible<optional<T>, T>::value),
-                             (std::is_constructible<T, T>::value));
+    assert_alikeness<std::is_copy_constructible, T>();
+    assert_alikeness<std::is_copy_assignable, T>();
+    assert_alikeness<std::is_move_constructible, T>();
+    assert_alikeness<std::is_move_assignable, T>();
+    assert_alikeness<is_hashable, T>();
+    assert_alikeness<bsoncxx::detail::is_equality_comparable, T>();
+    assert_alikeness<bsoncxx::detail::is_totally_ordered, T>();
+    assert_alikeness<std::is_trivially_destructible, T>();
+    STATIC_ASSERT_EXPR_ALIKE((bsoncxx::detail::is_equality_comparable<T>::value),
+                             (bsoncxx::detail::is_equality_comparable<T, optional<T>>::value));
+    STATIC_ASSERT_EXPR_ALIKE((bsoncxx::detail::is_totally_ordered<T>::value),
+                             (bsoncxx::detail::is_totally_ordered_with<T, optional<T>>::value));
+    STATIC_ASSERT_EXPR_ALIKE((std::is_constructible<T, T>::value),
+                             (std::is_constructible<optional<T>, T>::value));
     STATIC_ASSERT_EXPR((std::is_constructible<optional<T>, bsoncxx::stdx::nullopt_t>::value));
     // Assert we return proper reference types
     STATIC_ASSERT_EXPR((std::is_same<deref_t<optional<T>>, T&&>::value));
