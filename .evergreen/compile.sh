@@ -69,14 +69,13 @@ export CMAKE_BUILD_PARALLEL_LEVEL
 if command -V ccache 2>/dev/null; then
   export CMAKE_CXX_COMPILER_LAUNCHER=ccache
 
-
   # Allow reuse of ccache compilation results between different build directories.
   export CCACHE_BASEDIR CCACHE_NOHASHDIR
-  CCACHE_BASEDIR="$(pwd)"
-  CCACHE_NOHASHDIR=1
-  # Allow reuse of ccache compilation results between different build directories.
-  export CCACHE_BASEDIR CCACHE_NOHASHDIR
-  CCACHE_BASEDIR="$(pwd)"
+  if [[ "${OSTYPE:?}" == "cygwin" ]]; then
+    CCACHE_BASEDIR="$(cygpath -aw "$(pwd)")"
+  else
+    CCACHE_BASEDIR="$(pwd)"
+  fi
   CCACHE_NOHASHDIR=1
 fi
 
