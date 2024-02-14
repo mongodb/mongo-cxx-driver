@@ -23,7 +23,7 @@ function (RUN_DIST_CHECK PACKAGE_PREFIX EXT)
    )
 
    # Ensure a VERSION_CURRENT file is present.
-   if(NOT EXISTS ${PACKAGE_PREFIX}/build/VERSION_CURRENT)
+   if(MONGOCXX_INCLUDE_VERSION_FILE_IN_DIST AND NOT EXISTS ${PACKAGE_PREFIX}/build/VERSION_CURRENT)
       message (FATAL_ERROR "Expected tarball to contain a `build/VERSION_CURRENT` file, but it does not")
    endif ()
 
