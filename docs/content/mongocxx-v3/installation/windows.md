@@ -41,16 +41,6 @@ is explicitly selected):
   non-bsoncxx option if you are using a version of MSVC that does not support
   C++17.
 
-* `std::experimental`
-
-  **This option is deprecated and will be removed in an upcoming major release.**
-  Select with `-DBSONCXX_POLY_USE_STD_EXPERIMENTAL=1`. If your toolchain's
-  standard library provides `optional` and `string_view` in the namespace
-  `std::experimental`, you can use this option. Be aware that your standard
-  library's `std::experimental` implementation may change over time, breaking
-  binary compatibility in unexpected ways. Note that this polyfill is *not*
-  recommended and is unsupported.
-
 Most users should use the default polyfill selection behavior. However, if you
 have a preference for one of the external polyfill libraries (e.g. already a
 dependency being used by your application), you may prefer to explicitly select
