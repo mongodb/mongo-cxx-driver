@@ -155,8 +155,8 @@ option(BUILD_SHARED_LIBS_WITH_STATIC_MONGOC
     OFF
 )
 
-# Allow the user to opt into using bsoncxx implementations for C++17 polyfills.
-option(ENABLE_BSONCXX_POLY_USE_IMPLS "Enable using bsoncxx implementations of C++17 polyfills for pre-C++17 configurations" OFF)
+# Allow the user to opt into using bsoncxx implementations for C++17 polyfills by default.
+option(ENABLE_BSONCXX_POLY_USE_IMPLS "Enable using bsoncxx implementations of C++17 polyfills for pre-C++17 configurations by default" OFF)
 
 if(DEFINED CACHE{ENABLE_ABI_TAG_IN_LIBRARY_FILENAMES} AND NOT MSVC)
     message(WARNING "ENABLE_ABI_TAG_IN_LIBRARY_FILENAMES is an MSVC-only option and will be ignored by the current configuration")
