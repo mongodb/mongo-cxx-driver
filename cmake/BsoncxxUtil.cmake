@@ -53,10 +53,9 @@ function(bsoncxx_add_library TARGET OUTPUT_NAME LINK_TYPE)
         endif()
 
         # Library used for C++17 polyfills:
-        # - 'i' for bsoncxx implementations.
         # - 'm' for mnmlstc/core.
         # - 'b' for Boost.
-        # - 'x' for experimental standard library.
+        # - 'i' for bsoncxx implementations.
         # - 's' for standard library (no polyfill).
         if(1)
             if(BSONCXX_POLY_USE_IMPLS)
@@ -65,12 +64,12 @@ function(bsoncxx_add_library TARGET OUTPUT_NAME LINK_TYPE)
                 set(polyfill "m")
             elseif(BSONCXX_POLY_USE_BOOST)
                 set(polyfill "b")
-            elseif(BSONCXX_POLY_USE_STD_EXPERIMENTAL)
-                set(polyfill "x")
+            elseif(0) # CXX-2796: reserved for bsoncxx implementations as polyfill.
+                set(polyfill "i")
             elseif(BSONCXX_POLY_USE_STD)
                 set(polyfill "s")
             else()
-                message(FATAL_ERROR "could not determine polyfill library: must be one of [imbxs]")
+                message(FATAL_ERROR "could not determine polyfill library: must be one of [mbis]")
             endif()
 
             set_target_properties(${TARGET} PROPERTIES INTERFACE_BSONCXX_ABI_TAG_POLYFILL_LIBRARY ${polyfill})

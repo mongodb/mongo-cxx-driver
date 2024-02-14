@@ -31,17 +31,12 @@ function(mongocxx_add_library TARGET OUTPUT_NAME LINK_TYPE)
             string(APPEND abi_tag "-v${soversion}")
         endif()
 
-        # Build type. Inherit from bsoncxx.
-        if(1)
-            get_target_property(build_type ${bsoncxx_target} INTERFACE_BSONCXX_ABI_TAG_BUILD_TYPE)
-
-            set_target_properties(${TARGET} PROPERTIES
-                BSONCXX_ABI_TAG_BUILD_TYPE ${build_type}
-                INTERFACE_BSONCXX_ABI_TAG_BUILD_TYPE ${build_type}
-            )
-
-            string(APPEND abi_tag "-${build_type}")
-        endif()
+        # Build type (same as bsoncxx):
+        # - 'd' for debug.
+        # - 'r' for release (including RelWithDebInfo and MinSizeRel).
+        # - 'u' for unknown (e.g. to allow user-defined configurations).
+        # Compatibility is handled via CMake's IMPORTED_CONFIGURATIONS rather than interface properties.
+        string(APPEND abi_tag "-$<IF:$<CONFIG:Debug>,d,$<IF:$<OR:$<CONFIG:Release>,$<CONFIG:RelWithDebInfo>,$<CONFIG:MinSizeRel>>,r,u>>")
 
         # Link type with libmongoc. Inherit from bsoncxx.
         if(1)

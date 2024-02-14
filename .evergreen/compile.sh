@@ -23,7 +23,6 @@ set -o pipefail
 : "${REQUIRED_CXX_STANDARD:-}"
 : "${RUN_DISTCHECK:-}"
 : "${USE_POLYFILL_BOOST:-}"
-: "${USE_POLYFILL_STD_EXPERIMENTAL:-}"
 : "${USE_SANITIZER_ASAN:-}"
 : "${USE_SANITIZER_UBSAN:-}"
 : "${USE_STATIC_LIBS:-}"
@@ -67,10 +66,18 @@ CMAKE_BUILD_PARALLEL_LEVEL="$(nproc)"
 export CMAKE_BUILD_PARALLEL_LEVEL
 
 # Use ccache if available.
-if command -v ccache >/dev/null; then
-  echo "Enabling ccache as CMake compiler launcher"
-  export CMAKE_C_COMPILER_LAUNCHER=ccache
+if command -V ccache 2>/dev/null; then
   export CMAKE_CXX_COMPILER_LAUNCHER=ccache
+
+
+  # Allow reuse of ccache compilation results between different build directories.
+  export CCACHE_BASEDIR CCACHE_NOHASHDIR
+  CCACHE_BASEDIR="$(pwd)"
+  CCACHE_NOHASHDIR=1
+  # Allow reuse of ccache compilation results between different build directories.
+  export CCACHE_BASEDIR CCACHE_NOHASHDIR
+  CCACHE_BASEDIR="$(pwd)"
+  CCACHE_NOHASHDIR=1
 fi
 
 cmake_build_opts=()
@@ -127,13 +134,6 @@ darwin* | linux*)
 esac
 export CMAKE_GENERATOR="${generator:?}"
 export CMAKE_GENERATOR_PLATFORM="${platform:-}"
-
-if [[ "${USE_POLYFILL_STD_EXPERIMENTAL:-}" == "ON" ]]; then
-  cmake_flags+=(
-    "-DCMAKE_CXX_STANDARD=14"
-    "-DBSONCXX_POLY_USE_STD_EXPERIMENTAL=ON"
-  )
-fi
 
 if [[ "${USE_POLYFILL_BOOST:-}" == "ON" ]]; then
   cmake_flags+=("-DBSONCXX_POLY_USE_BOOST=ON")

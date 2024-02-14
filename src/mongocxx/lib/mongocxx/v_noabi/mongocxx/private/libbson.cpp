@@ -31,23 +31,7 @@ void doc_to_bson_t(const bsoncxx::v_noabi::document::view& doc, bson_t* bson) {
 
 }  // namespace
 
-#if !defined(BSONCXX_POLY_USE_STD)
-
-scoped_bson_t::scoped_bson_t(bsoncxx::v_noabi::document::view_or_value doc)
-    : _is_initialized{true}, _doc{std::move(doc)} {
-    doc_to_bson_t(*_doc, &_bson);
-}
-
-void scoped_bson_t::init_from_static(bsoncxx::v_noabi::document::view_or_value doc) {
-    _is_initialized = true;
-    _doc = std::move(doc);
-    doc_to_bson_t(*_doc, &_bson);
-}
-
-#endif
-
-scoped_bson_t::scoped_bson_t(
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> doc)
+scoped_bson_t::scoped_bson_t(bsoncxx::stdx::optional<bsoncxx::document::view_or_value> doc)
     : _is_initialized{doc} {
     if (doc) {
         _doc = std::move(doc);

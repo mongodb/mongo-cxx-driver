@@ -469,7 +469,6 @@ functions:
                   - REQUIRED_CXX_STANDARD
                   - RUN_DISTCHECK
                   - USE_POLYFILL_BOOST
-                  - USE_POLYFILL_STD_EXPERIMENTAL
                   - USE_SANITIZER_ASAN
                   - USE_SANITIZER_UBSAN
                   - USE_STATIC_LIBS
@@ -597,30 +596,12 @@ functions:
             display_name: "mongodb-logs.tar.gz"
 
     "upload code coverage":
-      - command: shell.exec
+      - command: subprocess.exec
         params:
-          shell: bash
+          binary: bash
           working_dir: "mongo-cxx-driver"
-          script: |
-            set -o errexit
-            set -o pipefail
-
-            # Nothing to do if code coverage was not enabled.
-            if [[ "${ENABLE_CODE_COVERAGE}" != "ON" ]]; then
-              exit 0
-            fi
-
-            # Note: coverage is currently only enabled on the ubuntu-1804 distro.
-            # This script does not support MacOS, Windows, or non-x86_64 distros.
-            # Update accordingly if code coverage is expanded to other distros.
-            curl -Os https://uploader.codecov.io/latest/linux/codecov
-            chmod +x codecov
-
-            # -Z: Exit with a non-zero value if error.
-            # -g: Run with gcov support.
-            # -t: Codecov upload token.
-            # perl: filter verbose "Found" list and "Processing" messages.
-            ./codecov -Zgt "${codecov_token}" | perl -lne 'print if not m|(^.*\.gcov(\.\.\.)?$)|'
+          args: [-c, .evergreen/upload-code-coverage.sh]
+          include_expansions_in_env: [codecov_token]
 
     "docker-image-build":
       - command: shell.exec
@@ -633,7 +614,7 @@ functions:
             set -x
             # TODO: Re-enable Alpine test once MONGOCRYPT-601 is released.
             # echo "Building Alpine Docker image"
-            # make -C extras/docker/alpine3.18 nocachebuild test
+            # make -C extras/docker/alpine3.19 nocachebuild test
             echo "Building Debian Docker image"
             make -C extras/docker/bookworm nocachebuild test
             echo "Building Red Hat UBI Docker image"
@@ -962,11 +943,21 @@ tasks:
             rsync -aq --exclude='examples/add_subdirectory' $(readlink -f ../..) .
             [ -d build ] || mkdir build
             . ./mongo-c-driver/.evergreen/scripts/find-cmake-latest.sh
-            export CMAKE
-            CMAKE="$(find_cmake_latest)"
-            command -v "$CMAKE"
-            $CMAKE -S . -B build -DENABLE_AUTOMATIC_INIT_AND_CLEANUP=OFF
-            $CMAKE --build build
+            export cmake_binary
+            cmake_binary="$(find_cmake_latest)"
+            # Use ccache if available.
+            if command -V ccache 2>/dev/null; then
+              export CMAKE_C_COMPILER_LAUNCHER=ccache
+              export CMAKE_CXX_COMPILER_LAUNCHER=ccache
+
+              # Allow reuse of ccache compilation results between different build directories.
+              export CCACHE_BASEDIR CCACHE_NOHASHDIR
+              CCACHE_BASEDIR="$(pwd)"
+              CCACHE_NOHASHDIR=1
+            fi
+            command -v "$cmake_binary"
+            "$cmake_binary" -S . -B build -DENABLE_AUTOMATIC_INIT_AND_CLEANUP=OFF
+            "$cmake_binary" --build build
             ./build/hello_mongocxx
 
     - name: debian-package-build
@@ -1674,24 +1665,6 @@ buildvariants:
           - name: compile_and_test_with_shared_libs_sharded_cluster
           - name: build_example_with_add_subdirectory
           - name: uninstall_check
-
-    # TODO CXX-2260 Upgrade std::experimental tasks to use Ubuntu 18.04 and mongodb_latest
-    # after bug fixes with newer g++ versions.
-    - name: ubuntu1604-debug-std-experimental
-      display_name: "Ubuntu 16.04 Debug (std::experimental) (MongoDB 4.4)"
-      expansions:
-          build_type: "Debug"
-          USE_POLYFILL_STD_EXPERIMENTAL: ON
-          mongodb_version: "4.4"
-          example_projects_cxx_standard: 14
-          use_mongocryptd: true  # crypt_shared is not available for Ubuntu 16.04
-      run_on:
-          - ubuntu1604-build
-      tasks:
-          - name: compile_and_test_with_shared_libs
-          - name: compile_and_test_with_shared_libs_extra_alignment
-          - name: compile_and_test_with_static_libs
-          - name: compile_and_test_with_static_libs_extra_alignment
 
     - name: ubuntu2004-debug-valgrind-latest
       display_name: "Valgrind Ubuntu 20.04 Debug (MongoDB Latest)"

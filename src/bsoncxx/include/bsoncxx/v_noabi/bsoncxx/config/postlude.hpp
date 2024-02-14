@@ -28,8 +28,6 @@ BSONCXX_POP_WARNINGS();
 #pragma pop_macro("BSONCXX_POLY_USE_IMPLS")
 #undef BSONCXX_POLY_USE_MNMLSTC
 #pragma pop_macro("BSONCXX_POLY_USE_MNMLSTC")
-#undef BSONCXX_POLY_USE_STD_EXPERIMENTAL
-#pragma pop_macro("BSONCXX_POLY_USE_STD_EXPERIMENTAL")
 #undef BSONCXX_POLY_USE_SYSTEM_MNMLSTC
 #pragma pop_macro("BSONCXX_POLY_USE_SYSTEM_MNMLSTC")
 #undef BSONCXX_POLY_USE_BOOST
@@ -99,3 +97,5 @@ static_assert(false, "BSONCXX_ENUM must be undef'ed");
 #pragma pop_macro("BSONCXX_IF_GCC")
 #pragma pop_macro("BSONCXX_IF_CLANG")
 #pragma pop_macro("BSONCXX_IF_GNU_LIKE")
+
+#pragma pop_macro("BSONCXX_FWD")

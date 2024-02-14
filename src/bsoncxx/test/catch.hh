@@ -94,6 +94,20 @@ struct StringMaker<stdx::optional<bsoncxx::stdx::nullopt_t>> {
         return "{nullopt}";
     }
 };
+
+template <>
+struct StringMaker<bsoncxx::detail::strong_ordering> {
+    static std::string convert(bsoncxx::detail::strong_ordering o) {
+        if (o < 0) {
+            return "[less-than]";
+        } else if (o > 0) {
+            return "[greater-than]";
+        } else {
+            return "[equal/equivalent]";
+        }
+    }
+};
+
 }  // namespace Catch
 
 #include <bsoncxx/config/private/postlude.hh>

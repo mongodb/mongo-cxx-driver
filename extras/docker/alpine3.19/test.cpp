@@ -9,5 +9,5 @@
 int main(void) {
     mongocxx::instance inst{};
     std::cout << "mongo-cxx-driver version: " << MONGOCXX_VERSION_STRING << std::endl;
-    std::cout << "THE alpine3.18 IMAGE WORKS!" << std::endl;
+    std::cout << "THE alpine3.19 IMAGE WORKS!" << std::endl;
 }
