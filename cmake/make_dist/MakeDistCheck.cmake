@@ -23,6 +23,11 @@ function(RUN_DIST_CHECK PACKAGE_PREFIX EXT)
       ERROR_MSG "Command to untar ${tarball} failed."
    )
 
+   # Ensure a VERSION_CURRENT file is present.
+   if(MONGOCXX_INCLUDE_VERSION_FILE_IN_DIST AND NOT EXISTS ${PACKAGE_PREFIX}/build/VERSION_CURRENT)
+      message (FATAL_ERROR "Expected tarball to contain a `build/VERSION_CURRENT` file, but it does not")
+   endif ()
+
    set(BUILD_DIR "_cmake_build")
    set(INSTALL_DIR "_cmake_install")
    file(REMOVE_RECURSE ${BUILD_DIR} ${INSTALL_DIR})

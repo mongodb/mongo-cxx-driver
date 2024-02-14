@@ -97,6 +97,8 @@ darwin* | linux*)
 esac
 : "${cmake_examples_target:?}"
 
+# Create a VERSION_CURRENT file in the build directory to include in the dist tarball.
+python ./etc/calc_release_version.py > ./build/VERSION_CURRENT
 cd build
 
 cmake_flags=(
