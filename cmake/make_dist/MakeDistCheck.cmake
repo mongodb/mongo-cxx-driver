@@ -24,7 +24,7 @@ function (RUN_DIST_CHECK PACKAGE_PREFIX EXT)
 
    # Ensure a VERSION_CURRENT file is present.
    if(NOT EXISTS ${PACKAGE_PREFIX}/build/VERSION_CURRENT)
-      message (FATAL_ERROR "Expected tarball to include `build/VERSION_CURRENT` file but did not.")
+      message (FATAL_ERROR "Expected tarball to contain a `build/VERSION_CURRENT` file, but it does not")
    endif ()
 
    set (BUILD_DIR "_cmake_build")
