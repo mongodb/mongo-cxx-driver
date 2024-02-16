@@ -163,7 +163,7 @@ linux*)
   ;;
 esac
 
-# Most compiler flags do not apply to builds on Windows distros.
+# Most compiler flags are not applicable to builds on Windows distros.
 if [[ "${OSTYPE:?}" != cygwin ]]; then
   # Sanitizers overwrite the usual compiler flags.
   if [[ "${USE_SANITIZER_ASAN:-}" == "ON" ]]; then
