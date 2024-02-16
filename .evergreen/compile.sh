@@ -69,7 +69,6 @@ export CMAKE_BUILD_PARALLEL_LEVEL
 if command -V ccache 2>/dev/null; then
   export CMAKE_CXX_COMPILER_LAUNCHER=ccache
 
-
   # Allow reuse of ccache compilation results between different build directories.
   export CCACHE_BASEDIR CCACHE_NOHASHDIR
   CCACHE_BASEDIR="$(pwd)"
@@ -99,7 +98,7 @@ esac
 : "${cmake_examples_target:?}"
 
 # Create a VERSION_CURRENT file in the build directory to include in the dist tarball.
-python ./etc/calc_release_version.py > ./build/VERSION_CURRENT
+python ./etc/calc_release_version.py >./build/VERSION_CURRENT
 cd build
 
 cmake_flags=(
@@ -116,7 +115,7 @@ case "${OSTYPE:?}" in
 cygwin)
   case "${generator:-}" in
   *2015*) cmake_flags+=("-DBOOST_ROOT=C:/local/boost_1_60_0") ;;
-  *2017*|*2019*) cmake_flags+=("-DCMAKE_CXX_STANDARD=17") ;;
+  *2017* | *2019*) cmake_flags+=("-DCMAKE_CXX_STANDARD=17") ;;
   *)
     echo "missing explicit CMake Generator on Windows distro" 1>&2
     exit 1
