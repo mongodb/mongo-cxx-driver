@@ -9,7 +9,7 @@ title = "macOS"
 
 ### Step 1: Choose a C++17 polyfill
 
-First, [choose a C++17 polyfill library]({{< ref "/mongocxx-v3/installation/polyfill-selection" >}}).
+First, [choose a C++17 polyfill library]({{< ref "/mongocxx-v3/polyfill-selection" >}}).
 
 ### Step 2: Download the latest version of the mongocxx driver.
 
