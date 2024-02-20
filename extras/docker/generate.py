@@ -5,8 +5,8 @@ from jinja2 import FileSystemLoader
 
 
 MONGOCXX_VERSION = "3.9.0"
-MONGOC_VERSION = "1.25.4"
-MONGOCRYPT_VERSION = "1.8.4"
+MONGOC_VERSION = "1.26.0"
+MONGOCRYPT_VERSION = "1.9.0"
 
 
 def render_template(template_filename, context):
