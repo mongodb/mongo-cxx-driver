@@ -39,10 +39,11 @@ is explicitly selected):
   non-bsoncxx option if you are using a version of MSVC that does not support
   C++17.
 
-Most users should use the default polyfill selection behavior. However, if you
-have a preference for one of the external polyfill libraries (e.g. already a
-dependency being used by your application), you may prefer to explicitly select
-that external polyfill library rather than rely on default selection behavior.
+Most users should use default behavior with `-DENABLE_BSONCXX_POLY_USE_IMPLS=ON`.
+However, if you have a preference for one of the external polyfill libraries
+(e.g. already a dependency being used by your application), you may prefer to
+explicitly select that external polyfill library rather than rely on default
+selection behavior.
 
 **NOTE**: C++ standard conformance and supported behavior of polyfill features
 may vary depending on the selected polyfill library. The purpose of these
