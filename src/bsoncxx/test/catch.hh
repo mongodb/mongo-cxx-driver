@@ -17,6 +17,7 @@
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/oid.hpp>
+#include <bsoncxx/stdx/operators.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/test/to_string.hh>
 #include <third_party/catch/include/catch.hpp>

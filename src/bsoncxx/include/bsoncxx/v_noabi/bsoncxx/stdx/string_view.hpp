@@ -14,6 +14,92 @@
 
 #pragma once
 
+#include <bsoncxx/config/prelude.hpp>
+
+#if defined(BSONCXX_POLY_USE_MNMLSTC)
+
+#include <core/string.hpp>
+
+namespace bsoncxx {
+namespace v_noabi {
+namespace stdx {
+
+using ::core::basic_string_view;
+using ::core::string_view;
+
+}  // namespace stdx
+}  // namespace v_noabi
+}  // namespace bsoncxx
+
+#elif defined(BSONCXX_POLY_USE_BOOST)
+
+#include <boost/version.hpp>
+
+#if BOOST_VERSION >= 106100
+
+#include <boost/utility/string_view.hpp>
+
+namespace bsoncxx {
+namespace v_noabi {
+namespace stdx {
+
+using ::boost::basic_string_view;
+using ::boost::string_view;
+
+}  // namespace stdx
+}  // namespace v_noabi
+}  // namespace bsoncxx
+
+#else
+
+#include <boost/utility/string_ref.hpp>
+
+namespace bsoncxx {
+namespace v_noabi {
+namespace stdx {
+
+template <typename charT, typename traits = std::char_traits<charT>>
+using basic_string_view = ::boost::basic_string_ref<charT, traits>;
+using string_view = ::boost::string_ref;
+
+}  // namespace stdx
+}  // namespace v_noabi
+}  // namespace bsoncxx
+
+#endif
+
+#elif defined(BSONCXX_POLY_USE_STD_EXPERIMENTAL)
+
+#include <experimental/string_view>
+
+namespace bsoncxx {
+namespace v_noabi {
+namespace stdx {
+
+using ::std::experimental::basic_string_view;
+using ::std::experimental::string_view;
+
+}  // namespace stdx
+}  // namespace v_noabi
+}  // namespace bsoncxx
+
+#elif defined(BSONCXX_POLY_USE_STD)
+
+#include <string_view>
+
+namespace bsoncxx {
+namespace v_noabi {
+namespace stdx {
+
+using ::std::basic_string_view;
+using ::std::string_view;
+
+}  // namespace stdx
+}  // namespace v_noabi
+}  // namespace bsoncxx
+
+#elif defined(BSONCXX_POLY_USE_IMPLS)
+
 #include <algorithm>
 #include <cstddef>
 #include <ios>
@@ -24,18 +110,6 @@
 
 #include <bsoncxx/stdx/operators.hpp>
 #include <bsoncxx/stdx/type_traits.hpp>
-
-#include <bsoncxx/config/prelude.hpp>
-
-#ifdef __has_include
-#if __has_include(<version>)
-#include <version>
-#endif
-#endif
-
-#ifdef __cpp_lib_string_view
-#include <string_view>
-#endif
 
 namespace bsoncxx {
 namespace v_noabi {
@@ -502,17 +576,6 @@ using string_view = basic_string_view<char>;
 }  // namespace v_noabi
 }  // namespace bsoncxx
 
-namespace bsoncxx {
-namespace stdx {
-
-using ::bsoncxx::v_noabi::stdx::basic_string_view;
-using ::bsoncxx::v_noabi::stdx::string_view;
-
-}  // namespace stdx
-}  // namespace bsoncxx
-
-#include <bsoncxx/config/postlude.hpp>
-
 namespace std {
 
 template <typename CharT, typename Traits>
@@ -526,3 +589,18 @@ struct hash<bsoncxx::v_noabi::stdx::basic_string_view<CharT, Traits>>
 };
 
 }  // namespace std
+
+#else
+#error "Cannot find a valid polyfill for string_view"
+#endif
+
+#include <bsoncxx/config/postlude.hpp>
+
+namespace bsoncxx {
+namespace stdx {
+
+using ::bsoncxx::v_noabi::stdx::basic_string_view;
+using ::bsoncxx::v_noabi::stdx::string_view;
+
+}  // namespace stdx
+}  // namespace bsoncxx

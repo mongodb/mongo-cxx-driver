@@ -20,9 +20,7 @@ endif()
 
 project(MONGO_CXX_DRIVER LANGUAGES CXX)
 
-if(NOT DEFINED BUILD_TESTING)
-    set(BUILD_TESTING OFF) # Set this to OFF by default
-endif()
+option(BUILD_TESTING "Include test targets in the \"all\" target")
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "4.8.2")
@@ -156,6 +154,9 @@ option(BUILD_SHARED_LIBS_WITH_STATIC_MONGOC
     "Use static mongo-c-driver libraries with shared mongo-cxx-driver libraries"
     OFF
 )
+
+# Allow the user to opt into using bsoncxx implementations for C++17 polyfills by default.
+option(ENABLE_BSONCXX_POLY_USE_IMPLS "Enable using bsoncxx implementations of C++17 polyfills for pre-C++17 configurations by default" OFF)
 
 if(DEFINED CACHE{ENABLE_ABI_TAG_IN_LIBRARY_FILENAMES} AND NOT MSVC)
     message(WARNING "ENABLE_ABI_TAG_IN_LIBRARY_FILENAMES is an MSVC-only option and will be ignored by the current configuration")
@@ -473,6 +474,10 @@ if(NOT(TARGET dist OR TARGET distcheck))
 
     if(NOT "${BSONCXX_POLY_USE_BOOST}" STREQUAL "")
         list(APPEND polyfill_flags "-DBSONCXX_POLY_USE_BOOST=${BSONCXX_POLY_USE_BOOST}")
+    endif()
+
+    if(NOT "${BSONCXX_POLY_USE_IMPLS}" STREQUAL "")
+        list(APPEND polyfill_flags "-DBSONCXX_POLY_USE_IMPLS=${BSONCXX_POLY_USE_IMPLS}")
     endif()
 
     if(NOT "${BSONCXX_POLY_USE_STD}" STREQUAL "")

@@ -53,9 +53,51 @@ class MONGOCXX_TEST_API scoped_bson_t {
     scoped_bson_t();
 
     //
-    // Constructs a new scoped_bson_t from an optional document view_or_value.
+    // Constructs a new scoped_bson_t from the provided document.
     //
-    // The internal bson_t is initialized if the optional is populated.
+    // The internal bson_t is considered initialized.
+    //
+    explicit scoped_bson_t(bsoncxx::document::view_or_value doc);
+
+    //
+    // Initializes a bson_t from the provided document.
+    //
+    // The internal bson_t is considered initialized.
+    //
+    void init_from_static(bsoncxx::document::view_or_value doc);
+
+    //
+    // Constructs a new scoped_bson_t from the provided document.
+    //
+    // The internal bson_t is considered initialized.
+    //
+    explicit scoped_bson_t(bsoncxx::document::view doc);
+
+    //
+    // Initializes a bson_t from the provided document.
+    //
+    // The internal bson_t is considered initialized.
+    //
+    void init_from_static(bsoncxx::document::view doc);
+
+    //
+    // Constructs a new scoped_bson_t from the provided document.
+    //
+    // The internal bson_t is considered initialized.
+    //
+    explicit scoped_bson_t(bsoncxx::document::value doc);
+
+    //
+    // Initializes a bson_t from the provided document.
+    //
+    // The internal bson_t is considered initialized.
+    //
+    void init_from_static(bsoncxx::document::value doc);
+
+    //
+    // Constructs a new scoped_bson_t from the provided optional document.
+    //
+    // The internal bson_t is initialized if the optional contains a document.
     //
     explicit scoped_bson_t(
         bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> doc);
@@ -63,7 +105,7 @@ class MONGOCXX_TEST_API scoped_bson_t {
     //
     // Initializes a bson_t from the provided optional document.
     //
-    // The internal bson_t is initialized if the optional is populated.
+    // The internal bson_t is initialized if the optional contains a document.
     //
     void init_from_static(
         bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> doc);
@@ -111,7 +153,7 @@ class MONGOCXX_TEST_API scoped_bson_t {
 
    private:
     bson_t _bson;
-    bool _is_initialized;
+    bool _is_initialized = false;
 
     // If we are passed a value created on-the-fly, we'll need to own this.
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _doc;

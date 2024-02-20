@@ -20,6 +20,7 @@ set(BSONCXX_VERSION_NO_EXTRA ${BSONCXX_VERSION_MAJOR}.${BSONCXX_VERSION_MINOR}.$
 set(BSONCXX_VERSION ${BSONCXX_VERSION_NO_EXTRA}${BSONCXX_VERSION_EXTRA})
 message(STATUS "bsoncxx version: ${BSONCXX_VERSION}")
 
+option(BSONCXX_POLY_USE_IMPLS "Use bsoncxx implementations for stdx polyfills" OFF)
 option(BSONCXX_POLY_USE_MNMLSTC "Use MNMLSTC/core for stdx polyfills" OFF)
 option(BSONCXX_POLY_USE_SYSTEM_MNMLSTC "Obtain mnmlstc/core from system" OFF)
 option(BSONCXX_POLY_USE_BOOST "Use boost for stdx polyfills" OFF)
@@ -30,7 +31,7 @@ set(BSONCXX_OUTPUT_BASENAME "bsoncxx" CACHE STRING "Output bsoncxx library base 
 # Count how many polyfill options are true-ish
 set(BSONCXX_POLY_OPTIONS_SET 0)
 
-foreach(BSONCXX_POLY_OPTION ${BSONCXX_POLY_USE_MNMLSTC} ${BSONCXX_POLY_USE_BOOST} ${BSONCXX_POLY_USE_STD})
+foreach(BSONCXX_POLY_OPTION ${BSONCXX_POLY_USE_IMPLS} ${BSONCXX_POLY_USE_MNMLSTC} ${BSONCXX_POLY_USE_BOOST} ${BSONCXX_POLY_USE_STD})
     if(${BSONCXX_POLY_OPTION})
         MATH(EXPR BSONCXX_POLY_OPTIONS_SET "${BSONCXX_POLY_OPTIONS_SET}+1")
     endif()
@@ -45,15 +46,23 @@ elseif(BSONCXX_POLY_OPTIONS_SET EQUAL 0)
         # If we are in C++17 mode, use the C++17 versions
         set(BSONCXX_POLY_USE_STD ON)
         message(STATUS "Auto-configuring bsoncxx to use C++17 std library polyfills since C++17 is active and user didn't specify otherwise")
+    elseif(ENABLE_BSONCXX_POLY_USE_IMPLS)
+        # If enabled, use bsoncxx implementations instead of external libraries.
+        set(BSONCXX_POLY_USE_IMPLS ON)
+        message(STATUS "Auto-configuring bsoncxx to use its own polyfill implementations since C++17 is inactive")
     elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
         # Otherwise, since MSVC can't handle MNMLSTC, default to boost
         set(BSONCXX_POLY_USE_BOOST ON)
         message(STATUS "Auto-configuring bsoncxx to use boost std library polyfills since C++17 is inactive and compiler is MSVC")
+        message(DEPRECATION "Default selection of external polyfill libraries is deprecated and will be removed in an upcoming major release. Set ENABLE_BSONCXX_POLY_USE_IMPLS=ON to enable recommended behavior.")
     else()
         # Otherwise, we are on a platform that can handle MNMLSTC
         set(BSONCXX_POLY_USE_MNMLSTC ON)
         message(STATUS "Auto-configuring bsoncxx to use MNMLSTC for polyfills since C++17 is inactive")
+        message(DEPRECATION "Default selection of external polyfill libraries is deprecated and will be removed in an upcoming major release. Set ENABLE_BSONCXX_POLY_USE_IMPLS=ON to enable recommended behavior.")
     endif()
+elseif(BSONCXX_POLY_USE_MNMLSTC OR BSONCXX_POLY_USE_BOOST)
+    message(DEPRECATION "Support for external polyfill libraries is deprecated and will be removed in an upcoming major release. Set BSONCXX_POLY_USE_IMPLS=ON (pre-C++17) or set CMAKE_CXX_STANDARD=17 (or newer) to select recommended behavior.")
 endif()
 
 # It doesn't make sense to say we aren't using MNMLSTC but then

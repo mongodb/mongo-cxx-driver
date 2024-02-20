@@ -15,6 +15,7 @@
 #cmakedefine BSONCXX_POLY_USE_MNMLSTC
 #cmakedefine BSONCXX_POLY_USE_SYSTEM_MNMLSTC
 #cmakedefine BSONCXX_POLY_USE_BOOST
+#cmakedefine BSONCXX_POLY_USE_IMPLS
 #cmakedefine BSONCXX_POLY_USE_STD
 
 #define BSONCXX_INLINE_NAMESPACE_BEGIN inline namespace v_noabi {

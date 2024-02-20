@@ -62,7 +62,7 @@ function(bsoncxx_add_library TARGET OUTPUT_NAME LINK_TYPE)
                 set(polyfill "m")
             elseif(BSONCXX_POLY_USE_BOOST)
                 set(polyfill "b")
-            elseif(0) # CXX-2796: reserved for bsoncxx implementations as polyfill.
+            elseif(BSONCXX_POLY_USE_IMPLS)
                 set(polyfill "i")
             elseif(BSONCXX_POLY_USE_STD)
                 set(polyfill "s")

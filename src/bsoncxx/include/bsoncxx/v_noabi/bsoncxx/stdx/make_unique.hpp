@@ -14,19 +14,30 @@
 
 #pragma once
 
-#include <cstddef>
 #include <memory>
+
+#include <bsoncxx/config/prelude.hpp>
+
+#pragma push_macro("BSONCXX_DETAIL_USE_STD_MAKE_UNIQUE")
+#undef BSONCXX_DETAIL_USE_STD_MAKE_UNIQUE
+
+#if (defined(__cplusplus) && __cplusplus >= 201402L) || \
+    (defined(_MSVC_LANG) && _MSVC_LANG >= 201402L)
+#define BSONCXX_DETAIL_USE_STD_MAKE_UNIQUE
+#endif
+
+// Only define bsoncxx implementation details when necessary.
+#if !defined(BSONCXX_DETAIL_USE_STD_MAKE_UNIQUE) || !defined(__cpp_lib_smart_ptr_for_overwrite)
+
+#include <cstddef>
 #include <type_traits>
 #include <utility>
 
 #include <bsoncxx/stdx/type_traits.hpp>
 
-#include <bsoncxx/config/prelude.hpp>
-
 namespace bsoncxx {
 namespace v_noabi {
 namespace stdx {
-
 namespace detail {
 
 // Switch backend of make_unique by the type we are creating.
@@ -84,6 +95,22 @@ template <typename T>
 struct make_unique_impl<T&&> {};
 
 }  // namespace detail
+}  // namespace stdx
+}  // namespace v_noabi
+}  // namespace bsoncxx
+
+#endif  // !defined(BSONCXX_DETAIL_USE_STD_MAKE_UNIQUE) ||
+        // !defined(__cpp_lib_smart_ptr_for_overwrite)
+
+namespace bsoncxx {
+namespace v_noabi {
+namespace stdx {
+
+// Unlike other C++17 polyfill features, this is a C++14 feature.
+// Use feature testing rather than polyfill library selection macros.
+#if defined(BSONCXX_DETAIL_USE_STD_MAKE_UNIQUE)
+using ::std::make_unique;
+#else
 
 /// Equivalent to `std::make_unique<T>(args...)` where `T` is a non-array type.
 template <typename T,
@@ -107,6 +134,14 @@ std::unique_ptr<T> make_unique(std::size_t count) {
     return Impl::make(std::true_type{}, count);
 }
 
+#endif
+
+// Unlike other C++17 polyfill features, this is a C++20 feature.
+// Use feature testing rather than polyfill library selection macros.
+#if defined(__cpp_lib_smart_ptr_for_overwrite)
+using ::std::make_unique_for_overwrite;
+#else
+
 /// Equivalent to `std::make_unique_for_overwrite<T>()` where `T` is a non-array type.
 template <typename T,
           typename Impl = detail::make_unique_impl<T>,
@@ -127,9 +162,13 @@ std::unique_ptr<T> make_unique_for_overwrite(std::size_t count) {
     return Impl::make(std::false_type{}, count);
 }
 
+#endif
+
 }  // namespace stdx
 }  // namespace v_noabi
 }  // namespace bsoncxx
+
+#pragma pop_macro("BSONCXX_DETAIL_USE_STD_MAKE_UNIQUE")
 
 #include <bsoncxx/config/postlude.hpp>
 

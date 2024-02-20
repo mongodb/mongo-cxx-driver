@@ -12,6 +12,12 @@
 #include <bsoncxx/stdx/type_traits.hpp>
 #include <bsoncxx/test/catch.hh>
 
+#include <bsoncxx/config/prelude.hpp>
+
+// Each polyfill library has some set of features that are not conformant with the standard
+// specification (inconsistent, missing, etc.). Limit testing to bsoncxx implementation and stdlib.
+#if defined(BSONCXX_POLY_USE_IMPLS) || defined(BSONCXX_POLY_USE_STD)
+
 using bsoncxx::stdx::in_place;
 using bsoncxx::stdx::nullopt;
 using bsoncxx::stdx::optional;
@@ -70,49 +76,52 @@ struct not_copyable {
     not_copyable& operator=(not_copyable&&) = default;
 };
 
+// Improve quality of error messages on failure (in particular for MSVC).
+#define STATIC_ASSERT_EXPR(expr) static_assert((expr), "expected: " #expr)
+#define STATIC_ASSERT_EXPR_EQUAL(a, b) static_assert((a) == (b), "expected: " #a " == " #b)
+#define STATIC_ASSERT_EXPR_IMPLIES(a, b) static_assert((!(a) || (b)), "expected: " #a " -> " #b)
+
+#if defined(BSONCXX_POLY_USE_STD)
+// Deliberately weaken assertions for stdlib implementations to accomodate for differences in
+// behavior.
+#define STATIC_ASSERT_EXPR_ALIKE(a, b) STATIC_ASSERT_EXPR_IMPLIES(a, b)
+#else
+#define STATIC_ASSERT_EXPR_ALIKE(a, b) STATIC_ASSERT_EXPR_EQUAL(a, b)
+#endif
+
 template <bsoncxx_ttparam Trait, typename T>
-bool assert_sameness() {
-    static_assert(Trait<T>::value == Trait<optional<T>>::value, "Fail");
+bool assert_alikeness() {
+    STATIC_ASSERT_EXPR_ALIKE(Trait<T>::value, Trait<optional<T>>::value);
     return true;
 }
 
 template <typename From1, typename To1, typename From2, typename To2>
 bool check_convert_alike() {
-    static_assert(std::is_convertible<From1, To1>::value  //
-                      == std::is_convertible<From2, To2>::value,
-                  "fail");
-    static_assert(std::is_convertible<From1&, To1>::value  //
-                      == std::is_convertible<From2&, To2>::value,
-                  "fail");
-    static_assert(std::is_convertible<From1 const&, To1>::value  //
-                      == std::is_convertible<From2 const&, To2>::value,
-                  "fail");
-    static_assert(std::is_convertible<From1&&, To1>::value  //
-                      == std::is_convertible<From2&&, To2>::value,
-                  "fail");
-    static_assert(std::is_convertible<From1 const&&, To1>::value  //
-                      == std::is_convertible<From2 const&&, To2>::value,
-                  "fail");
+    STATIC_ASSERT_EXPR_ALIKE((std::is_convertible<From1, To1>::value),
+                             (std::is_convertible<From2, To2>::value));
+    STATIC_ASSERT_EXPR_ALIKE((std::is_convertible<From1&, To1>::value),
+                             (std::is_convertible<From2&, To2>::value));
+    STATIC_ASSERT_EXPR_ALIKE((std::is_convertible<From1 const&, To1>::value),
+                             (std::is_convertible<From2 const&, To2>::value));
+    STATIC_ASSERT_EXPR_ALIKE((std::is_convertible<From1&&, To1>::value),
+                             (std::is_convertible<From2&&, To2>::value));
+    STATIC_ASSERT_EXPR_ALIKE((std::is_convertible<From1 const&&, To1>::value),
+                             (std::is_convertible<From2 const&&, To2>::value));
     return true;
 }
 
 template <typename From1, typename To1, typename From2, typename To2>
 bool check_construct_alike() {
-    static_assert(std::is_constructible<To1, From1>::value  //
-                      == std::is_constructible<To2, From2>::value,
-                  "fail");
-    static_assert(std::is_constructible<To1, From1&>::value  //
-                      == std::is_constructible<To2, From2&>::value,
-                  "fail");
-    static_assert(std::is_constructible<To1, From1 const&>::value  //
-                      == std::is_constructible<To2, From2 const&>::value,
-                  "fail");
-    static_assert(std::is_constructible<To1, From1&&>::value  //
-                      == std::is_constructible<To2, From2&&>::value,
-                  "fail");
-    static_assert(std::is_constructible<To1, From1 const&&>::value  //
-                      == std::is_constructible<To2, From2 const&&>::value,
-                  "fail");
+    STATIC_ASSERT_EXPR_ALIKE((std::is_constructible<To1, From1>::value),
+                             (std::is_constructible<To2, From2>::value));
+    STATIC_ASSERT_EXPR_ALIKE((std::is_constructible<To1, From1&>::value),
+                             (std::is_constructible<To2, From2&>::value));
+    STATIC_ASSERT_EXPR_ALIKE((std::is_constructible<To1, From1 const&>::value),
+                             (std::is_constructible<To2, From2 const&>::value));
+    STATIC_ASSERT_EXPR_ALIKE((std::is_constructible<To1, From1&&>::value),
+                             (std::is_constructible<To2, From2&&>::value));
+    STATIC_ASSERT_EXPR_ALIKE((std::is_constructible<To1, From1 const&&>::value),
+                             (std::is_constructible<To2, From2 const&&>::value));
     return true;
 }
 
@@ -126,55 +135,53 @@ bool check_conversions() {
 
 template <typename T>
 bool static_checks() {
-    assert_sameness<std::is_copy_constructible, T>();
-    assert_sameness<std::is_copy_assignable, T>();
-    assert_sameness<std::is_move_constructible, T>();
-    assert_sameness<std::is_move_assignable, T>();
-    assert_sameness<is_hashable, T>();
-    assert_sameness<bsoncxx::detail::is_equality_comparable, T>();
-    assert_sameness<bsoncxx::detail::is_totally_ordered, T>();
-    assert_sameness<std::is_trivially_destructible, T>();
-    static_assert(bsoncxx::detail::is_equality_comparable<T, optional<T>>::value ==
-                      bsoncxx::detail::is_equality_comparable<T>::value,
-                  "fail");
-    static_assert(bsoncxx::detail::is_totally_ordered_with<T, optional<T>>::value ==
-                      bsoncxx::detail::is_totally_ordered<optional<T>>::value,
-                  "fail");
-    static_assert(
-        std::is_constructible<optional<T>, T>::value == std::is_constructible<T, T>::value, "fail");
-    static_assert(std::is_constructible<optional<T>, bsoncxx::stdx::nullopt_t>{}, "fail");
+    assert_alikeness<std::is_copy_constructible, T>();
+    assert_alikeness<std::is_copy_assignable, T>();
+    assert_alikeness<std::is_move_constructible, T>();
+    assert_alikeness<std::is_move_assignable, T>();
+    assert_alikeness<is_hashable, T>();
+    assert_alikeness<bsoncxx::detail::is_equality_comparable, T>();
+    assert_alikeness<bsoncxx::detail::is_totally_ordered, T>();
+    assert_alikeness<std::is_trivially_destructible, T>();
+    STATIC_ASSERT_EXPR_ALIKE((bsoncxx::detail::is_equality_comparable<T>::value),
+                             (bsoncxx::detail::is_equality_comparable<T, optional<T>>::value));
+    STATIC_ASSERT_EXPR_ALIKE((bsoncxx::detail::is_totally_ordered<T>::value),
+                             (bsoncxx::detail::is_totally_ordered_with<T, optional<T>>::value));
+    STATIC_ASSERT_EXPR_ALIKE((std::is_constructible<T, T>::value),
+                             (std::is_constructible<optional<T>, T>::value));
+    STATIC_ASSERT_EXPR((std::is_constructible<optional<T>, bsoncxx::stdx::nullopt_t>::value));
     // Assert we return proper reference types
-    static_assert(std::is_same<deref_t<optional<T>>, T&&>{}, "fail");
-    static_assert(std::is_same<deref_t<optional<T> const>, const T&&>{}, "fail");
-    static_assert(std::is_same<deref_t<optional<T> const&>, const T&>{}, "fail");
-    static_assert(std::is_same<deref_t<optional<T>&>, T&>{}, "fail");
+    STATIC_ASSERT_EXPR((std::is_same<deref_t<optional<T>>, T&&>::value));
+    STATIC_ASSERT_EXPR((std::is_same<deref_t<optional<T> const>, const T&&>::value));
+    STATIC_ASSERT_EXPR((std::is_same<deref_t<optional<T> const&>, const T&>::value));
+    STATIC_ASSERT_EXPR((std::is_same<deref_t<optional<T>&>, T&>::value));
     // .value()
-    static_assert(std::is_same<value_t<optional<T>>, T&&>{}, "fail");
-    static_assert(std::is_same<value_t<optional<T> const>, const T&&>{}, "fail");
-    static_assert(std::is_same<value_t<optional<T> const&>, const T&>{}, "fail");
-    static_assert(std::is_same<value_t<optional<T>&>, T&>{}, "fail");
+    STATIC_ASSERT_EXPR((std::is_same<value_t<optional<T>>, T&&>::value));
+    STATIC_ASSERT_EXPR((std::is_same<value_t<optional<T> const>, const T&&>::value));
+    STATIC_ASSERT_EXPR((std::is_same<value_t<optional<T> const&>, const T&>::value));
+    STATIC_ASSERT_EXPR((std::is_same<value_t<optional<T>&>, T&>::value));
     // operator->
-    static_assert(std::is_same<arrow_t<optional<T>>, T*>{}, "fail");
-    static_assert(std::is_same<arrow_t<optional<T> const>, const T*>{}, "fail");
-    static_assert(std::is_same<arrow_t<optional<T> const&>, const T*>{}, "fail");
-    static_assert(std::is_same<arrow_t<optional<T>&>, T*>{}, "fail");
+    STATIC_ASSERT_EXPR((std::is_same<arrow_t<optional<T>>, T*>::value));
+    STATIC_ASSERT_EXPR((std::is_same<arrow_t<optional<T> const>, const T*>::value));
+    STATIC_ASSERT_EXPR((std::is_same<arrow_t<optional<T> const&>, const T*>::value));
+    STATIC_ASSERT_EXPR((std::is_same<arrow_t<optional<T>&>, T*>::value));
     return check_conversions<T, T>();
 }
 
 }  // namespace
 
-static_assert(bsoncxx::detail::is_totally_ordered<std::string>{}, "fail");
-static_assert(bsoncxx::detail::is_totally_ordered<int>{}, "fail");
-static_assert(!bsoncxx::detail::is_totally_ordered<not_ordered>{}, "fail");
+STATIC_ASSERT_EXPR(bsoncxx::detail::is_totally_ordered<std::string>::value);
+STATIC_ASSERT_EXPR(bsoncxx::detail::is_totally_ordered<int>::value);
+STATIC_ASSERT_EXPR(!bsoncxx::detail::is_totally_ordered<not_ordered>::value);
 
 #ifndef NO_LWG_2543
-static_assert(is_hashable<optional<int>>::value, "fail");
-static_assert(!is_hashable<optional<immobile>>::value, "fail");
+STATIC_ASSERT_EXPR(is_hashable<optional<int>>::value);
+STATIC_ASSERT_EXPR(!is_hashable<optional<immobile>>::value);
 #endif
 
 // Having this static_assert appear prior to static_checks<int> prevents a later static assert error
 // that occurs only on MSVC 19.29 (VS2019). Obviously.
-static_assert(bsoncxx::detail::is_totally_ordered<optional<int>>{}, "fail");
+STATIC_ASSERT_EXPR(bsoncxx::detail::is_totally_ordered<optional<int>>::value);
 // It's a useful check on its own, but now you are cursed with this knowledge just as I have been.
 // pain.
 
@@ -604,7 +611,10 @@ struct in_place_convertible {
 };
 
 TEST_CASE("optional<T> conversions") {
-    static_assert(!std::is_constructible<optional<bool>, optional<std::string>>{}, "fail");
+    // Some stdlib implementations do not forbid this ctor correctly.
+#if defined(BSONCXX_POLY_USE_IMPLS)
+    STATIC_ASSERT_EXPR((!std::is_constructible<optional<bool>, optional<std::string>>::value));
+#endif  // defined(BSONCXX_POLY_USE_IMPLS)
 
     optional<std::string> s1(bsoncxx::stdx::in_place);
     CHECK(s1 == "");
@@ -619,3 +629,5 @@ TEST_CASE("optional<T> conversions") {
     CHECK(string == c_str);
     CHECK(string2 == c_str);
 }
+
+#endif  // defined(BSONCXX_POLY_USE_IMPLS) || defined(BSONCXX_POLY_USE_STD)
