@@ -116,6 +116,33 @@
 
 
   
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
     
     
       
@@ -580,6 +607,35 @@
       <span class="menu-arrow fa fa-angle-down"></span>
   </a>
     <ul  class="current">
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongocxx-v3/polyfill-selection/">
+        
+        Choosing a C&#43;&#43;17 Polyfill
+    </a>
+  </li>
+
+
+        
         
         
         
@@ -1469,33 +1525,33 @@ which to use is entirely aesthetic.</p>
 <h2 id="list">List builder</h2>
 <p>The simplest way to create a BSON document or array is to use the JSON-like
 list builder:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#75715e">// { &#34;hello&#34;: &#34;world&#34; }
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>bsoncxx<span style="color:#f92672">::</span>builder<span style="color:#f92672">::</span>list list_builder <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#34;hello&#34;</span>, <span style="color:#e6db74">&#34;world&#34;</span>};
-</span></span><span style="display:flex;"><span>bsoncxx<span style="color:#f92672">::</span>document<span style="color:#f92672">::</span>view document <span style="color:#f92672">=</span> list_builder.view().get_document();
-</span></span></code></pre></div><p>More advanced uses of the list builder are shown in <a href="https://github.com/mongodb/mongo-cxx-driver/blob/master/examples/bsoncxx/builder_list.cpp">this
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#75715e">// { &#34;hello&#34;: &#34;world&#34; }
+</span><span style="color:#75715e"></span>bsoncxx<span style="color:#f92672">::</span>builder<span style="color:#f92672">::</span>list list_builder <span style="color:#f92672">=</span> {<span style="color:#e6db74">&#34;hello&#34;</span>, <span style="color:#e6db74">&#34;world&#34;</span>};
+bsoncxx<span style="color:#f92672">::</span>document<span style="color:#f92672">::</span>view document <span style="color:#f92672">=</span> list_builder.view().get_document();
+</code></pre></div><p>More advanced uses of the list builder are shown in <a href="https://github.com/mongodb/mongo-cxx-driver/blob/master/examples/bsoncxx/builder_list.cpp">this
 example</a>.</p>
 <h2 id="one-off">&ldquo;One-off&rdquo; builder functions</h2>
 <p>The &ldquo;One-off&rdquo; builder creates documents and arrays in a single call.
 These can be used when no additional logic (such as conditionals or loops)
 needs to be used to create the object:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#66d9ef">using</span> bsoncxx<span style="color:#f92672">::</span>builder<span style="color:#f92672">::</span>basic<span style="color:#f92672">::</span>kvp;
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">// { &#34;hello&#34;: &#34;world&#34; }
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>bsoncxx<span style="color:#f92672">::</span>document<span style="color:#f92672">::</span>value document <span style="color:#f92672">=</span> bsoncxx<span style="color:#f92672">::</span>builder<span style="color:#f92672">::</span>basic<span style="color:#f92672">::</span>make_document(kvp(<span style="color:#e6db74">&#34;hello&#34;</span>, <span style="color:#e6db74">&#34;world&#34;</span>));
-</span></span></code></pre></div><h2 id="basic-builder">Basic builder</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">using</span> bsoncxx<span style="color:#f92672">::</span>builder<span style="color:#f92672">::</span>basic<span style="color:#f92672">::</span>kvp;
+
+<span style="color:#75715e">// { &#34;hello&#34;: &#34;world&#34; }
+</span><span style="color:#75715e"></span>bsoncxx<span style="color:#f92672">::</span>document<span style="color:#f92672">::</span>value document <span style="color:#f92672">=</span> bsoncxx<span style="color:#f92672">::</span>builder<span style="color:#f92672">::</span>basic<span style="color:#f92672">::</span>make_document(kvp(<span style="color:#e6db74">&#34;hello&#34;</span>, <span style="color:#e6db74">&#34;world&#34;</span>));
+</code></pre></div><h2 id="basic-builder">Basic builder</h2>
 <pre tabindex="0"><code>using bsoncxx::builder::basic::kvp;
 
-// { &#34;hello&#34; : &#34;world&#34; }
+// { &quot;hello&quot; : &quot;world&quot; }
 bsoncxx::builder::basic::document basic_builder{};
-basic_builder.append(kvp(&#34;hello&#34;, &#34;world&#34;));
+basic_builder.append(kvp(&quot;hello&quot;, &quot;world&quot;));
 bsoncxx::document::value document = basic_builder.extract();
 </code></pre><p>More advanced uses of the basic builder are shown in <a href="https://github.com/mongodb/mongo-cxx-driver/blob/master/examples/bsoncxx/builder_basic.cpp">this
 example</a>.</p>
 <h2 id="stream-builder">Stream builder</h2>
-<pre tabindex="0"><code>// { &#34;hello&#34; : &#34;world&#34; }
+<pre tabindex="0"><code>// { &quot;hello&quot; : &quot;world&quot; }
 
 using bsoncxx::builder::stream;
-bsoncxx::document::value document = stream::document{} &lt;&lt; &#34;hello&#34; &lt;&lt; &#34;world&#34; &lt;&lt; stream::finalize;
+bsoncxx::document::value document = stream::document{} &lt;&lt; &quot;hello&quot; &lt;&lt; &quot;world&quot; &lt;&lt; stream::finalize;
 </code></pre><p>More advanced uses of the stream builder are shown in <a href="https://github.com/mongodb/mongo-cxx-driver/blob/master/examples/bsoncxx/builder_stream.cpp">this
 example</a>.</p>
 <p><strong>NOTE</strong>: In order to properly append each new value, a stream builder
@@ -1523,14 +1579,14 @@ for (const auto&amp; element : elements) {
 </code></pre><p>To build a subarray in a loop, pass a lambda to <code>append</code> (or as the second
 argument of <code>kvp</code> if the subarray is contained by a document rather than
 an array):</p>
-<pre tabindex="0"><code>// { &#34;foo&#34; : [ 1, 2, 3 ] }
+<pre tabindex="0"><code>// { &quot;foo&quot; : [ 1, 2, 3 ] }
 
 using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::sub_array;
 
 const auto elements = {1, 2, 3};
 auto doc = bsoncxx::builder::basic::document{};
-doc.append(kvp(&#34;foo&#34;, [&amp;elements](sub_array child) {
+doc.append(kvp(&quot;foo&quot;, [&amp;elements](sub_array child) {
     for (const auto&amp; element : elements) {
         child.append(element);
     }
@@ -1541,19 +1597,19 @@ uniform. To build an array in a loop properly, intermediate values
 returned by the stream builder should be stored in variables when the type
 changes. One attempt to build an array from a stream builder using a loop
 might look like the following:</p>
-<pre tabindex="0"><code>// { &#34;subdocs&#34; : [ { &#34;key&#34; : 1 }, { &#34;key&#34; : 2 }, { &#34;key&#34; : 3 } ], &#34;another_key&#34; : 42 }
+<pre tabindex="0"><code>// { &quot;subdocs&quot; : [ { &quot;key&quot; : 1 }, { &quot;key&quot; : 2 }, { &quot;key&quot; : 3 } ], &quot;another_key&quot; : 42 }
 using namespace bsoncxx;
 
 builder::stream::document builder{};
 
-auto in_array = builder &lt;&lt; &#34;subdocs&#34; &lt;&lt; builder::stream::open_array;
+auto in_array = builder &lt;&lt; &quot;subdocs&quot; &lt;&lt; builder::stream::open_array;
 for (auto&amp;&amp; e : {1, 2, 3}) {
-    in_array = in_array &lt;&lt; builder::stream::open_document &lt;&lt; &#34;key&#34; &lt;&lt; e
+    in_array = in_array &lt;&lt; builder::stream::open_document &lt;&lt; &quot;key&quot; &lt;&lt; e
                         &lt;&lt; builder::stream::close_document;
 }
 auto after_array = in_array &lt;&lt; builder::stream::close_array;
 
-after_array &lt;&lt; &#34;another_key&#34; &lt;&lt; 42;
+after_array &lt;&lt; &quot;another_key&quot; &lt;&lt; 42;
 
 document::value doc = after_array &lt;&lt; builder::stream::finalize;
 
@@ -1565,7 +1621,7 @@ statement within the loop body should assign its result back to the in_array
 object, so that the loop restarts in a consistent state:</p>
 <pre tabindex="0"><code>for (auto &amp;&amp; e : {1, 2, 3}) {
     auto open_state = in_array &lt;&lt; builder::stream::open_document;
-    auto temp_state = open_state &lt;&lt; &#34;key&#34; &lt;&lt; e;
+    auto temp_state = open_state &lt;&lt; &quot;key&quot; &lt;&lt; e;
     in_array = temp_state &lt;&lt; builder::stream::close_document;
 }
 </code></pre><h3 id="a-namevalueowning-bson-documents-valuesa"><!-- raw HTML omitted -->Owning BSON Documents (values)<!-- raw HTML omitted --></h3>
@@ -1580,8 +1636,8 @@ and should not be used.</p>
 <p>It&rsquo;s possible to create a <code>bsoncxx::document::value</code> in a single line using
 the stream builder interface and the <code>finalize</code> token. <code>finalize</code> returns a
 <code>document::value</code> from a temporary stream builder:</p>
-<pre tabindex="0"><code>// { &#34;finalize&#34; : &#34;is nifty&#34; }
-bsoncxx::document::value one_line = bsoncxx::builder::stream::document{} &lt;&lt; &#34;finalize&#34; &lt;&lt; &#34;is nifty&#34; &lt;&lt; bsoncxx::builder::stream::finalize;
+<pre tabindex="0"><code>// { &quot;finalize&quot; : &quot;is nifty&quot; }
+bsoncxx::document::value one_line = bsoncxx::builder::stream::document{} &lt;&lt; &quot;finalize&quot; &lt;&lt; &quot;is nifty&quot; &lt;&lt; bsoncxx::builder::stream::finalize;
 </code></pre><h3 id="a-nameviewnon-owning-bson-documents-viewsa"><!-- raw HTML omitted -->Non-owning BSON Documents (views)<!-- raw HTML omitted --></h3>
 <p><a href="https://github.com/mongodb/mongo-cxx-driver/blob/master/src/bsoncxx/include/bsoncxx/v_noabi/bsoncxx/document/view.hpp"><code>bsoncxx::document::view</code></a></p>
 <p>This type is a view into an owning <code>bsoncxx::document::value</code>.</p>
@@ -1591,14 +1647,14 @@ bsoncxx::document::value one_line = bsoncxx::builder::stream::document{} &lt;&lt
 </code></pre><p>In performance-critical code, passing views around is preferable to using
 values because we can avoid excess copying. Also, passing a view of a
 document allows us to use the document multiple times:</p>
-<pre tabindex="0"><code>// { &#34;copies&#34; : { &#34;$gt&#34; : 100 } }
-auto query_value = document{} &lt;&lt; &#34;copies&#34; &lt;&lt; open_document &lt;&lt; &#34;$gt&#34; &lt;&lt; 100 &lt;&lt; close_document &lt;&lt; finalize;
+<pre tabindex="0"><code>// { &quot;copies&quot; : { &quot;$gt&quot; : 100 } }
+auto query_value = document{} &lt;&lt; &quot;copies&quot; &lt;&lt; open_document &lt;&lt; &quot;$gt&quot; &lt;&lt; 100 &lt;&lt; close_document &lt;&lt; finalize;
 
 // Run the same query across different collections
-auto collection1 = db[&#34;science_fiction&#34;];
+auto collection1 = db[&quot;science_fiction&quot;];
 auto cursor1 = collection1.find(query_value.view());
 
-auto collection2 = db[&#34;cookbooks&#34;];
+auto collection2 = db[&quot;cookbooks&quot;];
 auto cursor2 = collection2.find(query_value.view());
 </code></pre><h3 id="a-nameview_or_valueoptionally-owning-bson-documents-view_or_valuea"><!-- raw HTML omitted -->Optionally-owning BSON Documents (view_or_value)<!-- raw HTML omitted --></h3>
 <p>Many driver methods take a document::view_or_value parameter, for example, <a href="https://github.com/mongodb/mongo-cxx-driver/blob/master/src/mongocxx/include/mongocxx/v_noabi/mongocxx/database.hpp#L144-L153"><code>run_command</code></a>:</p>
@@ -1606,7 +1662,7 @@ auto cursor2 = collection2.find(query_value.view());
 </code></pre><p>Such methods can take either a <code>document::view</code> or a <code>document::value</code>. If
 a <code>document::value</code> is passed in, it must be passed by r-value reference, so
 ownership of the document is transferred to the method.</p>
-<pre tabindex="0"><code>document::value ping = document{} &lt;&lt; &#34;ping&#34; &lt;&lt; 1 &lt;&lt; finalize;
+<pre tabindex="0"><code>document::value ping = document{} &lt;&lt; &quot;ping&quot; &lt;&lt; 1 &lt;&lt; finalize;
 
 // You can pass a document::view into run_command()
 db.run_command(ping.view());
@@ -1625,12 +1681,12 @@ with a dangling pointer.  Consider a method that returns a view of a
 newly-created document:</p>
 <pre tabindex="0"><code>bsoncxx::document::view make_a_dangling_view() {
    bsoncxx::builder::basic::document builder{};
-   builder.append(kvp(&#34;hello&#34;, &#34;world&#34;));
+   builder.append(kvp(&quot;hello&quot;, &quot;world&quot;));
 
    // This creates a document::value on the stack that will disappear when we return.
    bsoncxx::document::value stack_value{builder.extract()};
 
-   // We&#39;re returning a view of the local value
+   // We're returning a view of the local value
    return stack_value.view(); // Bad!!
 }
 </code></pre><p>This method returns a dangling view that should not be used:</p>
@@ -1640,25 +1696,25 @@ bsoncxx::document::view dangling_view = make_a_dangling_view(); // Warning!!
 dangerous view object, because the temporary value returned from
 <code>extract()</code> isn&rsquo;t captured:</p>
 <pre tabindex="0"><code>bsoncxx::builder::stream::document temp_builder{};
-temp_builder &lt;&lt; &#34;oh&#34; &lt;&lt; &#34;no&#34;;
+temp_builder &lt;&lt; &quot;oh&quot; &lt;&lt; &quot;no&quot;;
 bsoncxx::document::view dangling_view = temp_builder.extract().view(); // Bad!!
 </code></pre><h3 id="a-nameprintprinting-bson-documentsa"><!-- raw HTML omitted -->Printing BSON Documents<!-- raw HTML omitted --></h3>
 <p><a href="https://github.com/mongodb/mongo-cxx-driver/blob/master/src/bsoncxx/include/bsoncxx/v_noabi/bsoncxx/json.hpp#L39-L55"><code>bsoncxx::to_json()</code></a></p>
 <p>The bsoncxx library comes with a convenience method to convert BSON
 documents to strings for easy inspection:</p>
-<pre tabindex="0"><code>bsoncxx::document::value = document{} &lt;&lt; &#34;I am&#34; &lt;&lt; &#34;a BSON document&#34; &lt;&lt; finalize;
+<pre tabindex="0"><code>bsoncxx::document::value = document{} &lt;&lt; &quot;I am&quot; &lt;&lt; &quot;a BSON document&quot; &lt;&lt; finalize;
 std::cout &lt;&lt; bsoncxx::to_json(doc.view()) &lt;&lt; std::endl;
 </code></pre><p>There is an analogous method, <a href="https://github.com/mongodb/mongo-cxx-driver/blob/master/src/bsoncxx/include/bsoncxx/v_noabi/bsoncxx/json.hpp#L57-L67">from_json()</a>, to build document::values out of existing JSON strings.</p>
 <h3 id="a-namefieldsgetting-fields-out-of-bson-documentsa"><!-- raw HTML omitted -->Getting Fields out of BSON Documents<!-- raw HTML omitted --></h3>
 <p>The [ ] operator reaches into a BSON document to retrieve values:</p>
-<pre tabindex="0"><code>// doc_view = { &#34;store&#34; : &#34;Key Foods&#34;, &#34;fruits&#34; : [ &#34;apple&#34;, &#34;banana&#34; ] }
-auto store = doc_view[&#34;store&#34;];
-auto first_fruit = doc_view[&#34;fruits&#34;][0];
+<pre tabindex="0"><code>// doc_view = { &quot;store&quot; : &quot;Key Foods&quot;, &quot;fruits&quot; : [ &quot;apple&quot;, &quot;banana&quot; ] }
+auto store = doc_view[&quot;store&quot;];
+auto first_fruit = doc_view[&quot;fruits&quot;][0];
 </code></pre><p>This returns a <code>bsoncxx::document::element</code>, which holds the actual desired value:</p>
-<pre tabindex="0"><code>document::element store_ele{doc_view[&#34;store&#34;]};
+<pre tabindex="0"><code>document::element store_ele{doc_view[&quot;store&quot;]};
 if (store_ele) {
-    // this block will only execute if &#34;store&#34; was found in the document
-    std::cout &lt;&lt; &#34;Examining inventory at &#34; &lt;&lt; to_json(store_ele.get_value()) &lt;&lt; std::endl;
+    // this block will only execute if &quot;store&quot; was found in the document
+    std::cout &lt;&lt; &quot;Examining inventory at &quot; &lt;&lt; to_json(store_ele.get_value()) &lt;&lt; std::endl;
 }
 </code></pre><p>This feature is shown in more detail in <a href="https://github.com/mongodb/mongo-cxx-driver/blob/master/examples/bsoncxx/getting_values.cpp">this example</a> and <a href="https://github.com/mongodb/mongo-cxx-driver/blob/master/examples/bsoncxx/view_and_value.cpp">this example</a>.</p>
 <h3 id="bson-types">BSON Types</h3>

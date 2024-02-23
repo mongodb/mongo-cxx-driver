@@ -8,6 +8,17 @@
     <language>en-us</language>
     <lastBuildDate>Mon, 15 Aug 2016 16:11:58 +0530</lastBuildDate><atom:link href="https://mongocxx.org/mongocxx-v3/index.xml" rel="self" type="application/rss+xml" />
     <item>
+      <title>Choosing a C&#43;&#43;17 Polyfill</title>
+      <link>https://mongocxx.org/mongocxx-v3/polyfill-selection/</link>
+      <pubDate>Tue, 20 Feb 2024 00:00:00 +0000</pubDate>
+      
+      <guid>https://mongocxx.org/mongocxx-v3/polyfill-selection/</guid>
+      <description>The mongocxx driver uses C++17 features std::optional and std::string_view. To use the C++17 standard library implementations for these features, set the CMake configuration variable CMAKE_CXX_STANDARD to 17 or higher. Otherwise, to compile the mongocxx driver for pre-C++17 configurations, a polyfill library implementation must be selected from the following options (note: &amp;ldquo;default&amp;rdquo; refers to pre-C++17 configurations when no polyfill library is explicitly selected):
+  bsoncxx (default only when -DENABLE_BSONCXX_POLY_USE_IMPLS=ON)
+Select with -DBSONCXX_POLY_USE_IMPLS=ON.</description>
+    </item>
+    
+    <item>
       <title>Connection pools</title>
       <link>https://mongocxx.org/mongocxx-v3/connection-pools/</link>
       <pubDate>Tue, 18 Apr 2017 13:39:39 -0400</pubDate>
@@ -22,7 +33,7 @@
       <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
       
       <guid>https://mongocxx.org/mongocxx-v3/api-abi-versioning/</guid>
-      <description>API Versioning We use semantic versioning. bsoncxx and mongocxx both define corresponding CMake variables for MAJOR, MINOR, and PATCH. ABI Versioning Both bsoncxx and mongocxx both have a single scalar ABI version. Only bump ABI version on incompatible ABI change (not for ABI additions). We stay on ABI version _noabi (without bumping for incompatible changes) until ABI is stable. Parallel Header Installation For mongocxx, install all headers to $PREFIX/mongocxx/v$ABI/. For bsoncxx, install all headers to $PREFIX/bsoncxx/v$ABI/.</description>
+      <description>API Versioning  We use semantic versioning. bsoncxx and mongocxx both define corresponding CMake variables for MAJOR, MINOR, and PATCH.  ABI Versioning  Both bsoncxx and mongocxx both have a single scalar ABI version. Only bump ABI version on incompatible ABI change (not for ABI additions). We stay on ABI version _noabi (without bumping for incompatible changes) until ABI is stable.  Parallel Header Installation  For mongocxx, install all headers to $PREFIX/mongocxx/v$ABI/.</description>
     </item>
     
     <item>
@@ -33,8 +44,8 @@
       <guid>https://mongocxx.org/mongocxx-v3/configuration/</guid>
       <description>In the mongocxx driver, most configuration is done via the connection URI. Some additional connection options are possible via the mongocxx::options::client class.
 Configuring TLS/SSL To enable TLS (SSL), set tls=true in the URI:
-mongodb://mongodb.example.com/?tls=true
-By default, mongocxx will verify server certificates against the local system CA list. You can override that either by specifying different settings in the connection string, or by creating a mongocxx::options::tls object and passing it to tls_opts on mongocxx::options::client.</description>
+ mongodb://mongodb.example.com/?tls=true
+ By default, mongocxx will verify server certificates against the local system CA list. You can override that either by specifying different settings in the connection string, or by creating a mongocxx::options::tls object and passing it to tls_opts on mongocxx::options::client.</description>
     </item>
     
     <item>
@@ -55,10 +66,10 @@ Even if you create multiple child objects from a single client, and synchronize 
       
       <guid>https://mongocxx.org/mongocxx-v3/tutorial/</guid>
       <description>See the full code for this tutorial in tutorial.cpp.
-Prerequisites A mongod instance running on localhost on port 27017.
-The mongocxx Driver. See Installation for mongocxx.
-The following statements at the top of your source file:
-#include &amp;lt;cstdint&amp;gt; #include &amp;lt;iostream&amp;gt; #include &amp;lt;vector&amp;gt; #include &amp;lt;bsoncxx/builder/basic/document.hpp&amp;gt; #include &amp;lt;bsoncxx/json.hpp&amp;gt; #include &amp;lt;mongocxx/client.hpp&amp;gt; #include &amp;lt;mongocxx/instance.hpp&amp;gt; #include &amp;lt;mongocxx/stdx.hpp&amp;gt; #include &amp;lt;mongocxx/uri.hpp&amp;gt; using bsoncxx::builder::basic::kvp; using bsoncxx::builder::basic::make_array; using bsoncxx::builder::basic::make_document; Compiling The mongocxx driver&amp;rsquo;s installation process will install a libmongocxx.pc file for use with pkg-config.</description>
+Prerequisites   A mongod instance running on localhost on port 27017.
+  The mongocxx Driver. See Installation for mongocxx.
+  The following statements at the top of your source file:
+  #include &amp;lt;cstdint&amp;gt;#include &amp;lt;iostream&amp;gt;#include &amp;lt;vector&amp;gt; #include &amp;lt;bsoncxx/builder/basic/document.hpp&amp;gt;#include &amp;lt;bsoncxx/json.hpp&amp;gt;#include &amp;lt;mongocxx/client.hpp&amp;gt;#include &amp;lt;mongocxx/instance.hpp&amp;gt;#include &amp;lt;mongocxx/stdx.hpp&amp;gt;#include &amp;lt;mongocxx/uri.hpp&amp;gt; using bsoncxx::builder::basic::kvp; using bsoncxx::builder::basic::make_array; using bsoncxx::builder::basic::make_document; Compiling The mongocxx driver&amp;rsquo;s installation process will install a libmongocxx.</description>
     </item>
     
     <item>
@@ -68,7 +79,7 @@ The following statements at the top of your source file:
       
       <guid>https://mongocxx.org/mongocxx-v3/working-with-bson/</guid>
       <description>The mongocxx driver ships with a new library, bsoncxx. This article will go over some of the different types in this library, and how and when to use each. For more information and example code, see our examples.
-Document Builders Owning BSON Documents (values) Non-owning BSON Documents (views) Optionally-owning BSON Documents(view_or_value) BSON Document Lifetime Printing BSON Documents Getting Fields out of BSON Documents Document Builders The bsoncxx library offers four interfaces for building BSON: one-off functions, a basic builder, a list builder and a stream-based builder.</description>
+ Document Builders Owning BSON Documents (values) Non-owning BSON Documents (views) Optionally-owning BSON Documents(view_or_value) BSON Document Lifetime Printing BSON Documents Getting Fields out of BSON Documents  Document Builders The bsoncxx library offers four interfaces for building BSON: one-off functions, a basic builder, a list builder and a stream-based builder.</description>
     </item>
     
     <item>

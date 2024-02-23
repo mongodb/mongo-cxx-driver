@@ -116,6 +116,33 @@
 
 
   
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
     
     
       
@@ -508,6 +535,35 @@
       <span class="menu-arrow fa fa-angle-down"></span>
   </a>
     <ul  class="current">
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongocxx-v3/polyfill-selection/">
+        
+        Choosing a C&#43;&#43;17 Polyfill
+    </a>
+  </li>
+
+
+        
         
         
         
@@ -1388,35 +1444,35 @@ instance running on localhost on port 27017.</p>
 <p>The following statements at the top of your source file:</p>
 </li>
 </ul>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;cstdint&gt;</span><span style="color:#75715e">
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;iostream&gt;</span><span style="color:#75715e">
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;vector&gt;</span><span style="color:#75715e">
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;bsoncxx/builder/basic/document.hpp&gt;</span><span style="color:#75715e">
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;bsoncxx/json.hpp&gt;</span><span style="color:#75715e">
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;mongocxx/client.hpp&gt;</span><span style="color:#75715e">
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;mongocxx/instance.hpp&gt;</span><span style="color:#75715e">
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;mongocxx/stdx.hpp&gt;</span><span style="color:#75715e">
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;mongocxx/uri.hpp&gt;</span><span style="color:#75715e">
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">using</span> bsoncxx<span style="color:#f92672">::</span>builder<span style="color:#f92672">::</span>basic<span style="color:#f92672">::</span>kvp;
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">using</span> bsoncxx<span style="color:#f92672">::</span>builder<span style="color:#f92672">::</span>basic<span style="color:#f92672">::</span>make_array;
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">using</span> bsoncxx<span style="color:#f92672">::</span>builder<span style="color:#f92672">::</span>basic<span style="color:#f92672">::</span>make_document;
-</span></span></code></pre></div><h2 id="compiling">Compiling</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;cstdint&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;iostream&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;vector&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e"></span>
+<span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;bsoncxx/builder/basic/document.hpp&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;bsoncxx/json.hpp&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;mongocxx/client.hpp&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;mongocxx/instance.hpp&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;mongocxx/stdx.hpp&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;mongocxx/uri.hpp&gt;</span><span style="color:#75715e">
+</span><span style="color:#75715e"></span>
+<span style="color:#66d9ef">using</span> bsoncxx<span style="color:#f92672">::</span>builder<span style="color:#f92672">::</span>basic<span style="color:#f92672">::</span>kvp;
+<span style="color:#66d9ef">using</span> bsoncxx<span style="color:#f92672">::</span>builder<span style="color:#f92672">::</span>basic<span style="color:#f92672">::</span>make_array;
+<span style="color:#66d9ef">using</span> bsoncxx<span style="color:#f92672">::</span>builder<span style="color:#f92672">::</span>basic<span style="color:#f92672">::</span>make_document;
+</code></pre></div><h2 id="compiling">Compiling</h2>
 <p>The mongocxx driver&rsquo;s installation process will install a
 <code>libmongocxx.pc</code> file for use
 with <a href="https://www.freedesktop.org/wiki/Software/pkg-config/">pkg-config</a>.</p>
 <p>To compile a program, run the following command:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>c++ --std<span style="color:#f92672">=</span>c++11 &lt;input&gt;.cpp <span style="color:#66d9ef">$(</span>pkg-config --cflags --libs libmongocxx<span style="color:#66d9ef">)</span>
-</span></span></code></pre></div><p>If you don&rsquo;t have pkg-config available, you will need to set include and
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">c++ --std<span style="color:#f92672">=</span>c++11 &lt;input&gt;.cpp <span style="color:#66d9ef">$(</span>pkg-config --cflags --libs libmongocxx<span style="color:#66d9ef">)</span>
+</code></pre></div><p>If you don&rsquo;t have pkg-config available, you will need to set include and
 library flags manually on the command line or in your IDE.  For example, if
 libmongoc and mongocxx are installed in <code>/usr/local</code>, then the compilation
 line in above expands to this:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>c++ --std<span style="color:#f92672">=</span>c++11 &lt;input&gt;.cpp
-</span></span><span style="display:flex;"><span>  -I/usr/local/include/mongocxx/v_noabi <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  -I/usr/local/include/bsoncxx/v_noabi <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>  -L/usr/local/lib -lmongocxx -lbsoncxx
-</span></span></code></pre></div><h2 id="make-a-connection">Make a Connection</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">c++ --std<span style="color:#f92672">=</span>c++11 &lt;input&gt;.cpp
+  -I/usr/local/include/mongocxx/v_noabi <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>  -I/usr/local/include/bsoncxx/v_noabi <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>  -L/usr/local/lib -lmongocxx -lbsoncxx
+</code></pre></div><h2 id="make-a-connection">Make a Connection</h2>
 <p><strong>IMPORTANT</strong>: Before making any connections, you need to create one and only
 one instance of <a href="https://mongocxx.org/api/mongocxx-v3/classmongocxx_1_1v__noabi_1_1instance.html
 "><code>mongocxx::instance</code></a>.
@@ -1434,13 +1490,13 @@ supported URI options see the documentation for the version of libmongoc used
 to build the C++ driver or for the <a href="https://mongoc.org/libmongoc/current/mongoc_uri_t.html">latest libmongoc release</a></p>
 <p>The default <code>mongocxx::uri</code> constructor will connect to a
 server running on localhost on port <code>27017</code>:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span>mongocxx<span style="color:#f92672">::</span>instance instance{}; <span style="color:#75715e">// This should be done only once.
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>mongocxx<span style="color:#f92672">::</span>client client{mongocxx<span style="color:#f92672">::</span>uri{}};
-</span></span></code></pre></div><p>This is equivalent to the following:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span>mongocxx<span style="color:#f92672">::</span>instance instance{}; <span style="color:#75715e">// This should be done only once.
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>mongocxx<span style="color:#f92672">::</span>uri uri(<span style="color:#e6db74">&#34;mongodb://localhost:27017&#34;</span>);
-</span></span><span style="display:flex;"><span>mongocxx<span style="color:#f92672">::</span>client client(uri);
-</span></span></code></pre></div><h2 id="access-a-database">Access a Database</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">mongocxx<span style="color:#f92672">::</span>instance instance{}; <span style="color:#75715e">// This should be done only once.
+</span><span style="color:#75715e"></span>mongocxx<span style="color:#f92672">::</span>client client{mongocxx<span style="color:#f92672">::</span>uri{}};
+</code></pre></div><p>This is equivalent to the following:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">mongocxx<span style="color:#f92672">::</span>instance instance{}; <span style="color:#75715e">// This should be done only once.
+</span><span style="color:#75715e"></span>mongocxx<span style="color:#f92672">::</span>uri uri(<span style="color:#e6db74">&#34;mongodb://localhost:27017&#34;</span>);
+mongocxx<span style="color:#f92672">::</span>client client(uri);
+</code></pre></div><h2 id="access-a-database">Access a Database</h2>
 <p>Once you have a <a href="https://mongocxx.org/api/mongocxx-v3/classmongocxx_1_1v__noabi_1_1client.html
 "><code>mongocxx::client</code></a>
 instance connected to a MongoDB deployment, use either the
@@ -1451,8 +1507,8 @@ instance.</p>
 <p>If the database you request does not exist, MongoDB creates it when you
 first store data.</p>
 <p>The following example accesses the <code>mydb</code> database:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#66d9ef">auto</span> db <span style="color:#f92672">=</span> client[<span style="color:#e6db74">&#34;mydb&#34;</span>];
-</span></span></code></pre></div><h2 id="access-a-collection">Access a Collection</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">auto</span> db <span style="color:#f92672">=</span> client[<span style="color:#e6db74">&#34;mydb&#34;</span>];
+</code></pre></div><h2 id="access-a-collection">Access a Collection</h2>
 <p>Once you have a
 <a href="https://mongocxx.org/api/mongocxx-v3/classmongocxx_1_1v__noabi_1_1database.html
 "><code>mongocxx::database</code></a>
@@ -1465,8 +1521,8 @@ you first store data.</p>
 <p>For example, using the <code>db</code> instance created in the previous section,
 the following statement accesses the collection named <code>test</code> in the
 <code>mydb</code> database:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#66d9ef">auto</span> collection <span style="color:#f92672">=</span> db[<span style="color:#e6db74">&#34;test&#34;</span>];
-</span></span></code></pre></div><h2 id="create-a-document">Create a Document</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">auto</span> collection <span style="color:#f92672">=</span> db[<span style="color:#e6db74">&#34;test&#34;</span>];
+</code></pre></div><h2 id="create-a-document">Create a Document</h2>
 <p>To create a <code>document</code> using the C++ driver, use one of the two
 available builder interfaces:</p>
 <p>Stream builder: <code>bsoncxx::builder::stream</code>
@@ -1477,41 +1533,41 @@ A more conventional document builder that involves calling methods on
 a builder instance.</p>
 <p>This guide only briefly describes the basic builder.</p>
 <p>For example, consider the following JSON document:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{
-</span></span><span style="display:flex;"><span>   <span style="color:#f92672">&#34;name&#34;</span> : <span style="color:#e6db74">&#34;MongoDB&#34;</span>,
-</span></span><span style="display:flex;"><span>   <span style="color:#f92672">&#34;type&#34;</span> : <span style="color:#e6db74">&#34;database&#34;</span>,
-</span></span><span style="display:flex;"><span>   <span style="color:#f92672">&#34;count&#34;</span> : <span style="color:#ae81ff">1</span>,
-</span></span><span style="display:flex;"><span>   <span style="color:#f92672">&#34;versions&#34;</span>: [ <span style="color:#e6db74">&#34;v6.0&#34;</span>, <span style="color:#e6db74">&#34;v5.0&#34;</span>, <span style="color:#e6db74">&#34;v4.4&#34;</span>, <span style="color:#e6db74">&#34;v4.2&#34;</span>, <span style="color:#e6db74">&#34;v4.0&#34;</span>, <span style="color:#e6db74">&#34;v3.6&#34;</span> ],
-</span></span><span style="display:flex;"><span>   <span style="color:#f92672">&#34;info&#34;</span> : {
-</span></span><span style="display:flex;"><span>               <span style="color:#f92672">&#34;x&#34;</span> : <span style="color:#ae81ff">203</span>,
-</span></span><span style="display:flex;"><span>               <span style="color:#f92672">&#34;y&#34;</span> : <span style="color:#ae81ff">102</span>
-</span></span><span style="display:flex;"><span>            }
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><p>Using the basic builder interface, you can construct this document
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">{
+   <span style="color:#f92672">&#34;name&#34;</span> : <span style="color:#e6db74">&#34;MongoDB&#34;</span>,
+   <span style="color:#f92672">&#34;type&#34;</span> : <span style="color:#e6db74">&#34;database&#34;</span>,
+   <span style="color:#f92672">&#34;count&#34;</span> : <span style="color:#ae81ff">1</span>,
+   <span style="color:#f92672">&#34;versions&#34;</span>: [ <span style="color:#e6db74">&#34;v6.0&#34;</span>, <span style="color:#e6db74">&#34;v5.0&#34;</span>, <span style="color:#e6db74">&#34;v4.4&#34;</span>, <span style="color:#e6db74">&#34;v4.2&#34;</span>, <span style="color:#e6db74">&#34;v4.0&#34;</span>, <span style="color:#e6db74">&#34;v3.6&#34;</span> ],
+   <span style="color:#f92672">&#34;info&#34;</span> : {
+               <span style="color:#f92672">&#34;x&#34;</span> : <span style="color:#ae81ff">203</span>,
+               <span style="color:#f92672">&#34;y&#34;</span> : <span style="color:#ae81ff">102</span>
+            }
+}
+</code></pre></div><p>Using the basic builder interface, you can construct this document
 as follows:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#66d9ef">auto</span> doc_value <span style="color:#f92672">=</span> make_document(
-</span></span><span style="display:flex;"><span>    kvp(<span style="color:#e6db74">&#34;name&#34;</span>, <span style="color:#e6db74">&#34;MongoDB&#34;</span>),
-</span></span><span style="display:flex;"><span>    kvp(<span style="color:#e6db74">&#34;type&#34;</span>, <span style="color:#e6db74">&#34;database&#34;</span>),
-</span></span><span style="display:flex;"><span>    kvp(<span style="color:#e6db74">&#34;count&#34;</span>, <span style="color:#ae81ff">1</span>),
-</span></span><span style="display:flex;"><span>    kvp(<span style="color:#e6db74">&#34;versions&#34;</span>, make_array(<span style="color:#e6db74">&#34;v6.0&#34;</span>, <span style="color:#e6db74">&#34;v5.0&#34;</span>, <span style="color:#e6db74">&#34;v4.4&#34;</span>, <span style="color:#e6db74">&#34;v4.2&#34;</span>, <span style="color:#e6db74">&#34;v4.0&#34;</span>, <span style="color:#e6db74">&#34;v3.6&#34;</span>)),
-</span></span><span style="display:flex;"><span>    kvp(<span style="color:#e6db74">&#34;info&#34;</span>, make_document(kvp(<span style="color:#e6db74">&#34;x&#34;</span>, <span style="color:#ae81ff">203</span>), kvp(<span style="color:#e6db74">&#34;y&#34;</span>, <span style="color:#ae81ff">102</span>))));
-</span></span></code></pre></div><p>This <code>bsoncxx::document::value</code> type is a read-only object owning
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">auto</span> doc_value <span style="color:#f92672">=</span> make_document(
+    kvp(<span style="color:#e6db74">&#34;name&#34;</span>, <span style="color:#e6db74">&#34;MongoDB&#34;</span>),
+    kvp(<span style="color:#e6db74">&#34;type&#34;</span>, <span style="color:#e6db74">&#34;database&#34;</span>),
+    kvp(<span style="color:#e6db74">&#34;count&#34;</span>, <span style="color:#ae81ff">1</span>),
+    kvp(<span style="color:#e6db74">&#34;versions&#34;</span>, make_array(<span style="color:#e6db74">&#34;v6.0&#34;</span>, <span style="color:#e6db74">&#34;v5.0&#34;</span>, <span style="color:#e6db74">&#34;v4.4&#34;</span>, <span style="color:#e6db74">&#34;v4.2&#34;</span>, <span style="color:#e6db74">&#34;v4.0&#34;</span>, <span style="color:#e6db74">&#34;v3.6&#34;</span>)),
+    kvp(<span style="color:#e6db74">&#34;info&#34;</span>, make_document(kvp(<span style="color:#e6db74">&#34;x&#34;</span>, <span style="color:#ae81ff">203</span>), kvp(<span style="color:#e6db74">&#34;y&#34;</span>, <span style="color:#ae81ff">102</span>))));
+</code></pre></div><p>This <code>bsoncxx::document::value</code> type is a read-only object owning
 its own memory. To use it, you must obtain a
 <a href="https://mongocxx.org/api/mongocxx-v3/classbsoncxx_1_1v__noabi_1_1document_1_1view.html
 "><code>bsoncxx::document::view</code></a> using
 the <code>view()</code> method:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#66d9ef">auto</span> doc_view <span style="color:#f92672">=</span> doc_value.view();
-</span></span></code></pre></div><p>You can access fields within this document view using <code>operator[]</code>,
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">auto</span> doc_view <span style="color:#f92672">=</span> doc_value.view();
+</code></pre></div><p>You can access fields within this document view using <code>operator[]</code>,
 which will return a
 <a href="https://mongocxx.org/api/mongocxx-v3/classbsoncxx_1_1v__noabi_1_1document_1_1element.html
 "><code>bsoncxx::document::element</code></a>
 instance. For example, the following will extract the <code>name</code> field whose
 value is a string:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#66d9ef">auto</span> element <span style="color:#f92672">=</span> doc_view[<span style="color:#e6db74">&#34;name&#34;</span>];
-</span></span><span style="display:flex;"><span>assert(element.type() <span style="color:#f92672">==</span> bsoncxx<span style="color:#f92672">::</span>type<span style="color:#f92672">::</span>k_string);
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">auto</span> name <span style="color:#f92672">=</span> element.get_string().value; <span style="color:#75715e">// For C++ driver version &lt; 3.7.0, use get_utf8()
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>assert(<span style="color:#ae81ff">0</span> <span style="color:#f92672">==</span> name.compare(<span style="color:#e6db74">&#34;MongoDB&#34;</span>));
-</span></span></code></pre></div><p>If the value in the <code>name</code> field is not a string and you do not
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">auto</span> element <span style="color:#f92672">=</span> doc_view[<span style="color:#e6db74">&#34;name&#34;</span>];
+assert(element.type() <span style="color:#f92672">==</span> bsoncxx<span style="color:#f92672">::</span>type<span style="color:#f92672">::</span>k_string);
+<span style="color:#66d9ef">auto</span> name <span style="color:#f92672">=</span> element.get_string().value; <span style="color:#75715e">// For C++ driver version &lt; 3.7.0, use get_utf8()
+</span><span style="color:#75715e"></span>assert(<span style="color:#ae81ff">0</span> <span style="color:#f92672">==</span> name.compare(<span style="color:#e6db74">&#34;MongoDB&#34;</span>));
+</code></pre></div><p>If the value in the <code>name</code> field is not a string and you do not
 include a type guard as seen in the preceding example, this code will
 throw an instance of
 <a href="https://mongocxx.org/api/mongocxx-v3/classbsoncxx_1_1v__noabi_1_1exception.html
@@ -1522,49 +1578,49 @@ throw an instance of
 <a href="https://mongocxx.org/api/mongocxx-v3/classmongocxx_1_1v__noabi_1_1collection.html
 "><code>mongocxx::collection</code></a>
 instance&rsquo;s <code>insert_one()</code> method to insert <code>{ &quot;i&quot;: 0 }</code>:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#66d9ef">auto</span> insert_one_result <span style="color:#f92672">=</span> collection.insert_one(make_document(kvp(<span style="color:#e6db74">&#34;i&#34;</span>, <span style="color:#ae81ff">0</span>)));
-</span></span></code></pre></div><p><code>insert_one_result</code> is an optional <a href="https://mongocxx.org/api/mongocxx-v3/classmongocxx_1_1v__noabi_1_1result_1_1insert__one.html
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">auto</span> insert_one_result <span style="color:#f92672">=</span> collection.insert_one(make_document(kvp(<span style="color:#e6db74">&#34;i&#34;</span>, <span style="color:#ae81ff">0</span>)));
+</code></pre></div><p><code>insert_one_result</code> is an optional <a href="https://mongocxx.org/api/mongocxx-v3/classmongocxx_1_1v__noabi_1_1result_1_1insert__one.html
 "><code>mongocxx::result::insert_one</code></a>. In this example, <code>insert_one_result</code>
 is expected to be set. The default behavior for write operations is to wait for
 a reply from the server. This may be overriden by setting an unacknowledged
 <a href="https://mongocxx.org/api/mongocxx-v3/classmongocxx_1_1v__noabi_1_1write__concern.html
 "><code>mongocxx::write_concern</code></a>.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span>assert(insert_one_result);  <span style="color:#75715e">// Acknowledged writes return results.
-</span></span></span></code></pre></div><p>If you do not specify a top-level <code>_id</code> field in the document,
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">assert(insert_one_result);  <span style="color:#75715e">// Acknowledged writes return results.
+</span></code></pre></div><p>If you do not specify a top-level <code>_id</code> field in the document,
 MongoDB automatically adds an <code>_id</code> field to the inserted document.</p>
 <p>You can obtain this value using the <code>inserted_id()</code> method of the
 returned
 <a href="https://mongocxx.org/api/mongocxx-v3/classmongocxx_1_1v__noabi_1_1result_1_1insert__one.html
 "><code>mongocxx::result::insert_one</code></a>
 instance.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#66d9ef">auto</span> doc_id <span style="color:#f92672">=</span> insert_one_result<span style="color:#f92672">-&gt;</span>inserted_id();
-</span></span><span style="display:flex;"><span>assert(doc_id.type() <span style="color:#f92672">==</span> bsoncxx<span style="color:#f92672">::</span>type<span style="color:#f92672">::</span>k_oid);
-</span></span></code></pre></div><h3 id="insert-multiple-documents">Insert Multiple Documents</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">auto</span> doc_id <span style="color:#f92672">=</span> insert_one_result<span style="color:#f92672">-&gt;</span>inserted_id();
+assert(doc_id.type() <span style="color:#f92672">==</span> bsoncxx<span style="color:#f92672">::</span>type<span style="color:#f92672">::</span>k_oid);
+</code></pre></div><h3 id="insert-multiple-documents">Insert Multiple Documents</h3>
 <p>To insert multiple documents to the collection, use a
 <a href="https://mongocxx.org/api/mongocxx-v3/classmongocxx_1_1v__noabi_1_1collection.html
 "><code>mongocxx::collection</code></a> instance&rsquo;s
 <code>insert_many()</code> method, which takes a list of documents to insert.</p>
 <p>The following example inserts the documents <code>{ &quot;i&quot;: 1 }</code> and <code>{ &quot;i&quot;: 2 }</code>.
 Create the documents and add to the documents list:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span>std<span style="color:#f92672">::</span>vector<span style="color:#f92672">&lt;</span>bsoncxx<span style="color:#f92672">::</span>document<span style="color:#f92672">::</span>value<span style="color:#f92672">&gt;</span> documents;
-</span></span><span style="display:flex;"><span>documents.push_back(make_document(kvp(<span style="color:#e6db74">&#34;i&#34;</span>, <span style="color:#ae81ff">1</span>)));
-</span></span><span style="display:flex;"><span>documents.push_back(make_document(kvp(<span style="color:#e6db74">&#34;i&#34;</span>, <span style="color:#ae81ff">2</span>)));
-</span></span></code></pre></div><p>To insert these documents to the collection, pass the list of documents
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++">std<span style="color:#f92672">::</span>vector<span style="color:#f92672">&lt;</span>bsoncxx<span style="color:#f92672">::</span>document<span style="color:#f92672">::</span>value<span style="color:#f92672">&gt;</span> documents;
+documents.push_back(make_document(kvp(<span style="color:#e6db74">&#34;i&#34;</span>, <span style="color:#ae81ff">1</span>)));
+documents.push_back(make_document(kvp(<span style="color:#e6db74">&#34;i&#34;</span>, <span style="color:#ae81ff">2</span>)));
+</code></pre></div><p>To insert these documents to the collection, pass the list of documents
 to the <code>insert_many()</code> method.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#66d9ef">auto</span> insert_many_result <span style="color:#f92672">=</span> collection.insert_many(documents);
-</span></span><span style="display:flex;"><span>assert(insert_many_result);  <span style="color:#75715e">// Acknowledged writes return results.
-</span></span></span></code></pre></div><p>If you do not specify a top-level <code>_id</code> field in each document,
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">auto</span> insert_many_result <span style="color:#f92672">=</span> collection.insert_many(documents);
+assert(insert_many_result);  <span style="color:#75715e">// Acknowledged writes return results.
+</span></code></pre></div><p>If you do not specify a top-level <code>_id</code> field in each document,
 MongoDB automatically adds a <code>_id</code> field to the inserted documents.</p>
 <p>You can obtain this value using the <code>inserted_ids()</code> method of the
 returned
 <a href="https://mongocxx.org/api/mongocxx-v3/classmongocxx_1_1v__noabi_1_1result_1_1insert__many.html
 "><code>mongocxx::result::insert_many</code></a>
 instance.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#66d9ef">auto</span> doc0_id <span style="color:#f92672">=</span> insert_many_result<span style="color:#f92672">-&gt;</span>inserted_ids().at(<span style="color:#ae81ff">0</span>);
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">auto</span> doc1_id <span style="color:#f92672">=</span> insert_many_result<span style="color:#f92672">-&gt;</span>inserted_ids().at(<span style="color:#ae81ff">1</span>);
-</span></span><span style="display:flex;"><span>assert(doc0_id.type() <span style="color:#f92672">==</span> bsoncxx<span style="color:#f92672">::</span>type<span style="color:#f92672">::</span>k_oid);
-</span></span><span style="display:flex;"><span>assert(doc1_id.type() <span style="color:#f92672">==</span> bsoncxx<span style="color:#f92672">::</span>type<span style="color:#f92672">::</span>k_oid);
-</span></span></code></pre></div><h2 id="query-the-collection">Query the Collection</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">auto</span> doc0_id <span style="color:#f92672">=</span> insert_many_result<span style="color:#f92672">-&gt;</span>inserted_ids().at(<span style="color:#ae81ff">0</span>);
+<span style="color:#66d9ef">auto</span> doc1_id <span style="color:#f92672">=</span> insert_many_result<span style="color:#f92672">-&gt;</span>inserted_ids().at(<span style="color:#ae81ff">1</span>);
+assert(doc0_id.type() <span style="color:#f92672">==</span> bsoncxx<span style="color:#f92672">::</span>type<span style="color:#f92672">::</span>k_oid);
+assert(doc1_id.type() <span style="color:#f92672">==</span> bsoncxx<span style="color:#f92672">::</span>type<span style="color:#f92672">::</span>k_oid);
+</code></pre></div><h2 id="query-the-collection">Query the Collection</h2>
 <p>To query the collection, use the collection’s <code>find()</code> and
 <code>find_one</code> methods.</p>
 <p><code>find()</code> will return an instance of
@@ -1579,32 +1635,32 @@ filter criteria.</p>
 <h3 id="find-a-single-document-in-a-collection">Find a Single Document in a Collection</h3>
 <p>To return a single document in the collection, use the <code>find_one()</code>
 method without any parameters.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#66d9ef">auto</span> find_one_result <span style="color:#f92672">=</span> collection.find_one({});
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> (find_one_result) {
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Do something with *find_one_result
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
-</span></span><span style="display:flex;"><span>assert(find_one_result);
-</span></span></code></pre></div><h3 id="find-all-documents-in-a-collection">Find All Documents in a Collection</h3>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#66d9ef">auto</span> cursor_all <span style="color:#f92672">=</span> collection.find({});
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">auto</span> doc : cursor_all) {
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Do something with doc
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    assert(doc[<span style="color:#e6db74">&#34;_id&#34;</span>].type() <span style="color:#f92672">==</span> bsoncxx<span style="color:#f92672">::</span>type<span style="color:#f92672">::</span>k_oid);
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><h3 id="print-all-documents-in-a-collection">Print All Documents in a Collection</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">auto</span> find_one_result <span style="color:#f92672">=</span> collection.find_one({});
+<span style="color:#66d9ef">if</span> (find_one_result) {
+    <span style="color:#75715e">// Do something with *find_one_result
+</span><span style="color:#75715e"></span>}
+assert(find_one_result);
+</code></pre></div><h3 id="find-all-documents-in-a-collection">Find All Documents in a Collection</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">auto</span> cursor_all <span style="color:#f92672">=</span> collection.find({});
+<span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">auto</span> doc : cursor_all) {
+    <span style="color:#75715e">// Do something with doc
+</span><span style="color:#75715e"></span>    assert(doc[<span style="color:#e6db74">&#34;_id&#34;</span>].type() <span style="color:#f92672">==</span> bsoncxx<span style="color:#f92672">::</span>type<span style="color:#f92672">::</span>k_oid);
+}
+</code></pre></div><h3 id="print-all-documents-in-a-collection">Print All Documents in a Collection</h3>
 <p>The <a href="https://mongocxx.org/api/mongocxx-v3/namespacebsoncxx.html
 "><code>bsoncxx::to_json</code></a> function converts a BSON document to a JSON string.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#66d9ef">auto</span> cursor_all <span style="color:#f92672">=</span> collection.find({});
-</span></span><span style="display:flex;"><span>std<span style="color:#f92672">::</span>cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;collection &#34;</span> <span style="color:#f92672">&lt;&lt;</span> collection.name()
-</span></span><span style="display:flex;"><span>          <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34; contains these documents:&#34;</span> <span style="color:#f92672">&lt;&lt;</span> std<span style="color:#f92672">::</span>endl;
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">auto</span> doc : cursor_all) {
-</span></span><span style="display:flex;"><span>    std<span style="color:#f92672">::</span>cout <span style="color:#f92672">&lt;&lt;</span> bsoncxx<span style="color:#f92672">::</span>to_json(doc, bsoncxx<span style="color:#f92672">::</span>ExtendedJsonMode<span style="color:#f92672">::</span>k_relaxed) <span style="color:#f92672">&lt;&lt;</span> std<span style="color:#f92672">::</span>endl;
-</span></span><span style="display:flex;"><span>}
-</span></span><span style="display:flex;"><span>std<span style="color:#f92672">::</span>cout <span style="color:#f92672">&lt;&lt;</span> std<span style="color:#f92672">::</span>endl;
-</span></span></code></pre></div><p>The above example prints output resembling the following:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">auto</span> cursor_all <span style="color:#f92672">=</span> collection.find({});
+std<span style="color:#f92672">::</span>cout <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;collection &#34;</span> <span style="color:#f92672">&lt;&lt;</span> collection.name()
+          <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34; contains these documents:&#34;</span> <span style="color:#f92672">&lt;&lt;</span> std<span style="color:#f92672">::</span>endl;
+<span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">auto</span> doc : cursor_all) {
+    std<span style="color:#f92672">::</span>cout <span style="color:#f92672">&lt;&lt;</span> bsoncxx<span style="color:#f92672">::</span>to_json(doc, bsoncxx<span style="color:#f92672">::</span>ExtendedJsonMode<span style="color:#f92672">::</span>k_relaxed) <span style="color:#f92672">&lt;&lt;</span> std<span style="color:#f92672">::</span>endl;
+}
+std<span style="color:#f92672">::</span>cout <span style="color:#f92672">&lt;&lt;</span> std<span style="color:#f92672">::</span>endl;
+</code></pre></div><p>The above example prints output resembling the following:</p>
 <pre tabindex="0"><code>collection test contains these documents:
-{ &#34;_id&#34; : { &#34;$oid&#34; : &#34;6409edb48c37f371c70f03a1&#34; }, &#34;i&#34; : 0 }
-{ &#34;_id&#34; : { &#34;$oid&#34; : &#34;6409edb48c37f371c70f03a2&#34; }, &#34;i&#34; : 1 }
-{ &#34;_id&#34; : { &#34;$oid&#34; : &#34;6409edb48c37f371c70f03a3&#34; }, &#34;i&#34; : 2 }
+{ &quot;_id&quot; : { &quot;$oid&quot; : &quot;6409edb48c37f371c70f03a1&quot; }, &quot;i&quot; : 0 }
+{ &quot;_id&quot; : { &quot;$oid&quot; : &quot;6409edb48c37f371c70f03a2&quot; }, &quot;i&quot; : 1 }
+{ &quot;_id&quot; : { &quot;$oid&quot; : &quot;6409edb48c37f371c70f03a3&quot; }, &quot;i&quot; : 2 }
 </code></pre><p>The <code>_id</code> element has been added automatically by MongoDB to your
 document and your value will differ from that shown. MongoDB reserves
 field names that start with an underscore (<code>_</code>) and the dollar sign
@@ -1613,19 +1669,19 @@ field names that start with an underscore (<code>_</code>) and the dollar sign
 <h4 id="get-a-single-document-that-matches-a-filter">Get A Single Document That Matches a Filter</h4>
 <p>To find the first document where the field <code>i</code> has the value <code>0</code>,
 pass the document <code>{&quot;i&quot;: 0}</code> to specify the equality condition:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#66d9ef">auto</span> find_one_filtered_result <span style="color:#f92672">=</span> collection.find_one(make_document(kvp(<span style="color:#e6db74">&#34;i&#34;</span>, <span style="color:#ae81ff">0</span>)));
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">if</span> (find_one_filtered_result) {
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Do something with *find_one_filtered_result
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
-</span></span></code></pre></div><h4 id="get-all-documents-that-match-a-filter">Get All Documents That Match a Filter</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">auto</span> find_one_filtered_result <span style="color:#f92672">=</span> collection.find_one(make_document(kvp(<span style="color:#e6db74">&#34;i&#34;</span>, <span style="color:#ae81ff">0</span>)));
+<span style="color:#66d9ef">if</span> (find_one_filtered_result) {
+    <span style="color:#75715e">// Do something with *find_one_filtered_result
+</span><span style="color:#75715e"></span>}
+</code></pre></div><h4 id="get-all-documents-that-match-a-filter">Get All Documents That Match a Filter</h4>
 <p>The following example gets all documents where <code>0 &lt; &quot;i&quot; &lt;= 2</code>:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#66d9ef">auto</span> cursor_filtered <span style="color:#f92672">=</span>
-</span></span><span style="display:flex;"><span>    collection.find(make_document(kvp(<span style="color:#e6db74">&#34;i&#34;</span>, make_document(kvp(<span style="color:#e6db74">&#34;$gt&#34;</span>, <span style="color:#ae81ff">0</span>), kvp(<span style="color:#e6db74">&#34;$lte&#34;</span>, <span style="color:#ae81ff">2</span>)))));
-</span></span><span style="display:flex;"><span><span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">auto</span> doc : cursor_filtered) {
-</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// Do something with doc
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    assert(doc[<span style="color:#e6db74">&#34;_id&#34;</span>].type() <span style="color:#f92672">==</span> bsoncxx<span style="color:#f92672">::</span>type<span style="color:#f92672">::</span>k_oid);
-</span></span><span style="display:flex;"><span>}
-</span></span></code></pre></div><h2 id="update-documents">Update Documents</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">auto</span> cursor_filtered <span style="color:#f92672">=</span>
+    collection.find(make_document(kvp(<span style="color:#e6db74">&#34;i&#34;</span>, make_document(kvp(<span style="color:#e6db74">&#34;$gt&#34;</span>, <span style="color:#ae81ff">0</span>), kvp(<span style="color:#e6db74">&#34;$lte&#34;</span>, <span style="color:#ae81ff">2</span>)))));
+<span style="color:#66d9ef">for</span> (<span style="color:#66d9ef">auto</span> doc : cursor_filtered) {
+    <span style="color:#75715e">// Do something with doc
+</span><span style="color:#75715e"></span>    assert(doc[<span style="color:#e6db74">&#34;_id&#34;</span>].type() <span style="color:#f92672">==</span> bsoncxx<span style="color:#f92672">::</span>type<span style="color:#f92672">::</span>k_oid);
+}
+</code></pre></div><h2 id="update-documents">Update Documents</h2>
 <p>To update documents in a collection, you can use the collection’s
 <code>update_one()</code> and <code>update_many()</code> methods.</p>
 <p>The update methods return an instance of
@@ -1637,22 +1693,22 @@ documents modified by the update.</p>
 <p>To update at most one document, use the <code>update_one()</code> method.</p>
 <p>The following example updates the first document that matches the filter
 <code>{ &quot;i&quot;: 0 }</code> and sets the value of <code>foo</code> to <code>bar</code>:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#66d9ef">auto</span> update_one_result <span style="color:#f92672">=</span>
-</span></span><span style="display:flex;"><span>    collection.update_one(make_document(kvp(<span style="color:#e6db74">&#34;i&#34;</span>, <span style="color:#ae81ff">0</span>)),
-</span></span><span style="display:flex;"><span>                          make_document(kvp(<span style="color:#e6db74">&#34;$set&#34;</span>, make_document(kvp(<span style="color:#e6db74">&#34;foo&#34;</span>, <span style="color:#e6db74">&#34;bar&#34;</span>)))));
-</span></span><span style="display:flex;"><span>assert(update_one_result);  <span style="color:#75715e">// Acknowledged writes return results.
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>assert(update_one_result<span style="color:#f92672">-&gt;</span>modified_count() <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>);
-</span></span></code></pre></div><h3 id="update-multiple-documents">Update Multiple Documents</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">auto</span> update_one_result <span style="color:#f92672">=</span>
+    collection.update_one(make_document(kvp(<span style="color:#e6db74">&#34;i&#34;</span>, <span style="color:#ae81ff">0</span>)),
+                          make_document(kvp(<span style="color:#e6db74">&#34;$set&#34;</span>, make_document(kvp(<span style="color:#e6db74">&#34;foo&#34;</span>, <span style="color:#e6db74">&#34;bar&#34;</span>)))));
+assert(update_one_result);  <span style="color:#75715e">// Acknowledged writes return results.
+</span><span style="color:#75715e"></span>assert(update_one_result<span style="color:#f92672">-&gt;</span>modified_count() <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>);
+</code></pre></div><h3 id="update-multiple-documents">Update Multiple Documents</h3>
 <p>To update all documents matching a filter, use the <code>update_many()</code>
 method.</p>
 <p>The following example sets the value of <code>foo</code> to <code>buzz</code> where
 <code>i</code> is greater than <code>0</code>:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#66d9ef">auto</span> update_many_result <span style="color:#f92672">=</span>
-</span></span><span style="display:flex;"><span>    collection.update_many(make_document(kvp(<span style="color:#e6db74">&#34;i&#34;</span>, make_document(kvp(<span style="color:#e6db74">&#34;$gt&#34;</span>, <span style="color:#ae81ff">0</span>)))),
-</span></span><span style="display:flex;"><span>                            make_document(kvp(<span style="color:#e6db74">&#34;$set&#34;</span>, make_document(kvp(<span style="color:#e6db74">&#34;foo&#34;</span>, <span style="color:#e6db74">&#34;buzz&#34;</span>)))));
-</span></span><span style="display:flex;"><span>assert(update_many_result);  <span style="color:#75715e">// Acknowledged writes return results.
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>assert(update_many_result<span style="color:#f92672">-&gt;</span>modified_count() <span style="color:#f92672">==</span> <span style="color:#ae81ff">2</span>);
-</span></span></code></pre></div><h2 id="delete-documents">Delete Documents</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">auto</span> update_many_result <span style="color:#f92672">=</span>
+    collection.update_many(make_document(kvp(<span style="color:#e6db74">&#34;i&#34;</span>, make_document(kvp(<span style="color:#e6db74">&#34;$gt&#34;</span>, <span style="color:#ae81ff">0</span>)))),
+                            make_document(kvp(<span style="color:#e6db74">&#34;$set&#34;</span>, make_document(kvp(<span style="color:#e6db74">&#34;foo&#34;</span>, <span style="color:#e6db74">&#34;buzz&#34;</span>)))));
+assert(update_many_result);  <span style="color:#75715e">// Acknowledged writes return results.
+</span><span style="color:#75715e"></span>assert(update_many_result<span style="color:#f92672">-&gt;</span>modified_count() <span style="color:#f92672">==</span> <span style="color:#ae81ff">2</span>);
+</code></pre></div><h2 id="delete-documents">Delete Documents</h2>
 <p>To delete documents from a collection, you can use a collection’s
 <code>delete_one()</code> and <code>delete_many()</code> methods.</p>
 <p>The delete methods return an instance of
@@ -1664,18 +1720,18 @@ which contains the number of documents deleted.</p>
 <code>delete_one()</code> method.</p>
 <p>For example, to delete a document that matches the filter
 <code>{ &quot;i&quot;: 0 }</code>:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#66d9ef">auto</span> delete_one_result <span style="color:#f92672">=</span> collection.delete_one(make_document(kvp(<span style="color:#e6db74">&#34;i&#34;</span>, <span style="color:#ae81ff">0</span>)));
-</span></span><span style="display:flex;"><span>assert(delete_one_result);  <span style="color:#75715e">// Acknowledged writes return results.
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>assert(delete_one_result<span style="color:#f92672">-&gt;</span>deleted_count() <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>);
-</span></span></code></pre></div><h3 id="delete-all-documents-that-match-a-filter">Delete All Documents That Match a Filter</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">auto</span> delete_one_result <span style="color:#f92672">=</span> collection.delete_one(make_document(kvp(<span style="color:#e6db74">&#34;i&#34;</span>, <span style="color:#ae81ff">0</span>)));
+assert(delete_one_result);  <span style="color:#75715e">// Acknowledged writes return results.
+</span><span style="color:#75715e"></span>assert(delete_one_result<span style="color:#f92672">-&gt;</span>deleted_count() <span style="color:#f92672">==</span> <span style="color:#ae81ff">1</span>);
+</code></pre></div><h3 id="delete-all-documents-that-match-a-filter">Delete All Documents That Match a Filter</h3>
 <p>To delete all documents matching a filter, use a collection&rsquo;s
 <code>delete_many()</code> method.</p>
 <p>The following example deletes all documents where <code>i</code> is greater than <code>0</code>:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#66d9ef">auto</span> delete_many_result <span style="color:#f92672">=</span>
-</span></span><span style="display:flex;"><span>    collection.delete_many(make_document(kvp(<span style="color:#e6db74">&#34;i&#34;</span>, make_document(kvp(<span style="color:#e6db74">&#34;$gt&#34;</span>, <span style="color:#ae81ff">0</span>)))));
-</span></span><span style="display:flex;"><span>assert(delete_many_result);  <span style="color:#75715e">// Acknowledged writes return results.
-</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>assert(delete_many_result<span style="color:#f92672">-&gt;</span>deleted_count() <span style="color:#f92672">==</span> <span style="color:#ae81ff">2</span>);
-</span></span></code></pre></div><h2 id="create-indexes">Create Indexes</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">auto</span> delete_many_result <span style="color:#f92672">=</span>
+    collection.delete_many(make_document(kvp(<span style="color:#e6db74">&#34;i&#34;</span>, make_document(kvp(<span style="color:#e6db74">&#34;$gt&#34;</span>, <span style="color:#ae81ff">0</span>)))));
+assert(delete_many_result);  <span style="color:#75715e">// Acknowledged writes return results.
+</span><span style="color:#75715e"></span>assert(delete_many_result<span style="color:#f92672">-&gt;</span>deleted_count() <span style="color:#f92672">==</span> <span style="color:#ae81ff">2</span>);
+</code></pre></div><h2 id="create-indexes">Create Indexes</h2>
 <p>To create an <a href="https://www.mongodb.com/docs/manual/indexes/">index</a> on a
 field or set of fields, pass an index specification document to the
 <code>create_index()</code> method of a
@@ -1683,15 +1739,15 @@ field or set of fields, pass an index specification document to the
 "><code>mongocxx::collection</code></a> instance. An
 index key specification document contains the fields to index and the
 index type for each field:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-json" data-lang="json"><span style="display:flex;"><span>{ <span style="color:#f92672">&#34;index1&#34;</span>: <span style="color:#e6db74">&#34;&lt;type&gt;&#34;</span>, <span style="color:#f92672">&#34;index2&#34;</span>: <span style="color:#e6db74">&#34;&lt;type&gt;&#34;</span> }
-</span></span></code></pre></div><ul>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-json" data-lang="json">{ <span style="color:#f92672">&#34;index1&#34;</span>: <span style="color:#e6db74">&#34;&lt;type&gt;&#34;</span>, <span style="color:#f92672">&#34;index2&#34;</span>: <span style="color:#e6db74">&#34;&lt;type&gt;&#34;</span> }
+</code></pre></div><ul>
 <li>For an ascending index type, specify 1 for <code>&lt;type&gt;</code>.</li>
 <li>For a descending index type, specify -1 for <code>&lt;type&gt;</code>.</li>
 </ul>
 <p>The following example creates an ascending index on the <code>i</code> field:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-c++" data-lang="c++"><span style="display:flex;"><span><span style="color:#66d9ef">auto</span> index_specification <span style="color:#f92672">=</span> make_document(kvp(<span style="color:#e6db74">&#34;i&#34;</span>, <span style="color:#ae81ff">1</span>));
-</span></span><span style="display:flex;"><span>collection.create_index(std<span style="color:#f92672">::</span>move(index_specification));
-</span></span></code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-c++" data-lang="c++"><span style="color:#66d9ef">auto</span> index_specification <span style="color:#f92672">=</span> make_document(kvp(<span style="color:#e6db74">&#34;i&#34;</span>, <span style="color:#ae81ff">1</span>));
+collection.create_index(std<span style="color:#f92672">::</span>move(index_specification));
+</code></pre></div>
 
 
 

@@ -116,6 +116,33 @@
 
 
   
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
     
     
       
@@ -413,6 +440,35 @@
       <span class="menu-arrow fa fa-angle-down"></span>
   </a>
     <ul  class="current">
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongocxx-v3/polyfill-selection/">
+        
+        Choosing a C&#43;&#43;17 Polyfill
+    </a>
+  </li>
+
+
+        
         
         
         
@@ -1281,44 +1337,17 @@
 
 <h1>Linux</h1>
 <h3 id="step-1-choose-a-c17-polyfill">Step 1: Choose a C++17 polyfill</h3>
-<p>The mongocxx driver uses the C++17 features <code>std::optional</code> and
-<code>std::string_view</code>. To compile the mongocxx driver for pre-C++17, you
-must choose one of the following implementations for these features:</p>
-<p>MNMLSTC/core (<em>default for non-Windows platforms</em>)
-Select with <code>-DBSONCXX_POLY_USE_MNMLSTC=1</code>.  <strong>NOTE</strong>: This option
-vendors a header-only installation of MNMLSTC/core into the bsoncxx
-library installation and will therefore download MLNMLSTC from GitHub
-during the build process. If you already have an available version of
-MNMLSTC on your system, you can avoid the download step by using
-<code>-DBSONCXX_POLY_USE_SYSTEM_MNMLSTC</code>.</p>
-<p>Boost (<em>default for Windows platforms</em>)
-Select with <code>-DBSONCXX_POLY_USE_BOOST=1</code>. This is currently the
-only option if you are using a version of MSVC that does not support
-C++17.</p>
-<p><code>std::experimental</code>
-Select with <code>-DBSONCXX_POLY_USE_STD_EXPERIMENTAL=1</code>. If your
-toolchain&rsquo;s standard library provides <code>optional</code> and
-<code>string_view</code> in the namespace <code>std::experimental</code>, you can use
-this option. Be aware that your standard library&rsquo;s
-<code>std::experimental</code> implementation may change over time,
-breaking binary compatibility in unexpected ways. Note that this
-polyfill is <em>not</em> recommended and is unsupported.</p>
-<p>Most users should be fine sticking with the default. However, if you
-have an existing application which makes heavy use of one of the
-available libraries, you may prefer to build the mongocxx driver
-against the same library.</p>
-<p><strong>DO NOT</strong> change your project&rsquo;s polyfill if you need to create a
-stable binary interface.</p>
+<p>First, <a href="https://mongocxx.org/mongocxx-v3/polyfill-selection/">choose a C++17 polyfill library</a>.</p>
 <h3 id="step-2-download-the-latest-version-of-the-mongocxx-driver">Step 2: Download the latest version of the mongocxx driver.</h3>
 <p>The most reliable starting point for building the mongocxx driver is the latest
 release tarball.</p>
 <p>The <a href="https://github.com/mongodb/mongo-cxx-driver/releases">mongocxx releases</a>
 page will have links to the release tarball for the version you wish you install.  For
-example, to download version 3.9.0:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>curl -OL https://github.com/mongodb/mongo-cxx-driver/releases/download/r3.9.0/mongo-cxx-driver-r3.9.0.tar.gz
-</span></span><span style="display:flex;"><span>tar -xzf mongo-cxx-driver-r3.9.0.tar.gz
-</span></span><span style="display:flex;"><span>cd mongo-cxx-driver-r3.9.0/build
-</span></span></code></pre></div><p>Make sure you change to the <code>build</code> directory of whatever source tree you
+example, to download version 3.10.0:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">curl -OL https://github.com/mongodb/mongo-cxx-driver/releases/download/r3.10.0/mongo-cxx-driver-r3.10.0.tar.gz
+tar -xzf mongo-cxx-driver-r3.10.0.tar.gz
+cd mongo-cxx-driver-r3.10.0/build
+</code></pre></div><p>Make sure you change to the <code>build</code> directory of whatever source tree you
 obtain.</p>
 <h3 id="step-3-configure-the-driver">Step 3: Configure the driver</h3>
 <p>Without additional
@@ -1330,20 +1359,20 @@ from source. To configure <code>mongocxx</code> for installation into <code>/usr
     -DMONGOCXX_OVERRIDE_DEFAULT_INSTALL_PREFIX=OFF
 </code></pre><p>These options can be freely mixed with a C++17 polyfill option. For instance, this is how a user
 would run the command above with the Boost polyfill option:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>cmake ..                                            <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DCMAKE_BUILD_TYPE<span style="color:#f92672">=</span>Release                      <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DBSONCXX_POLY_USE_BOOST<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>                      <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DMONGOCXX_OVERRIDE_DEFAULT_INSTALL_PREFIX<span style="color:#f92672">=</span>OFF
-</span></span></code></pre></div><h3 id="step-4-build-and-install-the-driver">Step 4: Build and install the driver</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">cmake ..                                            <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -DCMAKE_BUILD_TYPE<span style="color:#f92672">=</span>Release                      <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -DBSONCXX_POLY_USE_BOOST<span style="color:#f92672">=</span><span style="color:#ae81ff">1</span>                      <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -DMONGOCXX_OVERRIDE_DEFAULT_INSTALL_PREFIX<span style="color:#f92672">=</span>OFF
+</code></pre></div><h3 id="step-4-build-and-install-the-driver">Step 4: Build and install the driver</h3>
 <p>Build and install the driver:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>cmake --build .
-</span></span><span style="display:flex;"><span>sudo cmake --build . --target install
-</span></span></code></pre></div><p>The driver can be uninstalled at a later time in one of two ways.  First,
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">cmake --build .
+sudo cmake --build . --target install
+</code></pre></div><p>The driver can be uninstalled at a later time in one of two ways.  First,
 the uninstall target can be called:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>sudo cmake --build . --target uninstall
-</span></span></code></pre></div><p>Second, the uninstall script can be called:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>sudo &lt;install-dir&gt;/share/mongo-cxx-driver/uninstall.sh
-</span></span></code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">sudo cmake --build . --target uninstall
+</code></pre></div><p>Second, the uninstall script can be called:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">sudo &lt;install-dir&gt;/share/mongo-cxx-driver/uninstall.sh
+</code></pre></div>
 
 
 

@@ -116,6 +116,33 @@
 
 
   
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
     
     
       
@@ -437,6 +464,35 @@
       <span class="menu-arrow fa fa-angle-down"></span>
   </a>
     <ul  class="current">
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongocxx-v3/polyfill-selection/">
+        
+        Choosing a C&#43;&#43;17 Polyfill
+    </a>
+  </li>
+
+
+        
         
         
         
@@ -1306,15 +1362,16 @@
 <h1>Advanced Configuration and Installation Options</h1>
 <h2 id="additional-options-for-integrators">Additional Options for Integrators</h2>
 <p>In the event that you are building the BSON C++ library and/or the C++ driver to embed with other components and you wish to avoid the potential for collision with components installed from a standard build or from a distribution package manager, you can make use of the <code>BSONCXX_OUTPUT_BASENAME</code> and <code>MONGOCXX_OUTPUT_BASENAME</code> options to <code>cmake</code>.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>cmake ..                                            <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DBSONCXX_OUTPUT_BASENAME<span style="color:#f92672">=</span>custom_bsoncxx        <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DMONGOCXX_OUTPUT_BASENAME<span style="color:#f92672">=</span>custom_mongocxx
-</span></span></code></pre></div><p>The above command would produce libraries named <code>libcustom_bsoncxx.so</code> and <code>libcustom_mongocxx.so</code> (or with the extension appropriate for the build platform).  Those libraries could be placed in a standard system directory or in an alternate location and could be linked to by specifying something like <code>-lcustom_mongocxx -lcustom_bsoncxx</code> on the linker command line (possibly adjusting the specific flags to those required by your linker).</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">cmake ..                                            <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -DBSONCXX_OUTPUT_BASENAME<span style="color:#f92672">=</span>custom_bsoncxx        <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -DMONGOCXX_OUTPUT_BASENAME<span style="color:#f92672">=</span>custom_mongocxx
+</code></pre></div><p>The above command would produce libraries named <code>libcustom_bsoncxx.so</code> and <code>libcustom_mongocxx.so</code> (or with the extension appropriate for the build platform).  Those libraries could be placed in a standard system directory or in an alternate location and could be linked to by specifying something like <code>-lcustom_mongocxx -lcustom_bsoncxx</code> on the linker command line (possibly adjusting the specific flags to those required by your linker).</p>
 <h2 id="installing-the-mongodb-c-driver">Installing the MongoDB C driver.</h2>
 <p>The mongocxx driver builds on top of the <a href="https://www.mongodb.com/docs/drivers/c/">MongoDB C driver</a>.</p>
 <p>The build of mongocxx-3.9.0 automatically downloads and installs the C driver if the C driver is not detected.
 To use an existing install of the C driver, set <code>CMAKE_PREFIX_PATH</code> to the directory containing the C driver install.</p>
 <ul>
+<li>For mongocxx-3.10.x, libmongoc 1.26.0 or later is required.</li>
 <li>For mongocxx-3.9.x, libmongoc 1.25.0 or later is required.</li>
 <li>For mongocxx-3.8.x, libmongoc 1.24.0 or later is required.</li>
 <li>For mongocxx-3.7.x, libmongoc 1.22.1 or later is required.</li>
@@ -1345,45 +1402,45 @@ of the implications of the various linking approaches before utilizing these opt
 <h3 id="configuring-with-mongocxx-32x-or-newer">Configuring with <code>mongocxx</code> 3.2.x or newer</h3>
 <p>Users have the option to build <code>mongocxx</code> as a static library. <strong>This is not recommended for novice
 users.</strong> A user can enable this behavior with the <code>-DBUILD_SHARED_LIBS</code> option:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>cmake ..                                            <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DCMAKE_BUILD_TYPE<span style="color:#f92672">=</span>Release                      <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DBUILD_SHARED_LIBS<span style="color:#f92672">=</span>OFF
-</span></span></code></pre></div><h3 id="configuring-with-mongocxx-350-or-newer">Configuring with <code>mongocxx</code> 3.5.0 or newer</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">cmake ..                                            <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -DCMAKE_BUILD_TYPE<span style="color:#f92672">=</span>Release                      <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -DBUILD_SHARED_LIBS<span style="color:#f92672">=</span>OFF
+</code></pre></div><h3 id="configuring-with-mongocxx-350-or-newer">Configuring with <code>mongocxx</code> 3.5.0 or newer</h3>
 <p>Users have the option to build <code>mongocxx</code> as both static and shared libraries. A user can enable
 this behavior with the <code>-DBUILD_SHARED_AND_STATIC_LIBS</code> option:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>cmake ..                                            <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DCMAKE_BUILD_TYPE<span style="color:#f92672">=</span>Release                      <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DBUILD_SHARED_AND_STATIC_LIBS<span style="color:#f92672">=</span>ON
-</span></span></code></pre></div><p>Users have the option to build <code>mongocxx</code> as a shared library that has statically linked
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">cmake ..                                            <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -DCMAKE_BUILD_TYPE<span style="color:#f92672">=</span>Release                      <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -DBUILD_SHARED_AND_STATIC_LIBS<span style="color:#f92672">=</span>ON
+</code></pre></div><p>Users have the option to build <code>mongocxx</code> as a shared library that has statically linked
 <code>libmongoc</code>. <strong>This is not recommended for novice users.</strong> A user can enable this behavior with the
 <code>-DBUILD_SHARED_LIBS_WITH_STATIC_MONGOC</code> option:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>cmake ..                                            <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DCMAKE_BUILD_TYPE<span style="color:#f92672">=</span>Release                      <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DBUILD_SHARED_LIBS_WITH_STATIC_MONGOC<span style="color:#f92672">=</span>ON
-</span></span></code></pre></div><h2 id="disabling-tests">Disabling tests</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">cmake ..                                            <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -DCMAKE_BUILD_TYPE<span style="color:#f92672">=</span>Release                      <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -DBUILD_SHARED_LIBS_WITH_STATIC_MONGOC<span style="color:#f92672">=</span>ON
+</code></pre></div><h2 id="disabling-tests">Disabling tests</h2>
 <p>Pass <code>-DENABLE_TESTS=OFF</code> as a cmake option to disable configuration of test targets.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>cmake .. -DENABLE_TESTS<span style="color:#f92672">=</span>OFF
-</span></span><span style="display:flex;"><span>cmake --build .. --target help
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># No test targets are configured.</span>
-</span></span></code></pre></div><h2 id="installing-to-non-standard-directories">Installing to non-standard directories</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">cmake .. -DENABLE_TESTS<span style="color:#f92672">=</span>OFF
+cmake --build .. --target help
+<span style="color:#75715e"># No test targets are configured.</span>
+</code></pre></div><h2 id="installing-to-non-standard-directories">Installing to non-standard directories</h2>
 <p>To install the C++ driver to a non-standard directory, specify <code>CMAKE_INSTALL_PREFIX</code> to the desired
 install path:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>cmake ..                                            <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DCMAKE_BUILD_TYPE<span style="color:#f92672">=</span>Release                      <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DCMAKE_INSTALL_PREFIX<span style="color:#f92672">=</span>$HOME/mongo-cxx-driver
-</span></span></code></pre></div><p>Consider also specifying the <code>-DCMAKE_INSTALL_RPATH=</code> option to the <code>lib</code> directory of the install.
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">cmake ..                                            <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -DCMAKE_BUILD_TYPE<span style="color:#f92672">=</span>Release                      <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -DCMAKE_INSTALL_PREFIX<span style="color:#f92672">=</span>$HOME/mongo-cxx-driver
+</code></pre></div><p>Consider also specifying the <code>-DCMAKE_INSTALL_RPATH=</code> option to the <code>lib</code> directory of the install.
 This may enable libmongocxx.so to locate libbsoncxx.so:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>cmake ..                                             <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DCMAKE_BUILD_TYPE<span style="color:#f92672">=</span>Release                       <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DCMAKE_INSTALL_PREFIX<span style="color:#f92672">=</span>$HOME/mongo-cxx-driver    <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DCMAKE_INSTALL_RPATH<span style="color:#f92672">=</span>$HOME/mongo-cxx-driver/lib
-</span></span></code></pre></div><p>If the C driver is installed to a non-standard directory, specify <code>CMAKE_PREFIX_PATH</code> to the install
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">cmake ..                                             <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -DCMAKE_BUILD_TYPE<span style="color:#f92672">=</span>Release                       <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -DCMAKE_INSTALL_PREFIX<span style="color:#f92672">=</span>$HOME/mongo-cxx-driver    <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -DCMAKE_INSTALL_RPATH<span style="color:#f92672">=</span>$HOME/mongo-cxx-driver/lib
+</code></pre></div><p>If the C driver is installed to a non-standard directory, specify <code>CMAKE_PREFIX_PATH</code> to the install
 path of the C driver:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>cmake ..                                            <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DCMAKE_BUILD_TYPE<span style="color:#f92672">=</span>Release                      <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DCMAKE_PREFIX_PATH<span style="color:#f92672">=</span>$HOME/mongo-c-driver        <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DCMAKE_INSTALL_PREFIX<span style="color:#f92672">=</span>$HOME/mongo-cxx-driver
-</span></span></code></pre></div><blockquote>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">cmake ..                                            <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -DCMAKE_BUILD_TYPE<span style="color:#f92672">=</span>Release                      <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -DCMAKE_PREFIX_PATH<span style="color:#f92672">=</span>$HOME/mongo-c-driver        <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -DCMAKE_INSTALL_PREFIX<span style="color:#f92672">=</span>$HOME/mongo-cxx-driver
+</code></pre></div><blockquote>
 <p><em>Note</em> If you need multiple paths in a CMake PATH variable, separate them with a semicolon like
 this:
 <code>-DCMAKE_PREFIX_PATH=&quot;/your/cdriver/prefix;/some/other/path&quot;</code></p>
@@ -1391,121 +1448,121 @@ this:
 <h3 id="configuring-with-mongocxx-31x-or-30x">Configuring with <code>mongocxx</code> 3.1.x or 3.0.x</h3>
 <p>Instead of the <code>-DCMAKE_PREFIX_PATH</code> option, users must specify the <code>libmongoc</code> installation
 directory by using the <code>-DLIBMONGOC_DIR</code> and <code>-DLIBBSON_DIR</code> options:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>cmake ..                                            <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DCMAKE_BUILD_TYPE<span style="color:#f92672">=</span>Release                      <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DLIBMONGOC_DIR<span style="color:#f92672">=</span>$HOME/mongo-c-driver            <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DLIBBSON_DIR<span style="color:#f92672">=</span>$HOME/mongo-c-driver              <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DCMAKE_INSTALL_PREFIX<span style="color:#f92672">=</span>$HOME/mongo-cxx-driver
-</span></span></code></pre></div><h3 id="fixing-the-library-not-loaded-error-on-macos">Fixing the &ldquo;Library not loaded&rdquo; error on macOS</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">cmake ..                                            <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -DCMAKE_BUILD_TYPE<span style="color:#f92672">=</span>Release                      <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -DLIBMONGOC_DIR<span style="color:#f92672">=</span>$HOME/mongo-c-driver            <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -DLIBBSON_DIR<span style="color:#f92672">=</span>$HOME/mongo-c-driver              <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -DCMAKE_INSTALL_PREFIX<span style="color:#f92672">=</span>$HOME/mongo-cxx-driver
+</code></pre></div><h3 id="fixing-the-library-not-loaded-error-on-macos">Fixing the &ldquo;Library not loaded&rdquo; error on macOS</h3>
 <p>Applications linking to a non-standard directory installation may encounter an error loading the C++ driver at runtime. Example:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># Tell pkg-config where to find C++ driver installation.</span>
-</span></span><span style="display:flex;"><span>export PKG_CONFIG_PATH<span style="color:#f92672">=</span>$HOME/mongo-cxx-driver/lib/pkgconfig
-</span></span><span style="display:flex;"><span>clang++ app.cpp -std<span style="color:#f92672">=</span>c++11 <span style="color:#66d9ef">$(</span>pkg-config --cflags --libs libmongocxx<span style="color:#66d9ef">)</span> -o ./app.out
-</span></span><span style="display:flex;"><span>./app.out
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># Prints the following error:</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># dyld[3217]: Library not loaded: &#39;@rpath/libmongocxx._noabi.dylib&#39;</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">#   Referenced from: &#39;/Users/kevin.albertson/code/app.out&#39;</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e">#   Reason: tried: &#39;/usr/local/lib/libmongocxx._noabi.dylib&#39; (no such file), &#39;/usr/lib/libmongocxx._noabi.dylib&#39; (no such file)</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># zsh: abort      ./app.out</span>
-</span></span></code></pre></div><p>The default <code>install name</code> of the C++ driver on macOS includes <code>@rpath</code>:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>otool -D $HOME/mongo-cxx-driver/lib/libmongocxx.dylib
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># Prints:</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># /Users/kevin.albertson/mongo-cxx-driver/lib/libmongocxx.dylib:</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># @rpath/libmongocxx._noabi.dylib</span>
-</span></span></code></pre></div><p>Including <code>@rpath</code> in the install name allows linking applications to control the list of search paths for the library.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#75715e"># Tell pkg-config where to find C++ driver installation.</span>
+export PKG_CONFIG_PATH<span style="color:#f92672">=</span>$HOME/mongo-cxx-driver/lib/pkgconfig
+clang++ app.cpp -std<span style="color:#f92672">=</span>c++11 <span style="color:#66d9ef">$(</span>pkg-config --cflags --libs libmongocxx<span style="color:#66d9ef">)</span> -o ./app.out
+./app.out
+<span style="color:#75715e"># Prints the following error:</span>
+<span style="color:#75715e"># dyld[3217]: Library not loaded: &#39;@rpath/libmongocxx._noabi.dylib&#39;</span>
+<span style="color:#75715e">#   Referenced from: &#39;/Users/kevin.albertson/code/app.out&#39;</span>
+<span style="color:#75715e">#   Reason: tried: &#39;/usr/local/lib/libmongocxx._noabi.dylib&#39; (no such file), &#39;/usr/lib/libmongocxx._noabi.dylib&#39; (no such file)</span>
+<span style="color:#75715e"># zsh: abort      ./app.out</span>
+</code></pre></div><p>The default <code>install name</code> of the C++ driver on macOS includes <code>@rpath</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">otool -D $HOME/mongo-cxx-driver/lib/libmongocxx.dylib
+<span style="color:#75715e"># Prints:</span>
+<span style="color:#75715e"># /Users/kevin.albertson/mongo-cxx-driver/lib/libmongocxx.dylib:</span>
+<span style="color:#75715e"># @rpath/libmongocxx._noabi.dylib</span>
+</code></pre></div><p>Including <code>@rpath</code> in the install name allows linking applications to control the list of search paths for the library.</p>
 <p><code>app.out</code> includes the load command for <code>@rpath/libmongocxx._noabi.dylib</code>. <code>app.out</code> does not have entries to substitute for <code>@rpath</code>.</p>
 <p>There are several ways to consider solving this on macOS:</p>
 <p>Pass <code>DYLD_FALLBACK_LIBRARY_PATH</code> to the directory containing the C++ driver libraries:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>DYLD_FALLBACK_LIBRARY_PATH<span style="color:#f92672">=</span>$HOME/mongo-cxx-driver/lib ./app.out
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># Prints &#34;successfully connected with C++ driver&#34;</span>
-</span></span></code></pre></div><p>Alternatively, the linker option <code>-Wl,-rpath</code> can be passed to add entries to substitute for <code>@rpath</code>:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># Tell pkg-config where to find C++ driver installation.</span>
-</span></span><span style="display:flex;"><span>export PKG_CONFIG_PATH<span style="color:#f92672">=</span>$HOME/mongo-cxx-driver/lib/pkgconfig
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># Pass the linker option -rpath to set an rpath in the final executable.</span>
-</span></span><span style="display:flex;"><span>clang++ app.cpp -std<span style="color:#f92672">=</span>c++11 -Wl,-rpath,$HOME/mongo-cxx-driver/lib <span style="color:#66d9ef">$(</span>pkg-config --cflags --libs libmongocxx<span style="color:#66d9ef">)</span> -o ./app.out
-</span></span><span style="display:flex;"><span>./app.out
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># Prints &#34;successfully connected with C++ driver&#34;</span>
-</span></span></code></pre></div><p>If building the application with cmake, the <a href="https://gitlab.kitware.com/cmake/community/-/wikis/doc/cmake/RPATH-handling#default-rpath-settings">Default RPATH settings</a> include the full RPATH to all used libraries in the build tree. However, when installing, cmake will clear the RPATH of these targets so they are installed with an empty RPATH. This may result in a <code>Library not loaded</code> error after install.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">DYLD_FALLBACK_LIBRARY_PATH<span style="color:#f92672">=</span>$HOME/mongo-cxx-driver/lib ./app.out
+<span style="color:#75715e"># Prints &#34;successfully connected with C++ driver&#34;</span>
+</code></pre></div><p>Alternatively, the linker option <code>-Wl,-rpath</code> can be passed to add entries to substitute for <code>@rpath</code>:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#75715e"># Tell pkg-config where to find C++ driver installation.</span>
+export PKG_CONFIG_PATH<span style="color:#f92672">=</span>$HOME/mongo-cxx-driver/lib/pkgconfig
+<span style="color:#75715e"># Pass the linker option -rpath to set an rpath in the final executable.</span>
+clang++ app.cpp -std<span style="color:#f92672">=</span>c++11 -Wl,-rpath,$HOME/mongo-cxx-driver/lib <span style="color:#66d9ef">$(</span>pkg-config --cflags --libs libmongocxx<span style="color:#66d9ef">)</span> -o ./app.out
+./app.out
+<span style="color:#75715e"># Prints &#34;successfully connected with C++ driver&#34;</span>
+</code></pre></div><p>If building the application with cmake, the <a href="https://gitlab.kitware.com/cmake/community/-/wikis/doc/cmake/RPATH-handling#default-rpath-settings">Default RPATH settings</a> include the full RPATH to all used libraries in the build tree. However, when installing, cmake will clear the RPATH of these targets so they are installed with an empty RPATH. This may result in a <code>Library not loaded</code> error after install.</p>
 <p>Example:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># Build application `app` using the C++ driver from a non-standard install.</span>
-</span></span><span style="display:flex;"><span>cmake <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DCMAKE_PREFIX_PATH<span style="color:#f92672">=</span>$HOME/mongo-cxx-driver <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DCMAKE_INSTALL_PREFIX<span style="color:#f92672">=</span>$HOME/app <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DCMAKE_CXX_STANDARD<span style="color:#f92672">=</span><span style="color:#ae81ff">11</span> <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -Bcmake-build -S.
-</span></span><span style="display:flex;"><span>cmake --build cmake-build --target app.out
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># Running app.out from build tree includes rpath to C++ driver.</span>
-</span></span><span style="display:flex;"><span>./cmake-build ./cmake-build/app.out
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># Prints: &#34;successfully connected with C++ driver&#34;</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>cmake --build cmake-build --target install
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># Running app.out from install tree does not include rpath to C++ driver.</span>
-</span></span><span style="display:flex;"><span>$HOME/app/bin/app.out
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># Prints &#34;Library not loaded&#34; error.</span>
-</span></span></code></pre></div><p>Consider setting <code>-DCMAKE_INSTALL_RPATH_USE_LINK_PATH=TRUE</code> so the rpath for the executable is kept in the install target.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># Build application `app` using the C++ driver from a non-standard install.</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># Use CMAKE_INSTALL_RPATH_USE_LINK_PATH=TRUE to keep rpath entry on installed app.</span>
-</span></span><span style="display:flex;"><span>cmake <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DCMAKE_PREFIX_PATH<span style="color:#f92672">=</span>$HOME/mongo-cxx-driver <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DCMAKE_INSTALL_PREFIX<span style="color:#f92672">=</span>$HOME/app <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DCMAKE_INSTALL_RPATH_USE_LINK_PATH<span style="color:#f92672">=</span>TRUE <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DCMAKE_CXX_STANDARD<span style="color:#f92672">=</span><span style="color:#ae81ff">11</span> <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -Bcmake-build -S.
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>cmake --build cmake-build --target install
-</span></span><span style="display:flex;"><span>$HOME/app/bin/app.out
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># Prints &#34;successfully connected with C++ driver&#34;</span>
-</span></span></code></pre></div><p>See the cmake documentation for <a href="https://gitlab.kitware.com/cmake/community/-/wikis/doc/cmake/RPATH-handling">RPATH handling</a> for more information.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#75715e"># Build application `app` using the C++ driver from a non-standard install.</span>
+cmake <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -DCMAKE_PREFIX_PATH<span style="color:#f92672">=</span>$HOME/mongo-cxx-driver <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -DCMAKE_INSTALL_PREFIX<span style="color:#f92672">=</span>$HOME/app <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -DCMAKE_CXX_STANDARD<span style="color:#f92672">=</span><span style="color:#ae81ff">11</span> <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -Bcmake-build -S.
+cmake --build cmake-build --target app.out
+<span style="color:#75715e"># Running app.out from build tree includes rpath to C++ driver.</span>
+./cmake-build ./cmake-build/app.out
+<span style="color:#75715e"># Prints: &#34;successfully connected with C++ driver&#34;</span>
+
+cmake --build cmake-build --target install
+<span style="color:#75715e"># Running app.out from install tree does not include rpath to C++ driver.</span>
+$HOME/app/bin/app.out
+<span style="color:#75715e"># Prints &#34;Library not loaded&#34; error.</span>
+</code></pre></div><p>Consider setting <code>-DCMAKE_INSTALL_RPATH_USE_LINK_PATH=TRUE</code> so the rpath for the executable is kept in the install target.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#75715e"># Build application `app` using the C++ driver from a non-standard install.</span>
+<span style="color:#75715e"># Use CMAKE_INSTALL_RPATH_USE_LINK_PATH=TRUE to keep rpath entry on installed app.</span>
+cmake <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -DCMAKE_PREFIX_PATH<span style="color:#f92672">=</span>$HOME/mongo-cxx-driver <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -DCMAKE_INSTALL_PREFIX<span style="color:#f92672">=</span>$HOME/app <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -DCMAKE_INSTALL_RPATH_USE_LINK_PATH<span style="color:#f92672">=</span>TRUE <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -DCMAKE_CXX_STANDARD<span style="color:#f92672">=</span><span style="color:#ae81ff">11</span> <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -Bcmake-build -S.
+
+cmake --build cmake-build --target install
+$HOME/app/bin/app.out
+<span style="color:#75715e"># Prints &#34;successfully connected with C++ driver&#34;</span>
+</code></pre></div><p>See the cmake documentation for <a href="https://gitlab.kitware.com/cmake/community/-/wikis/doc/cmake/RPATH-handling">RPATH handling</a> for more information.</p>
 <h3 id="fixing-the-cannot-open-shared-object-file-error-on-linux">Fixing the &ldquo;cannot open shared object file&rdquo; error on Linux</h3>
 <p>Applications linking to a non-standard directory installation may encounter an error loading the C++ driver at runtime. Example:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># Tell pkg-config where to find C++ driver installation.</span>
-</span></span><span style="display:flex;"><span>export PKG_CONFIG_PATH<span style="color:#f92672">=</span>$HOME/mongo-cxx-driver/lib/pkgconfig
-</span></span><span style="display:flex;"><span>g++ -std<span style="color:#f92672">=</span>c++11 app.cpp <span style="color:#66d9ef">$(</span>pkg-config --cflags --libs libmongocxx<span style="color:#66d9ef">)</span> -o ./app.out
-</span></span><span style="display:flex;"><span>./app.out
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># Prints the following error:</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># ./app.out: error while loading shared libraries: libmongocxx.so._noabi: cannot open shared object file: No such file or directory</span>
-</span></span></code></pre></div><p>There are several ways to consider solving this on Linux:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#75715e"># Tell pkg-config where to find C++ driver installation.</span>
+export PKG_CONFIG_PATH<span style="color:#f92672">=</span>$HOME/mongo-cxx-driver/lib/pkgconfig
+g++ -std<span style="color:#f92672">=</span>c++11 app.cpp <span style="color:#66d9ef">$(</span>pkg-config --cflags --libs libmongocxx<span style="color:#66d9ef">)</span> -o ./app.out
+./app.out
+<span style="color:#75715e"># Prints the following error:</span>
+<span style="color:#75715e"># ./app.out: error while loading shared libraries: libmongocxx.so._noabi: cannot open shared object file: No such file or directory</span>
+</code></pre></div><p>There are several ways to consider solving this on Linux:</p>
 <p>Pass <code>LD_LIBRARY_PATH</code> to the directory containing the C++ driver libraries:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span>LD_LIBRARY_PATH<span style="color:#f92672">=</span>$HOME/mongo-cxx-driver/lib ./app.out
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># Prints &#34;successfully connected with C++ driver&#34;</span>
-</span></span></code></pre></div><p>Alternatively, the linker option <code>-Wl,-rpath</code> can be passed to add <code>rpath</code> entries:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># Tell pkg-config where to find C++ driver installation.</span>
-</span></span><span style="display:flex;"><span>export PKG_CONFIG_PATH<span style="color:#f92672">=</span>$HOME/mongo-cxx-driver/lib/pkgconfig
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># Pass the linker option -rpath to set an rpath in the final executable.</span>
-</span></span><span style="display:flex;"><span>g++ app.cpp -std<span style="color:#f92672">=</span>c++11 -Wl,-rpath,$HOME/mongo-cxx-driver/lib <span style="color:#66d9ef">$(</span>pkg-config --cflags --libs libmongocxx<span style="color:#66d9ef">)</span> -o ./app.out
-</span></span><span style="display:flex;"><span>./app.out
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># Prints &#34;successfully connected with C++ driver&#34;</span>
-</span></span></code></pre></div><p>If building the application with cmake, the <a href="https://gitlab.kitware.com/cmake/community/-/wikis/doc/cmake/RPATH-handling#default-rpath-settings">Default RPATH settings</a> include the full RPATH to all used libraries in the build tree. However, when installing, cmake will clear the RPATH of these targets so they are installed with an empty RPATH. This may result in a <code>Library not loaded</code> error after install.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">LD_LIBRARY_PATH<span style="color:#f92672">=</span>$HOME/mongo-cxx-driver/lib ./app.out
+<span style="color:#75715e"># Prints &#34;successfully connected with C++ driver&#34;</span>
+</code></pre></div><p>Alternatively, the linker option <code>-Wl,-rpath</code> can be passed to add <code>rpath</code> entries:</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#75715e"># Tell pkg-config where to find C++ driver installation.</span>
+export PKG_CONFIG_PATH<span style="color:#f92672">=</span>$HOME/mongo-cxx-driver/lib/pkgconfig
+<span style="color:#75715e"># Pass the linker option -rpath to set an rpath in the final executable.</span>
+g++ app.cpp -std<span style="color:#f92672">=</span>c++11 -Wl,-rpath,$HOME/mongo-cxx-driver/lib <span style="color:#66d9ef">$(</span>pkg-config --cflags --libs libmongocxx<span style="color:#66d9ef">)</span> -o ./app.out
+./app.out
+<span style="color:#75715e"># Prints &#34;successfully connected with C++ driver&#34;</span>
+</code></pre></div><p>If building the application with cmake, the <a href="https://gitlab.kitware.com/cmake/community/-/wikis/doc/cmake/RPATH-handling#default-rpath-settings">Default RPATH settings</a> include the full RPATH to all used libraries in the build tree. However, when installing, cmake will clear the RPATH of these targets so they are installed with an empty RPATH. This may result in a <code>Library not loaded</code> error after install.</p>
 <p>Example:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># Build application `app` using the C++ driver from a non-standard install.</span>
-</span></span><span style="display:flex;"><span>cmake <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DCMAKE_PREFIX_PATH<span style="color:#f92672">=</span>$HOME/mongo-cxx-driver <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DCMAKE_INSTALL_PREFIX<span style="color:#f92672">=</span>$HOME/app <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DCMAKE_CXX_STANDARD<span style="color:#f92672">=</span><span style="color:#ae81ff">11</span> <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -Bcmake-build -S.
-</span></span><span style="display:flex;"><span>cmake --build cmake-build --target app.out
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># Running app.out from build tree includes rpath to C++ driver.</span>
-</span></span><span style="display:flex;"><span>./cmake-build ./cmake-build/app.out
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># Prints: &#34;successfully connected with C++ driver&#34;</span>
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>cmake --build cmake-build --target install
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># Running app.out from install tree does not include rpath to C++ driver.</span>
-</span></span><span style="display:flex;"><span>$HOME/app/bin/app.out
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># Prints &#34;cannot open shared object file&#34; error.</span>
-</span></span></code></pre></div><p>Consider setting <code>-DCMAKE_INSTALL_RPATH_USE_LINK_PATH=TRUE</code> so the rpath for the executable is kept in the install target.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-sh" data-lang="sh"><span style="display:flex;"><span><span style="color:#75715e"># Build application `app` using the C++ driver from a non-standard install.</span>
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># Use CMAKE_INSTALL_RPATH_USE_LINK_PATH=TRUE to keep rpath entry on installed app.</span>
-</span></span><span style="display:flex;"><span>cmake <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DCMAKE_PREFIX_PATH<span style="color:#f92672">=</span>$HOME/mongo-cxx-driver <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DCMAKE_INSTALL_PREFIX<span style="color:#f92672">=</span>$HOME/app <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DCMAKE_INSTALL_RPATH_USE_LINK_PATH<span style="color:#f92672">=</span>TRUE <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -DCMAKE_CXX_STANDARD<span style="color:#f92672">=</span><span style="color:#ae81ff">11</span> <span style="color:#ae81ff">\
-</span></span></span><span style="display:flex;"><span><span style="color:#ae81ff"></span>    -Bcmake-build -S.
-</span></span><span style="display:flex;"><span>
-</span></span><span style="display:flex;"><span>cmake --build cmake-build --target install
-</span></span><span style="display:flex;"><span>$HOME/app/bin/app.out
-</span></span><span style="display:flex;"><span><span style="color:#75715e"># Prints &#34;successfully connected with C++ driver&#34;</span>
-</span></span></code></pre></div><p>See the cmake documentation for <a href="https://gitlab.kitware.com/cmake/community/-/wikis/doc/cmake/RPATH-handling">RPATH handling</a> for more information.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#75715e"># Build application `app` using the C++ driver from a non-standard install.</span>
+cmake <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -DCMAKE_PREFIX_PATH<span style="color:#f92672">=</span>$HOME/mongo-cxx-driver <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -DCMAKE_INSTALL_PREFIX<span style="color:#f92672">=</span>$HOME/app <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -DCMAKE_CXX_STANDARD<span style="color:#f92672">=</span><span style="color:#ae81ff">11</span> <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -Bcmake-build -S.
+cmake --build cmake-build --target app.out
+<span style="color:#75715e"># Running app.out from build tree includes rpath to C++ driver.</span>
+./cmake-build ./cmake-build/app.out
+<span style="color:#75715e"># Prints: &#34;successfully connected with C++ driver&#34;</span>
+
+cmake --build cmake-build --target install
+<span style="color:#75715e"># Running app.out from install tree does not include rpath to C++ driver.</span>
+$HOME/app/bin/app.out
+<span style="color:#75715e"># Prints &#34;cannot open shared object file&#34; error.</span>
+</code></pre></div><p>Consider setting <code>-DCMAKE_INSTALL_RPATH_USE_LINK_PATH=TRUE</code> so the rpath for the executable is kept in the install target.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh"><span style="color:#75715e"># Build application `app` using the C++ driver from a non-standard install.</span>
+<span style="color:#75715e"># Use CMAKE_INSTALL_RPATH_USE_LINK_PATH=TRUE to keep rpath entry on installed app.</span>
+cmake <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -DCMAKE_PREFIX_PATH<span style="color:#f92672">=</span>$HOME/mongo-cxx-driver <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -DCMAKE_INSTALL_PREFIX<span style="color:#f92672">=</span>$HOME/app <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -DCMAKE_INSTALL_RPATH_USE_LINK_PATH<span style="color:#f92672">=</span>TRUE <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -DCMAKE_CXX_STANDARD<span style="color:#f92672">=</span><span style="color:#ae81ff">11</span> <span style="color:#ae81ff">\
+</span><span style="color:#ae81ff"></span>    -Bcmake-build -S.
+
+cmake --build cmake-build --target install
+$HOME/app/bin/app.out
+<span style="color:#75715e"># Prints &#34;successfully connected with C++ driver&#34;</span>
+</code></pre></div><p>See the cmake documentation for <a href="https://gitlab.kitware.com/cmake/community/-/wikis/doc/cmake/RPATH-handling">RPATH handling</a> for more information.</p>
 
 
 

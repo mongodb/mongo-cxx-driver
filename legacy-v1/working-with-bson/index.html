@@ -116,6 +116,33 @@
 
 
   
+
+
+        
+          
+        
+      
+    
+      
+      
+        
+        
+        
+        
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+  
     
     
       
@@ -726,6 +753,35 @@
       <span class="menu-arrow fa fa-angle-right"></span>
   </a>
     <ul >
+        
+        
+        
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <li class="toctree-l2">
+    <a href="/mongocxx-v3/polyfill-selection/">
+        
+        Choosing a C&#43;&#43;17 Polyfill
+    </a>
+  </li>
+
+
+        
         
         
         
@@ -1599,30 +1655,30 @@
 syntax. An exhaustive list is here:
 <a href="https://github.com/mongodb/mongo-cxx-driver/blob/legacy/src/mongo/bson/bsonmisc.h">bsonmisc.h</a></p>
 <p>Typical example of stream syntax:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>BSONObj p <span style="color:#f92672">=</span> BSON( <span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;Joe&#34;</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;age&#34;</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">33</span> );
-</span></span></code></pre></div><h4 id="genoid">GENOID</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">BSONObj p <span style="color:#f92672">=</span> BSON( <span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;Joe&#34;</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;age&#34;</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">33</span> );
+</code></pre></div><h4 id="genoid">GENOID</h4>
 <p>The server will add an <code>_id</code> automatically if it is not included explicitly.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>BSONObj p <span style="color:#f92672">=</span> BSON( GENOID <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;Joe&#34;</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;age&#34;</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">33</span> );
-</span></span><span style="display:flex;"><span><span style="color:#75715e">// result is: { _id : ..., name : &#34;Joe&#34;, age : 33 }
-</span></span></span></code></pre></div><h4 id="lt-gt-lte-gte-ne">LT, GT, LTE, GTE, NE</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">BSONObj p <span style="color:#f92672">=</span> BSON( GENOID <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;Joe&#34;</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;age&#34;</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">33</span> );
+<span style="color:#75715e">// result is: { _id : ..., name : &#34;Joe&#34;, age : 33 }
+</span></code></pre></div><h4 id="lt-gt-lte-gte-ne">LT, GT, LTE, GTE, NE</h4>
 <p>less than, greater than, etc.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>BSONObj p <span style="color:#f92672">=</span> BSON( <span style="color:#e6db74">&#34;age&#34;</span> <span style="color:#f92672">&lt;&lt;</span> GT <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">21</span> );
-</span></span><span style="display:flex;"><span><span style="color:#75715e">// result is:  { age : { $gt : 21 } }
-</span></span></span></code></pre></div><h4 id="datenow">DATENOW</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">BSONObj p <span style="color:#f92672">=</span> BSON( <span style="color:#e6db74">&#34;age&#34;</span> <span style="color:#f92672">&lt;&lt;</span> GT <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">21</span> );
+<span style="color:#75715e">// result is:  { age : { $gt : 21 } }
+</span></code></pre></div><h4 id="datenow">DATENOW</h4>
 <p>Translates to current date</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>BSONObj p <span style="color:#f92672">=</span> BSON( <span style="color:#e6db74">&#34;created&#34;</span> <span style="color:#f92672">&lt;&lt;</span> DATENOW );
-</span></span><span style="display:flex;"><span><span style="color:#75715e">// result is: { created : &#34;2009-10-09 11:41:42&#34; }
-</span></span></span></code></pre></div><h4 id="minkey-maxkey">MINKEY, MAXKEY</h4>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>BSONObj p <span style="color:#f92672">=</span> BSON( <span style="color:#e6db74">&#34;a&#34;</span> <span style="color:#f92672">&lt;&lt;</span> MINKEY);
-</span></span><span style="display:flex;"><span><span style="color:#75715e">// result is: { &#34;a&#34; : { &#34;$minKey&#34; : 1 } }
-</span></span></span></code></pre></div><h4 id="or">OR</h4>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>OR(BSON(<span style="color:#e6db74">&#34;x&#34;</span> <span style="color:#f92672">&lt;&lt;</span> GT <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">7</span>), BSON(<span style="color:#e6db74">&#34;y&#34;</span> <span style="color:#f92672">&lt;&lt;</span> LT <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">6</span>))
-</span></span><span style="display:flex;"><span><span style="color:#75715e">// result is: {$or: [{x: {$gt: 7}}, {y: {$lt: 6}}]}
-</span></span></span></code></pre></div><h4 id="bsonnull">BSONNULL</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">BSONObj p <span style="color:#f92672">=</span> BSON( <span style="color:#e6db74">&#34;created&#34;</span> <span style="color:#f92672">&lt;&lt;</span> DATENOW );
+<span style="color:#75715e">// result is: { created : &#34;2009-10-09 11:41:42&#34; }
+</span></code></pre></div><h4 id="minkey-maxkey">MINKEY, MAXKEY</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">BSONObj p <span style="color:#f92672">=</span> BSON( <span style="color:#e6db74">&#34;a&#34;</span> <span style="color:#f92672">&lt;&lt;</span> MINKEY);
+<span style="color:#75715e">// result is: { &#34;a&#34; : { &#34;$minKey&#34; : 1 } }
+</span></code></pre></div><h4 id="or">OR</h4>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">OR(BSON(<span style="color:#e6db74">&#34;x&#34;</span> <span style="color:#f92672">&lt;&lt;</span> GT <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">7</span>), BSON(<span style="color:#e6db74">&#34;y&#34;</span> <span style="color:#f92672">&lt;&lt;</span> LT <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">6</span>))
+<span style="color:#75715e">// result is: {$or: [{x: {$gt: 7}}, {y: {$lt: 6}}]}
+</span></code></pre></div><h4 id="bsonnull">BSONNULL</h4>
 <p>Translates to <code>null</code> value (will appear in MongoDB 2.1)</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>BSONObj p <span style="color:#f92672">=</span> BSON( <span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;Methuselah&#34;</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;age&#34;</span> <span style="color:#f92672">&lt;&lt;</span> BSONNULL );
-</span></span><span style="display:flex;"><span><span style="color:#75715e">// result is: { name : &#34;Methuselah&#34;, age : null }
-</span></span></span></code></pre></div>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">BSONObj p <span style="color:#f92672">=</span> BSON( <span style="color:#e6db74">&#34;name&#34;</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;Methuselah&#34;</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#e6db74">&#34;age&#34;</span> <span style="color:#f92672">&lt;&lt;</span> BSONNULL );
+<span style="color:#75715e">// result is: { name : &#34;Methuselah&#34;, age : null }
+</span></code></pre></div>
 
 
 
