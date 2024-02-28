@@ -186,9 +186,9 @@ ${CMAKE_INSTALL_PREFIX}/
 
 The CMake package config files are the same as the regular (non-MSVC) shared library behavior described above.
 
-**NOTE:** CMake automatically handles selection of libraries according to build type, but does not enforce build type consistency when only one build type is installed. Installing _both_ debug and release configurations on Windows highly recommended for this reason. This does not extend to _all_ build configuration parameters.
+**NOTE:** CMake automatically handles selection of libraries according to build type, but does not enforce build type consistency when only one build type is installed. Installing _both_ Debug and Release configurations on Windows is highly recommended for this reason. (This note only applies to the build type configuration parameter).
 
-The name of the pkg-config file for CXX Driver libraries is the same as the regular (non-MSVC) shared library behavior described above.
+The name of the pkg-config file for CXX Driver libraries is the same as that for the regular (non-MSVC) shared library behavior described above.
 However, when `ENABLE_ABI_TAG_IN_PKGCONFIG_FILENAMES=ON`, the library output name is used as-if it were the basename for pkg-config files.
 For example, to obtain flags for the shared library `bsoncxx-v_noabi-rhs-x64-v142-md.dll`, the pkg-config command may look as follows when `ENABLE_ABI_TAG_IN_PKGCONFIG_FILENAMES=OFF` (the default):
 
@@ -202,7 +202,7 @@ or as follows when `ENABLE_ABI_TAG_IN_PKGCONFIG_FILENAMES=ON`:
 pkg-config --cflags "libbsoncxx-v_noabi-rhs-x64-v142-md"
 ```
 
-Setting `ENABLE_ABI_TAG_IN_PKGCONFIG_FILENAMES=ON` is recommended when expected parallel installation of the bsoncxx library with different build configurations (e.g. Debug vs. Release).
+Setting `ENABLE_ABI_TAG_IN_PKGCONFIG_FILENAMES=ON` is recommended when parallel installation of CXX Driver libraries with different build configurations (e.g. Debug vs. Release) is expected.
 However, using CMake package config files instead is most recommended.
 
 ### Static Libraries

@@ -61,7 +61,7 @@ Properties of the build system include:
 
 However, build system configuration variables that directly impact the public API are considered part of the public API.
 
-For example, C++17 polyfills declared in the `bsoncxx::stdx` namespace depend on configuration variables that determine the polyfill library used, e.g. `CMAKE_CXX_STANDARD`, `BSONCXX_POLY_USE_STD`, etc..
+For example, C++17 polyfills declared in the `bsoncxx::stdx` namespace depend on configuration variables that determine the polyfill library used, e.g. `CMAKE_CXX_STANDARD`, `BSONCXX_POLY_USE_STD`, etc.
 A build configuration using `CMAKE_CXX_STANDARD=17` produces a public API where `bsoncxx::stdx::optional<T> == std::optional<T>`.
 Because changing the type of `bsoncxx::stdx::optional<T>` such that it is no longer equivalent to `std::optional<T>` is a breaking change to the public API, changing the polyfill library selection behavior of `CMAKE_CXX_STANDARD` is also a breaking change to the public API.
 Therefore, `CMAKE_CXX_STANDARD` is considered part of the public API.

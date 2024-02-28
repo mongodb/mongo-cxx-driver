@@ -22,7 +22,7 @@ Per [CMake documentation](https://cmake.org/cmake/help/latest/prop_tgt/SOVERSION
 
 For purposes of ABI versioning, we distinguish between the _stable ABI_ and the _unstable ABI_.
 
-The ABI version number bumped whenever there is a backward incompatible change to the stable ABI as defined below.
+The ABI version number is bumped whenever there is a backward incompatible change to the stable ABI as defined below.
 
 **IMPORTANT:** Only the stability of the stable ABI is communicated by the ABI version number. Backward (in)compatible changes to the unstable ABI are not communicated by the ABI version number.
 
@@ -56,13 +56,13 @@ If there is a symbol that _should_ be exported or part of the stable ABI, but is
 
 **NOTE:** The _behavior_ of a stable ABI symbol is not considered part of the stable ABI. The stability of documented behavior is communicated by the API version number, not the ABI version number.
 
-**NOTE:** Some entities that are part of the public API may not be part of the stable ABI (e.g. inline functions, inline variables, and template instantiations of functions and variables). Conversely, some entities that are part of the ABI may not be part of the public API (e.g. an exported private member function). See [API Versioning]({{< relref "api-versioning" >}}).
+**NOTE:** Some entities that are part of the public API may not be part of the stable ABI (e.g. inline functions, inline variables, and template instantiations of functions and variables). Conversely, some entities that are part of the stable ABI may not be part of the public API (e.g. an exported private member function). See [API Versioning]({{< relref "api-versioning" >}}).
 
 ## Build System Compatibility
 
-The stable ABI policy concerning properties of the build system is mostly to that for the public API (see [Build System Compatibility]({{< relref "/api-versioning#build-system-compatibility" >}})) with the following differences:
+The stable ABI policy concerning properties of the build system is mostly the same as that for the public API (see [Build System Compatibility]({{< relref "/api-versioning#build-system-compatibility" >}})) with the following differences:
 
-* Instead of properties that directly impact the public API, properties that directly impact the stable ABI, are considered part of the stable ABI.
+* Instead of properties that directly impact the public API, properties that directly impact the stable ABI are considered part of the stable ABI.
 * **The soname is considered part of the stable ABI**. This means, in contrast to the public API, `BSONCXX_OUTPUT_NAME` is considered part of the stable ABI, as it directly impacts the soname of the resulting bsoncxx shared library.
 * The "soname" is not applicable on Windows. See [Shared Libraries (MSVC Only)]({{< relref "../api-abi-versioning#shared-libraries-msvc-only" >}}).
 
@@ -96,7 +96,7 @@ The following compatibility table describes when the API major version number or
 | Remove a `vA` symbol (from the stable ABI) | Maybe (2) | No |
 
 * (1): A `vB` entity could be 100% source compatible with the `vA` API despite requiring use of a new, incompatible stable ABI symbol.
-* (2): A stable ABI symbol could be removed from the public API (e.g. via documentation or removal from public headers) while still providing an exported symbol definition for backward compatibility. This is probably unlikely to happen, but if it does, it be a rare case where the source and binary incompatible changes can be split into separate releases.
+* (2): A stable ABI symbol could be removed from the public API (e.g. via documentation or removal from public headers) while still providing an exported symbol definition for backward compatibility. This is probably unlikely to happen, but if it does, it would be a rare case where the source and binary incompatible changes can be split into separate releases.
 
 **IMPORTANT:** The integer used by an ABI namespace does _NOT_ directly correspond to an ABI version number. The ABI version number is bumped whenever _any_ binary incompatible change occurs, even when it is the removal of a _single_ symbol from the stable ABI. An ABI version number bump from `A` to `B` does _NOT_ imply the deprecation or removal of symbols declared in the ABI namespace `vA` (if one exists).
 
@@ -105,4 +105,4 @@ The following compatibility table describes when the API major version number or
 The policy for deprecation and removal of symbols in the stable ABI is the same as that for the public API: see [Deprecation and Removal]({{< relref "api-versioning#deprecation-and-removal" >}}).
 
 A release containing binary incompatible changes will bump the ABI version number rather than the API major version number.
-However, it is likely that when the ABI version number is bumped, the API major version number will also be bumped, as most binary incompatible changes will likely also be a source incompatible change.
+However, it is likely that when the ABI version number is bumped, the API major version number will also be bumped, as a binary incompatible change is likely to also be a source incompatible change.
