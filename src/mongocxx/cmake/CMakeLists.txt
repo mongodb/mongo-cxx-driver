@@ -72,17 +72,17 @@ if(1)
         add_custom_command(
             OUTPUT ${pcfilename}
             COMMAND ${CMAKE_COMMAND}
-                -D src_dir="${CMAKE_CURRENT_SOURCE_DIR}"
-                -D bin_dir="${CMAKE_CURRENT_BINARY_DIR}"
-                -D prefix="${CMAKE_INSTALL_PREFIX}"
-                -D includedir="${CMAKE_INSTALL_INCLUDEDIR}"
-                -D libdir="${CMAKE_INSTALL_LIBDIR}"
-                -D output_name="${output_name}"
-                -D version="${MONGOCXX_VERSION}"
-                -D is_static="${is_static}"
-                -D bsoncxx_name="${bsoncxx_name}"
-                -D libmongoc_req_abi_ver="${LIBMONGOC_REQUIRED_ABI_VERSION}"
-                -D libmongoc_req_ver="${LIBMONGOC_REQUIRED_VERSION}"
+                -D "src_dir=${CMAKE_CURRENT_SOURCE_DIR}"
+                -D "bin_dir=${CMAKE_CURRENT_BINARY_DIR}"
+                -D "prefix=${CMAKE_INSTALL_PREFIX}"
+                -D "includedir=${CMAKE_INSTALL_INCLUDEDIR}"
+                -D "libdir=${CMAKE_INSTALL_LIBDIR}"
+                -D "output_name=${output_name}"
+                -D "version=${MONGOCXX_VERSION}"
+                -D "is_static=${is_static}"
+                -D "bsoncxx_name=${bsoncxx_name}"
+                -D "libmongoc_req_abi_ver=${LIBMONGOC_REQUIRED_ABI_VERSION}"
+                -D "libmongoc_req_ver=${LIBMONGOC_REQUIRED_VERSION}"
                 -P ${CMAKE_CURRENT_SOURCE_DIR}/generate-pc.cmake
             MAIN_DEPENDENCY
                 ${CMAKE_CURRENT_SOURCE_DIR}/libmongocxx.pc.in

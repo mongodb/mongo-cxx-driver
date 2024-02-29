@@ -84,17 +84,17 @@ if(1)
         add_custom_command(
             OUTPUT ${pcfilename}
             COMMAND ${CMAKE_COMMAND}
-                -D src_dir="${CMAKE_CURRENT_SOURCE_DIR}"
-                -D bin_dir="${CMAKE_CURRENT_BINARY_DIR}"
-                -D prefix="${CMAKE_INSTALL_PREFIX}"
-                -D includedir="${CMAKE_INSTALL_INCLUDEDIR}"
-                -D libdir="${CMAKE_INSTALL_LIBDIR}"
-                -D output_name="${output_name}"
-                -D version="${BSONCXX_VERSION}"
-                -D is_static="${is_static}"
-                -D libbson_req_abi_ver="${LIBBSON_REQUIRED_ABI_VERSION}"
-                -D libbson_req_ver="${LIBBSON_REQUIRED_VERSION}"
-                -D mnmlstc_enabled="${BSONCXX_POLY_MNMLSTC_ENABLED}"
+                -D "src_dir=${CMAKE_CURRENT_SOURCE_DIR}"
+                -D "bin_dir=${CMAKE_CURRENT_BINARY_DIR}"
+                -D "prefix=${CMAKE_INSTALL_PREFIX}"
+                -D "includedir=${CMAKE_INSTALL_INCLUDEDIR}"
+                -D "libdir=${CMAKE_INSTALL_LIBDIR}"
+                -D "output_name=${output_name}"
+                -D "version=${BSONCXX_VERSION}"
+                -D "is_static=${is_static}"
+                -D "libbson_req_abi_ver=${LIBBSON_REQUIRED_ABI_VERSION}"
+                -D "libbson_req_ver=${LIBBSON_REQUIRED_VERSION}"
+                -D "mnmlstc_enabled=${BSONCXX_POLY_MNMLSTC_ENABLED}"
                 -P ${CMAKE_CURRENT_SOURCE_DIR}/generate-pc.cmake
             MAIN_DEPENDENCY
                 ${CMAKE_CURRENT_SOURCE_DIR}/libbsoncxx.pc.in
