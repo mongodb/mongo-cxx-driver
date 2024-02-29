@@ -61,28 +61,38 @@ if(1)
 
         set(pcfilename "${CMAKE_CURRENT_BINARY_DIR}/lib${output_name}.pc")
 
-        if(LINK_TYPE STREQUAL "STATIC")
-            get_target_property(bsoncxx_name bsoncxx_static OUTPUT_NAME)
-            set(is_static 1)
+        if (ENABLE_ABI_TAG_IN_PKGCONFIG_FILENAMES)
+            if(LINK_TYPE STREQUAL "STATIC")
+                get_target_property(bsoncxx_name bsoncxx_static OUTPUT_NAME)
+                set(is_static 1)
+            else()
+                get_target_property(bsoncxx_name bsoncxx_shared OUTPUT_NAME)
+                set(is_static 0)
+            endif()
         else()
-            get_target_property(bsoncxx_name bsoncxx_shared OUTPUT_NAME)
-            set(is_static 0)
+            if(LINK_TYPE STREQUAL "STATIC")
+                set(bsoncxx_name "$CACHE{BSONCXX_OUTPUT_BASENAME}-static")
+                set(is_static 1)
+            else()
+                set(bsoncxx_name "$CACHE{BSONCXX_OUTPUT_BASENAME}")
+                set(is_static 0)
+            endif()
         endif()
 
         add_custom_command(
             OUTPUT ${pcfilename}
             COMMAND ${CMAKE_COMMAND}
-                -D src_dir="${CMAKE_CURRENT_SOURCE_DIR}"
-                -D bin_dir="${CMAKE_CURRENT_BINARY_DIR}"
-                -D prefix="${CMAKE_INSTALL_PREFIX}"
-                -D includedir="${CMAKE_INSTALL_INCLUDEDIR}"
-                -D libdir="${CMAKE_INSTALL_LIBDIR}"
-                -D output_name="${output_name}"
-                -D version="${MONGOCXX_VERSION}"
-                -D is_static="${is_static}"
-                -D bsoncxx_name="${bsoncxx_name}"
-                -D libmongoc_req_abi_ver="${LIBMONGOC_REQUIRED_ABI_VERSION}"
-                -D libmongoc_req_ver="${LIBMONGOC_REQUIRED_VERSION}"
+                -D "src_dir=${CMAKE_CURRENT_SOURCE_DIR}"
+                -D "bin_dir=${CMAKE_CURRENT_BINARY_DIR}"
+                -D "prefix=${CMAKE_INSTALL_PREFIX}"
+                -D "includedir=${CMAKE_INSTALL_INCLUDEDIR}"
+                -D "libdir=${CMAKE_INSTALL_LIBDIR}"
+                -D "output_name=${output_name}"
+                -D "version=${MONGOCXX_VERSION_NO_EXTRA}"
+                -D "is_static=${is_static}"
+                -D "bsoncxx_name=${bsoncxx_name}"
+                -D "libmongoc_req_abi_ver=${LIBMONGOC_REQUIRED_ABI_VERSION}"
+                -D "libmongoc_req_ver=${LIBMONGOC_REQUIRED_VERSION}"
                 -P ${CMAKE_CURRENT_SOURCE_DIR}/generate-pc.cmake
             MAIN_DEPENDENCY
                 ${CMAKE_CURRENT_SOURCE_DIR}/libmongocxx.pc.in
