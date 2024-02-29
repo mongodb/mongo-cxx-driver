@@ -90,7 +90,7 @@ if(1)
                 -D "includedir=${CMAKE_INSTALL_INCLUDEDIR}"
                 -D "libdir=${CMAKE_INSTALL_LIBDIR}"
                 -D "output_name=${output_name}"
-                -D "version=${BSONCXX_VERSION}"
+                -D "version=${BSONCXX_VERSION_NO_EXTRA}"
                 -D "is_static=${is_static}"
                 -D "libbson_req_abi_ver=${LIBBSON_REQUIRED_ABI_VERSION}"
                 -D "libbson_req_ver=${LIBBSON_REQUIRED_VERSION}"

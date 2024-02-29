@@ -88,7 +88,7 @@ if(1)
                 -D "includedir=${CMAKE_INSTALL_INCLUDEDIR}"
                 -D "libdir=${CMAKE_INSTALL_LIBDIR}"
                 -D "output_name=${output_name}"
-                -D "version=${MONGOCXX_VERSION}"
+                -D "version=${MONGOCXX_VERSION_NO_EXTRA}"
                 -D "is_static=${is_static}"
                 -D "bsoncxx_name=${bsoncxx_name}"
                 -D "libmongoc_req_abi_ver=${LIBMONGOC_REQUIRED_ABI_VERSION}"
