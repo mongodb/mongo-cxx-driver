@@ -93,16 +93,15 @@ function(bsoncxx_add_library TARGET OUTPUT_NAME LINK_TYPE)
             if(1)
                 get_target_property(runtime ${TARGET} MSVC_RUNTIME_LIBRARY)
 
+                set(runtime_str "")
+
                 if(runtime)
-                    if(runtime STREQUAL "MultiThreaded")
-                        set(runtime_str "mt")
-                    elseif(runtime STREQUAL "MultiThreadedDebug")
-                        set(runtime_str "mtd")
-                    elseif(runtime STREQUAL "MultiThreadedDLL")
-                        set(runtime_str "md")
-                    elseif(runtime STREQUAL "MultiThreadedDebugDLL")
-                        set(runtime_str "mdd")
-                    endif()
+                    # MSVC_RUNTIME_LIBRARY may contain generator expressions.
+                    # Therefore the comparison must be evaluated during the build generation step.
+                    string(APPEND runtime_str "$<$<STREQUAL:${runtime},MultiThreaded>:mt>")
+                    string(APPEND runtime_str "$<$<STREQUAL:${runtime},MultiThreadedDebug>:mtd>")
+                    string(APPEND runtime_str "$<$<STREQUAL:${runtime},MultiThreadedDLL>:md>")
+                    string(APPEND runtime_str "$<$<STREQUAL:${runtime},MultiThreadedDebugDLL>:mdd>")
                 else()
                     # Per CMake documentation: if MSVC_RUNTIME_LIBRARY is not set, then
                     # CMake uses the default value MultiThreaded$<$<CONFIG:Debug>:Debug>DLL
