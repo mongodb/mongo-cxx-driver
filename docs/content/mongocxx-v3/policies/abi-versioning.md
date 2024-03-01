@@ -79,8 +79,8 @@ For example, all of the following redeclarations may be present simultaneously:
 * `bsoncxx::example::baz` -> `bsoncxx::v2::example::baz`
 
 Root namespace redeclarations are designed to allow for the addition of binary incompatible symbols in `vB` without breaking binary compatibility of `vA` symbols.
-They faciliate the deprecation of stable ABI symbols while providing the opportunity for a clean transition from `vA` to `vB` without breaking binary compatibility.
-They allow user code to opt into "redeclaration upgrades" that reduces require changes to source code when transitioning from `vA` to `vB`.
+They facilitate the deprecation of stable ABI symbols while providing the opportunity for a clean transition from `vA` to `vB` without breaking binary compatibility.
+They allow user code to opt into "redeclaration upgrades" that reduces required changes to source code when transitioning from `vA` to `vB`.
 
 These redeclaration upgrades are intended to support a clean transition away from deprecated, to-be-removed ABI symbols across releases.
 Accordingly, users are encouraged to use the root namespace declarations by default to opt into these upgrades.

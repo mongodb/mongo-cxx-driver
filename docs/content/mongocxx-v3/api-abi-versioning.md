@@ -113,7 +113,7 @@ cmake -S example -B example-build -D bsoncxx_ROOT="$INSTALLDIR"
 Although the CXX Driver also provides pkg-config files, users are strongly encouraged to use CMake package config files instead.
 
 The name of the pkg-config file for bsoncxx libraries is also controlled by `BSONCXX_OUTPUT_NAME` and follow the pattern `lib<basename>.pc`.
-Because the CXX Driver does not install pkg-config files to typical pkg-config system directories, the `PKG_CONFIG_PATH` environment variable may need to be used to augment pkg-config's search path, e.g.:
+The `PKG_CONFIG_PATH` environment variable may need to be used to augment pkg-config's search path, e.g.:
 
 ```bash
 bsoncxx_cflags="$(PKG_CONFIG_PATH="$INSTALLDIR" pkg-config --cflags "libbsoncxx >= 1.2.3")"
@@ -237,7 +237,7 @@ ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_LIBDIR}/
 
 ### Static Libraries (MSVC Only)
 
-The name of static libraries use the same pattern as regular (non-MSVC) static library behavior described above, but uses `static` as `<abi-version-number>` and the library output name as-if it were the basename.
+The name of static libraries use the same pattern as MSVC shared library behavior described above, but uses `static` as the `<abi-version-number>` and the library output name as-if it were the basename.
 
 For example, the following install prefix directory contains the expected shared _and_ static library files for a bsoncxx library (the bin directory is included to account for `.dll` files):
 
