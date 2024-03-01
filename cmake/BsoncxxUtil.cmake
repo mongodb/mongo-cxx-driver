@@ -93,10 +93,11 @@ function(bsoncxx_add_library TARGET OUTPUT_NAME LINK_TYPE)
             if(1)
                 get_target_property(runtime ${TARGET} MSVC_RUNTIME_LIBRARY)
 
+                set(runtime_str "")
+
                 if(runtime)
                     # MSVC_RUNTIME_LIBRARY may contain generator expressions.
                     # Therefore the comparison must be evaluated during the build generation step.
-                    set(runtime_str "")
                     string(APPEND runtime_str "$<$<STREQUAL:${runtime},MultiThreaded>:mt>")
                     string(APPEND runtime_str "$<$<STREQUAL:${runtime},MultiThreadedDebug>:mtd>")
                     string(APPEND runtime_str "$<$<STREQUAL:${runtime},MultiThreadedDLL>:md>")
