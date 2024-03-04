@@ -210,6 +210,9 @@ pushed.
 
 ## Update CHANGELOG.md for next release
 
+CHANGELOG.md on the `master` branch contains sections for every release. This is intended to ease searching for changes among all releases.
+CHANGELOG.md on a release branch (e.g. `releases/v1.2`) contains entries for all prior releases, and all patch releases on the `releases/v1.2` branch.
+
 ### For a minor release (e.g. r1.2.0):
 
 Open a PR to the master branch to add a new empty `[Unreleased]` section to the CHANGELOG.md for the next minor release and next patch release. Example:
