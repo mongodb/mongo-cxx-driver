@@ -212,26 +212,40 @@ pushed.
 
 ### For a minor release (e.g. r1.2.0):
 
-Open a PR to the master branch to add a new empty `[Unreleased]` section to the CHANGELOG.md for the next minor release. Example:
+Open a PR to the master branch to add a new empty `[Unreleased]` section to the CHANGELOG.md for the next minor release and next patch release. Example:
 
 ```md
 ## 1.3.0 [Unreleased]
+
+<!-- Will contain entries for 1.3.0 release. -->
+
+## 1.2.1 [Unreleased]
+
+<!-- Will contain entries for 1.2.1 release. Entries are implicitly included in 1.3.0 release. -->
+
 ```
 
 Open a PR to the release branch (e.g. `releases/v1.2`) to add a new empty `[Unreleased]` section to the CHANGELOG.md for the next patch release. Example:
 
 ```md
 ## 1.2.1 [Unreleased]
+
+<!-- Will contain entries for 1.2.1 release. -->
 ```
 
 ### For a patch release (e.g. r1.2.3):
 
-Open a PR to the `master` branch to add the notes of the recent release (`r1.2.3`) to the `master` branch. This is intended to keep release notes for all releases in master for easier searching.
+Open a PR to the `master` branch to remove `[Unreleased]` from the recently released version, and add a `[Unreleased]` section for the next patch release. Example:
+```md
+## 1.2.4 [Unreleased]
+<!-- Will contain entries for 1.2.4 release. -->
+## 1.2.3
 
 Open a PR to the release branch (e.g. `releases/v1.2`) branch to add a new empty `[Unreleased]` section to the CHANGELOG.md for the next patch release. Example:
 
 ```md
 ## 1.2.4 [Unreleased]
+<!-- Will contain entries for 1.2.4 release. -->
 ```
 
 ## Homebrew
