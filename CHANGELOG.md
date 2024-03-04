@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Changes prior to 3.9.0 are documented as [release notes on GitHub](https://github.com/mongodb/mongo-cxx-driver/releases).
 
+## 3.10.1 [Unreleased]
+
+### Fixed
+- Fix bsoncxx package name in pkg-config requires field when `ENABLE_ABI_TAG_IN_LIBRARY_FILENAMES=ON`.
+- Support generator expressions in `MSVC_RUNTIME_LIBRARY` for ABI tag string.
+
 ## 3.10.0
 
 ### Added
