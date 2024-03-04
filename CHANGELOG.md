@@ -9,7 +9,7 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 
 ## 3.11.0 [Unreleased]
 
-(TODO: add entries for the 3.11.0 release)
+<!-- Will contain entries for the 3.11.0 release. -->
 
 ## 3.10.1 [Unreleased]
 
