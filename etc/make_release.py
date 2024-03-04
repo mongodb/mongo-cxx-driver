@@ -496,9 +496,10 @@ def get_jira_project_versions(auth_jira):
 def get_all_issues_for_version(auth_jira, release_version):
     """
     Return a list of all issues in the project assigned to the given release.
+    Excludes the ticket created to track the release itself.
     """
 
-    jql_query = 'project={} and fixVersion={} ORDER BY issueKey ASC'\
+    jql_query = 'project={} and fixVersion={} and (labels IS EMPTY OR labels != release) ORDER BY issueKey ASC'\
             .format(str(CXX_PROJ_ID), release_version)
     return auth_jira.search_issues(jql_query, maxResults=0)
 
