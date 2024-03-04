@@ -63,8 +63,9 @@ the instructions. If doing a patch release (e.g. releasing rX.Y.Z with non-zero
 `Z`), check out the corresponding release branch, which should be an existing
 `releases/vX.Y` branch.
 
-Check Jira for tickets closed in this fix version. Consider updating CHANGELOG.md
-with notable changes not already mentioned.
+Check Jira for tickets closed in this fix version. Update CHANGELOG.md
+with notable changes not already mentioned. Update CHANGELOG.md to remove
+the text `[Unreleased]` for the title of this release. Commit this change.
 
 Create a tag for the commit to serve as the release (or release candidate):
 
@@ -206,6 +207,32 @@ pushed.
 - Checkout the master branch. Push the commit containing changes to `etc/` and
   `docs/`. This may require pushing the commit to a fork of the C++ Driver
   repository and creating a pull request.
+
+## Update CHANGELOG.md for next release
+
+### For a minor release (e.g. r1.2.0):
+
+Open a PR to the master branch to add a new empty `[Unreleased]` section to the CHANGELOG.md for the next minor release. Example:
+
+```md
+## 1.3.0 [Unreleased]
+```
+
+Open a PR to the release branch (e.g. `releases/v1.2`) to add a new empty `[Unreleased]` section to the CHANGELOG.md for the next patch release. Example:
+
+```md
+## 1.2.1 [Unreleased]
+```
+
+### For a patch release (e.g. r1.2.3):
+
+Open a PR to the `master` branch to add the notes of the recent release (`r1.2.3`) to the `master` branch. This is intended to keep release notes for all releases in master for easier searching.
+
+Open a PR to the release branch (e.g. `releases/v1.2`) branch to add a new empty `[Unreleased]` section to the CHANGELOG.md for the next patch release. Example:
+
+```md
+## 1.2.4 [Unreleased]
+```
 
 ## Homebrew
 This requires a macOS machine.
