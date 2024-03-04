@@ -9,8 +9,6 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 
 ## 3.11.0 [Unreleased]
 
-## 3.10.1 [Unreleased]
-
 ### Fixed
 
 - (MSVC only) The name of the libbsoncxx package in the "Requires" field of the libmongocxx pkg-config file incorrectly used the library output name instead of the pkg-config package name when `ENABLE_ABI_TAG_IN_PKGCONFIG_FILENAMES=OFF`.
