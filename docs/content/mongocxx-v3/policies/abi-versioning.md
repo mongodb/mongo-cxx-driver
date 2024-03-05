@@ -48,6 +48,8 @@ The _stable ABI_ is the set of exported symbols that are used by the public API 
 
 Including these exceptions, all other exported symbols are considered to be part of the _unstable ABI_.
 
+Only symbols whose corresponding API entity is explicitly declared with an export macro are exported, as controlled by the [`CXX_VISIBILITY_PRESET`](https://cmake.org/cmake/help/latest/prop_tgt/LANG_VISIBILITY_PRESET.html) target property. Additionally, entities that are declared `inline`, either explicitly (e.g. with `inline`) or implicitly (e.g. member function definitions in class definitions, variable/function template instantiations, etc.) are _not_ exported, as controlled by the [`VISIBILITY_INLINES_HIDDEN`](https://cmake.org/cmake/help/latest/prop_tgt/VISIBILITY_INLINES_HIDDEN.html) target property.
+
 If there is a symbol that _should_ be exported or part of the stable ABI, but is currently not, please submit a bug report.
 
 **IMPORTANT:** Direct use of exported symbols that bypasses the public API is not supported. All exported symbols (stable or unstable) must be used via the public API. If there is a symbol that _should_ be exported or part of the stable ABI, but is currently not, please submit a bug report.
