@@ -15,8 +15,8 @@
       <guid>https://mongocxx.org/mongocxx-v3/installation/windows/</guid>
       <description>Step 1: Choose a C++17 polyfill First, choose a C++17 polyfill library.
 Step 2: Download the latest version of the mongocxx driver. The most reliable starting point for building the mongocxx driver is the latest release tarball.
-The mongocxx releases page will have links to the release tarball for the version you wish you install. For example, to download version 3.10.0:
-curl -OL https://github.com/mongodb/mongo-cxx-driver/releases/download/r3.10.0/mongo-cxx-driver-r3.10.0.tar.gz tar -xzf mongo-cxx-driver-r3.10.0.tar.gz cd mongo-cxx-driver-r3.10.0/build Make sure you change to the build directory of whatever source tree you obtain.</description>
+The mongocxx releases page will have links to the release tarball for the version you wish you install. For example, to download version 3.10.1:
+curl -OL https://github.com/mongodb/mongo-cxx-driver/releases/download/r3.10.1/mongo-cxx-driver-r3.10.1.tar.gz tar -xzf mongo-cxx-driver-r3.10.1.tar.gz cd mongo-cxx-driver-r3.10.1/build Make sure you change to the build directory of whatever source tree you obtain.</description>
     </item>
     
     <item>
@@ -27,8 +27,8 @@ curl -OL https://github.com/mongodb/mongo-cxx-driver/releases/download/r3.10.0/m
       <guid>https://mongocxx.org/mongocxx-v3/installation/macos/</guid>
       <description>Step 1: Choose a C++17 polyfill First, choose a C++17 polyfill library.
 Step 2: Download the latest version of the mongocxx driver. The most reliable starting point for building the mongocxx driver is the latest release tarball.
-The mongocxx releases page will have links to the release tarball for the version you wish you install. For example, to download version 3.10.0:
-curl -OL https://github.com/mongodb/mongo-cxx-driver/releases/download/r3.10.0/mongo-cxx-driver-r3.10.0.tar.gz tar -xzf mongo-cxx-driver-r3.10.0.tar.gz cd mongo-cxx-driver-r3.10.0/build Make sure you change to the build directory of whatever source tree you obtain.</description>
+The mongocxx releases page will have links to the release tarball for the version you wish you install. For example, to download version 3.10.1:
+curl -OL https://github.com/mongodb/mongo-cxx-driver/releases/download/r3.10.1/mongo-cxx-driver-r3.10.1.tar.gz tar -xzf mongo-cxx-driver-r3.10.1.tar.gz cd mongo-cxx-driver-r3.10.1/build Make sure you change to the build directory of whatever source tree you obtain.</description>
     </item>
     
     <item>
@@ -39,8 +39,8 @@ curl -OL https://github.com/mongodb/mongo-cxx-driver/releases/download/r3.10.0/m
       <guid>https://mongocxx.org/mongocxx-v3/installation/linux/</guid>
       <description>Step 1: Choose a C++17 polyfill First, choose a C++17 polyfill library.
 Step 2: Download the latest version of the mongocxx driver. The most reliable starting point for building the mongocxx driver is the latest release tarball.
-The mongocxx releases page will have links to the release tarball for the version you wish you install. For example, to download version 3.10.0:
-curl -OL https://github.com/mongodb/mongo-cxx-driver/releases/download/r3.10.0/mongo-cxx-driver-r3.10.0.tar.gz tar -xzf mongo-cxx-driver-r3.10.0.tar.gz cd mongo-cxx-driver-r3.10.0/build Make sure you change to the build directory of whatever source tree you obtain.</description>
+The mongocxx releases page will have links to the release tarball for the version you wish you install. For example, to download version 3.10.1:
+curl -OL https://github.com/mongodb/mongo-cxx-driver/releases/download/r3.10.1/mongo-cxx-driver-r3.10.1.tar.gz tar -xzf mongo-cxx-driver-r3.10.1.tar.gz cd mongo-cxx-driver-r3.10.1/build Make sure you change to the build directory of whatever source tree you obtain.</description>
     </item>
     
     <item>
@@ -50,7 +50,7 @@ curl -OL https://github.com/mongodb/mongo-cxx-driver/releases/download/r3.10.0/m
       
       <guid>https://mongocxx.org/mongocxx-v3/installation/advanced/</guid>
       <description>Additional Options for Integrators In the event that you are building the BSON C++ library and/or the C++ driver to embed with other components and you wish to avoid the potential for collision with components installed from a standard build or from a distribution package manager, you can make use of the BSONCXX_OUTPUT_BASENAME and MONGOCXX_OUTPUT_BASENAME options to cmake.
-cmake .. \  -DBSONCXX_OUTPUT_BASENAME=custom_bsoncxx \  -DMONGOCXX_OUTPUT_BASENAME=custom_mongocxx The above command would produce libraries named libcustom_bsoncxx.</description>
+cmake .. \ -DBSONCXX_OUTPUT_BASENAME=custom_bsoncxx \ -DMONGOCXX_OUTPUT_BASENAME=custom_mongocxx The above command would produce libraries named libcustom_bsoncxx.</description>
     </item>
     
   </channel>

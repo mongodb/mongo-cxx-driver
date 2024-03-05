@@ -1399,45 +1399,45 @@ the connection string, or by creating a
 object and passing it to <code>tls_opts</code> on mongocxx::options::client.</p>
 <p>For example, to use a custom CA or to disable certificate validation,
 see the following example:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp">
-<span style="color:#75715e">// 1) Using tls_options
-</span><span style="color:#75715e"></span>mongocxx<span style="color:#f92672">::</span>options<span style="color:#f92672">::</span>client client_options;
-mongocxx<span style="color:#f92672">::</span>options<span style="color:#f92672">::</span>tls tls_options;
-
-<span style="color:#75715e">// If the server certificate is not signed by a well-known CA,
-</span><span style="color:#75715e">// you can set a custom CA file with the `ca_file` option.
-</span><span style="color:#75715e"></span>tls_options.ca_file(<span style="color:#e6db74">&#34;/path/to/custom/cert.pem&#34;</span>);
-
-<span style="color:#75715e">// If you want to disable certificate verification, you
-</span><span style="color:#75715e">// can set the `allow_invalid_certificates` option.
-</span><span style="color:#75715e"></span>tls_options.allow_invalid_certificates(true);
-
-client_options.tls_opts(tls_options);
-<span style="color:#66d9ef">auto</span> client1 <span style="color:#f92672">=</span> mongocxx<span style="color:#f92672">::</span>client{uri{<span style="color:#e6db74">&#34;mongodb://host1/?tls=true&#34;</span>}, client_options};
-
-<span style="color:#75715e">// 2) Using the URI
-</span><span style="color:#75715e"></span><span style="color:#66d9ef">auto</span> client2 <span style="color:#f92672">=</span> mongocxx<span style="color:#f92672">::</span>client{uri{<span style="color:#e6db74">&#34;mongodb://host1/?tls=true&amp;tlsAllowInvalidCertificates=true&amp;tlsCAFile=/path/to/custom/cert.pem&#34;</span>}};
-</code></pre></div><h2 id="configuring-authentication">Configuring authentication</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// 1) Using tls_options
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>mongocxx<span style="color:#f92672">::</span>options<span style="color:#f92672">::</span>client client_options;
+</span></span><span style="display:flex;"><span>mongocxx<span style="color:#f92672">::</span>options<span style="color:#f92672">::</span>tls tls_options;
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// If the server certificate is not signed by a well-known CA,
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// you can set a custom CA file with the `ca_file` option.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>tls_options.ca_file(<span style="color:#e6db74">&#34;/path/to/custom/cert.pem&#34;</span>);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// If you want to disable certificate verification, you
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">// can set the `allow_invalid_certificates` option.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>tls_options.allow_invalid_certificates(true);
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>client_options.tls_opts(tls_options);
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">auto</span> client1 <span style="color:#f92672">=</span> mongocxx<span style="color:#f92672">::</span>client{uri{<span style="color:#e6db74">&#34;mongodb://host1/?tls=true&#34;</span>}, client_options};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span><span style="color:#75715e">// 2) Using the URI
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span><span style="color:#66d9ef">auto</span> client2 <span style="color:#f92672">=</span> mongocxx<span style="color:#f92672">::</span>client{uri{<span style="color:#e6db74">&#34;mongodb://host1/?tls=true&amp;tlsAllowInvalidCertificates=true&amp;tlsCAFile=/path/to/custom/cert.pem&#34;</span>}};
+</span></span></code></pre></div><h2 id="configuring-authentication">Configuring authentication</h2>
 <h3 id="default-authentication-mechanism">Default authentication mechanism</h3>
 <p>MongoDB 3.0 changed the default authentication mechanism from MONGODB-CR
 to SCRAM-SHA-1. To create a credential that will authenticate properly
 regardless of server version, use a connection string with the user and
 password directly in the URI and with a parameter specifying the database
 to authenticate from:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;mongocxx/client.hpp&gt;</span><span style="color:#75715e">
-</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;mongocxx/uri.hpp&gt;</span><span style="color:#75715e">
-</span><span style="color:#75715e"></span>
-<span style="color:#66d9ef">auto</span> client <span style="color:#f92672">=</span> mongocxx<span style="color:#f92672">::</span>client{uri{<span style="color:#e6db74">&#34;mongodb://user1:pwd1@host1/?authSource=db1&#34;</span>}};
-</code></pre></div><h3 id="scram-sha-1">SCRAM-SHA-1</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;mongocxx/client.hpp&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;mongocxx/uri.hpp&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">auto</span> client <span style="color:#f92672">=</span> mongocxx<span style="color:#f92672">::</span>client{uri{<span style="color:#e6db74">&#34;mongodb://user1:pwd1@host1/?authSource=db1&#34;</span>}};
+</span></span></code></pre></div><h3 id="scram-sha-1">SCRAM-SHA-1</h3>
 <p>To explicitly create a credential of type SCRAM-SHA-1 use a connection
 string as above but with a parameter specifying the authentication
 mechanism as &ldquo;SCRAM-SHA-1&rdquo;:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;mongocxx/client.hpp&gt;</span><span style="color:#75715e">
-</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;mongocxx/uri.hpp&gt;</span><span style="color:#75715e">
-</span><span style="color:#75715e"></span>
-<span style="color:#66d9ef">auto</span> client <span style="color:#f92672">=</span> mongocxx<span style="color:#f92672">::</span>client{
-    uri{<span style="color:#e6db74">&#34;mongodb://user1:pwd1@host1/?authSource=db1&amp;authMechanism=SCRAM-SHA-1&#34;</span>}};
-</code></pre></div><h3 id="mongodb-cr">MONGODB-CR</h3>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;mongocxx/client.hpp&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;mongocxx/uri.hpp&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">auto</span> client <span style="color:#f92672">=</span> mongocxx<span style="color:#f92672">::</span>client{
+</span></span><span style="display:flex;"><span>    uri{<span style="color:#e6db74">&#34;mongodb://user1:pwd1@host1/?authSource=db1&amp;authMechanism=SCRAM-SHA-1&#34;</span>}};
+</span></span></code></pre></div><h3 id="mongodb-cr">MONGODB-CR</h3>
 <p>The MONGODB-CR authMechanism is deprecated and will no longer function in MongoDB 4.0. Instead, specify no authMechanism and the driver
 will use an authentication mechanism compatible with your server.</p>
 <h3 id="x509">X.509</h3>
@@ -1450,12 +1450,12 @@ and newer. To create a credential of this type, use a connection string with a
 parameter that specifies the authentication mechanism as &ldquo;MONGODB-X509&rdquo;,
 that specifies the path to the PEM file containing the client private key
 and certificate, and that has TLS enabled:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;mongocxx/client.hpp&gt;</span><span style="color:#75715e">
-</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;mongocxx/uri.hpp&gt;</span><span style="color:#75715e">
-</span><span style="color:#75715e"></span>
-<span style="color:#66d9ef">auto</span> client <span style="color:#f92672">=</span> mongocxx<span style="color:#f92672">::</span>client{
-    uri{<span style="color:#e6db74">&#34;mongodb://host1/?authMechanism=MONGODB-X509&amp;tlsCertificateFile=client.pem&amp;tls=true&#34;</span>}};
-</code></pre></div><p>See the MongoDB server
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;mongocxx/client.hpp&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;mongocxx/uri.hpp&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">auto</span> client <span style="color:#f92672">=</span> mongocxx<span style="color:#f92672">::</span>client{
+</span></span><span style="display:flex;"><span>    uri{<span style="color:#e6db74">&#34;mongodb://host1/?authMechanism=MONGODB-X509&amp;tlsCertificateFile=client.pem&amp;tls=true&#34;</span>}};
+</span></span></code></pre></div><p>See the MongoDB server
 <a href="https://www.mongodb.com/docs/manual/tutorial/configure-x509-client-authentication/">X.509 tutorial</a>
 for more information about determining the subject name from the
 certificate.</p>
@@ -1467,12 +1467,12 @@ supports proxy authentication through Kerberos service. To create a
 credential of type <a href="https://www.mongodb.com/docs/manual/core/kerberos/">Kerberos (GSSAPI)</a>
 use a connection string with the username and realm in the URI as well as
 a parameter specifying the authentication mechanism as &ldquo;GSSAPI&rdquo;:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;mongocxx/client.hpp&gt;</span><span style="color:#75715e">
-</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;mongocxx/uri.hpp&gt;</span><span style="color:#75715e">
-</span><span style="color:#75715e"></span>
-<span style="color:#66d9ef">auto</span> client <span style="color:#f92672">=</span> mongocxx<span style="color:#f92672">::</span>client{
-    uri{<span style="color:#e6db74">&#34;mongodb://username%40REALM.COM@host1/?authMechanism=GSSAPI&#34;</span>}};
-</code></pre></div><p>Note that the &ldquo;@&rdquo; symbol in the URI must be escaped to &ldquo;%40&rdquo; as shown in the example above.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;mongocxx/client.hpp&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;mongocxx/uri.hpp&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">auto</span> client <span style="color:#f92672">=</span> mongocxx<span style="color:#f92672">::</span>client{
+</span></span><span style="display:flex;"><span>    uri{<span style="color:#e6db74">&#34;mongodb://username%40REALM.COM@host1/?authMechanism=GSSAPI&#34;</span>}};
+</span></span></code></pre></div><p>Note that the &ldquo;@&rdquo; symbol in the URI must be escaped to &ldquo;%40&rdquo; as shown in the example above.</p>
 <h3 id="ldap">LDAP</h3>
 <p><a href="https://www.mongodb.com/products/mongodb-enterprise">MongoDB Enterprise</a>
 supports proxy authentication through a Lightweight Directory Access
@@ -1480,29 +1480,29 @@ Protocol (LDAP) service. To create a credential of type LDAP use a
 connection string specifying the user as well as parameters specifying
 the authentication source as &ldquo;$external&rdquo; and the authentication mechanishm
 as &ldquo;PLAIN&rdquo;:</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;mongocxx/client.hpp&gt;</span><span style="color:#75715e">
-</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;mongocxx/uri.hpp&gt;</span><span style="color:#75715e">
-</span><span style="color:#75715e"></span>
-<span style="color:#66d9ef">auto</span> client <span style="color:#f92672">=</span> mongocxx<span style="color:#f92672">::</span>client{
-    uri{<span style="color:#e6db74">&#34;mongodb://user1:pwd1@host1/?authSource=$external&amp;authMechanism=PLAIN&#34;</span>}};
-</code></pre></div><h2 id="configuring-a-connection-pool">Configuring a connection pool</h2>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;mongocxx/client.hpp&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;mongocxx/uri.hpp&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">auto</span> client <span style="color:#f92672">=</span> mongocxx<span style="color:#f92672">::</span>client{
+</span></span><span style="display:flex;"><span>    uri{<span style="color:#e6db74">&#34;mongodb://user1:pwd1@host1/?authSource=$external&amp;authMechanism=PLAIN&#34;</span>}};
+</span></span></code></pre></div><h2 id="configuring-a-connection-pool">Configuring a connection pool</h2>
 <p>To configure a connection pool, first create a <code>mongocxx::pool</code>, passing
 the URI as an argument. The size of the pool can be configured in the URI.
 Then, call <code>mongocxx::pool::acquire</code> to receive a client from the pool.
 The client will automatically be returned to the pool when it goes out of
 scope.</p>
-<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-cpp" data-lang="cpp"><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;mongocxx/pool.hpp&gt;</span><span style="color:#75715e">
-</span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;mongocxx/uri.hpp&gt;</span><span style="color:#75715e">
-</span><span style="color:#75715e"></span>
-<span style="color:#66d9ef">auto</span> pool <span style="color:#f92672">=</span> mongocxx<span style="color:#f92672">::</span>pool{uri{<span style="color:#e6db74">&#34;mongodb://host1/?minPoolSize=3&amp;maxPoolSize=5&#34;</span>}};
-
-{
-    <span style="color:#75715e">// To get a client from the pool, call `acquire()`.
-</span><span style="color:#75715e"></span>    <span style="color:#66d9ef">auto</span> client <span style="color:#f92672">=</span> pool.acquire();
-
-    <span style="color:#75715e">// The client is returned to the pool when it goes out of scope.
-</span><span style="color:#75715e"></span>}
-</code></pre></div><p>See <a href="../connection-pools">connection pool documentation</a> for more details.</p>
+<div class="highlight"><pre tabindex="0" style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4;"><code class="language-cpp" data-lang="cpp"><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;mongocxx/pool.hpp&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e">#include</span> <span style="color:#75715e">&lt;mongocxx/uri.hpp&gt;</span><span style="color:#75715e">
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>
+</span></span><span style="display:flex;"><span><span style="color:#66d9ef">auto</span> pool <span style="color:#f92672">=</span> mongocxx<span style="color:#f92672">::</span>pool{uri{<span style="color:#e6db74">&#34;mongodb://host1/?minPoolSize=3&amp;maxPoolSize=5&#34;</span>}};
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>{
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// To get a client from the pool, call `acquire()`.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>    <span style="color:#66d9ef">auto</span> client <span style="color:#f92672">=</span> pool.acquire();
+</span></span><span style="display:flex;"><span>
+</span></span><span style="display:flex;"><span>    <span style="color:#75715e">// The client is returned to the pool when it goes out of scope.
+</span></span></span><span style="display:flex;"><span><span style="color:#75715e"></span>}
+</span></span></code></pre></div><p>See <a href="../connection-pools">connection pool documentation</a> for more details.</p>
 <h2 id="compressing-data-to-and-from-mongodb">Compressing data to and from MongoDB</h2>
 <p>MongoDB 3.4 added Snappy compression support, while zlib compression was added
 in 3.6, and zstd compression in 4.2.</p>
