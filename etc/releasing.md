@@ -197,12 +197,12 @@ git push -f origin releases/stable
 ## Branch if necessary
 
 If doing a new minor release `x.y.0` (e.g. a `1.2.0` release), create branch
-`releases/vx.y`  (e.g `releases/v3.8`).
+`releases/vx.y`  (e.g `releases/v1.2`).
 
 Push the new branch:
 
 ```
-git push --set-upstream origin releases/v3.8
+git push --set-upstream origin releases/v1.2
 ```
 
 The new branch should be continuously tested on Evergreen. Create a BUILD ticket
