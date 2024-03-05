@@ -214,7 +214,7 @@ to request the build team create new Evergreen project to track the
 Documentation generation must be run after the release tag has been made and
 pushed.
 
-- Checkout the master branch.
+- Checkout the master branch. Create a new branch to contain documentation updates: `git checkout -b post-release-changes`. This branch will be used to create a PR later.
 - Edit `etc/apidocmenu.md` and add the released version in the `mongocxx` column
   following the established pattern. If this is a minor release (x.y.0), revise
   the entire document as needed.
@@ -253,53 +253,50 @@ pushed.
     stable release branch.
   - Commit and push the symlink change:
     `git commit -am "Update symlink for r1.2.3"`
+   - Switch back to the branch with documentation updates: `git checkout post-release-changes`.
 - Wait a few minutes and verify mongocxx.org has updated.
 - Checkout the master branch. Push the commit containing changes to `etc/` and
   `docs/`. This may require pushing the commit to a fork of the C++ Driver
   repository and creating a pull request.
 
-## Update CHANGELOG.md for next release
+## Update CHANGELOG.md post-release ...
 
 CHANGELOG.md on the `master` branch contains sections for every release. This is intended to ease searching for changes among all releases.
 CHANGELOG.md on a release branch (e.g. `releases/v1.2`) contains entries for patch releases of the minor version number tracked by the release branch (e.g. for 1.2.1, 1.2.2, 1.2.3, etc.), as well as all entries prior to the initial minor release (e.g. before 1.2.0).
 
-### For a minor release (e.g. r1.2.0):
+### ... on the `master` branch
 
-Open a PR to the master branch to add a new empty `[Unreleased]` section to the CHANGELOG.md for the next minor release and next patch release. Example:
+Check out the `post-release-changes` branch created before.
+
+Ensure `[Unreleased]` is removed from the recently released section.
+
+Ensure there are `[Unreleased]` sections for the next minor and patch releases. Example (if `1.2.3` was just released):
 
 ```md
 ## 1.3.0 [Unreleased]
-
-<!-- Will contain entries for 1.3.0 release. -->
-
-## 1.2.1 [Unreleased]
-
-<!-- Will contain entries for 1.2.1 release. Entries are implicitly included in 1.3.0 release. -->
-
-```
-
-Open a PR to the release branch (e.g. `releases/v1.2`) to add a new empty `[Unreleased]` section to the CHANGELOG.md for the next patch release. Example:
-
-```md
-## 1.2.1 [Unreleased]
-
-<!-- Will contain entries for 1.2.1 release. -->
-```
-
-### For a patch release (e.g. r1.2.3):
-
-Open a PR to the `master` branch to remove `[Unreleased]` from the recently released version, and add a `[Unreleased]` section for the next patch release. Example:
-```md
+<!-- Will contain entries for the next minor release -->
 ## 1.2.4 [Unreleased]
-<!-- Will contain entries for 1.2.4 release. -->
+<!-- Will contain entries for the next patch release -->
 ## 1.2.3
+<!-- Contains published release notes -->
+```
 
-Open a PR to the release branch (e.g. `releases/v1.2`) branch to add a new empty `[Unreleased]` section to the CHANGELOG.md for the next patch release. Example:
+Commit the change. Create a PR from the `post-release-changes` branch to merge to `master`.
+
+### ... on the release branch
+
+Check out the release branch (e.g. `releases/v1.2`).
+
+Update CHANGELOG.md to add an `[Unreleased]` section for the next patch release. Example (if `1.2.3` was just released):
 
 ```md
 ## 1.2.4 [Unreleased]
-<!-- Will contain entries for 1.2.4 release. -->
+<!-- Will contain entries for the next patch release -->
+## 1.2.3
+<!-- Contains published release notes -->
 ```
+
+Commit and push this change to the release branch (no PR necessary for release branch).
 
 ## Homebrew
 This requires a macOS machine.
