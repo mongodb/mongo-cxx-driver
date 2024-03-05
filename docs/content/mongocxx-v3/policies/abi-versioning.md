@@ -56,7 +56,7 @@ If there is a symbol that _should_ be exported or part of the stable ABI, but is
 
 **IMPORTANT:** A symbol only needs to be _used by_ the public API (even indirectly) to be considered part of the stable ABI. An exported symbol that has _never_ been used by any public API entity in _any_ prior release is not considered part of the stable ABI (see note above).
 
-**NOTE:** The _behavior_ of a stable ABI symbol is not considered part of the stable ABI. The stability of documented behavior is communicated by the API version number, not the ABI version number.
+**IMPORTANT:** The _behavior_ of a stable ABI symbol is also part of the stable ABI. This is to ensure consistent and compatible runtime behavior between shared libraries with the same ABI version number. The behavior _must_ be consistent with the documentation of one or more public API entities that uses the symbol (even indirectly) such that there is no observable change in public API behavior (within the scope of what is explicitly documented) across releases with the same ABI version number.
 
 **NOTE:** Some entities that are part of the public API may not be part of the stable ABI (e.g. inline functions, inline variables, and template instantiations of functions and variables). Conversely, some entities that are part of the stable ABI may not be part of the public API (e.g. an exported private member function). See [API Versioning]({{< relref "api-versioning" >}}).
 
