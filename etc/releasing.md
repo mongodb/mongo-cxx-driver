@@ -38,11 +38,43 @@ Update Jira ticket types and titles as appropriate.
 User-facing issues should generally be either "Bug" or "New Feature".
 Non-user facing issues should generally be "Task" tickets.
 
-## Update CHANGELOG.md
+## Update CHANGELOG.md pre-release ...
 
-Check Jira for tickets closed in this fix version. Update CHANGELOG.md
-with notable changes not already mentioned. Update CHANGELOG.md to remove
-the text `[Unreleased]` for the title of this release. Commit this change.
+### ... for a minor release (e.g. `1.2.0`)
+
+Check out the `master` branch. Create a new branch to contain changelog updates: `git checkout -b pre-release-changes`. This branch will be used to create a PR.
+
+Check Jira for tickets closed in this fix version. Update CHANGELOG.md with notable changes not already mentioned. Remove `[Unreleased]` from the version being released.
+
+Check if there is an `[Unreleased]` section for a patch version (e.g. `1.1.4 [Unreleased]`). The C++ driver does not typically do patch releases for previously released minor versions. If the previous patch release is no longer planned, move the patch release entries into the minor release section and remove the patch release section. If you are unsure whether the patch release is planned, ask in the #dbx-c-cxx channel.
+
+Example (if `1.2.0` is being released):
+```md
+## 1.2.0 [Unreleased]
+### Fixed
+- Fixes A <!-- Unreleased fix on master branch -->
+## 1.1.4 [Unreleased]
+### Fixed
+- Fixes B <!-- Unreleased fix on `releases/v1.1` branch. B is implicity fixed on 1.2.0. Change was cherry-picked from master. -->
+```
+
+Becomes:
+```md
+## 1.2.0
+### Fixed
+- Fixes A
+- Fixes B <!-- 1.1.4 is no longer planned. Document B in 1.2.0 -->
+```
+
+Commit with a message like `Update CHANGELOG for <version>`. Create a PR. Once the PR is merged, proceed with the rest of the releease.
+
+### ... for a patch release (e.g. `1.2.3`)
+
+Check out the release branch (e.g. `releases/v1.2`).
+
+Check Jira for tickets closed in this fix version. Update CHANGELOG.md with notable changes not already mentioned. Remove `[Unreleased]` from the version being released.
+
+Commit with a message like `Update CHANGELOG for <version>`. Push the change.
 
 
 ## Clone and set up environment
