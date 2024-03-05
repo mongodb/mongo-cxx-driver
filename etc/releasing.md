@@ -38,6 +38,13 @@ Update Jira ticket types and titles as appropriate.
 User-facing issues should generally be either "Bug" or "New Feature".
 Non-user facing issues should generally be "Task" tickets.
 
+## Update CHANGELOG.md
+
+Check Jira for tickets closed in this fix version. Update CHANGELOG.md
+with notable changes not already mentioned. Update CHANGELOG.md to remove
+the text `[Unreleased]` for the title of this release. Commit this change.
+
+
 ## Clone and set up environment
 
 Do a fresh clone, to avoid local git branches or IDE files from interfering.
@@ -62,10 +69,6 @@ stay on the master branch. You will create a new `releases/vX.Y` branch later in
 the instructions. If doing a patch release (e.g. releasing rX.Y.Z with non-zero
 `Z`), check out the corresponding release branch, which should be an existing
 `releases/vX.Y` branch.
-
-Check Jira for tickets closed in this fix version. Update CHANGELOG.md
-with notable changes not already mentioned. Update CHANGELOG.md to remove
-the text `[Unreleased]` for the title of this release. Commit this change.
 
 Create a tag for the commit to serve as the release (or release candidate):
 
