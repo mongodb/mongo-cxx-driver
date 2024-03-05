@@ -194,6 +194,21 @@ git reset --hard r1.2.3
 git push -f origin releases/stable
 ```
 
+## Branch if necessary
+
+If doing a new minor release `x.y.0` (e.g. a `1.2.0` release), create branch
+`releases/vx.y`  (e.g `releases/v3.8`).
+
+Push the new branch:
+
+```
+git push --set-upstream origin releases/v3.8
+```
+
+The new branch should be continuously tested on Evergreen. Create a BUILD ticket
+to request the build team create new Evergreen project to track the
+`releases/vx.y` branch (see BUILD-5666 for an example).
+
 ## Generate and Publish Documentation
 
 Documentation generation must be run after the release tag has been made and
@@ -317,21 +332,6 @@ under `Product & Driver Announcements` with the tag `cxx`.
 See this
 [example announcement](https://www.mongodb.com/community/forums/t/mongodb-c-11-driver-3-9-0-released/252724)
 of the stable release of 3.9.0.
-
-## Branch if necessary
-
-If doing a new minor release `x.y.0` (e.g. a `1.2.0` release), create branch
-`releases/vx.y`  (e.g `releases/v3.8`).
-
-Push the new branch:
-
-```
-git push --set-upstream origin releases/v3.8
-```
-
-The new branch should be continuously tested on Evergreen. Create a BUILD ticket
-to request the build team create new Evergreen project to track the
-`releases/vx.y` branch (see BUILD-5666 for an example).
 
 ## Docker Image Build and Publish
 
