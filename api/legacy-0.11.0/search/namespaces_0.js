@@ -1,5 +1,5 @@
 var searchData=
 [
-  ['client_850',['client',['../namespacemongo_1_1client.html',1,'mongo']]],
-  ['mongo_851',['mongo',['../namespacemongo.html',1,'']]]
+  ['client_0',['client',['../namespacemongo_1_1client.html',1,'mongo']]],
+  ['mongo_1',['mongo',['../namespacemongo.html',1,'']]]
 ];

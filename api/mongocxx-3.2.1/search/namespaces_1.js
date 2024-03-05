@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['mongocxx_553',['mongocxx',['../namespacemongocxx.html',1,'']]]
+  ['mongocxx_0',['mongocxx',['../namespacemongocxx.html',1,'']]]
 ];

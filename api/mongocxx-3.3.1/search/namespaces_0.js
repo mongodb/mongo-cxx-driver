@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['bsoncxx_572',['bsoncxx',['../namespacebsoncxx.html',1,'']]]
+  ['bsoncxx_0',['bsoncxx',['../namespacebsoncxx.html',1,'']]]
 ];
