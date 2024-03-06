@@ -205,9 +205,7 @@ Push the new branch:
 git push --set-upstream origin releases/v1.2
 ```
 
-The new branch should be continuously tested on Evergreen. Create a BUILD ticket
-to request the build team create new Evergreen project to track the
-`releases/vx.y` branch (see BUILD-5666 for an example).
+The new branch should be continuously tested on Evergreen. Update the "Display Name" and "Branch Name" of the [mongo-cxx-driver-latest-release Evergreen project](https://spruce.mongodb.com/project/mongo-cxx-driver-latest-release/settings/general) to refer to the new release branch.
 
 ## Generate and Publish Documentation
 
