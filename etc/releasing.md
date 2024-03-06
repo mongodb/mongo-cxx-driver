@@ -42,7 +42,7 @@ Non-user facing issues should generally be "Task" tickets.
 
 ### ... for a minor release (e.g. `1.2.0`)
 
-Check out the `master` branch. Create a new branch to contain changelog updates: `git checkout -b pre-release-changes`. This branch will be used to create a PR.
+Create a new branch on the master branch. This branch will contain changelog updates prior to release: `git checkout -b pre-release-changes master`.
 
 Check Jira for tickets closed in this fix version. Update CHANGELOG.md with notable changes not already mentioned. Remove `[Unreleased]` from the version being released.
 
