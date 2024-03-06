@@ -42,7 +42,7 @@ Non-user facing issues should generally be "Task" tickets.
 
 ### ... for a minor release (e.g. `1.2.0`)
 
-Create a new branch on the master branch. This branch will contain changelog updates prior to release: `git checkout -b pre-release-changes master`.
+Create a new branch to contain changelog updates from the master branch: `git checkout -b pre-release-changes master`. This branch will be used to create a PR.
 
 Check Jira for tickets closed in this fix version. Update CHANGELOG.md with notable changes not already mentioned. Remove `[Unreleased]` from the version being released.
 
@@ -212,7 +212,7 @@ The new branch should be continuously tested on Evergreen. Update the "Display N
 Documentation generation must be run after the release tag has been made and
 pushed.
 
-- Checkout the master branch. Create a new branch to contain documentation updates: `git checkout -b post-release-changes`. This branch will be used to create a PR later.
+- Create a new branch to contain documentation updates from master: `git checkout -b post-release-changes master`. This branch will be used to create a PR later.
 - Edit `etc/apidocmenu.md` and add the released version in the `mongocxx` column
   following the established pattern. If this is a minor release (X.Y.0), revise
   the entire document as needed.
