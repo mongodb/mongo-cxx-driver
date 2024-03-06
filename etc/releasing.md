@@ -197,7 +197,7 @@ git push -f origin releases/stable
 ## Branch if necessary
 
 If doing a new minor release `X.Y.0` (e.g. a `1.2.0` release), create branch
-`releases/vX.Y` (e.g `releases/v1.2`).
+`releases/vX.Y` (e.g `releases/v1.2`): `git checkout -b releases/v1.2 master`
 
 Push the new branch:
 
