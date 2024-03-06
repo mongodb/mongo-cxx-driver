@@ -265,7 +265,7 @@ CHANGELOG.md on a release branch (e.g. `releases/v1.2`) contains entries for pat
 
 Check out the `post-release-changes` branch created before.
 
-Ensure `[Unreleased]` is removed from the recently released section.
+Ensure `[Unreleased]` is removed from the recently released section. Ensure the contents of the recently released section match the published release notes.
 
 Ensure there are `[Unreleased]` sections for the next minor and patch releases. Example (if `1.2.3` was just released):
 
