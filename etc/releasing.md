@@ -255,9 +255,6 @@ pushed.
     `git commit -am "Update symlink for r1.2.3"`
    - Switch back to the branch with documentation updates: `git checkout post-release-changes`.
 - Wait a few minutes and verify mongocxx.org has updated.
-- Checkout the master branch. Push the commit containing changes to `etc/` and
-  `docs/`. This may require pushing the commit to a fork of the C++ Driver
-  repository and creating a pull request.
 
 ## Update CHANGELOG.md post-release ...
 
