@@ -8,7 +8,7 @@
 +
  Name:           mongo-cxx-driver
 -Version:        3.6.5
-+Version:        3.10.1
++Version:        3.10.2
  Release:        1%{?dist}
  Summary:        A C++ Driver for MongoDB
  License:        ASL 2.0
@@ -36,7 +36,7 @@
  %cmake \
      -DCMAKE_BUILD_TYPE=Release \
      -DBSONCXX_POLY_USE_BOOST=1 \
-+    -DBUILD_VERSION=3.10.1 \
++    -DBUILD_VERSION=3.10.2 \
 +    -DENABLE_UNINSTALL=OFF \
 +    -DENABLE_TESTS=OFF \
      .
