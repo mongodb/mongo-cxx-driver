@@ -196,8 +196,8 @@ git push -f origin releases/stable
 
 ## Branch if necessary
 
-If doing a new minor release `x.y.0` (e.g. a `1.2.0` release), create branch
-`releases/vx.y`  (e.g `releases/v1.2`).
+If doing a new minor release `X.Y.0` (e.g. a `1.2.0` release), create branch
+`releases/vX.Y` (e.g `releases/v1.2`).
 
 Push the new branch:
 
@@ -214,7 +214,7 @@ pushed.
 
 - Checkout the master branch. Create a new branch to contain documentation updates: `git checkout -b post-release-changes`. This branch will be used to create a PR later.
 - Edit `etc/apidocmenu.md` and add the released version in the `mongocxx` column
-  following the established pattern. If this is a minor release (x.y.0), revise
+  following the established pattern. If this is a minor release (X.Y.0), revise
   the entire document as needed.
 - Edit `docs/content/_index.md` and `README.md` to match.
 - Edit the `Installing the MongoDB C driver` section of
