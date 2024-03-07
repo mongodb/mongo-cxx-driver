@@ -73,7 +73,7 @@ Becomes:
 - Fixes B <!-- 1.1.4 is no longer planned. Document B in 1.2.0 -->
 ```
 
-Commit with a message like `Update CHANGELOG for <version>`. Create a PR. Once the PR is merged, proceed with the rest of the release. The `pre-release-changes` branch may be deleted.
+Commit with a message like `Update CHANGELOG for <version>`. Create a PR for the `pre-release-changes` branch which contains the commits made up to this point. Once the PR is merged, proceed with the rest of the release. The `pre-release-changes` branch may be deleted.
 
 ### ... for a patch release (e.g. `1.2.3`)
 
