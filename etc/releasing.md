@@ -51,17 +51,24 @@ Check if there is an `[Unreleased]` section for a patch version (e.g. `1.1.4 [Un
 Example (if `1.2.0` is being released):
 ```md
 ## 1.2.0 [Unreleased]
+
 ### Fixed
+
 - Fixes A <!-- Unreleased fix on master branch -->
+
 ## 1.1.4 [Unreleased]
+
 ### Fixed
+
 - Fixes B <!-- Unreleased fix on `releases/v1.1` branch. B is implicity fixed on 1.2.0. Change was cherry-picked from master. -->
 ```
 
 Becomes:
 ```md
 ## 1.2.0
+
 ### Fixed
+
 - Fixes A
 - Fixes B <!-- 1.1.4 is no longer planned. Document B in 1.2.0 -->
 ```
@@ -269,10 +276,15 @@ Ensure there are `[Unreleased]` sections for the next minor and patch releases. 
 
 ```md
 ## 1.3.0 [Unreleased]
+
 <!-- Will contain entries for the next minor release -->
+
 ## 1.2.4 [Unreleased]
+
 <!-- Will contain entries for the next patch release -->
+
 ## 1.2.3
+
 <!-- Contains published release notes -->
 ```
 
