@@ -38,10 +38,51 @@ Update Jira ticket types and titles as appropriate.
 User-facing issues should generally be either "Bug" or "New Feature".
 Non-user facing issues should generally be "Task" tickets.
 
-## Update CHANGELOG.md
+## Update CHANGELOG.md pre-release ...
 
-Check Jira for tickets closed in this fix version. Consider updating CHANGELOG.md
-with notable changes not already mentioned.
+### ... for a minor release (e.g. `1.2.0`)
+
+Create a new branch to contain changelog updates from the master branch: `git checkout -b pre-release-changes master`. This branch will be used to create a PR.
+
+Check Jira for tickets closed in this fix version. Update CHANGELOG.md with notable changes not already mentioned. Remove `[Unreleased]` from the version being released.
+
+Check if there is an `[Unreleased]` section for a patch version (e.g. `1.1.4 [Unreleased]`). Normally, the C++ Driver does not release patches for old minor versions. If an unreleased patch release section is no longer applicable, move its entries into the minor release section (as needed) and remove the patch release section. If you are unsure whether the patch release is planned, ask in the #dbx-c-cxx channel.
+
+Example (if `1.2.0` is being released):
+```md
+## 1.2.0 [Unreleased]
+
+### Fixed
+
+- Fixes A <!-- Unreleased fix on master branch -->
+
+## 1.1.4 [Unreleased]
+
+### Fixed
+
+- Fixes B <!-- Unreleased fix on `releases/v1.1` branch. B is implicity fixed on 1.2.0. Change was cherry-picked from master. -->
+```
+
+Becomes:
+```md
+## 1.2.0
+
+### Fixed
+
+- Fixes A
+- Fixes B <!-- 1.1.4 is no longer planned. Document B in 1.2.0 -->
+```
+
+Commit with a message like `Update CHANGELOG for <version>`. Create a PR for the `pre-release-changes` branch which contains the commits made up to this point. Once the PR is merged, proceed with the rest of the release. The `pre-release-changes` branch may be deleted.
+
+### ... for a patch release (e.g. `1.2.3`)
+
+Check out the existing release branch (e.g. `releases/v1.2`).
+
+Check Jira for tickets closed in this fix version. Update CHANGELOG.md with notable changes not already mentioned. Remove `[Unreleased]` from the version being released.
+
+Commit with a message like `Update CHANGELOG for <version>`. Push the change.
+
 
 ## Clone and set up environment
 
@@ -160,14 +201,27 @@ git reset --hard r1.2.3
 git push -f origin releases/stable
 ```
 
+## Branch if necessary
+
+If doing a new minor release `X.Y.0` (e.g. a `1.2.0` release), create branch
+`releases/vX.Y` (e.g `releases/v1.2`): `git checkout -b releases/v1.2 master`
+
+Push the new branch:
+
+```
+git push --set-upstream origin releases/v1.2
+```
+
+The new branch should be continuously tested on Evergreen. Update the "Display Name" and "Branch Name" of the [mongo-cxx-driver-latest-release Evergreen project](https://spruce.mongodb.com/project/mongo-cxx-driver-latest-release/settings/general) to refer to the new release branch.
+
 ## Generate and Publish Documentation
 
 Documentation generation must be run after the release tag has been made and
 pushed.
 
-- Checkout the master branch.
+- Create and checkout a new branch to contain documentation updates from master: `git checkout -b post-release-changes master`. This branch will be used to create a PR later.
 - Edit `etc/apidocmenu.md` and add the released version in the `mongocxx` column
-  following the established pattern. If this is a minor release (x.y.0), revise
+  following the established pattern. If this is a minor release (X.Y.0), revise
   the entire document as needed.
 - Edit `docs/content/_index.md` and `README.md` to match.
 - Edit the `Installing the MongoDB C driver` section of
@@ -204,14 +258,59 @@ pushed.
     stable release branch.
   - Commit and push the symlink change:
     `git commit -am "Update symlink for r1.2.3"`
+   - Switch back to the branch with documentation updates: `git checkout post-release-changes`.
 - Wait a few minutes and verify mongocxx.org has updated.
-- Checkout the master branch. Push the commit containing changes to `etc/` and
-  `docs/`. This may require pushing the commit to a fork of the C++ Driver
-  repository and creating a pull request.
+
+## Update CHANGELOG.md post-release ...
+
+CHANGELOG.md on the `master` branch contains sections for every release. This is intended to ease searching for changes among all releases.
+CHANGELOG.md on a release branch (e.g. `releases/v1.2`) contains entries for patch releases of the minor version number tracked by the release branch (e.g. for 1.2.1, 1.2.2, 1.2.3, etc.), as well as all entries prior to the initial minor release (e.g. before 1.2.0).
+
+### ... on the release branch
+
+Check out the release branch (e.g. `releases/v1.2`).
+
+Update CHANGELOG.md to add an `[Unreleased]` section for the next patch release. Example (if `1.2.3` was just released):
+
+```md
+## 1.2.4 [Unreleased]
+
+<!-- Will contain entries for the next patch release -->
+
+## 1.2.3
+
+<!-- Contains published release notes -->
+```
+
+Commit and push this change to the release branch (no PR necessary for release branch).
+
+### ... on the `master` branch
+
+Check out the `post-release-changes` branch created before editing and generating documentation.
+
+Ensure `[Unreleased]` is removed from the recently released section. Ensure the contents of the recently released section match the published release notes.
+
+Ensure there are `[Unreleased]` sections for the next minor and patch releases. Example (if `1.2.3` was just released):
+
+```md
+## 1.3.0 [Unreleased]
+
+<!-- Will contain entries for the next minor release -->
+
+## 1.2.4 [Unreleased]
+
+<!-- Will contain entries for the next patch release -->
+
+## 1.2.3
+
+<!-- Contains published release notes -->
+```
+
+Commit the change. Create a PR from the `post-release-changes` branch to merge to `master`.
 
 ## Homebrew
 This requires a macOS machine.
-If this is a stable release, update the [mongo-cxx-driver](https://github.com/Homebrew/homebrew-core/blob/master/Formula/mongo-cxx-driver.rb) homebrew formula, using: `brew bump-formula-pr --url <tarball url>`
+If this is a stable release, update the [mongo-cxx-driver](https://github.com/Homebrew/homebrew-core/blob/master/Formula/mongo-cxx-driver.rb) homebrew formula, using: `brew bump-formula-pr mongo-cxx-driver --url <tarball url>`
 
 Example:
 `brew bump-formula-pr mongo-cxx-driver --url https://github.com/mongodb/mongo-cxx-driver/releases/download/r3.7.3/mongo-cxx-driver-r3.7.3.tar.gz`
@@ -240,21 +339,6 @@ under `Product & Driver Announcements` with the tag `cxx`.
 See this
 [example announcement](https://www.mongodb.com/community/forums/t/mongodb-c-11-driver-3-9-0-released/252724)
 of the stable release of 3.9.0.
-
-## Branch if necessary
-
-If doing a new minor release `x.y.0` (e.g. a `1.2.0` release), create branch
-`releases/vx.y`  (e.g `releases/v3.8`).
-
-Push the new branch:
-
-```
-git push --set-upstream origin releases/v3.8
-```
-
-The new branch should be continuously tested on Evergreen. Create a BUILD ticket
-to request the build team create new Evergreen project to track the
-`releases/vx.y` branch (see BUILD-5666 for an example).
 
 ## Docker Image Build and Publish
 
