@@ -46,7 +46,7 @@ Create a new branch to contain changelog updates from the master branch: `git ch
 
 Check Jira for tickets closed in this fix version. Update CHANGELOG.md with notable changes not already mentioned. Remove `[Unreleased]` from the version being released.
 
-Check if there is an `[Unreleased]` section for a patch version (e.g. `1.1.4 [Unreleased]`). The C++ driver does not typically do patch releases for previously released minor versions. If the previous patch release is no longer planned, move the patch release entries into the minor release section and remove the patch release section. If you are unsure whether the patch release is planned, ask in the #dbx-c-cxx channel.
+Check if there is an `[Unreleased]` section for a patch version (e.g. `1.1.4 [Unreleased]`). Normally, the C++ Driver does not release patches for old minor versions. If an unreleased patch release section is no longer applicable, move its entries into the minor release section (as needed) and remove the patch release section. If you are unsure whether the patch release is planned, ask in the #dbx-c-cxx channel.
 
 Example (if `1.2.0` is being released):
 ```md
