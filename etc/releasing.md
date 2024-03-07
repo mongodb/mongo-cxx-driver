@@ -219,7 +219,7 @@ The new branch should be continuously tested on Evergreen. Update the "Display N
 Documentation generation must be run after the release tag has been made and
 pushed.
 
-- Create a new branch to contain documentation updates from master: `git checkout -b post-release-changes master`. This branch will be used to create a PR later.
+- Create and checkout a new branch to contain documentation updates from master: `git checkout -b post-release-changes master`. This branch will be used to create a PR later.
 - Edit `etc/apidocmenu.md` and add the released version in the `mongocxx` column
   following the established pattern. If this is a minor release (X.Y.0), revise
   the entire document as needed.
