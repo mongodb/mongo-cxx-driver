@@ -266,6 +266,21 @@ pushed.
 CHANGELOG.md on the `master` branch contains sections for every release. This is intended to ease searching for changes among all releases.
 CHANGELOG.md on a release branch (e.g. `releases/v1.2`) contains entries for patch releases of the minor version number tracked by the release branch (e.g. for 1.2.1, 1.2.2, 1.2.3, etc.), as well as all entries prior to the initial minor release (e.g. before 1.2.0).
 
+### ... on the release branch
+
+Check out the release branch (e.g. `releases/v1.2`).
+
+Update CHANGELOG.md to add an `[Unreleased]` section for the next patch release. Example (if `1.2.3` was just released):
+
+```md
+## 1.2.4 [Unreleased]
+<!-- Will contain entries for the next patch release -->
+## 1.2.3
+<!-- Contains published release notes -->
+```
+
+Commit and push this change to the release branch (no PR necessary for release branch).
+
 ### ... on the `master` branch
 
 Check out the `post-release-changes` branch created before editing and generating documentation.
@@ -289,21 +304,6 @@ Ensure there are `[Unreleased]` sections for the next minor and patch releases. 
 ```
 
 Commit the change. Create a PR from the `post-release-changes` branch to merge to `master`.
-
-### ... on the release branch
-
-Check out the release branch (e.g. `releases/v1.2`).
-
-Update CHANGELOG.md to add an `[Unreleased]` section for the next patch release. Example (if `1.2.3` was just released):
-
-```md
-## 1.2.4 [Unreleased]
-<!-- Will contain entries for the next patch release -->
-## 1.2.3
-<!-- Contains published release notes -->
-```
-
-Commit and push this change to the release branch (no PR necessary for release branch).
 
 ## Homebrew
 This requires a macOS machine.
