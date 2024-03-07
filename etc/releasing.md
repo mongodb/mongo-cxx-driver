@@ -274,8 +274,11 @@ Update CHANGELOG.md to add an `[Unreleased]` section for the next patch release.
 
 ```md
 ## 1.2.4 [Unreleased]
+
 <!-- Will contain entries for the next patch release -->
+
 ## 1.2.3
+
 <!-- Contains published release notes -->
 ```
 
