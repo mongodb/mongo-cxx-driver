@@ -77,7 +77,7 @@ Commit with a message like `Update CHANGELOG for <version>`. Create a PR for the
 
 ### ... for a patch release (e.g. `1.2.3`)
 
-Check out the release branch (e.g. `releases/v1.2`).
+Check out the existing release branch (e.g. `releases/v1.2`).
 
 Check Jira for tickets closed in this fix version. Update CHANGELOG.md with notable changes not already mentioned. Remove `[Unreleased]` from the version being released.
 
