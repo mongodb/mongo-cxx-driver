@@ -268,7 +268,7 @@ CHANGELOG.md on a release branch (e.g. `releases/v1.2`) contains entries for pat
 
 ### ... on the `master` branch
 
-Check out the `post-release-changes` branch created before.
+Check out the `post-release-changes` branch created before editing and generating documentation.
 
 Ensure `[Unreleased]` is removed from the recently released section. Ensure the contents of the recently released section match the published release notes.
 
