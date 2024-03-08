@@ -7,7 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Changes prior to 3.9.0 are documented as [release notes on GitHub](https://github.com/mongodb/mongo-cxx-driver/releases).
 
-## 3.10.0 [Unreleased]
+## 3.10.1 [Unreleased]
+
+### Fixed
+
+- (MSVC only) The name of the libbsoncxx package in the "Requires" field of the libmongocxx pkg-config file incorrectly used the library output name instead of the pkg-config package name when `ENABLE_ABI_TAG_IN_PKGCONFIG_FILENAMES=OFF`.
+- (MSVC only) The translation of the `MSVC_RUNTIME_LIBRARY` target property into an ABI tag parameter in library and package filenames did not account for generator expressions.
+
+## 3.10.0
 
 ### Added
 

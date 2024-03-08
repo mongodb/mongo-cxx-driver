@@ -438,16 +438,16 @@ install(FILES LICENSE README.md THIRD-PARTY-NOTICES
 # This is the command that produces the distribution tarball
 add_custom_command(OUTPUT ${DIST_FILE}
     COMMAND ${CMAKE_COMMAND}
-    -D CMAKE_MODULE_PATH=${PROJECT_SOURCE_DIR}/cmake/make_dist
-    -D PACKAGE_PREFIX=${PACKAGE_PREFIX}
-    -D MONGOCXX_SOURCE_DIR=${CMAKE_SOURCE_DIR}
-    -D BUILD_SOURCE_DIR=${BUILD_SOURCE_DIR}
-    -D SHELL=${SHELL}
-    "-Ddist_generated=\"${dist_generated}\""
-    -P ${PROJECT_SOURCE_DIR}/cmake/make_dist/MakeDist.cmake
+        -D "CMAKE_MODULE_PATH=${PROJECT_SOURCE_DIR}/cmake/make_dist"
+        -D "PACKAGE_PREFIX=${PACKAGE_PREFIX}"
+        -D "MONGOCXX_SOURCE_DIR=${CMAKE_SOURCE_DIR}"
+        -D "BUILD_SOURCE_DIR=${BUILD_SOURCE_DIR}"
+        -D "SHELL=${SHELL}"
+        -D "dist_generated=${dist_generated}"
+        -P ${PROJECT_SOURCE_DIR}/cmake/make_dist/MakeDist.cmake
 
     DEPENDS
-    ${ALL_DIST} ${dist_generated_depends}
+        ${ALL_DIST} ${dist_generated_depends}
 )
 
 if(NOT(TARGET dist OR TARGET distcheck))

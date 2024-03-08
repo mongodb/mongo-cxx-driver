@@ -9,11 +9,11 @@ and select the version "Pre CXX-584".
 Ensure the latest commit has run tests on the Evergreen waterfall.
 
 For a minor release this should be the
-[waterfall](https://spruce.mongodb.com/commits/cxx-driver) tracking the
+[waterfall](https://spruce.mongodb.com/commits/mongo-cxx-driver) tracking the
 master branch (requires auth).
-For a patch release this is the waterfall tracking that branch. E.g. if you are
-releasing 3.7.3, then refer to the the waterfall tracking
-[releases/v3.7](https://spruce.mongodb.com/commits/cxx-driver-v3.7)
+For a patch release this is the waterfall tracking the latest release. E.g. if you are
+releasing 1.2.3, then refer to the the waterfall tracking
+[releases/v1.2](https://spruce.mongodb.com/commits/mongo-cxx-driver-latest-release)
 (requires auth).
 
 If there are test failures, ensure they are at least expected or not introduced
@@ -500,7 +500,7 @@ patch --dry-run -d .evergreen -p0 -i spec.patch
 - Test the build with something like this:
 
 ```
-evergreen patch -p cxx-driver -v packaging -t rpm-package-build -f
+evergreen patch -p mongo-cxx-driver -v packaging -t rpm-package-build -f
 ```
 
 - There is no package upload step, since the downstream maintainer handles that
