@@ -11,7 +11,7 @@ title = "Installing the mongocxx driver"
 
 - Any standard Unix platform, or Windows 7 SP1+
 - A compiler that supports C++11 (gcc, clang, or Visual Studio)
-- [CMake](https://cmake.org) 3.2 or later
+- [CMake](https://cmake.org) 3.15 or later
 - [boost](https://www.boost.org) headers (optional)
 
 If you encounter build failures or other problems with a platform configuration
