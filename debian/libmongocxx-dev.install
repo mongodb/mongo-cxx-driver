@@ -1,4 +1,0 @@
-usr/include/mongocxx*
-usr/lib/*/libmongocxx*.so
-usr/lib/*/pkgconfig/libmongocxx*
-usr/lib/*/cmake/*mongocxx*
