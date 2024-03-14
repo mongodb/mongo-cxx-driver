@@ -1,3 +1,0 @@
-# Chosen not to maintain a symbols file, we'll check ABI stability with other
-# tools.
-libmongocxx-noabi: no-symbols-control-file
