@@ -1,6 +1,0 @@
-# Chosen not to maintain a symbols file, we'll check ABI stability with other
-# tools.
-libbsoncxx-noabi: no-symbols-control-file
-
-# False positive on the spelling error
-libbsoncxx-noabi: spelling-error-in-binary ment meant [usr/lib/x86_64-linux-gnu/libbsoncxx.so.3.9.0]
