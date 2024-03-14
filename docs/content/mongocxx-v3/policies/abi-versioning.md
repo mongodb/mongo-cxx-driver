@@ -68,7 +68,7 @@ The stable ABI policy concerning properties of the build system is mostly the sa
 * **The soname is considered part of the stable ABI**. This means, in contrast to the public API, `BSONCXX_OUTPUT_NAME` is considered part of the stable ABI, as it directly impacts the soname of the resulting bsoncxx shared library.
 * The "soname" is not applicable on Windows. See [Shared Libraries (MSVC Only)]({{< relref "../api-abi-versioning#shared-libraries-msvc-only" >}}).
 
-**NOTE:** We support the the stability of the public API _per build configuration_. We do not support compatibility of the public API _across_ different build configurations. For example, a shared library generated with `BSONCXX_OUTPUT_NAME=bsoncxx` is not expected to be compatible with a program compiled against a stable ABI produced using a build configuration with `BSONCXX_OUTPUT_NAME=bsoncxx-custom-basename`. (This is particularly important when using multi-config generators such as Visual Studio!)
+**NOTE:** We support the stability of the stable ABI _per build configuration_. We do not support compatibility of the stable ABI _across_ different build configurations. For example, a shared library generated with `BSONCXX_OUTPUT_NAME=bsoncxx` is not expected to be compatible with a program compiled against a stable ABI produced using a build configuration with `BSONCXX_OUTPUT_NAME=bsoncxx-custom-basename`. (This is particularly important when using multi-config generators such as Visual Studio!)
 
 ## Root Namespace Redeclarations
 

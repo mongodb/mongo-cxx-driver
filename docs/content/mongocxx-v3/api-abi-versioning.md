@@ -108,7 +108,7 @@ cmake -S example -B example-build -D bsoncxx_ROOT="$INSTALLDIR"
 # find_package(bsoncxx CONFIG REQUIRED PATHS "$INSTALLDIR")
 ```
 
-**NOTE:** The C Driver is a required dependency of CXX Driver. The CMake package config files for the C Driver may also need to be imported using the same (or similar) approach to satisfy this dependency.
+**NOTE:** The C Driver is a required dependency for the CXX Driver. The CMake package config files for the C Driver may also need to be imported using the same (or similar) approach to satisfy this dependency.
 
 Although the CXX Driver also provides pkg-config files, users are strongly encouraged to use CMake package config files instead.
 

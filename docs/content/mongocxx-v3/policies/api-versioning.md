@@ -70,7 +70,7 @@ On the other hand, `BSONCXX_OUTPUT_NAME` controls the `<basename>` used to gener
 Changing the name of a library or package file does not directly impact the public API (even if existing projects or applications may fail to configure, build, or link due to unexpected filenames).
 Therefore, `BSONCXX_OUTPUT_NAME` is _not_ considered part of the public API.
 
-**NOTE:** We support the the stability of the public API _per build configuration_. We do not support compatibility of the public API _across_ different build configurations. For example, a public API produced using a build configuration with `CMAKE_BUILD_TYPE=Debug` is not expected to be compatible with a program compiled against a public API produced using a build configuration with `CMAKE_BUILD_TYPE=Release`. (This is particularly important when using multi-config generators such as Visual Studio!)
+**NOTE:** We support the stability of the public API _per build configuration_. We do not support compatibility of the public API _across_ different build configurations. For example, a public API produced using a build configuration with `CMAKE_BUILD_TYPE=Debug` is not expected to be compatible with a program compiled against a public API produced using a build configuration with `CMAKE_BUILD_TYPE=Release`. (This is particularly important when using multi-config generators such as Visual Studio!)
 
 ## Root Namespace Redeclarations
 
