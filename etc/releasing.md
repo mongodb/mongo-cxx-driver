@@ -239,8 +239,8 @@ pushed.
     - [Windows](https://github.com/mongodb/docs-cpp/blob/master/source/installation/windows.txt)
     - [macOS](https://github.com/mongodb/docs-cpp/blob/master/source/installation/macos.txt)
 
-   If the release was not a release candidate, update `Step 2` to reflect the
-   new latest stable version to download.
+    If the release was not a release candidate, update `Step 2` to reflect the
+    new latest stable version to download.
 - Edit `etc/generate-all-apidocs.pl` and add the new release version to the
   `@DOC_TAGS` array, following the established pattern.
 - Commit these changes:
