@@ -36,7 +36,7 @@ namespace stream {
 /// a BSON array.
 ///
 /// @note Use of the stream builder is discouraged. See
-/// https://mongocxx.org/mongocxx-v3/working-with-bson/#stream-builder for
+/// https://www.mongodb.com/docs/languages/cpp/drivers/current/working-with-bson/#basic-builder for
 /// more details.
 ///
 class array : public array_context<> {

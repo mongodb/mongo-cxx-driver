@@ -6,10 +6,9 @@ type = "index"
 
 # MongoDB C++ Driver
 
-This is the legacy site for the Mongo C++ Driver documentation. See the
-documentation for driver versions 3.10 and newer, see the new [MongoDB C++
-Driver
+This is the legacy site for the Mongo C++ Driver documentation. See the new
+[MongoDB C++ Driver
 documentation](https://www.mongodb.com/docs/languages/cpp/drivers/current/).
 
-For documentation about previous diver versions, see the [Legacy C++ Driver
-documentation](https://mongocxx.org/legacy-v1/).
+For documentation of the legacy C++ driver (versions older than 3.0), see the
+[Legacy C++ Driver documentation](https://mongocxx.org/legacy-v1/).
