@@ -226,21 +226,17 @@ pushed.
   following the established pattern. If this is a minor release (X.Y.0), revise
   the entire document as needed.
 - Edit the `README.md` to match.
-- Ensure [DOCSP JIRA
-  tickets](https://jira.mongodb.org/projects/DOCSP/issues/DOCSP-37927?filter=allopenissues)
-  are created for:
+- If the release was not a release candidate, ensure a [DOCSP JIRA
+  ticket](https://jira.mongodb.org/projects/DOCSP/issues/) is created to request
+  updating:
 
   - the `Installing the MongoDB C driver` section of the [Advanced Installation
-   documentation](https://github.com/mongodb/docs-cpp/blob/master/source/installation/advanced.txt)
-  to reflect libmongoc requirements
-  - the installation pages for:
-
-    - [Linux](https://github.com/mongodb/docs-cpp/blob/master/source/installation/linux.txt)
-    - [Windows](https://github.com/mongodb/docs-cpp/blob/master/source/installation/windows.txt)
-    - [macOS](https://github.com/mongodb/docs-cpp/blob/master/source/installation/macos.txt)
-
-    If the release was not a release candidate, update `Step 2` to reflect the
-    new latest stable version to download.
+    documentation](https://github.com/mongodb/docs-cpp/blob/master/source/installation/advanced.txt)
+    to reflect libmongoc requirements
+  - the `Driver Status by Family and Version` section of the [home
+    page](https://github.com/mongodb/docs-cpp/blob/master/source/installation/linux.txt)
+  - the [C++ driver
+    version](https://github.com/mongodb/docs-cpp/blob/e13d787967172220ae19e5d78df61e2071735f0f/snooty.toml#L20-L21).
 - Edit `etc/generate-all-apidocs.pl` and add the new release version to the
   `@DOC_TAGS` array, following the established pattern.
 - Commit these changes:
