@@ -214,24 +214,29 @@ git push --set-upstream origin releases/v1.2
 
 The new branch should be continuously tested on Evergreen. Update the "Display Name" and "Branch Name" of the [mongo-cxx-driver-latest-release Evergreen project](https://spruce.mongodb.com/project/mongo-cxx-driver-latest-release/settings/general) to refer to the new release branch.
 
-## Generate and Publish Documentation
+## Create Documentation Tickets
 
 Documentation generation must be run after the release tag has been made and
 pushed.
 
-- Create and checkout a new branch to contain documentation updates from master: `git checkout -b post-release-changes master`. This branch will be used to create a PR later.
+- Create and checkout a new branch to contain documentation updates from master:
+  `git checkout -b post-release-changes master`. This branch will be used to
+  create a PR later.
 - Edit `etc/apidocmenu.md` and add the released version in the `mongocxx` column
   following the established pattern. If this is a minor release (X.Y.0), revise
   the entire document as needed.
-- Edit `docs/content/_index.md` and `README.md` to match.
-- Edit the `Installing the MongoDB C driver` section of
-  `docs/content/mongocxx-v3/installation/advanced.md` to reflect libmongoc
-  requirements.
-- Edit `docs/content/mongocxx-v3/installation/linux.md`,
-  `docs/content/mongocxx-v3/installation/macos.md` and
-  `docs/content/mongocxx-v3/installation/windows.md`.
-   If the release was not a release candidate, update `Step 2` to reflect the
-   new latest stable version to download.
+- Edit the `README.md` to match.
+- If the release was not a release candidate, ensure a [DOCSP JIRA
+  ticket](https://jira.mongodb.org/projects/DOCSP/issues/) is created to request
+  updating:
+
+  - the `Installing the MongoDB C driver` section of the [Advanced Installation
+    documentation](https://github.com/mongodb/docs-cpp/blob/master/source/installation/advanced.txt)
+    to reflect libmongoc requirements
+  - the `Driver Status by Family and Version` section of the [home
+    page](https://github.com/mongodb/docs-cpp/blob/master/source/installation/linux.txt)
+  - the [C++ driver
+    version](https://github.com/mongodb/docs-cpp/blob/e13d787967172220ae19e5d78df61e2071735f0f/snooty.toml#L20-L21).
 - Edit `etc/generate-all-apidocs.pl` and add the new release version to the
   `@DOC_TAGS` array, following the established pattern.
 - Commit these changes:
