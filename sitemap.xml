@@ -2,40 +2,10 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   <url>
-    <loc>https://mongocxx.org/mongocxx-v3/polyfill-selection/</loc>
-    <lastmod>2024-02-20T00:00:00+00:00</lastmod>
-  </url><url>
-    <loc>https://mongocxx.org/mongocxx-v3/installation/windows/</loc>
-    <lastmod>2020-09-26T13:47:23-04:00</lastmod>
-  </url><url>
-    <loc>https://mongocxx.org/mongocxx-v3/installation/macos/</loc>
-    <lastmod>2020-09-26T13:47:18-04:00</lastmod>
-  </url><url>
-    <loc>https://mongocxx.org/mongocxx-v3/installation/linux/</loc>
-    <lastmod>2020-09-26T13:47:02-04:00</lastmod>
-  </url><url>
-    <loc>https://mongocxx.org/mongocxx-v3/installation/advanced/</loc>
-    <lastmod>2020-09-26T13:14:52-04:00</lastmod>
-  </url><url>
-    <loc>https://mongocxx.org/mongocxx-v3/installation/</loc>
-    <lastmod>2020-09-26T13:14:52-04:00</lastmod>
-  </url><url>
-    <loc>https://mongocxx.org/mongocxx-v3/connection-pools/</loc>
-    <lastmod>2017-04-18T13:39:39-04:00</lastmod>
-  </url><url>
-    <loc>https://mongocxx.org/mongocxx-v3/api-abi-versioning/</loc>
-    <lastmod>2016-08-15T16:11:58+05:30</lastmod>
-  </url><url>
     <loc>https://mongocxx.org/legacy-v1/breaking-changes/</loc>
     <lastmod>2016-08-15T16:11:58+05:30</lastmod>
   </url><url>
     <loc>https://mongocxx.org/legacy-v1/configuration/</loc>
-    <lastmod>2016-08-15T16:11:58+05:30</lastmod>
-  </url><url>
-    <loc>https://mongocxx.org/mongocxx-v3/configuration/</loc>
-    <lastmod>2016-08-15T16:11:58+05:30</lastmod>
-  </url><url>
-    <loc>https://mongocxx.org/contributing/</loc>
     <lastmod>2016-08-15T16:11:58+05:30</lastmod>
   </url><url>
     <loc>https://mongocxx.org/legacy-v1/installation/</loc>
@@ -47,39 +17,13 @@
     <loc>https://mongocxx.org/</loc>
     <lastmod>2016-08-15T16:11:58+05:30</lastmod>
   </url><url>
-    <loc>https://mongocxx.org/reporting-bugs/</loc>
-    <lastmod>2016-08-15T16:11:58+05:30</lastmod>
-  </url><url>
-    <loc>https://mongocxx.org/contributing/testing-legacy/</loc>
-    <lastmod>2016-08-15T16:11:58+05:30</lastmod>
-  </url><url>
-    <loc>https://mongocxx.org/contributing/testing-mongocxx/</loc>
-    <lastmod>2016-08-15T16:11:58+05:30</lastmod>
-  </url><url>
     <loc>https://mongocxx.org/legacy-v1/</loc>
-    <lastmod>2016-08-15T16:11:58+05:30</lastmod>
-  </url><url>
-    <loc>https://mongocxx.org/mongocxx-v3/</loc>
-    <lastmod>2016-08-15T16:11:58+05:30</lastmod>
-  </url><url>
-    <loc>https://mongocxx.org/mongocxx-v3/thread-safety/</loc>
-    <lastmod>2016-08-15T16:11:58+05:30</lastmod>
-  </url><url>
-    <loc>https://mongocxx.org/mongocxx-v3/tutorial/</loc>
     <lastmod>2016-08-15T16:11:58+05:30</lastmod>
   </url><url>
     <loc>https://mongocxx.org/legacy-v1/working-with-bson/</loc>
     <lastmod>2016-08-15T16:11:58+05:30</lastmod>
   </url><url>
-    <loc>https://mongocxx.org/mongocxx-v3/working-with-bson/</loc>
-    <lastmod>2016-08-15T16:11:58+05:30</lastmod>
-  </url><url>
-    <loc>https://mongocxx.org/getting-help/</loc>
-    <lastmod>2015-03-17T15:36:56+00:00</lastmod>
-  </url><url>
     <loc>https://mongocxx.org/categories/</loc>
-  </url><url>
-    <loc>https://mongocxx.org/mongocxx-v3/client-side-encryption/</loc>
   </url><url>
     <loc>https://mongocxx.org/tags/</loc>
   </url>
