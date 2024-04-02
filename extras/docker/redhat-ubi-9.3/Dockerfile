@@ -4,7 +4,7 @@
 FROM registry.access.redhat.com/ubi9/ubi-minimal:9.3 AS builder
 
 ARG MONGOCXX_VERSION=3.10.1
-ARG MONGOC_VERSION=1.26.1
+ARG MONGOC_VERSION=1.26.2
 ARG MONGOCRYPT_VERSION=1.9.1
 
 WORKDIR /build
