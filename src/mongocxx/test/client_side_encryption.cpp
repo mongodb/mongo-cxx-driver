@@ -3150,6 +3150,13 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
             return;
         }
 
+        if (test_util::newer_than(client, "8.0")) {
+            WARN(
+                "Skipping - test is skipped on MongoDB server 8.0 or newer pending updates for "
+                "DRIVERS-2776");
+            return;
+        }
+
         if (test_util::get_topology(client) == "single") {
             WARN("Skipping - must not run against a standalone server");
             return;
