@@ -2,12 +2,12 @@
   "runOn": [
     {
       "minServerVersion": "7.0.0",
-      "serverless": "forbid",
       "topology": [
         "replicaset",
         "sharded",
         "load-balanced"
-      ]
+      ],
+      "maxServerVersion": "7.99.99"
     }
   ],
   "database_name": "default",
@@ -203,6 +203,8 @@
                 "type": 1,
                 "schema": {
                   "default.default": {
+                    "escCollection": "enxcol_.default.esc",
+                    "ecocCollection": "enxcol_.default.ecoc",
                     "fields": [
                       {
                         "keyId": {
@@ -254,6 +256,8 @@
                 "type": 1,
                 "schema": {
                   "default.default": {
+                    "escCollection": "enxcol_.default.esc",
+                    "ecocCollection": "enxcol_.default.ecoc",
                     "fields": [
                       {
                         "keyId": {
@@ -313,6 +317,8 @@
                 "type": 1,
                 "schema": {
                   "default.default": {
+                    "escCollection": "enxcol_.default.esc",
+                    "ecocCollection": "enxcol_.default.ecoc",
                     "fields": [
                       {
                         "keyId": {
