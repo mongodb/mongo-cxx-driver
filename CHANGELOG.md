@@ -13,7 +13,7 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 
 ### Deprecated
 
-- Deprecate use of the `functor.hpp` header.
+- Deprecate use of the `bsoncxx/util/functor.hpp` header.
 
 ## 3.10.2 [Unreleased]
 
