@@ -17,6 +17,6 @@
 #include <bsoncxx/config/prelude.hpp>
 
 BSONCXX_PRAGMA(
-    message("bsoncxx/util/functor.hpp header is deprecated and will be removed in a major release"))
+    message("bsoncxx/util/functor.hpp header is deprecated and will be removed in an upcoming major release"))
 
 #include <bsoncxx/config/postlude.hpp>
