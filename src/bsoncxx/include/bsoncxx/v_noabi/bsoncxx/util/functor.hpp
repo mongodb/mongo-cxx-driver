@@ -19,6 +19,10 @@
 
 #include <bsoncxx/config/prelude.hpp>
 
+BSONCXX_PRAGMA(
+    message("bsoncxx/util/functor.hpp header is deprecated and will be removed in an upcoming "
+            "major release"))
+
 namespace bsoncxx {
 namespace v_noabi {
 namespace util {
