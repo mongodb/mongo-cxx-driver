@@ -8,10 +8,6 @@ set -o pipefail
 
 mongoc_prefix="$(pwd)/../mongoc"
 
-if [[ "${OSTYPE:?}" =~ cygwin ]]; then
-  mongoc_prefix=$(cygpath -m "${mongoc_prefix:?}")
-fi
-
 # shellcheck source=/dev/null
 . "${mongoc_prefix:?}/.evergreen/scripts/find-cmake-latest.sh"
 export cmake_binary
@@ -21,19 +17,6 @@ command -v "$cmake_binary"
 # scan-build binary is available in different locations depending on the distro.
 # Search for a match in order of preference as listed.
 declare -a scan_build_directories
-
-# Prioritize Apple LLVM on MacOS to avoid confusing CMake with inconsistent
-# compilers and linkers.
-if [[ -d /usr/local/Cellar/llvm ]]; then
-  for dir in /opt/homebrew/Cellar/llvm /usr/local/Cellar/llvm; do
-    # Max depth: llvm/bin/scan-build. Sort: prefer newer versions.
-    for bin in $(find "${dir}" -maxdepth 3 -name 'scan-build' 2>/dev/null | sort -rV); do
-      if command -v "${bin}"; then
-        scan_build_directories+=("$(dirname "${bin}")")
-      fi
-    done
-  done
-fi
 
 scan_build_directories+=(
   # Prefer toolchain scan-build if available.
