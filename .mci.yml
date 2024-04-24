@@ -335,14 +335,16 @@ functions:
 
 
     "stop_mongod":
-        command: shell.exec
+        command: subprocess.exec
         params:
-            shell: bash
+            binary: bash
             working_dir: "."
-            script: |
+            args:
+              - -c
+              - |
                 set -o errexit
                 set -o pipefail
-                if cd drivers-evergreen-tools/.evergreen/orchestration; then
+                if cd drivers-evergreen-tools/.evergreen/orchestration 2>/dev/null; then
                   . ../venv-utils.sh
                   if venvactivate venv; then
                     mongo-orchestration stop
@@ -579,13 +581,23 @@ functions:
             display_name: "working-dir.tar.gz"
 
     "upload mongo orchestration artifacts":
-        - command: shell.exec
+        - command: subprocess.exec
           params:
             working_dir: "."
-            script: |
-              find . -name \*.log | xargs tar czf mongodb-logs.tar.gz
+            binary: bash
+            args:
+              - -c
+              - |
+                set -o errexit
+                for log in $(find . -name '*.log'); do
+                  tar rf mongodb-logs.tar "$log"
+                done
+                if [[ -f mongodb-logs.tar ]]; then
+                  gzip mongodb-logs.tar
+                fi
         - command: s3.put
           params:
+            optional: true
             aws_key: ${aws_key}
             aws_secret: ${aws_secret}
             local_file: mongodb-logs.tar.gz
