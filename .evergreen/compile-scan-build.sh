@@ -61,6 +61,7 @@ cmake_flags=(
 scan_build_flags=(
   --use-cc "${CC:?}"
   --use-c++ "${CXX:?}"
+  -analyze-headers
   --exclude "$(pwd)/build/src/bsoncxx/third_party/_deps" # mnmlstc
   --exclude "$(pwd)/build/_deps"                         # mongoc
 )
