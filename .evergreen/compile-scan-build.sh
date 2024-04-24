@@ -51,20 +51,6 @@ fi
 CMAKE_BUILD_PARALLEL_LEVEL="$(nproc)"
 export CMAKE_BUILD_PARALLEL_LEVEL
 
-# Use ccache if available.
-if command -V ccache 2>/dev/null; then
-  export CMAKE_CXX_COMPILER_LAUNCHER=ccache
-
-  # Allow reuse of ccache compilation results between different build directories.
-  export CCACHE_BASEDIR CCACHE_NOHASHDIR
-  if [[ "${OSTYPE:?}" == "cygwin" ]]; then
-    CCACHE_BASEDIR="$(cygpath -aw "$(pwd)")"
-  else
-    CCACHE_BASEDIR="$(pwd)"
-  fi
-  CCACHE_NOHASHDIR=1
-fi
-
 cmake_flags=(
   -D CMAKE_BUILD_TYPE=Debug
   -D "CMAKE_CXX_STANDARD=${CXX_STANDARD:?}"
@@ -89,7 +75,7 @@ esac
 echo "Configuring with CMake flags: ${cmake_flags[*]}"
 
 # Configure via scan-build for consistency.
-"${scan_build_binary}" "${scan_build_flags[@]}" "${cmake_binary:?}" -S . -B build "${cmake_flags[@]}"
+CCCACHE_DISABLE=1 "${scan_build_binary}" "${scan_build_flags[@]}" "${cmake_binary:?}" -S . -B build "${cmake_flags[@]}"
 
 # If scan-build emits warnings, continue the task and upload scan results before marking task as a failure.
 declare -r continue_command='{"status":"failed", "type":"test", "should_continue":true, "desc":"scan-build emitted one or more warnings or errors"}'
