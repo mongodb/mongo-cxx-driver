@@ -637,6 +637,55 @@ functions:
           name: perf
           file: mongo-cxx-driver/results.json
 
+    "run scan build":
+      - command: subprocess.exec
+        type: test
+        params:
+          binary: bash
+          working_dir: "mongo-cxx-driver"
+          add_expansions_to_env: true
+          redirect_standard_error_to_output: true
+          args:
+            - -c
+            - .evergreen/compile-scan-build.sh
+
+    "upload scan artifacts":
+      - command: subprocess.exec
+        type: test
+        params:
+          working_dir: "mongo-cxx-driver"
+          binary: bash
+          args:
+            - -c
+            - |
+              set -o errexit
+              if find scan -name \*.html | grep -q html; then
+                (cd scan && find . -name index.html -exec echo "<li><a href='{}'>{}</a></li>" \;) >> scan.html
+              else
+                echo "No issues found" > scan.html
+              fi
+      - command: subprocess.exec
+        params:
+          silent: true
+          working_dir: mongo-cxx-driver
+          binary: bash
+          env:
+            AWS_ACCESS_KEY_ID: ${aws_key}
+            AWS_SECRET_ACCESS_KEY: ${aws_secret}
+          args:
+            - -c
+            - aws s3 cp scan s3://mciuploads/${project}/${build_variant}/${revision}/${version_id}/${build_id}/scan/ --recursive --acl public-read --region us-east-1
+      - command: s3.put
+        params:
+          aws_key: ${aws_key}
+          aws_secret: ${aws_secret}
+          remote_file: ${project}/${build_variant}/${revision}/${version_id}/${build_id}/scan/index.html
+          bucket: mciuploads
+          permissions: public-read
+          local_file: mongo-cxx-driver/scan.html
+          content_type: text/html
+          display_name: Scan Build Report
+
 #######################################
 #              Post Task              #
 #######################################
@@ -1106,6 +1155,66 @@ tasks:
               fi
 
               ./build/src/mongocxx/test/test_driver "atlas search indexes prose tests"
+
+    - name: scan-build-ubuntu2204-std11-mnmlstc
+      run_on: ubuntu2204-large
+      tags: [scan-build-matrix]
+      commands:
+        - func: "setup"
+        - func: "fetch_c_driver_source"
+        - func: "run scan build"
+          vars:
+            CXX_STANDARD: 11
+            BSONCXX_POLYFILL: mnmlstc
+        - func: "upload scan artifacts"
+
+    - name: scan-build-ubuntu2204-std11-boost
+      run_on: ubuntu2204-large
+      tags: [scan-build-matrix]
+      commands:
+        - func: "setup"
+        - func: "fetch_c_driver_source"
+        - func: "run scan build"
+          vars:
+            CXX_STANDARD: 11
+            BSONCXX_POLYFILL: boost
+        - func: "upload scan artifacts"
+
+    - name: scan-build-ubuntu2204-std11-impls
+      run_on: ubuntu2204-large
+      tags: [scan-build-matrix]
+      commands:
+        - func: "setup"
+        - func: "fetch_c_driver_source"
+        - func: "run scan build"
+          vars:
+            CXX_STANDARD: 11
+            BSONCXX_POLYFILL: impls
+        - func: "upload scan artifacts"
+
+    - name: scan-build-ubuntu2204-std14-impls
+      run_on: ubuntu2204-large
+      tags: [scan-build-matrix]
+      commands:
+        - func: "setup"
+        - func: "fetch_c_driver_source"
+        - func: "run scan build"
+          vars:
+            CXX_STANDARD: 14
+            BSONCXX_POLYFILL: impls
+        - func: "upload scan artifacts"
+
+    - name: scan-build-ubuntu2204-std17
+      run_on: ubuntu2204-large
+      tags: [scan-build-matrix]
+      commands:
+        - func: "setup"
+        - func: "fetch_c_driver_source"
+        - func: "run scan build"
+          vars:
+            CXX_STANDARD: 17
+            BSONCXX_POLYFILL: std
+        - func: "upload scan artifacts"
 
 task_groups:
   - name: tg-abi-stability
@@ -2043,3 +2152,8 @@ buildvariants:
     - name: lint
       display_name: Lint
       tasks: [lint]
+
+    - name: scan-build-matrix
+      display_name: scan-build-matrix
+      tasks:
+        - name: .scan-build-matrix
