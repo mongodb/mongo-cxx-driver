@@ -188,7 +188,7 @@ functions:
             shell: bash
             script: |
                 if [ ! -d "drivers-evergreen-tools" ]; then
-                    git clone git@github.com:mongodb-labs/drivers-evergreen-tools.git
+                    git clone https://github.com/mongodb-labs/drivers-evergreen-tools.git
                 fi
                 cd drivers-evergreen-tools
                 export DRIVERS_TOOLS=$(pwd)
@@ -255,7 +255,7 @@ functions:
                 set -o errexit
                 set -o pipefail
                 if [ ! -d "drivers-evergreen-tools" ]; then
-                    git clone git@github.com:mongodb-labs/drivers-evergreen-tools.git
+                    git clone https://github.com/mongodb-labs/drivers-evergreen-tools.git
                 fi
                 cd drivers-evergreen-tools
                 # The legacy shell is only present in server 5.0 builds and earlier,
@@ -404,7 +404,7 @@ functions:
           script: |-
             set -o errexit
             if [ ! -d "drivers-evergreen-tools" ]; then
-                git clone git@github.com:mongodb-labs/drivers-evergreen-tools.git --depth=1
+                git clone https://github.com/mongodb-labs/drivers-evergreen-tools.git --depth=1
             fi
             echo "DRIVERS_TOOLS: $(pwd)/drivers-evergreen-tools" > det-expansion.yml
       # Set DRIVERS_TOOLS expansion.

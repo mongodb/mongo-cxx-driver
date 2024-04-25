@@ -41,7 +41,7 @@ cmake_binary="$(find_cmake_latest)"
 command -v "$cmake_binary"
 
 if [ ! -d ../drivers-evergreen-tools ]; then
-  git clone --depth 1 git@github.com:mongodb-labs/drivers-evergreen-tools.git ../drivers-evergreen-tools
+  git clone --depth 1 https://github.com/mongodb-labs/drivers-evergreen-tools.git ../drivers-evergreen-tools
 fi
 # shellcheck source=/dev/null
 . ../drivers-evergreen-tools/.evergreen/find-python3.sh
