@@ -14,6 +14,8 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 ### Deprecated
 
 - Deprecate use of the `bsoncxx/util/functor.hpp` header.
+- A future minor release plans to raise the minimum supported MongoDB Server version from 3.6 to 4.0. This is in
+accordance with [MongoDB Software Lifecycle Schedules](https://www.mongodb.com/legal/support-policy/lifecycles).
 
 ## 3.10.2 [Unreleased]
 
