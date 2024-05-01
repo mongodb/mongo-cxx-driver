@@ -7,19 +7,19 @@ DOCKER=docker
 .PHONY: build
 build:
 	$(DOCKER) build . \
-		-t mongodb/mongo-cxx-driver:$(MONGOCXX_VERSION)-redhat-ubi-9.3
+		-t mongodb/mongo-cxx-driver:$(MONGOCXX_VERSION)-noble
 
 .PHONY: nocachebuild
 nocachebuild:
 	$(DOCKER) build . \
 		--no-cache \
-		-t mongodb/mongo-cxx-driver:$(MONGOCXX_VERSION)-redhat-ubi-9.3
+		-t mongodb/mongo-cxx-driver:$(MONGOCXX_VERSION)-noble
 
 .PHONY: run
 run: | $(filter nocachebuild build, $(MAKECMDGOALS))
-	$(DOCKER) run --rm -it mongodb/mongo-cxx-driver:$(MONGOCXX_VERSION)-redhat-ubi-9.3
+	$(DOCKER) run --rm -it mongodb/mongo-cxx-driver:$(MONGOCXX_VERSION)-noble
 
 .PHONY: test
 test: | $(filter nocachebuild build, $(MAKECMDGOALS))
-	$(DOCKER) build . --no-cache -f TestDockerfile -t test-mongocxx-driver-image:$(MONGOCXX_VERSION)-redhat-ubi-9.3
-	$(DOCKER) run test-mongocxx-driver-image:$(MONGOCXX_VERSION)-redhat-ubi-9.3
+	$(DOCKER) build . --no-cache -f TestDockerfile -t test-mongocxx-driver-image:$(MONGOCXX_VERSION)-noble
+	$(DOCKER) run test-mongocxx-driver-image:$(MONGOCXX_VERSION)-noble
