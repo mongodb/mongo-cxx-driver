@@ -27,37 +27,37 @@ if __name__ == "__main__":
         "alpine3.19",
         "bookworm",
         "jammy",
-        "redhat-ubi-9.3",
+        "redhat-ubi-9.4",
     ]
     base_image = {
         "alpine3.19": "alpine:3.19",
         "bookworm": "debian:12-slim",
         "jammy": "ubuntu:22.04",
-        "redhat-ubi-9.3": "registry.access.redhat.com/ubi9/ubi-minimal:9.3",
+        "redhat-ubi-9.4": "registry.access.redhat.com/ubi9/ubi-minimal:9.4",
     }
     test_dependency_install_command = {
         "alpine3.19": "apk update && apk upgrade && apk add --no-cache alpine-sdk",
         "bookworm": "apt update && apt upgrade -y && apt install -y build-essential",
         "jammy": "apt update && apt upgrade -y && apt install -y build-essential",
-        "redhat-ubi-9.3": "microdnf upgrade -y && microdnf install -y g++",
+        "redhat-ubi-9.4": "microdnf upgrade -y && microdnf install -y g++",
     }
     build_dependencies_install_command = {
         "alpine3.19": "apk update && apk upgrade && apk add --no-cache alpine-sdk ninja cmake openssl-dev python3",
         "bookworm": "apt update && apt upgrade -y && apt install -y ninja-build build-essential cmake git libssl-dev python3 wget",
         "jammy": "apt update && apt upgrade -y && apt install -y ninja-build build-essential cmake git libssl-dev python3 wget",
-        "redhat-ubi-9.3": "microdnf upgrade -y && microdnf install -y ninja-build gcc g++ git gzip tar wget cmake openssl-devel python3",
+        "redhat-ubi-9.4": "microdnf upgrade -y && microdnf install -y ninja-build gcc g++ git gzip tar wget cmake openssl-devel python3",
     }
     runtime_dependencies_install_command = {
         "alpine3.19": "apk update && apk upgrade && apk add --no-cache openssl3 libstdc++ libc6-compat",
         "bookworm": "apt update && apt upgrade -y && apt install -y libssl3 && rm -rf /var/lib/apt/lists/*",
         "jammy": "apt update && apt upgrade -y && apt install -y libssl3 && rm -rf /var/lib/apt/lists/*",
-        "redhat-ubi-9.3": "microdnf upgrade -y && microdnf install -y openssl",
+        "redhat-ubi-9.4": "microdnf upgrade -y && microdnf install -y openssl",
     }
     post_install_commands = {
         "alpine3.19": "",
         "bookworm": "\nRUN ldconfig\n",
         "jammy": "\nRUN ldconfig\n",
-        "redhat-ubi-9.3": (
+        "redhat-ubi-9.4": (
             "\n"
             "RUN ldconfig\n"
             "\n"
