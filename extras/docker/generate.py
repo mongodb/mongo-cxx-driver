@@ -32,7 +32,7 @@ if __name__ == "__main__":
     base_image = {
         "alpine3.19": "alpine:3.19",
         "bookworm": "debian:12-slim",
-        "noble": "ubuntu:22.04",
+        "noble": "ubuntu:24.04",
         "redhat-ubi-9.4": "registry.access.redhat.com/ubi9/ubi-minimal:9.4",
     }
     test_dependency_install_command = {
