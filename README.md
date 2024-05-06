@@ -19,13 +19,13 @@ for more details about the various versions of the driver.
 
 ## Resources
 
-* [MongoDB C++ Driver Installation](https://www.mongodb.com/docs/languages/cpp/drivers/current/installation/)
-* [MongoDB C++ Driver Quickstart](https://www.mongodb.com/docs/languages/cpp/drivers/current/tutorial/)
+* [MongoDB C++ Driver Installation](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/installation/)
+* [MongoDB C++ Driver Quickstart](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/tutorial/)
 * [MongoDB CXX Driver Examples](https://github.com/mongodb/mongo-cxx-driver/tree/master/examples)
-* [MongoDB C++ Driver Manual](https://www.mongodb.com/docs/languages/cpp/drivers/current/)
+* [MongoDB C++ Driver Manual](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/)
 * [MongoDB C++ Driver Documentation](https://www.mongodb.com/docs/drivers/cxx/)
 * [MongoDB C++ Driver API Documentation](https://mongocxx.org/api/current/)
-* [MongoDB C++ Driver Contribution guidelines](https://www.mongodb.com/docs/languages/cpp/drivers/current/contributing/)
+* [MongoDB C++ Driver Contribution guidelines](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/contributing/)
 * [MongoDB Database Manual](https://www.mongodb.com/docs/manual/)
 * [MongoDB Developer Center](https://www.mongodb.com/developer/languages/cpp/)
 * [StackOverflow](https://stackoverflow.com/questions/tagged/mongodb%20c%2b%2b)
