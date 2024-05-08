@@ -23,6 +23,20 @@ by changes in the new release.
 
 Ensure there are no new, unexpected, or high severity issues on Coverity.
 
+## Update etc/purls.txt
+
+Ensure the list of bundled dependencies is up-to-date.
+
+Run the following commands from the project root directory to regenerate `etc/cyclonedx.sbom.txt` after updating `etc/purls.txt`:
+
+```
+# Output: "Login succeeded!"
+podman login artifactory.corp.mongodb.com --username cpp-driver
+
+# Output: "... writing sbom to file"
+podman run -it --rm -v $(pwd):$(pwd) artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:1.0 update --purls=$(pwd)/etc/purls.txt -o $(pwd)/etc/cyclonedx.sbom.json
+```
+
 ## Check fixVersions in Jira
 
 Ensure that all tickets under the
