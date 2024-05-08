@@ -22,10 +22,11 @@ scan_build_directories+=(
   # Prefer toolchain scan-build if available.
   "/opt/mongodbtoolchain/v4/bin"
   "/opt/mongodbtoolchain/v3/bin"
-
-  # Use system scan-build otherwise.
-  "/usr/bin"
 )
+
+# Use system scan-build otherwise.
+IFS=: read -ra sys_dirs <<< "${PATH:-}"
+scan_build_directories+=("${sys_dirs[@]:-}")
 
 declare scan_build_binary
 for dir in "${scan_build_directories[@]}"; do
