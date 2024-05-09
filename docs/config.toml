@@ -9,15 +9,6 @@ publishdir = "../build/hugo"
 [blackfriday]
   plainIdAnchors = true
 
-
-# Update versions in mongodb.toml as well
-[[menu.main]]
-    name = "mongocxx (v3)"
-    pre = "<i class='fa fa-arrow-right'></i>"
-    weight = 30
-    identifier = "mongocxx3"
-    url = "/mongocxx-v3/"
-
 [[menu.main]]
     name = "legacy (v1)"
     pre = "<i class='fa fa-arrow-right'></i>"
