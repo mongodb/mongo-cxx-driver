@@ -28,7 +28,7 @@
     },
     {
       "bom-ref": "pkg:github/mnmlstc/core@v1.1.0",
-      "copyright": "Copyright © 2013 - 2014 MNMLSTC",
+      "copyright": "Copyright \u00a9 2013 - 2014 MNMLSTC",
       "externalReferences": [
         {
           "type": "distribution",
@@ -91,7 +91,7 @@
     }
   ],
   "metadata": {
-    "timestamp": "2024-05-08T21:06:21.104599+00:00",
+    "timestamp": "2024-05-09T15:38:18.317845+00:00",
     "tools": [
       {
         "externalReferences": [

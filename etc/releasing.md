@@ -34,7 +34,7 @@ Run the following commands from the project root directory to regenerate `etc/cy
 podman login artifactory.corp.mongodb.com --username cpp-driver
 
 # Output: "... writing sbom to file"
-podman run -it --rm -v $(pwd):$(pwd) artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:1.0 update --purls=$(pwd)/etc/purls.txt -o $(pwd)/etc/cyclonedx.sbom.json
+podman run -it --rm -v "$(pwd):$(pwd)" artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:1.0 update -p "$(pwd)/etc/purls.txt" -i "$(pwd)/etc/cyclonedx.sbom.json" -o "$(pwd)/etc/cyclonedx.sbom.json"
 ```
 
 ## Check fixVersions in Jira
