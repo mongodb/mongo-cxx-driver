@@ -8,7 +8,7 @@ type = "index"
 
 This is the legacy site for the Mongo C++ Driver documentation. See the new
 [MongoDB C++ Driver
-documentation](https://www.mongodb.com/docs/languages/cpp/drivers/current/).
+documentation](https://www.mongodb.com/docs/languages/cpp/).
 
 For documentation of the legacy C++ driver (versions older than 3.0), see the
 [Legacy C++ Driver documentation](https://mongocxx.org/legacy-v1/).
