@@ -1,32 +1,6 @@
 {
   "components": [
     {
-      "bom-ref": "pkg:github/catchorg/catch2@v2.13.7#single_include/catch2/catch.hpp",
-      "copyright": "Copyright (c) 2021 Two Blue Cubes Ltd.",
-      "externalReferences": [
-        {
-          "type": "distribution",
-          "url": "https://github.com/catchorg/catch2/archive/refs/tags/v2.13.7.tar.gz"
-        },
-        {
-          "type": "website",
-          "url": "https://github.com/catchorg/catch2/tree/v2.13.7"
-        }
-      ],
-      "group": "catchorg",
-      "licenses": [
-        {
-          "license": {
-            "id": "BSL-1.0"
-          }
-        }
-      ],
-      "name": "catch2",
-      "purl": "pkg:github/catchorg/catch2@v2.13.7#single_include/catch2/catch.hpp",
-      "type": "library",
-      "version": "v2.13.7"
-    },
-    {
       "bom-ref": "pkg:github/mnmlstc/core@v1.1.0",
       "copyright": "Copyright \u00a9 2013 - 2014 MNMLSTC",
       "externalReferences": [
@@ -81,9 +55,6 @@
   ],
   "dependencies": [
     {
-      "ref": "pkg:github/catchorg/catch2@v2.13.7#single_include/catch2/catch.hpp"
-    },
-    {
       "ref": "pkg:github/mnmlstc/core@v1.1.0"
     },
     {
@@ -91,7 +62,7 @@
     }
   ],
   "metadata": {
-    "timestamp": "2024-05-09T15:38:18.317845+00:00",
+    "timestamp": "2024-05-09T15:50:40.695420+00:00",
     "tools": [
       {
         "externalReferences": [
