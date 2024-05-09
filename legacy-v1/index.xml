@@ -6,59 +6,42 @@
     <description>Recent content in The Legacy C&#43;&#43; Driver on MongoDB C&#43;&#43; Driver Manual</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Mon, 15 Aug 2016 16:11:58 +0530</lastBuildDate><atom:link href="https://mongocxx.org/legacy-v1/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Mon, 15 Aug 2016 16:11:58 +0530</lastBuildDate>
+    <atom:link href="https://mongocxx.org/legacy-v1/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Breaking changes from 26compat</title>
       <link>https://mongocxx.org/legacy-v1/breaking-changes/</link>
       <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
-      
       <guid>https://mongocxx.org/legacy-v1/breaking-changes/</guid>
-      <description>The 26compat release series tracks the server 2.6 releases one-to-one. As a result, it receives only bugfixes and small updates necessary to keep it building in isolation.
-The legacy release series, on the other hand, is a permanent and diverging fork. Our philosophy is to keep the legacy branch as close to the 26compat branch as is reasonable, but that when weighing new features against compatibility, we will choose new features.</description>
+      <description>The 26compat release series tracks the server 2.6 releases one-to-one. As a result, it receives only bugfixes and small updates necessary to keep it building in isolation.&#xA;The legacy release series, on the other hand, is a permanent and diverging fork. Our philosophy is to keep the legacy branch as close to the 26compat branch as is reasonable, but that when weighing new features against compatibility, we will choose new features.</description>
     </item>
-    
     <item>
       <title>Configuring the legacy driver</title>
       <link>https://mongocxx.org/legacy-v1/configuration/</link>
       <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
-      
       <guid>https://mongocxx.org/legacy-v1/configuration/</guid>
-      <description>In the legacy-0.9 development cycle, the mechanism by which the driver is configured was refactored. Note that these changes do not apply to releases on the 26compat branch, or releases pre-dating legacy-0.9.0.This page describes the new configuration mechanism and documents the various configuration options that may be used.
-The mongo::client::initialize function The mongo::client::initialize function, found in file src/mongo/client/init.h configures the driver and starts background threads critical to the functioning of the driver.</description>
+      <description>In the legacy-0.9 development cycle, the mechanism by which the driver is configured was refactored. Note that these changes do not apply to releases on the 26compat branch, or releases pre-dating legacy-0.9.0.This page describes the new configuration mechanism and documents the various configuration options that may be used.&#xA;The mongo::client::initialize function The mongo::client::initialize function, found in file src/mongo/client/init.h configures the driver and starts background threads critical to the functioning of the driver.</description>
     </item>
-    
     <item>
       <title>Installing the legacy driver</title>
       <link>https://mongocxx.org/legacy-v1/installation/</link>
       <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
-      
       <guid>https://mongocxx.org/legacy-v1/installation/</guid>
       <description>Table of Contents How to ask for Help Get the source code Choose a branch legacy branch Compile the Driver SCons options when Compiling the C++ Driver Targets Client Options Path Options Build Options SCons Options Windows Options Mac OS X Options Deprecated Options Windows Considerations Example C++ Driver Compilations Debug Builds Building on Windows Building against the pre-built boost binaries Building a DLL Building multiple Windows library variants Using the driver in your application Initialization and Configuration Client Headers Client Libraries Windows autolinking Linking with the static client library How to ask for Help If you are having difficulty building the driver after reading the below instructions, please post on the MongoDB Community Forums to ask for help.</description>
     </item>
-    
     <item>
       <title>Legacy driver tutorial</title>
       <link>https://mongocxx.org/legacy-v1/tutorial/</link>
       <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
-      
       <guid>https://mongocxx.org/legacy-v1/tutorial/</guid>
-      <description>Getting started with the Legacy C++ Driver This is an introduction to usage of the MongoDB database from a C++ program.
-NOTE: this tutorial is for the legacy and 26compat versions of the C++ driver.
-First, install MongoDB – see the installation page for details.
-Next, you may wish to take a look at the MongoDB Manual for a language independent look at how to use MongoDB. Also, we suggest some basic familiarity with the mongo shell – the shell is the primary database administration tool and is useful for manually inspecting the contents of a database after your C++ program runs.</description>
+      <description>Getting started with the Legacy C++ Driver This is an introduction to usage of the MongoDB database from a C++ program.&#xA;NOTE: this tutorial is for the legacy and 26compat versions of the C++ driver.&#xA;First, install MongoDB – see the installation page for details.&#xA;Next, you may wish to take a look at the MongoDB Manual for a language independent look at how to use MongoDB. Also, we suggest some basic familiarity with the mongo shell – the shell is the primary database administration tool and is useful for manually inspecting the contents of a database after your C++ program runs.</description>
     </item>
-    
     <item>
       <title>Working with BSON</title>
       <link>https://mongocxx.org/legacy-v1/working-with-bson/</link>
       <pubDate>Mon, 15 Aug 2016 16:11:58 +0530</pubDate>
-      
       <guid>https://mongocxx.org/legacy-v1/working-with-bson/</guid>
-      <description>BSON Helper Functions This is a non-exhaustive list of helper functions for use in the C++ stream syntax. An exhaustive list is here: bsonmisc.h
-Typical example of stream syntax:
-BSONObj p = BSON( &amp;#34;name&amp;#34; &amp;lt;&amp;lt; &amp;#34;Joe&amp;#34; &amp;lt;&amp;lt; &amp;#34;age&amp;#34; &amp;lt;&amp;lt; 33 ); GENOID The server will add an _id automatically if it is not included explicitly.
-BSONObj p = BSON( GENOID &amp;lt;&amp;lt; &amp;#34;name&amp;#34; &amp;lt;&amp;lt; &amp;#34;Joe&amp;#34; &amp;lt;&amp;lt; &amp;#34;age&amp;#34; &amp;lt;&amp;lt; 33 ); // result is: { _id : .</description>
+      <description>BSON Helper Functions This is a non-exhaustive list of helper functions for use in the C++ stream syntax. An exhaustive list is here: bsonmisc.h&#xA;Typical example of stream syntax:&#xA;BSONObj p = BSON( &amp;#34;name&amp;#34; &amp;lt;&amp;lt; &amp;#34;Joe&amp;#34; &amp;lt;&amp;lt; &amp;#34;age&amp;#34; &amp;lt;&amp;lt; 33 ); GENOID The server will add an _id automatically if it is not included explicitly.&#xA;BSONObj p = BSON( GENOID &amp;lt;&amp;lt; &amp;#34;name&amp;#34; &amp;lt;&amp;lt; &amp;#34;Joe&amp;#34; &amp;lt;&amp;lt; &amp;#34;age&amp;#34; &amp;lt;&amp;lt; 33 ); // result is: { _id : .</description>
     </item>
-    
   </channel>
 </rss>
