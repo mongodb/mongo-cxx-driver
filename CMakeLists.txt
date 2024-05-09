@@ -20,6 +20,12 @@ endif()
 
 project(MONGO_CXX_DRIVER LANGUAGES CXX)
 
+set(CMAKE_MODULE_PATH
+    ${CMAKE_MODULE_PATH}
+    ${PROJECT_SOURCE_DIR}/cmake
+    ${PROJECT_SOURCE_DIR}/cmake/make_dist
+)
+
 option(BUILD_TESTING "Include test targets in the \"all\" target")
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
@@ -42,9 +48,11 @@ else()
     message(WARNING "Unknown compiler... recklessly proceeding without a version check")
 endif()
 
+# Also update etc/purls.txt.
 set(LIBBSON_REQUIRED_VERSION 1.25.0)
 set(LIBBSON_REQUIRED_ABI_VERSION 1.0)
 
+# Also update etc/purls.txt.
 set(LIBMONGOC_REQUIRED_VERSION 1.25.0)
 set(LIBMONGOC_DOWNLOAD_VERSION 1.25.0)
 set(LIBMONGOC_REQUIRED_ABI_VERSION 1.0)
@@ -67,45 +75,7 @@ endif()
 
 if(NEED_DOWNLOAD_C_DRIVER)
     message(STATUS "No Mongo C Driver path provided via CMAKE_PREFIX_PATH, will download C driver version ${LIBMONGOC_DOWNLOAD_VERSION} from the internet.")
-    message(STATUS "Download and configure C driver version ${LIBMONGOC_DOWNLOAD_VERSION} ... begin")
-    include(FetchContent)
-    include(ExternalProject)
-
-    # Declare mongo-c-driver as a dependency
-    FetchContent_Declare(
-        mongo-c-driver
-        GIT_REPOSITORY https://github.com/mongodb/mongo-c-driver.git
-        GIT_TAG ${LIBMONGOC_DOWNLOAD_VERSION}
-    )
-
-    FetchContent_GetProperties(mongo-c-driver)
-
-    if(NOT mongo-c-driver_POPULATED)
-        set(OLD_ENABLE_TESTS ${ENABLE_TESTS})
-        set(OLD_BUILD_TESTING ${BUILD_TESTING})
-        set(OLD_CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
-        set(OLD_CMAKE_C_FLAGS ${CMAKE_C_FLAGS})
-
-        set(ENABLE_EXTRA_ALIGNMENT OFF)
-
-        FetchContent_Populate(mongo-c-driver)
-
-        # Set ENABLE_TESTS to OFF to disable the test-libmongoc target in the C driver.
-        # This prevents the LoadTests.cmake script from attempting to execute test-libmongoc.
-        # test-libmongoc is not built with the "all" target.
-        # Attempting to execute test-libmongoc results in an error: "Unable to find executable: NOT_FOUND"
-        set(ENABLE_TESTS OFF)
-        set(BUILD_TESTING OFF)
-        string(REPLACE " -Werror" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
-        string(REPLACE " -Werror" "" CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
-        add_subdirectory(${mongo-c-driver_SOURCE_DIR} ${mongo-c-driver_BINARY_DIR})
-        set(CMAKE_CXX_FLAGS ${OLD_CMAKE_CXX_FLAGS})
-        set(CMAKE_C_FLAGS ${OLD_CMAKE_C_FLAGS})
-        set(ENABLE_TESTS ${OLD_ENABLE_TESTS})
-        set(BUILD_TESTING ${OLD_BUILD_TESTING})
-    endif()
-
-    message(STATUS "Download and configure C driver version ${LIBMONGOC_DOWNLOAD_VERSION} ... end")
+    include(FetchMongoC)
 endif()
 
 # All of our target compilers support the deprecated
@@ -229,12 +199,6 @@ if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT AND MONGOCXX_OVERRIDE_DEFAULT_INS
         "path to: ${CMAKE_BINARY_DIR}/install")
     set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/install" CACHE PATH "default install path" FORCE)
 endif()
-
-set(CMAKE_MODULE_PATH
-    ${CMAKE_MODULE_PATH}
-    ${PROJECT_SOURCE_DIR}/cmake
-    ${PROJECT_SOURCE_DIR}/cmake/make_dist
-)
 
 include(GNUInstallDirs)
 include(ParseVersion)

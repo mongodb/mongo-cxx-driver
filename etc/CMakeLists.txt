@@ -14,6 +14,7 @@
 
 file (GLOB etc_DIST_cmds RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.cmd)
 file (GLOB etc_DIST_csss RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.css)
+file (GLOB etc_DIST_jsons RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.json)
 file (GLOB etc_DIST_mds RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.md)
 file (GLOB etc_DIST_pls RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.pl)
 file (GLOB etc_DIST_pys RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.py)
@@ -24,6 +25,7 @@ set_dist_list (etc_DIST
    CMakeLists.txt
    ${etc_DIST_cmds}
    ${etc_DIST_csss}
+   ${etc_DIST_jsons}
    ${etc_DIST_mds}
    ${etc_DIST_pls}
    ${etc_DIST_pys}
