@@ -136,8 +136,9 @@ git tag r1.2.3
 ## Run make_release.py
 
 `make_release.py` creates the distribution tarball
-(e.g. mongo-cxx-driver-r1.2.3.tar.gz), interacts with Jira, and drafts the
-release on GitHub.
+(e.g. mongo-cxx-driver-r1.2.3.tar.gz) and corresponding signature file (e.g.
+mongo-cxx-driver-r1.2.3.tar.gz.asc), interacts with Jira, and drafts the release
+on GitHub.
 
 To see all available options, run with `--help`
 
@@ -145,13 +146,21 @@ To see all available options, run with `--help`
 python ./etc/make_release.py --help
 ```
 
-It requires the following:
+It requires the following (note: avoid typing secrets as command-line arguments):
 
 - A GitHub token. Go to the GitHub settings page
   [Personal Access Tokens](https://github.com/settings/tokens) and create a
   token.  Save the token secret to `~/.secrets/github_token.txt`.
 - Jira OAuth credentials. Ask for these from a team member.
   Save it to `~/.secrets/jira_creds.txt`.
+- Artifactory and Garasign credentials. Save these to `~/.secrets/garasign-creds.txt` in the form:
+  ```
+  ARTIFACTORY_USER=<username>
+  ARTIFACTORY_PASSWORD=<password>
+  GRS_CONFIG_USER1_USERNAME=<username>
+  GRS_CONFIG_USER1_PASSWORD=<password>
+  ```
+  Ask for these from a team member.
 
 Run the release script with the git tag created above as an argument and
 `--dry-run` to test for unexpected errors.
