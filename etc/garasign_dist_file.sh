@@ -8,8 +8,11 @@ set -o pipefail
 
 : "${1:?"missing dist_file as first argument"}"
 
-if ! command -v podman >/dev/null; then
-  echo "podman is required to sign distribution tarball" 1>&2
+# Allow customization point to use docker in place of podman.
+launcher="${GARASIGN_LAUNCHER:-"podman"}"
+
+if ! command -v "${launcher:?}" >/dev/null; then
+  echo "${launcher:?} is required to sign distribution tarball" 1>&2
 fi
 
 if ! command -v gpg >/dev/null; then
@@ -39,12 +42,12 @@ unset GRS_CONFIG_USER1_PASSWORD
 dist_file="${1:?}"
 dist_file_signed="${dist_file:?}.asc"
 
-podman login --password-stdin --username "${ARTIFACTORY_USER:?}" artifactory.corp.mongodb.com <<< "${ARTIFACTORY_PASSWORD:?}"
+"${launcher:?}" login --password-stdin --username "${ARTIFACTORY_USER:?}" artifactory.corp.mongodb.com <<<"${ARTIFACTORY_PASSWORD:?}"
 
 plugin_commands=(
   gpg --yes -v --armor -o "${dist_file_signed:?}" --detach-sign "${dist_file:?}"
 )
-podman run \
+"${launcher:?}" run \
   --env-file="${creds:?}" \
   -e "PLUGIN_COMMANDS=${plugin_commands[*]:?}" \
   --rm \
