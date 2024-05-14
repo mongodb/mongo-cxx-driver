@@ -52,11 +52,6 @@ podman run \
   -w "$(pwd)" \
   artifactory.corp.mongodb.com/release-tools-container-registry-local/garasign-gpg
 
-# This is the key used to sign C++ Driver release artifacts.
-# This should match the key downloaded from pgp.mongodb.com below, otherwise
-# verification will fail due to no matching (trusted) public key.
-key=DC7F679B8A34DD606C1E54CAC4FC994D21532195
-
 # Validate the signature file works as intended.
 keyring="$(mktemp)"
 curl -sS https://pgp.mongodb.com/cpp-driver.pub | gpg -q --no-default-keyring --keyring "${keyring:?}" --import -
