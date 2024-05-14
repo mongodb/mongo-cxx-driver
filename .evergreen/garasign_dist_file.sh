@@ -41,18 +41,16 @@ dist_file_signed="${dist_file:?}.asc"
 
 echo "${ARTIFACTORY_PASSWORD:?}" | podman login --password-stdin --username "${ARTIFACTORY_USER:?}" artifactory.corp.mongodb.com
 
-podman_args=(
-  --env-file="${creds:?}"
-  --rm
-  -v "$(pwd):$(pwd)"
-  -w "$(pwd)"
-)
-podman_image=artifactory.corp.mongodb.com/release-tools-container-registry-local/garasign-gpg
-
 plugin_commands=(
   gpg --yes -v --armor -o "${dist_file_signed:?}" --detach-sign "${dist_file:?}"
 )
-podman run "${podman_args[@]:?}" -e "PLUGIN_COMMANDS=${plugin_commands[*]:?}" "${podman_image:?}"
+podman run \
+  --env-file="${creds:?}" \
+  -e "PLUGIN_COMMANDS=${plugin_commands[*]:?}" \
+  --rm \
+  -v "$(pwd):$(pwd)" \
+  -w "$(pwd)" \
+  artifactory.corp.mongodb.com/release-tools-container-registry-local/garasign-gpg
 
 # This is the key used to sign C++ Driver release artifacts.
 # This should match the key downloaded from pgp.mongodb.com below, otherwise
