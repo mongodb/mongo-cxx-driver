@@ -39,7 +39,7 @@ unset GRS_CONFIG_USER1_PASSWORD
 dist_file="${1:?}"
 dist_file_signed="${dist_file:?}.asc"
 
-echo "${ARTIFACTORY_PASSWORD:?}" | podman login --password-stdin --username "${ARTIFACTORY_USER:?}" artifactory.corp.mongodb.com
+podman login --password-stdin --username "${ARTIFACTORY_USER:?}" artifactory.corp.mongodb.com <<< "${ARTIFACTORY_PASSWORD:?}"
 
 plugin_commands=(
   gpg --yes -v --armor -o "${dist_file_signed:?}" --detach-sign "${dist_file:?}"
