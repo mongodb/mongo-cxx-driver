@@ -577,6 +577,9 @@ def generate_release_notes(release_version: str, changelog_contents: str) -> str
     - [Create an account](https://jira.mongodb.org) and login.
     - Navigate to the [CXX project](https://jira.mongodb.org/browse/CXX)
     - Click `Create`.
+
+    ## Signature Verification
+    Release artifacts may be verified by using the accompanying detached signature (.asc) and the cpp-driver public key obtained from https://pgp.mongodb.com.
     """).lstrip()
 
     release_notes = "".join(lines) + "\n"
