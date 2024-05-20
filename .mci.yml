@@ -1027,7 +1027,7 @@ tasks:
             ./build/hello_mongocxx
 
     - name: debian-package-build
-      run_on: ubuntu1804-test
+      run_on: debian12-latest-small
       commands:
       - func: "setup"
       - command: shell.exec
@@ -1051,7 +1051,7 @@ tasks:
           display_name: "deb.tar.gz"
 
     - name: debian-package-build-mnmlstc
-      run_on: ubuntu1804-test
+      run_on: debian12-latest-small
       commands:
       - func: "setup"
       - command: shell.exec
