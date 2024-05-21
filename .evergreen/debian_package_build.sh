@@ -20,6 +20,9 @@ if [ ! -z "${DEB_BUILD_PROFILES}" ]; then
    echo "DEB_BUILD_PROFILES was set; building with profiles: ${DEB_BUILD_PROFILES}"
 fi
 
+git config user.email "evergreen-build@example.com"
+git config user.name "Evergreen Build"
+
 if [ "${IS_PATCH}" = "true" ]; then
   git diff HEAD > ../upstream.patch
   git clean -fdx
@@ -54,6 +57,7 @@ cp -a mongo-cxx-driver ./unstable-chroot/tmp/
 sudo DEB_BUILD_PROFILES="${DEB_BUILD_PROFILES}" chroot ./unstable-chroot /bin/bash -c "
   (apt-get install -y ca-certificates cmake debhelper doxygen git libboost-dev libsasl2-dev libsnappy-dev libssl-dev libutf8proc-dev pkgconf zlib1g-dev build-essential curl fakeroot furo git-buildpackage python3-sphinx python3-sphinx-design && \
   mkdir /tmp/mongo-c-driver && \
+  cd /tmp/mongo-c-driver && \
   curl -o deb.tar.gz -L https://s3.amazonaws.com/mciuploads/mongo-c-driver/master/mongo-c-driver-debian-packages-latest.tar.gz && \
   tar zxvf deb.tar.gz && \
   apt-get install -y ./*.deb && \
