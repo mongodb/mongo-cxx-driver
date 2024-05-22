@@ -21,7 +21,7 @@ by changes in the new release.
 
 ## Check Coverity
 
-Ensure there are no new, unexpected, or high severity issues on Coverity.
+Ensure there are no new or unexpected issues with High severity or greater.
 
 ## Update etc/purls.txt
 
@@ -36,6 +36,14 @@ podman login artifactory.corp.mongodb.com --username cpp-driver
 # Output: "... writing sbom to file"
 podman run -it --rm -v "$(pwd):$(pwd)" artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:1.0 update -p "$(pwd)/etc/purls.txt" -i "$(pwd)/etc/cyclonedx.sbom.json" -o "$(pwd)/etc/cyclonedx.sbom.json"
 ```
+
+## Check Snyk
+
+Inspect the list of issues in the latest report for the mongodb/mongo-cxx-driver target in [Snyk](https://app.snyk.io/).
+
+Examine the latest report and ensure there are no new or unexpected fixable issues with High severity or greater.
+
+Deactivate any projects that will not be relevant in the upcoming release. Remove any projects that are not relevant to the current release.
 
 ## Check fixVersions in Jira
 
