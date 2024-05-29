@@ -154,21 +154,22 @@ To see all available options, run with `--help`
 python ./etc/make_release.py --help
 ```
 
-It requires the following (note: avoid typing secrets as command-line arguments):
+The following credentials are required. Ask for these from a team member if necessary. (Note: avoid typing secrets as command-line arguments).
 
 - A GitHub token. Go to the GitHub settings page
   [Personal Access Tokens](https://github.com/settings/tokens) and create a
   token.  Save the token secret to `~/.secrets/github_token.txt`.
-- Jira OAuth credentials. Ask for these from a team member.
-  Save it to `~/.secrets/jira_creds.txt`.
-- Artifactory and Garasign credentials. Save these to `~/.secrets/garasign-creds.txt` in the form:
-  ```
+- Jira OAuth credentials. Save it to `~/.secrets/jira_creds.txt`.
+- Artifactory credentials. Save these to `~/.secrets/artifactory-creds.txt`:
+  ```bash
   ARTIFACTORY_USER=<username>
   ARTIFACTORY_PASSWORD=<password>
+  ```
+- Garasign credentials. Save these to `~/.secrets/garasign-creds.txt`:
+  ```bash
   GRS_CONFIG_USER1_USERNAME=<username>
   GRS_CONFIG_USER1_PASSWORD=<password>
   ```
-  Ask for these from a team member.
 
 Run the release script with the git tag created above as an argument and
 `--dry-run` to test for unexpected errors.
