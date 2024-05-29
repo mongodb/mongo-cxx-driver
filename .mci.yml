@@ -700,6 +700,33 @@ functions:
           content_type: text/html
           display_name: Scan Build Report
 
+    "check augmented sbom":
+      - command: subprocess.exec
+        type: test
+        params:
+          working_dir: "mongo-cxx-driver"
+          binary: bash
+          include_expansions_in_env:
+            - ARTIFACTORY_USER
+            - ARTIFACTORY_PASSWORD
+            - SILK_CLIENT_ID
+            - SILK_CLIENT_SECRET
+          args:
+            - -c
+            - .evergreen/check-augmented-sbom.sh
+
+    "upload augmented sbom":
+      - command: s3.put
+        params:
+          aws_key: ${aws_key}
+          aws_secret: ${aws_secret}
+          remote_file: ${project}/${build_variant}/${revision}/${version_id}/${build_id}/silk/augmented.sbom.json
+          bucket: mciuploads
+          permissions: public-read
+          local_file: mongo-cxx-driver/etc/augmented.sbom.json
+          content_type: application/json
+          display_name: Augmented SBOM
+
 #######################################
 #              Post Task              #
 #######################################
@@ -1229,6 +1256,14 @@ tasks:
             CXX_STANDARD: 17
             BSONCXX_POLYFILL: std
         - func: "upload scan artifacts"
+
+    - name: silk-check-augmented-sbom
+      run_on: rhel8-latest-small
+      tags: [silk]
+      commands:
+        - func: "setup"
+        - func: "check augmented sbom"
+        - func: "upload augmented sbom"
 
 task_groups:
   - name: tg-abi-stability
@@ -2171,3 +2206,8 @@ buildvariants:
       display_name: scan-build-matrix
       tasks:
         - name: .scan-build-matrix
+
+    - name: silk
+      display_name: silk
+      tasks:
+        - name: .silk
