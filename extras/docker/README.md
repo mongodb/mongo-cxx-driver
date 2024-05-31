@@ -16,6 +16,8 @@ is also known as
 
 ## Tags
 
+**Important**: the following tags are provided for development purposes only and do **NOT** receive security updates.
+
 - [3.10.1-redhat-ubi-9.4](https://github.com/mongodb/mongo-cxx-driver/blob/5353ca8d092670fe80cc37424e666bbed43c0c2d/extras/docker/redhat-ubi-9.4/Dockerfile)
 - [3.10.1-redhat-ubi-9.3](https://github.com/mongodb/mongo-cxx-driver/blob/0532dc531ef64521a5aa2339f5835bb2d9f6f964/extras/docker/redhat-ubi-9.3/Dockerfile)
 - [3.10.0-redhat-ubi-9.3](https://github.com/mongodb/mongo-cxx-driver/blob/7fa047f64b476b7b7c422afc9b92eafde41f3412/extras/docker/redhat-ubi-9.3/Dockerfile)
