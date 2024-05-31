@@ -59,6 +59,9 @@ class core {
 
     ~core();
 
+    core(const core&) = delete;
+    core& operator=(const core&) = delete;
+
     ///
     /// Appends a key passed as a non-owning stdx::string_view.
     ///

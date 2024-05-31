@@ -43,6 +43,12 @@ class command_succeeded_event {
     ///
     ~command_succeeded_event();
 
+    command_succeeded_event(command_succeeded_event&&) = default;
+    command_succeeded_event& operator=(command_succeeded_event&&) = default;
+
+    command_succeeded_event(const command_succeeded_event&) = default;
+    command_succeeded_event& operator=(const command_succeeded_event&) = default;
+
     ///
     /// Returns the server reply for the succeeded operation.
     ///

@@ -119,6 +119,12 @@ class topology_description {
     ///
     ~topology_description();
 
+    topology_description(topology_description&&) = default;
+    topology_description& operator=(topology_description&&) = default;
+
+    topology_description(const topology_description&) = default;
+    topology_description& operator=(const topology_description&) = default;
+
     ///
     /// The topology type: "Unknown", "Sharded", "ReplicaSetNoPrimary", "ReplicaSetWithPrimary", or
     /// "Single".

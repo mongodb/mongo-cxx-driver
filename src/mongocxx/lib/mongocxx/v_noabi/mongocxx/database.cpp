@@ -55,6 +55,12 @@ class collection_names {
         bson_strfreev(_names);
     }
 
+    collection_names(collection_names&&) noexcept = delete;
+    collection_names& operator=(collection_names&&) noexcept = delete;
+
+    collection_names(const collection_names&) = delete;
+    collection_names& operator=(const collection_names&) = delete;
+
     const char* operator[](const std::size_t i) const {
         return _names[i];
     };

@@ -41,6 +41,12 @@ class heartbeat_succeeded_event {
     ///
     ~heartbeat_succeeded_event();
 
+    heartbeat_succeeded_event(heartbeat_succeeded_event&&) = default;
+    heartbeat_succeeded_event& operator=(heartbeat_succeeded_event&&) = default;
+
+    heartbeat_succeeded_event(const heartbeat_succeeded_event&) = default;
+    heartbeat_succeeded_event& operator=(const heartbeat_succeeded_event&) = default;
+
     ///
     /// Returns the server reply for the succeeded operation.
     ///

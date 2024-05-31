@@ -67,6 +67,12 @@ class pool {
     ///
     ~pool();
 
+    pool(pool&&) = delete;
+    pool& operator=(pool&&) = delete;
+
+    pool(const pool&) = delete;
+    pool& operator=(const pool&) = delete;
+
     ///
     /// An entry is a handle on a @c client object acquired via the pool. Similar to
     /// std::unique_ptr.

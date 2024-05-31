@@ -53,17 +53,17 @@ class client_encryption {
     ///
     /// Destroys a client_encryption.
     ///
-    ~client_encryption() noexcept;
+    ~client_encryption();
 
     ///
     /// Move-constructs a client_encryption object.
     ///
-    client_encryption(client_encryption&&);
+    client_encryption(client_encryption&&) noexcept;
 
     ///
     /// Move-assigns a client_encryption object.
     ///
-    client_encryption& operator=(client_encryption&&);
+    client_encryption& operator=(client_encryption&&) noexcept;
 
     client_encryption(const client_encryption&) = delete;
     client_encryption& operator=(const client_encryption&) = delete;

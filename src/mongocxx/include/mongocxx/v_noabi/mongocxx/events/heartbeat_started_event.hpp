@@ -42,6 +42,13 @@ class heartbeat_started_event {
     ///
     ~heartbeat_started_event();
 
+    heartbeat_started_event(heartbeat_started_event&&) = default;
+    MONGOCXX_INLINE heartbeat_started_event& operator=(heartbeat_started_event&&) noexcept =
+        default;
+
+    heartbeat_started_event(const heartbeat_started_event&) = default;
+    heartbeat_started_event& operator=(const heartbeat_started_event&) = default;
+
     ///
     /// Returns the host name.
     ///

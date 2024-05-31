@@ -42,6 +42,12 @@ class server_changed_event {
     ///
     ~server_changed_event();
 
+    server_changed_event(server_changed_event&&) = default;
+    server_changed_event& operator=(server_changed_event&&) = default;
+
+    server_changed_event(const server_changed_event&) = default;
+    server_changed_event& operator=(const server_changed_event&) = default;
+
     ///
     /// Returns the server host name.
     ///

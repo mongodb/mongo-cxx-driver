@@ -43,6 +43,12 @@ class command_started_event {
     ///
     ~command_started_event();
 
+    command_started_event(command_started_event&&) = default;
+    command_started_event& operator=(command_started_event&&) = default;
+
+    command_started_event(const command_started_event&) = default;
+    command_started_event& operator=(const command_started_event&) = default;
+
     ///
     /// Returns the command that has been started.
     ///

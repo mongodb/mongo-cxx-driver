@@ -45,7 +45,7 @@ class view_or_value : public bsoncxx::v_noabi::view_or_value<stdx::string_view, 
     ///
     /// Default constructor, equivalent to using an empty string.
     ///
-    BSONCXX_INLINE view_or_value() = default;
+    view_or_value() = default;
 
     ///
     /// Construct a string::view_or_value using a null-terminated const char *.

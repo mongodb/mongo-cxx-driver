@@ -41,6 +41,12 @@ class topology_changed_event {
     ///
     ~topology_changed_event();
 
+    topology_changed_event(topology_changed_event&&) = default;
+    topology_changed_event& operator=(topology_changed_event&&) = default;
+
+    topology_changed_event(const topology_changed_event&) = default;
+    topology_changed_event& operator=(const topology_changed_event&) = default;
+
     ///
     /// An opaque id, unique to this topology for this mongocxx::v_noabi::client or
     /// mongocxx::v_noabi::pool.

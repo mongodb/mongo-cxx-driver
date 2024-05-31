@@ -75,11 +75,13 @@ class value {
     ///
     explicit value(document::view view);
 
+    ~value() = default;
+
     value(const value&);
     value& operator=(const value&);
 
-    value(value&&) noexcept = default;
-    value& operator=(value&&) noexcept = default;
+    value(value&&) = default;
+    value& operator=(value&&) = default;
 
     ///
     /// Constructor used for serialization of user objects. This uses argument-dependent lookup

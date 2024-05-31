@@ -76,8 +76,8 @@ class value {
     value(const value&);
     value& operator=(const value&);
 
-    value(value&&) noexcept = default;
-    value& operator=(value&&) noexcept = default;
+    value(value&&) = default;
+    value& operator=(value&&) = default;
 
     ///
     /// Get a view over the document owned by this value.

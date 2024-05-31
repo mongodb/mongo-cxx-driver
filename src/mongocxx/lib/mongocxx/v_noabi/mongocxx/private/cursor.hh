@@ -43,6 +43,12 @@ class cursor::impl {
         libmongoc::cursor_destroy(cursor_t);
     }
 
+    impl(impl&&) = delete;
+    impl& operator=(impl&&) = delete;
+
+    impl(const impl&) = delete;
+    impl& operator=(const impl&) = delete;
+
     bool has_started() const {
         return status >= state::k_started;
     }

@@ -42,6 +42,9 @@ class index_view {
 
     ~index_view();
 
+    index_view(const index_view&) = delete;
+    index_view& operator=(const index_view&) = delete;
+
     ///
     /// @{
     ///

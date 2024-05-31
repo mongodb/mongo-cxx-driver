@@ -30,6 +30,12 @@ class write_concern::impl {
         libmongoc::write_concern_destroy(write_concern_t);
     }
 
+    impl(impl&&) = delete;
+    impl& operator=(impl&&) = delete;
+
+    impl(const impl&) = delete;
+    impl& operator=(const impl&) = delete;
+
     mongoc_write_concern_t* write_concern_t;
 };
 

@@ -37,6 +37,12 @@ class server_description {
     ///
     ~server_description();
 
+    server_description(server_description&&) = default;
+    server_description& operator=(server_description&&) = default;
+
+    server_description(const server_description&) = default;
+    server_description& operator=(const server_description&) = default;
+
     ///
     /// An opaque id, unique to this server for this mongocxx::v_noabi::client or
     /// mongocxx::v_noabi::pool.

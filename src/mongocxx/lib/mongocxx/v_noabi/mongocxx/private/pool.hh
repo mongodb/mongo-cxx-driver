@@ -33,6 +33,12 @@ class pool::impl {
         libmongoc::client_pool_destroy(client_pool_t);
     }
 
+    impl(impl&&) = delete;
+    impl& operator=(impl&&) = delete;
+
+    impl(const impl&) = delete;
+    impl& operator=(const impl&) = delete;
+
     mongoc_client_pool_t* client_pool_t;
     std::list<bsoncxx::v_noabi::string::view_or_value> tls_options;
     options::apm listeners;

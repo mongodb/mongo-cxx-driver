@@ -83,6 +83,9 @@ class uri {
     ///
     ~uri();
 
+    uri(const uri&) = delete;
+    uri& operator=(const uri&) = delete;
+
     ///
     /// Returns the authentication mechanism from the uri.
     ///
