@@ -22,14 +22,16 @@ namespace mongocxx {
 namespace v_noabi {
 namespace events {
 
-topology_description::server_descriptions::server_descriptions(
-    server_descriptions&& other) noexcept {
-    swap(other);
+topology_description::server_descriptions::server_descriptions(server_descriptions&& other) noexcept
+    : _container(std::move(other._container)), _sds(other._sds), _size(other._size) {
+    other._sds = nullptr;
+    other._size = 0u;
 }
 
 topology_description::server_descriptions& topology_description::server_descriptions::operator=(
     server_descriptions&& other) noexcept {
-    swap(other);
+    auto tmp = std::move(other);
+    swap(tmp);
     return *this;
 }
 
