@@ -23,25 +23,47 @@ by changes in the new release.
 
 Ensure there are no new or unexpected issues with High severity or greater.
 
-## Update etc/purls.txt
+## Check and Update the SBOM Document
 
-Ensure the list of bundled dependencies is up-to-date.
+**Note: this should preferably be done regularly and PRIOR to the scheduled release date.**
 
-Run the following commands from the project root directory to regenerate `etc/cyclonedx.sbom.txt` after updating `etc/purls.txt`:
+Ensure the list of bundled dependencies in `etc/purls.txt` is up-to-date. If not, update `etc/purls.txt`.
 
-```
+Ensure the `silk-check-augmented-sbom` task is passing on Evergreen for the relevant release branch. If it is passing, nothing needs to be done.
+
+If either `etc/purls.txt` was updated or the `silk-check-augmented-sbom` task is failing, update the SBOM document using the following command(s):
+
+```bash
+# Artifactory and Silk credentials. Ask for these from a team member.
+. $HOME/.secrets/artifactory-creds.txt
+. $HOME/.secrets/silk-creds.txt
+
 # Output: "Login succeeded!"
-podman login artifactory.corp.mongodb.com --username cpp-driver
+podman login --password-stdin --username "${ARTIFACTORY_USER:?}" artifactory.corp.mongodb.com <<<"${ARTIFACTORY_PASSWORD:?}"
 
 # Output: "... writing sbom to file"
-podman run -it --rm -v "$(pwd):$(pwd)" artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:1.0 update -p "$(pwd)/etc/purls.txt" -i "$(pwd)/etc/cyclonedx.sbom.json" -o "$(pwd)/etc/cyclonedx.sbom.json"
+podman run \
+  --env-file <(
+    printf "%s\n" \
+      "SILK_CLIENT_ID=${SILK_CLIENT_ID:?}" \
+      "SILK_CLIENT_SECRET=${SILK_CLIENT_SECRET:?}"
+  ) \
+  -it --rm -v "$(pwd):/pwd" \
+  artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:1.0 \
+  update -p "/pwd/etc/purls.txt" -i "/pwd/etc/cyclonedx.sbom.json" -o "/pwd/etc/cyclonedx.sbom.json"
 ```
 
-## Check Snyk
+Ensure any vulnerabilities with severity "High" or greater have a corresponding JIRA ticket (CXX or VULN) that is scheduled to be resolved within its remediation timeline.
 
-Inspect the list of issues in the latest report for the mongodb/mongo-cxx-driver target in [Snyk](https://app.snyk.io/).
+Update the [SSDLC Report spreadsheet](https://docs.google.com/spreadsheets/d/1sp0bLjj29xO9T8BwDIxUk5IPJ493QkBVCJKIgptxEPc/edit?usp=sharing) with any updates to new or known vulnerabilities.
 
-Examine the latest report and ensure there are no new or unexpected fixable issues with High severity or greater.
+Commit the latest version of the SBOM document into the repo. (This may just be a modification of the timestamp.)
+
+## Check and Update Snyk
+
+**Note: this should preferably be done regularly and PRIOR to the scheduled release date.**
+
+Inspect the list of projects in the latest report for the mongodb/mongo-cxx-driver target in [Snyk](https://app.snyk.io/).
 
 Deactivate any projects that will not be relevant in the upcoming release. Remove any projects that are not relevant to the current release.
 
