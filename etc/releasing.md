@@ -59,6 +59,8 @@ Ensure any vulnerabilities with severity "High" or greater have a corresponding 
 
 Update the [SSDLC Report spreadsheet](https://docs.google.com/spreadsheets/d/1sp0bLjj29xO9T8BwDIxUk5IPJ493QkBVCJKIgptxEPc/edit?usp=sharing) with any updates to new or known vulnerabilities.
 
+Update `etc/third_party_vulnerabilities.md` with any updates to new or known vulnerabilities for third party dependencies that affect the standard release product for the MongoDB C++ Driver.
+
 Commit the latest version of the SBOM document into the repo. (This may just be a modification of the timestamp.)
 
 ## Check and Update Snyk
