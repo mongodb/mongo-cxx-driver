@@ -23,6 +23,8 @@ by changes in the new release.
 
 Ensure there are no new or unexpected issues with High severity or greater.
 
+Update the [SSDLC Report spreadsheet](https://docs.google.com/spreadsheets/d/1sp0bLjj29xO9T8BwDIxUk5IPJ493QkBVCJKIgptxEPc/edit?usp=sharing) with any updates to new or known issues.
+
 ## Check and Update the SBOM Document
 
 **Note: this should preferably be done regularly and PRIOR to the scheduled release date.**
