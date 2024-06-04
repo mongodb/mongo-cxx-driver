@@ -3,7 +3,7 @@
 This document tracks vulnerabilities in 3rd party dependencies that directly affect the MongoDB C++ Driver standard release product.
 
 > [!IMPORTANT]
-> The "standard release product" is defined as the set of files which are _installed_ by a configuration, build, and install of the MongoDB C++ Driver. This includes static/shared library files, header files, and packaging files for supported build configurations. Vulnerabilities for 3rd party dependencies that are bundled with or required by the standard release product are reported in this document.
+> The "standard release product" is defined as the set of files which are _installed_ by a configuration, build, and install of the MongoDB C++ Driver. This includes static/shared library files, header files, and packaging files for supported build configurations. Vulnerabilities for 3rd party dependencies that are bundled with the standard release product are reported in this document.
 >
 > The release distribution tarball (`.tar.gz`) and corresponding digital signature (`.tar.gz.asc`) which are uploaded to GitHub as release assets are also considered part of the standard release product.
 >
