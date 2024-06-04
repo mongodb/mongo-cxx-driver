@@ -60,6 +60,9 @@ class pipeline {
     ///
     ~pipeline();
 
+    pipeline(const pipeline&) = delete;
+    pipeline& operator=(const pipeline&) = delete;
+
     ///
     /// Adds new fields to documents.
     ///

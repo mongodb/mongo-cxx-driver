@@ -30,6 +30,12 @@ class read_concern::impl {
         libmongoc::read_concern_destroy(read_concern_t);
     }
 
+    impl(impl&&) = delete;
+    impl& operator=(impl&&) = delete;
+
+    impl(const impl&) = delete;
+    impl& operator=(const impl&) = delete;
+
     ::mongoc_read_concern_t* read_concern_t;
 };
 

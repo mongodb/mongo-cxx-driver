@@ -42,6 +42,8 @@ class document : public sub_document {
     ///
     BSONCXX_INLINE document() : sub_document(&_core), _core(false) {}
 
+    ~document() = default;
+
     ///
     /// Move constructor
     ///
@@ -55,6 +57,9 @@ class document : public sub_document {
         _core = std::move(doc._core);
         return *this;
     }
+
+    document(const document&) = delete;
+    document& operator=(const document&) = delete;
 
     ///
     /// @return A view of the BSON document.

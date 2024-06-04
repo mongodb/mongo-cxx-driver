@@ -30,6 +30,12 @@ class bulk_write::impl {
         libmongoc::bulk_operation_destroy(operation_t);
     }
 
+    impl(impl&&) = delete;
+    impl& operator=(impl&&) = delete;
+
+    impl(const impl&) = delete;
+    impl& operator=(const impl&) = delete;
+
     mongoc_bulk_operation_t* operation_t;
 };
 

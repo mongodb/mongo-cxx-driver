@@ -126,6 +126,12 @@ class instance::impl {
 #endif
     }
 
+    impl(impl&&) noexcept = delete;
+    impl& operator=(impl&&) noexcept = delete;
+
+    impl(const impl&) = delete;
+    impl& operator=(const impl&) = delete;
+
     const std::unique_ptr<logger> _user_logger;
 };
 

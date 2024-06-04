@@ -43,14 +43,6 @@ class index_view::impl {
     impl(mongoc_collection_t* collection, mongoc_client_t* client)
         : _coll{collection}, _client{client} {}
 
-    impl(const impl& i) = default;
-
-    impl(impl&& i) = default;
-
-    ~impl() = default;
-
-    impl& operator=(const impl& i) = default;
-
     std::string get_index_name_from_keys(bsoncxx::v_noabi::document::view_or_value keys) {
         libbson::scoped_bson_t keys_bson{keys};
 

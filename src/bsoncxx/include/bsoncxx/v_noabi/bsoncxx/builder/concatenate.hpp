@@ -32,10 +32,6 @@ namespace builder {
 struct concatenate_doc {
     document::view_or_value doc;
 
-    // MSVC seems to need a hint that it should always
-    // inline this destructor.
-    BSONCXX_INLINE ~concatenate_doc() = default;
-
     ///
     /// Conversion operator that provides a view of the wrapped concatenate
     /// document.
@@ -63,10 +59,6 @@ struct concatenate_doc {
 ///
 struct concatenate_array {
     array::view_or_value array;
-
-    // MSVC seems to need a hint that it should always
-    // inline this destructor.
-    BSONCXX_INLINE ~concatenate_array() = default;
 
     ///
     /// Conversion operator that provides a view of the wrapped concatenate

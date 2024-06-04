@@ -54,6 +54,9 @@ class array : public sub_array {
         return *this;
     }
 
+    array(const array&) = delete;
+    array& operator=(const array&) = delete;
+
     ///
     /// @return A view of the BSON array.
     ///

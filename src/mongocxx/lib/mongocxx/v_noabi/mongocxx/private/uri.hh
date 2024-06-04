@@ -28,6 +28,10 @@ class uri::impl {
     ~impl() {
         libmongoc::uri_destroy(uri_t);
     }
+    impl(impl&&) = delete;
+    impl& operator=(impl&&) = delete;
+    impl(const impl&) = delete;
+    impl& operator=(const impl&) = delete;
     mongoc_uri_t* uri_t;
 };
 

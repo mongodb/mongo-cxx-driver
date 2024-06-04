@@ -40,6 +40,12 @@ class topology_closed_event {
     ///
     ~topology_closed_event();
 
+    topology_closed_event(topology_closed_event&&) = default;
+    topology_closed_event& operator=(topology_closed_event&&) = default;
+
+    topology_closed_event(const topology_closed_event&) = default;
+    topology_closed_event& operator=(const topology_closed_event&) = default;
+
     ///
     /// An opaque id, unique to this topology for this mongocxx::v_noabi::client or
     /// mongocxx::v_noabi::pool.

@@ -42,6 +42,12 @@ class heartbeat_failed_event {
     ///
     ~heartbeat_failed_event();
 
+    heartbeat_failed_event(heartbeat_failed_event&&) = default;
+    heartbeat_failed_event& operator=(heartbeat_failed_event&&) = default;
+
+    heartbeat_failed_event(const heartbeat_failed_event&) = default;
+    heartbeat_failed_event& operator=(const heartbeat_failed_event&) = default;
+
     ///
     /// Returns the failed operation's error message.
     ///

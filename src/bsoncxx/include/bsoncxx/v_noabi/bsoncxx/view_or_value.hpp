@@ -47,10 +47,15 @@ class view_or_value {
                   "View type must be default constructible");
 
     ///
+    /// Destroys a view_or_value.
+    ///
+    ~view_or_value() = default;
+
+    ///
     /// Default-constructs a view_or_value. This is equivalent to constructing a
     /// view_or_value with a default-constructed View.
     ///
-    BSONCXX_INLINE view_or_value() = default;
+    view_or_value() = default;
 
     ///
     /// Construct a view_or_value from a View. When constructed with a View,

@@ -30,6 +30,12 @@ class read_preference::impl {
         libmongoc::read_prefs_destroy(read_preference_t);
     }
 
+    impl(impl&&) = delete;
+    impl& operator=(impl&&) = delete;
+
+    impl(const impl&) = delete;
+    impl& operator=(const impl&) = delete;
+
     mongoc_read_prefs_t* read_preference_t;
 };
 

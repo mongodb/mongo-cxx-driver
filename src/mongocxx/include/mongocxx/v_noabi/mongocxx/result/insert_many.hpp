@@ -40,10 +40,12 @@ class insert_many {
 
     insert_many(result::bulk_write result, bsoncxx::v_noabi::array::value inserted_ids);
 
-    insert_many(const insert_many&);
-    insert_many(insert_many&&) = default;
+    ~insert_many() = default;
 
+    insert_many(const insert_many&);
     insert_many& operator=(const insert_many&);
+
+    insert_many(insert_many&&) = default;
     insert_many& operator=(insert_many&&) = default;
 
     ///

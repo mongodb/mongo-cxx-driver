@@ -53,7 +53,10 @@ class index_model {
     ///
     index_model(const index_model&);
 
-    index_model& operator=(const index_model&) = delete;
+    ///
+    /// Copy assigns an index_model.
+    ///
+    index_model& operator=(const index_model&) = default;
 
     ///
     /// Destroys an index_model.

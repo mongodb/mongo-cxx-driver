@@ -107,6 +107,9 @@ class instance {
     ///
     ~instance();
 
+    instance(const instance&) = delete;
+    instance& operator=(const instance&) = delete;
+
     ///
     /// Returns the current unique instance of the driver. If an instance was explicitly created,
     /// that will be returned. If no instance has yet been created, a default instance will be

@@ -42,6 +42,12 @@ class server_opening_event {
     ///
     ~server_opening_event();
 
+    server_opening_event(server_opening_event&&) = default;
+    server_opening_event& operator=(server_opening_event&&) = default;
+
+    server_opening_event(const server_opening_event&) = default;
+    server_opening_event& operator=(const server_opening_event&) = default;
+
     ///
     /// Returns the server host name.
     ///

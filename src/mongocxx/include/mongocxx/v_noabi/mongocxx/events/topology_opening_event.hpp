@@ -40,6 +40,12 @@ class topology_opening_event {
     ///
     ~topology_opening_event();
 
+    topology_opening_event(topology_opening_event&&) = default;
+    topology_opening_event& operator=(topology_opening_event&&) = default;
+
+    topology_opening_event(const topology_opening_event&) = default;
+    topology_opening_event& operator=(const topology_opening_event&) = default;
+
     ///
     /// An opaque id, unique to this topology for this mongocxx::v_noabi::client or
     /// mongocxx::v_noabi::pool.

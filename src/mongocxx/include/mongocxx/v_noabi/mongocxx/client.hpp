@@ -96,6 +96,9 @@ class client {
     ///
     ~client();
 
+    client(const client&) = delete;
+    client& operator=(const client&) = delete;
+
     ///
     /// Returns true if the client is valid, meaning it was not default constructed
     /// or moved from.

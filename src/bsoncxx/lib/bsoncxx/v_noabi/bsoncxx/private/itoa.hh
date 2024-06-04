@@ -27,6 +27,11 @@ class BSONCXX_TEST_API itoa {
    public:
     explicit itoa(uint32_t i = 0);
 
+    ~itoa() = default;
+
+    itoa(itoa&& rhs) = delete;
+    itoa& operator=(itoa&&) = delete;
+
     itoa(const itoa& rhs) = delete;
     itoa& operator=(const itoa&) = delete;
 

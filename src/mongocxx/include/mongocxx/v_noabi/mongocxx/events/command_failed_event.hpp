@@ -43,6 +43,12 @@ class command_failed_event {
     ///
     ~command_failed_event();
 
+    command_failed_event(command_failed_event&&) = default;
+    command_failed_event& operator=(command_failed_event&&) = default;
+
+    command_failed_event(const command_failed_event&) = default;
+    command_failed_event& operator=(const command_failed_event&) = default;
+
     ///
     /// Returns the server’s reply to the failed operation.
     ///

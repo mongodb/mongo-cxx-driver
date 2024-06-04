@@ -43,6 +43,12 @@ class server_closed_event {
     ///
     ~server_closed_event();
 
+    server_closed_event(server_closed_event&&) = default;
+    server_closed_event& operator=(server_closed_event&&) = default;
+
+    server_closed_event(const server_closed_event&) = default;
+    server_closed_event& operator=(const server_closed_event&) = default;
+
     ///
     /// Returns the server host name.
     ///

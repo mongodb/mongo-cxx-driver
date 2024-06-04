@@ -55,6 +55,12 @@ class stack {
         }
     }
 
+    stack(stack&&) = delete;
+    stack& operator=(stack&&) = delete;
+
+    stack(const stack&) = delete;
+    stack& operator=(const stack&) = delete;
+
     bool empty() const {
         return _is_empty;
     }

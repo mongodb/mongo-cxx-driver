@@ -60,6 +60,9 @@ class cursor {
     ///
     ~cursor();
 
+    cursor(const cursor&) = delete;
+    cursor& operator=(const cursor&) = delete;
+
     ///
     /// A cursor::iterator that points to the beginning of any available
     /// results.  If begin() is called more than once, the cursor::iterator
