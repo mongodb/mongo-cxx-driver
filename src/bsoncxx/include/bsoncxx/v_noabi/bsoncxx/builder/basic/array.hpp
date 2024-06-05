@@ -39,20 +39,28 @@ class array : public sub_array {
     ///
     /// Default constructor
     ///
-    BSONCXX_INLINE array() : sub_array(&_core), _core(true) {}
+    array() : sub_array(&_core), _core(true) {}
+
+    ///
+    /// Destructor
+    ///
+    ~array() = default;
 
     ///
     /// Move constructor
     ///
-    BSONCXX_INLINE array(array&& arr) noexcept : sub_array(&_core), _core(std::move(arr._core)) {}
+    array(array&& arr) noexcept : sub_array(&_core), _core(std::move(arr._core)) {}
 
     ///
     /// Move assignment operator
     ///
-    BSONCXX_INLINE array& operator=(array&& arr) noexcept {
+    array& operator=(array&& arr) noexcept {
         _core = std::move(arr._core);
         return *this;
     }
+
+    array(const array&) = delete;
+    array& operator=(const array&) = delete;
 
     ///
     /// @return A view of the BSON array.

@@ -75,6 +75,8 @@ class value {
     ///
     explicit value(document::view view);
 
+    ~value() = default;
+
     value(const value&);
     value& operator=(const value&);
 

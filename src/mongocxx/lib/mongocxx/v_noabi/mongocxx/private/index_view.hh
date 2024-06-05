@@ -269,9 +269,17 @@ class index_view::impl {
     class scoped_server_description {
        public:
         explicit scoped_server_description(mongoc_server_description_t* sd) : sd(sd) {}
+
         ~scoped_server_description() {
             mongoc_server_description_destroy(sd);
         }
+
+        scoped_server_description(scoped_server_description&&) = delete;
+        scoped_server_description& operator=(scoped_server_description&&) = delete;
+
+        scoped_server_description(const scoped_server_description&) = delete;
+        scoped_server_description& operator=(const scoped_server_description&) = delete;
+
         mongoc_server_description_t* sd;
     };
 };
