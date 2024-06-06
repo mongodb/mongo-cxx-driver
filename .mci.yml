@@ -723,7 +723,7 @@ functions:
           remote_file: ${project}/${build_variant}/${revision}/${version_id}/${build_id}/silk/augmented.sbom.json
           bucket: mciuploads
           permissions: public-read
-          local_file: mongo-cxx-driver/etc/augmented.sbom.json
+          local_file: mongo-cxx-driver/etc/augmented.sbom.json.new
           content_type: application/json
           display_name: Augmented SBOM
 

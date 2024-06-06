@@ -22,18 +22,18 @@ podman run \
   ) \
   -it --rm -v "$(pwd):/pwd" \
   artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:1.0 \
-  download --silk-asset-group mongo-cxx-driver -o /pwd/etc/augmented.sbom.json
+  download --silk-asset-group mongo-cxx-driver -o /pwd/etc/augmented.sbom.json.new
 
 [[ -f ./etc/augmented.sbom.json ]] || {
-  echo "failed to download augmented SBOM from Silk" 1>&2
+  echo "failed to download Augmented SBOM from Silk" 1>&2
   exit 1
 }
 
 # Allow task to upload the augmented SBOM despite failed diff.
 if ! diff -sy --suppress-common-lines \
-  <(jq 'del(.metadata)' ./etc/cyclonedx.sbom.json) \
-  <(jq 'del(.metadata)' ./etc/augmented.sbom.json); then
+  <(jq 'del(.metadata)' ./etc/augmented.sbom.json) \
+  <(jq 'del(.metadata)' ./etc/augmented.sbom.json.new); then
   declare status
-  status='{"status":"failed", "type":"test", "should_continue":true, "desc":"detected significant changes in augmented SBOM"}'
+  status='{"status":"failed", "type":"test", "should_continue":true, "desc":"detected significant changes in Augmented SBOM"}'
   curl -sS -d "${status:?}" -H "Content-Type: application/json" -X POST localhost:2285/task_status || true
 fi

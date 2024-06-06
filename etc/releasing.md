@@ -25,15 +25,13 @@ Ensure there are no new or unexpected issues with High severity or greater.
 
 Update the [SSDLC Report spreadsheet](https://docs.google.com/spreadsheets/d/1sp0bLjj29xO9T8BwDIxUk5IPJ493QkBVCJKIgptxEPc/edit?usp=sharing) with any updates to new or known issues.
 
-## Check and Update the SBOM Document
+## Check and Update the SBOM Lite
 
 **Note: this should preferably be done regularly and PRIOR to the scheduled release date.**
 
 Ensure the list of bundled dependencies in `etc/purls.txt` is up-to-date. If not, update `etc/purls.txt`.
 
-Ensure the `silk-check-augmented-sbom` task is passing on Evergreen for the relevant release branch. If it is passing, nothing needs to be done.
-
-If either `etc/purls.txt` was updated or the `silk-check-augmented-sbom` task is failing, update the SBOM document using the following command(s):
+If `etc/purls.txt` was updated, update the SBOM Lite document using the following command(s):
 
 ```bash
 # Artifactory and Silk credentials. Ask for these from a team member.
@@ -55,13 +53,21 @@ podman run \
   update -p "/pwd/etc/purls.txt" -i "/pwd/etc/cyclonedx.sbom.json" -o "/pwd/etc/cyclonedx.sbom.json"
 ```
 
-Ensure any vulnerabilities with severity "Medium" or greater have a corresponding JIRA ticket (CXX or VULN) that is scheduled to be resolved within its remediation timeline.
+Commit the latest version of the SBOM Lite document into the repo as `etc/cyclonedx.sbom.json`. (This may just be a modification of the timestamp.)
+
+## Check and Update the Augmented SBOM
+
+**Note: this should preferably be done regularly and PRIOR to the scheduled release date.**
+
+Ensure the `silk-check-augmented-sbom` task is passing on Evergreen for the relevant release branch. If it is passing, nothing needs to be done.
+
+If the `silk-check-augmented-sbom` task was failing, review the contents of the new Augmented SBOM and ensure any new or known vulnerabilities with severity "Medium" or greater have a corresponding JIRA ticket (CXX or VULN) that is scheduled to be resolved within its remediation timeline.
 
 Update the [SSDLC Report spreadsheet](https://docs.google.com/spreadsheets/d/1sp0bLjj29xO9T8BwDIxUk5IPJ493QkBVCJKIgptxEPc/edit?usp=sharing) with any updates to new or known vulnerabilities.
 
-Update `etc/third_party_vulnerabilities.md` with any updates to new or known vulnerabilities for third party dependencies that affect the standard release product for the MongoDB C++ Driver.
+Update `etc/third_party_vulnerabilities.md` with any updates to new or known vulnerabilities for third party dependencies that must be reported.
 
-Commit the latest version of the SBOM document into the repo. (This may just be a modification of the timestamp.)
+Commit the latest version of the Augmented SBOM document into the repo as `etc/augmented.sbom.json`. (This may just be a modification of the timestamp.)
 
 ## Check and Update Snyk
 
