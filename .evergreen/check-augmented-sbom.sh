@@ -29,6 +29,8 @@ podman run \
   exit 1
 }
 
+echo "Comparing Augmented SBOM..."
+
 # Allow task to upload the augmented SBOM despite failed diff.
 if ! diff -sy --left-column \
   <(jq 'del(.metadata)' ./etc/augmented.sbom.json) \
@@ -37,3 +39,5 @@ if ! diff -sy --left-column \
   status='{"status":"failed", "type":"test", "should_continue":true, "desc":"detected significant changes in Augmented SBOM"}'
   curl -sS -d "${status:?}" -H "Content-Type: application/json" -X POST localhost:2285/task_status || true
 fi
+
+echo "Comparing Augmented SBOM... done."
