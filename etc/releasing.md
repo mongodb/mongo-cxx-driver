@@ -41,6 +41,9 @@ If `etc/purls.txt` was updated, update the SBOM Lite document using the followin
 # Output: "Login succeeded!"
 podman login --password-stdin --username "${ARTIFACTORY_USER:?}" artifactory.corp.mongodb.com <<<"${ARTIFACTORY_PASSWORD:?}"
 
+# Ensure latest version of SilkBomb is being used.
+podman pull artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:1.0
+
 # Output: "... writing sbom to file"
 podman run \
   --env-file <(
@@ -61,13 +64,38 @@ Commit the latest version of the SBOM Lite document into the repo as `etc/cyclon
 
 Ensure the `silk-check-augmented-sbom` task is passing on Evergreen for the relevant release branch. If it is passing, nothing needs to be done.
 
-If the `silk-check-augmented-sbom` task was failing, review the contents of the new Augmented SBOM and ensure any new or known vulnerabilities with severity "Medium" or greater have a corresponding JIRA ticket (CXX or VULN) that is scheduled to be resolved within its remediation timeline.
+ If the `silk-check-augmented-sbom` task was failing, update the Augmented SBOM document using the following command(s):
+
+```bash
+# Artifactory and Silk credentials. Ask for these from a team member.
+. $HOME/.secrets/artifactory-creds.txt
+. $HOME/.secrets/silk-creds.txt
+
+# Output: "Login succeeded!"
+podman login --password-stdin --username "${ARTIFACTORY_USER:?}" artifactory.corp.mongodb.com <<<"${ARTIFACTORY_PASSWORD:?}"
+
+# Ensure latest version of SilkBomb is being used.
+podman pull artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:1.0
+
+# Output: "... writing sbom to file"
+podman run \
+  --env-file <(
+    printf "%s\n" \
+      "SILK_CLIENT_ID=${SILK_CLIENT_ID:?}" \
+      "SILK_CLIENT_SECRET=${SILK_CLIENT_SECRET:?}"
+  ) \
+  -it --rm -v "$(pwd):/pwd" \
+  artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:1.0 \
+  download --silk-asset-group "mongo-cxx-driver" -o "/pwd/etc/augmented.sbom.json"
+```
+
+Review the contents of the new Augmented SBOM and ensure any new or known vulnerabilities with severity "Medium" or greater have a corresponding JIRA ticket (CXX or VULN) that is scheduled to be resolved within its remediation timeline.
 
 Update the [SSDLC Report spreadsheet](https://docs.google.com/spreadsheets/d/1sp0bLjj29xO9T8BwDIxUk5IPJ493QkBVCJKIgptxEPc/edit?usp=sharing) with any updates to new or known vulnerabilities.
 
 Update `etc/third_party_vulnerabilities.md` with any updates to new or known vulnerabilities for third party dependencies that must be reported.
 
-Commit the latest version of the Augmented SBOM document into the repo as `etc/augmented.sbom.json`. (This may just be a modification of the timestamp.)
+Commit the latest version of the Augmented SBOM document into the repo as `etc/augmented.sbom.json`. The Augmented SBOM document does not need to be updated if the `silk-check-augmented-sbom` was not failing (in which case the only changes present would a version bump or timestamp update).
 
 ## Check and Update Snyk
 

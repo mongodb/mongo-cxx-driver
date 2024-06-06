@@ -15,6 +15,15 @@ command -v jq >/dev/null || {
 
 podman login --password-stdin --username "${ARTIFACTORY_USER:?}" artifactory.corp.mongodb.com <<<"${ARTIFACTORY_PASSWORD:?}"
 
+silkbomb_download_flags=(
+  # Avoid bumping version or timestamp in diff.
+  --no-update-sbom-version
+  --no-update-timestamp
+
+  --silk-asset-group mongo-cxx-driver
+  -o /pwd/etc/augmented.sbom.json.new
+)
+
 podman run \
   --env-file <(
     echo "SILK_CLIENT_ID=${SILK_CLIENT_ID:?}"
@@ -22,9 +31,9 @@ podman run \
   ) \
   -it --rm -v "$(pwd):/pwd" \
   artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:1.0 \
-  download --silk-asset-group mongo-cxx-driver -o /pwd/etc/augmented.sbom.json.new
+  download "${silkbomb_download_flags[@]:?}"
 
-[[ -f ./etc/augmented.sbom.json ]] || {
+[[ -f ./etc/augmented.sbom.json.new ]] || {
   echo "failed to download Augmented SBOM from Silk" 1>&2
   exit 1
 }
