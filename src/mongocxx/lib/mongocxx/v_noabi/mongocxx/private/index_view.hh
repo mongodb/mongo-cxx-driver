@@ -274,8 +274,15 @@ class index_view::impl {
             mongoc_server_description_destroy(sd);
         }
 
-        scoped_server_description(scoped_server_description&&) = delete;
-        scoped_server_description& operator=(scoped_server_description&&) = delete;
+        scoped_server_description(scoped_server_description&& other) : sd(other.sd) {
+            other.sd = nullptr;
+        }
+
+        scoped_server_description& operator=(scoped_server_description&& other) {
+            sd = other.sd;
+            other.sd = nullptr;
+            return *this;
+        }
 
         scoped_server_description(const scoped_server_description&) = delete;
         scoped_server_description& operator=(const scoped_server_description&) = delete;
