@@ -30,7 +30,7 @@ podman run \
 }
 
 # Allow task to upload the augmented SBOM despite failed diff.
-if ! diff -sy --suppress-common-lines \
+if ! diff -sy --left-column \
   <(jq 'del(.metadata)' ./etc/augmented.sbom.json) \
   <(jq 'del(.metadata)' ./etc/augmented.sbom.json.new); then
   declare status
