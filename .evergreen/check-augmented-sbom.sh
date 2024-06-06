@@ -42,8 +42,8 @@ echo "Comparing Augmented SBOM..."
 
 # Allow task to upload the augmented SBOM despite failed diff.
 if ! diff -sty --left-column -W 200 \
-  <(jq 'del(.metadata)' ./etc/augmented.sbom.json) \
-  <(jq 'del(.metadata)' ./etc/augmented.sbom.json.new) >|diff.txt; then
+  <(jq ./etc/augmented.sbom.json) \
+  <(jq ./etc/augmented.sbom.json.new) >|diff.txt; then
   declare status
   status='{"status":"failed", "type":"test", "should_continue":true, "desc":"detected significant changes in Augmented SBOM"}'
   curl -sS -d "${status:?}" -H "Content-Type: application/json" -X POST localhost:2285/task_status || true
