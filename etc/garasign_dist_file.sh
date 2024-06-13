@@ -19,25 +19,18 @@ if ! command -v gpg >/dev/null; then
   echo "gpg is required to verify distribution tarball signature" 1>&2
 fi
 
-creds=~/.secrets/garasign-creds.txt
+artifactory_creds=~/.secrets/artifactory-creds.txt
+garasign_creds=~/.secrets/garasign-creds.txt
 
-if [[ ! -f "${creds:?}" ]]; then
-  echo "missing file ${creds:?}" 1>&2
-  exit 1
-fi
+unset ARTIFACTORY_USER ARTIFACTORY_PASSWORD
+. "${artifactory_creds:?}"
+: "${ARTIFACTORY_USER:?"missing ARTIFACTORY_USER in ${artifactory_creds:?}"}"
+: "${ARTIFACTORY_PASSWORD:?"missing ARTIFACTORY_PASSWORD in ${artifactory_creds:?}"}"
 
-# Avoid conflict/use of creds defined in the environment.
-unset ARTIFACTORY_USER
-unset ARTIFACTORY_PASSWORD
-unset GRS_CONFIG_USER1_USERNAME
-unset GRS_CONFIG_USER1_PASSWORD
-
-. "${creds:?}"
-
-: "${ARTIFACTORY_USER:?"missing ARTIFACTORY_USER in ${creds:?}"}"
-: "${ARTIFACTORY_PASSWORD:?"missing ARTIFACTORY_PASSWORD in ${creds:?}"}"
-: "${GRS_CONFIG_USER1_USERNAME:?"missing GRS_CONFIG_USER1_USERNAME in ${creds:?}"}"
-: "${GRS_CONFIG_USER1_PASSWORD:?"missing GRS_CONFIG_USER1_PASSWORD in ${creds:?}"}"
+unset GRS_CONFIG_USER1_USERNAME GRS_CONFIG_USER1_PASSWORD
+. "${garasign_creds:?}"
+: "${GRS_CONFIG_USER1_USERNAME:?"missing GRS_CONFIG_USER1_USERNAME in ${garasign_creds:?}"}"
+: "${GRS_CONFIG_USER1_PASSWORD:?"missing GRS_CONFIG_USER1_PASSWORD in ${garasign_creds:?}"}"
 
 dist_file="${1:?}"
 dist_file_signed="${dist_file:?}.asc"
@@ -48,7 +41,7 @@ plugin_commands=(
   gpg --yes -v --armor -o "${dist_file_signed:?}" --detach-sign "${dist_file:?}"
 )
 "${launcher:?}" run \
-  --env-file="${creds:?}" \
+  --env-file="${garasign_creds:?}" \
   -e "PLUGIN_COMMANDS=${plugin_commands[*]:?}" \
   --rm \
   -v "$(pwd):$(pwd)" \
