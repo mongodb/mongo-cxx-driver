@@ -14,7 +14,6 @@
 
 #include <fstream>
 
-#include "bsoncxx/builder/basic/document.hpp"
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/string/to_string.hpp>
 #include <bsoncxx/test/catch.hh>
@@ -49,8 +48,6 @@ void _set_up_key_vault(const client& client, document::view test_spec_view) {
 }
 
 void add_auto_encryption_opts(document::view test, options::client* client_opts) {
-    using bsoncxx::builder::basic::kvp;
-    using bsoncxx::builder::basic::make_document;
     using std::getenv;
     using std::string;
 
@@ -90,6 +87,7 @@ void add_auto_encryption_opts(document::view test, options::client* client_opts)
         }
 
         if (const auto providers = test_encrypt_opts["kmsProviders"]) {
+            using bsoncxx::builder::basic::kvp;
             using bsoncxx::builder::basic::sub_document;
 
             bsoncxx::builder::basic::document kms_doc;
@@ -181,12 +179,8 @@ void add_auto_encryption_opts(document::view test, options::client* client_opts)
 
         char* bypass_spawn = std::getenv("ENCRYPTION_TESTS_BYPASS_SPAWN");
         char* mongocryptd_path = std::getenv("MONGOCRYPTD_PATH");
-        const auto shared_lib_path = std::getenv("CRYPT_SHARED_LIB_PATH");
 
-        if (shared_lib_path) {
-            auto_encrypt_opts.extra_options(make_document(
-                kvp("cryptSharedLibPath", shared_lib_path), kvp("cryptSharedLibRequired", true)));
-        } else if (bypass_spawn || mongocryptd_path) {
+        if (bypass_spawn || mongocryptd_path) {
             auto cmd = bsoncxx::builder::basic::document{};
 
             if (bypass_spawn && strcmp(bypass_spawn, "TRUE") == 0) {
