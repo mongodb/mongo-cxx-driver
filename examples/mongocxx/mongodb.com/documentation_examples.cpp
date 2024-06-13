@@ -37,15 +37,16 @@
 // corresponding page on mongodb.com/docs. See CXX-1249 and DRIVERS-356 for more info.
 
 template <typename T>
-void check_field(const T& document, const char* field, bool should_have, int example_no) {
+void check_field(const T& document, const char* field, bool should_have, int example_no, const char* example_type = NULL) {
+    std::string example_type_formatted = example_type? example_type + std::string(" ") : "";
     if (should_have) {
         if (!document[field]) {
-            throw std::logic_error(std::string("document in example ") +
-                                   std::to_string(example_no) + " should have field " + field);
+            throw std::logic_error(std::string("document in ") + example_type_formatted + std::string("example ") +
+                                   std::to_string(example_no) + " should not have field " + field);
         }
     } else {
         if (document[field]) {
-            throw std::logic_error(std::string("document in example ") +
+            throw std::logic_error(std::string("document in ") + example_type_formatted + std::string("example ") +
                                    std::to_string(example_no) + " should not have field " + field);
         }
     }
@@ -59,6 +60,16 @@ void check_has_field(const T& document, const char* field, int example_no) {
 template <typename T>
 void check_has_no_field(const T& document, const char* field, int example_no) {
     check_field(document, field, false, example_no);
+}
+
+template <typename T>
+void check_has_field(const T& document, const char* field, int example_no, const char* example_type) {
+    check_field(document, field, true, example_no, example_type);
+}
+
+template <typename T>
+void check_has_no_field(const T& document, const char* field, int example_no, const char* example_type) {
+    check_field(document, field, false, example_no, example_type);
 }
 
 bool should_run_client_side_encryption_test(void) {
@@ -1088,6 +1099,53 @@ void projection_examples(mongocxx::database db) {
             if (std::distance(instock.begin(), instock.end()) != 1) {
                 throw std::logic_error("wrong count in example 50");
             }
+        }
+    }
+
+    {
+        // Start Aggregation Projection Example 1
+        using bsoncxx::builder::basic::kvp;
+        using bsoncxx::builder::basic::make_array;
+        using bsoncxx::builder::basic::make_document;
+
+        auto cursor = db["inventory"].find(make_document(),
+            mongocxx::options::find{}.projection(make_document(
+                kvp("_id", 0),
+                kvp("item", 1),
+                kvp("status", make_document(
+                    kvp("$switch", make_document(
+                        kvp("branches", make_array(
+                            make_document(
+                                kvp("case", make_document(kvp("$eq", make_array("$status", "A")))),
+                                kvp("then", "Available")
+                            ),
+                            make_document(
+                                kvp("case", make_document(kvp("$eq", make_array("$status", "D")))),
+                                kvp("then", "Discontinued")
+                            )
+                        )),
+                        kvp("default", "No status found")
+                    ))
+                )),
+                kvp("area", make_document(
+                    kvp("$concat", make_array(
+                        make_document(kvp("$toString", make_document(kvp("$multiply", make_array("$size.h", "$size.w"))))),
+                        " ",
+                        "$size.uom"
+                    ))
+                )),
+                kvp("reportNumber", make_document(kvp("$literal", 1)))
+                )));
+        // End Aggregation Projection Example 1
+
+        for (auto&& document : cursor) {
+            check_has_no_field(document, "_id", 1, "aggregation projection");
+            check_has_field(document, "item", 1, "aggregation projection");
+            check_has_field(document, "status", 1, "aggregation projection");
+            check_has_no_field(document, "size", 1, "aggregation projection");
+            check_has_no_field(document, "instock", 1, "aggregation projection");
+            check_has_field(document, "area", 1, "aggregation projection");
+            check_has_field(document, "reportNumber", 1, "aggregation projection");
         }
     }
 }
