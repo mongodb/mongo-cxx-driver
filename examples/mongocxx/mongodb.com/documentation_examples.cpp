@@ -210,7 +210,10 @@ static bool is_replica_set(const mongocxx::client& client) {
     return static_cast<bool>(reply.view()["setName"]);
 }
 
-static bool version_at_least(mongocxx::database& db, int minimum_major, int minimum_minor, int minimum_patch) {
+static bool version_at_least(mongocxx::database& db,
+                             int minimum_major,
+                             int minimum_minor,
+                             int minimum_patch) {
     using bsoncxx::builder::basic::kvp;
     using bsoncxx::builder::basic::make_document;
 
@@ -227,11 +230,9 @@ static bool version_at_least(mongocxx::database& db, int minimum_major, int mini
         }
         if (split == 0) {
             major_string += i;
-        }
-        else if (split == 1) {
+        } else if (split == 1) {
             minor_string += i;
-        }
-        else if (split == 2) {
+        } else if (split == 2) {
             patch_string += i;
         }
     }
@@ -239,7 +240,8 @@ static bool version_at_least(mongocxx::database& db, int minimum_major, int mini
     int server_minor = std::stoi(minor_string);
     int server_patch = std::stoi(patch_string);
 
-    return server_major >= minimum_major && server_minor >= minimum_minor && server_patch >= minimum_patch;
+    return server_major >= minimum_major && server_minor >= minimum_minor &&
+           server_patch >= minimum_patch;
 }
 
 void insert_examples(mongocxx::database db) {
@@ -925,7 +927,7 @@ void query_null_missing_fields_examples(mongocxx::database db) {
 }
 
 void projection_insertion_example(mongocxx::database db) {
-        db["inventory"].drop();
+    db["inventory"].drop();
 
     {
         // Start Example 42
