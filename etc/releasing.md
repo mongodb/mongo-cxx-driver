@@ -230,6 +230,10 @@ The following credentials are required. Ask for these from a team member if nece
   GRS_CONFIG_USER1_USERNAME=<username>
   GRS_CONFIG_USER1_PASSWORD=<password>
   ```
+- Snyk credentials. Save these to `~/.secrets/snyk-creds.txt`:
+  ```bash
+  SNYK_API_TOKEN=<token>
+  ```
 
 Run the release script with the git tag created above as an argument and
 `--dry-run` to test for unexpected errors.
@@ -309,6 +313,41 @@ git push --set-upstream origin releases/v1.2
 ```
 
 The new branch should be continuously tested on Evergreen. Update the "Display Name" and "Branch Name" of the [mongo-cxx-driver-latest-release Evergreen project](https://spruce.mongodb.com/project/mongo-cxx-driver-latest-release/settings/general) to refer to the new release branch.
+
+## Update Silk and Snyk with new branch if necessary
+
+After creating the new minor release branch in the prior step, update Silk and Snyk to trach the new release branch.
+
+For Silk, see the [silk-create-asset-group.sh script](https://github.com/mongodb/libmongocrypt/blob/master/etc/silk-create-asset-group.sh) in the C Driver as reference for the commands to run against the Silk API. Use `mongo-cxx-driver` as the name and prefix in place of `mongo-c-driver` accordingly.
+
+For Snyk, configure and build the CXX Driver with `BSONCXX_POLY_USE_MNMLSTC=ON` (force download of mnmlstc/core sources) and `CMAKE_PREFIX_PATH=""` (force download of C Driver sources), then run:
+
+```bash
+# Snyk credentials. Ask for these from a team member.
+. ~/.secrets/snyk-creds.txt
+
+# Name of the new minor release branch. Ensure this is correct!
+branch="rX.Y"
+
+# Authenticate with Snyk dev-prod organization.
+snyk auth "${SNYK_API_TOKEN:?}"
+
+# Verify third party dependency sources listed in etc/purls.txt are detected by Snyk.
+# If not, see: https://support.snyk.io/hc/en-us/requests/new
+snyk_args=(
+  --org=dev-prod
+  --remote-repo-url=https://github.com/mongodb/mongo-cxx-driver/
+  --target-reference="${branch:?}"
+  --unmanaged
+  --all-projects
+  --detection-depth=10 # build/src/bsoncxx/third_party/_deps/core-install/include/core
+  --exclude=extras # CXX-3042
+)
+snyk test "${snyk_args[@]:?}" --print-deps
+
+# Create a new Snyk target reference for the new release branch.
+snyk monitor "${snyk_args[@]:?}"
+```
 
 ## Create Documentation Tickets
 
