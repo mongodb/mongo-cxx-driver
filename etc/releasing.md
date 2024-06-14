@@ -320,7 +320,7 @@ After creating the new minor release branch in the prior step, update Silk and S
 
 For Silk, see the [silk-create-asset-group.sh script](https://github.com/mongodb/libmongocrypt/blob/master/etc/silk-create-asset-group.sh) in the C Driver as reference for the commands to run against the Silk API. Use `mongo-cxx-driver` as the name and prefix in place of `mongo-c-driver` accordingly.
 
-For Snyk, configure and build the CXX Driver with `BSONCXX_POLY_USE_MNMLSTC=ON` (force download of mnmlstc/core sources) and `CMAKE_PREFIX_PATH=""` (force download of C Driver sources), then run:
+For Snyk, configure and build the CXX Driver with `BSONCXX_POLY_USE_MNMLSTC=ON` (force download of mnmlstc/core sources) and no `CMAKE_PREFIX_PATH` entry to a C Driver installation (force download of C Driver sources), then run:
 
 ```bash
 # Snyk credentials. Ask for these from a team member.
@@ -401,6 +401,17 @@ pushed.
    - Switch back to the branch with documentation updates: `git checkout post-release-changes`.
 - Wait a few minutes and verify mongocxx.org has updated.
 
+## Merge the release branch back into `master` if necessary
+
+If this is a patch release on a minor release branch, create a pull request on GitHub to merge the latest state of the `releases/rX.Y` branch containing the new release tag `rX.Y.Z` into the `master` branch. Use the "Create a merge commit" option when merging this pull request.
+
+> [IMPORTANT]
+> Use the "Create a merge commit" option when merging this pull request!
+
+Do **NOT** delete the release branch after merge.
+
+Verify correct repo state by running `git describe --tags --abbrev=0` on the post-merge `master` branch, which should return the patch release tag `rX.Y.Z`. Adding the `--first-parent` flag should return the last minor release tag `rX.Y.0`.
+
 ## Update CHANGELOG.md post-release ...
 
 CHANGELOG.md on the `master` branch contains sections for every release. This is intended to ease searching for changes among all releases.
@@ -446,7 +457,9 @@ Ensure there are `[Unreleased]` sections for the next minor and patch releases. 
 <!-- Contains published release notes -->
 ```
 
-Commit the change. Create a PR from the `post-release-changes` branch to merge to `master`.
+Commit the change.
+
+Create a PR from the `post-release-changes` branch to merge to `master`.
 
 ## Homebrew
 This requires a macOS machine.
