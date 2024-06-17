@@ -6,7 +6,7 @@
 
 ## Process Document
 
-- See [go/how-we-develop-software-doc](http://go/how-we-develop-software-doc).
+- Not available. <!-- CXX-3007: replace with link to public-facing document once available. -->
 
 ## Tool used to track third party vulnerabilities
 
@@ -29,7 +29,7 @@
 
 ## Security Assessment Report
 
-- Available upon request for approved partners (contact Rishabh Bisht \<rishabh.bisht@mongodb.com\>).
+- Not applicable to the MongoDB C++ Driver.
 
 ## Signature Information
 
