@@ -46,11 +46,7 @@ podman pull artifactory.corp.mongodb.com/release-tools-container-registry-public
 
 # Output: "... writing sbom to file"
 podman run \
-  --env-file <(
-    printf "%s\n" \
-      "SILK_CLIENT_ID=${SILK_CLIENT_ID:?}" \
-      "SILK_CLIENT_SECRET=${SILK_CLIENT_SECRET:?}"
-  ) \
+  --env-file "$HOME/.secrets/silk-creds.txt" \
   -it --rm -v "$(pwd):/pwd" \
   artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:1.0 \
   update -p "/pwd/etc/purls.txt" -i "/pwd/etc/cyclonedx.sbom.json" -o "/pwd/etc/cyclonedx.sbom.json"
@@ -79,11 +75,7 @@ podman pull artifactory.corp.mongodb.com/release-tools-container-registry-public
 
 # Output: "... writing sbom to file"
 podman run \
-  --env-file <(
-    printf "%s\n" \
-      "SILK_CLIENT_ID=${SILK_CLIENT_ID:?}" \
-      "SILK_CLIENT_SECRET=${SILK_CLIENT_SECRET:?}"
-  ) \
+  --env-file "$HOME/.secrets/silk-creds.txt"
   -it --rm -v "$(pwd):/pwd" \
   artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:1.0 \
   download --silk-asset-group "mongo-cxx-driver" -o "/pwd/etc/augmented.sbom.json"
@@ -229,6 +221,11 @@ The following credentials are required. Ask for these from a team member if nece
   ```bash
   GRS_CONFIG_USER1_USERNAME=<username>
   GRS_CONFIG_USER1_PASSWORD=<password>
+  ```
+- Silk credentials. Save these to `~/.secrets/silk-creds.txt`:
+  ```bash
+  SILK_CLIENT_ID=<client_id>
+  SILK_CLIENT_SECRET=<client_secret>
   ```
 - Snyk credentials. Save these to `~/.secrets/snyk-creds.txt`:
   ```bash
