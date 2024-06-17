@@ -318,7 +318,7 @@ The new branch should be continuously tested on Evergreen. Update the "Display N
 
 After creating the new minor release branch in the prior step, update Silk and Snyk to trach the new release branch.
 
-For Silk, see the [silk-create-asset-group.sh script](https://github.com/mongodb/libmongocrypt/blob/master/etc/silk-create-asset-group.sh) in the C Driver as reference for the commands to run against the Silk API. Use `mongo-cxx-driver` as the name and prefix in place of `mongo-c-driver` accordingly.
+For Silk, use the [create-silk-asset-group.py script](https://github.com/mongodb/mongo-c-driver/blob/master/tools/create-silk-asset-group.py) in the C Driver to create a new Silk asset group. Use `mongo-cxx-driver` as the name and prefix in place of `mongo-c-driver` accordingly.
 
 For Snyk, configure and build the CXX Driver with `BSONCXX_POLY_USE_MNMLSTC=ON` (force download of mnmlstc/core sources) and no `CMAKE_PREFIX_PATH` entry to a C Driver installation (force download of C Driver sources), then run:
 
