@@ -75,7 +75,7 @@ podman pull artifactory.corp.mongodb.com/release-tools-container-registry-public
 
 # Output: "... writing sbom to file"
 podman run \
-  --env-file "$HOME/.secrets/silk-creds.txt"
+  --env-file "$HOME/.secrets/silk-creds.txt" \
   -it --rm -v "$(pwd):/pwd" \
   artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:1.0 \
   download --silk-asset-group "mongo-cxx-driver" -o "/pwd/etc/augmented.sbom.json"
