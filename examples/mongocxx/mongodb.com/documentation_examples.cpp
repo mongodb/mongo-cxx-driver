@@ -240,8 +240,15 @@ static bool version_at_least(mongocxx::database& db,
     int server_minor = std::stoi(minor_string);
     int server_patch = std::stoi(patch_string);
 
-    return server_major >= minimum_major && server_minor >= minimum_minor &&
-           server_patch >= minimum_patch;
+    if (server_major < minimum_major) {
+        return false;
+    } else if (server_minor < minimum_minor) {
+        return false;
+    } else if (server_patch < minimum_patch) {
+        return false;
+    }
+
+    return true;
 }
 
 void insert_examples(mongocxx::database db) {
