@@ -58,6 +58,11 @@ class bulk_write {
     ///
     ~bulk_write();
 
+    ///
+    /// Checks if a bulk write operation is empty.
+    ///
+    /// @return A boolean that returns true if the bulk write operation is empty.
+    ///
     bool empty();
 
     ///

@@ -358,7 +358,7 @@ TEST_CASE("calling empty on a bulk write before and after appending", "[bulk_wri
     auto bw = client["db"]["coll"].create_bulk_write();
 
     REQUIRE(bw.empty());
-    bw.append(model::insert_one(make_document(kvp("id", 1))));
+    bw.append(model::insert_one(make_document(kvp("_id", 1))));
     bw.execute();
     REQUIRE_FALSE(bw.empty());
 }
