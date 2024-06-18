@@ -321,12 +321,15 @@ For Silk, use the [create-silk-asset-group.py script](https://github.com/mongodb
 # Snyk credentials. Ask for these from a team member.
 . ~/.secrets/silk-creds.txt.
 
+# Ensure correct release version number!
+version="X.Y"
+
 create_args=(
   --silk-client-id "${SILK_CLIENT_ID:?}"
   --silk-client-secret "${SILK_CLIENT_SECRET:?}"
-  --project "mongo-cxx-driver"
-  --branch "releases/vX.Y"          # Ensure correct branch name!
-  --asset-id "mongo-cxx-driver-X.Y" # Explicitly suffix the asset ID with the release version.
+  --asset-id "mongo-cxx-driver-${version:?}" # Avoid '/' in Asset ID field.
+  --project "mongo-cxx-driver-${version:?}"
+  --branch "releases/v${version:?}"
   --code-repo-url "https://github.com/mongodb/mongo-cxx-driver"
   --sbom-lite-path="etc/cyclonedx.sbom.json"
 )
