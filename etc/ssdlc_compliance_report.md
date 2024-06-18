@@ -10,7 +10,7 @@
 
 ## Tool used to track third party vulnerabilities
 
-- See [Silk](https://us1.app.silk.security/inventory/asset-group/mongodb____DedupedAssetGroup____60640b8853771efe3af5f78ea37af5d1cdd190df).
+- See [Silk](https://us1.app.silk.security/inventory/asset-group/mongodb____DedupedAssetGroup____60640b8853771efe3af5f78ea37af5d1cdd190df) (internal).
 - See [C++ Driver - SSDLC Reports](https://drive.google.com/drive/folders/1q9RI55trFzHlh8McALSIAbT6ugyn8zlO) for release-specific reports.
 
 ## Third-Party Dependency Information
@@ -25,7 +25,7 @@
 
 ## Security Testing Report
 
-- See [Driver Security Testing Summary](https://docs.google.com/document/d/1y2K_RY4GZVXpQvv4JH_35mSzFRTawNJ3mibpvSBU8H0/edit?usp=sharing). Available upon request for approved partners (contact Rishabh Bisht \<rishabh.bisht@mongodb.com\>).
+- See [Driver Security Testing Summary](https://docs.google.com/document/d/1y2K_RY4GZVXpQvv4JH_35mSzFRTawNJ3mibpvSBU8H0/edit?usp=sharing) (internal). Available as needed from the MongoDB C++ Driver team.
 
 ## Security Assessment Report
 
@@ -37,4 +37,4 @@
 
 ## Known Vulnerabilities
 
-- Any vulnerabilities that may be shown in the links referenced above have been reviewed and accepted by the appropriate approvers. For detailed information, [C++ Driver - SSDLC Reports](https://drive.google.com/drive/folders/1q9RI55trFzHlh8McALSIAbT6ugyn8zlO) for release-specific reports.
+- Any vulnerabilities that may be shown in the links referenced above have been reviewed and accepted by the appropriate approvers. For detailed information, see [C++ Driver - SSDLC Reports](https://drive.google.com/drive/folders/1q9RI55trFzHlh8McALSIAbT6ugyn8zlO) for release-specific reports.

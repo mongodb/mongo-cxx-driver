@@ -61,7 +61,7 @@ fi
 
 
 printf "#!/bin/sh\n"
-printf "# MongoDB C Driver uninstall program, generated with CMake"
+printf "# MongoDB C++ Driver uninstall program, generated with CMake"
 printf "\n"
 printf "# Copyright 2018-present MongoDB, Inc.\n"
 printf "#\n"
