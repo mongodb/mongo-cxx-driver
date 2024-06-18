@@ -236,18 +236,16 @@ static bool version_at_least(mongocxx::database& db,
             patch_string += i;
         }
     }
-    int server_major = std::stoi(major_string);
-    int server_minor = std::stoi(minor_string);
-    int server_patch = std::stoi(patch_string);
 
-    if (server_major < minimum_major) {
-        return false;
-    } else if (server_minor < minimum_minor) {
-        return false;
-    } else if (server_patch < minimum_patch) {
-        return false;
+    std::vector<int> server_semver{std::stoi(major_string), std::stoi(minor_string), std::stoi(minor_string)};
+    std::vector<int> minimum_semver{minimum_major, minimum_minor, minimum_patch};
+    for (size_t i = 0; i < server_semver.size(); i++) {
+        if (server_semver[i] < minimum_semver[i]) {
+            return false;
+        } else if (server_semver[i] > minimum_semver[i]) {
+            return true;
+        }
     }
-
     return true;
 }
 
