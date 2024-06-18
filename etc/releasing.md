@@ -46,11 +46,7 @@ podman pull artifactory.corp.mongodb.com/release-tools-container-registry-public
 
 # Output: "... writing sbom to file"
 podman run \
-  --env-file <(
-    printf "%s\n" \
-      "SILK_CLIENT_ID=${SILK_CLIENT_ID:?}" \
-      "SILK_CLIENT_SECRET=${SILK_CLIENT_SECRET:?}"
-  ) \
+  --env-file "$HOME/.secrets/silk-creds.txt" \
   -it --rm -v "$(pwd):/pwd" \
   artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:1.0 \
   update -p "/pwd/etc/purls.txt" -i "/pwd/etc/cyclonedx.sbom.json" -o "/pwd/etc/cyclonedx.sbom.json"
@@ -79,11 +75,7 @@ podman pull artifactory.corp.mongodb.com/release-tools-container-registry-public
 
 # Output: "... writing sbom to file"
 podman run \
-  --env-file <(
-    printf "%s\n" \
-      "SILK_CLIENT_ID=${SILK_CLIENT_ID:?}" \
-      "SILK_CLIENT_SECRET=${SILK_CLIENT_SECRET:?}"
-  ) \
+  --env-file "$HOME/.secrets/silk-creds.txt" \
   -it --rm -v "$(pwd):/pwd" \
   artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:1.0 \
   download --silk-asset-group "mongo-cxx-driver" -o "/pwd/etc/augmented.sbom.json"
@@ -230,6 +222,15 @@ The following credentials are required. Ask for these from a team member if nece
   GRS_CONFIG_USER1_USERNAME=<username>
   GRS_CONFIG_USER1_PASSWORD=<password>
   ```
+- Silk credentials. Save these to `~/.secrets/silk-creds.txt`:
+  ```bash
+  SILK_CLIENT_ID=<client_id>
+  SILK_CLIENT_SECRET=<client_secret>
+  ```
+- Snyk credentials. Save these to `~/.secrets/snyk-creds.txt`:
+  ```bash
+  SNYK_API_TOKEN=<token>
+  ```
 
 Run the release script with the git tag created above as an argument and
 `--dry-run` to test for unexpected errors.
@@ -310,6 +311,41 @@ git push --set-upstream origin releases/v1.2
 
 The new branch should be continuously tested on Evergreen. Update the "Display Name" and "Branch Name" of the [mongo-cxx-driver-latest-release Evergreen project](https://spruce.mongodb.com/project/mongo-cxx-driver-latest-release/settings/general) to refer to the new release branch.
 
+## Update Silk and Snyk with new branch if necessary
+
+After creating the new minor release branch in the prior step, update Silk and Snyk to trach the new release branch.
+
+For Silk, use the [create-silk-asset-group.py script](https://github.com/mongodb/mongo-c-driver/blob/master/tools/create-silk-asset-group.py) in the C Driver to create a new Silk asset group. Use `mongo-cxx-driver` as the name and prefix in place of `mongo-c-driver` accordingly.
+
+For Snyk, configure and build the CXX Driver with `BSONCXX_POLY_USE_MNMLSTC=ON` (force download of mnmlstc/core sources) and no `CMAKE_PREFIX_PATH` entry to a C Driver installation (force download of C Driver sources), then run:
+
+```bash
+# Snyk credentials. Ask for these from a team member.
+. ~/.secrets/snyk-creds.txt
+
+# Name of the new minor release branch. Ensure this is correct!
+branch="rX.Y"
+
+# Authenticate with Snyk dev-prod organization.
+snyk auth "${SNYK_API_TOKEN:?}"
+
+# Verify third party dependency sources listed in etc/purls.txt are detected by Snyk.
+# If not, see: https://support.snyk.io/hc/en-us/requests/new
+snyk_args=(
+  --org=dev-prod
+  --remote-repo-url=https://github.com/mongodb/mongo-cxx-driver/
+  --target-reference="${branch:?}"
+  --unmanaged
+  --all-projects
+  --detection-depth=10 # build/src/bsoncxx/third_party/_deps/core-install/include/core
+  --exclude=extras # CXX-3042
+)
+snyk test "${snyk_args[@]:?}" --print-deps
+
+# Create a new Snyk target reference for the new release branch.
+snyk monitor "${snyk_args[@]:?}"
+```
+
 ## Create Documentation Tickets
 
 Documentation generation must be run after the release tag has been made and
@@ -362,6 +398,17 @@ pushed.
    - Switch back to the branch with documentation updates: `git checkout post-release-changes`.
 - Wait a few minutes and verify mongocxx.org has updated.
 
+## Merge the release branch back into `master` if necessary
+
+If this is a patch release on a minor release branch, create a pull request on GitHub to merge the latest state of the `releases/rX.Y` branch containing the new release tag `rX.Y.Z` into the `master` branch. Use the "Create a merge commit" option when merging this pull request.
+
+> [IMPORTANT]
+> Use the "Create a merge commit" option when merging this pull request!
+
+Do **NOT** delete the release branch after merge.
+
+Verify correct repo state by running `git describe --tags --abbrev=0` on the post-merge `master` branch, which should return the patch release tag `rX.Y.Z`. Adding the `--first-parent` flag should return the last minor release tag `rX.Y.0`.
+
 ## Update CHANGELOG.md post-release ...
 
 CHANGELOG.md on the `master` branch contains sections for every release. This is intended to ease searching for changes among all releases.
@@ -407,7 +454,9 @@ Ensure there are `[Unreleased]` sections for the next minor and patch releases. 
 <!-- Contains published release notes -->
 ```
 
-Commit the change. Create a PR from the `post-release-changes` branch to merge to `master`.
+Commit the change.
+
+Create a PR from the `post-release-changes` branch to merge to `master`.
 
 ## Homebrew
 This requires a macOS machine.
