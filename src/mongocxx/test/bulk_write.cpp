@@ -20,6 +20,7 @@
 #include <mongocxx/instance.hpp>
 #include <mongocxx/private/libmongoc.hh>
 #include <mongocxx/write_concern.hpp>
+#include <mongocxx/test/client_helpers.hh>
 
 namespace {
 using namespace mongocxx;
@@ -354,7 +355,7 @@ TEST_CASE("passing write operations to append calls corresponding C function", "
 
 TEST_CASE("calling empty on a bulk write before and after appending", "[bulk_write]") {
     instance::current();
-    mongocxx::client client{mongocxx::uri{}};
+    mongocxx::client client{mongocxx::uri{}, test_util::add_test_server_api()};
     auto bw = client["db"]["coll"].create_bulk_write();
 
     REQUIRE(bw.empty());
