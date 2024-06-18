@@ -74,7 +74,7 @@ else()
 endif()
 
 if(NEED_DOWNLOAD_C_DRIVER)
-    message(STATUS "No Mongo C Driver path provided via CMAKE_PREFIX_PATH, will download C driver version ${LIBMONGOC_DOWNLOAD_VERSION} from the internet.")
+    message(STATUS "No MongoDB C Driver path provided via CMAKE_PREFIX_PATH, will download C driver version ${LIBMONGOC_DOWNLOAD_VERSION} from the internet.")
     include(FetchMongoC)
 endif()
 

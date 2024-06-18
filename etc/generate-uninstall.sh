@@ -61,7 +61,7 @@ fi
 
 
 printf "#!/bin/sh\n"
-printf "# Mongo C Driver uninstall program, generated with CMake"
+printf "# MongoDB C++ Driver uninstall program, generated with CMake"
 printf "\n"
 printf "# Copyright 2018-present MongoDB, Inc.\n"
 printf "#\n"
@@ -110,4 +110,3 @@ printf "(rmdir \"%s\" 2>/dev/null && printf \"\\\n\") || printf \" ... not remov
 printf "\n"
 printf "# Return to the directory from which the program was called\n"
 printf "cd \${save_pwd}\n"
-
