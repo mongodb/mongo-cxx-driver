@@ -19,8 +19,8 @@
 #include <mongocxx/client.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/private/libmongoc.hh>
-#include <mongocxx/write_concern.hpp>
 #include <mongocxx/test/client_helpers.hh>
+#include <mongocxx/write_concern.hpp>
 
 namespace {
 using namespace mongocxx;
