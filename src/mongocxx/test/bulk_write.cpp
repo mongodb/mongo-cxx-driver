@@ -351,4 +351,15 @@ TEST_CASE("passing write operations to append calls corresponding C function", "
         REQUIRE(called);
     }
 }
+
+TEST_CASE("calling empty on a bulk write before and after appending", "[bulk_write]") {
+    instance::current();
+    mongocxx::client client{mongocxx::uri{}};
+    auto bw = client["db"]["coll"].create_bulk_write();
+
+    REQUIRE(bw.empty());
+    bw.append(model::insert_one(make_document(kvp("id",1))));
+    bw.execute();
+    REQUIRE_FALSE(bw.empty());
+}
 }  // namespace

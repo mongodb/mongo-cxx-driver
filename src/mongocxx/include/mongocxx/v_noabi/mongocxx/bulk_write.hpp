@@ -58,6 +58,8 @@ class bulk_write {
     ///
     ~bulk_write();
 
+    bool empty();
+
     ///
     /// Appends a single write to the bulk write operation. The write operation's contents are
     /// copied into the bulk operation completely, so there is no dependency between the life of an
@@ -104,6 +106,8 @@ class bulk_write {
 
     bool _created_from_collection;
     std::unique_ptr<impl> _impl;
+
+    bool is_empty = true;
 };
 
 }  // namespace v_noabi

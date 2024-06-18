@@ -40,6 +40,10 @@ bulk_write& bulk_write::operator=(bulk_write&&) noexcept = default;
 
 bulk_write::~bulk_write() = default;
 
+bool bulk_write::empty() {
+    return is_empty;
+}
+
 bulk_write& bulk_write::append(const model::write& operation) {
     switch (operation.type()) {
         case write_type::k_insert_one: {
@@ -171,6 +175,8 @@ bulk_write& bulk_write::append(const model::write& operation) {
             break;
         }
     }
+
+    is_empty = false;
 
     return *this;
 }
