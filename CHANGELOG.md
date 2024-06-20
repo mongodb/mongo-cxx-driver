@@ -9,7 +9,7 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 
 ## 3.11.0 [Unreleased]
 
-<!-- Will contain entries for the next minor release -->
+- Bump minimum C Driver version to [1.27.0](https://github.com/mongodb/mongo-c-driver/releases/tag/1.27.0).
 
 ### Deprecated
 
