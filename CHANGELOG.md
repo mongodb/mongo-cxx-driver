@@ -15,6 +15,7 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
   - Note: `FetchContent_Populate()` is still used for mnmlstc/core for CMake versions prior to 3.18 to avoid `add_subdirectory()` behavior.
 - Test suite now uses Catch2 v3 via FetchContent instead of the bundled Catch2 v2 standalone header.
   - C++14 or newer is now required to build tests when enabled with `ENABLE_TESTS=ON`.
+- Bump minimum C Driver version to [1.27.0](https://github.com/mongodb/mongo-c-driver/releases/tag/1.27.0).
 
 ### Deprecated
 
