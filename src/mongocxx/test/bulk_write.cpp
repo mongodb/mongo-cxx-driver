@@ -360,6 +360,7 @@ TEST_CASE("calling empty on a bulk write before and after appending", "[bulk_wri
 
     REQUIRE(bw.empty());
     bw.append(model::insert_one(make_document(kvp("_id", 1))));
+    REQUIRE_FALSE(bw.empty());
     bw.execute();
     REQUIRE_FALSE(bw.empty());
 }
