@@ -98,8 +98,9 @@ class pool {
 
         // Obtains database with speified name in the entry's underlying client.
         // A database cannot be obtained from a temporary client object
-        mongocxx::v_noabi::database operator[] (bsoncxx::v_noabi::string::view_or_value name) const&;
-        mongocxx::v_noabi::database operator[] (bsoncxx::v_noabi::string::view_or_value name) && = delete;
+        mongocxx::v_noabi::database operator[](bsoncxx::v_noabi::string::view_or_value name) const&;
+        mongocxx::v_noabi::database operator[](bsoncxx::v_noabi::string::view_or_value name) && =
+            delete;
 
        private:
         friend ::mongocxx::v_noabi::pool;

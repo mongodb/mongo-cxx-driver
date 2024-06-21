@@ -127,8 +127,8 @@ pool::entry::operator bool() const noexcept {
     return static_cast<bool>(_client);
 }
 
-mongocxx::v_noabi::database pool::entry::operator[] (bsoncxx::v_noabi::string::view_or_value name) const&
-{
+mongocxx::v_noabi::database pool::entry::operator[](
+    bsoncxx::v_noabi::string::view_or_value name) const& {
     return (**this)[name];
 }
 
