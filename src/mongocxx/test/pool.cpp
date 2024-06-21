@@ -143,7 +143,14 @@ TEST_CASE("calling acquire on a pool returns an entry that manages its client", 
         client = nullptr;
         REQUIRE(push_called);
     }
-}
+
+    SECTION("[ ] overload can be used to directly access a database from underlying client") {
+        pool p{};
+        auto client = p.acquire();
+        database db = client["mydb"];
+        REQUIRE(db.name() == stdx::string_view{"mydb"});
+    }
+} 
 
 TEST_CASE("try_acquire returns an engaged stdx::optional<entry>", "[pool]") {
     instance::current();
