@@ -1,18 +1,32 @@
 # Contributing Guidelines
 
+When contributing code, in addition to following the [C++ Core Guidelines]
+(https://github.com/isocpp/CppCoreGuidelines), please follow the same
+[design guidelines](https://github.com/mongodb/mongo/wiki/Server-Design-Guidelines)
+and [style guidelines](https://github.com/mongodb/mongo/wiki/Style-Guidelines)
+as [mongodb/mongo.](https://github.com/mongodb/mongo) Additions and exceptions are listed
+below.
+
+For anything that isn't explicitly covered here, default to the
+[Google C++ Style Guide.](https://google.github.io/styleguide/cppguide.html#Scoping)
+Running [clang-format](https://clang.llvm.org/docs/ClangFormat.html) with our
+configuration file,
+[mongo-cxx-driver/.clang-format](https://github.com/mongodb/mongo-cxx-driver/blob/master/.clang-format),
+will help ensure your code conforms to these standards.
+
 ### Commit Messages
 
 If a pull-request addresses a JIRA ticket, for a single-commit PR, prefix
-the subject line with the ticket ID.  (For a multi-commit PR, we will add
+the subject line with the ticket ID. (For a multi-commit PR, we will add
 the ID later when we squash or merge it.)
 
 > CXX-883 Add commit message conventions to CONTRIBUTING.md
 
-Capitalize subject lines and don't use a trailing period.  Keep the subject
-at most 70 characters long.  Use active voice!  Imagine this preamble to get
+Capitalize subject lines and don't use a trailing period. Keep the subject
+at most 70 characters long. Use active voice! Imagine this preamble to get
 your phrasing right:
 
-> *If applied, this commit will...* [your subject line]
+> _If applied, this commit will..._ [your subject line]
 
 See Chris Beams'
 [How to write a git commit message](http://chris.beams.io/posts/git-commit/)
@@ -20,15 +34,15 @@ for more good guidelines to follow.
 
 ### Lifecycle Methods
 
- - default-or-argument-bearing 'user' constructors
+- default-or-argument-bearing 'user' constructors
 
- - declaration-or-deletion-of-move-constructor
- - declaration-or-deletion-of-move-assignment-operator
+- declaration-or-deletion-of-move-constructor
+- declaration-or-deletion-of-move-assignment-operator
 
- - declaration-or-deletion-of-copy-constructor
- - declaration-or-deletion-of-copy-assignment-operator
+- declaration-or-deletion-of-copy-constructor
+- declaration-or-deletion-of-copy-assignment-operator
 
- - declaration-of-dtor
+- declaration-of-dtor
 
 ### Headers
 
@@ -37,21 +51,21 @@ suffix.
 
 General structure:
 
- - License
- - Include Guard (`#pragma once`)
- - Header Prelude
- - System Headers `<vector>` (alphabetical order)
- - Driver Headers `<path/to/header.hpp>` (alphabetical order)
- - Open Namespace mongocxx 
- - `inline namespace v_noabi {`
- -    Code
- - `}  // namespace v_noabi`
- - Close Namespace mongocxx
- - Header Postlude
+- License
+- Include Guard (`#pragma once`)
+- Header Prelude
+- System Headers `<vector>` (alphabetical order)
+- Driver Headers `<path/to/header.hpp>` (alphabetical order)
+- Open Namespace mongocxx
+- `inline namespace v_noabi {`
+- Code
+- `}  // namespace v_noabi`
+- Close Namespace mongocxx
+- Header Postlude
 
 Example:
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
+```{.cpp}
 // Copyright 2018-present MongoDB Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
@@ -85,7 +99,7 @@ inline namespace v_noabi {
 }  // namespace mongocxx
 
 #include <driver/config/postlude.hpp>
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```
 
 ### Library Root Namespace
 
@@ -135,18 +149,18 @@ void fn(mongocxx::v_noabi::example::type param);
 
 Guidelines:
 
- - Blank line at beginning and end of class declaration
- - Public section up top / private at bottom
- - Lifecycle methods first (see rules above)
- - Private Member Ordering
-   - Friendships
-   - Private Constructors
-   - Private Methods
-   - Private Variables
+- Blank line at beginning and end of class declaration
+- Public section up top / private at bottom
+- Lifecycle methods first (see rules above)
+- Private Member Ordering
+  - Friendships
+  - Private Constructors
+  - Private Methods
+  - Private Variables
 
 Example:
 
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~{.cpp}
+```{.cpp}
 class foo {
 
     public:
@@ -164,14 +178,16 @@ class foo {
       std::unique_ptr<impl> _impl;
 
 };
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+```
 
 ### Inlines
- - Define outside of class declaration
- - Specify inline keyword in declaration and definition (for clarity)
+
+- Define outside of class declaration
+- Specify inline keyword in declaration and definition (for clarity)
 
 ### Relational Operators
- - Prefer to use free functions
+
+- Prefer to use free functions
 
 ### Formatting
 
