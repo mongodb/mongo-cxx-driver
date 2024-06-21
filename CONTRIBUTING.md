@@ -1,7 +1,6 @@
 # Contributing Guidelines
 
-When contributing code, in addition to following the [C++ Core Guidelines]
-(https://github.com/isocpp/CppCoreGuidelines), please follow the same
+When contributing code, in addition to following the [C++ Core Guidelines](https://github.com/isocpp/CppCoreGuidelines), please follow the same
 [design guidelines](https://github.com/mongodb/mongo/wiki/Server-Design-Guidelines)
 and [style guidelines](https://github.com/mongodb/mongo/wiki/Style-Guidelines)
 as [mongodb/mongo.](https://github.com/mongodb/mongo) Additions and exceptions are listed
