@@ -96,8 +96,7 @@ class pool {
         /// Return true if this entry has a client acquired from the pool.
         explicit operator bool() const noexcept;
 
-        // Obtains database with speified name in the entry's underlying client.
-        // A database cannot be obtained from a temporary client object
+        // Allows the pool_entry["db_name"] syntax to be used to access a database within the entry's underlying client.
         mongocxx::v_noabi::database operator[](bsoncxx::v_noabi::string::view_or_value name) const&;
         mongocxx::v_noabi::database operator[](bsoncxx::v_noabi::string::view_or_value name) && =
             delete;
