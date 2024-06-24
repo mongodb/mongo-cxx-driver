@@ -187,6 +187,10 @@ def release(jira_creds_file,
             click.echo('C++ driver distribution not built or not found...exiting!', err=True)
             sys.exit(1)
 
+    click.echo('Signing distribution...')
+    run_shell_script(f'./.evergreen/garasign_dist_file.sh {dist_file}')
+    click.echo('Signing distribution... done.')
+
     jira_vers_dict = get_jira_project_versions(auth_jira)
 
     if release_version not in jira_vers_dict.keys():
@@ -572,6 +576,9 @@ def generate_release_notes(release_version: str, changelog_contents: str) -> str
     - [Create an account](https://jira.mongodb.org) and login.
     - Navigate to the [CXX project](https://jira.mongodb.org/browse/CXX)
     - Click `Create`.
+
+    ## Signature Verification
+    Release artifacts may be verified by using the accompanying detached signature (.asc) and the cpp-driver public key obtained from https://pgp.mongodb.com.
     """).lstrip()
 
     release_notes = "".join(lines) + "\n"
@@ -649,7 +656,9 @@ def create_github_release_draft(gh_repo,
     gh_release = gh_repo.create_git_release(tag=release_tag, name=release_name,
                                             message=release_notes_text, draft=True,
                                             prerelease=is_pre_release)
+
     gh_release.upload_asset(dist_file)
+    gh_release.upload_asset(dist_file + ".asc")
 
     click.echo('Github release has been created.  Review and publish here: {}'
                .format(gh_release.html_url))
