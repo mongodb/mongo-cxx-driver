@@ -43,11 +43,11 @@ podman run \
 
 echo "Comparing Augmented SBOM..."
 
-old_json="$(jq -S '.' ./etc/augmented.sbom.json)"
-new_json="$(jq -S '.' ./etc/augmented.sbom.json.new)"
+jq -S '.' ./etc/augmented.sbom.json >|old.json
+jq -S '.' ./etc/augmented.sbom.json.new >|new.json
 
 # Allow task to upload the augmented SBOM despite failed diff.
-if ! diff -sty --left-column -W 200 <<<"${old_json:?}" <<<"${new_json:?}" >|diff.txt; then
+if ! diff -sty --left-column -W 200 old.json new.json >|diff.txt; then
   declare status
   status='{"status":"failed", "type":"test", "should_continue":true, "desc":"detected significant changes in Augmented SBOM"}'
   curl -sS -d "${status:?}" -H "Content-Type: application/json" -X POST localhost:2285/task_status || true
