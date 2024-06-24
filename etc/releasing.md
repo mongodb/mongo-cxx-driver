@@ -23,25 +23,85 @@ by changes in the new release.
 
 Ensure there are no new or unexpected issues with High severity or greater.
 
-## Update etc/purls.txt
+Update the [SSDLC Report spreadsheet](https://docs.google.com/spreadsheets/d/1sp0bLjj29xO9T8BwDIxUk5IPJ493QkBVCJKIgptxEPc/edit?usp=sharing) with any updates to new or known issues.
 
-Ensure the list of bundled dependencies is up-to-date.
+## Check and Update the SBOM Lite
 
-Run the following commands from the project root directory to regenerate `etc/cyclonedx.sbom.txt` after updating `etc/purls.txt`:
+**Note: this should preferably be done regularly and PRIOR to the scheduled release date.**
 
-```
+Ensure the list of bundled dependencies in `etc/purls.txt` is up-to-date. If not, update `etc/purls.txt`.
+
+If `etc/purls.txt` was updated, update the SBOM Lite document using the following command(s):
+
+```bash
+# Artifactory and Silk credentials. Ask for these from a team member.
+. $HOME/.secrets/artifactory-creds.txt
+. $HOME/.secrets/silk-creds.txt
+
 # Output: "Login succeeded!"
-podman login artifactory.corp.mongodb.com --username cpp-driver
+podman login --password-stdin --username "${ARTIFACTORY_USER:?}" artifactory.corp.mongodb.com <<<"${ARTIFACTORY_PASSWORD:?}"
+
+# Ensure latest version of SilkBomb is being used.
+podman pull artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:1.0
 
 # Output: "... writing sbom to file"
-podman run -it --rm -v "$(pwd):$(pwd)" artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:1.0 update -p "$(pwd)/etc/purls.txt" -i "$(pwd)/etc/cyclonedx.sbom.json" -o "$(pwd)/etc/cyclonedx.sbom.json"
+podman run \
+  --env-file <(
+    printf "%s\n" \
+      "SILK_CLIENT_ID=${SILK_CLIENT_ID:?}" \
+      "SILK_CLIENT_SECRET=${SILK_CLIENT_SECRET:?}"
+  ) \
+  -it --rm -v "$(pwd):/pwd" \
+  artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:1.0 \
+  update -p "/pwd/etc/purls.txt" -i "/pwd/etc/cyclonedx.sbom.json" -o "/pwd/etc/cyclonedx.sbom.json"
 ```
 
-## Check Snyk
+Commit the latest version of the SBOM Lite document into the repo as `etc/cyclonedx.sbom.json`. (This may just be a modification of the timestamp.)
 
-Inspect the list of issues in the latest report for the mongodb/mongo-cxx-driver target in [Snyk](https://app.snyk.io/).
+## Check and Update the Augmented SBOM
 
-Examine the latest report and ensure there are no new or unexpected fixable issues with High severity or greater.
+**Note: this should preferably be done regularly and PRIOR to the scheduled release date.**
+
+Ensure the `silk-check-augmented-sbom` task is passing on Evergreen for the relevant release branch. If it is passing, nothing needs to be done.
+
+ If the `silk-check-augmented-sbom` task was failing, update the Augmented SBOM document using the following command(s):
+
+```bash
+# Artifactory and Silk credentials. Ask for these from a team member.
+. $HOME/.secrets/artifactory-creds.txt
+. $HOME/.secrets/silk-creds.txt
+
+# Output: "Login succeeded!"
+podman login --password-stdin --username "${ARTIFACTORY_USER:?}" artifactory.corp.mongodb.com <<<"${ARTIFACTORY_PASSWORD:?}"
+
+# Ensure latest version of SilkBomb is being used.
+podman pull artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:1.0
+
+# Output: "... writing sbom to file"
+podman run \
+  --env-file <(
+    printf "%s\n" \
+      "SILK_CLIENT_ID=${SILK_CLIENT_ID:?}" \
+      "SILK_CLIENT_SECRET=${SILK_CLIENT_SECRET:?}"
+  ) \
+  -it --rm -v "$(pwd):/pwd" \
+  artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:1.0 \
+  download --silk-asset-group "mongo-cxx-driver" -o "/pwd/etc/augmented.sbom.json"
+```
+
+Review the contents of the new Augmented SBOM and ensure any new or known vulnerabilities with severity "Medium" or greater have a corresponding JIRA ticket (CXX or VULN) that is scheduled to be resolved within its remediation timeline.
+
+Update the [SSDLC Report spreadsheet](https://docs.google.com/spreadsheets/d/1sp0bLjj29xO9T8BwDIxUk5IPJ493QkBVCJKIgptxEPc/edit?usp=sharing) with any updates to new or known vulnerabilities.
+
+Update `etc/third_party_vulnerabilities.md` with any updates to new or known vulnerabilities for third party dependencies that must be reported.
+
+Commit the latest version of the Augmented SBOM document into the repo as `etc/augmented.sbom.json`. The Augmented SBOM document does not need to be updated if the `silk-check-augmented-sbom` was not failing (in which case the only changes present would a version bump or timestamp update).
+
+## Check and Update Snyk
+
+**Note: this should preferably be done regularly and PRIOR to the scheduled release date.**
+
+Inspect the list of projects in the latest report for the mongodb/mongo-cxx-driver target in [Snyk](https://app.snyk.io/).
 
 Deactivate any projects that will not be relevant in the upcoming release. Remove any projects that are not relevant to the current release.
 
@@ -113,21 +173,22 @@ To see all available options, run with `--help`
 python ./etc/make_release.py --help
 ```
 
-It requires the following (note: avoid typing secrets as command-line arguments):
+The following credentials are required. Ask for these from a team member if necessary. (Note: avoid typing secrets as command-line arguments).
 
 - A GitHub token. Go to the GitHub settings page
   [Personal Access Tokens](https://github.com/settings/tokens) and create a
   token.  Save the token secret to `~/.secrets/github_token.txt`.
-- Jira OAuth credentials. Ask for these from a team member.
-  Save it to `~/.secrets/jira_creds.txt`.
-- Artifactory and Garasign credentials. Save these to `~/.secrets/garasign-creds.txt` in the form:
-  ```
+- Jira OAuth credentials. Save it to `~/.secrets/jira_creds.txt`.
+- Artifactory credentials. Save these to `~/.secrets/artifactory-creds.txt`:
+  ```bash
   ARTIFACTORY_USER=<username>
   ARTIFACTORY_PASSWORD=<password>
+  ```
+- Garasign credentials. Save these to `~/.secrets/garasign-creds.txt`:
+  ```bash
   GRS_CONFIG_USER1_USERNAME=<username>
   GRS_CONFIG_USER1_PASSWORD=<password>
   ```
-  Ask for these from a team member.
 
 Run the release script with the git tag created above as an argument and
 `--dry-run` to test for unexpected errors.
