@@ -15,6 +15,9 @@ command -v jq >/dev/null || {
 
 podman login --password-stdin --username "${ARTIFACTORY_USER:?}" artifactory.corp.mongodb.com <<<"${ARTIFACTORY_PASSWORD:?}"
 
+# Ensure latest version of SilkBomb is being used.
+podman pull artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:1.0
+
 silkbomb_download_flags=(
   # Avoid bumping version or timestamp in diff.
   --no-update-sbom-version
@@ -40,10 +43,11 @@ podman run \
 
 echo "Comparing Augmented SBOM..."
 
+old_json="$(jq -S '.' ./etc/augmented.sbom.json)"
+new_json="$(jq -S '.' ./etc/augmented.sbom.json.new)"
+
 # Allow task to upload the augmented SBOM despite failed diff.
-if ! diff -sty --left-column -W 200 \
-  <(jq ./etc/augmented.sbom.json) \
-  <(jq ./etc/augmented.sbom.json.new) >|diff.txt; then
+if ! diff -sty --left-column -W 200 <<<"${old_json:?}" <<<"${new_json:?}" >|diff.txt; then
   declare status
   status='{"status":"failed", "type":"test", "should_continue":true, "desc":"detected significant changes in Augmented SBOM"}'
   curl -sS -d "${status:?}" -H "Content-Type: application/json" -X POST localhost:2285/task_status || true
