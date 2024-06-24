@@ -19,6 +19,10 @@ releasing 1.2.3, then refer to the the waterfall tracking
 If there are test failures, ensure they are at least expected or not introduced
 by changes in the new release.
 
+## Check Coverity
+
+Ensure there are no new, unexpected, or high severity issues on Coverity.
+
 ## Check fixVersions in Jira
 
 Ensure that all tickets under the
