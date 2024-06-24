@@ -6,7 +6,7 @@ type = "index"
 
 # MongoDB C++ Driver
 
-This is the legacy site for the Mongo C++ Driver documentation. See the new
+This is the legacy site for the MongoDB C++ Driver documentation. See the new
 [MongoDB C++ Driver
 documentation](https://www.mongodb.com/docs/languages/cpp/).
 
