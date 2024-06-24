@@ -62,7 +62,7 @@
     }
   ],
   "metadata": {
-    "timestamp": "2024-06-06T18:10:31.789025+00:00",
+    "timestamp": "2024-06-05T21:16:58.419485+00:00",
     "tools": [
       {
         "externalReferences": [
@@ -109,5 +109,6 @@
   "version": 1,
   "$schema": "http://cyclonedx.org/schema/bom-1.5.schema.json",
   "bomFormat": "CycloneDX",
-  "specVersion": "1.5"
+  "specVersion": "1.5",
+  "vulnerabilities": []
 }
