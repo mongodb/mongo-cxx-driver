@@ -293,6 +293,9 @@ to request the build team create new Evergreen project to track the
 
 ## Docker Image Build and Publish
 
+> [!IMPORTANT]
+> Docker image publication for new releases is currently suspended. See CXX-3042.
+
 We maintain the docker images found in the
 [mongodb/mongo-cxx-driver](https://hub.docker.com/r/mongodb/mongo-cxx-driver/)
 Docker Hub repo.
