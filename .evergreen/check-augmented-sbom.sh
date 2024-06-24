@@ -46,16 +46,6 @@ echo "Comparing Augmented SBOM..."
 jq -S '.' ./etc/augmented.sbom.json >|old.json
 jq -S '.' ./etc/augmented.sbom.json.new >|new.json
 
-[[ -f old.json ]] || {
-  echo "missing old.json" 1>&2
-  exit 1
-}
-
-[[ -f new.json ]] || {
-  echo "missing new.json" 1>&2
-  exit 1
-}
-
 # Allow task to upload the augmented SBOM despite failed diff.
 if ! diff -sty --left-column -W 200 old.json new.json >|diff.txt; then
   declare status
