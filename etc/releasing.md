@@ -274,7 +274,27 @@ The new branch should be continuously tested on Evergreen. Update the "Display N
 
 After creating the new minor release branch in the prior step, update Silk and Snyk to trach the new release branch.
 
-For Silk, use the [create-silk-asset-group.py script](https://github.com/mongodb/mongo-c-driver/blob/master/tools/create-silk-asset-group.py) in the C Driver to create a new Silk asset group. Use `mongo-cxx-driver` as the name and prefix in place of `mongo-c-driver` accordingly.
+For Silk, use the [create-silk-asset-group.py script](https://github.com/mongodb/mongo-c-driver/blob/master/tools/create-silk-asset-group.py) in the C Driver to create a new Silk asset group:
+
+```bash
+# Snyk credentials. Ask for these from a team member.
+. ~/.secrets/silk-creds.txt.
+
+# Ensure correct release version number!
+version="X.Y"
+
+create_args=(
+  --silk-client-id "${SILK_CLIENT_ID:?}"
+  --silk-client-secret "${SILK_CLIENT_SECRET:?}"
+  --asset-id "mongo-cxx-driver-${version:?}" # Avoid '/' in Asset ID field.
+  --project "mongo-cxx-driver-${version:?}"
+  --branch "releases/v${version:?}"
+  --code-repo-url "https://github.com/mongodb/mongo-cxx-driver"
+  --sbom-lite-path="etc/cyclonedx.sbom.json"
+)
+
+python path/to/tools/create-silk-asset-group.py "${create_args[@]:?}"
+```
 
 For Snyk, configure and build the CXX Driver with `BSONCXX_POLY_USE_MNMLSTC=ON` (force download of mnmlstc/core sources) and no `CMAKE_PREFIX_PATH` entry to a C Driver installation (force download of C Driver sources), then run:
 
@@ -283,7 +303,7 @@ For Snyk, configure and build the CXX Driver with `BSONCXX_POLY_USE_MNMLSTC=ON` 
 . ~/.secrets/snyk-creds.txt
 
 # Name of the new minor release branch. Ensure this is correct!
-branch="rX.Y"
+branch="releases/vX.Y"
 
 # Authenticate with Snyk dev-prod organization.
 snyk auth "${SNYK_API_TOKEN:?}"
