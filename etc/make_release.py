@@ -188,7 +188,7 @@ def release(jira_creds_file,
             sys.exit(1)
 
     click.echo('Signing distribution...')
-    run_shell_script(f'./.evergreen/garasign_dist_file.sh {dist_file}')
+    run_shell_script(f'./etc/garasign_dist_file.sh {dist_file}')
     click.echo('Signing distribution... done.')
 
     jira_vers_dict = get_jira_project_versions(auth_jira)
