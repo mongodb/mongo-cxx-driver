@@ -112,10 +112,7 @@ class encrypt {
         ///
         /// Use range encryption.
         ///
-        /// @warning The Range algorithm is experimental only. It is not intended for public use. It
-        /// is subject to breaking changes.
-        ///
-        k_range_preview,
+        k_range,
     };
 
     ///
@@ -129,7 +126,7 @@ class encrypt {
         /// @brief Use query type "rangePreview".
         /// @warning The Range algorithm is experimental only. It is not intended for public use. It
         /// is subject to breaking changes.
-        k_range_preview,
+        k_range,
     };
 
     ///
@@ -162,7 +159,7 @@ class encrypt {
 
     ///
     /// Sets the contention factor to use for encryption.
-    /// contentionFactor only applies when algorithm is "Indexed" or "RangePreview".
+    /// contentionFactor only applies when algorithm is "Indexed" or "Range".
     /// It is an error to set contentionFactor when algorithm is not "Indexed".
     ///
     /// @param contention_factor
@@ -183,8 +180,8 @@ class encrypt {
     ///
     /// @param query_type
     /// One of the following: - equality
-    /// query_type only applies when algorithm is "Indexed" or "RangePreview".
-    /// It is an error to set query_type when algorithm is not "Indexed" or "RangePreview".
+    /// query_type only applies when algorithm is "Indexed" or "Range".
+    /// It is an error to set query_type when algorithm is not "Indexed" or "Range".
     ///
     encrypt& query_type(encryption_query_type query_type);
 

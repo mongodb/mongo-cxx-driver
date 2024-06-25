@@ -136,9 +136,9 @@ void* encrypt::convert() const {
                 libmongoc::client_encryption_encrypt_opts_set_algorithm(
                     opts, MONGOC_ENCRYPT_ALGORITHM_UNINDEXED);
                 break;
-            case encryption_algorithm::k_range_preview:
+            case encryption_algorithm::k_range:
                 libmongoc::client_encryption_encrypt_opts_set_algorithm(
-                    opts, MONGOC_ENCRYPT_ALGORITHM_RANGEPREVIEW);
+                    opts, MONGOC_ENCRYPT_ALGORITHM_RANGE);
                 break;
             default:
                 throw exception{error_code::k_invalid_parameter,
@@ -159,9 +159,9 @@ void* encrypt::convert() const {
                 libmongoc::client_encryption_encrypt_opts_set_query_type(
                     opts, MONGOC_ENCRYPT_QUERY_TYPE_EQUALITY);
                 break;
-            case encryption_query_type::k_range_preview:
+            case encryption_query_type::k_range:
                 libmongoc::client_encryption_encrypt_opts_set_query_type(
-                    opts, MONGOC_ENCRYPT_QUERY_TYPE_RANGEPREVIEW);
+                    opts, MONGOC_ENCRYPT_QUERY_TYPE_RANGE);
                 break;
             default:
                 throw exception{error_code::k_invalid_parameter, "unsupported query type"};

@@ -134,7 +134,7 @@ class client_encryption {
     ///
     /// Encrypts a Match Expression or Aggregate Expression to query a range index.
     ///
-    /// @note Only supported when queryType is "rangePreview" and algorithm is "RangePreview".
+    /// @note Only supported when queryType is "range" and algorithm is "Range".
     ///
     /// @param expr A BSON document corresponding to either a Match Expression or an Aggregate
     /// Expression.
