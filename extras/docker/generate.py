@@ -4,7 +4,7 @@ from jinja2 import Environment
 from jinja2 import FileSystemLoader
 
 
-MONGOCXX_VERSION = "3.9.0"
+MONGOCXX_VERSION = "3.10.0"
 MONGOC_VERSION = "1.26.0"
 MONGOCRYPT_VERSION = "1.9.0"
 
