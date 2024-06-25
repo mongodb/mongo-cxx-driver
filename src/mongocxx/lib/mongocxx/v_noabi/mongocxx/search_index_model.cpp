@@ -15,6 +15,14 @@ search_index_model::search_index_model(bsoncxx::v_noabi::string::view_or_value n
                                        bsoncxx::v_noabi::document::view_or_value definition)
     : _impl{bsoncxx::v_noabi::stdx::make_unique<impl>(name, definition)} {}
 
+// Just definition and type passed
+search_index_model::search_index_model(bsoncxx::v_noabi::document::view_or_value definition, bsoncxx::v_noabi::string::view_or_value type)
+       : _impl{bsoncxx::v_noabi::stdx::make_unique<impl>(definition, type)} {}
+
+// All three fields passed
+search_index_model::search_index_model(bsoncxx::v_noabi::string::view_or_value name, bsoncxx::v_noabi::document::view_or_value definition, bsoncxx::v_noabi::string::view_or_value type)
+       : _impl{bsoncxx::v_noabi::stdx::make_unique<impl>(name, definition, type)} {}
+
 search_index_model::search_index_model(search_index_model&&) noexcept = default;
 
 search_index_model& search_index_model::operator=(search_index_model&&) noexcept = default;
@@ -37,6 +45,12 @@ bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> search
 bsoncxx::v_noabi::document::view search_index_model::definition() const {
     return _get_impl()._definition.view();
 }
+
+//  Retrieves type of a search_index_model.
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> search_index_model::type() const {
+    return _get_impl()._type;
+}
+
 
 const search_index_model::impl& search_index_model::_get_impl() const {
     if (!_impl) {
