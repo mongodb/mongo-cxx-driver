@@ -145,6 +145,70 @@ class search_index_view {
     ///
     /// This is a convenience method for creating a single search index.
     ///
+    /// @param definition
+    ///    The document describing the search index to be created.
+    /// @param type
+    ///    The type of the search index to create.
+    ///
+    /// @return The name of the created search index.
+    ///
+    std::string create_one(bsoncxx::v_noabi::document::view_or_value definition,
+                           bsoncxx::v_noabi::string::view_or_value type);
+
+    ///
+    /// This is a convenience method for creating a single search index.
+    ///
+    /// @param session
+    ///   The mongocxx::v_noabi::client_session with which to perform the operation.
+    /// @param definition
+    ///   The document describing the search index to be created.
+    /// @param type
+    ///    The type of the search index to create.
+    ///
+    /// @return The name of the created search index.
+    ///
+    std::string create_one(const client_session& session,
+                           bsoncxx::v_noabi::document::view_or_value definition,
+                           bsoncxx::v_noabi::string::view_or_value type);
+
+    ///
+    /// This is a convenience method for creating a single search index.
+    ///
+    /// @param name
+    ///    The name of the search index to create.
+    /// @param definition
+    ///    The document describing the search index to be created.
+    /// @param type
+    ///    The type of the search index to create.
+    ///
+    /// @return The name of the created search index.
+    ///
+    std::string create_one(bsoncxx::v_noabi::string::view_or_value name,
+                           bsoncxx::v_noabi::document::view_or_value definition,
+                           bsoncxx::v_noabi::string::view_or_value type);
+
+    ///
+    /// This is a convenience method for creating a single search index.
+    ///
+    /// @param session
+    ///   The mongocxx::v_noabi::client_session with which to perform the operation.
+    /// @param name
+    ///   The name of the search index to create.
+    /// @param definition
+    ///   The document describing the search index to be created.
+    /// @param type
+    ///    The type of the search index to create.
+    ///
+    /// @return The name of the created search index.
+    ///
+    std::string create_one(const client_session& session,
+                           bsoncxx::v_noabi::string::view_or_value name,
+                           bsoncxx::v_noabi::document::view_or_value definition,
+                           bsoncxx::v_noabi::string::view_or_value type);
+
+    ///
+    /// This is a convenience method for creating a single search index.
+    ///
     /// @param model
     ///   The search index model to create.
     ///
