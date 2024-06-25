@@ -1,13 +1,12 @@
 {
   "runOn": [
     {
-      "minServerVersion": "7.0.0",
+      "minServerVersion": "8.0.0",
       "topology": [
         "replicaset",
         "sharded",
         "load-balanced"
-      ],
-      "maxServerVersion": "7.99.99"
+      ]
     }
   ],
   "database_name": "default",
@@ -25,9 +24,12 @@
         "path": "encryptedDoubleNoPrecision",
         "bsonType": "double",
         "queries": {
-          "queryType": "rangePreview",
+          "queryType": "range",
           "contention": {
             "$numberLong": "0"
+          },
+          "trimFactor": {
+            "$numberInt": "1"
           },
           "sparsity": {
             "$numberLong": "1"
@@ -204,9 +206,12 @@
                         "path": "encryptedDoubleNoPrecision",
                         "bsonType": "double",
                         "queries": {
-                          "queryType": "rangePreview",
+                          "queryType": "range",
                           "contention": {
                             "$numberLong": "0"
+                          },
+                          "trimFactor": {
+                            "$numberInt": "1"
                           },
                           "sparsity": {
                             "$numberLong": "1"
@@ -251,9 +256,12 @@
                         "path": "encryptedDoubleNoPrecision",
                         "bsonType": "double",
                         "queries": {
-                          "queryType": "rangePreview",
+                          "queryType": "range",
                           "contention": {
                             "$numberLong": "0"
+                          },
+                          "trimFactor": {
+                            "$numberInt": "1"
                           },
                           "sparsity": {
                             "$numberLong": "1"
@@ -299,9 +307,12 @@
                         "path": "encryptedDoubleNoPrecision",
                         "bsonType": "double",
                         "queries": {
-                          "queryType": "rangePreview",
+                          "queryType": "range",
                           "contention": {
                             "$numberLong": "0"
+                          },
+                          "trimFactor": {
+                            "$numberInt": "1"
                           },
                           "sparsity": {
                             "$numberLong": "1"
@@ -326,12 +337,6 @@
                 "$$type": "binData"
               },
               "__safeContent__": [
-                {
-                  "$binary": {
-                    "base64": "5nRutVIyq7URVOVtbE4vM01APSIajAVnsShMwjBlzkM=",
-                    "subType": "00"
-                  }
-                },
                 {
                   "$binary": {
                     "base64": "6YrBn2ofIw1b5ooakrLOwF41BWrps8OO0H9WH4/rtlE=",
@@ -724,12 +729,6 @@
                 "$$type": "binData"
               },
               "__safeContent__": [
-                {
-                  "$binary": {
-                    "base64": "bE1vqWj3KNyM7cCYUv/cnYm8BPaUL3eMp5syTHq6NF4=",
-                    "subType": "00"
-                  }
-                },
                 {
                   "$binary": {
                     "base64": "2FIZh/9N+NeJEQwxYIX5ikQT85xJzulBNReXk8PnG/s=",
