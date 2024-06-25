@@ -410,6 +410,29 @@ git reset --hard rX.Y.Z
 git push -f upstream releases/stable
 ```
 
+### Upload SSDLC Reports
+
+Navigate to the [C++ Driver SSDLC Reports](https://drive.google.com/drive/folders/1q9RI55trFzHlh8McALSIAbT6ugyn8zlO) folder and update the master spreadsheet.
+
+Once complete, make two copies of the spreadsheet.
+
+Rename one copy to: "SSDLC Report: mongo-cxx-driver X.Y.Z". Leave this copy in this folder.
+
+Rename the other copy to: "static_analysis_report-X.Y.Z". Move this copy into the [SSDLC Compliance Files](https://drive.google.com/drive/folders/1_qwTwYyqPL7VjrZOiuyiDYi1y2NYiClS) folder and name it.
+
+Upload a copy of the `etc/ssdlc_compliance_report.md` and `etc/third_party_vulnerabilities.md` files from the `rX.Y.Z` repository. Rename the files with the version number `-X.Y.Z` suffix as already done for other files in this folder.
+
+> [!WARNING]
+> Uploading a file into the SSDLC Compliance Files folder is an irreversible action! However, the files may still be renamed. If necessary, rename any accidentally uploaded files to "(Delete Me)" or similar.
+
+Three new files should be present in the [SSDLC Compliance Files](https://drive.google.com/drive/folders/1_qwTwYyqPL7VjrZOiuyiDYi1y2NYiClS) folder following a release `X.Y.Z`:
+
+```
+ssdlc_compliance_report-X.Y.Z.md
+third_party_vulnerabilities-X.Y.Z.md
+static_analysis-X.Y.Z
+```
+
 ## Post-Release Steps
 
 ### Create a New Release Branch
