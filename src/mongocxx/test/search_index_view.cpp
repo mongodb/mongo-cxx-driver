@@ -13,6 +13,7 @@
 
 namespace {
 using bsoncxx::builder::basic::kvp;
+using bsoncxx::builder::basic::make_array;
 using bsoncxx::builder::basic::make_document;
 using namespace mongocxx;
 
@@ -21,6 +22,25 @@ bool does_search_index_exist_on_cursor(cursor& c, search_index_model& model, boo
         // check the name, that the index is queryable, and that the definition matches.
         if (doc["name"].get_string().value == *model.name() && doc["queryable"].get_bool().value &&
             doc["latestDefinition"].get_document().view() == model.definition()) {
+            // optional addition check needed if with_status is set
+            if (!with_status || (with_status && bsoncxx::string::to_string(
+                                                    doc["status"].get_string().value) == "READY")) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+bool does_search_index_exist_on_cursor_with_type(cursor& c,
+                                                 search_index_model& model,
+                                                 const char *type,
+                                                 bool with_status) {
+    for (auto&& doc : c) {
+        // check the name, that the index is queryable, and that the definition matches.
+        if (doc["name"].get_string().value == *model.name() && doc["queryable"].get_bool().value &&
+            doc["latestDefinition"].get_document().view() == model.definition()) {
+            assert(doc["type"].get_string().value.data() == type);
             // optional addition check needed if with_status is set
             if (!with_status || (with_status && bsoncxx::string::to_string(
                                                     doc["status"].get_string().value) == "READY")) {
@@ -85,6 +105,33 @@ TEST_CASE("atlas search indexes prose tests", "") {
         std::cout << "create one with name and definition SUCCESS" << std::endl;
     }
 
+    SECTION("create one with type") {
+        bsoncxx::oid id;
+        auto coll = db.create_collection(id.to_string());
+        auto siv = coll.search_indexes();
+        
+        // {
+        //   name: 'test-search-index-1',
+        //   type: "search",
+        //   definition : {
+        //     mappings : { dynamic: false }
+        //   }
+        // }
+        auto name = "test-search-index-1";
+        auto type = "search";
+        auto definition = make_document(kvp("mappings", make_document(kvp("dynamic", false))));
+            
+        REQUIRE(siv.create_one(name, definition.view(), type) == "test-search-index-1");
+
+        auto model = search_index_model(name, definition.view(), type); // Keep to 
+        assert_soon([&siv, &model](void) -> bool {
+            auto cursor = siv.list();
+            return does_search_index_exist_on_cursor_with_type(cursor, model, "search", false);
+        });
+
+        std::cout << "create one with type SUCCESS" << std::endl;
+    }
+
     SECTION("create one with model") {
         bsoncxx::oid id;
         auto coll = db.create_collection(id.to_string());
@@ -107,6 +154,130 @@ TEST_CASE("atlas search indexes prose tests", "") {
         });
 
         std::cout << "create one with model SUCCESS" << std::endl;
+    }
+
+    SECTION("create one with model no type given") {
+        bsoncxx::oid id;
+        auto coll = db.create_collection(id.to_string());
+        auto siv = coll.search_indexes();
+        // {
+        //   name: 'test-search-index',
+        //   definition : {
+        //     mappings : { dynamic: false }
+        //   }
+        // }
+        auto name = "test-search-index";
+        auto definition = make_document(kvp("mappings", make_document(kvp("dynamic", false))));
+        auto model = search_index_model(name, definition.view());
+
+        REQUIRE(siv.create_one(model) == "test-search-index");
+
+        assert_soon([&siv, &model](void) -> bool {
+            auto cursor = siv.list();
+            return does_search_index_exist_on_cursor_with_type(cursor, model, "search", false);
+        });
+
+        std::cout << "create one with model no type given SUCCESS" << std::endl;
+    }
+
+    SECTION("create one with model including type") {
+        bsoncxx::oid id;
+        auto coll = db.create_collection(id.to_string());
+        auto siv = coll.search_indexes();
+        // {
+        //   name: 'test-search-index',
+        //   type: "search",
+        //   definition : {
+        //     mappings : { dynamic: false }
+        //   }
+        // }
+        auto name = "test-search-index";
+        auto type = "search";
+        auto definition = make_document(kvp("mappings", make_document(kvp("dynamic", false))));
+        auto model = search_index_model(name, definition.view(), type);
+
+        REQUIRE(model.type().value() == "search");
+        REQUIRE(siv.create_one(model) == "test-search-index");
+
+        assert_soon([&siv, &model](void) -> bool {
+            auto cursor = siv.list();
+            return does_search_index_exist_on_cursor_with_type(cursor, model, "search", false);
+        });
+
+        std::cout << "create one with model including type SUCCESS" << std::endl;
+    }
+
+    SECTION("create one vector") {
+        bsoncxx::oid id;
+        auto coll = db.create_collection(id.to_string());
+        auto siv = coll.search_indexes();
+        //   {
+        //     name: 'test-search-index-vector',
+        //     type: 'vectorSearch',
+        //     definition: {
+        //       fields: [
+        //          {
+        //              type: 'vector',
+        //              path: 'plot_embedding',
+        //              numDimensions: 1536,
+        //              similarity: 'euclidean',
+        //          },
+        //       ]
+        //     }
+        //   }
+        auto name = "test-search-index-vector";
+        auto type = "vectorSearch";
+        auto definition =
+            make_document(kvp("fields",
+                              make_array(make_document(kvp("type", "vector"),
+                                                       kvp("path", "plot_embedding"),
+                                                       kvp("numDimensions", 1536),
+                                                       kvp("similarity", "euclidean")))));
+        auto model = search_index_model(name, definition.view(), type);
+
+        REQUIRE(model.type().value() == "vectorSearch");
+        REQUIRE(siv.create_one(model) == "test-search-index-vector");
+
+        assert_soon([&siv, &model](void) -> bool {
+            auto cursor = siv.list();
+            return does_search_index_exist_on_cursor_with_type(cursor, model, "vectorSearch", false);
+        });
+
+        std::cout << "create one with model vector SUCCESS" << std::endl;
+    }
+
+    SECTION("create one vector bad input") {
+        bsoncxx::oid id;
+        auto coll = db.create_collection(id.to_string());
+        auto siv = coll.search_indexes();
+        //   {
+        //     name: 'test-search-index-vector',
+        //     definition: {
+        //       fields: [
+        //          {
+        //              type: 'vector',
+        //              path: 'plot_embedding',
+        //              numDimensions: 1536,
+        //              similarity: 'euclidean',
+        //          },
+        //       ]
+        //     }
+        //   }
+        auto name = "test-search-index-vector";
+        auto definition =
+            make_document(kvp("fields",
+                              make_array(make_document(kvp("type", "vector"),
+                                                       kvp("path", "plot_embedding"),
+                                                       kvp("numDimensions", 1536),
+                                                       kvp("similarity", "euclidean")))));
+        auto model = search_index_model(name, definition.view());
+
+        // Expect an exception containing the string "Attribute mappings missing" due to the
+        // mappings field missing.
+        REQUIRE_THROWS_WITH(siv.create_one(model),
+                            "Attribute mappings missing.: generic server error");
+
+        std::cout << "create one with model vector bad input SUCCESS" << std::endl;
     }
 
     SECTION("create many") {

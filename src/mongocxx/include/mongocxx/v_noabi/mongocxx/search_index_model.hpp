@@ -25,12 +25,8 @@ class search_index_model {
     search_index_model(bsoncxx::v_noabi::document::view_or_value definition);
     search_index_model(bsoncxx::v_noabi::string::view_or_value name,
                        bsoncxx::v_noabi::document::view_or_value definition);
-
-    // Just definition and type passed
     search_index_model(bsoncxx::v_noabi::document::view_or_value definition,
                        bsoncxx::v_noabi::string::view_or_value type);
-
-    // All three fields passed
     search_index_model(bsoncxx::v_noabi::string::view_or_value name,
                        bsoncxx::v_noabi::document::view_or_value definition,
                        bsoncxx::v_noabi::string::view_or_value type);
