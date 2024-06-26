@@ -34,7 +34,7 @@ bool does_search_index_exist_on_cursor(cursor& c, search_index_model& model, boo
 
 bool does_search_index_exist_on_cursor_with_type(cursor& c,
                                                  search_index_model& model,
-                                                 const char *type,
+                                                 const char* type,
                                                  bool with_status) {
     for (auto&& doc : c) {
         // check the name, that the index is queryable, and that the definition matches.
@@ -109,7 +109,7 @@ TEST_CASE("atlas search indexes prose tests", "") {
         bsoncxx::oid id;
         auto coll = db.create_collection(id.to_string());
         auto siv = coll.search_indexes();
-        
+
         // {
         //   name: 'test-search-index-1',
         //   type: "search",
@@ -120,10 +120,10 @@ TEST_CASE("atlas search indexes prose tests", "") {
         auto name = "test-search-index-1";
         auto type = "search";
         auto definition = make_document(kvp("mappings", make_document(kvp("dynamic", false))));
-            
+
         REQUIRE(siv.create_one(name, definition.view(), type) == "test-search-index-1");
 
-        auto model = search_index_model(name, definition.view(), type); // Keep to 
+        auto model = search_index_model(name, definition.view(), type);  // Keep to
         assert_soon([&siv, &model](void) -> bool {
             auto cursor = siv.list();
             return does_search_index_exist_on_cursor_with_type(cursor, model, "search", false);
@@ -240,7 +240,8 @@ TEST_CASE("atlas search indexes prose tests", "") {
 
         assert_soon([&siv, &model](void) -> bool {
             auto cursor = siv.list();
-            return does_search_index_exist_on_cursor_with_type(cursor, model, "vectorSearch", false);
+            return does_search_index_exist_on_cursor_with_type(
+                cursor, model, "vectorSearch", false);
         });
 
         std::cout << "create one with model vector SUCCESS" << std::endl;
