@@ -61,9 +61,9 @@ class bulk_write {
     ///
     /// Checks if a bulk write operation is empty.
     ///
-    /// @return A boolean that returns true if the bulk write operation is empty.
+    /// @return A boolean indicating if the bulk write operation is empty.
     ///
-    bool empty();
+    bool empty() const noexcept;
 
     ///
     /// Appends a single write to the bulk write operation. The write operation's contents are

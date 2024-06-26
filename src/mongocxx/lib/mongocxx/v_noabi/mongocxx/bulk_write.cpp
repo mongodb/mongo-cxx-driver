@@ -40,7 +40,7 @@ bulk_write& bulk_write::operator=(bulk_write&&) noexcept = default;
 
 bulk_write::~bulk_write() = default;
 
-bool bulk_write::empty() {
+bool bulk_write::empty() const noexcept {
     return is_empty;
 }
 
