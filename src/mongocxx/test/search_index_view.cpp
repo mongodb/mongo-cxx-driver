@@ -319,6 +319,49 @@ TEST_CASE("atlas search indexes prose tests", "") {
         std::cout << "create many SUCCESS" << std::endl;
     }
 
+    SECTION("create many with types") {
+        bsoncxx::oid id;
+        auto coll = db.create_collection(id.to_string());
+        auto siv = coll.search_indexes();
+        // {
+        //   name: 'test-search-index-1',
+        //   type: "search",
+        //   definition : {
+        //     mappings : { dynamic: false }
+        //   }
+        // }
+        auto name1 = "test-search-index-1";
+        auto type1 = "search";
+        auto definition1 = make_document(kvp("mappings", make_document(kvp("dynamic", false))));
+        auto model1 = search_index_model(name1, definition1.view(), type1);
+
+        // {
+        //   name: 'test-search-index-2',
+        //   type: "search",
+        //   definition : {
+        //     mappings : { dynamic: false }
+        //   }
+        // }
+        auto name2 = "test-search-index-2";
+        auto type2 = "search";
+        auto definition2 = make_document(kvp("mappings", make_document(kvp("dynamic", false))));
+        auto model2 = search_index_model(name2, definition2.view(), type2);
+
+        std::vector<search_index_model> models = {model1, model2};
+
+        std::vector<std::string> result = siv.create_many(models);
+        std::vector<std::string> expected = {"test-search-index-1", "test-search-index-2"};
+        REQUIRE(result == expected);
+
+        assert_soon([&siv, &model1, &model2](void) -> bool {
+            auto cursor = siv.list();
+            return does_search_index_exist_on_cursor_with_type(cursor, model1, "search", false) &&
+                   does_search_index_exist_on_cursor_with_type(cursor, model2, "search", false);
+        });
+
+        std::cout << "create many with types SUCCESS" << std::endl;
+    }
+
     SECTION("drop one") {
         bsoncxx::oid id;
         auto coll = db.create_collection(id.to_string());
