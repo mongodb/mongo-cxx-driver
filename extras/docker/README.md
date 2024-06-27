@@ -3,7 +3,7 @@
 [MongoDB](https://hub.docker.com/r/mongodb/mongodb-community-server) is a
 cross-platform document-oriented NoSQL database. MongoDB uses JSON-like
 documents with optional schemas. MongoDB is developed by
-[MongoDB Inc](https://www.mongodb.com/).
+[MongoDB, Inc.](https://www.mongodb.com/).
 
 This image provides both a C++ driver as well as a C driver which are used to
 connect to MongoDB. The C++ driver is also known as
