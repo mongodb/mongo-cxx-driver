@@ -1,8 +1,9 @@
-mongo-cxx-driver (3.10.1-2) UNRELEASED; urgency=medium
+mongo-cxx-driver (3.10.2-1) UNRELEASED; urgency=medium
 
+  * New upstream release
   * Bump dependency on libmongoc-dev
 
- -- Roberto C. Sanchez <roberto@connexer.com>  Fri, 10 May 2024 10:48:44 -0400
+ -- Roberto C. Sanchez <roberto@connexer.com>  Thu, 27 Jun 2024 14:32:36 -0400
 
 mongo-cxx-driver (3.10.1-1) experimental; urgency=medium
 
