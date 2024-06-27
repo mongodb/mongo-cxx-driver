@@ -3102,12 +3102,11 @@ range_explicit_encryption_objects range_explicit_encryption_setup(const std::str
     //      algorithm: "RangePreview",
     //      contentionFactor: 0
     //   }
-    const auto encrypt_opts =
-        options::encrypt()
-            .range_opts(range_opts)
-            .key_id(key1_id)
-            .algorithm(options::encrypt::encryption_algorithm::k_range_preview)
-            .contention_factor(0);
+    const auto encrypt_opts = options::encrypt()
+                                  .range_opts(range_opts)
+                                  .key_id(key1_id)
+                                  .algorithm(options::encrypt::encryption_algorithm::k_range)
+                                  .contention_factor(0);
 
     // Use `clientEncryption` to encrypt these values: 0, 6, 30, and 200.
     const auto encrypted_v0 = client_encryption.encrypt(field_values.v0, encrypt_opts);
@@ -3216,7 +3215,7 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
                     options::encrypt()
                         .range_opts(range_opts)
                         .key_id(key1_id)
-                        .algorithm(options::encrypt::encryption_algorithm::k_range_preview)
+                        .algorithm(options::encrypt::encryption_algorithm::k_range)
                         .contention_factor(0));
 
                 // Use `clientEncryption` to decrypt `insertPayload`.
@@ -3251,8 +3250,8 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
                     options::encrypt()
                         .range_opts(range_opts)
                         .key_id(key1_id)
-                        .algorithm(options::encrypt::encryption_algorithm::k_range_preview)
-                        .query_type(options::encrypt::encryption_query_type::k_range_preview)
+                        .algorithm(options::encrypt::encryption_algorithm::k_range)
+                        .query_type(options::encrypt::encryption_query_type::k_range)
                         .contention_factor(0));
 
                 // Use encryptedClient to run a "find" operation on the `db.explicit_encryption`
@@ -3303,8 +3302,8 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
                     options::encrypt()
                         .range_opts(range_opts)
                         .key_id(key1_id)
-                        .algorithm(options::encrypt::encryption_algorithm::k_range_preview)
-                        .query_type(options::encrypt::encryption_query_type::k_range_preview)
+                        .algorithm(options::encrypt::encryption_algorithm::k_range)
+                        .query_type(options::encrypt::encryption_query_type::k_range)
                         .contention_factor(0));
 
                 // Use `encryptedClient` to run a "find" operation on the `db.explicit_encryption`
@@ -3351,8 +3350,8 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
                     options::encrypt()
                         .range_opts(range_opts)
                         .key_id(key1_id)
-                        .algorithm(options::encrypt::encryption_algorithm::k_range_preview)
-                        .query_type(options::encrypt::encryption_query_type::k_range_preview)
+                        .algorithm(options::encrypt::encryption_algorithm::k_range)
+                        .query_type(options::encrypt::encryption_query_type::k_range)
                         .contention_factor(0));
 
                 // Use encryptedClient to run a "find" operation on the `db.explicit_encryption`
@@ -3397,8 +3396,8 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
                     options::encrypt()
                         .range_opts(range_opts)
                         .key_id(key1_id)
-                        .algorithm(options::encrypt::encryption_algorithm::k_range_preview)
-                        .query_type(options::encrypt::encryption_query_type::k_range_preview)
+                        .algorithm(options::encrypt::encryption_algorithm::k_range)
+                        .query_type(options::encrypt::encryption_query_type::k_range)
                         .contention_factor(0));
 
                 // Use encryptedClient to run a "find" operation on the `db.explicit_encryption`
@@ -3448,8 +3447,7 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
                                 options::encrypt()
                                     .range_opts(range_opts)
                                     .key_id(key1_id)
-                                    .algorithm(
-                                        options::encrypt::encryption_algorithm::k_range_preview)
+                                    .algorithm(options::encrypt::encryption_algorithm::k_range)
                                     .contention_factor(0)),
                             Catch::Contains(
                                 "Value must be greater than or equal to the minimum value and "
@@ -3477,7 +3475,7 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
                             options::encrypt()
                                 .range_opts(range_opts)
                                 .key_id(key1_id)
-                                .algorithm(options::encrypt::encryption_algorithm::k_range_preview)
+                                .algorithm(options::encrypt::encryption_algorithm::k_range)
                                 .contention_factor(0);
 
                         // If the encrypted field is encryptedInt encrypt:
@@ -3533,8 +3531,7 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
                                                     .sparsity(1)
                                                     .precision(2))
                                     .key_id(key1_id)
-                                    .algorithm(
-                                        options::encrypt::encryption_algorithm::k_range_preview)
+                                    .algorithm(options::encrypt::encryption_algorithm::k_range)
                                     .contention_factor(0)),
                             Catch::Contains(
                                 "expected 'precision' to be set with double or decimal128 index"));
