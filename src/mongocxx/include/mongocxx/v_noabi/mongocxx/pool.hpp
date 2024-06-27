@@ -17,11 +17,12 @@
 #include <functional>
 #include <memory>
 
-#include <mongocxx/client-fwd.hpp>
 #include <mongocxx/options/auto_encryption-fwd.hpp>
 #include <mongocxx/pool-fwd.hpp>
 
 #include <bsoncxx/stdx/optional.hpp>
+#include <mongocxx/client.hpp>
+#include <mongocxx/database.hpp>
 #include <mongocxx/options/pool.hpp>
 #include <mongocxx/stdx.hpp>
 #include <mongocxx/uri.hpp>
@@ -96,8 +97,10 @@ class pool {
         /// Return true if this entry has a client acquired from the pool.
         explicit operator bool() const noexcept;
 
-        // Allows the pool_entry["db_name"] syntax to be used to access a database within the entry's underlying client.
-        mongocxx::v_noabi::database operator[](bsoncxx::v_noabi::string::view_or_value name) const&;
+        // Allows the pool_entry["db_name"] syntax to be used to access a database within the
+        // entry's underlying client.
+        MONGOCXX_INLINE mongocxx::v_noabi::database operator[](
+            bsoncxx::v_noabi::string::view_or_value name) const&;
         mongocxx::v_noabi::database operator[](bsoncxx::v_noabi::string::view_or_value name) && =
             delete;
 
@@ -131,6 +134,11 @@ class pool {
     class MONGOCXX_PRIVATE impl;
     const std::unique_ptr<impl> _impl;
 };
+
+MONGOCXX_INLINE mongocxx::v_noabi::database pool::entry::operator[](
+    bsoncxx::v_noabi::string::view_or_value name) const& {
+    return (**this)[name];
+}
 
 }  // namespace v_noabi
 }  // namespace mongocxx

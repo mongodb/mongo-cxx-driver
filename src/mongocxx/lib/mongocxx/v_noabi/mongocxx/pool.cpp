@@ -127,11 +127,6 @@ pool::entry::operator bool() const noexcept {
     return static_cast<bool>(_client);
 }
 
-mongocxx::v_noabi::database pool::entry::operator[](
-    bsoncxx::v_noabi::string::view_or_value name) const& {
-    return (**this)[name];
-}
-
 // construct a pool entry from a pointer to a client
 pool::entry::entry(pool::entry::unique_client p) : _client(std::move(p)) {}
 
