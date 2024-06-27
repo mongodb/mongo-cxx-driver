@@ -14,7 +14,7 @@ Build-Depends: debhelper (>= 11),
                libsasl2-dev,
                libutf8proc-dev,
                doxygen
-Standards-Version: 4.6.2
+Standards-Version: 4.7.0
 Section: libs
 Homepage: https://mongocxx.org/
 Vcs-Git: https://github.com/mongodb/mongo-cxx-driver.git
