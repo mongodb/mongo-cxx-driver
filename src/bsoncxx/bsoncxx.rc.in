@@ -33,7 +33,7 @@ BEGIN
             VALUE "OriginalFilename", BSONCXX_OUTPUT_BASENAME ".dll"
             VALUE "ProductName", "MongoDB C++ Driver"
             VALUE "ProductVersion", BSONCXX_VERSION
-            VALUE "LegalCopyright", "Copyright (C) 2014-present MongoDB, Inc."
+            VALUE "LegalCopyright", "Copyright 2009-present MongoDB, Inc."
         END
     END
     BLOCK "VarFileInfo"
@@ -42,4 +42,3 @@ BEGIN
         VALUE "Translation", 0x409, 1200
     END
 END
-
