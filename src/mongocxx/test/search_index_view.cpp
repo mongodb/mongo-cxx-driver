@@ -40,7 +40,7 @@ bool does_search_index_exist_on_cursor_with_type(cursor& c,
         // check the name, that the index is queryable, and that the definition matches.
         if (doc["name"].get_string().value == *model.name() && doc["queryable"].get_bool().value &&
             doc["latestDefinition"].get_document().view() == model.definition()) {
-            assert(doc["type"].get_string().value.data() == type);
+            REQUIRE(!strcmp(doc["type"].get_string().value.data(), type));
             // optional addition check needed if with_status is set
             if (!with_status || (with_status && bsoncxx::string::to_string(
                                                     doc["status"].get_string().value) == "READY")) {
