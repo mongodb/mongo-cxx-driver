@@ -59,6 +59,13 @@ class bulk_write {
     ~bulk_write();
 
     ///
+    /// Checks if a bulk write operation is empty.
+    ///
+    /// @return A boolean indicating if the bulk write operation is empty.
+    ///
+    bool empty() const noexcept;
+
+    ///
     /// Appends a single write to the bulk write operation. The write operation's contents are
     /// copied into the bulk operation completely, so there is no dependency between the life of an
     /// appended write operation and the bulk operation itself.
@@ -104,6 +111,8 @@ class bulk_write {
 
     bool _created_from_collection;
     std::unique_ptr<impl> _impl;
+
+    bool is_empty = true;
 };
 
 }  // namespace v_noabi
