@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# Copyright 2018-present MongoDB, Inc.
+# Copyright 2009-present MongoDB, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -63,7 +63,7 @@ fi
 printf "#!/bin/sh\n"
 printf "# MongoDB C++ Driver uninstall program, generated with CMake"
 printf "\n"
-printf "# Copyright 2018-present MongoDB, Inc.\n"
+printf "# Copyright 2009-present MongoDB, Inc.\n"
 printf "#\n"
 printf "# Licensed under the Apache License, Version 2.0 (the \"License\");\n"
 printf "# you may not use this file except in compliance with the License.\n"
