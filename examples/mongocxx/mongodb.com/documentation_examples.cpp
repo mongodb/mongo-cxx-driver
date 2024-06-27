@@ -37,16 +37,23 @@
 // corresponding page on mongodb.com/docs. See CXX-1249 and DRIVERS-356 for more info.
 
 template <typename T>
-void check_field(const T& document, const char* field, bool should_have, int example_no) {
+void check_field(const T& document,
+                 const char* field,
+                 bool should_have,
+                 int example_no,
+                 const char* example_type = NULL) {
+    std::string example_type_formatted = example_type ? example_type + std::string(" ") : "";
     if (should_have) {
         if (!document[field]) {
-            throw std::logic_error(std::string("document in example ") +
-                                   std::to_string(example_no) + " should have field " + field);
+            throw std::logic_error(std::string("document in ") + example_type_formatted +
+                                   std::string("example ") + std::to_string(example_no) +
+                                   " should not have field " + field);
         }
     } else {
         if (document[field]) {
-            throw std::logic_error(std::string("document in example ") +
-                                   std::to_string(example_no) + " should not have field " + field);
+            throw std::logic_error(std::string("document in ") + example_type_formatted +
+                                   std::string("example ") + std::to_string(example_no) +
+                                   " should not have field " + field);
         }
     }
 }
@@ -59,6 +66,22 @@ void check_has_field(const T& document, const char* field, int example_no) {
 template <typename T>
 void check_has_no_field(const T& document, const char* field, int example_no) {
     check_field(document, field, false, example_no);
+}
+
+template <typename T>
+void check_has_field(const T& document,
+                     const char* field,
+                     int example_no,
+                     const char* example_type) {
+    check_field(document, field, true, example_no, example_type);
+}
+
+template <typename T>
+void check_has_no_field(const T& document,
+                        const char* field,
+                        int example_no,
+                        const char* example_type) {
+    check_field(document, field, false, example_no, example_type);
 }
 
 bool should_run_client_side_encryption_test(void) {
@@ -185,6 +208,46 @@ static bsoncxx::document::value get_is_master(const mongocxx::client& client) {
 static bool is_replica_set(const mongocxx::client& client) {
     auto reply = get_is_master(client);
     return static_cast<bool>(reply.view()["setName"]);
+}
+
+static bool version_at_least(mongocxx::database& db,
+                             int minimum_major,
+                             int minimum_minor,
+                             int minimum_patch) {
+    using bsoncxx::builder::basic::kvp;
+    using bsoncxx::builder::basic::make_document;
+
+    auto resp = db.run_command(make_document(kvp("buildInfo", 1)));
+    auto version = resp.find("version")->get_string().value;
+    std::string major_string;
+    std::string minor_string;
+    std::string patch_string;
+    int split = 0;
+    for (auto i : version) {
+        if (i == '.') {
+            split += 1;
+            continue;
+        }
+        if (split == 0) {
+            major_string += i;
+        } else if (split == 1) {
+            minor_string += i;
+        } else if (split == 2) {
+            patch_string += i;
+        }
+    }
+
+    std::vector<int> server_semver{
+        std::stoi(major_string), std::stoi(minor_string), std::stoi(minor_string)};
+    std::vector<int> minimum_semver{minimum_major, minimum_minor, minimum_patch};
+    for (size_t i = 0; i < server_semver.size(); i++) {
+        if (server_semver[i] < minimum_semver[i]) {
+            return false;
+        } else if (server_semver[i] > minimum_semver[i]) {
+            return true;
+        }
+    }
+    return true;
 }
 
 void insert_examples(mongocxx::database db) {
@@ -869,7 +932,7 @@ void query_null_missing_fields_examples(mongocxx::database db) {
     }
 }
 
-void projection_examples(mongocxx::database db) {
+void projection_insertion_example(mongocxx::database db) {
     db["inventory"].drop();
 
     {
@@ -915,6 +978,10 @@ void projection_examples(mongocxx::database db) {
             throw std::logic_error("wrong count in example 42");
         }
     }
+}
+
+void projection_examples(mongocxx::database db) {
+    projection_insertion_example(db);
 
     {
         // Start Example 43
@@ -1088,6 +1155,63 @@ void projection_examples(mongocxx::database db) {
             if (std::distance(instock.begin(), instock.end()) != 1) {
                 throw std::logic_error("wrong count in example 50");
             }
+        }
+    }
+}
+
+void projection_with_aggregation_example(mongocxx::database db) {
+    {
+        if (!version_at_least(db, 4, 4, 0)) {
+            return;
+        }
+
+        projection_insertion_example(db);
+
+        // Start Aggregation Projection Example 1
+        using bsoncxx::builder::basic::kvp;
+        using bsoncxx::builder::basic::make_array;
+        using bsoncxx::builder::basic::make_document;
+
+        auto cursor = db["inventory"].find(
+            make_document(),
+            mongocxx::options::find{}.projection(make_document(
+                kvp("_id", 0),
+                kvp("item", 1),
+                kvp("status",
+                    make_document(kvp(
+                        "$switch",
+                        make_document(
+                            kvp("branches",
+                                make_array(
+                                    make_document(
+                                        kvp("case",
+                                            make_document(kvp("$eq", make_array("$status", "A")))),
+                                        kvp("then", "Available")),
+                                    make_document(
+                                        kvp("case",
+                                            make_document(kvp("$eq", make_array("$status", "D")))),
+                                        kvp("then", "Discontinued")))),
+                            kvp("default", "No status found"))))),
+                kvp("area",
+                    make_document(kvp(
+                        "$concat",
+                        make_array(
+                            make_document(kvp(
+                                "$toString",
+                                make_document(kvp("$multiply", make_array("$size.h", "$size.w"))))),
+                            " ",
+                            "$size.uom")))),
+                kvp("reportNumber", make_document(kvp("$literal", 1))))));
+        // End Aggregation Projection Example 1
+
+        for (auto&& document : cursor) {
+            check_has_no_field(document, "_id", 1, "aggregation projection");
+            check_has_field(document, "item", 1, "aggregation projection");
+            check_has_field(document, "status", 1, "aggregation projection");
+            check_has_no_field(document, "size", 1, "aggregation projection");
+            check_has_no_field(document, "instock", 1, "aggregation projection");
+            check_has_field(document, "area", 1, "aggregation projection");
+            check_has_field(document, "reportNumber", 1, "aggregation projection");
         }
     }
 }
@@ -1467,24 +1591,6 @@ static void snapshot_example2(mongocxx::client& client) {
     }
 }
 
-static bool version_at_least(mongocxx::database& db, int minimum_major) {
-    using bsoncxx::builder::basic::kvp;
-    using bsoncxx::builder::basic::make_document;
-
-    auto resp = db.run_command(make_document(kvp("buildInfo", 1)));
-    auto version = resp.find("version")->get_string().value;
-    std::string major_string;
-    for (auto i : version) {
-        if (i == '.') {
-            break;
-        }
-        major_string += i;
-    }
-    int server_major = std::stoi(major_string);
-
-    return server_major >= minimum_major;
-}
-
 // https://jira.mongodb.com/browse/CXX-2505
 static void queryable_encryption_api(mongocxx::client& client) {
     // Start Queryable Encryption Example
@@ -1610,14 +1716,15 @@ int main() {
         query_array_embedded_documents_examples(db);
         query_null_missing_fields_examples(db);
         projection_examples(db);
+        projection_with_aggregation_example(db);
         update_examples(db);
         delete_examples(db);
-        if (is_replica_set(conn) && version_at_least(db, 5)) {
+        if (is_replica_set(conn) && version_at_least(db, 5, 0, 0)) {
             snapshot_example1(conn);
             snapshot_example2(conn);
         }
         if (should_run_client_side_encryption_test() && is_replica_set(conn) &&
-            version_at_least(db, 7)) {
+            version_at_least(db, 7, 0, 0)) {
             queryable_encryption_api(conn);
         }
     } catch (const std::logic_error& e) {

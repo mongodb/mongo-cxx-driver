@@ -15,10 +15,12 @@
 add_subdirectory(make_dist)
 
 set(cmake_MODULES
-    ParseVersion.cmake
-    MacroGuardTest.cmake
     BsoncxxUtil.cmake
+    FetchMnmlstcCore.cmake
+    FetchMongoC.cmake
+    MacroGuardTest.cmake
     MongocxxUtil.cmake
+    ParseVersion.cmake
 )
 
 set_local_dist(cmake_DIST_local
