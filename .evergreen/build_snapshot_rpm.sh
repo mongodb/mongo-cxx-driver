@@ -7,7 +7,7 @@ set -o errexit
 #
 
 #
-# Copyright 2020 MongoDB, Inc.
+# Copyright 2009-present MongoDB, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -156,4 +156,3 @@ fi
 
 sudo mock -r ${config} --use-bootstrap-image --isolation=simple --clean
 (cd "${mock_result}" ; tar zcvf ../rpm.tar.gz *.rpm)
-

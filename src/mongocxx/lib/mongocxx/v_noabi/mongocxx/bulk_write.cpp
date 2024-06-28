@@ -1,4 +1,4 @@
-// Copyright 2014-present MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -39,6 +39,10 @@ bulk_write::bulk_write(bulk_write&&) noexcept = default;
 bulk_write& bulk_write::operator=(bulk_write&&) noexcept = default;
 
 bulk_write::~bulk_write() = default;
+
+bool bulk_write::empty() const noexcept {
+    return is_empty;
+}
 
 bulk_write& bulk_write::append(const model::write& operation) {
     switch (operation.type()) {
@@ -171,6 +175,8 @@ bulk_write& bulk_write::append(const model::write& operation) {
             break;
         }
     }
+
+    is_empty = false;
 
     return *this;
 }

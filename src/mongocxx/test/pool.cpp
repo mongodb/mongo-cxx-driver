@@ -1,4 +1,4 @@
-// Copyright 2015 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -142,6 +142,13 @@ TEST_CASE("calling acquire on a pool returns an entry that manages its client", 
         REQUIRE(!push_called);
         client = nullptr;
         REQUIRE(push_called);
+    }
+
+    SECTION("[ ] overload can be used to directly access a database from underlying client") {
+        pool p{};
+        auto client = p.acquire();
+        database db = client["mydb"];
+        REQUIRE(db.name() == stdx::string_view{"mydb"});
     }
 }
 
