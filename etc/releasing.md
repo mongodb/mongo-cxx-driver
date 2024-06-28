@@ -181,7 +181,7 @@ Inspect the list of tickets assigned to the version to be released on [Jira](htt
 
 Ensure all related ticket statuses are `Closed` (with the exception of the ticket tracking the release itself).
 
-For tickets that are will not be part of this release, update their fix version accordingly.
+For tickets that will not be part of this release, update their fix version accordingly.
 
 > [!IMPORTANT]
 > For a patch release, ensure the commits for all related tickets have been cherry-picked onto the release branch.
@@ -257,7 +257,7 @@ Remove the `[Unreleased]` tag from the relevant non-patch release section, e.g. 
 ```
 
 > [!IMPORTANT]
-> If there are entries under an unreleased patch release section with the old minor release number, move the entries into a new patch release section and remove the old patch release section. For example, for a `1.3.0` minor release, move entries from `1.2.3 [Unreleased]` to `1.3.1 [Unreleased]` and remove `1.2.3 [Unreleased]`. (This is analogous to updating the fix version of Jira tickets, as done earlier.)
+> If there are entries under an unreleased patch release section with the old minor release number, move the entries into this release's section and remove the unreleased patch release section. For example, for a `1.3.0` minor release, move entries from `1.2.3 [Unreleased]` to `1.3.0` and remove `1.2.3 [Unreleased]`. Due to cherry-picking, a non-patch release should always (already) contain the changes targeting a patch release with a prior minor version number. (This is analogous to updating the fix version of Jira tickets, as done earlier.)
 
 Commit the updates to `CHANGELOG.md`.
 
@@ -366,9 +366,6 @@ follows:
   with `--dist-file ./build/mongo-cxx-driver-rX.Y.Z.tar.gz`.
 
 If all goes well, run the command again without `--dry-run`. This should update Jira and create a draft release on GitHub.
-
-> [!TIP]
-> To avoid the Jira ticket tracking the release itself from preventing the script from completing successfully, pass `--allow-open-issues`. Carefully inspect the list of open tickets before using this flag!
 
 Verify the successful creation of the release draft on GitHub.
 
