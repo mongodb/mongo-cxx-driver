@@ -17,16 +17,17 @@ using bsoncxx::builder::basic::make_array;
 using bsoncxx::builder::basic::make_document;
 using namespace mongocxx;
 
-bool does_search_index_exist_on_cursor(cursor& c, search_index_model& model, bool with_status) {
-    for (auto&& index : c) {
+bool does_search_index_exist_on_cursor(cursor& c,
+                                       const search_index_model& model,
+                                       bool with_status) {
+    for (const auto& index : c) {
         // look for a queryable index with a matching name and assert the definition matches model
-        if (index["name"].get_string().value == *model.name() &&
+        if (index["name"].get_string().value == model.name().value() &&
             index["queryable"].get_bool().value) {
             REQUIRE(index["latestDefinition"].get_document().view() == model.definition());
             // optional addition check needed if with_status is set
             if (!with_status ||
-                (with_status &&
-                 bsoncxx::string::to_string(index["status"].get_string().value) == "READY")) {
+                bsoncxx::string::to_string(index["status"].get_string().value) == "READY") {
                 return true;
             }
         }
@@ -36,20 +37,19 @@ bool does_search_index_exist_on_cursor(cursor& c, search_index_model& model, boo
 
 // Almost identical to does_search_index_exist_on_cursor but checks type field.
 bool does_search_index_exist_on_cursor_with_type(cursor& c,
-                                                 search_index_model& model,
+                                                 const search_index_model& model,
                                                  const char* type,
                                                  bool with_status) {
-    for (auto&& index : c) {
+    for (const auto& index : c) {
         // look for a queryable index with a matching name
-        if (index["name"].get_string().value == *model.name() &&
+        if (index["name"].get_string().value == model.name().value() &&
             index["queryable"].get_bool().value) {
             // assert the definition and type match
             REQUIRE(index["latestDefinition"].get_document().view() == model.definition());
             REQUIRE(!strcmp(index["type"].get_string().value.data(), type));
             // optional addition check needed if with_status is set
             if (!with_status ||
-                (with_status &&
-                 bsoncxx::string::to_string(index["status"].get_string().value) == "READY")) {
+                bsoncxx::string::to_string(index["status"].get_string().value) == "READY") {
                 return true;
             }
         }
@@ -71,7 +71,7 @@ void assert_soon(std::function<bool()> fn) {
     FAIL("Expected function to return true within five minutes, but did not");
 }
 
-TEST_CASE("atlas search indexes prose tests", "") {
+TEST_CASE("atlas search indexes prose tests", "[atlas][search_indexes]") {
     instance::current();
 
     auto uri_getenv = std::getenv("MONGODB_URI");
@@ -94,9 +94,10 @@ TEST_CASE("atlas search indexes prose tests", "") {
         //     definition: {
         //     mappings: { dynamic: false }
         //   }
-        auto name = "test-search-index";
-        auto definition = make_document(kvp("mappings", make_document(kvp("dynamic", false))));
-        auto model = search_index_model(name, definition.view());
+        const auto name = "test-search-index";
+        const auto definition =
+            make_document(kvp("mappings", make_document(kvp("dynamic", false))));
+        const auto model = search_index_model(name, definition.view());
 
         REQUIRE(siv.create_one(name, definition.view()) == "test-search-index");
 
@@ -105,9 +106,7 @@ TEST_CASE("atlas search indexes prose tests", "") {
             return does_search_index_exist_on_cursor(cursor, model, false);
         });
 
-        std::cout
-            << "Prose Test Case 1: Driver can successfully create and list search indexes SUCCESS"
-            << std::endl;
+        SUCCEED("Prose Test Case 1: Driver can successfully create and list search indexes");
     }
 
     // Prose test case #2.
@@ -115,16 +114,17 @@ TEST_CASE("atlas search indexes prose tests", "") {
         bsoncxx::oid id;
         auto coll0 = db.create_collection(id.to_string());
         auto siv = coll0.search_indexes();
-        
+
         // {
         //   name: 'test-search-index-1',
         //   definition : {
         //     mappings : { dynamic: false }
         //   }
         // }
-        auto name1 = "test-search-index-1";
-        auto definition1 = make_document(kvp("mappings", make_document(kvp("dynamic", false))));
-        auto model1 = search_index_model(name1, definition1.view());
+        const auto name1 = "test-search-index-1";
+        const auto definition1 =
+            make_document(kvp("mappings", make_document(kvp("dynamic", false))));
+        const auto model1 = search_index_model(name1, definition1.view());
 
         // {
         //   name: 'test-search-index-2',
@@ -132,14 +132,15 @@ TEST_CASE("atlas search indexes prose tests", "") {
         //     mappings : { dynamic: false }
         //   }
         // }
-        auto name2 = "test-search-index-2";
-        auto definition2 = make_document(kvp("mappings", make_document(kvp("dynamic", false))));
-        auto model2 = search_index_model(name2, definition2.view());
+        const auto name2 = "test-search-index-2";
+        const auto definition2 =
+            make_document(kvp("mappings", make_document(kvp("dynamic", false))));
+        const auto model2 = search_index_model(name2, definition2.view());
 
-        std::vector<search_index_model> models = {model1, model2};
+        const std::vector<search_index_model> models = {model1, model2};
 
-        std::vector<std::string> result = siv.create_many(models);
-        std::vector<std::string> expected = {"test-search-index-1", "test-search-index-2"};
+        const std::vector<std::string> result = siv.create_many(models);
+        const std::vector<std::string> expected = {"test-search-index-1", "test-search-index-2"};
         REQUIRE(result == expected);
 
         assert_soon([&siv, &model1, &model2](void) -> bool {
@@ -148,9 +149,7 @@ TEST_CASE("atlas search indexes prose tests", "") {
                    does_search_index_exist_on_cursor(cursor, model2, false);
         });
 
-        std::cout
-            << "Prose Test Case 2: Driver can successfully create multiple indexes in batch SUCCESS"
-            << std::endl;
+        SUCCEED("Prose Test Case 2: Driver can successfully create multiple indexes in batch");
     }
 
     // Prose test case #3.
@@ -164,9 +163,10 @@ TEST_CASE("atlas search indexes prose tests", "") {
         //     mappings : { dynamic: false }
         //   }
         // }
-        auto name = "test-search-index";
-        auto definition = make_document(kvp("mappings", make_document(kvp("dynamic", false))));
-        auto model = search_index_model(name, definition.view());
+        const auto name = "test-search-index";
+        const auto definition =
+            make_document(kvp("mappings", make_document(kvp("dynamic", false))));
+        const auto model = search_index_model(name, definition.view());
 
         REQUIRE(siv.create_one(model) == "test-search-index");
 
@@ -184,8 +184,7 @@ TEST_CASE("atlas search indexes prose tests", "") {
             return cursor.begin() == cursor.end();
         });
 
-        std::cout << "Prose Test Case 3: Driver can successfully drop search indexes SUCCESS"
-                  << std::endl;
+        SUCCEED("Prose Test Case 3: Driver can successfully drop search indexes");
     }
 
     // Prose test case #4.
@@ -199,9 +198,10 @@ TEST_CASE("atlas search indexes prose tests", "") {
         //     mappings: { dynamic: false }
         //    }
         // }
-        auto name = "test-search-index";
-        auto definition = make_document(kvp("mappings", make_document(kvp("dynamic", false))));
-        auto model = search_index_model(name, definition.view());
+        const auto name = "test-search-index";
+        const auto definition =
+            make_document(kvp("mappings", make_document(kvp("dynamic", false))));
+        const auto model = search_index_model(name, definition.view());
 
         REQUIRE(siv.create_one(model) == "test-search-index");
 
@@ -216,8 +216,9 @@ TEST_CASE("atlas search indexes prose tests", "") {
         //     mappings: { dynamic: true }
         //   }
         // }
-        auto new_definition = make_document(kvp("mappings", make_document(kvp("dynamic", true))));
-        auto new_model = search_index_model(name, new_definition.view());
+        const auto new_definition =
+            make_document(kvp("mappings", make_document(kvp("dynamic", true))));
+        const auto new_model = search_index_model(name, new_definition.view());
         siv.update_one(name, new_definition.view());
 
         assert_soon([&siv, &new_model](void) -> bool {
@@ -225,7 +226,7 @@ TEST_CASE("atlas search indexes prose tests", "") {
             return does_search_index_exist_on_cursor(cursor, new_model, true);
         });
 
-        std::cout << "Prose Test Case 4: Driver can update a search index SUCCESS" << std::endl;
+        SUCCEED("Prose Test Case 4: Driver can update a search index");
     }
 
     // Prose test case #5.
@@ -233,9 +234,7 @@ TEST_CASE("atlas search indexes prose tests", "") {
         bsoncxx::oid id;
         auto coll = db[id.to_string()];
         coll.search_indexes().drop_one("apples");
-        std::cout
-            << "Prose Test Case 5: dropSearchIndex suppresses namespace not found errors SUCCESS"
-            << std::endl;
+        SUCCEED("Prose Test Case 5: dropSearchIndex suppresses namespace not found errors");
     }
 
     // Prose test case #6.
@@ -262,9 +261,10 @@ TEST_CASE("atlas search indexes prose tests", "") {
         //     mappings: { dynamic: false }
         //   }
         // }
-        auto name = "test-search-index-case6";
-        auto definition = make_document(kvp("mappings", make_document(kvp("dynamic", false))));
-        auto model = search_index_model(name, definition.view());
+        const auto name = "test-search-index-case6";
+        const auto definition =
+            make_document(kvp("mappings", make_document(kvp("dynamic", false))));
+        const auto model = search_index_model(name, definition.view());
 
         REQUIRE(siv.create_one(name, definition.view()) == "test-search-index-case6");
 
@@ -273,8 +273,9 @@ TEST_CASE("atlas search indexes prose tests", "") {
             return does_search_index_exist_on_cursor(cursor, model, false);
         });
 
-        std::cout << "Prose Test Case 6: Driver can successfully create and list search indexes"
-                  << " with non-default readConcern and writeConcern SUCCESS" << std::endl;
+        SUCCEED(
+            "Prose Test Case 6: Driver can successfully create and list search indexes with "
+            "non-default readConcern and writeConcern");
     }
 
     // Prose test case #7.
@@ -288,9 +289,10 @@ TEST_CASE("atlas search indexes prose tests", "") {
         //      mappings: { dynamic: false }
         //     }
         // }
-        auto name1 = "test-search-index-case7-implicit";
-        auto definition1 = make_document(kvp("mappings", make_document(kvp("dynamic", false))));
-        auto model1 = search_index_model(name1, definition1.view());
+        const auto name1 = "test-search-index-case7-implicit";
+        const auto definition1 =
+            make_document(kvp("mappings", make_document(kvp("dynamic", false))));
+        const auto model1 = search_index_model(name1, definition1.view());
 
         REQUIRE(siv.create_one(model1) == "test-search-index-case7-implicit");
 
@@ -306,9 +308,10 @@ TEST_CASE("atlas search indexes prose tests", "") {
         //       mappings: { dynamic: false }
         //     }
         //   }
-        auto name2 = "test-search-index-case7-explicit";
-        auto definition2 = make_document(kvp("mappings", make_document(kvp("dynamic", false))));
-        auto model2 = search_index_model(name2, definition2.view());
+        const auto name2 = "test-search-index-case7-explicit";
+        const auto definition2 =
+            make_document(kvp("mappings", make_document(kvp("dynamic", false))));
+        const auto model2 = search_index_model(name2, definition2.view());
 
         REQUIRE(siv.create_one(model2) == "test-search-index-case7-explicit");
 
@@ -331,15 +334,15 @@ TEST_CASE("atlas search indexes prose tests", "") {
         //       ]
         //     }
         //   }
-        auto name3 = "test-search-index-case7-vector";
-        auto type3 = "vectorSearch";
-        auto definition3 =
+        const auto name3 = "test-search-index-case7-vector";
+        const auto type3 = "vectorSearch";
+        const auto definition3 =
             make_document(kvp("fields",
                               make_array(make_document(kvp("type", "vector"),
                                                        kvp("path", "plot_embedding"),
                                                        kvp("numDimensions", 1536),
                                                        kvp("similarity", "euclidean")))));
-        auto model3 = search_index_model(name3, definition3.view(), type3);
+        const auto model3 = search_index_model(name3, definition3.view(), type3);
 
         REQUIRE(model3.type().value() == "vectorSearch");
         REQUIRE(siv.create_one(model3) == "test-search-index-case7-vector");
@@ -350,9 +353,9 @@ TEST_CASE("atlas search indexes prose tests", "") {
                 cursor, model3, "vectorSearch", false);
         });
 
-        std::cout << "Prose Test Case 7: Driver can successfully handle search index types when "
-                     "creating indexes SUCCESS"
-                  << std::endl;
+        SUCCEED(
+            "Prose Test Case 7: Driver can successfully handle search index types when creating "
+            "indexes");
     }
 
     // Prose test case #8.
@@ -373,25 +376,23 @@ TEST_CASE("atlas search indexes prose tests", "") {
         //       ]
         //     }
         //   }
-        auto name = "test-search-index-case8-error";
-        auto definition =
+        const auto name = "test-search-index-case8-error";
+        const auto definition =
             make_document(kvp("fields",
                               make_array(make_document(kvp("type", "vector"),
                                                        kvp("path", "plot_embedding"),
                                                        kvp("numDimensions", 1536),
                                                        kvp("similarity", "euclidean")))));
-        auto model = search_index_model(name, definition.view());
+        const auto model = search_index_model(name, definition.view());
 
         REQUIRE_THROWS_WITH(siv.create_one(model),
                             "Attribute mappings missing.: generic server error");
 
-        std::cout << "Prose Test Case 8: Driver requires explicit type to create a vector search "
-                     "index SUCCESS"
-                  << std::endl;
+        SUCCEED("Prose Test Case 8: Driver requires explicit type to create a vector search index");
     }
 }
 
-TEST_CASE("atlas search indexes tests", "") {
+TEST_CASE("atlas search indexes tests", "[atlas][search_indexes]") {
     instance::current();
 
     auto uri_getenv = std::getenv("MONGODB_URI");
@@ -404,7 +405,7 @@ TEST_CASE("atlas search indexes tests", "") {
 
     database db = mongodb_client["test"];
 
-    SECTION("get fields from model") {
+    SECTION("Name, type, and definition fields can be properly retrieved from model") {
         // {
         //   name: 'test-search-index',
         //   type: "search",
@@ -412,10 +413,11 @@ TEST_CASE("atlas search indexes tests", "") {
         //     mappings : { dynamic: false }
         //   }
         // }
-        auto name1 = "test-search-index";
-        auto type1 = "search";
-        auto definition1 = make_document(kvp("mappings", make_document(kvp("dynamic", false))));
-        auto model1 = search_index_model(name1, definition1.view(), type1);
+        const auto name1 = "test-search-index";
+        const auto type1 = "search";
+        const auto definition1 =
+            make_document(kvp("mappings", make_document(kvp("dynamic", false))));
+        const auto model1 = search_index_model(name1, definition1.view(), type1);
 
         REQUIRE(model1.name().value() == name1);
         REQUIRE(model1.type().value() == type1);
@@ -435,24 +437,24 @@ TEST_CASE("atlas search indexes tests", "") {
         //       ]
         //     }
         //   }
-        auto name2 = "test-search-index-vector";
-        auto type2 = "vectorSearch";
-        auto definition2 =
+        const auto name2 = "test-search-index-vector";
+        const auto type2 = "vectorSearch";
+        const auto definition2 =
             make_document(kvp("fields",
                               make_array(make_document(kvp("type", "vector"),
                                                        kvp("path", "plot_embedding"),
                                                        kvp("numDimensions", 1536),
                                                        kvp("similarity", "euclidean")))));
-        auto model2 = search_index_model(name2, definition2.view(), type2);
+        const auto model2 = search_index_model(name2, definition2.view(), type2);
 
         REQUIRE(model2.name().value() == name2);
         REQUIRE(model2.type().value() == type2);
         REQUIRE(model2.definition() == definition2.view());
 
-        std::cout << "get fields from model SUCCESS" << std::endl;
+        SUCCEED("Name, type, and definition fields can be properly retrieved from model");
     }
 
-    SECTION("create many with types") {
+    SECTION("Create many works with with search index types") {
         bsoncxx::oid id;
         auto coll = db.create_collection(id.to_string());
         auto siv = coll.search_indexes();
@@ -463,10 +465,11 @@ TEST_CASE("atlas search indexes tests", "") {
         //     mappings : { dynamic: false }
         //   }
         // }
-        auto name1 = "test-search-index-1";
-        auto type1 = "search";
-        auto definition1 = make_document(kvp("mappings", make_document(kvp("dynamic", false))));
-        auto model1 = search_index_model(name1, definition1.view(), type1);
+        const auto name1 = "test-search-index-1";
+        const auto type1 = "search";
+        const auto definition1 =
+            make_document(kvp("mappings", make_document(kvp("dynamic", false))));
+        const auto model1 = search_index_model(name1, definition1.view(), type1);
 
         // {
         //   name: 'test-search-index-2',
@@ -475,15 +478,16 @@ TEST_CASE("atlas search indexes tests", "") {
         //     mappings : { dynamic: false }
         //   }
         // }
-        auto name2 = "test-search-index-2";
-        auto type2 = "search";
-        auto definition2 = make_document(kvp("mappings", make_document(kvp("dynamic", false))));
-        auto model2 = search_index_model(name2, definition2.view(), type2);
+        const auto name2 = "test-search-index-2";
+        const auto type2 = "search";
+        const auto definition2 =
+            make_document(kvp("mappings", make_document(kvp("dynamic", false))));
+        const auto model2 = search_index_model(name2, definition2.view(), type2);
 
-        std::vector<search_index_model> models = {model1, model2};
+        const std::vector<search_index_model> models = {model1, model2};
 
-        std::vector<std::string> result = siv.create_many(models);
-        std::vector<std::string> expected = {"test-search-index-1", "test-search-index-2"};
+        const std::vector<std::string> result = siv.create_many(models);
+        const std::vector<std::string> expected = {"test-search-index-1", "test-search-index-2"};
         REQUIRE(result == expected);
 
         assert_soon([&siv, &model1, &model2](void) -> bool {
@@ -492,10 +496,10 @@ TEST_CASE("atlas search indexes tests", "") {
                    does_search_index_exist_on_cursor_with_type(cursor, model2, "search", false);
         });
 
-        std::cout << "create many with types SUCCESS" << std::endl;
+        SUCCEED("Create many works with with search index types");
     }
 
-    SECTION("create many with vector search types") {
+    SECTION("Create many works with vector search types") {
         bsoncxx::oid id;
         auto coll = db.create_collection(id.to_string());
         auto siv = coll.search_indexes();
@@ -513,15 +517,15 @@ TEST_CASE("atlas search indexes tests", "") {
         //       ]
         //     }
         //   }
-        auto name1 = "test-search-index-1";
-        auto type1 = "vectorSearch";
-        auto definition1 =
+        const auto name1 = "test-search-index-1";
+        const auto type1 = "vectorSearch";
+        const auto definition1 =
             make_document(kvp("fields",
                               make_array(make_document(kvp("type", "vector"),
                                                        kvp("path", "plot_embedding"),
                                                        kvp("numDimensions", 1536),
                                                        kvp("similarity", "euclidean")))));
-        auto model1 = search_index_model(name1, definition1.view(), type1);
+        const auto model1 = search_index_model(name1, definition1.view(), type1);
 
         //   {
         //     name: 'test-search-index-2',
@@ -537,20 +541,20 @@ TEST_CASE("atlas search indexes tests", "") {
         //       ]
         //     }
         //   }
-        auto name2 = "test-search-index-2";
-        auto type2 = "vectorSearch";
-        auto definition2 =
+        const auto name2 = "test-search-index-2";
+        const auto type2 = "vectorSearch";
+        const auto definition2 =
             make_document(kvp("fields",
                               make_array(make_document(kvp("type", "vector"),
                                                        kvp("path", "plot_embedding"),
                                                        kvp("numDimensions", 1536),
                                                        kvp("similarity", "euclidean")))));
-        auto model2 = search_index_model(name2, definition2.view(), type2);
+        const auto model2 = search_index_model(name2, definition2.view(), type2);
 
-        std::vector<search_index_model> models = {model1, model2};
+        const std::vector<search_index_model> models = {model1, model2};
 
-        std::vector<std::string> result = siv.create_many(models);
-        std::vector<std::string> expected = {"test-search-index-1", "test-search-index-2"};
+        const std::vector<std::string> result = siv.create_many(models);
+        const std::vector<std::string> expected = {"test-search-index-1", "test-search-index-2"};
         REQUIRE(result == expected);
 
         assert_soon([&siv, &model1, &model2](void) -> bool {
@@ -561,7 +565,7 @@ TEST_CASE("atlas search indexes tests", "") {
                        cursor, model2, "vectorSearch", false);
         });
 
-        std::cout << "create many with vector search types SUCCESS" << std::endl;
+        SUCCEED("Create many works with vector search types");
     }
 }
 }  // namespace

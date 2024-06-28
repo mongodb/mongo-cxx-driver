@@ -108,15 +108,13 @@ class search_index_view::impl {
             builder::basic::document search_index_doc;
             // model may or may not have a name or type attached to it. The server will create the
             // name if it is not set.
-            const stdx::optional<bsoncxx::v_noabi::string::view_or_value> name = model.name();
             const bsoncxx::v_noabi::document::view& definition = model.definition();
-            const stdx::optional<bsoncxx::v_noabi::string::view_or_value> type = model.type();
 
-            if (name) {
+            if (const auto name = model.name()) {
                 search_index_doc.append(kvp("name", name.value()));
             }
             search_index_doc.append(kvp("definition", definition));
-            if (type) {
+            if (const auto type = model.type()) {
                 search_index_doc.append(kvp("type", type.value()));
             }
             search_index_arr.append(search_index_doc.view());
