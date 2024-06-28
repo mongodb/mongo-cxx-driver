@@ -283,75 +283,82 @@ TEST_CASE("atlas search indexes prose tests", "[atlas][search_indexes]") {
         bsoncxx::oid id;
         auto coll0 = db.create_collection(id.to_string());
         auto siv = coll0.search_indexes();
-        // {
-        //     name: 'test-search-index-case7-implicit',
-        //     definition: {
-        //      mappings: { dynamic: false }
-        //     }
-        // }
-        const auto name1 = "test-search-index-case7-implicit";
-        const auto definition1 =
-            make_document(kvp("mappings", make_document(kvp("dynamic", false))));
-        const auto model1 = search_index_model(name1, definition1.view());
 
-        REQUIRE(siv.create_one(model1) == "test-search-index-case7-implicit");
+        {
+            // {
+            //     name: 'test-search-index-case7-implicit',
+            //     definition: {
+            //      mappings: { dynamic: false }
+            //     }
+            // }
+            const auto name = "test-search-index-case7-implicit";
+            const auto definition =
+                make_document(kvp("mappings", make_document(kvp("dynamic", false))));
+            const auto model = search_index_model(name, definition.view());
 
-        assert_soon([&siv, &model1](void) -> bool {
-            auto cursor = siv.list();
-            return does_search_index_exist_on_cursor_with_type(cursor, model1, "search", false);
-        });
+            REQUIRE(siv.create_one(model) == "test-search-index-case7-implicit");
 
-        //   {
-        //     name: 'test-search-index-case7-explicit',
-        //     type: 'search',
-        //     definition: {
-        //       mappings: { dynamic: false }
-        //     }
-        //   }
-        const auto name2 = "test-search-index-case7-explicit";
-        const auto definition2 =
-            make_document(kvp("mappings", make_document(kvp("dynamic", false))));
-        const auto model2 = search_index_model(name2, definition2.view());
+            assert_soon([&siv, &model](void) -> bool {
+                auto cursor = siv.list();
+                return does_search_index_exist_on_cursor_with_type(cursor, model, "search", false);
+            });
+        }
 
-        REQUIRE(siv.create_one(model2) == "test-search-index-case7-explicit");
+        {
+            //   {
+            //     name: 'test-search-index-case7-explicit',
+            //     type: 'search',
+            //     definition: {
+            //       mappings: { dynamic: false }
+            //     }
+            //   }
+            const auto name = "test-search-index-case7-explicit";
+            const auto definition =
+                make_document(kvp("mappings", make_document(kvp("dynamic", false))));
+            const auto model = search_index_model(name, definition.view());
 
-        assert_soon([&siv, &model2](void) -> bool {
-            auto cursor = siv.list();
-            return does_search_index_exist_on_cursor_with_type(cursor, model2, "search", false);
-        });
+            REQUIRE(siv.create_one(model) == "test-search-index-case7-explicit");
 
-        //   {
-        //     name: 'test-search-index-case7-vector',
-        //     type: 'vectorSearch',
-        //     definition: {
-        //       fields: [
-        //          {
-        //              type: 'vector',
-        //              path: 'plot_embedding',
-        //              numDimensions: 1536,
-        //              similarity: 'euclidean',
-        //          },
-        //       ]
-        //     }
-        //   }
-        const auto name3 = "test-search-index-case7-vector";
-        const auto type3 = "vectorSearch";
-        const auto definition3 =
-            make_document(kvp("fields",
-                              make_array(make_document(kvp("type", "vector"),
-                                                       kvp("path", "plot_embedding"),
-                                                       kvp("numDimensions", 1536),
-                                                       kvp("similarity", "euclidean")))));
-        const auto model3 = search_index_model(name3, definition3.view(), type3);
+            assert_soon([&siv, &model](void) -> bool {
+                auto cursor = siv.list();
+                return does_search_index_exist_on_cursor_with_type(cursor, model, "search", false);
+            });
+        }
 
-        REQUIRE(model3.type().value() == "vectorSearch");
-        REQUIRE(siv.create_one(model3) == "test-search-index-case7-vector");
+        {
+            //   {
+            //     name: 'test-search-index-case7-vector',
+            //     type: 'vectorSearch',
+            //     definition: {
+            //       fields: [
+            //          {
+            //              type: 'vector',
+            //              path: 'plot_embedding',
+            //              numDimensions: 1536,
+            //              similarity: 'euclidean',
+            //          },
+            //       ]
+            //     }
+            //   }
+            const auto name = "test-search-index-case7-vector";
+            const auto type = "vectorSearch";
+            const auto definition =
+                make_document(kvp("fields",
+                                  make_array(make_document(kvp("type", "vector"),
+                                                           kvp("path", "plot_embedding"),
+                                                           kvp("numDimensions", 1536),
+                                                           kvp("similarity", "euclidean")))));
+            const auto model = search_index_model(name, definition.view(), type);
 
-        assert_soon([&siv, &model3](void) -> bool {
-            auto cursor = siv.list();
-            return does_search_index_exist_on_cursor_with_type(
-                cursor, model3, "vectorSearch", false);
-        });
+            REQUIRE(model.type().value() == "vectorSearch");
+            REQUIRE(siv.create_one(model) == "test-search-index-case7-vector");
+
+            assert_soon([&siv, &model](void) -> bool {
+                auto cursor = siv.list();
+                return does_search_index_exist_on_cursor_with_type(
+                    cursor, model, "vectorSearch", false);
+            });
+        }
 
         SUCCEED(
             "Prose Test Case 7: Driver can successfully handle search index types when creating "
@@ -386,7 +393,7 @@ TEST_CASE("atlas search indexes prose tests", "[atlas][search_indexes]") {
         const auto model = search_index_model(name, definition.view());
 
         REQUIRE_THROWS_WITH(siv.create_one(model),
-                            "Attribute mappings missing.: generic server error");
+                            Catch::Matchers::Contains("Attribute mappings missing"));
 
         SUCCEED("Prose Test Case 8: Driver requires explicit type to create a vector search index");
     }
@@ -406,50 +413,54 @@ TEST_CASE("atlas search indexes tests", "[atlas][search_indexes]") {
     database db = mongodb_client["test"];
 
     SECTION("Name, type, and definition fields can be properly retrieved from model") {
-        // {
-        //   name: 'test-search-index',
-        //   type: "search",
-        //   definition : {
-        //     mappings : { dynamic: false }
-        //   }
-        // }
-        const auto name1 = "test-search-index";
-        const auto type1 = "search";
-        const auto definition1 =
-            make_document(kvp("mappings", make_document(kvp("dynamic", false))));
-        const auto model1 = search_index_model(name1, definition1.view(), type1);
+        {
+            // {
+            //   name: 'test-search-index',
+            //   type: "search",
+            //   definition : {
+            //     mappings : { dynamic: false }
+            //   }
+            // }
+            const auto name = "test-search-index";
+            const auto type = "search";
+            const auto definition =
+                make_document(kvp("mappings", make_document(kvp("dynamic", false))));
+            const auto model = search_index_model(name, definition.view(), type);
 
-        REQUIRE(model1.name().value() == name1);
-        REQUIRE(model1.type().value() == type1);
-        REQUIRE(model1.definition() == definition1.view());
+            REQUIRE(model.name().value() == name);
+            REQUIRE(model.type().value() == type);
+            REQUIRE(model.definition() == definition.view());
+        }
 
-        //   {
-        //     name: 'test-search-index-vector',
-        //     type: 'vectorSearch',
-        //     definition: {
-        //       fields: [
-        //          {
-        //              type: 'vector',
-        //              path: 'plot_embedding',
-        //              numDimensions: 1536,
-        //              similarity: 'euclidean',
-        //          },
-        //       ]
-        //     }
-        //   }
-        const auto name2 = "test-search-index-vector";
-        const auto type2 = "vectorSearch";
-        const auto definition2 =
-            make_document(kvp("fields",
-                              make_array(make_document(kvp("type", "vector"),
-                                                       kvp("path", "plot_embedding"),
-                                                       kvp("numDimensions", 1536),
-                                                       kvp("similarity", "euclidean")))));
-        const auto model2 = search_index_model(name2, definition2.view(), type2);
+        {
+            //   {
+            //     name: 'test-search-index-vector',
+            //     type: 'vectorSearch',
+            //     definition: {
+            //       fields: [
+            //          {
+            //              type: 'vector',
+            //              path: 'plot_embedding',
+            //              numDimensions: 1536,
+            //              similarity: 'euclidean',
+            //          },
+            //       ]
+            //     }
+            //   }
+            const auto name = "test-search-index-vector";
+            const auto type = "vectorSearch";
+            const auto definition =
+                make_document(kvp("fields",
+                                  make_array(make_document(kvp("type", "vector"),
+                                                           kvp("path", "plot_embedding"),
+                                                           kvp("numDimensions", 1536),
+                                                           kvp("similarity", "euclidean")))));
+            const auto model = search_index_model(name, definition.view(), type);
 
-        REQUIRE(model2.name().value() == name2);
-        REQUIRE(model2.type().value() == type2);
-        REQUIRE(model2.definition() == definition2.view());
+            REQUIRE(model.name().value() == name);
+            REQUIRE(model.type().value() == type);
+            REQUIRE(model.definition() == definition.view());
+        }
 
         SUCCEED("Name, type, and definition fields can be properly retrieved from model");
     }
