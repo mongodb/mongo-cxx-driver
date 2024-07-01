@@ -348,7 +348,7 @@ TEST_CASE("atlas search indexes prose tests", "[atlas][search_indexes]") {
                                                            kvp("path", "plot_embedding"),
                                                            kvp("numDimensions", 1536),
                                                            kvp("similarity", "euclidean")))));
-            const auto model = search_index_model(name, definition.view(), type);
+            auto model = search_index_model(name, definition.view()).type(type);
 
             REQUIRE(model.type().value() == "vectorSearch");
             REQUIRE(siv.create_one(model) == "test-search-index-case7-vector");
@@ -425,7 +425,7 @@ TEST_CASE("atlas search indexes tests", "[atlas][search_indexes]") {
             const auto type = "search";
             const auto definition =
                 make_document(kvp("mappings", make_document(kvp("dynamic", false))));
-            const auto model = search_index_model(name, definition.view(), type);
+            auto model = search_index_model(name, definition.view()).type(type);
 
             REQUIRE(model.name().value() == name);
             REQUIRE(model.type().value() == type);
@@ -455,7 +455,7 @@ TEST_CASE("atlas search indexes tests", "[atlas][search_indexes]") {
                                                            kvp("path", "plot_embedding"),
                                                            kvp("numDimensions", 1536),
                                                            kvp("similarity", "euclidean")))));
-            const auto model = search_index_model(name, definition.view(), type);
+            auto model = search_index_model(name, definition.view()).type(type);
 
             REQUIRE(model.name().value() == name);
             REQUIRE(model.type().value() == type);
@@ -480,7 +480,7 @@ TEST_CASE("atlas search indexes tests", "[atlas][search_indexes]") {
         const auto type1 = "search";
         const auto definition1 =
             make_document(kvp("mappings", make_document(kvp("dynamic", false))));
-        const auto model1 = search_index_model(name1, definition1.view(), type1);
+        auto model1 = search_index_model(name1, definition1.view()).type(type1);
 
         // {
         //   name: 'test-search-index-2',
@@ -493,7 +493,7 @@ TEST_CASE("atlas search indexes tests", "[atlas][search_indexes]") {
         const auto type2 = "search";
         const auto definition2 =
             make_document(kvp("mappings", make_document(kvp("dynamic", false))));
-        const auto model2 = search_index_model(name2, definition2.view(), type2);
+        auto model2 = search_index_model(name2, definition2.view()).type(type2);
 
         const std::vector<search_index_model> models = {model1, model2};
 
@@ -536,7 +536,7 @@ TEST_CASE("atlas search indexes tests", "[atlas][search_indexes]") {
                                                        kvp("path", "plot_embedding"),
                                                        kvp("numDimensions", 1536),
                                                        kvp("similarity", "euclidean")))));
-        const auto model1 = search_index_model(name1, definition1.view(), type1);
+        auto model1 = search_index_model(name1, definition1.view()).type(type1);
 
         //   {
         //     name: 'test-search-index-2',
@@ -560,7 +560,7 @@ TEST_CASE("atlas search indexes tests", "[atlas][search_indexes]") {
                                                        kvp("path", "plot_embedding"),
                                                        kvp("numDimensions", 1536),
                                                        kvp("similarity", "euclidean")))));
-        const auto model2 = search_index_model(name2, definition2.view(), type2);
+        auto model2 = search_index_model(name2, definition2.view()).type(type2);
 
         const std::vector<search_index_model> models = {model1, model2};
 

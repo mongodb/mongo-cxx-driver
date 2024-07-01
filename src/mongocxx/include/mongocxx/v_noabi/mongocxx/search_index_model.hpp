@@ -25,11 +25,6 @@ class search_index_model {
     search_index_model(bsoncxx::v_noabi::document::view_or_value definition);
     search_index_model(bsoncxx::v_noabi::string::view_or_value name,
                        bsoncxx::v_noabi::document::view_or_value definition);
-    search_index_model(bsoncxx::v_noabi::document::view_or_value definition,
-                       bsoncxx::v_noabi::string::view_or_value type);
-    search_index_model(bsoncxx::v_noabi::string::view_or_value name,
-                       bsoncxx::v_noabi::document::view_or_value definition,
-                       bsoncxx::v_noabi::string::view_or_value type);
 
     search_index_model() = delete;
 
@@ -72,6 +67,14 @@ class search_index_model {
     /// Retrieves type of a search_index_model.
     ///
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> type() const;
+
+    ///
+    /// Sets type of a search_index_model.
+    ///
+    /// @param type The type for this index. Can be either "search" or "vectorSearch".
+    ///
+    /// @return A reference to this object to facilitate method chaining.
+    search_index_model& type(bsoncxx::v_noabi::string::view_or_value type);
 
    private:
     class MONGOCXX_PRIVATE impl;
