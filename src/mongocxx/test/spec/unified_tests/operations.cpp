@@ -1801,9 +1801,14 @@ document::value create_search_index(collection& coll, document::view operation) 
     const auto raw_model = arguments["model"];
     const auto name = raw_model["name"];
     const auto definition = raw_model["definition"].get_document().value;
+    const auto type = raw_model["type"];
 
-    const auto model = name ? search_index_model(name.get_string().value, definition)
-                            : search_index_model(definition);
+    auto model = name ? search_index_model(name.get_string().value, definition)
+                      : search_index_model(definition);
+
+    if (type) {
+        model.type(type.get_string().value);
+    }
 
     return make_document(kvp("result", coll.search_indexes().create_one(model)));
 }
@@ -1819,6 +1824,9 @@ document::value create_search_indexes(collection& coll, document::view operation
                                        ? search_index_model(m["name"].get_string().value,
                                                             m["definition"].get_document().value)
                                        : search_index_model(m["definition"].get_document().value);
+        if (m["type"]) {
+            model.type(m["type"].get_string().value);
+        }
         models.push_back(model);
     }
 
