@@ -84,16 +84,16 @@ TEST_CASE("atlas search indexes prose tests", "[atlas][search_indexes]") {
 
     database db = mongodb_client["test"];
 
-    // Prose test case #1.
-    SECTION("Driver can successfully create and list search indexes") {
+    SECTION("Prose Test Case 1: Driver can successfully create and list search indexes") {
         bsoncxx::oid id;
         auto coll0 = db.create_collection(id.to_string());
         auto siv = coll0.search_indexes();
-        //   {
-        //      name: 'test-search-index',
-        //     definition: {
-        //     mappings: { dynamic: false }
+        // {
+        //   name: 'test-search-index',
+        //   definition : {
+        //     mappings : { dynamic: false }
         //   }
+        // }
         const auto name = "test-search-index";
         const auto definition =
             make_document(kvp("mappings", make_document(kvp("dynamic", false))));
@@ -109,8 +109,7 @@ TEST_CASE("atlas search indexes prose tests", "[atlas][search_indexes]") {
         SUCCEED("Prose Test Case 1: Driver can successfully create and list search indexes");
     }
 
-    // Prose test case #2.
-    SECTION("Driver can successfully create multiple indexes in batch") {
+    SECTION("Prose test case #2: Driver can successfully create multiple indexes in batch") {
         bsoncxx::oid id;
         auto coll0 = db.create_collection(id.to_string());
         auto siv = coll0.search_indexes();
@@ -152,8 +151,7 @@ TEST_CASE("atlas search indexes prose tests", "[atlas][search_indexes]") {
         SUCCEED("Prose Test Case 2: Driver can successfully create multiple indexes in batch");
     }
 
-    // Prose test case #3.
-    SECTION("Driver can successfully drop search indexes") {
+    SECTION("Prose test case #3: Driver can successfully drop search indexes") {
         bsoncxx::oid id;
         auto coll0 = db.create_collection(id.to_string());
         auto siv = coll0.search_indexes();
@@ -187,8 +185,7 @@ TEST_CASE("atlas search indexes prose tests", "[atlas][search_indexes]") {
         SUCCEED("Prose Test Case 3: Driver can successfully drop search indexes");
     }
 
-    // Prose test case #4.
-    SECTION("Driver can update a search index") {
+    SECTION("Prose test case #4: Driver can update a search index") {
         bsoncxx::oid id;
         auto coll0 = db.create_collection(id.to_string());
         auto siv = coll0.search_indexes();
@@ -229,18 +226,16 @@ TEST_CASE("atlas search indexes prose tests", "[atlas][search_indexes]") {
         SUCCEED("Prose Test Case 4: Driver can update a search index");
     }
 
-    // Prose test case #5.
-    SECTION("dropSearchIndex suppresses namespace not found errors") {
+    SECTION("Prose test case #5: dropSearchIndex suppresses namespace not found errors") {
         bsoncxx::oid id;
         auto coll = db[id.to_string()];
         coll.search_indexes().drop_one("apples");
         SUCCEED("Prose Test Case 5: dropSearchIndex suppresses namespace not found errors");
     }
 
-    // Prose test case #6.
     SECTION(
-        "Driver can successfully create and list search indexes with non-default readConcern and "
-        "writeConcern") {
+        "Prose test case #6: Driver can successfully create and list search indexes with "
+        "non-default readConcern and writeConcern") {
         bsoncxx::oid id;
         auto coll0 = db.create_collection(id.to_string());
 
@@ -278,8 +273,9 @@ TEST_CASE("atlas search indexes prose tests", "[atlas][search_indexes]") {
             "non-default readConcern and writeConcern");
     }
 
-    // Prose test case #7.
-    SECTION("Driver can successfully handle search index types when creating indexes") {
+    SECTION(
+        "Prose test case #7: Driver can successfully handle search index types when creating "
+        "indexes") {
         bsoncxx::oid id;
         auto coll0 = db.create_collection(id.to_string());
         auto siv = coll0.search_indexes();
@@ -315,7 +311,7 @@ TEST_CASE("atlas search indexes prose tests", "[atlas][search_indexes]") {
             const auto name = "test-search-index-case7-explicit";
             const auto definition =
                 make_document(kvp("mappings", make_document(kvp("dynamic", false))));
-            const auto model = search_index_model(name, definition.view());
+            auto model = search_index_model(name, definition.view()).type("search");
 
             REQUIRE(siv.create_one(model) == "test-search-index-case7-explicit");
 
@@ -365,8 +361,7 @@ TEST_CASE("atlas search indexes prose tests", "[atlas][search_indexes]") {
             "indexes");
     }
 
-    // Prose test case #8.
-    SECTION("Driver requires explicit type to create a vector search index") {
+    SECTION("Prose test case #8: Driver requires explicit type to create a vector search index") {
         bsoncxx::oid id;
         auto coll0 = db.create_collection(id.to_string());
         auto siv = coll0.search_indexes();
