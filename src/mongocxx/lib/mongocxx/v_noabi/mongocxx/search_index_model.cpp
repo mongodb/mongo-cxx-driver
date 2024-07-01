@@ -38,6 +38,16 @@ bsoncxx::v_noabi::document::view search_index_model::definition() const {
     return _get_impl()._definition.view();
 }
 
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> search_index_model::type()
+    const {
+    return _get_impl()._type;
+}
+
+search_index_model& search_index_model::type(bsoncxx::v_noabi::string::view_or_value type) {
+    _get_impl()._type = type;
+    return *this;
+}
+
 const search_index_model::impl& search_index_model::_get_impl() const {
     if (!_impl) {
         throw logic_error{error_code::k_invalid_search_index_model};
