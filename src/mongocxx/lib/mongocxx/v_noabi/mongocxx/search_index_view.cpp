@@ -65,30 +65,6 @@ std::string search_index_view::create_one(const client_session& session,
     return create_one(session, search_index_model(name, definition));
 }
 
-std::string search_index_view::create_one(bsoncxx::v_noabi::document::view_or_value definition,
-                                          bsoncxx::v_noabi::string::view_or_value type) {
-    return create_one(search_index_model(definition, type));
-}
-
-std::string search_index_view::create_one(const client_session& session,
-                                          bsoncxx::v_noabi::document::view_or_value definition,
-                                          bsoncxx::v_noabi::string::view_or_value type) {
-    return create_one(session, search_index_model(definition, type));
-}
-
-std::string search_index_view::create_one(bsoncxx::v_noabi::string::view_or_value name,
-                                          bsoncxx::v_noabi::document::view_or_value definition,
-                                          bsoncxx::v_noabi::string::view_or_value type) {
-    return create_one(search_index_model(name, definition, type));
-}
-
-std::string search_index_view::create_one(const client_session& session,
-                                          bsoncxx::v_noabi::string::view_or_value name,
-                                          bsoncxx::v_noabi::document::view_or_value definition,
-                                          bsoncxx::v_noabi::string::view_or_value type) {
-    return create_one(session, search_index_model(name, definition, type));
-}
-
 std::string search_index_view::create_one(const search_index_model& model) {
     return _get_impl().create_one(nullptr, model);
 }

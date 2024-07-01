@@ -99,7 +99,7 @@ TEST_CASE("atlas search indexes prose tests", "[atlas][search_indexes]") {
             make_document(kvp("mappings", make_document(kvp("dynamic", false))));
         const auto model = search_index_model(name, definition.view());
 
-        REQUIRE(siv.create_one(name, definition.view()) == "test-search-index");
+        REQUIRE(siv.create_one(model) == "test-search-index");
 
         assert_soon([&siv, &model](void) -> bool {
             auto cursor = siv.list();
@@ -266,7 +266,7 @@ TEST_CASE("atlas search indexes prose tests", "[atlas][search_indexes]") {
             make_document(kvp("mappings", make_document(kvp("dynamic", false))));
         const auto model = search_index_model(name, definition.view());
 
-        REQUIRE(siv.create_one(name, definition.view()) == "test-search-index-case6");
+        REQUIRE(siv.create_one(model) == "test-search-index-case6");
 
         assert_soon([&siv, &model](void) -> bool {
             auto cursor = siv.list();
