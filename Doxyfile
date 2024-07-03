@@ -2188,7 +2188,10 @@ SEARCH_INCLUDES        = YES
 # preprocessor.
 # This tag requires that the tag SEARCH_INCLUDES is set to YES.
 
-INCLUDE_PATH           = src/bsoncxx/include/bsoncxx/v_noabi
+INCLUDE_PATH           = src/bsoncxx/include/bsoncxx/v_noabi \
+                         src/mongocxx/include/mongocxx/v_noabi \
+                         src/bsoncxx/include \
+                         src/mongocxx/include
 
 # You can use the INCLUDE_FILE_PATTERNS tag to specify one or more wildcard
 # patterns (like *.h and *.hpp) to filter out the header-files in the
