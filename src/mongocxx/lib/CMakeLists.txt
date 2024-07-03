@@ -12,8 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set(mongocxx_sources_v_noabi "")
-list(APPEND mongocxx_sources_v_noabi
+set(mongocxx_sources_v_noabi
     mongocxx/v_noabi/mongocxx/bulk_write.cpp
     mongocxx/v_noabi/mongocxx/change_stream.cpp
     mongocxx/v_noabi/mongocxx/client_encryption.cpp

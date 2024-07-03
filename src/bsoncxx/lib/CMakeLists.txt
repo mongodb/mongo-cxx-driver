@@ -12,8 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-set(bsoncxx_sources_v_noabi "")
-list(APPEND bsoncxx_sources_v_noabi
+set(bsoncxx_sources_v_noabi
     bsoncxx/v_noabi/bsoncxx/array/element.cpp
     bsoncxx/v_noabi/bsoncxx/array/value.cpp
     bsoncxx/v_noabi/bsoncxx/array/view.cpp
