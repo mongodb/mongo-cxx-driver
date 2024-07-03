@@ -122,8 +122,9 @@ if(ENABLE_MACRO_GUARD_TESTS)
             "lib/*.hh" # Private headers.
             "test/*.hh" # Test headers.
         EXCLUDE_REGEXES
-            "(include|lib)/bsoncxx/v.*/config/.*" # Config headers.
-            "include/bsoncxx/v_noabi/bsoncxx/enums/.*" # X macro headers.
+            "(include|lib)/.*/(prelude|postlude)\.(hpp|hh)" # Macro guard headers.
+            "(include|lib)/bsoncxx/v_noabi/bsoncxx/config/.*" # v_noabi config headers.
+            "include/bsoncxx/v_noabi/bsoncxx/enums/.*" # v_noabi X-macro headers.
             ".*_symbols.hh" # Symbol headers.
     )
 endif()
