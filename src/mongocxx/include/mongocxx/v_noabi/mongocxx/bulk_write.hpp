@@ -111,8 +111,6 @@ class bulk_write {
 
     bool _created_from_collection;
     std::unique_ptr<impl> _impl;
-
-    bool is_empty = true;
 };
 
 }  // namespace v_noabi

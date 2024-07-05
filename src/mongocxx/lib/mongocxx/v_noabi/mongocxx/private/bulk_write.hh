@@ -37,6 +37,7 @@ class bulk_write::impl {
     impl& operator=(const impl&) = delete;
 
     mongoc_bulk_operation_t* operation_t;
+    bool is_empty = true;
 };
 
 }  // namespace v_noabi
