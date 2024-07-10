@@ -41,7 +41,7 @@ bulk_write& bulk_write::operator=(bulk_write&&) noexcept = default;
 bulk_write::~bulk_write() = default;
 
 bool bulk_write::empty() const noexcept {
-    return is_empty;
+    return _impl->is_empty;
 }
 
 bulk_write& bulk_write::append(const model::write& operation) {
@@ -176,7 +176,7 @@ bulk_write& bulk_write::append(const model::write& operation) {
         }
     }
 
-    is_empty = false;
+    _impl->is_empty = false;
 
     return *this;
 }
