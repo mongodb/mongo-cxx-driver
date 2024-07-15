@@ -331,7 +331,8 @@ if(ENABLE_MACRO_GUARD_TESTS)
             "lib/*.hh" # Private headers.
             "test/*.hh" # Test headers.
         EXCLUDE_REGEXES
-            "(include|lib)/mongocxx/v.*/config/.*" # Config headers.
+            "(include|lib)/.*/(prelude|postlude)\.(hpp|hh)" # Macro guard headers.
+            "(include|lib)/mongocxx/v_noabi/mongocxx/config/.*" # v_noabi config headers.
             ".*_symbols.hh" # Symbol headers.
     )
 endif()
