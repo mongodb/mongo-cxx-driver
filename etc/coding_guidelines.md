@@ -1,6 +1,6 @@
 # MongoDB C++ Driver Coding Guidelines
 
-For cases not explicitly documented here, refer to the [C++ Core Guidelines](https://github.com/isocpp/CppCoreGuidelines).
+For topics and situations not explicitly documented here, refer to the [C++ Core Guidelines](https://github.com/isocpp/CppCoreGuidelines).
 
 ## Headers
 

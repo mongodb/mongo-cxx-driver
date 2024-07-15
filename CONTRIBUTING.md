@@ -11,11 +11,11 @@ Prefix the PR title with the relevant JIRA ticket number when applicable. When m
 Examples include:
 
 ```
-CXX-XXXX Resolve issue xxxx
+CXX-XXXX Resolve an issue
 ```
 
 ```
-Fix several related bugs (CXX-XXXX, CXX-YYYY)
+Fix several related issues (CXX-AAAA, CXX-BBBB)
 
 * Commit A description
 * Commit B description
@@ -23,19 +23,21 @@ Fix several related bugs (CXX-XXXX, CXX-YYYY)
 ```
 
 ```
-CXX-XXXX Implement a feature resolving several related tickets
+CXX-XXXX Implement a feature resolving several related issues
 
-* CXX-AAAA commit A description
-* CXX-BBBB commit B description
+* CXX-AAAA Commit A description
+* CXX-BBBB Commit B description
 * Additional commit description
 ```
 
-Otherwise, refer to Chris Beams' guidelines for
+Refer to Chris Beams' guidelines for
 [How to Write a Git Commit Message](http://chris.beams.io/posts/git-commit/).
 
 ## Formatting
 
-Format files with [clang-format](https://clang.llvm.org/docs/ClangFormat.html) using the [etc/clang_format.py](https://github.com/mongodb/mongo-cxx-driver/blob/master/etc/clang_format.py) script. The script should be run in the project root directory to ensure the [.clang-format](https://github.com/mongodb/mongo-cxx-driver/blob/master/.clang-format) configuration file is used properly.
+Format files with [ClangFormat](https://clang.llvm.org/docs/ClangFormat.html) using the [etc/clang_format.py](https://github.com/mongodb/mongo-cxx-driver/blob/master/etc/clang_format.py) script.
+
+The script must be run in the project root directory to ensure the [.clang-format](https://github.com/mongodb/mongo-cxx-driver/blob/master/.clang-format) configuration file is used properly.
 
 ```bash
 # Allow the script to download the correct ClangFormat release version.
@@ -46,4 +48,4 @@ MONGO_CLANG_FORMAT="path/to/clang-format" python2 ./etc/clang-format.py format
 ```
 
 > [!NOTE]
-> ClangFormat results may differ across release versions. When using a preinstalled `clang-format` binary, the release version must be consistent with the `CLANG_FORMAT_VERSION` variable defined in the `etc/clang_format.py` script.
+> ClangFormat results may differ across release versions. When using a preinstalled ClangFormat binary, its version must be consistent with the `CLANG_FORMAT_VERSION` variable defined in the `etc/clang_format.py` script.
