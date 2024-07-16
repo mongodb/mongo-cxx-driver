@@ -11,9 +11,7 @@ General structure:
 
 - License
 - Include Guard (`#pragma once`)
-- Header Prelude
-- System Headers `<vector>` (alphabetical order)
-- Driver Headers `<path/to/header.hpp>` (alphabetical order)
+- Include Directives
 - Open Namespace mongocxx
 - `inline namespace v_noabi {`
 - Code
