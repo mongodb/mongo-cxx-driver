@@ -109,7 +109,7 @@ Guidelines:
 
 - Blank line at beginning and end of class declaration
 - Public section up top / private at bottom
-- Lifecycle methods first (see rules above)
+- Special Member Functions
 - Private Member Ordering
   - Friendships
   - Private Constructors
