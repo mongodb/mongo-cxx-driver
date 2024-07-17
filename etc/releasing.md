@@ -552,7 +552,7 @@ Example (using Jira syntax formatting):
 > [!NOTE]
 > Some of these commands may take a while to complete.
 
-Add the new release to the `@DOC_TAGS` array in `etc/generate-all-apidocs.pl`.
+Set `$LATEST_DOC_TAG` in `etc/generate-latest-apidocs.pl` to the latest release tag.
 
 Commit these changes to the `post-release-changes` branch:
 
@@ -566,7 +566,13 @@ Ensure `doxygen` and `hugo` are locally installed and up-to-date.
 command -V doxygen hugo
 ```
 
+> [!IMPORTANT]
+> The required Doxygen version is defined in `etc/generate-apidocs-from-tag.pl` as `$doxygen_version_required`. If not already present, download the required version from [Doxygen Releases](https://www.doxygen.nl/download.html). Use the `DOXYGEN_BINARY` environment variable to override the default `doxygen` command with a path to a specific Doxygen binary.
+
 Run `git clean -dfx` to restore the repository to a clean state.
+
+> [!WARNING]
+> Do NOT run `git clean -dfx` in your local development repository, as it may delete your local development files present in the repository (even if excluded)! Only run this in the command in the separate repository being used for this release!
 
 Configure CMake using `build` as the binary directory. Leave all other configuration variables as their default.
 
@@ -574,16 +580,16 @@ Configure CMake using `build` as the binary directory. Leave all other configura
 cmake -S . -B build
 ```
 
-Test generating Hugo docs locally by building the `docs` target:
+Test generating Hugo and Doxygen docs locally by building the `docs` target (this command DOES NOT check for the required Doxygen version):
 
 ```bash
 cmake --build build --target docs
 ```
 
-Test generating Doxygen docs by building the `doxygen-all` target:
+Test generating the latest versioned Doxygen docs by building the `doxygen-latest` target (this command DOES checks for the required Doxygen version):
 
 ```bash
-cmake --build build --target doxygen-all
+cmake --build build --target doxygen-latest
 ```
 
 Verify that the `build/docs/api/mongocxx-X.Y.Z` directory is present and populated.

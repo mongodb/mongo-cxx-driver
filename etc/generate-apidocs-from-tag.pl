@@ -9,6 +9,13 @@ use Cwd qw/getcwd realpath/;
 use File::Temp qw/tempdir/;
 use List::Util qw/first/;
 
+# The required Doxygen version.
+# The generated results are sensitive to the release version.
+our $doxygen_version_required = "1.9.1";
+
+# Allow specifying a custom Doxygen binary via the `$DOXYGEN_BINARY` environment variable.
+our $doxygen_binary = $ENV{DOXYGEN_BINARY} || "doxygen";
+
 # system() wrapper to die with an error if a command fails.
 sub _try_run {
     my @command = @_;
@@ -74,7 +81,7 @@ sub _parse_doxygen_config {
         next if substr($line,0,1) eq '#';
         next unless $line =~ /\S.*=/;
         # Join lines ending in backslash.
-        while ( $line =~ s{\\\n\z}{} ) {
+        while ( $line =~ s/\\\n\z// ) {
             $line .= " " . <$fh>;
         }
         # Save full line under the assigned key
@@ -82,6 +89,17 @@ sub _parse_doxygen_config {
         $config{$key} = $line;
     }
     return \%config;
+}
+
+# Enforce a compatible Doxygen version.
+sub _check_doxygen_version {
+    die "Failed to parse Doxygen version from output of `$doxygen_binary -v`"
+        unless `$doxygen_binary -v` =~ /^(\d+\.\d+\.\d+).*$/;
+
+    my $doxygen_version = $1; # Strip unneeded content.
+
+    die "Detected Doxygen version $doxygen_version does not match required version $doxygen_version_required"
+        unless $doxygen_version =~ /^$doxygen_version_required/
 }
 
 sub main {
@@ -134,8 +152,11 @@ sub main {
         qq[HTML_EXTRA_STYLESHEET = "$orig_dir/etc/doxygen-extra.css"\n],
     );
 
+    # Ensure up-to-date Doxygen version.
+    _check_doxygen_version();
+
     # Run doxygen
-    _try_run('doxygen', "$tmpdir/Doxyfile");
+    _try_run("$doxygen_binary", "$tmpdir/Doxyfile");
 }
 
 main();
@@ -152,4 +173,3 @@ sub DESTROY {
     my $self = shift;
     $self->{demolish}->() if $self->{demolish};
 }
-
