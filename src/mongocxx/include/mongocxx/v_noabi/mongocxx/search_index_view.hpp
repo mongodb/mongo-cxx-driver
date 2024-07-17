@@ -31,8 +31,6 @@ class search_index_view {
     ~search_index_view();
 
     ///
-    /// @{
-    ///
     /// Returns a cursor over all the search indexes.
     ///
     /// @param options
@@ -84,12 +82,6 @@ class search_index_view {
                 bsoncxx::v_noabi::string::view_or_value name,
                 const options::aggregate& options = options::aggregate());
 
-    ///
-    /// @}
-    ///
-
-    ///
-    /// @{
     ///
     /// This is a convenience method for creating a single search index with a default name.
     ///
@@ -165,12 +157,6 @@ class search_index_view {
     std::string create_one(const client_session& session, const search_index_model& model);
 
     ///
-    /// @}
-    ///
-
-    ///
-    /// @{
-    ///
     /// Creates multiple search indexes in the collection.
     ///
     /// @param models
@@ -194,12 +180,6 @@ class search_index_view {
                                          const std::vector<search_index_model>& models);
 
     ///
-    /// @}
-    ///
-
-    ///
-    /// @{
-    ///
     /// Drops a single search index from the collection by the index name.
     ///
     /// @param name
@@ -217,12 +197,6 @@ class search_index_view {
     ///
     void drop_one(const client_session& session, bsoncxx::v_noabi::string::view_or_value name);
 
-    ///
-    /// @}
-    ///
-
-    ///
-    /// @{
     ///
     /// Updates a single search index from the collection by the search index name.
     ///
@@ -247,10 +221,6 @@ class search_index_view {
     void update_one(const client_session& session,
                     bsoncxx::v_noabi::string::view_or_value name,
                     bsoncxx::v_noabi::document::view_or_value definition);
-
-    ///
-    /// @}
-    ///
 
    private:
     friend ::mongocxx::v_noabi::collection;

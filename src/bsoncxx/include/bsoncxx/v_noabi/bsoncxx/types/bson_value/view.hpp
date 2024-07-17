@@ -70,17 +70,15 @@ class view {
     ~view();
 
     ///
-    /// @{
+    /// @relates bsoncxx::v_noabi::types::bson_value::view
     ///
     /// Compare two bson_value::views for equality
     ///
-    /// @relates bson_value::view
-    ///
+    /// @{
     friend BSONCXX_API bool BSONCXX_CALL operator==(const bson_value::view&,
                                                     const bson_value::view&);
     friend BSONCXX_API bool BSONCXX_CALL operator!=(const bson_value::view&,
                                                     const bson_value::view&);
-    ///
     /// @}
     ///
 

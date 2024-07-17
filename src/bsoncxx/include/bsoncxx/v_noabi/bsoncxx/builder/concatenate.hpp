@@ -82,32 +82,30 @@ struct concatenate_array {
 };
 
 ///
-/// Helper method to concatenate a document. Use this with the document stream
-/// builder to merge an existing document's fields with a new document's.
+/// Helper method to concatenate a document.
 ///
-/// @param doc A document to be concatenated.
+/// Use this with the document stream builder to merge an existing document's fields with a new
+/// document's.
+///
+/// @param doc The document to concatenate.
 ///
 /// @return concatenate_doc A concatenating struct.
 ///
-/// @relatesalso concatenate_doc
+/// @see bsoncxx::v_noabi::builder::concatenate_doc
+///
+/// @note An overload accepting @ref v_noabi::array::view_or_value and returning a @ref
+/// concatenate_array is also declared in this scope.
 ///
 BSONCXX_INLINE concatenate_doc concatenate(document::view_or_value doc) {
     return {std::move(doc)};
 }
 
-///
-/// Method to concatenate an array with a new array. Use this with the array stream
-/// builder to merge an existing array's fields with a new array.
-///
-/// @param array An array to be concatenated.
-///
-/// @return concatenate_array A concatenating struct.
-///
-/// @relatesalso concatenate_array
-///
+// Why is Doxygen unable to parse this overload correctly???
+// @cond DOXYGEN_DISABLE "warning: no matching file member found for ..."
 BSONCXX_INLINE concatenate_array concatenate(array::view_or_value array) {
     return {std::move(array)};
 }
+// @endcond
 
 }  // namespace builder
 }  // namespace v_noabi

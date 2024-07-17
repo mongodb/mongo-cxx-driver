@@ -51,15 +51,13 @@ class operation_exception : public exception {
                         std::string what_arg = "");
 
     ///
-    /// @{
-    ///
     /// The optional raw bson error document from the server.
     ///
     /// @returns The raw server error, if it is available.
     ///
+    /// @{
     const stdx::optional<bsoncxx::v_noabi::document::value>& raw_server_error() const;
     stdx::optional<bsoncxx::v_noabi::document::value>& raw_server_error();
-    ///
     /// @}
     ///
 

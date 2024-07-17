@@ -46,8 +46,6 @@ class index_view {
     index_view& operator=(const index_view&) = delete;
 
     ///
-    /// @{
-    ///
     /// Returns a cursor over all the indexes.
     ///
     cursor list();
@@ -60,12 +58,6 @@ class index_view {
     ///
     cursor list(const client_session& session);
 
-    ///
-    /// @}
-    ///
-
-    ///
-    /// @{
     ///
     /// Creates an index. A convenience method that calls create_many.
     ///
@@ -121,12 +113,6 @@ class index_view {
         const bsoncxx::v_noabi::document::view_or_value& index_options = {},
         const options::index_view& options = options::index_view{});
 
-    ///
-    /// @}
-    ///
-
-    ///
-    /// @{
     ///
     /// Creates an index. A convenience method that calls create_many.
     ///
@@ -174,12 +160,6 @@ class index_view {
         const options::index_view& options = options::index_view{});
 
     ///
-    /// @}
-    ///
-
-    ///
-    /// @{
-    ///
     /// Adds a container of indexes to the collection.
     ///
     /// @param indexes
@@ -227,12 +207,6 @@ class index_view {
         const options::index_view& options = options::index_view{});
 
     ///
-    /// @}
-    ///
-
-    ///
-    /// @{
-    ///
     /// Drops a single index by name.
     ///
     /// @param name
@@ -273,12 +247,6 @@ class index_view {
                   stdx::string_view name,
                   const options::index_view& options = options::index_view{});
 
-    ///
-    /// @}
-    ///
-
-    ///
-    /// @{
     ///
     /// Attempts to drop a single index from the collection given the keys and options.
     ///
@@ -337,12 +305,6 @@ class index_view {
                   const options::index_view& options = options::index_view{});
 
     ///
-    /// @}
-    ///
-
-    ///
-    /// @{
-    ///
     /// Attempts to drop a single index from the collection given an index model.
     ///
     /// @param index
@@ -390,12 +352,6 @@ class index_view {
                   const options::index_view& options = options::index_view{});
 
     ///
-    /// @}
-    ///
-
-    ///
-    /// @{
-    ///
     /// Drops all indexes in the collection.
     ///
     /// @param options
@@ -425,10 +381,6 @@ class index_view {
     ///
     void drop_all(const client_session& session,
                   const options::index_view& options = options::index_view{});
-
-    ///
-    /// @}
-    ///
 
    private:
     friend ::mongocxx::v_noabi::collection;

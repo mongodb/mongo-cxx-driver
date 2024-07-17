@@ -162,16 +162,14 @@ class cursor::iterator {
     friend ::mongocxx::v_noabi::cursor;
 
     ///
-    /// @{
+    /// @relates mongocxx::v_noabi::mongocxx::cursor::iterator
     ///
-    /// Compare two iterators for (in)-equality.  Iterators compare equal if
+    /// Compare two iterators for (in)-equality. Iterators compare equal if
     /// they point to the same underlying cursor or if both are exhausted.
     ///
-    /// @relates iterator
-    ///
+    /// @{
     friend MONGOCXX_API bool MONGOCXX_CALL operator==(const iterator&, const iterator&);
     friend MONGOCXX_API bool MONGOCXX_CALL operator!=(const iterator&, const iterator&);
-    ///
     /// @}
     ///
 

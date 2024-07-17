@@ -112,7 +112,7 @@ struct b_double {
 ///
 /// free function comparator for b_double
 ///
-/// @relatesalso b_double
+/// @relatesalso bsoncxx::v_noabi::types::b_double
 ///
 BSONCXX_INLINE bool operator==(const b_double& lhs, const b_double& rhs) {
     return lhs.value == rhs.value;
@@ -146,7 +146,7 @@ struct b_string {
 ///
 /// free function comparator for b_string
 ///
-/// @relatesalso b_string
+/// @relatesalso bsoncxx::v_noabi::types::b_string
 ///
 BSONCXX_INLINE bool operator==(const b_string& lhs, const b_string& rhs) {
     return lhs.value == rhs.value;
@@ -185,7 +185,7 @@ struct b_document {
 ///
 /// free function comparator for b_document
 ///
-/// @relatesalso b_document
+/// @relatesalso bsoncxx::v_noabi::types::b_document
 ///
 BSONCXX_INLINE bool operator==(const b_document& lhs, const b_document& rhs) {
     return lhs.value == rhs.value;
@@ -210,7 +210,7 @@ struct b_array {
 ///
 /// free function comparator for b_array
 ///
-/// @relatesalso b_array
+/// @relatesalso bsoncxx::v_noabi::types::b_array
 ///
 BSONCXX_INLINE bool operator==(const b_array& lhs, const b_array& rhs) {
     return lhs.value == rhs.value;
@@ -230,7 +230,7 @@ struct b_binary {
 ///
 /// free function comparator for b_binary
 ///
-/// @relatesalso b_binary
+/// @relatesalso bsoncxx::v_noabi::types::b_binary
 ///
 BSONCXX_INLINE bool operator==(const b_binary& lhs, const b_binary& rhs) {
     return lhs.sub_type == rhs.sub_type && lhs.size == rhs.size &&
@@ -250,7 +250,7 @@ struct b_undefined {
 ///
 /// free function comparator for b_undefined
 ///
-/// @relatesalso b_undefined
+/// @relatesalso bsoncxx::v_noabi::types::b_undefined
 ///
 BSONCXX_INLINE bool operator==(const b_undefined&, const b_undefined&) {
     return true;
@@ -268,7 +268,7 @@ struct b_oid {
 ///
 /// free function comparator for b_oid
 ///
-/// @relatesalso b_oid
+/// @relatesalso bsoncxx::v_noabi::types::b_oid
 ///
 BSONCXX_INLINE bool operator==(const b_oid& lhs, const b_oid& rhs) {
     return lhs.value == rhs.value;
@@ -293,7 +293,7 @@ struct b_bool {
 ///
 /// free function comparator for b_bool
 ///
-/// @relatesalso b_bool
+/// @relatesalso bsoncxx::v_noabi::types::b_bool
 ///
 BSONCXX_INLINE bool operator==(const b_bool& lhs, const b_bool& rhs) {
     return lhs.value == rhs.value;
@@ -352,7 +352,7 @@ struct b_date {
 ///
 /// free function comparator for b_date
 ///
-/// @relatesalso b_date
+/// @relatesalso bsoncxx::v_noabi::types::b_date
 ///
 BSONCXX_INLINE bool operator==(const b_date& lhs, const b_date& rhs) {
     return lhs.value == rhs.value;
@@ -368,7 +368,7 @@ struct b_null {
 ///
 /// free function comparator for b_null
 ///
-/// @relatesalso b_null
+/// @relatesalso bsoncxx::v_noabi::types::b_null
 ///
 BSONCXX_INLINE bool operator==(const b_null&, const b_null&) {
     return true;
@@ -402,7 +402,7 @@ struct b_regex {
 ///
 /// free function comparator for b_regex
 ///
-/// @relatesalso b_regex
+/// @relatesalso bsoncxx::v_noabi::types::b_regex
 ///
 BSONCXX_INLINE bool operator==(const b_regex& lhs, const b_regex& rhs) {
     return lhs.regex == rhs.regex && lhs.options == rhs.options;
@@ -424,7 +424,7 @@ struct b_dbpointer {
 ///
 /// free function comparator for b_dbpointer
 ///
-/// @relatesalso b_dbpointer
+/// @relatesalso bsoncxx::v_noabi::types::b_dbpointer
 ///
 BSONCXX_INLINE bool operator==(const b_dbpointer& lhs, const b_dbpointer& rhs) {
     return lhs.collection == rhs.collection && lhs.value == rhs.value;
@@ -458,7 +458,7 @@ struct b_code {
 ///
 /// free function comparator for b_code
 ///
-/// @relatesalso b_code
+/// @relatesalso bsoncxx::v_noabi::types::b_code
 ///
 BSONCXX_INLINE bool operator==(const b_code& lhs, const b_code& rhs) {
     return lhs.code == rhs.code;
@@ -495,7 +495,7 @@ struct b_symbol {
 ///
 /// free function comparator for b_symbol
 ///
-/// @relatesalso b_symbol
+/// @relatesalso bsoncxx::v_noabi::types::b_symbol
 ///
 BSONCXX_INLINE bool operator==(const b_symbol& lhs, const b_symbol& rhs) {
     return lhs.symbol == rhs.symbol;
@@ -529,7 +529,7 @@ struct b_codewscope {
 ///
 /// free function comparator for b_codewscope
 ///
-/// @relatesalso b_codewscope
+/// @relatesalso bsoncxx::v_noabi::types::b_codewscope
 ///
 BSONCXX_INLINE bool operator==(const b_codewscope& lhs, const b_codewscope& rhs) {
     return lhs.code == rhs.code && lhs.scope == rhs.scope;
@@ -554,7 +554,7 @@ struct b_int32 {
 ///
 /// free function comparator for b_int32
 ///
-/// @relatesalso b_int32
+/// @relatesalso bsoncxx::v_noabi::types::b_int32
 ///
 BSONCXX_INLINE bool operator==(const b_int32& lhs, const b_int32& rhs) {
     return lhs.value == rhs.value;
@@ -573,7 +573,7 @@ struct b_timestamp {
 ///
 /// free function comparator for b_timestamp
 ///
-/// @relatesalso b_timestamp
+/// @relatesalso bsoncxx::v_noabi::types::b_timestamp
 ///
 BSONCXX_INLINE bool operator==(const b_timestamp& lhs, const b_timestamp& rhs) {
     return lhs.increment == rhs.increment && lhs.timestamp == rhs.timestamp;
@@ -598,7 +598,7 @@ struct b_int64 {
 ///
 /// free function comparator for b_int64
 ///
-/// @relatesalso b_int64
+/// @relatesalso bsoncxx::v_noabi::types::b_int64
 ///
 BSONCXX_INLINE bool operator==(const b_int64& lhs, const b_int64& rhs) {
     return lhs.value == rhs.value;
@@ -625,7 +625,7 @@ struct b_decimal128 {
 ///
 /// free function comparator for b_decimal128
 ///
-/// @relatesalso b_decimal128
+/// @relatesalso bsoncxx::v_noabi::types::b_decimal128
 ///
 BSONCXX_INLINE bool operator==(const b_decimal128& lhs, const b_decimal128& rhs) {
     return lhs.value == rhs.value;
@@ -641,7 +641,7 @@ struct b_minkey {
 ///
 /// free function comparator for b_minkey
 ///
-/// @relatesalso b_minkey
+/// @relatesalso bsoncxx::v_noabi::types::b_minkey
 ///
 BSONCXX_INLINE bool operator==(const b_minkey&, const b_minkey&) {
     return true;
@@ -657,11 +657,162 @@ struct b_maxkey {
 ///
 /// free function comparator for b_maxkey
 ///
-/// @relatesalso b_maxkey
+/// @relatesalso bsoncxx::v_noabi::types::b_maxkey
 ///
 BSONCXX_INLINE bool operator==(const b_maxkey&, const b_maxkey&) {
     return true;
 }
+
+#if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+
+///
+/// @relatesalso bsoncxx::v_noabi::types::b_double
+///
+/// free function comparator for b_double
+///
+bool operator!=(const b_double& lhs, const b_double& rhs);
+
+///
+/// @relatesalso bsoncxx::v_noabi::types::b_string
+///
+/// free function comparator for b_string
+///
+bool operator!=(const b_string& lhs, const b_string& rhs);
+
+///
+/// @relatesalso bsoncxx::v_noabi::types::b_document
+///
+/// free function comparator for b_document
+///
+bool operator!=(const b_document& lhs, const b_document& rhs);
+
+///
+/// @relatesalso bsoncxx::v_noabi::types::b_array
+///
+/// free function comparator for b_array
+///
+bool operator!=(const b_array& lhs, const b_array& rhs);
+
+///
+/// @relatesalso bsoncxx::v_noabi::types::b_binary
+///
+/// free function comparator for b_binary
+///
+bool operator!=(const b_binary& lhs, const b_binary& rhs);
+
+///
+/// @relatesalso bsoncxx::v_noabi::types::b_undefined
+///
+/// free function comparator for b_undefined
+///
+bool operator!=(const b_undefined&, const b_undefined&);
+
+///
+/// @relatesalso bsoncxx::v_noabi::types::b_oid
+///
+/// free function comparator for b_oid
+///
+bool operator!=(const b_oid& lhs, const b_oid& rhs);
+
+///
+/// @relatesalso bsoncxx::v_noabi::types::b_bool
+///
+/// free function comparator for b_bool
+///
+bool operator!=(const b_bool& lhs, const b_bool& rhs);
+
+///
+/// @relatesalso bsoncxx::v_noabi::types::b_date
+///
+/// free function comparator for b_date
+///
+bool operator!=(const b_date& lhs, const b_date& rhs);
+
+///
+/// @relatesalso bsoncxx::v_noabi::types::b_null
+///
+/// free function comparator for b_null
+///
+bool operator!=(const b_null&, const b_null&);
+
+///
+/// @relatesalso bsoncxx::v_noabi::types::b_regex
+///
+/// free function comparator for b_regex
+///
+bool operator!=(const b_regex& lhs, const b_regex& rhs);
+
+///
+/// @relatesalso bsoncxx::v_noabi::types::b_dbpointer
+///
+/// free function comparator for b_dbpointer
+///
+bool operator!=(const b_dbpointer& lhs, const b_dbpointer& rhs);
+
+///
+/// @relatesalso bsoncxx::v_noabi::types::b_code
+///
+/// free function comparator for b_code
+///
+bool operator!=(const b_code& lhs, const b_code& rhs);
+
+///
+/// @relatesalso bsoncxx::v_noabi::types::b_symbol
+///
+/// free function comparator for b_symbol
+///
+bool operator!=(const b_symbol& lhs, const b_symbol& rhs);
+
+///
+/// @relatesalso bsoncxx::v_noabi::types::b_codewscope
+///
+/// free function comparator for b_codewscope
+///
+bool operator!=(const b_codewscope& lhs, const b_codewscope& rhs);
+
+///
+/// @relatesalso bsoncxx::v_noabi::types::b_int32
+///
+/// free function comparator for b_int32
+///
+bool operator!=(const b_int32& lhs, const b_int32& rhs);
+
+///
+/// @relatesalso bsoncxx::v_noabi::types::b_timestamp
+///
+/// free function comparator for b_timestamp
+///
+bool operator!=(const b_timestamp& lhs, const b_timestamp& rhs);
+
+///
+/// @relatesalso bsoncxx::v_noabi::types::b_int64
+///
+/// free function comparator for b_int64
+///
+bool operator!=(const b_int64& lhs, const b_int64& rhs);
+
+///
+/// @relatesalso bsoncxx::v_noabi::types::b_decimal128
+///
+/// free function comparator for b_decimal128
+///
+bool operator!=(const b_decimal128& lhs, const b_decimal128& rhs);
+
+///
+/// @relatesalso bsoncxx::v_noabi::types::b_minkey
+///
+/// free function comparator for b_minkey
+///
+bool operator!=(const b_minkey&, const b_minkey&);
+
+///
+/// @relatesalso bsoncxx::v_noabi::types::b_maxkey
+///
+/// free function comparator for b_maxkey
+///
+bool operator!=(const b_maxkey&, const b_maxkey&);
+
+#else
 
 #define BSONCXX_ENUM(name, val)                                                \
     BSONCXX_INLINE bool operator!=(const b_##name& lhs, const b_##name& rhs) { \
@@ -669,6 +820,8 @@ BSONCXX_INLINE bool operator==(const b_maxkey&, const b_maxkey&) {
     }
 #include <bsoncxx/enums/type.hpp>
 #undef BSONCXX_ENUM
+
+#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
 
 }  // namespace types
 }  // namespace v_noabi

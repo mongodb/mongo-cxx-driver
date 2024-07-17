@@ -163,15 +163,13 @@ class read_concern {
     friend ::mongocxx::v_noabi::uri;
 
     ///
-    /// @{
+    /// @relates mongocxx::v_noabi::read_concern
     ///
     /// Compares two read_concern objects for (in)-equality.
     ///
-    /// @relates: read_concern
-    ///
+    /// @{
     friend MONGOCXX_API bool MONGOCXX_CALL operator==(const read_concern&, const read_concern&);
     friend MONGOCXX_API bool MONGOCXX_CALL operator!=(const read_concern&, const read_concern&);
-    ///
     /// @}
     ///
 

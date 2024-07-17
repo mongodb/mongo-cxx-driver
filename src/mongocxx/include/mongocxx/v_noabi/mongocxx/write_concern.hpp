@@ -253,15 +253,13 @@ class write_concern {
     friend ::mongocxx::v_noabi::uri;
 
     ///
-    /// @{
+    /// @relates mongocxx::v_noabi::write_concern
     ///
     /// Compares two write_concern objects for (in)-equality.
     ///
-    /// @relates: write_concern
-    ///
+    /// @{
     friend MONGOCXX_API bool MONGOCXX_CALL operator==(const write_concern&, const write_concern&);
     friend MONGOCXX_API bool MONGOCXX_CALL operator!=(const write_concern&, const write_concern&);
-    ///
     /// @}
     ///
 

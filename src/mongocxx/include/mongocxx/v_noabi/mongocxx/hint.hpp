@@ -53,19 +53,23 @@ class hint {
     explicit hint(bsoncxx::v_noabi::string::view_or_value index);
 
     ///
-    /// @{
+    /// @relates mongocxx::v_noabi::hint
     ///
-    /// Compare this hint to a string for (in)-equality
+    /// Convenience methods to compare for equality against an index name.
     ///
-    /// @relates hint
+    /// Compares equal if the hint contains a matching index name. Otherwise, compares unequal.
     ///
     friend MONGOCXX_API bool MONGOCXX_CALL operator==(const hint& index_hint, std::string index);
 
+    ///
+    /// @relates mongocxx::v_noabi::hint
+    ///
+    /// Convenience methods to compare for equality against an index document.
+    ///
+    /// Compares equal if the hint contains a matching index document. Otherwise, compares unequal.
+    ///
     friend MONGOCXX_API bool MONGOCXX_CALL operator==(const hint& index_hint,
                                                       bsoncxx::v_noabi::document::view index);
-    ///
-    /// @}
-    ///
 
     ///
     /// Returns a types::bson_value::view representing this hint.
@@ -91,54 +95,41 @@ class hint {
 };
 
 ///
-/// Convenience methods to compare for equality against an index name.
+/// Convenience methods to compare against an index name.
 ///
-/// Return true if this hint contains an index name that matches.
-///
-/// @relates hint
-///
-MONGOCXX_API bool MONGOCXX_CALL operator==(std::string index, const hint& index_hint);
-
+/// Compares equal if the hint contains a matching index name. Otherwise, compares unequal.
 ///
 /// @{
-///
-/// Convenience methods to compare for inequality against an index name.
-///
-/// Return true if this hint contains an index name that matches.
-///
-/// @relates hint
-///
+
+/// @relatesalso mongocxx::v_noabi::hint
+MONGOCXX_API bool MONGOCXX_CALL operator==(std::string index, const hint& index_hint);
+
+/// @relatesalso mongocxx::v_noabi::hint
 MONGOCXX_API bool MONGOCXX_CALL operator!=(const hint& index_hint, std::string index);
+
+/// @relatesalso mongocxx::v_noabi::hint
 MONGOCXX_API bool MONGOCXX_CALL operator!=(std::string index, const hint& index_index);
-///
+
 /// @}
 ///
 
 ///
 /// Convenience methods to compare for equality against an index document.
 ///
-/// Return true if this hint contains an index document that matches.
-///
-/// @relates hint
-///
-MONGOCXX_API bool MONGOCXX_CALL operator==(bsoncxx::v_noabi::document::view index,
-                                           const hint& index_hint);
-
+/// Compares equal if the hint contains a matching index document. Otherwise, compares unequal.
 ///
 /// @{
-///
-/// Convenience methods to compare for equality against an index document.
-///
-/// Return true if this hint contains an index document that matches.
-///
-///
-/// @relates hint
-///
+
+/// @relatesalso mongocxx::v_noabi::hint
+MONGOCXX_API bool MONGOCXX_CALL operator==(bsoncxx::v_noabi::document::view index,
+                                           const hint& index_hint);
+/// @relatesalso mongocxx::v_noabi::hint
 MONGOCXX_API bool MONGOCXX_CALL operator!=(const hint& index_hint,
                                            bsoncxx::v_noabi::document::view index);
+/// @relatesalso mongocxx::v_noabi::hint
 MONGOCXX_API bool MONGOCXX_CALL operator!=(bsoncxx::v_noabi::document::view index,
                                            const hint& index_hint);
-///
+
 /// @}
 ///
 

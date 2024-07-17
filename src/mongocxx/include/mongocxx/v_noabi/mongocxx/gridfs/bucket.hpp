@@ -100,8 +100,6 @@ class bucket {
     explicit operator bool() const noexcept;
 
     ///
-    /// @{
-    ///
     /// Opens a gridfs::uploader to create a new GridFS file. The id of the file will be
     /// automatically generated as an ObjectId.
     ///
@@ -163,12 +161,7 @@ class bucket {
     uploader open_upload_stream(const client_session& session,
                                 stdx::string_view filename,
                                 const options::gridfs::upload& options = {});
-    ///
-    /// @}
-    ///
 
-    ///
-    /// @{
     ///
     /// Opens a gridfs::uploader to create a new GridFS file.
     ///
@@ -237,12 +230,7 @@ class bucket {
                                         bsoncxx::v_noabi::types::bson_value::view id,
                                         stdx::string_view filename,
                                         const options::gridfs::upload& options = {});
-    ///
-    /// @}
-    ///
 
-    ///
-    /// @{
     ///
     /// Creates a new GridFS file by uploading bytes from an input stream. The id of the file will
     /// be automatically generated as an ObjectId.
@@ -336,12 +324,7 @@ class bucket {
                                               stdx::string_view filename,
                                               std::istream* source,
                                               const options::gridfs::upload& options = {});
-    ///
-    /// @}
-    ///
 
-    ///
-    /// @{
     ///
     /// Creates a new GridFS file with a user-supplied unique id by uploading bytes from an input
     /// stream.
@@ -437,12 +420,7 @@ class bucket {
                                     stdx::string_view filename,
                                     std::istream* source,
                                     const options::gridfs::upload& options = {});
-    ///
-    /// @}
-    ///
 
-    ///
-    /// @{
     ///
     /// Opens a gridfs::downloader to read a GridFS file.
     ///
@@ -481,12 +459,7 @@ class bucket {
     ///
     downloader open_download_stream(const client_session& session,
                                     bsoncxx::v_noabi::types::bson_value::view id);
-    ///
-    /// @}
-    ///
 
-    ///
-    /// @{
     ///
     /// Downloads the contents of a stored GridFS file from the bucket and writes it to a stream.
     ///
@@ -559,12 +532,7 @@ class bucket {
                             std::ostream* destination,
                             std::size_t start,
                             std::size_t end);
-    ///
-    /// @}
-    ///
 
-    ///
-    /// @{
     ///
     /// Deletes a GridFS file from the bucket.
     ///
@@ -593,12 +561,7 @@ class bucket {
     ///   if an error occurs when removing file data or chunk data from the database.
     ///
     void delete_file(const client_session& session, bsoncxx::v_noabi::types::bson_value::view id);
-    ///
-    /// @}
-    ///
 
-    ///
-    /// @{
     ///
     /// Finds the documents in the files collection of the bucket which match the provided filter.
     ///
@@ -645,9 +608,6 @@ class bucket {
     cursor find(const client_session& session,
                 bsoncxx::v_noabi::document::view_or_value filter,
                 const options::find& options = {});
-    ///
-    /// @}
-    ///
 
     ///
     /// Gets the name of the GridFS bucket.

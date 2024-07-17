@@ -129,15 +129,13 @@ class view {
     bool empty() const;
 
     ///
+    /// @relates bsoncxx::v_noabi::document::view
+    ///
+    /// Compare two document views for (in)-equality.
+    ///
     /// @{
-    ///
-    /// Compare two document views for (in)-equality
-    ///
-    /// @relates view
-    ///
     friend BSONCXX_API bool BSONCXX_CALL operator==(view, view);
     friend BSONCXX_API bool BSONCXX_CALL operator!=(view, view);
-    ///
     /// @}
     ///
 
@@ -173,15 +171,13 @@ class view::const_iterator {
     const_iterator operator++(int);
 
     ///
+    /// @relates bsoncxx::v_noabi::document::view::const_iterator
+    ///
+    /// Compares two const_iterators for (in)-equality.
+    ///
     /// @{
-    ///
-    /// Compares two const_iterators for (in)-equality
-    ///
-    /// @relates view::const_iterator
-    ///
     friend BSONCXX_API bool BSONCXX_CALL operator==(const const_iterator&, const const_iterator&);
     friend BSONCXX_API bool BSONCXX_CALL operator!=(const const_iterator&, const const_iterator&);
-    ///
     /// @}
     ///
 

@@ -220,9 +220,7 @@ class client {
         bsoncxx::v_noabi::string::view_or_value name) const&& = delete;
 
     ///
-    /// @{
-    ///
-    /// Enumerates the databases in the client.
+    /// @brief Enumerates the databases in the client.
     ///
     /// @return A mongocxx::v_noabi::cursor containing a BSON document for each
     ///   database. Each document contains a name field with the database
@@ -235,48 +233,22 @@ class client {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/listDatabases
     ///
+    /// @{
+
     cursor list_databases() const;
 
     ///
-    /// Enumerates the databases in the client.
-    ///
     /// @param session
     ///   The mongocxx::v_noabi::client_session with which to perform the aggregation.
-    ///
-    /// @return A mongocxx::v_noabi::cursor containing a BSON document for each
-    ///   database. Each document contains a name field with the database
-    ///   name, a sizeOnDisk field with the total size of the database file on
-    ///   disk in bytes, and an empty field specifying whether the database
-    ///   has any data.
-    ///
-    /// @throws mongocxx::v_noabi::operation_exception if the underlying 'listDatabases' command
-    /// fails.
-    ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/listDatabases
     ///
     cursor list_databases(const client_session& session) const;
 
     ///
-    /// Enumerates the databases in the client.
-    ///
     /// @param opts
     ///   Options passed directly to the 'listDatabases' command.
     ///
-    /// @return A mongocxx::v_noabi::cursor containing a BSON document for each
-    ///   database. Each document contains a name field with the database
-    ///   name, a sizeOnDisk field with the total size of the database file on
-    ///   disk in bytes, and an empty field specifying whether the database
-    ///   has any data.
-    ///
-    /// @throws mongocxx::v_noabi::operation_exception if the underlying 'listDatabases' command
-    /// fails.
-    ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/listDatabases
-    ///
     cursor list_databases(const bsoncxx::v_noabi::document::view_or_value opts) const;
 
-    ///
-    /// Enumerates the databases in the client.
     ///
     /// @param session
     ///   The mongocxx::v_noabi::client_session with which to perform the aggregation.
@@ -284,19 +256,14 @@ class client {
     /// @param opts
     ///   Options passed directly to the 'listDatabases' command.
     ///
-    /// @return A mongocxx::v_noabi::cursor containing a BSON document for each
-    ///   database. Each document contains a name field with the database
-    ///   name, a sizeOnDisk field with the total size of the database file on
-    ///   disk in bytes, and an empty field specifying whether the database
-    ///   has any data.
-    ///
-    /// @throws mongocxx::v_noabi::operation_exception if the underlying 'listDatabases' command
-    /// fails.
-    ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/listDatabases
-    ///
     cursor list_databases(const client_session& session,
                           const bsoncxx::v_noabi::document::view_or_value opts) const;
+
+    /// @}
+    ///
+
+    ///
+    /// @{
 
     ///
     /// Queries the MongoDB server for a list of known databases.
@@ -311,6 +278,7 @@ class client {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/listDatabases
     ///
+
     std::vector<std::string> list_database_names(
         const bsoncxx::v_noabi::document::view_or_value filter = {}) const;
 
@@ -319,7 +287,6 @@ class client {
     ///
     /// @param session
     ///   The mongocxx::v_noabi::client_session with which to perform the aggregation.
-    ///
     /// @param filter
     ///   An optional query expression to filter the returned database names.
     ///
@@ -334,7 +301,6 @@ class client {
         const client_session& session,
         const bsoncxx::v_noabi::document::view_or_value filter = {}) const;
 
-    ///
     /// @}
     ///
 
@@ -352,8 +318,10 @@ class client {
 
     ///
     /// @{
+
     ///
-    /// Gets a change stream on this client with an empty pipeline.
+    /// Get a change stream on this client with an empty pipeline.
+    ///
     /// Change streams are only supported with a "majority" read concern or no read concern.
     ///
     /// @param options
@@ -366,6 +334,10 @@ class client {
     ///
     change_stream watch(const options::change_stream& options = {});
 
+    ///
+    /// Get a change stream on this client with an empty pipeline.
+    ///
+    /// Change streams are only supported with a "majority" read concern or no read concern.
     ///
     /// @param session
     ///   The mongocxx::v_noabi::client_session with which to perform the watch operation.
@@ -380,7 +352,8 @@ class client {
     change_stream watch(const client_session& session, const options::change_stream& options = {});
 
     ///
-    /// Gets a change stream on this client.
+    /// Get a change stream on this client.
+    ///
     /// Change streams are only supported with a "majority" read concern or no read concern.
     ///
     /// @param pipe
@@ -398,7 +371,9 @@ class client {
     change_stream watch(const pipeline& pipe, const options::change_stream& options = {});
 
     ///
-    /// Gets a change stream on this client.
+    /// Get a change stream on this client.
+    ///
+    /// Change streams are only supported with a "majority" read concern or no read concern.
     ///
     /// @param session
     ///   The mongocxx::v_noabi::client_session with which to perform the watch operation.
@@ -416,7 +391,6 @@ class client {
                         const pipeline& pipe,
                         const options::change_stream& options = {});
 
-    ///
     /// @}
     ///
 
