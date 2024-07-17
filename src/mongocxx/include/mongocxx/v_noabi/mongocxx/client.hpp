@@ -332,42 +332,6 @@ class client {
         const bsoncxx::v_noabi::document::view_or_value filter = {}) const;
 
     ///
-    /// Queries the MongoDB server for a list of known databases.
-    ///
-    /// @param filter
-    ///   An optional query expression to filter the returned database names.
-    ///
-    /// @return std::vector<std::string> containing the database names.
-    ///
-    /// @throws mongocxx::v_noabi::operation_exception if the underlying 'listDatabases'
-    /// command fails.
-    ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/listDatabases
-    ///
-
-    std::vector<std::string> list_database_names(
-        const bsoncxx::v_noabi::document::view_or_value filter = {}) const;
-
-    ///
-    /// Queries the MongoDB server for a list of known databases.
-    ///
-    /// @param session
-    ///   The mongocxx::v_noabi::client_session with which to perform the aggregation.
-    /// @param filter
-    ///   An optional query expression to filter the returned database names.
-    ///
-    /// @return std::vector<std::string> containing the database names.
-    ///
-    /// @throws mongocxx::v_noabi::operation_exception if the underlying 'listDatabases'
-    /// command fails.
-    ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/listDatabases
-    ///
-    std::vector<std::string> list_database_names(
-        const client_session& session,
-        const bsoncxx::v_noabi::document::view_or_value filter = {}) const;
-
-    ///
     /// Create a client session for a sequence of operations.
     ///
     /// @return A client_session object. See `mongocxx::v_noabi::client_session` for more
