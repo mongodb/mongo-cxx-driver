@@ -218,9 +218,8 @@ class client {
         bsoncxx::v_noabi::string::view_or_value name) const&;
     MONGOCXX_INLINE mongocxx::v_noabi::database operator[](
         bsoncxx::v_noabi::string::view_or_value name) const&& = delete;
-
     ///
-    /// @brief Enumerates the databases in the client.
+    /// Enumerates the databases in the client.
     ///
     /// @return A mongocxx::v_noabi::cursor containing a BSON document for each
     ///   database. Each document contains a name field with the database
@@ -233,22 +232,48 @@ class client {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/listDatabases
     ///
-    /// @{
-
     cursor list_databases() const;
 
     ///
+    /// Enumerates the databases in the client.
+    ///
     /// @param session
     ///   The mongocxx::v_noabi::client_session with which to perform the aggregation.
+    ///
+    /// @return A mongocxx::v_noabi::cursor containing a BSON document for each
+    ///   database. Each document contains a name field with the database
+    ///   name, a sizeOnDisk field with the total size of the database file on
+    ///   disk in bytes, and an empty field specifying whether the database
+    ///   has any data.
+    ///
+    /// @throws mongocxx::v_noabi::operation_exception if the underlying 'listDatabases' command
+    /// fails.
+    ///
+    /// @see https://www.mongodb.com/docs/manual/reference/command/listDatabases
     ///
     cursor list_databases(const client_session& session) const;
 
     ///
+    /// Enumerates the databases in the client.
+    ///
     /// @param opts
     ///   Options passed directly to the 'listDatabases' command.
     ///
+    /// @return A mongocxx::v_noabi::cursor containing a BSON document for each
+    ///   database. Each document contains a name field with the database
+    ///   name, a sizeOnDisk field with the total size of the database file on
+    ///   disk in bytes, and an empty field specifying whether the database
+    ///   has any data.
+    ///
+    /// @throws mongocxx::v_noabi::operation_exception if the underlying 'listDatabases' command
+    /// fails.
+    ///
+    /// @see https://www.mongodb.com/docs/manual/reference/command/listDatabases
+    ///
     cursor list_databases(const bsoncxx::v_noabi::document::view_or_value opts) const;
 
+    ///
+    /// Enumerates the databases in the client.
     ///
     /// @param session
     ///   The mongocxx::v_noabi::client_session with which to perform the aggregation.
@@ -256,14 +281,55 @@ class client {
     /// @param opts
     ///   Options passed directly to the 'listDatabases' command.
     ///
+    /// @return A mongocxx::v_noabi::cursor containing a BSON document for each
+    ///   database. Each document contains a name field with the database
+    ///   name, a sizeOnDisk field with the total size of the database file on
+    ///   disk in bytes, and an empty field specifying whether the database
+    ///   has any data.
+    ///
+    /// @throws mongocxx::v_noabi::operation_exception if the underlying 'listDatabases' command
+    /// fails.
+    ///
+    /// @see https://www.mongodb.com/docs/manual/reference/command/listDatabases
+    ///
     cursor list_databases(const client_session& session,
                           const bsoncxx::v_noabi::document::view_or_value opts) const;
 
-    /// @}
     ///
+    /// Queries the MongoDB server for a list of known databases.
+    ///
+    /// @param filter
+    ///   An optional query expression to filter the returned database names.
+    ///
+    /// @return std::vector<std::string> containing the database names.
+    ///
+    /// @throws mongocxx::v_noabi::operation_exception if the underlying 'listDatabases'
+    /// command fails.
+    ///
+    /// @see https://www.mongodb.com/docs/manual/reference/command/listDatabases
+    ///
+    std::vector<std::string> list_database_names(
+        const bsoncxx::v_noabi::document::view_or_value filter = {}) const;
 
     ///
-    /// @{
+    /// Queries the MongoDB server for a list of known databases.
+    ///
+    /// @param session
+    ///   The mongocxx::v_noabi::client_session with which to perform the aggregation.
+    ///
+    /// @param filter
+    ///   An optional query expression to filter the returned database names.
+    ///
+    /// @return std::vector<std::string> containing the database names.
+    ///
+    /// @throws mongocxx::v_noabi::operation_exception if the underlying 'listDatabases'
+    /// command fails.
+    ///
+    /// @see https://www.mongodb.com/docs/manual/reference/command/listDatabases
+    ///
+    std::vector<std::string> list_database_names(
+        const client_session& session,
+        const bsoncxx::v_noabi::document::view_or_value filter = {}) const;
 
     ///
     /// Queries the MongoDB server for a list of known databases.
@@ -301,9 +367,6 @@ class client {
         const client_session& session,
         const bsoncxx::v_noabi::document::view_or_value filter = {}) const;
 
-    /// @}
-    ///
-
     ///
     /// Create a client session for a sequence of operations.
     ///
@@ -315,9 +378,6 @@ class client {
     /// server does not support.
     ///
     client_session start_session(const options::client_session& options = {});
-
-    ///
-    /// @{
 
     ///
     /// Get a change stream on this client with an empty pipeline.
@@ -390,9 +450,6 @@ class client {
     change_stream watch(const client_session& session,
                         const pipeline& pipe,
                         const options::change_stream& options = {});
-
-    /// @}
-    ///
 
     ///
     /// Prevents resource cleanup in the child process from interfering
