@@ -111,3 +111,8 @@
 #include <mongocxx/validation_criteria-fwd.hpp>
 #include <mongocxx/write_concern-fwd.hpp>
 #include <mongocxx/write_type-fwd.hpp>
+
+///
+/// @namespace mongocxx::v_noabi
+/// Entities declared in this namespace do not have a stable ABI.
+///

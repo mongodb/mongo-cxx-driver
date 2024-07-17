@@ -15,3 +15,8 @@
 // THIS FILE IS NOT INTENDED TO BE INCLUDABLE.
 #include <mongocxx/v_noabi/mongocxx/fwd.hpp>
 // THIS FILE IS NOT INTENDED TO BE INCLUDABLE.
+
+///
+/// @namespace mongocxx
+/// The top-level namespace for mongocxx library entities.
+///

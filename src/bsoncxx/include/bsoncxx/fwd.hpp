@@ -15,3 +15,8 @@
 // THIS FILE IS NOT INTENDED TO BE INCLUDABLE.
 #include <bsoncxx/v_noabi/bsoncxx/fwd.hpp>
 // THIS FILE IS NOT INTENDED TO BE INCLUDABLE.
+
+///
+/// @namespace bsoncxx
+/// The top-level namespace for bsoncxx library entities.
+///

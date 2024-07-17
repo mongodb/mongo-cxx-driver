@@ -63,16 +63,3 @@
 #pragma push_macro("MONGOCXX_UNREACHABLE")
 #undef MONGOCXX_UNREACHABLE
 #define MONGOCXX_UNREACHABLE std::abort()
-
-// Doxygen does not account for generated header files.
-// Document globally applicable macros and namespaces here.
-
-///
-/// @namespace mongocxx
-/// The top-level namespace for mongocxx library entities.
-///
-
-///
-/// @namespace mongocxx::v_noabi
-/// Entities declared in this namespace do not have a stable ABI.
-///
