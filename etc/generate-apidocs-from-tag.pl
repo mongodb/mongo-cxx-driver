@@ -74,7 +74,7 @@ sub _parse_doxygen_config {
         next if substr($line,0,1) eq '#';
         next unless $line =~ /\S.*=/;
         # Join lines ending in backslash.
-        while ( $line =~ s{\\\n\z}{} ) {
+        while ( $line =~ s/\\\n\z// ) {
             $line .= " " . <$fh>;
         }
         # Save full line under the assigned key
