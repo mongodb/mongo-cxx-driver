@@ -568,6 +568,9 @@ command -V doxygen hugo
 
 Run `git clean -dfx` to restore the repository to a clean state.
 
+> [!WARNING]
+> Do NOT run `git clean -dfx` in your local development repository, as it may delete your local development files present in the repository (even if excluded)! Only run this in the command in the separate repository being used for this release!
+
 Configure CMake using `build` as the binary directory. Leave all other configuration variables as their default.
 
 ```bash
