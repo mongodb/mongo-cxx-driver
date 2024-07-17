@@ -2213,11 +2213,11 @@ INCLUDE_FILE_PATTERNS  =
 PREDEFINED             = BSONCXX_API= \
                          BSONCXX_CALL= \
                          BSONCXX_DEPRECATED \
-                         BSONCXX_INLINE= \
+                         BSONCXX_INLINE=inline \
                          MONGOCXX_API= \
                          MONGOCXX_CALL= \
-                         MONGOCXX_DEPRECATED \
-                         MONGOCXX_INLINE=
+                         MONGOCXX_DEPRECATED= \
+                         MONGOCXX_INLINE=inline
 
 # If the MACRO_EXPANSION and EXPAND_ONLY_PREDEF tags are set to YES then this
 # tag can be used to specify a list of macro names that should be expanded. The
