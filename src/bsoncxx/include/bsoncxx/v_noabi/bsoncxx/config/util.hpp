@@ -7,6 +7,7 @@
 #define BSONCXX_STRINGIFY_IMPL(...) #__VA_ARGS__
 
 /**
+ * @internal
  * @brief Token-paste two macro arguments, after macro expansion
  */
 #define BSONCXX_CONCAT(A, ...) BSONCXX_CONCAT_IMPL(A, __VA_ARGS__)
