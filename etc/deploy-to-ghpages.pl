@@ -56,7 +56,8 @@ sub main {
     my $orig_dir = getcwd();
 
     # Create tempdir to store copy of repo.
-    my $tmp = tempdir( DIR => "/tmp", CLEANUP => 1 );
+    _try_run("mkdir", "-p", "build/tmp-repo");
+    my $tmp = tempdir( DIR => "build/tmp-repo", CLEANUP => 1 );
     my $tmpdir = realpath("$tmp");
 
     # Clone current repo to tempdir and checkout gh-pages branch.
