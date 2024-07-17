@@ -60,7 +60,7 @@ sub main {
     my $tmpdir = realpath("$tmp");
 
     # Clone current repo to tempdir and checkout gh-pages branch.
-    _try_run( qw/git clone/, $source_repo, $tmpdir );
+    _try_run( qw/git clone --filter=blob:none/, $source_repo, $tmpdir );
     {
         my $guard = _pushd($tmpdir);
         _try_run(qw/git checkout gh-pages/);
