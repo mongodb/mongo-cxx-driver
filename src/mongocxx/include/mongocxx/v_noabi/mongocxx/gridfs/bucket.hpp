@@ -511,8 +511,7 @@ class bucket {
                             std::ostream* destination);
 
     ///
-    /// @copydoc download_to_stream(bsoncxx::v_noabi::types::bson_value::view id, std::ostream*
-    /// destination)
+    /// @copydoc download_to_stream(bsoncxx::v_noabi::types::bson_value::view id, std::ostream* destination)
     ///
     /// @param start The byte offset to the beginning of content to download.
     /// @param end The byte offset to the end of content to download.
@@ -549,14 +548,12 @@ class bucket {
                             bsoncxx::v_noabi::types::bson_value::view id,
                             std::ostream* destination);
 
-    // clang-format off
     ///
     /// @copydoc download_to_stream(const client_session& session, bsoncxx::v_noabi::types::bson_value::view id, std::ostream* destination)
     ///
     /// @param start The byte offset to the beginning of content to download.
     /// @param end The byte offset to the end of content to download.
     ///
-    // clang-format on
     void download_to_stream(const client_session& session,
                             bsoncxx::v_noabi::types::bson_value::view id,
                             std::ostream* destination,
