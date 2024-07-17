@@ -566,6 +566,9 @@ Ensure `doxygen` and `hugo` are locally installed and up-to-date.
 command -V doxygen hugo
 ```
 
+> [!IMPORTANT]
+> The required Doxygen version is defined in `etc/generate-apidocs-from-tag.pl` as `$doxygen_version_required`. If not already present, download the required version from [Doxygen Releases](https://www.doxygen.nl/download.html). Use the `DOXYGEN_BINARY` environment variable to override the default `doxygen` command with a path to a specific Doxygen binary.
+
 Run `git clean -dfx` to restore the repository to a clean state.
 
 > [!WARNING]
@@ -577,13 +580,13 @@ Configure CMake using `build` as the binary directory. Leave all other configura
 cmake -S . -B build
 ```
 
-Test generating Hugo docs locally by building the `docs` target:
+Test generating Hugo and Doxygen docs locally by building the `docs` target (this command DOES NOT check for the required Doxygen version):
 
 ```bash
 cmake --build build --target docs
 ```
 
-Test generating Doxygen docs by building the `doxygen-all` target:
+Test generating all versioned Doxygen docs by building the `doxygen-all` target (this command DOES checks for the required Doxygen version):
 
 ```bash
 cmake --build build --target doxygen-all
