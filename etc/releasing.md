@@ -552,7 +552,7 @@ Example (using Jira syntax formatting):
 > [!NOTE]
 > Some of these commands may take a while to complete.
 
-Add the new release to the `@DOC_TAGS` array in `etc/generate-all-apidocs.pl`.
+Set `$LATEST_DOC_TAG` in `etc/generate-latest-apidocs.pl` to the latest release tag.
 
 Commit these changes to the `post-release-changes` branch:
 
@@ -586,10 +586,10 @@ Test generating Hugo and Doxygen docs locally by building the `docs` target (thi
 cmake --build build --target docs
 ```
 
-Test generating all versioned Doxygen docs by building the `doxygen-all` target (this command DOES checks for the required Doxygen version):
+Test generating the latest versioned Doxygen docs by building the `doxygen-latest` target (this command DOES checks for the required Doxygen version):
 
 ```bash
-cmake --build build --target doxygen-all
+cmake --build build --target doxygen-latest
 ```
 
 Verify that the `build/docs/api/mongocxx-X.Y.Z` directory is present and populated.

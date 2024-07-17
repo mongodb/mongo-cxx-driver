@@ -37,7 +37,7 @@ sub _doxygen_rsync {
     my $tmpdir = shift;
     my @filters = ( '- /current', '- /mongocxx-v3', '- /legacy-v1' );
     _try_run(
-        qw{rsync -Cavz --delete},
+        qw{rsync -Cavz},
         ( map { ; '--filter' => $_ } @filters ),
         "build/docs/api/", "$tmpdir/api/"
     );
@@ -105,4 +105,3 @@ sub DESTROY {
     my $self = shift;
     $self->{demolish}->() if $self->{demolish};
 }
-

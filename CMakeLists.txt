@@ -309,14 +309,14 @@ add_custom_target(doxygen-current
     VERBATIM
 )
 
-add_custom_target(doxygen-all
+add_custom_target(doxygen-latest
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-    COMMAND etc/generate-all-apidocs.pl
+    COMMAND etc/generate-latest-apidocs.pl
     VERBATIM
 )
 
 add_custom_target(doxygen-deploy
-    DEPENDS doxygen-all
+    DEPENDS doxygen-latest
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
     COMMAND etc/deploy-to-ghpages.pl --doxygen git@github.com:mongodb/mongo-cxx-driver
     VERBATIM
