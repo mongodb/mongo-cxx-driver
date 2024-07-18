@@ -25,13 +25,13 @@
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
+#include <bsoncxx/test/catch.hh>
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
 #include <mongocxx/client.hpp>
 #include <mongocxx/collection.hpp>
 #include <mongocxx/options/client.hpp>
 #include <mongocxx/stdx.hpp>
-#include <third_party/catch/include/catch.hpp>
 
 #include <mongocxx/config/private/prelude.hh>
 

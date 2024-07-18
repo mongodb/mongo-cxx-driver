@@ -28,6 +28,7 @@
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/string/to_string.hpp>
+#include <bsoncxx/test/catch.hh>
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/bson_value/view_or_value.hpp>
 #include <mongocxx/client.hpp>
@@ -36,7 +37,6 @@
 #include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/private/libmongoc.hh>
 #include <mongocxx/test/client_helpers.hh>
-#include <third_party/catch/include/catch.hpp>
 
 #include <mongocxx/config/private/prelude.hh>
 
