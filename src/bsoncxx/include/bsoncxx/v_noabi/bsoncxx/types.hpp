@@ -663,165 +663,194 @@ BSONCXX_INLINE bool operator==(const b_maxkey&, const b_maxkey&) {
     return true;
 }
 
-#if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-
 ///
 /// @relatesalso bsoncxx::v_noabi::types::b_double
 ///
 /// free function comparator for b_double
 ///
-bool operator!=(const b_double& lhs, const b_double& rhs);
+inline bool operator!=(const b_double& lhs, const b_double& rhs) {
+    return !(lhs == rhs);
+}
 
 ///
 /// @relatesalso bsoncxx::v_noabi::types::b_string
 ///
 /// free function comparator for b_string
 ///
-bool operator!=(const b_string& lhs, const b_string& rhs);
+inline bool operator!=(const b_string& lhs, const b_string& rhs) {
+    return !(lhs == rhs);
+}
 
 ///
 /// @relatesalso bsoncxx::v_noabi::types::b_document
 ///
 /// free function comparator for b_document
 ///
-bool operator!=(const b_document& lhs, const b_document& rhs);
+inline bool operator!=(const b_document& lhs, const b_document& rhs) {
+    return !(lhs == rhs);
+}
 
 ///
 /// @relatesalso bsoncxx::v_noabi::types::b_array
 ///
 /// free function comparator for b_array
 ///
-bool operator!=(const b_array& lhs, const b_array& rhs);
+inline bool operator!=(const b_array& lhs, const b_array& rhs) {
+    return !(lhs == rhs);
+}
 
 ///
 /// @relatesalso bsoncxx::v_noabi::types::b_binary
 ///
 /// free function comparator for b_binary
 ///
-bool operator!=(const b_binary& lhs, const b_binary& rhs);
+inline bool operator!=(const b_binary& lhs, const b_binary& rhs) {
+    return !(lhs == rhs);
+}
 
 ///
 /// @relatesalso bsoncxx::v_noabi::types::b_undefined
 ///
 /// free function comparator for b_undefined
 ///
-bool operator!=(const b_undefined&, const b_undefined&);
+inline bool operator!=(const b_undefined& lhs, const b_undefined& rhs) {
+    return !(lhs == rhs);
+}
 
 ///
 /// @relatesalso bsoncxx::v_noabi::types::b_oid
 ///
 /// free function comparator for b_oid
 ///
-bool operator!=(const b_oid& lhs, const b_oid& rhs);
+inline bool operator!=(const b_oid& lhs, const b_oid& rhs) {
+    return !(lhs == rhs);
+}
 
 ///
 /// @relatesalso bsoncxx::v_noabi::types::b_bool
 ///
 /// free function comparator for b_bool
 ///
-bool operator!=(const b_bool& lhs, const b_bool& rhs);
+inline bool operator!=(const b_bool& lhs, const b_bool& rhs) {
+    return !(lhs == rhs);
+}
 
 ///
 /// @relatesalso bsoncxx::v_noabi::types::b_date
 ///
 /// free function comparator for b_date
 ///
-bool operator!=(const b_date& lhs, const b_date& rhs);
+inline bool operator!=(const b_date& lhs, const b_date& rhs) {
+    return !(lhs == rhs);
+}
 
 ///
 /// @relatesalso bsoncxx::v_noabi::types::b_null
 ///
 /// free function comparator for b_null
 ///
-bool operator!=(const b_null&, const b_null&);
+inline bool operator!=(const b_null& lhs, const b_null& rhs) {
+    return !(lhs == rhs);
+}
 
 ///
 /// @relatesalso bsoncxx::v_noabi::types::b_regex
 ///
 /// free function comparator for b_regex
 ///
-bool operator!=(const b_regex& lhs, const b_regex& rhs);
+inline bool operator!=(const b_regex& lhs, const b_regex& rhs) {
+    return !(lhs == rhs);
+}
 
 ///
 /// @relatesalso bsoncxx::v_noabi::types::b_dbpointer
 ///
 /// free function comparator for b_dbpointer
 ///
-bool operator!=(const b_dbpointer& lhs, const b_dbpointer& rhs);
+inline bool operator!=(const b_dbpointer& lhs, const b_dbpointer& rhs) {
+    return !(lhs == rhs);
+}
 
 ///
 /// @relatesalso bsoncxx::v_noabi::types::b_code
 ///
 /// free function comparator for b_code
 ///
-bool operator!=(const b_code& lhs, const b_code& rhs);
+inline bool operator!=(const b_code& lhs, const b_code& rhs) {
+    return !(lhs == rhs);
+}
 
 ///
 /// @relatesalso bsoncxx::v_noabi::types::b_symbol
 ///
 /// free function comparator for b_symbol
 ///
-bool operator!=(const b_symbol& lhs, const b_symbol& rhs);
+inline bool operator!=(const b_symbol& lhs, const b_symbol& rhs) {
+    return !(lhs == rhs);
+}
 
 ///
 /// @relatesalso bsoncxx::v_noabi::types::b_codewscope
 ///
 /// free function comparator for b_codewscope
 ///
-bool operator!=(const b_codewscope& lhs, const b_codewscope& rhs);
+inline bool operator!=(const b_codewscope& lhs, const b_codewscope& rhs) {
+    return !(lhs == rhs);
+}
 
 ///
 /// @relatesalso bsoncxx::v_noabi::types::b_int32
 ///
 /// free function comparator for b_int32
 ///
-bool operator!=(const b_int32& lhs, const b_int32& rhs);
+inline bool operator!=(const b_int32& lhs, const b_int32& rhs) {
+    return !(lhs == rhs);
+}
 
 ///
 /// @relatesalso bsoncxx::v_noabi::types::b_timestamp
 ///
 /// free function comparator for b_timestamp
 ///
-bool operator!=(const b_timestamp& lhs, const b_timestamp& rhs);
+inline bool operator!=(const b_timestamp& lhs, const b_timestamp& rhs) {
+    return !(lhs == rhs);
+}
 
 ///
 /// @relatesalso bsoncxx::v_noabi::types::b_int64
 ///
 /// free function comparator for b_int64
 ///
-bool operator!=(const b_int64& lhs, const b_int64& rhs);
+inline bool operator!=(const b_int64& lhs, const b_int64& rhs) {
+    return !(lhs == rhs);
+}
 
 ///
 /// @relatesalso bsoncxx::v_noabi::types::b_decimal128
 ///
 /// free function comparator for b_decimal128
 ///
-bool operator!=(const b_decimal128& lhs, const b_decimal128& rhs);
+inline bool operator!=(const b_decimal128& lhs, const b_decimal128& rhs) {
+    return !(lhs == rhs);
+}
 
 ///
 /// @relatesalso bsoncxx::v_noabi::types::b_minkey
 ///
 /// free function comparator for b_minkey
 ///
-bool operator!=(const b_minkey&, const b_minkey&);
+inline bool operator!=(const b_minkey& lhs, const b_minkey& rhs) {
+    return !(lhs == rhs);
+}
 
 ///
 /// @relatesalso bsoncxx::v_noabi::types::b_maxkey
 ///
 /// free function comparator for b_maxkey
 ///
-bool operator!=(const b_maxkey&, const b_maxkey&);
-
-#else
-
-#define BSONCXX_ENUM(name, val)                                                \
-    BSONCXX_INLINE bool operator!=(const b_##name& lhs, const b_##name& rhs) { \
-        return !(lhs == rhs);                                                  \
-    }
-#include <bsoncxx/enums/type.hpp>
-#undef BSONCXX_ENUM
-
-#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+inline bool operator!=(const b_maxkey& lhs, const b_maxkey& rhs) {
+    return !(lhs == rhs);
+}
 
 }  // namespace types
 }  // namespace v_noabi
