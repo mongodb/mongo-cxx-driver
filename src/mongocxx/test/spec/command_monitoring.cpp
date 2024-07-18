@@ -17,6 +17,7 @@
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/string/to_string.hpp>
 #include <bsoncxx/test/catch.hh>
+#include <bsoncxx/test/exception_guard.hh>
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/exception.hpp>
 #include <mongocxx/instance.hpp>
@@ -75,6 +76,7 @@ void run_command_monitoring_tests_in_file(std::string test_path) {
         // Used by the listeners
         auto events = expectations.begin();
 
+        bsoncxx::test::exception_guard_state eguard;
         options::client client_opts;
         options::apm apm_opts;
 
@@ -84,6 +86,8 @@ void run_command_monitoring_tests_in_file(std::string test_path) {
 
         // COMMAND STARTED
         apm_opts.on_command_started([&](const events::command_started_event& event) {
+            BSONCXX_TEST_EXCEPTION_GUARD_BEGIN(eguard);
+
             if (event.command_name().compare("endSessions") == 0) {
                 return;
             }
@@ -104,14 +108,17 @@ void run_command_monitoring_tests_in_file(std::string test_path) {
                 } else if (field.compare("database_name") == 0) {
                     REQUIRE(event.database_name() == value.get_string().value);
                 } else {
-                    // Should not happen.
-                    REQUIRE(false);
+                    FAIL("Should not reach this point.");
                 }
             }
+
+            BSONCXX_TEST_EXCEPTION_GUARD_END(eguard);
         });
 
         // COMMAND FAILED
         apm_opts.on_command_failed([&](const events::command_failed_event& event) {
+            BSONCXX_TEST_EXCEPTION_GUARD_BEGIN(eguard);
+
             auto expected = (*events).get_document().value;
             events++;
 
@@ -122,14 +129,17 @@ void run_command_monitoring_tests_in_file(std::string test_path) {
                 if (field.compare("command_name") == 0) {
                     REQUIRE(event.command_name() == value.get_string().value);
                 } else {
-                    // Should not happen.
-                    REQUIRE(false);
+                    FAIL("Should not reach this point.");
                 }
             }
+
+            BSONCXX_TEST_EXCEPTION_GUARD_END(eguard);
         });
 
         // COMMAND SUCCESS
         apm_opts.on_command_succeeded([&](const events::command_succeeded_event& event) {
+            BSONCXX_TEST_EXCEPTION_GUARD_BEGIN(eguard);
+
             if (event.command_name().compare("endSessions") == 0) {
                 return;
             }
@@ -152,6 +162,8 @@ void run_command_monitoring_tests_in_file(std::string test_path) {
                     REQUIRE(false);
                 }
             }
+
+            BSONCXX_TEST_EXCEPTION_GUARD_END(eguard);
         });
 
         ///////////////////////////////////////////////////////////////////////

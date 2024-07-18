@@ -16,7 +16,6 @@
 #include <iostream>
 #include <iterator>
 #include <new>
-#include <sstream>
 #include <vector>
 
 #include <bsoncxx/builder/basic/document.hpp>
@@ -25,6 +24,7 @@
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/string/to_string.hpp>
 #include <bsoncxx/test/catch.hh>
+#include <bsoncxx/test/exception_guard.hh>
 #include <bsoncxx/types.hpp>
 #include <mongocxx/client.hpp>
 #include <mongocxx/collection.hpp>
@@ -2820,9 +2820,9 @@ TEST_CASE("Ensure that the WriteConcernError 'errInfo' object is propagated", "[
 
 TEST_CASE("expose writeErrors[].errInfo", "[collection]") {
     // A helper for checking that an error document is well-formed according to our requirements:
-    auto writeErrors_well_formed = [](const bsoncxx::document::view& reply_view) -> bool {
+    auto writeErrors_well_formed = [](const bsoncxx::document::view& reply_view) {
         if (!reply_view["writeErrors"]) {
-            return false;
+            FAIL(R"(missing "writeError" field in reply)");
         }
 
         const auto& errdoc = reply_view["writeErrors"][0];
@@ -2831,22 +2831,19 @@ TEST_CASE("expose writeErrors[].errInfo", "[collection]") {
 
         // The code should always be 121 (DocumentValidationFailure):
         if (121 != error_code) {
-            std::ostringstream os;
-            os << "writeErrors expected to have code 121, but had " << error_code << " instead";
-            throw std::runtime_error(os.str());
+            FAIL("writeErrors expected to have code 121, but had " << error_code << " instead");
         }
 
         // We require the "details" field be present:
         if (!errdoc["errInfo"]["details"]) {
-            throw std::runtime_error("no \"details\" field in \"writeErrors\"");
+            FAIL(R"(no "details" field in "writeErrors")");
         }
-
-        return true;
     };
 
     // Set up our test environment:
     instance::current();
 
+    bsoncxx::test::exception_guard_state eguard;
     mongocxx::options::apm apm_opts;
 
     auto client_opts = test_util::add_test_server_api();
@@ -2857,16 +2854,20 @@ TEST_CASE("expose writeErrors[].errInfo", "[collection]") {
 
     // Listen to the insertion-failed event: we want to get a copy of the server's
     // response so that we can compare it to the thrown exception later:
-    apm_opts.on_command_succeeded([&writeErrors_well_formed, &insert_succeeded](
+    apm_opts.on_command_succeeded([&writeErrors_well_formed, &insert_succeeded, &eguard](
                                       const mongocxx::events::command_succeeded_event& ev) {
+        BSONCXX_TEST_EXCEPTION_GUARD_BEGIN(eguard);
+
         if (0 != ev.command_name().compare("insert")) {
             return;
         }
 
-        REQUIRE(writeErrors_well_formed(ev.reply()));
+        writeErrors_well_formed(ev.reply());
 
         // Make sure that "we" were actually called:
         insert_succeeded = true;
+
+        BSONCXX_TEST_EXCEPTION_GUARD_END(eguard);
     });
 
     client_opts.apm_opts(apm_opts);
@@ -2899,18 +2900,19 @@ TEST_CASE("expose writeErrors[].errInfo", "[collection]") {
         try {
             coll.insert_one(entry.view());
 
-            // We should not make it here (i.e. this is an error):
-            CHECK(false);
+            FAIL("We should not make it here");
+
         } catch (const operation_exception& e) {
+            BSONCXX_TEST_EXCEPTION_GUARD_CHECK(eguard);
+
             auto rse = e.raw_server_error();
 
             // We have no has_value() check:
             CHECK(rse);
 
-            CHECK(writeErrors_well_formed(*rse));
+            writeErrors_well_formed(*rse);
         } catch (...) {
-            // An exception was thrown, but of the wrong type:
-            CHECK(false);
+            FAIL("An exception was thrown, but of the wrong type");
         }
 
         // Make sure that our callback was actually triggered and completed successfully:
