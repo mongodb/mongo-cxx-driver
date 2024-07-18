@@ -12,9 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// THIS FILE IS NOT INTENDED TO BE INCLUDABLE.
-#include <bsoncxx/v_noabi/bsoncxx/fwd.hpp>
-// THIS FILE IS NOT INTENDED TO BE INCLUDABLE.
+#if !defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+#error "This file is for documentation purposes only. It should not be included."
+#endif  // !defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
 
 ///
 /// @namespace bsoncxx

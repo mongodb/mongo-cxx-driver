@@ -12,4 +12,5 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <mongocxx/fwd.hpp>  // <mongocxx/v_noabi/mongocxx/fwd.hpp>
+// Validate that <mongocxx/v_noabi/mongocxx/fwd.hpp> is included, not <mongocxx/fwd.hpp>.
+#include <mongocxx/fwd.hpp>

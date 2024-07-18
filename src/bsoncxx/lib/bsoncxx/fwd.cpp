@@ -12,4 +12,5 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/fwd.hpp>  // <bsoncxx/v_noabi/bsoncxx/fwd.hpp>
+// Validate that <bsoncxx/v_noabi/bsoncxx/fwd.hpp> is included, not <bsoncxx/fwd.hpp>.
+#include <bsoncxx/fwd.hpp>
