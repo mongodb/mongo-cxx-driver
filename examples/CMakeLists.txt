@@ -30,7 +30,10 @@ add_subdirectory(bsoncxx)
 add_subdirectory(mongocxx)
 add_subdirectory(projects)
 
-add_custom_target(examples DEPENDS ${MONGOCXX_EXAMPLE_EXECUTABLES} ${BSONCXX_EXAMPLE_EXECUTABLES})
+if (NOT TARGET examples)
+  add_custom_target(examples)
+endif ()
+add_dependencies(examples ${MONGOCXX_EXAMPLE_EXECUTABLES} ${BSONCXX_EXAMPLE_EXECUTABLES})
 
 add_custom_target(run-examples DEPENDS examples)
 
