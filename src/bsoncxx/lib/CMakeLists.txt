@@ -71,6 +71,7 @@ endif()
 set_dist_list(src_bsoncxx_lib_DIST
     CMakeLists.txt
     ${bsoncxx_sources_v_noabi}
+    bsoncxx/fwd.cpp
     bsoncxx/v_noabi/bsoncxx/config/config.hpp.in
     bsoncxx/v_noabi/bsoncxx/config/private/config.hh.in
     bsoncxx/v_noabi/bsoncxx/config/private/postlude.hh
