@@ -250,21 +250,20 @@ BSONCXX_INLINE value::operator document::view() const noexcept {
 }
 
 ///
-/// @{
-///
 /// Compares two document values for (in)-equality.
 ///
-/// @relates document::value
-///
+/// @{
+
+/// @relatesalso bsoncxx::v_noabi::document::value
 BSONCXX_INLINE bool operator==(const value& lhs, const value& rhs) {
     return (lhs.view() == rhs.view());
 }
 
+/// @relatesalso bsoncxx::v_noabi::document::value
 BSONCXX_INLINE bool operator!=(const value& lhs, const value& rhs) {
     return !(lhs == rhs);
 }
 
-///
 /// @}
 ///
 

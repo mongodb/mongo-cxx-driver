@@ -291,17 +291,15 @@ class read_preference {
     friend ::mongocxx::v_noabi::uri;
 
     ///
-    /// @{
+    /// @relates mongocxx::v_noabi::read_preference
     ///
     /// Compares two read_preference objects for (in)-equality.
     ///
-    /// @relates: read_preference
-    ///
+    /// @{
     friend MONGOCXX_API bool MONGOCXX_CALL operator==(const read_preference&,
                                                       const read_preference&);
     friend MONGOCXX_API bool MONGOCXX_CALL operator!=(const read_preference&,
                                                       const read_preference&);
-    ///
     /// @}
     ///
 

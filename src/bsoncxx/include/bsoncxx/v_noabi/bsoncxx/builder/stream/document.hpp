@@ -30,12 +30,12 @@ namespace builder {
 namespace stream {
 
 ///
-/// A streaming interface for constructing
-/// a BSON document.
+/// A streaming interface for constructing a BSON document.
 ///
-/// @note Use of the stream builder is discouraged. See
-/// https://www.mongodb.com/docs/languages/cpp/drivers/current/working-with-bson/#basic-builder for
-/// more details.
+/// @warning Use of the stream builder is discouraged. See
+/// [Working with
+/// BSON](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/working-with-bson/#basic-builder)
+/// for more details.
 ///
 class document : public key_context<> {
    public:

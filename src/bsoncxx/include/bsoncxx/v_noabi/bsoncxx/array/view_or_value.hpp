@@ -25,7 +25,10 @@ namespace bsoncxx {
 namespace v_noabi {
 namespace array {
 
-using view_or_value = ::bsoncxx::v_noabi::view_or_value<view, value>;
+///
+/// Equivalent to `v_noabi::view_or_value<v_noabi::array::view, v_noabi::array::value>`.
+///
+using view_or_value = v_noabi::view_or_value<view, value>;
 
 }  // namespace array
 }  // namespace v_noabi

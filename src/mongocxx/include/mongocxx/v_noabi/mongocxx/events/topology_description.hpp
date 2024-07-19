@@ -73,26 +73,20 @@ class topology_description {
         using const_iterator = container::const_iterator;
 
         ///
-        /// @{
-        ///
         /// Returns an iterator to the beginning.
         ///
+        /// @{
         iterator begin() noexcept;
         const_iterator begin() const noexcept;
-
-        ///
         /// @}
         ///
 
         ///
-        /// @{
-        ///
         /// Returns an iterator to the end.
         ///
+        /// @{
         iterator end() noexcept;
         const_iterator end() const noexcept;
-
-        ///
         /// @}
         ///
 

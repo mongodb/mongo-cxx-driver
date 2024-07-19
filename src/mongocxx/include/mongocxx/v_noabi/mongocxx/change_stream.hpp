@@ -194,19 +194,19 @@ class change_stream::iterator {
     MONGOCXX_PRIVATE explicit iterator(iter_type type, const change_stream* change_stream);
 
     ///
+    /// @relates bsoncxx::v_noabi::change_stream::iterator
+    ///
+    /// Compare two iterators for (in)-equality.
+    ///
+    /// Iterators compare equal if they point to the same underlying change_stream or if both are
+    /// exhausted.
+    ///
     /// @{
-    ///
-    /// Compare two iterators for (in)-equality.  Iterators compare equal if
-    /// they point to the same underlying change_stream or if both are exhausted.
-    ///
-    /// @relates iterator
-    ///
     friend MONGOCXX_API bool MONGOCXX_CALL operator==(const change_stream::iterator&,
                                                       const change_stream::iterator&) noexcept;
 
     friend MONGOCXX_API bool MONGOCXX_CALL operator!=(const change_stream::iterator&,
                                                       const change_stream::iterator&) noexcept;
-    ///
     /// @}
     ///
 

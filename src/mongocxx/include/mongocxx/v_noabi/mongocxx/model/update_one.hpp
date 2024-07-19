@@ -51,8 +51,6 @@ class update_one {
 
    public:
     ///
-    /// @{
-    ///
     /// Constructs an update operation that will modify a single document matching the filter.
     ///
     /// @param filter
@@ -83,10 +81,6 @@ class update_one {
     ///
     update_one(bsoncxx::v_noabi::document::view_or_value filter,
                std::initializer_list<_empty_doc_tag> update);
-
-    ///
-    /// @}
-    ///
 
     ///
     /// Gets the filter

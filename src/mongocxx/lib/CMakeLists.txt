@@ -38,6 +38,7 @@ set(mongocxx_sources_v_noabi
     mongocxx/v_noabi/mongocxx/exception/error_code.cpp
     mongocxx/v_noabi/mongocxx/exception/operation_exception.cpp
     mongocxx/v_noabi/mongocxx/exception/server_error_code.cpp
+    mongocxx/v_noabi/mongocxx/fwd.cpp
     mongocxx/v_noabi/mongocxx/gridfs/bucket.cpp
     mongocxx/v_noabi/mongocxx/gridfs/downloader.cpp
     mongocxx/v_noabi/mongocxx/gridfs/uploader.cpp
@@ -110,6 +111,7 @@ set(mongocxx_sources_v_noabi
 
 list(APPEND mongocxx_sources
     ${mongocxx_sources_v_noabi}
+    mongocxx/fwd.cpp
 )
 list(TRANSFORM mongocxx_sources PREPEND "${CMAKE_CURRENT_SOURCE_DIR}/")
 set(mongocxx_sources "${mongocxx_sources}" PARENT_SCOPE)
@@ -157,6 +159,7 @@ endif()
 set_dist_list(src_mongocxx_lib_DIST
     CMakeLists.txt
     ${mongocxx_sources_v_noabi}
+    mongocxx/fwd.cpp
     mongocxx/v_noabi/mongocxx/config/config.hpp.in
     mongocxx/v_noabi/mongocxx/config/private/config.hh.in
     mongocxx/v_noabi/mongocxx/config/private/postlude.hh

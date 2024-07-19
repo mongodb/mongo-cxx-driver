@@ -167,7 +167,7 @@ class array_context {
     ///
     /// Conversion operator for single_context.
     ///
-    /// @relatesalso single_context
+    /// @see bsoncxx::v_noabi::builder::stream::single_context
     ///
     BSONCXX_INLINE operator single_context();
 

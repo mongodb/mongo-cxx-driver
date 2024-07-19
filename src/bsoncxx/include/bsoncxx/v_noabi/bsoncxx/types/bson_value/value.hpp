@@ -41,7 +41,7 @@ namespace bson_value {
 /// For accessors into this type and to extract the various BSON types out,
 /// please use bson_value::view.
 ///
-/// @relatesalso bson_value::view
+/// @see bsoncxx::v_noabi::bson_value::view
 ///
 class value {
    public:
@@ -276,48 +276,48 @@ class value {
 };
 
 ///
-/// @{
-///
 /// Compares values for (in)-equality.
 ///
-/// @relates bson_value::value
-///
+/// @{
+
+/// @relatesalso bsoncxx::v_noabi::types::bson_value::value
 BSONCXX_INLINE bool operator==(const value& lhs, const value& rhs) {
     return (lhs.view() == rhs.view());
 }
 
+/// @relatesalso bsoncxx::v_noabi::types::bson_value::value
 BSONCXX_INLINE bool operator!=(const value& lhs, const value& rhs) {
     return !(lhs == rhs);
 }
 
-///
 /// @}
 ///
 
 ///
-/// @{
-///
 /// Compares a value with a view for (in)-equality.
 ///
-/// @relates bson_value::value
-///
+/// @{
+
+/// @relatesalso bsoncxx::v_noabi::types::bson_value::value
 BSONCXX_INLINE bool operator==(const value& lhs, const view& rhs) {
     return (lhs.view() == rhs);
 }
 
+/// @relatesalso bsoncxx::v_noabi::types::bson_value::value
 BSONCXX_INLINE bool operator==(const view& lhs, const value& rhs) {
     return (rhs == lhs);
 }
 
+/// @relatesalso bsoncxx::v_noabi::types::bson_value::value
 BSONCXX_INLINE bool operator!=(const value& lhs, const view& rhs) {
     return !(lhs == rhs);
 }
 
+/// @relatesalso bsoncxx::v_noabi::types::bson_value::value
 BSONCXX_INLINE bool operator!=(const view& lhs, const value& rhs) {
     return !(lhs == rhs);
 }
 
-///
 /// @}
 ///
 

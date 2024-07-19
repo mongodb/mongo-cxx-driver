@@ -141,8 +141,6 @@ class collection {
     explicit operator bool() const noexcept;
 
     ///
-    /// @{
-    ///
     /// Runs an aggregation framework pipeline against this collection.
     ///
     /// @param pipeline
@@ -188,12 +186,7 @@ class collection {
     cursor aggregate(const client_session& session,
                      const pipeline& pipeline,
                      const options::aggregate& options = options::aggregate());
-    ///
-    /// @}
-    ///
 
-    ///
-    /// @{
     ///
     /// Creates a new bulk operation to be executed against this collection.
     /// The lifetime of the bulk_write is independent of the collection.
@@ -220,12 +213,7 @@ class collection {
     ///
     mongocxx::v_noabi::bulk_write create_bulk_write(const client_session& session,
                                                     const options::bulk_write& options = {});
-    ///
-    /// @}
-    ///
 
-    ///
-    /// @{
     ///
     /// Sends a write to the server as a bulk write operation.
     ///
@@ -275,12 +263,7 @@ class collection {
         const client_session& session,
         const model::write& write,
         const options::bulk_write& options = options::bulk_write());
-    ///
-    /// @}
-    ///
 
-    ///
-    /// @{
     ///
     /// Sends a container of writes to the server as a bulk write operation.
     ///
@@ -334,12 +317,7 @@ class collection {
         const client_session& session,
         const container_type& writes,
         const options::bulk_write& options = options::bulk_write());
-    ///
-    /// @}
-    ///
 
-    ///
-    /// @{
     ///
     /// Sends writes starting at @c begin and ending at @c end to the server as a bulk write
     /// operation.
@@ -398,12 +376,7 @@ class collection {
         write_model_iterator_type begin,
         write_model_iterator_type end,
         const options::bulk_write& options = options::bulk_write());
-    ///
-    /// @}
-    ///
 
-    ///
-    /// @{
     ///
     /// Counts the number of documents matching the provided filter.
     ///
@@ -453,12 +426,7 @@ class collection {
     std::int64_t count_documents(const client_session& session,
                                  bsoncxx::v_noabi::document::view_or_value filter,
                                  const options::count& options = options::count());
-    ///
-    /// @}
-    ///
 
-    ///
-    /// @{
     ///
     /// Returns an estimate of the number of documents in the collection.
     ///
@@ -476,12 +444,7 @@ class collection {
     ///
     std::int64_t estimated_document_count(
         const options::estimated_document_count& options = options::estimated_document_count());
-    ///
-    /// @}
-    ///
 
-    ///
-    /// @{
     ///
     /// Creates an index over the collection for the provided keys with the provided options.
     ///
@@ -534,12 +497,6 @@ class collection {
         options::index_view operation_options = options::index_view{});
 
     ///
-    /// @}
-    ///
-
-    ///
-    /// @{
-    ///
     /// Deletes all matching documents from the collection.
     ///
     /// @param filter
@@ -583,12 +540,6 @@ class collection {
         const options::delete_options& options = options::delete_options());
 
     ///
-    /// @}
-    ///
-
-    ///
-    /// @{
-    ///
     /// Deletes a single matching document from the collection.
     ///
     /// @param filter
@@ -631,12 +582,6 @@ class collection {
         bsoncxx::v_noabi::document::view_or_value filter,
         const options::delete_options& options = options::delete_options());
 
-    ///
-    /// @}
-    ///
-
-    ///
-    /// @{
     ///
     /// Finds the distinct values for a specified field across the collection.
     ///
@@ -646,11 +591,11 @@ class collection {
     ///   Document view representing the documents for which the distinct operation will apply.
     /// @param options
     ///   Optional arguments, see options::distinct.
-
+    ///
     /// @return mongocxx::v_noabi::cursor having the distinct values for the specified
     /// field.  If the operation fails, the cursor throws
     /// mongocxx::v_noabi::query_exception when the returned cursor is iterated.
-
+    ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/distinct/
     ///
     cursor distinct(bsoncxx::v_noabi::string::view_or_value name,
@@ -668,11 +613,11 @@ class collection {
     ///   Document view representing the documents for which the distinct operation will apply.
     /// @param options
     ///   Optional arguments, see options::distinct.
-
+    ///
     /// @return mongocxx::v_noabi::cursor having the distinct values for the specified
     /// field.  If the operation fails, the cursor throws
     /// mongocxx::v_noabi::query_exception when the returned cursor is iterated.
-
+    ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/distinct/
     ///
     cursor distinct(const client_session& session,
@@ -680,12 +625,6 @@ class collection {
                     bsoncxx::v_noabi::document::view_or_value filter,
                     const options::distinct& options = options::distinct());
 
-    ///
-    /// @}
-    ///
-
-    ///
-    /// @{
     ///
     /// Drops this collection and all its contained documents from the database.
     ///
@@ -735,12 +674,6 @@ class collection {
               bsoncxx::v_noabi::document::view_or_value collection_options = {});
 
     ///
-    /// @}
-    ///
-
-    ///
-    /// @{
-    ///
     /// Finds the documents in this collection which match the provided filter.
     ///
     /// @param filter
@@ -784,8 +717,6 @@ class collection {
                 const options::find& options = options::find());
 
     ///
-    /// @{
-    ///
     /// Finds a single document in this collection that match the provided filter.
     ///
     /// @param filter
@@ -825,12 +756,6 @@ class collection {
         const options::find& options = options::find());
 
     ///
-    /// @}
-    ///
-
-    ///
-    /// @{
-    ///
     /// Finds a single document matching the filter, deletes it, and returns the original.
     ///
     /// @param filter
@@ -875,12 +800,6 @@ class collection {
         bsoncxx::v_noabi::document::view_or_value filter,
         const options::find_one_and_delete& options = options::find_one_and_delete());
 
-    ///
-    /// @}
-    ///
-
-    ///
-    /// @{
     ///
     /// Finds a single document matching the filter, replaces it, and returns either the original
     /// or the replacement document.
@@ -934,12 +853,6 @@ class collection {
         bsoncxx::v_noabi::document::view_or_value replacement,
         const options::find_one_and_replace& options = options::find_one_and_replace());
 
-    ///
-    /// @}
-    ///
-
-    ///
-    /// @{
     ///
     /// Finds a single document matching the filter, updates it, and returns either the original
     /// or the newly-updated document.
@@ -1099,12 +1012,6 @@ class collection {
         std::initializer_list<_empty_doc_tag> update,
         const options::find_one_and_update& options = options::find_one_and_update());
 
-    ///
-    /// @}
-    ///
-
-    ///
-    /// @{
     ///
     /// Inserts a single document into the collection. If the document is missing an identifier
     /// (@c _id field) one will be generated for it.
@@ -1119,8 +1026,11 @@ class collection {
     /// disengaged.
     ///
     /// @throws mongocxx::v_noabi::bulk_write_exception if the operation fails.
+    ///
     stdx::optional<result::insert_one> insert_one(
         bsoncxx::v_noabi::document::view_or_value document, const options::insert& options = {});
+
+    ///
     ///
     /// Inserts a single document into the collection. If the document is missing an identifier
     /// (@c _id field) one will be generated for it.
@@ -1137,16 +1047,12 @@ class collection {
     /// disengaged.
     ///
     /// @throws mongocxx::v_noabi::bulk_write_exception if the operation fails.
+    ///
     stdx::optional<result::insert_one> insert_one(
         const client_session& session,
         bsoncxx::v_noabi::document::view_or_value document,
         const options::insert& options = {});
-    ///
-    /// @}
-    ///
 
-    ///
-    /// @{
     ///
     /// Inserts multiple documents into the collection. If any of the documents are missing
     /// identifiers the driver will generate them.
@@ -1202,8 +1108,6 @@ class collection {
         const options::insert& options = options::insert());
 
     ///
-    /// @{
-    ///
     /// Inserts multiple documents into the collection. If any of the documents are missing
     /// identifiers the driver will generate them.
     ///
@@ -1259,12 +1163,8 @@ class collection {
         document_view_iterator_type begin,
         document_view_iterator_type end,
         const options::insert& options = options::insert());
-    ///
-    /// @}
-    ///
 
     ///
-    /// @{
     ///
     /// Returns a list of the indexes currently on this collection.
     ///
@@ -1289,10 +1189,6 @@ class collection {
     /// @see https://www.mongodb.com/docs/manual/reference/command/listIndexes/
     ///
     cursor list_indexes(const client_session& session) const;
-
-    ///
-    /// @}
-    ///
 
     ///
     /// Returns the name of this collection.
@@ -1352,10 +1248,6 @@ class collection {
                 const bsoncxx::v_noabi::stdx::optional<write_concern>& write_concern = {});
 
     ///
-    /// @}
-    ///
-
-    ///
     /// Sets the read_concern for this collection. Changes will not have any effect on existing
     /// cursors or other read operations which use the previously-set read concern.
     ///
@@ -1396,8 +1288,6 @@ class collection {
     ///
     mongocxx::v_noabi::read_preference read_preference() const;
 
-    ///
-    /// @{
     ///
     /// Replaces a single document matching the provided filter in this collection.
     ///
@@ -1452,8 +1342,6 @@ class collection {
         const options::replace& options = options::replace{});
 
     ///
-    /// @{
-    ///
     /// Updates multiple documents matching the provided filter in this collection.
     ///
     /// @param filter
@@ -1607,12 +1495,6 @@ class collection {
                                                const options::update& options = options::update());
 
     ///
-    /// @}
-    ///
-
-    ///
-    /// @{
-    ///
     /// Updates a single document matching the provided filter in this collection.
     ///
     /// @param filter
@@ -1764,10 +1646,6 @@ class collection {
                                               bsoncxx::v_noabi::document::view_or_value filter,
                                               std::initializer_list<_empty_doc_tag> update,
                                               const options::update& options = options::update());
-
-    ///
-    /// @}
-    ///
 
     ///
     /// Sets the write_concern for this collection. Changes will not have any effect on existing
@@ -1787,10 +1665,10 @@ class collection {
 
     ///
     /// Gets an index_view to the collection.
+    ///
     index_view indexes();
 
     ///
-    /// @{
     ///
     /// Gets a change stream on this collection with an empty pipeline.
     /// Change streams are only supported with a "majority" read concern or no read concern.
@@ -1856,11 +1734,8 @@ class collection {
                         const options::change_stream& options = {});
 
     ///
-    /// @}
-    ///
-
-    ///
     /// Gets a search_index_view to the collection.
+    ///
     search_index_view search_indexes();
 
    private:

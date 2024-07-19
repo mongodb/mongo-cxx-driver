@@ -218,9 +218,6 @@ class client {
         bsoncxx::v_noabi::string::view_or_value name) const&;
     MONGOCXX_INLINE mongocxx::v_noabi::database operator[](
         bsoncxx::v_noabi::string::view_or_value name) const&& = delete;
-
-    ///
-    /// @{
     ///
     /// Enumerates the databases in the client.
     ///
@@ -335,10 +332,6 @@ class client {
         const bsoncxx::v_noabi::document::view_or_value filter = {}) const;
 
     ///
-    /// @}
-    ///
-
-    ///
     /// Create a client session for a sequence of operations.
     ///
     /// @return A client_session object. See `mongocxx::v_noabi::client_session` for more
@@ -351,9 +344,8 @@ class client {
     client_session start_session(const options::client_session& options = {});
 
     ///
-    /// @{
+    /// Get a change stream on this client with an empty pipeline.
     ///
-    /// Gets a change stream on this client with an empty pipeline.
     /// Change streams are only supported with a "majority" read concern or no read concern.
     ///
     /// @param options
@@ -366,6 +358,10 @@ class client {
     ///
     change_stream watch(const options::change_stream& options = {});
 
+    ///
+    /// Get a change stream on this client with an empty pipeline.
+    ///
+    /// Change streams are only supported with a "majority" read concern or no read concern.
     ///
     /// @param session
     ///   The mongocxx::v_noabi::client_session with which to perform the watch operation.
@@ -380,7 +376,8 @@ class client {
     change_stream watch(const client_session& session, const options::change_stream& options = {});
 
     ///
-    /// Gets a change stream on this client.
+    /// Get a change stream on this client.
+    ///
     /// Change streams are only supported with a "majority" read concern or no read concern.
     ///
     /// @param pipe
@@ -398,7 +395,9 @@ class client {
     change_stream watch(const pipeline& pipe, const options::change_stream& options = {});
 
     ///
-    /// Gets a change stream on this client.
+    /// Get a change stream on this client.
+    ///
+    /// Change streams are only supported with a "majority" read concern or no read concern.
     ///
     /// @param session
     ///   The mongocxx::v_noabi::client_session with which to perform the watch operation.
@@ -415,10 +414,6 @@ class client {
     change_stream watch(const client_session& session,
                         const pipeline& pipe,
                         const options::change_stream& options = {});
-
-    ///
-    /// @}
-    ///
 
     ///
     /// Prevents resource cleanup in the child process from interfering

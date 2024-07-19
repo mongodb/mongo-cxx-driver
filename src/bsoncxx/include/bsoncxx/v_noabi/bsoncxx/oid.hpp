@@ -86,23 +86,22 @@ class oid {
     }
 
     ///
+    /// @relates bsoncxx::v_noabi::oid
+    ///
+    /// Relational operators for OIDs.
+    ///
     /// @{
-    ///
-    /// Relational operators for OIDs
-    ///
-    /// @relates oid
-    ///
     friend BSONCXX_API bool BSONCXX_CALL operator<(const oid& lhs, const oid& rhs);
     friend BSONCXX_API bool BSONCXX_CALL operator>(const oid& lhs, const oid& rhs);
     friend BSONCXX_API bool BSONCXX_CALL operator<=(const oid& lhs, const oid& rhs);
     friend BSONCXX_API bool BSONCXX_CALL operator>=(const oid& lhs, const oid& rhs);
     friend BSONCXX_API bool BSONCXX_CALL operator==(const oid& lhs, const oid& rhs);
     friend BSONCXX_API bool BSONCXX_CALL operator!=(const oid& lhs, const oid& rhs);
-    ///
     /// @}
     ///
 
     ///
+    /// @memberof bsoncxx::v_noabi::oid <!-- Fix leaky relates above. -->
     /// Extracts the timestamp portion of the underlying ObjectId.
     ///
     /// @return A std::time_t initialized to the timestamp.

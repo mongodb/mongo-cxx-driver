@@ -65,15 +65,13 @@ class decimal128 {
     std::string to_string() const;
 
     ///
-    /// @{
+    /// @relates bsoncxx::v_noabi::decimal128
     ///
     /// Relational operators for decimal128
     ///
-    /// @relates decimal128
-    ///
+    /// @{
     friend BSONCXX_API bool BSONCXX_CALL operator==(const decimal128& lhs, const decimal128& rhs);
     friend BSONCXX_API bool BSONCXX_CALL operator!=(const decimal128& lhs, const decimal128& rhs);
-    ///
     /// @}
     ///
 

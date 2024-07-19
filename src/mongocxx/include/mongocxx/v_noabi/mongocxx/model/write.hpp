@@ -87,8 +87,7 @@ class write {
     ~write();
 
     ///
-    /// Returns the current type of this write. You must call this
-    /// method before calling any of the get methods below.
+    /// Returns the current type of this write.
     ///
     write_type type() const;
 

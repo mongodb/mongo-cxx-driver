@@ -46,3 +46,13 @@
 #include <bsoncxx/types/bson_value/view-fwd.hpp>
 #include <bsoncxx/validate-fwd.hpp>
 #include <bsoncxx/view_or_value-fwd.hpp>
+
+///
+/// @namespace bsoncxx::v_noabi
+/// Entities declared in this namespace do not have a stable ABI.
+///
+
+///
+/// @namespace bsoncxx::v_noabi::stdx
+/// Declares polyfills for C++17 forward compatibility.
+///

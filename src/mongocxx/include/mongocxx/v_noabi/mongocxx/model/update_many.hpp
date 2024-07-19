@@ -51,8 +51,6 @@ class update_many {
 
    public:
     ///
-    /// @{
-    ///
     /// Constructs an update operation that will modify all documents matching the filter.
     ///
     /// @param filter
@@ -83,10 +81,6 @@ class update_many {
     ///
     update_many(bsoncxx::v_noabi::document::view_or_value filter,
                 std::initializer_list<_empty_doc_tag> update);
-
-    ///
-    /// @}
-    ///
 
     ///
     /// Gets the filter.

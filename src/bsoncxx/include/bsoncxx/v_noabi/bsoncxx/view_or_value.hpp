@@ -145,74 +145,80 @@ class view_or_value {
 };
 
 ///
+/// Compare view_or_value objects for (in)-equality.
+///
 /// @{
-///
-/// Compare view_or_value objects for (in)-equality
-///
-/// @relates: view_or_value
-///
+
+/// @relatesalso bsoncxx::v_noabi::view_or_value
 template <typename View, typename Value>
 BSONCXX_INLINE bool operator==(const view_or_value<View, Value>& lhs,
                                const view_or_value<View, Value>& rhs) {
     return lhs.view() == rhs.view();
 }
 
+/// @relatesalso bsoncxx::v_noabi::view_or_value
 template <typename View, typename Value>
 BSONCXX_INLINE bool operator!=(const view_or_value<View, Value>& lhs,
                                const view_or_value<View, Value>& rhs) {
     return !(lhs == rhs);
 }
-///
+
 /// @}
 ///
 
 ///
-/// @{
-///
 /// Mixed (in)-equality operators for view_or_value against View or Value types
 ///
-/// @relates view_or_value
-///
+/// @{
+
+/// @relatesalso bsoncxx::v_noabi::view_or_value
 template <typename View, typename Value>
 BSONCXX_INLINE bool operator==(const view_or_value<View, Value>& lhs, View rhs) {
     return lhs.view() == rhs;
 }
 
+/// @relatesalso bsoncxx::v_noabi::view_or_value
 template <typename View, typename Value>
 BSONCXX_INLINE bool operator==(View lhs, const view_or_value<View, Value>& rhs) {
     return rhs == lhs;
 }
 
+/// @relatesalso bsoncxx::v_noabi::view_or_value
 template <typename View, typename Value>
 BSONCXX_INLINE bool operator!=(const view_or_value<View, Value>& lhs, View rhs) {
     return !(lhs == rhs);
 }
 
+/// @relatesalso bsoncxx::v_noabi::view_or_value
 template <typename View, typename Value>
 BSONCXX_INLINE bool operator!=(View lhs, const view_or_value<View, Value>& rhs) {
     return !(rhs == lhs);
 }
 
+/// @relatesalso bsoncxx::v_noabi::view_or_value
 template <typename View, typename Value>
 BSONCXX_INLINE bool operator==(const view_or_value<View, Value>& lhs, const Value& rhs) {
     return lhs.view() == View(rhs);
 }
 
+/// @relatesalso bsoncxx::v_noabi::view_or_value
 template <typename View, typename Value>
 BSONCXX_INLINE bool operator==(const Value& lhs, const view_or_value<View, Value>& rhs) {
     return rhs == lhs;
 }
 
+/// @relatesalso bsoncxx::v_noabi::view_or_value
 template <typename View, typename Value>
 BSONCXX_INLINE bool operator!=(const view_or_value<View, Value>& lhs, const Value& rhs) {
     return !(lhs == rhs);
 }
 
+/// @relatesalso bsoncxx::v_noabi::view_or_value
 template <typename View, typename Value>
 BSONCXX_INLINE bool operator!=(const Value& lhs, const view_or_value<View, Value>& rhs) {
     return !(rhs == lhs);
 }
-///
+
 /// @}
 ///
 

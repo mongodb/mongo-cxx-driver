@@ -22,6 +22,7 @@ set(bsoncxx_sources_v_noabi
     bsoncxx/v_noabi/bsoncxx/document/value.cpp
     bsoncxx/v_noabi/bsoncxx/document/view.cpp
     bsoncxx/v_noabi/bsoncxx/exception/error_code.cpp
+    bsoncxx/v_noabi/bsoncxx/fwd.cpp
     bsoncxx/v_noabi/bsoncxx/json.cpp
     bsoncxx/v_noabi/bsoncxx/oid.cpp
     bsoncxx/v_noabi/bsoncxx/private/itoa.cpp
@@ -34,6 +35,7 @@ set(bsoncxx_sources_v_noabi
 
 list(APPEND bsoncxx_sources
     ${bsoncxx_sources_v_noabi}
+    bsoncxx/fwd.cpp
 )
 list(TRANSFORM bsoncxx_sources PREPEND "${CMAKE_CURRENT_SOURCE_DIR}/")
 set(bsoncxx_sources "${bsoncxx_sources}" PARENT_SCOPE)
@@ -69,6 +71,7 @@ endif()
 set_dist_list(src_bsoncxx_lib_DIST
     CMakeLists.txt
     ${bsoncxx_sources_v_noabi}
+    bsoncxx/fwd.cpp
     bsoncxx/v_noabi/bsoncxx/config/config.hpp.in
     bsoncxx/v_noabi/bsoncxx/config/private/config.hh.in
     bsoncxx/v_noabi/bsoncxx/config/private/postlude.hh

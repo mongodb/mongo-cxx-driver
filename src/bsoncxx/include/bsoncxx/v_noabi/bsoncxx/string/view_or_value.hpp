@@ -93,28 +93,30 @@ class view_or_value : public bsoncxx::v_noabi::view_or_value<stdx::string_view, 
 };
 
 ///
+/// Comparison operators for comparing string::view_or_value directly with `const char*`.
+///
 /// @{
-///
-/// Comparison operators for comparing string::view_or_value directly with const char *.
-///
-/// @relates view_or_value
-///
+
+/// @relatesalso bsoncxx::v_noabi::string::view_or_value
 BSONCXX_INLINE bool operator==(const view_or_value& lhs, const char* rhs) {
     return lhs.view() == stdx::string_view(rhs);
 }
 
+/// @relatesalso bsoncxx::v_noabi::string::view_or_value
 BSONCXX_INLINE bool operator!=(const view_or_value& lhs, const char* rhs) {
     return !(lhs == rhs);
 }
 
+/// @relatesalso bsoncxx::v_noabi::string::view_or_value
 BSONCXX_INLINE bool operator==(const char* lhs, const view_or_value& rhs) {
     return rhs == lhs;
 }
 
+/// @relatesalso bsoncxx::v_noabi::string::view_or_value
 BSONCXX_INLINE bool operator!=(const char* lhs, const view_or_value& rhs) {
     return !(rhs == lhs);
 }
-///
+
 /// @}
 ///
 

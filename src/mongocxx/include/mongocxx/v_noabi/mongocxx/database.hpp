@@ -84,8 +84,6 @@ class database {
     explicit operator bool() const noexcept;
 
     ///
-    /// @{
-    ///
     /// Runs an aggregation framework pipeline against this database for
     /// pipeline stages that do not require an underlying collection,
     /// such as $currentOp and $listLocalSessions.
@@ -135,12 +133,7 @@ class database {
     cursor aggregate(const client_session& session,
                      const pipeline& pipeline,
                      const options::aggregate& options = options::aggregate());
-    ///
-    /// @}
-    ///
 
-    ///
-    /// @{
     ///
     /// Runs a command against this database.
     ///
@@ -181,12 +174,7 @@ class database {
     ///
     bsoncxx::v_noabi::document::value run_command(bsoncxx::v_noabi::document::view_or_value command,
                                                   uint32_t server_id);
-    ///
-    /// @}
-    ///
 
-    ///
-    /// @{
     ///
     /// Explicitly creates a collection in this database with the specified options.
     ///
@@ -334,12 +322,6 @@ class database {
         const stdx::optional<write_concern>& write_concern = {});
 
     ///
-    /// @}
-    ///
-
-    ///
-    /// @{
-    ///
     /// Drops the database and all its collections.
     ///
     /// @param write_concern (optional)
@@ -373,9 +355,6 @@ class database {
     void drop(const client_session& session,
               const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>&
                   write_concern = {});
-    ///
-    /// @}
-    ///
 
     ///
     /// Checks whether this database contains a collection having the given name.
@@ -389,8 +368,6 @@ class database {
     ///
     bool has_collection(bsoncxx::v_noabi::string::view_or_value name) const;
 
-    ///
-    /// @{
     ///
     /// Enumerates the collections in this database.
     ///
@@ -451,10 +428,6 @@ class database {
     ///
     std::vector<std::string> list_collection_names(
         const client_session& session, bsoncxx::v_noabi::document::view_or_value filter = {});
-
-    ///
-    /// @}
-    ///
 
     ///
     /// Get the name of this database.
@@ -563,8 +536,6 @@ class database {
         const options::gridfs::bucket& options = options::gridfs::bucket()) const;
 
     ///
-    /// @{
-    ///
     /// Gets a change stream on this database with an empty pipeline.
     /// Change streams are only supported with a "majority" read concern or no read concern.
     ///
@@ -627,10 +598,6 @@ class database {
     change_stream watch(const client_session& session,
                         const pipeline& pipe,
                         const options::change_stream& options = {});
-
-    ///
-    /// @}
-    ///
 
    private:
     friend ::mongocxx::v_noabi::client_encryption;
