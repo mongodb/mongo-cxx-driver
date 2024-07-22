@@ -1,12 +1,11 @@
 var searchData=
 [
-  ['wait_566',['WAIT',['../structmongo_1_1ReplicaSetMonitor_1_1NextStep.html#aa421378cd5a889ac53b133282f3a8659a8a63dac0ead2d626ffcff89b59157b72',1,'mongo::ReplicaSetMonitor::NextStep']]],
-  ['wait_567',['wait',['../classmongo_1_1BackgroundJob.html#aa75db818af9919b85133bce83109d9b3',1,'mongo::BackgroundJob']]],
-  ['waitfor_568',['waitFor',['../classmongo_1_1NotifyAll.html#a76cd855ffcdd28f8d2a2299617e8771b',1,'mongo::NotifyAll']]],
-  ['warning_569',['warning',['../namespacemongo.html#af417ee17ac67bd62a91c325565b43753',1,'mongo']]],
-  ['where_570',['where',['../classmongo_1_1Query.html#a5a76d129aac5a4bcf8f6fce3462b9068',1,'mongo::Query']]],
-  ['wocompare_571',['woCompare',['../classmongo_1_1BSONElement.html#ab60feadf708bbf4b4a1b7c3efc62429b',1,'mongo::BSONElement::woCompare()'],['../classmongo_1_1BSONObj.html#aceae20d8f96355101aa7e33764e14da1',1,'mongo::BSONObj::woCompare(const BSONObj &amp;r, const Ordering &amp;o, bool considerFieldName=true) const'],['../classmongo_1_1BSONObj.html#a03ca0672a114d56dc346744990ce6d10',1,'mongo::BSONObj::woCompare(const BSONObj &amp;r, const BSONObj &amp;ordering=BSONObj(), bool considerFieldName=true) const']]],
-  ['wosortorder_572',['woSortOrder',['../classmongo_1_1BSONObj.html#a8dea159b38f5f044ccd9cc3f81afc114',1,'mongo::BSONObj']]],
-  ['wrap_573',['wrap',['../classmongo_1_1BSONElement.html#a36900c104e74fe44e5b5627be3487464',1,'mongo::BSONElement::wrap() const'],['../classmongo_1_1BSONElement.html#a340cc2979697880dff228add16e02fee',1,'mongo::BSONElement::wrap(const StringData &amp;newName) const']]],
-  ['write_574',['write',['../classmongo_1_1GridFile.html#a712ef640e815de753ce6d7f7b260506c',1,'mongo::GridFile::write(std::ostream &amp;out) const'],['../classmongo_1_1GridFile.html#a26812bb1f726222128145b091c92bc5f',1,'mongo::GridFile::write(const std::string &amp;where) const']]]
+  ['wait',['WAIT',['../structmongo_1_1ReplicaSetMonitor_1_1NextStep.html#aa421378cd5a889ac53b133282f3a8659a8a63dac0ead2d626ffcff89b59157b72',1,'mongo::ReplicaSetMonitor::NextStep::WAIT()'],['../classmongo_1_1BackgroundJob.html#aa75db818af9919b85133bce83109d9b3',1,'mongo::BackgroundJob::wait()']]],
+  ['waitfor',['waitFor',['../classmongo_1_1NotifyAll.html#a76cd855ffcdd28f8d2a2299617e8771b',1,'mongo::NotifyAll']]],
+  ['warning',['warning',['../namespacemongo.html#af417ee17ac67bd62a91c325565b43753',1,'mongo']]],
+  ['where',['where',['../classmongo_1_1Query.html#a5a76d129aac5a4bcf8f6fce3462b9068',1,'mongo::Query']]],
+  ['wocompare',['woCompare',['../classmongo_1_1BSONElement.html#ab035a62fadebb3afa0527fb47e22578e',1,'mongo::BSONElement::woCompare()'],['../classmongo_1_1BSONObj.html#a729a708786ce7ea4c4880b81b52e9387',1,'mongo::BSONObj::woCompare(const BSONObj &amp;r, const Ordering &amp;o, bool considerFieldName=true) const '],['../classmongo_1_1BSONObj.html#a744cb89235cce055b86cfd994fd0e8b7',1,'mongo::BSONObj::woCompare(const BSONObj &amp;r, const BSONObj &amp;ordering=BSONObj(), bool considerFieldName=true) const ']]],
+  ['wosortorder',['woSortOrder',['../classmongo_1_1BSONObj.html#a2a6764ccf171cdb79177fa4ce2dbfd89',1,'mongo::BSONObj']]],
+  ['wrap',['wrap',['../classmongo_1_1BSONElement.html#a4652bf017df1695c29547870211af094',1,'mongo::BSONElement::wrap() const '],['../classmongo_1_1BSONElement.html#a880c35107a891b950b0937e137b9da83',1,'mongo::BSONElement::wrap(const StringData &amp;newName) const ']]],
+  ['write',['write',['../classmongo_1_1GridFile.html#adf35bae5a704596b0f89b3a073fd9eca',1,'mongo::GridFile::write(std::ostream &amp;out) const '],['../classmongo_1_1GridFile.html#ab0a432644a22deee38b2e80f0cfd5df0',1,'mongo::GridFile::write(const std::string &amp;where) const ']]]
 ];

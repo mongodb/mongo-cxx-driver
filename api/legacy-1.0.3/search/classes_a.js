@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['jparse_765',['JParse',['../classmongo_1_1JParse.html',1,'mongo']]]
+  ['jparse',['JParse',['../classmongo_1_1JParse.html',1,'mongo']]]
 ];
