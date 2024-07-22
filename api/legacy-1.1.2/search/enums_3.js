@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['insertoptions_1761',['InsertOptions',['../namespacemongo.html#a0735b0c8a829e3df753479b9adac5350',1,'mongo']]]
+  ['jsonstringformat',['JsonStringFormat',['../namespacemongo.html#a2767df491e3691937fa3b671ad3248a8',1,'mongo']]]
 ];

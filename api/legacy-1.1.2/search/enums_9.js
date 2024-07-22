@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['tlsprotocol_1769',['TLSProtocol',['../classmongo_1_1client_1_1Options.html#a95f274b7805765fe169bb4e61de0f3d3',1,'mongo::client::Options']]]
+  ['updateoptions',['UpdateOptions',['../namespacemongo.html#aa3f96eda244f639cbcf6a18d3b941e2c',1,'mongo']]]
 ];
