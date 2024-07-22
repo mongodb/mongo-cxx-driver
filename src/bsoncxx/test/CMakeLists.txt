@@ -34,6 +34,7 @@ add_executable(test_bson
     bson_util_itoa.cpp
     bson_validate.cpp
     bson_value.cpp
+    exception_guard.cpp
     json.cpp
     oid.cpp
     optional.test.cpp
@@ -141,6 +142,8 @@ set_dist_list(src_bsoncxx_test_DIST
     bson_validate.cpp
     bson_value.cpp
     catch.hh
+    exception_guard.cpp
+    exception_guard.hh
     json.cpp
     oid.cpp
     optional.test.cpp

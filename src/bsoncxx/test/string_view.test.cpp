@@ -17,7 +17,7 @@
 #include <bsoncxx/stdx/operators.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/stdx/type_traits.hpp>
-#include <third_party/catch/include/catch.hpp>
+#include <bsoncxx/test/catch.hh>
 
 #include <bsoncxx/config/prelude.hpp>
 

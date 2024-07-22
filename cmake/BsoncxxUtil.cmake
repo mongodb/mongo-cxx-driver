@@ -143,6 +143,7 @@ function(bsoncxx_add_library TARGET OUTPUT_NAME LINK_TYPE)
     if(BSONCXX_POLY_USE_MNMLSTC AND NOT BSONCXX_POLY_USE_SYSTEM_MNMLSTC)
         target_include_directories(
             ${TARGET}
+            SYSTEM
             PUBLIC
             $<BUILD_INTERFACE:${CORE_INCLUDE_DIR}>
             $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/bsoncxx/v_noabi/bsoncxx/third_party/mnmlstc>

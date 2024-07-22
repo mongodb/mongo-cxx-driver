@@ -20,11 +20,11 @@
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/string/to_string.hpp>
+#include <bsoncxx/test/catch.hh>
 #include <bsoncxx/types/bson_value/value.hpp>
 #include <mongocxx/collection.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/test/spec/monitoring.hh>
-#include <third_party/catch/include/catch.hpp>
 
 #include <mongocxx/config/prelude.hpp>
 

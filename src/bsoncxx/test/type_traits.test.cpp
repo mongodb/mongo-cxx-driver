@@ -2,7 +2,7 @@
 #include <type_traits>
 
 #include <bsoncxx/stdx/type_traits.hpp>
-#include <third_party/catch/include/catch.hpp>
+#include <bsoncxx/test/catch.hh>
 
 #include <bsoncxx/config/prelude.hpp>
 

@@ -21,11 +21,11 @@
 
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/string/to_string.hpp>
+#include <bsoncxx/test/catch.hh>
 #include <bsoncxx/test/to_string.hh>
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/bson_value/value.hpp>
 #include <mongocxx/test/client_helpers.hh>
-#include <third_party/catch/include/catch.hpp>
 
 using namespace bsoncxx;
 using namespace mongocxx;
