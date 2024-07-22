@@ -135,3 +135,9 @@
 
 #define BSONCXX_FWD(...) static_cast<decltype(__VA_ARGS__)&&>(__VA_ARGS__)
 
+///
+/// @file
+/// Provides macros for internal use.
+///
+/// @warning For internal use only!
+///

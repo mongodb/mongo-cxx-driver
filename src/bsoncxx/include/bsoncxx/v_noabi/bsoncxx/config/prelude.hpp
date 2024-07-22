@@ -120,3 +120,23 @@
 // CXX-2769: out-of-place, but remains for backward compatibility.
 #pragma push_macro("BSONCXX_ENUM")
 #undef BSONCXX_ENUM
+
+///
+/// @file
+/// The bsoncxx macro guard prelude header.
+///
+/// @warning For internal use only!
+///
+/// @par "Includes" @parblock
+/// @li @ref bsoncxx/v_noabi/bsoncxx/config/compiler.hpp
+/// @li @ref bsoncxx-v_noabi-bsoncxx-config-config-hpp
+/// @li @ref bsoncxx-v_noabi-bsoncxx-config-export-hpp
+/// @li @ref bsoncxx/v_noabi/bsoncxx/config/util.hpp
+/// @li @ref bsoncxx-v_noabi-bsoncxx-config-version-hpp
+/// @endparblock
+///
+/// This header uses macro pragmas to guard macros defined by the bsoncxx library for internal use
+/// by "pushing" their prior definition onto the stack before use by bsoncxx headers.
+///
+/// @see bsoncxx/v_noabi/bsoncxx/config/postlude.hpp
+///

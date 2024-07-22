@@ -44,3 +44,10 @@ BSONCXX_DISABLE_WARNING(MSVC(5275));
 
 #define BSONCXX_INLINE inline BSONCXX_PRIVATE
 #define BSONCXX_CALL BSONCXX_IF_MSVC(__cdecl)
+
+///
+/// @file
+/// Provides macros for internal use.
+///
+/// @warning For internal use only!
+///
