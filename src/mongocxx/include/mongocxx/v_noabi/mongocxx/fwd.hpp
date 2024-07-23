@@ -193,21 +193,6 @@
 
 ///
 /// @ingroup mongocxx-v_noabi-mongocxx-config-export-hpp
-/// Defined when the mongocxx library is built as a static library.
-///
-/// @warning For internal use only!
-///
-/// This macro is not defined when the mongocxx library is built as a shared library.
-///
-/// @note This macro is intended to be automatically defined by the CMake or pkg-config package
-/// configuration file used to import the mongocxx library. Manually defining this macro is NOT
-/// recommended, but may be necessary depending on how the mongocxx library is being imported or
-/// packaged.
-///
-#define MONGOCXX_STATIC
-
-///
-/// @ingroup mongocxx-v_noabi-mongocxx-config-export-hpp
 /// Declares the associated entity as part of the ABI.
 ///
 /// @warning For internal use only!
