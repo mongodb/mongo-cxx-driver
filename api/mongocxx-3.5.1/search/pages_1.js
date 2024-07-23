@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['mongodb_20c_2b_2b_20driver_1173',['MongoDB C++ Driver',['../index.html',1,'']]]
+  ['mongodb_20c_2b_2b_20driver',['MongoDB C++ Driver',['../index.html',1,'']]]
 ];
