@@ -240,8 +240,7 @@ BSONCXX_INLINE bool operator==(const b_binary& lhs, const b_binary& rhs) {
 ///
 /// A BSON undefined value.
 ///
-/// @deprecated
-///   This BSON type is deprecated and use by clients is discouraged.
+/// @deprecated This BSON type is deprecated. Usage is discouraged.
 ///
 struct b_undefined {
     static constexpr auto type_id = type::k_undefined;
@@ -409,10 +408,9 @@ BSONCXX_INLINE bool operator==(const b_regex& lhs, const b_regex& rhs) {
 }
 
 ///
-/// A BSON DBPointer value.
+/// A BSON DBPointer (aka DBRef) value.
 ///
-/// @deprecated
-///   A BSON DBPointer (aka DBRef) is still supported but deprecated.
+/// @deprecated This BSON type is deprecated. Usage is discouraged.
 ///
 struct b_dbpointer {
     static constexpr auto type_id = type::k_dbpointer;
@@ -467,8 +465,7 @@ BSONCXX_INLINE bool operator==(const b_code& lhs, const b_code& rhs) {
 ///
 /// A BSON Symbol value.
 ///
-/// @deprecated
-///   This BSON type is deprecated and use by clients is discouraged.
+/// @deprecated This BSON type is deprecated. Usage is discouraged.
 ///
 struct b_symbol {
     static constexpr auto type_id = type::k_symbol;

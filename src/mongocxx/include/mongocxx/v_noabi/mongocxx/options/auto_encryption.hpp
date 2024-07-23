@@ -97,6 +97,11 @@ class auto_encryption {
     const stdx::optional<mongocxx::v_noabi::pool*>& key_vault_pool() const;
 
     ///
+    /// Represents the name of a database and a collection.
+    ///
+    using ns_pair = std::pair<std::string, std::string>;
+
+    ///
     /// Sets the namespace to use to access the key vault collection, which
     /// contains all data keys used for encryption and decryption. This
     /// option must be set:
@@ -112,7 +117,6 @@ class auto_encryption {
     ///
     /// @see https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
-    using ns_pair = std::pair<std::string, std::string>;
     auto_encryption& key_vault_namespace(ns_pair ns);
 
     ///

@@ -123,6 +123,11 @@ class data_key {
     const std::vector<std::string>& key_alt_names() const;
 
     ///
+    /// Represents binary data used to represent key material.
+    ///
+    using key_material_type = std::vector<uint8_t>;
+
+    ///
     /// Sets the binary data for the key material
     ///
     /// An optional BinData of 96 bytes to use as custom key material for the
@@ -140,7 +145,6 @@ class data_key {
     ///
     /// @see https://www.mongodb.com/docs/v6.0/reference/method/KeyVault.createKey/
     ///
-    using key_material_type = std::vector<uint8_t>;
     data_key& key_material(key_material_type key_material);
 
     ///

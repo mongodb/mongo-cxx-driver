@@ -153,8 +153,7 @@ class value {
     /// @param value
     ///     the object id
     ///
-    /// @deprecated
-    ///   A BSON DBPointer (aka DBRef) is still supported but deprecated.
+    /// @warning The DBPointer (aka DBRef) BSON type is deprecated. Usage is discouraged.
     ///
     value(stdx::string_view collection, oid value);
 
@@ -192,10 +191,8 @@ class value {
     ///
     /// @throws bsoncxx::v_noabi::exception if the type's value is not k_code, k_regex, or k_symbol.
     ///
-    /// @deprecated
-    ///   The BSON symbol type is deprecated and use by clients is discouraged.
-    /// @deprecated
-    ///   The BSON undefined type is deprecated and use by clients is discouraged.
+    /// @warning The Symbol BSON type is deprecated. Usage is discouraged.
+    /// @warning The Undefined BSON type is deprecated. Usage is discouraged.
     ///
     value(const type id, stdx::string_view v);
 
