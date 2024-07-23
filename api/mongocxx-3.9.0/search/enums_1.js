@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['encryption_5falgorithm_1316',['encryption_algorithm',['../classmongocxx_1_1v__noabi_1_1options_1_1encrypt.html#acaef24ad11e46a93788060ccb66c8510',1,'mongocxx::v_noabi::options::encrypt']]],
-  ['encryption_5fquery_5ftype_1317',['encryption_query_type',['../classmongocxx_1_1v__noabi_1_1options_1_1encrypt.html#a90b658aa86d0d1853f20e67e1ed2804a',1,'mongocxx::v_noabi::options::encrypt']]],
-  ['error_5fcode_1318',['error_code',['../namespacebsoncxx_1_1v__noabi.html#a217902599bbc7208f4db7611bae2c5b9',1,'bsoncxx::error_code()'],['../namespacebsoncxx_1_1v__noabi.html#a217902599bbc7208f4db7611bae2c5b9',1,'bsoncxx::v_noabi::error_code()'],['../namespacemongocxx_1_1v__noabi.html#a9a81008699fb58e58cd5af0d0a90f198',1,'mongocxx::error_code()'],['../namespacemongocxx_1_1v__noabi.html#a9a81008699fb58e58cd5af0d0a90f198',1,'mongocxx::v_noabi::error_code()']]],
-  ['extendedjsonmode_1319',['ExtendedJsonMode',['../namespacebsoncxx_1_1v__noabi.html#a60dd2f6217949fcc5aed38795773dfb4',1,'bsoncxx::ExtendedJsonMode()'],['../namespacebsoncxx_1_1v__noabi.html#a60dd2f6217949fcc5aed38795773dfb4',1,'bsoncxx::v_noabi::ExtendedJsonMode()']]]
+  ['encryption_5falgorithm_0',['encryption_algorithm',['../classmongocxx_1_1v__noabi_1_1options_1_1encrypt.html#acaef24ad11e46a93788060ccb66c8510',1,'mongocxx::v_noabi::options::encrypt']]],
+  ['encryption_5fquery_5ftype_1',['encryption_query_type',['../classmongocxx_1_1v__noabi_1_1options_1_1encrypt.html#a90b658aa86d0d1853f20e67e1ed2804a',1,'mongocxx::v_noabi::options::encrypt']]],
+  ['error_5fcode_2',['error_code',['../namespacebsoncxx_1_1v__noabi.html#a217902599bbc7208f4db7611bae2c5b9',1,'bsoncxx::error_code'],['../namespacebsoncxx_1_1v__noabi.html#a217902599bbc7208f4db7611bae2c5b9',1,'bsoncxx::v_noabi::error_code'],['../namespacemongocxx_1_1v__noabi.html#a9a81008699fb58e58cd5af0d0a90f198',1,'mongocxx::error_code'],['../namespacemongocxx_1_1v__noabi.html#a9a81008699fb58e58cd5af0d0a90f198',1,'mongocxx::v_noabi::error_code']]],
+  ['extendedjsonmode_3',['ExtendedJsonMode',['../namespacebsoncxx_1_1v__noabi.html#a60dd2f6217949fcc5aed38795773dfb4',1,'bsoncxx::ExtendedJsonMode'],['../namespacebsoncxx_1_1v__noabi.html#a60dd2f6217949fcc5aed38795773dfb4',1,'bsoncxx::v_noabi::ExtendedJsonMode']]]
 ];
