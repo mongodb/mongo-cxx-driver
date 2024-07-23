@@ -17,7 +17,7 @@ var searchData=
   ['is_5ferror_5fcode_5fenum_3c_20bsoncxx_3a_3aerror_5fcode_20_3e_260',['is_error_code_enum&lt; bsoncxx::error_code &gt;',['../structstd_1_1is__error__code__enum_3_01bsoncxx_1_1error__code_01_4.html',1,'std']]],
   ['is_5ferror_5fcode_5fenum_3c_20mongocxx_3a_3aerror_5fcode_20_3e_261',['is_error_code_enum&lt; mongocxx::error_code &gt;',['../structstd_1_1is__error__code__enum_3_01mongocxx_1_1error__code_01_4.html',1,'std']]],
   ['is_5ferror_5fcode_5fenum_3c_20mongocxx_3a_3aserver_5ferror_5fcode_20_3e_262',['is_error_code_enum&lt; mongocxx::server_error_code &gt;',['../structstd_1_1is__error__code__enum_3_01mongocxx_1_1server__error__code_01_4.html',1,'std']]],
-  ['is_5fmaster_263',['is_master',['../classmongocxx_1_1events_1_1server__description.html#a521b86b648ae69228247d31b0ba9d4af',1,'mongocxx::events::server_description']]],
+  ['is_5fmaster_263',['is_master',['../classmongocxx_1_1events_1_1server__description.html#a7dd253cbe9c95bf248ad3b3734e12f09',1,'mongocxx::events::server_description']]],
   ['is_5fowning_264',['is_owning',['../classbsoncxx_1_1view__or__value.html#abaa2e9186dc0456ad027257fc41e6a09',1,'bsoncxx::view_or_value']]],
   ['iterator_265',['iterator',['../classmongocxx_1_1events_1_1topology__description_1_1server__descriptions.html#a37057760123b9283651ed336d682857e',1,'mongocxx::events::topology_description::server_descriptions::iterator()'],['../classmongocxx_1_1change__stream_1_1iterator.html#a97aa3acdea9319607d8ebca203564d3a',1,'mongocxx::change_stream::iterator::iterator()'],['../classmongocxx_1_1change__stream_1_1iterator.html',1,'mongocxx::change_stream::iterator'],['../classmongocxx_1_1cursor_1_1iterator.html',1,'mongocxx::cursor::iterator']]]
 ];

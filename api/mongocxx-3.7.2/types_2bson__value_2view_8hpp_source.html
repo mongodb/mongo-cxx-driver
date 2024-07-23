@@ -129,7 +129,7 @@ $(function() {
 <div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160; </div>
 <div class="line"><a name="l00101"></a><span class="lineno"><a class="line" href="classbsoncxx_1_1types_1_1bson__value_1_1view.html#aecc6a36dd6a117c8ccb0282d19771fd1">  101</a></span>&#160;    const <a class="code" href="structbsoncxx_1_1types_1_1b__double.html">b_double</a>&amp; get_double() const;</div>
 <div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160; </div>
-<div class="line"><a name="l00111"></a><span class="lineno"><a class="line" href="classbsoncxx_1_1types_1_1bson__value_1_1view.html#a4f8072ea51d396671f1f96eb5824ccd4">  111</a></span>&#160;    BSONCXX_DEPRECATED const <a class="code" href="structbsoncxx_1_1types_1_1b__string.html">b_string</a>&amp; get_utf8() const;</div>
+<div class="line"><a name="l00111"></a><span class="lineno"><a class="line" href="classbsoncxx_1_1types_1_1bson__value_1_1view.html#a7218e6eb82cd550c4dcb8a19f21f23a8">  111</a></span>&#160;    BSONCXX_DEPRECATED const <a class="code" href="structbsoncxx_1_1types_1_1b__string.html">b_string</a>&amp; get_utf8() const;</div>
 <div class="line"><a name="l00112"></a><span class="lineno">  112</span>&#160; </div>
 <div class="line"><a name="l00119"></a><span class="lineno"><a class="line" href="classbsoncxx_1_1types_1_1bson__value_1_1view.html#a259c3d442ab20ce69263ccdf46176317">  119</a></span>&#160;    const <a class="code" href="structbsoncxx_1_1types_1_1b__string.html">b_string</a>&amp; get_string() const;</div>
 <div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160; </div>
@@ -213,8 +213,8 @@ $(function() {
 <div class="line"><a name="l00312"></a><span class="lineno">  312</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>
 <div class="line"><a name="l00313"></a><span class="lineno">  313</span>&#160;<span class="keyword">using</span> not_view = <span class="keyword">typename</span> std::enable_if&lt;</div>
 <div class="line"><a name="l00314"></a><span class="lineno">  314</span>&#160;    std::is_constructible&lt;bson_value::view, T&gt;::value &amp;&amp;</div>
-<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;        !std::is_same&lt;typename std::decay&lt;T&gt;::type, <a class="code" href="classbsoncxx_1_1types_1_1bson__value_1_1view.html">bson_value::view</a>&gt;<a class="code" href="classbsoncxx_1_1types_1_1bson__value_1_1view.html">::value</a> &amp;&amp;</div>
-<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;        !std::is_same&lt;typename std::decay&lt;T&gt;::type, <a class="code" href="classbsoncxx_1_1types_1_1bson__value_1_1value.html">bson_value::value</a>&gt;<a class="code" href="classbsoncxx_1_1types_1_1bson__value_1_1view.html">::value</a>,</div>
+<div class="line"><a name="l00315"></a><span class="lineno">  315</span>&#160;        !std::is_same&lt;typename std::decay&lt;T&gt;::type, <a class="code" href="classbsoncxx_1_1types_1_1bson__value_1_1view.html">bson_value::view</a>&gt;::value &amp;&amp;</div>
+<div class="line"><a name="l00316"></a><span class="lineno">  316</span>&#160;        !std::is_same&lt;typename std::decay&lt;T&gt;::type, <a class="code" href="classbsoncxx_1_1types_1_1bson__value_1_1value.html">bson_value::value</a>&gt;::value,</div>
 <div class="line"><a name="l00317"></a><span class="lineno">  317</span>&#160;    <span class="keywordtype">bool</span>&gt;<a class="code" href="namespacebsoncxx.html#a22a07dfc3decc8969c2eac30094e676b">::type</a>;</div>
 <div class="line"><a name="l00318"></a><span class="lineno">  318</span>&#160; </div>
 <div class="line"><a name="l00319"></a><span class="lineno">  319</span>&#160;<span class="keyword">template</span> &lt;<span class="keyword">typename</span> T&gt;</div>

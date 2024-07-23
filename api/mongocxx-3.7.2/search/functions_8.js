@@ -11,7 +11,7 @@ var searchData=
   ['inserted_5fids_972',['inserted_ids',['../classmongocxx_1_1result_1_1insert__many.html#aee9c03cc7129fa9ba1ad812d3f67f731',1,'mongocxx::result::insert_many']]],
   ['instance_973',['instance',['../classmongocxx_1_1instance.html#a5e13ff4c229a95828127bfe5b1072525',1,'mongocxx::instance::instance()'],['../classmongocxx_1_1instance.html#a785015ce94487d486237d97da3b5dfa6',1,'mongocxx::instance::instance(std::unique_ptr&lt; logger &gt; logger)'],['../classmongocxx_1_1instance.html#a88ef2933c835e6f1f4f86c8b45d927dd',1,'mongocxx::instance::instance(instance &amp;&amp;) noexcept']]],
   ['is_5facknowledged_974',['is_acknowledged',['../classmongocxx_1_1write__concern.html#a2c1dedfada21320ecf809824589bfc33',1,'mongocxx::write_concern']]],
-  ['is_5fmaster_975',['is_master',['../classmongocxx_1_1events_1_1server__description.html#a521b86b648ae69228247d31b0ba9d4af',1,'mongocxx::events::server_description']]],
+  ['is_5fmaster_975',['is_master',['../classmongocxx_1_1events_1_1server__description.html#a7dd253cbe9c95bf248ad3b3734e12f09',1,'mongocxx::events::server_description']]],
   ['is_5fowning_976',['is_owning',['../classbsoncxx_1_1view__or__value.html#abaa2e9186dc0456ad027257fc41e6a09',1,'bsoncxx::view_or_value']]],
   ['iterator_977',['iterator',['../classmongocxx_1_1change__stream_1_1iterator.html#a97aa3acdea9319607d8ebca203564d3a',1,'mongocxx::change_stream::iterator']]]
 ];

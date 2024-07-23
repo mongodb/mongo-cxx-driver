@@ -4,7 +4,7 @@ var searchData=
   ['has_5ferror_5flabel_949',['has_error_label',['../classmongocxx_1_1operation__exception.html#a0c9ea0e474b6ac3acdca18c8f568a92a',1,'mongocxx::operation_exception']]],
   ['has_5freadable_5fserver_950',['has_readable_server',['../classmongocxx_1_1events_1_1topology__description.html#ab12f671fd7bf28a74da67a94243270e4',1,'mongocxx::events::topology_description']]],
   ['has_5fwritable_5fserver_951',['has_writable_server',['../classmongocxx_1_1events_1_1topology__description.html#aa544ef0e875883abc8a522239bf3bff9',1,'mongocxx::events::topology_description']]],
-  ['haystack_5fbucket_5fsize_952',['haystack_bucket_size',['../classmongocxx_1_1options_1_1index.html#a9ce5458893e9bbb0891300c77b7adfd5',1,'mongocxx::options::index::haystack_bucket_size(double haystack_bucket_size)'],['../classmongocxx_1_1options_1_1index.html#aab13f485a52a3a5fc7a90423d772285c',1,'mongocxx::options::index::haystack_bucket_size() const']]],
+  ['haystack_5fbucket_5fsize_952',['haystack_bucket_size',['../classmongocxx_1_1options_1_1index.html#a9d8739153993fc52b7f41b3bbd8cb8ba',1,'mongocxx::options::index::haystack_bucket_size(double haystack_bucket_size)'],['../classmongocxx_1_1options_1_1index.html#aae3a2f0b7ce6ea14f826b423541ce6f6',1,'mongocxx::options::index::haystack_bucket_size() const']]],
   ['heartbeat_5ffailed_953',['heartbeat_failed',['../classmongocxx_1_1options_1_1apm.html#aaf3c9a0cb5c020d75eedef1b3eac59db',1,'mongocxx::options::apm']]],
   ['heartbeat_5ffrequency_5fms_954',['heartbeat_frequency_ms',['../classmongocxx_1_1uri.html#a40e99b539cf3285480246f3c44218d9e',1,'mongocxx::uri']]],
   ['heartbeat_5fstarted_955',['heartbeat_started',['../classmongocxx_1_1options_1_1apm.html#a9cff6a0f326654702d4140aa6429659c',1,'mongocxx::options::apm']]],
