@@ -101,3 +101,15 @@ static_assert(false, "BSONCXX_ENUM must be undef'ed");
 #pragma pop_macro("BSONCXX_IF_GNU_LIKE")
 
 #pragma pop_macro("BSONCXX_FWD")
+
+///
+/// @file
+/// The bsoncxx macro guard postlude header.
+///
+/// @warning For internal use only!
+///
+/// This header uses macro pragmas to guard macros defined by the bsoncxx library for internal use
+/// by "popping" their prior definition onto the stack after use by bsoncxx headers.
+///
+/// @see bsoncxx/v_noabi/bsoncxx/config/prelude.hpp
+///

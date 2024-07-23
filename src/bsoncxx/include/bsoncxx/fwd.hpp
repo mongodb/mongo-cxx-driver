@@ -17,6 +17,82 @@
 #endif  // !defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
 
 ///
+/// @file
+/// For documentation purposes only.
+///
+/// This header is not intended to be includable.
+///
+/// @note This header is shadowed by @ref bsoncxx/v_noabi/bsoncxx/fwd.hpp per include directory
+/// search ordering.
+///
+
+///
+/// @dir bsoncxx/include/bsoncxx
+/// Provides headers declaring entities in @ref bsoncxx
+///
+
+///
 /// @namespace bsoncxx
-/// The top-level namespace for bsoncxx library entities.
+/// The top-level namespace within which all bsoncxx library entities are declared.
+///
+/// In addition to declaring ABI namespaces (`v_noabi`, `v1`, etc.), this namespace also provides
+/// "redeclarations" of entities within ABI namespaces. These redeclarations are intended to be the
+/// preferred method for using bsoncxx library entities when ABI stability of the bsoncxx library is
+/// NOT a requirement by the user. See [Root Namespace
+/// Redeclarations](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/api-abi-versioning/abi-versioning/#std-label-cpp-abi-root-namespace-redec).
+///
+
+///
+/// @namespace bsoncxx::array
+/// Declares entities representing a BSON array.
+///
+
+///
+/// @namespace bsoncxx::builder
+/// Declares entities used to build BSON documents.
+///
+
+///
+/// @namespace bsoncxx::builder::basic
+/// Declares entities used with "basic" BSON builder syntax.
+///
+
+///
+/// @namespace bsoncxx::builder::stream
+/// Declares entities used with "streaming" BSON builder syntax.
+///
+
+///
+/// @namespace bsoncxx::document
+/// Declares entities representing a BSON document.
+///
+
+///
+/// @namespace bsoncxx::exception
+/// Declares entities related to bsoncxx exceptions and error codes.
+///
+
+///
+/// @namespace bsoncxx::stdx
+/// Declares C++17 standard library polyfills.
+///
+
+///
+/// @namespace bsoncxx::string
+/// Declares entities related to handling string types.
+///
+
+///
+/// @namespace bsoncxx::types
+/// Declares entities representing BSON value types.
+///
+
+///
+/// @namespace bsoncxx::types::bson_value
+/// Declares entities representing any BSON value type.
+///
+
+///
+/// @namespace std
+/// The top-level namespace reserved for the C++ standard library.
 ///

@@ -17,6 +17,62 @@
 #endif  // !defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
 
 ///
+/// @file
+/// For documentation purposes only.
+///
+/// This header is not intended to be includable.
+///
+/// @note This header is shadowed by @ref mongocxx/v_noabi/mongocxx/fwd.hpp per include directory
+/// search ordering.
+///
+
+///
+/// @dir mongocxx/include/mongocxx
+/// Provides headers declaring entities in @ref mongocxx
+///
+
+///
 /// @namespace mongocxx
-/// The top-level namespace for mongocxx library entities.
+/// The top-level namespace within which all mongocxx library entities are declared.
+///
+/// In addition to declaring ABI namespaces (`v_noabi`, `v1`, etc.), this namespace also provides
+/// "redeclarations" of entities within ABI namespaces. These redeclarations are intended to be the
+/// preferred method for using bsoncxx library entities when ABI stability of the bsoncxx library is
+/// NOT a requirement by the user. See [Root Namespace
+/// Redeclarations](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/api-abi-versioning/abi-versioning/#std-label-cpp-abi-root-namespace-redec).
+///
+
+///
+/// @namespace mongocxx::events
+/// Declares entities describing APM events.
+///
+
+///
+/// @namespace mongocxx::gridfs
+/// Declares entities related to GridFS.
+///
+
+///
+/// @namespace mongocxx::model
+/// Declares entities representing bulk write operations.
+///
+
+///
+/// @namespace mongocxx::options
+/// Declares entities representing options to use with various commands.
+///
+
+///
+/// @namespace mongocxx::options::gridfs
+/// Declares entities representing options specific to GridFS.
+///
+
+///
+/// @namespace mongocxx::result
+/// Declares entities representing the result of various commands.
+///
+
+///
+/// @namespace mongocxx::result::gridfs
+/// Declares entities representing the result of GridFS commands.
 ///

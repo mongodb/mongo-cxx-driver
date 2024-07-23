@@ -113,6 +113,281 @@
 #include <mongocxx/write_type-fwd.hpp>
 
 ///
+/// @file
+/// Aggregate of all forward headers declaring entities in @ref mongocxx::v_noabi.
+///
+/// @par "Includes" @parblock
+/// @li All header files under @ref src/mongocxx/include/mongocxx/v_noabi/mongocxx
+/// "mongocxx/v_noabi/mongocxx" whose filename ends with `-fwd.hpp`.
+/// @endparblock
+///
+
+///
+/// @dir mongocxx/v_noabi
+/// The directory relative to which headers declaring entities in @ref mongocxx::v_noabi
+/// are typically included.
+///
+/// For backward compatibility, unstable ABI headers may be included using the syntax
+/// `<mongocxx/foo.hpp>`, which is equivalent to `<mongocxx/v_noabi/mongocxx/foo.hpp>`.
+///
+
+///
+/// @dir mongocxx/v_noabi/mongocxx
+/// Provides headers declaring entities in @ref mongocxx::v_noabi.
+///
+
+///
+/// @dir mongocxx/v_noabi/mongocxx/config
+/// Provides headers related to mongocxx library configuration.
+///
+
+#if defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+
+///
+/// @defgroup mongocxx-v_noabi-mongocxx-config-config-hpp mongocxx/v_noabi/mongocxx/config/config.hpp
+/// This page documents macros provided by the generated header
+/// `mongocxx/v_noabi/mongocxx/config/config.hpp`.
+///
+/// @name mongocxx/v_noabi/mongocxx/config/config.hpp
+///
+/// These macros are provided by @ref mongocxx-v_noabi-mongocxx-config-config-hpp "config.hpp",
+/// **NOT** by @ref mongocxx/v_noabi/mongocxx/fwd.hpp "fwd.hpp" (where this is documented)!
+///
+/// @{
+///
+
+///
+/// @ingroup mongocxx-v_noabi-mongocxx-config-config-hpp
+/// For internal use only!
+///
+/// @deprecated To be removed in an upcoming major release.
+/// <!-- Explicitly documented due to long-standing availability. -->
+///
+#define MONGOCXX_INLINE_NAMESPACE_BEGIN
+
+///
+/// @ingroup mongocxx-v_noabi-mongocxx-config-config-hpp
+/// For internal use only!
+///
+/// @deprecated To be removed in an upcoming major release.
+/// <!-- Explicitly documented due to long-standing availability. -->
+///
+#define MONGOCXX_INLINE_NAMESPACE_END
+
+///
+/// @} <!-- mongocxx/v_noabi/mongocxx/config/config.hpp -->
+///
+
+///
+/// @defgroup mongocxx-v_noabi-mongocxx-config-export-hpp mongocxx/v_noabi/mongocxx/config/export.hpp
+/// This page documents macros provided by the generated header
+/// `mongocxx/v_noabi/mongocxx/config/export.hpp`.
+///
+/// @name mongocxx/v_noabi/mongocxx/config/export.hpp
+///
+/// These macros are provided by @ref mongocxx-v_noabi-mongocxx-config-export-hpp "export.hpp",
+/// **NOT** by @ref mongocxx/v_noabi/mongocxx/fwd.hpp "fwd.hpp" (where this is documented)!
+///
+/// @{
+///
+
+///
+/// @ingroup mongocxx-v_noabi-mongocxx-config-export-hpp
+/// Declares the associated entity as part of the ABI.
+///
+/// @warning For internal use only!
+///
+/// @note This is a symbol visibility control macro, NOT a declaration of public API. Public API vs.
+/// private API is determined by the placement of the entity being declared (e.g. in a public
+/// header, as a public class member, etc.) or by documentation (e.g. absence of "For internal use
+/// only!" warnings). See [API and ABI
+/// Versioning](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/api-abi-versioning/).
+///
+#define MONGOCXX_API
+
+///
+/// @ingroup mongocxx-v_noabi-mongocxx-config-export-hpp
+/// Excludes the associated entity from being part of the ABI.
+///
+/// @warning For internal use only!
+///
+/// @note This is a symbol visibility control macro, NOT a declaration of private API. Public API
+/// vs. private API is determined by the placement of the entity being declared (e.g. in a detail
+/// header, as a private class member, etc.) or by documentation (e.g. "For internal use only!",
+/// absence of documentation, etc.). See [API and ABI
+/// Versioning](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/api-abi-versioning/).
+///
+#define MONGOCXX_PRIVATE
+
+///
+/// @ingroup mongocxx-v_noabi-mongocxx-config-export-hpp
+/// Declares the associated entity as deprecated.
+///
+/// @warning For internal use only!
+///
+#define MONGOCXX_DEPRECATED
+
+///
+/// @ingroup mongocxx-v_noabi-mongocxx-config-export-hpp
+/// Equivalent to @ref MONGOCXX_API and @ref MONGOCXX_DEPRECATED.
+///
+/// @warning For internal use only!
+///
+#define MONGOCXX_DEPRECATED_EXPORT
+
+///
+/// @ingroup mongocxx-v_noabi-mongocxx-config-export-hpp
+/// Equivalent to @ref MONGOCXX_PRIVATE and @ref MONGOCXX_DEPRECATED.
+///
+/// @warning For internal use only!
+///
+#define MONGOCXX_DEPRECATED_NO_EXPORT
+
+///
+/// @} <!-- mongocxx/v_noabi/mongocxx/config/export.hpp -->
+///
+
+///
+/// @defgroup mongocxx-v_noabi-mongocxx-config-version-hpp mongocxx/v_noabi/mongocxx/config/version.hpp
+/// This page documents macros provided by the generated header
+/// `mongocxx/v_noabi/mongocxx/config/version.hpp`.
+///
+/// @name mongocxx/v_noabi/mongocxx/config/version.hpp
+///
+/// These macros are provided by @ref mongocxx-v_noabi-mongocxx-config-version-hpp "version.hpp",
+/// **NOT** by @ref mongocxx/v_noabi/mongocxx/fwd.hpp "fwd.hpp" (where this is documented)!
+///
+/// @{
+///
+
+///
+/// @ingroup mongocxx-v_noabi-mongocxx-config-version-hpp
+/// Defined as a string literal encoding this mongocxx library's API version number.
+///
+/// This value includes the major version, minor version, patch version, and suffix if any.
+///
+/// Example: `"1.2.3-extra"`
+///
+/// This value is derived from the `BUILD_VERSION` variable during configuration.
+///
+#define MONGOCXX_VERSION_STRING
+
+///
+/// @ingroup mongocxx-v_noabi-mongocxx-config-version-hpp
+/// Defined as this mongocxx library's API major version number.
+///
+/// This value is derived from the `BUILD_VERSION` variable during configuration.
+///
+#define MONGOCXX_VERSION_MAJOR
+
+///
+/// @ingroup mongocxx-v_noabi-mongocxx-config-version-hpp
+/// Defined as this mongocxx library's API minor version number.
+///
+/// This value is derived from the `BUILD_VERSION` variable during configuration.
+///
+#define MONGOCXX_VERSION_MINOR
+
+///
+/// @ingroup mongocxx-v_noabi-mongocxx-config-version-hpp
+/// Defined as this mongocxx library's API patch version number.
+///
+/// This value is derived from the `BUILD_VERSION` variable during configuration.
+///
+#define MONGOCXX_VERSION_PATCH
+
+///
+/// @ingroup mongocxx-v_noabi-mongocxx-config-version-hpp
+/// Defined as this mongocxx library's API version number suffix if any.
+///
+/// This value is derived from the `BUILD_VERSION` variable during configuration.
+///
+#define MONGOCXX_VERSION_EXTRA
+
+///
+/// @} <!-- mongocxx/v_noabi/mongocxx/config/version.hpp -->
+///
+
+#endif  // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+
+///
+/// @dir mongocxx/v_noabi/mongocxx/events
+/// Provides headers declaring entities in @ref mongocxx::v_noabi::events.
+///
+
+///
+/// @dir mongocxx/v_noabi/mongocxx/exception
+/// Provides headers declaring entities in @ref mongocxx::v_noabi::exception.
+///
+
+///
+/// @dir mongocxx/v_noabi/mongocxx/gridfs
+/// Provides headers declaring entities in @ref mongocxx::v_noabi::gridfs.
+///
+
+///
+/// @dir mongocxx/v_noabi/mongocxx/model
+/// Provides headers declaring entities in @ref mongocxx::v_noabi::model.
+///
+
+///
+/// @dir mongocxx/v_noabi/mongocxx/options
+/// Provides headers declaring entities in @ref mongocxx::v_noabi::options.
+///
+
+///
+/// @dir mongocxx/v_noabi/mongocxx/options/gridfs
+/// Provides headers declaring entities in @ref mongocxx::v_noabi::options::gridfs.
+///
+
+///
+/// @dir mongocxx/v_noabi/mongocxx/result
+/// Provides headers declaring entities in @ref mongocxx::v_noabi::result.
+///
+
+///
+/// @dir mongocxx/v_noabi/mongocxx/result/gridfs
+/// Provides headers declaring entities in @ref mongocxx::v_noabi::result::gridfs.
+///
+
+///
 /// @namespace mongocxx::v_noabi
-/// Entities declared in this namespace do not have a stable ABI.
+/// Declares entities whose ABI stability is NOT guaranteed.
+///
+
+///
+/// @namespace mongocxx::v_noabi::events
+/// @copydoc mongocxx::events
+///
+
+///
+/// @namespace mongocxx::v_noabi::gridfs
+/// @copydoc mongocxx::gridfs
+///
+
+///
+/// @namespace mongocxx::v_noabi::model
+/// @copydoc mongocxx::model
+///
+/// @see mongocxx::v_noabi::bulk_write
+///
+
+///
+/// @namespace mongocxx::v_noabi::options
+/// @copydoc mongocxx::options
+///
+
+///
+/// @namespace mongocxx::v_noabi::options::gridfs
+/// @copydoc mongocxx::options::gridfs
+///
+
+///
+/// @namespace mongocxx::v_noabi::result
+/// @copydoc mongocxx::result
+///
+
+///
+/// @namespace mongocxx::v_noabi::result::gridfs
+/// @copydoc mongocxx::result::gridfs
 ///
