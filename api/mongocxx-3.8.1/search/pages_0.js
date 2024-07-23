@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['c_20driver_0',['MongoDB C++ Driver',['../index.html',1,'']]]
+  ['deprecated_20list_1381',['Deprecated List',['../deprecated.html',1,'']]]
 ];
