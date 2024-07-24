@@ -989,7 +989,7 @@ tasks:
         params:
           updates:
           - key: mongocxx_version_finder_sh
-            value: $(sed -nE 's/^#define MONGOCXX_VERSION_STRING "([^"]+)".*/\1/p' build/src/mongocxx/config/version.hpp)
+            value: $(sed -nE 's/^#define MONGOCXX_VERSION_STRING "([^"]+)".*/\1/p' build/src/mongocxx/v_noabi/mongocxx/config/version.hpp)
       - command: shell.exec
         type: test
         params:
@@ -1009,7 +1009,7 @@ tasks:
         params:
           updates:
           - key: mongocxx_version_finder_sh
-            value: $(sed -nE 's/^#define MONGOCXX_VERSION_STRING "([^"]+)".*/\1/p' build/src/mongocxx/config/version.hpp)
+            value: $(sed -nE 's/^#define MONGOCXX_VERSION_STRING "([^"]+)".*/\1/p' build/src/mongocxx/v_noabi/mongocxx/config/version.hpp)
       - command: shell.exec
         type: test
         params:
