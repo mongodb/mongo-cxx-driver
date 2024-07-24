@@ -169,6 +169,11 @@ class client_session {
     void abort_transaction();
 
     ///
+    /// Represents a callback invoked within a transaction.
+    ///
+    using with_transaction_cb = std::function<void MONGOCXX_CALL(client_session*)>;
+
+    ///
     /// Helper to run a user-provided callback within a transaction.
     ///
     /// This method will start a new transaction on this client session,
@@ -189,7 +194,6 @@ class client_session {
     /// @throws mongocxx::v_noabi::operation_exception if there are errors completing the
     /// transaction.
     ///
-    using with_transaction_cb = std::function<void MONGOCXX_CALL(client_session*)>;
     void with_transaction(with_transaction_cb cb, options::transaction opts = {});
 
    private:

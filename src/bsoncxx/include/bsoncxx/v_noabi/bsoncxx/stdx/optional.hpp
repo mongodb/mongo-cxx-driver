@@ -475,11 +475,7 @@ constexpr copymove_classification classify_assignment() {
     return CanCopy ? copyable : CanMove ? movable : immobile;
 }
 
-/**
- * @brief Common base class for optional storage implementation
- *
- * @tparam T
- */
+/// Common base class for optional storage implementation
 template <typename T>
 class optional_common_base;
 

@@ -435,7 +435,7 @@ static constexpr struct invoke_fn {
 /**
  * @brief Yields the type that would result from invoking F with the given arguments.
  *
- * @tparam Fun A invocable: A function pointer or callable object, or a member pointer
+ * @tparam F An invocable function pointer, object, or pointer-to-member.
  * @tparam Args The arguments to apply
  */
 template <typename F, typename... Args>
@@ -444,14 +444,14 @@ using invoke_result_t = decltype(invoke(std::declval<F>(), std::declval<Args>().
 /**
  * @brief Trait type to detect if the given object can be "invoked" using the given arguments.
  *
- * @tparam Fun A invocable: A function pointer or callable object, or a member pointer
+ * @tparam F An invocable function pointer, object, or pointer-to-member.
  * @tparam Args The arguments to match against
  */
-template <typename Fun, typename... Args>
+template <typename F, typename... Args>
 #if defined(_MSC_VER) && _MSC_VER < 1910
-using is_invocable = is_detected<invoke_result_t, Fun, Args...>;
+using is_invocable = is_detected<invoke_result_t, F, Args...>;
 #else
-struct is_invocable : is_detected<invoke_result_t, Fun, Args...> {
+struct is_invocable : is_detected<invoke_result_t, F, Args...> {
 };
 #endif
 
