@@ -25,9 +25,10 @@
 
 #include <bsoncxx/config/private/prelude.hh>
 
-#define BSONCXX_CITER \
-    bson_iter_t iter; \
-    bson_iter_init_from_data_at_offset(&iter, _raw, _length, _offset, _keylen);
+#define BSONCXX_CITER                                                           \
+    bson_iter_t iter;                                                           \
+    bson_iter_init_from_data_at_offset(&iter, _raw, _length, _offset, _keylen); \
+    ((void)0)
 
 namespace bsoncxx {
 namespace v_noabi {

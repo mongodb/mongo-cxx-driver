@@ -118,7 +118,7 @@ bsoncxx::v_noabi::document::value read_concern::to_document() const {
     bsoncxx::v_noabi::builder::basic::document doc;
     if (level) {
         doc.append(kvp("level", level));
-    };
+    }
 
     return doc.extract();
 }

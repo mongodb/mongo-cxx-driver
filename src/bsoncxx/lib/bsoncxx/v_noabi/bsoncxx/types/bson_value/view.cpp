@@ -23,9 +23,10 @@
 
 #include <bsoncxx/config/private/prelude.hh>
 
-#define BSONCXX_CITER \
-    bson_iter_t iter; \
-    bson_iter_init_from_data_at_offset(&iter, raw, length, offset, keylen);
+#define BSONCXX_CITER                                                       \
+    bson_iter_t iter;                                                       \
+    bson_iter_init_from_data_at_offset(&iter, raw, length, offset, keylen); \
+    ((void)0)
 
 #define BSONCXX_TYPE_CHECK(name)                                                         \
     do {                                                                                 \
