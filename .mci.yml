@@ -985,11 +985,6 @@ tasks:
       - func: "setup"
       - func: "fetch_c_driver_source"
       - func: "compile"
-      - command: expansions.update
-        params:
-          updates:
-          - key: mongocxx_version_finder_sh
-            value: $(sed -nE 's/^#define MONGOCXX_VERSION_STRING "([^"]+)".*/\1/p' build/src/mongocxx/v_noabi/mongocxx/config/version.hpp)
       - command: shell.exec
         type: test
         params:
@@ -997,7 +992,6 @@ tasks:
           working_dir: "mongo-cxx-driver"
           script: |-
             set -o errexit
-            export INSTALL_VERSION=${mongocxx_version_finder_sh}
             ./.evergreen/uninstall_check.sh
 
     - name: uninstall_check_windows
@@ -1005,11 +999,6 @@ tasks:
       - func: "setup"
       - func: "fetch_c_driver_source"
       - func: "compile"
-      - command: expansions.update
-        params:
-          updates:
-          - key: mongocxx_version_finder_sh
-            value: $(sed -nE 's/^#define MONGOCXX_VERSION_STRING "([^"]+)".*/\1/p' build/src/mongocxx/v_noabi/mongocxx/config/version.hpp)
       - command: shell.exec
         type: test
         params:
@@ -1017,7 +1006,6 @@ tasks:
           working_dir: "mongo-cxx-driver"
           script: |-
             set -o errexit
-            export INSTALL_VERSION=${mongocxx_version_finder_sh}
             cmd.exe /c .\\.evergreen\\uninstall_check_windows.cmd
 
     - name: build_example_with_add_subdirectory
