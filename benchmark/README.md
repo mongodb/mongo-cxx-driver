@@ -1,4 +1,4 @@
-This suite implements the benchmarks described in this spec: https://docs.google.com/document/d/1x7dCHHx_owOFYIPZ6VQwPerSWRhdkMSiepyFrNSFlLw/edit#
+This suite implements the benchmarks described in this spec: https://github.com/mongodb/specifications/blob/master/source/benchmarking/benchmarking.md
 
 # Compiling
 Configure the C++ driver to build with C++17 or newer and build the `microbenchmarks` target.
