@@ -175,6 +175,7 @@ bsoncxx::v_noabi::document::value write_concern::to_document() const {
                 if (auto t = tag()) {
                     doc.append(kvp("w", *t));
                 }
+                break;
             default:
                 break;
         }
