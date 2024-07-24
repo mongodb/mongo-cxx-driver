@@ -182,7 +182,7 @@ class basic_string_view : bsoncxx::detail::equality_operators, bsoncxx::detail::
         const std::basic_string<value_type, traits_type, Alloc>& str) noexcept
         : _begin(str.data()), _size(str.size()) {}
 
-#if __cpp_lib_string_view
+#if defined(__cpp_lib_string_view)
     constexpr basic_string_view(std::basic_string_view<value_type, traits_type> sv) noexcept
         : _begin(sv.data()), _size(sv.size()) {}
 #endif
@@ -503,7 +503,7 @@ class basic_string_view : bsoncxx::detail::equality_operators, bsoncxx::detail::
         return std::basic_string<Char, Traits, Allocator>(data(), size());
     }
 
-#if __cpp_lib_string_view
+#if defined(__cpp_lib_string_view)
     explicit operator std::basic_string_view<value_type, traits_type>() const noexcept {
         return std::basic_string_view<value_type, traits_type>(data(), size());
     }
