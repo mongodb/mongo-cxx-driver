@@ -61,12 +61,12 @@ functions:
           type: setup
           params:
             binary: bash
-            args: [mongo-cxx-driver/.evergreen/abi-compliance-check-setup.sh]
+            args: [-c, mongo-cxx-driver/.evergreen/abi-compliance-check-setup.sh]
         - command: subprocess.exec
           type: test
           params:
             binary: bash
-            args: [mongo-cxx-driver/.evergreen/abi-compliance-check-test.sh]
+            args: [-c, mongo-cxx-driver/.evergreen/abi-compliance-check-test.sh]
         - command: s3.put
           type: system
           params:
@@ -117,12 +117,12 @@ functions:
           type: setup
           params:
             binary: bash
-            args: [mongo-cxx-driver/.evergreen/abidiff-setup.sh]
+            args: [-c, mongo-cxx-driver/.evergreen/abidiff-setup.sh]
         - command: subprocess.exec
           type: test
           params:
             binary: bash
-            args: [mongo-cxx-driver/.evergreen/abidiff-test.sh]
+            args: [-c, mongo-cxx-driver/.evergreen/abidiff-test.sh]
         - command: s3.put
           type: system
           params:
@@ -151,7 +151,7 @@ functions:
           type: test
           params:
             binary: bash
-            args: [mongo-cxx-driver/.evergreen/abi-prohibited-symbols-test.sh]
+            args: [-c, mongo-cxx-driver/.evergreen/abi-prohibited-symbols-test.sh]
 
     "setup":
         - command: shell.exec
@@ -338,7 +338,6 @@ functions:
         command: subprocess.exec
         params:
             binary: bash
-            working_dir: "."
             args:
               - -c
               - |
@@ -583,7 +582,6 @@ functions:
     "upload mongo orchestration artifacts":
         - command: subprocess.exec
           params:
-            working_dir: "."
             binary: bash
             args:
               - -c
@@ -659,9 +657,7 @@ functions:
           working_dir: "mongo-cxx-driver"
           add_expansions_to_env: true
           redirect_standard_error_to_output: true
-          args:
-            - -c
-            - .evergreen/compile-scan-build.sh
+          args: [-c, .evergreen/compile-scan-build.sh]
 
     "upload scan artifacts":
       - command: subprocess.exec
@@ -711,9 +707,7 @@ functions:
             - ARTIFACTORY_PASSWORD
             - SILK_CLIENT_ID
             - SILK_CLIENT_SECRET
-          args:
-            - -c
-            - .evergreen/check-augmented-sbom.sh
+          args: [-c, .evergreen/check-augmented-sbom.sh]
 
     "upload augmented sbom":
       - command: s3.put
@@ -1287,7 +1281,7 @@ task_groups:
       - command: subprocess.exec
         params:
           binary: bash
-          args: [mongo-cxx-driver/.evergreen/abi-stability-setup.sh]
+          args: [-c, mongo-cxx-driver/.evergreen/abi-stability-setup.sh]
           include_expansions_in_env: [cxx_standard]
     tasks: [".abi-stability"]
     teardown_task_can_fail_task: true
@@ -1308,8 +1302,7 @@ task_groups:
           add_expansions_to_env: true
           env:
             MONGODB_VERSION: '7.0'
-          args:
-            - ${DRIVERS_TOOLS}/.evergreen/atlas/setup-atlas-cluster.sh
+          args: [-c, "${DRIVERS_TOOLS}/.evergreen/atlas/setup-atlas-cluster.sh"]
       - command: expansions.update
         # Expected to set MONGODB_URI expansion.
         params:
@@ -1320,8 +1313,7 @@ task_groups:
           working_dir: mongo-cxx-driver
           binary: bash
           add_expansions_to_env: true
-          args:
-            - ${DRIVERS_TOOLS}/.evergreen/atlas/teardown-atlas-cluster.sh
+          args: [-c, "${DRIVERS_TOOLS}/.evergreen/atlas/teardown-atlas-cluster.sh"]
     setup_group_can_fail_task: true
     setup_group_timeout_secs: 1800
     tasks:
