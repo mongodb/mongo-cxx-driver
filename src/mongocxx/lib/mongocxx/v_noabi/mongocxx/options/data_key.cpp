@@ -52,7 +52,7 @@ void* data_key::convert() const {
 
     if (!_key_alt_names.empty()) {
         auto altnames = _key_alt_names;
-        char** names = (char**)bson_malloc(sizeof(char*) * altnames.size());
+        auto names = static_cast<char**>(bson_malloc(sizeof(char*) * altnames.size()));
         uint32_t i = 0;
 
         for (auto&& name : altnames) {

@@ -127,7 +127,8 @@ view::view(const std::uint8_t* raw,
 
     auto value = bson_iter_value(&iter);
 
-    _init((void*)value);
+    // ABI backward compatibility. Const is restored in `view::_init`.
+    _init(const_cast<void*>(static_cast<const void*>(value)));
 }
 
 view::view(void* internal_value) noexcept {
@@ -141,7 +142,7 @@ void view::_init(void* internal_value) noexcept {
         return;
     }
 
-    bson_value_t* v = (bson_value_t*)(internal_value);
+    auto v = static_cast<const bson_value_t*>(internal_value);
     _type = static_cast<bsoncxx::v_noabi::type>(v->value_type);
 
     switch (_type) {
