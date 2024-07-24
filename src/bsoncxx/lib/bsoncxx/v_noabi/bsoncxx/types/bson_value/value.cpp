@@ -90,6 +90,25 @@ value::value(const type id) : _impl{stdx::make_unique<impl>()} {
         case type::k_undefined:
             _impl->_value.value_type = BSON_TYPE_UNDEFINED;
             break;
+
+        case type::k_double:
+        case type::k_string:
+        case type::k_document:
+        case type::k_array:
+        case type::k_binary:
+        case type::k_oid:
+        case type::k_bool:
+        case type::k_date:
+        case type::k_null:
+        case type::k_regex:
+        case type::k_dbpointer:
+        case type::k_code:
+        case type::k_symbol:
+        case type::k_codewscope:
+        case type::k_int32:
+        case type::k_timestamp:
+        case type::k_int64:
+        case type::k_decimal128:
         default:
             throw bsoncxx::v_noabi::exception(error_code::k_invalid_bson_type_id);
     }
@@ -122,6 +141,25 @@ value::value(const type id, stdx::string_view v) : _impl{stdx::make_unique<impl>
             _impl->_value.value.v_symbol.symbol = make_copy_for_libbson(v);
             _impl->_value.value.v_symbol.len = (uint32_t)v.length();
             break;
+
+        case type::k_double:
+        case type::k_string:
+        case type::k_document:
+        case type::k_array:
+        case type::k_binary:
+        case type::k_undefined:
+        case type::k_oid:
+        case type::k_bool:
+        case type::k_date:
+        case type::k_null:
+        case type::k_dbpointer:
+        case type::k_codewscope:
+        case type::k_int32:
+        case type::k_timestamp:
+        case type::k_int64:
+        case type::k_decimal128:
+        case type::k_maxkey:
+        case type::k_minkey:
         default:
             throw bsoncxx::v_noabi::exception(error_code::k_invalid_bson_type_id);
     }
@@ -142,6 +180,26 @@ value::value(type id, uint64_t a, uint64_t b) : _impl{stdx::make_unique<impl>()}
             _impl->_value.value.v_timestamp.increment = (uint32_t)a;
             _impl->_value.value.v_timestamp.timestamp = (uint32_t)b;
             break;
+
+        case type::k_double:
+        case type::k_string:
+        case type::k_document:
+        case type::k_array:
+        case type::k_binary:
+        case type::k_undefined:
+        case type::k_oid:
+        case type::k_bool:
+        case type::k_date:
+        case type::k_null:
+        case type::k_regex:
+        case type::k_dbpointer:
+        case type::k_code:
+        case type::k_symbol:
+        case type::k_codewscope:
+        case type::k_int32:
+        case type::k_int64:
+        case type::k_maxkey:
+        case type::k_minkey:
         default:
             throw bsoncxx::v_noabi::exception(error_code::k_invalid_bson_type_id);
     }

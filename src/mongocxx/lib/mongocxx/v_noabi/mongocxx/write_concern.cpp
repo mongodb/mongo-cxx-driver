@@ -176,6 +176,8 @@ bsoncxx::v_noabi::document::value write_concern::to_document() const {
                     doc.append(kvp("w", *t));
                 }
                 break;
+
+            case write_concern::level::k_acknowledged:
             default:
                 break;
         }

@@ -70,6 +70,8 @@ void read_concern::acknowledge_level(read_concern::level rc_level) {
             libmongoc::read_concern_set_level(_impl->read_concern_t,
                                               MONGOC_READ_CONCERN_LEVEL_SNAPSHOT);
             break;
+
+        case read_concern::level::k_unknown:
         default:
             throw exception{error_code::k_unknown_read_concern};
     }
