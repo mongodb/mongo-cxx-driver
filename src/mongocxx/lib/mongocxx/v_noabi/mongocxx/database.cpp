@@ -49,7 +49,7 @@ class collection_names {
    public:
     explicit collection_names(char** names) {
         _names = names;
-    };
+    }
 
     ~collection_names() {
         bson_strfreev(_names);
@@ -63,7 +63,7 @@ class collection_names {
 
     const char* operator[](const std::size_t i) const {
         return _names[i];
-    };
+    }
 
     bool operator!() const {
         return _names == nullptr;
