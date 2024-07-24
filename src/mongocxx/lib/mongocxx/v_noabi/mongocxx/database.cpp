@@ -128,7 +128,7 @@ cursor database::_aggregate(const client_session* session,
 
     scoped_bson_t options_bson(b.view());
 
-    const ::mongoc_read_prefs_t* rp_ptr = NULL;
+    const ::mongoc_read_prefs_t* rp_ptr = nullptr;
 
     if (options.read_preference()) {
         rp_ptr = options.read_preference()->_impl->read_preference_t;
@@ -230,7 +230,7 @@ bsoncxx::v_noabi::document::value database::_run_command(
     scoped_bson_t options_bson(options_builder.extract());
     auto result = libmongoc::database_command_with_opts(_get_impl().database_t,
                                                         command_bson.bson(),
-                                                        NULL,
+                                                        nullptr,
                                                         options_bson.bson(),
                                                         reply_bson.bson_for_init(),
                                                         &error);

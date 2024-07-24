@@ -136,7 +136,7 @@ mongocxx::v_noabi::write_concern uri::write_concern() const {
 static stdx::optional<stdx::string_view> _string_option(mongoc_uri_t* uri, std::string opt_name) {
     const char* value;
 
-    value = libmongoc::uri_get_option_as_utf8(uri, opt_name.c_str(), NULL);
+    value = libmongoc::uri_get_option_as_utf8(uri, opt_name.c_str(), nullptr);
     if (!value) {
         return {};
     }

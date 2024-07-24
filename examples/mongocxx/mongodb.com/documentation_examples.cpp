@@ -41,7 +41,7 @@ void check_field(const T& document,
                  const char* field,
                  bool should_have,
                  int example_no,
-                 const char* example_type = NULL) {
+                 const char* example_type = nullptr) {
     std::string example_type_formatted = example_type ? example_type + std::string(" ") : "";
     if (should_have) {
         if (!document[field]) {

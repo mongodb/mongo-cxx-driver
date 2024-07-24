@@ -60,7 +60,7 @@ void read_concern::acknowledge_level(read_concern::level rc_level) {
             break;
         case read_concern::level::k_server_default:
             // libmongoc uses a NULL level to mean "use the server's default read_concern."
-            libmongoc::read_concern_set_level(_impl->read_concern_t, NULL);
+            libmongoc::read_concern_set_level(_impl->read_concern_t, nullptr);
             break;
         case read_concern::level::k_available:
             libmongoc::read_concern_set_level(_impl->read_concern_t,
@@ -81,7 +81,7 @@ void read_concern::acknowledge_string(stdx::string_view rc_string) {
     // libmongoc uses a NULL level to mean "use the server's default read_concern."
     libmongoc::read_concern_set_level(
         _impl->read_concern_t,
-        rc_string.empty() ? NULL : bsoncxx::v_noabi::string::to_string(rc_string).data());
+        rc_string.empty() ? nullptr : bsoncxx::v_noabi::string::to_string(rc_string).data());
 }
 
 read_concern::level read_concern::acknowledge_level() const {

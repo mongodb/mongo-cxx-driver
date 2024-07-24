@@ -172,7 +172,7 @@ TEST_CASE("builder appends oid", "[bsoncxx::builder::stream]") {
     bson_init(&expected);
 
     bson_oid_t oid;
-    bson_oid_init(&oid, NULL);
+    bson_oid_init(&oid, nullptr);
 
     bson_append_oid(&expected, "foo", -1, &oid);
 
@@ -1339,7 +1339,7 @@ TEST_CASE("list builder appends oid", "[bsoncxx::builder::list]") {
     bson_init(&expected);
 
     bson_oid_t oid;
-    bson_oid_init(&oid, NULL);
+    bson_oid_init(&oid, nullptr);
 
     bson_append_oid(&expected, "foo", -1, &oid);
 

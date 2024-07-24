@@ -213,7 +213,7 @@ TEST_CASE("Collection", "[collection]") {
                     REQUIRE(o.find("writeConcern") == o.end());
                 }
 
-                return NULL;
+                return nullptr;
             });
 
         pipe.match(make_document(kvp("foo", "bar")));
@@ -268,7 +268,7 @@ TEST_CASE("Collection", "[collection]") {
             if (expected_opts) {
                 bson_t opts_without_skip_or_limit = BSON_INITIALIZER;
                 bson_copy_to_excluding_noinit(
-                    opts, &opts_without_skip_or_limit, "skip", "limit", NULL);
+                    opts, &opts_without_skip_or_limit, "skip", "limit", nullptr);
                 REQUIRE(bson_equal(&opts_without_skip_or_limit, expected_opts));
                 bson_destroy(&opts_without_skip_or_limit);
             }
@@ -454,7 +454,7 @@ TEST_CASE("Collection", "[collection]") {
                         libmongoc::conversions::read_mode_t_from_read_mode(
                             mongo_coll.read_preference().mode()));
 
-            mongoc_cursor_t* cursor = NULL;
+            mongoc_cursor_t* cursor = nullptr;
             return cursor;
         });
 

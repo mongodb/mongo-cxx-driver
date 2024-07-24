@@ -2847,7 +2847,7 @@ TEST_CASE("Custom Key Material Test", "[client_side_encryption]") {
     mongocxx::libbson::scoped_bson_t bson_doc;
     bson_doc.init_from_static(doc);
     mongocxx::libbson::scoped_bson_t doc_without_id;
-    bson_copy_to_excluding_noinit(bson_doc.bson(), doc_without_id.bson_for_init(), "_id", NULL);
+    bson_copy_to_excluding_noinit(bson_doc.bson(), doc_without_id.bson_for_init(), "_id", nullptr);
 
     bsoncxx::document::value new_doc(doc_without_id.steal());
 

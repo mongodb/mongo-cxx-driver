@@ -77,7 +77,7 @@ const auto gen_error = [](bool has_error) {
                            "expected error");
             *bson = &err_doc;
         } else {
-            *bson = NULL;
+            *bson = nullptr;
         }
         return has_error;
     };

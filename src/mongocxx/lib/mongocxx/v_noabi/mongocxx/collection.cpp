@@ -403,7 +403,7 @@ cursor collection::_find(const client_session* session,
                          const options::find& options) {
     scoped_bson_t filter_bson{std::move(filter)};
 
-    const mongoc_read_prefs_t* rp_ptr = NULL;
+    const mongoc_read_prefs_t* rp_ptr = nullptr;
     if (options.read_preference()) {
         rp_ptr = options.read_preference()->_impl->read_preference_t;
     }
@@ -483,7 +483,7 @@ cursor collection::_aggregate(const client_session* session,
 
     scoped_bson_t options_bson(b.view());
 
-    const ::mongoc_read_prefs_t* rp_ptr = NULL;
+    const ::mongoc_read_prefs_t* rp_ptr = nullptr;
 
     if (options.read_preference()) {
         rp_ptr = options.read_preference()->_impl->read_preference_t;
@@ -1055,7 +1055,7 @@ std::int64_t collection::_count_documents(const client_session* session,
     scoped_bson_t bson_filter{filter};
     scoped_bson_t reply;
     bson_error_t error;
-    const mongoc_read_prefs_t* read_prefs = NULL;
+    const mongoc_read_prefs_t* read_prefs = nullptr;
 
     if (const auto& rp = options.read_preference()) {
         read_prefs = rp->_impl->read_preference_t;
@@ -1120,7 +1120,7 @@ std::int64_t collection::estimated_document_count(
     scoped_bson_t reply;
     bson_error_t error;
 
-    const mongoc_read_prefs_t* read_prefs = NULL;
+    const mongoc_read_prefs_t* read_prefs = nullptr;
 
     if (const auto& rp = options.read_preference()) {
         read_prefs = rp->_impl->read_preference_t;
@@ -1208,7 +1208,7 @@ cursor collection::_distinct(const client_session* session,
             bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
     }
 
-    const mongoc_read_prefs_t* rp_ptr = NULL;
+    const mongoc_read_prefs_t* rp_ptr = nullptr;
     if (const auto& rp = options.read_preference()) {
         rp_ptr = rp->_impl->read_preference_t;
     }

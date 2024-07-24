@@ -119,7 +119,8 @@ value::value(stdx::string_view regex, stdx::string_view options)
     : _impl{stdx::make_unique<impl>()} {
     _impl->_value.value_type = BSON_TYPE_REGEX;
     _impl->_value.value.v_regex.regex = make_copy_for_libbson(regex);
-    _impl->_value.value.v_regex.options = options.empty() ? NULL : make_copy_for_libbson(options);
+    _impl->_value.value.v_regex.options =
+        options.empty() ? nullptr : make_copy_for_libbson(options);
 }
 
 value::value(b_code v) : value(v.type_id, v) {}
@@ -129,7 +130,7 @@ value::value(const type id, stdx::string_view v) : _impl{stdx::make_unique<impl>
         case type::k_regex:
             _impl->_value.value_type = BSON_TYPE_REGEX;
             _impl->_value.value.v_regex.regex = make_copy_for_libbson(v);
-            _impl->_value.value.v_regex.options = NULL;
+            _impl->_value.value.v_regex.options = nullptr;
             break;
         case type::k_code:
             _impl->_value.value_type = BSON_TYPE_CODE;
