@@ -2194,27 +2194,6 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             REQUIRE(result->inserted_count() == 1);
         }
 
-        SECTION("fail if server has maxWireVersion < 5 and write has collation") {
-            if (test_util::get_max_wire_version(mongodb_client) < 5) {
-                collection coll = db["bulk_write_collation"];
-                coll.drop();
-
-                auto collation =
-                    make_document(kvp("collation", make_document(kvp("locale", "en_US"))));
-
-                model::delete_one first{std::move(doc1)};
-                model::delete_one second{std::move(doc2)};
-
-                second.collation(collation.view());
-
-                auto bulk = coll.create_bulk_write(bulk_opts);
-                bulk.append(first);
-                bulk.append(second);
-
-                REQUIRE_THROWS_AS(bulk.execute(), operation_exception);
-            }
-        }
-
         SECTION("bypass_document_validation ignores validation_criteria", "[collection]") {
             std::string collname = "bulk_write_bypass_document_validation";
             db[collname].drop();
