@@ -18,7 +18,6 @@ bulkWrite-insertOne-dots_and_dollars.json
 bulkWrite-replaceOne-dots_and_dollars.json
 bulkWrite-replaceOne-hint-unacknowledged.json
 bulkWrite-replaceOne-let.json
-bulkWrite-update-hint-clientError.json
 bulkWrite-update-hint-serverError.json
 bulkWrite-update-hint.json
 bulkWrite-update-validation.json
@@ -32,13 +31,11 @@ countDocuments-comment.json
 db-aggregate-write-readPreference.json
 db-aggregate.json
 deleteMany-comment.json
-deleteMany-hint-clientError.json
 deleteMany-hint-serverError.json
 deleteMany-hint-unacknowledged.json
 deleteMany-hint.json
 deleteMany-let.json
 deleteOne-comment.json
-deleteOne-hint-clientError.json
 deleteOne-hint-serverError.json
 deleteOne-hint-unacknowledged.json
 deleteOne-hint.json
@@ -46,7 +43,6 @@ deleteOne-let.json
 distinct-comment.json
 estimatedDocumentCount-comment.json
 estimatedDocumentCount.json
-find-allowdiskuse-clientError.json
 find-allowdiskuse-serverError.json
 find-allowdiskuse.json
 find-comment.json
@@ -84,7 +80,6 @@ replaceOne-let.json
 replaceOne-validation.json
 updateMany-comment.json
 updateMany-dots_and_dollars.json
-updateMany-hint-clientError.json
 updateMany-hint-serverError.json
 updateMany-hint-unacknowledged.json
 updateMany-hint.json
@@ -92,7 +87,6 @@ updateMany-let.json
 updateMany-validation.json
 updateOne-comment.json
 updateOne-dots_and_dollars.json
-updateOne-hint-clientError.json
 updateOne-hint-serverError.json
 updateOne-hint-unacknowledged.json
 updateOne-hint.json
