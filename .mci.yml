@@ -193,7 +193,7 @@ functions:
                 cd drivers-evergreen-tools
                 export DRIVERS_TOOLS=$(pwd)
 
-                bash .evergreen/atlas_data_lake/pull-mongohouse-image.sh
+                .evergreen/atlas_data_lake/pull-mongohouse-image.sh
 
     "run_mongohouse":
         command: shell.exec
@@ -203,7 +203,7 @@ functions:
                 cd drivers-evergreen-tools
                 export DRIVERS_TOOLS=$(pwd)
 
-                bash .evergreen/atlas_data_lake/run-mongohouse-image.sh
+                .evergreen/atlas_data_lake/run-mongohouse-image.sh
 
     "test_mongohouse":
         command: shell.exec
@@ -1004,7 +1004,7 @@ tasks:
           script: |-
             set -o errexit
             export INSTALL_VERSION=${mongocxx_version_finder_sh}
-            sh ./.evergreen/uninstall_check.sh
+            ./.evergreen/uninstall_check.sh
 
     - name: uninstall_check_windows
       commands:
@@ -1075,7 +1075,7 @@ tasks:
           script: |-
             set -o errexit
             export IS_PATCH="${is_patch}"
-            sh .evergreen/debian_package_build.sh
+            .evergreen/debian_package_build.sh
       - command: s3.put
         params:
           aws_key: ${aws_key}
@@ -1100,7 +1100,7 @@ tasks:
             set -o errexit
             export IS_PATCH="${is_patch}"
             export DEB_BUILD_PROFILES="pkg.mongo-cxx-driver.mnmlstc"
-            sh .evergreen/debian_package_build.sh
+            .evergreen/debian_package_build.sh
       - command: s3.put
         params:
           aws_key: ${aws_key}
@@ -1123,7 +1123,7 @@ tasks:
           shell: bash
           script: |-
             set -o errexit
-            sh .evergreen/build_snapshot_rpm.sh
+            .evergreen/build_snapshot_rpm.sh
       - command: s3.put
         params:
           aws_key: ${aws_key}
