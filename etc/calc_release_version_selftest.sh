@@ -1,4 +1,5 @@
-#!/bin/bash
+#!/usr/bin/env bash
+#
 # calc_release_version_selftest.sh is used to test output of calc_release_version.py.
 # run with:
 # cd etc

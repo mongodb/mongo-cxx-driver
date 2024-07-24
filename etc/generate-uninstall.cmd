@@ -46,7 +46,7 @@ set prefix=%prefix:"=%
 echo.@echo off
 echo.
 echo.REM MongoDB C++ Driver uninstall program, generated with CMake
-echo.
+echo.REM
 echo.REM Copyright 2009-present MongoDB, Inc.
 echo.REM
 echo.REM Licensed under the Apache License, Version 2.0 (the "License");
