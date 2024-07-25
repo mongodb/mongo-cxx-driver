@@ -297,10 +297,6 @@ stdx::optional<bsoncxx::document::value> parse_test_file(std::string path) {
     return bsoncxx::from_json(stream.str());
 }
 
-bool supports_collation(const client& client) {
-    return get_max_wire_version(client) >= 5;
-}
-
 bsoncxx::document::value transform_document(bsoncxx::document::view view, const xformer_t& fcn) {
     bsoncxx::builder::basic::array context;
 

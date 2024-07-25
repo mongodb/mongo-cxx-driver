@@ -462,11 +462,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         auto predicate = make_document(kvp("x", "FOO"));
         auto find_opts = options::find{}.collation(case_insensitive_collation.view());
         auto cursor = coll.find(predicate.view(), find_opts);
-        if (test_util::supports_collation(mongodb_client)) {
-            REQUIRE(std::distance(cursor.begin(), cursor.end()) == 1);
-        } else {
-            REQUIRE_THROWS_AS(std::distance(cursor.begin(), cursor.end()), query_exception);
-        }
+        REQUIRE(std::distance(cursor.begin(), cursor.end()) == 1);
     }
 
     SECTION("find with return_key", "[collection]") {
@@ -519,11 +515,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
         auto predicate = make_document(kvp("x", "FOO"));
         auto find_opts = options::find{}.collation(case_insensitive_collation.view());
-        if (test_util::supports_collation(mongodb_client)) {
-            REQUIRE(coll.find_one(predicate.view(), find_opts));
-        } else {
-            REQUIRE_THROWS_AS(coll.find_one(predicate.view(), find_opts), query_exception);
-        }
+        REQUIRE(coll.find_one(predicate.view(), find_opts));
     }
 
     SECTION("insert and update single document", "[collection]") {
@@ -674,21 +666,16 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         update_doc.append(kvp("$set", make_document(kvp("changed", true))));
 
         auto update_opts = options::update{}.collation(case_insensitive_collation.view());
-        if (test_util::supports_collation(mongodb_client)) {
-            INFO("unacknowledged write concern fails");
-            update_opts.write_concern(noack);
-            REQUIRE_THROWS_AS(coll.update_one(predicate.view(), update_doc.view(), update_opts),
-                              operation_exception);
+        INFO("unacknowledged write concern fails");
+        update_opts.write_concern(noack);
+        REQUIRE_THROWS_AS(coll.update_one(predicate.view(), update_doc.view(), update_opts),
+                          operation_exception);
 
-            INFO("default write concern succeeds");
-            update_opts.write_concern(default_wc);
-            auto result = coll.update_one(predicate.view(), update_doc.view(), update_opts);
-            REQUIRE(result);
-            REQUIRE(result->modified_count() == 1);
-        } else {
-            REQUIRE_THROWS_AS(coll.update_one(predicate.view(), update_doc.view(), update_opts),
-                              bulk_write_exception);
-        }
+        INFO("default write concern succeeds");
+        update_opts.write_concern(default_wc);
+        auto result = coll.update_one(predicate.view(), update_doc.view(), update_opts);
+        REQUIRE(result);
+        REQUIRE(result->modified_count() == 1);
     }
 
     SECTION("insert and update multiple documents", "[collection]") {
@@ -793,22 +780,16 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         update_doc.append(kvp("$set", make_document(kvp("changed", true))));
 
         auto update_opts = options::update{}.collation(case_insensitive_collation.view());
-        if (test_util::supports_collation(mongodb_client)) {
-            INFO("unacknowledged write concern fails");
-            update_opts.write_concern(noack);
-            REQUIRE_THROWS_AS(coll.update_many(predicate.view(), update_doc.view(), update_opts),
-                              operation_exception);
+        INFO("unacknowledged write concern fails");
+        update_opts.write_concern(noack);
+        REQUIRE_THROWS_AS(coll.update_many(predicate.view(), update_doc.view(), update_opts),
+                          operation_exception);
 
-            INFO("default write concern succeeds");
-            update_opts.write_concern(default_wc);
-            auto result = coll.update_many(predicate.view(), update_doc.view(), update_opts);
-            REQUIRE(result);
-            REQUIRE(result->modified_count() == 1);
-
-        } else {
-            REQUIRE_THROWS_AS(coll.update_many(predicate.view(), update_doc.view(), update_opts),
-                              bulk_write_exception);
-        }
+        INFO("default write concern succeeds");
+        update_opts.write_concern(default_wc);
+        auto result = coll.update_many(predicate.view(), update_doc.view(), update_opts);
+        REQUIRE(result);
+        REQUIRE(result->modified_count() == 1);
     }
 
     SECTION("replace document replaces only one document", "[collection]") {
@@ -895,11 +876,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
         auto predicate = make_document(kvp("x", "FOO"));
         auto count_opts = options::count{}.collation(case_insensitive_collation.view());
-        if (test_util::supports_collation(mongodb_client)) {
-            REQUIRE(coll.count_documents(predicate.view(), count_opts) == 1);
-        } else {
-            REQUIRE_THROWS_AS(coll.count_documents(predicate.view(), count_opts), query_exception);
-        }
+        REQUIRE(coll.count_documents(predicate.view(), count_opts) == 1);
     }
 
     SECTION("replace_one returns correct result object", "[collection]") {
@@ -972,24 +949,16 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         replacement_doc.append(kvp("x", "bar"));
 
         auto replace_opts = options::replace{}.collation(case_insensitive_collation.view());
-        if (test_util::supports_collation(mongodb_client)) {
-            INFO("unacknowledged write concern fails");
-            replace_opts.write_concern(noack);
-            REQUIRE_THROWS_AS(
-                coll.replace_one(predicate.view(), replacement_doc.view(), replace_opts),
-                operation_exception);
+        INFO("unacknowledged write concern fails");
+        replace_opts.write_concern(noack);
+        REQUIRE_THROWS_AS(coll.replace_one(predicate.view(), replacement_doc.view(), replace_opts),
+                          operation_exception);
 
-            INFO("default write concern succeeds");
-            replace_opts.write_concern(default_wc);
-            auto result = coll.replace_one(predicate.view(), replacement_doc.view(), replace_opts);
-            REQUIRE(result);
-            REQUIRE(result->modified_count() == 1);
-
-        } else {
-            REQUIRE_THROWS_AS(
-                coll.replace_one(predicate.view(), replacement_doc.view(), replace_opts),
-                bulk_write_exception);
-        }
+        INFO("default write concern succeeds");
+        replace_opts.write_concern(default_wc);
+        auto result = coll.replace_one(predicate.view(), replacement_doc.view(), replace_opts);
+        REQUIRE(result);
+        REQUIRE(result->modified_count() == 1);
     }
 
     SECTION("filtered document delete one works", "[collection]") {
@@ -1093,19 +1062,15 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         auto predicate = make_document(kvp("x", "FOO"));
 
         auto delete_opts = options::delete_options{}.collation(case_insensitive_collation.view());
-        if (test_util::supports_collation(mongodb_client)) {
-            INFO("unacknowledged write concern fails");
-            delete_opts.write_concern(noack);
-            REQUIRE_THROWS_AS(coll.delete_one(predicate.view(), delete_opts), operation_exception);
+        INFO("unacknowledged write concern fails");
+        delete_opts.write_concern(noack);
+        REQUIRE_THROWS_AS(coll.delete_one(predicate.view(), delete_opts), operation_exception);
 
-            INFO("default write concern succeeds");
-            delete_opts.write_concern(default_wc);
-            auto result = coll.delete_one(predicate.view(), delete_opts);
-            REQUIRE(result);
-            REQUIRE(result->deleted_count() == 1);
-        } else {
-            REQUIRE_THROWS_AS(coll.delete_one(predicate.view(), delete_opts), bulk_write_exception);
-        }
+        INFO("default write concern succeeds");
+        delete_opts.write_concern(default_wc);
+        auto result = coll.delete_one(predicate.view(), delete_opts);
+        REQUIRE(result);
+        REQUIRE(result->deleted_count() == 1);
     }
 
     SECTION("delete many works", "[collection]") {
@@ -1200,20 +1165,15 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         auto predicate = make_document(kvp("x", "FOO"));
 
         auto delete_opts = options::delete_options{}.collation(case_insensitive_collation.view());
-        if (test_util::supports_collation(mongodb_client)) {
-            INFO("unacknowledged write concern fails");
-            delete_opts.write_concern(noack);
-            REQUIRE_THROWS_AS(coll.delete_many(predicate.view(), delete_opts), operation_exception);
+        INFO("unacknowledged write concern fails");
+        delete_opts.write_concern(noack);
+        REQUIRE_THROWS_AS(coll.delete_many(predicate.view(), delete_opts), operation_exception);
 
-            INFO("default write concern succeeds");
-            delete_opts.write_concern(default_wc);
-            auto result = coll.delete_many(predicate.view(), delete_opts);
-            REQUIRE(result);
-            REQUIRE(result->deleted_count() == 1);
-        } else {
-            REQUIRE_THROWS_AS(coll.delete_many(predicate.view(), delete_opts),
-                              bulk_write_exception);
-        }
+        INFO("default write concern succeeds");
+        delete_opts.write_concern(default_wc);
+        auto result = coll.delete_many(predicate.view(), delete_opts);
+        REQUIRE(result);
+        REQUIRE(result->deleted_count() == 1);
     }
 
     SECTION("find works with sort", "[collection]") {
@@ -1307,24 +1267,18 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
             auto collation_criteria = make_document(kvp("x", "FOO"));
 
-            if (test_util::supports_collation(mongodb_client)) {
-                INFO("unacknowledged write concern fails");
-                options.write_concern(noack);
-                REQUIRE_THROWS_AS(coll.find_one_and_replace(
-                                      collation_criteria.view(), replacement.view(), options),
-                                  logic_error);
+            INFO("unacknowledged write concern fails");
+            options.write_concern(noack);
+            REQUIRE_THROWS_AS(
+                coll.find_one_and_replace(collation_criteria.view(), replacement.view(), options),
+                logic_error);
 
-                INFO("default write concern succeeds");
-                options.write_concern(default_wc);
-                auto doc = coll.find_one_and_replace(
-                    collation_criteria.view(), replacement.view(), options);
-                REQUIRE(doc);
-                REQUIRE(doc->view()["x"].get_string().value == stdx::string_view{"foo"});
-            } else {
-                REQUIRE_THROWS_AS(coll.find_one_and_replace(
-                                      collation_criteria.view(), replacement.view(), options),
-                                  write_exception);
-            }
+            INFO("default write concern succeeds");
+            options.write_concern(default_wc);
+            auto doc =
+                coll.find_one_and_replace(collation_criteria.view(), replacement.view(), options);
+            REQUIRE(doc);
+            REQUIRE(doc->view()["x"].get_string().value == stdx::string_view{"foo"});
         }
 
         SECTION("bad criteria returns negative optional") {
@@ -1416,25 +1370,17 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
             auto collation_criteria = make_document(kvp("x", "FOO"));
 
-            if (test_util::supports_collation(mongodb_client)) {
-                INFO("unacknowledged write concern fails");
-                options.write_concern(noack);
-                REQUIRE_THROWS_AS(
-                    coll.find_one_and_update(collation_criteria.view(), update.view(), options),
-                    logic_error);
+            INFO("unacknowledged write concern fails");
+            options.write_concern(noack);
+            REQUIRE_THROWS_AS(
+                coll.find_one_and_update(collation_criteria.view(), update.view(), options),
+                logic_error);
 
-                INFO("default write concern succeeds");
-                options.write_concern(default_wc);
-                auto doc =
-                    coll.find_one_and_update(collation_criteria.view(), update.view(), options);
-                REQUIRE(doc);
-                REQUIRE(doc->view()["x"].get_string().value == stdx::string_view{"foo"});
-
-            } else {
-                REQUIRE_THROWS_AS(
-                    coll.find_one_and_update(collation_criteria.view(), update.view(), options),
-                    write_exception);
-            }
+            INFO("default write concern succeeds");
+            options.write_concern(default_wc);
+            auto doc = coll.find_one_and_update(collation_criteria.view(), update.view(), options);
+            REQUIRE(doc);
+            REQUIRE(doc->view()["x"].get_string().value == stdx::string_view{"foo"});
         }
 
         SECTION("bad criteria returns negative optional") {
@@ -1510,22 +1456,16 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
             auto collation_criteria = make_document(kvp("x", "FOO"));
 
-            if (test_util::supports_collation(mongodb_client)) {
-                INFO("unacknowledged write concern fails");
-                options.write_concern(noack);
-                REQUIRE_THROWS_AS(coll.find_one_and_delete(collation_criteria.view(), options),
-                                  logic_error);
+            INFO("unacknowledged write concern fails");
+            options.write_concern(noack);
+            REQUIRE_THROWS_AS(coll.find_one_and_delete(collation_criteria.view(), options),
+                              logic_error);
 
-                INFO("default write concern succeeds");
-                options.write_concern(default_wc);
-                auto doc = coll.find_one_and_delete(collation_criteria.view(), options);
-                REQUIRE(doc);
-                REQUIRE(doc->view()["x"].get_string().value == stdx::string_view{"foo"});
-
-            } else {
-                REQUIRE_THROWS_AS(coll.find_one_and_delete(collation_criteria.view(), options),
-                                  write_exception);
-            }
+            INFO("default write concern succeeds");
+            options.write_concern(default_wc);
+            auto doc = coll.find_one_and_delete(collation_criteria.view(), options);
+            REQUIRE(doc);
+            REQUIRE(doc->view()["x"].get_string().value == stdx::string_view{"foo"});
         }
     }
 
@@ -1550,15 +1490,9 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             pipeline.add_fields(make_document(kvp("x", 1)));
             auto cursor = coll.aggregate(pipeline);
 
-            if (test_util::get_max_wire_version(mongodb_client) >= 5) {
-                // The server supports add_fields().
-                auto results = get_results(std::move(cursor));
-                REQUIRE(results.size() == 1);
-                REQUIRE(results[0].view()["x"].get_int32() == 1);
-            } else {
-                // The server does not support add_fields().
-                REQUIRE_THROWS_AS(get_results(std::move(cursor)), operation_exception);
-            }
+            auto results = get_results(std::move(cursor));
+            REQUIRE(results.size() == 1);
+            REQUIRE(results[0].view()["x"].get_int32() == 1);
         }
 
         SECTION("bucket") {
@@ -1573,20 +1507,14 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
                 make_document(kvp("groupBy", "$x"), kvp("boundaries", make_array(0, 2, 6))));
             auto cursor = coll.aggregate(pipeline);
 
-            if (test_util::get_max_wire_version(mongodb_client) >= 5) {
-                // The server supports bucket().
-                auto results = get_results(std::move(cursor));
-                REQUIRE(results.size() == 2);
+            auto results = get_results(std::move(cursor));
+            REQUIRE(results.size() == 2);
 
-                REQUIRE(results[0].view()["_id"].get_int32() == 0);
-                REQUIRE(results[0].view()["count"].get_int32() == 1);
+            REQUIRE(results[0].view()["_id"].get_int32() == 0);
+            REQUIRE(results[0].view()["count"].get_int32() == 1);
 
-                REQUIRE(results[1].view()["_id"].get_int32() == 2);
-                REQUIRE(results[1].view()["count"].get_int32() == 2);
-            } else {
-                // The server does not support bucket().
-                REQUIRE_THROWS_AS(get_results(std::move(cursor)), operation_exception);
-            }
+            REQUIRE(results[1].view()["_id"].get_int32() == 2);
+            REQUIRE(results[1].view()["count"].get_int32() == 2);
         }
 
         SECTION("bucket_auto") {
@@ -1600,20 +1528,13 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             pipeline.bucket_auto(make_document(kvp("groupBy", "$x"), kvp("buckets", 2)));
             auto cursor = coll.aggregate(pipeline);
 
-            if (test_util::get_max_wire_version(mongodb_client) >= 5) {
-                // The server supports bucket_auto().
-
-                auto results = get_results(std::move(cursor));
-                REQUIRE(results.size() == 2);
-                // We check that the "count" field exists here, but we don't assert the exact count,
-                // since the server doesn't guarantee what the exact boundaries (and thus the exact
-                // counts) will be.
-                REQUIRE(results[0].view()["count"]);
-                REQUIRE(results[1].view()["count"]);
-            } else {
-                // The server does not support bucket_auto().
-                REQUIRE_THROWS_AS(get_results(std::move(cursor)), operation_exception);
-            }
+            auto results = get_results(std::move(cursor));
+            REQUIRE(results.size() == 2);
+            // We check that the "count" field exists here, but we don't assert the exact count,
+            // since the server doesn't guarantee what the exact boundaries (and thus the exact
+            // counts) will be.
+            REQUIRE(results[0].view()["count"]);
+            REQUIRE(results[1].view()["count"]);
         }
 
         SECTION("coll_stats") {
@@ -1625,16 +1546,10 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             pipeline.coll_stats(make_document(kvp("latencyStats", make_document())));
             auto cursor = coll.aggregate(pipeline);
 
-            if (test_util::get_max_wire_version(mongodb_client) >= 5) {
-                // The server supports coll_stats().
-                auto results = get_results(std::move(cursor));
-                REQUIRE(results.size() == 1);
-                REQUIRE(results[0].view()["ns"]);
-                REQUIRE(results[0].view()["latencyStats"]);
-            } else {
-                // The server does not support coll_stats().
-                REQUIRE_THROWS_AS(get_results(std::move(cursor)), operation_exception);
-            }
+            auto results = get_results(std::move(cursor));
+            REQUIRE(results.size() == 1);
+            REQUIRE(results[0].view()["ns"]);
+            REQUIRE(results[0].view()["latencyStats"]);
         }
 
         SECTION("count") {
@@ -1648,15 +1563,9 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             pipeline.count("foo");
             auto cursor = coll.aggregate(pipeline);
 
-            if (test_util::get_max_wire_version(mongodb_client) >= 5) {
-                // The server supports count().
-                auto results = get_results(std::move(cursor));
-                REQUIRE(results.size() == 1);
-                REQUIRE(results[0].view()["foo"].get_int32() == 3);
-            } else {
-                // The server does not support count().
-                REQUIRE_THROWS_AS(get_results(std::move(cursor)), operation_exception);
-            }
+            auto results = get_results(std::move(cursor));
+            REQUIRE(results.size() == 1);
+            REQUIRE(results[0].view()["foo"].get_int32() == 3);
         }
 
         SECTION("facet") {
@@ -1670,16 +1579,10 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             pipeline.facet(make_document(kvp("foo", make_array(make_document(kvp("$limit", 2))))));
             auto cursor = coll.aggregate(pipeline);
 
-            if (test_util::get_max_wire_version(mongodb_client) >= 5) {
-                // The server supports facet().
-                auto results = get_results(std::move(cursor));
-                REQUIRE(results.size() == 1);
-                auto foo_array = results[0].view()["foo"].get_array().value;
-                REQUIRE(std::distance(foo_array.begin(), foo_array.end()) == 2);
-            } else {
-                // The server does not support facet().
-                REQUIRE_THROWS_AS(get_results(std::move(cursor)), operation_exception);
-            }
+            auto results = get_results(std::move(cursor));
+            REQUIRE(results.size() == 1);
+            auto foo_array = results[0].view()["foo"].get_array().value;
+            REQUIRE(std::distance(foo_array.begin(), foo_array.end()) == 2);
         }
 
         SECTION("geo_near") {
@@ -1718,16 +1621,10 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             pipeline.sort(make_document(kvp("x", 1)));
             auto cursor = coll.aggregate(pipeline);
 
-            if (test_util::get_max_wire_version(mongodb_client) >= 5) {
-                // The server supports graph_lookup().
-                auto results = get_results(std::move(cursor));
-                REQUIRE(results.size() == 2);
-                REQUIRE(results[0].view()["z"].get_array().value.empty());
-                REQUIRE(!results[1].view()["z"].get_array().value.empty());
-            } else {
-                // The server does not support graph_lookup().
-                REQUIRE_THROWS_AS(get_results(std::move(cursor)), operation_exception);
-            }
+            auto results = get_results(std::move(cursor));
+            REQUIRE(results.size() == 2);
+            REQUIRE(results[0].view()["z"].get_array().value.empty());
+            REQUIRE(!results[1].view()["z"].get_array().value.empty());
         }
 
         SECTION("group") {
@@ -1760,14 +1657,8 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             pipeline.index_stats();
             auto cursor = coll.aggregate(pipeline);
 
-            if (test_util::get_max_wire_version(mongodb_client) >= 4) {
-                // The server supports index_stats().
-                auto results = get_results(std::move(cursor));
-                REQUIRE(results.size() == 4);
-            } else {
-                // The server does not support index_stats().
-                REQUIRE_THROWS_AS(get_results(std::move(cursor)), operation_exception);
-            }
+            auto results = get_results(std::move(cursor));
+            REQUIRE(results.size() == 4);
         }
 
         SECTION("limit") {
@@ -1804,16 +1695,10 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             pipeline.sort(make_document(kvp("x", 1)));
             auto cursor = coll.aggregate(pipeline);
 
-            if (test_util::get_max_wire_version(mongodb_client) >= 4) {
-                // The server supports lookup().
-                auto results = get_results(std::move(cursor));
-                REQUIRE(results.size() == 2);
-                REQUIRE(!results[0].view()["z"].get_array().value.empty());
-                REQUIRE(results[1].view()["z"].get_array().value.empty());
-            } else {
-                // The server does not support lookup().
-                REQUIRE_THROWS_AS(get_results(std::move(cursor)), operation_exception);
-            }
+            auto results = get_results(std::move(cursor));
+            REQUIRE(results.size() == 2);
+            REQUIRE(!results[0].view()["z"].get_array().value.empty());
+            REQUIRE(results[1].view()["z"].get_array().value.empty());
         }
 
         SECTION("match") {
@@ -1898,19 +1783,13 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             stdx::optional<cursor> cursor;
             REQUIRE_NOTHROW(cursor = coll_in.aggregate(pipeline, options));
 
-            if (test_util::get_max_wire_version(mongodb_client) >= 1) {
-                // The server supports out().
-                auto results = get_results(std::move(*cursor));
-                REQUIRE(results.empty());
+            auto results = get_results(std::move(*cursor));
+            REQUIRE(results.empty());
 
-                auto collection_contents = get_results(coll_out.find({}));
-                REQUIRE(collection_contents.size() == 1);
-                REQUIRE(collection_contents[0].view()["x"].get_int32() == 1);
-                REQUIRE(!collection_contents[0].view()["y"]);
-            } else {
-                // The server does not support out().
-                REQUIRE_THROWS_AS(get_results(std::move(*cursor)), operation_exception);
-            }
+            auto collection_contents = get_results(coll_out.find({}));
+            REQUIRE(collection_contents.size() == 1);
+            REQUIRE(collection_contents[0].view()["x"].get_int32() == 1);
+            REQUIRE(!collection_contents[0].view()["y"]);
         }
 
         SECTION("out fails when not last") {
@@ -1969,15 +1848,9 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             pipeline.replace_root(make_document(kvp("newRoot", "$x")));
             auto cursor = coll.aggregate(pipeline);
 
-            if (test_util::get_max_wire_version(mongodb_client) >= 5) {
-                // The server supports replace_root().
-                auto results = get_results(std::move(cursor));
-                REQUIRE(results.size() == 1);
-                REQUIRE(results[0].view()["y"]);
-            } else {
-                // The server does not support replace_root().
-                REQUIRE_THROWS_AS(get_results(std::move(cursor)), operation_exception);
-            }
+            auto results = get_results(std::move(cursor));
+            REQUIRE(results.size() == 1);
+            REQUIRE(results[0].view()["y"]);
         }
 
         SECTION("sample") {
@@ -1992,14 +1865,8 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             pipeline.sample(3);
             auto cursor = coll.aggregate(pipeline);
 
-            if (test_util::get_max_wire_version(mongodb_client) >= 4) {
-                // The server supports sample().
-                auto results = get_results(std::move(cursor));
-                REQUIRE(results.size() == 3);
-            } else {
-                // The server does not support sample().
-                REQUIRE_THROWS_AS(get_results(std::move(cursor)), operation_exception);
-            }
+            auto results = get_results(std::move(cursor));
+            REQUIRE(results.size() == 3);
         }
 
         SECTION("skip") {
@@ -2052,16 +1919,10 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
                 pipeline.sort_by_count("$x");
                 auto cursor = coll.aggregate(pipeline);
 
-                if (test_util::get_max_wire_version(mongodb_client) >= 5) {
-                    // The server supports sort_by_count().
-                    auto results = get_results(std::move(cursor));
-                    REQUIRE(results.size() == 2);
-                    REQUIRE(results[0].view()["_id"].get_int32() == 2);
-                    REQUIRE(results[1].view()["_id"].get_int32() == 1);
-                } else {
-                    // The server does not support sort_by_count().
-                    REQUIRE_THROWS_AS(get_results(std::move(cursor)), operation_exception);
-                }
+                auto results = get_results(std::move(cursor));
+                REQUIRE(results.size() == 2);
+                REQUIRE(results[0].view()["_id"].get_int32() == 2);
+                REQUIRE(results[1].view()["_id"].get_int32() == 1);
             }
 
             SECTION("with document") {
@@ -2073,16 +1934,10 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
                 pipeline.sort_by_count(make_document(kvp("$mod", make_array("$x", 2))));
                 auto cursor = coll.aggregate(pipeline);
 
-                if (test_util::get_max_wire_version(mongodb_client) >= 5) {
-                    // The server supports sort_by_count().
-                    auto results = get_results(std::move(cursor));
-                    REQUIRE(results.size() == 2);
-                    REQUIRE(results[0].view()["_id"].get_int32() == 0);
-                    REQUIRE(results[1].view()["_id"].get_int32() == 1);
-                } else {
-                    // The server does not support sort_by_count().
-                    REQUIRE_THROWS_AS(get_results(std::move(cursor)), operation_exception);
-                }
+                auto results = get_results(std::move(cursor));
+                REQUIRE(results.size() == 2);
+                REQUIRE(results[0].view()["_id"].get_int32() == 0);
+                REQUIRE(results[1].view()["_id"].get_int32() == 1);
             }
         }
 
@@ -2107,14 +1962,8 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             pipeline.unwind(make_document(kvp("path", "$x")));
             auto cursor = coll.aggregate(pipeline);
 
-            if (test_util::get_max_wire_version(mongodb_client) >= 4) {
-                // The server supports unwind() with a document.
-                auto results = get_results(std::move(cursor));
-                REQUIRE(results.size() == 5);
-            } else {
-                // The server does not support unwind() with a document.
-                REQUIRE_THROWS_AS(get_results(std::move(cursor)), operation_exception);
-            }
+            auto results = get_results(std::move(cursor));
+            REQUIRE(results.size() == 5);
         }
     }
 
@@ -2134,12 +1983,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
         auto agg_opts = options::aggregate{}.collation(case_insensitive_collation.view());
         auto results = coll.aggregate(p, agg_opts);
 
-        if (test_util::supports_collation(mongodb_client)) {
-            REQUIRE(std::distance(results.begin(), results.end()) == 1);
-        } else {
-            // The server does not support collation.
-            REQUIRE_THROWS_AS(std::distance(results.begin(), results.end()), operation_exception);
-        }
+        REQUIRE(std::distance(results.begin(), results.end()) == 1);
     }
 
     SECTION("bulk_write returns correct result object") {
@@ -2192,27 +2036,6 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
             auto result = coll.write(model::insert_one{std::move(doc3)});
             REQUIRE(result);
             REQUIRE(result->inserted_count() == 1);
-        }
-
-        SECTION("fail if server has maxWireVersion < 5 and write has collation") {
-            if (test_util::get_max_wire_version(mongodb_client) < 5) {
-                collection coll = db["bulk_write_collation"];
-                coll.drop();
-
-                auto collation =
-                    make_document(kvp("collation", make_document(kvp("locale", "en_US"))));
-
-                model::delete_one first{std::move(doc1)};
-                model::delete_one second{std::move(doc2)};
-
-                second.collation(collation.view());
-
-                auto bulk = coll.create_bulk_write(bulk_opts);
-                bulk.append(first);
-                bulk.append(second);
-
-                REQUIRE_THROWS_AS(bulk.execute(), operation_exception);
-            }
         }
 
         SECTION("bypass_document_validation ignores validation_criteria", "[collection]") {
@@ -2295,19 +2118,13 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
         auto distinct_opts = options::distinct{}.collation(case_insensitive_collation.view());
 
-        if (test_util::supports_collation(mongodb_client)) {
-            auto distinct_results = coll.distinct("x", predicate.view(), distinct_opts);
-            auto iter = distinct_results.begin();
-            REQUIRE(iter != distinct_results.end());
-            auto result = *iter;
-            auto values = result["values"].get_array().value;
-            REQUIRE(std::distance(values.begin(), values.end()) == 1);
-            REQUIRE(values[0].get_string().value == stdx::string_view{"foo"});
-        } else {
-            // The server does not support collation.
-            REQUIRE_THROWS_AS(coll.distinct("x", predicate.view(), distinct_opts),
-                              operation_exception);
-        }
+        auto distinct_results = coll.distinct("x", predicate.view(), distinct_opts);
+        auto iter = distinct_results.begin();
+        REQUIRE(iter != distinct_results.end());
+        auto result = *iter;
+        auto values = result["values"].get_array().value;
+        REQUIRE(std::distance(values.begin(), values.end()) == 1);
+        REQUIRE(values[0].get_string().value == stdx::string_view{"foo"});
     }
 }
 
@@ -2337,10 +2154,10 @@ TEST_CASE("read_concern is inherited from parent", "[collection]") {
     }
 }
 
-void find_index_and_validate(collection& coll,
-                             stdx::string_view index_name,
-                             const std::function<void(bsoncxx::document::view)>& validate =
-                                 [](bsoncxx::document::view) {}) {
+void find_index_and_validate(
+    collection& coll,
+    stdx::string_view index_name,
+    const std::function<void(bsoncxx::document::view)>& validate = [](bsoncxx::document::view) {}) {
     auto cursor = coll.list_indexes();
 
     for (auto&& index : cursor) {
