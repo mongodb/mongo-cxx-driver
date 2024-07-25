@@ -125,15 +125,6 @@ std::string get_hosts(const client& client = {uri{}, add_test_server_api()});
 ///
 stdx::optional<bsoncxx::document::value> parse_test_file(std::string path);
 
-//
-// Determines whether or not the given client supports the collation feature, by running the
-// "hello" command.
-//
-// Throws mongocxx::operation_exception if the operation fails, or the server reply is
-// malformed.
-//
-bool supports_collation(const client& client);
-
 using item_t = std::pair<stdx::optional<stdx::string_view>, bsoncxx::types::bson_value::view>;
 using xformer_t = std::function<stdx::optional<item_t>(item_t, bsoncxx::builder::basic::array*)>;
 

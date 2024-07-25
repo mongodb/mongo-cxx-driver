@@ -449,45 +449,42 @@ TEST_CASE("index creation and deletion with different collation") {
 
     client mongodb_client{uri{}, test_util::add_test_server_api()};
 
-    if (test_util::get_max_wire_version(mongodb_client) >= 5) {
-        database db = mongodb_client["index_view_collation"];
-        collection coll = db["index_view_collation"];
-        coll.drop();
-        coll.insert_one({});  // Ensure that the collection exists.
+    database db = mongodb_client["index_view_collation"];
+    collection coll = db["index_view_collation"];
+    coll.drop();
+    coll.insert_one({});  // Ensure that the collection exists.
 
-        bsoncxx::document::value keys = make_document(kvp("a", 1), kvp("bcd", -1), kvp("d", 1));
-        bsoncxx::document::value us_collation =
-            make_document(kvp("collation", make_document(kvp("locale", "en_US"))));
-        bsoncxx::document::value ko_collation = make_document(
-            kvp("name", "custom_index_name"), kvp("collation", make_document(kvp("locale", "ko"))));
+    bsoncxx::document::value keys = make_document(kvp("a", 1), kvp("bcd", -1), kvp("d", 1));
+    bsoncxx::document::value us_collation =
+        make_document(kvp("collation", make_document(kvp("locale", "en_US"))));
+    bsoncxx::document::value ko_collation = make_document(
+        kvp("name", "custom_index_name"), kvp("collation", make_document(kvp("locale", "ko"))));
 
-        index_model index_us{keys.view(), us_collation.view()};
-        index_model index_ko{keys.view(), ko_collation.view()};
+    index_model index_us{keys.view(), us_collation.view()};
+    index_model index_ko{keys.view(), ko_collation.view()};
 
-        index_view view = coll.indexes();
+    index_view view = coll.indexes();
 
-        view.create_one(index_us);
-        view.create_one(index_ko);
+    view.create_one(index_us);
+    view.create_one(index_ko);
 
-        auto cursor = view.list();
-        REQUIRE(std::distance(cursor.begin(), cursor.end()) == 3);
+    auto cursor = view.list();
+    REQUIRE(std::distance(cursor.begin(), cursor.end()) == 3);
 
-        view.drop_one("a_1_bcd_-1_d_1");
+    view.drop_one("a_1_bcd_-1_d_1");
 
-        auto cursor_after_drop = view.list();
+    auto cursor_after_drop = view.list();
 
-        REQUIRE(std::distance(cursor_after_drop.begin(), cursor_after_drop.end()) == 2);
+    REQUIRE(std::distance(cursor_after_drop.begin(), cursor_after_drop.end()) == 2);
 
-        auto cursor_after_drop1 = view.list();
-        auto index_it = cursor_after_drop1.begin();
-        ++index_it;
-        bsoncxx::document::view index = *index_it;
+    auto cursor_after_drop1 = view.list();
+    auto index_it = cursor_after_drop1.begin();
+    ++index_it;
+    bsoncxx::document::view index = *index_it;
 
-        REQUIRE(bsoncxx::string::to_string(index["name"].get_string().value) ==
-                "custom_index_name");
+    REQUIRE(bsoncxx::string::to_string(index["name"].get_string().value) == "custom_index_name");
 
-        coll.drop();
-        db.drop();
-    }
+    coll.drop();
+    db.drop();
 }
 }  // namespace
