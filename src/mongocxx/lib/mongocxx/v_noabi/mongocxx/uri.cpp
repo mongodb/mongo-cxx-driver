@@ -103,7 +103,7 @@ mongocxx::v_noabi::read_concern uri::read_concern() const {
 
 mongocxx::v_noabi::read_preference uri::read_preference() const {
     auto rp = libmongoc::uri_get_read_prefs_t(_impl->uri_t);
-    return (mongocxx::v_noabi::read_preference)(
+    return mongocxx::v_noabi::read_preference(
         stdx::make_unique<read_preference::impl>(libmongoc::read_prefs_copy(rp)));
 }
 
@@ -136,7 +136,7 @@ mongocxx::v_noabi::write_concern uri::write_concern() const {
 static stdx::optional<stdx::string_view> _string_option(mongoc_uri_t* uri, std::string opt_name) {
     const char* value;
 
-    value = libmongoc::uri_get_option_as_utf8(uri, opt_name.c_str(), NULL);
+    value = libmongoc::uri_get_option_as_utf8(uri, opt_name.c_str(), nullptr);
     if (!value) {
         return {};
     }

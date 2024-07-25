@@ -117,7 +117,7 @@ class strong_ordering {
 
     // nonstd: Swap greater/less values
     constexpr strong_ordering inverted() const noexcept {
-        return *this < 0 ? greater : *this > 0 ? less : *this;
+        return *this < nullptr ? greater : *this > nullptr ? less : *this;
     }
 };
 

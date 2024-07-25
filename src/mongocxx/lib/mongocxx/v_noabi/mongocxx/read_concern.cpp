@@ -60,7 +60,7 @@ void read_concern::acknowledge_level(read_concern::level rc_level) {
             break;
         case read_concern::level::k_server_default:
             // libmongoc uses a NULL level to mean "use the server's default read_concern."
-            libmongoc::read_concern_set_level(_impl->read_concern_t, NULL);
+            libmongoc::read_concern_set_level(_impl->read_concern_t, nullptr);
             break;
         case read_concern::level::k_available:
             libmongoc::read_concern_set_level(_impl->read_concern_t,
@@ -70,6 +70,8 @@ void read_concern::acknowledge_level(read_concern::level rc_level) {
             libmongoc::read_concern_set_level(_impl->read_concern_t,
                                               MONGOC_READ_CONCERN_LEVEL_SNAPSHOT);
             break;
+
+        case read_concern::level::k_unknown:
         default:
             throw exception{error_code::k_unknown_read_concern};
     }
@@ -79,7 +81,7 @@ void read_concern::acknowledge_string(stdx::string_view rc_string) {
     // libmongoc uses a NULL level to mean "use the server's default read_concern."
     libmongoc::read_concern_set_level(
         _impl->read_concern_t,
-        rc_string.empty() ? NULL : bsoncxx::v_noabi::string::to_string(rc_string).data());
+        rc_string.empty() ? nullptr : bsoncxx::v_noabi::string::to_string(rc_string).data());
 }
 
 read_concern::level read_concern::acknowledge_level() const {
@@ -118,7 +120,7 @@ bsoncxx::v_noabi::document::value read_concern::to_document() const {
     bsoncxx::v_noabi::builder::basic::document doc;
     if (level) {
         doc.append(kvp("level", level));
-    };
+    }
 
     return doc.extract();
 }

@@ -47,7 +47,8 @@ class value::impl {
     impl operator=(const impl&) = delete;
 
     bson_value::view view() const noexcept {
-        return bson_value::view{(void*)&_value};
+        // ABI backward compatibility. Const is restored in `view::_init`.
+        return bson_value::view{const_cast<void*>(static_cast<const void*>(&_value))};
     }
 
     bson_value_t _value;

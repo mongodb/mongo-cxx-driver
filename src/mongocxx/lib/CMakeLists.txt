@@ -192,6 +192,7 @@ set_dist_list(src_mongocxx_lib_DIST
     mongocxx/v_noabi/mongocxx/private/pool.hh
     mongocxx/v_noabi/mongocxx/private/read_concern.hh
     mongocxx/v_noabi/mongocxx/private/read_preference.hh
+    mongocxx/v_noabi/mongocxx/private/scoped_bson_value.hh
     mongocxx/v_noabi/mongocxx/private/search_index_model.hh
     mongocxx/v_noabi/mongocxx/private/search_index_view.hh
     mongocxx/v_noabi/mongocxx/private/uri.hh

@@ -124,7 +124,7 @@ struct nullopt_t {
     explicit constexpr nullopt_t(std::nullptr_t) noexcept {}
 };
 /// Tag constant to construct or compare with an empty optional value
-static constexpr nullopt_t nullopt{0};
+static constexpr nullopt_t nullopt{nullptr};
 /// Tag used to call the emplacement-constructor of optional<T>
 static constexpr struct in_place_t {
 } in_place;

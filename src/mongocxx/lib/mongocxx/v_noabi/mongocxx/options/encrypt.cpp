@@ -20,6 +20,7 @@
 #include <mongocxx/options/encrypt.hpp>
 #include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/libmongoc.hh>
+#include <mongocxx/private/scoped_bson_value.hh>
 
 #include <mongocxx/config/private/prelude.hh>
 
@@ -81,55 +82,6 @@ const stdx::optional<options::range>& encrypt::range_opts() const {
     return _range_opts;
 }
 
-namespace {
-
-struct scoped_bson_value {
-    bson_value_t value = {};
-
-    // Allow obtaining a pointer to this->value even in rvalue expressions.
-    bson_value_t* get() noexcept {
-        return &value;
-    }
-
-    // Communicate this->value is to be initialized via the resulting pointer.
-    bson_value_t* value_for_init() noexcept {
-        return &this->value;
-    }
-
-    template <typename T>
-    auto convert(const T& value)
-        // Use trailing return type syntax to SFINAE without triggering GCC -Wignored-attributes
-        // warnings due to using decltype within template parameters.
-        -> decltype(bsoncxx::v_noabi::types::convert_to_libbson(std::declval<const T&>(),
-                                                                std::declval<bson_value_t*>())) {
-        bsoncxx::v_noabi::types::convert_to_libbson(value, &this->value);
-    }
-
-    template <typename T>
-    explicit scoped_bson_value(const T& value) {
-        convert(value);
-    }
-
-    explicit scoped_bson_value(const bsoncxx::v_noabi::types::bson_value::view& view) {
-        // Argument order is reversed for bsoncxx::v_noabi::types::bson_value::view.
-        bsoncxx::v_noabi::types::convert_to_libbson(&this->value, view);
-    }
-
-    ~scoped_bson_value() {
-        bson_value_destroy(&value);
-    }
-
-    // Expectation is that value_for_init() will be used to initialize this->value.
-    scoped_bson_value() = default;
-
-    scoped_bson_value(const scoped_bson_value&) = delete;
-    scoped_bson_value(scoped_bson_value&&) = delete;
-    scoped_bson_value& operator=(const scoped_bson_value&) = delete;
-    scoped_bson_value& operator=(scoped_bson_value&&) = delete;
-};
-
-}  // namespace
-
 void* encrypt::convert() const {
     using libbson::scoped_bson_t;
 
@@ -158,7 +110,8 @@ void* encrypt::convert() const {
                             "key id must be a binary value with subtype 4 (UUID)"};
         }
 
-        libmongoc::client_encryption_encrypt_opts_set_keyid(opts, scoped_bson_value(key_id).get());
+        libmongoc::client_encryption_encrypt_opts_set_keyid(
+            opts, detail::scoped_bson_value(key_id).get());
     }
 
     if (_key_alt_name) {
@@ -234,12 +187,12 @@ void* encrypt::convert() const {
 
         if (min) {
             libmongoc::client_encryption_encrypt_range_opts_set_min(
-                range_opts, scoped_bson_value(min->view()).get());
+                range_opts, detail::scoped_bson_value(min->view()).get());
         }
 
         if (max) {
             libmongoc::client_encryption_encrypt_range_opts_set_max(
-                range_opts, scoped_bson_value(max->view()).get());
+                range_opts, detail::scoped_bson_value(max->view()).get());
         }
 
         if (precision) {

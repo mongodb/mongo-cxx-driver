@@ -58,6 +58,8 @@ class error_category_impl final : public std::error_category {
                 return "unset document::element";
             case error_code::k_invalid_oid:
                 return "could not parse Object ID string";
+            case error_code::k_failed_converting_bson_to_json:
+                return "could not convert document to JSON";
             case error_code::k_json_parse_failure:
                 return "could not parse JSON document";
             case error_code::k_invalid_decimal128:
@@ -72,6 +74,8 @@ class error_category_impl final : public std::error_category {
                 return "tried to complete appending an array, but overflowed";
             case error_code::k_cannot_end_appending_document:
                 return "tried to complete appending an document, but overflowed";
+            case error_code::k_invalid_binary_subtype:
+                return "invalid BSON binary subtype";
             case error_code::k_invalid_bson_type_id:
                 return "invalid BSON type identifier";
 #define BSONCXX_ENUM(name, value)            \

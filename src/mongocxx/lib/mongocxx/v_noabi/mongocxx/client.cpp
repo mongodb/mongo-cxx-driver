@@ -45,7 +45,7 @@ class database_names {
    public:
     explicit database_names(char** names) {
         _names = names;
-    };
+    }
 
     ~database_names() {
         bson_strfreev(_names);
@@ -58,7 +58,7 @@ class database_names {
 
     const char* operator[](const std::size_t i) const {
         return _names[i];
-    };
+    }
 
     bool operator!() const {
         return _names == nullptr;
