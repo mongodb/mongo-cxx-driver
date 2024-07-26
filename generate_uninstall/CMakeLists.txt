@@ -19,11 +19,11 @@ if (WIN32)
       "${CMAKE_INSTALL_PREFIX}"
    )
    install (CODE "
-      string(REPLACE \";\" \"\\n\" MONGOCXX_INSTALL_MANIFEST_CONTENT
+      string (REPLACE \";\" \"\\n\" MONGOCXX_INSTALL_MANIFEST_CONTENT
          \"\${CMAKE_INSTALL_MANIFEST_FILES}\")
-      string(REPLACE \"/\" \"\\\\\" MONGOCXX_INSTALL_MANIFEST_CONTENT_WIN32
+      string (REPLACE \"/\" \"\\\\\" MONGOCXX_INSTALL_MANIFEST_CONTENT_WIN32
          \"\${MONGOCXX_INSTALL_MANIFEST_CONTENT}\")
-      file(WRITE \"mongocxx_install_manifest.txt\"
+      file (WRITE \"mongocxx_install_manifest.txt\"
          \"\${MONGOCXX_INSTALL_MANIFEST_CONTENT_WIN32}\")
       execute_process (
          COMMAND
@@ -51,9 +51,9 @@ if (WIN32)
    )
 else ()
    install (CODE "
-      string(REPLACE \";\" \"\\n\" MONGOCXX_INSTALL_MANIFEST_CONTENT
+      string (REPLACE \";\" \"\\n\" MONGOCXX_INSTALL_MANIFEST_CONTENT
          \"\${CMAKE_INSTALL_MANIFEST_FILES}\")
-      file(WRITE \"mongocxx_install_manifest.txt\"
+      file (WRITE \"mongocxx_install_manifest.txt\"
          \"\${MONGOCXX_INSTALL_MANIFEST_CONTENT}\")
       execute_process (
          COMMAND
@@ -71,7 +71,7 @@ else ()
 
       # Ensure generated uninstall script has executable permissions.
       if (\"${CMAKE_VERSION}\" VERSION_GREATER_EQUAL \"3.19.0\")
-         file(
+         file (
             CHMOD \"${CMAKE_CURRENT_BINARY_DIR}/${UNINSTALL_PROG}\"
             PERMISSIONS
                   OWNER_READ OWNER_WRITE OWNER_EXECUTE
@@ -80,7 +80,7 @@ else ()
          )
       else ()
          # Workaround lack of file(CHMOD).
-         file(
+         file (
             COPY \"${CMAKE_CURRENT_BINARY_DIR}/${UNINSTALL_PROG}\"
             DESTINATION \"${UNINSTALL_PROG}.d\"
             FILE_PERMISSIONS
@@ -88,7 +88,7 @@ else ()
                   GROUP_READ GROUP_EXECUTE
                   WORLD_READ WORLD_EXECUTE
          )
-         file(RENAME \"${UNINSTALL_PROG}.d/${UNINSTALL_PROG}\" \"${UNINSTALL_PROG}\")
+         file (RENAME \"${UNINSTALL_PROG}.d/${UNINSTALL_PROG}\" \"${UNINSTALL_PROG}\")
       endif ()
    ")
    install (FILES "${CMAKE_CURRENT_BINARY_DIR}/${UNINSTALL_PROG}" DESTINATION "${UNINSTALL_PROG_DIR}" PERMISSIONS ${UNINSTALL_PERMISSIONS})
