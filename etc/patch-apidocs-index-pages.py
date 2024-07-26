@@ -48,7 +48,7 @@ def find_api_docs(api_docs_path: str) -> List[str]:
         if dir.is_dir() and not dir.is_symlink():
             api_docs.append(dir.name)
 
-    # Sort by legacy vs. modern, then by SemvVer. Example:
+    # Sort by legacy vs. modern, then by SemVer. Example:
     #  - legacy-0.1.0
     #  - legacy-0.2.0
     #  - legacy-0.10.0
