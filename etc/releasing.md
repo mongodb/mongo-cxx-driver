@@ -592,7 +592,12 @@ Test generating the latest versioned Doxygen docs by building the `doxygen-lates
 cmake --build build --target doxygen-latest
 ```
 
-Verify that the `build/docs/api/mongocxx-X.Y.Z` directory is present and populated.
+Verify that the `build/docs/api/mongocxx-X.Y.Z` directory is present and populated. Verify the resulting API doc looks as expected.
+
+Remove all contents of `build/docs/api` before running the next commands.
+
+> [!IMPORTANT]
+> Remove all contents of `build/docs/api` before running the next commands.
 
 Generate and deploy the updated documentation to GitHub pages by building the `hugo-deploy` and `doxygen-deploy` targets:
 
