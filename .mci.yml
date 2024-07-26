@@ -61,12 +61,12 @@ functions:
           type: setup
           params:
             binary: bash
-            args: [mongo-cxx-driver/.evergreen/abi-compliance-check-setup.sh]
+            args: [-c, mongo-cxx-driver/.evergreen/abi-compliance-check-setup.sh]
         - command: subprocess.exec
           type: test
           params:
             binary: bash
-            args: [mongo-cxx-driver/.evergreen/abi-compliance-check-test.sh]
+            args: [-c, mongo-cxx-driver/.evergreen/abi-compliance-check-test.sh]
         - command: s3.put
           type: system
           params:
@@ -117,12 +117,12 @@ functions:
           type: setup
           params:
             binary: bash
-            args: [mongo-cxx-driver/.evergreen/abidiff-setup.sh]
+            args: [-c, mongo-cxx-driver/.evergreen/abidiff-setup.sh]
         - command: subprocess.exec
           type: test
           params:
             binary: bash
-            args: [mongo-cxx-driver/.evergreen/abidiff-test.sh]
+            args: [-c, mongo-cxx-driver/.evergreen/abidiff-test.sh]
         - command: s3.put
           type: system
           params:
@@ -151,7 +151,7 @@ functions:
           type: test
           params:
             binary: bash
-            args: [mongo-cxx-driver/.evergreen/abi-prohibited-symbols-test.sh]
+            args: [-c, mongo-cxx-driver/.evergreen/abi-prohibited-symbols-test.sh]
 
     "setup":
         - command: shell.exec
@@ -193,7 +193,7 @@ functions:
                 cd drivers-evergreen-tools
                 export DRIVERS_TOOLS=$(pwd)
 
-                bash .evergreen/atlas_data_lake/pull-mongohouse-image.sh
+                .evergreen/atlas_data_lake/pull-mongohouse-image.sh
 
     "run_mongohouse":
         command: shell.exec
@@ -203,7 +203,7 @@ functions:
                 cd drivers-evergreen-tools
                 export DRIVERS_TOOLS=$(pwd)
 
-                bash .evergreen/atlas_data_lake/run-mongohouse-image.sh
+                .evergreen/atlas_data_lake/run-mongohouse-image.sh
 
     "test_mongohouse":
         command: shell.exec
@@ -338,7 +338,6 @@ functions:
         command: subprocess.exec
         params:
             binary: bash
-            working_dir: "."
             args:
               - -c
               - |
@@ -583,7 +582,6 @@ functions:
     "upload mongo orchestration artifacts":
         - command: subprocess.exec
           params:
-            working_dir: "."
             binary: bash
             args:
               - -c
@@ -659,9 +657,7 @@ functions:
           working_dir: "mongo-cxx-driver"
           add_expansions_to_env: true
           redirect_standard_error_to_output: true
-          args:
-            - -c
-            - .evergreen/compile-scan-build.sh
+          args: [-c, .evergreen/compile-scan-build.sh]
 
     "upload scan artifacts":
       - command: subprocess.exec
@@ -711,9 +707,7 @@ functions:
             - ARTIFACTORY_PASSWORD
             - SILK_CLIENT_ID
             - SILK_CLIENT_SECRET
-          args:
-            - -c
-            - .evergreen/check-augmented-sbom.sh
+          args: [-c, .evergreen/check-augmented-sbom.sh]
 
     "upload augmented sbom":
       - command: s3.put
@@ -991,11 +985,6 @@ tasks:
       - func: "setup"
       - func: "fetch_c_driver_source"
       - func: "compile"
-      - command: expansions.update
-        params:
-          updates:
-          - key: mongocxx_version_finder_sh
-            value: $(sed -nE 's/^#define MONGOCXX_VERSION_STRING "([^"]+)".*/\1/p' build/src/mongocxx/config/version.hpp)
       - command: shell.exec
         type: test
         params:
@@ -1003,19 +992,13 @@ tasks:
           working_dir: "mongo-cxx-driver"
           script: |-
             set -o errexit
-            export INSTALL_VERSION=${mongocxx_version_finder_sh}
-            sh ./.evergreen/uninstall_check.sh
+            ./.evergreen/uninstall_check.sh
 
     - name: uninstall_check_windows
       commands:
       - func: "setup"
       - func: "fetch_c_driver_source"
       - func: "compile"
-      - command: expansions.update
-        params:
-          updates:
-          - key: mongocxx_version_finder_sh
-            value: $(sed -nE 's/^#define MONGOCXX_VERSION_STRING "([^"]+)".*/\1/p' build/src/mongocxx/config/version.hpp)
       - command: shell.exec
         type: test
         params:
@@ -1023,7 +1006,6 @@ tasks:
           working_dir: "mongo-cxx-driver"
           script: |-
             set -o errexit
-            export INSTALL_VERSION=${mongocxx_version_finder_sh}
             cmd.exe /c .\\.evergreen\\uninstall_check_windows.cmd
 
     - name: build_example_with_add_subdirectory
@@ -1075,7 +1057,7 @@ tasks:
           script: |-
             set -o errexit
             export IS_PATCH="${is_patch}"
-            sh .evergreen/debian_package_build.sh
+            .evergreen/debian_package_build.sh
       - command: s3.put
         params:
           aws_key: ${aws_key}
@@ -1100,7 +1082,7 @@ tasks:
             set -o errexit
             export IS_PATCH="${is_patch}"
             export DEB_BUILD_PROFILES="pkg.mongo-cxx-driver.mnmlstc"
-            sh .evergreen/debian_package_build.sh
+            .evergreen/debian_package_build.sh
       - command: s3.put
         params:
           aws_key: ${aws_key}
@@ -1123,7 +1105,7 @@ tasks:
           shell: bash
           script: |-
             set -o errexit
-            sh .evergreen/build_snapshot_rpm.sh
+            .evergreen/build_snapshot_rpm.sh
       - command: s3.put
         params:
           aws_key: ${aws_key}
@@ -1287,7 +1269,7 @@ task_groups:
       - command: subprocess.exec
         params:
           binary: bash
-          args: [mongo-cxx-driver/.evergreen/abi-stability-setup.sh]
+          args: [-c, mongo-cxx-driver/.evergreen/abi-stability-setup.sh]
           include_expansions_in_env: [cxx_standard]
     tasks: [".abi-stability"]
     teardown_task_can_fail_task: true
@@ -1308,8 +1290,7 @@ task_groups:
           add_expansions_to_env: true
           env:
             MONGODB_VERSION: '7.0'
-          args:
-            - ${DRIVERS_TOOLS}/.evergreen/atlas/setup-atlas-cluster.sh
+          args: [-c, "${DRIVERS_TOOLS}/.evergreen/atlas/setup-atlas-cluster.sh"]
       - command: expansions.update
         # Expected to set MONGODB_URI expansion.
         params:
@@ -1320,8 +1301,7 @@ task_groups:
           working_dir: mongo-cxx-driver
           binary: bash
           add_expansions_to_env: true
-          args:
-            - ${DRIVERS_TOOLS}/.evergreen/atlas/teardown-atlas-cluster.sh
+          args: [-c, "${DRIVERS_TOOLS}/.evergreen/atlas/teardown-atlas-cluster.sh"]
     setup_group_can_fail_task: true
     setup_group_timeout_secs: 1800
     tasks:

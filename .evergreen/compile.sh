@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Runs cmake and compiles the standard build targets (all, install, examples).  Any arguments passed
 # to this script will be forwarded on as flags passed to cmake.

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env sh
 
 # Copyright 2009-present MongoDB, Inc.
 #
@@ -60,9 +60,10 @@ if [ "${DESTDIR}" ]; then
 fi
 
 
-printf "#!/bin/sh\n"
+printf "#!/usr/bin/env bash\n"
+printf "#\n"
 printf "# MongoDB C++ Driver uninstall program, generated with CMake"
-printf "\n"
+printf "#\n"
 printf "# Copyright 2009-present MongoDB, Inc.\n"
 printf "#\n"
 printf "# Licensed under the Apache License, Version 2.0 (the \"License\");\n"
