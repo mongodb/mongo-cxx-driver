@@ -57,7 +57,7 @@ namespace v_noabi {
 /// @endcode
 ///
 /// Note that client is not thread-safe. See
-/// https://www.mongodb.com/docs/languages/cpp/drivers/current/thread-safety/ for more details.
+/// https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/thread-safety/ for more details.
 class client {
    public:
     ///

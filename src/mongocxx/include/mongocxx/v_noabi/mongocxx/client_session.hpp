@@ -39,7 +39,7 @@ namespace v_noabi {
 /// or snapshots.
 ///
 /// Note that client_session is not thread-safe. See
-/// https://www.mongodb.com/docs/languages/cpp/drivers/current/thread-safety/ for more details.
+/// https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/thread-safety/ for more details.
 ///
 /// @see
 /// https://www.mongodb.com/docs/manual/core/read-isolation-consistency-recency/#causal-consistency

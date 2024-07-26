@@ -1,7 +1,7 @@
 # MongoDB C++ Driver 
 [![codecov](https://codecov.io/gh/mongodb/mongo-cxx-driver/branch/master/graph/badge.svg)](https://codecov.io/gh/mongodb/mongo-cxx-driver)
 [![Documentation](https://img.shields.io/badge/docs-doxygen-blue.svg)](https://mongocxx.org/api/mongocxx-v3/)
-[![Documentation](https://img.shields.io/badge/docs-mongocxx-green.svg)](https://www.mongodb.com/docs/languages/cpp/drivers/current/)
+[![Documentation](https://img.shields.io/badge/docs-mongocxx-green.svg)](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://github.com/mongodb/mongo-cxx-driver/blob/master/LICENSE)
 
 Welcome to the MongoDB C++ Driver!

@@ -67,8 +67,8 @@ Compatibility of each C++ driver version with each MongoDB server is documented 
 
 ## Resources
 
-* [MongoDB C++ Driver Quickstart](https://www.mongodb.com/docs/languages/cpp/drivers/current/tutorial/)
-* [MongoDB C++ Driver Manual](https://www.mongodb.com/docs/languages/cpp/drivers/current/)
+* [MongoDB C++ Driver Quickstart](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/tutorial/)
+* [MongoDB C++ Driver Manual](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/)
 * [MongoDB C++ Driver Source Code on GitHub](https://github.com/mongodb/mongo-cxx-driver)
 * [MongoDB Database Manual](https://www.mongodb.com/docs/manual/)
 
