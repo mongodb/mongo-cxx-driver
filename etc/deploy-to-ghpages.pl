@@ -41,6 +41,8 @@ sub _doxygen_rsync {
         ( map { ; '--filter' => $_ } @filters ),
         "build/docs/api/", "$tmpdir/api/"
     );
+    $ENV{APIDOCSPATH} = "$tmpdir/api";
+    _try_run(qw{etc/patch-apidocs-index-pages.py})
 }
 
 sub main {
