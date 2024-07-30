@@ -99,9 +99,9 @@ struct StringMaker<stdx::optional<bsoncxx::stdx::nullopt_t>> {
 template <>
 struct StringMaker<bsoncxx::detail::strong_ordering> {
     static std::string convert(bsoncxx::detail::strong_ordering o) {
-        if (o < 0) {
+        if (o < nullptr) {
             return "[less-than]";
-        } else if (o > 0) {
+        } else if (o > nullptr) {
             return "[greater-than]";
         } else {
             return "[equal/equivalent]";
