@@ -42,9 +42,13 @@ enum class error_code : std::int32_t {
 
     /// A document operation was performed while building an array.
     k_cannot_perform_document_operation_on_array,
+
+    // @cond DOXYGEN_DISABLE
 #define BSONCXX_ENUM(name, value) k_need_element_type_k_##name,
 #include <bsoncxx/enums/type.hpp>
 #undef BSONCXX_ENUM
+    // @endcond DOXYGEN_DISABLE
+
     /// No key was provided when one was needed.
     k_need_key,
 
@@ -54,7 +58,7 @@ enum class error_code : std::int32_t {
     /// A document was closed while no document was open.
     k_no_document_to_close,
 
-    // Attempted to view or extract a document when a key was still awaiting a matching value.
+    /// Attempted to view or extract a document when a key was still awaiting a matching value.
     k_unmatched_key_in_builder,
 
     /// An empty element was accessed.
@@ -66,7 +70,7 @@ enum class error_code : std::int32_t {
     /// An Object ID string failed to parse.
     k_invalid_oid,
 
-    // This type is unused and deprecated.
+    /// This type is unused and deprecated.
     k_failed_converting_bson_to_json,
 
     /// A Decimal128 string failed to parse.
@@ -93,12 +97,18 @@ enum class error_code : std::int32_t {
     /// Invalid type.
     k_invalid_bson_type_id,
 
-/// A value failed to append.
+    // @cond DOXYGEN_DISABLE
 #define BSONCXX_ENUM(name, value) k_cannot_append_##name,
 #include <bsoncxx/enums/type.hpp>
 #undef BSONCXX_ENUM
+    // @endcond DOXYGEN_DISABLE
+
+    /// A value failed to append.
     k_cannot_append_utf8 = k_cannot_append_string,
+
+    /// @deprecated Use `k_need_element_type_k_string` instead.
     k_need_element_type_k_utf8 = k_need_element_type_k_string,
+
     // Add new constant string message to error_code.cpp as well!
 };
 
