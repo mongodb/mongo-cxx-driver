@@ -89,7 +89,7 @@ struct not_copyable {
 #define STATIC_ASSERT_EXPR_ALIKE(a, b) STATIC_ASSERT_EXPR_EQUAL(a, b)
 #endif
 
-template <bsoncxx_ttparam Trait, typename T>
+template <template <class...> class Trait, typename T>
 bool assert_alikeness() {
     STATIC_ASSERT_EXPR_ALIKE(Trait<T>::value, Trait<optional<T>>::value);
     return true;
