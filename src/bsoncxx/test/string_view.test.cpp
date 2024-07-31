@@ -10,7 +10,7 @@
 #endif
 #endif
 
-#if __cpp_lib_string_view
+#if defined(__cpp_lib_string_view)
 #include <string_view>
 #endif
 
