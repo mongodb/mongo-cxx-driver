@@ -30,7 +30,7 @@ namespace bsoncxx {
 namespace v_noabi {
 namespace builder {
 
-using namespace ::bsoncxx::v_noabi::types;  // Deprecated.
+using namespace ::bsoncxx::v_noabi::types;  // Deprecated. Deliberately undocumented.
 
 }  // namespace builder
 }  // namespace v_noabi
@@ -204,7 +204,7 @@ class array : public list {
 namespace bsoncxx {
 namespace builder {
 
-using namespace ::bsoncxx::v_noabi::types;  // Deprecated.
+using namespace ::bsoncxx::v_noabi::types;  // Deprecated. Deliberately undocumented.
 
 }  // namespace builder
 }  // namespace bsoncxx
@@ -213,3 +213,8 @@ using namespace ::bsoncxx::v_noabi::types;  // Deprecated.
 #if defined(BSONCXX_TEST_MACRO_GUARDS_FIX_MISSING_POSTLUDE)
 #include <bsoncxx/config/postlude.hpp>
 #endif
+
+///
+/// @file
+/// Defines entities for use with "list" BSON builder syntax.
+///

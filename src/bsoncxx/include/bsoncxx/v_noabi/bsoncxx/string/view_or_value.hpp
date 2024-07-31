@@ -30,6 +30,10 @@ namespace string {
 ///
 /// Class representing a view-or-value variant type for strings.
 ///
+/// @par "Derived From" @parblock
+/// @li @ref bsoncxx::v_noabi::view_or_value<stdx::string_view, std::string>
+/// @endparblock
+///
 /// This class adds several string-specific methods to the bsoncxx::v_noabi::view_or_value template:
 /// - a constructor overload for const char*
 /// - a constructor overload for std::string by l-value reference
@@ -134,3 +138,30 @@ using ::bsoncxx::v_noabi::string::operator!=;
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref bsoncxx::v_noabi::string::view_or_value.
+///
+
+#if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+
+namespace bsoncxx {
+namespace string {
+
+/// @ref bsoncxx::v_noabi::string::operator==(const v_noabi::string::view_or_value& lhs, const char* rhs)
+inline bool operator==(const v_noabi::string::view_or_value& lhs, const char* rhs);
+
+/// @ref bsoncxx::v_noabi::string::operator!=(const v_noabi::string::view_or_value& lhs, const char* rhs)
+inline bool operator!=(const v_noabi::string::view_or_value& lhs, const char* rhs);
+
+/// @ref bsoncxx::v_noabi::string::operator==(const char* lhs, const v_noabi::string::view_or_value& rhs)
+inline bool operator==(const char* lhs, const v_noabi::string::view_or_value& rhs);
+
+/// @ref bsoncxx::v_noabi::string::operator!=(const char* lhs, const v_noabi::string::view_or_value& rhs)
+inline bool operator!=(const char* lhs, const v_noabi::string::view_or_value& rhs);
+
+}  // namespace string
+}  // namespace bsoncxx
+
+#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

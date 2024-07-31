@@ -41,3 +41,26 @@ using ::bsoncxx::v_noabi::builder::basic::concatenate;
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
+
+///
+/// @file
+/// Redeclares @ref bsoncxx::v_noabi::builder::concatenate in the @ref
+/// bsoncxx::v_noabi::builder::basic namespace.
+///
+
+#if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+
+namespace bsoncxx {
+namespace builder {
+namespace basic {
+
+/// @ref bsoncxx::v_noabi::builder::concatenate(v_noabi::document::view_or_value doc)
+/// @note An overload accepting @ref v_noabi::array::view_or_value and returning a @ref
+/// v_noabi::builder::concatenate_array is also declared in this scope.
+v_noabi::concatenate_doc concatenate(v_noabi::document::view_or_value doc);
+
+}  // namespace basic
+}  // namespace builder
+}  // namespace bsoncxx
+
+#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

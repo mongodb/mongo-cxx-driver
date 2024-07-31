@@ -43,7 +43,7 @@ enum class error_code : std::int32_t {
     /// A document operation was performed while building an array.
     k_cannot_perform_document_operation_on_array,
 
-    // @cond DOXYGEN_DISABLE
+// @cond DOXYGEN_DISABLE
 #define BSONCXX_ENUM(name, value) k_need_element_type_k_##name,
 #include <bsoncxx/enums/type.hpp>
 #undef BSONCXX_ENUM
@@ -97,7 +97,7 @@ enum class error_code : std::int32_t {
     /// Invalid type.
     k_invalid_bson_type_id,
 
-    // @cond DOXYGEN_DISABLE
+// @cond DOXYGEN_DISABLE
 #define BSONCXX_ENUM(name, value) k_cannot_append_##name,
 #include <bsoncxx/enums/type.hpp>
 #undef BSONCXX_ENUM
@@ -143,8 +143,30 @@ using ::bsoncxx::v_noabi::make_error_code;
 
 namespace std {
 
-// Specialize is_error_code_enum so we get simpler std::error_code construction
+///
+/// Indicates @ref bsoncxx::v_noabi::error_code is eligible for `std::error_code` implicit
+/// conversions.
+///
 template <>
 struct is_error_code_enum<bsoncxx::v_noabi::error_code> : public true_type {};
 
 }  // namespace std
+
+///
+/// @file
+/// Provides @ref bsoncxx::v_noabi::error_code.
+///
+
+#if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+
+namespace bsoncxx {
+
+/// @ref bsoncxx::v_noabi::error_category()
+const std::error_category& error_category();
+
+/// @ref bsoncxx::v_noabi::make_error_code(v_noabi::error_code error)
+std::error_code make_error_code(v_noabi::error_code error);
+
+}  // namespace bsoncxx
+
+#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

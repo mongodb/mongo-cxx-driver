@@ -217,3 +217,10 @@ struct is_totally_ordered_with : conjunction<is_totally_ordered<T>,
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides comparison-related utilities for internal use.
+///
+/// @warning For internal use only!
+///

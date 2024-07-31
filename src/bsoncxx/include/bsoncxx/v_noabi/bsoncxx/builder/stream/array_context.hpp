@@ -193,3 +193,8 @@ class array_context {
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref bsoncxx::v_noabi::builder::stream::array_context.
+///

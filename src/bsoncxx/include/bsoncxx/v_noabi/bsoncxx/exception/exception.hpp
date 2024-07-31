@@ -35,3 +35,8 @@ class exception : public std::system_error {
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref bsoncxx::v_noabi::exception.
+///

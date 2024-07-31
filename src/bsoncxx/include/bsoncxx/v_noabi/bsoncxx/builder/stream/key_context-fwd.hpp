@@ -38,3 +38,23 @@ using ::bsoncxx::v_noabi::builder::stream::key_context;
 }  // namespace stream
 }  // namespace builder
 }  // namespace bsoncxx
+
+///
+/// @file
+/// Declares @ref bsoncxx::v_noabi::builder::stream::key_context.
+///
+
+#if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+
+namespace bsoncxx {
+namespace builder {
+namespace stream {
+
+/// @ref bsoncxx::v_noabi::builder::stream::key_context
+class key_context {};
+
+}  // namespace stream
+}  // namespace builder
+}  // namespace bsoncxx
+
+#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

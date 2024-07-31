@@ -35,3 +35,23 @@ using ::bsoncxx::v_noabi::builder::basic::document;
 }  // namespace basic
 }  // namespace builder
 }  // namespace bsoncxx
+
+///
+/// @file
+/// Declares @ref bsoncxx::v_noabi::builder::basic::document.
+///
+
+#if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+
+namespace bsoncxx {
+namespace builder {
+namespace basic {
+
+/// @ref bsoncxx::v_noabi::builder::basic::document
+class document {};
+
+}  // namespace basic
+}  // namespace builder
+}  // namespace bsoncxx
+
+#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

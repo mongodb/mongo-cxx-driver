@@ -86,3 +86,8 @@ class sub_array {
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
+
+///
+/// @file
+/// Defines bsoncxx::v_noabi::builder::basic::sub_array.
+///

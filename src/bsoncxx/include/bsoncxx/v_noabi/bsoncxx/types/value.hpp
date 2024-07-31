@@ -23,10 +23,9 @@ namespace v_noabi {
 namespace types {
 
 ///
-/// The bsoncxx::v_noabi::types::bson_value::view class has been renamed to
-/// bsoncxx::v_noabi::types::bson_value::view.
+/// Equivalent to @ref bsoncxx::v_noabi::types::bson_value::view.
 ///
-/// @deprecated use bsoncxx::v_noabi::types::bson_value::view instead.
+/// @deprecated Use @ref bsoncxx::v_noabi::types::bson_value::view instead.
 ///
 BSONCXX_DEPRECATED typedef types::bson_value::view value;
 
@@ -37,9 +36,30 @@ BSONCXX_DEPRECATED typedef types::bson_value::view value;
 namespace bsoncxx {
 namespace types {
 
-using ::bsoncxx::v_noabi::types::value;  // Deprecated
+using ::bsoncxx::v_noabi::types::value;  // Deprecated.
 
 }  // namespace types
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref bsoncxx::v_noabi::types::value.
+///
+/// @deprecated Use @ref bsoncxx/v_noabi/bsoncxx/types/bson_value/view.hpp instead.
+///
+
+#if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+
+namespace bsoncxx {
+namespace types {
+
+/// @ref bsoncxx::v_noabi::types::value
+/// @deprecated Use @ref bsoncxx::v_noabi::types::bson_value::view instead.
+class value {};
+
+}  // namespace types
+}  // namespace bsoncxx
+
+#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

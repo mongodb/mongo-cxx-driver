@@ -180,3 +180,10 @@ using ::bsoncxx::v_noabi::stdx::make_unique_for_overwrite;
 
 }  // namespace stdx
 }  // namespace bsoncxx
+
+///
+/// @file
+/// Provides `std::make_unique`-related polyfills for internal use.
+///
+/// @warning For internal use only!
+///

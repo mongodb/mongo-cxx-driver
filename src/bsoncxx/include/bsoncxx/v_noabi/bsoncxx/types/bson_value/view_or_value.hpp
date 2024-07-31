@@ -25,6 +25,9 @@ namespace v_noabi {
 namespace types {
 namespace bson_value {
 
+///
+/// Equivalent to `v_noabi::view_or_value<view, value>`.
+///
 using view_or_value = bsoncxx::v_noabi::view_or_value<view, value>;
 
 }  // namespace bson_value
@@ -43,3 +46,23 @@ using ::bsoncxx::v_noabi::types::bson_value::view_or_value;
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref bsoncxx::v_noabi::types::bson_value::view_or_value.
+///
+
+#if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+
+namespace bsoncxx {
+namespace types {
+namespace bson_value {
+
+/// @ref bsoncxx::v_noabi::types::bson_value::view_or_value
+class view_or_value {};
+
+}  // namespace bson_value
+}  // namespace types
+}  // namespace bsoncxx
+
+#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

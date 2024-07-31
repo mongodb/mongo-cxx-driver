@@ -471,3 +471,10 @@ struct is_nothrow_swappable : is_nothrow_swappable_with<T&, T&> {};
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides `<type_traits>`-related polyfills for internal use.
+///
+/// @warning For internal use only!
+///

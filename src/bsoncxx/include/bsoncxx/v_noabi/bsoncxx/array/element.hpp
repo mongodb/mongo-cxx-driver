@@ -124,3 +124,30 @@ using ::bsoncxx::v_noabi::array::operator!=;
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
+
+///
+/// @file
+/// Defines bsoncxx::v_noabi::array::element.
+///
+
+#if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+
+namespace bsoncxx {
+namespace array {
+
+/// @ref bsoncxx::v_noabi::array::operator==(const v_noabi::array::element& elem, const v_noabi::types::bson_value::view& v)
+bool operator==(const v_noabi::array::element& elem, const v_noabi::types::bson_value::view& v);
+
+/// @ref bsoncxx::v_noabi::array::operator==(const v_noabi::types::bson_value::view& v, const v_noabi::array::element& elem)
+bool operator==(const v_noabi::types::bson_value::view& v, const v_noabi::array::element& elem);
+
+/// @ref bsoncxx::v_noabi::array::operator!=(const v_noabi::array::element& elem, const v_noabi::types::bson_value::view& v)
+bool operator!=(const v_noabi::array::element& elem, const v_noabi::types::bson_value::view& v);
+
+/// @ref bsoncxx::v_noabi::array::operator!=(const v_noabi::types::bson_value::view& v, const v_noabi::array::element& elem)
+bool operator!=(const v_noabi::types::bson_value::view& v, const v_noabi::array::element& elem);
+
+}  // namespace array
+}  // namespace bsoncxx
+
+#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

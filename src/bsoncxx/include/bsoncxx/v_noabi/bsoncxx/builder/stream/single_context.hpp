@@ -113,3 +113,8 @@ BSONCXX_INLINE value_context<T>::operator single_context() {
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref bsoncxx::v_noabi::builder::stream::single_context.
+///
