@@ -39,3 +39,23 @@ using ::mongocxx::v_noabi::result::gridfs::upload;
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
+
+///
+/// @file
+/// Declares @ref mongocxx::v_noabi::result::gridfs::upload.
+///
+
+#if defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+
+namespace mongocxx {
+namespace result {
+namespace gridfs {
+
+/// @ref mongocxx::v_noabi::result::gridfs::upload
+class upload {};
+
+}  // namespace gridfs
+}  // namespace result
+}  // namespace mongocxx
+
+#endif  // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

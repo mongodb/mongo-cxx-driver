@@ -114,3 +114,8 @@ class command_failed_event {
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref mongocxx::v_noabi::events::command_failed_event.
+///

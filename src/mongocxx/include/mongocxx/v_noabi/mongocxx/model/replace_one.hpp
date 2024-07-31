@@ -137,3 +137,8 @@ class replace_one {
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref mongocxx::v_noabi::model::replace_one.
+///

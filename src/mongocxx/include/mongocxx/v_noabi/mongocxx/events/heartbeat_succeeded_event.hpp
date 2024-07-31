@@ -91,3 +91,8 @@ class heartbeat_succeeded_event {
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref mongocxx::v_noabi::events::heartbeat_succeeded_event.
+///

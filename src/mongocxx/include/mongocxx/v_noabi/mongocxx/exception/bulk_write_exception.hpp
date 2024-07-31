@@ -38,3 +38,8 @@ class bulk_write_exception : public operation_exception {
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref mongocxx::v_noabi::bulk_write_exception.
+///

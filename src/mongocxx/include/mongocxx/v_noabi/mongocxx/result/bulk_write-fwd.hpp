@@ -35,3 +35,21 @@ using ::mongocxx::v_noabi::result::bulk_write;
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
+
+///
+/// @file
+/// Declares @ref mongocxx::v_noabi::result::bulk_write.
+///
+
+#if defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+
+namespace mongocxx {
+namespace result {
+
+/// @ref mongocxx::v_noabi::result::bulk_write
+class bulk_write {};
+
+}  // namespace result
+}  // namespace mongocxx
+
+#endif  // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

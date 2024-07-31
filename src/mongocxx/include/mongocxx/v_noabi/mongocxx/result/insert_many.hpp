@@ -95,3 +95,8 @@ class insert_many {
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref mongocxx::v_noabi::result::insert_many.
+///

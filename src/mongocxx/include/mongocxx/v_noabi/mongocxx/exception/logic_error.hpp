@@ -37,3 +37,8 @@ class logic_error : public exception {
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref mongocxx::v_noabi::logic_error.
+///

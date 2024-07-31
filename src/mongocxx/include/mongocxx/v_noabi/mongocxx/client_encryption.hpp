@@ -284,3 +284,8 @@ class client_encryption {
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref mongocxx::v_noabi::client_encryption.
+///

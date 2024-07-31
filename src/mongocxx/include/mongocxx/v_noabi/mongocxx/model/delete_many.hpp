@@ -106,3 +106,8 @@ class delete_many {
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref mongocxx::v_noabi::model::delete_many.
+///

@@ -35,3 +35,21 @@ using ::mongocxx::v_noabi::gridfs::bucket;
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
+
+///
+/// @file
+/// Declares @ref mongocxx::v_noabi::gridfs::bucket.
+///
+
+#if defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+
+namespace mongocxx {
+namespace gridfs {
+
+/// @ref mongocxx::v_noabi::gridfs::bucket
+class bucket {};
+
+}  // namespace gridfs
+}  // namespace mongocxx
+
+#endif  // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

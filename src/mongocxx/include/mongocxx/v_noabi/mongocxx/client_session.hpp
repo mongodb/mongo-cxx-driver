@@ -221,6 +221,11 @@ class client_session {
 #include <mongocxx/config/postlude.hpp>
 
 ///
+/// @file
+/// Provides @ref mongocxx::v_noabi::client_session.
+///
+
+///
 /// @example examples/mongocxx/client_session.cpp
 /// Use a mongocxx::v_noabi::client_session for a sequence of operations with causal consistency.
 ///

@@ -35,3 +35,21 @@ using ::mongocxx::v_noabi::options::client_session;
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
+
+///
+/// @file
+/// Declares @ref mongocxx::v_noabi::options::client.
+///
+
+#if defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+
+namespace mongocxx {
+namespace options {
+
+/// @ref mongocxx::v_noabi::options::client
+class client {};
+
+}  // namespace options
+}  // namespace mongocxx
+
+#endif  // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

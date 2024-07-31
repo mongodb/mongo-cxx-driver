@@ -116,3 +116,8 @@ class estimated_document_count {
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref mongocxx::v_noabi::options::estimated_document_count.
+///

@@ -93,3 +93,8 @@ class server_changed_event {
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref mongocxx::v_noabi::events::server_changed_event.
+///

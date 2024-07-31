@@ -32,3 +32,10 @@
 #define MONGOCXX_CALL
 
 #endif
+
+///
+/// @file
+/// Provides macros for internal use.
+///
+/// @warning For internal use only!
+///

@@ -184,3 +184,8 @@ class read_concern {
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref mongocxx::v_noabi::read_concern.
+///

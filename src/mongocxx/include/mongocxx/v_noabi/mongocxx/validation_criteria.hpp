@@ -144,10 +144,21 @@ class validation_criteria {
     stdx::optional<validation_action> _action;
 };
 
+///
+/// Compare equal when the arguments' rule, level, and action compare equal; otherwise, compare
+/// false.
+///
+/// @{
+
+/// @relatesalso mongocxx::v_noabi::validation_criteria
 MONGOCXX_API bool MONGOCXX_CALL operator==(const validation_criteria& lhs,
                                            const validation_criteria& rhs);
+
+/// @relatesalso mongocxx::v_noabi::validation_criteria
 MONGOCXX_API bool MONGOCXX_CALL operator!=(const validation_criteria& lhs,
                                            const validation_criteria& rhs);
+/// @}
+///
 
 MONGOCXX_INLINE validation_criteria::operator bsoncxx::v_noabi::document::value() const {
     return to_document_deprecated();
@@ -164,3 +175,22 @@ using ::mongocxx::v_noabi::operator!=;
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref mongocxx::v_noabi::validation_criteria.
+///
+
+#if defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+
+namespace mongocxx {
+
+/// @ref mongocxx::v_noabi::operator==(const v_noabi::validation_criteria& lhs, const v_noabi::validation_criteria& rhs)
+bool operator==(const v_noabi::validation_criteria& lhs, const v_noabi::validation_criteria& rhs);
+
+/// @ref mongocxx::v_noabi::operator!=(const v_noabi::validation_criteria& lhs, const v_noabi::validation_criteria& rhs)
+bool operator!=(const v_noabi::validation_criteria& lhs, const v_noabi::validation_criteria& rhs);
+
+}  // namespace mongocxx
+
+#endif  // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
