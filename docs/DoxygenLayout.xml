@@ -17,8 +17,8 @@
       <tab type="hierarchy" visible="yes" title="" intro=""/>
       <tab type="classmembers" visible="yes" title="" intro=""/>
     </tab>
-    <tab type="modules" visible="yes" title="" intro=""/>
-    <tab type="pages" visible="yes" title="" intro=""/>
+    <tab type="modules" visible="yes" title="Groups" intro="Pages documenting groups of related entities."/>
+    <tab type="pages" visible="yes" title="Topics" intro="Pages documenting topics related to the API."/>
     <tab type="interfaces" visible="no" title="Unused">
       <tab type="interfacelist" visible="yes" title="" intro=""/>
       <tab type="interfaceindex" visible="$ALPHABETICAL_INDEX" title=""/>
