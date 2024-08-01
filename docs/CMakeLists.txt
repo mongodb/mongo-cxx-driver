@@ -23,6 +23,7 @@ set_local_dist (docs_DIST_local
    ${docs_DIST_mds}
    ${docs_DIST_htmls}
    ${docs_DIST_tomls}
+   DoxygenLayout.xml
    layouts/.readme
    static/.readme
 )
