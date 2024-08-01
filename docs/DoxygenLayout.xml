@@ -40,6 +40,7 @@
   <class>
     <briefdescription visible="no"/>
     <detaileddescription title="Description"/>
+    <usedfiles visible="$SHOW_USED_FILES"/>
     <includes visible="$SHOW_INCLUDE_FILES"/>
     <inheritancegraph visible="$CLASS_GRAPH"/>
     <collaborationgraph visible="$COLLABORATION_GRAPH"/>
@@ -91,7 +92,6 @@
       <events title=""/>
     </memberdef>
     <allmemberslink visible="yes"/>
-    <usedfiles visible="$SHOW_USED_FILES"/>
     <authorsection visible="yes"/>
   </class>
 
