@@ -138,7 +138,7 @@ using ::bsoncxx::v_noabi::builder::basic::make_document;
 
 ///
 /// @file
-/// Defines bsoncxx::v_noabi::builder::basic::document.
+/// Provides @ref bsoncxx::v_noabi::builder::basic::document.
 ///
 
 #if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

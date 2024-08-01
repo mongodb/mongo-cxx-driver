@@ -89,5 +89,5 @@ class sub_array {
 
 ///
 /// @file
-/// Defines bsoncxx::v_noabi::builder::basic::sub_array.
+/// Provides @ref bsoncxx::v_noabi::builder::basic::sub_array.
 ///

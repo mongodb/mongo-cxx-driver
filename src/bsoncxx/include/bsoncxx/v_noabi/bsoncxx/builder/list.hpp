@@ -216,5 +216,5 @@ using namespace ::bsoncxx::v_noabi::types;  // Deprecated. Deliberately undocume
 
 ///
 /// @file
-/// Defines entities for use with "list" BSON builder syntax.
+/// Provides entities for use with "list" BSON builder syntax.
 ///

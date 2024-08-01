@@ -139,7 +139,7 @@ using ::bsoncxx::v_noabi::builder::basic::make_array;
 
 ///
 /// @file
-/// Defines bsoncxx::v_noabi::builder::basic::array.
+/// Provides @ref bsoncxx::v_noabi::builder::basic::array.
 ///
 
 #if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

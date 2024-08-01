@@ -123,7 +123,7 @@ using ::bsoncxx::v_noabi::builder::concatenate;
 
 ///
 /// @file
-/// Defines concatenators for use with "streaming" BSON builder syntax.
+/// Provides concatenators for use with "streaming" BSON builder syntax.
 ///
 
 #if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

@@ -109,5 +109,5 @@ class sub_document {
 
 ///
 /// @file
-/// Defines bsoncxx::v_noabi::builder::basic::sub_document.
+/// Provides @ref bsoncxx::v_noabi::builder::basic::sub_document.
 ///

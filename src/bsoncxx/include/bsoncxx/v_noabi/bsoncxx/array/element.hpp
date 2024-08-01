@@ -127,7 +127,7 @@ using ::bsoncxx::v_noabi::array::operator!=;
 
 ///
 /// @file
-/// Defines bsoncxx::v_noabi::array::element.
+/// Provides @ref bsoncxx::v_noabi::array::element.
 ///
 
 #if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
