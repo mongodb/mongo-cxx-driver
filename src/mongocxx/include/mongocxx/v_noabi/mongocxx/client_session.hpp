@@ -219,8 +219,3 @@ class client_session {
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
-
-///
-/// @example examples/mongocxx/client_session.cpp
-/// Use a mongocxx::v_noabi::client_session for a sequence of operations with causal consistency.
-///
