@@ -42,3 +42,11 @@ using namespace mongocxx::v_noabi::stdx;
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
+
+///
+/// @file
+/// Redeclares @ref bsoncxx::v_noabi::stdx in @ref mongocxx::v_noabi::stdx for internal use.
+///
+/// @warning These redeclarations are for internal use only! Users should reference entities
+/// declared in @ref bsoncxx::v_noabi::stdx directly, not through @ref mongocxx::v_noabi::stdx.
+///
