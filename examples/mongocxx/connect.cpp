@@ -19,7 +19,6 @@
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/json.hpp>
-#include <bsoncxx/stdx/make_unique.hpp>
 #include <mongocxx/client.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/logger.hpp>
@@ -44,6 +43,11 @@ class logger final : public mongocxx::logger {
     std::ostream* const _stream;
 };
 
+// Use `std::make_unique` with C++14 and newer.
+std::unique_ptr<logger> make_logger() {
+    return std::unique_ptr<logger>(new logger(&std::cout));
+}
+
 }  // namespace
 
 int main(int argc, char* argv[]) {
@@ -53,7 +57,7 @@ int main(int argc, char* argv[]) {
     // The mongocxx::instance constructor and destructor initialize and shut down the driver,
     // respectively. Therefore, a mongocxx::instance must be created before using the driver and
     // must remain alive for as long as the driver is in use.
-    mongocxx::instance inst{bsoncxx::stdx::make_unique<logger>(&std::cout)};
+    mongocxx::instance inst{make_logger()};
 
     try {
         const auto uri = mongocxx::uri{(argc >= 2) ? argv[1] : mongocxx::uri::k_default_uri};

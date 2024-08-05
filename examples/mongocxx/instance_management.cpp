@@ -14,8 +14,8 @@
 
 #include <cstdlib>
 #include <memory>
+#include <type_traits>
 
-#include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 #include <mongocxx/instance.hpp>
@@ -80,11 +80,14 @@ void configure(mongocxx::uri uri) {
                                 bsoncxx::stdx::string_view) noexcept {}
     };
 
-    auto instance =
-        bsoncxx::stdx::make_unique<mongocxx::instance>(bsoncxx::stdx::make_unique<noop_logger>());
+    // Use `std::make_unique` with C++14 and newer.
+    auto instance = std::unique_ptr<mongocxx::instance>(
+        new mongocxx::instance(std::unique_ptr<noop_logger>(new noop_logger())));
 
-    mongo_access::instance().configure(std::move(instance),
-                                       bsoncxx::stdx::make_unique<mongocxx::pool>(std::move(uri)));
+    // Use `std::make_unique` with C++14 and newer.
+    auto pool = std::unique_ptr<mongocxx::pool>(new mongocxx::pool(std::move(uri)));
+
+    mongo_access::instance().configure(std::move(instance), std::move(pool));
 }
 
 bool do_work() {
