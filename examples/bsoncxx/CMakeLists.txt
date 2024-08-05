@@ -12,10 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-include_directories(
-    ${CMAKE_INSTALL_PREFIX}/${CMAKE_INSTALL_INCLUDEDIR}/bsoncxx/v_noabi
-)
-
 set(BSONCXX_EXAMPLES
     builder_core.cpp
     builder_list.cpp
