@@ -46,9 +46,8 @@
   <!-- Layout definition for a class page -->
   <class>
     <briefdescription visible="no"/>
-    <detaileddescription title="Description"/>
-    <usedfiles visible="$SHOW_USED_FILES"/>
     <includes visible="$SHOW_HEADERFILE"/>
+    <detaileddescription title="Description"/>
     <inheritancegraph visible="yes"/>
     <collaborationgraph visible="yes"/>
     <memberdecl>
@@ -99,6 +98,7 @@
       <events title=""/>
     </memberdef>
     <allmemberslink visible="yes"/>
+    <usedfiles visible="$SHOW_USED_FILES"/>
     <authorsection visible="yes"/>
   </class>
 
