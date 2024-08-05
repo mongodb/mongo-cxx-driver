@@ -49,7 +49,7 @@ namespace bsoncxx {
 namespace builder {
 namespace stream {
 
-/// @ref bsoncxx::v_noabi::builder::stream::array_context
+/// @ref bsoncxx::v_noabi::builder::stream::single_context
 class single_context {};
 
 }  // namespace stream

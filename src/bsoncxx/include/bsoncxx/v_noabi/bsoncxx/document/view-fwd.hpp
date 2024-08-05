@@ -47,7 +47,7 @@ namespace bsoncxx {
 namespace document {
 
 /// @ref bsoncxx::v_noabi::document::view
-class element {};
+class view {};
 
 }  // namespace document
 }  // namespace bsoncxx
