@@ -218,4 +218,18 @@ std::unique_ptr<T> make_unique(std::size_t count);
 }  // namespace v_noabi
 }  // namespace bsoncxx
 
+namespace bsoncxx {
+namespace stdx {
+
+/// @ref bsoncxx::v_noabi::stdx::make_unique(Args&&... args)
+template <typename T, typename... Args>
+std::unique_ptr<T> make_unique(Args&&... args);
+
+/// @ref bsoncxx::v_noabi::stdx::make_unique(std::size_t count)
+template <typename T>
+std::unique_ptr<T> make_unique(std::size_t count);
+
+}  // namespace stdx
+}  // namespace bsoncxx
+
 #endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
