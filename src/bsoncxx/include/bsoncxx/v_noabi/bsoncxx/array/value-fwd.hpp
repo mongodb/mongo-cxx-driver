@@ -35,3 +35,21 @@ using ::bsoncxx::v_noabi::array::value;
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
+
+///
+/// @file
+/// Declares @ref bsoncxx::v_noabi::array::value.
+///
+
+#if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+
+namespace bsoncxx {
+namespace array {
+
+/// @ref bsoncxx::v_noabi::array::value
+class value {};
+
+}  // namespace array
+}  // namespace bsoncxx
+
+#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

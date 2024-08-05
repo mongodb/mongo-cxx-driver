@@ -33,3 +33,9 @@ struct BSONCXX_API finalize_type;
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides types used to define stream manipulators in @ref
+/// bsoncxx/v_noabi/bsoncxx/builder/stream/helpers.hpp.
+///

@@ -25,11 +25,29 @@ namespace bsoncxx {
 namespace v_noabi {
 namespace string {
 
+///
+/// Convert a `bsoncxx::v_noabi::stdx::string_view` to a `std::string`.
+///
+/// This function may be used in place of explicit conversion to `std::string`, which may not be
+/// supported across all polyfill build configurations.
+///
+/// @par "Example" @parblock
+/// @code{.cpp}
+/// std::string example(bsoncxx::v_noabi::stdx::string_view sv) {
+///   // This may not be supported depending on the polyfill library.
+///   // return std::string(sv);
+///
+///   // This is supported regardless of the polyfill library.
+///   return bsoncxx::v_noabi::string::to_string(sv);
+/// }
+/// @endcode
+/// @endparblock
+///
 template <class CharT,
           class Traits = std::char_traits<CharT>,
           class Allocator = std::allocator<CharT>>
 BSONCXX_INLINE std::basic_string<CharT, Traits, Allocator> to_string(
-    stdx::basic_string_view<CharT, Traits> value, const Allocator& alloc = Allocator()) {
+    v_noabi::stdx::basic_string_view<CharT, Traits> value, const Allocator& alloc = Allocator()) {
     return std::basic_string<CharT, Traits, Allocator>{value.data(), value.length(), alloc};
 }
 
@@ -46,3 +64,23 @@ using ::bsoncxx::v_noabi::string::to_string;
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref bsoncxx::v_noabi::string::to_string.
+///
+
+#if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+
+namespace bsoncxx {
+namespace string {
+
+/// @ref bsoncxx::v_noabi::string::to_string
+template <class CharT, class Traits, class Allocator>
+std::basic_string<CharT, Traits, Allocator> to_string(
+    v_noabi::stdx::basic_string_view<CharT, Traits> value, const Allocator& alloc);
+
+}  // namespace string
+}  // namespace bsoncxx
+
+#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

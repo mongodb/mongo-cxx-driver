@@ -120,3 +120,8 @@ BSONCXX_INLINE value::operator array::view() const noexcept {
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref bsoncxx::v_noabi::array::value.
+///

@@ -145,7 +145,7 @@ class view_or_value {
 };
 
 ///
-/// Compare view_or_value objects for (in)-equality.
+/// Compare view_or_value objects for (in)equality.
 ///
 /// @{
 
@@ -167,7 +167,7 @@ BSONCXX_INLINE bool operator!=(const view_or_value<View, Value>& lhs,
 ///
 
 ///
-/// Mixed (in)-equality operators for view_or_value against View or Value types
+/// Mixed (in)equality operators for view_or_value against View and Value types
 ///
 /// @{
 
@@ -233,3 +233,54 @@ using ::bsoncxx::v_noabi::operator!=;
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref bsoncxx::v_noabi::view_or_value.
+///
+
+#if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+
+namespace bsoncxx {
+
+/// @ref bsoncxx::v_noabi::operator==(const v_noabi::view_or_value<View, Value>& lhs, const v_noabi::view_or_value<View, Value>& rhs)
+template <typename View, typename Value>
+bool operator==(const v_noabi::view_or_value<View, Value>& lhs,
+                const v_noabi::view_or_value<View, Value>& rhs);
+
+/// @ref bsoncxx::v_noabi::operator!=(const v_noabi::view_or_value<View, Value>& lhs, const v_noabi::view_or_value<View, Value>& rhs)
+template <typename View, typename Value>
+bool operator!=(const v_noabi::view_or_value<View, Value>& lhs,
+                const v_noabi::view_or_value<View, Value>& rhs);
+
+/// @ref bsoncxx::v_noabi::operator==(const v_noabi::view_or_value<View, Value>& lhs, View rhs)
+template <typename View, typename Value>
+bool operator==(const v_noabi::view_or_value<View, Value>& lhs, View rhs);
+
+/// @ref bsoncxx::v_noabi::operator==(View lhs, const v_noabi::view_or_value<View, Value>& rhs)
+template <typename View, typename Value>
+bool operator==(View lhs, const v_noabi::view_or_value<View, Value>& rhs);
+
+/// @ref bsoncxx::v_noabi::operator!=(const v_noabi::view_or_value<View, Value>& lhs, View rhs)
+template <typename View, typename Value>
+bool operator!=(const v_noabi::view_or_value<View, Value>& lhs, View rhs);
+
+/// @ref bsoncxx::v_noabi::operator!=(View lhs, const v_noabi::view_or_value<View, Value>& rhs)
+template <typename View, typename Value>
+bool operator!=(View lhs, const v_noabi::view_or_value<View, Value>& rhs);
+
+/// @ref bsoncxx::v_noabi::operator==(const v_noabi::view_or_value<View, Value>& lhs, const Value& rhs)
+template <typename View, typename Value>
+bool operator==(const v_noabi::view_or_value<View, Value>& lhs, const Value& rhs);
+
+/// @ref bsoncxx::v_noabi::operator==(const Value& lhs, const v_noabi::view_or_value<View, Value>& rhs)
+template <typename View, typename Value>
+bool operator==(const Value& lhs, const v_noabi::view_or_value<View, Value>& rhs);
+
+/// @ref bsoncxx::v_noabi::operator!=(const v_noabi::view_or_value<View, Value>& lhs, const Value& rhs)
+template <typename View, typename Value>
+bool operator!=(const v_noabi::view_or_value<View, Value>& lhs, const Value& rhs);
+
+}  // namespace bsoncxx
+
+#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

@@ -281,3 +281,24 @@ using ::bsoncxx::v_noabi::document::operator!=;
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref bsoncxx::v_noabi::document::value.
+///
+
+#if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+
+namespace bsoncxx {
+namespace document {
+
+/// @ref bsoncxx::v_noabi::document::operator==(const v_noabi::document::value& lhs, const v_noabi::document::value& rhs)
+inline bool operator==(const v_noabi::document::value& lhs, const v_noabi::document::value& rhs);
+
+/// @ref bsoncxx::v_noabi::document::operator!=(const v_noabi::document::value& lhs, const v_noabi::document::value& rhs)
+inline bool operator!=(const v_noabi::document::value& lhs, const v_noabi::document::value& rhs);
+
+}  // namespace document
+}  // namespace bsoncxx
+
+#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

@@ -51,3 +51,24 @@ using ::bsoncxx::v_noabi::types::bson_value::make_value;
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref bsoncxx::v_noabi::types::bson_value::make_value.
+///
+
+#if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+
+namespace bsoncxx {
+namespace types {
+namespace bson_value {
+
+/// @ref bsoncxx::v_noabi::types::bson_value::make_value
+template <typename T>
+v_noabi::types::bson_value::value make_value(T&& t);
+
+}  // namespace bson_value
+}  // namespace types
+}  // namespace bsoncxx
+
+#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

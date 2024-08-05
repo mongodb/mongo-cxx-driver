@@ -21,18 +21,18 @@ struct assert_same {
 
 template <typename Expect, typename... Args>
 struct Case {
-    template <bsoncxx_ttparam F>
+    template <template <class...> class F>
     struct apply {
         using x = typename assert_same<F<Args...>, Expect>::x;
     };
 };
 
-template <bsoncxx_ttparam Op, typename Case>
+template <template <class...> class Op, typename Case>
 struct one_case {
     using x = typename Case::template apply<Op>::x;
 };
 
-template <bsoncxx_ttparam Oper, typename... Cases>
+template <template <class...> class Oper, typename... Cases>
 struct check_cases : one_case<Oper, Cases>... {};
 
 constexpr check_cases<  //

@@ -98,3 +98,8 @@ class decimal128 {
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref bsoncxx::v_noabi::decimal128.
+///

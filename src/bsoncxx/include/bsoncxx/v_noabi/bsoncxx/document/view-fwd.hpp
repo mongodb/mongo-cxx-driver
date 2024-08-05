@@ -35,3 +35,21 @@ using ::bsoncxx::v_noabi::document::view;
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
+
+///
+/// @file
+/// Declares @ref bsoncxx::v_noabi::document::view.
+///
+
+#if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+
+namespace bsoncxx {
+namespace document {
+
+/// @ref bsoncxx::v_noabi::document::view
+class view {};
+
+}  // namespace document
+}  // namespace bsoncxx
+
+#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

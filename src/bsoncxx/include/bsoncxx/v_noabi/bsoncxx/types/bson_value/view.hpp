@@ -312,29 +312,45 @@ using is_bson_view_compatible = detail::conjunction<
 template <typename T>
 using not_view = is_bson_view_compatible<T>;
 
+///
+/// Compares a view with a type representable as a view.
+///
+/// @par "Constraints" @parblock
+/// @li @ref bsoncxx::v_noabi::types::bson_value::view is constructible from `T`.
+/// @endparblock
+///
+/// @{
+
+/// @relatesalso bsoncxx::v_noabi::types::bson_value::view
 template <typename T>
 BSONCXX_INLINE detail::requires_t<bool, is_bson_view_compatible<T>>  //
 operator==(const bson_value::view& lhs, T&& rhs) {
     return lhs == bson_value::view{std::forward<T>(rhs)};
 }
 
+/// @relatesalso bsoncxx::v_noabi::types::bson_value::view
 template <typename T>
 BSONCXX_INLINE detail::requires_t<bool, is_bson_view_compatible<T>>  //
 operator==(T&& lhs, const bson_value::view& rhs) {
     return bson_value::view{std::forward<T>(lhs)} == rhs;
 }
 
+/// @relatesalso bsoncxx::v_noabi::types::bson_value::view
 template <typename T>
 BSONCXX_INLINE detail::requires_t<bool, is_bson_view_compatible<T>>  //
 operator!=(const bson_value::view& lhs, T&& rhs) {
     return lhs != bson_value::view{std::forward<T>(rhs)};
 }
 
+/// @relatesalso bsoncxx::v_noabi::types::bson_value::view
 template <typename T>
 BSONCXX_INLINE detail::requires_t<bool, is_bson_view_compatible<T>>  //
 operator!=(T&& lhs, const bson_value::view& rhs) {
     return bson_value::view{std::forward<T>(lhs)} != rhs;
 }
+
+/// @}
+///
 
 }  // namespace bson_value
 }  // namespace types
@@ -353,3 +369,36 @@ using ::bsoncxx::v_noabi::types::bson_value::operator!=;
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref bsoncxx::v_noabi::types::bson_value::view.
+///
+
+#if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+
+namespace bsoncxx {
+namespace types {
+namespace bson_value {
+
+/// @ref bsoncxx::v_noabi::types::bson_value::operator==(const v_noabi::types::bson_value::view& lhs, T&& rhs)
+template <typename T>
+inline bool operator==(const v_noabi::types::bson_value::view& lhs, T&& rhs);
+
+/// @ref bsoncxx::v_noabi::types::bson_value::operator==(T&& lhs, const v_noabi::types::bson_value::view& rhs)
+template <typename T>
+inline bool operator==(T&& lhs, const v_noabi::types::bson_value::view& rhs);
+
+/// @ref bsoncxx::v_noabi::types::bson_value::operator!=(const v_noabi::types::bson_value::view& lhs, T&& rhs)
+template <typename T>
+inline bool operator!=(const v_noabi::types::bson_value::view& lhs, T&& rhs);
+
+/// @ref bsoncxx::v_noabi::types::bson_value::operator!=(T&& lhs, const v_noabi::types::bson_value::view& rhs)
+template <typename T>
+inline bool operator!=(T&& lhs, const v_noabi::types::bson_value::view& rhs);
+
+}  // namespace bson_value
+}  // namespace types
+}  // namespace bsoncxx
+
+#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

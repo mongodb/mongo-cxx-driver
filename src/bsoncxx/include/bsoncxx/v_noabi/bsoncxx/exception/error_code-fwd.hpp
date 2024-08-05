@@ -37,3 +37,19 @@ template <>
 struct is_error_code_enum<bsoncxx::v_noabi::error_code>;
 
 }  // namespace std
+
+///
+/// @file
+/// Declares @ref bsoncxx::v_noabi::error_code.
+///
+
+#if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+
+namespace bsoncxx {
+
+/// @ref bsoncxx::v_noabi::error_code
+class error_code {};
+
+}  // namespace bsoncxx
+
+#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

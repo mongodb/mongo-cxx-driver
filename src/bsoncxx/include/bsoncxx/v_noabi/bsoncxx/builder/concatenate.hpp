@@ -94,7 +94,7 @@ struct concatenate_array {
 /// @see bsoncxx::v_noabi::builder::concatenate_doc
 ///
 /// @note An overload accepting @ref v_noabi::array::view_or_value and returning a @ref
-/// concatenate_array is also declared in this scope.
+/// v_noabi::builder::concatenate_array is also declared in this scope.
 ///
 BSONCXX_INLINE concatenate_doc concatenate(document::view_or_value doc) {
     return {std::move(doc)};
@@ -120,3 +120,23 @@ using ::bsoncxx::v_noabi::builder::concatenate;
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides concatenators for use with "streaming" BSON builder syntax.
+///
+
+#if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+
+namespace bsoncxx {
+namespace builder {
+
+/// @ref bsoncxx::v_noabi::builder::concatenate
+/// @note An overload accepting @ref v_noabi::array::view_or_value and returning a @ref
+/// v_noabi::builder::concatenate_array is also declared in this scope.
+v_noabi::builder::concatenate_doc concatenate(v_noabi::document::view_or_value doc);
+
+}  // namespace builder
+}  // namespace bsoncxx
+
+#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

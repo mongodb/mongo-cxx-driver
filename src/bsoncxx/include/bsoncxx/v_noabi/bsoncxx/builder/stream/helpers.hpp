@@ -24,7 +24,7 @@ namespace v_noabi {
 namespace builder {
 namespace stream {
 
-using ::bsoncxx::v_noabi::builder::concatenate;  // Deprecated.
+using ::bsoncxx::v_noabi::builder::concatenate;  // Deprecated. Deliberately undocumented.
 
 ///
 /// The type of a stream manipulator to open a subdocument.
@@ -100,7 +100,7 @@ namespace bsoncxx {
 namespace builder {
 namespace stream {
 
-using ::bsoncxx::v_noabi::builder::stream::concatenate;  // Deprecated.
+using ::bsoncxx::v_noabi::builder::stream::concatenate;  // Deprecated. Deliberately undocumented.
 
 using ::bsoncxx::v_noabi::builder::stream::close_array;
 using ::bsoncxx::v_noabi::builder::stream::close_document;
@@ -113,3 +113,35 @@ using ::bsoncxx::v_noabi::builder::stream::open_document;
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides stream manipulators for use with "streaming" BSON builder syntax.
+///
+
+#if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+
+namespace bsoncxx {
+namespace builder {
+namespace stream {
+
+/// @ref bsoncxx::v_noabi::builder::stream::close_array
+constexpr close_array_type close_array;
+
+/// @ref bsoncxx::v_noabi::builder::stream::close_document
+constexpr close_document_type close_document;
+
+/// @ref bsoncxx::v_noabi::builder::stream::finalize
+constexpr finalize_type finalize;
+
+/// @ref bsoncxx::v_noabi::builder::stream::open_array
+constexpr open_array_type open_array;
+
+/// @ref bsoncxx::v_noabi::builder::stream::open_document
+constexpr open_document_type open_document;
+
+}  // namespace stream
+}  // namespace builder
+}  // namespace bsoncxx
+
+#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

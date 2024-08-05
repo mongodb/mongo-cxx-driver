@@ -136,3 +136,24 @@ using ::bsoncxx::v_noabi::builder::basic::make_array;
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref bsoncxx::v_noabi::builder::basic::array.
+///
+
+#if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+
+namespace bsoncxx {
+namespace builder {
+namespace basic {
+
+/// @ref bsoncxx::v_noabi::builder::basic::make_array
+template <typename... Args>
+v_noabi::array::value make_array(Args&&... args);
+
+}  // namespace basic
+}  // namespace builder
+}  // namespace bsoncxx
+
+#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

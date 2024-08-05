@@ -153,9 +153,9 @@ BSONCXX_INLINE bool operator==(const b_string& lhs, const b_string& rhs) {
 }
 
 ///
-/// This class has been renamed to b_string
+/// Equivalent to @ref b_string.
 ///
-/// @deprecated use b_string instead.
+/// @deprecated Use @ref b_string instead.
 ///
 BSONCXX_DEPRECATED typedef b_string b_utf8;
 
@@ -878,3 +878,156 @@ static_assert(false, "BSONCXX_ENUM must be undef'ed");
 #pragma pop_macro("BSONCXX_ENUM")
 
 #include <bsoncxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides entities used to represent BSON types.
+///
+
+#if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+
+namespace bsoncxx {
+
+/// @ref bsoncxx::v_noabi::to_string(v_noabi::type rhs)
+std::string to_string(v_noabi::type rhs);
+
+/// @ref bsoncxx::v_noabi::to_string(v_noabi::binary_sub_type rhs)
+std::string to_string(v_noabi::binary_sub_type rhs);
+
+namespace types {
+
+/// @ref bsoncxx::v_noabi::types::b_utf8
+/// @deprecated Use @ref bsoncxx::types::b_string instead.
+struct b_utf8 {};
+
+/// @ref bsoncxx::v_noabi::types::operator==(const v_noabi::types::b_double& lhs, const v_noabi::types::b_double& rhs)
+bool operator==(const v_noabi::types::b_double& lhs, const v_noabi::types::b_double& rhs);
+
+/// @ref bsoncxx::v_noabi::types::operator==(const v_noabi::types::b_string& lhs, const v_noabi::types::b_string& rhs)
+bool operator==(const v_noabi::types::b_string& lhs, const v_noabi::types::b_string& rhs);
+
+/// @ref bsoncxx::v_noabi::types::operator==(const v_noabi::types::b_document& lhs, const v_noabi::types::b_document& rhs)
+bool operator==(const v_noabi::types::b_document& lhs, const v_noabi::types::b_document& rhs);
+
+/// @ref bsoncxx::v_noabi::types::operator==(const v_noabi::types::b_array& lhs, const v_noabi::types::b_array& rhs)
+bool operator==(const v_noabi::types::b_array& lhs, const v_noabi::types::b_array& rhs);
+
+/// @ref bsoncxx::v_noabi::types::operator==(const v_noabi::types::b_binary& lhs, const v_noabi::types::b_binary& rhs)
+bool operator==(const v_noabi::types::b_binary& lhs, const v_noabi::types::b_binary& rhs);
+
+/// @ref bsoncxx::v_noabi::types::operator==(const v_noabi::types::b_undefined&, const v_noabi::types::b_undefined&)
+bool operator==(const v_noabi::types::b_undefined&, const v_noabi::types::b_undefined&);
+
+/// @ref bsoncxx::v_noabi::types::operator==(const v_noabi::types::b_oid& lhs, const v_noabi::types::b_oid& rhs)
+bool operator==(const v_noabi::types::b_oid& lhs, const v_noabi::types::b_oid& rhs);
+
+/// @ref bsoncxx::v_noabi::types::operator==(const v_noabi::types::b_bool& lhs, const v_noabi::types::b_bool& rhs)
+bool operator==(const v_noabi::types::b_bool& lhs, const v_noabi::types::b_bool& rhs);
+
+/// @ref bsoncxx::v_noabi::types::operator==(const v_noabi::types::b_date& lhs, const v_noabi::types::b_date& rhs)
+bool operator==(const v_noabi::types::b_date& lhs, const v_noabi::types::b_date& rhs);
+
+/// @ref bsoncxx::v_noabi::types::operator==(const v_noabi::types::b_null&, const v_noabi::types::b_null&)
+bool operator==(const v_noabi::types::b_null&, const v_noabi::types::b_null&);
+
+/// @ref bsoncxx::v_noabi::types::operator==(const v_noabi::types::b_regex& lhs, const v_noabi::types::b_regex& rhs)
+bool operator==(const v_noabi::types::b_regex& lhs, const v_noabi::types::b_regex& rhs);
+
+/// @ref bsoncxx::v_noabi::types::operator==(const v_noabi::types::b_dbpointer& lhs, const v_noabi::types::b_dbpointer& rhs)
+bool operator==(const v_noabi::types::b_dbpointer& lhs, const v_noabi::types::b_dbpointer& rhs);
+
+/// @ref bsoncxx::v_noabi::types::operator==(const v_noabi::types::b_code& lhs, const v_noabi::types::b_code& rhs)
+bool operator==(const v_noabi::types::b_code& lhs, const v_noabi::types::b_code& rhs);
+
+/// @ref bsoncxx::v_noabi::types::operator==(const v_noabi::types::b_symbol& lhs, const v_noabi::types::b_symbol& rhs)
+bool operator==(const v_noabi::types::b_symbol& lhs, const v_noabi::types::b_symbol& rhs);
+
+/// @ref bsoncxx::v_noabi::types::operator==(const v_noabi::types::b_codewscope& lhs, const v_noabi::types::b_codewscope& rhs)
+bool operator==(const v_noabi::types::b_codewscope& lhs, const v_noabi::types::b_codewscope& rhs);
+
+/// @ref bsoncxx::v_noabi::types::operator==(const v_noabi::types::b_int32& lhs, const v_noabi::types::b_int32& rhs)
+bool operator==(const v_noabi::types::b_int32& lhs, const v_noabi::types::b_int32& rhs);
+
+/// @ref bsoncxx::v_noabi::types::operator==(const v_noabi::types::b_timestamp& lhs, const v_noabi::types::b_timestamp& rhs)
+bool operator==(const v_noabi::types::b_timestamp& lhs, const v_noabi::types::b_timestamp& rhs);
+
+/// @ref bsoncxx::v_noabi::types::operator==(const v_noabi::types::b_int64& lhs, const v_noabi::types::b_int64& rhs)
+bool operator==(const v_noabi::types::b_int64& lhs, const v_noabi::types::b_int64& rhs);
+
+/// @ref bsoncxx::v_noabi::types::operator==(const v_noabi::types::b_decimal128& lhs, const v_noabi::types::b_decimal128& rhs)
+bool operator==(const v_noabi::types::b_decimal128& lhs, const v_noabi::types::b_decimal128& rhs);
+
+/// @ref bsoncxx::v_noabi::types::operator==(const v_noabi::types::b_minkey&, const v_noabi::types::b_minkey&)
+bool operator==(const v_noabi::types::b_minkey&, const v_noabi::types::b_minkey&);
+
+/// @ref bsoncxx::v_noabi::types::operator==(const v_noabi::types::b_maxkey&, const v_noabi::types::b_maxkey&)
+bool operator==(const v_noabi::types::b_maxkey&, const v_noabi::types::b_maxkey&);
+
+/// @ref bsoncxx::v_noabi::types::operator!=(const v_noabi::types::b_double& lhs, const v_noabi::types::b_double& rhs)
+bool operator!=(const v_noabi::types::b_double& lhs, const v_noabi::types::b_double& rhs);
+
+/// @ref bsoncxx::v_noabi::types::operator!=(const v_noabi::types::b_string& lhs, const v_noabi::types::b_string& rhs)
+bool operator!=(const v_noabi::types::b_string& lhs, const v_noabi::types::b_string& rhs);
+
+/// @ref bsoncxx::v_noabi::types::operator!=(const v_noabi::types::b_document& lhs, const v_noabi::types::b_document& rhs)
+bool operator!=(const v_noabi::types::b_document& lhs, const v_noabi::types::b_document& rhs);
+
+/// @ref bsoncxx::v_noabi::types::operator!=(const v_noabi::types::b_array& lhs, const v_noabi::types::b_array& rhs)
+bool operator!=(const v_noabi::types::b_array& lhs, const v_noabi::types::b_array& rhs);
+
+/// @ref bsoncxx::v_noabi::types::operator!=(const v_noabi::types::b_binary& lhs, const v_noabi::types::b_binary& rhs)
+bool operator!=(const v_noabi::types::b_binary& lhs, const v_noabi::types::b_binary& rhs);
+
+/// @ref bsoncxx::v_noabi::types::operator!=(const v_noabi::types::b_undefined& lhs, const v_noabi::types::b_undefined& rhs)
+bool operator!=(const v_noabi::types::b_undefined& lhs, const v_noabi::types::b_undefined& rhs);
+
+/// @ref bsoncxx::v_noabi::types::operator!=(const v_noabi::types::b_oid& lhs, const v_noabi::types::b_oid& rhs)
+bool operator!=(const v_noabi::types::b_oid& lhs, const v_noabi::types::b_oid& rhs);
+
+/// @ref bsoncxx::v_noabi::types::operator!=(const v_noabi::types::b_bool& lhs, const v_noabi::types::b_bool& rhs)
+bool operator!=(const v_noabi::types::b_bool& lhs, const v_noabi::types::b_bool& rhs);
+
+/// @ref bsoncxx::v_noabi::types::operator!=(const v_noabi::types::b_date& lhs, const v_noabi::types::b_date& rhs)
+bool operator!=(const v_noabi::types::b_date& lhs, const v_noabi::types::b_date& rhs);
+
+/// @ref bsoncxx::v_noabi::types::operator!=(const v_noabi::types::b_null& lhs, const v_noabi::types::b_null& rhs)
+bool operator!=(const v_noabi::types::b_null& lhs, const v_noabi::types::b_null& rhs);
+
+/// @ref bsoncxx::v_noabi::types::operator!=(const v_noabi::types::b_regex& lhs, const v_noabi::types::b_regex& rhs)
+bool operator!=(const v_noabi::types::b_regex& lhs, const v_noabi::types::b_regex& rhs);
+
+/// @ref bsoncxx::v_noabi::types::operator!=(const v_noabi::types::b_dbpointer& lhs, const v_noabi::types::b_dbpointer& rhs)
+bool operator!=(const v_noabi::types::b_dbpointer& lhs, const v_noabi::types::b_dbpointer& rhs);
+
+/// @ref bsoncxx::v_noabi::types::operator!=(const v_noabi::types::b_code& lhs, const v_noabi::types::b_code& rhs)
+bool operator!=(const v_noabi::types::b_code& lhs, const v_noabi::types::b_code& rhs);
+
+/// @ref bsoncxx::v_noabi::types::operator!=(const v_noabi::types::b_symbol& lhs, const v_noabi::types::b_symbol& rhs)
+bool operator!=(const v_noabi::types::b_symbol& lhs, const v_noabi::types::b_symbol& rhs);
+
+/// @ref bsoncxx::v_noabi::types::operator!=(const v_noabi::types::b_codewscope& lhs, const v_noabi::types::b_codewscope& rhs)
+bool operator!=(const v_noabi::types::b_codewscope& lhs, const v_noabi::types::b_codewscope& rhs);
+
+/// @ref bsoncxx::v_noabi::types::operator!=(const v_noabi::types::b_int32& lhs, const v_noabi::types::b_int32& rhs)
+bool operator!=(const v_noabi::types::b_int32& lhs, const v_noabi::types::b_int32& rhs);
+
+/// @ref bsoncxx::v_noabi::types::operator!=(const v_noabi::types::b_timestamp& lhs, const v_noabi::types::b_timestamp& rhs)
+bool operator!=(const v_noabi::types::b_timestamp& lhs, const v_noabi::types::b_timestamp& rhs);
+
+/// @ref bsoncxx::v_noabi::types::operator!=(const v_noabi::types::b_int64& lhs, const v_noabi::types::b_int64& rhs)
+bool operator!=(const v_noabi::types::b_int64& lhs, const v_noabi::types::b_int64& rhs);
+
+/// @ref bsoncxx::v_noabi::types::operator!=(const v_noabi::types::b_decimal128& lhs, const v_noabi::types::b_decimal128& rhs)
+bool operator!=(const v_noabi::types::b_decimal128& lhs, const v_noabi::types::b_decimal128& rhs);
+
+/// @ref bsoncxx::v_noabi::types::operator!=(const v_noabi::types::b_minkey& lhs, const v_noabi::types::b_minkey& rhs)
+bool operator!=(const v_noabi::types::b_minkey& lhs, const v_noabi::types::b_minkey& rhs);
+
+/// @ref bsoncxx::v_noabi::types::operator!=(const v_noabi::types::b_maxkey& lhs, const v_noabi::types::b_maxkey& rhs)
+bool operator!=(const v_noabi::types::b_maxkey& lhs, const v_noabi::types::b_maxkey& rhs);
+
+}  // namespace types
+
+}  // namespace bsoncxx
+
+#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

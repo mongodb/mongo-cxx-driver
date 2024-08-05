@@ -62,3 +62,8 @@ BSONCXX_INLINE void value_append(core* core, T&& t) {
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
+
+///
+/// @file
+/// For internal use only!
+///

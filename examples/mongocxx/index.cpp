@@ -14,7 +14,6 @@
 
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>
-#include <bsoncxx/stdx/make_unique.hpp>
 #include <mongocxx/client.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/uri.hpp>
@@ -58,8 +57,11 @@ int main(int, char**) {
     {
         db["restaurants"].drop();
         mongocxx::options::index index_options{};
-        std::unique_ptr<mongocxx::options::index::wiredtiger_storage_options> wt_options =
-            bsoncxx::stdx::make_unique<mongocxx::options::index::wiredtiger_storage_options>();
+
+        // Use `std::make_unique` with C++14 and newer.
+        std::unique_ptr<mongocxx::options::index::wiredtiger_storage_options> wt_options{
+            new mongocxx::options::index::wiredtiger_storage_options()};
+
         wt_options->config_string("block_allocation=first");
         index_options.storage_options(std::move(wt_options));
         db["restaurants"].create_index(make_document(kvp("cuisine", 1)), index_options);

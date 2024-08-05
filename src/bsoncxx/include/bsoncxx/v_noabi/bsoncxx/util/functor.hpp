@@ -116,3 +116,10 @@ struct is_functor : functor::is_functor_impl<C, S, std::is_class<C>::value> {};
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
+
+///
+/// @file
+/// This header is deprecated.
+///
+/// @deprecated This header is deprecated.
+///
