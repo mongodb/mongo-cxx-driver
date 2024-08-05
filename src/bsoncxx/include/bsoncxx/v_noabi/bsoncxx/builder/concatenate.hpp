@@ -93,19 +93,25 @@ struct concatenate_array {
 ///
 /// @see bsoncxx::v_noabi::builder::concatenate_doc
 ///
-/// @note An overload accepting @ref v_noabi::array::view_or_value and returning a @ref
-/// v_noabi::builder::concatenate_array is also declared in this scope.
-///
 BSONCXX_INLINE concatenate_doc concatenate(document::view_or_value doc) {
     return {std::move(doc)};
 }
 
-// Why is Doxygen unable to parse this overload correctly???
-// @cond DOXYGEN_DISABLE "warning: no matching file member found for ..."
+///
+/// Helper method to concatenate an array.
+///
+/// Use this with the document stream builder to merge an existing array's fields with a new
+/// document's.
+///
+/// @param array The array to concatenate.
+///
+/// @return concatenate_doc A concatenating struct.
+///
+/// @see bsoncxx::v_noabi::builder::concatenate_doc
+///
 BSONCXX_INLINE concatenate_array concatenate(array::view_or_value array) {
     return {std::move(array)};
 }
-// @endcond
 
 }  // namespace builder
 }  // namespace v_noabi
@@ -131,10 +137,11 @@ using ::bsoncxx::v_noabi::builder::concatenate;
 namespace bsoncxx {
 namespace builder {
 
-/// @ref bsoncxx::v_noabi::builder::concatenate
-/// @note An overload accepting @ref v_noabi::array::view_or_value and returning a @ref
-/// v_noabi::builder::concatenate_array is also declared in this scope.
+/// @ref bsoncxx::v_noabi::builder::concatenate(v_noabi::document::view_or_value doc)
 v_noabi::builder::concatenate_doc concatenate(v_noabi::document::view_or_value doc);
+
+/// @ref bsoncxx::v_noabi::builder::concatenate(v_noabi::array::view_or_value doc)
+v_noabi::builder::concatenate_doc concatenate(v_noabi::array::view_or_value doc);
 
 }  // namespace builder
 }  // namespace bsoncxx
