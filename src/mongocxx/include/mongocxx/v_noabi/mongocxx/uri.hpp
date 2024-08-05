@@ -36,10 +36,6 @@ namespace v_noabi {
 ///
 /// Class representing a MongoDB connection string URI.
 ///
-/// @todo CXX-2038 Use optionals for all option getters. Otherwise users cannot distinguish between
-/// a case of an empty option explicitly present in the URI and the option being omitted. Also
-/// change getters that return a std::string to return a string_view since a copy is not necessary.
-///
 /// @see https://www.mongodb.com/docs/manual/reference/connection-string/
 /// @see https://mongoc.org/libmongoc/current/mongoc_uri_t.html for more information on supported
 /// URI options.
