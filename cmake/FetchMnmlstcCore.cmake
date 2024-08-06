@@ -12,6 +12,7 @@ FetchContent_Declare(
     EP_mnmlstc_core
 
     SOURCE_DIR "${core-src}"
+    SOURCE_SUBDIR ""
     SUBBUILD_DIR "${core-subbuild}"
     BINARY_DIR "${core-build}"
     INSTALL_DIR "${core-install}"
@@ -32,7 +33,12 @@ if(core_FOUND AND "$CACHE{INTERNAL_MONGOC_MNMLSTC_CORE_FOUND}")
 else()
     if(NOT ep_mnmlstc_core_POPULATED)
         message(STATUS "Downloading mnmlstc/core...")
-        FetchContent_Populate(EP_mnmlstc_core)
+        if("${CMAKE_VERSION}" VERSION_LESS "3.18.0")
+            # SOURCE_SUBDIR is not yet supported.
+            FetchContent_Populate(EP_mnmlstc_core)
+        else()
+            FetchContent_MakeAvailable(EP_mnmlstc_core)
+        endif()
         message(STATUS "Downloading mnmlstc/core... done.")
     endif()
 
