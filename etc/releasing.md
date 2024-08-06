@@ -671,6 +671,20 @@ Add a section for the next patch release, e.g. following a `1.2.3` release:
 
 Commit the changes to the `releases/vX.Y` branch and push the branch to the remote repository (a PR is not required for this step).
 
+Checkout the `post-release-changes` branch.
+
+Add a section for the new patch release containing the same entries as in the release, e.g. following a `1.2.3` release:
+
+```md
+## 1.3.0 [Unreleased]
+
+<!-- Will contain entries for the next patch release. -->
+
+## 1.2.3 <!-- Just released. -->
+
+## 1.2.2 <!-- Prior release. -->
+```
+
 #### ... for a Non-Patch Release
 
 Checkout the `post-release-changes` branch.
