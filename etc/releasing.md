@@ -673,17 +673,27 @@ Commit the changes to the `releases/vX.Y` branch and push the branch to the remo
 
 Checkout the `post-release-changes` branch.
 
-Add a section for the new patch release containing the same entries as in the release, e.g. following a `1.2.3` release:
+Sync the entries in the patch release section to be consistent with the entries on the release branch, e.g. following a `1.2.3` release:
 
 ```md
 ## 1.3.0 [Unreleased]
+
+<!-- Will contain entries for the next minor release. -->
+<!-- Ensure these entries are not removed during the sync. -->
+
+## 1.2.4 [Unreleased]
 
 <!-- Will contain entries for the next patch release. -->
 
 ## 1.2.3 <!-- Just released. -->
 
+<!-- Ensure these entries match those in the release. -->
+
 ## 1.2.2 <!-- Prior release. -->
 ```
+
+> [!TIP]
+> Use `git restore --source=rX.Y.Z --worktree CHANGELOG.md` to obtain the `CHANGELOG.md` in `rX.Y.Z` as unstaged changes.
 
 #### ... for a Non-Patch Release
 
