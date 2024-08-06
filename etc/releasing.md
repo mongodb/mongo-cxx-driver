@@ -679,7 +679,7 @@ Sync the entries in the patch release section to be consistent with the entries 
 ## 1.3.0 [Unreleased]
 
 <!-- Will contain entries for the next minor release. -->
-<!-- Ensure these entries are not removed during the sync. -->
+<!-- Ensure any existing entries are not removed during the sync. -->
 
 ## 1.2.4 [Unreleased]
 
