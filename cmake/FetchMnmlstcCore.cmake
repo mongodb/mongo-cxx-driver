@@ -12,7 +12,7 @@ FetchContent_Declare(
     EP_mnmlstc_core
 
     SOURCE_DIR "${core-src}"
-    SOURCE_SUBDIR ""
+    SOURCE_SUBDIR "" # Disable `add_subdirectory()` in `FetchContent_MakeAvailable()`.
     SUBBUILD_DIR "${core-subbuild}"
     BINARY_DIR "${core-build}"
     INSTALL_DIR "${core-install}"
