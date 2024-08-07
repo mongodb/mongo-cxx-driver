@@ -20,10 +20,7 @@
 /// @file
 /// For documentation purposes only.
 ///
-/// This header is not intended to be includable.
-///
-/// @note This header is shadowed by @ref mongocxx/v_noabi/mongocxx/fwd.hpp per include directory
-/// search ordering.
+/// @note This header is not includable!
 ///
 
 ///
