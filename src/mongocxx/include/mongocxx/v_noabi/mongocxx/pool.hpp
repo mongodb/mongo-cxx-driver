@@ -144,3 +144,8 @@ MONGOCXX_INLINE mongocxx::v_noabi::database pool::entry::operator[](
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref mongocxx::v_noabi::pool.
+///

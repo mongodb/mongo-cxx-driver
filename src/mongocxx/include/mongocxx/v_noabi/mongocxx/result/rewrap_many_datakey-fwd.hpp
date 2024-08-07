@@ -35,3 +35,21 @@ using ::mongocxx::v_noabi::result::rewrap_many_datakey;
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
+
+///
+/// @file
+/// Declares @ref mongocxx::v_noabi::result::rewrap_many_datakey.
+///
+
+#if defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+
+namespace mongocxx {
+namespace result {
+
+/// @ref mongocxx::v_noabi::result::rewrap_many_datakey
+class rewrap_many_datakey {};
+
+}  // namespace result
+}  // namespace mongocxx
+
+#endif  // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

@@ -35,3 +35,21 @@ using ::mongocxx::v_noabi::result::insert_one;
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
+
+///
+/// @file
+/// Declares @ref mongocxx::v_noabi::result::insert_one.
+///
+
+#if defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+
+namespace mongocxx {
+namespace result {
+
+/// @ref mongocxx::v_noabi::result::insert_one
+class insert_one {};
+
+}  // namespace result
+}  // namespace mongocxx
+
+#endif  // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

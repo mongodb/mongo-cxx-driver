@@ -35,3 +35,21 @@ using ::mongocxx::v_noabi::events::server_description;
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
+
+///
+/// @file
+/// Declares @ref mongocxx::v_noabi::events::server_description.
+///
+
+#if defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+
+namespace mongocxx {
+namespace events {
+
+/// @ref mongocxx::v_noabi::events::server_description
+class server_description {};
+
+}  // namespace events
+}  // namespace mongocxx
+
+#endif  // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

@@ -37,3 +37,8 @@ class query_exception : public operation_exception {
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref mongocxx::v_noabi::query_exception.
+///

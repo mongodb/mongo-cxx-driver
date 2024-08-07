@@ -49,3 +49,8 @@ class rewrap_many_datakey {
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref mongocxx::v_noabi::result::rewrap_many_datakey.
+///

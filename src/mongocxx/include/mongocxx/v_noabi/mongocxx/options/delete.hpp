@@ -159,3 +159,8 @@ class delete_options {
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref mongocxx::v_noabi::options::delete_options.
+///

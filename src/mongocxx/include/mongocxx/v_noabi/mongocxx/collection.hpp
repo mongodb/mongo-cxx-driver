@@ -1972,3 +1972,8 @@ MONGOCXX_INLINE stdx::optional<result::insert_many> collection::insert_many(
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref mongocxx::v_noabi::collection.
+///

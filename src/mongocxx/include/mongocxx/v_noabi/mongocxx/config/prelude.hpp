@@ -63,3 +63,22 @@
 #pragma push_macro("MONGOCXX_UNREACHABLE")
 #undef MONGOCXX_UNREACHABLE
 #define MONGOCXX_UNREACHABLE std::abort()
+
+///
+/// @file
+/// The mongocxx macro guard prelude header.
+///
+/// @warning For internal use only!
+///
+/// @par "Includes" @parblock
+/// @li @ref mongocxx/v_noabi/mongocxx/config/compiler.hpp
+/// @li @ref mongocxx-v_noabi-mongocxx-config-config-hpp
+/// @li @ref mongocxx-v_noabi-mongocxx-config-export-hpp
+/// @li @ref mongocxx-v_noabi-mongocxx-config-version-hpp
+/// @endparblock
+///
+/// This header uses macro pragmas to guard macros defined by the mongocxx library for internal use
+/// by "pushing" their prior definition onto the stack before use by mongocxx headers.
+///
+/// @see mongocxx/v_noabi/mongocxx/config/postlude.hpp
+///

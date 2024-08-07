@@ -48,3 +48,8 @@ enum class write_type {
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref mongocxx::v_noabi::write_type.
+///

@@ -35,3 +35,21 @@ using ::mongocxx::v_noabi::model::update_many;
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
+
+///
+/// @file
+/// Declares @ref mongocxx::v_noabi::model::update_many.
+///
+
+#if defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+
+namespace mongocxx {
+namespace model {
+
+/// @ref mongocxx::v_noabi::model::update_many
+class update_many {};
+
+}  // namespace model
+}  // namespace mongocxx
+
+#endif  // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

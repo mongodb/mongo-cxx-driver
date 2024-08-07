@@ -178,3 +178,8 @@ class downloader {
 #if defined(MONGOCXX_TEST_MACRO_GUARDS_FIX_MISSING_POSTLUDE)
 #include <mongocxx/config/postlude.hpp>
 #endif
+
+///
+/// @file
+/// Provides utilities to download GridFS files.
+///

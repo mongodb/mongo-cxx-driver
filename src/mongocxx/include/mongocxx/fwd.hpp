@@ -76,3 +76,14 @@
 /// @namespace mongocxx::result::gridfs
 /// Declares entities representing the result of GridFS commands.
 ///
+
+///
+/// @namespace mongocxx::stdx
+/// Redeclares @ref bsoncxx C++17 standard library polyfills in the @ref mongocxx library namespace
+/// for internal use.
+///
+/// @deprecated Use @ref bsoncxx::stdx instead.
+///
+/// @warning These redeclarations are for internal use only! Users should reference entities
+/// declared in @ref bsoncxx directly, not through @ref mongocxx.
+///

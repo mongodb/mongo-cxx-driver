@@ -35,3 +35,21 @@ using ::mongocxx::v_noabi::gridfs::uploader;
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
+
+///
+/// @file
+/// Declares utilities to upload GridFS files.
+///
+
+#if defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+
+namespace mongocxx {
+namespace gridfs {
+
+/// @ref mongocxx::v_noabi::gridfs::uploader
+class uploader {};
+
+}  // namespace gridfs
+}  // namespace mongocxx
+
+#endif  // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

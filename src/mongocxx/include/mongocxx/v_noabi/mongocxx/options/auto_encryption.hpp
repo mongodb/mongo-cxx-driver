@@ -402,3 +402,8 @@ class auto_encryption {
 #if defined(MONGOCXX_TEST_MACRO_GUARDS_FIX_MISSING_POSTLUDE)
 #include <mongocxx/config/postlude.hpp>
 #endif
+
+///
+/// @file
+/// Provides @ref mongocxx::v_noabi::options::auto_encryption.
+///
