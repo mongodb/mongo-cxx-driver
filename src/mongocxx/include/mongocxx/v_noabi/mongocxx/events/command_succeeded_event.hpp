@@ -37,7 +37,6 @@ namespace events {
 class command_succeeded_event {
    public:
     MONGOCXX_PRIVATE explicit command_succeeded_event(const void* event);
-
     ///
     /// Destroys a command_succeeded_event.
     ///
@@ -114,3 +113,8 @@ class command_succeeded_event {
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref mongocxx::v_noabi::events::command_succeeded_event.
+///

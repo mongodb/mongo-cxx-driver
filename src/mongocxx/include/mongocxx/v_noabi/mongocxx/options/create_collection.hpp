@@ -28,9 +28,8 @@ namespace options {
 ///
 /// Class representing the optional arguments to a MongoDB createCollection command
 ///
-/// This class is deprecated, as are the database class methods that use this class.
-/// Please use the new database::create_collection methods that take options as a
-/// BSON document.
+/// @deprecated Use @ref mongocxx::v_noabi::database::create_collection overloads with a BSON
+/// document option parameter instead.
 ///
 class MONGOCXX_API create_collection_deprecated {
    public:
@@ -237,6 +236,12 @@ class MONGOCXX_API create_collection_deprecated {
     stdx::optional<mongocxx::v_noabi::validation_criteria> _validation;
 };
 
+///
+/// Equivalent to @ref create_collection_deprecated.
+///
+/// @deprecated Use @ref mongocxx::v_noabi::database::create_collection overloads with a BSON
+/// document option parameter instead.
+///
 MONGOCXX_DEPRECATED typedef create_collection_deprecated create_collection;
 
 MONGOCXX_INLINE create_collection_deprecated::operator bsoncxx::v_noabi::document::value() const {
@@ -257,3 +262,27 @@ using ::mongocxx::v_noabi::options::create_collection_deprecated;
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref mongocxx::v_noabi::options::create_collection.
+///
+/// @deprecated Use @ref mongocxx::v_noabi::database::create_collection overloads with a BSON
+/// document option parameter instead.
+///
+
+#if defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+
+namespace mongocxx {
+namespace options {
+
+/// @ref mongocxx::v_noabi::options::create_collection
+class create_collection {};
+
+/// @ref mongocxx::v_noabi::options::create_collection_deprecated
+class create_collection_deprecated {};
+
+}  // namespace options
+}  // namespace mongocxx
+
+#endif  // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

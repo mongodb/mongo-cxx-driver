@@ -671,6 +671,30 @@ Add a section for the next patch release, e.g. following a `1.2.3` release:
 
 Commit the changes to the `releases/vX.Y` branch and push the branch to the remote repository (a PR is not required for this step).
 
+Checkout the `post-release-changes` branch.
+
+Sync the entries in the patch release section to be consistent with the entries on the release branch, e.g. following a `1.2.3` release:
+
+```md
+## 1.3.0 [Unreleased]
+
+<!-- Will contain entries for the next minor release. -->
+<!-- Ensure any existing entries are not removed during the sync. -->
+
+## 1.2.4 [Unreleased]
+
+<!-- Will contain entries for the next patch release. -->
+
+## 1.2.3 <!-- Just released. -->
+
+<!-- Ensure these entries match those in the release. -->
+
+## 1.2.2 <!-- Prior release. -->
+```
+
+> [!TIP]
+> Use `git restore --source=rX.Y.Z --worktree CHANGELOG.md` to obtain the `CHANGELOG.md` in `rX.Y.Z` as unstaged changes.
+
 #### ... for a Non-Patch Release
 
 Checkout the `post-release-changes` branch.

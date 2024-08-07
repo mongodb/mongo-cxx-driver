@@ -63,3 +63,8 @@ class topology_opening_event {
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref mongocxx::v_noabi::events::topology_opening_event.
+///

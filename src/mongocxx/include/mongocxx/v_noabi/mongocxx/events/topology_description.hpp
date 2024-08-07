@@ -28,7 +28,7 @@ namespace mongocxx {
 namespace v_noabi {
 namespace events {
 
-using mongocxx::v_noabi::read_preference;
+using mongocxx::v_noabi::read_preference;  // Deprecated. Deliberately undocumented.
 
 ///
 /// Class representing what the driver knows about a topology of MongoDB servers: either a
@@ -168,9 +168,14 @@ class topology_description {
 namespace mongocxx {
 namespace events {
 
-using ::mongocxx::v_noabi::events::read_preference;  // Deprecated.
+using ::mongocxx::v_noabi::events::read_preference;  // Deprecated. Deliberately undocumented.
 
 }  // namespace events
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref mongocxx::v_noabi::events::topology_description.
+///

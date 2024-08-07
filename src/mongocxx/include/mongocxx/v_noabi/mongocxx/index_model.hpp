@@ -82,3 +82,8 @@ class index_model {
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref mongocxx::v_noabi::index_model.
+///

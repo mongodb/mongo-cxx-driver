@@ -60,3 +60,15 @@
 // prelude.hpp
 #undef MONGOCXX_UNREACHABLE
 #pragma pop_macro("MONGOCXX_UNREACHABLE")
+
+///
+/// @file
+/// The mongocxx macro guard postlude header.
+///
+/// @warning For internal use only!
+///
+/// This header uses macro pragmas to guard macros defined by the mongocxx library for internal use
+/// by "popping" their prior definition onto the stack after use by mongocxx headers.
+///
+/// @see mongocxx/v_noabi/mongocxx/config/prelude.hpp
+///

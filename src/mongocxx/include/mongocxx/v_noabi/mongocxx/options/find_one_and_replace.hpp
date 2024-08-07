@@ -318,3 +318,8 @@ class find_one_and_replace {
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref mongocxx::v_noabi::options::find_one_and_replace.
+///

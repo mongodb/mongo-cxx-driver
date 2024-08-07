@@ -31,3 +31,19 @@ using ::mongocxx::v_noabi::write_concern;
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
+
+///
+/// @file
+/// Declares @ref mongocxx::v_noabi::write_concern.
+///
+
+#if defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+
+namespace mongocxx {
+
+/// @ref mongocxx::v_noabi::write_concern
+class write_concern {};
+
+}  // namespace mongocxx
+
+#endif  // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

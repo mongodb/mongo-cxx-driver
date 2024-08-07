@@ -35,3 +35,21 @@ using ::mongocxx::v_noabi::options::find_one_and_replace;
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
+
+///
+/// @file
+/// Declares @ref mongocxx::v_noabi::options::find_one_and_replace.
+///
+
+#if defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+
+namespace mongocxx {
+namespace options {
+
+/// @ref mongocxx::v_noabi::options::find_one_and_replace
+class find_one_and_replace {};
+
+}  // namespace options
+}  // namespace mongocxx
+
+#endif  // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

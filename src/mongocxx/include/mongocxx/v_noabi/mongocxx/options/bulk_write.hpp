@@ -160,3 +160,8 @@ class bulk_write {
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref mongocxx::v_noabi::options::bulk_write.
+///

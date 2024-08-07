@@ -9,7 +9,10 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 
 ## 3.11.0 [Unreleased]
 
-<!-- Will contain entries for the next minor release -->
+### Changed
+
+- `FetchContent_MakeAvailable()` is used to populate dependencies instead of `FetchContent_Populate()` for the Mongo C Driver (when not provided by `CMAKE_PREFIX_PATH`) and mnmlstc/core (when automatically selected or `BSONCXX_POLY_USE_MNMLSTC=ON`).
+  - Note: `FetchContent_Populate()` is still used for mnmlstc/core for CMake versions prior to 3.18 to avoid `add_subdirectory()` behavior.
 
 ### Deprecated
 
@@ -17,9 +20,19 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 - A future minor release plans to raise the minimum supported MongoDB Server version from 3.6 to 4.0. This is in
 accordance with [MongoDB Software Lifecycle Schedules](https://www.mongodb.com/legal/support-policy/lifecycles).
 
-## 3.10.2 [Unreleased]
+## 3.10.3 [Unreleased]
 
 <!-- Will contain entries for the next patch release -->
+
+## 3.10.2
+
+### Added
+
+- SSDLC Compliance Report and related release artifacts.
+
+### Fixed
+
+- Undefined behavior when moving a `mongocxx::v_noabi::events::topology_description::server_descriptions` object due to uninitialized data member access.
 
 ## 3.10.1
 
@@ -71,6 +84,7 @@ accordance with [MongoDB Software Lifecycle Schedules](https://www.mongodb.com/l
 - Add VERSIONINFO resource to bsoncxx.dll and mongocxx.dll.
 
 ### Changed
+
 - Do not build tests as part of `all` target. Configure with `BUILD_TESTING=ON` to build tests.
 - Bump minimum required CMake version to 3.15 to support the FetchContent module and for consistency with the C Driver.
 - Improve handling of downloaded (non-system) mnmlstc/core as the polyfill library.
@@ -79,11 +93,13 @@ accordance with [MongoDB Software Lifecycle Schedules](https://www.mongodb.com/l
 - Bump minimum C Driver version to [1.25.0](https://github.com/mongodb/mongo-c-driver/releases/tag/1.25.0).
 
 ### Fixed
+
 - Explicitly document that throwing an exception from an APM callback is undefined behavior.
 - Do not prematurely install mnmlstc/core headers during the CMake build step.
 - Require a C Driver CMake package is found via `find_dependency()` for all installed CXX Driver package configurations.
 
 ### Removed
+
 - Remove support for exported targets from the CMake project build tree.
 - Drop support for the following operating systems:
   - macOS 10.14 and 10.15

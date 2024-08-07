@@ -141,3 +141,8 @@ class server_api {
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref mongocxx::v_noabi::options::server_api.
+///

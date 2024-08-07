@@ -38,3 +38,8 @@ class authentication_exception : public operation_exception {
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref mongocxx::v_noabi::authentication_exception.
+///

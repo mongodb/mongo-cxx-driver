@@ -31,3 +31,19 @@ using ::mongocxx::v_noabi::instance;
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
+
+///
+/// @file
+/// Declares @ref mongocxx::v_noabi::instance.
+///
+
+#if defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+
+namespace mongocxx {
+
+/// @ref mongocxx::v_noabi::instance
+class instance {};
+
+}  // namespace mongocxx
+
+#endif  // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

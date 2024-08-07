@@ -143,8 +143,30 @@ using ::mongocxx::v_noabi::make_error_code;
 
 namespace std {
 
-// Specialize is_error_code_enum so we get simpler std::error_code construction
+///
+/// Indicates @ref mongocxx::v_noabi::error_code is eligible for `std::error_code` implicit
+/// conversions.
+///
 template <>
 struct is_error_code_enum<::mongocxx::v_noabi::error_code> : std::true_type {};
 
 }  // namespace std
+
+///
+/// @file
+/// Provides @ref mongocxx::v_noabi::error_code.
+///
+
+#if defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+
+namespace mongocxx {
+
+/// @ref mongocxx::v_noabi::error_category()
+const std::error_category& error_category();
+
+/// @ref mongocxx::v_noabi::make_error_code(v_noabi::error_code error)
+inline std::error_code make_error_code(v_noabi::error_code error);
+
+}  // namespace mongocxx
+
+#endif  // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

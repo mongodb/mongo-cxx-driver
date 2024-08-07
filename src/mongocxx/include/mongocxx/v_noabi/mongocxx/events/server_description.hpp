@@ -104,3 +104,8 @@ class server_description {
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref mongocxx::v_noabi::events::server_description.
+///
