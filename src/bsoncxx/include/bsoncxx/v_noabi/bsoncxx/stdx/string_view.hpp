@@ -438,7 +438,7 @@ class basic_string_view : bsoncxx::detail::equality_operators, bsoncxx::detail::
 // Required to define this here for compatibility with C++14 and older. Can be removed in C++17 or
 // newer.
 template <typename C, typename Tr>
-const std::size_t basic_string_view<C, Tr>::npos;
+constexpr std::size_t basic_string_view<C, Tr>::npos;
 
 using string_view = basic_string_view<char>;
 
