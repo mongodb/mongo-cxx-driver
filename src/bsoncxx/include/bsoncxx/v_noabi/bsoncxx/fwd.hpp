@@ -376,11 +376,6 @@
 ///
 
 ///
-/// @namespace bsoncxx::v_noabi::exception
-/// @copydoc bsoncxx::exception
-///
-
-///
 /// @namespace bsoncxx::v_noabi::stdx
 /// @copydoc bsoncxx::stdx
 ///

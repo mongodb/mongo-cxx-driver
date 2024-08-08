@@ -140,8 +140,8 @@ namespace builder {
 /// @ref bsoncxx::v_noabi::builder::concatenate(v_noabi::document::view_or_value doc)
 v_noabi::builder::concatenate_doc concatenate(v_noabi::document::view_or_value doc);
 
-/// @ref bsoncxx::v_noabi::builder::concatenate(v_noabi::array::view_or_value doc)
-v_noabi::builder::concatenate_doc concatenate(v_noabi::array::view_or_value doc);
+/// @ref bsoncxx::v_noabi::builder::concatenate(v_noabi::array::view_or_value array)
+v_noabi::builder::concatenate_array concatenate(v_noabi::array::view_or_value array);
 
 }  // namespace builder
 }  // namespace bsoncxx

@@ -65,11 +65,6 @@
 ///
 
 ///
-/// @namespace bsoncxx::exception
-/// Declares entities related to bsoncxx exceptions and error codes.
-///
-
-///
 /// @namespace bsoncxx::stdx
 /// Declares C++17 standard library polyfills.
 ///
