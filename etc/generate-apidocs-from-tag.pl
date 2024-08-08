@@ -11,7 +11,7 @@ use List::Util qw/first/;
 
 # The required Doxygen version.
 # The generated results are sensitive to the release version.
-our $doxygen_version_required = "1.11.0";
+our $doxygen_version_required = "1.12.0";
 
 # Allow specifying a custom Doxygen binary via the `$DOXYGEN_BINARY` environment variable.
 our $doxygen_binary = $ENV{DOXYGEN_BINARY} || "doxygen";
