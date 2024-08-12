@@ -1806,7 +1806,7 @@ buildvariants:
           build_type: "Release"
           mongodb_version: "5.0"
       run_on:
-          - ubuntu1804-build
+          - ubuntu1804-large
       tasks:
           - name: compile_and_test_with_shared_libs
           - name: compile_and_test_with_shared_libs_extra_alignment
@@ -1842,7 +1842,7 @@ buildvariants:
           disable_slow_tests: 1
           use_mongocryptd: true
       run_on:
-          - ubuntu1804-build
+          - ubuntu1804-large
       tasks:
           - name: compile_and_test_with_shared_libs
           - name: compile_and_test_with_shared_libs_extra_alignment
@@ -1884,7 +1884,7 @@ buildvariants:
           example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=address
       run_on:
-          - ubuntu1804-build
+          - ubuntu1804-large
       tasks:
           - name: compile_and_test_with_shared_libs
           - name: compile_and_test_with_shared_libs_extra_alignment
@@ -1927,7 +1927,7 @@ buildvariants:
           example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined
       run_on:
-          - ubuntu1804-build
+          - ubuntu1804-large
       tasks:
           # We currently don't run UBSAN on the shared library due to issues with UBSAN reporting
           # numerous false positive instances of undefined behavior in the mock tests, when the
