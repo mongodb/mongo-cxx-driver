@@ -65,6 +65,9 @@ endforeach(EXAMPLE)
 set_local_dist (examples_DIST_local
    CMakeLists.txt
    README.md
+   add_subdirectory/.gitignore
+   add_subdirectory/CMakeLists.txt
+   add_subdirectory/hello_mongocxx.cpp
    projects/bsoncxx/cmake/shared/build.sh
    projects/bsoncxx/cmake/shared/build/.gitignore
    projects/bsoncxx/cmake/shared/CMakeLists.txt
