@@ -62,8 +62,6 @@ foreach(EXAMPLE ${BSONCXX_EXAMPLE_EXECUTABLES})
     add_custom_command(TARGET run-examples POST_BUILD COMMAND ${EXAMPLE})
 endforeach(EXAMPLE)
 
-file (GLOB examples_DIST_mds RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.md)
-
 set_local_dist (examples_DIST_local
    CMakeLists.txt
    README.md
