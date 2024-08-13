@@ -31,6 +31,9 @@ using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_document;
 
 int main(int, char**) {
+    // No known way to set MSBuild IgnoreStandardErrorWarningFormat=true via CMake or CLI.
+    const bool print_error_messages = std::getenv("MONGOCXX_TEST_TOPOLOGY") == nullptr;
+
     // The mongocxx::instance constructor and destructor initialize and shut down the driver,
     // respectively. Therefore, a mongocxx::instance must be created before using the driver and
     // must remain alive for as long as the driver is in use.
@@ -64,7 +67,9 @@ int main(int, char**) {
             return EXIT_FAILURE;
         }
 
-        std::cout << e.what() << std::endl << std::endl;
+        if (print_error_messages) {
+            std::cout << e.what() << std::endl << std::endl;
+        }
     }
 
     // Renaming a collection that does not exist throws a mongocxx::operation_exception.
@@ -101,11 +106,13 @@ int main(int, char**) {
             return EXIT_FAILURE;
         }
 
-        std::cout << e.what() << std::endl;
-        if (e.raw_server_error()) {
-            std::cout << bsoncxx::to_json(*(e.raw_server_error())) << std::endl;
+        if (print_error_messages) {
+            std::cout << e.what() << std::endl;
+            if (e.raw_server_error()) {
+                std::cout << bsoncxx::to_json(*(e.raw_server_error())) << std::endl;
+            }
+            std::cout << std::endl;
         }
-        std::cout << std::endl;
     }
 
     // Adding a document whose "_id" is already present throws a mongocxx::bulk_write_exception.
@@ -128,12 +135,14 @@ int main(int, char**) {
             return EXIT_FAILURE;
         }
 
-        std::cout << e.what() << std::endl;
-        if (e.raw_server_error()) {
-            std::cout << "Raw server error:" << std::endl;
-            std::cout << bsoncxx::to_json(*(e.raw_server_error())) << std::endl;
+        if (print_error_messages) {
+            std::cout << e.what() << std::endl;
+            if (e.raw_server_error()) {
+                std::cout << "Raw server error:" << std::endl;
+                std::cout << bsoncxx::to_json(*(e.raw_server_error())) << std::endl;
+            }
+            std::cout << std::endl;
         }
-        std::cout << std::endl;
     }
 
     return EXIT_SUCCESS;
