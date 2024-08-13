@@ -12,7 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <cstdlib>
 #include <iostream>
+#include <string>
 
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>
@@ -27,6 +29,14 @@ using bsoncxx::builder::basic::make_document;
 using namespace mongocxx;
 
 int main() {
+    if (const char* const topology_env = std::getenv("MONGOCXX_TEST_TOPOLOGY")) {
+        const auto topology = std::string(topology_env);
+        if (topology != "replica") {
+            std::cerr << "Skipping: client_session example requires a replica set" << std::endl;
+            return 0;
+        }
+    }
+
     // The mongocxx::instance constructor and destructor initialize and shut down the driver,
     // respectively. Therefore, a mongocxx::instance must be created before using the driver and
     // must remain alive for as long as the driver is in use.
