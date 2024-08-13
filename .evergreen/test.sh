@@ -238,7 +238,7 @@ if [[ "${OSTYPE:?}" =~ cygwin ]]; then
     echo "Running examples..."
     if ! "${cmake_binary:?}" --build . --config "${build_type:?}" --target examples/run-examples --parallel 1 -- /verbosity:minimal >|output.txt 2>&1; then
       # Only emit output on failure.
-      cat output.txt 1>&2
+      cat output.txt
       exit 1
     fi
     echo "Running examples... done."
@@ -295,7 +295,7 @@ else
     echo "Running examples..."
     if ! "${cmake_binary:?}" --build . --target run-examples --parallel 1 >|output.txt 2>&1; then
       # Only emit output on failure.
-      cat output.txt 1>&2
+      cat output.txt
       exit 1
     fi
     echo "Running examples... done."
