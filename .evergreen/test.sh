@@ -225,13 +225,18 @@ fi
 pushd "${working_dir:?}/build"
 
 if [[ "${OSTYPE:?}" =~ cygwin ]]; then
-  CTEST_OUTPUT_ON_FAILURE=1 "${cmake_binary:?}" --build . --target RUN_TESTS -- /p:Configuration="${build_type:?}" /verbosity:minimal
+  CTEST_OUTPUT_ON_FAILURE=1 "${cmake_binary:?}" --build . --config "${build_type:?}" --target RUN_TESTS -- /verbosity:minimal
+
+  echo "Building examples..."
+  "${cmake_binary:?}" --build . --config "${build_type:?}" --target examples/examples
+  echo "Building examples... done."
+
   # Only run examples if MONGODB_API_VERSION is unset. We do not append
   # API version to example clients, so examples will fail when requireApiVersion
   # is true.
   if [[ -z "$MONGODB_API_VERSION" ]]; then
     echo "Running examples..."
-    if ! CTEST_OUTPUT_ON_FAILURE=1 "${cmake_binary:?}" --build . --target examples/run-examples -- /p:Configuration="${build_type:?}" /verbosity:minimal >|output.txt 2>&1; then
+    if ! "${cmake_binary:?}" --build . --config "${build_type:?}" --target examples/run-examples --parallel 1 -- /verbosity:minimal >|output.txt 2>&1; then
       # Only emit output on failure.
       cat output.txt 1>&2
       exit 1
@@ -279,42 +284,21 @@ else
   run_test ./src/mongocxx/test/test_read_write_concern_specs
   run_test ./src/mongocxx/test/test_unified_format_spec
 
-  # Some platforms like OS X don't support the /mode syntax to the -perm option
-  # of find(1), and some platforms like Ubuntu 16.04 don't support the +mode
-  # syntax, so we use Perl to help us find executable files.
-  EXAMPLES="$(find examples -type f | sort | perl -nlwe 'print if -x')"
+  echo "Building examples..."
+  "${cmake_binary:?}" --build . --target examples
+  echo "Building examples... done."
 
   # Only run examples if MONGODB_API_VERSION is unset. We do not append
   # API version to example clients, so examples will fail when requireApiVersion
   # is true.
   if [[ -z "${MONGODB_API_VERSION:-}" ]]; then
-    for test in ${EXAMPLES:?}; do
-      echo "Running ${test:?}"
-      case "${test:?}" in
-      *encryption*)
-        echo " - Skipping client side encryption example"
-        ;;
-      *change_stream*)
-        echo " - TODO CXX-1201, enable for servers that support change streams"
-        ;;
-      *client_session*)
-        echo " - TODO CXX-1201, enable for servers that support change streams"
-        ;;
-      *with_transaction*)
-        echo " - TODO CXX-1201, enable for servers that support transactions"
-        ;;
-      *causal_consistency*)
-        echo " - TODO CXX-1201, enable for servers that support transactions"
-        ;;
-      *)
-        if ! run_test "${test:?}" >|output.txt 2>&1; then
-          # Only emit output on failure.
-          cat output.txt 1>&2
-          exit 1
-        fi
-        ;;
-      esac
-    done
+    echo "Running examples..."
+    if ! "${cmake_binary:?}" --build . --target run-examples --parallel 1 >|output.txt 2>&1; then
+      # Only emit output on failure.
+      cat output.txt 1>&2
+      exit 1
+    fi
+    echo "Running examples... done."
   fi
 fi
 

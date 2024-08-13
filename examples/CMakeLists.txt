@@ -13,7 +13,7 @@
 # limitations under the License.
 
 add_custom_target(examples)
-add_custom_target(run-examples DEPENDS examples)
+add_custom_target(run-examples)
 
 if (TARGET bsoncxx_static)
     add_library(bsoncxx_target ALIAS bsoncxx_static)
@@ -56,8 +56,10 @@ function(add_examples_executable source)
     # Deliberately use `__vectorcall` by default with MSVC to catch missing `__cdecl`.
     target_compile_options(${name} PRIVATE "$<$<CXX_COMPILER_ID:MSVC>:/Gv>")
 
+    # Keep build and run targets completely separate.
     add_dependencies(examples ${name})
-    add_custom_command(TARGET run-examples POST_BUILD COMMAND ${name})
+    add_custom_target(run-examples-${name} COMMAND ${name})
+    add_dependencies(run-examples run-examples-${name})
 endfunction()
 
 file(GLOB_RECURSE bsoncxx_examples_sources
