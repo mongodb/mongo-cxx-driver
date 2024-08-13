@@ -92,7 +92,7 @@ bsoncxx::document::value doc_from_file(std::string path) {
     return bsoncxx::from_json(file_contents);
 }
 
-int main(int, char**) {
+int main() {
     instance inst{};
 
     // This must be the same master key that was used to create

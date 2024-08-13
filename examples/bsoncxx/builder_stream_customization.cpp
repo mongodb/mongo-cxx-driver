@@ -68,7 +68,7 @@ range_kvp_appender<begin_t, end_t> make_range_kvp_appender(begin_t&& begin, end_
                                               std::forward<end_t>(end));
 }
 
-int main(int, char**) {
+int main() {
     using builder::stream::array;
     using builder::stream::document;
     using builder::stream::finalize;

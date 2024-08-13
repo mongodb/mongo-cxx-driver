@@ -19,7 +19,7 @@
 
 using namespace bsoncxx;
 
-int main(int, char**) {
+int main() {
     using builder::stream::array;
     using builder::stream::document;
 

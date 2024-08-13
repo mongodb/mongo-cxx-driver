@@ -31,7 +31,7 @@
 
 using namespace bsoncxx;
 
-int main(int, char**) {
+int main() {
     // This example will cover the read-only BSON interface.
 
     // Lets first build up a non-trivial BSON document using the builder interface.
