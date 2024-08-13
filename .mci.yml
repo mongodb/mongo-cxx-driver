@@ -512,6 +512,7 @@ functions:
                   - example_projects_ldflags
                   - generator
                   - lib_dir
+                  - MONGOCXX_TEST_TOPOLOGY
                   - MONGODB_API_VERSION
                   - platform
                   - TEST_WITH_ASAN
@@ -789,6 +790,8 @@ tasks:
         # Call "install_c_driver" before "test" to build static C driver libraries. Example projects require static C driver libraries.
         - func: "install_c_driver"
         - func: "test"
+          vars:
+              MONGOCXX_TEST_TOPOLOGY: single
 
     - name: compile_and_test_with_shared_libs_extra_alignment
       commands:
@@ -804,6 +807,8 @@ tasks:
           vars:
               BSON_EXTRA_ALIGNMENT: 1
         - func: "test"
+          vars:
+              MONGOCXX_TEST_TOPOLOGY: single
 
     - name: compile_and_test_with_shared_libs_cxx20
       commands:
@@ -819,8 +824,9 @@ tasks:
         - func: "install_c_driver"
         - func: "test"
           vars:
-              REQUIRED_CXX_STANDARD: 20
               example_projects_cxx_standard: 20
+              MONGOCXX_TEST_TOPOLOGY: single
+              REQUIRED_CXX_STANDARD: 20
 
     - name: compile_and_test_with_shared_libs_extra_alignment_cxx20
       commands:
@@ -839,8 +845,9 @@ tasks:
               BSON_EXTRA_ALIGNMENT: 1
         - func: "test"
           vars:
-              REQUIRED_CXX_STANDARD: 20
               example_projects_cxx_standard: 20
+              MONGOCXX_TEST_TOPOLOGY: single
+              REQUIRED_CXX_STANDARD: 20
 
     - name: compile_with_shared_libs
       commands:
@@ -897,6 +904,7 @@ tasks:
         - func: "install_c_driver"
         - func: "test"
           vars:
+              MONGOCXX_TEST_TOPOLOGY: single
               USE_STATIC_LIBS: 1
 
     - name: compile_and_test_with_static_libs_extra_alignment
@@ -916,6 +924,7 @@ tasks:
               BSON_EXTRA_ALIGNMENT: 1
         - func: "test"
           vars:
+              MONGOCXX_TEST_TOPOLOGY: single
               USE_STATIC_LIBS: 1
 
     - name: compile_and_test_with_shared_libs_replica_set
@@ -932,6 +941,8 @@ tasks:
         - func: "run_kms_servers"
         - func: "install_c_driver"
         - func: "test"
+          vars:
+              MONGOCXX_TEST_TOPOLOGY: replica
 
     - name: compile_and_test_with_shared_libs_sharded_cluster
       commands:
@@ -947,6 +958,8 @@ tasks:
         - func: "run_kms_servers"
         - func: "install_c_driver"
         - func: "test"
+          vars:
+              MONGOCXX_TEST_TOPOLOGY: sharded
 
     # Auto downloading the C driver in the C++ build does not currently include
     # support for libmongocrypt, therefore it is not configured with
@@ -965,6 +978,8 @@ tasks:
         - func: "clone_drivers-evergreen-tools"
         - func: "run_kms_servers"
         - func: "test"
+          vars:
+              MONGOCXX_TEST_TOPOLOGY: replica
 
     - name: compile_and_test_with_shared_libs_sharded_cluster_with_libmongocrypt
       commands:
@@ -979,6 +994,8 @@ tasks:
         - func: "clone_drivers-evergreen-tools"
         - func: "run_kms_servers"
         - func: "test"
+          vars:
+              MONGOCXX_TEST_TOPOLOGY: sharded
 
     - name: uninstall_check
       commands:
@@ -1141,6 +1158,7 @@ tasks:
         - func: "run_kms_servers"
         - func: "test"
           vars:
+              MONGOCXX_TEST_TOPOLOGY: single
               MONGODB_API_VERSION: 1
 
     - name: test_versioned_api_accept_version_two
@@ -1155,6 +1173,8 @@ tasks:
         - func: "clone_drivers-evergreen-tools"
         - func: "run_kms_servers"
         - func: "test"
+          vars:
+              MONGOCXX_TEST_TOPOLOGY: single
 
     - name: docker_build_arm
       run_on:

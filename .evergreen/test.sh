@@ -12,6 +12,7 @@ set -o pipefail
 : "${cse_gcp_email:?}"
 : "${cse_gcp_privatekey:?}"
 : "${distro_id:?}" # Required by find-cmake-latest.sh.
+: "${MONGOCXX_TEST_TOPOLOGY:?}"
 
 : "${CRYPT_SHARED_LIB_PATH:-}"
 : "${disable_slow_tests:-}"
