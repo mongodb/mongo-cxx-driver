@@ -32,7 +32,7 @@ find_package(Threads REQUIRED)
 
 function(add_examples_executable source)
     set(opt_args "")
-    set(single_args "")
+    set(single_args "SKIP_RUN_EXAMPLES")
     set(multi_args "LIBRARIES")
 
     cmake_parse_arguments(PARSED "${opt_args}" "${single_args}" "${multi_args}" ${ARGN})
@@ -40,6 +40,10 @@ function(add_examples_executable source)
     if(NOT "${PARSED_UNPARSED_ARGUMENTS}" STREQUAL "")
         message(FATAL_ERROR "unrecognized argument: ${PARSED_UNPARSED_ARGUMENTS}")
     endif()
+
+    if ("${PARSED_SKIP_RUN_EXAMPLES}" STREQUAL "")
+        set(PARSED_SKIP_RUN_EXAMPLES "OFF") # Default to OFF.
+    endif ()
 
     # path/to/source.cpp -> source
     get_filename_component(name ${source} NAME_WE)
@@ -59,7 +63,10 @@ function(add_examples_executable source)
     # Keep build and run targets completely separate.
     add_dependencies(examples ${name})
     add_custom_target(run-examples-${name} COMMAND ${name})
-    add_dependencies(run-examples run-examples-${name})
+
+    if (NOT PARSED_SKIP_RUN_EXAMPLES)
+        add_dependencies(run-examples run-examples-${name})
+    endif ()
 endfunction()
 
 file(GLOB_RECURSE bsoncxx_examples_sources
@@ -80,17 +87,21 @@ endforeach()
 
 foreach(source ${mongocxx_examples_sources})
     set(extra_libs "")
-
-    # Don't run the CSFLE examples as part of the suite; needs mongocryptd running.
-    if (${source} MATCHES "encryption")
-        continue()
-    endif()
+    set(skip_run_examples OFF)
 
     if (${source} MATCHES "pool")
         list(APPEND extra_libs Threads::Threads)
     endif()
 
-    add_examples_executable(${source} LIBRARIES mongocxx_target ${extra_libs})
+    # Don't run the CSFLE examples as part of the suite; needs mongocryptd running.
+    if (${source} MATCHES "encryption")
+        set(skip_run_examples ON)
+    endif()
+
+    add_examples_executable(${source}
+        LIBRARIES mongocxx_target ${extra_libs}
+        SKIP_RUN_EXAMPLES ${skip_run_examples}
+    )
 endforeach()
 
 set_local_dist (examples_DIST_local
