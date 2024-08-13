@@ -12,7 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <cstdlib>
 #include <iostream>
+#include <string>
 
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>
@@ -38,6 +40,14 @@ using namespace mongocxx;
 // conveniently run a custom callback inside of a transaction.
 //
 int main() {
+    if (const char* const topology_env = std::getenv("MONGOCXX_TEST_TOPOLOGY")) {
+        const auto topology = std::string(topology_env);
+        if (topology != "replica") {
+            std::cerr << "Skipping: with_transaction example requires a replica set" << std::endl;
+            return 0;
+        }
+    }
+
     // Start Transactions withTxn API Example 1
 
     // The mongocxx::instance constructor and destructor initialize and shut down the driver,

@@ -82,7 +82,7 @@ foreach(source ${mongocxx_examples_sources})
     set(extra_libs "")
 
     # TODO CXX-1201, enable some examples only for replica sets.
-    if (${source} MATCHES "with_transaction|causal_consistency")
+    if (${source} MATCHES "causal_consistency")
         continue()
     endif()
 
