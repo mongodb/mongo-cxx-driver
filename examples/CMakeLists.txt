@@ -81,11 +81,6 @@ endforeach()
 foreach(source ${mongocxx_examples_sources})
     set(extra_libs "")
 
-    # TODO CXX-1201, enable some examples only for replica sets.
-    if (${source} MATCHES "causal_consistency")
-        continue()
-    endif()
-
     # Don't run the CSFLE examples as part of the suite; needs mongocryptd running.
     if (${source} MATCHES "encryption")
         continue()
