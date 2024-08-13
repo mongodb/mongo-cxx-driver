@@ -28,7 +28,6 @@ endif()
 
 add_subdirectory(bsoncxx)
 add_subdirectory(mongocxx)
-add_subdirectory(projects)
 
 add_custom_target(examples DEPENDS ${MONGOCXX_EXAMPLE_EXECUTABLES} ${BSONCXX_EXAMPLE_EXECUTABLES})
 
@@ -67,13 +66,34 @@ file (GLOB examples_DIST_mds RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.md)
 
 set_local_dist (examples_DIST_local
    CMakeLists.txt
-   ${examples_DIST_mds}
+   README.md
+   projects/bsoncxx/cmake/shared/build.sh
+   projects/bsoncxx/cmake/shared/build/.gitignore
+   projects/bsoncxx/cmake/shared/CMakeLists.txt
+   projects/bsoncxx/cmake/static/build.sh
+   projects/bsoncxx/cmake/static/build/.gitignore
+   projects/bsoncxx/cmake/static/CMakeLists.txt
+   projects/bsoncxx/hello_bsoncxx.cpp
+   projects/bsoncxx/pkg-config/shared/build.sh
+   projects/bsoncxx/pkg-config/shared/build/.gitignore
+   projects/bsoncxx/pkg-config/static/build.sh
+   projects/bsoncxx/pkg-config/static/build/.gitignore
+   projects/mongocxx/cmake/shared/build.sh
+   projects/mongocxx/cmake/shared/build/.gitignore
+   projects/mongocxx/cmake/shared/CMakeLists.txt
+   projects/mongocxx/cmake/static/build.sh
+   projects/mongocxx/cmake/static/build/.gitignore
+   projects/mongocxx/cmake/static/CMakeLists.txt
+   projects/mongocxx/hello_mongocxx.cpp
+   projects/mongocxx/pkg-config/shared/build.sh
+   projects/mongocxx/pkg-config/shared/build/.gitignore
+   projects/mongocxx/pkg-config/static/build.sh
+   projects/mongocxx/pkg-config/static/build/.gitignore
 )
 
 set (examples_DIST
    ${examples_DIST_local}
    ${examples_bsoncxx_DIST}
    ${examples_mongocxx_DIST}
-   ${examples_projects_DIST}
    PARENT_SCOPE
 )
