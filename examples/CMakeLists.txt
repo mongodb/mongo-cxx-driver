@@ -12,58 +12,94 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# NOTE: The targets in this directory will only build if you have
-# installed the bsoncxx and mongocxx libraries via the 'install'
-# targets.
-
-# TODO: Ideally, there would be dependencies here on the install targets
-# for bsoncxx and mongocxx. However, there is currently no way to express
-# that dependency in CMake (see https://cmake.org/Bug/view.php?id=8438)
-
-# Build the examples with vectorcall as the default on Windows
-# so that we shake out missing _CALL macros.
-if (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /Gv")
-endif()
-
-add_subdirectory(bsoncxx)
-add_subdirectory(mongocxx)
-
-add_custom_target(examples DEPENDS ${MONGOCXX_EXAMPLE_EXECUTABLES} ${BSONCXX_EXAMPLE_EXECUTABLES})
-
+add_custom_target(examples)
 add_custom_target(run-examples DEPENDS examples)
 
-# Run all mongocxx examples on `make run-examples`.
-foreach(EXAMPLE ${MONGOCXX_EXAMPLE_EXECUTABLES})
-    # Skip the "exception" example when running with Visual Studio, which currently fails due to the
-    # following CMake/MSBuild issue:
-    # <https://cmake.org/pipermail/cmake-developers/2015-October/026775.html>.  The "exception"
-    # example prints "error:" to standard out, which MSBuild interprets as a command failure due to
-    # its default behavior of detecting "standard error format" messages from commands.
-    if ((${EXAMPLE} STREQUAL "exception") AND (CMAKE_CXX_COMPILER_ID STREQUAL "MSVC"))
-        continue()
+if (TARGET bsoncxx_static)
+    add_library(bsoncxx_target ALIAS bsoncxx_static)
+else()
+    add_library(bsoncxx_target ALIAS bsoncxx_shared)
+endif()
+
+if (TARGET mongocxx_static)
+    add_library(mongocxx_target ALIAS mongocxx_static)
+else()
+    add_library(mongocxx_target ALIAS mongocxx_shared)
+endif()
+
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(Threads REQUIRED)
+
+function(add_examples_executable source)
+    set(opt_args "")
+    set(single_args "")
+    set(multi_args "LIBRARIES")
+
+    cmake_parse_arguments(PARSED "${opt_args}" "${single_args}" "${multi_args}" ${ARGN})
+
+    if(NOT "${PARSED_UNPARSED_ARGUMENTS}" STREQUAL "")
+        message(FATAL_ERROR "unrecognized argument: ${PARSED_UNPARSED_ARGUMENTS}")
     endif()
 
+    # path/to/source.cpp -> source
+    get_filename_component(name ${source} NAME_WE)
+
+    # path/to/source.cpp -> path/to
+    get_filename_component(subdir ${source} DIRECTORY)
+
+    add_executable(${name} EXCLUDE_FROM_ALL ${source})
+    target_link_libraries(${name} PRIVATE ${PARSED_LIBRARIES})
+
+    # Keep executables in separate directories.
+    set_target_properties(${name} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${subdir})
+
+    # Deliberately use `__vectorcall` by default with MSVC to catch missing `__cdecl`.
+    target_compile_options(${name} PRIVATE "$<$<CXX_COMPILER_ID:MSVC>:/Gv>")
+
+    add_dependencies(examples ${name})
+    add_custom_command(TARGET run-examples POST_BUILD COMMAND ${name})
+endfunction()
+
+file(GLOB_RECURSE bsoncxx_examples_sources
+    RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
+    CONFIGURE_DEPENDS
+    "bsoncxx/*.cpp"
+)
+
+file(GLOB_RECURSE mongocxx_examples_sources
+    RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
+    CONFIGURE_DEPENDS
+    "mongocxx/*.cpp"
+)
+
+foreach(source ${bsoncxx_examples_sources})
+    add_examples_executable(${source} LIBRARIES bsoncxx_target)
+endforeach()
+
+foreach(source ${mongocxx_examples_sources})
+    set(extra_libs "")
+
     # TODO CXX-1201, enable some examples only for replica sets.
-    if (${EXAMPLE} MATCHES "change_streams|client_session|with_transaction|causal_consistency")
+    if (${source} MATCHES "change_streams|client_session|with_transaction|causal_consistency")
         continue()
     endif()
 
     # Don't run the CSFLE examples as part of the suite; needs mongocryptd running.
-    if (${EXAMPLE} MATCHES "encryption")
+    if (${source} MATCHES "encryption")
         continue()
     endif()
 
-    add_custom_command(TARGET run-examples POST_BUILD COMMAND ${EXAMPLE})
-endforeach(EXAMPLE)
+    if (${source} MATCHES "pool")
+        list(APPEND extra_libs Threads::Threads)
+    endif()
 
-# Run all bsoncxx examples on `make run-examples`.
-foreach(EXAMPLE ${BSONCXX_EXAMPLE_EXECUTABLES})
-    add_custom_command(TARGET run-examples POST_BUILD COMMAND ${EXAMPLE})
-endforeach(EXAMPLE)
+    add_examples_executable(${source} LIBRARIES mongocxx_target ${extra_libs})
+endforeach()
 
 set_local_dist (examples_DIST_local
    CMakeLists.txt
+   ${bsoncxx_examples_sources}
+   ${mongocxx_examples_sources}
    README.md
    add_subdirectory/.gitignore
    add_subdirectory/CMakeLists.txt
@@ -94,7 +130,5 @@ set_local_dist (examples_DIST_local
 
 set (examples_DIST
    ${examples_DIST_local}
-   ${examples_bsoncxx_DIST}
-   ${examples_mongocxx_DIST}
    PARENT_SCOPE
 )
