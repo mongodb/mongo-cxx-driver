@@ -62,7 +62,13 @@ function(add_examples_executable source)
 
     # Keep build and run targets completely separate.
     add_dependencies(examples ${name})
-    add_custom_target(run-examples-${name} COMMAND ${name})
+
+    # Use full path to avoid implicit build dependency.
+    if (isMultiConfig)
+        add_custom_target(run-examples-${name} COMMAND "${subdir}/$<CONFIG>/${name}")
+    else ()
+        add_custom_target(run-examples-${name} COMMAND "${subdir}/${name}")
+    endif ()
 
     if (NOT PARSED_SKIP_RUN_EXAMPLES)
         add_dependencies(run-examples run-examples-${name})
