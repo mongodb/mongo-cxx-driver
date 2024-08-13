@@ -42,7 +42,7 @@ int main() {
     // must remain alive for as long as the driver is in use.
     mongocxx::instance inst{};
 
-    mongocxx::client conn{mongocxx::uri{"mongodb://localhost/?replicaSet=replset"}};
+    mongocxx::client conn{mongocxx::uri{"mongodb://localhost/?replicaSet=repl0"}};
 
     // By default, a session is causally consistent. Pass options::client_session to override
     // causal consistency.

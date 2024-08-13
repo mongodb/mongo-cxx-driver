@@ -61,7 +61,7 @@ int main() {
     // 'mongodb://mongodb0.example.com:27017,mongodb1.example.com:27017/?replicaSet=myRepl'
     // For a sharded cluster, connect to the mongos instances; e.g.
     // uriString = 'mongodb://mongos0.example.com:27017,mongos1.example.com:27017/'
-    mongocxx::client client{mongocxx::uri{"mongodb://localhost/?replicaSet=replset"}};
+    mongocxx::client client{mongocxx::uri{"mongodb://localhost/?replicaSet=repl0"}};
 
     write_concern wc_majority{};
     wc_majority.acknowledge_level(write_concern::level::k_majority);

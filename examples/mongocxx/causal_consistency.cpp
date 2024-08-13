@@ -48,7 +48,7 @@ int main() {
     using namespace mongocxx;
 
     instance inst{};
-    client client{mongocxx::uri{"mongodb://localhost/?replicaSet=replset"}};
+    client client{mongocxx::uri{"mongodb://localhost/?replicaSet=repl0"}};
 
     // Start Causal Consistency Example 1
 
