@@ -15,6 +15,16 @@
 add_custom_target(examples)
 add_custom_target(run-examples)
 
+add_custom_target(run-api-examples)
+add_custom_target(run-bsoncxx-examples)
+add_custom_target(run-mongocxx-examples)
+
+add_dependencies(run-examples
+    run-api-examples
+    run-bsoncxx-examples
+    run-mongocxx-examples
+)
+
 if (TARGET bsoncxx_static)
     add_library(bsoncxx_target ALIAS bsoncxx_static)
 else()
@@ -75,8 +85,23 @@ function(add_examples_executable source)
         add_custom_target(run-examples-${target_name} COMMAND "${subdir}/${name}")
     endif ()
 
+    set (type "")
+    if (${source} MATCHES "^api/")
+        set (type "api")
+    elseif (${source} MATCHES "^bsoncxx/")
+        set (type "bsoncxx")
+    elseif (${source} MATCHES "^mongocxx/")
+        set (type "mongocxx")
+    else ()
+        message (FATAL_ERROR "unexpected subdirectory ${subdir}")
+    endif ()
+
     if (NOT PARSED_SKIP_RUN_EXAMPLES)
-        add_dependencies(run-examples run-examples-${target_name})
+        add_dependencies(run-${type}-examples run-examples-${target_name})
+
+        if (${subdir} MATCHES "^api/")
+            add_dependencies(run-${type}-examples run-examples-${target_name})
+        endif ()
     endif ()
 endfunction()
 
