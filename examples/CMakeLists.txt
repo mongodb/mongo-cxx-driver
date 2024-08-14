@@ -80,6 +80,12 @@ function(add_examples_executable source)
     endif ()
 endfunction()
 
+file(GLOB_RECURSE api_examples_sources
+    RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
+    CONFIGURE_DEPENDS
+    "api/*.cpp"
+)
+
 file(GLOB_RECURSE bsoncxx_examples_sources
     RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
     CONFIGURE_DEPENDS
@@ -91,6 +97,10 @@ file(GLOB_RECURSE mongocxx_examples_sources
     CONFIGURE_DEPENDS
     "mongocxx/*.cpp"
 )
+
+foreach(source ${api_examples_sources})
+    add_examples_executable(${source} LIBRARIES mongocxx_target)
+endforeach()
 
 foreach(source ${bsoncxx_examples_sources})
     add_examples_executable(${source} LIBRARIES bsoncxx_target)
@@ -117,6 +127,7 @@ endforeach()
 
 set_local_dist (examples_DIST_local
    CMakeLists.txt
+   ${api_examples_sources}
    ${bsoncxx_examples_sources}
    ${mongocxx_examples_sources}
    README.md
