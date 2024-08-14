@@ -57,6 +57,7 @@ function(add_examples_executable source)
     target_link_libraries(${target_name} PRIVATE ${PARSED_LIBRARIES})
 
     # Keep executables in separate directories.
+    set_target_properties(${target_name} PROPERTIES OUTPUT_NAME ${name})
     set_target_properties(${target_name} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${subdir})
 
     # Deliberately use `__vectorcall` by default with MSVC to catch missing `__cdecl`.
