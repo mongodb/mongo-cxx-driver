@@ -14,7 +14,7 @@
 
 add_subdirectory (themes)
 
-file (GLOB_RECURSE docs_DIST_mds RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} content/*.md)
+file (GLOB_RECURSE docs_DIST_mds RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} api/*.md content/*.md)
 file (GLOB docs_DIST_htmls RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} layouts/shortcodes/*.html)
 file (GLOB docs_DIST_tomls RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.toml data/*.toml)
 
