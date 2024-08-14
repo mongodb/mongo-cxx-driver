@@ -51,27 +51,29 @@ function(add_examples_executable source)
     # path/to/source.cpp -> path/to
     get_filename_component(subdir ${source} DIRECTORY)
 
-    add_executable(${name} EXCLUDE_FROM_ALL ${source})
-    target_link_libraries(${name} PRIVATE ${PARSED_LIBRARIES})
+    # path/to/source -> path-to-source
+    string(REPLACE "/" "-" target_name "${subdir}/${name}")
+    add_executable(${target_name} EXCLUDE_FROM_ALL ${source})
+    target_link_libraries(${target_name} PRIVATE ${PARSED_LIBRARIES})
 
     # Keep executables in separate directories.
-    set_target_properties(${name} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${subdir})
+    set_target_properties(${target_name} PROPERTIES RUNTIME_OUTPUT_DIRECTORY ${subdir})
 
     # Deliberately use `__vectorcall` by default with MSVC to catch missing `__cdecl`.
-    target_compile_options(${name} PRIVATE "$<$<CXX_COMPILER_ID:MSVC>:/Gv>")
+    target_compile_options(${target_name} PRIVATE "$<$<CXX_COMPILER_ID:MSVC>:/Gv>")
 
     # Keep build and run targets completely separate.
-    add_dependencies(examples ${name})
+    add_dependencies(examples ${target_name})
 
     # Use full path to avoid implicit build dependency.
     if (isMultiConfig)
-        add_custom_target(run-examples-${name} COMMAND "${subdir}/$<CONFIG>/${name}")
+        add_custom_target(run-examples-${target_name} COMMAND "${subdir}/$<CONFIG>/${name}")
     else ()
-        add_custom_target(run-examples-${name} COMMAND "${subdir}/${name}")
+        add_custom_target(run-examples-${target_name} COMMAND "${subdir}/${name}")
     endif ()
 
     if (NOT PARSED_SKIP_RUN_EXAMPLES)
-        add_dependencies(run-examples run-examples-${name})
+        add_dependencies(run-examples run-examples-${target_name})
     endif ()
 endfunction()
 
