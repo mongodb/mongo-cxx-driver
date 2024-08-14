@@ -38,7 +38,6 @@ set(mongocxx_sources_v_noabi
     mongocxx/v_noabi/mongocxx/exception/error_code.cpp
     mongocxx/v_noabi/mongocxx/exception/operation_exception.cpp
     mongocxx/v_noabi/mongocxx/exception/server_error_code.cpp
-    mongocxx/v_noabi/mongocxx/fwd.cpp
     mongocxx/v_noabi/mongocxx/gridfs/bucket.cpp
     mongocxx/v_noabi/mongocxx/gridfs/downloader.cpp
     mongocxx/v_noabi/mongocxx/gridfs/uploader.cpp

@@ -22,7 +22,6 @@ set(bsoncxx_sources_v_noabi
     bsoncxx/v_noabi/bsoncxx/document/value.cpp
     bsoncxx/v_noabi/bsoncxx/document/view.cpp
     bsoncxx/v_noabi/bsoncxx/exception/error_code.cpp
-    bsoncxx/v_noabi/bsoncxx/fwd.cpp
     bsoncxx/v_noabi/bsoncxx/json.cpp
     bsoncxx/v_noabi/bsoncxx/oid.cpp
     bsoncxx/v_noabi/bsoncxx/private/itoa.cpp
