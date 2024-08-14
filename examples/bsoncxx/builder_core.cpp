@@ -17,7 +17,7 @@
 
 using namespace bsoncxx;
 
-int main(int, char**) {
+int main() {
     // bsoncxx::builder::core is a low-level primitive that can be useful for building other
     // BSON abstractions. Most users should just use builder::stream or builder::basic.
 

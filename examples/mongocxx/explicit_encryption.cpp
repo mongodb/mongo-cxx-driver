@@ -44,7 +44,7 @@ using namespace mongocxx;
 
 const int kKeyLength = 96;
 
-int main(int, char**) {
+int main() {
     instance inst{};
 
     // This must be the same master key that was used to create

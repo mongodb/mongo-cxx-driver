@@ -22,7 +22,7 @@
 
 using namespace bsoncxx;
 
-int main(int, char**) {
+int main() {
     // Convert a string to BSON Decimal128.
     decimal128 d128;
     try {

@@ -21,7 +21,7 @@
 
 using namespace bsoncxx;
 
-int main(int, char**) {
+int main() {
     // bsoncxx::builder::basic presents a BSON-construction interface familiar to users of the
     // server's
     // BSON library or the Java driver.
