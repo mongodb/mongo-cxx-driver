@@ -42,7 +42,7 @@ find_package(Threads REQUIRED)
 
 function(add_examples_executable source)
     set(opt_args "")
-    set(single_args "SKIP_RUN_EXAMPLES")
+    set(single_args "ADD_TO_RUN_EXAMPLES")
     set(multi_args "LIBRARIES")
 
     cmake_parse_arguments(PARSED "${opt_args}" "${single_args}" "${multi_args}" ${ARGN})
@@ -51,8 +51,8 @@ function(add_examples_executable source)
         message(FATAL_ERROR "unrecognized argument: ${PARSED_UNPARSED_ARGUMENTS}")
     endif()
 
-    if ("${PARSED_SKIP_RUN_EXAMPLES}" STREQUAL "")
-        set(PARSED_SKIP_RUN_EXAMPLES "OFF") # Default to OFF.
+    if ("${PARSED_ADD_TO_RUN_EXAMPLES}" STREQUAL "")
+        set(PARSED_ADD_TO_RUN_EXAMPLES "ON") # Default to ON.
     endif ()
 
     # path/to/source.cpp -> source
@@ -96,7 +96,7 @@ function(add_examples_executable source)
         message (FATAL_ERROR "unexpected subdirectory ${subdir}")
     endif ()
 
-    if (NOT PARSED_SKIP_RUN_EXAMPLES)
+    if (PARSED_ADD_TO_RUN_EXAMPLES)
         add_dependencies(run-${type}-examples run-examples-${target_name})
 
         if (${subdir} MATCHES "^api/")
@@ -133,7 +133,7 @@ endforeach()
 
 foreach(source ${mongocxx_examples_sources})
     set(extra_libs "")
-    set(skip_run_examples OFF)
+    set(add_to_run_examples ON)
 
     if (${source} MATCHES "pool")
         list(APPEND extra_libs Threads::Threads)
@@ -141,12 +141,12 @@ foreach(source ${mongocxx_examples_sources})
 
     # Don't run the CSFLE examples as part of the suite; needs mongocryptd running.
     if (${source} MATCHES "encryption")
-        set(skip_run_examples ON)
+        set(add_to_run_examples OFF)
     endif()
 
     add_examples_executable(${source}
         LIBRARIES mongocxx_target ${extra_libs}
-        SKIP_RUN_EXAMPLES ${skip_run_examples}
+        ADD_TO_RUN_EXAMPLES ${add_to_run_examples}
     )
 endforeach()
 
