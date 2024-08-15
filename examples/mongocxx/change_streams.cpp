@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <cstdlib>
 #include <iostream>
 
 #include <bsoncxx/builder/basic/document.hpp>
@@ -47,6 +48,11 @@ void watch_forever(mongocxx::collection& collection) {
 }  // namespace
 
 int main(int argc, char* argv[]) {
+    if (std::getenv("MONGOCXX_TEST_TOPOLOGY")) {
+        std::cerr << "Skipping: change_streams example should not be run by tests" << std::endl;
+        return 0;
+    }
+
     mongocxx::instance inst{};
     auto uri_str = mongocxx::uri::k_default_uri;
     std::string db = "db";

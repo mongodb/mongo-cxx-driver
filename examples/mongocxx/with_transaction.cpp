@@ -12,7 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <cstdlib>
 #include <iostream>
+#include <string>
 
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>
@@ -38,6 +40,14 @@ using namespace mongocxx;
 // conveniently run a custom callback inside of a transaction.
 //
 int main() {
+    if (const char* const topology_env = std::getenv("MONGOCXX_TEST_TOPOLOGY")) {
+        const auto topology = std::string(topology_env);
+        if (topology != "replica") {
+            std::cerr << "Skipping: with_transaction example requires a replica set" << std::endl;
+            return 0;
+        }
+    }
+
     // Start Transactions withTxn API Example 1
 
     // The mongocxx::instance constructor and destructor initialize and shut down the driver,
@@ -51,7 +61,7 @@ int main() {
     // 'mongodb://mongodb0.example.com:27017,mongodb1.example.com:27017/?replicaSet=myRepl'
     // For a sharded cluster, connect to the mongos instances; e.g.
     // uriString = 'mongodb://mongos0.example.com:27017,mongos1.example.com:27017/'
-    mongocxx::client client{mongocxx::uri{"mongodb://localhost/?replicaSet=replset"}};
+    mongocxx::client client{mongocxx::uri{"mongodb://localhost/?replicaSet=repl0"}};
 
     write_concern wc_majority{};
     wc_majority.acknowledge_level(write_concern::level::k_majority);
