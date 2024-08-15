@@ -31,7 +31,10 @@ using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_document;
 
 int main() {
-    // No known way to set MSBuild IgnoreStandardErrorWarningFormat=true via CMake or CLI.
+    // Do not print error messages when run in CI to prevent MSBuild diagnostic format detection
+    // from causing build failures. There is currently no way to specify
+    // IgnoreStandardErrorWarningFormat=true via CMake or CLI. See:
+    // https://learn.microsoft.com/en-us/visualstudio/msbuild/msbuild-diagnostic-format-for-tasksIgnoreStandardErrorWarningFormat
     const bool print_error_messages = std::getenv("MONGOCXX_TEST_TOPOLOGY") == nullptr;
 
     // The mongocxx::instance constructor and destructor initialize and shut down the driver,
