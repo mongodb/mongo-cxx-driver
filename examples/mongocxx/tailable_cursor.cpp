@@ -68,7 +68,7 @@ void insert_docs(mongocxx::collection* coll) {
     }
 }
 
-int main(int, char**) {
+int main() {
     // The mongocxx::instance constructor and destructor initialize and shut down the driver,
     // respectively. Therefore, a mongocxx::instance must be created before using the driver and
     // must remain alive for as long as the driver is in use.

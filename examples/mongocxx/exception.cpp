@@ -30,7 +30,7 @@
 using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_document;
 
-int main(int, char**) {
+int main() {
     // No known way to set MSBuild IgnoreStandardErrorWarningFormat=true via CMake or CLI.
     const bool print_error_messages = std::getenv("MONGOCXX_TEST_TOPOLOGY") == nullptr;
 

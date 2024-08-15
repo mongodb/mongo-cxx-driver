@@ -23,7 +23,7 @@
 
 using namespace bsoncxx;
 
-int main(int, char**) {
+int main() {
     using namespace builder::stream;
 
     builder::stream::document build_doc;

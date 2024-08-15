@@ -20,7 +20,7 @@
 
 using namespace bsoncxx;
 
-int main(int, char**) {
+int main() {
     using namespace bsoncxx::builder;
 
     //
