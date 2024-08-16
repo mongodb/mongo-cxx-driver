@@ -85,7 +85,7 @@ using ::std::experimental::string_view;
 
 #elif defined(BSONCXX_POLY_USE_STD)
 
-#include <string_view>
+#include <string>
 
 namespace bsoncxx {
 namespace v_noabi {
