@@ -16,6 +16,7 @@
 
 #include <chrono>
 #include <cstring>
+#include <string>
 
 #include <bsoncxx/types-fwd.hpp>
 

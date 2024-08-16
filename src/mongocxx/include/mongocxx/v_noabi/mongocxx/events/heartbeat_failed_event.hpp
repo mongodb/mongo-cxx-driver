@@ -15,6 +15,7 @@
 #pragma once
 
 #include <cstdint>
+#include <string>
 
 #include <mongocxx/events/heartbeat_failed_event-fwd.hpp>
 

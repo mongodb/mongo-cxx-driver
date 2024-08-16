@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <string>
+
 #include <mongocxx/exception/operation_exception-fwd.hpp>
 
 #include <bsoncxx/document/value.hpp>

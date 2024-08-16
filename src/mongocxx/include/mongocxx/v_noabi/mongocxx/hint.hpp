@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <string>
+
 #include <mongocxx/hint-fwd.hpp>
 
 #include <bsoncxx/document/value.hpp>

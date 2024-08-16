@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <string>
+
 #include <mongocxx/client_encryption-fwd.hpp>
 #include <mongocxx/options/encrypt-fwd.hpp>
 

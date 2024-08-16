@@ -15,6 +15,7 @@
 #pragma once
 
 #include <memory>
+#include <string>
 
 #include <mongocxx/client-fwd.hpp>
 #include <mongocxx/client_session-fwd.hpp>

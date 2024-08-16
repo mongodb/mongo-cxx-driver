@@ -16,6 +16,7 @@
 
 #include <iostream>
 #include <memory>
+#include <string>
 #include <vector>
 
 #include <bsoncxx/document/element-fwd.hpp>

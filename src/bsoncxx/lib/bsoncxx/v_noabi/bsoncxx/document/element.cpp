@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include <cstdlib>
+#include <string>
 
 #include <bsoncxx/document/element.hpp>
 #include <bsoncxx/exception/error_code.hpp>
