@@ -15,6 +15,7 @@
 #pragma once
 
 #include <chrono>
+#include <string>
 
 #include <mongocxx/options/index_view-fwd.hpp>
 

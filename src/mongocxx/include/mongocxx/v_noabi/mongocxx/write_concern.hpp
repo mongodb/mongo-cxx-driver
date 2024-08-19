@@ -18,6 +18,7 @@
 #include <cstdint>
 #include <memory>
 #include <stdexcept>
+#include <string>
 
 #include <mongocxx/bulk_write-fwd.hpp>
 #include <mongocxx/client-fwd.hpp>

@@ -10,6 +10,7 @@
 #include <mongocxx/private/client_session.hh>
 #include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/libmongoc.hh>
+#include <mongocxx/search_index_view.hpp>
 
 #include <mongocxx/config/private/prelude.hh>
 
