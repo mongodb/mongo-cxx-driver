@@ -202,7 +202,7 @@ else
     for _ in $(seq 60); do
       # Exit code 7: "Failed to connect to host".
       if
-        curl -s "localhost:${port:?}"
+        curl -s -m 1 "localhost:${port:?}"
         (($? != 7))
       then
         return 0
