@@ -1044,19 +1044,8 @@ tasks:
             export cmake_binary
             cmake_binary="$(find_cmake_latest)"
             # Use ccache if available.
-            if command -V ccache 2>/dev/null; then
-              export CMAKE_C_COMPILER_LAUNCHER=ccache
-              export CMAKE_CXX_COMPILER_LAUNCHER=ccache
-
-              # Allow reuse of ccache compilation results between different build directories.
-              export CCACHE_BASEDIR CCACHE_NOHASHDIR
-              if [[ "${OSTYPE:?}" == "cygwin" ]]; then
-                CCACHE_BASEDIR="$(cygpath -aw "$(pwd)")"
-              else
-                CCACHE_BASEDIR="$(pwd)"
-              fi
-              CCACHE_NOHASHDIR=1
-            fi
+            . ./mongo-c-driver/.evergreen/scripts/find-ccache.sh
+            find_ccache_and_export_vars "$(pwd)" || true
             command -v "$cmake_binary"
             "$cmake_binary" -S . -B build -DENABLE_AUTOMATIC_INIT_AND_CLEANUP=OFF
             "$cmake_binary" --build build

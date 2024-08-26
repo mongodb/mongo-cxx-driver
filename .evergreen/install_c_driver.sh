@@ -131,14 +131,10 @@ else
 fi
 
 # Use ccache if available.
-if command -V ccache 2>/dev/null; then
-  export CMAKE_C_COMPILER_LAUNCHER=ccache
-  export CMAKE_CXX_COMPILER_LAUNCHER=ccache
-
-  # Allow reuse of ccache compilation results between different build directories.
-  export CCACHE_BASEDIR CCACHE_NOHASHDIR
-  CCACHE_BASEDIR="${mongoc_idir}"
-  CCACHE_NOHASHDIR=1
+if [[ -f "${mongoc_dir:?}/.evergreen/scripts/find-ccache.sh" ]]; then
+  # shellcheck source=/dev/null
+  . "${mongoc_dir:?}/.evergreen/scripts/find-ccache.sh"
+  find_ccache_and_export_vars "$(pwd)" || true
 fi
 
 # Install libmongoc.
