@@ -419,6 +419,11 @@ functions:
           script: |-
             set -o errexit
             echo "Preparing CSFLE venv environment..."
+            if [[ "${distro_id:?}" =~ vs2015 ]]; then
+              # Python: ImportError: DLL load failed while importing _rust: The specified procedure could not be found.
+              echo "Preparing CSFLE venv environment... skipped."
+              exit 0
+            fi
             cd ./drivers-evergreen-tools/.evergreen/csfle
             # This function ensures future invocations of activate-kmstlsvenv.sh conducted in
             # parallel do not race to setup a venv environment; it has already been prepared.
