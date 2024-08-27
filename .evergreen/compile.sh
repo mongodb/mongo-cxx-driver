@@ -66,17 +66,10 @@ CMAKE_BUILD_PARALLEL_LEVEL="$(nproc)"
 export CMAKE_BUILD_PARALLEL_LEVEL
 
 # Use ccache if available.
-if command -V ccache 2>/dev/null; then
-  export CMAKE_CXX_COMPILER_LAUNCHER=ccache
-
-  # Allow reuse of ccache compilation results between different build directories.
-  export CCACHE_BASEDIR CCACHE_NOHASHDIR
-  if [[ "${OSTYPE:?}" == "cygwin" ]]; then
-    CCACHE_BASEDIR="$(cygpath -aw "$(pwd)")"
-  else
-    CCACHE_BASEDIR="$(pwd)"
-  fi
-  CCACHE_NOHASHDIR=1
+if [[ -f "${mongoc_prefix:?}/.evergreen/scripts/find-ccache.sh" ]]; then
+  # shellcheck source=/dev/null
+  . "${mongoc_prefix:?}/.evergreen/scripts/find-ccache.sh"
+  find_ccache_and_export_vars "$(pwd)" || true
 fi
 
 cmake_build_opts=()

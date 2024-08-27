@@ -215,7 +215,7 @@ functions:
                 wait_for_mongohouse() {
                     for _ in $(seq 300); do
                         # Exit code 7: "Failed to connect to host".
-                        if curl -s localhost:$1; (("$?" != 7)); then
+                        if curl -s -m 1 localhost:$1; (("$?" != 7)); then
                             return 0
                         else
                             sleep 1
@@ -419,23 +419,17 @@ functions:
           script: |-
             set -o errexit
             echo "Preparing CSFLE venv environment..."
+            if [[ "${distro_id}" =~ windows-64-vs2015-* ]]; then
+              # Python: ImportError: DLL load failed while importing _rust: The specified procedure could not be found.
+              echo "Preparing CSFLE venv environment... skipped."
+              exit 0
+            fi
             cd ./drivers-evergreen-tools/.evergreen/csfle
             # This function ensures future invocations of activate-kmstlsvenv.sh conducted in
             # parallel do not race to setup a venv environment; it has already been prepared.
             # This primarily addresses the situation where the "test" and "run_kms_servers"
             # functions invoke 'activate-kmstlsvenv.sh' simultaneously.
-            if [[ "$OSTYPE" =~ cygwin && ! -d kmstlsvenv ]]; then
-                # Avoid using Python 3.10 on Windows due to incompatible cipher suites.
-                # See CXX-2628.
-                . ../venv-utils.sh
-                venvcreate "C:/python/Python39/python.exe" kmstlsvenv || # windows-2017
-                venvcreate "C:/python/Python38/python.exe" kmstlsvenv    # windows-2015
-                python -m pip install --upgrade boto3~=1.19 pykmip~=0.10.0 "sqlalchemy<2.0.0"
-                deactivate
-            else
-                . ./activate-kmstlsvenv.sh
-                deactivate
-            fi
+            . ./activate-kmstlsvenv.sh && deactivate
             echo "Preparing CSFLE venv environment... done."
       - command: shell.exec
         params:
@@ -444,6 +438,11 @@ functions:
           script: |-
             set -o errexit
             echo "Starting mock KMS servers..."
+            if [[ "${distro_id}" =~ windows-64-vs2015-* ]]; then
+              # Python: ImportError: DLL load failed while importing _rust: The specified procedure could not be found.
+              echo "Starting mock KMS servers... skipped."
+              exit 0
+            fi
             cd ./drivers-evergreen-tools/.evergreen/csfle
             . ./activate-kmstlsvenv.sh
             python -u kms_http_server.py --ca_file ../x509gen/ca.pem --cert_file ../x509gen/server.pem --port 8999 &
@@ -1044,19 +1043,8 @@ tasks:
             export cmake_binary
             cmake_binary="$(find_cmake_latest)"
             # Use ccache if available.
-            if command -V ccache 2>/dev/null; then
-              export CMAKE_C_COMPILER_LAUNCHER=ccache
-              export CMAKE_CXX_COMPILER_LAUNCHER=ccache
-
-              # Allow reuse of ccache compilation results between different build directories.
-              export CCACHE_BASEDIR CCACHE_NOHASHDIR
-              if [[ "${OSTYPE:?}" == "cygwin" ]]; then
-                CCACHE_BASEDIR="$(cygpath -aw "$(pwd)")"
-              else
-                CCACHE_BASEDIR="$(pwd)"
-              fi
-              CCACHE_NOHASHDIR=1
-            fi
+            . ./mongo-c-driver/.evergreen/scripts/find-ccache.sh
+            find_ccache_and_export_vars "$(pwd)" || true
             command -v "$cmake_binary"
             "$cmake_binary" -S . -B build -DENABLE_AUTOMATIC_INIT_AND_CLEANUP=OFF
             "$cmake_binary" --build build
