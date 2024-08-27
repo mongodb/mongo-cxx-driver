@@ -746,14 +746,6 @@ The C++ Driver Team
 
 ## Packaging
 
-### Homebrew
-
-This requires a macOS machine.
-If this is a stable release, update the [mongo-cxx-driver](https://github.com/Homebrew/homebrew-core/blob/master/Formula/mongo-cxx-driver.rb) homebrew formula, using: `brew bump-formula-pr mongo-cxx-driver --url <tarball url>`
-
-Example:
-`brew bump-formula-pr mongo-cxx-driver --url https://github.com/mongodb/mongo-cxx-driver/releases/download/r3.7.3/mongo-cxx-driver-r3.7.3.tar.gz`
-
 ### vcpkg
 
 Submit a PR or create an issue to update the vc-pkg file for mongo-cxx-driver.
