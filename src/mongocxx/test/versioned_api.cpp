@@ -13,14 +13,15 @@
 // limitations under the License.
 
 #include <bsoncxx/string/to_string.hpp>
-#include <bsoncxx/test/catch.hh>
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/client.hpp>
 #include <mongocxx/options/server_api.hpp>
-#include <mongocxx/test/client_helpers.hh>
 #include <mongocxx/uri.hpp>
+
+#include <bsoncxx/test/catch.hh>
+#include <mongocxx/test/client_helpers.hh>
 
 using namespace mongocxx;
 

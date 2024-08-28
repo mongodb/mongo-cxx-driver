@@ -16,11 +16,12 @@
 #include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/oid.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
-#include <bsoncxx/test/catch.hh>
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/result/gridfs/upload.hpp>
+
+#include <bsoncxx/test/catch.hh>
 
 namespace {
 using namespace bsoncxx;

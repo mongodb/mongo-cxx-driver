@@ -15,16 +15,18 @@
 #include <cstddef>
 #include <string>
 
-#include <bsoncxx/test/catch.hh>
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/tls.hpp>
 #include <mongocxx/pool.hpp>
 #include <mongocxx/private/libmongoc.hh>
-#include <third_party/catch/include/helpers.hpp>
 
 #include <mongocxx/config/private/prelude.hh>
+
+#include <bsoncxx/test/catch.hh>
+
+#include <third_party/catch/include/helpers.hpp>
 
 namespace {
 using namespace mongocxx;

@@ -13,9 +13,10 @@
 // limitations under the License.
 
 #include <bsoncxx/stdx/string_view.hpp>
-#include <bsoncxx/test/catch.hh>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/read_concern.hpp>
+
+#include <bsoncxx/test/catch.hh>
 
 namespace {
 using namespace mongocxx;

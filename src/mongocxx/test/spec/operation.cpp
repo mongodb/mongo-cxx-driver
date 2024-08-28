@@ -18,7 +18,6 @@
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/string/to_string.hpp>
-#include <bsoncxx/test/catch.hh>
 #include <bsoncxx/types.hpp>
 #include <mongocxx/client.hpp>
 #include <mongocxx/collection.hpp>
@@ -40,9 +39,11 @@
 #include <mongocxx/result/insert_one.hpp>
 #include <mongocxx/result/replace_one.hpp>
 #include <mongocxx/result/update.hpp>
-#include <mongocxx/test/spec/operation.hh>
 
 #include <mongocxx/config/private/prelude.hh>
+
+#include <bsoncxx/test/catch.hh>
+#include <mongocxx/test/spec/operation.hh>
 
 namespace mongocxx {
 namespace spec {

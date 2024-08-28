@@ -10,9 +10,10 @@
 #include <bsoncxx/stdx/operators.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/stdx/type_traits.hpp>
-#include <bsoncxx/test/catch.hh>
 
 #include <bsoncxx/config/prelude.hpp>
+
+#include <bsoncxx/test/catch.hh>
 
 // Each polyfill library has some set of features that are not conformant with the standard
 // specification (inconsistent, missing, etc.). Limit testing to bsoncxx implementation and stdlib.

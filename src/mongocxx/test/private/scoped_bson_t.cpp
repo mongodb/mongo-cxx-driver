@@ -15,8 +15,9 @@
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
-#include <bsoncxx/test/catch.hh>
 #include <mongocxx/private/libbson.hh>
+
+#include <bsoncxx/test/catch.hh>
 
 namespace {
 using namespace bsoncxx;

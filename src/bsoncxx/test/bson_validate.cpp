@@ -18,8 +18,9 @@
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/builder/basic/sub_array.hpp>
-#include <bsoncxx/test/catch.hh>
 #include <bsoncxx/validate.hpp>
+
+#include <bsoncxx/test/catch.hh>
 
 namespace {
 using namespace bsoncxx;

@@ -16,11 +16,13 @@
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/private/suppress_deprecation_warnings.hh>
 #include <bsoncxx/string/to_string.hpp>
-#include <bsoncxx/test/catch.hh>
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/create_collection.hpp>
+
+#include <bsoncxx/test/catch.hh>
+
 #include <third_party/catch/include/helpers.hpp>
 
 namespace {

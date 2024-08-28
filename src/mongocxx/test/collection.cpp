@@ -23,8 +23,6 @@
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/string/to_string.hpp>
-#include <bsoncxx/test/catch.hh>
-#include <bsoncxx/test/exception_guard.hh>
 #include <bsoncxx/types.hpp>
 #include <mongocxx/client.hpp>
 #include <mongocxx/collection.hpp>
@@ -38,8 +36,11 @@
 #include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/libmongoc.hh>
 #include <mongocxx/read_concern.hpp>
-#include <mongocxx/test/client_helpers.hh>
 #include <mongocxx/write_concern.hpp>
+
+#include <bsoncxx/test/catch.hh>
+#include <bsoncxx/test/exception_guard.hh>
+#include <mongocxx/test/client_helpers.hh>
 
 namespace {
 

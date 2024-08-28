@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include <bsoncxx/private/itoa.hh>
+
 #include <bsoncxx/test/catch.hh>
 
 namespace {

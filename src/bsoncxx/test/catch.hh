@@ -19,10 +19,12 @@
 #include <bsoncxx/oid.hpp>
 #include <bsoncxx/stdx/operators.hpp>
 #include <bsoncxx/stdx/optional.hpp>
-#include <bsoncxx/test/to_string.hh>
-#include <third_party/catch/include/catch.hpp>
 
 #include <bsoncxx/config/private/prelude.hh>
+
+#include <bsoncxx/test/to_string.hh>
+
+#include <third_party/catch/include/catch.hpp>
 
 namespace Catch {
 using namespace bsoncxx;

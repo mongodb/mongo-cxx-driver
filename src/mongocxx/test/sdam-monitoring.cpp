@@ -16,11 +16,12 @@
 
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/string/to_string.hpp>
-#include <bsoncxx/test/catch.hh>
-#include <bsoncxx/test/exception_guard.hh>
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/exception.hpp>
 #include <mongocxx/instance.hpp>
+
+#include <bsoncxx/test/catch.hh>
+#include <bsoncxx/test/exception_guard.hh>
 #include <mongocxx/test/client_helpers.hh>
 #include <mongocxx/test/spec/operation.hh>
 

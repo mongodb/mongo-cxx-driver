@@ -19,10 +19,11 @@
 
 #include <bsoncxx/document/view.hpp>
 #include <mongocxx/client.hpp>
-#include <mongocxx/test/spec/operation.hh>
 #include <mongocxx/uri.hpp>
 
 #include <mongocxx/config/private/prelude.hh>
+
+#include <mongocxx/test/spec/operation.hh>
 
 namespace mongocxx {
 namespace spec {

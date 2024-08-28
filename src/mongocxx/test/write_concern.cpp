@@ -14,11 +14,12 @@
 
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>
-#include <bsoncxx/test/catch.hh>
 #include <mongocxx/exception/exception.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/write_concern.hpp>
+
+#include <bsoncxx/test/catch.hh>
 
 namespace {
 using namespace mongocxx;

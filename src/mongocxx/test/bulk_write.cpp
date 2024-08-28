@@ -13,14 +13,15 @@
 // limitations under the License.
 
 #include <bsoncxx/builder/basic/document.hpp>
-#include <bsoncxx/test/catch.hh>
 #include <bsoncxx/types.hpp>
 #include <mongocxx/bulk_write.hpp>
 #include <mongocxx/client.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/private/libmongoc.hh>
-#include <mongocxx/test/client_helpers.hh>
 #include <mongocxx/write_concern.hpp>
+
+#include <bsoncxx/test/catch.hh>
+#include <mongocxx/test/client_helpers.hh>
 
 namespace {
 using namespace mongocxx;

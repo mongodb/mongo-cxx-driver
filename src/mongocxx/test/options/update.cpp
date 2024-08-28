@@ -13,9 +13,11 @@
 // limitations under the License.
 
 #include <bsoncxx/builder/basic/document.hpp>
-#include <bsoncxx/test/catch.hh>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/update.hpp>
+
+#include <bsoncxx/test/catch.hh>
+
 #include <third_party/catch/include/helpers.hpp>
 
 namespace {

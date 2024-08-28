@@ -19,6 +19,7 @@
 #include <bsoncxx/exception/exception.hpp>
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/private/libbson.hh>
+
 #include <bsoncxx/test/catch.hh>
 
 namespace {

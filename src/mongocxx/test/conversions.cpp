@@ -12,9 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/test/catch.hh>
 #include <mongocxx/private/conversions.hh>
 #include <mongocxx/read_preference.hpp>
+
+#include <bsoncxx/test/catch.hh>
 
 namespace {
 using namespace mongocxx;

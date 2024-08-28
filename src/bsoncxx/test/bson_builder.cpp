@@ -24,9 +24,10 @@
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/private/libbson.hh>
 #include <bsoncxx/string/to_string.hpp>
-#include <bsoncxx/test/catch.hh>
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
+
+#include <bsoncxx/test/catch.hh>
 
 namespace {
 

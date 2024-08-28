@@ -16,7 +16,6 @@
 
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/string/to_string.hpp>
-#include <bsoncxx/test/catch.hh>
 #include <mongocxx/client.hpp>
 #include <mongocxx/database.hpp>
 #include <mongocxx/exception/logic_error.hpp>
@@ -27,7 +26,10 @@
 #include <mongocxx/private/conversions.hh>
 #include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/libmongoc.hh>
+
+#include <bsoncxx/test/catch.hh>
 #include <mongocxx/test/client_helpers.hh>
+
 #include <third_party/catch/include/helpers.hpp>
 
 namespace {

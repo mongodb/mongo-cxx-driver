@@ -16,14 +16,16 @@
 
 #include <bsoncxx/private/helpers.hh>
 #include <bsoncxx/stdx/make_unique.hpp>
-#include <bsoncxx/test/catch.hh>
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/bulk_write_exception.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/exception/server_error_code.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/private/libmongoc.hh>
+
+#include <bsoncxx/test/catch.hh>
 #include <mongocxx/test/client_helpers.hh>
+
 #include <third_party/catch/include/helpers.hpp>
 
 namespace {

@@ -25,7 +25,6 @@
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/string/to_string.hpp>
-#include <bsoncxx/test/catch.hh>
 #include <mongocxx/client.hpp>
 #include <mongocxx/collection.hpp>
 #include <mongocxx/database.hpp>
@@ -38,11 +37,13 @@
 #include <mongocxx/pipeline.hpp>
 #include <mongocxx/result/delete.hpp>
 #include <mongocxx/result/insert_one.hpp>
+
+#include <mongocxx/config/private/prelude.hh>
+
+#include <bsoncxx/test/catch.hh>
 #include <mongocxx/test/spec/monitoring.hh>
 #include <mongocxx/test/spec/operation.hh>
 #include <mongocxx/test/spec/util.hh>
-
-#include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 namespace spec {

@@ -14,8 +14,9 @@
 
 #include <chrono>
 
-#include <bsoncxx/test/catch.hh>
 #include <bsoncxx/types.hpp>
+
+#include <bsoncxx/test/catch.hh>
 
 namespace {
 TEST_CASE("time_point is converted to b_date and back", "[bsoncxx::types::b_date]") {

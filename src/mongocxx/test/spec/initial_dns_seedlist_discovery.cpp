@@ -17,11 +17,12 @@
 #include <mutex>
 #include <thread>
 
-#include <bsoncxx/test/catch.hh>
 #include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/pool.hpp>
 #include <mongocxx/pool.hpp>
+
+#include <bsoncxx/test/catch.hh>
 #include <mongocxx/test/spec/monitoring.hh>
 
 namespace {

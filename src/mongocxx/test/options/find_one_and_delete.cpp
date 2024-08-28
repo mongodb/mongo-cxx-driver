@@ -15,9 +15,11 @@
 #include <chrono>
 
 #include <bsoncxx/builder/basic/document.hpp>
-#include <bsoncxx/test/catch.hh>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/find_one_and_delete.hpp>
+
+#include <bsoncxx/test/catch.hh>
+
 #include <third_party/catch/include/helpers.hpp>
 
 namespace {

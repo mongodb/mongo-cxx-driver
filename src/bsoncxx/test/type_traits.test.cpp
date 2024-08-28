@@ -2,9 +2,10 @@
 #include <type_traits>
 
 #include <bsoncxx/stdx/type_traits.hpp>
-#include <bsoncxx/test/catch.hh>
 
 #include <bsoncxx/config/prelude.hpp>
+
+#include <bsoncxx/test/catch.hh>
 
 // We declare variables that are only used for compilation checking
 BSONCXX_DISABLE_WARNING(GNU("-Wunused"));

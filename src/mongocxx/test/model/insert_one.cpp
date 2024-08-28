@@ -13,9 +13,10 @@
 // limitations under the License.
 
 #include <bsoncxx/builder/basic/document.hpp>
-#include <bsoncxx/test/catch.hh>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/model/insert_one.hpp>
+
+#include <bsoncxx/test/catch.hh>
 
 namespace {
 using namespace bsoncxx::builder::basic;

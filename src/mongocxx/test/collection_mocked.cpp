@@ -21,7 +21,6 @@
 #include <bsoncxx/private/helpers.hh>
 #include <bsoncxx/private/libbson.hh>
 #include <bsoncxx/stdx/optional.hpp>
-#include <bsoncxx/test/catch.hh>
 #include <mongocxx/client.hpp>
 #include <mongocxx/collection.hpp>
 #include <mongocxx/database.hpp>
@@ -34,6 +33,9 @@
 #include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/libmongoc.hh>
 #include <mongocxx/read_preference.hpp>
+
+#include <bsoncxx/test/catch.hh>
+
 #include <third_party/catch/include/helpers.hpp>
 
 namespace {
