@@ -27,8 +27,8 @@ function(fetch_catch2)
 
     if(NOT ep_catch2_POPULATED)
         # Avoid Catch2 compile warnings from being treated as errors.
-        string(REPLACE "-Werror" "" CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
-        string(REPLACE "-Werror" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
+        string(REPLACE " -Werror" "" CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
+        string(REPLACE " -Werror" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 
         FetchContent_MakeAvailable(EP_Catch2)
 
