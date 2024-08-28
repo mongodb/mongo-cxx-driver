@@ -5,6 +5,11 @@ include(FetchContent)
 message(STATUS "Downloading Catch2...")
 
 function(fetch_catch2)
+    set(fetch_args "")
+    if ("${CMAKE_VERSION}" VERSION_GREATER_EQUAL "3.25.0")
+        set(fetch_args "SYSTEM")
+    endif()
+
     FetchContent_Declare(
         EP_Catch2
 
@@ -12,6 +17,8 @@ function(fetch_catch2)
         GIT_TAG v3.7.0
         GIT_SHALLOW TRUE
         LOG_DOWNLOAD ON
+
+        ${fetch_args}
 
         FETCHCONTENT_UPDATES_DISCONNECTED ON
     )

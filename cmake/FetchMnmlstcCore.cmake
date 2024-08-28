@@ -7,6 +7,11 @@ set(core-subbuild "${CMAKE_CURRENT_BINARY_DIR}/_deps/core-subbuild")
 set(core-build "${CMAKE_CURRENT_BINARY_DIR}/_deps/core-build")
 set(core-install "${CMAKE_CURRENT_BINARY_DIR}/_deps/core-install")
 
+set(fetch_args "")
+if ("${CMAKE_VERSION}" VERSION_GREATER_EQUAL "3.25.0")
+    set(fetch_args "SYSTEM")
+endif()
+
 # Also update etc/purls.txt.
 FetchContent_Declare(
     EP_mnmlstc_core
@@ -21,6 +26,8 @@ FetchContent_Declare(
     GIT_TAG v1.1.0
     GIT_SHALLOW TRUE
     LOG_DOWNLOAD ON
+
+    ${fetch_args}
 
     FETCHCONTENT_UPDATES_DISCONNECTED ON
 )
