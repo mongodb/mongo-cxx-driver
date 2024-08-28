@@ -24,9 +24,10 @@
 #include <mongocxx/private/libmongoc.hh>
 
 #include <bsoncxx/test/catch.hh>
+#include <mongocxx/test/catch_helpers.hh>
 #include <mongocxx/test/client_helpers.hh>
 
-#include <third_party/catch/include/helpers.hpp>
+#include <catch2/generators/catch_generators.hpp>
 
 namespace {
 using bsoncxx::from_json;
@@ -234,8 +235,6 @@ TEST_CASE("session", "[session]") {
     }
 
     SECTION("wrong client") {
-        using Catch::Matchers::Contains;
-
         // "Session argument is for the right client" test from Driver Sessions Spec.
         // Passing a session from client "c" should fail with client "c2" and related objects.
         client c2{uri{}, test_util::add_test_server_api()};

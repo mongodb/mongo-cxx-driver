@@ -60,6 +60,7 @@ PATH="${working_dir:?}/build/src/mongocxx/test/${build_type:?}:${PATH:-}"
 PATH="${working_dir:?}/build/src/bsoncxx/test/${build_type:?}:${PATH:-}"
 PATH="${working_dir:?}/build/src/mongocxx/${build_type:?}:${PATH:-}"
 PATH="${working_dir:?}/build/src/bsoncxx/${build_type:?}:${PATH:-}"
+PATH="${working_dir:?}/build/_deps/ep_catch2-build/src/${build_type:?}:${PATH:-}"
 PATH="${mongoc_dir:?}/bin:${PATH:-}"
 PATH="${working_dir:?}/build/install/bin:${PATH:-}"
 

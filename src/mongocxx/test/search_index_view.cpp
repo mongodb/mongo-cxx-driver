@@ -12,6 +12,9 @@
 #include <bsoncxx/test/catch.hh>
 #include <mongocxx/test/client_helpers.hh>
 
+#include <catch2/catch_case_sensitive.hpp>
+#include <catch2/matchers/catch_matchers_string.hpp>
+
 namespace {
 using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_array;
@@ -389,7 +392,7 @@ TEST_CASE("atlas search indexes prose tests", "[atlas][search_indexes]") {
         const auto model = search_index_model(name, definition.view());
 
         REQUIRE_THROWS_WITH(siv.create_one(model),
-                            Catch::Matchers::Contains("Attribute mappings missing"));
+                            Catch::Matchers::ContainsSubstring("Attribute mappings missing"));
 
         SUCCEED("Prose Test Case 8: Driver requires explicit type to create a vector search index");
     }

@@ -28,9 +28,10 @@
 #include <mongocxx/private/libmongoc.hh>
 
 #include <bsoncxx/test/catch.hh>
+#include <mongocxx/test/catch_helpers.hh>
 #include <mongocxx/test/client_helpers.hh>
 
-#include <third_party/catch/include/helpers.hpp>
+#include <catch2/generators/catch_generators.hpp>
 
 namespace {
 using namespace mongocxx;
@@ -517,7 +518,7 @@ struct check_service_id {
     check_service_id(const bool expect_service_id) : expect_service_id(expect_service_id) {}
 
     void operator()(const EventT& event) {
-        INFO("checking for service_id()")
+        INFO("checking for service_id()");
         CAPTURE(event.command_name(), expect_service_id);
 
         auto service_id = event.service_id();

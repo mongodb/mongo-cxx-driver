@@ -16,8 +16,7 @@
 #include <mongocxx/options/insert.hpp>
 
 #include <bsoncxx/test/catch.hh>
-
-#include <third_party/catch/include/helpers.hpp>
+#include <mongocxx/test/catch_helpers.hh>
 
 namespace {
 using namespace mongocxx;

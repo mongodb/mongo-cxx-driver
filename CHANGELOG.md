@@ -11,8 +11,10 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 
 ### Changed
 
-- `FetchContent_MakeAvailable()` is used to populate dependencies instead of `FetchContent_Populate()` for the Mongo C Driver (when not provided by `CMAKE_PREFIX_PATH`) and mnmlstc/core (when automatically selected or `BSONCXX_POLY_USE_MNMLSTC=ON`).
+- `FetchContent_MakeAvailable()` is used to populate dependencies instead of `FetchContent_Populate()` for the Mongo C Driver (when not provided by `CMAKE_PREFIX_PATH`) and mnmlstc/core (when automatically selected or when `BSONCXX_POLY_USE_MNMLSTC=ON`).
   - Note: `FetchContent_Populate()` is still used for mnmlstc/core for CMake versions prior to 3.18 to avoid `add_subdirectory()` behavior.
+- Test suite now uses Catch2 v3 via FetchContent instead of the bundled Catch2 v2 standalone header.
+  - C++14 or newer is now required to build tests when enabled with `ENABLE_TESTS=ON`.
 
 ### Deprecated
 

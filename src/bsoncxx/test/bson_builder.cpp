@@ -29,6 +29,9 @@
 
 #include <bsoncxx/test/catch.hh>
 
+#include <catch2/catch_case_sensitive.hpp>
+#include <catch2/matchers/catch_matchers_string.hpp>
+
 namespace {
 
 using namespace bsoncxx;
@@ -1712,12 +1715,12 @@ TEST_CASE("list builder with explicit type deduction", "[bsoncxx::builder::list]
 
     SECTION("document") {
         builder::list b;
-        auto kvp_regex =
-            Catch::Matches("(.*)must be list of key-value pairs(.*)", Catch::CaseSensitive::No);
+        auto kvp_regex = Catch::Matchers::Matches("(.*)must be list of key-value pairs(.*)",
+                                                  Catch::CaseSensitive::No);
         REQUIRE_THROWS_WITH((b = builder::document{"foo", 1, 2}), kvp_regex);
 
-        auto type_regex =
-            Catch::Matches("(.*)must be string type(.*)int32(.*)", Catch::CaseSensitive::No);
+        auto type_regex = Catch::Matchers::Matches("(.*)must be string type(.*)int32(.*)",
+                                                   Catch::CaseSensitive::No);
         REQUIRE_THROWS_WITH((b = builder::document{"foo", 1, 2, 4}), type_regex);
     }
 }

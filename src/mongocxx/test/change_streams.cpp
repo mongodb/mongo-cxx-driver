@@ -29,9 +29,8 @@
 #include <mongocxx/write_concern.hpp>
 
 #include <bsoncxx/test/catch.hh>
+#include <mongocxx/test/catch_helpers.hh>
 #include <mongocxx/test/client_helpers.hh>
-
-#include <third_party/catch/include/helpers.hpp>
 
 namespace {
 

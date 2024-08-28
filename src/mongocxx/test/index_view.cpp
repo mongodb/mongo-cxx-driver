@@ -28,6 +28,9 @@
 #include <bsoncxx/test/catch.hh>
 #include <mongocxx/test/client_helpers.hh>
 
+#include <catch2/catch_case_sensitive.hpp>
+#include <catch2/matchers/catch_matchers_string.hpp>
+
 namespace {
 using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_document;
@@ -190,7 +193,7 @@ TEST_CASE("create_one", "[index_view]") {
         options::index_view options;
 
         auto commit_quorum_regex =
-            Catch::Matches("(.*)commit( )?quorum(.*)", Catch::CaseSensitive::No);
+            Catch::Matchers::Matches("(.*)commit( )?quorum(.*)", Catch::CaseSensitive::No);
 
         bool is_supported = test_util::get_max_wire_version(mongodb_client) >= 9;
         CAPTURE(is_supported);

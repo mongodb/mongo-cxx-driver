@@ -14,25 +14,30 @@
 
 #pragma once
 
-#include <bsoncxx/test/catch.hh>
 #include <mongocxx/exception/exception.hpp>
 #include <mongocxx/private/libmongoc.hh>
 
 #include <mongocxx/config/private/prelude.hh>
+
+#include <bsoncxx/test/catch.hh>
+
+#include <catch2/catch_case_sensitive.hpp>
+#include <catch2/matchers/catch_matchers.hpp>
+#include <catch2/matchers/catch_matchers_string.hpp>
 
 namespace mongocxx {
 namespace test_util {
 
 // Check that an error message includes a substring, case-insensitively. Use like:
 // REQUIRE_THROWS_MATCHES(function(), mongocxx::exception, mongocxx_exception_matcher("substring")
-class mongocxx_exception_matcher : public Catch::MatcherBase<mongocxx::exception> {
+class mongocxx_exception_matcher : public Catch::Matchers::MatcherBase<mongocxx::exception> {
     std::string expected_msg;
 
 public:
     mongocxx_exception_matcher(std::string msg) : expected_msg(msg) {}
 
     bool match(const mongocxx::exception& exc) const override {
-        return Catch::Contains(expected_msg, Catch::CaseSensitive::No).match(exc.what());
+        return Catch::Matchers::ContainsSubstring(expected_msg, Catch::CaseSensitive::No).match(exc.what());
     }
 
     std::string describe() const override {

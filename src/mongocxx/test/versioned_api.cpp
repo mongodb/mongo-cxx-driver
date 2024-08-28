@@ -23,6 +23,8 @@
 #include <bsoncxx/test/catch.hh>
 #include <mongocxx/test/client_helpers.hh>
 
+#include <catch2/matchers/catch_matchers_string.hpp>
+
 using namespace mongocxx;
 
 static bool has_api_version_1(
@@ -205,7 +207,7 @@ TEST_CASE("Versioned API, with insert-many for 'count' migration") {
         INFO(error.what());
         CHECK(error.code().value() == 323);
         CHECK_THAT(error.what(),
-                   Catch::StartsWith(
+                   Catch::Matchers::StartsWith(
                        "Provided apiStrict:true, but the command count is not in API Version 1."));
     }
 

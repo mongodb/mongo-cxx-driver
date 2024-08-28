@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+include(FetchCatch2)
+
 if(NOT BUILD_TESTING)
     set_property(DIRECTORY PROPERTY EXCLUDE_FROM_ALL TRUE)
 endif()
@@ -174,20 +176,23 @@ add_executable(test_versioned_api
 
 # Common target properties for test executables.
 add_library(mongocxx_test_properties INTERFACE)
-target_link_libraries(mongocxx_test_properties INTERFACE mongocxx_mocked ${libmongoc_target})
+
+target_link_libraries(mongocxx_test_properties INTERFACE Catch2::Catch2)
+target_compile_features(mongocxx_test_properties INTERFACE cxx_std_14)
+
+target_link_libraries(mongocxx_test_properties INTERFACE mongocxx_mocked ${libmongoc_target} Catch2::Catch2)
 target_include_directories(mongocxx_test_properties INTERFACE
 
     # Allow `#include <mongoc/mongoc.h>`
     ${libmongoc_include_directories}
 
-    # Allow `#include <mongocxx/test/...>` and `#include <third_party/...>`.
+    # Allow `#include <mongocxx/test/...>`.
     ${CMAKE_CURRENT_SOURCE_DIR}/../..
 )
 add_library(mongocxx::test_properties ALIAS mongocxx_test_properties)
 
-# Avoid redundant recompilation of catch/main.cpp.
-add_library(mongocxx_test_properties_with_main STATIC EXCLUDE_FROM_ALL ${THIRD_PARTY_SOURCE_DIR}/catch/main.cpp)
-target_link_libraries(mongocxx_test_properties_with_main PUBLIC mongocxx::test_properties)
+add_library(mongocxx_test_properties_with_main INTERFACE)
+target_link_libraries(mongocxx_test_properties_with_main INTERFACE mongocxx::test_properties Catch2::Catch2WithMain)
 add_library(mongocxx::test_properties_with_main ALIAS mongocxx_test_properties_with_main)
 
 set_property(
@@ -341,6 +346,7 @@ endif()
 set_dist_list(src_mongocxx_test_DIST
     CMakeLists.txt
     bulk_write.cpp
+    catch_helpers.hh
     change_streams.cpp
     client_helpers.cpp
     client_helpers.hh

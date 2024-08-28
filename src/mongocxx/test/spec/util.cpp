@@ -45,6 +45,8 @@
 #include <mongocxx/test/spec/operation.hh>
 #include <mongocxx/test/spec/util.hh>
 
+#include <catch2/matchers/catch_matchers_string.hpp>
+
 namespace mongocxx {
 namespace spec {
 
@@ -777,7 +779,9 @@ void run_transaction_operations(
             auto error_contains =
                 test_util::tolowercase(op["result"]["errorContains"].get_string().value);
 
-            REQUIRE_THAT(error_msg, Catch::Contains(error_contains, Catch::CaseSensitive::No));
+            REQUIRE_THAT(
+                error_msg,
+                Catch::Matchers::ContainsSubstring(error_contains, Catch::CaseSensitive::No));
         }
 
         // "If the result document has an 'errorCodeName' field, verify that the method threw a

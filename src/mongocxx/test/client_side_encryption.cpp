@@ -42,10 +42,11 @@
 #include <mongocxx/config/prelude.hpp>
 
 #include <bsoncxx/test/catch.hh>
+#include <mongocxx/test/catch_helpers.hh>
 #include <mongocxx/test/client_helpers.hh>
 #include <mongocxx/test/spec/monitoring.hh>
 
-#include <third_party/catch/include/helpers.hpp>
+#include <catch2/generators/catch_generators.hpp>
 
 namespace {
 const auto kLocalMasterKey =
@@ -1719,13 +1720,14 @@ TEST_CASE("Bypass spawning mongocryptd", "[client_side_encryption]") {
     REQUIRE_THROWS(ping_client["admin"].run_command(make_document(kvp("ping", 1))));
 }
 
-class kms_tls_expired_cert_matcher : public Catch::MatcherBase<mongocxx::exception> {
+class kms_tls_expired_cert_matcher : public Catch::Matchers::MatcherBase<mongocxx::exception> {
    public:
     bool match(const mongocxx::exception& exc) const override {
-        return (Catch::Contains("certificate has expired") ||  // OpenSSL
-                Catch::Contains("CSSMERR_TP_CERT_EXPIRED") ||  // Secure Transport
-                Catch::Contains("certificate has expired") ||  // Secure Channel
-                Catch::Contains("certificate has expired"))    // LibreSSL
+        return (Catch::Matchers::ContainsSubstring("certificate has expired") ||  // OpenSSL
+                Catch::Matchers::ContainsSubstring(
+                    "CSSMERR_TP_CERT_EXPIRED") ||  // Secure Transport
+                Catch::Matchers::ContainsSubstring("certificate has expired") ||  // Secure Channel
+                Catch::Matchers::ContainsSubstring("certificate has expired"))    // LibreSSL
             .match(exc.what());
     }
 
@@ -1781,13 +1783,15 @@ TEST_CASE("KMS TLS expired certificate", "[client_side_encryption]") {
                            kms_tls_expired_cert_matcher());
 }
 
-class kms_tls_wrong_host_cert_matcher : public Catch::MatcherBase<mongocxx::exception> {
+class kms_tls_wrong_host_cert_matcher : public Catch::Matchers::MatcherBase<mongocxx::exception> {
    public:
     bool match(const mongocxx::exception& exc) const override {
-        return (Catch::Contains("IP address mismatch") ||                 // OpenSSL
-                Catch::Contains("Host name mismatch") ||                  // Secure Transport
-                Catch::Contains("hostname doesn't match certificate") ||  // Secure Channel
-                Catch::Contains("not present in server certificate"))     // LibreSSL
+        return (Catch::Matchers::ContainsSubstring("IP address mismatch") ||  // OpenSSL
+                Catch::Matchers::ContainsSubstring("Host name mismatch") ||   // Secure Transport
+                Catch::Matchers::ContainsSubstring(
+                    "hostname doesn't match certificate") ||  // Secure Channel
+                Catch::Matchers::ContainsSubstring(
+                    "not present in server certificate"))  // LibreSSL
             .match(exc.what());
     }
 
@@ -1951,8 +1955,9 @@ TEST_CASE("KMS TLS Options Tests", "[client_side_encryption][!mayfail]") {
     auto client_encryption_invalid_hostname = make_prose_test_11_ce(
         &setup_client, "127.0.0.1:9001", "127.0.0.1:9001", "127.0.0.1:9001", with_certs::ca_only);
 
-    const auto expired_cert_matcher = Catch::Contains("expired", Catch::CaseSensitive::No);
-    const auto invalid_hostname_matcher = Catch::Matches(
+    const auto expired_cert_matcher =
+        Catch::Matchers::ContainsSubstring("expired", Catch::CaseSensitive::No);
+    const auto invalid_hostname_matcher = Catch::Matchers::Matches(
         // Content of error message may vary depending on the SSL library being used.
         ".*(mismatch|doesn't match|not present).*",
         Catch::CaseSensitive::No);
@@ -1987,7 +1992,7 @@ TEST_CASE("KMS TLS Options Tests", "[client_side_encryption][!mayfail]") {
                     << "arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0"
                     << "endpoint"
                     << "127.0.0.1:9002" << finalize)),
-            Catch::Contains("parse error", Catch::CaseSensitive::No));
+            Catch::Matchers::ContainsSubstring("parse error", Catch::CaseSensitive::No));
 
         // Expect an error indicating TLS handshake failed due to an expired certificate.
         CHECK_THROWS_WITH(
@@ -2034,8 +2039,9 @@ TEST_CASE("KMS TLS Options Tests", "[client_side_encryption][!mayfail]") {
 
         // Expect an error from libmongocrypt with a message containing the string: "HTTP
         // status=404". This implies TLS handshake succeeded.
-        CHECK_THROWS_WITH(client_encryption_with_tls.create_data_key("azure", opts),
-                          Catch::Contains("HTTP status=404", Catch::CaseSensitive::No));
+        CHECK_THROWS_WITH(
+            client_encryption_with_tls.create_data_key("azure", opts),
+            Catch::Matchers::ContainsSubstring("HTTP status=404", Catch::CaseSensitive::No));
 
         // Expect an error indicating TLS handshake failed due to an expired certificate.
         CHECK_THROWS_WITH(client_encryption_expired.create_data_key("azure", opts),
@@ -2066,8 +2072,9 @@ TEST_CASE("KMS TLS Options Tests", "[client_side_encryption][!mayfail]") {
 
         // Expect an error from libmongocrypt with a message containing the string: "HTTP
         // status=404". This implies TLS handshake succeeded.
-        CHECK_THROWS_WITH(client_encryption_with_tls.create_data_key("gcp", opts),
-                          Catch::Contains("HTTP status=404", Catch::CaseSensitive::No));
+        CHECK_THROWS_WITH(
+            client_encryption_with_tls.create_data_key("gcp", opts),
+            Catch::Matchers::ContainsSubstring("HTTP status=404", Catch::CaseSensitive::No));
 
         // Expect an error indicating TLS handshake failed due to an expired certificate.
         CHECK_THROWS_WITH(client_encryption_expired.create_data_key("gcp", opts),
@@ -3453,7 +3460,7 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
                                     .algorithm(
                                         options::encrypt::encryption_algorithm::k_range_preview)
                                     .contention_factor(0)),
-                            Catch::Contains(
+                            Catch::Matchers::ContainsSubstring(
                                 "Value must be greater than or equal to the minimum value and "
                                 "less than or equal to the maximum value"));
                     }
@@ -3491,9 +3498,9 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
                                                : to_field_value(6, RangeFieldType::Int);
 
                         // Assert an error was raised.
-                        REQUIRE_THROWS_WITH(
-                            client_encryption.encrypt(value.view(), encrypt_opts),
-                            Catch::Contains("expected matching 'min' and value type"));
+                        REQUIRE_THROWS_WITH(client_encryption.encrypt(value.view(), encrypt_opts),
+                                            Catch::Matchers::ContainsSubstring(
+                                                "expected matching 'min' and value type"));
                     }
                     break;
                 }
@@ -3538,7 +3545,7 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
                                     .algorithm(
                                         options::encrypt::encryption_algorithm::k_range_preview)
                                     .contention_factor(0)),
-                            Catch::Contains(
+                            Catch::Matchers::ContainsSubstring(
                                 "expected 'precision' to be set with double or decimal128 index"));
                     }
                 } break;
@@ -3565,7 +3572,8 @@ TEST_CASE("16. Rewrap. Case 2: RewrapManyDataKeyOpts.provider is not optional",
     REQUIRE_THROWS_WITH(
         clientEncryption.rewrap_many_datakey(
             make_document(), mongocxx::options::rewrap_many_datakey().master_key(make_document())),
-        Catch::Contains("expected 'provider' to be set to identify type of 'master_key'"));
+        Catch::Matchers::ContainsSubstring(
+            "expected 'provider' to be set to identify type of 'master_key'"));
 }
 
 }  // namespace

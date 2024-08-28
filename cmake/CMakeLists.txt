@@ -16,6 +16,7 @@ add_subdirectory(make_dist)
 
 set(cmake_MODULES
     BsoncxxUtil.cmake
+    FetchCatch2.cmake
     FetchMnmlstcCore.cmake
     FetchMongoC.cmake
     MacroGuardTest.cmake
