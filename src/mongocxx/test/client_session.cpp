@@ -158,7 +158,7 @@ TEST_CASE("session options", "[session]") {
 TEST_CASE("start_session failure", "[session]") {
     using namespace mongocxx::test_util;
 
-    MOCK_CLIENT
+    MOCK_CLIENT;
 
     instance::current();
 

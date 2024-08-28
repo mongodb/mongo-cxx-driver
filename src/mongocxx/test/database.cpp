@@ -131,8 +131,8 @@ TEST_CASE("mongocxx::database copy assignment operator", "[database]") {
 
 TEST_CASE("A database", "[database]") {
     stdx::string_view database_name{"database"};
-    MOCK_CLIENT
-    MOCK_DATABASE
+    MOCK_CLIENT;
+    MOCK_DATABASE;
 
     instance::current();
 
@@ -289,7 +289,7 @@ TEST_CASE("A database", "[database]") {
     }
 
     SECTION("may create a collection") {
-        MOCK_COLLECTION
+        MOCK_COLLECTION;
         stdx::string_view collection_name{"dummy_collection"};
         database database = mongo_client[database_name];
         collection obtained_collection = database[collection_name];

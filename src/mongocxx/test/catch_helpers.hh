@@ -58,20 +58,24 @@ class mongocxx_exception_matcher : public Catch::Matchers::MatcherBase<mongocxx:
     SECTION("has a method to set the NAME") {        \
         OBJECT.NAME(VALUE);                          \
         REQUIRE(OBJECT.NAME().value() == VALUE);     \
-    }
+    }                                                \
+    ((void)0)
 
 #define MOCK_POOL_NOSSL                                                                        \
     auto client_pool_new_with_error = libmongoc::client_pool_new_with_error.create_instance(); \
     auto client_pool_destroy = libmongoc::client_pool_destroy.create_instance();               \
     auto client_pool_pop = libmongoc::client_pool_pop.create_instance();                       \
     auto client_pool_push = libmongoc::client_pool_push.create_instance();                     \
-    auto client_pool_try_pop = libmongoc::client_pool_try_pop.create_instance();
+    auto client_pool_try_pop = libmongoc::client_pool_try_pop.create_instance();               \
+    ((void)0)
 
 #if defined(MONGOCXX_ENABLE_SSL) && defined(MONGOC_ENABLE_SSL)
 #define MOCK_POOL                                                                          \
-    MOCK_POOL_NOSSL                                                                        \
+    MOCK_POOL_NOSSL;                                                                       \
     auto client_pool_set_ssl_opts = libmongoc::client_pool_set_ssl_opts.create_instance(); \
-    client_pool_set_ssl_opts->interpose([](::mongoc_client_pool_t*, const ::mongoc_ssl_opt_t*) {});
+    client_pool_set_ssl_opts->interpose(                                                   \
+        [](::mongoc_client_pool_t*, const ::mongoc_ssl_opt_t*) {});                        \
+    ((void)0)
 #else
 #define MOCK_POOL MOCK_POOL_NOSSL
 #endif
@@ -94,13 +98,15 @@ class mongocxx_exception_matcher : public Catch::Matchers::MatcherBase<mongocxx:
     client_get_concern->interpose([](const mongoc_client_t*) { return nullptr; }).forever();    \
     auto client_start_session = libmongoc::client_start_session.create_instance();              \
     auto client_find_databases_with_opts =                                                      \
-        mongocxx::libmongoc::client_find_databases_with_opts.create_instance();
+        mongocxx::libmongoc::client_find_databases_with_opts.create_instance();                 \
+    ((void)0)
 
 #if defined(MONGOCXX_ENABLE_SSL) && defined(MONGOC_ENABLE_SSL)
-#define MOCK_CLIENT                                                              \
-    MOCK_CLIENT_NOSSL                                                            \
-    auto client_set_ssl_opts = libmongoc::client_set_ssl_opts.create_instance(); \
-    client_set_ssl_opts->interpose([](::mongoc_client_t*, const ::mongoc_ssl_opt_t*) {});
+#define MOCK_CLIENT                                                                       \
+    MOCK_CLIENT_NOSSL;                                                                    \
+    auto client_set_ssl_opts = libmongoc::client_set_ssl_opts.create_instance();          \
+    client_set_ssl_opts->interpose([](::mongoc_client_t*, const ::mongoc_ssl_opt_t*) {}); \
+    ((void)0)
 #else
 #define MOCK_CLIENT MOCK_CLIENT_NOSSL
 #endif
@@ -136,7 +142,8 @@ class mongocxx_exception_matcher : public Catch::Matchers::MatcherBase<mongocxx:
                        const bson_t*,                                                            \
                        bson_t*,                                                                  \
                        bson_error_t*) { return true; })                                          \
-        .forever();
+        .forever();                                                                              \
+    ((void)0)
 
 #define MOCK_COLLECTION                                                                           \
     auto collection_set_preference = libmongoc::collection_set_read_prefs.create_instance();      \
@@ -161,15 +168,17 @@ class mongocxx_exception_matcher : public Catch::Matchers::MatcherBase<mongocxx:
     collection_get_name->interpose([](mongoc_collection_t*) { return "dummy_collection"; });      \
     auto collection_rename = libmongoc::collection_rename.create_instance();                      \
     auto collection_find_and_modify_with_opts =                                                   \
-        libmongoc::collection_find_and_modify_with_opts.create_instance();
+        libmongoc::collection_find_and_modify_with_opts.create_instance();                        \
+    ((void)0)
 
-#define MOCK_CHANGE_STREAM                                                           \
-    auto collection_watch = libmongoc::collection_watch.create_instance();           \
-    auto database_watch = libmongoc::database_watch.create_instance();               \
-    auto client_watch = libmongoc::client_watch.create_instance();                   \
-    auto change_stream_destroy = libmongoc::change_stream_destroy.create_instance(); \
-    auto change_stream_next = libmongoc::change_stream_next.create_instance();       \
-    auto change_stream_error_document = libmongoc::change_stream_error_document.create_instance();
+#define MOCK_CHANGE_STREAM                                                                         \
+    auto collection_watch = libmongoc::collection_watch.create_instance();                         \
+    auto database_watch = libmongoc::database_watch.create_instance();                             \
+    auto client_watch = libmongoc::client_watch.create_instance();                                 \
+    auto change_stream_destroy = libmongoc::change_stream_destroy.create_instance();               \
+    auto change_stream_next = libmongoc::change_stream_next.create_instance();                     \
+    auto change_stream_error_document = libmongoc::change_stream_error_document.create_instance(); \
+    ((void)0)
 
 #define MOCK_FAM                                                                                   \
     auto find_and_modify_opts_destroy = libmongoc::find_and_modify_opts_destroy.create_instance(); \
@@ -224,11 +233,13 @@ class mongocxx_exception_matcher : public Catch::Matchers::MatcherBase<mongocxx:
             auto update_view = bsoncxx::helpers::view_from_bson_t(update);                         \
             REQUIRE(update_view == expected_find_and_modify_opts_update);                          \
             return true;                                                                           \
-        });
+        });                                                                                        \
+    ((void)0)
 
 #define MOCK_CURSOR                                                    \
     auto cursor_destroy = libmongoc::cursor_destroy.create_instance(); \
-    cursor_destroy->interpose([&](mongoc_cursor_t*) {});
+    cursor_destroy->interpose([&](mongoc_cursor_t*) {});               \
+    ((void)0)
 
 #define MOCK_BULK                                                                      \
     auto bulk_operation_insert_with_opts =                                             \
@@ -253,7 +264,8 @@ class mongocxx_exception_matcher : public Catch::Matchers::MatcherBase<mongocxx:
     bool bulk_operation_set_bypass_document_validation_called = false;                 \
     bool bulk_operation_execute_called = false;                                        \
     bool bulk_operation_destroy_called = false;                                        \
-    bool collection_create_bulk_operation_called = false;
+    bool collection_create_bulk_operation_called = false;                              \
+    ((void)0)
 
 #define MOCK_CONCERN                                                     \
     auto concern_copy = libmongoc::write_concern_copy.create_instance(); \
@@ -269,6 +281,7 @@ class mongocxx_exception_matcher : public Catch::Matchers::MatcherBase<mongocxx:
     auto read_prefs_set_max_staleness_seconds =                                    \
         libmongoc::read_prefs_set_max_staleness_seconds.create_instance();         \
     auto read_prefs_set_mode = libmongoc::read_prefs_set_mode.create_instance();   \
-    auto read_prefs_set_tags = libmongoc::read_prefs_set_tags.create_instance();
+    auto read_prefs_set_tags = libmongoc::read_prefs_set_tags.create_instance();   \
+    ((void)0)
 
 #include <mongocxx/config/private/postlude.hh>

@@ -193,7 +193,7 @@ TEST_CASE("Spec Prose Tests") {
 }
 
 TEST_CASE("Mock streams and error-handling") {
-    MOCK_CHANGE_STREAM
+    MOCK_CHANGE_STREAM;
 
     instance::current();
     client mongodb_client{uri{}, test_util::add_test_server_api()};

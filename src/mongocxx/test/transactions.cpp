@@ -456,11 +456,11 @@ TEST_CASE("Transactions Mongos Pinning Prose Tests", "[transactions]") {
     {
         mongocxx::client client{mongocxx::uri{"mongodb://localhost:27017"}};
         REQUIRE(client["config"].has_collection("shards"));
-    };
+    }
     {
         mongocxx::client client{mongocxx::uri{"mongodb://localhost:27018"}};
         REQUIRE(client["config"].has_collection("shards"));
-    };
+    }
 
     const auto uri =
         mongocxx::uri("mongodb://localhost:27017,localhost:27018/?localThresholdMS=1000");

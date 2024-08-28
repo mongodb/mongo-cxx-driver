@@ -31,7 +31,7 @@ namespace {
 using namespace mongocxx;
 
 TEST_CASE("a pool is created with the correct MongoDB URI", "[pool]") {
-    MOCK_POOL
+    MOCK_POOL;
 
     instance::current();
 
@@ -68,7 +68,7 @@ TEST_CASE(
     "If we pass an engaged SSL options struct to the pool class, we will use it to configure the "
     "underlying mongoc pool",
     "[pool]") {
-    MOCK_POOL
+    MOCK_POOL;
 
     instance::current();
 
@@ -109,7 +109,7 @@ TEST_CASE(
 #endif
 
 TEST_CASE("calling acquire on a pool returns an entry that manages its client", "[pool]") {
-    MOCK_POOL
+    MOCK_POOL;
 
     instance::current();
 
@@ -164,7 +164,7 @@ TEST_CASE(
     "try_acquire returns a disengaged stdx::optional<entry> if mongoc_client_pool_try_pop "
     "returns a null pointer",
     "[pool]") {
-    MOCK_POOL
+    MOCK_POOL;
 
     instance::current();
 

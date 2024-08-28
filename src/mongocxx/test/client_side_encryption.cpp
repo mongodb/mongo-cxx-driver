@@ -2923,7 +2923,7 @@ std::string to_type_str(RangeFieldType field_type) {
             return "Int";
         case RangeFieldType::Long:
             return "Long";
-    };
+    }
 
     FAIL("unexpected field type " << static_cast<int>(field_type));
     MONGOCXX_UNREACHABLE;

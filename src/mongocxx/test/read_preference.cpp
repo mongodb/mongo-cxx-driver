@@ -146,7 +146,7 @@ TEST_CASE("Read preference inequality operator works", "[read_preference]") {
 
 TEST_CASE("Read preference methods call underlying mongoc methods", "[read_preference]") {
     instance::current();
-    MOCK_READ_PREFERENCE
+    MOCK_READ_PREFERENCE;
 
     read_preference rp;
     bool called = false;

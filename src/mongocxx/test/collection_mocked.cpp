@@ -58,12 +58,12 @@ TEST_CASE("Collection", "[collection]") {
     const std::string collection_name("dummy_collection");
     const std::string database_name("mocked_collection");
 
-    MOCK_CLIENT
-    MOCK_DATABASE
-    MOCK_COLLECTION
-    MOCK_FAM
-    MOCK_BULK
-    MOCK_CURSOR
+    MOCK_CLIENT;
+    MOCK_DATABASE;
+    MOCK_COLLECTION;
+    MOCK_FAM;
+    MOCK_BULK;
+    MOCK_CURSOR;
 
     client mongo_client{uri{}};
     write_concern concern;
