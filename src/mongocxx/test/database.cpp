@@ -180,7 +180,6 @@ TEST_CASE("A database", "[database]") {
         database_destroy->interpose([&](mongoc_database_t*) { destroy_called = true; });
 
         {
-            client mongo_client{uri{}, test_util::add_test_server_api()};
             database a = mongo_client[database_name];
 
             database b{std::move(a)};

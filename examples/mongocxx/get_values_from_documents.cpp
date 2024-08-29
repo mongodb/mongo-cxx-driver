@@ -63,11 +63,11 @@ void iterate_messagelist(const bsoncxx::document::element& ele) {
     // Check validity and type before trying to iterate.
     if (ele.type() == type::k_array) {
         bsoncxx::array::view subarray{ele.get_array().value};
-        for (const bsoncxx::array::element& msg : subarray) {
+        for (const bsoncxx::array::element& message : subarray) {
             // Check correct type before trying to access elements.
             // Only print out fields if they exist; don't report missing fields.
-            if (msg.type() == type::k_document) {
-                bsoncxx::document::view subdoc = msg.get_document().value;
+            if (message.type() == type::k_document) {
+                bsoncxx::document::view subdoc = message.get_document().value;
                 bsoncxx::document::element uid = subdoc["uid"];
                 bsoncxx::document::element status = subdoc["status"];
                 bsoncxx::document::element msg = subdoc["msg"];

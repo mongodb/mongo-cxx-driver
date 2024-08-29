@@ -2432,11 +2432,11 @@ TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
             size_t count = 0;
             for (const auto& it : found) {
                 count++;
-                auto doc = it.find("encryptedUnindexed")->get_string().value;
 
                 // Assert one document is returned containing the field { "encryptedUnindexed":
                 // "encrypted unindexed value" }.
-                REQUIRE(doc == plain_text_unindexed_value);
+                REQUIRE(it.find("encryptedUnindexed")->get_string().value ==
+                        plain_text_unindexed_value);
             }
 
             // Assert one document is returned containing the field { "encryptedUnindexed":
@@ -2695,30 +2695,22 @@ TEST_CASE("Unique Index on keyAltNames", "[client_side_encryption]") {
 
     // 5. Using client_encryption, create a data key with a local KMS provider and the keyAltName
     // "def".
-    mongocxx::options::data_key dk_opts;
-    dk_opts.key_alt_names({"def"});
-    std::string provider = "local";
-    auto existing_key = client_encryption.create_data_key(provider, dk_opts);
+    auto existing_key = client_encryption.create_data_key(
+        "local", mongocxx::options::data_key().key_alt_names({"def"}));
 
     SECTION("Case 1: createKey()") {
         // 1. Use client_encryption to create a new local data key with a keyAltName "abc" and
         // assert the operation does not fail.
-        {
-            mongocxx::options::data_key dk_opts;
-            dk_opts.key_alt_names({"abc"});
-            std::string provider = "local";
-            client_encryption.create_data_key(provider, dk_opts);
-        }
+        client_encryption.create_data_key("local",
+                                          mongocxx::options::data_key().key_alt_names({"abc"}));
 
         // 2. Repeat Step 1 and assert the operation fails due to a duplicate key server error
         // (error code 11000).
         {
-            mongocxx::options::data_key dk_opts;
-            dk_opts.key_alt_names({"abc"});
-            std::string provider = "local";
             bool exception_thrown = false;
             try {
-                client_encryption.create_data_key(provider, dk_opts);
+                client_encryption.create_data_key(
+                    "local", mongocxx::options::data_key().key_alt_names({"abc"}));
             } catch (mongocxx::operation_exception& e) {
                 REQUIRE(std::strstr(
                     e.what(),
@@ -2732,12 +2724,10 @@ TEST_CASE("Unique Index on keyAltNames", "[client_side_encryption]") {
         // 3. Use client_encryption to create a new local data key with a keyAltName "def" and
         // assert the operation fails due to a duplicate key server error (error code 11000).
         {
-            mongocxx::options::data_key dk_opts;
-            dk_opts.key_alt_names({"def"});
-            std::string provider = "local";
             bool exception_thrown = false;
             try {
-                client_encryption.create_data_key(provider, dk_opts);
+                client_encryption.create_data_key(
+                    "local", mongocxx::options::data_key().key_alt_names({"def"}));
             } catch (mongocxx::operation_exception& e) {
                 REQUIRE(std::strstr(
                     e.what(),

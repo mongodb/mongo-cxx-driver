@@ -62,16 +62,16 @@ int main() {
     // note that all of the interesting methods for reading BSON are defined on the view type.
 
     // iterate over the elements in a bson document
-    for (document::element ele : view) {
+    for (document::element doc_ele : view) {
         // element is non owning view of a key-value pair within a document.
 
         // we can use the key() method to get a string_view of the key.
-        stdx::string_view field_key{ele.key()};
+        stdx::string_view field_key{doc_ele.key()};
 
         std::cout << "Got key, key = " << field_key << std::endl;
 
         // we can use type() to get the type of the value.
-        switch (ele.type()) {
+        switch (doc_ele.type()) {
             case type::k_string:
                 std::cout << "Got String!" << std::endl;
                 break;
@@ -81,10 +81,11 @@ int main() {
             case type::k_array: {
                 std::cout << "Got Array!" << std::endl;
                 // if we have a subarray, we can access it by getting a view of it.
-                array::view subarr{ele.get_array().value};
-                for (array::element ele : subarr) {
+                array::view subarr{doc_ele.get_array().value};
+                for (array::element arr_ele : subarr) {
                     std::cout << "array element: "
-                              << bsoncxx::string::to_string(ele.get_string().value) << std::endl;
+                              << bsoncxx::string::to_string(arr_ele.get_string().value)
+                              << std::endl;
                 }
                 break;
             }
@@ -94,7 +95,7 @@ int main() {
 
         // usually we don't need to actually use a switch statement, because we can also
         // get a variant 'value' that can hold any BSON type.
-        types::bson_value::view ele_val{ele.get_value()};
+        types::bson_value::view doc_ele_val{doc_ele.get_value()};
     }
 
     // If we want to search for an element we can use operator[]
