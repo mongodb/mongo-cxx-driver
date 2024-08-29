@@ -29,6 +29,10 @@
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
 
+#include <bsoncxx/config/prelude.hpp>
+
+BSONCXX_DISABLE_WARNING(GNU("-Wswitch-enum"));
+
 using namespace bsoncxx;
 
 int main() {
