@@ -144,7 +144,7 @@ TEST_CASE("A client throws if its underlying mongoc client is NULL", "[client]")
 
     instance::current();
 
-    client_new->interpose([](const mongoc_uri_t*) { return (mongoc_client_t*)nullptr; });
+    client_new->interpose([](const mongoc_uri_t*) -> mongoc_client_t* { return nullptr; });
 
     REQUIRE_THROWS_AS(client{uri{}}, mongocxx::exception);
 }

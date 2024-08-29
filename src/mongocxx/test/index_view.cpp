@@ -401,9 +401,11 @@ TEST_CASE("drop_all", "[index_view]") {
         }
 
         auto cursor1 = indexes.list();
-        REQUIRE((unsigned)std::distance(cursor1.begin(), cursor1.end()) == models.size() + 1);
-        REQUIRE((unsigned)(result_view["numIndexesAfter"].get_int32() -
-                           result_view["numIndexesBefore"].get_int32()) == models.size());
+        REQUIRE(static_cast<std::size_t>(std::distance(cursor1.begin(), cursor1.end())) ==
+                models.size() + 1);
+        REQUIRE(static_cast<std::size_t>(result_view["numIndexesAfter"].get_int32() -
+                                         result_view["numIndexesBefore"].get_int32()) ==
+                models.size());
 
         indexes.drop_all();
         auto cursor2 = indexes.list();
@@ -430,9 +432,11 @@ TEST_CASE("drop_all", "[index_view]") {
         }
 
         auto cursor1 = indexes.list();
-        REQUIRE((unsigned)std::distance(cursor1.begin(), cursor1.end()) == models.size() + 1);
-        REQUIRE((unsigned)(result_view["numIndexesAfter"].get_int32() -
-                           result_view["numIndexesBefore"].get_int32()) == models.size());
+        REQUIRE(static_cast<std::size_t>(std::distance(cursor1.begin(), cursor1.end())) ==
+                models.size() + 1u);
+        REQUIRE(static_cast<std::size_t>(result_view["numIndexesAfter"].get_int32() -
+                                         result_view["numIndexesBefore"].get_int32()) ==
+                models.size());
 
         options::index_view options;
         options.max_time(std::chrono::milliseconds(1));

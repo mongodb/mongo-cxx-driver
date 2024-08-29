@@ -152,7 +152,7 @@ bsoncxx::document::value _make_kms_doc(bool include_external = true) {
     memcpy(&(key_storage[0]), kLocalMasterKey, 96);
 
     bsoncxx::types::b_binary local_master_key{
-        bsoncxx::binary_sub_type::k_binary, 96, (const uint8_t*)&key_storage};
+        bsoncxx::binary_sub_type::k_binary, 96, reinterpret_cast<const uint8_t*>(&key_storage)};
 
     kms_doc.append(
         kvp("local", [&](sub_document subdoc) { subdoc.append(kvp("key", local_master_key)); }));
@@ -867,16 +867,21 @@ void _run_corpus_test(bool use_schema_map) {
     memcpy(&(gcp_key_id_storage[0]), kGcpKeyUUID, 16);
     memcpy(&(kmip_key_id_storage[0]), kKmipKeyUUID, 16);
 
-    bsoncxx::types::b_binary local_key_id{
-        bsoncxx::binary_sub_type::k_uuid, 16, (const uint8_t*)&local_key_id_storage};
-    bsoncxx::types::b_binary aws_key_id{
-        bsoncxx::binary_sub_type::k_uuid, 16, (const uint8_t*)&aws_key_id_storage};
-    bsoncxx::types::b_binary azure_key_id{
-        bsoncxx::binary_sub_type::k_uuid, 16, (const uint8_t*)&azure_key_id_storage};
-    bsoncxx::types::b_binary gcp_key_id{
-        bsoncxx::binary_sub_type::k_uuid, 16, (const uint8_t*)&gcp_key_id_storage};
-    bsoncxx::types::b_binary kmip_key_id{
-        bsoncxx::binary_sub_type::k_uuid, 16, (const uint8_t*)&kmip_key_id_storage};
+    bsoncxx::types::b_binary local_key_id{bsoncxx::binary_sub_type::k_uuid,
+                                          16,
+                                          reinterpret_cast<const uint8_t*>(&local_key_id_storage)};
+    bsoncxx::types::b_binary aws_key_id{bsoncxx::binary_sub_type::k_uuid,
+                                        16,
+                                        reinterpret_cast<const uint8_t*>(&aws_key_id_storage)};
+    bsoncxx::types::b_binary azure_key_id{bsoncxx::binary_sub_type::k_uuid,
+                                          16,
+                                          reinterpret_cast<const uint8_t*>(&azure_key_id_storage)};
+    bsoncxx::types::b_binary gcp_key_id{bsoncxx::binary_sub_type::k_uuid,
+                                        16,
+                                        reinterpret_cast<const uint8_t*>(&gcp_key_id_storage)};
+    bsoncxx::types::b_binary kmip_key_id{bsoncxx::binary_sub_type::k_uuid,
+                                         16,
+                                         reinterpret_cast<const uint8_t*>(&kmip_key_id_storage)};
 
     auto local_key_value = make_value(local_key_id);
     auto aws_key_value = make_value(aws_key_id);
@@ -2841,7 +2846,7 @@ TEST_CASE("Custom Key Material Test", "[client_side_encryption]") {
     std::vector<uint8_t> id = {
         0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0};
     bsoncxx::types::b_binary id_bin{
-        bsoncxx::binary_sub_type::k_uuid, (uint32_t)id.size(), id.data()};
+        bsoncxx::binary_sub_type::k_uuid, static_cast<std::uint32_t>(id.size()), id.data()};
     auto key_doc = make_document(kvp("_id", id_bin));
 
     mongocxx::libbson::scoped_bson_t bson_doc;

@@ -248,12 +248,13 @@ TEST_CASE("types::bson_value::value", "[bsoncxx::types::bson_value::value]") {
         SECTION("binary") {
             std::vector<uint8_t> bin{'d', 'e', 'a', 'd', 'b', 'e', 'e', 'f'};
             auto test_doc = bson_value::make_value(
-                b_binary{binary_sub_type::k_binary, (uint32_t)bin.size(), bin.data()});
+                b_binary{binary_sub_type::k_binary, static_cast<uint32_t>(bin.size()), bin.data()});
             value_construction_test(test_doc.view());
 
             coverting_construction_test(bin, test_doc);
-            REQUIRE(bson_value::value(b_binary{
-                        binary_sub_type::k_binary, (uint32_t)bin.size(), bin.data()}) == test_doc);
+            REQUIRE(bson_value::value(b_binary{binary_sub_type::k_binary,
+                                               static_cast<uint32_t>(bin.size()),
+                                               bin.data()}) == test_doc);
             REQUIRE(bson_value::value(bin.data(), bin.size(), binary_sub_type::k_binary) ==
                     test_doc);
             REQUIRE(bson_value::value(bin.data(), bin.size()) == test_doc);
