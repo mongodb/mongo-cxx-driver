@@ -1441,19 +1441,19 @@ static bool is_snapshot_ready(mongocxx::client& client, mongocxx::collection& co
     opts.snapshot(true);
 
     auto session = client.start_session(opts);
+
     try {
-        auto maybe_value = collection.find_one(session, {});
-        if (maybe_value) {
+        if (collection.find_one(session, {})) {
             return true;
         }
-        return false;
     } catch (const mongocxx::operation_exception& e) {
         if (e.code().value() == 246) {  // snapshot unavailable
             return false;
         }
         throw;
     }
-    return true;
+
+    return false;
 }
 
 // Seed the pets database and wait for the snapshot to become available.
