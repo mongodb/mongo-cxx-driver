@@ -73,9 +73,9 @@ class mongo_access {
 void configure(mongocxx::uri uri) {
     class noop_logger : public mongocxx::logger {
        public:
-        virtual void operator()(mongocxx::log_level,
-                                bsoncxx::stdx::string_view,
-                                bsoncxx::stdx::string_view) noexcept {}
+        void operator()(mongocxx::log_level,
+                        bsoncxx::stdx::string_view,
+                        bsoncxx::stdx::string_view) noexcept override {}
     };
 
     // Use `std::make_unique` with C++14 and newer.
