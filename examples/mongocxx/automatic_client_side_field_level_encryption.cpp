@@ -45,6 +45,8 @@ using bsoncxx::types::bson_value::make_value;
 
 using namespace mongocxx;
 
+namespace {
+
 const int kKeyLength = 96;
 
 using ns_pair = std::pair<std::string, std::string>;
@@ -91,6 +93,8 @@ bsoncxx::document::value doc_from_file(std::string path) {
 
     return bsoncxx::from_json(file_contents);
 }
+
+}  // namespace
 
 int main() {
     instance inst{};

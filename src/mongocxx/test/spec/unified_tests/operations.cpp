@@ -35,6 +35,8 @@ using namespace bsoncxx;
 using builder::basic::kvp;
 using builder::basic::make_document;
 
+namespace {
+
 int64_t as_int64(const document::element& el) {
     if (el.type() == type::k_int32)
         return static_cast<std::int64_t>(el.get_int32().value);
@@ -315,7 +317,7 @@ void set_hint(Model& model, const mongocxx::document::element& hint) {
     }
 }
 
-document::value bulk_write(collection& coll, client_session* session, document::view op) {
+document::value run_bulk_write(collection& coll, client_session* session, document::view op) {
     using bsoncxx::builder::basic::kvp;
     using bsoncxx::builder::basic::make_document;
 
@@ -1024,59 +1026,6 @@ document::value find_one_and_update(collection& coll,
     }
 
     return result.extract();
-}
-
-bsoncxx::stdx::optional<read_concern> operations::lookup_read_concern(document::view doc) {
-    if (doc["readConcern"] && doc["readConcern"]["level"]) {
-        read_concern rc;
-        rc.acknowledge_string(string::to_string(doc["readConcern"]["level"].get_string().value));
-        return rc;
-    }
-
-    return {};
-}
-
-bsoncxx::stdx::optional<write_concern> operations::lookup_write_concern(document::view doc) {
-    if (doc["writeConcern"] && doc["writeConcern"]["w"]) {
-        write_concern wc;
-        document::element w = doc["writeConcern"]["w"];
-        if (w.type() == bsoncxx::type::k_string) {
-            std::string level = string::to_string(w.get_string().value);
-            if (level == "majority") {
-                wc.acknowledge_level(write_concern::level::k_majority);
-            } else if (level == "acknowledged") {
-                wc.acknowledge_level(write_concern::level::k_acknowledged);
-            } else if (level == "unacknowledged") {
-                wc.acknowledge_level(write_concern::level::k_unacknowledged);
-            }
-        } else if (w.type() == bsoncxx::type::k_int32) {
-            wc.nodes(w.get_int32());
-        }
-        return wc;
-    }
-
-    return {};
-}
-
-bsoncxx::stdx::optional<read_preference> operations::lookup_read_preference(document::view doc) {
-    if (doc["readPreference"] && doc["readPreference"]["mode"]) {
-        read_preference rp;
-        std::string mode = string::to_string(doc["readPreference"]["mode"].get_string().value);
-        if (mode == "Primary") {
-            rp.mode(read_preference::read_mode::k_primary);
-        } else if (mode == "PrimaryPreferred") {
-            rp.mode(read_preference::read_mode::k_primary_preferred);
-        } else if (mode == "Secondary") {
-            rp.mode(read_preference::read_mode::k_secondary);
-        } else if (mode == "SecondaryPreferred") {
-            rp.mode(read_preference::read_mode::k_secondary_preferred);
-        } else if (mode == "Nearest") {
-            rp.mode(read_preference::read_mode::k_nearest);
-        }
-        return rp;
-    }
-
-    return {};
 }
 
 options::transaction set_opts(document::view args) {
@@ -1894,6 +1843,8 @@ document::value update_search_index(collection& coll, document::view operation) 
     return make_document();
 }
 
+}  // namespace
+
 document::value operations::run(entity::map& entity_map,
                                 std::unordered_map<std::string, spec::apm_checker>& apm_map,
                                 const array::element& op,
@@ -1907,7 +1858,7 @@ document::value operations::run(entity::map& entity_map,
     if (name == "find")
         return find(entity_map.get_collection(object), get_session(op_view, entity_map), op_view);
     if (name == "bulkWrite")
-        return bulk_write(
+        return run_bulk_write(
             entity_map.get_collection(object), get_session(op_view, entity_map), op_view);
     if (name == "insertMany")
         return insert_many(
@@ -2298,6 +2249,59 @@ document::value operations::run(entity::map& entity_map,
     }
 
     throw std::logic_error{"unsupported operation: " + name};
+}
+
+bsoncxx::stdx::optional<read_concern> operations::lookup_read_concern(document::view doc) {
+    if (doc["readConcern"] && doc["readConcern"]["level"]) {
+        read_concern rc;
+        rc.acknowledge_string(string::to_string(doc["readConcern"]["level"].get_string().value));
+        return rc;
+    }
+
+    return {};
+}
+
+bsoncxx::stdx::optional<write_concern> operations::lookup_write_concern(document::view doc) {
+    if (doc["writeConcern"] && doc["writeConcern"]["w"]) {
+        write_concern wc;
+        document::element w = doc["writeConcern"]["w"];
+        if (w.type() == bsoncxx::type::k_string) {
+            std::string level = string::to_string(w.get_string().value);
+            if (level == "majority") {
+                wc.acknowledge_level(write_concern::level::k_majority);
+            } else if (level == "acknowledged") {
+                wc.acknowledge_level(write_concern::level::k_acknowledged);
+            } else if (level == "unacknowledged") {
+                wc.acknowledge_level(write_concern::level::k_unacknowledged);
+            }
+        } else if (w.type() == bsoncxx::type::k_int32) {
+            wc.nodes(w.get_int32());
+        }
+        return wc;
+    }
+
+    return {};
+}
+
+bsoncxx::stdx::optional<read_preference> operations::lookup_read_preference(document::view doc) {
+    if (doc["readPreference"] && doc["readPreference"]["mode"]) {
+        read_preference rp;
+        std::string mode = string::to_string(doc["readPreference"]["mode"].get_string().value);
+        if (mode == "Primary") {
+            rp.mode(read_preference::read_mode::k_primary);
+        } else if (mode == "PrimaryPreferred") {
+            rp.mode(read_preference::read_mode::k_primary_preferred);
+        } else if (mode == "Secondary") {
+            rp.mode(read_preference::read_mode::k_secondary);
+        } else if (mode == "SecondaryPreferred") {
+            rp.mode(read_preference::read_mode::k_secondary_preferred);
+        } else if (mode == "Nearest") {
+            rp.mode(read_preference::read_mode::k_nearest);
+        }
+        return rp;
+    }
+
+    return {};
 }
 
 }  // namespace mongocxx

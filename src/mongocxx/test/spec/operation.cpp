@@ -50,7 +50,7 @@ namespace spec {
 using namespace mongocxx;
 using namespace bsoncxx;
 
-int64_t as_int64(const document::element& el) {
+static int64_t as_int64(const document::element& el) {
     if (el.type() == type::k_int32) {
         return static_cast<std::int64_t>(el.get_int32().value);
     } else if (el.type() == type::k_int64) {

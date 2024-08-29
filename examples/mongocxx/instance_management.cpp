@@ -67,8 +67,6 @@ class mongo_access {
     std::unique_ptr<mongocxx::pool> _pool = nullptr;
 };
 
-}  // namespace
-
 // The 'configure' and 'do_work' functions use the same mongocxx::instance and mongocxx::pool
 // objects by way of the mongo_access singleton.
 
@@ -96,6 +94,8 @@ bool do_work() {
         return false;
     return true;
 }
+
+}  // namespace
 
 int main(int argc, char* argv[]) {
     auto uri = mongocxx::uri{(argc >= 2) ? argv[1] : mongocxx::uri::k_default_uri};

@@ -230,7 +230,7 @@ void disable_fail_point(std::string uri_string,
     disable_fail_point(client, fail_point);
 }
 
-void disable_targeted_fail_point(std::uint32_t server_id) {
+static void disable_targeted_fail_point(std::uint32_t server_id) {
     const auto command_owner =
         make_document(kvp("configureFailPoint", "failCommand"), kvp("mode", "off"));
     const auto command = command_owner.view();
@@ -597,7 +597,7 @@ static void test_setup(document::view test, document::view test_spec) {
     configure_fail_point(client, test);
 }
 
-void parse_session_opts(document::view session_opts, options::client_session* out) {
+static void parse_session_opts(document::view session_opts, options::client_session* out) {
     options::transaction txn_opts;
     if (session_opts["defaultTransactionOptions"]) {
         if (auto rc =
@@ -627,8 +627,7 @@ void parse_session_opts(document::view session_opts, options::client_session* ou
     out->default_transaction_opts(txn_opts);
 }
 
-using bsoncxx::stdx::string_view;
-void run_transaction_operations(
+static void run_transaction_operations(
     document::view test,
     client* client,
     string_view db_name,

@@ -72,8 +72,6 @@ std::string match_doc_current_path() noexcept {
     return std::accumulate(S_match_doc_path.cbegin(), S_match_doc_path.cend(), std::string());
 }
 
-}  // namespace
-
 template <typename Element>
 type to_type(const Element& type) {
     auto type_str = string::to_string(type.get_string().value);
@@ -233,6 +231,8 @@ void matches_array(types::bson_value::view actual,
         assert::matches(a->get_value(), e->get_value(), map, is_array_of_root_docs);
     }
 }
+
+}  // namespace
 
 void assert::matches(types::bson_value::view actual,
                      types::bson_value::view expected,

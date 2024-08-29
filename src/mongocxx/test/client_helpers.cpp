@@ -323,7 +323,7 @@ bool is_numeric(types::bson_value::view value) {
            value.type() == type::k_double;
 }
 
-stdx::optional<type> is_type_operator(types::bson_value::view value) {
+static stdx::optional<type> is_type_operator(types::bson_value::view value) {
     if (value.type() == type::k_document && value.get_document().value["$$type"]) {
         auto t = value.get_document().value["$$type"].get_string().value;
         if (t.compare("binData") == 0) {

@@ -17,8 +17,7 @@
 #include <mongocxx/client.hpp>
 #include <mongocxx/instance.hpp>
 
-// NOTE: Any time this file is modified, a DOCS ticket should be opened to sync the changes with the
-// corresponding page on mongodb.com/docs. See CXX-1514, CXX-1249, and DRIVERS-356 for more info.
+namespace {
 
 void index_examples(const mongocxx::database& db) {
     {
@@ -38,6 +37,8 @@ void index_examples(const mongocxx::database& db) {
         // End Index Example 2
     }
 }
+
+}  // namespace
 
 int main() {
     // The mongocxx::instance constructor and destructor initialize and shut down the driver,

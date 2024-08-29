@@ -33,8 +33,7 @@
 #include <mongocxx/options/server_api.hpp>
 #include <mongocxx/uri.hpp>
 
-// NOTE: Any time this file is modified, a DOCS ticket should be opened to sync the changes with the
-// corresponding page on mongodb.com/docs. See CXX-1249 and DRIVERS-356 for more info.
+namespace {
 
 template <typename T>
 void check_field(const T& document,
@@ -1698,6 +1697,8 @@ static void queryable_encryption_api(mongocxx::client& client) {
     }
     // End Queryable Encryption Example
 }
+
+}  // namespace
 
 int main() {
     // The mongocxx::instance constructor and destructor initialize and shut down the driver,

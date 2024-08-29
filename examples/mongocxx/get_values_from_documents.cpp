@@ -25,6 +25,8 @@ using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_array;
 using bsoncxx::builder::basic::make_document;
 
+namespace {
+
 // Document model, showing array with nested documents:
 //
 // {
@@ -117,6 +119,8 @@ void iterate_documents(mongocxx::collection& coll) {
         print_document(doc);
     }
 }
+
+}  // namespace
 
 int main() {
     // The mongocxx::instance constructor and destructor initialize and shut down the driver,
