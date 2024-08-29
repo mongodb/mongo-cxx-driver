@@ -38,6 +38,7 @@
 #include <mongocxx/private/libmongoc.hh>
 #include <mongocxx/test/client_helpers.hh>
 
+#include <bsoncxx/config/prelude.hpp>
 #include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
@@ -343,7 +344,10 @@ bool matches(types::bson_value::view main,
         return t == main.type();
     }
 
-    if (is_numeric(pattern) && as_double(pattern) == 42) {
+    BSONCXX_PUSH_WARNINGS();
+    BSONCXX_DISABLE_WARNING(GNU("-Wfloat-equal"));
+
+    if (is_numeric(pattern) && as_double(pattern) == 42.0) {
         return true;
     }
 
@@ -351,6 +355,8 @@ bool matches(types::bson_value::view main,
     if (is_numeric(main) && is_numeric(pattern) && as_double(main) == as_double(pattern)) {
         return true;
     }
+
+    BSONCXX_POP_WARNINGS();
 
     if (main.type() == type::k_document) {
         // the value '42' acts as placeholders for "any value"

@@ -27,6 +27,8 @@
 #include <bsoncxx/types/bson_value/value.hpp>
 #include <mongocxx/test/client_helpers.hh>
 
+#include <bsoncxx/config/prelude.hpp>
+
 using namespace bsoncxx;
 using namespace mongocxx;
 
@@ -255,8 +257,12 @@ void assert::matches(types::bson_value::view actual,
                     to_string(actual),
                     to_string(expected),
                     match_doc_current_path());
+
+            BSONCXX_PUSH_WARNINGS();
+            BSONCXX_DISABLE_WARNING(GNU("-Wfloat-equal"));
             REQUIRE(test_util::is_numeric(actual));
             REQUIRE(test_util::as_double(expected) == test_util::as_double(actual));
+            BSONCXX_POP_WARNINGS();
             return;
         }
         default: {
