@@ -180,7 +180,7 @@ add_library(mongocxx_test_properties INTERFACE)
 target_link_libraries(mongocxx_test_properties INTERFACE Catch2::Catch2)
 target_compile_features(mongocxx_test_properties INTERFACE cxx_std_14)
 
-target_link_libraries(mongocxx_test_properties INTERFACE mongocxx_mocked ${libmongoc_target} Catch2::Catch2)
+target_link_libraries(mongocxx_test_properties INTERFACE mongocxx_mocked ${libmongoc_target})
 target_include_directories(mongocxx_test_properties INTERFACE
 
     # Allow `#include <mongoc/mongoc.h>`
