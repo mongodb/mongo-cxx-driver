@@ -56,10 +56,6 @@ class mongo_access {
         return _pool->acquire();
     }
 
-    bsoncxx::stdx::optional<connection> try_get_connection() {
-        return _pool->try_acquire();
-    }
-
    private:
     mongo_access() = default;
 

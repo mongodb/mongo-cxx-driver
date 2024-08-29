@@ -8,6 +8,7 @@
 
 // We declare variables that are only used for compilation checking
 BSONCXX_DISABLE_WARNING(GNU("-Wunused"));
+BSONCXX_DISABLE_WARNING(Clang("-Wunused-template"));
 
 namespace {
 
@@ -159,7 +160,9 @@ static_assert(
 struct constrained_callable {
     // Viable only if F is callable as F(int, Arg)
     template <typename F, typename Arg>
-    tt::requires_t<double, tt::is_invocable<F, int, Arg>> operator()(F&&, Arg) const;
+    tt::requires_t<double, tt::is_invocable<F, int, Arg>> operator()(F&&, Arg) const {
+        return 0.0;
+    }
 };
 
 static_assert(!tt::is_detected<tt::invoke_result_t,
@@ -181,9 +184,7 @@ static_assert(
 
 struct rank_test {
     template <typename T>
-    constexpr int val(T x, bsoncxx::detail::rank<0>) const {
-        return x.never_instantiated();
-    }
+    constexpr int val(T x, bsoncxx::detail::rank<0>) const = delete;
     template <typename T>
     constexpr int val(T x, bsoncxx::detail::rank<1>) const {
         return x + 30;

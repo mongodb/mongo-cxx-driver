@@ -704,6 +704,7 @@ document::value operation_runner::_run_replace_one(document::view operation) {
         try {
             modified_count = replace_result->modified_count();
         } catch (const std::exception& e) {
+            CAPTURE(e);
         }
 
         upserted_count = replace_result->result().upserted_count();
@@ -796,6 +797,7 @@ document::value operation_runner::_run_update_many(document::view operation) {
         try {
             modified_count = update_result->modified_count();
         } catch (const std::exception& e) {
+            CAPTURE(e);
         }
 
         upserted_count = update_result->result().upserted_count();
@@ -887,6 +889,7 @@ document::value operation_runner::_run_update_one(document::view operation) {
         try {
             modified_count = update_result->modified_count();
         } catch (const std::exception& e) {
+            CAPTURE(e);
         }
 
         upserted_count = update_result->result().upserted_count();

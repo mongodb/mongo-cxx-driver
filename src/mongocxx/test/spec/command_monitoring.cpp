@@ -182,7 +182,7 @@ void run_command_monitoring_tests_in_file(std::string test_path) {
 
         try {
             op_runner.run(operation);
-        } catch (mongocxx::exception& e) {
+        } catch (mongocxx::exception&) {
             // do nothing.
         }
 

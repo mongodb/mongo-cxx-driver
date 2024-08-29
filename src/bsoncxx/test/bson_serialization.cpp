@@ -36,9 +36,6 @@ struct Person {
     bool operator==(const Person& rhs) const {
         return (first_name == rhs.first_name) && (last_name == rhs.last_name) && (age == rhs.age);
     }
-    bool operator!=(const Person& rhs) const {
-        return !(operator==(rhs));
-    }
 };
 
 void to_bson(const Person& person, bsoncxx::document::value& bson_object) {

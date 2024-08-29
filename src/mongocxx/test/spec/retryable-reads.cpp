@@ -99,6 +99,7 @@ void run_retryable_reads_tests_in_file(std::string test_path) {
             try {
                 actual_outcome_value = op_runner.run(operation);
             } catch (const operation_exception& e) {
+                CAPTURE(e);
                 REQUIRE(operation["error"].get_bool().value);
             }
 
