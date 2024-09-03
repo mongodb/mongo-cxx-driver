@@ -29,10 +29,6 @@
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
 
-#include <bsoncxx/config/prelude.hpp>
-
-BSONCXX_DISABLE_WARNING(GNU("-Wswitch-enum"));
-
 using namespace bsoncxx;
 
 int main() {
@@ -89,8 +85,27 @@ int main() {
                 }
                 break;
             }
-            default:
+
+            case type::k_double:
+            case type::k_document:
+            case type::k_binary:
+            case type::k_undefined:
+            case type::k_bool:
+            case type::k_date:
+            case type::k_null:
+            case type::k_regex:
+            case type::k_dbpointer:
+            case type::k_code:
+            case type::k_symbol:
+            case type::k_codewscope:
+            case type::k_int32:
+            case type::k_timestamp:
+            case type::k_int64:
+            case type::k_decimal128:
+            case type::k_maxkey:
+            case type::k_minkey:
                 std::cout << "We messed up!" << std::endl;
+                break;
         }
 
         // usually we don't need to actually use a switch statement, because we can also
