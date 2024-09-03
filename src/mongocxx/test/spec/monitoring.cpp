@@ -33,8 +33,8 @@ namespace spec {
 using namespace mongocxx;
 using bsoncxx::to_json;
 
-void remove_ignored_command_monitoring_events(apm_checker::event_vector& events,
-                                              const std::vector<std::string>& ignore) {
+static void remove_ignored_command_monitoring_events(apm_checker::event_vector& events,
+                                                     const std::vector<std::string>& ignore) {
     auto is_ignored = [&](bsoncxx::document::value v) {
         return std::any_of(std::begin(ignore), std::end(ignore), [&](stdx::string_view key) {
             return v.view()["commandStartedEvent"]["command"][key] ||

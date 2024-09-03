@@ -155,7 +155,7 @@ bsoncxx::document::value _make_kms_doc(bool include_external = true) {
     memcpy(&(key_storage[0]), kLocalMasterKey, 96);
 
     bsoncxx::types::b_binary local_master_key{
-        bsoncxx::binary_sub_type::k_binary, 96, (const uint8_t*)&key_storage};
+        bsoncxx::binary_sub_type::k_binary, 96, reinterpret_cast<const uint8_t*>(&key_storage)};
 
     kms_doc.append(
         kvp("local", [&](sub_document subdoc) { subdoc.append(kvp("key", local_master_key)); }));
@@ -870,16 +870,21 @@ void _run_corpus_test(bool use_schema_map) {
     memcpy(&(gcp_key_id_storage[0]), kGcpKeyUUID, 16);
     memcpy(&(kmip_key_id_storage[0]), kKmipKeyUUID, 16);
 
-    bsoncxx::types::b_binary local_key_id{
-        bsoncxx::binary_sub_type::k_uuid, 16, (const uint8_t*)&local_key_id_storage};
-    bsoncxx::types::b_binary aws_key_id{
-        bsoncxx::binary_sub_type::k_uuid, 16, (const uint8_t*)&aws_key_id_storage};
-    bsoncxx::types::b_binary azure_key_id{
-        bsoncxx::binary_sub_type::k_uuid, 16, (const uint8_t*)&azure_key_id_storage};
-    bsoncxx::types::b_binary gcp_key_id{
-        bsoncxx::binary_sub_type::k_uuid, 16, (const uint8_t*)&gcp_key_id_storage};
-    bsoncxx::types::b_binary kmip_key_id{
-        bsoncxx::binary_sub_type::k_uuid, 16, (const uint8_t*)&kmip_key_id_storage};
+    bsoncxx::types::b_binary local_key_id{bsoncxx::binary_sub_type::k_uuid,
+                                          16,
+                                          reinterpret_cast<const uint8_t*>(&local_key_id_storage)};
+    bsoncxx::types::b_binary aws_key_id{bsoncxx::binary_sub_type::k_uuid,
+                                        16,
+                                        reinterpret_cast<const uint8_t*>(&aws_key_id_storage)};
+    bsoncxx::types::b_binary azure_key_id{bsoncxx::binary_sub_type::k_uuid,
+                                          16,
+                                          reinterpret_cast<const uint8_t*>(&azure_key_id_storage)};
+    bsoncxx::types::b_binary gcp_key_id{bsoncxx::binary_sub_type::k_uuid,
+                                        16,
+                                        reinterpret_cast<const uint8_t*>(&gcp_key_id_storage)};
+    bsoncxx::types::b_binary kmip_key_id{bsoncxx::binary_sub_type::k_uuid,
+                                         16,
+                                         reinterpret_cast<const uint8_t*>(&kmip_key_id_storage)};
 
     auto local_key_value = make_value(local_key_id);
     auto aws_key_value = make_value(aws_key_id);
@@ -2436,11 +2441,11 @@ TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
             size_t count = 0;
             for (const auto& it : found) {
                 count++;
-                auto doc = it.find("encryptedUnindexed")->get_string().value;
 
                 // Assert one document is returned containing the field { "encryptedUnindexed":
                 // "encrypted unindexed value" }.
-                REQUIRE(doc == plain_text_unindexed_value);
+                REQUIRE(it.find("encryptedUnindexed")->get_string().value ==
+                        plain_text_unindexed_value);
             }
 
             // Assert one document is returned containing the field { "encryptedUnindexed":
@@ -2699,30 +2704,22 @@ TEST_CASE("Unique Index on keyAltNames", "[client_side_encryption]") {
 
     // 5. Using client_encryption, create a data key with a local KMS provider and the keyAltName
     // "def".
-    mongocxx::options::data_key dk_opts;
-    dk_opts.key_alt_names({"def"});
-    std::string provider = "local";
-    auto existing_key = client_encryption.create_data_key(provider, dk_opts);
+    auto existing_key = client_encryption.create_data_key(
+        "local", mongocxx::options::data_key().key_alt_names({"def"}));
 
     SECTION("Case 1: createKey()") {
         // 1. Use client_encryption to create a new local data key with a keyAltName "abc" and
         // assert the operation does not fail.
-        {
-            mongocxx::options::data_key dk_opts;
-            dk_opts.key_alt_names({"abc"});
-            std::string provider = "local";
-            client_encryption.create_data_key(provider, dk_opts);
-        }
+        client_encryption.create_data_key("local",
+                                          mongocxx::options::data_key().key_alt_names({"abc"}));
 
         // 2. Repeat Step 1 and assert the operation fails due to a duplicate key server error
         // (error code 11000).
         {
-            mongocxx::options::data_key dk_opts;
-            dk_opts.key_alt_names({"abc"});
-            std::string provider = "local";
             bool exception_thrown = false;
             try {
-                client_encryption.create_data_key(provider, dk_opts);
+                client_encryption.create_data_key(
+                    "local", mongocxx::options::data_key().key_alt_names({"abc"}));
             } catch (mongocxx::operation_exception& e) {
                 REQUIRE(std::strstr(
                     e.what(),
@@ -2736,12 +2733,10 @@ TEST_CASE("Unique Index on keyAltNames", "[client_side_encryption]") {
         // 3. Use client_encryption to create a new local data key with a keyAltName "def" and
         // assert the operation fails due to a duplicate key server error (error code 11000).
         {
-            mongocxx::options::data_key dk_opts;
-            dk_opts.key_alt_names({"def"});
-            std::string provider = "local";
             bool exception_thrown = false;
             try {
-                client_encryption.create_data_key(provider, dk_opts);
+                client_encryption.create_data_key(
+                    "local", mongocxx::options::data_key().key_alt_names({"def"}));
             } catch (mongocxx::operation_exception& e) {
                 REQUIRE(std::strstr(
                     e.what(),
@@ -2850,7 +2845,7 @@ TEST_CASE("Custom Key Material Test", "[client_side_encryption]") {
     std::vector<uint8_t> id = {
         0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0};
     bsoncxx::types::b_binary id_bin{
-        bsoncxx::binary_sub_type::k_uuid, (uint32_t)id.size(), id.data()};
+        bsoncxx::binary_sub_type::k_uuid, static_cast<std::uint32_t>(id.size()), id.data()};
     auto key_doc = make_document(kvp("_id", id_bin));
 
     mongocxx::libbson::scoped_bson_t bson_doc;

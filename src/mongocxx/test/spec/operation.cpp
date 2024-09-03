@@ -51,7 +51,7 @@ namespace spec {
 using namespace mongocxx;
 using namespace bsoncxx;
 
-int64_t as_int64(const document::element& el) {
+static int64_t as_int64(const document::element& el) {
     if (el.type() == type::k_int32) {
         return static_cast<std::int64_t>(el.get_int32().value);
     } else if (el.type() == type::k_int64) {
@@ -705,6 +705,7 @@ document::value operation_runner::_run_replace_one(document::view operation) {
         try {
             modified_count = replace_result->modified_count();
         } catch (const std::exception& e) {
+            CAPTURE(e);
         }
 
         upserted_count = replace_result->result().upserted_count();
@@ -797,6 +798,7 @@ document::value operation_runner::_run_update_many(document::view operation) {
         try {
             modified_count = update_result->modified_count();
         } catch (const std::exception& e) {
+            CAPTURE(e);
         }
 
         upserted_count = update_result->result().upserted_count();
@@ -888,6 +890,7 @@ document::value operation_runner::_run_update_one(document::view operation) {
         try {
             modified_count = update_result->modified_count();
         } catch (const std::exception& e) {
+            CAPTURE(e);
         }
 
         upserted_count = update_result->result().upserted_count();

@@ -33,8 +33,7 @@
 #include <mongocxx/options/server_api.hpp>
 #include <mongocxx/uri.hpp>
 
-// NOTE: Any time this file is modified, a DOCS ticket should be opened to sync the changes with the
-// corresponding page on mongodb.com/docs. See CXX-1249 and DRIVERS-356 for more info.
+namespace {
 
 template <typename T>
 void check_field(const T& document,
@@ -141,7 +140,7 @@ std::string getenv_or_fail(const char* s) {
 // Returns a document with credentials for KMS providers.
 // If include_external is true, all KMS providers are set.
 // If include_external is false, only the local provider is set.
-bsoncxx::document::value _make_kms_doc(bool include_external = true) {
+bsoncxx::document::value make_kms_doc(bool include_external = true) {
     using bsoncxx::builder::basic::sub_document;
     using bsoncxx::builder::stream::close_array;
     using bsoncxx::builder::stream::close_document;
@@ -1442,19 +1441,19 @@ static bool is_snapshot_ready(mongocxx::client& client, mongocxx::collection& co
     opts.snapshot(true);
 
     auto session = client.start_session(opts);
+
     try {
-        auto maybe_value = collection.find_one(session, {});
-        if (maybe_value) {
+        if (collection.find_one(session, {})) {
             return true;
         }
-        return false;
     } catch (const mongocxx::operation_exception& e) {
         if (e.code().value() == 246) {  // snapshot unavailable
             return false;
         }
         throw;
     }
-    return true;
+
+    return false;
 }
 
 // Seed the pets database and wait for the snapshot to become available.
@@ -1612,7 +1611,7 @@ static void queryable_encryption_api(mongocxx::client& client) {
     options::client_encryption ce_opts;
     ce_opts.key_vault_client(&key_vault_client);
     ce_opts.key_vault_namespace({"keyvault", "datakeys"});
-    ce_opts.kms_providers(_make_kms_doc(false));
+    ce_opts.kms_providers(make_kms_doc(false));
     client_encryption client_encryption(std::move(ce_opts));
 
     auto key1_id = client_encryption.create_data_key("local");
@@ -1634,7 +1633,7 @@ static void queryable_encryption_api(mongocxx::client& client) {
     // Create an Queryable Encryption collection.
     options::auto_encryption auto_encrypt_opts{};
     auto_encrypt_opts.key_vault_namespace({"keyvault", "datakeys"});
-    auto_encrypt_opts.kms_providers(_make_kms_doc(false));
+    auto_encrypt_opts.kms_providers(make_kms_doc(false));
     auto_encrypt_opts.encrypted_fields_map(encrypted_fields_map.view());
 
     // Optional, If mongocryptd is not in PATH, then find the binary at MONGOCRYPTD_PATH.
@@ -1698,6 +1697,8 @@ static void queryable_encryption_api(mongocxx::client& client) {
     }
     // End Queryable Encryption Example
 }
+
+}  // namespace
 
 int main() {
     // The mongocxx::instance constructor and destructor initialize and shut down the driver,

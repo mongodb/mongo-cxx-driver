@@ -29,6 +29,8 @@ using bsoncxx::builder::basic::document;
 using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_document;
 
+namespace {
+
 //
 // Document number counter for sample inserted documents.  This just
 // makes the tailed document more obviously in sequence.
@@ -67,6 +69,8 @@ void insert_docs(mongocxx::collection* coll) {
         coll->insert_one(builder.extract());
     }
 }
+
+}  // namespace
 
 int main() {
     // The mongocxx::instance constructor and destructor initialize and shut down the driver,

@@ -28,6 +28,8 @@
 #include <bsoncxx/test/to_string.hh>
 #include <mongocxx/test/client_helpers.hh>
 
+#include <bsoncxx/config/prelude.hpp>
+
 using namespace bsoncxx;
 using namespace mongocxx;
 
@@ -72,8 +74,6 @@ struct match_scope_array_idx {
 std::string match_doc_current_path() noexcept {
     return std::accumulate(S_match_doc_path.cbegin(), S_match_doc_path.cend(), std::string());
 }
-
-}  // namespace
 
 template <typename Element>
 type to_type(const Element& type) {
@@ -235,6 +235,8 @@ void matches_array(types::bson_value::view actual,
     }
 }
 
+}  // namespace
+
 void assert::matches(types::bson_value::view actual,
                      types::bson_value::view expected,
                      entity::map& map,
@@ -256,8 +258,12 @@ void assert::matches(types::bson_value::view actual,
                     to_string(actual),
                     to_string(expected),
                     match_doc_current_path());
+
+            BSONCXX_PUSH_WARNINGS();
+            BSONCXX_DISABLE_WARNING(GNU("-Wfloat-equal"));
             REQUIRE(test_util::is_numeric(actual));
             REQUIRE(test_util::as_double(expected) == test_util::as_double(actual));
+            BSONCXX_POP_WARNINGS();
             return;
         }
         default: {

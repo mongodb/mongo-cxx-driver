@@ -31,18 +31,19 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     target_compile_options(mongocxx_mocked PRIVATE /bigobj)
 endif()
 
-set(spec_test_common
-    spec/operation.cpp
-    spec/unified_tests/entity.cpp
-    spec/unified_tests/assert.cpp
+add_library(client_helpers OBJECT client_helpers.cpp)
+
+add_library(spec_test_common OBJECT
     spec/monitoring.cpp
+    spec/operation.cpp
+    spec/unified_tests/assert.cpp
+    spec/unified_tests/entity.cpp
     spec/util.cpp
 )
 
 add_executable(test_driver
     bulk_write.cpp
     change_streams.cpp
-    client_helpers.cpp
     client_session.cpp
     client_side_encryption.cpp
     client.cpp
@@ -104,75 +105,41 @@ add_executable(test_driver
     validation_criteria.cpp
     write_concern.cpp
 )
+target_link_libraries(test_driver PRIVATE client_helpers)
 
-add_executable(test_logging
-    logging.cpp
-)
+add_executable(test_logging logging.cpp)
 
-add_executable(test_instance
-    instance.cpp
-)
+add_executable(test_instance instance.cpp)
 
-add_executable(test_crud_specs
-    spec/crud.cpp
-    ${spec_test_common}
-    client_helpers.cpp
-)
+add_executable(test_crud_specs spec/crud.cpp)
+target_link_libraries(test_crud_specs PRIVATE spec_test_common client_helpers)
 
-add_executable(test_gridfs_specs
-    spec/gridfs.cpp
-    ${spec_test_common}
-    client_helpers.cpp
-)
+add_executable(test_gridfs_specs spec/gridfs.cpp)
+target_link_libraries(test_gridfs_specs PRIVATE spec_test_common client_helpers)
 
-add_executable(test_client_side_encryption_specs
-    spec/client_side_encryption.cpp
-    ${spec_test_common}
-    client_helpers.cpp
-)
+add_executable(test_client_side_encryption_specs spec/client_side_encryption.cpp)
+target_link_libraries(test_client_side_encryption_specs PRIVATE spec_test_common client_helpers)
 
-add_executable(test_command_monitoring_specs
-    spec/command_monitoring.cpp
-    ${spec_test_common}
-    client_helpers.cpp
-)
+add_executable(test_command_monitoring_specs spec/command_monitoring.cpp)
+target_link_libraries(test_command_monitoring_specs PRIVATE spec_test_common client_helpers)
 
-add_executable(test_transactions_specs
-    spec/transactions.cpp
-    ${spec_test_common}
-    client_helpers.cpp
-)
+add_executable(test_transactions_specs spec/transactions.cpp)
+target_link_libraries(test_transactions_specs PRIVATE spec_test_common client_helpers)
 
-add_executable(test_retryable_reads_specs
-    spec/retryable-reads.cpp
-    ${spec_test_common}
-    client_helpers.cpp
-)
+add_executable(test_retryable_reads_specs spec/retryable-reads.cpp)
+target_link_libraries(test_retryable_reads_specs PRIVATE spec_test_common client_helpers)
 
-add_executable(test_read_write_concern_specs
-    spec/read_write_concern.cpp
-    ${spec_test_common}
-    client_helpers.cpp
-)
+add_executable(test_read_write_concern_specs spec/read_write_concern.cpp)
+target_link_libraries(test_read_write_concern_specs PRIVATE spec_test_common client_helpers)
 
-add_executable(test_mongohouse_specs
-    spec/mongohouse.cpp
-    ${spec_test_common}
-    client_helpers.cpp
-)
+add_executable(test_mongohouse_specs spec/mongohouse.cpp)
+target_link_libraries(test_mongohouse_specs PRIVATE spec_test_common client_helpers)
 
-add_executable(test_unified_format_spec
-    spec/unified_tests/operations.cpp
-    spec/unified_tests/runner.cpp
-    ${spec_test_common}
-    client_helpers.cpp
-)
+add_executable(test_unified_format_spec spec/unified_tests/operations.cpp spec/unified_tests/runner.cpp)
+target_link_libraries(test_unified_format_spec PRIVATE spec_test_common client_helpers)
 
-add_executable(test_versioned_api
-    versioned_api.cpp
-    ${spec_test_common}
-    client_helpers.cpp
-)
+add_executable(test_versioned_api versioned_api.cpp)
+target_link_libraries(test_versioned_api PRIVATE spec_test_common client_helpers)
 
 # Common target properties for test executables.
 add_library(mongocxx_test_properties INTERFACE)
@@ -197,17 +164,25 @@ add_library(mongocxx::test_properties_with_main ALIAS mongocxx_test_properties_w
 
 set_property(
     TARGET
-        test_driver
-        test_logging
-        test_instance
+        client_helpers
+        spec_test_common
+    APPEND PROPERTY LINK_LIBRARIES
+        mongocxx::test_properties
+)
+
+set_property(
+    TARGET
         test_client_side_encryption_specs
-        test_crud_specs
-        test_gridfs_specs
         test_command_monitoring_specs
-        test_transactions_specs
-        test_retryable_reads_specs
-        test_read_write_concern_specs
+        test_crud_specs
+        test_driver
+        test_gridfs_specs
+        test_instance
+        test_logging
         test_mongohouse_specs
+        test_read_write_concern_specs
+        test_retryable_reads_specs
+        test_transactions_specs
         test_unified_format_spec
         test_versioned_api
     APPEND PROPERTY LINK_LIBRARIES

@@ -88,7 +88,7 @@ bsoncxx::document::value get_kms_values() {
     char key_storage[96];
     memcpy(&(key_storage[0]), kLocalMasterKey, 96);
     const bsoncxx::types::b_binary local_master_key{
-        bsoncxx::binary_sub_type::k_binary, 96, (const uint8_t*)&key_storage};
+        bsoncxx::binary_sub_type::k_binary, 96, reinterpret_cast<const uint8_t*>(&key_storage)};
 
     auto kms_doc = make_document(
         kvp("aws",

@@ -115,6 +115,7 @@ TEST_CASE("uri_options::test_srv_options", "[uri_options]") {
                 }
             } catch (mongocxx::logic_error& e) {
                 bool should_throw = !test.valid || test.warning;
+                CAPTURE(e);
                 REQUIRE(should_throw);
             }
         }

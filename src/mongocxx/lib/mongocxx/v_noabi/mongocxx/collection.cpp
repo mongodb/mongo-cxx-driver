@@ -326,10 +326,10 @@ bsoncxx::v_noabi::builder::basic::document build_find_options_document(
     }
 
     // Prioritize new comment option over old $comment modifier.
-    if (const auto& comment = options.comment_option()) {
-        options_builder.append(kvp("comment", *comment));
-    } else if (const auto& comment = options.comment()) {
-        options_builder.append(kvp("comment", *comment));
+    if (const auto& new_comment = options.comment_option()) {
+        options_builder.append(kvp("comment", *new_comment));
+    } else if (const auto& old_comment = options.comment()) {
+        options_builder.append(kvp("comment", *old_comment));
     }
 
     if (const auto& cursor_type = options.cursor_type()) {

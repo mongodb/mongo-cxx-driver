@@ -19,8 +19,7 @@
 #include <mongocxx/client.hpp>
 #include <mongocxx/instance.hpp>
 
-// NOTE: Any time this file is modified, a DOCS ticket should be opened to sync the changes with the
-// corresponding page on mongodb.com/docs. See CXX-1514, CXX-1249, and DRIVERS-356 for more info.
+namespace {
 
 void runcommand_examples(mongocxx::database& db) {
     {
@@ -29,11 +28,13 @@ void runcommand_examples(mongocxx::database& db) {
         auto buildInfo = db.run_command(make_document(kvp("buildInfo", 1)));
         // End runCommand Example 1
 
-        if (buildInfo.view()["ok"].get_double() != double{1}) {
+        if (buildInfo.view()["ok"].get_double() != 1.0) {
             throw std::logic_error("buildInfo command failed in runCommand example 1");
         }
     }
 }
+
+}  // namespace
 
 int main() {
     // The mongocxx::instance constructor and destructor initialize and shut down the driver,

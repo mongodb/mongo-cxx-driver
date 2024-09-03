@@ -29,7 +29,7 @@
 namespace {
 
 // watch_forever iterates the change stream until an error occurs.
-void watch_forever(mongocxx::collection& collection) {
+[[noreturn]] void watch_forever(mongocxx::collection& collection) {
     mongocxx::options::change_stream options;
     // Wait up to 1 second before polling again.
     const std::chrono::milliseconds await_time{1000};

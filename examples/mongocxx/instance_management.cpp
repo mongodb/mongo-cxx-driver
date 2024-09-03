@@ -56,10 +56,6 @@ class mongo_access {
         return _pool->acquire();
     }
 
-    bsoncxx::stdx::optional<connection> try_get_connection() {
-        return _pool->try_acquire();
-    }
-
    private:
     mongo_access() = default;
 
@@ -67,17 +63,15 @@ class mongo_access {
     std::unique_ptr<mongocxx::pool> _pool = nullptr;
 };
 
-}  // namespace
-
 // The 'configure' and 'do_work' functions use the same mongocxx::instance and mongocxx::pool
 // objects by way of the mongo_access singleton.
 
 void configure(mongocxx::uri uri) {
     class noop_logger : public mongocxx::logger {
        public:
-        virtual void operator()(mongocxx::log_level,
-                                bsoncxx::stdx::string_view,
-                                bsoncxx::stdx::string_view) noexcept {}
+        void operator()(mongocxx::log_level,
+                        bsoncxx::stdx::string_view,
+                        bsoncxx::stdx::string_view) noexcept override {}
     };
 
     // Use `std::make_unique` with C++14 and newer.
@@ -96,6 +90,8 @@ bool do_work() {
         return false;
     return true;
 }
+
+}  // namespace
 
 int main(int argc, char* argv[]) {
     auto uri = mongocxx::uri{(argc >= 2) ? argv[1] : mongocxx::uri::k_default_uri};

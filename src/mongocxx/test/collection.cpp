@@ -830,7 +830,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
         REQUIRE(updated);
         REQUIRE(updated->view()["changed"].get_bool() == true);
-        REQUIRE(coll.count_documents({}) == (std::int64_t)1);
+        REQUIRE(coll.count_documents({}) == std::int64_t{1});
     }
 
     SECTION("matching upsert updates document", "[collection]") {
@@ -979,7 +979,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
         coll.delete_one(b2.view());
 
-        REQUIRE(coll.count_documents({}) == (std::int64_t)2);
+        REQUIRE(coll.count_documents({}) == std::int64_t{2});
 
         auto cursor = coll.find({});
 

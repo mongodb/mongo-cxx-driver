@@ -163,9 +163,11 @@ TEST_CASE("start_session failure", "[session]") {
     instance::current();
 
     client_start_session
-        ->interpose([](mongoc_client_t*, const mongoc_session_opt_t*, bson_error_t* error) {
+        ->interpose([](mongoc_client_t*,
+                       const mongoc_session_opt_t*,
+                       bson_error_t* error) -> mongoc_client_session_t* {
             bson_set_error(error, MONGOC_ERROR_CLIENT, MONGOC_ERROR_CLIENT_SESSION_FAILURE, "foo");
-            return (mongoc_client_session_t*)nullptr;
+            return nullptr;
         })
         .forever();
 
@@ -420,7 +422,7 @@ TEST_CASE("lsid", "[session]") {
 
             auto one = bsoncxx::types::bson_value::view{bsoncxx::types::b_int32{1}};
             auto two = bsoncxx::types::bson_value::view{bsoncxx::types::b_int32{2}};
-            auto data = (uint8_t*)"foo";
+            auto data = reinterpret_cast<const uint8_t*>("foo");
             size_t len = 4;
             // Ensure multiple chunks.
             options::gridfs::upload opts;

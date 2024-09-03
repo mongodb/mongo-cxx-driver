@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include <algorithm>
+#include <cstdint>
 #include <fstream>
 #include <iostream>
 #include <random>
@@ -44,6 +45,8 @@ using bsoncxx::builder::stream::open_document;
 using bsoncxx::types::bson_value::make_value;
 
 using namespace mongocxx;
+
+namespace {
 
 const int kKeyLength = 96;
 
@@ -92,15 +95,19 @@ bsoncxx::document::value doc_from_file(std::string path) {
     return bsoncxx::from_json(file_contents);
 }
 
+}  // namespace
+
 int main() {
     instance inst{};
 
     // This must be the same master key that was used to create
     // the encryption key; here, we use a random key as a placeholder.
-    char key_storage[kKeyLength];
-    std::generate_n(key_storage, kKeyLength, std::rand);
+    std::uint8_t key_storage[kKeyLength];
+    std::generate_n(key_storage, kKeyLength, []() {
+        return static_cast<std::uint8_t>(std::rand() % UINT8_MAX);
+    });
     bsoncxx::types::b_binary local_master_key{
-        bsoncxx::binary_sub_type::k_binary, kKeyLength, (const uint8_t*)&key_storage};
+        bsoncxx::binary_sub_type::k_binary, kKeyLength, key_storage};
 
     auto kms_providers = document{} << "local" << open_document << "key" << local_master_key
                                     << close_document << finalize;

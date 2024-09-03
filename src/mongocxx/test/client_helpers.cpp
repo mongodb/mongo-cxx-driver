@@ -36,6 +36,7 @@
 #include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/private/libmongoc.hh>
 
+#include <bsoncxx/config/prelude.hpp>
 #include <mongocxx/config/private/prelude.hh>
 
 #include <bsoncxx/test/catch.hh>
@@ -324,7 +325,7 @@ bool is_numeric(types::bson_value::view value) {
            value.type() == type::k_double;
 }
 
-stdx::optional<type> is_type_operator(types::bson_value::view value) {
+static stdx::optional<type> is_type_operator(types::bson_value::view value) {
     if (value.type() == type::k_document && value.get_document().value["$$type"]) {
         auto t = value.get_document().value["$$type"].get_string().value;
         if (t.compare("binData") == 0) {
@@ -344,7 +345,10 @@ bool matches(types::bson_value::view main,
         return t == main.type();
     }
 
-    if (is_numeric(pattern) && as_double(pattern) == 42) {
+    BSONCXX_PUSH_WARNINGS();
+    BSONCXX_DISABLE_WARNING(GNU("-Wfloat-equal"));
+
+    if (is_numeric(pattern) && as_double(pattern) == 42.0) {
         return true;
     }
 
@@ -352,6 +356,8 @@ bool matches(types::bson_value::view main,
     if (is_numeric(main) && is_numeric(pattern) && as_double(main) == as_double(pattern)) {
         return true;
     }
+
+    BSONCXX_POP_WARNINGS();
 
     if (main.type() == type::k_document) {
         // the value '42' acts as placeholders for "any value"

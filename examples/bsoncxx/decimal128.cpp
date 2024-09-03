@@ -27,7 +27,7 @@ int main() {
     decimal128 d128;
     try {
         d128 = decimal128{"1.234E+3456"};
-    } catch (const bsoncxx::exception& e) {
+    } catch (const bsoncxx::exception&) {
         // The example won't fail, but in general, arbitrary strings
         // might not convert properly.
         return EXIT_FAILURE;
