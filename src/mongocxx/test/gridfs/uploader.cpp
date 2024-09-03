@@ -14,9 +14,10 @@
 
 #include <cstdint>
 
-#include <bsoncxx/test/catch.hh>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/gridfs/uploader.hpp>
+
+#include <bsoncxx/test/catch.hh>
 
 namespace {
 using namespace mongocxx;

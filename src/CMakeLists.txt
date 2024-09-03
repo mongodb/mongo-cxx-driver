@@ -12,15 +12,11 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-add_definitions(-DMONGO_CXX_DRIVER_COMPILING)
 add_subdirectory(bsoncxx)
 add_subdirectory(mongocxx)
 
 set_local_dist(src_DIST_local
     CMakeLists.txt
-    third_party/catch/main.cpp
-    third_party/catch/include/catch.hpp
-    third_party/catch/include/helpers.hpp
 )
 
 set(src_DIST

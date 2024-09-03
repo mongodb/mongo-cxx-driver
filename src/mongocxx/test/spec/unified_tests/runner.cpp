@@ -12,27 +12,29 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include "assert.hh"
+#include "entity.hh"
+#include "operations.hh"
+
 #include <fstream>
 #include <numeric>
 #include <regex>
 #include <sstream>
 #include <unordered_set>
 
-#include "assert.hh"
-#include "entity.hh"
-#include "operations.hh"
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/string/to_string.hpp>
-#include <bsoncxx/test/catch.hh>
 #include <bsoncxx/types/bson_value/value.hpp>
 #include <mongocxx/client_encryption.hpp>
 #include <mongocxx/exception/bulk_write_exception.hpp>
 #include <mongocxx/exception/exception.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/instance.hpp>
+
+#include <bsoncxx/test/catch.hh>
 #include <mongocxx/test/client_helpers.hh>
 #include <mongocxx/test/spec/monitoring.hh>
 #include <mongocxx/test/spec/util.hh>

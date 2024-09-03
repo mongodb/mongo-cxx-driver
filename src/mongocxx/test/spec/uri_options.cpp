@@ -15,10 +15,11 @@
 #include <cctype>
 #include <fstream>
 
-#include <bsoncxx/test/catch.hh>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/pool.hpp>
+
+#include <bsoncxx/test/catch.hh>
 
 namespace {
 

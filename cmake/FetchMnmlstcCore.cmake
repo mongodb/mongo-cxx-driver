@@ -7,6 +7,11 @@ set(core-subbuild "${CMAKE_CURRENT_BINARY_DIR}/_deps/core-subbuild")
 set(core-build "${CMAKE_CURRENT_BINARY_DIR}/_deps/core-build")
 set(core-install "${CMAKE_CURRENT_BINARY_DIR}/_deps/core-install")
 
+set(fetch_args "")
+if (CMAKE_VERSION VERSION_GREATER_EQUAL "3.25.0")
+    set(fetch_args "SYSTEM")
+endif()
+
 # Also update etc/purls.txt.
 FetchContent_Declare(
     EP_mnmlstc_core
@@ -22,6 +27,8 @@ FetchContent_Declare(
     GIT_SHALLOW TRUE
     LOG_DOWNLOAD ON
 
+    ${fetch_args}
+
     FETCHCONTENT_UPDATES_DISCONNECTED ON
 )
 FetchContent_GetProperties(EP_mnmlstc_core)
@@ -33,7 +40,7 @@ if(core_FOUND AND "$CACHE{INTERNAL_MONGOC_MNMLSTC_CORE_FOUND}")
 else()
     if(NOT ep_mnmlstc_core_POPULATED)
         message(STATUS "Downloading mnmlstc/core...")
-        if("${CMAKE_VERSION}" VERSION_LESS "3.18.0")
+        if(CMAKE_VERSION VERSION_LESS "3.18.0")
             # SOURCE_SUBDIR is not yet supported.
             FetchContent_Populate(EP_mnmlstc_core)
         else()

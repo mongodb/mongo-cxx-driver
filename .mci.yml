@@ -1001,6 +1001,8 @@ tasks:
       - func: "setup"
       - func: "fetch_c_driver_source"
       - func: "compile"
+        vars:
+          ENABLE_TESTS: OFF
       - command: shell.exec
         type: test
         params:
@@ -1015,6 +1017,8 @@ tasks:
       - func: "setup"
       - func: "fetch_c_driver_source"
       - func: "compile"
+        vars:
+          ENABLE_TESTS: OFF
       - command: shell.exec
         type: test
         params:
@@ -2156,10 +2160,7 @@ buildvariants:
       run_on:
           - windows-64-vs2015-compile
       tasks:
-          - name: compile_and_test_with_shared_libs
-          - name: compile_and_test_with_shared_libs_extra_alignment
-          - name: compile_and_test_with_static_libs
-          - name: compile_and_test_with_static_libs_extra_alignment
+          - name: compile_without_tests
           - name: uninstall_check_windows
 
     - name: windows-2k8-debug
@@ -2172,9 +2173,8 @@ buildvariants:
       run_on:
           - windows-64-vs2015-compile
       tasks:
-          # The debug shared lib is tested in the "integration tests" matrix
-          - name: compile_and_test_with_static_libs
-          - name: compile_and_test_with_static_libs_extra_alignment
+          - name: compile_without_tests
+          - name: uninstall_check_windows
 
     - name: windows-msvc2015-debug
       display_name: "Windows (VS 2015) Debug (MongoDB 4.2)"
@@ -2186,8 +2186,8 @@ buildvariants:
       run_on:
          - windows-64-vs2015-compile
       tasks:
-         - name: compile_with_shared_libs
-         - name: compile_and_test_auth_with_shared_libs
+         - name: compile_without_tests
+         - name: uninstall_check_windows
 
     - name: packaging
       display_name: Linux Distro Packaging

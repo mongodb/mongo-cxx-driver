@@ -14,15 +14,17 @@
 
 #pragma once
 
+#include "entity.hh"
+
 #include <unordered_map>
 
-#include "entity.hh"
 #include <bsoncxx/array/element.hpp>
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/document/view.hpp>
-#include <mongocxx/test/spec/monitoring.hh>
 
 #include <mongocxx/config/private/prelude.hh>
+
+#include <mongocxx/test/spec/monitoring.hh>
 
 namespace mongocxx {
 namespace operations {

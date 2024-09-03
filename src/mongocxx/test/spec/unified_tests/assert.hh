@@ -15,6 +15,7 @@
 #pragma once
 
 #include "entity.hh"
+
 #include <bsoncxx/types/bson_value/view_or_value.hpp>
 
 #include <mongocxx/config/private/prelude.hh>

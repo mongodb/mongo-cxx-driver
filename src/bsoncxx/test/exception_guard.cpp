@@ -25,6 +25,8 @@
 
 #include <bsoncxx/test/catch.hh>
 
+#include <catch2/matchers/catch_matchers_string.hpp>
+
 namespace {
 
 TEST_CASE("bsoncxx::test::exception_guard", "[test]") {
@@ -126,7 +128,7 @@ TEST_CASE("bsoncxx::test::exception_guard", "[test]") {
                 CAPTURE(expected.line);
                 CAPTURE(expected.func);
 
-                CHECK_THAT(log, Catch::Contains("two"));
+                CHECK_THAT(log, Catch::Matchers::ContainsSubstring("two"));
                 CHECK(log_view.find(expected.file) != npos);
                 CHECK(log_view.find(std::to_string(expected.line)) != npos);
                 CHECK(log_view.find(expected.func) == npos);  // Func is not logged.
@@ -148,7 +150,7 @@ TEST_CASE("bsoncxx::test::exception_guard", "[test]") {
                 CAPTURE(expected.line);
                 CAPTURE(expected.func);
 
-                CHECK_THAT(log, Catch::Contains("Catch::TestFailureException"));
+                CHECK_THAT(log, Catch::Matchers::ContainsSubstring("Catch::TestFailureException"));
                 CHECK(log_view.find(expected.file) != npos);
                 CHECK(log_view.find(std::to_string(expected.line)) != npos);
                 CHECK(log_view.find(expected.func) == npos);  // Func is not logged.
@@ -156,7 +158,7 @@ TEST_CASE("bsoncxx::test::exception_guard", "[test]") {
 
             // The original exception.
             const auto check_expr = [&] { BSONCXX_TEST_EXCEPTION_GUARD_CHECK(eguard); };
-            REQUIRE_THROWS_WITH(check_expr(), Catch::Contains("one"));
+            REQUIRE_THROWS_WITH(check_expr(), Catch::Matchers::ContainsSubstring("one"));
         }
     }
 

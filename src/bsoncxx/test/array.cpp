@@ -14,9 +14,10 @@
 
 #include <bsoncxx/array/view.hpp>
 #include <bsoncxx/builder/basic/array.hpp>
-#include <bsoncxx/test/catch.hh>
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/bson_value/make_value.hpp>
+
+#include <bsoncxx/test/catch.hh>
 
 namespace {
 

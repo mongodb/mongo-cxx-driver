@@ -15,22 +15,23 @@
 #include <cstddef>
 #include <string>
 
-#include <bsoncxx/test/catch.hh>
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/tls.hpp>
 #include <mongocxx/pool.hpp>
 #include <mongocxx/private/libmongoc.hh>
-#include <third_party/catch/include/helpers.hpp>
 
 #include <mongocxx/config/private/prelude.hh>
+
+#include <bsoncxx/test/catch.hh>
+#include <mongocxx/test/catch_helpers.hh>
 
 namespace {
 using namespace mongocxx;
 
 TEST_CASE("a pool is created with the correct MongoDB URI", "[pool]") {
-    MOCK_POOL
+    MOCK_POOL;
 
     instance::current();
 
@@ -67,7 +68,7 @@ TEST_CASE(
     "If we pass an engaged SSL options struct to the pool class, we will use it to configure the "
     "underlying mongoc pool",
     "[pool]") {
-    MOCK_POOL
+    MOCK_POOL;
 
     instance::current();
 
@@ -108,7 +109,7 @@ TEST_CASE(
 #endif
 
 TEST_CASE("calling acquire on a pool returns an entry that manages its client", "[pool]") {
-    MOCK_POOL
+    MOCK_POOL;
 
     instance::current();
 
@@ -163,7 +164,7 @@ TEST_CASE(
     "try_acquire returns a disengaged stdx::optional<entry> if mongoc_client_pool_try_pop "
     "returns a null pointer",
     "[pool]") {
-    MOCK_POOL
+    MOCK_POOL;
 
     instance::current();
 

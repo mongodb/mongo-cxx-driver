@@ -17,9 +17,10 @@
 #include <bsoncxx/stdx/operators.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/stdx/type_traits.hpp>
-#include <bsoncxx/test/catch.hh>
 
 #include <bsoncxx/config/prelude.hpp>
+
+#include <bsoncxx/test/catch.hh>
 
 namespace stdx = bsoncxx::stdx;
 using stdx::string_view;

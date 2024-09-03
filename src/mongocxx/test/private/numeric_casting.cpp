@@ -13,9 +13,10 @@
 // limitations under the License.
 
 #include <bsoncxx/builder/basic/document.hpp>
-#include <bsoncxx/test/catch.hh>
 #include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/numeric_casting.hh>
+
+#include <bsoncxx/test/catch.hh>
 
 namespace {
 

@@ -18,7 +18,6 @@
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/private/libbson.hh>
-#include <bsoncxx/test/catch.hh>
 #include <mongocxx/client.hpp>
 #include <mongocxx/collection.hpp>
 #include <mongocxx/instance.hpp>
@@ -27,9 +26,11 @@
 #include <mongocxx/pipeline.hpp>
 #include <mongocxx/pool.hpp>
 #include <mongocxx/private/libbson.hh>
-#include <mongocxx/test/client_helpers.hh>
 #include <mongocxx/write_concern.hpp>
-#include <third_party/catch/include/helpers.hpp>
+
+#include <bsoncxx/test/catch.hh>
+#include <mongocxx/test/catch_helpers.hh>
+#include <mongocxx/test/client_helpers.hh>
 
 namespace {
 
@@ -192,7 +193,7 @@ TEST_CASE("Spec Prose Tests") {
 }
 
 TEST_CASE("Mock streams and error-handling") {
-    MOCK_CHANGE_STREAM
+    MOCK_CHANGE_STREAM;
 
     instance::current();
     client mongodb_client{uri{}, test_util::add_test_server_api()};

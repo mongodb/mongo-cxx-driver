@@ -12,8 +12,9 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/test/catch.hh>
 #include <mongocxx/instance.hpp>
+
+#include <bsoncxx/test/catch.hh>
 #include <mongocxx/test/spec/util.hh>
 
 namespace {

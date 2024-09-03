@@ -21,7 +21,6 @@
 #include <bsoncxx/private/helpers.hh>
 #include <bsoncxx/private/libbson.hh>
 #include <bsoncxx/stdx/optional.hpp>
-#include <bsoncxx/test/catch.hh>
 #include <mongocxx/client.hpp>
 #include <mongocxx/collection.hpp>
 #include <mongocxx/database.hpp>
@@ -34,7 +33,9 @@
 #include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/libmongoc.hh>
 #include <mongocxx/read_preference.hpp>
-#include <third_party/catch/include/helpers.hpp>
+
+#include <bsoncxx/test/catch.hh>
+#include <mongocxx/test/catch_helpers.hh>
 
 namespace {
 using namespace mongocxx;
@@ -57,12 +58,12 @@ TEST_CASE("Collection", "[collection]") {
     const std::string collection_name("dummy_collection");
     const std::string database_name("mocked_collection");
 
-    MOCK_CLIENT
-    MOCK_DATABASE
-    MOCK_COLLECTION
-    MOCK_FAM
-    MOCK_BULK
-    MOCK_CURSOR
+    MOCK_CLIENT;
+    MOCK_DATABASE;
+    MOCK_COLLECTION;
+    MOCK_FAM;
+    MOCK_BULK;
+    MOCK_CURSOR;
 
     client mongo_client{uri{}};
     write_concern concern;

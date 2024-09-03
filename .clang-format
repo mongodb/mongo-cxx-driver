@@ -10,14 +10,20 @@ Cpp11BracedListStyle: true
 DerivePointerAlignment: false
 IncludeBlocks: Regroup
 IncludeCategories:
-  - Regex: 'prelude\.(hpp|hh)' # preludes
-    Priority: 4
+  - Regex: '".*"' # relative headers
+    Priority: 10
+  - Regex: '(bsoncxx|mongocxx)/config(/private)?/prelude\.(hpp|hh)' # v_noabi preludes
+    Priority: 50
+  - Regex: '(bsoncxx|mongocxx)/test/.*' # test headers
+    Priority: 60
   - Regex: '<[[:alnum:]_.]+>' # system headers
-    Priority: 1
-  - Regex: '.*(-|\/)fwd\.(hpp|hh)' # forwarding headers
-    Priority: 2
-  - Regex: '.*' # driver headers
-    Priority: 3
+    Priority: 20
+  - Regex: '(bsoncxx|mongocxx)/.*(-|\/)fwd\.(hpp|hh)' # all driver forwarding headers
+    Priority: 30
+  - Regex: '(bsoncxx|mongocxx)/.*' # all remaining (normal) driver headers
+    Priority: 40
+  - Regex: '.*' # all other headers (third party)
+    Priority: 90
 IndentWidth: 4
 MaxEmptyLinesToKeep: 1
 NamespaceIndentation: None

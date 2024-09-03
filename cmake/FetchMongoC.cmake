@@ -4,11 +4,18 @@ include(FetchContent)
 
 message(STATUS "Download and configure C driver version ${LIBMONGOC_DOWNLOAD_VERSION} ... begin")
 
+set(fetch_args "")
+if (CMAKE_VERSION VERSION_GREATER_EQUAL "3.25.0")
+    set(fetch_args "SYSTEM")
+endif()
+
 # Declare mongo-c-driver as a dependency
 FetchContent_Declare(
     mongo-c-driver
     GIT_REPOSITORY https://github.com/mongodb/mongo-c-driver.git
     GIT_TAG ${LIBMONGOC_DOWNLOAD_VERSION}
+
+    ${fetch_args}
 )
 
 FetchContent_GetProperties(mongo-c-driver)

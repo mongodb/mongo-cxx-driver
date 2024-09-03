@@ -19,13 +19,15 @@
 #include <bsoncxx/oid.hpp>
 #include <bsoncxx/stdx/operators.hpp>
 #include <bsoncxx/stdx/optional.hpp>
-#include <bsoncxx/test/to_string.hh>
-#include <third_party/catch/include/catch.hpp>
 
 #include <bsoncxx/config/private/prelude.hh>
 
+#include <bsoncxx/test/to_string.hh>
+
+#include <catch2/catch_test_macros.hpp>  // TEST_CASE, SECTION, CHECK, etc.
+#include <catch2/catch_tostring.hpp>     // Catch::StringMaker
+
 namespace Catch {
-using namespace bsoncxx;
 
 // Catch2 must be able to stringify documents, optionals, etc. if they're used in Catch2 macros.
 
@@ -39,7 +41,7 @@ struct StringMaker<bsoncxx::oid> {
 template <>
 struct StringMaker<bsoncxx::document::view> {
     static std::string convert(const bsoncxx::document::view& value) {
-        return bsoncxx::to_json(value, ExtendedJsonMode::k_relaxed);
+        return bsoncxx::to_json(value, bsoncxx::ExtendedJsonMode::k_relaxed);
     }
 };
 
@@ -60,6 +62,7 @@ struct StringMaker<bsoncxx::document::value> {
 template <>
 struct StringMaker<bsoncxx::types::bson_value::view> {
     static std::string convert(const bsoncxx::types::bson_value::view& value) {
+        using bsoncxx::to_string;
         return '{' + to_string(value.type()) + ": " + to_string(value) + '}';
     }
 };
@@ -79,7 +82,7 @@ struct StringMaker<bsoncxx::types::bson_value::view_or_value> {
 };
 
 template <typename T>
-struct StringMaker<stdx::optional<T>> {
+struct StringMaker<bsoncxx::stdx::optional<T>> {
     static std::string convert(const bsoncxx::stdx::optional<T>& value) {
         if (value) {
             return StringMaker<T>::convert(value.value());
@@ -90,7 +93,7 @@ struct StringMaker<stdx::optional<T>> {
 };
 
 template <>
-struct StringMaker<stdx::optional<bsoncxx::stdx::nullopt_t>> {
+struct StringMaker<bsoncxx::stdx::optional<bsoncxx::stdx::nullopt_t>> {
     static std::string convert(const bsoncxx::stdx::optional<bsoncxx::stdx::nullopt_t>&) {
         return "{nullopt}";
     }

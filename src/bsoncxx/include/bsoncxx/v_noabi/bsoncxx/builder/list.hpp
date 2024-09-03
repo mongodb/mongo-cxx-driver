@@ -160,7 +160,7 @@ class document : public list {
     ///
     /// Creates an empty document.
     ///
-    document() : list({}, false, false){};
+    document() : list({}, false, false) {}
 
     ///
     /// Creates a BSON document.
@@ -184,7 +184,7 @@ class array : public list {
     ///
     /// Creates an empty array.
     ///
-    array() : list({}, false, true){};
+    array() : list({}, false, true) {}
 
     ///
     /// Creates a BSON array.

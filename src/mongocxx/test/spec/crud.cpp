@@ -14,8 +14,9 @@
 
 #include <fstream>
 
-#include <bsoncxx/test/catch.hh>
 #include <mongocxx/instance.hpp>
+
+#include <bsoncxx/test/catch.hh>
 #include <mongocxx/test/spec/util.hh>
 
 namespace {

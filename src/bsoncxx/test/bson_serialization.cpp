@@ -17,8 +17,9 @@
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/string/to_string.hpp>
-#include <bsoncxx/test/catch.hh>
 #include <bsoncxx/types/bson_value/view.hpp>
+
+#include <bsoncxx/test/catch.hh>
 
 namespace {
 using namespace bsoncxx;

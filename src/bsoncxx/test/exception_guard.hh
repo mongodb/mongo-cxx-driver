@@ -22,9 +22,10 @@
 #include <vector>
 
 #include <bsoncxx/stdx/string_view.hpp>
-#include <bsoncxx/test/catch.hh>
 
 #include <bsoncxx/config/private/prelude.hh>
+
+#include <bsoncxx/test/catch.hh>
 
 namespace bsoncxx {
 namespace test {

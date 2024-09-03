@@ -17,6 +17,7 @@
 #include <bsoncxx/builder/basic/array.hpp>
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/basic/sub_array.hpp>
+
 #include <bsoncxx/test/catch.hh>
 
 namespace {

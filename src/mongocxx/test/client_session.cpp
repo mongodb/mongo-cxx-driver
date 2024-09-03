@@ -16,15 +16,18 @@
 
 #include <bsoncxx/private/helpers.hh>
 #include <bsoncxx/stdx/make_unique.hpp>
-#include <bsoncxx/test/catch.hh>
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/bulk_write_exception.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/exception/server_error_code.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/private/libmongoc.hh>
+
+#include <bsoncxx/test/catch.hh>
+#include <mongocxx/test/catch_helpers.hh>
 #include <mongocxx/test/client_helpers.hh>
-#include <third_party/catch/include/helpers.hpp>
+
+#include <catch2/generators/catch_generators.hpp>
 
 namespace {
 using bsoncxx::from_json;
@@ -155,7 +158,7 @@ TEST_CASE("session options", "[session]") {
 TEST_CASE("start_session failure", "[session]") {
     using namespace mongocxx::test_util;
 
-    MOCK_CLIENT
+    MOCK_CLIENT;
 
     instance::current();
 
@@ -232,8 +235,6 @@ TEST_CASE("session", "[session]") {
     }
 
     SECTION("wrong client") {
-        using Catch::Matchers::Contains;
-
         // "Session argument is for the right client" test from Driver Sessions Spec.
         // Passing a session from client "c" should fail with client "c2" and related objects.
         client c2{uri{}, test_util::add_test_server_api()};

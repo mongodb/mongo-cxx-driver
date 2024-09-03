@@ -12,6 +12,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+include(FetchCatch2)
+
 if(NOT BUILD_TESTING)
     set_property(DIRECTORY PROPERTY EXCLUDE_FROM_ALL TRUE)
 endif()
@@ -46,25 +48,28 @@ add_executable(test_bson
 
 # Common target properties for test executables.
 add_library(bsoncxx_test_properties INTERFACE)
+
+target_link_libraries(bsoncxx_test_properties INTERFACE Catch2::Catch2)
+target_compile_features(bsoncxx_test_properties INTERFACE cxx_std_14)
+
 target_link_libraries(bsoncxx_test_properties INTERFACE bsoncxx_testing ${libbson_target})
 target_include_directories(bsoncxx_test_properties INTERFACE
 
     # Allow `#include <bson/bson.h>`
     ${libbson_include_directories}
 
-    # Allow `#include <bsoncxx/test/...>` and `#include <third_party/...>`.
+    # Allow `#include <bsoncxx/test/...>`.
     ${CMAKE_CURRENT_SOURCE_DIR}/../..
 )
 target_compile_definitions(bsoncxx_test_properties INTERFACE ${libbson_definitions})
 add_library(bsoncxx::test_properties ALIAS bsoncxx_test_properties)
 
 # Avoid redundant recompilation of catch/main.cpp.
-add_library(bsoncxx_test_properties_with_main STATIC EXCLUDE_FROM_ALL ${THIRD_PARTY_SOURCE_DIR}/catch/main.cpp)
-target_link_libraries(bsoncxx_test_properties_with_main PUBLIC bsoncxx::test_properties)
+add_library(bsoncxx_test_properties_with_main INTERFACE)
+target_link_libraries(bsoncxx_test_properties_with_main INTERFACE bsoncxx::test_properties Catch2::Catch2WithMain)
 add_library(bsoncxx::test_properties_with_main ALIAS bsoncxx_test_properties_with_main)
 
-set_property(TARGET test_bson APPEND PROPERTY LINK_LIBRARIES bsoncxx::test_properties_with_main)
-
+target_link_libraries (test_bson PRIVATE bsoncxx::test_properties_with_main)
 add_test(NAME bson COMMAND test_bson)
 
 # Generate test to ensure macro guards behave properly.

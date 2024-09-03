@@ -105,7 +105,7 @@ sudo mock -r ${config} --use-bootstrap-image --isolation=simple --copyout "/tmp/
 sudo mock -r ${config} --use-bootstrap-image --isolation=simple --cwd "/tmp/${build_dir}" --chroot -- /bin/sh -c "(
   [ -d build ] || mkdir build ;
   cd build ;
-  /usr/bin/cmake -DCMAKE_BUILD_TYPE=Release -DBSONCXX_POLY_USE_BOOST=1 -DENABLE_UNINSTALL=OFF .. ;
+  /usr/bin/cmake -DCMAKE_BUILD_TYPE=Release -DBSONCXX_POLY_USE_BOOST=1 -DENABLE_UNINSTALL=OFF -DENABLE_TESTS=OFF .. ;
   make -j 8 dist
   )"
 

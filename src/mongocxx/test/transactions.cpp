@@ -15,11 +15,12 @@
 #include <iostream>
 #include <unordered_set>
 
-#include <bsoncxx/test/catch.hh>
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/instance.hpp>
+
+#include <bsoncxx/test/catch.hh>
 #include <mongocxx/test/client_helpers.hh>
 
 namespace {
@@ -455,11 +456,11 @@ TEST_CASE("Transactions Mongos Pinning Prose Tests", "[transactions]") {
     {
         mongocxx::client client{mongocxx::uri{"mongodb://localhost:27017"}};
         REQUIRE(client["config"].has_collection("shards"));
-    };
+    }
     {
         mongocxx::client client{mongocxx::uri{"mongodb://localhost:27018"}};
         REQUIRE(client["config"].has_collection("shards"));
-    };
+    }
 
     const auto uri =
         mongocxx::uri("mongodb://localhost:27017,localhost:27018/?localThresholdMS=1000");

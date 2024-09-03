@@ -16,10 +16,11 @@
 
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/string/to_string.hpp>
-#include <bsoncxx/test/catch.hh>
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/exception.hpp>
 #include <mongocxx/instance.hpp>
+
+#include <bsoncxx/test/catch.hh>
 #include <mongocxx/test/client_helpers.hh>
 #include <mongocxx/test/spec/monitoring.hh>
 #include <mongocxx/test/spec/operation.hh>

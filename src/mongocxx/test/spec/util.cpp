@@ -25,7 +25,6 @@
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/string/to_string.hpp>
-#include <bsoncxx/test/catch.hh>
 #include <mongocxx/client.hpp>
 #include <mongocxx/collection.hpp>
 #include <mongocxx/database.hpp>
@@ -38,11 +37,15 @@
 #include <mongocxx/pipeline.hpp>
 #include <mongocxx/result/delete.hpp>
 #include <mongocxx/result/insert_one.hpp>
+
+#include <mongocxx/config/private/prelude.hh>
+
+#include <bsoncxx/test/catch.hh>
 #include <mongocxx/test/spec/monitoring.hh>
 #include <mongocxx/test/spec/operation.hh>
 #include <mongocxx/test/spec/util.hh>
 
-#include <mongocxx/config/private/prelude.hh>
+#include <catch2/matchers/catch_matchers_string.hpp>
 
 namespace mongocxx {
 namespace spec {
@@ -776,7 +779,9 @@ void run_transaction_operations(
             auto error_contains =
                 test_util::tolowercase(op["result"]["errorContains"].get_string().value);
 
-            REQUIRE_THAT(error_msg, Catch::Contains(error_contains, Catch::CaseSensitive::No));
+            REQUIRE_THAT(
+                error_msg,
+                Catch::Matchers::ContainsSubstring(error_contains, Catch::CaseSensitive::No));
         }
 
         // "If the result document has an 'errorCodeName' field, verify that the method threw a

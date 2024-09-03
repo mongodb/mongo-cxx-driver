@@ -13,9 +13,10 @@
 // limitations under the License.
 
 #include <bsoncxx/builder/basic/document.hpp>
-#include <bsoncxx/test/catch.hh>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/result/update.hpp>
+
+#include <bsoncxx/test/catch.hh>
 
 namespace {
 using bsoncxx::builder::basic::kvp;
