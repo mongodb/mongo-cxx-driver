@@ -49,11 +49,12 @@ int main() {
 
     // This must be the same master key that was used to create
     // the encryption key; here, we use a random key as a placeholder.
-    char key_storage[kKeyLength];
-    std::generate_n(key_storage, kKeyLength, std::rand);
-    bsoncxx::types::b_binary local_master_key{bsoncxx::binary_sub_type::k_binary,
-                                              kKeyLength,
-                                              reinterpret_cast<const uint8_t*>(&key_storage)};
+    std::uint8_t key_storage[kKeyLength];
+    std::generate_n(key_storage, kKeyLength, []() {
+        return static_cast<std::uint8_t>(std::rand() % UINT8_MAX);
+    });
+    bsoncxx::types::b_binary local_master_key{
+        bsoncxx::binary_sub_type::k_binary, kKeyLength, key_storage};
 
     auto kms_providers = document{} << "local" << open_document << "key" << local_master_key
                                     << close_document << finalize;
