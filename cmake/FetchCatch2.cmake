@@ -6,7 +6,7 @@ message(STATUS "Downloading Catch2...")
 
 function(fetch_catch2)
     set(fetch_args "")
-    if ("${CMAKE_VERSION}" VERSION_GREATER_EQUAL "3.25.0")
+    if (CMAKE_VERSION VERSION_GREATER_EQUAL "3.25.0")
         set(fetch_args "SYSTEM")
     endif()
 

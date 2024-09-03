@@ -5,7 +5,7 @@ include(FetchContent)
 message(STATUS "Download and configure C driver version ${LIBMONGOC_DOWNLOAD_VERSION} ... begin")
 
 set(fetch_args "")
-if ("${CMAKE_VERSION}" VERSION_GREATER_EQUAL "3.25.0")
+if (CMAKE_VERSION VERSION_GREATER_EQUAL "3.25.0")
     set(fetch_args "SYSTEM")
 endif()
 
