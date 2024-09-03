@@ -56,6 +56,11 @@ class logger {
    public:
     virtual ~logger();
 
+    logger(logger&&) = default;
+    logger& operator=(logger&&) = default;
+    logger(const logger&) = default;
+    logger& operator=(const logger&) = default;
+
     ///
     /// Handles a log message. User defined logger implementations may do whatever they wish when
     /// this is called, such as log the output to a file or send it to a remote server for analysis.

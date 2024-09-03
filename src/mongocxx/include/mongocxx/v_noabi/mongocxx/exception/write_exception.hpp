@@ -30,6 +30,13 @@ namespace v_noabi {
 ///
 class write_exception : public operation_exception {
    public:
+    ~write_exception() override;
+
+    write_exception(write_exception&&) = default;
+    write_exception& operator=(write_exception&&) = default;
+    write_exception(const write_exception&) = default;
+    write_exception& operator=(const write_exception&) = default;
+
     using operation_exception::operation_exception;
 };
 

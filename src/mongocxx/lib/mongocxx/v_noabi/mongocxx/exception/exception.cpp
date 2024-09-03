@@ -12,40 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#pragma once
-
-#include <mongocxx/exception/logic_error-fwd.hpp>
-
 #include <mongocxx/exception/exception.hpp>
-
-#include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
 namespace v_noabi {
 
-///
-/// Class representing an exception caused by using the mongocxx API improperly.
-///
-/// @see mongocxx::v_noabi::exception
-///
-class logic_error : public exception {
-   public:
-    ~logic_error() override;
-
-    logic_error(logic_error&&) = default;
-    logic_error& operator=(logic_error&&) = default;
-    logic_error(const logic_error&) = default;
-    logic_error& operator=(const logic_error&) = default;
-
-    using exception::exception;
-};
+exception::~exception() = default;
 
 }  // namespace v_noabi
 }  // namespace mongocxx
-
-#include <mongocxx/config/postlude.hpp>
-
-///
-/// @file
-/// Provides @ref mongocxx::v_noabi::logic_error.
-///

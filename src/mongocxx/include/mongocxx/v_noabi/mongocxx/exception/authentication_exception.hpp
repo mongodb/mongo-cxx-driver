@@ -31,6 +31,13 @@ namespace v_noabi {
 ///
 class authentication_exception : public operation_exception {
    public:
+    ~authentication_exception() override;
+
+    authentication_exception(authentication_exception&&) = default;
+    authentication_exception& operator=(authentication_exception&&) = default;
+    authentication_exception(const authentication_exception&) = default;
+    authentication_exception& operator=(const authentication_exception&) = default;
+
     using operation_exception::operation_exception;
 };
 

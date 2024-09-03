@@ -36,6 +36,13 @@ namespace v_noabi {
 ///
 class operation_exception : public exception {
    public:
+    ~operation_exception() override;
+
+    operation_exception(operation_exception&&) = default;
+    operation_exception& operator=(operation_exception&&) = default;
+    operation_exception(const operation_exception&) = default;
+    operation_exception& operator=(const operation_exception&) = default;
+
     using exception::exception;
 
     ///

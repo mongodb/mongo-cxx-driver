@@ -43,6 +43,7 @@ add_library(spec_test_common OBJECT
 
 add_executable(test_driver
     bulk_write.cpp
+    catch_helpers.cpp
     change_streams.cpp
     client_session.cpp
     client_side_encryption.cpp
@@ -332,6 +333,7 @@ endif()
 set_dist_list(src_mongocxx_test_DIST
     CMakeLists.txt
     bulk_write.cpp
+    catch_helpers.cpp
     catch_helpers.hh
     change_streams.cpp
     client_helpers.cpp

@@ -31,6 +31,13 @@ namespace v_noabi {
 ///
 class gridfs_exception : public exception {
    public:
+    ~gridfs_exception() override;
+
+    gridfs_exception(gridfs_exception&&) = default;
+    gridfs_exception& operator=(gridfs_exception&&) = default;
+    gridfs_exception(const gridfs_exception&) = default;
+    gridfs_exception& operator=(const gridfs_exception&) = default;
+
     using exception::exception;
 };
 

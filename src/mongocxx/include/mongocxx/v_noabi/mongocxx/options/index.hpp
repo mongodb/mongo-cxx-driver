@@ -47,6 +47,13 @@ class index {
        public:
         virtual ~base_storage_options();
 
+        base_storage_options(base_storage_options&&) = default;
+        base_storage_options& operator=(base_storage_options&&) = default;
+        base_storage_options(const base_storage_options&) = default;
+        base_storage_options& operator=(const base_storage_options&) = default;
+
+        base_storage_options() = default;
+
        private:
         friend ::mongocxx::v_noabi::options::index;
 
@@ -59,6 +66,13 @@ class index {
     class MONGOCXX_ABI_EXPORT wiredtiger_storage_options final : public base_storage_options {
        public:
         ~wiredtiger_storage_options() override;
+
+        wiredtiger_storage_options(wiredtiger_storage_options&&) = default;
+        wiredtiger_storage_options& operator=(wiredtiger_storage_options&&) = default;
+        wiredtiger_storage_options(const wiredtiger_storage_options&) = default;
+        wiredtiger_storage_options& operator=(const wiredtiger_storage_options&) = default;
+
+        wiredtiger_storage_options() = default;
 
         ///
         /// Set the WiredTiger configuration string.

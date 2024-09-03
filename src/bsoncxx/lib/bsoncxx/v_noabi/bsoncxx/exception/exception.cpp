@@ -12,39 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#pragma once
-
-#include <system_error>
-
-#include <bsoncxx/exception/exception-fwd.hpp>
-
-#include <bsoncxx/config/prelude.hpp>
+#include <bsoncxx/exception/exception.hpp>
 
 namespace bsoncxx {
 namespace v_noabi {
 
-///
-/// Class representing any exceptions emitted from the bsoncxx library or
-/// its underlying implementation.
-///
-class exception : public std::system_error {
-   public:
-    ~exception() override;
-
-    exception(exception&&) = default;
-    exception& operator=(exception&&) = default;
-    exception(const exception&) = default;
-    exception& operator=(const exception&) = default;
-
-    using std::system_error::system_error;
-};
+exception::~exception() = default;
 
 }  // namespace v_noabi
 }  // namespace bsoncxx
-
-#include <bsoncxx/config/postlude.hpp>
-
-///
-/// @file
-/// Provides @ref bsoncxx::v_noabi::exception.
-///

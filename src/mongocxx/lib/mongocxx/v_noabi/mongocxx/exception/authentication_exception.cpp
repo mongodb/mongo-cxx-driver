@@ -12,39 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#pragma once
-
-#include <string>
-#include <system_error>
-
-#include <mongocxx/exception/exception-fwd.hpp>
-
-#include <mongocxx/config/prelude.hpp>
+#include <mongocxx/exception/authentication_exception.hpp>
 
 namespace mongocxx {
 namespace v_noabi {
 
-///
-/// A class to be used as the base class for all mongocxx exceptions.
-///
-class exception : public std::system_error {
-   public:
-    ~exception() override;
-
-    exception(exception&&) = default;
-    exception& operator=(exception&&) = default;
-    exception(const exception&) = default;
-    exception& operator=(const exception&) = default;
-
-    using system_error::system_error;
-};
+authentication_exception::~authentication_exception() = default;
 
 }  // namespace v_noabi
 }  // namespace mongocxx
-
-#include <mongocxx/config/postlude.hpp>
-
-///
-/// @file
-/// Provides @ref mongocxx::v_noabi::exception.
-///
