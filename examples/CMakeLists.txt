@@ -66,6 +66,9 @@ function(add_examples_executable source)
     add_executable(${target_name} EXCLUDE_FROM_ALL ${source})
     target_link_libraries(${target_name} PRIVATE ${PARSED_LIBRARIES})
 
+    # Permit `#include <examples/macros.hh>`.
+    target_include_directories(${target_name} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/..)
+
     # Keep executables in separate directories.
     set_target_properties(${target_name} PROPERTIES
         OUTPUT_NAME ${name}
@@ -123,6 +126,12 @@ file(GLOB_RECURSE mongocxx_examples_sources
     "mongocxx/*.cpp"
 )
 
+file(GLOB_RECURSE examples_headers
+    RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
+    CONFIGURE_DEPENDS
+    "*.hh"
+)
+
 foreach(source ${api_examples_sources})
     add_examples_executable(${source} LIBRARIES mongocxx_target)
 endforeach()
@@ -155,6 +164,7 @@ set_local_dist (examples_DIST_local
    ${api_examples_sources}
    ${bsoncxx_examples_sources}
    ${mongocxx_examples_sources}
+   ${examples_headers}
    README.md
    add_subdirectory/.gitignore
    add_subdirectory/CMakeLists.txt

@@ -32,6 +32,8 @@
 #include <mongocxx/options/data_key.hpp>
 #include <mongocxx/options/encrypt.hpp>
 
+#include <examples/macros.hh>
+
 using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_document;
 

@@ -14,6 +14,8 @@
 #include <mongocxx/stdx.hpp>
 #include <mongocxx/uri.hpp>
 
+#include <examples/macros.hh>
+
 // Redefine assert after including headers. Release builds may undefine the assert macro and result
 // in -Wunused-variable warnings.
 #if defined(NDEBUG) || !defined(assert)
@@ -31,7 +33,7 @@ using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_array;
 using bsoncxx::builder::basic::make_document;
 
-int main() {
+int EXAMPLES_CDECL main() {
     mongocxx::instance instance{};  // This should be done only once.
     mongocxx::uri uri("mongodb://localhost:27017");
     mongocxx::client client(uri);

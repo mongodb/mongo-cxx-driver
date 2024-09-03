@@ -25,6 +25,8 @@
 #include <mongocxx/options/find.hpp>
 #include <mongocxx/uri.hpp>
 
+#include <examples/macros.hh>
+
 using bsoncxx::builder::basic::document;
 using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_document;

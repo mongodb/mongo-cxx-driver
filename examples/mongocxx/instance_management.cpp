@@ -23,6 +23,8 @@
 #include <mongocxx/pool.hpp>
 #include <mongocxx/uri.hpp>
 
+#include <examples/macros.hh>
+
 namespace {
 
 // The mongocxx::instance constructor and destructor initialize and shut down the driver,

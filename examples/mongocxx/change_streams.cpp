@@ -26,6 +26,8 @@
 #include <mongocxx/pool.hpp>
 #include <mongocxx/uri.hpp>
 
+#include <examples/macros.hh>
+
 namespace {
 
 // watch_forever iterates the change stream until an error occurs.
@@ -47,7 +49,7 @@ namespace {
 
 }  // namespace
 
-int main(int argc, char* argv[]) {
+int EXAMPLES_CDECL main(int argc, char* argv[]) {
     if (std::getenv("MONGOCXX_TEST_TOPOLOGY")) {
         std::cerr << "Skipping: change_streams example should not be run by tests" << std::endl;
         return 0;

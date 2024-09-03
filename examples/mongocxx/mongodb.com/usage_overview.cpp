@@ -24,10 +24,12 @@
 #include <mongocxx/instance.hpp>
 #include <mongocxx/uri.hpp>
 
+#include <examples/macros.hh>
+
 // NOTE: Any time this file is modified, a WEBSITE ticket should be opened to sync the changes with
 // the "What is MongoDB" webpage, which the example was originally added to as part of WEBSITE-5148.
 
-int main() {
+int EXAMPLES_CDECL main() {
     // 1. Connect to MongoDB instance running on localhost
     mongocxx::instance instance{};
     mongocxx::client client{mongocxx::uri{}};

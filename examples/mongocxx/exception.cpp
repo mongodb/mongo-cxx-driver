@@ -27,10 +27,12 @@
 #include <mongocxx/instance.hpp>
 #include <mongocxx/uri.hpp>
 
+#include <examples/macros.hh>
+
 using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_document;
 
-int main() {
+int EXAMPLES_CDECL main() {
     // Do not print error messages when run in CI to prevent MSBuild diagnostic format detection
     // from causing build failures. There is currently no way to specify
     // IgnoreStandardErrorWarningFormat=true via CMake or CLI. See:

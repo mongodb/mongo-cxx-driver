@@ -20,6 +20,8 @@
 #include <mongocxx/client.hpp>
 #include <mongocxx/instance.hpp>
 
+#include <examples/macros.hh>
+
 using bsoncxx::type;
 using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_array;

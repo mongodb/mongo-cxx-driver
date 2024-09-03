@@ -19,6 +19,8 @@
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/json.hpp>
 
+#include <examples/macros.hh>
+
 using namespace bsoncxx;
 
 // concatenates arbitrary ranges into an array context
@@ -68,7 +70,7 @@ range_kvp_appender<begin_t, end_t> make_range_kvp_appender(begin_t&& begin, end_
                                               std::forward<end_t>(end));
 }
 
-int main() {
+int EXAMPLES_CDECL main() {
     using builder::stream::array;
     using builder::stream::document;
     using builder::stream::finalize;
