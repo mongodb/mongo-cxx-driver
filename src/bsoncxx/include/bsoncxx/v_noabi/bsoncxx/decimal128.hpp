@@ -55,14 +55,14 @@ class decimal128 {
     /// @throws bsoncxx::v_noabi::exception if the string isn't a valid BSON Decimal128
     /// representation.
     ///
-    explicit decimal128(stdx::string_view str);
+    explicit BSONCXX_ABI_EXPORT_CDECL() decimal128(stdx::string_view str);
 
     ///
     /// Converts this decimal128 value to a string representation.
     ///
     /// @return A string representation of a IEEE 754-2008 decimal number.
     ///
-    std::string to_string() const;
+    BSONCXX_ABI_EXPORT_CDECL(std::string) to_string() const;
 
     ///
     /// @relates bsoncxx::v_noabi::decimal128
@@ -70,22 +70,22 @@ class decimal128 {
     /// Relational operators for decimal128
     ///
     /// @{
-    friend BSONCXX_API bool BSONCXX_CALL operator==(const decimal128& lhs, const decimal128& rhs);
-    friend BSONCXX_API bool BSONCXX_CALL operator!=(const decimal128& lhs, const decimal128& rhs);
+    friend BSONCXX_ABI_EXPORT_CDECL(bool) operator==(const decimal128& lhs, const decimal128& rhs);
+    friend BSONCXX_ABI_EXPORT_CDECL(bool) operator!=(const decimal128& lhs, const decimal128& rhs);
     /// @}
     ///
 
     ///
     /// Accessor for high 64 bits.
     ///
-    BSONCXX_INLINE uint64_t high() const {
+    uint64_t high() const {
         return _high;
     }
 
     ///
     /// Accessor for low 64 bits.
     ///
-    BSONCXX_INLINE uint64_t low() const {
+    uint64_t low() const {
         return _low;
     }
 

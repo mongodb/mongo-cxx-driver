@@ -78,27 +78,27 @@ int oid_compare(const oid& lhs, const oid& rhs) {
     return bson_oid_compare(&lhs_oid, &rhs_oid);
 }
 
-bool BSONCXX_CALL operator<(const oid& lhs, const oid& rhs) {
+bool operator<(const oid& lhs, const oid& rhs) {
     return oid_compare(lhs, rhs) < 0;
 }
 
-bool BSONCXX_CALL operator>(const oid& lhs, const oid& rhs) {
+bool operator>(const oid& lhs, const oid& rhs) {
     return oid_compare(lhs, rhs) > 0;
 }
 
-bool BSONCXX_CALL operator<=(const oid& lhs, const oid& rhs) {
+bool operator<=(const oid& lhs, const oid& rhs) {
     return oid_compare(lhs, rhs) <= 0;
 }
 
-bool BSONCXX_CALL operator>=(const oid& lhs, const oid& rhs) {
+bool operator>=(const oid& lhs, const oid& rhs) {
     return oid_compare(lhs, rhs) >= 0;
 }
 
-bool BSONCXX_CALL operator==(const oid& lhs, const oid& rhs) {
+bool operator==(const oid& lhs, const oid& rhs) {
     return oid_compare(lhs, rhs) == 0;
 }
 
-bool BSONCXX_CALL operator!=(const oid& lhs, const oid& rhs) {
+bool operator!=(const oid& lhs, const oid& rhs) {
     return oid_compare(lhs, rhs) != 0;
 }
 

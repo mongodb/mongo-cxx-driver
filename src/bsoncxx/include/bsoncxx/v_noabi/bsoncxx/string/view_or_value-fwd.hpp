@@ -20,7 +20,7 @@ namespace bsoncxx {
 namespace v_noabi {
 namespace string {
 
-class BSONCXX_API view_or_value;
+class view_or_value;
 
 }  // namespace string
 }  // namespace v_noabi

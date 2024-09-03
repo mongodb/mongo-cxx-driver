@@ -54,7 +54,7 @@ std::string to_json_helper(document::view view, decltype(bson_as_json) converter
 
 }  // namespace
 
-std::string BSONCXX_CALL to_json(document::view view, ExtendedJsonMode mode) {
+std::string to_json(document::view view, ExtendedJsonMode mode) {
     switch (mode) {
         case ExtendedJsonMode::k_legacy:
             return to_json_helper(view, bson_as_json);
@@ -69,7 +69,7 @@ std::string BSONCXX_CALL to_json(document::view view, ExtendedJsonMode mode) {
     BSONCXX_UNREACHABLE;
 }
 
-std::string BSONCXX_CALL to_json(array::view view, ExtendedJsonMode mode) {
+std::string to_json(array::view view, ExtendedJsonMode mode) {
     switch (mode) {
         case ExtendedJsonMode::k_legacy:
             return to_json_helper(view, bson_array_as_json);
@@ -84,7 +84,7 @@ std::string BSONCXX_CALL to_json(array::view view, ExtendedJsonMode mode) {
     BSONCXX_UNREACHABLE;
 }
 
-document::value BSONCXX_CALL from_json(stdx::string_view json) {
+document::value from_json(stdx::string_view json) {
     bson_error_t error;
     bson_t* result = bson_new_from_json(reinterpret_cast<const uint8_t*>(json.data()),
                                         static_cast<std::int32_t>(json.size()),

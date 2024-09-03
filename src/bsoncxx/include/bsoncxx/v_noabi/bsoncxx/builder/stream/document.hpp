@@ -42,19 +42,19 @@ class document : public key_context<> {
     ///
     /// Default constructor.
     ///
-    BSONCXX_INLINE document() : key_context<>(&_core), _core(false) {}
+    document() : key_context<>(&_core), _core(false) {}
 
     ///
     /// @return A view of the BSON document.
     ///
-    BSONCXX_INLINE bsoncxx::v_noabi::document::view view() const {
+    bsoncxx::v_noabi::document::view view() const {
         return _core.view_document();
     }
 
     ///
     /// @return A view of the BSON document.
     ///
-    BSONCXX_INLINE operator bsoncxx::v_noabi::document::view() const {
+    operator bsoncxx::v_noabi::document::view() const {
         return view();
     }
 
@@ -67,14 +67,14 @@ class document : public key_context<> {
     ///  After calling extract() it is illegal to call any methods
     ///  on this class, unless it is subsequenly moved into.
     ///
-    BSONCXX_INLINE bsoncxx::v_noabi::document::value extract() {
+    bsoncxx::v_noabi::document::value extract() {
         return _core.extract_document();
     }
 
     ///
     /// Reset the underlying BSON to an empty document.
     ///
-    BSONCXX_INLINE void clear() {
+    void clear() {
         _core.clear();
     }
 

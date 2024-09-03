@@ -19,7 +19,7 @@
 namespace bsoncxx {
 namespace v_noabi {
 
-class BSONCXX_API oid;
+class oid;
 
 }  // namespace v_noabi
 }  // namespace bsoncxx

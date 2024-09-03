@@ -38,7 +38,7 @@ struct concatenate_doc {
     ///
     /// @return A view of the wrapped concatenate document.
     ///
-    BSONCXX_INLINE operator document::view() const {
+    operator document::view() const {
         return doc;
     }
 
@@ -48,7 +48,7 @@ struct concatenate_doc {
     ///
     /// @return A view of the wrapped concatenate document.
     ///
-    BSONCXX_INLINE document::view view() const {
+    document::view view() const {
         return doc;
     }
 };
@@ -66,7 +66,7 @@ struct concatenate_array {
     ///
     /// @return A view of the wrapped concatenate array.
     ///
-    BSONCXX_INLINE operator array::view() const {
+    operator array::view() const {
         return array;
     }
 
@@ -76,7 +76,7 @@ struct concatenate_array {
     ///
     /// @return A view of the wrapped concatenate array.
     ///
-    BSONCXX_INLINE array::view view() const {
+    array::view view() const {
         return array;
     }
 };
@@ -93,7 +93,7 @@ struct concatenate_array {
 ///
 /// @see bsoncxx::v_noabi::builder::concatenate_doc
 ///
-BSONCXX_INLINE concatenate_doc concatenate(document::view_or_value doc) {
+inline concatenate_doc concatenate(document::view_or_value doc) {
     return {std::move(doc)};
 }
 
@@ -109,7 +109,7 @@ BSONCXX_INLINE concatenate_doc concatenate(document::view_or_value doc) {
 ///
 /// @see bsoncxx::v_noabi::builder::concatenate_doc
 ///
-BSONCXX_INLINE concatenate_array concatenate(array::view_or_value array) {
+inline concatenate_array concatenate(array::view_or_value array) {
     return {std::move(array)};
 }
 

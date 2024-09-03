@@ -23,7 +23,7 @@ namespace v_noabi {
 #include <bsoncxx/enums/type.hpp>
 #undef BSONCXX_ENUM
 
-std::string BSONCXX_CALL to_string(type rhs) {
+std::string to_string(type rhs) {
     switch (static_cast<uint8_t>(rhs)) {
 #define BSONCXX_ENUM(name, val) \
     case val:                   \
@@ -36,7 +36,7 @@ std::string BSONCXX_CALL to_string(type rhs) {
     }
 }
 
-std::string BSONCXX_CALL to_string(binary_sub_type rhs) {
+std::string to_string(binary_sub_type rhs) {
     switch (static_cast<uint8_t>(rhs)) {
 #define BSONCXX_ENUM(name, val) \
     case val:                   \

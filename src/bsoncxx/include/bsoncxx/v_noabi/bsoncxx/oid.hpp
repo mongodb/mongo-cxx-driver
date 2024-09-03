@@ -44,7 +44,7 @@ class oid {
     ///
     /// Constructs an oid and initializes it to a newly generated ObjectId.
     ///
-    oid();
+    BSONCXX_ABI_EXPORT_CDECL() oid();
 
     ///
     /// Constructs an oid initializes it to the contents of the provided buffer.
@@ -56,7 +56,7 @@ class oid {
     ///
     /// @throws bsoncxx::v_noabi::exception if the length is not equal to oid::size().
     ///
-    explicit oid(const char* bytes, std::size_t len);
+    explicit BSONCXX_ABI_EXPORT_CDECL() oid(const char* bytes, std::size_t len);
 
     ///
     /// Constructs an oid and initializes it from the provided hex string.
@@ -67,14 +67,14 @@ class oid {
     /// @throws bsoncxx::v_noabi::exception if the string isn't an OID-sized hex
     /// string.
     ///
-    explicit oid(const stdx::string_view& str);
+    explicit BSONCXX_ABI_EXPORT_CDECL() oid(const stdx::string_view& str);
 
     ///
     /// Converts this oid to a hexadecimal string.
     ///
     /// @return A hexadecimal string representation of this ObjectId.
     ///
-    std::string to_string() const;
+    BSONCXX_ABI_EXPORT_CDECL(std::string) to_string() const;
 
     ///
     /// Returns the number of bytes in this ObjectId.
@@ -91,12 +91,12 @@ class oid {
     /// Relational operators for OIDs.
     ///
     /// @{
-    friend BSONCXX_API bool BSONCXX_CALL operator<(const oid& lhs, const oid& rhs);
-    friend BSONCXX_API bool BSONCXX_CALL operator>(const oid& lhs, const oid& rhs);
-    friend BSONCXX_API bool BSONCXX_CALL operator<=(const oid& lhs, const oid& rhs);
-    friend BSONCXX_API bool BSONCXX_CALL operator>=(const oid& lhs, const oid& rhs);
-    friend BSONCXX_API bool BSONCXX_CALL operator==(const oid& lhs, const oid& rhs);
-    friend BSONCXX_API bool BSONCXX_CALL operator!=(const oid& lhs, const oid& rhs);
+    friend BSONCXX_ABI_EXPORT_CDECL(bool) operator<(const oid& lhs, const oid& rhs);
+    friend BSONCXX_ABI_EXPORT_CDECL(bool) operator>(const oid& lhs, const oid& rhs);
+    friend BSONCXX_ABI_EXPORT_CDECL(bool) operator<=(const oid& lhs, const oid& rhs);
+    friend BSONCXX_ABI_EXPORT_CDECL(bool) operator>=(const oid& lhs, const oid& rhs);
+    friend BSONCXX_ABI_EXPORT_CDECL(bool) operator==(const oid& lhs, const oid& rhs);
+    friend BSONCXX_ABI_EXPORT_CDECL(bool) operator!=(const oid& lhs, const oid& rhs);
     /// @}
     ///
 
@@ -106,17 +106,17 @@ class oid {
     ///
     /// @return A std::time_t initialized to the timestamp.
     ///
-    std::time_t get_time_t() const;
+    BSONCXX_ABI_EXPORT_CDECL(std::time_t) get_time_t() const;
 
     ///
     /// An accessor for the internal data buffer in the oid.
     ///
     /// @return A pointer to the internal buffer holding the oid bytes.
     ///
-    const char* bytes() const;
+    BSONCXX_ABI_EXPORT_CDECL(const char*) bytes() const;
 
    private:
-    friend BSONCXX_PRIVATE int oid_compare(const oid& lhs, const oid& rhs);
+    friend int oid_compare(const oid& lhs, const oid& rhs);
 
     std::array<char, k_oid_length> _bytes;
 };

@@ -44,19 +44,19 @@ class array : public array_context<> {
     ///
     /// Default constructor.
     ///
-    BSONCXX_INLINE array() : array_context<>(&_core), _core(true) {}
+    array() : array_context<>(&_core), _core(true) {}
 
     ///
     /// @return A view of the BSON array.
     ///
-    BSONCXX_INLINE bsoncxx::v_noabi::array::view view() const {
+    bsoncxx::v_noabi::array::view view() const {
         return _core.view_array();
     }
 
     ///
     /// @return A view of the BSON array.
     ///
-    BSONCXX_INLINE operator bsoncxx::v_noabi::array::view() const {
+    operator bsoncxx::v_noabi::array::view() const {
         return view();
     }
 
@@ -69,14 +69,14 @@ class array : public array_context<> {
     ///  After calling extract() it is illegal to call any methods
     ///  on this class, unless it is subsequenly moved into.
     ///
-    BSONCXX_INLINE bsoncxx::v_noabi::array::value extract() {
+    bsoncxx::v_noabi::array::value extract() {
         return _core.extract_array();
     }
 
     ///
     /// Reset the underlying BSON to an empty array.
     ///
-    BSONCXX_INLINE void clear() {
+    void clear() {
         _core.clear();
     }
 

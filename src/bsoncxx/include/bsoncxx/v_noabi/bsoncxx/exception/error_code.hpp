@@ -117,7 +117,7 @@ enum class error_code : std::int32_t {
 ///
 /// @return The bsoncxx error_category
 ///
-BSONCXX_API const std::error_category& BSONCXX_CALL error_category();
+BSONCXX_ABI_EXPORT_CDECL(const std::error_category&) error_category();
 
 ///
 /// Translate a bsoncxx::v_noabi::error_code into a std::error_code.
@@ -125,7 +125,7 @@ BSONCXX_API const std::error_category& BSONCXX_CALL error_category();
 /// @param error An error from bsoncxx
 /// @return An error_code
 ///
-BSONCXX_INLINE std::error_code make_error_code(error_code error) {
+inline std::error_code make_error_code(error_code error) {
     return {static_cast<int>(error), error_category()};
 }
 

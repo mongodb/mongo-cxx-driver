@@ -38,7 +38,7 @@ namespace array {
 ///
 class element : private document::element {
    public:
-    element();
+    BSONCXX_ABI_EXPORT_CDECL() element();
 
     using document::element::operator bool;
 
@@ -80,12 +80,12 @@ class element : private document::element {
    private:
     friend ::bsoncxx::v_noabi::array::view;
 
-    BSONCXX_PRIVATE explicit element(const std::uint8_t* raw,
-                                     std::uint32_t length,
-                                     std::uint32_t offset,
-                                     std::uint32_t keylen);
+    explicit element(const std::uint8_t* raw,
+                     std::uint32_t length,
+                     std::uint32_t offset,
+                     std::uint32_t keylen);
 
-    BSONCXX_PRIVATE explicit element(const stdx::string_view key);
+    explicit element(const stdx::string_view key);
 };
 
 ///
@@ -96,16 +96,16 @@ class element : private document::element {
 /// @{
 
 /// @relatesalso bsoncxx::v_noabi::array::element
-BSONCXX_API bool BSONCXX_CALL operator==(const element& elem, const types::bson_value::view& v);
+BSONCXX_ABI_EXPORT_CDECL(bool) operator==(const element& elem, const types::bson_value::view& v);
 
 /// @relatesalso bsoncxx::v_noabi::array::element
-BSONCXX_API bool BSONCXX_CALL operator==(const types::bson_value::view& v, const element& elem);
+BSONCXX_ABI_EXPORT_CDECL(bool) operator==(const types::bson_value::view& v, const element& elem);
 
 /// @relatesalso bsoncxx::v_noabi::array::element
-BSONCXX_API bool BSONCXX_CALL operator!=(const element& elem, const types::bson_value::view& v);
+BSONCXX_ABI_EXPORT_CDECL(bool) operator!=(const element& elem, const types::bson_value::view& v);
 
 /// @relatesalso bsoncxx::v_noabi::array::element
-BSONCXX_API bool BSONCXX_CALL operator!=(const types::bson_value::view& v, const element& elem);
+BSONCXX_ABI_EXPORT_CDECL(bool) operator!=(const types::bson_value::view& v, const element& elem);
 
 /// @}
 ///

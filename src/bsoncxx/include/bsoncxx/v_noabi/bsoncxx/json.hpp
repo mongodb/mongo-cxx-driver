@@ -50,11 +50,11 @@ enum class ExtendedJsonMode : std::uint8_t {
 ///
 /// @{
 
-BSONCXX_API std::string BSONCXX_CALL to_json(document::view view,
-                                             ExtendedJsonMode mode = ExtendedJsonMode::k_legacy);
+BSONCXX_ABI_EXPORT_CDECL(std::string)
+to_json(document::view view, ExtendedJsonMode mode = ExtendedJsonMode::k_legacy);
 
-BSONCXX_API std::string BSONCXX_CALL to_json(array::view view,
-                                             ExtendedJsonMode mode = ExtendedJsonMode::k_legacy);
+BSONCXX_ABI_EXPORT_CDECL(std::string)
+to_json(array::view view, ExtendedJsonMode mode = ExtendedJsonMode::k_legacy);
 
 /// @}
 ///
@@ -68,7 +68,7 @@ BSONCXX_API std::string BSONCXX_CALL to_json(array::view view,
 ///
 /// @throws bsoncxx::v_noabi::exception with error details if the conversion failed.
 ///
-BSONCXX_API document::value BSONCXX_CALL from_json(stdx::string_view json);
+BSONCXX_ABI_EXPORT_CDECL(document::value) from_json(stdx::string_view json);
 
 ///
 /// Constructs a new document::value from the provided JSON text. This is the UDL version of

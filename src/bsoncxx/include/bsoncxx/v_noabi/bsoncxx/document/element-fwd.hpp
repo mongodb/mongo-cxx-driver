@@ -20,7 +20,7 @@ namespace bsoncxx {
 namespace v_noabi {
 namespace document {
 
-class BSONCXX_API element;
+class element;
 
 }  // namespace document
 }  // namespace v_noabi
