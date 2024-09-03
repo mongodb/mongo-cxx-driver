@@ -80,8 +80,8 @@ function(add_macro_guard_test)
         "static_assert(compare_equal(\"abc\", \"abc\"), \"compare_equal() sanity check failed\");\n"
         "static_assert(!compare_equal(\"abc\", \"def\"), \"compare_equal() sanity check failed\");\n"
         "\n"
-        "#define _TO_STR(x) #x\n"
-        "#define TO_STR(x) _TO_STR(x)\n"
+        "#define TO_STR_1(x) #x\n"
+        "#define TO_STR(x) TO_STR_1(x)\n"
         "\n"
     )
 
