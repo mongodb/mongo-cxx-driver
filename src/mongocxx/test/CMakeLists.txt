@@ -157,10 +157,13 @@ target_include_directories(mongocxx_test_properties INTERFACE
     # Allow `#include <mongocxx/test/...>`.
     ${CMAKE_CURRENT_SOURCE_DIR}/../..
 )
+# Use `__vectorcall` by default with MSVC to catch missing `__cdecl`.
+target_compile_options(mongocxx_test_properties INTERFACE "$<$<CXX_COMPILER_ID:MSVC>:/Gv>")
 add_library(mongocxx::test_properties ALIAS mongocxx_test_properties)
 
 add_library(mongocxx_test_properties_with_main INTERFACE)
-target_link_libraries(mongocxx_test_properties_with_main INTERFACE mongocxx::test_properties Catch2::Catch2WithMain)
+target_link_libraries(mongocxx_test_properties_with_main INTERFACE mongocxx::test_properties)
+target_sources(mongocxx_test_properties_with_main INTERFACE catch.cpp)
 add_library(mongocxx::test_properties_with_main ALIAS mongocxx_test_properties_with_main)
 
 set_property(
@@ -335,6 +338,7 @@ set_dist_list(src_mongocxx_test_DIST
     bulk_write.cpp
     catch_helpers.cpp
     catch_helpers.hh
+    catch.cpp
     change_streams.cpp
     client_helpers.cpp
     client_helpers.hh

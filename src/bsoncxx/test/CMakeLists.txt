@@ -36,6 +36,7 @@ add_executable(test_bson
     bson_util_itoa.cpp
     bson_validate.cpp
     bson_value.cpp
+    catch.cpp
     exception_guard.cpp
     json.cpp
     oid.cpp
@@ -62,11 +63,14 @@ target_include_directories(bsoncxx_test_properties INTERFACE
     ${CMAKE_CURRENT_SOURCE_DIR}/../..
 )
 target_compile_definitions(bsoncxx_test_properties INTERFACE ${libbson_definitions})
+# Use `__vectorcall` by default with MSVC to catch missing `__cdecl`.
+target_compile_options(bsoncxx_test_properties INTERFACE "$<$<CXX_COMPILER_ID:MSVC>:/Gv>")
 add_library(bsoncxx::test_properties ALIAS bsoncxx_test_properties)
 
 # Avoid redundant recompilation of catch/main.cpp.
 add_library(bsoncxx_test_properties_with_main INTERFACE)
-target_link_libraries(bsoncxx_test_properties_with_main INTERFACE bsoncxx::test_properties Catch2::Catch2WithMain)
+target_link_libraries(bsoncxx_test_properties_with_main INTERFACE bsoncxx::test_properties)
+target_sources(bsoncxx_test_properties INTERFACE catch.cpp)
 add_library(bsoncxx::test_properties_with_main ALIAS bsoncxx_test_properties_with_main)
 
 target_link_libraries (test_bson PRIVATE bsoncxx::test_properties_with_main)
@@ -158,6 +162,7 @@ set_dist_list(src_bsoncxx_test_DIST
     bson_util_itoa.cpp
     bson_validate.cpp
     bson_value.cpp
+    catch.cpp
     catch.hh
     exception_guard.cpp
     exception_guard.hh

@@ -30,6 +30,11 @@ function(fetch_catch2)
         string(REPLACE " -Werror" "" CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
         string(REPLACE " -Werror" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 
+        # Ensure consistent default calling convention with test executables.
+        if(MSVC)
+            string(APPEND CMAKE_CXX_FLAGS " /Gv")
+        endif()
+
         FetchContent_MakeAvailable(EP_Catch2)
 
         # Avoid building unnecessary targets. Use FetchContent_Declare(EXCLUDE_FROM_ALL) in CMake 3.28 and newer.

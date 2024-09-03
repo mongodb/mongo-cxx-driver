@@ -75,7 +75,7 @@ function(add_examples_executable source)
         RUNTIME_OUTPUT_DIRECTORY ${subdir}
     )
 
-    # Deliberately use `__vectorcall` by default with MSVC to catch missing `__cdecl`.
+    # Use `__vectorcall` by default with MSVC to catch missing `__cdecl`.
     target_compile_options(${target_name} PRIVATE "$<$<CXX_COMPILER_ID:MSVC>:/Gv>")
 
     # Keep build and run targets completely separate.
