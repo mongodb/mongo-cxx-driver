@@ -88,6 +88,11 @@ function(add_macro_guard_test)
     add_library(test_${PARSED_PROJECT_NAME}_macro_guards STATIC EXCLUDE_FROM_ALL)
     target_link_libraries(test_${PARSED_PROJECT_NAME}_macro_guards PRIVATE ${PARSED_PROJECT_TEST_PROPERTIES_TARGET})
 
+    # Avoid noisy warnings.
+    target_compile_options(test_${PARSED_PROJECT_NAME}_macro_guards PRIVATE
+        $<$<CXX_COMPILER_ID:GNU,Clang>:-Wno-unused-macros>
+    )
+
     # Test each header individually.
     foreach(header ${GUARDED_HEADERS})
         set(MACRO_GUARD_TEST "${MACRO_GUARD_TEST_PRELUDE}")
