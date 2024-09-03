@@ -19,7 +19,7 @@
 namespace mongocxx {
 namespace v_noabi {
 
-class MONGOCXX_API bulk_write_exception;
+class MONGOCXX_ABI_EXPORT bulk_write_exception;
 
 }  // namespace v_noabi
 }  // namespace mongocxx

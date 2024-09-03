@@ -77,32 +77,32 @@ class read_concern {
     /// run with this read_concern will use the server's default read_concern instead of
     /// specifying one.
     ///
-    read_concern();
+    MONGOCXX_ABI_EXPORT_CDECL() read_concern();
 
     ///
     /// Copy constructs a read_concern.
     ///
-    read_concern(const read_concern&);
+    MONGOCXX_ABI_EXPORT_CDECL() read_concern(const read_concern&);
 
     ///
     /// Copy assigns a read_concern.
     ///
-    read_concern& operator=(const read_concern&);
+    MONGOCXX_ABI_EXPORT_CDECL(read_concern&) operator=(const read_concern&);
 
     ///
     /// Move constructs a read_concern.
     ///
-    read_concern(read_concern&&) noexcept;
+    MONGOCXX_ABI_EXPORT_CDECL() read_concern(read_concern&&) noexcept;
 
     ///
     /// Move assigns a read_concern.
     ///
-    read_concern& operator=(read_concern&&) noexcept;
+    MONGOCXX_ABI_EXPORT_CDECL(read_concern&) operator=(read_concern&&) noexcept;
 
     ///
     /// Destroys a read_concern.
     ///
-    ~read_concern();
+    MONGOCXX_ABI_EXPORT_CDECL() ~read_concern();
 
     ///
     /// Sets the read concern level.
@@ -114,7 +114,7 @@ class read_concern {
     ///   mongocxx::v_noabi::exception if rc_level is not k_local, k_majority, k_linearizable, or
     ///   k_server_default.
     ///
-    void acknowledge_level(level rc_level);
+    MONGOCXX_ABI_EXPORT_CDECL(void) acknowledge_level(level rc_level);
 
     ///
     /// Gets the current read concern level.
@@ -124,7 +124,7 @@ class read_concern {
     ///
     /// @return The read concern level.
     ///
-    level acknowledge_level() const;
+    MONGOCXX_ABI_EXPORT_CDECL(level) acknowledge_level() const;
 
     ///
     /// Sets the read concern string. Any valid read concern string (e.g. "local",
@@ -135,7 +135,7 @@ class read_concern {
     /// @param rc_string
     ///   The read concern string.
     ///
-    void acknowledge_string(stdx::string_view rc_string);
+    MONGOCXX_ABI_EXPORT_CDECL(void) acknowledge_string(stdx::string_view rc_string);
 
     ///
     /// Gets the current read concern string.
@@ -145,7 +145,7 @@ class read_concern {
     ///
     /// @return The read concern string.
     ///
-    stdx::string_view acknowledge_string() const;
+    MONGOCXX_ABI_EXPORT_CDECL(stdx::string_view) acknowledge_string() const;
 
     ///
     /// Gets the document form of this read_concern.
@@ -153,7 +153,18 @@ class read_concern {
     /// @return
     ///   Document representation of this read_concern.
     ///
-    bsoncxx::v_noabi::document::value to_document() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::value) to_document() const;
+
+    ///
+    /// @relates mongocxx::v_noabi::read_concern
+    ///
+    /// Compares two read_concern objects for (in)-equality.
+    ///
+    /// @{
+    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(const read_concern&, const read_concern&);
+    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator!=(const read_concern&, const read_concern&);
+    /// @}
+    ///
 
    private:
     friend ::mongocxx::v_noabi::client;
@@ -162,20 +173,9 @@ class read_concern {
     friend ::mongocxx::v_noabi::options::transaction;
     friend ::mongocxx::v_noabi::uri;
 
-    ///
-    /// @relates mongocxx::v_noabi::read_concern
-    ///
-    /// Compares two read_concern objects for (in)-equality.
-    ///
-    /// @{
-    friend MONGOCXX_API bool MONGOCXX_CALL operator==(const read_concern&, const read_concern&);
-    friend MONGOCXX_API bool MONGOCXX_CALL operator!=(const read_concern&, const read_concern&);
-    /// @}
-    ///
+    class impl;
 
-    class MONGOCXX_PRIVATE impl;
-
-    MONGOCXX_PRIVATE read_concern(std::unique_ptr<impl>&& implementation);
+    read_concern(std::unique_ptr<impl>&& implementation);
 
     std::unique_ptr<impl> _impl;
 };

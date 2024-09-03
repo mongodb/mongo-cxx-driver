@@ -42,7 +42,8 @@ class validation_criteria {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    validation_criteria& rule(bsoncxx::v_noabi::document::view_or_value rule);
+    MONGOCXX_ABI_EXPORT_CDECL(validation_criteria&)
+    rule(bsoncxx::v_noabi::document::view_or_value rule);
 
     ///
     /// Gets the validation rule for this validation object.
@@ -50,7 +51,8 @@ class validation_criteria {
     /// @return
     ///   Document representing a validation rule.
     ///
-    const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& rule() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+    rule() const;
 
     ///
     /// A class to represent the different validation level options.
@@ -76,7 +78,7 @@ class validation_criteria {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    validation_criteria& level(validation_level level);
+    MONGOCXX_ABI_EXPORT_CDECL(validation_criteria&) level(validation_level level);
 
     ///
     /// Gets the validation level.
@@ -84,7 +86,7 @@ class validation_criteria {
     /// @return
     ///   The enumerated validation level.
     ///
-    const stdx::optional<validation_level>& level() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<validation_level>&) level() const;
 
     ///
     /// A class to represent the different validation action options.
@@ -108,7 +110,7 @@ class validation_criteria {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    validation_criteria& action(validation_action action);
+    MONGOCXX_ABI_EXPORT_CDECL(validation_criteria&) action(validation_action action);
 
     ///
     /// Gets the validation action to run when documents failing validation are inserted or
@@ -117,7 +119,7 @@ class validation_criteria {
     /// @return
     ///   The enumerated validation action.
     ///
-    const stdx::optional<validation_action>& action() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<validation_action>&) action() const;
 
     ///
     /// Returns a bson document representing this set of validation criteria.
@@ -128,15 +130,19 @@ class validation_criteria {
     ///
     /// @return Validation criteria, as a document.
     ///
-    MONGOCXX_DEPRECATED bsoncxx::v_noabi::document::value to_document() const;
-    bsoncxx::v_noabi::document::value to_document_deprecated() const;
+    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::value)
+        to_document() const;
+
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::value) to_document_deprecated() const;
 
     ///
     /// @deprecated
     ///   This method is deprecated. To determine which options are set on this object, use the
     ///   provided accessors instead.
     ///
-    MONGOCXX_DEPRECATED MONGOCXX_INLINE operator bsoncxx::v_noabi::document::value() const;
+    MONGOCXX_DEPRECATED operator bsoncxx::v_noabi::document::value() const {
+        return to_document_deprecated();
+    }
 
    private:
     stdx::optional<bsoncxx::v_noabi::document::view_or_value> _rule;
@@ -151,18 +157,14 @@ class validation_criteria {
 /// @{
 
 /// @relatesalso mongocxx::v_noabi::validation_criteria
-MONGOCXX_API bool MONGOCXX_CALL operator==(const validation_criteria& lhs,
-                                           const validation_criteria& rhs);
+MONGOCXX_ABI_EXPORT_CDECL(bool)
+operator==(const validation_criteria& lhs, const validation_criteria& rhs);
 
 /// @relatesalso mongocxx::v_noabi::validation_criteria
-MONGOCXX_API bool MONGOCXX_CALL operator!=(const validation_criteria& lhs,
-                                           const validation_criteria& rhs);
+MONGOCXX_ABI_EXPORT_CDECL(bool)
+operator!=(const validation_criteria& lhs, const validation_criteria& rhs);
 /// @}
 ///
-
-MONGOCXX_INLINE validation_criteria::operator bsoncxx::v_noabi::document::value() const {
-    return to_document_deprecated();
-}
 
 }  // namespace v_noabi
 }  // namespace mongocxx

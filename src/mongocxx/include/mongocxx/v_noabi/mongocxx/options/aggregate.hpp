@@ -55,7 +55,7 @@ class aggregate {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    aggregate& allow_disk_use(bool allow_disk_use);
+    MONGOCXX_ABI_EXPORT_CDECL(aggregate&) allow_disk_use(bool allow_disk_use);
 
     ///
     /// Retrieves the current allow_disk_use setting.
@@ -64,7 +64,7 @@ class aggregate {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    const stdx::optional<bool>& allow_disk_use() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bool>&) allow_disk_use() const;
 
     ///
     /// Sets the number of documents to return per batch.
@@ -78,7 +78,7 @@ class aggregate {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    aggregate& batch_size(std::int32_t batch_size);
+    MONGOCXX_ABI_EXPORT_CDECL(aggregate&) batch_size(std::int32_t batch_size);
 
     ///
     /// The current batch size setting.
@@ -87,7 +87,7 @@ class aggregate {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    const stdx::optional<std::int32_t>& batch_size() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<std::int32_t>&) batch_size() const;
 
     ///
     /// Sets the collation for this operation.
@@ -101,7 +101,8 @@ class aggregate {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    aggregate& collation(bsoncxx::v_noabi::document::view_or_value collation);
+    MONGOCXX_ABI_EXPORT_CDECL(aggregate&)
+    collation(bsoncxx::v_noabi::document::view_or_value collation);
 
     ///
     /// Retrieves the current collation for this operation.
@@ -111,7 +112,8 @@ class aggregate {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& collation() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+    collation() const;
 
     ///
     /// Sets the variable mapping for this operation.
@@ -125,7 +127,7 @@ class aggregate {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    aggregate& let(bsoncxx::v_noabi::document::view_or_value let);
+    MONGOCXX_ABI_EXPORT_CDECL(aggregate&) let(bsoncxx::v_noabi::document::view_or_value let);
 
     ///
     /// Retrieves the current variable mapping for this operation.
@@ -135,7 +137,8 @@ class aggregate {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& let() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+    let() const;
 
     ///
     /// Sets the maximum amount of time for this operation to run server-side in milliseconds.
@@ -149,7 +152,7 @@ class aggregate {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    aggregate& max_time(std::chrono::milliseconds max_time);
+    MONGOCXX_ABI_EXPORT_CDECL(aggregate&) max_time(std::chrono::milliseconds max_time);
 
     ///
     /// The current max_time setting.
@@ -159,7 +162,7 @@ class aggregate {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    const stdx::optional<std::chrono::milliseconds>& max_time() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<std::chrono::milliseconds>&) max_time() const;
 
     ///
     /// Sets the read_preference for this operation.
@@ -172,7 +175,7 @@ class aggregate {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    aggregate& read_preference(mongocxx::v_noabi::read_preference rp);
+    MONGOCXX_ABI_EXPORT_CDECL(aggregate&) read_preference(mongocxx::v_noabi::read_preference rp);
 
     ///
     /// The current read_preference for this operation.
@@ -181,7 +184,8 @@ class aggregate {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    const stdx::optional<mongocxx::v_noabi::read_preference>& read_preference() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<mongocxx::v_noabi::read_preference>&)
+    read_preference() const;
 
     ///
     /// Sets whether the $out stage should bypass document validation.
@@ -192,7 +196,8 @@ class aggregate {
     ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
-    aggregate& bypass_document_validation(bool bypass_document_validation);
+    MONGOCXX_ABI_EXPORT_CDECL(aggregate&)
+    bypass_document_validation(bool bypass_document_validation);
 
     ///
     /// The current bypass_document_validation setting.
@@ -201,7 +206,7 @@ class aggregate {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    const stdx::optional<bool>& bypass_document_validation() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bool>&) bypass_document_validation() const;
 
     ///
     /// Sets the index to use for this operation.
@@ -218,7 +223,7 @@ class aggregate {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    aggregate& hint(mongocxx::v_noabi::hint index_hint);
+    MONGOCXX_ABI_EXPORT_CDECL(aggregate&) hint(mongocxx::v_noabi::hint index_hint);
 
     ///
     /// Gets the current hint.
@@ -227,7 +232,7 @@ class aggregate {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    const stdx::optional<mongocxx::v_noabi::hint>& hint() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<mongocxx::v_noabi::hint>&) hint() const;
 
     ///
     /// Sets the write concern to use for this operation. Only has an effect if $out is a part of
@@ -243,7 +248,8 @@ class aggregate {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    aggregate& write_concern(mongocxx::v_noabi::write_concern write_concern);
+    MONGOCXX_ABI_EXPORT_CDECL(aggregate&)
+    write_concern(mongocxx::v_noabi::write_concern write_concern);
 
     ///
     /// Gets the current write concern.
@@ -254,7 +260,8 @@ class aggregate {
     /// @see
     ///   https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    const stdx::optional<mongocxx::v_noabi::write_concern>& write_concern() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<mongocxx::v_noabi::write_concern>&)
+    write_concern() const;
 
     ///
     /// Sets the read concern to use for this operation.
@@ -268,7 +275,8 @@ class aggregate {
     /// @return
     ///   A reference to the object on which this member function is being called.
     ///
-    aggregate& read_concern(mongocxx::v_noabi::read_concern read_concern);
+    MONGOCXX_ABI_EXPORT_CDECL(aggregate&)
+    read_concern(mongocxx::v_noabi::read_concern read_concern);
 
     ///
     /// Gets the current read concern.
@@ -279,7 +287,8 @@ class aggregate {
     /// @see
     ///   https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    const stdx::optional<mongocxx::v_noabi::read_concern>& read_concern() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<mongocxx::v_noabi::read_concern>&)
+    read_concern() const;
 
     ///
     /// Sets the comment to use for this operation.
@@ -293,7 +302,8 @@ class aggregate {
     /// @return
     ///   A reference to the object on which this member function is being called.
     ///
-    aggregate& comment(bsoncxx::v_noabi::types::bson_value::view_or_value comment);
+    MONGOCXX_ABI_EXPORT_CDECL(aggregate&)
+    comment(bsoncxx::v_noabi::types::bson_value::view_or_value comment);
 
     ///
     /// Gets the current comment.
@@ -304,7 +314,9 @@ class aggregate {
     /// @see
     ///   https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    const stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>& comment() const;
+    MONGOCXX_ABI_EXPORT_CDECL(
+        const stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>&)
+    comment() const;
 
    private:
     friend ::mongocxx::v_noabi::collection;

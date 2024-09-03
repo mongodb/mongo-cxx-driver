@@ -20,7 +20,7 @@ namespace mongocxx {
 namespace v_noabi {
 namespace result {
 
-class MONGOCXX_API insert_many;
+class insert_many;
 
 }  // namespace result
 }  // namespace v_noabi

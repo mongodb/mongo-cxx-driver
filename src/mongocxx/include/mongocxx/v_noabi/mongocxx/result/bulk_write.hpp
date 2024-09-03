@@ -38,21 +38,21 @@ class bulk_write {
     using id_map = std::map<std::size_t, bsoncxx::v_noabi::document::element>;
 
     // This constructor is public for testing purposes only
-    explicit bulk_write(bsoncxx::v_noabi::document::value raw_response);
+    explicit MONGOCXX_ABI_EXPORT_CDECL() bulk_write(bsoncxx::v_noabi::document::value raw_response);
 
     ///
     /// Gets the number of documents that were inserted during this operation.
     ///
     /// @return The number of documents that were inserted.
     ///
-    std::int32_t inserted_count() const;
+    MONGOCXX_ABI_EXPORT_CDECL(std::int32_t) inserted_count() const;
 
     ///
     /// Gets the number of documents that were matched during this operation.
     ///
     /// @return The number of documents that were matched.
     ///
-    std::int32_t matched_count() const;
+    MONGOCXX_ABI_EXPORT_CDECL(std::int32_t) matched_count() const;
 
     ///
     /// Gets the number of documents that were modified during this operation.
@@ -61,21 +61,21 @@ class bulk_write {
     ///
     /// @throws with server versions below 2.6 due to the field `nModified` not being returned.
     ///
-    std::int32_t modified_count() const;
+    MONGOCXX_ABI_EXPORT_CDECL(std::int32_t) modified_count() const;
 
     ///
     /// Gets the number of documents that were deleted during this operation.
     ///
     /// @return The number of documents that were deleted.
     ///
-    std::int32_t deleted_count() const;
+    MONGOCXX_ABI_EXPORT_CDECL(std::int32_t) deleted_count() const;
 
     ///
     /// Gets the number of documents that were upserted during this operation.
     ///
     /// @return The number of documents that were upserted.
     ///
-    std::int32_t upserted_count() const;
+    MONGOCXX_ABI_EXPORT_CDECL(std::int32_t) upserted_count() const;
 
     ///
     /// Gets the ids of the upserted documents.
@@ -83,15 +83,15 @@ class bulk_write {
     /// @note The returned id_map must not be accessed after the bulk_write object is destroyed.
     /// @return A map from bulk write index to _id field for upserted documents.
     ///
-    id_map upserted_ids() const;
+    MONGOCXX_ABI_EXPORT_CDECL(id_map) upserted_ids() const;
+
+    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(const bulk_write&, const bulk_write&);
+    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator!=(const bulk_write&, const bulk_write&);
 
    private:
-    MONGOCXX_PRIVATE bsoncxx::v_noabi::document::view view() const;
+    bsoncxx::v_noabi::document::view view() const;
 
     bsoncxx::v_noabi::document::value _response;
-
-    friend MONGOCXX_API bool MONGOCXX_CALL operator==(const bulk_write&, const bulk_write&);
-    friend MONGOCXX_API bool MONGOCXX_CALL operator!=(const bulk_write&, const bulk_write&);
 };
 
 }  // namespace result

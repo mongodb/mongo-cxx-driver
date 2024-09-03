@@ -89,7 +89,8 @@ class data_key {
     /// @see
     /// https://www.mongodb.com/docs/manual/core/security-client-side-encryption-key-management/
     ///
-    data_key& master_key(bsoncxx::v_noabi::document::view_or_value master_key);
+    MONGOCXX_ABI_EXPORT_CDECL(data_key&)
+    master_key(bsoncxx::v_noabi::document::view_or_value master_key);
 
     ///
     /// Gets the master key.
@@ -97,7 +98,8 @@ class data_key {
     /// @return
     ///   An optional document containing the master key.
     ///
-    const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& master_key() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+    master_key() const;
 
     ///
     /// Sets an optional list of string alternate names used to reference the key.
@@ -112,7 +114,7 @@ class data_key {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/method/getClientEncryption/
     ///
-    data_key& key_alt_names(std::vector<std::string> key_alt_names);
+    MONGOCXX_ABI_EXPORT_CDECL(data_key&) key_alt_names(std::vector<std::string> key_alt_names);
 
     ///
     /// Gets the alternate names for the data key.
@@ -120,7 +122,7 @@ class data_key {
     /// @return
     ///   The alternate names for the data key.
     ///
-    const std::vector<std::string>& key_alt_names() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const std::vector<std::string>&) key_alt_names() const;
 
     ///
     /// Represents binary data used to represent key material.
@@ -145,7 +147,7 @@ class data_key {
     ///
     /// @see https://www.mongodb.com/docs/v6.0/reference/method/KeyVault.createKey/
     ///
-    data_key& key_material(key_material_type key_material);
+    MONGOCXX_ABI_EXPORT_CDECL(data_key&) key_material(key_material_type key_material);
 
     ///
     /// Gets the keyMaterial as binary data
@@ -155,12 +157,12 @@ class data_key {
     ///
     /// @see https://www.mongodb.com/docs/v6.0/reference/method/KeyVault.createKey/
     ///
-    const stdx::optional<key_material_type>& key_material();
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<key_material_type>&) key_material();
 
    private:
     friend ::mongocxx::v_noabi::client_encryption;
 
-    MONGOCXX_PRIVATE void* convert() const;
+    void* convert() const;
 
     stdx::optional<bsoncxx::v_noabi::document::view_or_value> _master_key;
     std::vector<std::string> _key_alt_names;

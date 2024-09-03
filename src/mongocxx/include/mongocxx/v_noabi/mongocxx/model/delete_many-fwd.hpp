@@ -20,7 +20,7 @@ namespace mongocxx {
 namespace v_noabi {
 namespace model {
 
-class MONGOCXX_API delete_many;
+class delete_many;
 
 }  // namespace model
 }  // namespace v_noabi

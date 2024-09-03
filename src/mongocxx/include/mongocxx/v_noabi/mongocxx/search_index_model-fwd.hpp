@@ -19,7 +19,7 @@
 namespace mongocxx {
 namespace v_noabi {
 
-class MONGOCXX_API search_index_model;
+class search_index_model;
 
 }  // namespace v_noabi
 }  // namespace mongocxx

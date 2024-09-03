@@ -20,7 +20,7 @@ namespace mongocxx {
 namespace v_noabi {
 namespace events {
 
-class MONGOCXX_API command_failed_event;
+class command_failed_event;
 
 }  // namespace events
 }  // namespace v_noabi

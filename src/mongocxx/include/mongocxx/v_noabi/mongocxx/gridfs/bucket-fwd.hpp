@@ -20,7 +20,7 @@ namespace mongocxx {
 namespace v_noabi {
 namespace gridfs {
 
-class MONGOCXX_API bucket;
+class bucket;
 
 }  // namespace gridfs
 }  // namespace v_noabi

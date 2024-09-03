@@ -44,33 +44,37 @@ class range {
    public:
     /// @brief Sets `RangeOpts.min`.
     /// @note Required if @ref precision is set.
-    range& min(bsoncxx::v_noabi::types::bson_value::view_or_value value);
+    MONGOCXX_ABI_EXPORT_CDECL(range&) min(bsoncxx::v_noabi::types::bson_value::view_or_value value);
 
     /// @brief Gets `RangeOpts.min`.
     /// @note Required if @ref precision is set.
-    const stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>& min() const;
+    MONGOCXX_ABI_EXPORT_CDECL(
+        const stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>&)
+    min() const;
 
     /// @brief Sets `RangeOpts.max`.
     /// @note Required if @ref precision is set.
-    range& max(bsoncxx::v_noabi::types::bson_value::view_or_value value);
+    MONGOCXX_ABI_EXPORT_CDECL(range&) max(bsoncxx::v_noabi::types::bson_value::view_or_value value);
 
     /// @brief Gets `RangeOpts.max`.
     /// @note Required if @ref precision is set.
-    const stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>& max() const;
+    MONGOCXX_ABI_EXPORT_CDECL(
+        const stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>&)
+    max() const;
 
     /// @brief Sets `RangeOpts.sparsity`.
-    range& sparsity(std::int64_t value);
+    MONGOCXX_ABI_EXPORT_CDECL(range&) sparsity(std::int64_t value);
 
     /// @brief Gets `RangeOpts.sparsity`.
-    const stdx::optional<std::int64_t>& sparsity() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<std::int64_t>&) sparsity() const;
 
     /// @brief Sets `RangeOpts.precision`.
     /// @note May only be set for `double` or `decimal128`.
-    range& precision(std::int32_t value);
+    MONGOCXX_ABI_EXPORT_CDECL(range&) precision(std::int32_t value);
 
     /// @brief Gets `RangeOpts.precision`.
     /// @note May only be set for `double` or `decimal128`.
-    const stdx::optional<std::int32_t>& precision() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<std::int32_t>&) precision() const;
 
    private:
     stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> _min;

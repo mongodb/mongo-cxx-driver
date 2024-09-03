@@ -50,7 +50,7 @@ class client {
     /// @deprecated
     ///   Please use tls_opts instead.
     ///
-    MONGOCXX_DEPRECATED client& ssl_opts(tls ssl_opts);
+    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(client&) ssl_opts(tls ssl_opts);
 
     ///
     /// Sets the TLS-related options.
@@ -62,7 +62,7 @@ class client {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    client& tls_opts(tls tls_opts);
+    MONGOCXX_ABI_EXPORT_CDECL(client&) tls_opts(tls tls_opts);
 
     ///
     /// The current SSL-related options.
@@ -71,14 +71,14 @@ class client {
     ///
     /// @deprecated Please use tls_opts instead.
     ///
-    MONGOCXX_DEPRECATED const stdx::optional<tls>& ssl_opts() const;
+    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<tls>&) ssl_opts() const;
 
     ///
     /// The current TLS-related options.
     ///
     /// @return The TLS-related options.
     ///
-    const stdx::optional<tls>& tls_opts() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<tls>&) tls_opts() const;
 
     ///
     /// Sets the automatic encryption options.
@@ -90,7 +90,7 @@ class client {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    client& auto_encryption_opts(auto_encryption auto_encryption_opts);
+    MONGOCXX_ABI_EXPORT_CDECL(client&) auto_encryption_opts(auto_encryption auto_encryption_opts);
 
     ///
     /// Gets the current automatic encryption options.
@@ -98,7 +98,7 @@ class client {
     /// @return
     ///   The automatic encryption opts.
     ///
-    const stdx::optional<auto_encryption>& auto_encryption_opts() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<auto_encryption>&) auto_encryption_opts() const;
 
     ///
     /// Sets the APM-related options.
@@ -110,14 +110,14 @@ class client {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    client& apm_opts(apm apm_opts);
+    MONGOCXX_ABI_EXPORT_CDECL(client&) apm_opts(apm apm_opts);
 
     ///
     /// The current APM-related options.
     ///
     /// @return The APM-related options.
     ///
-    const stdx::optional<apm>& apm_opts() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<apm>&) apm_opts() const;
 
     ///
     /// Sets the server API options.
@@ -129,7 +129,7 @@ class client {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    client& server_api_opts(server_api server_api_opts);
+    MONGOCXX_ABI_EXPORT_CDECL(client&) server_api_opts(server_api server_api_opts);
 
     ///
     /// Gets the current server API options or returns a disengaged optional if there are no server
@@ -138,7 +138,7 @@ class client {
     /// @return
     ///   The server API options.
     ///
-    const stdx::optional<server_api>& server_api_opts() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<server_api>&) server_api_opts() const;
 
    private:
     stdx::optional<tls> _tls_opts;

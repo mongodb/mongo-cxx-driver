@@ -33,41 +33,42 @@ namespace result {
 class replace_one {
    public:
     // This constructor is public for testing purposes only
-    explicit replace_one(result::bulk_write result);
+    explicit MONGOCXX_ABI_EXPORT_CDECL() replace_one(result::bulk_write result);
 
     ///
     /// Returns the bulk write result for this replace_one operation.
     ///
     /// @return The raw bulk write result.
     ///
-    const result::bulk_write& result() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const result::bulk_write&) result() const;
 
     ///
     /// Gets the number of documents that were matched during this operation.
     ///
     /// @return The number of documents that were matched.
     ///
-    std::int32_t matched_count() const;
+    MONGOCXX_ABI_EXPORT_CDECL(std::int32_t) matched_count() const;
 
     ///
     /// Gets the number of documents that were modified during this operation.
     ///
     /// @return The number of documents that were modified.
     ///
-    std::int32_t modified_count() const;
+    MONGOCXX_ABI_EXPORT_CDECL(std::int32_t) modified_count() const;
 
     ///
     /// Gets the id of the upserted document.
     ///
     /// @return The value of the _id field for upserted document.
     ///
-    stdx::optional<bsoncxx::v_noabi::document::element> upserted_id() const;
+    MONGOCXX_ABI_EXPORT_CDECL(stdx::optional<bsoncxx::v_noabi::document::element>)
+    upserted_id() const;
+
+    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(const replace_one&, const replace_one&);
+    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator!=(const replace_one&, const replace_one&);
 
    private:
     result::bulk_write _result;
-
-    friend MONGOCXX_API bool MONGOCXX_CALL operator==(const replace_one&, const replace_one&);
-    friend MONGOCXX_API bool MONGOCXX_CALL operator!=(const replace_one&, const replace_one&);
 };
 
 }  // namespace result

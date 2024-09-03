@@ -21,7 +21,7 @@ namespace v_noabi {
 
 enum class log_level;
 
-class MONGOCXX_API logger;
+class MONGOCXX_ABI_EXPORT logger;
 
 }  // namespace v_noabi
 }  // namespace mongocxx

@@ -44,7 +44,7 @@ class hint {
     /// @param index
     ///   Document view or value representing the index to be used.
     ///
-    hint(bsoncxx::v_noabi::document::view_or_value index);
+    MONGOCXX_ABI_EXPORT_CDECL() hint(bsoncxx::v_noabi::document::view_or_value index);
 
     ///
     /// Constructs a new hint.
@@ -52,7 +52,7 @@ class hint {
     /// @param index
     ///   String representing the name of the index to be used.
     ///
-    explicit hint(bsoncxx::v_noabi::string::view_or_value index);
+    explicit MONGOCXX_ABI_EXPORT_CDECL() hint(bsoncxx::v_noabi::string::view_or_value index);
 
     ///
     /// @relates mongocxx::v_noabi::hint
@@ -61,7 +61,7 @@ class hint {
     ///
     /// Compares equal if the hint contains a matching index name. Otherwise, compares unequal.
     ///
-    friend MONGOCXX_API bool MONGOCXX_CALL operator==(const hint& index_hint, std::string index);
+    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(const hint& index_hint, std::string index);
 
     ///
     /// @relates mongocxx::v_noabi::hint
@@ -70,7 +70,7 @@ class hint {
     ///
     /// Compares equal if the hint contains a matching index document. Otherwise, compares unequal.
     ///
-    friend MONGOCXX_API bool MONGOCXX_CALL operator==(const hint& index_hint,
+    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(const hint& index_hint,
                                                       bsoncxx::v_noabi::document::view index);
 
     ///
@@ -80,7 +80,7 @@ class hint {
     /// not outlive
     /// the hint object that it was created from.
     ///
-    bsoncxx::v_noabi::types::bson_value::view to_value() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::types::bson_value::view) to_value() const;
 
     ///
     /// Returns a types::bson_value::view representing this hint.
@@ -89,7 +89,9 @@ class hint {
     /// not outlive
     /// the hint object that it was created from.
     ///
-    MONGOCXX_INLINE operator bsoncxx::v_noabi::types::bson_value::view() const;
+    operator bsoncxx::v_noabi::types::bson_value::view() const {
+        return to_value();
+    }
 
    private:
     stdx::optional<bsoncxx::v_noabi::document::view_or_value> _index_doc;
@@ -104,13 +106,13 @@ class hint {
 /// @{
 
 /// @relatesalso mongocxx::v_noabi::hint
-MONGOCXX_API bool MONGOCXX_CALL operator==(std::string index, const hint& index_hint);
+MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(std::string index, const hint& index_hint);
 
 /// @relatesalso mongocxx::v_noabi::hint
-MONGOCXX_API bool MONGOCXX_CALL operator!=(const hint& index_hint, std::string index);
+MONGOCXX_ABI_EXPORT_CDECL(bool) operator!=(const hint& index_hint, std::string index);
 
 /// @relatesalso mongocxx::v_noabi::hint
-MONGOCXX_API bool MONGOCXX_CALL operator!=(std::string index, const hint& index_index);
+MONGOCXX_ABI_EXPORT_CDECL(bool) operator!=(std::string index, const hint& index_index);
 
 /// @}
 ///
@@ -123,21 +125,17 @@ MONGOCXX_API bool MONGOCXX_CALL operator!=(std::string index, const hint& index_
 /// @{
 
 /// @relatesalso mongocxx::v_noabi::hint
-MONGOCXX_API bool MONGOCXX_CALL operator==(bsoncxx::v_noabi::document::view index,
-                                           const hint& index_hint);
+MONGOCXX_ABI_EXPORT_CDECL(bool)
+operator==(bsoncxx::v_noabi::document::view index, const hint& index_hint);
 /// @relatesalso mongocxx::v_noabi::hint
-MONGOCXX_API bool MONGOCXX_CALL operator!=(const hint& index_hint,
-                                           bsoncxx::v_noabi::document::view index);
+MONGOCXX_ABI_EXPORT_CDECL(bool)
+operator!=(const hint& index_hint, bsoncxx::v_noabi::document::view index);
 /// @relatesalso mongocxx::v_noabi::hint
-MONGOCXX_API bool MONGOCXX_CALL operator!=(bsoncxx::v_noabi::document::view index,
-                                           const hint& index_hint);
+MONGOCXX_ABI_EXPORT_CDECL(bool)
+operator!=(bsoncxx::v_noabi::document::view index, const hint& index_hint);
 
 /// @}
 ///
-
-MONGOCXX_INLINE hint::operator bsoncxx::v_noabi::types::bson_value::view() const {
-    return to_value();
-}
 
 }  // namespace v_noabi
 }  // namespace mongocxx

@@ -35,14 +35,14 @@ class insert_one {
     /// @param document
     ///   The document to insert.
     ///
-    insert_one(bsoncxx::v_noabi::document::view_or_value document);
+    MONGOCXX_ABI_EXPORT_CDECL() insert_one(bsoncxx::v_noabi::document::view_or_value document);
 
     ///
     /// Gets the document to be inserted.
     ///
     /// @return The document to be inserted.
     ///
-    const bsoncxx::v_noabi::document::view_or_value& document() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::document::view_or_value&) document() const;
 
    private:
     bsoncxx::v_noabi::document::view_or_value _document;

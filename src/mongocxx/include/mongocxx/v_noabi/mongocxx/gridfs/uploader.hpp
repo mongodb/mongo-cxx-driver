@@ -47,17 +47,17 @@ class uploader {
     /// from uploader. The only valid actions to take with a default constructed uploader are to
     /// assign to it, or destroy it.
     ///
-    uploader() noexcept;
+    MONGOCXX_ABI_EXPORT_CDECL() uploader() noexcept;
 
     ///
     /// Move constructs an uploader.
     ///
-    uploader(uploader&&) noexcept;
+    MONGOCXX_ABI_EXPORT_CDECL() uploader(uploader&&) noexcept;
 
     ///
     /// Move assigns an uploader.
     ///
-    uploader& operator=(uploader&&) noexcept;
+    MONGOCXX_ABI_EXPORT_CDECL(uploader&) operator=(uploader&&) noexcept;
 
     uploader(const uploader&) = delete;
 
@@ -66,12 +66,12 @@ class uploader {
     ///
     /// Destroys an uploader.
     ///
-    ~uploader();
+    MONGOCXX_ABI_EXPORT_CDECL() ~uploader();
 
     ///
     /// Returns true if the uploader is valid, meaning it was not default constructed or moved from.
     ///
-    explicit operator bool() const noexcept;
+    explicit MONGOCXX_ABI_EXPORT_CDECL() operator bool() const noexcept;
 
     ///
     /// Writes a specified number of bytes to a GridFS file.
@@ -91,7 +91,7 @@ class uploader {
     ///   if the uploader requires more than 2^31-1 chunks to store the file at the requested chunk
     ///   size.
     ///
-    void write(const std::uint8_t* bytes, std::size_t length);
+    MONGOCXX_ABI_EXPORT_CDECL(void) write(const std::uint8_t* bytes, std::size_t length);
 
     ///
     /// Closes the uploader stream.
@@ -105,7 +105,7 @@ class uploader {
     ///   if the uploader requires more than 2^31-1 chunks to store the file at the requested chunk
     ///   size.
     ///
-    result::gridfs::upload close();
+    MONGOCXX_ABI_EXPORT_CDECL(result::gridfs::upload) close();
 
     ///
     /// Aborts uploading the file.
@@ -115,7 +115,7 @@ class uploader {
     /// @throws mongocxx::v_noabi::bulk_write_exception
     ///   if an error occurs when removing chunk data from the database.
     ///
-    void abort();
+    MONGOCXX_ABI_EXPORT_CDECL(void) abort();
 
     ///
     /// Gets the chunk size of the file being uploaded.
@@ -123,7 +123,7 @@ class uploader {
     /// @return
     ///   The chunk size in bytes.
     ///
-    std::int32_t chunk_size() const;
+    MONGOCXX_ABI_EXPORT_CDECL(std::int32_t) chunk_size() const;
 
    private:
     friend ::mongocxx::v_noabi::gridfs::bucket;
@@ -149,22 +149,21 @@ class uploader {
     // @param metadata
     //   Optional metadata field of the files collection document.
     //
-    MONGOCXX_PRIVATE uploader(
-        const client_session* session,
-        bsoncxx::v_noabi::types::bson_value::view id,
-        stdx::string_view filename,
-        collection files,
-        collection chunks,
-        std::int32_t chunk_size,
-        stdx::optional<bsoncxx::v_noabi::document::view_or_value> metadata = {});
+    uploader(const client_session* session,
+             bsoncxx::v_noabi::types::bson_value::view id,
+             stdx::string_view filename,
+             collection files,
+             collection chunks,
+             std::int32_t chunk_size,
+             stdx::optional<bsoncxx::v_noabi::document::view_or_value> metadata = {});
 
-    MONGOCXX_PRIVATE void finish_chunk();
-    MONGOCXX_PRIVATE void flush_chunks();
+    void finish_chunk();
+    void flush_chunks();
 
-    class MONGOCXX_PRIVATE impl;
+    class impl;
 
-    MONGOCXX_PRIVATE impl& _get_impl();
-    MONGOCXX_PRIVATE const impl& _get_impl() const;
+    impl& _get_impl();
+    const impl& _get_impl() const;
 
     std::unique_ptr<impl> _impl;
 };

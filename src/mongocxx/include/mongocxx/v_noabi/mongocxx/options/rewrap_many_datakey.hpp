@@ -50,7 +50,8 @@ class rewrap_many_datakey {
     /// @see
     /// https://www.mongodb.com/docs/manual/core/csfle/reference/kms-providers/#std-label-csfle-reference-kms-providers
     ///
-    rewrap_many_datakey& provider(bsoncxx::v_noabi::string::view_or_value provider);
+    MONGOCXX_ABI_EXPORT_CDECL(rewrap_many_datakey&)
+    provider(bsoncxx::v_noabi::string::view_or_value provider);
 
     ///
     /// Get the KMS provider
@@ -65,7 +66,7 @@ class rewrap_many_datakey {
     /// @see
     /// https://www.mongodb.com/docs/manual/core/csfle/reference/kms-providers/#std-label-csfle-reference-kms-providers
     ///
-    bsoncxx::v_noabi::string::view_or_value provider() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::string::view_or_value) provider() const;
 
     ///
     /// Set the masterKey option.
@@ -82,7 +83,8 @@ class rewrap_many_datakey {
     /// @see
     /// https://www.mongodb.com/docs/manual/core/csfle/reference/kms-providers/#std-label-csfle-reference-kms-providers-create-and-store
     ///
-    rewrap_many_datakey& master_key(bsoncxx::v_noabi::document::view_or_value master_key);
+    MONGOCXX_ABI_EXPORT_CDECL(rewrap_many_datakey&)
+    master_key(bsoncxx::v_noabi::document::view_or_value master_key);
 
     ///
     /// Get the masterKey option.
@@ -97,7 +99,8 @@ class rewrap_many_datakey {
     /// @see
     /// https://www.mongodb.com/docs/manual/core/csfle/reference/kms-providers/#std-label-csfle-reference-kms-providers-create-and-store
     ///
-    const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& master_key() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+    master_key() const;
 
    private:
     friend ::mongocxx::v_noabi::client_encryption;

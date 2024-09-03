@@ -45,9 +45,7 @@ class update_one {
     //
     // See update_one() for an example of such overloads.
     //
-    class _empty_doc_tag {
-        _empty_doc_tag() = default;
-    };
+    class _empty_doc_tag {};
 
    public:
     ///
@@ -58,6 +56,7 @@ class update_one {
     /// @param update
     ///   Document representing the modifications to be applied to the matching document.
     ///
+    MONGOCXX_ABI_EXPORT_CDECL()
     update_one(bsoncxx::v_noabi::document::view_or_value filter,
                bsoncxx::v_noabi::document::view_or_value update);
 
@@ -69,6 +68,7 @@ class update_one {
     /// @param update
     ///   Pipeline representing the modifications to be applied to the matching document.
     ///
+    MONGOCXX_ABI_EXPORT_CDECL()
     update_one(bsoncxx::v_noabi::document::view_or_value filter, const pipeline& update);
 
     ///
@@ -79,6 +79,7 @@ class update_one {
     /// @param update
     ///   Supports the empty update {}.
     ///
+    MONGOCXX_ABI_EXPORT_CDECL()
     update_one(bsoncxx::v_noabi::document::view_or_value filter,
                std::initializer_list<_empty_doc_tag> update);
 
@@ -87,14 +88,14 @@ class update_one {
     ///
     /// @return The filter to be used for the update operation.
     ///
-    const bsoncxx::v_noabi::document::view_or_value& filter() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::document::view_or_value&) filter() const;
 
     ///
     /// Gets the update document.
     ///
     /// @return The modifications to be applied as part of the update.
     ///
-    const bsoncxx::v_noabi::document::view_or_value& update() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::document::view_or_value&) update() const;
 
     ///
     /// Sets the collation for this update operation.
@@ -105,7 +106,8 @@ class update_one {
     /// @see
     ///   https://www.mongodb.com/docs/manual/reference/collation/
     ///
-    update_one& collation(bsoncxx::v_noabi::document::view_or_value collation);
+    MONGOCXX_ABI_EXPORT_CDECL(update_one&)
+    collation(bsoncxx::v_noabi::document::view_or_value collation);
 
     ///
     /// Gets the collation option for this update operation.
@@ -116,7 +118,8 @@ class update_one {
     /// @see
     ///   https://www.mongodb.com/docs/manual/reference/collation/
     ///
-    const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& collation() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+    collation() const;
 
     ///
     /// Sets the index to use for this operation.
@@ -131,14 +134,14 @@ class update_one {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    update_one& hint(mongocxx::v_noabi::hint index_hint);
+    MONGOCXX_ABI_EXPORT_CDECL(update_one&) hint(mongocxx::v_noabi::hint index_hint);
 
     ///
     /// Gets the current hint.
     ///
     /// @return The current hint, if one is set.
     ///
-    const stdx::optional<mongocxx::v_noabi::hint>& hint() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<mongocxx::v_noabi::hint>&) hint() const;
 
     ///
     /// Sets the upsert option.
@@ -153,14 +156,14 @@ class update_one {
     ///   The server side default is @c false, which does not insert a new document if a match
     ///   is not found.
     ///
-    update_one& upsert(bool upsert);
+    MONGOCXX_ABI_EXPORT_CDECL(update_one&) upsert(bool upsert);
 
     ///
     /// Gets the current value of the upsert option.
     ///
     /// @return The optional value of the upsert option.
     ///
-    const stdx::optional<bool>& upsert() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bool>&) upsert() const;
 
     ///
     /// Set array filters for this update operation.
@@ -170,7 +173,8 @@ class update_one {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/update/
     ///
-    update_one& array_filters(bsoncxx::v_noabi::array::view_or_value array_filters);
+    MONGOCXX_ABI_EXPORT_CDECL(update_one&)
+    array_filters(bsoncxx::v_noabi::array::view_or_value array_filters);
 
     ///
     /// Get array filters for this operation.
@@ -180,7 +184,8 @@ class update_one {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/update/
     ///
-    const stdx::optional<bsoncxx::v_noabi::array::view_or_value>& array_filters() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::array::view_or_value>&)
+    array_filters() const;
 
    private:
     bsoncxx::v_noabi::document::view_or_value _filter;

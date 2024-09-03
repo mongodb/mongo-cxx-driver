@@ -50,7 +50,8 @@ class find_one_and_update {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    find_one_and_update& collation(bsoncxx::v_noabi::document::view_or_value collation);
+    MONGOCXX_ABI_EXPORT_CDECL(find_one_and_update&)
+    collation(bsoncxx::v_noabi::document::view_or_value collation);
 
     ///
     /// Retrieves the current collation for this operation.
@@ -60,7 +61,8 @@ class find_one_and_update {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& collation() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+    collation() const;
 
     ///
     /// Whether or not to bypass document validation for this operation.
@@ -78,7 +80,8 @@ class find_one_and_update {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    find_one_and_update& bypass_document_validation(bool bypass_document_validation);
+    MONGOCXX_ABI_EXPORT_CDECL(find_one_and_update&)
+    bypass_document_validation(bool bypass_document_validation);
 
     ///
     /// The current setting for bypassing document validation.
@@ -87,7 +90,7 @@ class find_one_and_update {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    const stdx::optional<bool>& bypass_document_validation() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bool>&) bypass_document_validation() const;
 
     ///
     /// Sets the index to use for this operation.
@@ -103,14 +106,14 @@ class find_one_and_update {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    find_one_and_update& hint(mongocxx::v_noabi::hint index_hint);
+    MONGOCXX_ABI_EXPORT_CDECL(find_one_and_update&) hint(mongocxx::v_noabi::hint index_hint);
 
     ///
     /// Gets the current hint.
     ///
     /// @return The current hint, if one is set.
     ///
-    const stdx::optional<mongocxx::v_noabi::hint>& hint() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<mongocxx::v_noabi::hint>&) hint() const;
 
     ///
     /// Set the value of the let option.
@@ -122,7 +125,8 @@ class find_one_and_update {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    find_one_and_update& let(bsoncxx::v_noabi::document::view_or_value let);
+    MONGOCXX_ABI_EXPORT_CDECL(find_one_and_update&)
+    let(bsoncxx::v_noabi::document::view_or_value let);
 
     ///
     /// Gets the current value of the let option.
@@ -130,7 +134,8 @@ class find_one_and_update {
     /// @return
     ///  The current let option.
     ///
-    const stdx::optional<bsoncxx::v_noabi::document::view_or_value> let() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::view_or_value>)
+    let() const;
 
     ///
     /// Set the value of the comment option.
@@ -142,7 +147,8 @@ class find_one_and_update {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    find_one_and_update& comment(bsoncxx::v_noabi::types::bson_value::view_or_value comment);
+    MONGOCXX_ABI_EXPORT_CDECL(find_one_and_update&)
+    comment(bsoncxx::v_noabi::types::bson_value::view_or_value comment);
 
     ///
     /// Gets the current value of the comment option.
@@ -150,7 +156,9 @@ class find_one_and_update {
     /// @return
     ///  The current comment option.
     ///
-    const stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> comment() const;
+    MONGOCXX_ABI_EXPORT_CDECL(
+        const stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>)
+    comment() const;
 
     ///
     /// Sets the maximum amount of time for this operation to run (server-side) in milliseconds.
@@ -164,7 +172,7 @@ class find_one_and_update {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    find_one_and_update& max_time(std::chrono::milliseconds max_time);
+    MONGOCXX_ABI_EXPORT_CDECL(find_one_and_update&) max_time(std::chrono::milliseconds max_time);
 
     ///
     /// The current max_time setting.
@@ -173,7 +181,7 @@ class find_one_and_update {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    const stdx::optional<std::chrono::milliseconds>& max_time() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<std::chrono::milliseconds>&) max_time() const;
 
     ///
     /// Sets a projection, which limits the fields to return.
@@ -187,7 +195,8 @@ class find_one_and_update {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    find_one_and_update& projection(bsoncxx::v_noabi::document::view_or_value projection);
+    MONGOCXX_ABI_EXPORT_CDECL(find_one_and_update&)
+    projection(bsoncxx::v_noabi::document::view_or_value projection);
 
     ///
     /// Gets the current projection for this operation.
@@ -196,7 +205,8 @@ class find_one_and_update {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& projection() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+    projection() const;
 
     ///
     /// Set the desired version of the updated document to return, either the original
@@ -212,7 +222,8 @@ class find_one_and_update {
     /// @see https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     /// @see mongocxx::v_noabi::options::return_document
     ///
-    find_one_and_update& return_document(return_document return_document);
+    MONGOCXX_ABI_EXPORT_CDECL(find_one_and_update&)
+    return_document(return_document return_document);
 
     ///
     /// Which version of the updated document to return.
@@ -222,7 +233,8 @@ class find_one_and_update {
     /// @see https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     /// @see mongocxx::v_noabi::options::return_document
     ///
-    const stdx::optional<mongocxx::v_noabi::options::return_document>& return_document() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<mongocxx::v_noabi::options::return_document>&)
+    return_document() const;
 
     ///
     /// Sets the order by which to search the collection for a matching document.
@@ -239,7 +251,8 @@ class find_one_and_update {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    find_one_and_update& sort(bsoncxx::v_noabi::document::view_or_value ordering);
+    MONGOCXX_ABI_EXPORT_CDECL(find_one_and_update&)
+    sort(bsoncxx::v_noabi::document::view_or_value ordering);
 
     ///
     /// Gets the current sort ordering.
@@ -248,7 +261,8 @@ class find_one_and_update {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& sort() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+    sort() const;
 
     ///
     /// Sets the upsert flag on the operation. When @c true, the operation creates a new document if
@@ -264,7 +278,7 @@ class find_one_and_update {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    find_one_and_update& upsert(bool upsert);
+    MONGOCXX_ABI_EXPORT_CDECL(find_one_and_update&) upsert(bool upsert);
 
     ///
     /// Gets the current upsert setting.
@@ -273,7 +287,7 @@ class find_one_and_update {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    const stdx::optional<bool>& upsert() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bool>&) upsert() const;
 
     ///
     /// Sets the write concern for this operation.
@@ -288,7 +302,8 @@ class find_one_and_update {
     /// @see
     ///   https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    find_one_and_update& write_concern(mongocxx::v_noabi::write_concern write_concern);
+    MONGOCXX_ABI_EXPORT_CDECL(find_one_and_update&)
+    write_concern(mongocxx::v_noabi::write_concern write_concern);
 
     ///
     /// Gets the current write concern.
@@ -299,7 +314,8 @@ class find_one_and_update {
     /// @see
     ///   https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    const stdx::optional<mongocxx::v_noabi::write_concern>& write_concern() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<mongocxx::v_noabi::write_concern>&)
+    write_concern() const;
 
     ///
     /// Set array filters for this operation.
@@ -313,7 +329,8 @@ class find_one_and_update {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    find_one_and_update& array_filters(bsoncxx::v_noabi::array::view_or_value array_filters);
+    MONGOCXX_ABI_EXPORT_CDECL(find_one_and_update&)
+    array_filters(bsoncxx::v_noabi::array::view_or_value array_filters);
 
     ///
     /// Get array filters for this operation.
@@ -323,7 +340,8 @@ class find_one_and_update {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    const stdx::optional<bsoncxx::v_noabi::array::view_or_value>& array_filters() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::array::view_or_value>&)
+    array_filters() const;
 
    private:
     stdx::optional<bool> _bypass_document_validation;

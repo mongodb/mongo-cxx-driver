@@ -56,15 +56,16 @@ class apm {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    apm& on_command_started(
-        std::function<void(const events::command_started_event&)> command_started);
+    MONGOCXX_ABI_EXPORT_CDECL(apm&)
+    on_command_started(std::function<void(const events::command_started_event&)> command_started);
 
     ///
     /// Retrieves the command started monitoring callback.
     ///
     /// @return The command started monitoring callback.
     ///
-    const std::function<void(const events::command_started_event&)>& command_started() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const std::function<void(const events::command_started_event&)>&)
+    command_started() const;
 
     ///
     /// Set the command failed monitoring callback. The callback takes a reference to a
@@ -80,14 +81,16 @@ class apm {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    apm& on_command_failed(std::function<void(const events::command_failed_event&)> command_failed);
+    MONGOCXX_ABI_EXPORT_CDECL(apm&)
+    on_command_failed(std::function<void(const events::command_failed_event&)> command_failed);
 
     ///
     /// Retrieves the command failed monitoring callback.
     ///
     /// @return The command failed monitoring callback.
     ///
-    const std::function<void(const events::command_failed_event&)>& command_failed() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const std::function<void(const events::command_failed_event&)>&)
+    command_failed() const;
 
     ///
     /// Set the command succeeded monitoring callback. The callback takes a reference to a
@@ -103,7 +106,8 @@ class apm {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    apm& on_command_succeeded(
+    MONGOCXX_ABI_EXPORT_CDECL(apm&)
+    on_command_succeeded(
         std::function<void(const events::command_succeeded_event&)> command_succeeded);
 
     ///
@@ -111,7 +115,8 @@ class apm {
     ///
     /// @return The command succeeded monitoring callback.
     ///
-    const std::function<void(const events::command_succeeded_event&)>& command_succeeded() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const std::function<void(const events::command_succeeded_event&)>&)
+    command_succeeded() const;
 
     ///
     /// Set the server opening monitoring callback. The callback takes a reference to a
@@ -127,14 +132,16 @@ class apm {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    apm& on_server_opening(std::function<void(const events::server_opening_event&)> server_opening);
+    MONGOCXX_ABI_EXPORT_CDECL(apm&)
+    on_server_opening(std::function<void(const events::server_opening_event&)> server_opening);
 
     ///
     /// Retrieves the server opening monitoring callback.
     ///
     /// @return The server opening monitoring callback.
     ///
-    const std::function<void(const events::server_opening_event&)>& server_opening() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const std::function<void(const events::server_opening_event&)>&)
+    server_opening() const;
 
     ///
     /// Set the server closed monitoring callback. The callback takes a reference to a
@@ -150,14 +157,16 @@ class apm {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    apm& on_server_closed(std::function<void(const events::server_closed_event&)> server_closed);
+    MONGOCXX_ABI_EXPORT_CDECL(apm&)
+    on_server_closed(std::function<void(const events::server_closed_event&)> server_closed);
 
     ///
     /// Retrieves the server closed monitoring callback.
     ///
     /// @return The server closed monitoring callback.
     ///
-    const std::function<void(const events::server_closed_event&)>& server_closed() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const std::function<void(const events::server_closed_event&)>&)
+    server_closed() const;
 
     ///
     /// Set the server description changed monitoring callback. The callback takes a reference to a
@@ -174,14 +183,16 @@ class apm {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    apm& on_server_changed(std::function<void(const events::server_changed_event&)> server_changed);
+    MONGOCXX_ABI_EXPORT_CDECL(apm&)
+    on_server_changed(std::function<void(const events::server_changed_event&)> server_changed);
 
     ///
     /// Retrieves the server description changed monitoring callback.
     ///
     /// @return The server description changed monitoring callback.
     ///
-    const std::function<void(const events::server_changed_event&)>& server_changed() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const std::function<void(const events::server_changed_event&)>&)
+    server_changed() const;
 
     ///
     /// Set the topology_opening monitoring callback. The callback takes a reference to a
@@ -197,7 +208,8 @@ class apm {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    apm& on_topology_opening(
+    MONGOCXX_ABI_EXPORT_CDECL(apm&)
+    on_topology_opening(
         std::function<void(const events::topology_opening_event&)> topology_opening);
 
     ///
@@ -205,7 +217,8 @@ class apm {
     ///
     /// @return The topology_opening monitoring callback.
     ///
-    const std::function<void(const events::topology_opening_event&)>& topology_opening() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const std::function<void(const events::topology_opening_event&)>&)
+    topology_opening() const;
 
     ///
     /// Set the topology closed monitoring callback. The callback takes a reference to a
@@ -221,15 +234,16 @@ class apm {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    apm& on_topology_closed(
-        std::function<void(const events::topology_closed_event&)> topology_closed);
+    MONGOCXX_ABI_EXPORT_CDECL(apm&)
+    on_topology_closed(std::function<void(const events::topology_closed_event&)> topology_closed);
 
     ///
     /// Retrieves the topology closed monitoring callback.
     ///
     /// @return The topology closed monitoring callback.
     ///
-    const std::function<void(const events::topology_closed_event&)>& topology_closed() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const std::function<void(const events::topology_closed_event&)>&)
+    topology_closed() const;
 
     ///
     /// Set the topology description changed monitoring callback. The callback takes a reference to
@@ -246,7 +260,8 @@ class apm {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    apm& on_topology_changed(
+    MONGOCXX_ABI_EXPORT_CDECL(apm&)
+    on_topology_changed(
         std::function<void(const events::topology_changed_event&)> topology_changed);
 
     ///
@@ -254,7 +269,8 @@ class apm {
     ///
     /// @return The topology description changed monitoring callback.
     ///
-    const std::function<void(const events::topology_changed_event&)>& topology_changed() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const std::function<void(const events::topology_changed_event&)>&)
+    topology_changed() const;
 
     ///
     /// Set the heartbeat started monitoring callback. The callback takes a reference to a
@@ -270,7 +286,8 @@ class apm {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    apm& on_heartbeat_started(
+    MONGOCXX_ABI_EXPORT_CDECL(apm&)
+    on_heartbeat_started(
         std::function<void(const events::heartbeat_started_event&)> heartbeat_started);
 
     ///
@@ -278,7 +295,8 @@ class apm {
     ///
     /// @return The heartbeat started monitoring callback.
     ///
-    const std::function<void(const events::heartbeat_started_event&)>& heartbeat_started() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const std::function<void(const events::heartbeat_started_event&)>&)
+    heartbeat_started() const;
 
     ///
     /// Set the heartbeat failed monitoring callback. The callback takes a reference to a
@@ -294,7 +312,8 @@ class apm {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    apm& on_heartbeat_failed(
+    MONGOCXX_ABI_EXPORT_CDECL(apm&)
+    on_heartbeat_failed(
         std::function<void(const events::heartbeat_failed_event&)> heartbeat_failed);
 
     ///
@@ -302,7 +321,8 @@ class apm {
     ///
     /// @return The heartbeat failed monitoring callback.
     ///
-    const std::function<void(const events::heartbeat_failed_event&)>& heartbeat_failed() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const std::function<void(const events::heartbeat_failed_event&)>&)
+    heartbeat_failed() const;
 
     ///
     /// Set the heartbeat succeeded monitoring callback. The callback takes a reference to a
@@ -319,7 +339,8 @@ class apm {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    apm& on_heartbeat_succeeded(
+    MONGOCXX_ABI_EXPORT_CDECL(apm&)
+    on_heartbeat_succeeded(
         std::function<void(const events::heartbeat_succeeded_event&)> heartbeat_succeeded);
 
     ///
@@ -327,8 +348,8 @@ class apm {
     ///
     /// @return The heartbeat succeeded monitoring callback.
     ///
-    const std::function<void(const events::heartbeat_succeeded_event&)>& heartbeat_succeeded()
-        const;
+    MONGOCXX_ABI_EXPORT_CDECL(const std::function<void(const events::heartbeat_succeeded_event&)>&)
+    heartbeat_succeeded() const;
 
    private:
     std::function<void(const events::command_started_event&)> _command_started;

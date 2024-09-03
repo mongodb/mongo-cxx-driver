@@ -55,7 +55,7 @@ class find {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    find& allow_disk_use(bool allow_disk_use);
+    MONGOCXX_ABI_EXPORT_CDECL(find&) allow_disk_use(bool allow_disk_use);
 
     ///
     /// Gets the current setting for allowing disk use on the server.
@@ -64,7 +64,7 @@ class find {
     ///
     /// @return Whether disk use on the server is allowed.
     ///
-    const stdx::optional<bool>& allow_disk_use() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bool>&) allow_disk_use() const;
 
     ///
     /// Sets whether to allow partial results from a mongos if some shards are down (instead of
@@ -79,7 +79,7 @@ class find {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    find& allow_partial_results(bool allow_partial);
+    MONGOCXX_ABI_EXPORT_CDECL(find&) allow_partial_results(bool allow_partial);
 
     ///
     /// Gets the current setting for allowing partial results from mongos.
@@ -88,7 +88,7 @@ class find {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    const stdx::optional<bool>& allow_partial_results() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bool>&) allow_partial_results() const;
 
     ///
     /// Sets the number of documents to return per batch.
@@ -102,7 +102,7 @@ class find {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    find& batch_size(std::int32_t batch_size);
+    MONGOCXX_ABI_EXPORT_CDECL(find&) batch_size(std::int32_t batch_size);
 
     ///
     /// The current batch size setting.
@@ -111,7 +111,7 @@ class find {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    const stdx::optional<std::int32_t>& batch_size() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<std::int32_t>&) batch_size() const;
 
     ///
     /// Sets the collation for this operation.
@@ -125,7 +125,7 @@ class find {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    find& collation(bsoncxx::v_noabi::document::view_or_value collation);
+    MONGOCXX_ABI_EXPORT_CDECL(find&) collation(bsoncxx::v_noabi::document::view_or_value collation);
 
     ///
     /// Retrieves the current collation for this operation.
@@ -135,7 +135,8 @@ class find {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& collation() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+    collation() const;
 
     ///
     /// Attaches a comment to the query. If $comment also exists in the modifiers document then
@@ -152,7 +153,7 @@ class find {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    find& comment(bsoncxx::v_noabi::string::view_or_value comment);
+    MONGOCXX_ABI_EXPORT_CDECL(find&) comment(bsoncxx::v_noabi::string::view_or_value comment);
 
     ///
     /// Gets the current comment attached to this query.
@@ -163,7 +164,8 @@ class find {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    const stdx::optional<bsoncxx::v_noabi::string::view_or_value>& comment() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::string::view_or_value>&)
+    comment() const;
 
     ///
     /// Indicates the type of cursor to use for this query.
@@ -177,7 +179,7 @@ class find {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    find& cursor_type(cursor::type cursor_type);
+    MONGOCXX_ABI_EXPORT_CDECL(find&) cursor_type(cursor::type cursor_type);
 
     ///
     /// Gets the current cursor type.
@@ -186,7 +188,7 @@ class find {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    const stdx::optional<cursor::type>& cursor_type() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<cursor::type>&) cursor_type() const;
 
     ///
     /// Sets the index to use for this operation.
@@ -203,7 +205,7 @@ class find {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    find& hint(mongocxx::v_noabi::hint index_hint);
+    MONGOCXX_ABI_EXPORT_CDECL(find&) hint(mongocxx::v_noabi::hint index_hint);
 
     ///
     /// Gets the current hint.
@@ -212,7 +214,7 @@ class find {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    const stdx::optional<mongocxx::v_noabi::hint>& hint() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<mongocxx::v_noabi::hint>&) hint() const;
 
     ///
     /// Set the value of the let option.
@@ -226,7 +228,7 @@ class find {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    find& let(bsoncxx::v_noabi::document::view_or_value let);
+    MONGOCXX_ABI_EXPORT_CDECL(find&) let(bsoncxx::v_noabi::document::view_or_value let);
 
     ///
     /// Gets the current value of the let option.
@@ -236,7 +238,8 @@ class find {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    const stdx::optional<bsoncxx::v_noabi::document::view_or_value> let() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::view_or_value>)
+    let() const;
 
     ///
     /// Set the value of the comment option.
@@ -252,7 +255,8 @@ class find {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    find& comment_option(bsoncxx::v_noabi::types::bson_value::view_or_value comment);
+    MONGOCXX_ABI_EXPORT_CDECL(find&)
+    comment_option(bsoncxx::v_noabi::types::bson_value::view_or_value comment);
 
     ///
     /// Gets the current value of the comment option.
@@ -264,8 +268,9 @@ class find {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    const stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>& comment_option()
-        const;
+    MONGOCXX_ABI_EXPORT_CDECL(
+        const stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>&)
+    comment_option() const;
 
     ///
     /// Sets maximum number of documents to return.
@@ -278,7 +283,7 @@ class find {
     ///   method chaining.
     /// @see https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    find& limit(std::int64_t limit);
+    MONGOCXX_ABI_EXPORT_CDECL(find&) limit(std::int64_t limit);
 
     ///
     /// Gets the current limit.
@@ -287,7 +292,7 @@ class find {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    const stdx::optional<std::int64_t>& limit() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<std::int64_t>&) limit() const;
 
     ///
     /// Gets the current exclusive upper bound for a specific index.
@@ -301,7 +306,7 @@ class find {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    find& max(bsoncxx::v_noabi::document::view_or_value max);
+    MONGOCXX_ABI_EXPORT_CDECL(find&) max(bsoncxx::v_noabi::document::view_or_value max);
 
     ///
     /// Sets the current exclusive upper bound for a specific index.
@@ -310,7 +315,8 @@ class find {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& max() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+    max() const;
 
     ///
     /// The maximum amount of time for the server to wait on new documents to satisfy a tailable
@@ -329,7 +335,7 @@ class find {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    find& max_await_time(std::chrono::milliseconds max_await_time);
+    MONGOCXX_ABI_EXPORT_CDECL(find&) max_await_time(std::chrono::milliseconds max_await_time);
 
     ///
     /// The maximum amount of time for the server to wait on new documents to satisfy a tailable
@@ -339,7 +345,8 @@ class find {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    const stdx::optional<std::chrono::milliseconds>& max_await_time() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<std::chrono::milliseconds>&)
+    max_await_time() const;
 
     ///
     /// Sets the maximum amount of time for this operation to run (server-side) in milliseconds.
@@ -353,7 +360,7 @@ class find {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    find& max_time(std::chrono::milliseconds max_time);
+    MONGOCXX_ABI_EXPORT_CDECL(find&) max_time(std::chrono::milliseconds max_time);
 
     ///
     /// The current max_time_ms setting.
@@ -362,7 +369,7 @@ class find {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    const stdx::optional<std::chrono::milliseconds>& max_time() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<std::chrono::milliseconds>&) max_time() const;
 
     ///
     /// Gets the current inclusive lower bound for a specific index.
@@ -376,7 +383,7 @@ class find {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    find& min(bsoncxx::v_noabi::document::view_or_value min);
+    MONGOCXX_ABI_EXPORT_CDECL(find&) min(bsoncxx::v_noabi::document::view_or_value min);
 
     ///
     /// Sets the current inclusive lower bound for a specific index.
@@ -385,7 +392,8 @@ class find {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& min() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+    min() const;
 
     ///
     /// Sets the cursor flag to prevent cursor from timing out server-side due to a period of
@@ -400,7 +408,7 @@ class find {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    find& no_cursor_timeout(bool no_cursor_timeout);
+    MONGOCXX_ABI_EXPORT_CDECL(find&) no_cursor_timeout(bool no_cursor_timeout);
 
     ///
     /// Gets the current no_cursor_timeout setting.
@@ -409,7 +417,7 @@ class find {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    const stdx::optional<bool>& no_cursor_timeout() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bool>&) no_cursor_timeout() const;
 
     ///
     /// Sets a projection which limits the returned fields for all matching documents.
@@ -423,7 +431,8 @@ class find {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    find& projection(bsoncxx::v_noabi::document::view_or_value projection);
+    MONGOCXX_ABI_EXPORT_CDECL(find&)
+    projection(bsoncxx::v_noabi::document::view_or_value projection);
 
     ///
     /// Gets the current projection set on this query.
@@ -432,7 +441,8 @@ class find {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& projection() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+    projection() const;
 
     ///
     /// Sets the read_preference for this operation.
@@ -446,7 +456,7 @@ class find {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    find& read_preference(mongocxx::v_noabi::read_preference rp);
+    MONGOCXX_ABI_EXPORT_CDECL(find&) read_preference(mongocxx::v_noabi::read_preference rp);
 
     ///
     /// The current read_preference for this operation.
@@ -456,7 +466,8 @@ class find {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    const stdx::optional<mongocxx::v_noabi::read_preference>& read_preference() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<mongocxx::v_noabi::read_preference>&)
+    read_preference() const;
 
     ///
     /// Sets whether to return the index keys associated with the query results, instead of the
@@ -472,7 +483,7 @@ class find {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    find& return_key(bool return_key);
+    MONGOCXX_ABI_EXPORT_CDECL(find&) return_key(bool return_key);
 
     ///
     /// Gets the current setting for returning the index keys associated with the query results,
@@ -484,7 +495,7 @@ class find {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    const stdx::optional<bool>& return_key() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bool>&) return_key() const;
 
     ///
     /// Sets whether to include the record identifier for each document in the query results.
@@ -498,7 +509,7 @@ class find {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    find& show_record_id(bool show_record_id);
+    MONGOCXX_ABI_EXPORT_CDECL(find&) show_record_id(bool show_record_id);
 
     ///
     /// Gets the current setting for whether the record identifier is returned for each document in
@@ -509,7 +520,7 @@ class find {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    const stdx::optional<bool>& show_record_id() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bool>&) show_record_id() const;
 
     ///
     /// Sets the number of documents to skip before returning results.
@@ -523,7 +534,7 @@ class find {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    find& skip(std::int64_t skip);
+    MONGOCXX_ABI_EXPORT_CDECL(find&) skip(std::int64_t skip);
 
     ///
     /// Gets the current number of documents to skip.
@@ -532,7 +543,7 @@ class find {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    const stdx::optional<std::int64_t>& skip() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<std::int64_t>&) skip() const;
 
     ///
     /// The order in which to return matching documents. If $orderby also exists in the modifiers
@@ -547,7 +558,7 @@ class find {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    find& sort(bsoncxx::v_noabi::document::view_or_value ordering);
+    MONGOCXX_ABI_EXPORT_CDECL(find&) sort(bsoncxx::v_noabi::document::view_or_value ordering);
 
     ///
     /// Gets the current sort ordering for this query.
@@ -556,7 +567,8 @@ class find {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/find/
     ///
-    const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& sort() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+    sort() const;
 
    private:
     stdx::optional<bool> _allow_disk_use;

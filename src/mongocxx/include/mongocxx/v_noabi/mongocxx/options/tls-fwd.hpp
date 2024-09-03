@@ -20,7 +20,7 @@ namespace mongocxx {
 namespace v_noabi {
 namespace options {
 
-class MONGOCXX_API tls;
+class tls;
 
 }  // namespace options
 }  // namespace v_noabi

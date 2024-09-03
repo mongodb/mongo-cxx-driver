@@ -33,7 +33,7 @@ namespace options {
 ///
 class index_view {
    public:
-    index_view();
+    MONGOCXX_ABI_EXPORT_CDECL() index_view();
 
     ///
     /// Sets the maximum amount of time for this operation to run (server-side) in milliseconds.
@@ -48,7 +48,7 @@ class index_view {
     /// @see
     ///   https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    index_view& max_time(std::chrono::milliseconds max_time);
+    MONGOCXX_ABI_EXPORT_CDECL(index_view&) max_time(std::chrono::milliseconds max_time);
 
     ///
     /// The current max_time setting.
@@ -59,7 +59,8 @@ class index_view {
     /// @see
     ///   https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    const bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds>& max_time() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds>&)
+    max_time() const;
 
     ///
     /// Sets the write concern for this operation.
@@ -74,7 +75,8 @@ class index_view {
     /// @see
     ///   https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    index_view& write_concern(mongocxx::v_noabi::write_concern write_concern);
+    MONGOCXX_ABI_EXPORT_CDECL(index_view&)
+    write_concern(mongocxx::v_noabi::write_concern write_concern);
 
     ///
     /// Gets the current write concern.
@@ -85,7 +87,9 @@ class index_view {
     /// @see
     ///   https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>& write_concern() const;
+    MONGOCXX_ABI_EXPORT_CDECL(
+        const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>&)
+    write_concern() const;
 
     ///
     /// Sets the commit quorum for this operation.
@@ -104,7 +108,7 @@ class index_view {
     /// @see
     ///   https://www.mongodb.com/docs/manual/reference/command/createIndexes
     ///
-    index_view& commit_quorum(std::int32_t commit_quorum);
+    MONGOCXX_ABI_EXPORT_CDECL(index_view&) commit_quorum(std::int32_t commit_quorum);
 
     ///
     /// Sets the commit quorum for this operation.
@@ -123,7 +127,7 @@ class index_view {
     /// @see
     ///   https://www.mongodb.com/docs/manual/reference/command/createIndexes
     ///
-    index_view& commit_quorum(std::string commit_quorum);
+    MONGOCXX_ABI_EXPORT_CDECL(index_view&) commit_quorum(std::string commit_quorum);
 
     ///
     /// Gets the current commitQuorum setting.
@@ -136,7 +140,8 @@ class index_view {
     /// @see
     ///   https://www.mongodb.com/docs/manual/reference/command/createIndexes
     ///
-    const stdx::optional<bsoncxx::v_noabi::document::value> commit_quorum() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::value>)
+    commit_quorum() const;
 
    private:
     bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds> _max_time;

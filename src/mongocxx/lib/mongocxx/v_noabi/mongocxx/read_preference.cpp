@@ -138,12 +138,12 @@ const stdx::optional<bsoncxx::v_noabi::document::view> read_preference::hedge() 
     return stdx::optional<bsoncxx::v_noabi::document::view>{};
 }
 
-bool MONGOCXX_CALL operator==(const read_preference& lhs, const read_preference& rhs) {
+bool operator==(const read_preference& lhs, const read_preference& rhs) {
     return (lhs.mode() == rhs.mode()) && (lhs.tags() == rhs.tags()) &&
            (lhs.max_staleness() == rhs.max_staleness());
 }
 
-bool MONGOCXX_CALL operator!=(const read_preference& lhs, const read_preference& rhs) {
+bool operator!=(const read_preference& lhs, const read_preference& rhs) {
     return !(lhs == rhs);
 }
 

@@ -43,25 +43,25 @@ class pipeline {
     ///
     /// @see https://www.mongodb.com/docs/manual/core/aggregation-pipeline/
     ///
-    pipeline();
+    MONGOCXX_ABI_EXPORT_CDECL() pipeline();
 
     ///
     /// Move constructs a pipeline.
     ///
-    pipeline(pipeline&&) noexcept;
+    MONGOCXX_ABI_EXPORT_CDECL() pipeline(pipeline&&) noexcept;
 
     ///
     /// Move assigns a pipeline.
     ///
-    pipeline& operator=(pipeline&&) noexcept;
+    MONGOCXX_ABI_EXPORT_CDECL(pipeline&) operator=(pipeline&&) noexcept;
 
     ///
     /// Destroys a pipeline.
     ///
-    ~pipeline();
+    MONGOCXX_ABI_EXPORT_CDECL() ~pipeline();
 
     pipeline(const pipeline&) = delete;
-    pipeline& operator=(const pipeline&) = delete;
+    MONGOCXX_ABI_EXPORT_CDECL(pipeline&) operator=(const pipeline&) = delete;
 
     ///
     /// Adds new fields to documents.
@@ -77,7 +77,8 @@ class pipeline {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    pipeline& add_fields(bsoncxx::v_noabi::document::view_or_value fields_to_add);
+    MONGOCXX_ABI_EXPORT_CDECL(pipeline&)
+    add_fields(bsoncxx::v_noabi::document::view_or_value fields_to_add);
 
     ///
     /// Categorizes documents into groups, called buckets, based on a specified expression and
@@ -93,7 +94,8 @@ class pipeline {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    pipeline& bucket(bsoncxx::v_noabi::document::view_or_value bucket_args);
+    MONGOCXX_ABI_EXPORT_CDECL(pipeline&)
+    bucket(bsoncxx::v_noabi::document::view_or_value bucket_args);
 
     ///
     /// Categorizes documents into a specific number of groups, called buckets, based on a
@@ -110,7 +112,8 @@ class pipeline {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    pipeline& bucket_auto(bsoncxx::v_noabi::document::view_or_value bucket_auto_args);
+    MONGOCXX_ABI_EXPORT_CDECL(pipeline&)
+    bucket_auto(bsoncxx::v_noabi::document::view_or_value bucket_auto_args);
 
     ///
     /// Returns statistics regarding a collection or view.
@@ -125,8 +128,9 @@ class pipeline {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    pipeline& coll_stats(bsoncxx::v_noabi::document::view_or_value coll_stats_args =
-                             bsoncxx::v_noabi::document::view{});
+    MONGOCXX_ABI_EXPORT_CDECL(pipeline&)
+    coll_stats(bsoncxx::v_noabi::document::view_or_value coll_stats_args =
+                   bsoncxx::v_noabi::document::view{});
 
     ///
     /// Returns a document containing a count of the number of documents input to the stage.
@@ -140,7 +144,7 @@ class pipeline {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    pipeline& count(std::string field);
+    MONGOCXX_ABI_EXPORT_CDECL(pipeline&) count(std::string field);
 
     ///
     /// Returns a stream of documents containing information on active and/or dormant
@@ -157,7 +161,8 @@ class pipeline {
     /// @return
     ///   A reference to the object on which this method is being called.
     ///
-    pipeline& current_op(bsoncxx::v_noabi::document::view_or_value current_op_args);
+    MONGOCXX_ABI_EXPORT_CDECL(pipeline&)
+    current_op(bsoncxx::v_noabi::document::view_or_value current_op_args);
 
     ///
     /// Processes multiple aggregation pipelines within a single stage on the same set of input
@@ -173,7 +178,8 @@ class pipeline {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    pipeline& facet(bsoncxx::v_noabi::document::view_or_value facet_args);
+    MONGOCXX_ABI_EXPORT_CDECL(pipeline&)
+    facet(bsoncxx::v_noabi::document::view_or_value facet_args);
 
     ///
     /// Appends a stage to this pipeline object.
@@ -190,7 +196,8 @@ class pipeline {
     /// @return
     ///   A reference to this object on which this member function is being called.
     ///
-    pipeline& append_stage(bsoncxx::v_noabi::document::view_or_value stage);
+    MONGOCXX_ABI_EXPORT_CDECL(pipeline&)
+    append_stage(bsoncxx::v_noabi::document::view_or_value stage);
 
     ///
     /// Appends stages to this pipeline object from the given bson array.
@@ -207,7 +214,8 @@ class pipeline {
     /// @return
     ///   A reference to the object on which this member function is being called.
     ///
-    pipeline& append_stages(bsoncxx::v_noabi::array::view_or_value stages);
+    MONGOCXX_ABI_EXPORT_CDECL(pipeline&)
+    append_stages(bsoncxx::v_noabi::array::view_or_value stages);
 
     ///
     /// Outputs documents in order of nearest to farthest from a specified point.
@@ -222,7 +230,8 @@ class pipeline {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    pipeline& geo_near(bsoncxx::v_noabi::document::view_or_value geo_near_args);
+    MONGOCXX_ABI_EXPORT_CDECL(pipeline&)
+    geo_near(bsoncxx::v_noabi::document::view_or_value geo_near_args);
 
     ///
     /// Performs a recursive search on a collection.
@@ -237,7 +246,8 @@ class pipeline {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    pipeline& graph_lookup(bsoncxx::v_noabi::document::view_or_value graph_lookup_args);
+    MONGOCXX_ABI_EXPORT_CDECL(pipeline&)
+    graph_lookup(bsoncxx::v_noabi::document::view_or_value graph_lookup_args);
 
     ///
     /// Groups documents by some specified expression and outputs to the next stage a
@@ -257,7 +267,8 @@ class pipeline {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    pipeline& group(bsoncxx::v_noabi::document::view_or_value group_args);
+    MONGOCXX_ABI_EXPORT_CDECL(pipeline&)
+    group(bsoncxx::v_noabi::document::view_or_value group_args);
 
     ///
     /// Returns statistics regarding the use of each index for the collection.
@@ -268,7 +279,7 @@ class pipeline {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/indexStats/
     ///
-    pipeline& index_stats();
+    MONGOCXX_ABI_EXPORT_CDECL(pipeline&) index_stats();
 
     ///
     /// Limits the number of documents passed to the next stage in the pipeline.
@@ -282,7 +293,7 @@ class pipeline {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    pipeline& limit(std::int32_t limit);
+    MONGOCXX_ABI_EXPORT_CDECL(pipeline&) limit(std::int32_t limit);
 
     ///
     /// Lists the sessions cached in memory by the mongod or mongos instance.
@@ -297,8 +308,8 @@ class pipeline {
     /// @return
     ///   A reference to the object on which this method is being called.
     ///
-    pipeline& list_local_sessions(
-        bsoncxx::v_noabi::document::view_or_value list_local_sessions_args);
+    MONGOCXX_ABI_EXPORT_CDECL(pipeline&)
+    list_local_sessions(bsoncxx::v_noabi::document::view_or_value list_local_sessions_args);
 
     ///
     /// Lists all sessions stored in the system.sessions collection in the config database.
@@ -312,7 +323,8 @@ class pipeline {
     /// @return
     ///   A reference to the object on which this method is being called.
     ///
-    pipeline& list_sessions(bsoncxx::v_noabi::document::view_or_value list_sessions_args);
+    MONGOCXX_ABI_EXPORT_CDECL(pipeline&)
+    list_sessions(bsoncxx::v_noabi::document::view_or_value list_sessions_args);
 
     ///
     /// Performs a left outer join to an unsharded collection in the same database to filter in
@@ -328,7 +340,8 @@ class pipeline {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    pipeline& lookup(bsoncxx::v_noabi::document::view_or_value lookup_args);
+    MONGOCXX_ABI_EXPORT_CDECL(pipeline&)
+    lookup(bsoncxx::v_noabi::document::view_or_value lookup_args);
 
     ///
     /// Filters the documents. Only the documents that match the condition(s) specified by the
@@ -343,7 +356,7 @@ class pipeline {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    pipeline& match(bsoncxx::v_noabi::document::view_or_value filter);
+    MONGOCXX_ABI_EXPORT_CDECL(pipeline&) match(bsoncxx::v_noabi::document::view_or_value filter);
 
     ///
     /// Outputs the aggregation results to a collection.
@@ -358,7 +371,8 @@ class pipeline {
     /// @return
     ///   A reference to the object on which this member function is being called.
     ///
-    pipeline& merge(bsoncxx::v_noabi::document::view_or_value merge_args);
+    MONGOCXX_ABI_EXPORT_CDECL(pipeline&)
+    merge(bsoncxx::v_noabi::document::view_or_value merge_args);
 
     ///
     /// Takes documents returned by the aggregation pipeline and writes them to a specified
@@ -374,7 +388,7 @@ class pipeline {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    pipeline& out(std::string collection_name);
+    MONGOCXX_ABI_EXPORT_CDECL(pipeline&) out(std::string collection_name);
 
     ///
     /// Projects a subset of the fields in the documents to the next stage of the pipeline.
@@ -388,7 +402,8 @@ class pipeline {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    pipeline& project(bsoncxx::v_noabi::document::view_or_value projection);
+    MONGOCXX_ABI_EXPORT_CDECL(pipeline&)
+    project(bsoncxx::v_noabi::document::view_or_value projection);
 
     ///
     /// Restricts the contents of the documents based on information stored in the documents
@@ -403,7 +418,8 @@ class pipeline {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    pipeline& redact(bsoncxx::v_noabi::document::view_or_value restrictions);
+    MONGOCXX_ABI_EXPORT_CDECL(pipeline&)
+    redact(bsoncxx::v_noabi::document::view_or_value restrictions);
 
     ///
     /// Promotes a specified document to the top level and replaces all other fields.
@@ -418,7 +434,8 @@ class pipeline {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    pipeline& replace_root(bsoncxx::v_noabi::document::view_or_value replace_root_args);
+    MONGOCXX_ABI_EXPORT_CDECL(pipeline&)
+    replace_root(bsoncxx::v_noabi::document::view_or_value replace_root_args);
 
     ///
     /// Randomly selects the specified number of documents that pass into the stage and passes the
@@ -433,7 +450,7 @@ class pipeline {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    pipeline& sample(std::int32_t size);
+    MONGOCXX_ABI_EXPORT_CDECL(pipeline&) sample(std::int32_t size);
 
     ///
     /// Skips over the specified number of documents that pass into the stage and passes the
@@ -448,7 +465,7 @@ class pipeline {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    pipeline& skip(std::int32_t docs_to_skip);
+    MONGOCXX_ABI_EXPORT_CDECL(pipeline&) skip(std::int32_t docs_to_skip);
 
     ///
     /// Sorts all input documents and returns them to the pipeline in sorted order.
@@ -462,7 +479,7 @@ class pipeline {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    pipeline& sort(bsoncxx::v_noabi::document::view_or_value ordering);
+    MONGOCXX_ABI_EXPORT_CDECL(pipeline&) sort(bsoncxx::v_noabi::document::view_or_value ordering);
 
     ///
     /// Groups incoming documents based on the value of a specified expression, then computes the
@@ -481,7 +498,8 @@ class pipeline {
     ///   This overload of sort_by_count() is intended to be used when the desired sort is over a
     ///   grouping of the result of a complex expression computed from the input documents.
     ///
-    pipeline& sort_by_count(bsoncxx::v_noabi::document::view_or_value field_expression);
+    MONGOCXX_ABI_EXPORT_CDECL(pipeline&)
+    sort_by_count(bsoncxx::v_noabi::document::view_or_value field_expression);
 
     ///
     /// Groups incoming documents based on the value of a specified expression, then computes the
@@ -501,7 +519,7 @@ class pipeline {
     ///   This overload of sort_by_count() is intended to be used when the desired sort is over a
     ///   grouping of the value of a particular element in the input documents.
     ///
-    pipeline& sort_by_count(std::string field_expression);
+    MONGOCXX_ABI_EXPORT_CDECL(pipeline&) sort_by_count(std::string field_expression);
 
     ///
     /// Deconstructs an array field from the input documents to output a document for each element.
@@ -521,7 +539,8 @@ class pipeline {
     ///   This overload of unwind() is intended to be used when additional options other than the
     ///   field name need to be specified.
     ///
-    pipeline& unwind(bsoncxx::v_noabi::document::view_or_value unwind_args);
+    MONGOCXX_ABI_EXPORT_CDECL(pipeline&)
+    unwind(bsoncxx::v_noabi::document::view_or_value unwind_args);
 
     ///
     /// Deconstructs an array field from the input documents to output a document for each element.
@@ -541,19 +560,19 @@ class pipeline {
     ///   This overload of unwind() is intended to be used when no options other than the field name
     ///   need to be specified.
     ///
-    pipeline& unwind(std::string field_name);
+    MONGOCXX_ABI_EXPORT_CDECL(pipeline&) unwind(std::string field_name);
 
     ///
     /// @return A view of the underlying BSON array this pipeline represents.
     ///
-    bsoncxx::v_noabi::array::view view_array() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::array::view) view_array() const;
 
    private:
     friend ::mongocxx::v_noabi::client;
     friend ::mongocxx::v_noabi::collection;
     friend ::mongocxx::v_noabi::database;
 
-    class MONGOCXX_PRIVATE impl;
+    class impl;
     std::unique_ptr<impl> _impl;
 };
 

@@ -31,14 +31,17 @@ class rewrap_many_datakey {
    public:
     rewrap_many_datakey() = default;
 
-    explicit rewrap_many_datakey(mongocxx::v_noabi::result::bulk_write bulk_write_result_doc);
+    explicit MONGOCXX_ABI_EXPORT_CDECL()
+        rewrap_many_datakey(mongocxx::v_noabi::result::bulk_write bulk_write_result_doc);
 
     ///
     /// Returns the bulk write result for this rewrap_many_datakey operation.
     ///
     /// @return The raw bulk write result.
     ///
-    const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::result::bulk_write>& result();
+    MONGOCXX_ABI_EXPORT_CDECL(
+        const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::result::bulk_write>&)
+    result();
 
    private:
     bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::result::bulk_write> _result;

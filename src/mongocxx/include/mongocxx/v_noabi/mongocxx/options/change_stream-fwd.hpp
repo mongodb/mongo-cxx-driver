@@ -20,7 +20,7 @@ namespace mongocxx {
 namespace v_noabi {
 namespace options {
 
-class MONGOCXX_API change_stream;
+class change_stream;
 
 }  // namespace options
 }  // namespace v_noabi

@@ -20,7 +20,7 @@ namespace mongocxx {
 namespace v_noabi {
 namespace options {
 
-class MONGOCXX_API delete_options;
+class delete_options;
 
 }  // namespace options
 }  // namespace v_noabi

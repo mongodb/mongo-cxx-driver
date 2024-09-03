@@ -35,12 +35,12 @@ namespace events {
 ///
 class heartbeat_started_event {
    public:
-    MONGOCXX_PRIVATE explicit heartbeat_started_event(const void* event);
+    explicit heartbeat_started_event(const void* event);
 
     ///
     /// Destroys a heartbeat_started_event.
     ///
-    ~heartbeat_started_event();
+    MONGOCXX_ABI_EXPORT_CDECL() ~heartbeat_started_event();
 
     heartbeat_started_event(heartbeat_started_event&&) = default;
     heartbeat_started_event& operator=(heartbeat_started_event&&) noexcept = default;
@@ -53,21 +53,21 @@ class heartbeat_started_event {
     ///
     /// @return The host name.
     ///
-    bsoncxx::v_noabi::stdx::string_view host() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::string_view) host() const;
 
     ///
     /// Returns the port.
     ///
     /// @return The port.
     ///
-    std::uint16_t port() const;
+    MONGOCXX_ABI_EXPORT_CDECL(std::uint16_t) port() const;
 
     ///
     /// Returns a boolean indicating whether this heartbeat event is from an awaitable hello.
     ///
     /// @return A boolean.
     ///
-    bool awaited() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bool) awaited() const;
 
    private:
     const void* _started_event;

@@ -101,11 +101,11 @@ const bsoncxx::v_noabi::document::view* cursor::iterator::operator->() const {
 // both are "at the end".  We check for exhaustion first because the most
 // common check is `iter != cursor.end()`.
 //
-bool MONGOCXX_CALL operator==(const cursor::iterator& lhs, const cursor::iterator& rhs) {
+bool operator==(const cursor::iterator& lhs, const cursor::iterator& rhs) {
     return ((rhs.is_exhausted() && lhs.is_exhausted()) || (lhs._cursor == rhs._cursor));
 }
 
-bool MONGOCXX_CALL operator!=(const cursor::iterator& lhs, const cursor::iterator& rhs) {
+bool operator!=(const cursor::iterator& lhs, const cursor::iterator& rhs) {
     return !(lhs == rhs);
 }
 
