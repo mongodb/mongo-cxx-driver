@@ -15,7 +15,6 @@
 // compiler.hpp
 #undef BSONCXX_INLINE
 #pragma pop_macro("BSONCXX_INLINE")
-BSONCXX_POP_WARNINGS();
 #undef BSONCXX_CALL
 #pragma pop_macro("BSONCXX_CALL")
 

@@ -23,10 +23,15 @@
 #include <mongocxx/exception/exception.hpp>
 #include <mongocxx/stdx.hpp>
 
+#include <bsoncxx/config/prelude.hpp>
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
 namespace v_noabi {
+
+BSONCXX_PUSH_WARNINGS();
+BSONCXX_DISABLE_WARNING(MSVC(4251));
+BSONCXX_DISABLE_WARNING(MSVC(4275));
 
 ///
 /// Class representing an exception received from a MongoDB server.  It includes the server-provided
@@ -84,9 +89,12 @@ class operation_exception : public exception {
     stdx::optional<bsoncxx::v_noabi::document::value> _raw_server_error;
 };
 
+BSONCXX_POP_WARNINGS();
+
 }  // namespace v_noabi
 }  // namespace mongocxx
 
+#include <bsoncxx/config/postlude.hpp>
 #include <mongocxx/config/postlude.hpp>
 
 ///

@@ -19,10 +19,15 @@
 
 #include <mongocxx/exception/exception-fwd.hpp>
 
+#include <bsoncxx/config/prelude.hpp>
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
 namespace v_noabi {
+
+BSONCXX_PUSH_WARNINGS();
+BSONCXX_DISABLE_WARNING(MSVC(4251));
+BSONCXX_DISABLE_WARNING(MSVC(4275));
 
 ///
 /// A class to be used as the base class for all mongocxx exceptions.
@@ -39,9 +44,12 @@ class exception : public std::system_error {
     using system_error::system_error;
 };
 
+BSONCXX_POP_WARNINGS();
+
 }  // namespace v_noabi
 }  // namespace mongocxx
 
+#include <bsoncxx/config/postlude.hpp>
 #include <mongocxx/config/postlude.hpp>
 
 ///

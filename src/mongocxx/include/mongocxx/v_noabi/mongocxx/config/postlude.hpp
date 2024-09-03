@@ -15,9 +15,6 @@
 // compiler.hpp
 #undef MONGOCXX_INLINE
 #pragma pop_macro("MONGOCXX_INLINE")
-#if defined(_MSC_VER)
-#pragma warning(pop)
-#endif
 #undef MONGOCXX_CALL
 #pragma pop_macro("MONGOCXX_CALL")
 

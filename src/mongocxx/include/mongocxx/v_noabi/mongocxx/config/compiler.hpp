@@ -12,17 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// TODO: DRY this definition with the one from bsoncxx/config/compiler.hpp per discussion
-//       here - https://github.com/mongodb/mongo-cxx-driver/pull/374#issuecomment-158179295
-#if defined(_MSC_VER)
-
-// Disable MSVC warnings that cause a lot of noise related to DLL visibility
-// for types that we don't control (like std::unique_ptr).
-#pragma warning(push)
-#pragma warning(disable : 4251 4275)
-
-#endif
-
 // For backward compatibility. Use `inline` instead.
 #define MONGOCXX_INLINE inline MONGOCXX_ABI_NO_EXPORT
 

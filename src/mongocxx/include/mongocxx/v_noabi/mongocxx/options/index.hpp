@@ -27,6 +27,7 @@
 #include <bsoncxx/string/view_or_value.hpp>
 #include <mongocxx/stdx.hpp>
 
+#include <bsoncxx/config/prelude.hpp>
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
@@ -40,6 +41,10 @@ namespace options {
 ///
 class index {
    public:
+    BSONCXX_PUSH_WARNINGS();
+    BSONCXX_DISABLE_WARNING(MSVC(4251));
+    BSONCXX_DISABLE_WARNING(MSVC(4275));
+
     ///
     /// Base class representing the optional storage engine options for indexes.
     ///
@@ -96,6 +101,8 @@ class index {
 
         stdx::optional<bsoncxx::v_noabi::string::view_or_value> _config_string;
     };
+
+    BSONCXX_POP_WARNINGS();
 
     MONGOCXX_ABI_EXPORT_CDECL() index();
 
@@ -537,6 +544,7 @@ class index {
 }  // namespace v_noabi
 }  // namespace mongocxx
 
+#include <bsoncxx/config/postlude.hpp>
 #include <mongocxx/config/postlude.hpp>
 
 ///
