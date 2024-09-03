@@ -42,8 +42,11 @@ BSONCXX_PUSH_WARNINGS();
 BSONCXX_DISABLE_WARNING(MSVC(4251));
 BSONCXX_DISABLE_WARNING(MSVC(5275));
 
-#define BSONCXX_INLINE inline BSONCXX_PRIVATE
-#define BSONCXX_CALL BSONCXX_IF_MSVC(__cdecl)
+// For backward compatibility. Use `inline` instead.
+#define BSONCXX_INLINE inline BSONCXX_ABI_NO_EXPORT
+
+// For backward compatibility. Use BSONCXX_ABI_EXPORT_CDECL instead.
+#define BSONCXX_CALL BSONCXX_ABI_CDECL
 
 ///
 /// @file

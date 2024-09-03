@@ -55,7 +55,7 @@ namespace libmongoc {
 #endif
 
 #define MONGOCXX_LIBMONGOC_SYMBOL(name) \
-    extern MONGOCXX_TEST_API mongocxx::test_util::mock<decltype(&mongoc_##name)>& name;
+    extern MONGOCXX_ABI_EXPORT_TESTING mongocxx::test_util::mock<decltype(&mongoc_##name)>& name;
 #include "libmongoc_symbols.hh"
 #undef MONGOCXX_LIBMONGOC_SYMBOL
 

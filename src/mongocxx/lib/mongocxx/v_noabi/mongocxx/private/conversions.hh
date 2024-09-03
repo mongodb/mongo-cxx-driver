@@ -24,11 +24,11 @@ namespace mongocxx {
 namespace libmongoc {
 namespace conversions {
 
-MONGOCXX_TEST_API mongoc_read_mode_t
+MONGOCXX_ABI_EXPORT_CDECL_TESTING(mongoc_read_mode_t)
 read_mode_t_from_read_mode(read_preference::read_mode read_mode);
 
-MONGOCXX_TEST_API read_preference::read_mode read_mode_from_read_mode_t(
-    mongoc_read_mode_t read_mode);
+MONGOCXX_ABI_EXPORT_CDECL_TESTING(read_preference::read_mode)
+read_mode_from_read_mode_t(mongoc_read_mode_t read_mode);
 
 }  // namespace conversions
 }  // namespace libmongoc

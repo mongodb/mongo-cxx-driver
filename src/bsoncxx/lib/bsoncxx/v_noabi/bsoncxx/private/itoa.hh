@@ -23,7 +23,7 @@
 
 namespace bsoncxx {
 
-class BSONCXX_TEST_API itoa {
+class BSONCXX_ABI_EXPORT_TESTING itoa {
    public:
     explicit itoa(uint32_t i = 0);
 
