@@ -59,6 +59,17 @@ namespace libmongoc {
 #include "libmongoc_symbols.hh"
 #undef MONGOCXX_LIBMONGOC_SYMBOL
 
+// CDRIVER-5678
+using log_func_cdecl_t = void(MONGOCXX_ABI_CDECL*)(mongoc_log_level_t log_level,
+                                                   const char* log_domain,
+                                                   const char* message,
+                                                   void* user_data);
+using log_set_handler_cdecl_t = void(MONGOCXX_ABI_CDECL*)(log_func_cdecl_t log_func,
+                                                          void* user_data);
+
+extern MONGOCXX_ABI_EXPORT_TESTING mongocxx::test_util::mock<log_set_handler_cdecl_t>&
+    log_set_handler;
+
 #if defined(__GNUC__) && (__GNUC__ >= 6) && !defined(__clang__)
 #pragma GCC diagnostic pop
 #endif
@@ -68,6 +79,9 @@ namespace libmongoc {
 #define MONGOCXX_LIBMONGOC_SYMBOL(name) constexpr auto name = mongoc_##name;
 #include "libmongoc_symbols.hh"
 #undef MONGOCXX_LIBMONGOC_SYMBOL
+
+// CDRIVER-5678
+constexpr auto log_set_handler = mongoc_log_set_handler;
 
 #endif
 
