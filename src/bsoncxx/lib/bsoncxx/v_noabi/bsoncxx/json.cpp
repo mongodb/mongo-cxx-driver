@@ -99,7 +99,7 @@ document::value BSONCXX_CALL from_json(stdx::string_view json) {
     return document::value{buf, length, bson_free_deleter};
 }
 
-document::value BSONCXX_CALL operator""_bson(const char* str, size_t len) {
+document::value BSONCXX_CALL operator"" _bson(const char* str, size_t len) {
     return from_json(stdx::string_view{str, len});
 }
 

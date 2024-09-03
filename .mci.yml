@@ -2209,3 +2209,13 @@ buildvariants:
       display_name: silk
       tasks:
         - name: .silk
+
+    - name: rhel79-compile
+      display_name: "RHEL 7.9 (gcc 4.8.5)"
+      expansions:
+          build_type: "Release"
+          BSONCXX_POLYFILL: impls
+      run_on:
+          - rhel79-small
+      tasks:
+          - name: compile_without_tests

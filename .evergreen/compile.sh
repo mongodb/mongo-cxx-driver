@@ -148,7 +148,13 @@ darwin*)
   ;;
 linux*)
   cc_flags+=("${cc_flags_init[@]}")
-  cxx_flags+=("${cxx_flags_init[@]}" -Wno-expansion-to-defined -Wno-missing-field-initializers)
+  cxx_flags+=("${cxx_flags_init[@]}" -Wno-missing-field-initializers)
+
+  if [[ "${distro_id:?}" != rhel7* ]]; then
+    cxx_flags+=("-Wno-expansion-to-defined")
+  else
+    cxx_flags+=("-Wno-unused-parameter") # TODO: remove once C driver is upgraded to include fix of CDRIVER-5673.
+  fi
   ;;
 *)
   echo "unrecognized operating system ${OSTYPE:?}" 1>&2
