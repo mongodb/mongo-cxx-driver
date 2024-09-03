@@ -82,7 +82,7 @@ BSONCXX_ABI_EXPORT_CDECL(document::value) from_json(stdx::string_view json);
 ///
 /// @throws bsoncxx::v_noabi::exception with error details if the conversion failed.
 ///
-BSONCXX_API document::value BSONCXX_CALL operator"" _bson(const char* json, size_t len);
+BSONCXX_ABI_EXPORT_CDECL(document::value) operator"" _bson(const char* json, size_t len);
 
 }  // namespace v_noabi
 }  // namespace bsoncxx

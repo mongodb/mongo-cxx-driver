@@ -26,6 +26,8 @@
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/instance.hpp>
 
+#include <examples/macros.hh>
+
 using namespace mongocxx;
 
 namespace {
@@ -144,7 +146,7 @@ void aggregation_examples(const mongocxx::database& db) {
 
 }  // namespace
 
-int main() {
+int EXAMPLES_CDECL main() {
     // The mongocxx::instance constructor and destructor initialize and shut down the driver,
     // respectively. Therefore, a mongocxx::instance must be created before using the driver and
     // must remain alive for as long as the driver is in use.

@@ -95,7 +95,7 @@ bool do_work() {
 
 }  // namespace
 
-int main(int argc, char* argv[]) {
+int EXAMPLES_CDECL main(int argc, char* argv[]) {
     auto uri = mongocxx::uri{(argc >= 2) ? argv[1] : mongocxx::uri::k_default_uri};
     configure(std::move(uri));
     return do_work() ? EXIT_SUCCESS : EXIT_FAILURE;
