@@ -308,13 +308,10 @@ if(ENABLE_MACRO_GUARD_TESTS)
             MONGOCXX_COMPILER_VERSION
         INCLUDE_PATTERNS
             "include/*.hpp" # Public headers.
-            "lib/*.hh" # Private headers.
-            "test/*.hh" # Test headers.
         EXCLUDE_REGEXES
             "include/mongocxx/doc\.hpp" # Doc header.
-            "(include|lib)/.*/(prelude|postlude)\.(hpp|hh)" # Macro guard headers.
-            "(include|lib)/mongocxx/v_noabi/mongocxx/config/.*" # v_noabi config headers.
-            ".*_symbols.hh" # Symbol headers.
+            "include/.*/(prelude|postlude)\.(hpp|hh)" # Macro guard headers.
+            "include/mongocxx/v_noabi/mongocxx/config/.*" # v_noabi config headers.
     )
 endif()
 
