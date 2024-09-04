@@ -250,7 +250,7 @@ def iter_tag_lines():
     the second is a tag that is associated with that commit. Duplicate commits
     are possible.
     """
-    output = check_output(['git', 'tag', '--list', '--format=%(*objectname)|%(objectname)|%(refname:strip=2)'])
+    output = check_output(['git', 'tag', '--list', '--format="%(*objectname)|%(objectname)|%(refname:strip=2)"'])
     lines = output.splitlines()
     for l in lines:
         obj, tagobj, tag = l.split('|', 2)
