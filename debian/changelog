@@ -1,3 +1,9 @@
+mongo-cxx-driver (3.10.2-2) UNRELEASED; urgency=medium
+
+  * d/rules: set -DENABLE_TESTS=OFF (since upstream CI is very thorough)
+
+ -- Roberto C. Sanchez <roberto@connexer.com>  Thu, 05 Sep 2024 15:25:42 -0400
+
 mongo-cxx-driver (3.10.2-1) experimental; urgency=medium
 
   * New upstream release
