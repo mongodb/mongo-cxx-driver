@@ -24,11 +24,11 @@
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/bson_value/value.hpp>
 
+#include <bsoncxx/config/prelude.hpp>
+
 #include <bsoncxx/test/catch.hh>
 #include <bsoncxx/test/to_string.hh>
 #include <mongocxx/test/client_helpers.hh>
-
-#include <bsoncxx/config/prelude.hpp>
 
 using namespace bsoncxx;
 using namespace mongocxx;
