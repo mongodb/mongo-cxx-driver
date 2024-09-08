@@ -131,8 +131,12 @@ pool::entry::operator bool() const noexcept {
 pool::entry::entry(pool::entry::unique_client p) : _client(std::move(p)) {}
 
 pool::entry pool::acquire() {
-    return entry(entry::unique_client(new client(libmongoc::client_pool_pop(_impl->client_pool_t)),
-                                      [this](client* client) { _release(client); }));
+    auto cli = libmongoc::client_pool_pop(_impl->client_pool_t);
+    if (!cli)
+        throw exception{ error_code::k_invalid_client_object,
+                        "mongoc_client_pool returned a null client, possibly due to parameter 'waitQueueTimeoutMS' limits." };
+
+    return entry(entry::unique_client(new client(cli), [this](client* client) { _release(client); }));
 }
 
 stdx::optional<pool::entry> pool::try_acquire() {
