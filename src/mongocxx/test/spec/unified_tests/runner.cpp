@@ -1366,10 +1366,7 @@ TEST_CASE("index management spec automated tests", "[unified_format_spec]") {
 // See:
 // https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/client-side-encryption.rst
 TEST_CASE("client side encryption unified format spec automated tests", "[unified_format_spec]") {
-    if (!mongocxx::test_util::should_run_client_side_encryption_test()) {
-        WARN("Skipping - client side encryption unified tests");
-        return;
-    }
+    CLIENT_SIDE_ENCRYPTION_ENABLED_OR_SKIP();
     CHECK(run_unified_format_tests_in_env_dir("CLIENT_SIDE_ENCRYPTION_UNIFIED_TESTS_PATH"));
 }
 
