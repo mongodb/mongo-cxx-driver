@@ -211,9 +211,7 @@ void run_encryption_tests_in_file(const std::string& test_path) {
     auto tests = test_spec_view["tests"].get_array().value;
 
     /* we may not have a supported topology */
-    if (should_skip_spec_test(client{uri{}, test_util::add_test_server_api()}, test_spec_view)) {
-        SKIP("unsupported test file: " << test_path);
-    }
+    CHECK_IF_SKIP_SPEC_TEST((client{uri{}, test_util::add_test_server_api()}), test_spec_view);
 
     mongocxx::client setup_client{
         uri{},
@@ -227,10 +225,8 @@ void run_encryption_tests_in_file(const std::string& test_path) {
         const auto description = string::to_string(test["description"].get_string().value);
 
         DYNAMIC_SECTION(description) {
-            if (should_skip_spec_test(client{uri{}, test_util::add_test_server_api()},
-                                      test.get_document().value)) {
-                continue;
-            }
+            CHECK_IF_SKIP_SPEC_TEST((client{uri{}, test_util::add_test_server_api()}),
+                                    test.get_document().value);
 
             options::client client_opts;
 

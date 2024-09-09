@@ -46,14 +46,10 @@ void run_retryable_reads_tests_in_file(std::string test_path) {
     document::view test_spec_view = test_spec->view();
     for (auto&& test : test_spec_view["tests"].get_array().value) {
         client client{get_uri(test.get_document().value), client_opts};
-        if (should_skip_spec_test(client, test_spec_view)) {
-            return;
-        }
+        CHECK_IF_SKIP_SPEC_TEST(client, test_spec_view);
 
         INFO("Test description: " << test["description"].get_string().value);
-        if (should_skip_spec_test(client, test.get_document())) {
-            continue;
-        }
+        CHECK_IF_SKIP_SPEC_TEST(client, test.get_document());
 
         auto get_value_or_default = [&](std::string key, std::string default_str) {
             if (test_spec_view[key]) {
