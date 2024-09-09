@@ -1146,23 +1146,19 @@ void run_tests(mongocxx::stdx::string_view test_description, document::view test
             {
                 const auto iter = should_skip_test_cases.find({test_description, description});
                 if (iter != should_skip_test_cases.end()) {
-                    WARN("test skipped: " << iter->second);
-                    continue;
+                    SKIP(test_description << ": " << description << ": unsupported test case");
                 }
             }
 
             if (!has_run_on_requirements(ele.get_document())) {
-                std::stringstream warning;
-                warning << "test skipped: "
-                        << "none of the runOnRequirements were met" << std::endl
-                        << to_json(ele["runOnRequirements"].get_array().value);
-                WARN(warning.str());
-                continue;
+                SKIP(test_description << ": " << description
+                                      << ": none of the runOnRequirements were met: "
+                                      << to_json(ele["runOnRequirements"].get_array().value));
             }
 
             if (ele["skipReason"]) {
-                WARN("Skip Reason: " + string::to_string(ele["skipReason"].get_string().value));
-                continue;
+                SKIP(test_description << ": " << description << ": "
+                                      << string::to_string(ele["skipReason"].get_string().value));
             }
 
             fail_point_guard_type fail_point_guard;
@@ -1267,12 +1263,8 @@ void run_tests_in_file(const std::string& test_path) {
     }
 
     if (!has_run_on_requirements(test_spec_view)) {
-        std::stringstream warning;
-        warning << "file skipped: " << test_path << std::endl
-                << "none of the runOnRequirements were met" << std::endl
-                << to_json(test_spec_view["runOnRequirements"].get_array().value);
-        WARN(warning.str());
-        return;
+        CAPTURE(to_json(test_spec_view["runOnRequirements"].get_array().value));
+        SKIP(test_path << ": none of the runOnRequirements were met");
     }
 
     const auto description = test_spec_view["description"].get_string().value;
@@ -1307,10 +1299,10 @@ bool run_unified_format_tests_in_env_dir(
     for (std::string file; std::getline(files, file);) {
         DYNAMIC_SECTION(file) {
             if (unsupported_tests.find(file) != unsupported_tests.end()) {
-                WARN("Skipping unsupported test file: " << file);
-            } else {
-                run_tests_in_file(base_path + '/' + file);
+                SKIP("unsupported test file: " << file);
             }
+
+            run_tests_in_file(base_path + '/' + file);
         }
     }
 

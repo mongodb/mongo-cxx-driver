@@ -692,8 +692,7 @@ TEST_CASE("lsid", "[session]") {
 
     SECTION("collection::watch") {
         if (!test_util::is_replica_set(test.client)) {
-            WARN("skip: watch() requires replica set");
-            return;
+            SKIP("watch() requires replica set");
         }
 
         auto f = [&s, &collection](bool use_session) {
@@ -850,8 +849,7 @@ TEST_CASE("with_transaction", "[session]") {
         SECTION("callback raises a custom error") {
             // Multi-document transactions require server 4.2+.
             if (compare_versions(get_server_version(test.client), "4.2") < 0) {
-                WARN("Skipping - MongoDB server 4.2 or newer required");
-                return;
+                SKIP("MongoDB server 4.2 or newer required");
             }
 
             // Test an operation_exception

@@ -566,10 +566,10 @@ void run_tests_in_suite(std::string ev, test_runner cb, std::set<std::string> un
     while (std::getline(test_files, test_file)) {
         DYNAMIC_SECTION(test_file) {
             if (unsupported_tests.find(test_file) != unsupported_tests.end()) {
-                WARN("Skipping unsupported test file: " << test_file);
-            } else {
-                cb(path + "/" + test_file);
+                SKIP("unsupported test file: " << test_file);
             }
+
+            cb(path + "/" + test_file);
         }
     }
 }
@@ -852,8 +852,7 @@ void run_transactions_tests_in_file(const std::string& test_path) {
 
     /* we may not have a supported topology */
     if (should_skip_spec_test({uri{}, test_util::add_test_server_api()}, test_spec_view)) {
-        WARN("File skipped - " + test_path);
-        return;
+        SKIP(test_path);
     }
 
     for (auto&& test : tests) {

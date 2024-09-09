@@ -212,8 +212,7 @@ void run_encryption_tests_in_file(const std::string& test_path) {
 
     /* we may not have a supported topology */
     if (should_skip_spec_test(client{uri{}, test_util::add_test_server_api()}, test_spec_view)) {
-        WARN("File skipped - " + test_path);
-        return;
+        SKIP("unsupported test file: " << test_path);
     }
 
     mongocxx::client setup_client{
@@ -346,8 +345,7 @@ TEST_CASE("Client side encryption spec automated tests", "[client_side_encryptio
         DYNAMIC_SECTION(test_file) {
             if (std::find(unsupported_tests.begin(), unsupported_tests.end(), test_file) !=
                 unsupported_tests.end()) {
-                WARN("skipping " << test_file);
-                continue;
+                SKIP("unsupported test file: " << test_file);
             }
 
             run_encryption_tests_in_file(path + "/" + test_file);
