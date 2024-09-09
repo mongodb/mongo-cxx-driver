@@ -210,7 +210,13 @@ auto size(Container c) -> decltype(std::distance(std::begin(c), std::end(c))) {
 //
 // @return Whether sessions are supported by the client's topology.
 //
-bool server_has_sessions(const client& conn);
+bool server_has_sessions_impl(const client& conn);
+
+#define SERVER_HAS_SESSIONS_OR_SKIP(conn)                       \
+    if (!mongocxx::test_util::server_has_sessions_impl(conn)) { \
+        SKIP("server does not support session");                \
+    }                                                           \
+    ((void)0)
 
 #if defined(MONGOC_ENABLE_CLIENT_SIDE_ENCRYPTION)
 enum struct cseeos_result {

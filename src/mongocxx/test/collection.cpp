@@ -50,7 +50,6 @@ using bsoncxx::builder::basic::make_array;
 using bsoncxx::builder::basic::make_document;
 
 using namespace mongocxx;
-using test_util::server_has_sessions;
 
 TEST_CASE("A default constructed collection cannot perform operations", "[collection]") {
     instance::current();

@@ -37,16 +37,13 @@ using bsoncxx::document::value;
 using bsoncxx::types::b_timestamp;
 
 using namespace mongocxx;
-using test_util::server_has_sessions;
 
 TEST_CASE("session options", "[session]") {
     instance::current();
 
     client c{uri{}, test_util::add_test_server_api()};
 
-    if (!server_has_sessions(c)) {
-        return;
-    }
+    SERVER_HAS_SESSIONS_OR_SKIP(c);
 
     SECTION("default") {
         // Make sure the defaults don't cause a client exception:
@@ -184,9 +181,7 @@ TEST_CASE("session", "[session]") {
 
     client c{uri{}, test_util::add_test_server_api()};
 
-    if (!server_has_sessions(c)) {
-        return;
-    }
+    SERVER_HAS_SESSIONS_OR_SKIP(c);
 
     auto s = c.start_session();
 
@@ -398,9 +393,7 @@ TEST_CASE("lsid", "[session]") {
 
     session_test test;
 
-    if (!server_has_sessions(test.client)) {
-        return;
-    }
+    SERVER_HAS_SESSIONS_OR_SKIP(test.client);
 
     auto s = test.client.start_session();
     auto db = test.client["lsid"];
@@ -848,9 +841,7 @@ TEST_CASE("with_transaction", "[session]") {
 
     session_test test;
 
-    if (!server_has_sessions(test.client)) {
-        return;
-    }
+    SERVER_HAS_SESSIONS_OR_SKIP(test.client);
 
     auto session = test.client.start_session();
 
@@ -895,9 +886,7 @@ TEST_CASE("unacknowledged write in session", "[session]") {
 
     session_test test;
 
-    if (!server_has_sessions(test.client)) {
-        return;
-    }
+    SERVER_HAS_SESSIONS_OR_SKIP(test.client);
 
     auto s = test.client.start_session();
     auto db = test.client["lsid"];

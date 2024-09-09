@@ -492,7 +492,7 @@ void check_outcome_collection(mongocxx::collection* coll, bsoncxx::document::vie
     REQUIRE(begin(actual) == end(actual));
 }
 
-bool server_has_sessions(const client& conn) {
+bool server_has_sessions_impl(const client& conn) {
     auto result = get_is_master(conn);
     auto result_view = result.view();
 
@@ -500,7 +500,6 @@ bool server_has_sessions(const client& conn) {
         return true;
     }
 
-    WARN("skip: server does not support sessions");
     return false;
 }
 
