@@ -293,10 +293,6 @@ else
   run_test ./src/mongocxx/test/test_read_write_concern_specs
   run_test ./src/mongocxx/test/test_unified_format_spec
 
-  echo "Building examples..."
-  "${cmake_binary:?}" --build . --target examples
-  echo "Building examples... done."
-
   # Only run examples if MONGODB_API_VERSION is unset. We do not append
   # API version to example clients, so examples will fail when requireApiVersion
   # is true.
