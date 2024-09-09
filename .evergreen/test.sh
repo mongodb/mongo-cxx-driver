@@ -262,7 +262,11 @@ else
     echo "CRYPT_SHARED_LIB_PATH=${CRYPT_SHARED_LIB_PATH:?}"
   fi
 
-  run_test() { "$@"; }
+  test_args=(
+    --reporter compact
+  )
+
+  run_test() { "$@" "${test_args[@]:?}"; }
 
   if [[ "${TEST_WITH_ASAN:-}" == "ON" || "${TEST_WITH_UBSAN:-}" == "ON" ]]; then
     export ASAN_OPTIONS="detect_leaks=1"
@@ -270,7 +274,7 @@ else
     export PATH="/usr/lib/llvm-3.8/bin:${PATH:-}"
   elif [[ "${TEST_WITH_VALGRIND:-}" == "ON" ]]; then
     run_test() {
-      valgrind --leak-check=full --track-origins=yes --num-callers=50 --error-exitcode=1 --error-limit=no --read-var-info=yes --suppressions=../etc/memcheck.suppressions "$@"
+      valgrind --leak-check=full --track-origins=yes --num-callers=50 --error-exitcode=1 --error-limit=no --read-var-info=yes --suppressions=../etc/memcheck.suppressions "$@" "${test_args[@]:?}"
     }
   fi
 

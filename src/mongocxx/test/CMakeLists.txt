@@ -206,23 +206,28 @@ set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 target_link_libraries(test_driver PRIVATE Threads::Threads)
 
-add_test(NAME driver COMMAND test_driver)
-add_test(NAME logging COMMAND test_logging)
-add_test(NAME instance COMMAND test_instance)
-add_test(NAME crud_specs COMMAND test_crud_specs)
-add_test(NAME gridfs_specs COMMAND test_gridfs_specs)
-add_test(NAME client_side_encryption_specs COMMAND test_client_side_encryption_specs)
-add_test(NAME command_monitoring_specs COMMAND test_command_monitoring_specs)
-add_test(NAME transactions_specs COMMAND test_transactions_specs)
-add_test(NAME retryable_reads_spec COMMAND test_retryable_reads_specs)
-add_test(NAME read_write_concern_specs COMMAND test_read_write_concern_specs)
-add_test(NAME unified_format_spec COMMAND test_unified_format_spec)
-add_test(NAME versioned_api COMMAND test_versioned_api)
+set(test_args "")
+list(APPEND test_args
+    --reporter compact
+)
+
+add_test(NAME driver COMMAND test_driver ${test_args})
+add_test(NAME logging COMMAND test_logging ${test_args})
+add_test(NAME instance COMMAND test_instance ${test_args})
+add_test(NAME crud_specs COMMAND test_crud_specs ${test_args})
+add_test(NAME gridfs_specs COMMAND test_gridfs_specs ${test_args})
+add_test(NAME client_side_encryption_specs COMMAND test_client_side_encryption_specs ${test_args})
+add_test(NAME command_monitoring_specs COMMAND test_command_monitoring_specs ${test_args})
+add_test(NAME transactions_specs COMMAND test_transactions_specs ${test_args})
+add_test(NAME retryable_reads_spec COMMAND test_retryable_reads_specs ${test_args})
+add_test(NAME read_write_concern_specs COMMAND test_read_write_concern_specs ${test_args})
+add_test(NAME unified_format_spec COMMAND test_unified_format_spec ${test_args})
+add_test(NAME versioned_api COMMAND test_versioned_api ${test_args})
 
 # Adding this as a test will run it as part of the RUN_TESTS command in MSVC.
 # Do not add, since we only test mongohouse on Linux.
 if(0)
-    add_test(mongohouse_specs NAME test_mongohouse_specs COMMAND)
+    add_test(NAME mongohouse_specs COMMAND test_mongohouse_specs ${test_args})
 endif()
 
 set_property(TEST crud_specs APPEND PROPERTY ENVIRONMENT
