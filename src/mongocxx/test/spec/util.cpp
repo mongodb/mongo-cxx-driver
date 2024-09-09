@@ -564,7 +564,7 @@ void run_tests_in_suite(std::string ev, test_runner cb, std::set<std::string> un
 
     std::string test_file;
     while (std::getline(test_files, test_file)) {
-        SECTION(test_file) {
+        DYNAMIC_SECTION(test_file) {
             if (unsupported_tests.find(test_file) != unsupported_tests.end()) {
                 WARN("Skipping unsupported test file: " << test_file);
             } else {
@@ -859,7 +859,7 @@ void run_transactions_tests_in_file(const std::string& test_path) {
     for (auto&& test : tests) {
         const auto description = string::to_string(test["description"].get_string().value);
 
-        SECTION(description) {
+        DYNAMIC_SECTION(description) {
             client setup_client{get_uri(test.get_document().value),
                                 test_util::add_test_server_api()};
 
@@ -1024,7 +1024,8 @@ void run_crud_tests_in_file(const std::string& test_path, uri test_uri) {
 
     for (auto&& test : test_spec_view["tests"].get_array().value) {
         auto description = test["description"].get_string().value;
-        SECTION(to_string(description)) {
+
+        DYNAMIC_SECTION(to_string(description)) {
             if (should_skip_spec_test(client, test.get_document())) {
                 continue;
             }

@@ -227,7 +227,7 @@ void run_encryption_tests_in_file(const std::string& test_path) {
     for (auto&& test : tests) {
         const auto description = string::to_string(test["description"].get_string().value);
 
-        SECTION(description) {
+        DYNAMIC_SECTION(description) {
             if (should_skip_spec_test(client{uri{}, test_util::add_test_server_api()},
                                       test.get_document().value)) {
                 continue;
@@ -345,7 +345,7 @@ TEST_CASE("Client side encryption spec automated tests", "[client_side_encryptio
 
     std::string test_file;
     while (std::getline(test_files, test_file)) {
-        SECTION(test_file) {
+        DYNAMIC_SECTION(test_file) {
             if (std::find(unsupported_tests.begin(), unsupported_tests.end(), test_file) !=
                 unsupported_tests.end()) {
                 WARN("skipping " << test_file);

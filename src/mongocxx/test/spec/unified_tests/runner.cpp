@@ -1141,7 +1141,8 @@ void run_tests(mongocxx::stdx::string_view test_description, document::view test
 
     for (const auto& ele : test["tests"].get_array().value) {
         const auto description = string::to_string(ele["description"].get_string().value);
-        SECTION(description) {
+
+        DYNAMIC_SECTION(description) {
             {
                 const auto iter = should_skip_test_cases.find({test_description, description});
                 if (iter != should_skip_test_cases.end()) {
@@ -1304,7 +1305,7 @@ bool run_unified_format_tests_in_env_dir(
     instance::current();
 
     for (std::string file; std::getline(files, file);) {
-        SECTION(file) {
+        DYNAMIC_SECTION(file) {
             if (unsupported_tests.find(file) != unsupported_tests.end()) {
                 WARN("Skipping unsupported test file: " << file);
             } else {

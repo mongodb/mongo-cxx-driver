@@ -101,7 +101,8 @@ TEST_CASE("uri_options::test_srv_options", "[uri_options]") {
     for (const auto& it : tests) {
         auto doc = it.get_document().value;
         auto test = URIOptionsTest::parse(doc);
-        SECTION(std::string(test.description)) {
+
+        DYNAMIC_SECTION(test.description) {
             try {
                 mongocxx::uri my_uri{test.uri};
                 REQUIRE(test.valid);
