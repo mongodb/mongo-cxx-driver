@@ -1277,7 +1277,7 @@ void run_tests_in_file(const std::string& test_path) {
 // Check the environment for the specified variable; if present, extract it
 // as a directory and run all the tests contained in the magic "test_files.txt"
 // file:
-bool run_unified_format_tests_in_env_dir(
+void run_unified_format_tests_in_env_dir(
     const std::string& env_path,
     const std::set<mongocxx::stdx::string_view>& unsupported_tests = {}) {
     const char* p = std::getenv(env_path.c_str());
@@ -1305,8 +1305,6 @@ bool run_unified_format_tests_in_env_dir(
             run_tests_in_file(base_path + '/' + file);
         }
     }
-
-    return true;
 }
 
 TEST_CASE("unified format spec automated tests", "[unified_format_spec]") {
@@ -1316,50 +1314,50 @@ TEST_CASE("unified format spec automated tests", "[unified_format_spec]") {
         // Waiting on CDRIVER-3525 and CXX-2166.
         "valid-pass/assertNumberConnectionsCheckedOut.json"};
 
-    CHECK(run_unified_format_tests_in_env_dir("UNIFIED_FORMAT_TESTS_PATH", unsupported_tests));
+    run_unified_format_tests_in_env_dir("UNIFIED_FORMAT_TESTS_PATH", unsupported_tests);
 }
 
 TEST_CASE("session unified format spec automated tests", "[unified_format_spec]") {
-    CHECK(run_unified_format_tests_in_env_dir("SESSION_UNIFIED_TESTS_PATH"));
+    run_unified_format_tests_in_env_dir("SESSION_UNIFIED_TESTS_PATH");
 }
 
 TEST_CASE("CRUD unified format spec automated tests", "[unified_format_spec]") {
-    CHECK(run_unified_format_tests_in_env_dir("CRUD_UNIFIED_TESTS_PATH"));
+    run_unified_format_tests_in_env_dir("CRUD_UNIFIED_TESTS_PATH");
 }
 
 TEST_CASE("change streams unified format spec automated tests", "[unified_format_spec]") {
-    CHECK(run_unified_format_tests_in_env_dir("CHANGE_STREAMS_UNIFIED_TESTS_PATH"));
+    run_unified_format_tests_in_env_dir("CHANGE_STREAMS_UNIFIED_TESTS_PATH");
 }
 
 TEST_CASE("retryable reads unified format spec automated tests", "[unified_format_spec]") {
-    CHECK(run_unified_format_tests_in_env_dir("RETRYABLE_READS_UNIFIED_TESTS_PATH"));
+    run_unified_format_tests_in_env_dir("RETRYABLE_READS_UNIFIED_TESTS_PATH");
 }
 
 TEST_CASE("retryable writes unified format spec automated tests", "[unified_format_spec]") {
-    CHECK(run_unified_format_tests_in_env_dir("RETRYABLE_WRITES_UNIFIED_TESTS_PATH"));
+    run_unified_format_tests_in_env_dir("RETRYABLE_WRITES_UNIFIED_TESTS_PATH");
 }
 
 TEST_CASE("transactions unified format spec automated tests", "[unified_format_spec]") {
-    CHECK(run_unified_format_tests_in_env_dir("TRANSACTIONS_UNIFIED_TESTS_PATH"));
+    run_unified_format_tests_in_env_dir("TRANSACTIONS_UNIFIED_TESTS_PATH");
 }
 
 TEST_CASE("versioned API spec automated tests", "[unified_format_spec]") {
-    CHECK(run_unified_format_tests_in_env_dir("VERSIONED_API_TESTS_PATH"));
+    run_unified_format_tests_in_env_dir("VERSIONED_API_TESTS_PATH");
 }
 
 TEST_CASE("collection management spec automated tests", "[unified_format_spec]") {
-    CHECK(run_unified_format_tests_in_env_dir("COLLECTION_MANAGEMENT_TESTS_PATH"));
+    run_unified_format_tests_in_env_dir("COLLECTION_MANAGEMENT_TESTS_PATH");
 }
 
 TEST_CASE("index management spec automated tests", "[unified_format_spec]") {
-    CHECK(run_unified_format_tests_in_env_dir("INDEX_MANAGEMENT_TESTS_PATH"));
+    run_unified_format_tests_in_env_dir("INDEX_MANAGEMENT_TESTS_PATH");
 }
 
 // See:
 // https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/client-side-encryption.rst
 TEST_CASE("client side encryption unified format spec automated tests", "[unified_format_spec]") {
     CLIENT_SIDE_ENCRYPTION_ENABLED_OR_SKIP();
-    CHECK(run_unified_format_tests_in_env_dir("CLIENT_SIDE_ENCRYPTION_UNIFIED_TESTS_PATH"));
+    run_unified_format_tests_in_env_dir("CLIENT_SIDE_ENCRYPTION_UNIFIED_TESTS_PATH");
 }
 
 }  // namespace
