@@ -209,6 +209,7 @@ target_link_libraries(test_driver PRIVATE Threads::Threads)
 set(test_args "")
 list(APPEND test_args
     --reporter compact
+    --allow-running-no-tests
 )
 
 add_test(NAME driver COMMAND test_driver ${test_args})

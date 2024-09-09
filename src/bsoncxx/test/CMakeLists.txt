@@ -74,6 +74,7 @@ target_link_libraries (test_bson PRIVATE bsoncxx::test_properties_with_main)
 set(test_args "")
 list(APPEND test_args
     --reporter compact
+    --allow-running-no-tests
 )
 
 add_test(NAME bson COMMAND test_bson ${test_args})

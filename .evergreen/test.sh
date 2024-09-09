@@ -264,6 +264,7 @@ else
 
   test_args=(
     --reporter compact
+    --allow-running-no-tests
   )
 
   run_test() { "$@" "${test_args[@]:?}"; }
