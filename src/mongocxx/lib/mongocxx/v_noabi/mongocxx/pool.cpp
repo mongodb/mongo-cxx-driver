@@ -133,7 +133,7 @@ pool::entry::entry(pool::entry::unique_client p) : _client(std::move(p)) {}
 pool::entry pool::acquire() {
     auto cli = libmongoc::client_pool_pop(_impl->client_pool_t);
     if (!cli)
-        throw exception{ error_code::k_invalid_client_object,
+        throw exception{ error_code::k_invalid_client_acquired,
                         "failed to acquire client, possibly due to parameter 'waitQueueTimeoutMS' limits." };
 
     return entry(entry::unique_client(new client(cli), [this](client* client) { _release(client); }));

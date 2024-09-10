@@ -107,6 +107,9 @@ enum class error_code : std::int32_t {
     // A default-constructed or moved-from mongocxx::v_noabi::search_index_view object has been
     // used.
     k_invalid_search_index_view,
+    
+    /// Acquired a NULL mongocxx::v_noabi::client object.
+    k_invalid_client_acquired,
 
     // Add new constant string message to error_code.cpp as well!
 };
