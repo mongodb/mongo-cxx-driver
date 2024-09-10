@@ -215,8 +215,8 @@ bool server_has_sessions_impl(const client& conn);
 #define SERVER_HAS_SESSIONS_OR_SKIP(conn)                       \
     if (!mongocxx::test_util::server_has_sessions_impl(conn)) { \
         SKIP("server does not support session");                \
-    }                                                           \
-    ((void)0)
+    } else                                                      \
+        ((void)0)
 
 #if defined(MONGOC_ENABLE_CLIENT_SIDE_ENCRYPTION)
 enum struct cseeos_result {
@@ -227,16 +227,18 @@ enum struct cseeos_result {
 
 cseeos_result client_side_encryption_enabled_or_skip_impl();
 
-#define CLIENT_SIDE_ENCRYPTION_ENABLED_OR_SKIP()                                  \
-    switch (mongocxx::test_util::client_side_encryption_enabled_or_skip_impl()) { \
-        case mongocxx::test_util::cseeos_result::enable:                          \
-            break;                                                                \
-        case mongocxx::test_util::cseeos_result::skip:                            \
-            SKIP("CSE environemnt variables not set");                            \
-        case mongocxx::test_util::cseeos_result::fail:                            \
-            FAIL("One or more CSE environment variable is missing");              \
-    }                                                                             \
-    ((void)0)
+#define CLIENT_SIDE_ENCRYPTION_ENABLED_OR_SKIP()                                      \
+    if {                                                                              \
+        switch (mongocxx::test_util::client_side_encryption_enabled_or_skip_impl()) { \
+            case mongocxx::test_util::cseeos_result::enable:                          \
+                break;                                                                \
+            case mongocxx::test_util::cseeos_result::skip:                            \
+                SKIP("CSE environemnt variables not set");                            \
+            case mongocxx::test_util::cseeos_result::fail:                            \
+                FAIL("One or more CSE environment variable is missing");              \
+        }                                                                             \
+    } else                                                                            \
+        ((void)0)
 #else
 #define CLIENT_SIDE_ENCRYPTION_ENABLED_OR_SKIP() \
     SKIP("linked libmongoc does not support client side encryption")
