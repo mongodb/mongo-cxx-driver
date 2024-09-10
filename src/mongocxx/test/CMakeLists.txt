@@ -206,24 +206,22 @@ set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 target_link_libraries(test_driver PRIVATE Threads::Threads)
 
-set(test_args "")
-list(APPEND test_args
-    --reporter compact
-    --allow-running-no-tests
+foreach(test_name
+    client_side_encryption_specs
+    command_monitoring_specs
+    crud_specs
+    driver
+    gridfs_specs
+    instance
+    logging
+    read_write_concern_specs
+    retryable_reads_spec
+    transactions_specs
+    unified_format_spec
+    versioned_api
 )
-
-add_test(NAME driver COMMAND test_driver ${test_args})
-add_test(NAME logging COMMAND test_logging ${test_args})
-add_test(NAME instance COMMAND test_instance ${test_args})
-add_test(NAME crud_specs COMMAND test_crud_specs ${test_args})
-add_test(NAME gridfs_specs COMMAND test_gridfs_specs ${test_args})
-add_test(NAME client_side_encryption_specs COMMAND test_client_side_encryption_specs ${test_args})
-add_test(NAME command_monitoring_specs COMMAND test_command_monitoring_specs ${test_args})
-add_test(NAME transactions_specs COMMAND test_transactions_specs ${test_args})
-add_test(NAME retryable_reads_spec COMMAND test_retryable_reads_specs ${test_args})
-add_test(NAME read_write_concern_specs COMMAND test_read_write_concern_specs ${test_args})
-add_test(NAME unified_format_spec COMMAND test_unified_format_spec ${test_args})
-add_test(NAME versioned_api COMMAND test_versioned_api ${test_args})
+    add_test(NAME ${test_name} COMMAND test_${test_name} --reporter compact --allow-running-no-tests)
+endforeach()
 
 # Adding this as a test will run it as part of the RUN_TESTS command in MSVC.
 # Do not add, since we only test mongohouse on Linux.
