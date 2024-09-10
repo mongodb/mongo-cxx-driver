@@ -228,7 +228,7 @@ enum struct cseeos_result {
 cseeos_result client_side_encryption_enabled_or_skip_impl();
 
 #define CLIENT_SIDE_ENCRYPTION_ENABLED_OR_SKIP()                                      \
-    if {                                                                              \
+    if (1) {                                                                          \
         switch (mongocxx::test_util::client_side_encryption_enabled_or_skip_impl()) { \
             case mongocxx::test_util::cseeos_result::enable:                          \
                 break;                                                                \
