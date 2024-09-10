@@ -71,13 +71,7 @@ add_library(bsoncxx::test_properties_with_main ALIAS bsoncxx_test_properties_wit
 
 target_link_libraries (test_bson PRIVATE bsoncxx::test_properties_with_main)
 
-set(test_args "")
-list(APPEND test_args
-    --reporter compact
-    --allow-running-no-tests
-)
-
-add_test(NAME bson COMMAND test_bson ${test_args})
+add_test(NAME bson COMMAND test_bson --reporter compact --allow-running-no-tests)
 
 # Generate test to ensure macro guards behave properly.
 if(ENABLE_MACRO_GUARD_TESTS)
