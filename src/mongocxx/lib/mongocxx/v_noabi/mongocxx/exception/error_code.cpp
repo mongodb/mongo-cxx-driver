@@ -92,6 +92,9 @@ class error_category final : public std::error_category {
             case error_code::k_invalid_search_index_view:
                 return "invalid use of default constructed or moved-from "
                        "mongocxx::search_index_view object";
+            case error_code::k_invalid_client_acquired:
+                return "invalid mongocxx::v_noabi::client object was acquired, "
+                       "possibly due to curi-parameter 'waitQueueTimeoutMS' limits";
             default:
                 return "unknown mongocxx error";
         }
