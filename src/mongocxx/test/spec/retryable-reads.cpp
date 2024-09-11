@@ -117,7 +117,7 @@ void run_retryable_reads_tests_in_file(std::string test_path) {
     }
 }
 
-TEST_CASE("retryable reads spec tests", "[retryable_reads_spec]") {
+TEST_CASE("retryable reads spec tests", "[retryable_reads_specs]") {
     instance::current();
 
     std::set<std::string> unsupported_tests{"gridfs-downloadByName.json",

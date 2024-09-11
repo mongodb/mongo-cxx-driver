@@ -135,8 +135,8 @@ target_link_libraries(test_read_write_concern_specs PRIVATE spec_test_common cli
 add_executable(test_mongohouse_specs spec/mongohouse.cpp)
 target_link_libraries(test_mongohouse_specs PRIVATE spec_test_common client_helpers)
 
-add_executable(test_unified_format_spec spec/unified_tests/operations.cpp spec/unified_tests/runner.cpp)
-target_link_libraries(test_unified_format_spec PRIVATE spec_test_common client_helpers)
+add_executable(test_unified_format_specs spec/unified_tests/operations.cpp spec/unified_tests/runner.cpp)
+target_link_libraries(test_unified_format_specs PRIVATE spec_test_common client_helpers)
 
 add_executable(test_versioned_api versioned_api.cpp)
 target_link_libraries(test_versioned_api PRIVATE spec_test_common client_helpers)
@@ -183,7 +183,7 @@ set_property(
         test_read_write_concern_specs
         test_retryable_reads_specs
         test_transactions_specs
-        test_unified_format_spec
+        test_unified_format_specs
         test_versioned_api
     APPEND PROPERTY LINK_LIBRARIES
         mongocxx::test_properties_with_main
@@ -215,7 +215,7 @@ foreach(test_name
     instance
     logging
     read_write_concern_specs
-    retryable_reads_spec
+    retryable_reads_specs
     transactions_specs
     unified_format_spec
     versioned_api
@@ -255,7 +255,7 @@ set_property(TEST transactions_specs APPEND PROPERTY ENVIRONMENT
     "WITH_TRANSACTION_TESTS_PATH=${DATA_SOURCE_DIR}/with_transaction"
 )
 
-set_property(TEST retryable_reads_spec APPEND PROPERTY ENVIRONMENT
+set_property(TEST retryable_reads_specs APPEND PROPERTY ENVIRONMENT
     "RETRYABLE_READS_LEGACY_TESTS_PATH=${DATA_SOURCE_DIR}/retryable-reads/legacy"
 )
 
