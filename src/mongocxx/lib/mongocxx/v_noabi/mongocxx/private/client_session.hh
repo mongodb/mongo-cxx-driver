@@ -244,8 +244,7 @@ class client_session::impl {
     options::client_session _options;
 
     using unique_session =
-        std::unique_ptr<mongoc_client_session_t,
-                        std::function<void MONGOCXX_CALL(mongoc_client_session_t*)>>;
+        std::unique_ptr<mongoc_client_session_t, std::function<void(mongoc_client_session_t*)>>;
 
     unique_session _session_t;
 

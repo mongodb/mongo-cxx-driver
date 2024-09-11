@@ -37,7 +37,7 @@ namespace document {
 ///
 class value {
    public:
-    using deleter_type = void (*)(std::uint8_t*);
+    using deleter_type = void(BSONCXX_ABI_CDECL*)(std::uint8_t*);
     using unique_ptr_type = std::unique_ptr<uint8_t[], deleter_type>;
 
     ///

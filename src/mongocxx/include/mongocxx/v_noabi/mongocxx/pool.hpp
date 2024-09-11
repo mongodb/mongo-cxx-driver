@@ -110,7 +110,8 @@ class pool {
        private:
         friend ::mongocxx::v_noabi::pool;
 
-        using unique_client = std::unique_ptr<client, std::function<void(client*)>>;
+        using unique_client =
+            std::unique_ptr<client, std::function<void MONGOCXX_ABI_CDECL(client*)>>;
 
         explicit entry(unique_client);
 
