@@ -492,7 +492,7 @@ void check_outcome_collection(mongocxx::collection* coll, bsoncxx::document::vie
     REQUIRE(begin(actual) == end(actual));
 }
 
-bool server_has_sessions(const client& conn) {
+bool server_has_sessions_impl(const client& conn) {
     auto result = get_is_master(conn);
     auto result_view = result.view();
 
@@ -500,50 +500,44 @@ bool server_has_sessions(const client& conn) {
         return true;
     }
 
-    WARN("skip: server does not support sessions");
     return false;
 }
 
-bool should_run_client_side_encryption_test(void) {
-#ifndef MONGOC_ENABLE_CLIENT_SIDE_ENCRYPTION
-    WARN("linked libmongoc does not support client side encryption - skipping tests");
-    return false;
-#endif
+#if defined(MONGOC_ENABLE_CLIENT_SIDE_ENCRYPTION)
 
-    std::vector<const char*> vars{
-        "MONGOCXX_TEST_AWS_SECRET_ACCESS_KEY",
-        "MONGOCXX_TEST_AWS_ACCESS_KEY_ID",
-        "MONGOCXX_TEST_AZURE_TENANT_ID",
-        "MONGOCXX_TEST_AZURE_CLIENT_ID",
-        "MONGOCXX_TEST_AZURE_CLIENT_SECRET",
-        "MONGOCXX_TEST_CSFLE_TLS_CA_FILE",
-        "MONGOCXX_TEST_CSFLE_TLS_CERTIFICATE_KEY_FILE",
-        "MONGOCXX_TEST_GCP_EMAIL",
-        "MONGOCXX_TEST_GCP_PRIVATEKEY",
-    };
+cseeos_result client_side_encryption_enabled_or_skip_impl() {
+    static const cseeos_result result = [] {
+        std::vector<const char*> vars{
+            "MONGOCXX_TEST_AWS_SECRET_ACCESS_KEY",
+            "MONGOCXX_TEST_AWS_ACCESS_KEY_ID",
+            "MONGOCXX_TEST_AZURE_TENANT_ID",
+            "MONGOCXX_TEST_AZURE_CLIENT_ID",
+            "MONGOCXX_TEST_AZURE_CLIENT_SECRET",
+            "MONGOCXX_TEST_CSFLE_TLS_CA_FILE",
+            "MONGOCXX_TEST_CSFLE_TLS_CERTIFICATE_KEY_FILE",
+            "MONGOCXX_TEST_GCP_EMAIL",
+            "MONGOCXX_TEST_GCP_PRIVATEKEY",
+        };
 
-    std::ostringstream os;
-    os << "Please set environment variables to enable client side encryption tests:\n";
-    std::copy(std::begin(vars), std::end(vars), std::ostream_iterator<const char*>(os, "\n"));
+        const auto is_set = [](const char* var) -> bool { return std::getenv(var) != nullptr; };
 
-    if (std::none_of(std::begin(vars), std::end(vars), std::getenv)) {
-        os << "Skipping client side encryption tests.\n";
+        const auto count = std::count_if(vars.begin(), vars.end(), is_set);
 
-        WARN(os.str());
+        if (count == 0) {
+            return cseeos_result::skip;
+        }
 
-        return false;
-    }
+        if (static_cast<std::size_t>(count) < vars.size()) {
+            return cseeos_result::fail;
+        }
 
-    if (!std::all_of(std::begin(vars), std::end(vars), std::getenv)) {
-        os << "Failing client side encryption tests (some environment variables were not set).\n";
+        return cseeos_result::enable;
+    }();
 
-        FAIL(os.str());
-
-        return false;
-    }
-
-    return true;
+    return result;
 }
+
+#endif  // defined(MONGOC_ENABLE_CLIENT_SIDE_ENCRYPTION)
 
 std::string getenv_or_fail(const std::string env_name) {
     auto val = std::getenv(env_name.c_str());

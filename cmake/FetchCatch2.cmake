@@ -2,8 +2,6 @@
 
 include(FetchContent)
 
-message(STATUS "Downloading Catch2...")
-
 function(fetch_catch2)
     set(fetch_args "")
     if (CMAKE_VERSION VERSION_GREATER_EQUAL "3.25.0")
@@ -26,6 +24,8 @@ function(fetch_catch2)
     FetchContent_GetProperties(EP_Catch2)
 
     if(NOT ep_catch2_POPULATED)
+        message(STATUS "Downloading Catch2...")
+
         # Avoid Catch2 compile warnings from being treated as errors.
         string(REPLACE " -Werror" "" CMAKE_C_FLAGS "${CMAKE_C_FLAGS}")
         string(REPLACE " -Werror" "" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
@@ -38,9 +38,9 @@ function(fetch_catch2)
         # Catch2 config vars.
         set_property(CACHE CATCH_INSTALL_DOCS PROPERTY VALUE OFF)
         set_property(CACHE CATCH_INSTALL_EXTRAS PROPERTY VALUE OFF)
+
+        message (STATUS "Downloading Catch2... done.")
     endif()
 endfunction()
 
 fetch_catch2()
-
-message (STATUS "Downloading Catch2... done.")

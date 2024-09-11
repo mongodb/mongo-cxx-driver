@@ -135,8 +135,8 @@ target_link_libraries(test_read_write_concern_specs PRIVATE spec_test_common cli
 add_executable(test_mongohouse_specs spec/mongohouse.cpp)
 target_link_libraries(test_mongohouse_specs PRIVATE spec_test_common client_helpers)
 
-add_executable(test_unified_format_spec spec/unified_tests/operations.cpp spec/unified_tests/runner.cpp)
-target_link_libraries(test_unified_format_spec PRIVATE spec_test_common client_helpers)
+add_executable(test_unified_format_specs spec/unified_tests/operations.cpp spec/unified_tests/runner.cpp)
+target_link_libraries(test_unified_format_specs PRIVATE spec_test_common client_helpers)
 
 add_executable(test_versioned_api versioned_api.cpp)
 target_link_libraries(test_versioned_api PRIVATE spec_test_common client_helpers)
@@ -183,7 +183,7 @@ set_property(
         test_read_write_concern_specs
         test_retryable_reads_specs
         test_transactions_specs
-        test_unified_format_spec
+        test_unified_format_specs
         test_versioned_api
     APPEND PROPERTY LINK_LIBRARIES
         mongocxx::test_properties_with_main
@@ -206,23 +206,27 @@ set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 target_link_libraries(test_driver PRIVATE Threads::Threads)
 
-add_test(NAME driver COMMAND test_driver)
-add_test(NAME logging COMMAND test_logging)
-add_test(NAME instance COMMAND test_instance)
-add_test(NAME crud_specs COMMAND test_crud_specs)
-add_test(NAME gridfs_specs COMMAND test_gridfs_specs)
-add_test(NAME client_side_encryption_specs COMMAND test_client_side_encryption_specs)
-add_test(NAME command_monitoring_specs COMMAND test_command_monitoring_specs)
-add_test(NAME transactions_specs COMMAND test_transactions_specs)
-add_test(NAME retryable_reads_spec COMMAND test_retryable_reads_specs)
-add_test(NAME read_write_concern_specs COMMAND test_read_write_concern_specs)
-add_test(NAME unified_format_spec COMMAND test_unified_format_spec)
-add_test(NAME versioned_api COMMAND test_versioned_api)
+foreach(test_name
+    client_side_encryption_specs
+    command_monitoring_specs
+    crud_specs
+    driver
+    gridfs_specs
+    instance
+    logging
+    read_write_concern_specs
+    retryable_reads_specs
+    transactions_specs
+    unified_format_specs
+    versioned_api
+)
+    add_test(NAME ${test_name} COMMAND test_${test_name} --reporter compact --allow-running-no-tests)
+endforeach()
 
 # Adding this as a test will run it as part of the RUN_TESTS command in MSVC.
 # Do not add, since we only test mongohouse on Linux.
 if(0)
-    add_test(mongohouse_specs NAME test_mongohouse_specs COMMAND)
+    add_test(NAME mongohouse_specs COMMAND test_mongohouse_specs ${test_args})
 endif()
 
 set_property(TEST crud_specs APPEND PROPERTY ENVIRONMENT
@@ -251,7 +255,7 @@ set_property(TEST transactions_specs APPEND PROPERTY ENVIRONMENT
     "WITH_TRANSACTION_TESTS_PATH=${DATA_SOURCE_DIR}/with_transaction"
 )
 
-set_property(TEST retryable_reads_spec APPEND PROPERTY ENVIRONMENT
+set_property(TEST retryable_reads_specs APPEND PROPERTY ENVIRONMENT
     "RETRYABLE_READS_LEGACY_TESTS_PATH=${DATA_SOURCE_DIR}/retryable-reads/legacy"
 )
 
@@ -259,7 +263,7 @@ set_property(TEST read_write_concern_specs APPEND PROPERTY ENVIRONMENT
     "READ_WRITE_CONCERN_OPERATION_TESTS_PATH=${DATA_SOURCE_DIR}/read-write-concern/operation"
 )
 
-set_property(TEST unified_format_spec APPEND PROPERTY ENVIRONMENT
+set_property(TEST unified_format_specs APPEND PROPERTY ENVIRONMENT
     "CHANGE_STREAMS_UNIFIED_TESTS_PATH=${DATA_SOURCE_DIR}/change-streams/unified"
     "CLIENT_SIDE_ENCRYPTION_UNIFIED_TESTS_PATH=${DATA_SOURCE_DIR}/client_side_encryption/unified"
     "COLLECTION_MANAGEMENT_TESTS_PATH=${DATA_SOURCE_DIR}/collection-management"

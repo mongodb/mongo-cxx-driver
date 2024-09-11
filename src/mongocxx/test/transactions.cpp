@@ -36,11 +36,9 @@ TEST_CASE("Transaction tests", "[transactions]") {
     client mongodb_client{uri{}, test_util::add_test_server_api()};
 
     if (!test_util::is_replica_set(mongodb_client)) {
-        WARN("Skipping: transactions tests require replica set");
-        return;
+        SKIP("transactions tests require replica set");
     } else if (test_util::get_max_wire_version(mongodb_client) < 7) {
-        WARN("Skipping - transactions tests require max wire version is >= 7");
-        return;
+        SKIP("transactions tests require max wire version is >= 7");
     }
 
     // The test run in first 3 SECTIONs below
@@ -223,11 +221,9 @@ TEST_CASE("Transactions Documentation Examples", "[transactions]") {
     client client{uri{}, test_util::add_test_server_api()};
 
     if (!test_util::is_replica_set(client)) {
-        WARN("Skipping: transactions tests require replica set");
-        return;
+        SKIP("transactions tests require replica set");
     } else if (test_util::get_max_wire_version(client) < 7) {
-        WARN("Skipping - transactions tests require max wire version is >= 7");
-        return;
+        SKIP("transactions tests require max wire version is >= 7");
     }
 
     /* Create necessary collections. */
@@ -443,13 +439,11 @@ TEST_CASE("Transactions Mongos Pinning Prose Tests", "[transactions]") {
     instance::current();
 
     if (test_util::compare_versions(test_util::get_server_version(), "4.1.6") < 0) {
-        WARN("Skipping - requires server 4.1.6+");
-        return;
+        SKIP("requires server 4.1.6+");
     }
 
     if (test_util::get_topology() != "sharded") {
-        WARN("Skipping - requires sharded cluster topology");
-        return;
+        SKIP("requires sharded cluster topology");
     }
 
     // @require_mongos_count_at_least(2)

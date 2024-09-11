@@ -211,10 +211,7 @@ void run_encryption_tests_in_file(const std::string& test_path) {
     auto tests = test_spec_view["tests"].get_array().value;
 
     /* we may not have a supported topology */
-    if (should_skip_spec_test(client{uri{}, test_util::add_test_server_api()}, test_spec_view)) {
-        WARN("File skipped - " + test_path);
-        return;
-    }
+    CHECK_IF_SKIP_SPEC_TEST((client{uri{}, test_util::add_test_server_api()}), test_spec_view);
 
     mongocxx::client setup_client{
         uri{},
@@ -227,11 +224,9 @@ void run_encryption_tests_in_file(const std::string& test_path) {
     for (auto&& test : tests) {
         const auto description = string::to_string(test["description"].get_string().value);
 
-        SECTION(description) {
-            if (should_skip_spec_test(client{uri{}, test_util::add_test_server_api()},
-                                      test.get_document().value)) {
-                continue;
-            }
+        DYNAMIC_SECTION(description) {
+            CHECK_IF_SKIP_SPEC_TEST((client{uri{}, test_util::add_test_server_api()}),
+                                    test.get_document().value);
 
             options::client client_opts;
 
@@ -325,15 +320,13 @@ void run_encryption_tests_in_file(const std::string& test_path) {
 TEST_CASE("Client side encryption spec automated tests", "[client_side_encryption_spec]") {
     instance::current();
 
+    CLIENT_SIDE_ENCRYPTION_ENABLED_OR_SKIP();
+
     std::set<std::string> unsupported_tests = {
         "badQueries.json", "count.json", "unsupportedCommand.json"};
 
     char* encryption_tests_path = std::getenv("CLIENT_SIDE_ENCRYPTION_LEGACY_TESTS_PATH");
     REQUIRE(encryption_tests_path);
-
-    if (!mongocxx::test_util::should_run_client_side_encryption_test()) {
-        return;
-    }
 
     std::string path{encryption_tests_path};
     if (path.back() == '/') {
@@ -345,11 +338,10 @@ TEST_CASE("Client side encryption spec automated tests", "[client_side_encryptio
 
     std::string test_file;
     while (std::getline(test_files, test_file)) {
-        SECTION(test_file) {
+        DYNAMIC_SECTION(test_file) {
             if (std::find(unsupported_tests.begin(), unsupported_tests.end(), test_file) !=
                 unsupported_tests.end()) {
-                WARN("skipping " << test_file);
-                continue;
+                SKIP("unsupported test file: " << test_file);
             }
 
             run_encryption_tests_in_file(path + "/" + test_file);

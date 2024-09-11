@@ -1141,27 +1141,24 @@ void run_tests(mongocxx::stdx::string_view test_description, document::view test
 
     for (const auto& ele : test["tests"].get_array().value) {
         const auto description = string::to_string(ele["description"].get_string().value);
-        SECTION(description) {
+
+        DYNAMIC_SECTION(description) {
             {
                 const auto iter = should_skip_test_cases.find({test_description, description});
                 if (iter != should_skip_test_cases.end()) {
-                    WARN("test skipped: " << iter->second);
-                    continue;
+                    SKIP(test_description << ": " << description << ": unsupported test case");
                 }
             }
 
             if (!has_run_on_requirements(ele.get_document())) {
-                std::stringstream warning;
-                warning << "test skipped: "
-                        << "none of the runOnRequirements were met" << std::endl
-                        << to_json(ele["runOnRequirements"].get_array().value);
-                WARN(warning.str());
-                continue;
+                SKIP(test_description << ": " << description
+                                      << ": none of the runOnRequirements were met: "
+                                      << to_json(ele["runOnRequirements"].get_array().value));
             }
 
             if (ele["skipReason"]) {
-                WARN("Skip Reason: " + string::to_string(ele["skipReason"].get_string().value));
-                continue;
+                SKIP(test_description << ": " << description << ": "
+                                      << string::to_string(ele["skipReason"].get_string().value));
             }
 
             fail_point_guard_type fail_point_guard;
@@ -1266,12 +1263,8 @@ void run_tests_in_file(const std::string& test_path) {
     }
 
     if (!has_run_on_requirements(test_spec_view)) {
-        std::stringstream warning;
-        warning << "file skipped: " << test_path << std::endl
-                << "none of the runOnRequirements were met" << std::endl
-                << to_json(test_spec_view["runOnRequirements"].get_array().value);
-        WARN(warning.str());
-        return;
+        CAPTURE(to_json(test_spec_view["runOnRequirements"].get_array().value));
+        SKIP(test_path << ": none of the runOnRequirements were met");
     }
 
     const auto description = test_spec_view["description"].get_string().value;
@@ -1284,7 +1277,7 @@ void run_tests_in_file(const std::string& test_path) {
 // Check the environment for the specified variable; if present, extract it
 // as a directory and run all the tests contained in the magic "test_files.txt"
 // file:
-bool run_unified_format_tests_in_env_dir(
+void run_unified_format_tests_in_env_dir(
     const std::string& env_path,
     const std::set<mongocxx::stdx::string_view>& unsupported_tests = {}) {
     const char* p = std::getenv(env_path.c_str());
@@ -1304,72 +1297,67 @@ bool run_unified_format_tests_in_env_dir(
     instance::current();
 
     for (std::string file; std::getline(files, file);) {
-        SECTION(file) {
+        DYNAMIC_SECTION(file) {
             if (unsupported_tests.find(file) != unsupported_tests.end()) {
-                WARN("Skipping unsupported test file: " << file);
-            } else {
-                run_tests_in_file(base_path + '/' + file);
+                SKIP("unsupported test file: " << file);
             }
+
+            run_tests_in_file(base_path + '/' + file);
         }
     }
-
-    return true;
 }
 
-TEST_CASE("unified format spec automated tests", "[unified_format_spec]") {
+TEST_CASE("unified format spec automated tests", "[unified_format_specs]") {
     const std::set<mongocxx::stdx::string_view> unsupported_tests = {
         // Waiting on CDRIVER-3525 and CXX-2166.
         "valid-pass/entity-client-cmap-events.json",
         // Waiting on CDRIVER-3525 and CXX-2166.
         "valid-pass/assertNumberConnectionsCheckedOut.json"};
 
-    CHECK(run_unified_format_tests_in_env_dir("UNIFIED_FORMAT_TESTS_PATH", unsupported_tests));
+    run_unified_format_tests_in_env_dir("UNIFIED_FORMAT_TESTS_PATH", unsupported_tests);
 }
 
-TEST_CASE("session unified format spec automated tests", "[unified_format_spec]") {
-    CHECK(run_unified_format_tests_in_env_dir("SESSION_UNIFIED_TESTS_PATH"));
+TEST_CASE("session unified format spec automated tests", "[unified_format_specs]") {
+    run_unified_format_tests_in_env_dir("SESSION_UNIFIED_TESTS_PATH");
 }
 
-TEST_CASE("CRUD unified format spec automated tests", "[unified_format_spec]") {
-    CHECK(run_unified_format_tests_in_env_dir("CRUD_UNIFIED_TESTS_PATH"));
+TEST_CASE("CRUD unified format spec automated tests", "[unified_format_specs]") {
+    run_unified_format_tests_in_env_dir("CRUD_UNIFIED_TESTS_PATH");
 }
 
-TEST_CASE("change streams unified format spec automated tests", "[unified_format_spec]") {
-    CHECK(run_unified_format_tests_in_env_dir("CHANGE_STREAMS_UNIFIED_TESTS_PATH"));
+TEST_CASE("change streams unified format spec automated tests", "[unified_format_specs]") {
+    run_unified_format_tests_in_env_dir("CHANGE_STREAMS_UNIFIED_TESTS_PATH");
 }
 
-TEST_CASE("retryable reads unified format spec automated tests", "[unified_format_spec]") {
-    CHECK(run_unified_format_tests_in_env_dir("RETRYABLE_READS_UNIFIED_TESTS_PATH"));
+TEST_CASE("retryable reads unified format spec automated tests", "[unified_format_specs]") {
+    run_unified_format_tests_in_env_dir("RETRYABLE_READS_UNIFIED_TESTS_PATH");
 }
 
-TEST_CASE("retryable writes unified format spec automated tests", "[unified_format_spec]") {
-    CHECK(run_unified_format_tests_in_env_dir("RETRYABLE_WRITES_UNIFIED_TESTS_PATH"));
+TEST_CASE("retryable writes unified format spec automated tests", "[unified_format_specs]") {
+    run_unified_format_tests_in_env_dir("RETRYABLE_WRITES_UNIFIED_TESTS_PATH");
 }
 
-TEST_CASE("transactions unified format spec automated tests", "[unified_format_spec]") {
-    CHECK(run_unified_format_tests_in_env_dir("TRANSACTIONS_UNIFIED_TESTS_PATH"));
+TEST_CASE("transactions unified format spec automated tests", "[unified_format_specs]") {
+    run_unified_format_tests_in_env_dir("TRANSACTIONS_UNIFIED_TESTS_PATH");
 }
 
-TEST_CASE("versioned API spec automated tests", "[unified_format_spec]") {
-    CHECK(run_unified_format_tests_in_env_dir("VERSIONED_API_TESTS_PATH"));
+TEST_CASE("versioned API spec automated tests", "[unified_format_specs]") {
+    run_unified_format_tests_in_env_dir("VERSIONED_API_TESTS_PATH");
 }
 
-TEST_CASE("collection management spec automated tests", "[unified_format_spec]") {
-    CHECK(run_unified_format_tests_in_env_dir("COLLECTION_MANAGEMENT_TESTS_PATH"));
+TEST_CASE("collection management spec automated tests", "[unified_format_specs]") {
+    run_unified_format_tests_in_env_dir("COLLECTION_MANAGEMENT_TESTS_PATH");
 }
 
-TEST_CASE("index management spec automated tests", "[unified_format_spec]") {
-    CHECK(run_unified_format_tests_in_env_dir("INDEX_MANAGEMENT_TESTS_PATH"));
+TEST_CASE("index management spec automated tests", "[unified_format_specs]") {
+    run_unified_format_tests_in_env_dir("INDEX_MANAGEMENT_TESTS_PATH");
 }
 
 // See:
 // https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/client-side-encryption.rst
-TEST_CASE("client side encryption unified format spec automated tests", "[unified_format_spec]") {
-    if (!mongocxx::test_util::should_run_client_side_encryption_test()) {
-        WARN("Skipping - client side encryption unified tests");
-        return;
-    }
-    CHECK(run_unified_format_tests_in_env_dir("CLIENT_SIDE_ENCRYPTION_UNIFIED_TESTS_PATH"));
+TEST_CASE("client side encryption unified format spec automated tests", "[unified_format_specs]") {
+    CLIENT_SIDE_ENCRYPTION_ENABLED_OR_SKIP();
+    run_unified_format_tests_in_env_dir("CLIENT_SIDE_ENCRYPTION_UNIFIED_TESTS_PATH");
 }
 
 }  // namespace

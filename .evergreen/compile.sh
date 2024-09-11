@@ -72,15 +72,17 @@ if [[ -f "${mongoc_prefix:?}/.evergreen/scripts/find-ccache.sh" ]]; then
   find_ccache_and_export_vars "$(pwd)" || true
 fi
 
+
+build_targets=()
 cmake_build_opts=()
 case "${OSTYPE:?}" in
 cygwin)
   cmake_build_opts+=("/verbosity:minimal")
-  cmake_examples_target="examples/examples"
+  build_targets+=(--target ALL_BUILD --target examples/examples)
   ;;
 
 darwin* | linux*)
-  cmake_examples_target="examples"
+  build_targets+=(--target all --target examples)
   ;;
 
 *)
@@ -88,7 +90,6 @@ darwin* | linux*)
   exit 1
   ;;
 esac
-: "${cmake_examples_target:?}"
 
 # Create a VERSION_CURRENT file in the build directory to include in the dist tarball.
 python ./etc/calc_release_version.py >./build/VERSION_CURRENT
@@ -223,21 +224,23 @@ if [[ -n "${REQUIRED_CXX_STANDARD:-}" ]]; then
   cmake_flags+=("-DCMAKE_CXX_STANDARD_REQUIRED=ON")
 fi
 
+if [[ "${COMPILE_MACRO_GUARD_TESTS:-"OFF"}" == "ON" ]]; then
+  cmake_flags+=("-DENABLE_MACRO_GUARD_TESTS=ON")
+fi
+
 echo "Configuring with CMake flags: ${cmake_flags[*]}"
 
 "${cmake_binary}" "${cmake_flags[@]}" ..
 
 if [[ "${COMPILE_MACRO_GUARD_TESTS:-"OFF"}" == "ON" ]]; then
   # We only need to compile the macro guard tests.
-  "${cmake_binary}" -DENABLE_MACRO_GUARD_TESTS=ON ..
   "${cmake_binary}" --build . --config "${build_type:?}" --target test_bsoncxx_macro_guards test_mongocxx_macro_guards -- "${cmake_build_opts[@]}"
   exit # Nothing else to be done.
 fi
 
 # Regular build and install routine.
-"${cmake_binary}" --build . --config "${build_type:?}" -- "${cmake_build_opts[@]}"
-"${cmake_binary}" --build . --config "${build_type:?}" --target install -- "${cmake_build_opts[@]}"
-"${cmake_binary}" --build . --config "${build_type:?}" --target "${cmake_examples_target:?}" -- "${cmake_build_opts[@]}"
+"${cmake_binary}" --build . --config "${build_type:?}" "${build_targets[@]:?}" -- "${cmake_build_opts[@]}"
+"${cmake_binary}" --install . --config "${build_type:?}"
 
 if [[ "${_RUN_DISTCHECK:-}" ]]; then
   "${cmake_binary}" --build . --config "${build_type:?}" --target distcheck
