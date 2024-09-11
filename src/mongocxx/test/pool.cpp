@@ -26,6 +26,7 @@
 
 #include <bsoncxx/test/catch.hh>
 #include <mongocxx/test/catch_helpers.hh>
+#include <mongocxx/test/client_helpers.hh>
 
 namespace {
 using namespace mongocxx;
@@ -183,4 +184,18 @@ TEST_CASE("a pool is created with an invalid connection string", "[pool]") {
 
     REQUIRE_THROWS_AS(pool{mongocxx::uri(uristr)}, operation_exception);
 }
+
+TEST_CASE("acquiring a client throws if waitQueueTimeoutMS expires", "[pool]") {
+    instance::current();
+    mongocxx::pool pool{
+        mongocxx::uri{"mongodb://localhost:27017/?waitQueueTimeoutMS=1&maxPoolSize=1"},
+        options::pool(test_util::add_test_server_api())};
+    // Acquire only available client:
+    auto client = pool.acquire();
+    CHECK(client);
+    // Try to acquire again. Expect timeout:
+    REQUIRE_THROWS_WITH(pool.acquire(),
+                        Catch::Matchers::ContainsSubstring("failed to acquire client"));
+}
+
 }  // namespace
