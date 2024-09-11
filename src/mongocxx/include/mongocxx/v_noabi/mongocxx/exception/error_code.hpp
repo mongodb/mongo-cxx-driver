@@ -108,8 +108,8 @@ enum class error_code : std::int32_t {
     // used.
     k_invalid_search_index_view,
     
-    /// Acquired a NULL mongocxx::v_noabi::client object.
-    k_invalid_client_acquired,
+    // Timed out while waiting for a client to be returned to the pool
+    k_pool_wait_queue_timeout,
 
     // Add new constant string message to error_code.cpp as well!
 };
