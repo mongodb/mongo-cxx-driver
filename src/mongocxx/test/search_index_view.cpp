@@ -80,8 +80,7 @@ TEST_CASE("atlas search indexes prose tests", "[atlas][search_indexes]") {
 
     auto uri_getenv = std::getenv("MONGODB_URI");
     if (!uri_getenv) {
-        WARN("Skipping - Test requires the environment variable: MONGODB_URI");
-        return;
+        SKIP("Test requires the environment variable: MONGODB_URI");
     }
 
     client mongodb_client{uri{uri_getenv}};
@@ -403,8 +402,7 @@ TEST_CASE("atlas search indexes tests", "[atlas][search_indexes]") {
 
     auto uri_getenv = std::getenv("MONGODB_URI");
     if (!uri_getenv) {
-        WARN("Skipping - Test requires the environment variable: MONGODB_URI");
-        return;
+        SKIP("Test requires the environment variable: MONGODB_URI");
     }
 
     client mongodb_client{uri{uri_getenv}};

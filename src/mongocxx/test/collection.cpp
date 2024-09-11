@@ -50,7 +50,6 @@ using bsoncxx::builder::basic::make_array;
 using bsoncxx::builder::basic::make_document;
 
 using namespace mongocxx;
-using test_util::server_has_sessions;
 
 TEST_CASE("A default constructed collection cannot perform operations", "[collection]") {
     instance::current();
@@ -218,8 +217,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
         SECTION("unacknowledged write concern returns disengaged optional", "[collection]") {
             if (test_util::get_max_wire_version(mongodb_client) > 13) {
-                WARN("Skipping - getLastError removed in SERVER-57390");
-                return;
+                SKIP("getLastError removed in SERVER-57390");
             }
             collection coll = db["insert_one_unack_write"];
             coll.drop();
@@ -349,8 +347,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
         SECTION("unacknowledged write concern returns disengaged optional") {
             if (test_util::get_max_wire_version(mongodb_client) > 13) {
-                WARN("Skipping - getLastError removed in SERVER-57390");
-                return;
+                SKIP("getLastError removed in SERVER-57390");
             }
             collection coll = db["insert_many_unack_write"];
             coll.drop();
@@ -542,8 +539,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
     SECTION("update_one can take a pipeline", "[collection]") {
         if (!test_util::newer_than(mongodb_client, "4.1.11")) {
-            WARN("skip: pipeline updates require 4.1.11");
-            return;
+            SKIP("pipeline updates require 4.1.11");
         }
 
         collection coll = db["update_one_pipeline"];
@@ -613,8 +609,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
         SECTION("unacknowledged write concern returns disengaged optional") {
             if (test_util::get_max_wire_version(mongodb_client) > 13) {
-                WARN("Skipping - getLastError removed in SERVER-57390");
-                return;
+                SKIP("getLastError removed in SERVER-57390");
             }
             collection coll = db["update_one_unack_write"];
             coll.drop();
@@ -725,8 +720,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
         SECTION("unacknowledged write concern returns disengaged optional") {
             if (test_util::get_max_wire_version(mongodb_client) > 13) {
-                WARN("Skipping - getLastError removed in SERVER-57390");
-                return;
+                SKIP("getLastError removed in SERVER-57390");
             }
             collection coll = db["update_many_unack_write"];
             coll.drop();
@@ -897,8 +891,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
         SECTION("unacknowledged write concern returns disengaged optional") {
             if (test_util::get_max_wire_version(mongodb_client) > 13) {
-                WARN("Skipping - getLastError removed in SERVER-57390");
-                return;
+                SKIP("getLastError removed in SERVER-57390");
             }
             collection coll = db["replace_one_unack_write"];
             coll.drop();
@@ -1033,8 +1026,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
         SECTION("unacknowledged write concern returns disengaged optional") {
             if (test_util::get_max_wire_version(mongodb_client) > 13) {
-                WARN("Skipping - getLastError removed in SERVER-57390");
-                return;
+                SKIP("getLastError removed in SERVER-57390");
             }
             collection coll = db["delete_one_unack_write"];
             coll.drop();
@@ -1134,8 +1126,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
         SECTION("unacknowledged write concern returns disengaged optional") {
             if (test_util::get_max_wire_version(mongodb_client) > 13) {
-                WARN("Skipping - getLastError removed in SERVER-57390");
-                return;
+                SKIP("getLastError removed in SERVER-57390");
             }
             collection coll = db["delete_many_unack_write"];
             coll.drop();
@@ -2009,8 +2000,7 @@ TEST_CASE("CRUD functionality", "[driver::collection]") {
 
         SECTION("unacknowledged write concern returns disengaged optional", "[collection]") {
             if (test_util::get_max_wire_version(mongodb_client) > 13) {
-                WARN("Skipping - getLastError removed in SERVER-57390");
-                return;
+                SKIP("getLastError removed in SERVER-57390");
             }
             collection coll = db["bulk_write_unack_write"];
             coll.drop();
@@ -2589,8 +2579,7 @@ TEST_CASE("Ensure that the WriteConcernError 'errInfo' object is propagated", "[
 
     if (test_util::get_topology(mongodb_client) == "sharded" &&
         test_util::compare_versions(test_util::get_server_version(mongodb_client), "4.1.0") < 0) {
-        WARN("Skipping - failCommand on mongos requires 4.1+");
-        return;
+        SKIP("failCommand on mongos requires 4.1+");
     }
 
     using bsoncxx::builder::basic::sub_document;
@@ -2693,8 +2682,7 @@ TEST_CASE("expose writeErrors[].errInfo", "[collection]") {
     auto mongodb_client = mongocxx::client(uri{}, client_opts);
 
     if (!test_util::newer_than(mongodb_client, "5.0")) {
-        WARN("skip: test requires MongoDB server 5.0 or newer");
-        return;
+        SKIP("test requires MongoDB server 5.0 or newer");
     }
 
     database db = mongodb_client["prose_test_expose_details"];

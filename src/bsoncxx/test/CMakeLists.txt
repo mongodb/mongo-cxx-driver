@@ -74,7 +74,8 @@ target_sources(bsoncxx_test_properties INTERFACE catch.cpp)
 add_library(bsoncxx::test_properties_with_main ALIAS bsoncxx_test_properties_with_main)
 
 target_link_libraries (test_bson PRIVATE bsoncxx::test_properties_with_main)
-add_test(NAME bson COMMAND test_bson)
+
+add_test(NAME bson COMMAND test_bson --reporter compact --allow-running-no-tests)
 
 # Generate test to ensure macro guards behave properly.
 if(ENABLE_MACRO_GUARD_TESTS)

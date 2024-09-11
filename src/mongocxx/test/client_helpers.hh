@@ -210,9 +210,39 @@ auto size(Container c) -> decltype(std::distance(std::begin(c), std::end(c))) {
 //
 // @return Whether sessions are supported by the client's topology.
 //
-bool server_has_sessions(const client& conn);
+bool server_has_sessions_impl(const client& conn);
 
-bool should_run_client_side_encryption_test(void);
+#define SERVER_HAS_SESSIONS_OR_SKIP(conn)                       \
+    if (!mongocxx::test_util::server_has_sessions_impl(conn)) { \
+        SKIP("server does not support session");                \
+    } else                                                      \
+        ((void)0)
+
+#if defined(MONGOC_ENABLE_CLIENT_SIDE_ENCRYPTION)
+enum struct cseeos_result {
+    enable,
+    skip,
+    fail,
+};
+
+cseeos_result client_side_encryption_enabled_or_skip_impl();
+
+#define CLIENT_SIDE_ENCRYPTION_ENABLED_OR_SKIP()                                      \
+    if (1) {                                                                          \
+        switch (mongocxx::test_util::client_side_encryption_enabled_or_skip_impl()) { \
+            case mongocxx::test_util::cseeos_result::enable:                          \
+                break;                                                                \
+            case mongocxx::test_util::cseeos_result::skip:                            \
+                SKIP("CSE environemnt variables not set");                            \
+            case mongocxx::test_util::cseeos_result::fail:                            \
+                FAIL("One or more CSE environment variable is missing");              \
+        }                                                                             \
+    } else                                                                            \
+        ((void)0)
+#else
+#define CLIENT_SIDE_ENCRYPTION_ENABLED_OR_SKIP() \
+    SKIP("linked libmongoc does not support client side encryption")
+#endif  // defined(MONGOC_ENABLE_CLIENT_SIDE_ENCRYPTION)
 
 std::string getenv_or_fail(const std::string env_name);
 

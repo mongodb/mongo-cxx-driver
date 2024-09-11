@@ -262,7 +262,12 @@ else
     echo "CRYPT_SHARED_LIB_PATH=${CRYPT_SHARED_LIB_PATH:?}"
   fi
 
-  run_test() { "$@"; }
+  test_args=(
+    --reporter compact
+    --allow-running-no-tests
+  )
+
+  run_test() { "$@" "${test_args[@]:?}"; }
 
   if [[ "${TEST_WITH_ASAN:-}" == "ON" || "${TEST_WITH_UBSAN:-}" == "ON" ]]; then
     export ASAN_OPTIONS="detect_leaks=1"
@@ -270,7 +275,7 @@ else
     export PATH="/usr/lib/llvm-3.8/bin:${PATH:-}"
   elif [[ "${TEST_WITH_VALGRIND:-}" == "ON" ]]; then
     run_test() {
-      valgrind --leak-check=full --track-origins=yes --num-callers=50 --error-exitcode=1 --error-limit=no --read-var-info=yes --suppressions=../etc/memcheck.suppressions "$@"
+      valgrind --leak-check=full --track-origins=yes --num-callers=50 --error-exitcode=1 --error-limit=no --read-var-info=yes --suppressions=../etc/memcheck.suppressions "$@" "${test_args[@]:?}"
     }
   fi
 
@@ -286,11 +291,7 @@ else
   run_test ./src/mongocxx/test/test_logging
   run_test ./src/mongocxx/test/test_retryable_reads_specs
   run_test ./src/mongocxx/test/test_read_write_concern_specs
-  run_test ./src/mongocxx/test/test_unified_format_spec
-
-  echo "Building examples..."
-  "${cmake_binary:?}" --build . --target examples
-  echo "Building examples... done."
+  run_test ./src/mongocxx/test/test_unified_format_specs
 
   # Only run examples if MONGODB_API_VERSION is unset. We do not append
   # API version to example clients, so examples will fail when requireApiVersion

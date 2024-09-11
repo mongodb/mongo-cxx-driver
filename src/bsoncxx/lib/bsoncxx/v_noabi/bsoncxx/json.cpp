@@ -38,13 +38,17 @@ void bson_free_deleter(std::uint8_t* ptr) {
 
 std::string to_json_helper(document::view view, decltype(bson_as_json) converter) {
     bson_t bson;
-    bson_init_static(&bson, view.data(), view.length());
+
+    if (!bson_init_static(&bson, view.data(), view.length())) {
+        throw exception(error_code::k_failed_converting_bson_to_json);
+    }
 
     size_t size;
     auto result = converter(&bson, &size);
 
-    if (!result)
+    if (!result) {
         throw exception(error_code::k_failed_converting_bson_to_json);
+    }
 
     const auto deleter = [](char* result) { bson_free(result); };
     const std::unique_ptr<char[], decltype(deleter)> cleanup(result, deleter);

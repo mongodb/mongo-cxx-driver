@@ -70,9 +70,8 @@ void run_command_monitoring_tests_in_file(std::string test_path) {
 
         // Use a separate client to check version info, so as not to interfere with APM
         client temp_client{uri{}, test_util::add_test_server_api()};
-        if (spec::should_skip_spec_test(temp_client, test.get_document().value)) {
-            return;
-        }
+
+        CHECK_IF_SKIP_SPEC_TEST(temp_client, test.get_document().value);
 
         // Used by the listeners
         auto events = expectations.begin();

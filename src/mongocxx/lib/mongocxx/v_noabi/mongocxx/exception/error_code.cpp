@@ -92,6 +92,8 @@ class error_category final : public std::error_category {
             case error_code::k_invalid_search_index_view:
                 return "invalid use of default constructed or moved-from "
                        "mongocxx::search_index_view object";
+            case error_code::k_pool_wait_queue_timeout:
+                return "timed out while waiting for a client to be returned to the pool";
             default:
                 return "unknown mongocxx error";
         }

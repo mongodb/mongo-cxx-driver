@@ -39,7 +39,6 @@ using namespace mongocxx;
 using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_array;
 using bsoncxx::builder::basic::make_document;
-using test_util::server_has_sessions;
 
 bool check_for_collections(cursor cursor, std::set<std::string> expected_colls) {
     for (auto&& coll : cursor) {
@@ -342,9 +341,7 @@ TEST_CASE("Database integration tests", "[database]") {
         };
 
         SECTION("listLocalSessions") {
-            if (!server_has_sessions(mongo_client)) {
-                return;
-            }
+            SERVER_HAS_SESSIONS_OR_SKIP(mongo_client);
 
             // SERVER-79306: Ensure the database exists for consistent behavior with sharded
             // clusters.

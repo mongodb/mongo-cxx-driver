@@ -219,7 +219,7 @@ static void iterate_srv_max_hosts_tests(std::string dir, std::vector<std::string
     for (const auto& file : files) {
         auto test_doc = _doc_from_file("/" + dir + "/" + file);
         auto test = initial_dns_seedlist_test::parse(test_doc);
-        SECTION(file) {
+        DYNAMIC_SECTION(file) {
             run_srv_max_hosts_test_file(test);
         }
     }
@@ -256,8 +256,7 @@ TEST_CASE("uri::test_srv_max_hosts", "[uri]") {
     mongocxx::instance::current();
 
     if (!std::getenv("MONGOCXX_TEST_DNS")) {
-        WARN("Skipping - initial DNS seedlist discovery tests require MONGOCXX_TEST_DNS to be set");
-        return;
+        SKIP("initial DNS seedlist discovery tests require MONGOCXX_TEST_DNS to be set");
     }
 
     assert_tls_enabled();
