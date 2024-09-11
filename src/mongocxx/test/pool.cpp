@@ -193,7 +193,6 @@ TEST_CASE("acquiring a client throws if waitQueueTimeoutMS expires", "[pool]") {
     // Acquire only available client:
     auto client = pool.acquire();
     CHECK(client);
-    CHECK(client);
     // Try to acquire again. Expect timeout:
     REQUIRE_THROWS_WITH(pool.acquire(),
                         Catch::Matchers::ContainsSubstring("failed to acquire client"));
