@@ -217,7 +217,7 @@ foreach(test_name
     read_write_concern_specs
     retryable_reads_specs
     transactions_specs
-    unified_format_spec
+    unified_format_specs
     versioned_api
 )
     add_test(NAME ${test_name} COMMAND test_${test_name} --reporter compact --allow-running-no-tests)
@@ -263,7 +263,7 @@ set_property(TEST read_write_concern_specs APPEND PROPERTY ENVIRONMENT
     "READ_WRITE_CONCERN_OPERATION_TESTS_PATH=${DATA_SOURCE_DIR}/read-write-concern/operation"
 )
 
-set_property(TEST unified_format_spec APPEND PROPERTY ENVIRONMENT
+set_property(TEST unified_format_specs APPEND PROPERTY ENVIRONMENT
     "CHANGE_STREAMS_UNIFIED_TESTS_PATH=${DATA_SOURCE_DIR}/change-streams/unified"
     "CLIENT_SIDE_ENCRYPTION_UNIFIED_TESTS_PATH=${DATA_SOURCE_DIR}/client_side_encryption/unified"
     "COLLECTION_MANAGEMENT_TESTS_PATH=${DATA_SOURCE_DIR}/collection-management"
