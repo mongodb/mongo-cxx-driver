@@ -54,6 +54,8 @@
 #pragma pop_macro("BSONCXX_API")
 #pragma pop_macro("BSONCXX_PRIVATE")
 #pragma pop_macro("BSONCXX_DEPRECATED")
+#pragma pop_macro("BSONCXX_DEPRECATED_EXPORT")
+#pragma pop_macro("BSONCXX_DEPRECATED_NO_EXPORT")
 #endif
 
 // prelude.hpp

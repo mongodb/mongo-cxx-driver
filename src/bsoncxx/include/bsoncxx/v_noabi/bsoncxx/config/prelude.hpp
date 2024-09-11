@@ -105,6 +105,10 @@
 #undef BSONCXX_PRIVATE
 #pragma push_macro("BSONCXX_DEPRECATED")
 #undef BSONCXX_DEPRECATED
+#pragma push_macro("BSONCXX_DEPRECATED_EXPORT")
+#undef BSONCXX_DEPRECATED
+#pragma push_macro("BSONCXX_DEPRECATED_NO_EXPORT")
+#undef BSONCXX_DEPRECATED
 #endif
 
 #include <bsoncxx/config/util.hpp>
