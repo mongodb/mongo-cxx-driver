@@ -46,8 +46,8 @@ view::view() noexcept : view(nullptr) {}
 // so we can't rely on automatic noexcept propagation. It really is though, so it is OK.
 #if !defined(BSONCXX_POLY_USE_BOOST)
 #define BSONCXX_ENUM(name, val)                                                                \
-    view::view(b_##name value) noexcept                                                        \
-        : _type(static_cast<bsoncxx::v_noabi::type>(val)), _b_##name(std::move(value)) {       \
+    view::view(b_##name v) noexcept                                                        \
+        : _type(static_cast<bsoncxx::v_noabi::type>(val)), _b_##name(std::move(v)) {       \
         static_assert(std::is_nothrow_copy_constructible<b_##name>::value, "Copy may throw");  \
         static_assert(std::is_nothrow_copy_assignable<b_##name>::value, "Copy may throw");     \
         static_assert(std::is_nothrow_destructible<b_##name>::value, "Destruction may throw"); \

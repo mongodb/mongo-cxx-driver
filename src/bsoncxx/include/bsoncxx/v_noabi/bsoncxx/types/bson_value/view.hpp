@@ -40,23 +40,33 @@ namespace bson_value {
 ///
 class view {
    public:
-///
-/// Construct a bson_value::view from any of the various BSON types. Defines
-/// constructors of the following form for each type:
-///
-///   explicit view(type) noexcept;
-///
-/// Like this:
-///
-///   explicit view(b_double) noexcept;
-///   explicit view(b_string) noexcept;
-///   explicit view(b_bool) noexcept;
-///
-/// etc.
-///
-#define BSONCXX_ENUM(type, val) explicit BSONCXX_ABI_EXPORT_CDECL() view(b_##type) noexcept;
-#include <bsoncxx/enums/type.hpp>
-#undef BSONCXX_ENUM
+    ///
+    /// Construct a bson_value::view from the provided BSON type.
+    ///
+    /// @{
+    explicit BSONCXX_ABI_EXPORT_CDECL() view(b_double v) noexcept;
+    explicit BSONCXX_ABI_EXPORT_CDECL() view(b_string v) noexcept;
+    explicit BSONCXX_ABI_EXPORT_CDECL() view(b_document v) noexcept;
+    explicit BSONCXX_ABI_EXPORT_CDECL() view(b_array v) noexcept;
+    explicit BSONCXX_ABI_EXPORT_CDECL() view(b_binary v) noexcept;
+    explicit BSONCXX_ABI_EXPORT_CDECL() view(b_undefined v) noexcept;
+    explicit BSONCXX_ABI_EXPORT_CDECL() view(b_oid v) noexcept;
+    explicit BSONCXX_ABI_EXPORT_CDECL() view(b_bool v) noexcept;
+    explicit BSONCXX_ABI_EXPORT_CDECL() view(b_date v) noexcept;
+    explicit BSONCXX_ABI_EXPORT_CDECL() view(b_null v) noexcept;
+    explicit BSONCXX_ABI_EXPORT_CDECL() view(b_regex v) noexcept;
+    explicit BSONCXX_ABI_EXPORT_CDECL() view(b_dbpointer v) noexcept;
+    explicit BSONCXX_ABI_EXPORT_CDECL() view(b_code v) noexcept;
+    explicit BSONCXX_ABI_EXPORT_CDECL() view(b_symbol v) noexcept;
+    explicit BSONCXX_ABI_EXPORT_CDECL() view(b_codewscope v) noexcept;
+    explicit BSONCXX_ABI_EXPORT_CDECL() view(b_int32 v) noexcept;
+    explicit BSONCXX_ABI_EXPORT_CDECL() view(b_timestamp v) noexcept;
+    explicit BSONCXX_ABI_EXPORT_CDECL() view(b_int64 v) noexcept;
+    explicit BSONCXX_ABI_EXPORT_CDECL() view(b_decimal128 v) noexcept;
+    explicit BSONCXX_ABI_EXPORT_CDECL() view(b_maxkey v) noexcept;
+    explicit BSONCXX_ABI_EXPORT_CDECL() view(b_minkey v) noexcept;
+    /// @}
+    ///
 
     ///
     /// Default constructs a bson_value::view. The resulting view will be initialized
