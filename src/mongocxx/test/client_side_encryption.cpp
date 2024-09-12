@@ -3096,12 +3096,8 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
     {
         auto client = mongocxx::client(mongocxx::uri(), test_util::add_test_server_api());
 
-        if (!test_util::newer_than(client, "7.0")) {
-            SKIP("MongoDB server 7.0 or newer required");
-        }
-
-        if (test_util::newer_than(client, "8.0")) {
-            SKIP("skipped on MongoDB server 8.0 or newer pending updates for DRIVERS-2776");
+        if (!test_util::newer_than(client, "8.0")) {
+            SKIP("MongoDB server 8.0 or newer required");
         }
 
         if (test_util::get_topology(client) == "single") {
@@ -3186,8 +3182,8 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
                 // `EncryptOpts` to encrypt the query:
                 //   class EncryptOpts {
                 //      keyId : <key1ID>
-                //      algorithm: "RangePreview",
-                //      queryType: "rangePreview",
+                //      algorithm: "Range",
+                //      queryType: "range",
                 //      contentionFactor: 0
                 //   }
                 // Store the result in `findPayload`.
@@ -3238,8 +3234,8 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
                 // `EncryptOpts` to encrypt the query:
                 //   class EncryptOpts {
                 //      keyId : <key1ID>
-                //      algorithm: "RangePreview",
-                //      queryType: "rangePreview",
+                //      algorithm: "Range",
+                //      queryType: "range",
                 //      contentionFactor: 0
                 //   }
                 // Store the result in `findPayload`.
@@ -3286,8 +3282,8 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
                 // `EncryptOpts` to encrypt the query:
                 //   class EncryptOpts {
                 //      keyId : <key1ID>
-                //      algorithm: "RangePreview",
-                //      queryType: "rangePreview",
+                //      algorithm: "Range",
+                //      queryType: "range",
                 //      contentionFactor: 0
                 //   }
                 // Store the result in `findPayload`.
@@ -3332,8 +3328,8 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
                 // `EncryptOpts` to encrypt the query:
                 //   class EncryptOpts {
                 //      keyId : <key1ID>
-                //      algorithm: "RangePreview",
-                //      queryType: "rangePreview",
+                //      algorithm: "Range",
+                //      queryType: "range",
                 //      contentionFactor: 0
                 //   }
                 // Store the result in `findPayload`.
