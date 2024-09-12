@@ -30,7 +30,7 @@ namespace options {
 
 ///
 /// @brief `RangeOpts` specifies index options for a Queryable Encryption field supporting
-/// "rangePreview" queries.
+/// "range" queries.
 ///
 /// @note @ref min, @ref max, @ref sparsity, and @ref precision must match the values set in the
 /// encryptedFields of the destination collection.

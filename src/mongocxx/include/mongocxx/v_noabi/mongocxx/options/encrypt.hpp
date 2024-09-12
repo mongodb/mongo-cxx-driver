@@ -116,16 +116,14 @@ class encrypt {
     };
 
     ///
-    /// queryType only applies when algorithm is "indexed" or "rangePreview".
-    /// It is an error to set queryType when algorithm is not "indexed" or "rangePreview".
+    /// queryType only applies when algorithm is "indexed" or "range".
+    /// It is an error to set queryType when algorithm is not "indexed" or "range".
     ///
     enum class encryption_query_type : std::uint8_t {
         /// @brief Use query type "equality".
         k_equality,
 
-        /// @brief Use query type "rangePreview".
-        /// @warning The Range algorithm is experimental only. It is not intended for public use. It
-        /// is subject to breaking changes.
+        /// @brief Use query type "range".
         k_range,
     };
 
