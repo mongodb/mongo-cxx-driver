@@ -49,7 +49,7 @@ else()
 endif()
 
 # Also update etc/purls.txt.
-set(LIBBSON_REQUIRED_VERSION 1.27.0)
+set(LIBBSON_REQUIRED_VERSION 1.28.0)
 set(LIBBSON_REQUIRED_ABI_VERSION 1.0)
 
 # Also update etc/purls.txt.
