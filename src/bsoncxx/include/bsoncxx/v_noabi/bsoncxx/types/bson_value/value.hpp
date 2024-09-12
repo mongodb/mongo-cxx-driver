@@ -42,7 +42,7 @@ namespace bson_value {
 /// For accessors into this type and to extract the various BSON types out,
 /// please use bson_value::view.
 ///
-/// @see bsoncxx::v_noabi::bson_value::view
+/// @see @ref bsoncxx::v_noabi::types::bson_value::view
 ///
 class value {
    public:
