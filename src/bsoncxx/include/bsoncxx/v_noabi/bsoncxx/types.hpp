@@ -38,6 +38,8 @@ namespace v_noabi {
 ///
 /// An enumeration of each BSON type.
 ///
+/// @showenumvalues
+///
 enum class type : std::uint8_t {
     k_double = 0x01,      ///< 64-bit binary floating point.
     k_string = 0x02,      ///< UTF-8 string.
@@ -65,6 +67,8 @@ enum class type : std::uint8_t {
 
 ///
 /// An enumeration of each BSON binary sub type.
+///
+/// @showenumvalues
 ///
 enum class binary_sub_type : std::uint8_t {
     k_binary = 0x00,             ///< Generic binary subtype.
