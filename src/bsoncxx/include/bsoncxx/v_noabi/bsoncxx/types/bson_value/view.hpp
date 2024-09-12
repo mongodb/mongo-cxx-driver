@@ -83,12 +83,12 @@ class view {
     ///
 
     ///
-    /// @return The type of the underlying BSON value stored in this object.
+    /// Returns the type of the underlying BSON value stored in this object.
     ///
     BSONCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::type) type() const;
 
     ///
-    /// @return The underlying BSON double value.
+    /// Returns the underlying BSON double value.
     ///
     /// @warning
     ///   Calling the wrong get_<type> method will cause an exception to be thrown.
@@ -96,7 +96,7 @@ class view {
     BSONCXX_ABI_EXPORT_CDECL(const b_double&) get_double() const;
 
     ///
-    /// @return The underlying BSON UTF-8 string value.
+    /// Returns the underlying BSON UTF-8 string value.
     ///
     /// @deprecated use get_string instead.
     ///
@@ -106,7 +106,7 @@ class view {
     BSONCXX_DEPRECATED BSONCXX_ABI_EXPORT_CDECL(const b_string&) get_utf8() const;
 
     ///
-    /// @return The underlying BSON UTF-8 string value.
+    /// Returns the underlying BSON UTF-8 string value.
     ///
     /// @warning
     ///   Calling the wrong get_<type> method will cause an exception to be thrown.
@@ -114,7 +114,7 @@ class view {
     BSONCXX_ABI_EXPORT_CDECL(const b_string&) get_string() const;
 
     ///
-    /// @return The underlying BSON document value.
+    /// Returns the underlying BSON document value.
     ///
     /// @warning
     ///   Calling the wrong get_<type> method will cause an exception to be thrown.
@@ -122,7 +122,7 @@ class view {
     BSONCXX_ABI_EXPORT_CDECL(const b_document&) get_document() const;
 
     ///
-    /// @return The underlying BSON array value.
+    /// Returns the underlying BSON array value.
     ///
     /// @warning
     ///   Calling the wrong get_<type> method will cause an exception to be thrown.
@@ -130,7 +130,7 @@ class view {
     BSONCXX_ABI_EXPORT_CDECL(const b_array&) get_array() const;
 
     ///
-    /// @return The underlying BSON binary data value.
+    /// Returns the underlying BSON binary data value.
     ///
     /// @warning
     ///   Calling the wrong get_<type> method will cause an exception to be thrown.
@@ -138,7 +138,7 @@ class view {
     BSONCXX_ABI_EXPORT_CDECL(const b_binary&) get_binary() const;
 
     ///
-    /// @return The underlying BSON undefined value.
+    /// Returns the underlying BSON undefined value.
     ///
     /// @warning
     ///   Calling the wrong get_<type> method will cause an exception to be thrown.
@@ -146,7 +146,7 @@ class view {
     BSONCXX_ABI_EXPORT_CDECL(const b_undefined&) get_undefined() const;
 
     ///
-    /// @return The underlying BSON ObjectId value.
+    /// Returns the underlying BSON ObjectId value.
     ///
     /// @warning
     ///   Calling the wrong get_<type> method will cause an exception to be thrown.
@@ -154,7 +154,7 @@ class view {
     BSONCXX_ABI_EXPORT_CDECL(const b_oid&) get_oid() const;
 
     ///
-    /// @return The underlying BSON boolean value.
+    /// Returns the underlying BSON boolean value.
     ///
     /// @warning
     ///   Calling the wrong get_<type> method will cause an exception to be thrown.
@@ -162,7 +162,7 @@ class view {
     BSONCXX_ABI_EXPORT_CDECL(const b_bool&) get_bool() const;
 
     ///
-    /// @return The underlying BSON date value.
+    /// Returns the underlying BSON date value.
     ///
     /// @warning
     ///   Calling the wrong get_<type> method will cause an exception to be thrown.
@@ -170,7 +170,7 @@ class view {
     BSONCXX_ABI_EXPORT_CDECL(const b_date&) get_date() const;
 
     ///
-    /// @return The underlying BSON null value.
+    /// Returns the underlying BSON null value.
     ///
     /// @warning
     ///   Calling the wrong get_<type> method will cause an exception to be thrown.
@@ -178,7 +178,7 @@ class view {
     BSONCXX_ABI_EXPORT_CDECL(const b_null&) get_null() const;
 
     ///
-    /// @return The underlying BSON regex value.
+    /// Returns the underlying BSON regex value.
     ///
     /// @warning
     ///   Calling the wrong get_<type> method will cause an exception to be thrown.
@@ -186,7 +186,7 @@ class view {
     BSONCXX_ABI_EXPORT_CDECL(const b_regex&) get_regex() const;
 
     ///
-    /// @return The underlying BSON DBPointer value.
+    /// Returns the underlying BSON DBPointer value.
     ///
     /// @warning
     ///   Calling the wrong get_<type> method will cause an exception to be thrown.
@@ -194,7 +194,7 @@ class view {
     BSONCXX_ABI_EXPORT_CDECL(const b_dbpointer&) get_dbpointer() const;
 
     ///
-    /// @return The underlying BSON JavaScript code value.
+    /// Returns the underlying BSON JavaScript code value.
     ///
     /// @warning
     ///   Calling the wrong get_<type> method will cause an exception to be thrown.
@@ -202,7 +202,7 @@ class view {
     BSONCXX_ABI_EXPORT_CDECL(const b_code&) get_code() const;
 
     ///
-    /// @return The underlying BSON symbol value.
+    /// Returns the underlying BSON symbol value.
     ///
     /// @warning
     ///   Calling the wrong get_<type> method will cause an exception to be thrown.
@@ -210,7 +210,7 @@ class view {
     BSONCXX_ABI_EXPORT_CDECL(const b_symbol&) get_symbol() const;
 
     ///
-    /// @return The underlying BSON JavaScript code with scope value.
+    /// Returns the underlying BSON JavaScript code with scope value.
     ///
     /// @warning
     ///   Calling the wrong get_<type> method will cause an exception to be thrown.
@@ -218,7 +218,7 @@ class view {
     BSONCXX_ABI_EXPORT_CDECL(const b_codewscope&) get_codewscope() const;
 
     ///
-    /// @return The underlying BSON 32-bit signed integer value.
+    /// Returns the underlying BSON 32-bit signed integer value.
     ///
     /// @warning
     ///   Calling the wrong get_<type> method will cause an exception to be thrown.
@@ -226,7 +226,7 @@ class view {
     BSONCXX_ABI_EXPORT_CDECL(const b_int32&) get_int32() const;
 
     ///
-    /// @return The underlying BSON replication timestamp value.
+    /// Returns the underlying BSON replication timestamp value.
     ///
     /// @warning
     ///   Calling the wrong get_<type> method will cause an exception to be thrown.
@@ -234,7 +234,7 @@ class view {
     BSONCXX_ABI_EXPORT_CDECL(const b_timestamp&) get_timestamp() const;
 
     ///
-    /// @return The underlying BSON 64-bit signed integer value.
+    /// Returns the underlying BSON 64-bit signed integer value.
     ///
     /// @warning
     ///   Calling the wrong get_<type> method will cause an exception to be thrown.
@@ -242,7 +242,7 @@ class view {
     BSONCXX_ABI_EXPORT_CDECL(const b_int64&) get_int64() const;
 
     ///
-    /// @return The underlying BSON Decimal128 value.
+    /// Returns the underlying BSON Decimal128 value.
     ///
     /// @warning
     ///   Calling the wrong get_<type> method will cause an exception to be thrown.
@@ -250,7 +250,7 @@ class view {
     BSONCXX_ABI_EXPORT_CDECL(const b_decimal128&) get_decimal128() const;
 
     ///
-    /// @return The underlying BSON min-key value.
+    /// Returns the underlying BSON min-key value.
     ///
     /// @warning
     ///   Calling the wrong get_<type> method will cause an exception to be thrown.
@@ -258,7 +258,7 @@ class view {
     BSONCXX_ABI_EXPORT_CDECL(const b_minkey&) get_minkey() const;
 
     ///
-    /// @return The underlying BSON max-key value.
+    /// Returns the underlying BSON max-key value.
     ///
     /// @warning
     ///   Calling the wrong get_<type> method will cause an exception to be thrown.
