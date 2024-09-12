@@ -48,14 +48,14 @@ class insert {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    insert& bypass_document_validation(bool bypass_document_validation);
+    MONGOCXX_ABI_EXPORT_CDECL(insert&) bypass_document_validation(bool bypass_document_validation);
 
     ///
     /// Gets the current value of the bypass_document_validation option.
     ///
     /// @return The optional value of the bypass_document_validation option.
     ///
-    const stdx::optional<bool>& bypass_document_validation() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bool>&) bypass_document_validation() const;
 
     ///
     /// Sets the write_concern for this operation.
@@ -69,7 +69,7 @@ class insert {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    insert& write_concern(mongocxx::v_noabi::write_concern wc);
+    MONGOCXX_ABI_EXPORT_CDECL(insert&) write_concern(mongocxx::v_noabi::write_concern wc);
 
     ///
     /// The current write_concern for this operation.
@@ -78,7 +78,8 @@ class insert {
     ///
     /// @see https://www.mongodb.com/docs/manual/core/write-concern/
     ///
-    const stdx::optional<mongocxx::v_noabi::write_concern>& write_concern() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<mongocxx::v_noabi::write_concern>&)
+    write_concern() const;
 
     ///
     /// @note: This applies only to insert_many and is ignored for insert_one.
@@ -97,7 +98,7 @@ class insert {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/insert/
     ///
-    insert& ordered(bool ordered);
+    MONGOCXX_ABI_EXPORT_CDECL(insert&) ordered(bool ordered);
 
     ///
     /// The current ordered value for this operation.
@@ -106,7 +107,7 @@ class insert {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/insert/
     ///
-    const stdx::optional<bool>& ordered() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bool>&) ordered() const;
 
     ///
     /// Sets the comment for this operation.
@@ -120,7 +121,8 @@ class insert {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    insert& comment(bsoncxx::v_noabi::types::bson_value::view_or_value comment);
+    MONGOCXX_ABI_EXPORT_CDECL(insert&)
+    comment(bsoncxx::v_noabi::types::bson_value::view_or_value comment);
 
     ///
     /// The current comment for this operation.
@@ -129,7 +131,9 @@ class insert {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/insert/
     ///
-    const stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>& comment() const;
+    MONGOCXX_ABI_EXPORT_CDECL(
+        const stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>&)
+    comment() const;
 
    private:
     stdx::optional<mongocxx::v_noabi::write_concern> _write_concern;

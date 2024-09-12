@@ -21,7 +21,7 @@ namespace v_noabi {
 namespace types {
 namespace bson_value {
 
-class BSONCXX_API value;
+class value;
 
 }  // namespace bson_value
 }  // namespace types

@@ -20,7 +20,7 @@ namespace mongocxx {
 namespace v_noabi {
 namespace model {
 
-class MONGOCXX_API write;
+class write;
 
 }  // namespace model
 }  // namespace v_noabi

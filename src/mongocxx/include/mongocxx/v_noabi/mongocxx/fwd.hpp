@@ -193,7 +193,39 @@
 
 ///
 /// @ingroup mongocxx-v_noabi-mongocxx-config-export-hpp
-/// Declares the associated entity as part of the ABI.
+/// Exports the associated entity as part of the ABI.
+///
+/// @warning For internal use only!
+///
+#define MONGOCXX_ABI_EXPORT
+
+///
+/// @ingroup mongocxx-v_noabi-mongocxx-config-export-hpp
+/// Excludes the associated entity from being part of the ABI.
+///
+/// @warning For internal use only!
+///
+#define MONGOCXX_ABI_NO_EXPORT
+
+///
+/// @ingroup mongocxx-v_noabi-mongocxx-config-export-hpp
+/// Expands to `__cdecl` when built with MSVC on Windows.
+///
+/// @warning For internal use only!
+///
+#define MONGOCXX_ABI_CDECL
+
+///
+/// @ingroup mongocxx-v_noabi-mongocxx-config-export-hpp
+/// Equivalent to @ref MONGOCXX_ABI_EXPORT with @ref MONGOCXX_ABI_CDECL.
+///
+/// @warning For internal use only!
+///
+#define MONGOCXX_ABI_EXPORT_CDECL(...) MONGOCXX_ABI_EXPORT __VA_ARGS__ MONGOCXX_ABI_CDECL
+
+///
+/// @ingroup mongocxx-v_noabi-mongocxx-config-export-hpp
+/// Equivalent to @ref MONGOCXX_ABI_EXPORT.
 ///
 /// @warning For internal use only!
 ///
@@ -203,11 +235,11 @@
 /// only!" warnings). See [API and ABI
 /// Versioning](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/api-abi-versioning/).
 ///
-#define MONGOCXX_API
+#define MONGOCXX_API MONGOCXX_ABI_EXPORT
 
 ///
 /// @ingroup mongocxx-v_noabi-mongocxx-config-export-hpp
-/// Excludes the associated entity from being part of the ABI.
+/// Equivalent to `inline` with @ref MONGOCXX_ABI_NO_EXPORT.
 ///
 /// @warning For internal use only!
 ///
@@ -217,7 +249,7 @@
 /// absence of documentation, etc.). See [API and ABI
 /// Versioning](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/api-abi-versioning/).
 ///
-#define MONGOCXX_PRIVATE
+#define MONGOCXX_PRIVATE inline MONGOCXX_ABI_NO_EXPORT
 
 ///
 /// @ingroup mongocxx-v_noabi-mongocxx-config-export-hpp

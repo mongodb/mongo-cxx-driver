@@ -35,9 +35,16 @@ set(mongocxx_sources_v_noabi
     mongocxx/v_noabi/mongocxx/events/topology_closed_event.cpp
     mongocxx/v_noabi/mongocxx/events/topology_description.cpp
     mongocxx/v_noabi/mongocxx/events/topology_opening_event.cpp
+    mongocxx/v_noabi/mongocxx/exception/authentication_exception.cpp
+    mongocxx/v_noabi/mongocxx/exception/bulk_write_exception.cpp
     mongocxx/v_noabi/mongocxx/exception/error_code.cpp
+    mongocxx/v_noabi/mongocxx/exception/exception.cpp
+    mongocxx/v_noabi/mongocxx/exception/gridfs_exception.cpp
+    mongocxx/v_noabi/mongocxx/exception/logic_error.cpp
     mongocxx/v_noabi/mongocxx/exception/operation_exception.cpp
+    mongocxx/v_noabi/mongocxx/exception/query_exception.cpp
     mongocxx/v_noabi/mongocxx/exception/server_error_code.cpp
+    mongocxx/v_noabi/mongocxx/exception/write_exception.cpp
     mongocxx/v_noabi/mongocxx/gridfs/bucket.cpp
     mongocxx/v_noabi/mongocxx/gridfs/downloader.cpp
     mongocxx/v_noabi/mongocxx/gridfs/uploader.cpp

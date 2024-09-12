@@ -37,7 +37,7 @@ template <typename T>
 class mock;
 
 template <typename R, typename... Args>
-class mock<R (*)(Args...)> {
+class mock<R(MONGOCXX_ABI_CDECL*)(Args...)> {
    public:
     using underlying_ptr = R (*)(Args...);
     using callback = std::function<R(Args...)>;

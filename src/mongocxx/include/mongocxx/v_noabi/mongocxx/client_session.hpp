@@ -57,36 +57,36 @@ class client_session {
     ///
     /// Move constructs a session.
     ///
-    client_session(client_session&&) noexcept;
+    MONGOCXX_ABI_EXPORT_CDECL() client_session(client_session&&) noexcept;
 
     ///
     /// Move assigns a session.
     ///
-    client_session& operator=(client_session&&) noexcept;
+    MONGOCXX_ABI_EXPORT_CDECL(client_session&) operator=(client_session&&) noexcept;
 
     client_session(const client_session&) = delete;
-    client_session& operator=(const client_session&) = delete;
+    MONGOCXX_ABI_EXPORT_CDECL(client_session&) operator=(const client_session&) = delete;
 
     ///
     /// Ends and destroys the session.
     ///
-    ~client_session() noexcept;
+    MONGOCXX_ABI_EXPORT_CDECL() ~client_session() noexcept;
 
     ///
     /// Gets the client that started this session.
     ///
-    const mongocxx::v_noabi::client& client() const noexcept;
+    MONGOCXX_ABI_EXPORT_CDECL(const mongocxx::v_noabi::client&) client() const noexcept;
 
     ///
     /// Gets the options this session was created with.
     ///
-    const options::client_session& options() const noexcept;
+    MONGOCXX_ABI_EXPORT_CDECL(const options::client_session&) options() const noexcept;
 
     ///
     /// Get the server-side "logical session ID" associated with this session, as a BSON document.
     /// This view is invalid after the session is destroyed.
     ///
-    bsoncxx::v_noabi::document::view id() const noexcept;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::view) id() const noexcept;
 
     ///
     /// Get the session's clusterTime, as a BSON document. This is an opaque value suitable for
@@ -94,30 +94,30 @@ class client_session {
     /// not been used for any operation and you have not called advance_cluster_time().
     /// This view is invalid after the session is destroyed.
     ///
-    bsoncxx::v_noabi::document::view cluster_time() const noexcept;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::view) cluster_time() const noexcept;
 
     ///
     /// Get the session's operationTime, as a BSON timestamp. This is an opaque value suitable for
     /// passing to advance_operation_time(). The timestamp is zero if the session has not been used
     /// for any operation and you have not called advance_operation_time().
     ///
-    bsoncxx::v_noabi::types::b_timestamp operation_time() const noexcept;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::types::b_timestamp) operation_time() const noexcept;
 
     ///
     /// Get the server_id the session is pinned to. The server_id is zero if the session is not
     /// pinned to a server.
     ///
-    std::uint32_t server_id() const noexcept;
+    MONGOCXX_ABI_EXPORT_CDECL(std::uint32_t) server_id() const noexcept;
 
     ///
     /// Returns the current transaction state for this session.
     ///
-    transaction_state get_transaction_state() const noexcept;
+    MONGOCXX_ABI_EXPORT_CDECL(transaction_state) get_transaction_state() const noexcept;
 
     ///
     /// Returns whether or not this session is dirty.
     ///
-    bool get_dirty() const noexcept;
+    MONGOCXX_ABI_EXPORT_CDECL(bool) get_dirty() const noexcept;
 
     ///
     /// Advance the cluster time for a session. Has an effect only if the new cluster time is
@@ -127,7 +127,8 @@ class client_session {
     /// clusterTime from another session, ensuring subsequent operations in this session are
     /// causally consistent with the last operation in the other session.
     ///
-    void advance_cluster_time(const bsoncxx::v_noabi::document::view& cluster_time);
+    MONGOCXX_ABI_EXPORT_CDECL(void)
+    advance_cluster_time(const bsoncxx::v_noabi::document::view& cluster_time);
 
     ///
     /// Advance the session's operation time, expressed as a BSON timestamp. Has an effect only if
@@ -137,7 +138,8 @@ class client_session {
     /// clusterTime from another session, ensuring subsequent operations in this session are
     /// causally consistent with the last operation in the other session.
     ///
-    void advance_operation_time(const bsoncxx::v_noabi::types::b_timestamp& operation_time);
+    MONGOCXX_ABI_EXPORT_CDECL(void)
+    advance_operation_time(const bsoncxx::v_noabi::types::b_timestamp& operation_time);
 
     ///
     /// Starts a transaction on the current client session.
@@ -149,7 +151,8 @@ class client_session {
     /// are network or other transient failures, or if there are other errors such as a session with
     /// a transaction already in progress.
     ///
-    void start_transaction(const stdx::optional<options::transaction>& transaction_opts = {});
+    MONGOCXX_ABI_EXPORT_CDECL(void)
+    start_transaction(const stdx::optional<options::transaction>& transaction_opts = {});
 
     ///
     /// Commits a transaction on the current client session.
@@ -158,7 +161,7 @@ class client_session {
     /// are network or other transient failures, or if there are other errors such as a session with
     /// no transaction in progress.
     ///
-    void commit_transaction();
+    MONGOCXX_ABI_EXPORT_CDECL(void) commit_transaction();
 
     ///
     /// Aborts a transaction on the current client session.
@@ -166,12 +169,12 @@ class client_session {
     /// @throws mongocxx::v_noabi::operation_exception if the options are misconfigured or if there
     /// are other errors such as a session with no transaction in progress.
     ///
-    void abort_transaction();
+    MONGOCXX_ABI_EXPORT_CDECL(void) abort_transaction();
 
     ///
     /// Represents a callback invoked within a transaction.
     ///
-    using with_transaction_cb = std::function<void MONGOCXX_CALL(client_session*)>;
+    using with_transaction_cb = std::function<void MONGOCXX_ABI_CDECL(client_session*)>;
 
     ///
     /// Helper to run a user-provided callback within a transaction.
@@ -194,7 +197,8 @@ class client_session {
     /// @throws mongocxx::v_noabi::operation_exception if there are errors completing the
     /// transaction.
     ///
-    void with_transaction(with_transaction_cb cb, options::transaction opts = {});
+    MONGOCXX_ABI_EXPORT_CDECL(void)
+    with_transaction(with_transaction_cb cb, options::transaction opts = {});
 
    private:
     friend ::mongocxx::v_noabi::bulk_write;
@@ -204,13 +208,12 @@ class client_session {
     friend ::mongocxx::v_noabi::index_view;
     friend ::mongocxx::v_noabi::search_index_view;
 
-    class MONGOCXX_PRIVATE impl;
+    class impl;
 
-    MONGOCXX_PRIVATE client_session(const mongocxx::v_noabi::client* client,
-                                    const options::client_session& options);
+    client_session(const mongocxx::v_noabi::client* client, const options::client_session& options);
 
-    MONGOCXX_PRIVATE impl& _get_impl();
-    MONGOCXX_PRIVATE const impl& _get_impl() const;
+    impl& _get_impl();
+    const impl& _get_impl() const;
 
     std::unique_ptr<impl> _impl;
 };

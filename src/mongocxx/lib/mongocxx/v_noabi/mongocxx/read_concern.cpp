@@ -125,11 +125,11 @@ bsoncxx::v_noabi::document::value read_concern::to_document() const {
     return doc.extract();
 }
 
-bool MONGOCXX_CALL operator==(const read_concern& lhs, const read_concern& rhs) {
+bool operator==(const read_concern& lhs, const read_concern& rhs) {
     return lhs.acknowledge_level() == rhs.acknowledge_level();
 }
 
-bool MONGOCXX_CALL operator!=(const read_concern& lhs, const read_concern& rhs) {
+bool operator!=(const read_concern& lhs, const read_concern& rhs) {
     return !(lhs == rhs);
 }
 

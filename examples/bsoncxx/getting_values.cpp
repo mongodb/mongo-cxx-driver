@@ -21,9 +21,11 @@
 
 #include <bsoncxx/config/prelude.hpp>
 
+#include <examples/macros.hh>
+
 using namespace bsoncxx;
 
-int main() {
+int EXAMPLES_CDECL main() {
     using namespace builder::stream;
 
     builder::stream::document build_doc;

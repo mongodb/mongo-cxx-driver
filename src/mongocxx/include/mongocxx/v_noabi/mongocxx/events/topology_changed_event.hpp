@@ -34,12 +34,12 @@ namespace events {
 ///
 class topology_changed_event {
    public:
-    MONGOCXX_PRIVATE explicit topology_changed_event(const void* event);
+    explicit topology_changed_event(const void* event);
 
     ///
     /// Destroys a topology_changed_event.
     ///
-    ~topology_changed_event();
+    MONGOCXX_ABI_EXPORT_CDECL() ~topology_changed_event();
 
     topology_changed_event(topology_changed_event&&) = default;
     topology_changed_event& operator=(topology_changed_event&&) = default;
@@ -53,21 +53,21 @@ class topology_changed_event {
     ///
     /// @return The id.
     ///
-    bsoncxx::v_noabi::oid topology_id() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::oid) topology_id() const;
 
     ///
     /// The server's description before it changed.
     ///
     /// @return The topology_description.
     ///
-    topology_description previous_description() const;
+    MONGOCXX_ABI_EXPORT_CDECL(topology_description) previous_description() const;
 
     ///
     /// The server's description after it changed.
     ///
     /// @return The topology_description.
     ///
-    topology_description new_description() const;
+    MONGOCXX_ABI_EXPORT_CDECL(topology_description) new_description() const;
 
    private:
     const void* _event;

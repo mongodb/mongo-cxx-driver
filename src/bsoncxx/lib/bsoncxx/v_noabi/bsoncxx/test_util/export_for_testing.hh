@@ -16,15 +16,17 @@
 
 #include <bsoncxx/config/private/prelude.hh>
 
-// The BSONCXX_TEST_API macro is intended to be used for exporting symbols for testing which are not
+// The BSONCXX_TESTING macro is intended to be used for exporting symbols for testing which are not
 // normally exported as part of the bsoncxx library.  We currently use this workaround in lieu of
 // linking standalone unit tests, in order to expose private symbols for unit testing when we build
 // the shared library.
 
-#ifdef BSONCXX_TESTING
-#define BSONCXX_TEST_API BSONCXX_API
+#if defined(BSONCXX_TESTING)
+#define BSONCXX_ABI_EXPORT_TESTING BSONCXX_ABI_EXPORT
+#define BSONCXX_ABI_EXPORT_CDECL_TESTING(...) BSONCXX_ABI_EXPORT_CDECL(__VA_ARGS__)
 #else
-#define BSONCXX_TEST_API
+#define BSONCXX_ABI_EXPORT_TESTING
+#define BSONCXX_ABI_EXPORT_CDECL_TESTING(...) __VA_ARGS__
 #endif
 
 #include <bsoncxx/config/private/postlude.hh>

@@ -46,7 +46,7 @@ namespace string {
 template <class CharT,
           class Traits = std::char_traits<CharT>,
           class Allocator = std::allocator<CharT>>
-BSONCXX_INLINE std::basic_string<CharT, Traits, Allocator> to_string(
+std::basic_string<CharT, Traits, Allocator> to_string(
     v_noabi::stdx::basic_string_view<CharT, Traits> value, const Allocator& alloc = Allocator()) {
     return std::basic_string<CharT, Traits, Allocator>{value.data(), value.length(), alloc};
 }

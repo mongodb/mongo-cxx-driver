@@ -51,7 +51,7 @@ class server_api {
     /// @param version
     ///   The server api version to send to the server.
     ///
-    server_api(version version);
+    MONGOCXX_ABI_EXPORT_CDECL() server_api(version version);
 
     ///
     /// Converts a version enum value to its string value.
@@ -64,7 +64,7 @@ class server_api {
     /// @return
     ///   The string value of the given enum value.
     ///
-    static std::string version_to_string(version version);
+    static MONGOCXX_ABI_EXPORT_CDECL(std::string) version_to_string(version version);
 
     ///
     /// Converts a version string to its enum value.
@@ -77,7 +77,7 @@ class server_api {
     /// @return
     ///   The enum value of the given string.
     ///
-    static version version_from_string(stdx::string_view version);
+    static MONGOCXX_ABI_EXPORT_CDECL(version) version_from_string(stdx::string_view version);
 
     ///
     /// Sets the strict option, specifying whether the server should return
@@ -89,7 +89,7 @@ class server_api {
     /// @return
     ///   A reference to this object to facilitate method chaining.
     ///
-    server_api& strict(bool strict);
+    MONGOCXX_ABI_EXPORT_CDECL(server_api&) strict(bool strict);
 
     ///
     /// Gets the current value of the strict option.
@@ -97,7 +97,7 @@ class server_api {
     /// @return
     ///   The optional value of the strict option.
     ///
-    const stdx::optional<bool>& strict() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bool>&) strict() const;
 
     ///
     /// Sets the deprecation errors option, specifying whether the server should
@@ -109,7 +109,7 @@ class server_api {
     /// @return
     ///   A reference to this object to facilitate method chaining.
     ///
-    server_api& deprecation_errors(bool deprecation_errors);
+    MONGOCXX_ABI_EXPORT_CDECL(server_api&) deprecation_errors(bool deprecation_errors);
 
     ///
     /// Gets the current value of the deprecation errors option.
@@ -117,7 +117,7 @@ class server_api {
     /// @return
     ///   The optional value of the deprecation errors option.
     ///
-    const stdx::optional<bool>& deprecation_errors() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bool>&) deprecation_errors() const;
 
     ///
     /// Gets the declared server api version.
@@ -125,7 +125,7 @@ class server_api {
     /// @return
     ///   The version enum value specifying the declared server api version.
     ///
-    version get_version() const;
+    MONGOCXX_ABI_EXPORT_CDECL(version) get_version() const;
 
    private:
     friend ::mongocxx::v_noabi::client;

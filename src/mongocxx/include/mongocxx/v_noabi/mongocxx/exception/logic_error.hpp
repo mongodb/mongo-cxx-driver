@@ -30,6 +30,13 @@ namespace v_noabi {
 ///
 class logic_error : public exception {
    public:
+    ~logic_error() override;
+
+    logic_error(logic_error&&) = default;
+    logic_error& operator=(logic_error&&) = default;
+    logic_error(const logic_error&) = default;
+    logic_error& operator=(const logic_error&) = default;
+
     using exception::exception;
 };
 

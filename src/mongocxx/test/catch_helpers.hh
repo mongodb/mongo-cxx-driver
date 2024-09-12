@@ -34,6 +34,13 @@ class mongocxx_exception_matcher : public Catch::Matchers::MatcherBase<mongocxx:
     std::string expected_msg;
 
    public:
+    ~mongocxx_exception_matcher() override;
+
+    mongocxx_exception_matcher(mongocxx_exception_matcher&&) = default;
+    mongocxx_exception_matcher& operator=(mongocxx_exception_matcher&&) = delete;
+    mongocxx_exception_matcher(const mongocxx_exception_matcher&) = default;
+    mongocxx_exception_matcher& operator=(const mongocxx_exception_matcher&) = delete;
+
     mongocxx_exception_matcher(std::string msg) : expected_msg(msg) {}
 
     bool match(const mongocxx::exception& exc) const override {

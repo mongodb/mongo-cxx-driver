@@ -33,12 +33,12 @@ namespace events {
 ///
 class topology_closed_event {
    public:
-    MONGOCXX_PRIVATE explicit topology_closed_event(const void* event);
+    explicit topology_closed_event(const void* event);
 
     ///
     /// Destroys a topology_closed_event.
     ///
-    ~topology_closed_event();
+    MONGOCXX_ABI_EXPORT_CDECL() ~topology_closed_event();
 
     topology_closed_event(topology_closed_event&&) = default;
     topology_closed_event& operator=(topology_closed_event&&) = default;
@@ -52,7 +52,7 @@ class topology_closed_event {
     ///
     /// @return The id.
     ///
-    bsoncxx::v_noabi::oid topology_id() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::oid) topology_id() const;
 
    private:
     const void* _event;

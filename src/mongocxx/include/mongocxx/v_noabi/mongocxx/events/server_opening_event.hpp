@@ -35,12 +35,12 @@ namespace events {
 ///
 class server_opening_event {
    public:
-    MONGOCXX_PRIVATE explicit server_opening_event(const void* event);
+    explicit server_opening_event(const void* event);
 
     ///
     /// Destroys a server_opening_event.
     ///
-    ~server_opening_event();
+    MONGOCXX_ABI_EXPORT_CDECL() ~server_opening_event();
 
     server_opening_event(server_opening_event&&) = default;
     server_opening_event& operator=(server_opening_event&&) = default;
@@ -53,14 +53,14 @@ class server_opening_event {
     ///
     /// @return The host name.
     ///
-    bsoncxx::v_noabi::stdx::string_view host() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::string_view) host() const;
 
     ///
     /// Returns the server port.
     ///
     /// @return The port.
     ///
-    std::uint16_t port() const;
+    MONGOCXX_ABI_EXPORT_CDECL(std::uint16_t) port() const;
 
     ///
     /// An opaque id, unique to this topology for this mongocxx::v_noabi::client or
@@ -68,7 +68,7 @@ class server_opening_event {
     ///
     /// @return The id.
     ///
-    const bsoncxx::v_noabi::oid topology_id() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::oid) topology_id() const;
 
    private:
     const void* _event;

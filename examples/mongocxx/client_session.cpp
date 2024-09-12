@@ -23,12 +23,14 @@
 #include <mongocxx/instance.hpp>
 #include <mongocxx/uri.hpp>
 
+#include <examples/macros.hh>
+
 using bsoncxx::to_json;
 using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_document;
 using namespace mongocxx;
 
-int main() {
+int EXAMPLES_CDECL main() {
     if (const char* const topology_env = std::getenv("MONGOCXX_TEST_TOPOLOGY")) {
         const auto topology = std::string(topology_env);
         if (topology != "replica") {

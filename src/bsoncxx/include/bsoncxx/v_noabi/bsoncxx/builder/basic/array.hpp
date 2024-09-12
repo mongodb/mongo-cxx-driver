@@ -65,7 +65,7 @@ class array : public sub_array {
     ///
     /// @return A view of the BSON array.
     ///
-    BSONCXX_INLINE bsoncxx::v_noabi::array::view view() const {
+    bsoncxx::v_noabi::array::view view() const {
         return _core.view_array();
     }
 
@@ -75,7 +75,7 @@ class array : public sub_array {
     ///
     /// @return A view of the current builder contents.
     ///
-    BSONCXX_INLINE operator bsoncxx::v_noabi::array::view() const {
+    operator bsoncxx::v_noabi::array::view() const {
         return view();
     }
 
@@ -88,14 +88,14 @@ class array : public sub_array {
     ///  After calling extract() it is illegal to call any methods
     ///  on this class, unless it is subsequenly moved into.
     ///
-    BSONCXX_INLINE bsoncxx::v_noabi::array::value extract() {
+    bsoncxx::v_noabi::array::value extract() {
         return _core.extract_array();
     }
 
     ///
     /// Reset the underlying BSON to an empty array.
     ///
-    BSONCXX_INLINE void clear() {
+    void clear() {
         _core.clear();
     }
 
@@ -114,7 +114,7 @@ class array : public sub_array {
 ///   A bsoncxx::v_noabi::array::value containing the elements.
 ///
 template <typename... Args>
-bsoncxx::v_noabi::array::value BSONCXX_CALL make_array(Args&&... args) {
+bsoncxx::v_noabi::array::value make_array(Args&&... args) {
     array array;
     array.append(std::forward<Args>(args)...);
     return array.extract();

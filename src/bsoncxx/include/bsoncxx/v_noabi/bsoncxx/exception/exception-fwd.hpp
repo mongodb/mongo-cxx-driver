@@ -19,7 +19,7 @@
 namespace bsoncxx {
 namespace v_noabi {
 
-class BSONCXX_API exception;
+class BSONCXX_ABI_EXPORT exception;
 
 }  // namespace v_noabi
 }  // namespace bsoncxx

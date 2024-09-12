@@ -144,3 +144,9 @@ class foo {
 ## Relational Operators
 
 - Prefer to use free functions
+
+## Virtual Functions
+
+- Define at least one virtual function out-of-line in a source file as the "key function" for the polymorphic class to avoid weak vtables.
+  - Use the virtual destructor as the key function if no other appropriate virtual function exists.
+  - Ensure all copy and move special member functions are defaulted, deleted, or defined if the virtual destructor is defined out-of-line.

@@ -29,14 +29,17 @@ namespace gridfs {
 /// Class representing the result of a GridFS upload operation.
 class upload {
    public:
-    upload(bsoncxx::v_noabi::types::bson_value::view id);
+    MONGOCXX_ABI_EXPORT_CDECL() upload(bsoncxx::v_noabi::types::bson_value::view id);
 
     ///
     /// Gets the id of the uploaded GridFS file.
     ///
     /// @return The id of the uploaded file.
     ///
-    const bsoncxx::v_noabi::types::bson_value::view& id() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::types::bson_value::view&) id() const;
+
+    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(const upload&, const upload&);
+    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator!=(const upload&, const upload&);
 
    private:
     // Array with a single element, containing the value of the _id field for the inserted files
@@ -45,9 +48,6 @@ class upload {
 
     // Points into _id_owned.
     bsoncxx::v_noabi::types::bson_value::view _id;
-
-    friend MONGOCXX_API bool MONGOCXX_CALL operator==(const upload&, const upload&);
-    friend MONGOCXX_API bool MONGOCXX_CALL operator!=(const upload&, const upload&);
 };
 
 }  // namespace gridfs

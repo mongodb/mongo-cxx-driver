@@ -22,7 +22,10 @@ class search_index_model {
     ///
     /// Initializes a new search_index_model over a mongocxx::v_noabi::collection.
     ///
+    MONGOCXX_ABI_EXPORT_CDECL()
     search_index_model(bsoncxx::v_noabi::document::view_or_value definition);
+
+    MONGOCXX_ABI_EXPORT_CDECL()
     search_index_model(bsoncxx::v_noabi::string::view_or_value name,
                        bsoncxx::v_noabi::document::view_or_value definition);
 
@@ -31,42 +34,46 @@ class search_index_model {
     ///
     /// Move constructs a search_index_model.
     ///
-    search_index_model(search_index_model&&) noexcept;
+    MONGOCXX_ABI_EXPORT_CDECL() search_index_model(search_index_model&&) noexcept;
 
     ///
     /// Move assigns a search_index_model.
     ///
-    search_index_model& operator=(search_index_model&&) noexcept;
+    MONGOCXX_ABI_EXPORT_CDECL(search_index_model&) operator=(search_index_model&&) noexcept;
 
     ///
     /// Copy constructs a search_index_model.
     ///
-    search_index_model(const search_index_model&);
+    MONGOCXX_ABI_EXPORT_CDECL() search_index_model(const search_index_model&);
 
     ///
     /// Copy assigns a search_index_model.
     ///
-    search_index_model& operator=(const search_index_model&);
+    MONGOCXX_ABI_EXPORT_CDECL(search_index_model&) operator=(const search_index_model&);
 
     ///
     /// Destroys a search_index_model.
     ///
-    ~search_index_model();
+    MONGOCXX_ABI_EXPORT_CDECL() ~search_index_model();
 
     ///
     /// Retrieves name of a search_index_model.
     ///
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> name() const;
+    MONGOCXX_ABI_EXPORT_CDECL(
+        bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value>)
+    name() const;
 
     ///
     /// Retrieves definition of a search_index_model.
     ///
-    bsoncxx::v_noabi::document::view definition() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::view) definition() const;
 
     ///
     /// Retrieves type of a search_index_model.
     ///
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> type() const;
+    MONGOCXX_ABI_EXPORT_CDECL(
+        bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value>)
+    type() const;
 
     ///
     /// Sets type of a search_index_model.
@@ -74,14 +81,15 @@ class search_index_model {
     /// @param type The type for this index. Can be either "search" or "vectorSearch".
     ///
     /// @return A reference to this object to facilitate method chaining.
-    search_index_model& type(bsoncxx::v_noabi::string::view_or_value type);
+    MONGOCXX_ABI_EXPORT_CDECL(search_index_model&)
+    type(bsoncxx::v_noabi::string::view_or_value type);
 
    private:
-    class MONGOCXX_PRIVATE impl;
+    class impl;
 
-    MONGOCXX_PRIVATE const impl& _get_impl() const;
+    const impl& _get_impl() const;
 
-    MONGOCXX_PRIVATE impl& _get_impl();
+    impl& _get_impl();
 
    private:
     std::unique_ptr<impl> _impl;

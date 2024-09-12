@@ -36,12 +36,12 @@ namespace events {
 ///
 class command_started_event {
    public:
-    MONGOCXX_PRIVATE explicit command_started_event(const void* event);
+    explicit command_started_event(const void* event);
 
     ///
     /// Destroys a command_started_event.
     ///
-    ~command_started_event();
+    MONGOCXX_ABI_EXPORT_CDECL() ~command_started_event();
 
     command_started_event(command_started_event&&) = default;
     command_started_event& operator=(command_started_event&&) = default;
@@ -54,56 +54,57 @@ class command_started_event {
     ///
     /// @return The command.
     ///
-    bsoncxx::v_noabi::document::view command() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::view) command() const;
 
     ///
     /// Returns the name of the database.
     ///
     /// @return The database name.
     ///
-    bsoncxx::v_noabi::stdx::string_view database_name() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::string_view) database_name() const;
 
     ///
     /// Returns the name of the command.
     ///
     /// @return The command name.
     ///
-    bsoncxx::v_noabi::stdx::string_view command_name() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::string_view) command_name() const;
 
     ///
     /// Returns the request id.
     ///
     /// @return The request id.
     ///
-    std::int64_t request_id() const;
+    MONGOCXX_ABI_EXPORT_CDECL(std::int64_t) request_id() const;
 
     ///
     /// Returns the operation id.
     ///
     /// @return The operation id.
     ///
-    std::int64_t operation_id() const;
+    MONGOCXX_ABI_EXPORT_CDECL(std::int64_t) operation_id() const;
 
     ///
     /// Optionally returns the service id.
     ///
     /// @return No contained value, or contains the service id if load balancing is enabled.
     ///
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::oid> service_id() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::oid>)
+    service_id() const;
 
     ///
     /// Returns the host name.
     ///
     /// @return The host name.
     ///
-    bsoncxx::v_noabi::stdx::string_view host() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::string_view) host() const;
 
     ///
     /// Returns the port.
     ///
     /// @return The port.
     ///
-    std::uint16_t port() const;
+    MONGOCXX_ABI_EXPORT_CDECL(std::uint16_t) port() const;
 
    private:
     const void* _started_event;

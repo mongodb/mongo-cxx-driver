@@ -25,6 +25,8 @@
 #include <mongocxx/options/client.hpp>
 #include <mongocxx/uri.hpp>
 
+#include <examples/macros.hh>
+
 namespace {
 
 class logger final : public mongocxx::logger {
@@ -50,7 +52,7 @@ std::unique_ptr<logger> make_logger() {
 
 }  // namespace
 
-int main(int argc, char* argv[]) {
+int EXAMPLES_CDECL main(int argc, char* argv[]) {
     using bsoncxx::builder::basic::kvp;
     using bsoncxx::builder::basic::make_document;
 

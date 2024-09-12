@@ -47,7 +47,7 @@ enum class log_level {
 ///
 /// @return a std::string representation of the type.
 ///
-MONGOCXX_API stdx::string_view MONGOCXX_CALL to_string(log_level level);
+MONGOCXX_ABI_EXPORT_CDECL(stdx::string_view) to_string(log_level level);
 
 ///
 /// The interface that all user-defined loggers must implement.
@@ -55,6 +55,11 @@ MONGOCXX_API stdx::string_view MONGOCXX_CALL to_string(log_level level);
 class logger {
    public:
     virtual ~logger();
+
+    logger(logger&&) = default;
+    logger& operator=(logger&&) = default;
+    logger(const logger&) = default;
+    logger& operator=(const logger&) = default;
 
     ///
     /// Handles a log message. User defined logger implementations may do whatever they wish when

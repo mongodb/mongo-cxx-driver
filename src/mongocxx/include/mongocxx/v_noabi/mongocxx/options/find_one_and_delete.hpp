@@ -47,7 +47,8 @@ class find_one_and_delete {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    find_one_and_delete& collation(bsoncxx::v_noabi::document::view_or_value collation);
+    MONGOCXX_ABI_EXPORT_CDECL(find_one_and_delete&)
+    collation(bsoncxx::v_noabi::document::view_or_value collation);
 
     ///
     /// Retrieves the current collation for this operation.
@@ -57,7 +58,8 @@ class find_one_and_delete {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& collation() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+    collation() const;
 
     ///
     /// Sets the maximum amount of time for this operation to run (server-side) in milliseconds.
@@ -71,7 +73,7 @@ class find_one_and_delete {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    find_one_and_delete& max_time(std::chrono::milliseconds max_time);
+    MONGOCXX_ABI_EXPORT_CDECL(find_one_and_delete&) max_time(std::chrono::milliseconds max_time);
 
     ///
     /// The current max_time setting.
@@ -80,7 +82,7 @@ class find_one_and_delete {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    const stdx::optional<std::chrono::milliseconds>& max_time() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<std::chrono::milliseconds>&) max_time() const;
 
     ///
     /// Sets a projection that limits the fields to return.
@@ -94,7 +96,8 @@ class find_one_and_delete {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    find_one_and_delete& projection(bsoncxx::v_noabi::document::view_or_value projection);
+    MONGOCXX_ABI_EXPORT_CDECL(find_one_and_delete&)
+    projection(bsoncxx::v_noabi::document::view_or_value projection);
 
     ///
     /// Gets the current projection set on this operation.
@@ -103,7 +106,8 @@ class find_one_and_delete {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& projection() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+    projection() const;
 
     ///
     /// Sets the order to search for a matching document.
@@ -120,7 +124,8 @@ class find_one_and_delete {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    find_one_and_delete& sort(bsoncxx::v_noabi::document::view_or_value ordering);
+    MONGOCXX_ABI_EXPORT_CDECL(find_one_and_delete&)
+    sort(bsoncxx::v_noabi::document::view_or_value ordering);
 
     ///
     /// Gets the current sort ordering.
@@ -129,7 +134,8 @@ class find_one_and_delete {
     ///
     /// @see https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& sort() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+    sort() const;
 
     ///
     /// Sets the write concern for this operation.
@@ -144,7 +150,8 @@ class find_one_and_delete {
     /// @see
     ///   https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    find_one_and_delete& write_concern(mongocxx::v_noabi::write_concern write_concern);
+    MONGOCXX_ABI_EXPORT_CDECL(find_one_and_delete&)
+    write_concern(mongocxx::v_noabi::write_concern write_concern);
 
     ///
     /// Gets the current write concern.
@@ -155,7 +162,8 @@ class find_one_and_delete {
     /// @see
     ///   https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    const stdx::optional<mongocxx::v_noabi::write_concern>& write_concern() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<mongocxx::v_noabi::write_concern>&)
+    write_concern() const;
 
     ///
     /// Sets the index to use for this operation.
@@ -170,14 +178,14 @@ class find_one_and_delete {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    find_one_and_delete& hint(mongocxx::v_noabi::hint index_hint);
+    MONGOCXX_ABI_EXPORT_CDECL(find_one_and_delete&) hint(mongocxx::v_noabi::hint index_hint);
 
     ///
     /// Gets the current hint.
     ///
     /// @return The current hint, if one is set.
     ///
-    const stdx::optional<mongocxx::v_noabi::hint>& hint() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<mongocxx::v_noabi::hint>&) hint() const;
 
     ///
     /// Set the value of the let option.
@@ -189,7 +197,8 @@ class find_one_and_delete {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    find_one_and_delete& let(bsoncxx::v_noabi::document::view_or_value let);
+    MONGOCXX_ABI_EXPORT_CDECL(find_one_and_delete&)
+    let(bsoncxx::v_noabi::document::view_or_value let);
 
     ///
     /// Gets the current value of the let option.
@@ -197,7 +206,8 @@ class find_one_and_delete {
     /// @return
     ///  The current let option.
     ///
-    const stdx::optional<bsoncxx::v_noabi::document::view_or_value> let() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::view_or_value>)
+    let() const;
 
     ///
     /// Set the value of the comment option.
@@ -209,7 +219,8 @@ class find_one_and_delete {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    find_one_and_delete& comment(bsoncxx::v_noabi::types::bson_value::view_or_value comment);
+    MONGOCXX_ABI_EXPORT_CDECL(find_one_and_delete&)
+    comment(bsoncxx::v_noabi::types::bson_value::view_or_value comment);
 
     ///
     /// Gets the current value of the comment option.
@@ -217,7 +228,9 @@ class find_one_and_delete {
     /// @return
     ///  The current comment option.
     ///
-    const stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> comment() const;
+    MONGOCXX_ABI_EXPORT_CDECL(
+        const stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>)
+    comment() const;
 
    private:
     stdx::optional<bsoncxx::v_noabi::document::view_or_value> _collation;

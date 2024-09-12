@@ -30,6 +30,13 @@ namespace v_noabi {
 ///
 class query_exception : public operation_exception {
    public:
+    ~query_exception() override;
+
+    query_exception(query_exception&&) = default;
+    query_exception& operator=(query_exception&&) = default;
+    query_exception(const query_exception&) = default;
+    query_exception& operator=(const query_exception&) = default;
+
     using operation_exception::operation_exception;
 };
 

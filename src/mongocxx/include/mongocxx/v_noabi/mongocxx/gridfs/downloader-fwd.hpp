@@ -22,7 +22,7 @@ namespace gridfs {
 
 struct chunks_and_bytes_offset;
 
-class MONGOCXX_API downloader;
+class downloader;
 
 }  // namespace gridfs
 }  // namespace v_noabi

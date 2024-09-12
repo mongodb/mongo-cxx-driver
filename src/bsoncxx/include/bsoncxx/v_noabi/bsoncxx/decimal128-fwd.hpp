@@ -19,7 +19,7 @@
 namespace bsoncxx {
 namespace v_noabi {
 
-class BSONCXX_API decimal128;
+class decimal128;
 
 }  // namespace v_noabi
 }  // namespace bsoncxx

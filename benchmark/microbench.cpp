@@ -26,6 +26,8 @@ bool finished_running(const std::chrono::duration<std::uint32_t, std::milli>& cu
     return (curr_time > maxtime || (curr_time > mintime && iter > max_iter));
 }
 
+microbench::~microbench() = default;
+
 void microbench::run() {
     setup();
 

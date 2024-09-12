@@ -29,9 +29,11 @@
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
 
+#include <examples/macros.hh>
+
 using namespace bsoncxx;
 
-int main() {
+int EXAMPLES_CDECL main() {
     // This example will cover the read-only BSON interface.
 
     // Lets first build up a non-trivial BSON document using the builder interface.

@@ -33,7 +33,7 @@ namespace types {
 
 #pragma push_macro("BSONCXX_ENUM")
 #undef BSONCXX_ENUM
-#define BSONCXX_ENUM(name, val) struct BSONCXX_API b_##name;
+#define BSONCXX_ENUM(name, val) struct b_##name;
 #include <bsoncxx/enums/type.hpp>
 #undef BSONCXX_ENUM
 #pragma pop_macro("BSONCXX_ENUM")

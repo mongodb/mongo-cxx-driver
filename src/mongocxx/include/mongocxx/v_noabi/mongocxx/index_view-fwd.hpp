@@ -19,7 +19,7 @@
 namespace mongocxx {
 namespace v_noabi {
 
-class MONGOCXX_API index_view;
+class index_view;
 
 }  // namespace v_noabi
 }  // namespace mongocxx

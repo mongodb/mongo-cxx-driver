@@ -38,14 +38,14 @@ class delete_one {
     /// @param filter
     ///   Document representing the criteria for deletion.
     ///
-    delete_one(bsoncxx::v_noabi::document::view_or_value filter);
+    MONGOCXX_ABI_EXPORT_CDECL() delete_one(bsoncxx::v_noabi::document::view_or_value filter);
 
     ///
     /// Gets the filter on this delete operation.
     ///
     /// @return The filter to be used for the delete operation.
     ///
-    const bsoncxx::v_noabi::document::view_or_value& filter() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::document::view_or_value&) filter() const;
 
     ///
     /// Sets the collation for this delete operation.
@@ -56,7 +56,8 @@ class delete_one {
     /// @see
     ///   https://www.mongodb.com/docs/manual/reference/collation/
     ///
-    delete_one& collation(bsoncxx::v_noabi::document::view_or_value collation);
+    MONGOCXX_ABI_EXPORT_CDECL(delete_one&)
+    collation(bsoncxx::v_noabi::document::view_or_value collation);
 
     ///
     /// Gets the collation option for this delete operation.
@@ -67,7 +68,8 @@ class delete_one {
     /// @see
     ///   https://www.mongodb.com/docs/manual/reference/collation/
     ///
-    const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& collation() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+    collation() const;
 
     ///
     /// Sets the index to use for this operation.
@@ -82,14 +84,14 @@ class delete_one {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    delete_one& hint(mongocxx::v_noabi::hint index_hint);
+    MONGOCXX_ABI_EXPORT_CDECL(delete_one&) hint(mongocxx::v_noabi::hint index_hint);
 
     ///
     /// Gets the current hint.
     ///
     /// @return The current hint, if one is set.
     ///
-    const stdx::optional<mongocxx::v_noabi::hint>& hint() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<mongocxx::v_noabi::hint>&) hint() const;
 
    private:
     bsoncxx::v_noabi::document::view_or_value _filter;

@@ -198,7 +198,39 @@
 
 ///
 /// @ingroup bsoncxx-v_noabi-bsoncxx-config-export-hpp
-/// Declares the associated entity as part of the ABI.
+/// Exports the associated entity as part of the ABI.
+///
+/// @warning For internal use only!
+///
+#define BSONCXX_ABI_EXPORT
+
+///
+/// @ingroup bsoncxx-v_noabi-bsoncxx-config-export-hpp
+/// Excludes the associated entity from being part of the ABI.
+///
+/// @warning For internal use only!
+///
+#define BSONCXX_ABI_NO_EXPORT
+
+///
+/// @ingroup bsoncxx-v_noabi-bsoncxx-config-export-hpp
+/// Expands to `__cdecl` when built with MSVC on Windows.
+///
+/// @warning For internal use only!
+///
+#define BSONCXX_ABI_CDECL
+
+///
+/// @ingroup bsoncxx-v_noabi-bsoncxx-config-export-hpp
+/// Equivalent to @ref BSONCXX_ABI_EXPORT with @ref BSONCXX_ABI_CDECL.
+///
+/// @warning For internal use only!
+///
+#define BSONCXX_ABI_EXPORT_CDECL(...) BSONCXX_ABI_EXPORT __VA_ARGS__ BSONCXX_ABI_CDECL
+
+///
+/// @ingroup bsoncxx-v_noabi-bsoncxx-config-export-hpp
+/// Equivalent to @ref BSONCXX_ABI_EXPORT.
 ///
 /// @warning For internal use only!
 ///
@@ -208,11 +240,11 @@
 /// only!" warnings). See [API and ABI
 /// Versioning](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/api-abi-versioning/).
 ///
-#define BSONCXX_API
+#define BSONCXX_API BSONCXX_ABI_EXPORT
 
 ///
 /// @ingroup bsoncxx-v_noabi-bsoncxx-config-export-hpp
-/// Excludes the associated entity from being part of the ABI.
+/// Equivalent to `inline` with @ref BSONCXX_ABI_NO_EXPORT.
 ///
 /// @warning For internal use only!
 ///
@@ -222,7 +254,7 @@
 /// absence of documentation, etc.). See [API and ABI
 /// Versioning](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/api-abi-versioning/).
 ///
-#define BSONCXX_PRIVATE
+#define BSONCXX_PRIVATE inline BSONCXX_ABI_NO_EXPORT
 
 ///
 /// @ingroup bsoncxx-v_noabi-bsoncxx-config-export-hpp

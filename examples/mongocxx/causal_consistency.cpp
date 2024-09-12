@@ -31,12 +31,14 @@
 #include <mongocxx/uri.hpp>
 #include <mongocxx/write_concern.hpp>
 
+#include <examples/macros.hh>
+
 using bsoncxx::builder::stream::close_document;
 using bsoncxx::builder::stream::document;
 using bsoncxx::builder::stream::finalize;
 using bsoncxx::builder::stream::open_document;
 
-int main() {
+int EXAMPLES_CDECL main() {
     if (const char* const topology_env = std::getenv("MONGOCXX_TEST_TOPOLOGY")) {
         const auto topology = std::string(topology_env);
         if (topology != "replica") {

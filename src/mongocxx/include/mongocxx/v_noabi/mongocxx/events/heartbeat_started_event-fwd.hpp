@@ -20,7 +20,7 @@ namespace mongocxx {
 namespace v_noabi {
 namespace events {
 
-class MONGOCXX_API heartbeat_started_event;
+class heartbeat_started_event;
 
 }  // namespace events
 }  // namespace v_noabi

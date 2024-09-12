@@ -19,7 +19,7 @@
 namespace mongocxx {
 namespace v_noabi {
 
-class MONGOCXX_API gridfs_exception;
+class MONGOCXX_ABI_EXPORT gridfs_exception;
 
 }  // namespace v_noabi
 }  // namespace mongocxx

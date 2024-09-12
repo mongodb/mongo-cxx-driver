@@ -60,13 +60,13 @@ class pool {
     /// @throws mongocxx::v_noabi::exception if invalid options are provided (whether from the URI
     /// or
     ///  provided client options).
-    explicit pool(const uri& mongodb_uri = mongocxx::v_noabi::uri(),
-                  const options::pool& options = options::pool());
+    explicit MONGOCXX_ABI_EXPORT_CDECL() pool(const uri& mongodb_uri = mongocxx::v_noabi::uri(),
+                                              const options::pool& options = options::pool());
 
     ///
     /// Destroys a pool.
     ///
-    ~pool();
+    MONGOCXX_ABI_EXPORT_CDECL() ~pool();
 
     pool(pool&&) = delete;
     pool& operator=(pool&&) = delete;
@@ -81,35 +81,39 @@ class pool {
     /// @note The lifetime of any entry object must be a subset of the pool object
     ///  from which it was acquired.
     ///
-    class MONGOCXX_API entry {
+    class entry {
        public:
         /// Access a member of the client instance.
-        client* operator->() const& noexcept;
+        MONGOCXX_ABI_EXPORT_CDECL(client*) operator->() const& noexcept;
         client* operator->() && = delete;
 
         /// Retrieve a reference to the client.
-        client& operator*() const& noexcept;
+        MONGOCXX_ABI_EXPORT_CDECL(client&) operator*() const& noexcept;
         client& operator*() && = delete;
 
         /// Assign nullptr to this entry to release its client to the pool.
-        entry& operator=(std::nullptr_t) noexcept;
+        MONGOCXX_ABI_EXPORT_CDECL(entry&) operator=(std::nullptr_t) noexcept;
 
         /// Return true if this entry has a client acquired from the pool.
-        explicit operator bool() const noexcept;
+        explicit MONGOCXX_ABI_EXPORT_CDECL() operator bool() const noexcept;
 
         // Allows the pool_entry["db_name"] syntax to be used to access a database within the
         // entry's underlying client.
-        MONGOCXX_INLINE mongocxx::v_noabi::database operator[](
-            bsoncxx::v_noabi::string::view_or_value name) const&;
+        mongocxx::v_noabi::database operator[](
+            bsoncxx::v_noabi::string::view_or_value name) const& {
+            return (**this)[name];
+        }
+
         mongocxx::v_noabi::database operator[](bsoncxx::v_noabi::string::view_or_value name) && =
             delete;
 
        private:
         friend ::mongocxx::v_noabi::pool;
 
-        using unique_client = std::unique_ptr<client, std::function<void MONGOCXX_CALL(client*)>>;
+        using unique_client =
+            std::unique_ptr<client, std::function<void MONGOCXX_ABI_CDECL(client*)>>;
 
-        MONGOCXX_PRIVATE explicit entry(unique_client);
+        explicit entry(unique_client);
 
         unique_client _client;
     };
@@ -118,27 +122,22 @@ class pool {
     /// Acquires a client from the pool. The calling thread will block until a connection is
     /// available.
     ///
-    entry acquire();
+    MONGOCXX_ABI_EXPORT_CDECL(entry) acquire();
 
     ///
     /// Acquires a client from the pool. This method will return immediately, but may return a
     /// disengaged optional if a client is not available.
     ///
-    stdx::optional<entry> try_acquire();
+    MONGOCXX_ABI_EXPORT_CDECL(stdx::optional<entry>) try_acquire();
 
    private:
     friend ::mongocxx::v_noabi::options::auto_encryption;
 
-    MONGOCXX_PRIVATE void _release(client* client);
+    void _release(client* client);
 
-    class MONGOCXX_PRIVATE impl;
+    class impl;
     const std::unique_ptr<impl> _impl;
 };
-
-MONGOCXX_INLINE mongocxx::v_noabi::database pool::entry::operator[](
-    bsoncxx::v_noabi::string::view_or_value name) const& {
-    return (**this)[name];
-}
 
 }  // namespace v_noabi
 }  // namespace mongocxx

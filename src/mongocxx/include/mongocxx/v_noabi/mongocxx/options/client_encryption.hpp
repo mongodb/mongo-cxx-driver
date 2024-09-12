@@ -48,7 +48,8 @@ class client_encryption {
     ///
     /// @see https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
-    client_encryption& key_vault_client(mongocxx::v_noabi::client* client);
+    MONGOCXX_ABI_EXPORT_CDECL(client_encryption&)
+    key_vault_client(mongocxx::v_noabi::client* client);
 
     ///
     /// Gets the key vault client.
@@ -56,7 +57,8 @@ class client_encryption {
     /// @return
     ///   An optional pointer to the key vault client.
     ///
-    const stdx::optional<mongocxx::v_noabi::client*>& key_vault_client() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<mongocxx::v_noabi::client*>&)
+    key_vault_client() const;
 
     ///
     /// Represents the name of a database and a collection.
@@ -79,7 +81,7 @@ class client_encryption {
     ///
     /// @see https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
-    client_encryption& key_vault_namespace(ns_pair ns);
+    MONGOCXX_ABI_EXPORT_CDECL(client_encryption&) key_vault_namespace(ns_pair ns);
 
     ///
     /// Gets the key vault namespace.
@@ -88,7 +90,7 @@ class client_encryption {
     ///   An optional pair of strings representing the namespace of the
     ///   key vault collection.
     ///
-    const stdx::optional<ns_pair>& key_vault_namespace() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<ns_pair>&) key_vault_namespace() const;
 
     ///
     /// Sets the KMS providers to use for client side encryption.
@@ -133,7 +135,8 @@ class client_encryption {
     ///
     /// @see https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
-    client_encryption& kms_providers(bsoncxx::v_noabi::document::view_or_value kms_providers);
+    MONGOCXX_ABI_EXPORT_CDECL(client_encryption&)
+    kms_providers(bsoncxx::v_noabi::document::view_or_value kms_providers);
 
     ///
     /// Gets the KMS providers.
@@ -141,7 +144,8 @@ class client_encryption {
     /// @return
     ///   An optional document containing the KMS providers.
     ///
-    const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& kms_providers() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+    kms_providers() const;
 
     ///
     /// Sets the TLS options to use for client side encryption with a given KMS provider.
@@ -165,7 +169,8 @@ class client_encryption {
     ///
     /// @see https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
-    client_encryption& tls_opts(bsoncxx::v_noabi::document::view_or_value tls_opts);
+    MONGOCXX_ABI_EXPORT_CDECL(client_encryption&)
+    tls_opts(bsoncxx::v_noabi::document::view_or_value tls_opts);
 
     ///
     /// Gets the TLS options.
@@ -173,12 +178,13 @@ class client_encryption {
     /// @return
     ///   An optional document containing the TLS options.
     ///
-    const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& tls_opts() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+    tls_opts() const;
 
    private:
     friend ::mongocxx::v_noabi::client_encryption;
 
-    MONGOCXX_PRIVATE void* convert() const;
+    void* convert() const;
 
     stdx::optional<mongocxx::v_noabi::client*> _key_vault_client;
     stdx::optional<ns_pair> _key_vault_namespace;

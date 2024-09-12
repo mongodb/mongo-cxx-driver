@@ -21,7 +21,7 @@ namespace v_noabi {
 namespace options {
 namespace gridfs {
 
-class MONGOCXX_API upload;
+class upload;
 
 }  // namespace gridfs
 }  // namespace options

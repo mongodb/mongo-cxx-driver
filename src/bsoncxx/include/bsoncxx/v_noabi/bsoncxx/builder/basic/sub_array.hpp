@@ -43,13 +43,13 @@ class sub_array {
     ///
     /// Default constructor
     ///
-    BSONCXX_INLINE sub_array(core* core) : _core(core) {}
+    sub_array(core* core) : _core(core) {}
 
     ///
     /// Appends multiple BSON values.
     ///
     template <typename Arg, typename... Args>
-    BSONCXX_INLINE void append(Arg&& a, Args&&... args) {
+    void append(Arg&& a, Args&&... args) {
         append_(std::forward<Arg>(a));
         append(std::forward<Args>(args)...);
     }
@@ -65,7 +65,7 @@ class sub_array {
     // Appends a BSON value.
     //
     template <typename T>
-    BSONCXX_INLINE void append_(T&& t) {
+    void append_(T&& t) {
         impl::value_append(_core, std::forward<T>(t));
     }
 
