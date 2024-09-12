@@ -333,7 +333,7 @@ if(ENABLE_MACRO_GUARD_TESTS)
         EXCLUDE_REGEXES
             "include/mongocxx/doc\.hpp" # Doc header.
             "include/.*/(prelude|postlude)\.hpp" # Macro guard headers.
-            "(include|lib)/mongocxx/v_noabi/mongocxx/config/.*\.hpp" # v_noabi config headers.
+            "include/mongocxx/v_noabi/mongocxx/config/.*\.hpp" # v_noabi config headers.
     )
 endif()
 

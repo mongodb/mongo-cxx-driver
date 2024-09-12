@@ -147,7 +147,7 @@ if(ENABLE_MACRO_GUARD_TESTS)
         EXCLUDE_REGEXES
             "include/bsoncxx/doc\.hpp" # Doc header.
             "include/.*/(prelude|postlude)\.hpp" # Macro guard headers.
-            "(include|lib)/bsoncxx/v_noabi/bsoncxx/config/.*\.hpp" # v_noabi config headers.
+            "include/bsoncxx/v_noabi/bsoncxx/config/.*\.hpp" # v_noabi config headers.
             "include/bsoncxx/v_noabi/bsoncxx/enums/.*\.hpp" # v_noabi X-macro headers.
     )
 endif()
