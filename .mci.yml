@@ -1745,23 +1745,6 @@ buildvariants:
           - name: build_example_with_add_subdirectory
           - name: uninstall_check
 
-    - name: debian10-release-latest
-      display_name: "Debian 10 Release (MongoDB Latest)"
-      expansions:
-          build_type: "Release"
-          mongodb_version: "latest"
-      run_on:
-          - debian10-large
-      tasks:
-          - name: compile_and_test_with_shared_libs
-          - name: compile_and_test_with_shared_libs_extra_alignment
-          - name: compile_and_test_with_static_libs
-          - name: compile_and_test_with_static_libs_extra_alignment
-          - name: compile_and_test_with_shared_libs_replica_set_with_libmongocrypt
-          - name: compile_and_test_with_shared_libs_sharded_cluster_with_libmongocrypt
-          - name: build_example_with_add_subdirectory
-          - name: uninstall_check
-
     - name: debian10-release-50
       display_name: "Debian 10 Release (MongoDB 5.0)"
       expansions:
