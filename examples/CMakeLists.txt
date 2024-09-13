@@ -108,12 +108,6 @@ function(add_examples_executable source)
     endif ()
 endfunction()
 
-file(GLOB_RECURSE api_examples_sources
-    RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
-    CONFIGURE_DEPENDS
-    "api/*.cpp"
-)
-
 file(GLOB_RECURSE bsoncxx_examples_sources
     RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
     CONFIGURE_DEPENDS
@@ -169,6 +163,46 @@ foreach(source ${mongocxx_examples_sources})
     )
 endforeach()
 
+file(GLOB_RECURSE api_examples_sources
+    RELATIVE ${CMAKE_CURRENT_SOURCE_DIR}
+    CONFIGURE_DEPENDS
+    "api/*.cpp"
+)
+list(REMOVE_ITEM api_examples_sources "api/runner.cpp")
+
+function (add_abi_examples)
+    # Avoid MAX_PATH errors on Windows due to long target names by using a single `api-runner` .
+    add_examples_executable(api/runner.cpp LIBRARIES mongocxx_target Threads::Threads)
+
+    # Define a unique entry function name per component.
+    foreach (source ${api_examples_sources})
+        target_sources (api-runner PRIVATE ${source})
+
+        # path/to/source.cpp -> source
+        get_filename_component(name ${source} NAME_WE)
+
+        # path/to/source.cpp -> path/to
+        get_filename_component(subdir ${source} DIRECTORY)
+
+        # path/to/source -> path_to_source
+        string(REPLACE "/" "_" component_name "${subdir}/${name}")
+
+        # Define a unique component name for each component to be registered with the runner.
+        set_property (SOURCE ${source} APPEND PROPERTY COMPILE_DEFINITIONS "EXAMPLES_COMPONENT_NAME=${component_name}")
+    endforeach ()
+
+    # Silence warnings for common patterns in API examples.
+    set_property (TARGET api-runner APPEND PROPERTY COMPILE_OPTIONS
+        # Allow unused variables.
+        $<$<CXX_COMPILER_ID:AppleClang,Clang,GNU>:-Wno-unused>
+        $<$<CXX_COMPILER_ID:MSVC>:/wd4189>
+
+        # Allow simpler switch statements.
+        $<$<CXX_COMPILER_ID:AppleClang,Clang,GNU>:-Wno-switch>
+    )
+endfunction ()
+add_abi_examples ()
+
 set_local_dist (examples_DIST_local
    CMakeLists.txt
    ${api_examples_sources}
@@ -179,6 +213,7 @@ set_local_dist (examples_DIST_local
    add_subdirectory/.gitignore
    add_subdirectory/CMakeLists.txt
    add_subdirectory/hello_mongocxx.cpp
+   api/runner.cpp
    projects/bsoncxx/cmake/shared/build.sh
    projects/bsoncxx/cmake/shared/build/.gitignore
    projects/bsoncxx/cmake/shared/CMakeLists.txt

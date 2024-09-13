@@ -17,6 +17,7 @@
 
 #include <bsoncxx/decimal128.hpp>
 
+#include <examples/api/runner.hh>
 #include <examples/macros.hh>
 
 namespace {
@@ -81,6 +82,6 @@ void example() {
 
 }  // namespace
 
-int EXAMPLES_CDECL main() {
+RUNNER_REGISTER_COMPONENT() {
     example();
 }

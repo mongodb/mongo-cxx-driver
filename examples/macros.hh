@@ -19,3 +19,6 @@
 #else
 #define EXAMPLES_CDECL
 #endif
+
+#define EXAMPLES_CONCAT(a, b) EXAMPLES_CONCAT_1(a, b)
+#define EXAMPLES_CONCAT_1(a, b) a##b

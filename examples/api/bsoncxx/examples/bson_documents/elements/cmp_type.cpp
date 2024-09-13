@@ -19,6 +19,7 @@
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/types.hpp>
 
+#include <examples/api/runner.hh>
 #include <examples/macros.hh>
 
 namespace {
@@ -41,7 +42,7 @@ void example(bsoncxx::document::element e) {
 
 }  // namespace
 
-int EXAMPLES_CDECL main() {
+RUNNER_REGISTER_COMPONENT() {
     const auto doc = bsoncxx::from_json(R"({"a": {"$numberInt": "1"}, "b": {"$numberLong": "2"}})");
 
     example(doc["a"]);

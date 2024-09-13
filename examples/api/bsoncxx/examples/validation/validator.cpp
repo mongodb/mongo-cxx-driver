@@ -17,6 +17,7 @@
 
 #include <bsoncxx/validate.hpp>
 
+#include <examples/api/runner.hh>
 #include <examples/macros.hh>
 
 namespace {
@@ -85,7 +86,7 @@ void example(const std::uint8_t* bytes, std::size_t length) {
 
 }  // namespace
 
-int EXAMPLES_CDECL main() {
+RUNNER_REGISTER_COMPONENT() {
     // clang-format off
     std::uint8_t bytes[] = {
         // Total Bytes: 53

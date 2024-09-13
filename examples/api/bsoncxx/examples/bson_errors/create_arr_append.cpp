@@ -27,6 +27,7 @@
 #include <bsoncxx/exception/exception.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 
+#include <examples/api/runner.hh>
 #include <examples/macros.hh>
 
 namespace {
@@ -51,6 +52,6 @@ void example(bsoncxx::stdx::string_view big_string) {
 
 }  // namespace
 
-int EXAMPLES_CDECL main() {
+RUNNER_REGISTER_COMPONENT() {
     example(examples::big_string().view());
 }

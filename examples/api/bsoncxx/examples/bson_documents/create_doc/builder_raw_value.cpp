@@ -22,6 +22,7 @@
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/types.hpp>
 
+#include <examples/api/runner.hh>
 #include <examples/macros.hh>
 
 namespace {
@@ -44,7 +45,7 @@ void example(const std::uint8_t* data, std::size_t length) {
 
 }  // namespace
 
-int EXAMPLES_CDECL main() {
+RUNNER_REGISTER_COMPONENT() {
     bsoncxx::document::value owner = bsoncxx::from_json(R"({"key": "value"})");
     bsoncxx::document::view doc = owner.view();
 

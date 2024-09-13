@@ -18,6 +18,7 @@
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/types.hpp>
 
+#include <examples/api/runner.hh>
 #include <examples/macros.hh>
 
 namespace {
@@ -62,7 +63,7 @@ void example(bsoncxx::array::element e) {
 
 }  // namespace
 
-int EXAMPLES_CDECL main() {
+RUNNER_REGISTER_COMPONENT() {
     const auto doc = bsoncxx::from_json(R"({"v": [1, 2.0, "three"]})");
     const auto arr = doc["v"].get_array().value;
 

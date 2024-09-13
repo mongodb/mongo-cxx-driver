@@ -19,6 +19,7 @@
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/types.hpp>
 
+#include <examples/api/runner.hh>
 #include <examples/macros.hh>
 
 namespace {
@@ -47,7 +48,7 @@ void example(bsoncxx::array::view arr) {
 
 }  // namespace
 
-int EXAMPLES_CDECL main() {  // clang-format off
+RUNNER_REGISTER_COMPONENT() {  // clang-format off
     example(bsoncxx::from_json(R"({"v": [1, 2.0, "three"]})")["v"].get_array().value);
 
 }  // clang-format on
