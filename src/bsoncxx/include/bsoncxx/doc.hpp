@@ -88,3 +88,23 @@
 /// @namespace std
 /// The top-level namespace reserved for the C++ standard library.
 ///
+
+///
+/// @page topic-bsoncxx-examples Using the bsoncxx Library
+/// @brief Examples of how to use the bsoncxx library.
+///
+
+///
+/// @page topic-mongocxx-examples Using the mongocxx Library
+/// @brief Examples of how to use the bsoncxx library.
+///
+
+///
+/// @page topic-bsoncxx-about About the bsoncxx Library
+/// @brief Design decisions, history, and other technical details about the bsoncxx library.
+///
+
+///
+/// @page topic-mongocxx-about About the mongocxx Library
+/// @brief Design decisions, history, and other technical details about the mongocxx library.
+///
