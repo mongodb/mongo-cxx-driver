@@ -93,6 +93,7 @@
 /// @page topic-bsoncxx-examples Using the bsoncxx Library
 /// @brief Examples of how to use the bsoncxx library.
 /// @li @subpage topic-bsoncxx-examples-bson-documents
+/// @li @subpage topic-bsoncxx-examples-bson-errors
 ///
 
 ///
@@ -106,6 +107,13 @@
 /// @include{doc} api/bsoncxx/examples/bson_documents/elements.md
 /// @include{doc} api/bsoncxx/examples/bson_documents/values.md
 /// @include{doc} api/bsoncxx/examples/bson_documents/json.md
+///
+
+///
+/// @page topic-bsoncxx-examples-bson-errors BSON Error Handling
+/// @brief How to handle BSON document failures, errors, and exceptions.
+/// @tableofcontents
+/// @include{doc} api/bsoncxx/examples/bson_errors.md
 ///
 
 ///
