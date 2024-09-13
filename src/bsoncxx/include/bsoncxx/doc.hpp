@@ -92,11 +92,18 @@
 ///
 /// @page topic-bsoncxx-examples Using the bsoncxx Library
 /// @brief Examples of how to use the bsoncxx library.
+/// @li @subpage topic-bsoncxx-examples-bson-documents
 ///
 
 ///
 /// @page topic-mongocxx-examples Using the mongocxx Library
 /// @brief Examples of how to use the bsoncxx library.
+///
+
+///
+/// @page topic-bsoncxx-examples-bson-documents BSON Documents
+/// @brief How to create and use BSON documents.
+/// @tableofcontents
 ///
 
 ///
