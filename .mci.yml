@@ -1707,13 +1707,13 @@ buildvariants:
           - name: compile_and_test_with_shared_libs_sharded_cluster_with_libmongocrypt
           - name: build_example_with_add_subdirectory
 
-    - name: debian11-release-latest
-      display_name: "Debian 11 Release (MongoDB Latest)"
+    - name: debian12-release-latest
+      display_name: "Debian 12 Release (MongoDB Latest)"
       expansions:
           build_type: "Release"
           mongodb_version: "latest"
       run_on:
-          - debian11-large
+          - debian12-large
       tasks:
           - name: compile_and_test_with_shared_libs
           - name: compile_and_test_with_shared_libs_extra_alignment
