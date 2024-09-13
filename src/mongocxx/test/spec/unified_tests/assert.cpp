@@ -47,7 +47,7 @@ thread_local std::vector<std::string> S_match_doc_path;
  */
 struct match_scope_doc_key {
     match_scope_doc_key(bsoncxx::stdx::string_view key) {
-        S_match_doc_path.push_back("/" + std::string(key));
+        S_match_doc_path.push_back(std::string("/") + std::string(key));
     }
 
     ~match_scope_doc_key() {
