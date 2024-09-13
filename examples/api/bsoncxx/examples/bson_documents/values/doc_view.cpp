@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <cassert>
-
 #include <bsoncxx/document/element.hpp>
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/types.hpp>
@@ -28,20 +26,20 @@ namespace {
 // {"a": 1, "b": 2.0, "c": "three"}
 void example(bsoncxx::document::element e) {
     bsoncxx::types::bson_value::view v = e.get_value();
-    assert(v.type() == e.type());
+    ASSERT(v.type() == e.type());
 
     switch (v.type()) {
         case bsoncxx::type::k_int32:
-            assert(e.key().compare("a") == 0);
-            assert(v.get_int32() == e.get_int32());
+            ASSERT(e.key().compare("a") == 0);
+            ASSERT(v.get_int32() == e.get_int32());
             break;
         case bsoncxx::type::k_double:
-            assert(e.key().compare("b") == 0);
-            assert(v.get_double() == e.get_double());
+            ASSERT(e.key().compare("b") == 0);
+            ASSERT(v.get_double() == e.get_double());
             break;
         case bsoncxx::type::k_string:
-            assert(e.key().compare("c") == 0);
-            assert(v.get_string() == e.get_string());
+            ASSERT(e.key().compare("c") == 0);
+            ASSERT(v.get_string() == e.get_string());
             break;
     }
 }

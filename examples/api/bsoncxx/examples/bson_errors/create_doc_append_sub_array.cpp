@@ -16,7 +16,6 @@
 
 //
 
-#include <cassert>
 #include <cstddef>
 #include <limits>
 #include <memory>
@@ -48,28 +47,28 @@ void example(bsoncxx::stdx::string_view big_string) {
             arr.append(big_string);  // Throws.
         }));
 
-        assert(false && "should not reach this point");
+        ASSERT(false && "should not reach this point");
     } catch (const bsoncxx::exception& ex) {
-        assert(ex.code() == bsoncxx::error_code::k_cannot_append_string);
+        ASSERT(ex.code() == bsoncxx::error_code::k_cannot_append_string);
     }
 
     // Builder is in an erroneous state.
     try {
         builder.view();  // Throws.
 
-        assert(false && "should not reach this point");
+        ASSERT(false && "should not reach this point");
     } catch (const bsoncxx::exception& ex) {
-        assert(ex.code() == bsoncxx::error_code::k_unmatched_key_in_builder);
+        ASSERT(ex.code() == bsoncxx::error_code::k_unmatched_key_in_builder);
     }
 
     // Reset builder to a usable state.
     builder.clear();
-    assert(builder.view().empty());
+    ASSERT(builder.view().empty());
 
     // Restore the original state prior to the append failure.
     builder.append(bsoncxx::builder::concatenate_doc{original.view()});
 
-    assert(builder.view() == original.view());
+    ASSERT(builder.view() == original.view());
 }
 // [Example]
 

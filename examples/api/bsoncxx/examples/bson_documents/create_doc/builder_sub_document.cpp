@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <cassert>
-
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/document/value.hpp>
@@ -33,7 +31,7 @@ void example() {
         "v", [](bsoncxx::builder::basic::sub_document doc) { doc.append(kvp("key", "value")); }));
     bsoncxx::document::view v = owner.view()["v"].get_document().value;
 
-    assert(v["key"].get_string().value.compare("value") == 0);
+    ASSERT(v["key"].get_string().value.compare("value") == 0);
 }
 // [Example]
 

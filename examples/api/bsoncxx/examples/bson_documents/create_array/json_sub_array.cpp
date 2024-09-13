@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <cassert>
-
 #include <bsoncxx/array/view.hpp>
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/json.hpp>
@@ -33,8 +31,8 @@ void example() {
     )");
     bsoncxx::array::view sub = owner.view()["0"].get_array().value;
 
-    assert(sub[0].get_int32().value == 1);
-    assert(sub[1].get_int32().value == 2);
+    ASSERT(sub[0].get_int32().value == 1);
+    ASSERT(sub[1].get_int32().value == 2);
 }
 // [Example]
 

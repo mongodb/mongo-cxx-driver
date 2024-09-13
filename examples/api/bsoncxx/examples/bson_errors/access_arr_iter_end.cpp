@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <cassert>
-
 #include <bsoncxx/array/element.hpp>
 #include <bsoncxx/array/view.hpp>
 #include <bsoncxx/json.hpp>
@@ -27,7 +25,7 @@ namespace {
 // [Example]
 // [1, 2, 3]
 void example(bsoncxx::array::view arr) {
-    assert(arr.begin() != arr.end());
+    ASSERT(arr.begin() != arr.end());
 
     auto iter = arr.begin();  // 1
 
@@ -35,15 +33,15 @@ void example(bsoncxx::array::view arr) {
     ++iter;  // 3
     ++iter;  // End iterator.
 
-    assert(iter == arr.end());
+    ASSERT(iter == arr.end());
 
     ++iter;  // DO NOT DO THIS
 
-    assert(iter == arr.end());  // Incrementing an end iterator results in an end iterator.
+    ASSERT(iter == arr.end());  // Incrementing an end iterator results in an end iterator.
 
     bsoncxx::array::element e = *iter;  // DO NOT DO THIS
 
-    assert(!e);  // An end iterator returns an invalid element.
+    ASSERT(!e);  // An end iterator returns an invalid element.
 }
 // [Example]
 

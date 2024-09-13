@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <cassert>
-
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
 
@@ -31,20 +29,20 @@ void example() {
     bsoncxx::types::b_string v2{"three"};
 
     view_type v;
-    assert(v.type() == bsoncxx::type::k_null);
-    assert(v.get_null() == bsoncxx::types::b_null{});
+    ASSERT(v.type() == bsoncxx::type::k_null);
+    ASSERT(v.get_null() == bsoncxx::types::b_null{});
 
     v = view_type(v0);
-    assert(v.type() == v0.type_id);
-    assert(v.get_int32() == v0);
+    ASSERT(v.type() == v0.type_id);
+    ASSERT(v.get_int32() == v0);
 
     v = view_type(v1);
-    assert(v.type() == v1.type_id);
-    assert(v.get_double() == v1);
+    ASSERT(v.type() == v1.type_id);
+    ASSERT(v.get_double() == v1);
 
     v = view_type(v2);
-    assert(v.type() == v2.type_id);
-    assert(v.get_string() == v2);
+    ASSERT(v.type() == v2.type_id);
+    ASSERT(v.get_string() == v2);
 }
 // [Example]
 

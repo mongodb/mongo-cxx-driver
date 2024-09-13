@@ -20,7 +20,6 @@
 //
 
 #include <algorithm>
-#include <cassert>
 #include <cstddef>
 #include <cstdint>
 #include <cstring>
@@ -62,7 +61,7 @@ class runner_type {
     }
 
     int run() {
-        assert(jobs > 0);
+        ASSERT(jobs > 0);
 
         std::cout << "seed: " << seed << std::endl;
 

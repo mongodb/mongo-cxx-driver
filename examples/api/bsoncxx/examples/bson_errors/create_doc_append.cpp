@@ -16,7 +16,6 @@
 
 //
 
-#include <cassert>
 #include <cstddef>
 #include <limits>
 #include <memory>
@@ -44,12 +43,12 @@ void example(bsoncxx::stdx::string_view big_string) {
     try {
         builder.append(kvp("too big", big_string));  // Throws.
 
-        assert(false && "should not reach this point");
+        ASSERT(false && "should not reach this point");
     } catch (const bsoncxx::exception& ex) {
-        assert(ex.code() == bsoncxx::error_code::k_cannot_append_string);
+        ASSERT(ex.code() == bsoncxx::error_code::k_cannot_append_string);
     }
 
-    assert(builder.view() == original.view());
+    ASSERT(builder.view() == original.view());
 }
 // [Example]
 

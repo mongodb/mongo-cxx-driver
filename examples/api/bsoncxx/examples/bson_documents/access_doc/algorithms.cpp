@@ -13,7 +13,6 @@
 // limitations under the License.
 
 #include <algorithm>
-#include <cassert>
 #include <iterator>
 #include <vector>
 
@@ -30,7 +29,7 @@ namespace {
 // [Example]
 // {"a": 1, "b": 2.0, "c": "three"}
 void example(bsoncxx::document::view doc) {
-    assert(std::distance(doc.begin(), doc.end()) == 3);
+    ASSERT(std::distance(doc.begin(), doc.end()) == 3);
 
     std::vector<bsoncxx::document::element> elements;
 
@@ -41,9 +40,9 @@ void example(bsoncxx::document::view doc) {
                      return e.key().compare("a") == 0 || e.type() == bsoncxx::type::k_string;
                  });
 
-    assert(elements.size() == 2u);
-    assert(elements[0].key().compare("a") == 0);
-    assert(elements[1].key().compare("c") == 0);
+    ASSERT(elements.size() == 2u);
+    ASSERT(elements[0].key().compare("a") == 0);
+    ASSERT(elements[1].key().compare("c") == 0);
 }
 // [Example]
 

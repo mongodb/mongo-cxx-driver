@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <cassert>
-
 #include <bsoncxx/exception/error_code.hpp>
 #include <bsoncxx/exception/exception.hpp>
 #include <bsoncxx/types.hpp>
@@ -27,23 +25,23 @@ namespace {
 // [Example]
 void example() {
     bsoncxx::types::bson_value::view v;
-    assert(v.type() == bsoncxx::type::k_null);
-    assert(v.get_null() == bsoncxx::types::b_null{});
+    ASSERT(v.type() == bsoncxx::type::k_null);
+    ASSERT(v.get_null() == bsoncxx::types::b_null{});
 
     try {
         bsoncxx::types::b_int32 i = v.get_int32();  // Throws.
 
-        assert(false && "should not reach this point");
+        ASSERT(false && "should not reach this point");
     } catch (const bsoncxx::exception& ex) {
-        assert(ex.code() == bsoncxx::error_code::k_need_element_type_k_int32);
+        ASSERT(ex.code() == bsoncxx::error_code::k_need_element_type_k_int32);
     }
 
     try {
         bsoncxx::types::b_int64 i = v.get_int64();  // Throws.
 
-        assert(false && "should not reach this point");
+        ASSERT(false && "should not reach this point");
     } catch (const bsoncxx::exception& ex) {
-        assert(ex.code() == bsoncxx::error_code::k_need_element_type_k_int64);
+        ASSERT(ex.code() == bsoncxx::error_code::k_need_element_type_k_int64);
     }
 }
 // [Example]

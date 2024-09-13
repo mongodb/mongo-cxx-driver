@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <cassert>
-
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/types.hpp>
@@ -26,17 +24,17 @@ namespace {
 // [Example]
 // {"a": 1, "b": 2}
 void example(bsoncxx::document::view doc) {
-    assert(doc.find("a") == doc.begin());
+    ASSERT(doc.find("a") == doc.begin());
 
     {
         auto iter = doc.find("b");
 
-        assert(iter != doc.end());
-        assert(iter->key().compare("b") == 0);
-        assert(iter->get_int32().value == 2);
+        ASSERT(iter != doc.end());
+        ASSERT(iter->key().compare("b") == 0);
+        ASSERT(iter->get_int32().value == 2);
     }
 
-    assert(doc.find("x") == doc.end());
+    ASSERT(doc.find("x") == doc.end());
 }
 // [Example]
 

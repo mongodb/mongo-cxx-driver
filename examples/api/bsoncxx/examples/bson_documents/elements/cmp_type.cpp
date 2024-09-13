@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <cassert>
 #include <cstdint>
 
 #include <bsoncxx/document/element.hpp>
@@ -31,11 +30,11 @@ void example(bsoncxx::document::element e) {
     std::int64_t b{2};
 
     if (e.type() == bsoncxx::type::k_int32) {
-        assert(e.key().compare("a") == 0);
-        assert(e.get_int32().value == a);
+        ASSERT(e.key().compare("a") == 0);
+        ASSERT(e.get_int32().value == a);
     } else if (e.type() == bsoncxx::type::k_int64) {
-        assert(e.key().compare("b") == 0);
-        assert(e.get_int64().value == b);
+        ASSERT(e.key().compare("b") == 0);
+        ASSERT(e.get_int64().value == b);
     }
 }
 // [Example]

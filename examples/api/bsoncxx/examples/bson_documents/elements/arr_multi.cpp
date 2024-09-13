@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <cassert>
-
 #include <bsoncxx/array/element.hpp>
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/types.hpp>
@@ -28,32 +26,32 @@ namespace {
 void example(bsoncxx::array::element e) {
     switch (e.type()) {
         case bsoncxx::type::k_int32: {
-            assert(e.key().compare("0") == 0);
+            ASSERT(e.key().compare("0") == 0);
 
             bsoncxx::types::b_int32 v = e.get_int32();
 
-            assert(v.type_id == bsoncxx::type::k_int32);
-            assert(v.value == 1);
+            ASSERT(v.type_id == bsoncxx::type::k_int32);
+            ASSERT(v.value == 1);
 
             break;
         }
         case bsoncxx::type::k_double: {
-            assert(e.key().compare("1") == 0);
+            ASSERT(e.key().compare("1") == 0);
 
             bsoncxx::types::b_double v = e.get_double();
 
-            assert(v.type_id == bsoncxx::type::k_double);
-            assert(v.value == 2.0);
+            ASSERT(v.type_id == bsoncxx::type::k_double);
+            ASSERT(v.value == 2.0);
 
             break;
         }
         case bsoncxx::type::k_string: {
-            assert(e.key().compare("2") == 0);
+            ASSERT(e.key().compare("2") == 0);
 
             bsoncxx::types::b_string v = e.get_string();
 
-            assert(v.type_id == bsoncxx::type::k_string);
-            assert(v.value.compare("three") == 0);
+            ASSERT(v.type_id == bsoncxx::type::k_string);
+            ASSERT(v.value.compare("three") == 0);
 
             break;
         }

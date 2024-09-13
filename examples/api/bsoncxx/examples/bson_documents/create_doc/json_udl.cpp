@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <cassert>
-
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/json.hpp>
 
@@ -29,7 +27,7 @@ void example() {
     bsoncxx::document::value a = R"({"key": "value"})"_bson;
     bsoncxx::document::value b = bsoncxx::from_json(R"({"key": "value"})");
 
-    assert(a == b);
+    ASSERT(a == b);
 }
 // [Example]
 

@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <cassert>
-
 #include <bsoncxx/exception/error_code.hpp>
 #include <bsoncxx/exception/exception.hpp>
 #include <bsoncxx/types.hpp>
@@ -30,9 +28,9 @@ void example() {
         bsoncxx::document::element e;
         bsoncxx::types::bson_value::view v = e.get_value();  // Throws.
 
-        assert(false && "should not reach this point");
+        ASSERT(false && "should not reach this point");
     } catch (const bsoncxx::exception& ex) {
-        assert(ex.code() == bsoncxx::error_code::k_unset_element);
+        ASSERT(ex.code() == bsoncxx::error_code::k_unset_element);
     }
 }
 // [Example]

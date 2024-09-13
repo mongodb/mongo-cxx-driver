@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <cassert>
-
 #include <bsoncxx/document/element.hpp>
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/json.hpp>
@@ -27,32 +25,32 @@ namespace {
 // [Example]
 // {"a": 1, "b": 2}
 void example(bsoncxx::document::view doc) {
-    assert(doc.begin() != doc.end());
+    ASSERT(doc.begin() != doc.end());
 
     auto iter = doc.begin();
-    assert(iter == doc.begin());
+    ASSERT(iter == doc.begin());
 
     {
         bsoncxx::document::element e = *iter;
 
-        assert(e.key().compare("a") == 0);
-        assert(e.get_int32().value == 1);
+        ASSERT(e.key().compare("a") == 0);
+        ASSERT(e.get_int32().value == 1);
     }
 
     ++iter;
 
-    assert(iter->key().compare("b") == 0);
-    assert(iter->get_int32().value == 2);
+    ASSERT(iter->key().compare("b") == 0);
+    ASSERT(iter->get_int32().value == 2);
 
     {
         auto iter_copy = iter++;
 
-        assert(iter_copy != iter);
-        assert(iter_copy->key().compare("b") == 0);
-        assert(iter_copy->get_int32() == 2);
+        ASSERT(iter_copy != iter);
+        ASSERT(iter_copy->key().compare("b") == 0);
+        ASSERT(iter_copy->get_int32() == 2);
     }
 
-    assert(iter == doc.end());
+    ASSERT(iter == doc.end());
 }
 // [Example]
 

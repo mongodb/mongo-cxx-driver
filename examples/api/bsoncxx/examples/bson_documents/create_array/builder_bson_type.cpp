@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <cassert>
-
 #include <bsoncxx/array/value.hpp>
 #include <bsoncxx/array/view.hpp>
 #include <bsoncxx/builder/basic/array.hpp>
@@ -33,13 +31,13 @@ void example() {
     bsoncxx::array::value owner = bsoncxx::builder::basic::make_array(a, b, c);
     bsoncxx::array::view arr = owner.view();
 
-    assert(arr[0].type() == bsoncxx::type::k_int32);
-    assert(arr[1].type() == bsoncxx::type::k_double);
-    assert(arr[2].type() == bsoncxx::type::k_string);
+    ASSERT(arr[0].type() == bsoncxx::type::k_int32);
+    ASSERT(arr[1].type() == bsoncxx::type::k_double);
+    ASSERT(arr[2].type() == bsoncxx::type::k_string);
 
-    assert(arr[0].get_int32().value == 1);
-    assert(arr[1].get_double().value == 2.0);
-    assert(arr[2].get_string().value.compare("three") == 0);
+    ASSERT(arr[0].get_int32().value == 1);
+    ASSERT(arr[1].get_double().value == 2.0);
+    ASSERT(arr[2].get_string().value.compare("three") == 0);
 }
 // [Example]
 

@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <cassert>
-
 #include <bsoncxx/array/element.hpp>
 #include <bsoncxx/array/value.hpp>
 #include <bsoncxx/array/view.hpp>
@@ -37,22 +35,22 @@ void example() {
 
     bsoncxx::array::element e = arr[0];
 
-    assert(!e);  // An invalid BSON array returns an invalid element.
+    ASSERT(!e);  // An invalid BSON array returns an invalid element.
 
     try {
         bsoncxx::stdx::string_view key = e.key();  // Throws.
 
-        assert(false && "should not reach this point");
+        ASSERT(false && "should not reach this point");
     } catch (const bsoncxx::exception& ex) {
-        assert(ex.code() == bsoncxx::error_code::k_unset_element);
+        ASSERT(ex.code() == bsoncxx::error_code::k_unset_element);
     }
 
     try {
         bsoncxx::type type = e.type();  // Throws.
 
-        assert(false && "should not reach this point");
+        ASSERT(false && "should not reach this point");
     } catch (const bsoncxx::exception& ex) {
-        assert(ex.code() == bsoncxx::error_code::k_unset_element);
+        ASSERT(ex.code() == bsoncxx::error_code::k_unset_element);
     }
 }
 // [Example]

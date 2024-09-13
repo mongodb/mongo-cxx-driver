@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <cassert>
-
 #include <bsoncxx/exception/error_code.hpp>
 #include <bsoncxx/exception/exception.hpp>
 #include <bsoncxx/types.hpp>
@@ -29,9 +27,9 @@ void example() {
     try {
         bsoncxx::types::bson_value::value value{bsoncxx::type::k_null};  // Throws.
 
-        assert(false && "should not reach this point");
+        ASSERT(false && "should not reach this point");
     } catch (const bsoncxx::exception& ex) {
-        assert(ex.code() == bsoncxx::error_code::k_invalid_bson_type_id);
+        ASSERT(ex.code() == bsoncxx::error_code::k_invalid_bson_type_id);
     }
 }
 // [Example]

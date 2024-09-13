@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <cassert>
-
 #include <bsoncxx/exception/error_code.hpp>
 #include <bsoncxx/exception/exception.hpp>
 #include <bsoncxx/oid.hpp>
@@ -28,9 +26,9 @@ void example() {
     try {
         bsoncxx::oid oid{"invalid"};  // Throws.
 
-        assert(false && "should not reach this point");
+        ASSERT(false && "should not reach this point");
     } catch (const bsoncxx::exception& ex) {
-        assert(ex.code() == bsoncxx::error_code::k_invalid_oid);
+        ASSERT(ex.code() == bsoncxx::error_code::k_invalid_oid);
     }
 
     try {
@@ -38,9 +36,9 @@ void example() {
 
         bsoncxx::oid oid{bytes, sizeof(bytes)};  // Throws.
 
-        assert(false && "should not reach this point");
+        ASSERT(false && "should not reach this point");
     } catch (const bsoncxx::exception& ex) {
-        assert(ex.code() == bsoncxx::error_code::k_invalid_oid);
+        ASSERT(ex.code() == bsoncxx::error_code::k_invalid_oid);
     }
 }
 // [Example]

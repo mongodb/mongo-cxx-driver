@@ -13,7 +13,6 @@
 // limitations under the License.
 
 #include <algorithm>
-#include <cassert>
 
 #include <bsoncxx/array/element.hpp>
 #include <bsoncxx/array/view.hpp>
@@ -28,11 +27,11 @@ namespace {
 // [Example]
 // [1, 2, 3]
 void example(bsoncxx::array::view arr) {
-    assert(std::distance(arr.begin(), arr.end()) == 3);
+    ASSERT(std::distance(arr.begin(), arr.end()) == 3);
 
     bsoncxx::array::element e = arr[3];
 
-    assert(!e);  // A missing element is represented as an invalid element.
+    ASSERT(!e);  // A missing element is represented as an invalid element.
 }
 // [Example]
 

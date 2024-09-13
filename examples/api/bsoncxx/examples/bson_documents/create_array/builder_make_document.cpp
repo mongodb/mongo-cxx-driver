@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <cassert>
 #include <cstdint>
 
 #include <bsoncxx/array/value.hpp>
@@ -31,9 +30,9 @@ void example() {
         bsoncxx::builder::basic::make_array(std::int32_t{1}, 2.0, "three");
     bsoncxx::array::view arr = owner.view();
 
-    assert(arr[0].get_int32().value == 1);
-    assert(arr[1].get_double().value == 2.0);
-    assert(arr[2].get_string().value.compare("three") == 0);
+    ASSERT(arr[0].get_int32().value == 1);
+    ASSERT(arr[1].get_double().value == 2.0);
+    ASSERT(arr[2].get_string().value.compare("three") == 0);
 }
 // [Example]
 

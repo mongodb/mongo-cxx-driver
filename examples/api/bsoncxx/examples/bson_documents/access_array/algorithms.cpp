@@ -13,7 +13,6 @@
 // limitations under the License.
 
 #include <algorithm>
-#include <cassert>
 #include <vector>
 
 #include <bsoncxx/array/element.hpp>
@@ -29,7 +28,7 @@ namespace {
 // [Example]
 // [1, 2.0, "three"]
 void example(bsoncxx::array::view arr) {
-    assert(std::distance(arr.begin(), arr.end()) == 3);
+    ASSERT(std::distance(arr.begin(), arr.end()) == 3);
 
     std::vector<bsoncxx::array::element> elements;
 
@@ -38,9 +37,9 @@ void example(bsoncxx::array::view arr) {
             return e.key().compare("0") == 0 || e.type() == bsoncxx::type::k_string;
         });
 
-    assert(elements.size() == 2u);
-    assert(elements[0].key().compare("0") == 0);
-    assert(elements[1].key().compare("2") == 0);
+    ASSERT(elements.size() == 2u);
+    ASSERT(elements[0].key().compare("0") == 0);
+    ASSERT(elements[1].key().compare("2") == 0);
 }
 // [Example]
 

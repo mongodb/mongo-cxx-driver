@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <cassert>
-
 #include <bsoncxx/exception/error_code.hpp>
 #include <bsoncxx/exception/exception.hpp>
 #include <bsoncxx/json.hpp>
@@ -28,9 +26,9 @@ void example() {
     try {
         const auto doc = bsoncxx::from_json(R"(invalid json)");
 
-        assert(false && "should not reach this point");
+        ASSERT(false && "should not reach this point");
     } catch (const bsoncxx::exception& ex) {
-        assert(ex.code() == bsoncxx::error_code::k_json_parse_failure);
+        ASSERT(ex.code() == bsoncxx::error_code::k_json_parse_failure);
     }
 }
 // [Example]

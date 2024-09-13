@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <cassert>
 #include <cstddef>
 #include <cstdint>
 
@@ -32,8 +31,8 @@ namespace {
 void example(const std::uint8_t* data, std::size_t length) {
     bsoncxx::array::view arr{data, length};
 
-    assert(arr[0].get_int32().value == 1);
-    assert(arr[1].get_int32().value == 2);
+    ASSERT(arr[0].get_int32().value == 1);
+    ASSERT(arr[1].get_int32().value == 2);
 }
 // [Example]
 

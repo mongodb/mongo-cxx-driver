@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <cassert>
 #include <cstddef>
 #include <cstdint>
 
@@ -31,7 +30,7 @@ namespace {
 void example(const std::uint8_t* data, std::size_t length) {
     bsoncxx::document::view doc{data, length};
 
-    assert(doc["key"].get_string().value.compare("value") == 0);
+    ASSERT(doc["key"].get_string().value.compare("value") == 0);
 }
 // [Example]
 

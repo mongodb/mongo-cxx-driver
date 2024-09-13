@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <cassert>
-
 #include <bsoncxx/document/element.hpp>
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/json.hpp>
@@ -27,16 +25,16 @@ namespace {
 // [Example]
 // {"a": 1, "b": 2}
 void example(bsoncxx::document::view doc) {
-    assert(doc["a"]);
+    ASSERT(doc["a"]);
 
     {
         bsoncxx::document::element e = doc["b"];
 
-        assert(e.key().compare("b") == 0);
-        assert(e.get_int32().value == 2);
+        ASSERT(e.key().compare("b") == 0);
+        ASSERT(e.get_int32().value == 2);
     }
 
-    assert(!doc["c"]);  // Invalid element.
+    ASSERT(!doc["c"]);  // Invalid element.
 }
 // [Example]
 

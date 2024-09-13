@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <cassert>
 #include <cstdint>
 #include <string>
 
@@ -41,9 +40,9 @@ void example() {
     try {
         std::string json = bsoncxx::to_json(doc);  // Throws.
 
-        assert(false && "should not reach this point");
+        ASSERT(false && "should not reach this point");
     } catch (const bsoncxx::exception& ex) {
-        assert(ex.code() == bsoncxx::error_code::k_failed_converting_bson_to_json);
+        ASSERT(ex.code() == bsoncxx::error_code::k_failed_converting_bson_to_json);
     }
 }
 // [Example]

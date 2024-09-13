@@ -14,6 +14,9 @@
 
 #pragma once
 
+#include <cstdio>
+#include <cstdlib>
+
 #if defined(_MSC_VER)
 #define EXAMPLES_CDECL __cdecl
 #else
@@ -22,3 +25,13 @@
 
 #define EXAMPLES_CONCAT(a, b) EXAMPLES_CONCAT_1(a, b)
 #define EXAMPLES_CONCAT_1(a, b) a##b
+
+// Unconditionally define `assert()` for examples.
+#define ASSERT(...)                                                                           \
+    if (!static_cast<bool>(__VA_ARGS__)) {                                                    \
+        std::printf(                                                                          \
+            "%s:%d: %s: assertion failed: %s\n", __FILE__, __LINE__, __func__, #__VA_ARGS__); \
+        std::fflush(stdout);                                                                  \
+        std::abort();                                                                         \
+    } else                                                                                    \
+        ((void)0)

@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <cassert>
-
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/json.hpp>
@@ -33,7 +31,7 @@ void example() {
     )");
     bsoncxx::document::view v = owner.view()["0"].get_document().value;
 
-    assert(v["key"].get_string().value.compare("value") == 0);
+    ASSERT(v["key"].get_string().value.compare("value") == 0);
 }
 // [Example]
 

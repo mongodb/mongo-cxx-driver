@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <cassert>
-
 #include <bsoncxx/array/element.hpp>
 #include <bsoncxx/array/view.hpp>
 #include <bsoncxx/json.hpp>
@@ -27,16 +25,16 @@ namespace {
 // [Example]
 // [1, 2]
 void example(bsoncxx::array::view arr) {
-    assert(arr[0]);
+    ASSERT(arr[0]);
 
     {
         bsoncxx::array::element e = arr[1];
 
-        assert(e.key().compare("1") == 0);
-        assert(e.get_int32().value == 2);
+        ASSERT(e.key().compare("1") == 0);
+        ASSERT(e.get_int32().value == 2);
     }
 
-    assert(!arr[2]);  // Invalid element.
+    ASSERT(!arr[2]);  // Invalid element.
 }
 // [Example]
 

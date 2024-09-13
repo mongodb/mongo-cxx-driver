@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <cassert>
 #include <cstddef>
 #include <cstdint>
 
@@ -31,14 +30,14 @@ void example() {
     {
         std::uint8_t bytes[1]{};  // Invalid.
 
-        assert(!bsoncxx::validate(bytes, sizeof(bytes)));
+        ASSERT(!bsoncxx::validate(bytes, sizeof(bytes)));
 
         std::size_t offset;
 
-        assert(!bsoncxx::validate(bytes, sizeof(bytes), bsoncxx::validator{}, &offset));
+        ASSERT(!bsoncxx::validate(bytes, sizeof(bytes), bsoncxx::validator{}, &offset));
 
         // Set to `0` for an invalid BSON document.
-        assert(offset == 0u);
+        ASSERT(offset == 0u);
     }
 
     bsoncxx::document::value owner = bsoncxx::from_json(R"({"x": 1})");
@@ -47,24 +46,24 @@ void example() {
 
     {
         auto doc_opt = bsoncxx::validate(data, length);
-        assert(doc_opt);
+        ASSERT(doc_opt);
 
         bsoncxx::document::view doc = *doc_opt;
 
-        assert(doc.data() == data);
-        assert(doc.length() == length);
-        assert(doc == owner.view());
+        ASSERT(doc.data() == data);
+        ASSERT(doc.length() == length);
+        ASSERT(doc == owner.view());
     }
 
     {
         bsoncxx::validator options;
         std::size_t offset = 123u;
 
-        assert(bsoncxx::validate(data, length) ==
+        ASSERT(bsoncxx::validate(data, length) ==
                bsoncxx::validate(data, length, options, &offset));
 
         // Not set when valid.
-        assert(offset == 123u);
+        ASSERT(offset == 123u);
     }
 }
 // [Example]

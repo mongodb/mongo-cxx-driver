@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <cassert>
-
 #include <bsoncxx/array/view.hpp>
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/types.hpp>
@@ -26,17 +24,17 @@ namespace {
 // [Example]
 // [1, 2]
 void example(bsoncxx::array::view arr) {
-    assert(arr.find(0) == arr.begin());
+    ASSERT(arr.find(0) == arr.begin());
 
     {
         auto iter = arr.find(1);
 
-        assert(iter != arr.end());
-        assert(iter->key().compare("1") == 0);
-        assert(iter->get_int32().value == 2);
+        ASSERT(iter != arr.end());
+        ASSERT(iter->key().compare("1") == 0);
+        ASSERT(iter->get_int32().value == 2);
     }
 
-    assert(arr.find(2) == arr.end());
+    ASSERT(arr.find(2) == arr.end());
 }
 // [Example]
 

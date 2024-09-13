@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <cassert>
 #include <cstdint>
 
 #include <bsoncxx/array/view.hpp>
@@ -37,11 +36,11 @@ void example() {
         }));
     bsoncxx::array::view v = owner.view()["v"].get_array().value;
 
-    assert(v[0].type() == bsoncxx::type::k_int32);
-    assert(v[1].type() == bsoncxx::type::k_int64);
+    ASSERT(v[0].type() == bsoncxx::type::k_int32);
+    ASSERT(v[1].type() == bsoncxx::type::k_int64);
 
-    assert(v[0].get_int32().value == 1);
-    assert(v[1].get_int64().value == 2);
+    ASSERT(v[0].get_int32().value == 1);
+    ASSERT(v[1].get_int64().value == 2);
 }
 // [Example]
 

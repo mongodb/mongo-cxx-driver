@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <cassert>
 #include <cstdint>
 
 #include <bsoncxx/builder/basic/document.hpp>
@@ -38,13 +37,13 @@ void example() {
         bsoncxx::builder::basic::make_document(kvp("a", a), kvp("b", b), kvp("c", c));
     bsoncxx::document::view doc = owner.view();
 
-    assert(doc["a"].type() == bsoncxx::type::k_int32);
-    assert(doc["b"].type() == bsoncxx::type::k_double);
-    assert(doc["c"].type() == bsoncxx::type::k_string);
+    ASSERT(doc["a"].type() == bsoncxx::type::k_int32);
+    ASSERT(doc["b"].type() == bsoncxx::type::k_double);
+    ASSERT(doc["c"].type() == bsoncxx::type::k_string);
 
-    assert(doc["a"].get_int32() == a);
-    assert(doc["b"].get_double() == b);
-    assert(doc["c"].get_string() == c);
+    ASSERT(doc["a"].get_int32() == a);
+    ASSERT(doc["b"].get_double() == b);
+    ASSERT(doc["c"].get_string() == c);
 }
 // [Example]
 

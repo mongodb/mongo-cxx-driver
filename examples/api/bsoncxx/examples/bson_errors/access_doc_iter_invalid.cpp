@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <cassert>
 #include <cstdint>
 
 #include <bsoncxx/document/element.hpp>
@@ -36,11 +35,11 @@ void example() {
 
     auto iter = doc.begin();
 
-    assert(iter == doc.end());  // An invalid BSON document returns an end iterator.
+    ASSERT(iter == doc.end());  // An invalid BSON document returns an end iterator.
 
     bsoncxx::document::element e = *iter;  // DO NOT DO THIS
 
-    assert(!e);  // An end iterator returns an invalid element.
+    ASSERT(!e);  // An end iterator returns an invalid element.
 }
 // [Example]
 

@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <cassert>
-
 #include <bsoncxx/decimal128.hpp>
 #include <bsoncxx/exception/error_code.hpp>
 #include <bsoncxx/exception/exception.hpp>
@@ -28,9 +26,9 @@ void example() {
     try {
         bsoncxx::decimal128 d{"invalid"};  // Throws.
 
-        assert(false && "should not reach this point");
+        ASSERT(false && "should not reach this point");
     } catch (const bsoncxx::exception& ex) {
-        assert(ex.code() == bsoncxx::error_code::k_invalid_decimal128);
+        ASSERT(ex.code() == bsoncxx::error_code::k_invalid_decimal128);
     }
 }
 // [Example]

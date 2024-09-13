@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <cassert>
 #include <cstdint>
 #include <string>
 
@@ -57,7 +56,7 @@ void example() {
         //     }
         // }
         std::string json = bsoncxx::to_json(doc, ExtendedJsonMode::k_canonical);
-        assert(
+        ASSERT(
             json ==
             R"({ "a" : { "$numberInt" : "1" }, "b" : { "$numberLong" : "2" }, "c" : { "$binary" : { "base64" : "dGhyZWU=", "subType" : "00" } } })");
     }
@@ -75,7 +74,7 @@ void example() {
         //     }
         // }
         std::string json = bsoncxx::to_json(doc, ExtendedJsonMode::k_relaxed);
-        assert(
+        ASSERT(
             json ==
             R"({ "a" : 1, "b" : 2, "c" : { "$binary" : { "base64" : "dGhyZWU=", "subType" : "00" } } })");
     }
@@ -91,14 +90,14 @@ void example() {
         //     }
         // }
         std::string json = bsoncxx::to_json(doc);
-        assert(json == R"({ "a" : 1, "b" : 2, "c" : { "$binary" : "dGhyZWU=", "$type" : "00" } })");
+        ASSERT(json == R"({ "a" : 1, "b" : 2, "c" : { "$binary" : "dGhyZWU=", "$type" : "00" } })");
     }
 
     {
         std::string a = bsoncxx::to_json(doc);
         std::string b = bsoncxx::to_json(doc, ExtendedJsonMode::k_legacy);
 
-        assert(a == b);
+        ASSERT(a == b);
     }
 }
 // [Example]

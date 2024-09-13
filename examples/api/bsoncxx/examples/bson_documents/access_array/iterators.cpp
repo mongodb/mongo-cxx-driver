@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <cassert>
-
 #include <bsoncxx/array/element.hpp>
 #include <bsoncxx/array/view.hpp>
 #include <bsoncxx/json.hpp>
@@ -27,32 +25,32 @@ namespace {
 // [Example]
 // [1, 2]
 void example(bsoncxx::array::view arr) {
-    assert(arr.begin() != arr.end());
+    ASSERT(arr.begin() != arr.end());
 
     auto iter = arr.begin();
-    assert(iter == arr.begin());
+    ASSERT(iter == arr.begin());
 
     {
         bsoncxx::array::element e = *iter;
 
-        assert(e.key().compare("0") == 0);
-        assert(e.get_int32().value == 1);
+        ASSERT(e.key().compare("0") == 0);
+        ASSERT(e.get_int32().value == 1);
     }
 
     ++iter;
 
-    assert(iter->key().compare("1") == 0);
-    assert(iter->get_int32().value == 2);
+    ASSERT(iter->key().compare("1") == 0);
+    ASSERT(iter->get_int32().value == 2);
 
     {
         auto iter_copy = iter++;
 
-        assert(iter_copy != iter);
-        assert(iter_copy->key().compare("1") == 0);
-        assert(iter_copy->get_int32() == 2);
+        ASSERT(iter_copy != iter);
+        ASSERT(iter_copy->key().compare("1") == 0);
+        ASSERT(iter_copy->get_int32() == 2);
     }
 
-    assert(iter == arr.end());
+    ASSERT(iter == arr.end());
 }
 // [Example]
 

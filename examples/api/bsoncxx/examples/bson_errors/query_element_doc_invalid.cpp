@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <cassert>
 #include <cstdint>
 
 #include <bsoncxx/document/element.hpp>
@@ -39,22 +38,22 @@ void example() {
 
     bsoncxx::document::element e = doc["x"];
 
-    assert(!e);  // An invalid BSON document returns an invalid element.
+    ASSERT(!e);  // An invalid BSON document returns an invalid element.
 
     try {
         bsoncxx::stdx::string_view key = e.key();  // Throws.
 
-        assert(false && "should not reach this point");
+        ASSERT(false && "should not reach this point");
     } catch (const bsoncxx::exception& ex) {
-        assert(ex.code() == bsoncxx::error_code::k_unset_element);
+        ASSERT(ex.code() == bsoncxx::error_code::k_unset_element);
     }
 
     try {
         bsoncxx::type type = e.type();  // Throws.
 
-        assert(false && "should not reach this point");
+        ASSERT(false && "should not reach this point");
     } catch (const bsoncxx::exception& ex) {
-        assert(ex.code() == bsoncxx::error_code::k_unset_element);
+        ASSERT(ex.code() == bsoncxx::error_code::k_unset_element);
     }
 }
 // [Example]

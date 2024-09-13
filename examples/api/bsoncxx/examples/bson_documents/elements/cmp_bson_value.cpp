@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <cassert>
-
 #include <bsoncxx/document/element.hpp>
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/types.hpp>
@@ -31,18 +29,18 @@ void example(bsoncxx::document::element e) {
     bsoncxx::types::b_int64 b{2};
 
     if (e.get_value() == a) {
-        assert(e.key().compare("a") == 0);
+        ASSERT(e.key().compare("a") == 0);
     } else if (e.get_value() == b) {
-        assert(e.key().compare("b") == 0);
+        ASSERT(e.key().compare("b") == 0);
     }
 
     bsoncxx::types::bson_value::view va{a};
     bsoncxx::types::bson_value::view vb{b};
 
     if (e == va) {
-        assert(e.key().compare("a") == 0);
+        ASSERT(e.key().compare("a") == 0);
     } else if (e == vb) {
-        assert(e.key().compare("b") == 0);
+        ASSERT(e.key().compare("b") == 0);
     }
 }
 // [Example]

@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <cassert>
-
 #include <bsoncxx/array/element.hpp>
 #include <bsoncxx/array/view.hpp>
 #include <bsoncxx/json.hpp>
@@ -30,16 +28,16 @@ void example(bsoncxx::array::view arr) {
     for (bsoncxx::array::element e : arr) {
         switch (e.type()) {
             case bsoncxx::type::k_int32:
-                assert(e.key().compare("0") == 0);
-                assert(e.get_int32().value == 1);
+                ASSERT(e.key().compare("0") == 0);
+                ASSERT(e.get_int32().value == 1);
                 break;
             case bsoncxx::type::k_double:
-                assert(e.key().compare("1") == 0);
-                assert(e.get_double().value == 2.0);
+                ASSERT(e.key().compare("1") == 0);
+                ASSERT(e.get_double().value == 2.0);
                 break;
             case bsoncxx::type::k_string:
-                assert(e.key().compare("2") == 0);
-                assert(e.get_string().value.compare("three") == 0);
+                ASSERT(e.key().compare("2") == 0);
+                ASSERT(e.get_string().value.compare("three") == 0);
                 break;
         }
     }
