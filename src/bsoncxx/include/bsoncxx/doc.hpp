@@ -95,6 +95,7 @@
 /// @li @subpage topic-bsoncxx-examples-bson-documents
 /// @li @subpage topic-bsoncxx-examples-bson-errors
 /// @li @subpage topic-bsoncxx-examples-decimal128
+/// @li @subpage topic-bsoncxx-examples-oid
 ///
 
 ///
@@ -122,6 +123,13 @@
 /// @brief How to use Decimal128 interfaces.
 /// @tableofcontents
 /// @include{doc} api/bsoncxx/examples/decimal128.md
+///
+
+///
+/// @page topic-bsoncxx-examples-oid ObjectID
+/// @brief How to use ObjectID (OID) interfaces.
+/// @tableofcontents
+/// @include{doc} api/bsoncxx/examples/oid.md
 ///
 
 ///
