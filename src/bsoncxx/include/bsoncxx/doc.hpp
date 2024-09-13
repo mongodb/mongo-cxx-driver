@@ -94,6 +94,7 @@
 /// @brief Examples of how to use the bsoncxx library.
 /// @li @subpage topic-bsoncxx-examples-bson-documents
 /// @li @subpage topic-bsoncxx-examples-bson-errors
+/// @li @subpage topic-bsoncxx-examples-decimal128
 ///
 
 ///
@@ -114,6 +115,13 @@
 /// @brief How to handle BSON document failures, errors, and exceptions.
 /// @tableofcontents
 /// @include{doc} api/bsoncxx/examples/bson_errors.md
+///
+
+///
+/// @page topic-bsoncxx-examples-decimal128 Decimal128
+/// @brief How to use Decimal128 interfaces.
+/// @tableofcontents
+/// @include{doc} api/bsoncxx/examples/decimal128.md
 ///
 
 ///
