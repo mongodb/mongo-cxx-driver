@@ -34,20 +34,20 @@ void example(bsoncxx::document::view doc) {
     {
         bsoncxx::document::element e = *iter;
 
-        assert(e.key() == "a");
+        assert(e.key().compare("a") == 0);
         assert(e.get_int32().value == 1);
     }
 
     ++iter;
 
-    assert(iter->key() == "b");
+    assert(iter->key().compare("b") == 0);
     assert(iter->get_int32().value == 2);
 
     {
         auto iter_copy = iter++;
 
         assert(iter_copy != iter);
-        assert(iter_copy->key() == "b");
+        assert(iter_copy->key().compare("b") == 0);
         assert(iter_copy->get_int32() == 2);
     }
 

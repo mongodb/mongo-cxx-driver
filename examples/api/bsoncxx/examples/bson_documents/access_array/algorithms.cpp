@@ -34,12 +34,12 @@ void example(bsoncxx::array::view arr) {
 
     std::copy_if(
         arr.begin(), arr.end(), std::back_inserter(elements), [](const bsoncxx::array::element& e) {
-            return e.key() == "0" || e.type() == bsoncxx::type::k_string;
+            return e.key().compare("0") == 0 || e.type() == bsoncxx::type::k_string;
         });
 
     assert(elements.size() == 2u);
-    assert(elements[0].key() == "0");
-    assert(elements[1].key() == "2");
+    assert(elements[0].key().compare("0") == 0);
+    assert(elements[1].key().compare("2") == 0);
 }
 // [Example]
 

@@ -35,7 +35,7 @@ void example(const std::uint8_t* bytes, std::size_t length) {
         bsoncxx::validator options;
         std::size_t offset;
 
-        assert(bsoncxx::validate(bytes, length, options, &offset).has_value());
+        assert(bsoncxx::validate(bytes, length, options, &offset));
     }
 
     // Validate UTF-8 strings.
@@ -45,14 +45,14 @@ void example(const std::uint8_t* bytes, std::size_t length) {
 
         options.check_utf8(true);
 
-        assert(!bsoncxx::validate(bytes, length, options, &offset).has_value());
+        assert(!bsoncxx::validate(bytes, length, options, &offset));
 
         // Offset of `"x": "\0"` relative to start of the document.
         assert(offset == 4u);
 
         options.check_utf8_allow_null(true);
 
-        assert(bsoncxx::validate(bytes, length, options, &offset).has_value());
+        assert(bsoncxx::validate(bytes, length, options, &offset));
     }
 
     // Validate dot keys.
@@ -62,7 +62,7 @@ void example(const std::uint8_t* bytes, std::size_t length) {
 
         options.check_dot_keys(true);
 
-        assert(!bsoncxx::validate(bytes, length, options, &offset).has_value());
+        assert(!bsoncxx::validate(bytes, length, options, &offset));
 
         // Offset of `"a.b": 1` relative to start of the document.
         assert(offset == 15u);
@@ -75,7 +75,7 @@ void example(const std::uint8_t* bytes, std::size_t length) {
 
         options.check_dollar_keys(true);
 
-        assert(!bsoncxx::validate(bytes, length, options, &offset).has_value());
+        assert(!bsoncxx::validate(bytes, length, options, &offset));
 
         // Offset of `"a.b": 1` relative to start of the sub-document. (CDRIVER-5710)
         assert(offset == 4u);

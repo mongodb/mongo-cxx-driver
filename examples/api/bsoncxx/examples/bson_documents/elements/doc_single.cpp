@@ -26,14 +26,14 @@ namespace {
 // {"a": 1, "b": 2.0, "c": "three"}
 void example(bsoncxx::document::element e) {
     if (e.type() == bsoncxx::type::k_int32) {
-        assert(e.key() == "a");
+        assert(e.key().compare("a") == 0);
 
         bsoncxx::types::b_int32 v = e.get_int32();
 
         assert(v.type_id == bsoncxx::type::k_int32);
         assert(v.value == 1);
     } else {
-        assert(e.key() != "a");
+        assert(e.key().compare("a") != 0);
     }
 }
 // [Example]

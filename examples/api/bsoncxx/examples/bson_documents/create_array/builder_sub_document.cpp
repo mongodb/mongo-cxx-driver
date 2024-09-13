@@ -31,7 +31,7 @@ void example() {
         [](bsoncxx::builder::basic::sub_document doc) { doc.append(kvp("key", "value")); });
     bsoncxx::document::view v = owner.view()[0].get_document().value;
 
-    assert(v["key"].get_string().value == "value");
+    assert(v["key"].get_string().value.compare("value") == 0);
 }
 // [Example]
 

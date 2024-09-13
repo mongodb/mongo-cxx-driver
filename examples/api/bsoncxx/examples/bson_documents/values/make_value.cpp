@@ -50,7 +50,7 @@ void example() {
         view_type v = owner.view();
 
         assert(v.type() == bsoncxx::type::k_string);
-        assert(v.get_string().value == "three");
+        assert(v.get_string().value.compare("three") == 0);
     }
 }
 // [Example]

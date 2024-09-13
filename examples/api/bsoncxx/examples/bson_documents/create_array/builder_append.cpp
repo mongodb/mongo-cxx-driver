@@ -35,7 +35,7 @@ void example() {
 
     assert(arr[0].get_int32().value == 1);
     assert(arr[1].get_double().value == 2.0);
-    assert(arr[2].get_string().value == "three");
+    assert(arr[2].get_string().value.compare("three") == 0);
 }
 // [Example]
 

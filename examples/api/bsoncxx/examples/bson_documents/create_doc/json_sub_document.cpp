@@ -32,7 +32,7 @@ void example() {
     )");
     bsoncxx::document::view v = doc["v"].get_document().value;
 
-    assert(v["key"].get_string().value == "value");
+    assert(v["key"].get_string().value.compare("value") == 0);
 }
 // [Example]
 

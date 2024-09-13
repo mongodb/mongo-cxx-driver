@@ -29,16 +29,16 @@ void example(bsoncxx::array::view arr) {
     for (bsoncxx::array::element e : arr) {
         switch (e.type()) {
             case bsoncxx::type::k_int32:
-                assert(e.key() == "0");
+                assert(e.key().compare("0") == 0);
                 assert(e.get_int32().value == 1);
                 break;
             case bsoncxx::type::k_double:
-                assert(e.key() == "1");
+                assert(e.key().compare("1") == 0);
                 assert(e.get_double().value == 2.0);
                 break;
             case bsoncxx::type::k_string:
-                assert(e.key() == "2");
-                assert(e.get_string().value == "three");
+                assert(e.key().compare("2") == 0);
+                assert(e.get_string().value.compare("three") == 0);
                 break;
         }
     }

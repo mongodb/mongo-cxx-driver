@@ -29,16 +29,16 @@ void example(bsoncxx::document::view doc) {
     for (bsoncxx::document::element e : doc) {
         switch (e.type()) {
             case bsoncxx::type::k_int32:
-                assert(e.key() == "a");
+                assert(e.key().compare("a") == 0);
                 assert(e.get_int32().value == 1);
                 break;
             case bsoncxx::type::k_double:
-                assert(e.key() == "b");
+                assert(e.key().compare("b") == 0);
                 assert(e.get_double().value == 2.0);
                 break;
             case bsoncxx::type::k_string:
-                assert(e.key() == "c");
-                assert(e.get_string().value == "three");
+                assert(e.key().compare("c") == 0);
+                assert(e.get_string().value.compare("three") == 0);
                 break;
         }
     }

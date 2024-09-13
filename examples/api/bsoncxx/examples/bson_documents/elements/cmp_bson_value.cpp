@@ -30,18 +30,18 @@ void example(bsoncxx::document::element e) {
     bsoncxx::types::b_int64 b{2};
 
     if (e.get_value() == a) {
-        assert(e.key() == "a");
+        assert(e.key().compare("a") == 0);
     } else if (e.get_value() == b) {
-        assert(e.key() == "b");
+        assert(e.key().compare("b") == 0);
     }
 
     bsoncxx::types::bson_value::view va{a};
     bsoncxx::types::bson_value::view vb{b};
 
     if (e == va) {
-        assert(e.key() == "a");
+        assert(e.key().compare("a") == 0);
     } else if (e == vb) {
-        assert(e.key() == "b");
+        assert(e.key().compare("b") == 0);
     }
 }
 // [Example]

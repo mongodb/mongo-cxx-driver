@@ -30,10 +30,10 @@ void example(bsoncxx::document::element e) {
     std::int64_t b{2};
 
     if (e.type() == bsoncxx::type::k_int32) {
-        assert(e.key() == "a");
+        assert(e.key().compare("a") == 0);
         assert(e.get_int32().value == a);
     } else if (e.type() == bsoncxx::type::k_int64) {
-        assert(e.key() == "b");
+        assert(e.key().compare("b") == 0);
         assert(e.get_int64().value == b);
     }
 }

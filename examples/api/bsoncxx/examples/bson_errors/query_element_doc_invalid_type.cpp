@@ -27,7 +27,7 @@ namespace {
 // [Example]
 // {"x": 1}
 void example(bsoncxx::document::element e) {
-    assert(e.key() == "x");
+    assert(e.key().compare("x") == 0);
     assert(e.type() == bsoncxx::type::k_int32);
     assert(e.get_int32().value == 1);
 

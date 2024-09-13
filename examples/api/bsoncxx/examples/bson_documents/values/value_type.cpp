@@ -42,7 +42,7 @@ void example() {
     v = std::string("three");
 
     assert(v.view().type() == bsoncxx::type::k_string);
-    assert(v.view().get_string().value == "three");
+    assert(v.view().get_string().value.compare("three") == 0);
 }
 // [Example]
 

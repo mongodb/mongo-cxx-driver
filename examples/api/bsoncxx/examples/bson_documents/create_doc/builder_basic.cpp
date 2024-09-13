@@ -36,7 +36,7 @@ void example() {
 
     assert(doc["a"].get_int32().value == 1);
     assert(doc["b"].get_double().value == 2.0);
-    assert(doc["c"].get_string().value == "three");
+    assert(doc["c"].get_string().value.compare("three") == 0);
 }
 // [Example]
 

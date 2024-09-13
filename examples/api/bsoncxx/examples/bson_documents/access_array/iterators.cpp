@@ -34,20 +34,20 @@ void example(bsoncxx::array::view arr) {
     {
         bsoncxx::array::element e = *iter;
 
-        assert(e.key() == "0");
+        assert(e.key().compare("0") == 0);
         assert(e.get_int32().value == 1);
     }
 
     ++iter;
 
-    assert(iter->key() == "1");
+    assert(iter->key().compare("1") == 0);
     assert(iter->get_int32().value == 2);
 
     {
         auto iter_copy = iter++;
 
         assert(iter_copy != iter);
-        assert(iter_copy->key() == "1");
+        assert(iter_copy->key().compare("1") == 0);
         assert(iter_copy->get_int32() == 2);
     }
 

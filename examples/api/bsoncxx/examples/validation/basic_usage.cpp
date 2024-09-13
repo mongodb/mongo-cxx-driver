@@ -30,11 +30,11 @@ void example() {
     {
         std::uint8_t bytes[1]{};  // Invalid.
 
-        assert(!bsoncxx::validate(bytes, sizeof(bytes)).has_value());
+        assert(!bsoncxx::validate(bytes, sizeof(bytes)));
 
         std::size_t offset;
 
-        assert(!bsoncxx::validate(bytes, sizeof(bytes), bsoncxx::validator{}, &offset).has_value());
+        assert(!bsoncxx::validate(bytes, sizeof(bytes), bsoncxx::validator{}, &offset));
 
         // Set to `0` for an invalid BSON document.
         assert(offset == 0u);
@@ -46,7 +46,7 @@ void example() {
 
     {
         auto doc_opt = bsoncxx::validate(data, length);
-        assert(doc_opt.has_value());
+        assert(doc_opt);
 
         bsoncxx::document::view doc = *doc_opt;
 

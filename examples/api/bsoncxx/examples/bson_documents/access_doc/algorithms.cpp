@@ -37,12 +37,12 @@ void example(bsoncxx::document::view doc) {
                  doc.end(),
                  std::back_inserter(elements),
                  [](const bsoncxx::document::element& e) {
-                     return e.key() == "a" || e.type() == bsoncxx::type::k_string;
+                     return e.key().compare("a") == 0 || e.type() == bsoncxx::type::k_string;
                  });
 
     assert(elements.size() == 2u);
-    assert(elements[0].key() == "a");
-    assert(elements[1].key() == "c");
+    assert(elements[0].key().compare("a") == 0);
+    assert(elements[1].key().compare("c") == 0);
 }
 // [Example]
 

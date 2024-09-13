@@ -27,7 +27,7 @@ namespace {
 // [Example]
 // [1]
 void example(bsoncxx::array::element e) {
-    assert(e.key() == "0");
+    assert(e.key().compare("0") == 0);
     assert(e.type() == bsoncxx::type::k_int32);
     assert(e.get_int32().value == 1);
 

@@ -31,15 +31,15 @@ void example(bsoncxx::array::element e) {
 
     switch (v.type()) {
         case bsoncxx::type::k_int32:
-            assert(e.key() == "0");
+            assert(e.key().compare("0") == 0);
             assert(v.get_int32() == e.get_int32());
             break;
         case bsoncxx::type::k_double:
-            assert(e.key() == "1");
+            assert(e.key().compare("1") == 0);
             assert(v.get_double() == e.get_double());
             break;
         case bsoncxx::type::k_string:
-            assert(e.key() == "2");
+            assert(e.key().compare("2") == 0);
             assert(v.get_string() == e.get_string());
             break;
     }

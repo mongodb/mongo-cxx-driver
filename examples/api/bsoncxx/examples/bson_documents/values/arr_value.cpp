@@ -38,7 +38,7 @@ void example() {
     v = v.view().get_array().value[0].get_string();  // Copy: no dangling.
 
     assert(v.view().type() == bsoncxx::type::k_string);
-    assert(v.view().get_string().value == "value");
+    assert(v.view().get_string().value.compare("value") == 0);
 }
 // [Example]
 

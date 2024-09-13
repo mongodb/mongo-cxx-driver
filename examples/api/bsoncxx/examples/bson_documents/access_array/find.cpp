@@ -31,7 +31,7 @@ void example(bsoncxx::array::view arr) {
         auto iter = arr.find(1);
 
         assert(iter != arr.end());
-        assert(iter->key() == "1");
+        assert(iter->key().compare("1") == 0);
         assert(iter->get_int32().value == 2);
     }
 

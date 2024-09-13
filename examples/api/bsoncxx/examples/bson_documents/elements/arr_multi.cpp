@@ -27,7 +27,7 @@ namespace {
 void example(bsoncxx::array::element e) {
     switch (e.type()) {
         case bsoncxx::type::k_int32: {
-            assert(e.key() == "0");
+            assert(e.key().compare("0") == 0);
 
             bsoncxx::types::b_int32 v = e.get_int32();
 
@@ -37,7 +37,7 @@ void example(bsoncxx::array::element e) {
             break;
         }
         case bsoncxx::type::k_double: {
-            assert(e.key() == "1");
+            assert(e.key().compare("1") == 0);
 
             bsoncxx::types::b_double v = e.get_double();
 
@@ -47,12 +47,12 @@ void example(bsoncxx::array::element e) {
             break;
         }
         case bsoncxx::type::k_string: {
-            assert(e.key() == "2");
+            assert(e.key().compare("2") == 0);
 
             bsoncxx::types::b_string v = e.get_string();
 
             assert(v.type_id == bsoncxx::type::k_string);
-            assert(v.value == "three");
+            assert(v.value.compare("three") == 0);
 
             break;
         }

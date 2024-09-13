@@ -31,7 +31,7 @@ void example(bsoncxx::document::view doc) {
     {
         bsoncxx::document::element e = doc["b"];
 
-        assert(e.key() == "b");
+        assert(e.key().compare("b") == 0);
         assert(e.get_int32().value == 2);
     }
 

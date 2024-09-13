@@ -31,7 +31,7 @@ void example(bsoncxx::document::view doc) {
         auto iter = doc.find("b");
 
         assert(iter != doc.end());
-        assert(iter->key() == "b");
+        assert(iter->key().compare("b") == 0);
         assert(iter->get_int32().value == 2);
     }
 
