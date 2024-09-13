@@ -96,14 +96,21 @@
 ///
 
 ///
-/// @page topic-mongocxx-examples Using the mongocxx Library
-/// @brief Examples of how to use the bsoncxx library.
-///
-
-///
 /// @page topic-bsoncxx-examples-bson-documents BSON Documents
 /// @brief How to create and use BSON documents.
 /// @tableofcontents
+/// @include{doc} api/bsoncxx/examples/bson_documents/create_doc.md
+/// @include{doc} api/bsoncxx/examples/bson_documents/create_array.md
+/// @include{doc} api/bsoncxx/examples/bson_documents/access_doc.md
+/// @include{doc} api/bsoncxx/examples/bson_documents/access_array.md
+/// @include{doc} api/bsoncxx/examples/bson_documents/elements.md
+/// @include{doc} api/bsoncxx/examples/bson_documents/values.md
+/// @include{doc} api/bsoncxx/examples/bson_documents/json.md
+///
+
+///
+/// @page topic-mongocxx-examples Using the mongocxx Library
+/// @brief Examples of how to use the bsoncxx library.
 ///
 
 ///
