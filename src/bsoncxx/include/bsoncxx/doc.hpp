@@ -96,6 +96,7 @@
 /// @li @subpage topic-bsoncxx-examples-bson-errors
 /// @li @subpage topic-bsoncxx-examples-decimal128
 /// @li @subpage topic-bsoncxx-examples-oid
+/// @li @subpage topic-bsoncxx-examples-validation
 ///
 
 ///
@@ -130,6 +131,13 @@
 /// @brief How to use ObjectID (OID) interfaces.
 /// @tableofcontents
 /// @include{doc} api/bsoncxx/examples/oid.md
+///
+
+///
+/// @page topic-bsoncxx-examples-validation Validation
+/// @brief How to use BSON document validation interfaces.
+/// @tableofcontents
+/// @include{doc} api/bsoncxx/examples/validation.md
 ///
 
 ///
