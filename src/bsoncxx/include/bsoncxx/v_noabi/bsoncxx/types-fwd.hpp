@@ -67,27 +67,27 @@ using ::bsoncxx::v_noabi::type;
 namespace bsoncxx {
 namespace types {
 
-using ::bsoncxx::v_noabi::types::b_double;
-using ::bsoncxx::v_noabi::types::b_string;
-using ::bsoncxx::v_noabi::types::b_document;
 using ::bsoncxx::v_noabi::types::b_array;
 using ::bsoncxx::v_noabi::types::b_binary;
-using ::bsoncxx::v_noabi::types::b_undefined;
-using ::bsoncxx::v_noabi::types::b_oid;
 using ::bsoncxx::v_noabi::types::b_bool;
-using ::bsoncxx::v_noabi::types::b_date;
-using ::bsoncxx::v_noabi::types::b_null;
-using ::bsoncxx::v_noabi::types::b_regex;
-using ::bsoncxx::v_noabi::types::b_dbpointer;
 using ::bsoncxx::v_noabi::types::b_code;
-using ::bsoncxx::v_noabi::types::b_symbol;
 using ::bsoncxx::v_noabi::types::b_codewscope;
-using ::bsoncxx::v_noabi::types::b_int32;
-using ::bsoncxx::v_noabi::types::b_timestamp;
-using ::bsoncxx::v_noabi::types::b_int64;
+using ::bsoncxx::v_noabi::types::b_date;
+using ::bsoncxx::v_noabi::types::b_dbpointer;
 using ::bsoncxx::v_noabi::types::b_decimal128;
+using ::bsoncxx::v_noabi::types::b_document;
+using ::bsoncxx::v_noabi::types::b_double;
+using ::bsoncxx::v_noabi::types::b_int32;
+using ::bsoncxx::v_noabi::types::b_int64;
 using ::bsoncxx::v_noabi::types::b_maxkey;
 using ::bsoncxx::v_noabi::types::b_minkey;
+using ::bsoncxx::v_noabi::types::b_null;
+using ::bsoncxx::v_noabi::types::b_oid;
+using ::bsoncxx::v_noabi::types::b_regex;
+using ::bsoncxx::v_noabi::types::b_string;
+using ::bsoncxx::v_noabi::types::b_symbol;
+using ::bsoncxx::v_noabi::types::b_timestamp;
+using ::bsoncxx::v_noabi::types::b_undefined;
 
 }  // namespace types
 }  // namespace bsoncxx
