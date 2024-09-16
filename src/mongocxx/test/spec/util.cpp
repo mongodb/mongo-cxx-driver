@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include "mongocxx/test/client_helpers.hh"
+
 #include <fstream>
 #include <set>
 #include <string>
@@ -906,8 +908,8 @@ void run_transactions_tests_in_file(const std::string& test_path) {
                 apm_checker apm_checker;
                 client_opts.apm_opts(
                     apm_checker.get_apm_opts(true /* command_started_events_only */));
-                client_opts = test_util::add_test_server_api(client_opts);
-                client client = {get_uri(test.get_document().value), client_opts};
+                client client = {get_uri(test.get_document().value),
+                                 test_util::add_test_server_api(client_opts)};
 
                 options::client_session session0_opts;
                 options::client_session session1_opts;
