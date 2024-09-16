@@ -42,22 +42,37 @@ namespace bson_value {
 /// For accessors into this type and to extract the various BSON types out,
 /// please use bson_value::view.
 ///
-/// @see bsoncxx::v_noabi::bson_value::view
+/// @see @ref bsoncxx::v_noabi::types::bson_value::view
 ///
 class value {
    public:
-///
-/// Constructor for each BSON type.
-///
-/// These x-macros will expand to:
-///    value(b_double v);
-///    value(b_string v);
-///    value(b_document v);
-///    value(b_array v); ...
-///
-#define BSONCXX_ENUM(name, val) BSONCXX_ABI_EXPORT_CDECL() value(b_##name v);
-#include <bsoncxx/enums/type.hpp>
-#undef BSONCXX_ENUM
+    ///
+    /// Construct a bson_value::value from the provided BSON type.
+    ///
+    /// @{
+    BSONCXX_ABI_EXPORT_CDECL() value(b_double v);
+    BSONCXX_ABI_EXPORT_CDECL() value(b_string v);
+    BSONCXX_ABI_EXPORT_CDECL() value(b_document v);
+    BSONCXX_ABI_EXPORT_CDECL() value(b_array v);
+    BSONCXX_ABI_EXPORT_CDECL() value(b_binary v);
+    BSONCXX_ABI_EXPORT_CDECL() value(b_undefined v);
+    BSONCXX_ABI_EXPORT_CDECL() value(b_oid v);
+    BSONCXX_ABI_EXPORT_CDECL() value(b_bool v);
+    BSONCXX_ABI_EXPORT_CDECL() value(b_date v);
+    BSONCXX_ABI_EXPORT_CDECL() value(b_null);
+    BSONCXX_ABI_EXPORT_CDECL() value(b_regex v);
+    BSONCXX_ABI_EXPORT_CDECL() value(b_dbpointer v);
+    BSONCXX_ABI_EXPORT_CDECL() value(b_code v);
+    BSONCXX_ABI_EXPORT_CDECL() value(b_symbol v);
+    BSONCXX_ABI_EXPORT_CDECL() value(b_codewscope v);
+    BSONCXX_ABI_EXPORT_CDECL() value(b_int32 v);
+    BSONCXX_ABI_EXPORT_CDECL() value(b_timestamp v);
+    BSONCXX_ABI_EXPORT_CDECL() value(b_int64 v);
+    BSONCXX_ABI_EXPORT_CDECL() value(b_decimal128 v);
+    BSONCXX_ABI_EXPORT_CDECL() value(b_maxkey v);
+    BSONCXX_ABI_EXPORT_CDECL() value(b_minkey v);
+    /// @}
+    ///
 
     ///
     /// Constructs a BSON UTF-8 string value.
