@@ -43,11 +43,30 @@ enum class error_code : std::int32_t {
     /// A document operation was performed while building an array.
     k_cannot_perform_document_operation_on_array,
 
-// @cond DOXYGEN_DISABLE
-#define BSONCXX_ENUM(name, value) k_need_element_type_k_##name,
-#include <bsoncxx/enums/type.hpp>
-#undef BSONCXX_ENUM
-    // @endcond DOXYGEN_DISABLE
+    /// The underlying value does not have the requested type.
+    /// @{
+    k_need_element_type_k_double,
+    k_need_element_type_k_string,
+    k_need_element_type_k_document,
+    k_need_element_type_k_array,
+    k_need_element_type_k_binary,
+    k_need_element_type_k_undefined,
+    k_need_element_type_k_oid,
+    k_need_element_type_k_bool,
+    k_need_element_type_k_date,
+    k_need_element_type_k_null,
+    k_need_element_type_k_regex,
+    k_need_element_type_k_dbpointer,
+    k_need_element_type_k_code,
+    k_need_element_type_k_symbol,
+    k_need_element_type_k_codewscope,
+    k_need_element_type_k_int32,
+    k_need_element_type_k_timestamp,
+    k_need_element_type_k_int64,
+    k_need_element_type_k_decimal128,
+    k_need_element_type_k_maxkey,
+    k_need_element_type_k_minkey,
+    /// @}
 
     /// No key was provided when one was needed.
     k_need_key,
@@ -97,13 +116,32 @@ enum class error_code : std::int32_t {
     /// Invalid type.
     k_invalid_bson_type_id,
 
-// @cond DOXYGEN_DISABLE
-#define BSONCXX_ENUM(name, value) k_cannot_append_##name,
-#include <bsoncxx/enums/type.hpp>
-#undef BSONCXX_ENUM
-    // @endcond DOXYGEN_DISABLE
+    /// Failed to append a value of the given type.
+    /// @{
+    k_cannot_append_double,
+    k_cannot_append_string,
+    k_cannot_append_document,
+    k_cannot_append_array,
+    k_cannot_append_binary,
+    k_cannot_append_undefined,
+    k_cannot_append_oid,
+    k_cannot_append_bool,
+    k_cannot_append_date,
+    k_cannot_append_null,
+    k_cannot_append_regex,
+    k_cannot_append_dbpointer,
+    k_cannot_append_code,
+    k_cannot_append_symbol,
+    k_cannot_append_codewscope,
+    k_cannot_append_int32,
+    k_cannot_append_timestamp,
+    k_cannot_append_int64,
+    k_cannot_append_decimal128,
+    k_cannot_append_maxkey,
+    k_cannot_append_minkey,
+    /// @}
 
-    /// A value failed to append.
+    /// Failed to append a value of the given type.
     k_cannot_append_utf8 = k_cannot_append_string,
 
     /// @deprecated Use `k_need_element_type_k_string` instead.
