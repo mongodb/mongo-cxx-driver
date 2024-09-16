@@ -18,6 +18,7 @@
 
 void runner_register_fn(void (*fn)());
 
+// Defined by examples/CMakeLists.txt.
 #if !defined(EXAMPLES_COMPONENT_NAME)
 #error "EXAMPLES_COMPONENT_NAME is not defined!"
 #endif  // !defined(EXAMPLES_COMPONENT_NAME)
