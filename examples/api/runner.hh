@@ -22,9 +22,8 @@ void runner_register_fn(void (*fn)());
 #error "EXAMPLES_COMPONENT_NAME is not defined!"
 #endif  // !defined(EXAMPLES_COMPONENT_NAME)
 
-#define RUNNER_REGISTER_COMPONENT()                                                               \
-    static void EXAMPLES_CONCAT(EXAMPLES_COMPONENT_NAME, _entry_point)(void);                     \
-    static int EXAMPLES_CONCAT(EXAMPLES_COMPONENT_NAME, _registerator) =                          \
-        ([] { ::runner_register_fn(&EXAMPLES_CONCAT(EXAMPLES_COMPONENT_NAME, _entry_point)); }(), \
-         0);                                                                                      \
+#define RUNNER_REGISTER_COMPONENT()                                                         \
+    static void EXAMPLES_CONCAT(EXAMPLES_COMPONENT_NAME, _entry_point)(void);               \
+    static int EXAMPLES_CONCAT(EXAMPLES_COMPONENT_NAME, _registerator) =                    \
+        (::runner_register_fn(&EXAMPLES_CONCAT(EXAMPLES_COMPONENT_NAME, _entry_point)), 0); \
     static void EXAMPLES_CONCAT(EXAMPLES_COMPONENT_NAME, _entry_point)(void)
