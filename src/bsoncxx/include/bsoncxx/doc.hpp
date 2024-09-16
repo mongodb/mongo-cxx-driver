@@ -90,7 +90,14 @@
 ///
 
 ///
-/// @page topic-bsoncxx-examples Using the bsoncxx Library
+/// @page topic-bsoncxx The bsoncxx Library
+/// @brief Topics relating to the bsoncxx library.
+/// @li @subpage topic-bsoncxx-examples
+/// @li @subpage topic-bsoncxx-about
+///
+
+///
+/// @page topic-bsoncxx-examples How-To Guides
 /// @brief Examples of how to use the bsoncxx library.
 /// @li @subpage topic-bsoncxx-examples-bson-documents
 /// @li @subpage topic-bsoncxx-examples-bson-errors
@@ -141,16 +148,6 @@
 ///
 
 ///
-/// @page topic-mongocxx-examples Using the mongocxx Library
-/// @brief Examples of how to use the bsoncxx library.
-///
-
-///
-/// @page topic-bsoncxx-about About the bsoncxx Library
+/// @page topic-bsoncxx-about Explanation
 /// @brief Design decisions, history, and other technical details about the bsoncxx library.
-///
-
-///
-/// @page topic-mongocxx-about About the mongocxx Library
-/// @brief Design decisions, history, and other technical details about the mongocxx library.
 ///
