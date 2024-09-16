@@ -101,10 +101,6 @@ function(add_examples_executable source)
 
     if (PARSED_ADD_TO_RUN_EXAMPLES)
         add_dependencies(run-${type}-examples run-examples-${target_name})
-
-        if (${subdir} MATCHES "^api/")
-            add_dependencies(run-${type}-examples run-examples-${target_name})
-        endif ()
     endif ()
 endfunction()
 
