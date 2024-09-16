@@ -116,7 +116,7 @@ int EXAMPLES_CDECL main(int argc, char** argv) {
         runner.set_seed(static_cast<std::minstd_rand::result_type>(std::random_device()()));
     }
 
-    // Permit using a custom seed for reproducibility.
+    // Permit using a custom job count.
     if (argc > 2) {
         char* const jobs_str = argv[2];
 
