@@ -554,6 +554,8 @@ Example (using Jira syntax formatting):
 
 Set `$LATEST_DOC_TAG` in `etc/generate-latest-apidocs.pl` to the latest release tag.
 
+Change the version number for `SITEMAP_URL` in `Doxyfile` to the latest release version.
+
 Commit these changes to the `post-release-changes` branch:
 
 ```bash
