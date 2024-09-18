@@ -20,6 +20,7 @@
 #include <mongocxx/options/index_view-fwd.hpp>
 
 #include <bsoncxx/stdx/optional.hpp>
+
 #include <mongocxx/write_concern.hpp>
 
 #include <mongocxx/config/prelude.hpp>

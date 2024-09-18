@@ -30,6 +30,7 @@
 #include <bsoncxx/oid.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/string/view_or_value.hpp>
+
 #include <mongocxx/bulk_write.hpp>
 #include <mongocxx/change_stream.hpp>
 #include <mongocxx/client_session.hpp>

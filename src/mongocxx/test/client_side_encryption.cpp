@@ -27,6 +27,7 @@
 #include <bsoncxx/types/bson_value/make_value.hpp>
 #include <bsoncxx/types/bson_value/value.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
+
 #include <mongocxx/client.hpp>
 #include <mongocxx/client_encryption.hpp>
 #include <mongocxx/exception/error_code.hpp>
@@ -42,6 +43,7 @@
 #include <mongocxx/config/prelude.hpp>
 
 #include <bsoncxx/test/catch.hh>
+
 #include <mongocxx/test/catch_helpers.hh>
 #include <mongocxx/test/client_helpers.hh>
 #include <mongocxx/test/spec/monitoring.hh>

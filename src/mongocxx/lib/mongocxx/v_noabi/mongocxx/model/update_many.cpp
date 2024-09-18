@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include <bsoncxx/array/view_or_value.hpp>
+
 #include <mongocxx/model/update_many.hpp>
 
 #include <mongocxx/config/private/prelude.hh>

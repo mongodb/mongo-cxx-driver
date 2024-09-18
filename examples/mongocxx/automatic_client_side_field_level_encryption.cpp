@@ -24,6 +24,7 @@
 #include <bsoncxx/builder/stream/helpers.hpp>
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/types/bson_value/make_value.hpp>
+
 #include <mongocxx/client.hpp>
 #include <mongocxx/client_encryption.hpp>
 #include <mongocxx/instance.hpp>

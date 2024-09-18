@@ -14,6 +14,7 @@
 
 #include <bsoncxx/builder/basic/array.hpp>
 #include <bsoncxx/builder/basic/document.hpp>
+
 #include <mongocxx/client.hpp>
 #include <mongocxx/instance.hpp>
 

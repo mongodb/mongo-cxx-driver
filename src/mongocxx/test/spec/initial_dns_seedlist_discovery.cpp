@@ -23,6 +23,7 @@
 #include <mongocxx/pool.hpp>
 
 #include <bsoncxx/test/catch.hh>
+
 #include <mongocxx/test/spec/monitoring.hh>
 
 namespace {

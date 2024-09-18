@@ -25,9 +25,11 @@
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/string/view_or_value.hpp>
+
 #include <mongocxx/stdx.hpp>
 
 #include <bsoncxx/config/prelude.hpp>
+
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
@@ -545,6 +547,7 @@ class index {
 }  // namespace mongocxx
 
 #include <bsoncxx/config/postlude.hpp>
+
 #include <mongocxx/config/postlude.hpp>
 
 ///

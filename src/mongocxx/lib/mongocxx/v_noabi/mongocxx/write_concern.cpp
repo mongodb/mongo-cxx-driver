@@ -15,6 +15,7 @@
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/string/to_string.hpp>
+
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/exception.hpp>
 #include <mongocxx/exception/logic_error.hpp>

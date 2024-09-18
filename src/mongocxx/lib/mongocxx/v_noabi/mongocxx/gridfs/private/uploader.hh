@@ -19,6 +19,7 @@
 
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/string/to_string.hpp>
+
 #include <mongocxx/gridfs/uploader.hpp>
 
 #include <mongocxx/config/private/prelude.hh>

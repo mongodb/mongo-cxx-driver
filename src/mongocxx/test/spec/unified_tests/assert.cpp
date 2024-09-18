@@ -28,6 +28,7 @@
 
 #include <bsoncxx/test/catch.hh>
 #include <bsoncxx/test/to_string.hh>
+
 #include <mongocxx/test/client_helpers.hh>
 
 using namespace bsoncxx;

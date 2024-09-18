@@ -15,6 +15,7 @@
 #pragma once
 
 #include <bsoncxx/builder/basic/array.hpp>
+
 #include <mongocxx/pipeline.hpp>
 
 #include <mongocxx/config/private/prelude.hh>

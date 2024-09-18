@@ -15,6 +15,7 @@
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/stdx/make_unique.hpp>
+
 #include <mongocxx/bulk_write.hpp>
 #include <mongocxx/collection.hpp>
 #include <mongocxx/exception/bulk_write_exception.hpp>

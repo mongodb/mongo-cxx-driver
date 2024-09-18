@@ -23,6 +23,7 @@
 #include <bsoncxx/types/bson_value/value.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
 #include <bsoncxx/types/private/convert.hh>
+
 #include <mongocxx/client.hpp>
 #include <mongocxx/client_encryption.hpp>
 #include <mongocxx/exception/operation_exception.hpp>

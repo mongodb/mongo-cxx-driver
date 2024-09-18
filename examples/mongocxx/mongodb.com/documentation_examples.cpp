@@ -25,6 +25,7 @@
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/types.hpp>
+
 #include <mongocxx/client.hpp>
 #include <mongocxx/client_encryption.hpp>
 #include <mongocxx/exception/operation_exception.hpp>

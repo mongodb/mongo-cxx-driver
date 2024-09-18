@@ -15,6 +15,7 @@
 #include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/builder/basic/sub_document.hpp>
 #include <bsoncxx/builder/concatenate.hpp>
+
 #include <mongocxx/hint.hpp>
 
 #include <mongocxx/config/private/prelude.hh>

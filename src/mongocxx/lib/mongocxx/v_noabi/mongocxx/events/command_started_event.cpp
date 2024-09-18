@@ -14,6 +14,7 @@
 
 #include <bsoncxx/private/helpers.hh>
 #include <bsoncxx/stdx/make_unique.hpp>
+
 #include <mongocxx/events/command_started_event.hpp>
 #include <mongocxx/private/libmongoc.hh>
 

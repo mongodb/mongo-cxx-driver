@@ -19,6 +19,7 @@
 #include <mongocxx/logger-fwd.hpp>
 
 #include <bsoncxx/stdx/string_view.hpp>
+
 #include <mongocxx/stdx.hpp>
 
 #include <mongocxx/config/prelude.hpp>

@@ -18,10 +18,12 @@
 #include <bsoncxx/string/to_string.hpp>
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
+
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/create_collection.hpp>
 
 #include <bsoncxx/test/catch.hh>
+
 #include <mongocxx/test/catch_helpers.hh>
 
 namespace {

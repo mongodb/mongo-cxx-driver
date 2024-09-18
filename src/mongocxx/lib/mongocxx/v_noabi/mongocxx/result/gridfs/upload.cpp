@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include <bsoncxx/builder/basic/array.hpp>
+
 #include <mongocxx/result/gridfs/upload.hpp>
 
 #include <mongocxx/config/private/prelude.hh>

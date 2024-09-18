@@ -20,6 +20,7 @@
 #include <mongocxx/exception/exception-fwd.hpp>
 
 #include <bsoncxx/config/prelude.hpp>
+
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
@@ -50,6 +51,7 @@ BSONCXX_POP_WARNINGS();
 }  // namespace mongocxx
 
 #include <bsoncxx/config/postlude.hpp>
+
 #include <mongocxx/config/postlude.hpp>
 
 ///

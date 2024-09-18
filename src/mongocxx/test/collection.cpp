@@ -24,6 +24,7 @@
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/string/to_string.hpp>
 #include <bsoncxx/types.hpp>
+
 #include <mongocxx/client.hpp>
 #include <mongocxx/collection.hpp>
 #include <mongocxx/exception/bulk_write_exception.hpp>
@@ -40,6 +41,7 @@
 
 #include <bsoncxx/test/catch.hh>
 #include <bsoncxx/test/exception_guard.hh>
+
 #include <mongocxx/test/client_helpers.hh>
 
 namespace {

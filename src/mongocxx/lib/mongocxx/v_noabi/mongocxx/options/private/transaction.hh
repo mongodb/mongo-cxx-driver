@@ -18,6 +18,7 @@
 #include <memory>
 
 #include <bsoncxx/stdx/make_unique.hpp>
+
 #include <mongocxx/private/read_concern.hh>
 #include <mongocxx/private/read_preference.hh>
 #include <mongocxx/private/write_concern.hh>

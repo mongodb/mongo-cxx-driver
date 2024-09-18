@@ -24,6 +24,7 @@
 #include <mongocxx/write_concern-fwd.hpp>
 
 #include <bsoncxx/stdx/optional.hpp>
+
 #include <mongocxx/stdx.hpp>
 
 #include <mongocxx/config/prelude.hpp>

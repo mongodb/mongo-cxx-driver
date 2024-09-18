@@ -16,10 +16,12 @@
 
 #include <bsoncxx/builder/basic/array.hpp>
 #include <bsoncxx/builder/basic/document.hpp>
+
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/find_one_and_update.hpp>
 
 #include <bsoncxx/test/catch.hh>
+
 #include <mongocxx/test/catch_helpers.hh>
 
 namespace {

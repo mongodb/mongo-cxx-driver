@@ -27,6 +27,7 @@
 
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/stdx/optional.hpp>
+
 #include <mongocxx/options/client_session.hpp>
 
 #include <mongocxx/config/prelude.hpp>
