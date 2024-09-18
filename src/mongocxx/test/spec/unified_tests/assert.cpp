@@ -61,7 +61,9 @@ struct match_scope_doc_key {
  */
 struct match_scope_array_idx {
     match_scope_array_idx(int idx) {
-        S_match_doc_path.push_back(std::string("[") + std::to_string(idx) + std::string("]"));
+        S_match_doc_path.emplace_back("[");
+        S_match_doc_path.push_back(std::to_string(idx));
+        S_match_doc_path.emplace_back("]");
     }
 
     ~match_scope_array_idx() {
