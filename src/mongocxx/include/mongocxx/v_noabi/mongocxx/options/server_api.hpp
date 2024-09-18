@@ -34,8 +34,7 @@ namespace options {
 ///
 /// Class representing options for server API.
 ///
-/// @see @li [Stable API (MongoDB
-/// Manual)](https://www.mongodb.com/docs/manual/reference/stable-api/)
+/// @see @li [Stable API (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/stable-api/)
 ///
 class server_api {
    public:

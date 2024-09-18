@@ -52,8 +52,7 @@ namespace v_noabi {
 /// a single document. Note that writes must be made with majority write concern in order for reads
 /// to be linearizable.
 ///
-/// @see @li [Read Concern (MongoDB
-/// Manual)](https://www.mongodb.com/docs/manual/reference/read-concern/)
+/// @see @li [Read Concern (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/read-concern/)
 ///
 class read_concern {
    public:
@@ -61,10 +60,8 @@ class read_concern {
     /// A class to represent the read concern level for read operations.
     ///
     /// @see @parblock
-    /// @li [Read Concern Levels (MongoDB
-    /// Manual)](https://www.mongodb.com/docs/manual/reference/read-concern/#read-concern-levels)
-    /// @li [Default MongoDB Read Concerns/Write Concerns (MongoDB
-    /// Manual)](https://www.mongodb.com/docs/manual/reference/mongodb-defaults/#read-concern)
+    /// @li [Read Concern Levels (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/read-concern/#read-concern-levels)
+    /// @li [Default MongoDB Read Concerns/Write Concerns (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/mongodb-defaults/#read-concern)
     /// @endparblock
     ///
     enum class level {

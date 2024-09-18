@@ -55,8 +55,7 @@ namespace v_noabi {
 /// critical operations, clients can adjust the write concern to ensure better performance
 /// rather than persistence to the entire deployment.
 ///
-/// @see @li [Write Concern (MongoDB
-/// Manual)](https://www.mongodb.com/docs/manual/core/write-concern/)
+/// @see @li [Write Concern (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/write-concern/)
 ///
 class write_concern {
    public:
@@ -64,10 +63,8 @@ class write_concern {
     /// A class to represent the write concern level for write operations.
     ///
     /// @see @parblock
-    /// @li [Write Concern (MongoDB
-    /// Manual)](https://www.mongodb.com/docs/manual/reference/write-concern/)
-    /// @li [Default MongoDB Read Concerns/Write
-    /// Concerns](https://www.mongodb.com/docs/manual/reference/mongodb-defaults/#write-concern)
+    /// @li [Write Concern (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/write-concern/)
+    /// @li [Default MongoDB Read Concerns/Write Concerns](https://www.mongodb.com/docs/manual/reference/mongodb-defaults/#write-concern)
     /// @endparblock
     ///
     enum class level {

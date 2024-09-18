@@ -5,7 +5,7 @@ BasedOnStyle: Google
 BinPackArguments: false
 BinPackParameters: false
 ColumnLimit: 100
-CommentPragmas: '^\s*@(addtogroup|copydoc|defgroup|fn|ref)'
+CommentPragmas: '^\s*@(addtogroup|copydoc|defgroup|fn|li \[|ref|see @li \[)'
 Cpp11BracedListStyle: true
 DerivePointerAlignment: false
 IncludeBlocks: Regroup
