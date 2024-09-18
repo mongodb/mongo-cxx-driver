@@ -131,8 +131,10 @@
 /// @brief How to use Decimal128 interfaces.
 /// @tableofcontents
 /// @see @parblock
-/// @li [BSON Decimal128 Type Handling in Drivers (MongoDB Specifications)](https://specifications.readthedocs.io/en/latest/bson-decimal128/decimal128/)
-/// @li [Conversions (General Decimal Arithmetic Specification)](https://speleotrove.com/decimal/daconvs.html)
+/// @li [BSON Decimal128 Type Handling in Drivers (MongoDB
+/// Specifications)](https://specifications.readthedocs.io/en/latest/bson-decimal128/decimal128/)
+/// @li [Conversions (General Decimal Arithmetic
+/// Specification)](https://speleotrove.com/decimal/daconvs.html)
 /// @endparblock
 /// @include{doc} api/bsoncxx/examples/decimal128.md
 ///
