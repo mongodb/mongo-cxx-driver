@@ -18,6 +18,7 @@
 #include <mongocxx/options/client_session-fwd.hpp>
 
 #include <bsoncxx/stdx/optional.hpp>
+
 #include <mongocxx/options/transaction.hpp>
 #include <mongocxx/stdx.hpp>
 

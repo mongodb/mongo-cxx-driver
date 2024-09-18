@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include <bsoncxx/array/view_or_value.hpp>
+
 #include <mongocxx/options/find_one_and_update.hpp>
 
 #include <mongocxx/config/private/prelude.hh>

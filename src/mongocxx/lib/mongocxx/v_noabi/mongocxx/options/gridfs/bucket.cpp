@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include <bsoncxx/stdx/optional.hpp>
+
 #include <mongocxx/options/gridfs/bucket.hpp>
 #include <mongocxx/read_concern.hpp>
 #include <mongocxx/read_preference.hpp>

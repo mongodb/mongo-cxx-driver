@@ -19,6 +19,7 @@
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/private/libbson.hh>
 #include <bsoncxx/stdx/optional.hpp>
+
 #include <mongocxx/stdx.hpp>
 #include <mongocxx/test_util/export_for_testing.hh>
 

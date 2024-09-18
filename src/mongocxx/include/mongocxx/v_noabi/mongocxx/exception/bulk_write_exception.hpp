@@ -17,6 +17,7 @@
 #include <mongocxx/exception/bulk_write_exception-fwd.hpp>
 
 #include <bsoncxx/document/value.hpp>
+
 #include <mongocxx/exception/operation_exception.hpp>
 
 #include <mongocxx/config/prelude.hpp>

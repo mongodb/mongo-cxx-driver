@@ -14,6 +14,7 @@
 
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
+
 #include <mongocxx/instance.hpp>
 #include <mongocxx/result/insert_one.hpp>
 

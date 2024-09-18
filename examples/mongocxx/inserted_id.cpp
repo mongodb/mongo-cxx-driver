@@ -17,6 +17,7 @@
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/types.hpp>
+
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/exception.hpp>
 #include <mongocxx/instance.hpp>

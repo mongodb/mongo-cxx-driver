@@ -15,6 +15,7 @@
 #include <string>
 
 #include <bsoncxx/builder/basic/document.hpp>
+
 #include <mongocxx/validation_criteria.hpp>
 
 #include <mongocxx/config/private/prelude.hh>

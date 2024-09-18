@@ -21,6 +21,7 @@
 #include <mongocxx/instance.hpp>
 
 #include <bsoncxx/test/catch.hh>
+
 #include <mongocxx/test/client_helpers.hh>
 
 namespace {

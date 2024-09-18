@@ -25,6 +25,7 @@
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
+
 #include <mongocxx/cursor.hpp>
 #include <mongocxx/stdx.hpp>
 

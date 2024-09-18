@@ -17,6 +17,7 @@
 #include <ostream>
 
 #include <bsoncxx/json.hpp>
+
 #include <mongocxx/client.hpp>
 #include <mongocxx/gridfs/bucket.hpp>
 #include <mongocxx/instance.hpp>

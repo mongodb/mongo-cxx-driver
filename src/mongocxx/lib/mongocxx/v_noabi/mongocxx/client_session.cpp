@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include <bsoncxx/stdx/make_unique.hpp>
+
 #include <mongocxx/exception/exception.hpp>
 #include <mongocxx/exception/private/mongoc_error.hh>
 #include <mongocxx/private/client.hh>

@@ -20,6 +20,7 @@
 
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/string/view_or_value.hpp>
+
 #include <mongocxx/stdx.hpp>
 
 #include <mongocxx/config/prelude.hpp>

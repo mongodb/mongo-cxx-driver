@@ -22,6 +22,7 @@
 
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
+
 #include <mongocxx/client_session.hpp>
 #include <mongocxx/cursor.hpp>
 #include <mongocxx/index_model.hpp>

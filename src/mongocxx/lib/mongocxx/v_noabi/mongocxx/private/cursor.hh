@@ -16,6 +16,7 @@
 
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/stdx/optional.hpp>
+
 #include <mongocxx/cursor.hpp>
 #include <mongocxx/private/libmongoc.hh>
 

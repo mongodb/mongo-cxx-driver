@@ -22,6 +22,7 @@
 #include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/types.hpp>
+
 #include <mongocxx/client.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/pool.hpp>

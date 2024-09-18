@@ -19,6 +19,7 @@
 
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/document/view.hpp>
+
 #include <mongocxx/client_session.hpp>
 #include <mongocxx/pipeline.hpp>
 #include <mongocxx/private/libmongoc.hh>

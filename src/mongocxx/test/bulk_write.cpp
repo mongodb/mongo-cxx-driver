@@ -14,6 +14,7 @@
 
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/types.hpp>
+
 #include <mongocxx/bulk_write.hpp>
 #include <mongocxx/client.hpp>
 #include <mongocxx/instance.hpp>
@@ -21,6 +22,7 @@
 #include <mongocxx/write_concern.hpp>
 
 #include <bsoncxx/test/catch.hh>
+
 #include <mongocxx/test/client_helpers.hh>
 
 namespace {

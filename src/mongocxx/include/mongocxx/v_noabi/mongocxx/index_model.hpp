@@ -18,6 +18,7 @@
 
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
+
 #include <mongocxx/options/index.hpp>
 
 #include <mongocxx/config/prelude.hpp>

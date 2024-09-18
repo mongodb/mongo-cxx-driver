@@ -19,6 +19,7 @@
 #include <mongocxx/options/client-fwd.hpp>
 
 #include <bsoncxx/stdx/optional.hpp>
+
 #include <mongocxx/options/apm.hpp>
 #include <mongocxx/options/auto_encryption.hpp>
 #include <mongocxx/options/server_api.hpp>

@@ -16,6 +16,7 @@
 #include <utility>
 
 #include <bsoncxx/string/to_string.hpp>
+
 #include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/libmongoc.hh>

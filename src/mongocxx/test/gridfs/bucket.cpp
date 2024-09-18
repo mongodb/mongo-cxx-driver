@@ -28,6 +28,7 @@
 #include <bsoncxx/oid.hpp>
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
+
 #include <mongocxx/client.hpp>
 #include <mongocxx/database.hpp>
 #include <mongocxx/exception/gridfs_exception.hpp>
@@ -40,6 +41,7 @@
 #include <mongocxx/uri.hpp>
 
 #include <bsoncxx/test/catch.hh>
+
 #include <mongocxx/test/client_helpers.hh>
 
 namespace {

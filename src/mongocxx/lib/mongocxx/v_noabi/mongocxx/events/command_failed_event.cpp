@@ -17,6 +17,7 @@
 #include <bsoncxx/private/libbson.hh>
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/stdx/optional.hpp>
+
 #include <mongocxx/events/command_failed_event.hpp>
 #include <mongocxx/private/libmongoc.hh>
 

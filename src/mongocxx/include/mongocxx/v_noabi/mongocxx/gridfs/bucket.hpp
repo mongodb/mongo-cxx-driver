@@ -25,6 +25,7 @@
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
+
 #include <mongocxx/cursor.hpp>
 #include <mongocxx/gridfs/downloader.hpp>
 #include <mongocxx/gridfs/uploader.hpp>

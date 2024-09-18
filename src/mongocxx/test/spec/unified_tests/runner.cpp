@@ -28,6 +28,7 @@
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/string/to_string.hpp>
 #include <bsoncxx/types/bson_value/value.hpp>
+
 #include <mongocxx/client_encryption.hpp>
 #include <mongocxx/exception/bulk_write_exception.hpp>
 #include <mongocxx/exception/exception.hpp>
@@ -35,6 +36,7 @@
 #include <mongocxx/instance.hpp>
 
 #include <bsoncxx/test/catch.hh>
+
 #include <mongocxx/test/client_helpers.hh>
 #include <mongocxx/test/spec/monitoring.hh>
 #include <mongocxx/test/spec/util.hh>
