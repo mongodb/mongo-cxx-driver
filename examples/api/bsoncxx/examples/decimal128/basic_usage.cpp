@@ -22,7 +22,6 @@
 namespace {
 
 // [Example]
-// See: https://speleotrove.com/decimal/daconvs.html
 void example() {
     using d128 = bsoncxx::decimal128;  // For brevity.
 
