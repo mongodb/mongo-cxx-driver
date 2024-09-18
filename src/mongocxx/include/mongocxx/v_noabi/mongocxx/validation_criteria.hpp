@@ -94,9 +94,12 @@ class validation_criteria {
     /// A class to represent the different validation action options.
     ///
     enum class validation_action {
-        k_error,  ///< Reject any insertion or update that violates the validation criteria.
-        k_warn,   ///< Log any violations of the validation criteria, but allow the insertion or
-                  ///< update to proceed.
+        /// Reject any insertion or update that violates the validation criteria.
+        k_error,
+
+        /// Log any violations of the validation criteria, but allow the insertion or update to
+        /// proceed.
+        k_warn,
     };
 
     ///
