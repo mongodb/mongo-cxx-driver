@@ -52,23 +52,29 @@ namespace v_noabi {
 /// a single document. Note that writes must be made with majority write concern in order for reads
 /// to be linearizable.
 ///
-/// @see https://www.mongodb.com/docs/manual/reference/read-concern/
+/// @see @li [Read Concern (MongoDB
+/// Manual)](https://www.mongodb.com/docs/manual/reference/read-concern/)
 ///
 class read_concern {
    public:
     ///
-    /// A class to represent the read concern level.
+    /// A class to represent the read concern level for read operations.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/read-concern/#read-concern-levels
+    /// @see @parblock
+    /// @li [Read Concern Levels (MongoDB
+    /// Manual)](https://www.mongodb.com/docs/manual/reference/read-concern/#read-concern-levels)
+    /// @li [Default MongoDB Read Concerns/Write Concerns (MongoDB
+    /// Manual)](https://www.mongodb.com/docs/manual/reference/mongodb-defaults/#read-concern)
+    /// @endparblock
     ///
     enum class level {
-        k_local,
-        k_majority,
-        k_linearizable,
-        k_server_default,
-        k_unknown,
-        k_available,
-        k_snapshot
+        k_local,           ///< Represent read concern level "local".
+        k_majority,        ///< Represent read concern level "majority".
+        k_linearizable,    ///< Represent read concern level "linearizable".
+        k_server_default,  ///< Represent the server's default read concern level.
+        k_unknown,         ///< Represent an unknown read concern level.
+        k_available,       ///< Represent read concern level "available".
+        k_snapshot         ///< Represent read concern level "snapshot".
     };
 
     ///

@@ -31,13 +31,13 @@ namespace v_noabi {
 /// The log level of a message passed to a mongocxx::v_noabi::logger.
 ///
 enum class log_level {
-    k_error,
-    k_critical,
-    k_warning,
-    k_message,
-    k_info,
-    k_debug,
-    k_trace,
+    k_error,     ///< Log Level Error.
+    k_critical,  ///< Log Level Critical.
+    k_warning,   ///< Log Level Warning.
+    k_message,   ///< Log Level Message.
+    k_info,      ///< Log Level Info.
+    k_debug,     ///< Log Level Debug.
+    k_trace,     ///< Log Level Trace.
 };
 
 ///

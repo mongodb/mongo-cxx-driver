@@ -34,12 +34,17 @@ namespace options {
 ///
 /// Class representing options for server API.
 ///
+/// @see @li [Stable API (MongoDB
+/// Manual)](https://www.mongodb.com/docs/manual/reference/stable-api/)
+///
 class server_api {
    public:
     ///
     /// Enum representing the possible values for server API version.
     ///
-    enum class version { k_version_1 };
+    enum class version {
+        k_version_1,  ///< Stable API Version 1.
+    };
 
     ///
     /// Constructs a new server_api object.

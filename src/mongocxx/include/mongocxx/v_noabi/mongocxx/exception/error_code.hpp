@@ -97,18 +97,18 @@ enum class error_code : std::int32_t {
     /// A moved-from mongocxx::v_noabi::options::transaction object has been used.
     k_invalid_transaction_options_object,
 
-    // A resource (server API handle, etc.) could not be created:
+    /// A resource (server API handle, etc.) could not be created:
     k_create_resource_fail,
 
-    // A default-constructed or moved-from mongocxx::v_noabi::search_index_model object has been
-    // used.
+    /// A default-constructed or moved-from mongocxx::v_noabi::search_index_model object has been
+    /// used.
     k_invalid_search_index_model,
 
-    // A default-constructed or moved-from mongocxx::v_noabi::search_index_view object has been
-    // used.
+    /// A default-constructed or moved-from mongocxx::v_noabi::search_index_view object has been
+    /// used.
     k_invalid_search_index_view,
 
-    // Timed out while waiting for a client to be returned to the pool
+    /// Timed out while waiting for a client to be returned to the pool
     k_pool_wait_queue_timeout,
 
     // Add new constant string message to error_code.cpp as well!
