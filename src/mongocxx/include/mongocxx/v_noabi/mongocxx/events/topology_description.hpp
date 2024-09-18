@@ -19,6 +19,7 @@
 #include <mongocxx/events/topology_description-fwd.hpp>
 
 #include <bsoncxx/stdx/string_view.hpp>
+
 #include <mongocxx/events/server_description.hpp>
 #include <mongocxx/read_preference.hpp>
 

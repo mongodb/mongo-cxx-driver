@@ -17,6 +17,7 @@
 #include <mongocxx/events/topology_opening_event-fwd.hpp>
 
 #include <bsoncxx/oid.hpp>
+
 #include <mongocxx/events/topology_description.hpp>
 
 #include <mongocxx/config/prelude.hpp>

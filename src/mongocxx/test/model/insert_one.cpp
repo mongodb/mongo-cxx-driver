@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include <bsoncxx/builder/basic/document.hpp>
+
 #include <mongocxx/instance.hpp>
 #include <mongocxx/model/insert_one.hpp>
 

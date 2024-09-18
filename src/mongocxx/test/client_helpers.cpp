@@ -30,6 +30,7 @@
 #include <bsoncxx/string/to_string.hpp>
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/bson_value/view_or_value.hpp>
+
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
@@ -37,9 +38,11 @@
 #include <mongocxx/private/libmongoc.hh>
 
 #include <bsoncxx/config/prelude.hpp>
+
 #include <mongocxx/config/private/prelude.hh>
 
 #include <bsoncxx/test/catch.hh>
+
 #include <mongocxx/test/client_helpers.hh>
 
 namespace mongocxx {

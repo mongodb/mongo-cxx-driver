@@ -19,6 +19,7 @@
 #include <string>
 
 #include <bsoncxx/document/view.hpp>
+
 #include <mongocxx/client.hpp>
 #include <mongocxx/uri.hpp>
 

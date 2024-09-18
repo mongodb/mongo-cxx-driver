@@ -16,6 +16,7 @@
 #include <mongocxx/options/insert.hpp>
 
 #include <bsoncxx/test/catch.hh>
+
 #include <mongocxx/test/catch_helpers.hh>
 
 namespace {

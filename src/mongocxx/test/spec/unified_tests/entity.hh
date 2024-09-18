@@ -18,6 +18,7 @@
 #include <unordered_map>
 
 #include <bsoncxx/types/bson_value/value.hpp>
+
 #include <mongocxx/client.hpp>
 #include <mongocxx/client_encryption.hpp>
 

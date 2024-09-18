@@ -18,6 +18,7 @@
 
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
+
 #include <mongocxx/bulk_write.hpp>
 
 #include <mongocxx/config/prelude.hpp>

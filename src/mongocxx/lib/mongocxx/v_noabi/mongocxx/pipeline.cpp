@@ -15,6 +15,7 @@
 #include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/builder/basic/sub_document.hpp>
 #include <bsoncxx/stdx/make_unique.hpp>
+
 #include <mongocxx/pipeline.hpp>
 #include <mongocxx/private/pipeline.hh>
 #include <mongocxx/stdx.hpp>

@@ -18,6 +18,7 @@
 
 #include <bsoncxx/oid.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
+
 #include <mongocxx/events/server_description.hpp>
 
 #include <mongocxx/config/prelude.hpp>

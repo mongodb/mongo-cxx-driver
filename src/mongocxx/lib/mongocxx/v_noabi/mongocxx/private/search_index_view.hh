@@ -6,6 +6,7 @@
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/string/to_string.hpp>
+
 #include <mongocxx/private/append_aggregate_options.hh>
 #include <mongocxx/private/client_session.hh>
 #include <mongocxx/private/libbson.hh>

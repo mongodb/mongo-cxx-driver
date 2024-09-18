@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include <bsoncxx/stdx/make_unique.hpp>
+
 #include <mongocxx/client_encryption.hpp>
 #include <mongocxx/private/client_encryption.hh>
 #include <mongocxx/private/database.hh>

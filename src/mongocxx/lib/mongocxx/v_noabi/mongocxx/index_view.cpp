@@ -14,6 +14,7 @@
 
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/string/to_string.hpp>
+
 #include <mongocxx/client_session.hpp>
 #include <mongocxx/exception/private/mongoc_error.hh>
 #include <mongocxx/index_view.hpp>

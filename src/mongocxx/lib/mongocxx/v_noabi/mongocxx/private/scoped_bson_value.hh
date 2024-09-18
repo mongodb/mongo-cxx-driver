@@ -18,6 +18,7 @@
 
 #include <bsoncxx/types/bson_value/view.hpp>
 #include <bsoncxx/types/private/convert.hh>
+
 #include <mongocxx/private/libbson.hh>
 
 namespace mongocxx {

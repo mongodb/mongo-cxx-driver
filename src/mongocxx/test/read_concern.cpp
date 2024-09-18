@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include <bsoncxx/stdx/string_view.hpp>
+
 #include <mongocxx/instance.hpp>
 #include <mongocxx/read_concern.hpp>
 

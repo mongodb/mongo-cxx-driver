@@ -15,6 +15,7 @@
 #include <utility>
 
 #include <bsoncxx/types/private/convert.hh>
+
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/options/encrypt.hpp>

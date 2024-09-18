@@ -22,6 +22,7 @@
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/bson_value/view_or_value.hpp>
+
 #include <mongocxx/options/range.hpp>
 #include <mongocxx/stdx.hpp>
 
