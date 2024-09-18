@@ -156,6 +156,10 @@ linux*)
   else
     cxx_flags+=("-Wno-unused-parameter") # TODO: remove once C driver is upgraded to include fix of CDRIVER-5673.
   fi
+
+  if [[ "${distro_id:?}" == debian12*]]; then
+    cxx_flags+=("-Wno-error=restrict")
+  fi
   ;;
 *)
   echo "unrecognized operating system ${OSTYPE:?}" 1>&2
