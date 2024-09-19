@@ -55,15 +55,25 @@ namespace v_noabi {
 /// critical operations, clients can adjust the write concern to ensure better performance
 /// rather than persistence to the entire deployment.
 ///
-/// @see https://www.mongodb.com/docs/manual/core/write-concern/
+/// @see
+/// - [Write Concern (MongoDB Manual)](https://www.mongodb.com/docs/manual/core/write-concern/)
 ///
 class write_concern {
    public:
     ///
-    /// A class to represent the special case values for write_concern::nodes.
-    /// @see https://www.mongodb.com/docs/manual/reference/write-concern/#w-option
+    /// A class to represent the write concern level for write operations.
     ///
-    enum class level { k_default, k_majority, k_tag, k_unacknowledged, k_acknowledged };
+    /// @see
+    /// - [Write Concern (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/write-concern/)
+    /// - [Default MongoDB Read Concerns/Write Concerns](https://www.mongodb.com/docs/manual/reference/mongodb-defaults/#write-concern)
+    ///
+    enum class level {
+        k_default,         ///< Represent the implicit default write concern.
+        k_majority,        ///< Represent write concern with `w: "majority"`.
+        k_tag,             ///< Represent write concern with `w: <custom write concern name>`.
+        k_unacknowledged,  ///< Represent write concern with `w: 0`.
+        k_acknowledged,    ///< Represent write concern with `w: 1`.
+    };
 
     ///
     /// Constructs a new write_concern.
