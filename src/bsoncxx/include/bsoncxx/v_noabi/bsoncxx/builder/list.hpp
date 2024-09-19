@@ -60,7 +60,8 @@ class list {
     /// @param value
     ///     the BSON value
     ///
-    /// @see bsoncxx::v_noabi::types::bson_value::value.
+    /// @see
+    /// - @ref bsoncxx::v_noabi::types::bson_value::value.
     ///
     template <typename T>
     list(T value) : val{value} {}
@@ -81,15 +82,17 @@ class list {
     ///     bsoncxx::v_noabi::builder::document or bsoncxx::v_noabi::builder::array constructor,
     ///     respectively.
     ///
-    /// @see bsoncxx::v_noabi::builder::document
-    /// @see bsoncxx::v_noabi::builder::array
+    /// @see
+    /// - @ref bsoncxx::v_noabi::builder::document
+    /// - @ref bsoncxx::v_noabi::builder::array
     ///
     list(initializer_list_t init) : list(init, true, true) {}
 
     ///
     /// Provides a view of the underlying BSON value.
     ///
-    /// @see bsoncxx::v_noabi::types::bson_value::view.
+    /// @see
+    /// - @ref bsoncxx::v_noabi::types::bson_value::view.
     ///
     operator bson_value::view() {
         return view();
@@ -98,7 +101,8 @@ class list {
     ///
     /// Provides a view of the underlying BSON value.
     ///
-    /// @see bsoncxx::v_noabi::types::bson_value::view.
+    /// @see
+    /// - @ref bsoncxx::v_noabi::types::bson_value::view.
     ///
     bson_value::view view() {
         return val.view();
@@ -168,8 +172,9 @@ class document : public list {
     /// @param init
     ///     the initializer list used to construct the BSON document
     ///
-    /// @see bsoncxx::v_noabi::builder::list
-    /// @see bsoncxx::v_noabi::builder::array
+    /// @see
+    /// - @ref bsoncxx::v_noabi::builder::list
+    /// - @ref bsoncxx::v_noabi::builder::array
     ///
     document(initializer_list_t init) : list(init, false, false) {}
 };
@@ -192,8 +197,9 @@ class array : public list {
     /// @param init
     ///     the initializer list used to construct the BSON array
     ///
-    /// @see bsoncxx::v_noabi::builder::list
-    /// @see bsoncxx::v_noabi::builder::document
+    /// @see
+    /// - @ref bsoncxx::v_noabi::builder::list
+    /// - @ref bsoncxx::v_noabi::builder::document
     ///
     array(initializer_list_t init) : list(init, false, true) {}
 };

@@ -325,9 +325,8 @@ using not_view = is_bson_view_compatible<T>;
 ///
 /// Compares a view with a type representable as a view.
 ///
-/// @par "Constraints" @parblock
-/// @li @ref bsoncxx::v_noabi::types::bson_value::view is constructible from `T`.
-/// @endparblock
+/// @par Constraints
+/// - @ref bsoncxx::v_noabi::types::bson_value::view is constructible from `T`.
 ///
 /// @{
 

@@ -91,7 +91,8 @@ struct concatenate_array {
 ///
 /// @return concatenate_doc A concatenating struct.
 ///
-/// @see bsoncxx::v_noabi::builder::concatenate_doc
+/// @see
+/// - @ref bsoncxx::v_noabi::builder::concatenate_doc
 ///
 inline concatenate_doc concatenate(document::view_or_value doc) {
     return {std::move(doc)};
@@ -107,7 +108,8 @@ inline concatenate_doc concatenate(document::view_or_value doc) {
 ///
 /// @return concatenate_doc A concatenating struct.
 ///
-/// @see bsoncxx::v_noabi::builder::concatenate_doc
+/// @see
+/// - @ref bsoncxx::v_noabi::builder::concatenate_doc
 ///
 inline concatenate_array concatenate(array::view_or_value array) {
     return {std::move(array)};

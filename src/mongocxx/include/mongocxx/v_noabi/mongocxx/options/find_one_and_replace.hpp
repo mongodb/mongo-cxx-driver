@@ -48,7 +48,8 @@ class find_one_and_replace {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/findAndModify/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(find_one_and_replace&)
     collation(bsoncxx::v_noabi::document::view_or_value collation);
@@ -59,7 +60,8 @@ class find_one_and_replace {
     /// @return
     ///   The current collation.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/findAndModify/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
     collation() const;
@@ -78,7 +80,8 @@ class find_one_and_replace {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/findAndModify/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(find_one_and_replace&)
     bypass_document_validation(bool bypass_document_validation);
@@ -88,7 +91,8 @@ class find_one_and_replace {
     ///
     /// @return the current bypass document validation setting.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/findAndModify/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bool>&) bypass_document_validation() const;
 
@@ -169,7 +173,8 @@ class find_one_and_replace {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/findAndModify/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(find_one_and_replace&) max_time(std::chrono::milliseconds max_time);
 
@@ -178,7 +183,8 @@ class find_one_and_replace {
     ///
     /// @return the current max allowed running time (in milliseconds).
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/findAndModify/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<std::chrono::milliseconds>&) max_time() const;
 
@@ -192,7 +198,8 @@ class find_one_and_replace {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/findAndModify/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(find_one_and_replace&)
     projection(bsoncxx::v_noabi::document::view_or_value projection);
@@ -202,7 +209,8 @@ class find_one_and_replace {
     ///
     /// @return The current projection.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/findAndModify/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
     projection() const;
@@ -218,8 +226,9 @@ class find_one_and_replace {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/findAndModify/
-    /// @see mongocxx::v_noabi::options::return_document
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/findAndModify/
+    /// - @ref mongocxx::v_noabi::options::return_document
     ///
     MONGOCXX_ABI_EXPORT_CDECL(find_one_and_replace&)
     return_document(return_document return_document);
@@ -229,8 +238,9 @@ class find_one_and_replace {
     ///
     /// @return Version of document to return, either original or replacement.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/findAndModify/
-    /// @see mongocxx::v_noabi::options::return_document
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/findAndModify/
+    /// - @ref mongocxx::v_noabi::options::return_document
     ///
     MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<mongocxx::v_noabi::options::return_document>&)
     return_document() const;
@@ -248,7 +258,8 @@ class find_one_and_replace {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/findAndModify/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(find_one_and_replace&)
     sort(bsoncxx::v_noabi::document::view_or_value ordering);
@@ -258,7 +269,8 @@ class find_one_and_replace {
     ///
     /// @return The current sort ordering.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/findAndModify/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
     sort() const;
@@ -275,7 +287,8 @@ class find_one_and_replace {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/findAndModify/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(find_one_and_replace&) upsert(bool upsert);
 
@@ -284,7 +297,8 @@ class find_one_and_replace {
     ///
     /// @return The current upsert setting.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/findAndModify/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bool>&) upsert() const;
 
@@ -299,7 +313,7 @@ class find_one_and_replace {
     ///   method chaining.
     ///
     /// @see
-    ///   https://www.mongodb.com/docs/manual/reference/command/findAndModify/
+    /// - https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(find_one_and_replace&)
     write_concern(mongocxx::v_noabi::write_concern write_concern);
@@ -311,7 +325,7 @@ class find_one_and_replace {
     ///   The current write concern.
     ///
     /// @see
-    ///   https://www.mongodb.com/docs/manual/reference/command/findAndModify/
+    /// - https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<mongocxx::v_noabi::write_concern>&)
     write_concern() const;

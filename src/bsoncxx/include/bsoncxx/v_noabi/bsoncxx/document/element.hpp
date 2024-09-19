@@ -40,7 +40,8 @@ namespace document {
 /// interrogated by calling type(), the key can be extracted by calling key() and
 /// a specific value can be extracted through get_X() accessors.
 ///
-/// @see bsoncxx::v_noabi::array::element
+/// @see
+/// - @ref bsoncxx::v_noabi::array::element
 ///
 class element {
    public:

@@ -134,7 +134,8 @@ class write_concern {
 
     ///
     /// Sets the acknowledge level.
-    /// @see https://www.mongodb.com/docs/manual/reference/write-concern/#w-option
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/write-concern/#w-option
     ///
     /// @param confirm_level
     ///   Either level::k_unacknowledged, level::k_acknowledged, level::k_default, or
@@ -205,7 +206,8 @@ class write_concern {
     ///
     /// This is unset by default.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/write-concern/#w-option
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/write-concern/#w-option
     ///
     /// @return The number of required nodes.
     ///
@@ -214,7 +216,8 @@ class write_concern {
     ///
     /// Gets the current acknowledgment level.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/write-concern/#w-option
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/write-concern/#w-option
     ///
     /// @return The acknowledgment level.
     ///

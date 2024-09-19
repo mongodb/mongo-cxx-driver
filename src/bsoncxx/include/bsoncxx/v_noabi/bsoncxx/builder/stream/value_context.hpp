@@ -108,7 +108,8 @@ class value_context {
     ///
     /// Conversion operator for single_context.
     ///
-    /// @see bsoncxx::v_noabi::builder::stream::single_context
+    /// @see
+    /// - @ref bsoncxx::v_noabi::builder::stream::single_context
     ///
     operator single_context();
 

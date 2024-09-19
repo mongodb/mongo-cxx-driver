@@ -45,7 +45,8 @@ class estimated_document_count {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/count/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/count/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(estimated_document_count&)
     max_time(std::chrono::milliseconds max_time);
@@ -55,7 +56,8 @@ class estimated_document_count {
     ///
     /// @return The current max time (in milliseconds).
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/count/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/count/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds>&)
     max_time() const;
@@ -70,7 +72,8 @@ class estimated_document_count {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/count/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/count/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(estimated_document_count&)
     comment(bsoncxx::v_noabi::types::bson_value::view_or_value comment);
@@ -80,7 +83,8 @@ class estimated_document_count {
     ///
     /// @return The current comment
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/count/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/count/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(
         const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>&)
@@ -96,7 +100,8 @@ class estimated_document_count {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/count/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/count/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(estimated_document_count&)
     read_preference(mongocxx::v_noabi::read_preference rp);
@@ -106,7 +111,8 @@ class estimated_document_count {
     ///
     /// @return the current read_preference
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/count/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/count/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(
         const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_preference>&)

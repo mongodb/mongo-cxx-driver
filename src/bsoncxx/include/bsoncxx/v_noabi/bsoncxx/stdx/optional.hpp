@@ -853,8 +853,8 @@ using ::bsoncxx::v_noabi::stdx::optional;
 /// configuration variables and the `BSONCXX_POLY_USE_*` macros provided by @ref
 /// bsoncxx-v_noabi-bsoncxx-config-config-hpp.
 ///
-/// @see [Choosing a C++17
-/// Polyfill](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/polyfill-selection/)
+/// @see
+/// - [Choosing a C++17 Polyfill](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/polyfill-selection/)
 ///
 
 #if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

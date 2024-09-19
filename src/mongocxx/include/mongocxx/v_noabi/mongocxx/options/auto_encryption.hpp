@@ -55,7 +55,8 @@ class auto_encryption {
     /// @return
     ///   A reference to this object to facilitate method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(auto_encryption&) key_vault_client(mongocxx::v_noabi::client* client);
 
@@ -86,7 +87,8 @@ class auto_encryption {
     /// @return
     ///   A reference to this object to facilitate method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(auto_encryption&) key_vault_pool(mongocxx::v_noabi::pool* pool);
 
@@ -118,7 +120,8 @@ class auto_encryption {
     /// @return
     ///   A reference to this object to facilitate method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(auto_encryption&) key_vault_namespace(ns_pair ns);
 
@@ -138,33 +141,33 @@ class auto_encryption {
     /// supported: "aws", "azure", "gcp", "kmip", and "local". The kmsProviders map values differ
     /// by provider:
     ///
-    /// @code{.unparsed}
-    ///    aws: {
-    ///      accessKeyId: String,
-    ///      secretAccessKey: String
-    ///    }
+    /// ```
+    /// aws: {
+    ///   accessKeyId: String,
+    ///   secretAccessKey: String
+    /// }
     ///
-    ///    azure: {
-    ///       tenantId: String,
-    ///       clientId: String,
-    ///       clientSecret: String,
-    ///       identityPlatformEndpoint: Optional<String> // Defaults to login.microsoftonline.com
-    ///    }
+    /// azure: {
+    ///    tenantId: String,
+    ///    clientId: String,
+    ///    clientSecret: String,
+    ///    identityPlatformEndpoint: Optional<String> // Defaults to login.microsoftonline.com
+    /// }
     ///
-    ///    gcp: {
-    ///       email: String,
-    ///       privateKey: byte[] or String, // May be passed as a base64 encoded string.
-    ///       endpoint: Optional<String> // Defaults to oauth2.googleapis.com
-    ///    }
+    /// gcp: {
+    ///    email: String,
+    ///    privateKey: byte[] or String, // May be passed as a base64 encoded string.
+    ///    endpoint: Optional<String> // Defaults to oauth2.googleapis.com
+    /// }
     ///
-    ///    kmip: {
-    ///       endpoint: String
-    ///    }
+    /// kmip: {
+    ///    endpoint: String
+    /// }
     ///
-    ///    local: {
-    ///      key: byte[96] // The master key used to encrypt/decrypt data keys.
-    ///    }
-    /// @endcode
+    /// local: {
+    ///   key: byte[96] // The master key used to encrypt/decrypt data keys.
+    /// }
+    /// ```
     ///
     /// @param kms_providers
     ///   A document containing the KMS providers.
@@ -172,7 +175,8 @@ class auto_encryption {
     /// @return
     ///   A reference to this object to facilitate method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(auto_encryption&)
     kms_providers(bsoncxx::v_noabi::document::view_or_value kms_providers);
@@ -192,13 +196,13 @@ class auto_encryption {
     /// Multiple KMS providers may be specified. Supported KMS providers are "aws", "azure", "gcp",
     /// and "kmip". The map value has the same form for all supported providers:
     ///
-    /// @code{.unparsed}
-    ///    <KMS provider name>: {
-    ///        tlsCaFile: Optional<String>
-    ///        tlsCertificateKeyFile: Optional<String>
-    ///        tlsCertificateKeyFilePassword: Optional<String>
-    ///    }
-    /// @endcode
+    /// ```
+    /// <KMS provider name>: {
+    ///     tlsCaFile: Optional<String>
+    ///     tlsCertificateKeyFile: Optional<String>
+    ///     tlsCertificateKeyFilePassword: Optional<String>
+    /// }
+    /// ```
     ///
     /// @param tls_opts
     ///   A document containing the TLS options.
@@ -206,7 +210,8 @@ class auto_encryption {
     /// @return
     ///   A reference to this object to facilitate method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(auto_encryption&)
     tls_opts(bsoncxx::v_noabi::document::view_or_value tls_opts);
@@ -240,7 +245,8 @@ class auto_encryption {
     /// @return
     ///   A reference to this object to facilitate method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(auto_encryption&)
     schema_map(bsoncxx::v_noabi::document::view_or_value schema_map);
@@ -264,12 +270,14 @@ class auto_encryption {
     /// @param encrypted_fields_map
     ///   The mapping of which fields to encrypt.
     ///
-    /// @see https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
     /// @return
     ///   A reference to this object to facilitate method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(auto_encryption&)
     encrypted_fields_map(bsoncxx::v_noabi::document::view_or_value encrypted_fields_map);
@@ -293,7 +301,8 @@ class auto_encryption {
     /// @return
     ///   A reference to this object to facilitate method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(auto_encryption&) bypass_auto_encryption(bool should_bypass);
 
@@ -315,7 +324,8 @@ class auto_encryption {
     /// @return
     ///   A reference to this object to facilitate method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(auto_encryption&) bypass_query_analysis(bool should_bypass);
 
@@ -374,7 +384,8 @@ class auto_encryption {
     /// @return
     ///   A reference to this object to facilitate method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(auto_encryption&)
     extra_options(bsoncxx::v_noabi::document::view_or_value extra);

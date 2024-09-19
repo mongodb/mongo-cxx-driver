@@ -26,7 +26,8 @@ namespace v_noabi {
 ///
 /// Class representing an exception during a query operation.
 ///
-/// @see mongocxx::v_noabi::operation_exception
+/// @see
+/// - @ref mongocxx::v_noabi::operation_exception
 ///
 class query_exception : public operation_exception {
    public:

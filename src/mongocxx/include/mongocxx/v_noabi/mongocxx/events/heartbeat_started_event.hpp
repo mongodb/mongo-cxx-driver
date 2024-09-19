@@ -30,8 +30,8 @@ namespace events {
 /// An event notification sent when the driver begins executing a "hello" command to check the
 /// status of a server.
 ///
-/// @see "ServerHeartbeatStartedEvent" in
-/// https://github.com/mongodb/specifications/blob/master/source/server-discovery-and-monitoring/server-discovery-and-monitoring.rst
+/// @see
+/// - "ServerHeartbeatStartedEvent" in https://github.com/mongodb/specifications/blob/master/source/server-discovery-and-monitoring/server-discovery-and-monitoring.rst
 ///
 class heartbeat_started_event {
    public:

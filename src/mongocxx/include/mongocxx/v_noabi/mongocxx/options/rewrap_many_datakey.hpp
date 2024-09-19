@@ -49,7 +49,7 @@ class rewrap_many_datakey {
     ///   An optional document containing the TLS options.
     ///
     /// @see
-    /// https://www.mongodb.com/docs/manual/core/csfle/reference/kms-providers/#std-label-csfle-reference-kms-providers
+    /// - https://www.mongodb.com/docs/manual/core/csfle/reference/kms-providers/#std-label-csfle-reference-kms-providers
     ///
     MONGOCXX_ABI_EXPORT_CDECL(rewrap_many_datakey&)
     provider(bsoncxx::v_noabi::string::view_or_value provider);
@@ -65,7 +65,7 @@ class rewrap_many_datakey {
     ///   An optional string name of the provider.
     ///
     /// @see
-    /// https://www.mongodb.com/docs/manual/core/csfle/reference/kms-providers/#std-label-csfle-reference-kms-providers
+    /// - https://www.mongodb.com/docs/manual/core/csfle/reference/kms-providers/#std-label-csfle-reference-kms-providers
     ///
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::string::view_or_value) provider() const;
 
@@ -82,7 +82,7 @@ class rewrap_many_datakey {
     ///   A reference to this object to facilitate method chaining.
     ///
     /// @see
-    /// https://www.mongodb.com/docs/manual/core/csfle/reference/kms-providers/#std-label-csfle-reference-kms-providers-create-and-store
+    /// - https://www.mongodb.com/docs/manual/core/csfle/reference/kms-providers/#std-label-csfle-reference-kms-providers-create-and-store
     ///
     MONGOCXX_ABI_EXPORT_CDECL(rewrap_many_datakey&)
     master_key(bsoncxx::v_noabi::document::view_or_value master_key);
@@ -98,7 +98,7 @@ class rewrap_many_datakey {
     ///   A reference to this object to facilitate method chaining.
     ///
     /// @see
-    /// https://www.mongodb.com/docs/manual/core/csfle/reference/kms-providers/#std-label-csfle-reference-kms-providers-create-and-store
+    /// - https://www.mongodb.com/docs/manual/core/csfle/reference/kms-providers/#std-label-csfle-reference-kms-providers-create-and-store
     ///
     MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
     master_key() const;

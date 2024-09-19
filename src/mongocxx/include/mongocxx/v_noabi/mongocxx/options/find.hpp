@@ -54,7 +54,8 @@ class find {
     /// @return
     ///   A reference to this object to facilitate method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/find/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/find/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(find&) allow_disk_use(bool allow_disk_use);
 
@@ -78,7 +79,8 @@ class find {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/find/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/find/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(find&) allow_partial_results(bool allow_partial);
 
@@ -87,7 +89,8 @@ class find {
     ///
     /// @return Whether partial results from mongos are allowed.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/find/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/find/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bool>&) allow_partial_results() const;
 
@@ -101,7 +104,8 @@ class find {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/find/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/find/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(find&) batch_size(std::int32_t batch_size);
 
@@ -110,7 +114,8 @@ class find {
     ///
     /// @return The current batch size.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/find/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/find/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<std::int32_t>&) batch_size() const;
 
@@ -124,7 +129,8 @@ class find {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/find/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/find/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(find&) collation(bsoncxx::v_noabi::document::view_or_value collation);
 
@@ -134,7 +140,8 @@ class find {
     /// @return
     ///   The current collation.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/find/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/find/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
     collation() const;
@@ -152,7 +159,8 @@ class find {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/find/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/find/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(find&) comment(bsoncxx::v_noabi::string::view_or_value comment);
 
@@ -163,7 +171,8 @@ class find {
     ///
     /// @return The comment attached to this query.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/find/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/find/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::string::view_or_value>&)
     comment() const;
@@ -178,7 +187,8 @@ class find {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/find/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/find/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(find&) cursor_type(cursor::type cursor_type);
 
@@ -187,14 +197,16 @@ class find {
     ///
     /// @return The current cursor type.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/find/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/find/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<cursor::type>&) cursor_type() const;
 
     ///
     /// Sets the index to use for this operation.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/find/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/find/
     ///
     /// @note if the server already has a cached shape for this query, it may
     /// ignore a hint.
@@ -213,7 +225,8 @@ class find {
     ///
     /// @return The current hint, if one is set.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/find/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/find/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<mongocxx::v_noabi::hint>&) hint() const;
 
@@ -227,7 +240,8 @@ class find {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/find/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/find/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(find&) let(bsoncxx::v_noabi::document::view_or_value let);
 
@@ -237,7 +251,8 @@ class find {
     /// @return
     ///  The current let option.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/find/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/find/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::view_or_value>)
     let() const;
@@ -254,7 +269,8 @@ class find {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/find/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/find/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(find&)
     comment_option(bsoncxx::v_noabi::types::bson_value::view_or_value comment);
@@ -267,7 +283,8 @@ class find {
     /// @return
     ///  The current comment option.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/find/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/find/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(
         const stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>&)
@@ -282,7 +299,8 @@ class find {
     /// @return
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
-    /// @see https://www.mongodb.com/docs/manual/reference/command/find/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/find/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(find&) limit(std::int64_t limit);
 
@@ -291,7 +309,8 @@ class find {
     ///
     /// @return The current limit.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/find/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/find/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<std::int64_t>&) limit() const;
 
@@ -305,7 +324,8 @@ class find {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/find/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/find/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(find&) max(bsoncxx::v_noabi::document::view_or_value max);
 
@@ -314,7 +334,8 @@ class find {
     ///
     /// @return The exclusive upper bound for a specific index.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/find/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/find/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
     max() const;
@@ -334,7 +355,8 @@ class find {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/find/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/find/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(find&) max_await_time(std::chrono::milliseconds max_await_time);
 
@@ -344,7 +366,8 @@ class find {
     ///
     /// @return The current max await time (in milliseconds).
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/find/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/find/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<std::chrono::milliseconds>&)
     max_await_time() const;
@@ -359,7 +382,8 @@ class find {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/find/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/find/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(find&) max_time(std::chrono::milliseconds max_time);
 
@@ -368,7 +392,8 @@ class find {
     ///
     /// @return The current max time (in milliseconds).
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/find/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/find/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<std::chrono::milliseconds>&) max_time() const;
 
@@ -382,7 +407,8 @@ class find {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/find/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/find/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(find&) min(bsoncxx::v_noabi::document::view_or_value min);
 
@@ -391,7 +417,8 @@ class find {
     ///
     /// @return The inclusive lower bound for a specific index.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/find/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/find/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
     min() const;
@@ -407,7 +434,8 @@ class find {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/find/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/find/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(find&) no_cursor_timeout(bool no_cursor_timeout);
 
@@ -416,7 +444,8 @@ class find {
     ///
     /// @return The current no_cursor_timeout setting.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/find/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/find/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bool>&) no_cursor_timeout() const;
 
@@ -430,7 +459,8 @@ class find {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/find/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/find/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(find&)
     projection(bsoncxx::v_noabi::document::view_or_value projection);
@@ -440,7 +470,8 @@ class find {
     ///
     /// @return The current projection.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/find/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/find/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
     projection() const;
@@ -455,7 +486,8 @@ class find {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/find/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/find/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(find&) read_preference(mongocxx::v_noabi::read_preference rp);
 
@@ -465,7 +497,8 @@ class find {
     /// @return
     ///   The current read_preference.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/find/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/find/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<mongocxx::v_noabi::read_preference>&)
     read_preference() const;
@@ -482,7 +515,8 @@ class find {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/find/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/find/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(find&) return_key(bool return_key);
 
@@ -494,7 +528,8 @@ class find {
     ///   Whether index keys associated with the query results are returned, instead of the actual
     ///   query results themselves.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/find/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/find/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bool>&) return_key() const;
 
@@ -508,7 +543,8 @@ class find {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/find/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/find/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(find&) show_record_id(bool show_record_id);
 
@@ -519,7 +555,8 @@ class find {
     /// @return
     ///   Whether the record identifier is included.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/find/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/find/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bool>&) show_record_id() const;
 
@@ -533,7 +570,8 @@ class find {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/find/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/find/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(find&) skip(std::int64_t skip);
 
@@ -542,7 +580,8 @@ class find {
     ///
     /// @return The number of documents to skip.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/find/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/find/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<std::int64_t>&) skip() const;
 
@@ -557,7 +596,8 @@ class find {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/find/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/find/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(find&) sort(bsoncxx::v_noabi::document::view_or_value ordering);
 
@@ -566,7 +606,8 @@ class find {
     ///
     /// @return The current sort ordering.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/find/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/find/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
     sort() const;

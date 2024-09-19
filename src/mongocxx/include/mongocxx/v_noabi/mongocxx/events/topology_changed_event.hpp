@@ -30,8 +30,8 @@ namespace events {
 /// An event notification sent when the driver observes a change in any of the servers it is
 /// connected to or a change in the overall server topology.
 ///
-/// @see "TopologyDescriptionChangedEvent" in
-/// https://github.com/mongodb/specifications/blob/master/source/server-discovery-and-monitoring/server-discovery-and-monitoring.rst
+/// @see
+/// - "TopologyDescriptionChangedEvent" in https://github.com/mongodb/specifications/blob/master/source/server-discovery-and-monitoring/server-discovery-and-monitoring.rst
 ///
 class topology_changed_event {
    public:

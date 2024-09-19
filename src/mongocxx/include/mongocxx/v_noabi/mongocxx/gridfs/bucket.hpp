@@ -51,15 +51,18 @@ namespace gridfs {
 /// in the `<bucketname>.files` collection containing the information about the file. Users should
 /// not modify these collections directly.
 ///
-/// Example of how obtain the default GridFS bucket for a given database:
-/// @code
-///   mongocxx::v_noabi::client mongo_client{mongocxx::v_noabi::uri{}};
-///   auto gridfs_bucket = mongo_client["database"].gridfs_bucket();
-/// @endcode
+/// @par Example
+/// ```cpp
+/// mongocxx::v_noabi::client mongo_client{mongocxx::v_noabi::uri{}};
+///
+/// // Obtain the default GridFS bucket for a given database.
+/// auto gridfs_bucket = mongo_client["database"].gridfs_bucket();
+/// ```
 ///
 /// See also the method documentation for `mongocxx::v_noabi::database::gridfs_bucket()`.
 ///
-/// @see https://www.mongodb.com/display/DOCS/GridFS
+/// @see
+/// - https://www.mongodb.com/display/DOCS/GridFS
 ///
 class bucket {
    public:
@@ -592,7 +595,8 @@ class bucket {
     /// @throws mongocxx::v_noabi::logic_error if the options are invalid, or if the unsupported
     /// option modifiers "$query" or "$explain" are used.
     ///
-    /// @see mongocxx::v_noabi::collection::find.
+    /// @see
+    /// - @ref mongocxx::v_noabi::collection::find.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(cursor)
     find(bsoncxx::v_noabi::document::view_or_value filter, const options::find& options = {});
@@ -617,7 +621,8 @@ class bucket {
     /// @throws mongocxx::v_noabi::logic_error if the options are invalid, or if the unsupported
     /// option modifiers "$query" or "$explain" are used.
     ///
-    /// @see mongocxx::v_noabi::collection::find.
+    /// @see
+    /// - @ref mongocxx::v_noabi::collection::find.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(cursor)
     find(const client_session& session,

@@ -28,8 +28,8 @@ namespace events {
 /// An event notification sent when the driver stops monitoring a server topology and destroys its
 /// description.
 ///
-/// @see "TopologyClosedEvent" in
-/// https://github.com/mongodb/specifications/blob/master/source/server-discovery-and-monitoring/server-discovery-and-monitoring.rst
+/// @see
+/// - "TopologyClosedEvent" in https://github.com/mongodb/specifications/blob/master/source/server-discovery-and-monitoring/server-discovery-and-monitoring.rst
 ///
 class topology_closed_event {
    public:

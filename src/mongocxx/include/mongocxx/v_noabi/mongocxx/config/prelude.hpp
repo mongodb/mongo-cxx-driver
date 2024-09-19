@@ -75,15 +75,15 @@
 ///
 /// @warning For internal use only!
 ///
-/// @par "Includes" @parblock
-/// @li @ref mongocxx/v_noabi/mongocxx/config/compiler.hpp
-/// @li @ref mongocxx-v_noabi-mongocxx-config-config-hpp
-/// @li @ref mongocxx-v_noabi-mongocxx-config-export-hpp
-/// @li @ref mongocxx-v_noabi-mongocxx-config-version-hpp
-/// @endparblock
+/// @par Includes
+/// - @ref mongocxx/v_noabi/mongocxx/config/compiler.hpp
+/// - @ref mongocxx-v_noabi-mongocxx-config-config-hpp
+/// - @ref mongocxx-v_noabi-mongocxx-config-export-hpp
+/// - @ref mongocxx-v_noabi-mongocxx-config-version-hpp
 ///
 /// This header uses macro pragmas to guard macros defined by the mongocxx library for internal use
 /// by "pushing" their prior definition onto the stack before use by mongocxx headers.
 ///
-/// @see mongocxx/v_noabi/mongocxx/config/postlude.hpp
+/// @see
+/// - @ref mongocxx/v_noabi/mongocxx/config/postlude.hpp
 ///

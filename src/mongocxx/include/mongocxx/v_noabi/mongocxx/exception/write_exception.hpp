@@ -26,7 +26,8 @@ namespace v_noabi {
 ///
 /// Class representing an exception during a write operation.
 ///
-/// @see mongocxx::v_noabi::operation_exception
+/// @see
+/// - @ref mongocxx::v_noabi::operation_exception
 ///
 class write_exception : public operation_exception {
    public:

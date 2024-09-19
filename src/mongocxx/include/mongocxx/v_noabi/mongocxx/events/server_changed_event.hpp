@@ -31,8 +31,8 @@ namespace events {
 /// An event notification sent when the driver observes a change in the status of a server it is
 /// connected to.
 ///
-/// @see "ServerDescriptionChangedEvent" in
-/// https://github.com/mongodb/specifications/blob/master/source/server-discovery-and-monitoring/server-discovery-and-monitoring.rst
+/// @see
+/// - "ServerDescriptionChangedEvent" in https://github.com/mongodb/specifications/blob/master/source/server-discovery-and-monitoring/server-discovery-and-monitoring.rst
 ///
 class server_changed_event {
    public:

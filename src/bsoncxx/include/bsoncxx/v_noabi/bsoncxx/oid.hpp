@@ -35,7 +35,8 @@ namespace v_noabi {
 /// @note we use 'oid' to refer to this concrete class. We use 'ObjectId' to refer
 /// to the BSON type.
 ///
-/// @see https://www.mongodb.com/docs/manual/reference/object-id/
+/// @see
+/// - https://www.mongodb.com/docs/manual/reference/object-id/
 ///
 class oid {
    public:
