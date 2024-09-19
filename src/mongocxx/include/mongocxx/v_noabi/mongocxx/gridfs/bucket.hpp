@@ -51,11 +51,13 @@ namespace gridfs {
 /// in the `<bucketname>.files` collection containing the information about the file. Users should
 /// not modify these collections directly.
 ///
-/// Example of how obtain the default GridFS bucket for a given database:
-/// @code
-///   mongocxx::v_noabi::client mongo_client{mongocxx::v_noabi::uri{}};
-///   auto gridfs_bucket = mongo_client["database"].gridfs_bucket();
-/// @endcode
+/// @par Example
+/// ```cpp
+/// mongocxx::v_noabi::client mongo_client{mongocxx::v_noabi::uri{}};
+///
+/// // Obtain the default GridFS bucket for a given database.
+/// auto gridfs_bucket = mongo_client["database"].gridfs_bucket();
+/// ```
 ///
 /// See also the method documentation for `mongocxx::v_noabi::database::gridfs_bucket()`.
 ///

@@ -77,12 +77,12 @@ namespace v_noabi {
 /// different fields. While not a requirement, typically documents in a collection have a similar
 /// shape or related purpose.
 ///
-/// Example:
-/// @code
-///   // Connect and get a collection.
-///   mongocxx::v_noabi::client mongo_client{mongocxx::v_noabi::uri{}};
-///   auto coll = mongo_client["database"]["collection"];
-/// @endcode
+/// @par Example
+/// ```cpp
+/// // Connect and get a collection.
+/// mongocxx::v_noabi::client mongo_client{mongocxx::v_noabi::uri{}};
+/// auto coll = mongo_client["database"]["collection"];
+/// ```
 ///
 class collection {
     //

@@ -51,11 +51,11 @@ namespace v_noabi {
 /// via a client object (databases, collections, cursors, etc...) @b must be a subset of the
 /// lifetime of the client that created them.
 ///
-/// Example:
-/// @code
-///   mongocxx::v_noabi::client mongo_client{mongocxx::v_noabi::uri{}};
-///   mongocxx::v_noabi::client mongo_client{mongocxx::v_noabi::uri{"mongodb://localhost:27017"}};
-/// @endcode
+/// @par Example
+/// ```cpp
+/// mongocxx::v_noabi::client mongo_client{mongocxx::v_noabi::uri{}};
+/// mongocxx::v_noabi::client mongo_client{mongocxx::v_noabi::uri{"mongodb://localhost:27017"}};
+/// ```
 ///
 /// Note that client is not thread-safe. See
 /// https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/thread-safety/ for more details.
