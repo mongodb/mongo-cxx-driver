@@ -401,7 +401,8 @@
 /// @namespace mongocxx::v_noabi::model
 /// @copydoc mongocxx::model
 ///
-/// @see mongocxx::v_noabi::bulk_write
+/// @see
+/// - @ref mongocxx::v_noabi::bulk_write
 ///
 
 ///

@@ -142,5 +142,6 @@
 /// This header uses macro pragmas to guard macros defined by the bsoncxx library for internal use
 /// by "pushing" their prior definition onto the stack before use by bsoncxx headers.
 ///
-/// @see bsoncxx/v_noabi/bsoncxx/config/postlude.hpp
+/// @see
+/// - @ref bsoncxx/v_noabi/bsoncxx/config/postlude.hpp
 ///

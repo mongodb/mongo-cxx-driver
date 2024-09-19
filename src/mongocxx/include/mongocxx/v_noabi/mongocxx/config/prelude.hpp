@@ -85,5 +85,6 @@
 /// This header uses macro pragmas to guard macros defined by the mongocxx library for internal use
 /// by "pushing" their prior definition onto the stack before use by mongocxx headers.
 ///
-/// @see mongocxx/v_noabi/mongocxx/config/postlude.hpp
+/// @see
+/// - @ref mongocxx/v_noabi/mongocxx/config/postlude.hpp
 ///

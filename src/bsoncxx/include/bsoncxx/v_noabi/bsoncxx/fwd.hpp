@@ -421,7 +421,8 @@
 /// @namespace bsoncxx::v_noabi::types
 /// @copydoc bsoncxx::types
 ///
-/// @see bsoncxx::v_noabi::types::bson_value
+/// @see
+/// - @ref bsoncxx::v_noabi::types::bson_value
 ///
 
 ///

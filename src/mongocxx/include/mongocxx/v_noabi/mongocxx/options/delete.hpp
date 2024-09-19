@@ -45,7 +45,7 @@ class delete_options {
     ///   method chaining.
     ///
     /// @see
-    ///   https://www.mongodb.com/docs/manual/reference/collation/
+    /// - https://www.mongodb.com/docs/manual/reference/collation/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(delete_options&)
     collation(bsoncxx::v_noabi::document::view_or_value collation);
@@ -57,7 +57,7 @@ class delete_options {
     ///   The current collation.
     ///
     /// @see
-    ///   https://www.mongodb.com/docs/manual/reference/collation/
+    /// - https://www.mongodb.com/docs/manual/reference/collation/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
     collation() const;
@@ -72,7 +72,8 @@ class delete_options {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/core/write-concern/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/core/write-concern/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(delete_options&) write_concern(write_concern wc);
 
@@ -82,8 +83,8 @@ class delete_options {
     /// @return
     ///   The current write_concern.
     ///
-    /// @see https://www.mongodb.com/docs/manual/core/write-concern/
-    ///
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/core/write-concern/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<mongocxx::v_noabi::write_concern>&)
     write_concern() const;

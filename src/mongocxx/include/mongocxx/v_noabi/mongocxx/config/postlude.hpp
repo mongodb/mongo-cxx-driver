@@ -63,5 +63,6 @@
 /// This header uses macro pragmas to guard macros defined by the mongocxx library for internal use
 /// by "popping" their prior definition onto the stack after use by mongocxx headers.
 ///
-/// @see mongocxx/v_noabi/mongocxx/config/prelude.hpp
+/// @see
+/// - @ref mongocxx/v_noabi/mongocxx/config/prelude.hpp
 ///

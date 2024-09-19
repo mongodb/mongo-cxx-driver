@@ -59,7 +59,8 @@ namespace gridfs {
 ///
 /// See also the method documentation for `mongocxx::v_noabi::database::gridfs_bucket()`.
 ///
-/// @see https://www.mongodb.com/display/DOCS/GridFS
+/// @see
+/// - https://www.mongodb.com/display/DOCS/GridFS
 ///
 class bucket {
    public:
@@ -592,7 +593,8 @@ class bucket {
     /// @throws mongocxx::v_noabi::logic_error if the options are invalid, or if the unsupported
     /// option modifiers "$query" or "$explain" are used.
     ///
-    /// @see mongocxx::v_noabi::collection::find.
+    /// @see
+    /// - @ref mongocxx::v_noabi::collection::find.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(cursor)
     find(bsoncxx::v_noabi::document::view_or_value filter, const options::find& options = {});
@@ -617,7 +619,8 @@ class bucket {
     /// @throws mongocxx::v_noabi::logic_error if the options are invalid, or if the unsupported
     /// option modifiers "$query" or "$explain" are used.
     ///
-    /// @see mongocxx::v_noabi::collection::find.
+    /// @see
+    /// - @ref mongocxx::v_noabi::collection::find.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(cursor)
     find(const client_session& session,

@@ -121,7 +121,8 @@ class client {
     /// @param rc
     ///   The new @c read_concern
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/read-concern/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/read-concern/
     ///
     MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(void)
         read_concern(mongocxx::v_noabi::read_concern rc);
@@ -149,7 +150,8 @@ class client {
     /// @param rp
     ///   The new @c read_preference
     ///
-    /// @see https://www.mongodb.com/docs/manual/core/read-preference/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/core/read-preference/
     ///
     MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(void)
         read_preference(mongocxx::v_noabi::read_preference rp);
@@ -162,7 +164,8 @@ class client {
     ///
     /// @return The current @c read_preference
     ///
-    /// @see https://www.mongodb.com/docs/manual/core/read-preference/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/core/read-preference/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(mongocxx::v_noabi::read_preference) read_preference() const;
 
@@ -243,7 +246,8 @@ class client {
     /// @throws mongocxx::v_noabi::operation_exception if the underlying 'listDatabases' command
     /// fails.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/listDatabases
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/listDatabases
     ///
     MONGOCXX_ABI_EXPORT_CDECL(cursor) list_databases() const;
 
@@ -262,7 +266,8 @@ class client {
     /// @throws mongocxx::v_noabi::operation_exception if the underlying 'listDatabases' command
     /// fails.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/listDatabases
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/listDatabases
     ///
     MONGOCXX_ABI_EXPORT_CDECL(cursor) list_databases(const client_session& session) const;
 
@@ -281,7 +286,8 @@ class client {
     /// @throws mongocxx::v_noabi::operation_exception if the underlying 'listDatabases' command
     /// fails.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/listDatabases
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/listDatabases
     ///
     MONGOCXX_ABI_EXPORT_CDECL(cursor)
     list_databases(const bsoncxx::v_noabi::document::view_or_value opts) const;
@@ -304,7 +310,8 @@ class client {
     /// @throws mongocxx::v_noabi::operation_exception if the underlying 'listDatabases' command
     /// fails.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/listDatabases
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/listDatabases
     ///
     MONGOCXX_ABI_EXPORT_CDECL(cursor)
     list_databases(const client_session& session,
@@ -321,7 +328,8 @@ class client {
     /// @throws mongocxx::v_noabi::operation_exception if the underlying 'listDatabases'
     /// command fails.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/listDatabases
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/listDatabases
     ///
     MONGOCXX_ABI_EXPORT_CDECL(std::vector<std::string>)
     list_database_names(const bsoncxx::v_noabi::document::view_or_value filter = {}) const;
@@ -340,7 +348,8 @@ class client {
     /// @throws mongocxx::v_noabi::operation_exception if the underlying 'listDatabases'
     /// command fails.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/listDatabases
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/listDatabases
     ///
     MONGOCXX_ABI_EXPORT_CDECL(std::vector<std::string>)
     list_database_names(const client_session& session,
@@ -370,7 +379,8 @@ class client {
     /// @return
     ///  A change stream on this client.
     ///
-    /// @see https://www.mongodb.com/docs/manual/changeStreams/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/changeStreams/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(change_stream) watch(const options::change_stream& options = {});
 
@@ -387,7 +397,8 @@ class client {
     /// @return
     ///  A change stream on this client.
     ///
-    /// @see https://www.mongodb.com/docs/manual/changeStreams/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/changeStreams/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(change_stream)
     watch(const client_session& session, const options::change_stream& options = {});
@@ -407,7 +418,8 @@ class client {
     /// @return
     ///  A change stream on this client.
     ///
-    /// @see https://www.mongodb.com/docs/manual/changeStreams/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/changeStreams/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(change_stream)
     watch(const pipeline& pipe, const options::change_stream& options = {});
@@ -427,7 +439,8 @@ class client {
     /// @return
     ///  A change stream on this client.
     ///
-    /// @see https://www.mongodb.com/docs/manual/changeStreams/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/changeStreams/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(change_stream)
     watch(const client_session& session,

@@ -47,7 +47,8 @@ class client_encryption {
     /// @return
     ///   A reference to this object to facilitate method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(client_encryption&)
     key_vault_client(mongocxx::v_noabi::client* client);
@@ -80,7 +81,8 @@ class client_encryption {
     /// @return
     ///   A reference to this object to facilitate method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(client_encryption&) key_vault_namespace(ns_pair ns);
 
@@ -134,7 +136,8 @@ class client_encryption {
     /// @return
     ///   A reference to this object to facilitate method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(client_encryption&)
     kms_providers(bsoncxx::v_noabi::document::view_or_value kms_providers);
@@ -168,7 +171,8 @@ class client_encryption {
     /// @return
     ///   A reference to this object to facilitate method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(client_encryption&)
     tls_opts(bsoncxx::v_noabi::document::view_or_value tls_opts);

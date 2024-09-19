@@ -151,7 +151,8 @@ class collection {
     /// the cursor throws mongocxx::v_noabi::query_exception when the returned cursor
     /// is iterated.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/aggregate/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
     /// @note
     ///   In order to pass a read concern to this, you must use the
@@ -175,7 +176,8 @@ class collection {
     /// the cursor throws mongocxx::v_noabi::query_exception when the returned cursor
     /// is iterated.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/aggregate/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
     /// @note
     ///   In order to pass a read concern to this, you must use the
@@ -232,8 +234,9 @@ class collection {
     ///   mongocxx::v_noabi::bulk_write_exception when there are errors processing
     ///   the writes.
     ///
-    /// @see mongocxx::v_noabi::bulk_write
-    /// @see https://www.mongodb.com/docs/manual/core/bulk-write-operations/
+    /// @see
+    /// - @ref mongocxx::v_noabi::bulk_write
+    /// - https://www.mongodb.com/docs/manual/core/bulk-write-operations/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(stdx::optional<result::bulk_write>)
     write(const model::write& write, const options::bulk_write& options = options::bulk_write()) {
@@ -259,8 +262,9 @@ class collection {
     ///   mongocxx::v_noabi::bulk_write_exception when there are errors processing
     ///   the writes.
     ///
-    /// @see mongocxx::v_noabi::bulk_write
-    /// @see https://www.mongodb.com/docs/manual/core/bulk-write-operations/
+    /// @see
+    /// - @ref mongocxx::v_noabi::bulk_write
+    /// - https://www.mongodb.com/docs/manual/core/bulk-write-operations/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(stdx::optional<result::bulk_write>)
     write(const client_session& session,
@@ -287,8 +291,9 @@ class collection {
     ///
     /// @throws mongocxx::v_noabi::bulk_write_exception when there are errors processing the writes.
     ///
-    /// @see mongocxx::v_noabi::bulk_write
-    /// @see https://www.mongodb.com/docs/manual/core/bulk-write-operations/
+    /// @see
+    /// - @ref mongocxx::v_noabi::bulk_write
+    /// - https://www.mongodb.com/docs/manual/core/bulk-write-operations/
     ///
     template <typename container_type>
     stdx::optional<result::bulk_write> bulk_write(
@@ -316,8 +321,9 @@ class collection {
     ///
     /// @throws mongocxx::v_noabi::bulk_write_exception when there are errors processing the writes.
     ///
-    /// @see mongocxx::v_noabi::bulk_write
-    /// @see https://www.mongodb.com/docs/manual/core/bulk-write-operations/
+    /// @see
+    /// - @ref mongocxx::v_noabi::bulk_write
+    /// - https://www.mongodb.com/docs/manual/core/bulk-write-operations/
     ///
     template <typename container_type>
     stdx::optional<result::bulk_write> bulk_write(
@@ -346,8 +352,9 @@ class collection {
     ///
     /// @throws mongocxx::v_noabi::bulk_write_exception when there are errors processing the writes.
     ///
-    /// @see mongocxx::v_noabi::bulk_write
-    /// @see https://www.mongodb.com/docs/manual/core/bulk-write-operations/
+    /// @see
+    /// - @ref mongocxx::v_noabi::bulk_write
+    /// - https://www.mongodb.com/docs/manual/core/bulk-write-operations/
     ///
     template <typename write_model_iterator_type>
     stdx::optional<result::bulk_write> bulk_write(
@@ -380,8 +387,9 @@ class collection {
     ///
     /// @throws mongocxx::v_noabi::bulk_write_exception when there are errors processing the writes.
     ///
-    /// @see mongocxx::v_noabi::bulk_write
-    /// @see https://www.mongodb.com/docs/manual/core/bulk-write-operations/
+    /// @see
+    /// - @ref mongocxx::v_noabi::bulk_write
+    /// - https://www.mongodb.com/docs/manual/core/bulk-write-operations/
     ///
     template <typename write_model_iterator_type>
     stdx::optional<result::bulk_write> bulk_write(
@@ -414,7 +422,8 @@ class collection {
     /// estimatedDocumentCount are recommended to upgrade their server version to 5.0.8 or newer, or
     /// set `apiStrict: false` to avoid encountering errors.
     ///
-    /// @see mongocxx::v_noabi::collection::estimated_document_count
+    /// @see
+    /// - @ref mongocxx::v_noabi::collection::estimated_document_count
     ///
     MONGOCXX_ABI_EXPORT_CDECL(std::int64_t)
     count_documents(bsoncxx::v_noabi::document::view_or_value filter,
@@ -439,7 +448,8 @@ class collection {
     /// estimatedDocumentCount are recommended to upgrade their server version to 5.0.8 or newer, or
     /// set `apiStrict: false` to avoid encountering errors.
     ///
-    /// @see mongocxx::v_noabi::collection::estimated_document_count
+    /// @see
+    /// - @ref mongocxx::v_noabi::collection::estimated_document_count
     ///
     MONGOCXX_ABI_EXPORT_CDECL(std::int64_t)
     count_documents(const client_session& session,
@@ -459,7 +469,8 @@ class collection {
     /// @note This function is implemented in terms of the count server command. See:
     /// https://www.mongodb.com/docs/manual/reference/command/count/#behavior for more information.
     ///
-    /// @see mongocxx::v_noabi::collection::count_documents
+    /// @see
+    /// - @ref mongocxx::v_noabi::collection::count_documents
     ///
     MONGOCXX_ABI_EXPORT_CDECL(std::int64_t)
     estimated_document_count(
@@ -479,7 +490,7 @@ class collection {
     ///   mongocxx::v_noabi::operation_exception if index creation fails.
     ///
     /// @see
-    ///   https://www.mongodb.com/docs/manual/reference/command/createIndexes/
+    /// - https://www.mongodb.com/docs/manual/reference/command/createIndexes/
     ///
     /// @note
     ///   Write concern supported only for MongoDB 3.4+.
@@ -505,7 +516,7 @@ class collection {
     ///   mongocxx::v_noabi::operation_exception if index creation fails.
     ///
     /// @see
-    ///   https://www.mongodb.com/docs/manual/reference/command/createIndexes/
+    /// - https://www.mongodb.com/docs/manual/reference/command/createIndexes/
     ///
     /// @note
     ///   Write concern supported only for MongoDB 3.4+.
@@ -530,7 +541,8 @@ class collection {
     ///
     /// @throws mongocxx::v_noabi::bulk_write_exception if the delete fails.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/delete/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/delete/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(stdx::optional<result::delete_result>)
     delete_many(bsoncxx::v_noabi::document::view_or_value filter,
@@ -552,7 +564,8 @@ class collection {
     ///
     /// @throws mongocxx::v_noabi::bulk_write_exception if the delete fails.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/delete/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/delete/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(stdx::optional<result::delete_result>)
     delete_many(const client_session& session,
@@ -573,7 +586,8 @@ class collection {
     ///
     /// @throws mongocxx::v_noabi::bulk_write_exception if the delete fails.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/delete/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/delete/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(stdx::optional<result::delete_result>)
     delete_one(bsoncxx::v_noabi::document::view_or_value filter,
@@ -595,7 +609,8 @@ class collection {
     ///
     /// @throws mongocxx::v_noabi::bulk_write_exception if the delete fails.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/delete/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/delete/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(stdx::optional<result::delete_result>)
     delete_one(const client_session& session,
@@ -616,7 +631,8 @@ class collection {
     /// field.  If the operation fails, the cursor throws
     /// mongocxx::v_noabi::query_exception when the returned cursor is iterated.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/distinct/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/distinct/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(cursor)
     distinct(bsoncxx::v_noabi::string::view_or_value name,
@@ -639,7 +655,8 @@ class collection {
     /// field.  If the operation fails, the cursor throws
     /// mongocxx::v_noabi::query_exception when the returned cursor is iterated.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/distinct/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/distinct/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(cursor)
     distinct(const client_session& session,
@@ -661,7 +678,7 @@ class collection {
     ///   mongocxx::v_noabi::operation_exception if the operation fails.
     ///
     /// @see
-    ///   https://www.mongodb.com/docs/manual/reference/command/drop/
+    /// - https://www.mongodb.com/docs/manual/reference/command/drop/
     ///
     /// @note
     ///   Write concern supported only for MongoDB 3.4+.
@@ -686,7 +703,7 @@ class collection {
     ///   mongocxx::v_noabi::operation_exception if the operation fails.
     ///
     /// @see
-    ///   https://www.mongodb.com/docs/manual/reference/command/drop/
+    /// - https://www.mongodb.com/docs/manual/reference/command/drop/
     ///
     /// @note
     ///   Write concern supported only for MongoDB 3.4+.
@@ -712,7 +729,8 @@ class collection {
     /// @throws mongocxx::v_noabi::logic_error if the options are invalid, or if the unsupported
     /// option modifiers "$query" or "$explain" are used.
     ///
-    /// @see https://www.mongodb.com/docs/manual/core/read-operations-introduction/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/core/read-operations-introduction/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(cursor)
     find(bsoncxx::v_noabi::document::view_or_value filter,
@@ -735,7 +753,8 @@ class collection {
     /// @throws mongocxx::v_noabi::logic_error if the options are invalid, or if the unsupported
     /// option modifiers "$query" or "$explain" are used.
     ///
-    /// @see https://www.mongodb.com/docs/manual/core/read-operations-introduction/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/core/read-operations-introduction/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(cursor)
     find(const client_session& session,
@@ -754,7 +773,8 @@ class collection {
     ///
     /// @throws mongocxx::v_noabi::query_exception if the operation fails.
     ///
-    /// @see https://www.mongodb.com/docs/manual/core/read-operations-introduction/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/core/read-operations-introduction/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(stdx::optional<bsoncxx::v_noabi::document::value>)
     find_one(bsoncxx::v_noabi::document::view_or_value filter,
@@ -774,7 +794,8 @@ class collection {
     ///
     /// @throws mongocxx::v_noabi::query_exception if the operation fails.
     ///
-    /// @see https://www.mongodb.com/docs/manual/core/read-operations-introduction/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/core/read-operations-introduction/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(stdx::optional<bsoncxx::v_noabi::document::value>)
     find_one(const client_session& session,
@@ -1217,7 +1238,8 @@ class collection {
     ///
     /// @throws mongocxx::v_noabi::operation_exception if the operation fails.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/listIndexes/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/listIndexes/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(cursor) list_indexes() const;
 
@@ -1231,7 +1253,8 @@ class collection {
     ///
     /// @throws mongocxx::v_noabi::operation_exception if the operation fails.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/listIndexes/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/listIndexes/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(cursor) list_indexes(const client_session& session) const;
 
@@ -1257,7 +1280,7 @@ class collection {
     ///   mongocxx::v_noabi::operation_exception if the operation fails.
     ///
     /// @see
-    ///   https://www.mongodb.com/docs/manual/reference/command/renameCollection/
+    /// - https://www.mongodb.com/docs/manual/reference/command/renameCollection/
     ///
     /// @note
     ///   Write concern supported only for MongoDB 3.4+.
@@ -1283,7 +1306,7 @@ class collection {
     ///   mongocxx::v_noabi::operation_exception if the operation fails.
     ///
     /// @see
-    ///   https://www.mongodb.com/docs/manual/reference/command/renameCollection/
+    /// - https://www.mongodb.com/docs/manual/reference/command/renameCollection/
     ///
     /// @note
     ///   Write concern supported only for MongoDB 3.4+.
@@ -1301,7 +1324,8 @@ class collection {
     /// @param rc
     ///   The new @c read_concern
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/read-concern/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/read-concern/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(void) read_concern(mongocxx::v_noabi::read_concern rc);
 
@@ -1322,7 +1346,8 @@ class collection {
     /// @param rp
     ///   The read_preference to set.
     ///
-    /// @see https://www.mongodb.com/docs/manual/core/read-preference/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/core/read-preference/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(void) read_preference(mongocxx::v_noabi::read_preference rp);
 
@@ -1331,7 +1356,8 @@ class collection {
     ///
     /// @return The current read_preference.
     ///
-    /// @see https://www.mongodb.com/docs/manual/core/read-preference/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/core/read-preference/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(mongocxx::v_noabi::read_preference) read_preference() const;
 
@@ -1353,7 +1379,8 @@ class collection {
     ///   mongocxx::v_noabi::logic_error if the replacement is invalid, or
     ///   mongocxx::v_noabi::bulk_write_exception if the operation fails.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/update/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/update/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(stdx::optional<result::replace_one>)
     replace_one(bsoncxx::v_noabi::document::view_or_value filter,
@@ -1380,7 +1407,8 @@ class collection {
     ///   mongocxx::v_noabi::logic_error if the replacement is invalid, or
     ///   mongocxx::v_noabi::bulk_write_exception if the operation fails.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/update/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/update/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(stdx::optional<result::replace_one>)
     replace_one(const client_session& session,
@@ -1406,7 +1434,8 @@ class collection {
     ///   mongocxx::v_noabi::logic_error if the update is invalid, or
     ///   mongocxx::v_noabi::bulk_write_exception if the operation fails.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/update/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/update/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(stdx::optional<result::update>)
     update_many(bsoncxx::v_noabi::document::view_or_value filter,
@@ -1431,7 +1460,8 @@ class collection {
     ///   mongocxx::v_noabi::logic_error if the update is invalid, or
     ///   mongocxx::v_noabi::bulk_write_exception if the operation fails.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/update/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/update/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(stdx::optional<result::update>)
     update_many(bsoncxx::v_noabi::document::view_or_value filter,
@@ -1456,7 +1486,8 @@ class collection {
     ///   mongocxx::v_noabi::logic_error if the update is invalid, or
     ///   mongocxx::v_noabi::bulk_write_exception if the operation fails.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/update/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/update/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(stdx::optional<result::update>)
     update_many(bsoncxx::v_noabi::document::view_or_value filter,
@@ -1483,7 +1514,8 @@ class collection {
     ///   mongocxx::v_noabi::logic_error if the update is invalid, or
     ///   mongocxx::v_noabi::bulk_write_exception if the operation fails.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/update/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/update/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(stdx::optional<result::update>)
     update_many(const client_session& session,
@@ -1511,7 +1543,8 @@ class collection {
     ///   mongocxx::v_noabi::logic_error if the update is invalid, or
     ///   mongocxx::v_noabi::bulk_write_exception if the operation fails.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/update/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/update/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(stdx::optional<result::update>)
     update_many(const client_session& session,
@@ -1539,7 +1572,8 @@ class collection {
     ///   mongocxx::v_noabi::logic_error if the update is invalid, or
     ///   mongocxx::v_noabi::bulk_write_exception if the operation fails.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/update/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/update/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(stdx::optional<result::update>)
     update_many(const client_session& session,
@@ -1565,7 +1599,8 @@ class collection {
     ///   mongocxx::v_noabi::logic_error if the update is invalid, or
     ///   mongocxx::v_noabi::bulk_write_exception if the operation fails.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/update/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/update/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(stdx::optional<result::update>)
     update_one(bsoncxx::v_noabi::document::view_or_value filter,
@@ -1590,7 +1625,8 @@ class collection {
     ///   mongocxx::v_noabi::logic_error if the update is invalid, or
     ///   mongocxx::v_noabi::bulk_write_exception if the operation fails.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/update/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/update/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(stdx::optional<result::update>)
     update_one(bsoncxx::v_noabi::document::view_or_value filter,
@@ -1615,7 +1651,8 @@ class collection {
     ///   mongocxx::v_noabi::logic_error if the update is invalid, or
     ///   mongocxx::v_noabi::bulk_write_exception if the operation fails.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/update/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/update/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(stdx::optional<result::update>)
     update_one(bsoncxx::v_noabi::document::view_or_value filter,
@@ -1642,7 +1679,8 @@ class collection {
     ///   mongocxx::v_noabi::logic_error if the update is invalid, or
     ///   mongocxx::v_noabi::bulk_write_exception if the operation fails.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/update/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/update/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(stdx::optional<result::update>)
     update_one(const client_session& session,
@@ -1670,7 +1708,8 @@ class collection {
     ///   mongocxx::v_noabi::logic_error if the update is invalid, or
     ///   mongocxx::v_noabi::bulk_write_exception if the operation fails.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/update/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/update/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(stdx::optional<result::update>)
     update_one(const client_session& session,
@@ -1698,7 +1737,8 @@ class collection {
     ///   mongocxx::v_noabi::logic_error if the update is invalid, or
     ///   mongocxx::v_noabi::bulk_write_exception if the operation fails.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/update/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/update/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(stdx::optional<result::update>)
     update_one(const client_session& session,
@@ -1738,7 +1778,8 @@ class collection {
     /// @return
     ///  A change stream on this collection.
     ///
-    /// @see https://www.mongodb.com/docs/manual/changeStreams/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/changeStreams/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(change_stream) watch(const options::change_stream& options = {});
 
@@ -1751,7 +1792,8 @@ class collection {
     /// @return
     ///  A change stream on this collection.
     ///
-    /// @see https://www.mongodb.com/docs/manual/changeStreams/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/changeStreams/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(change_stream)
     watch(const client_session& session, const options::change_stream& options = {});
@@ -1770,7 +1812,8 @@ class collection {
     /// @return
     ///  A change stream on this collection.
     ///
-    /// @see https://www.mongodb.com/docs/manual/changeStreams/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/changeStreams/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(change_stream)
     watch(const pipeline& pipe, const options::change_stream& options = {});
@@ -1788,7 +1831,8 @@ class collection {
     /// @return
     ///  A change stream on this collection.
     ///
-    /// @see https://www.mongodb.com/docs/manual/changeStreams/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/changeStreams/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(change_stream)
     watch(const client_session& session,

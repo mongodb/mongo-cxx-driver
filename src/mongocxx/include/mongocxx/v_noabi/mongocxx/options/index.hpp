@@ -39,7 +39,8 @@ namespace options {
 ///
 /// Class representing the optional arguments to a MongoDB create index operation.
 ///
-/// @see https://www.mongodb.com/docs/manual/reference/command/createIndexes
+/// @see
+/// - https://www.mongodb.com/docs/manual/reference/command/createIndexes
 ///
 class index {
    public:
@@ -119,7 +120,8 @@ class index {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/tutorial/build-indexes-in-the-background/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/tutorial/build-indexes-in-the-background/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(index&) background(bool background);
 
@@ -141,7 +143,8 @@ class index {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/core/index-unique/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/core/index-unique/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(index&) unique(bool unique);
 
@@ -163,7 +166,8 @@ class index {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/core/index-hidden/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/core/index-hidden/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(index&) hidden(bool hidden);
 
@@ -205,7 +209,7 @@ class index {
     ///   method chaining.
     ///
     /// @see
-    ///   https://www.mongodb.com/docs/manual/reference/collation/
+    /// - https://www.mongodb.com/docs/manual/reference/collation/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(index&) collation(bsoncxx::v_noabi::document::view collation);
 
@@ -216,7 +220,7 @@ class index {
     ///   The current collation.
     ///
     /// @see
-    ///   https://www.mongodb.com/docs/manual/reference/collation/
+    /// - https://www.mongodb.com/docs/manual/reference/collation/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::view>&)
     collation() const;
@@ -232,7 +236,8 @@ class index {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/core/index-sparse/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/core/index-sparse/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(index&) sparse(bool sparse);
 
@@ -278,7 +283,8 @@ class index {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/core/index-ttl/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/core/index-ttl/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(index&) expire_after(std::chrono::seconds seconds);
 
@@ -475,7 +481,8 @@ class index {
     /// values; i.e. group in the same bucket those location values that are within the specified
     /// number of units to each other.
     ///
-    /// @see https://www.mongodb.com/docs/manual/core/geohaystack/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/core/geohaystack/
     ///
     /// @param haystack_bucket_size
     ///   The geoHaystack bucket size.

@@ -37,9 +37,8 @@ namespace v_noabi {
 ///
 /// Class representing a MongoDB connection string URI.
 ///
-/// @see https://www.mongodb.com/docs/manual/reference/connection-string/
-/// @see https://mongoc.org/libmongoc/current/mongoc_uri_t.html for more information on supported
-/// URI options.
+/// @see
+/// - https://www.mongodb.com/docs/manual/reference/connection-string/
 ///
 class uri {
    public:
@@ -56,9 +55,8 @@ class uri {
     /// Constructs a uri from an optional MongoDB URI string. If no URI string is specified,
     /// uses the default URI string, 'mongodb://localhost:27017'.
     ///
-    /// @see The documentation for the version of libmongoc used for the list of supported
-    ///   URI options. For the latest libmongoc release:
-    ///   https://mongoc.org/libmongoc/current/mongoc_uri_t.html
+    /// @see
+    /// - https://mongoc.org/libmongoc/current/mongoc_uri_t.html
     ///
     /// @param uri_string
     ///   String representing a MongoDB connection string URI, defaults to k_default_uri.

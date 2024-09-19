@@ -104,5 +104,6 @@ static_assert(false, "BSONCXX_ENUM must be undef'ed");
 /// This header uses macro pragmas to guard macros defined by the bsoncxx library for internal use
 /// by "popping" their prior definition onto the stack after use by bsoncxx headers.
 ///
-/// @see bsoncxx/v_noabi/bsoncxx/config/prelude.hpp
+/// @see
+/// - @ref bsoncxx/v_noabi/bsoncxx/config/prelude.hpp
 ///

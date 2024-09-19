@@ -29,7 +29,8 @@ namespace v_noabi {
 ///
 /// Class representing criteria for document validation, to be applied to a collection.
 ///
-/// @see https://www.mongodb.com/docs/manual/core/document-validation/
+/// @see
+/// - https://www.mongodb.com/docs/manual/core/document-validation/
 ///
 class validation_criteria {
    public:

@@ -46,7 +46,8 @@ class find_one_and_delete {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/findAndModify/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(find_one_and_delete&)
     collation(bsoncxx::v_noabi::document::view_or_value collation);
@@ -57,7 +58,8 @@ class find_one_and_delete {
     /// @return
     ///   The current collation.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/findAndModify/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
     collation() const;
@@ -72,7 +74,8 @@ class find_one_and_delete {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/findAndModify/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(find_one_and_delete&) max_time(std::chrono::milliseconds max_time);
 
@@ -81,7 +84,8 @@ class find_one_and_delete {
     ///
     /// @return the current max time (in milliseconds).
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/findAndModify/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<std::chrono::milliseconds>&) max_time() const;
 
@@ -95,7 +99,8 @@ class find_one_and_delete {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/findAndModify/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(find_one_and_delete&)
     projection(bsoncxx::v_noabi::document::view_or_value projection);
@@ -105,7 +110,8 @@ class find_one_and_delete {
     ///
     /// @return The current projection.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/findAndModify/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
     projection() const;
@@ -123,7 +129,8 @@ class find_one_and_delete {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/findAndModify/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(find_one_and_delete&)
     sort(bsoncxx::v_noabi::document::view_or_value ordering);
@@ -133,7 +140,8 @@ class find_one_and_delete {
     ///
     /// @return The current sort ordering.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/findAndModify/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
     sort() const;
@@ -149,7 +157,7 @@ class find_one_and_delete {
     ///   method chaining.
     ///
     /// @see
-    ///   https://www.mongodb.com/docs/manual/reference/command/findAndModify/
+    /// - https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(find_one_and_delete&)
     write_concern(mongocxx::v_noabi::write_concern write_concern);
@@ -161,7 +169,7 @@ class find_one_and_delete {
     ///   The current write concern.
     ///
     /// @see
-    ///   https://www.mongodb.com/docs/manual/reference/command/findAndModify/
+    /// - https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<mongocxx::v_noabi::write_concern>&)
     write_concern() const;

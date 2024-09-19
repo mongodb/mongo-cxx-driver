@@ -88,7 +88,7 @@ class data_key {
     ///   A reference to this object.
     ///
     /// @see
-    /// https://www.mongodb.com/docs/manual/core/security-client-side-encryption-key-management/
+    /// - https://www.mongodb.com/docs/manual/core/security-client-side-encryption-key-management/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(data_key&)
     master_key(bsoncxx::v_noabi::document::view_or_value master_key);
@@ -113,7 +113,8 @@ class data_key {
     /// @return
     ///   A reference to this object.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/method/getClientEncryption/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/method/getClientEncryption/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(data_key&) key_alt_names(std::vector<std::string> key_alt_names);
 
@@ -146,7 +147,8 @@ class data_key {
     /// @return
     ///   A reference to this object.
     ///
-    /// @see https://www.mongodb.com/docs/v6.0/reference/method/KeyVault.createKey/
+    /// @see
+    /// - https://www.mongodb.com/docs/v6.0/reference/method/KeyVault.createKey/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(data_key&) key_material(key_material_type key_material);
 
@@ -156,7 +158,8 @@ class data_key {
     /// @return
     ///   The binary data for the key material
     ///
-    /// @see https://www.mongodb.com/docs/v6.0/reference/method/KeyVault.createKey/
+    /// @see
+    /// - https://www.mongodb.com/docs/v6.0/reference/method/KeyVault.createKey/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<key_material_type>&) key_material();
 

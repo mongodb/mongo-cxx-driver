@@ -105,7 +105,7 @@ class update_many {
     ///   The new collation.
     ///
     /// @see
-    ///   https://www.mongodb.com/docs/manual/reference/collation/
+    /// - https://www.mongodb.com/docs/manual/reference/collation/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(update_many&)
     collation(bsoncxx::v_noabi::document::view_or_value collation);
@@ -117,7 +117,7 @@ class update_many {
     ///   The optional value of the collation option.
     ///
     /// @see
-    ///   https://www.mongodb.com/docs/manual/reference/collation/
+    /// - https://www.mongodb.com/docs/manual/reference/collation/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
     collation() const;
@@ -171,7 +171,8 @@ class update_many {
     /// @param array_filters
     ///   Array representing filters determining which array elements to modify.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/update/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/update/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(update_many&)
     array_filters(bsoncxx::v_noabi::array::view_or_value array_filters);
@@ -182,7 +183,8 @@ class update_many {
     /// @return
     ///   The current array filters.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/update/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/update/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::array::view_or_value>&)
     array_filters() const;

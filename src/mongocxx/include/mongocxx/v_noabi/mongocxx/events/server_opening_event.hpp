@@ -30,8 +30,8 @@ namespace events {
 /// An event notification sent when the driver adds a MongoDB server to the topology description
 /// and begins monitoring it.
 ///
-/// @see "ServerOpeningEvent" in
-/// https://github.com/mongodb/specifications/blob/master/source/server-discovery-and-monitoring/server-discovery-and-monitoring.rst
+/// @see
+/// - "ServerOpeningEvent" in https://github.com/mongodb/specifications/blob/master/source/server-discovery-and-monitoring/server-discovery-and-monitoring.rst
 ///
 class server_opening_event {
    public:

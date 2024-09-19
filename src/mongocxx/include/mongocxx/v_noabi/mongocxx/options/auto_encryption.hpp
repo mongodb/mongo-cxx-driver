@@ -55,7 +55,8 @@ class auto_encryption {
     /// @return
     ///   A reference to this object to facilitate method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(auto_encryption&) key_vault_client(mongocxx::v_noabi::client* client);
 
@@ -86,7 +87,8 @@ class auto_encryption {
     /// @return
     ///   A reference to this object to facilitate method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(auto_encryption&) key_vault_pool(mongocxx::v_noabi::pool* pool);
 
@@ -118,7 +120,8 @@ class auto_encryption {
     /// @return
     ///   A reference to this object to facilitate method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(auto_encryption&) key_vault_namespace(ns_pair ns);
 
@@ -172,7 +175,8 @@ class auto_encryption {
     /// @return
     ///   A reference to this object to facilitate method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(auto_encryption&)
     kms_providers(bsoncxx::v_noabi::document::view_or_value kms_providers);
@@ -206,7 +210,8 @@ class auto_encryption {
     /// @return
     ///   A reference to this object to facilitate method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(auto_encryption&)
     tls_opts(bsoncxx::v_noabi::document::view_or_value tls_opts);
@@ -240,7 +245,8 @@ class auto_encryption {
     /// @return
     ///   A reference to this object to facilitate method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(auto_encryption&)
     schema_map(bsoncxx::v_noabi::document::view_or_value schema_map);
@@ -264,12 +270,14 @@ class auto_encryption {
     /// @param encrypted_fields_map
     ///   The mapping of which fields to encrypt.
     ///
-    /// @see https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
     /// @return
     ///   A reference to this object to facilitate method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(auto_encryption&)
     encrypted_fields_map(bsoncxx::v_noabi::document::view_or_value encrypted_fields_map);
@@ -293,7 +301,8 @@ class auto_encryption {
     /// @return
     ///   A reference to this object to facilitate method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(auto_encryption&) bypass_auto_encryption(bool should_bypass);
 
@@ -315,7 +324,8 @@ class auto_encryption {
     /// @return
     ///   A reference to this object to facilitate method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(auto_encryption&) bypass_query_analysis(bool should_bypass);
 
@@ -374,7 +384,8 @@ class auto_encryption {
     /// @return
     ///   A reference to this object to facilitate method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(auto_encryption&)
     extra_options(bsoncxx::v_noabi::document::view_or_value extra);

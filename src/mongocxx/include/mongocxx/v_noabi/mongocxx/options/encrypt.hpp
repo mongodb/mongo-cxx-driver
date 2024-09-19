@@ -51,7 +51,8 @@ class encrypt {
     /// @return
     ///   A reference to this object to facilitate method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(encrypt&)
     key_id(bsoncxx::v_noabi::types::bson_value::view_or_value key_id);
@@ -76,7 +77,8 @@ class encrypt {
     /// @return
     ///   A reference to this obejct to facilitate method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/method/getClientEncryption/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/method/getClientEncryption/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(encrypt&) key_alt_name(std::string name);
 
@@ -150,7 +152,7 @@ class encrypt {
     /// mongocxx::v_noabi::options::auto_encryption::bypass_auto_encryption must be false.
     ///
     /// @see
-    /// https://www.mongodb.com/docs/manual/core/security-client-side-encryption/#encryption-algorithms
+    /// - https://www.mongodb.com/docs/manual/core/security-client-side-encryption/#encryption-algorithms
     ///
     MONGOCXX_ABI_EXPORT_CDECL(encrypt&) algorithm(encryption_algorithm algorithm);
 
