@@ -3377,6 +3377,12 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
                     // This test case should be skipped if the encrypted field is
                     // `encryptedDoubleNoPrecision` or `encryptedDecimalNoPrecision`.
                     break;
+
+                case RangeFieldType::DecimalPrecision:
+                case RangeFieldType::DoublePrecision:
+                case RangeFieldType::Date:
+                case RangeFieldType::Int:
+                case RangeFieldType::Long:
                 default: {
                     SECTION("Case 6: encrypting a document greater than the maximum errors") {
                         const auto original = to_field_value(201, field_type);
@@ -3413,6 +3419,12 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
                     // This test case should be skipped if the encrypted field is
                     // `encryptedDoubleNoPrecision`.
                     break;
+
+                case RangeFieldType::DecimalPrecision:
+                case RangeFieldType::DoublePrecision:
+                case RangeFieldType::Date:
+                case RangeFieldType::Int:
+                case RangeFieldType::Long:
                 default: {
                     SECTION("Case 7: encrypting a document of a different type errors") {
                         // For all the tests below use these EncryptOpts:
@@ -3454,6 +3466,10 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
                     // `encryptedDoublePrecision` or `encryptedDoubleNoPrecision` or
                     // `encryptedDecimalPrecision` or `encryptedDecimalNoPrecision`.
                     break;
+
+                case RangeFieldType::Date:
+                case RangeFieldType::Int:
+                case RangeFieldType::Long:
                 default: {
                     SECTION("Case 8: setting precision errors if the type is not a double") {
                         // Use `clientEncryption.encrypt()` to try to encrypt the value 6 with these
