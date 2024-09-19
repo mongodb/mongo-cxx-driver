@@ -235,8 +235,10 @@ cseeos_result client_side_encryption_enabled_or_skip_impl();
                 break;                                                                \
             case mongocxx::test_util::cseeos_result::skip:                            \
                 SKIP("CSE environemnt variables not set");                            \
+                break;                                                                \
             case mongocxx::test_util::cseeos_result::fail:                            \
                 FAIL("One or more CSE environment variable is missing");              \
+                break;                                                                \
         }                                                                             \
     } else                                                                            \
         ((void)0)

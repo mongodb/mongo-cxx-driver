@@ -116,6 +116,25 @@ bsoncxx::array::value transform_array(bsoncxx::array::view view,
                 builder.append(transform_array(v.get_array().value, fcn, context));
                 break;
 
+            case bsoncxx::type::k_double:
+            case bsoncxx::type::k_string:
+            case bsoncxx::type::k_binary:
+            case bsoncxx::type::k_undefined:
+            case bsoncxx::type::k_oid:
+            case bsoncxx::type::k_bool:
+            case bsoncxx::type::k_date:
+            case bsoncxx::type::k_null:
+            case bsoncxx::type::k_regex:
+            case bsoncxx::type::k_dbpointer:
+            case bsoncxx::type::k_code:
+            case bsoncxx::type::k_symbol:
+            case bsoncxx::type::k_codewscope:
+            case bsoncxx::type::k_int32:
+            case bsoncxx::type::k_timestamp:
+            case bsoncxx::type::k_int64:
+            case bsoncxx::type::k_decimal128:
+            case bsoncxx::type::k_maxkey:
+            case bsoncxx::type::k_minkey:
             default:
                 builder.append(v);
                 break;
@@ -159,6 +178,25 @@ bsoncxx::document::value transform_document_recursive(bsoncxx::document::view vi
                     k, transform_array(v.get_array().value, fcn, context)));
                 break;
 
+            case bsoncxx::type::k_double:
+            case bsoncxx::type::k_string:
+            case bsoncxx::type::k_binary:
+            case bsoncxx::type::k_undefined:
+            case bsoncxx::type::k_oid:
+            case bsoncxx::type::k_bool:
+            case bsoncxx::type::k_date:
+            case bsoncxx::type::k_null:
+            case bsoncxx::type::k_regex:
+            case bsoncxx::type::k_dbpointer:
+            case bsoncxx::type::k_code:
+            case bsoncxx::type::k_symbol:
+            case bsoncxx::type::k_codewscope:
+            case bsoncxx::type::k_int32:
+            case bsoncxx::type::k_timestamp:
+            case bsoncxx::type::k_int64:
+            case bsoncxx::type::k_decimal128:
+            case bsoncxx::type::k_maxkey:
+            case bsoncxx::type::k_minkey:
             default:
                 builder.append(bsoncxx::builder::basic::kvp(k, v));
                 break;
