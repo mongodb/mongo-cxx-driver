@@ -31,8 +31,8 @@ namespace string {
 /// This function may be used in place of explicit conversion to `std::string`, which may not be
 /// supported across all polyfill build configurations.
 ///
-/// @par "Example" @parblock
-/// @code{.cpp}
+/// @par Example
+/// ```cpp
 /// std::string example(bsoncxx::v_noabi::stdx::string_view sv) {
 ///   // This may not be supported depending on the polyfill library.
 ///   // return std::string(sv);
@@ -40,8 +40,6 @@ namespace string {
 ///   // This is supported regardless of the polyfill library.
 ///   return bsoncxx::v_noabi::string::to_string(sv);
 /// }
-/// @endcode
-/// @endparblock
 ///
 template <class CharT,
           class Traits = std::char_traits<CharT>,

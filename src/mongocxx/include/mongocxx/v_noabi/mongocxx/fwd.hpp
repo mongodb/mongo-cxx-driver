@@ -116,10 +116,8 @@
 /// @file
 /// Aggregate of all forward headers declaring entities in @ref mongocxx::v_noabi.
 ///
-/// @par "Includes" @parblock
-/// @li All header files under @ref src/mongocxx/include/mongocxx/v_noabi/mongocxx
-/// "mongocxx/v_noabi/mongocxx" whose filename ends with `-fwd.hpp`.
-/// @endparblock
+/// @par Includes
+/// - All header files under @ref src/mongocxx/include/mongocxx/v_noabi/mongocxx "mongocxx/v_noabi/mongocxx" whose filename ends with `-fwd.hpp`.
 ///
 
 ///
