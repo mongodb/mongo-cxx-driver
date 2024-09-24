@@ -39,7 +39,8 @@ namespace v_noabi {
 /// For interoperability with other MongoDB drivers, the minimum and maximum number of connections
 /// in the pool is configured using the 'minPoolSize' and 'maxPoolSize' connection string options.
 ///
-/// @see https://www.mongodb.com/docs/manual/reference/connection-string/#connection-string-options
+/// @see
+/// - https://www.mongodb.com/docs/manual/reference/connection-string/#connection-string-options
 ///
 /// @remark When connecting to a replica set, it is @b much more efficient to use a pool as opposed
 /// to manually constructing @c client objects. The pool will use a single background thread per

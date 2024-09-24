@@ -43,7 +43,7 @@ namespace v_noabi {
 /// https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/thread-safety/ for more details.
 ///
 /// @see
-/// https://www.mongodb.com/docs/manual/core/read-isolation-consistency-recency/#causal-consistency
+/// - https://www.mongodb.com/docs/manual/core/read-isolation-consistency-recency/#causal-consistency
 ///
 class client_session {
    public:

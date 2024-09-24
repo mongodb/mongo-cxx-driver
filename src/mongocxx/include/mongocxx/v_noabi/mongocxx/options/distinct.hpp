@@ -47,7 +47,8 @@ class distinct {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/distinct/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/distinct/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(distinct&)
     collation(bsoncxx::v_noabi::document::view_or_value collation);
@@ -58,7 +59,8 @@ class distinct {
     /// @return
     ///   The current collation.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/distinct/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/distinct/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
     collation() const;
@@ -73,7 +75,8 @@ class distinct {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/distinct/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/distinct/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(distinct&) max_time(std::chrono::milliseconds max_time);
 
@@ -82,7 +85,8 @@ class distinct {
     ///
     /// @return The current max time (in milliseconds).
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/distinct/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/distinct/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<std::chrono::milliseconds>&) max_time() const;
 
@@ -96,7 +100,8 @@ class distinct {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/distinct/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/distinct/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(distinct&)
     comment(bsoncxx::v_noabi::types::bson_value::view_or_value comment);
@@ -106,7 +111,8 @@ class distinct {
     ///
     /// @return The current comment
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/distinct/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/distinct/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(
         const stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>&)
@@ -122,7 +128,8 @@ class distinct {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/distinct/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/distinct/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(distinct&) read_preference(mongocxx::v_noabi::read_preference rp);
 
@@ -131,7 +138,8 @@ class distinct {
     ///
     /// @return the current read_preference.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/distinct/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/distinct/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<mongocxx::v_noabi::read_preference>&)
     read_preference() const;

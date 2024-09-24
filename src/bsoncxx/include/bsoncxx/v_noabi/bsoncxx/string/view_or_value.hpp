@@ -30,9 +30,8 @@ namespace string {
 ///
 /// Class representing a view-or-value variant type for strings.
 ///
-/// @par "Derived From" @parblock
-/// @li @ref bsoncxx::v_noabi::view_or_value<stdx::string_view, std::string>
-/// @endparblock
+/// @par Derived From
+/// - @ref bsoncxx::v_noabi::view_or_value<stdx::string_view, std::string>
 ///
 /// This class adds several string-specific methods to the bsoncxx::v_noabi::view_or_value template:
 /// - a constructor overload for const char*

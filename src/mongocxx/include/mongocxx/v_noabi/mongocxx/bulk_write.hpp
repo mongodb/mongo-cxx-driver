@@ -38,8 +38,9 @@ namespace v_noabi {
 /// method. Options that you would typically specify for individual write operations (such as write
 /// concern) are instead specified for the aggregate operation.
 ///
-/// @see https://www.mongodb.com/docs/manual/core/crud/
-/// @see https://www.mongodb.com/docs/manual/core/bulk-write-operations/
+/// @see
+/// - https://www.mongodb.com/docs/manual/core/crud/
+/// - https://www.mongodb.com/docs/manual/core/bulk-write-operations/
 ///
 class bulk_write {
    public:
@@ -96,7 +97,8 @@ class bulk_write {
     ///
     /// @return The optional result of the bulk operation execution, a result::bulk_write.
     ///
-    /// @see https://www.mongodb.com/docs/manual/core/bulk-write-operations/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/core/bulk-write-operations/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(stdx::optional<result::bulk_write>) execute() const;
 

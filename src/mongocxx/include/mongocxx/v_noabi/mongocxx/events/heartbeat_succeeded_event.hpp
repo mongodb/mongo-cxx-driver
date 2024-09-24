@@ -29,8 +29,8 @@ namespace events {
 /// An event notification sent when the driver completes a "hello" command to check the status
 /// of a server.
 ///
-/// @see "ServerHeartbeatSucceededEvent" in
-/// https://github.com/mongodb/specifications/blob/master/source/server-discovery-and-monitoring/server-discovery-and-monitoring.rst
+/// @see
+/// - "ServerHeartbeatSucceededEvent" in https://github.com/mongodb/specifications/blob/master/source/server-discovery-and-monitoring/server-discovery-and-monitoring.rst
 ///
 class heartbeat_succeeded_event {
    public:

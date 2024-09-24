@@ -59,7 +59,8 @@ namespace v_noabi {
 /// in order to perform read operations on a direct connection to a secondary member of a replica
 /// set, you must set a read preference that allows reading from secondaries.
 ///
-/// @see https://www.mongodb.com/docs/manual/core/read-preference/
+/// @see
+/// - https://www.mongodb.com/docs/manual/core/read-preference/
 ///
 class read_preference {
    public:
@@ -72,7 +73,8 @@ class read_preference {
     /// replicate operations from the primary with some delay. Ensure that your application
     /// can tolerate stale data if you choose to use a non-primary mode.
     ///
-    /// @see https://www.mongodb.com/docs/manual/core/read-preference/#read-preference-modes
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/core/read-preference/#read-preference-modes
     ///
     enum class read_mode : std::uint8_t {
         ///
@@ -128,7 +130,8 @@ class read_preference {
     /// @param tags
     ///   A document representing tags to use for the read_preference.
     ///
-    /// @see https://www.mongodb.com/docs/manual/core/read-preference/#tag-sets
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/core/read-preference/#tag-sets
     ///
     /// @deprecated The tags() method should be used instead.
     ///
@@ -188,7 +191,8 @@ class read_preference {
     /// @param tag_set_list
     ///   Document representing the tag set list.
     ///
-    /// @see https://www.mongodb.com/docs/manual/core/read-preference-tags/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/core/read-preference-tags/
     ///
     /// @return
     ///   A reference to the object on which this member function is being called.  This facilitates
@@ -203,7 +207,8 @@ class read_preference {
     /// @param tag_set_list
     ///   Array of tag sets.
     ///
-    /// @see https://www.mongodb.com/docs/manual/core/read-preference-tags/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/core/read-preference-tags/
     ///
     /// @return
     ///   A reference to the object on which this member function is being called.  This facilitates
@@ -217,7 +222,8 @@ class read_preference {
     ///
     /// @return The optionally set current tag set list.
     ///
-    /// @see https://www.mongodb.com/docs/manual/core/read-preference-tags/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/core/read-preference-tags/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(stdx::optional<bsoncxx::v_noabi::document::view>) tags() const;
 

@@ -51,10 +51,8 @@
 /// @file
 /// Aggregate of all forward headers declaring entities in @ref bsoncxx::v_noabi.
 ///
-/// @par "Includes" @parblock
-/// @li All header files under @ref src/bsoncxx/include/bsoncxx/v_noabi/bsoncxx
-/// "bsoncxx/v_noabi/bsoncxx" whose filename ends with `-fwd.hpp`.
-/// @endparblock
+/// @par Includes
+/// - All header files under @ref src/bsoncxx/include/bsoncxx/v_noabi/bsoncxx "bsoncxx/v_noabi/bsoncxx" whose filename ends with `-fwd.hpp`.
 ///
 
 ///
@@ -95,13 +93,11 @@
 /// @dir bsoncxx/v_noabi/bsoncxx/config
 /// Provides headers related to bsoncxx library configuration.
 ///
-/// @par "Generated Headers"
-///
+/// @par Generated Headers
 /// Generated headers are documented by the following pages:
-///
-/// @li @ref bsoncxx-v_noabi-bsoncxx-config-config-hpp
-/// @li @ref bsoncxx-v_noabi-bsoncxx-config-export-hpp
-/// @li @ref bsoncxx-v_noabi-bsoncxx-config-version-hpp
+/// - @ref bsoncxx-v_noabi-bsoncxx-config-config-hpp
+/// - @ref bsoncxx-v_noabi-bsoncxx-config-export-hpp
+/// - @ref bsoncxx-v_noabi-bsoncxx-config-version-hpp
 ///
 
 #if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
@@ -421,7 +417,8 @@
 /// @namespace bsoncxx::v_noabi::types
 /// @copydoc bsoncxx::types
 ///
-/// @see bsoncxx::v_noabi::types::bson_value
+/// @see
+/// - @ref bsoncxx::v_noabi::types::bson_value
 ///
 
 ///

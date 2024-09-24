@@ -31,8 +31,8 @@ namespace events {
 ///
 /// An event notification sent when the driver successfully executes a MongoDB command.
 ///
-/// @see "CommandSucceededEvent" in
-/// https://github.com/mongodb/specifications/blob/master/source/command-logging-and-monitoring/command-logging-and-monitoring.rst
+/// @see
+/// - "CommandSucceededEvent" in https://github.com/mongodb/specifications/blob/master/source/command-logging-and-monitoring/command-logging-and-monitoring.rst
 ///
 class command_succeeded_event {
    public:

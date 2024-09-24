@@ -26,7 +26,8 @@ namespace v_noabi {
 ///
 /// Class representing an exception caused by using the mongocxx API improperly.
 ///
-/// @see mongocxx::v_noabi::exception
+/// @see
+/// - @ref mongocxx::v_noabi::exception
 ///
 class logic_error : public exception {
    public:

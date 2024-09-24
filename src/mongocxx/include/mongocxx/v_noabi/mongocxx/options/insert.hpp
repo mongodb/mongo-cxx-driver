@@ -64,7 +64,8 @@ class insert {
     /// @param wc
     ///   The new write_concern.
     ///
-    /// @see https://www.mongodb.com/docs/manual/core/write-concern/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/core/write-concern/
     ///
     /// @return
     ///   A reference to the object on which this member function is being called.  This facilitates
@@ -77,7 +78,8 @@ class insert {
     ///
     /// @return The current write_concern.
     ///
-    /// @see https://www.mongodb.com/docs/manual/core/write-concern/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/core/write-concern/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<mongocxx::v_noabi::write_concern>&)
     write_concern() const;
@@ -97,7 +99,8 @@ class insert {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/insert/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/insert/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(insert&) ordered(bool ordered);
 
@@ -106,7 +109,8 @@ class insert {
     ///
     /// @return The current ordered value.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/insert/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/insert/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bool>&) ordered() const;
 
@@ -116,7 +120,8 @@ class insert {
     /// @param comment
     ///   The new comment.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/insert/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/insert/
     ///
     /// @return
     ///   A reference to the object on which this member function is being called.  This facilitates
@@ -130,7 +135,8 @@ class insert {
     ///
     /// @return The current comment.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/insert/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/insert/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(
         const stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>&)

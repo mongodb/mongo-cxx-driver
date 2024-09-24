@@ -46,7 +46,8 @@ class create_collection_deprecated {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/glossary/#term-capped-collection
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/glossary/#term-capped-collection
     ///
     MONGOCXX_ABI_EXPORT_CDECL(create_collection_deprecated&) capped(bool capped);
 
@@ -56,7 +57,8 @@ class create_collection_deprecated {
     /// @return
     ///   Whether or not this collection will be capped.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/glossary/#term-capped-collection
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/glossary/#term-capped-collection
     ///
     MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bool>&) capped() const;
 
@@ -71,7 +73,7 @@ class create_collection_deprecated {
     ///   method chaining.
     ///
     /// @see
-    ///   https://www.mongodb.com/docs/manual/reference/collation/
+    /// - https://www.mongodb.com/docs/manual/reference/collation/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(create_collection_deprecated&)
     collation(bsoncxx::v_noabi::document::view_or_value collation);
@@ -83,7 +85,7 @@ class create_collection_deprecated {
     ///   The default collation for the collection.
     ///
     /// @see
-    ///   https://www.mongodb.com/docs/manual/reference/collation/
+    /// - https://www.mongodb.com/docs/manual/reference/collation/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
     collation() const;
@@ -116,7 +118,8 @@ class create_collection_deprecated {
     ///
     /// When true, disables the power of 2 sizes allocation for the collection.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/create/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/create/
     ///
     /// @param no_padding
     ///   When true, disables power of 2 sizing for this collection.
@@ -130,7 +133,8 @@ class create_collection_deprecated {
     ///
     /// Gets the current value of the "no padding" option for the collection.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/create/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/create/
     ///
     /// @return
     ///   When true, power of 2 sizing is disabled for this collection.
@@ -196,7 +200,8 @@ class create_collection_deprecated {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/core/document-validation/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/core/document-validation/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(create_collection_deprecated&)
     validation_criteria(mongocxx::v_noabi::validation_criteria validation);
@@ -207,7 +212,8 @@ class create_collection_deprecated {
     /// @return
     ///   Validation criteria for this collection.
     ///
-    /// @see https://www.mongodb.com/docs/manual/core/document-validation/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/core/document-validation/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<mongocxx::v_noabi::validation_criteria>&)
     validation_criteria() const;
