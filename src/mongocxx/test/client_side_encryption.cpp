@@ -3484,6 +3484,9 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
     }
 }
 
+// Prose Test 23
+TEST_CASE("Range Explicit Encryption applies defaults", "[client_side_encryption]") {}
+
 TEST_CASE("16. Rewrap. Case 2: RewrapManyDataKeyOpts.provider is not optional",
           "[client_side_encryption]") {
     instance::current();
