@@ -2899,35 +2899,40 @@ options::range to_range_opts(RangeFieldType field_type) {
 
     switch (field_type) {
         case RangeFieldType::DecimalNoPrecision:
-            return options::range().sparsity(1);
+            return options::range().trim_factor(1).sparsity(1);
         case RangeFieldType::DecimalPrecision:
             return options::range()
                 .min(make_value(b_decimal128{bsoncxx::decimal128(std::to_string(0))}))
                 .max(make_value(b_decimal128{bsoncxx::decimal128(std::to_string(200))}))
+                .trim_factor(1)
                 .sparsity(1)
                 .precision(2);
         case RangeFieldType::DoubleNoPrecision:
-            return options::range().sparsity(1);
+            return options::range().trim_factor(1).sparsity(1);
         case RangeFieldType::DoublePrecision:
             return options::range()
                 .min(make_value(b_double{0.0}))
                 .max(make_value(b_double{200.0}))
+                .trim_factor(1)
                 .sparsity(1)
                 .precision(2);
         case RangeFieldType::Date:
             return options::range()
                 .min(make_value(b_date{std::chrono::milliseconds(0)}))
                 .max(make_value(b_date{std::chrono::milliseconds(200)}))
+                .trim_factor(1)
                 .sparsity(1);
         case RangeFieldType::Int:
             return options::range()
                 .min(make_value(b_int32{0}))
                 .max(make_value(b_int32{200}))
+                .trim_factor(1)
                 .sparsity(1);
         case RangeFieldType::Long:
             return options::range()
                 .min(make_value(b_int64{0}))
                 .max(make_value(b_int64{200}))
+                .trim_factor(1)
                 .sparsity(1);
     }
 
