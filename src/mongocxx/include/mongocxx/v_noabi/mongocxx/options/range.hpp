@@ -64,6 +64,12 @@ class range {
     /// @brief Gets `RangeOpts.sparsity`.
     const stdx::optional<std::int64_t>& sparsity() const;
 
+    /// @brief Sets `RangeOpts.trimFactor`.
+    range& trimFactor(std::int64_t value);
+
+    /// @brief Gets `RangeOpts.trimFactor`.
+    const stdx::optional<std::int64_t>& trim_factor() const;
+
     /// @brief Sets `RangeOpts.precision`.
     /// @note May only be set for `double` or `decimal128`.
     range& precision(std::int32_t value);
@@ -76,6 +82,7 @@ class range {
     stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> _min;
     stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> _max;
     stdx::optional<std::int64_t> _sparsity;
+    stdx::optional<std::int64_t> _trim_factor;
     stdx::optional<std::int32_t> _precision;
 };
 

@@ -184,6 +184,7 @@ void* encrypt::convert() const {
         const auto& max = _range_opts->max();
         const auto& precision = _range_opts->precision();
         const auto& sparsity = _range_opts->sparsity();
+        const auto& trim_factor = _range_opts->trim_factor();
 
         if (min) {
             libmongoc::client_encryption_encrypt_range_opts_set_min(
@@ -201,6 +202,11 @@ void* encrypt::convert() const {
 
         if (sparsity) {
             libmongoc::client_encryption_encrypt_range_opts_set_sparsity(range_opts, *sparsity);
+        }
+
+        if (trim_factor) {
+            libmongoc::client_encryption_encrypt_range_opts_set_trim_factor(range_opts,
+                                                                            *trim_factor);
         }
 
         libmongoc::client_encryption_encrypt_opts_set_range_opts(opts, range_opts);
