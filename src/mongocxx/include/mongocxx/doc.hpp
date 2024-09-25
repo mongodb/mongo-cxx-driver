@@ -84,3 +84,20 @@
 /// @warning These redeclarations are for internal use only! Users should reference entities
 /// declared in @ref bsoncxx directly, not through @ref mongocxx.
 ///
+
+///
+/// @page topic-mongocxx The mongocxx Library
+/// @brief Topics relating to the mongocxx library.
+/// @li @subpage topic-mongocxx-examples
+/// @li @subpage topic-mongocxx-about
+///
+
+///
+/// @page topic-mongocxx-examples How-To Guides
+/// @brief Examples of how to use the mongocxx library.
+///
+
+///
+/// @page topic-mongocxx-about Explanation
+/// @brief Design decisions, history, and other technical details about the mongocxx library.
+///
