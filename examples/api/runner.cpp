@@ -120,7 +120,7 @@ int EXAMPLES_CDECL main(int argc, char** argv) {
                 static_cast<std::minstd_rand::result_type>(std::strtoul(seed_str, &end, 10));
 
             if (static_cast<std::size_t>(end - seed_str) != std::strlen(seed_str)) {
-                std::cerr << "invalid seed string" << std::endl;
+                std::cerr << "invalid seed string: " << seed_str << std::endl;
                 return 1;
             }
 
@@ -140,7 +140,7 @@ int EXAMPLES_CDECL main(int argc, char** argv) {
             const auto jobs = std::strtoul(jobs_str, &end, 10);
 
             if (static_cast<std::size_t>(end - jobs_str) != std::strlen(jobs_str)) {
-                std::cerr << "invalid jobs string" << std::endl;
+                std::cerr << "invalid jobs string: " << jobs_str << std::endl;
                 return 1;
             }
 
