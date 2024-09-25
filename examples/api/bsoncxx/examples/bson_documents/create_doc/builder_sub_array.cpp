@@ -15,9 +15,9 @@
 #include <cstdint>
 
 #include <bsoncxx/array/view.hpp>
+#include <bsoncxx/builder/basic/array.hpp>
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>
-#include <bsoncxx/builder/basic/sub_array.hpp>
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/types.hpp>
 
@@ -29,11 +29,11 @@ namespace {
 // [Example]
 void example() {
     using bsoncxx::builder::basic::kvp;
+    using bsoncxx::builder::basic::make_array;
+    using bsoncxx::builder::basic::make_document;
 
     bsoncxx::document::value owner =
-        bsoncxx::builder::basic::make_document(kvp("v", [](bsoncxx::builder::basic::sub_array arr) {
-            arr.append(std::int32_t{1}, std::int64_t{2});
-        }));
+        make_document(kvp("v", make_array(std::int32_t{1}, std::int64_t{2})));
     bsoncxx::array::view v = owner.view()["v"].get_array().value;
 
     ASSERT(v[0].type() == bsoncxx::type::k_int32);

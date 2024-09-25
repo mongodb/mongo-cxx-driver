@@ -12,10 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/builder/basic/array.hpp>
+#include <cstdint>
+
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>
+#include <bsoncxx/document/value.hpp>
 #include <bsoncxx/document/view.hpp>
+#include <bsoncxx/types.hpp>
 
 #include <examples/api/runner.hh>
 #include <examples/macros.hh>
@@ -25,13 +28,21 @@ namespace {
 // [Example]
 void example() {
     using bsoncxx::builder::basic::kvp;
-    using bsoncxx::builder::basic::make_array;
-    using bsoncxx::builder::basic::make_document;
 
-    bsoncxx::array::value owner = make_array(make_document(kvp("key", "value")));
-    bsoncxx::document::view v = owner.view()[0].get_document().value;
+    std::string keys[] = {"a", "b", "c"};
+    std::int32_t values[] = {1, 2, 3};
 
-    ASSERT(v["key"].get_string().value.compare("value") == 0);
+    bsoncxx::document::value owner = bsoncxx::builder::basic::make_document(
+        kvp("v", [&](bsoncxx::builder::basic::sub_document doc) {
+            for (int i = 0; i < 3; ++i) {
+                doc.append(kvp(keys[i], values[i]));
+            }
+        }));
+    bsoncxx::document::view v = owner.view()["v"].get_document().value;
+
+    ASSERT(v["a"].get_int32().value == 1);
+    ASSERT(v["b"].get_int32().value == 2);
+    ASSERT(v["c"].get_int32().value == 3);
 }
 // [Example]
 

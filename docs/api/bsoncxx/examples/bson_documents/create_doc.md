@@ -56,9 +56,17 @@
 
 @snippet api/bsoncxx/examples/bson_documents/create_doc/builder_sub_document.cpp Example
 
+### With Multiple Sub-Document Appends
+
+@snippet api/bsoncxx/examples/bson_documents/create_doc/builder_sub_document_append.cpp Example
+
 ### With a Sub-Array
 
 @snippet api/bsoncxx/examples/bson_documents/create_doc/builder_sub_array.cpp Example
+
+### With Multiple Sub-Array Appends
+
+@snippet api/bsoncxx/examples/bson_documents/create_doc/builder_sub_array_append.cpp Example
 
 ## From Raw Bytes
 

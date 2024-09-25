@@ -26,9 +26,9 @@ namespace {
 // [Example]
 void example() {
     using bsoncxx::builder::basic::kvp;
+    using bsoncxx::builder::basic::make_document;
 
-    bsoncxx::document::value owner = bsoncxx::builder::basic::make_document(kvp(
-        "v", [](bsoncxx::builder::basic::sub_document doc) { doc.append(kvp("key", "value")); }));
+    bsoncxx::document::value owner = make_document(kvp("v", make_document(kvp("key", "value"))));
     bsoncxx::document::view v = owner.view()["v"].get_document().value;
 
     ASSERT(v["key"].get_string().value.compare("value") == 0);

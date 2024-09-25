@@ -25,10 +25,9 @@ namespace {
 
 // [Example]
 void example() {
-    bsoncxx::array::value owner =
-        bsoncxx::builder::basic::make_array([](bsoncxx::builder::basic::sub_array arr) {
-            arr.append(std::int32_t{1}, std::int64_t{2});
-        });
+    using bsoncxx::builder::basic::make_array;
+
+    bsoncxx::array::value owner = make_array(make_array(std::int32_t{1}, std::int64_t{2}));
     bsoncxx::array::view v = owner.view()[0].get_array().value;
 
     ASSERT(v[0].type() == bsoncxx::type::k_int32);
