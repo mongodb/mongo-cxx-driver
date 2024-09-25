@@ -29,7 +29,7 @@ void example() {
         bsoncxx::oid a;
         bsoncxx::oid b;
 
-        ASSERT(a == b || a != b);  // Random.
+        ASSERT(a != b);  // Random and unique per process.
     }
 
     {
