@@ -65,7 +65,7 @@ class range {
     const stdx::optional<std::int64_t>& sparsity() const;
 
     /// @brief Sets `RangeOpts.trimFactor`.
-    range& trimFactor(std::int32_t value);
+    range& trim_factor(std::int32_t value);
 
     /// @brief Gets `RangeOpts.trimFactor`.
     const stdx::optional<std::int32_t>& trim_factor() const;
