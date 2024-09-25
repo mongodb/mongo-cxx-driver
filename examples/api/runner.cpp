@@ -100,37 +100,63 @@ void runner_register_fn(void (*fn)()) {
 }
 
 int EXAMPLES_CDECL main(int argc, char** argv) {
-    // Permit using a custom seed for reproducibility.
-    if (argc > 1) {
-        char* const seed_str = argv[1];
-        char* end = nullptr;
+    bool set_seed = false;
+    bool set_jobs = false;
 
-        runner.set_seed(
-            static_cast<std::minstd_rand::result_type>(std::strtoul(seed_str, &end, 10)));
+    // Simple command-line argument parser.
+    for (int i = 1; i < argc; ++i) {
+        // Permit using a custom seed for reproducibility.
+        if (strcmp(argv[i], "--seed") == 0) {
+            if (i + 1 >= argc) {
+                std::cerr << "missing argument to --seed" << std::endl;
+                return 1;
+            }
 
-        if (static_cast<std::size_t>(end - argv[1]) != std::strlen(seed_str)) {
-            std::cerr << "invalid seed string" << std::endl;
-            return 1;
+            char* const seed_str = argv[++i];  // Next argument.
+            char* end = nullptr;
+
+            const auto seed =
+                static_cast<std::minstd_rand::result_type>(std::strtoul(seed_str, &end, 10));
+
+            if (static_cast<std::size_t>(end - seed_str) != std::strlen(seed_str)) {
+                std::cerr << "invalid seed string" << std::endl;
+                return 1;
+            }
+
+            runner.set_seed(seed);
+            set_seed = true;
         }
-    } else {
+
+        if (strcmp(argv[i], "--jobs") == 0) {
+            if (i + 1 >= argc) {
+                std::cerr << "missing argument to --jobs" << std::endl;
+                return 1;
+            }
+
+            char* const jobs_str = argv[++i];  // Next argument.
+            char* end = nullptr;
+
+            const auto jobs = static_cast<unsigned int>(std::strtoul(jobs_str, &end, 10));
+
+            if (static_cast<std::size_t>(end - jobs_str) != std::strlen(jobs_str)) {
+                std::cerr << "invalid jobs string" << std::endl;
+                return 1;
+            }
+
+            runner.set_jobs(jobs);
+            set_jobs = true;
+        }
+    }
+
+    // Default: use a random seed.
+    if (!set_seed) {
         runner.set_seed(static_cast<std::minstd_rand::result_type>(std::random_device()()));
     }
 
-    // Permit using a custom job count.
-    if (argc > 2) {
-        char* const jobs_str = argv[2];
-
-        char* end = nullptr;
-
-        runner.set_jobs(static_cast<unsigned int>(std::strtoul(jobs_str, &end, 10)));
-
-        if (static_cast<std::size_t>(end - argv[1]) != std::strlen(jobs_str)) {
-            std::cerr << "invalid jobs string" << std::endl;
-            return 1;
-        }
-    } else {
+    // Default: request maximum job count.
+    if (!set_jobs) {
         runner.set_jobs(0);
     }
 
-    return runner.run();
+    return runner.run();  // Return directly from forked processes.
 }
