@@ -20,6 +20,7 @@
 //
 
 #include <algorithm>
+#include <climits>
 #include <cstddef>
 #include <cstdint>
 #include <cstring>
@@ -53,7 +54,7 @@ class runner_type {
     }
 
     void set_jobs(unsigned int jobs) {
-        if (jobs <= 0) {
+        if (jobs == 0u) {
             this->jobs = std::thread::hardware_concurrency();
         } else {
             this->jobs = jobs;
@@ -61,7 +62,7 @@ class runner_type {
     }
 
     int run() {
-        ASSERT(jobs > 0);
+        ASSERT(jobs > 0u);
 
         std::cout << "seed: " << seed << std::endl;
 
@@ -136,14 +137,18 @@ int EXAMPLES_CDECL main(int argc, char** argv) {
             char* const jobs_str = argv[++i];  // Next argument.
             char* end = nullptr;
 
-            const auto jobs = static_cast<unsigned int>(std::strtoul(jobs_str, &end, 10));
+            const auto jobs = std::strtoul(jobs_str, &end, 10);
 
             if (static_cast<std::size_t>(end - jobs_str) != std::strlen(jobs_str)) {
                 std::cerr << "invalid jobs string" << std::endl;
                 return 1;
             }
 
-            runner.set_jobs(jobs);
+            if (jobs >= UINT_MAX) {
+                std::cerr << "invalid jobs string (too large): " << jobs_str << std::endl;
+            }
+
+            runner.set_jobs(static_cast<unsigned int>(jobs));
             set_jobs = true;
         }
     }
