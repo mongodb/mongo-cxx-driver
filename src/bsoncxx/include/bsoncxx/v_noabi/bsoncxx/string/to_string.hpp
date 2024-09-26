@@ -40,6 +40,7 @@ namespace string {
 ///   // This is supported regardless of the polyfill library.
 ///   return bsoncxx::v_noabi::string::to_string(sv);
 /// }
+/// ```
 ///
 template <class CharT,
           class Traits = std::char_traits<CharT>,
