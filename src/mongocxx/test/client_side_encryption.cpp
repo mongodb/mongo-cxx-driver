@@ -3490,7 +3490,113 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
 }
 
 // Prose Test 23
-TEST_CASE("Range Explicit Encryption applies defaults", "[client_side_encryption]") {}
+TEST_CASE("Range Explicit Encryption applies defaults", "[client_side_encryption]") {
+    instance::current();
+
+    CLIENT_SIDE_ENCRYPTION_ENABLED_OR_SKIP();
+
+    // Create a MongoClient named `keyVaultClient`.
+    mongocxx::client key_vault_client{
+        uri{},
+        test_util::add_test_server_api(),
+    };
+
+    // Create a ClientEncryption object named `clientEncryption` with these options:
+    //   ClientEncryptionOpts {
+    //      keyVaultClient: <keyVaultClient>;
+    //      keyVaultNamespace: "keyvault.datakeys";
+    //      kmsProviders: { "local": { "key": <base64 decoding of LOCAL_MASTERKEY> } }
+    //   }
+    const auto kms_providers = _make_kms_doc(false);
+    mongocxx::client_encryption client_encryption(options::client_encryption()
+                                                      .key_vault_client(&key_vault_client)
+                                                      .key_vault_namespace({"keyvault", "datakeys"})
+                                                      .kms_providers(kms_providers.view()));
+
+    // Create a key with `clientEncryption.createDataKey`. Store the returned key ID in a variable
+    // named `keyId`.
+    const auto& keyId = client_encryption.create_data_key("local");
+
+    // Call `clientEncryption.encrypt` to encrypt the int32 value `123` with these options:
+    // `EncryptOpts`:
+    //   class EncryptOpts {
+    //      keyId : <key1ID>:
+    //      algorithm: "Range",
+    //      contentionFactor: 0,
+    //      rangeOpts: RangeOpts {
+    //         min: 0,
+    //         max: 1000
+    //      }
+    //   }
+    const auto v_123 = to_field_value(123, RangeFieldType::Int);
+    auto payload_defaults = client_encryption.encrypt(
+        v_123,
+        options::encrypt()
+            .key_id(keyId.view())
+            .algorithm(options::encrypt::encryption_algorithm::k_range)
+            .contention_factor(0)
+            .range_opts(options::range()
+                            .min(to_field_value(0, RangeFieldType::Int))
+                            .max(to_field_value(1000, RangeFieldType::Int))));
+
+    SECTION("Case 1: Uses libmongocrypt defaults") {
+        // Call `clientEncryption.encrypt` to encrypt the int32 value `123` with these options:
+        // `EncryptOpts`:
+        //   class EncryptOpts {
+        //      keyId : <key1ID>:
+        //      algorithm: "Range",
+        //      contentionFactor: 0,
+        //      rangeOpts: RangeOpts {
+        //         min: 0,
+        //         max: 1000,
+        //         sparsity: 2,
+        //         trimFactor: 6
+        //      }
+        //   }
+        auto payload_libmongocrypt_defaults = client_encryption.encrypt(
+            v_123,
+            options::encrypt()
+                .key_id(keyId.view())
+                .algorithm(options::encrypt::encryption_algorithm::k_range)
+                .contention_factor(0)
+                .range_opts(options::range()
+                                .min(to_field_value(0, RangeFieldType::Int))
+                                .max(to_field_value(1000, RangeFieldType::Int))
+                                .sparsity(2)
+                                .trim_factor(6)));
+
+        REQUIRE_NOTHROW(payload_defaults.view().get_binary().size ==
+                        payload_libmongocrypt_defaults.view().get_binary().size);
+    }
+
+    SECTION("Case 2: Accepts `trimFactor` 0") {
+        // Call `clientEncryption.encrypt` to encrypt the int32 value `123` with these options:
+        // `EncryptOpts`:
+        //   class EncryptOpts {
+        //      keyId : <key1ID>:
+        //      algorithm: "Range",
+        //      contentionFactor: 0,
+        //      rangeOpts: RangeOpts {
+        //         min: 0,
+        //         max: 1000,
+        //         trimFactor: 0
+        //      }
+        //   }
+        auto payload_trim_factor_0 = client_encryption.encrypt(
+            v_123,
+            options::encrypt()
+                .key_id(keyId.view())
+                .algorithm(options::encrypt::encryption_algorithm::k_range)
+                .contention_factor(0)
+                .range_opts(options::range()
+                                .min(to_field_value(0, RangeFieldType::Int))
+                                .max(to_field_value(1000, RangeFieldType::Int))
+                                .trim_factor(0)));
+
+        REQUIRE_NOTHROW(payload_defaults.view().get_binary().size <
+                        payload_trim_factor_0.view().get_binary().size);
+    }
+}
 
 TEST_CASE("16. Rewrap. Case 2: RewrapManyDataKeyOpts.provider is not optional",
           "[client_side_encryption]") {
