@@ -3501,6 +3501,10 @@ TEST_CASE("Range Explicit Encryption applies defaults", "[client_side_encryption
         test_util::add_test_server_api(),
     };
 
+    if (!test_util::newer_than(key_vault_client, "8.0")) {
+        SKIP("MongoDB server 8.0 or newer required");
+    }
+
     // Create a ClientEncryption object named `clientEncryption` with these options:
     //   ClientEncryptionOpts {
     //      keyVaultClient: <keyVaultClient>;
