@@ -13,7 +13,7 @@ variables:
     # - the default value of --c-driver-build-ref in etc/make_release.py
     # - LIBMONGOC_REQUIRED_VERSION in src/mongocxx/CMakeLists.txt
     # - the PURL version in etc/purls.txt
-    mongoc_version_minimum: &mongoc_version_minimum "8a85033"
+    mongoc_version_minimum: &mongoc_version_minimum "1.28.0"
 
     integration_matrix:
         integration_matrix_tasks_single: &integration_matrix_tasks_single
