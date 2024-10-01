@@ -158,6 +158,7 @@ linux*)
   fi
 
   if [[ "${distro_id:?}" == debian12* ]]; then
+    # Disable `restrict` warning on GCC 12 due to  https://gcc.gnu.org/bugzilla/show_bug.cgi?id=105651 and https://gcc.gnu.org/bugzilla/show_bug.cgi?id=105329
     cxx_flags+=("-Wno-error=restrict")
   fi
   ;;
