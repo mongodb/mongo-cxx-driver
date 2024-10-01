@@ -695,15 +695,12 @@ database create_database(document::view object) {
 client create_client(document::view object) {
     const auto conn = "mongodb://" + get_hostnames(object) + "/?" + uri_options_to_string(object);
     auto apm_opts = options::apm{};
-    auto client_opts = options::client{};
+    auto client_opts = test_util::add_test_server_api();
     // Use specified serverApi or default if none is provided.
     if (object["serverApi"]) {
         const auto server_api_opts = create_server_api(object);
         client_opts.server_api_opts(server_api_opts);
-    } else {
-        client_opts = test_util::add_test_server_api();
     }
-
     auto& apm = get_apm_map()[string::to_string(object["id"].get_string().value)];
 
     add_observe_events(apm, apm_opts, object);

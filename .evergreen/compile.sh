@@ -154,7 +154,12 @@ linux*)
   if [[ "${distro_id:?}" != rhel7* ]]; then
     cxx_flags+=("-Wno-expansion-to-defined")
   else
-    cxx_flags+=("-Wno-unused-parameter") # TODO: remove once C driver is upgraded to include fix of CDRIVER-5673.
+    cc_flags+=("-Wno-maybe-uninitialized") # Ignore false-positive warning in C driver build.
+  fi
+
+  if [[ "${distro_id:?}" == debian12* ]]; then
+    # Disable `restrict` warning on GCC 12 due to  https://gcc.gnu.org/bugzilla/show_bug.cgi?id=105651 and https://gcc.gnu.org/bugzilla/show_bug.cgi?id=105329
+    cxx_flags+=("-Wno-error=restrict")
   fi
   ;;
 *)

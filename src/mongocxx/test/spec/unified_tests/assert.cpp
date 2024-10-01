@@ -48,7 +48,8 @@ thread_local std::vector<std::string> S_match_doc_path;
  */
 struct match_scope_doc_key {
     match_scope_doc_key(bsoncxx::stdx::string_view key) {
-        S_match_doc_path.push_back("/" + std::string(key));
+        S_match_doc_path.emplace_back("/");
+        S_match_doc_path.back().append(key.data(), key.size());
     }
 
     ~match_scope_doc_key() {
@@ -61,7 +62,9 @@ struct match_scope_doc_key {
  */
 struct match_scope_array_idx {
     match_scope_array_idx(int idx) {
-        S_match_doc_path.push_back("[" + std::to_string(idx) + "]");
+        S_match_doc_path.emplace_back("[");
+        S_match_doc_path.push_back(std::to_string(idx));
+        S_match_doc_path.emplace_back("]");
     }
 
     ~match_scope_array_idx() {

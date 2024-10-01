@@ -549,7 +549,7 @@ stdx::optional<result::insert_one> collection::_insert_one(const client_session*
     }
 
     return stdx::optional<result::insert_one>(
-        result::insert_one(std::move(result.value()), std::move(oid.get_value())));
+        result::insert_one(std::move(result.value()), oid.get_value()));
 }
 
 stdx::optional<result::insert_one> collection::insert_one(view_or_value document,

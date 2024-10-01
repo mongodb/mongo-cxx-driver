@@ -31,16 +31,14 @@ namespace options {
 
 ///
 /// @brief `RangeOpts` specifies index options for a Queryable Encryption field supporting
-/// "rangePreview" queries.
+/// "range" queries.
 ///
-/// @note @ref min, @ref max, @ref sparsity, and @ref precision must match the values set in the
-/// encryptedFields of the destination collection.
+/// @note @ref min, @ref max, @ref trimFactor, @ref sparsity, and @ref precision must match the
+/// values set in the encryptedFields of the destination collection.
 ///
 /// @note For double and decimal128, @ref min, @ref max, and @ref precision must all be set, or all
 /// be unset.
 ///
-/// @warning The Range algorithm is experimental only. It is not intended for public use. It is
-/// subject to breaking changes.
 class range {
    public:
     /// @brief Sets `RangeOpts.min`.
@@ -69,6 +67,12 @@ class range {
     /// @brief Gets `RangeOpts.sparsity`.
     MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<std::int64_t>&) sparsity() const;
 
+    /// @brief Sets `RangeOpts.trimFactor`.
+    MONGOCXX_ABI_EXPORT_CDECL(range&) trim_factor(std::int32_t value);
+
+    /// @brief Gets `RangeOpts.trimFactor`.
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<std::int32_t>&) trim_factor() const;
+
     /// @brief Sets `RangeOpts.precision`.
     /// @note May only be set for `double` or `decimal128`.
     MONGOCXX_ABI_EXPORT_CDECL(range&) precision(std::int32_t value);
@@ -81,6 +85,7 @@ class range {
     stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> _min;
     stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> _max;
     stdx::optional<std::int64_t> _sparsity;
+    stdx::optional<std::int32_t> _trim_factor;
     stdx::optional<std::int32_t> _precision;
 };
 

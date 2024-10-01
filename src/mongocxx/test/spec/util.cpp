@@ -12,6 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include "mongocxx/test/client_helpers.hh"
+
 #include <fstream>
 #include <set>
 #include <string>
@@ -908,8 +910,8 @@ void run_transactions_tests_in_file(const std::string& test_path) {
                 apm_checker apm_checker;
                 client_opts.apm_opts(
                     apm_checker.get_apm_opts(true /* command_started_events_only */));
-                client_opts = test_util::add_test_server_api(client_opts);
-                client client = {get_uri(test.get_document().value), client_opts};
+                client client = {get_uri(test.get_document().value),
+                                 test_util::add_test_server_api(client_opts)};
 
                 options::client_session session0_opts;
                 options::client_session session1_opts;
@@ -1034,8 +1036,7 @@ void run_crud_tests_in_file(const std::string& test_path, uri test_uri) {
     options::client client_opts;
     apm_checker apm_checker;
     client_opts.apm_opts(apm_checker.get_apm_opts(true /* command_started_events_only */));
-    client_opts = test_util::add_test_server_api(client_opts);
-    client client{std::move(test_uri), client_opts};
+    client client{std::move(test_uri), test_util::add_test_server_api(client_opts)};
 
     document::view test_spec_view = test_spec->view();
     CHECK_IF_SKIP_SPEC_TEST(client, test_spec_view);

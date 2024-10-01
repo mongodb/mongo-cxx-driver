@@ -215,7 +215,7 @@ uploader bucket::_open_upload_stream_with_id(const client_session* session,
                     _get_impl().files,
                     _get_impl().chunks,
                     chunk_size_bytes,
-                    std::move(options.metadata())};
+                    options.metadata()};
 }
 
 uploader bucket::open_upload_stream_with_id(bsoncxx::v_noabi::types::bson_value::view id,

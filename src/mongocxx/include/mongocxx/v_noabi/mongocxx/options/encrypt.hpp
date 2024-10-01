@@ -118,24 +118,19 @@ class encrypt {
         ///
         /// Use range encryption.
         ///
-        /// @warning The Range algorithm is experimental only. It is not intended for public use. It
-        /// is subject to breaking changes.
-        ///
-        k_range_preview,
+        k_range,
     };
 
     ///
-    /// queryType only applies when algorithm is "indexed" or "rangePreview".
-    /// It is an error to set queryType when algorithm is not "indexed" or "rangePreview".
+    /// queryType only applies when algorithm is "indexed" or "range".
+    /// It is an error to set queryType when algorithm is not "indexed" or "range".
     ///
     enum class encryption_query_type : std::uint8_t {
         /// @brief Use query type "equality".
         k_equality,
 
-        /// @brief Use query type "rangePreview".
-        /// @warning The Range algorithm is experimental only. It is not intended for public use. It
-        /// is subject to breaking changes.
-        k_range_preview,
+        /// @brief Use query type "range".
+        k_range,
     };
 
     ///
@@ -168,7 +163,7 @@ class encrypt {
 
     ///
     /// Sets the contention factor to use for encryption.
-    /// contentionFactor only applies when algorithm is "Indexed" or "RangePreview".
+    /// contentionFactor only applies when algorithm is "Indexed" or "Range".
     /// It is an error to set contentionFactor when algorithm is not "Indexed".
     ///
     /// @param contention_factor
@@ -189,8 +184,8 @@ class encrypt {
     ///
     /// @param query_type
     /// One of the following: - equality
-    /// query_type only applies when algorithm is "Indexed" or "RangePreview".
-    /// It is an error to set query_type when algorithm is not "Indexed" or "RangePreview".
+    /// query_type only applies when algorithm is "Indexed" or "Range".
+    /// It is an error to set query_type when algorithm is not "Indexed" or "Range".
     ///
     MONGOCXX_ABI_EXPORT_CDECL(encrypt&) query_type(encryption_query_type query_type);
 
@@ -205,11 +200,6 @@ class encrypt {
     ///
     /// Sets the range options to use for encryption.
     ///
-    /// @warning Queryable Encryption is in Public Technical Preview. Queryable Encryption should
-    /// not be used in production and is subject to backwards breaking changes.
-    ///
-    /// @warning The Range algorithm is experimental only. It is not intended for public use. It
-    /// is subject to breaking changes.
     MONGOCXX_ABI_EXPORT_CDECL(encrypt&) range_opts(options::range opts);
 
     ///
@@ -218,11 +208,6 @@ class encrypt {
     /// @return
     ///   An optional range options.
     ///
-    /// @warning Queryable Encryption is in Public Technical Preview. Queryable Encryption should
-    /// not be used in production and is subject to backwards breaking changes.
-    ///
-    /// @warning The Range algorithm is experimental only. It is not intended for public use. It
-    /// is subject to breaking changes.
     MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<options::range>&) range_opts() const;
 
    private:
