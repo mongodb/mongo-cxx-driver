@@ -154,7 +154,7 @@ linux*)
   if [[ "${distro_id:?}" != rhel7* ]]; then
     cxx_flags+=("-Wno-expansion-to-defined")
   else
-    cxx_flags+=("-Wno-maybe-uninitialized") # Ignore false-positive warning in C driver build.
+    cc_flags+=("-Wno-maybe-uninitialized") # Ignore false-positive warning in C driver build.
   fi
 
   if [[ "${distro_id:?}" == debian12* ]]; then
