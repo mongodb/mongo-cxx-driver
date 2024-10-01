@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <iostream>
+
 #include <examples/macros.hh>
 
 void runner_register_component(void (*fn)(), const char* name);
@@ -31,10 +33,19 @@ void runner_register_forking_component(void (*fn)(), const char* name);
 #error "EXAMPLES_COMPONENT_NAME is not defined!"
 #endif  // !defined(EXAMPLES_COMPONENT_NAME)
 
-#define RUNNER_REGISTER_COMPONENT_IMPL(name, register_fn)                                         \
-    static void EXAMPLES_CONCAT3(name, _entry_point_, __LINE__)(void);                            \
-    static int EXAMPLES_CONCAT2(name, _registrator) =                                             \
-        ((register_fn)(&EXAMPLES_CONCAT3(name, _entry_point_, __LINE__), EXAMPLES_STR(name)), 0); \
+#define RUNNER_REGISTER_COMPONENT_IMPL(name, register_fn)                                 \
+    static void EXAMPLES_CONCAT3(name, _entry_point_, __LINE__)(void);                    \
+    static void EXAMPLES_CONCAT4(name, _entry_point_, __LINE__, _guarded)(void) try {     \
+        EXAMPLES_CONCAT3(name, _entry_point_, __LINE__)();                                \
+    } catch (...) {                                                                       \
+        std::cout << EXAMPLES_STR(name) ":" << __LINE__ << ": failed: uncaught exception" \
+                  << std::endl;                                                           \
+        throw;                                                                            \
+    }                                                                                     \
+    static int EXAMPLES_CONCAT2(name, _registrator) =                                     \
+        ((register_fn)(&EXAMPLES_CONCAT4(name, _entry_point_, __LINE__, _guarded),        \
+                       EXAMPLES_STR(name)),                                               \
+         0);                                                                              \
     static void EXAMPLES_CONCAT3(EXAMPLES_COMPONENT_NAME, _entry_point_, __LINE__)(void)
 
 #define RUNNER_REGISTER_COMPONENT() \
