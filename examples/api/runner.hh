@@ -33,6 +33,9 @@ void runner_register_forking_component(void (*fn)(), const char* name);
 #error "EXAMPLES_COMPONENT_NAME is not defined!"
 #endif  // !defined(EXAMPLES_COMPONENT_NAME)
 
+#define EXAMPLES_COMPONENT_NAME_STR EXAMPLES_COMPONENT_NAME_STR_IMPL(EXAMPLES_COMPONENT_NAME)
+#define EXAMPLES_COMPONENT_NAME_STR_IMPL(name) EXAMPLES_STR(name)
+
 #define RUNNER_REGISTER_COMPONENT_IMPL(name, register_fn)                                 \
     static void EXAMPLES_CONCAT3(name, _entry_point_, __LINE__)(void);                    \
     static void EXAMPLES_CONCAT4(name, _entry_point_, __LINE__, _guarded)(void) try {     \
