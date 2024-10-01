@@ -170,8 +170,6 @@ function (add_abi_examples)
     # Avoid MAX_PATH errors on Windows due to long target names by using a single `api-runner` .
     add_examples_executable(api/runner.cpp LIBRARIES mongocxx_target Threads::Threads)
 
-    target_sources (api-runner PRIVATE "api/runner.cpp")
-
     # Define a unique entry function name per component.
     foreach (source ${api_examples_sources})
         target_sources (api-runner PRIVATE ${source})
