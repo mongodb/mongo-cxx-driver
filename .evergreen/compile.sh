@@ -154,7 +154,6 @@ linux*)
   if [[ "${distro_id:?}" != rhel7* ]]; then
     cxx_flags+=("-Wno-expansion-to-defined")
   else
-    cxx_flags+=("-Wno-unused-parameter") # TODO: remove once C driver is upgraded to include fix of CDRIVER-5673.
     cxx_flags+=("-Wno-maybe-uninitialized") # Ignore false-positive warning in C driver build.
   fi
 
