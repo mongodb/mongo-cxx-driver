@@ -9,6 +9,9 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 
 ## 3.11.0 [Unreleased]
 
+### Added
+- Introduces stable support for In-Use Encryption range indexes.
+
 ### Changed
 
 - `FetchContent_MakeAvailable()` is used to populate dependencies instead of `FetchContent_Populate()` for the Mongo C Driver (when not provided by `CMAKE_PREFIX_PATH`) and mnmlstc/core (when automatically selected or when `BSONCXX_POLY_USE_MNMLSTC=ON`).
