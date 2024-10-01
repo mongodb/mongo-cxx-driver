@@ -30,7 +30,13 @@
 #include <thread>
 #include <vector>
 
+#include <bsoncxx/builder/basic/document.hpp>
+#include <bsoncxx/builder/basic/kvp.hpp>
+
+#include <mongocxx/client.hpp>
+#include <mongocxx/exception/exception.hpp>
 #include <mongocxx/instance.hpp>
+#include <mongocxx/uri.hpp>
 
 #include <examples/macros.hh>
 
@@ -57,8 +63,15 @@ class runner_type {
 
    private:
     std::vector<component> components;
+
     std::vector<component> components_with_instance;
+
+    std::vector<component> components_for_single;
+    std::vector<component> components_for_replica;
+    std::vector<component> components_for_sharded;
+
     std::vector<component> forking_components;
+
     std::minstd_rand::result_type seed = 0u;
     std::minstd_rand gen;
     unsigned int jobs = 0;
@@ -161,6 +174,30 @@ class runner_type {
         mongocxx::instance instance;
 
         run_with_jobs(components_with_instance, jobs);
+
+        try {
+            mongocxx::client client{mongocxx::uri{"mongodb://localhost:27017/"}};
+
+            const auto reply = client["admin"].run_command(bsoncxx::builder::basic::make_document(
+                bsoncxx::builder::basic::kvp("isMaster", 1)));
+
+            if (reply["msg"]) {
+                std::cout << "Running API examples against a live sharded server" << std::endl;
+                run_with_jobs(components_for_sharded, jobs);
+                run_with_jobs(components_for_replica, jobs);
+                run_with_jobs(components_for_single, jobs);
+            } else if (reply["setName"]) {
+                std::cout << "Running API examples against a live replica server" << std::endl;
+                run_with_jobs(components_for_replica, jobs);
+                run_with_jobs(components_for_single, jobs);
+            } else {
+                std::cout << "Running API examples against a live single server" << std::endl;
+                run_with_jobs(components_for_single, jobs);
+            }
+        } catch (const mongocxx::exception& ex) {
+            std::cout << "Skipping API examples that require a live server: " << ex.what()
+                      << std::endl;
+        }
     }
 
    public:
@@ -170,6 +207,18 @@ class runner_type {
 
     void add_component_with_instance(fn_type fn, const char* name) {
         components_with_instance.emplace_back(fn, name);
+    }
+
+    void add_component_for_single(fn_type fn, const char* name) {
+        components_for_single.emplace_back(fn, name);
+    }
+
+    void add_component_for_replica(fn_type fn, const char* name) {
+        components_for_replica.emplace_back(fn, name);
+    }
+
+    void add_component_for_sharded(fn_type fn, const char* name) {
+        components_for_sharded.emplace_back(fn, name);
     }
 
     void add_forking_component(fn_type fn, const char* name) {
@@ -226,6 +275,18 @@ void runner_register_component(void (*fn)(), const char* name) {
 
 void runner_register_component_with_instance(void (*fn)(), const char* name) {
     runner.add_component_with_instance(fn, name);
+}
+
+void runner_register_component_for_single(void (*fn)(), const char* name) {
+    runner.add_component_for_single(fn, name);
+}
+
+void runner_register_component_for_replica(void (*fn)(), const char* name) {
+    runner.add_component_for_replica(fn, name);
+}
+
+void runner_register_component_for_sharded(void (*fn)(), const char* name) {
+    runner.add_component_for_sharded(fn, name);
 }
 
 void runner_register_forking_component(void (*fn)(), const char* name) {

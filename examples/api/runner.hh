@@ -20,6 +20,10 @@ void runner_register_component(void (*fn)(), const char* name);
 
 void runner_register_component_with_instance(void (*fn)(), const char* name);
 
+void runner_register_component_for_single(void (*fn)(), const char* name);
+void runner_register_component_for_replica(void (*fn)(), const char* name);
+void runner_register_component_for_sharded(void (*fn)(), const char* name);
+
 void runner_register_forking_component(void (*fn)(), const char* name);
 
 // Defined by examples/CMakeLists.txt.
@@ -39,6 +43,15 @@ void runner_register_forking_component(void (*fn)(), const char* name);
 #define RUNNER_REGISTER_COMPONENT_WITH_INSTANCE()           \
     RUNNER_REGISTER_COMPONENT_IMPL(EXAMPLES_COMPONENT_NAME, \
                                    ::runner_register_component_with_instance)
+
+#define RUNNER_REGISTER_COMPONENT_FOR_SINGLE() \
+    RUNNER_REGISTER_COMPONENT_IMPL(EXAMPLES_COMPONENT_NAME, ::runner_register_component_for_single)
+
+#define RUNNER_REGISTER_COMPONENT_FOR_REPLICA() \
+    RUNNER_REGISTER_COMPONENT_IMPL(EXAMPLES_COMPONENT_NAME, ::runner_register_component_for_replica)
+
+#define RUNNER_REGISTER_COMPONENT_FOR_SHARDED() \
+    RUNNER_REGISTER_COMPONENT_IMPL(EXAMPLES_COMPONENT_NAME, ::runner_register_component_for_sharded)
 
 #define RUNNER_REGISTER_FORKING_COMPONENT() \
     RUNNER_REGISTER_COMPONENT_IMPL(EXAMPLES_COMPONENT_NAME, ::runner_register_forking_component)
