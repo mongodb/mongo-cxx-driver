@@ -101,6 +101,7 @@
 /// @li @subpage topic-mongocxx-examples-clients
 /// @li @subpage topic-mongocxx-examples-databases
 /// @li @subpage topic-mongocxx-examples-collections
+/// @li @subpage topic-mongocxx-examples-operation-exceptions
 ///
 
 ///
@@ -145,6 +146,13 @@
 /// @brief How to obtain and use collections.
 /// @tableofcontents
 /// @include{doc} api/mongocxx/examples/collections.md
+///
+
+///
+/// @page topic-mongocxx-examples-operation-exceptions Operation Exceptions
+/// @brief How to handle exceptions thrown by database and collection operations.
+/// @tableofcontents
+/// @include{doc} api/mongocxx/examples/operation_exceptions.md
 ///
 
 ///
