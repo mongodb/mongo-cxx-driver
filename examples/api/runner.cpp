@@ -32,21 +32,135 @@
 
 #include <examples/macros.hh>
 
+#if !defined(_MSC_VER)
+
+#include <unistd.h>
+
+#include <sys/wait.h>
+
+#endif  // !defined(_MSC_VER)
+
 namespace {
 
 class runner_type {
    public:
     using fn_type = void (*)();
 
+    struct component {
+        fn_type fn;
+        const char* name;
+
+        component(fn_type f, const char* n) : fn(f), name(n) {}
+    };
+
    private:
-    std::vector<fn_type> fns;
+    std::vector<component> components;
+    std::vector<component> forking_components;
     std::minstd_rand::result_type seed = 0u;
     std::minstd_rand gen;
     unsigned int jobs = 0;
 
+    static void run_with_jobs(const std::vector<component>& components, unsigned int jobs) {
+        if (jobs == 1) {
+            for (const auto& component : components) {
+                component.fn();
+            }
+        } else {
+            std::queue<std::thread> threads;
+
+            // Rudimentary job scheduler.
+            for (const auto& component : components) {
+                while (threads.size() >= jobs) {
+                    threads.front().join();
+                    threads.pop();
+                }
+
+                threads.emplace(component.fn);
+            }
+
+            while (!threads.empty()) {
+                threads.front().join();
+                threads.pop();
+            }
+        }
+    }
+
+    void run_components() {
+        run_with_jobs(components, jobs);
+    }
+
+    enum struct action {
+        succeed,
+        fail,
+        return_from_main,
+    };
+
+#if !defined(_MSC_VER)
+    action run_forking_components() {
+        // Forking with threads is difficult and the number of components that require forking are
+        // few in number. Run forking components sequentially.
+        for (const auto& component : forking_components) {
+            const auto& fn = component.fn;
+            const auto& name = component.name;
+
+            const pid_t pid = ::fork();
+
+            // Child: do nothing more than call the registered function.
+            if (pid == 0) {
+                fn();
+                return action::return_from_main;  // Return from `main()`.
+            }
+
+            // Parent: wait for child and handle returned status values.
+            else {
+                int status;
+
+                const int ret = ::waitpid(pid, &status, 0);
+
+                // For non-zero exit codes, permit continuation for example coverage.
+                if (WIFEXITED(status) && WEXITSTATUS(status) != EXIT_SUCCESS) {
+                    std::cout << __func__ << ": failed: " << name
+                              << " exited with a non-zero exit code: " << WEXITSTATUS(status)
+                              << std::endl;
+
+                    return action::fail;
+                }
+
+                // For unexpected signals, stop immediately.
+                else if (WIFSIGNALED(status)) {
+                    const int signal = WTERMSIG(status);
+                    const char* const sigstr = ::strsignal(signal);
+
+                    std::cout << __func__ << ": failed: " << name
+                              << " was killed by signal: " << signal << " ("
+                              << (sigstr ? sigstr : "") << ")" << std::endl;
+
+                    std::exit(EXIT_FAILURE);
+                }
+
+                // We don't expect any other failure condition.
+                else {
+                    ASSERT(ret != -1);
+                }
+            }
+        }
+
+        return action::succeed;
+    }
+#else
+    action run_forking_components() {
+        std::cout << "Skipping API examples that require forked processes" << std::endl;
+        return action::succeed;
+    }
+#endif  // !defined(_MSC_VER)
+
    public:
-    void add(fn_type fn) {
-        fns.push_back(fn);
+    void add_component(fn_type fn, const char* name) {
+        components.emplace_back(fn, name);
+    }
+
+    void add_forking_component(fn_type fn, const char* name) {
+        forking_components.emplace_back(fn, name);
     }
 
     void set_seed(std::minstd_rand::result_type seed) {
@@ -69,26 +183,21 @@ class runner_type {
         gen.seed(seed);
 
         // Prevent ordering dependencies across examples.
-        std::shuffle(fns.begin(), fns.end(), gen);
+        std::shuffle(components.begin(), components.end(), gen);
+        std::shuffle(forking_components.begin(), forking_components.end(), gen);
 
-        std::queue<std::thread> threads;
+        run_components();
 
-        // Rudimentary job scheduler.
-        for (auto fn : fns) {
-            while (threads.size() >= jobs) {
-                threads.front().join();
-                threads.pop();
-            }
-
-            threads.emplace(fn);
+        switch (run_forking_components()) {
+            case action::succeed:
+                break;  // Continue example coverage.
+            case action::fail:
+                return EXIT_FAILURE;  // A component failed.
+            case action::return_from_main:
+                return EXIT_SUCCESS;  // Return directly from forked processes.
         }
 
-        while (!threads.empty()) {
-            threads.front().join();
-            threads.pop();
-        }
-
-        return 0;
+        return EXIT_SUCCESS;
     }
 };
 
@@ -96,8 +205,12 @@ runner_type runner;
 
 }  // namespace
 
-void runner_register_fn(void (*fn)()) {
-    runner.add(fn);
+void runner_register_component(void (*fn)(), const char* name) {
+    runner.add_component(fn, name);
+}
+
+void runner_register_forking_component(void (*fn)(), const char* name) {
+    runner.add_forking_component(fn, name);
 }
 
 int EXAMPLES_CDECL main(int argc, char** argv) {

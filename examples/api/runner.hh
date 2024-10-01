@@ -16,15 +16,23 @@
 
 #include <examples/macros.hh>
 
-void runner_register_fn(void (*fn)());
+void runner_register_component(void (*fn)(), const char* name);
+
+void runner_register_forking_component(void (*fn)(), const char* name);
 
 // Defined by examples/CMakeLists.txt.
 #if !defined(EXAMPLES_COMPONENT_NAME)
 #error "EXAMPLES_COMPONENT_NAME is not defined!"
 #endif  // !defined(EXAMPLES_COMPONENT_NAME)
 
-#define RUNNER_REGISTER_COMPONENT()                                                         \
-    static void EXAMPLES_CONCAT(EXAMPLES_COMPONENT_NAME, _entry_point)(void);               \
-    static int EXAMPLES_CONCAT(EXAMPLES_COMPONENT_NAME, _registerator) =                    \
-        (::runner_register_fn(&EXAMPLES_CONCAT(EXAMPLES_COMPONENT_NAME, _entry_point)), 0); \
-    static void EXAMPLES_CONCAT(EXAMPLES_COMPONENT_NAME, _entry_point)(void)
+#define RUNNER_REGISTER_COMPONENT_IMPL(name, register_fn)                                         \
+    static void EXAMPLES_CONCAT3(name, _entry_point_, __LINE__)(void);                            \
+    static int EXAMPLES_CONCAT2(name, _registrator) =                                             \
+        ((register_fn)(&EXAMPLES_CONCAT3(name, _entry_point_, __LINE__), EXAMPLES_STR(name)), 0); \
+    static void EXAMPLES_CONCAT3(EXAMPLES_COMPONENT_NAME, _entry_point_, __LINE__)(void)
+
+#define RUNNER_REGISTER_COMPONENT() \
+    RUNNER_REGISTER_COMPONENT_IMPL(EXAMPLES_COMPONENT_NAME, ::runner_register_component)
+
+#define RUNNER_REGISTER_FORKING_COMPONENT() \
+    RUNNER_REGISTER_COMPONENT_IMPL(EXAMPLES_COMPONENT_NAME, ::runner_register_forking_component)
