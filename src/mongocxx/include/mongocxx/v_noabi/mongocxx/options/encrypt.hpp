@@ -197,8 +197,6 @@ class encrypt {
     /// @warning Queryable Encryption is in Public Technical Preview. Queryable Encryption should
     /// not be used in production and is subject to backwards breaking changes.
     ///
-    /// @warning The Range algorithm is experimental only. It is not intended for public use. It
-    /// is subject to breaking changes.
     encrypt& range_opts(options::range opts);
 
     ///
@@ -210,8 +208,6 @@ class encrypt {
     /// @warning Queryable Encryption is in Public Technical Preview. Queryable Encryption should
     /// not be used in production and is subject to backwards breaking changes.
     ///
-    /// @warning The Range algorithm is experimental only. It is not intended for public use. It
-    /// is subject to breaking changes.
     const stdx::optional<options::range>& range_opts() const;
 
    private:

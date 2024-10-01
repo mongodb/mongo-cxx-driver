@@ -142,8 +142,6 @@ class client_encryption {
     ///
     /// @returns The encrypted expression.
     ///
-    /// @warning The Range algorithm is experimental only. It is not intended for public use. It is
-    /// subject to breaking changes.
     bsoncxx::v_noabi::document::value encrypt_expression(
         bsoncxx::v_noabi::document::view_or_value expr, const options::encrypt& opts);
 

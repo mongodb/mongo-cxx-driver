@@ -38,8 +38,6 @@ namespace options {
 /// @note For double and decimal128, @ref min, @ref max, and @ref precision must all be set, or all
 /// be unset.
 ///
-/// @warning The Range algorithm is experimental only. It is not intended for public use. It is
-/// subject to breaking changes.
 class range {
    public:
     /// @brief Sets `RangeOpts.min`.
