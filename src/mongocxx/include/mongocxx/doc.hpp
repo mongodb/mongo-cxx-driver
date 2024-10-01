@@ -98,6 +98,7 @@
 /// @li @subpage topic-mongocxx-examples-instance
 /// @li @subpage topic-mongocxx-examples-logger
 /// @li @subpage topic-mongocxx-examples-uri
+/// @li @subpage topic-mongocxx-examples-clients
 ///
 
 ///
@@ -121,6 +122,13 @@
 /// @see [Connection Strings (MongoDB
 /// Manual)](https://www.mongodb.com/docs/manual/reference/connection-string/)
 /// @include{doc} api/mongocxx/examples/uri.md
+///
+
+///
+/// @page topic-mongocxx-examples-clients Clients
+/// @brief How to use clients and client pools.
+/// @tableofcontents
+/// @include{doc} api/mongocxx/examples/clients.md
 ///
 
 ///
