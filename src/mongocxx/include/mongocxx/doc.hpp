@@ -95,6 +95,14 @@
 ///
 /// @page topic-mongocxx-examples How-To Guides
 /// @brief Examples of how to use the mongocxx library.
+/// @li @subpage topic-mongocxx-examples-instance
+///
+
+///
+/// @page topic-mongocxx-examples-instance Instance
+/// @brief How to use a MongoDB C++ Driver instance.
+/// @tableofcontents
+/// @include{doc} api/mongocxx/examples/instance.md
 ///
 
 ///
