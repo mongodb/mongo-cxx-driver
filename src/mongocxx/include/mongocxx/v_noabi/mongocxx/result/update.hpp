@@ -20,6 +20,7 @@
 
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/types.hpp>
+
 #include <mongocxx/result/bulk_write.hpp>
 #include <mongocxx/stdx.hpp>
 
@@ -33,46 +34,47 @@ namespace result {
 class update {
    public:
     // This constructor is public for testing purposes only
-    explicit update(result::bulk_write result);
+    explicit MONGOCXX_ABI_EXPORT_CDECL() update(result::bulk_write result);
 
     ///
     /// Returns the bulk write result for this update operation.
     ///
     /// @return The raw bulk write result.
     ///
-    const result::bulk_write& result() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const result::bulk_write&) result() const;
 
     ///
     /// Gets the number of documents that were matched during this operation.
     ///
     /// @return The number of documents that were matched.
     ///
-    std::int32_t matched_count() const;
+    MONGOCXX_ABI_EXPORT_CDECL(std::int32_t) matched_count() const;
 
     ///
     /// Gets the number of documents that were modified during this operation.
     ///
     /// @return The number of documents that were modified.
-    std::int32_t modified_count() const;
+    MONGOCXX_ABI_EXPORT_CDECL(std::int32_t) modified_count() const;
 
     ///
     /// Gets the number of documents that were upserted during this operation.
     ///
     /// @return The number of documents that were upserted.
-    std::int32_t upserted_count() const;
+    MONGOCXX_ABI_EXPORT_CDECL(std::int32_t) upserted_count() const;
 
     ///
     /// If a document was upserted during this operation, gets the _id of the upserted document.
     ///
     /// @return The value of the _id field for upserted document.
     ///
-    stdx::optional<bsoncxx::v_noabi::document::element> upserted_id() const;
+    MONGOCXX_ABI_EXPORT_CDECL(stdx::optional<bsoncxx::v_noabi::document::element>)
+    upserted_id() const;
+
+    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(const update&, const update&);
+    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator!=(const update&, const update&);
 
    private:
     result::bulk_write _result;
-
-    friend MONGOCXX_API bool MONGOCXX_CALL operator==(const update&, const update&);
-    friend MONGOCXX_API bool MONGOCXX_CALL operator!=(const update&, const update&);
 };
 
 }  // namespace result

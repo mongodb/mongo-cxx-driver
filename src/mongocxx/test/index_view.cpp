@@ -17,6 +17,7 @@
 
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/string/to_string.hpp>
+
 #include <mongocxx/client.hpp>
 #include <mongocxx/collection.hpp>
 #include <mongocxx/exception/logic_error.hpp>
@@ -26,6 +27,7 @@
 #include <mongocxx/options/index_view.hpp>
 
 #include <bsoncxx/test/catch.hh>
+
 #include <mongocxx/test/client_helpers.hh>
 
 #include <catch2/catch_case_sensitive.hpp>

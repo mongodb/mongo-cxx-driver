@@ -15,6 +15,7 @@
 #include <string>
 
 #include <bsoncxx/stdx/make_unique.hpp>
+
 #include <mongocxx/change_stream.hpp>
 #include <mongocxx/private/change_stream.hh>
 #include <mongocxx/private/libmongoc.hh>
@@ -98,8 +99,7 @@ change_stream::iterator::iterator(const iter_type type, const change_stream* cha
 // Care about the underlying change_stream being the same so we can
 // support a collection of iterators for change streams from different
 // collections.
-bool MONGOCXX_CALL operator==(const change_stream::iterator& lhs,
-                              const change_stream::iterator& rhs) noexcept {
+bool operator==(const change_stream::iterator& lhs, const change_stream::iterator& rhs) noexcept {
     // Tracking different streams never equal.
     if (lhs._change_stream != rhs._change_stream) {
         return false;
@@ -118,8 +118,7 @@ bool MONGOCXX_CALL operator==(const change_stream::iterator& lhs,
         ((rhs._type == change_stream::iterator::iter_type::k_end) && lhs.is_exhausted());
 }
 
-bool MONGOCXX_CALL operator!=(const change_stream::iterator& lhs,
-                              const change_stream::iterator& rhs) noexcept {
+bool operator!=(const change_stream::iterator& lhs, const change_stream::iterator& rhs) noexcept {
     return !(lhs == rhs);
 }
 

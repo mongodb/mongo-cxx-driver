@@ -15,9 +15,11 @@
 #include <bsoncxx/builder/core.hpp>
 #include <bsoncxx/types.hpp>
 
+#include <examples/macros.hh>
+
 using namespace bsoncxx;
 
-int main() {
+int EXAMPLES_CDECL main() {
     // bsoncxx::builder::core is a low-level primitive that can be useful for building other
     // BSON abstractions. Most users should just use builder::stream or builder::basic.
 

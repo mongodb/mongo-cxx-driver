@@ -22,6 +22,7 @@
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/bson_value/view_or_value.hpp>
+
 #include <mongocxx/options/range.hpp>
 #include <mongocxx/stdx.hpp>
 
@@ -50,9 +51,11 @@ class encrypt {
     /// @return
     ///   A reference to this object to facilitate method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/core/security-client-side-encryption/
     ///
-    encrypt& key_id(bsoncxx::v_noabi::types::bson_value::view_or_value key_id);
+    MONGOCXX_ABI_EXPORT_CDECL(encrypt&)
+    key_id(bsoncxx::v_noabi::types::bson_value::view_or_value key_id);
 
     ///
     /// Gets the key_id.
@@ -60,7 +63,9 @@ class encrypt {
     /// @return
     ///   An optional owning bson_value containing the key_id.
     ///
-    const stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>& key_id() const;
+    MONGOCXX_ABI_EXPORT_CDECL(
+        const stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>&)
+    key_id() const;
 
     ///
     /// Sets a name by which to lookup a key from the key vault collection to use
@@ -72,9 +77,10 @@ class encrypt {
     /// @return
     ///   A reference to this obejct to facilitate method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/method/getClientEncryption/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/method/getClientEncryption/
     ///
-    encrypt& key_alt_name(std::string name);
+    MONGOCXX_ABI_EXPORT_CDECL(encrypt&) key_alt_name(std::string name);
 
     ///
     /// Gets the current key alt name.
@@ -82,7 +88,7 @@ class encrypt {
     /// @return
     ///   An optional key name.
     ///
-    const stdx::optional<std::string>& key_alt_name() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<std::string>&) key_alt_name() const;
 
     ///
     /// Determines which AEAD_AES_256_CBC algorithm to use with HMAC_SHA_512 when
@@ -141,9 +147,9 @@ class encrypt {
     /// mongocxx::v_noabi::options::auto_encryption::bypass_auto_encryption must be false.
     ///
     /// @see
-    /// https://www.mongodb.com/docs/manual/core/security-client-side-encryption/#encryption-algorithms
+    /// - https://www.mongodb.com/docs/manual/core/security-client-side-encryption/#encryption-algorithms
     ///
-    encrypt& algorithm(encryption_algorithm algorithm);
+    MONGOCXX_ABI_EXPORT_CDECL(encrypt&) algorithm(encryption_algorithm algorithm);
 
     ///
     /// Gets the current algorithm.
@@ -153,7 +159,7 @@ class encrypt {
     /// @return
     ///   An optional algorithm.
     ///
-    const stdx::optional<encryption_algorithm>& algorithm() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<encryption_algorithm>&) algorithm() const;
 
     ///
     /// Sets the contention factor to use for encryption.
@@ -163,7 +169,7 @@ class encrypt {
     /// @param contention_factor
     ///   An integer specifiying the desired contention factor.
     ///
-    encrypt& contention_factor(int64_t contention_factor);
+    MONGOCXX_ABI_EXPORT_CDECL(encrypt&) contention_factor(int64_t contention_factor);
 
     ///
     /// Gets the current contention factor.
@@ -171,7 +177,7 @@ class encrypt {
     /// @return
     ///   An optional contention factor.
     ///
-    const stdx::optional<int64_t>& contention_factor() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<int64_t>&) contention_factor() const;
 
     ///
     /// Sets the query type to use for encryption.
@@ -181,7 +187,7 @@ class encrypt {
     /// query_type only applies when algorithm is "Indexed" or "Range".
     /// It is an error to set query_type when algorithm is not "Indexed" or "Range".
     ///
-    encrypt& query_type(encryption_query_type query_type);
+    MONGOCXX_ABI_EXPORT_CDECL(encrypt&) query_type(encryption_query_type query_type);
 
     ///
     /// Gets the current query type.
@@ -189,7 +195,7 @@ class encrypt {
     /// @return
     ///   A query type.
     ///
-    const stdx::optional<encryption_query_type>& query_type() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<encryption_query_type>&) query_type() const;
 
     ///
     /// Sets the range options to use for encryption.
@@ -197,7 +203,7 @@ class encrypt {
     /// @warning Queryable Encryption is in Public Technical Preview. Queryable Encryption should
     /// not be used in production and is subject to backwards breaking changes.
     ///
-    encrypt& range_opts(options::range opts);
+    MONGOCXX_ABI_EXPORT_CDECL(encrypt&) range_opts(options::range opts);
 
     ///
     /// Gets the current range options.
@@ -208,12 +214,12 @@ class encrypt {
     /// @warning Queryable Encryption is in Public Technical Preview. Queryable Encryption should
     /// not be used in production and is subject to backwards breaking changes.
     ///
-    const stdx::optional<options::range>& range_opts() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<options::range>&) range_opts() const;
 
    private:
     friend ::mongocxx::v_noabi::client_encryption;
 
-    MONGOCXX_PRIVATE void* convert() const;
+    void* convert() const;
 
     stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> _key_id;
     stdx::optional<std::string> _key_alt_name;

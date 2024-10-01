@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include <bsoncxx/types/bson_value/view.hpp>
+
 #include <mongocxx/result/insert_many.hpp>
 
 #include <mongocxx/config/private/prelude.hh>
@@ -57,7 +58,7 @@ insert_many::id_map insert_many::inserted_ids() const {
     return _inserted_ids;
 }
 
-bool MONGOCXX_CALL operator==(const insert_many& lhs, const insert_many& rhs) {
+bool operator==(const insert_many& lhs, const insert_many& rhs) {
     if (lhs.result() != rhs.result()) {
         return false;
     } else if (lhs.inserted_ids().size() != rhs.inserted_ids().size()) {
@@ -72,7 +73,7 @@ bool MONGOCXX_CALL operator==(const insert_many& lhs, const insert_many& rhs) {
     }
     return true;
 }
-bool MONGOCXX_CALL operator!=(const insert_many& lhs, const insert_many& rhs) {
+bool operator!=(const insert_many& lhs, const insert_many& rhs) {
     return !(lhs == rhs);
 }
 

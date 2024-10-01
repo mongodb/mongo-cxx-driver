@@ -20,7 +20,7 @@ namespace mongocxx {
 namespace v_noabi {
 namespace options {
 
-class MONGOCXX_API bulk_write;
+class bulk_write;
 
 }  // namespace options
 }  // namespace v_noabi

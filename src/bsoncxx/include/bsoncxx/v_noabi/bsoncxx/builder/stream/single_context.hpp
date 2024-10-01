@@ -43,14 +43,14 @@ class single_context {
     /// @param core
     ///   The core builder to orchestrate
     ///
-    BSONCXX_INLINE single_context(core* core) : _core(core) {}
+    single_context(core* core) : _core(core) {}
 
     ///
     /// << operator for opening a new subdocument in the core builder.
     ///
     /// The argument must be an open_document_type token (it is otherwise ignored).
     ///
-    BSONCXX_INLINE key_context<> operator<<(open_document_type) {
+    key_context<> operator<<(open_document_type) {
         _core->open_document();
 
         return wrap_document();
@@ -61,7 +61,7 @@ class single_context {
     ///
     /// The argument must be an open_array_type token (it is otherwise ignored).
     ///
-    BSONCXX_INLINE array_context<> operator<<(open_array_type) {
+    array_context<> operator<<(open_array_type) {
         _core->open_array();
 
         return wrap_array();
@@ -75,16 +75,16 @@ class single_context {
     ///   The value to append
     ///
     template <class T>
-    BSONCXX_INLINE void operator<<(T&& t) {
+    void operator<<(T&& t) {
         _core->append(std::forward<T>(t));
     }
 
    private:
-    BSONCXX_INLINE array_context<> wrap_array() {
+    array_context<> wrap_array() {
         return array_context<>(_core);
     }
 
-    BSONCXX_INLINE key_context<> wrap_document() {
+    key_context<> wrap_document() {
         return key_context<>(_core);
     }
 
@@ -95,7 +95,7 @@ class single_context {
 /// Implementation of the single_context conversion operator for array_context.
 ///
 template <class T>
-BSONCXX_INLINE array_context<T>::operator single_context() {
+array_context<T>::operator single_context() {
     return single_context(_core);
 }
 
@@ -103,7 +103,7 @@ BSONCXX_INLINE array_context<T>::operator single_context() {
 /// Implementation of the single_context conversion operator for value_context.
 ///
 template <class T>
-BSONCXX_INLINE value_context<T>::operator single_context() {
+value_context<T>::operator single_context() {
     return single_context(_core);
 }
 

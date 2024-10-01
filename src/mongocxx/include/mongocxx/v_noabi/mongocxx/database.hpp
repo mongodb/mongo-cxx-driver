@@ -24,6 +24,7 @@
 
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/string/view_or_value.hpp>
+
 #include <mongocxx/client_session.hpp>
 #include <mongocxx/collection.hpp>
 #include <mongocxx/gridfs/bucket.hpp>
@@ -50,38 +51,38 @@ class database {
     /// to the state of a moved-from database. The only valid actions to take with a default
     /// constructed database are to assign to it, or destroy it.
     ///
-    database() noexcept;
+    MONGOCXX_ABI_EXPORT_CDECL() database() noexcept;
 
     ///
     /// Move constructs a database.
     ///
-    database(database&&) noexcept;
+    MONGOCXX_ABI_EXPORT_CDECL() database(database&&) noexcept;
 
     ///
     /// Move assigns a database.
     ///
-    database& operator=(database&&) noexcept;
+    MONGOCXX_ABI_EXPORT_CDECL(database&) operator=(database&&) noexcept;
 
     ///
     /// Copy constructs a database.
     ///
-    database(const database&);
+    MONGOCXX_ABI_EXPORT_CDECL() database(const database&);
 
     ///
     /// Copy assigns a database.
     ///
-    database& operator=(const database&);
+    MONGOCXX_ABI_EXPORT_CDECL(database&) operator=(const database&);
 
     ///
     /// Destroys a database.
     ///
-    ~database();
+    MONGOCXX_ABI_EXPORT_CDECL() ~database();
 
     ///
     /// Returns true if the client is valid, meaning it was not default constructed
     /// or moved from.
     ///
-    explicit operator bool() const noexcept;
+    explicit MONGOCXX_ABI_EXPORT_CDECL() operator bool() const noexcept;
 
     ///
     /// Runs an aggregation framework pipeline against this database for
@@ -97,15 +98,16 @@ class database {
     /// the cursor throws mongocxx::v_noabi::query_exception when the returned cursor
     /// is iterated.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/aggregate/#dbcmd.aggregate
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/#dbcmd.aggregate
     ///
     /// @note
     ///   In order to pass a read concern to this, you must use the
     ///   database level set read concern - database::read_concern(rc).
     ///   (Write concern supported only for MongoDB 3.4+).
     ///
-    cursor aggregate(const pipeline& pipeline,
-                     const options::aggregate& options = options::aggregate());
+    MONGOCXX_ABI_EXPORT_CDECL(cursor)
+    aggregate(const pipeline& pipeline, const options::aggregate& options = options::aggregate());
 
     ///
     /// Runs an aggregation framework pipeline against this database for
@@ -123,34 +125,38 @@ class database {
     /// the cursor throws mongocxx::v_noabi::query_exception when the returned cursor
     /// is iterated.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/aggregate/#dbcmd.aggregate
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/#dbcmd.aggregate
     ///
     /// @note
     ///   In order to pass a read concern to this, you must use the
     ///   database level set read concern - database::read_concern(rc).
     ///   (Write concern supported only for MongoDB 3.4+).
     ///
-    cursor aggregate(const client_session& session,
-                     const pipeline& pipeline,
-                     const options::aggregate& options = options::aggregate());
+    MONGOCXX_ABI_EXPORT_CDECL(cursor)
+    aggregate(const client_session& session,
+              const pipeline& pipeline,
+              const options::aggregate& options = options::aggregate());
 
     ///
     /// Runs a command against this database.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/method/db.runCommand/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/method/db.runCommand/
     ///
     /// @param command document representing the command to be run.
     /// @return the result of executing the command.
     ///
     /// @throws mongocxx::v_noabi::operation_exception if the operation fails.
     ///
-    bsoncxx::v_noabi::document::value run_command(
-        bsoncxx::v_noabi::document::view_or_value command);
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::value)
+    run_command(bsoncxx::v_noabi::document::view_or_value command);
 
     ///
     /// Runs a command against this database.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/method/db.runCommand/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/method/db.runCommand/
     ///
     /// @param session The mongocxx::v_noabi::client_session with which to run the command.
     /// @param command document representing the command to be run.
@@ -158,13 +164,14 @@ class database {
     ///
     /// @throws mongocxx::v_noabi::operation_exception if the operation fails.
     ///
-    bsoncxx::v_noabi::document::value run_command(
-        const client_session& session, bsoncxx::v_noabi::document::view_or_value command);
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::value)
+    run_command(const client_session& session, bsoncxx::v_noabi::document::view_or_value command);
 
     ///
     /// Executes a command on a specific server using this database.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/method/db.runCommand/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/method/db.runCommand/
     ///
     /// @param command document representing the command to be run.
     /// @param server_id specifying which server to use.
@@ -172,14 +179,14 @@ class database {
     ///
     /// @throws mongocxx::v_noabi::operation_exception if the operation fails.
     ///
-    bsoncxx::v_noabi::document::value run_command(bsoncxx::v_noabi::document::view_or_value command,
-                                                  uint32_t server_id);
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::value)
+    run_command(bsoncxx::v_noabi::document::view_or_value command, uint32_t server_id);
 
     ///
     /// Explicitly creates a collection in this database with the specified options.
     ///
     /// @see
-    ///   https://www.mongodb.com/docs/manual/reference/command/create/
+    /// - https://www.mongodb.com/docs/manual/reference/command/create/
     ///
     /// @note This function can also be used to create a Time Series Collection. See:
     /// https://www.mongodb.com/docs/manual/core/timeseries-collections/
@@ -195,16 +202,16 @@ class database {
     /// @exception
     ///   mongocxx::v_noabi::operation_exception if the operation fails.
     ///
-    mongocxx::v_noabi::collection create_collection(
-        stdx::string_view name,
-        bsoncxx::v_noabi::document::view_or_value collection_options = {},
-        const stdx::optional<write_concern>& write_concern = {});
+    MONGOCXX_ABI_EXPORT_CDECL(mongocxx::v_noabi::collection)
+    create_collection(stdx::string_view name,
+                      bsoncxx::v_noabi::document::view_or_value collection_options = {},
+                      const stdx::optional<write_concern>& write_concern = {});
 
     ///
     /// Explicitly creates a collection in this database with the specified options.
     ///
     /// @see
-    ///   https://www.mongodb.com/docs/manual/reference/command/create/
+    /// - https://www.mongodb.com/docs/manual/reference/command/create/
     ///
     /// @note This function can also be used to create a Time Series Collection. See:
     /// https://www.mongodb.com/docs/manual/core/timeseries-collections/
@@ -222,11 +229,11 @@ class database {
     /// @exception
     ///   mongocxx::v_noabi::operation_exception if the operation fails.
     ///
-    mongocxx::v_noabi::collection create_collection(
-        const client_session& session,
-        stdx::string_view name,
-        bsoncxx::v_noabi::document::view_or_value collection_options = {},
-        const stdx::optional<write_concern>& write_concern = {});
+    MONGOCXX_ABI_EXPORT_CDECL(mongocxx::v_noabi::collection)
+    create_collection(const client_session& session,
+                      stdx::string_view name,
+                      bsoncxx::v_noabi::document::view_or_value collection_options = {},
+                      const stdx::optional<write_concern>& write_concern = {});
 
     ///
     /// Explicitly creates a collection in this database with the specified options.
@@ -236,7 +243,7 @@ class database {
     ///   bsoncxx::v_noabi::document::view_or_value collection_options instead.
     ///
     /// @see
-    ///   https://www.mongodb.com/docs/manual/reference/command/create/
+    /// - https://www.mongodb.com/docs/manual/reference/command/create/
     ///
     /// @param name
     ///   the new collection's name.
@@ -249,17 +256,17 @@ class database {
     /// @exception
     ///   mongocxx::v_noabi::operation_exception if the operation fails.
     ///
-    MONGOCXX_DEPRECATED mongocxx::v_noabi::collection create_collection(
-        bsoncxx::v_noabi::string::view_or_value name,
-        const options::create_collection_deprecated& collection_options,
-        const stdx::optional<write_concern>& write_concern = {}) {
+    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(mongocxx::v_noabi::collection)
+        create_collection(bsoncxx::v_noabi::string::view_or_value name,
+                          const options::create_collection_deprecated& collection_options,
+                          const stdx::optional<write_concern>& write_concern = {}) {
         return create_collection_deprecated(name, collection_options, write_concern);
     }
 
-    mongocxx::v_noabi::collection create_collection_deprecated(
-        bsoncxx::v_noabi::string::view_or_value name,
-        const options::create_collection_deprecated& collection_options,
-        const stdx::optional<write_concern>& write_concern = {});
+    MONGOCXX_ABI_EXPORT_CDECL(mongocxx::v_noabi::collection)
+    create_collection_deprecated(bsoncxx::v_noabi::string::view_or_value name,
+                                 const options::create_collection_deprecated& collection_options,
+                                 const stdx::optional<write_concern>& write_concern = {});
 
     ///
     /// Explicitly creates a collection in this database with the specified options.
@@ -269,7 +276,7 @@ class database {
     ///   bsoncxx::v_noabi::document::view_or_value collection_options instead.
     ///
     /// @see
-    ///   https://www.mongodb.com/docs/manual/reference/command/create/
+    /// - https://www.mongodb.com/docs/manual/reference/command/create/
     ///
     /// @param session
     ///   The mongocxx::v_noabi::client_session with which to perform the create operation.
@@ -284,11 +291,11 @@ class database {
     /// @exception
     ///   mongocxx::v_noabi::operation_exception if the operation fails.
     ///
-    MONGOCXX_DEPRECATED mongocxx::v_noabi::collection create_collection(
-        const client_session& session,
-        bsoncxx::v_noabi::string::view_or_value name,
-        const options::create_collection_deprecated& collection_options,
-        const stdx::optional<write_concern>& write_concern = {}) {
+    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(mongocxx::v_noabi::collection)
+        create_collection(const client_session& session,
+                          bsoncxx::v_noabi::string::view_or_value name,
+                          const options::create_collection_deprecated& collection_options,
+                          const stdx::optional<write_concern>& write_concern = {}) {
         return create_collection_deprecated(session, name, collection_options, write_concern);
     }
 
@@ -300,7 +307,7 @@ class database {
     ///   bsoncxx::v_noabi::document::view_or_value collection_options instead.
     ///
     /// @see
-    ///   https://www.mongodb.com/docs/manual/reference/command/create/
+    /// - https://www.mongodb.com/docs/manual/reference/command/create/
     ///
     /// @param session
     ///   The mongocxx::v_noabi::client_session with which to perform the create operation.
@@ -315,11 +322,11 @@ class database {
     /// @exception
     ///   mongocxx::v_noabi::operation_exception if the operation fails.
     ///
-    mongocxx::v_noabi::collection create_collection_deprecated(
-        const client_session& session,
-        bsoncxx::v_noabi::string::view_or_value name,
-        const options::create_collection_deprecated& collection_options,
-        const stdx::optional<write_concern>& write_concern = {});
+    MONGOCXX_ABI_EXPORT_CDECL(mongocxx::v_noabi::collection)
+    create_collection_deprecated(const client_session& session,
+                                 bsoncxx::v_noabi::string::view_or_value name,
+                                 const options::create_collection_deprecated& collection_options,
+                                 const stdx::optional<write_concern>& write_concern = {});
 
     ///
     /// Drops the database and all its collections.
@@ -332,10 +339,11 @@ class database {
     ///   mongocxx::v_noabi::operation_exception if the operation fails.
     ///
     /// @see
-    ///   https://www.mongodb.com/docs/manual/reference/command/dropDatabase/
+    /// - https://www.mongodb.com/docs/manual/reference/command/dropDatabase/
     ///
-    void drop(const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>&
-                  write_concern = {});
+    MONGOCXX_ABI_EXPORT_CDECL(void)
+    drop(const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>& write_concern =
+             {});
 
     ///
     /// Drops the database and all its collections.
@@ -350,11 +358,12 @@ class database {
     ///   mongocxx::v_noabi::operation_exception if the operation fails.
     ///
     /// @see
-    ///   https://www.mongodb.com/docs/manual/reference/command/dropDatabase/
+    /// - https://www.mongodb.com/docs/manual/reference/command/dropDatabase/
     ///
-    void drop(const client_session& session,
-              const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>&
-                  write_concern = {});
+    MONGOCXX_ABI_EXPORT_CDECL(void)
+    drop(const client_session& session,
+         const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>& write_concern =
+             {});
 
     ///
     /// Checks whether this database contains a collection having the given name.
@@ -366,7 +375,8 @@ class database {
     /// @throws mongocxx::v_noabi::operation_exception if the underlying 'listCollections'
     /// command fails.
     ///
-    bool has_collection(bsoncxx::v_noabi::string::view_or_value name) const;
+    MONGOCXX_ABI_EXPORT_CDECL(bool)
+    has_collection(bsoncxx::v_noabi::string::view_or_value name) const;
 
     ///
     /// Enumerates the collections in this database.
@@ -376,9 +386,11 @@ class database {
     ///
     /// @return mongocxx::v_noabi::cursor containing the collection information.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/listCollections/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/listCollections/
     ///
-    cursor list_collections(bsoncxx::v_noabi::document::view_or_value filter = {});
+    MONGOCXX_ABI_EXPORT_CDECL(cursor)
+    list_collections(bsoncxx::v_noabi::document::view_or_value filter = {});
 
     ///
     /// Enumerates the collections in this database.
@@ -390,10 +402,12 @@ class database {
     ///
     /// @return mongocxx::v_noabi::cursor containing the collection information.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/listCollections/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/listCollections/
     ///
-    cursor list_collections(const client_session& session,
-                            bsoncxx::v_noabi::document::view_or_value filter = {});
+    MONGOCXX_ABI_EXPORT_CDECL(cursor)
+    list_collections(const client_session& session,
+                     bsoncxx::v_noabi::document::view_or_value filter = {});
 
     ///
     /// Enumerates the collection names in this database.
@@ -406,10 +420,11 @@ class database {
     /// @throws mongocxx::v_noabi::operation_exception if the underlying 'listCollections'
     /// command fails.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/listCollections/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/listCollections/
     ///
-    std::vector<std::string> list_collection_names(
-        bsoncxx::v_noabi::document::view_or_value filter = {});
+    MONGOCXX_ABI_EXPORT_CDECL(std::vector<std::string>)
+    list_collection_names(bsoncxx::v_noabi::document::view_or_value filter = {});
 
     ///
     /// Enumerates the collection names in this database.
@@ -424,17 +439,19 @@ class database {
     /// @throws mongocxx::v_noabi::operation_exception if the underlying 'listCollections'
     /// command fails.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/listCollections/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/listCollections/
     ///
-    std::vector<std::string> list_collection_names(
-        const client_session& session, bsoncxx::v_noabi::document::view_or_value filter = {});
+    MONGOCXX_ABI_EXPORT_CDECL(std::vector<std::string>)
+    list_collection_names(const client_session& session,
+                          bsoncxx::v_noabi::document::view_or_value filter = {});
 
     ///
     /// Get the name of this database.
     ///
     /// @return the name of this database.
     ///
-    stdx::string_view name() const;
+    MONGOCXX_ABI_EXPORT_CDECL(stdx::string_view) name() const;
 
     ///
     /// Sets the read_concern for this database.
@@ -446,9 +463,10 @@ class database {
     /// @param rc
     ///   The new @c read_concern
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/read-concern/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/read-concern/
     ///
-    void read_concern(mongocxx::v_noabi::read_concern rc);
+    MONGOCXX_ABI_EXPORT_CDECL(void) read_concern(mongocxx::v_noabi::read_concern rc);
 
     ///
     /// The current read concern for this database.
@@ -458,7 +476,7 @@ class database {
     ///
     /// @return the current read_concern
     ///
-    mongocxx::v_noabi::read_concern read_concern() const;
+    MONGOCXX_ABI_EXPORT_CDECL(mongocxx::v_noabi::read_concern) read_concern() const;
 
     ///
     /// Sets the read_preference for this database.
@@ -467,20 +485,22 @@ class database {
     /// from this database, but do affect new ones. New collections will receive a copy of the
     /// new read_preference for this database upon instantiation.
     ///
-    /// @see https://www.mongodb.com/docs/manual/core/read-preference/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/core/read-preference/
     ///
     /// @param rp the new read_preference.
     ///
-    void read_preference(mongocxx::v_noabi::read_preference rp);
+    MONGOCXX_ABI_EXPORT_CDECL(void) read_preference(mongocxx::v_noabi::read_preference rp);
 
     ///
     /// The current read preference for this database.
     ///
-    /// @see https://www.mongodb.com/docs/manual/core/read-preference/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/core/read-preference/
     ///
     /// @return the current read_preference
     ///
-    mongocxx::v_noabi::read_preference read_preference() const;
+    MONGOCXX_ABI_EXPORT_CDECL(mongocxx::v_noabi::read_preference) read_preference() const;
 
     ///
     /// Sets the write_concern for this database.
@@ -489,14 +509,14 @@ class database {
     /// from this database, but do affect new ones as new collections will receive a copy of the
     /// write_concern of this database upon instantiation.
     ///
-    void write_concern(mongocxx::v_noabi::write_concern wc);
+    MONGOCXX_ABI_EXPORT_CDECL(void) write_concern(mongocxx::v_noabi::write_concern wc);
 
     ///
     /// The current write_concern for this database.
     ///
     /// @return the current write_concern
     ///
-    mongocxx::v_noabi::write_concern write_concern() const;
+    MONGOCXX_ABI_EXPORT_CDECL(mongocxx::v_noabi::write_concern) write_concern() const;
 
     ///
     /// Access a collection (logical grouping of documents) within this database.
@@ -505,7 +525,8 @@ class database {
     ///
     /// @return the collection.
     ///
-    mongocxx::v_noabi::collection collection(bsoncxx::v_noabi::string::view_or_value name) const;
+    MONGOCXX_ABI_EXPORT_CDECL(mongocxx::v_noabi::collection)
+    collection(bsoncxx::v_noabi::string::view_or_value name) const;
 
     ///
     /// Allows the db["collection_name"] syntax to be used to access a collection within this
@@ -515,8 +536,9 @@ class database {
     ///
     /// @return the collection.
     ///
-    MONGOCXX_INLINE mongocxx::v_noabi::collection operator[](
-        bsoncxx::v_noabi::string::view_or_value name) const;
+    mongocxx::v_noabi::collection operator[](bsoncxx::v_noabi::string::view_or_value name) const {
+        return collection(name);
+    }
 
     ///
     /// Access a GridFS bucket within this database.
@@ -532,8 +554,8 @@ class database {
     ///
     /// @throws mongocxx::v_noabi::logic_error if `options` are invalid.
     ///
-    gridfs::bucket gridfs_bucket(
-        const options::gridfs::bucket& options = options::gridfs::bucket()) const;
+    MONGOCXX_ABI_EXPORT_CDECL(gridfs::bucket)
+    gridfs_bucket(const options::gridfs::bucket& options = options::gridfs::bucket()) const;
 
     ///
     /// Gets a change stream on this database with an empty pipeline.
@@ -545,9 +567,10 @@ class database {
     /// @return
     ///  A change stream on this database.
     ///
-    /// @see https://www.mongodb.com/docs/manual/changeStreams/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/changeStreams/
     ///
-    change_stream watch(const options::change_stream& options = {});
+    MONGOCXX_ABI_EXPORT_CDECL(change_stream) watch(const options::change_stream& options = {});
 
     ///
     /// @param session
@@ -558,9 +581,11 @@ class database {
     /// @return
     ///  A change stream on this database.
     ///
-    /// @see https://www.mongodb.com/docs/manual/changeStreams/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/changeStreams/
     ///
-    change_stream watch(const client_session& session, const options::change_stream& options = {});
+    MONGOCXX_ABI_EXPORT_CDECL(change_stream)
+    watch(const client_session& session, const options::change_stream& options = {});
 
     ///
     /// Gets a change stream on this database.
@@ -576,9 +601,11 @@ class database {
     /// @return
     ///  A change stream on this database.
     ///
-    /// @see https://www.mongodb.com/docs/manual/changeStreams/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/changeStreams/
     ///
-    change_stream watch(const pipeline& pipe, const options::change_stream& options = {});
+    MONGOCXX_ABI_EXPORT_CDECL(change_stream)
+    watch(const pipeline& pipe, const options::change_stream& options = {});
 
     ///
     /// Gets a change stream on this database.
@@ -593,65 +620,61 @@ class database {
     /// @return
     ///  A change stream on this database.
     ///
-    /// @see https://www.mongodb.com/docs/manual/changeStreams/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/changeStreams/
     ///
-    change_stream watch(const client_session& session,
-                        const pipeline& pipe,
-                        const options::change_stream& options = {});
+    MONGOCXX_ABI_EXPORT_CDECL(change_stream)
+    watch(const client_session& session,
+          const pipeline& pipe,
+          const options::change_stream& options = {});
 
    private:
     friend ::mongocxx::v_noabi::client_encryption;
     friend ::mongocxx::v_noabi::client;
     friend ::mongocxx::v_noabi::collection;
 
-    MONGOCXX_PRIVATE database(const mongocxx::v_noabi::client& client,
-                              bsoncxx::v_noabi::string::view_or_value name);
+    database(const mongocxx::v_noabi::client& client, bsoncxx::v_noabi::string::view_or_value name);
 
-    MONGOCXX_PRIVATE cursor _aggregate(const client_session* session,
-                                       const pipeline& pipeline,
-                                       const options::aggregate& options);
+    cursor _aggregate(const client_session* session,
+                      const pipeline& pipeline,
+                      const options::aggregate& options);
 
-    MONGOCXX_PRIVATE bsoncxx::v_noabi::document::value _run_command(
+    bsoncxx::v_noabi::document::value _run_command(
         const client_session* session, bsoncxx::v_noabi::document::view_or_value command);
 
-    MONGOCXX_PRIVATE mongocxx::v_noabi::collection _create_collection(
+    mongocxx::v_noabi::collection _create_collection(
         const client_session* session,
         stdx::string_view name,
         bsoncxx::v_noabi::document::view_or_value collection_options,
         const stdx::optional<mongocxx::v_noabi::write_concern>& write_concern);
 
-    MONGOCXX_PRIVATE mongocxx::v_noabi::collection _create_collection_deprecated(
+    mongocxx::v_noabi::collection _create_collection_deprecated(
         const client_session* session,
         bsoncxx::v_noabi::string::view_or_value name,
         const options::create_collection_deprecated& collection_options,
         const stdx::optional<mongocxx::v_noabi::write_concern>& write_concern);
 
-    MONGOCXX_PRIVATE cursor _list_collections(const client_session* session,
-                                              bsoncxx::v_noabi::document::view_or_value filter);
+    cursor _list_collections(const client_session* session,
+                             bsoncxx::v_noabi::document::view_or_value filter);
 
-    MONGOCXX_PRIVATE std::vector<std::string> _list_collection_names(
+    std::vector<std::string> _list_collection_names(
         const client_session* session, bsoncxx::v_noabi::document::view_or_value filter);
 
-    MONGOCXX_PRIVATE void _drop(
+    void _drop(
         const client_session* session,
         const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>& write_concern);
 
-    MONGOCXX_PRIVATE change_stream _watch(const client_session* session,
-                                          const pipeline& pipe,
-                                          const options::change_stream& options);
+    change_stream _watch(const client_session* session,
+                         const pipeline& pipe,
+                         const options::change_stream& options);
 
-    class MONGOCXX_PRIVATE impl;
+    class impl;
 
-    MONGOCXX_PRIVATE impl& _get_impl();
-    MONGOCXX_PRIVATE const impl& _get_impl() const;
+    impl& _get_impl();
+    const impl& _get_impl() const;
 
     std::unique_ptr<impl> _impl;
 };
-
-MONGOCXX_INLINE mongocxx::v_noabi::collection database::operator[](
-    bsoncxx::v_noabi::string::view_or_value name) const {
-    return collection(name);
-}
 
 }  // namespace v_noabi
 }  // namespace mongocxx

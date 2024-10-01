@@ -23,6 +23,7 @@
 #include <bsoncxx/builder/stream/helpers.hpp>
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/types/bson_value/make_value.hpp>
+
 #include <mongocxx/client.hpp>
 #include <mongocxx/client_encryption.hpp>
 #include <mongocxx/instance.hpp>
@@ -30,6 +31,8 @@
 #include <mongocxx/options/client.hpp>
 #include <mongocxx/options/data_key.hpp>
 #include <mongocxx/options/encrypt.hpp>
+
+#include <examples/macros.hh>
 
 using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_document;
@@ -45,7 +48,7 @@ using namespace mongocxx;
 
 const int kKeyLength = 96;
 
-int main() {
+int EXAMPLES_CDECL main() {
     instance inst{};
 
     // This must be the same master key that was used to create

@@ -35,7 +35,7 @@ namespace array {
 ///
 class value {
    public:
-    using deleter_type = void (*)(std::uint8_t*);
+    using deleter_type = void(BSONCXX_ABI_CDECL*)(std::uint8_t*);
     using unique_ptr_type = std::unique_ptr<uint8_t[], deleter_type>;
 
     ///
@@ -50,7 +50,7 @@ class value {
     /// @param dtor
     ///   A user provided deleter.
     ///
-    value(std::uint8_t* data, std::size_t length, deleter_type dtor);
+    BSONCXX_ABI_EXPORT_CDECL() value(std::uint8_t* data, std::size_t length, deleter_type dtor);
 
     ///
     /// Constructs a value from a std::unique_ptr to a buffer. The ownership
@@ -61,7 +61,7 @@ class value {
     /// @param length
     ///   The length of the document.
     ///
-    value(unique_ptr_type ptr, std::size_t length);
+    BSONCXX_ABI_EXPORT_CDECL() value(unique_ptr_type ptr, std::size_t length);
 
     ///
     /// Constructs a value from a view of an array. The data referenced
@@ -71,10 +71,10 @@ class value {
     /// @param view
     ///   A view of another array to copy.
     ///
-    explicit value(array::view view);
+    explicit BSONCXX_ABI_EXPORT_CDECL() value(array::view view);
 
-    value(const value&);
-    value& operator=(const value&);
+    BSONCXX_ABI_EXPORT_CDECL() value(const value&);
+    BSONCXX_ABI_EXPORT_CDECL(value&) operator=(const value&);
 
     value(value&&) = default;
     value& operator=(value&&) = default;
@@ -82,14 +82,18 @@ class value {
     ///
     /// Get a view over the document owned by this value.
     ///
-    BSONCXX_INLINE array::view view() const noexcept;
+    array::view view() const noexcept {
+        return array::view{static_cast<uint8_t*>(_data.get()), _length};
+    }
 
     ///
     /// Conversion operator that provides a view given a value.
     ///
     /// @return A view over the value.
     ///
-    BSONCXX_INLINE operator array::view() const noexcept;
+    operator array::view() const noexcept {
+        return view();
+    }
 
     ///
     /// Transfer ownership of the underlying buffer to the caller.
@@ -100,20 +104,12 @@ class value {
     ///
     /// @return A std::unique_ptr with ownership of the buffer.
     ///
-    unique_ptr_type release();
+    BSONCXX_ABI_EXPORT_CDECL(unique_ptr_type) release();
 
    private:
     unique_ptr_type _data;
     std::size_t _length{0};
 };
-
-BSONCXX_INLINE array::view value::view() const noexcept {
-    return array::view{static_cast<uint8_t*>(_data.get()), _length};
-}
-
-BSONCXX_INLINE value::operator array::view() const noexcept {
-    return view();
-}
 
 }  // namespace array
 }  // namespace v_noabi

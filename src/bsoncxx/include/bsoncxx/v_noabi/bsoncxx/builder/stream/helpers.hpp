@@ -61,8 +61,7 @@ struct open_array_type {
 /// A stream manipulator to open a subarray.
 ///
 /// @see
-/// https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/working-with-bson/#std-label-cpp-bson-builders
-/// for help building arrays in loops.
+/// - https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/working-with-bson/#std-label-cpp-bson-builders for help building arrays in loops.
 ///
 constexpr open_array_type open_array;
 

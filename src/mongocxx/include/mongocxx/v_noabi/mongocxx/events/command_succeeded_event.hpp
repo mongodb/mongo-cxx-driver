@@ -31,16 +31,16 @@ namespace events {
 ///
 /// An event notification sent when the driver successfully executes a MongoDB command.
 ///
-/// @see "CommandSucceededEvent" in
-/// https://github.com/mongodb/specifications/blob/master/source/command-logging-and-monitoring/command-logging-and-monitoring.rst
+/// @see
+/// - "CommandSucceededEvent" in https://github.com/mongodb/specifications/blob/master/source/command-logging-and-monitoring/command-logging-and-monitoring.rst
 ///
 class command_succeeded_event {
    public:
-    MONGOCXX_PRIVATE explicit command_succeeded_event(const void* event);
+    explicit command_succeeded_event(const void* event);
     ///
     /// Destroys a command_succeeded_event.
     ///
-    ~command_succeeded_event();
+    MONGOCXX_ABI_EXPORT_CDECL() ~command_succeeded_event();
 
     command_succeeded_event(command_succeeded_event&&) = default;
     command_succeeded_event& operator=(command_succeeded_event&&) = default;
@@ -53,56 +53,57 @@ class command_succeeded_event {
     ///
     /// @return The reply.
     ///
-    bsoncxx::v_noabi::document::view reply() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::view) reply() const;
 
     ///
     /// Returns the name of the command.
     ///
     /// @return The command name.
     ///
-    bsoncxx::v_noabi::stdx::string_view command_name() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::string_view) command_name() const;
 
     ///
     /// Returns the duration of the successful operation.
     ///
     /// @return The duration in microseconds.
     ///
-    std::int64_t duration() const;
+    MONGOCXX_ABI_EXPORT_CDECL(std::int64_t) duration() const;
 
     ///
     /// Returns the request id.
     ///
     /// @return The request id.
     ///
-    std::int64_t request_id() const;
+    MONGOCXX_ABI_EXPORT_CDECL(std::int64_t) request_id() const;
 
     ///
     /// Returns the operation id.
     ///
     /// @return The operation id.
     ///
-    std::int64_t operation_id() const;
+    MONGOCXX_ABI_EXPORT_CDECL(std::int64_t) operation_id() const;
 
     ///
     /// Optionally returns the service id.
     ///
     /// @return No contained value, or contains the service id if load balancing is enabled.
     ///
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::oid> service_id() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::oid>)
+    service_id() const;
 
     ///
     /// Returns the host name.
     ///
     /// @return The host name.
     ///
-    bsoncxx::v_noabi::stdx::string_view host() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::string_view) host() const;
 
     ///
     /// Returns the port.
     ///
     /// @return The port.
     ///
-    std::uint16_t port() const;
+    MONGOCXX_ABI_EXPORT_CDECL(std::uint16_t) port() const;
 
    private:
     const void* _succeeded_event;

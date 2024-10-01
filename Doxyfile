@@ -153,7 +153,7 @@ ABBREVIATE_BRIEF       =
 # description.
 # The default value is: NO.
 
-ALWAYS_DETAILED_SEC    = NO
+ALWAYS_DETAILED_SEC    = YES
 
 # If the INLINE_INHERITED_MEMB tag is set to YES, doxygen will show all
 # inherited members of a class in the documentation of that class as if those
@@ -237,7 +237,7 @@ QT_AUTOBRIEF           = NO
 # not recognized any more.
 # The default value is: NO.
 
-MULTILINE_CPP_IS_BRIEF = NO
+MULTILINE_CPP_IS_BRIEF = YES
 
 # By default Python docstrings are displayed as preformatted text and doxygen's
 # special commands cannot be used. By setting PYTHON_DOCSTRING to NO the
@@ -726,7 +726,7 @@ SORT_BY_SCOPE_NAME     = YES
 # accept a match between prototype and implementation in such cases.
 # The default value is: NO.
 
-STRICT_PROTO_MATCHING  = NO
+STRICT_PROTO_MATCHING  = YES
 
 # The GENERATE_TODOLIST tag can be used to enable (YES) or disable (NO) the todo
 # list. This list is created by putting \todo commands in the documentation.
@@ -883,7 +883,7 @@ WARN_NO_PARAMDOC       = NO
 # will automatically be disabled.
 # The default value is: NO.
 
-WARN_IF_UNDOC_ENUM_VAL = NO # TODO: set to YES.
+WARN_IF_UNDOC_ENUM_VAL = YES
 
 # If the WARN_AS_ERROR tag is set to YES then doxygen will immediately stop when
 # a warning is encountered. If the WARN_AS_ERROR tag is set to FAIL_ON_WARNINGS
@@ -1592,7 +1592,7 @@ TOC_EXPAND             = NO
 # protocol see https://www.sitemaps.org
 # This tag requires that the tag GENERATE_HTML is set to YES.
 
-SITEMAP_URL            =
+SITEMAP_URL            = https://mongocxx.org/api/mongocxx-3.10.2/
 
 # If the GENERATE_QHP tag is set to YES and both QHP_NAMESPACE and
 # QHP_VIRTUAL_FOLDER are set, an additional index file will be generated that
@@ -1726,7 +1726,7 @@ FULL_SIDEBAR           = NO
 # Minimum value: 0, maximum value: 20, default value: 4.
 # This tag requires that the tag GENERATE_HTML is set to YES.
 
-ENUM_VALUES_PER_LINE   = 4
+ENUM_VALUES_PER_LINE   = 0
 
 # If the treeview is enabled (see GENERATE_TREEVIEW) then this tag can be used
 # to set the initial width (in pixels) of the frame in which the tree is shown.
@@ -2417,15 +2417,9 @@ INCLUDE_FILE_PATTERNS  =
 # recursively expanded use the := operator instead of the = operator.
 # This tag requires that the tag ENABLE_PREPROCESSING is set to YES.
 
-PREDEFINED             = BSONCXX_API= \
-                         BSONCXX_CALL= \
-                         BSONCXX_DEPRECATED \
-                         BSONCXX_INLINE=inline \
+PREDEFINED             = BSONCXX_ABI_EXPORT_CDECL(...)=__VA_ARGS__ \
                          BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR= \
-                         MONGOCXX_API= \
-                         MONGOCXX_CALL= \
-                         MONGOCXX_DEPRECATED= \
-                         MONGOCXX_INLINE=inline \
+                         MONGOCXX_ABI_EXPORT_CDECL(...)=__VA_ARGS__ \
                          MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR=
 
 # If the MACRO_EXPANSION and EXPAND_ONLY_PREDEF tags are set to YES then this
@@ -2435,7 +2429,26 @@ PREDEFINED             = BSONCXX_API= \
 # definition found in the source code.
 # This tag requires that the tag ENABLE_PREPROCESSING is set to YES.
 
-EXPAND_AS_DEFINED      =
+EXPAND_AS_DEFINED      = BSONCXX_ABI_CDECL \
+                         BSONCXX_ABI_EXPORT \
+                         BSONCXX_ABI_NO_EXPORT \
+                         BSONCXX_API \
+                         BSONCXX_CALL \
+                         BSONCXX_DEPRECATED \
+                         BSONCXX_DEPRECATED_EXPORT \
+                         BSONCXX_DEPRECATED_NO_EXPORT \
+                         BSONCXX_INLINE \
+                         BSONCXX_PRIVATE \
+                         MONGOCXX_ABI_CDECL \
+                         MONGOCXX_ABI_EXPORT \
+                         MONGOCXX_ABI_NO_EXPORT \
+                         MONGOCXX_API \
+                         MONGOCXX_CALL \
+                         MONGOCXX_DEPRECATED \
+                         MONGOCXX_DEPRECATED_EXPORT \
+                         MONGOCXX_DEPRECATED_NO_EXPORT \
+                         MONGOCXX_INLINE \
+                         MONGOCXX_PRIVATE
 
 # If the SKIP_FUNCTION_MACROS tag is set to YES then doxygen's preprocessor will
 # remove all references to function-like macros that are alone on a line, have

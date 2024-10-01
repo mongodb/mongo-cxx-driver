@@ -21,12 +21,14 @@
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/string/to_string.hpp>
 #include <bsoncxx/types/bson_value/value.hpp>
+
 #include <mongocxx/collection.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 
 #include <mongocxx/config/prelude.hpp>
 
 #include <bsoncxx/test/catch.hh>
+
 #include <mongocxx/test/spec/monitoring.hh>
 
 namespace mongocxx {
@@ -300,10 +302,31 @@ T _build_update_model(document::view arguments) {
         case bsoncxx::type::k_document: {
             return T(filter, arguments["update"].get_document().value);
         }
+
         case bsoncxx::type::k_array: {
             pipeline update = build_pipeline(arguments["update"].get_array().value);
             return T(filter, update);
         }
+
+        case bsoncxx::type::k_double:
+        case bsoncxx::type::k_string:
+        case bsoncxx::type::k_binary:
+        case bsoncxx::type::k_undefined:
+        case bsoncxx::type::k_oid:
+        case bsoncxx::type::k_bool:
+        case bsoncxx::type::k_date:
+        case bsoncxx::type::k_null:
+        case bsoncxx::type::k_regex:
+        case bsoncxx::type::k_dbpointer:
+        case bsoncxx::type::k_code:
+        case bsoncxx::type::k_symbol:
+        case bsoncxx::type::k_codewscope:
+        case bsoncxx::type::k_int32:
+        case bsoncxx::type::k_timestamp:
+        case bsoncxx::type::k_int64:
+        case bsoncxx::type::k_decimal128:
+        case bsoncxx::type::k_maxkey:
+        case bsoncxx::type::k_minkey:
         default:
             throw std::logic_error{"update must be a document or an array"};
     }
@@ -1005,6 +1028,7 @@ document::value find_one_and_update(collection& coll,
             }
             break;
         }
+
         case bsoncxx::type::k_array: {
             pipeline update = build_pipeline(arguments["update"].get_array().value);
             if (session) {
@@ -1014,6 +1038,26 @@ document::value find_one_and_update(collection& coll,
             }
             break;
         }
+
+        case bsoncxx::type::k_double:
+        case bsoncxx::type::k_string:
+        case bsoncxx::type::k_binary:
+        case bsoncxx::type::k_undefined:
+        case bsoncxx::type::k_oid:
+        case bsoncxx::type::k_bool:
+        case bsoncxx::type::k_date:
+        case bsoncxx::type::k_null:
+        case bsoncxx::type::k_regex:
+        case bsoncxx::type::k_dbpointer:
+        case bsoncxx::type::k_code:
+        case bsoncxx::type::k_symbol:
+        case bsoncxx::type::k_codewscope:
+        case bsoncxx::type::k_int32:
+        case bsoncxx::type::k_timestamp:
+        case bsoncxx::type::k_int64:
+        case bsoncxx::type::k_decimal128:
+        case bsoncxx::type::k_maxkey:
+        case bsoncxx::type::k_minkey:
         default:
             throw std::logic_error{"update must be a document or an array"};
     }
@@ -1341,6 +1385,7 @@ document::value update_one(collection& coll, client_session* session, document::
                                             : coll.update_one(filter, doc, options);
                 break;
             }
+
             case bsoncxx::type::k_array: {
                 pipeline pipe;
                 pipe.append_stages(update.get_array().value);
@@ -1348,6 +1393,26 @@ document::value update_one(collection& coll, client_session* session, document::
                                             : coll.update_one(filter, pipe, options);
                 break;
             }
+
+            case bsoncxx::type::k_double:
+            case bsoncxx::type::k_string:
+            case bsoncxx::type::k_binary:
+            case bsoncxx::type::k_undefined:
+            case bsoncxx::type::k_oid:
+            case bsoncxx::type::k_bool:
+            case bsoncxx::type::k_date:
+            case bsoncxx::type::k_null:
+            case bsoncxx::type::k_regex:
+            case bsoncxx::type::k_dbpointer:
+            case bsoncxx::type::k_code:
+            case bsoncxx::type::k_symbol:
+            case bsoncxx::type::k_codewscope:
+            case bsoncxx::type::k_int32:
+            case bsoncxx::type::k_timestamp:
+            case bsoncxx::type::k_int64:
+            case bsoncxx::type::k_decimal128:
+            case bsoncxx::type::k_maxkey:
+            case bsoncxx::type::k_minkey:
             default:
                 throw std::logic_error("unexpected type '" + to_string(type) +
                                        "' for field 'update'");
@@ -1412,12 +1477,33 @@ document::value update_many(collection& coll, document::view operation) {
                 update_many_result = coll.update_many(filter, doc, options);
                 break;
             }
+
             case bsoncxx::type::k_array: {
                 pipeline pipe;
                 pipe.append_stages(update.get_array().value);
                 update_many_result = coll.update_many(filter, pipe, options);
                 break;
             }
+
+            case bsoncxx::type::k_double:
+            case bsoncxx::type::k_string:
+            case bsoncxx::type::k_binary:
+            case bsoncxx::type::k_undefined:
+            case bsoncxx::type::k_oid:
+            case bsoncxx::type::k_bool:
+            case bsoncxx::type::k_date:
+            case bsoncxx::type::k_null:
+            case bsoncxx::type::k_regex:
+            case bsoncxx::type::k_dbpointer:
+            case bsoncxx::type::k_code:
+            case bsoncxx::type::k_symbol:
+            case bsoncxx::type::k_codewscope:
+            case bsoncxx::type::k_int32:
+            case bsoncxx::type::k_timestamp:
+            case bsoncxx::type::k_int64:
+            case bsoncxx::type::k_decimal128:
+            case bsoncxx::type::k_maxkey:
+            case bsoncxx::type::k_minkey:
             default:
                 throw std::logic_error("unexpected type '" + to_string(type) +
                                        "' for field 'update'");

@@ -19,7 +19,7 @@
 namespace mongocxx {
 namespace v_noabi {
 
-stdx::string_view MONGOCXX_CALL to_string(log_level level) {
+stdx::string_view to_string(log_level level) {
     switch (level) {
         case log_level::k_error:
             return "error";

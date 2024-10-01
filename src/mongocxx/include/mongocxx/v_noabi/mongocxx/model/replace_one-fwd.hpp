@@ -20,7 +20,7 @@ namespace mongocxx {
 namespace v_noabi {
 namespace model {
 
-class MONGOCXX_API replace_one;
+class replace_one;
 
 }  // namespace model
 }  // namespace v_noabi

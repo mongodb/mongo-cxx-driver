@@ -17,9 +17,11 @@
 #include <bsoncxx/builder/stream/helpers.hpp>
 #include <bsoncxx/types.hpp>
 
+#include <examples/macros.hh>
+
 using namespace bsoncxx;
 
-int main() {
+int EXAMPLES_CDECL main() {
     using builder::stream::array;
     using builder::stream::document;
 

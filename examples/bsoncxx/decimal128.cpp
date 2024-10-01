@@ -20,9 +20,11 @@
 #include <bsoncxx/exception/exception.hpp>
 #include <bsoncxx/types.hpp>
 
+#include <examples/macros.hh>
+
 using namespace bsoncxx;
 
-int main() {
+int EXAMPLES_CDECL main() {
     // Convert a string to BSON Decimal128.
     decimal128 d128;
     try {

@@ -28,6 +28,7 @@
 
 #include <bsoncxx/test/catch.hh>
 #include <bsoncxx/test/to_string.hh>
+
 #include <mongocxx/test/client_helpers.hh>
 
 using namespace bsoncxx;
@@ -249,9 +250,11 @@ void assert::matches(types::bson_value::view actual,
         case bsoncxx::type::k_document:
             matches_document(actual, expected, map, is_root);
             return;
+
         case bsoncxx::type::k_array:
             matches_array(actual, expected, map, is_array_of_root_docs);
             return;
+
         case bsoncxx::type::k_int32:
         case bsoncxx::type::k_int64:
         case bsoncxx::type::k_double: {
@@ -269,6 +272,23 @@ void assert::matches(types::bson_value::view actual,
             BSONCXX_POP_WARNINGS();
             return;
         }
+
+        case bsoncxx::type::k_string:
+        case bsoncxx::type::k_binary:
+        case bsoncxx::type::k_undefined:
+        case bsoncxx::type::k_oid:
+        case bsoncxx::type::k_bool:
+        case bsoncxx::type::k_date:
+        case bsoncxx::type::k_null:
+        case bsoncxx::type::k_regex:
+        case bsoncxx::type::k_dbpointer:
+        case bsoncxx::type::k_code:
+        case bsoncxx::type::k_symbol:
+        case bsoncxx::type::k_codewscope:
+        case bsoncxx::type::k_timestamp:
+        case bsoncxx::type::k_decimal128:
+        case bsoncxx::type::k_maxkey:
+        case bsoncxx::type::k_minkey:
         default: {
             CAPTURE(is_root,
                     to_string(actual.type()),

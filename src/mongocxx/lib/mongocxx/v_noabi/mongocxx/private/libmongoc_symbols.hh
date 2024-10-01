@@ -279,7 +279,7 @@ MONGOCXX_LIBMONGOC_SYMBOL(index_opt_geo_init)
 MONGOCXX_LIBMONGOC_SYMBOL(index_opt_init)
 MONGOCXX_LIBMONGOC_SYMBOL(index_opt_wt_init)
 MONGOCXX_LIBMONGOC_SYMBOL(init)
-MONGOCXX_LIBMONGOC_SYMBOL(log_set_handler)
+// MONGOCXX_LIBMONGOC_SYMBOL(log_set_handler)  // CDRIVER-5678: not __cdecl.
 MONGOCXX_LIBMONGOC_SYMBOL(read_concern_copy)
 MONGOCXX_LIBMONGOC_SYMBOL(read_concern_destroy)
 MONGOCXX_LIBMONGOC_SYMBOL(read_concern_get_level)

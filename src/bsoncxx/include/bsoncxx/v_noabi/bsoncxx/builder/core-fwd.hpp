@@ -20,7 +20,7 @@ namespace bsoncxx {
 namespace v_noabi {
 namespace builder {
 
-class BSONCXX_API core;
+class core;
 
 }  // namespace builder
 }  // namespace v_noabi

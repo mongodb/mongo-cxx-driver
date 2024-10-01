@@ -19,6 +19,7 @@
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/string/to_string.hpp>
 #include <bsoncxx/types.hpp>
+
 #include <mongocxx/client.hpp>
 #include <mongocxx/collection.hpp>
 #include <mongocxx/cursor.hpp>
@@ -43,6 +44,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 #include <bsoncxx/test/catch.hh>
+
 #include <mongocxx/test/spec/operation.hh>
 
 namespace mongocxx {
@@ -570,6 +572,7 @@ document::value operation_runner::_run_find_one_and_update(document::view operat
             }
             break;
         }
+
         case bsoncxx::type::k_array: {
             pipeline update = build_pipeline(arguments["update"].get_array().value);
             if (session) {
@@ -579,6 +582,26 @@ document::value operation_runner::_run_find_one_and_update(document::view operat
             }
             break;
         }
+
+        case bsoncxx::type::k_double:
+        case bsoncxx::type::k_string:
+        case bsoncxx::type::k_binary:
+        case bsoncxx::type::k_undefined:
+        case bsoncxx::type::k_oid:
+        case bsoncxx::type::k_bool:
+        case bsoncxx::type::k_date:
+        case bsoncxx::type::k_null:
+        case bsoncxx::type::k_regex:
+        case bsoncxx::type::k_dbpointer:
+        case bsoncxx::type::k_code:
+        case bsoncxx::type::k_symbol:
+        case bsoncxx::type::k_codewscope:
+        case bsoncxx::type::k_int32:
+        case bsoncxx::type::k_timestamp:
+        case bsoncxx::type::k_int64:
+        case bsoncxx::type::k_decimal128:
+        case bsoncxx::type::k_maxkey:
+        case bsoncxx::type::k_minkey:
         default:
             throw std::logic_error{"update must be a document or an array"};
     }
@@ -776,6 +799,7 @@ document::value operation_runner::_run_update_many(document::view operation) {
             }
             break;
         }
+
         case bsoncxx::type::k_array: {
             pipeline update = build_pipeline(arguments["update"].get_array().value);
             if (session) {
@@ -785,6 +809,26 @@ document::value operation_runner::_run_update_many(document::view operation) {
             }
             break;
         }
+
+        case bsoncxx::type::k_double:
+        case bsoncxx::type::k_string:
+        case bsoncxx::type::k_binary:
+        case bsoncxx::type::k_undefined:
+        case bsoncxx::type::k_oid:
+        case bsoncxx::type::k_bool:
+        case bsoncxx::type::k_date:
+        case bsoncxx::type::k_null:
+        case bsoncxx::type::k_regex:
+        case bsoncxx::type::k_dbpointer:
+        case bsoncxx::type::k_code:
+        case bsoncxx::type::k_symbol:
+        case bsoncxx::type::k_codewscope:
+        case bsoncxx::type::k_int32:
+        case bsoncxx::type::k_timestamp:
+        case bsoncxx::type::k_int64:
+        case bsoncxx::type::k_decimal128:
+        case bsoncxx::type::k_maxkey:
+        case bsoncxx::type::k_minkey:
         default:
             throw std::logic_error{"update must be a document or an array"};
     }
@@ -868,6 +912,7 @@ document::value operation_runner::_run_update_one(document::view operation) {
             }
             break;
         }
+
         case bsoncxx::type::k_array: {
             pipeline update = build_pipeline(arguments["update"].get_array().value);
             if (session) {
@@ -877,6 +922,26 @@ document::value operation_runner::_run_update_one(document::view operation) {
             }
             break;
         }
+
+        case bsoncxx::type::k_double:
+        case bsoncxx::type::k_string:
+        case bsoncxx::type::k_binary:
+        case bsoncxx::type::k_undefined:
+        case bsoncxx::type::k_oid:
+        case bsoncxx::type::k_bool:
+        case bsoncxx::type::k_date:
+        case bsoncxx::type::k_null:
+        case bsoncxx::type::k_regex:
+        case bsoncxx::type::k_dbpointer:
+        case bsoncxx::type::k_code:
+        case bsoncxx::type::k_symbol:
+        case bsoncxx::type::k_codewscope:
+        case bsoncxx::type::k_int32:
+        case bsoncxx::type::k_timestamp:
+        case bsoncxx::type::k_int64:
+        case bsoncxx::type::k_decimal128:
+        case bsoncxx::type::k_maxkey:
+        case bsoncxx::type::k_minkey:
         default:
             throw std::logic_error{"update must be a document or an array"};
     }
@@ -964,10 +1029,31 @@ T _build_update_model(document::view arguments) {
         case bsoncxx::type::k_document: {
             return T(filter, arguments["update"].get_document().value);
         }
+
         case bsoncxx::type::k_array: {
             pipeline update = build_pipeline(arguments["update"].get_array().value);
             return T(filter, update);
         }
+
+        case bsoncxx::type::k_double:
+        case bsoncxx::type::k_string:
+        case bsoncxx::type::k_binary:
+        case bsoncxx::type::k_undefined:
+        case bsoncxx::type::k_oid:
+        case bsoncxx::type::k_bool:
+        case bsoncxx::type::k_date:
+        case bsoncxx::type::k_null:
+        case bsoncxx::type::k_regex:
+        case bsoncxx::type::k_dbpointer:
+        case bsoncxx::type::k_code:
+        case bsoncxx::type::k_symbol:
+        case bsoncxx::type::k_codewscope:
+        case bsoncxx::type::k_int32:
+        case bsoncxx::type::k_timestamp:
+        case bsoncxx::type::k_int64:
+        case bsoncxx::type::k_decimal128:
+        case bsoncxx::type::k_maxkey:
+        case bsoncxx::type::k_minkey:
         default:
             throw std::logic_error{"update must be a document or an array"};
     }

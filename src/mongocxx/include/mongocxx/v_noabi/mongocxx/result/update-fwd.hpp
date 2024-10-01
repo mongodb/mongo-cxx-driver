@@ -20,7 +20,7 @@ namespace mongocxx {
 namespace v_noabi {
 namespace result {
 
-class MONGOCXX_API update;
+class update;
 
 }  // namespace result
 }  // namespace v_noabi

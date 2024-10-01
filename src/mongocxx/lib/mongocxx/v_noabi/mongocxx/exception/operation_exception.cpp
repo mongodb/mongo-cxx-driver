@@ -16,6 +16,7 @@
 #include <utility>
 
 #include <bsoncxx/string/to_string.hpp>
+
 #include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/libmongoc.hh>
@@ -24,6 +25,8 @@
 
 namespace mongocxx {
 namespace v_noabi {
+
+operation_exception::~operation_exception() = default;
 
 operation_exception::operation_exception(std::error_code ec,
                                          bsoncxx::v_noabi::document::value&& raw_server_error,

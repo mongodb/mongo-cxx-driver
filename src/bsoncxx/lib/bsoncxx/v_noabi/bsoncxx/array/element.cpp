@@ -33,19 +33,19 @@ element::element(const std::uint8_t* raw,
 
 element::element(const stdx::string_view key) : document::element(key) {}
 
-bool BSONCXX_CALL operator==(const element& elem, const types::bson_value::view& v) {
+bool operator==(const element& elem, const types::bson_value::view& v) {
     return elem.get_value() == v;
 }
 
-bool BSONCXX_CALL operator==(const types::bson_value::view& v, const element& elem) {
+bool operator==(const types::bson_value::view& v, const element& elem) {
     return elem == v;
 }
 
-bool BSONCXX_CALL operator!=(const element& elem, const types::bson_value::view& v) {
+bool operator!=(const element& elem, const types::bson_value::view& v) {
     return !(elem == v);
 }
 
-bool BSONCXX_CALL operator!=(const types::bson_value::view& v, const element& elem) {
+bool operator!=(const types::bson_value::view& v, const element& elem) {
     return !(elem == v);
 }
 

@@ -31,17 +31,17 @@ namespace events {
 ///
 /// An event notification sent when the driver fails to execute a MongoDB command.
 ///
-/// @see "CommandFailedEvent" in
-/// https://github.com/mongodb/specifications/blob/master/source/command-logging-and-monitoring/command-logging-and-monitoring.rst
+/// @see
+/// - "CommandFailedEvent" in https://github.com/mongodb/specifications/blob/master/source/command-logging-and-monitoring/command-logging-and-monitoring.rst
 ///
 class command_failed_event {
    public:
-    MONGOCXX_PRIVATE explicit command_failed_event(const void* event);
+    explicit command_failed_event(const void* event);
 
     ///
     /// Destroys a command_failed_event.
     ///
-    ~command_failed_event();
+    MONGOCXX_ABI_EXPORT_CDECL() ~command_failed_event();
 
     command_failed_event(command_failed_event&&) = default;
     command_failed_event& operator=(command_failed_event&&) = default;
@@ -54,56 +54,57 @@ class command_failed_event {
     ///
     /// @return The failure.
     ///
-    bsoncxx::v_noabi::document::view failure() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::view) failure() const;
 
     ///
     /// Returns the name of the command.
     ///
     /// @return The command name.
     ///
-    bsoncxx::v_noabi::stdx::string_view command_name() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::string_view) command_name() const;
 
     ///
     /// Returns the duration of the failed operation.
     ///
     /// @return The duration in microseconds.
     ///
-    std::int64_t duration() const;
+    MONGOCXX_ABI_EXPORT_CDECL(std::int64_t) duration() const;
 
     ///
     /// Returns the request id.
     ///
     /// @return The request id.
     ///
-    std::int64_t request_id() const;
+    MONGOCXX_ABI_EXPORT_CDECL(std::int64_t) request_id() const;
 
     ///
     /// Returns the operation id.
     ///
     /// @return The operation id.
     ///
-    std::int64_t operation_id() const;
+    MONGOCXX_ABI_EXPORT_CDECL(std::int64_t) operation_id() const;
 
     ///
     /// Optionally returns the service id.
     ///
     /// @return No contained value, or contains the service id if load balancing is enabled.
     ///
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::oid> service_id() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::oid>)
+    service_id() const;
 
     ///
     /// Returns the host name.
     ///
     /// @return The host name.
     ///
-    bsoncxx::v_noabi::stdx::string_view host() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::string_view) host() const;
 
     ///
     /// Returns the port.
     ///
     /// @return The port.
     ///
-    std::uint16_t port() const;
+    MONGOCXX_ABI_EXPORT_CDECL(std::uint16_t) port() const;
 
    private:
     const void* _failed_event;

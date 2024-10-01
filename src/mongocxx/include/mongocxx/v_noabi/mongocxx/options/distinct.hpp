@@ -23,6 +23,7 @@
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/types/bson_value/view_or_value.hpp>
+
 #include <mongocxx/read_preference.hpp>
 
 #include <mongocxx/config/prelude.hpp>
@@ -46,9 +47,11 @@ class distinct {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/distinct/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/distinct/
     ///
-    distinct& collation(bsoncxx::v_noabi::document::view_or_value collation);
+    MONGOCXX_ABI_EXPORT_CDECL(distinct&)
+    collation(bsoncxx::v_noabi::document::view_or_value collation);
 
     ///
     /// Retrieves the current collation for this operation.
@@ -56,9 +59,11 @@ class distinct {
     /// @return
     ///   The current collation.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/distinct/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/distinct/
     ///
-    const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& collation() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+    collation() const;
 
     ///
     /// Sets the maximum amount of time for this operation to run (server-side) in milliseconds.
@@ -70,18 +75,20 @@ class distinct {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/distinct/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/distinct/
     ///
-    distinct& max_time(std::chrono::milliseconds max_time);
+    MONGOCXX_ABI_EXPORT_CDECL(distinct&) max_time(std::chrono::milliseconds max_time);
 
     ///
     /// The current max_time setting.
     ///
     /// @return The current max time (in milliseconds).
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/distinct/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/distinct/
     ///
-    const stdx::optional<std::chrono::milliseconds>& max_time() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<std::chrono::milliseconds>&) max_time() const;
 
     ///
     /// Sets the comment for this operation.
@@ -93,18 +100,23 @@ class distinct {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/distinct/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/distinct/
     ///
-    distinct& comment(bsoncxx::v_noabi::types::bson_value::view_or_value comment);
+    MONGOCXX_ABI_EXPORT_CDECL(distinct&)
+    comment(bsoncxx::v_noabi::types::bson_value::view_or_value comment);
 
     ///
     /// The current comment for this operation.
     ///
     /// @return The current comment
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/distinct/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/distinct/
     ///
-    const stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>& comment() const;
+    MONGOCXX_ABI_EXPORT_CDECL(
+        const stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>&)
+    comment() const;
 
     ///
     /// Sets the read_preference for this operation.
@@ -116,18 +128,21 @@ class distinct {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/distinct/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/distinct/
     ///
-    distinct& read_preference(mongocxx::v_noabi::read_preference rp);
+    MONGOCXX_ABI_EXPORT_CDECL(distinct&) read_preference(mongocxx::v_noabi::read_preference rp);
 
     ///
     /// The current read_preference for this operation.
     ///
     /// @return the current read_preference.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/distinct/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/distinct/
     ///
-    const stdx::optional<mongocxx::v_noabi::read_preference>& read_preference() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<mongocxx::v_noabi::read_preference>&)
+    read_preference() const;
 
    private:
     stdx::optional<bsoncxx::v_noabi::document::view_or_value> _collation;

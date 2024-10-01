@@ -16,6 +16,7 @@
 #include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/builder/concatenate.hpp>
 #include <bsoncxx/types.hpp>
+
 #include <mongocxx/options/create_collection.hpp>
 
 #include <mongocxx/config/private/prelude.hh>

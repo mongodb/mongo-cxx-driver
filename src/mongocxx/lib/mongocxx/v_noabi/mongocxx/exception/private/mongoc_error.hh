@@ -15,6 +15,7 @@
 #pragma once
 
 #include <bsoncxx/document/value.hpp>
+
 #include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/exception/server_error_code.hpp>
 #include <mongocxx/private/libmongoc.hh>

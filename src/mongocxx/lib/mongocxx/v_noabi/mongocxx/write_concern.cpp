@@ -15,6 +15,7 @@
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/string/to_string.hpp>
+
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/exception.hpp>
 #include <mongocxx/exception/logic_error.hpp>
@@ -198,7 +199,7 @@ bsoncxx::v_noabi::document::value write_concern::to_document() const {
     return doc.extract();
 }
 
-bool MONGOCXX_CALL operator==(const write_concern& lhs, const write_concern& rhs) {
+bool operator==(const write_concern& lhs, const write_concern& rhs) {
     return std::forward_as_tuple(lhs.journal(),
                                  lhs.nodes(),
                                  lhs.acknowledge_level(),
@@ -212,7 +213,7 @@ bool MONGOCXX_CALL operator==(const write_concern& lhs, const write_concern& rhs
                                                                          rhs.timeout());
 }
 
-bool MONGOCXX_CALL operator!=(const write_concern& lhs, const write_concern& rhs) {
+bool operator!=(const write_concern& lhs, const write_concern& rhs) {
     return !(lhs == rhs);
 }
 

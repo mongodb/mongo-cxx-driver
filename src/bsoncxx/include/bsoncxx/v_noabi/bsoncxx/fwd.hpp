@@ -51,10 +51,8 @@
 /// @file
 /// Aggregate of all forward headers declaring entities in @ref bsoncxx::v_noabi.
 ///
-/// @par "Includes" @parblock
-/// @li All header files under @ref src/bsoncxx/include/bsoncxx/v_noabi/bsoncxx
-/// "bsoncxx/v_noabi/bsoncxx" whose filename ends with `-fwd.hpp`.
-/// @endparblock
+/// @par Includes
+/// - All header files under @ref src/bsoncxx/include/bsoncxx/v_noabi/bsoncxx "bsoncxx/v_noabi/bsoncxx" whose filename ends with `-fwd.hpp`.
 ///
 
 ///
@@ -95,13 +93,11 @@
 /// @dir bsoncxx/v_noabi/bsoncxx/config
 /// Provides headers related to bsoncxx library configuration.
 ///
-/// @par "Generated Headers"
-///
+/// @par Generated Headers
 /// Generated headers are documented by the following pages:
-///
-/// @li @ref bsoncxx-v_noabi-bsoncxx-config-config-hpp
-/// @li @ref bsoncxx-v_noabi-bsoncxx-config-export-hpp
-/// @li @ref bsoncxx-v_noabi-bsoncxx-config-version-hpp
+/// - @ref bsoncxx-v_noabi-bsoncxx-config-config-hpp
+/// - @ref bsoncxx-v_noabi-bsoncxx-config-export-hpp
+/// - @ref bsoncxx-v_noabi-bsoncxx-config-version-hpp
 ///
 
 #if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
@@ -198,7 +194,39 @@
 
 ///
 /// @ingroup bsoncxx-v_noabi-bsoncxx-config-export-hpp
-/// Declares the associated entity as part of the ABI.
+/// Exports the associated entity as part of the ABI.
+///
+/// @warning For internal use only!
+///
+#define BSONCXX_ABI_EXPORT
+
+///
+/// @ingroup bsoncxx-v_noabi-bsoncxx-config-export-hpp
+/// Excludes the associated entity from being part of the ABI.
+///
+/// @warning For internal use only!
+///
+#define BSONCXX_ABI_NO_EXPORT
+
+///
+/// @ingroup bsoncxx-v_noabi-bsoncxx-config-export-hpp
+/// Expands to `__cdecl` when built with MSVC on Windows.
+///
+/// @warning For internal use only!
+///
+#define BSONCXX_ABI_CDECL
+
+///
+/// @ingroup bsoncxx-v_noabi-bsoncxx-config-export-hpp
+/// Equivalent to @ref BSONCXX_ABI_EXPORT with @ref BSONCXX_ABI_CDECL.
+///
+/// @warning For internal use only!
+///
+#define BSONCXX_ABI_EXPORT_CDECL(...) BSONCXX_ABI_EXPORT __VA_ARGS__ BSONCXX_ABI_CDECL
+
+///
+/// @ingroup bsoncxx-v_noabi-bsoncxx-config-export-hpp
+/// Equivalent to @ref BSONCXX_ABI_EXPORT.
 ///
 /// @warning For internal use only!
 ///
@@ -208,11 +236,11 @@
 /// only!" warnings). See [API and ABI
 /// Versioning](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/api-abi-versioning/).
 ///
-#define BSONCXX_API
+#define BSONCXX_API BSONCXX_ABI_EXPORT
 
 ///
 /// @ingroup bsoncxx-v_noabi-bsoncxx-config-export-hpp
-/// Excludes the associated entity from being part of the ABI.
+/// Equivalent to `inline` with @ref BSONCXX_ABI_NO_EXPORT.
 ///
 /// @warning For internal use only!
 ///
@@ -222,7 +250,7 @@
 /// absence of documentation, etc.). See [API and ABI
 /// Versioning](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/api-abi-versioning/).
 ///
-#define BSONCXX_PRIVATE
+#define BSONCXX_PRIVATE inline BSONCXX_ABI_NO_EXPORT
 
 ///
 /// @ingroup bsoncxx-v_noabi-bsoncxx-config-export-hpp
@@ -389,7 +417,8 @@
 /// @namespace bsoncxx::v_noabi::types
 /// @copydoc bsoncxx::types
 ///
-/// @see bsoncxx::v_noabi::types::bson_value
+/// @see
+/// - @ref bsoncxx::v_noabi::types::bson_value
 ///
 
 ///

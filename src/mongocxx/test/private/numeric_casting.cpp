@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include <bsoncxx/builder/basic/document.hpp>
+
 #include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/numeric_casting.hh>
 

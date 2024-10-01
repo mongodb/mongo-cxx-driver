@@ -19,6 +19,7 @@
 #include <bsoncxx/array/view_or_value.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
+
 #include <mongocxx/hint.hpp>
 #include <mongocxx/pipeline.hpp>
 #include <mongocxx/stdx.hpp>
@@ -45,9 +46,7 @@ class update_many {
     //
     // See update_many() for an example of such overloads.
     //
-    class _empty_doc_tag {
-        _empty_doc_tag() = default;
-    };
+    class _empty_doc_tag {};
 
    public:
     ///
@@ -58,6 +57,7 @@ class update_many {
     /// @param update
     ///   Document representing the modifications to be applied to matching documents.
     ///
+    MONGOCXX_ABI_EXPORT_CDECL()
     update_many(bsoncxx::v_noabi::document::view_or_value filter,
                 bsoncxx::v_noabi::document::view_or_value update);
 
@@ -69,6 +69,7 @@ class update_many {
     /// @param update
     ///   Pipeline representing the modifications to be applied to matching documents.
     ///
+    MONGOCXX_ABI_EXPORT_CDECL()
     update_many(bsoncxx::v_noabi::document::view_or_value filter, const pipeline& update);
 
     ///
@@ -79,6 +80,7 @@ class update_many {
     /// @param update
     ///   Supports the empty update {}.
     ///
+    MONGOCXX_ABI_EXPORT_CDECL()
     update_many(bsoncxx::v_noabi::document::view_or_value filter,
                 std::initializer_list<_empty_doc_tag> update);
 
@@ -87,14 +89,14 @@ class update_many {
     ///
     /// @return The filter to be used for the update operation.
     ///
-    const bsoncxx::v_noabi::document::view_or_value& filter() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::document::view_or_value&) filter() const;
 
     ///
     /// Gets the update document.
     ///
     /// @return The modifications to be applied as part of the update.
     ///
-    const bsoncxx::v_noabi::document::view_or_value& update() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::document::view_or_value&) update() const;
 
     ///
     /// Sets the collation for this update operation.
@@ -103,9 +105,10 @@ class update_many {
     ///   The new collation.
     ///
     /// @see
-    ///   https://www.mongodb.com/docs/manual/reference/collation/
+    /// - https://www.mongodb.com/docs/manual/reference/collation/
     ///
-    update_many& collation(bsoncxx::v_noabi::document::view_or_value collation);
+    MONGOCXX_ABI_EXPORT_CDECL(update_many&)
+    collation(bsoncxx::v_noabi::document::view_or_value collation);
 
     ///
     /// Gets the collation option for this update operation.
@@ -114,9 +117,10 @@ class update_many {
     ///   The optional value of the collation option.
     ///
     /// @see
-    ///   https://www.mongodb.com/docs/manual/reference/collation/
+    /// - https://www.mongodb.com/docs/manual/reference/collation/
     ///
-    const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& collation() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+    collation() const;
 
     /// Sets the index to use for this operation.
     ///
@@ -130,14 +134,14 @@ class update_many {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    update_many& hint(mongocxx::v_noabi::hint index_hint);
+    MONGOCXX_ABI_EXPORT_CDECL(update_many&) hint(mongocxx::v_noabi::hint index_hint);
 
     ///
     /// Gets the current hint.
     ///
     /// @return The current hint, if one is set.
     ///
-    const stdx::optional<mongocxx::v_noabi::hint>& hint() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<mongocxx::v_noabi::hint>&) hint() const;
 
     ///
     /// Sets the upsert option.
@@ -152,14 +156,14 @@ class update_many {
     ///   The server side default is @c false, which does not insert a new document if a match
     ///   is not found.
     ///
-    update_many& upsert(bool upsert);
+    MONGOCXX_ABI_EXPORT_CDECL(update_many&) upsert(bool upsert);
 
     ///
     /// Gets the current value of the upsert option.
     ///
     /// @return The optional value of the upsert option.
     ///
-    const stdx::optional<bool>& upsert() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bool>&) upsert() const;
 
     ///
     /// Set array filters for this update operation.
@@ -167,9 +171,11 @@ class update_many {
     /// @param array_filters
     ///   Array representing filters determining which array elements to modify.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/update/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/update/
     ///
-    update_many& array_filters(bsoncxx::v_noabi::array::view_or_value array_filters);
+    MONGOCXX_ABI_EXPORT_CDECL(update_many&)
+    array_filters(bsoncxx::v_noabi::array::view_or_value array_filters);
 
     ///
     /// Get array filters for this operation.
@@ -177,9 +183,11 @@ class update_many {
     /// @return
     ///   The current array filters.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/update/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/update/
     ///
-    const stdx::optional<bsoncxx::v_noabi::array::view_or_value>& array_filters() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::array::view_or_value>&)
+    array_filters() const;
 
    private:
     bsoncxx::v_noabi::document::view_or_value _filter;

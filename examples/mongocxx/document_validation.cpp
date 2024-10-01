@@ -17,10 +17,13 @@
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
+
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/exception.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/uri.hpp>
+
+#include <examples/macros.hh>
 
 using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_document;
@@ -28,7 +31,7 @@ using bsoncxx::stdx::string_view;
 using mongocxx::collection;
 using mongocxx::validation_criteria;
 
-int main() {
+int EXAMPLES_CDECL main() {
     // The mongocxx::instance constructor and destructor initialize and shut down the driver,
     // respectively. Therefore, a mongocxx::instance must be created before using the driver and
     // must remain alive for as long as the driver is in use.

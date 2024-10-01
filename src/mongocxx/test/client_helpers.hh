@@ -27,6 +27,7 @@
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
+
 #include <mongocxx/client.hpp>
 #include <mongocxx/collection.hpp>
 #include <mongocxx/options/client.hpp>
@@ -235,8 +236,10 @@ cseeos_result client_side_encryption_enabled_or_skip_impl();
                 break;                                                                \
             case mongocxx::test_util::cseeos_result::skip:                            \
                 SKIP("CSE environemnt variables not set");                            \
+                break;                                                                \
             case mongocxx::test_util::cseeos_result::fail:                            \
                 FAIL("One or more CSE environment variable is missing");              \
+                break;                                                                \
         }                                                                             \
     } else                                                                            \
         ((void)0)

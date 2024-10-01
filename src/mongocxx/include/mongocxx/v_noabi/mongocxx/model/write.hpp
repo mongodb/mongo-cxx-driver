@@ -19,6 +19,7 @@
 #include <mongocxx/model/write-fwd.hpp>
 
 #include <bsoncxx/stdx/optional.hpp>
+
 #include <mongocxx/model/delete_many.hpp>
 #include <mongocxx/model/delete_one.hpp>
 #include <mongocxx/model/insert_one.hpp>
@@ -41,42 +42,42 @@ class write {
     ///
     /// Constructs a write from a model::insert_one.
     ///
-    write(insert_one value);
+    MONGOCXX_ABI_EXPORT_CDECL() write(insert_one value);
 
     ///
     /// Constructs a write from a model::update_one.
     ///
-    write(update_one value);
+    MONGOCXX_ABI_EXPORT_CDECL() write(update_one value);
 
     ///
     /// Constructs a write from a model::update_many.
     ///
-    write(update_many value);
+    MONGOCXX_ABI_EXPORT_CDECL() write(update_many value);
 
     ///
     /// Constructs a write from a model::delete_one.
     ///
-    write(delete_one value);
+    MONGOCXX_ABI_EXPORT_CDECL() write(delete_one value);
 
     ///
     /// Constructs a write from a model::delete_many.
     ///
-    write(delete_many value);
+    MONGOCXX_ABI_EXPORT_CDECL() write(delete_many value);
 
     ///
     /// Constructs a write from a model::replace_one.
     ///
-    write(replace_one value);
+    MONGOCXX_ABI_EXPORT_CDECL() write(replace_one value);
 
     ///
     /// Move constructs a write.
     ///
-    write(write&& rhs) noexcept;
+    MONGOCXX_ABI_EXPORT_CDECL() write(write&& rhs) noexcept;
 
     ///
     /// Move assigns a write.
     ///
-    write& operator=(write&& rhs) noexcept;
+    MONGOCXX_ABI_EXPORT_CDECL(write&) operator=(write&& rhs) noexcept;
 
     write(const write& rhs) = delete;
     write& operator=(const write& rhs) = delete;
@@ -84,57 +85,57 @@ class write {
     ///
     /// Destroys a write.
     ///
-    ~write();
+    MONGOCXX_ABI_EXPORT_CDECL() ~write();
 
     ///
     /// Returns the current type of this write.
     ///
-    write_type type() const;
+    MONGOCXX_ABI_EXPORT_CDECL(write_type) type() const;
 
     ///
     /// Accesses the write as a model::insert_one. It is illegal to call
     /// this method if the return of type() does not indicate
     /// that this object currently contains the applicable type.
     ///
-    const insert_one& get_insert_one() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const insert_one&) get_insert_one() const;
 
     ///
     /// Accesses the write as an model::update_one. It is illegal to call
     /// this method if the return of type() does not indicate
     /// that this object currently contains the applicable type.
     ///
-    const update_one& get_update_one() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const update_one&) get_update_one() const;
 
     ///
     /// Accesses the write as an model::update_many. It is illegal to call
     /// this method if the return of type() does not indicate
     /// that this object currently contains the applicable type.
     ///
-    const update_many& get_update_many() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const update_many&) get_update_many() const;
 
     ///
     /// Accesses the write as a model::delete_one. It is illegal to call
     /// this method if the return of type() does not indicate
     /// that this object currently contains the applicable type.
     ///
-    const delete_one& get_delete_one() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const delete_one&) get_delete_one() const;
 
     ///
     /// Accesses the write as a model::delete_many. It is illegal to call
     /// this method if the return of type() does not indicate
     /// that this object currently contains the applicable type.
     ///
-    const delete_many& get_delete_many() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const delete_many&) get_delete_many() const;
 
     ///
     /// Accesses the write as a model::replace_one. It is illegal to call
     /// this method if the return of type() does not indicate
     /// that this object currently contains the applicable type.
     ///
-    const replace_one& get_replace_one() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const replace_one&) get_replace_one() const;
 
    private:
-    MONGOCXX_PRIVATE void destroy_member() noexcept;
+    void destroy_member() noexcept;
 
     write_type _type;
 

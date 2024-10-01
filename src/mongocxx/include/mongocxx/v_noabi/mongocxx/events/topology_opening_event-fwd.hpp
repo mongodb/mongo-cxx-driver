@@ -20,7 +20,7 @@ namespace mongocxx {
 namespace v_noabi {
 namespace events {
 
-class MONGOCXX_API topology_opening_event;
+class topology_opening_event;
 
 }  // namespace events
 }  // namespace v_noabi

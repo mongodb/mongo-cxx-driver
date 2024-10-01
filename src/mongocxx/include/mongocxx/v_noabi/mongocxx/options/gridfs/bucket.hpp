@@ -19,6 +19,7 @@
 #include <mongocxx/options/gridfs/bucket-fwd.hpp>
 
 #include <bsoncxx/stdx/optional.hpp>
+
 #include <mongocxx/read_concern.hpp>
 #include <mongocxx/read_preference.hpp>
 #include <mongocxx/stdx.hpp>
@@ -46,7 +47,7 @@ class bucket {
     ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
-    bucket& bucket_name(std::string bucket_name);
+    MONGOCXX_ABI_EXPORT_CDECL(bucket&) bucket_name(std::string bucket_name);
 
     ///
     /// Gets the name of the bucket.
@@ -54,7 +55,7 @@ class bucket {
     /// @return
     ///   The name of the bucket.
     ///
-    const stdx::optional<std::string>& bucket_name() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<std::string>&) bucket_name() const;
 
     ///
     /// Sets the size of the chunks in the bucket. This will be used as the chunk size for files
@@ -67,7 +68,7 @@ class bucket {
     ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
-    bucket& chunk_size_bytes(std::int32_t chunk_size_bytes);
+    MONGOCXX_ABI_EXPORT_CDECL(bucket&) chunk_size_bytes(std::int32_t chunk_size_bytes);
 
     ///
     /// Gets the size of the chunks in the bucket.
@@ -75,7 +76,7 @@ class bucket {
     /// @return
     ///   The size of the chunks in the bucket in bytes.
     ///
-    const stdx::optional<std::int32_t>& chunk_size_bytes() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<std::int32_t>&) chunk_size_bytes() const;
 
     ///
     /// Sets the read concern to be used when reading from the bucket. Defaults to the read
@@ -88,7 +89,7 @@ class bucket {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    bucket& read_concern(mongocxx::v_noabi::read_concern read_concern);
+    MONGOCXX_ABI_EXPORT_CDECL(bucket&) read_concern(mongocxx::v_noabi::read_concern read_concern);
 
     ///
     /// Gets the read concern of the bucket.
@@ -96,7 +97,8 @@ class bucket {
     /// @return
     ///   The read concern of the bucket.
     ///
-    const stdx::optional<mongocxx::v_noabi::read_concern>& read_concern() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<mongocxx::v_noabi::read_concern>&)
+    read_concern() const;
 
     ///
     /// Sets the read preference to be used when reading from the GridFS bucket. Defaults to the
@@ -115,7 +117,8 @@ class bucket {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    bucket& read_preference(mongocxx::v_noabi::read_preference read_preference);
+    MONGOCXX_ABI_EXPORT_CDECL(bucket&)
+    read_preference(mongocxx::v_noabi::read_preference read_preference);
 
     ///
     /// Gets the read preference of the bucket.
@@ -123,7 +126,8 @@ class bucket {
     /// @return
     ///   The read preference of the bucket.
     ///
-    const stdx::optional<mongocxx::v_noabi::read_preference>& read_preference() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<mongocxx::v_noabi::read_preference>&)
+    read_preference() const;
 
     ///
     /// Sets the write concern to be used when writing to the GridFS bucket. Defaults to the write
@@ -136,7 +140,8 @@ class bucket {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    bucket& write_concern(mongocxx::v_noabi::write_concern write_concern);
+    MONGOCXX_ABI_EXPORT_CDECL(bucket&)
+    write_concern(mongocxx::v_noabi::write_concern write_concern);
 
     ///
     /// Gets the write concern of the bucket.
@@ -144,7 +149,8 @@ class bucket {
     /// @return
     ///   The write concern of the bucket.
     ///
-    const stdx::optional<mongocxx::v_noabi::write_concern>& write_concern() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<mongocxx::v_noabi::write_concern>&)
+    write_concern() const;
 
    private:
     stdx::optional<std::string> _bucket_name;

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <bsoncxx/document/view_or_value.hpp>
+
 #include <mongocxx/search_index_model.hpp>
 
 #include <mongocxx/config/private/prelude.hh>

@@ -20,6 +20,7 @@
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/types/bson_value/view_or_value.hpp>
+
 #include <mongocxx/hint.hpp>
 #include <mongocxx/stdx.hpp>
 #include <mongocxx/write_concern.hpp>
@@ -50,14 +51,14 @@ class replace {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    replace& bypass_document_validation(bool bypass_document_validation);
+    MONGOCXX_ABI_EXPORT_CDECL(replace&) bypass_document_validation(bool bypass_document_validation);
 
     ///
     /// Gets the current value of the bypass_document_validation option.
     ///
     /// @return The optional value of the bypass_document_validation option.
     ///
-    const stdx::optional<bool>& bypass_document_validation() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bool>&) bypass_document_validation() const;
 
     ///
     /// Sets the collation for this operation.
@@ -70,9 +71,10 @@ class replace {
     ///   method chaining.
     ///
     /// @see
-    ///   https://www.mongodb.com/docs/manual/reference/collation/
+    /// - https://www.mongodb.com/docs/manual/reference/collation/
     ///
-    replace& collation(bsoncxx::v_noabi::document::view_or_value collation);
+    MONGOCXX_ABI_EXPORT_CDECL(replace&)
+    collation(bsoncxx::v_noabi::document::view_or_value collation);
 
     ///
     /// Retrieves the current collation for this operation.
@@ -81,9 +83,10 @@ class replace {
     ///   The current collation.
     ///
     /// @see
-    ///   https://www.mongodb.com/docs/manual/reference/collation/
+    /// - https://www.mongodb.com/docs/manual/reference/collation/
     ///
-    const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& collation() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+    collation() const;
 
     ///
     /// Sets the upsert option.
@@ -101,14 +104,14 @@ class replace {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    replace& upsert(bool upsert);
+    MONGOCXX_ABI_EXPORT_CDECL(replace&) upsert(bool upsert);
 
     ///
     /// Gets the current value of the upsert option.
     ///
     /// @return The optional value of the upsert option.
     ///
-    const stdx::optional<bool>& upsert() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bool>&) upsert() const;
 
     ///
     /// Sets the write_concern for this operation.
@@ -120,9 +123,10 @@ class replace {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/core/write-concern/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/core/write-concern/
     ///
-    replace& write_concern(mongocxx::v_noabi::write_concern wc);
+    MONGOCXX_ABI_EXPORT_CDECL(replace&) write_concern(mongocxx::v_noabi::write_concern wc);
 
     ///
     /// The current write_concern for this operation.
@@ -130,9 +134,11 @@ class replace {
     /// @return
     ///   The current write_concern
     ///
-    /// @see https://www.mongodb.com/docs/manual/core/write-concern/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/core/write-concern/
     ///
-    const stdx::optional<mongocxx::v_noabi::write_concern>& write_concern() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<mongocxx::v_noabi::write_concern>&)
+    write_concern() const;
 
     ///
     /// Sets the index to use for this operation.
@@ -147,14 +153,14 @@ class replace {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    replace& hint(mongocxx::v_noabi::hint index_hint);
+    MONGOCXX_ABI_EXPORT_CDECL(replace&) hint(mongocxx::v_noabi::hint index_hint);
 
     ///
     /// Gets the current hint.
     ///
     /// @return The current hint, if one is set.
     ///
-    const stdx::optional<mongocxx::v_noabi::hint>& hint() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<mongocxx::v_noabi::hint>&) hint() const;
 
     ///
     /// Set the value of the let option.
@@ -166,7 +172,7 @@ class replace {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    replace& let(bsoncxx::v_noabi::document::view_or_value let);
+    MONGOCXX_ABI_EXPORT_CDECL(replace&) let(bsoncxx::v_noabi::document::view_or_value let);
 
     ///
     /// Gets the current value of the let option.
@@ -174,7 +180,8 @@ class replace {
     /// @return
     ///  The current let option.
     ///
-    const stdx::optional<bsoncxx::v_noabi::document::view_or_value> let() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::view_or_value>)
+    let() const;
 
     ///
     /// Set the value of the comment option.
@@ -186,7 +193,8 @@ class replace {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    replace& comment(bsoncxx::v_noabi::types::bson_value::view_or_value comment);
+    MONGOCXX_ABI_EXPORT_CDECL(replace&)
+    comment(bsoncxx::v_noabi::types::bson_value::view_or_value comment);
 
     ///
     /// Gets the current value of the comment option.
@@ -194,7 +202,9 @@ class replace {
     /// @return
     ///  The current comment option.
     ///
-    const stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> comment() const;
+    MONGOCXX_ABI_EXPORT_CDECL(
+        const stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>)
+    comment() const;
 
    private:
     stdx::optional<bool> _bypass_document_validation;

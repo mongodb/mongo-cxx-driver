@@ -44,10 +44,10 @@ stdx::optional<bsoncxx::v_noabi::document::element> update::upserted_id() const 
     return _result.upserted_ids()[0];
 }
 
-bool MONGOCXX_CALL operator==(const update& lhs, const update& rhs) {
+bool operator==(const update& lhs, const update& rhs) {
     return lhs.result() == rhs.result();
 }
-bool MONGOCXX_CALL operator!=(const update& lhs, const update& rhs) {
+bool operator!=(const update& lhs, const update& rhs) {
     return !(lhs == rhs);
 }
 

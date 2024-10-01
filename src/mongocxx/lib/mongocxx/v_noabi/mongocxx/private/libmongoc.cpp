@@ -33,6 +33,9 @@ namespace libmongoc {
 #include "libmongoc_symbols.hh"
 #undef MONGOCXX_LIBMONGOC_SYMBOL
 
+mongocxx::test_util::mock<log_set_handler_cdecl_t>& log_set_handler =
+    *new test_util::mock<log_set_handler_cdecl_t>(mongoc_log_set_handler);
+
 #if defined(__GNUC__) && (__GNUC__ >= 6) && !defined(__clang__)
 #pragma GCC diagnostic pop
 #endif

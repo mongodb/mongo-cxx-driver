@@ -17,6 +17,7 @@
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/private/helpers.hh>
 #include <bsoncxx/stdx/string_view.hpp>
+
 #include <mongocxx/collection.hpp>
 #include <mongocxx/database.hpp>
 #include <mongocxx/private/database.hh>

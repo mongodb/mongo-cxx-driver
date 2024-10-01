@@ -29,9 +29,6 @@
 
 #include <bsoncxx/config/prelude.hpp>
 
-#pragma push_macro("BSONCXX_ENUM")
-#undef BSONCXX_ENUM
-
 BSONCXX_PUSH_WARNINGS();
 BSONCXX_DISABLE_WARNING(GNU("-Wfloat-equal"));
 
@@ -40,36 +37,50 @@ namespace v_noabi {
 
 ///
 /// An enumeration of each BSON type.
-/// These x-macros will expand to be of the form:
-///    k_double = 0x01,
-///    k_string = 0x02,
-///    k_document = 0x03,
-///    k_array = 0x04 ...
+///
+/// @showenumvalues
 ///
 enum class type : std::uint8_t {
-#define BSONCXX_ENUM(name, val) k_##name = val,
-#include <bsoncxx/enums/type.hpp>
-#undef BSONCXX_ENUM
-    k_utf8 = 0x02,
+    k_double = 0x01,      ///< 64-bit binary floating point.
+    k_string = 0x02,      ///< UTF-8 string.
+    k_utf8 = 0x02,        ///< Equivalent to @ref k_string. @deprecated
+    k_document = 0x03,    ///< Embedded document.
+    k_array = 0x04,       ///< Array.
+    k_binary = 0x05,      ///< Binary data.
+    k_undefined = 0x06,   ///< Undefined value. @deprecated
+    k_oid = 0x07,         ///< ObjectId.
+    k_bool = 0x08,        ///< Boolean.
+    k_date = 0x09,        ///< UTC datetime.
+    k_null = 0x0A,        ///< Null value.
+    k_regex = 0x0B,       ///< Regular expression.
+    k_dbpointer = 0x0C,   ///< DBPointer. @deprecated
+    k_code = 0x0D,        ///< JavaScript code.
+    k_symbol = 0x0E,      ///< Symbol. @deprecated
+    k_codewscope = 0x0F,  ///< JavaScript code with scope.
+    k_int32 = 0x10,       ///< 32-bit integer.
+    k_timestamp = 0x11,   ///< Timestamp.
+    k_int64 = 0x12,       ///< 64-bit integer.
+    k_decimal128 = 0x13,  ///< 128-bit decimal floating point.
+    k_maxkey = 0x7F,      ///< Min key.
+    k_minkey = 0xFF,      ///< Max key.
 };
 
 ///
 /// An enumeration of each BSON binary sub type.
-/// These x-macros will expand to be of the form:
-///   k_binary = 0x00,
-///   k_function = 0x01,
-///   k_binary_deprecated = 0x02,
-///   k_uuid_deprecated = 0x03,
-///   k_uuid = 0x04,
-///   k_md5 = 0x05,
-///   k_encrypted = 0x06,
-///   k_column = 0x07,
-///   k_user = 0x80
+///
+/// @showenumvalues
 ///
 enum class binary_sub_type : std::uint8_t {
-#define BSONCXX_ENUM(name, val) k_##name = val,
-#include <bsoncxx/enums/binary_sub_type.hpp>
-#undef BSONCXX_ENUM
+    k_binary = 0x00,             ///< Generic binary subtype.
+    k_function = 0x01,           ///< Function.
+    k_binary_deprecated = 0x02,  ///< Binary (Old). @deprecated
+    k_uuid_deprecated = 0x03,    ///< UUID (Old). @deprecated
+    k_uuid = 0x04,               ///< UUID.
+    k_md5 = 0x05,                ///< MD5.
+    k_encrypted = 0x06,          ///< Encrypted BSON value.
+    k_column = 0x07,             ///< Compressed BSON column.
+    k_sensitive = 0x08,          ///< Sensitive.
+    k_user = 0x80,               ///< User defined.
 };
 
 ///
@@ -80,7 +91,7 @@ enum class binary_sub_type : std::uint8_t {
 ///
 /// @return a std::string representation of the type.
 ///
-BSONCXX_API std::string BSONCXX_CALL to_string(type rhs);
+BSONCXX_ABI_EXPORT_CDECL(std::string) to_string(type rhs);
 
 ///
 /// Returns a stringification of the given binary sub type.
@@ -90,7 +101,7 @@ BSONCXX_API std::string BSONCXX_CALL to_string(type rhs);
 ///
 /// @return a std::string representation of the type.
 ///
-BSONCXX_API std::string BSONCXX_CALL to_string(binary_sub_type rhs);
+BSONCXX_ABI_EXPORT_CDECL(std::string) to_string(binary_sub_type rhs);
 
 namespace types {
 
@@ -98,14 +109,14 @@ namespace types {
 /// A BSON double value.
 ///
 struct b_double {
-    static constexpr auto type_id = type::k_double;
+    BSONCXX_ABI_EXPORT static constexpr auto type_id = type::k_double;
 
     double value;
 
     ///
     /// Conversion operator unwrapping a double
     ///
-    BSONCXX_INLINE operator double() const {
+    operator double() const {
         return value;
     }
 };
@@ -115,7 +126,7 @@ struct b_double {
 ///
 /// @relatesalso bsoncxx::v_noabi::types::b_double
 ///
-BSONCXX_INLINE bool operator==(const b_double& lhs, const b_double& rhs) {
+inline bool operator==(const b_double& lhs, const b_double& rhs) {
     return lhs.value == rhs.value;
 }
 
@@ -123,7 +134,7 @@ BSONCXX_INLINE bool operator==(const b_double& lhs, const b_double& rhs) {
 /// A BSON UTF-8 encoded string value.
 ///
 struct b_string {
-    static constexpr auto type_id = type::k_string;
+    BSONCXX_ABI_EXPORT static constexpr auto type_id = type::k_string;
 
     ///
     /// Constructor for b_string.
@@ -132,14 +143,14 @@ struct b_string {
     ///   The value to wrap.
     ///
     template <typename T, detail::requires_not_t<int, detail::is_alike<b_string, T>> = 0>
-    BSONCXX_INLINE explicit b_string(T&& t) : value(std::forward<T>(t)) {}
+    explicit b_string(T&& t) : value(std::forward<T>(t)) {}
 
     stdx::string_view value;
 
     ///
     /// Conversion operator unwrapping a string_view
     ///
-    BSONCXX_INLINE operator stdx::string_view() const {
+    operator stdx::string_view() const {
         return value;
     }
 };
@@ -149,7 +160,7 @@ struct b_string {
 ///
 /// @relatesalso bsoncxx::v_noabi::types::b_string
 ///
-BSONCXX_INLINE bool operator==(const b_string& lhs, const b_string& rhs) {
+inline bool operator==(const b_string& lhs, const b_string& rhs) {
     return lhs.value == rhs.value;
 }
 
@@ -164,21 +175,21 @@ BSONCXX_DEPRECATED typedef b_string b_utf8;
 /// A BSON document value.
 ///
 struct b_document {
-    static constexpr auto type_id = type::k_document;
+    BSONCXX_ABI_EXPORT static constexpr auto type_id = type::k_document;
 
     document::view value;
 
     ///
     /// Conversion operator unwrapping a document::view
     ///
-    BSONCXX_INLINE operator document::view() const {
+    operator document::view() const {
         return value;
     }
 
     ///
     /// Returns an unwrapped document::view
     ///
-    BSONCXX_INLINE document::view view() {
+    document::view view() {
         return value;
     }
 };
@@ -188,7 +199,7 @@ struct b_document {
 ///
 /// @relatesalso bsoncxx::v_noabi::types::b_document
 ///
-BSONCXX_INLINE bool operator==(const b_document& lhs, const b_document& rhs) {
+inline bool operator==(const b_document& lhs, const b_document& rhs) {
     return lhs.value == rhs.value;
 }
 
@@ -196,14 +207,14 @@ BSONCXX_INLINE bool operator==(const b_document& lhs, const b_document& rhs) {
 /// A BSON array value.
 ///
 struct b_array {
-    static constexpr auto type_id = type::k_array;
+    BSONCXX_ABI_EXPORT static constexpr auto type_id = type::k_array;
 
     array::view value;
 
     ///
     /// Conversion operator unwrapping an array::view
     ///
-    BSONCXX_INLINE operator array::view() const {
+    operator array::view() const {
         return value;
     }
 };
@@ -213,7 +224,7 @@ struct b_array {
 ///
 /// @relatesalso bsoncxx::v_noabi::types::b_array
 ///
-BSONCXX_INLINE bool operator==(const b_array& lhs, const b_array& rhs) {
+inline bool operator==(const b_array& lhs, const b_array& rhs) {
     return lhs.value == rhs.value;
 }
 
@@ -221,7 +232,7 @@ BSONCXX_INLINE bool operator==(const b_array& lhs, const b_array& rhs) {
 /// A BSON binary data value.
 ///
 struct b_binary {
-    static constexpr auto type_id = type::k_binary;
+    BSONCXX_ABI_EXPORT static constexpr auto type_id = type::k_binary;
 
     binary_sub_type sub_type;
     uint32_t size;
@@ -233,7 +244,7 @@ struct b_binary {
 ///
 /// @relatesalso bsoncxx::v_noabi::types::b_binary
 ///
-BSONCXX_INLINE bool operator==(const b_binary& lhs, const b_binary& rhs) {
+inline bool operator==(const b_binary& lhs, const b_binary& rhs) {
     return lhs.sub_type == rhs.sub_type && lhs.size == rhs.size &&
            (!lhs.size || (std::memcmp(lhs.bytes, rhs.bytes, lhs.size) == 0));
 }
@@ -244,7 +255,7 @@ BSONCXX_INLINE bool operator==(const b_binary& lhs, const b_binary& rhs) {
 /// @deprecated This BSON type is deprecated. Usage is discouraged.
 ///
 struct b_undefined {
-    static constexpr auto type_id = type::k_undefined;
+    BSONCXX_ABI_EXPORT static constexpr auto type_id = type::k_undefined;
 };
 
 ///
@@ -252,7 +263,7 @@ struct b_undefined {
 ///
 /// @relatesalso bsoncxx::v_noabi::types::b_undefined
 ///
-BSONCXX_INLINE bool operator==(const b_undefined&, const b_undefined&) {
+inline bool operator==(const b_undefined&, const b_undefined&) {
     return true;
 }
 
@@ -260,7 +271,7 @@ BSONCXX_INLINE bool operator==(const b_undefined&, const b_undefined&) {
 /// A BSON ObjectId value.
 ///
 struct b_oid {
-    static constexpr auto type_id = type::k_oid;
+    BSONCXX_ABI_EXPORT static constexpr auto type_id = type::k_oid;
 
     oid value;
 };
@@ -270,7 +281,7 @@ struct b_oid {
 ///
 /// @relatesalso bsoncxx::v_noabi::types::b_oid
 ///
-BSONCXX_INLINE bool operator==(const b_oid& lhs, const b_oid& rhs) {
+inline bool operator==(const b_oid& lhs, const b_oid& rhs) {
     return lhs.value == rhs.value;
 }
 
@@ -278,14 +289,14 @@ BSONCXX_INLINE bool operator==(const b_oid& lhs, const b_oid& rhs) {
 /// A BSON boolean value.
 ///
 struct b_bool {
-    static constexpr auto type_id = type::k_bool;
+    BSONCXX_ABI_EXPORT static constexpr auto type_id = type::k_bool;
 
     bool value;
 
     ///
     /// Conversion operator unwrapping a bool
     ///
-    BSONCXX_INLINE operator bool() const {
+    operator bool() const {
         return value;
     }
 };
@@ -295,7 +306,7 @@ struct b_bool {
 ///
 /// @relatesalso bsoncxx::v_noabi::types::b_bool
 ///
-BSONCXX_INLINE bool operator==(const b_bool& lhs, const b_bool& rhs) {
+inline bool operator==(const b_bool& lhs, const b_bool& rhs) {
     return lhs.value == rhs.value;
 }
 
@@ -303,7 +314,7 @@ BSONCXX_INLINE bool operator==(const b_bool& lhs, const b_bool& rhs) {
 /// A BSON date value.
 ///
 struct b_date {
-    static constexpr auto type_id = type::k_date;
+    BSONCXX_ABI_EXPORT static constexpr auto type_id = type::k_date;
 
     ///
     /// Constructor for b_date
@@ -311,7 +322,6 @@ struct b_date {
     /// @param value
     ///   Milliseconds since the system_clock epoch.
     ///
-    BSONCXX_INLINE
     explicit b_date(std::chrono::milliseconds value) : value(value) {}
 
     ///
@@ -320,7 +330,6 @@ struct b_date {
     /// @param tp
     ///   A system_clock time_point.
     ///
-    BSONCXX_INLINE
     explicit b_date(const std::chrono::system_clock::time_point& tp)
         : value(std::chrono::duration_cast<std::chrono::milliseconds>(tp.time_since_epoch())) {}
 
@@ -329,21 +338,21 @@ struct b_date {
     ///
     /// Conversion operator unwrapping a int64_t
     ///
-    BSONCXX_INLINE operator int64_t() const {
+    operator int64_t() const {
         return value.count();
     }
 
     ///
     /// Manually convert this b_date to an int64_t
     ///
-    BSONCXX_INLINE int64_t to_int64() const {
+    int64_t to_int64() const {
         return value.count();
     }
 
     ///
     /// Conversion operator unwrapping a time_point
     ///
-    BSONCXX_INLINE operator std::chrono::system_clock::time_point() const {
+    operator std::chrono::system_clock::time_point() const {
         return std::chrono::system_clock::time_point(
             std::chrono::duration_cast<std::chrono::system_clock::duration>(value));
     }
@@ -354,7 +363,7 @@ struct b_date {
 ///
 /// @relatesalso bsoncxx::v_noabi::types::b_date
 ///
-BSONCXX_INLINE bool operator==(const b_date& lhs, const b_date& rhs) {
+inline bool operator==(const b_date& lhs, const b_date& rhs) {
     return lhs.value == rhs.value;
 }
 
@@ -362,7 +371,7 @@ BSONCXX_INLINE bool operator==(const b_date& lhs, const b_date& rhs) {
 /// A BSON null value.
 ///
 struct b_null {
-    static constexpr auto type_id = type::k_null;
+    BSONCXX_ABI_EXPORT static constexpr auto type_id = type::k_null;
 };
 
 ///
@@ -370,7 +379,7 @@ struct b_null {
 ///
 /// @relatesalso bsoncxx::v_noabi::types::b_null
 ///
-BSONCXX_INLINE bool operator==(const b_null&, const b_null&) {
+inline bool operator==(const b_null&, const b_null&) {
     return true;
 }
 
@@ -378,7 +387,7 @@ BSONCXX_INLINE bool operator==(const b_null&, const b_null&) {
 /// A BSON regex value.
 ///
 struct b_regex {
-    static constexpr auto type_id = type::k_regex;
+    BSONCXX_ABI_EXPORT static constexpr auto type_id = type::k_regex;
 
     ///
     /// Constructor for b_regex
@@ -392,7 +401,7 @@ struct b_regex {
     template <typename T,
               typename U = stdx::string_view,
               detail::requires_not_t<int, detail::is_alike<b_regex, T>> = 0>
-    BSONCXX_INLINE explicit b_regex(T&& regex, U&& options = U{})
+    explicit b_regex(T&& regex, U&& options = U{})
         : regex(std::forward<T>(regex)), options(std::forward<U>(options)) {}
 
     stdx::string_view regex;
@@ -404,7 +413,7 @@ struct b_regex {
 ///
 /// @relatesalso bsoncxx::v_noabi::types::b_regex
 ///
-BSONCXX_INLINE bool operator==(const b_regex& lhs, const b_regex& rhs) {
+inline bool operator==(const b_regex& lhs, const b_regex& rhs) {
     return lhs.regex == rhs.regex && lhs.options == rhs.options;
 }
 
@@ -414,7 +423,7 @@ BSONCXX_INLINE bool operator==(const b_regex& lhs, const b_regex& rhs) {
 /// @deprecated This BSON type is deprecated. Usage is discouraged.
 ///
 struct b_dbpointer {
-    static constexpr auto type_id = type::k_dbpointer;
+    BSONCXX_ABI_EXPORT static constexpr auto type_id = type::k_dbpointer;
 
     stdx::string_view collection;
     oid value;
@@ -425,7 +434,7 @@ struct b_dbpointer {
 ///
 /// @relatesalso bsoncxx::v_noabi::types::b_dbpointer
 ///
-BSONCXX_INLINE bool operator==(const b_dbpointer& lhs, const b_dbpointer& rhs) {
+inline bool operator==(const b_dbpointer& lhs, const b_dbpointer& rhs) {
     return lhs.collection == rhs.collection && lhs.value == rhs.value;
 }
 
@@ -433,7 +442,7 @@ BSONCXX_INLINE bool operator==(const b_dbpointer& lhs, const b_dbpointer& rhs) {
 /// A BSON JavaScript code value.
 ///
 struct b_code {
-    static constexpr auto type_id = type::k_code;
+    BSONCXX_ABI_EXPORT static constexpr auto type_id = type::k_code;
 
     ///
     /// Constructor for b_code.
@@ -442,14 +451,14 @@ struct b_code {
     ///   The js code
     ///
     template <typename T, detail::requires_not_t<int, detail::is_alike<b_code, T>> = 0>
-    BSONCXX_INLINE explicit b_code(T&& t) : code(std::forward<T>(t)) {}
+    explicit b_code(T&& t) : code(std::forward<T>(t)) {}
 
     stdx::string_view code;
 
     ///
     /// Conversion operator unwrapping a string_view
     ///
-    BSONCXX_INLINE operator stdx::string_view() const {
+    operator stdx::string_view() const {
         return code;
     }
 };
@@ -459,7 +468,7 @@ struct b_code {
 ///
 /// @relatesalso bsoncxx::v_noabi::types::b_code
 ///
-BSONCXX_INLINE bool operator==(const b_code& lhs, const b_code& rhs) {
+inline bool operator==(const b_code& lhs, const b_code& rhs) {
     return lhs.code == rhs.code;
 }
 
@@ -469,7 +478,7 @@ BSONCXX_INLINE bool operator==(const b_code& lhs, const b_code& rhs) {
 /// @deprecated This BSON type is deprecated. Usage is discouraged.
 ///
 struct b_symbol {
-    static constexpr auto type_id = type::k_symbol;
+    BSONCXX_ABI_EXPORT static constexpr auto type_id = type::k_symbol;
 
     ///
     /// Constructor for b_symbol.
@@ -478,14 +487,14 @@ struct b_symbol {
     ///   The symbol.
     ///
     template <typename T, detail::requires_not_t<int, detail::is_alike<b_symbol, T>> = 0>
-    BSONCXX_INLINE explicit b_symbol(T&& t) : symbol(std::forward<T>(t)) {}
+    explicit b_symbol(T&& t) : symbol(std::forward<T>(t)) {}
 
     stdx::string_view symbol;
 
     ///
     /// Conversion operator unwrapping a string_view
     ///
-    BSONCXX_INLINE operator stdx::string_view() const {
+    operator stdx::string_view() const {
         return symbol;
     }
 };
@@ -495,7 +504,7 @@ struct b_symbol {
 ///
 /// @relatesalso bsoncxx::v_noabi::types::b_symbol
 ///
-BSONCXX_INLINE bool operator==(const b_symbol& lhs, const b_symbol& rhs) {
+inline bool operator==(const b_symbol& lhs, const b_symbol& rhs) {
     return lhs.symbol == rhs.symbol;
 }
 
@@ -503,7 +512,7 @@ BSONCXX_INLINE bool operator==(const b_symbol& lhs, const b_symbol& rhs) {
 /// A BSON JavaScript code with scope value.
 ///
 struct b_codewscope {
-    static constexpr auto type_id = type::k_codewscope;
+    BSONCXX_ABI_EXPORT static constexpr auto type_id = type::k_codewscope;
 
     ///
     /// Constructor for b_codewscope.
@@ -517,7 +526,7 @@ struct b_codewscope {
     template <typename T,
               typename U,
               detail::requires_not_t<int, detail::is_alike<b_codewscope, T>> = 0>
-    BSONCXX_INLINE explicit b_codewscope(T&& code, U&& scope)
+    explicit b_codewscope(T&& code, U&& scope)
         : code(std::forward<T>(code)), scope(std::forward<U>(scope)) {}
 
     stdx::string_view code;
@@ -529,7 +538,7 @@ struct b_codewscope {
 ///
 /// @relatesalso bsoncxx::v_noabi::types::b_codewscope
 ///
-BSONCXX_INLINE bool operator==(const b_codewscope& lhs, const b_codewscope& rhs) {
+inline bool operator==(const b_codewscope& lhs, const b_codewscope& rhs) {
     return lhs.code == rhs.code && lhs.scope == rhs.scope;
 }
 
@@ -537,14 +546,14 @@ BSONCXX_INLINE bool operator==(const b_codewscope& lhs, const b_codewscope& rhs)
 /// A BSON signed 32-bit integer value.
 ///
 struct b_int32 {
-    static constexpr auto type_id = type::k_int32;
+    BSONCXX_ABI_EXPORT static constexpr auto type_id = type::k_int32;
 
     int32_t value;
 
     ///
     /// Conversion operator unwrapping a int32_t
     ///
-    BSONCXX_INLINE operator int32_t() const {
+    operator int32_t() const {
         return value;
     }
 };
@@ -554,7 +563,7 @@ struct b_int32 {
 ///
 /// @relatesalso bsoncxx::v_noabi::types::b_int32
 ///
-BSONCXX_INLINE bool operator==(const b_int32& lhs, const b_int32& rhs) {
+inline bool operator==(const b_int32& lhs, const b_int32& rhs) {
     return lhs.value == rhs.value;
 }
 
@@ -562,7 +571,7 @@ BSONCXX_INLINE bool operator==(const b_int32& lhs, const b_int32& rhs) {
 /// A BSON replication timestamp value.
 ///
 struct b_timestamp {
-    static constexpr auto type_id = type::k_timestamp;
+    BSONCXX_ABI_EXPORT static constexpr auto type_id = type::k_timestamp;
 
     uint32_t increment;
     uint32_t timestamp;
@@ -573,7 +582,7 @@ struct b_timestamp {
 ///
 /// @relatesalso bsoncxx::v_noabi::types::b_timestamp
 ///
-BSONCXX_INLINE bool operator==(const b_timestamp& lhs, const b_timestamp& rhs) {
+inline bool operator==(const b_timestamp& lhs, const b_timestamp& rhs) {
     return lhs.increment == rhs.increment && lhs.timestamp == rhs.timestamp;
 }
 
@@ -581,14 +590,14 @@ BSONCXX_INLINE bool operator==(const b_timestamp& lhs, const b_timestamp& rhs) {
 /// A BSON 64-bit signed integer value.
 ///
 struct b_int64 {
-    static constexpr auto type_id = type::k_int64;
+    BSONCXX_ABI_EXPORT static constexpr auto type_id = type::k_int64;
 
     int64_t value;
 
     ///
     /// Conversion operator unwrapping a int64_t
     ///
-    BSONCXX_INLINE operator int64_t() const {
+    operator int64_t() const {
         return value;
     }
 };
@@ -598,7 +607,7 @@ struct b_int64 {
 ///
 /// @relatesalso bsoncxx::v_noabi::types::b_int64
 ///
-BSONCXX_INLINE bool operator==(const b_int64& lhs, const b_int64& rhs) {
+inline bool operator==(const b_int64& lhs, const b_int64& rhs) {
     return lhs.value == rhs.value;
 }
 
@@ -606,7 +615,7 @@ BSONCXX_INLINE bool operator==(const b_int64& lhs, const b_int64& rhs) {
 /// A BSON Decimal128 value.
 ///
 struct b_decimal128 {
-    static constexpr auto type_id = type::k_decimal128;
+    BSONCXX_ABI_EXPORT static constexpr auto type_id = type::k_decimal128;
 
     decimal128 value;
 
@@ -617,7 +626,7 @@ struct b_decimal128 {
     ///   The value to wrap.
     ///
     template <typename T, detail::requires_not_t<int, detail::is_alike<b_decimal128, T>> = 0>
-    BSONCXX_INLINE explicit b_decimal128(T&& t) : value(std::forward<T>(t)) {}
+    explicit b_decimal128(T&& t) : value(std::forward<T>(t)) {}
 };
 
 ///
@@ -625,7 +634,7 @@ struct b_decimal128 {
 ///
 /// @relatesalso bsoncxx::v_noabi::types::b_decimal128
 ///
-BSONCXX_INLINE bool operator==(const b_decimal128& lhs, const b_decimal128& rhs) {
+inline bool operator==(const b_decimal128& lhs, const b_decimal128& rhs) {
     return lhs.value == rhs.value;
 }
 
@@ -633,7 +642,7 @@ BSONCXX_INLINE bool operator==(const b_decimal128& lhs, const b_decimal128& rhs)
 /// A BSON min-key value.
 ///
 struct b_minkey {
-    static constexpr auto type_id = type::k_minkey;
+    BSONCXX_ABI_EXPORT static constexpr auto type_id = type::k_minkey;
 };
 
 ///
@@ -641,7 +650,7 @@ struct b_minkey {
 ///
 /// @relatesalso bsoncxx::v_noabi::types::b_minkey
 ///
-BSONCXX_INLINE bool operator==(const b_minkey&, const b_minkey&) {
+inline bool operator==(const b_minkey&, const b_minkey&) {
     return true;
 }
 
@@ -649,7 +658,7 @@ BSONCXX_INLINE bool operator==(const b_minkey&, const b_minkey&) {
 /// A BSON max-key value.
 ///
 struct b_maxkey {
-    static constexpr auto type_id = type::k_maxkey;
+    BSONCXX_ABI_EXPORT static constexpr auto type_id = type::k_maxkey;
 };
 
 ///
@@ -657,7 +666,7 @@ struct b_maxkey {
 ///
 /// @relatesalso bsoncxx::v_noabi::types::b_maxkey
 ///
-BSONCXX_INLINE bool operator==(const b_maxkey&, const b_maxkey&) {
+inline bool operator==(const b_maxkey&, const b_maxkey&) {
     return true;
 }
 
@@ -872,11 +881,6 @@ using ::bsoncxx::v_noabi::types::operator!=;
 
 }  // namespace types
 }  // namespace bsoncxx
-
-#ifdef BSONCXX_ENUM
-static_assert(false, "BSONCXX_ENUM must be undef'ed");
-#endif
-#pragma pop_macro("BSONCXX_ENUM")
 
 #include <bsoncxx/config/postlude.hpp>
 

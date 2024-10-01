@@ -20,6 +20,7 @@
 
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/types/bson_value/view_or_value.hpp>
+
 #include <mongocxx/read_preference.hpp>
 
 #include <mongocxx/config/prelude.hpp>
@@ -44,18 +45,22 @@ class estimated_document_count {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/count/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/count/
     ///
-    estimated_document_count& max_time(std::chrono::milliseconds max_time);
+    MONGOCXX_ABI_EXPORT_CDECL(estimated_document_count&)
+    max_time(std::chrono::milliseconds max_time);
 
     ///
     /// The current max_time setting.
     ///
     /// @return The current max time (in milliseconds).
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/count/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/count/
     ///
-    const bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds>& max_time() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds>&)
+    max_time() const;
 
     ///
     /// Sets the comment for this operation.
@@ -67,18 +72,22 @@ class estimated_document_count {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/count/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/count/
     ///
-    estimated_document_count& comment(bsoncxx::v_noabi::types::bson_value::view_or_value comment);
+    MONGOCXX_ABI_EXPORT_CDECL(estimated_document_count&)
+    comment(bsoncxx::v_noabi::types::bson_value::view_or_value comment);
 
     ///
     /// The current comment for this operation.
     ///
     /// @return The current comment
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/count/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/count/
     ///
-    const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>&
+    MONGOCXX_ABI_EXPORT_CDECL(
+        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>&)
     comment() const;
 
     ///
@@ -91,19 +100,23 @@ class estimated_document_count {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/count/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/count/
     ///
-    estimated_document_count& read_preference(mongocxx::v_noabi::read_preference rp);
+    MONGOCXX_ABI_EXPORT_CDECL(estimated_document_count&)
+    read_preference(mongocxx::v_noabi::read_preference rp);
 
     ///
     /// The current read_preference for this operation.
     ///
     /// @return the current read_preference
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/count/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/count/
     ///
-    const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_preference>& read_preference()
-        const;
+    MONGOCXX_ABI_EXPORT_CDECL(
+        const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_preference>&)
+    read_preference() const;
 
    private:
     bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds> _max_time;

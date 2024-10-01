@@ -18,10 +18,12 @@
 #include <bsoncxx/string/to_string.hpp>
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
+
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/create_collection.hpp>
 
 #include <bsoncxx/test/catch.hh>
+
 #include <mongocxx/test/catch_helpers.hh>
 
 namespace {
@@ -42,8 +44,6 @@ TEST_CASE("create_collection accessors/mutators", "[create_collection]") {
     auto validation = validation_criteria{}.rule(make_document(kvp("a", 1)));
 
     CHECK_OPTIONAL_ARGUMENT(cc, capped, true);
-    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN;
-    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END;
     CHECK_OPTIONAL_ARGUMENT(cc, size, 5);
     CHECK_OPTIONAL_ARGUMENT(cc, max, 2);
     CHECK_OPTIONAL_ARGUMENT(cc, collation, collation.view());

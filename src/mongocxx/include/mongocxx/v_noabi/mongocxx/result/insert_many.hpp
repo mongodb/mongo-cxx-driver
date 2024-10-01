@@ -22,6 +22,7 @@
 
 #include <bsoncxx/array/value.hpp>
 #include <bsoncxx/types.hpp>
+
 #include <mongocxx/result/bulk_write.hpp>
 
 #include <mongocxx/config/prelude.hpp>
@@ -38,12 +39,13 @@ class insert_many {
    public:
     using id_map = std::map<std::size_t, bsoncxx::v_noabi::document::element>;
 
+    MONGOCXX_ABI_EXPORT_CDECL()
     insert_many(result::bulk_write result, bsoncxx::v_noabi::array::value inserted_ids);
 
     ~insert_many() = default;
 
-    insert_many(const insert_many&);
-    insert_many& operator=(const insert_many&);
+    MONGOCXX_ABI_EXPORT_CDECL() insert_many(const insert_many&);
+    MONGOCXX_ABI_EXPORT_CDECL(insert_many&) operator=(const insert_many&);
 
     insert_many(insert_many&&) = default;
     insert_many& operator=(insert_many&&) = default;
@@ -53,14 +55,14 @@ class insert_many {
     ///
     /// @return The raw bulk write result.
     ///
-    const result::bulk_write& result() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const result::bulk_write&) result() const;
 
     ///
     /// Gets the number of documents that were inserted during this operation.
     ///
     /// @return The number of documents that were inserted.
     ///
-    std::int32_t inserted_count() const;
+    MONGOCXX_ABI_EXPORT_CDECL(std::int32_t) inserted_count() const;
 
     ///
     /// Gets the _ids of the inserted documents.
@@ -69,13 +71,16 @@ class insert_many {
     /// destroyed.
     /// @return Map of the index of the operation to the _id of the inserted document.
     ///
-    id_map inserted_ids() const;
+    MONGOCXX_ABI_EXPORT_CDECL(id_map) inserted_ids() const;
+
+    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(const insert_many&, const insert_many&);
+    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator!=(const insert_many&, const insert_many&);
 
    private:
     friend ::mongocxx::v_noabi::collection;
 
     // Construct _inserted_ids from _inserted_ids_owned
-    MONGOCXX_PRIVATE void _buildInsertedIds();
+    void _buildInsertedIds();
 
     result::bulk_write _result;
 
@@ -85,9 +90,6 @@ class insert_many {
 
     // Points into _inserted_ids_owned.
     id_map _inserted_ids;
-
-    friend MONGOCXX_API bool MONGOCXX_CALL operator==(const insert_many&, const insert_many&);
-    friend MONGOCXX_API bool MONGOCXX_CALL operator!=(const insert_many&, const insert_many&);
 };
 
 }  // namespace result

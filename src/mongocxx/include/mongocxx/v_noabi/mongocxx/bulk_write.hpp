@@ -38,32 +38,33 @@ namespace v_noabi {
 /// method. Options that you would typically specify for individual write operations (such as write
 /// concern) are instead specified for the aggregate operation.
 ///
-/// @see https://www.mongodb.com/docs/manual/core/crud/
-/// @see https://www.mongodb.com/docs/manual/core/bulk-write-operations/
+/// @see
+/// - https://www.mongodb.com/docs/manual/core/crud/
+/// - https://www.mongodb.com/docs/manual/core/bulk-write-operations/
 ///
 class bulk_write {
    public:
     ///
     /// Move constructs a bulk write operation.
     ///
-    bulk_write(bulk_write&&) noexcept;
+    MONGOCXX_ABI_EXPORT_CDECL() bulk_write(bulk_write&&) noexcept;
 
     ///
     /// Move assigns a bulk write operation.
     ///
-    bulk_write& operator=(bulk_write&&) noexcept;
+    MONGOCXX_ABI_EXPORT_CDECL(bulk_write&) operator=(bulk_write&&) noexcept;
 
     ///
     /// Destroys a bulk write operation.
     ///
-    ~bulk_write();
+    MONGOCXX_ABI_EXPORT_CDECL() ~bulk_write();
 
     ///
     /// Checks if a bulk write operation is empty.
     ///
     /// @return A boolean indicating if the bulk write operation is empty.
     ///
-    bool empty() const noexcept;
+    MONGOCXX_ABI_EXPORT_CDECL(bool) empty() const noexcept;
 
     ///
     /// Appends a single write to the bulk write operation. The write operation's contents are
@@ -87,7 +88,7 @@ class bulk_write {
     ///
     /// @throws mongocxx::v_noabi::logic_error if the given operation is invalid.
     ///
-    bulk_write& append(const model::write& operation);
+    MONGOCXX_ABI_EXPORT_CDECL(bulk_write&) append(const model::write& operation);
 
     ///
     /// Executes a bulk write.
@@ -96,18 +97,19 @@ class bulk_write {
     ///
     /// @return The optional result of the bulk operation execution, a result::bulk_write.
     ///
-    /// @see https://www.mongodb.com/docs/manual/core/bulk-write-operations/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/core/bulk-write-operations/
     ///
-    stdx::optional<result::bulk_write> execute() const;
+    MONGOCXX_ABI_EXPORT_CDECL(stdx::optional<result::bulk_write>) execute() const;
 
    private:
     friend ::mongocxx::v_noabi::collection;
 
-    class MONGOCXX_PRIVATE impl;
+    class impl;
 
-    MONGOCXX_PRIVATE bulk_write(const collection& coll,
-                                const options::bulk_write& options,
-                                const client_session* session = nullptr);
+    bulk_write(const collection& coll,
+               const options::bulk_write& options,
+               const client_session* session = nullptr);
 
     bool _created_from_collection;
     std::unique_ptr<impl> _impl;

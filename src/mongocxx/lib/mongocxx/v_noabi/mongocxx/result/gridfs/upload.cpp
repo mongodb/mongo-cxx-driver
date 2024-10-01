@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include <bsoncxx/builder/basic/array.hpp>
+
 #include <mongocxx/result/gridfs/upload.hpp>
 
 #include <mongocxx/config/private/prelude.hh>
@@ -30,10 +31,10 @@ const bsoncxx::v_noabi::types::bson_value::view& upload::id() const {
     return _id;
 }
 
-bool MONGOCXX_CALL operator==(const upload& lhs, const upload& rhs) {
+bool operator==(const upload& lhs, const upload& rhs) {
     return lhs.id() == rhs.id();
 }
-bool MONGOCXX_CALL operator!=(const upload& lhs, const upload& rhs) {
+bool operator!=(const upload& lhs, const upload& rhs) {
     return !(lhs == rhs);
 }
 

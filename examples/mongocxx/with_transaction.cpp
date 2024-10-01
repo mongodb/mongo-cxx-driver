@@ -19,6 +19,7 @@
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/json.hpp>
+
 #include <mongocxx/client.hpp>
 #include <mongocxx/client_session.hpp>
 #include <mongocxx/collection.hpp>
@@ -31,6 +32,8 @@
 #include <mongocxx/uri.hpp>
 #include <mongocxx/write_concern.hpp>
 
+#include <examples/macros.hh>
+
 using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_document;
 using namespace mongocxx;
@@ -39,7 +42,7 @@ using namespace mongocxx;
 // This example shows how to use the client_session::with_transaction helper to
 // conveniently run a custom callback inside of a transaction.
 //
-int main() {
+int EXAMPLES_CDECL main() {
     if (const char* const topology_env = std::getenv("MONGOCXX_TEST_TOPOLOGY")) {
         const auto topology = std::string(topology_env);
         if (topology != "replica") {

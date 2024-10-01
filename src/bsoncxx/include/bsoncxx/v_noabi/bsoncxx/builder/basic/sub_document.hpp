@@ -42,13 +42,13 @@ void value_append(core* core, T&& t);
 ///
 class sub_document {
    public:
-    BSONCXX_INLINE sub_document(core* core) : _core(core) {}
+    sub_document(core* core) : _core(core) {}
 
     ///
     /// Appends multiple basic::kvp key-value pairs.
     ///
     template <typename Arg, typename... Args>
-    BSONCXX_INLINE void append(Arg&& a, Args&&... args) {
+    void append(Arg&& a, Args&&... args) {
         append_(std::forward<Arg>(a));
         append(std::forward<Args>(args)...);
     }
@@ -64,7 +64,7 @@ class sub_document {
     // Appends a basic::kvp where the key is a non-owning string view.
     //
     template <typename K, typename V>
-    BSONCXX_INLINE detail::requires_t<void, detail::is_alike<K, stdx::string_view>>  //
+    detail::requires_t<void, detail::is_alike<K, stdx::string_view>>  //
     append_(std::tuple<K, V>&& t) {
         _core->key_view(std::forward<K>(std::get<0>(t)));
         impl::value_append(_core, std::forward<V>(std::get<1>(t)));
@@ -74,7 +74,7 @@ class sub_document {
     // Appends a basic::kvp where the key is an owning STL string.
     //
     template <typename K, typename V>
-    BSONCXX_INLINE detail::requires_t<void, detail::is_alike<K, std::string>>  //
+    detail::requires_t<void, detail::is_alike<K, std::string>>  //
     append_(std::tuple<K, V>&& t) {
         _core->key_owned(std::forward<K>(std::get<0>(t)));
         impl::value_append(_core, std::forward<V>(std::get<1>(t)));
@@ -84,7 +84,7 @@ class sub_document {
     // Appends a basic::kvp where the key is a string literal
     //
     template <std::size_t n, typename V>
-    BSONCXX_INLINE void append_(std::tuple<const char (&)[n], V>&& t) {
+    void append_(std::tuple<const char (&)[n], V>&& t) {
         _core->key_view(stdx::string_view{std::get<0>(t), n - 1});
         impl::value_append(_core, std::forward<V>(std::get<1>(t)));
     }

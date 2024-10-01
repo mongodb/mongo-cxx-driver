@@ -19,9 +19,11 @@
 #include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/types.hpp>
 
+#include <examples/macros.hh>
+
 using namespace bsoncxx;
 
-int main() {
+int EXAMPLES_CDECL main() {
     // bsoncxx::builder::basic presents a BSON-construction interface familiar to users of the
     // server's
     // BSON library or the Java driver.

@@ -28,6 +28,7 @@
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/string/to_string.hpp>
 #include <bsoncxx/types/bson_value/value.hpp>
+
 #include <mongocxx/client_encryption.hpp>
 #include <mongocxx/exception/bulk_write_exception.hpp>
 #include <mongocxx/exception/exception.hpp>
@@ -35,6 +36,7 @@
 #include <mongocxx/instance.hpp>
 
 #include <bsoncxx/test/catch.hh>
+
 #include <mongocxx/test/client_helpers.hh>
 #include <mongocxx/test/spec/monitoring.hh>
 #include <mongocxx/test/spec/util.hh>
@@ -145,9 +147,30 @@ bsoncxx::document::value parse_kms_doc(bsoncxx::document::view_or_value test_kms
                 case bsoncxx::type::k_string:
                     variables_doc.append(kvp(variable, actual_value.get_string()));
                     break;
+
                 case bsoncxx::type::k_binary:
                     variables_doc.append(kvp(variable, actual_value.get_binary()));
                     break;
+
+                case bsoncxx::type::k_double:
+                case bsoncxx::type::k_document:
+                case bsoncxx::type::k_array:
+                case bsoncxx::type::k_undefined:
+                case bsoncxx::type::k_oid:
+                case bsoncxx::type::k_bool:
+                case bsoncxx::type::k_date:
+                case bsoncxx::type::k_null:
+                case bsoncxx::type::k_regex:
+                case bsoncxx::type::k_dbpointer:
+                case bsoncxx::type::k_code:
+                case bsoncxx::type::k_symbol:
+                case bsoncxx::type::k_codewscope:
+                case bsoncxx::type::k_int32:
+                case bsoncxx::type::k_timestamp:
+                case bsoncxx::type::k_int64:
+                case bsoncxx::type::k_decimal128:
+                case bsoncxx::type::k_maxkey:
+                case bsoncxx::type::k_minkey:
                 default:
                     FAIL("FAIL: unexpected variable type in KMS doc: '"
                          << bsoncxx::to_string(actual_value.type()) << "'");

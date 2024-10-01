@@ -23,9 +23,9 @@
 
 namespace bsoncxx {
 
-class BSONCXX_TEST_API itoa {
+class itoa {
    public:
-    explicit itoa(uint32_t i = 0);
+    explicit BSONCXX_ABI_EXPORT_CDECL_TESTING() itoa(uint32_t i = 0);
 
     ~itoa() = default;
 
@@ -35,32 +35,28 @@ class BSONCXX_TEST_API itoa {
     itoa(const itoa& rhs) = delete;
     itoa& operator=(const itoa&) = delete;
 
-    itoa& operator=(uint32_t new_value);
+    BSONCXX_ABI_EXPORT_CDECL_TESTING(itoa&) operator=(uint32_t new_value);
 
-    uint32_t val() const;
-    const char* c_str() const;
-    std::size_t length() const;
+    uint32_t val() const {
+        return _val;
+    }
+
+    const char* c_str() const {
+        return _str;
+    }
+
+    std::size_t length() const {
+        return _len;
+    }
 
    private:
-    BSONCXX_PRIVATE void _init();
+    void _init();
 
     uint32_t _val;
     const char* _str;
     uint8_t _len;
     char _buf[11];
 };
-
-inline uint32_t itoa::val() const {
-    return _val;
-}
-
-inline const char* itoa::c_str() const {
-    return _str;
-}
-
-inline std::size_t itoa::length() const {
-    return _len;
-}
 
 }  // namespace bsoncxx
 

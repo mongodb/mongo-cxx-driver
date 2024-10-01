@@ -14,8 +14,11 @@
 
 #include <bsoncxx/builder/basic/array.hpp>
 #include <bsoncxx/builder/basic/document.hpp>
+
 #include <mongocxx/client.hpp>
 #include <mongocxx/instance.hpp>
+
+#include <examples/macros.hh>
 
 namespace {
 
@@ -40,7 +43,7 @@ void index_examples(const mongocxx::database& db) {
 
 }  // namespace
 
-int main() {
+int EXAMPLES_CDECL main() {
     // The mongocxx::instance constructor and destructor initialize and shut down the driver,
     // respectively. Therefore, a mongocxx::instance must be created before using the driver and
     // must remain alive for as long as the driver is in use.

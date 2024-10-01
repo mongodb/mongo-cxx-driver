@@ -23,6 +23,7 @@
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/types/bson_value/view_or_value.hpp>
+
 #include <mongocxx/hint.hpp>
 #include <mongocxx/read_preference.hpp>
 
@@ -47,9 +48,11 @@ class count {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/aggregate/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    count& collation(bsoncxx::v_noabi::document::view_or_value collation);
+    MONGOCXX_ABI_EXPORT_CDECL(count&)
+    collation(bsoncxx::v_noabi::document::view_or_value collation);
 
     ///
     /// Retrieves the current collation for this operation.
@@ -57,9 +60,11 @@ class count {
     /// @return
     ///   The current collation.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/aggregate/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& collation() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+    collation() const;
 
     ///
     /// Sets the index to use for this operation.
@@ -71,18 +76,20 @@ class count {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/aggregate/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    count& hint(mongocxx::v_noabi::hint index_hint);
+    MONGOCXX_ABI_EXPORT_CDECL(count&) hint(mongocxx::v_noabi::hint index_hint);
 
     ///
     /// Gets the current hint.
     ///
     /// @return The current hint, if one is set.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/aggregate/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    const stdx::optional<mongocxx::v_noabi::hint>& hint() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<mongocxx::v_noabi::hint>&) hint() const;
 
     ///
     /// Set the value of the comment option.
@@ -94,18 +101,23 @@ class count {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/aggregate/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    count& comment(bsoncxx::v_noabi::types::bson_value::view_or_value comment);
+    MONGOCXX_ABI_EXPORT_CDECL(count&)
+    comment(bsoncxx::v_noabi::types::bson_value::view_or_value comment);
 
     ///
     /// Gets the current value of the comment option.
     ///
     /// @return The current comment option.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/aggregate/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    const stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>& comment() const;
+    MONGOCXX_ABI_EXPORT_CDECL(
+        const stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>&)
+    comment() const;
 
     ///
     /// Sets the maximum number of documents to count.
@@ -117,18 +129,20 @@ class count {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/aggregate/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    count& limit(std::int64_t limit);
+    MONGOCXX_ABI_EXPORT_CDECL(count&) limit(std::int64_t limit);
 
     ///
     /// Gets the current limit.
     ///
     /// @return The current limit.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/aggregate/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    const stdx::optional<std::int64_t>& limit() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<std::int64_t>&) limit() const;
 
     ///
     /// Sets the maximum amount of time for this operation to run (server-side) in milliseconds.
@@ -140,18 +154,20 @@ class count {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/aggregate/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    count& max_time(std::chrono::milliseconds max_time);
+    MONGOCXX_ABI_EXPORT_CDECL(count&) max_time(std::chrono::milliseconds max_time);
 
     ///
     /// The current max_time setting.
     ///
     /// @return The current max time (in milliseconds).
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/aggregate/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    const stdx::optional<std::chrono::milliseconds>& max_time() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<std::chrono::milliseconds>&) max_time() const;
 
     ///
     /// Sets the number of documents to skip before counting documents.
@@ -163,18 +179,20 @@ class count {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/aggregate/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    count& skip(std::int64_t skip);
+    MONGOCXX_ABI_EXPORT_CDECL(count&) skip(std::int64_t skip);
 
     ///
     /// Gets the current number of documents to skip.
     ///
     /// @return The number of documents to skip.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/aggregate/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    const stdx::optional<std::int64_t>& skip() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<std::int64_t>&) skip() const;
 
     ///
     /// Sets the read_preference for this operation.
@@ -186,18 +204,21 @@ class count {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/aggregate/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    count& read_preference(mongocxx::v_noabi::read_preference rp);
+    MONGOCXX_ABI_EXPORT_CDECL(count&) read_preference(mongocxx::v_noabi::read_preference rp);
 
     ///
     /// The current read_preference for this operation.
     ///
     /// @return the current read_preference
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/aggregate/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    const stdx::optional<mongocxx::v_noabi::read_preference>& read_preference() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<mongocxx::v_noabi::read_preference>&)
+    read_preference() const;
 
    private:
     stdx::optional<bsoncxx::v_noabi::document::view_or_value> _collation;

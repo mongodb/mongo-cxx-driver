@@ -30,7 +30,7 @@ namespace bson_value {
 /// of the passed-in t can be anything that builder::basic::sub_document::append accepts.
 ///
 template <typename T>
-BSONCXX_INLINE bson_value::value make_value(T&& t) {
+bson_value::value make_value(T&& t) {
     auto doc = builder::basic::make_document(builder::basic::kvp("v", std::forward<T>(t)));
     return doc.view()["v"].get_owning_value();
 }

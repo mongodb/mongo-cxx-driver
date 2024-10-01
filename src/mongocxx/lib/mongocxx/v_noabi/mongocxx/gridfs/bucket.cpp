@@ -21,6 +21,7 @@
 #include <bsoncxx/oid.hpp>
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/stdx/optional.hpp>
+
 #include <mongocxx/database.hpp>
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/gridfs_exception.hpp>

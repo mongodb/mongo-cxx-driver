@@ -19,6 +19,7 @@
 #include <mongocxx/logger-fwd.hpp>
 
 #include <bsoncxx/stdx/string_view.hpp>
+
 #include <mongocxx/stdx.hpp>
 
 #include <mongocxx/config/prelude.hpp>
@@ -30,13 +31,13 @@ namespace v_noabi {
 /// The log level of a message passed to a mongocxx::v_noabi::logger.
 ///
 enum class log_level {
-    k_error,
-    k_critical,
-    k_warning,
-    k_message,
-    k_info,
-    k_debug,
-    k_trace,
+    k_error,     ///< Log Level Error.
+    k_critical,  ///< Log Level Critical.
+    k_warning,   ///< Log Level Warning.
+    k_message,   ///< Log Level Message.
+    k_info,      ///< Log Level Info.
+    k_debug,     ///< Log Level Debug.
+    k_trace,     ///< Log Level Trace.
 };
 
 ///
@@ -47,7 +48,7 @@ enum class log_level {
 ///
 /// @return a std::string representation of the type.
 ///
-MONGOCXX_API stdx::string_view MONGOCXX_CALL to_string(log_level level);
+MONGOCXX_ABI_EXPORT_CDECL(stdx::string_view) to_string(log_level level);
 
 ///
 /// The interface that all user-defined loggers must implement.
@@ -55,6 +56,11 @@ MONGOCXX_API stdx::string_view MONGOCXX_CALL to_string(log_level level);
 class logger {
    public:
     virtual ~logger();
+
+    logger(logger&&) = default;
+    logger& operator=(logger&&) = default;
+    logger(const logger&) = default;
+    logger& operator=(const logger&) = default;
 
     ///
     /// Handles a log message. User defined logger implementations may do whatever they wish when

@@ -21,7 +21,7 @@ namespace v_noabi {
 namespace options {
 namespace gridfs {
 
-class MONGOCXX_API bucket;
+class bucket;
 
 }  // namespace gridfs
 }  // namespace options

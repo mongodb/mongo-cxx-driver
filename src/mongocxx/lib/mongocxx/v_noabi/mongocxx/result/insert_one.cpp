@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include <bsoncxx/builder/basic/array.hpp>
+
 #include <mongocxx/result/insert_one.hpp>
 
 #include <mongocxx/config/private/prelude.hh>
@@ -35,10 +36,10 @@ const bsoncxx::v_noabi::types::bson_value::view& insert_one::inserted_id() const
     return _inserted_id;
 }
 
-bool MONGOCXX_CALL operator==(const insert_one& lhs, const insert_one& rhs) {
+bool operator==(const insert_one& lhs, const insert_one& rhs) {
     return ((lhs.result() == rhs.result()) && (lhs.inserted_id() == rhs.inserted_id()));
 }
-bool MONGOCXX_CALL operator!=(const insert_one& lhs, const insert_one& rhs) {
+bool operator!=(const insert_one& lhs, const insert_one& rhs) {
     return !(lhs == rhs);
 }
 

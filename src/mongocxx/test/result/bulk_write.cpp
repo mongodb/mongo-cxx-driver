@@ -15,6 +15,7 @@
 #include <bsoncxx/builder/basic/array.hpp>
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
+
 #include <mongocxx/instance.hpp>
 #include <mongocxx/result/bulk_write.hpp>
 

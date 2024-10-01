@@ -16,6 +16,7 @@
 
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
+
 #include <mongocxx/stdx.hpp>
 #include <mongocxx/validation_criteria.hpp>
 
@@ -31,7 +32,7 @@ namespace options {
 /// @deprecated Use @ref mongocxx::v_noabi::database::create_collection overloads with a BSON
 /// document option parameter instead.
 ///
-class MONGOCXX_API create_collection_deprecated {
+class create_collection_deprecated {
    public:
     ///
     /// To create a capped collection, specify true.
@@ -45,9 +46,10 @@ class MONGOCXX_API create_collection_deprecated {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/glossary/#term-capped-collection
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/glossary/#term-capped-collection
     ///
-    create_collection_deprecated& capped(bool capped);
+    MONGOCXX_ABI_EXPORT_CDECL(create_collection_deprecated&) capped(bool capped);
 
     ///
     /// Gets the current capped setting.
@@ -55,9 +57,10 @@ class MONGOCXX_API create_collection_deprecated {
     /// @return
     ///   Whether or not this collection will be capped.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/glossary/#term-capped-collection
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/glossary/#term-capped-collection
     ///
-    const stdx::optional<bool>& capped() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bool>&) capped() const;
 
     ///
     /// Sets the default collation for this collection.
@@ -70,9 +73,10 @@ class MONGOCXX_API create_collection_deprecated {
     ///   method chaining.
     ///
     /// @see
-    ///   https://www.mongodb.com/docs/manual/reference/collation/
+    /// - https://www.mongodb.com/docs/manual/reference/collation/
     ///
-    create_collection_deprecated& collation(bsoncxx::v_noabi::document::view_or_value collation);
+    MONGOCXX_ABI_EXPORT_CDECL(create_collection_deprecated&)
+    collation(bsoncxx::v_noabi::document::view_or_value collation);
 
     ///
     /// Gets the default collation for this collection.
@@ -81,9 +85,10 @@ class MONGOCXX_API create_collection_deprecated {
     ///   The default collation for the collection.
     ///
     /// @see
-    ///   https://www.mongodb.com/docs/manual/reference/collation/
+    /// - https://www.mongodb.com/docs/manual/reference/collation/
     ///
-    const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& collation() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+    collation() const;
 
     ///
     /// The maximum number of documents allowed in the capped collection.
@@ -99,7 +104,7 @@ class MONGOCXX_API create_collection_deprecated {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    create_collection_deprecated& max(std::int64_t max_documents);
+    MONGOCXX_ABI_EXPORT_CDECL(create_collection_deprecated&) max(std::int64_t max_documents);
 
     ///
     /// Gets the current setting for the maximum number of documents allowed in the capped
@@ -108,12 +113,13 @@ class MONGOCXX_API create_collection_deprecated {
     /// @return
     ///   Maximum number of documents allowed in the collection (if capped).
     ///
-    const stdx::optional<std::int64_t>& max() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<std::int64_t>&) max() const;
 
     ///
     /// When true, disables the power of 2 sizes allocation for the collection.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/create/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/create/
     ///
     /// @param no_padding
     ///   When true, disables power of 2 sizing for this collection.
@@ -122,17 +128,18 @@ class MONGOCXX_API create_collection_deprecated {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    create_collection_deprecated& no_padding(bool no_padding);
+    MONGOCXX_ABI_EXPORT_CDECL(create_collection_deprecated&) no_padding(bool no_padding);
 
     ///
     /// Gets the current value of the "no padding" option for the collection.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/command/create/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/command/create/
     ///
     /// @return
     ///   When true, power of 2 sizing is disabled for this collection.
     ///
-    const stdx::optional<bool>& no_padding() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bool>&) no_padding() const;
 
     ///
     /// A maximum size, in bytes, for a capped collection.
@@ -149,7 +156,7 @@ class MONGOCXX_API create_collection_deprecated {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    create_collection_deprecated& size(std::int64_t max_size);
+    MONGOCXX_ABI_EXPORT_CDECL(create_collection_deprecated&) size(std::int64_t max_size);
 
     ///
     /// Gets the current size setting, for a capped collection.
@@ -157,7 +164,7 @@ class MONGOCXX_API create_collection_deprecated {
     /// @return
     ///   Maximum size, in bytes, of this collection (if capped).
     ///
-    const stdx::optional<std::int64_t>& size() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<std::int64_t>&) size() const;
 
     ///
     /// Specify configuration to the storage on a per-collection basis.
@@ -171,8 +178,8 @@ class MONGOCXX_API create_collection_deprecated {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    create_collection_deprecated& storage_engine(
-        bsoncxx::v_noabi::document::view_or_value storage_engine_opts);
+    MONGOCXX_ABI_EXPORT_CDECL(create_collection_deprecated&)
+    storage_engine(bsoncxx::v_noabi::document::view_or_value storage_engine_opts);
 
     ///
     /// Gets the current storage engine configuration for this collection.
@@ -180,7 +187,8 @@ class MONGOCXX_API create_collection_deprecated {
     /// @return
     ///   Configuration options specific to the storage engine.
     ///
-    const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& storage_engine() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+    storage_engine() const;
 
     ///
     /// Specify validation criteria for this collection.
@@ -192,10 +200,11 @@ class MONGOCXX_API create_collection_deprecated {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/core/document-validation/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/core/document-validation/
     ///
-    create_collection_deprecated& validation_criteria(
-        mongocxx::v_noabi::validation_criteria validation);
+    MONGOCXX_ABI_EXPORT_CDECL(create_collection_deprecated&)
+    validation_criteria(mongocxx::v_noabi::validation_criteria validation);
 
     ///
     /// Gets the current validation criteria for this collection.
@@ -203,9 +212,11 @@ class MONGOCXX_API create_collection_deprecated {
     /// @return
     ///   Validation criteria for this collection.
     ///
-    /// @see https://www.mongodb.com/docs/manual/core/document-validation/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/core/document-validation/
     ///
-    const stdx::optional<mongocxx::v_noabi::validation_criteria>& validation_criteria() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<mongocxx::v_noabi::validation_criteria>&)
+    validation_criteria() const;
 
     ///
     /// Return a bson document representing the options set on this object.
@@ -216,15 +227,19 @@ class MONGOCXX_API create_collection_deprecated {
     ///
     /// @return Options, as a document.
     ///
-    MONGOCXX_DEPRECATED bsoncxx::v_noabi::document::value to_document() const;
-    bsoncxx::v_noabi::document::value to_document_deprecated() const;
+    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::value)
+        to_document() const;
+
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::value) to_document_deprecated() const;
 
     ///
     /// @deprecated
     ///   This method is deprecated. To determine which options are set on this object, use the
     ///   provided accessors instead.
     ///
-    MONGOCXX_DEPRECATED MONGOCXX_INLINE operator bsoncxx::v_noabi::document::value() const;
+    MONGOCXX_DEPRECATED inline operator bsoncxx::v_noabi::document::value() const {
+        return to_document_deprecated();
+    }
 
    private:
     stdx::optional<bool> _capped;
@@ -243,10 +258,6 @@ class MONGOCXX_API create_collection_deprecated {
 /// document option parameter instead.
 ///
 MONGOCXX_DEPRECATED typedef create_collection_deprecated create_collection;
-
-MONGOCXX_INLINE create_collection_deprecated::operator bsoncxx::v_noabi::document::value() const {
-    return to_document_deprecated();
-}
 
 }  // namespace options
 }  // namespace v_noabi

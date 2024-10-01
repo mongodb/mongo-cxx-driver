@@ -18,6 +18,7 @@
 #include <unordered_map>
 
 #include <bsoncxx/types/bson_value/value.hpp>
+
 #include <mongocxx/client.hpp>
 #include <mongocxx/client_encryption.hpp>
 
@@ -72,8 +73,9 @@ class map {
     // client must outlive the objects created from it, the client objects are held in a separate
     // map and declared first.
     //
-    // @see: https://mongoc.org/libmongoc/current/lifecycle.html#object-lifecycle
-    // @see: https://isocpp.org/wiki/faq/dtors#order-dtors-for-members
+    // See:
+    // - https://mongoc.org/libmongoc/current/lifecycle.html#object-lifecycle
+    // - https://isocpp.org/wiki/faq/dtors#order-dtors-for-members
     std::unordered_map<key_type, client> _client_map;
     std::unordered_map<key_type, mongocxx::database> _database_map;
     std::unordered_map<key_type, mongocxx::collection> _collection_map;

@@ -17,6 +17,7 @@
 #include <mongocxx/exception/bulk_write_exception-fwd.hpp>
 
 #include <bsoncxx/document/value.hpp>
+
 #include <mongocxx/exception/operation_exception.hpp>
 
 #include <mongocxx/config/prelude.hpp>
@@ -27,10 +28,18 @@ namespace v_noabi {
 ///
 /// Class representing an exception during a bulk write operation.
 ///
-/// @see mongocxx::v_noabi::operation_exception
+/// @see
+/// - @ref mongocxx::v_noabi::operation_exception
 ///
 class bulk_write_exception : public operation_exception {
    public:
+    ~bulk_write_exception() override;
+
+    bulk_write_exception(bulk_write_exception&&) = default;
+    bulk_write_exception& operator=(bulk_write_exception&&) = default;
+    bulk_write_exception(const bulk_write_exception&) = default;
+    bulk_write_exception& operator=(const bulk_write_exception&) = default;
+
     using operation_exception::operation_exception;
 };
 

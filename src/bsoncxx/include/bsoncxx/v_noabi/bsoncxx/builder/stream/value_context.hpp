@@ -55,7 +55,7 @@ class value_context {
     /// @param core
     ///   The core builder to orchestrate
     ///
-    BSONCXX_INLINE value_context(core* core) : _core(core) {}
+    value_context(core* core) : _core(core) {}
 
     ///
     /// << operator for accepting a real value and appending it to the core
@@ -65,7 +65,7 @@ class value_context {
     ///   The value to append
     ///
     template <class T>
-    BSONCXX_INLINE detail::requires_not_t<base, detail::is_invocable<T, single_context>>  //
+    detail::requires_not_t<base, detail::is_invocable<T, single_context>>  //
     operator<<(T&& t) {
         _core->append(std::forward<T>(t));
         return unwrap();
@@ -79,7 +79,7 @@ class value_context {
     ///   The callback to invoke
     ///
     template <typename T>
-    BSONCXX_INLINE detail::requires_t<base, detail::is_invocable<T, single_context>>  //
+    detail::requires_t<base, detail::is_invocable<T, single_context>>  //
     operator<<(T&& func) {
         detail::invoke(std::forward<T>(func), *this);
         return unwrap();
@@ -90,7 +90,7 @@ class value_context {
     ///
     /// The argument must be an open_document_type token (it is otherwise ignored).
     ///
-    BSONCXX_INLINE key_context<base> operator<<(const open_document_type) {
+    key_context<base> operator<<(const open_document_type) {
         _core->open_document();
         return wrap_document();
     }
@@ -100,7 +100,7 @@ class value_context {
     ///
     /// The argument must be an open_array_type token (it is otherwise ignored).
     ///
-    BSONCXX_INLINE array_context<base> operator<<(const open_array_type) {
+    array_context<base> operator<<(const open_array_type) {
         _core->open_array();
         return wrap_array();
     }
@@ -108,7 +108,8 @@ class value_context {
     ///
     /// Conversion operator for single_context.
     ///
-    /// @see bsoncxx::v_noabi::builder::stream::single_context
+    /// @see
+    /// - @ref bsoncxx::v_noabi::builder::stream::single_context
     ///
     operator single_context();
 
@@ -120,15 +121,15 @@ class value_context {
 #endif
 
    private:
-    BSONCXX_INLINE base unwrap() {
+    base unwrap() {
         return base(_core);
     }
 
-    BSONCXX_INLINE array_context<base> wrap_array() {
+    array_context<base> wrap_array() {
         return array_context<base>(_core);
     }
 
-    BSONCXX_INLINE key_context<base> wrap_document() {
+    key_context<base> wrap_document() {
         return key_context<base>(_core);
     }
 

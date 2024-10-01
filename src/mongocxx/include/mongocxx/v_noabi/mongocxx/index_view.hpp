@@ -22,6 +22,7 @@
 
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
+
 #include <mongocxx/client_session.hpp>
 #include <mongocxx/cursor.hpp>
 #include <mongocxx/index_model.hpp>
@@ -37,18 +38,18 @@ namespace v_noabi {
 ///
 class index_view {
    public:
-    index_view(index_view&&) noexcept;
-    index_view& operator=(index_view&&) noexcept;
+    MONGOCXX_ABI_EXPORT_CDECL() index_view(index_view&&) noexcept;
+    MONGOCXX_ABI_EXPORT_CDECL(index_view&) operator=(index_view&&) noexcept;
 
-    ~index_view();
+    MONGOCXX_ABI_EXPORT_CDECL() ~index_view();
 
     index_view(const index_view&) = delete;
-    index_view& operator=(const index_view&) = delete;
+    MONGOCXX_ABI_EXPORT_CDECL(index_view&) operator=(const index_view&) = delete;
 
     ///
     /// Returns a cursor over all the indexes.
     ///
-    cursor list();
+    MONGOCXX_ABI_EXPORT_CDECL(cursor) list();
 
     ///
     /// Returns a cursor over all the indexes.
@@ -56,7 +57,7 @@ class index_view {
     /// @param session
     ///   The mongocxx::v_noabi::client_session with which to perform the list operation.
     ///
-    cursor list(const client_session& session);
+    MONGOCXX_ABI_EXPORT_CDECL(cursor) list(const client_session& session);
 
     ///
     /// Creates an index. A convenience method that calls create_many.
@@ -77,12 +78,13 @@ class index_view {
     ///    Throws operation_exception for any errors encountered by the server or if max_time_ms
     ///    option is present and the operation exceeds the time limit.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/method/db.collection.createIndex/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/method/db.collection.createIndex/
     ///
-    stdx::optional<std::string> create_one(
-        const bsoncxx::v_noabi::document::view_or_value& keys,
-        const bsoncxx::v_noabi::document::view_or_value& index_options = {},
-        const options::index_view& options = options::index_view{});
+    MONGOCXX_ABI_EXPORT_CDECL(stdx::optional<std::string>)
+    create_one(const bsoncxx::v_noabi::document::view_or_value& keys,
+               const bsoncxx::v_noabi::document::view_or_value& index_options = {},
+               const options::index_view& options = options::index_view{});
 
     ///
     /// Creates an index. A convenience method that calls create_many.
@@ -105,13 +107,14 @@ class index_view {
     ///    Throws operation_exception for any errors encountered by the server or if max_time_ms
     ///    option is present and the operation exceeds the time limit.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/method/db.collection.createIndex/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/method/db.collection.createIndex/
     ///
-    stdx::optional<std::string> create_one(
-        const client_session& session,
-        const bsoncxx::v_noabi::document::view_or_value& keys,
-        const bsoncxx::v_noabi::document::view_or_value& index_options = {},
-        const options::index_view& options = options::index_view{});
+    MONGOCXX_ABI_EXPORT_CDECL(stdx::optional<std::string>)
+    create_one(const client_session& session,
+               const bsoncxx::v_noabi::document::view_or_value& keys,
+               const bsoncxx::v_noabi::document::view_or_value& index_options = {},
+               const options::index_view& options = options::index_view{});
 
     ///
     /// Creates an index. A convenience method that calls create_many.
@@ -129,10 +132,12 @@ class index_view {
     ///    Throws operation_exception for any errors encountered by the server or if max_time_ms
     ///    option is present and the operation exceeds the time limit.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/method/cursor.maxTimeMS/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/method/cursor.maxTimeMS/
     ///
-    stdx::optional<std::string> create_one(
-        const index_model& index, const options::index_view& options = options::index_view{});
+    MONGOCXX_ABI_EXPORT_CDECL(stdx::optional<std::string>)
+    create_one(const index_model& index,
+               const options::index_view& options = options::index_view{});
 
     ///
     /// Creates an index. A convenience method that calls create_many.
@@ -152,12 +157,13 @@ class index_view {
     ///    Throws operation_exception for any errors encountered by the server or if max_time_ms
     ///    option is present and the operation exceeds the time limit.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/method/cursor.maxTimeMS/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/method/cursor.maxTimeMS/
     ///
-    stdx::optional<std::string> create_one(
-        const client_session& session,
-        const index_model& index,
-        const options::index_view& options = options::index_view{});
+    MONGOCXX_ABI_EXPORT_CDECL(stdx::optional<std::string>)
+    create_one(const client_session& session,
+               const index_model& index,
+               const options::index_view& options = options::index_view{});
 
     ///
     /// Adds a container of indexes to the collection.
@@ -175,11 +181,12 @@ class index_view {
     ///     Throws operation_exception for any errors encountered by the server or if max_time_ms
     ///     option is present and the operation exceeds the time limit.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/method/cursor.maxTimeMS/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/method/cursor.maxTimeMS/
     ///
-    bsoncxx::v_noabi::document::value create_many(
-        const std::vector<index_model>& indexes,
-        const options::index_view& options = options::index_view{});
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::value)
+    create_many(const std::vector<index_model>& indexes,
+                const options::index_view& options = options::index_view{});
 
     ///
     /// Adds a container of indexes to the collection.
@@ -199,12 +206,13 @@ class index_view {
     ///     Throws operation_exception for any errors encountered by the server or if max_time_ms
     ///     option is present and the operation exceeds the time limit.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/method/cursor.maxTimeMS/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/method/cursor.maxTimeMS/
     ///
-    bsoncxx::v_noabi::document::value create_many(
-        const client_session& session,
-        const std::vector<index_model>& indexes,
-        const options::index_view& options = options::index_view{});
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::value)
+    create_many(const client_session& session,
+                const std::vector<index_model>& indexes,
+                const options::index_view& options = options::index_view{});
 
     ///
     /// Drops a single index by name.
@@ -220,10 +228,11 @@ class index_view {
     /// @exception
     ///   Throws logic_error if "*" is passed in for the index name.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/method/cursor.maxTimeMS/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/method/cursor.maxTimeMS/
     ///
-    void drop_one(stdx::string_view name,
-                  const options::index_view& options = options::index_view{});
+    MONGOCXX_ABI_EXPORT_CDECL(void)
+    drop_one(stdx::string_view name, const options::index_view& options = options::index_view{});
 
     ///
     /// Drops a single index by name.
@@ -241,11 +250,13 @@ class index_view {
     /// @exception
     ///   Throws logic_error if "*" is passed in for the index name.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/method/cursor.maxTimeMS/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/method/cursor.maxTimeMS/
     ///
-    void drop_one(const client_session& session,
-                  stdx::string_view name,
-                  const options::index_view& options = options::index_view{});
+    MONGOCXX_ABI_EXPORT_CDECL(void)
+    drop_one(const client_session& session,
+             stdx::string_view name,
+             const options::index_view& options = options::index_view{});
 
     ///
     /// Attempts to drop a single index from the collection given the keys and options.
@@ -268,11 +279,13 @@ class index_view {
     /// @exception
     ///   Throws logic_error if "*" is passed in for the index name
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/method/cursor.maxTimeMS/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/method/cursor.maxTimeMS/
     ///
-    void drop_one(const bsoncxx::v_noabi::document::view_or_value& keys,
-                  const bsoncxx::v_noabi::document::view_or_value& index_options = {},
-                  const options::index_view& options = options::index_view{});
+    MONGOCXX_ABI_EXPORT_CDECL(void)
+    drop_one(const bsoncxx::v_noabi::document::view_or_value& keys,
+             const bsoncxx::v_noabi::document::view_or_value& index_options = {},
+             const options::index_view& options = options::index_view{});
 
     ///
     /// Attempts to drop a single index from the collection given the keys and options.
@@ -297,12 +310,14 @@ class index_view {
     /// @exception
     ///   Throws logic_error if "*" is passed in for the index name
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/method/cursor.maxTimeMS/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/method/cursor.maxTimeMS/
     ///
-    void drop_one(const client_session& session,
-                  const bsoncxx::v_noabi::document::view_or_value& keys,
-                  const bsoncxx::v_noabi::document::view_or_value& index_options = {},
-                  const options::index_view& options = options::index_view{});
+    MONGOCXX_ABI_EXPORT_CDECL(void)
+    drop_one(const client_session& session,
+             const bsoncxx::v_noabi::document::view_or_value& keys,
+             const bsoncxx::v_noabi::document::view_or_value& index_options = {},
+             const options::index_view& options = options::index_view{});
 
     ///
     /// Attempts to drop a single index from the collection given an index model.
@@ -321,10 +336,11 @@ class index_view {
     /// @exception
     ///   Throws logic_error if "*" is passed in for the index name
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/method/cursor.maxTimeMS/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/method/cursor.maxTimeMS/
     ///
-    void drop_one(const index_model& index,
-                  const options::index_view& options = options::index_view{});
+    MONGOCXX_ABI_EXPORT_CDECL(void)
+    drop_one(const index_model& index, const options::index_view& options = options::index_view{});
 
     ///
     /// Attempts to drop a single index from the collection given an index model.
@@ -345,11 +361,13 @@ class index_view {
     /// @exception
     ///   Throws logic_error if "*" is passed in for the index name
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/method/cursor.maxTimeMS/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/method/cursor.maxTimeMS/
     ///
-    void drop_one(const client_session& session,
-                  const index_model& index,
-                  const options::index_view& options = options::index_view{});
+    MONGOCXX_ABI_EXPORT_CDECL(void)
+    drop_one(const client_session& session,
+             const index_model& index,
+             const options::index_view& options = options::index_view{});
 
     ///
     /// Drops all indexes in the collection.
@@ -361,9 +379,11 @@ class index_view {
     ///   Throws operation_exception for any errors encountered by the server or if max_time_ms
     ///   option is present and the operation exceeds the time limit.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/method/cursor.maxTimeMS/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/method/cursor.maxTimeMS/
     ///
-    void drop_all(const options::index_view& options = options::index_view{});
+    MONGOCXX_ABI_EXPORT_CDECL(void)
+    drop_all(const options::index_view& options = options::index_view{});
 
     ///
     /// Drops all indexes in the collection.
@@ -377,18 +397,20 @@ class index_view {
     ///   Throws operation_exception for any errors encountered by the server or if max_time_ms
     ///   option is present and the operation exceeds the time limit.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/method/cursor.maxTimeMS/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/method/cursor.maxTimeMS/
     ///
-    void drop_all(const client_session& session,
-                  const options::index_view& options = options::index_view{});
+    MONGOCXX_ABI_EXPORT_CDECL(void)
+    drop_all(const client_session& session,
+             const options::index_view& options = options::index_view{});
 
    private:
     friend ::mongocxx::v_noabi::collection;
-    class MONGOCXX_PRIVATE impl;
+    class impl;
 
-    MONGOCXX_PRIVATE index_view(void* coll, void* client);
+    index_view(void* coll, void* client);
 
-    MONGOCXX_PRIVATE impl& _get_impl();
+    impl& _get_impl();
 
    private:
     std::unique_ptr<impl> _impl;

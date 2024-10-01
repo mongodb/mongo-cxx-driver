@@ -19,6 +19,7 @@
 #include <mongocxx/write_concern.hpp>
 
 #include <bsoncxx/test/catch.hh>
+
 #include <mongocxx/test/catch_helpers.hh>
 
 namespace {

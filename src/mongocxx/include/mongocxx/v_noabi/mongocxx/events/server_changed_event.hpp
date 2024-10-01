@@ -18,6 +18,7 @@
 
 #include <bsoncxx/oid.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
+
 #include <mongocxx/events/server_description.hpp>
 
 #include <mongocxx/config/prelude.hpp>
@@ -30,17 +31,17 @@ namespace events {
 /// An event notification sent when the driver observes a change in the status of a server it is
 /// connected to.
 ///
-/// @see "ServerDescriptionChangedEvent" in
-/// https://github.com/mongodb/specifications/blob/master/source/server-discovery-and-monitoring/server-discovery-and-monitoring.rst
+/// @see
+/// - "ServerDescriptionChangedEvent" in https://github.com/mongodb/specifications/blob/master/source/server-discovery-and-monitoring/server-discovery-and-monitoring.rst
 ///
 class server_changed_event {
    public:
-    MONGOCXX_PRIVATE explicit server_changed_event(const void* event);
+    explicit server_changed_event(const void* event);
 
     ///
     /// Destroys a server_changed_event.
     ///
-    ~server_changed_event();
+    MONGOCXX_ABI_EXPORT_CDECL() ~server_changed_event();
 
     server_changed_event(server_changed_event&&) = default;
     server_changed_event& operator=(server_changed_event&&) = default;
@@ -53,14 +54,14 @@ class server_changed_event {
     ///
     /// @return The host name.
     ///
-    bsoncxx::v_noabi::stdx::string_view host() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::string_view) host() const;
 
     ///
     /// Returns the server port.
     ///
     /// @return The port.
     ///
-    std::uint16_t port() const;
+    MONGOCXX_ABI_EXPORT_CDECL(std::uint16_t) port() const;
 
     ///
     /// An opaque id, unique to this topology for this mongocxx::v_noabi::client or
@@ -68,21 +69,21 @@ class server_changed_event {
     ///
     /// @return The id.
     ///
-    const bsoncxx::v_noabi::oid topology_id() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::oid) topology_id() const;
 
     ///
     /// The server's description before it changed.
     ///
     /// @return The server_description.
     ///
-    const server_description previous_description() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const server_description) previous_description() const;
 
     ///
     /// The server's description after it changed.
     ///
     /// @return The server_description.
     ///
-    const server_description new_description() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const server_description) new_description() const;
 
    private:
     const void* _event;

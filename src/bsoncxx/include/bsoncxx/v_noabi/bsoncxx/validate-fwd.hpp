@@ -19,7 +19,7 @@
 namespace bsoncxx {
 namespace v_noabi {
 
-class BSONCXX_API validator;
+class validator;
 
 }  // namespace v_noabi
 }  // namespace bsoncxx

@@ -77,14 +77,13 @@ sudo DEB_BUILD_PROFILES="${DEB_BUILD_PROFILES}" chroot ./unstable-chroot /bin/ba
   LANG=C /bin/bash -x ./debian/build_snapshot.sh && \
   debc ../*.changes && \
   dpkg -i ../*.deb && \
-  /usr/bin/g++ ${MNMLSTC_INCLUDE:-}-I/usr/include/bsoncxx/v_noabi -I/usr/include/mongocxx/v_noabi -o runcommand_examples examples/mongocxx/mongodb.com/runcommand_examples.cpp -lmongocxx -lbsoncxx && \
-  /usr/bin/g++ ${MNMLSTC_INCLUDE:-}-I/usr/include/bsoncxx/v_noabi -I/usr/include/mongocxx/v_noabi -o aggregation_examples examples/mongocxx/mongodb.com/aggregation_examples.cpp -lmongocxx -lbsoncxx && \
-  /usr/bin/g++ ${MNMLSTC_INCLUDE:-}-I/usr/include/bsoncxx/v_noabi -I/usr/include/mongocxx/v_noabi -o index_examples examples/mongocxx/mongodb.com/index_examples.cpp -lmongocxx -lbsoncxx && \
-  /usr/bin/g++ ${MNMLSTC_INCLUDE:-}-I/usr/include/bsoncxx/v_noabi -I/usr/include/mongocxx/v_noabi -o documentation_examples examples/mongocxx/mongodb.com/documentation_examples.cpp -lmongocxx -lbsoncxx )"
+  /usr/bin/g++ ${MNMLSTC_INCLUDE:-}-I/usr/include/bsoncxx/v_noabi -I/usr/include/mongocxx/v_noabi -I. -o runcommand_examples examples/mongocxx/mongodb.com/runcommand_examples.cpp -lmongocxx -lbsoncxx && \
+  /usr/bin/g++ ${MNMLSTC_INCLUDE:-}-I/usr/include/bsoncxx/v_noabi -I/usr/include/mongocxx/v_noabi -I. -o aggregation_examples examples/mongocxx/mongodb.com/aggregation_examples.cpp -lmongocxx -lbsoncxx && \
+  /usr/bin/g++ ${MNMLSTC_INCLUDE:-}-I/usr/include/bsoncxx/v_noabi -I/usr/include/mongocxx/v_noabi -I. -o index_examples examples/mongocxx/mongodb.com/index_examples.cpp -lmongocxx -lbsoncxx && \
+  /usr/bin/g++ ${MNMLSTC_INCLUDE:-}-I/usr/include/bsoncxx/v_noabi -I/usr/include/mongocxx/v_noabi -I. -o documentation_examples examples/mongocxx/mongodb.com/documentation_examples.cpp -lmongocxx -lbsoncxx )"
 
 [ -e ./unstable-chroot/tmp/mongo-cxx-driver/runcommand_examples ] || (echo "Example 'runcommand_examples' was not built!" ; exit 1)
 [ -e ./unstable-chroot/tmp/mongo-cxx-driver/aggregation_examples ] || (echo "Example 'aggregation_examples' was not built!" ; exit 1)
 [ -e ./unstable-chroot/tmp/mongo-cxx-driver/index_examples ] || (echo "Example 'index_examples' was not built!" ; exit 1)
 [ -e ./unstable-chroot/tmp/mongo-cxx-driver/documentation_examples ] || (echo "Example 'documentation_examples' was not built!" ; exit 1)
 (cd ./unstable-chroot/tmp/ ; tar zcvf ../../deb.tar.gz *.dsc *.orig.tar.gz *.debian.tar.xz *.build *.deb)
-

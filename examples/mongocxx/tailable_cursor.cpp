@@ -18,12 +18,15 @@
 
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/json.hpp>
+
 #include <mongocxx/client.hpp>
 #include <mongocxx/collection.hpp>
 #include <mongocxx/database.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/find.hpp>
 #include <mongocxx/uri.hpp>
+
+#include <examples/macros.hh>
 
 using bsoncxx::builder::basic::document;
 using bsoncxx::builder::basic::kvp;
@@ -72,7 +75,7 @@ void insert_docs(mongocxx::collection* coll) {
 
 }  // namespace
 
-int main() {
+int EXAMPLES_CDECL main() {
     // The mongocxx::instance constructor and destructor initialize and shut down the driver,
     // respectively. Therefore, a mongocxx::instance must be created before using the driver and
     // must remain alive for as long as the driver is in use.

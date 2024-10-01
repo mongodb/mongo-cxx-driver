@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include <bsoncxx/string/to_string.hpp>
+
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/instance.hpp>
@@ -24,6 +25,7 @@
 #include <mongocxx/config/private/prelude.hh>
 
 #include <bsoncxx/test/catch.hh>
+
 #include <mongocxx/test/catch_helpers.hh>
 #include <mongocxx/test/client_helpers.hh>
 

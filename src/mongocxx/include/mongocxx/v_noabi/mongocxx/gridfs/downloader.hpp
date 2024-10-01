@@ -25,6 +25,7 @@
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
+
 #include <mongocxx/cursor.hpp>
 #include <mongocxx/stdx.hpp>
 
@@ -52,17 +53,17 @@ class downloader {
     /// from downloader. The only valid actions to take with a default constructed downloader are to
     /// assign to it, or destroy it.
     ///
-    downloader() noexcept;
+    MONGOCXX_ABI_EXPORT_CDECL() downloader() noexcept;
 
     ///
     /// Move constructs a downloader.
     ///
-    downloader(downloader&&) noexcept;
+    MONGOCXX_ABI_EXPORT_CDECL() downloader(downloader&&) noexcept;
 
     ///
     /// Move assigns a downloader.
     ///
-    downloader& operator=(downloader&&) noexcept;
+    MONGOCXX_ABI_EXPORT_CDECL(downloader&) operator=(downloader&&) noexcept;
 
     downloader(const downloader&) = delete;
 
@@ -71,13 +72,13 @@ class downloader {
     ///
     /// Destroys a downloader.
     ///
-    ~downloader();
+    MONGOCXX_ABI_EXPORT_CDECL() ~downloader();
 
     ///
     /// Returns true if the downloader is valid, meaning it was not default constructed or moved
     /// from.
     ///
-    explicit operator bool() const noexcept;
+    explicit MONGOCXX_ABI_EXPORT_CDECL() operator bool() const noexcept;
 
     ///
     /// Reads a specified number of bytes from the GridFS file being downloaded.
@@ -99,14 +100,14 @@ class downloader {
     /// @throws mongocxx::v_noabi::query_exception
     ///   if an error occurs when reading chunk data from the database for the requested file.
     ///
-    std::size_t read(std::uint8_t* buffer, std::size_t length);
+    MONGOCXX_ABI_EXPORT_CDECL(std::size_t) read(std::uint8_t* buffer, std::size_t length);
 
     ///
     /// Closes the downloader stream.
     ///
     /// @throws mongocxx::v_noabi::logic_error if the download stream was already closed.
     ///
-    void close();
+    MONGOCXX_ABI_EXPORT_CDECL(void) close();
 
     ///
     /// Gets the chunk size of the file being downloaded.
@@ -114,7 +115,7 @@ class downloader {
     /// @return
     ///   The chunk size in bytes.
     ///
-    std::int32_t chunk_size() const;
+    MONGOCXX_ABI_EXPORT_CDECL(std::int32_t) chunk_size() const;
 
     ///
     /// Gets the length of the file being downloaded.
@@ -122,7 +123,7 @@ class downloader {
     /// @return
     ///   The length in bytes.
     ///
-    std::int64_t file_length() const;
+    MONGOCXX_ABI_EXPORT_CDECL(std::int64_t) file_length() const;
 
     ///
     /// Gets the files collection document of the file being downloaded.
@@ -130,7 +131,7 @@ class downloader {
     /// @return
     ///    A view to the files collection document of the file being downloaded.
     ///
-    bsoncxx::v_noabi::document::view files_document() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::view) files_document() const;
 
    private:
     friend ::mongocxx::v_noabi::gridfs::bucket;
@@ -154,18 +155,18 @@ class downloader {
     // @param files_doc
     //   The files collection document of the file being downloaded.
     //
-    MONGOCXX_PRIVATE downloader(stdx::optional<cursor> chunks,
-                                chunks_and_bytes_offset start,
-                                std::int32_t chunk_size,
-                                std::int64_t file_len,
-                                bsoncxx::v_noabi::document::value files_doc);
+    downloader(stdx::optional<cursor> chunks,
+               chunks_and_bytes_offset start,
+               std::int32_t chunk_size,
+               std::int64_t file_len,
+               bsoncxx::v_noabi::document::value files_doc);
 
-    MONGOCXX_PRIVATE void fetch_chunk();
+    void fetch_chunk();
 
-    class MONGOCXX_PRIVATE impl;
+    class impl;
 
-    MONGOCXX_PRIVATE impl& _get_impl();
-    MONGOCXX_PRIVATE const impl& _get_impl() const;
+    impl& _get_impl();
+    const impl& _get_impl() const;
 
     std::unique_ptr<impl> _impl;
 };

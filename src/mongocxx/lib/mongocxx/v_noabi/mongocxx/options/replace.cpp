@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include <bsoncxx/document/view_or_value.hpp>
+
 #include <mongocxx/options/replace.hpp>
 
 #include <mongocxx/config/private/prelude.hh>

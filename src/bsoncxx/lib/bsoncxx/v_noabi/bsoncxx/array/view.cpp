@@ -73,12 +73,12 @@ view::const_iterator view::const_iterator::operator++(int) {
     return before;
 }
 
-bool BSONCXX_CALL operator==(const view::const_iterator& lhs, const view::const_iterator& rhs) {
+bool operator==(const view::const_iterator& lhs, const view::const_iterator& rhs) {
     return std::forward_as_tuple(lhs._element.raw(), lhs._element.offset()) ==
            std::forward_as_tuple(rhs._element.raw(), rhs._element.offset());
 }
 
-bool BSONCXX_CALL operator!=(const view::const_iterator& lhs, const view::const_iterator& rhs) {
+bool operator!=(const view::const_iterator& lhs, const view::const_iterator& rhs) {
     return !(lhs == rhs);
 }
 
@@ -158,12 +158,12 @@ view::operator document::view() const {
     return _view;
 }
 
-bool BSONCXX_CALL operator==(view lhs, view rhs) {
+bool operator==(view lhs, view rhs) {
     return (lhs.length() == rhs.length()) &&
            (std::memcmp(lhs.data(), rhs.data(), lhs.length()) == 0);
 }
 
-bool BSONCXX_CALL operator!=(view lhs, view rhs) {
+bool operator!=(view lhs, view rhs) {
     return !(lhs == rhs);
 }
 

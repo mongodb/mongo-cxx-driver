@@ -13,10 +13,12 @@
 // limitations under the License.
 
 #include <bsoncxx/builder/basic/document.hpp>
+
 #include <mongocxx/instance.hpp>
 #include <mongocxx/model/delete_one.hpp>
 
 #include <bsoncxx/test/catch.hh>
+
 #include <mongocxx/test/catch_helpers.hh>
 
 namespace {

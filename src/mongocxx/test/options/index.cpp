@@ -15,10 +15,12 @@
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/types.hpp>
+
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/index.hpp>
 
 #include <bsoncxx/test/catch.hh>
+
 #include <mongocxx/test/catch_helpers.hh>
 
 namespace {

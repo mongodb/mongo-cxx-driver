@@ -32,27 +32,27 @@ namespace result {
 class delete_result {
    public:
     // This constructor is public for testing purposes only
-    explicit delete_result(result::bulk_write result);
+    explicit MONGOCXX_ABI_EXPORT_CDECL() delete_result(result::bulk_write result);
 
     ///
     /// Returns the bulk write result.
     ///
     /// @return The raw bulk write result.
     ///
-    const result::bulk_write& result() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const result::bulk_write&) result() const;
 
     ///
     /// Gets the number of documents that were deleted during this operation.
     ///
     /// @return The number of documents that were deleted.
     ///
-    std::int32_t deleted_count() const;
+    MONGOCXX_ABI_EXPORT_CDECL(std::int32_t) deleted_count() const;
+
+    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(const delete_result&, const delete_result&);
+    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator!=(const delete_result&, const delete_result&);
 
    private:
     result::bulk_write _result;
-
-    friend MONGOCXX_API bool MONGOCXX_CALL operator==(const delete_result&, const delete_result&);
-    friend MONGOCXX_API bool MONGOCXX_CALL operator!=(const delete_result&, const delete_result&);
 };
 
 }  // namespace result

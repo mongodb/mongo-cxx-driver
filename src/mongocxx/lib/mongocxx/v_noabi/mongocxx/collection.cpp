@@ -29,6 +29,7 @@
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/types.hpp>
+
 #include <mongocxx/bulk_write.hpp>
 #include <mongocxx/client.hpp>
 #include <mongocxx/collection.hpp>
@@ -90,9 +91,8 @@ mongocxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> find_and_mo
     bool bypass,
     mongocxx::v_noabi::stdx::optional<bsoncxx::v_noabi::array::view_or_value> array_filters,
     const T& options) {
-    using unique_opts =
-        std::unique_ptr<mongoc_find_and_modify_opts_t,
-                        std::function<void MONGOCXX_CALL(mongoc_find_and_modify_opts_t*)>>;
+    using unique_opts = std::unique_ptr<mongoc_find_and_modify_opts_t,
+                                        std::function<void(mongoc_find_and_modify_opts_t*)>>;
 
     auto opts = unique_opts(mongocxx::libmongoc::find_and_modify_opts_new(), destroy_fam_opts);
 

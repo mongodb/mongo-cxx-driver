@@ -25,6 +25,7 @@
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/types.hpp>
+
 #include <mongocxx/client.hpp>
 #include <mongocxx/client_encryption.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
@@ -32,6 +33,8 @@
 #include <mongocxx/options/find.hpp>
 #include <mongocxx/options/server_api.hpp>
 #include <mongocxx/uri.hpp>
+
+#include <examples/macros.hh>
 
 namespace {
 
@@ -1700,7 +1703,7 @@ static void queryable_encryption_api(mongocxx::client& client) {
 
 }  // namespace
 
-int main() {
+int EXAMPLES_CDECL main() {
     // The mongocxx::instance constructor and destructor initialize and shut down the driver,
     // respectively. Therefore, a mongocxx::instance must be created before using the driver and
     // must remain alive for as long as the driver is in use.

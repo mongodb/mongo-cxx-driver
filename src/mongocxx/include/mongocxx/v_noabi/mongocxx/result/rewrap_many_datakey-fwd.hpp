@@ -20,7 +20,7 @@ namespace mongocxx {
 namespace v_noabi {
 namespace result {
 
-class MONGOCXX_API rewrap_many_datakey;
+class rewrap_many_datakey;
 
 }  // namespace result
 }  // namespace v_noabi

@@ -35,22 +35,22 @@ namespace v_noabi {
 class change_stream {
    public:
     /// A change stream iterator.
-    class MONGOCXX_API iterator;
+    class iterator;
 
     ///
     /// Move constructs a change_stream.
     ///
-    change_stream(change_stream&& other) noexcept;
+    MONGOCXX_ABI_EXPORT_CDECL() change_stream(change_stream&& other) noexcept;
 
     ///
     /// Move assigns a change_stream.
     ///
-    change_stream& operator=(change_stream&& other) noexcept;
+    MONGOCXX_ABI_EXPORT_CDECL(change_stream&) operator=(change_stream&& other) noexcept;
 
     ///
     /// Destroys a change_stream.
     ///
-    ~change_stream();
+    MONGOCXX_ABI_EXPORT_CDECL() ~change_stream();
 
     ///
     /// A change_stream::iterator points to the beginning of any
@@ -72,7 +72,7 @@ class change_stream {
     /// @exception
     ///   Throws mongocxx::v_noabi::query_exception if the query failed.
     ///
-    iterator begin() const;
+    MONGOCXX_ABI_EXPORT_CDECL(iterator) begin() const;
 
     ///
     /// A change_stream::iterator indicating stream exhaustion, meaning that
@@ -81,7 +81,7 @@ class change_stream {
     /// @return
     ///   The change_stream::iterator indicating exhaustion
     ///
-    iterator end() const;
+    MONGOCXX_ABI_EXPORT_CDECL(iterator) end() const;
 
     ///
     /// Returns a resume token for this change stream.
@@ -96,7 +96,8 @@ class change_stream {
     /// resume token of the most recently returned document in the stream, or a
     /// postBatchResumeToken if the current batch of documents has been exhausted.
     ///
-    /// @see https://www.mongodb.com/docs/manual/changeStreams/#resume-tokens
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/changeStreams/#resume-tokens
     ///
     /// The returned document::view is valid for the lifetime of the stream and
     /// its data may be updated if the change stream is iterated after this function.
@@ -106,7 +107,8 @@ class change_stream {
     /// @return
     ///   The token.
     ///
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> get_resume_token() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view>)
+    get_resume_token() const;
 
    private:
     friend ::mongocxx::v_noabi::client;
@@ -115,9 +117,9 @@ class change_stream {
 
     friend ::mongocxx::v_noabi::change_stream::iterator;
 
-    MONGOCXX_PRIVATE change_stream(void* change_stream_ptr);
+    change_stream(void* change_stream_ptr);
 
-    class MONGOCXX_PRIVATE impl;
+    class impl;
     std::unique_ptr<impl> _impl;
 };
 
@@ -138,7 +140,7 @@ class change_stream::iterator {
     /// Default-constucted iterators can be compared (all default-constructed
     /// iterators are ==), assigned, and copied.
     ///
-    iterator();
+    MONGOCXX_ABI_EXPORT_CDECL() iterator();
 
     ///
     /// Dereferences the view for the document currently being pointed to.
@@ -146,7 +148,7 @@ class change_stream::iterator {
     /// The returned document::view is valid until the iterator is incremented. The value may be
     /// copied to extend its lifetime.
     ///
-    const bsoncxx::v_noabi::document::view& operator*() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::document::view&) operator*() const;
 
     ///
     /// Accesses a member of the dereferenced document currently being pointed to.
@@ -154,7 +156,7 @@ class change_stream::iterator {
     /// The returned document::view is valid until the iterator is incremented. The value may be
     /// copied to extend its lifetime.
     ///
-    const bsoncxx::v_noabi::document::view* operator->() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::document::view*) operator->() const;
 
     ///
     /// Pre-increments the iterator to move to the next document.
@@ -169,7 +171,7 @@ class change_stream::iterator {
     ///
     /// @throws mongocxx::v_noabi::query_exception if the query failed
     ///
-    iterator& operator++();
+    MONGOCXX_ABI_EXPORT_CDECL(iterator&) operator++();
 
     ///
     /// Post-increments the iterator to move to the next document.
@@ -184,14 +186,7 @@ class change_stream::iterator {
     ///
     /// @throws mongocxx::v_noabi::query_exception if the query failed
     ///
-    void operator++(int);
-
-   private:
-    friend ::mongocxx::v_noabi::change_stream;
-
-    enum class iter_type { k_tracking, k_default_constructed, k_end };
-
-    MONGOCXX_PRIVATE explicit iterator(iter_type type, const change_stream* change_stream);
+    MONGOCXX_ABI_EXPORT_CDECL(void) operator++(int);
 
     ///
     /// @relates bsoncxx::v_noabi::change_stream::iterator
@@ -202,15 +197,22 @@ class change_stream::iterator {
     /// exhausted.
     ///
     /// @{
-    friend MONGOCXX_API bool MONGOCXX_CALL operator==(const change_stream::iterator&,
+    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(const change_stream::iterator&,
                                                       const change_stream::iterator&) noexcept;
 
-    friend MONGOCXX_API bool MONGOCXX_CALL operator!=(const change_stream::iterator&,
+    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator!=(const change_stream::iterator&,
                                                       const change_stream::iterator&) noexcept;
     /// @}
     ///
 
-    MONGOCXX_PRIVATE bool is_exhausted() const;
+   private:
+    friend ::mongocxx::v_noabi::change_stream;
+
+    enum class iter_type { k_tracking, k_default_constructed, k_end };
+
+    explicit iterator(iter_type type, const change_stream* change_stream);
+
+    bool is_exhausted() const;
 
     // iter_type==k_default_constructed is equivalent to _change_stream==nullptr
     iter_type _type;

@@ -19,7 +19,7 @@
 namespace mongocxx {
 namespace v_noabi {
 
-class MONGOCXX_API validation_criteria;
+class validation_criteria;
 
 }  // namespace v_noabi
 }  // namespace mongocxx

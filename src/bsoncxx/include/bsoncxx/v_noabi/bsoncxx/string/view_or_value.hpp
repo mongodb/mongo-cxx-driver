@@ -30,9 +30,8 @@ namespace string {
 ///
 /// Class representing a view-or-value variant type for strings.
 ///
-/// @par "Derived From" @parblock
-/// @li @ref bsoncxx::v_noabi::view_or_value<stdx::string_view, std::string>
-/// @endparblock
+/// @par Derived From
+/// - @ref bsoncxx::v_noabi::view_or_value<stdx::string_view, std::string>
 ///
 /// This class adds several string-specific methods to the bsoncxx::v_noabi::view_or_value template:
 /// - a constructor overload for const char*
@@ -49,7 +48,7 @@ class view_or_value : public bsoncxx::v_noabi::view_or_value<stdx::string_view, 
     ///
     /// Default constructor, equivalent to using an empty string.
     ///
-    view_or_value() = default;
+    BSONCXX_ABI_EXPORT_CDECL() view_or_value() = default;
 
     ///
     /// Construct a string::view_or_value using a null-terminated const char *.
@@ -58,7 +57,7 @@ class view_or_value : public bsoncxx::v_noabi::view_or_value<stdx::string_view, 
     ///
     /// @param str A null-terminated string
     ///
-    BSONCXX_INLINE view_or_value(const char* str)
+    view_or_value(const char* str)
         : bsoncxx::v_noabi::view_or_value<stdx::string_view, std::string>(stdx::string_view(str)) {}
 
     ///
@@ -71,7 +70,7 @@ class view_or_value : public bsoncxx::v_noabi::view_or_value<stdx::string_view, 
     ///
     /// @param str A std::string l-value reference.
     ///
-    BSONCXX_INLINE view_or_value(const std::string& str)
+    view_or_value(const std::string& str)
         : bsoncxx::v_noabi::view_or_value<stdx::string_view, std::string>(stdx::string_view(str)) {}
 
     ///
@@ -84,7 +83,7 @@ class view_or_value : public bsoncxx::v_noabi::view_or_value<stdx::string_view, 
     ///
     /// @return A new view_or_value object.
     ///
-    view_or_value terminated() const;
+    BSONCXX_ABI_EXPORT_CDECL(view_or_value) terminated() const;
 
     ///
     /// Call data() on this view_or_value's string_view. This method is not
@@ -93,7 +92,7 @@ class view_or_value : public bsoncxx::v_noabi::view_or_value<stdx::string_view, 
     ///
     /// @return A const char* of this string.
     ///
-    const char* data() const;
+    BSONCXX_ABI_EXPORT_CDECL(const char*) data() const;
 };
 
 ///
@@ -102,22 +101,22 @@ class view_or_value : public bsoncxx::v_noabi::view_or_value<stdx::string_view, 
 /// @{
 
 /// @relatesalso bsoncxx::v_noabi::string::view_or_value
-BSONCXX_INLINE bool operator==(const view_or_value& lhs, const char* rhs) {
+inline bool operator==(const view_or_value& lhs, const char* rhs) {
     return lhs.view() == stdx::string_view(rhs);
 }
 
 /// @relatesalso bsoncxx::v_noabi::string::view_or_value
-BSONCXX_INLINE bool operator!=(const view_or_value& lhs, const char* rhs) {
+inline bool operator!=(const view_or_value& lhs, const char* rhs) {
     return !(lhs == rhs);
 }
 
 /// @relatesalso bsoncxx::v_noabi::string::view_or_value
-BSONCXX_INLINE bool operator==(const char* lhs, const view_or_value& rhs) {
+inline bool operator==(const char* lhs, const view_or_value& rhs) {
     return rhs == lhs;
 }
 
 /// @relatesalso bsoncxx::v_noabi::string::view_or_value
-BSONCXX_INLINE bool operator!=(const char* lhs, const view_or_value& rhs) {
+inline bool operator!=(const char* lhs, const view_or_value& rhs) {
     return !(rhs == lhs);
 }
 

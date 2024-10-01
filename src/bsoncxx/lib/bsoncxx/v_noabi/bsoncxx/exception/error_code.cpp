@@ -91,7 +91,7 @@ class error_category_impl final : public std::error_category {
 
 }  // namespace
 
-const std::error_category& BSONCXX_CALL error_category() {
+const std::error_category& error_category() {
     static const error_category_impl instance{};
     return instance;
 }

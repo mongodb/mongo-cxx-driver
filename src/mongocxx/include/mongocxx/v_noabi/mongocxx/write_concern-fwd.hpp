@@ -19,7 +19,7 @@
 namespace mongocxx {
 namespace v_noabi {
 
-class MONGOCXX_API write_concern;
+class write_concern;
 
 }  // namespace v_noabi
 }  // namespace mongocxx

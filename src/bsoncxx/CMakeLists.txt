@@ -154,12 +154,30 @@ endif()
 # Generate and install the export header.
 if(1)
     function(bsoncxx_install_export_header TARGET)
+        set(bsoncxx_export_header_custom_content "")
+        string(APPEND bsoncxx_export_header_custom_content
+            "\n"
+            "#if defined(_MSC_VER)\n"
+            "#define BSONCXX_ABI_CDECL __cdecl\n"
+            "#else\n"
+            "#define BSONCXX_ABI_CDECL\n"
+            "#endif\n"
+            "\n"
+            "#define BSONCXX_ABI_EXPORT_CDECL(...) BSONCXX_ABI_EXPORT __VA_ARGS__ BSONCXX_ABI_CDECL\n"
+            "\n"
+            "// For backward compatibility. Use BSONCXX_ABI_EXPORT_CDECL instead.\n"
+            "#define BSONCXX_API BSONCXX_ABI_EXPORT\n"
+            "\n"
+            "// For backward compatibility. Use BSONCXX_ABI_NO_EXPORT instead.\n"
+            "#define BSONCXX_PRIVATE BSONCXX_ABI_NO_EXPORT\n"
+        )
         generate_export_header(${TARGET}
-            BASE_NAME BSONCXX
-            EXPORT_MACRO_NAME BSONCXX_API
-            NO_EXPORT_MACRO_NAME BSONCXX_PRIVATE
+            BASE_NAME BSONCXX_ABI
+            EXPORT_MACRO_NAME BSONCXX_ABI_EXPORT
+            DEPRECATED_MACRO_NAME BSONCXX_DEPRECATED
             EXPORT_FILE_NAME ${PROJECT_BINARY_DIR}/lib/bsoncxx/v_noabi/bsoncxx/config/export.hpp
             STATIC_DEFINE BSONCXX_STATIC
+            CUSTOM_CONTENT_FROM_VARIABLE bsoncxx_export_header_custom_content
         )
 
         install(FILES
