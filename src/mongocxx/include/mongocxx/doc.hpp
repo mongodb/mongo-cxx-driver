@@ -97,6 +97,7 @@
 /// @brief Examples of how to use the mongocxx library.
 /// @li @subpage topic-mongocxx-examples-instance
 /// @li @subpage topic-mongocxx-examples-logger
+/// @li @subpage topic-mongocxx-examples-uri
 ///
 
 ///
@@ -111,6 +112,15 @@
 /// @brief How to use a custom logger with a MongoDB C++ Driver instance.
 /// @tableofcontents
 /// @include{doc} api/mongocxx/examples/logger.md
+///
+
+///
+/// @page topic-mongocxx-examples-uri URI
+/// @brief How to create and use URIs.
+/// @tableofcontents
+/// @see [Connection Strings (MongoDB
+/// Manual)](https://www.mongodb.com/docs/manual/reference/connection-string/)
+/// @include{doc} api/mongocxx/examples/uri.md
 ///
 
 ///
