@@ -30,6 +30,8 @@
 #include <thread>
 #include <vector>
 
+#include <mongocxx/instance.hpp>
+
 #include <examples/macros.hh>
 
 #if !defined(_MSC_VER)
@@ -55,6 +57,7 @@ class runner_type {
 
    private:
     std::vector<component> components;
+    std::vector<component> components_with_instance;
     std::vector<component> forking_components;
     std::minstd_rand::result_type seed = 0u;
     std::minstd_rand gen;
@@ -154,9 +157,19 @@ class runner_type {
     }
 #endif  // !defined(_MSC_VER)
 
+    void run_components_with_instance() {
+        mongocxx::instance instance;
+
+        run_with_jobs(components_with_instance, jobs);
+    }
+
    public:
     void add_component(fn_type fn, const char* name) {
         components.emplace_back(fn, name);
+    }
+
+    void add_component_with_instance(fn_type fn, const char* name) {
+        components_with_instance.emplace_back(fn, name);
     }
 
     void add_forking_component(fn_type fn, const char* name) {
@@ -197,6 +210,8 @@ class runner_type {
                 return EXIT_SUCCESS;  // Return directly from forked processes.
         }
 
+        run_components_with_instance();
+
         return EXIT_SUCCESS;
     }
 };
@@ -207,6 +222,10 @@ runner_type runner;
 
 void runner_register_component(void (*fn)(), const char* name) {
     runner.add_component(fn, name);
+}
+
+void runner_register_component_with_instance(void (*fn)(), const char* name) {
+    runner.add_component_with_instance(fn, name);
 }
 
 void runner_register_forking_component(void (*fn)(), const char* name) {
