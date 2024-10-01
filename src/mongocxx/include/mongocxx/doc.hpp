@@ -96,6 +96,7 @@
 /// @page topic-mongocxx-examples How-To Guides
 /// @brief Examples of how to use the mongocxx library.
 /// @li @subpage topic-mongocxx-examples-instance
+/// @li @subpage topic-mongocxx-examples-logger
 ///
 
 ///
@@ -103,6 +104,13 @@
 /// @brief How to use a MongoDB C++ Driver instance.
 /// @tableofcontents
 /// @include{doc} api/mongocxx/examples/instance.md
+///
+
+///
+/// @page topic-mongocxx-examples-logger Logger
+/// @brief How to use a custom logger with a MongoDB C++ Driver instance.
+/// @tableofcontents
+/// @include{doc} api/mongocxx/examples/logger.md
 ///
 
 ///
