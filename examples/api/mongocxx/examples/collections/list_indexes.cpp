@@ -12,9 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <bsoncxx/document/view.hpp>
 #include <bsoncxx/json.hpp>
+#include <bsoncxx/types.hpp>
 
 #include <mongocxx/client.hpp>
+#include <mongocxx/collection.hpp>
+#include <mongocxx/cursor.hpp>
 #include <mongocxx/database.hpp>
 #include <mongocxx/uri.hpp>
 
@@ -26,16 +30,14 @@
 namespace {
 
 // [Example]
-void example(mongocxx::database db) {
-    ASSERT(!db.has_collection("coll"));
+void example(mongocxx::collection coll) {
+    for (bsoncxx::document::view doc : coll.list_indexes()) {
+        ASSERT(doc["name"]);
+        ASSERT(doc["name"].type() == bsoncxx::type::k_string);
 
-    auto opts = bsoncxx::from_json(R"({"validationLevel": "strict", "validationAction": "error"})");
-    // ... other create options.
-
-    mongocxx::collection coll = db.create_collection("coll", opts.view());
-
-    ASSERT(coll);
-    ASSERT(db.has_collection("coll"));
+        ASSERT(doc["key"]);
+        ASSERT(doc["key"].type() == bsoncxx::type::k_document);
+    }
 }
 // [Example]
 
@@ -47,6 +49,10 @@ RUNNER_REGISTER_COMPONENT_FOR_SINGLE() {
     {
         db_lock guard{client, EXAMPLES_COMPONENT_NAME_STR};
 
-        example(set_rw_concern_majority(guard.get()));
+        auto coll = set_rw_concern_majority(guard.get().create_collection("coll"));
+
+        (void)coll.create_index(bsoncxx::from_json(R"({"key": 1})"));
+
+        example(coll);
     }
 }

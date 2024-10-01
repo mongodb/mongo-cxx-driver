@@ -12,9 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <algorithm>
+
+#include <bsoncxx/document/value.hpp>
 #include <bsoncxx/json.hpp>
+#include <bsoncxx/types.hpp>
 
 #include <mongocxx/client.hpp>
+#include <mongocxx/collection.hpp>
 #include <mongocxx/database.hpp>
 #include <mongocxx/uri.hpp>
 
@@ -26,16 +31,11 @@
 namespace {
 
 // [Example]
-void example(mongocxx::database db) {
-    ASSERT(!db.has_collection("coll"));
+void example(mongocxx::collection coll) {
+    bsoncxx::document::value result = coll.create_index(bsoncxx::from_json(R"({"key": 1})"));
 
-    auto opts = bsoncxx::from_json(R"({"validationLevel": "strict", "validationAction": "error"})");
-    // ... other create options.
-
-    mongocxx::collection coll = db.create_collection("coll", opts.view());
-
-    ASSERT(coll);
-    ASSERT(db.has_collection("coll"));
+    ASSERT(result["name"]);
+    ASSERT(result["name"].get_string().value.compare("key_1") == 0);
 }
 // [Example]
 
@@ -47,6 +47,18 @@ RUNNER_REGISTER_COMPONENT_FOR_SINGLE() {
     {
         db_lock guard{client, EXAMPLES_COMPONENT_NAME_STR};
 
-        example(set_rw_concern_majority(guard.get()));
+        auto coll = set_rw_concern_majority(guard.get().create_collection("coll"));
+
+        auto count_indexes = [&coll] {
+            auto cursor = coll.list_indexes();
+
+            return std::distance(cursor.begin(), cursor.end());
+        };
+
+        ASSERT(count_indexes() == 1);  // _id
+
+        example(coll);
+
+        ASSERT(count_indexes() == 2);  // _id, key_1
     }
 }

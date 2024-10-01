@@ -100,6 +100,7 @@
 /// @li @subpage topic-mongocxx-examples-uri
 /// @li @subpage topic-mongocxx-examples-clients
 /// @li @subpage topic-mongocxx-examples-databases
+/// @li @subpage topic-mongocxx-examples-collections
 ///
 
 ///
@@ -137,6 +138,13 @@
 /// @brief How to obtain and use databases.
 /// @tableofcontents
 /// @include{doc} api/mongocxx/examples/databases.md
+///
+
+///
+/// @page topic-mongocxx-examples-collections Collections
+/// @brief How to obtain and use collections.
+/// @tableofcontents
+/// @include{doc} api/mongocxx/examples/collections.md
 ///
 
 ///

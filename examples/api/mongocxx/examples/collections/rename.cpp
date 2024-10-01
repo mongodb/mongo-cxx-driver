@@ -12,9 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/json.hpp>
-
 #include <mongocxx/client.hpp>
+#include <mongocxx/collection.hpp>
 #include <mongocxx/database.hpp>
 #include <mongocxx/uri.hpp>
 
@@ -27,15 +26,19 @@ namespace {
 
 // [Example]
 void example(mongocxx::database db) {
-    ASSERT(!db.has_collection("coll"));
+    mongocxx::collection coll = db["old"];
 
-    auto opts = bsoncxx::from_json(R"({"validationLevel": "strict", "validationAction": "error"})");
-    // ... other create options.
+    ASSERT(db.has_collection("old"));
+    ASSERT(!db.has_collection("new"));
 
-    mongocxx::collection coll = db.create_collection("coll", opts.view());
+    ASSERT(coll.name().compare("old") == 0);
 
-    ASSERT(coll);
-    ASSERT(db.has_collection("coll"));
+    coll.rename("new");
+
+    ASSERT(coll.name().compare("new") == 0);
+
+    ASSERT(!db.has_collection("old"));
+    ASSERT(db.has_collection("new"));
 }
 // [Example]
 
@@ -47,6 +50,10 @@ RUNNER_REGISTER_COMPONENT_FOR_SINGLE() {
     {
         db_lock guard{client, EXAMPLES_COMPONENT_NAME_STR};
 
-        example(set_rw_concern_majority(guard.get()));
+        auto db = set_rw_concern_majority(guard.get());
+
+        (void)db.create_collection("old");
+
+        example(db);
     }
 }

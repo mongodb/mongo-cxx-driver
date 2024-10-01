@@ -12,41 +12,48 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/json.hpp>
-
 #include <mongocxx/client.hpp>
+#include <mongocxx/collection.hpp>
 #include <mongocxx/database.hpp>
 #include <mongocxx/uri.hpp>
 
-#include <examples/api/concern.hh>
-#include <examples/api/db_lock.hh>
 #include <examples/api/runner.hh>
 #include <examples/macros.hh>
 
 namespace {
 
 // [Example]
-void example(mongocxx::database db) {
-    ASSERT(!db.has_collection("coll"));
+void example(mongocxx::collection coll) {
+    using wc_level = mongocxx::write_concern::level;
 
-    auto opts = bsoncxx::from_json(R"({"validationLevel": "strict", "validationAction": "error"})");
-    // ... other create options.
+    // Default.
+    {
+        mongocxx::write_concern wc = coll.write_concern();
 
-    mongocxx::collection coll = db.create_collection("coll", opts.view());
+        ASSERT(wc.acknowledge_level() == wc_level::k_default);
+        ASSERT(wc.timeout() == std::chrono::milliseconds(0));
+    }
 
-    ASSERT(coll);
-    ASSERT(db.has_collection("coll"));
+    // Explicit.
+    {
+        mongocxx::write_concern wc;
+
+        wc.majority(std::chrono::milliseconds(5000));
+        // ... other write concern options.
+
+        coll.write_concern(wc);
+
+        ASSERT(coll.write_concern() == wc);
+        ASSERT(coll.write_concern().acknowledge_level() == wc_level::k_majority);
+        ASSERT(coll.write_concern().timeout() == std::chrono::seconds(5));
+    }
 }
 // [Example]
 
 }  // namespace
 
-RUNNER_REGISTER_COMPONENT_FOR_SINGLE() {
+RUNNER_REGISTER_COMPONENT_WITH_INSTANCE() {
     mongocxx::client client{mongocxx::uri{}};
 
-    {
-        db_lock guard{client, EXAMPLES_COMPONENT_NAME_STR};
-
-        example(set_rw_concern_majority(guard.get()));
-    }
+    example(client["db"]["coll"]);
 }

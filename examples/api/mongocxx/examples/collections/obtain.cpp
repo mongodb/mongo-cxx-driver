@@ -12,14 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/json.hpp>
-
 #include <mongocxx/client.hpp>
+#include <mongocxx/collection.hpp>
 #include <mongocxx/database.hpp>
 #include <mongocxx/uri.hpp>
 
-#include <examples/api/concern.hh>
-#include <examples/api/db_lock.hh>
 #include <examples/api/runner.hh>
 #include <examples/macros.hh>
 
@@ -27,26 +24,19 @@ namespace {
 
 // [Example]
 void example(mongocxx::database db) {
-    ASSERT(!db.has_collection("coll"));
-
-    auto opts = bsoncxx::from_json(R"({"validationLevel": "strict", "validationAction": "error"})");
-    // ... other create options.
-
-    mongocxx::collection coll = db.create_collection("coll", opts.view());
+    mongocxx::collection coll = db["coll"];
 
     ASSERT(coll);
-    ASSERT(db.has_collection("coll"));
+    ASSERT(coll.name().compare("coll") == 0);
+
+    ASSERT(db.collection("coll").name().compare("coll") == 0);
 }
 // [Example]
 
 }  // namespace
 
-RUNNER_REGISTER_COMPONENT_FOR_SINGLE() {
+RUNNER_REGISTER_COMPONENT_WITH_INSTANCE() {
     mongocxx::client client{mongocxx::uri{}};
 
-    {
-        db_lock guard{client, EXAMPLES_COMPONENT_NAME_STR};
-
-        example(set_rw_concern_majority(guard.get()));
-    }
+    example(client["db"]);
 }

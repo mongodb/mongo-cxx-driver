@@ -15,7 +15,8 @@
 #include <bsoncxx/json.hpp>
 
 #include <mongocxx/client.hpp>
-#include <mongocxx/database.hpp>
+#include <mongocxx/collection.hpp>
+#include <mongocxx/result/insert_one.hpp>
 #include <mongocxx/uri.hpp>
 
 #include <examples/api/concern.hh>
@@ -26,16 +27,37 @@
 namespace {
 
 // [Example]
-void example(mongocxx::database db) {
-    ASSERT(!db.has_collection("coll"));
+void example(mongocxx::collection coll) {
+    auto x1 = bsoncxx::from_json(R"({"x": 1})");
+    auto x2 = bsoncxx::from_json(R"({"x": 2})");
 
-    auto opts = bsoncxx::from_json(R"({"validationLevel": "strict", "validationAction": "error"})");
-    // ... other create options.
+    // Basic usage.
+    {
+        ASSERT(coll.count_documents(x1.view()) == 0);
 
-    mongocxx::collection coll = db.create_collection("coll", opts.view());
+        auto result_opt = coll.insert_one(x1.view());
 
-    ASSERT(coll);
-    ASSERT(db.has_collection("coll"));
+        ASSERT(result_opt);
+
+        mongocxx::result::insert_one& result = *result_opt;
+
+        ASSERT(result.result().inserted_count() == 1);
+
+        ASSERT(coll.count_documents(x1.view()) == 1);
+    }
+
+    // With options.
+    {
+        ASSERT(coll.count_documents(x2.view()) == 0);
+
+        mongocxx::options::insert opts;
+
+        // ... set insert options.
+
+        ASSERT(coll.insert_one(x2.view(), opts));
+
+        ASSERT(coll.count_documents(x2.view()) == 1);
+    }
 }
 // [Example]
 
@@ -47,6 +69,6 @@ RUNNER_REGISTER_COMPONENT_FOR_SINGLE() {
     {
         db_lock guard{client, EXAMPLES_COMPONENT_NAME_STR};
 
-        example(set_rw_concern_majority(guard.get()));
+        example(set_rw_concern_majority(guard.get().create_collection("coll")));
     }
 }

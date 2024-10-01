@@ -12,10 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <chrono>
+
 #include <bsoncxx/json.hpp>
 
 #include <mongocxx/client.hpp>
-#include <mongocxx/database.hpp>
+#include <mongocxx/collection.hpp>
+#include <mongocxx/model/insert_one.hpp>
+#include <mongocxx/options/estimated_document_count.hpp>
 #include <mongocxx/uri.hpp>
 
 #include <examples/api/concern.hh>
@@ -26,16 +30,23 @@
 namespace {
 
 // [Example]
-void example(mongocxx::database db) {
-    ASSERT(!db.has_collection("coll"));
+// [
+//     {"x": 1},
+//     {"x": 2},
+//     {"x": 3},
+// ]
+void example(mongocxx::collection coll) {
+    // Basic usage.
+    ASSERT(coll.estimated_document_count() == 3);
 
-    auto opts = bsoncxx::from_json(R"({"validationLevel": "strict", "validationAction": "error"})");
-    // ... other create options.
+    // With options.
+    {
+        mongocxx::options::estimated_document_count opts;
 
-    mongocxx::collection coll = db.create_collection("coll", opts.view());
+        // ... set estimated scount options.
 
-    ASSERT(coll);
-    ASSERT(db.has_collection("coll"));
+        ASSERT(coll.estimated_document_count(opts) == 3);
+    }
 }
 // [Example]
 
@@ -47,6 +58,16 @@ RUNNER_REGISTER_COMPONENT_FOR_SINGLE() {
     {
         db_lock guard{client, EXAMPLES_COMPONENT_NAME_STR};
 
-        example(set_rw_concern_majority(guard.get()));
+        auto coll = set_rw_concern_majority(guard.get().create_collection("coll"));
+
+        using insert = mongocxx::model::insert_one;
+
+        ASSERT(coll.create_bulk_write()
+                   .append(insert{bsoncxx::from_json(R"({"x": 1})")})
+                   .append(insert{bsoncxx::from_json(R"({"x": 2})")})
+                   .append(insert{bsoncxx::from_json(R"({"x": 3})")})
+                   .execute());
+
+        example(coll);
     }
 }
