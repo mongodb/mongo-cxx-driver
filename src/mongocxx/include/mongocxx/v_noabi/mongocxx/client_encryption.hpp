@@ -136,7 +136,7 @@ class client_encryption {
     ///
     /// Encrypts a Match Expression or Aggregate Expression to query a range index.
     ///
-    /// @note Only supported when queryType is "rangePreview" and algorithm is "RangePreview".
+    /// @note Only supported when queryType is "range" and algorithm is "Range".
     ///
     /// @param expr A BSON document corresponding to either a Match Expression or an Aggregate
     /// Expression.
@@ -144,8 +144,6 @@ class client_encryption {
     ///
     /// @returns The encrypted expression.
     ///
-    /// @warning The Range algorithm is experimental only. It is not intended for public use. It is
-    /// subject to breaking changes.
     MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::value)
     encrypt_expression(bsoncxx::v_noabi::document::view_or_value expr,
                        const options::encrypt& opts);

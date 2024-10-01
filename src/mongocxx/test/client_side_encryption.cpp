@@ -2901,35 +2901,40 @@ options::range to_range_opts(RangeFieldType field_type) {
 
     switch (field_type) {
         case RangeFieldType::DecimalNoPrecision:
-            return options::range().sparsity(1);
+            return options::range().trim_factor(1).sparsity(1);
         case RangeFieldType::DecimalPrecision:
             return options::range()
                 .min(make_value(b_decimal128{bsoncxx::decimal128(std::to_string(0))}))
                 .max(make_value(b_decimal128{bsoncxx::decimal128(std::to_string(200))}))
+                .trim_factor(1)
                 .sparsity(1)
                 .precision(2);
         case RangeFieldType::DoubleNoPrecision:
-            return options::range().sparsity(1);
+            return options::range().trim_factor(1).sparsity(1);
         case RangeFieldType::DoublePrecision:
             return options::range()
                 .min(make_value(b_double{0.0}))
                 .max(make_value(b_double{200.0}))
+                .trim_factor(1)
                 .sparsity(1)
                 .precision(2);
         case RangeFieldType::Date:
             return options::range()
                 .min(make_value(b_date{std::chrono::milliseconds(0)}))
                 .max(make_value(b_date{std::chrono::milliseconds(200)}))
+                .trim_factor(1)
                 .sparsity(1);
         case RangeFieldType::Int:
             return options::range()
                 .min(make_value(b_int32{0}))
                 .max(make_value(b_int32{200}))
+                .trim_factor(1)
                 .sparsity(1);
         case RangeFieldType::Long:
             return options::range()
                 .min(make_value(b_int64{0}))
                 .max(make_value(b_int64{200}))
+                .trim_factor(1)
                 .sparsity(1);
     }
 
@@ -3055,15 +3060,14 @@ range_explicit_encryption_objects range_explicit_encryption_setup(const std::str
     // `EncryptOpts`:
     //   class EncryptOpts {
     //      keyId : <key1ID>:
-    //      algorithm: "RangePreview",
+    //      algorithm: "Range",
     //      contentionFactor: 0
     //   }
-    const auto encrypt_opts =
-        options::encrypt()
-            .range_opts(range_opts)
-            .key_id(key1_id)
-            .algorithm(options::encrypt::encryption_algorithm::k_range_preview)
-            .contention_factor(0);
+    const auto encrypt_opts = options::encrypt()
+                                  .range_opts(range_opts)
+                                  .key_id(key1_id)
+                                  .algorithm(options::encrypt::encryption_algorithm::k_range)
+                                  .contention_factor(0);
 
     // Use `clientEncryption` to encrypt these values: 0, 6, 30, and 200.
     const auto encrypted_v0 = client_encryption.encrypt(field_values.v0, encrypt_opts);
@@ -3099,12 +3103,8 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
     {
         auto client = mongocxx::client(mongocxx::uri(), test_util::add_test_server_api());
 
-        if (!test_util::newer_than(client, "7.0")) {
-            SKIP("MongoDB server 7.0 or newer required");
-        }
-
-        if (test_util::newer_than(client, "8.0")) {
-            SKIP("skipped on MongoDB server 8.0 or newer pending updates for DRIVERS-2776");
+        if (!test_util::newer_than(client, "8.0")) {
+            SKIP("MongoDB server 8.0 or newer required");
         }
 
         if (test_util::get_topology(client) == "single") {
@@ -3155,7 +3155,7 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
                 // `EncryptOpts`:
                 //   class EncryptOpts {
                 //      keyId : <key1ID>
-                //      algorithm: "RangePreview",
+                //      algorithm: "Range",
                 //      contentionFactor: 0
                 //   }
                 // Store the result in insertPayload.
@@ -3164,7 +3164,7 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
                     options::encrypt()
                         .range_opts(range_opts)
                         .key_id(key1_id)
-                        .algorithm(options::encrypt::encryption_algorithm::k_range_preview)
+                        .algorithm(options::encrypt::encryption_algorithm::k_range)
                         .contention_factor(0));
 
                 // Use `clientEncryption` to decrypt `insertPayload`.
@@ -3189,8 +3189,8 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
                 // `EncryptOpts` to encrypt the query:
                 //   class EncryptOpts {
                 //      keyId : <key1ID>
-                //      algorithm: "RangePreview",
-                //      queryType: "rangePreview",
+                //      algorithm: "Range",
+                //      queryType: "range",
                 //      contentionFactor: 0
                 //   }
                 // Store the result in `findPayload`.
@@ -3199,8 +3199,8 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
                     options::encrypt()
                         .range_opts(range_opts)
                         .key_id(key1_id)
-                        .algorithm(options::encrypt::encryption_algorithm::k_range_preview)
-                        .query_type(options::encrypt::encryption_query_type::k_range_preview)
+                        .algorithm(options::encrypt::encryption_algorithm::k_range)
+                        .query_type(options::encrypt::encryption_query_type::k_range)
                         .contention_factor(0));
 
                 // Use encryptedClient to run a "find" operation on the `db.explicit_encryption`
@@ -3241,8 +3241,8 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
                 // `EncryptOpts` to encrypt the query:
                 //   class EncryptOpts {
                 //      keyId : <key1ID>
-                //      algorithm: "RangePreview",
-                //      queryType: "rangePreview",
+                //      algorithm: "Range",
+                //      queryType: "range",
                 //      contentionFactor: 0
                 //   }
                 // Store the result in `findPayload`.
@@ -3251,8 +3251,8 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
                     options::encrypt()
                         .range_opts(range_opts)
                         .key_id(key1_id)
-                        .algorithm(options::encrypt::encryption_algorithm::k_range_preview)
-                        .query_type(options::encrypt::encryption_query_type::k_range_preview)
+                        .algorithm(options::encrypt::encryption_algorithm::k_range)
+                        .query_type(options::encrypt::encryption_query_type::k_range)
                         .contention_factor(0));
 
                 // Use `encryptedClient` to run a "find" operation on the `db.explicit_encryption`
@@ -3289,8 +3289,8 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
                 // `EncryptOpts` to encrypt the query:
                 //   class EncryptOpts {
                 //      keyId : <key1ID>
-                //      algorithm: "RangePreview",
-                //      queryType: "rangePreview",
+                //      algorithm: "Range",
+                //      queryType: "range",
                 //      contentionFactor: 0
                 //   }
                 // Store the result in `findPayload`.
@@ -3299,8 +3299,8 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
                     options::encrypt()
                         .range_opts(range_opts)
                         .key_id(key1_id)
-                        .algorithm(options::encrypt::encryption_algorithm::k_range_preview)
-                        .query_type(options::encrypt::encryption_query_type::k_range_preview)
+                        .algorithm(options::encrypt::encryption_algorithm::k_range)
+                        .query_type(options::encrypt::encryption_query_type::k_range)
                         .contention_factor(0));
 
                 // Use encryptedClient to run a "find" operation on the `db.explicit_encryption`
@@ -3335,8 +3335,8 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
                 // `EncryptOpts` to encrypt the query:
                 //   class EncryptOpts {
                 //      keyId : <key1ID>
-                //      algorithm: "RangePreview",
-                //      queryType: "rangePreview",
+                //      algorithm: "Range",
+                //      queryType: "range",
                 //      contentionFactor: 0
                 //   }
                 // Store the result in `findPayload`.
@@ -3345,8 +3345,8 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
                     options::encrypt()
                         .range_opts(range_opts)
                         .key_id(key1_id)
-                        .algorithm(options::encrypt::encryption_algorithm::k_range_preview)
-                        .query_type(options::encrypt::encryption_query_type::k_range_preview)
+                        .algorithm(options::encrypt::encryption_algorithm::k_range)
+                        .query_type(options::encrypt::encryption_query_type::k_range)
                         .contention_factor(0));
 
                 // Use encryptedClient to run a "find" operation on the `db.explicit_encryption`
@@ -3391,7 +3391,7 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
                         // matching RangeOpts listed in Test Setup: RangeOpts and these EncryptOpts:
                         //   class EncryptOpts {
                         //      keyId : <key1ID>
-                        //      algorithm: "RangePreview",
+                        //      algorithm: "Range",
                         //      contentionFactor: 0
                         //   }
                         // The error should be raised because 201 is greater than the maximum value
@@ -3402,8 +3402,7 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
                                 options::encrypt()
                                     .range_opts(range_opts)
                                     .key_id(key1_id)
-                                    .algorithm(
-                                        options::encrypt::encryption_algorithm::k_range_preview)
+                                    .algorithm(options::encrypt::encryption_algorithm::k_range)
                                     .contention_factor(0)),
                             Catch::Matchers::ContainsSubstring(
                                 "Value must be greater than or equal to the minimum value and "
@@ -3430,14 +3429,14 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
                         // For all the tests below use these EncryptOpts:
                         //   class EncryptOpts {
                         //      keyId : <key1ID>
-                        //      algorithm: "RangePreview",
+                        //      algorithm: "Range",
                         //      contentionFactor: 0
                         //   }
                         const auto encrypt_opts =
                             options::encrypt()
                                 .range_opts(range_opts)
                                 .key_id(key1_id)
-                                .algorithm(options::encrypt::encryption_algorithm::k_range_preview)
+                                .algorithm(options::encrypt::encryption_algorithm::k_range)
                                 .contention_factor(0);
 
                         // If the encrypted field is encryptedInt encrypt:
@@ -3476,7 +3475,7 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
                         // `EncryptOpts` and these `RangeOpts`:
                         //   class EncryptOpts {
                         //      keyId : <key1ID>
-                        //      algorithm: "RangePreview",
+                        //      algorithm: "Range",
                         //      contentionFactor: 0
                         //   }
                         //
@@ -3497,8 +3496,7 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
                                                     .sparsity(1)
                                                     .precision(2))
                                     .key_id(key1_id)
-                                    .algorithm(
-                                        options::encrypt::encryption_algorithm::k_range_preview)
+                                    .algorithm(options::encrypt::encryption_algorithm::k_range)
                                     .contention_factor(0)),
                             Catch::Matchers::ContainsSubstring(
                                 "expected 'precision' to be set with double or decimal128 index"));
@@ -3506,6 +3504,119 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
                 } break;
             }
         }
+    }
+}
+
+// Prose Test 23
+TEST_CASE("Range Explicit Encryption applies defaults", "[client_side_encryption]") {
+    instance::current();
+
+    CLIENT_SIDE_ENCRYPTION_ENABLED_OR_SKIP();
+
+    // Create a MongoClient named `keyVaultClient`.
+    mongocxx::client key_vault_client{
+        uri{},
+        test_util::add_test_server_api(),
+    };
+
+    if (!test_util::newer_than(key_vault_client, "8.0")) {
+        SKIP("MongoDB server 8.0 or newer required");
+    }
+
+    // Create a ClientEncryption object named `clientEncryption` with these options:
+    //   ClientEncryptionOpts {
+    //      keyVaultClient: <keyVaultClient>;
+    //      keyVaultNamespace: "keyvault.datakeys";
+    //      kmsProviders: { "local": { "key": <base64 decoding of LOCAL_MASTERKEY> } }
+    //   }
+    const auto kms_providers = _make_kms_doc(false);
+    mongocxx::client_encryption client_encryption(options::client_encryption()
+                                                      .key_vault_client(&key_vault_client)
+                                                      .key_vault_namespace({"keyvault", "datakeys"})
+                                                      .kms_providers(kms_providers.view()));
+
+    // Create a key with `clientEncryption.createDataKey`. Store the returned key ID in a variable
+    // named `keyId`.
+    const auto& keyId = client_encryption.create_data_key("local");
+
+    // Call `clientEncryption.encrypt` to encrypt the int32 value `123` with these options:
+    // `EncryptOpts`:
+    //   class EncryptOpts {
+    //      keyId : <key1ID>:
+    //      algorithm: "Range",
+    //      contentionFactor: 0,
+    //      rangeOpts: RangeOpts {
+    //         min: 0,
+    //         max: 1000
+    //      }
+    //   }
+    const auto v_123 = to_field_value(123, RangeFieldType::Int);
+    auto payload_defaults = client_encryption.encrypt(
+        v_123,
+        options::encrypt()
+            .key_id(keyId.view())
+            .algorithm(options::encrypt::encryption_algorithm::k_range)
+            .contention_factor(0)
+            .range_opts(options::range()
+                            .min(to_field_value(0, RangeFieldType::Int))
+                            .max(to_field_value(1000, RangeFieldType::Int))));
+
+    SECTION("Case 1: Uses libmongocrypt defaults") {
+        // Call `clientEncryption.encrypt` to encrypt the int32 value `123` with these options:
+        // `EncryptOpts`:
+        //   class EncryptOpts {
+        //      keyId : <key1ID>:
+        //      algorithm: "Range",
+        //      contentionFactor: 0,
+        //      rangeOpts: RangeOpts {
+        //         min: 0,
+        //         max: 1000,
+        //         sparsity: 2,
+        //         trimFactor: 6
+        //      }
+        //   }
+        auto payload_libmongocrypt_defaults = client_encryption.encrypt(
+            v_123,
+            options::encrypt()
+                .key_id(keyId.view())
+                .algorithm(options::encrypt::encryption_algorithm::k_range)
+                .contention_factor(0)
+                .range_opts(options::range()
+                                .min(to_field_value(0, RangeFieldType::Int))
+                                .max(to_field_value(1000, RangeFieldType::Int))
+                                .sparsity(2)
+                                .trim_factor(6)));
+
+        REQUIRE_NOTHROW(payload_defaults.view().get_binary().size ==
+                        payload_libmongocrypt_defaults.view().get_binary().size);
+    }
+
+    SECTION("Case 2: Accepts `trimFactor` 0") {
+        // Call `clientEncryption.encrypt` to encrypt the int32 value `123` with these options:
+        // `EncryptOpts`:
+        //   class EncryptOpts {
+        //      keyId : <key1ID>:
+        //      algorithm: "Range",
+        //      contentionFactor: 0,
+        //      rangeOpts: RangeOpts {
+        //         min: 0,
+        //         max: 1000,
+        //         trimFactor: 0
+        //      }
+        //   }
+        auto payload_trim_factor_0 = client_encryption.encrypt(
+            v_123,
+            options::encrypt()
+                .key_id(keyId.view())
+                .algorithm(options::encrypt::encryption_algorithm::k_range)
+                .contention_factor(0)
+                .range_opts(options::range()
+                                .min(to_field_value(0, RangeFieldType::Int))
+                                .max(to_field_value(1000, RangeFieldType::Int))
+                                .trim_factor(0)));
+
+        REQUIRE_NOTHROW(payload_defaults.view().get_binary().size <
+                        payload_trim_factor_0.view().get_binary().size);
     }
 }
 

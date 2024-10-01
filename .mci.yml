@@ -12,7 +12,8 @@ variables:
     # If updating mongoc_version_minimum, also update:
     # - the default value of --c-driver-build-ref in etc/make_release.py
     # - LIBMONGOC_REQUIRED_VERSION in src/mongocxx/CMakeLists.txt
-    mongoc_version_minimum: &mongoc_version_minimum "1.25.0"
+    # - the PURL version in etc/purls.txt
+    mongoc_version_minimum: &mongoc_version_minimum "1.28.0"
 
     integration_matrix:
         integration_matrix_tasks_single: &integration_matrix_tasks_single
@@ -1706,13 +1707,13 @@ buildvariants:
           - name: compile_and_test_with_shared_libs_sharded_cluster_with_libmongocrypt
           - name: build_example_with_add_subdirectory
 
-    - name: debian11-release-latest
-      display_name: "Debian 11 Release (MongoDB Latest)"
+    - name: debian12-release-latest
+      display_name: "Debian 12 Release (MongoDB Latest)"
       expansions:
           build_type: "Release"
           mongodb_version: "latest"
       run_on:
-          - debian11-large
+          - debian12-large
       tasks:
           - name: compile_and_test_with_shared_libs
           - name: compile_and_test_with_shared_libs_extra_alignment
@@ -1741,23 +1742,6 @@ buildvariants:
           - name: compile_and_test_with_static_libs_extra_alignment
           - name: compile_and_test_with_shared_libs_replica_set
           - name: compile_and_test_with_shared_libs_sharded_cluster
-          - name: build_example_with_add_subdirectory
-          - name: uninstall_check
-
-    - name: debian10-release-latest
-      display_name: "Debian 10 Release (MongoDB Latest)"
-      expansions:
-          build_type: "Release"
-          mongodb_version: "latest"
-      run_on:
-          - debian10-large
-      tasks:
-          - name: compile_and_test_with_shared_libs
-          - name: compile_and_test_with_shared_libs_extra_alignment
-          - name: compile_and_test_with_static_libs
-          - name: compile_and_test_with_static_libs_extra_alignment
-          - name: compile_and_test_with_shared_libs_replica_set_with_libmongocrypt
-          - name: compile_and_test_with_shared_libs_sharded_cluster_with_libmongocrypt
           - name: build_example_with_add_subdirectory
           - name: uninstall_check
 

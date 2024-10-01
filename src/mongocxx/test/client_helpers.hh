@@ -31,6 +31,7 @@
 #include <mongocxx/client.hpp>
 #include <mongocxx/collection.hpp>
 #include <mongocxx/options/client.hpp>
+#include <mongocxx/private/libmongoc.hh>
 #include <mongocxx/stdx.hpp>
 
 #include <mongocxx/config/private/prelude.hh>
