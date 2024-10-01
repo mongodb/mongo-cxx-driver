@@ -3060,7 +3060,7 @@ range_explicit_encryption_objects range_explicit_encryption_setup(const std::str
     // `EncryptOpts`:
     //   class EncryptOpts {
     //      keyId : <key1ID>:
-    //      algorithm: "RangePreview",
+    //      algorithm: "Range",
     //      contentionFactor: 0
     //   }
     const auto encrypt_opts = options::encrypt()
@@ -3155,7 +3155,7 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
                 // `EncryptOpts`:
                 //   class EncryptOpts {
                 //      keyId : <key1ID>
-                //      algorithm: "RangePreview",
+                //      algorithm: "Range",
                 //      contentionFactor: 0
                 //   }
                 // Store the result in insertPayload.
@@ -3391,7 +3391,7 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
                         // matching RangeOpts listed in Test Setup: RangeOpts and these EncryptOpts:
                         //   class EncryptOpts {
                         //      keyId : <key1ID>
-                        //      algorithm: "RangePreview",
+                        //      algorithm: "Range",
                         //      contentionFactor: 0
                         //   }
                         // The error should be raised because 201 is greater than the maximum value
@@ -3429,7 +3429,7 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
                         // For all the tests below use these EncryptOpts:
                         //   class EncryptOpts {
                         //      keyId : <key1ID>
-                        //      algorithm: "RangePreview",
+                        //      algorithm: "Range",
                         //      contentionFactor: 0
                         //   }
                         const auto encrypt_opts =
@@ -3475,7 +3475,7 @@ TEST_CASE("Range Explicit Encryption", "[client_side_encryption]") {
                         // `EncryptOpts` and these `RangeOpts`:
                         //   class EncryptOpts {
                         //      keyId : <key1ID>
-                        //      algorithm: "RangePreview",
+                        //      algorithm: "Range",
                         //      contentionFactor: 0
                         //   }
                         //

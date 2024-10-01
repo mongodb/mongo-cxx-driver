@@ -200,9 +200,6 @@ class encrypt {
     ///
     /// Sets the range options to use for encryption.
     ///
-    /// @warning Queryable Encryption is in Public Technical Preview. Queryable Encryption should
-    /// not be used in production and is subject to backwards breaking changes.
-    ///
     MONGOCXX_ABI_EXPORT_CDECL(encrypt&) range_opts(options::range opts);
 
     ///
@@ -210,9 +207,6 @@ class encrypt {
     ///
     /// @return
     ///   An optional range options.
-    ///
-    /// @warning Queryable Encryption is in Public Technical Preview. Queryable Encryption should
-    /// not be used in production and is subject to backwards breaking changes.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<options::range>&) range_opts() const;
 
