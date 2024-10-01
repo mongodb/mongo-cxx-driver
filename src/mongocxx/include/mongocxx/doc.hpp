@@ -99,6 +99,7 @@
 /// @li @subpage topic-mongocxx-examples-logger
 /// @li @subpage topic-mongocxx-examples-uri
 /// @li @subpage topic-mongocxx-examples-clients
+/// @li @subpage topic-mongocxx-examples-databases
 ///
 
 ///
@@ -129,6 +130,13 @@
 /// @brief How to use clients and client pools.
 /// @tableofcontents
 /// @include{doc} api/mongocxx/examples/clients.md
+///
+
+///
+/// @page topic-mongocxx-examples-databases Databases
+/// @brief How to obtain and use databases.
+/// @tableofcontents
+/// @include{doc} api/mongocxx/examples/databases.md
 ///
 
 ///
