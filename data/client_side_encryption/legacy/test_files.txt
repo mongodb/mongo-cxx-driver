@@ -29,6 +29,8 @@ fle2v2-InsertFind-Indexed.json
 fle2v2-InsertFind-Unindexed.json
 fle2v2-MissingKey.json
 fle2v2-NoEncryption.json
+fle2v2-Rangev2-Compact.json
+fle2v2-Rangev2-Defaults.json
 fle2v2-Rangev2-Date-Aggregate.json
 fle2v2-Rangev2-Date-Correctness.json
 fle2v2-Rangev2-Date-Delete.json
