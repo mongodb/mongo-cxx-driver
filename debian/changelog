@@ -1,10 +1,10 @@
-mongo-cxx-driver (3.11.0-1) UNRELEASED; urgency=medium
+mongo-cxx-driver (3.11.0-1) experimental; urgency=medium
 
   * New upstream release
   * d/rules: set -DENABLE_TESTS=OFF (since upstream CI is very thorough)
   * d/copyright: remove references to removed files
 
- -- Roberto C. Sanchez <roberto@connexer.com>  Wed, 02 Oct 2024 17:05:59 -0400
+ -- Roberto C. Sanchez <roberto@connexer.com>  Wed, 02 Oct 2024 17:21:34 -0400
 
 mongo-cxx-driver (3.10.2-1) experimental; urgency=medium
 
