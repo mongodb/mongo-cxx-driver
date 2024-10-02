@@ -14,7 +14,7 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 - Support for MongoDB Server version 8.0.
 - Stable support for In-Use Encryption Range Indexes.
 - Documentation of the [API and ABI versioning and compatibility policy](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/api-abi-versioning/).
-- API documentation page improvements.
+- API documentation pages for directories, files, namespaces, and root namespace redeclarations.
 - `empty()` member function for `mongocxx::v_noabi::bulk_write`.
 
 ### Fixed
@@ -36,7 +36,7 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
   - Note: `FetchContent_Populate()` is still used for mnmlstc/core for CMake versions prior to 3.18 to avoid `add_subdirectory()` behavior.
 - Test suite now uses Catch2 v3 via FetchContent instead of the bundled Catch2 v2 standalone header.
   - C++14 or newer is required to build tests when enabled with `ENABLE_TESTS=ON`.
-  - Set `ENABLE_TESTS=OFF` to avoid the C++14 requirement when building the C++ Driver.
+  - Set `ENABLE_TESTS=OFF` to avoid the C++14 requirement when building C++ Driver libraries.
 
 ### Deprecated
 
