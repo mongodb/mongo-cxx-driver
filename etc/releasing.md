@@ -470,7 +470,7 @@ The new branch should be tracked by Silk. Use the [create-silk-asset-group.py sc
 
 ```bash
 # Snyk credentials. Ask for these from a team member.
-. ~/.secrets/silk-creds.txt.
+. ~/.secrets/silk-creds.txt
 
 # Ensure correct release version number!
 version="X.Y"
