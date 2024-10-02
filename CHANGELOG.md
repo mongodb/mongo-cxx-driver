@@ -7,40 +7,54 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Changes prior to 3.9.0 are documented as [release notes on GitHub](https://github.com/mongodb/mongo-cxx-driver/releases).
 
-## 3.11.0 [Unreleased]
+## 3.11.0
 
 ### Added
-- Introduces stable support for In-Use Encryption range indexes.
+
+- Support for MongoDB Server version 8.0.
+- Stable support for In-Use Encryption Range Indexes.
+- Documentation of the [API and ABI versioning and compatibility policy](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/api-abi-versioning/).
+- API documentation pages for directories, files, namespaces, and root namespace redeclarations.
+- `empty()` member function for `mongocxx::v_noabi::bulk_write`.
+
+### Fixed
+
+- GCC 4.8.5 (RHEL 7) compatibility issues.
+  - Redeclaration error due to `bsoncxx::v_noabi::stdx::basic_string_view<...>::npos`.
+  - User-defined literal syntax error due to `bsoncxx::v_noabi::operator"" _bson(const char*, size_t)`.
+- MSVC 17.11 compatibility issue due to missing `<string>` include directives.
+- `bsoncxx::v_noabi::to_json` error handling given invalid BSON documents.
+- Client pool error handling on wait queue timeout per `waitQueueTimeoutMS`.
 
 ### Changed
 
-- `FetchContent_MakeAvailable()` is used to populate dependencies instead of `FetchContent_Populate()` for the Mongo C Driver (when not provided by `CMAKE_PREFIX_PATH`) and mnmlstc/core (when automatically selected or when `BSONCXX_POLY_USE_MNMLSTC=ON`).
+- Bump the minimum required C Driver version to [1.28.0](https://github.com/mongodb/mongo-c-driver/releases/tag/1.28.0).
+- Declare all exported function symbols with `__cdecl` when compiled with MSVC.
+  - This does not affect users who compile with MSVC's default calling convention.
+  - This is an ABI breaking change for users who use an alternative default calling convention when building their projects (e.g. with `/Gz`, `/Gv`, etc.). See [Argument Passing and Naming Conventions](https://learn.microsoft.com/en-us/cpp/cpp/argument-passing-and-naming-conventions) for more information.
+- `FetchContent_MakeAvailable()` is used to populate dependencies instead of `FetchContent_Populate()` for the C Driver (when not provided by `CMAKE_PREFIX_PATH`) and mnmlstc/core (when automatically selected or when `BSONCXX_POLY_USE_MNMLSTC=ON`).
   - Note: `FetchContent_Populate()` is still used for mnmlstc/core for CMake versions prior to 3.18 to avoid `add_subdirectory()` behavior.
 - Test suite now uses Catch2 v3 via FetchContent instead of the bundled Catch2 v2 standalone header.
-  - C++14 or newer is now required to build tests when enabled with `ENABLE_TESTS=ON`.
-- Bump minimum C Driver version to [1.28.0](https://github.com/mongodb/mongo-c-driver/releases/tag/1.28.0).
+  - C++14 or newer is required to build tests when enabled with `ENABLE_TESTS=ON`.
+  - Set `ENABLE_TESTS=OFF` to avoid the C++14 requirement when building C++ Driver libraries.
 
 ### Deprecated
 
-- Deprecate use of the `bsoncxx/util/functor.hpp` header.
-- A future minor release plans to raise the minimum supported MongoDB Server version from 3.6 to 4.0. This is in
-accordance with [MongoDB Software Lifecycle Schedules](https://www.mongodb.com/legal/support-policy/lifecycles).
+- Support for MongoDB Server 3.6. See [MongoDB Software Lifecycle Schedules](https://www.mongodb.com/legal/support-policy/lifecycles).
+- The `bsoncxx/util/functor.hpp` header.
+- The `bsoncxx::util` namespace.
 
 ### Removed
 
-- Export of private member functions in bsoncxx:
+- Export of private member functions in the bsoncxx ABI:
   - `bsoncxx::v_noabi::types::bson_value::value::value(const uint8_t*, uint32_t, uint32_t, uint32_t)`
   - `bsoncxx::v_noabi::types::bson_value::view::_init(void*)`
   - `bsoncxx::v_noabi::types::bson_value::view::view(const uint8_t*, uint32_t, uint32_t, uint32_t)`
   - `bsoncxx::v_noabi::types::bson_value::view::view(void*)`
-- Export of private member functions in mongocxx:
+- Export of private member functions in the mongocxx ABI:
   - `mongocxx::v_noabi::options::change_stream::as_bson()`
   - `mongocxx::v_noabi::options::aggregate::append(bsoncxx::v_noabi::builder::basic::document&)`
   - `mongocxx::v_noabi::options::index::storage_options()`
-
-## 3.10.3 [Unreleased]
-
-<!-- Will contain entries for the next patch release -->
 
 ## 3.10.2
 
