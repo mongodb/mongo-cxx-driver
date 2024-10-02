@@ -44,12 +44,12 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 
 ### Deprecated
 
-- Support for MongoDB Server 3.6. See [MongoDB Software Lifecycle Schedules](https://www.mongodb.com/legal/support-policy/lifecycles).
 - The `bsoncxx/util/functor.hpp` header.
 - The `bsoncxx::util` namespace.
 
 ### Removed
 
+- Support for MongoDB Server 3.6. See [MongoDB Software Lifecycle Schedules](https://www.mongodb.com/legal/support-policy/lifecycles).
 - Export of private member functions in the bsoncxx ABI:
   - `bsoncxx::v_noabi::types::bson_value::value::value(const uint8_t*, uint32_t, uint32_t, uint32_t)`
   - `bsoncxx::v_noabi::types::bson_value::view::_init(void*)`
