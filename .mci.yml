@@ -11,8 +11,8 @@ variables:
 
     # If updating mongoc_version_minimum, also update:
     # - the default value of --c-driver-build-ref in etc/make_release.py
-    # - LIBMONGOC_REQUIRED_VERSION in src/mongocxx/CMakeLists.txt
-    # - the PURL version in etc/purls.txt
+    # - LIBBSON_REQUIRED_VERSION and LIBMONGOC_REQUIRED_VERSION in CMakeLists.txt
+    # - the version of pkg:github/mongodb/mongo-c-driver in etc/purls.txt
     mongoc_version_minimum: &mongoc_version_minimum "1.28.0"
 
     integration_matrix:

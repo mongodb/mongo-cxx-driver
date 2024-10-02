@@ -103,6 +103,12 @@ For patch releases, check the [mongo-cxx-driver-latest-release](https://spruce.m
 
 Ensure there are no new or unexpected task failures.
 
+### Minimum Required MongoDB C Driver Version
+
+Ensure `mongoc_version_minimum` and related values are updated for the latest minimum required C Driver release.
+
+See the comment accompanying `mongoc_version_minimum` for a list of other sources to update.
+
 ### Coverity
 
 Ensure there are no new or unexpected issues with High severity or greater.
@@ -136,9 +142,14 @@ podman run \
 
 Commit the latest version of the SBOM Lite document into the repo as `etc/cyclonedx.sbom.json`. (This may just be a modification of the timestamp.)
 
+Generate an updated Augmented SBOM as described below.
+
+> [!IMPORTANT]
+> If the SBOM Lite was updated, generate an updated Augmented SBOM as described below even if the `silk-check-augmented-sbom` is currently passing on Evergreen!
+
 ### Augmented SBOM
 
-Ensure the `silk-check-augmented-sbom` task is passing on Evergreen for the relevant release branch. If it is passing, nothing needs to be done.
+Ensure the `silk-check-augmented-sbom` task is passing on Evergreen for the relevant release branch. If it is passing, nothing needs to be done (unless the SBOM Lite was updated as described above).
 
  If the `silk-check-augmented-sbom` task was failing, update the Augmented SBOM document using the following command(s):
 
@@ -265,6 +276,8 @@ Commit the updates to `CHANGELOG.md`.
 git commit -m 'Update CHANGELOG for X.Y.Z'
 ```
 
+## Pre-Release Changes PR
+
 Push the `pre-release-changes` branch to a fork repository and create a PR to merge `pre-release-changes` onto `master`:
 
 ```bash
@@ -352,7 +365,7 @@ python ./etc/make_release.py "${make_release_args[@]:?}" --dry-run rX.Y.Z
 ```
 
 > [!TIP]
-> Export environment variables (e.g.`CMAKE_BUILD_PARALLEL_LEVEL`) to improve the speed of this command.
+> Export environment variables (e.g. `CMAKE_BUILD_PARALLEL_LEVEL`, `CMAKE_GENERATOR`, etc.) to improve the speed of this command.
 
 If an error occurs, inspect logs the script produces, and troubleshoot as
 follows:
@@ -374,7 +387,7 @@ Verify the successful creation of the release draft on GitHub.
 Push the release tag (created earlier) to the remote repository:
 
 ```bash
-git push origin rX.Y.Z
+git push upstream rX.Y.Z
 ```
 
 ### Release on GitHub
@@ -448,7 +461,7 @@ git checkout -b releases/vX.Y upstream/master
 Push the new branch to the remote repository:
 
 ```
-git push origin releases/vX.Y
+git push upstream releases/vX.Y
 ```
 
 The new branch should be continuously tested on Evergreen. Update the "Display Name" and "Branch Name" of the [mongo-cxx-driver-latest-release Evergreen project](https://spruce.mongodb.com/project/mongo-cxx-driver-latest-release/settings/general) to refer to the new release branch.
@@ -475,6 +488,8 @@ create_args=(
 python path/to/tools/create-silk-asset-group.py "${create_args[@]:?}"
 ```
 
+Verify the new asset group (`mongo-cxx-driver-X.Y`) is present in the [Silk Asset Inventory](https://us1.app.silk.security/inventory/all).
+
 ### Update Snyk
 
 > [!IMPORTANT]
@@ -482,7 +497,14 @@ python path/to/tools/create-silk-asset-group.py "${create_args[@]:?}"
 
 Checkout the new release tag.
 
-Configure and build the CXX Driver with `BSONCXX_POLY_USE_MNMLSTC=ON` (force download of mnmlstc/core sources) and no `CMAKE_PREFIX_PATH` entry to an existing C Driver installation (force download of C Driver sources), then run:
+Configure and build the CXX Driver with `BSONCXX_POLY_USE_MNMLSTC=ON` (force download of mnmlstc/core sources) and no `CMAKE_PREFIX_PATH` entry to an existing C Driver installation (force download of C Driver sources):
+
+```bash
+cmake -S . -B build -D BSONCXX_POLY_USE_MNMLSTC=ON
+cmake --build build
+```
+
+Then run:
 
 ```bash
 # Snyk credentials. Ask for these from a team member.
@@ -511,7 +533,9 @@ snyk test "${snyk_args[@]:?}" --print-deps
 snyk monitor "${snyk_args[@]:?}"
 ```
 
-### Create Documentation Tickets
+Verify the new Snyk target reference is present in the [Snyk project targets list](https://app.snyk.io/org/dev-prod/projects?groupBy=targets&before&after&searchQuery=mongo-cxx-driver&sortBy=highest+severity&filters[Show]=&filters[Integrations]=cli&filters[CollectionIds]=) for `mongodb/mongo-cxx-driver`.
+
+### Post-Release Changes
 
 Create and checkout a new branch `post-release-changes` relative to `master` to contain documentation updates following the new release:
 
@@ -525,9 +549,17 @@ This branch will be used to create a PR later.
 > [!IMPORTANT]
 > Make sure the `post-release-changes` branch is created on `master`, not `rX.Y.Z` or `releases/vX.Y`!
 
-Add the new release to the tables in `etc/apidocmenu.md`.
+Update the tables in `etc/apidocmenu.md` with entries for the new release.
 
 Edit `README.md` to match the updated `etc/apidocmenu.md`.
+
+Commit these changes to the `post-release-changes` branch:
+
+```bash
+git commit -m "Post-release changes"
+```
+
+### Create Documentation Tickets
 
 (Stable Releases Only) Close the Jira ticket tracking this release with "Documentation Changes" set to "Needed". Fill the "Documentation Changes Summary" field with information requesting updates to:
 
@@ -542,7 +574,7 @@ This will generate a DOCSP ticket with instructions to update the C++ Driver doc
 Example (using Jira syntax formatting):
 
 ```
-* The [Advanced Installation|https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/installation/advanced/#installing-the-mongodb-c-driver] page must be updated with a new requirement: "For mongocxx-X.Y.x, libmongoc A.B.C or later is required.
+* The [Advanced Installation|https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/installation/advanced/#installing-the-mongodb-c-driver] page must be updated with a new requirement: "For mongocxx-X.Y.x, libmongoc A.B.C or later is required."
 * The [MongoDB C++ Driver|https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/#driver-status-by-family-and-version] page must be updated: {{{}mongocxx X.Y.x{}}} is now a previous stable release and no longer under active development; {{{}mongocxx X.Y+1.x{}}} is the new current stable release eligible for bug fixes.
 * the [full version|https://github.com/mongodb/docs-cpp/blob/master/snooty.toml] for C++ Driver documentation must be updated to {{{}X.Y.Z{}}}.
 ```
@@ -574,7 +606,7 @@ command -V doxygen hugo
 Run `git clean -dfx` to restore the repository to a clean state.
 
 > [!WARNING]
-> Do NOT run `git clean -dfx` in your local development repository, as it may delete your local development files present in the repository (even if excluded)! Only run this in the command in the separate repository being used for this release!
+> Do NOT run `git clean -dfx` in your local development repository, as it may delete your local development files present in the repository (even if normally ignored by git)! Only run this in the command in the separate repository being used for this release!
 
 Configure CMake using `build` as the binary directory. Leave all other configuration variables as their default.
 
@@ -591,6 +623,7 @@ cmake --build build --target docs
 Test generating the latest versioned Doxygen docs by building the `doxygen-latest` target (this command DOES checks for the required Doxygen version):
 
 ```bash
+export DOXYGEN_BINARY=<path/to/doxygen> # Optional. For binary version compatibility.
 cmake --build build --target doxygen-latest
 ```
 
@@ -645,6 +678,8 @@ Commit and push this change to the `gh-pages` branch:
 ```bash
 git commit -m "Update symlink for rX.Y.Z"
 ```
+
+Wait for [GitHub Actions](https://github.com/mongodb/mongo-cxx-driver/actions) to finish deploying the updated pages.
 
 Verify the https://mongocxx.org/api/current/ page has been updated with the new release.
 
@@ -715,6 +750,10 @@ Add a section for the next minor release, e.g. following a `1.3.0` release:
 
 Commit these changes to `post-release-changes`.
 
+```bash
+git commit -m "Add CHANGELOG section for the next minor release"
+```
+
 ### Merge Post-Release Changes
 
 Push the `post-releases-changes` branch to your personal fork repository and create a PR to merge the post-release changes into `master`.
@@ -728,12 +767,18 @@ git push -u origin post-release-changes
 
 Post an announcement to the [Developer Community Forum](https://www.mongodb.com/community/forums/tags/c/announcements/driver-releases/110/cxx) under "Product & Driver Announcements > Driver Releases" and include the "production" and "cxx" tags.
 
-Template:
+Template Title:
+
+```
+MongoDB C++11 Driver X.Y.Z Released
+```
+
+Template Body:
 
 ```md
 The MongoDB C++ Driver Team is pleased to announce the availability of [MongoDB C++ Driver X.Y.Z](https://github.com/mongodb/mongo-cxx-driver/releases/tag/rX.Y.Z).
 
-Please note that this version of mongocxx requires [MongoDB C Driver A.B.C](https://github.com/mongodb/mongo-c-driver/releases/tag/A.B.C) or higher.
+Please note that this version of mongocxx requires [MongoDB C Driver A.B.C](https://github.com/mongodb/mongo-c-driver/releases/tag/A.B.C) or newer.
 
 See the [MongoDB C++ Driver Manual](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/) and the [Driver Installation Instructions](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/installation/) for more details on downloading, installing, and using this driver.
 
@@ -751,12 +796,16 @@ The C++ Driver Team
 ### vcpkg
 
 Submit a PR or create an issue to update the vc-pkg file for mongo-cxx-driver.
-To submit an issue, follow: https://github.com/microsoft/vcpkg/issues/new/choose. Example: https://github.com/microsoft/vcpkg/issues/34984
+To submit an issue, follow: https://github.com/microsoft/vcpkg/issues/new/choose (Request an update to an existing port). Example: [r3.10.2](https://github.com/microsoft/vcpkg/issues/39539).
+
+Include a note communicating new minimum C Driver version requirements.
 
 ### Conan
 
 Submit a PR or create an issue to update the Conan recipe for mongo-cxx-driver.
-To submit an issue, follow: https://github.com/conan-io/conan-center-index/issues/new/choose/. Example: https://github.com/conan-io/conan-center-index/issues/21006
+To submit an issue, follow: https://github.com/conan-io/conan-center-index/issues/new/choose/ (Package: New Version). Example: [r3.10.2](https://github.com/conan-io/conan-center-index/issues/24451).
+
+Include a note communicating new minimum C Driver version requirements.
 
 ## Docker Image Build and Publish
 
