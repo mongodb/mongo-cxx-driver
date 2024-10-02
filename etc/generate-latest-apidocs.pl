@@ -13,7 +13,7 @@ sub _try_run {
     die "Error running '@command" if $?;
 }
 
-my $LATEST_DOC_TAG = "r3.10.2";
+my $LATEST_DOC_TAG = "r3.11.0";
 
 sub main {
     _try_run("etc/generate-apidocs-from-tag.pl", $LATEST_DOC_TAG);
