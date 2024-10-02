@@ -6,10 +6,12 @@
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/string/to_string.hpp>
+
 #include <mongocxx/private/append_aggregate_options.hh>
 #include <mongocxx/private/client_session.hh>
 #include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/libmongoc.hh>
+#include <mongocxx/search_index_view.hpp>
 
 #include <mongocxx/config/private/prelude.hh>
 
@@ -106,15 +108,17 @@ class search_index_view::impl {
 
         for (auto&& model : search_indexes) {
             builder::basic::document search_index_doc;
-            // model may or may not have a name attached to it. The server will create the name if
-            // it is not set.
-            const stdx::optional<bsoncxx::v_noabi::string::view_or_value> name = model.name();
+            // model may or may not have a name or type attached to it. The server will create the
+            // name if it is not set.
             const bsoncxx::v_noabi::document::view& definition = model.definition();
 
-            if (name) {
+            if (const auto name = model.name()) {
                 search_index_doc.append(kvp("name", name.value()));
             }
             search_index_doc.append(kvp("definition", definition));
+            if (const auto type = model.type()) {
+                search_index_doc.append(kvp("type", type.value()));
+            }
             search_index_arr.append(search_index_doc.view());
         }
 

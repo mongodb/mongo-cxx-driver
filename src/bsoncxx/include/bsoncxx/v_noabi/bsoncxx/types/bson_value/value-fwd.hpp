@@ -1,4 +1,4 @@
-// Copyright 2023 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ namespace v_noabi {
 namespace types {
 namespace bson_value {
 
-class BSONCXX_API value;
+class value;
 
 }  // namespace bson_value
 }  // namespace types
@@ -39,3 +39,23 @@ using ::bsoncxx::v_noabi::types::bson_value::value;
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
+
+///
+/// @file
+/// Declares @ref bsoncxx::v_noabi::types::bson_value::value.
+///
+
+#if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+
+namespace bsoncxx {
+namespace types {
+namespace bson_value {
+
+/// @ref bsoncxx::v_noabi::types::bson_value::value
+class value {};
+
+}  // namespace bson_value
+}  // namespace types
+}  // namespace bsoncxx
+
+#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

@@ -1,4 +1,4 @@
-// Copyright 2014 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ template <typename T>
 class mock;
 
 template <typename R, typename... Args>
-class mock<R (*)(Args...)> {
+class mock<R(MONGOCXX_ABI_CDECL*)(Args...)> {
    public:
     using underlying_ptr = R (*)(Args...);
     using callback = std::function<R(Args...)>;

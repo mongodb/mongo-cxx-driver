@@ -1,4 +1,4 @@
-// Copyright 2017 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,7 +17,7 @@
 
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/string/to_string.hpp>
-#include <bsoncxx/test/catch.hh>
+
 #include <mongocxx/client.hpp>
 #include <mongocxx/collection.hpp>
 #include <mongocxx/exception/logic_error.hpp>
@@ -25,7 +25,13 @@
 #include <mongocxx/index_view.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/index_view.hpp>
+
+#include <bsoncxx/test/catch.hh>
+
 #include <mongocxx/test/client_helpers.hh>
+
+#include <catch2/catch_case_sensitive.hpp>
+#include <catch2/matchers/catch_matchers_string.hpp>
 
 namespace {
 using bsoncxx::builder::basic::kvp;
@@ -175,8 +181,7 @@ TEST_CASE("create_one", "[index_view]") {
 
     SECTION("commitQuorum option") {
         if (test_util::get_topology(mongodb_client) == "single") {
-            WARN("skip: commitQuorum option requires a replica set");
-            return;
+            SKIP("commitQuorum option requires a replica set");
         }
 
         collection coll = db["index_view_create_one_commit_quorum"];
@@ -189,7 +194,7 @@ TEST_CASE("create_one", "[index_view]") {
         options::index_view options;
 
         auto commit_quorum_regex =
-            Catch::Matches("(.*)commit( )?quorum(.*)", Catch::CaseSensitive::No);
+            Catch::Matchers::Matches("(.*)commit( )?quorum(.*)", Catch::CaseSensitive::No);
 
         bool is_supported = test_util::get_max_wire_version(mongodb_client) >= 9;
         CAPTURE(is_supported);
@@ -401,9 +406,11 @@ TEST_CASE("drop_all", "[index_view]") {
         }
 
         auto cursor1 = indexes.list();
-        REQUIRE((unsigned)std::distance(cursor1.begin(), cursor1.end()) == models.size() + 1);
-        REQUIRE((unsigned)(result_view["numIndexesAfter"].get_int32() -
-                           result_view["numIndexesBefore"].get_int32()) == models.size());
+        REQUIRE(static_cast<std::size_t>(std::distance(cursor1.begin(), cursor1.end())) ==
+                models.size() + 1);
+        REQUIRE(static_cast<std::size_t>(result_view["numIndexesAfter"].get_int32() -
+                                         result_view["numIndexesBefore"].get_int32()) ==
+                models.size());
 
         indexes.drop_all();
         auto cursor2 = indexes.list();
@@ -430,9 +437,11 @@ TEST_CASE("drop_all", "[index_view]") {
         }
 
         auto cursor1 = indexes.list();
-        REQUIRE((unsigned)std::distance(cursor1.begin(), cursor1.end()) == models.size() + 1);
-        REQUIRE((unsigned)(result_view["numIndexesAfter"].get_int32() -
-                           result_view["numIndexesBefore"].get_int32()) == models.size());
+        REQUIRE(static_cast<std::size_t>(std::distance(cursor1.begin(), cursor1.end())) ==
+                models.size() + 1u);
+        REQUIRE(static_cast<std::size_t>(result_view["numIndexesAfter"].get_int32() -
+                                         result_view["numIndexesBefore"].get_int32()) ==
+                models.size());
 
         options::index_view options;
         options.max_time(std::chrono::milliseconds(1));
@@ -449,45 +458,42 @@ TEST_CASE("index creation and deletion with different collation") {
 
     client mongodb_client{uri{}, test_util::add_test_server_api()};
 
-    if (test_util::get_max_wire_version(mongodb_client) >= 5) {
-        database db = mongodb_client["index_view_collation"];
-        collection coll = db["index_view_collation"];
-        coll.drop();
-        coll.insert_one({});  // Ensure that the collection exists.
+    database db = mongodb_client["index_view_collation"];
+    collection coll = db["index_view_collation"];
+    coll.drop();
+    coll.insert_one({});  // Ensure that the collection exists.
 
-        bsoncxx::document::value keys = make_document(kvp("a", 1), kvp("bcd", -1), kvp("d", 1));
-        bsoncxx::document::value us_collation =
-            make_document(kvp("collation", make_document(kvp("locale", "en_US"))));
-        bsoncxx::document::value ko_collation = make_document(
-            kvp("name", "custom_index_name"), kvp("collation", make_document(kvp("locale", "ko"))));
+    bsoncxx::document::value keys = make_document(kvp("a", 1), kvp("bcd", -1), kvp("d", 1));
+    bsoncxx::document::value us_collation =
+        make_document(kvp("collation", make_document(kvp("locale", "en_US"))));
+    bsoncxx::document::value ko_collation = make_document(
+        kvp("name", "custom_index_name"), kvp("collation", make_document(kvp("locale", "ko"))));
 
-        index_model index_us{keys.view(), us_collation.view()};
-        index_model index_ko{keys.view(), ko_collation.view()};
+    index_model index_us{keys.view(), us_collation.view()};
+    index_model index_ko{keys.view(), ko_collation.view()};
 
-        index_view view = coll.indexes();
+    index_view view = coll.indexes();
 
-        view.create_one(index_us);
-        view.create_one(index_ko);
+    view.create_one(index_us);
+    view.create_one(index_ko);
 
-        auto cursor = view.list();
-        REQUIRE(std::distance(cursor.begin(), cursor.end()) == 3);
+    auto cursor = view.list();
+    REQUIRE(std::distance(cursor.begin(), cursor.end()) == 3);
 
-        view.drop_one("a_1_bcd_-1_d_1");
+    view.drop_one("a_1_bcd_-1_d_1");
 
-        auto cursor_after_drop = view.list();
+    auto cursor_after_drop = view.list();
 
-        REQUIRE(std::distance(cursor_after_drop.begin(), cursor_after_drop.end()) == 2);
+    REQUIRE(std::distance(cursor_after_drop.begin(), cursor_after_drop.end()) == 2);
 
-        auto cursor_after_drop1 = view.list();
-        auto index_it = cursor_after_drop1.begin();
-        ++index_it;
-        bsoncxx::document::view index = *index_it;
+    auto cursor_after_drop1 = view.list();
+    auto index_it = cursor_after_drop1.begin();
+    ++index_it;
+    bsoncxx::document::view index = *index_it;
 
-        REQUIRE(bsoncxx::string::to_string(index["name"].get_string().value) ==
-                "custom_index_name");
+    REQUIRE(bsoncxx::string::to_string(index["name"].get_string().value) == "custom_index_name");
 
-        coll.drop();
-        db.drop();
-    }
+    coll.drop();
+    db.drop();
 }
 }  // namespace

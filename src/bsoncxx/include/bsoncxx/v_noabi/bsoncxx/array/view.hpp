@@ -1,4 +1,4 @@
-// Copyright 2014 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -35,28 +35,28 @@ namespace array {
 ///
 class view {
    public:
-    class BSONCXX_API const_iterator;
+    class const_iterator;
     using iterator = const_iterator;
 
     ///
     /// @returns A const_iterator to the first element of the array.
     ///
-    const_iterator cbegin() const;
+    BSONCXX_ABI_EXPORT_CDECL(const_iterator) cbegin() const;
 
     ///
     /// @returns A const_iterator to the past-the-end element of the array.
     ///
-    const_iterator cend() const;
+    BSONCXX_ABI_EXPORT_CDECL(const_iterator) cend() const;
 
     ///
     /// @returns A const_iterator to the first element of the array.
     ///
-    const_iterator begin() const;
+    BSONCXX_ABI_EXPORT_CDECL(const_iterator) begin() const;
 
     ///
     /// @returns A const_iterator to the past-the-end element of the array.
     ///
-    const_iterator end() const;
+    BSONCXX_ABI_EXPORT_CDECL(const_iterator) end() const;
 
     ///
     /// Indexes into this BSON array. If the index is out-of-bounds, a past-the-end iterator
@@ -68,7 +68,7 @@ class view {
     ///
     /// @return An iterator to the element if it exists, or the past-the-end iterator.
     ///
-    const_iterator find(std::uint32_t i) const;
+    BSONCXX_ABI_EXPORT_CDECL(const_iterator) find(std::uint32_t i) const;
 
     ///
     /// Indexes into this BSON array. If the index is out-of-bounds, the invalid array::element
@@ -80,13 +80,13 @@ class view {
     ///
     /// @return The element if it exists, or the invalid element.
     ///
-    element operator[](std::uint32_t i) const;
+    BSONCXX_ABI_EXPORT_CDECL(element) operator[](std::uint32_t i) const;
 
     ///
     /// Default constructs a view. The resulting view will be initialized to point at
     /// an empty BSON array.
     ///
-    view();
+    BSONCXX_ABI_EXPORT_CDECL() view();
 
     ///
     /// Constructs a view from a buffer. The caller is responsible for ensuring that
@@ -97,14 +97,14 @@ class view {
     /// @param length
     ///   The size of the buffer, in bytes.
     ///
-    view(const std::uint8_t* data, std::size_t length);
+    BSONCXX_ABI_EXPORT_CDECL() view(const std::uint8_t* data, std::size_t length);
 
     ///
     /// Access the raw bytes of the underlying array.
     ///
     /// @return A (non-owning) pointer to the view's buffer.
     ///
-    const std::uint8_t* data() const;
+    BSONCXX_ABI_EXPORT_CDECL(const std::uint8_t*) data() const;
 
     ///
     /// Gets the length of the underlying buffer.
@@ -114,7 +114,7 @@ class view {
     ///
     /// @return The length of the array, in bytes.
     ///
-    std::size_t length() const;
+    BSONCXX_ABI_EXPORT_CDECL(std::size_t) length() const;
 
     ///
     /// Checks if the underlying buffer is empty, i.e. it is equivalent to
@@ -122,23 +122,21 @@ class view {
     ///
     /// @return true if the underlying document is empty.
     ///
-    bool empty() const;
+    BSONCXX_ABI_EXPORT_CDECL(bool) empty() const;
 
     ///
     /// Conversion operator unwrapping a document::view
     ///
-    operator document::view() const;
+    BSONCXX_ABI_EXPORT_CDECL() operator document::view() const;
 
     ///
-    /// @{
+    /// @relates bsoncx::v_noabi::document::view
     ///
     /// Compare two views for (in)-equality
     ///
-    /// @relates view
-    ///
-    friend BSONCXX_API bool BSONCXX_CALL operator==(view, view);
-    friend BSONCXX_API bool BSONCXX_CALL operator!=(view, view);
-    ///
+    /// @{
+    friend BSONCXX_ABI_EXPORT_CDECL(bool) operator==(view, view);
+    friend BSONCXX_ABI_EXPORT_CDECL(bool) operator!=(view, view);
     /// @}
     ///
 
@@ -163,25 +161,23 @@ class view::const_iterator {
     using iterator_category = std::forward_iterator_tag;
     using difference_type = std::ptrdiff_t;
 
-    const_iterator();
-    explicit const_iterator(const element& element);
+    BSONCXX_ABI_EXPORT_CDECL() const_iterator();
+    BSONCXX_ABI_EXPORT_CDECL(explicit) const_iterator(const element& element);
 
-    reference operator*();
-    pointer operator->();
+    BSONCXX_ABI_EXPORT_CDECL(reference) operator*();
+    BSONCXX_ABI_EXPORT_CDECL(pointer) operator->();
 
-    const_iterator& operator++();
-    const_iterator operator++(int);
+    BSONCXX_ABI_EXPORT_CDECL(const_iterator&) operator++();
+    BSONCXX_ABI_EXPORT_CDECL(const_iterator) operator++(int);
 
+    ///
+    /// @relates bsoncxx::v_noabi::array::view::const_iterator
+    ///
+    /// Compare two const_iterators for (in)-equality.
     ///
     /// @{
-    ///
-    /// Compare two const_iterators for (in)-equality
-    ///
-    /// @relates view::const_iterator
-    ///
-    friend BSONCXX_API bool BSONCXX_CALL operator==(const const_iterator&, const const_iterator&);
-    friend BSONCXX_API bool BSONCXX_CALL operator!=(const const_iterator&, const const_iterator&);
-    ///
+    friend BSONCXX_ABI_EXPORT_CDECL(bool) operator==(const const_iterator&, const const_iterator&);
+    friend BSONCXX_ABI_EXPORT_CDECL(bool) operator!=(const const_iterator&, const const_iterator&);
     /// @}
     ///
 
@@ -194,3 +190,8 @@ class view::const_iterator {
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref bsoncxx::v_noabi::array::view.
+///

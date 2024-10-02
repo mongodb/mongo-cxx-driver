@@ -1,4 +1,4 @@
-// Copyright 2023 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,11 +21,11 @@ namespace v_noabi {
 namespace builder {
 namespace stream {
 
-struct BSONCXX_API open_document_type;
-struct BSONCXX_API close_document_type;
-struct BSONCXX_API open_array_type;
-struct BSONCXX_API close_array_type;
-struct BSONCXX_API finalize_type;
+struct open_document_type;
+struct close_document_type;
+struct open_array_type;
+struct close_array_type;
+struct finalize_type;
 
 }  // namespace stream
 }  // namespace builder
@@ -33,3 +33,9 @@ struct BSONCXX_API finalize_type;
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides types used to define stream manipulators in @ref
+/// bsoncxx/v_noabi/bsoncxx/builder/stream/helpers.hpp.
+///

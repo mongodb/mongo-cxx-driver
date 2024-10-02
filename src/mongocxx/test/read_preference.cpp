@@ -1,4 +1,4 @@
-// Copyright 2014 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,12 +15,15 @@
 #include <bsoncxx/builder/basic/array.hpp>
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/document/view.hpp>
-#include <bsoncxx/test/catch.hh>
+
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/private/conversions.hh>
 #include <mongocxx/read_preference.hpp>
-#include <third_party/catch/include/helpers.hpp>
+
+#include <bsoncxx/test/catch.hh>
+
+#include <mongocxx/test/catch_helpers.hh>
 
 namespace {
 using namespace bsoncxx;
@@ -145,7 +148,7 @@ TEST_CASE("Read preference inequality operator works", "[read_preference]") {
 
 TEST_CASE("Read preference methods call underlying mongoc methods", "[read_preference]") {
     instance::current();
-    MOCK_READ_PREFERENCE
+    MOCK_READ_PREFERENCE;
 
     read_preference rp;
     bool called = false;

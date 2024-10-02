@@ -1,4 +1,4 @@
-// Copyright 2014 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,9 +14,11 @@
 
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/json.hpp>
-#include <bsoncxx/test/catch.hh>
+
 #include <mongocxx/instance.hpp>
 #include <mongocxx/result/delete.hpp>
+
+#include <bsoncxx/test/catch.hh>
 
 namespace {
 

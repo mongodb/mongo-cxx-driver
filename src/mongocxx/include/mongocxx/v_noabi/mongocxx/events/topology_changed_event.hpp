@@ -1,4 +1,4 @@
-// Copyright 2018-present MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 #include <mongocxx/events/topology_changed_event-fwd.hpp>
 
 #include <bsoncxx/oid.hpp>
+
 #include <mongocxx/events/topology_description.hpp>
 
 #include <mongocxx/config/prelude.hpp>
@@ -29,17 +30,23 @@ namespace events {
 /// An event notification sent when the driver observes a change in any of the servers it is
 /// connected to or a change in the overall server topology.
 ///
-/// @see "TopologyDescriptionChangedEvent" in
-/// https://github.com/mongodb/specifications/blob/master/source/server-discovery-and-monitoring/server-discovery-and-monitoring.rst
+/// @see
+/// - "TopologyDescriptionChangedEvent" in https://github.com/mongodb/specifications/blob/master/source/server-discovery-and-monitoring/server-discovery-and-monitoring.rst
 ///
 class topology_changed_event {
    public:
-    MONGOCXX_PRIVATE explicit topology_changed_event(const void* event);
+    explicit topology_changed_event(const void* event);
 
     ///
     /// Destroys a topology_changed_event.
     ///
-    ~topology_changed_event();
+    MONGOCXX_ABI_EXPORT_CDECL() ~topology_changed_event();
+
+    topology_changed_event(topology_changed_event&&) = default;
+    topology_changed_event& operator=(topology_changed_event&&) = default;
+
+    topology_changed_event(const topology_changed_event&) = default;
+    topology_changed_event& operator=(const topology_changed_event&) = default;
 
     ///
     /// An opaque id, unique to this topology for this mongocxx::v_noabi::client or
@@ -47,21 +54,21 @@ class topology_changed_event {
     ///
     /// @return The id.
     ///
-    bsoncxx::v_noabi::oid topology_id() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::oid) topology_id() const;
 
     ///
     /// The server's description before it changed.
     ///
     /// @return The topology_description.
     ///
-    topology_description previous_description() const;
+    MONGOCXX_ABI_EXPORT_CDECL(topology_description) previous_description() const;
 
     ///
     /// The server's description after it changed.
     ///
     /// @return The topology_description.
     ///
-    topology_description new_description() const;
+    MONGOCXX_ABI_EXPORT_CDECL(topology_description) new_description() const;
 
    private:
     const void* _event;
@@ -72,3 +79,8 @@ class topology_changed_event {
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref mongocxx::v_noabi::events::topology_changed_event.
+///

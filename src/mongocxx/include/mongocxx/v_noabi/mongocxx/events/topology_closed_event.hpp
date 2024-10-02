@@ -1,4 +1,4 @@
-// Copyright 2018-present MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -28,17 +28,23 @@ namespace events {
 /// An event notification sent when the driver stops monitoring a server topology and destroys its
 /// description.
 ///
-/// @see "TopologyClosedEvent" in
-/// https://github.com/mongodb/specifications/blob/master/source/server-discovery-and-monitoring/server-discovery-and-monitoring.rst
+/// @see
+/// - "TopologyClosedEvent" in https://github.com/mongodb/specifications/blob/master/source/server-discovery-and-monitoring/server-discovery-and-monitoring.rst
 ///
 class topology_closed_event {
    public:
-    MONGOCXX_PRIVATE explicit topology_closed_event(const void* event);
+    explicit topology_closed_event(const void* event);
 
     ///
     /// Destroys a topology_closed_event.
     ///
-    ~topology_closed_event();
+    MONGOCXX_ABI_EXPORT_CDECL() ~topology_closed_event();
+
+    topology_closed_event(topology_closed_event&&) = default;
+    topology_closed_event& operator=(topology_closed_event&&) = default;
+
+    topology_closed_event(const topology_closed_event&) = default;
+    topology_closed_event& operator=(const topology_closed_event&) = default;
 
     ///
     /// An opaque id, unique to this topology for this mongocxx::v_noabi::client or
@@ -46,7 +52,7 @@ class topology_closed_event {
     ///
     /// @return The id.
     ///
-    bsoncxx::v_noabi::oid topology_id() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::oid) topology_id() const;
 
    private:
     const void* _event;
@@ -57,3 +63,8 @@ class topology_closed_event {
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref mongocxx::v_noabi::events::topology_closed_event.
+///

@@ -1,4 +1,4 @@
-// Copyright 2017 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,10 +21,12 @@
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/string/to_string.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
+
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/exception/write_exception.hpp>
+#include <mongocxx/index_view.hpp>
 #include <mongocxx/options/index_view.hpp>
 #include <mongocxx/private/client_session.hh>
 #include <mongocxx/private/libbson.hh>
@@ -42,14 +44,6 @@ class index_view::impl {
    public:
     impl(mongoc_collection_t* collection, mongoc_client_t* client)
         : _coll{collection}, _client{client} {}
-
-    impl(const impl& i) = default;
-
-    impl(impl&& i) = default;
-
-    ~impl() = default;
-
-    impl& operator=(const impl& i) = default;
 
     std::string get_index_name_from_keys(bsoncxx::v_noabi::document::view_or_value keys) {
         libbson::scoped_bson_t keys_bson{keys};
@@ -269,9 +263,24 @@ class index_view::impl {
     class scoped_server_description {
        public:
         explicit scoped_server_description(mongoc_server_description_t* sd) : sd(sd) {}
+
         ~scoped_server_description() {
             mongoc_server_description_destroy(sd);
         }
+
+        scoped_server_description(scoped_server_description&& other) : sd(other.sd) {
+            other.sd = nullptr;
+        }
+
+        scoped_server_description& operator=(scoped_server_description&& other) {
+            sd = other.sd;
+            other.sd = nullptr;
+            return *this;
+        }
+
+        scoped_server_description(const scoped_server_description&) = delete;
+        scoped_server_description& operator=(const scoped_server_description&) = delete;
+
         mongoc_server_description_t* sd;
     };
 };

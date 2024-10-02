@@ -1,4 +1,4 @@
-// Copyright 2014 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@
 #include <utility>
 
 #include <bsoncxx/stdx/make_unique.hpp>
+
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/instance.hpp>
@@ -125,6 +126,12 @@ class instance::impl {
         libmongoc::cleanup();
 #endif
     }
+
+    impl(impl&&) noexcept = delete;
+    impl& operator=(impl&&) noexcept = delete;
+
+    impl(const impl&) = delete;
+    impl& operator=(const impl&) = delete;
 
     const std::unique_ptr<logger> _user_logger;
 };

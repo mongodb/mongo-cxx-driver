@@ -1,4 +1,4 @@
-// Copyright 2018-present MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,11 +15,13 @@
 #include <iostream>
 #include <unordered_set>
 
-#include <bsoncxx/test/catch.hh>
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/instance.hpp>
+
+#include <bsoncxx/test/catch.hh>
+
 #include <mongocxx/test/client_helpers.hh>
 
 namespace {
@@ -35,11 +37,9 @@ TEST_CASE("Transaction tests", "[transactions]") {
     client mongodb_client{uri{}, test_util::add_test_server_api()};
 
     if (!test_util::is_replica_set(mongodb_client)) {
-        WARN("Skipping: transactions tests require replica set");
-        return;
+        SKIP("transactions tests require replica set");
     } else if (test_util::get_max_wire_version(mongodb_client) < 7) {
-        WARN("Skipping - transactions tests require max wire version is >= 7");
-        return;
+        SKIP("transactions tests require max wire version is >= 7");
     }
 
     // The test run in first 3 SECTIONs below
@@ -222,11 +222,9 @@ TEST_CASE("Transactions Documentation Examples", "[transactions]") {
     client client{uri{}, test_util::add_test_server_api()};
 
     if (!test_util::is_replica_set(client)) {
-        WARN("Skipping: transactions tests require replica set");
-        return;
+        SKIP("transactions tests require replica set");
     } else if (test_util::get_max_wire_version(client) < 7) {
-        WARN("Skipping - transactions tests require max wire version is >= 7");
-        return;
+        SKIP("transactions tests require max wire version is >= 7");
     }
 
     /* Create necessary collections. */
@@ -442,24 +440,22 @@ TEST_CASE("Transactions Mongos Pinning Prose Tests", "[transactions]") {
     instance::current();
 
     if (test_util::compare_versions(test_util::get_server_version(), "4.1.6") < 0) {
-        WARN("Skipping - requires server 4.1.6+");
-        return;
+        SKIP("requires server 4.1.6+");
     }
 
     if (test_util::get_topology() != "sharded") {
-        WARN("Skipping - requires sharded cluster topology");
-        return;
+        SKIP("requires sharded cluster topology");
     }
 
     // @require_mongos_count_at_least(2)
     {
         mongocxx::client client{mongocxx::uri{"mongodb://localhost:27017"}};
         REQUIRE(client["config"].has_collection("shards"));
-    };
+    }
     {
         mongocxx::client client{mongocxx::uri{"mongodb://localhost:27018"}};
         REQUIRE(client["config"].has_collection("shards"));
-    };
+    }
 
     const auto uri =
         mongocxx::uri("mongodb://localhost:27017,localhost:27018/?localThresholdMS=1000");

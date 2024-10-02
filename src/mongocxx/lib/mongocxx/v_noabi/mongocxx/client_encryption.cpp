@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include <bsoncxx/stdx/make_unique.hpp>
+
 #include <mongocxx/client_encryption.hpp>
 #include <mongocxx/private/client_encryption.hh>
 #include <mongocxx/private/database.hh>
@@ -27,9 +28,9 @@ using mongocxx::libbson::scoped_bson_t;
 client_encryption::client_encryption(options::client_encryption opts)
     : _impl(stdx::make_unique<impl>(std::move(opts))) {}
 
-client_encryption::~client_encryption() noexcept = default;
-client_encryption::client_encryption(client_encryption&&) = default;
-client_encryption& client_encryption::operator=(client_encryption&&) = default;
+client_encryption::~client_encryption() = default;
+client_encryption::client_encryption(client_encryption&&) noexcept = default;
+client_encryption& client_encryption::operator=(client_encryption&&) noexcept = default;
 
 bsoncxx::v_noabi::types::bson_value::value client_encryption::create_data_key(
     std::string kms_provider, const options::data_key& opts) {

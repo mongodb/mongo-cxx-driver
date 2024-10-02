@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,8 +17,9 @@
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/string/to_string.hpp>
-#include <bsoncxx/test/catch.hh>
 #include <bsoncxx/types/bson_value/view.hpp>
+
+#include <bsoncxx/test/catch.hh>
 
 namespace {
 using namespace bsoncxx;
@@ -35,9 +36,6 @@ struct Person {
 
     bool operator==(const Person& rhs) const {
         return (first_name == rhs.first_name) && (last_name == rhs.last_name) && (age == rhs.age);
-    }
-    bool operator!=(const Person& rhs) const {
-        return !(operator==(rhs));
     }
 };
 

@@ -1,4 +1,4 @@
-// Copyright 2014 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 #include <memory>
 #include <stdexcept>
+#include <string>
 #include <type_traits>
 
 #include <bsoncxx/builder/core-fwd.hpp>
@@ -44,7 +45,7 @@ namespace builder {
 ///
 class core {
    public:
-    class BSONCXX_PRIVATE impl;
+    class impl;
 
     ///
     /// Constructs an empty BSON datum.
@@ -52,12 +53,15 @@ class core {
     /// @param is_array
     ///   True if the top-level BSON datum should be an array.
     ///
-    explicit core(bool is_array);
+    explicit BSONCXX_ABI_EXPORT_CDECL() core(bool is_array);
 
-    core(core&& rhs) noexcept;
-    core& operator=(core&& rhs) noexcept;
+    BSONCXX_ABI_EXPORT_CDECL() core(core&& rhs) noexcept;
+    BSONCXX_ABI_EXPORT_CDECL(core&) operator=(core&& rhs) noexcept;
 
-    ~core();
+    BSONCXX_ABI_EXPORT_CDECL() ~core();
+
+    core(const core&) = delete;
+    core& operator=(const core&) = delete;
 
     ///
     /// Appends a key passed as a non-owning stdx::string_view.
@@ -79,7 +83,7 @@ class core {
     /// @throws bsoncxx::v_noabi::exception if the current BSON datum is an array or if the previous
     /// value appended to the builder was also a key.
     ///
-    core& key_view(stdx::string_view key);
+    BSONCXX_ABI_EXPORT_CDECL(core&) key_view(stdx::string_view key);
 
     ///
     /// Appends a key passed as an STL string.  Transfers ownership of the key to this class.
@@ -94,7 +98,7 @@ class core {
     /// @throws bsoncxx::v_noabi::exception if the current BSON datum is an array or if the previous
     /// value appended to the builder was a key.
     ///
-    core& key_owned(std::string key);
+    BSONCXX_ABI_EXPORT_CDECL(core&) key_owned(std::string key);
 
     ///
     /// Opens a sub-document within this BSON datum.
@@ -107,7 +111,7 @@ class core {
     ///   bsoncxx::v_noabi::exception if the current BSON datum is a document that is waiting for a
     ///   key to be appended to start a new key/value pair.
     ///
-    core& open_document();
+    BSONCXX_ABI_EXPORT_CDECL(core&) open_document();
 
     ///
     /// Opens a sub-array within this BSON datum.
@@ -120,7 +124,7 @@ class core {
     ///   bsoncxx::v_noabi::exception if the current BSON datum is a document that is waiting for a
     ///   key to be appended to start a new key/value pair.
     ///
-    core& open_array();
+    BSONCXX_ABI_EXPORT_CDECL(core&) open_array();
 
     ///
     /// Closes the current sub-document within this BSON datum.
@@ -131,7 +135,7 @@ class core {
     ///
     /// @throws bsoncxx::v_noabi::exception if the current BSON datum is not an open sub-document.
     ///
-    core& close_document();
+    BSONCXX_ABI_EXPORT_CDECL(core&) close_document();
 
     ///
     /// Closes the current sub-array within this BSON datum.
@@ -142,7 +146,7 @@ class core {
     ///
     /// @throws bsoncxx::v_noabi::exception if the current BSON datum is not an open sub-array.
     ///
-    core& close_array();
+    BSONCXX_ABI_EXPORT_CDECL(core&) close_array();
 
     ///
     /// Appends the keys from a BSON document into this BSON datum.
@@ -161,7 +165,7 @@ class core {
     /// @throws
     ///   bsoncxx::v_noabi::exception if one of the keys fails to append.
     ///
-    core& concatenate(const bsoncxx::v_noabi::document::view& view);
+    BSONCXX_ABI_EXPORT_CDECL(core&) concatenate(const bsoncxx::v_noabi::document::view& view);
 
     ///
     /// Appends a BSON double.
@@ -175,7 +179,7 @@ class core {
     ///   key to be appended to start a new key/value pair.
     ///   bsoncxx::v_noabi::exception if the double fails to append.
     ///
-    core& append(const types::b_double& value);
+    BSONCXX_ABI_EXPORT_CDECL(core&) append(const types::b_double& value);
 
     ///
     /// Append a BSON UTF-8 string.
@@ -189,7 +193,7 @@ class core {
     ///   key to be appended to start a new key/value pair.
     ///   bsoncxx::v_noabi::exception if the string fails to append.
     ///
-    core& append(const types::b_string& value);
+    BSONCXX_ABI_EXPORT_CDECL(core&) append(const types::b_string& value);
 
     ///
     /// Appends a BSON document.
@@ -203,7 +207,7 @@ class core {
     ///   key to be appended to start a new key/value pair.
     ///   bsoncxx::v_noabi::exception if the document fails to append.
     ///
-    core& append(const types::b_document& value);
+    BSONCXX_ABI_EXPORT_CDECL(core&) append(const types::b_document& value);
 
     ///
     /// Appends a BSON array.
@@ -217,7 +221,7 @@ class core {
     ///   key to be appended to start a new key/value pair.
     ///   bsoncxx::v_noabi::exception if the array fails to append.
     ///
-    core& append(const types::b_array& value);
+    BSONCXX_ABI_EXPORT_CDECL(core&) append(const types::b_array& value);
 
     ///
     /// Appends a BSON binary datum.
@@ -231,7 +235,7 @@ class core {
     ///   key to be appended to start a new key/value pair.
     ///   bsoncxx::v_noabi::exception if the binary fails to append.
     ///
-    core& append(const types::b_binary& value);
+    BSONCXX_ABI_EXPORT_CDECL(core&) append(const types::b_binary& value);
 
     ///
     /// Appends a BSON undefined.
@@ -245,7 +249,7 @@ class core {
     ///   key to be appended to start a new key/value pair.
     ///   bsoncxx::v_noabi::exception if undefined fails to append.
     ///
-    core& append(const types::b_undefined& value);
+    BSONCXX_ABI_EXPORT_CDECL(core&) append(const types::b_undefined& value);
 
     ///
     /// Appends a BSON ObjectId.
@@ -259,7 +263,7 @@ class core {
     ///   key to be appended to start a new key/value pair.
     ///   bsoncxx::v_noabi::exception if the ObjectId fails to append.
     ///
-    core& append(const types::b_oid& value);
+    BSONCXX_ABI_EXPORT_CDECL(core&) append(const types::b_oid& value);
 
     ///
     /// Appends a BSON boolean.
@@ -273,7 +277,7 @@ class core {
     ///   key to be appended to start a new key/value pair.
     ///   bsoncxx::v_noabi::exception if the boolean fails to append.
     ///
-    core& append(const types::b_bool& value);
+    BSONCXX_ABI_EXPORT_CDECL(core&) append(const types::b_bool& value);
 
     ///
     /// Appends a BSON date.
@@ -287,7 +291,7 @@ class core {
     ///   key to be appended to start a new key/value pair.
     ///   bsoncxx::v_noabi::exception if the date fails to append.
     ///
-    core& append(const types::b_date& value);
+    BSONCXX_ABI_EXPORT_CDECL(core&) append(const types::b_date& value);
 
     ///
     /// Appends a BSON null.
@@ -301,7 +305,7 @@ class core {
     ///   key to be appended to start a new key/value pair.
     ///   bsoncxx::v_noabi::exception if null fails to append.
     ///
-    core& append(const types::b_null& value);
+    BSONCXX_ABI_EXPORT_CDECL(core&) append(const types::b_null& value);
 
     ///
     /// Appends a BSON regex.
@@ -315,7 +319,7 @@ class core {
     ///   key to be appended to start a new key/value pair.
     ///   bsoncxx::v_noabi::exception if the regex fails to append.
     ///
-    core& append(const types::b_regex& value);
+    BSONCXX_ABI_EXPORT_CDECL(core&) append(const types::b_regex& value);
 
     ///
     /// Appends a BSON DBPointer.
@@ -329,7 +333,7 @@ class core {
     ///   key to be appended to start a new key/value pair.
     ///   bsoncxx::v_noabi::exception if the DBPointer fails to append.
     ///
-    core& append(const types::b_dbpointer& value);
+    BSONCXX_ABI_EXPORT_CDECL(core&) append(const types::b_dbpointer& value);
 
     ///
     /// Appends a BSON JavaScript code.
@@ -343,7 +347,7 @@ class core {
     ///   key to be appended to start a new key/value pair.
     ///   bsoncxx::v_noabi::exception if the JavaScript code fails to append.
     ///
-    core& append(const types::b_code& value);
+    BSONCXX_ABI_EXPORT_CDECL(core&) append(const types::b_code& value);
 
     ///
     /// Appends a BSON symbol.
@@ -357,7 +361,7 @@ class core {
     ///   key to be appended to start a new key/value pair.
     ///   bsoncxx::v_noabi::exception if the symbol fails to append.
     ///
-    core& append(const types::b_symbol& value);
+    BSONCXX_ABI_EXPORT_CDECL(core&) append(const types::b_symbol& value);
 
     ///
     /// Appends a BSON JavaScript code with scope.
@@ -371,7 +375,7 @@ class core {
     ///   key to be appended to start a new key/value pair.
     ///   bsoncxx::v_noabi::exception if the JavaScript code with scope fails to append.
     ///
-    core& append(const types::b_codewscope& value);
+    BSONCXX_ABI_EXPORT_CDECL(core&) append(const types::b_codewscope& value);
 
     ///
     /// Appends a BSON 32-bit signed integer.
@@ -385,7 +389,7 @@ class core {
     ///   key to be appended to start a new key/value pair.
     ///   bsoncxx::v_noabi::exception if the 32-bit signed integer fails to append.
     ///
-    core& append(const types::b_int32& value);
+    BSONCXX_ABI_EXPORT_CDECL(core&) append(const types::b_int32& value);
 
     ///
     /// Appends a BSON replication timestamp.
@@ -399,7 +403,7 @@ class core {
     ///   key to be appended to start a new key/value pair.
     ///   bsoncxx::v_noabi::exception if the timestamp fails to append.
     ///
-    core& append(const types::b_timestamp& value);
+    BSONCXX_ABI_EXPORT_CDECL(core&) append(const types::b_timestamp& value);
 
     ///
     /// Appends a BSON 64-bit signed integer.
@@ -413,7 +417,7 @@ class core {
     ///   key to be appended to start a new key/value pair.
     ///   bsoncxx::v_noabi::exception if the 64-bit signed integer fails to append.
     ///
-    core& append(const types::b_int64& value);
+    BSONCXX_ABI_EXPORT_CDECL(core&) append(const types::b_int64& value);
 
     ///
     /// Appends a BSON Decimal128.
@@ -427,7 +431,7 @@ class core {
     ///   key to be appended to start a new key/value pair.
     ///   bsoncxx::v_noabi::exception if the Decimal128 fails to append.
     ///
-    core& append(const types::b_decimal128& value);
+    BSONCXX_ABI_EXPORT_CDECL(core&) append(const types::b_decimal128& value);
 
     ///
     /// Appends a BSON min-key.
@@ -441,7 +445,7 @@ class core {
     ///   key to be appended to start a new key/value pair.
     ///   bsoncxx::v_noabi::exception if the min-key fails to append.
     ///
-    core& append(const types::b_minkey& value);
+    BSONCXX_ABI_EXPORT_CDECL(core&) append(const types::b_minkey& value);
 
     ///
     /// Appends a BSON max-key.
@@ -455,7 +459,7 @@ class core {
     ///   key to be appended to start a new key/value pair.
     ///   bsoncxx::v_noabi::exception if the max-key fails to append.
     ///
-    core& append(const types::b_maxkey& value);
+    BSONCXX_ABI_EXPORT_CDECL(core&) append(const types::b_maxkey& value);
 
     ///
     /// Appends a BSON variant value.
@@ -468,7 +472,7 @@ class core {
     ///   bsoncxx::v_noabi::exception if the current BSON datum is a document that is waiting for a
     ///   key to be appended to start a new key/value pair.
     ///
-    core& append(const types::bson_value::view& value);
+    BSONCXX_ABI_EXPORT_CDECL(core&) append(const types::bson_value::view& value);
 
     ///
     /// Appends an STL string as a BSON UTF-8 string.
@@ -481,7 +485,7 @@ class core {
     ///   bsoncxx::v_noabi::exception if the current BSON datum is a document that is waiting for a
     ///   key to be appended to start a new key/value pair.
     ///
-    core& append(std::string str);
+    BSONCXX_ABI_EXPORT_CDECL(core&) append(std::string str);
 
     ///
     /// Appends a string view as a BSON UTF-8 string.
@@ -494,7 +498,7 @@ class core {
     ///   bsoncxx::v_noabi::exception if the current BSON datum is a document that is waiting for a
     ///   key to be appended to start a new key/value pair.
     ///
-    core& append(stdx::string_view str);
+    BSONCXX_ABI_EXPORT_CDECL(core&) append(stdx::string_view str);
 
     ///
     /// Appends a char* or const char*.
@@ -510,7 +514,7 @@ class core {
     ///   key to be appended to start a new key/value pair.
     ///
     template <typename T>
-    BSONCXX_INLINE core& append(T* v) {
+    core& append(T* v) {
         static_assert(detail::is_alike<T, char>::value,
                       "append is disabled for non-char pointer types");
         append(types::b_string{v});
@@ -529,7 +533,7 @@ class core {
     ///   bsoncxx::v_noabi::exception if the current BSON datum is a document that is waiting for a
     ///   key to be appended to start a new key/value pair.
     ///
-    core& append(bool value);
+    BSONCXX_ABI_EXPORT_CDECL(core&) append(bool value);
 
     ///
     /// Appends a native double as a BSON double.
@@ -542,7 +546,7 @@ class core {
     ///   bsoncxx::v_noabi::exception if the current BSON datum is a document that is waiting for a
     ///   key to be appended to start a new key/value pair.
     ///
-    core& append(double value);
+    BSONCXX_ABI_EXPORT_CDECL(core&) append(double value);
 
     ///
     /// Appends a native int32_t as a BSON 32-bit signed integer.
@@ -555,7 +559,7 @@ class core {
     ///   bsoncxx::v_noabi::exception if the current BSON datum is a document that is waiting for a
     ///   key to be appended to start a new key/value pair.
     ///
-    core& append(std::int32_t value);
+    BSONCXX_ABI_EXPORT_CDECL(core&) append(std::int32_t value);
 
     ///
     /// Appends a native int64_t as a BSON 64-bit signed integer.
@@ -568,7 +572,7 @@ class core {
     ///   bsoncxx::v_noabi::exception if the current BSON datum is a document that is waiting for a
     ///   key to be appended to start a new key/value pair.
     ///
-    core& append(std::int64_t value);
+    BSONCXX_ABI_EXPORT_CDECL(core&) append(std::int64_t value);
 
     ///
     /// Appends an oid as a BSON ObjectId.
@@ -581,7 +585,7 @@ class core {
     ///   bsoncxx::v_noabi::exception if the current BSON datum is a document that is waiting for a
     ///   key to be appended to start a new key/value pair.
     ///
-    core& append(const oid& value);
+    BSONCXX_ABI_EXPORT_CDECL(core&) append(const oid& value);
 
     ///
     /// Appends a decimal128 object as a BSON Decimal128.
@@ -594,7 +598,7 @@ class core {
     ///   bsoncxx::v_noabi::exception if the current BSON datum is a document that is waiting for a
     ///   key to be appended to start a new key/value pair.
     ///
-    core& append(decimal128 value);
+    BSONCXX_ABI_EXPORT_CDECL(core&) append(decimal128 value);
 
     ///
     /// Appends the given document view.
@@ -607,7 +611,7 @@ class core {
     ///   bsoncxx::v_noabi::exception if the current BSON datum is a document that is waiting for a
     ///   key to be appended to start a new key/value pair.
     ///
-    core& append(bsoncxx::v_noabi::document::view view);
+    BSONCXX_ABI_EXPORT_CDECL(core&) append(bsoncxx::v_noabi::document::view view);
 
     ///
     /// Appends the given array view.
@@ -620,7 +624,7 @@ class core {
     ///   bsoncxx::v_noabi::exception if the current BSON datum is a document that is waiting for a
     ///   key to be appended to start a new key/value pair.
     ///
-    core& append(bsoncxx::v_noabi::array::view view);
+    BSONCXX_ABI_EXPORT_CDECL(core&) append(bsoncxx::v_noabi::array::view view);
 
     ///
     /// Gets a view over the document.
@@ -634,7 +638,7 @@ class core {
     ///
     /// @throws bsoncxx::v_noabi::exception if the precondition is violated.
     ///
-    bsoncxx::v_noabi::document::view view_document() const;
+    BSONCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::view) view_document() const;
 
     ///
     /// Gets a view over the array.
@@ -647,7 +651,7 @@ class core {
     ///
     /// @throws bsoncxx::v_noabi::exception if the precondition is violated.
     ///
-    bsoncxx::v_noabi::array::view view_array() const;
+    BSONCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::array::view) view_array() const;
 
     ///
     /// Transfers ownership of the underlying document to the caller.
@@ -665,7 +669,7 @@ class core {
     ///   After calling extract_document() it is illegal to call any methods on this class, unless
     ///   it is subsequenly moved into.
     ///
-    bsoncxx::v_noabi::document::value extract_document();
+    BSONCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::value) extract_document();
 
     ///
     /// Transfers ownership of the underlying document to the caller.
@@ -682,13 +686,13 @@ class core {
     ///   After calling extract_array() it is illegal to call any methods on this class, unless it
     ///   is subsequenly moved into.
     ///
-    bsoncxx::v_noabi::array::value extract_array();
+    BSONCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::array::value) extract_array();
 
     ///
     /// Deletes the contents of the underlying BSON datum. After calling clear(), the state of this
     /// class will be the same as it was immediately after construction.
     ///
-    void clear();
+    BSONCXX_ABI_EXPORT_CDECL(void) clear();
 
    private:
     std::unique_ptr<impl> _impl;
@@ -699,3 +703,8 @@ class core {
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref bsoncxx::v_noabi::builder::core.
+///

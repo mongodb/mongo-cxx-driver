@@ -1,4 +1,4 @@
-// Copyright 2014 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -31,6 +31,7 @@
 #include <bsoncxx/array/view_or_value.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
+
 #include <mongocxx/options/transaction.hpp>
 #include <mongocxx/stdx.hpp>
 
@@ -58,7 +59,8 @@ namespace v_noabi {
 /// in order to perform read operations on a direct connection to a secondary member of a replica
 /// set, you must set a read preference that allows reading from secondaries.
 ///
-/// @see https://www.mongodb.com/docs/manual/core/read-preference/
+/// @see
+/// - https://www.mongodb.com/docs/manual/core/read-preference/
 ///
 class read_preference {
    public:
@@ -71,7 +73,8 @@ class read_preference {
     /// replicate operations from the primary with some delay. Ensure that your application
     /// can tolerate stale data if you choose to use a non-primary mode.
     ///
-    /// @see https://www.mongodb.com/docs/manual/core/read-preference/#read-preference-modes
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/core/read-preference/#read-preference-modes
     ///
     enum class read_mode : std::uint8_t {
         ///
@@ -103,7 +106,7 @@ class read_preference {
     ///
     /// Constructs a new read_preference with read_mode set to k_primary.
     ///
-    read_preference();
+    MONGOCXX_ABI_EXPORT_CDECL() read_preference();
 
     struct deprecated_tag {};
 
@@ -115,8 +118,9 @@ class read_preference {
     ///
     /// @deprecated The constructor with no arguments and the method mode() should be used.
     ///
-    MONGOCXX_DEPRECATED read_preference(read_mode mode);
-    read_preference(read_mode mode, deprecated_tag);
+    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL() read_preference(read_mode mode);
+
+    MONGOCXX_ABI_EXPORT_CDECL() read_preference(read_mode mode, deprecated_tag);
 
     ///
     /// Constructs a new read_preference with tags.
@@ -126,38 +130,41 @@ class read_preference {
     /// @param tags
     ///   A document representing tags to use for the read_preference.
     ///
-    /// @see https://www.mongodb.com/docs/manual/core/read-preference/#tag-sets
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/core/read-preference/#tag-sets
     ///
     /// @deprecated The tags() method should be used instead.
     ///
-    MONGOCXX_DEPRECATED read_preference(read_mode mode,
-                                        bsoncxx::v_noabi::document::view_or_value tags);
+    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL()
+        read_preference(read_mode mode, bsoncxx::v_noabi::document::view_or_value tags);
+
+    MONGOCXX_ABI_EXPORT_CDECL()
     read_preference(read_mode mode, bsoncxx::v_noabi::document::view_or_value tags, deprecated_tag);
 
     ///
     /// Copy constructs a read_preference.
     ///
-    read_preference(const read_preference&);
+    MONGOCXX_ABI_EXPORT_CDECL() read_preference(const read_preference&);
 
     ///
     /// Copy assigns a read_preference.
     ///
-    read_preference& operator=(const read_preference&);
+    MONGOCXX_ABI_EXPORT_CDECL(read_preference&) operator=(const read_preference&);
 
     ///
     /// Move constructs a read_preference.
     ///
-    read_preference(read_preference&&) noexcept;
+    MONGOCXX_ABI_EXPORT_CDECL() read_preference(read_preference&&) noexcept;
 
     ///
     /// Move assigns a read_preference.
     ///
-    read_preference& operator=(read_preference&&) noexcept;
+    MONGOCXX_ABI_EXPORT_CDECL(read_preference&) operator=(read_preference&&) noexcept;
 
     ///
     /// Destroys a read_preference.
     ///
-    ~read_preference();
+    MONGOCXX_ABI_EXPORT_CDECL() ~read_preference();
 
     ///
     /// Sets a new mode for this read_preference.
@@ -169,14 +176,14 @@ class read_preference {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    read_preference& mode(read_mode mode);
+    MONGOCXX_ABI_EXPORT_CDECL(read_preference&) mode(read_mode mode);
 
     ///
     /// Returns the current read_mode for this read_preference.
     ///
     /// @return The current read_mode.
     ///
-    read_mode mode() const;
+    MONGOCXX_ABI_EXPORT_CDECL(read_mode) mode() const;
 
     ///
     /// Sets or updates the tag set list for this read_preference.
@@ -184,13 +191,15 @@ class read_preference {
     /// @param tag_set_list
     ///   Document representing the tag set list.
     ///
-    /// @see https://www.mongodb.com/docs/manual/core/read-preference-tags/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/core/read-preference-tags/
     ///
     /// @return
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    read_preference& tags(bsoncxx::v_noabi::document::view_or_value tag_set_list);
+    MONGOCXX_ABI_EXPORT_CDECL(read_preference&)
+    tags(bsoncxx::v_noabi::document::view_or_value tag_set_list);
 
     ///
     /// Sets or updates the tag set list for this read_preference.
@@ -198,22 +207,25 @@ class read_preference {
     /// @param tag_set_list
     ///   Array of tag sets.
     ///
-    /// @see https://www.mongodb.com/docs/manual/core/read-preference-tags/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/core/read-preference-tags/
     ///
     /// @return
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    read_preference& tags(bsoncxx::v_noabi::array::view_or_value tag_set_list);
+    MONGOCXX_ABI_EXPORT_CDECL(read_preference&)
+    tags(bsoncxx::v_noabi::array::view_or_value tag_set_list);
 
     ///
     /// Sets or updates the tag set list for this read_preference.
     ///
     /// @return The optionally set current tag set list.
     ///
-    /// @see https://www.mongodb.com/docs/manual/core/read-preference-tags/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/core/read-preference-tags/
     ///
-    stdx::optional<bsoncxx::v_noabi::document::view> tags() const;
+    MONGOCXX_ABI_EXPORT_CDECL(stdx::optional<bsoncxx::v_noabi::document::view>) tags() const;
 
     ///
     /// Sets the max staleness setting for this read_preference.  Secondary
@@ -245,14 +257,14 @@ class read_preference {
     ///
     /// @throws mongocxx::v_noabi::logic_error if the argument is invalid.
     ///
-    read_preference& max_staleness(std::chrono::seconds max_staleness);
+    MONGOCXX_ABI_EXPORT_CDECL(read_preference&) max_staleness(std::chrono::seconds max_staleness);
 
     ///
     /// Returns the current max staleness setting for this read_preference.
     ///
     /// @return The optionally current max staleness setting.
     ///
-    stdx::optional<std::chrono::seconds> max_staleness() const;
+    MONGOCXX_ABI_EXPORT_CDECL(stdx::optional<std::chrono::seconds>) max_staleness() const;
 
     ///
     /// Sets the hedge document to be used for the read preference. Sharded clusters running MongoDB
@@ -272,14 +284,28 @@ class read_preference {
     /// @return A reference to the object on which this member function is being called. This
     /// facilitates method chaining.
     ///
-    read_preference& hedge(bsoncxx::v_noabi::document::view_or_value hedge);
+    MONGOCXX_ABI_EXPORT_CDECL(read_preference&)
+    hedge(bsoncxx::v_noabi::document::view_or_value hedge);
 
     ///
     /// Gets the current hedge document to be used for the read preference.
     ///
     /// @return A hedge document if one was set.
     ///
-    const stdx::optional<bsoncxx::v_noabi::document::view> hedge() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::view>) hedge() const;
+
+    ///
+    /// @relates mongocxx::v_noabi::read_preference
+    ///
+    /// Compares two read_preference objects for (in)-equality.
+    ///
+    /// @{
+    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(const read_preference&,
+                                                      const read_preference&);
+    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator!=(const read_preference&,
+                                                      const read_preference&);
+    /// @}
+    ///
 
    private:
     friend ::mongocxx::v_noabi::client;
@@ -290,24 +316,9 @@ class read_preference {
     friend ::mongocxx::v_noabi::search_index_view;
     friend ::mongocxx::v_noabi::uri;
 
-    ///
-    /// @{
-    ///
-    /// Compares two read_preference objects for (in)-equality.
-    ///
-    /// @relates: read_preference
-    ///
-    friend MONGOCXX_API bool MONGOCXX_CALL operator==(const read_preference&,
-                                                      const read_preference&);
-    friend MONGOCXX_API bool MONGOCXX_CALL operator!=(const read_preference&,
-                                                      const read_preference&);
-    ///
-    /// @}
-    ///
+    class impl;
 
-    class MONGOCXX_PRIVATE impl;
-
-    MONGOCXX_PRIVATE read_preference(std::unique_ptr<impl>&& implementation);
+    read_preference(std::unique_ptr<impl>&& implementation);
 
     std::unique_ptr<impl> _impl;
 };
@@ -316,3 +327,8 @@ class read_preference {
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref mongocxx::v_noabi::read_preference.
+///

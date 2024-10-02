@@ -37,10 +37,12 @@ sub _doxygen_rsync {
     my $tmpdir = shift;
     my @filters = ( '- /current', '- /mongocxx-v3', '- /legacy-v1' );
     _try_run(
-        qw{rsync -Cavz --delete},
+        qw{rsync -Cavz},
         ( map { ; '--filter' => $_ } @filters ),
         "build/docs/api/", "$tmpdir/api/"
     );
+    $ENV{APIDOCSPATH} = "$tmpdir/api";
+    _try_run(qw{etc/patch-apidocs-index-pages.py})
 }
 
 sub main {
@@ -56,11 +58,12 @@ sub main {
     my $orig_dir = getcwd();
 
     # Create tempdir to store copy of repo.
-    my $tmp = tempdir( DIR => "/tmp", CLEANUP => 1 );
+    _try_run("mkdir", "-p", "build/tmp-repo");
+    my $tmp = tempdir( DIR => "build/tmp-repo", CLEANUP => 1 );
     my $tmpdir = realpath("$tmp");
 
     # Clone current repo to tempdir and checkout gh-pages branch.
-    _try_run( qw/git clone/, $source_repo, $tmpdir );
+    _try_run( qw/git clone --filter=blob:none/, $source_repo, $tmpdir );
     {
         my $guard = _pushd($tmpdir);
         _try_run(qw/git checkout gh-pages/);
@@ -104,4 +107,3 @@ sub DESTROY {
     my $self = shift;
     $self->{demolish}->() if $self->{demolish};
 }
-

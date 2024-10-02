@@ -1,4 +1,4 @@
-// Copyright 2023 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -31,12 +31,27 @@ namespace bsoncxx {
 namespace v_noabi {
 namespace types {
 
-#pragma push_macro("BSONCXX_ENUM")
-#undef BSONCXX_ENUM
-#define BSONCXX_ENUM(name, val) struct BSONCXX_API b_##name;
-#include <bsoncxx/enums/type.hpp>
-#undef BSONCXX_ENUM
-#pragma pop_macro("BSONCXX_ENUM")
+struct b_double;
+struct b_string;
+struct b_document;
+struct b_array;
+struct b_binary;
+struct b_undefined;
+struct b_oid;
+struct b_bool;
+struct b_date;
+struct b_null;
+struct b_regex;
+struct b_dbpointer;
+struct b_code;
+struct b_symbol;
+struct b_codewscope;
+struct b_int32;
+struct b_timestamp;
+struct b_int64;
+struct b_decimal128;
+struct b_maxkey;
+struct b_minkey;
 
 }  // namespace types
 }  // namespace v_noabi
@@ -52,14 +67,107 @@ using ::bsoncxx::v_noabi::type;
 namespace bsoncxx {
 namespace types {
 
-#pragma push_macro("BSONCXX_ENUM")
-#undef BSONCXX_ENUM
-#define BSONCXX_ENUM(name, val) using ::bsoncxx::v_noabi::types::b_##name;
-#include <bsoncxx/enums/type.hpp>
-#undef BSONCXX_ENUM
-#pragma pop_macro("BSONCXX_ENUM")
+using ::bsoncxx::v_noabi::types::b_array;
+using ::bsoncxx::v_noabi::types::b_binary;
+using ::bsoncxx::v_noabi::types::b_bool;
+using ::bsoncxx::v_noabi::types::b_code;
+using ::bsoncxx::v_noabi::types::b_codewscope;
+using ::bsoncxx::v_noabi::types::b_date;
+using ::bsoncxx::v_noabi::types::b_dbpointer;
+using ::bsoncxx::v_noabi::types::b_decimal128;
+using ::bsoncxx::v_noabi::types::b_document;
+using ::bsoncxx::v_noabi::types::b_double;
+using ::bsoncxx::v_noabi::types::b_int32;
+using ::bsoncxx::v_noabi::types::b_int64;
+using ::bsoncxx::v_noabi::types::b_maxkey;
+using ::bsoncxx::v_noabi::types::b_minkey;
+using ::bsoncxx::v_noabi::types::b_null;
+using ::bsoncxx::v_noabi::types::b_oid;
+using ::bsoncxx::v_noabi::types::b_regex;
+using ::bsoncxx::v_noabi::types::b_string;
+using ::bsoncxx::v_noabi::types::b_symbol;
+using ::bsoncxx::v_noabi::types::b_timestamp;
+using ::bsoncxx::v_noabi::types::b_undefined;
 
 }  // namespace types
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
+
+///
+/// @file
+/// Declares entities used to represent BSON types.
+///
+
+#if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+
+namespace bsoncxx {
+namespace types {
+
+/// @ref bsoncxx::v_noabi::types::b_double
+struct b_double {};
+
+/// @ref bsoncxx::v_noabi::types::b_string
+struct b_string {};
+
+/// @ref bsoncxx::v_noabi::types::b_document
+struct b_document {};
+
+/// @ref bsoncxx::v_noabi::types::b_array
+struct b_array {};
+
+/// @ref bsoncxx::v_noabi::types::b_binary
+struct b_binary {};
+
+/// @ref bsoncxx::v_noabi::types::b_undefined
+struct b_undefined {};
+
+/// @ref bsoncxx::v_noabi::types::b_oid
+struct b_oid {};
+
+/// @ref bsoncxx::v_noabi::types::b_bool
+struct b_bool {};
+
+/// @ref bsoncxx::v_noabi::types::b_date
+struct b_date {};
+
+/// @ref bsoncxx::v_noabi::types::b_null
+struct b_null {};
+
+/// @ref bsoncxx::v_noabi::types::b_regex
+struct b_regex {};
+
+/// @ref bsoncxx::v_noabi::types::b_dbpointer
+struct b_dbpointer {};
+
+/// @ref bsoncxx::v_noabi::types::b_code
+struct b_code {};
+
+/// @ref bsoncxx::v_noabi::types::b_symbol
+struct b_symbol {};
+
+/// @ref bsoncxx::v_noabi::types::b_codewscope
+struct b_codewscope {};
+
+/// @ref bsoncxx::v_noabi::types::b_int32
+struct b_int32 {};
+
+/// @ref bsoncxx::v_noabi::types::b_timestamp
+struct b_timestamp {};
+
+/// @ref bsoncxx::v_noabi::types::b_int64
+struct b_int64 {};
+
+/// @ref bsoncxx::v_noabi::types::b_decimal128
+struct b_decimal128 {};
+
+/// @ref bsoncxx::v_noabi::types::b_maxkey
+struct b_maxkey {};
+
+/// @ref bsoncxx::v_noabi::types::b_minkey
+struct b_minkey {};
+
+}  // namespace types
+}  // namespace bsoncxx
+
+#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

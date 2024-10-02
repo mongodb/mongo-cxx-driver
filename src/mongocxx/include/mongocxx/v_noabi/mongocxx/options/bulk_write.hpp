@@ -1,4 +1,4 @@
-// Copyright 2014 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/types/bson_value/view_or_value.hpp>
+
 #include <mongocxx/write_concern.hpp>
 
 #include <mongocxx/config/prelude.hpp>
@@ -37,7 +38,7 @@ class bulk_write {
     /// as this is the only safe choice. If you want an unordered update, you must call
     /// ordered(false) to switch to unordered mode.
     ///
-    bulk_write();
+    MONGOCXX_ABI_EXPORT_CDECL() bulk_write();
 
     ///
     /// Sets whether the writes must be executed in order by the server.
@@ -54,14 +55,14 @@ class bulk_write {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    bulk_write& ordered(bool ordered);
+    MONGOCXX_ABI_EXPORT_CDECL(bulk_write&) ordered(bool ordered);
 
     ///
     /// Gets the current value of the ordered option.
     ///
     /// @return The value of the ordered option.
     ///
-    bool ordered() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bool) ordered() const;
 
     ///
     /// Sets the write_concern for this operation.
@@ -73,9 +74,10 @@ class bulk_write {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/core/write-concern/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/core/write-concern/
     ///
-    bulk_write& write_concern(mongocxx::v_noabi::write_concern wc);
+    MONGOCXX_ABI_EXPORT_CDECL(bulk_write&) write_concern(mongocxx::v_noabi::write_concern wc);
 
     ///
     /// The current write_concern for this operation.
@@ -83,9 +85,11 @@ class bulk_write {
     /// @return
     ///   The current write_concern.
     ///
-    /// @see https://www.mongodb.com/docs/manual/core/write-concern/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/core/write-concern/
     ///
-    const stdx::optional<mongocxx::v_noabi::write_concern>& write_concern() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<mongocxx::v_noabi::write_concern>&)
+    write_concern() const;
 
     ///
     /// Set whether or not to bypass document validation for this operation.
@@ -97,7 +101,8 @@ class bulk_write {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    bulk_write& bypass_document_validation(bool bypass_document_validation);
+    MONGOCXX_ABI_EXPORT_CDECL(bulk_write&)
+    bypass_document_validation(bool bypass_document_validation);
 
     ///
     /// The current setting for bypassing document validation for this operation.
@@ -105,7 +110,7 @@ class bulk_write {
     /// @return
     ///  The current document validation bypass setting.
     ///
-    const stdx::optional<bool> bypass_document_validation() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bool>) bypass_document_validation() const;
 
     ///
     /// Set the value of the let option.
@@ -117,7 +122,7 @@ class bulk_write {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    bulk_write& let(bsoncxx::v_noabi::document::view_or_value let);
+    MONGOCXX_ABI_EXPORT_CDECL(bulk_write&) let(bsoncxx::v_noabi::document::view_or_value let);
 
     ///
     /// Gets the current value of the let option.
@@ -125,7 +130,8 @@ class bulk_write {
     /// @return
     ///  The current let option.
     ///
-    const stdx::optional<bsoncxx::v_noabi::document::view_or_value> let() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::view_or_value>)
+    let() const;
 
     ///
     /// Set the value of the comment option.
@@ -137,7 +143,8 @@ class bulk_write {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    bulk_write& comment(bsoncxx::v_noabi::types::bson_value::view_or_value comment);
+    MONGOCXX_ABI_EXPORT_CDECL(bulk_write&)
+    comment(bsoncxx::v_noabi::types::bson_value::view_or_value comment);
 
     ///
     /// Gets the current value of the comment option.
@@ -145,7 +152,9 @@ class bulk_write {
     /// @return
     ///  The current comment option.
     ///
-    const stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> comment() const;
+    MONGOCXX_ABI_EXPORT_CDECL(
+        const stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>)
+    comment() const;
 
    private:
     bool _ordered;
@@ -160,3 +169,8 @@ class bulk_write {
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref mongocxx::v_noabi::options::bulk_write.
+///

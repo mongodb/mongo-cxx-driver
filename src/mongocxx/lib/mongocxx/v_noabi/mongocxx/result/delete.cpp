@@ -1,4 +1,4 @@
-// Copyright 2014 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -30,10 +30,10 @@ std::int32_t delete_result::deleted_count() const {
     return _result.deleted_count();
 }
 
-bool MONGOCXX_CALL operator==(const delete_result& lhs, const delete_result& rhs) {
+bool operator==(const delete_result& lhs, const delete_result& rhs) {
     return lhs.result() == rhs.result();
 }
-bool MONGOCXX_CALL operator!=(const delete_result& lhs, const delete_result& rhs) {
+bool operator!=(const delete_result& lhs, const delete_result& rhs) {
     return !(lhs == rhs);
 }
 

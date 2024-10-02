@@ -1,4 +1,4 @@
-// Copyright 2018-present MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,14 +17,17 @@
 
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/json.hpp>
-#include <bsoncxx/test/to_string.hh>
+
 #include <mongocxx/exception/error_code.hpp>
+
+#include <mongocxx/config/private/prelude.hh>
+
+#include <bsoncxx/test/catch.hh>
+#include <bsoncxx/test/to_string.hh>
+
 #include <mongocxx/test/client_helpers.hh>
 #include <mongocxx/test/spec/monitoring.hh>
 #include <mongocxx/test/spec/unified_tests/assert.hh>
-#include <third_party/catch/include/catch.hpp>
-
-#include <mongocxx/config/private/prelude.hh>
 
 namespace mongocxx {
 namespace spec {
@@ -32,8 +35,8 @@ namespace spec {
 using namespace mongocxx;
 using bsoncxx::to_json;
 
-void remove_ignored_command_monitoring_events(apm_checker::event_vector& events,
-                                              const std::vector<std::string>& ignore) {
+static void remove_ignored_command_monitoring_events(apm_checker::event_vector& events,
+                                                     const std::vector<std::string>& ignore) {
     auto is_ignored = [&](bsoncxx::document::value v) {
         return std::any_of(std::begin(ignore), std::end(ignore), [&](stdx::string_view key) {
             return v.view()["commandStartedEvent"]["command"][key] ||

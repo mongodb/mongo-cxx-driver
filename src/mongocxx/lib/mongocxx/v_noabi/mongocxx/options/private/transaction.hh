@@ -1,4 +1,4 @@
-// Copyright 2018-present MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@
 #include <memory>
 
 #include <bsoncxx/stdx/make_unique.hpp>
+
 #include <mongocxx/private/read_concern.hh>
 #include <mongocxx/private/read_preference.hh>
 #include <mongocxx/private/write_concern.hh>
@@ -51,8 +52,10 @@ class transaction::impl {
         return *this;
     }
 
-    impl(impl&&) noexcept = default;
-    impl& operator=(impl&&) noexcept = default;
+    ~impl() = default;
+
+    impl(impl&&) = default;
+    impl& operator=(impl&&) = default;
 
     void read_concern(const mongocxx::v_noabi::read_concern& rc) {
         libmongoc::transaction_opts_set_read_concern(_transaction_opt_t.get(),

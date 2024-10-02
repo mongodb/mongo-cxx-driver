@@ -1,4 +1,4 @@
-// Copyright 2015 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -64,15 +64,15 @@ bool validator::check_dot_keys() const {
     return _impl->_check_dot_keys;
 }
 
-stdx::optional<document::view> BSONCXX_CALL validate(const std::uint8_t* data, std::size_t length) {
+stdx::optional<document::view> validate(const std::uint8_t* data, std::size_t length) {
     const validator vtor{};
     return validate(data, length, vtor);
 }
 
-stdx::optional<document::view> BSONCXX_CALL validate(const std::uint8_t* data,
-                                                     std::size_t length,
-                                                     const validator& validator,
-                                                     std::size_t* invalid_offset) {
+stdx::optional<document::view> validate(const std::uint8_t* data,
+                                        std::size_t length,
+                                        const validator& validator,
+                                        std::size_t* invalid_offset) {
     ::bson_validate_flags_t flags = BSON_VALIDATE_NONE;
 
     const auto flip_if = [&flags](bool cond, ::bson_validate_flags_t flag) {

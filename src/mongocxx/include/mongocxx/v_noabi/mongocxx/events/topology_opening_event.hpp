@@ -1,4 +1,4 @@
-// Copyright 2018-present MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 #include <mongocxx/events/topology_opening_event-fwd.hpp>
 
 #include <bsoncxx/oid.hpp>
+
 #include <mongocxx/events/topology_description.hpp>
 
 #include <mongocxx/config/prelude.hpp>
@@ -28,17 +29,23 @@ namespace events {
 ///
 /// An event notification sent when the driver initializes a server topology.
 ///
-/// @see "TopologyOpeningEvent" in
-/// https://github.com/mongodb/specifications/blob/master/source/server-discovery-and-monitoring/server-discovery-and-monitoring.rst
+/// @see
+/// - "TopologyOpeningEvent" in https://github.com/mongodb/specifications/blob/master/source/server-discovery-and-monitoring/server-discovery-and-monitoring.rst
 ///
 class topology_opening_event {
    public:
-    MONGOCXX_PRIVATE explicit topology_opening_event(const void* event);
+    explicit topology_opening_event(const void* event);
 
     ///
     /// Destroys a topology_opening_event.
     ///
-    ~topology_opening_event();
+    MONGOCXX_ABI_EXPORT_CDECL() ~topology_opening_event();
+
+    topology_opening_event(topology_opening_event&&) = default;
+    topology_opening_event& operator=(topology_opening_event&&) = default;
+
+    topology_opening_event(const topology_opening_event&) = default;
+    topology_opening_event& operator=(const topology_opening_event&) = default;
 
     ///
     /// An opaque id, unique to this topology for this mongocxx::v_noabi::client or
@@ -46,7 +53,7 @@ class topology_opening_event {
     ///
     /// @return The id.
     ///
-    bsoncxx::v_noabi::oid topology_id() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::oid) topology_id() const;
 
    private:
     const void* _event;
@@ -57,3 +64,8 @@ class topology_opening_event {
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref mongocxx::v_noabi::events::topology_opening_event.
+///

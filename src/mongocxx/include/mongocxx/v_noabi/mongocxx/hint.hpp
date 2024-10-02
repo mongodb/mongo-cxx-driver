@@ -1,4 +1,4 @@
-// Copyright 2015 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,6 +14,8 @@
 
 #pragma once
 
+#include <string>
+
 #include <mongocxx/hint-fwd.hpp>
 
 #include <bsoncxx/document/value.hpp>
@@ -21,6 +23,7 @@
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/string/view_or_value.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
+
 #include <mongocxx/stdx.hpp>
 
 #include <mongocxx/config/prelude.hpp>
@@ -42,7 +45,7 @@ class hint {
     /// @param index
     ///   Document view or value representing the index to be used.
     ///
-    hint(bsoncxx::v_noabi::document::view_or_value index);
+    MONGOCXX_ABI_EXPORT_CDECL() hint(bsoncxx::v_noabi::document::view_or_value index);
 
     ///
     /// Constructs a new hint.
@@ -50,22 +53,26 @@ class hint {
     /// @param index
     ///   String representing the name of the index to be used.
     ///
-    explicit hint(bsoncxx::v_noabi::string::view_or_value index);
+    explicit MONGOCXX_ABI_EXPORT_CDECL() hint(bsoncxx::v_noabi::string::view_or_value index);
 
     ///
-    /// @{
+    /// @relates mongocxx::v_noabi::hint
     ///
-    /// Compare this hint to a string for (in)-equality
+    /// Convenience methods to compare for equality against an index name.
     ///
-    /// @relates hint
+    /// Compares equal if the hint contains a matching index name. Otherwise, compares unequal.
     ///
-    friend MONGOCXX_API bool MONGOCXX_CALL operator==(const hint& index_hint, std::string index);
+    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(const hint& index_hint, std::string index);
 
-    friend MONGOCXX_API bool MONGOCXX_CALL operator==(const hint& index_hint,
+    ///
+    /// @relates mongocxx::v_noabi::hint
+    ///
+    /// Convenience methods to compare for equality against an index document.
+    ///
+    /// Compares equal if the hint contains a matching index document. Otherwise, compares unequal.
+    ///
+    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(const hint& index_hint,
                                                       bsoncxx::v_noabi::document::view index);
-    ///
-    /// @}
-    ///
 
     ///
     /// Returns a types::bson_value::view representing this hint.
@@ -74,7 +81,7 @@ class hint {
     /// not outlive
     /// the hint object that it was created from.
     ///
-    bsoncxx::v_noabi::types::bson_value::view to_value() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::types::bson_value::view) to_value() const;
 
     ///
     /// Returns a types::bson_value::view representing this hint.
@@ -83,7 +90,9 @@ class hint {
     /// not outlive
     /// the hint object that it was created from.
     ///
-    MONGOCXX_INLINE operator bsoncxx::v_noabi::types::bson_value::view() const;
+    operator bsoncxx::v_noabi::types::bson_value::view() const {
+        return to_value();
+    }
 
    private:
     stdx::optional<bsoncxx::v_noabi::document::view_or_value> _index_doc;
@@ -91,60 +100,43 @@ class hint {
 };
 
 ///
-/// Convenience methods to compare for equality against an index name.
+/// Convenience methods to compare against an index name.
 ///
-/// Return true if this hint contains an index name that matches.
-///
-/// @relates hint
-///
-MONGOCXX_API bool MONGOCXX_CALL operator==(std::string index, const hint& index_hint);
-
+/// Compares equal if the hint contains a matching index name. Otherwise, compares unequal.
 ///
 /// @{
-///
-/// Convenience methods to compare for inequality against an index name.
-///
-/// Return true if this hint contains an index name that matches.
-///
-/// @relates hint
-///
-MONGOCXX_API bool MONGOCXX_CALL operator!=(const hint& index_hint, std::string index);
-MONGOCXX_API bool MONGOCXX_CALL operator!=(std::string index, const hint& index_index);
-///
+
+/// @relatesalso mongocxx::v_noabi::hint
+MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(std::string index, const hint& index_hint);
+
+/// @relatesalso mongocxx::v_noabi::hint
+MONGOCXX_ABI_EXPORT_CDECL(bool) operator!=(const hint& index_hint, std::string index);
+
+/// @relatesalso mongocxx::v_noabi::hint
+MONGOCXX_ABI_EXPORT_CDECL(bool) operator!=(std::string index, const hint& index_index);
+
 /// @}
 ///
 
 ///
 /// Convenience methods to compare for equality against an index document.
 ///
-/// Return true if this hint contains an index document that matches.
-///
-/// @relates hint
-///
-MONGOCXX_API bool MONGOCXX_CALL operator==(bsoncxx::v_noabi::document::view index,
-                                           const hint& index_hint);
-
+/// Compares equal if the hint contains a matching index document. Otherwise, compares unequal.
 ///
 /// @{
-///
-/// Convenience methods to compare for equality against an index document.
-///
-/// Return true if this hint contains an index document that matches.
-///
-///
-/// @relates hint
-///
-MONGOCXX_API bool MONGOCXX_CALL operator!=(const hint& index_hint,
-                                           bsoncxx::v_noabi::document::view index);
-MONGOCXX_API bool MONGOCXX_CALL operator!=(bsoncxx::v_noabi::document::view index,
-                                           const hint& index_hint);
-///
+
+/// @relatesalso mongocxx::v_noabi::hint
+MONGOCXX_ABI_EXPORT_CDECL(bool)
+operator==(bsoncxx::v_noabi::document::view index, const hint& index_hint);
+/// @relatesalso mongocxx::v_noabi::hint
+MONGOCXX_ABI_EXPORT_CDECL(bool)
+operator!=(const hint& index_hint, bsoncxx::v_noabi::document::view index);
+/// @relatesalso mongocxx::v_noabi::hint
+MONGOCXX_ABI_EXPORT_CDECL(bool)
+operator!=(bsoncxx::v_noabi::document::view index, const hint& index_hint);
+
 /// @}
 ///
-
-MONGOCXX_INLINE hint::operator bsoncxx::v_noabi::types::bson_value::view() const {
-    return to_value();
-}
 
 }  // namespace v_noabi
 }  // namespace mongocxx
@@ -157,3 +149,34 @@ using ::mongocxx::v_noabi::operator!=;
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref mongocxx::v_noabi::hint.
+///
+
+#if defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+
+namespace mongocxx {
+
+/// @ref mongocxx::v_noabi::operator==(std::string index, const v_noabi::hint& index_hint)
+bool operator==(std::string index, const v_noabi::hint& index_hint);
+
+/// @ref mongocxx::v_noabi::operator!=(const v_noabi::hint& index_hint, std::string index)
+bool operator!=(const v_noabi::hint& index_hint, std::string index);
+
+/// @ref mongocxx::v_noabi::operator!=(std::string index, const v_noabi::hint& index_index)
+bool operator!=(std::string index, const v_noabi::hint& index_index);
+
+/// @ref mongocxx::v_noabi::operator==(bsoncxx::v_noabi::document::view index, const v_noabi::hint& index_hint)
+bool operator==(bsoncxx::v_noabi::document::view index, const v_noabi::hint& index_hint);
+
+/// @ref mongocxx::v_noabi::operator!=(const v_noabi::hint& index_hint, bsoncxx::v_noabi::document::view index)
+bool operator!=(const v_noabi::hint& index_hint, bsoncxx::v_noabi::document::view index);
+
+/// @ref mongocxx::v_noabi::operator!=(bsoncxx::v_noabi::document::view index, const v_noabi::hint& index_hint)
+bool operator!=(bsoncxx::v_noabi::document::view index, const v_noabi::hint& index_hint);
+
+}  // namespace mongocxx
+
+#endif  // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

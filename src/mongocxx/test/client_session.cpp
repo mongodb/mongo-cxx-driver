@@ -1,4 +1,4 @@
-// Copyright 2018-present MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,15 +16,20 @@
 
 #include <bsoncxx/private/helpers.hh>
 #include <bsoncxx/stdx/make_unique.hpp>
-#include <bsoncxx/test/catch.hh>
+
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/bulk_write_exception.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/exception/server_error_code.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/private/libmongoc.hh>
+
+#include <bsoncxx/test/catch.hh>
+
+#include <mongocxx/test/catch_helpers.hh>
 #include <mongocxx/test/client_helpers.hh>
-#include <third_party/catch/include/helpers.hpp>
+
+#include <catch2/generators/catch_generators.hpp>
 
 namespace {
 using bsoncxx::from_json;
@@ -34,16 +39,13 @@ using bsoncxx::document::value;
 using bsoncxx::types::b_timestamp;
 
 using namespace mongocxx;
-using test_util::server_has_sessions;
 
 TEST_CASE("session options", "[session]") {
     instance::current();
 
     client c{uri{}, test_util::add_test_server_api()};
 
-    if (!server_has_sessions(c)) {
-        return;
-    }
+    SERVER_HAS_SESSIONS_OR_SKIP(c);
 
     SECTION("default") {
         // Make sure the defaults don't cause a client exception:
@@ -155,14 +157,16 @@ TEST_CASE("session options", "[session]") {
 TEST_CASE("start_session failure", "[session]") {
     using namespace mongocxx::test_util;
 
-    MOCK_CLIENT
+    MOCK_CLIENT;
 
     instance::current();
 
     client_start_session
-        ->interpose([](mongoc_client_t*, const mongoc_session_opt_t*, bson_error_t* error) {
+        ->interpose([](mongoc_client_t*,
+                       const mongoc_session_opt_t*,
+                       bson_error_t* error) -> mongoc_client_session_t* {
             bson_set_error(error, MONGOC_ERROR_CLIENT, MONGOC_ERROR_CLIENT_SESSION_FAILURE, "foo");
-            return (mongoc_client_session_t*)nullptr;
+            return nullptr;
         })
         .forever();
 
@@ -179,9 +183,7 @@ TEST_CASE("session", "[session]") {
 
     client c{uri{}, test_util::add_test_server_api()};
 
-    if (!server_has_sessions(c)) {
-        return;
-    }
+    SERVER_HAS_SESSIONS_OR_SKIP(c);
 
     auto s = c.start_session();
 
@@ -232,8 +234,6 @@ TEST_CASE("session", "[session]") {
     }
 
     SECTION("wrong client") {
-        using Catch::Matchers::Contains;
-
         // "Session argument is for the right client" test from Driver Sessions Spec.
         // Passing a session from client "c" should fail with client "c2" and related objects.
         client c2{uri{}, test_util::add_test_server_api()};
@@ -395,9 +395,7 @@ TEST_CASE("lsid", "[session]") {
 
     session_test test;
 
-    if (!server_has_sessions(test.client)) {
-        return;
-    }
+    SERVER_HAS_SESSIONS_OR_SKIP(test.client);
 
     auto s = test.client.start_session();
     auto db = test.client["lsid"];
@@ -419,7 +417,7 @@ TEST_CASE("lsid", "[session]") {
 
             auto one = bsoncxx::types::bson_value::view{bsoncxx::types::b_int32{1}};
             auto two = bsoncxx::types::bson_value::view{bsoncxx::types::b_int32{2}};
-            auto data = (uint8_t*)"foo";
+            auto data = reinterpret_cast<const uint8_t*>("foo");
             size_t len = 4;
             // Ensure multiple chunks.
             options::gridfs::upload opts;
@@ -696,8 +694,7 @@ TEST_CASE("lsid", "[session]") {
 
     SECTION("collection::watch") {
         if (!test_util::is_replica_set(test.client)) {
-            WARN("skip: watch() requires replica set");
-            return;
+            SKIP("watch() requires replica set");
         }
 
         auto f = [&s, &collection](bool use_session) {
@@ -845,9 +842,7 @@ TEST_CASE("with_transaction", "[session]") {
 
     session_test test;
 
-    if (!server_has_sessions(test.client)) {
-        return;
-    }
+    SERVER_HAS_SESSIONS_OR_SKIP(test.client);
 
     auto session = test.client.start_session();
 
@@ -856,8 +851,7 @@ TEST_CASE("with_transaction", "[session]") {
         SECTION("callback raises a custom error") {
             // Multi-document transactions require server 4.2+.
             if (compare_versions(get_server_version(test.client), "4.2") < 0) {
-                WARN("Skipping - MongoDB server 4.2 or newer required");
-                return;
+                SKIP("MongoDB server 4.2 or newer required");
             }
 
             // Test an operation_exception
@@ -892,9 +886,7 @@ TEST_CASE("unacknowledged write in session", "[session]") {
 
     session_test test;
 
-    if (!server_has_sessions(test.client)) {
-        return;
-    }
+    SERVER_HAS_SESSIONS_OR_SKIP(test.client);
 
     auto s = test.client.start_session();
     auto db = test.client["lsid"];

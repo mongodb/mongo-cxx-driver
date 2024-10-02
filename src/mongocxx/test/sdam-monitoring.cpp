@@ -1,4 +1,4 @@
-// Copyright 2018-present MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,10 +16,14 @@
 
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/string/to_string.hpp>
-#include <bsoncxx/test/catch.hh>
+
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/exception.hpp>
 #include <mongocxx/instance.hpp>
+
+#include <bsoncxx/test/catch.hh>
+#include <bsoncxx/test/exception_guard.hh>
+
 #include <mongocxx/test/client_helpers.hh>
 #include <mongocxx/test/spec/operation.hh>
 
@@ -52,6 +56,7 @@ TEST_CASE("SDAM Monitoring", "[sdam_monitoring]") {
         test_uri = uri{"mongodb://localhost/?replicaSet=" + rs_name};
     }
 
+    bsoncxx::test::exception_guard_state eguard;
     options::apm apm_opts;
     stdx::optional<oid> topology_id;
 
@@ -68,7 +73,7 @@ TEST_CASE("SDAM Monitoring", "[sdam_monitoring]") {
             server_opening_events++;
             if (topology_id) {
                 // A previous server was opened first.
-                REQUIRE(topology_id.value() == event.topology_id());
+                CHECK(topology_id.value() == event.topology_id());
             }
 
             topology_id = event.topology_id();
@@ -76,6 +81,8 @@ TEST_CASE("SDAM Monitoring", "[sdam_monitoring]") {
 
         // ServerDescriptionChanged
         apm_opts.on_server_changed([&](const events::server_changed_event& event) {
+            BSONCXX_TEST_EXCEPTION_GUARD_BEGIN(eguard);
+
             server_changed_events++;
             // A server_opening_event should have set topology_id.
             REQUIRE(topology_id);
@@ -106,6 +113,8 @@ TEST_CASE("SDAM Monitoring", "[sdam_monitoring]") {
             }
 
             REQUIRE(old_sd.id() == new_sd.id());
+
+            BSONCXX_TEST_EXCEPTION_GUARD_END(eguard);
         });
 
         // We don't expect a ServerClosedEvent unless a replica set member is removed.
@@ -115,6 +124,7 @@ TEST_CASE("SDAM Monitoring", "[sdam_monitoring]") {
         ///////////////////////////////////////////////////////////////////////
 
         open_and_close_client(test_uri, apm_opts);
+        BSONCXX_TEST_EXCEPTION_GUARD_CHECK(eguard);
         REQUIRE(server_opening_events > 0);
         REQUIRE(server_changed_events > 0);
     }
@@ -134,7 +144,7 @@ TEST_CASE("SDAM Monitoring", "[sdam_monitoring]") {
             topology_opening_events++;
             if (topology_id) {
                 // A previous server was opened first.
-                REQUIRE(topology_id.value() == event.topology_id());
+                CHECK(topology_id.value() == event.topology_id());
             }
 
             topology_id = event.topology_id();
@@ -142,6 +152,8 @@ TEST_CASE("SDAM Monitoring", "[sdam_monitoring]") {
 
         // TopologyDescriptionChanged
         apm_opts.on_topology_changed([&](const events::topology_changed_event& event) {
+            BSONCXX_TEST_EXCEPTION_GUARD_BEGIN(eguard);
+
             topology_changed_events++;
             // A topology_opening_event should have set topology_id.
             REQUIRE(topology_id);
@@ -186,12 +198,14 @@ TEST_CASE("SDAM Monitoring", "[sdam_monitoring]") {
                     REQUIRE(new_sd_type == "Mongos");
                 }
             }
+
+            BSONCXX_TEST_EXCEPTION_GUARD_END(eguard);
         });
 
         // TopologyClosedEvent
         apm_opts.on_topology_closed([&](const events::topology_closed_event& event) {
             topology_closed_events++;
-            REQUIRE(topology_id.value() == event.topology_id());
+            CHECK(topology_id.value() == event.topology_id());
         });
 
         ///////////////////////////////////////////////////////////////////////
@@ -199,6 +213,7 @@ TEST_CASE("SDAM Monitoring", "[sdam_monitoring]") {
         ///////////////////////////////////////////////////////////////////////
 
         open_and_close_client(test_uri, apm_opts);
+        BSONCXX_TEST_EXCEPTION_GUARD_CHECK(eguard);
         REQUIRE(topology_opening_events > 0);
         REQUIRE(topology_changed_events > 0);
         REQUIRE(topology_closed_events > 0);
@@ -229,20 +244,20 @@ TEST_CASE("SDAM Monitoring", "[sdam_monitoring]") {
         // ServerHeartbeatStartedEvent
         apm_opts.on_heartbeat_started([&](const events::heartbeat_started_event& event) {
             heartbeat_started_events++;
-            REQUIRE_FALSE(event.host().empty());
-            REQUIRE(event.port() != 0);
+            CHECK_FALSE(event.host().empty());
+            CHECK(event.port() != 0);
             // Client is single-threaded, and will never perform an awaitable hello.
-            REQUIRE(!event.awaited());
+            CHECK(!event.awaited());
         });
 
         // ServerHeartbeatSucceededEvent
         apm_opts.on_heartbeat_succeeded([&](const events::heartbeat_succeeded_event& event) {
             heartbeat_succeeded_events++;
-            REQUIRE_FALSE(event.host().empty());
-            REQUIRE(event.port() != 0);
-            REQUIRE_FALSE(event.reply().empty());
+            CHECK_FALSE(event.host().empty());
+            CHECK(event.port() != 0);
+            CHECK_FALSE(event.reply().empty());
             // Client is single-threaded, and will never perform an awaitable hello.
-            REQUIRE(!event.awaited());
+            CHECK(!event.awaited());
         });
 
         // Don't expect a ServerHeartbeatFailedEvent here, see the test below.
@@ -252,6 +267,7 @@ TEST_CASE("SDAM Monitoring", "[sdam_monitoring]") {
         ///////////////////////////////////////////////////////////////////////
 
         open_and_close_client(test_uri, apm_opts);
+        BSONCXX_TEST_EXCEPTION_GUARD_CHECK(eguard);
         REQUIRE(heartbeat_started_events > 0);
         REQUIRE(heartbeat_succeeded_events > 0);
         REQUIRE(started_awaited_called);
@@ -273,10 +289,10 @@ TEST_CASE("Heartbeat failed event", "[sdam_monitoring]") {
     // ServerHeartbeatFailedEvent
     apm_opts.on_heartbeat_failed([&](const events::heartbeat_failed_event& event) {
         heartbeat_failed_events++;
-        REQUIRE_FALSE(event.host().empty());
-        REQUIRE_FALSE(event.message().empty());
-        REQUIRE(event.port() != 0);
-        REQUIRE(!event.awaited());
+        CHECK_FALSE(event.host().empty());
+        CHECK_FALSE(event.message().empty());
+        CHECK(event.port() != 0);
+        CHECK(!event.awaited());
     });
 
     REQUIRE_THROWS_AS(

@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ namespace bson_value {
 /// of the passed-in t can be anything that builder::basic::sub_document::append accepts.
 ///
 template <typename T>
-BSONCXX_INLINE bson_value::value make_value(T&& t) {
+bson_value::value make_value(T&& t) {
     auto doc = builder::basic::make_document(builder::basic::kvp("v", std::forward<T>(t)));
     return doc.view()["v"].get_owning_value();
 }
@@ -51,3 +51,24 @@ using ::bsoncxx::v_noabi::types::bson_value::make_value;
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref bsoncxx::v_noabi::types::bson_value::make_value.
+///
+
+#if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+
+namespace bsoncxx {
+namespace types {
+namespace bson_value {
+
+/// @ref bsoncxx::v_noabi::types::bson_value::make_value
+template <typename T>
+v_noabi::types::bson_value::value make_value(T&& t);
+
+}  // namespace bson_value
+}  // namespace types
+}  // namespace bsoncxx
+
+#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

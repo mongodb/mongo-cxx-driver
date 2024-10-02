@@ -1,4 +1,4 @@
-// Copyright 2015 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,9 +15,11 @@
 #include <bsoncxx/builder/core.hpp>
 #include <bsoncxx/types.hpp>
 
+#include <examples/macros.hh>
+
 using namespace bsoncxx;
 
-int main(int, char**) {
+int EXAMPLES_CDECL main() {
     // bsoncxx::builder::core is a low-level primitive that can be useful for building other
     // BSON abstractions. Most users should just use builder::stream or builder::basic.
 

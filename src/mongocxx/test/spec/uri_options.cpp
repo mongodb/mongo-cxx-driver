@@ -1,4 +1,4 @@
-// Copyright 2016 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,10 +15,11 @@
 #include <cctype>
 #include <fstream>
 
-#include <bsoncxx/test/catch.hh>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/pool.hpp>
+
+#include <bsoncxx/test/catch.hh>
 
 namespace {
 
@@ -78,12 +79,33 @@ static void assert_elements_equal(bsoncxx::document::element expected_option,
         case bsoncxx::type::k_int32:
             REQUIRE(expected_option.get_int32() == my_option.get_int32());
             break;
+
         case bsoncxx::type::k_bool:
             REQUIRE(expected_option.get_bool() == my_option.get_bool());
             break;
+
         case bsoncxx::type::k_string:
             REQUIRE(expected_option.get_string() == my_option.get_string());
             break;
+
+        case bsoncxx::type::k_double:
+        case bsoncxx::type::k_document:
+        case bsoncxx::type::k_array:
+        case bsoncxx::type::k_binary:
+        case bsoncxx::type::k_undefined:
+        case bsoncxx::type::k_oid:
+        case bsoncxx::type::k_date:
+        case bsoncxx::type::k_null:
+        case bsoncxx::type::k_regex:
+        case bsoncxx::type::k_dbpointer:
+        case bsoncxx::type::k_code:
+        case bsoncxx::type::k_symbol:
+        case bsoncxx::type::k_codewscope:
+        case bsoncxx::type::k_timestamp:
+        case bsoncxx::type::k_int64:
+        case bsoncxx::type::k_decimal128:
+        case bsoncxx::type::k_maxkey:
+        case bsoncxx::type::k_minkey:
         default:
             std::string msg =
                 "option type not handled: " + bsoncxx::to_string(expected_option.type());
@@ -100,7 +122,8 @@ TEST_CASE("uri_options::test_srv_options", "[uri_options]") {
     for (const auto& it : tests) {
         auto doc = it.get_document().value;
         auto test = URIOptionsTest::parse(doc);
-        SECTION(std::string(test.description)) {
+
+        DYNAMIC_SECTION(test.description) {
             try {
                 mongocxx::uri my_uri{test.uri};
                 REQUIRE(test.valid);
@@ -114,6 +137,7 @@ TEST_CASE("uri_options::test_srv_options", "[uri_options]") {
                 }
             } catch (mongocxx::logic_error& e) {
                 bool should_throw = !test.valid || test.warning;
+                CAPTURE(e);
                 REQUIRE(should_throw);
             }
         }

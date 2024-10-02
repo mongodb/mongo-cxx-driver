@@ -1,4 +1,4 @@
-// Copyright 2016 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -24,9 +24,13 @@
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/private/libbson.hh>
 #include <bsoncxx/string/to_string.hpp>
-#include <bsoncxx/test/catch.hh>
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
+
+#include <bsoncxx/test/catch.hh>
+
+#include <catch2/catch_case_sensitive.hpp>
+#include <catch2/matchers/catch_matchers_string.hpp>
 
 namespace {
 
@@ -141,11 +145,14 @@ TEST_CASE("builder appends binary", "[bsoncxx::builder::stream]") {
     bson_t expected;
     bson_init(&expected);
 
-    bson_append_binary(&expected, "foo", -1, BSON_SUBTYPE_BINARY, (uint8_t*)"deadbeef", 8);
+    bson_append_binary(
+        &expected, "foo", -1, BSON_SUBTYPE_BINARY, reinterpret_cast<const uint8_t*>("deadbeef"), 8);
 
     builder::stream::document b;
 
-    b << "foo" << types::b_binary{binary_sub_type::k_binary, 8, (uint8_t*)"deadbeef"};
+    b << "foo"
+      << types::b_binary{
+             binary_sub_type::k_binary, 8, reinterpret_cast<const uint8_t*>("deadbeef")};
 
     bson_eq_stream(&expected, b);
 
@@ -172,20 +179,20 @@ TEST_CASE("builder appends oid", "[bsoncxx::builder::stream]") {
     bson_init(&expected);
 
     bson_oid_t oid;
-    bson_oid_init(&oid, NULL);
+    bson_oid_init(&oid, nullptr);
 
     bson_append_oid(&expected, "foo", -1, &oid);
 
     builder::stream::document b;
 
     SECTION("b_oid works") {
-        b << "foo" << types::b_oid{bsoncxx::oid{(char*)oid.bytes, 12}};
+        b << "foo" << types::b_oid{bsoncxx::oid{reinterpret_cast<const char*>(oid.bytes), 12}};
 
         bson_eq_stream(&expected, b);
     }
 
     SECTION("raw oid works") {
-        b << "foo" << bsoncxx::oid{(char*)oid.bytes, 12};
+        b << "foo" << bsoncxx::oid{reinterpret_cast<const char*>(oid.bytes), 12};
 
         bson_eq_stream(&expected, b);
     }
@@ -1312,9 +1319,12 @@ TEST_CASE("list builder appends binary", "[bsoncxx::builder::list]") {
     bson_t expected;
     bson_init(&expected);
 
-    bson_append_binary(&expected, "foo", -1, BSON_SUBTYPE_BINARY, (uint8_t*)"data", 4);
+    bson_append_binary(
+        &expected, "foo", -1, BSON_SUBTYPE_BINARY, reinterpret_cast<const uint8_t*>("data"), 4);
 
-    builder::list b{"foo", types::b_binary{binary_sub_type::k_binary, 4, (uint8_t*)"data"}};
+    builder::list b{
+        "foo",
+        types::b_binary{binary_sub_type::k_binary, 4, reinterpret_cast<const uint8_t*>("data")}};
 
     bson_eq_object(&expected, b.view().get_document().value);
 
@@ -1339,18 +1349,19 @@ TEST_CASE("list builder appends oid", "[bsoncxx::builder::list]") {
     bson_init(&expected);
 
     bson_oid_t oid;
-    bson_oid_init(&oid, NULL);
+    bson_oid_init(&oid, nullptr);
 
     bson_append_oid(&expected, "foo", -1, &oid);
 
     SECTION("b_oid works") {
-        builder::list b{"foo", types::b_oid{bsoncxx::oid{(char*)oid.bytes, 12}}};
+        builder::list b{"foo",
+                        types::b_oid{bsoncxx::oid{reinterpret_cast<const char*>(oid.bytes), 12}}};
 
         bson_eq_object(&expected, b.view().get_document().value);
     }
 
     SECTION("raw oid works") {
-        builder::list b{"foo", bsoncxx::oid{(char*)oid.bytes, 12}};
+        builder::list b{"foo", bsoncxx::oid{reinterpret_cast<const char*>(oid.bytes), 12}};
 
         bson_eq_object(&expected, b.view().get_document().value);
     }
@@ -1711,12 +1722,12 @@ TEST_CASE("list builder with explicit type deduction", "[bsoncxx::builder::list]
 
     SECTION("document") {
         builder::list b;
-        auto kvp_regex =
-            Catch::Matches("(.*)must be list of key-value pairs(.*)", Catch::CaseSensitive::No);
+        auto kvp_regex = Catch::Matchers::Matches("(.*)must be list of key-value pairs(.*)",
+                                                  Catch::CaseSensitive::No);
         REQUIRE_THROWS_WITH((b = builder::document{"foo", 1, 2}), kvp_regex);
 
-        auto type_regex =
-            Catch::Matches("(.*)must be string type(.*)int32(.*)", Catch::CaseSensitive::No);
+        auto type_regex = Catch::Matchers::Matches("(.*)must be string type(.*)int32(.*)",
+                                                   Catch::CaseSensitive::No);
         REQUIRE_THROWS_WITH((b = builder::document{"foo", 1, 2, 4}), type_regex);
     }
 }

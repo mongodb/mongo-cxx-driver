@@ -1,4 +1,4 @@
-// Copyright 2017 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@
 #include <bsoncxx/oid.hpp>
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/stdx/optional.hpp>
+
 #include <mongocxx/database.hpp>
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/gridfs_exception.hpp>
@@ -214,7 +215,7 @@ uploader bucket::_open_upload_stream_with_id(const client_session* session,
                     _get_impl().files,
                     _get_impl().chunks,
                     chunk_size_bytes,
-                    std::move(options.metadata())};
+                    options.metadata()};
 }
 
 uploader bucket::open_upload_stream_with_id(bsoncxx::v_noabi::types::bson_value::view id,

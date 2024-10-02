@@ -1,4 +1,4 @@
-# Copyright 2016 MongoDB Inc.
+# Copyright 2009-present MongoDB, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -49,12 +49,12 @@ else()
 endif()
 
 # Also update etc/purls.txt.
-set(LIBBSON_REQUIRED_VERSION 1.25.0)
+set(LIBBSON_REQUIRED_VERSION 1.28.0)
 set(LIBBSON_REQUIRED_ABI_VERSION 1.0)
 
 # Also update etc/purls.txt.
-set(LIBMONGOC_REQUIRED_VERSION 1.25.0)
-set(LIBMONGOC_DOWNLOAD_VERSION 1.25.0)
+set(LIBMONGOC_REQUIRED_VERSION 1.28.0)
+set(LIBMONGOC_DOWNLOAD_VERSION 1.28.0)
 set(LIBMONGOC_REQUIRED_ABI_VERSION 1.0)
 
 set(NEED_DOWNLOAD_C_DRIVER false)
@@ -309,14 +309,14 @@ add_custom_target(doxygen-current
     VERBATIM
 )
 
-add_custom_target(doxygen-all
+add_custom_target(doxygen-latest
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
-    COMMAND etc/generate-all-apidocs.pl
+    COMMAND etc/generate-latest-apidocs.pl
     VERBATIM
 )
 
 add_custom_target(doxygen-deploy
-    DEPENDS doxygen-all
+    DEPENDS doxygen-latest
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
     COMMAND etc/deploy-to-ghpages.pl --doxygen git@github.com:mongodb/mongo-cxx-driver
     VERBATIM

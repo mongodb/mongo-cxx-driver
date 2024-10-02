@@ -1,4 +1,4 @@
-// Copyright 2014 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@
 #include <bsoncxx/array/value.hpp>
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
+
 #include <mongocxx/result/bulk_write.hpp>
 
 #include <mongocxx/config/prelude.hpp>
@@ -31,6 +32,7 @@ namespace result {
 class insert_one {
    public:
     // This constructor is public for testing purposes only
+    MONGOCXX_ABI_EXPORT_CDECL()
     insert_one(result::bulk_write result, bsoncxx::v_noabi::types::bson_value::view inserted_id);
 
     ///
@@ -38,14 +40,17 @@ class insert_one {
     ///
     /// @return The raw bulk write result.
     ///
-    const result::bulk_write& result() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const result::bulk_write&) result() const;
 
     ///
     /// Gets the _id of the inserted document.
     ///
     /// @return The value of the _id field for the inserted document.
     ///
-    const bsoncxx::v_noabi::types::bson_value::view& inserted_id() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::types::bson_value::view&) inserted_id() const;
+
+    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(const insert_one&, const insert_one&);
+    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator!=(const insert_one&, const insert_one&);
 
    private:
     result::bulk_write _result;
@@ -55,9 +60,6 @@ class insert_one {
 
     // Points into _inserted_id_owned.
     bsoncxx::v_noabi::types::bson_value::view _inserted_id;
-
-    friend MONGOCXX_API bool MONGOCXX_CALL operator==(const insert_one&, const insert_one&);
-    friend MONGOCXX_API bool MONGOCXX_CALL operator!=(const insert_one&, const insert_one&);
 };
 
 }  // namespace result
@@ -65,3 +67,8 @@ class insert_one {
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref mongocxx::v_noabi::result::insert_one.
+///

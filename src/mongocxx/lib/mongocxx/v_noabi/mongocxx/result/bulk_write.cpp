@@ -1,4 +1,4 @@
-// Copyright 2014 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -60,10 +60,10 @@ bsoncxx::v_noabi::document::view bulk_write::view() const {
     return _response.view();
 }
 
-bool MONGOCXX_CALL operator==(const bulk_write& lhs, const bulk_write& rhs) {
+bool operator==(const bulk_write& lhs, const bulk_write& rhs) {
     return lhs.view() == rhs.view();
 }
-bool MONGOCXX_CALL operator!=(const bulk_write& lhs, const bulk_write& rhs) {
+bool operator!=(const bulk_write& lhs, const bulk_write& rhs) {
     return !(lhs == rhs);
 }
 

@@ -1,4 +1,4 @@
-// Copyright 2023 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -28,27 +28,23 @@ namespace detail {
 template <typename L, typename R>
 auto is_equality_comparable_f(...) -> std::false_type;
 
+BSONCXX_PUSH_WARNINGS();
+BSONCXX_DISABLE_WARNING(GNU("-Wfloat-equal"));
 template <typename L, typename R>
-auto is_equality_comparable_f(int,
-                              bool b = false,
-                              const_reference_t<L> l = soft_declval<L&>(),
-                              const_reference_t<R> r = soft_declval<R&>())
-    -> true_t<decltype((l == r) ? 0 : 0,  //
-                       (r == l) ? 0 : 0,
-                       (l != r) ? 0 : 0,
-                       (r != l) ? 0 : 0)>;
+auto is_equality_comparable_f(int, bool b = false)
+    -> true_t<decltype((std::declval<const L&>() == std::declval<const R&>()) ? 0 : 0,  //
+                       (std::declval<const R&>() == std::declval<const L&>()) ? 0 : 0,
+                       (std::declval<const L&>() != std::declval<const R&>()) ? 0 : 0,
+                       (std::declval<const R&>() != std::declval<const L&>()) ? 0 : 0)>;
+BSONCXX_POP_WARNINGS();
 
-/**
- * @brief Detect whether two types are equality-comparable.
- *
- * Requires L == R, L != R, R == L, and R != L
- */
+// Detect whether two types are equality-comparable.
+//
+// Requires L == R, L != R, R == L, and R != L.
 template <typename L, typename R = L>
 struct is_equality_comparable : decltype(is_equality_comparable_f<L, R>(0)) {};
 
-/**
- * @brief Callable object and tag type for equality comparison
- */
+// Callable object and tag type for equality comparison.
 struct equal_to {
     template <typename L, typename R>
     constexpr requires_t<bool, is_equality_comparable<L, R>>  //
@@ -57,10 +53,8 @@ struct equal_to {
     }
 };
 
-/**
- * @brief Derive from this class to define ADL-only operator== and operator!= on the basis of
- * an ADL-only tag_invoke(equal_to, l, r)
- */
+// Derive from this class to define ADL-only operator== and operator!= on the basis of
+// an ADL-only tag_invoke(equal_to, l, r).
 class equality_operators {
     template <typename L, typename R>
     constexpr static auto impl(rank<1>, L& l, R& r) BSONCXX_RETURNS(tag_invoke(equal_to{}, l, r));
@@ -68,20 +62,22 @@ class equality_operators {
     template <typename L, typename R>
     constexpr static auto impl(rank<0>, L& l, R& r) BSONCXX_RETURNS(tag_invoke(equal_to{}, r, l));
 
+    // @cond DOXYGEN_DISABLE "Found ';' while parsing initializer list!"
     template <typename Left, typename Other>
     constexpr friend auto operator==(const Left& self, const Other& other)
         BSONCXX_RETURNS(equality_operators::impl(rank<1>{}, self, other));
+    // @endcond
 
+    // @cond DOXYGEN_DISABLE "Found ';' while parsing initializer list!"
     template <typename Left, typename Other>
     constexpr friend auto operator!=(const Left& self, const Other& other)
         BSONCXX_RETURNS(!equality_operators::impl(rank<1>{}, self, other));
+    // @endcond
 };
 
-/**
- * @brief Very basic impl of C++20 std::strong_ordering
- *
- * We don't need other weaker orderings yet, so this is all that we have
- */
+// Very basic impl of C++20 std::strong_ordering.
+//
+// We don't need other weaker orderings yet, so this is all that we have.
 class strong_ordering {
     signed char _c;
     struct _construct {};
@@ -117,7 +113,7 @@ class strong_ordering {
 
     // nonstd: Swap greater/less values
     constexpr strong_ordering inverted() const noexcept {
-        return *this < 0 ? greater : *this > 0 ? less : *this;
+        return *this < nullptr ? greater : *this > nullptr ? less : *this;
     }
 };
 
@@ -136,12 +132,12 @@ INLINE_VAR const strong_ordering strong_ordering::equal =
 
 #pragma pop_macro("INLINE_VAR")
 
-/**
- * @brief Implements a three-way comparison between two objects. That is, in
- * a single operation, determine whether the left operand is less-than, greater-than,
- * or equal-to the right-hand operand.
- */
+// Implements a three-way comparison between two objects. That is, in
+// a single operation, determine whether the left operand is less-than, greater-than,
+// or equal-to the right-hand operand.
 struct compare_three_way {
+    BSONCXX_PUSH_WARNINGS();
+    BSONCXX_DISABLE_WARNING(GNU("-Wfloat-equal"));
     template <typename L,
               typename R,
               typename = decltype(std::declval<L>() < std::declval<R>()),
@@ -151,6 +147,7 @@ struct compare_three_way {
                        : (l == r ? strong_ordering::equal  //
                                  : strong_ordering::greater);
     }
+    BSONCXX_POP_WARNINGS();
 
     template <typename L,
               typename R,
@@ -165,10 +162,8 @@ struct compare_three_way {
         BSONCXX_RETURNS((impl)(l, r, rank<2>{}));
 };
 
-/**
- * @brief Inherit to define ADL-visible ordering operators based on an ADL-visible
- * implementation of tag_invoke(compare_three_way, l, r)
- */
+// Inherit to define ADL-visible ordering operators based on an ADL-visible
+// implementation of tag_invoke(compare_three_way, l, r).
 struct ordering_operators {
     template <typename L, typename R>
     constexpr static auto impl(const L& l, const R& r, rank<1>)
@@ -183,7 +178,7 @@ struct ordering_operators {
 #define DEFOP(Oper)                                             \
     template <typename L, typename R>                           \
     constexpr friend auto operator Oper(const L& l, const R& r) \
-        BSONCXX_RETURNS(ordering_operators::impl(l, r, rank<1>{}) Oper 0)
+        BSONCXX_RETURNS(ordering_operators::impl(l, r, rank<1>{}) Oper nullptr)
     DEFOP(<);
     DEFOP(>);
     DEFOP(<=);
@@ -191,21 +186,19 @@ struct ordering_operators {
 #pragma pop_macro("DEFOP")
 };
 
-template <typename T, typename U>
+template <typename L, typename R>
 std::false_type is_partially_ordered_with_f(rank<0>);
 
-template <typename T, typename U>
-auto is_partially_ordered_with_f(rank<1>,
-                                 const T& l = soft_declval<T>(),
-                                 const U& r = soft_declval<U>())  //
-    -> true_t<decltype(l > r),
-              decltype(l < r),
-              decltype(l >= r),
-              decltype(l <= r),
-              decltype(r < l),
-              decltype(r > l),
-              decltype(r <= l),
-              decltype(r >= l)>;
+template <typename L, typename R>
+auto is_partially_ordered_with_f(rank<1>)
+    -> true_t<decltype(std::declval<const L&>() > std::declval<const R&>()),
+              decltype(std::declval<const L&>() < std::declval<const R&>()),
+              decltype(std::declval<const L&>() >= std::declval<const R&>()),
+              decltype(std::declval<const L&>() <= std::declval<const R&>()),
+              decltype(std::declval<const R&>() < std::declval<const L&>()),
+              decltype(std::declval<const R&>() > std::declval<const L&>()),
+              decltype(std::declval<const R&>() <= std::declval<const L&>()),
+              decltype(std::declval<const R&>() >= std::declval<const L&>())>;
 
 template <typename T, typename U>
 struct is_partially_ordered_with : decltype(is_partially_ordered_with_f<T, U>(rank<1>{})) {};
@@ -224,3 +217,10 @@ struct is_totally_ordered_with : conjunction<is_totally_ordered<T>,
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides comparison-related utilities for internal use.
+///
+/// @warning For internal use only!
+///

@@ -1,4 +1,4 @@
-// Copyright 2017-present MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@
 #include <mongocxx/options/client_session-fwd.hpp>
 
 #include <bsoncxx/stdx/optional.hpp>
+
 #include <mongocxx/options/transaction.hpp>
 #include <mongocxx/stdx.hpp>
 
@@ -48,15 +49,15 @@ class client_session {
     ///   method chaining.
     ///
     /// @see
-    /// https://www.mongodb.com/docs/manual/core/read-isolation-consistency-recency/#causal-consistency
+    /// - https://www.mongodb.com/docs/manual/core/read-isolation-consistency-recency/#causal-consistency
     ///
-    client_session& causal_consistency(bool causal_consistency) noexcept;
+    MONGOCXX_ABI_EXPORT_CDECL(client_session&) causal_consistency(bool causal_consistency) noexcept;
 
     ///
     /// Gets the value of the causal_consistency option.
     ///
     ///
-    bool causal_consistency() const noexcept;
+    MONGOCXX_ABI_EXPORT_CDECL(bool) causal_consistency() const noexcept;
 
     ///
     /// Sets the read concern "snapshot" (not enabled by default).
@@ -66,18 +67,18 @@ class client_session {
     ///   method chaining.
     ///
     /// @see
-    /// https://www.mongodb.com/docs/manual/reference/read-concern-snapshot/
+    /// - https://www.mongodb.com/docs/manual/reference/read-concern-snapshot/
     ///
     /// @note Snapshot reads and causal consistency are mutually exclusive: only one or the
     /// other may be active at a time. Attempting to do so will result in an error being thrown
     /// by mongocxx::v_noabi::client::start_session.
     ///
-    client_session& snapshot(bool enable_snapshot_reads) noexcept;
+    MONGOCXX_ABI_EXPORT_CDECL(client_session&) snapshot(bool enable_snapshot_reads) noexcept;
 
     ///
     /// Gets the value of the snapshot_reads option.
     ///
-    bool snapshot() const noexcept;
+    MONGOCXX_ABI_EXPORT_CDECL(bool) snapshot() const noexcept;
 
     ///
     /// Sets the default transaction options.
@@ -89,14 +90,15 @@ class client_session {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    client_session& default_transaction_opts(transaction default_transaction_opts);
+    MONGOCXX_ABI_EXPORT_CDECL(client_session&)
+    default_transaction_opts(transaction default_transaction_opts);
 
     ///
     /// Gets the current default transaction options.
     ///
     /// @return The default transaction options.
     ///
-    const stdx::optional<transaction>& default_transaction_opts() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<transaction>&) default_transaction_opts() const;
 
    private:
     friend ::mongocxx::v_noabi::client_session;
@@ -112,3 +114,8 @@ class client_session {
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref mongocxx::v_noabi::options::client_session.
+///

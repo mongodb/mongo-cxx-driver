@@ -1,4 +1,4 @@
-// Copyright 2014 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -41,29 +41,34 @@ class pipeline {
     ///
     /// Creates a new aggregation pipeline.
     ///
-    /// @see https://www.mongodb.com/docs/manual/core/aggregation-pipeline/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/core/aggregation-pipeline/
     ///
-    pipeline();
+    MONGOCXX_ABI_EXPORT_CDECL() pipeline();
 
     ///
     /// Move constructs a pipeline.
     ///
-    pipeline(pipeline&&) noexcept;
+    MONGOCXX_ABI_EXPORT_CDECL() pipeline(pipeline&&) noexcept;
 
     ///
     /// Move assigns a pipeline.
     ///
-    pipeline& operator=(pipeline&&) noexcept;
+    MONGOCXX_ABI_EXPORT_CDECL(pipeline&) operator=(pipeline&&) noexcept;
 
     ///
     /// Destroys a pipeline.
     ///
-    ~pipeline();
+    MONGOCXX_ABI_EXPORT_CDECL() ~pipeline();
+
+    pipeline(const pipeline&) = delete;
+    MONGOCXX_ABI_EXPORT_CDECL(pipeline&) operator=(const pipeline&) = delete;
 
     ///
     /// Adds new fields to documents.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/addFields/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/operator/aggregation/addFields/
     ///
     /// @param fields_to_add
     ///   A document specifying the fields to add.  For each field specified in this parameter, a
@@ -74,13 +79,15 @@ class pipeline {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    pipeline& add_fields(bsoncxx::v_noabi::document::view_or_value fields_to_add);
+    MONGOCXX_ABI_EXPORT_CDECL(pipeline&)
+    add_fields(bsoncxx::v_noabi::document::view_or_value fields_to_add);
 
     ///
     /// Categorizes documents into groups, called buckets, based on a specified expression and
     /// bucket boundaries.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/bucket/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/operator/aggregation/bucket/
     ///
     /// @param bucket_args
     ///   The specification for the bucket operation.  The required fields `groupBy` and
@@ -90,14 +97,16 @@ class pipeline {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    pipeline& bucket(bsoncxx::v_noabi::document::view_or_value bucket_args);
+    MONGOCXX_ABI_EXPORT_CDECL(pipeline&)
+    bucket(bsoncxx::v_noabi::document::view_or_value bucket_args);
 
     ///
     /// Categorizes documents into a specific number of groups, called buckets, based on a
     /// specified expression.  Bucket boundaries are automatically determined in an attempt to
     /// evenly distribute the documents into the specified number of buckets.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/bucketAuto/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/operator/aggregation/bucketAuto/
     ///
     /// @param bucket_auto_args
     ///   The specification for the bucket_auto operation.  This required fields `groupBy` and
@@ -107,12 +116,14 @@ class pipeline {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    pipeline& bucket_auto(bsoncxx::v_noabi::document::view_or_value bucket_auto_args);
+    MONGOCXX_ABI_EXPORT_CDECL(pipeline&)
+    bucket_auto(bsoncxx::v_noabi::document::view_or_value bucket_auto_args);
 
     ///
     /// Returns statistics regarding a collection or view.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/collStats/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/operator/aggregation/collStats/
     ///
     /// @param coll_stats_args
     ///   The specification for the coll_stats operation.  See link above for a list of valid
@@ -122,13 +133,15 @@ class pipeline {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    pipeline& coll_stats(bsoncxx::v_noabi::document::view_or_value coll_stats_args =
-                             bsoncxx::v_noabi::document::view{});
+    MONGOCXX_ABI_EXPORT_CDECL(pipeline&)
+    coll_stats(bsoncxx::v_noabi::document::view_or_value coll_stats_args =
+                   bsoncxx::v_noabi::document::view{});
 
     ///
     /// Returns a document containing a count of the number of documents input to the stage.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/count/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/operator/aggregation/count/
     ///
     /// @param field
     ///   Name of the field for the count to be written to.
@@ -137,7 +150,7 @@ class pipeline {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    pipeline& count(std::string field);
+    MONGOCXX_ABI_EXPORT_CDECL(pipeline&) count(std::string field);
 
     ///
     /// Returns a stream of documents containing information on active and/or dormant
@@ -146,7 +159,8 @@ class pipeline {
     ///
     /// This stage must be used with database aggregate on the 'admin' database.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/currentOp/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/operator/aggregation/currentOp/
     ///
     /// @param current_op_args
     ///   A document containing the arguments for the current_op operation.
@@ -154,13 +168,15 @@ class pipeline {
     /// @return
     ///   A reference to the object on which this method is being called.
     ///
-    pipeline& current_op(bsoncxx::v_noabi::document::view_or_value current_op_args);
+    MONGOCXX_ABI_EXPORT_CDECL(pipeline&)
+    current_op(bsoncxx::v_noabi::document::view_or_value current_op_args);
 
     ///
     /// Processes multiple aggregation pipelines within a single stage on the same set of input
     /// documents.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/facet/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/operator/aggregation/facet/
     ///
     /// @param facet_args
     ///   The specification for the facet operation.  Each field in the the provided document should
@@ -170,7 +186,8 @@ class pipeline {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    pipeline& facet(bsoncxx::v_noabi::document::view_or_value facet_args);
+    MONGOCXX_ABI_EXPORT_CDECL(pipeline&)
+    facet(bsoncxx::v_noabi::document::view_or_value facet_args);
 
     ///
     /// Appends a stage to this pipeline object.
@@ -187,7 +204,8 @@ class pipeline {
     /// @return
     ///   A reference to this object on which this member function is being called.
     ///
-    pipeline& append_stage(bsoncxx::v_noabi::document::view_or_value stage);
+    MONGOCXX_ABI_EXPORT_CDECL(pipeline&)
+    append_stage(bsoncxx::v_noabi::document::view_or_value stage);
 
     ///
     /// Appends stages to this pipeline object from the given bson array.
@@ -204,12 +222,14 @@ class pipeline {
     /// @return
     ///   A reference to the object on which this member function is being called.
     ///
-    pipeline& append_stages(bsoncxx::v_noabi::array::view_or_value stages);
+    MONGOCXX_ABI_EXPORT_CDECL(pipeline&)
+    append_stages(bsoncxx::v_noabi::array::view_or_value stages);
 
     ///
     /// Outputs documents in order of nearest to farthest from a specified point.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/geoNear/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/operator/aggregation/geoNear/
     ///
     /// @param geo_near_args
     ///   The specification for the geo_near operation.  The required fields `near` and
@@ -219,12 +239,14 @@ class pipeline {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    pipeline& geo_near(bsoncxx::v_noabi::document::view_or_value geo_near_args);
+    MONGOCXX_ABI_EXPORT_CDECL(pipeline&)
+    geo_near(bsoncxx::v_noabi::document::view_or_value geo_near_args);
 
     ///
     /// Performs a recursive search on a collection.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/graphLookup/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/operator/aggregation/graphLookup/
     ///
     /// @param graph_lookup_args
     ///   The specification for the graph_lookup operation.  The required fields `from`,
@@ -234,7 +256,8 @@ class pipeline {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    pipeline& graph_lookup(bsoncxx::v_noabi::document::view_or_value graph_lookup_args);
+    MONGOCXX_ABI_EXPORT_CDECL(pipeline&)
+    graph_lookup(bsoncxx::v_noabi::document::view_or_value graph_lookup_args);
 
     ///
     /// Groups documents by some specified expression and outputs to the next stage a
@@ -245,7 +268,8 @@ class pipeline {
     ///
     /// @note group does not order output documents.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/group/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/operator/aggregation/group/
     ///
     /// @param group_args
     ///   The specification for the group operation.  The required field `_id` must be included.
@@ -254,7 +278,8 @@ class pipeline {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    pipeline& group(bsoncxx::v_noabi::document::view_or_value group_args);
+    MONGOCXX_ABI_EXPORT_CDECL(pipeline&)
+    group(bsoncxx::v_noabi::document::view_or_value group_args);
 
     ///
     /// Returns statistics regarding the use of each index for the collection.
@@ -263,14 +288,16 @@ class pipeline {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/indexStats/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/operator/aggregation/indexStats/
     ///
-    pipeline& index_stats();
+    MONGOCXX_ABI_EXPORT_CDECL(pipeline&) index_stats();
 
     ///
     /// Limits the number of documents passed to the next stage in the pipeline.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/limit/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/operator/aggregation/limit/
     ///
     /// @param limit
     ///   The number of documents to which output should be limited.
@@ -279,14 +306,15 @@ class pipeline {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    pipeline& limit(std::int32_t limit);
+    MONGOCXX_ABI_EXPORT_CDECL(pipeline&) limit(std::int32_t limit);
 
     ///
     /// Lists the sessions cached in memory by the mongod or mongos instance.
     ///
     /// This option must be used with database aggregate.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/listLocalSessions/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/operator/aggregation/listLocalSessions/
     ///
     /// @param list_local_sessions_args
     ///   A document containing the arguments for list_local_sessions.
@@ -294,14 +322,15 @@ class pipeline {
     /// @return
     ///   A reference to the object on which this method is being called.
     ///
-    pipeline& list_local_sessions(
-        bsoncxx::v_noabi::document::view_or_value list_local_sessions_args);
+    MONGOCXX_ABI_EXPORT_CDECL(pipeline&)
+    list_local_sessions(bsoncxx::v_noabi::document::view_or_value list_local_sessions_args);
 
     ///
     /// Lists all sessions stored in the system.sessions collection in the config database.
     /// These sessions are visible to all members of the MongoDB deployment.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/listSessions/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/operator/aggregation/listSessions/
     ///
     /// @param list_sessions_args
     ///   A document containing the arguments for list_sessions.
@@ -309,13 +338,15 @@ class pipeline {
     /// @return
     ///   A reference to the object on which this method is being called.
     ///
-    pipeline& list_sessions(bsoncxx::v_noabi::document::view_or_value list_sessions_args);
+    MONGOCXX_ABI_EXPORT_CDECL(pipeline&)
+    list_sessions(bsoncxx::v_noabi::document::view_or_value list_sessions_args);
 
     ///
     /// Performs a left outer join to an unsharded collection in the same database to filter in
     /// documents from the "joined" collection for processing.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/lookup/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/operator/aggregation/lookup/
     ///
     /// @param lookup_args
     ///   The specification for the lookup operation.  The required fields `from`, `localField`,
@@ -325,13 +356,15 @@ class pipeline {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    pipeline& lookup(bsoncxx::v_noabi::document::view_or_value lookup_args);
+    MONGOCXX_ABI_EXPORT_CDECL(pipeline&)
+    lookup(bsoncxx::v_noabi::document::view_or_value lookup_args);
 
     ///
     /// Filters the documents. Only the documents that match the condition(s) specified by the
     /// `filter` will continue to the next pipeline stage.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/match/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/operator/aggregation/match/
     ///
     /// @param filter
     ///   The filter.
@@ -340,12 +373,13 @@ class pipeline {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    pipeline& match(bsoncxx::v_noabi::document::view_or_value filter);
+    MONGOCXX_ABI_EXPORT_CDECL(pipeline&) match(bsoncxx::v_noabi::document::view_or_value filter);
 
     ///
     /// Outputs the aggregation results to a collection.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/merge/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/operator/aggregation/merge/
     ///
     /// @param merge_args
     ///   The specification for the merge options. Must include an `into` field that
@@ -355,14 +389,16 @@ class pipeline {
     /// @return
     ///   A reference to the object on which this member function is being called.
     ///
-    pipeline& merge(bsoncxx::v_noabi::document::view_or_value merge_args);
+    MONGOCXX_ABI_EXPORT_CDECL(pipeline&)
+    merge(bsoncxx::v_noabi::document::view_or_value merge_args);
 
     ///
     /// Takes documents returned by the aggregation pipeline and writes them to a specified
     /// collection. This stage must be the last stage in the pipeline. The out operator lets the
     /// aggregation framework return result sets of any size.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/out/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/operator/aggregation/out/
     ///
     /// @param collection_name
     ///   The name of the collection where the output documents should go.
@@ -371,12 +407,13 @@ class pipeline {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    pipeline& out(std::string collection_name);
+    MONGOCXX_ABI_EXPORT_CDECL(pipeline&) out(std::string collection_name);
 
     ///
     /// Projects a subset of the fields in the documents to the next stage of the pipeline.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/project/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/operator/aggregation/project/
     ///
     /// @param projection
     ///   The projection specification.
@@ -385,13 +422,15 @@ class pipeline {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    pipeline& project(bsoncxx::v_noabi::document::view_or_value projection);
+    MONGOCXX_ABI_EXPORT_CDECL(pipeline&)
+    project(bsoncxx::v_noabi::document::view_or_value projection);
 
     ///
     /// Restricts the contents of the documents based on information stored in the documents
     /// themselves.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/redact/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/operator/aggregation/redact/
     ///
     /// @param restrictions
     ///   The document restrictions.
@@ -400,12 +439,14 @@ class pipeline {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    pipeline& redact(bsoncxx::v_noabi::document::view_or_value restrictions);
+    MONGOCXX_ABI_EXPORT_CDECL(pipeline&)
+    redact(bsoncxx::v_noabi::document::view_or_value restrictions);
 
     ///
     /// Promotes a specified document to the top level and replaces all other fields.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceRoot/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/operator/aggregation/replaceRoot/
     ///
     /// @param replace_root_args
     ///   The specification for the replace_root operation.  The required field `newRoot` must be
@@ -415,13 +456,15 @@ class pipeline {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    pipeline& replace_root(bsoncxx::v_noabi::document::view_or_value replace_root_args);
+    MONGOCXX_ABI_EXPORT_CDECL(pipeline&)
+    replace_root(bsoncxx::v_noabi::document::view_or_value replace_root_args);
 
     ///
     /// Randomly selects the specified number of documents that pass into the stage and passes the
     /// remaining documents to the next stage in the pipeline.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/sample/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/operator/aggregation/sample/
     ///
     /// @param size
     ///   The number of input documents to select.
@@ -430,13 +473,14 @@ class pipeline {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    pipeline& sample(std::int32_t size);
+    MONGOCXX_ABI_EXPORT_CDECL(pipeline&) sample(std::int32_t size);
 
     ///
     /// Skips over the specified number of documents that pass into the stage and passes the
     /// remaining documents to the next stage in the pipeline.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/skip/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/operator/aggregation/skip/
     ///
     /// @param docs_to_skip
     ///   The number of input documents to skip.
@@ -445,12 +489,13 @@ class pipeline {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    pipeline& skip(std::int32_t docs_to_skip);
+    MONGOCXX_ABI_EXPORT_CDECL(pipeline&) skip(std::int32_t docs_to_skip);
 
     ///
     /// Sorts all input documents and returns them to the pipeline in sorted order.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/sort/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/operator/aggregation/sort/
     ///
     /// @param ordering
     ///   Document specifying the ordering by which the documents are sorted.
@@ -459,13 +504,14 @@ class pipeline {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    pipeline& sort(bsoncxx::v_noabi::document::view_or_value ordering);
+    MONGOCXX_ABI_EXPORT_CDECL(pipeline&) sort(bsoncxx::v_noabi::document::view_or_value ordering);
 
     ///
     /// Groups incoming documents based on the value of a specified expression, then computes the
     /// count of documents in each distinct group.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/sortByCount/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/operator/aggregation/sortByCount/
     ///
     /// @param field_expression
     ///   The expression to group by, as an object.  The expression can not evaluate to an object.
@@ -478,13 +524,15 @@ class pipeline {
     ///   This overload of sort_by_count() is intended to be used when the desired sort is over a
     ///   grouping of the result of a complex expression computed from the input documents.
     ///
-    pipeline& sort_by_count(bsoncxx::v_noabi::document::view_or_value field_expression);
+    MONGOCXX_ABI_EXPORT_CDECL(pipeline&)
+    sort_by_count(bsoncxx::v_noabi::document::view_or_value field_expression);
 
     ///
     /// Groups incoming documents based on the value of a specified expression, then computes the
     /// count of documents in each distinct group.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/sortByCount/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/operator/aggregation/sortByCount/
     ///
     /// @param field_expression
     ///   The expression to group by, as a string.  To specify a field path, prefix the field path
@@ -498,14 +546,15 @@ class pipeline {
     ///   This overload of sort_by_count() is intended to be used when the desired sort is over a
     ///   grouping of the value of a particular element in the input documents.
     ///
-    pipeline& sort_by_count(std::string field_expression);
+    MONGOCXX_ABI_EXPORT_CDECL(pipeline&) sort_by_count(std::string field_expression);
 
     ///
     /// Deconstructs an array field from the input documents to output a document for each element.
     /// Each output document is an input document with the value of its array field replaced by
     /// an element from the unwound array.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/unwind/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/operator/aggregation/unwind/
     ///
     /// @param unwind_args
     ///   The specification for the unwind operation.  The required field path must be included.
@@ -518,14 +567,16 @@ class pipeline {
     ///   This overload of unwind() is intended to be used when additional options other than the
     ///   field name need to be specified.
     ///
-    pipeline& unwind(bsoncxx::v_noabi::document::view_or_value unwind_args);
+    MONGOCXX_ABI_EXPORT_CDECL(pipeline&)
+    unwind(bsoncxx::v_noabi::document::view_or_value unwind_args);
 
     ///
     /// Deconstructs an array field from the input documents to output a document for each element.
     /// Each output document is an input document with the value of its array field replaced by
     /// an element from the unwound array.
     ///
-    /// @see https://www.mongodb.com/docs/manual/reference/operator/aggregation/unwind/
+    /// @see
+    /// - https://www.mongodb.com/docs/manual/reference/operator/aggregation/unwind/
     ///
     /// @param field_name
     ///   The name of the field to unwind.
@@ -538,19 +589,19 @@ class pipeline {
     ///   This overload of unwind() is intended to be used when no options other than the field name
     ///   need to be specified.
     ///
-    pipeline& unwind(std::string field_name);
+    MONGOCXX_ABI_EXPORT_CDECL(pipeline&) unwind(std::string field_name);
 
     ///
     /// @return A view of the underlying BSON array this pipeline represents.
     ///
-    bsoncxx::v_noabi::array::view view_array() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::array::view) view_array() const;
 
    private:
     friend ::mongocxx::v_noabi::client;
     friend ::mongocxx::v_noabi::collection;
     friend ::mongocxx::v_noabi::database;
 
-    class MONGOCXX_PRIVATE impl;
+    class impl;
     std::unique_ptr<impl> _impl;
 };
 
@@ -558,3 +609,8 @@ class pipeline {
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref mongocxx::v_noabi::pipeline.
+///

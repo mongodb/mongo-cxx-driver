@@ -1,4 +1,4 @@
-// Copyright 2016 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,9 +20,7 @@ namespace mongocxx {
 namespace v_noabi {
 namespace options {
 
-pool::pool(client client_opts) {
-    _client_opts = std::move(client_opts);
-}
+pool::pool(client client_opts) : _client_opts(std::move(client_opts)) {}
 
 const client& pool::client_opts() const {
     return _client_opts;

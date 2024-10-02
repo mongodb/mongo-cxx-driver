@@ -1,4 +1,4 @@
-// Copyright 2018-present MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,7 +18,7 @@
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/private/libbson.hh>
-#include <bsoncxx/test/catch.hh>
+
 #include <mongocxx/client.hpp>
 #include <mongocxx/collection.hpp>
 #include <mongocxx/instance.hpp>
@@ -27,9 +27,12 @@
 #include <mongocxx/pipeline.hpp>
 #include <mongocxx/pool.hpp>
 #include <mongocxx/private/libbson.hh>
-#include <mongocxx/test/client_helpers.hh>
 #include <mongocxx/write_concern.hpp>
-#include <third_party/catch/include/helpers.hpp>
+
+#include <bsoncxx/test/catch.hh>
+
+#include <mongocxx/test/catch_helpers.hh>
+#include <mongocxx/test/client_helpers.hh>
 
 namespace {
 
@@ -77,7 +80,7 @@ const auto gen_error = [](bool has_error) {
                            "expected error");
             *bson = &err_doc;
         } else {
-            *bson = NULL;
+            *bson = nullptr;
         }
         return has_error;
     };
@@ -94,8 +97,7 @@ TEST_CASE("Change stream options") {
     client mongodb_client{uri{}, test_util::add_test_server_api()};
 
     if (!test_util::is_replica_set(mongodb_client)) {
-        WARN("skip: change streams require replica set");
-        return;
+        SKIP("change streams require replica set");
     }
 
     SECTION("Error if both resumeAfter and startAfter are set") {
@@ -117,8 +119,7 @@ TEST_CASE("Spec Prose Tests") {
     client client{uri{}, test_util::add_test_server_api()};
 
     if (!test_util::is_replica_set(client)) {
-        WARN("skip: change streams require replica set");
-        return;
+        SKIP("change streams require replica set");
     }
 
     auto db = client["db"];
@@ -192,7 +193,7 @@ TEST_CASE("Spec Prose Tests") {
 }
 
 TEST_CASE("Mock streams and error-handling") {
-    MOCK_CHANGE_STREAM
+    MOCK_CHANGE_STREAM;
 
     instance::current();
     client mongodb_client{uri{}, test_util::add_test_server_api()};
@@ -386,8 +387,7 @@ TEST_CASE("Create streams.events and assert we can read a single event", "[min36
     instance::current();
     client mongodb_client{uri{}, test_util::add_test_server_api()};
     if (!test_util::is_replica_set(mongodb_client)) {
-        WARN("skip: change streams require replica set");
-        return;
+        SKIP("change streams require replica set");
     }
 
     collection events = mongodb_client["streams"]["events"];
@@ -407,8 +407,7 @@ TEST_CASE("Give an invalid pipeline", "[min36]") {
     instance::current();
     client mongodb_client{uri{}, test_util::add_test_server_api()};
     if (!test_util::is_replica_set(mongodb_client)) {
-        WARN("skip: change streams require replica set");
-        return;
+        SKIP("change streams require replica set");
     }
 
     options::change_stream options{};
@@ -438,8 +437,7 @@ TEST_CASE("Documentation Examples", "[min36]") {
     mongocxx::pool pool{uri{}, options::pool(test_util::add_test_server_api())};
     auto mongodb_client = pool.acquire();
     if (!test_util::is_replica_set(*mongodb_client)) {
-        WARN("skip: change streams require replica set");
-        return;
+        SKIP("change streams require replica set");
     }
 
     collection events = (*mongodb_client)["streams"]["events"];
@@ -545,8 +543,7 @@ TEST_CASE("Watch 2 collections", "[min36]") {
     instance::current();
     client mongodb_client{uri{}, test_util::add_test_server_api()};
     if (!test_util::is_replica_set(mongodb_client)) {
-        WARN("skip: change streams require replica set");
-        return;
+        SKIP("change streams require replica set");
     }
 
     options::change_stream options{};
@@ -593,8 +590,7 @@ TEST_CASE("Watch a Collection", "[min36]") {
     instance::current();
     client mongodb_client{uri{}, test_util::add_test_server_api()};
     if (!test_util::is_replica_set(mongodb_client)) {
-        WARN("skip: change streams require replica set");
-        return;
+        SKIP("change streams require replica set");
     }
 
     options::change_stream options{};

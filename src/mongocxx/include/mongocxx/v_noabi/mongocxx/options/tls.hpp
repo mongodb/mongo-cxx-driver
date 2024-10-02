@@ -1,4 +1,4 @@
-// Copyright 2019 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@
 
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/string/view_or_value.hpp>
+
 #include <mongocxx/stdx.hpp>
 
 #include <mongocxx/config/prelude.hpp>
@@ -44,14 +45,15 @@ class tls {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    tls& pem_file(bsoncxx::v_noabi::string::view_or_value pem_file);
+    MONGOCXX_ABI_EXPORT_CDECL(tls&) pem_file(bsoncxx::v_noabi::string::view_or_value pem_file);
 
     ///
     /// Retrieves the current path to the .pem file.
     ///
     /// @return The path to the .pem file.
     ///
-    const stdx::optional<bsoncxx::v_noabi::string::view_or_value>& pem_file() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::string::view_or_value>&)
+    pem_file() const;
 
     ///
     /// The pass phrase used to decrypt an encrypted PEM file.
@@ -63,14 +65,16 @@ class tls {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    tls& pem_password(bsoncxx::v_noabi::string::view_or_value pem_password);
+    MONGOCXX_ABI_EXPORT_CDECL(tls&)
+    pem_password(bsoncxx::v_noabi::string::view_or_value pem_password);
 
     ///
     /// Retrieves the current decryption pass phrase.
     ///
     /// @return The pass phrase.
     ///
-    const stdx::optional<bsoncxx::v_noabi::string::view_or_value>& pem_password() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::string::view_or_value>&)
+    pem_password() const;
 
     ///
     /// The path to the .pem file that contains the root certificate chain from the Certificate
@@ -83,14 +87,15 @@ class tls {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    tls& ca_file(bsoncxx::v_noabi::string::view_or_value ca_file);
+    MONGOCXX_ABI_EXPORT_CDECL(tls&) ca_file(bsoncxx::v_noabi::string::view_or_value ca_file);
 
     ///
     /// Retrieves the current path to the CA file.
     ///
     /// @return The path to the CA file.
     ///
-    const stdx::optional<bsoncxx::v_noabi::string::view_or_value>& ca_file() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::string::view_or_value>&)
+    ca_file() const;
 
     ///
     /// The path to the Certificate Authority directory.
@@ -102,14 +107,15 @@ class tls {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    tls& ca_dir(bsoncxx::v_noabi::string::view_or_value ca_dir);
+    MONGOCXX_ABI_EXPORT_CDECL(tls&) ca_dir(bsoncxx::v_noabi::string::view_or_value ca_dir);
 
     ///
     /// Retrieves the current path to the CA directory.
     ///
     /// @return The path to the CA directory.
     ///
-    const stdx::optional<bsoncxx::v_noabi::string::view_or_value>& ca_dir() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::string::view_or_value>&)
+    ca_dir() const;
 
     ///
     /// The path to the .pem file that contains revoked certificates.
@@ -121,14 +127,15 @@ class tls {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    tls& crl_file(bsoncxx::v_noabi::string::view_or_value crl_file);
+    MONGOCXX_ABI_EXPORT_CDECL(tls&) crl_file(bsoncxx::v_noabi::string::view_or_value crl_file);
 
     ///
     /// Retrieves the current path to the .pem file that contains revoked certificates.
     ///
     /// @return The path to the revoked certificates file.
     ///
-    const stdx::optional<bsoncxx::v_noabi::string::view_or_value>& crl_file() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::string::view_or_value>&)
+    crl_file() const;
 
     ///
     /// If true, the driver will not verify the server's CA file.
@@ -140,14 +147,14 @@ class tls {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    tls& allow_invalid_certificates(bool allow_invalid_certificates);
+    MONGOCXX_ABI_EXPORT_CDECL(tls&) allow_invalid_certificates(bool allow_invalid_certificates);
 
     ///
     /// Retrieves whether or not the driver will check the server's CA file.
     ///
     /// @return Whether or not the driver will check the server's CA file.
     ///
-    const stdx::optional<bool>& allow_invalid_certificates() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bool>&) allow_invalid_certificates() const;
 
    private:
     stdx::optional<bsoncxx::v_noabi::string::view_or_value> _pem_file;
@@ -163,3 +170,8 @@ class tls {
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref mongocxx::v_noabi::options::tls.
+///

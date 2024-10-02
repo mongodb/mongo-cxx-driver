@@ -1,4 +1,4 @@
-// Copyright 2015 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/json.hpp>
+
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/bulk_write_exception.hpp>
 #include <mongocxx/exception/error_code.hpp>
@@ -27,10 +28,18 @@
 #include <mongocxx/instance.hpp>
 #include <mongocxx/uri.hpp>
 
+#include <examples/macros.hh>
+
 using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_document;
 
-int main(int, char**) {
+int EXAMPLES_CDECL main() {
+    // Do not print error messages when run in CI to prevent MSBuild diagnostic format detection
+    // from causing build failures. There is currently no way to specify
+    // IgnoreStandardErrorWarningFormat=true via CMake or CLI. See:
+    // https://learn.microsoft.com/en-us/visualstudio/msbuild/msbuild-diagnostic-format-for-tasksIgnoreStandardErrorWarningFormat
+    const bool print_error_messages = std::getenv("MONGOCXX_TEST_TOPOLOGY") == nullptr;
+
     // The mongocxx::instance constructor and destructor initialize and shut down the driver,
     // respectively. Therefore, a mongocxx::instance must be created before using the driver and
     // must remain alive for as long as the driver is in use.
@@ -64,7 +73,9 @@ int main(int, char**) {
             return EXIT_FAILURE;
         }
 
-        std::cout << e.what() << std::endl << std::endl;
+        if (print_error_messages) {
+            std::cout << e.what() << std::endl << std::endl;
+        }
     }
 
     // Renaming a collection that does not exist throws a mongocxx::operation_exception.
@@ -101,11 +112,13 @@ int main(int, char**) {
             return EXIT_FAILURE;
         }
 
-        std::cout << e.what() << std::endl;
-        if (e.raw_server_error()) {
-            std::cout << bsoncxx::to_json(*(e.raw_server_error())) << std::endl;
+        if (print_error_messages) {
+            std::cout << e.what() << std::endl;
+            if (e.raw_server_error()) {
+                std::cout << bsoncxx::to_json(*(e.raw_server_error())) << std::endl;
+            }
+            std::cout << std::endl;
         }
-        std::cout << std::endl;
     }
 
     // Adding a document whose "_id" is already present throws a mongocxx::bulk_write_exception.
@@ -128,12 +141,14 @@ int main(int, char**) {
             return EXIT_FAILURE;
         }
 
-        std::cout << e.what() << std::endl;
-        if (e.raw_server_error()) {
-            std::cout << "Raw server error:" << std::endl;
-            std::cout << bsoncxx::to_json(*(e.raw_server_error())) << std::endl;
+        if (print_error_messages) {
+            std::cout << e.what() << std::endl;
+            if (e.raw_server_error()) {
+                std::cout << "Raw server error:" << std::endl;
+                std::cout << bsoncxx::to_json(*(e.raw_server_error())) << std::endl;
+            }
+            std::cout << std::endl;
         }
-        std::cout << std::endl;
     }
 
     return EXIT_SUCCESS;

@@ -1,4 +1,4 @@
-// Copyright 2023 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ namespace mongocxx {
 namespace v_noabi {
 namespace model {
 
-class MONGOCXX_API update_many;
+class update_many;
 
 }  // namespace model
 }  // namespace v_noabi
@@ -35,3 +35,21 @@ using ::mongocxx::v_noabi::model::update_many;
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
+
+///
+/// @file
+/// Declares @ref mongocxx::v_noabi::model::update_many.
+///
+
+#if defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+
+namespace mongocxx {
+namespace model {
+
+/// @ref mongocxx::v_noabi::model::update_many
+class update_many {};
+
+}  // namespace model
+}  // namespace mongocxx
+
+#endif  // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

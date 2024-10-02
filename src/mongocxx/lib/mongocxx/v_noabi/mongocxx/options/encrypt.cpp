@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,11 +15,13 @@
 #include <utility>
 
 #include <bsoncxx/types/private/convert.hh>
+
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/options/encrypt.hpp>
 #include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/libmongoc.hh>
+#include <mongocxx/private/scoped_bson_value.hh>
 
 #include <mongocxx/config/private/prelude.hh>
 
@@ -81,55 +83,6 @@ const stdx::optional<options::range>& encrypt::range_opts() const {
     return _range_opts;
 }
 
-namespace {
-
-struct scoped_bson_value {
-    bson_value_t value = {};
-
-    // Allow obtaining a pointer to this->value even in rvalue expressions.
-    bson_value_t* get() noexcept {
-        return &value;
-    }
-
-    // Communicate this->value is to be initialized via the resulting pointer.
-    bson_value_t* value_for_init() noexcept {
-        return &this->value;
-    }
-
-    template <typename T>
-    auto convert(const T& value)
-        // Use trailing return type syntax to SFINAE without triggering GCC -Wignored-attributes
-        // warnings due to using decltype within template parameters.
-        -> decltype(bsoncxx::v_noabi::types::convert_to_libbson(std::declval<const T&>(),
-                                                                std::declval<bson_value_t*>())) {
-        bsoncxx::v_noabi::types::convert_to_libbson(value, &this->value);
-    }
-
-    template <typename T>
-    explicit scoped_bson_value(const T& value) {
-        convert(value);
-    }
-
-    explicit scoped_bson_value(const bsoncxx::v_noabi::types::bson_value::view& view) {
-        // Argument order is reversed for bsoncxx::v_noabi::types::bson_value::view.
-        bsoncxx::v_noabi::types::convert_to_libbson(&this->value, view);
-    }
-
-    ~scoped_bson_value() {
-        bson_value_destroy(&value);
-    }
-
-    // Expectation is that value_for_init() will be used to initialize this->value.
-    scoped_bson_value() = default;
-
-    scoped_bson_value(const scoped_bson_value&) = delete;
-    scoped_bson_value(scoped_bson_value&&) = delete;
-    scoped_bson_value& operator=(const scoped_bson_value&) = delete;
-    scoped_bson_value& operator=(scoped_bson_value&&) = delete;
-};
-
-}  // namespace
-
 void* encrypt::convert() const {
     using libbson::scoped_bson_t;
 
@@ -158,7 +111,8 @@ void* encrypt::convert() const {
                             "key id must be a binary value with subtype 4 (UUID)"};
         }
 
-        libmongoc::client_encryption_encrypt_opts_set_keyid(opts, scoped_bson_value(key_id).get());
+        libmongoc::client_encryption_encrypt_opts_set_keyid(
+            opts, detail::scoped_bson_value(key_id).get());
     }
 
     if (_key_alt_name) {
@@ -183,9 +137,9 @@ void* encrypt::convert() const {
                 libmongoc::client_encryption_encrypt_opts_set_algorithm(
                     opts, MONGOC_ENCRYPT_ALGORITHM_UNINDEXED);
                 break;
-            case encryption_algorithm::k_range_preview:
+            case encryption_algorithm::k_range:
                 libmongoc::client_encryption_encrypt_opts_set_algorithm(
-                    opts, MONGOC_ENCRYPT_ALGORITHM_RANGEPREVIEW);
+                    opts, MONGOC_ENCRYPT_ALGORITHM_RANGE);
                 break;
             default:
                 throw exception{error_code::k_invalid_parameter,
@@ -206,9 +160,9 @@ void* encrypt::convert() const {
                 libmongoc::client_encryption_encrypt_opts_set_query_type(
                     opts, MONGOC_ENCRYPT_QUERY_TYPE_EQUALITY);
                 break;
-            case encryption_query_type::k_range_preview:
+            case encryption_query_type::k_range:
                 libmongoc::client_encryption_encrypt_opts_set_query_type(
-                    opts, MONGOC_ENCRYPT_QUERY_TYPE_RANGEPREVIEW);
+                    opts, MONGOC_ENCRYPT_QUERY_TYPE_RANGE);
                 break;
             default:
                 throw exception{error_code::k_invalid_parameter, "unsupported query type"};
@@ -231,15 +185,16 @@ void* encrypt::convert() const {
         const auto& max = _range_opts->max();
         const auto& precision = _range_opts->precision();
         const auto& sparsity = _range_opts->sparsity();
+        const auto& trim_factor = _range_opts->trim_factor();
 
         if (min) {
             libmongoc::client_encryption_encrypt_range_opts_set_min(
-                range_opts, scoped_bson_value(min->view()).get());
+                range_opts, detail::scoped_bson_value(min->view()).get());
         }
 
         if (max) {
             libmongoc::client_encryption_encrypt_range_opts_set_max(
-                range_opts, scoped_bson_value(max->view()).get());
+                range_opts, detail::scoped_bson_value(max->view()).get());
         }
 
         if (precision) {
@@ -248,6 +203,11 @@ void* encrypt::convert() const {
 
         if (sparsity) {
             libmongoc::client_encryption_encrypt_range_opts_set_sparsity(range_opts, *sparsity);
+        }
+
+        if (trim_factor) {
+            libmongoc::client_encryption_encrypt_range_opts_set_trim_factor(range_opts,
+                                                                            *trim_factor);
         }
 
         libmongoc::client_encryption_encrypt_opts_set_range_opts(opts, range_opts);

@@ -1,4 +1,4 @@
-// Copyright 2021 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -29,8 +29,7 @@ namespace options {
 using unique_server_api =
     std::unique_ptr<mongoc_server_api_t, decltype(libmongoc::server_api_destroy)>;
 
-BSON_MAYBE_UNUSED
-static unique_server_api make_server_api(const server_api& opts) {
+inline unique_server_api make_server_api(const server_api& opts) {
     mongoc_server_api_version_t mongoc_api_version;
 
     // Convert version enum value to std::string then to c_str to create mongoc api version.

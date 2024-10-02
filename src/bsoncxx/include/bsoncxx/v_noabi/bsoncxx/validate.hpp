@@ -1,4 +1,4 @@
-// Copyright 2015 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -41,8 +41,8 @@ namespace v_noabi {
 ///   An engaged optional containing a view if the document is valid, or
 ///   an unengaged optional if the document is invalid.
 ///
-BSONCXX_API stdx::optional<document::view> BSONCXX_CALL validate(const std::uint8_t* data,
-                                                                 std::size_t length);
+BSONCXX_ABI_EXPORT_CDECL(stdx::optional<document::view>)
+validate(const std::uint8_t* data, std::size_t length);
 
 ///
 /// Validates a BSON document. This overload provides additional control over the
@@ -64,7 +64,7 @@ BSONCXX_API stdx::optional<document::view> BSONCXX_CALL validate(const std::uint
 ///   An engaged optional containing a view if the document is valid, or
 ///   an unengaged optional if the document is invalid.
 ///
-BSONCXX_API stdx::optional<document::view> BSONCXX_CALL
+BSONCXX_ABI_EXPORT_CDECL(stdx::optional<document::view>)
 validate(const std::uint8_t* data,
          std::size_t length,
          const validator& validator,
@@ -79,12 +79,12 @@ class validator {
     ///
     /// Constructs a validator.
     ///
-    validator();
+    BSONCXX_ABI_EXPORT_CDECL() validator();
 
     ///
     /// Destructs a validator.
     ///
-    ~validator();
+    BSONCXX_ABI_EXPORT_CDECL() ~validator();
 
     ///
     /// Verify that all keys and string values are valid UTF-8.
@@ -92,14 +92,14 @@ class validator {
     /// @param check_utf8
     ///   If true, UTF-8 validation is performed.
     ///
-    void check_utf8(bool check_utf8);
+    BSONCXX_ABI_EXPORT_CDECL(void) check_utf8(bool check_utf8);
 
     ///
     /// Getter for the current check_utf8 value of the underlying validator.
     ///
     /// @return True if UTF-8 validation is performed.
     ///
-    bool check_utf8() const;
+    BSONCXX_ABI_EXPORT_CDECL(bool) check_utf8() const;
 
     ///
     /// Verify that all keys and string values are valid UTF-8, but allow
@@ -109,7 +109,7 @@ class validator {
     /// @param check_utf8_allow_null
     ///   If true, UTF-8 validation (with null bytes allowed) is performed.
     ///
-    void check_utf8_allow_null(bool check_utf8_allow_null);
+    BSONCXX_ABI_EXPORT_CDECL(void) check_utf8_allow_null(bool check_utf8_allow_null);
 
     ///
     /// Getter for the current check_utf8_allow_null value of the underlying
@@ -118,7 +118,7 @@ class validator {
     /// @return True if UTF-8 validation (with null bytes allowed) is
     ///   performed.
     ///
-    bool check_utf8_allow_null() const;
+    BSONCXX_ABI_EXPORT_CDECL(bool) check_utf8_allow_null() const;
 
     ///
     /// Verifies that document keys are not preceeded with '$'.
@@ -126,7 +126,7 @@ class validator {
     /// @param check_dollar_keys
     ///   If true, keys starting with '$' will be treated as invalid.
     ///
-    void check_dollar_keys(bool check_dollar_keys);
+    BSONCXX_ABI_EXPORT_CDECL(void) check_dollar_keys(bool check_dollar_keys);
 
     ///
     /// Getter for the current check_dollar_keys value of the underlying
@@ -134,7 +134,7 @@ class validator {
     ///
     /// @return True if keys starting with '$' will be treated as invalid.
     ///
-    bool check_dollar_keys() const;
+    BSONCXX_ABI_EXPORT_CDECL(bool) check_dollar_keys() const;
 
     ///
     /// Verifies that document keys do not contain any '.' characters.
@@ -142,7 +142,7 @@ class validator {
     /// @param check_dot_keys
     ///   If true, keys containing '.' will be treated as invalid.
     ///
-    void check_dot_keys(bool check_dot_keys);
+    BSONCXX_ABI_EXPORT_CDECL(void) check_dot_keys(bool check_dot_keys);
 
     ///
     /// Getter for the current check_dot_keys value of the underlying
@@ -150,10 +150,10 @@ class validator {
     ///
     /// @return True if keys containing '.' will be treated as invalid.
     ///
-    bool check_dot_keys() const;
+    BSONCXX_ABI_EXPORT_CDECL(bool) check_dot_keys() const;
 
    private:
-    struct BSONCXX_PRIVATE impl;
+    struct impl;
     std::unique_ptr<impl> _impl;
 };
 
@@ -167,3 +167,26 @@ using ::bsoncxx::v_noabi::validate;
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides utilities to validate BSON document representations.
+///
+
+#if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+
+namespace bsoncxx {
+
+/// @ref bsoncxx::v_noabi::validate(const std::uint8_t* data, std::size_t length)
+v_noabi::stdx::optional<v_noabi::document::view> validate(const std::uint8_t* data,
+                                                          std::size_t length);
+
+/// @ref bsoncxx::v_noabi::validate(const std::uint8_t* data, std::size_t length, const v_noabi::validator& validator, std::size_t* invalid_offset)
+v_noabi::stdx::optional<v_noabi::document::view> validate(const std::uint8_t* data,
+                                                          std::size_t length,
+                                                          const v_noabi::validator& validator,
+                                                          std::size_t* invalid_offset = nullptr);
+
+}  // namespace bsoncxx
+
+#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

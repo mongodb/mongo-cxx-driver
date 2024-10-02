@@ -1,4 +1,4 @@
-// Copyright 2014 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -30,7 +30,14 @@ class bulk_write::impl {
         libmongoc::bulk_operation_destroy(operation_t);
     }
 
+    impl(impl&&) = delete;
+    impl& operator=(impl&&) = delete;
+
+    impl(const impl&) = delete;
+    impl& operator=(const impl&) = delete;
+
     mongoc_bulk_operation_t* operation_t;
+    bool is_empty = true;
 };
 
 }  // namespace v_noabi

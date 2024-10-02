@@ -185,7 +185,7 @@ inline int ntop(std::uint8_t const* src,
         return -1;
     }
     target[datalength] = '\0'; /* Returned value doesn't count \0. */
-    return (int)datalength;
+    return static_cast<int>(datalength);
 }
 
 }  // namespace b64

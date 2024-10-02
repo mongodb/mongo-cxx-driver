@@ -3,7 +3,7 @@
 [MongoDB](https://hub.docker.com/r/mongodb/mongodb-community-server) is a
 cross-platform document-oriented NoSQL database. MongoDB uses JSON-like
 documents with optional schemas. MongoDB is developed by
-[MongoDB Inc](https://www.mongodb.com/).
+[MongoDB, Inc.](https://www.mongodb.com/).
 
 This image provides both a C++ driver as well as a C driver which are used to
 connect to MongoDB. The C++ driver is also known as
@@ -37,7 +37,7 @@ instance for
 Next, create a `Dockerfile` like so.
 ```Dockerfile
 # Dockerfile
-FROM mongodb/mongo-cxx-driver:3.9.0-redhat-ubi-9.3
+FROM mongodb/mongo-cxx-driver:3.10.1-redhat-ubi-9.4
 
 WORKDIR /build
 
@@ -166,7 +166,7 @@ instance for
 Next, create a `Dockerfile` like so.
 ```Dockerfile
 # Dockerfile
-FROM mongodb/mongo-cxx-driver:3.9.0-redhat-ubi-9.3
+FROM mongodb/mongo-cxx-driver:3.10.1-redhat-ubi-9.4
 
 WORKDIR /build
 

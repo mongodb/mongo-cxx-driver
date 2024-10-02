@@ -1,4 +1,4 @@
-// Copyright 2017 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@
 
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
+
 #include <mongocxx/stdx.hpp>
 
 #include <mongocxx/config/prelude.hpp>
@@ -43,7 +44,7 @@ class upload {
     ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
-    upload& chunk_size_bytes(std::int32_t chunk_size_bytes);
+    MONGOCXX_ABI_EXPORT_CDECL(upload&) chunk_size_bytes(std::int32_t chunk_size_bytes);
 
     ///
     /// Gets the chunk size of the GridFS file being uploaded.
@@ -51,7 +52,7 @@ class upload {
     /// @return
     ///   The chunk size of the GridFS file being uploaded in bytes.
     ///
-    const stdx::optional<std::int32_t>& chunk_size_bytes() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<std::int32_t>&) chunk_size_bytes() const;
 
     ///
     /// Sets the metadata field of the GridFS file being uploaded. A GridFS file can store arbitrary
@@ -64,7 +65,7 @@ class upload {
     ///   A reference to the object on which this member function is being called. This facilitates
     ///   method chaining.
     ///
-    upload& metadata(bsoncxx::v_noabi::document::view_or_value metadata);
+    MONGOCXX_ABI_EXPORT_CDECL(upload&) metadata(bsoncxx::v_noabi::document::view_or_value metadata);
 
     ///
     /// Gets the metadata of the GridFS file being uploaded.
@@ -72,7 +73,8 @@ class upload {
     /// @return
     ///   The metadata document of the GridFS file.
     ///
-    const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& metadata() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+    metadata() const;
 
    private:
     stdx::optional<std::int32_t> _chunk_size_bytes;
@@ -85,3 +87,8 @@ class upload {
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref mongocxx::v_noabi::options::gridfs::upload.
+///

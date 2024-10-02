@@ -1,4 +1,4 @@
-// Copyright 2014 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -35,14 +35,14 @@ class insert_one {
     /// @param document
     ///   The document to insert.
     ///
-    insert_one(bsoncxx::v_noabi::document::view_or_value document);
+    MONGOCXX_ABI_EXPORT_CDECL() insert_one(bsoncxx::v_noabi::document::view_or_value document);
 
     ///
     /// Gets the document to be inserted.
     ///
     /// @return The document to be inserted.
     ///
-    const bsoncxx::v_noabi::document::view_or_value& document() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::document::view_or_value&) document() const;
 
    private:
     bsoncxx::v_noabi::document::view_or_value _document;
@@ -53,3 +53,8 @@ class insert_one {
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref mongocxx::v_noabi::model::insert_one.
+///

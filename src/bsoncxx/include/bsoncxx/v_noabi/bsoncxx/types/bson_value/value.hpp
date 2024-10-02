@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 #include <iostream>
 #include <memory>
+#include <string>
 #include <vector>
 
 #include <bsoncxx/document/element-fwd.hpp>
@@ -41,87 +42,103 @@ namespace bson_value {
 /// For accessors into this type and to extract the various BSON types out,
 /// please use bson_value::view.
 ///
-/// @relatesalso bson_value::view
+/// @see
+/// - @ref bsoncxx::v_noabi::types::bson_value::view
 ///
 class value {
    public:
-///
-/// Constructor for each BSON type.
-///
-/// These x-macros will expand to:
-///    value(b_double v);
-///    value(b_string v);
-///    value(b_document v);
-///    value(b_array v); ...
-///
-#define BSONCXX_ENUM(name, val) value(b_##name v);
-#include <bsoncxx/enums/type.hpp>
-#undef BSONCXX_ENUM
+    ///
+    /// Construct a bson_value::value from the provided BSON type.
+    ///
+    /// @{
+    BSONCXX_ABI_EXPORT_CDECL() value(b_double v);
+    BSONCXX_ABI_EXPORT_CDECL() value(b_string v);
+    BSONCXX_ABI_EXPORT_CDECL() value(b_document v);
+    BSONCXX_ABI_EXPORT_CDECL() value(b_array v);
+    BSONCXX_ABI_EXPORT_CDECL() value(b_binary v);
+    BSONCXX_ABI_EXPORT_CDECL() value(b_undefined v);
+    BSONCXX_ABI_EXPORT_CDECL() value(b_oid v);
+    BSONCXX_ABI_EXPORT_CDECL() value(b_bool v);
+    BSONCXX_ABI_EXPORT_CDECL() value(b_date v);
+    BSONCXX_ABI_EXPORT_CDECL() value(b_null);
+    BSONCXX_ABI_EXPORT_CDECL() value(b_regex v);
+    BSONCXX_ABI_EXPORT_CDECL() value(b_dbpointer v);
+    BSONCXX_ABI_EXPORT_CDECL() value(b_code v);
+    BSONCXX_ABI_EXPORT_CDECL() value(b_symbol v);
+    BSONCXX_ABI_EXPORT_CDECL() value(b_codewscope v);
+    BSONCXX_ABI_EXPORT_CDECL() value(b_int32 v);
+    BSONCXX_ABI_EXPORT_CDECL() value(b_timestamp v);
+    BSONCXX_ABI_EXPORT_CDECL() value(b_int64 v);
+    BSONCXX_ABI_EXPORT_CDECL() value(b_decimal128 v);
+    BSONCXX_ABI_EXPORT_CDECL() value(b_maxkey v);
+    BSONCXX_ABI_EXPORT_CDECL() value(b_minkey v);
+    /// @}
+    ///
 
     ///
     /// Constructs a BSON UTF-8 string value.
     ///
-    value(const char* v);
+    BSONCXX_ABI_EXPORT_CDECL() value(const char* v);
 
     ///
     /// Constructs a BSON UTF-8 string value.
     ///
-    value(std::string v);
+    BSONCXX_ABI_EXPORT_CDECL() value(std::string v);
 
     ///
     /// Constructs a BSON UTF-8 string value.
     ///
-    value(stdx::string_view v);
+    BSONCXX_ABI_EXPORT_CDECL() value(stdx::string_view v);
 
     ///
     /// Constructs a BSON 32-bit signed integer value.
     ///
-    value(int32_t v);
+    BSONCXX_ABI_EXPORT_CDECL() value(int32_t v);
 
     ///
     /// Constructs a BSON 64-bit signed integer value.
     ///
-    value(int64_t v);
+    BSONCXX_ABI_EXPORT_CDECL() value(int64_t v);
 
     ///
     /// Constructs a BSON double value.
     ///
-    value(double v);
+    BSONCXX_ABI_EXPORT_CDECL() value(double v);
 
     ///
     /// Constructs a BSON boolean value.
     ///
-    value(bool v);
+    BSONCXX_ABI_EXPORT_CDECL() value(bool v);
 
     ///
     /// Constructs a BSON ObjectId value.
     ///
-    value(oid v);
+    BSONCXX_ABI_EXPORT_CDECL() value(oid v);
 
     ///
     /// Constructs a BSON Decimal128 value.
     ///
-    value(decimal128 v);
+    BSONCXX_ABI_EXPORT_CDECL() value(decimal128 v);
 
     ///
     /// Constructs a BSON date value.
     ///
-    value(std::chrono::milliseconds v);
+    BSONCXX_ABI_EXPORT_CDECL() value(std::chrono::milliseconds v);
 
     ///
     /// Constructs a BSON null value.
     ///
-    value(std::nullptr_t);
+    BSONCXX_ABI_EXPORT_CDECL() value(std::nullptr_t);
 
     ///
     /// Constructs a BSON document value.
     ///
-    value(bsoncxx::v_noabi::document::view v);
+    BSONCXX_ABI_EXPORT_CDECL() value(bsoncxx::v_noabi::document::view v);
 
     ///
     /// Constructs a BSON array value.
     ///
-    value(bsoncxx::v_noabi::array::view v);
+    BSONCXX_ABI_EXPORT_CDECL() value(bsoncxx::v_noabi::array::view v);
 
     ///
     /// Constructs a BSON binary data value.
@@ -131,6 +148,7 @@ class value {
     /// @param sub_type
     ///     an optional binary sub type. Defaults to type::k_binary
     ///
+    BSONCXX_ABI_EXPORT_CDECL()
     value(std::vector<unsigned char> v, const binary_sub_type sub_type = {});
 
     ///
@@ -143,6 +161,7 @@ class value {
     /// @param sub_type
     ///     an optional binary sub type. Defaults to type::k_binary
     ///
+    BSONCXX_ABI_EXPORT_CDECL()
     value(const uint8_t* data, size_t size, const binary_sub_type sub_type = {});
 
     ///
@@ -153,10 +172,9 @@ class value {
     /// @param value
     ///     the object id
     ///
-    /// @deprecated
-    ///   A BSON DBPointer (aka DBRef) is still supported but deprecated.
+    /// @warning The DBPointer (aka DBRef) BSON type is deprecated. Usage is discouraged.
     ///
-    value(stdx::string_view collection, oid value);
+    BSONCXX_ABI_EXPORT_CDECL() value(stdx::string_view collection, oid value);
 
     ///
     /// Constructs a BSON JavaScript code with scope value.
@@ -166,6 +184,7 @@ class value {
     /// @param scope
     ///     a bson document view holding the scope environment
     ///
+    BSONCXX_ABI_EXPORT_CDECL()
     value(stdx::string_view code, bsoncxx::v_noabi::document::view_or_value scope);
 
     ///
@@ -176,7 +195,7 @@ class value {
     /// @param options
     ///   The regex options
     ///
-    value(stdx::string_view regex, stdx::string_view options);
+    BSONCXX_ABI_EXPORT_CDECL() value(stdx::string_view regex, stdx::string_view options);
 
     ///
     /// Constructs one of the following BSON values (each specified by the parenthesized type):
@@ -192,12 +211,10 @@ class value {
     ///
     /// @throws bsoncxx::v_noabi::exception if the type's value is not k_code, k_regex, or k_symbol.
     ///
-    /// @deprecated
-    ///   The BSON symbol type is deprecated and use by clients is discouraged.
-    /// @deprecated
-    ///   The BSON undefined type is deprecated and use by clients is discouraged.
+    /// @warning The Symbol BSON type is deprecated. Usage is discouraged.
+    /// @warning The Undefined BSON type is deprecated. Usage is discouraged.
     ///
-    value(const type id, stdx::string_view v);
+    BSONCXX_ABI_EXPORT_CDECL() value(const type id, stdx::string_view v);
 
     ///
     /// Constructs one of the following BSON values (each specified by the parenthesized type):
@@ -211,7 +228,7 @@ class value {
     /// @throws bsoncxx::v_noabi::exception if the type's value is not k_maxkey, k_minkey, or
     /// k_undefined.
     ///
-    value(const type id);
+    BSONCXX_ABI_EXPORT_CDECL() value(const type id);
 
     ///
     /// Constructs one of the following BSON values (each specified by the parenthesized type):
@@ -233,30 +250,30 @@ class value {
     ///   The BSON timestamp type is used internally by the MongoDB server - use by clients
     ///   is discouraged.
     ///
-    value(const type id, uint64_t a, uint64_t b);
+    BSONCXX_ABI_EXPORT_CDECL() value(const type id, uint64_t a, uint64_t b);
 
-    ~value();
+    BSONCXX_ABI_EXPORT_CDECL() ~value();
 
-    value(const value&);
-    value& operator=(const value&);
+    BSONCXX_ABI_EXPORT_CDECL() value(const value&);
+    BSONCXX_ABI_EXPORT_CDECL(value&) operator=(const value&);
 
-    value(value&&) noexcept;
-    value& operator=(value&&) noexcept;
+    BSONCXX_ABI_EXPORT_CDECL() value(value&&) noexcept;
+    BSONCXX_ABI_EXPORT_CDECL(value&) operator=(value&&) noexcept;
 
     ///
     /// Create an owning copy of a bson_value::view.
     ///
-    explicit value(const view&);
+    explicit BSONCXX_ABI_EXPORT_CDECL() value(const view&);
 
     ///
     /// Get a view over the bson_value owned by this object.
     ///
-    bson_value::view view() const noexcept;
+    BSONCXX_ABI_EXPORT_CDECL(bson_value::view) view() const noexcept;
 
     ///
     /// Conversion operator that provides a bson_value::view given a bson_value::value.
     ///
-    operator bson_value::view() const noexcept;
+    BSONCXX_ABI_EXPORT_CDECL() operator bson_value::view() const noexcept;
 
    private:
     friend ::bsoncxx::v_noabi::document::element;
@@ -267,57 +284,58 @@ class value {
           std::uint32_t keylen);
 
     // Makes a copy of 'internal_value' and owns the copy.
-    value(void* internal_value);
+    // Export is required by mongocxx via make_owning_bson.
+    BSONCXX_ABI_EXPORT_CDECL() value(void* internal_value);
 
     friend value make_owning_bson(void* internal_value);
 
-    class BSONCXX_PRIVATE impl;
+    class impl;
     std::unique_ptr<impl> _impl;
 };
 
 ///
-/// @{
-///
 /// Compares values for (in)-equality.
 ///
-/// @relates bson_value::value
-///
-BSONCXX_INLINE bool operator==(const value& lhs, const value& rhs) {
+/// @{
+
+/// @relatesalso bsoncxx::v_noabi::types::bson_value::value
+inline bool operator==(const value& lhs, const value& rhs) {
     return (lhs.view() == rhs.view());
 }
 
-BSONCXX_INLINE bool operator!=(const value& lhs, const value& rhs) {
+/// @relatesalso bsoncxx::v_noabi::types::bson_value::value
+inline bool operator!=(const value& lhs, const value& rhs) {
     return !(lhs == rhs);
 }
 
-///
 /// @}
 ///
 
 ///
+/// Compares a value with a view for (in)equality.
+///
 /// @{
-///
-/// Compares a value with a view for (in)-equality.
-///
-/// @relates bson_value::value
-///
-BSONCXX_INLINE bool operator==(const value& lhs, const view& rhs) {
+
+/// @relatesalso bsoncxx::v_noabi::types::bson_value::value
+inline bool operator==(const value& lhs, const view& rhs) {
     return (lhs.view() == rhs);
 }
 
-BSONCXX_INLINE bool operator==(const view& lhs, const value& rhs) {
+/// @relatesalso bsoncxx::v_noabi::types::bson_value::value
+inline bool operator==(const view& lhs, const value& rhs) {
     return (rhs == lhs);
 }
 
-BSONCXX_INLINE bool operator!=(const value& lhs, const view& rhs) {
+/// @relatesalso bsoncxx::v_noabi::types::bson_value::value
+inline bool operator!=(const value& lhs, const view& rhs) {
     return !(lhs == rhs);
 }
 
-BSONCXX_INLINE bool operator!=(const view& lhs, const value& rhs) {
+/// @relatesalso bsoncxx::v_noabi::types::bson_value::value
+inline bool operator!=(const view& lhs, const value& rhs) {
     return !(lhs == rhs);
 }
 
-///
 /// @}
 ///
 
@@ -338,3 +356,44 @@ using ::bsoncxx::v_noabi::types::bson_value::operator!=;
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref bsoncxx::v_noabi::types::bson_value::value.
+///
+
+#if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+
+namespace bsoncxx {
+namespace types {
+namespace bson_value {
+
+/// @ref bsoncxx::v_noabi::types::bson_value::operator==(const v_noabi::types::bson_value::value& lhs, const v_noabi::types::bson_value::value& rhs)
+inline bool operator==(const v_noabi::types::bson_value::value& lhs,
+                       const v_noabi::types::bson_value::value& rhs);
+
+/// @ref bsoncxx::v_noabi::types::bson_value::operator!=(const v_noabi::types::bson_value::value& lhs, const v_noabi::types::bson_value::value& rhs)
+inline bool operator!=(const v_noabi::types::bson_value::value& lhs,
+                       const v_noabi::types::bson_value::value& rhs);
+
+/// @ref bsoncxx::v_noabi::types::bson_value::operator==(const v_noabi::types::bson_value::value& lhs, const v_noabi::types::bson_value::view& rhs)
+inline bool operator==(const v_noabi::types::bson_value::value& lhs,
+                       const v_noabi::types::bson_value::view& rhs);
+
+/// @ref bsoncxx::v_noabi::types::bson_value::operator==(const v_noabi::types::bson_value::view& lhs, const v_noabi::types::bson_value::value& rhs)
+inline bool operator==(const v_noabi::types::bson_value::view& lhs,
+                       const v_noabi::types::bson_value::value& rhs);
+
+/// @ref bsoncxx::v_noabi::types::bson_value::operator!=(const v_noabi::types::bson_value::value& lhs, const v_noabi::types::bson_value::view& rhs)
+inline bool operator!=(const v_noabi::types::bson_value::value& lhs,
+                       const v_noabi::types::bson_value::view& rhs);
+
+/// @ref bsoncxx::v_noabi::types::bson_value::operator!=(const v_noabi::types::bson_value::view& lhs, const v_noabi::types::bson_value::value& rhs)
+inline bool operator!=(const v_noabi::types::bson_value::view& lhs,
+                       const v_noabi::types::bson_value::value& rhs);
+
+}  // namespace bson_value
+}  // namespace types
+}  // namespace bsoncxx
+
+#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

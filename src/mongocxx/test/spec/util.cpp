@@ -1,4 +1,4 @@
-// Copyright 2018-present MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -11,6 +11,8 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
+
+#include "mongocxx/test/client_helpers.hh"
 
 #include <fstream>
 #include <set>
@@ -25,7 +27,7 @@
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/string/to_string.hpp>
-#include <bsoncxx/test/catch.hh>
+
 #include <mongocxx/client.hpp>
 #include <mongocxx/collection.hpp>
 #include <mongocxx/database.hpp>
@@ -38,11 +40,16 @@
 #include <mongocxx/pipeline.hpp>
 #include <mongocxx/result/delete.hpp>
 #include <mongocxx/result/insert_one.hpp>
+
+#include <mongocxx/config/private/prelude.hh>
+
+#include <bsoncxx/test/catch.hh>
+
 #include <mongocxx/test/spec/monitoring.hh>
 #include <mongocxx/test/spec/operation.hh>
 #include <mongocxx/test/spec/util.hh>
 
-#include <mongocxx/config/private/prelude.hh>
+#include <catch2/matchers/catch_matchers_string.hpp>
 
 namespace mongocxx {
 namespace spec {
@@ -87,8 +94,8 @@ uint32_t error_code_from_name(string_view name) {
 }
 
 /* Called with the entire test file and individual tests. */
-bool should_skip_spec_test(const client& client, document::view test) {
-    std::set<std::string> unsupported_tests = {
+bool check_if_skip_spec_test_impl(const client& client, document::view test, std::string& reason) {
+    static const std::set<std::string> unsupported_tests = {
         "CreateIndex and dropIndex omits default write concern",
         "MapReduce omits default write concern",
         "Deprecated count with empty collection",
@@ -101,41 +108,55 @@ bool should_skip_spec_test(const client& client, document::view test) {
         "run command fails with explicit secondary read preference",
     };
 
-    if (test["description"]) {
-        std::string description = std::string(test["description"].get_string().value);
-        if (unsupported_tests.find(description) != unsupported_tests.end()) {
-            UNSCOPED_INFO("Test skipped - " << description << "\n"
-                                            << "reason: unsupported in C++ driver");
+    if (const auto description = test["description"]) {
+        const auto desc = std::string(description.get_string().value);
+        if (unsupported_tests.find(desc) != unsupported_tests.end()) {
+            reason.append(desc);
+            reason.append(": not supported by the C++ Driver");
             return true;
         }
     }
 
-    if (test["skipReason"]) {
-        UNSCOPED_INFO("Test skipped - " << test["description"].get_string().value << "\n"
-                                        << "reason: " << test["skipReason"].get_string().value);
+    if (const auto skip_reason = test["skipReason"]) {
+        const auto desc = test["description"].get_string().value;
+        const auto str = skip_reason.get_string().value;
+
+        reason.append(desc.data(), desc.size());
+        reason.append(": ");
+        reason.append(str.data(), str.size());
+
         return true;
     }
 
-    auto run_mongohouse_tests = std::getenv("RUN_MONGOHOUSE_TESTS");
-    if (run_mongohouse_tests && std::string(run_mongohouse_tests) == "ON") {
-        // mongohoused does not return `version` field in response to serverStatus.
-        // Exit early to run the test.
-        return false;
+    {
+        const auto run_mongohouse_tests = std::getenv("RUN_MONGOHOUSE_TESTS");
+
+        if (run_mongohouse_tests && std::string(run_mongohouse_tests) == "ON") {
+            // mongohoused does not return `version` field in response to serverStatus.
+            // Exit early to run the test.
+            return false;
+        }
     }
 
-    std::string server_version = test_util::get_server_version(client);
+    const auto server_version = test_util::get_server_version(client);
 
-    std::string topology = test_util::get_topology(client);
+    const auto topology = test_util::get_topology(client);
 
     if (test["ignore_if_server_version_greater_than"]) {
-        std::string max_server_version = bsoncxx::string::to_string(
+        const auto max_server_version = bsoncxx::string::to_string(
             test["ignore_if_server_version_greater_than"].get_string().value);
+
         if (test_util::compare_versions(server_version, max_server_version) > 0) {
+            reason.append(server_version);
+            reason.append(" is greater than ");
+            reason.append(max_server_version);
             return true;
         }
     }
 
     auto should_skip = [&](document::view requirements) {
+        reason.clear();
+
         if (requirements["topology"]) {
             auto topologies = requirements["topology"].get_array().value;
             bool found = false;
@@ -146,22 +167,30 @@ bool should_skip_spec_test(const client& client, document::view test) {
                 }
             }
             if (!found) {
+                reason.append(topology);
+                reason.append(" is not present in the list of topologies");
                 return true;
             }
         }
 
         if (requirements["minServerVersion"]) {
-            auto min_server_version =
+            const auto min_server_version =
                 string::to_string(requirements["minServerVersion"].get_string().value);
             if (test_util::compare_versions(server_version, min_server_version) < 0) {
+                reason.append(server_version);
+                reason.append(" is greater than minimum server version ");
+                reason.append(min_server_version);
                 return true;
             }
         }
 
         if (requirements["maxServerVersion"]) {
-            auto max_server_version =
+            const auto max_server_version =
                 string::to_string(requirements["maxServerVersion"].get_string().value);
             if (test_util::compare_versions(server_version, max_server_version) > 0) {
+                reason.append(server_version);
+                reason.append(" is greater than max server version ");
+                reason.append(max_server_version);
                 return true;
             }
         }
@@ -175,13 +204,14 @@ bool should_skip_spec_test(const client& client, document::view test) {
                 return false;
             }
         }
-    } else if (!should_skip(test)) {
-        return false;
+
+        reason.clear();
+        reason.append("no runOn conditions are satisfied");
+
+        return true;
     }
 
-    UNSCOPED_INFO("Skipping - unsupported server version '" + server_version + "' with topology '" +
-                  topology + "'");
-    return true;
+    return should_skip(test);
 }
 
 void configure_fail_point(const client& client, document::view test) {
@@ -230,7 +260,7 @@ void disable_fail_point(std::string uri_string,
     disable_fail_point(client, fail_point);
 }
 
-void disable_targeted_fail_point(std::uint32_t server_id) {
+static void disable_targeted_fail_point(std::uint32_t server_id) {
     const auto command_owner =
         make_document(kvp("configureFailPoint", "failCommand"), kvp("mode", "off"));
     const auto command = command_owner.view();
@@ -561,7 +591,7 @@ void run_tests_in_suite(std::string ev, test_runner cb, std::set<std::string> un
 
     std::string test_file;
     while (std::getline(test_files, test_file)) {
-        SECTION(test_file) {
+        DYNAMIC_SECTION(test_file) {
             if (unsupported_tests.find(test_file) != unsupported_tests.end()) {
                 WARN("Skipping unsupported test file: " << test_file);
             } else {
@@ -597,7 +627,7 @@ static void test_setup(document::view test, document::view test_spec) {
     configure_fail_point(client, test);
 }
 
-void parse_session_opts(document::view session_opts, options::client_session* out) {
+static void parse_session_opts(document::view session_opts, options::client_session* out) {
     options::transaction txn_opts;
     if (session_opts["defaultTransactionOptions"]) {
         if (auto rc =
@@ -627,8 +657,7 @@ void parse_session_opts(document::view session_opts, options::client_session* ou
     out->default_transaction_opts(txn_opts);
 }
 
-using bsoncxx::stdx::string_view;
-void run_transaction_operations(
+static void run_transaction_operations(
     document::view test,
     client* client,
     string_view db_name,
@@ -776,7 +805,9 @@ void run_transaction_operations(
             auto error_contains =
                 test_util::tolowercase(op["result"]["errorContains"].get_string().value);
 
-            REQUIRE_THAT(error_msg, Catch::Contains(error_contains, Catch::CaseSensitive::No));
+            REQUIRE_THAT(
+                error_msg,
+                Catch::Matchers::ContainsSubstring(error_contains, Catch::CaseSensitive::No));
         }
 
         // "If the result document has an 'errorCodeName' field, verify that the method threw a
@@ -847,22 +878,17 @@ void run_transactions_tests_in_file(const std::string& test_path) {
     const auto tests = test_spec_view["tests"].get_array().value;
 
     /* we may not have a supported topology */
-    if (should_skip_spec_test({uri{}, test_util::add_test_server_api()}, test_spec_view)) {
-        WARN("File skipped - " + test_path);
-        return;
-    }
+    CHECK_IF_SKIP_SPEC_TEST((client{uri{}, test_util::add_test_server_api()}), test_spec_view);
 
     for (auto&& test : tests) {
         const auto description = string::to_string(test["description"].get_string().value);
 
-        SECTION(description) {
+        DYNAMIC_SECTION(description) {
             client setup_client{get_uri(test.get_document().value),
                                 test_util::add_test_server_api()};
 
             // Step 1: If the `skipReason` field is present, skip this test completely.
-            if (should_skip_spec_test(setup_client, test.get_document().value)) {
-                continue;
-            }
+            CHECK_IF_SKIP_SPEC_TEST(setup_client, test.get_document().value);
 
             // Steps 2-8.
             test_setup(test.get_document().value, test_spec_view);
@@ -884,8 +910,8 @@ void run_transactions_tests_in_file(const std::string& test_path) {
                 apm_checker apm_checker;
                 client_opts.apm_opts(
                     apm_checker.get_apm_opts(true /* command_started_events_only */));
-                client_opts = test_util::add_test_server_api(client_opts);
-                client client = {get_uri(test.get_document().value), client_opts};
+                client client = {get_uri(test.get_document().value),
+                                 test_util::add_test_server_api(client_opts)};
 
                 options::client_session session0_opts;
                 options::client_session session1_opts;
@@ -1010,20 +1036,16 @@ void run_crud_tests_in_file(const std::string& test_path, uri test_uri) {
     options::client client_opts;
     apm_checker apm_checker;
     client_opts.apm_opts(apm_checker.get_apm_opts(true /* command_started_events_only */));
-    client_opts = test_util::add_test_server_api(client_opts);
-    client client{std::move(test_uri), client_opts};
+    client client{std::move(test_uri), test_util::add_test_server_api(client_opts)};
 
     document::view test_spec_view = test_spec->view();
-    if (should_skip_spec_test(client, test_spec_view)) {
-        return;
-    }
+    CHECK_IF_SKIP_SPEC_TEST(client, test_spec_view);
 
     for (auto&& test : test_spec_view["tests"].get_array().value) {
         auto description = test["description"].get_string().value;
-        SECTION(to_string(description)) {
-            if (should_skip_spec_test(client, test.get_document())) {
-                continue;
-            }
+
+        DYNAMIC_SECTION(to_string(description)) {
+            CHECK_IF_SKIP_SPEC_TEST(client, test.get_document());
 
             auto get_value_or_default = [&](std::string key, std::string default_str) {
                 if (test_spec_view[key]) {

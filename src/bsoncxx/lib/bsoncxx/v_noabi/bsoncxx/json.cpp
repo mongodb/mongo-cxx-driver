@@ -1,4 +1,4 @@
-// Copyright 2015 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -38,13 +38,17 @@ void bson_free_deleter(std::uint8_t* ptr) {
 
 std::string to_json_helper(document::view view, decltype(bson_as_json) converter) {
     bson_t bson;
-    bson_init_static(&bson, view.data(), view.length());
+
+    if (!bson_init_static(&bson, view.data(), view.length())) {
+        throw exception(error_code::k_failed_converting_bson_to_json);
+    }
 
     size_t size;
     auto result = converter(&bson, &size);
 
-    if (!result)
+    if (!result) {
         throw exception(error_code::k_failed_converting_bson_to_json);
+    }
 
     const auto deleter = [](char* result) { bson_free(result); };
     const std::unique_ptr<char[], decltype(deleter)> cleanup(result, deleter);
@@ -54,7 +58,7 @@ std::string to_json_helper(document::view view, decltype(bson_as_json) converter
 
 }  // namespace
 
-std::string BSONCXX_CALL to_json(document::view view, ExtendedJsonMode mode) {
+std::string to_json(document::view view, ExtendedJsonMode mode) {
     switch (mode) {
         case ExtendedJsonMode::k_legacy:
             return to_json_helper(view, bson_as_json);
@@ -69,7 +73,7 @@ std::string BSONCXX_CALL to_json(document::view view, ExtendedJsonMode mode) {
     BSONCXX_UNREACHABLE;
 }
 
-std::string BSONCXX_CALL to_json(array::view view, ExtendedJsonMode mode) {
+std::string to_json(array::view view, ExtendedJsonMode mode) {
     switch (mode) {
         case ExtendedJsonMode::k_legacy:
             return to_json_helper(view, bson_array_as_json);
@@ -84,7 +88,7 @@ std::string BSONCXX_CALL to_json(array::view view, ExtendedJsonMode mode) {
     BSONCXX_UNREACHABLE;
 }
 
-document::value BSONCXX_CALL from_json(stdx::string_view json) {
+document::value from_json(stdx::string_view json) {
     bson_error_t error;
     bson_t* result = bson_new_from_json(reinterpret_cast<const uint8_t*>(json.data()),
                                         static_cast<std::int32_t>(json.size()),
@@ -99,7 +103,7 @@ document::value BSONCXX_CALL from_json(stdx::string_view json) {
     return document::value{buf, length, bson_free_deleter};
 }
 
-document::value BSONCXX_CALL operator"" _bson(const char* str, size_t len) {
+document::value operator"" _bson(const char* str, size_t len) {
     return from_json(stdx::string_view{str, len});
 }
 

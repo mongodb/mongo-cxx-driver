@@ -1,4 +1,4 @@
-// Copyright 2015 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,10 +15,13 @@
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/document/element.hpp>
 #include <bsoncxx/string/to_string.hpp>
-#include <bsoncxx/test/catch.hh>
+
 #include <mongocxx/instance.hpp>
 #include <mongocxx/validation_criteria.hpp>
-#include <third_party/catch/include/helpers.hpp>
+
+#include <bsoncxx/test/catch.hh>
+
+#include <mongocxx/test/catch_helpers.hh>
 
 namespace {
 using namespace mongocxx;

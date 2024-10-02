@@ -1,4 +1,4 @@
-// Copyright 2016 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,6 +18,8 @@
 #include <bsoncxx/builder/stream/array.hpp>
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/json.hpp>
+
+#include <examples/macros.hh>
 
 using namespace bsoncxx;
 
@@ -68,7 +70,7 @@ range_kvp_appender<begin_t, end_t> make_range_kvp_appender(begin_t&& begin, end_
                                               std::forward<end_t>(end));
 }
 
-int main(int, char**) {
+int EXAMPLES_CDECL main() {
     using builder::stream::array;
     using builder::stream::document;
     using builder::stream::finalize;

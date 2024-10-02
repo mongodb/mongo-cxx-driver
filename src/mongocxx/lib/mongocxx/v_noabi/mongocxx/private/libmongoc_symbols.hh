@@ -1,4 +1,4 @@
-// Copyright 2014-present MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -151,6 +151,7 @@ MONGOCXX_LIBMONGOC_SYMBOL(client_encryption_encrypt_range_opts_set_min)
 MONGOCXX_LIBMONGOC_SYMBOL(client_encryption_encrypt_range_opts_set_max)
 MONGOCXX_LIBMONGOC_SYMBOL(client_encryption_encrypt_range_opts_set_precision)
 MONGOCXX_LIBMONGOC_SYMBOL(client_encryption_encrypt_range_opts_set_sparsity)
+MONGOCXX_LIBMONGOC_SYMBOL(client_encryption_encrypt_range_opts_set_trim_factor)
 MONGOCXX_LIBMONGOC_SYMBOL(client_encryption_get_key)
 MONGOCXX_LIBMONGOC_SYMBOL(client_encryption_get_key_by_alt_name)
 MONGOCXX_LIBMONGOC_SYMBOL(client_encryption_get_keys)
@@ -278,7 +279,7 @@ MONGOCXX_LIBMONGOC_SYMBOL(index_opt_geo_init)
 MONGOCXX_LIBMONGOC_SYMBOL(index_opt_init)
 MONGOCXX_LIBMONGOC_SYMBOL(index_opt_wt_init)
 MONGOCXX_LIBMONGOC_SYMBOL(init)
-MONGOCXX_LIBMONGOC_SYMBOL(log_set_handler)
+// MONGOCXX_LIBMONGOC_SYMBOL(log_set_handler)  // CDRIVER-5678: not __cdecl.
 MONGOCXX_LIBMONGOC_SYMBOL(read_concern_copy)
 MONGOCXX_LIBMONGOC_SYMBOL(read_concern_destroy)
 MONGOCXX_LIBMONGOC_SYMBOL(read_concern_get_level)

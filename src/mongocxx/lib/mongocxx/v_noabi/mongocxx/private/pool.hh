@@ -1,4 +1,4 @@
-// Copyright 2015 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -32,6 +32,12 @@ class pool::impl {
     ~impl() {
         libmongoc::client_pool_destroy(client_pool_t);
     }
+
+    impl(impl&&) = delete;
+    impl& operator=(impl&&) = delete;
+
+    impl(const impl&) = delete;
+    impl& operator=(const impl&) = delete;
 
     mongoc_client_pool_t* client_pool_t;
     std::list<bsoncxx::v_noabi::string::view_or_value> tls_options;

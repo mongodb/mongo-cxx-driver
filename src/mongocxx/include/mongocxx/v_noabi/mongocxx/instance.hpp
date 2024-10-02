@@ -1,4 +1,4 @@
-// Copyright 2014 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -82,7 +82,7 @@ class instance {
     ///
     /// Creates an instance of the driver.
     ///
-    instance();
+    MONGOCXX_ABI_EXPORT_CDECL() instance();
 
     ///
     /// Creates an instance of the driver with a user provided log handler.
@@ -90,22 +90,25 @@ class instance {
     ///
     /// @throws mongocxx::v_noabi::logic_error if an instance already exists.
     ///
-    instance(std::unique_ptr<logger> logger);
+    MONGOCXX_ABI_EXPORT_CDECL() instance(std::unique_ptr<logger> logger);
 
     ///
     /// Move constructs an instance of the driver.
     ///
-    instance(instance&&) noexcept;
+    MONGOCXX_ABI_EXPORT_CDECL() instance(instance&&) noexcept;
 
     ///
     /// Move assigns an instance of the driver.
     ///
-    instance& operator=(instance&&) noexcept;
+    MONGOCXX_ABI_EXPORT_CDECL(instance&) operator=(instance&&) noexcept;
 
     ///
     /// Destroys an instance of the driver.
     ///
-    ~instance();
+    MONGOCXX_ABI_EXPORT_CDECL() ~instance();
+
+    instance(const instance&) = delete;
+    instance& operator=(const instance&) = delete;
 
     ///
     /// Returns the current unique instance of the driver. If an instance was explicitly created,
@@ -122,10 +125,10 @@ class instance {
     /// @note This method is intended primarily for test authors, where managing the lifetime of the
     /// instance w.r.t. the test framework can be problematic.
     ///
-    static instance& current();
+    static MONGOCXX_ABI_EXPORT_CDECL(instance&) current();
 
    private:
-    class MONGOCXX_PRIVATE impl;
+    class impl;
     std::unique_ptr<impl> _impl;
 };
 
@@ -133,3 +136,8 @@ class instance {
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref mongocxx::v_noabi::instance.
+///

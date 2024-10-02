@@ -1,4 +1,4 @@
-// Copyright 2014 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ namespace document {
 ///
 class value {
    public:
-    using deleter_type = void (*)(std::uint8_t*);
+    using deleter_type = void(BSONCXX_ABI_CDECL*)(std::uint8_t*);
     using unique_ptr_type = std::unique_ptr<uint8_t[], deleter_type>;
 
     ///
@@ -52,7 +52,7 @@ class value {
     /// @param dtor
     ///   A user provided deleter.
     ///
-    value(std::uint8_t* data, std::size_t length, deleter_type dtor);
+    BSONCXX_ABI_EXPORT_CDECL() value(std::uint8_t* data, std::size_t length, deleter_type dtor);
 
     ///
     /// Constructs a value from a std::unique_ptr to a buffer. The ownership
@@ -63,7 +63,7 @@ class value {
     /// @param length
     ///   The length of the document.
     ///
-    value(unique_ptr_type ptr, std::size_t length);
+    BSONCXX_ABI_EXPORT_CDECL() value(unique_ptr_type ptr, std::size_t length);
 
     ///
     /// Constructs a value from a view of a document. The data referenced
@@ -73,13 +73,15 @@ class value {
     /// @param view
     ///   A view of another document to copy.
     ///
-    explicit value(document::view view);
+    explicit BSONCXX_ABI_EXPORT_CDECL() value(document::view view);
 
-    value(const value&);
-    value& operator=(const value&);
+    ~value() = default;
 
-    value(value&&) noexcept = default;
-    value& operator=(value&&) noexcept = default;
+    BSONCXX_ABI_EXPORT_CDECL() value(const value&);
+    BSONCXX_ABI_EXPORT_CDECL(value&) operator=(const value&);
+
+    value(value&&) = default;
+    value& operator=(value&&) = default;
 
     ///
     /// Constructor used for serialization of user objects. This uses argument-dependent lookup
@@ -102,22 +104,22 @@ class value {
     ///
     /// @returns A const_iterator to the first element of the document.
     ///
-    document::view::const_iterator cbegin() const;
+    BSONCXX_ABI_EXPORT_CDECL(document::view::const_iterator) cbegin() const;
 
     ///
     /// @returns A const_iterator to the past-the-end element of the document.
     ///
-    document::view::const_iterator cend() const;
+    BSONCXX_ABI_EXPORT_CDECL(document::view::const_iterator) cend() const;
 
     ///
     /// @returns A const_iterator to the first element of the document.
     ///
-    document::view::const_iterator begin() const;
+    BSONCXX_ABI_EXPORT_CDECL(document::view::const_iterator) begin() const;
 
     ///
     /// @returns A const_iterator to the past-the-end element of the document.
     ///
-    document::view::const_iterator end() const;
+    BSONCXX_ABI_EXPORT_CDECL(document::view::const_iterator) end() const;
 
     ///
     /// Finds the first element of the document with the provided key. If there is
@@ -134,7 +136,7 @@ class value {
     ///
     /// @return An iterator to the matching element, if found, or the past-the-end iterator.
     ///
-    document::view::const_iterator find(stdx::string_view key) const;
+    BSONCXX_ABI_EXPORT_CDECL(document::view::const_iterator) find(stdx::string_view key) const;
 
     ///
     /// Finds the first element of the document with the provided key. If there is no
@@ -146,14 +148,14 @@ class value {
     ///
     /// @return The matching element, if found, or the invalid element.
     ///
-    element operator[](stdx::string_view key) const;
+    BSONCXX_ABI_EXPORT_CDECL(element) operator[](stdx::string_view key) const;
 
     ///
     /// Access the raw bytes of the underlying document.
     ///
     /// @return A pointer to the value's buffer.
     ///
-    const std::uint8_t* data() const;
+    BSONCXX_ABI_EXPORT_CDECL(const std::uint8_t*) data() const;
 
     ///
     /// Gets the length of the underlying buffer.
@@ -163,7 +165,7 @@ class value {
     ///
     /// @return The length of the document, in bytes.
     ///
-    std::size_t length() const;
+    BSONCXX_ABI_EXPORT_CDECL(std::size_t) length() const;
 
     ///
     /// Checks if the underlying document is empty, i.e. it is equivalent to
@@ -171,19 +173,27 @@ class value {
     ///
     /// @return true if the underlying document is empty.
     ///
-    bool empty() const;
+    BSONCXX_ABI_EXPORT_CDECL(bool) empty() const;
 
     ///
     /// Get a view over the document owned by this value.
     ///
-    BSONCXX_INLINE document::view view() const noexcept;
+    document::view view() const noexcept {
+        // Silence false positive with g++ 10.2.1 on Debian 11.
+        BSONCXX_PUSH_WARNINGS();
+        BSONCXX_DISABLE_WARNING(GCC("-Wmaybe-uninitialized"));
+        return document::view{static_cast<uint8_t*>(_data.get()), _length};
+        BSONCXX_POP_WARNINGS();
+    }
 
     ///
     /// Conversion operator that provides a view given a value.
     ///
     /// @return A view over the value.
     ///
-    BSONCXX_INLINE operator document::view() const noexcept;
+    operator document::view() const noexcept {
+        return view();
+    }
 
     ///
     /// Constructs an object of type T from this document object. This method uses
@@ -222,47 +232,34 @@ class value {
     ///
     /// @return A std::unique_ptr with ownership of the buffer.
     ///
-    unique_ptr_type release();
+    BSONCXX_ABI_EXPORT_CDECL(unique_ptr_type) release();
 
     ///
     /// Replace the formerly-owned buffer with the new view.
     /// This will make a copy of the passed-in view.
     ///
-    void reset(document::view view);
+    BSONCXX_ABI_EXPORT_CDECL(void) reset(document::view view);
 
    private:
     unique_ptr_type _data;
     std::size_t _length{0};
 };
 
-BSONCXX_INLINE document::view value::view() const noexcept {
-    // Silence false positive with g++ 10.2.1 on Debian 11.
-    BSONCXX_PUSH_WARNINGS();
-    BSONCXX_DISABLE_WARNING(GCC("-Wmaybe-uninitialized"));
-    return document::view{static_cast<uint8_t*>(_data.get()), _length};
-    BSONCXX_POP_WARNINGS();
-}
-
-BSONCXX_INLINE value::operator document::view() const noexcept {
-    return view();
-}
-
-///
-/// @{
 ///
 /// Compares two document values for (in)-equality.
 ///
-/// @relates document::value
-///
-BSONCXX_INLINE bool operator==(const value& lhs, const value& rhs) {
+/// @{
+
+/// @relatesalso bsoncxx::v_noabi::document::value
+inline bool operator==(const value& lhs, const value& rhs) {
     return (lhs.view() == rhs.view());
 }
 
-BSONCXX_INLINE bool operator!=(const value& lhs, const value& rhs) {
+/// @relatesalso bsoncxx::v_noabi::document::value
+inline bool operator!=(const value& lhs, const value& rhs) {
     return !(lhs == rhs);
 }
 
-///
 /// @}
 ///
 
@@ -280,3 +277,24 @@ using ::bsoncxx::v_noabi::document::operator!=;
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref bsoncxx::v_noabi::document::value.
+///
+
+#if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+
+namespace bsoncxx {
+namespace document {
+
+/// @ref bsoncxx::v_noabi::document::operator==(const v_noabi::document::value& lhs, const v_noabi::document::value& rhs)
+inline bool operator==(const v_noabi::document::value& lhs, const v_noabi::document::value& rhs);
+
+/// @ref bsoncxx::v_noabi::document::operator!=(const v_noabi::document::value& lhs, const v_noabi::document::value& rhs)
+inline bool operator!=(const v_noabi::document::value& lhs, const v_noabi::document::value& rhs);
+
+}  // namespace document
+}  // namespace bsoncxx
+
+#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

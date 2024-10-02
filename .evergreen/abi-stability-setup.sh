@@ -26,6 +26,13 @@ declare cmake_binary
 cmake_binary="$(find_cmake_latest)"
 command -V "${cmake_binary:?}"
 
+# Use ccache if available.
+if [[ -f "./mongoc/.evergreen/scripts/find-ccache.sh" ]]; then
+  # shellcheck source=/dev/null
+  . "./mongoc/.evergreen/scripts/find-ccache.sh"
+  find_ccache_and_export_vars "$(pwd)" || true
+fi
+
 # To use a different base commit, replace `--abbrev 0` with the intended commit.
 # Note: EVG treat all changes relative to the EVG base commit as staged changes!
 declare base current
@@ -53,17 +60,6 @@ if command -V ninja; then
 else
   export CMAKE_BUILD_PARALLEL_LEVEL
   CMAKE_BUILD_PARALLEL_LEVEL="${parallel_level:?}"
-fi
-
-# Use ccache if available.
-if command -V ccache 2>/dev/null; then
-  export CMAKE_C_COMPILER_LAUNCHER=ccache
-  export CMAKE_CXX_COMPILER_LAUNCHER=ccache
-
-  # Allow reuse of ccache compilation results between different build directories.
-  export CCACHE_BASEDIR CCACHE_NOHASHDIR
-  CCACHE_BASEDIR="$(pwd)/mongo-cxx-driver"
-  CCACHE_NOHASHDIR=1
 fi
 
 # Install prefix to use for ABI compatibility scripts.

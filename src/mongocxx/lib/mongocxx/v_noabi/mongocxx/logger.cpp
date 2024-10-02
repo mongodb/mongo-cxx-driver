@@ -1,4 +1,4 @@
-// Copyright 2015 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,7 +19,7 @@
 namespace mongocxx {
 namespace v_noabi {
 
-stdx::string_view MONGOCXX_CALL to_string(log_level level) {
+stdx::string_view to_string(log_level level) {
     switch (level) {
         case log_level::k_error:
             return "error";

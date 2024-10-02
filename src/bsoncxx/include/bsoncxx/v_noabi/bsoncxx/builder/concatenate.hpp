@@ -1,4 +1,4 @@
-// Copyright 2015 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -32,17 +32,13 @@ namespace builder {
 struct concatenate_doc {
     document::view_or_value doc;
 
-    // MSVC seems to need a hint that it should always
-    // inline this destructor.
-    BSONCXX_INLINE ~concatenate_doc() = default;
-
     ///
     /// Conversion operator that provides a view of the wrapped concatenate
     /// document.
     ///
     /// @return A view of the wrapped concatenate document.
     ///
-    BSONCXX_INLINE operator document::view() const {
+    operator document::view() const {
         return doc;
     }
 
@@ -52,7 +48,7 @@ struct concatenate_doc {
     ///
     /// @return A view of the wrapped concatenate document.
     ///
-    BSONCXX_INLINE document::view view() const {
+    document::view view() const {
         return doc;
     }
 };
@@ -64,17 +60,13 @@ struct concatenate_doc {
 struct concatenate_array {
     array::view_or_value array;
 
-    // MSVC seems to need a hint that it should always
-    // inline this destructor.
-    BSONCXX_INLINE ~concatenate_array() = default;
-
     ///
     /// Conversion operator that provides a view of the wrapped concatenate
     /// array.
     ///
     /// @return A view of the wrapped concatenate array.
     ///
-    BSONCXX_INLINE operator array::view() const {
+    operator array::view() const {
         return array;
     }
 
@@ -84,36 +76,42 @@ struct concatenate_array {
     ///
     /// @return A view of the wrapped concatenate array.
     ///
-    BSONCXX_INLINE array::view view() const {
+    array::view view() const {
         return array;
     }
 };
 
 ///
-/// Helper method to concatenate a document. Use this with the document stream
-/// builder to merge an existing document's fields with a new document's.
+/// Helper method to concatenate a document.
 ///
-/// @param doc A document to be concatenated.
+/// Use this with the document stream builder to merge an existing document's fields with a new
+/// document's.
+///
+/// @param doc The document to concatenate.
 ///
 /// @return concatenate_doc A concatenating struct.
 ///
-/// @relatesalso concatenate_doc
+/// @see
+/// - @ref bsoncxx::v_noabi::builder::concatenate_doc
 ///
-BSONCXX_INLINE concatenate_doc concatenate(document::view_or_value doc) {
+inline concatenate_doc concatenate(document::view_or_value doc) {
     return {std::move(doc)};
 }
 
 ///
-/// Method to concatenate an array with a new array. Use this with the array stream
-/// builder to merge an existing array's fields with a new array.
+/// Helper method to concatenate an array.
 ///
-/// @param array An array to be concatenated.
+/// Use this with the document stream builder to merge an existing array's fields with a new
+/// document's.
 ///
-/// @return concatenate_array A concatenating struct.
+/// @param array The array to concatenate.
 ///
-/// @relatesalso concatenate_array
+/// @return concatenate_doc A concatenating struct.
 ///
-BSONCXX_INLINE concatenate_array concatenate(array::view_or_value array) {
+/// @see
+/// - @ref bsoncxx::v_noabi::builder::concatenate_doc
+///
+inline concatenate_array concatenate(array::view_or_value array) {
     return {std::move(array)};
 }
 
@@ -130,3 +128,24 @@ using ::bsoncxx::v_noabi::builder::concatenate;
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides concatenators for use with "streaming" BSON builder syntax.
+///
+
+#if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+
+namespace bsoncxx {
+namespace builder {
+
+/// @ref bsoncxx::v_noabi::builder::concatenate(v_noabi::document::view_or_value doc)
+v_noabi::builder::concatenate_doc concatenate(v_noabi::document::view_or_value doc);
+
+/// @ref bsoncxx::v_noabi::builder::concatenate(v_noabi::array::view_or_value array)
+v_noabi::builder::concatenate_array concatenate(v_noabi::array::view_or_value array);
+
+}  // namespace builder
+}  // namespace bsoncxx
+
+#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

@@ -1,4 +1,4 @@
-// Copyright 2014 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -38,7 +38,7 @@ namespace array {
 ///
 class element : private document::element {
    public:
-    element();
+    BSONCXX_ABI_EXPORT_CDECL() element();
 
     using document::element::operator bool;
 
@@ -80,41 +80,33 @@ class element : private document::element {
    private:
     friend ::bsoncxx::v_noabi::array::view;
 
-    BSONCXX_PRIVATE explicit element(const std::uint8_t* raw,
-                                     std::uint32_t length,
-                                     std::uint32_t offset,
-                                     std::uint32_t keylen);
+    explicit element(const std::uint8_t* raw,
+                     std::uint32_t length,
+                     std::uint32_t offset,
+                     std::uint32_t keylen);
 
-    BSONCXX_PRIVATE explicit element(const stdx::string_view key);
+    explicit element(const stdx::string_view key);
 };
 
 ///
-/// @{
-///
 /// Convenience methods to compare for equality against a bson_value.
 ///
-/// Returns true if this element contains a bson_value that matches.
+/// Compares equal if this element contains a matching bson_value. Otherwise, compares unequal.
 ///
-/// @relates element
-///
-BSONCXX_API bool BSONCXX_CALL operator==(const element& elem, const types::bson_value::view& v);
-BSONCXX_API bool BSONCXX_CALL operator==(const types::bson_value::view& v, const element& elem);
-///
-/// @}
-///
+/// @{
 
-///
-/// @{
-///
-/// Convenience methods to compare for equality against a bson_value.
-///
-/// Returns false if this element contains a bson_value that matches.
-///
-/// @relates element
-///
-BSONCXX_API bool BSONCXX_CALL operator!=(const element& elem, const types::bson_value::view& v);
-BSONCXX_API bool BSONCXX_CALL operator!=(const types::bson_value::view& v, const element& elem);
-///
+/// @relatesalso bsoncxx::v_noabi::array::element
+BSONCXX_ABI_EXPORT_CDECL(bool) operator==(const element& elem, const types::bson_value::view& v);
+
+/// @relatesalso bsoncxx::v_noabi::array::element
+BSONCXX_ABI_EXPORT_CDECL(bool) operator==(const types::bson_value::view& v, const element& elem);
+
+/// @relatesalso bsoncxx::v_noabi::array::element
+BSONCXX_ABI_EXPORT_CDECL(bool) operator!=(const element& elem, const types::bson_value::view& v);
+
+/// @relatesalso bsoncxx::v_noabi::array::element
+BSONCXX_ABI_EXPORT_CDECL(bool) operator!=(const types::bson_value::view& v, const element& elem);
+
 /// @}
 ///
 
@@ -132,3 +124,30 @@ using ::bsoncxx::v_noabi::array::operator!=;
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref bsoncxx::v_noabi::array::element.
+///
+
+#if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+
+namespace bsoncxx {
+namespace array {
+
+/// @ref bsoncxx::v_noabi::array::operator==(const v_noabi::array::element& elem, const v_noabi::types::bson_value::view& v)
+bool operator==(const v_noabi::array::element& elem, const v_noabi::types::bson_value::view& v);
+
+/// @ref bsoncxx::v_noabi::array::operator==(const v_noabi::types::bson_value::view& v, const v_noabi::array::element& elem)
+bool operator==(const v_noabi::types::bson_value::view& v, const v_noabi::array::element& elem);
+
+/// @ref bsoncxx::v_noabi::array::operator!=(const v_noabi::array::element& elem, const v_noabi::types::bson_value::view& v)
+bool operator!=(const v_noabi::array::element& elem, const v_noabi::types::bson_value::view& v);
+
+/// @ref bsoncxx::v_noabi::array::operator!=(const v_noabi::types::bson_value::view& v, const v_noabi::array::element& elem)
+bool operator!=(const v_noabi::types::bson_value::view& v, const v_noabi::array::element& elem);
+
+}  // namespace array
+}  // namespace bsoncxx
+
+#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

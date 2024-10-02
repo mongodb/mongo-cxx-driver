@@ -1,4 +1,4 @@
-// Copyright 2014 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -54,6 +54,12 @@ class stack {
             _buckets.pop_back();
         }
     }
+
+    stack(stack&&) = delete;
+    stack& operator=(stack&&) = delete;
+
+    stack(const stack&) = delete;
+    stack& operator=(const stack&) = delete;
 
     bool empty() const {
         return _is_empty;

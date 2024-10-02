@@ -1,4 +1,4 @@
-// Copyright 2014-present MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -29,6 +29,7 @@
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/types.hpp>
+
 #include <mongocxx/bulk_write.hpp>
 #include <mongocxx/client.hpp>
 #include <mongocxx/collection.hpp>
@@ -90,9 +91,8 @@ mongocxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> find_and_mo
     bool bypass,
     mongocxx::v_noabi::stdx::optional<bsoncxx::v_noabi::array::view_or_value> array_filters,
     const T& options) {
-    using unique_opts =
-        std::unique_ptr<mongoc_find_and_modify_opts_t,
-                        std::function<void MONGOCXX_CALL(mongoc_find_and_modify_opts_t*)>>;
+    using unique_opts = std::unique_ptr<mongoc_find_and_modify_opts_t,
+                                        std::function<void(mongoc_find_and_modify_opts_t*)>>;
 
     auto opts = unique_opts(mongocxx::libmongoc::find_and_modify_opts_new(), destroy_fam_opts);
 
@@ -326,10 +326,10 @@ bsoncxx::v_noabi::builder::basic::document build_find_options_document(
     }
 
     // Prioritize new comment option over old $comment modifier.
-    if (const auto& comment = options.comment_option()) {
-        options_builder.append(kvp("comment", *comment));
-    } else if (const auto& comment = options.comment()) {
-        options_builder.append(kvp("comment", *comment));
+    if (const auto& new_comment = options.comment_option()) {
+        options_builder.append(kvp("comment", *new_comment));
+    } else if (const auto& old_comment = options.comment()) {
+        options_builder.append(kvp("comment", *old_comment));
     }
 
     if (const auto& cursor_type = options.cursor_type()) {
@@ -403,7 +403,7 @@ cursor collection::_find(const client_session* session,
                          const options::find& options) {
     scoped_bson_t filter_bson{std::move(filter)};
 
-    const mongoc_read_prefs_t* rp_ptr = NULL;
+    const mongoc_read_prefs_t* rp_ptr = nullptr;
     if (options.read_preference()) {
         rp_ptr = options.read_preference()->_impl->read_preference_t;
     }
@@ -483,7 +483,7 @@ cursor collection::_aggregate(const client_session* session,
 
     scoped_bson_t options_bson(b.view());
 
-    const ::mongoc_read_prefs_t* rp_ptr = NULL;
+    const ::mongoc_read_prefs_t* rp_ptr = nullptr;
 
     if (options.read_preference()) {
         rp_ptr = options.read_preference()->_impl->read_preference_t;
@@ -549,7 +549,7 @@ stdx::optional<result::insert_one> collection::_insert_one(const client_session*
     }
 
     return stdx::optional<result::insert_one>(
-        result::insert_one(std::move(result.value()), std::move(oid.get_value())));
+        result::insert_one(std::move(result.value()), oid.get_value()));
 }
 
 stdx::optional<result::insert_one> collection::insert_one(view_or_value document,
@@ -922,11 +922,12 @@ stdx::optional<bsoncxx::v_noabi::document::value> collection::_find_one_and_repl
     const options::find_one_and_replace& options) {
     mongoc_find_and_modify_flags_t flags = MONGOC_FIND_AND_MODIFY_NONE;
     if (options.upsert().value_or(false)) {
-        flags = (mongoc_find_and_modify_flags_t)(flags | MONGOC_FIND_AND_MODIFY_UPSERT);
+        flags = static_cast<mongoc_find_and_modify_flags_t>(flags | MONGOC_FIND_AND_MODIFY_UPSERT);
     }
 
     if (options.return_document() == options::return_document::k_after) {
-        flags = (mongoc_find_and_modify_flags_t)(flags | MONGOC_FIND_AND_MODIFY_RETURN_NEW);
+        flags =
+            static_cast<mongoc_find_and_modify_flags_t>(flags | MONGOC_FIND_AND_MODIFY_RETURN_NEW);
     }
 
     return find_and_modify(_get_impl().collection_t,
@@ -959,11 +960,12 @@ stdx::optional<bsoncxx::v_noabi::document::value> collection::_find_one_and_upda
     const options::find_one_and_update& options) {
     mongoc_find_and_modify_flags_t flags = MONGOC_FIND_AND_MODIFY_NONE;
     if (options.upsert().value_or(false)) {
-        flags = (mongoc_find_and_modify_flags_t)(flags | MONGOC_FIND_AND_MODIFY_UPSERT);
+        flags = static_cast<mongoc_find_and_modify_flags_t>(flags | MONGOC_FIND_AND_MODIFY_UPSERT);
     }
 
     if (options.return_document() == options::return_document::k_after) {
-        flags = (mongoc_find_and_modify_flags_t)(flags | MONGOC_FIND_AND_MODIFY_RETURN_NEW);
+        flags =
+            static_cast<mongoc_find_and_modify_flags_t>(flags | MONGOC_FIND_AND_MODIFY_RETURN_NEW);
     }
 
     return find_and_modify(_get_impl().collection_t,
@@ -1055,7 +1057,7 @@ std::int64_t collection::_count_documents(const client_session* session,
     scoped_bson_t bson_filter{filter};
     scoped_bson_t reply;
     bson_error_t error;
-    const mongoc_read_prefs_t* read_prefs = NULL;
+    const mongoc_read_prefs_t* read_prefs = nullptr;
 
     if (const auto& rp = options.read_preference()) {
         read_prefs = rp->_impl->read_preference_t;
@@ -1120,7 +1122,7 @@ std::int64_t collection::estimated_document_count(
     scoped_bson_t reply;
     bson_error_t error;
 
-    const mongoc_read_prefs_t* read_prefs = NULL;
+    const mongoc_read_prefs_t* read_prefs = nullptr;
 
     if (const auto& rp = options.read_preference()) {
         read_prefs = rp->_impl->read_preference_t;
@@ -1208,7 +1210,7 @@ cursor collection::_distinct(const client_session* session,
             bsoncxx::v_noabi::builder::concatenate_doc{session->_get_impl().to_document()});
     }
 
-    const mongoc_read_prefs_t* rp_ptr = NULL;
+    const mongoc_read_prefs_t* rp_ptr = nullptr;
     if (const auto& rp = options.read_preference()) {
         rp_ptr = rp->_impl->read_preference_t;
     }

@@ -1,4 +1,4 @@
-// Copyright 2014 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,6 +18,10 @@
 #include <type_traits>
 
 #include <bsoncxx/config/prelude.hpp>
+
+BSONCXX_PRAGMA(
+    message("bsoncxx/util/functor.hpp header is deprecated and will be removed in an upcoming "
+            "major release"))
 
 namespace bsoncxx {
 namespace v_noabi {
@@ -112,3 +116,10 @@ struct is_functor : functor::is_functor_impl<C, S, std::is_class<C>::value> {};
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
+
+///
+/// @file
+/// This header is deprecated.
+///
+/// @deprecated This header is deprecated.
+///

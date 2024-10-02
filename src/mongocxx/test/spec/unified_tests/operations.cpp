@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,12 +21,15 @@
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/string/to_string.hpp>
 #include <bsoncxx/types/bson_value/value.hpp>
+
 #include <mongocxx/collection.hpp>
 #include <mongocxx/exception/logic_error.hpp>
-#include <mongocxx/test/spec/monitoring.hh>
-#include <third_party/catch/include/catch.hpp>
 
 #include <mongocxx/config/prelude.hpp>
+
+#include <bsoncxx/test/catch.hh>
+
+#include <mongocxx/test/spec/monitoring.hh>
 
 namespace mongocxx {
 
@@ -34,6 +37,8 @@ using namespace bsoncxx;
 
 using builder::basic::kvp;
 using builder::basic::make_document;
+
+namespace {
 
 int64_t as_int64(const document::element& el) {
     if (el.type() == type::k_int32)
@@ -297,10 +302,31 @@ T _build_update_model(document::view arguments) {
         case bsoncxx::type::k_document: {
             return T(filter, arguments["update"].get_document().value);
         }
+
         case bsoncxx::type::k_array: {
             pipeline update = build_pipeline(arguments["update"].get_array().value);
             return T(filter, update);
         }
+
+        case bsoncxx::type::k_double:
+        case bsoncxx::type::k_string:
+        case bsoncxx::type::k_binary:
+        case bsoncxx::type::k_undefined:
+        case bsoncxx::type::k_oid:
+        case bsoncxx::type::k_bool:
+        case bsoncxx::type::k_date:
+        case bsoncxx::type::k_null:
+        case bsoncxx::type::k_regex:
+        case bsoncxx::type::k_dbpointer:
+        case bsoncxx::type::k_code:
+        case bsoncxx::type::k_symbol:
+        case bsoncxx::type::k_codewscope:
+        case bsoncxx::type::k_int32:
+        case bsoncxx::type::k_timestamp:
+        case bsoncxx::type::k_int64:
+        case bsoncxx::type::k_decimal128:
+        case bsoncxx::type::k_maxkey:
+        case bsoncxx::type::k_minkey:
         default:
             throw std::logic_error{"update must be a document or an array"};
     }
@@ -315,7 +341,7 @@ void set_hint(Model& model, const mongocxx::document::element& hint) {
     }
 }
 
-document::value bulk_write(collection& coll, client_session* session, document::view op) {
+document::value run_bulk_write(collection& coll, client_session* session, document::view op) {
     using bsoncxx::builder::basic::kvp;
     using bsoncxx::builder::basic::make_document;
 
@@ -1002,6 +1028,7 @@ document::value find_one_and_update(collection& coll,
             }
             break;
         }
+
         case bsoncxx::type::k_array: {
             pipeline update = build_pipeline(arguments["update"].get_array().value);
             if (session) {
@@ -1011,6 +1038,26 @@ document::value find_one_and_update(collection& coll,
             }
             break;
         }
+
+        case bsoncxx::type::k_double:
+        case bsoncxx::type::k_string:
+        case bsoncxx::type::k_binary:
+        case bsoncxx::type::k_undefined:
+        case bsoncxx::type::k_oid:
+        case bsoncxx::type::k_bool:
+        case bsoncxx::type::k_date:
+        case bsoncxx::type::k_null:
+        case bsoncxx::type::k_regex:
+        case bsoncxx::type::k_dbpointer:
+        case bsoncxx::type::k_code:
+        case bsoncxx::type::k_symbol:
+        case bsoncxx::type::k_codewscope:
+        case bsoncxx::type::k_int32:
+        case bsoncxx::type::k_timestamp:
+        case bsoncxx::type::k_int64:
+        case bsoncxx::type::k_decimal128:
+        case bsoncxx::type::k_maxkey:
+        case bsoncxx::type::k_minkey:
         default:
             throw std::logic_error{"update must be a document or an array"};
     }
@@ -1024,59 +1071,6 @@ document::value find_one_and_update(collection& coll,
     }
 
     return result.extract();
-}
-
-bsoncxx::stdx::optional<read_concern> operations::lookup_read_concern(document::view doc) {
-    if (doc["readConcern"] && doc["readConcern"]["level"]) {
-        read_concern rc;
-        rc.acknowledge_string(string::to_string(doc["readConcern"]["level"].get_string().value));
-        return rc;
-    }
-
-    return {};
-}
-
-bsoncxx::stdx::optional<write_concern> operations::lookup_write_concern(document::view doc) {
-    if (doc["writeConcern"] && doc["writeConcern"]["w"]) {
-        write_concern wc;
-        document::element w = doc["writeConcern"]["w"];
-        if (w.type() == bsoncxx::type::k_string) {
-            std::string level = string::to_string(w.get_string().value);
-            if (level == "majority") {
-                wc.acknowledge_level(write_concern::level::k_majority);
-            } else if (level == "acknowledged") {
-                wc.acknowledge_level(write_concern::level::k_acknowledged);
-            } else if (level == "unacknowledged") {
-                wc.acknowledge_level(write_concern::level::k_unacknowledged);
-            }
-        } else if (w.type() == bsoncxx::type::k_int32) {
-            wc.nodes(w.get_int32());
-        }
-        return wc;
-    }
-
-    return {};
-}
-
-bsoncxx::stdx::optional<read_preference> operations::lookup_read_preference(document::view doc) {
-    if (doc["readPreference"] && doc["readPreference"]["mode"]) {
-        read_preference rp;
-        std::string mode = string::to_string(doc["readPreference"]["mode"].get_string().value);
-        if (mode == "Primary") {
-            rp.mode(read_preference::read_mode::k_primary);
-        } else if (mode == "PrimaryPreferred") {
-            rp.mode(read_preference::read_mode::k_primary_preferred);
-        } else if (mode == "Secondary") {
-            rp.mode(read_preference::read_mode::k_secondary);
-        } else if (mode == "SecondaryPreferred") {
-            rp.mode(read_preference::read_mode::k_secondary_preferred);
-        } else if (mode == "Nearest") {
-            rp.mode(read_preference::read_mode::k_nearest);
-        }
-        return rp;
-    }
-
-    return {};
 }
 
 options::transaction set_opts(document::view args) {
@@ -1391,6 +1385,7 @@ document::value update_one(collection& coll, client_session* session, document::
                                             : coll.update_one(filter, doc, options);
                 break;
             }
+
             case bsoncxx::type::k_array: {
                 pipeline pipe;
                 pipe.append_stages(update.get_array().value);
@@ -1398,6 +1393,26 @@ document::value update_one(collection& coll, client_session* session, document::
                                             : coll.update_one(filter, pipe, options);
                 break;
             }
+
+            case bsoncxx::type::k_double:
+            case bsoncxx::type::k_string:
+            case bsoncxx::type::k_binary:
+            case bsoncxx::type::k_undefined:
+            case bsoncxx::type::k_oid:
+            case bsoncxx::type::k_bool:
+            case bsoncxx::type::k_date:
+            case bsoncxx::type::k_null:
+            case bsoncxx::type::k_regex:
+            case bsoncxx::type::k_dbpointer:
+            case bsoncxx::type::k_code:
+            case bsoncxx::type::k_symbol:
+            case bsoncxx::type::k_codewscope:
+            case bsoncxx::type::k_int32:
+            case bsoncxx::type::k_timestamp:
+            case bsoncxx::type::k_int64:
+            case bsoncxx::type::k_decimal128:
+            case bsoncxx::type::k_maxkey:
+            case bsoncxx::type::k_minkey:
             default:
                 throw std::logic_error("unexpected type '" + to_string(type) +
                                        "' for field 'update'");
@@ -1462,12 +1477,33 @@ document::value update_many(collection& coll, document::view operation) {
                 update_many_result = coll.update_many(filter, doc, options);
                 break;
             }
+
             case bsoncxx::type::k_array: {
                 pipeline pipe;
                 pipe.append_stages(update.get_array().value);
                 update_many_result = coll.update_many(filter, pipe, options);
                 break;
             }
+
+            case bsoncxx::type::k_double:
+            case bsoncxx::type::k_string:
+            case bsoncxx::type::k_binary:
+            case bsoncxx::type::k_undefined:
+            case bsoncxx::type::k_oid:
+            case bsoncxx::type::k_bool:
+            case bsoncxx::type::k_date:
+            case bsoncxx::type::k_null:
+            case bsoncxx::type::k_regex:
+            case bsoncxx::type::k_dbpointer:
+            case bsoncxx::type::k_code:
+            case bsoncxx::type::k_symbol:
+            case bsoncxx::type::k_codewscope:
+            case bsoncxx::type::k_int32:
+            case bsoncxx::type::k_timestamp:
+            case bsoncxx::type::k_int64:
+            case bsoncxx::type::k_decimal128:
+            case bsoncxx::type::k_maxkey:
+            case bsoncxx::type::k_minkey:
             default:
                 throw std::logic_error("unexpected type '" + to_string(type) +
                                        "' for field 'update'");
@@ -1801,9 +1837,14 @@ document::value create_search_index(collection& coll, document::view operation) 
     const auto raw_model = arguments["model"];
     const auto name = raw_model["name"];
     const auto definition = raw_model["definition"].get_document().value;
+    const auto type = raw_model["type"];
 
-    const auto model = name ? search_index_model(name.get_string().value, definition)
-                            : search_index_model(definition);
+    auto model = name ? search_index_model(name.get_string().value, definition)
+                      : search_index_model(definition);
+
+    if (type) {
+        model.type(type.get_string().value);
+    }
 
     return make_document(kvp("result", coll.search_indexes().create_one(model)));
 }
@@ -1819,6 +1860,9 @@ document::value create_search_indexes(collection& coll, document::view operation
                                        ? search_index_model(m["name"].get_string().value,
                                                             m["definition"].get_document().value)
                                        : search_index_model(m["definition"].get_document().value);
+        if (m["type"]) {
+            model.type(m["type"].get_string().value);
+        }
         models.push_back(model);
     }
 
@@ -1886,6 +1930,8 @@ document::value update_search_index(collection& coll, document::view operation) 
     return make_document();
 }
 
+}  // namespace
+
 document::value operations::run(entity::map& entity_map,
                                 std::unordered_map<std::string, spec::apm_checker>& apm_map,
                                 const array::element& op,
@@ -1899,7 +1945,7 @@ document::value operations::run(entity::map& entity_map,
     if (name == "find")
         return find(entity_map.get_collection(object), get_session(op_view, entity_map), op_view);
     if (name == "bulkWrite")
-        return bulk_write(
+        return run_bulk_write(
             entity_map.get_collection(object), get_session(op_view, entity_map), op_view);
     if (name == "insertMany")
         return insert_many(
@@ -2290,6 +2336,59 @@ document::value operations::run(entity::map& entity_map,
     }
 
     throw std::logic_error{"unsupported operation: " + name};
+}
+
+bsoncxx::stdx::optional<read_concern> operations::lookup_read_concern(document::view doc) {
+    if (doc["readConcern"] && doc["readConcern"]["level"]) {
+        read_concern rc;
+        rc.acknowledge_string(string::to_string(doc["readConcern"]["level"].get_string().value));
+        return rc;
+    }
+
+    return {};
+}
+
+bsoncxx::stdx::optional<write_concern> operations::lookup_write_concern(document::view doc) {
+    if (doc["writeConcern"] && doc["writeConcern"]["w"]) {
+        write_concern wc;
+        document::element w = doc["writeConcern"]["w"];
+        if (w.type() == bsoncxx::type::k_string) {
+            std::string level = string::to_string(w.get_string().value);
+            if (level == "majority") {
+                wc.acknowledge_level(write_concern::level::k_majority);
+            } else if (level == "acknowledged") {
+                wc.acknowledge_level(write_concern::level::k_acknowledged);
+            } else if (level == "unacknowledged") {
+                wc.acknowledge_level(write_concern::level::k_unacknowledged);
+            }
+        } else if (w.type() == bsoncxx::type::k_int32) {
+            wc.nodes(w.get_int32());
+        }
+        return wc;
+    }
+
+    return {};
+}
+
+bsoncxx::stdx::optional<read_preference> operations::lookup_read_preference(document::view doc) {
+    if (doc["readPreference"] && doc["readPreference"]["mode"]) {
+        read_preference rp;
+        std::string mode = string::to_string(doc["readPreference"]["mode"].get_string().value);
+        if (mode == "Primary") {
+            rp.mode(read_preference::read_mode::k_primary);
+        } else if (mode == "PrimaryPreferred") {
+            rp.mode(read_preference::read_mode::k_primary_preferred);
+        } else if (mode == "Secondary") {
+            rp.mode(read_preference::read_mode::k_secondary);
+        } else if (mode == "SecondaryPreferred") {
+            rp.mode(read_preference::read_mode::k_secondary_preferred);
+        } else if (mode == "Nearest") {
+            rp.mode(read_preference::read_mode::k_nearest);
+        }
+        return rp;
+    }
+
+    return {};
 }
 
 }  // namespace mongocxx

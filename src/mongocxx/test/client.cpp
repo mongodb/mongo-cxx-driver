@@ -1,4 +1,4 @@
-// Copyright 2014 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,24 +13,27 @@
 // limitations under the License.
 
 #include <bsoncxx/string/to_string.hpp>
-#include <bsoncxx/test/catch.hh>
+
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/pool.hpp>
 #include <mongocxx/private/conversions.hh>
 #include <mongocxx/private/libmongoc.hh>
-#include <mongocxx/test/client_helpers.hh>
 #include <mongocxx/uri.hpp>
-#include <third_party/catch/include/helpers.hpp>
 
 #include <mongocxx/config/private/prelude.hh>
+
+#include <bsoncxx/test/catch.hh>
+
+#include <mongocxx/test/catch_helpers.hh>
+#include <mongocxx/test/client_helpers.hh>
 
 namespace {
 using namespace mongocxx;
 
 TEST_CASE("A default constructed client is false-ish", "[client]") {
-    MOCK_CLIENT
+    MOCK_CLIENT;
 
     instance::current();
 
@@ -49,7 +52,7 @@ TEST_CASE("A client lists its databases with a filter applied", "[client]") {
     using bsoncxx::builder::basic::kvp;
     using bsoncxx::builder::basic::make_document;
 
-    MOCK_CLIENT
+    MOCK_CLIENT;
     instance::current();
 
     auto client_list_databases_called = false;
@@ -76,7 +79,7 @@ TEST_CASE("list databases passes authorizedDatabases option", "[client]") {
     using bsoncxx::builder::basic::kvp;
     using bsoncxx::builder::basic::make_document;
 
-    MOCK_CLIENT
+    MOCK_CLIENT;
 
     bool called = false;
     stdx::optional<bsoncxx::document::value> opts_passed;
@@ -113,7 +116,7 @@ TEST_CASE("list databases passes authorizedDatabases option", "[client]") {
 }
 
 TEST_CASE("A client constructed with a URI is truthy", "[client]") {
-    MOCK_CLIENT
+    MOCK_CLIENT;
 
     instance::current();
 
@@ -122,7 +125,7 @@ TEST_CASE("A client constructed with a URI is truthy", "[client]") {
 }
 
 TEST_CASE("A client connects to a provided mongodb uri", "[client]") {
-    MOCK_CLIENT
+    MOCK_CLIENT;
 
     instance::current();
 
@@ -140,17 +143,17 @@ TEST_CASE("A client connects to a provided mongodb uri", "[client]") {
 }
 
 TEST_CASE("A client throws if its underlying mongoc client is NULL", "[client]") {
-    MOCK_CLIENT
+    MOCK_CLIENT;
 
     instance::current();
 
-    client_new->interpose([](const mongoc_uri_t*) { return (mongoc_client_t*)nullptr; });
+    client_new->interpose([](const mongoc_uri_t*) -> mongoc_client_t* { return nullptr; });
 
     REQUIRE_THROWS_AS(client{uri{}}, mongocxx::exception);
 }
 
 TEST_CASE("A client cleans up its underlying mongoc client on destruction", "[client]") {
-    MOCK_CLIENT
+    MOCK_CLIENT;
 
     instance::current();
 
@@ -166,7 +169,7 @@ TEST_CASE("A client cleans up its underlying mongoc client on destruction", "[cl
 }
 
 TEST_CASE("A client supports move operations", "[client]") {
-    MOCK_CLIENT
+    MOCK_CLIENT;
 
     instance::current();
 
@@ -183,7 +186,7 @@ TEST_CASE("A client supports move operations", "[client]") {
 }
 
 TEST_CASE("A client has a settable Read Concern", "[client]") {
-    MOCK_CLIENT
+    MOCK_CLIENT;
 
     instance::current();
 
@@ -207,7 +210,7 @@ TEST_CASE("A client has a settable Read Concern", "[client]") {
 }
 
 TEST_CASE("A client's read preferences may be set and obtained", "[client]") {
-    MOCK_CLIENT
+    MOCK_CLIENT;
 
     instance::current();
 
@@ -290,7 +293,7 @@ TEST_CASE("A client can delete apm options and the callbacks will still work pro
 }
 
 TEST_CASE("A client's write concern may be set and obtained", "[client]") {
-    MOCK_CLIENT
+    MOCK_CLIENT;
 
     instance::current();
 
@@ -331,7 +334,7 @@ TEST_CASE("A client's write concern may be set and obtained", "[client]") {
 }
 
 TEST_CASE("A client can be reset", "[client]") {
-    MOCK_CLIENT
+    MOCK_CLIENT;
 
     instance::current();
 
@@ -345,7 +348,7 @@ TEST_CASE("A client can be reset", "[client]") {
 }
 
 TEST_CASE("A client can create a named database object", "[client]") {
-    MOCK_CLIENT
+    MOCK_CLIENT;
 
     instance::current();
 
@@ -427,7 +430,7 @@ TEST_CASE("integration tests for client metadata handshake feature") {
 
 #if defined(MONGOCXX_ENABLE_SSL) && defined(MONGOC_ENABLE_SSL)
 TEST_CASE("A client can be constructed with SSL options", "[client]") {
-    MOCK_CLIENT
+    MOCK_CLIENT;
 
     instance::current();
 

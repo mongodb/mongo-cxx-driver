@@ -1,4 +1,4 @@
-// Copyright 2015-present MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -97,16 +97,19 @@ enum class error_code : std::int32_t {
     /// A moved-from mongocxx::v_noabi::options::transaction object has been used.
     k_invalid_transaction_options_object,
 
-    // A resource (server API handle, etc.) could not be created:
+    /// A resource (server API handle, etc.) could not be created:
     k_create_resource_fail,
 
-    // A default-constructed or moved-from mongocxx::v_noabi::search_index_model object has been
-    // used.
+    /// A default-constructed or moved-from mongocxx::v_noabi::search_index_model object has been
+    /// used.
     k_invalid_search_index_model,
 
-    // A default-constructed or moved-from mongocxx::v_noabi::search_index_view object has been
-    // used.
+    /// A default-constructed or moved-from mongocxx::v_noabi::search_index_view object has been
+    /// used.
     k_invalid_search_index_view,
+
+    /// Timed out while waiting for a client to be returned to the pool
+    k_pool_wait_queue_timeout,
 
     // Add new constant string message to error_code.cpp as well!
 };
@@ -116,7 +119,7 @@ enum class error_code : std::int32_t {
 ///
 /// @return The mongocxx error_category
 ///
-MONGOCXX_API const std::error_category& MONGOCXX_CALL error_category();
+MONGOCXX_ABI_EXPORT_CDECL(const std::error_category&) error_category();
 
 ///
 /// Translate a mongocxx::v_noabi::error_code into a std::error_code.
@@ -125,7 +128,7 @@ MONGOCXX_API const std::error_category& MONGOCXX_CALL error_category();
 ///
 /// @return A std::error_code
 ///
-MONGOCXX_INLINE std::error_code make_error_code(error_code error) {
+inline std::error_code make_error_code(error_code error) {
     return {static_cast<int>(error), error_category()};
 }
 
@@ -143,8 +146,30 @@ using ::mongocxx::v_noabi::make_error_code;
 
 namespace std {
 
-// Specialize is_error_code_enum so we get simpler std::error_code construction
+///
+/// Indicates @ref mongocxx::v_noabi::error_code is eligible for `std::error_code` implicit
+/// conversions.
+///
 template <>
 struct is_error_code_enum<::mongocxx::v_noabi::error_code> : std::true_type {};
 
 }  // namespace std
+
+///
+/// @file
+/// Provides @ref mongocxx::v_noabi::error_code.
+///
+
+#if defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+
+namespace mongocxx {
+
+/// @ref mongocxx::v_noabi::error_category()
+const std::error_category& error_category();
+
+/// @ref mongocxx::v_noabi::make_error_code(v_noabi::error_code error)
+inline std::error_code make_error_code(v_noabi::error_code error);
+
+}  // namespace mongocxx
+
+#endif  // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

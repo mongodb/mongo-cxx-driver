@@ -1,4 +1,4 @@
-// Copyright 2014 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/stdx/optional.hpp>
+
 #include <mongocxx/cursor.hpp>
 #include <mongocxx/private/libmongoc.hh>
 
@@ -42,6 +43,12 @@ class cursor::impl {
     ~impl() {
         libmongoc::cursor_destroy(cursor_t);
     }
+
+    impl(impl&&) = delete;
+    impl& operator=(impl&&) = delete;
+
+    impl(const impl&) = delete;
+    impl& operator=(const impl&) = delete;
 
     bool has_started() const {
         return status >= state::k_started;

@@ -10,16 +10,17 @@
 #endif
 #endif
 
-#if __cpp_lib_string_view
+#if defined(__cpp_lib_string_view)
 #include <string_view>
 #endif
 
 #include <bsoncxx/stdx/operators.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/stdx/type_traits.hpp>
-#include <third_party/catch/include/catch.hpp>
 
 #include <bsoncxx/config/prelude.hpp>
+
+#include <bsoncxx/test/catch.hh>
 
 namespace stdx = bsoncxx::stdx;
 using stdx::string_view;

@@ -1,4 +1,4 @@
-// Copyright 2020-present MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,12 +13,15 @@
 // limitations under the License.
 
 #include <chrono>
+#include <cstdlib>
 #include <ctime>
 #include <iostream>
+#include <string>
 
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/builder/stream/helpers.hpp>
 #include <bsoncxx/json.hpp>
+
 #include <mongocxx/client.hpp>
 #include <mongocxx/client_session.hpp>
 #include <mongocxx/collection.hpp>
@@ -29,16 +32,26 @@
 #include <mongocxx/uri.hpp>
 #include <mongocxx/write_concern.hpp>
 
+#include <examples/macros.hh>
+
 using bsoncxx::builder::stream::close_document;
 using bsoncxx::builder::stream::document;
 using bsoncxx::builder::stream::finalize;
 using bsoncxx::builder::stream::open_document;
 
-int main() {
+int EXAMPLES_CDECL main() {
+    if (const char* const topology_env = std::getenv("MONGOCXX_TEST_TOPOLOGY")) {
+        const auto topology = std::string(topology_env);
+        if (topology != "replica") {
+            std::cerr << "Skipping: with_transaction example requires a replica set" << std::endl;
+            return 0;
+        }
+    }
+
     using namespace mongocxx;
 
     instance inst{};
-    client client{mongocxx::uri{"mongodb://localhost/?replicaSet=replset"}};
+    client client{mongocxx::uri{"mongodb://localhost/?replicaSet=repl0"}};
 
     // Start Causal Consistency Example 1
 

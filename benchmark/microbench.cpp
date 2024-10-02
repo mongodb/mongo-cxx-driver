@@ -1,4 +1,4 @@
-// Copyright 2017 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -25,6 +25,8 @@ bool finished_running(const std::chrono::duration<std::uint32_t, std::milli>& cu
                       std::uint32_t iter) {
     return (curr_time > maxtime || (curr_time > mintime && iter > max_iter));
 }
+
+microbench::~microbench() = default;
 
 void microbench::run() {
     setup();

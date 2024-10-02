@@ -1,4 +1,4 @@
-// Copyright 2015 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
 #include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/builder/basic/sub_document.hpp>
 #include <bsoncxx/builder/concatenate.hpp>
+
 #include <mongocxx/hint.hpp>
 
 #include <mongocxx/config/private/prelude.hh>
@@ -40,35 +41,35 @@ bsoncxx::v_noabi::types::bson_value::view hint::to_value() const {
         bsoncxx::v_noabi::types::b_string{*_index_string}};
 }
 
-bool MONGOCXX_CALL operator==(const hint& index_hint, std::string index) {
+bool operator==(const hint& index_hint, std::string index) {
     return ((index_hint._index_string) && (*(index_hint._index_string) == index));
 }
 
-bool MONGOCXX_CALL operator==(std::string index, const hint& index_hint) {
+bool operator==(std::string index, const hint& index_hint) {
     return index_hint == index;
 }
 
-bool MONGOCXX_CALL operator!=(const hint& index_hint, std::string index) {
+bool operator!=(const hint& index_hint, std::string index) {
     return !(index_hint == index);
 }
 
-bool MONGOCXX_CALL operator!=(std::string index, const hint& index_hint) {
+bool operator!=(std::string index, const hint& index_hint) {
     return !(index_hint == index);
 }
 
-bool MONGOCXX_CALL operator==(const hint& index_hint, bsoncxx::v_noabi::document::view index) {
+bool operator==(const hint& index_hint, bsoncxx::v_noabi::document::view index) {
     return index_hint._index_doc && index_hint._index_doc->view() == index;
 }
 
-bool MONGOCXX_CALL operator==(bsoncxx::v_noabi::document::view index, const hint& index_hint) {
+bool operator==(bsoncxx::v_noabi::document::view index, const hint& index_hint) {
     return index_hint == index;
 }
 
-bool MONGOCXX_CALL operator!=(const hint& index_hint, bsoncxx::v_noabi::document::view index) {
+bool operator!=(const hint& index_hint, bsoncxx::v_noabi::document::view index) {
     return !(index_hint == index);
 }
 
-bool MONGOCXX_CALL operator!=(bsoncxx::v_noabi::document::view index, const hint& index_hint) {
+bool operator!=(bsoncxx::v_noabi::document::view index, const hint& index_hint) {
     return !(index_hint == index);
 }
 

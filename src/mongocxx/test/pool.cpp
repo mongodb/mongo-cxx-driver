@@ -1,4 +1,4 @@
-// Copyright 2015 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,22 +15,25 @@
 #include <cstddef>
 #include <string>
 
-#include <bsoncxx/test/catch.hh>
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/tls.hpp>
 #include <mongocxx/pool.hpp>
 #include <mongocxx/private/libmongoc.hh>
-#include <third_party/catch/include/helpers.hpp>
 
 #include <mongocxx/config/private/prelude.hh>
+
+#include <bsoncxx/test/catch.hh>
+
+#include <mongocxx/test/catch_helpers.hh>
+#include <mongocxx/test/client_helpers.hh>
 
 namespace {
 using namespace mongocxx;
 
 TEST_CASE("a pool is created with the correct MongoDB URI", "[pool]") {
-    MOCK_POOL
+    MOCK_POOL;
 
     instance::current();
 
@@ -67,7 +70,7 @@ TEST_CASE(
     "If we pass an engaged SSL options struct to the pool class, we will use it to configure the "
     "underlying mongoc pool",
     "[pool]") {
-    MOCK_POOL
+    MOCK_POOL;
 
     instance::current();
 
@@ -108,7 +111,7 @@ TEST_CASE(
 #endif
 
 TEST_CASE("calling acquire on a pool returns an entry that manages its client", "[pool]") {
-    MOCK_POOL
+    MOCK_POOL;
 
     instance::current();
 
@@ -143,6 +146,13 @@ TEST_CASE("calling acquire on a pool returns an entry that manages its client", 
         client = nullptr;
         REQUIRE(push_called);
     }
+
+    SECTION("[ ] overload can be used to directly access a database from underlying client") {
+        pool p{};
+        auto client = p.acquire();
+        database db = client["mydb"];
+        REQUIRE(db.name() == stdx::string_view{"mydb"});
+    }
 }
 
 TEST_CASE("try_acquire returns an engaged stdx::optional<entry>", "[pool]") {
@@ -156,7 +166,7 @@ TEST_CASE(
     "try_acquire returns a disengaged stdx::optional<entry> if mongoc_client_pool_try_pop "
     "returns a null pointer",
     "[pool]") {
-    MOCK_POOL
+    MOCK_POOL;
 
     instance::current();
 
@@ -175,4 +185,18 @@ TEST_CASE("a pool is created with an invalid connection string", "[pool]") {
 
     REQUIRE_THROWS_AS(pool{mongocxx::uri(uristr)}, operation_exception);
 }
+
+TEST_CASE("acquiring a client throws if waitQueueTimeoutMS expires", "[pool]") {
+    instance::current();
+    mongocxx::pool pool{
+        mongocxx::uri{"mongodb://localhost:27017/?waitQueueTimeoutMS=1&maxPoolSize=1"},
+        options::pool(test_util::add_test_server_api())};
+    // Acquire only available client:
+    auto client = pool.acquire();
+    CHECK(client);
+    // Try to acquire again. Expect timeout:
+    REQUIRE_THROWS_WITH(pool.acquire(),
+                        Catch::Matchers::ContainsSubstring("failed to acquire client"));
+}
+
 }  // namespace

@@ -1,4 +1,4 @@
-// Copyright 2014 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,6 +14,7 @@
 
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/types.hpp>
+
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/private/conversions.hh>
@@ -138,12 +139,12 @@ const stdx::optional<bsoncxx::v_noabi::document::view> read_preference::hedge() 
     return stdx::optional<bsoncxx::v_noabi::document::view>{};
 }
 
-bool MONGOCXX_CALL operator==(const read_preference& lhs, const read_preference& rhs) {
+bool operator==(const read_preference& lhs, const read_preference& rhs) {
     return (lhs.mode() == rhs.mode()) && (lhs.tags() == rhs.tags()) &&
            (lhs.max_staleness() == rhs.max_staleness());
 }
 
-bool MONGOCXX_CALL operator!=(const read_preference& lhs, const read_preference& rhs) {
+bool operator!=(const read_preference& lhs, const read_preference& rhs) {
     return !(lhs == rhs);
 }
 

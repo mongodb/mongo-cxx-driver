@@ -1,4 +1,4 @@
-// Copyright 2018-present MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -30,12 +30,18 @@ namespace events {
 ///
 class server_description {
    public:
-    MONGOCXX_PRIVATE explicit server_description(const void* event);
+    explicit server_description(const void* event);
 
     ///
     /// Destroys a server_description.
     ///
-    ~server_description();
+    MONGOCXX_ABI_EXPORT_CDECL() ~server_description();
+
+    server_description(server_description&&) = default;
+    server_description& operator=(server_description&&) = default;
+
+    server_description(const server_description&) = default;
+    server_description& operator=(const server_description&) = default;
 
     ///
     /// An opaque id, unique to this server for this mongocxx::v_noabi::client or
@@ -43,14 +49,14 @@ class server_description {
     ///
     /// @return The id.
     ///
-    std::uint32_t id() const;
+    MONGOCXX_ABI_EXPORT_CDECL(std::uint32_t) id() const;
 
     ///
     /// The duration of the last hello call, indicating network latency.
     ///
     /// @return The duration in microseconds.
     ///
-    std::int64_t round_trip_time() const;
+    MONGOCXX_ABI_EXPORT_CDECL(std::int64_t) round_trip_time() const;
 
     ///
     /// The server type: "Unknown", "Standalone", "Mongos", "PossiblePrimary", "RSPrimary",
@@ -58,14 +64,15 @@ class server_description {
     ///
     /// @return The type as a short-lived string view.
     ///
-    bsoncxx::v_noabi::stdx::string_view type() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::string_view) type() const;
 
     ///
     /// @return The response as a short-lived document view.
     ///
     /// @deprecated use hello instead.
     ///
-    MONGOCXX_DEPRECATED bsoncxx::v_noabi::document::view is_master() const;
+    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::view)
+        is_master() const;
 
     ///
     /// The server's last response to the "hello" command, or an empty document if the driver
@@ -73,21 +80,21 @@ class server_description {
     ///
     /// @return The response as a short-lived document view.
     ///
-    bsoncxx::v_noabi::document::view hello() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::view) hello() const;
 
     ///
     /// Returns the server host name.
     ///
     /// @return The host name.
     ///
-    bsoncxx::v_noabi::stdx::string_view host() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::string_view) host() const;
 
     ///
     /// Returns the server port.
     ///
     /// @return The port.
     ///
-    std::uint16_t port() const;
+    MONGOCXX_ABI_EXPORT_CDECL(std::uint16_t) port() const;
 
    private:
     const void* _sd;
@@ -98,3 +105,8 @@ class server_description {
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref mongocxx::v_noabi::events::server_description.
+///

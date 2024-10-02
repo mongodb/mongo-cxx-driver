@@ -1,6 +1,6 @@
 @echo off
 
-REM Copyright 2018-present MongoDB, Inc.
+REM Copyright 2009-present MongoDB, Inc.
 REM
 REM Licensed under the Apache License, Version 2.0 (the "License");
 REM you may not use this file except in compliance with the License.
@@ -46,8 +46,8 @@ set prefix=%prefix:"=%
 echo.@echo off
 echo.
 echo.REM MongoDB C++ Driver uninstall program, generated with CMake
-echo.
-echo.REM Copyright 2018-present MongoDB, Inc.
+echo.REM
+echo.REM Copyright 2009-present MongoDB, Inc.
 echo.REM
 echo.REM Licensed under the Apache License, Version 2.0 (the "License");
 echo.REM you may not use this file except in compliance with the License.

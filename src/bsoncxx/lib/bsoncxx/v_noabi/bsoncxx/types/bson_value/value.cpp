@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -50,7 +50,7 @@ value::value(b_string v) : value(v.value) {}
 value::value(stdx::string_view v) : _impl{stdx::make_unique<impl>()} {
     _impl->_value.value_type = BSON_TYPE_UTF8;
     _impl->_value.value.v_utf8.str = make_copy_for_libbson(v);
-    _impl->_value.value.v_utf8.len = (uint32_t)v.size();
+    _impl->_value.value.v_utf8.len = static_cast<uint32_t>(v.size());
 }
 
 value::value(b_null) : value(nullptr) {}
@@ -90,6 +90,25 @@ value::value(const type id) : _impl{stdx::make_unique<impl>()} {
         case type::k_undefined:
             _impl->_value.value_type = BSON_TYPE_UNDEFINED;
             break;
+
+        case type::k_double:
+        case type::k_string:
+        case type::k_document:
+        case type::k_array:
+        case type::k_binary:
+        case type::k_oid:
+        case type::k_bool:
+        case type::k_date:
+        case type::k_null:
+        case type::k_regex:
+        case type::k_dbpointer:
+        case type::k_code:
+        case type::k_symbol:
+        case type::k_codewscope:
+        case type::k_int32:
+        case type::k_timestamp:
+        case type::k_int64:
+        case type::k_decimal128:
         default:
             throw bsoncxx::v_noabi::exception(error_code::k_invalid_bson_type_id);
     }
@@ -100,7 +119,8 @@ value::value(stdx::string_view regex, stdx::string_view options)
     : _impl{stdx::make_unique<impl>()} {
     _impl->_value.value_type = BSON_TYPE_REGEX;
     _impl->_value.value.v_regex.regex = make_copy_for_libbson(regex);
-    _impl->_value.value.v_regex.options = options.empty() ? NULL : make_copy_for_libbson(options);
+    _impl->_value.value.v_regex.options =
+        options.empty() ? nullptr : make_copy_for_libbson(options);
 }
 
 value::value(b_code v) : value(v.type_id, v) {}
@@ -110,18 +130,37 @@ value::value(const type id, stdx::string_view v) : _impl{stdx::make_unique<impl>
         case type::k_regex:
             _impl->_value.value_type = BSON_TYPE_REGEX;
             _impl->_value.value.v_regex.regex = make_copy_for_libbson(v);
-            _impl->_value.value.v_regex.options = NULL;
+            _impl->_value.value.v_regex.options = nullptr;
             break;
         case type::k_code:
             _impl->_value.value_type = BSON_TYPE_CODE;
             _impl->_value.value.v_code.code = make_copy_for_libbson(v);
-            _impl->_value.value.v_code.code_len = (uint32_t)v.length();
+            _impl->_value.value.v_code.code_len = static_cast<uint32_t>(v.length());
             break;
         case type::k_symbol:
             _impl->_value.value_type = BSON_TYPE_SYMBOL;
             _impl->_value.value.v_symbol.symbol = make_copy_for_libbson(v);
-            _impl->_value.value.v_symbol.len = (uint32_t)v.length();
+            _impl->_value.value.v_symbol.len = static_cast<uint32_t>(v.length());
             break;
+
+        case type::k_double:
+        case type::k_string:
+        case type::k_document:
+        case type::k_array:
+        case type::k_binary:
+        case type::k_undefined:
+        case type::k_oid:
+        case type::k_bool:
+        case type::k_date:
+        case type::k_null:
+        case type::k_dbpointer:
+        case type::k_codewscope:
+        case type::k_int32:
+        case type::k_timestamp:
+        case type::k_int64:
+        case type::k_decimal128:
+        case type::k_maxkey:
+        case type::k_minkey:
         default:
             throw bsoncxx::v_noabi::exception(error_code::k_invalid_bson_type_id);
     }
@@ -139,9 +178,29 @@ value::value(type id, uint64_t a, uint64_t b) : _impl{stdx::make_unique<impl>()}
             break;
         case type::k_timestamp:
             _impl->_value.value_type = BSON_TYPE_TIMESTAMP;
-            _impl->_value.value.v_timestamp.increment = (uint32_t)a;
-            _impl->_value.value.v_timestamp.timestamp = (uint32_t)b;
+            _impl->_value.value.v_timestamp.increment = static_cast<uint32_t>(a);
+            _impl->_value.value.v_timestamp.timestamp = static_cast<uint32_t>(b);
             break;
+
+        case type::k_double:
+        case type::k_string:
+        case type::k_document:
+        case type::k_array:
+        case type::k_binary:
+        case type::k_undefined:
+        case type::k_oid:
+        case type::k_bool:
+        case type::k_date:
+        case type::k_null:
+        case type::k_regex:
+        case type::k_dbpointer:
+        case type::k_code:
+        case type::k_symbol:
+        case type::k_codewscope:
+        case type::k_int32:
+        case type::k_int64:
+        case type::k_maxkey:
+        case type::k_minkey:
         default:
             throw bsoncxx::v_noabi::exception(error_code::k_invalid_bson_type_id);
     }
@@ -151,7 +210,7 @@ value::value(b_dbpointer v) : value(v.collection, v.value) {}
 value::value(stdx::string_view collection, oid value) : _impl{stdx::make_unique<impl>()} {
     _impl->_value.value_type = BSON_TYPE_DBPOINTER;
     _impl->_value.value.v_dbpointer.collection = make_copy_for_libbson(collection);
-    _impl->_value.value.v_dbpointer.collection_len = (uint32_t)collection.length();
+    _impl->_value.value.v_dbpointer.collection_len = static_cast<uint32_t>(collection.length());
     std::memcpy(_impl->_value.value.v_dbpointer.oid.bytes, value.bytes(), value.k_oid_length);
 }
 
@@ -160,9 +219,10 @@ value::value(stdx::string_view code, bsoncxx::v_noabi::document::view_or_value s
     : _impl{stdx::make_unique<impl>()} {
     _impl->_value.value_type = BSON_TYPE_CODEWSCOPE;
     _impl->_value.value.v_codewscope.code = make_copy_for_libbson(code);
-    _impl->_value.value.v_codewscope.code_len = (uint32_t)code.length();
-    _impl->_value.value.v_codewscope.scope_len = (uint32_t)scope.view().length();
-    _impl->_value.value.v_codewscope.scope_data = (uint8_t*)bson_malloc(scope.view().length());
+    _impl->_value.value.v_codewscope.code_len = static_cast<uint32_t>(code.length());
+    _impl->_value.value.v_codewscope.scope_len = static_cast<uint32_t>(scope.view().length());
+    _impl->_value.value.v_codewscope.scope_data =
+        static_cast<uint8_t*>(bson_malloc(scope.view().length()));
     std::memcpy(
         _impl->_value.value.v_codewscope.scope_data, scope.view().data(), scope.view().length());
 }
@@ -174,8 +234,8 @@ value::value(const uint8_t* data, size_t size, const binary_sub_type sub_type)
     : _impl{stdx::make_unique<impl>()} {
     _impl->_value.value_type = BSON_TYPE_BINARY;
     _impl->_value.value.v_binary.subtype = static_cast<bson_subtype_t>(sub_type);
-    _impl->_value.value.v_binary.data_len = (uint32_t)size;
-    _impl->_value.value.v_binary.data = (uint8_t*)bson_malloc(size);
+    _impl->_value.value.v_binary.data_len = static_cast<uint32_t>(size);
+    _impl->_value.value.v_binary.data = static_cast<uint8_t*>(bson_malloc(size));
     if (size)
         std::memcpy(_impl->_value.value.v_binary.data, data, size);
 }
@@ -183,16 +243,16 @@ value::value(const uint8_t* data, size_t size, const binary_sub_type sub_type)
 value::value(b_document v) : value(v.view()) {}
 value::value(bsoncxx::v_noabi::document::view v) : _impl{stdx::make_unique<impl>()} {
     _impl->_value.value_type = BSON_TYPE_DOCUMENT;
-    _impl->_value.value.v_doc.data_len = (uint32_t)v.length();
-    _impl->_value.value.v_doc.data = (uint8_t*)bson_malloc(v.length());
+    _impl->_value.value.v_doc.data_len = static_cast<uint32_t>(v.length());
+    _impl->_value.value.v_doc.data = static_cast<uint8_t*>(bson_malloc(v.length()));
     std::memcpy(_impl->_value.value.v_doc.data, v.data(), v.length());
 }
 
 value::value(b_array v) : value(v.value) {}
 value::value(bsoncxx::v_noabi::array::view v) : _impl{stdx::make_unique<impl>()} {
     _impl->_value.value_type = BSON_TYPE_ARRAY;
-    _impl->_value.value.v_doc.data_len = (uint32_t)v.length();
-    _impl->_value.value.v_doc.data = (uint8_t*)bson_malloc(v.length());
+    _impl->_value.value.v_doc.data_len = static_cast<uint32_t>(v.length());
+    _impl->_value.value.v_doc.data = static_cast<uint8_t*>(bson_malloc(v.length()));
     std::memcpy(_impl->_value.value.v_doc.data, v.data(), v.length());
 }
 
@@ -215,7 +275,7 @@ value::value(const std::uint8_t* raw,
 }
 
 value::value(void* internal_value)
-    : _impl(stdx::make_unique<impl>((bson_value_t*)internal_value)) {}
+    : _impl(stdx::make_unique<impl>(static_cast<const bson_value_t*>(internal_value))) {}
 
 value::value(const value& rhs) : value(&rhs._impl->_value) {}
 

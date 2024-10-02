@@ -1,4 +1,4 @@
-// Copyright 2014 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -39,25 +39,33 @@ class array : public sub_array {
     ///
     /// Default constructor
     ///
-    BSONCXX_INLINE array() : sub_array(&_core), _core(true) {}
+    array() : sub_array(&_core), _core(true) {}
+
+    ///
+    /// Destructor
+    ///
+    ~array() = default;
 
     ///
     /// Move constructor
     ///
-    BSONCXX_INLINE array(array&& arr) noexcept : sub_array(&_core), _core(std::move(arr._core)) {}
+    array(array&& arr) noexcept : sub_array(&_core), _core(std::move(arr._core)) {}
 
     ///
     /// Move assignment operator
     ///
-    BSONCXX_INLINE array& operator=(array&& arr) noexcept {
+    array& operator=(array&& arr) noexcept {
         _core = std::move(arr._core);
         return *this;
     }
 
+    array(const array&) = delete;
+    array& operator=(const array&) = delete;
+
     ///
     /// @return A view of the BSON array.
     ///
-    BSONCXX_INLINE bsoncxx::v_noabi::array::view view() const {
+    bsoncxx::v_noabi::array::view view() const {
         return _core.view_array();
     }
 
@@ -67,7 +75,7 @@ class array : public sub_array {
     ///
     /// @return A view of the current builder contents.
     ///
-    BSONCXX_INLINE operator bsoncxx::v_noabi::array::view() const {
+    operator bsoncxx::v_noabi::array::view() const {
         return view();
     }
 
@@ -80,14 +88,14 @@ class array : public sub_array {
     ///  After calling extract() it is illegal to call any methods
     ///  on this class, unless it is subsequenly moved into.
     ///
-    BSONCXX_INLINE bsoncxx::v_noabi::array::value extract() {
+    bsoncxx::v_noabi::array::value extract() {
         return _core.extract_array();
     }
 
     ///
     /// Reset the underlying BSON to an empty array.
     ///
-    BSONCXX_INLINE void clear() {
+    void clear() {
         _core.clear();
     }
 
@@ -106,7 +114,7 @@ class array : public sub_array {
 ///   A bsoncxx::v_noabi::array::value containing the elements.
 ///
 template <typename... Args>
-bsoncxx::v_noabi::array::value BSONCXX_CALL make_array(Args&&... args) {
+bsoncxx::v_noabi::array::value make_array(Args&&... args) {
     array array;
     array.append(std::forward<Args>(args)...);
     return array.extract();
@@ -128,3 +136,24 @@ using ::bsoncxx::v_noabi::builder::basic::make_array;
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref bsoncxx::v_noabi::builder::basic::array.
+///
+
+#if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+
+namespace bsoncxx {
+namespace builder {
+namespace basic {
+
+/// @ref bsoncxx::v_noabi::builder::basic::make_array
+template <typename... Args>
+v_noabi::array::value make_array(Args&&... args);
+
+}  // namespace basic
+}  // namespace builder
+}  // namespace bsoncxx
+
+#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

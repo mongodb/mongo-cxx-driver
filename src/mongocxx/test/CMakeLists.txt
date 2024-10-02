@@ -1,4 +1,4 @@
-# Copyright 2016 MongoDB Inc.
+# Copyright 2009-present MongoDB, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -11,6 +11,8 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
+include(FetchCatch2)
 
 if(NOT BUILD_TESTING)
     set_property(DIRECTORY PROPERTY EXCLUDE_FROM_ALL TRUE)
@@ -29,18 +31,20 @@ if(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     target_compile_options(mongocxx_mocked PRIVATE /bigobj)
 endif()
 
-set(spec_test_common
-    spec/operation.cpp
-    spec/unified_tests/entity.cpp
-    spec/unified_tests/assert.cpp
+add_library(client_helpers OBJECT client_helpers.cpp)
+
+add_library(spec_test_common OBJECT
     spec/monitoring.cpp
+    spec/operation.cpp
+    spec/unified_tests/assert.cpp
+    spec/unified_tests/entity.cpp
     spec/util.cpp
 )
 
 add_executable(test_driver
     bulk_write.cpp
+    catch_helpers.cpp
     change_streams.cpp
-    client_helpers.cpp
     client_session.cpp
     client_side_encryption.cpp
     client.cpp
@@ -102,108 +106,88 @@ add_executable(test_driver
     validation_criteria.cpp
     write_concern.cpp
 )
+target_link_libraries(test_driver PRIVATE client_helpers)
 
-add_executable(test_logging
-    logging.cpp
-)
+add_executable(test_logging logging.cpp)
 
-add_executable(test_instance
-    instance.cpp
-)
+add_executable(test_instance instance.cpp)
 
-add_executable(test_crud_specs
-    spec/crud.cpp
-    ${spec_test_common}
-    client_helpers.cpp
-)
+add_executable(test_crud_specs spec/crud.cpp)
+target_link_libraries(test_crud_specs PRIVATE spec_test_common client_helpers)
 
-add_executable(test_gridfs_specs
-    spec/gridfs.cpp
-    ${spec_test_common}
-    client_helpers.cpp
-)
+add_executable(test_gridfs_specs spec/gridfs.cpp)
+target_link_libraries(test_gridfs_specs PRIVATE spec_test_common client_helpers)
 
-add_executable(test_client_side_encryption_specs
-    spec/client_side_encryption.cpp
-    ${spec_test_common}
-    client_helpers.cpp
-)
+add_executable(test_client_side_encryption_specs spec/client_side_encryption.cpp)
+target_link_libraries(test_client_side_encryption_specs PRIVATE spec_test_common client_helpers)
 
-add_executable(test_command_monitoring_specs
-    spec/command_monitoring.cpp
-    ${spec_test_common}
-    client_helpers.cpp
-)
+add_executable(test_command_monitoring_specs spec/command_monitoring.cpp)
+target_link_libraries(test_command_monitoring_specs PRIVATE spec_test_common client_helpers)
 
-add_executable(test_transactions_specs
-    spec/transactions.cpp
-    ${spec_test_common}
-    client_helpers.cpp
-)
+add_executable(test_transactions_specs spec/transactions.cpp)
+target_link_libraries(test_transactions_specs PRIVATE spec_test_common client_helpers)
 
-add_executable(test_retryable_reads_specs
-    spec/retryable-reads.cpp
-    ${spec_test_common}
-    client_helpers.cpp
-)
+add_executable(test_retryable_reads_specs spec/retryable-reads.cpp)
+target_link_libraries(test_retryable_reads_specs PRIVATE spec_test_common client_helpers)
 
-add_executable(test_read_write_concern_specs
-    spec/read_write_concern.cpp
-    ${spec_test_common}
-    client_helpers.cpp
-)
+add_executable(test_read_write_concern_specs spec/read_write_concern.cpp)
+target_link_libraries(test_read_write_concern_specs PRIVATE spec_test_common client_helpers)
 
-add_executable(test_mongohouse_specs
-    spec/mongohouse.cpp
-    ${spec_test_common}
-    client_helpers.cpp
-)
+add_executable(test_mongohouse_specs spec/mongohouse.cpp)
+target_link_libraries(test_mongohouse_specs PRIVATE spec_test_common client_helpers)
 
-add_executable(test_unified_format_spec
-    spec/unified_tests/operations.cpp
-    spec/unified_tests/runner.cpp
-    ${spec_test_common}
-    client_helpers.cpp
-)
+add_executable(test_unified_format_specs spec/unified_tests/operations.cpp spec/unified_tests/runner.cpp)
+target_link_libraries(test_unified_format_specs PRIVATE spec_test_common client_helpers)
 
-add_executable(test_versioned_api
-    versioned_api.cpp
-    ${spec_test_common}
-    client_helpers.cpp
-)
+add_executable(test_versioned_api versioned_api.cpp)
+target_link_libraries(test_versioned_api PRIVATE spec_test_common client_helpers)
 
 # Common target properties for test executables.
 add_library(mongocxx_test_properties INTERFACE)
+
+target_link_libraries(mongocxx_test_properties INTERFACE Catch2::Catch2)
+target_compile_features(mongocxx_test_properties INTERFACE cxx_std_14)
+
 target_link_libraries(mongocxx_test_properties INTERFACE mongocxx_mocked ${libmongoc_target})
 target_include_directories(mongocxx_test_properties INTERFACE
 
     # Allow `#include <mongoc/mongoc.h>`
     ${libmongoc_include_directories}
 
-    # Allow `#include <mongocxx/test/...>` and `#include <third_party/...>`.
+    # Allow `#include <mongocxx/test/...>`.
     ${CMAKE_CURRENT_SOURCE_DIR}/../..
 )
+# Use `__vectorcall` by default with MSVC to catch missing `__cdecl`.
+target_compile_options(mongocxx_test_properties INTERFACE "$<$<CXX_COMPILER_ID:MSVC>:/Gv>")
 add_library(mongocxx::test_properties ALIAS mongocxx_test_properties)
 
-# Avoid redundant recompilation of catch/main.cpp.
-add_library(mongocxx_test_properties_with_main STATIC EXCLUDE_FROM_ALL ${THIRD_PARTY_SOURCE_DIR}/catch/main.cpp)
-target_link_libraries(mongocxx_test_properties_with_main PUBLIC mongocxx::test_properties)
+add_library(mongocxx_test_properties_with_main INTERFACE)
+target_link_libraries(mongocxx_test_properties_with_main INTERFACE mongocxx::test_properties)
+target_sources(mongocxx_test_properties_with_main INTERFACE catch.cpp)
 add_library(mongocxx::test_properties_with_main ALIAS mongocxx_test_properties_with_main)
 
 set_property(
     TARGET
-        test_driver
-        test_logging
-        test_instance
+        client_helpers
+        spec_test_common
+    APPEND PROPERTY LINK_LIBRARIES
+        mongocxx::test_properties
+)
+
+set_property(
+    TARGET
         test_client_side_encryption_specs
-        test_crud_specs
-        test_gridfs_specs
         test_command_monitoring_specs
-        test_transactions_specs
-        test_retryable_reads_specs
-        test_read_write_concern_specs
+        test_crud_specs
+        test_driver
+        test_gridfs_specs
+        test_instance
+        test_logging
         test_mongohouse_specs
-        test_unified_format_spec
+        test_read_write_concern_specs
+        test_retryable_reads_specs
+        test_transactions_specs
+        test_unified_format_specs
         test_versioned_api
     APPEND PROPERTY LINK_LIBRARIES
         mongocxx::test_properties_with_main
@@ -226,23 +210,27 @@ set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 target_link_libraries(test_driver PRIVATE Threads::Threads)
 
-add_test(NAME driver COMMAND test_driver)
-add_test(NAME logging COMMAND test_logging)
-add_test(NAME instance COMMAND test_instance)
-add_test(NAME crud_specs COMMAND test_crud_specs)
-add_test(NAME gridfs_specs COMMAND test_gridfs_specs)
-add_test(NAME client_side_encryption_specs COMMAND test_client_side_encryption_specs)
-add_test(NAME command_monitoring_specs COMMAND test_command_monitoring_specs)
-add_test(NAME transactions_specs COMMAND test_transactions_specs)
-add_test(NAME retryable_reads_spec COMMAND test_retryable_reads_specs)
-add_test(NAME read_write_concern_specs COMMAND test_read_write_concern_specs)
-add_test(NAME unified_format_spec COMMAND test_unified_format_spec)
-add_test(NAME versioned_api COMMAND test_versioned_api)
+foreach(test_name
+    client_side_encryption_specs
+    command_monitoring_specs
+    crud_specs
+    driver
+    gridfs_specs
+    instance
+    logging
+    read_write_concern_specs
+    retryable_reads_specs
+    transactions_specs
+    unified_format_specs
+    versioned_api
+)
+    add_test(NAME ${test_name} COMMAND test_${test_name} --reporter compact --allow-running-no-tests)
+endforeach()
 
 # Adding this as a test will run it as part of the RUN_TESTS command in MSVC.
 # Do not add, since we only test mongohouse on Linux.
 if(0)
-    add_test(mongohouse_specs NAME test_mongohouse_specs COMMAND)
+    add_test(NAME mongohouse_specs COMMAND test_mongohouse_specs ${test_args})
 endif()
 
 set_property(TEST crud_specs APPEND PROPERTY ENVIRONMENT
@@ -271,7 +259,7 @@ set_property(TEST transactions_specs APPEND PROPERTY ENVIRONMENT
     "WITH_TRANSACTION_TESTS_PATH=${DATA_SOURCE_DIR}/with_transaction"
 )
 
-set_property(TEST retryable_reads_spec APPEND PROPERTY ENVIRONMENT
+set_property(TEST retryable_reads_specs APPEND PROPERTY ENVIRONMENT
     "RETRYABLE_READS_LEGACY_TESTS_PATH=${DATA_SOURCE_DIR}/retryable-reads/legacy"
 )
 
@@ -279,7 +267,7 @@ set_property(TEST read_write_concern_specs APPEND PROPERTY ENVIRONMENT
     "READ_WRITE_CONCERN_OPERATION_TESTS_PATH=${DATA_SOURCE_DIR}/read-write-concern/operation"
 )
 
-set_property(TEST unified_format_spec APPEND PROPERTY ENVIRONMENT
+set_property(TEST unified_format_specs APPEND PROPERTY ENVIRONMENT
     "CHANGE_STREAMS_UNIFIED_TESTS_PATH=${DATA_SOURCE_DIR}/change-streams/unified"
     "CLIENT_SIDE_ENCRYPTION_UNIFIED_TESTS_PATH=${DATA_SOURCE_DIR}/client_side_encryption/unified"
     "COLLECTION_MANAGEMENT_TESTS_PATH=${DATA_SOURCE_DIR}/collection-management"
@@ -305,40 +293,56 @@ if(ENABLE_MACRO_GUARD_TESTS)
         PROJECT_NAME mongocxx
         PROJECT_TEST_PROPERTIES_TARGET mongocxx::test_properties
         GUARDED_MACROS
-            MONGOCXX_INLINE # compiler.hpp
+            # compiler.hpp
+            MONGOCXX_INLINE
             MONGOCXX_CALL
-            MONGOCXX_INLINE_NAMESPACE_BEGIN # config.hpp (generated by CMake)
+
+            # config.hpp (generated by CMake)
+            MONGOCXX_INLINE_NAMESPACE_BEGIN
             MONGOCXX_INLINE_NAMESPACE_END
-            MONGOCXX_VERSION_STRING # version.hpp (generated by CMake)
+
+            # version.hpp (generated by CMake)
+            MONGOCXX_VERSION_STRING
             MONGOCXX_VERSION_EXTRA
             MONGOCXX_VERSION_MAJOR
             MONGOCXX_VERSION_MINOR
             MONGOCXX_VERSION_PATCH
-            MONGOCXX_API_H # export.hpp (generated by CMake)
+
+            # export.hpp (generated by CMake)
+            MONGOCXX_ABI_CDECL
+            MONGOCXX_ABI_EXPORT
+            MONGOCXX_ABI_EXPORT_TESTING
+            MONGOCXX_ABI_EXPORT_CDECL
+            MONGOCXX_ABI_EXPORT_CDECL_TESTING
+            MONGOCXX_ABI_NO_EXPORT
             MONGOCXX_API
             MONGOCXX_PRIVATE
             MONGOCXX_DEPRECATED
             MONGOCXX_DEPRECATED_EXPORT
             MONGOCXX_DEPRECATED_NO_EXPORT
-            DEFINE_NO_DEPRECATED
-            MONGOCXX_NO_DEPRECATED
-            MONGOCXX_UNREACHABLE # prelude.hpp
-            MONGOCXX_ENABLE_SSL # config.hh (generated by CMake)
+
+            # prelude.hpp
+            MONGOCXX_UNREACHABLE
+
+            # config.hh (generated by CMake)
+            MONGOCXX_ENABLE_SSL
             MONGOCXX_COMPILER_ID
             MONGOCXX_COMPILER_VERSION
         INCLUDE_PATTERNS
             "include/*.hpp" # Public headers.
-            "lib/*.hh" # Private headers.
-            "test/*.hh" # Test headers.
         EXCLUDE_REGEXES
-            "(include|lib)/mongocxx/v.*/config/.*" # Config headers.
-            ".*_symbols.hh" # Symbol headers.
+            "include/mongocxx/doc\.hpp" # Doc header.
+            "include/.*/(prelude|postlude)\.hpp" # Macro guard headers.
+            "include/mongocxx/v_noabi/mongocxx/config/.*\.hpp" # v_noabi config headers.
     )
 endif()
 
 set_dist_list(src_mongocxx_test_DIST
     CMakeLists.txt
     bulk_write.cpp
+    catch_helpers.cpp
+    catch_helpers.hh
+    catch.cpp
     change_streams.cpp
     client_helpers.cpp
     client_helpers.hh

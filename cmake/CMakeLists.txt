@@ -1,4 +1,4 @@
-# Copyright 2018-present MongoDB Inc.
+# Copyright 2009-present MongoDB, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@ add_subdirectory(make_dist)
 
 set(cmake_MODULES
     BsoncxxUtil.cmake
+    FetchCatch2.cmake
     FetchMnmlstcCore.cmake
     FetchMongoC.cmake
     MacroGuardTest.cmake

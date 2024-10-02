@@ -1,4 +1,4 @@
-// Copyright 2014 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -26,10 +26,18 @@ namespace v_noabi {
 ///
 /// Class representing an exception during a query operation.
 ///
-/// @see mongocxx::v_noabi::operation_exception
+/// @see
+/// - @ref mongocxx::v_noabi::operation_exception
 ///
 class query_exception : public operation_exception {
    public:
+    ~query_exception() override;
+
+    query_exception(query_exception&&) = default;
+    query_exception& operator=(query_exception&&) = default;
+    query_exception(const query_exception&) = default;
+    query_exception& operator=(const query_exception&) = default;
+
     using operation_exception::operation_exception;
 };
 
@@ -37,3 +45,8 @@ class query_exception : public operation_exception {
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref mongocxx::v_noabi::query_exception.
+///

@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,15 +14,17 @@
 
 #pragma once
 
+#include "entity.hh"
+
 #include <unordered_map>
 
-#include "entity.hh"
 #include <bsoncxx/array/element.hpp>
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/document/view.hpp>
-#include <mongocxx/test/spec/monitoring.hh>
 
 #include <mongocxx/config/private/prelude.hh>
+
+#include <mongocxx/test/spec/monitoring.hh>
 
 namespace mongocxx {
 namespace operations {
