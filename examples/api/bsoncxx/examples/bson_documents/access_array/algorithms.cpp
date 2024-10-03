@@ -17,7 +17,7 @@
 
 #include <bsoncxx/array/element.hpp>
 #include <bsoncxx/array/view.hpp>
-#include <bsoncxx/json.hpp>
+#include <bsoncxx/builder/basic/array.hpp>
 #include <bsoncxx/types.hpp>
 
 #include <examples/api/runner.hh>
@@ -46,5 +46,5 @@ void example(bsoncxx::array::view arr) {
 }  // namespace
 
 RUNNER_REGISTER_COMPONENT() {
-    example(bsoncxx::from_json(R"({"v": [1, 2.0, "three"]})")["v"].get_array().value);
+    example(bsoncxx::builder::basic::make_array(1, 2.0, "three"));
 }

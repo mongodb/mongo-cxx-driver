@@ -13,9 +13,9 @@
 // limitations under the License.
 
 #include <bsoncxx/array/element.hpp>
+#include <bsoncxx/builder/basic/array.hpp>
 #include <bsoncxx/exception/error_code.hpp>
 #include <bsoncxx/exception/exception.hpp>
-#include <bsoncxx/json.hpp>
 #include <bsoncxx/types.hpp>
 
 #include <examples/api/runner.hh>
@@ -51,5 +51,5 @@ void example(bsoncxx::array::element e) {
 }  // namespace
 
 RUNNER_REGISTER_COMPONENT() {
-    example(bsoncxx::from_json(R"({"v": [1]})")["v"].get_array().value[0]);
+    example(bsoncxx::builder::basic::make_array(1));
 }
