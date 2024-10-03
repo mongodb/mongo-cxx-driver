@@ -678,6 +678,7 @@ functions:
       - command: subprocess.exec
         params:
           silent: true
+          optional: true
           working_dir: mongo-cxx-driver
           binary: bash
           env:
