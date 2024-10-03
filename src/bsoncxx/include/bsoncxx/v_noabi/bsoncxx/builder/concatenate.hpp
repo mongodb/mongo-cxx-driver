@@ -26,8 +26,10 @@ namespace v_noabi {
 namespace builder {
 
 ///
-/// Container to concatenate a document. Use it by constructing an instance with the
-/// document to be concatenated, and pass it into a document stream builder.
+/// Container to concatenate a document.
+///
+/// Use this with a document or array builder to merge an existing document's fields with that of
+/// the document or array being built.
 ///
 struct concatenate_doc {
     document::view_or_value doc;
@@ -54,8 +56,10 @@ struct concatenate_doc {
 };
 
 ///
-/// Container to concatenate an array. Use this with the array stream builder in order
-/// to pass an array into a new builder and append its values to the stream.
+/// Container to concatenate an array.
+///
+/// Use this with a document or array builder to merge an existing array's fields with that of the
+/// document or array being built.
 ///
 struct concatenate_array {
     array::view_or_value array;
@@ -84,8 +88,8 @@ struct concatenate_array {
 ///
 /// Helper method to concatenate a document.
 ///
-/// Use this with the document stream builder to merge an existing document's fields with a new
-/// document's.
+/// Use this with a document or array builder to merge an existing document's fields with that of
+/// the document or array being built.
 ///
 /// @param doc The document to concatenate.
 ///
@@ -101,15 +105,15 @@ inline concatenate_doc concatenate(document::view_or_value doc) {
 ///
 /// Helper method to concatenate an array.
 ///
-/// Use this with the document stream builder to merge an existing array's fields with a new
-/// document's.
+/// Use this with a document or array builder to merge an existing array's fields with that of the
+/// document or array being built.
 ///
 /// @param array The array to concatenate.
 ///
 /// @return concatenate_doc A concatenating struct.
 ///
 /// @see
-/// - @ref bsoncxx::v_noabi::builder::concatenate_doc
+/// - @ref bsoncxx::v_noabi::builder::concatenate_array
 ///
 inline concatenate_array concatenate(array::view_or_value array) {
     return {std::move(array)};
