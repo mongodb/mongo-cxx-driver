@@ -88,8 +88,8 @@ struct concatenate_array {
 ///
 /// Helper method to concatenate a document.
 ///
-/// Use this with a document or array builder to merge an existing document's fields with that of
-/// the document or array being built.
+/// Use this with a document builder to merge an existing document's fields with that of the
+/// document being built.
 ///
 /// @param doc The document to concatenate.
 ///
@@ -105,8 +105,8 @@ inline concatenate_doc concatenate(document::view_or_value doc) {
 ///
 /// Helper method to concatenate an array.
 ///
-/// Use this with a document or array builder to merge an existing array's fields with that of the
-/// document or array being built.
+/// Use this with an array builder to merge an existing array's fields with that of the array being
+/// built.
 ///
 /// @param array The array to concatenate.
 ///
