@@ -899,51 +899,50 @@ driver process documentation Google doc.
 
 1. Change to the packaging branch, `git checkout debian/unstable`, and make sure
    the working directorty is clean, `git status`, and up-to-date, `git pull`.
-2. Because it is possible to have divergences between release branches, the next
-   step depends on whether the release `r3.xx.y` is a minor release (i.e.,
-   `y=0`) or a patch release (i.e., `y>0`). In the case of a minor release
-   perform step 3 and then continue with step 5, and in the case of a patch
-   release, skip to step 4 and continue from there.
-3. For a minor release, replace the upstream sources with those from the tagged
-   release, `git checkout --no-overlay r3.xx.0 . ':!debian'`. This operation
-   should never produce a conflict. Commit the changes,
-   `git commit -m "Checkout upstream sources for 'r3.xx.0' into debian/unstable"`.
-4. For a patch release, merge the release tag, `git merge r3.xx.y`; in theory,
-   as long as `y>0` this should not result in a conflict. If the merge stops
-   with a conflict, then it will be necessary to investigate the problem.
-5. Verify that there are no extraneous differences from the release tag,
+2. Because it is possible to have divergences between release branches, some
+   special procedures are needed. Execute the following sequence of commands
+   (substituting version numbers as appropriate):
+
+```
+$ git merge --no-commit --no-ff r3.xx.y     # may result in conflicts
+$ git checkout HEAD -- debian               # ensures debian/ dir is preserved
+$ git add .                                 # prepare to resolve conflicts
+$ git checkout --no-overlay r3.xx.y -- . ':!debian' # resolve conflicts
+$ git add .
+$ git commit
+```
+
+3. Verify that there are no extraneous differences from the release tag,
    `git diff r3.xx.y..HEAD --stat -- . ':!debian'`; the command should produce
    no output, and if any output is shown then that indicates differences in
    files outside the `debian/` directory.
-6. If there were any files outside the `debian/` directory listed in the last
-   step then replace them, `git checkout r3.xx.y -- path/to/file1 path/to/file2`.
-   Commit these changes,
-   `git commit -m "Fix-up, post Merge tag 'r3.xx.y' into debian/unstable"` and
-   repeat step 5.
-7. Create a new changelog entry (use the command `dch -i` to ensure proper
+4. If there were any files outside the `debian/` directory listed in the last
+   step then something has gone wrong. Discard the changes on the branch and
+   start again.
+5. Create a new changelog entry (use the command `dch -i` to ensure proper
    formatting), then adjust the version number on the top line of the changelog
    as appropriate.
-8. Make any other necessary changes to the Debian packaging components (e.g.,
+6. Make any other necessary changes to the Debian packaging components (e.g.,
    update to standards version, dependencies, descriptions, etc.) and make
    relevant entries in `debian/changelog` as needed.
-9. Use `git add` to stage the changed files for commit (only files in the
+7. Use `git add` to stage the changed files for commit (only files in the
    `debian/` directory should be committed), then commit them (the `debcommit`
    utility is helpful here).
-10. Build the package with `gbp buildpackage` and inspect the resulting package
-    files (at a minimum use `debc` on the `.changes` file in order to confirm
-    files are installed to the proper locations by the proper packages and also
-    use `lintian` on the `.changes` file in order to confirm that there are no
-    unexpected errors or warnings; the `lintian` used for this check should
-    always be the latest version as it is found in the unstable distribution).
-11. If any changes are needed, make them, commit them, and rebuild the package.
+8. Build the package with `gbp buildpackage` and inspect the resulting package
+   files (at a minimum use `debc` on the `.changes` file in order to confirm
+   files are installed to the proper locations by the proper packages and also
+   use `lintian` on the `.changes` file in order to confirm that there are no
+   unexpected errors or warnings; the `lintian` used for this check should
+   always be the latest version as it is found in the unstable distribution).
+9. If any changes are needed, make them, commit them, and rebuild the package.
 
 > [!IMPORTANT]
 > It may be desirable to squash multiple commits down to a single commit before building the final packages.
 
-12. Mark the package ready for release with the `dch -Dexperimental -r` command
+10. Mark the package ready for release with the `dch -Dexperimental -r` command
     and commit the resulting changes (after inspecting them),
     `git commit debian/changelog -m 'mark ready for release'`.
-13. Build the final packages. Once the final packages are built, they can be
+11. Build the final packages. Once the final packages are built, they can be
     signed and uploaded and the version can be tagged using the `--git-tag`
     option of `gbp buildpackage`. The best approach is to build the packages,
     prepare everything and then upload. Once the archive has accepted the
