@@ -28,8 +28,8 @@ namespace builder {
 ///
 /// Container to concatenate a document.
 ///
-/// Use this with a document or array builder to merge an existing document's fields with that of
-/// the document or array being built.
+/// Use this with a document builder to merge an existing document's fields with that of the
+/// document being built.
 ///
 struct concatenate_doc {
     document::view_or_value doc;
@@ -58,8 +58,8 @@ struct concatenate_doc {
 ///
 /// Container to concatenate an array.
 ///
-/// Use this with a document or array builder to merge an existing array's fields with that of the
-/// document or array being built.
+/// Use this with an array builder to merge an existing array's fields with that of the array being
+/// built.
 ///
 struct concatenate_array {
     array::view_or_value array;
