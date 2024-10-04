@@ -32,6 +32,10 @@
 
 @snippet api/bsoncxx/examples/bson_documents/create_doc/builder_make_document.cpp Example
 
+### With concatenate
+
+@snippet api/bsoncxx/examples/bson_documents/create_doc/builder_concatenate.cpp Example
+
 ### With Multiple Appends
 
 @snippet api/bsoncxx/examples/bson_documents/create_doc/builder_append.cpp Example
