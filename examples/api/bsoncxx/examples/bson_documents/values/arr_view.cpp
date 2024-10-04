@@ -13,7 +13,7 @@
 // limitations under the License.
 
 #include <bsoncxx/array/element.hpp>
-#include <bsoncxx/json.hpp>
+#include <bsoncxx/builder/basic/array.hpp>
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
 
@@ -48,8 +48,8 @@ void example(bsoncxx::array::element e) {
 }  // namespace
 
 RUNNER_REGISTER_COMPONENT() {
-    const auto doc = bsoncxx::from_json(R"({"v": [1, 2.0, "three"]})");
-    const auto arr = doc["v"].get_array().value;
+    const auto owner = bsoncxx::builder::basic::make_array(1, 2.0, "three");
+    const auto arr = owner.view();
 
     example(arr[0]);
     example(arr[1]);

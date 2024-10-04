@@ -12,12 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <algorithm>
+#include <iostream>
 
-#include <bsoncxx/array/element.hpp>
 #include <bsoncxx/array/view.hpp>
 #include <bsoncxx/builder/basic/array.hpp>
-#include <bsoncxx/types.hpp>
+#include <bsoncxx/builder/concatenate.hpp>
 
 #include <examples/api/runner.hh>
 #include <examples/macros.hh>
@@ -25,18 +24,20 @@
 namespace {
 
 // [Example]
-// [1, 2, 3]
-void example(bsoncxx::array::view arr) {
-    ASSERT(std::distance(arr.begin(), arr.end()) == 3);
+// a: [1]
+// b: [2]
+void example(bsoncxx::array::view a, bsoncxx::array::view b) {
+    bsoncxx::builder::basic::array builder;
 
-    bsoncxx::array::element e = arr[3];
+    builder.append(bsoncxx::builder::concatenate(a));
+    builder.append(bsoncxx::builder::concatenate(b));
 
-    ASSERT(!e);  // A missing element is represented as an invalid element.
+    ASSERT(builder.view() == bsoncxx::builder::basic::make_array(1, 2));
 }
 // [Example]
 
 }  // namespace
 
 RUNNER_REGISTER_COMPONENT() {
-    example(bsoncxx::builder::basic::make_array(1, 2, 3));
+    example(bsoncxx::builder::basic::make_array(1), bsoncxx::builder::basic::make_array(2));
 }

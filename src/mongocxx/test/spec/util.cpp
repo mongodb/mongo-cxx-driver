@@ -593,10 +593,10 @@ void run_tests_in_suite(std::string ev, test_runner cb, std::set<std::string> un
     while (std::getline(test_files, test_file)) {
         DYNAMIC_SECTION(test_file) {
             if (unsupported_tests.find(test_file) != unsupported_tests.end()) {
-                WARN("Skipping unsupported test file: " << test_file);
-            } else {
-                cb(path + "/" + test_file);
+                SKIP("Skipping unsupported test file: " << test_file);
             }
+
+            cb(path + "/" + test_file);
         }
     }
 }
