@@ -188,17 +188,3 @@ struct is_error_code_enum<bsoncxx::v_noabi::error_code> : public true_type {};
 /// @file
 /// Provides @ref bsoncxx::v_noabi::error_code.
 ///
-
-#if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-
-namespace bsoncxx {
-
-/// @ref bsoncxx::v_noabi::error_category()
-const std::error_category& error_category();
-
-/// @ref bsoncxx::v_noabi::make_error_code(v_noabi::error_code error)
-std::error_code make_error_code(v_noabi::error_code error);
-
-}  // namespace bsoncxx
-
-#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

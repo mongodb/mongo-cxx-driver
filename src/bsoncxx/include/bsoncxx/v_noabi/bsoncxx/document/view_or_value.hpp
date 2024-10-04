@@ -47,16 +47,3 @@ using ::bsoncxx::v_noabi::document::view_or_value;
 /// @file
 /// Provides @ref bsoncxx::v_noabi::document::view_or_value.
 ///
-
-#if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-
-namespace bsoncxx {
-namespace document {
-
-/// @ref bsoncxx::v_noabi::document::view_or_value
-class view_or_value {};
-
-}  // namespace document
-}  // namespace bsoncxx
-
-#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

@@ -36,14 +36,3 @@ using ::mongocxx::v_noabi::logic_error;
 /// @file
 /// Declares @ref mongocxx::v_noabi::logic_error.
 ///
-
-#if defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-
-namespace mongocxx {
-
-/// @ref mongocxx::v_noabi::logic_error
-class logic_error {};
-
-}  // namespace mongocxx
-
-#endif  // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

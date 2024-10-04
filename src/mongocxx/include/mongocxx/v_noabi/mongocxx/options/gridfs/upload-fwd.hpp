@@ -44,18 +44,3 @@ using ::mongocxx::v_noabi::options::gridfs::upload;
 /// @file
 /// Declares @ref mongocxx::v_noabi::options::gridfs::upload.
 ///
-
-#if defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-
-namespace mongocxx {
-namespace options {
-namespace gridfs {
-
-/// @ref mongocxx::v_noabi::options::gridfs::upload
-class upload {};
-
-}  // namespace gridfs
-}  // namespace options
-}  // namespace mongocxx
-
-#endif  // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

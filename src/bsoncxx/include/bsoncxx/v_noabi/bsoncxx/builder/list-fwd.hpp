@@ -40,22 +40,3 @@ using ::bsoncxx::v_noabi::builder::list;
 /// @file
 /// Provides entities for use with "list" BSON builder syntax.
 ///
-
-#if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-
-namespace bsoncxx {
-namespace builder {
-
-/// @ref bsoncxx::v_noabi::builder::array
-class array {};
-
-/// @ref bsoncxx::v_noabi::builder::document
-class document {};
-
-/// @ref bsoncxx::v_noabi::builder::list
-class list {};
-
-}  // namespace builder
-}  // namespace bsoncxx
-
-#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

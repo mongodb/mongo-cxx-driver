@@ -40,16 +40,3 @@ using ::mongocxx::v_noabi::options::index_view;
 /// @file
 /// Declares @ref mongocxx::v_noabi::options::index_view.
 ///
-
-#if defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-
-namespace mongocxx {
-namespace options {
-
-/// @ref mongocxx::v_noabi::options::index_view
-class index_view {};
-
-}  // namespace options
-}  // namespace mongocxx
-
-#endif  // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

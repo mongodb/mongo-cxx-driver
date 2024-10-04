@@ -360,39 +360,3 @@ using ::bsoncxx::v_noabi::types::bson_value::operator!=;
 /// @file
 /// Provides @ref bsoncxx::v_noabi::types::bson_value::value.
 ///
-
-#if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-
-namespace bsoncxx {
-namespace types {
-namespace bson_value {
-
-/// @ref bsoncxx::v_noabi::types::bson_value::operator==(const v_noabi::types::bson_value::value& lhs, const v_noabi::types::bson_value::value& rhs)
-inline bool operator==(const v_noabi::types::bson_value::value& lhs,
-                       const v_noabi::types::bson_value::value& rhs);
-
-/// @ref bsoncxx::v_noabi::types::bson_value::operator!=(const v_noabi::types::bson_value::value& lhs, const v_noabi::types::bson_value::value& rhs)
-inline bool operator!=(const v_noabi::types::bson_value::value& lhs,
-                       const v_noabi::types::bson_value::value& rhs);
-
-/// @ref bsoncxx::v_noabi::types::bson_value::operator==(const v_noabi::types::bson_value::value& lhs, const v_noabi::types::bson_value::view& rhs)
-inline bool operator==(const v_noabi::types::bson_value::value& lhs,
-                       const v_noabi::types::bson_value::view& rhs);
-
-/// @ref bsoncxx::v_noabi::types::bson_value::operator==(const v_noabi::types::bson_value::view& lhs, const v_noabi::types::bson_value::value& rhs)
-inline bool operator==(const v_noabi::types::bson_value::view& lhs,
-                       const v_noabi::types::bson_value::value& rhs);
-
-/// @ref bsoncxx::v_noabi::types::bson_value::operator!=(const v_noabi::types::bson_value::value& lhs, const v_noabi::types::bson_value::view& rhs)
-inline bool operator!=(const v_noabi::types::bson_value::value& lhs,
-                       const v_noabi::types::bson_value::view& rhs);
-
-/// @ref bsoncxx::v_noabi::types::bson_value::operator!=(const v_noabi::types::bson_value::view& lhs, const v_noabi::types::bson_value::value& rhs)
-inline bool operator!=(const v_noabi::types::bson_value::view& lhs,
-                       const v_noabi::types::bson_value::value& rhs);
-
-}  // namespace bson_value
-}  // namespace types
-}  // namespace bsoncxx
-
-#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

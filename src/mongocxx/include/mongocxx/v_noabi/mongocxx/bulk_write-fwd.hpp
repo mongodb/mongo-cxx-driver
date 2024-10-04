@@ -36,14 +36,3 @@ using ::mongocxx::v_noabi::bulk_write;
 /// @file
 /// Declares @ref mongocxx::v_noabi::bulk_write.
 ///
-
-#if defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-
-namespace mongocxx {
-
-/// @ref mongocxx::v_noabi::bulk_write
-class bulk_write {};
-
-}  // namespace mongocxx
-
-#endif  // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

@@ -40,16 +40,3 @@ using ::mongocxx::v_noabi::options::aggregate;
 /// @file
 /// Declares @ref mongocxx::v_noabi::options::aggregate.
 ///
-
-#if defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-
-namespace mongocxx {
-namespace options {
-
-/// @ref mongocxx::v_noabi::options::aggregate
-class aggregate {};
-
-}  // namespace options
-}  // namespace mongocxx
-
-#endif  // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

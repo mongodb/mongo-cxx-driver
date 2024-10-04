@@ -40,16 +40,3 @@ using ::mongocxx::v_noabi::options::transaction;
 /// @file
 /// Declares @ref mongocxx::v_noabi::options::transaction.
 ///
-
-#if defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-
-namespace mongocxx {
-namespace options {
-
-/// @ref mongocxx::v_noabi::options::transaction
-class transaction {};
-
-}  // namespace options
-}  // namespace mongocxx
-
-#endif  // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

@@ -40,16 +40,3 @@ using ::bsoncxx::v_noabi::builder::core;
 /// @file
 /// Declares @ref bsoncxx::v_noabi::builder::core.
 ///
-
-#if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-
-namespace bsoncxx {
-namespace builder {
-
-/// @ref bsoncxx::v_noabi::builder::core
-class core {};
-
-}  // namespace builder
-}  // namespace bsoncxx
-
-#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
