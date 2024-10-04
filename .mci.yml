@@ -685,12 +685,12 @@ functions:
             AWS_SECRET_ACCESS_KEY: ${aws_secret}
           args:
             - -c
-            - aws s3 cp scan s3://mciuploads/${project}/${build_variant}/${revision}/${version_id}/${build_id}/scan/ --recursive --acl public-read --region us-east-1
+            - aws s3 cp scan s3://mciuploads/mongo-cxx-driver/${build_variant}/${revision}/${version_id}/${build_id}/scan/ --recursive --acl public-read --region us-east-1
       - command: s3.put
         params:
           aws_key: ${aws_key}
           aws_secret: ${aws_secret}
-          remote_file: ${project}/${build_variant}/${revision}/${version_id}/${build_id}/scan/index.html
+          remote_file: mongo-cxx-driver/${build_variant}/${revision}/${version_id}/${build_id}/scan/index.html
           bucket: mciuploads
           permissions: public-read
           local_file: mongo-cxx-driver/scan.html
@@ -715,7 +715,7 @@ functions:
         params:
           aws_key: ${aws_key}
           aws_secret: ${aws_secret}
-          remote_file: ${project}/${build_variant}/${revision}/${version_id}/${build_id}/silk/augmented.sbom.json
+          remote_file: mongo-cxx-driver/${build_variant}/${revision}/${version_id}/${build_id}/silk/augmented.sbom.json
           bucket: mciuploads
           permissions: public-read
           local_file: mongo-cxx-driver/etc/augmented.sbom.json.new
@@ -725,7 +725,7 @@ functions:
         params:
           aws_key: ${aws_key}
           aws_secret: ${aws_secret}
-          remote_file: ${project}/${build_variant}/${revision}/${version_id}/${build_id}/silk/augmented.sbom.json.diff
+          remote_file: mongo-cxx-driver/${build_variant}/${revision}/${version_id}/${build_id}/silk/augmented.sbom.json.diff
           bucket: mciuploads
           permissions: public-read
           local_file: mongo-cxx-driver/diff.txt
