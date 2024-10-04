@@ -51,5 +51,5 @@ void example(bsoncxx::array::element e) {
 }  // namespace
 
 RUNNER_REGISTER_COMPONENT() {
-    example(bsoncxx::builder::basic::make_array(1));
+    example(bsoncxx::builder::basic::make_array(1).view()[0]);
 }
