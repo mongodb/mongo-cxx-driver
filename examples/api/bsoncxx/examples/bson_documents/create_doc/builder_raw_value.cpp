@@ -38,7 +38,7 @@ void example(const std::uint8_t* data, std::size_t length) {
     bsoncxx::document::value owner{raw, length, deleter};
     bsoncxx::document::view doc = owner.view();
 
-    ASSERT(doc["key"].get_string().value.compare("value") == 0);
+    EXPECT(doc["key"].get_string().value.compare("value") == 0);
 }
 // [Example]
 

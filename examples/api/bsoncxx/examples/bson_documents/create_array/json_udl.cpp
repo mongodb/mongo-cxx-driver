@@ -27,7 +27,7 @@ void example() {
     bsoncxx::document::value a = R"([1, 2])"_bson;
     bsoncxx::document::value b = bsoncxx::from_json(R"([1, 2])");
 
-    ASSERT(a == b);
+    EXPECT(a == b);
 }
 // [Example]
 

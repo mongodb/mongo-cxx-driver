@@ -27,9 +27,9 @@ void example() {
     try {
         bsoncxx::types::bson_value::value value{bsoncxx::type::k_null};  // Throws.
 
-        ASSERT(false && "should not reach this point");
+        EXPECT(false && "should not reach this point");
     } catch (const bsoncxx::exception& ex) {
-        ASSERT(ex.code() == bsoncxx::error_code::k_invalid_bson_type_id);
+        EXPECT(ex.code() == bsoncxx::error_code::k_invalid_bson_type_id);
     }
 }
 // [Example]

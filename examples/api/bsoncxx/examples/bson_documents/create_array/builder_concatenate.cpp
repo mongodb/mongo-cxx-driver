@@ -32,7 +32,7 @@ void example(bsoncxx::array::view a, bsoncxx::array::view b) {
     builder.append(bsoncxx::builder::concatenate(a));
     builder.append(bsoncxx::builder::concatenate(b));
 
-    ASSERT(builder.view() == bsoncxx::builder::basic::make_array(1, 2));
+    EXPECT(builder.view() == bsoncxx::builder::basic::make_array(1, 2));
 }
 // [Example]
 

@@ -43,12 +43,12 @@ void example(bsoncxx::stdx::string_view big_string) {
     try {
         builder.append(kvp("too big", big_string));  // Throws.
 
-        ASSERT(false && "should not reach this point");
+        EXPECT(false && "should not reach this point");
     } catch (const bsoncxx::exception& ex) {
-        ASSERT(ex.code() == bsoncxx::error_code::k_cannot_append_string);
+        EXPECT(ex.code() == bsoncxx::error_code::k_cannot_append_string);
     }
 
-    ASSERT(builder.view() == original.view());
+    EXPECT(builder.view() == original.view());
 }
 // [Example]
 

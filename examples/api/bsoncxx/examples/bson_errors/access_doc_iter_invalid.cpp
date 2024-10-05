@@ -35,11 +35,11 @@ void example() {
 
     auto iter = doc.begin();
 
-    ASSERT(iter == doc.end());  // An invalid BSON document returns an end iterator.
+    EXPECT(iter == doc.end());  // An invalid BSON document returns an end iterator.
 
     bsoncxx::document::element e = *iter;  // DO NOT DO THIS
 
-    ASSERT(!e);  // An end iterator returns an invalid element.
+    EXPECT(!e);  // An end iterator returns an invalid element.
 }
 // [Example]
 

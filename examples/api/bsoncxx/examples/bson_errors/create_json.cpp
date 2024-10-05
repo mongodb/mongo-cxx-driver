@@ -26,9 +26,9 @@ void example() {
     try {
         const auto doc = bsoncxx::from_json(R"(invalid json)");
 
-        ASSERT(false && "should not reach this point");
+        EXPECT(false && "should not reach this point");
     } catch (const bsoncxx::exception& ex) {
-        ASSERT(ex.code() == bsoncxx::error_code::k_json_parse_failure);
+        EXPECT(ex.code() == bsoncxx::error_code::k_json_parse_failure);
     }
 }
 // [Example]

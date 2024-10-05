@@ -24,17 +24,17 @@ namespace {
 // [Example]
 // [1, 2]
 void example(bsoncxx::array::view arr) {
-    ASSERT(arr.find(0) == arr.begin());
+    EXPECT(arr.find(0) == arr.begin());
 
     {
         auto iter = arr.find(1);
 
-        ASSERT(iter != arr.end());
-        ASSERT(iter->key().compare("1") == 0);
-        ASSERT(iter->get_int32().value == 2);
+        EXPECT(iter != arr.end());
+        EXPECT(iter->key().compare("1") == 0);
+        EXPECT(iter->get_int32().value == 2);
     }
 
-    ASSERT(arr.find(2) == arr.end());
+    EXPECT(arr.find(2) == arr.end());
 }
 // [Example]
 

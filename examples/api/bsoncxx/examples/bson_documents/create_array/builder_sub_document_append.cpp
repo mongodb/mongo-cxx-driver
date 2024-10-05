@@ -40,9 +40,9 @@ void example() {
         });
     bsoncxx::document::view v = owner.view()[0].get_document().value;
 
-    ASSERT(v["a"].get_int32().value == 1);
-    ASSERT(v["b"].get_int32().value == 2);
-    ASSERT(v["c"].get_int32().value == 3);
+    EXPECT(v["a"].get_int32().value == 1);
+    EXPECT(v["b"].get_int32().value == 2);
+    EXPECT(v["c"].get_int32().value == 3);
 }
 // [Example]
 

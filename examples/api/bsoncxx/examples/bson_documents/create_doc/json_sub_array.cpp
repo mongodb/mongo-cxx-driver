@@ -31,8 +31,8 @@ void example() {
     )");
     bsoncxx::array::view sub = owner.view()["v"].get_array().value;
 
-    ASSERT(sub[0].get_int32().value == 1);
-    ASSERT(sub[1].get_int32().value == 2);
+    EXPECT(sub[0].get_int32().value == 1);
+    EXPECT(sub[1].get_int32().value == 2);
 }
 // [Example]
 

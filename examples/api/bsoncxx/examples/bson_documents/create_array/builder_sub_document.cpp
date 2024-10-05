@@ -31,7 +31,7 @@ void example() {
     bsoncxx::array::value owner = make_array(make_document(kvp("key", "value")));
     bsoncxx::document::view v = owner.view()[0].get_document().value;
 
-    ASSERT(v["key"].get_string().value.compare("value") == 0);
+    EXPECT(v["key"].get_string().value.compare("value") == 0);
 }
 // [Example]
 

@@ -31,7 +31,7 @@ void example() {
     )");
     bsoncxx::document::view v = doc["v"].get_document().value;
 
-    ASSERT(v["key"].get_string().value.compare("value") == 0);
+    EXPECT(v["key"].get_string().value.compare("value") == 0);
 }
 // [Example]
 

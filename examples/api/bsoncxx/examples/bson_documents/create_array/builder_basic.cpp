@@ -31,9 +31,9 @@ void example() {
     bsoncxx::array::value owner = builder.extract();
     bsoncxx::array::view arr = owner.view();
 
-    ASSERT(arr[0].get_int32().value == 1);
-    ASSERT(arr[1].get_double().value == 2.0);
-    ASSERT(arr[2].get_string().value.compare("three") == 0);
+    EXPECT(arr[0].get_int32().value == 1);
+    EXPECT(arr[1].get_double().value == 2.0);
+    EXPECT(arr[2].get_string().value.compare("three") == 0);
 }
 // [Example]
 

@@ -62,7 +62,7 @@ class runner_type {
     }
 
     int run() {
-        ASSERT(jobs > 0u);
+        EXPECT(jobs > 0u);
 
         std::cout << "seed: " << seed << std::endl;
 
