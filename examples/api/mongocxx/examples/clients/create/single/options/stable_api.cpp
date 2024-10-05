@@ -39,8 +39,8 @@ mongocxx::client example() {
     mongocxx::uri uri;
     mongocxx::client client{uri, client_opts};
 
-    ASSERT(client);
-    ASSERT(client.uri().to_string() == mongocxx::uri::k_default_uri);
+    EXPECT(client);
+    EXPECT(client.uri().to_string() == mongocxx::uri::k_default_uri);
 
     return client;
 }
@@ -53,5 +53,5 @@ RUNNER_REGISTER_COMPONENT_FOR_SINGLE() {
 
     auto reply = client["admin"].run_command(bsoncxx::from_json(R"({"ping": 1})"));
 
-    ASSERT(reply["ok"] && reply["ok"].get_double().value == 1.0);
+    EXPECT(reply["ok"] && reply["ok"].get_double().value == 1.0);
 }

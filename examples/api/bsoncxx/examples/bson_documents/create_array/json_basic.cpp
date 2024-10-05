@@ -29,9 +29,9 @@ void example() {
     )");
     bsoncxx::document::view doc = owner.view();
 
-    ASSERT(doc["0"].get_int32().value == 1);
-    ASSERT(doc["1"].get_double().value == 2.0);
-    ASSERT(doc["2"].get_string().value.compare("three") == 0);
+    EXPECT(doc["0"].get_int32().value == 1);
+    EXPECT(doc["1"].get_double().value == 2.0);
+    EXPECT(doc["2"].get_string().value.compare("three") == 0);
 }
 // [Example]
 

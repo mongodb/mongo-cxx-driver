@@ -25,32 +25,32 @@ namespace {
 // [Example]
 // [1, 2]
 void example(bsoncxx::array::view arr) {
-    ASSERT(arr.begin() != arr.end());
+    EXPECT(arr.begin() != arr.end());
 
     auto iter = arr.begin();
-    ASSERT(iter == arr.begin());
+    EXPECT(iter == arr.begin());
 
     {
         bsoncxx::array::element e = *iter;
 
-        ASSERT(e.key().compare("0") == 0);
-        ASSERT(e.get_int32().value == 1);
+        EXPECT(e.key().compare("0") == 0);
+        EXPECT(e.get_int32().value == 1);
     }
 
     ++iter;
 
-    ASSERT(iter->key().compare("1") == 0);
-    ASSERT(iter->get_int32().value == 2);
+    EXPECT(iter->key().compare("1") == 0);
+    EXPECT(iter->get_int32().value == 2);
 
     {
         auto iter_copy = iter++;
 
-        ASSERT(iter_copy != iter);
-        ASSERT(iter_copy->key().compare("1") == 0);
-        ASSERT(iter_copy->get_int32() == 2);
+        EXPECT(iter_copy != iter);
+        EXPECT(iter_copy->key().compare("1") == 0);
+        EXPECT(iter_copy->get_int32() == 2);
     }
 
-    ASSERT(iter == arr.end());
+    EXPECT(iter == arr.end());
 }
 // [Example]
 

@@ -26,19 +26,19 @@ void example() {
     {
         mongocxx::uri uri{"mongodb://localhost:27017/"};
 
-        ASSERT(uri.username().empty());
-        ASSERT(uri.password().empty());
+        EXPECT(uri.username().empty());
+        EXPECT(uri.password().empty());
 
-        ASSERT(uri.tls() == false);
+        EXPECT(uri.tls() == false);
     }
 
     {
         mongocxx::uri uri{"mongodb://bob:pwd123@localhost:27017/?tls=true"};
 
-        ASSERT(uri.username().compare("bob") == 0);
-        ASSERT(uri.password() == "pwd123");
+        EXPECT(uri.username().compare("bob") == 0);
+        EXPECT(uri.password() == "pwd123");
 
-        ASSERT(uri.tls() == true);
+        EXPECT(uri.tls() == true);
     }
 }
 // [Example]

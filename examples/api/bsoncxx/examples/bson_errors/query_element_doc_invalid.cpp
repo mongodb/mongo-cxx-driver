@@ -38,22 +38,22 @@ void example() {
 
     bsoncxx::document::element e = doc["x"];
 
-    ASSERT(!e);  // An invalid BSON document returns an invalid element.
+    EXPECT(!e);  // An invalid BSON document returns an invalid element.
 
     try {
         bsoncxx::stdx::string_view key = e.key();  // Throws.
 
-        ASSERT(false && "should not reach this point");
+        EXPECT(false && "should not reach this point");
     } catch (const bsoncxx::exception& ex) {
-        ASSERT(ex.code() == bsoncxx::error_code::k_unset_element);
+        EXPECT(ex.code() == bsoncxx::error_code::k_unset_element);
     }
 
     try {
         bsoncxx::type type = e.type();  // Throws.
 
-        ASSERT(false && "should not reach this point");
+        EXPECT(false && "should not reach this point");
     } catch (const bsoncxx::exception& ex) {
-        ASSERT(ex.code() == bsoncxx::error_code::k_unset_element);
+        EXPECT(ex.code() == bsoncxx::error_code::k_unset_element);
     }
 }
 // [Example]

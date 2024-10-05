@@ -33,7 +33,7 @@ void example(mongocxx::client& client) {
     {
         std::vector<std::string> names = client.list_database_names();
 
-        ASSERT(std::count(names.begin(), names.end(), "db") == 1);
+        EXPECT(std::count(names.begin(), names.end(), "db") == 1);
     }
 
     db.drop();
@@ -41,7 +41,7 @@ void example(mongocxx::client& client) {
     {
         std::vector<std::string> names = client.list_database_names();
 
-        ASSERT(std::count(names.begin(), names.end(), "db") == 0);
+        EXPECT(std::count(names.begin(), names.end(), "db") == 0);
     }
 }
 // [Example]

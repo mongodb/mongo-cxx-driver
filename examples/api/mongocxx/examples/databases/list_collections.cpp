@@ -40,7 +40,7 @@ void example(mongocxx::database db) {
         c = 0;
 
         for (bsoncxx::document::view doc : cursor) {
-            ASSERT(doc["name"]);
+            EXPECT(doc["name"]);
 
             auto name = bsoncxx::string::to_string(doc["name"].get_string().value);
 
@@ -58,9 +58,9 @@ void example(mongocxx::database db) {
     {
         count_fields(db.list_collections());
 
-        ASSERT(a == 1);  // Present.
-        ASSERT(b == 1);  // Present.
-        ASSERT(c == 0);  // Missing.
+        EXPECT(a == 1);  // Present.
+        EXPECT(b == 1);  // Present.
+        EXPECT(c == 0);  // Missing.
     }
 
     // With a filter.
@@ -69,9 +69,9 @@ void example(mongocxx::database db) {
 
         count_fields(db.list_collections(filter.view()));
 
-        ASSERT(a == 1);  // Present.
-        ASSERT(b == 0);  // Filtered.
-        ASSERT(c == 0);  // Missing.
+        EXPECT(a == 1);  // Present.
+        EXPECT(b == 0);  // Filtered.
+        EXPECT(c == 0);  // Missing.
     }
 }
 // [Example]

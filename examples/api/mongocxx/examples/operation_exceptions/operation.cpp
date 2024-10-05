@@ -31,7 +31,7 @@ namespace {
 
 // [Example]
 void example(mongocxx::database db) {
-    ASSERT(db.name().compare("db") == 0);
+    EXPECT(db.name().compare("db") == 0);
 
     // The `getParameter` command can only be run in the `admin` database.
     auto cmd = bsoncxx::from_json(R"({"getParameter": "*"})");
@@ -41,23 +41,23 @@ void example(mongocxx::database db) {
     try {
         auto reply = db.run_command(cmd.view());
 
-        ASSERT(false && "should not reach this point");
+        EXPECT(false && "should not reach this point");
     } catch (const mongocxx::operation_exception& ex) {
-        ASSERT(ex.code().category() == mongocxx::server_error_category());
-        ASSERT(ex.code().value() == 13);  // Unauthorized
-        ASSERT(std::strstr(ex.what(), "admin") != nullptr);
+        EXPECT(ex.code().category() == mongocxx::server_error_category());
+        EXPECT(ex.code().value() == 13);  // Unauthorized
+        EXPECT(std::strstr(ex.what(), "admin") != nullptr);
 
         if (auto server_error_opt = ex.raw_server_error()) {
             bsoncxx::document::view server_error = server_error_opt->view();
 
-            ASSERT(server_error["ok"]);
-            ASSERT(server_error["ok"].get_double().value == 0.0);
+            EXPECT(server_error["ok"]);
+            EXPECT(server_error["ok"].get_double().value == 0.0);
 
-            ASSERT(server_error["code"]);
-            ASSERT(server_error["code"].get_int32().value == ex.code().value());
+            EXPECT(server_error["code"]);
+            EXPECT(server_error["code"].get_int32().value == ex.code().value());
 
-            ASSERT(server_error["codeName"]);
-            ASSERT(server_error["errmsg"]);
+            EXPECT(server_error["codeName"]);
+            EXPECT(server_error["errmsg"]);
             // ... other error fields.
         }
     }

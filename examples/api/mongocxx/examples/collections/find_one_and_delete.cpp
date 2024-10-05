@@ -42,25 +42,25 @@ void example(mongocxx::collection coll) {
 
     // Basic usage.
     {
-        ASSERT(coll.count_documents(has_field_x.view()) == 3);
+        EXPECT(coll.count_documents(has_field_x.view()) == 3);
 
         auto result_opt = coll.find_one_and_delete(x2.view());
 
-        ASSERT(result_opt);
+        EXPECT(result_opt);
 
         bsoncxx::document::view doc = result_opt->view();
 
-        ASSERT(doc["_id"]);
+        EXPECT(doc["_id"]);
 
-        ASSERT(doc["x"]);
-        ASSERT(doc["x"].get_int32().value == 2);
+        EXPECT(doc["x"]);
+        EXPECT(doc["x"].get_int32().value == 2);
 
-        ASSERT(coll.count_documents(has_field_x.view()) == 2);
+        EXPECT(coll.count_documents(has_field_x.view()) == 2);
     }
 
     // With options.
     {
-        ASSERT(coll.count_documents(has_field_x.view()) == 2);
+        EXPECT(coll.count_documents(has_field_x.view()) == 2);
 
         mongocxx::options::find_one_and_delete opts;
 
@@ -69,13 +69,13 @@ void example(mongocxx::collection coll) {
 
         auto result_opt = coll.find_one_and_delete(x3.view(), opts);
 
-        ASSERT(result_opt);
-        ASSERT(*result_opt == x3);
+        EXPECT(result_opt);
+        EXPECT(*result_opt == x3);
 
-        ASSERT(coll.count_documents(has_field_x.view()) == 1);
+        EXPECT(coll.count_documents(has_field_x.view()) == 1);
     }
 
-    ASSERT(coll.count_documents(x1.view()) == 1);
+    EXPECT(coll.count_documents(x1.view()) == 1);
 }
 // [Example]
 
@@ -93,7 +93,7 @@ RUNNER_REGISTER_COMPONENT_FOR_SINGLE() {
 
         using insert = mongocxx::model::insert_one;
 
-        ASSERT(coll.create_bulk_write()
+        EXPECT(coll.create_bulk_write()
                    .append(insert{bsoncxx::from_json(R"({"x": 1})")})
                    .append(insert{bsoncxx::from_json(R"({"x": 2})")})
                    .append(insert{bsoncxx::from_json(R"({"x": 3})")})

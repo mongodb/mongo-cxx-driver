@@ -156,7 +156,7 @@ class runner_type {
 
                 // We don't expect any other failure condition.
                 else {
-                    ASSERT(ret != -1);
+                    EXPECT(ret != -1);
                 }
             }
         }
@@ -238,7 +238,7 @@ class runner_type {
     }
 
     int run() {
-        ASSERT(jobs > 0u);
+        EXPECT(jobs > 0u);
 
         std::cout << "seed: " << seed << std::endl;
 

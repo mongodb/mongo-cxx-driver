@@ -40,8 +40,8 @@ mongocxx::client example() {
     mongocxx::uri uri{"mongodb://bob:pwd123@localhost:27017/?tls=true"};
     mongocxx::client client{uri, client_opts};
 
-    ASSERT(client);
-    ASSERT(client.uri().to_string() == uri.to_string());
+    EXPECT(client);
+    EXPECT(client.uri().to_string() == uri.to_string());
 
     return client;
 }
@@ -55,7 +55,7 @@ RUNNER_REGISTER_COMPONENT_FOR_SINGLE() {
 
         auto reply = client["admin"].run_command(bsoncxx::from_json(R"({"ping": 1})"));
 
-        ASSERT(reply["ok"] && reply["ok"].get_double().value == 1.0);
+        EXPECT(reply["ok"] && reply["ok"].get_double().value == 1.0);
     } catch (const mongocxx::exception& ex) {
         if (ex.code() == mongocxx::error_code::k_ssl_not_supported) {
             // Library may not be configured with TLS/SSL support enabled.

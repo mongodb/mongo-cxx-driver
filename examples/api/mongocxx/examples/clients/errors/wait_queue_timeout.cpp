@@ -32,13 +32,13 @@ void example() {
 
         mongocxx::pool::entry hold = pool.acquire();
 
-        ASSERT(hold);
+        EXPECT(hold);
 
         mongocxx::pool::entry entry = pool.acquire();  // Throws.
 
-        ASSERT(false && "should not reach this point");
+        EXPECT(false && "should not reach this point");
     } catch (const mongocxx::exception& ex) {
-        ASSERT(ex.code() == mongocxx::error_code::k_pool_wait_queue_timeout);
+        EXPECT(ex.code() == mongocxx::error_code::k_pool_wait_queue_timeout);
     }
 }
 // [Example]

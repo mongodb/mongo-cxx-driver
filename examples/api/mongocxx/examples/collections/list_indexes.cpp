@@ -32,11 +32,11 @@ namespace {
 // [Example]
 void example(mongocxx::collection coll) {
     for (bsoncxx::document::view doc : coll.list_indexes()) {
-        ASSERT(doc["name"]);
-        ASSERT(doc["name"].type() == bsoncxx::type::k_string);
+        EXPECT(doc["name"]);
+        EXPECT(doc["name"].type() == bsoncxx::type::k_string);
 
-        ASSERT(doc["key"]);
-        ASSERT(doc["key"].type() == bsoncxx::type::k_document);
+        EXPECT(doc["key"]);
+        EXPECT(doc["key"].type() == bsoncxx::type::k_document);
     }
 }
 // [Example]

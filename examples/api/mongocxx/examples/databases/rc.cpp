@@ -31,7 +31,7 @@ void example(mongocxx::database db) {
     {
         mongocxx::read_concern rc = db.read_concern();
 
-        ASSERT(rc.acknowledge_level() == rc_level::k_server_default);
+        EXPECT(rc.acknowledge_level() == rc_level::k_server_default);
     }
 
     // Explicit.
@@ -43,8 +43,8 @@ void example(mongocxx::database db) {
 
         db.read_concern(rc);
 
-        ASSERT(db.read_concern() == rc);
-        ASSERT(db.read_concern().acknowledge_level() == rc_level::k_majority);
+        EXPECT(db.read_concern() == rc);
+        EXPECT(db.read_concern().acknowledge_level() == rc_level::k_majority);
     }
 }
 // [Example]
@@ -54,7 +54,7 @@ void example(mongocxx::database db) {
 RUNNER_REGISTER_COMPONENT_WITH_INSTANCE() {
     mongocxx::client client{mongocxx::uri{}};
 
-    ASSERT(client.read_concern() == mongocxx::read_concern{});
+    EXPECT(client.read_concern() == mongocxx::read_concern{});
 
     example(client["db"]);
 }

@@ -27,27 +27,27 @@ void example() {
         // Missing `mongodb://`.
         mongocxx::uri invalid_uri{"invalid"};
 
-        ASSERT(false && "should not reach this point");
+        EXPECT(false && "should not reach this point");
     } catch (const mongocxx::exception& ex) {
-        ASSERT(ex.code() == mongocxx::error_code::k_invalid_uri);
+        EXPECT(ex.code() == mongocxx::error_code::k_invalid_uri);
     }
 
     try {
         // Missing `=`.
         mongocxx::uri invalid_uri{"mongodb://localhost:27017/?tls"};
 
-        ASSERT(false && "should not reach this point");
+        EXPECT(false && "should not reach this point");
     } catch (const mongocxx::exception& ex) {
-        ASSERT(ex.code() == mongocxx::error_code::k_invalid_uri);
+        EXPECT(ex.code() == mongocxx::error_code::k_invalid_uri);
     }
 
     try {
         // Missing user credentials when authMechanism is provided.
         mongocxx::uri invalid_uri{"mongodb://localhost:27017/?authMechanism=SCRAM-SHA-256"};
 
-        ASSERT(false && "should not reach this point");
+        EXPECT(false && "should not reach this point");
     } catch (const mongocxx::exception& ex) {
-        ASSERT(ex.code() == mongocxx::error_code::k_invalid_uri);
+        EXPECT(ex.code() == mongocxx::error_code::k_invalid_uri);
     }
 }
 // [Example]

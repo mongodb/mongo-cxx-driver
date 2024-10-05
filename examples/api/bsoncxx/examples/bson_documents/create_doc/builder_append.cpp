@@ -36,9 +36,9 @@ void example() {
     bsoncxx::document::value owner = builder.extract();
     bsoncxx::document::view doc = owner.view();
 
-    ASSERT(doc["a"].get_int32().value == 1);
-    ASSERT(doc["b"].get_double().value == 2.0);
-    ASSERT(doc["c"].get_string().value.compare("three") == 0);
+    EXPECT(doc["a"].get_int32().value == 1);
+    EXPECT(doc["b"].get_double().value == 2.0);
+    EXPECT(doc["c"].get_string().value.compare("three") == 0);
 }
 // [Example]
 

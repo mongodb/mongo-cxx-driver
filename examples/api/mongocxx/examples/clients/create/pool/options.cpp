@@ -34,12 +34,12 @@ void example() {
 
     mongocxx::pool::entry entry = pool.acquire();
 
-    ASSERT(entry);
+    EXPECT(entry);
 
     mongocxx::client& client = *entry;
 
-    ASSERT(client);
-    ASSERT(client.uri().to_string() == mongocxx::uri::k_default_uri);
+    EXPECT(client);
+    EXPECT(client.uri().to_string() == mongocxx::uri::k_default_uri);
 }
 // [Example]
 

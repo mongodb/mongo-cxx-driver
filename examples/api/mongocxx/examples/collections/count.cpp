@@ -36,9 +36,9 @@ namespace {
 void example(mongocxx::collection coll) {
     // Basic usage.
     {
-        ASSERT(coll.count_documents(bsoncxx::from_json(R"({"x": {"$exists": 1}})")) == 3);
-        ASSERT(coll.count_documents(bsoncxx::from_json(R"({"x": {"$gt": 1}})")) == 2);
-        ASSERT(coll.count_documents(bsoncxx::from_json(R"({"x": {"$gt": 2}})")) == 1);
+        EXPECT(coll.count_documents(bsoncxx::from_json(R"({"x": {"$exists": 1}})")) == 3);
+        EXPECT(coll.count_documents(bsoncxx::from_json(R"({"x": {"$gt": 1}})")) == 2);
+        EXPECT(coll.count_documents(bsoncxx::from_json(R"({"x": {"$gt": 2}})")) == 1);
     }
 
     // With options.
@@ -48,7 +48,7 @@ void example(mongocxx::collection coll) {
         opts.limit(1);
         // ... other count options.
 
-        ASSERT(coll.count_documents(bsoncxx::from_json(R"({"x": {"$exists": 1}})"), opts) == 1);
+        EXPECT(coll.count_documents(bsoncxx::from_json(R"({"x": {"$exists": 1}})"), opts) == 1);
     }
 }
 // [Example]
@@ -67,7 +67,7 @@ RUNNER_REGISTER_COMPONENT_FOR_SINGLE() {
 
         using insert = mongocxx::model::insert_one;
 
-        ASSERT(coll.create_bulk_write()
+        EXPECT(coll.create_bulk_write()
                    .append(insert{bsoncxx::from_json(R"({"x": 1})")})
                    .append(insert{bsoncxx::from_json(R"({"x": 2})")})
                    .append(insert{bsoncxx::from_json(R"({"x": 3})")})

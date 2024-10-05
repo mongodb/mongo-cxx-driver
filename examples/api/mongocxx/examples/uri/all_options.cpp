@@ -31,14 +31,14 @@ void example() {
 
     bsoncxx::document::view options = uri.options();
 
-    ASSERT(options["appname"]);
-    ASSERT(options["appname"].get_string().value.compare("example") == 0);
+    EXPECT(options["appname"]);
+    EXPECT(options["appname"].get_string().value.compare("example") == 0);
 
-    ASSERT(options["tls"]);
-    ASSERT(options["tls"].get_bool().value == true);
+    EXPECT(options["tls"]);
+    EXPECT(options["tls"].get_bool().value == true);
 
-    ASSERT(options["maxpoolsize"]);
-    ASSERT(options["maxpoolsize"].get_int32().value == 10);
+    EXPECT(options["maxpoolsize"]);
+    EXPECT(options["maxpoolsize"].get_int32().value == 10);
 }
 // [Example]
 

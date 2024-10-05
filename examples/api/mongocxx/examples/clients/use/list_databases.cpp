@@ -30,16 +30,16 @@ void example(mongocxx::client client) {
     int count = 0;
 
     for (bsoncxx::document::view doc : databases) {
-        ASSERT(doc["name"]);
-        ASSERT(doc["sizeOnDisk"]);
-        ASSERT(doc["empty"]);
+        EXPECT(doc["name"]);
+        EXPECT(doc["sizeOnDisk"]);
+        EXPECT(doc["empty"]);
 
         if (doc["name"].get_string().value.compare("admin") == 0) {
             ++count;
         }
     }
 
-    ASSERT(count == 1);
+    EXPECT(count == 1);
 }
 // [Example]
 

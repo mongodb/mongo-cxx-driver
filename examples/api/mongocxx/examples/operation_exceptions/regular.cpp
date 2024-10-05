@@ -29,7 +29,7 @@ namespace {
 
 // [Example]
 void example(mongocxx::database db) {
-    ASSERT(db.name().compare("db") == 0);
+    EXPECT(db.name().compare("db") == 0);
 
     // The `getParameter` command can only be run in the `admin` database.
     auto cmd = bsoncxx::from_json(R"({"getParameter": "*"})");
@@ -39,11 +39,11 @@ void example(mongocxx::database db) {
     try {
         auto reply = db.run_command(cmd.view());
 
-        ASSERT(false && "should not reach this point");
+        EXPECT(false && "should not reach this point");
     } catch (const mongocxx::exception& ex) {
-        ASSERT(ex.code().category() == mongocxx::server_error_category());
-        ASSERT(ex.code().value() == 13);  // Unauthorized
-        ASSERT(std::strstr(ex.what(), "admin") != nullptr);
+        EXPECT(ex.code().category() == mongocxx::server_error_category());
+        EXPECT(ex.code().value() == 13);  // Unauthorized
+        EXPECT(std::strstr(ex.what(), "admin") != nullptr);
     }
 }
 // [Example]

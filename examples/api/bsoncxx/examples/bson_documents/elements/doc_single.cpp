@@ -25,14 +25,14 @@ namespace {
 // {"a": 1, "b": 2.0, "c": "three"}
 void example(bsoncxx::document::element e) {
     if (e.type() == bsoncxx::type::k_int32) {
-        ASSERT(e.key().compare("a") == 0);
+        EXPECT(e.key().compare("a") == 0);
 
         bsoncxx::types::b_int32 v = e.get_int32();
 
-        ASSERT(v.type_id == bsoncxx::type::k_int32);
-        ASSERT(v.value == 1);
+        EXPECT(v.type_id == bsoncxx::type::k_int32);
+        EXPECT(v.value == 1);
     } else {
-        ASSERT(e.key().compare("a") != 0);
+        EXPECT(e.key().compare("a") != 0);
     }
 }
 // [Example]

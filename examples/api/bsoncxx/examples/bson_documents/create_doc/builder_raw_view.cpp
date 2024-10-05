@@ -30,7 +30,7 @@ namespace {
 void example(const std::uint8_t* data, std::size_t length) {
     bsoncxx::document::view doc{data, length};
 
-    ASSERT(doc["key"].get_string().value.compare("value") == 0);
+    EXPECT(doc["key"].get_string().value.compare("value") == 0);
 }
 // [Example]
 

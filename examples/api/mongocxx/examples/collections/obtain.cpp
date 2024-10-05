@@ -26,10 +26,10 @@ namespace {
 void example(mongocxx::database db) {
     mongocxx::collection coll = db["coll"];
 
-    ASSERT(coll);
-    ASSERT(coll.name().compare("coll") == 0);
+    EXPECT(coll);
+    EXPECT(coll.name().compare("coll") == 0);
 
-    ASSERT(db.collection("coll").name().compare("coll") == 0);
+    EXPECT(db.collection("coll").name().compare("coll") == 0);
 }
 // [Example]
 

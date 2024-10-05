@@ -45,12 +45,12 @@ void example(mongocxx::collection coll) {
 
         auto result_opt = coll.insert_many(docs);
 
-        ASSERT(result_opt);
+        EXPECT(result_opt);
 
         mongocxx::result::insert_many& result = *result_opt;
 
-        ASSERT(result.inserted_count() == 2);
-        ASSERT(result.result().inserted_count() == 2);
+        EXPECT(result.inserted_count() == 2);
+        EXPECT(result.result().inserted_count() == 2);
     }
 
     // Iterators.
@@ -59,12 +59,12 @@ void example(mongocxx::collection coll) {
 
         auto result_opt = coll.insert_many(std::begin(docs), std::end(docs));
 
-        ASSERT(result_opt);
+        EXPECT(result_opt);
 
         mongocxx::result::insert_many& result = *result_opt;
 
-        ASSERT(result.inserted_count() == 2);
-        ASSERT(result.result().inserted_count() == 2);
+        EXPECT(result.inserted_count() == 2);
+        EXPECT(result.result().inserted_count() == 2);
     }
 
     // With options.
@@ -75,7 +75,7 @@ void example(mongocxx::collection coll) {
 
         // ... set insert options.
 
-        ASSERT(coll.insert_many(docs, opts));
+        EXPECT(coll.insert_many(docs, opts));
     }
 }
 // [Example]

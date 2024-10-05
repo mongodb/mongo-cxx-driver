@@ -30,13 +30,13 @@ void example() {
         mongocxx::uri uri{"mongodb://localhost:27017/"};
 
         std::string database = uri.database();
-        ASSERT(database.empty());
+        EXPECT(database.empty());
 
         auto try_once_opt = uri.server_selection_try_once();
-        ASSERT(!try_once_opt);
+        EXPECT(!try_once_opt);
 
         auto appname_opt = uri.appname();
-        ASSERT(!appname_opt);
+        EXPECT(!appname_opt);
     }
 
     {
@@ -44,15 +44,15 @@ void example() {
             "mongodb://localhost:27017/dbName?appName=example&serverSelectionTryOnce=false"};
 
         auto database = uri.database();
-        ASSERT(database.compare("dbName") == 0);
+        EXPECT(database.compare("dbName") == 0);
 
         auto try_once_opt = uri.server_selection_try_once();
-        ASSERT(try_once_opt);
-        ASSERT(*try_once_opt == false);
+        EXPECT(try_once_opt);
+        EXPECT(*try_once_opt == false);
 
         auto appname_opt = uri.appname();
-        ASSERT(appname_opt);
-        ASSERT(appname_opt->compare("example") == 0);
+        EXPECT(appname_opt);
+        EXPECT(appname_opt->compare("example") == 0);
     }
 }
 // [Example]

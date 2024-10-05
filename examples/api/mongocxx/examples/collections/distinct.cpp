@@ -47,19 +47,19 @@ void example(mongocxx::collection coll) {
 
         std::vector<bsoncxx::document::value> docs{cursor.begin(), cursor.end()};
 
-        ASSERT(docs.size() == 1u);
+        EXPECT(docs.size() == 1u);
 
         auto doc = docs[0].view();
 
-        ASSERT(doc["values"]);
-        ASSERT(doc["values"].type() == bsoncxx::type::k_array);
+        EXPECT(doc["values"]);
+        EXPECT(doc["values"].type() == bsoncxx::type::k_array);
 
         auto arr = doc["values"].get_array().value;
 
-        ASSERT(std::distance(arr.begin(), arr.end()) == 2);
+        EXPECT(std::distance(arr.begin(), arr.end()) == 2);
 
-        ASSERT(arr[0].get_int32().value == 1);
-        ASSERT(arr[1].get_int32().value == 2);
+        EXPECT(arr[0].get_int32().value == 1);
+        EXPECT(arr[1].get_int32().value == 2);
     }
 
     // With options.
@@ -70,7 +70,7 @@ void example(mongocxx::collection coll) {
 
         mongocxx::cursor cursor = coll.distinct("x", bsoncxx::from_json(R"({"flag": 1})"), opts);
 
-        ASSERT(std::distance(cursor.begin(), cursor.end()) == 1);
+        EXPECT(std::distance(cursor.begin(), cursor.end()) == 1);
     }
 }
 // [Example]
@@ -87,7 +87,7 @@ RUNNER_REGISTER_COMPONENT_FOR_SINGLE() {
 
         using insert = mongocxx::model::insert_one;
 
-        ASSERT(coll.create_bulk_write()
+        EXPECT(coll.create_bulk_write()
                    .append(insert{bsoncxx::from_json(R"({"x": 1, "flag": 1})")})
                    .append(insert{bsoncxx::from_json(R"({"x": 2, "flag": 1})")})
                    .append(insert{bsoncxx::from_json(R"({"x": 3, "flag": 0})")})

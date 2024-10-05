@@ -30,8 +30,8 @@ void example(mongocxx::collection coll) {
     {
         mongocxx::write_concern wc = coll.write_concern();
 
-        ASSERT(wc.acknowledge_level() == wc_level::k_default);
-        ASSERT(wc.timeout() == std::chrono::milliseconds(0));
+        EXPECT(wc.acknowledge_level() == wc_level::k_default);
+        EXPECT(wc.timeout() == std::chrono::milliseconds(0));
     }
 
     // Explicit.
@@ -43,9 +43,9 @@ void example(mongocxx::collection coll) {
 
         coll.write_concern(wc);
 
-        ASSERT(coll.write_concern() == wc);
-        ASSERT(coll.write_concern().acknowledge_level() == wc_level::k_majority);
-        ASSERT(coll.write_concern().timeout() == std::chrono::seconds(5));
+        EXPECT(coll.write_concern() == wc);
+        EXPECT(coll.write_concern().acknowledge_level() == wc_level::k_majority);
+        EXPECT(coll.write_concern().timeout() == std::chrono::seconds(5));
     }
 }
 // [Example]

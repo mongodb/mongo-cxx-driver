@@ -33,30 +33,30 @@ void example(mongocxx::collection coll) {
 
     // Basic usage.
     {
-        ASSERT(coll.count_documents(x1.view()) == 0);
+        EXPECT(coll.count_documents(x1.view()) == 0);
 
         auto result_opt = coll.insert_one(x1.view());
 
-        ASSERT(result_opt);
+        EXPECT(result_opt);
 
         mongocxx::result::insert_one& result = *result_opt;
 
-        ASSERT(result.result().inserted_count() == 1);
+        EXPECT(result.result().inserted_count() == 1);
 
-        ASSERT(coll.count_documents(x1.view()) == 1);
+        EXPECT(coll.count_documents(x1.view()) == 1);
     }
 
     // With options.
     {
-        ASSERT(coll.count_documents(x2.view()) == 0);
+        EXPECT(coll.count_documents(x2.view()) == 0);
 
         mongocxx::options::insert opts;
 
         // ... set insert options.
 
-        ASSERT(coll.insert_one(x2.view(), opts));
+        EXPECT(coll.insert_one(x2.view(), opts));
 
-        ASSERT(coll.count_documents(x2.view()) == 1);
+        EXPECT(coll.count_documents(x2.view()) == 1);
     }
 }
 // [Example]

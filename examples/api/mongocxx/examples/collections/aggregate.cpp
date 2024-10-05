@@ -54,7 +54,7 @@ void example(mongocxx::collection coll) {
             return doc.find("x") != doc.end();
         };
 
-        ASSERT(std::count_if(cursor.begin(), cursor.end(), has_field_x) == 1);
+        EXPECT(std::count_if(cursor.begin(), cursor.end(), has_field_x) == 1);
     }
 
     // With options.
@@ -65,7 +65,7 @@ void example(mongocxx::collection coll) {
 
         mongocxx::cursor cursor = coll.aggregate(mongocxx::pipeline{}, opts);
 
-        ASSERT(std::distance(cursor.begin(), cursor.end()) == 2);
+        EXPECT(std::distance(cursor.begin(), cursor.end()) == 2);
     }
 }
 // [Example]
@@ -82,7 +82,7 @@ RUNNER_REGISTER_COMPONENT_FOR_SINGLE() {
 
         using insert = mongocxx::model::insert_one;
 
-        ASSERT(coll.create_bulk_write()
+        EXPECT(coll.create_bulk_write()
                    .append(insert{bsoncxx::from_json(R"({"x": 1})")})
                    .append(insert{bsoncxx::from_json(R"({"x": 2})")})
                    .execute());

@@ -40,11 +40,11 @@ void example() {
                                 mongocxx::options::client{}.auto_encryption_opts(
                                     mongocxx::options::auto_encryption{})};  // Throws.
 
-        ASSERT(false && "should not reach this point");
+        EXPECT(false && "should not reach this point");
     } catch (const mongocxx::exception& ex) {
         // CXX-834: libmongoc error code.
-        ASSERT(ex.code().category() == mongocxx::server_error_category());
-        ASSERT(ex.code().value() == 58);  // MONGOC_ERROR_CLIENT_INVALID_ENCRYPTION_ARG
+        EXPECT(ex.code().category() == mongocxx::server_error_category());
+        EXPECT(ex.code().value() == 58);  // MONGOC_ERROR_CLIENT_INVALID_ENCRYPTION_ARG
     }
 
     // Invalid KMS providers.
@@ -56,11 +56,11 @@ void example() {
                     .key_vault_namespace({"keyvault", "datakeys"})
                     .kms_providers(bsoncxx::from_json(R"({"invalid": 1})")))};  // Throws.
 
-        ASSERT(false && "should not reach this point");
+        EXPECT(false && "should not reach this point");
     } catch (const mongocxx::exception& ex) {
         // CXX-834: libmongocrypt error code.
-        ASSERT(ex.code().category() == mongocxx::server_error_category());
-        ASSERT(ex.code().value() == 1);  // MONGOCRYPT_GENERIC_ERROR_CODE
+        EXPECT(ex.code().category() == mongocxx::server_error_category());
+        EXPECT(ex.code().value() == 1);  // MONGOCRYPT_GENERIC_ERROR_CODE
     }
 
     // Incompatible options.
@@ -71,9 +71,9 @@ void example() {
                 mongocxx::options::auto_encryption{}.key_vault_client(nullptr).key_vault_pool(
                     nullptr))};  // Throws.
 
-        ASSERT(false && "should not reach this point");
+        EXPECT(false && "should not reach this point");
     } catch (const mongocxx::exception& ex) {
-        ASSERT(ex.code() == mongocxx::error_code::k_invalid_parameter);
+        EXPECT(ex.code() == mongocxx::error_code::k_invalid_parameter);
     }
 }
 // [Example]
@@ -88,7 +88,7 @@ RUNNER_REGISTER_COMPONENT_WITH_INSTANCE() {
             mongocxx::uri{},
             mongocxx::options::client{}.auto_encryption_opts(mongocxx::options::auto_encryption{})};
 
-        ASSERT(false && "should not reach this point");
+        EXPECT(false && "should not reach this point");
     } catch (const mongocxx::exception& ex) {
         if (std::strstr(ex.what(), "ENABLE_CLIENT_SIDE_ENCRYPTION") != nullptr) {
             // Library may not be configured with TLS/SSL support enabled.

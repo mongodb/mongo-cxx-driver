@@ -40,28 +40,28 @@ void example(mongocxx::collection coll) {
 
     // Basic usage.
     {
-        ASSERT(coll.count_documents(x0.view()) == 0);
+        EXPECT(coll.count_documents(x0.view()) == 0);
 
         auto filter = bsoncxx::from_json(R"({"x": 2})");
 
         auto result_opt = coll.replace_one(filter.view(), x0.view());
 
-        ASSERT(result_opt);
+        EXPECT(result_opt);
 
         mongocxx::result::replace_one& result = *result_opt;
 
-        ASSERT(result.matched_count() == 1);
-        ASSERT(result.modified_count() == 1);
-        ASSERT(result.result().matched_count() == 1);
-        ASSERT(result.result().modified_count() == 1);
+        EXPECT(result.matched_count() == 1);
+        EXPECT(result.modified_count() == 1);
+        EXPECT(result.result().matched_count() == 1);
+        EXPECT(result.result().modified_count() == 1);
 
-        ASSERT(coll.count_documents(x0.view()) == 1);
+        EXPECT(coll.count_documents(x0.view()) == 1);
     }
 
     // With options.
     {
-        ASSERT(coll.count_documents(is_original.view()) == 2);
-        ASSERT(coll.count_documents(is_replaced.view()) == 1);
+        EXPECT(coll.count_documents(is_original.view()) == 2);
+        EXPECT(coll.count_documents(is_replaced.view()) == 1);
 
         mongocxx::options::replace opts;
 
@@ -70,17 +70,17 @@ void example(mongocxx::collection coll) {
 
         auto filter = bsoncxx::from_json(R"({"replaced": false})");
 
-        ASSERT(coll.replace_one(filter.view(), x0.view(), opts));
-        ASSERT(coll.count_documents(is_original.view()) == 1);
-        ASSERT(coll.count_documents(is_replaced.view()) == 2);
+        EXPECT(coll.replace_one(filter.view(), x0.view(), opts));
+        EXPECT(coll.count_documents(is_original.view()) == 1);
+        EXPECT(coll.count_documents(is_replaced.view()) == 2);
 
-        ASSERT(coll.replace_one(filter.view(), x0.view(), opts));
-        ASSERT(coll.count_documents(is_original.view()) == 0);
-        ASSERT(coll.count_documents(is_replaced.view()) == 3);
+        EXPECT(coll.replace_one(filter.view(), x0.view(), opts));
+        EXPECT(coll.count_documents(is_original.view()) == 0);
+        EXPECT(coll.count_documents(is_replaced.view()) == 3);
 
-        ASSERT(coll.replace_one(filter.view(), x0.view(), opts));
-        ASSERT(coll.count_documents(is_original.view()) == 0);
-        ASSERT(coll.count_documents(is_replaced.view()) == 4);
+        EXPECT(coll.replace_one(filter.view(), x0.view(), opts));
+        EXPECT(coll.count_documents(is_original.view()) == 0);
+        EXPECT(coll.count_documents(is_replaced.view()) == 4);
     }
 }
 // [Example]
@@ -99,7 +99,7 @@ RUNNER_REGISTER_COMPONENT_FOR_SINGLE() {
 
         using insert = mongocxx::model::insert_one;
 
-        ASSERT(coll.create_bulk_write()
+        EXPECT(coll.create_bulk_write()
                    .append(insert(bsoncxx::from_json(R"({"x": 1, "replaced": false})")))
                    .append(insert(bsoncxx::from_json(R"({"x": 2, "replaced": false})")))
                    .append(insert(bsoncxx::from_json(R"({"x": 3, "replaced": false})")))

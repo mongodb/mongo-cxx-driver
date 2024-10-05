@@ -28,11 +28,11 @@ namespace {
 void example(mongocxx::database db) {
     mongocxx::collection coll = db["coll"];
 
-    ASSERT(db.has_collection("coll"));
+    EXPECT(db.has_collection("coll"));
 
     coll.drop();
 
-    ASSERT(!db.has_collection("coll"));
+    EXPECT(!db.has_collection("coll"));
 }
 // [Example]
 

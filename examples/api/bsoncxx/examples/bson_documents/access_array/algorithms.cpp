@@ -28,7 +28,7 @@ namespace {
 // [Example]
 // [1, 2.0, "three"]
 void example(bsoncxx::array::view arr) {
-    ASSERT(std::distance(arr.begin(), arr.end()) == 3);
+    EXPECT(std::distance(arr.begin(), arr.end()) == 3);
 
     std::vector<bsoncxx::array::element> elements;
 
@@ -37,9 +37,9 @@ void example(bsoncxx::array::view arr) {
             return e.key().compare("0") == 0 || e.type() == bsoncxx::type::k_string;
         });
 
-    ASSERT(elements.size() == 2u);
-    ASSERT(elements[0].key().compare("0") == 0);
-    ASSERT(elements[1].key().compare("2") == 0);
+    EXPECT(elements.size() == 2u);
+    EXPECT(elements[0].key().compare("0") == 0);
+    EXPECT(elements[1].key().compare("2") == 0);
 }
 // [Example]
 

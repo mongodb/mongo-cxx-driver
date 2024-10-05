@@ -27,9 +27,9 @@ void example() {
     mongocxx::uri b{uri_str};
     mongocxx::uri c{mongocxx::uri::k_default_uri};
 
-    ASSERT(a.to_string() == uri_str);
-    ASSERT(b.to_string() == uri_str);
-    ASSERT(c.to_string() == uri_str);
+    EXPECT(a.to_string() == uri_str);
+    EXPECT(b.to_string() == uri_str);
+    EXPECT(c.to_string() == uri_str);
 }
 // [Example]
 

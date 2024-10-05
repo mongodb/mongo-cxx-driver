@@ -25,14 +25,14 @@ void example() {
     {
         mongocxx::client client;
 
-        ASSERT(!client);
+        EXPECT(!client);
     }
 
     {
         mongocxx::client client{mongocxx::uri{}};
 
-        ASSERT(client);
-        ASSERT(client.uri().to_string() == mongocxx::uri::k_default_uri);
+        EXPECT(client);
+        EXPECT(client.uri().to_string() == mongocxx::uri::k_default_uri);
     }
 }
 // [Example]

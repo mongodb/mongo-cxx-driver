@@ -28,17 +28,17 @@ namespace {
 void example(mongocxx::database db) {
     mongocxx::collection coll = db["old"];
 
-    ASSERT(db.has_collection("old"));
-    ASSERT(!db.has_collection("new"));
+    EXPECT(db.has_collection("old"));
+    EXPECT(!db.has_collection("new"));
 
-    ASSERT(coll.name().compare("old") == 0);
+    EXPECT(coll.name().compare("old") == 0);
 
     coll.rename("new");
 
-    ASSERT(coll.name().compare("new") == 0);
+    EXPECT(coll.name().compare("new") == 0);
 
-    ASSERT(!db.has_collection("old"));
-    ASSERT(db.has_collection("new"));
+    EXPECT(!db.has_collection("old"));
+    EXPECT(db.has_collection("new"));
 }
 // [Example]
 

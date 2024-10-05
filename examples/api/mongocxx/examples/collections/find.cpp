@@ -47,15 +47,15 @@ void example(mongocxx::collection coll) {
         int count = 0;
 
         for (bsoncxx::document::view doc : cursor) {
-            ASSERT(doc["_id"]);
+            EXPECT(doc["_id"]);
 
-            ASSERT(doc["x"]);
-            ASSERT(doc["x"].get_int32().value != 2);
+            EXPECT(doc["x"]);
+            EXPECT(doc["x"].get_int32().value != 2);
 
             ++count;
         }
 
-        ASSERT(count == 2);
+        EXPECT(count == 2);
     }
 
     // With options.
@@ -70,11 +70,11 @@ void example(mongocxx::collection coll) {
 
         std::vector<bsoncxx::document::value> docs{cursor.begin(), cursor.end()};
 
-        ASSERT(docs.size() == 3u);
+        EXPECT(docs.size() == 3u);
 
-        ASSERT(docs[0] == bsoncxx::from_json(R"({"x": 1})"));
-        ASSERT(docs[1] == bsoncxx::from_json(R"({"x": 2})"));
-        ASSERT(docs[2] == bsoncxx::from_json(R"({"x": 3})"));
+        EXPECT(docs[0] == bsoncxx::from_json(R"({"x": 1})"));
+        EXPECT(docs[1] == bsoncxx::from_json(R"({"x": 2})"));
+        EXPECT(docs[2] == bsoncxx::from_json(R"({"x": 3})"));
     }
 }
 // [Example]
@@ -93,7 +93,7 @@ RUNNER_REGISTER_COMPONENT_FOR_SINGLE() {
 
         using insert = mongocxx::model::insert_one;
 
-        ASSERT(coll.create_bulk_write()
+        EXPECT(coll.create_bulk_write()
                    .append(insert{bsoncxx::from_json(R"({"x": 1, "found": true})")})
                    .append(insert{bsoncxx::from_json(R"({"x": 2, "found": false})")})
                    .append(insert{bsoncxx::from_json(R"({"x": 3, "found": true})")})

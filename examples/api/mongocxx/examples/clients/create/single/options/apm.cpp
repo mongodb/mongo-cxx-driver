@@ -41,7 +41,7 @@ void example() {
 
     mongocxx::client client{mongocxx::uri{}, client_opts};
 
-    ASSERT(client);
+    EXPECT(client);
 }
 // [Example]
 

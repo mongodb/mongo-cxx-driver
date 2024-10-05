@@ -34,7 +34,7 @@ void example(mongocxx::client client) {
 
     std::vector<std::string> names = client.list_database_names(opts.view());
 
-    ASSERT(std::count(names.begin(), names.end(), "admin") == 0);
+    EXPECT(std::count(names.begin(), names.end(), "admin") == 0);
 }
 // [Example]
 

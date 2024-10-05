@@ -31,9 +31,9 @@ void example() {
             mongocxx::uri{},
             mongocxx::options::client{}.tls_opts(mongocxx::options::tls{})};  // Throws.
 
-        ASSERT(false && "should not reach this point");
+        EXPECT(false && "should not reach this point");
     } catch (const mongocxx::exception& ex) {
-        ASSERT(
+        EXPECT(
             // When TLS/SSL is enabled for both mongocxx and libmongoc.
             ex.code() == mongocxx::error_code::k_invalid_parameter ||
 

@@ -28,17 +28,17 @@ void example() {
     try {
         mongocxx::instance instance;  // Throws.
 
-        ASSERT(false && "should not reach this point");
+        EXPECT(false && "should not reach this point");
     } catch (const mongocxx::exception& ex) {
-        ASSERT(ex.code() == mongocxx::error_code::k_cannot_recreate_instance);
+        EXPECT(ex.code() == mongocxx::error_code::k_cannot_recreate_instance);
     }
 
     try {
         auto& instance = mongocxx::instance::current();  // Throws.
 
-        ASSERT(false && "should not reach this point");
+        EXPECT(false && "should not reach this point");
     } catch (const mongocxx::exception& ex) {
-        ASSERT(ex.code() == mongocxx::error_code::k_instance_destroyed);
+        EXPECT(ex.code() == mongocxx::error_code::k_instance_destroyed);
     }
 }
 // [Example]

@@ -32,8 +32,8 @@ void example(mongocxx::database db) {
     {
         mongocxx::write_concern wc = db.write_concern();
 
-        ASSERT(wc.acknowledge_level() == wc_level::k_default);
-        ASSERT(wc.timeout() == std::chrono::milliseconds(0));
+        EXPECT(wc.acknowledge_level() == wc_level::k_default);
+        EXPECT(wc.timeout() == std::chrono::milliseconds(0));
     }
 
     // Explicit.
@@ -45,9 +45,9 @@ void example(mongocxx::database db) {
 
         db.write_concern(wc);
 
-        ASSERT(db.write_concern() == wc);
-        ASSERT(db.write_concern().acknowledge_level() == wc_level::k_majority);
-        ASSERT(db.write_concern().timeout() == std::chrono::seconds(5));
+        EXPECT(db.write_concern() == wc);
+        EXPECT(db.write_concern().acknowledge_level() == wc_level::k_majority);
+        EXPECT(db.write_concern().timeout() == std::chrono::seconds(5));
     }
 }
 // [Example]
@@ -57,7 +57,7 @@ void example(mongocxx::database db) {
 RUNNER_REGISTER_COMPONENT_WITH_INSTANCE() {
     mongocxx::client client{mongocxx::uri{}};
 
-    ASSERT(client.write_concern() == mongocxx::write_concern{});
+    EXPECT(client.write_concern() == mongocxx::write_concern{});
 
     example(client["db"]);
 }

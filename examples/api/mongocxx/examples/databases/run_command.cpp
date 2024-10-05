@@ -30,8 +30,8 @@ void example(mongocxx::database db) {
 
     bsoncxx::document::value reply = db.run_command(cmd.view());
 
-    ASSERT(reply["ok"]);
-    ASSERT(reply["ok"].get_double().value == 1.0);
+    EXPECT(reply["ok"]);
+    EXPECT(reply["ok"].get_double().value == 1.0);
 }
 // [Example]
 

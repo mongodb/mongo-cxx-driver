@@ -26,20 +26,20 @@ namespace {
 // [1, 2.0, "three"]
 void example(bsoncxx::array::element e) {
     bsoncxx::types::bson_value::view v = e.get_value();
-    ASSERT(v.type() == e.type());
+    EXPECT(v.type() == e.type());
 
     switch (v.type()) {
         case bsoncxx::type::k_int32:
-            ASSERT(e.key().compare("0") == 0);
-            ASSERT(v.get_int32() == e.get_int32());
+            EXPECT(e.key().compare("0") == 0);
+            EXPECT(v.get_int32() == e.get_int32());
             break;
         case bsoncxx::type::k_double:
-            ASSERT(e.key().compare("1") == 0);
-            ASSERT(v.get_double() == e.get_double());
+            EXPECT(e.key().compare("1") == 0);
+            EXPECT(v.get_double() == e.get_double());
             break;
         case bsoncxx::type::k_string:
-            ASSERT(e.key().compare("2") == 0);
-            ASSERT(v.get_string() == e.get_string());
+            EXPECT(e.key().compare("2") == 0);
+            EXPECT(v.get_string() == e.get_string());
             break;
     }
 }

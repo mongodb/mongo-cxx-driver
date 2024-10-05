@@ -34,13 +34,13 @@ void example() {
     bsoncxx::stdx::string_view debug = mongocxx::to_string(mongocxx::log_level::k_debug);
     bsoncxx::stdx::string_view trace = mongocxx::to_string(mongocxx::log_level::k_trace);
 
-    ASSERT(error.compare("error") == 0);
-    ASSERT(critical.compare("critical") == 0);
-    ASSERT(warning.compare("warning") == 0);
-    ASSERT(message.compare("message") == 0);
-    ASSERT(info.compare("info") == 0);
-    ASSERT(debug.compare("debug") == 0);
-    ASSERT(trace.compare("trace") == 0);
+    EXPECT(error.compare("error") == 0);
+    EXPECT(critical.compare("critical") == 0);
+    EXPECT(warning.compare("warning") == 0);
+    EXPECT(message.compare("message") == 0);
+    EXPECT(info.compare("info") == 0);
+    EXPECT(debug.compare("debug") == 0);
+    EXPECT(trace.compare("trace") == 0);
 }
 // [Example]
 

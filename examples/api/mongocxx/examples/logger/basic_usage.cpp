@@ -35,9 +35,9 @@ class example_logger : public mongocxx::logger {
     void operator()(mongocxx::log_level level,
                     bsoncxx::stdx::string_view domain,
                     bsoncxx::stdx::string_view message) noexcept override {
-        ASSERT(level == mongocxx::log_level::k_info);
-        ASSERT(domain.compare("mongocxx") == 0);
-        ASSERT(message.compare("libmongoc logging callback enabled") == 0);
+        EXPECT(level == mongocxx::log_level::k_info);
+        EXPECT(domain.compare("mongocxx") == 0);
+        EXPECT(message.compare("libmongoc logging callback enabled") == 0);
 
         *counter_ptr += 1;
     }
@@ -52,7 +52,7 @@ void example() {
     // Emit the informational mongocxx log message: "libmongoc logging callback enabled".
     mongocxx::instance instance{std::move(logger)};
 
-    ASSERT(counter == 1);
+    EXPECT(counter == 1);
 }
 // [Example]
 

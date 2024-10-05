@@ -35,29 +35,29 @@ namespace {
 // [Example]
 void example(mongocxx::collection coll) {
     {
-        ASSERT(coll.count_documents(bsoncxx::from_json(R"({"x": 1})")) == 0);
+        EXPECT(coll.count_documents(bsoncxx::from_json(R"({"x": 1})")) == 0);
 
         mongocxx::model::insert_one insert{bsoncxx::from_json(R"({"x": 1})")};
 
         auto result_opt = coll.write(insert);
 
-        ASSERT(result_opt);
-        ASSERT(result_opt->inserted_count() == 1);
+        EXPECT(result_opt);
+        EXPECT(result_opt->inserted_count() == 1);
 
-        ASSERT(coll.count_documents(bsoncxx::from_json(R"({"x": 1})")) == 1);
+        EXPECT(coll.count_documents(bsoncxx::from_json(R"({"x": 1})")) == 1);
     }
 
     {
-        ASSERT(coll.count_documents(bsoncxx::from_json(R"({"y": 1})")) == 0);
+        EXPECT(coll.count_documents(bsoncxx::from_json(R"({"y": 1})")) == 0);
 
         mongocxx::options::bulk_write opts;
 
         opts.ordered(true);
         // ... other bulk write options.
 
-        ASSERT(coll.write(mongocxx::model::insert_one{bsoncxx::from_json(R"({"y": 1})")}, opts));
+        EXPECT(coll.write(mongocxx::model::insert_one{bsoncxx::from_json(R"({"y": 1})")}, opts));
 
-        ASSERT(coll.count_documents(bsoncxx::from_json(R"({"y": 1})")) == 1);
+        EXPECT(coll.count_documents(bsoncxx::from_json(R"({"y": 1})")) == 1);
     }
 }
 // [Example]

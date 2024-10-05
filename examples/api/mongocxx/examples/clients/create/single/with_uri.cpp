@@ -25,8 +25,8 @@ void example() {
     mongocxx::uri uri{"mongodb://localhost:27017/?serverSelectionTryOnce=true"};
     mongocxx::client client{uri};
 
-    ASSERT(client);
-    ASSERT(client.uri().to_string() == uri.to_string());
+    EXPECT(client);
+    EXPECT(client.uri().to_string() == uri.to_string());
 }
 // [Example]
 

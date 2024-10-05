@@ -26,17 +26,17 @@ void example() {
     {
         mongocxx::instance instance;
 
-        ASSERT(&mongocxx::instance::current() == &instance);
+        EXPECT(&mongocxx::instance::current() == &instance);
 
         try {
             mongocxx::instance another_instance;  // Throws.
 
-            ASSERT(false && "should not reach this point");
+            EXPECT(false && "should not reach this point");
         } catch (const mongocxx::exception& ex) {
-            ASSERT(ex.code() == mongocxx::error_code::k_cannot_recreate_instance);
+            EXPECT(ex.code() == mongocxx::error_code::k_cannot_recreate_instance);
         }
 
-        ASSERT(&mongocxx::instance::current() == &instance);
+        EXPECT(&mongocxx::instance::current() == &instance);
     }
 }
 // [Example]

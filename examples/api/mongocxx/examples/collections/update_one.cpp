@@ -39,45 +39,45 @@ void example(mongocxx::collection coll) {
 
     // Basic usage.
     {
-        ASSERT(coll.count_documents(updated.view()) == 0);
+        EXPECT(coll.count_documents(updated.view()) == 0);
 
         auto filter = bsoncxx::from_json(R"({"x": 2})");
         auto update = bsoncxx::from_json(R"({"$set": {"updated": true}})");
 
         auto result_opt = coll.update_one(filter.view(), update.view());
 
-        ASSERT(result_opt);
+        EXPECT(result_opt);
 
         mongocxx::result::update& result = *result_opt;
 
-        ASSERT(result.matched_count() == 1);
-        ASSERT(result.modified_count() == 1);
-        ASSERT(result.result().matched_count() == 1);
-        ASSERT(result.result().modified_count() == 1);
+        EXPECT(result.matched_count() == 1);
+        EXPECT(result.modified_count() == 1);
+        EXPECT(result.result().matched_count() == 1);
+        EXPECT(result.result().modified_count() == 1);
 
-        ASSERT(coll.count_documents(bsoncxx::from_json(R"({"x": 2, "updated": true})")) == 1);
-        ASSERT(coll.count_documents(updated.view()) == 1);
+        EXPECT(coll.count_documents(bsoncxx::from_json(R"({"x": 2, "updated": true})")) == 1);
+        EXPECT(coll.count_documents(updated.view()) == 1);
     }
 
     // With options.
     {
-        ASSERT(coll.count_documents(updated.view()) == 1);
+        EXPECT(coll.count_documents(updated.view()) == 1);
 
         auto x4 = bsoncxx::from_json(R"({"x": 4, "updated": true})");
 
-        ASSERT(coll.count_documents(x4.view()) == 0);
+        EXPECT(coll.count_documents(x4.view()) == 0);
 
         mongocxx::options::update opts;
 
         opts.upsert(true);
         // ... other update options.
 
-        ASSERT(coll.update_one(bsoncxx::from_json(R"({"x": 4})"),
+        EXPECT(coll.update_one(bsoncxx::from_json(R"({"x": 4})"),
                                bsoncxx::from_json(R"({"$set": {"updated": true}})"),
                                opts));
 
-        ASSERT(coll.count_documents(x4.view()) == 1);
-        ASSERT(coll.count_documents(updated.view()) == 2);
+        EXPECT(coll.count_documents(x4.view()) == 1);
+        EXPECT(coll.count_documents(updated.view()) == 2);
     }
 }
 // [Example]
@@ -96,7 +96,7 @@ RUNNER_REGISTER_COMPONENT_FOR_SINGLE() {
 
         using insert = mongocxx::model::insert_one;
 
-        ASSERT(coll.create_bulk_write()
+        EXPECT(coll.create_bulk_write()
                    .append(insert{bsoncxx::from_json(R"({"x": 1, "updated": false})")})
                    .append(insert{bsoncxx::from_json(R"({"x": 2, "updated": false})")})
                    .append(insert{bsoncxx::from_json(R"({"x": 3, "updated": false})")})

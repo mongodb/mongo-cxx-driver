@@ -28,8 +28,8 @@ void example(mongocxx::database db) {
     {
         mongocxx::read_preference rp;
 
-        ASSERT(db.read_preference() == rp);
-        ASSERT(db.read_preference().mode() == mongocxx::read_preference::read_mode::k_primary);
+        EXPECT(db.read_preference() == rp);
+        EXPECT(db.read_preference().mode() == mongocxx::read_preference::read_mode::k_primary);
     }
 
     // Explicit.
@@ -41,7 +41,7 @@ void example(mongocxx::database db) {
 
         db.read_preference(rp);
 
-        ASSERT(db.read_preference() == rp);
+        EXPECT(db.read_preference() == rp);
     }
 }
 // [Example]
@@ -51,7 +51,7 @@ void example(mongocxx::database db) {
 RUNNER_REGISTER_COMPONENT_WITH_INSTANCE() {
     mongocxx::client client{mongocxx::uri{}};
 
-    ASSERT(client.read_preference() == mongocxx::read_preference{});
+    EXPECT(client.read_preference() == mongocxx::read_preference{});
 
     example(client["db"]);
 }

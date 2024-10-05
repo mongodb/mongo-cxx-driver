@@ -27,15 +27,15 @@ namespace {
 
 // [Example]
 void example(mongocxx::database db) {
-    ASSERT(!db.has_collection("coll"));
+    EXPECT(!db.has_collection("coll"));
 
     auto opts = bsoncxx::from_json(R"({"validationLevel": "strict", "validationAction": "error"})");
     // ... other create options.
 
     mongocxx::collection coll = db.create_collection("coll", opts.view());
 
-    ASSERT(coll);
-    ASSERT(db.has_collection("coll"));
+    EXPECT(coll);
+    EXPECT(db.has_collection("coll"));
 }
 // [Example]
 

@@ -26,14 +26,14 @@ namespace {
 void example() {
     mongocxx::client client;
 
-    ASSERT(!client);
+    EXPECT(!client);
 
     try {
         mongocxx::uri uri = client.uri();  // DO NOT DO THIS. Throws.
 
-        ASSERT(false && "should not reach this point");
+        EXPECT(false && "should not reach this point");
     } catch (const mongocxx::exception& ex) {
-        ASSERT(ex.code() == mongocxx::error_code::k_invalid_client_object);
+        EXPECT(ex.code() == mongocxx::error_code::k_invalid_client_object);
     }
 }
 // [Example]

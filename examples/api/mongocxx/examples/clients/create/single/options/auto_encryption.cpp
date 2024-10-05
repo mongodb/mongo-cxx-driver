@@ -45,7 +45,7 @@ void example(bsoncxx::document::view kms_providers) {
     mongocxx::uri uri;
     mongocxx::client client{uri, client_opts};
 
-    ASSERT(client);
+    EXPECT(client);
 }
 // [Example]
 

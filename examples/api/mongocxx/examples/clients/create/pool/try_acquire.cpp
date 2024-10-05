@@ -28,23 +28,23 @@ void example() {
 
     auto entry_opt = pool.try_acquire();
 
-    ASSERT(entry_opt);
-    ASSERT(*entry_opt);
+    EXPECT(entry_opt);
+    EXPECT(*entry_opt);
 
     {
         mongocxx::pool::entry hold = std::move(*entry_opt);
 
-        ASSERT(hold);
+        EXPECT(hold);
 
         entry_opt = pool.try_acquire();
 
-        ASSERT(!entry_opt);
+        EXPECT(!entry_opt);
     }
 
     entry_opt = pool.try_acquire();
 
-    ASSERT(entry_opt);
-    ASSERT(*entry_opt);
+    EXPECT(entry_opt);
+    EXPECT(*entry_opt);
 }
 // [Example]
 

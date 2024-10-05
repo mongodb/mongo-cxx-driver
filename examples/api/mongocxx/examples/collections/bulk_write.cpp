@@ -32,7 +32,7 @@ namespace {
 
 // [Example]
 void example(mongocxx::collection coll) {
-    ASSERT(coll.count_documents(bsoncxx::from_json(R"({"x": {"$exists": 1}})")) == 0);
+    EXPECT(coll.count_documents(bsoncxx::from_json(R"({"x": {"$exists": 1}})")) == 0);
 
     mongocxx::model::insert_one insert{bsoncxx::from_json(R"({"x": 10})")};
     mongocxx::model::update_one update{bsoncxx::from_json(R"({"x": {"$exists": 1}})"),
@@ -46,14 +46,14 @@ void example(mongocxx::collection coll) {
 
     auto result_opt = bulk_write.execute();
 
-    ASSERT(result_opt);
+    EXPECT(result_opt);
 
     mongocxx::result::bulk_write& result = *result_opt;
 
-    ASSERT(result.inserted_count() == 1);
-    ASSERT(result.modified_count() == 1);
+    EXPECT(result.inserted_count() == 1);
+    EXPECT(result.modified_count() == 1);
 
-    ASSERT(coll.count_documents(bsoncxx::from_json(R"({"x": 20})")) == 1);
+    EXPECT(coll.count_documents(bsoncxx::from_json(R"({"x": 20})")) == 1);
 }
 // [Example]
 

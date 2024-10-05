@@ -40,14 +40,14 @@ void example(mongocxx::collection coll) {
 
         auto result_opt = coll.find_one(filter.view());
 
-        ASSERT(result_opt);
+        EXPECT(result_opt);
 
         bsoncxx::document::view doc = result_opt->view();
 
-        ASSERT(doc["_id"]);
+        EXPECT(doc["_id"]);
 
-        ASSERT(doc["x"]);
-        ASSERT(doc["x"].get_int32().value == 2);
+        EXPECT(doc["x"]);
+        EXPECT(doc["x"].get_int32().value == 2);
     }
 
     // With options.
@@ -60,8 +60,8 @@ void example(mongocxx::collection coll) {
 
         auto result_opt = coll.find_one(bsoncxx::builder::basic::make_document(), opts);
 
-        ASSERT(result_opt);
-        ASSERT(*result_opt == bsoncxx::from_json(R"({"x": 1})"));
+        EXPECT(result_opt);
+        EXPECT(*result_opt == bsoncxx::from_json(R"({"x": 1})"));
     }
 }
 // [Example]
@@ -80,7 +80,7 @@ RUNNER_REGISTER_COMPONENT_FOR_SINGLE() {
 
         using insert = mongocxx::model::insert_one;
 
-        ASSERT(coll.create_bulk_write()
+        EXPECT(coll.create_bulk_write()
                    .append(insert{bsoncxx::from_json(R"({"x": 1, "found": false})")})
                    .append(insert{bsoncxx::from_json(R"({"x": 2, "found": true})")})
                    .append(insert{bsoncxx::from_json(R"({"x": 3, "found": false})")})

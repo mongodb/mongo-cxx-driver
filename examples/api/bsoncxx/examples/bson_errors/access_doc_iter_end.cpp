@@ -25,22 +25,22 @@ namespace {
 // [Example]
 // {"a": 1, "b": 2}
 void example(bsoncxx::document::view doc) {
-    ASSERT(doc.begin() != doc.end());
+    EXPECT(doc.begin() != doc.end());
 
     auto iter = doc.begin();  // "a": 1
 
     ++iter;  // "b": 2
     ++iter;  // End iterator.
 
-    ASSERT(iter == doc.end());
+    EXPECT(iter == doc.end());
 
     ++iter;  // DO NOT DO THIS
 
-    ASSERT(iter == doc.end());  // Incrementing an end iterator results in an end iterator.
+    EXPECT(iter == doc.end());  // Incrementing an end iterator results in an end iterator.
 
     bsoncxx::document::element e = *iter;  // DO NOT DO THIS
 
-    ASSERT(!e);  // An end iterator returns an invalid element.
+    EXPECT(!e);  // An end iterator returns an invalid element.
 }
 // [Example]
 

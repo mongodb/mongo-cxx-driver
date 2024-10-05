@@ -28,8 +28,8 @@ void example(mongocxx::collection coll) {
     {
         mongocxx::read_preference rp;
 
-        ASSERT(coll.read_preference() == rp);
-        ASSERT(coll.read_preference().mode() == mongocxx::read_preference::read_mode::k_primary);
+        EXPECT(coll.read_preference() == rp);
+        EXPECT(coll.read_preference().mode() == mongocxx::read_preference::read_mode::k_primary);
     }
 
     // Explicit.
@@ -41,7 +41,7 @@ void example(mongocxx::collection coll) {
 
         coll.read_preference(rp);
 
-        ASSERT(coll.read_preference() == rp);
+        EXPECT(coll.read_preference() == rp);
     }
 }
 // [Example]

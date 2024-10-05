@@ -24,8 +24,8 @@ namespace {
 
 // [Example]
 void example(mongocxx::database db) {
-    ASSERT(db.has_collection("present"));
-    ASSERT(!db.has_collection("missing"));
+    EXPECT(db.has_collection("present"));
+    EXPECT(!db.has_collection("missing"));
 }
 // [Example]
 

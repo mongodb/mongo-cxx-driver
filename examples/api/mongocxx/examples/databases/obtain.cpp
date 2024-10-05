@@ -25,10 +25,10 @@ namespace {
 void example(mongocxx::client client) {
     mongocxx::database db = client["db"];
 
-    ASSERT(db);
-    ASSERT(db.name().compare("db") == 0);
+    EXPECT(db);
+    EXPECT(db.name().compare("db") == 0);
 
-    ASSERT(client.database("db").name().compare("db") == 0);
+    EXPECT(client.database("db").name().compare("db") == 0);
 }
 // [Example]
 

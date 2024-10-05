@@ -30,7 +30,7 @@ void example(mongocxx::collection coll) {
     {
         mongocxx::read_concern rc = coll.read_concern();
 
-        ASSERT(rc.acknowledge_level() == rc_level::k_server_default);
+        EXPECT(rc.acknowledge_level() == rc_level::k_server_default);
     }
 
     // Explicit.
@@ -42,8 +42,8 @@ void example(mongocxx::collection coll) {
 
         coll.read_concern(rc);
 
-        ASSERT(coll.read_concern() == rc);
-        ASSERT(coll.read_concern().acknowledge_level() == rc_level::k_majority);
+        EXPECT(coll.read_concern() == rc);
+        EXPECT(coll.read_concern().acknowledge_level() == rc_level::k_majority);
     }
 }
 // [Example]

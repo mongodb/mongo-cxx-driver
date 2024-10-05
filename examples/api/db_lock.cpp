@@ -43,7 +43,7 @@ db_lock::db_lock(mongocxx::client& client, std::string name) : _client_ptr(&clie
 }
 
 mongocxx::database db_lock::get() const& {
-    ASSERT(_client_ptr);
+    EXPECT(_client_ptr);
 
     return _client_ptr->database(_name);
 }

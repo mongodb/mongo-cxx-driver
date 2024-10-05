@@ -31,12 +31,12 @@
 
 #define EXAMPLES_STR(e) #e
 
-// Unconditionally define `assert()` for examples.
-#define ASSERT(...)                                                                           \
-    if (!static_cast<bool>(__VA_ARGS__)) {                                                    \
-        std::printf(                                                                          \
-            "%s:%d: %s: assertion failed: %s\n", __FILE__, __LINE__, __func__, #__VA_ARGS__); \
-        std::fflush(stdout);                                                                  \
-        std::abort();                                                                         \
-    } else                                                                                    \
+// Unconditionally `assert()` expectations in examples.
+#define EXPECT(...)                                                                             \
+    if (!static_cast<bool>(__VA_ARGS__)) {                                                      \
+        std::printf(                                                                            \
+            "%s:%d: %s: expectation failed: %s\n", __FILE__, __LINE__, __func__, #__VA_ARGS__); \
+        std::fflush(stdout);                                                                    \
+        std::abort();                                                                           \
+    } else                                                                                      \
         ((void)0)

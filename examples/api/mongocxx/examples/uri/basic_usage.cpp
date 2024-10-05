@@ -25,11 +25,11 @@ void example() {
 
     mongocxx::uri uri{uri_str};
 
-    ASSERT(uri.to_string() == uri_str);
+    EXPECT(uri.to_string() == uri_str);
 
-    ASSERT(uri.username().compare("bob") == 0);
-    ASSERT(uri.password() == "pwd123");
-    ASSERT(uri.tls() == true);
+    EXPECT(uri.username().compare("bob") == 0);
+    EXPECT(uri.password() == "pwd123");
+    EXPECT(uri.tls() == true);
 }
 // [Example]
 

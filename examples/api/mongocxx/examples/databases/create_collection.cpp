@@ -26,13 +26,13 @@ namespace {
 
 // [Example]
 void example(mongocxx::database db) {
-    ASSERT(!db.has_collection("coll"));
+    EXPECT(!db.has_collection("coll"));
 
     mongocxx::collection coll = db.create_collection("coll");
 
-    ASSERT(coll);
+    EXPECT(coll);
 
-    ASSERT(db.has_collection("coll"));
+    EXPECT(db.has_collection("coll"));
 }
 // [Example]
 

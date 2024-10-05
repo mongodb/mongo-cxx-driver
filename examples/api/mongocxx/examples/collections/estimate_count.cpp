@@ -37,7 +37,7 @@ namespace {
 // ]
 void example(mongocxx::collection coll) {
     // Basic usage.
-    ASSERT(coll.estimated_document_count() == 3);
+    EXPECT(coll.estimated_document_count() == 3);
 
     // With options.
     {
@@ -45,7 +45,7 @@ void example(mongocxx::collection coll) {
 
         // ... set estimated scount options.
 
-        ASSERT(coll.estimated_document_count(opts) == 3);
+        EXPECT(coll.estimated_document_count(opts) == 3);
     }
 }
 // [Example]
@@ -62,7 +62,7 @@ RUNNER_REGISTER_COMPONENT_FOR_SINGLE() {
 
         using insert = mongocxx::model::insert_one;
 
-        ASSERT(coll.create_bulk_write()
+        EXPECT(coll.create_bulk_write()
                    .append(insert{bsoncxx::from_json(R"({"x": 1})")})
                    .append(insert{bsoncxx::from_json(R"({"x": 2})")})
                    .append(insert{bsoncxx::from_json(R"({"x": 3})")})

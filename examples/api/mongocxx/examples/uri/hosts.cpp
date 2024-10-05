@@ -27,23 +27,23 @@ void example() {
 
     std::vector<mongocxx::uri::host> hosts = uri.hosts();
 
-    ASSERT(hosts.size() == 3u);
+    EXPECT(hosts.size() == 3u);
 
     const mongocxx::uri::host& first = hosts[0];
     const mongocxx::uri::host& second = hosts[1];
     const mongocxx::uri::host& third = hosts[2];
 
-    ASSERT(first.name == "127.0.0.1");
-    ASSERT(first.port == 27017u);
-    ASSERT(first.family == 0);  // AF_UNSPEC (AP_INET).
+    EXPECT(first.name == "127.0.0.1");
+    EXPECT(first.port == 27017u);
+    EXPECT(first.family == 0);  // AF_UNSPEC (AP_INET).
 
-    ASSERT(second.name == "::1");
-    ASSERT(second.port == 27018u);
-    ASSERT(second.family != 0);  // AF_INET6.
+    EXPECT(second.name == "::1");
+    EXPECT(second.port == 27018u);
+    EXPECT(second.family != 0);  // AF_INET6.
 
-    ASSERT(third.name == "/path/to.socket");
-    ASSERT(third.port == 27019u);
-    ASSERT(third.family != 0);  // AF_UNIX.
+    EXPECT(third.name == "/path/to.socket");
+    EXPECT(third.port == 27019u);
+    EXPECT(third.family != 0);  // AF_UNIX.
 }
 // [Example]
 

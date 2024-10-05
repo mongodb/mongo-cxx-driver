@@ -33,7 +33,7 @@ namespace {
 void example(mongocxx::client client) {
     std::vector<std::string> names = client.list_database_names();
 
-    ASSERT(std::count(names.begin(), names.end(), "admin") == 1);
+    EXPECT(std::count(names.begin(), names.end(), "admin") == 1);
 }
 // [Example]
 

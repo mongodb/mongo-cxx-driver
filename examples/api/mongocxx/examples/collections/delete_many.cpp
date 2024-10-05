@@ -40,35 +40,35 @@ void example(mongocxx::collection coll) {
 
     // Basic usage.
     {
-        ASSERT(coll.count_documents(x1.view()) == 1);
-        ASSERT(coll.count_documents(x2.view()) == 1);
-        ASSERT(coll.count_documents(x3.view()) == 1);
+        EXPECT(coll.count_documents(x1.view()) == 1);
+        EXPECT(coll.count_documents(x2.view()) == 1);
+        EXPECT(coll.count_documents(x3.view()) == 1);
 
         auto result_opt = coll.delete_many(bsoncxx::from_json(R"({"x": {"$gt": 1}})"));
 
-        ASSERT(result_opt);
+        EXPECT(result_opt);
 
         mongocxx::result::delete_result& result = *result_opt;
 
-        ASSERT(result.deleted_count() == 2);
-        ASSERT(result.result().deleted_count() == 2);
+        EXPECT(result.deleted_count() == 2);
+        EXPECT(result.result().deleted_count() == 2);
 
-        ASSERT(coll.count_documents(x1.view()) == 1);
-        ASSERT(coll.count_documents(x2.view()) == 0);
-        ASSERT(coll.count_documents(x3.view()) == 0);
+        EXPECT(coll.count_documents(x1.view()) == 1);
+        EXPECT(coll.count_documents(x2.view()) == 0);
+        EXPECT(coll.count_documents(x3.view()) == 0);
     }
 
     // With options.
     {
-        ASSERT(coll.count_documents(x1.view()) == 1);
+        EXPECT(coll.count_documents(x1.view()) == 1);
 
         mongocxx::options::delete_options opts;
 
         // ... set delete options.
 
-        ASSERT(coll.delete_many(bsoncxx::from_json(R"({"x": {"$exists": 1}})"), opts));
+        EXPECT(coll.delete_many(bsoncxx::from_json(R"({"x": {"$exists": 1}})"), opts));
 
-        ASSERT(coll.count_documents(x1.view()) == 0);
+        EXPECT(coll.count_documents(x1.view()) == 0);
     }
 }
 // [Example]
@@ -87,7 +87,7 @@ RUNNER_REGISTER_COMPONENT_FOR_SINGLE() {
 
         using insert = mongocxx::model::insert_one;
 
-        ASSERT(coll.create_bulk_write()
+        EXPECT(coll.create_bulk_write()
                    .append(insert{bsoncxx::from_json(R"({"x": 1})")})
                    .append(insert{bsoncxx::from_json(R"({"x": 2})")})
                    .append(insert{bsoncxx::from_json(R"({"x": 3})")})

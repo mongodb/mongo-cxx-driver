@@ -24,20 +24,20 @@ namespace {
 void example() {
     bsoncxx::types::bson_value::value v = nullptr;
 
-    ASSERT(v.view().type() == bsoncxx::type::k_null);
-    ASSERT(v.view().get_null() == bsoncxx::types::b_null{});
+    EXPECT(v.view().type() == bsoncxx::type::k_null);
+    EXPECT(v.view().get_null() == bsoncxx::types::b_null{});
 
     v = bsoncxx::types::b_int32{1};
-    ASSERT(v.view().type() == bsoncxx::type::k_int32);
-    ASSERT(v.view().get_int32().value == 1);
+    EXPECT(v.view().type() == bsoncxx::type::k_int32);
+    EXPECT(v.view().get_int32().value == 1);
 
     v = bsoncxx::types::b_double{2.0};
-    ASSERT(v.view().type() == bsoncxx::type::k_double);
-    ASSERT(v.view().get_double().value == 2.0);
+    EXPECT(v.view().type() == bsoncxx::type::k_double);
+    EXPECT(v.view().get_double().value == 2.0);
 
     v = bsoncxx::types::b_string{"three"};
-    ASSERT(v.view().type() == bsoncxx::type::k_string);
-    ASSERT(v.view().get_string().value.compare("three") == 0);
+    EXPECT(v.view().type() == bsoncxx::type::k_string);
+    EXPECT(v.view().get_string().value.compare("three") == 0);
 }
 // [Example]
 

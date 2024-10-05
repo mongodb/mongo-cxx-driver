@@ -34,8 +34,8 @@ namespace {
 void example(mongocxx::collection coll) {
     bsoncxx::document::value result = coll.create_index(bsoncxx::from_json(R"({"key": 1})"));
 
-    ASSERT(result["name"]);
-    ASSERT(result["name"].get_string().value.compare("key_1") == 0);
+    EXPECT(result["name"]);
+    EXPECT(result["name"].get_string().value.compare("key_1") == 0);
 }
 // [Example]
 
@@ -55,10 +55,10 @@ RUNNER_REGISTER_COMPONENT_FOR_SINGLE() {
             return std::distance(cursor.begin(), cursor.end());
         };
 
-        ASSERT(count_indexes() == 1);  // _id
+        EXPECT(count_indexes() == 1);  // _id
 
         example(coll);
 
-        ASSERT(count_indexes() == 2);  // _id, key_1
+        EXPECT(count_indexes() == 2);  // _id, key_1
     }
 }
