@@ -30,7 +30,7 @@ namespace events {
 /// of a server.
 ///
 /// @see
-/// - "ServerHeartbeatSucceededEvent" in https://github.com/mongodb/specifications/blob/master/source/server-discovery-and-monitoring/server-discovery-and-monitoring.rst
+/// - "ServerHeartbeatSucceededEvent" in https://github.com/mongodb/specifications/blob/master/source/server-discovery-and-monitoring/server-discovery-and-monitoring.md
 ///
 class heartbeat_succeeded_event {
    public:

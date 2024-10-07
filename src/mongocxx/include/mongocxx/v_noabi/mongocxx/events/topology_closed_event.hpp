@@ -29,7 +29,7 @@ namespace events {
 /// description.
 ///
 /// @see
-/// - "TopologyClosedEvent" in https://github.com/mongodb/specifications/blob/master/source/server-discovery-and-monitoring/server-discovery-and-monitoring.rst
+/// - "TopologyClosedEvent" in https://github.com/mongodb/specifications/blob/master/source/server-discovery-and-monitoring/server-discovery-and-monitoring.md
 ///
 class topology_closed_event {
    public:

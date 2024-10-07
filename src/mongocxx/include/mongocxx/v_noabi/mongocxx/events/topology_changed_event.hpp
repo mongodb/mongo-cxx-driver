@@ -31,7 +31,7 @@ namespace events {
 /// connected to or a change in the overall server topology.
 ///
 /// @see
-/// - "TopologyDescriptionChangedEvent" in https://github.com/mongodb/specifications/blob/master/source/server-discovery-and-monitoring/server-discovery-and-monitoring.rst
+/// - "TopologyDescriptionChangedEvent" in https://github.com/mongodb/specifications/blob/master/source/server-discovery-and-monitoring/server-discovery-and-monitoring.md
 ///
 class topology_changed_event {
    public:

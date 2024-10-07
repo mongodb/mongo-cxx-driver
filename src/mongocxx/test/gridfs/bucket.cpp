@@ -70,7 +70,7 @@ void validate_gridfs_file(database db,
             stdx::string_view(expected_file_name));
 
     // md5 is deprecated in GridFS, we don't include it:
-    // https://github.com/mongodb/specifications/blob/master/source/gridfs/gridfs-spec.rst
+    // https://github.com/mongodb/specifications/blob/master/source/gridfs/gridfs-spec.md
     REQUIRE(!files_doc->view()["md5"]);
 
     std::int32_t index = 0;
