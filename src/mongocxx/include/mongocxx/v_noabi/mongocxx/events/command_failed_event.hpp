@@ -32,7 +32,7 @@ namespace events {
 /// An event notification sent when the driver fails to execute a MongoDB command.
 ///
 /// @see
-/// - "CommandFailedEvent" in https://github.com/mongodb/specifications/blob/master/source/command-logging-and-monitoring/command-logging-and-monitoring.rst
+/// - "CommandFailedEvent" in https://github.com/mongodb/specifications/blob/master/source/command-logging-and-monitoring/command-logging-and-monitoring.md
 ///
 class command_failed_event {
    public:

@@ -942,7 +942,7 @@ void assert_error(const mongocxx::operation_exception& exception,
         // in assert_error():
         // See
         //
-    "https://github.com/mongodb/specifications/blob/master/source/unified-test-format/unified-test-format.rst#expectederror":
+    "https://github.com/mongodb/specifications/blob/master/source/unified-test-format/unified-test-format.md#expectederror":
         // A substring of the expected error message (e.g. "errmsg" field in a server error
         // document). The test runner MUST assert that the error message contains this string using
         // a case-insensitive match.
@@ -1374,7 +1374,7 @@ TEST_CASE("index management spec automated tests", "[unified_format_specs]") {
 }
 
 // See:
-// https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/client-side-encryption.rst
+// https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/client-side-encryption.md
 TEST_CASE("client side encryption unified format spec automated tests", "[unified_format_specs]") {
     CLIENT_SIDE_ENCRYPTION_ENABLED_OR_SKIP();
     run_unified_format_tests_in_env_dir("CLIENT_SIDE_ENCRYPTION_UNIFIED_TESTS_PATH");

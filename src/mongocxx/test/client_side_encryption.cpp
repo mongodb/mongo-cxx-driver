@@ -2080,7 +2080,7 @@ TEST_CASE("KMS TLS Options Tests", "[client_side_encryption][!mayfail]") {
     }
 }
 
-// https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.rst#test-setup
+// https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.md#test-setup
 std::tuple<mongocxx::client_encryption, mongocxx::client> _setup_explicit_encryption(
     bsoncxx::document::view key1_document, mongocxx::client* key_vault_client) {
     mongocxx::client client{
@@ -2164,7 +2164,7 @@ std::tuple<mongocxx::client_encryption, mongocxx::client> _setup_explicit_encryp
     return std::make_tuple(std::move(client_encryption), std::move(encrypted_client));
 }
 
-// https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.rst
+// https://github.com/mongodb/specifications/blob/master/source/client-side-encryption/tests/README.md
 TEST_CASE("Explicit Encryption", "[client_side_encryption]") {
     instance::current();
 
