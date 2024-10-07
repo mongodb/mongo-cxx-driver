@@ -31,7 +31,7 @@ namespace events {
 /// and begins monitoring it.
 ///
 /// @see
-/// - "ServerOpeningEvent" in https://github.com/mongodb/specifications/blob/master/source/server-discovery-and-monitoring/server-discovery-and-monitoring.rst
+/// - "ServerOpeningEvent" in https://github.com/mongodb/specifications/blob/master/source/server-discovery-and-monitoring/server-discovery-and-monitoring.md
 ///
 class server_opening_event {
    public:
