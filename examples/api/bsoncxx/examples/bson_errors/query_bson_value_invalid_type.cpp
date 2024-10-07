@@ -25,23 +25,23 @@ namespace {
 // [Example]
 void example() {
     bsoncxx::types::bson_value::view v;
-    ASSERT(v.type() == bsoncxx::type::k_null);
-    ASSERT(v.get_null() == bsoncxx::types::b_null{});
+    EXPECT(v.type() == bsoncxx::type::k_null);
+    EXPECT(v.get_null() == bsoncxx::types::b_null{});
 
     try {
         bsoncxx::types::b_int32 i = v.get_int32();  // Throws.
 
-        ASSERT(false && "should not reach this point");
+        EXPECT(false && "should not reach this point");
     } catch (const bsoncxx::exception& ex) {
-        ASSERT(ex.code() == bsoncxx::error_code::k_need_element_type_k_int32);
+        EXPECT(ex.code() == bsoncxx::error_code::k_need_element_type_k_int32);
     }
 
     try {
         bsoncxx::types::b_int64 i = v.get_int64();  // Throws.
 
-        ASSERT(false && "should not reach this point");
+        EXPECT(false && "should not reach this point");
     } catch (const bsoncxx::exception& ex) {
-        ASSERT(ex.code() == bsoncxx::error_code::k_need_element_type_k_int64);
+        EXPECT(ex.code() == bsoncxx::error_code::k_need_element_type_k_int64);
     }
 }
 // [Example]

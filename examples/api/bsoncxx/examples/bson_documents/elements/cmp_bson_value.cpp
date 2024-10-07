@@ -29,18 +29,18 @@ void example(bsoncxx::document::element e) {
     bsoncxx::types::b_int64 b{2};
 
     if (e.get_value() == a) {
-        ASSERT(e.key().compare("a") == 0);
+        EXPECT(e.key().compare("a") == 0);
     } else if (e.get_value() == b) {
-        ASSERT(e.key().compare("b") == 0);
+        EXPECT(e.key().compare("b") == 0);
     }
 
     bsoncxx::types::bson_value::view va{a};
     bsoncxx::types::bson_value::view vb{b};
 
     if (e == va) {
-        ASSERT(e.key().compare("a") == 0);
+        EXPECT(e.key().compare("a") == 0);
     } else if (e == vb) {
-        ASSERT(e.key().compare("b") == 0);
+        EXPECT(e.key().compare("b") == 0);
     }
 }
 // [Example]

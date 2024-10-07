@@ -40,13 +40,13 @@ void example() {
         kvp("a", values[0]), kvp("b", values[1]), kvp("c", values[2]));
     bsoncxx::document::view doc = owner.view();
 
-    ASSERT(doc["a"].type() == bsoncxx::type::k_int32);
-    ASSERT(doc["b"].type() == bsoncxx::type::k_double);
-    ASSERT(doc["c"].type() == bsoncxx::type::k_string);
+    EXPECT(doc["a"].type() == bsoncxx::type::k_int32);
+    EXPECT(doc["b"].type() == bsoncxx::type::k_double);
+    EXPECT(doc["c"].type() == bsoncxx::type::k_string);
 
-    ASSERT(doc["a"].get_value() == values[0]);
-    ASSERT(doc["b"].get_value() == values[1]);
-    ASSERT(doc["c"].get_value() == values[2]);
+    EXPECT(doc["a"].get_value() == values[0]);
+    EXPECT(doc["b"].get_value() == values[1]);
+    EXPECT(doc["c"].get_value() == values[2]);
 }
 // [Example]
 

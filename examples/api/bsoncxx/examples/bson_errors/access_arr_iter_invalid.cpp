@@ -34,11 +34,11 @@ void example() {
 
     auto iter = arr.begin();
 
-    ASSERT(iter == arr.end());  // An invalid BSON document returns an end iterator.
+    EXPECT(iter == arr.end());  // An invalid BSON document returns an end iterator.
 
     bsoncxx::array::element e = *iter;  // DO NOT DO THIS
 
-    ASSERT(!e);  // An end iterator returns an invalid element.
+    EXPECT(!e);  // An end iterator returns an invalid element.
 }
 // [Example]
 

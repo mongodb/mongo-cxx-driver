@@ -56,7 +56,7 @@ void example() {
         //     }
         // }
         std::string json = bsoncxx::to_json(doc, ExtendedJsonMode::k_canonical);
-        ASSERT(
+        EXPECT(
             json ==
             R"({ "a" : { "$numberInt" : "1" }, "b" : { "$numberLong" : "2" }, "c" : { "$binary" : { "base64" : "dGhyZWU=", "subType" : "00" } } })");
     }
@@ -74,7 +74,7 @@ void example() {
         //     }
         // }
         std::string json = bsoncxx::to_json(doc, ExtendedJsonMode::k_relaxed);
-        ASSERT(
+        EXPECT(
             json ==
             R"({ "a" : 1, "b" : 2, "c" : { "$binary" : { "base64" : "dGhyZWU=", "subType" : "00" } } })");
     }
@@ -90,14 +90,14 @@ void example() {
         //     }
         // }
         std::string json = bsoncxx::to_json(doc);
-        ASSERT(json == R"({ "a" : 1, "b" : 2, "c" : { "$binary" : "dGhyZWU=", "$type" : "00" } })");
+        EXPECT(json == R"({ "a" : 1, "b" : 2, "c" : { "$binary" : "dGhyZWU=", "$type" : "00" } })");
     }
 
     {
         std::string a = bsoncxx::to_json(doc);
         std::string b = bsoncxx::to_json(doc, ExtendedJsonMode::k_legacy);
 
-        ASSERT(a == b);
+        EXPECT(a == b);
     }
 }
 // [Example]

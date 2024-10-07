@@ -31,7 +31,7 @@ void example(bsoncxx::document::view a, bsoncxx::document::view b) {
     builder.append(bsoncxx::builder::concatenate(a));
     builder.append(bsoncxx::builder::concatenate(b));
 
-    ASSERT(builder.view() == bsoncxx::from_json(R"({"a": 1, "b": 2})"));
+    EXPECT(builder.view() == bsoncxx::from_json(R"({"a": 1, "b": 2})"));
 }
 // [Example]
 

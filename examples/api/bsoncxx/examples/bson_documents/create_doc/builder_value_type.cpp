@@ -33,13 +33,13 @@ void example() {
         kvp("a", std::int32_t{1}), kvp("b", 2.0), kvp("c", "three"));
     bsoncxx::document::view doc = owner.view();
 
-    ASSERT(doc["a"].type() == bsoncxx::type::k_int32);
-    ASSERT(doc["b"].type() == bsoncxx::type::k_double);
-    ASSERT(doc["c"].type() == bsoncxx::type::k_string);
+    EXPECT(doc["a"].type() == bsoncxx::type::k_int32);
+    EXPECT(doc["b"].type() == bsoncxx::type::k_double);
+    EXPECT(doc["c"].type() == bsoncxx::type::k_string);
 
-    ASSERT(doc["a"].get_int32().value == 1);
-    ASSERT(doc["b"].get_double().value == 2.0);
-    ASSERT(doc["c"].get_string().value.compare("three") == 0);
+    EXPECT(doc["a"].get_int32().value == 1);
+    EXPECT(doc["b"].get_double().value == 2.0);
+    EXPECT(doc["c"].get_string().value.compare("three") == 0);
 }
 // [Example]
 

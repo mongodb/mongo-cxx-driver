@@ -26,9 +26,9 @@ void example() {
     try {
         bsoncxx::oid oid{"invalid"};  // Throws.
 
-        ASSERT(false && "should not reach this point");
+        EXPECT(false && "should not reach this point");
     } catch (const bsoncxx::exception& ex) {
-        ASSERT(ex.code() == bsoncxx::error_code::k_invalid_oid);
+        EXPECT(ex.code() == bsoncxx::error_code::k_invalid_oid);
     }
 
     try {
@@ -36,9 +36,9 @@ void example() {
 
         bsoncxx::oid oid{bytes, sizeof(bytes)};  // Throws.
 
-        ASSERT(false && "should not reach this point");
+        EXPECT(false && "should not reach this point");
     } catch (const bsoncxx::exception& ex) {
-        ASSERT(ex.code() == bsoncxx::error_code::k_invalid_oid);
+        EXPECT(ex.code() == bsoncxx::error_code::k_invalid_oid);
     }
 }
 // [Example]

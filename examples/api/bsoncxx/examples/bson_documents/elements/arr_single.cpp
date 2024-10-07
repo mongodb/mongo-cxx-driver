@@ -25,14 +25,14 @@ namespace {
 // [1, 2.0, "three"]
 void example(bsoncxx::array::element e) {
     if (e.type() == bsoncxx::type::k_int32) {
-        ASSERT(e.key().compare("0") == 0);
+        EXPECT(e.key().compare("0") == 0);
 
         bsoncxx::types::b_int32 v = e.get_int32();
 
-        ASSERT(v.type_id == bsoncxx::type::k_int32);
-        ASSERT(v.value == 1);
+        EXPECT(v.type_id == bsoncxx::type::k_int32);
+        EXPECT(v.value == 1);
     } else {
-        ASSERT(e.key().compare("0") != 0);
+        EXPECT(e.key().compare("0") != 0);
     }
 }
 // [Example]

@@ -46,28 +46,28 @@ void example(bsoncxx::stdx::string_view big_string) {
             doc.append(kvp("too big", big_string));  // Throws.
         }));
 
-        ASSERT(false && "should not reach this point");
+        EXPECT(false && "should not reach this point");
     } catch (const bsoncxx::exception& ex) {
-        ASSERT(ex.code() == bsoncxx::error_code::k_cannot_append_string);
+        EXPECT(ex.code() == bsoncxx::error_code::k_cannot_append_string);
     }
 
     // Builder is in an erroneous state.
     try {
         builder.view();  // Throws.
 
-        ASSERT(false && "should not reach this point");
+        EXPECT(false && "should not reach this point");
     } catch (const bsoncxx::exception& ex) {
-        ASSERT(ex.code() == bsoncxx::error_code::k_unmatched_key_in_builder);
+        EXPECT(ex.code() == bsoncxx::error_code::k_unmatched_key_in_builder);
     }
 
     // Reset builder to a usable state.
     builder.clear();
-    ASSERT(builder.view().empty());
+    EXPECT(builder.view().empty());
 
     // Restore the original state prior to the append failure.
     builder.append(bsoncxx::builder::concatenate_doc{original.view()});
 
-    ASSERT(builder.view() == original.view());
+    EXPECT(builder.view() == original.view());
 }
 // [Example]
 

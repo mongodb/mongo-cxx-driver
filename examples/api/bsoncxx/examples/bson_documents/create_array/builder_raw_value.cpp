@@ -39,8 +39,8 @@ void example(const std::uint8_t* data, std::size_t length) {
     bsoncxx::array::value owner{raw, length, deleter};
     bsoncxx::array::view arr = owner.view();
 
-    ASSERT(arr[0].get_int32().value == 1);
-    ASSERT(arr[1].get_int32().value == 2);
+    EXPECT(arr[0].get_int32().value == 1);
+    EXPECT(arr[1].get_int32().value == 2);
 }
 // [Example]
 

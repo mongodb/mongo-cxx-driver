@@ -37,13 +37,13 @@ void example() {
         bsoncxx::builder::basic::make_document(kvp("a", a), kvp("b", b), kvp("c", c));
     bsoncxx::document::view doc = owner.view();
 
-    ASSERT(doc["a"].type() == bsoncxx::type::k_int32);
-    ASSERT(doc["b"].type() == bsoncxx::type::k_double);
-    ASSERT(doc["c"].type() == bsoncxx::type::k_string);
+    EXPECT(doc["a"].type() == bsoncxx::type::k_int32);
+    EXPECT(doc["b"].type() == bsoncxx::type::k_double);
+    EXPECT(doc["c"].type() == bsoncxx::type::k_string);
 
-    ASSERT(doc["a"].get_int32() == a);
-    ASSERT(doc["b"].get_double() == b);
-    ASSERT(doc["c"].get_string() == c);
+    EXPECT(doc["a"].get_int32() == a);
+    EXPECT(doc["b"].get_double() == b);
+    EXPECT(doc["c"].get_string() == c);
 }
 // [Example]
 

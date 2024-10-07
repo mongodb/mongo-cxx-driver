@@ -29,20 +29,20 @@ void example() {
     bsoncxx::types::b_string v2{"three"};
 
     view_type v;
-    ASSERT(v.type() == bsoncxx::type::k_null);
-    ASSERT(v.get_null() == bsoncxx::types::b_null{});
+    EXPECT(v.type() == bsoncxx::type::k_null);
+    EXPECT(v.get_null() == bsoncxx::types::b_null{});
 
     v = view_type(v0);
-    ASSERT(v.type() == v0.type_id);
-    ASSERT(v.get_int32() == v0);
+    EXPECT(v.type() == v0.type_id);
+    EXPECT(v.get_int32() == v0);
 
     v = view_type(v1);
-    ASSERT(v.type() == v1.type_id);
-    ASSERT(v.get_double() == v1);
+    EXPECT(v.type() == v1.type_id);
+    EXPECT(v.get_double() == v1);
 
     v = view_type(v2);
-    ASSERT(v.type() == v2.type_id);
-    ASSERT(v.get_string() == v2);
+    EXPECT(v.type() == v2.type_id);
+    EXPECT(v.get_string() == v2);
 }
 // [Example]
 
