@@ -20,6 +20,7 @@
 //
 
 #include <algorithm>
+#include <cassert>
 #include <climits>
 #include <cstddef>
 #include <cstdint>
@@ -156,7 +157,7 @@ class runner_type {
 
                 // We don't expect any other failure condition.
                 else {
-                    EXPECT(ret != -1);
+                    assert(ret != -1);
                 }
             }
         }
@@ -238,7 +239,7 @@ class runner_type {
     }
 
     int run() {
-        EXPECT(jobs > 0u);
+        assert(jobs > 0u);
 
         std::cout << "seed: " << seed << std::endl;
 
