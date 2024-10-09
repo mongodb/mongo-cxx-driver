@@ -43,7 +43,7 @@ void example(mongocxx::collection coll) {
     {
         mongocxx::options::estimated_document_count opts;
 
-        // ... set estimated scount options.
+        // ... set estimated count options.
 
         EXPECT(coll.estimated_document_count(opts) == 3);
     }
