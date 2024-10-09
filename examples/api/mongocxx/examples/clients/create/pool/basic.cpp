@@ -37,7 +37,7 @@ void example() {
     }
 
     {
-        mongocxx::uri uri{"mongodb://localhost:27017/?serverSelectionTryOnce=true"};
+        mongocxx::uri uri{"mongodb://localhost:27017/?appName=example"};
         mongocxx::pool pool{uri};
 
         mongocxx::pool::entry entry = pool.acquire();

@@ -22,7 +22,7 @@ namespace {
 
 // [Example]
 void example() {
-    mongocxx::uri uri{"mongodb://localhost:27017/?serverSelectionTryOnce=true"};
+    mongocxx::uri uri{"mongodb://localhost:27017/?appName=example"};
     mongocxx::client client{uri};
 
     EXPECT(client);

@@ -41,14 +41,14 @@ void example() {
 
     {
         mongocxx::uri uri{
-            "mongodb://localhost:27017/dbName?appName=example&serverSelectionTryOnce=false"};
+            "mongodb://localhost:27017/dbName?appName=example&retryReads=true"};
 
         auto database = uri.database();
         EXPECT(database.compare("dbName") == 0);
 
-        auto try_once_opt = uri.server_selection_try_once();
-        EXPECT(try_once_opt);
-        EXPECT(*try_once_opt == false);
+        auto retry_reads_opt = uri.retry_reads();
+        EXPECT(retry_reads_opt);
+        EXPECT(*retry_reads_opt == true);
 
         auto appname_opt = uri.appname();
         EXPECT(appname_opt);
