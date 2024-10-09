@@ -12,8 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <chrono>
-
 #include <mongocxx/collection.hpp>
 #include <mongocxx/database.hpp>
 #include <mongocxx/read_concern.hpp>
@@ -43,6 +41,6 @@ mongocxx::read_concern rc_majority() {
 
 mongocxx::write_concern wc_majority() {
     mongocxx::write_concern wc;
-    wc.majority(std::chrono::milliseconds(0));
+    wc.acknowledge_level(mongocxx::write_concern::level::k_majority);
     return wc;
 }
