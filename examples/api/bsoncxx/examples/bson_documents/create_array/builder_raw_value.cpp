@@ -20,7 +20,6 @@
 #include <bsoncxx/array/view.hpp>
 #include <bsoncxx/builder/basic/array.hpp>
 #include <bsoncxx/document/value.hpp>
-#include <bsoncxx/types.hpp>
 
 #include <examples/api/runner.hh>
 #include <examples/macros.hh>
@@ -36,11 +35,9 @@ void example(const std::uint8_t* data, std::size_t length) {
     std::copy_n(data, length, raw);
 
     deleter_type deleter = [](std::uint8_t* data) { delete[] data; };
-    bsoncxx::array::value owner{raw, length, deleter};
-    bsoncxx::array::view arr = owner.view();
+    bsoncxx::array::value arr{raw, length, deleter};
 
-    EXPECT(arr[0].get_int32().value == 1);
-    EXPECT(arr[1].get_int32().value == 2);
+    EXPECT(arr.view() == bsoncxx::builder::basic::make_array(1, 2));
 }
 // [Example]
 
