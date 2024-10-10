@@ -49,11 +49,14 @@ class uri {
         std::int32_t family;
     };
 
+    ///
+    /// The default URI string: `"mongodb://localhost:27017"`.
+    ///
     static MONGOCXX_ABI_EXPORT const std::string k_default_uri;
 
     ///
     /// Constructs a uri from an optional MongoDB URI string. If no URI string is specified,
-    /// uses the default URI string, 'mongodb://localhost:27017'.
+    /// uses the default URI string: `"mongodb://localhost:27017"`.
     ///
     /// @see
     /// - https://mongoc.org/libmongoc/current/mongoc_uri_t.html

@@ -95,6 +95,64 @@
 ///
 /// @page topic-mongocxx-examples How-To Guides
 /// @brief Examples of how to use the mongocxx library.
+/// @li @subpage topic-mongocxx-examples-instance
+/// @li @subpage topic-mongocxx-examples-logger
+/// @li @subpage topic-mongocxx-examples-uri
+/// @li @subpage topic-mongocxx-examples-clients
+/// @li @subpage topic-mongocxx-examples-databases
+/// @li @subpage topic-mongocxx-examples-collections
+/// @li @subpage topic-mongocxx-examples-operation-exceptions
+///
+
+///
+/// @page topic-mongocxx-examples-instance Instance
+/// @brief How to use a MongoDB C++ Driver instance.
+/// @tableofcontents
+/// @include{doc} api/mongocxx/examples/instance.md
+///
+
+///
+/// @page topic-mongocxx-examples-logger Logger
+/// @brief How to use a custom logger with a MongoDB C++ Driver instance.
+/// @tableofcontents
+/// @include{doc} api/mongocxx/examples/logger.md
+///
+
+///
+/// @page topic-mongocxx-examples-uri URI
+/// @brief How to create and use URIs.
+/// @tableofcontents
+/// @see [Connection Strings (MongoDB
+/// Manual)](https://www.mongodb.com/docs/manual/reference/connection-string/)
+/// @include{doc} api/mongocxx/examples/uri.md
+///
+
+///
+/// @page topic-mongocxx-examples-clients Clients
+/// @brief How to use clients and client pools.
+/// @tableofcontents
+/// @include{doc} api/mongocxx/examples/clients.md
+///
+
+///
+/// @page topic-mongocxx-examples-databases Databases
+/// @brief How to obtain and use databases.
+/// @tableofcontents
+/// @include{doc} api/mongocxx/examples/databases.md
+///
+
+///
+/// @page topic-mongocxx-examples-collections Collections
+/// @brief How to obtain and use collections.
+/// @tableofcontents
+/// @include{doc} api/mongocxx/examples/collections.md
+///
+
+///
+/// @page topic-mongocxx-examples-operation-exceptions Operation Exceptions
+/// @brief How to handle exceptions thrown by database and collection operations.
+/// @tableofcontents
+/// @include{doc} api/mongocxx/examples/operation_exceptions.md
 ///
 
 ///

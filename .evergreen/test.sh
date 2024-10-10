@@ -297,6 +297,9 @@ else
   # API version to example clients, so examples will fail when requireApiVersion
   # is true.
   if [[ -z "${MONGODB_API_VERSION:-}" ]]; then
+    # Avoid `[__NSCFConstantString initialize] may have been in progress in another thread when fork() was called.` errors on MacOS.
+    export OBJC_DISABLE_INITIALIZE_FORK_SAFETY=YES
+
     echo "Running examples..."
     if ! "${cmake_binary:?}" --build . --target run-examples --parallel 1 >|output.txt 2>&1; then
       # Only emit output on failure.
