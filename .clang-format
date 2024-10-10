@@ -5,18 +5,33 @@ BasedOnStyle: Google
 BinPackArguments: false
 BinPackParameters: false
 ColumnLimit: 100
+CommentPragmas: '^\s*(@(addtogroup|copydoc|defgroup|fn|ref)|- )'
 Cpp11BracedListStyle: true
 DerivePointerAlignment: false
 IncludeBlocks: Regroup
 IncludeCategories:
-  - Regex: 'prelude\.(hpp|hh)' # preludes
-    Priority: 4
+  - Regex: '".*"' # relative headers
+    Priority: 10
+  - Regex: 'bsoncxx/config(/private)?/prelude\.(hpp|hh)' # v_noabi preludes
+    Priority: 50
+  - Regex: 'mongocxx/config(/private)?/prelude\.(hpp|hh)' # v_noabi preludes
+    Priority: 51
+  - Regex: 'bsoncxx/test/.*' # test headers
+    Priority: 60
+  - Regex: 'mongocxx/test/.*' # test headers
+    Priority: 61
   - Regex: '<[[:alnum:]_.]+>' # system headers
-    Priority: 1
-  - Regex: '.*(-|\/)fwd\.(hpp|hh)' # forwarding headers
-    Priority: 2
-  - Regex: '.*' # driver headers
-    Priority: 3
+    Priority: 20
+  - Regex: 'bsoncxx/.*(-|\/)fwd\.(hpp|hh)' # all driver forwarding headers
+    Priority: 30
+  - Regex: 'mongocxx/.*(-|\/)fwd\.(hpp|hh)' # all driver forwarding headers
+    Priority: 31
+  - Regex: 'bsoncxx/.*' # all remaining (normal) driver headers
+    Priority: 40
+  - Regex: 'mongocxx/.*' # all remaining (normal) driver headers
+    Priority: 41
+  - Regex: '.*' # all other headers (third party)
+    Priority: 90
 IndentWidth: 4
 MaxEmptyLinesToKeep: 1
 NamespaceIndentation: None

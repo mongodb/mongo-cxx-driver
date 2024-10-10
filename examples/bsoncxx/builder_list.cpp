@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,9 +18,11 @@
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/bson_value/value.hpp>
 
+#include <examples/macros.hh>
+
 using namespace bsoncxx;
 
-int main(int, char**) {
+int EXAMPLES_CDECL main() {
     using namespace bsoncxx::builder;
 
     //

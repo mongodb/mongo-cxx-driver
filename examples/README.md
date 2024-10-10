@@ -16,6 +16,6 @@
 ## Building project examples
 
 1. Install `libmongoc` and `mongocxx` following the [installation
-   instructions](https://www.mongodb.com/docs/languages/cpp/drivers/current/installation/)
+   instructions](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/installation/)
 2. Change to one of the project example directories, e.g. `examples/projects/cmake/mongocxx/shared`
 3. Run `./build.sh`

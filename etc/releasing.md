@@ -1,40 +1,128 @@
 # Releasing the mongocxx driver
 
-If doing a release on a version prior to 3.5.0, follow the old instructions from
-the shared Google drive. Go to File -> Version History -> See Version History
-and select the version "Pre CXX-584".
+The release steps for a patch release differ slightly from release steps for a minor or major release.
+Ensure steps specific to patch releases are correctly applied or skipped depending on the type of release.
 
-## Ensure tests are passing
+`X.Y.Z` is used to refer to a release version with major version `X`, minor version `Y`, and patch version `Z`. For sake of examples, `1.2.3` is used as the new patch release version and `1.3.0` is used as the non-patch release version (implying the current stable release version is `1.2.2`).
 
-Ensure the latest commit has run tests on the Evergreen waterfall.
+> [!WARNING]
+> Do NOT accidentally use example version numbers when executing release commands and scripts!
 
-For a minor release this should be the
-[waterfall](https://spruce.mongodb.com/commits/mongo-cxx-driver) tracking the
-master branch (requires auth).
-For a patch release this is the waterfall tracking the latest release. E.g. if you are
-releasing 1.2.3, then refer to the the waterfall tracking
-[releases/v1.2](https://spruce.mongodb.com/commits/mongo-cxx-driver-latest-release)
-(requires auth).
+## Remote Repositories
 
-If there are test failures, ensure they are at least expected or not introduced
-by changes in the new release.
+In some steps, the main remote repository must be distinguished from a personal fork remote repository.
 
-## Check Coverity
+The main repository is referred to as `upstream`.
+
+The fork repository is referred to as `origin`.
+
+The main repository may be explicitly named during initial clone via `--origin <name>`:
+
+```bash
+git clone -o upstream git@github.com:mongodb/mongo-cxx-driver.git
+```
+
+The fork repository may be subsequently added via `git remote add`:
+
+```bash
+git remote add origin git@github.com:<username>/mongo-cxx-driver.git
+```
+
+An existing remote may be renamed using `git remote rename <old> <new>`.
+
+## Secrets and Credentials
+
+> [!WARNING]
+> Avoid directly typing secret values as command-line arguments. Save the secret values to the relevant file using an editor. Use `source path/to/secret.txt && program --argument "${SECRET:?}"` instead of `program --argument "<secret>"`.
+
+Some release steps require one or more of the following secrets.
+
+- A GitHub Personal Access Token (Classic).
+  - Location: `~/.secrets/github-token.txt`
+  - Format:
+    ```
+    <github_token>
+    ```
+  - Instructions: go to the GitHub settings page
+  [Personal Access Tokens](https://github.com/settings/tokens) and create a
+  (classic) token with the "repo" scope selected.
+
+    Configure SSO to authorize this token for the `mongodb` organization. (Do not forget this step!)
+- Jira OAuth credentials.
+  - Location: `~/.secrets/jira-creds.txt`
+  - Format:
+    ```
+    Username: evergreen.jirareleases@mongodb.com
+
+    access_token : <access_token>
+    access_token_secret : <access_token_secret>
+    consumer_key : <consumer_key>
+    key_cert: -----BEGIN RSA PRIVATE KEY-----\n...\n-----END RSA PRIVATE KEY-----
+    ```
+    Note the `"\n"` strings must be preserved as-is in the key_cert value.
+- Artifactory credentials.
+  - Location: `~/.secrets/artifactory-creds.txt`:
+  - Format:
+    ```bash
+    ARTIFACTORY_USER=<username>
+    ARTIFACTORY_PASSWORD=<password>
+    ```
+- Garasign credentials
+  - Location: `~/.secrets/garasign-creds.txt`
+  - Format:
+    ```bash
+    GRS_CONFIG_USER1_USERNAME=<username>
+    GRS_CONFIG_USER1_PASSWORD=<password>
+    ```
+- Silk credentials.
+  - Location: `~/.secrets/silk-creds.txt`
+  - Format:
+    ```bash
+    SILK_CLIENT_ID=<client_id>
+    SILK_CLIENT_SECRET=<client_secret>
+    ```
+- Snyk credentials.
+  - Location: `~/.secrets/snyk-creds.txt`
+  - Format:
+    ```bash
+    SNYK_API_TOKEN=<token>
+    ```
+
+## Pre-Release Steps
+
+> [!TIP]
+> Pre-release steps should preferably be done regularly and PRIOR to the scheduled release date.
+
+### Evergreen
+
+Ensure Evergreen has run mainline tasks on the latest commit.
+
+For non-patch releases, check the [mongo-cxx-driver](https://spruce.mongodb.com/commits/mongo-cxx-driver) project mainline.
+
+For patch releases, check the [mongo-cxx-driver-latest-release](https://spruce.mongodb.com/commits/mongo-cxx-driver-latest-release) project
+
+Ensure there are no new or unexpected task failures.
+
+### Minimum Required MongoDB C Driver Version
+
+Ensure `mongoc_version_minimum` and related values are updated for the latest minimum required C Driver release.
+
+See the comment accompanying `mongoc_version_minimum` for a list of other sources to update.
+
+### Coverity
 
 Ensure there are no new or unexpected issues with High severity or greater.
 
 Update the [SSDLC Report spreadsheet](https://docs.google.com/spreadsheets/d/1sp0bLjj29xO9T8BwDIxUk5IPJ493QkBVCJKIgptxEPc/edit?usp=sharing) with any updates to new or known issues.
 
-## Check and Update the SBOM Lite
-
-**Note: this should preferably be done regularly and PRIOR to the scheduled release date.**
+### SBOM Lite
 
 Ensure the list of bundled dependencies in `etc/purls.txt` is up-to-date. If not, update `etc/purls.txt`.
 
 If `etc/purls.txt` was updated, update the SBOM Lite document using the following command(s):
 
 ```bash
-# Artifactory and Silk credentials. Ask for these from a team member.
+# Artifactory and Silk credentials.
 . $HOME/.secrets/artifactory-creds.txt
 . $HOME/.secrets/silk-creds.txt
 
@@ -54,16 +142,19 @@ podman run \
 
 Commit the latest version of the SBOM Lite document into the repo as `etc/cyclonedx.sbom.json`. (This may just be a modification of the timestamp.)
 
-## Check and Update the Augmented SBOM
+Generate an updated Augmented SBOM as described below.
 
-**Note: this should preferably be done regularly and PRIOR to the scheduled release date.**
+> [!IMPORTANT]
+> If the SBOM Lite was updated, generate an updated Augmented SBOM as described below even if the `silk-check-augmented-sbom` is currently passing on Evergreen!
 
-Ensure the `silk-check-augmented-sbom` task is passing on Evergreen for the relevant release branch. If it is passing, nothing needs to be done.
+### Augmented SBOM
+
+Ensure the `silk-check-augmented-sbom` task is passing on Evergreen for the relevant release branch. If it is passing, nothing needs to be done (unless the SBOM Lite was updated as described above).
 
  If the `silk-check-augmented-sbom` task was failing, update the Augmented SBOM document using the following command(s):
 
 ```bash
-# Artifactory and Silk credentials. Ask for these from a team member.
+# Artifactory and Silk credentials.
 . $HOME/.secrets/artifactory-creds.txt
 . $HOME/.secrets/silk-creds.txt
 
@@ -85,241 +176,301 @@ Review the contents of the new Augmented SBOM and ensure any new or known vulner
 
 Update the [SSDLC Report spreadsheet](https://docs.google.com/spreadsheets/d/1sp0bLjj29xO9T8BwDIxUk5IPJ493QkBVCJKIgptxEPc/edit?usp=sharing) with any updates to new or known vulnerabilities.
 
-Update `etc/third_party_vulnerabilities.md` with any updates to new or known vulnerabilities for third party dependencies that must be reported.
+Update `etc/third_party_vulnerabilities.md` with any updates to new or known vulnerabilities for third party dependencies that have not yet been fixed by the upcoming release.
 
 Commit the latest version of the Augmented SBOM document into the repo as `etc/augmented.sbom.json`. The Augmented SBOM document does not need to be updated if the `silk-check-augmented-sbom` was not failing (in which case the only changes present would a version bump or timestamp update).
 
-## Check and Update Snyk
+### Check Snyk
 
-**Note: this should preferably be done regularly and PRIOR to the scheduled release date.**
-
-Inspect the list of projects in the latest report for the mongodb/mongo-cxx-driver target in [Snyk](https://app.snyk.io/).
+Inspect the list of projects in the latest report for the `mongodb/mongo-cxx-driver` target in [Snyk](https://app.snyk.io/org/dev-prod/).
 
 Deactivate any projects that will not be relevant in the upcoming release. Remove any projects that are not relevant to the current release.
 
-## Check fixVersions in Jira
+### Check Jira
 
-Ensure that all tickets under the
-[version to be released](https://jira.mongodb.com/projects/CXX?selectedItem=com.atlassian.jira.jira-projects-plugin%3Arelease-page&status=unreleased)
-are in `Closed` status on the C++ Driver releases page. If not, bulk change open
-tickets that will NOT be in the release to a new version (create it if
-necessary).
+Inspect the list of tickets assigned to the version to be released on [Jira](https://jira.mongodb.com/projects/CXX?selectedItem=com.atlassian.jira.jira-projects-plugin%3Arelease-page&status=unreleased).
 
-For a patch release, check that all tickets for the version to be released have
-changes cherry-picked onto the release branch. This is indicated by a comment on
-the ticket. Here is an
-[example comment](https://jira.mongodb.com/browse/CXX-2650?focusedCommentId=5271981&page=com.atlassian.jira.plugin.system.issuetabpanels:comment-tabpanel#comment-5271981).
+Ensure all related ticket statuses are `Closed` (with the exception of the ticket tracking the release itself).
 
-## Audit Jira ticket titles and types
+For tickets that will not be part of this release, update their fix version accordingly.
 
-Update Jira ticket types and titles as appropriate.
-User-facing issues should generally be either "Bug" or "New Feature".
-Non-user facing issues should generally be "Task" tickets.
+> [!IMPORTANT]
+> For a patch release, ensure the commits for all related tickets have been cherry-picked onto the release branch.
 
-## Update CHANGELOG.md pre-release ...
+> [!TIP]
+> This is a good time to also update entries in `CHANGELOG.md` corresponding to the tickets whose fix versions are being updated.
 
-### ... for a minor release (e.g. `1.2.0`)
+Update the contents of related Jira tickets as appropriate (improve the title, clarify the description, link related tickets, etc.).
 
-Create a new branch to contain changelog updates from the master branch: `git checkout -b pre-release-changes master`. This branch will be used to create a PR.
+> [!NOTE]
+> A ticket whose changes may impact users should either be a "Bug" or "New Feature".
+> Otherwise, the ticket should typically be a "Task".
 
-Check Jira for tickets closed in this fix version. Update CHANGELOG.md with notable changes not already mentioned. Remove `[Unreleased]` from the version being released.
+## Release Steps
 
-Check if there is an `[Unreleased]` section for a patch version (e.g. `1.1.4 [Unreleased]`). Normally, the C++ Driver does not release patches for old minor versions. If an unreleased patch release section is no longer applicable, move its entries into the minor release section (as needed) and remove the patch release section. If you are unsure whether the patch release is planned, ask in the #dbx-c-cxx channel.
+### Update CHANGELOG...
 
-Example (if `1.2.0` is being released):
+This step depends on the release type.
+
+#### ... for a Patch Release
+
+Checkout the current release branch `releases/vX.Y` (e.g. for a patch release `1.2.3`, the current release branch is `releases/v1.2`).
+
+```bash
+git fetch upstream
+git checkout releases/vX.Y
+```
+
+Update `CHANGELOG.md` with a summary of important changes in this release. Consult the list of related Jira tickets (updated ealier) as well as the list of commits since the last release.
+
+Remove the `[Unreleased]` tag from the relevant patch release section, e.g. for release `1.2.3`:
+
 ```md
-## 1.2.0 [Unreleased]
+## 1.2.3
 
-### Fixed
+...
 
-- Fixes A <!-- Unreleased fix on master branch -->
+## 1.2.2
 
-## 1.1.4 [Unreleased]
+...
 
-### Fixed
-
-- Fixes B <!-- Unreleased fix on `releases/v1.1` branch. B is implicity fixed on 1.2.0. Change was cherry-picked from master. -->
 ```
 
-Becomes:
+Commit and push the updates to `CHANGELOG.md` to `releases/vX.Y` (a PR is not required):
+
+```bash
+git commit -m 'Update CHANGELOG for X.Y.Z'
+git push upstream releases/vX.Y
+```
+
+#### ... for a Non-Patch Release
+
+Create a new branch named `pre-release-changes` on `master`. This branch will be used to later create a PR prior to release.
+
+```bash
+git fetch upstream
+git checkout -b pre-release-changes upstream/master
+```
+
+Update `CHANGELOG.md` with a summary of important changes in this release. Consult the list of related Jira tickets (updated earlier) as well as the list of commits since the last release.
+
+Remove the `[Unreleased]` tag from the relevant non-patch release section, e.g. for release `1.3.0`:
+
 ```md
-## 1.2.0
+## 1.3.0
 
-### Fixed
+...
 
-- Fixes A
-- Fixes B <!-- 1.1.4 is no longer planned. Document B in 1.2.0 -->
-```
+## 1.2.2
 
-Commit with a message like `Update CHANGELOG for <version>`. Create a PR for the `pre-release-changes` branch which contains the commits made up to this point. Once the PR is merged, proceed with the rest of the release. The `pre-release-changes` branch may be deleted.
-
-### ... for a patch release (e.g. `1.2.3`)
-
-Check out the existing release branch (e.g. `releases/v1.2`).
-
-Check Jira for tickets closed in this fix version. Update CHANGELOG.md with notable changes not already mentioned. Remove `[Unreleased]` from the version being released.
-
-Commit with a message like `Update CHANGELOG for <version>`. Push the change.
-
-
-## Clone and set up environment
-
-Do a fresh clone, to avoid local git branches or IDE files from interfering.
+...
 
 ```
-git clone git@github.com:mongodb/mongo-cxx-driver.git mongo-cxx-driver-release
+
+> [!IMPORTANT]
+> If there are entries under an unreleased patch release section with the old minor release number, move the entries into this release's section and remove the unreleased patch release section. For example, for a `1.3.0` minor release, move entries from `1.2.3 [Unreleased]` to `1.3.0` and remove `1.2.3 [Unreleased]`. Due to cherry-picking, a non-patch release should always (already) contain the changes targeting a patch release with a prior minor version number. (This is analogous to updating the fix version of Jira tickets, as done earlier.)
+
+Commit the updates to `CHANGELOG.md`.
+
+```bash
+git commit -m 'Update CHANGELOG for X.Y.Z'
+```
+
+## Pre-Release Changes PR
+
+Push the `pre-release-changes` branch to a fork repository and create a PR to merge `pre-release-changes` onto `master`:
+
+```bash
+git remote add origin git@github.com:<username>/mongo-cxx-driver.git
+git push -u origin pre-release-changes
+```
+
+Once the PR is merged, delete the `pre-release-changes` branch.
+
+### Fresh Clone
+
+To avoid potential complications during the release process, clone the updated repository in a new directory:
+
+```bash
+git clone -o upstream git@github.com:mongodb/mongo-cxx-driver.git mongo-cxx-driver-release
 cd mongo-cxx-driver-release
 ```
 
-Start a Python 3 virtual environment and install required packages with pip.
+Create and activate a fresh Python 3 virtual environment with required packages installed:
 
-```
-python3 -m venv ~/virtualenv
-. ~/virtualenv/bin/activate
+```bash
+
+python3 -m venv ~/mongo-cxx-driver-release-venv # Outside the mongo-cxx-driver-release directory!
+source ~/mongo-cxx-driver-release-venv/bin/activate
 pip install -r etc/requirements.txt
 ```
 
-## Tag the release
+### Create a Release Tag...
 
-If doing a minor release (e.g. releasing r1.2.0, with a zero patch component),
-stay on the master branch. You will create a new `releases/vX.Y` branch later in
-the instructions. If doing a patch release (e.g. releasing rX.Y.Z with non-zero
-`Z`), check out the corresponding release branch, which should be an existing
-`releases/vX.Y` branch.
+> [!IMPORTANT]
+> Do NOT push the release tag immediately after its creation!
 
-Create a tag for the commit to serve as the release (or release candidate):
+#### ... for a Patch Release
 
+Checkout the release branch (containing the changes from earlier steps) and create a tag for the release.
+
+```bash
+git checkout releases/vX.Y
+git tag rX.Y.Z
 ```
-git tag r1.2.3
+
+#### ... for a Non-Patch Release
+
+Checkout the `master` branch (containing the changes from earlier steps) and create a tag for the release:
+
+```bash
+git checkout master
+git tag rX.Y.0
 ```
 
-## Run make_release.py
+> [!NOTE]
+> A new release branch `releases/vX.Y` will be created later as part of post-release steps.
 
-`make_release.py` creates the distribution tarball
-(e.g. mongo-cxx-driver-r1.2.3.tar.gz) and corresponding signature file (e.g.
-mongo-cxx-driver-r1.2.3.tar.gz.asc), interacts with Jira, and drafts the release
-on GitHub.
+### Run etc/make_release.py
 
-To see all available options, run with `--help`
+This script performs the following steps:
+
+- create the distribution tarball (e.g. `mongo-cxx-driver-r1.2.3.tar.gz`),
+- creates a signature file for the distribution tarball (e.g. `mongo-cxx-driver-r1.2.3.tar.gz.asc`),
+- query Jira for release and ticket statuses, and
+- creates a release draft on GitHub.
+
+To see all available options, run with `--help`.
 
 ```
 python ./etc/make_release.py --help
 ```
 
-The following credentials are required. Ask for these from a team member if necessary. (Note: avoid typing secrets as command-line arguments).
+The following secrets are required by this script:
 
-- A GitHub token. Go to the GitHub settings page
-  [Personal Access Tokens](https://github.com/settings/tokens) and create a
-  token.  Save the token secret to `~/.secrets/github_token.txt`.
-- Jira OAuth credentials. Save it to `~/.secrets/jira_creds.txt`.
-- Artifactory credentials. Save these to `~/.secrets/artifactory-creds.txt`:
-  ```bash
-  ARTIFACTORY_USER=<username>
-  ARTIFACTORY_PASSWORD=<password>
-  ```
-- Garasign credentials. Save these to `~/.secrets/garasign-creds.txt`:
-  ```bash
-  GRS_CONFIG_USER1_USERNAME=<username>
-  GRS_CONFIG_USER1_PASSWORD=<password>
-  ```
-- Silk credentials. Save these to `~/.secrets/silk-creds.txt`:
-  ```bash
-  SILK_CLIENT_ID=<client_id>
-  SILK_CLIENT_SECRET=<client_secret>
-  ```
-- Snyk credentials. Save these to `~/.secrets/snyk-creds.txt`:
-  ```bash
-  SNYK_API_TOKEN=<token>
-  ```
+- GitHub Personal Access Token.
+- Jira OAuth credentials.
+- Artifactory credentials.
+- Garasign credentials.
 
 Run the release script with the git tag created above as an argument and
 `--dry-run` to test for unexpected errors.
 
-```
-python ./etc/make_release.py \
-    --dry-run \
-    --jira-creds-file ~/.secrets/jira_creds.txt \
-    --github-token-file ~/.secrets/github_token.txt \
-    r1.2.3
+```bash
+make_release_args=(
+    --jira-creds-file ~/.secrets/jira-creds.txt
+    --github-token-file ~/.secrets/github-token.txt
+)
+python ./etc/make_release.py "${make_release_args[@]:?}" --dry-run rX.Y.Z
 ```
 
-If all goes well, run the command again without `--dry-run`, which should build
-and test the tarball and draft the GitHub release.
-
-### Troubleshooting make_release.py
+> [!TIP]
+> Export environment variables (e.g. `CMAKE_BUILD_PARALLEL_LEVEL`, `CMAKE_GENERATOR`, etc.) to improve the speed of this command.
 
 If an error occurs, inspect logs the script produces, and troubleshoot as
 follows:
 
 - Use `--dry-run` to prevent unrecoverable effects.
 - If building the C driver fails, use an existing C driver build (ensure it is
-  the right version) with `--with-c-driver /path/to/cdriver/install`.
+  the right version) with `--with-c-driver /path/to/c-driver/install`.
 - Use `--skip-distcheck` to bypass time consuming checks when building the
   distribution tarball.
 - If the script succeeded at creating the distribution tarball, pass it directly
-  with `--dist-file ./build/mongo-cxx-driver-r1.2.3.tar.gz`.
+  with `--dist-file ./build/mongo-cxx-driver-rX.Y.Z.tar.gz`.
 
-## Push the tag
+If all goes well, run the command again without `--dry-run`. This should update Jira and create a draft release on GitHub.
 
-Review the build output and, assuming the distcheck target is successful, push
-the tag into the main remote:
+Verify the successful creation of the release draft on GitHub.
 
-```
-git push git@github.com:mongodb/mongo-cxx-driver.git refs/tags/r1.2.3
-```
+### Push the Release Tag
 
-### Release the Version in GitHub
+Push the release tag (created earlier) to the remote repository:
 
-Review the generated release draft on GitHub, then publish the release:
-
-```
-Edit -> Publish Release
+```bash
+git push upstream rX.Y.Z
 ```
 
-## Release the Version in Jira
+### Release on GitHub
+
+Verify the pushed release tag is detected by the release draft (refresh the page if necessary).
+
+Review the contents of the release draft, then publish the release.
+
+### Release on Jira
 
 Navigate to the
 [fixVersions page on Jira](https://jira.mongodb.com/plugins/servlet/project-config/CXX/versions?status=unreleased).
-Click the "..." next to the version you are about to release and select
-"Release".
 
-## Update releases/stable branch if needed
+Click the "..." next to the relevant version and select "Release".
+
+### Update releases/stable
 
 The `releases/stable` branch tracks the most recent "stable" release for users
 who install from the git repository.
 
-After any stable release (i.e. not an alpha, beta, RC, etc. release), check out
-the `releases/stable` branch, reset it to the new release tag, and force push it
-to the repo:
+> [!WARNING]
+> This step does NOT apply to alpha, beta, release candidate (RC), or similar types of "unstable" release versions which may contain a suffix in its release tag.
 
-```
+Check out the `releases/stable` branch, hard-reset it to the new release tag, then force-push it
+to the remote repository:
+
+```bash
 git checkout releases/stable
-git reset --hard r1.2.3
-git push -f origin releases/stable
+git reset --hard rX.Y.Z
+git push -f upstream releases/stable
 ```
 
-## Branch if necessary
+### Upload SSDLC Reports
 
-If doing a new minor release `X.Y.0` (e.g. a `1.2.0` release), create branch
-`releases/vX.Y` (e.g `releases/v1.2`): `git checkout -b releases/v1.2 master`
+Navigate to the [C++ Driver SSDLC Reports](https://drive.google.com/drive/folders/1q9RI55trFzHlh8McALSIAbT6ugyn8zlO) folder and update the master spreadsheet.
 
-Push the new branch:
+Once complete, make two copies of the spreadsheet.
+
+Rename one copy to: "SSDLC Report: mongo-cxx-driver X.Y.Z". Leave this copy in this folder.
+
+Rename the other copy to: "static_analysis_report-X.Y.Z". Move this copy into the [SSDLC Compliance Files](https://drive.google.com/drive/folders/1_qwTwYyqPL7VjrZOiuyiDYi1y2NYiClS) folder and name it.
+
+Upload a copy of the `etc/ssdlc_compliance_report.md`, `etc/third_party_vulnerabilities.md`, and `etc/augmented.sbom.json` files. Rename the files with the version number `-X.Y.Z` suffix in their filenames as already done for other files in this folder.
+
+> [!WARNING]
+> Uploading a file into the SSDLC Compliance Files folder is an irreversible action! However, the files may still be renamed. If necessary, rename any accidentally uploaded files to "(Delete Me)" or similar.
+
+Four new files should be present in the [SSDLC Compliance Files](https://drive.google.com/drive/folders/1_qwTwYyqPL7VjrZOiuyiDYi1y2NYiClS) folder following a release `X.Y.Z`:
 
 ```
-git push --set-upstream origin releases/v1.2
+ssdlc_compliance_report-X.Y.Z.md
+third_party_vulnerabilities-X.Y.Z.md
+static_analysis-X.Y.Z
+augmented.sbom-X.Y.Z.json
+```
+
+## Post-Release Steps
+
+### Create a New Release Branch
+
+> [!IMPORTANT]
+> The creation of a new release branch only applies to non-patch releases! Patch releases should continue to use the existing release branch.
+
+For a new non-patch release `X.Y.0`, create a new branch `releases/vX.Y`:
+
+```bash
+git fetch upstream
+git checkout -b releases/vX.Y upstream/master
+```
+
+Push the new branch to the remote repository:
+
+```
+git push upstream releases/vX.Y
 ```
 
 The new branch should be continuously tested on Evergreen. Update the "Display Name" and "Branch Name" of the [mongo-cxx-driver-latest-release Evergreen project](https://spruce.mongodb.com/project/mongo-cxx-driver-latest-release/settings/general) to refer to the new release branch.
 
-## Update Silk and Snyk with new branch if necessary
-
-After creating the new minor release branch in the prior step, update Silk and Snyk to trach the new release branch.
-
-For Silk, use the [create-silk-asset-group.py script](https://github.com/mongodb/mongo-c-driver/blob/master/tools/create-silk-asset-group.py) in the C Driver to create a new Silk asset group:
+The new branch should be tracked by Silk. Use the [create-silk-asset-group.py script](https://github.com/mongodb/mongo-c-driver/blob/master/tools/create-silk-asset-group.py) in the C Driver to create a new Silk asset group:
 
 ```bash
 # Snyk credentials. Ask for these from a team member.
-. ~/.secrets/silk-creds.txt.
+. ~/.secrets/silk-creds.txt
 
 # Ensure correct release version number!
 version="X.Y"
@@ -337,14 +488,30 @@ create_args=(
 python path/to/tools/create-silk-asset-group.py "${create_args[@]:?}"
 ```
 
-For Snyk, configure and build the CXX Driver with `BSONCXX_POLY_USE_MNMLSTC=ON` (force download of mnmlstc/core sources) and no `CMAKE_PREFIX_PATH` entry to a C Driver installation (force download of C Driver sources), then run:
+Verify the new asset group (`mongo-cxx-driver-X.Y`) is present in the [Silk Asset Inventory](https://us1.app.silk.security/inventory/all).
+
+### Update Snyk
+
+> [!IMPORTANT]
+> Run the Snyk commands in a fresh clone of the post-release repository to avoid existing build and release artifacts from affecting Snyk.
+
+Checkout the new release tag.
+
+Configure and build the CXX Driver with `BSONCXX_POLY_USE_MNMLSTC=ON` (force download of mnmlstc/core sources) and no `CMAKE_PREFIX_PATH` entry to an existing C Driver installation (force download of C Driver sources):
+
+```bash
+cmake -S . -B build -D BSONCXX_POLY_USE_MNMLSTC=ON
+cmake --build build
+```
+
+Then run:
 
 ```bash
 # Snyk credentials. Ask for these from a team member.
 . ~/.secrets/snyk-creds.txt
 
-# Name of the new minor release branch. Ensure this is correct!
-branch="releases/vX.Y"
+# The new release tag. Ensure this is correct!
+release_tag="rX.Y.Z"
 
 # Authenticate with Snyk dev-prod organization.
 snyk auth "${SNYK_API_TOKEN:?}"
@@ -354,7 +521,7 @@ snyk auth "${SNYK_API_TOKEN:?}"
 snyk_args=(
   --org=dev-prod
   --remote-repo-url=https://github.com/mongodb/mongo-cxx-driver/
-  --target-reference="${branch:?}"
+  --target-reference="${release_tag:?}"
   --unmanaged
   --all-projects
   --detection-depth=10 # build/src/bsoncxx/third_party/_deps/core-install/include/core
@@ -362,153 +529,283 @@ snyk_args=(
 )
 snyk test "${snyk_args[@]:?}" --print-deps
 
-# Create a new Snyk target reference for the new release branch.
+# Create a new Snyk target reference for the new release tag.
 snyk monitor "${snyk_args[@]:?}"
 ```
 
-## Create Documentation Tickets
+Verify the new Snyk target reference is present in the [Snyk project targets list](https://app.snyk.io/org/dev-prod/projects?groupBy=targets&before&after&searchQuery=mongo-cxx-driver&sortBy=highest+severity&filters[Show]=&filters[Integrations]=cli&filters[CollectionIds]=) for `mongodb/mongo-cxx-driver`.
 
-Documentation generation must be run after the release tag has been made and
-pushed.
+### Post-Release Changes
 
-- Create and checkout a new branch to contain documentation updates from master:
-  `git checkout -b post-release-changes master`. This branch will be used to
-  create a PR later.
-- Edit `etc/apidocmenu.md` and add the released version in the `mongocxx` column
-  following the established pattern. If this is a minor release (X.Y.0), revise
-  the entire document as needed.
-- Edit the `README.md` to match.
-- If the release was not a release candidate, ensure a [DOCSP JIRA
-  ticket](https://jira.mongodb.org/projects/DOCSP/issues/) is created to request
-  updating:
+Create and checkout a new branch `post-release-changes` relative to `master` to contain documentation updates following the new release:
 
-  - the `Installing the MongoDB C driver` section of the [Advanced Installation
-    documentation](https://github.com/mongodb/docs-cpp/blob/master/source/installation/advanced.txt)
-    to reflect libmongoc requirements
-  - the `Driver Status by Family and Version` section of the [home
-    page](https://github.com/mongodb/docs-cpp/blob/master/source/installation/linux.txt)
-  - the [C++ driver
-    version](https://github.com/mongodb/docs-cpp/blob/e13d787967172220ae19e5d78df61e2071735f0f/snooty.toml#L20-L21).
-- Edit `etc/generate-all-apidocs.pl` and add the new release version to the
-  `@DOC_TAGS` array, following the established pattern.
-- Commit these changes:
-  `git commit -am "Prepare to generate r1.2.3 release documentation"`
-- Ensure you have `doxygen` and `hugo` installed and up to date.
-- Run `git clean -dxf` to clear out all extraneous files.
-- Configure with `cmake` in the `build` directory as you usually would.
-- Build docs locally to test.
-  - To test Hugo documentation, run the `docs` build target with
-    `cmake --build ./build --target docs`.
-  - To test generation of all API docs for all tags, build the  `doxygen-all`
-    target with `cmake --build ./build --target doxygen-all` and be prepared to
-    wait a while.
-- To generate and deploy documentation to GitHub Pages, build both the
-  `hugo-deploy` and `doxygen-deploy` targets. The doxygen build will take a long
-  time.
-  - `cmake --build ./build --target hugo-deploy`
-  - `cmake --build ./build --target doxygen-deploy`
-- If the release was not a release candidate, update symlinks
-  - Check out the `gh-pages` branch and git pull the deployed docs.
-  - Update the `api/mongocxx-v3` symlink to point to the newly released version.
-    If a minor version bump has occurred, revise the symlink structure as
-    needed. Make sure `current` always points to a symlink tracking the latest
-    stable release branch.
-  - Commit and push the symlink change:
-    `git commit -am "Update symlink for r1.2.3"`
-   - Switch back to the branch with documentation updates: `git checkout post-release-changes`.
-- Wait a few minutes and verify mongocxx.org has updated.
+```bash
+git fetch upstream
+git checkout -b post-release-changes upstream/master
+```
 
-## Merge the release branch back into `master` if necessary
+This branch will be used to create a PR later.
 
-If this is a patch release on a minor release branch, create a pull request on GitHub to merge the latest state of the `releases/rX.Y` branch containing the new release tag `rX.Y.Z` into the `master` branch. Use the "Create a merge commit" option when merging this pull request.
+> [!IMPORTANT]
+> Make sure the `post-release-changes` branch is created on `master`, not `rX.Y.Z` or `releases/vX.Y`!
 
-> [IMPORTANT]
-> Use the "Create a merge commit" option when merging this pull request!
+Update the tables in `etc/apidocmenu.md` with entries for the new release.
 
-Do **NOT** delete the release branch after merge.
+Edit `README.md` to match the updated `etc/apidocmenu.md`.
 
-Verify correct repo state by running `git describe --tags --abbrev=0` on the post-merge `master` branch, which should return the patch release tag `rX.Y.Z`. Adding the `--first-parent` flag should return the last minor release tag `rX.Y.0`.
+Commit these changes to the `post-release-changes` branch:
 
-## Update CHANGELOG.md post-release ...
+```bash
+git commit -m "Post-release changes"
+```
 
-CHANGELOG.md on the `master` branch contains sections for every release. This is intended to ease searching for changes among all releases.
-CHANGELOG.md on a release branch (e.g. `releases/v1.2`) contains entries for patch releases of the minor version number tracked by the release branch (e.g. for 1.2.1, 1.2.2, 1.2.3, etc.), as well as all entries prior to the initial minor release (e.g. before 1.2.0).
+### Create Documentation Tickets
 
-### ... on the release branch
+(Stable Releases Only) Close the Jira ticket tracking this release with "Documentation Changes" set to "Needed". Fill the "Documentation Changes Summary" field with information requesting updates to:
 
-Check out the release branch (e.g. `releases/v1.2`).
+  - the "Installing the MongoDB C Driver" section of the [Advanced Configuration and Installation Options](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/installation/advanced/#installing-the-mongodb-c-driver) page
+    with any new libmongoc version requirements,
+  - the "Driver Status by Family and Version" section of the [home
+    page](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/#driver-status-by-family-and-version), and
+  - the [full version](https://github.com/mongodb/docs-cpp/blob/master/snooty.toml) for the C++ Driver documentation pages.
 
-Update CHANGELOG.md to add an `[Unreleased]` section for the next patch release. Example (if `1.2.3` was just released):
+This will generate a DOCSP ticket with instructions to update the C++ Driver docs.
+
+Example (using Jira syntax formatting):
+
+```
+* The [Advanced Installation|https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/installation/advanced/#installing-the-mongodb-c-driver] page must be updated with a new requirement: "For mongocxx-X.Y.x, libmongoc A.B.C or later is required."
+* The [MongoDB C++ Driver|https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/#driver-status-by-family-and-version] page must be updated: {{{}mongocxx X.Y.x{}}} is now a previous stable release and no longer under active development; {{{}mongocxx X.Y+1.x{}}} is the new current stable release eligible for bug fixes.
+* the [full version|https://github.com/mongodb/docs-cpp/blob/master/snooty.toml] for C++ Driver documentation must be updated to {{{}X.Y.Z{}}}.
+```
+
+### Publish Updated Documentation
+
+> [!NOTE]
+> Some of these commands may take a while to complete.
+
+Set `$LATEST_DOC_TAG` in `etc/generate-latest-apidocs.pl` to the latest release tag.
+
+Change the version number for `SITEMAP_URL` in `Doxyfile` to the latest release version.
+
+Commit these changes to the `post-release-changes` branch:
+
+```bash
+git commit -am "Prepare to generate rX.Y.Z release documentation"
+```
+
+Ensure `doxygen` and `hugo` are locally installed and up-to-date.
+
+```bash
+command -V doxygen hugo
+```
+
+> [!IMPORTANT]
+> The required Doxygen version is defined in `etc/generate-apidocs-from-tag.pl` as `$doxygen_version_required`. If not already present, download the required version from [Doxygen Releases](https://www.doxygen.nl/download.html). Use the `DOXYGEN_BINARY` environment variable to override the default `doxygen` command with a path to a specific Doxygen binary.
+
+Run `git clean -dfx` to restore the repository to a clean state.
+
+> [!WARNING]
+> Do NOT run `git clean -dfx` in your local development repository, as it may delete your local development files present in the repository (even if normally ignored by git)! Only run this in the command in the separate repository being used for this release!
+
+Configure CMake using `build` as the binary directory. Leave all other configuration variables as their default.
+
+```bash
+cmake -S . -B build
+```
+
+Test generating Hugo and Doxygen docs locally by building the `docs` target (this command DOES NOT check for the required Doxygen version):
+
+```bash
+cmake --build build --target docs
+```
+
+Test generating the latest versioned Doxygen docs by building the `doxygen-latest` target (this command DOES checks for the required Doxygen version):
+
+```bash
+export DOXYGEN_BINARY=<path/to/doxygen> # Optional. For binary version compatibility.
+cmake --build build --target doxygen-latest
+```
+
+Verify that the `build/docs/api/mongocxx-X.Y.Z` directory is present and populated. Verify the resulting API doc looks as expected.
+
+Remove all contents of `build/docs/api` before running the next commands.
+
+> [!IMPORTANT]
+> Remove all contents of `build/docs/api` before running the next commands.
+
+Generate and deploy the updated documentation to GitHub pages by building the `hugo-deploy` and `doxygen-deploy` targets:
+
+```bash
+cmake --build build --target hugo-deploy
+cmake --build build --target doxygen-deploy
+```
+
+These commands will update the `gh-pages` branch and push the changes to the remote repository.
+
+> [!WARNING]
+> Build and release artifacts may still be present in the repository after this step. Do not accidentally commit these files into the repository in the following steps!
+
+### Update Symlinks
+
+> [!IMPORTANT]
+> Symlink updates only apply to stable releases! Release candidates and other unstable releases do not require updating symlinks.
+
+Checkout the updated `gh-pages` branch:
+
+```bash
+git checkout gh-pages
+git pull
+```
+
+Update the `api/mongocxx-v3` symlink to refer to the new release version:
+
+```bash
+cd api
+rm mongocxx-v3
+ln -s mongocxx-X.Y.Z mongocxx-v3
+```
+
+Double-check that the `current` symlink is pointing to the symlink tracking the latest stable release:
+
+```
+current     -> mongocxx-v3
+mongocxx-v3 -> mongocxx-X.Y.Z
+```
+
+Commit and push this change to the `gh-pages` branch:
+
+```bash
+git commit -m "Update symlink for rX.Y.Z"
+```
+
+Wait for [GitHub Actions](https://github.com/mongodb/mongo-cxx-driver/actions) to finish deploying the updated pages.
+
+Verify the https://mongocxx.org/api/current/ page has been updated with the new release.
+
+### Update CHANGELOG...
+
+#### ... for a Patch Release
+
+Checkout the updated `releases/vX.Y` branch.
+
+```bash
+git checkout releases/vX.Y
+git pull
+```
+
+Add a section for the next patch release, e.g. following a `1.2.3` release:
 
 ```md
 ## 1.2.4 [Unreleased]
 
-<!-- Will contain entries for the next patch release -->
+<!-- Will contain entries for the next patch release. -->
 
-## 1.2.3
+## 1.2.3 <!-- Just released. -->
 
-<!-- Contains published release notes -->
+## 1.2.2 <!-- Prior release. -->
 ```
 
-Commit and push this change to the release branch (no PR necessary for release branch).
+Commit the changes to the `releases/vX.Y` branch and push the branch to the remote repository (a PR is not required for this step).
 
-### ... on the `master` branch
+Checkout the `post-release-changes` branch.
 
-Check out the `post-release-changes` branch created before editing and generating documentation.
-
-Ensure `[Unreleased]` is removed from the recently released section. Ensure the contents of the recently released section match the published release notes.
-
-Ensure there are `[Unreleased]` sections for the next minor and patch releases. Example (if `1.2.3` was just released):
+Sync the entries in the patch release section to be consistent with the entries on the release branch, e.g. following a `1.2.3` release:
 
 ```md
 ## 1.3.0 [Unreleased]
 
-<!-- Will contain entries for the next minor release -->
+<!-- Will contain entries for the next minor release. -->
+<!-- Ensure any existing entries are not removed during the sync. -->
 
 ## 1.2.4 [Unreleased]
 
-<!-- Will contain entries for the next patch release -->
+<!-- Will contain entries for the next patch release. -->
 
-## 1.2.3
+## 1.2.3 <!-- Just released. -->
 
-<!-- Contains published release notes -->
+<!-- Ensure these entries match those in the release. -->
+
+## 1.2.2 <!-- Prior release. -->
 ```
 
-Commit the change.
+> [!TIP]
+> Use `git restore --source=rX.Y.Z --worktree CHANGELOG.md` to obtain the `CHANGELOG.md` in `rX.Y.Z` as unstaged changes.
 
-Create a PR from the `post-release-changes` branch to merge to `master`.
+#### ... for a Non-Patch Release
 
-## Homebrew
-This requires a macOS machine.
-If this is a stable release, update the [mongo-cxx-driver](https://github.com/Homebrew/homebrew-core/blob/master/Formula/mongo-cxx-driver.rb) homebrew formula, using: `brew bump-formula-pr mongo-cxx-driver --url <tarball url>`
+Checkout the `post-release-changes` branch.
 
-Example:
-`brew bump-formula-pr mongo-cxx-driver --url https://github.com/mongodb/mongo-cxx-driver/releases/download/r3.7.3/mongo-cxx-driver-r3.7.3.tar.gz`
+Add a section for the next minor release, e.g. following a `1.3.0` release:
 
-## vcpkg
-Submit a PR or create an issue to update the vc-pkg file for mongo-c-driver.
-To submit an issue, follow: https://github.com/microsoft/vcpkg/issues/new/choose. Example: https://github.com/microsoft/vcpkg/issues/34984
+```md
+## 1.4.0 [Unreleased]
 
-## Conan
-Submit a PR or create an issue to update the Conan recipe for mongo-c-driver.
-To submit an issue, follow: https://github.com/conan-io/conan-center-index/issues/new/choose/. Example: https://github.com/conan-io/conan-center-index/issues/21006
+<!-- Will contain entries for the next minor release. -->
 
-## Comment on the generated DOCSP ticket
+## 1.3.0 <!-- Just released. -->
 
-Minor releases generate a DOCSP ticket. Add a comment to the generated DOCSP ticket describing if the
-[MongoDB Compatibility Table](https://www.mongodb.com/docs/drivers/cxx/#mongodb-compatibility)
-or [Language Compatibility Table](https://www.mongodb.com/docs/drivers/cxx/#language-compatibility)
-should be updated. Generally, only a minor release will require updates.
-(See [DOCSP-30876](https://jira.mongodb.com/browse/DOCSP-30876) for an example.)
+## 1.2.2 <!-- Prior release. -->
+```
 
-## Announce on Community Forums
+Commit these changes to `post-release-changes`.
 
-Announce Post to the [developer community forum](https://community.mongodb.com)
-under `Product & Driver Announcements` with the tag `cxx`.
+```bash
+git commit -m "Add CHANGELOG section for the next minor release"
+```
 
-See this
-[example announcement](https://www.mongodb.com/community/forums/t/mongodb-c-11-driver-3-9-0-released/252724)
-of the stable release of 3.9.0.
+### Merge Post-Release Changes
+
+Push the `post-releases-changes` branch to your personal fork repository and create a PR to merge the post-release changes into `master`.
+
+```bash
+git remote add origin git@github.com:<username>/mongo-cxx-driver.git
+git push -u origin post-release-changes
+```
+
+### Announce on Community Forums
+
+Post an announcement to the [Developer Community Forum](https://www.mongodb.com/community/forums/tags/c/announcements/driver-releases/110/cxx) under "Product & Driver Announcements > Driver Releases" and include the "production" and "cxx" tags.
+
+Template Title:
+
+```
+MongoDB C++11 Driver X.Y.Z Released
+```
+
+Template Body:
+
+```md
+The MongoDB C++ Driver Team is pleased to announce the availability of [MongoDB C++ Driver X.Y.Z](https://github.com/mongodb/mongo-cxx-driver/releases/tag/rX.Y.Z).
+
+Please note that this version of mongocxx requires [MongoDB C Driver A.B.C](https://github.com/mongodb/mongo-c-driver/releases/tag/A.B.C) or newer.
+
+See the [MongoDB C++ Driver Manual](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/) and the [Driver Installation Instructions](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/installation/) for more details on downloading, installing, and using this driver.
+
+NOTE: The mongocxx 3.10.x series does not promise API or ABI stability across patch releases.
+
+Please feel free to post any questions on the MongoDB Community forum in the [Drivers](https://www.mongodb.com/community/forums/c/data/drivers/7) category tagged with [cxx](https://www.mongodb.com/community/forums/tag/cxx). Bug reports should be filed against the [CXX](https://jira.mongodb.org/projects/CXX) project in the MongoDB JIRA. Your feedback on the C++11 driver is greatly appreciated.
+
+Sincerely,
+
+The C++ Driver Team
+```
+
+## Packaging
+
+### vcpkg
+
+Submit a PR or create an issue to update the vc-pkg file for mongo-cxx-driver.
+To submit an issue, follow: https://github.com/microsoft/vcpkg/issues/new/choose (Request an update to an existing port). Example: [r3.10.2](https://github.com/microsoft/vcpkg/issues/39539).
+
+Include a note communicating new minimum C Driver version requirements.
+
+### Conan
+
+Submit a PR or create an issue to update the Conan recipe for mongo-cxx-driver.
+To submit an issue, follow: https://github.com/conan-io/conan-center-index/issues/new/choose/ (Package: New Version). Example: [r3.10.2](https://github.com/conan-io/conan-center-index/issues/24451).
+
+Include a note communicating new minimum C Driver version requirements.
 
 ## Docker Image Build and Publish
 
@@ -593,120 +890,65 @@ driver process documentation Google doc.
 
 ### Debian
 
+> [!IMPORTANT]
+> These instructions should be kept in sync with the corresponding C driver
+> release process documentation located in the `docs/dev/debian.rst` file in the
+> C driver repository.
+
 #### Build
 
-- Checkout the appropriate release branch.
-- For the first Debian package release on a new release branch, edit
-  `debian/gbp.conf` and update the `upstream-branch` and `debian-branch`
-  variables to match the name of the new release branch (e.g., `releases/v3.x`);
-  both variables will have the same value
-- The Debian package release is made after the upstream release has been tagged
-- Create a new changelog entry (use the command `dch -i` to ensure proper
-  formatting), then adjust the version number on the top line of the changelog
-  as appropriate
+1. Change to the packaging branch, `git checkout debian/unstable`, and make sure
+   the working directorty is clean, `git status`, and up-to-date, `git pull`.
+2. Because it is possible to have divergences between release branches, some
+   special procedures are needed. Execute the following sequence of commands
+   (substituting version numbers as appropriate):
 
 ```
-DEBEMAIL='my-email@mongodb.com' DEBFULLNAME='FIRSTNAME LASTNAME' dch -v VERSION
+$ git merge --no-commit --no-ff r3.xx.y     # may result in conflicts
+$ git checkout HEAD -- debian               # ensures debian/ dir is preserved
+$ git add .                                 # prepare to resolve conflicts
+$ git checkout --no-overlay r3.xx.y -- . ':!debian' # resolve conflicts
+$ git add .
+$ git commit
 ```
 
-- Make any other necessary changes to the Debian packaging components
-  (e.g., update to standards version, dependencies, descriptions, etc.) and make
-  relevant entries in `debian/changelog` as needed
-- If this release fixes any Debian bugs that are tracked in the Debian bug
-  tracking system (links below in [Post Build](#post-build)), then note that
-  the bug is closed with this release in `debian/changelog`, for example:
-```
-  * New upstream release (Closes: #1042682)
-```
+3. Verify that there are no extraneous differences from the release tag,
+   `git diff r3.xx.y..HEAD --stat -- . ':!debian'`; the command should produce
+   no output, and if any output is shown then that indicates differences in
+   files outside the `debian/` directory.
+4. If there were any files outside the `debian/` directory listed in the last
+   step then something has gone wrong. Discard the changes on the branch and
+   start again.
+5. Create a new changelog entry (use the command `dch -i` to ensure proper
+   formatting), then adjust the version number on the top line of the changelog
+   as appropriate.
+6. Make any other necessary changes to the Debian packaging components (e.g.,
+   update to standards version, dependencies, descriptions, etc.) and make
+   relevant entries in `debian/changelog` as needed.
+7. Use `git add` to stage the changed files for commit (only files in the
+   `debian/` directory should be committed), then commit them (the `debcommit`
+   utility is helpful here).
+8. Build the package with `gbp buildpackage` and inspect the resulting package
+   files (at a minimum use `debc` on the `.changes` file in order to confirm
+   files are installed to the proper locations by the proper packages and also
+   use `lintian` on the `.changes` file in order to confirm that there are no
+   unexpected errors or warnings; the `lintian` used for this check should
+   always be the latest version as it is found in the unstable distribution).
+9. If any changes are needed, make them, commit them, and rebuild the package.
 
-- Use `git add` to stage the changed files for commit (only files in the
-  `debian/` directory should be committed), then commit them (the `debcommit`
-  utility is helpful here). A common commit message for this stage is:
+> [!IMPORTANT]
+> It may be desirable to squash multiple commits down to a single commit before building the final packages.
 
-```
-(Debian packaging) New upstream release
-```
-
-- Create a chroot environment using cowbuilder.
-
-```
-$ sudo cowbuilder --create --mirror http://ftp.us.debian.org/debian/ --distribution sid --basepath /var/cache/pbuilder/base-sid.cow
-```
-
-- If you already have a chroot environment setup, then update it.
-
-```
-$ sudo cowbuilder --update --mirror http://ftp.us.debian.org/debian/ --distribution sid --basepath /var/cache/pbuilder/base-sid.cow
-```
-
-- Create the file `~/.gbp.conf` with the following text.
-
-```
-[DEFAULT]
-cleaner = true
-pbuilder = True
-pbuilder-options = --source-only-changes
-
-[buildpackage]
-#sign-tags = True
-export-dir = ../build-area/
-```
-
-- Build the package with `gbp buildpackage`
-
-```
-DH_VERBOSE=1 DEB_BUILD_OPTIONS="parallel=$(nproc)" gbp buildpackage --git-dist=sid
-```
-
-- Inspect the resulting package files (at a minimum use `debc` on the `.changes`
-  file in order to confirm files are installed to the proper locations by the
-  proper packages and also use `lintian` on the `.changes` file in order to
-  confirm that there are no unexpected errors or warnings; the `lintian` used
-  for this check should always be the latest version as it is found in the
-  unstable distribution). This is easiest done using the Sid chroot that was
-  created in the previous steps.
-
-```
-$ sudo cowbuilder --login --basepath /var/cache/pbuilder/base-sid.cow/ --bindmounts $HOME
-# apt update && apt install -y lintian
-# lintian -viI mongo-cxx-driver_3.7.2-1_amd64.changes
-```
-
-- You may need to update to the latest Debian policy, which you can do the
-  following to see the latest policy.
-
-```
-# apt install debian-policy
-# zless /usr/share/doc/debian-policy/upgrading-checklist.txt.gz
-```
-
-- If any changes are needed, make them, commit them, and rebuild the package
-- Edit changelog, change UNRELEASED to experimental.
-
-```
-$ DEBEMAIL='my-email@mongodb.com' DEBFULLNAME='FIRSTNAME LASTNAME' dch -r -D experimental
-```
-
-- Commit this change with the following message:
-
-```
-(Debian packaging) ready for release
-```
-
-- It may be desirable to squash multiple commits down to a single commit before
-  building the final packages
-- After you finish making commits, build the Debian package for one final time,
-  and if you are not a Debian maintainer, then give the packages to a debian
-  maintainer to do the two steps below:
-  - Once the final packages are built, they can be signed and uploaded and the
-    version can be tagged using the `--git-tag` option of `gbp buildpackage`
-  - Sign and upload the package, push the commits on the release branch and
-    the master branch to the remote, and push the Debian package tag.
-- After the commit has been tagged, switch from the release branch to the
-  `master` branch and cherry-pick the commit(s) made on the release branch that
-  touch only the Debian packaging (this will ensure that the packaging and
-  especially the changelog on the master remain up to date)
-- Open a PR with the cherry-picks and use the `Rebase and merge` merge strategy.
+10. Mark the package ready for release with the `dch -Dexperimental -r` command
+    and commit the resulting changes (after inspecting them),
+    `git commit debian/changelog -m 'mark ready for release'`.
+11. Build the final packages. Once the final packages are built, they can be
+    signed and uploaded and the version can be tagged using the `--git-tag`
+    option of `gbp buildpackage`. The best approach is to build the packages,
+    prepare everything and then upload. Once the archive has accepted the
+    upload, then execute
+    `gbp buildpackage --git-tag --git-tag-only --git-sign-tags` and push the
+    commits on the `debian/unstable` branch as well as the new signed tag.
 
 #### Post Build
 

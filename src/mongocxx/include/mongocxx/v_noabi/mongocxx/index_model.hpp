@@ -1,4 +1,4 @@
-// Copyright 2017 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@
 
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/document/view_or_value.hpp>
+
 #include <mongocxx/options/index.hpp>
 
 #include <mongocxx/config/prelude.hpp>
@@ -33,6 +34,7 @@ class index_model {
     ///
     /// Initializes a new index_model over a mongocxx::v_noabi::collection.
     ///
+    MONGOCXX_ABI_EXPORT_CDECL()
     index_model(const bsoncxx::v_noabi::document::view_or_value& keys,
                 const bsoncxx::v_noabi::document::view_or_value& options = {});
 
@@ -41,17 +43,17 @@ class index_model {
     ///
     /// Move constructs an index_model.
     ///
-    index_model(index_model&&) noexcept;
+    MONGOCXX_ABI_EXPORT_CDECL() index_model(index_model&&) noexcept;
 
     ///
     /// Move assigns an index_model.
     ///
-    index_model& operator=(index_model&&) noexcept;
+    MONGOCXX_ABI_EXPORT_CDECL(index_model&) operator=(index_model&&) noexcept;
 
     ///
     /// Copy constructs an index_model.
     ///
-    index_model(const index_model&);
+    MONGOCXX_ABI_EXPORT_CDECL() index_model(const index_model&);
 
     ///
     /// Copy assigns an index_model.
@@ -61,17 +63,17 @@ class index_model {
     ///
     /// Destroys an index_model.
     ///
-    ~index_model();
+    MONGOCXX_ABI_EXPORT_CDECL() ~index_model();
 
     ///
     /// Retrieves keys of an index_model.
     ///
-    bsoncxx::v_noabi::document::view keys() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::view) keys() const;
 
     ///
     /// Retrieves options of an index_model.
     ///
-    bsoncxx::v_noabi::document::view options() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::view) options() const;
 
    private:
     bsoncxx::v_noabi::document::value _keys;
@@ -82,3 +84,8 @@ class index_model {
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref mongocxx::v_noabi::index_model.
+///

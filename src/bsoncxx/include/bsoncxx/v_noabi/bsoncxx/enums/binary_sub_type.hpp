@@ -1,4 +1,4 @@
-// Copyright 2014 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -26,3 +26,13 @@ BSONCXX_ENUM(encrypted, 0x06)
 BSONCXX_ENUM(column, 0x07)
 BSONCXX_ENUM(sensitive, 0x08)
 BSONCXX_ENUM(user, 0x80)
+
+///
+/// @file
+/// X macro header expanding the user-provided `BSONCXX_ENUM` macro over BSON binary subtypes.
+///
+/// @warning The `BSONCXX_ENUM` macro must be defined by the user prior to including this header!
+///
+/// The user-provided `BSONCXX_ENUM` macro must accept two arguments: the name of the binary subtype
+/// corresponding value. See the source code for the list of expanded types and values.
+///

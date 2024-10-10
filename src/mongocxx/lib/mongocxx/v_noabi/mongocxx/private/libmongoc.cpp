@@ -1,4 +1,4 @@
-// Copyright 2014 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -32,6 +32,9 @@ namespace libmongoc {
         *new test_util::mock<decltype(&mongoc_##name)>(mongoc_##name);
 #include "libmongoc_symbols.hh"
 #undef MONGOCXX_LIBMONGOC_SYMBOL
+
+mongocxx::test_util::mock<log_set_handler_cdecl_t>& log_set_handler =
+    *new test_util::mock<log_set_handler_cdecl_t>(mongoc_log_set_handler);
 
 #if defined(__GNUC__) && (__GNUC__ >= 6) && !defined(__clang__)
 #pragma GCC diagnostic pop

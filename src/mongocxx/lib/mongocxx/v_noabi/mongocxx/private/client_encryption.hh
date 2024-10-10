@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -23,6 +23,7 @@
 #include <bsoncxx/types/bson_value/value.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
 #include <bsoncxx/types/private/convert.hh>
+
 #include <mongocxx/client.hpp>
 #include <mongocxx/client_encryption.hpp>
 #include <mongocxx/exception/operation_exception.hpp>
@@ -32,6 +33,7 @@
 #include <mongocxx/private/cursor.hh>
 #include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/libmongoc.hh>
+#include <mongocxx/private/scoped_bson_value.hh>
 #include <mongocxx/result/bulk_write.hpp>
 
 #include <mongocxx/config/private/prelude.hh>
@@ -42,51 +44,6 @@ namespace v_noabi {
 class client_encryption::impl {
    private:
     using scoped_bson_t = mongocxx::libbson::scoped_bson_t;
-
-    struct scoped_bson_value {
-        bson_value_t value = {};
-
-        // Allow obtaining a pointer to this->value even in rvalue expressions.
-        bson_value_t* get() noexcept {
-            return &value;
-        }
-
-        // Communicate this->value is to be initialized via the resulting pointer.
-        bson_value_t* value_for_init() noexcept {
-            return &this->value;
-        }
-
-        template <typename T>
-        auto convert(const T& value)
-            // Use trailing return type syntax to SFINAE without triggering GCC -Wignored-attributes
-            // warnings due to using decltype within template parameters.
-            -> decltype(bsoncxx::v_noabi::types::convert_to_libbson(
-                std::declval<const T&>(), std::declval<bson_value_t*>())) {
-            bsoncxx::v_noabi::types::convert_to_libbson(value, &this->value);
-        }
-
-        template <typename T>
-        explicit scoped_bson_value(const T& value) {
-            convert(value);
-        }
-
-        explicit scoped_bson_value(const bsoncxx::v_noabi::types::bson_value::view& view) {
-            // Argument order is reversed for bsoncxx::v_noabi::types::bson_value::view.
-            bsoncxx::v_noabi::types::convert_to_libbson(&this->value, view);
-        }
-
-        ~scoped_bson_value() {
-            bson_value_destroy(&value);
-        }
-
-        // Expectation is that value_for_init() will be used to initialize this->value.
-        scoped_bson_value() = default;
-
-        scoped_bson_value(const scoped_bson_value&) = delete;
-        scoped_bson_value(scoped_bson_value&&) = delete;
-        scoped_bson_value& operator=(const scoped_bson_value&) = delete;
-        scoped_bson_value& operator=(scoped_bson_value&&) = delete;
-    };
 
     struct encrypt_opts_deleter {
         void operator()(mongoc_client_encryption_encrypt_opts_t* ptr) noexcept {
@@ -133,7 +90,7 @@ class client_encryption::impl {
 
         const auto datakey_opts = datakey_opts_ptr(static_cast<opts_type*>(opts.convert()));
 
-        scoped_bson_value keyid;
+        detail::scoped_bson_value keyid;
         bson_error_t error;
 
         if (!libmongoc::client_encryption_create_datakey(_client_encryption.get(),
@@ -152,11 +109,11 @@ class client_encryption::impl {
         const auto encrypt_opts =
             encrypt_opts_ptr(static_cast<mongoc_client_encryption_encrypt_opts_t*>(opts.convert()));
 
-        scoped_bson_value ciphertext;
+        detail::scoped_bson_value ciphertext;
         bson_error_t error;
 
         if (!libmongoc::client_encryption_encrypt(_client_encryption.get(),
-                                                  scoped_bson_value(value).get(),
+                                                  detail::scoped_bson_value(value).get(),
                                                   encrypt_opts.get(),
                                                   ciphertext.value_for_init(),
                                                   &error)) {
@@ -187,11 +144,11 @@ class client_encryption::impl {
 
     bsoncxx::v_noabi::types::bson_value::value decrypt(
         bsoncxx::v_noabi::types::bson_value::view value) {
-        scoped_bson_value decrypted_value;
+        detail::scoped_bson_value decrypted_value;
         bson_error_t error;
 
         if (!libmongoc::client_encryption_decrypt(_client_encryption.get(),
-                                                  scoped_bson_value(value).get(),
+                                                  detail::scoped_bson_value(value).get(),
                                                   decrypted_value.value_for_init(),
                                                   &error)) {
             throw_exception<operation_exception>(error);
@@ -257,7 +214,7 @@ class client_encryption::impl {
         bson_error_t error;
 
         if (!libmongoc::client_encryption_delete_key(_client_encryption.get(),
-                                                     scoped_bson_value(id.view()).get(),
+                                                     detail::scoped_bson_value(id.view()).get(),
                                                      reply.bson_for_init(),
                                                      &error)) {
             throw_exception<operation_exception>(error);
@@ -281,7 +238,7 @@ class client_encryption::impl {
         bson_error_t error;
 
         if (!libmongoc::client_encryption_get_key(_client_encryption.get(),
-                                                  scoped_bson_value(id.view()).get(),
+                                                  detail::scoped_bson_value(id.view()).get(),
                                                   key_doc.bson_for_init(),
                                                   &error)) {
             throw_exception<operation_exception>(error);
@@ -311,11 +268,12 @@ class client_encryption::impl {
         scoped_bson_t key_doc;
         bson_error_t error;
 
-        if (!libmongoc::client_encryption_add_key_alt_name(_client_encryption.get(),
-                                                           scoped_bson_value(id.view()).get(),
-                                                           key_alt_name.terminated().data(),
-                                                           key_doc.bson_for_init(),
-                                                           &error)) {
+        if (!libmongoc::client_encryption_add_key_alt_name(
+                _client_encryption.get(),
+                detail::scoped_bson_value(id.view()).get(),
+                key_alt_name.terminated().data(),
+                key_doc.bson_for_init(),
+                &error)) {
             throw_exception<operation_exception>(error);
         }
 
@@ -347,11 +305,12 @@ class client_encryption::impl {
         scoped_bson_t key_doc;
         bson_error_t error;
 
-        if (!libmongoc::client_encryption_remove_key_alt_name(_client_encryption.get(),
-                                                              scoped_bson_value(id.view()).get(),
-                                                              key_alt_name.terminated().data(),
-                                                              key_doc.bson_for_init(),
-                                                              &error)) {
+        if (!libmongoc::client_encryption_remove_key_alt_name(
+                _client_encryption.get(),
+                detail::scoped_bson_value(id.view()).get(),
+                key_alt_name.terminated().data(),
+                key_doc.bson_for_init(),
+                &error)) {
             throw_exception<operation_exception>(error);
         }
 

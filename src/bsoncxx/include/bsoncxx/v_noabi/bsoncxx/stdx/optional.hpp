@@ -1,4 +1,4 @@
-// Copyright 2015 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -86,6 +86,7 @@ using ::std::optional;
 #include <exception>
 #include <initializer_list>
 #include <memory>
+#include <new>
 #include <stdexcept>
 #include <type_traits>
 #include <utility>
@@ -99,48 +100,47 @@ namespace v_noabi {
 
 namespace stdx {
 
-/**
- * @brief Implementation of an std::optional-like class template
- *
- * Presents mostly the same interface as std::optional from C++17.
- *
- * @tparam T The type being made "optional"
- */
 template <typename T>
 class optional;
 
-/**
- * @brief Exception type thrown upon attempted access to a value-less optional<T>
- * via a throwing accessor API.
- */
+BSONCXX_PUSH_WARNINGS();
+BSONCXX_DISABLE_WARNING(Clang("-Wweak-vtables"));
+// Exception type thrown upon attempted access to a value-less optional<T> via a throwing accessor
+// API.
 class bad_optional_access : public std::exception {
    public:
     const char* what() const noexcept override {
         return "bad_optional_access()";
     }
 };
-/// Tag type to represent an empty optional value
+BSONCXX_POP_WARNINGS();
+
+// Tag type to represent an empty optional value.
 struct nullopt_t {
     explicit constexpr nullopt_t(std::nullptr_t) noexcept {}
 };
-/// Tag constant to construct or compare with an empty optional value
-static constexpr nullopt_t nullopt{0};
-/// Tag used to call the emplacement-constructor of optional<T>
+
+// Tag constant to construct or compare with an empty optional value.
+static constexpr nullopt_t nullopt{nullptr};
+
+// Tag used to call the emplacement-constructor of optional<T>.
 static constexpr struct in_place_t {
 } in_place;
 
 namespace detail {
 
-// Terminates the program when an illegal use of optional<T> is attempted
+// Terminates the program when an illegal use of optional<T> is attempted.
 [[noreturn]] inline void terminate_disengaged_optional(const char* what) noexcept {
     (void)std::fprintf(stderr, "%s: Invalid attempted use of disengaged optional<T>\n", what);
     std::terminate();
 }
-// Throws bad_optional_access for throwing optional<T> member functions
+
+// Throws bad_optional_access for throwing optional<T> member functions.
 [[noreturn]] inline void throw_bad_optional() {
     throw bad_optional_access();
 }
-// Base class of std::optional. Implementation detail, defined later
+
+// Base class of std::optional. Implementation detail, defined later.
 template <typename T>
 struct optional_base_class;
 
@@ -152,7 +152,7 @@ std::true_type not_an_optional_f(const T&);
 template <typename T>
 std::false_type not_an_optional_f(const optional<T>&);
 
-// Utility trait to detect specializations of stdx::optional
+// Utility trait to detect specializations of stdx::optional.
 template <typename T>
 struct not_an_optional : decltype(not_an_optional_f(std::declval<T const&>())) {};
 
@@ -189,36 +189,34 @@ class optional : bsoncxx::detail::equality_operators,
                  bsoncxx::detail::ordering_operators,
                  public detail::optional_base_class<T>::type {
    public:
-    /// The type of value held within this optional
     using value_type = T;
-    /// An lvalue-reference-to-mutable T
     using reference = bsoncxx::detail::add_lvalue_reference_t<T>;
-    /// An lvalue-reference-to-const T
     using const_reference =
         bsoncxx::detail::add_lvalue_reference_t<bsoncxx::detail::add_const_t<T>>;
-    /// An rvalue-reference-to-mutable T
     using rvalue_reference = bsoncxx::detail::add_rvalue_reference_t<T>;
-    /// An rvalue-reference-to-const T
     using const_rvalue_reference =
         bsoncxx::detail::add_rvalue_reference_t<bsoncxx::detail::add_const_t<T>>;
-    /// A pointer-to-mutable T
     using pointer = bsoncxx::detail::add_pointer_t<T>;
-    /// A pointer-to-const T
     using const_pointer = bsoncxx::detail::add_pointer_t<const T>;
 
-    // Constructors [1]
+    // Constructors [1].
+
     optional() = default;
     constexpr optional(nullopt_t) noexcept {}
 
-    // Ctor [2] and [3] are provided by base classes
+    // Ctor [2] and [3] are provided by base classes.
+
     optional(const optional&) = default;
     optional(optional&&) = default;
+
     // Same with assignments
+
     optional& operator=(const optional&) = default;
     optional& operator=(optional&&) = default;
     ~optional() = default;
 
     // In-place constructors
+
     template <typename... Args>
     bsoncxx_cxx14_constexpr explicit optional(in_place_t, Args&&... args) noexcept(
         noexcept(T(BSONCXX_FWD(args)...))) {
@@ -306,7 +304,8 @@ class optional : bsoncxx::detail::equality_operators,
         return this->has_value();
     }
 
-    // Unchecked dereference operators
+    // Unchecked dereference operators.
+
     bsoncxx_cxx14_constexpr reference operator*() & noexcept {
         _assert_has_value("operator*() &");
         return this->_storage.value;
@@ -324,7 +323,8 @@ class optional : bsoncxx::detail::equality_operators,
         return static_cast<const_rvalue_reference>(**this);
     }
 
-    // (Unchecked) member-access operators
+    // (Unchecked) member-access operators.
+
     bsoncxx_cxx14_constexpr pointer operator->() noexcept {
         _assert_has_value("operator->()");
         return std::addressof(**this);
@@ -334,7 +334,8 @@ class optional : bsoncxx::detail::equality_operators,
         return std::addressof(**this);
     }
 
-    // Checked accessors
+    // Checked accessors.
+
     bsoncxx_cxx14_constexpr reference value() & {
         _throw_if_empty();
         return **this;
@@ -352,7 +353,8 @@ class optional : bsoncxx::detail::equality_operators,
         return static_cast<const_rvalue_reference>(**this);
     }
 
-    // Checked value-or-alternative
+    // Checked value-or-alternative.
+
     template <typename U>
     bsoncxx_cxx14_constexpr value_type value_or(U&& dflt) const& {
         if (has_value()) {
@@ -385,35 +387,27 @@ class optional : bsoncxx::detail::equality_operators,
     }
 };
 
-/**
- * @brief Construct an optional by decay-copying the given value into a new
- * optional<decay_t<T>>
- *
- * @param value The value being made into an optional
- */
+// Construct an optional by decay-copying the given value into a new optional<decay_t<T>>.
+//
+// @param value The value being made into an optional.
 template <typename T>
 bsoncxx_cxx14_constexpr optional<bsoncxx::detail::decay_t<T>> make_optional(T&& value) noexcept(
     std::is_nothrow_constructible<bsoncxx::detail::decay_t<T>, T&&>::value) {
     return optional<bsoncxx::detail::decay_t<T>>(BSONCXX_FWD(value));
 }
 
-/**
- * @brief Emplace-construct a new optional of the given type with the given
- * constructor arguments
- *
- * @tparam T The type to be constructed
- * @param args Constructor arguments
- */
+// Emplace-construct a new optional of the given type with the given constructor arguments.
+//
+// @tparam T The type to be constructed
+// @param args Constructor arguments
 template <typename T, typename... Args>
 bsoncxx_cxx14_constexpr optional<T> make_optional(Args&&... args) noexcept(
     std::is_nothrow_constructible<T, Args&&...>::value) {
     return optional<T>(in_place, BSONCXX_FWD(args)...);
 }
 
-/**
- * @brief Emplace-construct a new optional of the given type with the given
- * arguments (accepts an init-list as the first argument)
- */
+// Emplace-construct a new optional of the given type with the given arguments (accepts an init-list
+// as the first argument).
 template <typename T, typename U, typename... Args>
 bsoncxx_cxx14_constexpr optional<T>
 make_optional(std::initializer_list<U> il, Args&&... args) noexcept(
@@ -423,9 +417,7 @@ make_optional(std::initializer_list<U> il, Args&&... args) noexcept(
 
 namespace detail {
 
-/**
- * @brief Union template that defines the storage for an optional's data.
- */
+// Union template that defines the storage for an optional's data.
 template <typename T, bool = std::is_trivially_destructible<T>::value>
 union storage_for {
     // Placeholder member for disengaged optional
@@ -452,14 +444,14 @@ union storage_for<T, true /* Is trivially destructible */> {
     storage_for& operator=(const storage_for&) = delete;
 };
 
-// Whether a type is copyable, moveable, or immobile
+// Whether a type is copyable, moveable, or immobile.
 enum copymove_classification {
     copyable,
     movable,
     immobile,
 };
 
-/// Classify the constructibility of the given type
+// Classify the constructibility of the given type.
 template <typename T,
           bool CanCopy = std::is_copy_constructible<T>::value,
           bool CanMove = std::is_move_constructible<T>::value>
@@ -467,7 +459,7 @@ constexpr copymove_classification classify_construct() {
     return CanCopy ? copyable : CanMove ? movable : immobile;
 }
 
-/// Classify the assignability of the given type
+// Classify the assignability of the given type.
 template <typename T,
           bool CanCopy = std::is_copy_assignable<T>::value,
           bool CanMove = std::is_move_assignable<T>::value>
@@ -475,19 +467,17 @@ constexpr copymove_classification classify_assignment() {
     return CanCopy ? copyable : CanMove ? movable : immobile;
 }
 
-/**
- * @brief Common base class for optional storage implementation
- *
- * @tparam T
- */
+// Common base class for optional storage implementation
+//
+// @tparam T
 template <typename T>
 class optional_common_base;
 
-/// Define the special member constructors for optional<T>
+// Define the special member constructors for optional<T>.
 template <typename T, copymove_classification = classify_construct<T>()>
 struct optional_construct_base;
 
-/// Define the special member assignment operators for optional<T>
+// Define the special member assignment operators for optional<T>.
 template <typename T, copymove_classification = classify_assignment<T>()>
 struct optional_assign_base;
 
@@ -503,15 +493,19 @@ struct optional_assign_base<T, copyable> : optional_construct_base<T> {};
 
 template <typename T>
 struct optional_assign_base<T, movable> : optional_construct_base<T> {
-    // Constructors defer to base
+    // Constructors defer to base.
+
     optional_assign_base() = default;
     optional_assign_base(optional_assign_base const&) = default;
     optional_assign_base(optional_assign_base&&) = default;
     ~optional_assign_base() = default;
 
-    // No copy
+    // Disallow copies.
+
     bsoncxx_cxx14_constexpr optional_assign_base& operator=(const optional_assign_base&) = delete;
-    // Allow move-assign:
+
+    // Allow move-assignment.
+
     bsoncxx_cxx14_constexpr optional_assign_base& operator=(optional_assign_base&& other) = default;
 };
 
@@ -552,12 +546,14 @@ template <>
 struct optional_destruct_helper<false /* Non-trivial */> {
     template <typename T>
     struct base : optional_common_base<T> {
-        // Special members defer to base
+        // Special members defer to base.
+
         base() = default;
         base(base const&) = default;
         base(base&&) = default;
         base& operator=(const base&) = default;
         base& operator=(base&&) = default;
+
         ~base() {
             // Here we destroy the contained object during destruction.
             this->reset();
@@ -567,12 +563,13 @@ struct optional_destruct_helper<false /* Non-trivial */> {
 
 template <>
 struct optional_destruct_helper<true /* Trivial */> {
-    // Just fall-through to the common base, which has no special destructor
+    // Just fall-through to the common base, which has no special destructor.
+
     template <typename T>
     using base = optional_common_base<T>;
 };
 
-// Optional's ADL-only operators live here:
+// Optional's ADL-only operators are defined here.
 struct optional_operators_base {
     template <typename T, typename U>
     friend bsoncxx_cxx14_constexpr auto tag_invoke(bsoncxx::detail::equal_to,
@@ -582,7 +579,11 @@ struct optional_operators_base {
         if (left.has_value() != right.has_value()) {
             return false;
         }
+
+        BSONCXX_PUSH_WARNINGS();
+        BSONCXX_DISABLE_WARNING(GNU("-Wfloat-equal"));
         return !left.has_value() || *left == *right;
+        BSONCXX_POP_WARNINGS();
     }
 
     template <typename T, typename U>
@@ -590,7 +591,10 @@ struct optional_operators_base {
                                      optional<T> const& left,
                                      U const& right) noexcept -> bsoncxx::detail::
         requires_t<bool, not_an_optional<U>, bsoncxx::detail::is_equality_comparable<T, U>> {
+        BSONCXX_PUSH_WARNINGS();
+        BSONCXX_DISABLE_WARNING(GNU("-Wfloat-equal"));
         return left.has_value() && *left == right;
+        BSONCXX_POP_WARNINGS();
     }
 
     template <typename T>
@@ -610,15 +614,15 @@ struct optional_operators_base {
             if (right.has_value()) {
                 return compare(*left, *right);
             } else {
-                // non-null is greater than any null
+                // Non-null is greater than any null.
                 return bsoncxx::detail::strong_ordering::greater;
             }
         } else {
             if (right.has_value()) {
-                // Null is less than any non-null
+                // Null is less than any non-null.
                 return bsoncxx::detail::strong_ordering::less;
             } else {
-                // Both are null
+                // Both are null.
                 return bsoncxx::detail::strong_ordering::equal;
             }
         }
@@ -634,7 +638,7 @@ struct optional_operators_base {
         if (left.has_value()) {
             return compare(*left, right);
         }
-        // null optional is less-than any non-null value
+        // Null optional is less-than any non-null value.
         return bsoncxx::detail::strong_ordering::less;
     }
 
@@ -658,7 +662,7 @@ struct optional_swap_mixin<T, true> {
     }
 };
 
-// Common base class of all optionals
+// Common base class of all optionals.
 template <typename T>
 class optional_common_base : optional_operators_base, optional_swap_mixin<T> {
     using storage_type = detail::storage_for<bsoncxx::detail::remove_const_t<T>>;
@@ -693,10 +697,7 @@ class optional_common_base : optional_operators_base, optional_swap_mixin<T> {
         return *this;
     }
 
-    /**
-     * @internal
-     * @brief If the optional is holding a value, destroy that value and set ourselves null
-     */
+    // If the optional is holding a value, destroy that value and set ourselves null.
     void reset() noexcept {
         if (this->_has_value) {
             this->_storage.value.~T();
@@ -704,11 +705,8 @@ class optional_common_base : optional_operators_base, optional_swap_mixin<T> {
         this->_has_value = false;
     }
 
-    /**
-     * @internal
-     * @brief If the optional is holding a value, destroy that value. Construct
-     * a new value in-place using the given arguments.
-     */
+    // If the optional is holding a value, destroy that value. Construct a new value in-place using
+    // the given arguments.
     template <typename... Args>
     T& emplace(Args&&... args) {
         this->reset();
@@ -716,11 +714,8 @@ class optional_common_base : optional_operators_base, optional_swap_mixin<T> {
         return this->_storage.value;
     }
 
-    /**
-     * @internal
-     * @brief If the optional is holding a value, destroy that value. Construct
-     * a new value in-place using the given arguments.
-     */
+    // If the optional is holding a value, destroy that value. Construct a new value in-place using
+    // the given arguments.
     template <typename U, typename... Args>
     T& emplace(std::initializer_list<U> il, Args&&... args) {
         this->reset();
@@ -728,20 +723,17 @@ class optional_common_base : optional_operators_base, optional_swap_mixin<T> {
         return this->_storage.value;
     }
 
-    /**
-     * @internal
-     * @brief Special swap for optional values that removes need for a temporary
-     */
+    // Special swap for optional values that removes need for a temporary.
     bsoncxx_cxx14_constexpr void swap(optional_common_base& other) noexcept(
         std::is_nothrow_move_constructible<T>::value&&
             bsoncxx::detail::is_nothrow_swappable<T>::value) {
         if (other._has_value) {
             if (this->_has_value) {
                 using std::swap;
-                // Defer to the underlying swap
+                // Defer to the underlying swap.
                 swap(this->_storage.value, other._storage.value);
             } else {
-                // "steal" the other's value
+                // "steal" the other's value.
                 this->emplace(std::move(other._storage.value));
                 other.reset();
             }
@@ -749,7 +741,7 @@ class optional_common_base : optional_operators_base, optional_swap_mixin<T> {
             other.emplace(std::move(this->_storage.value));
             this->reset();
         } else {
-            // Neither optional has a value, so do nothing
+            // Neither optional has a value, so do nothing.
         }
     }
 
@@ -758,11 +750,8 @@ class optional_common_base : optional_operators_base, optional_swap_mixin<T> {
     storage_type _storage;
     bool _has_value = false;
 
-    /**
-     * @internal
-     * @brief In-place construct a new value from the given arguments. Assumes
-     * that the optional does not have a live value.
-     */
+    // In-place construct a new value from the given arguments. Assumes that the optional does not
+    // have a live value.
     template <typename... Args>
     void _emplace_construct_anew(Args&&... args) noexcept(
         std::is_nothrow_constructible<T, Args&&...>::value) {
@@ -770,14 +759,11 @@ class optional_common_base : optional_operators_base, optional_swap_mixin<T> {
         this->_has_value = true;
     }
 
-    /**
-     * @internal
-     * @brief Perform the semantics of the assignment operator.
-     */
+    // Perform the semantics of the assignment operator.
     template <typename U>
     void _assign(U&& other_storage) {
         if (other_storage._has_value) {
-            // We are receiving a value
+            // We are receiving a value.
             if (this->_has_value) {
                 // We already have a value. Invoke the underlying assignment.
                 this->_storage.value = BSONCXX_FWD(other_storage)._storage.value;
@@ -786,7 +772,7 @@ class optional_common_base : optional_operators_base, optional_swap_mixin<T> {
                 this->_emplace_construct_anew(BSONCXX_FWD(other_storage)._storage.value);
             }
         } else {
-            // We are receiving nullopt. Destroy our value, if present:
+            // We are receiving nullopt. Destroy our value, if present.
             this->reset();
         }
     }
@@ -803,7 +789,7 @@ template <typename T,
 struct optional_hash;
 
 // Hash is "disabled" if the underlying type is not hashable (disabled = cannot construct the hash
-// invocable)
+// invocable).
 template <typename T>
 struct optional_hash<T, false> {
     optional_hash() = delete;
@@ -858,3 +844,37 @@ using ::bsoncxx::v_noabi::stdx::optional;
 
 }  // namespace stdx
 }  // namespace bsoncxx
+
+///
+/// @file
+/// Provides `std::optional`-related polyfills for library API usage.
+///
+/// @note The API and ABI compatibility of this polyfill is determined by polyfill build
+/// configuration variables and the `BSONCXX_POLY_USE_*` macros provided by @ref
+/// bsoncxx-v_noabi-bsoncxx-config-config-hpp.
+///
+/// @see
+/// - [Choosing a C++17 Polyfill](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/polyfill-selection/)
+///
+
+#if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+
+namespace bsoncxx {
+namespace v_noabi {
+namespace stdx {
+
+///
+/// A polyfill for `std::optional<T>`.
+///
+/// @note The API and ABI compatibility of this polyfill is determined by polyfill build
+/// configuration variables and the `BSONCXX_POLY_USE_*` macros provided by @ref
+/// bsoncxx-v_noabi-bsoncxx-config-config-hpp.
+///
+template <typename T>
+class optional {};
+
+}  // namespace stdx
+}  // namespace v_noabi
+}  // namespace bsoncxx
+
+#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

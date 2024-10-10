@@ -1,6 +1,7 @@
 #pragma once
 
 #include <bsoncxx/builder/basic/document.hpp>
+
 #include <mongocxx/options/aggregate.hpp>
 
 #include <mongocxx/config/private/prelude.hh>

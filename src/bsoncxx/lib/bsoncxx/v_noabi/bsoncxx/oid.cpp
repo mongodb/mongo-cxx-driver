@@ -1,4 +1,4 @@
-// Copyright 2014 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -78,27 +78,27 @@ int oid_compare(const oid& lhs, const oid& rhs) {
     return bson_oid_compare(&lhs_oid, &rhs_oid);
 }
 
-bool BSONCXX_CALL operator<(const oid& lhs, const oid& rhs) {
+bool operator<(const oid& lhs, const oid& rhs) {
     return oid_compare(lhs, rhs) < 0;
 }
 
-bool BSONCXX_CALL operator>(const oid& lhs, const oid& rhs) {
+bool operator>(const oid& lhs, const oid& rhs) {
     return oid_compare(lhs, rhs) > 0;
 }
 
-bool BSONCXX_CALL operator<=(const oid& lhs, const oid& rhs) {
+bool operator<=(const oid& lhs, const oid& rhs) {
     return oid_compare(lhs, rhs) <= 0;
 }
 
-bool BSONCXX_CALL operator>=(const oid& lhs, const oid& rhs) {
+bool operator>=(const oid& lhs, const oid& rhs) {
     return oid_compare(lhs, rhs) >= 0;
 }
 
-bool BSONCXX_CALL operator==(const oid& lhs, const oid& rhs) {
+bool operator==(const oid& lhs, const oid& rhs) {
     return oid_compare(lhs, rhs) == 0;
 }
 
-bool BSONCXX_CALL operator!=(const oid& lhs, const oid& rhs) {
+bool operator!=(const oid& lhs, const oid& rhs) {
     return oid_compare(lhs, rhs) != 0;
 }
 

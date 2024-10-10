@@ -1,4 +1,4 @@
-// Copyright 2016 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,14 +14,17 @@
 
 #include <cstdlib>
 #include <memory>
+#include <type_traits>
 
-#include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
+
 #include <mongocxx/instance.hpp>
 #include <mongocxx/logger.hpp>
 #include <mongocxx/pool.hpp>
 #include <mongocxx/uri.hpp>
+
+#include <examples/macros.hh>
 
 namespace {
 
@@ -56,10 +59,6 @@ class mongo_access {
         return _pool->acquire();
     }
 
-    bsoncxx::stdx::optional<connection> try_get_connection() {
-        return _pool->try_acquire();
-    }
-
    private:
     mongo_access() = default;
 
@@ -67,24 +66,25 @@ class mongo_access {
     std::unique_ptr<mongocxx::pool> _pool = nullptr;
 };
 
-}  // namespace
-
 // The 'configure' and 'do_work' functions use the same mongocxx::instance and mongocxx::pool
 // objects by way of the mongo_access singleton.
 
 void configure(mongocxx::uri uri) {
     class noop_logger : public mongocxx::logger {
        public:
-        virtual void operator()(mongocxx::log_level,
-                                bsoncxx::stdx::string_view,
-                                bsoncxx::stdx::string_view) noexcept {}
+        void operator()(mongocxx::log_level,
+                        bsoncxx::stdx::string_view,
+                        bsoncxx::stdx::string_view) noexcept override {}
     };
 
-    auto instance =
-        bsoncxx::stdx::make_unique<mongocxx::instance>(bsoncxx::stdx::make_unique<noop_logger>());
+    // Use `std::make_unique` with C++14 and newer.
+    auto instance = std::unique_ptr<mongocxx::instance>(
+        new mongocxx::instance(std::unique_ptr<noop_logger>(new noop_logger())));
 
-    mongo_access::instance().configure(std::move(instance),
-                                       bsoncxx::stdx::make_unique<mongocxx::pool>(std::move(uri)));
+    // Use `std::make_unique` with C++14 and newer.
+    auto pool = std::unique_ptr<mongocxx::pool>(new mongocxx::pool(std::move(uri)));
+
+    mongo_access::instance().configure(std::move(instance), std::move(pool));
 }
 
 bool do_work() {
@@ -94,7 +94,9 @@ bool do_work() {
     return true;
 }
 
-int main(int argc, char* argv[]) {
+}  // namespace
+
+int EXAMPLES_CDECL main(int argc, char* argv[]) {
     auto uri = mongocxx::uri{(argc >= 2) ? argv[1] : mongocxx::uri::k_default_uri};
     configure(std::move(uri));
     return do_work() ? EXIT_SUCCESS : EXIT_FAILURE;

@@ -1,4 +1,4 @@
-// Copyright 2015 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,12 +16,15 @@
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/private/suppress_deprecation_warnings.hh>
 #include <bsoncxx/string/to_string.hpp>
-#include <bsoncxx/test/catch.hh>
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
+
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/create_collection.hpp>
-#include <third_party/catch/include/helpers.hpp>
+
+#include <bsoncxx/test/catch.hh>
+
+#include <mongocxx/test/catch_helpers.hh>
 
 namespace {
 using namespace bsoncxx;
@@ -41,8 +44,6 @@ TEST_CASE("create_collection accessors/mutators", "[create_collection]") {
     auto validation = validation_criteria{}.rule(make_document(kvp("a", 1)));
 
     CHECK_OPTIONAL_ARGUMENT(cc, capped, true);
-    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN;
-    BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END;
     CHECK_OPTIONAL_ARGUMENT(cc, size, 5);
     CHECK_OPTIONAL_ARGUMENT(cc, max, 2);
     CHECK_OPTIONAL_ARGUMENT(cc, collation, collation.view());

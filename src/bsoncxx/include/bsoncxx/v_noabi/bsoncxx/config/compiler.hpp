@@ -1,4 +1,4 @@
-// Copyright 2015 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -36,11 +36,15 @@
 
 // clang-format on
 
-// Disable MSVC warnings that cause a lot of noise related to DLL visibility
-// for types that we don't control (like std::unique_ptr).
-BSONCXX_PUSH_WARNINGS();
-BSONCXX_DISABLE_WARNING(MSVC(4251));
-BSONCXX_DISABLE_WARNING(MSVC(5275));
+// For backward compatibility. Use `inline` instead.
+#define BSONCXX_INLINE inline BSONCXX_ABI_NO_EXPORT
 
-#define BSONCXX_INLINE inline BSONCXX_PRIVATE
-#define BSONCXX_CALL BSONCXX_IF_MSVC(__cdecl)
+// For backward compatibility. Use BSONCXX_ABI_EXPORT_CDECL instead.
+#define BSONCXX_CALL BSONCXX_ABI_CDECL
+
+///
+/// @file
+/// Provides macros for internal use.
+///
+/// @warning For internal use only!
+///

@@ -1,4 +1,4 @@
-// Copyright 2014 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,6 +14,7 @@
 
 #include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/stdx/make_unique.hpp>
+
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
@@ -45,7 +46,7 @@ class database_names {
    public:
     explicit database_names(char** names) {
         _names = names;
-    };
+    }
 
     ~database_names() {
         bson_strfreev(_names);
@@ -58,7 +59,7 @@ class database_names {
 
     const char* operator[](const std::size_t i) const {
         return _names[i];
-    };
+    }
 
     bool operator!() const {
         return _names == nullptr;

@@ -1,4 +1,4 @@
-// Copyright 2015 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -37,7 +37,7 @@ enum class server_error_code : std::int32_t {
 ///
 /// @return The mongocxx error_category
 ///
-MONGOCXX_API const std::error_category& MONGOCXX_CALL server_error_category();
+MONGOCXX_ABI_EXPORT_CDECL(const std::error_category&) server_error_category();
 
 ///
 /// Translate a mongocxx::v_noabi::server_error_code into a std::error_code.
@@ -46,7 +46,7 @@ MONGOCXX_API const std::error_category& MONGOCXX_CALL server_error_category();
 ///
 /// @return A std::error_code
 ///
-MONGOCXX_INLINE std::error_code make_error_code(server_error_code error) {
+inline std::error_code make_error_code(server_error_code error) {
     return {static_cast<int>(error), server_error_category()};
 }
 
@@ -64,8 +64,30 @@ using ::mongocxx::v_noabi::server_error_category;
 
 namespace std {
 
-// Specialize is_error_code_enum so we get simpler std::error_code construction
+///
+/// Indicates @ref mongocxx::v_noabi::server_error_code is eligible for `std::error_code` implicit
+/// conversions.
+///
 template <>
 struct is_error_code_enum<::mongocxx::v_noabi::server_error_code> : std::true_type {};
 
 }  // namespace std
+
+///
+/// @file
+/// Provides @ref mongocxx::v_noabi::server_error_code.
+///
+
+#if defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+
+namespace mongocxx {
+
+/// @ref mongocxx::v_noabi::server_error_category()
+const std::error_category& server_error_category();
+
+/// @ref mongocxx::v_noabi::make_error_code(v_noabi::server_error_code error)
+inline std::error_code make_error_code(v_noabi::server_error_code error);
+
+}  // namespace mongocxx
+
+#endif  // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

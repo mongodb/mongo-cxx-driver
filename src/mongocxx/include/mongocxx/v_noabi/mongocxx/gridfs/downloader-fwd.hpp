@@ -1,4 +1,4 @@
-// Copyright 2023 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@ namespace gridfs {
 
 struct chunks_and_bytes_offset;
 
-class MONGOCXX_API downloader;
+class downloader;
 
 }  // namespace gridfs
 }  // namespace v_noabi
@@ -39,3 +39,24 @@ using ::mongocxx::v_noabi::gridfs::downloader;
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
+
+///
+/// @file
+/// Declares utilities to download GridFS files.
+///
+
+#if defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+
+namespace mongocxx {
+namespace gridfs {
+
+/// @ref mongocxx::v_noabi::gridfs::chunks_and_bytes_offset
+struct chunks_and_bytes_offset {};
+
+/// @ref mongocxx::v_noabi::gridfs::downloader
+class downloader {};
+
+}  // namespace gridfs
+}  // namespace mongocxx
+
+#endif  // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

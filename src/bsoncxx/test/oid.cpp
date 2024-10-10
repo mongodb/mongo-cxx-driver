@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@
 
 #include <bsoncxx/oid.hpp>
 #include <bsoncxx/private/libbson.hh>
+
 #include <bsoncxx/test/catch.hh>
 
 using namespace bsoncxx;

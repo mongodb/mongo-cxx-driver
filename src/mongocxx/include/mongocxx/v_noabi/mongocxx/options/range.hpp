@@ -1,4 +1,4 @@
-// Copyright 2023 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@
 
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/bson_value/view_or_value.hpp>
+
 #include <mongocxx/stdx.hpp>
 
 #include <mongocxx/config/prelude.hpp>
@@ -30,52 +31,61 @@ namespace options {
 
 ///
 /// @brief `RangeOpts` specifies index options for a Queryable Encryption field supporting
-/// "rangePreview" queries.
+/// "range" queries.
 ///
-/// @note @ref min, @ref max, @ref sparsity, and @ref precision must match the values set in the
+/// @note `min`, `max`, `trimFactor`, `sparsity`, and `precision` must match the values set in the
 /// encryptedFields of the destination collection.
 ///
-/// @note For double and decimal128, @ref min, @ref max, and @ref precision must all be set, or all
-/// be unset.
+/// @note For double and decimal128, `min`, `max`, and `precision` must all be set, or all be
+/// unset.
 ///
-/// @warning The Range algorithm is experimental only. It is not intended for public use. It is
-/// subject to breaking changes.
 class range {
    public:
     /// @brief Sets `RangeOpts.min`.
     /// @note Required if @ref precision is set.
-    range& min(bsoncxx::v_noabi::types::bson_value::view_or_value value);
+    MONGOCXX_ABI_EXPORT_CDECL(range&) min(bsoncxx::v_noabi::types::bson_value::view_or_value value);
 
     /// @brief Gets `RangeOpts.min`.
     /// @note Required if @ref precision is set.
-    const stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>& min() const;
+    MONGOCXX_ABI_EXPORT_CDECL(
+        const stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>&)
+    min() const;
 
     /// @brief Sets `RangeOpts.max`.
     /// @note Required if @ref precision is set.
-    range& max(bsoncxx::v_noabi::types::bson_value::view_or_value value);
+    MONGOCXX_ABI_EXPORT_CDECL(range&) max(bsoncxx::v_noabi::types::bson_value::view_or_value value);
 
     /// @brief Gets `RangeOpts.max`.
     /// @note Required if @ref precision is set.
-    const stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>& max() const;
+    MONGOCXX_ABI_EXPORT_CDECL(
+        const stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>&)
+    max() const;
 
     /// @brief Sets `RangeOpts.sparsity`.
-    range& sparsity(std::int64_t value);
+    MONGOCXX_ABI_EXPORT_CDECL(range&) sparsity(std::int64_t value);
 
     /// @brief Gets `RangeOpts.sparsity`.
-    const stdx::optional<std::int64_t>& sparsity() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<std::int64_t>&) sparsity() const;
+
+    /// @brief Sets `RangeOpts.trimFactor`.
+    MONGOCXX_ABI_EXPORT_CDECL(range&) trim_factor(std::int32_t value);
+
+    /// @brief Gets `RangeOpts.trimFactor`.
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<std::int32_t>&) trim_factor() const;
 
     /// @brief Sets `RangeOpts.precision`.
     /// @note May only be set for `double` or `decimal128`.
-    range& precision(std::int32_t value);
+    MONGOCXX_ABI_EXPORT_CDECL(range&) precision(std::int32_t value);
 
     /// @brief Gets `RangeOpts.precision`.
     /// @note May only be set for `double` or `decimal128`.
-    const stdx::optional<std::int32_t>& precision() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<std::int32_t>&) precision() const;
 
    private:
     stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> _min;
     stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> _max;
     stdx::optional<std::int64_t> _sparsity;
+    stdx::optional<std::int32_t> _trim_factor;
     stdx::optional<std::int32_t> _precision;
 };
 
@@ -87,3 +97,8 @@ class range {
 #if defined(MONGOCXX_TEST_MACRO_GUARDS_FIX_MISSING_POSTLUDE)
 #include <mongocxx/config/postlude.hpp>
 #endif
+
+///
+/// @file
+/// Provides @ref mongocxx::v_noabi::options::range.
+///

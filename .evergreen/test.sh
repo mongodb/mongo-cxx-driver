@@ -12,6 +12,7 @@ set -o pipefail
 : "${cse_gcp_email:?}"
 : "${cse_gcp_privatekey:?}"
 : "${distro_id:?}" # Required by find-cmake-latest.sh.
+: "${MONGOCXX_TEST_TOPOLOGY:?}"
 
 : "${CRYPT_SHARED_LIB_PATH:-}"
 : "${disable_slow_tests:-}"
@@ -59,6 +60,7 @@ PATH="${working_dir:?}/build/src/mongocxx/test/${build_type:?}:${PATH:-}"
 PATH="${working_dir:?}/build/src/bsoncxx/test/${build_type:?}:${PATH:-}"
 PATH="${working_dir:?}/build/src/mongocxx/${build_type:?}:${PATH:-}"
 PATH="${working_dir:?}/build/src/bsoncxx/${build_type:?}:${PATH:-}"
+PATH="${working_dir:?}/build/_deps/ep_catch2-build/src/${build_type:?}:${PATH:-}"
 PATH="${mongoc_dir:?}/bin:${PATH:-}"
 PATH="${working_dir:?}/build/install/bin:${PATH:-}"
 
@@ -105,6 +107,9 @@ export MONGOCXX_TEST_TLS_CA_FILE="${DRIVERS_TOOLS:?}/.evergreen/x509gen/ca.pem"
 
 if [ "$(uname -m)" == "ppc64le" ]; then
   echo "Skipping CSFLE test setup (CDRIVER-4246/CXX-2423)"
+elif [[ "${distro_id:?}" =~ windows-64-vs2015-* ]]; then
+  # Python: ImportError: DLL load failed while importing _rust: The specified procedure could not be found.
+  echo "Skipping CSFLE test setup (CXX-2628)"
 else
   # export environment variables for encryption tests
   set +o errexit
@@ -201,7 +206,7 @@ else
     for _ in $(seq 60); do
       # Exit code 7: "Failed to connect to host".
       if
-        curl -s "localhost:${port:?}"
+        curl -s -m 1 "localhost:${port:?}"
         (($? != 7))
       then
         return 0
@@ -224,15 +229,20 @@ fi
 pushd "${working_dir:?}/build"
 
 if [[ "${OSTYPE:?}" =~ cygwin ]]; then
-  CTEST_OUTPUT_ON_FAILURE=1 "${cmake_binary:?}" --build . --target RUN_TESTS -- /p:Configuration="${build_type:?}" /verbosity:minimal
+  CTEST_OUTPUT_ON_FAILURE=1 "${cmake_binary:?}" --build . --config "${build_type:?}" --target RUN_TESTS -- /verbosity:minimal
+
+  echo "Building examples..."
+  "${cmake_binary:?}" --build . --config "${build_type:?}" --target examples/examples
+  echo "Building examples... done."
+
   # Only run examples if MONGODB_API_VERSION is unset. We do not append
   # API version to example clients, so examples will fail when requireApiVersion
   # is true.
   if [[ -z "$MONGODB_API_VERSION" ]]; then
     echo "Running examples..."
-    if ! CTEST_OUTPUT_ON_FAILURE=1 "${cmake_binary:?}" --build . --target examples/run-examples -- /p:Configuration="${build_type:?}" /verbosity:minimal >|output.txt 2>&1; then
+    if ! "${cmake_binary:?}" --build . --config "${build_type:?}" --target examples/run-examples --parallel 1 -- /verbosity:minimal >|output.txt 2>&1; then
       # Only emit output on failure.
-      cat output.txt 1>&2
+      cat output.txt
       exit 1
     fi
     echo "Running examples... done."
@@ -252,7 +262,12 @@ else
     echo "CRYPT_SHARED_LIB_PATH=${CRYPT_SHARED_LIB_PATH:?}"
   fi
 
-  run_test() { "$@"; }
+  test_args=(
+    --reporter compact
+    --allow-running-no-tests
+  )
+
+  run_test() { "$@" "${test_args[@]:?}"; }
 
   if [[ "${TEST_WITH_ASAN:-}" == "ON" || "${TEST_WITH_UBSAN:-}" == "ON" ]]; then
     export ASAN_OPTIONS="detect_leaks=1"
@@ -260,7 +275,7 @@ else
     export PATH="/usr/lib/llvm-3.8/bin:${PATH:-}"
   elif [[ "${TEST_WITH_VALGRIND:-}" == "ON" ]]; then
     run_test() {
-      valgrind --leak-check=full --track-origins=yes --num-callers=50 --error-exitcode=1 --error-limit=no --read-var-info=yes --suppressions=../etc/memcheck.suppressions "$@"
+      valgrind --leak-check=full --track-origins=yes --num-callers=50 --error-exitcode=1 --error-limit=no --read-var-info=yes --suppressions=../etc/memcheck.suppressions "$@" "${test_args[@]:?}"
     }
   fi
 
@@ -276,44 +291,19 @@ else
   run_test ./src/mongocxx/test/test_logging
   run_test ./src/mongocxx/test/test_retryable_reads_specs
   run_test ./src/mongocxx/test/test_read_write_concern_specs
-  run_test ./src/mongocxx/test/test_unified_format_spec
-
-  # Some platforms like OS X don't support the /mode syntax to the -perm option
-  # of find(1), and some platforms like Ubuntu 16.04 don't support the +mode
-  # syntax, so we use Perl to help us find executable files.
-  EXAMPLES="$(find examples -type f | sort | perl -nlwe 'print if -x')"
+  run_test ./src/mongocxx/test/test_unified_format_specs
 
   # Only run examples if MONGODB_API_VERSION is unset. We do not append
   # API version to example clients, so examples will fail when requireApiVersion
   # is true.
   if [[ -z "${MONGODB_API_VERSION:-}" ]]; then
-    for test in ${EXAMPLES:?}; do
-      echo "Running ${test:?}"
-      case "${test:?}" in
-      *encryption*)
-        echo " - Skipping client side encryption example"
-        ;;
-      *change_stream*)
-        echo " - TODO CXX-1201, enable for servers that support change streams"
-        ;;
-      *client_session*)
-        echo " - TODO CXX-1201, enable for servers that support change streams"
-        ;;
-      *with_transaction*)
-        echo " - TODO CXX-1201, enable for servers that support transactions"
-        ;;
-      *causal_consistency*)
-        echo " - TODO CXX-1201, enable for servers that support transactions"
-        ;;
-      *)
-        if ! run_test "${test:?}" >|output.txt 2>&1; then
-          # Only emit output on failure.
-          cat output.txt 1>&2
-          exit 1
-        fi
-        ;;
-      esac
-    done
+    echo "Running examples..."
+    if ! "${cmake_binary:?}" --build . --target run-examples --parallel 1 >|output.txt 2>&1; then
+      # Only emit output on failure.
+      cat output.txt
+      exit 1
+    fi
+    echo "Running examples... done."
   fi
 fi
 

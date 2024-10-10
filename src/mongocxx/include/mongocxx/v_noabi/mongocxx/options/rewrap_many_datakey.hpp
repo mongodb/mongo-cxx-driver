@@ -1,4 +1,4 @@
-// Copyright 2023 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@
 #include <bsoncxx/string/view_or_value.hpp>
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/bson_value/view_or_value.hpp>
+
 #include <mongocxx/stdx.hpp>
 
 #include <mongocxx/config/prelude.hpp>
@@ -48,9 +49,10 @@ class rewrap_many_datakey {
     ///   An optional document containing the TLS options.
     ///
     /// @see
-    /// https://www.mongodb.com/docs/manual/core/csfle/reference/kms-providers/#std-label-csfle-reference-kms-providers
+    /// - https://www.mongodb.com/docs/manual/core/csfle/reference/kms-providers/#std-label-csfle-reference-kms-providers
     ///
-    rewrap_many_datakey& provider(bsoncxx::v_noabi::string::view_or_value provider);
+    MONGOCXX_ABI_EXPORT_CDECL(rewrap_many_datakey&)
+    provider(bsoncxx::v_noabi::string::view_or_value provider);
 
     ///
     /// Get the KMS provider
@@ -63,9 +65,9 @@ class rewrap_many_datakey {
     ///   An optional string name of the provider.
     ///
     /// @see
-    /// https://www.mongodb.com/docs/manual/core/csfle/reference/kms-providers/#std-label-csfle-reference-kms-providers
+    /// - https://www.mongodb.com/docs/manual/core/csfle/reference/kms-providers/#std-label-csfle-reference-kms-providers
     ///
-    bsoncxx::v_noabi::string::view_or_value provider() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::string::view_or_value) provider() const;
 
     ///
     /// Set the masterKey option.
@@ -80,9 +82,10 @@ class rewrap_many_datakey {
     ///   A reference to this object to facilitate method chaining.
     ///
     /// @see
-    /// https://www.mongodb.com/docs/manual/core/csfle/reference/kms-providers/#std-label-csfle-reference-kms-providers-create-and-store
+    /// - https://www.mongodb.com/docs/manual/core/csfle/reference/kms-providers/#std-label-csfle-reference-kms-providers-create-and-store
     ///
-    rewrap_many_datakey& master_key(bsoncxx::v_noabi::document::view_or_value master_key);
+    MONGOCXX_ABI_EXPORT_CDECL(rewrap_many_datakey&)
+    master_key(bsoncxx::v_noabi::document::view_or_value master_key);
 
     ///
     /// Get the masterKey option.
@@ -95,9 +98,10 @@ class rewrap_many_datakey {
     ///   A reference to this object to facilitate method chaining.
     ///
     /// @see
-    /// https://www.mongodb.com/docs/manual/core/csfle/reference/kms-providers/#std-label-csfle-reference-kms-providers-create-and-store
+    /// - https://www.mongodb.com/docs/manual/core/csfle/reference/kms-providers/#std-label-csfle-reference-kms-providers-create-and-store
     ///
-    const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& master_key() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+    master_key() const;
 
    private:
     friend ::mongocxx::v_noabi::client_encryption;
@@ -111,3 +115,8 @@ class rewrap_many_datakey {
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref mongocxx::v_noabi::options::rewrap_many_datakey.
+///

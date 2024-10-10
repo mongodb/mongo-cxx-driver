@@ -1,4 +1,4 @@
-// Copyright 2014 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -41,10 +41,10 @@ stdx::optional<bsoncxx::v_noabi::document::element> replace_one::upserted_id() c
     return _result.upserted_ids()[0];
 }
 
-bool MONGOCXX_CALL operator==(const replace_one& lhs, const replace_one& rhs) {
+bool operator==(const replace_one& lhs, const replace_one& rhs) {
     return lhs.result() == rhs.result();
 }
-bool MONGOCXX_CALL operator!=(const replace_one& lhs, const replace_one& rhs) {
+bool operator!=(const replace_one& lhs, const replace_one& rhs) {
     return !(lhs == rhs);
 }
 

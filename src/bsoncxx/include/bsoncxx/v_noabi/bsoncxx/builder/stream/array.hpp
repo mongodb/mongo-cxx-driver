@@ -1,4 +1,4 @@
-// Copyright 2014 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -32,31 +32,31 @@ namespace builder {
 namespace stream {
 
 ///
-/// A streaming interface for constructing
-/// a BSON array.
+/// A streaming interface for constructing a BSON array.
 ///
-/// @note Use of the stream builder is discouraged. See
-/// https://www.mongodb.com/docs/languages/cpp/drivers/current/working-with-bson/#basic-builder for
-/// more details.
+/// @warning Use of the stream builder is discouraged. See
+/// [Working with
+/// BSON](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/working-with-bson/#basic-builder)
+/// for more details.
 ///
 class array : public array_context<> {
    public:
     ///
     /// Default constructor.
     ///
-    BSONCXX_INLINE array() : array_context<>(&_core), _core(true) {}
+    array() : array_context<>(&_core), _core(true) {}
 
     ///
     /// @return A view of the BSON array.
     ///
-    BSONCXX_INLINE bsoncxx::v_noabi::array::view view() const {
+    bsoncxx::v_noabi::array::view view() const {
         return _core.view_array();
     }
 
     ///
     /// @return A view of the BSON array.
     ///
-    BSONCXX_INLINE operator bsoncxx::v_noabi::array::view() const {
+    operator bsoncxx::v_noabi::array::view() const {
         return view();
     }
 
@@ -69,14 +69,14 @@ class array : public array_context<> {
     ///  After calling extract() it is illegal to call any methods
     ///  on this class, unless it is subsequenly moved into.
     ///
-    BSONCXX_INLINE bsoncxx::v_noabi::array::value extract() {
+    bsoncxx::v_noabi::array::value extract() {
         return _core.extract_array();
     }
 
     ///
     /// Reset the underlying BSON to an empty array.
     ///
-    BSONCXX_INLINE void clear() {
+    void clear() {
         _core.clear();
     }
 
@@ -90,3 +90,8 @@ class array : public array_context<> {
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref bsoncxx::v_noabi::builder::stream::array.
+///

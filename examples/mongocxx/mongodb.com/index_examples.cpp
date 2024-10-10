@@ -1,4 +1,4 @@
-// Copyright 2018-present MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,11 +14,13 @@
 
 #include <bsoncxx/builder/basic/array.hpp>
 #include <bsoncxx/builder/basic/document.hpp>
+
 #include <mongocxx/client.hpp>
 #include <mongocxx/instance.hpp>
 
-// NOTE: Any time this file is modified, a DOCS ticket should be opened to sync the changes with the
-// corresponding page on mongodb.com/docs. See CXX-1514, CXX-1249, and DRIVERS-356 for more info.
+#include <examples/macros.hh>
+
+namespace {
 
 void index_examples(const mongocxx::database& db) {
     {
@@ -39,7 +41,9 @@ void index_examples(const mongocxx::database& db) {
     }
 }
 
-int main() {
+}  // namespace
+
+int EXAMPLES_CDECL main() {
     // The mongocxx::instance constructor and destructor initialize and shut down the driver,
     // respectively. Therefore, a mongocxx::instance must be created before using the driver and
     // must remain alive for as long as the driver is in use.

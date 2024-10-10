@@ -1,4 +1,4 @@
-// Copyright 2018-present MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
 #pragma once
 
 #include <cstdint>
+#include <string>
 
 #include <mongocxx/events/heartbeat_failed_event-fwd.hpp>
 
@@ -30,17 +31,17 @@ namespace events {
 /// An event notification sent when the driver failed to send an "hello" command to check the
 /// status of a server.
 ///
-/// @see "ServerHeartbeatFailedEvent" in
-/// https://github.com/mongodb/specifications/blob/master/source/server-discovery-and-monitoring/server-discovery-and-monitoring.rst
+/// @see
+/// - "ServerHeartbeatFailedEvent" in https://github.com/mongodb/specifications/blob/master/source/server-discovery-and-monitoring/server-discovery-and-monitoring.md
 ///
 class heartbeat_failed_event {
    public:
-    MONGOCXX_PRIVATE explicit heartbeat_failed_event(const void* event);
+    explicit heartbeat_failed_event(const void* event);
 
     ///
     /// Destroys a heartbeat_failed_event.
     ///
-    ~heartbeat_failed_event();
+    MONGOCXX_ABI_EXPORT_CDECL() ~heartbeat_failed_event();
 
     heartbeat_failed_event(heartbeat_failed_event&&) = default;
     heartbeat_failed_event& operator=(heartbeat_failed_event&&) = default;
@@ -53,35 +54,35 @@ class heartbeat_failed_event {
     ///
     /// @return The message.
     ///
-    std::string message() const;
+    MONGOCXX_ABI_EXPORT_CDECL(std::string) message() const;
 
     ///
     /// Returns the duration of the failed operation.
     ///
     /// @return The duration in microseconds.
     ///
-    std::int64_t duration() const;
+    MONGOCXX_ABI_EXPORT_CDECL(std::int64_t) duration() const;
 
     ///
     /// Returns the host name.
     ///
     /// @return The host name.
     ///
-    bsoncxx::v_noabi::stdx::string_view host() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::string_view) host() const;
 
     ///
     /// Returns the port.
     ///
     /// @return The port.
     ///
-    std::uint16_t port() const;
+    MONGOCXX_ABI_EXPORT_CDECL(std::uint16_t) port() const;
 
     ///
     /// Returns a boolean indicating whether this heartbeat event is from an awaitable hello.
     ///
     /// @return A boolean.
     ///
-    bool awaited() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bool) awaited() const;
 
    private:
     const void* _failed_event;
@@ -92,3 +93,8 @@ class heartbeat_failed_event {
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref mongocxx::v_noabi::events::heartbeat_failed_event.
+///

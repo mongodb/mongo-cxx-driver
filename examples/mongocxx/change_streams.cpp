@@ -1,4 +1,4 @@
-// Copyright 2018-present MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <cstdlib>
 #include <iostream>
 
 #include <bsoncxx/builder/basic/document.hpp>
@@ -19,16 +20,19 @@
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/string/to_string.hpp>
+
 #include <mongocxx/change_stream.hpp>
 #include <mongocxx/client.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/pool.hpp>
 #include <mongocxx/uri.hpp>
 
+#include <examples/macros.hh>
+
 namespace {
 
 // watch_forever iterates the change stream until an error occurs.
-void watch_forever(mongocxx::collection& collection) {
+[[noreturn]] void watch_forever(mongocxx::collection& collection) {
     mongocxx::options::change_stream options;
     // Wait up to 1 second before polling again.
     const std::chrono::milliseconds await_time{1000};
@@ -46,7 +50,12 @@ void watch_forever(mongocxx::collection& collection) {
 
 }  // namespace
 
-int main(int argc, char* argv[]) {
+int EXAMPLES_CDECL main(int argc, char* argv[]) {
+    if (std::getenv("MONGOCXX_TEST_TOPOLOGY")) {
+        std::cerr << "Skipping: change_streams example should not be run by tests" << std::endl;
+        return 0;
+    }
+
     mongocxx::instance inst{};
     auto uri_str = mongocxx::uri::k_default_uri;
     std::string db = "db";

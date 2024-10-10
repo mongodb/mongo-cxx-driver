@@ -1,4 +1,4 @@
-// Copyright 2014 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,6 +17,7 @@
 #include <mongocxx/exception/authentication_exception-fwd.hpp>
 
 #include <bsoncxx/document/value.hpp>
+
 #include <mongocxx/exception/operation_exception.hpp>
 
 #include <mongocxx/config/prelude.hpp>
@@ -27,10 +28,18 @@ namespace v_noabi {
 ///
 /// Class representing an exception during authentication.
 ///
-/// @see mongocxx::v_noabi::operation_exception
+/// @see
+/// - @ref mongocxx::v_noabi::operation_exception
 ///
 class authentication_exception : public operation_exception {
    public:
+    ~authentication_exception() override;
+
+    authentication_exception(authentication_exception&&) = default;
+    authentication_exception& operator=(authentication_exception&&) = default;
+    authentication_exception(const authentication_exception&) = default;
+    authentication_exception& operator=(const authentication_exception&) = default;
+
     using operation_exception::operation_exception;
 };
 
@@ -38,3 +47,8 @@ class authentication_exception : public operation_exception {
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref mongocxx::v_noabi::authentication_exception.
+///

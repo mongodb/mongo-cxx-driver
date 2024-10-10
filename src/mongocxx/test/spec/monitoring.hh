@@ -1,4 +1,4 @@
-// Copyright 2018-present MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,10 +15,11 @@
 #pragma once
 
 #include <mongocxx/client.hpp>
-#include <mongocxx/test/client_helpers.hh>
-#include <mongocxx/test/spec/unified_tests/entity.hh>
 
 #include <mongocxx/config/private/prelude.hh>
+
+#include <mongocxx/test/client_helpers.hh>
+#include <mongocxx/test/spec/unified_tests/entity.hh>
 
 namespace mongocxx {
 namespace spec {

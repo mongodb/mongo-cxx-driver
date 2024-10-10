@@ -1,4 +1,4 @@
-// Copyright 2023 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -43,8 +43,17 @@ range& range::sparsity(std::int64_t value) {
     return *this;
 }
 
+range& range::trim_factor(std::int32_t value) {
+    _trim_factor = value;
+    return *this;
+}
+
 const stdx::optional<std::int64_t>& range::sparsity() const {
     return _sparsity;
+}
+
+const stdx::optional<std::int32_t>& range::trim_factor() const {
+    return _trim_factor;
 }
 
 range& range::precision(std::int32_t value) {

@@ -1,4 +1,4 @@
-// Copyright 2018-present MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,10 +16,14 @@
 
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/string/to_string.hpp>
-#include <bsoncxx/test/catch.hh>
+
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/exception.hpp>
 #include <mongocxx/instance.hpp>
+
+#include <bsoncxx/test/catch.hh>
+#include <bsoncxx/test/exception_guard.hh>
+
 #include <mongocxx/test/client_helpers.hh>
 #include <mongocxx/test/spec/operation.hh>
 #include <mongocxx/test/spec/util.hh>
@@ -68,13 +72,13 @@ void run_command_monitoring_tests_in_file(std::string test_path) {
 
         // Use a separate client to check version info, so as not to interfere with APM
         client temp_client{uri{}, test_util::add_test_server_api()};
-        if (spec::should_skip_spec_test(temp_client, test.get_document().value)) {
-            return;
-        }
+
+        CHECK_IF_SKIP_SPEC_TEST(temp_client, test.get_document().value);
 
         // Used by the listeners
         auto events = expectations.begin();
 
+        bsoncxx::test::exception_guard_state eguard;
         options::client client_opts;
         options::apm apm_opts;
 
@@ -84,6 +88,8 @@ void run_command_monitoring_tests_in_file(std::string test_path) {
 
         // COMMAND STARTED
         apm_opts.on_command_started([&](const events::command_started_event& event) {
+            BSONCXX_TEST_EXCEPTION_GUARD_BEGIN(eguard);
+
             if (event.command_name().compare("endSessions") == 0) {
                 return;
             }
@@ -104,14 +110,17 @@ void run_command_monitoring_tests_in_file(std::string test_path) {
                 } else if (field.compare("database_name") == 0) {
                     REQUIRE(event.database_name() == value.get_string().value);
                 } else {
-                    // Should not happen.
-                    REQUIRE(false);
+                    FAIL("Should not reach this point.");
                 }
             }
+
+            BSONCXX_TEST_EXCEPTION_GUARD_END(eguard);
         });
 
         // COMMAND FAILED
         apm_opts.on_command_failed([&](const events::command_failed_event& event) {
+            BSONCXX_TEST_EXCEPTION_GUARD_BEGIN(eguard);
+
             auto expected = (*events).get_document().value;
             events++;
 
@@ -122,14 +131,17 @@ void run_command_monitoring_tests_in_file(std::string test_path) {
                 if (field.compare("command_name") == 0) {
                     REQUIRE(event.command_name() == value.get_string().value);
                 } else {
-                    // Should not happen.
-                    REQUIRE(false);
+                    FAIL("Should not reach this point.");
                 }
             }
+
+            BSONCXX_TEST_EXCEPTION_GUARD_END(eguard);
         });
 
         // COMMAND SUCCESS
         apm_opts.on_command_succeeded([&](const events::command_succeeded_event& event) {
+            BSONCXX_TEST_EXCEPTION_GUARD_BEGIN(eguard);
+
             if (event.command_name().compare("endSessions") == 0) {
                 return;
             }
@@ -152,6 +164,8 @@ void run_command_monitoring_tests_in_file(std::string test_path) {
                     REQUIRE(false);
                 }
             }
+
+            BSONCXX_TEST_EXCEPTION_GUARD_END(eguard);
         });
 
         ///////////////////////////////////////////////////////////////////////
@@ -170,7 +184,7 @@ void run_command_monitoring_tests_in_file(std::string test_path) {
 
         try {
             op_runner.run(operation);
-        } catch (mongocxx::exception& e) {
+        } catch (mongocxx::exception&) {
             // do nothing.
         }
 

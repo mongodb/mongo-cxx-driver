@@ -1,4 +1,4 @@
-// Copyright 2014 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -43,22 +43,22 @@ class cursor {
    public:
     enum class type { k_non_tailable, k_tailable, k_tailable_await };
 
-    class MONGOCXX_API iterator;
+    class iterator;
 
     ///
     /// Move constructs a cursor.
     ///
-    cursor(cursor&&) noexcept;
+    MONGOCXX_ABI_EXPORT_CDECL() cursor(cursor&&) noexcept;
 
     ///
     /// Move assigns a cursor.
     ///
-    cursor& operator=(cursor&&) noexcept;
+    MONGOCXX_ABI_EXPORT_CDECL(cursor&) operator=(cursor&&) noexcept;
 
     ///
     /// Destroys a cursor.
     ///
-    ~cursor();
+    MONGOCXX_ABI_EXPORT_CDECL() ~cursor();
 
     cursor(const cursor&) = delete;
     cursor& operator=(const cursor&) = delete;
@@ -77,7 +77,7 @@ class cursor {
     ///
     /// @throws mongocxx::v_noabi::query_exception if the query failed
     ///
-    iterator begin();
+    MONGOCXX_ABI_EXPORT_CDECL(iterator) begin();
 
     ///
     /// A cursor::iterator indicating cursor exhaustion, meaning that
@@ -85,7 +85,7 @@ class cursor {
     ///
     /// @return the cursor::iterator
     ///
-    iterator end();
+    MONGOCXX_ABI_EXPORT_CDECL(iterator) end();
 
    private:
     friend ::mongocxx::v_noabi::client_encryption;
@@ -97,11 +97,10 @@ class cursor {
 
     friend ::mongocxx::v_noabi::cursor::iterator;
 
-    MONGOCXX_PRIVATE cursor(
-        void* cursor_ptr,
-        bsoncxx::v_noabi::stdx::optional<type> cursor_type = bsoncxx::v_noabi::stdx::nullopt);
+    cursor(void* cursor_ptr,
+           bsoncxx::v_noabi::stdx::optional<type> cursor_type = bsoncxx::v_noabi::stdx::nullopt);
 
-    class MONGOCXX_PRIVATE impl;
+    class impl;
     std::unique_ptr<impl> _impl;
 };
 
@@ -137,47 +136,45 @@ class cursor::iterator {
     ///
     /// Dereferences the view for the document currently being pointed to.
     ///
-    const bsoncxx::v_noabi::document::view& operator*() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::document::view&) operator*() const;
 
     ///
     /// Accesses a member of the dereferenced document currently being pointed to.
     ///
-    const bsoncxx::v_noabi::document::view* operator->() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::document::view*) operator->() const;
 
     ///
     /// Pre-increments the iterator to move to the next document.
     ///
     /// @throws mongocxx::v_noabi::query_exception if the query failed
     ///
-    iterator& operator++();
+    MONGOCXX_ABI_EXPORT_CDECL(iterator&) operator++();
 
     ///
     /// Post-increments the iterator to move to the next document.
     ///
     /// @throws mongocxx::v_noabi::query_exception if the query failed
     ///
-    void operator++(int);
+    MONGOCXX_ABI_EXPORT_CDECL(void) operator++(int);
 
    private:
     friend ::mongocxx::v_noabi::cursor;
 
     ///
-    /// @{
+    /// @relates mongocxx::v_noabi::mongocxx::cursor::iterator
     ///
-    /// Compare two iterators for (in)-equality.  Iterators compare equal if
+    /// Compare two iterators for (in)-equality. Iterators compare equal if
     /// they point to the same underlying cursor or if both are exhausted.
     ///
-    /// @relates iterator
-    ///
-    friend MONGOCXX_API bool MONGOCXX_CALL operator==(const iterator&, const iterator&);
-    friend MONGOCXX_API bool MONGOCXX_CALL operator!=(const iterator&, const iterator&);
-    ///
+    /// @{
+    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(const iterator&, const iterator&);
+    friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator!=(const iterator&, const iterator&);
     /// @}
     ///
 
-    MONGOCXX_PRIVATE bool is_exhausted() const;
+    bool is_exhausted() const;
 
-    MONGOCXX_PRIVATE explicit iterator(cursor* cursor);
+    explicit iterator(cursor* cursor);
 
     // If this pointer is null, the iterator is considered "past-the-end".
     cursor* _cursor;
@@ -187,3 +184,8 @@ class cursor::iterator {
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref mongocxx::v_noabi::cursor.
+///

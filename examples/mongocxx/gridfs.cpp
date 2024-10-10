@@ -1,4 +1,4 @@
-// Copyright 2017 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,17 +17,17 @@
 #include <ostream>
 
 #include <bsoncxx/json.hpp>
-#include <bsoncxx/stdx/make_unique.hpp>
+
 #include <mongocxx/client.hpp>
 #include <mongocxx/gridfs/bucket.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/uri.hpp>
 
+#include <examples/macros.hh>
+
 using namespace mongocxx;
 
-using bsoncxx::stdx::make_unique;
-
-int main() {
+int EXAMPLES_CDECL main() {
     // The mongocxx::instance constructor and destructor initialize and shut down the driver,
     // respectively. Therefore, a mongocxx::instance must be created before using the driver and
     // must remain alive for as long as the driver is in use.
@@ -61,7 +61,9 @@ int main() {
     auto bytes_counter = 0;
 
     auto buffer_size = std::min(file_length, static_cast<std::int64_t>(downloader.chunk_size()));
-    auto buffer = make_unique<std::uint8_t[]>(static_cast<std::size_t>(buffer_size));
+
+    // Use `std::make_unique` with C++14 and newer.
+    auto buffer = std::unique_ptr<std::uint8_t[]>(new std::uint8_t[buffer_size]);
 
     while (auto length_read =
                downloader.read(buffer.get(), static_cast<std::size_t>(buffer_size))) {

@@ -1,4 +1,4 @@
-// Copyright 2015-present MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -92,6 +92,8 @@ class error_category final : public std::error_category {
             case error_code::k_invalid_search_index_view:
                 return "invalid use of default constructed or moved-from "
                        "mongocxx::search_index_view object";
+            case error_code::k_pool_wait_queue_timeout:
+                return "timed out while waiting for a client to be returned to the pool";
             default:
                 return "unknown mongocxx error";
         }
@@ -100,7 +102,7 @@ class error_category final : public std::error_category {
 
 }  // namespace
 
-const std::error_category& MONGOCXX_CALL error_category() {
+const std::error_category& error_category() {
     static const class error_category category {};
     return category;
 }

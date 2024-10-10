@@ -15,7 +15,7 @@ https://github.com/mongodb/mongo-cxx-driver.
 ---------------------------------------
 [Note: Catch is used only for testing.]
 
-Copyright (c) 2012 Two Blue Cubes Ltd. All rights reserved.
+Copyright Catch2 Authors
 
 Distributed under the Boost Software License, Version 1.0.
 See http://www.boost.org/LICENSE_1_0.txt

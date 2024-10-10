@@ -1,4 +1,4 @@
-// Copyright 2014 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -25,11 +25,9 @@ namespace v_noabi {
 namespace options {
 
 ///
-/// Class representing the optional arguments to a MongoDB driver client (SSL)
+/// @copydoc mongocxx::v_noabi::options::tls
 ///
-/// This class has been renamed to options::tls.
-///
-/// @deprecated use the tls options class instead.
+/// @deprecated Use @ref mongocxx::v_noabi::options::tls instead.
 ///
 MONGOCXX_DEPRECATED typedef tls ssl;
 
@@ -38,3 +36,10 @@ MONGOCXX_DEPRECATED typedef tls ssl;
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref mongocxx::v_noabi::options::ssl.
+///
+/// @deprecated Use @ref mongocxx/v_noabi/mongocxx/options/tls.hpp instead.
+///

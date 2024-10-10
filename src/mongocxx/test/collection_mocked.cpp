@@ -1,4 +1,4 @@
-// Copyright 2014 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@
 #include <bsoncxx/private/helpers.hh>
 #include <bsoncxx/private/libbson.hh>
 #include <bsoncxx/stdx/optional.hpp>
-#include <bsoncxx/test/catch.hh>
+
 #include <mongocxx/client.hpp>
 #include <mongocxx/collection.hpp>
 #include <mongocxx/database.hpp>
@@ -34,7 +34,10 @@
 #include <mongocxx/private/libbson.hh>
 #include <mongocxx/private/libmongoc.hh>
 #include <mongocxx/read_preference.hpp>
-#include <third_party/catch/include/helpers.hpp>
+
+#include <bsoncxx/test/catch.hh>
+
+#include <mongocxx/test/catch_helpers.hh>
 
 namespace {
 using namespace mongocxx;
@@ -57,12 +60,12 @@ TEST_CASE("Collection", "[collection]") {
     const std::string collection_name("dummy_collection");
     const std::string database_name("mocked_collection");
 
-    MOCK_CLIENT
-    MOCK_DATABASE
-    MOCK_COLLECTION
-    MOCK_FAM
-    MOCK_BULK
-    MOCK_CURSOR
+    MOCK_CLIENT;
+    MOCK_DATABASE;
+    MOCK_COLLECTION;
+    MOCK_FAM;
+    MOCK_BULK;
+    MOCK_CURSOR;
 
     client mongo_client{uri{}};
     write_concern concern;
@@ -213,7 +216,7 @@ TEST_CASE("Collection", "[collection]") {
                     REQUIRE(o.find("writeConcern") == o.end());
                 }
 
-                return NULL;
+                return nullptr;
             });
 
         pipe.match(make_document(kvp("foo", "bar")));
@@ -268,7 +271,7 @@ TEST_CASE("Collection", "[collection]") {
             if (expected_opts) {
                 bson_t opts_without_skip_or_limit = BSON_INITIALIZER;
                 bson_copy_to_excluding_noinit(
-                    opts, &opts_without_skip_or_limit, "skip", "limit", NULL);
+                    opts, &opts_without_skip_or_limit, "skip", "limit", nullptr);
                 REQUIRE(bson_equal(&opts_without_skip_or_limit, expected_opts));
                 bson_destroy(&opts_without_skip_or_limit);
             }
@@ -454,7 +457,7 @@ TEST_CASE("Collection", "[collection]") {
                         libmongoc::conversions::read_mode_t_from_read_mode(
                             mongo_coll.read_preference().mode()));
 
-            mongoc_cursor_t* cursor = NULL;
+            mongoc_cursor_t* cursor = nullptr;
             return cursor;
         });
 

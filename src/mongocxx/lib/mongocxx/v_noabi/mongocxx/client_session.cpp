@@ -1,4 +1,4 @@
-// Copyright 2017-present MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include <bsoncxx/stdx/make_unique.hpp>
+
 #include <mongocxx/exception/exception.hpp>
 #include <mongocxx/exception/private/mongoc_error.hh>
 #include <mongocxx/private/client.hh>

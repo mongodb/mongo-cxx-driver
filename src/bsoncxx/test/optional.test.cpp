@@ -10,9 +10,10 @@
 #include <bsoncxx/stdx/operators.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/stdx/type_traits.hpp>
-#include <bsoncxx/test/catch.hh>
 
 #include <bsoncxx/config/prelude.hpp>
+
+#include <bsoncxx/test/catch.hh>
 
 // Each polyfill library has some set of features that are not conformant with the standard
 // specification (inconsistent, missing, etc.). Limit testing to bsoncxx implementation and stdlib.
@@ -51,6 +52,11 @@ template <typename T>
 struct is_hashable : std::false_type {};
 #endif
 
+BSONCXX_PUSH_WARNINGS();
+BSONCXX_DISABLE_WARNING(GNU("-Wunused"));
+BSONCXX_DISABLE_WARNING(Clang("-Wunused-member-function"));
+BSONCXX_DISABLE_WARNING(Clang("-Wunneeded-member-function"));
+
 struct not_default_constructible {
     explicit not_default_constructible(int);
 };
@@ -76,10 +82,16 @@ struct not_copyable {
     not_copyable& operator=(not_copyable&&) = default;
 };
 
+BSONCXX_POP_WARNINGS();
+
 // Improve quality of error messages on failure (in particular for MSVC).
 #define STATIC_ASSERT_EXPR(expr) static_assert((expr), "expected: " #expr)
 #define STATIC_ASSERT_EXPR_EQUAL(a, b) static_assert((a) == (b), "expected: " #a " == " #b)
+
+BSONCXX_PUSH_WARNINGS();
+BSONCXX_DISABLE_WARNING(GNU("-Wunused-macros"));
 #define STATIC_ASSERT_EXPR_IMPLIES(a, b) static_assert((!(a) || (b)), "expected: " #a " -> " #b)
+BSONCXX_POP_WARNINGS();
 
 #if defined(BSONCXX_POLY_USE_STD)
 // Deliberately weaken assertions for stdlib implementations to accomodate for differences in
@@ -89,7 +101,7 @@ struct not_copyable {
 #define STATIC_ASSERT_EXPR_ALIKE(a, b) STATIC_ASSERT_EXPR_EQUAL(a, b)
 #endif
 
-template <bsoncxx_ttparam Trait, typename T>
+template <template <class...> class Trait, typename T>
 bool assert_alikeness() {
     STATIC_ASSERT_EXPR_ALIKE(Trait<T>::value, Trait<optional<T>>::value);
     return true;

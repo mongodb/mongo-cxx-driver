@@ -1,4 +1,4 @@
-// Copyright 2020-present MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,11 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <cstdlib>
 #include <iostream>
+#include <string>
 
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/json.hpp>
+
 #include <mongocxx/client.hpp>
 #include <mongocxx/client_session.hpp>
 #include <mongocxx/collection.hpp>
@@ -29,6 +32,8 @@
 #include <mongocxx/uri.hpp>
 #include <mongocxx/write_concern.hpp>
 
+#include <examples/macros.hh>
+
 using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_document;
 using namespace mongocxx;
@@ -37,7 +42,15 @@ using namespace mongocxx;
 // This example shows how to use the client_session::with_transaction helper to
 // conveniently run a custom callback inside of a transaction.
 //
-int main() {
+int EXAMPLES_CDECL main() {
+    if (const char* const topology_env = std::getenv("MONGOCXX_TEST_TOPOLOGY")) {
+        const auto topology = std::string(topology_env);
+        if (topology != "replica") {
+            std::cerr << "Skipping: with_transaction example requires a replica set" << std::endl;
+            return 0;
+        }
+    }
+
     // Start Transactions withTxn API Example 1
 
     // The mongocxx::instance constructor and destructor initialize and shut down the driver,
@@ -51,7 +64,7 @@ int main() {
     // 'mongodb://mongodb0.example.com:27017,mongodb1.example.com:27017/?replicaSet=myRepl'
     // For a sharded cluster, connect to the mongos instances; e.g.
     // uriString = 'mongodb://mongos0.example.com:27017,mongos1.example.com:27017/'
-    mongocxx::client client{mongocxx::uri{"mongodb://localhost/?replicaSet=replset"}};
+    mongocxx::client client{mongocxx::uri{"mongodb://localhost/?replicaSet=repl0"}};
 
     write_concern wc_majority{};
     wc_majority.acknowledge_level(write_concern::level::k_majority);

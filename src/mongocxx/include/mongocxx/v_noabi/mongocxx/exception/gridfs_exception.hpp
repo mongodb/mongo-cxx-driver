@@ -1,4 +1,4 @@
-// Copyright 2017 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -27,10 +27,18 @@ namespace v_noabi {
 /// Class representing an error encountered when attempting to perform the requested GridFS
 /// operation.
 ///
-/// @see mongocxx::v_noabi::exception
+/// @see
+/// - @ref mongocxx::v_noabi::exception
 ///
 class gridfs_exception : public exception {
    public:
+    ~gridfs_exception() override;
+
+    gridfs_exception(gridfs_exception&&) = default;
+    gridfs_exception& operator=(gridfs_exception&&) = default;
+    gridfs_exception(const gridfs_exception&) = default;
+    gridfs_exception& operator=(const gridfs_exception&) = default;
+
     using exception::exception;
 };
 
@@ -38,3 +46,8 @@ class gridfs_exception : public exception {
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref mongocxx::v_noabi::gridfs_exception.
+///

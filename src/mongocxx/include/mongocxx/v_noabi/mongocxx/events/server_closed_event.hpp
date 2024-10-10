@@ -1,4 +1,4 @@
-// Copyright 2018-present MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -31,17 +31,17 @@ namespace events {
 /// An event notification sent when the driver stops monitoring a MongoDB server and removes it
 /// from the topology description.
 ///
-/// @see "ServerClosedEvent" in
-/// https://github.com/mongodb/specifications/blob/master/source/server-discovery-and-monitoring/server-discovery-and-monitoring.rst
+/// @see
+/// - "ServerClosedEvent" in https://github.com/mongodb/specifications/blob/master/source/server-discovery-and-monitoring/server-discovery-and-monitoring.md
 ///
 class server_closed_event {
    public:
-    MONGOCXX_PRIVATE explicit server_closed_event(const void* event);
+    explicit server_closed_event(const void* event);
 
     ///
     /// Destroys a server_closed_event.
     ///
-    ~server_closed_event();
+    MONGOCXX_ABI_EXPORT_CDECL() ~server_closed_event();
 
     server_closed_event(server_closed_event&&) = default;
     server_closed_event& operator=(server_closed_event&&) = default;
@@ -54,14 +54,14 @@ class server_closed_event {
     ///
     /// @return The host name.
     ///
-    bsoncxx::v_noabi::stdx::string_view host() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::string_view) host() const;
 
     ///
     /// Returns the server port.
     ///
     /// @return The port.
     ///
-    std::uint16_t port() const;
+    MONGOCXX_ABI_EXPORT_CDECL(std::uint16_t) port() const;
 
     ///
     /// An opaque id, unique to this topology for this mongocxx::v_noabi::client or
@@ -69,7 +69,7 @@ class server_closed_event {
     ///
     /// @return The id.
     ///
-    const bsoncxx::v_noabi::oid topology_id() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::oid) topology_id() const;
 
    private:
     const void* _event;
@@ -80,3 +80,8 @@ class server_closed_event {
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref mongocxx::v_noabi::events::server_closed_event.
+///

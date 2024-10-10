@@ -1,4 +1,4 @@
-// Copyright 2015 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@
 
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
+
 #include <mongocxx/stdx.hpp>
 
 #include <mongocxx/config/prelude.hpp>
@@ -28,7 +29,8 @@ namespace v_noabi {
 ///
 /// Class representing criteria for document validation, to be applied to a collection.
 ///
-/// @see https://www.mongodb.com/docs/manual/core/document-validation/
+/// @see
+/// - https://www.mongodb.com/docs/manual/core/document-validation/
 ///
 class validation_criteria {
    public:
@@ -42,7 +44,8 @@ class validation_criteria {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    validation_criteria& rule(bsoncxx::v_noabi::document::view_or_value rule);
+    MONGOCXX_ABI_EXPORT_CDECL(validation_criteria&)
+    rule(bsoncxx::v_noabi::document::view_or_value rule);
 
     ///
     /// Gets the validation rule for this validation object.
@@ -50,19 +53,21 @@ class validation_criteria {
     /// @return
     ///   Document representing a validation rule.
     ///
-    const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& rule() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+    rule() const;
 
     ///
     /// A class to represent the different validation level options.
     ///
-    /// - k_off: Disable validation entirely.
-    /// - k_moderate: Apply validation rules to inserts, and apply validation rules to updates only
-    ///   if the document to be updated already fulfills the validation criteria.
-    /// - k_strict: Apply validation rules to all inserts and updates.
-    ///
     enum class validation_level {
+        /// Disable validation entirely.
         k_off,
+
+        /// Apply validation rules to inserts, and apply validation rules to updates only if the
+        /// document to be updated already fulfills the validation criteria.
         k_moderate,
+
+        /// Apply validation rules to all inserts and updates.
         k_strict,
     };
 
@@ -76,7 +81,7 @@ class validation_criteria {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    validation_criteria& level(validation_level level);
+    MONGOCXX_ABI_EXPORT_CDECL(validation_criteria&) level(validation_level level);
 
     ///
     /// Gets the validation level.
@@ -84,17 +89,17 @@ class validation_criteria {
     /// @return
     ///   The enumerated validation level.
     ///
-    const stdx::optional<validation_level>& level() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<validation_level>&) level() const;
 
     ///
     /// A class to represent the different validation action options.
     ///
-    /// - k_error: Reject any insertion or update that violates the validation criteria.
-    /// - k_warn: Log any violations of the validation criteria, but allow the insertion or update
-    ///   to proceed.
-    ///
     enum class validation_action {
+        /// Reject any insertion or update that violates the validation criteria.
         k_error,
+
+        /// Log any violations of the validation criteria, but allow the insertion or update to
+        /// proceed.
         k_warn,
     };
 
@@ -108,7 +113,7 @@ class validation_criteria {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    validation_criteria& action(validation_action action);
+    MONGOCXX_ABI_EXPORT_CDECL(validation_criteria&) action(validation_action action);
 
     ///
     /// Gets the validation action to run when documents failing validation are inserted or
@@ -117,7 +122,7 @@ class validation_criteria {
     /// @return
     ///   The enumerated validation action.
     ///
-    const stdx::optional<validation_action>& action() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<validation_action>&) action() const;
 
     ///
     /// Returns a bson document representing this set of validation criteria.
@@ -128,15 +133,19 @@ class validation_criteria {
     ///
     /// @return Validation criteria, as a document.
     ///
-    MONGOCXX_DEPRECATED bsoncxx::v_noabi::document::value to_document() const;
-    bsoncxx::v_noabi::document::value to_document_deprecated() const;
+    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::value)
+        to_document() const;
+
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::document::value) to_document_deprecated() const;
 
     ///
     /// @deprecated
     ///   This method is deprecated. To determine which options are set on this object, use the
     ///   provided accessors instead.
     ///
-    MONGOCXX_DEPRECATED MONGOCXX_INLINE operator bsoncxx::v_noabi::document::value() const;
+    MONGOCXX_DEPRECATED operator bsoncxx::v_noabi::document::value() const {
+        return to_document_deprecated();
+    }
 
    private:
     stdx::optional<bsoncxx::v_noabi::document::view_or_value> _rule;
@@ -144,14 +153,21 @@ class validation_criteria {
     stdx::optional<validation_action> _action;
 };
 
-MONGOCXX_API bool MONGOCXX_CALL operator==(const validation_criteria& lhs,
-                                           const validation_criteria& rhs);
-MONGOCXX_API bool MONGOCXX_CALL operator!=(const validation_criteria& lhs,
-                                           const validation_criteria& rhs);
+///
+/// Compare equal when the arguments' rule, level, and action compare equal; otherwise, compare
+/// false.
+///
+/// @{
 
-MONGOCXX_INLINE validation_criteria::operator bsoncxx::v_noabi::document::value() const {
-    return to_document_deprecated();
-}
+/// @relatesalso mongocxx::v_noabi::validation_criteria
+MONGOCXX_ABI_EXPORT_CDECL(bool)
+operator==(const validation_criteria& lhs, const validation_criteria& rhs);
+
+/// @relatesalso mongocxx::v_noabi::validation_criteria
+MONGOCXX_ABI_EXPORT_CDECL(bool)
+operator!=(const validation_criteria& lhs, const validation_criteria& rhs);
+/// @}
+///
 
 }  // namespace v_noabi
 }  // namespace mongocxx
@@ -164,3 +180,22 @@ using ::mongocxx::v_noabi::operator!=;
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref mongocxx::v_noabi::validation_criteria.
+///
+
+#if defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+
+namespace mongocxx {
+
+/// @ref mongocxx::v_noabi::operator==(const v_noabi::validation_criteria& lhs, const v_noabi::validation_criteria& rhs)
+bool operator==(const v_noabi::validation_criteria& lhs, const v_noabi::validation_criteria& rhs);
+
+/// @ref mongocxx::v_noabi::operator!=(const v_noabi::validation_criteria& lhs, const v_noabi::validation_criteria& rhs)
+bool operator!=(const v_noabi::validation_criteria& lhs, const v_noabi::validation_criteria& rhs);
+
+}  // namespace mongocxx
+
+#endif  // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

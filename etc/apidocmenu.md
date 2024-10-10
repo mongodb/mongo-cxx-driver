@@ -8,8 +8,9 @@ Currently, no drivers guarantee API or ABI stability.
 | Family/version       | Stability | Development        | Purpose                            |
 | -------------------- | --------- | ------------------ | ---------------------------------- |
 | (repo master branch) | Unstable  | Active development | New feature development            |
-| mongocxx 3.10.x      | Stable    | Bug fixes only     | Current stable C++ driver release  |
-| mongocxx 3.9.x       | Stable    | None               | Previous stable C++ driver release  |
+| mongocxx 3.11.x      | Stable    | Bug fixes only     | Current stable C++ driver release  |
+| mongocxx 3.10.x      | Stable    | None               | Previous stable C++ driver release |
+| mongocxx 3.9.x       | Stable    | None               | Previous stable C++ driver release |
 | mongocxx 3.8.x       | Stable    | None               | Previous stable C++ driver release |
 | mongocxx 3.7.x       | Stable    | None               | Previous stable C++ driver release |
 | mongocxx 3.6.x       | Stable    | None               | Previous stable C++ driver release |
@@ -24,6 +25,7 @@ Currently, no drivers guarantee API or ABI stability.
 
 | mongocxx                             |
 | ------------------------------------ |
+| [mongocxx-3.11.0](../mongocxx-3.11.0)|
 | [mongocxx-3.10.2](../mongocxx-3.10.2)|
 | [mongocxx-3.10.1](../mongocxx-3.10.1)|
 | [mongocxx-3.10.0](../mongocxx-3.10.0)|
@@ -67,8 +69,8 @@ Compatibility of each C++ driver version with each MongoDB server is documented 
 
 ## Resources
 
-* [MongoDB C++ Driver Quickstart](https://www.mongodb.com/docs/languages/cpp/drivers/current/tutorial/)
-* [MongoDB C++ Driver Manual](https://www.mongodb.com/docs/languages/cpp/drivers/current/)
+* [MongoDB C++ Driver Quickstart](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/tutorial/)
+* [MongoDB C++ Driver Manual](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/)
 * [MongoDB C++ Driver Source Code on GitHub](https://github.com/mongodb/mongo-cxx-driver)
 * [MongoDB Database Manual](https://www.mongodb.com/docs/manual/)
 

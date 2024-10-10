@@ -1,4 +1,4 @@
-// Copyright 2018-present MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -30,17 +30,17 @@ namespace events {
 /// An event notification sent when the driver begins executing a "hello" command to check the
 /// status of a server.
 ///
-/// @see "ServerHeartbeatStartedEvent" in
-/// https://github.com/mongodb/specifications/blob/master/source/server-discovery-and-monitoring/server-discovery-and-monitoring.rst
+/// @see
+/// - "ServerHeartbeatStartedEvent" in https://github.com/mongodb/specifications/blob/master/source/server-discovery-and-monitoring/server-discovery-and-monitoring.md
 ///
 class heartbeat_started_event {
    public:
-    MONGOCXX_PRIVATE explicit heartbeat_started_event(const void* event);
+    explicit heartbeat_started_event(const void* event);
 
     ///
     /// Destroys a heartbeat_started_event.
     ///
-    ~heartbeat_started_event();
+    MONGOCXX_ABI_EXPORT_CDECL() ~heartbeat_started_event();
 
     heartbeat_started_event(heartbeat_started_event&&) = default;
     heartbeat_started_event& operator=(heartbeat_started_event&&) noexcept = default;
@@ -53,21 +53,21 @@ class heartbeat_started_event {
     ///
     /// @return The host name.
     ///
-    bsoncxx::v_noabi::stdx::string_view host() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::string_view) host() const;
 
     ///
     /// Returns the port.
     ///
     /// @return The port.
     ///
-    std::uint16_t port() const;
+    MONGOCXX_ABI_EXPORT_CDECL(std::uint16_t) port() const;
 
     ///
     /// Returns a boolean indicating whether this heartbeat event is from an awaitable hello.
     ///
     /// @return A boolean.
     ///
-    bool awaited() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bool) awaited() const;
 
    private:
     const void* _started_event;
@@ -78,3 +78,8 @@ class heartbeat_started_event {
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref mongocxx::v_noabi::events::heartbeat_started_event.
+///

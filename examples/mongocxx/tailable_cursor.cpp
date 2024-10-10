@@ -1,4 +1,4 @@
-// Copyright 2017 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@
 
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/json.hpp>
+
 #include <mongocxx/client.hpp>
 #include <mongocxx/collection.hpp>
 #include <mongocxx/database.hpp>
@@ -25,9 +26,13 @@
 #include <mongocxx/options/find.hpp>
 #include <mongocxx/uri.hpp>
 
+#include <examples/macros.hh>
+
 using bsoncxx::builder::basic::document;
 using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_document;
+
+namespace {
 
 //
 // Document number counter for sample inserted documents.  This just
@@ -68,7 +73,9 @@ void insert_docs(mongocxx::collection* coll) {
     }
 }
 
-int main(int, char**) {
+}  // namespace
+
+int EXAMPLES_CDECL main() {
     // The mongocxx::instance constructor and destructor initialize and shut down the driver,
     // respectively. Therefore, a mongocxx::instance must be created before using the driver and
     // must remain alive for as long as the driver is in use.

@@ -1,4 +1,4 @@
-// Copyright 2016 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -37,14 +37,14 @@ class pool {
     /// @param client_opts
     ///   The client options.
     ///
-    pool(client client_opts = client());
+    MONGOCXX_ABI_EXPORT_CDECL() pool(client client_opts = client());
 
     ///
     /// The current client options.
     ///
     /// @return The client options.
     ///
-    const client& client_opts() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const client&) client_opts() const;
 
    private:
     client _client_opts;
@@ -55,3 +55,8 @@ class pool {
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref mongocxx::v_noabi::options::pool.
+///

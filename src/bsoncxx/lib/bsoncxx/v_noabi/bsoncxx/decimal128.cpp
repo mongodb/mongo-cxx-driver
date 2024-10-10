@@ -1,4 +1,4 @@
-// Copyright 2016 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -42,11 +42,11 @@ std::string decimal128::to_string() const {
     return {str};
 }
 
-bool BSONCXX_CALL operator==(const decimal128& lhs, const decimal128& rhs) {
+bool operator==(const decimal128& lhs, const decimal128& rhs) {
     return lhs._high == rhs._high && lhs._low == rhs._low;
 }
 
-bool BSONCXX_CALL operator!=(const decimal128& lhs, const decimal128& rhs) {
+bool operator!=(const decimal128& lhs, const decimal128& rhs) {
     return !(lhs == rhs);
 }
 

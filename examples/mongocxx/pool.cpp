@@ -1,4 +1,4 @@
-// Copyright 2017 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -22,14 +22,17 @@
 #include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/types.hpp>
+
 #include <mongocxx/client.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/pool.hpp>
 #include <mongocxx/uri.hpp>
 
+#include <examples/macros.hh>
+
 using bsoncxx::builder::basic::kvp;
 
-int main() {
+int EXAMPLES_CDECL main() {
     // The mongocxx::instance constructor and destructor initialize and shut down the driver,
     // respectively. Therefore, a mongocxx::instance must be created before using the driver and
     // must remain alive for as long as the driver is in use.
@@ -45,14 +48,14 @@ int main() {
         auto run = [&](std::int64_t j) {
             // Each client and collection can only be used in a single thread.
             auto client = pool.acquire();
-            auto coll = (*client)["test"][collection_names[static_cast<std::size_t>(j)]];
+            auto coll = client["test"][collection_names[static_cast<std::size_t>(j)]];
             coll.delete_many({});
 
             bsoncxx::types::b_int64 index = {j};
             coll.insert_one(bsoncxx::builder::basic::make_document(kvp("x", index)));
 
             if (auto doc =
-                    (*client)["test"][collection_names[static_cast<std::size_t>(j)]].find_one({})) {
+                    client["test"][collection_names[static_cast<std::size_t>(j)]].find_one({})) {
                 // In order to ensure that the newline is printed immediately after the document,
                 // they need to be streamed to std::cout as a single string.
                 std::stringstream ss;

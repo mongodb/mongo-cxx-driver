@@ -1,4 +1,4 @@
-// Copyright 2016 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -14,8 +14,9 @@
 
 #include <chrono>
 
-#include <bsoncxx/test/catch.hh>
 #include <bsoncxx/types.hpp>
+
+#include <bsoncxx/test/catch.hh>
 
 namespace {
 TEST_CASE("time_point is converted to b_date and back", "[bsoncxx::types::b_date]") {

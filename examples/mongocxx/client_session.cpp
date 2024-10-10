@@ -1,4 +1,4 @@
-// Copyright 2018-present MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,27 +12,40 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <cstdlib>
 #include <iostream>
+#include <string>
 
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/json.hpp>
+
 #include <mongocxx/client.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/uri.hpp>
+
+#include <examples/macros.hh>
 
 using bsoncxx::to_json;
 using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_document;
 using namespace mongocxx;
 
-int main() {
+int EXAMPLES_CDECL main() {
+    if (const char* const topology_env = std::getenv("MONGOCXX_TEST_TOPOLOGY")) {
+        const auto topology = std::string(topology_env);
+        if (topology != "replica") {
+            std::cerr << "Skipping: client_session example requires a replica set" << std::endl;
+            return 0;
+        }
+    }
+
     // The mongocxx::instance constructor and destructor initialize and shut down the driver,
     // respectively. Therefore, a mongocxx::instance must be created before using the driver and
     // must remain alive for as long as the driver is in use.
     mongocxx::instance inst{};
 
-    mongocxx::client conn{mongocxx::uri{"mongodb://localhost/?replicaSet=replset"}};
+    mongocxx::client conn{mongocxx::uri{"mongodb://localhost/?replicaSet=repl0"}};
 
     // By default, a session is causally consistent. Pass options::client_session to override
     // causal consistency.

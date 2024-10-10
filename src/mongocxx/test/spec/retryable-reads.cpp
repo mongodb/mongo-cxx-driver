@@ -1,4 +1,4 @@
-// Copyright 2016 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,9 +16,12 @@
 #include <set>
 
 #include <bsoncxx/string/to_string.hpp>
-#include <bsoncxx/test/catch.hh>
+
 #include <mongocxx/exception/operation_exception.hpp>
 #include <mongocxx/instance.hpp>
+
+#include <bsoncxx/test/catch.hh>
+
 #include <mongocxx/test/spec/monitoring.hh>
 #include <mongocxx/test/spec/operation.hh>
 #include <mongocxx/test/spec/util.hh>
@@ -45,14 +48,10 @@ void run_retryable_reads_tests_in_file(std::string test_path) {
     document::view test_spec_view = test_spec->view();
     for (auto&& test : test_spec_view["tests"].get_array().value) {
         client client{get_uri(test.get_document().value), client_opts};
-        if (should_skip_spec_test(client, test_spec_view)) {
-            return;
-        }
+        CHECK_IF_SKIP_SPEC_TEST(client, test_spec_view);
 
         INFO("Test description: " << test["description"].get_string().value);
-        if (should_skip_spec_test(client, test.get_document())) {
-            continue;
-        }
+        CHECK_IF_SKIP_SPEC_TEST(client, test.get_document());
 
         auto get_value_or_default = [&](std::string key, std::string default_str) {
             if (test_spec_view[key]) {
@@ -99,6 +98,7 @@ void run_retryable_reads_tests_in_file(std::string test_path) {
             try {
                 actual_outcome_value = op_runner.run(operation);
             } catch (const operation_exception& e) {
+                CAPTURE(e);
                 REQUIRE(operation["error"].get_bool().value);
             }
 
@@ -119,7 +119,7 @@ void run_retryable_reads_tests_in_file(std::string test_path) {
     }
 }
 
-TEST_CASE("retryable reads spec tests", "[retryable_reads_spec]") {
+TEST_CASE("retryable reads spec tests", "[retryable_reads_specs]") {
     instance::current();
 
     std::set<std::string> unsupported_tests{"gridfs-downloadByName.json",

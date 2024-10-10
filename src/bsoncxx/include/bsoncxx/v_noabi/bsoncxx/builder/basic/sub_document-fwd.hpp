@@ -1,4 +1,4 @@
-// Copyright 2023 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -35,3 +35,23 @@ using ::bsoncxx::v_noabi::builder::basic::sub_document;
 }  // namespace basic
 }  // namespace builder
 }  // namespace bsoncxx
+
+///
+/// @file
+/// Declares @ref bsoncxx::v_noabi::builder::basic::sub_document.
+///
+
+#if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+
+namespace bsoncxx {
+namespace builder {
+namespace basic {
+
+/// @ref bsoncxx::v_noabi::builder::basic::sub_document
+class sub_document {};
+
+}  // namespace basic
+}  // namespace builder
+}  // namespace bsoncxx
+
+#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

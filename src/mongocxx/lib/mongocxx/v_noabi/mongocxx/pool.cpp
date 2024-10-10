@@ -1,4 +1,4 @@
-// Copyright 2015 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
 #include <utility>
 
 #include <bsoncxx/stdx/make_unique.hpp>
+
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/exception.hpp>
@@ -131,8 +132,14 @@ pool::entry::operator bool() const noexcept {
 pool::entry::entry(pool::entry::unique_client p) : _client(std::move(p)) {}
 
 pool::entry pool::acquire() {
-    return entry(entry::unique_client(new client(libmongoc::client_pool_pop(_impl->client_pool_t)),
-                                      [this](client* client) { _release(client); }));
+    auto cli = libmongoc::client_pool_pop(_impl->client_pool_t);
+    if (!cli)
+        throw exception{
+            error_code::k_pool_wait_queue_timeout,
+            "failed to acquire client, possibly due to parameter 'waitQueueTimeoutMS' limits."};
+
+    return entry(
+        entry::unique_client(new client(cli), [this](client* client) { _release(client); }));
 }
 
 stdx::optional<pool::entry> pool::try_acquire() {

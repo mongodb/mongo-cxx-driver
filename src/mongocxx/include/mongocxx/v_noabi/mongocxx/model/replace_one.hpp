@@ -1,4 +1,4 @@
-// Copyright 2014 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@
 
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
+
 #include <mongocxx/hint.hpp>
 #include <mongocxx/stdx.hpp>
 
@@ -40,6 +41,7 @@ class replace_one {
     /// @param replacement
     ///   Document that will serve as the replacement.
     ///
+    MONGOCXX_ABI_EXPORT_CDECL()
     replace_one(bsoncxx::v_noabi::document::view_or_value filter,
                 bsoncxx::v_noabi::document::view_or_value replacement);
 
@@ -48,14 +50,14 @@ class replace_one {
     ///
     /// @return The filter to be used for the replacement operation.
     ///
-    const bsoncxx::v_noabi::document::view_or_value& filter() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::document::view_or_value&) filter() const;
 
     ///
     /// Gets the replacement document.
     ///
     /// @return The document that will replace the original selected document.
     ///
-    const bsoncxx::v_noabi::document::view_or_value& replacement() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::document::view_or_value&) replacement() const;
 
     ///
     /// Sets the collation for this replacement operation.
@@ -64,9 +66,10 @@ class replace_one {
     ///   The new collation.
     ///
     /// @see
-    ///   https://www.mongodb.com/docs/manual/reference/collation/
+    /// - https://www.mongodb.com/docs/manual/reference/collation/
     ///
-    replace_one& collation(bsoncxx::v_noabi::document::view_or_value collation);
+    MONGOCXX_ABI_EXPORT_CDECL(replace_one&)
+    collation(bsoncxx::v_noabi::document::view_or_value collation);
 
     ///
     /// Gets the collation option for this replacement operation.
@@ -75,9 +78,10 @@ class replace_one {
     ///   The optional value of the collation option.
     ///
     /// @see
-    ///   https://www.mongodb.com/docs/manual/reference/collation/
+    /// - https://www.mongodb.com/docs/manual/reference/collation/
     ///
-    const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& collation() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+    collation() const;
 
     ///
     /// Sets the upsert option.
@@ -92,14 +96,14 @@ class replace_one {
     ///   The server side default is @c false, which does not insert a new document if a match
     ///   is not found.
     ///
-    replace_one& upsert(bool upsert);
+    MONGOCXX_ABI_EXPORT_CDECL(replace_one&) upsert(bool upsert);
 
     ///
     /// Gets the current value of the upsert option.
     ///
     /// @return The optional value of the upsert option.
     ///
-    const stdx::optional<bool>& upsert() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bool>&) upsert() const;
 
     ///
     /// Sets the index to use for this operation.
@@ -114,14 +118,14 @@ class replace_one {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    replace_one& hint(mongocxx::v_noabi::hint index_hint);
+    MONGOCXX_ABI_EXPORT_CDECL(replace_one&) hint(mongocxx::v_noabi::hint index_hint);
 
     ///
     /// Gets the current hint.
     ///
     /// @return The current hint, if one is set.
     ///
-    const stdx::optional<mongocxx::v_noabi::hint>& hint() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<mongocxx::v_noabi::hint>&) hint() const;
 
    private:
     bsoncxx::v_noabi::document::view_or_value _filter;
@@ -137,3 +141,8 @@ class replace_one {
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref mongocxx::v_noabi::model::replace_one.
+///

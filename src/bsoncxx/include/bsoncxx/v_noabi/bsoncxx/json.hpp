@@ -1,4 +1,4 @@
-// Copyright 2015 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -40,7 +40,7 @@ enum class ExtendedJsonMode : std::uint8_t {
 /// Converts a BSON document to a JSON string, in extended format.
 ///
 /// @param view
-///   A valid BSON document.
+///   A valid BSON document or array.
 /// @param mode
 ///   An optional JSON representation mode.
 ///
@@ -48,39 +48,41 @@ enum class ExtendedJsonMode : std::uint8_t {
 ///
 /// @returns An extended JSON string.
 ///
-BSONCXX_API std::string BSONCXX_CALL to_json(document::view view,
-                                             ExtendedJsonMode mode = ExtendedJsonMode::k_legacy);
+/// @{
 
-BSONCXX_API std::string BSONCXX_CALL to_json(array::view view,
-                                             ExtendedJsonMode mode = ExtendedJsonMode::k_legacy);
+BSONCXX_ABI_EXPORT_CDECL(std::string)
+to_json(document::view view, ExtendedJsonMode mode = ExtendedJsonMode::k_legacy);
+
+BSONCXX_ABI_EXPORT_CDECL(std::string)
+to_json(array::view view, ExtendedJsonMode mode = ExtendedJsonMode::k_legacy);
+
+/// @}
+///
 
 ///
 /// Constructs a new document::value from the provided JSON text.
 ///
-/// @param 'json'
-///  A string_view into a JSON document.
+/// @param json A string_view into a JSON document.
 ///
 /// @returns A document::value if conversion worked.
 ///
 /// @throws bsoncxx::v_noabi::exception with error details if the conversion failed.
 ///
-BSONCXX_API document::value BSONCXX_CALL from_json(stdx::string_view json);
+BSONCXX_ABI_EXPORT_CDECL(document::value) from_json(stdx::string_view json);
 
 ///
 /// Constructs a new document::value from the provided JSON text. This is the UDL version of
 /// from_json().
 ///
-/// @param 'json'
-///  A string into a JSON document.
+/// @param json A string into a JSON document.
 ///
-/// @param 'len'
-///  The length of the JSON string. This is calculated automatically upon use of the UDL.
+/// @param len The length of the JSON string. This is calculated automatically upon use of the UDL.
 ///
 /// @returns A document::value if conversion worked.
 ///
 /// @throws bsoncxx::v_noabi::exception with error details if the conversion failed.
 ///
-BSONCXX_API document::value BSONCXX_CALL operator""_bson(const char* json, size_t len);
+BSONCXX_ABI_EXPORT_CDECL(document::value) operator"" _bson(const char* json, size_t len);
 
 }  // namespace v_noabi
 }  // namespace bsoncxx
@@ -90,8 +92,36 @@ namespace bsoncxx {
 using ::bsoncxx::v_noabi::from_json;
 using ::bsoncxx::v_noabi::to_json;
 
-using ::bsoncxx::v_noabi::operator""_bson;
+using ::bsoncxx::v_noabi::operator"" _bson;
 
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides utilities to convert between BSON and JSON representations.
+///
+
+#if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+
+namespace bsoncxx {
+
+/// @ref bsoncxx::v_noabi::to_json(v_noabi::document::view view, v_noabi::ExtendedJsonMode mode)
+std::string to_json(v_noabi::document::view view,
+                    v_noabi::ExtendedJsonMode mode = ExtendedJsonMode::k_legacy);
+
+/// @ref bsoncxx::v_noabi::to_json(v_noabi::array::view view, v_noabi::ExtendedJsonMode mode)
+std::string to_json(v_noabi::array::view view,
+                    v_noabi::ExtendedJsonMode mode = ExtendedJsonMode::k_legacy);
+
+/// @ref bsoncxx::v_noabi::from_json(v_noabi::stdx::string_view json)
+v_noabi::document::value from_json(v_noabi::stdx::string_view json);
+
+// Space is required between `operator` and `""` in @ref to avoid confusing Doxygen.
+/// @ref bsoncxx::v_noabi::operator ""_bson(const char* json, size_t len)
+v_noabi::document::value operator""_bson(const char* json, std::size_t len);
+
+}  // namespace bsoncxx
+
+#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

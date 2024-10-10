@@ -1,4 +1,4 @@
-// Copyright 2017 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -29,8 +29,8 @@
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/string/to_string.hpp>
-#include <bsoncxx/test/catch.hh>
 #include <bsoncxx/types/bson_value/view.hpp>
+
 #include <mongocxx/client.hpp>
 #include <mongocxx/collection.hpp>
 #include <mongocxx/cursor.hpp>
@@ -40,6 +40,9 @@
 #include <mongocxx/instance.hpp>
 #include <mongocxx/options/gridfs/upload.hpp>
 #include <mongocxx/result/gridfs/upload.hpp>
+
+#include <bsoncxx/test/catch.hh>
+
 #include <mongocxx/test/client_helpers.hh>
 #include <mongocxx/test/spec/util.hh>
 

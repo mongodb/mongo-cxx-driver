@@ -1,4 +1,4 @@
-// Copyright 2020-present MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,11 +21,15 @@
 
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/string/to_string.hpp>
-#include <bsoncxx/test/to_string.hh>
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/bson_value/value.hpp>
+
+#include <bsoncxx/config/prelude.hpp>
+
+#include <bsoncxx/test/catch.hh>
+#include <bsoncxx/test/to_string.hh>
+
 #include <mongocxx/test/client_helpers.hh>
-#include <third_party/catch/include/catch.hpp>
 
 using namespace bsoncxx;
 using namespace mongocxx;
@@ -44,7 +48,8 @@ thread_local std::vector<std::string> S_match_doc_path;
  */
 struct match_scope_doc_key {
     match_scope_doc_key(bsoncxx::stdx::string_view key) {
-        S_match_doc_path.push_back("/" + std::string(key));
+        S_match_doc_path.emplace_back("/");
+        S_match_doc_path.back().append(key.data(), key.size());
     }
 
     ~match_scope_doc_key() {
@@ -57,7 +62,9 @@ struct match_scope_doc_key {
  */
 struct match_scope_array_idx {
     match_scope_array_idx(int idx) {
-        S_match_doc_path.push_back("[" + std::to_string(idx) + "]");
+        S_match_doc_path.emplace_back("[");
+        S_match_doc_path.push_back(std::to_string(idx));
+        S_match_doc_path.emplace_back("]");
     }
 
     ~match_scope_array_idx() {
@@ -71,8 +78,6 @@ struct match_scope_array_idx {
 std::string match_doc_current_path() noexcept {
     return std::accumulate(S_match_doc_path.cbegin(), S_match_doc_path.cend(), std::string());
 }
-
-}  // namespace
 
 template <typename Element>
 type to_type(const Element& type) {
@@ -234,6 +239,8 @@ void matches_array(types::bson_value::view actual,
     }
 }
 
+}  // namespace
+
 void assert::matches(types::bson_value::view actual,
                      types::bson_value::view expected,
                      entity::map& map,
@@ -243,9 +250,11 @@ void assert::matches(types::bson_value::view actual,
         case bsoncxx::type::k_document:
             matches_document(actual, expected, map, is_root);
             return;
+
         case bsoncxx::type::k_array:
             matches_array(actual, expected, map, is_array_of_root_docs);
             return;
+
         case bsoncxx::type::k_int32:
         case bsoncxx::type::k_int64:
         case bsoncxx::type::k_double: {
@@ -255,10 +264,31 @@ void assert::matches(types::bson_value::view actual,
                     to_string(actual),
                     to_string(expected),
                     match_doc_current_path());
+
+            BSONCXX_PUSH_WARNINGS();
+            BSONCXX_DISABLE_WARNING(GNU("-Wfloat-equal"));
             REQUIRE(test_util::is_numeric(actual));
             REQUIRE(test_util::as_double(expected) == test_util::as_double(actual));
+            BSONCXX_POP_WARNINGS();
             return;
         }
+
+        case bsoncxx::type::k_string:
+        case bsoncxx::type::k_binary:
+        case bsoncxx::type::k_undefined:
+        case bsoncxx::type::k_oid:
+        case bsoncxx::type::k_bool:
+        case bsoncxx::type::k_date:
+        case bsoncxx::type::k_null:
+        case bsoncxx::type::k_regex:
+        case bsoncxx::type::k_dbpointer:
+        case bsoncxx::type::k_code:
+        case bsoncxx::type::k_symbol:
+        case bsoncxx::type::k_codewscope:
+        case bsoncxx::type::k_timestamp:
+        case bsoncxx::type::k_decimal128:
+        case bsoncxx::type::k_maxkey:
+        case bsoncxx::type::k_minkey:
         default: {
             CAPTURE(is_root,
                     to_string(actual.type()),

@@ -1,4 +1,4 @@
-# Copyright 2018-present MongoDB Inc.
+# Copyright 2009-present MongoDB, Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
 
 add_subdirectory (themes)
 
-file (GLOB_RECURSE docs_DIST_mds RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} content/*.md)
+file (GLOB_RECURSE docs_DIST_mds RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} api/*.md content/*.md)
 file (GLOB docs_DIST_htmls RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} layouts/shortcodes/*.html)
 file (GLOB docs_DIST_tomls RELATIVE ${CMAKE_CURRENT_SOURCE_DIR} *.toml data/*.toml)
 
@@ -23,6 +23,7 @@ set_local_dist (docs_DIST_local
    ${docs_DIST_mds}
    ${docs_DIST_htmls}
    ${docs_DIST_tomls}
+   DoxygenLayout.xml
    layouts/.readme
    static/.readme
 )

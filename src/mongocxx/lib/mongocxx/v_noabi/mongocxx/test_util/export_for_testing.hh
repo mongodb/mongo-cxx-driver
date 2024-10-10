@@ -1,4 +1,4 @@
-// Copyright 2017 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,10 +19,12 @@
 // See src/bsoncxx/lib/bsoncxx/v_noabi/bsoncxx/test_util/export_for_testing.hh for an explanation of
 // the purpose of this header.
 
-#ifdef MONGOCXX_TESTING
-#define MONGOCXX_TEST_API MONGOCXX_API
+#if defined(MONGOCXX_TESTING)
+#define MONGOCXX_ABI_EXPORT_TESTING MONGOCXX_ABI_EXPORT
+#define MONGOCXX_ABI_EXPORT_CDECL_TESTING(...) MONGOCXX_ABI_EXPORT_CDECL(__VA_ARGS__)
 #else
-#define MONGOCXX_TEST_API
+#define MONGOCXX_ABI_EXPORT_TESTING
+#define MONGOCXX_ABI_EXPORT_CDECL_TESTING(...) __VA_ARGS__
 #endif
 
 #include <mongocxx/config/private/postlude.hh>

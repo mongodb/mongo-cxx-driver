@@ -1,4 +1,4 @@
-// Copyright 2020-present MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
 // limitations under the License.
 
 #include <algorithm>
+#include <cstdint>
 #include <fstream>
 #include <iostream>
 #include <random>
@@ -23,6 +24,7 @@
 #include <bsoncxx/builder/stream/helpers.hpp>
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/types/bson_value/make_value.hpp>
+
 #include <mongocxx/client.hpp>
 #include <mongocxx/client_encryption.hpp>
 #include <mongocxx/instance.hpp>
@@ -30,6 +32,8 @@
 #include <mongocxx/options/client.hpp>
 #include <mongocxx/options/data_key.hpp>
 #include <mongocxx/options/encrypt.hpp>
+
+#include <examples/macros.hh>
 
 using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_document;
@@ -44,6 +48,8 @@ using bsoncxx::builder::stream::open_document;
 using bsoncxx::types::bson_value::make_value;
 
 using namespace mongocxx;
+
+namespace {
 
 const int kKeyLength = 96;
 
@@ -92,15 +98,19 @@ bsoncxx::document::value doc_from_file(std::string path) {
     return bsoncxx::from_json(file_contents);
 }
 
-int main(int, char**) {
+}  // namespace
+
+int EXAMPLES_CDECL main() {
     instance inst{};
 
     // This must be the same master key that was used to create
     // the encryption key; here, we use a random key as a placeholder.
-    char key_storage[kKeyLength];
-    std::generate_n(key_storage, kKeyLength, std::rand);
+    std::uint8_t key_storage[kKeyLength];
+    std::generate_n(key_storage, kKeyLength, []() {
+        return static_cast<std::uint8_t>(std::rand() % UINT8_MAX);
+    });
     bsoncxx::types::b_binary local_master_key{
-        bsoncxx::binary_sub_type::k_binary, kKeyLength, (const uint8_t*)&key_storage};
+        bsoncxx::binary_sub_type::k_binary, kKeyLength, key_storage};
 
     auto kms_providers = document{} << "local" << open_document << "key" << local_master_key
                                     << close_document << finalize;

@@ -1,4 +1,4 @@
-// Copyright 2023 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ namespace v_noabi {
 
 enum class log_level;
 
-class MONGOCXX_API logger;
+class MONGOCXX_ABI_EXPORT logger;
 
 }  // namespace v_noabi
 }  // namespace mongocxx
@@ -35,3 +35,22 @@ using ::mongocxx::v_noabi::logger;
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
+
+///
+/// @file
+/// Declares utilities related to mongocxx logging.
+///
+
+#if defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+
+namespace mongocxx {
+
+/// @ref mongocxx::v_noabi::log_level
+enum class log_level {};
+
+/// @ref mongocxx::v_noabi::logger
+class logger {};
+
+}  // namespace mongocxx
+
+#endif  // defined(MONGOCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

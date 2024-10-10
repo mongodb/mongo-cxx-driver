@@ -1,4 +1,4 @@
-// Copyright 2018-present MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@
 #include <mongocxx/write_concern-fwd.hpp>
 
 #include <bsoncxx/stdx/optional.hpp>
+
 #include <mongocxx/stdx.hpp>
 
 #include <mongocxx/config/prelude.hpp>
@@ -37,32 +38,32 @@ namespace options {
 ///
 class transaction {
    public:
-    transaction();
+    MONGOCXX_ABI_EXPORT_CDECL() transaction();
 
     ///
     /// Copy constructs transaction options.
     ///
-    transaction(const transaction&);
+    MONGOCXX_ABI_EXPORT_CDECL() transaction(const transaction&);
 
     ///
     /// Copy assigns transaction options.
     ///
-    transaction& operator=(const transaction&);
+    MONGOCXX_ABI_EXPORT_CDECL(transaction&) operator=(const transaction&);
 
     ///
     /// Move constructs transaction options.
     ///
-    transaction(transaction&&) noexcept;
+    MONGOCXX_ABI_EXPORT_CDECL() transaction(transaction&&) noexcept;
 
     ///
     /// Move assigns transaction options.
     ///
-    transaction& operator=(transaction&&) noexcept;
+    MONGOCXX_ABI_EXPORT_CDECL(transaction&) operator=(transaction&&) noexcept;
 
     ///
     /// Destroys the transaction options.
     ///
-    ~transaction() noexcept;
+    MONGOCXX_ABI_EXPORT_CDECL() ~transaction() noexcept;
 
     ///
     /// Sets the transaction read concern.
@@ -74,7 +75,7 @@ class transaction {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    transaction& read_concern(const mongocxx::v_noabi::read_concern& rc);
+    MONGOCXX_ABI_EXPORT_CDECL(transaction&) read_concern(const mongocxx::v_noabi::read_concern& rc);
 
     ///
     /// Gets the current transaction read concern.
@@ -82,7 +83,7 @@ class transaction {
     /// @return
     ///    An optional containing the read concern. If the read concern has not been set, a
     ///    disengaged optional is returned.
-    stdx::optional<mongocxx::v_noabi::read_concern> read_concern() const;
+    MONGOCXX_ABI_EXPORT_CDECL(stdx::optional<mongocxx::v_noabi::read_concern>) read_concern() const;
 
     ///
     /// Sets the transaction write concern.
@@ -94,7 +95,8 @@ class transaction {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    transaction& write_concern(const mongocxx::v_noabi::write_concern& wc);
+    MONGOCXX_ABI_EXPORT_CDECL(transaction&)
+    write_concern(const mongocxx::v_noabi::write_concern& wc);
 
     ///
     /// Gets the current transaction write concern.
@@ -104,7 +106,8 @@ class transaction {
     /// @return
     ///    An optional containing the write concern. If the write concern has not been set, a
     ///    disengaged optional is returned.
-    stdx::optional<mongocxx::v_noabi::write_concern> write_concern() const;
+    MONGOCXX_ABI_EXPORT_CDECL(stdx::optional<mongocxx::v_noabi::write_concern>)
+    write_concern() const;
 
     ///
     /// Sets the transaction read preference.
@@ -116,7 +119,8 @@ class transaction {
     ///   A reference to the object on which this member function is being called.  This facilitates
     ///   method chaining.
     ///
-    transaction& read_preference(const mongocxx::v_noabi::read_preference& rp);
+    MONGOCXX_ABI_EXPORT_CDECL(transaction&)
+    read_preference(const mongocxx::v_noabi::read_preference& rp);
 
     ///
     /// Gets the current transaction read preference.
@@ -124,7 +128,8 @@ class transaction {
     /// @return
     ///    An optional containing the read preference. If the read preference has not been set, a
     ///    disengaged optional is returned.
-    stdx::optional<mongocxx::v_noabi::read_preference> read_preference() const;
+    MONGOCXX_ABI_EXPORT_CDECL(stdx::optional<mongocxx::v_noabi::read_preference>)
+    read_preference() const;
 
     ///
     /// Sets the transaction's max commit time, in milliseconds.
@@ -135,7 +140,7 @@ class transaction {
     /// @return
     ///   A reference to the object on which this function is being called.
     ///
-    transaction& max_commit_time_ms(std::chrono::milliseconds ms);
+    MONGOCXX_ABI_EXPORT_CDECL(transaction&) max_commit_time_ms(std::chrono::milliseconds ms);
 
     ///
     /// Gets the current transaction commit time, in milliseconds.
@@ -144,15 +149,15 @@ class transaction {
     ///   An optional containing the timeout. If the max commit time has not been set,
     ///   a disengaged optional is returned.
     ///
-    stdx::optional<std::chrono::milliseconds> max_commit_time_ms() const;
+    MONGOCXX_ABI_EXPORT_CDECL(stdx::optional<std::chrono::milliseconds>) max_commit_time_ms() const;
 
    private:
     friend ::mongocxx::v_noabi::client_session;
 
-    class MONGOCXX_PRIVATE impl;
+    class impl;
 
-    MONGOCXX_PRIVATE impl& _get_impl();
-    MONGOCXX_PRIVATE const impl& _get_impl() const;
+    impl& _get_impl();
+    const impl& _get_impl() const;
     std::unique_ptr<impl> _impl;
 };
 
@@ -161,3 +166,8 @@ class transaction {
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref mongocxx::v_noabi::options::transaction.
+///

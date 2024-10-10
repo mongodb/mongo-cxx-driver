@@ -1,4 +1,4 @@
-// Copyright 2015 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -39,7 +39,7 @@ class server_error_category final : public std::error_category {
 
 }  // namespace
 
-const std::error_category& MONGOCXX_CALL server_error_category() {
+const std::error_category& server_error_category() {
     static const class server_error_category category {};
     return category;
 }

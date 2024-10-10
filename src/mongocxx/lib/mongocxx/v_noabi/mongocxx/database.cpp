@@ -1,4 +1,4 @@
-// Copyright 2014 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@
 #include <bsoncxx/builder/concatenate.hpp>
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/string/to_string.hpp>
+
 #include <mongocxx/client.hpp>
 #include <mongocxx/database.hpp>
 #include <mongocxx/exception/error_code.hpp>
@@ -49,7 +50,7 @@ class collection_names {
    public:
     explicit collection_names(char** names) {
         _names = names;
-    };
+    }
 
     ~collection_names() {
         bson_strfreev(_names);
@@ -63,7 +64,7 @@ class collection_names {
 
     const char* operator[](const std::size_t i) const {
         return _names[i];
-    };
+    }
 
     bool operator!() const {
         return _names == nullptr;
@@ -128,7 +129,7 @@ cursor database::_aggregate(const client_session* session,
 
     scoped_bson_t options_bson(b.view());
 
-    const ::mongoc_read_prefs_t* rp_ptr = NULL;
+    const ::mongoc_read_prefs_t* rp_ptr = nullptr;
 
     if (options.read_preference()) {
         rp_ptr = options.read_preference()->_impl->read_preference_t;
@@ -230,7 +231,7 @@ bsoncxx::v_noabi::document::value database::_run_command(
     scoped_bson_t options_bson(options_builder.extract());
     auto result = libmongoc::database_command_with_opts(_get_impl().database_t,
                                                         command_bson.bson(),
-                                                        NULL,
+                                                        nullptr,
                                                         options_bson.bson(),
                                                         reply_bson.bson_for_init(),
                                                         &error);

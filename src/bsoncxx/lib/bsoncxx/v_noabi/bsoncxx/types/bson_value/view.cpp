@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -23,9 +23,10 @@
 
 #include <bsoncxx/config/private/prelude.hh>
 
-#define BSONCXX_CITER \
-    bson_iter_t iter; \
-    bson_iter_init_from_data_at_offset(&iter, raw, length, offset, keylen);
+#define BSONCXX_CITER                                                       \
+    bson_iter_t iter;                                                       \
+    bson_iter_init_from_data_at_offset(&iter, raw, length, offset, keylen); \
+    ((void)0)
 
 #define BSONCXX_TYPE_CHECK(name)                                                         \
     do {                                                                                 \
@@ -45,8 +46,8 @@ view::view() noexcept : view(nullptr) {}
 // so we can't rely on automatic noexcept propagation. It really is though, so it is OK.
 #if !defined(BSONCXX_POLY_USE_BOOST)
 #define BSONCXX_ENUM(name, val)                                                                \
-    view::view(b_##name value) noexcept                                                        \
-        : _type(static_cast<bsoncxx::v_noabi::type>(val)), _b_##name(std::move(value)) {       \
+    view::view(b_##name v) noexcept                                                            \
+        : _type(static_cast<bsoncxx::v_noabi::type>(val)), _b_##name(std::move(v)) {           \
         static_assert(std::is_nothrow_copy_constructible<b_##name>::value, "Copy may throw");  \
         static_assert(std::is_nothrow_copy_assignable<b_##name>::value, "Copy may throw");     \
         static_assert(std::is_nothrow_destructible<b_##name>::value, "Destruction may throw"); \
@@ -126,7 +127,8 @@ view::view(const std::uint8_t* raw,
 
     auto value = bson_iter_value(&iter);
 
-    _init((void*)value);
+    // ABI backward compatibility. Const is restored in `view::_init`.
+    _init(const_cast<void*>(static_cast<const void*>(value)));
 }
 
 view::view(void* internal_value) noexcept {
@@ -140,7 +142,7 @@ void view::_init(void* internal_value) noexcept {
         return;
     }
 
-    bson_value_t* v = (bson_value_t*)(internal_value);
+    auto v = static_cast<const bson_value_t*>(internal_value);
     _type = static_cast<bsoncxx::v_noabi::type>(v->value_type);
 
     switch (_type) {

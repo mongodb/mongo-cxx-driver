@@ -1,4 +1,4 @@
-// Copyright 2015 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,14 +20,16 @@
 #include <bsoncxx/exception/exception.hpp>
 #include <bsoncxx/types.hpp>
 
+#include <examples/macros.hh>
+
 using namespace bsoncxx;
 
-int main(int, char**) {
+int EXAMPLES_CDECL main() {
     // Convert a string to BSON Decimal128.
     decimal128 d128;
     try {
         d128 = decimal128{"1.234E+3456"};
-    } catch (const bsoncxx::exception& e) {
+    } catch (const bsoncxx::exception&) {
         // The example won't fail, but in general, arbitrary strings
         // might not convert properly.
         return EXIT_FAILURE;

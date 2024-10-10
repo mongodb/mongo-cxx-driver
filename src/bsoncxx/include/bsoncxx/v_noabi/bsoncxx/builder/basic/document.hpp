@@ -1,4 +1,4 @@
-// Copyright 2014 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -40,20 +40,19 @@ class document : public sub_document {
     ///
     /// Default constructor
     ///
-    BSONCXX_INLINE document() : sub_document(&_core), _core(false) {}
+    document() : sub_document(&_core), _core(false) {}
 
     ~document() = default;
 
     ///
     /// Move constructor
     ///
-    BSONCXX_INLINE document(document&& doc) noexcept
-        : sub_document(&_core), _core(std::move(doc._core)) {}
+    document(document&& doc) noexcept : sub_document(&_core), _core(std::move(doc._core)) {}
 
     ///
     /// Move assignment operator
     ///
-    BSONCXX_INLINE document& operator=(document&& doc) noexcept {
+    document& operator=(document&& doc) noexcept {
         _core = std::move(doc._core);
         return *this;
     }
@@ -64,7 +63,7 @@ class document : public sub_document {
     ///
     /// @return A view of the BSON document.
     ///
-    BSONCXX_INLINE bsoncxx::v_noabi::document::view view() const {
+    bsoncxx::v_noabi::document::view view() const {
         return _core.view_document();
     }
 
@@ -74,7 +73,7 @@ class document : public sub_document {
     ///
     /// @return A view of the current builder contents.
     ///
-    BSONCXX_INLINE operator bsoncxx::v_noabi::document::view() const {
+    operator bsoncxx::v_noabi::document::view() const {
         return view();
     }
 
@@ -87,14 +86,14 @@ class document : public sub_document {
     ///  After calling extract() it is illegal to call any methods
     ///  on this class, unless it is subsequently moved into.
     ///
-    BSONCXX_INLINE bsoncxx::v_noabi::document::value extract() {
+    bsoncxx::v_noabi::document::value extract() {
         return _core.extract_document();
     }
 
     ///
     /// Reset the underlying BSON to an empty document.
     ///
-    BSONCXX_INLINE void clear() {
+    void clear() {
         _core.clear();
     }
 
@@ -113,7 +112,7 @@ class document : public sub_document {
 ///   A bsoncxx::v_noabi::document::value containing the elements.
 ///
 template <typename... Args>
-bsoncxx::v_noabi::document::value BSONCXX_CALL make_document(Args&&... args) {
+bsoncxx::v_noabi::document::value make_document(Args&&... args) {
     document document;
     document.append(std::forward<Args>(args)...);
     return document.extract();
@@ -135,3 +134,24 @@ using ::bsoncxx::v_noabi::builder::basic::make_document;
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref bsoncxx::v_noabi::builder::basic::document.
+///
+
+#if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+
+namespace bsoncxx {
+namespace builder {
+namespace basic {
+
+/// @ref bsoncxx::v_noabi::builder::basic::make_document
+template <typename... Args>
+v_noabi::document::value make_document(Args&&... args);
+
+}  // namespace basic
+}  // namespace builder
+}  // namespace bsoncxx
+
+#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

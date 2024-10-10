@@ -1,4 +1,4 @@
-// Copyright 2014 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/string/to_string.hpp>
+
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/exception.hpp>
 #include <mongocxx/exception/logic_error.hpp>
@@ -175,6 +176,12 @@ bsoncxx::v_noabi::document::value write_concern::to_document() const {
                 if (auto t = tag()) {
                     doc.append(kvp("w", *t));
                 }
+                break;
+
+            case write_concern::level::k_acknowledged:
+                // `ns.has_value()` implies an acknowledged write.
+                break;
+
             default:
                 break;
         }
@@ -192,7 +199,7 @@ bsoncxx::v_noabi::document::value write_concern::to_document() const {
     return doc.extract();
 }
 
-bool MONGOCXX_CALL operator==(const write_concern& lhs, const write_concern& rhs) {
+bool operator==(const write_concern& lhs, const write_concern& rhs) {
     return std::forward_as_tuple(lhs.journal(),
                                  lhs.nodes(),
                                  lhs.acknowledge_level(),
@@ -206,7 +213,7 @@ bool MONGOCXX_CALL operator==(const write_concern& lhs, const write_concern& rhs
                                                                          rhs.timeout());
 }
 
-bool MONGOCXX_CALL operator!=(const write_concern& lhs, const write_concern& rhs) {
+bool operator!=(const write_concern& lhs, const write_concern& rhs) {
     return !(lhs == rhs);
 }
 

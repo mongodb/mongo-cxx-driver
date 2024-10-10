@@ -1,4 +1,4 @@
-// Copyright 2014 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -28,7 +28,7 @@ namespace basic {
 /// and a BSON value.
 ///
 template <typename T, typename U>
-BSONCXX_INLINE std::tuple<T&&, U&&> kvp(T&& t, U&& u) {
+std::tuple<T&&, U&&> kvp(T&& t, U&& u) {
     return std::tuple<T&&, U&&>(std::forward<T>(t), std::forward<U>(u));
 }
 
@@ -48,3 +48,24 @@ using ::bsoncxx::v_noabi::builder::basic::kvp;
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
+
+///
+/// @file
+/// Declares @ref bsoncxx::v_noabi::builder::basic::kvp.
+///
+
+#if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+
+namespace bsoncxx {
+namespace builder {
+namespace basic {
+
+/// @ref bsoncxx::v_noabi::builder::basic::kvp
+template <typename T, typename U>
+std::tuple<T&&, U&&> kvp(T&& t, U&& u);
+
+}  // namespace basic
+}  // namespace builder
+}  // namespace bsoncxx
+
+#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

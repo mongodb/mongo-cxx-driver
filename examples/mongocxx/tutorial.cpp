@@ -1,7 +1,7 @@
 // Compile with: c++ --std=c++11 tutorial.cpp $(pkg-config --cflags --libs libmongocxx)
 
 // The following is a formatted copy from the tutorial
-// https://www.mongodb.com/docs/languages/cpp/drivers/current/tutorial/.
+// https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/tutorial/.
 
 #include <cstdint>
 #include <iostream>
@@ -9,10 +9,13 @@
 
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/json.hpp>
+
 #include <mongocxx/client.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/stdx.hpp>
 #include <mongocxx/uri.hpp>
+
+#include <examples/macros.hh>
 
 // Redefine assert after including headers. Release builds may undefine the assert macro and result
 // in -Wunused-variable warnings.
@@ -31,7 +34,7 @@ using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_array;
 using bsoncxx::builder::basic::make_document;
 
-int main() {
+int EXAMPLES_CDECL main() {
     mongocxx::instance instance{};  // This should be done only once.
     mongocxx::uri uri("mongodb://localhost:27017");
     mongocxx::client client(uri);

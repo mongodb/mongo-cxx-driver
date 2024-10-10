@@ -11,9 +11,9 @@ variables:
 
     # If updating mongoc_version_minimum, also update:
     # - the default value of --c-driver-build-ref in etc/make_release.py
-    # - LIBMONGOC_REQUIRED_VERSION in src/mongocxx/CMakeLists.txt
-    # - the PURL version in etc/purls.txt
-    mongoc_version_minimum: &mongoc_version_minimum "1.27.0"
+    # - LIBBSON_REQUIRED_VERSION and LIBMONGOC_REQUIRED_VERSION in CMakeLists.txt
+    # - the version of pkg:github/mongodb/mongo-c-driver in etc/purls.txt
+    mongoc_version_minimum: &mongoc_version_minimum "1.28.0"
 
     integration_matrix:
         integration_matrix_tasks_single: &integration_matrix_tasks_single
@@ -62,12 +62,12 @@ functions:
           type: setup
           params:
             binary: bash
-            args: [mongo-cxx-driver/.evergreen/abi-compliance-check-setup.sh]
+            args: [-c, mongo-cxx-driver/.evergreen/abi-compliance-check-setup.sh]
         - command: subprocess.exec
           type: test
           params:
             binary: bash
-            args: [mongo-cxx-driver/.evergreen/abi-compliance-check-test.sh]
+            args: [-c, mongo-cxx-driver/.evergreen/abi-compliance-check-test.sh]
         - command: s3.put
           type: system
           params:
@@ -118,12 +118,12 @@ functions:
           type: setup
           params:
             binary: bash
-            args: [mongo-cxx-driver/.evergreen/abidiff-setup.sh]
+            args: [-c, mongo-cxx-driver/.evergreen/abidiff-setup.sh]
         - command: subprocess.exec
           type: test
           params:
             binary: bash
-            args: [mongo-cxx-driver/.evergreen/abidiff-test.sh]
+            args: [-c, mongo-cxx-driver/.evergreen/abidiff-test.sh]
         - command: s3.put
           type: system
           params:
@@ -152,7 +152,7 @@ functions:
           type: test
           params:
             binary: bash
-            args: [mongo-cxx-driver/.evergreen/abi-prohibited-symbols-test.sh]
+            args: [-c, mongo-cxx-driver/.evergreen/abi-prohibited-symbols-test.sh]
 
     "setup":
         - command: shell.exec
@@ -194,7 +194,7 @@ functions:
                 cd drivers-evergreen-tools
                 export DRIVERS_TOOLS=$(pwd)
 
-                bash .evergreen/atlas_data_lake/pull-mongohouse-image.sh
+                .evergreen/atlas_data_lake/pull-mongohouse-image.sh
 
     "run_mongohouse":
         command: shell.exec
@@ -204,7 +204,7 @@ functions:
                 cd drivers-evergreen-tools
                 export DRIVERS_TOOLS=$(pwd)
 
-                bash .evergreen/atlas_data_lake/run-mongohouse-image.sh
+                .evergreen/atlas_data_lake/run-mongohouse-image.sh
 
     "test_mongohouse":
         command: shell.exec
@@ -216,7 +216,7 @@ functions:
                 wait_for_mongohouse() {
                     for _ in $(seq 300); do
                         # Exit code 7: "Failed to connect to host".
-                        if curl -s localhost:$1; (("$?" != 7)); then
+                        if curl -s -m 1 localhost:$1; (("$?" != 7)); then
                             return 0
                         else
                             sleep 1
@@ -339,7 +339,6 @@ functions:
         command: subprocess.exec
         params:
             binary: bash
-            working_dir: "."
             args:
               - -c
               - |
@@ -421,23 +420,17 @@ functions:
           script: |-
             set -o errexit
             echo "Preparing CSFLE venv environment..."
+            if [[ "${distro_id}" =~ windows-64-vs2015-* ]]; then
+              # Python: ImportError: DLL load failed while importing _rust: The specified procedure could not be found.
+              echo "Preparing CSFLE venv environment... skipped."
+              exit 0
+            fi
             cd ./drivers-evergreen-tools/.evergreen/csfle
             # This function ensures future invocations of activate-kmstlsvenv.sh conducted in
             # parallel do not race to setup a venv environment; it has already been prepared.
             # This primarily addresses the situation where the "test" and "run_kms_servers"
             # functions invoke 'activate-kmstlsvenv.sh' simultaneously.
-            if [[ "$OSTYPE" =~ cygwin && ! -d kmstlsvenv ]]; then
-                # Avoid using Python 3.10 on Windows due to incompatible cipher suites.
-                # See CXX-2628.
-                . ../venv-utils.sh
-                venvcreate "C:/python/Python39/python.exe" kmstlsvenv || # windows-2017
-                venvcreate "C:/python/Python38/python.exe" kmstlsvenv    # windows-2015
-                python -m pip install --upgrade boto3~=1.19 pykmip~=0.10.0 "sqlalchemy<2.0.0"
-                deactivate
-            else
-                . ./activate-kmstlsvenv.sh
-                deactivate
-            fi
+            . ./activate-kmstlsvenv.sh && deactivate
             echo "Preparing CSFLE venv environment... done."
       - command: shell.exec
         params:
@@ -446,6 +439,11 @@ functions:
           script: |-
             set -o errexit
             echo "Starting mock KMS servers..."
+            if [[ "${distro_id}" =~ windows-64-vs2015-* ]]; then
+              # Python: ImportError: DLL load failed while importing _rust: The specified procedure could not be found.
+              echo "Starting mock KMS servers... skipped."
+              exit 0
+            fi
             cd ./drivers-evergreen-tools/.evergreen/csfle
             . ./activate-kmstlsvenv.sh
             python -u kms_http_server.py --ca_file ../x509gen/ca.pem --cert_file ../x509gen/server.pem --port 8999 &
@@ -514,6 +512,7 @@ functions:
                   - example_projects_ldflags
                   - generator
                   - lib_dir
+                  - MONGOCXX_TEST_TOPOLOGY
                   - MONGODB_API_VERSION
                   - platform
                   - TEST_WITH_ASAN
@@ -584,7 +583,6 @@ functions:
     "upload mongo orchestration artifacts":
         - command: subprocess.exec
           params:
-            working_dir: "."
             binary: bash
             args:
               - -c
@@ -660,9 +658,7 @@ functions:
           working_dir: "mongo-cxx-driver"
           add_expansions_to_env: true
           redirect_standard_error_to_output: true
-          args:
-            - -c
-            - .evergreen/compile-scan-build.sh
+          args: [-c, .evergreen/compile-scan-build.sh]
 
     "upload scan artifacts":
       - command: subprocess.exec
@@ -689,12 +685,12 @@ functions:
             AWS_SECRET_ACCESS_KEY: ${aws_secret}
           args:
             - -c
-            - aws s3 cp scan s3://mciuploads/${project}/${build_variant}/${revision}/${version_id}/${build_id}/scan/ --recursive --acl public-read --region us-east-1
+            - aws s3 cp scan s3://mciuploads/mongo-cxx-driver/${build_variant}/${revision}/${version_id}/${build_id}/scan/ --recursive --acl public-read --region us-east-1
       - command: s3.put
         params:
           aws_key: ${aws_key}
           aws_secret: ${aws_secret}
-          remote_file: ${project}/${build_variant}/${revision}/${version_id}/${build_id}/scan/index.html
+          remote_file: mongo-cxx-driver/${build_variant}/${revision}/${version_id}/${build_id}/scan/index.html
           bucket: mciuploads
           permissions: public-read
           local_file: mongo-cxx-driver/scan.html
@@ -712,16 +708,14 @@ functions:
             - ARTIFACTORY_PASSWORD
             - SILK_CLIENT_ID
             - SILK_CLIENT_SECRET
-          args:
-            - -c
-            - .evergreen/check-augmented-sbom.sh
+          args: [-c, .evergreen/check-augmented-sbom.sh]
 
     "upload augmented sbom":
       - command: s3.put
         params:
           aws_key: ${aws_key}
           aws_secret: ${aws_secret}
-          remote_file: ${project}/${build_variant}/${revision}/${version_id}/${build_id}/silk/augmented.sbom.json
+          remote_file: mongo-cxx-driver/${build_variant}/${revision}/${version_id}/${build_id}/silk/augmented.sbom.json
           bucket: mciuploads
           permissions: public-read
           local_file: mongo-cxx-driver/etc/augmented.sbom.json.new
@@ -731,7 +725,7 @@ functions:
         params:
           aws_key: ${aws_key}
           aws_secret: ${aws_secret}
-          remote_file: ${project}/${build_variant}/${revision}/${version_id}/${build_id}/silk/augmented.sbom.json.diff
+          remote_file: mongo-cxx-driver/${build_variant}/${revision}/${version_id}/${build_id}/silk/augmented.sbom.json.diff
           bucket: mciuploads
           permissions: public-read
           local_file: mongo-cxx-driver/diff.txt
@@ -796,6 +790,8 @@ tasks:
         # Call "install_c_driver" before "test" to build static C driver libraries. Example projects require static C driver libraries.
         - func: "install_c_driver"
         - func: "test"
+          vars:
+              MONGOCXX_TEST_TOPOLOGY: single
 
     - name: compile_and_test_with_shared_libs_extra_alignment
       commands:
@@ -811,6 +807,8 @@ tasks:
           vars:
               BSON_EXTRA_ALIGNMENT: 1
         - func: "test"
+          vars:
+              MONGOCXX_TEST_TOPOLOGY: single
 
     - name: compile_and_test_with_shared_libs_cxx20
       commands:
@@ -826,8 +824,9 @@ tasks:
         - func: "install_c_driver"
         - func: "test"
           vars:
-              REQUIRED_CXX_STANDARD: 20
               example_projects_cxx_standard: 20
+              MONGOCXX_TEST_TOPOLOGY: single
+              REQUIRED_CXX_STANDARD: 20
 
     - name: compile_and_test_with_shared_libs_extra_alignment_cxx20
       commands:
@@ -846,8 +845,9 @@ tasks:
               BSON_EXTRA_ALIGNMENT: 1
         - func: "test"
           vars:
-              REQUIRED_CXX_STANDARD: 20
               example_projects_cxx_standard: 20
+              MONGOCXX_TEST_TOPOLOGY: single
+              REQUIRED_CXX_STANDARD: 20
 
     - name: compile_with_shared_libs
       commands:
@@ -904,6 +904,7 @@ tasks:
         - func: "install_c_driver"
         - func: "test"
           vars:
+              MONGOCXX_TEST_TOPOLOGY: single
               USE_STATIC_LIBS: 1
 
     - name: compile_and_test_with_static_libs_extra_alignment
@@ -923,6 +924,7 @@ tasks:
               BSON_EXTRA_ALIGNMENT: 1
         - func: "test"
           vars:
+              MONGOCXX_TEST_TOPOLOGY: single
               USE_STATIC_LIBS: 1
 
     - name: compile_and_test_with_shared_libs_replica_set
@@ -939,6 +941,8 @@ tasks:
         - func: "run_kms_servers"
         - func: "install_c_driver"
         - func: "test"
+          vars:
+              MONGOCXX_TEST_TOPOLOGY: replica
 
     - name: compile_and_test_with_shared_libs_sharded_cluster
       commands:
@@ -954,6 +958,8 @@ tasks:
         - func: "run_kms_servers"
         - func: "install_c_driver"
         - func: "test"
+          vars:
+              MONGOCXX_TEST_TOPOLOGY: sharded
 
     # Auto downloading the C driver in the C++ build does not currently include
     # support for libmongocrypt, therefore it is not configured with
@@ -972,6 +978,8 @@ tasks:
         - func: "clone_drivers-evergreen-tools"
         - func: "run_kms_servers"
         - func: "test"
+          vars:
+              MONGOCXX_TEST_TOPOLOGY: replica
 
     - name: compile_and_test_with_shared_libs_sharded_cluster_with_libmongocrypt
       commands:
@@ -986,17 +994,16 @@ tasks:
         - func: "clone_drivers-evergreen-tools"
         - func: "run_kms_servers"
         - func: "test"
+          vars:
+              MONGOCXX_TEST_TOPOLOGY: sharded
 
     - name: uninstall_check
       commands:
       - func: "setup"
       - func: "fetch_c_driver_source"
       - func: "compile"
-      - command: expansions.update
-        params:
-          updates:
-          - key: mongocxx_version_finder_sh
-            value: $(sed -nE 's/^#define MONGOCXX_VERSION_STRING "([^"]+)".*/\1/p' build/src/mongocxx/config/version.hpp)
+        vars:
+          ENABLE_TESTS: OFF
       - command: shell.exec
         type: test
         params:
@@ -1004,19 +1011,15 @@ tasks:
           working_dir: "mongo-cxx-driver"
           script: |-
             set -o errexit
-            export INSTALL_VERSION=${mongocxx_version_finder_sh}
-            sh ./.evergreen/uninstall_check.sh
+            ./.evergreen/uninstall_check.sh
 
     - name: uninstall_check_windows
       commands:
       - func: "setup"
       - func: "fetch_c_driver_source"
       - func: "compile"
-      - command: expansions.update
-        params:
-          updates:
-          - key: mongocxx_version_finder_sh
-            value: $(sed -nE 's/^#define MONGOCXX_VERSION_STRING "([^"]+)".*/\1/p' build/src/mongocxx/config/version.hpp)
+        vars:
+          ENABLE_TESTS: OFF
       - command: shell.exec
         type: test
         params:
@@ -1024,7 +1027,6 @@ tasks:
           working_dir: "mongo-cxx-driver"
           script: |-
             set -o errexit
-            export INSTALL_VERSION=${mongocxx_version_finder_sh}
             cmd.exe /c .\\.evergreen\\uninstall_check_windows.cmd
 
     - name: build_example_with_add_subdirectory
@@ -1046,19 +1048,8 @@ tasks:
             export cmake_binary
             cmake_binary="$(find_cmake_latest)"
             # Use ccache if available.
-            if command -V ccache 2>/dev/null; then
-              export CMAKE_C_COMPILER_LAUNCHER=ccache
-              export CMAKE_CXX_COMPILER_LAUNCHER=ccache
-
-              # Allow reuse of ccache compilation results between different build directories.
-              export CCACHE_BASEDIR CCACHE_NOHASHDIR
-              if [[ "${OSTYPE:?}" == "cygwin" ]]; then
-                CCACHE_BASEDIR="$(cygpath -aw "$(pwd)")"
-              else
-                CCACHE_BASEDIR="$(pwd)"
-              fi
-              CCACHE_NOHASHDIR=1
-            fi
+            . ./mongo-c-driver/.evergreen/scripts/find-ccache.sh
+            find_ccache_and_export_vars "$(pwd)" || true
             command -v "$cmake_binary"
             "$cmake_binary" -S . -B build -DENABLE_AUTOMATIC_INIT_AND_CLEANUP=OFF
             "$cmake_binary" --build build
@@ -1076,7 +1067,7 @@ tasks:
           script: |-
             set -o errexit
             export IS_PATCH="${is_patch}"
-            sh .evergreen/debian_package_build.sh
+            .evergreen/debian_package_build.sh
       - command: s3.put
         params:
           aws_key: ${aws_key}
@@ -1101,7 +1092,7 @@ tasks:
             set -o errexit
             export IS_PATCH="${is_patch}"
             export DEB_BUILD_PROFILES="pkg.mongo-cxx-driver.mnmlstc"
-            sh .evergreen/debian_package_build.sh
+            .evergreen/debian_package_build.sh
       - command: s3.put
         params:
           aws_key: ${aws_key}
@@ -1124,7 +1115,7 @@ tasks:
           shell: bash
           script: |-
             set -o errexit
-            sh .evergreen/build_snapshot_rpm.sh
+            .evergreen/build_snapshot_rpm.sh
       - command: s3.put
         params:
           aws_key: ${aws_key}
@@ -1160,6 +1151,7 @@ tasks:
         - func: "run_kms_servers"
         - func: "test"
           vars:
+              MONGOCXX_TEST_TOPOLOGY: single
               MONGODB_API_VERSION: 1
 
     - name: test_versioned_api_accept_version_two
@@ -1174,6 +1166,8 @@ tasks:
         - func: "clone_drivers-evergreen-tools"
         - func: "run_kms_servers"
         - func: "test"
+          vars:
+              MONGOCXX_TEST_TOPOLOGY: single
 
     - name: docker_build_arm
       run_on:
@@ -1288,7 +1282,7 @@ task_groups:
       - command: subprocess.exec
         params:
           binary: bash
-          args: [mongo-cxx-driver/.evergreen/abi-stability-setup.sh]
+          args: [-c, mongo-cxx-driver/.evergreen/abi-stability-setup.sh]
           include_expansions_in_env: [cxx_standard]
     tasks: [".abi-stability"]
     teardown_task_can_fail_task: true
@@ -1309,8 +1303,7 @@ task_groups:
           add_expansions_to_env: true
           env:
             MONGODB_VERSION: '7.0'
-          args:
-            - ${DRIVERS_TOOLS}/.evergreen/atlas/setup-atlas-cluster.sh
+          args: [-c, "${DRIVERS_TOOLS}/.evergreen/atlas/setup-atlas-cluster.sh"]
       - command: expansions.update
         # Expected to set MONGODB_URI expansion.
         params:
@@ -1321,8 +1314,7 @@ task_groups:
           working_dir: mongo-cxx-driver
           binary: bash
           add_expansions_to_env: true
-          args:
-            - ${DRIVERS_TOOLS}/.evergreen/atlas/teardown-atlas-cluster.sh
+          args: [-c, "${DRIVERS_TOOLS}/.evergreen/atlas/teardown-atlas-cluster.sh"]
     setup_group_can_fail_task: true
     setup_group_timeout_secs: 1800
     tasks:
@@ -1715,13 +1707,13 @@ buildvariants:
           - name: compile_and_test_with_shared_libs_sharded_cluster_with_libmongocrypt
           - name: build_example_with_add_subdirectory
 
-    - name: debian11-release-latest
-      display_name: "Debian 11 Release (MongoDB Latest)"
+    - name: debian12-release-latest
+      display_name: "Debian 12 Release (MongoDB Latest)"
       expansions:
           build_type: "Release"
           mongodb_version: "latest"
       run_on:
-          - debian11-large
+          - debian12-large
       tasks:
           - name: compile_and_test_with_shared_libs
           - name: compile_and_test_with_shared_libs_extra_alignment
@@ -1750,23 +1742,6 @@ buildvariants:
           - name: compile_and_test_with_static_libs_extra_alignment
           - name: compile_and_test_with_shared_libs_replica_set
           - name: compile_and_test_with_shared_libs_sharded_cluster
-          - name: build_example_with_add_subdirectory
-          - name: uninstall_check
-
-    - name: debian10-release-latest
-      display_name: "Debian 10 Release (MongoDB Latest)"
-      expansions:
-          build_type: "Release"
-          mongodb_version: "latest"
-      run_on:
-          - debian10-large
-      tasks:
-          - name: compile_and_test_with_shared_libs
-          - name: compile_and_test_with_shared_libs_extra_alignment
-          - name: compile_and_test_with_static_libs
-          - name: compile_and_test_with_static_libs_extra_alignment
-          - name: compile_and_test_with_shared_libs_replica_set_with_libmongocrypt
-          - name: compile_and_test_with_shared_libs_sharded_cluster_with_libmongocrypt
           - name: build_example_with_add_subdirectory
           - name: uninstall_check
 
@@ -1827,7 +1802,7 @@ buildvariants:
           build_type: "Release"
           mongodb_version: "5.0"
       run_on:
-          - ubuntu1804-build
+          - ubuntu1804-large
       tasks:
           - name: compile_and_test_with_shared_libs
           - name: compile_and_test_with_shared_libs_extra_alignment
@@ -1863,7 +1838,7 @@ buildvariants:
           disable_slow_tests: 1
           use_mongocryptd: true
       run_on:
-          - ubuntu1804-build
+          - ubuntu1804-large
       tasks:
           - name: compile_and_test_with_shared_libs
           - name: compile_and_test_with_shared_libs_extra_alignment
@@ -1905,7 +1880,7 @@ buildvariants:
           example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=address
       run_on:
-          - ubuntu1804-build
+          - ubuntu1804-large
       tasks:
           - name: compile_and_test_with_shared_libs
           - name: compile_and_test_with_shared_libs_extra_alignment
@@ -1948,7 +1923,7 @@ buildvariants:
           example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined
       run_on:
-          - ubuntu1804-build
+          - ubuntu1804-large
       tasks:
           # We currently don't run UBSAN on the shared library due to issues with UBSAN reporting
           # numerous false positive instances of undefined behavior in the mock tests, when the
@@ -2169,10 +2144,7 @@ buildvariants:
       run_on:
           - windows-64-vs2015-compile
       tasks:
-          - name: compile_and_test_with_shared_libs
-          - name: compile_and_test_with_shared_libs_extra_alignment
-          - name: compile_and_test_with_static_libs
-          - name: compile_and_test_with_static_libs_extra_alignment
+          - name: compile_without_tests
           - name: uninstall_check_windows
 
     - name: windows-2k8-debug
@@ -2185,9 +2157,8 @@ buildvariants:
       run_on:
           - windows-64-vs2015-compile
       tasks:
-          # The debug shared lib is tested in the "integration tests" matrix
-          - name: compile_and_test_with_static_libs
-          - name: compile_and_test_with_static_libs_extra_alignment
+          - name: compile_without_tests
+          - name: uninstall_check_windows
 
     - name: windows-msvc2015-debug
       display_name: "Windows (VS 2015) Debug (MongoDB 4.2)"
@@ -2199,8 +2170,8 @@ buildvariants:
       run_on:
          - windows-64-vs2015-compile
       tasks:
-         - name: compile_with_shared_libs
-         - name: compile_and_test_auth_with_shared_libs
+         - name: compile_without_tests
+         - name: uninstall_check_windows
 
     - name: packaging
       display_name: Linux Distro Packaging
@@ -2222,3 +2193,13 @@ buildvariants:
       display_name: silk
       tasks:
         - name: .silk
+
+    - name: rhel79-compile
+      display_name: "RHEL 7.9 (gcc 4.8.5)"
+      expansions:
+          build_type: "Release"
+          BSONCXX_POLYFILL: impls
+      run_on:
+          - rhel79-small
+      tasks:
+          - name: compile_without_tests

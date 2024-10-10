@@ -1,4 +1,4 @@
-// Copyright 2014 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,13 +13,17 @@
 // limitations under the License.
 
 #include <bsoncxx/builder/basic/document.hpp>
-#include <bsoncxx/test/catch.hh>
 #include <bsoncxx/types.hpp>
+
 #include <mongocxx/bulk_write.hpp>
 #include <mongocxx/client.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/private/libmongoc.hh>
 #include <mongocxx/write_concern.hpp>
+
+#include <bsoncxx/test/catch.hh>
+
+#include <mongocxx/test/client_helpers.hh>
 
 namespace {
 using namespace mongocxx;
@@ -350,5 +354,17 @@ TEST_CASE("passing write operations to append calls corresponding C function", "
         bw.append(ro);
         REQUIRE(called);
     }
+}
+
+TEST_CASE("calling empty on a bulk write before and after appending", "[bulk_write]") {
+    instance::current();
+    mongocxx::client client{mongocxx::uri{}, test_util::add_test_server_api()};
+    auto bw = client["db"]["coll"].create_bulk_write();
+
+    REQUIRE(bw.empty());
+    bw.append(model::insert_one(make_document(kvp("_id", 1))));
+    REQUIRE_FALSE(bw.empty());
+    bw.execute();
+    REQUIRE_FALSE(bw.empty());
 }
 }  // namespace

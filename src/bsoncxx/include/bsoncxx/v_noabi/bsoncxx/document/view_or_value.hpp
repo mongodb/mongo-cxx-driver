@@ -1,4 +1,4 @@
-// Copyright 2015 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -24,7 +24,10 @@ namespace bsoncxx {
 namespace v_noabi {
 namespace document {
 
-using view_or_value = bsoncxx::v_noabi::view_or_value<view, value>;
+///
+/// Equivalent to `v_noabi::view_or_value<v_noabi::document::view, v_noabi::document::value>`.
+///
+using view_or_value = v_noabi::view_or_value<v_noabi::document::view, v_noabi::document::value>;
 
 }  // namespace document
 }  // namespace v_noabi
@@ -39,3 +42,21 @@ using ::bsoncxx::v_noabi::document::view_or_value;
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref bsoncxx::v_noabi::document::view_or_value.
+///
+
+#if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+
+namespace bsoncxx {
+namespace document {
+
+/// @ref bsoncxx::v_noabi::document::view_or_value
+class view_or_value {};
+
+}  // namespace document
+}  // namespace bsoncxx
+
+#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

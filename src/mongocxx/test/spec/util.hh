@@ -1,4 +1,4 @@
-// Copyright 2018-present MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -16,13 +16,16 @@
 
 #include <functional>
 #include <set>
+#include <string>
 
 #include <bsoncxx/document/view.hpp>
+
 #include <mongocxx/client.hpp>
-#include <mongocxx/test/spec/operation.hh>
 #include <mongocxx/uri.hpp>
 
 #include <mongocxx/config/private/prelude.hh>
+
+#include <mongocxx/test/spec/operation.hh>
 
 namespace mongocxx {
 namespace spec {
@@ -35,12 +38,16 @@ using namespace mongocxx;
 ///
 uint32_t error_code_from_name(stdx::string_view name);
 
-///
-/// Returns true if this test should be skipped for any reason (for
-/// example, if a skipReason is defined, or if the given topology is not
-/// supported for this test.
-///
-bool should_skip_spec_test(const client& client, document::view test);
+bool check_if_skip_spec_test_impl(const client& client, document::view test, std::string& reason);
+
+#define CHECK_IF_SKIP_SPEC_TEST(client, test)                                     \
+    {                                                                             \
+        std::string reason;                                                       \
+        if (mongocxx::spec::check_if_skip_spec_test_impl(client, test, reason)) { \
+            SKIP(reason);                                                         \
+        }                                                                         \
+    }                                                                             \
+    ((void)0)
 
 ///
 /// Configures the fail point described by test["failPoint"].

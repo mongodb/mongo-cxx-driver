@@ -1,4 +1,4 @@
-// Copyright 2015 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ namespace basic {
 namespace impl {
 
 template <typename T>
-BSONCXX_INLINE detail::requires_t<void, detail::is_invocable<T, sub_document>>  //
+detail::requires_t<void, detail::is_invocable<T, sub_document>>  //
 generic_append(core* core, T&& func) {
     core->open_document();
     detail::invoke(std::forward<T>(func), sub_document(core));
@@ -35,7 +35,7 @@ generic_append(core* core, T&& func) {
 }
 
 template <typename T, typename Placeholder = void>  // placeholder 'void' for VS2015 compat
-BSONCXX_INLINE detail::requires_t<void, detail::is_invocable<T, sub_array>>  //
+detail::requires_t<void, detail::is_invocable<T, sub_array>>  //
 generic_append(core* core, T&& func) {
     core->open_array();
     detail::invoke(std::forward<T>(func), sub_array(core));
@@ -43,15 +43,15 @@ generic_append(core* core, T&& func) {
 }
 
 template <typename T, typename = void, typename = void>
-BSONCXX_INLINE detail::requires_not_t<void,  //
-                                      detail::is_invocable<T, sub_document>,
-                                      detail::is_invocable<T, sub_array>>
+detail::requires_not_t<void,  //
+                       detail::is_invocable<T, sub_document>,
+                       detail::is_invocable<T, sub_array>>
 generic_append(core* core, T&& t) {
     core->append(std::forward<T>(t));
 }
 
 template <typename T>
-BSONCXX_INLINE void value_append(core* core, T&& t) {
+void value_append(core* core, T&& t) {
     generic_append(core, std::forward<T>(t));
 }
 
@@ -62,3 +62,8 @@ BSONCXX_INLINE void value_append(core* core, T&& t) {
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
+
+///
+/// @file
+/// For internal use only!
+///

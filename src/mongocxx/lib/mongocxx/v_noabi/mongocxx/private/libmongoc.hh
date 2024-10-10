@@ -1,4 +1,4 @@
-// Copyright 2014 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -55,9 +55,20 @@ namespace libmongoc {
 #endif
 
 #define MONGOCXX_LIBMONGOC_SYMBOL(name) \
-    extern MONGOCXX_TEST_API mongocxx::test_util::mock<decltype(&mongoc_##name)>& name;
+    extern MONGOCXX_ABI_EXPORT_TESTING mongocxx::test_util::mock<decltype(&mongoc_##name)>& name;
 #include "libmongoc_symbols.hh"
 #undef MONGOCXX_LIBMONGOC_SYMBOL
+
+// CDRIVER-5678
+using log_func_cdecl_t = void(MONGOCXX_ABI_CDECL*)(mongoc_log_level_t log_level,
+                                                   const char* log_domain,
+                                                   const char* message,
+                                                   void* user_data);
+using log_set_handler_cdecl_t = void(MONGOCXX_ABI_CDECL*)(log_func_cdecl_t log_func,
+                                                          void* user_data);
+
+extern MONGOCXX_ABI_EXPORT_TESTING mongocxx::test_util::mock<log_set_handler_cdecl_t>&
+    log_set_handler;
 
 #if defined(__GNUC__) && (__GNUC__ >= 6) && !defined(__clang__)
 #pragma GCC diagnostic pop
@@ -68,6 +79,9 @@ namespace libmongoc {
 #define MONGOCXX_LIBMONGOC_SYMBOL(name) constexpr auto name = mongoc_##name;
 #include "libmongoc_symbols.hh"
 #undef MONGOCXX_LIBMONGOC_SYMBOL
+
+// CDRIVER-5678
+constexpr auto log_set_handler = mongoc_log_set_handler;
 
 #endif
 

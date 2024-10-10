@@ -1,4 +1,4 @@
-// Copyright 2015 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -12,7 +12,10 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+#include <string>
+
 #include <bsoncxx/builder/basic/document.hpp>
+
 #include <mongocxx/validation_criteria.hpp>
 
 #include <mongocxx/config/private/prelude.hh>
@@ -103,13 +106,11 @@ bsoncxx::v_noabi::document::value validation_criteria::to_document() const {
     return to_document_deprecated();
 }
 
-MONGOCXX_API bool MONGOCXX_CALL operator==(const validation_criteria& lhs,
-                                           const validation_criteria& rhs) {
+bool operator==(const validation_criteria& lhs, const validation_criteria& rhs) {
     return ((lhs.rule() == rhs.rule()) && (lhs.level() == rhs.level()) &&
             (lhs.action() == rhs.action()));
 }
-MONGOCXX_API bool MONGOCXX_CALL operator!=(const validation_criteria& lhs,
-                                           const validation_criteria& rhs) {
+bool operator!=(const validation_criteria& lhs, const validation_criteria& rhs) {
     return !(lhs == rhs);
 }
 

@@ -1,4 +1,4 @@
-// Copyright 2014 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -112,7 +112,8 @@ namespace stdx {
 using ::std::make_unique;
 #else
 
-/// Equivalent to `std::make_unique<T>(args...)` where `T` is a non-array type.
+// Equivalent to `std::make_unique<T>(args...)` where `T` is a non-array type.
+// @cond DOXYGEN_DISABLE
 template <typename T,
           typename... Args,
           typename Impl = detail::make_unique_impl<T>,
@@ -122,8 +123,10 @@ template <typename T,
 std::unique_ptr<T> make_unique(Args&&... args) {
     return Impl::make(std::true_type{}, std::forward<Args>(args)...);
 }
+// @endcond
 
-/// Equivalent to `std::make_unique<T>(count)` where `T` is an array type.
+// Equivalent to `std::make_unique<T>(count)` where `T` is an array type.
+// @cond DOXYGEN_DISABLE
 template <
     typename T,
     typename Impl = detail::make_unique_impl<T>,
@@ -133,6 +136,7 @@ template <
 std::unique_ptr<T> make_unique(std::size_t count) {
     return Impl::make(std::true_type{}, count);
 }
+// @endcond DOXYGEN_DISABLE
 
 #endif
 
@@ -142,7 +146,7 @@ std::unique_ptr<T> make_unique(std::size_t count) {
 using ::std::make_unique_for_overwrite;
 #else
 
-/// Equivalent to `std::make_unique_for_overwrite<T>()` where `T` is a non-array type.
+// Equivalent to `std::make_unique_for_overwrite<T>()` where `T` is a non-array type.
 template <typename T,
           typename Impl = detail::make_unique_impl<T>,
           typename std::enable_if<!std::is_array<T>::value,
@@ -151,7 +155,7 @@ std::unique_ptr<T> make_unique_for_overwrite() {
     return Impl::make(std::false_type{});
 }
 
-/// Equivalent to `std::make_unique_for_overwrite<T>(count)` where `T` is an array type.
+// Equivalent to `std::make_unique_for_overwrite<T>(count)` where `T` is an array type.
 template <
     typename T,
     typename Impl = detail::make_unique_impl<T>,
@@ -180,3 +184,52 @@ using ::bsoncxx::v_noabi::stdx::make_unique_for_overwrite;
 
 }  // namespace stdx
 }  // namespace bsoncxx
+
+///
+/// @file
+/// Provides `std::make_unique`-related polyfills for internal use.
+///
+/// @deprecated Primarily for internal use; will be removed in an upcoming major release.
+///
+
+#if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+
+namespace bsoncxx {
+namespace v_noabi {
+namespace stdx {
+
+///
+/// Equivalent to `std::make_unique` for non-array types.
+///
+/// @deprecated Primarily for internal use; will be removed in an upcoming major release.
+///
+template <typename T, typename... Args>
+std::unique_ptr<T> make_unique(Args&&... args);
+
+///
+/// Equivalent to `std::make_unique` for array types.
+///
+/// @deprecated Primarily for internal use. Will be removed in an upcoming major release.
+///
+template <typename T>
+std::unique_ptr<T> make_unique(std::size_t count);
+
+}  // namespace stdx
+}  // namespace v_noabi
+}  // namespace bsoncxx
+
+namespace bsoncxx {
+namespace stdx {
+
+/// @ref bsoncxx::v_noabi::stdx::make_unique(Args&&... args)
+template <typename T, typename... Args>
+std::unique_ptr<T> make_unique(Args&&... args);
+
+/// @ref bsoncxx::v_noabi::stdx::make_unique(std::size_t count)
+template <typename T>
+std::unique_ptr<T> make_unique(std::size_t count);
+
+}  // namespace stdx
+}  // namespace bsoncxx
+
+#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

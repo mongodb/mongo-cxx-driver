@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Runs cmake and compiles the standard build targets (all, install, examples).  Any arguments passed
 # to this script will be forwarded on as flags passed to cmake.
@@ -66,28 +66,23 @@ CMAKE_BUILD_PARALLEL_LEVEL="$(nproc)"
 export CMAKE_BUILD_PARALLEL_LEVEL
 
 # Use ccache if available.
-if command -V ccache 2>/dev/null; then
-  export CMAKE_CXX_COMPILER_LAUNCHER=ccache
-
-  # Allow reuse of ccache compilation results between different build directories.
-  export CCACHE_BASEDIR CCACHE_NOHASHDIR
-  if [[ "${OSTYPE:?}" == "cygwin" ]]; then
-    CCACHE_BASEDIR="$(cygpath -aw "$(pwd)")"
-  else
-    CCACHE_BASEDIR="$(pwd)"
-  fi
-  CCACHE_NOHASHDIR=1
+if [[ -f "${mongoc_prefix:?}/.evergreen/scripts/find-ccache.sh" ]]; then
+  # shellcheck source=/dev/null
+  . "${mongoc_prefix:?}/.evergreen/scripts/find-ccache.sh"
+  find_ccache_and_export_vars "$(pwd)" || true
 fi
 
+
+build_targets=()
 cmake_build_opts=()
 case "${OSTYPE:?}" in
 cygwin)
   cmake_build_opts+=("/verbosity:minimal")
-  cmake_examples_target="examples/examples"
+  build_targets+=(--target ALL_BUILD --target examples/examples)
   ;;
 
 darwin* | linux*)
-  cmake_examples_target="examples"
+  build_targets+=(--target all --target examples)
   ;;
 
 *)
@@ -95,7 +90,6 @@ darwin* | linux*)
   exit 1
   ;;
 esac
-: "${cmake_examples_target:?}"
 
 # Create a VERSION_CURRENT file in the build directory to include in the dist tarball.
 python ./etc/calc_release_version.py >./build/VERSION_CURRENT
@@ -155,7 +149,18 @@ darwin*)
   ;;
 linux*)
   cc_flags+=("${cc_flags_init[@]}")
-  cxx_flags+=("${cxx_flags_init[@]}" -Wno-expansion-to-defined -Wno-missing-field-initializers)
+  cxx_flags+=("${cxx_flags_init[@]}" -Wno-missing-field-initializers)
+
+  if [[ "${distro_id:?}" != rhel7* ]]; then
+    cxx_flags+=("-Wno-expansion-to-defined")
+  else
+    cc_flags+=("-Wno-maybe-uninitialized") # Ignore false-positive warning in C driver build.
+  fi
+
+  if [[ "${distro_id:?}" == debian12* ]]; then
+    # Disable `restrict` warning on GCC 12 due to  https://gcc.gnu.org/bugzilla/show_bug.cgi?id=105651 and https://gcc.gnu.org/bugzilla/show_bug.cgi?id=105329
+    cxx_flags+=("-Wno-error=restrict")
+  fi
   ;;
 *)
   echo "unrecognized operating system ${OSTYPE:?}" 1>&2
@@ -224,21 +229,23 @@ if [[ -n "${REQUIRED_CXX_STANDARD:-}" ]]; then
   cmake_flags+=("-DCMAKE_CXX_STANDARD_REQUIRED=ON")
 fi
 
+if [[ "${COMPILE_MACRO_GUARD_TESTS:-"OFF"}" == "ON" ]]; then
+  cmake_flags+=("-DENABLE_MACRO_GUARD_TESTS=ON")
+fi
+
 echo "Configuring with CMake flags: ${cmake_flags[*]}"
 
 "${cmake_binary}" "${cmake_flags[@]}" ..
 
 if [[ "${COMPILE_MACRO_GUARD_TESTS:-"OFF"}" == "ON" ]]; then
   # We only need to compile the macro guard tests.
-  "${cmake_binary}" -DENABLE_MACRO_GUARD_TESTS=ON ..
   "${cmake_binary}" --build . --config "${build_type:?}" --target test_bsoncxx_macro_guards test_mongocxx_macro_guards -- "${cmake_build_opts[@]}"
   exit # Nothing else to be done.
 fi
 
 # Regular build and install routine.
-"${cmake_binary}" --build . --config "${build_type:?}" -- "${cmake_build_opts[@]}"
-"${cmake_binary}" --build . --config "${build_type:?}" --target install -- "${cmake_build_opts[@]}"
-"${cmake_binary}" --build . --config "${build_type:?}" --target "${cmake_examples_target:?}" -- "${cmake_build_opts[@]}"
+"${cmake_binary}" --build . --config "${build_type:?}" "${build_targets[@]:?}" -- "${cmake_build_opts[@]}"
+"${cmake_binary}" --install . --config "${build_type:?}"
 
 if [[ "${_RUN_DISTCHECK:-}" ]]; then
   "${cmake_binary}" --build . --config "${build_type:?}" --target distcheck

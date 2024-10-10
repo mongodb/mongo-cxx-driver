@@ -1,4 +1,4 @@
-// Copyright 2015 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -41,3 +41,27 @@ using ::bsoncxx::v_noabi::builder::basic::concatenate;
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
+
+///
+/// @file
+/// Redeclares @ref bsoncxx::v_noabi::builder::concatenate in the @ref
+/// bsoncxx::v_noabi::builder::basic namespace.
+///
+
+#if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+
+namespace bsoncxx {
+namespace builder {
+namespace basic {
+
+/// @ref bsoncxx::v_noabi::builder::concatenate(v_noabi::document::view_or_value doc)
+v_noabi::concatenate_doc concatenate(v_noabi::document::view_or_value doc);
+
+/// @ref bsoncxx::v_noabi::builder::concatenate(v_noabi::array::view_or_value array)
+v_noabi::concatenate_array concatenate(v_noabi::array::view_or_value array);
+
+}  // namespace basic
+}  // namespace builder
+}  // namespace bsoncxx
+
+#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

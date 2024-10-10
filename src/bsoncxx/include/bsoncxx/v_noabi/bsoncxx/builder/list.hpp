@@ -1,4 +1,4 @@
-// Copyright 2020 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -30,7 +30,7 @@ namespace bsoncxx {
 namespace v_noabi {
 namespace builder {
 
-using namespace ::bsoncxx::v_noabi::types;  // Deprecated.
+using namespace ::bsoncxx::v_noabi::types;  // Deprecated. Deliberately undocumented.
 
 }  // namespace builder
 }  // namespace v_noabi
@@ -60,7 +60,8 @@ class list {
     /// @param value
     ///     the BSON value
     ///
-    /// @see bsoncxx::v_noabi::types::bson_value::value.
+    /// @see
+    /// - @ref bsoncxx::v_noabi::types::bson_value::value.
     ///
     template <typename T>
     list(T value) : val{value} {}
@@ -81,15 +82,17 @@ class list {
     ///     bsoncxx::v_noabi::builder::document or bsoncxx::v_noabi::builder::array constructor,
     ///     respectively.
     ///
-    /// @see bsoncxx::v_noabi::builder::document
-    /// @see bsoncxx::v_noabi::builder::array
+    /// @see
+    /// - @ref bsoncxx::v_noabi::builder::document
+    /// - @ref bsoncxx::v_noabi::builder::array
     ///
     list(initializer_list_t init) : list(init, true, true) {}
 
     ///
     /// Provides a view of the underlying BSON value.
     ///
-    /// @see bsoncxx::v_noabi::types::bson_value::view.
+    /// @see
+    /// - @ref bsoncxx::v_noabi::types::bson_value::view.
     ///
     operator bson_value::view() {
         return view();
@@ -98,7 +101,8 @@ class list {
     ///
     /// Provides a view of the underlying BSON value.
     ///
-    /// @see bsoncxx::v_noabi::types::bson_value::view.
+    /// @see
+    /// - @ref bsoncxx::v_noabi::types::bson_value::view.
     ///
     bson_value::view view() {
         return val.view();
@@ -160,7 +164,7 @@ class document : public list {
     ///
     /// Creates an empty document.
     ///
-    document() : list({}, false, false){};
+    document() : list({}, false, false) {}
 
     ///
     /// Creates a BSON document.
@@ -168,8 +172,9 @@ class document : public list {
     /// @param init
     ///     the initializer list used to construct the BSON document
     ///
-    /// @see bsoncxx::v_noabi::builder::list
-    /// @see bsoncxx::v_noabi::builder::array
+    /// @see
+    /// - @ref bsoncxx::v_noabi::builder::list
+    /// - @ref bsoncxx::v_noabi::builder::array
     ///
     document(initializer_list_t init) : list(init, false, false) {}
 };
@@ -184,7 +189,7 @@ class array : public list {
     ///
     /// Creates an empty array.
     ///
-    array() : list({}, false, true){};
+    array() : list({}, false, true) {}
 
     ///
     /// Creates a BSON array.
@@ -192,8 +197,9 @@ class array : public list {
     /// @param init
     ///     the initializer list used to construct the BSON array
     ///
-    /// @see bsoncxx::v_noabi::builder::list
-    /// @see bsoncxx::v_noabi::builder::document
+    /// @see
+    /// - @ref bsoncxx::v_noabi::builder::list
+    /// - @ref bsoncxx::v_noabi::builder::document
     ///
     array(initializer_list_t init) : list(init, false, true) {}
 };
@@ -204,7 +210,7 @@ class array : public list {
 namespace bsoncxx {
 namespace builder {
 
-using namespace ::bsoncxx::v_noabi::types;  // Deprecated.
+using namespace ::bsoncxx::v_noabi::types;  // Deprecated. Deliberately undocumented.
 
 }  // namespace builder
 }  // namespace bsoncxx
@@ -213,3 +219,8 @@ using namespace ::bsoncxx::v_noabi::types;  // Deprecated.
 #if defined(BSONCXX_TEST_MACRO_GUARDS_FIX_MISSING_POSTLUDE)
 #include <bsoncxx/config/postlude.hpp>
 #endif
+
+///
+/// @file
+/// Provides entities for use with "list" BSON builder syntax.
+///

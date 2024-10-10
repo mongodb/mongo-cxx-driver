@@ -1,4 +1,4 @@
-// Copyright 2017 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -26,9 +26,9 @@
 #include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/oid.hpp>
-#include <bsoncxx/test/catch.hh>
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
+
 #include <mongocxx/client.hpp>
 #include <mongocxx/database.hpp>
 #include <mongocxx/exception/gridfs_exception.hpp>
@@ -38,8 +38,11 @@
 #include <mongocxx/options/find.hpp>
 #include <mongocxx/options/gridfs/upload.hpp>
 #include <mongocxx/options/index.hpp>
-#include <mongocxx/test/client_helpers.hh>
 #include <mongocxx/uri.hpp>
+
+#include <bsoncxx/test/catch.hh>
+
+#include <mongocxx/test/client_helpers.hh>
 
 namespace {
 using namespace mongocxx;
@@ -67,7 +70,7 @@ void validate_gridfs_file(database db,
             stdx::string_view(expected_file_name));
 
     // md5 is deprecated in GridFS, we don't include it:
-    // https://github.com/mongodb/specifications/blob/master/source/gridfs/gridfs-spec.rst
+    // https://github.com/mongodb/specifications/blob/master/source/gridfs/gridfs-spec.md
     REQUIRE(!files_doc->view()["md5"]);
 
     std::int32_t index = 0;

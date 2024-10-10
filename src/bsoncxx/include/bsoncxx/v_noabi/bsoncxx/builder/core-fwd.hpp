@@ -1,4 +1,4 @@
-// Copyright 2023 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ namespace bsoncxx {
 namespace v_noabi {
 namespace builder {
 
-class BSONCXX_API core;
+class core;
 
 }  // namespace builder
 }  // namespace v_noabi
@@ -35,3 +35,21 @@ using ::bsoncxx::v_noabi::builder::core;
 }  // namespace bsoncxx
 
 #include <bsoncxx/config/postlude.hpp>
+
+///
+/// @file
+/// Declares @ref bsoncxx::v_noabi::builder::core.
+///
+
+#if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
+
+namespace bsoncxx {
+namespace builder {
+
+/// @ref bsoncxx::v_noabi::builder::core
+class core {};
+
+}  // namespace builder
+}  // namespace bsoncxx
+
+#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

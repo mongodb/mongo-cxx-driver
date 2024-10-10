@@ -2,12 +2,15 @@
 #include <type_traits>
 
 #include <bsoncxx/stdx/type_traits.hpp>
-#include <third_party/catch/include/catch.hpp>
 
 #include <bsoncxx/config/prelude.hpp>
 
+#include <bsoncxx/test/catch.hh>
+
 // We declare variables that are only used for compilation checking
 BSONCXX_DISABLE_WARNING(GNU("-Wunused"));
+BSONCXX_DISABLE_WARNING(Clang("-Wunused-template"));
+BSONCXX_DISABLE_WARNING(Clang("-Wunneeded-member-function"));
 
 namespace {
 
@@ -21,18 +24,18 @@ struct assert_same {
 
 template <typename Expect, typename... Args>
 struct Case {
-    template <bsoncxx_ttparam F>
+    template <template <class...> class F>
     struct apply {
         using x = typename assert_same<F<Args...>, Expect>::x;
     };
 };
 
-template <bsoncxx_ttparam Op, typename Case>
+template <template <class...> class Op, typename Case>
 struct one_case {
     using x = typename Case::template apply<Op>::x;
 };
 
-template <bsoncxx_ttparam Oper, typename... Cases>
+template <template <class...> class Oper, typename... Cases>
 struct check_cases : one_case<Oper, Cases>... {};
 
 constexpr check_cases<  //
@@ -159,7 +162,9 @@ static_assert(
 struct constrained_callable {
     // Viable only if F is callable as F(int, Arg)
     template <typename F, typename Arg>
-    tt::requires_t<double, tt::is_invocable<F, int, Arg>> operator()(F&&, Arg) const;
+    tt::requires_t<double, tt::is_invocable<F, int, Arg>> operator()(F&&, Arg) const {
+        return 0.0;
+    }
 };
 
 static_assert(!tt::is_detected<tt::invoke_result_t,
@@ -181,9 +186,7 @@ static_assert(
 
 struct rank_test {
     template <typename T>
-    constexpr int val(T x, bsoncxx::detail::rank<0>) const {
-        return x.never_instantiated();
-    }
+    constexpr int val(T x, bsoncxx::detail::rank<0>) const = delete;
     template <typename T>
     constexpr int val(T x, bsoncxx::detail::rank<1>) const {
         return x + 30;

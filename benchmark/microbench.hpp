@@ -1,4 +1,4 @@
-// Copyright 2017 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -67,7 +67,12 @@ class microbench {
     microbench(std::string&& name, double task_size, std::set<benchmark_type> tags = {})
         : _score{task_size}, _tags{tags}, _name{std::move(name)} {}
 
-    virtual ~microbench() = default;
+    virtual ~microbench();
+
+    microbench(microbench&&) = default;
+    microbench& operator=(microbench&&) = default;
+    microbench(const microbench&) = default;
+    microbench& operator=(const microbench&) = default;
 
     void run();
 

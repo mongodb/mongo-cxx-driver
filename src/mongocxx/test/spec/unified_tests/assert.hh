@@ -1,4 +1,4 @@
-// Copyright 2020-present MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
 #pragma once
 
 #include "entity.hh"
+
 #include <bsoncxx/types/bson_value/view_or_value.hpp>
 
 #include <mongocxx/config/private/prelude.hh>

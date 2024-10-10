@@ -1,4 +1,4 @@
-// Copyright 2014 MongoDB Inc.
+// Copyright 2009-present MongoDB, Inc.
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -26,10 +26,18 @@ namespace v_noabi {
 ///
 /// Class representing an exception caused by using the mongocxx API improperly.
 ///
-/// @see mongocxx::v_noabi::exception
+/// @see
+/// - @ref mongocxx::v_noabi::exception
 ///
 class logic_error : public exception {
    public:
+    ~logic_error() override;
+
+    logic_error(logic_error&&) = default;
+    logic_error& operator=(logic_error&&) = default;
+    logic_error(const logic_error&) = default;
+    logic_error& operator=(const logic_error&) = default;
+
     using exception::exception;
 };
 
@@ -37,3 +45,8 @@ class logic_error : public exception {
 }  // namespace mongocxx
 
 #include <mongocxx/config/postlude.hpp>
+
+///
+/// @file
+/// Provides @ref mongocxx::v_noabi::logic_error.
+///
