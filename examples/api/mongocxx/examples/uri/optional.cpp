@@ -40,8 +40,7 @@ void example() {
     }
 
     {
-        mongocxx::uri uri{
-            "mongodb://localhost:27017/dbName?appName=example&retryReads=true"};
+        mongocxx::uri uri{"mongodb://localhost:27017/dbName?appName=example&retryReads=true"};
 
         auto database = uri.database();
         EXPECT(database.compare("dbName") == 0);
