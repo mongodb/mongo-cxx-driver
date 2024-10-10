@@ -16,6 +16,8 @@
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/document/view.hpp>
+#include <bsoncxx/json.hpp>
+#include <bsoncxx/types.hpp>
 
 #include <examples/api/runner.hh>
 #include <examples/macros.hh>
@@ -28,10 +30,12 @@ void example() {
     using bsoncxx::builder::basic::make_array;
     using bsoncxx::builder::basic::make_document;
 
-    bsoncxx::array::value owner = make_array(make_document(kvp("key", "value")));
+    bsoncxx::document::value subdoc = make_document(kvp("key", "value"));
+
+    bsoncxx::array::value owner = make_array(subdoc.view());
     bsoncxx::document::view v = owner.view()[0].get_document().value;
 
-    EXPECT(v["key"].get_string().value.compare("value") == 0);
+    EXPECT(v == subdoc.view());
 }
 // [Example]
 

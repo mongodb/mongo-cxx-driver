@@ -17,8 +17,7 @@
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/document/value.hpp>
-#include <bsoncxx/document/view.hpp>
-#include <bsoncxx/types.hpp>
+#include <bsoncxx/json.hpp>
 #include <bsoncxx/types/bson_value/value.hpp>
 
 #include <examples/api/runner.hh>
@@ -36,17 +35,10 @@ void example() {
         "three",
     };
 
-    bsoncxx::document::value owner = bsoncxx::builder::basic::make_document(
+    bsoncxx::document::value doc = bsoncxx::builder::basic::make_document(
         kvp("a", values[0]), kvp("b", values[1]), kvp("c", values[2]));
-    bsoncxx::document::view doc = owner.view();
 
-    EXPECT(doc["a"].type() == bsoncxx::type::k_int32);
-    EXPECT(doc["b"].type() == bsoncxx::type::k_double);
-    EXPECT(doc["c"].type() == bsoncxx::type::k_string);
-
-    EXPECT(doc["a"].get_value() == values[0]);
-    EXPECT(doc["b"].get_value() == values[1]);
-    EXPECT(doc["c"].get_value() == values[2]);
+    EXPECT(doc.view() == bsoncxx::from_json(R"({"a": 1, "b": 2.0, "c": "three"})"));
 }
 // [Example]
 

@@ -28,16 +28,9 @@ void example() {
     bsoncxx::types::b_double b{2.0};
     bsoncxx::types::b_string c{"three"};
 
-    bsoncxx::array::value owner = bsoncxx::builder::basic::make_array(a, b, c);
-    bsoncxx::array::view arr = owner.view();
+    bsoncxx::array::value arr = bsoncxx::builder::basic::make_array(a, b, c);
 
-    EXPECT(arr[0].type() == bsoncxx::type::k_int32);
-    EXPECT(arr[1].type() == bsoncxx::type::k_double);
-    EXPECT(arr[2].type() == bsoncxx::type::k_string);
-
-    EXPECT(arr[0].get_int32().value == 1);
-    EXPECT(arr[1].get_double().value == 2.0);
-    EXPECT(arr[2].get_string().value.compare("three") == 0);
+    EXPECT(arr.view() == bsoncxx::builder::basic::make_array(1, 2.0, "three"));
 }
 // [Example]
 

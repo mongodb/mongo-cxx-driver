@@ -19,7 +19,6 @@
 #include <bsoncxx/document/value.hpp>
 #include <bsoncxx/document/view.hpp>
 #include <bsoncxx/json.hpp>
-#include <bsoncxx/types.hpp>
 
 #include <examples/api/runner.hh>
 #include <examples/macros.hh>
@@ -35,10 +34,9 @@ void example(const std::uint8_t* data, std::size_t length) {
     std::copy_n(data, length, raw);
 
     deleter_type deleter = [](std::uint8_t* data) { delete[] data; };
-    bsoncxx::document::value owner{raw, length, deleter};
-    bsoncxx::document::view doc = owner.view();
+    bsoncxx::document::value doc{raw, length, deleter};
 
-    EXPECT(doc["key"].get_string().value.compare("value") == 0);
+    EXPECT(doc.view() == bsoncxx::from_json(R"({"key": "value"})"));
 }
 // [Example]
 

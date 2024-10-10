@@ -17,7 +17,6 @@
 #include <bsoncxx/array/value.hpp>
 #include <bsoncxx/array/view.hpp>
 #include <bsoncxx/builder/basic/array.hpp>
-#include <bsoncxx/types.hpp>
 
 #include <examples/api/runner.hh>
 #include <examples/macros.hh>
@@ -28,12 +27,9 @@ namespace {
 void example() {
     bsoncxx::builder::basic::array builder;
     builder.append(std::int32_t{1}, 2.0, "three");
-    bsoncxx::array::value owner = builder.extract();
-    bsoncxx::array::view arr = owner.view();
+    bsoncxx::array::value arr = builder.extract();
 
-    EXPECT(arr[0].get_int32().value == 1);
-    EXPECT(arr[1].get_double().value == 2.0);
-    EXPECT(arr[2].get_string().value.compare("three") == 0);
+    EXPECT(arr.view() == bsoncxx::builder::basic::make_array(1, 2.0, "three"));
 }
 // [Example]
 

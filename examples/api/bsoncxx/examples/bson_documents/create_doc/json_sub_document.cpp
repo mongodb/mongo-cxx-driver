@@ -31,7 +31,7 @@ void example() {
     )");
     bsoncxx::document::view v = doc["v"].get_document().value;
 
-    EXPECT(v["key"].get_string().value.compare("value") == 0);
+    EXPECT(v == bsoncxx::from_json(R"({"key": "value"})"));
 }
 // [Example]
 

@@ -24,14 +24,14 @@ namespace {
 
 // [Example]
 void example() {
-    bsoncxx::document::value owner = bsoncxx::from_json(R"(
+    bsoncxx::document::value doc = bsoncxx::from_json(R"(
         [
             {"key": "value"}
         ]
     )");
-    bsoncxx::document::view v = owner.view()["0"].get_document().value;
+    bsoncxx::document::view v = doc.view()["0"].get_document().value;
 
-    EXPECT(v["key"].get_string().value.compare("value") == 0);
+    EXPECT(v == bsoncxx::from_json(R"({"key": "value"})"));
 }
 // [Example]
 

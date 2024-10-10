@@ -18,7 +18,6 @@
 #include <bsoncxx/array/view.hpp>
 #include <bsoncxx/builder/basic/array.hpp>
 #include <bsoncxx/document/value.hpp>
-#include <bsoncxx/types.hpp>
 
 #include <examples/api/runner.hh>
 #include <examples/macros.hh>
@@ -30,8 +29,7 @@ namespace {
 void example(const std::uint8_t* data, std::size_t length) {
     bsoncxx::array::view arr{data, length};
 
-    EXPECT(arr[0].get_int32().value == 1);
-    EXPECT(arr[1].get_int32().value == 2);
+    EXPECT(arr == bsoncxx::builder::basic::make_array(1, 2));
 }
 // [Example]
 
