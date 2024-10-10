@@ -19,6 +19,7 @@
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/document/value.hpp>
+#include <bsoncxx/json.hpp>
 #include <bsoncxx/types.hpp>
 
 #include <examples/api/runner.hh>
@@ -32,15 +33,12 @@ void example() {
     using bsoncxx::builder::basic::make_array;
     using bsoncxx::builder::basic::make_document;
 
-    bsoncxx::document::value owner =
-        make_document(kvp("v", make_array(std::int32_t{1}, std::int64_t{2})));
+    bsoncxx::array::value subarr = make_array(1, 2.0, "three");
+
+    bsoncxx::document::value owner = make_document(kvp("v", subarr.view()));
     bsoncxx::array::view v = owner.view()["v"].get_array().value;
 
-    EXPECT(v[0].type() == bsoncxx::type::k_int32);
-    EXPECT(v[1].type() == bsoncxx::type::k_int64);
-
-    EXPECT(v[0].get_int32().value == 1);
-    EXPECT(v[1].get_int64().value == 2);
+    EXPECT(v == subarr.view());
 }
 // [Example]
 

@@ -15,6 +15,7 @@
 #include <cstdint>
 
 #include <bsoncxx/array/view.hpp>
+#include <bsoncxx/builder/basic/array.hpp>
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/builder/basic/sub_array.hpp>
@@ -40,9 +41,7 @@ void example() {
         }));
     bsoncxx::array::view v = owner.view()["v"].get_array().value;
 
-    EXPECT(v[0].get_int32().value == 1);
-    EXPECT(v[1].get_int32().value == 2);
-    EXPECT(v[2].get_int32().value == 3);
+    EXPECT(v == bsoncxx::builder::basic::make_array(1, 2, 3));
 }
 // [Example]
 
