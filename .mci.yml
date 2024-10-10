@@ -1980,6 +1980,7 @@ buildvariants:
 
     - name: zseries-rhel83-latest
       display_name: "zSeries RHEL 8.3 (MongoDB Latest)"
+      patchable: false
       batchtime: 1440 # 1 day
       expansions:
           build_type: "Release"
@@ -1997,6 +1998,7 @@ buildvariants:
 
     - name: zseries-rhel83-60
       display_name: "zSeries RHEL 8.3 (MongoDB 6.0)"
+      patchable: false
       batchtime: 1440 # 1 day
       expansions:
           build_type: "Release"
@@ -2014,6 +2016,7 @@ buildvariants:
 
     - name: zseries-rhel83-50
       display_name: "zSeries RHEL 8.3 (MongoDB 5.0)"
+      patchable: false
       batchtime: 1440 # 1 day
       expansions:
           build_type: "Release"
@@ -2031,6 +2034,7 @@ buildvariants:
 
     - name: power8-rhel81-latest
       display_name: "ppc64le RHEL 8.1 (MongoDB Latest)"
+      patchable: false
       batchtime: 1440 # 1 day
       expansions:
           build_type: "Release"
@@ -2048,6 +2052,7 @@ buildvariants:
 
     - name: power8-rhel81-50
       display_name: "ppc64le RHEL 8.1 (MongoDB 5.0)"
+      patchable: false
       batchtime: 1440 # 1 day
       expansions:
           build_type: "Release"
