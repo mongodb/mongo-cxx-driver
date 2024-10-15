@@ -2001,7 +2001,23 @@ buildvariants:
       tasks:
         - name: compile_without_tests
         - name: compile_macro_guard_tests
+
+    - name: atlas-search-indexes-7.0
+      display_name: "Atlas Search Indexes (7.0)"
+      expansions:
+        build_type: "Debug"
+      run_on:
+        - ubuntu2004-build
+      tasks:
         - name: test_atlas_task_group_search_indexes
+
+    - name: atlas-search-indexes-8.0
+      display_name: "Atlas Search Indexes (8.0)"
+      expansions:
+        build_type: "Debug"
+      run_on:
+        - ubuntu2004-build
+      tasks:
         - name: test_atlas_task_group_search_indexes_8.0
 
     - name: ubuntu2004-debug-gcc
