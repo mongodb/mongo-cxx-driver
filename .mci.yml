@@ -1292,7 +1292,7 @@ task_groups:
           binary: bash
           args: [-c, rm -rf *]
 
-  - name: test_atlas_task_group_search_indexes
+  - name: test_atlas_task_group_search_indexes_7.0
     setup_group:
       - func: "setup"
       - func: "clone_drivers-evergreen-tools"
@@ -2009,7 +2009,7 @@ buildvariants:
       run_on:
         - ubuntu2004-build
       tasks:
-        - name: test_atlas_task_group_search_indexes
+        - name: test_atlas_task_group_search_indexes_7.0
 
     - name: atlas-search-indexes-8.0
       display_name: "Atlas Search Indexes (8.0)"
