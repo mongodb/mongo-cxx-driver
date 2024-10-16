@@ -31,8 +31,7 @@
 #include <thread>
 #include <vector>
 
-#include <bsoncxx/builder/basic/document.hpp>
-#include <bsoncxx/builder/basic/kvp.hpp>
+#include <bsoncxx/json.hpp>
 
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/exception.hpp>
@@ -180,8 +179,11 @@ class runner_type {
         try {
             mongocxx::client client{mongocxx::uri{"mongodb://localhost:27017/"}};
 
-            const auto reply = client["admin"].run_command(bsoncxx::builder::basic::make_document(
-                bsoncxx::builder::basic::kvp("isMaster", 1)));
+            const auto reply =
+                client["admin"].run_command(bsoncxx::from_json(R"({"isMaster": 1})"));
+
+            // Try to speed up performance of change stream examples and other operations,
+            // especially for sharded clusters.
 
             if (reply["msg"]) {
                 std::cout << "Running API examples against a live sharded server" << std::endl;
