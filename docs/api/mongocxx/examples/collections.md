@@ -143,3 +143,17 @@
 ## Execute an Aggregation Operation
 
 @snippet examples/api/mongocxx/examples/collections/aggregate.cpp Example
+
+# Error Handling
+
+## Invalid Collection
+
+@snippet examples/api/mongocxx/examples/collections/incompatible_options.cpp Example
+
+## Invalid Parameter
+
+@snippet examples/api/mongocxx/examples/collections/invalid_parameter.cpp Example
+
+## Incompatible Options
+
+@snippet examples/api/mongocxx/examples/collections/incompatible_options.cpp Example
