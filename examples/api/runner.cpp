@@ -76,6 +76,7 @@ class runner_type {
     std::minstd_rand::result_type seed = 0u;
     std::minstd_rand gen;
     unsigned int jobs = 0;
+    bool use_fork = true;
 
     static void run_with_jobs(const std::vector<component>& components, unsigned int jobs) {
         if (jobs == 1) {
@@ -112,64 +113,64 @@ class runner_type {
         return_from_main,
     };
 
-#if !defined(_MSC_VER)
     action run_forking_components() {
-        // Forking with threads is difficult and the number of components that require forking are
-        // few in number. Run forking components sequentially.
-        for (const auto& component : forking_components) {
-            const auto& fn = component.fn;
-            const auto& name = component.name;
+        if (use_fork) {
+#if !defined(_MSC_VER)
+            // Forking with threads is difficult and the number of components that require forking
+            // are few in number. Run forking components sequentially.
+            for (const auto& component : forking_components) {
+                const auto& fn = component.fn;
+                const auto& name = component.name;
 
-            const pid_t pid = ::fork();
+                const pid_t pid = ::fork();
 
-            // Child: do nothing more than call the registered function.
-            if (pid == 0) {
-                fn();
-                return action::return_from_main;  // Return from `main()`.
-            }
-
-            // Parent: wait for child and handle returned status values.
-            else {
-                int status;
-
-                const int ret = ::waitpid(pid, &status, 0);
-
-                // For non-zero exit codes, permit continuation for example coverage.
-                if (WIFEXITED(status) && WEXITSTATUS(status) != EXIT_SUCCESS) {
-                    std::cout << __func__ << ": failed: " << name
-                              << " exited with a non-zero exit code: " << WEXITSTATUS(status)
-                              << std::endl;
-
-                    return action::fail;
+                // Child: do nothing more than call the registered function.
+                if (pid == 0) {
+                    fn();
+                    return action::return_from_main;  // Return from `main()`.
                 }
 
-                // For unexpected signals, stop immediately.
-                else if (WIFSIGNALED(status)) {
-                    const int signal = WTERMSIG(status);
-                    const char* const sigstr = ::strsignal(signal);
-
-                    std::cout << __func__ << ": failed: " << name
-                              << " was killed by signal: " << signal << " ("
-                              << (sigstr ? sigstr : "") << ")" << std::endl;
-
-                    std::exit(EXIT_FAILURE);
-                }
-
-                // We don't expect any other failure condition.
+                // Parent: wait for child and handle returned status values.
                 else {
-                    assert(ret != -1);
+                    int status;
+
+                    const int ret = ::waitpid(pid, &status, 0);
+
+                    // For non-zero exit codes, permit continuation for example coverage.
+                    if (WIFEXITED(status) && WEXITSTATUS(status) != EXIT_SUCCESS) {
+                        std::cout << __func__ << ": failed: " << name
+                                  << " exited with a non-zero exit code: " << WEXITSTATUS(status)
+                                  << std::endl;
+
+                        return action::fail;
+                    }
+
+                    // For unexpected signals, stop immediately.
+                    else if (WIFSIGNALED(status)) {
+                        const int signal = WTERMSIG(status);
+                        const char* const sigstr = ::strsignal(signal);
+
+                        std::cout << __func__ << ": failed: " << name
+                                  << " was killed by signal: " << signal << " ("
+                                  << (sigstr ? sigstr : "") << ")" << std::endl;
+
+                        std::exit(EXIT_FAILURE);
+                    }
+
+                    // We don't expect any other failure condition.
+                    else {
+                        assert(ret != -1);
+                    }
                 }
             }
+
+            return action::succeed;
+#endif  // !defined(_MSC_VER)
         }
 
-        return action::succeed;
-    }
-#else
-    action run_forking_components() {
         std::cout << "Skipping API examples that require forked processes" << std::endl;
         return action::succeed;
     }
-#endif  // !defined(_MSC_VER)
 
     void run_components_with_instance() {
         mongocxx::instance instance;
@@ -238,6 +239,10 @@ class runner_type {
         }
     }
 
+    void set_use_fork(bool use_fork) {
+        this->use_fork = use_fork;
+    }
+
     int run() {
         assert(jobs > 0u);
 
@@ -297,6 +302,7 @@ void runner_register_forking_component(void (*fn)(), const char* name) {
 int EXAMPLES_CDECL main(int argc, char** argv) {
     bool set_seed = false;
     bool set_jobs = false;
+    bool set_use_fork = false;
 
     // Simple command-line argument parser.
     for (int i = 1; i < argc; ++i) {
@@ -322,6 +328,7 @@ int EXAMPLES_CDECL main(int argc, char** argv) {
             set_seed = true;
         }
 
+        // Allow setting job count (e.g. set to 1 for debugging).
         if (strcmp(argv[i], "--jobs") == 0) {
             if (i + 1 >= argc) {
                 std::cerr << "missing argument to --jobs" << std::endl;
@@ -345,6 +352,27 @@ int EXAMPLES_CDECL main(int argc, char** argv) {
             runner.set_jobs(static_cast<unsigned int>(jobs));
             set_jobs = true;
         }
+
+        // Allow disabling use of fork (e.g. disable for debugging).
+        if (strcmp(argv[i], "--use-fork") == 0) {
+            if (i + 1 >= argc) {
+                std::cerr << "missing argument to --use-fork" << std::endl;
+                return 1;
+            }
+
+            char* const use_fork_str = argv[++i];  // Next argument.
+            char* end = nullptr;
+
+            const auto flag = std::strtoul(use_fork_str, &end, 10);
+
+            if (static_cast<std::size_t>(end - use_fork_str) != std::strlen(use_fork_str)) {
+                std::cerr << "invalid argument: " << use_fork_str << std::endl;
+                return 1;
+            }
+
+            runner.set_use_fork(flag == 0 ? false : true);
+            set_use_fork = true;
+        }
     }
 
     // Default: use a random seed.
@@ -355,6 +383,11 @@ int EXAMPLES_CDECL main(int argc, char** argv) {
     // Default: request maximum job count.
     if (!set_jobs) {
         runner.set_jobs(0);
+    }
+
+    // Default: use fork when available.
+    if (!set_use_fork) {
+        runner.set_use_fork(true);
     }
 
     return runner.run();  // Return directly from forked processes.
