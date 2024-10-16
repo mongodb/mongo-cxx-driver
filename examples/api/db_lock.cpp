@@ -21,6 +21,7 @@
 #include <mongocxx/collection.hpp>
 #include <mongocxx/database.hpp>
 
+#include <examples/api/concern.hh>
 #include <examples/api/db_lock.hh>
 #include <examples/macros.hh>
 
@@ -32,14 +33,14 @@ std::mutex db_locks_mut;
 }  // namespace
 
 db_lock::~db_lock() {
-    this->get().drop();
+    this->get().drop(wc_majority());
 }
 
 db_lock::db_lock(mongocxx::client& client, std::string name) : _client_ptr(&client), _name(name) {
     ((void)std::lock_guard<std::mutex>{db_locks_mut},
      _lock = std::unique_lock<std::mutex>(db_locks[name]));
 
-    this->get().drop();
+    this->get().drop(wc_majority());
 }
 
 mongocxx::database db_lock::get() const& {
