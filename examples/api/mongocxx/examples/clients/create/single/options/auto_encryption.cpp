@@ -18,6 +18,7 @@
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/document/view.hpp>
+#include <bsoncxx/json.hpp>
 
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/error_code.hpp>
@@ -37,6 +38,8 @@ void example(bsoncxx::document::view kms_providers) {
 
     auto_encryption_opts.key_vault_namespace({"keyvault", "datakeys"});
     auto_encryption_opts.kms_providers(kms_providers);
+    auto_encryption_opts.extra_options(bsoncxx::from_json(
+        R"({"mongocryptdURI": "mongodb://localhost:27027", "mongocryptdSpawnArgs": ["--port", "27027"]})"));
     // ... other automatic encryption options.
 
     mongocxx::options::client client_opts;
