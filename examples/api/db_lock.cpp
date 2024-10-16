@@ -37,6 +37,15 @@ db_lock::~db_lock() {
 }
 
 db_lock::db_lock(mongocxx::client& client, std::string name) : _client_ptr(&client), _name(name) {
+    // https://www.mongodb.com/docs/manual/reference/limits/#mongodb-limit-Length-of-Database-Names
+    static constexpr std::size_t db_name_size_max = 63u;
+
+    if (_name.size() > db_name_size_max) {
+        // Strip prefix, which is more likely to be common across components.
+        // e.g. `api_mongocxx_examples_very_long_component_name` -> `g_component_name` (length: 16).
+        _name = std::move(_name).substr(_name.size() - db_name_size_max, db_name_size_max);
+    }
+
     ((void)std::lock_guard<std::mutex>{db_locks_mut},
      _lock = std::unique_lock<std::mutex>(db_locks[name]));
 
