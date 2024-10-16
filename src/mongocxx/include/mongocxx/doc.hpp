@@ -122,8 +122,8 @@
 /// @page topic-mongocxx-examples-uri URI
 /// @brief How to create and use URIs.
 /// @tableofcontents
-/// @see [Connection Strings (MongoDB
-/// Manual)](https://www.mongodb.com/docs/manual/reference/connection-string/)
+/// @see
+/// - [Connection Strings (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/connection-string/)
 /// @include{doc} api/mongocxx/examples/uri.md
 ///
 
