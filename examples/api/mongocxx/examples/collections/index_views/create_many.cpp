@@ -13,14 +13,15 @@
 // limitations under the License.
 
 #include <algorithm>
+#include <vector>
 
-#include <bsoncxx/document/value.hpp>
 #include <bsoncxx/json.hpp>
-#include <bsoncxx/types.hpp>
 
 #include <mongocxx/client.hpp>
 #include <mongocxx/collection.hpp>
 #include <mongocxx/database.hpp>
+#include <mongocxx/index_model.hpp>
+#include <mongocxx/index_view.hpp>
 #include <mongocxx/uri.hpp>
 
 #include <examples/api/concern.hh>
@@ -31,11 +32,27 @@
 namespace {
 
 // [Example]
-void example(mongocxx::collection coll) {
-    bsoncxx::document::value result = coll.create_index(bsoncxx::from_json(R"({"key": 1})"));
+void example(mongocxx::index_view indexes) {
+    std::vector<mongocxx::index_model> models;
 
-    EXPECT(result["name"]);
-    EXPECT(result["name"].get_string().value.compare("key_1") == 0);
+    models.emplace_back(bsoncxx::from_json(R"({"x": 1})"));
+    models.emplace_back(bsoncxx::from_json(R"({"y": 1})"));
+
+    auto result = indexes.create_many(models);
+
+    // SERVER-78611
+    if (result["raw"]) {
+        result = result["raw"].get_document().value.begin()->get_document().value;
+    }
+
+    EXPECT(result["ok"]);
+    EXPECT(result["ok"].get_double().value == 1.0);
+
+    EXPECT(result["numIndexesBefore"]);
+    EXPECT(result["numIndexesBefore"].get_int32().value == 1);  // _id_
+
+    EXPECT(result["numIndexesAfter"]);
+    EXPECT(result["numIndexesAfter"].get_int32().value == 3);  // _id_, x_1, y_1
 }
 // [Example]
 
@@ -47,18 +64,6 @@ RUNNER_REGISTER_COMPONENT_FOR_SINGLE() {
     {
         db_lock guard{client, EXAMPLES_COMPONENT_NAME_STR};
 
-        auto coll = set_rw_concern_majority(guard.get().create_collection("coll"));
-
-        auto count_indexes = [&coll] {
-            auto cursor = coll.list_indexes();
-
-            return std::distance(cursor.begin(), cursor.end());
-        };
-
-        EXPECT(count_indexes() == 1);  // _id_
-
-        example(coll);
-
-        EXPECT(count_indexes() == 2);  // _id_, key_1
+        example(set_rw_concern_majority(guard.get().create_collection("coll")).indexes());
     }
 }

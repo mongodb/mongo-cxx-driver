@@ -14,13 +14,12 @@
 
 #include <algorithm>
 
-#include <bsoncxx/document/value.hpp>
 #include <bsoncxx/json.hpp>
-#include <bsoncxx/types.hpp>
 
 #include <mongocxx/client.hpp>
 #include <mongocxx/collection.hpp>
 #include <mongocxx/database.hpp>
+#include <mongocxx/index_view.hpp>
 #include <mongocxx/uri.hpp>
 
 #include <examples/api/concern.hh>
@@ -31,11 +30,14 @@
 namespace {
 
 // [Example]
-void example(mongocxx::collection coll) {
-    bsoncxx::document::value result = coll.create_index(bsoncxx::from_json(R"({"key": 1})"));
+void example(mongocxx::index_view indexes) {
+    for (bsoncxx::document::view doc : indexes.list()) {
+        EXPECT(doc["name"]);
+        EXPECT(doc["name"].type() == bsoncxx::type::k_string);
 
-    EXPECT(result["name"]);
-    EXPECT(result["name"].get_string().value.compare("key_1") == 0);
+        EXPECT(doc["key"]);
+        EXPECT(doc["key"].type() == bsoncxx::type::k_document);
+    }
 }
 // [Example]
 
@@ -49,16 +51,8 @@ RUNNER_REGISTER_COMPONENT_FOR_SINGLE() {
 
         auto coll = set_rw_concern_majority(guard.get().create_collection("coll"));
 
-        auto count_indexes = [&coll] {
-            auto cursor = coll.list_indexes();
+        (void)coll.create_index(bsoncxx::from_json(R"({"key": 1})"));
 
-            return std::distance(cursor.begin(), cursor.end());
-        };
-
-        EXPECT(count_indexes() == 1);  // _id_
-
-        example(coll);
-
-        EXPECT(count_indexes() == 2);  // _id_, key_1
+        example(coll.indexes());
     }
 }

@@ -26,17 +26,49 @@
 
 # Index Operations
 
-## List Indexes
+## On a Collection
+
+### List Indexes
 
 @snippet examples/api/mongocxx/examples/collections/list_indexes.cpp Example
 
-## Create an Index
+### Create an Index
 
 @snippet examples/api/mongocxx/examples/collections/create_index.cpp Example
 
-## Create an Index With Options
+### Create an Index With Options
 
 @snippet examples/api/mongocxx/examples/collections/create_index_with_options.cpp Example
+
+## With an Index View
+
+### Obtain an Index View
+
+@snippet examples/api/mongocxx/examples/collections/index_views/indexes.cpp Example
+
+### List Indexes
+
+@snippet examples/api/mongocxx/examples/collections/index_views/list.cpp Example
+
+### Create an Index
+
+@snippet examples/api/mongocxx/examples/collections/index_views/create.cpp Example
+
+### Create an Index With Options
+
+@snippet examples/api/mongocxx/examples/collections/index_views/create_with_options.cpp Example
+
+### Create Multiple Indexes
+
+@snippet examples/api/mongocxx/examples/collections/index_views/create_many.cpp Example
+
+### Drop an Index
+
+@snippet examples/api/mongocxx/examples/collections/index_views/drop.cpp Example
+
+### Drop All Indexes
+
+@snippet examples/api/mongocxx/examples/collections/index_views/drop_all.cpp Example
 
 # Document Operations
 
