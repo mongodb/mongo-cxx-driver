@@ -102,6 +102,7 @@
 /// @li @subpage topic-mongocxx-examples-databases
 /// @li @subpage topic-mongocxx-examples-collections
 /// @li @subpage topic-mongocxx-examples-client-sessions
+/// @li @subpage topic-mongocxx-examples-change-streams
 /// @li @subpage topic-mongocxx-examples-operation-exceptions
 ///
 
@@ -154,6 +155,13 @@
 /// @brief How to obtain and use collections.
 /// @tableofcontents
 /// @include{doc} api/mongocxx/examples/collections.md
+///
+
+///
+/// @page topic-mongocxx-examples-change-streams Change Streams
+/// @brief How to obtain and use change streams.
+/// @tableofcontents
+/// @include{doc} api/mongocxx/examples/change_streams.md
 ///
 
 ///
