@@ -187,9 +187,6 @@ class runner_type {
             const auto reply =
                 client["admin"].run_command(bsoncxx::from_json(R"({"isMaster": 1})"));
 
-            // Try to speed up performance of change stream examples and other operations,
-            // especially for sharded clusters.
-
             if (reply["msg"]) {
                 std::cout << "Running API examples against a live sharded server" << std::endl;
                 run_with_jobs(components_for_sharded, jobs);
