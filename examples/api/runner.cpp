@@ -438,7 +438,7 @@ bool parse_filter(int argc, char** argv, int i) {
 bool parse_verbose(int argc, char** argv, int i) {
     if (strcmp(argv[i], "--verbose") == 0) {
         if (i + 1 >= argc) {
-            std::cerr << "missing argument to --filter" << std::endl;
+            std::cerr << "missing argument to --verbose" << std::endl;
             return false;
         }
 
