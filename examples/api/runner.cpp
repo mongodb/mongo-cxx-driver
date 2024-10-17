@@ -499,7 +499,7 @@ int EXAMPLES_CDECL main(int argc, char** argv) {
         }
 
         // Allow disabling use of fork (e.g. disable for debugging).
-        if (!parse_use_fork(argc, argv, i, set_jobs)) {
+        if (!parse_use_fork(argc, argv, i, set_use_fork)) {
             return EXIT_FAILURE;
         }
 
