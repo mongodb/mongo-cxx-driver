@@ -15,7 +15,6 @@
 #include <mongocxx/client.hpp>
 #include <mongocxx/client_session.hpp>
 #include <mongocxx/options/client_session.hpp>
-#include <mongocxx/options/transaction.hpp>
 #include <mongocxx/uri.hpp>
 
 #include <examples/api/runner.hh>

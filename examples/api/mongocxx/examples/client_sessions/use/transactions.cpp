@@ -23,10 +23,7 @@
 #include <mongocxx/database.hpp>
 #include <mongocxx/exception/exception.hpp>
 #include <mongocxx/model/insert_one.hpp>
-#include <mongocxx/model/update_one.hpp>
-#include <mongocxx/read_concern.hpp>
 #include <mongocxx/uri.hpp>
-#include <mongocxx/write_concern.hpp>
 
 #include <examples/api/concern.hh>
 #include <examples/api/db_lock.hh>
@@ -40,7 +37,6 @@ void example(mongocxx::client_session session, mongocxx::collection coll) {
     using bsoncxx::builder::basic::make_document;
 
     using mongocxx::model::insert_one;
-    using mongocxx::model::update_one;
 
     auto x0 = bsoncxx::from_json(R"({"x": 0})");
     auto inc = bsoncxx::from_json(R"({"$inc": {"x": 1}})");

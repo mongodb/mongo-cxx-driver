@@ -21,9 +21,7 @@
 #include <mongocxx/client_session.hpp>
 #include <mongocxx/collection.hpp>
 #include <mongocxx/database.hpp>
-#include <mongocxx/read_concern.hpp>
 #include <mongocxx/uri.hpp>
-#include <mongocxx/write_concern.hpp>
 
 #include <examples/api/concern.hh>
 #include <examples/api/db_lock.hh>
