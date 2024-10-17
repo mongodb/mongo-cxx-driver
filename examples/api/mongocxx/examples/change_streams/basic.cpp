@@ -43,7 +43,7 @@ void example(mongocxx::database db) {
     auto start = now();
 
     // periodicNoopIntervalSecs: 10 (default)
-    while (count == 0 && now() - start < std::chrono::seconds(10)) {
+    while (count < 1 && now() - start < std::chrono::seconds(10)) {
         for (bsoncxx::document::view change : stream) {
             ++count;
 
