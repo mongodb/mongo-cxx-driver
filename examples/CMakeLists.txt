@@ -122,19 +122,6 @@ file(GLOB_RECURSE examples_headers
     "*.hh"
 )
 
-foreach(source ${api_examples_sources})
-    add_examples_executable(${source} LIBRARIES mongocxx_target)
-
-    # Silence warnings for common patterns in API examples.
-    set_property (SOURCE ${source} APPEND PROPERTY COMPILE_OPTIONS
-        # Allow unused variables.
-        $<$<CXX_COMPILER_ID:AppleClang,Clang,GNU>:-Wno-unused>
-        $<$<CXX_COMPILER_ID:MSVC>:/wd4189>
-
-        # Allow simpler switch statements.
-        $<$<CXX_COMPILER_ID:AppleClang,Clang,GNU>:-Wno-switch>
-    )
-endforeach()
 
 foreach(source ${bsoncxx_examples_sources})
     add_examples_executable(${source} LIBRARIES bsoncxx_target)
