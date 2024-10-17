@@ -32,7 +32,7 @@
 namespace {
 
 // [Example]
-void example(mongocxx::client_session session, mongocxx::database db) {
+void example(mongocxx::database db) {
     mongocxx::collection coll = db.create_collection("coll");
 
     mongocxx::pipeline pipeline;
@@ -41,28 +41,20 @@ void example(mongocxx::client_session session, mongocxx::database db) {
         bsoncxx::from_json(R"({"operationType": "insert", "fullDocument.watched": true})"));
     // ... other pipeline options.
 
-    mongocxx::change_stream stream = coll.watch(session, pipeline);
+    mongocxx::change_stream stream = coll.watch(pipeline);
 
-    {
-        session.start_transaction(
-            mongocxx::options::transaction{}.max_commit_time_ms(std::chrono::seconds(1)));
+    // Observed.
+    EXPECT(coll.insert_one(bsoncxx::from_json(R"({"x": 1, "watched": true})")));
 
-        // Observed.
-        EXPECT(coll.insert_one(session, bsoncxx::from_json(R"({"x": 1, "watched": true})")));
+    // Not observed (fullDocument mismatch).
+    EXPECT(coll.insert_one(bsoncxx::from_json(R"({"x": 2, "watched": false})")));
 
-        // Not observed (fullDocument mismatch).
-        EXPECT(coll.insert_one(session, bsoncxx::from_json(R"({"x": 2, "watched": false})")));
+    // Not observed (operationType mismatch).
+    EXPECT(coll.update_one(bsoncxx::from_json(R"({"x": 2})"),
+                           bsoncxx::from_json(R"({"$set": {"watched": true}})")));
 
-        // Not observed (operationType mismatch).
-        EXPECT(coll.update_one(session,
-                               bsoncxx::from_json(R"({"x": 2})"),
-                               bsoncxx::from_json(R"({"$set": {"watched": true}})")));
-
-        // Observed.
-        EXPECT(coll.insert_one(session, bsoncxx::from_json(R"({"x": 3, "watched": true})")));
-
-        session.commit_transaction();
-    }
+    // Observed.
+    EXPECT(coll.insert_one(bsoncxx::from_json(R"({"x": 3, "watched": true})")));
 
     int count = 0;
     auto now = [] { return std::chrono::steady_clock::now(); };
@@ -90,7 +82,7 @@ RUNNER_REGISTER_COMPONENT_FOR_REPLICA() {
         auto db = set_rw_concern_majority(guard.get());
         auto coll = db["coll"];
 
-        example(client.start_session(), db);
+        example(db);
 
         EXPECT(coll.count_documents(bsoncxx::from_json(R"({"x": {"$exists": 1}})")) == 3);
 
