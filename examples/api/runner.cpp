@@ -26,13 +26,15 @@
 #include <cstdint>
 #include <cstring>
 #include <iostream>
+#include <iterator>
+#include <numeric>
 #include <queue>
 #include <random>
 #include <thread>
 #include <vector>
 
-#include <bsoncxx/builder/basic/document.hpp>
-#include <bsoncxx/builder/basic/kvp.hpp>
+#include <bsoncxx/json.hpp>
+#include <bsoncxx/stdx/optional.hpp>
 
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/exception.hpp>
@@ -76,6 +78,9 @@ class runner_type {
     std::minstd_rand::result_type seed = 0u;
     std::minstd_rand gen;
     unsigned int jobs = 0;
+    bool use_fork = true;
+    std::vector<std::string> filters;
+    bool verbose = false;
 
     static void run_with_jobs(const std::vector<component>& components, unsigned int jobs) {
         if (jobs == 1) {
@@ -112,64 +117,64 @@ class runner_type {
         return_from_main,
     };
 
-#if !defined(_MSC_VER)
     action run_forking_components() {
-        // Forking with threads is difficult and the number of components that require forking are
-        // few in number. Run forking components sequentially.
-        for (const auto& component : forking_components) {
-            const auto& fn = component.fn;
-            const auto& name = component.name;
+        if (use_fork) {
+#if !defined(_MSC_VER)
+            // Forking with threads is difficult and the number of components that require forking
+            // are few in number. Run forking components sequentially.
+            for (const auto& component : forking_components) {
+                const auto& fn = component.fn;
+                const auto& name = component.name;
 
-            const pid_t pid = ::fork();
+                const pid_t pid = ::fork();
 
-            // Child: do nothing more than call the registered function.
-            if (pid == 0) {
-                fn();
-                return action::return_from_main;  // Return from `main()`.
-            }
-
-            // Parent: wait for child and handle returned status values.
-            else {
-                int status;
-
-                const int ret = ::waitpid(pid, &status, 0);
-
-                // For non-zero exit codes, permit continuation for example coverage.
-                if (WIFEXITED(status) && WEXITSTATUS(status) != EXIT_SUCCESS) {
-                    std::cout << __func__ << ": failed: " << name
-                              << " exited with a non-zero exit code: " << WEXITSTATUS(status)
-                              << std::endl;
-
-                    return action::fail;
+                // Child: do nothing more than call the registered function.
+                if (pid == 0) {
+                    fn();
+                    return action::return_from_main;  // Return from `main()`.
                 }
 
-                // For unexpected signals, stop immediately.
-                else if (WIFSIGNALED(status)) {
-                    const int signal = WTERMSIG(status);
-                    const char* const sigstr = ::strsignal(signal);
-
-                    std::cout << __func__ << ": failed: " << name
-                              << " was killed by signal: " << signal << " ("
-                              << (sigstr ? sigstr : "") << ")" << std::endl;
-
-                    std::exit(EXIT_FAILURE);
-                }
-
-                // We don't expect any other failure condition.
+                // Parent: wait for child and handle returned status values.
                 else {
-                    assert(ret != -1);
+                    int status;
+
+                    const int ret = ::waitpid(pid, &status, 0);
+
+                    // For non-zero exit codes, permit continuation for example coverage.
+                    if (WIFEXITED(status) && WEXITSTATUS(status) != EXIT_SUCCESS) {
+                        std::cout << __func__ << ": failed: " << name
+                                  << " exited with a non-zero exit code: " << WEXITSTATUS(status)
+                                  << std::endl;
+
+                        return action::fail;
+                    }
+
+                    // For unexpected signals, stop immediately.
+                    else if (WIFSIGNALED(status)) {
+                        const int signal = WTERMSIG(status);
+                        const char* const sigstr = ::strsignal(signal);
+
+                        std::cout << __func__ << ": failed: " << name
+                                  << " was killed by signal: " << signal << " ("
+                                  << (sigstr ? sigstr : "") << ")" << std::endl;
+
+                        std::exit(EXIT_FAILURE);
+                    }
+
+                    // We don't expect any other failure condition.
+                    else {
+                        assert(ret != -1);
+                    }
                 }
             }
+
+            return action::succeed;
+#endif  // !defined(_MSC_VER)
         }
 
-        return action::succeed;
-    }
-#else
-    action run_forking_components() {
         std::cout << "Skipping API examples that require forked processes" << std::endl;
         return action::succeed;
     }
-#endif  // !defined(_MSC_VER)
 
     void run_components_with_instance() {
         mongocxx::instance instance;
@@ -179,8 +184,8 @@ class runner_type {
         try {
             mongocxx::client client{mongocxx::uri{"mongodb://localhost:27017/"}};
 
-            const auto reply = client["admin"].run_command(bsoncxx::builder::basic::make_document(
-                bsoncxx::builder::basic::kvp("isMaster", 1)));
+            const auto reply =
+                client["admin"].run_command(bsoncxx::from_json(R"({"isMaster": 1})"));
 
             if (reply["msg"]) {
                 std::cout << "Running API examples against a live sharded server" << std::endl;
@@ -238,6 +243,18 @@ class runner_type {
         }
     }
 
+    void set_use_fork(bool use_fork) {
+        this->use_fork = use_fork;
+    }
+
+    void add_filter(const char* filter) {
+        this->filters.emplace_back(filter);
+    }
+
+    void set_verbose(bool verbose) {
+        this->verbose = verbose;
+    }
+
     int run() {
         assert(jobs > 0u);
 
@@ -245,9 +262,66 @@ class runner_type {
 
         gen.seed(seed);
 
+        std::vector<component>* all_components[] = {
+            &components,
+            &components_with_instance,
+            &components_for_single,
+            &components_for_replica,
+            &components_for_sharded,
+            &forking_components,
+        };
+
+        // Unconditionally sort to ensure seed consistency after shuffle.
+        for (auto cptr : all_components) {
+            std::sort(cptr->begin(), cptr->end(), [](const component& lhs, const component& rhs) {
+                return std::strcmp(lhs.name, rhs.name) < 0;
+            });
+        }
+
+        // Filter components to be executed to those containing all filter substrings.
+        for (auto filter : filters) {
+            for (auto cptr : all_components) {
+                cptr->erase(std::remove_if(cptr->begin(),
+                                           cptr->end(),
+                                           [&filter](component c) {
+                                               if (std::strstr(c.name, filter.c_str()) != nullptr) {
+                                                   return false;
+                                               }
+                                               return true;
+                                           }),
+                            cptr->end());
+            }
+        }
+
+        // Print the list of components to be executed.
+        if (verbose) {
+            std::vector<bsoncxx::stdx::string_view> names;
+
+            names.reserve(std::accumulate(std::begin(all_components),
+                                          std::end(all_components),
+                                          std::size_t{0},
+                                          [](std::size_t n, const std::vector<component>* cptr) {
+                                              return n + cptr->size();
+                                          }));
+
+            for (auto cptr : all_components) {
+                for (auto c : *cptr) {
+                    names.emplace_back(c.name);
+                }
+            }
+
+            std::sort(names.begin(), names.end());
+
+            std::cout << "API example components to be executed:" << std::endl;
+            for (auto name : names) {
+                std::cout << " - " << name << std::endl;
+            }
+        }
+
         // Prevent ordering dependencies across examples.
-        std::shuffle(components.begin(), components.end(), gen);
-        std::shuffle(forking_components.begin(), forking_components.end(), gen);
+        for (auto cptr : all_components) {
+            std::shuffle(cptr->begin(), cptr->end(), gen);
+        }
 
         run_components();
 
@@ -267,6 +341,119 @@ class runner_type {
 };
 
 runner_type runner;
+
+bool parse_seed(int argc, char** argv, int i, bool& set_seed) {
+    if (strcmp(argv[i], "--seed") == 0) {
+        if (i + 1 >= argc) {
+            std::cerr << "missing argument to --seed" << std::endl;
+            return false;
+        }
+
+        char* const seed_str = argv[i + 1];  // Next argument.
+        char* end = nullptr;
+
+        const auto seed =
+            static_cast<std::minstd_rand::result_type>(std::strtoul(seed_str, &end, 10));
+
+        if (static_cast<std::size_t>(end - seed_str) != std::strlen(seed_str)) {
+            std::cerr << "invalid seed string: " << seed_str << std::endl;
+            return false;
+        }
+
+        runner.set_seed(seed);
+        set_seed = true;
+    }
+
+    return true;
+}
+
+bool parse_jobs(int argc, char** argv, int i, bool& set_jobs) {
+    if (strcmp(argv[i], "--jobs") == 0) {
+        if (i + 1 >= argc) {
+            std::cerr << "missing argument to --jobs" << std::endl;
+            return false;
+        }
+
+        char* const jobs_str = argv[i + 1];  // Next argument.
+        char* end = nullptr;
+
+        const auto jobs = std::strtoul(jobs_str, &end, 10);
+
+        if (static_cast<std::size_t>(end - jobs_str) != std::strlen(jobs_str)) {
+            std::cerr << "invalid jobs string: " << jobs_str << std::endl;
+            return false;
+        }
+
+        if (jobs >= UINT_MAX) {
+            std::cerr << "invalid jobs string (too large): " << jobs_str << std::endl;
+        }
+
+        runner.set_jobs(static_cast<unsigned int>(jobs));
+        set_jobs = true;
+    }
+
+    return true;
+}
+
+bool parse_use_fork(int argc, char** argv, int i, bool& set_use_fork) {
+    if (strcmp(argv[i], "--use-fork") == 0) {
+        if (i + 1 >= argc) {
+            std::cerr << "missing argument to --use-fork" << std::endl;
+            return false;
+        }
+
+        char* const use_fork_str = argv[i + 1];  // Next argument.
+        char* end = nullptr;
+
+        const auto flag = std::strtoul(use_fork_str, &end, 10);
+
+        if (static_cast<std::size_t>(end - use_fork_str) != std::strlen(use_fork_str)) {
+            std::cerr << "invalid argument: " << use_fork_str << std::endl;
+            return false;
+        }
+
+        runner.set_use_fork(flag == 0 ? false : true);
+        set_use_fork = true;
+    }
+
+    return true;
+}
+
+bool parse_filter(int argc, char** argv, int i) {
+    if (strcmp(argv[i], "--filter") == 0) {
+        if (i + 1 >= argc) {
+            std::cerr << "missing argument to --filter" << std::endl;
+            return false;
+        }
+
+        runner.add_filter(argv[i + 1]);
+    }
+
+    return true;
+}
+
+bool parse_verbose(int argc, char** argv, int i) {
+    if (strcmp(argv[i], "--verbose") == 0) {
+        if (i + 1 >= argc) {
+            std::cerr << "missing argument to --verbose" << std::endl;
+            return false;
+        }
+
+        char* const verbose_str = argv[i + 1];  // Next argument.
+        char* end = nullptr;
+
+        const auto verbose = std::strtoul(verbose_str, &end, 10);
+
+        if (static_cast<std::size_t>(end - verbose_str) != std::strlen(verbose_str)) {
+            std::cerr << "invalid verbose string: " << verbose_str << std::endl;
+            return false;
+        }
+
+        runner.set_verbose(verbose != 0u);
+    }
+
+    return true;
+}
 
 }  // namespace
 
@@ -297,53 +484,35 @@ void runner_register_forking_component(void (*fn)(), const char* name) {
 int EXAMPLES_CDECL main(int argc, char** argv) {
     bool set_seed = false;
     bool set_jobs = false;
+    bool set_use_fork = false;
 
     // Simple command-line argument parser.
-    for (int i = 1; i < argc; ++i) {
+    for (int i = 1; i < argc; i += 2) {
         // Permit using a custom seed for reproducibility.
-        if (strcmp(argv[i], "--seed") == 0) {
-            if (i + 1 >= argc) {
-                std::cerr << "missing argument to --seed" << std::endl;
-                return 1;
-            }
-
-            char* const seed_str = argv[++i];  // Next argument.
-            char* end = nullptr;
-
-            const auto seed =
-                static_cast<std::minstd_rand::result_type>(std::strtoul(seed_str, &end, 10));
-
-            if (static_cast<std::size_t>(end - seed_str) != std::strlen(seed_str)) {
-                std::cerr << "invalid seed string: " << seed_str << std::endl;
-                return 1;
-            }
-
-            runner.set_seed(seed);
-            set_seed = true;
+        if (!parse_seed(argc, argv, i, set_seed)) {
+            return EXIT_FAILURE;
         }
 
-        if (strcmp(argv[i], "--jobs") == 0) {
-            if (i + 1 >= argc) {
-                std::cerr << "missing argument to --jobs" << std::endl;
-                return 1;
-            }
+        // Allow setting job count (e.g. set to 1 for debugging).
+        if (!parse_jobs(argc, argv, i, set_jobs)) {
+            return EXIT_FAILURE;
+        }
 
-            char* const jobs_str = argv[++i];  // Next argument.
-            char* end = nullptr;
+        // Allow disabling use of fork (e.g. disable for debugging).
+        if (!parse_use_fork(argc, argv, i, set_use_fork)) {
+            return EXIT_FAILURE;
+        }
 
-            const auto jobs = std::strtoul(jobs_str, &end, 10);
+        // Allow limiting executed examples to a subset of components.
+        // Only components whose name contains all filters as a substring are executed.
+        if (!parse_filter(argc, argv, i)) {
+            return EXIT_FAILURE;
+        }
 
-            if (static_cast<std::size_t>(end - jobs_str) != std::strlen(jobs_str)) {
-                std::cerr << "invalid jobs string: " << jobs_str << std::endl;
-                return 1;
-            }
-
-            if (jobs >= UINT_MAX) {
-                std::cerr << "invalid jobs string (too large): " << jobs_str << std::endl;
-            }
-
-            runner.set_jobs(static_cast<unsigned int>(jobs));
-            set_jobs = true;
+        // Allow printing the name of components being executed.
+        // Useful when combined with `--filter`.
+        if (!parse_verbose(argc, argv, i)) {
+            return EXIT_FAILURE;
         }
     }
 
@@ -355,6 +524,11 @@ int EXAMPLES_CDECL main(int argc, char** argv) {
     // Default: request maximum job count.
     if (!set_jobs) {
         runner.set_jobs(0);
+    }
+
+    // Default: use fork when available.
+    if (!set_use_fork) {
+        runner.set_use_fork(true);
     }
 
     return runner.run();  // Return directly from forked processes.

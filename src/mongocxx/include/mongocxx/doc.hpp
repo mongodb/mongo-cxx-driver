@@ -101,6 +101,8 @@
 /// @li @subpage topic-mongocxx-examples-clients
 /// @li @subpage topic-mongocxx-examples-databases
 /// @li @subpage topic-mongocxx-examples-collections
+/// @li @subpage topic-mongocxx-examples-client-sessions
+/// @li @subpage topic-mongocxx-examples-change-streams
 /// @li @subpage topic-mongocxx-examples-operation-exceptions
 ///
 
@@ -122,8 +124,8 @@
 /// @page topic-mongocxx-examples-uri URI
 /// @brief How to create and use URIs.
 /// @tableofcontents
-/// @see [Connection Strings (MongoDB
-/// Manual)](https://www.mongodb.com/docs/manual/reference/connection-string/)
+/// @see
+/// - [Connection Strings (MongoDB Manual)](https://www.mongodb.com/docs/manual/reference/connection-string/)
 /// @include{doc} api/mongocxx/examples/uri.md
 ///
 
@@ -132,6 +134,13 @@
 /// @brief How to use clients and client pools.
 /// @tableofcontents
 /// @include{doc} api/mongocxx/examples/clients.md
+///
+
+///
+/// @page topic-mongocxx-examples-client-sessions Client Sessions
+/// @brief How to create and use client sessions.
+/// @tableofcontents
+/// @include{doc} api/mongocxx/examples/client_sessions.md
 ///
 
 ///
@@ -146,6 +155,13 @@
 /// @brief How to obtain and use collections.
 /// @tableofcontents
 /// @include{doc} api/mongocxx/examples/collections.md
+///
+
+///
+/// @page topic-mongocxx-examples-change-streams Change Streams
+/// @brief How to obtain and use change streams.
+/// @tableofcontents
+/// @include{doc} api/mongocxx/examples/change_streams.md
 ///
 
 ///

@@ -14,13 +14,12 @@
 
 #include <algorithm>
 
-#include <bsoncxx/document/value.hpp>
 #include <bsoncxx/json.hpp>
-#include <bsoncxx/types.hpp>
 
 #include <mongocxx/client.hpp>
 #include <mongocxx/collection.hpp>
 #include <mongocxx/database.hpp>
+#include <mongocxx/index_view.hpp>
 #include <mongocxx/uri.hpp>
 
 #include <examples/api/concern.hh>
@@ -31,11 +30,34 @@
 namespace {
 
 // [Example]
-void example(mongocxx::collection coll) {
-    bsoncxx::document::value result = coll.create_index(bsoncxx::from_json(R"({"key": 1})"));
+// [
+//     {
+//         "key": { "_id": 1 },
+//         "name": "_id_"
+//     {
+//         "key": { "x": 1 },
+//         "name": "x_1"
+//     },
+//     {
+//         "key": { "y": 1 },
+//         "name": "custom_name"
+//     }
+// ]
+void example(mongocxx::index_view indexes) {
+    auto count_indexes = [&indexes] {
+        auto cursor = indexes.list();
+        return std::distance(cursor.begin(), cursor.end());
+    };
 
-    EXPECT(result["name"]);
-    EXPECT(result["name"].get_string().value.compare("key_1") == 0);
+    EXPECT(count_indexes() == 3);  // _id_, x_1, custom_name
+
+    indexes.drop_one("custom_name");
+
+    EXPECT(count_indexes() == 2);  // _id_, x_1
+
+    indexes.drop_one(bsoncxx::from_json(R"({"x": 1})"));
+
+    EXPECT(count_indexes() == 1);  // _id_
 }
 // [Example]
 
@@ -49,16 +71,10 @@ RUNNER_REGISTER_COMPONENT_FOR_SINGLE() {
 
         auto coll = set_rw_concern_majority(guard.get().create_collection("coll"));
 
-        auto count_indexes = [&coll] {
-            auto cursor = coll.list_indexes();
+        (void)coll.create_index(bsoncxx::from_json(R"({"x": 1})"));
+        (void)coll.create_index(bsoncxx::from_json(R"({"y": 1})"),
+                                bsoncxx::from_json(R"({"name": "custom_name"})"));
 
-            return std::distance(cursor.begin(), cursor.end());
-        };
-
-        EXPECT(count_indexes() == 1);  // _id_
-
-        example(coll);
-
-        EXPECT(count_indexes() == 2);  // _id_, key_1
+        example(coll.indexes());
     }
 }

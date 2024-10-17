@@ -41,3 +41,9 @@
 ## List Collection Names in the Database
 
 @snippet examples/api/mongocxx/examples/databases/list_collection_names.cpp Example
+
+# Error Handling
+
+## Invalid Database
+
+@snippet examples/api/mongocxx/examples/databases/invalid.cpp Example

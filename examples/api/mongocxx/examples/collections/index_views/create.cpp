@@ -14,13 +14,13 @@
 
 #include <algorithm>
 
-#include <bsoncxx/document/value.hpp>
 #include <bsoncxx/json.hpp>
-#include <bsoncxx/types.hpp>
 
 #include <mongocxx/client.hpp>
 #include <mongocxx/collection.hpp>
 #include <mongocxx/database.hpp>
+#include <mongocxx/index_model.hpp>
+#include <mongocxx/index_view.hpp>
 #include <mongocxx/uri.hpp>
 
 #include <examples/api/concern.hh>
@@ -31,11 +31,23 @@
 namespace {
 
 // [Example]
-void example(mongocxx::collection coll) {
-    bsoncxx::document::value result = coll.create_index(bsoncxx::from_json(R"({"key": 1})"));
+void example(mongocxx::index_view indexes) {
+    // Basic usage.
+    {
+        auto result_opt = indexes.create_one(bsoncxx::from_json(R"({"x": 1})"));
 
-    EXPECT(result["name"]);
-    EXPECT(result["name"].get_string().value.compare("key_1") == 0);
+        EXPECT(result_opt);
+        EXPECT(result_opt->compare("x_1") == 0);
+    }
+
+    // Index model.
+    {
+        auto result_opt =
+            indexes.create_one(mongocxx::index_model{bsoncxx::from_json(R"({"y": 1})")});
+
+        EXPECT(result_opt);
+        EXPECT(result_opt->compare("y_1") == 0);
+    }
 }
 // [Example]
 
@@ -57,8 +69,8 @@ RUNNER_REGISTER_COMPONENT_FOR_SINGLE() {
 
         EXPECT(count_indexes() == 1);  // _id_
 
-        example(coll);
+        example(coll.indexes());
 
-        EXPECT(count_indexes() == 2);  // _id_, key_1
+        EXPECT(count_indexes() == 3);  // _id_, x_1, y_1
     }
 }
