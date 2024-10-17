@@ -32,6 +32,7 @@
 #include <vector>
 
 #include <bsoncxx/json.hpp>
+#include <bsoncxx/stdx/optional.hpp>
 
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/exception.hpp>
@@ -275,6 +276,83 @@ class runner_type {
 
 runner_type runner;
 
+bool parse_seed(int argc, char** argv, int i, bool& set_seed) {
+    if (strcmp(argv[i], "--seed") == 0) {
+        if (i + 1 >= argc) {
+            std::cerr << "missing argument to --seed" << std::endl;
+            return false;
+        }
+
+        char* const seed_str = argv[i + 1];  // Next argument.
+        char* end = nullptr;
+
+        const auto seed =
+            static_cast<std::minstd_rand::result_type>(std::strtoul(seed_str, &end, 10));
+
+        if (static_cast<std::size_t>(end - seed_str) != std::strlen(seed_str)) {
+            std::cerr << "invalid seed string: " << seed_str << std::endl;
+            return false;
+        }
+
+        runner.set_seed(seed);
+        set_seed = true;
+    }
+
+    return true;
+}
+
+bool parse_jobs(int argc, char** argv, int i, bool& set_jobs) {
+    if (strcmp(argv[i], "--jobs") == 0) {
+        if (i + 1 >= argc) {
+            std::cerr << "missing argument to --jobs" << std::endl;
+            return false;
+        }
+
+        char* const jobs_str = argv[i + 1];  // Next argument.
+        char* end = nullptr;
+
+        const auto jobs = std::strtoul(jobs_str, &end, 10);
+
+        if (static_cast<std::size_t>(end - jobs_str) != std::strlen(jobs_str)) {
+            std::cerr << "invalid jobs string: " << jobs_str << std::endl;
+            return false;
+        }
+
+        if (jobs >= UINT_MAX) {
+            std::cerr << "invalid jobs string (too large): " << jobs_str << std::endl;
+        }
+
+        runner.set_jobs(static_cast<unsigned int>(jobs));
+        set_jobs = true;
+    }
+
+    return true;
+}
+
+bool parse_use_fork(int argc, char** argv, int i, bool& set_use_fork) {
+    if (strcmp(argv[i], "--use-fork") == 0) {
+        if (i + 1 >= argc) {
+            std::cerr << "missing argument to --use-fork" << std::endl;
+            return false;
+        }
+
+        char* const use_fork_str = argv[i + 1];  // Next argument.
+        char* end = nullptr;
+
+        const auto flag = std::strtoul(use_fork_str, &end, 10);
+
+        if (static_cast<std::size_t>(end - use_fork_str) != std::strlen(use_fork_str)) {
+            std::cerr << "invalid argument: " << use_fork_str << std::endl;
+            return false;
+        }
+
+        runner.set_use_fork(flag == 0 ? false : true);
+        set_use_fork = true;
+    }
+
+    return true;
+}
+
 }  // namespace
 
 void runner_register_component(void (*fn)(), const char* name) {
@@ -307,73 +385,20 @@ int EXAMPLES_CDECL main(int argc, char** argv) {
     bool set_use_fork = false;
 
     // Simple command-line argument parser.
-    for (int i = 1; i < argc; ++i) {
+    for (int i = 1; i < argc; i += 2) {
         // Permit using a custom seed for reproducibility.
-        if (strcmp(argv[i], "--seed") == 0) {
-            if (i + 1 >= argc) {
-                std::cerr << "missing argument to --seed" << std::endl;
-                return 1;
-            }
-
-            char* const seed_str = argv[++i];  // Next argument.
-            char* end = nullptr;
-
-            const auto seed =
-                static_cast<std::minstd_rand::result_type>(std::strtoul(seed_str, &end, 10));
-
-            if (static_cast<std::size_t>(end - seed_str) != std::strlen(seed_str)) {
-                std::cerr << "invalid seed string: " << seed_str << std::endl;
-                return 1;
-            }
-
-            runner.set_seed(seed);
-            set_seed = true;
+        if (!parse_seed(argc, argv, i, set_seed)) {
+            return EXIT_FAILURE;
         }
 
         // Allow setting job count (e.g. set to 1 for debugging).
-        if (strcmp(argv[i], "--jobs") == 0) {
-            if (i + 1 >= argc) {
-                std::cerr << "missing argument to --jobs" << std::endl;
-                return 1;
-            }
-
-            char* const jobs_str = argv[++i];  // Next argument.
-            char* end = nullptr;
-
-            const auto jobs = std::strtoul(jobs_str, &end, 10);
-
-            if (static_cast<std::size_t>(end - jobs_str) != std::strlen(jobs_str)) {
-                std::cerr << "invalid jobs string: " << jobs_str << std::endl;
-                return 1;
-            }
-
-            if (jobs >= UINT_MAX) {
-                std::cerr << "invalid jobs string (too large): " << jobs_str << std::endl;
-            }
-
-            runner.set_jobs(static_cast<unsigned int>(jobs));
-            set_jobs = true;
+        if (!parse_jobs(argc, argv, i, set_jobs)) {
+            return EXIT_FAILURE;
         }
 
         // Allow disabling use of fork (e.g. disable for debugging).
-        if (strcmp(argv[i], "--use-fork") == 0) {
-            if (i + 1 >= argc) {
-                std::cerr << "missing argument to --use-fork" << std::endl;
-                return 1;
-            }
-
-            char* const use_fork_str = argv[++i];  // Next argument.
-            char* end = nullptr;
-
-            const auto flag = std::strtoul(use_fork_str, &end, 10);
-
-            if (static_cast<std::size_t>(end - use_fork_str) != std::strlen(use_fork_str)) {
-                std::cerr << "invalid argument: " << use_fork_str << std::endl;
-                return 1;
-            }
-
-            runner.set_use_fork(flag == 0 ? false : true);
-            set_use_fork = true;
+        if (!parse_use_fork(argc, argv, i, set_jobs)) {
+            return EXIT_FAILURE;
         }
     }
 
