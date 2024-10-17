@@ -26,6 +26,8 @@
 #include <cstdint>
 #include <cstring>
 #include <iostream>
+#include <iterator>
+#include <numeric>
 #include <queue>
 #include <random>
 #include <thread>
@@ -77,6 +79,8 @@ class runner_type {
     std::minstd_rand gen;
     unsigned int jobs = 0;
     bool use_fork = true;
+    std::vector<std::string> filters;
+    bool verbose = false;
 
     static void run_with_jobs(const std::vector<component>& components, unsigned int jobs) {
         if (jobs == 1) {
@@ -246,6 +250,14 @@ class runner_type {
         this->use_fork = use_fork;
     }
 
+    void add_filter(const char* filter) {
+        this->filters.emplace_back(filter);
+    }
+
+    void set_verbose(bool verbose) {
+        this->verbose = verbose;
+    }
+
     int run() {
         assert(jobs > 0u);
 
@@ -253,9 +265,66 @@ class runner_type {
 
         gen.seed(seed);
 
+        std::vector<component>* all_components[] = {
+            &components,
+            &components_with_instance,
+            &components_for_single,
+            &components_for_replica,
+            &components_for_sharded,
+            &forking_components,
+        };
+
+        // Unconditionally sort to ensure seed consistency after shuffle.
+        for (auto cptr : all_components) {
+            std::sort(cptr->begin(), cptr->end(), [](const component& lhs, const component& rhs) {
+                return std::strcmp(lhs.name, rhs.name) < 0;
+            });
+        }
+
+        // Filter components to be executed to those containing all filter substrings.
+        for (auto filter : filters) {
+            for (auto cptr : all_components) {
+                cptr->erase(std::remove_if(cptr->begin(),
+                                           cptr->end(),
+                                           [&filter](component c) {
+                                               if (std::strstr(c.name, filter.c_str()) != nullptr) {
+                                                   return false;
+                                               }
+                                               return true;
+                                           }),
+                            cptr->end());
+            }
+        }
+
+        // Print the list of components to be executed.
+        if (verbose) {
+            std::vector<bsoncxx::stdx::string_view> names;
+
+            names.reserve(std::accumulate(std::begin(all_components),
+                                          std::end(all_components),
+                                          std::size_t{0},
+                                          [](std::size_t n, const std::vector<component>* cptr) {
+                                              return n + cptr->size();
+                                          }));
+
+            for (auto cptr : all_components) {
+                for (auto c : *cptr) {
+                    names.emplace_back(c.name);
+                }
+            }
+
+            std::sort(names.begin(), names.end());
+
+            std::cout << "API example components to be executed:" << std::endl;
+            for (auto name : names) {
+                std::cout << " - " << name << std::endl;
+            }
+        }
+
         // Prevent ordering dependencies across examples.
-        std::shuffle(components.begin(), components.end(), gen);
-        std::shuffle(forking_components.begin(), forking_components.end(), gen);
+        for (auto cptr : all_components) {
+            std::shuffle(cptr->begin(), cptr->end(), gen);
+        }
 
         run_components();
 
@@ -353,6 +422,42 @@ bool parse_use_fork(int argc, char** argv, int i, bool& set_use_fork) {
     return true;
 }
 
+bool parse_filter(int argc, char** argv, int i) {
+    if (strcmp(argv[i], "--filter") == 0) {
+        if (i + 1 >= argc) {
+            std::cerr << "missing argument to --filter" << std::endl;
+            return false;
+        }
+
+        runner.add_filter(argv[i + 1]);
+    }
+
+    return true;
+}
+
+bool parse_verbose(int argc, char** argv, int i) {
+    if (strcmp(argv[i], "--verbose") == 0) {
+        if (i + 1 >= argc) {
+            std::cerr << "missing argument to --filter" << std::endl;
+            return false;
+        }
+
+        char* const verbose_str = argv[i + 1];  // Next argument.
+        char* end = nullptr;
+
+        const auto verbose = std::strtoul(verbose_str, &end, 10);
+
+        if (static_cast<std::size_t>(end - verbose_str) != std::strlen(verbose_str)) {
+            std::cerr << "invalid verbose string: " << verbose_str << std::endl;
+            return false;
+        }
+
+        runner.set_verbose(verbose != 0u);
+    }
+
+    return true;
+}
+
 }  // namespace
 
 void runner_register_component(void (*fn)(), const char* name) {
@@ -398,6 +503,18 @@ int EXAMPLES_CDECL main(int argc, char** argv) {
 
         // Allow disabling use of fork (e.g. disable for debugging).
         if (!parse_use_fork(argc, argv, i, set_jobs)) {
+            return EXIT_FAILURE;
+        }
+
+        // Allow limiting executed examples to a subset of components.
+        // Only components whose name contains all filters as a substring are executed.
+        if (!parse_filter(argc, argv, i)) {
+            return EXIT_FAILURE;
+        }
+
+        // Allow printing the name of components being executed.
+        // Useful when combined with `--filter`.
+        if (!parse_verbose(argc, argv, i)) {
             return EXIT_FAILURE;
         }
     }
