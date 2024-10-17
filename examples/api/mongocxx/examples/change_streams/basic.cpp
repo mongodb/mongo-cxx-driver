@@ -18,6 +18,7 @@
 
 #include <mongocxx/client.hpp>
 #include <mongocxx/collection.hpp>
+#include <mongocxx/database.hpp>
 #include <mongocxx/uri.hpp>
 
 #include <examples/api/concern.hh>
@@ -28,7 +29,9 @@
 namespace {
 
 // [Example]
-void example(mongocxx::collection coll) {
+void example(mongocxx::database db) {
+    mongocxx::collection coll = db.create_collection("coll");
+
     mongocxx::change_stream stream = coll.watch();
 
     auto result_opt = coll.insert_one(bsoncxx::from_json(R"({"x": 1})"));
@@ -48,8 +51,8 @@ void example(mongocxx::collection coll) {
             EXPECT(change["operationType"].get_string().value.compare("insert") == 0);
 
             EXPECT(change["ns"]);
-            EXPECT(change["ns"]["db"].get_string().value.compare("db") == 0);
-            EXPECT(change["ns"]["coll"].get_string().value.compare("coll") == 0);
+            EXPECT(change["ns"]["db"].get_string().value == db.name());
+            EXPECT(change["ns"]["coll"].get_string().value == coll.name());
 
             EXPECT(change["fullDocument"]);
             EXPECT(change["fullDocument"]["x"]);
@@ -69,8 +72,8 @@ RUNNER_REGISTER_COMPONENT_FOR_REPLICA() {
     mongocxx::client client{mongocxx::uri{}};
 
     {
-        db_lock guard{client, "db"};
+        db_lock guard{client, EXAMPLES_COMPONENT_NAME_STR};
 
-        example(set_rw_concern_majority(guard.get()).create_collection("coll"));
+        example(set_rw_concern_majority(guard.get()));
     }
 }

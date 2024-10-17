@@ -20,6 +20,7 @@
 #include <mongocxx/client.hpp>
 #include <mongocxx/client_session.hpp>
 #include <mongocxx/collection.hpp>
+#include <mongocxx/database.hpp>
 #include <mongocxx/exception/exception.hpp>
 #include <mongocxx/uri.hpp>
 
@@ -31,7 +32,9 @@
 namespace {
 
 // [Example]
-void example(mongocxx::client_session session, mongocxx::collection coll) {
+void example(mongocxx::client_session session, mongocxx::database db) {
+    mongocxx::collection coll = db.create_collection("coll");
+
     mongocxx::pipeline pipeline;
 
     pipeline.match(
@@ -82,11 +85,12 @@ RUNNER_REGISTER_COMPONENT_FOR_REPLICA() {
     mongocxx::client client{mongocxx::uri{}};
 
     try {
-        db_lock guard{client, "db"};
+        db_lock guard{client, EXAMPLES_COMPONENT_NAME_STR};
 
-        auto coll = set_rw_concern_majority(guard.get().create_collection("coll"));
+        auto db = set_rw_concern_majority(guard.get());
+        auto coll = db["coll"];
 
-        example(client.start_session(), coll);
+        example(client.start_session(), db);
 
         EXPECT(coll.count_documents(bsoncxx::from_json(R"({"x": {"$exists": 1}})")) == 3);
 
