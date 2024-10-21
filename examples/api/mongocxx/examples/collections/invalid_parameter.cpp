@@ -12,15 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <algorithm>
+#include <chrono>
 
-#include <bsoncxx/document/value.hpp>
-#include <bsoncxx/json.hpp>
-#include <bsoncxx/types.hpp>
+#include <bsoncxx/builder/basic/document.hpp>
 
 #include <mongocxx/client.hpp>
-#include <mongocxx/collection.hpp>
 #include <mongocxx/database.hpp>
+#include <mongocxx/exception/error_code.hpp>
+#include <mongocxx/exception/exception.hpp>
 #include <mongocxx/uri.hpp>
 
 #include <examples/api/concern.hh>
@@ -32,10 +31,17 @@ namespace {
 
 // [Example]
 void example(mongocxx::collection coll) {
-    bsoncxx::document::value result = coll.create_index(bsoncxx::from_json(R"({"key": 1})"));
+    mongocxx::options::find opts;
 
-    EXPECT(result["name"]);
-    EXPECT(result["name"].get_string().value.compare("key_1") == 0);
+    opts.max_await_time(std::chrono::milliseconds(-1));
+
+    try {
+        auto name = coll.find(bsoncxx::builder::basic::make_document(), opts);
+
+        EXPECT(false && "should not reach this point");
+    } catch (const mongocxx::exception& ex) {
+        EXPECT(ex.code() == mongocxx::error_code::k_invalid_parameter);
+    }
 }
 // [Example]
 
@@ -47,18 +53,6 @@ RUNNER_REGISTER_COMPONENT_FOR_SINGLE() {
     {
         db_lock guard{client, EXAMPLES_COMPONENT_NAME_STR};
 
-        auto coll = set_rw_concern_majority(guard.get().create_collection("coll"));
-
-        auto count_indexes = [&coll] {
-            auto cursor = coll.list_indexes();
-
-            return std::distance(cursor.begin(), cursor.end());
-        };
-
-        EXPECT(count_indexes() == 1);  // _id_
-
-        example(coll);
-
-        EXPECT(count_indexes() == 2);  // _id_, key_1
+        example(set_rw_concern_majority(guard.get()).create_collection("coll"));
     }
 }
