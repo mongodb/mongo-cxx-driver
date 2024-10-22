@@ -43,6 +43,7 @@ sub _doxygen_rsync {
     );
     $ENV{APIDOCSPATH} = "$tmpdir/api";
     _try_run(qw{etc/patch-apidocs-index-pages.py})
+    _try_run(qw{etc/patch-apidocs-current-redirects.py})
 }
 
 sub main {
