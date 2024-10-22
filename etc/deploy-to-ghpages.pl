@@ -29,7 +29,7 @@ sub _pushd {
 
 sub _hugo_rsync {
     my $tmpdir = shift;
-    _try_run( qw{rsync -Cavz --delete --exclude=/api --exclude=/.git* --exclude=CNAME build/hugo/},
+    _try_run( qw{rsync -Cavz --delete --exclude=/api --exclude=/.git* --exclude=CNAME --exclude=sitemap.xml build/hugo/},
         $tmpdir );
 }
 
@@ -42,8 +42,8 @@ sub _doxygen_rsync {
         "build/docs/api/", "$tmpdir/api/"
     );
     $ENV{APIDOCSPATH} = "$tmpdir/api";
-    _try_run(qw{etc/patch-apidocs-index-pages.py})
-    _try_run(qw{etc/patch-apidocs-current-redirects.py})
+    _try_run(qw{etc/patch-apidocs-index-pages.py});
+    _try_run(qw{etc/patch-apidocs-current-redirects.py});
 }
 
 sub main {
