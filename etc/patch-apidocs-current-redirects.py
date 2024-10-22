@@ -15,7 +15,8 @@
 # limitations under the License.
 
 """
-Patches the root-level index.html file in each API doc site to match the state of the latest API doc site.
+Patches HTML files within the latest API doc directory (under APIDOCSPATH) to
+redirect users from `/api/current` to canonical URLs under `/api/mongocxx-X.Y.Z`.
 """
 
 from concurrent.futures import ProcessPoolExecutor
