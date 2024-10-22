@@ -124,7 +124,8 @@ def insert_current_redirect(apidocspath, page, latest):
 
             m = end_of_head_re.match(line)
             if m:
-                indent = m.group(1) + ' '
+                # Patched index.html has 1-space indentation. The rest have none.
+                indent = '' if m.group(1) == '' else '  '
                 end_of_head = idx
                 break
 
