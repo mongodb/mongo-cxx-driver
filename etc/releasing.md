@@ -646,7 +646,7 @@ These commands will update the `gh-pages` branch and push the changes to the rem
 > [!WARNING]
 > Build and release artifacts may still be present in the repository after this step. Do not accidentally commit these files into the repository in the following steps!
 
-### Update Symlinks
+### Update gh-pages
 
 > [!IMPORTANT]
 > Symlink updates only apply to stable releases! Release candidates and other unstable releases do not require updating symlinks.
@@ -673,10 +673,27 @@ current     -> mongocxx-v3
 mongocxx-v3 -> mongocxx-X.Y.Z
 ```
 
-Commit and push this change to the `gh-pages` branch:
+Add a new entry to the `sitemap_index.xml` file referencing the sitemap for `api/mongocxx-X.Y.Z`.
+Set `<lastmod>` for both the new entry and the `/current` sitemap entry to the current date:
+
+```xml
+...
+<!-- API Documentation Pages. -->
+<sitemap>
+  <loc>https://mongocxx.org/api/current/sitemap.xml</loc>
+  <lastmod>YYYY-MM-DD</lastmod>
+</sitemap>
+<sitemap>
+  <loc>https://mongocxx.org/api/mongocxx-X.Y.Z/sitemap.xml</loc>
+  <lastmod>YYYY-MM-DD</lastmod>
+</sitemap>
+...
+```
+
+Commit and push these change to the `gh-pages` branch:
 
 ```bash
-git commit -m "Update symlink for rX.Y.Z"
+git commit -m "Update symlink and sitemap for rX.Y.Z"
 ```
 
 Wait for [GitHub Actions](https://github.com/mongodb/mongo-cxx-driver/actions) to finish deploying the updated pages.
