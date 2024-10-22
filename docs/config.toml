@@ -5,6 +5,7 @@ theme = "mongodb"
 canonifyurls = false
 relativeurls = false
 publishdir = "../build/hugo"
+disableKinds = ["taxonomy", "term"]
 
 [blackfriday]
   plainIdAnchors = true
