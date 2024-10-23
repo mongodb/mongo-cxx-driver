@@ -5,6 +5,7 @@ theme = "mongodb"
 canonifyurls = false
 relativeurls = false
 publishdir = "../build/hugo"
+disableKinds = ["taxonomy", "term"]
 
 [blackfriday]
   plainIdAnchors = true
@@ -18,7 +19,7 @@ publishdir = "../build/hugo"
 
 [[menu.main]]
     name = "API Documentation"
-    pre = "<i class='fa fa-file-text-o'></i>"
+    pre = "<i class='fa fa-book'></i>"
     weight = 90
     identifier = "apiDocs"
     url = "https://mongocxx.org/api/current"
