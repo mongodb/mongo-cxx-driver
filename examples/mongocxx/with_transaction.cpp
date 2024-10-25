@@ -66,14 +66,10 @@ int EXAMPLES_CDECL main() {
     // uriString = 'mongodb://mongos0.example.com:27017,mongos1.example.com:27017/'
     mongocxx::client client{mongocxx::uri{"mongodb://localhost/?replicaSet=repl0"}};
 
+    // Prepare to set majority write explicitly. Note: on Atlas deployments this won't always be
+    // needed. The suggested Atlas connection string includes majority write concern by default.
     write_concern wc_majority{};
     wc_majority.acknowledge_level(write_concern::level::k_majority);
-
-    read_concern rc_local{};
-    rc_local.acknowledge_level(read_concern::level::k_local);
-
-    read_preference rp_primary{};
-    rp_primary.mode(read_preference::read_mode::k_primary);
 
     // Prereq: Create collections.
 
@@ -107,8 +103,6 @@ int EXAMPLES_CDECL main() {
     try {
         options::transaction opts;
         opts.write_concern(wc_majority);
-        opts.read_concern(rc_local);
-        opts.read_preference(rp_primary);
 
         session.with_transaction(callback, opts);
     } catch (const mongocxx::exception& e) {
