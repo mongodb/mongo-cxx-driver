@@ -58,6 +58,14 @@ functions:
         local_files_include_filter: cxx-noabi/logs/**/log.txt
         permissions: public-read
         remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${execution}/abi-compliance-check/noabi/
+  abi-prohibited-symbols:
+    command: subprocess.exec
+    type: test
+    params:
+      binary: bash
+      args:
+        - -c
+        - mongo-cxx-driver/.evergreen/scripts/abi-prohibited-symbols-test.sh
   abidiff:
     - command: subprocess.exec
       type: setup
