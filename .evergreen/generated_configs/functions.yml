@@ -1,0 +1,8 @@
+functions:
+  stub:
+    - command: subprocess.exec
+      params:
+        binary: bash
+        args:
+          - -c
+          - echo "stub!"

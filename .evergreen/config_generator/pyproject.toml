@@ -1,0 +1,5 @@
+[project]
+name = "config_generator"
+version = "0.1.0"
+description = "For development purposes only"
+requires-python = ">=3.10"

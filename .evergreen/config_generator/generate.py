@@ -3,6 +3,7 @@
 # Generates *.yml files under .evergreen/generated_configs.
 
 
+import os
 import sys
 
 from importlib import import_module
@@ -20,6 +21,9 @@ def main():
     # Requires Python 3.10 or newer.
     assert sys.version_info.major >= 3
     assert sys.version_info.minor >= 10
+
+    # Permit `import config_generator.*`.
+    sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
     for name in GENERATOR_NAMES:
         m = import_module(f"config_generator.generators.{name}")
