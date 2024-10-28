@@ -163,6 +163,25 @@ functions:
             clang --version || true
             cmake --version || true
             openssl version || true
+  start_mongod:
+    - command: subprocess.exec
+      type: setup
+      params:
+        binary: bash
+        include_expansions_in_env:
+          - build_variant
+          - mongodb_version
+          - AUTH
+          - ORCHESTRATION_FILE
+          - REQUIRE_API_VERSION
+          - TOPOLOGY
+        args:
+          - -c
+          - mongo-cxx-driver/.evergreen/scripts/start-mongod.sh
+    - command: expansions.update
+      type: setup
+      params:
+        file: drivers-evergreen-tools/mo-expansion.yml
   stub:
     - command: subprocess.exec
       params:
