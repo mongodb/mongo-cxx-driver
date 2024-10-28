@@ -103,6 +103,15 @@ functions:
         local_files_include_filter: cxx-noabi/*.txt
         permissions: public-read
         remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${execution}/abidiff/noabi/
+  backtrace:
+    command: subprocess.exec
+    type: system
+    params:
+      binary: bash
+      working_dir: mongo-cxx-driver
+      args:
+        - -c
+        - etc/debug-core-evergreen.sh
   build_mongohouse:
     command: subprocess.exec
     type: setup
