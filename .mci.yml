@@ -53,21 +53,6 @@ variables:
 #######################################
 
 functions:
-    "test auth":
-        - command: shell.exec
-          params:
-              shell: bash
-              working_dir: "mongo-cxx-driver"
-              script: |
-
-                  export MONGOC_INSTALL_PREFIX=$(pwd)/../mongoc
-                  export MONGOCXX_INSTALL_PREFIX=$(pwd)/build/install
-                  export LIB_DIR=${lib_dir}
-                  export BUILD_TYPE=${build_type}
-                  export BUILD_DIR=$(pwd)/build
-                  export URI="mongodb://bob:pwd123@localhost"
-                  ./.evergreen/connect.sh
-
     "test atlas connectivity":
         - command: shell.exec
           params:
