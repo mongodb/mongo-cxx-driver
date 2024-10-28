@@ -36,6 +36,14 @@ buildvariants:
     tasks:
       - name: tg-atlas-search-indexes-7.0
       - name: tg-atlas-search-indexes-8.0
+  - name: auth-matrix
+    display_name: auth-matrix
+    display_tasks:
+      - name: auth-matrix
+        execution_tasks:
+          - .auth
+    tasks:
+      - name: .auth
   - name: benchmarks
     display_name: benchmarks
     tasks:

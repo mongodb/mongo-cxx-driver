@@ -104,6 +104,63 @@ tasks:
         vars:
           build_type: Debug
       - func: test-search-index-helpers
+  - name: auth-ubuntu2004-debug-shared-latest-single
+    run_on: ubuntu2004-large
+    tags: [auth, ubuntu2004, debug, shared, latest, single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          AUTH: auth
+          mongodb_version: latest
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          ENABLE_CODE_COVERAGE: "ON"
+      - func: test auth
+      - func: test atlas connectivity
+  - name: auth-windows-2019-vs2017-x64-debug-shared-latest-single
+    run_on: windows-vsCurrent-large
+    tags: [auth, windows-vsCurrent, vs2017x64, debug, shared, latest, single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: generator, value: Visual Studio 15 2017 }
+            - { key: platform, value: x64 }
+      - func: setup
+      - func: start_mongod
+        vars:
+          AUTH: auth
+          mongodb_version: latest
+      - func: fetch_c_driver_source
+      - func: compile
+      - func: test auth
+      - func: test atlas connectivity
+  - name: auth-windows-2019-vs2019-x64-debug-shared-latest-single
+    run_on: windows-vsCurrent-large
+    tags: [auth, windows-vsCurrent, vs2019x64, debug, shared, latest, single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: generator, value: Visual Studio 16 2019 }
+            - { key: platform, value: x64 }
+      - func: setup
+      - func: start_mongod
+        vars:
+          AUTH: auth
+          mongodb_version: latest
+      - func: fetch_c_driver_source
+      - func: compile
+      - func: test auth
+      - func: test atlas connectivity
   - name: benchmarks
     run_on: rhel90-dbx-perf-large
     tags: [benchmarks, rhel90-dbx-perf]

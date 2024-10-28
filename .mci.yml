@@ -5,22 +5,22 @@
 exec_timeout_secs: 3600
 
 include:
-  - filename: .evergreen/generated_configs/functions.yml
-  - filename: .evergreen/generated_configs/tasks.yml
-  - filename: .evergreen/generated_configs/task_groups.yml
-  - filename: .evergreen/generated_configs/variants.yml
+    - filename: .evergreen/generated_configs/functions.yml
+    - filename: .evergreen/generated_configs/tasks.yml
+    - filename: .evergreen/generated_configs/task_groups.yml
+    - filename: .evergreen/generated_configs/variants.yml
 
 #######################################
 #              Post Task              #
 #######################################
 
 post:
-  - func: "stop_mongod"
-  - func: "backtrace"
-  # Workaround for CXX-2040
-  # - func: "upload working dir"
-  - func: "upload mongo orchestration artifacts"
-  - func: "upload code coverage"
+    - func: "stop_mongod"
+    - func: "backtrace"
+    # Workaround for CXX-2040
+    # - func: "upload working dir"
+    - func: "upload mongo orchestration artifacts"
+    - func: "upload code coverage"
 
 #######################################
 #               Tasks                 #
@@ -29,157 +29,146 @@ post:
 tasks:
     - name: compile_and_test_with_shared_libs
       commands:
-        - func: "setup"
-        - func: "start_mongod"
-        - func: "fetch_c_driver_source"
-        - func: "compile"
-          vars:
-              RUN_DISTCHECK: 1
-        - func: "fetch-det"
-        - func: "run_kms_servers"
-        # Call "install_c_driver" before "test" to build static C driver libraries. Example projects require static C driver libraries.
-        - func: "install_c_driver"
-        - func: "test"
-          vars:
-              MONGOCXX_TEST_TOPOLOGY: single
+          - func: "setup"
+          - func: "start_mongod"
+          - func: "fetch_c_driver_source"
+          - func: "compile"
+            vars:
+                RUN_DISTCHECK: 1
+          - func: "fetch-det"
+          - func: "run_kms_servers"
+          # Call "install_c_driver" before "test" to build static C driver libraries. Example projects require static C driver libraries.
+          - func: "install_c_driver"
+          - func: "test"
+            vars:
+                MONGOCXX_TEST_TOPOLOGY: single
 
     - name: compile_and_test_with_shared_libs_extra_alignment
       commands:
-        - func: "setup"
-        - func: "start_mongod"
-        - func: "fetch_c_driver_source"
-          vars:
-              BSON_EXTRA_ALIGNMENT: 1
-        - func: "compile"
-        - func: "fetch-det"
-        - func: "run_kms_servers"
-        - func: "install_c_driver"
-          vars:
-              BSON_EXTRA_ALIGNMENT: 1
-        - func: "test"
-          vars:
-              MONGOCXX_TEST_TOPOLOGY: single
+          - func: "setup"
+          - func: "start_mongod"
+          - func: "fetch_c_driver_source"
+            vars:
+                BSON_EXTRA_ALIGNMENT: 1
+          - func: "compile"
+          - func: "fetch-det"
+          - func: "run_kms_servers"
+          - func: "install_c_driver"
+            vars:
+                BSON_EXTRA_ALIGNMENT: 1
+          - func: "test"
+            vars:
+                MONGOCXX_TEST_TOPOLOGY: single
 
     - name: compile_and_test_with_shared_libs_cxx20
       commands:
-        - func: "setup"
-        - func: "start_mongod"
-        - func: "fetch_c_driver_source"
-        - func: "compile"
-          vars:
-              RUN_DISTCHECK: 1
-              REQUIRED_CXX_STANDARD: 20
-        - func: "fetch-det"
-        - func: "run_kms_servers"
-        - func: "install_c_driver"
-        - func: "test"
-          vars:
-              example_projects_cxx_standard: 20
-              MONGOCXX_TEST_TOPOLOGY: single
-              REQUIRED_CXX_STANDARD: 20
+          - func: "setup"
+          - func: "start_mongod"
+          - func: "fetch_c_driver_source"
+          - func: "compile"
+            vars:
+                RUN_DISTCHECK: 1
+                REQUIRED_CXX_STANDARD: 20
+          - func: "fetch-det"
+          - func: "run_kms_servers"
+          - func: "install_c_driver"
+          - func: "test"
+            vars:
+                example_projects_cxx_standard: 20
+                MONGOCXX_TEST_TOPOLOGY: single
+                REQUIRED_CXX_STANDARD: 20
 
     - name: compile_and_test_with_shared_libs_extra_alignment_cxx20
       commands:
-        - func: "setup"
-        - func: "start_mongod"
-        - func: "fetch_c_driver_source"
-          vars:
-              BSON_EXTRA_ALIGNMENT: 1
-        - func: "compile"
-          vars:
-              REQUIRED_CXX_STANDARD: 20
-        - func: "fetch-det"
-        - func: "run_kms_servers"
-        - func: "install_c_driver"
-          vars:
-              BSON_EXTRA_ALIGNMENT: 1
-        - func: "test"
-          vars:
-              example_projects_cxx_standard: 20
-              MONGOCXX_TEST_TOPOLOGY: single
-              REQUIRED_CXX_STANDARD: 20
-
-    - name: compile_and_test_auth_with_shared_libs
-      commands:
-        - func: "setup"
-        - func: "start_mongod"
-          vars:
-              AUTH: auth
-        - func: "fetch_c_driver_source"
-        - func: "compile"
-        - func: "test auth"
-        - func: "test atlas connectivity"
+          - func: "setup"
+          - func: "start_mongod"
+          - func: "fetch_c_driver_source"
+            vars:
+                BSON_EXTRA_ALIGNMENT: 1
+          - func: "compile"
+            vars:
+                REQUIRED_CXX_STANDARD: 20
+          - func: "fetch-det"
+          - func: "run_kms_servers"
+          - func: "install_c_driver"
+            vars:
+                BSON_EXTRA_ALIGNMENT: 1
+          - func: "test"
+            vars:
+                example_projects_cxx_standard: 20
+                MONGOCXX_TEST_TOPOLOGY: single
+                REQUIRED_CXX_STANDARD: 20
 
     - name: compile_and_test_with_static_libs
       commands:
-        - func: "setup"
-        - func: "start_mongod"
-        - func: "fetch_c_driver_source"
-        - func: "compile"
-          vars:
-              USE_STATIC_LIBS: 1
-              RUN_DISTCHECK: 1
-        - func: "fetch-det"
-        - func: "run_kms_servers"
-        - func: "install_c_driver"
-        - func: "test"
-          vars:
-              MONGOCXX_TEST_TOPOLOGY: single
-              USE_STATIC_LIBS: 1
+          - func: "setup"
+          - func: "start_mongod"
+          - func: "fetch_c_driver_source"
+          - func: "compile"
+            vars:
+                USE_STATIC_LIBS: 1
+                RUN_DISTCHECK: 1
+          - func: "fetch-det"
+          - func: "run_kms_servers"
+          - func: "install_c_driver"
+          - func: "test"
+            vars:
+                MONGOCXX_TEST_TOPOLOGY: single
+                USE_STATIC_LIBS: 1
 
     - name: compile_and_test_with_static_libs_extra_alignment
       commands:
-        - func: "setup"
-        - func: "start_mongod"
-        - func: "fetch_c_driver_source"
-          vars:
-              BSON_EXTRA_ALIGNMENT: 1
-        - func: "compile"
-          vars:
-              USE_STATIC_LIBS: 1
-        - func: "fetch-det"
-        - func: "run_kms_servers"
-        - func: "install_c_driver"
-          vars:
-              BSON_EXTRA_ALIGNMENT: 1
-        - func: "test"
-          vars:
-              MONGOCXX_TEST_TOPOLOGY: single
-              USE_STATIC_LIBS: 1
+          - func: "setup"
+          - func: "start_mongod"
+          - func: "fetch_c_driver_source"
+            vars:
+                BSON_EXTRA_ALIGNMENT: 1
+          - func: "compile"
+            vars:
+                USE_STATIC_LIBS: 1
+          - func: "fetch-det"
+          - func: "run_kms_servers"
+          - func: "install_c_driver"
+            vars:
+                BSON_EXTRA_ALIGNMENT: 1
+          - func: "test"
+            vars:
+                MONGOCXX_TEST_TOPOLOGY: single
+                USE_STATIC_LIBS: 1
 
     - name: compile_and_test_with_shared_libs_replica_set
       commands:
-        - func: "setup"
-        - func: "start_mongod"
-          vars:
-              TOPOLOGY: "replica_set"
-        - func: "fetch_c_driver_source"
-        - func: "compile"
-          vars:
-              RUN_DISTCHECK: 1
-        - func: "fetch-det"
-        - func: "run_kms_servers"
-        - func: "install_c_driver"
-        - func: "test"
-          vars:
-              MONGOCXX_TEST_TOPOLOGY: replica
+          - func: "setup"
+          - func: "start_mongod"
+            vars:
+                TOPOLOGY: "replica_set"
+          - func: "fetch_c_driver_source"
+          - func: "compile"
+            vars:
+                RUN_DISTCHECK: 1
+          - func: "fetch-det"
+          - func: "run_kms_servers"
+          - func: "install_c_driver"
+          - func: "test"
+            vars:
+                MONGOCXX_TEST_TOPOLOGY: replica
 
     - name: compile_and_test_with_shared_libs_sharded_cluster
       commands:
-        - func: "setup"
-        - func: "start_mongod"
-          vars:
-              TOPOLOGY: "sharded_cluster"
-        - func: "fetch_c_driver_source"
-        - func: "compile"
-          vars:
-              RUN_DISTCHECK: 1
-        - func: "fetch-det"
-        - func: "run_kms_servers"
-        - func: "install_c_driver"
-        - func: "test"
-          vars:
-              MONGOCXX_TEST_TOPOLOGY: sharded
+          - func: "setup"
+          - func: "start_mongod"
+            vars:
+                TOPOLOGY: "sharded_cluster"
+          - func: "fetch_c_driver_source"
+          - func: "compile"
+            vars:
+                RUN_DISTCHECK: 1
+          - func: "fetch-det"
+          - func: "run_kms_servers"
+          - func: "install_c_driver"
+          - func: "test"
+            vars:
+                MONGOCXX_TEST_TOPOLOGY: sharded
 
     # Auto downloading the C driver in the C++ build does not currently include
     # support for libmongocrypt, therefore it is not configured with
@@ -187,35 +176,35 @@ tasks:
     # a manually configured C driver, hence the need to seperate this task.
     - name: compile_and_test_with_shared_libs_replica_set_with_libmongocrypt
       commands:
-        - func: "setup"
-        - func: "start_mongod"
-          vars:
-              TOPOLOGY: "replica_set"
-        - func: "install_c_driver"
-        - func: "compile"
-          vars:
-              RUN_DISTCHECK: 1
-        - func: "fetch-det"
-        - func: "run_kms_servers"
-        - func: "test"
-          vars:
-              MONGOCXX_TEST_TOPOLOGY: replica
+          - func: "setup"
+          - func: "start_mongod"
+            vars:
+                TOPOLOGY: "replica_set"
+          - func: "install_c_driver"
+          - func: "compile"
+            vars:
+                RUN_DISTCHECK: 1
+          - func: "fetch-det"
+          - func: "run_kms_servers"
+          - func: "test"
+            vars:
+                MONGOCXX_TEST_TOPOLOGY: replica
 
     - name: compile_and_test_with_shared_libs_sharded_cluster_with_libmongocrypt
       commands:
-        - func: "setup"
-        - func: "start_mongod"
-          vars:
-              TOPOLOGY: "sharded_cluster"
-        - func: "install_c_driver"
-        - func: "compile"
-          vars:
-              RUN_DISTCHECK: 1
-        - func: "fetch-det"
-        - func: "run_kms_servers"
-        - func: "test"
-          vars:
-              MONGOCXX_TEST_TOPOLOGY: sharded
+          - func: "setup"
+          - func: "start_mongod"
+            vars:
+                TOPOLOGY: "sharded_cluster"
+          - func: "install_c_driver"
+          - func: "compile"
+            vars:
+                RUN_DISTCHECK: 1
+          - func: "fetch-det"
+          - func: "run_kms_servers"
+          - func: "test"
+            vars:
+                MONGOCXX_TEST_TOPOLOGY: sharded
 
 #######################################
 #           Buildvariants             #
@@ -576,40 +565,6 @@ buildvariants:
           ENABLE_CODE_COVERAGE: ON
       tasks:
           - name: compile_and_test_with_shared_libs_sharded_cluster_with_libmongocrypt
-
-    - name: integration-auth-ubuntu2004-latest-single
-      display_name: "Ubuntu 20.04 Debug Latest Auth"
-      run_on: ubuntu2004-large
-      expansions:
-          mongodb_version: "latest"
-          build_type: "Debug"
-          ENABLE_CODE_COVERAGE: ON
-      tasks:
-          - name: compile_and_test_auth_with_shared_libs
-
-    - name: integration-auth-vs2017-latest-single
-      display_name: "Windows (VS 2017) Debug Latest Auth"
-      run_on: windows-vsCurrent-large
-      expansions:
-          mongodb_version: "latest"
-          build_type: "Debug" # Same for Windows and Linux
-          generator: Visual Studio 15 2017
-          platform: x64
-          example_projects_cxx_standard: 17
-      tasks:
-          - name: compile_and_test_auth_with_shared_libs
-
-    - name: integration-auth-vs2019-latest-single
-      display_name: "Windows (VS 2019) Debug Latest Auth"
-      run_on: windows-vsCurrent-large
-      expansions:
-          mongodb_version: "latest"
-          build_type: "Debug" # Same for Windows and Linux
-          generator: Visual Studio 16 2019
-          platform: x64
-          example_projects_cxx_standard: 17
-      tasks:
-          - name: compile_and_test_auth_with_shared_libs
 
     - name: integration-mongocryptd-ubuntu2004-latest
       display_name: "Ubuntu 20.04 Debug (MongoDB Latest) with mongocryptd"

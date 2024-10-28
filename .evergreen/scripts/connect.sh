@@ -3,7 +3,6 @@
 set -o errexit
 set -o pipefail
 
-LIB_DIR=${LIB_DIR:-"lib"}
 BUILD_TYPE=${BUILD_TYPE:-"Debug"}
 
 print_usage_and_exit() {
@@ -18,7 +17,7 @@ print_usage_and_exit() {
     BUILD_TYPE="Debug" \\
     BUILD_DIR=$(pwd)/cmake-build \\
     URI="mongodb://localhost:27017/?" \\
-        ./.evergreen/scripts/connect.sh
+        .evergreen/scripts/connect.sh
 EOF
   exit 1
 }
@@ -39,8 +38,8 @@ fi
 # Use PATH / LD_LIBRARY_PATH / DYLD_LIBRARY_PATH to inform the tests where to find
 # mongoc library dependencies on Windows / Linux / Mac OS, respectively.
 export PATH=$PATH:$MONGOC_INSTALL_PREFIX/bin
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$MONGOC_INSTALL_PREFIX/$LIB_DIR/
-export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:$MONGOC_INSTALL_PREFIX/$LIB_DIR/
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$MONGOC_INSTALL_PREFIX/lib
+export DYLD_LIBRARY_PATH=$DYLD_LIBRARY_PATH:$MONGOC_INSTALL_PREFIX/lib
 
 # Windows also needs to be informed where to find mongocxx library dependencies.
 export PATH=$PATH:$BUILD_DIR/src/bsoncxx/$BUILD_TYPE

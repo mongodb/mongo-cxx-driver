@@ -539,14 +539,13 @@ functions:
         - |
           export MONGOC_INSTALL_PREFIX=$(pwd)/../mongoc
           export MONGOCXX_INSTALL_PREFIX=$(pwd)/build/install
-          export LIB_DIR=${lib_dir}
           export BUILD_TYPE=${build_type}
           export BUILD_DIR=$(pwd)/build
 
           # The atlas_serverless_uri expansion is set in the Evergreen project settings.
           export URI="${atlas_serverless_uri}"
 
-          ./.evergreen/scripts/connect.sh
+          .evergreen/scripts/connect.sh
   test auth:
     command: subprocess.exec
     type: test
@@ -558,11 +557,11 @@ functions:
         - |
           export MONGOC_INSTALL_PREFIX=$(pwd)/../mongoc
           export MONGOCXX_INSTALL_PREFIX=$(pwd)/build/install
-          export LIB_DIR=${lib_dir}
           export BUILD_TYPE=${build_type}
           export BUILD_DIR=$(pwd)/build
           export URI="mongodb://bob:pwd123@localhost"
-          ./.evergreen/scripts/connect.sh
+
+          .evergreen/scripts/connect.sh
   test-search-index-helpers:
     command: subprocess.exec
     type: test
