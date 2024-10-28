@@ -17,3 +17,7 @@ jira_creds.txt
 
 # Hugo artifacts.
 .hugo_build.lock
+
+# uv (Python)
+.python-version
+.venv
