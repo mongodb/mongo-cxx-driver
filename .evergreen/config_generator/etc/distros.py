@@ -37,7 +37,7 @@ class Distro(BaseModel):
     @validator('os_ver')
     @classmethod
     def validate_os_ver(cls, value):
-        return Version(value)
+        return value == 'latest' or Version(value)
 
 # See: https://evergreen.mongodb.com/distros
 # pylint: disable=line-too-long
@@ -74,6 +74,9 @@ RHEL_DISTROS = [
     Distro(name='rhel87-small', os='rhel', os_type='linux', os_ver='8.7', size='small'),
     Distro(name='rhel90-large', os='rhel', os_type='linux', os_ver='9.0', size='large'),
     Distro(name='rhel90-small', os='rhel', os_type='linux', os_ver='9.0', size='small'),
+
+    Distro(name='rhel8-latest-large', os='rhel', os_type='linux', os_ver='latest', size='large'),
+    Distro(name='rhel8-latest-small', os='rhel', os_type='linux', os_ver='latest', size='small'),
 ]
 
 RHEL_ARM64_DISTROS = [
