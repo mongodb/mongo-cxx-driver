@@ -19,3 +19,12 @@ buildvariants:
       cxx_standard: "17"
     tasks:
       - name: tg-abi-stability
+  - name: atlas-search-indexes-matrix
+    display_name: atlas-search-indexes-matrix
+    display_tasks:
+      - name: atlas-search-indexes-matrix
+        execution_tasks:
+          - .atlas-search-indexes
+    tasks:
+      - name: tg-atlas-search-indexes-7.0
+      - name: tg-atlas-search-indexes-8.0

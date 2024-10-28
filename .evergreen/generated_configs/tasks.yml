@@ -14,3 +14,21 @@ tasks:
     tags: [abi-stability, abidiff, ubuntu2204]
     commands:
       - func: abidiff
+  - name: atlas-search-indexes-7.0
+    run_on: ubuntu2004-large
+    tags: [atlas-search-indexes, ubuntu2004]
+    commands:
+      - func: install_c_driver
+      - func: compile
+        vars:
+          build_type: Debug
+      - func: test-search-index-helpers
+  - name: atlas-search-indexes-8.0
+    run_on: ubuntu2004-large
+    tags: [atlas-search-indexes, ubuntu2004]
+    commands:
+      - func: install_c_driver
+      - func: compile
+        vars:
+          build_type: Debug
+      - func: test-search-index-helpers
