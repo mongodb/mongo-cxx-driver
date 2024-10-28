@@ -63,6 +63,24 @@ tasks:
     commands:
       - func: setup
       - func: lint
+  - name: packaging-debian
+    run_on: debian12-latest-large
+    tags: [packaging, debian12-latest]
+    commands:
+      - func: setup
+      - func: build-package-debian
+  - name: packaging-debian-mnmlstc
+    run_on: debian12-latest-large
+    tags: [packaging, debian12-latest]
+    commands:
+      - func: setup
+      - func: build-package-debian-mnmlstc
+  - name: packaging-rpm
+    run_on: rhel92-arm64-large
+    tags: [packaging, rhel92-arm64]
+    commands:
+      - func: setup
+      - func: build-package-rpm
   - name: silk
     run_on: rhel8-latest-small
     tags: [silk, rhel8-latest]

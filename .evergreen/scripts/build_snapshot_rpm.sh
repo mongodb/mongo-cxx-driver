@@ -25,7 +25,7 @@ set -o errexit
 
 for arg in "$@"; do
   if [ "$arg" = "-h" ]; then
-    echo "Usage: ./.evergreen-old/build_snapshot_rpm.sh"
+    echo "Usage: ./.evergreen/build_snapshot_rpm.sh"
     echo ""
     echo "  This script is used to build a .rpm package directly from a snapshot of the"
     echo "  current repository."
@@ -60,9 +60,9 @@ if [ -f "${spec_file}" ]; then
   echo "Found old spec file (${spec_file})...removing"
   rm -f  ${spec_file}
 fi
-cp "$(pwd)/.evergreen-old/${package}.spec" ..
-if [ -f .evergreen-old/spec.patch ]; then
-  patch -d .. -p0 -i $(pwd)/.evergreen-old/spec.patch
+cp "$(pwd)/.evergreen/${package}.spec" ..
+if [ -f .evergreen/spec.patch ]; then
+  patch -d .. -p0 -i $(pwd)/.evergreen/spec.patch
 fi
 
 changelog_package=$(rpmspec --srpm -q --qf "%{name}" ${spec_file})
