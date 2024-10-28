@@ -247,14 +247,29 @@ def make_distro_str(distro_name, compiler, arch) -> str:
 
 def to_cc(compiler):
     return {
-        'vs2013x64': 'Visual Studio 12 2013 Win64',
+        'vs2013x64': 'Visual Studio 12 2013',
         'vs2013x86': 'Visual Studio 12 2013',
-        'vs2015x64': 'Visual Studio 14 2015 Win64',
+        'vs2015x64': 'Visual Studio 14 2015',
         'vs2015x86': 'Visual Studio 14 2015',
-        'vs2017x64': 'Visual Studio 15 2017 Win64',
+        'vs2017x64': 'Visual Studio 15 2017',
         'vs2017x86': 'Visual Studio 15 2017',
-        'vs2019x64': 'Visual Studio 16 2019 Win64',
+        'vs2019x64': 'Visual Studio 16 2019',
         'vs2019x86': 'Visual Studio 16 2019',
-        'vs2022x64': 'Visual Studio 17 2022 Win64',
+        'vs2022x64': 'Visual Studio 17 2022',
         'vs2022x86': 'Visual Studio 17 2022',
+    }.get(compiler, compiler)
+
+
+def to_platform(compiler):
+    return {
+        'vs2013x64': 'x64',
+        'vs2013x86': 'Win32',
+        'vs2015x64': 'x64',
+        'vs2015x86': 'Win32',
+        'vs2017x64': 'x64',
+        'vs2017x86': 'Win32',
+        'vs2019x64': 'x64',
+        'vs2019x86': 'Win32',
+        'vs2022x64': 'x64',
+        'vs2022x86': 'Win32',
     }.get(compiler, compiler)
