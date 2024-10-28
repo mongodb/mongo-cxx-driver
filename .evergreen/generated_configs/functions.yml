@@ -273,6 +273,17 @@ functions:
       params:
         name: perf
         file: mongo-cxx-driver/results.json
+  run scan build:
+    - command: subprocess.exec
+      type: test
+      params:
+        binary: bash
+        working_dir: mongo-cxx-driver
+        add_expansions_to_env: true
+        redirect_standard_error_to_output: true
+        args:
+          - -c
+          - .evergreen/scripts/compile-scan-build.sh
   run_kms_servers:
     - command: subprocess.exec
       type: setup
