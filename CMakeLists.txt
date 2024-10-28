@@ -14,10 +14,6 @@
 
 cmake_minimum_required(VERSION 3.15)
 
-if(POLICY CMP0025)
-    cmake_policy(SET CMP0025 NEW)
-endif()
-
 project(MONGO_CXX_DRIVER LANGUAGES CXX)
 
 set(CMAKE_MODULE_PATH

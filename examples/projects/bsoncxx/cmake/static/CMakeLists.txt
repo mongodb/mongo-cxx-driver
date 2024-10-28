@@ -15,11 +15,7 @@
 # Demonstrates how to use the CMake 'find_package' mechanism to locate build against the libbsoncxx
 # static library.
 
-cmake_minimum_required(VERSION 3.2 FATAL_ERROR)
-
-if(POLICY CMP0025)
-    cmake_policy(SET CMP0025 NEW)
-endif()
+cmake_minimum_required(VERSION 3.15)
 
 project(HELLO_WORLD LANGUAGES C CXX)
 
