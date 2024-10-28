@@ -35,6 +35,15 @@ if [[ "${OSTYPE:?}" =~ cygwin ]]; then
   mongoc_prefix=$(cygpath -m "${mongoc_prefix:?}")
 fi
 
+# Detect whether "install_c_driver" has been executed.
+declare mongoc_is_installed
+if [[ -d "${mongoc_prefix:?}/lib/cmake" ]]; then
+  mongoc_is_installed="1"
+else
+  mongoc_is_installed="0"
+fi
+: "${mongoc_is_installed:?}"
+
 # shellcheck source=/dev/null
 . "${mongoc_prefix:?}/.evergreen/scripts/find-cmake-latest.sh"
 export cmake_binary
@@ -225,9 +234,8 @@ if [ "${USE_STATIC_LIBS:-}" ]; then
   cmake_flags+=("-DBUILD_SHARED_LIBS=OFF")
 fi
 
-# Only present when C Driver is previously built and installed.
-if [ ! -d "${mongoc_prefix:?}/lib/cmake" ]; then
-  if [ "${BSON_EXTRA_ALIGNMENT:-}" == "1" ]; then
+if [[ "${mongoc_is_installed:?}" == "0" ]]; then
+  if [[ "${BSON_EXTRA_ALIGNMENT:-}" == "1" ]]; then
     echo "Configuring auto-downloaded C Driver with ENABLE_EXTRA_ALIGNMENT=ON"
     cmake_flags+=("-DENABLE_EXTRA_ALIGNMENT=ON")
   else
@@ -264,4 +272,31 @@ fi
 
 if [[ "${_RUN_DISTCHECK:-}" ]]; then
   "${cmake_binary}" --build . --config "${build_type:?}" --target distcheck
+fi
+
+# Ensure extra alignment is enabled or disabled as expected.
+if [[ "${mongoc_is_installed:?}" == "1" ]]; then
+  if [ "${BSON_EXTRA_ALIGNMENT:-}" == "1" ]; then
+    grep -R "#define BSON_EXTRA_ALIGN 1" "${mongoc_prefix:?}" || {
+      echo "BSON_EXTRA_ALIGN is not 1 despite BSON_EXTRA_ALIGNMENT=1" 1>&2
+      exit 1
+    }
+  else
+    grep -R "#define BSON_EXTRA_ALIGN 0" "${mongoc_prefix:?}" || {
+      echo "BSON_EXTRA_ALIGN is not 0 despite BSON_EXTRA_ALIGNMENT=0" 1>&2
+      exit 1
+    }
+  fi
+else
+  if [ "${BSON_EXTRA_ALIGNMENT:-}" == "1" ]; then
+    grep -R "#define BSON_EXTRA_ALIGN 1" . || {
+      echo "BSON_EXTRA_ALIGN is not 1 despite BSON_EXTRA_ALIGNMENT=1" 1>&2
+      exit 1
+    }
+  else
+    grep -R "#define BSON_EXTRA_ALIGN 0" . || {
+      echo "BSON_EXTRA_ALIGN is not 0 despite BSON_EXTRA_ALIGNMENT=0" 1>&2
+      exit 1
+    }
+  fi
 fi
