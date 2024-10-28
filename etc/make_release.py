@@ -39,7 +39,7 @@ When editing this file, consider running `test_make_release.py` to validate chan
 
 import textwrap
 import re
-from distutils.version import LooseVersion
+from looseversion import LooseVersion
 import os
 import subprocess
 import sys
@@ -609,7 +609,7 @@ def read_github_creds(github_token_file):
     Read the GitHub token from the specified file and return it as a string.
     """
 
-    token_re = re.compile('^(?:Token - )?(?P<tok>\w{40}).*$')
+    token_re = re.compile('^(?:Token - )?(?P<tok>\\w{40}).*$')
     github_token = None
 
     with open(github_token_file, 'rb') as token_stream:
