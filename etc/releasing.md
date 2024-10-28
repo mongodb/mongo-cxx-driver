@@ -105,9 +105,9 @@ Ensure there are no new or unexpected task failures.
 
 ### Minimum Required MongoDB C Driver Version
 
-Ensure `mongoc_version_minimum` and related values are updated for the latest minimum required C Driver release.
+Ensure `MONGOC_VERSION_MINIMUM` and related values are updated for the latest minimum required C Driver release.
 
-See the comment accompanying `mongoc_version_minimum` for a list of other sources to update.
+See the comment accompanying `MONGOC_VERSION_MINIMUM` for a list of other sources to update.
 
 ### Coverity
 

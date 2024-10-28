@@ -407,7 +407,7 @@ def build_c_driver(c_driver_build_ref, quiet):
 
     env = os.environ.copy()
     env['mongoc_version'] = c_driver_build_ref
-    run_shell_script('./.evergreen/install_c_driver.sh', env=env)
+    run_shell_script('./.evergreen/scripts/install_c_driver.sh', env=env)
 
     if not quiet:
         click.echo('Build of C Driver version "{}" was successful.'.format(c_driver_build_ref))
