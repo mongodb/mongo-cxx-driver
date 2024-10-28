@@ -3,7 +3,7 @@
 set -o errexit
 set -o pipefail
 
-: "${BSONCXX_POLYFILL:?}"
+: "${BSONCXX_POLYFILL:-}"
 : "${CXX_STANDARD:?}"
 
 mongoc_prefix="$(pwd)/../mongoc"
@@ -67,7 +67,7 @@ scan_build_flags=(
   --exclude "$(pwd)/build/_deps"                         # mongoc
 )
 
-case "${BSONCXX_POLYFILL:?}" in
+case "${BSONCXX_POLYFILL:-}" in
 mnmlstc) cmake_flags+=(-D "BSONCXX_POLY_USE_MNMLSTC=ON") ;;
 boost) cmake_flags+=(-D "BSONCXX_POLY_USE_BOOST=ON") ;;
 impls) cmake_flags+=(-D "BSONCXX_POLY_USE_IMPLS=ON") ;;
