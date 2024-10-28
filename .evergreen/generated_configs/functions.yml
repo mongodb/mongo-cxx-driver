@@ -251,6 +251,28 @@ functions:
       args:
         - -c
         - python etc/clang_format.py lint
+  run benchmarks:
+    - command: subprocess.exec
+      type: setup
+      params:
+        binary: bash
+        working_dir: mongo-cxx-driver
+        args:
+          - -c
+          - etc/microbenchmark-test-data.sh
+    - command: subprocess.exec
+      type: test
+      params:
+        binary: bash
+        working_dir: mongo-cxx-driver
+        args:
+          - -c
+          - build/benchmark/microbenchmarks all
+    - command: perf.send
+      type: system
+      params:
+        name: perf
+        file: mongo-cxx-driver/results.json
   run_kms_servers:
     - command: subprocess.exec
       type: setup

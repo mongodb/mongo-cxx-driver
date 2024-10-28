@@ -53,24 +53,6 @@ variables:
 #######################################
 
 functions:
-    "run benchmarks":
-      - command: shell.exec
-        type: setup
-        params:
-          shell: bash
-          working_dir: "mongo-cxx-driver"
-          script: ./etc/microbenchmark-test-data.sh
-      - command: shell.exec
-        type: test
-        params:
-          shell: bash
-          working_dir: "mongo-cxx-driver"
-          script: ./build/benchmark/microbenchmarks all
-      - command: perf.send
-        params:
-          name: perf
-          file: mongo-cxx-driver/results.json
-
     "run scan build":
       - command: subprocess.exec
         type: test

@@ -7,16 +7,16 @@ set -o errexit
 set -o nounset
 
 if [ ! -d ".git" ]; then
-    echo "$0: This script must be run from the root of the repository" >&2
-    exit 1
+  echo "$0: This script must be run from the root of the repository" >&2
+  exit 1
 fi
 
-tmpdir=`perl -MFile::Temp=tempdir -wle 'print tempdir(TMPDIR => 1, CLEANUP => 0)'`
+tmpdir=$(perl -MFile::Temp=tempdir -wle 'print tempdir(TMPDIR => 1, CLEANUP => 0)')
 curl -sL https://github.com/mongodb-labs/driver-performance-test-data/archive/master.zip -o "$tmpdir/data.zip"
-unzip -d "$tmpdir" "$tmpdir/data.zip" > /dev/null
+unzip -d "$tmpdir" "$tmpdir/data.zip" >/dev/null
 mkdir -p data/benchmark
 
-pushd "$tmpdir/driver-performance-test-data-master" > /dev/null
+pushd "$tmpdir/driver-performance-test-data-master" >/dev/null
 
 tar xf extended_bson.tgz
 tar xf parallel.tgz
@@ -27,6 +27,6 @@ rm parallel.tgz
 rm single_and_multi_document.tgz
 rm README.md
 
-popd > /dev/null
+popd >/dev/null
 rsync -ah "$tmpdir/driver-performance-test-data-master/" data/benchmark
 rm -rf "$tmpdir"
