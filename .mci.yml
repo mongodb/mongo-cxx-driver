@@ -4,6 +4,9 @@
 
 exec_timeout_secs: 3600
 
+include:
+  - filename: .evergreen/generated_configs/functions.yml
+
 #######################################
 #            Variables                #
 #######################################
