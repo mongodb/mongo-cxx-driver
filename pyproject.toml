@@ -2,5 +2,10 @@
 name = "mongo-cxx-driver"
 version = "0.1.0"
 description = "For development purposes only"
-requires-python = ">=3.0"
-dependencies = []
+requires-python = ">=3.10"
+
+[tool.uv]
+dev-dependencies = [
+    "beautifulsoup4>=4.0",
+    "packaging>=14.0",
+]

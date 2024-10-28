@@ -299,10 +299,11 @@ cd mongo-cxx-driver-release
 Create and activate a fresh Python 3 virtual environment with required packages installed:
 
 ```bash
-
-python3 -m venv ~/mongo-cxx-driver-release-venv # Outside the mongo-cxx-driver-release directory!
-source ~/mongo-cxx-driver-release-venv/bin/activate
-pip install -r etc/requirements.txt
+# See: https://docs.astral.sh/uv/getting-started/installation/
+uv venv ~/mongo-cxx-driver-release-venv # Outside the mongo-cxx-driver-release directory!
+uv sync
+source ~/mongo-cxx-driver-release-venv/bin/activate # Required by subsequent commands.
+                                                    # `uv run` may also be used instead.
 ```
 
 ### Create a Release Tag...
