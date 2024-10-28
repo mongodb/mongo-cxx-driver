@@ -132,6 +132,22 @@ functions:
       args:
         - -c
         - ./etc/run-clang-tidy.sh
+  fetch-det:
+    - command: subprocess.exec
+      type: setup
+      params:
+        binary: bash
+        args:
+          - -c
+          - |
+            if [[ ! -d drivers-evergreen-tools ]]; then
+                git clone --depth=1 https://github.com/mongodb-labs/drivers-evergreen-tools.git
+            fi
+            echo "DRIVERS_TOOLS: $(pwd)/drivers-evergreen-tools" > det-expansion.yml
+    - command: expansions.update
+      type: setup
+      params:
+        file: det-expansion.yml
   fetch_c_driver_source:
     command: subprocess.exec
     type: setup

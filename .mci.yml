@@ -53,20 +53,6 @@ variables:
 #######################################
 
 functions:
-    "clone_drivers-evergreen-tools":
-      - command: shell.exec
-        params:
-          shell: bash
-          script: |-
-            set -o errexit
-            if [ ! -d "drivers-evergreen-tools" ]; then
-                git clone https://github.com/mongodb-labs/drivers-evergreen-tools.git --depth=1
-            fi
-            echo "DRIVERS_TOOLS: $(pwd)/drivers-evergreen-tools" > det-expansion.yml
-      # Set DRIVERS_TOOLS expansion.
-      - command: expansions.update
-        params:
-          file: det-expansion.yml
     "run_kms_servers":
       - command: shell.exec
         params:
@@ -439,7 +425,7 @@ tasks:
         - func: "compile"
           vars:
               RUN_DISTCHECK: 1
-        - func: "clone_drivers-evergreen-tools"
+        - func: "fetch-det"
         - func: "run_kms_servers"
         # Call "install_c_driver" before "test" to build static C driver libraries. Example projects require static C driver libraries.
         - func: "install_c_driver"
@@ -455,7 +441,7 @@ tasks:
           vars:
               BSON_EXTRA_ALIGNMENT: 1
         - func: "compile"
-        - func: "clone_drivers-evergreen-tools"
+        - func: "fetch-det"
         - func: "run_kms_servers"
         - func: "install_c_driver"
           vars:
@@ -473,7 +459,7 @@ tasks:
           vars:
               RUN_DISTCHECK: 1
               REQUIRED_CXX_STANDARD: 20
-        - func: "clone_drivers-evergreen-tools"
+        - func: "fetch-det"
         - func: "run_kms_servers"
         - func: "install_c_driver"
         - func: "test"
@@ -492,7 +478,7 @@ tasks:
         - func: "compile"
           vars:
               REQUIRED_CXX_STANDARD: 20
-        - func: "clone_drivers-evergreen-tools"
+        - func: "fetch-det"
         - func: "run_kms_servers"
         - func: "install_c_driver"
           vars:
@@ -553,7 +539,7 @@ tasks:
           vars:
               USE_STATIC_LIBS: 1
               RUN_DISTCHECK: 1
-        - func: "clone_drivers-evergreen-tools"
+        - func: "fetch-det"
         - func: "run_kms_servers"
         - func: "install_c_driver"
         - func: "test"
@@ -571,7 +557,7 @@ tasks:
         - func: "compile"
           vars:
               USE_STATIC_LIBS: 1
-        - func: "clone_drivers-evergreen-tools"
+        - func: "fetch-det"
         - func: "run_kms_servers"
         - func: "install_c_driver"
           vars:
@@ -591,7 +577,7 @@ tasks:
         - func: "compile"
           vars:
               RUN_DISTCHECK: 1
-        - func: "clone_drivers-evergreen-tools"
+        - func: "fetch-det"
         - func: "run_kms_servers"
         - func: "install_c_driver"
         - func: "test"
@@ -608,7 +594,7 @@ tasks:
         - func: "compile"
           vars:
               RUN_DISTCHECK: 1
-        - func: "clone_drivers-evergreen-tools"
+        - func: "fetch-det"
         - func: "run_kms_servers"
         - func: "install_c_driver"
         - func: "test"
@@ -629,7 +615,7 @@ tasks:
         - func: "compile"
           vars:
               RUN_DISTCHECK: 1
-        - func: "clone_drivers-evergreen-tools"
+        - func: "fetch-det"
         - func: "run_kms_servers"
         - func: "test"
           vars:
@@ -645,7 +631,7 @@ tasks:
         - func: "compile"
           vars:
               RUN_DISTCHECK: 1
-        - func: "clone_drivers-evergreen-tools"
+        - func: "fetch-det"
         - func: "run_kms_servers"
         - func: "test"
           vars:
@@ -801,7 +787,7 @@ tasks:
               AUTH: noauth
         - func: "fetch_c_driver_source"
         - func: "compile"
-        - func: "clone_drivers-evergreen-tools"
+        - func: "fetch-det"
         - func: "run_kms_servers"
         - func: "test"
           vars:
@@ -817,7 +803,7 @@ tasks:
               AUTH: noauth
         - func: "fetch_c_driver_source"
         - func: "compile"
-        - func: "clone_drivers-evergreen-tools"
+        - func: "fetch-det"
         - func: "run_kms_servers"
         - func: "test"
           vars:
@@ -949,7 +935,7 @@ task_groups:
   - name: test_atlas_task_group_search_indexes_7.0
     setup_group:
       - func: "setup"
-      - func: "clone_drivers-evergreen-tools"
+      - func: "fetch-det"
       - command: subprocess.exec
         params:
           working_dir: mongo-cxx-driver
@@ -977,7 +963,7 @@ task_groups:
   - name: test_atlas_task_group_search_indexes_8.0
     setup_group:
       - func: "setup"
-      - func: "clone_drivers-evergreen-tools"
+      - func: "fetch-det"
       - command: subprocess.exec
         params:
           working_dir: mongo-cxx-driver
