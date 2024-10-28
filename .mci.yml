@@ -53,16 +53,6 @@ variables:
 #######################################
 
 functions:
-    "lint":
-        - command: shell.exec
-          params:
-              shell: bash
-              working_dir: "mongo-cxx-driver"
-              script: |
-                  set -o errexit
-                  set -o pipefail
-                  python etc/clang_format.py lint
-
     "clang-tidy":
       - command: shell.exec
         params:
