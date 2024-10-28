@@ -1,1 +1,27 @@
-task_groups: []
+task_groups:
+  - name: tg-abi-stability
+    max_hosts: -1
+    setup_group_can_fail_task: true
+    setup_task:
+      - command: git.get_project
+        params:
+          directory: mongo-cxx-driver
+      - func: install_c_driver
+      - command: subprocess.exec
+        params:
+          binary: bash
+          include_expansions_in_env:
+            - cxx_standard
+          args:
+            - -c
+            - mongo-cxx-driver/.evergreen/scripts/abi-stability-setup.sh
+    tasks:
+      - .abi-stability
+    teardown_task:
+      - command: subprocess.exec
+        params:
+          binary: bash
+          args:
+            - -c
+            - rm -rf *
+    teardown_task_can_fail_task: true
