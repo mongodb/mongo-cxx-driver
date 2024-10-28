@@ -226,12 +226,12 @@ if [ "${USE_STATIC_LIBS:-}" ]; then
 fi
 
 # Only present when C Driver is previously built and installed.
-if [ -d "${mongoc_prefix:?}/lib/cmake" ]; then
+if [ ! -d "${mongoc_prefix:?}/lib/cmake" ]; then
   if [ "${BSON_EXTRA_ALIGNMENT:-}" == "1" ]; then
     echo "Configuring auto-downloaded C Driver with ENABLE_EXTRA_ALIGNMENT=ON"
-    configure_flags+=("-DENABLE_EXTRA_ALIGNMENT=ON")
+    cmake_flags+=("-DENABLE_EXTRA_ALIGNMENT=ON")
   else
-    configure_flags+=("-DENABLE_EXTRA_ALIGNMENT=OFF")
+    cmake_flags+=("-DENABLE_EXTRA_ALIGNMENT=OFF")
   fi
 fi
 
