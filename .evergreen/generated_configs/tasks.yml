@@ -762,6 +762,210 @@ tasks:
           generator: Visual Studio 14 2015
           platform: x64
       - func: uninstall-check
+  - name: valgrind-ubuntu1804-shared-5.0-single
+    run_on: ubuntu1804-large
+    tags: [valgrind, ubuntu1804, shared, "5.0", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "5.0"
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          TEST_WITH_VALGRIND: "ON"
+          disable_slow_tests: 1
+          use_mongocryptd: true
+  - name: valgrind-ubuntu1804-shared-extra_alignment-5.0-single
+    run_on: ubuntu1804-large
+    tags: [valgrind, ubuntu1804, shared, extra_alignment, "5.0", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "5.0"
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          TEST_WITH_VALGRIND: "ON"
+          disable_slow_tests: 1
+          use_mongocryptd: true
+  - name: valgrind-ubuntu1804-static-5.0-single
+    run_on: ubuntu1804-large
+    tags: [valgrind, ubuntu1804, static, "5.0", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: USE_STATIC_LIBS, value: "1" }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "5.0"
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          TEST_WITH_VALGRIND: "ON"
+          disable_slow_tests: 1
+          use_mongocryptd: true
+  - name: valgrind-ubuntu1804-static-extra_alignment-5.0-single
+    run_on: ubuntu1804-large
+    tags: [valgrind, ubuntu1804, static, extra_alignment, "5.0", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: USE_STATIC_LIBS, value: "1" }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "5.0"
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          TEST_WITH_VALGRIND: "ON"
+          disable_slow_tests: 1
+          use_mongocryptd: true
+  - name: valgrind-ubuntu2004-shared-extra_alignment-latest-single
+    run_on: ubuntu2004-large
+    tags: [valgrind, ubuntu2004, shared, extra_alignment, latest, single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: latest
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          TEST_WITH_VALGRIND: "ON"
+          disable_slow_tests: 1
+          use_mongocryptd: true
+  - name: valgrind-ubuntu2004-shared-latest-single
+    run_on: ubuntu2004-large
+    tags: [valgrind, ubuntu2004, shared, latest, single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: latest
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          TEST_WITH_VALGRIND: "ON"
+          disable_slow_tests: 1
+          use_mongocryptd: true
+  - name: valgrind-ubuntu2004-static-extra_alignment-latest-single
+    run_on: ubuntu2004-large
+    tags: [valgrind, ubuntu2004, static, extra_alignment, latest, single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: USE_STATIC_LIBS, value: "1" }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: latest
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          TEST_WITH_VALGRIND: "ON"
+          disable_slow_tests: 1
+          use_mongocryptd: true
+  - name: valgrind-ubuntu2004-static-latest-single
+    run_on: ubuntu2004-large
+    tags: [valgrind, ubuntu2004, static, latest, single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: USE_STATIC_LIBS, value: "1" }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: latest
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          TEST_WITH_VALGRIND: "ON"
+          disable_slow_tests: 1
+          use_mongocryptd: true
   - name: versioned-api-one-required-macos-1100-release-shared-boost
     run_on: macos-1100
     tags: [versioned-api, macos-1100, release, shared, boost]
