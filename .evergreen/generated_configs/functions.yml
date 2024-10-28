@@ -444,6 +444,17 @@ functions:
       args:
         - -c
         - .evergreen/scripts/test-mongohouse.sh
+  upload code coverage:
+    command: subprocess.exec
+    type: system
+    params:
+      binary: bash
+      working_dir: mongo-cxx-driver
+      include_expansions_in_env:
+        - codecov_token
+      args:
+        - -c
+        - .evergreen/scripts/upload-code-coverage.sh
   upload mongo orchestration artifacts:
     - command: subprocess.exec
       type: system

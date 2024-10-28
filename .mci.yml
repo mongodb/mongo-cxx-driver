@@ -53,14 +53,6 @@ variables:
 #######################################
 
 functions:
-    "upload code coverage":
-      - command: subprocess.exec
-        params:
-          binary: bash
-          working_dir: "mongo-cxx-driver"
-          args: [-c, .evergreen/upload-code-coverage.sh]
-          include_expansions_in_env: [codecov_token]
-
     "docker-image-build":
       - command: shell.exec
         params:
