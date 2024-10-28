@@ -288,6 +288,3326 @@ tasks:
     commands:
       - func: setup
       - func: docker-image-build
+  - name: integration-debian10-release-shared-5.0-replica
+    run_on: debian10-large
+    tags: [integration, debian10, release, shared, "5.0", replica]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: replica_set
+          mongodb_version: "5.0"
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: replica
+  - name: integration-debian10-release-shared-5.0-sharded
+    run_on: debian10-large
+    tags: [integration, debian10, release, shared, "5.0", sharded]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: sharded_cluster
+          mongodb_version: "5.0"
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: sharded
+  - name: integration-debian10-release-shared-5.0-single
+    run_on: debian10-large
+    tags: [integration, debian10, release, shared, "5.0", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "5.0"
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+  - name: integration-debian10-release-shared-extra_alignment-5.0-single
+    run_on: debian10-large
+    tags: [integration, debian10, release, shared, extra_alignment, "5.0", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "5.0"
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+  - name: integration-debian10-release-static-5.0-single
+    run_on: debian10-large
+    tags: [integration, debian10, release, static, "5.0", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "5.0"
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+          USE_STATIC_LIBS: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          USE_STATIC_LIBS: 1
+  - name: integration-debian10-release-static-extra_alignment-5.0-single
+    run_on: debian10-large
+    tags: [integration, debian10, release, static, extra_alignment, "5.0", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "5.0"
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          USE_STATIC_LIBS: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          USE_STATIC_LIBS: 1
+  - name: integration-debian11-release-shared-5.0-replica
+    run_on: debian11-large
+    tags: [integration, debian11, release, shared, "5.0", replica]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: replica_set
+          mongodb_version: "5.0"
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: replica
+  - name: integration-debian11-release-shared-5.0-sharded
+    run_on: debian11-large
+    tags: [integration, debian11, release, shared, "5.0", sharded]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: sharded_cluster
+          mongodb_version: "5.0"
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: sharded
+  - name: integration-debian11-release-shared-5.0-single
+    run_on: debian11-large
+    tags: [integration, debian11, release, shared, "5.0", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "5.0"
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+  - name: integration-debian11-release-shared-extra_alignment-5.0-single
+    run_on: debian11-large
+    tags: [integration, debian11, release, shared, extra_alignment, "5.0", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "5.0"
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+  - name: integration-debian11-release-static-5.0-single
+    run_on: debian11-large
+    tags: [integration, debian11, release, static, "5.0", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "5.0"
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+          USE_STATIC_LIBS: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          USE_STATIC_LIBS: 1
+  - name: integration-debian11-release-static-extra_alignment-5.0-single
+    run_on: debian11-large
+    tags: [integration, debian11, release, static, extra_alignment, "5.0", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "5.0"
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          USE_STATIC_LIBS: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          USE_STATIC_LIBS: 1
+  - name: integration-debian12-release-shared-csfle-latest-replica
+    run_on: debian12-large
+    tags: [integration, debian12, release, shared, csfle, latest, replica]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: replica_set
+          mongodb_version: latest
+      - func: install_c_driver
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: replica
+  - name: integration-debian12-release-shared-csfle-latest-sharded
+    run_on: debian12-large
+    tags: [integration, debian12, release, shared, csfle, latest, sharded]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: sharded_cluster
+          mongodb_version: latest
+      - func: install_c_driver
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: sharded
+  - name: integration-debian12-release-shared-extra_alignment-latest-single
+    run_on: debian12-large
+    tags: [integration, debian12, release, shared, extra_alignment, latest, single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: latest
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+  - name: integration-debian12-release-shared-latest-single
+    run_on: debian12-large
+    tags: [integration, debian12, release, shared, latest, single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: latest
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+  - name: integration-debian12-release-static-extra_alignment-latest-single
+    run_on: debian12-large
+    tags: [integration, debian12, release, static, extra_alignment, latest, single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: latest
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          USE_STATIC_LIBS: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          USE_STATIC_LIBS: 1
+  - name: integration-debian12-release-static-latest-single
+    run_on: debian12-large
+    tags: [integration, debian12, release, static, latest, single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: latest
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+          USE_STATIC_LIBS: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          USE_STATIC_LIBS: 1
+  - name: integration-macos-1100-release-shared-boost-5.0-single
+    run_on: macos-1100
+    tags: [integration, macos-1100, release, shared, boost, "5.0", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "5.0"
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          BSONCXX_POLYFILL: boost
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+  - name: integration-macos-1100-release-shared-boost-extra_alignment-5.0-single
+    run_on: macos-1100
+    tags: [integration, macos-1100, release, shared, boost, extra_alignment, "5.0", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "5.0"
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          BSONCXX_POLYFILL: boost
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+  - name: integration-macos-1100-release-shared-boost-extra_alignment-latest-single
+    run_on: macos-1100
+    tags: [integration, macos-1100, release, shared, boost, extra_alignment, latest, single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: latest
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          BSONCXX_POLYFILL: boost
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+  - name: integration-macos-1100-release-shared-boost-latest-single
+    run_on: macos-1100
+    tags: [integration, macos-1100, release, shared, boost, latest, single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: latest
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          BSONCXX_POLYFILL: boost
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+  - name: integration-macos-1100-release-static-boost-5.0-single
+    run_on: macos-1100
+    tags: [integration, macos-1100, release, static, boost, "5.0", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "5.0"
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          BSONCXX_POLYFILL: boost
+          RUN_DISTCHECK: 1
+          USE_STATIC_LIBS: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          USE_STATIC_LIBS: 1
+  - name: integration-macos-1100-release-static-boost-extra_alignment-5.0-single
+    run_on: macos-1100
+    tags: [integration, macos-1100, release, static, boost, extra_alignment, "5.0", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "5.0"
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          BSONCXX_POLYFILL: boost
+          BSON_EXTRA_ALIGNMENT: 1
+          USE_STATIC_LIBS: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          USE_STATIC_LIBS: 1
+  - name: integration-macos-1100-release-static-boost-extra_alignment-latest-single
+    run_on: macos-1100
+    tags: [integration, macos-1100, release, static, boost, extra_alignment, latest, single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: latest
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          BSONCXX_POLYFILL: boost
+          BSON_EXTRA_ALIGNMENT: 1
+          USE_STATIC_LIBS: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          USE_STATIC_LIBS: 1
+  - name: integration-macos-1100-release-static-boost-latest-single
+    run_on: macos-1100
+    tags: [integration, macos-1100, release, static, boost, latest, single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: latest
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          BSONCXX_POLYFILL: boost
+          RUN_DISTCHECK: 1
+          USE_STATIC_LIBS: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          USE_STATIC_LIBS: 1
+  - name: integration-rhel81-power8-release-shared-5.0-single
+    run_on: rhel81-power8-large
+    tags: [integration, rhel81-power8, release, shared, "5.0", single]
+    patchable: false
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "5.0"
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          lib_dir: lib64
+  - name: integration-rhel81-power8-release-shared-extra_alignment-5.0-single
+    run_on: rhel81-power8-large
+    tags: [integration, rhel81-power8, release, shared, extra_alignment, "5.0", single]
+    patchable: false
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "5.0"
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          lib_dir: lib64
+  - name: integration-rhel81-power8-release-shared-extra_alignment-latest-single
+    run_on: rhel81-power8-large
+    tags: [integration, rhel81-power8, release, shared, extra_alignment, latest, single]
+    patchable: false
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: latest
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          lib_dir: lib64
+  - name: integration-rhel81-power8-release-shared-latest-single
+    run_on: rhel81-power8-large
+    tags: [integration, rhel81-power8, release, shared, latest, single]
+    patchable: false
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: latest
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          lib_dir: lib64
+  - name: integration-rhel81-power8-release-static-5.0-single
+    run_on: rhel81-power8-large
+    tags: [integration, rhel81-power8, release, static, "5.0", single]
+    patchable: false
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "5.0"
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+          USE_STATIC_LIBS: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          USE_STATIC_LIBS: 1
+          lib_dir: lib64
+  - name: integration-rhel81-power8-release-static-extra_alignment-5.0-single
+    run_on: rhel81-power8-large
+    tags: [integration, rhel81-power8, release, static, extra_alignment, "5.0", single]
+    patchable: false
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "5.0"
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          USE_STATIC_LIBS: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          USE_STATIC_LIBS: 1
+          lib_dir: lib64
+  - name: integration-rhel81-power8-release-static-extra_alignment-latest-single
+    run_on: rhel81-power8-large
+    tags: [integration, rhel81-power8, release, static, extra_alignment, latest, single]
+    patchable: false
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: latest
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          USE_STATIC_LIBS: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          USE_STATIC_LIBS: 1
+          lib_dir: lib64
+  - name: integration-rhel81-power8-release-static-latest-single
+    run_on: rhel81-power8-large
+    tags: [integration, rhel81-power8, release, static, latest, single]
+    patchable: false
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: latest
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+          USE_STATIC_LIBS: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          USE_STATIC_LIBS: 1
+          lib_dir: lib64
+  - name: integration-rhel83-zseries-release-shared-5.0-single
+    run_on: rhel83-zseries-large
+    tags: [integration, rhel83-zseries, release, shared, "5.0", single]
+    patchable: false
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "5.0"
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          lib_dir: lib64
+  - name: integration-rhel83-zseries-release-shared-6.0-single
+    run_on: rhel83-zseries-large
+    tags: [integration, rhel83-zseries, release, shared, "6.0", single]
+    patchable: false
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "6.0"
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          lib_dir: lib64
+  - name: integration-rhel83-zseries-release-shared-extra_alignment-5.0-single
+    run_on: rhel83-zseries-large
+    tags: [integration, rhel83-zseries, release, shared, extra_alignment, "5.0", single]
+    patchable: false
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "5.0"
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          lib_dir: lib64
+  - name: integration-rhel83-zseries-release-shared-extra_alignment-6.0-single
+    run_on: rhel83-zseries-large
+    tags: [integration, rhel83-zseries, release, shared, extra_alignment, "6.0", single]
+    patchable: false
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "6.0"
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          lib_dir: lib64
+  - name: integration-rhel83-zseries-release-shared-extra_alignment-latest-single
+    run_on: rhel83-zseries-large
+    tags: [integration, rhel83-zseries, release, shared, extra_alignment, latest, single]
+    patchable: false
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: latest
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          lib_dir: lib64
+  - name: integration-rhel83-zseries-release-shared-latest-single
+    run_on: rhel83-zseries-large
+    tags: [integration, rhel83-zseries, release, shared, latest, single]
+    patchable: false
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: latest
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          lib_dir: lib64
+  - name: integration-rhel83-zseries-release-static-5.0-single
+    run_on: rhel83-zseries-large
+    tags: [integration, rhel83-zseries, release, static, "5.0", single]
+    patchable: false
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "5.0"
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+          USE_STATIC_LIBS: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          USE_STATIC_LIBS: 1
+          lib_dir: lib64
+  - name: integration-rhel83-zseries-release-static-6.0-single
+    run_on: rhel83-zseries-large
+    tags: [integration, rhel83-zseries, release, static, "6.0", single]
+    patchable: false
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "6.0"
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+          USE_STATIC_LIBS: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          USE_STATIC_LIBS: 1
+          lib_dir: lib64
+  - name: integration-rhel83-zseries-release-static-extra_alignment-5.0-single
+    run_on: rhel83-zseries-large
+    tags: [integration, rhel83-zseries, release, static, extra_alignment, "5.0", single]
+    patchable: false
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "5.0"
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          USE_STATIC_LIBS: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          USE_STATIC_LIBS: 1
+          lib_dir: lib64
+  - name: integration-rhel83-zseries-release-static-extra_alignment-6.0-single
+    run_on: rhel83-zseries-large
+    tags: [integration, rhel83-zseries, release, static, extra_alignment, "6.0", single]
+    patchable: false
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "6.0"
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          USE_STATIC_LIBS: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          USE_STATIC_LIBS: 1
+          lib_dir: lib64
+  - name: integration-rhel83-zseries-release-static-extra_alignment-latest-single
+    run_on: rhel83-zseries-large
+    tags: [integration, rhel83-zseries, release, static, extra_alignment, latest, single]
+    patchable: false
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: latest
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          USE_STATIC_LIBS: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          USE_STATIC_LIBS: 1
+          lib_dir: lib64
+  - name: integration-rhel83-zseries-release-static-latest-single
+    run_on: rhel83-zseries-large
+    tags: [integration, rhel83-zseries, release, static, latest, single]
+    patchable: false
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: latest
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+          USE_STATIC_LIBS: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          USE_STATIC_LIBS: 1
+          lib_dir: lib64
+  - name: integration-rhel90-arm64-release-shared-csfle-latest-replica
+    run_on: rhel90-arm64-large
+    tags: [integration, rhel90-arm64, release, shared, csfle, latest, replica]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: replica_set
+          mongodb_version: latest
+      - func: install_c_driver
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: replica
+          lib_dir: lib64
+  - name: integration-rhel90-arm64-release-shared-csfle-latest-sharded
+    run_on: rhel90-arm64-large
+    tags: [integration, rhel90-arm64, release, shared, csfle, latest, sharded]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: sharded_cluster
+          mongodb_version: latest
+      - func: install_c_driver
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: sharded
+          lib_dir: lib64
+  - name: integration-rhel90-arm64-release-shared-extra_alignment-latest-single
+    run_on: rhel90-arm64-large
+    tags: [integration, rhel90-arm64, release, shared, extra_alignment, latest, single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: latest
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          lib_dir: lib64
+  - name: integration-rhel90-arm64-release-shared-latest-single
+    run_on: rhel90-arm64-large
+    tags: [integration, rhel90-arm64, release, shared, latest, single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: latest
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          lib_dir: lib64
+  - name: integration-rhel90-arm64-release-static-extra_alignment-latest-single
+    run_on: rhel90-arm64-large
+    tags: [integration, rhel90-arm64, release, static, extra_alignment, latest, single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: latest
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          USE_STATIC_LIBS: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          USE_STATIC_LIBS: 1
+          lib_dir: lib64
+  - name: integration-rhel90-arm64-release-static-latest-single
+    run_on: rhel90-arm64-large
+    tags: [integration, rhel90-arm64, release, static, latest, single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: latest
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+          USE_STATIC_LIBS: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          USE_STATIC_LIBS: 1
+          lib_dir: lib64
+  - name: integration-rhel90-release-shared-csfle-latest-replica
+    run_on: rhel90-large
+    tags: [integration, rhel90, release, shared, csfle, latest, replica]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: replica_set
+          mongodb_version: latest
+      - func: install_c_driver
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: replica
+          lib_dir: lib64
+  - name: integration-rhel90-release-shared-csfle-latest-sharded
+    run_on: rhel90-large
+    tags: [integration, rhel90, release, shared, csfle, latest, sharded]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: sharded_cluster
+          mongodb_version: latest
+      - func: install_c_driver
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: sharded
+          lib_dir: lib64
+  - name: integration-rhel90-release-shared-extra_alignment-latest-single
+    run_on: rhel90-large
+    tags: [integration, rhel90, release, shared, extra_alignment, latest, single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: latest
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          lib_dir: lib64
+  - name: integration-rhel90-release-shared-latest-single
+    run_on: rhel90-large
+    tags: [integration, rhel90, release, shared, latest, single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: latest
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          lib_dir: lib64
+  - name: integration-rhel90-release-static-extra_alignment-latest-single
+    run_on: rhel90-large
+    tags: [integration, rhel90, release, static, extra_alignment, latest, single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: latest
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          USE_STATIC_LIBS: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          USE_STATIC_LIBS: 1
+          lib_dir: lib64
+  - name: integration-rhel90-release-static-latest-single
+    run_on: rhel90-large
+    tags: [integration, rhel90, release, static, latest, single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: latest
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+          USE_STATIC_LIBS: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          USE_STATIC_LIBS: 1
+          lib_dir: lib64
+  - name: integration-ubuntu1804-arm64-release-shared-5.0-single
+    run_on: ubuntu1804-arm64-large
+    tags: [integration, ubuntu1804-arm64, release, shared, "5.0", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "5.0"
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+  - name: integration-ubuntu1804-arm64-release-shared-extra_alignment-5.0-single
+    run_on: ubuntu1804-arm64-large
+    tags: [integration, ubuntu1804-arm64, release, shared, extra_alignment, "5.0", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "5.0"
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+  - name: integration-ubuntu1804-arm64-release-static-5.0-single
+    run_on: ubuntu1804-arm64-large
+    tags: [integration, ubuntu1804-arm64, release, static, "5.0", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "5.0"
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+          USE_STATIC_LIBS: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          USE_STATIC_LIBS: 1
+  - name: integration-ubuntu1804-arm64-release-static-extra_alignment-5.0-single
+    run_on: ubuntu1804-arm64-large
+    tags: [integration, ubuntu1804-arm64, release, static, extra_alignment, "5.0", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "5.0"
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          USE_STATIC_LIBS: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          USE_STATIC_LIBS: 1
+  - name: integration-ubuntu1804-debug-shared-4.0-single
+    run_on: ubuntu1804-large
+    tags: [integration, ubuntu1804, debug, shared, "4.0", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "4.0"
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+  - name: integration-ubuntu1804-debug-shared-4.2-single
+    run_on: ubuntu1804-large
+    tags: [integration, ubuntu1804, debug, shared, "4.2", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "4.2"
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+  - name: integration-ubuntu1804-debug-shared-4.4-single
+    run_on: ubuntu1804-large
+    tags: [integration, ubuntu1804, debug, shared, "4.4", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "4.4"
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+  - name: integration-ubuntu1804-debug-shared-5.0-single
+    run_on: ubuntu1804-large
+    tags: [integration, ubuntu1804, debug, shared, "5.0", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "5.0"
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+  - name: integration-ubuntu1804-debug-shared-6.0-single
+    run_on: ubuntu1804-large
+    tags: [integration, ubuntu1804, debug, shared, "6.0", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "6.0"
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+  - name: integration-ubuntu1804-debug-shared-csfle-4.0-replica
+    run_on: ubuntu1804-large
+    tags: [integration, ubuntu1804, debug, shared, csfle, "4.0", replica]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: replica_set
+          mongodb_version: "4.0"
+      - func: install_c_driver
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: replica
+  - name: integration-ubuntu1804-debug-shared-csfle-4.0-sharded
+    run_on: ubuntu1804-large
+    tags: [integration, ubuntu1804, debug, shared, csfle, "4.0", sharded]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: sharded_cluster
+          mongodb_version: "4.0"
+      - func: install_c_driver
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: sharded
+  - name: integration-ubuntu1804-debug-shared-csfle-4.2-replica
+    run_on: ubuntu1804-large
+    tags: [integration, ubuntu1804, debug, shared, csfle, "4.2", replica]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: replica_set
+          mongodb_version: "4.2"
+      - func: install_c_driver
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: replica
+  - name: integration-ubuntu1804-debug-shared-csfle-4.2-replica-mongocryptd
+    run_on: ubuntu1804-large
+    tags: [integration, ubuntu1804, debug, shared, csfle, "4.2", replica, mongocryptd]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: replica_set
+          mongodb_version: "4.2"
+      - func: install_c_driver
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: replica
+          use_mongocryptd: true
+  - name: integration-ubuntu1804-debug-shared-csfle-4.2-sharded
+    run_on: ubuntu1804-large
+    tags: [integration, ubuntu1804, debug, shared, csfle, "4.2", sharded]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: sharded_cluster
+          mongodb_version: "4.2"
+      - func: install_c_driver
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: sharded
+  - name: integration-ubuntu1804-debug-shared-csfle-4.2-sharded-mongocryptd
+    run_on: ubuntu1804-large
+    tags: [integration, ubuntu1804, debug, shared, csfle, "4.2", sharded, mongocryptd]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: sharded_cluster
+          mongodb_version: "4.2"
+      - func: install_c_driver
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: sharded
+          use_mongocryptd: true
+  - name: integration-ubuntu1804-debug-shared-csfle-4.4-replica
+    run_on: ubuntu1804-large
+    tags: [integration, ubuntu1804, debug, shared, csfle, "4.4", replica]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: replica_set
+          mongodb_version: "4.4"
+      - func: install_c_driver
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: replica
+  - name: integration-ubuntu1804-debug-shared-csfle-4.4-replica-mongocryptd
+    run_on: ubuntu1804-large
+    tags: [integration, ubuntu1804, debug, shared, csfle, "4.4", replica, mongocryptd]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: replica_set
+          mongodb_version: "4.4"
+      - func: install_c_driver
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: replica
+          use_mongocryptd: true
+  - name: integration-ubuntu1804-debug-shared-csfle-4.4-sharded
+    run_on: ubuntu1804-large
+    tags: [integration, ubuntu1804, debug, shared, csfle, "4.4", sharded]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: sharded_cluster
+          mongodb_version: "4.4"
+      - func: install_c_driver
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: sharded
+  - name: integration-ubuntu1804-debug-shared-csfle-4.4-sharded-mongocryptd
+    run_on: ubuntu1804-large
+    tags: [integration, ubuntu1804, debug, shared, csfle, "4.4", sharded, mongocryptd]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: sharded_cluster
+          mongodb_version: "4.4"
+      - func: install_c_driver
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: sharded
+          use_mongocryptd: true
+  - name: integration-ubuntu1804-debug-shared-csfle-5.0-replica
+    run_on: ubuntu1804-large
+    tags: [integration, ubuntu1804, debug, shared, csfle, "5.0", replica]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: replica_set
+          mongodb_version: "5.0"
+      - func: install_c_driver
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: replica
+  - name: integration-ubuntu1804-debug-shared-csfle-5.0-replica-mongocryptd
+    run_on: ubuntu1804-large
+    tags: [integration, ubuntu1804, debug, shared, csfle, "5.0", replica, mongocryptd]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: replica_set
+          mongodb_version: "5.0"
+      - func: install_c_driver
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: replica
+          use_mongocryptd: true
+  - name: integration-ubuntu1804-debug-shared-csfle-5.0-sharded
+    run_on: ubuntu1804-large
+    tags: [integration, ubuntu1804, debug, shared, csfle, "5.0", sharded]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: sharded_cluster
+          mongodb_version: "5.0"
+      - func: install_c_driver
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: sharded
+  - name: integration-ubuntu1804-debug-shared-csfle-5.0-sharded-mongocryptd
+    run_on: ubuntu1804-large
+    tags: [integration, ubuntu1804, debug, shared, csfle, "5.0", sharded, mongocryptd]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: sharded_cluster
+          mongodb_version: "5.0"
+      - func: install_c_driver
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: sharded
+          use_mongocryptd: true
+  - name: integration-ubuntu1804-debug-shared-csfle-6.0-replica
+    run_on: ubuntu1804-large
+    tags: [integration, ubuntu1804, debug, shared, csfle, "6.0", replica]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: replica_set
+          mongodb_version: "6.0"
+      - func: install_c_driver
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: replica
+  - name: integration-ubuntu1804-debug-shared-csfle-6.0-sharded
+    run_on: ubuntu1804-large
+    tags: [integration, ubuntu1804, debug, shared, csfle, "6.0", sharded]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: sharded_cluster
+          mongodb_version: "6.0"
+      - func: install_c_driver
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: sharded
+  - name: integration-ubuntu1804-debug-shared-extra_alignment-4.0-single
+    run_on: ubuntu1804-large
+    tags: [integration, ubuntu1804, debug, shared, extra_alignment, "4.0", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "4.0"
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+  - name: integration-ubuntu1804-debug-shared-extra_alignment-4.2-single
+    run_on: ubuntu1804-large
+    tags: [integration, ubuntu1804, debug, shared, extra_alignment, "4.2", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "4.2"
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+  - name: integration-ubuntu1804-debug-shared-extra_alignment-4.4-single
+    run_on: ubuntu1804-large
+    tags: [integration, ubuntu1804, debug, shared, extra_alignment, "4.4", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "4.4"
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+  - name: integration-ubuntu1804-debug-shared-extra_alignment-5.0-single
+    run_on: ubuntu1804-large
+    tags: [integration, ubuntu1804, debug, shared, extra_alignment, "5.0", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "5.0"
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+  - name: integration-ubuntu1804-debug-shared-extra_alignment-6.0-single
+    run_on: ubuntu1804-large
+    tags: [integration, ubuntu1804, debug, shared, extra_alignment, "6.0", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "6.0"
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+  - name: integration-ubuntu1804-release-shared-5.0-replica
+    run_on: ubuntu1804-large
+    tags: [integration, ubuntu1804, release, shared, "5.0", replica]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: replica_set
+          mongodb_version: "5.0"
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: replica
+  - name: integration-ubuntu1804-release-shared-5.0-sharded
+    run_on: ubuntu1804-large
+    tags: [integration, ubuntu1804, release, shared, "5.0", sharded]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: sharded_cluster
+          mongodb_version: "5.0"
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: sharded
+  - name: integration-ubuntu2004-arm64-release-shared-extra_alignment-latest-single
+    run_on: ubuntu2004-arm64-large
+    tags: [integration, ubuntu2004-arm64, release, shared, extra_alignment, latest, single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: latest
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+  - name: integration-ubuntu2004-arm64-release-shared-latest-single
+    run_on: ubuntu2004-arm64-large
+    tags: [integration, ubuntu2004-arm64, release, shared, latest, single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: latest
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+  - name: integration-ubuntu2004-arm64-release-static-extra_alignment-latest-single
+    run_on: ubuntu2004-arm64-large
+    tags: [integration, ubuntu2004-arm64, release, static, extra_alignment, latest, single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: latest
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          USE_STATIC_LIBS: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          USE_STATIC_LIBS: 1
+  - name: integration-ubuntu2004-arm64-release-static-latest-single
+    run_on: ubuntu2004-arm64-large
+    tags: [integration, ubuntu2004-arm64, release, static, latest, single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: latest
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+          USE_STATIC_LIBS: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          USE_STATIC_LIBS: 1
+  - name: integration-ubuntu2004-debug-shared-7.0-single
+    run_on: ubuntu2004-large
+    tags: [integration, ubuntu2004, debug, shared, "7.0", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "7.0"
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+  - name: integration-ubuntu2004-debug-shared-8.0-single
+    run_on: ubuntu2004-large
+    tags: [integration, ubuntu2004, debug, shared, "8.0", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "8.0"
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+  - name: integration-ubuntu2004-debug-shared-csfle-7.0-replica
+    run_on: ubuntu2004-large
+    tags: [integration, ubuntu2004, debug, shared, csfle, "7.0", replica]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: replica_set
+          mongodb_version: "7.0"
+      - func: install_c_driver
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: replica
+  - name: integration-ubuntu2004-debug-shared-csfle-7.0-sharded
+    run_on: ubuntu2004-large
+    tags: [integration, ubuntu2004, debug, shared, csfle, "7.0", sharded]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: sharded_cluster
+          mongodb_version: "7.0"
+      - func: install_c_driver
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: sharded
+  - name: integration-ubuntu2004-debug-shared-csfle-8.0-replica
+    run_on: ubuntu2004-large
+    tags: [integration, ubuntu2004, debug, shared, csfle, "8.0", replica]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: replica_set
+          mongodb_version: "8.0"
+      - func: install_c_driver
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: replica
+  - name: integration-ubuntu2004-debug-shared-csfle-8.0-sharded
+    run_on: ubuntu2004-large
+    tags: [integration, ubuntu2004, debug, shared, csfle, "8.0", sharded]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: sharded_cluster
+          mongodb_version: "8.0"
+      - func: install_c_driver
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: sharded
+  - name: integration-ubuntu2004-debug-shared-csfle-latest-replica
+    run_on: ubuntu2004-large
+    tags: [integration, ubuntu2004, debug, shared, csfle, latest, replica]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: replica_set
+          mongodb_version: latest
+      - func: install_c_driver
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: replica
+  - name: integration-ubuntu2004-debug-shared-csfle-latest-replica-mongocryptd
+    run_on: ubuntu2004-large
+    tags: [integration, ubuntu2004, debug, shared, csfle, latest, replica, mongocryptd]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: replica_set
+          mongodb_version: latest
+      - func: install_c_driver
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: replica
+          use_mongocryptd: true
+  - name: integration-ubuntu2004-debug-shared-csfle-latest-sharded
+    run_on: ubuntu2004-large
+    tags: [integration, ubuntu2004, debug, shared, csfle, latest, sharded]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: sharded_cluster
+          mongodb_version: latest
+      - func: install_c_driver
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: sharded
+  - name: integration-ubuntu2004-debug-shared-csfle-latest-sharded-mongocryptd
+    run_on: ubuntu2004-large
+    tags: [integration, ubuntu2004, debug, shared, csfle, latest, sharded, mongocryptd]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: sharded_cluster
+          mongodb_version: latest
+      - func: install_c_driver
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: sharded
+          use_mongocryptd: true
+  - name: integration-ubuntu2004-debug-shared-extra_alignment-7.0-single
+    run_on: ubuntu2004-large
+    tags: [integration, ubuntu2004, debug, shared, extra_alignment, "7.0", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "7.0"
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+  - name: integration-ubuntu2004-debug-shared-extra_alignment-8.0-single
+    run_on: ubuntu2004-large
+    tags: [integration, ubuntu2004, debug, shared, extra_alignment, "8.0", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "8.0"
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+  - name: integration-ubuntu2004-debug-shared-extra_alignment-latest-single
+    run_on: ubuntu2004-large
+    tags: [integration, ubuntu2004, debug, shared, extra_alignment, latest, single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: latest
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+  - name: integration-ubuntu2004-debug-shared-latest-single
+    run_on: ubuntu2004-large
+    tags: [integration, ubuntu2004, debug, shared, latest, single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: latest
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+  - name: integration-ubuntu2004-release-shared-5.0-replica
+    run_on: ubuntu2004-large
+    tags: [integration, ubuntu2004, release, shared, "5.0", replica]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: replica_set
+          mongodb_version: "5.0"
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: replica
+  - name: integration-ubuntu2004-release-shared-5.0-sharded
+    run_on: ubuntu2004-large
+    tags: [integration, ubuntu2004, release, shared, "5.0", sharded]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: sharded_cluster
+          mongodb_version: "5.0"
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: sharded
+  - name: integration-ubuntu2004-release-shared-5.0-single
+    run_on: ubuntu2004-large
+    tags: [integration, ubuntu2004, release, shared, "5.0", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "5.0"
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+  - name: integration-ubuntu2004-release-shared-csfle-5.0-replica
+    run_on: ubuntu2004-large
+    tags: [integration, ubuntu2004, release, shared, csfle, "5.0", replica]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: replica_set
+          mongodb_version: "5.0"
+      - func: install_c_driver
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: replica
+  - name: integration-ubuntu2004-release-shared-csfle-5.0-sharded
+    run_on: ubuntu2004-large
+    tags: [integration, ubuntu2004, release, shared, csfle, "5.0", sharded]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: sharded_cluster
+          mongodb_version: "5.0"
+      - func: install_c_driver
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: sharded
+  - name: integration-ubuntu2004-release-shared-csfle-latest-replica
+    run_on: ubuntu2004-large
+    tags: [integration, ubuntu2004, release, shared, csfle, latest, replica]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: replica_set
+          mongodb_version: latest
+      - func: install_c_driver
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: replica
+  - name: integration-ubuntu2004-release-shared-csfle-latest-sharded
+    run_on: ubuntu2004-large
+    tags: [integration, ubuntu2004, release, shared, csfle, latest, sharded]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          TOPOLOGY: sharded_cluster
+          mongodb_version: latest
+      - func: install_c_driver
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: sharded
+  - name: integration-ubuntu2004-release-shared-extra_alignment-5.0-single
+    run_on: ubuntu2004-large
+    tags: [integration, ubuntu2004, release, shared, extra_alignment, "5.0", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "5.0"
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+  - name: integration-ubuntu2004-release-shared-extra_alignment-latest-single
+    run_on: ubuntu2004-large
+    tags: [integration, ubuntu2004, release, shared, extra_alignment, latest, single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: latest
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+  - name: integration-ubuntu2004-release-shared-latest-single
+    run_on: ubuntu2004-large
+    tags: [integration, ubuntu2004, release, shared, latest, single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: latest
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+  - name: integration-ubuntu2004-release-static-5.0-single
+    run_on: ubuntu2004-large
+    tags: [integration, ubuntu2004, release, static, "5.0", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "5.0"
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+          USE_STATIC_LIBS: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          USE_STATIC_LIBS: 1
+  - name: integration-ubuntu2004-release-static-extra_alignment-5.0-single
+    run_on: ubuntu2004-large
+    tags: [integration, ubuntu2004, release, static, extra_alignment, "5.0", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "5.0"
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          USE_STATIC_LIBS: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          USE_STATIC_LIBS: 1
+  - name: integration-ubuntu2004-release-static-extra_alignment-latest-single
+    run_on: ubuntu2004-large
+    tags: [integration, ubuntu2004, release, static, extra_alignment, latest, single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: latest
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          USE_STATIC_LIBS: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          USE_STATIC_LIBS: 1
+  - name: integration-ubuntu2004-release-static-latest-single
+    run_on: ubuntu2004-large
+    tags: [integration, ubuntu2004, release, static, latest, single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Release }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: latest
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+          USE_STATIC_LIBS: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          USE_STATIC_LIBS: 1
+  - name: integration-windows-2019-vs2019-x64-debug-shared-4.0-single
+    run_on: windows-vsCurrent-large
+    tags: [integration, windows-vsCurrent, debug, shared, "4.0", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: generator, value: Visual Studio 16 2019 }
+            - { key: platform, value: x64 }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "4.0"
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          example_projects_cxx_standard: 17
+  - name: integration-windows-2019-vs2019-x64-debug-shared-4.2-single
+    run_on: windows-vsCurrent-large
+    tags: [integration, windows-vsCurrent, debug, shared, "4.2", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: generator, value: Visual Studio 16 2019 }
+            - { key: platform, value: x64 }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "4.2"
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          example_projects_cxx_standard: 17
+  - name: integration-windows-2019-vs2019-x64-debug-shared-4.4-single
+    run_on: windows-vsCurrent-large
+    tags: [integration, windows-vsCurrent, debug, shared, "4.4", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: generator, value: Visual Studio 16 2019 }
+            - { key: platform, value: x64 }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "4.4"
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          example_projects_cxx_standard: 17
+  - name: integration-windows-2019-vs2019-x64-debug-shared-5.0-single
+    run_on: windows-vsCurrent-large
+    tags: [integration, windows-vsCurrent, debug, shared, "5.0", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: generator, value: Visual Studio 16 2019 }
+            - { key: platform, value: x64 }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "5.0"
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          example_projects_cxx_standard: 17
+  - name: integration-windows-2019-vs2019-x64-debug-shared-6.0-single
+    run_on: windows-vsCurrent-large
+    tags: [integration, windows-vsCurrent, debug, shared, "6.0", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: generator, value: Visual Studio 16 2019 }
+            - { key: platform, value: x64 }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "6.0"
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          example_projects_cxx_standard: 17
+  - name: integration-windows-2019-vs2019-x64-debug-shared-7.0-single
+    run_on: windows-vsCurrent-large
+    tags: [integration, windows-vsCurrent, debug, shared, "7.0", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: generator, value: Visual Studio 16 2019 }
+            - { key: platform, value: x64 }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "7.0"
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          example_projects_cxx_standard: 17
+  - name: integration-windows-2019-vs2019-x64-debug-shared-8.0-single
+    run_on: windows-vsCurrent-large
+    tags: [integration, windows-vsCurrent, debug, shared, "8.0", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: generator, value: Visual Studio 16 2019 }
+            - { key: platform, value: x64 }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "8.0"
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          example_projects_cxx_standard: 17
+  - name: integration-windows-2019-vs2019-x64-debug-shared-extra_alignment-4.0-single
+    run_on: windows-vsCurrent-large
+    tags: [integration, windows-vsCurrent, debug, shared, extra_alignment, "4.0", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: generator, value: Visual Studio 16 2019 }
+            - { key: platform, value: x64 }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "4.0"
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          example_projects_cxx_standard: 17
+  - name: integration-windows-2019-vs2019-x64-debug-shared-extra_alignment-4.2-single
+    run_on: windows-vsCurrent-large
+    tags: [integration, windows-vsCurrent, debug, shared, extra_alignment, "4.2", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: generator, value: Visual Studio 16 2019 }
+            - { key: platform, value: x64 }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "4.2"
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          example_projects_cxx_standard: 17
+  - name: integration-windows-2019-vs2019-x64-debug-shared-extra_alignment-4.4-single
+    run_on: windows-vsCurrent-large
+    tags: [integration, windows-vsCurrent, debug, shared, extra_alignment, "4.4", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: generator, value: Visual Studio 16 2019 }
+            - { key: platform, value: x64 }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "4.4"
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          example_projects_cxx_standard: 17
+  - name: integration-windows-2019-vs2019-x64-debug-shared-extra_alignment-5.0-single
+    run_on: windows-vsCurrent-large
+    tags: [integration, windows-vsCurrent, debug, shared, extra_alignment, "5.0", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: generator, value: Visual Studio 16 2019 }
+            - { key: platform, value: x64 }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "5.0"
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          example_projects_cxx_standard: 17
+  - name: integration-windows-2019-vs2019-x64-debug-shared-extra_alignment-6.0-single
+    run_on: windows-vsCurrent-large
+    tags: [integration, windows-vsCurrent, debug, shared, extra_alignment, "6.0", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: generator, value: Visual Studio 16 2019 }
+            - { key: platform, value: x64 }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "6.0"
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          example_projects_cxx_standard: 17
+  - name: integration-windows-2019-vs2019-x64-debug-shared-extra_alignment-7.0-single
+    run_on: windows-vsCurrent-large
+    tags: [integration, windows-vsCurrent, debug, shared, extra_alignment, "7.0", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: generator, value: Visual Studio 16 2019 }
+            - { key: platform, value: x64 }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "7.0"
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          example_projects_cxx_standard: 17
+  - name: integration-windows-2019-vs2019-x64-debug-shared-extra_alignment-8.0-single
+    run_on: windows-vsCurrent-large
+    tags: [integration, windows-vsCurrent, debug, shared, extra_alignment, "8.0", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: generator, value: Visual Studio 16 2019 }
+            - { key: platform, value: x64 }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "8.0"
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          example_projects_cxx_standard: 17
+  - name: integration-windows-2019-vs2019-x64-debug-shared-extra_alignment-latest-single
+    run_on: windows-vsCurrent-large
+    tags: [integration, windows-vsCurrent, debug, shared, extra_alignment, latest, single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: generator, value: Visual Studio 16 2019 }
+            - { key: platform, value: x64 }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: latest
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          example_projects_cxx_standard: 17
+  - name: integration-windows-2019-vs2019-x64-debug-shared-latest-single
+    run_on: windows-vsCurrent-large
+    tags: [integration, windows-vsCurrent, debug, shared, latest, single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: generator, value: Visual Studio 16 2019 }
+            - { key: platform, value: x64 }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: latest
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: install_c_driver
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          example_projects_cxx_standard: 17
   - name: lint
     run_on: ubuntu1804-large
     tags: [lint, ubuntu1804]
