@@ -53,19 +53,6 @@ variables:
 #######################################
 
 functions:
-    "check augmented sbom":
-      - command: subprocess.exec
-        type: test
-        params:
-          working_dir: "mongo-cxx-driver"
-          binary: bash
-          include_expansions_in_env:
-            - ARTIFACTORY_USER
-            - ARTIFACTORY_PASSWORD
-            - SILK_CLIENT_ID
-            - SILK_CLIENT_SECRET
-          args: [-c, .evergreen/check-augmented-sbom.sh]
-
     "upload augmented sbom":
       - command: s3.put
         params:
