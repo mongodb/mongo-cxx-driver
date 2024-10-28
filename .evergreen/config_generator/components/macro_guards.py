@@ -45,10 +45,7 @@ def tasks():
                     Compile.call(
                         build_type='Debug',
                         compiler=compiler,
-                        vars={
-                            'COMPILE_MACRO_GUARD_TESTS': 'ON',
-                            'ENABLE_TESTS': 'OFF',
-                        },
+                        vars={'COMPILE_MACRO_GUARD_TESTS': 'ON'},
                     )
                 ],
             )

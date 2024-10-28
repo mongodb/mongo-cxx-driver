@@ -3623,7 +3623,6 @@ tasks:
       - func: compile
         vars:
           COMPILE_MACRO_GUARD_TESTS: "ON"
-          ENABLE_TESTS: "OFF"
           build_type: Debug
   - name: macro-guards-ubuntu2004-clang
     run_on: ubuntu2004-large
@@ -3634,7 +3633,6 @@ tasks:
       - func: compile
         vars:
           COMPILE_MACRO_GUARD_TESTS: "ON"
-          ENABLE_TESTS: "OFF"
           build_type: Debug
           cc_compiler: clang
           cxx_compiler: clang++
@@ -3647,7 +3645,6 @@ tasks:
       - func: compile
         vars:
           COMPILE_MACRO_GUARD_TESTS: "ON"
-          ENABLE_TESTS: "OFF"
           build_type: Debug
           cc_compiler: gcc
           cxx_compiler: g++
