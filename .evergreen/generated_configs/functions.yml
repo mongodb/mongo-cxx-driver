@@ -118,6 +118,18 @@ functions:
           export DRIVERS_TOOLS=$(pwd)
 
           .evergreen/atlas_data_lake/pull-mongohouse-image.sh
+  run_mongohouse:
+    command: subprocess.exec
+    type: setup
+    params:
+      binary: bash
+      args:
+        - -c
+        - |
+          cd drivers-evergreen-tools
+          export DRIVERS_TOOLS=$(pwd)
+
+          .evergreen/atlas_data_lake/run-mongohouse-image.sh
   setup:
     - command: subprocess.exec
       type: setup

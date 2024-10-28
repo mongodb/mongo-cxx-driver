@@ -61,16 +61,6 @@ variables:
 #######################################
 
 functions:
-    "run_mongohouse":
-        command: shell.exec
-        params:
-            shell: bash
-            script: |
-                cd drivers-evergreen-tools
-                export DRIVERS_TOOLS=$(pwd)
-
-                .evergreen/atlas_data_lake/run-mongohouse-image.sh
-
     "test_mongohouse":
         command: shell.exec
         params:
