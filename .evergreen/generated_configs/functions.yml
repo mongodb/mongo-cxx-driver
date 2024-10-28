@@ -444,6 +444,33 @@ functions:
       args:
         - -c
         - .evergreen/scripts/test-mongohouse.sh
+  upload mongo orchestration artifacts:
+    - command: subprocess.exec
+      type: system
+      params:
+        binary: bash
+        args:
+          - -c
+          - |
+            set -o errexit
+            for log in $(find . -name '*.log'); do
+              tar rf mongodb-logs.tar "$log"
+            done
+            if [[ -f mongodb-logs.tar ]]; then
+              gzip mongodb-logs.tar
+            fi
+    - command: s3.put
+      type: system
+      params:
+        display_name: mongodb-logs.tar.gz
+        aws_key: ${aws_key}
+        aws_secret: ${aws_secret}
+        bucket: mciuploads
+        content_type: ${content_type|application/x-gzip}
+        local_file: mongodb-logs.tar.gz
+        optional: true
+        permissions: public-read
+        remote_file: mongo-cxx-driver/${build_variant}/${revision}/${version_id}/${build_id}/logs/${task_id}-${execution}-mongodb-logs.tar.gz
   upload working dir:
     - command: archive.targz_pack
       type: system

@@ -53,32 +53,6 @@ variables:
 #######################################
 
 functions:
-    "upload mongo orchestration artifacts":
-        - command: subprocess.exec
-          params:
-            binary: bash
-            args:
-              - -c
-              - |
-                set -o errexit
-                for log in $(find . -name '*.log'); do
-                  tar rf mongodb-logs.tar "$log"
-                done
-                if [[ -f mongodb-logs.tar ]]; then
-                  gzip mongodb-logs.tar
-                fi
-        - command: s3.put
-          params:
-            optional: true
-            aws_key: ${aws_key}
-            aws_secret: ${aws_secret}
-            local_file: mongodb-logs.tar.gz
-            remote_file: mongo-cxx-driver/${build_variant}/${revision}/${version_id}/${build_id}/logs/${task_id}-${execution}-mongodb-logs.tar.gz
-            bucket: mciuploads
-            permissions: public-read
-            content_type: ${content_type|application/x-gzip}
-            display_name: "mongodb-logs.tar.gz"
-
     "upload code coverage":
       - command: subprocess.exec
         params:
