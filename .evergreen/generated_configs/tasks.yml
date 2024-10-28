@@ -14,6 +14,78 @@ tasks:
     tags: [abi-stability, abidiff, ubuntu2204]
     commands:
       - func: abidiff
+  - name: add-subdirectory-debian10-release-5.0-single
+    run_on: debian10-large
+    tags: [add-subdirectory, debian10, release, "5.0", single]
+    commands:
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "5.0"
+      - func: build-examples-with-add-subdirectory
+  - name: add-subdirectory-debian11-release-5.0-single
+    run_on: debian11-large
+    tags: [add-subdirectory, debian11, release, "5.0", single]
+    commands:
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "5.0"
+      - func: build-examples-with-add-subdirectory
+  - name: add-subdirectory-debian12-release-latest-single
+    run_on: debian12-large
+    tags: [add-subdirectory, debian12, release, latest, single]
+    commands:
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: latest
+      - func: build-examples-with-add-subdirectory
+  - name: add-subdirectory-rhel90-arm64-release-latest-single
+    run_on: rhel90-arm64-large
+    tags: [add-subdirectory, rhel90-arm64, release, latest, single]
+    commands:
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: latest
+      - func: build-examples-with-add-subdirectory
+  - name: add-subdirectory-rhel90-release-latest-single
+    run_on: rhel90-large
+    tags: [add-subdirectory, rhel90, release, latest, single]
+    commands:
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: latest
+      - func: build-examples-with-add-subdirectory
+  - name: add-subdirectory-ubuntu1804-release-5.0-single
+    run_on: ubuntu1804-large
+    tags: [add-subdirectory, ubuntu1804, release, "5.0", single]
+    commands:
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "5.0"
+      - func: build-examples-with-add-subdirectory
+  - name: add-subdirectory-ubuntu2004-release-5.0-single
+    run_on: ubuntu2004-large
+    tags: [add-subdirectory, ubuntu2004, release, "5.0", single]
+    commands:
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "5.0"
+      - func: build-examples-with-add-subdirectory
+  - name: add-subdirectory-ubuntu2004-release-latest-single
+    run_on: ubuntu2004-large
+    tags: [add-subdirectory, ubuntu2004, release, latest, single]
+    commands:
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: latest
+      - func: build-examples-with-add-subdirectory
   - name: atlas-search-indexes-7.0
     run_on: ubuntu2004-large
     tags: [atlas-search-indexes, ubuntu2004]

@@ -225,32 +225,6 @@ tasks:
           vars:
               MONGOCXX_TEST_TOPOLOGY: sharded
 
-    - name: build_example_with_add_subdirectory
-      commands:
-      - func: "setup"
-      - func: "start_mongod"
-      - command: shell.exec
-        type: test
-        params:
-          working_dir: "mongo-cxx-driver"
-          shell: bash
-          script: |-
-            set -o errexit
-            cd examples/add_subdirectory
-            [ -d mongo-c-driver ] || git clone --depth 1 https://github.com/mongodb/mongo-c-driver
-            rsync -aq --exclude='examples/add_subdirectory' $(readlink -f ../..) .
-            [ -d build ] || mkdir build
-            . ./mongo-c-driver/.evergreen/scripts/find-cmake-latest.sh
-            export cmake_binary
-            cmake_binary="$(find_cmake_latest)"
-            # Use ccache if available.
-            . ./mongo-c-driver/.evergreen/scripts/find-ccache.sh
-            find_ccache_and_export_vars "$(pwd)" || true
-            command -v "$cmake_binary"
-            "$cmake_binary" -S . -B build -DENABLE_AUTOMATIC_INIT_AND_CLEANUP=OFF
-            "$cmake_binary" --build build
-            ./build/hello_mongocxx
-
 #######################################
 #           Buildvariants             #
 #######################################
@@ -714,7 +688,6 @@ buildvariants:
           - name: compile_and_test_with_static_libs_extra_alignment
           - name: compile_and_test_with_shared_libs_replica_set_with_libmongocrypt
           - name: compile_and_test_with_shared_libs_sharded_cluster_with_libmongocrypt
-          - name: build_example_with_add_subdirectory
 
     - name: benchmarks-rhel9
       display_name: "Benchmarks (RHEL 9.2)"
@@ -741,7 +714,6 @@ buildvariants:
           - name: compile_and_test_with_static_libs_extra_alignment
           - name: compile_and_test_with_shared_libs_replica_set_with_libmongocrypt
           - name: compile_and_test_with_shared_libs_sharded_cluster_with_libmongocrypt
-          - name: build_example_with_add_subdirectory
 
     - name: debian12-release-latest
       display_name: "Debian 12 Release (MongoDB Latest)"
@@ -759,7 +731,6 @@ buildvariants:
           - name: compile_and_test_with_static_libs_extra_alignment
           - name: compile_and_test_with_shared_libs_replica_set_with_libmongocrypt
           - name: compile_and_test_with_shared_libs_sharded_cluster_with_libmongocrypt
-          - name: build_example_with_add_subdirectory
 
     - name: debian11-release-50
       display_name: "Debian 11 Release (MongoDB 5.0)"
@@ -777,7 +748,6 @@ buildvariants:
           - name: compile_and_test_with_static_libs_extra_alignment
           - name: compile_and_test_with_shared_libs_replica_set
           - name: compile_and_test_with_shared_libs_sharded_cluster
-          - name: build_example_with_add_subdirectory
 
     - name: debian10-release-50
       display_name: "Debian 10 Release (MongoDB 5.0)"
@@ -793,7 +763,6 @@ buildvariants:
           - name: compile_and_test_with_static_libs_extra_alignment
           - name: compile_and_test_with_shared_libs_replica_set
           - name: compile_and_test_with_shared_libs_sharded_cluster
-          - name: build_example_with_add_subdirectory
 
     - name: ubuntu2004-release-latest
       display_name: "Ubuntu 20.04 Release (MongoDB Latest)"
@@ -809,7 +778,6 @@ buildvariants:
           - name: compile_and_test_with_static_libs_extra_alignment
           - name: compile_and_test_with_shared_libs_replica_set_with_libmongocrypt
           - name: compile_and_test_with_shared_libs_sharded_cluster_with_libmongocrypt
-          - name: build_example_with_add_subdirectory
 
     - name: ubuntu2004-release-50
       display_name: "Ubuntu 20.04 Release (MongoDB 5.0)"
@@ -825,7 +793,6 @@ buildvariants:
           - name: compile_and_test_with_static_libs_extra_alignment
           - name: compile_and_test_with_shared_libs_replica_set
           - name: compile_and_test_with_shared_libs_sharded_cluster
-          - name: build_example_with_add_subdirectory
 
     - name: ubuntu1804-release-50
       display_name: "Ubuntu 18.04 Release (MongoDB 5.0)"
@@ -841,7 +808,6 @@ buildvariants:
           - name: compile_and_test_with_static_libs_extra_alignment
           - name: compile_and_test_with_shared_libs_replica_set
           - name: compile_and_test_with_shared_libs_sharded_cluster
-          - name: build_example_with_add_subdirectory
 
     - name: zseries-rhel83-latest
       display_name: "zSeries RHEL 8.3 (MongoDB Latest)"

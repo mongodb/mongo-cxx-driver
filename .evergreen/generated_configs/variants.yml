@@ -19,6 +19,14 @@ buildvariants:
       cxx_standard: "17"
     tasks:
       - name: tg-abi-stability
+  - name: add-subdirectory-examples
+    display_name: add-subdirectory-examples
+    display_tasks:
+      - name: add-subdirectory-examples
+        execution_tasks:
+          - .add-subdirectory
+    tasks:
+      - name: .add-subdirectory
   - name: atlas-search-indexes-matrix
     display_name: atlas-search-indexes-matrix
     display_tasks:
