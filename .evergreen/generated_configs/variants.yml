@@ -36,6 +36,10 @@ buildvariants:
     tasks:
       - name: tg-atlas-search-indexes-7.0
       - name: tg-atlas-search-indexes-8.0
+  - name: benchmarks
+    display_name: benchmarks
+    tasks:
+      - name: .benchmarks
   - name: clang-tidy
     display_name: Clang Tidy
     tasks:

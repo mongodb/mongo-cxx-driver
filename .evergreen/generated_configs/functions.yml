@@ -112,6 +112,41 @@ functions:
       args:
         - -c
         - etc/debug-core-evergreen.sh
+  benchmarks-compile:
+    command: subprocess.exec
+    type: setup
+    params:
+      binary: bash
+      working_dir: mongo-cxx-driver
+      args:
+        - -c
+        - |
+          set -o errexit
+          set -o pipefail
+          cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH="$(pwd)/../mongoc" -DCMAKE_CXX_STANDARD=20
+          cmake --build build --target microbenchmarks --parallel 64
+  benchmarks-run:
+    - command: subprocess.exec
+      type: setup
+      params:
+        binary: bash
+        working_dir: mongo-cxx-driver
+        args:
+          - -c
+          - etc/microbenchmark-test-data.sh
+    - command: subprocess.exec
+      type: test
+      params:
+        binary: bash
+        working_dir: mongo-cxx-driver
+        args:
+          - -c
+          - build/benchmark/microbenchmarks all
+    - command: perf.send
+      type: system
+      params:
+        name: perf
+        file: mongo-cxx-driver/results.json
   build-examples-with-add-subdirectory:
     command: subprocess.exec
     type: test
@@ -253,22 +288,6 @@ functions:
       args:
         - -c
         - .evergreen/scripts/compile.sh
-  compile_benchmarks:
-    command: subprocess.exec
-    type: setup
-    params:
-      binary: bash
-      working_dir: mongo-cxx-driver
-      env:
-        CC: ${cc_compiler}
-        CXX: ${cxx_compiler}
-      args:
-        - -c
-        - |
-          set -o errexit
-          set -o pipefail
-          cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH="$(pwd)/../mongoc" -DCMAKE_CXX_STANDARD=20
-          cmake --build build --target microbenchmarks --parallel 64
   docker-image-build:
     command: subprocess.exec
     type: test
@@ -336,28 +355,6 @@ functions:
       args:
         - -c
         - python etc/clang_format.py lint
-  run benchmarks:
-    - command: subprocess.exec
-      type: setup
-      params:
-        binary: bash
-        working_dir: mongo-cxx-driver
-        args:
-          - -c
-          - etc/microbenchmark-test-data.sh
-    - command: subprocess.exec
-      type: test
-      params:
-        binary: bash
-        working_dir: mongo-cxx-driver
-        args:
-          - -c
-          - build/benchmark/microbenchmarks all
-    - command: perf.send
-      type: system
-      params:
-        name: perf
-        file: mongo-cxx-driver/results.json
   run scan build:
     - command: subprocess.exec
       type: test
