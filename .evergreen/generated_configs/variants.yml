@@ -84,3 +84,11 @@ buildvariants:
           - .uninstall-check
     tasks:
       - name: .uninstall-check
+  - name: versioned-api-matrix
+    display_name: versioned-api-matrix
+    display_tasks:
+      - name: versioned-api-matrix
+        execution_tasks:
+          - .versioned-api
+    tasks:
+      - name: .versioned-api
