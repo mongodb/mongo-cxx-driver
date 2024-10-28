@@ -39,7 +39,11 @@ buildvariants:
         execution_tasks:
           - .compile-only
     tasks:
-      - name: .compile-only
+      - name: .compile-only .rhel81-power8
+        batchtime: 1440
+      - name: .compile-only .rhel83-zseries
+        batchtime: 1440
+      - name: .compile-only !.rhel81-power8 !.rhel83-zseries
   - name: docker-build
     display_name: Docker Build
     tasks:
