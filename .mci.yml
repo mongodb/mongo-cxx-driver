@@ -6,6 +6,9 @@ exec_timeout_secs: 3600
 
 include:
   - filename: .evergreen/generated_configs/functions.yml
+  - filename: .evergreen/generated_configs/tasks.yml
+  - filename: .evergreen/generated_configs/task_groups.yml
+  - filename: .evergreen/generated_configs/variants.yml
 
 #######################################
 #            Variables                #
