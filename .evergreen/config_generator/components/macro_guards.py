@@ -46,7 +46,7 @@ def tasks():
                         build_type='Debug',
                         compiler=compiler,
                         vars={
-                            'COMPILE_MACRO_GUARD_TESTS': 'OFF',
+                            'COMPILE_MACRO_GUARD_TESTS': 'ON',
                             'ENABLE_TESTS': 'OFF',
                         },
                     )
