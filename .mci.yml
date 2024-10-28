@@ -327,7 +327,7 @@ tasks:
           working_dir: "mongo-cxx-driver"
           script: |-
             set -o errexit
-            ./.evergreen/uninstall_check.sh
+            ./.evergreen-old/uninstall_check.sh
 
     - name: uninstall_check_windows
       commands:
@@ -343,7 +343,7 @@ tasks:
           working_dir: "mongo-cxx-driver"
           script: |-
             set -o errexit
-            cmd.exe /c .\\.evergreen\\uninstall_check_windows.cmd
+            cmd.exe /c .\\.evergreen-old\\uninstall_check_windows.cmd
 
     - name: build_example_with_add_subdirectory
       commands:
@@ -383,7 +383,7 @@ tasks:
           script: |-
             set -o errexit
             export IS_PATCH="${is_patch}"
-            .evergreen/debian_package_build.sh
+            .evergreen-old/debian_package_build.sh
       - command: s3.put
         params:
           aws_key: ${aws_key}
@@ -408,7 +408,7 @@ tasks:
             set -o errexit
             export IS_PATCH="${is_patch}"
             export DEB_BUILD_PROFILES="pkg.mongo-cxx-driver.mnmlstc"
-            .evergreen/debian_package_build.sh
+            .evergreen-old/debian_package_build.sh
       - command: s3.put
         params:
           aws_key: ${aws_key}
@@ -431,7 +431,7 @@ tasks:
           shell: bash
           script: |-
             set -o errexit
-            .evergreen/build_snapshot_rpm.sh
+            .evergreen-old/build_snapshot_rpm.sh
       - command: s3.put
         params:
           aws_key: ${aws_key}
@@ -598,7 +598,7 @@ task_groups:
       - command: subprocess.exec
         params:
           binary: bash
-          args: [-c, mongo-cxx-driver/.evergreen/abi-stability-setup.sh]
+          args: [-c, mongo-cxx-driver/.evergreen-old/abi-stability-setup.sh]
           include_expansions_in_env: [cxx_standard]
     tasks: [".abi-stability"]
     teardown_task_can_fail_task: true
