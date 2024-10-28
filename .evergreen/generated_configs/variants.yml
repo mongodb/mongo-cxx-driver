@@ -36,6 +36,10 @@ buildvariants:
     display_name: Lint
     tasks:
       - name: .lint
+  - name: mongohouse
+    display_name: Mongohouse
+    tasks:
+      - name: .mongohouse
   - name: uninstall-check
     display_name: Uninstall Check
     display_tasks:
