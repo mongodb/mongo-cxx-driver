@@ -20,6 +20,17 @@ pre_error_fails_task: true
 # teardown_group commands of appropriate task groups.
 post_error_fails_task: false
 
+# Commands run after all tasks (excluding those in task groups).
+# Use sparingly and ensure they are error-proof.
+# TODO: move into teardown_group commands of appropriate task groups.
+post:
+    - func: "stop_mongod"
+    - func: "backtrace"
+    # Workaround for CXX-2040
+    # - func: "upload working dir"
+    - func: "upload mongo orchestration artifacts"
+    - func: "upload code coverage"
+
 include:
   - filename: .evergreen/generated_configs/functions.yml
   - filename: .evergreen/generated_configs/task_groups.yml
