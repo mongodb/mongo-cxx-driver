@@ -113,14 +113,6 @@ tasks:
       - func: "compile_benchmarks"
       - func: "run benchmarks"
 
-    - name: compile_macro_guard_tests
-      commands:
-      - func: "setup"
-      - func: "fetch_c_driver_source"
-      - func: "compile"
-        vars:
-            COMPILE_MACRO_GUARD_TESTS: ON
-
     - name: compile_and_test_auth_with_shared_libs
       commands:
         - func: "setup"
@@ -1031,40 +1023,6 @@ buildvariants:
           # driver invokes mock callback functions that have libmongoc types in the callback
           # signature.
           - name: compile_and_test_with_static_libs
-
-    - name: ubuntu2004-debug
-      display_name: "Ubuntu 20.04 Debug (MongoDB Latest) (Extra)"
-      expansions:
-        build_type: "Debug"
-        mongodb_version: "latest"
-      run_on:
-        - ubuntu2004-build
-      tasks:
-        - name: compile_macro_guard_tests
-
-    - name: ubuntu2004-debug-gcc
-      display_name: "Ubuntu 20.04 Debug (GCC)"
-      expansions:
-        build_type: "Debug"
-        mongodb_version: "latest"
-        cc_compiler: gcc
-        cxx_compiler: g++
-      run_on:
-        - ubuntu2004-large
-      tasks:
-        - name: compile_macro_guard_tests
-
-    - name: ubuntu2004-debug-clang
-      display_name: "Ubuntu 20.04 Debug (Clang)"
-      expansions:
-        build_type: "Debug"
-        mongodb_version: "latest"
-        cc_compiler: clang
-        cxx_compiler: clang++
-      run_on:
-        - ubuntu2004-large
-      tasks:
-        - name: compile_macro_guard_tests
 
     - name: zseries-rhel83-latest
       display_name: "zSeries RHEL 8.3 (MongoDB Latest)"

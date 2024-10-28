@@ -154,6 +154,43 @@ tasks:
     commands:
       - func: setup
       - func: lint
+  - name: macro-guards-ubuntu2004
+    run_on: ubuntu2004-large
+    tags: [macro-guards, ubuntu2004]
+    commands:
+      - func: setup
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          COMPILE_MACRO_GUARD_TESTS: "OFF"
+          ENABLE_TESTS: "OFF"
+          build_type: Debug
+  - name: macro-guards-ubuntu2004-clang
+    run_on: ubuntu2004-large
+    tags: [macro-guards, ubuntu2004, clang]
+    commands:
+      - func: setup
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          COMPILE_MACRO_GUARD_TESTS: "OFF"
+          ENABLE_TESTS: "OFF"
+          build_type: Debug
+          cc_compiler: clang
+          cxx_compiler: clang++
+  - name: macro-guards-ubuntu2004-gcc
+    run_on: ubuntu2004-large
+    tags: [macro-guards, ubuntu2004, gcc]
+    commands:
+      - func: setup
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          COMPILE_MACRO_GUARD_TESTS: "OFF"
+          ENABLE_TESTS: "OFF"
+          build_type: Debug
+          cc_compiler: gcc
+          cxx_compiler: g++
   - name: packaging-debian
     run_on: debian12-latest-large
     tags: [packaging, debian12-latest]

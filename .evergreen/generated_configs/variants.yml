@@ -48,6 +48,14 @@ buildvariants:
     display_name: Lint
     tasks:
       - name: .lint
+  - name: macro-guards-matrix
+    display_name: macro-guards-matrix
+    display_tasks:
+      - name: macro-guards-matrix
+        execution_tasks:
+          - .macro-guards
+    tasks:
+      - name: .macro-guards
   - name: mongohouse
     display_name: Mongohouse
     tasks:
