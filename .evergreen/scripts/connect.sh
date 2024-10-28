@@ -6,9 +6,9 @@ set -o pipefail
 LIB_DIR=${LIB_DIR:-"lib"}
 BUILD_TYPE=${BUILD_TYPE:-"Debug"}
 
-print_usage_and_exit () {
-    echo "Error: $1"
-    cat << EOF
+print_usage_and_exit() {
+  echo "Error: $1"
+  cat <<EOF
     connect.sh runs the connect example with a MongoDB URI.
 
     Example usage:
@@ -18,22 +18,22 @@ print_usage_and_exit () {
     BUILD_TYPE="Debug" \\
     BUILD_DIR=$(pwd)/cmake-build \\
     URI="mongodb://localhost:27017/?" \\
-        ./.evergreen/connect.sh
+        ./.evergreen/scripts/connect.sh
 EOF
-    exit 1;
+  exit 1
 }
 
 if [ -z "$URI" ]; then
-    print_usage_and_exit "URI is a required environment variable."
+  print_usage_and_exit "URI is a required environment variable."
 fi
 if [ -z "$MONGOC_INSTALL_PREFIX" ]; then
-    print_usage_and_exit "MONGOC_INSTALL_PREFIX is a required environment variable."
+  print_usage_and_exit "MONGOC_INSTALL_PREFIX is a required environment variable."
 fi
 if [ -z "$MONGOCXX_INSTALL_PREFIX" ]; then
-    print_usage_and_exit "MONGOCXX_INSTALL_PREFIX is a required environment variable."
+  print_usage_and_exit "MONGOCXX_INSTALL_PREFIX is a required environment variable."
 fi
 if [ -z "$BUILD_DIR" ]; then
-    print_usage_and_exit "BUILD_DIR is a required environment variable."
+  print_usage_and_exit "BUILD_DIR is a required environment variable."
 fi
 
 # Use PATH / LD_LIBRARY_PATH / DYLD_LIBRARY_PATH to inform the tests where to find
@@ -48,7 +48,7 @@ export PATH=$PATH:$BUILD_DIR/src/mongocxx/$BUILD_TYPE
 export PATH=$PATH:$MONGOCXX_INSTALL_PREFIX/bin
 
 if [ "Windows_NT" == "$OS" ]; then
-    $BUILD_DIR/examples/mongocxx/$BUILD_TYPE/connect.exe "$URI"
+  "$BUILD_DIR/examples/mongocxx/$BUILD_TYPE/connect.exe" "$URI"
 else
-    $BUILD_DIR/examples/mongocxx/connect "$URI"
+  "$BUILD_DIR/examples/mongocxx/connect" "$URI"
 fi

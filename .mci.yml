@@ -53,25 +53,6 @@ variables:
 #######################################
 
 functions:
-    "test atlas connectivity":
-        - command: shell.exec
-          params:
-              shell: bash
-              working_dir: "mongo-cxx-driver"
-              silent: true
-              script: |
-
-                  export MONGOC_INSTALL_PREFIX=$(pwd)/../mongoc
-                  export MONGOCXX_INSTALL_PREFIX=$(pwd)/build/install
-                  export LIB_DIR=${lib_dir}
-                  export BUILD_TYPE=${build_type}
-                  export BUILD_DIR=$(pwd)/build
-
-                  # The atlas_serverless_uri expansion is set in the Evergreen project settings.
-                  export URI="${atlas_serverless_uri}"
-
-                  ./.evergreen/connect.sh
-
     "backtrace":
         - command: shell.exec
           params:
