@@ -1,5 +1,1 @@
-tasks:
-  - name: stub
-    run_on: ubuntu2404-large
-    commands:
-      - func: stub
+tasks: []

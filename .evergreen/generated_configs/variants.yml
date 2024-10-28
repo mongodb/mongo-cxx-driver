@@ -1,5 +1,1 @@
-buildvariants:
-  - name: stub
-    display_name: stub
-    tasks:
-      - name: stub
+buildvariants: []

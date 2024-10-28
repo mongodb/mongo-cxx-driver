@@ -423,13 +423,6 @@ functions:
               mongo-orchestration stop
               fi
           fi
-  stub:
-    - command: subprocess.exec
-      params:
-        binary: bash
-        args:
-          - -c
-          - echo "stub!"
   test:
     command: subprocess.exec
     type: test
