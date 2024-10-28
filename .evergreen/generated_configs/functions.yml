@@ -118,6 +118,20 @@ functions:
           export DRIVERS_TOOLS=$(pwd)
 
           .evergreen/atlas_data_lake/pull-mongohouse-image.sh
+  clang-tidy:
+    command: subprocess.exec
+    type: test
+    params:
+      binary: bash
+      working_dir: mongo-cxx-driver
+      env:
+        CC: ${cc_compiler}
+        CXX: ${cxx_compiler}
+      include_expansions_in_env:
+        - distro_id
+      args:
+        - -c
+        - ./etc/run-clang-tidy.sh
   fetch_c_driver_source:
     command: subprocess.exec
     type: setup
