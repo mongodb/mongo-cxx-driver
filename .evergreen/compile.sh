@@ -12,9 +12,11 @@ set -o errexit
 set -o pipefail
 
 : "${branch_name:?}"
+: "${BSONCXX_POLYFILL:-}"
 : "${build_type:?}"
 : "${distro_id:?}" # Required by find-cmake-latest.sh.
 
+: "${BSONCXX_POLYFILL:-}"
 : "${COMPILE_MACRO_GUARD_TESTS:-}"
 : "${ENABLE_CODE_COVERAGE:-}"
 : "${ENABLE_TESTS:-}"
@@ -130,9 +132,13 @@ esac
 export CMAKE_GENERATOR="${generator:?}"
 export CMAKE_GENERATOR_PLATFORM="${platform:-}"
 
-if [[ "${USE_POLYFILL_BOOST:-}" == "ON" ]]; then
-  cmake_flags+=("-DBSONCXX_POLY_USE_BOOST=ON")
-fi
+case "${BSONCXX_POLYFILL:-}" in
+mnmlstc) cmake_flags+=(-D "BSONCXX_POLY_USE_MNMLSTC=ON") ;;
+boost) cmake_flags+=(-D "BSONCXX_POLY_USE_BOOST=ON") ;;
+impls) cmake_flags+=(-D "BSONCXX_POLY_USE_IMPLS=ON") ;;
+std) cmake_flags+=(-D "BSONCXX_POLY_USE_STD=ON") ;;
+*) ;;
+esac
 
 cc_flags_init=(-Wall -Wextra -Wno-attributes -Werror -Wno-missing-field-initializers)
 cxx_flags_init=(-Wall -Wextra -Wconversion -Wnarrowing -pedantic -Werror)

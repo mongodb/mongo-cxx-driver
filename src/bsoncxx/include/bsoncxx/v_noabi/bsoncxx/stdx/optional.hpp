@@ -506,7 +506,7 @@ struct optional_assign_base<T, movable> : optional_construct_base<T> {
 
     // Allow move-assignment.
 
-    bsoncxx_cxx14_constexpr optional_assign_base& operator=(optional_assign_base&& other) = default;
+    bsoncxx_cxx14_constexpr optional_assign_base& operator=(optional_assign_base&&) = default;
 };
 
 template <typename T>
@@ -529,7 +529,7 @@ struct optional_construct_base<T, movable> : optional_destruct_base<T> {
     optional_construct_base() = default;
 
     optional_construct_base(const optional_construct_base&) = delete;
-    optional_construct_base(optional_construct_base&& other) = default;
+    optional_construct_base(optional_construct_base&&) = default;
     optional_construct_base& operator=(const optional_construct_base&) = default;
     optional_construct_base& operator=(optional_construct_base&&) = default;
 };

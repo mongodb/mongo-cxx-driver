@@ -462,6 +462,7 @@ functions:
               include_expansions_in_env:
                   - branch_name
                   - build_type
+                  - BSONCXX_POLYFILL
                   - COMPILE_MACRO_GUARD_TESTS
                   - distro_id
                   - ENABLE_CODE_COVERAGE
@@ -470,7 +471,6 @@ functions:
                   - platform
                   - REQUIRED_CXX_STANDARD
                   - RUN_DISTCHECK
-                  - USE_POLYFILL_BOOST
                   - USE_SANITIZER_ASAN
                   - USE_SANITIZER_UBSAN
                   - USE_STATIC_LIBS
@@ -2029,7 +2029,7 @@ buildvariants:
         cc_compiler: gcc
         cxx_compiler: g++
       run_on:
-        - ubuntu2004-small
+        - ubuntu2004-large
       tasks:
         - name: compile_without_tests
         - name: compile_macro_guard_tests
@@ -2042,7 +2042,7 @@ buildvariants:
         cc_compiler: clang
         cxx_compiler: clang++
       run_on:
-        - ubuntu2004-small
+        - ubuntu2004-large
       tasks:
         - name: clang-tidy
         - name: compile_without_tests
@@ -2066,7 +2066,7 @@ buildvariants:
           cmake: "cmake"
           lib_dir: "lib64"
       run_on:
-          - rhel83-zseries-small
+          - rhel83-zseries-large
       tasks:
           - name: compile_with_shared_libs
           - name: compile_and_test_with_shared_libs
@@ -2084,7 +2084,7 @@ buildvariants:
           cmake: "cmake"
           lib_dir: "lib64"
       run_on:
-          - rhel83-zseries-small
+          - rhel83-zseries-large
       tasks:
           - name: compile_with_shared_libs
           - name: compile_and_test_with_shared_libs
@@ -2102,7 +2102,7 @@ buildvariants:
           cmake: "cmake"
           lib_dir: "lib64"
       run_on:
-          - rhel83-zseries-small
+          - rhel83-zseries-large
       tasks:
           - name: compile_with_shared_libs
           - name: compile_and_test_with_shared_libs
@@ -2181,7 +2181,7 @@ buildvariants:
       display_name: "MacOS 11.0 Release (Boost) (MongoDB Latest)"
       expansions:
           build_type: "Release"
-          USE_POLYFILL_BOOST: ON
+          BSONCXX_POLYFILL: "boost"
           mongodb_version: "latest"
       run_on:
           - macos-1100
@@ -2195,7 +2195,7 @@ buildvariants:
       display_name: "MacOS 11.0 Release (Boost) (MongoDB 5.0)"
       expansions:
           build_type: "Release"
-          USE_POLYFILL_BOOST: ON
+          BSONCXX_POLYFILL: "boost"
           mongodb_version: "5.0"
       run_on:
           - macos-1100
@@ -2209,7 +2209,7 @@ buildvariants:
       display_name: "MacOS 11.0 Release Versioned API"
       expansions:
           build_type: "Release"
-          USE_POLYFILL_BOOST: ON
+          BSONCXX_POLYFILL: "boost"
           mongodb_version: "latest"
       run_on:
           - macos-1100
@@ -2283,6 +2283,6 @@ buildvariants:
           build_type: "Release"
           BSONCXX_POLYFILL: impls
       run_on:
-          - rhel79-small
+          - rhel79-large
       tasks:
           - name: compile_without_tests
