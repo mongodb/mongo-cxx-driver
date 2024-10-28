@@ -45,6 +45,18 @@ tasks:
         vars:
           cc_compiler: clang
           cxx_compiler: clang++
+  - name: docker-build-ubuntu2204
+    run_on: ubuntu2204-large
+    tags: [docker-build, ubuntu2204]
+    commands:
+      - func: setup
+      - func: docker-image-build
+  - name: docker-build-ubuntu2204-arm64
+    run_on: ubuntu2204-arm64-large
+    tags: [docker-build, ubuntu2204-arm64]
+    commands:
+      - func: setup
+      - func: docker-image-build
   - name: lint
     run_on: ubuntu1804-large
     tags: [lint, ubuntu1804]

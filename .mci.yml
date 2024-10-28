@@ -377,20 +377,6 @@ tasks:
           vars:
               MONGOCXX_TEST_TOPOLOGY: single
 
-    - name: docker_build_arm
-      run_on:
-        - ubuntu2204-arm64-small
-      commands:
-         - func: "setup"
-         - func: "docker-image-build"
-
-    - name: docker_build
-      run_on:
-        - ubuntu2204-small
-      commands:
-         - func: "setup"
-         - func: "docker-image-build"
-
     - name: scan-build-ubuntu2204-std11-mnmlstc
       run_on: ubuntu2204-large
       tags: [scan-build-matrix]
@@ -920,11 +906,6 @@ buildvariants:
     #######################################
     #         Linux Buildvariants         #
     #######################################
-    - name: docker-builder
-      display_name: "Docker builder"
-      tasks:
-          - name: docker_build
-          - name: docker_build_arm
 
     - name: rhel9-release-latest
       display_name: "RHEL 9 Release (MongoDB Latest)"
