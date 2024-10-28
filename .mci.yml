@@ -27,12 +27,6 @@ post:
 #######################################
 
 tasks:
-    - name: lint
-      run_on: ubuntu1804-large
-      commands:
-        - func: "setup"
-        - func: "lint"
-
     - name: clang-tidy
       commands:
         - func: "setup"
@@ -1510,10 +1504,6 @@ buildvariants:
          - name: debian-package-build
          - name: debian-package-build-mnmlstc
          - name: rpm-package-build
-
-    - name: lint
-      display_name: Lint
-      tasks: [lint]
 
     - name: scan-build-matrix
       display_name: scan-build-matrix
