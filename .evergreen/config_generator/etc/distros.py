@@ -229,6 +229,10 @@ def make_distro_str(distro_name, compiler, arch) -> str:
             'vs2015x86': '-x86',
             'vs2017x64': '-x64',
             'vs2017x86': '-x86',
+            'vs2019x64': '-x64',
+            'vs2019x86': '-x86',
+            'vs2022x64': '-x64',
+            'vs2022x86': '-x86',
         }.get(compiler, f'-{compiler}')
     else:
         distro_str = distro_name
@@ -249,4 +253,8 @@ def to_cc(compiler):
         'vs2015x86': 'Visual Studio 14 2015',
         'vs2017x64': 'Visual Studio 15 2017 Win64',
         'vs2017x86': 'Visual Studio 15 2017',
+        'vs2019x64': 'Visual Studio 16 2019 Win64',
+        'vs2019x86': 'Visual Studio 16 2019',
+        'vs2022x64': 'Visual Studio 17 2022 Win64',
+        'vs2022x86': 'Visual Studio 17 2022',
     }.get(compiler, compiler)
