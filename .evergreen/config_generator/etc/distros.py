@@ -273,3 +273,27 @@ def to_platform(compiler):
         'vs2022x64': 'x64',
         'vs2022x86': 'Win32',
     }.get(compiler, compiler)
+
+
+def compiler_to_vars(compiler):
+    match compiler:
+        case 'gcc':
+            return {
+                'cc_compiler': 'gcc',
+                'cxx_compiler': 'g++',
+            }
+
+        case 'clang':
+            return {
+                'cc_compiler': 'clang',
+                'cxx_compiler': 'clang++',
+            }
+
+        case str(c) if 'vs' in c:
+            return {
+                'generator': to_cc(c),
+                'platform': to_platform(c),
+            }
+
+        case _:
+            return {}
