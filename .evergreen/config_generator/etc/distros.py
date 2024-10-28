@@ -87,6 +87,8 @@ RHEL_ARM64_DISTROS = [
     Distro(name='rhel82-arm64-small', os='rhel', os_type='linux', os_ver='8.2', size='small', arch='arm64'),
     Distro(name='rhel90-arm64-large', os='rhel', os_type='linux', os_ver='9.0', size='large', arch='arm64'),
     Distro(name='rhel90-arm64-small', os='rhel', os_type='linux', os_ver='9.0', size='small', arch='arm64'),
+    Distro(name='rhel92-arm64-large', os='rhel', os_type='linux', os_ver='9.2', size='large', arch='arm64'),
+    Distro(name='rhel92-arm64-small', os='rhel', os_type='linux', os_ver='9.2', size='small', arch='arm64'),
 ]
 
 RHEL_POWER8_DISTROS = [
