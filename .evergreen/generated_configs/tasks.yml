@@ -51,3 +51,94 @@ tasks:
     commands:
       - func: setup
       - func: lint
+  - name: uninstall-check-debian10-gcc-release-shared
+    run_on: debian10-large
+    tags: [uninstall-check, debian10, gcc, release, shared]
+    commands:
+      - func: setup
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          ENABLE_TESTS: "OFF"
+          build_type: Release
+          cc_compiler: gcc
+          cxx_compiler: g++
+      - func: uninstall-check
+  - name: uninstall-check-debian11-gcc-release-shared
+    run_on: debian11-large
+    tags: [uninstall-check, debian11, gcc, release, shared]
+    commands:
+      - func: setup
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          ENABLE_TESTS: "OFF"
+          build_type: Release
+          cc_compiler: gcc
+          cxx_compiler: g++
+      - func: uninstall-check
+  - name: uninstall-check-debian12-gcc-release-shared
+    run_on: debian12-large
+    tags: [uninstall-check, debian12, gcc, release, shared]
+    commands:
+      - func: setup
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          ENABLE_TESTS: "OFF"
+          build_type: Release
+          cc_compiler: gcc
+          cxx_compiler: g++
+      - func: uninstall-check
+  - name: uninstall-check-ubuntu1804-gcc-release-shared
+    run_on: ubuntu1804-large
+    tags: [uninstall-check, ubuntu1804, gcc, release, shared]
+    commands:
+      - func: setup
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          ENABLE_TESTS: "OFF"
+          build_type: Release
+          cc_compiler: gcc
+          cxx_compiler: g++
+      - func: uninstall-check
+  - name: uninstall-check-ubuntu2004-gcc-release-shared
+    run_on: ubuntu2004-large
+    tags: [uninstall-check, ubuntu2004, gcc, release, shared]
+    commands:
+      - func: setup
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          ENABLE_TESTS: "OFF"
+          build_type: Release
+          cc_compiler: gcc
+          cxx_compiler: g++
+      - func: uninstall-check
+  - name: uninstall-check-vs2015-x64-debug-shared
+    run_on: windows-64-vs2015-large
+    tags: [uninstall-check, windows-64-vs2015, vs2015x64, debug, shared]
+    commands:
+      - func: setup
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          ENABLE_TESTS: "OFF"
+          build_type: Debug
+          generator: Visual Studio 14 2015
+          platform: x64
+      - func: uninstall-check
+  - name: uninstall-check-vs2015-x64-release-shared
+    run_on: windows-64-vs2015-large
+    tags: [uninstall-check, windows-64-vs2015, vs2015x64, release, shared]
+    commands:
+      - func: setup
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          ENABLE_TESTS: "OFF"
+          build_type: Release
+          generator: Visual Studio 14 2015
+          platform: x64
+      - func: uninstall-check

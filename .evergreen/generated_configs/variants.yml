@@ -36,3 +36,11 @@ buildvariants:
     display_name: Lint
     tasks:
       - name: .lint
+  - name: uninstall-check
+    display_name: Uninstall Check
+    display_tasks:
+      - name: uninstall-check
+        execution_tasks:
+          - .uninstall-check
+    tasks:
+      - name: .uninstall-check

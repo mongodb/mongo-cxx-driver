@@ -516,6 +516,19 @@ functions:
       args:
         - -c
         - .evergreen/scripts/test-mongohouse.sh
+  uninstall-check:
+    command: subprocess.exec
+    type: test
+    params:
+      binary: bash
+      working_dir: mongo-cxx-driver
+      args:
+        - -c
+        - |
+          case "$OSTYPE" in
+          darwin*|linux*) .evergreen/scripts/uninstall_check.sh ;;
+          cygwin) cmd.exe /c ".evergreen\\scripts\\uninstall_check_windows.cmd" ;;
+          esac
   upload augmented sbom:
     - command: s3.put
       type: system
