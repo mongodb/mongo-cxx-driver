@@ -45,6 +45,97 @@ tasks:
         vars:
           cc_compiler: clang
           cxx_compiler: clang++
+  - name: compile-only-rhel79-release-shared-impls
+    run_on: rhel79-large
+    tags: [compile-only, rhel79, release, shared, impls]
+    commands:
+      - func: setup
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          BSONCXX_POLYFILL: impls
+          ENABLE_TESTS: "OFF"
+          build_type: Release
+  - name: compile-only-rhel81-power8-release-shared
+    run_on: rhel81-power8-large
+    tags: [compile-only, rhel81-power8, release, shared]
+    patchable: false
+    commands:
+      - func: setup
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          ENABLE_TESTS: "OFF"
+          build_type: Release
+  - name: compile-only-rhel83-zseries-release-shared
+    run_on: rhel83-zseries-large
+    tags: [compile-only, rhel83-zseries, release, shared]
+    patchable: false
+    commands:
+      - func: setup
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          ENABLE_TESTS: "OFF"
+          build_type: Release
+  - name: compile-only-ubuntu2004-clang-debug-shared
+    run_on: ubuntu2004-large
+    tags: [compile-only, ubuntu2004, clang, debug, shared]
+    commands:
+      - func: setup
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          ENABLE_TESTS: "OFF"
+          build_type: Debug
+          cc_compiler: clang
+          cxx_compiler: clang++
+  - name: compile-only-ubuntu2004-debug-shared
+    run_on: ubuntu2004-large
+    tags: [compile-only, ubuntu2004, debug, shared]
+    commands:
+      - func: setup
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          ENABLE_TESTS: "OFF"
+          build_type: Debug
+  - name: compile-only-ubuntu2004-gcc-debug-shared
+    run_on: ubuntu2004-large
+    tags: [compile-only, ubuntu2004, gcc, debug, shared]
+    commands:
+      - func: setup
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          ENABLE_TESTS: "OFF"
+          build_type: Debug
+          cc_compiler: gcc
+          cxx_compiler: g++
+  - name: compile-only-vs2015-x64-debug-shared
+    run_on: windows-64-vs2015-large
+    tags: [compile-only, windows-64-vs2015, vs2015x64, debug, shared]
+    commands:
+      - func: setup
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          ENABLE_TESTS: "OFF"
+          build_type: Debug
+          generator: Visual Studio 14 2015
+          platform: x64
+  - name: compile-only-vs2015-x64-release-shared
+    run_on: windows-64-vs2015-large
+    tags: [compile-only, windows-64-vs2015, vs2015x64, release, shared]
+    commands:
+      - func: setup
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          ENABLE_TESTS: "OFF"
+          build_type: Release
+          generator: Visual Studio 14 2015
+          platform: x64
   - name: docker-build-ubuntu2204
     run_on: ubuntu2204-large
     tags: [docker-build, ubuntu2204]

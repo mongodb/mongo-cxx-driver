@@ -105,14 +105,6 @@ tasks:
       - func: "fetch_c_driver_source"
       - func: "compile"
 
-    - name: compile_without_tests
-      commands:
-      - func: "setup"
-      - func: "fetch_c_driver_source"
-      - func: "compile"
-        vars:
-            ENABLE_TESTS: OFF
-
     - name: compile_and_run_benchmarks
       commands:
       - func: "setup"
@@ -1048,7 +1040,6 @@ buildvariants:
       run_on:
         - ubuntu2004-build
       tasks:
-        - name: compile_without_tests
         - name: compile_macro_guard_tests
 
     - name: ubuntu2004-debug-gcc
@@ -1061,7 +1052,6 @@ buildvariants:
       run_on:
         - ubuntu2004-large
       tasks:
-        - name: compile_without_tests
         - name: compile_macro_guard_tests
 
     - name: ubuntu2004-debug-clang
@@ -1074,7 +1064,6 @@ buildvariants:
       run_on:
         - ubuntu2004-large
       tasks:
-        - name: compile_without_tests
         - name: compile_macro_guard_tests
 
     - name: zseries-rhel83-latest
@@ -1237,49 +1226,3 @@ buildvariants:
       tasks:
           - name: test_versioned_api
           - name: test_versioned_api_accept_version_two
-
-    - name: windows-2k8-release
-      display_name: "Windows (VS 2015) Release (MongoDB 4.2)"
-      expansions:
-          build_type: "Release"
-          mongodb_version: "4.2"
-          generator: Visual Studio 14 2015
-          platform: x64
-      run_on:
-          - windows-64-vs2015-compile
-      tasks:
-          - name: compile_without_tests
-
-    - name: windows-2k8-debug
-      display_name: "Windows (VS 2015) Debug Static (MongoDB 4.2)"
-      expansions:
-          build_type: "Debug"
-          mongodb_version: "4.2"
-          generator: Visual Studio 14 2015
-          platform: x64
-      run_on:
-          - windows-64-vs2015-compile
-      tasks:
-          - name: compile_without_tests
-
-    - name: windows-msvc2015-debug
-      display_name: "Windows (VS 2015) Debug (MongoDB 4.2)"
-      expansions:
-          build_type: "Debug"
-          generator: Visual Studio 14 2015
-          platform: x64
-          mongodb_version: "4.2"
-      run_on:
-         - windows-64-vs2015-compile
-      tasks:
-         - name: compile_without_tests
-
-    - name: rhel79-compile
-      display_name: "RHEL 7.9 (gcc 4.8.5)"
-      expansions:
-          build_type: "Release"
-          BSONCXX_POLYFILL: impls
-      run_on:
-          - rhel79-large
-      tasks:
-          - name: compile_without_tests
