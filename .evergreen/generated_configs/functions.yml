@@ -170,3 +170,12 @@ functions:
         args:
           - -c
           - echo "stub!"
+  test_mongohouse:
+    command: subprocess.exec
+    type: test
+    params:
+      binary: bash
+      working_dir: mongo-cxx-driver
+      args:
+        - -c
+        - .evergreen/scripts/test-mongohouse.sh
