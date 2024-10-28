@@ -58,6 +58,43 @@ functions:
         local_files_include_filter: cxx-noabi/logs/**/log.txt
         permissions: public-read
         remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${execution}/abi-compliance-check/noabi/
+  abidiff:
+    - command: subprocess.exec
+      type: setup
+      params:
+        binary: bash
+        args:
+          - -c
+          - mongo-cxx-driver/.evergreen/scripts/abidiff-setup.sh
+    - command: subprocess.exec
+      type: test
+      params:
+        binary: bash
+        args:
+          - -c
+          - mongo-cxx-driver/.evergreen/scripts/abidiff-test.sh
+    - command: s3.put
+      type: system
+      params:
+        display_name: "abidiff (Stable): "
+        aws_key: ${aws_key}
+        aws_secret: ${aws_secret}
+        bucket: mciuploads
+        content_type: text/plain
+        local_files_include_filter: cxx-abi/*.txt
+        permissions: public-read
+        remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${execution}/abidiff/abi/
+    - command: s3.put
+      type: system
+      params:
+        display_name: "abidiff (Unstable): "
+        aws_key: ${aws_key}
+        aws_secret: ${aws_secret}
+        bucket: mciuploads
+        content_type: text/plain
+        local_files_include_filter: cxx-noabi/*.txt
+        permissions: public-read
+        remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${execution}/abidiff/noabi/
   stub:
     - command: subprocess.exec
       params:
