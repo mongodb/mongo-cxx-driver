@@ -12,7 +12,6 @@ set -o errexit
 set -o pipefail
 
 : "${branch_name:?}"
-: "${BSONCXX_POLYFILL:-}"
 : "${build_type:?}"
 : "${distro_id:?}" # Required by find-cmake-latest.sh.
 
@@ -24,7 +23,6 @@ set -o pipefail
 : "${platform:-}"
 : "${REQUIRED_CXX_STANDARD:-}"
 : "${RUN_DISTCHECK:-}"
-: "${USE_POLYFILL_BOOST:-}"
 : "${USE_SANITIZER_ASAN:-}"
 : "${USE_SANITIZER_UBSAN:-}"
 : "${USE_STATIC_LIBS:-}"

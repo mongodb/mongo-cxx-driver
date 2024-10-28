@@ -132,6 +132,33 @@ functions:
       args:
         - -c
         - ./etc/run-clang-tidy.sh
+  compile:
+    command: subprocess.exec
+    type: test
+    params:
+      binary: bash
+      working_dir: mongo-cxx-driver
+      env:
+        CC: ${cc_compiler}
+        CXX: ${cxx_compiler}
+      include_expansions_in_env:
+        - branch_name
+        - BSONCXX_POLYFILL
+        - build_type
+        - COMPILE_MACRO_GUARD_TESTS
+        - distro_id
+        - ENABLE_CODE_COVERAGE
+        - ENABLE_TESTS
+        - generator
+        - platform
+        - REQUIRED_CXX_STANDARD
+        - RUN_DISTCHECK
+        - USE_SANITIZER_ASAN
+        - USE_SANITIZER_UBSAN
+        - USE_STATIC_LIBS
+      args:
+        - -c
+        - .evergreen/scripts/compile.sh
   fetch-det:
     - command: subprocess.exec
       type: setup
