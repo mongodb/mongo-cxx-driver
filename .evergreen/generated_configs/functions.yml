@@ -159,6 +159,22 @@ functions:
       args:
         - -c
         - .evergreen/scripts/compile.sh
+  compile_benchmarks:
+    command: subprocess.exec
+    type: setup
+    params:
+      binary: bash
+      working_dir: mongo-cxx-driver
+      env:
+        CC: ${cc_compiler}
+        CXX: ${cxx_compiler}
+      args:
+        - -c
+        - |
+          set -o errexit
+          set -o pipefail
+          cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH="$(pwd)/../mongoc" -DCMAKE_CXX_STANDARD=20
+          cmake --build build --target microbenchmarks --parallel 64
   fetch-det:
     - command: subprocess.exec
       type: setup
