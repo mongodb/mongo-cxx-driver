@@ -53,18 +53,6 @@ variables:
 #######################################
 
 functions:
-    # fetch_c_driver_source may be used to fetch the C driver source without installing the C driver.
-    # This can be used when only CI scripts are needed.
-    "fetch_c_driver_source":
-      - command: shell.exec
-        params:
-            shell: bash
-            working_dir: "."
-            script: |
-                set -o errexit
-                set -o pipefail
-                git clone --depth 1 https://github.com/mongodb/mongo-c-driver mongoc
-
     "lint":
         - command: shell.exec
           params:
