@@ -103,6 +103,39 @@ functions:
         local_files_include_filter: cxx-noabi/*.txt
         permissions: public-read
         remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${execution}/abidiff/noabi/
+  setup:
+    - command: subprocess.exec
+      type: setup
+      params:
+        binary: bash
+        args:
+          - -c
+          - |
+            set -o errexit
+            set -o pipefail
+            rm -rf "mongo-cxx-driver"
+            rm -fr "mongo-c-driver"
+            rm -fr mongod
+            rm -fr drivers-evergreen-tools
+    - command: git.get_project
+      params:
+        directory: mongo-cxx-driver
+    - command: subprocess.exec
+      type: setup
+      params:
+        binary: bash
+        args:
+          - -c
+          - |
+            set -o errexit
+            set -o pipefail
+            cc --version || true
+            c++ --version || true
+            gcc --version || true
+            g++ --version || true
+            clang --version || true
+            cmake --version || true
+            openssl version || true
   stub:
     - command: subprocess.exec
       params:
