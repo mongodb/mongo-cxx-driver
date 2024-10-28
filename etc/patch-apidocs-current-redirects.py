@@ -14,6 +14,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# /// script
+# requires-python = ">=3.10"
+# dependencies = [
+#   "packaging>=14.0",
+# ]
+# ///
+
 """
 Patches HTML files within the latest API doc directory (under APIDOCSPATH) to
 redirect users from `/api/current` to canonical URLs under `/api/mongocxx-X.Y.Z`.

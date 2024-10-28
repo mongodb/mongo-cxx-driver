@@ -1,4 +1,9 @@
 #!/usr/bin/env python
+
+# /// script
+# requires-python = "<3.0"
+# ///
+
 """
 A script that provides:
 1. Ability to grab binaries where possible from LLVM.

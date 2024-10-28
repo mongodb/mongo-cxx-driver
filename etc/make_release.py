@@ -16,6 +16,17 @@
 # limitations under the License.
 #
 
+# /// script
+# requires-python = ">=3.10"
+# dependencies = [
+#   "click>=6.0",
+#   "gitpython>=3.1",
+#   "jira>=3.1",
+#   "looseversion>=1.3",
+#   "pygithub>=2.0",
+# ]
+# ///
+
 """
 Make a release of the C++ Driver, including steps associated with the CXX
 project in Jira, and with the mongodb/mongo-cxx-driver GitHub repository.

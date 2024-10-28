@@ -14,6 +14,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+# /// script
+# requires-python = ">=3.10"
+# dependencies = [
+#   "beautifulsoup4>=4.12",
+#   "packaging>=14.0",
+# ]
+# ///
+
 """
 Patches the root-level index.html file in each API doc site to match the state of the latest API doc site.
 """

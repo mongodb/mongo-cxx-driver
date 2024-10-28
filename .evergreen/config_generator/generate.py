@@ -2,6 +2,14 @@
 
 # Generates *.yml files under .evergreen/generated_configs.
 
+# /// script
+# requires-python = ">=3.10"
+# dependencies = [
+#   "packaging>=14.0",
+#   "pydantic>=2.7",
+#   "shrub-py>=3.3.1",
+# ]
+# ///
 
 import os
 import sys
@@ -18,10 +26,6 @@ GENERATOR_NAMES = [
 
 
 def main():
-    # Requires Python 3.10 or newer.
-    assert sys.version_info.major >= 3
-    assert sys.version_info.minor >= 10
-
     # Permit `import config_generator.*`.
     sys.path.append(os.path.join(os.path.dirname(__file__), '..'))
 
