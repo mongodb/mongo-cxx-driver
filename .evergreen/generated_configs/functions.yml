@@ -495,6 +495,19 @@ functions:
           export BUILD_DIR=$(pwd)/build
           export URI="mongodb://bob:pwd123@localhost"
           ./.evergreen/scripts/connect.sh
+  test-search-index-helpers:
+    command: subprocess.exec
+    type: test
+    params:
+      binary: bash
+      working_dir: mongo-cxx-driver
+      args:
+        - -c
+        - |
+          export MONGODB_URI=${MONGODB_URI}
+          export LD_LIBRARY_PATH=$(pwd)/../mongoc/lib
+
+          ./build/src/mongocxx/test/test_driver "atlas search indexes prose tests"
   test_mongohouse:
     command: subprocess.exec
     type: test

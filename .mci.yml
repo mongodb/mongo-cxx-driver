@@ -445,25 +445,6 @@ tasks:
          - func: "setup"
          - func: "docker-image-build"
 
-    - name: test_search_index_helpers
-      commands:
-        - func: "install_c_driver"
-        - func: "compile"
-        - command: shell.exec
-          params:
-            shell: bash
-            working_dir: mongo-cxx-driver
-            script: |
-              export MONGODB_URI=${MONGODB_URI}
-
-              if [ -n "${lib_dir}" ]; then
-                  export LD_LIBRARY_PATH=$(pwd)/../mongoc/${lib_dir}/
-                else
-                  export LD_LIBRARY_PATH=$(pwd)/../mongoc/lib/
-              fi
-
-              ./build/src/mongocxx/test/test_driver "atlas search indexes prose tests"
-
     - name: scan-build-ubuntu2204-std11-mnmlstc
       run_on: ubuntu2204-large
       tags: [scan-build-matrix]
@@ -531,64 +512,6 @@ tasks:
         - func: "setup"
         - func: "check augmented sbom"
         - func: "upload augmented sbom"
-
-task_groups:
-  - name: test_atlas_task_group_search_indexes_7.0
-    setup_group:
-      - func: "setup"
-      - func: "fetch-det"
-      - command: subprocess.exec
-        params:
-          working_dir: mongo-cxx-driver
-          binary: bash
-          add_expansions_to_env: true
-          env:
-            MONGODB_VERSION: '7.0'
-          args: [-c, "${DRIVERS_TOOLS}/.evergreen/atlas/setup-atlas-cluster.sh"]
-      - command: expansions.update
-        # Expected to set MONGODB_URI expansion.
-        params:
-          file: mongo-cxx-driver/atlas-expansion.yml
-    teardown_group:
-      - command: subprocess.exec
-        params:
-          working_dir: mongo-cxx-driver
-          binary: bash
-          add_expansions_to_env: true
-          args: [-c, "${DRIVERS_TOOLS}/.evergreen/atlas/teardown-atlas-cluster.sh"]
-    setup_group_can_fail_task: true
-    setup_group_timeout_secs: 1800
-    tasks:
-      - test_search_index_helpers
-
-  - name: test_atlas_task_group_search_indexes_8.0
-    setup_group:
-      - func: "setup"
-      - func: "fetch-det"
-      - command: subprocess.exec
-        params:
-          working_dir: mongo-cxx-driver
-          binary: bash
-          add_expansions_to_env: true
-          env:
-            MONGODB_VERSION: '8.0'
-          args: [-c, "${DRIVERS_TOOLS}/.evergreen/atlas/setup-atlas-cluster.sh"]
-      - command: expansions.update
-        # Expected to set MONGODB_URI expansion.
-        params:
-          file: mongo-cxx-driver/atlas-expansion.yml
-    teardown_group:
-      - command: subprocess.exec
-        params:
-          working_dir: mongo-cxx-driver
-          binary: bash
-          add_expansions_to_env: true
-          args: [-c, "${DRIVERS_TOOLS}/.evergreen/atlas/teardown-atlas-cluster.sh"]
-    setup_group_can_fail_task: true
-    setup_group_timeout_secs: 1800
-    tasks:
-      - test_search_index_helpers
-
 
 #######################################
 #           Buildvariants             #
@@ -1349,24 +1272,6 @@ buildvariants:
       tasks:
         - name: compile_without_tests
         - name: compile_macro_guard_tests
-
-    - name: atlas-search-indexes-7.0
-      display_name: "Atlas Search Indexes (7.0)"
-      expansions:
-        build_type: "Debug"
-      run_on:
-        - ubuntu2004-build
-      tasks:
-        - name: test_atlas_task_group_search_indexes_7.0
-
-    - name: atlas-search-indexes-8.0
-      display_name: "Atlas Search Indexes (8.0)"
-      expansions:
-        build_type: "Debug"
-      run_on:
-        - ubuntu2004-build
-      tasks:
-        - name: test_atlas_task_group_search_indexes_8.0
 
     - name: ubuntu2004-debug-gcc
       display_name: "Ubuntu 20.04 Debug (GCC)"
