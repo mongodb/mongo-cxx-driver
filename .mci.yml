@@ -24,40 +24,6 @@ variables:
 #######################################
 
 functions:
-    "abidiff":
-        - command: subprocess.exec
-          type: setup
-          params:
-            binary: bash
-            args: [-c, mongo-cxx-driver/.evergreen-old/abidiff-setup.sh]
-        - command: subprocess.exec
-          type: test
-          params:
-            binary: bash
-            args: [-c, mongo-cxx-driver/.evergreen-old/abidiff-test.sh]
-        - command: s3.put
-          type: system
-          params:
-            aws_key: ${aws_key}
-            aws_secret: ${aws_secret}
-            bucket: mciuploads
-            content_type: text/plain
-            display_name: "abidiff (Stable): "
-            local_files_include_filter: cxx-abi/*.txt
-            permissions: public-read
-            remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${execution}/abidiff/abi/
-        - command: s3.put
-          type: system
-          params:
-            aws_key: ${aws_key}
-            aws_secret: ${aws_secret}
-            bucket: mciuploads
-            content_type: text/plain
-            display_name: "abidiff (Unstable): "
-            local_files_include_filter: cxx-noabi/*.txt
-            permissions: public-read
-            remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${execution}/abidiff/noabi/
-
     "abi-prohibited-symbols":
         - command: subprocess.exec
           type: test
