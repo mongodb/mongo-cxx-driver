@@ -7,7 +7,7 @@ from typing import (Any, Iterable, Literal, Mapping, Type, TypeVar,
                     Union, cast)
 
 import yaml
-from shrub.v3.evg_command import EvgCommandType, subprocess_exec
+from shrub.v3.evg_command import EvgCommandType, KeyValueParam, subprocess_exec
 from shrub.v3.evg_project import EvgProject
 from shrub.v3.shrub_service import ConfigDumper
 from shrub.v3.evg_task import EvgTaskRef
@@ -132,9 +132,17 @@ class Dumper(ConfigDumper):
         return self.represent_special_mapping(tag, ordered.items(), flow_style)
 
 
+# Workaround represention error for KeyValueParam with `serialize_as_any=True`.
+Dumper.add_representer(
+    KeyValueParam,
+    lambda dumper, data: dumper.represent_dict({'key': data.key, 'value': data.value})
+)
+
+
+# Set `serialize_as_any=True` to permit dumping additional fields in subclasses defined above.
 def to_yaml(project: EvgProject) -> str:
     return yaml.dump(
-        project.dict(exclude_none=True, exclude_unset=True, by_alias=True),
+        project.model_dump(exclude_none=True, exclude_unset=True, by_alias=True, serialize_as_any=True),
         Dumper=Dumper,
         default_flow_style=False,
         width=float('inf'),
