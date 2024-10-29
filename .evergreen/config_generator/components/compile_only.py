@@ -33,7 +33,7 @@ MATRIX = [
 # pylint: enable=line-too-long
 
 
-def tasks():
+def generate_tasks():
     res = []
 
     for distro_name, compiler, build_types, link_types, polyfills in MATRIX:
@@ -78,6 +78,20 @@ def tasks():
     return res
 
 
+TASKS = generate_tasks()
+
+
+def tasks():
+    res = TASKS.copy()
+
+    # PowerPC and zSeries are limited resources.
+    for task in res:
+        if any(pattern in task.run_on for pattern in ["power8", "zseries"]):
+            task.patchable = False
+
+    return res
+
+
 def variants():
     tasks = []
 
@@ -94,7 +108,7 @@ def variants():
         BuildVariant(
             name=f'{TAG}-matrix',
             display_name=f'{TAG}-matrix',
-            tasks=[EvgTaskRef(name=f'.{TAG}')],
+            tasks=tasks,
             display_tasks=[
                 DisplayTask(
                     name=f'{TAG}-matrix',

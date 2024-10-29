@@ -99,12 +99,6 @@ tasks:
               MONGOCXX_TEST_TOPOLOGY: single
               REQUIRED_CXX_STANDARD: 20
 
-    - name: compile_with_shared_libs
-      commands:
-      - func: "setup"
-      - func: "fetch_c_driver_source"
-      - func: "compile"
-
     - name: compile_and_run_benchmarks
       commands:
       - func: "setup"
@@ -983,7 +977,6 @@ buildvariants:
       run_on:
           - rhel83-zseries-large
       tasks:
-          - name: compile_with_shared_libs
           - name: compile_and_test_with_shared_libs
           - name: compile_and_test_with_shared_libs_extra_alignment
           - name: compile_and_test_with_static_libs
@@ -1001,7 +994,6 @@ buildvariants:
       run_on:
           - rhel83-zseries-large
       tasks:
-          - name: compile_with_shared_libs
           - name: compile_and_test_with_shared_libs
           - name: compile_and_test_with_shared_libs_extra_alignment
           - name: compile_and_test_with_static_libs
@@ -1019,7 +1011,6 @@ buildvariants:
       run_on:
           - rhel83-zseries-large
       tasks:
-          - name: compile_with_shared_libs
           - name: compile_and_test_with_shared_libs
           - name: compile_and_test_with_shared_libs_extra_alignment
           - name: compile_and_test_with_static_libs
@@ -1037,7 +1028,6 @@ buildvariants:
       run_on:
           - rhel81-power8-large
       tasks:
-          - name: compile_with_shared_libs
           - name: compile_and_test_with_shared_libs
           - name: compile_and_test_with_shared_libs_extra_alignment
           - name: compile_and_test_with_static_libs
@@ -1055,7 +1045,6 @@ buildvariants:
       run_on:
           - rhel81-power8-large
       tasks:
-          - name: compile_with_shared_libs
           - name: compile_and_test_with_shared_libs
           - name: compile_and_test_with_shared_libs_extra_alignment
           - name: compile_and_test_with_static_libs
