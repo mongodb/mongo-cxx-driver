@@ -100,10 +100,6 @@ buildvariants:
     display_name: Silk
     tasks:
       - name: .silk
-  - name: stub
-    display_name: stub
-    tasks:
-      - name: stub
   - name: uninstall-check
     display_name: Uninstall Check
     display_tasks:

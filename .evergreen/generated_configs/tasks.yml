@@ -4107,15 +4107,6 @@ tasks:
       - func: setup
       - func: check augmented sbom
       - func: upload augmented sbom
-  - name: stub
-    run_on: ubuntu2004-large
-    commands:
-      - command: subprocess.exec
-        params:
-          binary: bash
-          args:
-            - -c
-            - "true"
   - name: test_mongohouse
     run_on: ubuntu2204-large
     tags: [mongohouse, ubuntu2204]
