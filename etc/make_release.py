@@ -438,7 +438,7 @@ def build_distribution(release_tag, release_version, c_driver_dir, quiet, skip_d
         click.echo('Clear ./build with "git clean -xdf ./build"', err=True)
         return None
 
-    run_shell_script('. .evergreen/find_cmake.sh;'
+    run_shell_script('. .evergreen/scripts/find-cmake-old.sh;'
                      'cd build;'
                      'echo ' + release_version + ' > VERSION_CURRENT;'
                      '${CMAKE} -DCMAKE_BUILD_TYPE=Release '

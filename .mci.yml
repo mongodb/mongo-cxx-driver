@@ -247,38 +247,6 @@ tasks:
           vars:
               MONGOCXX_TEST_TOPOLOGY: sharded
 
-    - name: uninstall_check
-      commands:
-      - func: "setup"
-      - func: "fetch_c_driver_source"
-      - func: "compile"
-        vars:
-          ENABLE_TESTS: OFF
-      - command: shell.exec
-        type: test
-        params:
-          shell: bash
-          working_dir: "mongo-cxx-driver"
-          script: |-
-            set -o errexit
-            ./.evergreen-old/uninstall_check.sh
-
-    - name: uninstall_check_windows
-      commands:
-      - func: "setup"
-      - func: "fetch_c_driver_source"
-      - func: "compile"
-        vars:
-          ENABLE_TESTS: OFF
-      - command: shell.exec
-        type: test
-        params:
-          shell: bash
-          working_dir: "mongo-cxx-driver"
-          script: |-
-            set -o errexit
-            cmd.exe /c .\\.evergreen-old\\uninstall_check_windows.cmd
-
     - name: build_example_with_add_subdirectory
       commands:
       - func: "setup"
@@ -1043,7 +1011,6 @@ buildvariants:
           - name: compile_and_test_with_shared_libs_replica_set_with_libmongocrypt
           - name: compile_and_test_with_shared_libs_sharded_cluster_with_libmongocrypt
           - name: build_example_with_add_subdirectory
-          - name: uninstall_check
 
     - name: debian11-release-50
       display_name: "Debian 11 Release (MongoDB 5.0)"
@@ -1062,7 +1029,6 @@ buildvariants:
           - name: compile_and_test_with_shared_libs_replica_set
           - name: compile_and_test_with_shared_libs_sharded_cluster
           - name: build_example_with_add_subdirectory
-          - name: uninstall_check
 
     - name: debian10-release-50
       display_name: "Debian 10 Release (MongoDB 5.0)"
@@ -1079,7 +1045,6 @@ buildvariants:
           - name: compile_and_test_with_shared_libs_replica_set
           - name: compile_and_test_with_shared_libs_sharded_cluster
           - name: build_example_with_add_subdirectory
-          - name: uninstall_check
 
     - name: ubuntu2004-release-latest
       display_name: "Ubuntu 20.04 Release (MongoDB Latest)"
@@ -1096,7 +1061,6 @@ buildvariants:
           - name: compile_and_test_with_shared_libs_replica_set_with_libmongocrypt
           - name: compile_and_test_with_shared_libs_sharded_cluster_with_libmongocrypt
           - name: build_example_with_add_subdirectory
-          - name: uninstall_check
 
     - name: ubuntu2004-release-50
       display_name: "Ubuntu 20.04 Release (MongoDB 5.0)"
@@ -1113,7 +1077,6 @@ buildvariants:
           - name: compile_and_test_with_shared_libs_replica_set
           - name: compile_and_test_with_shared_libs_sharded_cluster
           - name: build_example_with_add_subdirectory
-          - name: uninstall_check
 
     - name: ubuntu1804-release-50
       display_name: "Ubuntu 18.04 Release (MongoDB 5.0)"
@@ -1130,7 +1093,6 @@ buildvariants:
           - name: compile_and_test_with_shared_libs_replica_set
           - name: compile_and_test_with_shared_libs_sharded_cluster
           - name: build_example_with_add_subdirectory
-          - name: uninstall_check
 
     - name: ubuntu2004-debug-valgrind-latest
       display_name: "Valgrind Ubuntu 20.04 Debug (MongoDB Latest)"
@@ -1467,7 +1429,6 @@ buildvariants:
           - windows-64-vs2015-compile
       tasks:
           - name: compile_without_tests
-          - name: uninstall_check_windows
 
     - name: windows-2k8-debug
       display_name: "Windows (VS 2015) Debug Static (MongoDB 4.2)"
@@ -1480,7 +1441,6 @@ buildvariants:
           - windows-64-vs2015-compile
       tasks:
           - name: compile_without_tests
-          - name: uninstall_check_windows
 
     - name: windows-msvc2015-debug
       display_name: "Windows (VS 2015) Debug (MongoDB 4.2)"
@@ -1493,7 +1453,6 @@ buildvariants:
          - windows-64-vs2015-compile
       tasks:
          - name: compile_without_tests
-         - name: uninstall_check_windows
 
     - name: packaging
       display_name: Linux Distro Packaging

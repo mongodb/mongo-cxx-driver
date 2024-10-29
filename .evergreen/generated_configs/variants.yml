@@ -40,3 +40,11 @@ buildvariants:
     display_name: stub
     tasks:
       - name: stub
+  - name: uninstall-check
+    display_name: Uninstall Check
+    display_tasks:
+      - name: uninstall-check
+        execution_tasks:
+          - .uninstall-check
+    tasks:
+      - name: .uninstall-check
