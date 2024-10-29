@@ -100,6 +100,14 @@ buildvariants:
           - .uninstall-check
     tasks:
       - name: .uninstall-check
+  - name: valgrind-matrix
+    display_name: valgrind-matrix
+    display_tasks:
+      - name: valgrind-matrix
+        execution_tasks:
+          - .valgrind
+    tasks:
+      - name: .valgrind
   - name: versioned-api-matrix
     display_name: versioned-api-matrix
     display_tasks:

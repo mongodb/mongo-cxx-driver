@@ -847,38 +847,6 @@ buildvariants:
           - name: compile_and_test_with_shared_libs_sharded_cluster
           - name: build_example_with_add_subdirectory
 
-    - name: ubuntu2004-debug-valgrind-latest
-      display_name: "Valgrind Ubuntu 20.04 Debug (MongoDB Latest)"
-      expansions:
-          build_type: "Debug"
-          TEST_WITH_VALGRIND: "ON"
-          mongodb_version: "latest"
-          disable_slow_tests: 1
-          use_mongocryptd: true  # false positives arise from the crypt_shared library
-      run_on:
-          - ubuntu2004-build
-      tasks:
-          - name: compile_and_test_with_shared_libs
-          - name: compile_and_test_with_shared_libs_extra_alignment
-          - name: compile_and_test_with_static_libs
-          - name: compile_and_test_with_static_libs_extra_alignment
-
-    - name: ubuntu1804-debug-valgrind-50
-      display_name: "Valgrind Ubuntu 18.04 Debug (MongoDB 5.0)"
-      expansions:
-          build_type: "Debug"
-          TEST_WITH_VALGRIND: "ON"
-          mongodb_version: "5.0"
-          disable_slow_tests: 1
-          use_mongocryptd: true
-      run_on:
-          - ubuntu1804-large
-      tasks:
-          - name: compile_and_test_with_shared_libs
-          - name: compile_and_test_with_shared_libs_extra_alignment
-          - name: compile_and_test_with_static_libs
-          - name: compile_and_test_with_static_libs_extra_alignment
-
     - name: zseries-rhel83-latest
       display_name: "zSeries RHEL 8.3 (MongoDB Latest)"
       patchable: false
