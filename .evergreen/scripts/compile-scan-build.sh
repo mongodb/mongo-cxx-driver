@@ -25,7 +25,7 @@ scan_build_directories+=(
 )
 
 # Use system scan-build otherwise.
-IFS=: read -ra sys_dirs <<< "${PATH:-}"
+IFS=: read -ra sys_dirs <<<"${PATH:-}"
 scan_build_directories+=("${sys_dirs[@]:-}")
 
 declare scan_build_binary
