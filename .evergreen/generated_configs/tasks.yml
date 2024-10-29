@@ -178,7 +178,6 @@ tasks:
           RUN_DISTCHECK: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: replica
@@ -201,7 +200,6 @@ tasks:
           RUN_DISTCHECK: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: sharded
@@ -223,7 +221,6 @@ tasks:
           RUN_DISTCHECK: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -239,15 +236,15 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "5.0"
-      - func: fetch_c_driver_source
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
-        vars:
-          BSON_EXTRA_ALIGNMENT: 1
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -270,7 +267,6 @@ tasks:
           USE_STATIC_LIBS: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -287,16 +283,16 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "5.0"
-      - func: fetch_c_driver_source
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           USE_STATIC_LIBS: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
-        vars:
-          BSON_EXTRA_ALIGNMENT: 1
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -320,7 +316,6 @@ tasks:
           RUN_DISTCHECK: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: replica
@@ -343,7 +338,6 @@ tasks:
           RUN_DISTCHECK: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: sharded
@@ -365,7 +359,6 @@ tasks:
           RUN_DISTCHECK: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -388,7 +381,6 @@ tasks:
           RUN_DISTCHECK: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -406,16 +398,16 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "5.0"
-      - func: fetch_c_driver_source
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           REQUIRED_CXX_STANDARD: 20
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
-        vars:
-          BSON_EXTRA_ALIGNMENT: 1
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -433,15 +425,15 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "5.0"
-      - func: fetch_c_driver_source
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
-        vars:
-          BSON_EXTRA_ALIGNMENT: 1
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -464,7 +456,6 @@ tasks:
           USE_STATIC_LIBS: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -481,16 +472,16 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "5.0"
-      - func: fetch_c_driver_source
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           USE_STATIC_LIBS: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
-        vars:
-          BSON_EXTRA_ALIGNMENT: 1
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -551,16 +542,16 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: latest
-      - func: fetch_c_driver_source
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           REQUIRED_CXX_STANDARD: 20
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
-        vars:
-          BSON_EXTRA_ALIGNMENT: 1
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -585,7 +576,6 @@ tasks:
           RUN_DISTCHECK: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -603,15 +593,15 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: latest
-      - func: fetch_c_driver_source
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
-        vars:
-          BSON_EXTRA_ALIGNMENT: 1
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -633,7 +623,6 @@ tasks:
           RUN_DISTCHECK: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -649,16 +638,16 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: latest
-      - func: fetch_c_driver_source
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           USE_STATIC_LIBS: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
-        vars:
-          BSON_EXTRA_ALIGNMENT: 1
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -682,7 +671,6 @@ tasks:
           USE_STATIC_LIBS: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -706,7 +694,6 @@ tasks:
           RUN_DISTCHECK: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -722,16 +709,16 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "5.0"
-      - func: fetch_c_driver_source
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: compile
         vars:
           BSONCXX_POLYFILL: boost
           BSON_EXTRA_ALIGNMENT: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
-        vars:
-          BSON_EXTRA_ALIGNMENT: 1
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -747,16 +734,16 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: latest
-      - func: fetch_c_driver_source
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: compile
         vars:
           BSONCXX_POLYFILL: boost
           BSON_EXTRA_ALIGNMENT: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
-        vars:
-          BSON_EXTRA_ALIGNMENT: 1
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -779,7 +766,6 @@ tasks:
           RUN_DISTCHECK: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -803,7 +789,6 @@ tasks:
           USE_STATIC_LIBS: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -820,7 +805,10 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "5.0"
-      - func: fetch_c_driver_source
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: compile
         vars:
           BSONCXX_POLYFILL: boost
@@ -828,9 +816,6 @@ tasks:
           USE_STATIC_LIBS: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
-        vars:
-          BSON_EXTRA_ALIGNMENT: 1
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -847,7 +832,10 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: latest
-      - func: fetch_c_driver_source
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: compile
         vars:
           BSONCXX_POLYFILL: boost
@@ -855,9 +843,6 @@ tasks:
           USE_STATIC_LIBS: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
-        vars:
-          BSON_EXTRA_ALIGNMENT: 1
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -882,7 +867,6 @@ tasks:
           USE_STATIC_LIBS: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -906,7 +890,6 @@ tasks:
           RUN_DISTCHECK: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -924,15 +907,15 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "5.0"
-      - func: fetch_c_driver_source
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
-        vars:
-          BSON_EXTRA_ALIGNMENT: 1
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -950,15 +933,15 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: latest
-      - func: fetch_c_driver_source
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
-        vars:
-          BSON_EXTRA_ALIGNMENT: 1
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -982,7 +965,6 @@ tasks:
           RUN_DISTCHECK: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -1007,7 +989,6 @@ tasks:
           USE_STATIC_LIBS: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -1026,16 +1007,16 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "5.0"
-      - func: fetch_c_driver_source
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           USE_STATIC_LIBS: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
-        vars:
-          BSON_EXTRA_ALIGNMENT: 1
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -1054,16 +1035,16 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: latest
-      - func: fetch_c_driver_source
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           USE_STATIC_LIBS: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
-        vars:
-          BSON_EXTRA_ALIGNMENT: 1
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -1089,7 +1070,6 @@ tasks:
           USE_STATIC_LIBS: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -1114,7 +1094,6 @@ tasks:
           RUN_DISTCHECK: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -1138,7 +1117,6 @@ tasks:
           RUN_DISTCHECK: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -1156,15 +1134,15 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "5.0"
-      - func: fetch_c_driver_source
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
-        vars:
-          BSON_EXTRA_ALIGNMENT: 1
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -1182,15 +1160,15 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "6.0"
-      - func: fetch_c_driver_source
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
-        vars:
-          BSON_EXTRA_ALIGNMENT: 1
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -1208,15 +1186,15 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: latest
-      - func: fetch_c_driver_source
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
-        vars:
-          BSON_EXTRA_ALIGNMENT: 1
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -1240,7 +1218,6 @@ tasks:
           RUN_DISTCHECK: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -1265,7 +1242,6 @@ tasks:
           USE_STATIC_LIBS: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -1291,7 +1267,6 @@ tasks:
           USE_STATIC_LIBS: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -1310,16 +1285,16 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "5.0"
-      - func: fetch_c_driver_source
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           USE_STATIC_LIBS: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
-        vars:
-          BSON_EXTRA_ALIGNMENT: 1
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -1338,16 +1313,16 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "6.0"
-      - func: fetch_c_driver_source
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           USE_STATIC_LIBS: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
-        vars:
-          BSON_EXTRA_ALIGNMENT: 1
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -1366,16 +1341,16 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: latest
-      - func: fetch_c_driver_source
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           USE_STATIC_LIBS: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
-        vars:
-          BSON_EXTRA_ALIGNMENT: 1
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -1401,7 +1376,6 @@ tasks:
           USE_STATIC_LIBS: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -1465,16 +1439,16 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: latest
-      - func: fetch_c_driver_source
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           REQUIRED_CXX_STANDARD: 20
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
-        vars:
-          BSON_EXTRA_ALIGNMENT: 1
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -1500,7 +1474,6 @@ tasks:
           RUN_DISTCHECK: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -1519,15 +1492,15 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: latest
-      - func: fetch_c_driver_source
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
-        vars:
-          BSON_EXTRA_ALIGNMENT: 1
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -1550,7 +1523,6 @@ tasks:
           RUN_DISTCHECK: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -1567,16 +1539,16 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: latest
-      - func: fetch_c_driver_source
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           USE_STATIC_LIBS: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
-        vars:
-          BSON_EXTRA_ALIGNMENT: 1
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -1601,7 +1573,6 @@ tasks:
           USE_STATIC_LIBS: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -1665,16 +1636,16 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: latest
-      - func: fetch_c_driver_source
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           REQUIRED_CXX_STANDARD: 20
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
-        vars:
-          BSON_EXTRA_ALIGNMENT: 1
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -1700,7 +1671,6 @@ tasks:
           RUN_DISTCHECK: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -1719,15 +1689,15 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: latest
-      - func: fetch_c_driver_source
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
-        vars:
-          BSON_EXTRA_ALIGNMENT: 1
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -1750,7 +1720,6 @@ tasks:
           RUN_DISTCHECK: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -1767,16 +1736,16 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: latest
-      - func: fetch_c_driver_source
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           USE_STATIC_LIBS: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
-        vars:
-          BSON_EXTRA_ALIGNMENT: 1
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -1801,7 +1770,6 @@ tasks:
           USE_STATIC_LIBS: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -1825,7 +1793,6 @@ tasks:
           RUN_DISTCHECK: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -1841,15 +1808,15 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "5.0"
-      - func: fetch_c_driver_source
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
-        vars:
-          BSON_EXTRA_ALIGNMENT: 1
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -1872,7 +1839,6 @@ tasks:
           USE_STATIC_LIBS: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -1889,16 +1855,16 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "5.0"
-      - func: fetch_c_driver_source
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           USE_STATIC_LIBS: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
-        vars:
-          BSON_EXTRA_ALIGNMENT: 1
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -1921,7 +1887,6 @@ tasks:
           RUN_DISTCHECK: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -1943,7 +1908,6 @@ tasks:
           RUN_DISTCHECK: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -1965,7 +1929,6 @@ tasks:
           RUN_DISTCHECK: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -1987,7 +1950,6 @@ tasks:
           RUN_DISTCHECK: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -2009,7 +1971,6 @@ tasks:
           RUN_DISTCHECK: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -2383,15 +2344,15 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "4.0"
-      - func: fetch_c_driver_source
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
-        vars:
-          BSON_EXTRA_ALIGNMENT: 1
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -2407,15 +2368,15 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "4.2"
-      - func: fetch_c_driver_source
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
-        vars:
-          BSON_EXTRA_ALIGNMENT: 1
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -2431,15 +2392,15 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "4.4"
-      - func: fetch_c_driver_source
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
-        vars:
-          BSON_EXTRA_ALIGNMENT: 1
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -2455,15 +2416,15 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "5.0"
-      - func: fetch_c_driver_source
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
-        vars:
-          BSON_EXTRA_ALIGNMENT: 1
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -2479,15 +2440,15 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "6.0"
-      - func: fetch_c_driver_source
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
-        vars:
-          BSON_EXTRA_ALIGNMENT: 1
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -2510,7 +2471,6 @@ tasks:
           RUN_DISTCHECK: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: replica
@@ -2533,7 +2493,6 @@ tasks:
           RUN_DISTCHECK: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: sharded
@@ -2549,15 +2508,15 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: latest
-      - func: fetch_c_driver_source
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
-        vars:
-          BSON_EXTRA_ALIGNMENT: 1
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -2579,7 +2538,6 @@ tasks:
           RUN_DISTCHECK: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -2595,16 +2553,16 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: latest
-      - func: fetch_c_driver_source
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           USE_STATIC_LIBS: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
-        vars:
-          BSON_EXTRA_ALIGNMENT: 1
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -2628,7 +2586,6 @@ tasks:
           USE_STATIC_LIBS: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -2651,7 +2608,6 @@ tasks:
           RUN_DISTCHECK: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -2673,7 +2629,6 @@ tasks:
           RUN_DISTCHECK: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -2867,15 +2822,15 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "7.0"
-      - func: fetch_c_driver_source
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
-        vars:
-          BSON_EXTRA_ALIGNMENT: 1
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -2891,15 +2846,15 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "8.0"
-      - func: fetch_c_driver_source
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
-        vars:
-          BSON_EXTRA_ALIGNMENT: 1
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -2915,15 +2870,15 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: latest
-      - func: fetch_c_driver_source
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
-        vars:
-          BSON_EXTRA_ALIGNMENT: 1
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -2945,7 +2900,6 @@ tasks:
           RUN_DISTCHECK: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -2968,7 +2922,6 @@ tasks:
           RUN_DISTCHECK: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: replica
@@ -2991,7 +2944,6 @@ tasks:
           RUN_DISTCHECK: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: sharded
@@ -3013,7 +2965,6 @@ tasks:
           RUN_DISTCHECK: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -3117,15 +3068,15 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "5.0"
-      - func: fetch_c_driver_source
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
-        vars:
-          BSON_EXTRA_ALIGNMENT: 1
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -3141,15 +3092,15 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: latest
-      - func: fetch_c_driver_source
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
-        vars:
-          BSON_EXTRA_ALIGNMENT: 1
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -3171,7 +3122,6 @@ tasks:
           RUN_DISTCHECK: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -3194,7 +3144,6 @@ tasks:
           USE_STATIC_LIBS: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -3211,16 +3160,16 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "5.0"
-      - func: fetch_c_driver_source
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           USE_STATIC_LIBS: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
-        vars:
-          BSON_EXTRA_ALIGNMENT: 1
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -3237,16 +3186,16 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: latest
-      - func: fetch_c_driver_source
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
           USE_STATIC_LIBS: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
-        vars:
-          BSON_EXTRA_ALIGNMENT: 1
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -3270,7 +3219,6 @@ tasks:
           USE_STATIC_LIBS: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -3295,7 +3243,6 @@ tasks:
           RUN_DISTCHECK: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -3320,7 +3267,6 @@ tasks:
           RUN_DISTCHECK: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -3345,7 +3291,6 @@ tasks:
           RUN_DISTCHECK: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -3370,7 +3315,6 @@ tasks:
           RUN_DISTCHECK: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -3395,7 +3339,6 @@ tasks:
           RUN_DISTCHECK: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -3420,7 +3363,6 @@ tasks:
           RUN_DISTCHECK: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -3445,7 +3387,6 @@ tasks:
           RUN_DISTCHECK: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -3464,15 +3405,15 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "4.0"
-      - func: fetch_c_driver_source
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
-        vars:
-          BSON_EXTRA_ALIGNMENT: 1
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -3491,15 +3432,15 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "4.2"
-      - func: fetch_c_driver_source
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
-        vars:
-          BSON_EXTRA_ALIGNMENT: 1
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -3518,15 +3459,15 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "4.4"
-      - func: fetch_c_driver_source
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
-        vars:
-          BSON_EXTRA_ALIGNMENT: 1
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -3545,15 +3486,15 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "5.0"
-      - func: fetch_c_driver_source
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
-        vars:
-          BSON_EXTRA_ALIGNMENT: 1
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -3572,15 +3513,15 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "6.0"
-      - func: fetch_c_driver_source
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
-        vars:
-          BSON_EXTRA_ALIGNMENT: 1
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -3599,15 +3540,15 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "7.0"
-      - func: fetch_c_driver_source
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
-        vars:
-          BSON_EXTRA_ALIGNMENT: 1
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -3626,15 +3567,15 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "8.0"
-      - func: fetch_c_driver_source
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
-        vars:
-          BSON_EXTRA_ALIGNMENT: 1
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -3653,15 +3594,15 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: latest
-      - func: fetch_c_driver_source
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
-        vars:
-          BSON_EXTRA_ALIGNMENT: 1
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
@@ -3686,7 +3627,6 @@ tasks:
           RUN_DISTCHECK: 1
       - func: fetch-det
       - func: run_kms_servers
-      - func: install_c_driver
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single

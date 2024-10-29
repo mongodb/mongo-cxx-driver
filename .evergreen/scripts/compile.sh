@@ -15,6 +15,7 @@ set -o pipefail
 : "${build_type:?}"
 : "${distro_id:?}" # Required by find-cmake-latest.sh.
 
+: "${BSON_EXTRA_ALIGNMENT:-}"
 : "${BSONCXX_POLYFILL:-}"
 : "${COMPILE_MACRO_GUARD_TESTS:-}"
 : "${ENABLE_CODE_COVERAGE:-}"
@@ -155,6 +156,10 @@ linux*)
   cc_flags+=("${cc_flags_init[@]}")
   cxx_flags+=("${cxx_flags_init[@]}" -Wno-missing-field-initializers)
 
+  if [[ "${CXX:-}" != "clang++" ]]; then
+    cxx_flags+=(-Wno-aligned-new)
+  fi
+
   if [[ "${distro_id:?}" != rhel7* ]]; then
     cxx_flags+=("-Wno-expansion-to-defined")
   else
@@ -253,4 +258,31 @@ fi
 
 if [[ "${_RUN_DISTCHECK:-}" ]]; then
   "${cmake_binary}" --build . --config "${build_type:?}" --target distcheck
+fi
+
+# Ensure extra alignment is enabled or disabled as expected.
+if [[ -n "$(find "${mongoc_prefix:?}" -name 'bson-config.h')" ]]; then
+  if [[ "${BSON_EXTRA_ALIGNMENT:-}" == "1" ]]; then
+    grep -R "#define BSON_EXTRA_ALIGN 1" "${mongoc_prefix:?}" || {
+      echo "BSON_EXTRA_ALIGN is not 1 despite BSON_EXTRA_ALIGNMENT=1" 1>&2
+      exit 1
+    }
+  else
+    grep -R "#define BSON_EXTRA_ALIGN 0" "${mongoc_prefix:?}" || {
+      echo "BSON_EXTRA_ALIGN is not 0 despite BSON_EXTRA_ALIGNMENT=0" 1>&2
+      exit 1
+    }
+  fi
+else
+  if [[ "${BSON_EXTRA_ALIGNMENT:-}" == "1" ]]; then
+    grep -R "#define BSON_EXTRA_ALIGN 1" install || {
+      echo "BSON_EXTRA_ALIGN is not 1 despite BSON_EXTRA_ALIGNMENT=1" 1>&2
+      exit 1
+    }
+  else
+    grep -R "#define BSON_EXTRA_ALIGN 0" install || {
+      echo "BSON_EXTRA_ALIGN is not 0 despite BSON_EXTRA_ALIGNMENT=0" 1>&2
+      exit 1
+    }
+  fi
 fi

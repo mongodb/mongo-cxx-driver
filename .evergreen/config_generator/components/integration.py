@@ -136,16 +136,26 @@ def tasks():
 
             match with_csfle:
                 case 'plain':
-                    commands += [
-                        Setup.call(),
-                        StartMongod.call(mongodb_version=mongodb_version, topology=topology),
-                        FetchCDriverSource.call(),
-                        Compile.call(polyfill=polyfill, vars=compile_vars),
-                        FetchDET.call(),
-                        RunKMSServers.call(),
-                        InstallCDriver.call(vars=icd_vars),
-                        Test.call(vars=test_vars),
-                    ]
+                    if with_extra_align:
+                        commands += [
+                            Setup.call(),
+                            StartMongod.call(mongodb_version=mongodb_version, topology=topology),
+                            InstallCDriver.call(vars=icd_vars | {'SKIP_INSTALL_LIBMONGOCRYPT': 1}),
+                            Compile.call(polyfill=polyfill, vars=compile_vars),
+                            FetchDET.call(),
+                            RunKMSServers.call(),
+                            Test.call(vars=test_vars),
+                        ]
+                    else:
+                        commands += [
+                            Setup.call(),
+                            StartMongod.call(mongodb_version=mongodb_version, topology=topology),
+                            FetchCDriverSource.call(),
+                            Compile.call(polyfill=polyfill, vars=compile_vars),
+                            FetchDET.call(),
+                            RunKMSServers.call(),
+                            Test.call(vars=test_vars),
+                        ]
                 case 'csfle':
                     commands += [
                         Setup.call(),
