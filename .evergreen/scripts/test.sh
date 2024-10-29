@@ -357,7 +357,7 @@ fi
 # is true.
 if [[ -z "${MONGODB_API_VERSION:-}" ]]; then
   echo "Building example projects..."
-  .evergreen-old/build_example_projects.sh
+  .evergreen/scripts/build-example-projects.sh
   echo "Building example projects... done."
 fi
 unset MONGODB_API_VERSION

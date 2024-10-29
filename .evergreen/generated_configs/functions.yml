@@ -347,6 +347,42 @@ functions:
               mongo-orchestration stop
               fi
           fi
+  test:
+    command: subprocess.exec
+    type: test
+    params:
+      binary: bash
+      working_dir: mongo-cxx-driver
+      include_expansions_in_env:
+        - build_type
+        - CRYPT_SHARED_LIB_PATH
+        - cse_aws_access_key_id
+        - cse_aws_secret_access_key
+        - cse_azure_client_id
+        - cse_azure_client_secret
+        - cse_azure_tenant_id
+        - cse_gcp_email
+        - cse_gcp_privatekey
+        - disable_slow_tests
+        - distro_id
+        - example_projects_cc
+        - example_projects_cxx
+        - example_projects_cxx_standard
+        - example_projects_cxxflags
+        - example_projects_ldflags
+        - generator
+        - lib_dir
+        - MONGOCXX_TEST_TOPOLOGY
+        - MONGODB_API_VERSION
+        - platform
+        - TEST_WITH_ASAN
+        - TEST_WITH_UBSAN
+        - TEST_WITH_VALGRIND
+        - use_mongocryptd
+        - USE_STATIC_LIBS
+      args:
+        - -c
+        - .evergreen/scripts/test.sh
   test_mongohouse:
     command: subprocess.exec
     type: test

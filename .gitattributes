@@ -1,4 +1,4 @@
-.evergreen/build_example_projects.sh eol=lf
+.evergreen/scripts/build-example-projects.sh eol=lf
 .evergreen/scripts/compile.sh eol=lf
 .evergreen/install.sh eol=lf
 examples/projects/bsoncxx/cmake/shared/build.sh eol=lf
