@@ -24,35 +24,6 @@ variables:
 #######################################
 
 functions:
-    "setup":
-        - command: shell.exec
-          params:
-              shell: bash
-              script: |
-                 set -o errexit
-                 set -o pipefail
-                 rm -rf "mongo-cxx-driver"
-                 rm -fr "mongo-c-driver"
-                 rm -fr mongod
-                 rm -fr drivers-evergreen-tools
-        - command: git.get_project
-          params:
-              directory: "mongo-cxx-driver"
-        - command: shell.exec
-          params:
-              shell: bash
-              working_dir: "."
-              script: |
-                 set -o errexit
-                 set -o pipefail
-                 cc --version || true
-                 c++ --version || true
-                 gcc --version || true
-                 g++ --version || true
-                 clang --version || true
-                 cmake --version || true
-                 openssl version || true
-
     "build_mongohouse":
         command: shell.exec
         params:
