@@ -296,13 +296,17 @@ git clone -o upstream git@github.com:mongodb/mongo-cxx-driver.git mongo-cxx-driv
 cd mongo-cxx-driver-release
 ```
 
-Create and activate a fresh Python 3 virtual environment with required packages installed:
+Create and activate a fresh Python 3 virtual environment with required packages installed using [uv](https://docs.astral.sh/uv/getting-started/installation/):
 
 ```bash
+# Outside the mongo-cxx-driver-release directory!
+export UV_PROJECT_ENVIRONMENT="$HOME/mongo-cxx-driver-release-venv"
 
-python3 -m venv ~/mongo-cxx-driver-release-venv # Outside the mongo-cxx-driver-release directory!
-source ~/mongo-cxx-driver-release-venv/bin/activate
-pip install -r etc/requirements.txt
+# Install required packages into a new virtual environment.
+uv sync --frozen
+
+# Activate the virtual environment.
+source "$UV_PROJECT_ENVIRONMENT/bin/activate"
 ```
 
 ### Create a Release Tag...
