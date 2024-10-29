@@ -24,13 +24,6 @@ variables:
 #######################################
 
 functions:
-    "abi-prohibited-symbols":
-        - command: subprocess.exec
-          type: test
-          params:
-            binary: bash
-            args: [-c, mongo-cxx-driver/.evergreen-old/abi-prohibited-symbols-test.sh]
-
     "setup":
         - command: shell.exec
           params:
