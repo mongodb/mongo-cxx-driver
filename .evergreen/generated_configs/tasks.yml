@@ -60,6 +60,18 @@ tasks:
           args:
             - -c
             - "true"
+  - name: test_mongohouse
+    run_on: ubuntu2204-large
+    tags: [mongohouse, ubuntu2204]
+    commands:
+      - func: setup
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          build_type: Release
+      - func: build_mongohouse
+      - func: run_mongohouse
+      - func: test_mongohouse
   - name: uninstall-check-debian10-gcc-release-shared
     run_on: debian10-large
     tags: [uninstall-check, debian10, gcc, release, shared]
