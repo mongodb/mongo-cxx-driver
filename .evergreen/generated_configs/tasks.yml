@@ -4222,7 +4222,9 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "5.0"
-      - func: fetch_c_driver_source
+      - func: install_c_driver
+        vars:
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: compile
         vars:
           RUN_DISTCHECK: 1
@@ -4246,7 +4248,10 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "5.0"
-      - func: fetch_c_driver_source
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
@@ -4271,7 +4276,9 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "5.0"
-      - func: fetch_c_driver_source
+      - func: install_c_driver
+        vars:
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: compile
         vars:
           RUN_DISTCHECK: 1
@@ -4296,7 +4303,10 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: "5.0"
-      - func: fetch_c_driver_source
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
@@ -4320,7 +4330,10 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: latest
-      - func: fetch_c_driver_source
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
@@ -4344,7 +4357,9 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: latest
-      - func: fetch_c_driver_source
+      - func: install_c_driver
+        vars:
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: compile
         vars:
           RUN_DISTCHECK: 1
@@ -4369,7 +4384,10 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: latest
-      - func: fetch_c_driver_source
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
@@ -4394,7 +4412,9 @@ tasks:
       - func: start_mongod
         vars:
           mongodb_version: latest
-      - func: fetch_c_driver_source
+      - func: install_c_driver
+        vars:
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: compile
         vars:
           RUN_DISTCHECK: 1

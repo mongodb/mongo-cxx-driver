@@ -55,7 +55,8 @@ def tasks():
             tags += [mongodb_version, topology]
 
             updates = [KeyValueParam(key='build_type', value='Debug')]
-            compile_vars = {'BSON_EXTRA_ALIGNMENT': 1} if with_extra_align else {}
+            icd_vars = {'SKIP_INSTALL_LIBMONGOCRYPT': 1}
+            compile_vars = {}
             test_vars = {
                 'MONGOCXX_TEST_TOPOLOGY': topology,
                 'TEST_WITH_VALGRIND': 'ON',
@@ -66,7 +67,10 @@ def tasks():
             if link_type == 'static':
                 updates.append(KeyValueParam(key='USE_STATIC_LIBS', value='1'))
 
-            if not with_extra_align:
+            if with_extra_align:
+                icd_vars |= {'BSON_EXTRA_ALIGNMENT': 1}
+                compile_vars |= {'BSON_EXTRA_ALIGNMENT': 1}
+            else:
                 compile_vars |= {'RUN_DISTCHECK': 1}
 
             commands = [expansions_update(updates=updates)] if updates else []
@@ -74,7 +78,7 @@ def tasks():
             commands += [
                 Setup.call(),
                 StartMongod.call(mongodb_version=mongodb_version, topology=topology),
-                FetchCDriverSource.call(),
+                InstallCDriver.call(vars=icd_vars),
                 Compile.call(compiler=compiler, vars=compile_vars),
                 FetchDET.call(),
                 RunKMSServers.call(),
