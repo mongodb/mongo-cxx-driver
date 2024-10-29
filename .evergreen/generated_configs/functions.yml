@@ -437,3 +437,22 @@ functions:
       args:
         - -c
         - .evergreen/scripts/test-mongohouse.sh
+  upload working dir:
+    - command: archive.targz_pack
+      type: system
+      params:
+        include:
+          - ./**
+        source_dir: mongo-cxx-driver
+        target: working-dir.tar.gz
+    - command: s3.put
+      type: system
+      params:
+        display_name: working-dir.tar.gz
+        aws_key: ${aws_key}
+        aws_secret: ${aws_secret}
+        bucket: mciuploads
+        content_type: ${content_type|application/x-gzip}
+        local_file: working-dir.tar.gz
+        permissions: public-read
+        remote_file: mongo-cxx-driver/${build_variant}/${revision}/${version_id}/${build_id}/artifacts/${task_id}-${execution}-working-dir.tar.gz
