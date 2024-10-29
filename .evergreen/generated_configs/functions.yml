@@ -528,6 +528,44 @@ functions:
         optional: true
         permissions: public-read
         remote_file: mongo-cxx-driver/${build_variant}/${revision}/${version_id}/${build_id}/logs/${task_id}-${execution}-mongodb-logs.tar.gz
+  upload scan artifacts:
+    - command: subprocess.exec
+      type: test
+      params:
+        binary: bash
+        working_dir: mongo-cxx-driver
+        args:
+          - -c
+          - |
+            set -o errexit
+            if find scan -name \*.html | grep -q html; then
+                (cd scan && find . -name index.html -exec echo "<li><a href='{}'>{}</a></li>" \;) >> scan.html
+            else
+                echo "No issues found" > scan.html
+            fi
+    - command: subprocess.exec
+      type: test
+      params:
+        binary: bash
+        working_dir: mongo-cxx-driver
+        env:
+          AWS_ACCESS_KEY_ID: ${aws_key}
+          AWS_SECRET_ACCESS_KEY: ${aws_secret}
+        silent: true
+        args:
+          - -c
+          - aws s3 cp scan s3://mciuploads/mongo-cxx-driver/${build_variant}/${revision}/${version_id}/${build_id}/scan/ --recursive --acl public-read --region us-east-1
+    - command: s3.put
+      type: system
+      params:
+        display_name: Scan Build Report
+        aws_key: ${aws_key}
+        aws_secret: ${aws_secret}
+        bucket: mciuploads
+        content_type: text/html
+        local_file: mongo-cxx-driver/scan.html
+        permissions: public-read
+        remote_file: mongo-cxx-driver/${build_variant}/${revision}/${version_id}/${build_id}/scan/index.html
   upload working dir:
     - command: archive.targz_pack
       type: system
