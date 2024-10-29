@@ -3704,6 +3704,8 @@ tasks:
         vars:
           mongodb_version: "5.0"
       - func: install_c_driver
+        vars:
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: compile
         vars:
           RUN_DISTCHECK: 1
@@ -3735,6 +3737,7 @@ tasks:
       - func: install_c_driver
         vars:
           BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
@@ -3765,6 +3768,8 @@ tasks:
         vars:
           mongodb_version: "5.0"
       - func: install_c_driver
+        vars:
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: compile
         vars:
           RUN_DISTCHECK: 1
@@ -3797,6 +3802,7 @@ tasks:
       - func: install_c_driver
         vars:
           BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
@@ -3826,6 +3832,8 @@ tasks:
         vars:
           mongodb_version: "5.0"
       - func: install_c_driver
+        vars:
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: compile
         vars:
           RUN_DISTCHECK: 1
@@ -3857,6 +3865,7 @@ tasks:
       - func: install_c_driver
         vars:
           BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
@@ -3887,6 +3896,8 @@ tasks:
         vars:
           mongodb_version: "5.0"
       - func: install_c_driver
+        vars:
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: compile
         vars:
           RUN_DISTCHECK: 1
@@ -3919,6 +3930,7 @@ tasks:
       - func: install_c_driver
         vars:
           BSON_EXTRA_ALIGNMENT: 1
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: compile
         vars:
           BSON_EXTRA_ALIGNMENT: 1
@@ -3949,6 +3961,8 @@ tasks:
         vars:
           mongodb_version: "5.0"
       - func: install_c_driver
+        vars:
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: compile
         vars:
           RUN_DISTCHECK: 1
@@ -3979,6 +3993,8 @@ tasks:
         vars:
           mongodb_version: "5.0"
       - func: install_c_driver
+        vars:
+          SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: compile
         vars:
           RUN_DISTCHECK: 1

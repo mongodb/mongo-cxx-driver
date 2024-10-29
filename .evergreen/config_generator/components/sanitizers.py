@@ -62,7 +62,7 @@ def tasks():
             updates = [KeyValueParam(key='build_type', value='Debug')]
             updates += [KeyValueParam(key=key, value=value) for key, value in compiler_to_vars(compiler).items()]
 
-            icd_vars = {}
+            icd_vars = {'SKIP_INSTALL_LIBMONGOCRYPT': 1}
             compile_vars = {}
             test_vars = {
                 'MONGOCXX_TEST_TOPOLOGY': topology,
