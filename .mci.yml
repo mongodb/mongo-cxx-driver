@@ -8,33 +8,6 @@ include:
   - filename: .evergreen/generated_configs/functions.yml
 
 #######################################
-#            Functions                #
-#######################################
-
-functions:
-    "upload augmented sbom":
-      - command: s3.put
-        params:
-          aws_key: ${aws_key}
-          aws_secret: ${aws_secret}
-          remote_file: mongo-cxx-driver/${build_variant}/${revision}/${version_id}/${build_id}/silk/augmented.sbom.json
-          bucket: mciuploads
-          permissions: public-read
-          local_file: mongo-cxx-driver/etc/augmented.sbom.json.new
-          content_type: application/json
-          display_name: Augmented SBOM
-      - command: s3.put
-        params:
-          aws_key: ${aws_key}
-          aws_secret: ${aws_secret}
-          remote_file: mongo-cxx-driver/${build_variant}/${revision}/${version_id}/${build_id}/silk/augmented.sbom.json.diff
-          bucket: mciuploads
-          permissions: public-read
-          local_file: mongo-cxx-driver/diff.txt
-          content_type: application/json
-          display_name: Augmented SBOM (Diff)
-
-#######################################
 #              Post Task              #
 #######################################
 

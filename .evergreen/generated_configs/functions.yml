@@ -504,6 +504,29 @@ functions:
       args:
         - -c
         - .evergreen/scripts/test-mongohouse.sh
+  upload augmented sbom:
+    - command: s3.put
+      type: system
+      params:
+        display_name: Augmented SBOM
+        aws_key: ${aws_key}
+        aws_secret: ${aws_secret}
+        bucket: mciuploads
+        content_type: application/json
+        local_file: mongo-cxx-driver/etc/augmented.sbom.json.new
+        permissions: public-read
+        remote_file: mongo-cxx-driver/${build_variant}/${revision}/${version_id}/${build_id}/silk/augmented.sbom.json
+    - command: s3.put
+      type: system
+      params:
+        display_name: Augmented SBOM (Diff)
+        aws_key: ${aws_key}
+        aws_secret: ${aws_secret}
+        bucket: mciuploads
+        content_type: application/json
+        local_file: mongo-cxx-driver/diff.txt
+        permissions: public-read
+        remote_file: mongo-cxx-driver/${build_variant}/${revision}/${version_id}/${build_id}/silk/augmented.sbom.json.diff
   upload code coverage:
     command: subprocess.exec
     type: system
