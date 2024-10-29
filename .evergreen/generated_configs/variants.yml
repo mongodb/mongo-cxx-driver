@@ -32,6 +32,14 @@ buildvariants:
     display_name: Clang Tidy
     tasks:
       - name: .clang-tidy
+  - name: compile-only-matrix
+    display_name: compile-only-matrix
+    display_tasks:
+      - name: compile-only-matrix
+        execution_tasks:
+          - .compile-only
+    tasks:
+      - name: .compile-only
   - name: docker-build
     display_name: Docker Build
     tasks:
