@@ -118,6 +118,14 @@ functions:
           export DRIVERS_TOOLS=$(pwd)
 
           .evergreen/atlas_data_lake/pull-mongohouse-image.sh
+  fetch_c_driver_source:
+    command: subprocess.exec
+    type: setup
+    params:
+      binary: bash
+      args:
+        - -c
+        - git clone --depth 1 https://github.com/mongodb/mongo-c-driver mongoc
   install_c_driver:
     - command: expansions.update
       type: setup
