@@ -11,6 +11,7 @@ from shrub.v3.evg_command import EvgCommandType, KeyValueParam, subprocess_exec
 from shrub.v3.evg_project import EvgProject
 from shrub.v3.shrub_service import ConfigDumper
 from shrub.v3.evg_task import EvgTaskRef
+from shrub.v3.evg_task_group import EvgTaskGroup
 from typing_extensions import get_args, get_origin, get_type_hints
 
 T = TypeVar('T')
@@ -25,6 +26,17 @@ class TaskRef(EvgTaskRef):
     """
 
     batchtime: int | None = None
+
+
+# Equivalent to EvgTaskGroup but defines additional properties.
+class TaskGroup(EvgTaskGroup):
+    """
+    An evergreen task group model that also includes additional properties.
+
+    (The shrub.py model is missing some properties)
+    """
+
+    teardown_task_can_fail_task: bool | None = None
 
 
 # Automatically formats the provided script and invokes it in Bash.
