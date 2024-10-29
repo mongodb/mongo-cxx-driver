@@ -99,14 +99,6 @@ tasks:
               MONGOCXX_TEST_TOPOLOGY: single
               REQUIRED_CXX_STANDARD: 20
 
-    - name: compile_and_run_benchmarks
-      commands:
-      - func: "setup"
-      - func: "start_mongod"
-      - func: "fetch_c_driver_source"
-      - func: "compile_benchmarks"
-      - func: "run benchmarks"
-
     - name: compile_and_test_auth_with_shared_libs
       commands:
         - func: "setup"
@@ -719,14 +711,6 @@ buildvariants:
           - name: compile_and_test_with_shared_libs_replica_set_with_libmongocrypt
           - name: compile_and_test_with_shared_libs_sharded_cluster_with_libmongocrypt
           - name: build_example_with_add_subdirectory
-
-    - name: benchmarks-rhel9
-      display_name: "Benchmarks (RHEL 9.2)"
-      expansions:
-          mongodb_version: "v6.0-perf"
-      run_on: rhel90-dbx-perf-large
-      tasks:
-          - name: compile_and_run_benchmarks
 
     - name: arm-rhel9-release-latest
       display_name: "arm64 RHEL 9 Release (MongoDB Latest)"

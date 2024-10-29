@@ -32,6 +32,17 @@ tasks:
         vars:
           build_type: Debug
       - func: test-search-index-helpers
+  - name: benchmarks
+    run_on: rhel90-dbx-perf-large
+    tags: [benchmarks, rhel90-dbx-perf]
+    commands:
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: v6.0-perf
+      - func: fetch_c_driver_source
+      - func: benchmarks-compile
+      - func: benchmarks-run
   - name: clang-tidy
     run_on: ubuntu2004-small
     tags: [clang-tidy, ubuntu2004]
