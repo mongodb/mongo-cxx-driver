@@ -44,6 +44,10 @@ buildvariants:
     display_name: Mongohouse
     tasks:
       - name: .mongohouse
+  - name: packaging
+    display_name: Linux Distro Packaging
+    tasks:
+      - name: .packaging
   - name: silk
     display_name: Silk
     tasks:

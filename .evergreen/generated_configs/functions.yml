@@ -112,6 +112,69 @@ functions:
       args:
         - -c
         - etc/debug-core-evergreen.sh
+  build-package-debian:
+    - command: subprocess.exec
+      type: test
+      params:
+        binary: bash
+        working_dir: mongo-cxx-driver
+        args:
+          - -c
+          - |
+            set -o errexit
+            export IS_PATCH="${is_patch}"
+            .evergreen/scripts/debian_package_build.sh
+    - command: s3.put
+      params:
+        display_name: "\"deb.tar.gz\""
+        aws_key: ${aws_key}
+        aws_secret: ${aws_secret}
+        bucket: mciuploads
+        content_type: ${content_type|application/x-gzip}
+        local_file: deb.tar.gz
+        permissions: public-read
+        remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${execution}/debian-packages.tar.gz
+  build-package-debian-mnmlstc:
+    - command: subprocess.exec
+      type: test
+      params:
+        binary: bash
+        working_dir: mongo-cxx-driver
+        args:
+          - -c
+          - |
+            set -o errexit
+            export IS_PATCH="${is_patch}"
+            export DEB_BUILD_PROFILES="pkg.mongo-cxx-driver.mnmlstc"
+            .evergreen/scripts/debian_package_build.sh
+    - command: s3.put
+      params:
+        display_name: "\"deb.tar.gz\""
+        aws_key: ${aws_key}
+        aws_secret: ${aws_secret}
+        bucket: mciuploads
+        content_type: ${content_type|application/x-gzip}
+        local_file: deb.tar.gz
+        permissions: public-read
+        remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${execution}/debian-packages-mnmlstc.tar.gz
+  build-package-rpm:
+    - command: subprocess.exec
+      type: test
+      params:
+        binary: bash
+        working_dir: mongo-cxx-driver
+        args:
+          - -c
+          - .evergreen/scripts/build_snapshot_rpm.sh
+    - command: s3.put
+      params:
+        aws_key: ${aws_key}
+        aws_secret: ${aws_secret}
+        bucket: mciuploads
+        content_type: ${content_type|application/x-gzip}
+        local_file: rpm.tar.gz
+        permissions: public-read
+        remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${execution}/rpm-packages.tar.gz
   build_mongohouse:
     command: subprocess.exec
     type: setup
