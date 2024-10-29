@@ -242,7 +242,11 @@ if [[ "${COMPILE_MACRO_GUARD_TESTS:-"OFF"}" == "ON" ]]; then
   cmake_flags+=("-DENABLE_MACRO_GUARD_TESTS=ON")
 fi
 
-echo "Configuring with CMake flags: ${cmake_flags[*]}"
+echo "Configuring with CMake flags:"
+for flag in "${cmake_flags[@]}"; do
+  echo " - ${flag:?}"
+done
+echo
 
 "${cmake_binary}" "${cmake_flags[@]}" ..
 

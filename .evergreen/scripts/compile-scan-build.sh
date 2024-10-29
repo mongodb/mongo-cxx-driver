@@ -74,7 +74,11 @@ impls) cmake_flags+=(-D "BSONCXX_POLY_USE_IMPLS=ON") ;;
 std) cmake_flags+=(-D "BSONCXX_POLY_USE_STD=ON") ;;
 esac
 
-echo "Configuring with CMake flags: ${cmake_flags[*]}"
+echo "Configuring with CMake flags:"
+for flag in "${cmake_flags[@]}"; do
+  echo " - ${flag:?}"
+done
+echo
 
 # Configure via scan-build for consistency.
 CCCACHE_DISABLE=1 "${scan_build_binary}" "${scan_build_flags[@]}" "${cmake_binary:?}" -S . -B build "${cmake_flags[@]}"
