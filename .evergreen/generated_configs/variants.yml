@@ -28,6 +28,10 @@ buildvariants:
     tasks:
       - name: tg-atlas-search-indexes-7.0
       - name: tg-atlas-search-indexes-8.0
+  - name: lint
+    display_name: Lint
+    tasks:
+      - name: .lint
   - name: stub
     display_name: stub
     tasks:

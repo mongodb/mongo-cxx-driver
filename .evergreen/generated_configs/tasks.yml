@@ -32,6 +32,12 @@ tasks:
         vars:
           build_type: Debug
       - func: test-search-index-helpers
+  - name: lint
+    run_on: ubuntu1804-large
+    tags: [lint, ubuntu1804]
+    commands:
+      - func: setup
+      - func: lint
   - name: stub
     run_on: ubuntu2004-large
     commands:
