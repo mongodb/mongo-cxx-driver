@@ -383,6 +383,26 @@ functions:
       args:
         - -c
         - .evergreen/scripts/test.sh
+  test atlas connectivity:
+    command: subprocess.exec
+    type: test
+    params:
+      binary: bash
+      working_dir: mongo-cxx-driver
+      silent: true
+      args:
+        - -c
+        - |
+          export MONGOC_INSTALL_PREFIX=$(pwd)/../mongoc
+          export MONGOCXX_INSTALL_PREFIX=$(pwd)/build/install
+          export LIB_DIR=${lib_dir}
+          export BUILD_TYPE=${build_type}
+          export BUILD_DIR=$(pwd)/build
+
+          # The atlas_serverless_uri expansion is set in the Evergreen project settings.
+          export URI="${atlas_serverless_uri}"
+
+          ./.evergreen/scripts/connect.sh
   test auth:
     command: subprocess.exec
     type: test
