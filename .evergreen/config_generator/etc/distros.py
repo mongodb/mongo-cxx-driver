@@ -258,3 +258,42 @@ def to_cc(compiler):
         'vs2022x64': 'Visual Studio 17 2022',
         'vs2022x86': 'Visual Studio 17 2022',
     }.get(compiler, compiler)
+
+
+def to_platform(compiler):
+    return {
+        'vs2013x64': 'x64',
+        'vs2013x86': 'Win32',
+        'vs2015x64': 'x64',
+        'vs2015x86': 'Win32',
+        'vs2017x64': 'x64',
+        'vs2017x86': 'Win32',
+        'vs2019x64': 'x64',
+        'vs2019x86': 'Win32',
+        'vs2022x64': 'x64',
+        'vs2022x86': 'Win32',
+    }.get(compiler, compiler)
+
+
+def compiler_to_vars(compiler):
+    match compiler:
+        case 'gcc':
+            return {
+                'cc_compiler': 'gcc',
+                'cxx_compiler': 'g++',
+            }
+
+        case 'clang':
+            return {
+                'cc_compiler': 'clang',
+                'cxx_compiler': 'clang++',
+            }
+
+        case str(vs) if 'vs' in vs:
+            return {
+                'generator': to_cc(vs),
+                'platform': to_platform(vs),
+            }
+
+        case _:
+            return {}
