@@ -306,66 +306,6 @@ tasks:
           vars:
               MONGOCXX_TEST_TOPOLOGY: single
 
-    - name: scan-build-ubuntu2204-std11-mnmlstc
-      run_on: ubuntu2204-large
-      tags: [scan-build-matrix]
-      commands:
-        - func: "setup"
-        - func: "fetch_c_driver_source"
-        - func: "run scan build"
-          vars:
-            CXX_STANDARD: 11
-            BSONCXX_POLYFILL: mnmlstc
-        - func: "upload scan artifacts"
-
-    - name: scan-build-ubuntu2204-std11-boost
-      run_on: ubuntu2204-large
-      tags: [scan-build-matrix]
-      commands:
-        - func: "setup"
-        - func: "fetch_c_driver_source"
-        - func: "run scan build"
-          vars:
-            CXX_STANDARD: 11
-            BSONCXX_POLYFILL: boost
-        - func: "upload scan artifacts"
-
-    - name: scan-build-ubuntu2204-std11-impls
-      run_on: ubuntu2204-large
-      tags: [scan-build-matrix]
-      commands:
-        - func: "setup"
-        - func: "fetch_c_driver_source"
-        - func: "run scan build"
-          vars:
-            CXX_STANDARD: 11
-            BSONCXX_POLYFILL: impls
-        - func: "upload scan artifacts"
-
-    - name: scan-build-ubuntu2204-std14-impls
-      run_on: ubuntu2204-large
-      tags: [scan-build-matrix]
-      commands:
-        - func: "setup"
-        - func: "fetch_c_driver_source"
-        - func: "run scan build"
-          vars:
-            CXX_STANDARD: 14
-            BSONCXX_POLYFILL: impls
-        - func: "upload scan artifacts"
-
-    - name: scan-build-ubuntu2204-std17
-      run_on: ubuntu2204-large
-      tags: [scan-build-matrix]
-      commands:
-        - func: "setup"
-        - func: "fetch_c_driver_source"
-        - func: "run scan build"
-          vars:
-            CXX_STANDARD: 17
-            BSONCXX_POLYFILL: std
-        - func: "upload scan artifacts"
-
 #######################################
 #           Buildvariants             #
 #######################################
@@ -1337,11 +1277,6 @@ buildvariants:
          - windows-64-vs2015-compile
       tasks:
          - name: compile_without_tests
-
-    - name: scan-build-matrix
-      display_name: scan-build-matrix
-      tasks:
-        - name: .scan-build-matrix
 
     - name: rhel79-compile
       display_name: "RHEL 7.9 (gcc 4.8.5)"

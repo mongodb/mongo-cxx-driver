@@ -81,6 +81,113 @@ tasks:
     commands:
       - func: setup
       - func: build-package-rpm
+  - name: scan-build-ubuntu2204-std11-boost
+    run_on: ubuntu2204-large
+    tags: [scan-build, ubuntu2204, std11, boost]
+    commands:
+      - func: setup
+      - func: fetch_c_driver_source
+      - func: run scan build
+        vars:
+          BSONCXX_POLYFILL: boost
+          CXX_STANDARD: 11
+      - func: upload scan artifacts
+  - name: scan-build-ubuntu2204-std11-default
+    run_on: ubuntu2204-large
+    tags: [scan-build, ubuntu2204, std11]
+    commands:
+      - func: setup
+      - func: fetch_c_driver_source
+      - func: run scan build
+        vars:
+          CXX_STANDARD: 11
+      - func: upload scan artifacts
+  - name: scan-build-ubuntu2204-std11-impls
+    run_on: ubuntu2204-large
+    tags: [scan-build, ubuntu2204, std11, impls]
+    commands:
+      - func: setup
+      - func: fetch_c_driver_source
+      - func: run scan build
+        vars:
+          BSONCXX_POLYFILL: impls
+          CXX_STANDARD: 11
+      - func: upload scan artifacts
+  - name: scan-build-ubuntu2204-std11-mnmlstc
+    run_on: ubuntu2204-large
+    tags: [scan-build, ubuntu2204, std11, mnmlstc]
+    commands:
+      - func: setup
+      - func: fetch_c_driver_source
+      - func: run scan build
+        vars:
+          BSONCXX_POLYFILL: mnmlstc
+          CXX_STANDARD: 11
+      - func: upload scan artifacts
+  - name: scan-build-ubuntu2204-std14-boost
+    run_on: ubuntu2204-large
+    tags: [scan-build, ubuntu2204, std14, boost]
+    commands:
+      - func: setup
+      - func: fetch_c_driver_source
+      - func: run scan build
+        vars:
+          BSONCXX_POLYFILL: boost
+          CXX_STANDARD: 14
+      - func: upload scan artifacts
+  - name: scan-build-ubuntu2204-std14-default
+    run_on: ubuntu2204-large
+    tags: [scan-build, ubuntu2204, std14]
+    commands:
+      - func: setup
+      - func: fetch_c_driver_source
+      - func: run scan build
+        vars:
+          CXX_STANDARD: 14
+      - func: upload scan artifacts
+  - name: scan-build-ubuntu2204-std14-impls
+    run_on: ubuntu2204-large
+    tags: [scan-build, ubuntu2204, std14, impls]
+    commands:
+      - func: setup
+      - func: fetch_c_driver_source
+      - func: run scan build
+        vars:
+          BSONCXX_POLYFILL: impls
+          CXX_STANDARD: 14
+      - func: upload scan artifacts
+  - name: scan-build-ubuntu2204-std14-mnmlstc
+    run_on: ubuntu2204-large
+    tags: [scan-build, ubuntu2204, std14, mnmlstc]
+    commands:
+      - func: setup
+      - func: fetch_c_driver_source
+      - func: run scan build
+        vars:
+          BSONCXX_POLYFILL: mnmlstc
+          CXX_STANDARD: 14
+      - func: upload scan artifacts
+  - name: scan-build-ubuntu2204-std17-default
+    run_on: ubuntu2204-large
+    tags: [scan-build, ubuntu2204, std17]
+    commands:
+      - func: setup
+      - func: fetch_c_driver_source
+      - func: run scan build
+        vars:
+          CXX_STANDARD: 17
+      - func: upload scan artifacts
+  - name: scan-build-ubuntu2204-std17-impls
+    run_on: ubuntu2204-large
+    tags: [scan-build, ubuntu2204, std17, impls]
+    commands:
+      - func: setup
+      - func: fetch_c_driver_source
+      - func: run scan build
+        vars:
+          BSONCXX_POLYFILL: impls
+          CXX_STANDARD: 17
+      - func: upload scan artifacts
   - name: silk
     run_on: rhel8-latest-small
     tags: [silk, rhel8-latest]

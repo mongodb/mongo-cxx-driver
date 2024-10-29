@@ -48,6 +48,14 @@ buildvariants:
     display_name: Linux Distro Packaging
     tasks:
       - name: .packaging
+  - name: scan-build-matrix
+    display_name: scan-build-matrix
+    display_tasks:
+      - name: scan-build-matrix
+        execution_tasks:
+          - .scan-build
+    tasks:
+      - name: .scan-build
   - name: silk
     display_name: Silk
     tasks:
