@@ -24,19 +24,6 @@ variables:
 #######################################
 
 functions:
-    "build_mongohouse":
-        command: shell.exec
-        params:
-            shell: bash
-            script: |
-                if [ ! -d "drivers-evergreen-tools" ]; then
-                    git clone https://github.com/mongodb-labs/drivers-evergreen-tools.git
-                fi
-                cd drivers-evergreen-tools
-                export DRIVERS_TOOLS=$(pwd)
-
-                .evergreen/atlas_data_lake/pull-mongohouse-image.sh
-
     "run_mongohouse":
         command: shell.exec
         params:
