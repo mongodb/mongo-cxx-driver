@@ -194,7 +194,7 @@ class client_session {
     /// by the with_transaction() helper.
     ///
     /// For example, a callback that invokes collection::insert_one may encounter a
-    /// "DuplicateKey" error with accompanying server-side transaction abort. If this
+    /// "duplicate key" error with accompanying server-side transaction abort. If this
     /// error were not seen by the with_transaction() helper, the entire transaction
     /// would retry repeatedly until the overall time limit expires.
     ///
