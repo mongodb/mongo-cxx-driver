@@ -12,18 +12,6 @@ include:
 #######################################
 
 functions:
-    "clang-tidy":
-      - command: shell.exec
-        params:
-          shell: bash
-          working_dir: "mongo-cxx-driver"
-          include_expansions_in_env:
-            - distro_id
-          env:
-            CC: ${cc_compiler}
-            CXX: ${cxx_compiler}
-          script: ./etc/run-clang-tidy.sh
-
     "clone_drivers-evergreen-tools":
       - command: shell.exec
         params:
