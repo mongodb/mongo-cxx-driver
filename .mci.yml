@@ -12,31 +12,6 @@ include:
 #######################################
 
 functions:
-    "compile":
-        - command: shell.exec
-          params:
-              shell: bash
-              working_dir: "mongo-cxx-driver"
-              include_expansions_in_env:
-                  - branch_name
-                  - build_type
-                  - BSONCXX_POLYFILL
-                  - COMPILE_MACRO_GUARD_TESTS
-                  - distro_id
-                  - ENABLE_CODE_COVERAGE
-                  - ENABLE_TESTS
-                  - generator
-                  - platform
-                  - REQUIRED_CXX_STANDARD
-                  - RUN_DISTCHECK
-                  - USE_SANITIZER_ASAN
-                  - USE_SANITIZER_UBSAN
-                  - USE_STATIC_LIBS
-              env:
-                  CC: ${cc_compiler}
-                  CXX: ${cxx_compiler}
-              script: .evergreen-old/compile.sh
-
     "compile_benchmarks":
       - command: shell.exec
         type: setup
