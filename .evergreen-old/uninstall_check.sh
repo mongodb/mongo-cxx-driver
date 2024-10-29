@@ -9,7 +9,7 @@ touch $INSTALL_DIR/lib/canary.txt
 
 ls -l $INSTALL_DIR/share/mongo-cxx-driver
 
-. .evergreen/find_cmake.sh
+. .evergreen-old/find_cmake.sh
 
 $CMAKE --build $BUILD_DIR --target uninstall
 

@@ -63,12 +63,12 @@ functions:
           type: setup
           params:
             binary: bash
-            args: [-c, mongo-cxx-driver/.evergreen/abi-compliance-check-setup.sh]
+            args: [-c, mongo-cxx-driver/.evergreen-old/abi-compliance-check-setup.sh]
         - command: subprocess.exec
           type: test
           params:
             binary: bash
-            args: [-c, mongo-cxx-driver/.evergreen/abi-compliance-check-test.sh]
+            args: [-c, mongo-cxx-driver/.evergreen-old/abi-compliance-check-test.sh]
         - command: s3.put
           type: system
           params:
@@ -119,12 +119,12 @@ functions:
           type: setup
           params:
             binary: bash
-            args: [-c, mongo-cxx-driver/.evergreen/abidiff-setup.sh]
+            args: [-c, mongo-cxx-driver/.evergreen-old/abidiff-setup.sh]
         - command: subprocess.exec
           type: test
           params:
             binary: bash
-            args: [-c, mongo-cxx-driver/.evergreen/abidiff-test.sh]
+            args: [-c, mongo-cxx-driver/.evergreen-old/abidiff-test.sh]
         - command: s3.put
           type: system
           params:
@@ -153,7 +153,7 @@ functions:
           type: test
           params:
             binary: bash
-            args: [-c, mongo-cxx-driver/.evergreen/abi-prohibited-symbols-test.sh]
+            args: [-c, mongo-cxx-driver/.evergreen-old/abi-prohibited-symbols-test.sh]
 
     "setup":
         - command: shell.exec
@@ -364,7 +364,7 @@ functions:
         params:
             shell: bash
             add_expansions_to_env: true
-            script: mongo-cxx-driver/.evergreen/install_c_driver.sh
+            script: mongo-cxx-driver/.evergreen-old/install_c_driver.sh
 
     # fetch_c_driver_source may be used to fetch the C driver source without installing the C driver.
     # This can be used when only CI scripts are needed.
@@ -477,7 +477,7 @@ functions:
               env:
                   CC: ${cc_compiler}
                   CXX: ${cxx_compiler}
-              script: .evergreen/compile.sh
+              script: .evergreen-old/compile.sh
 
     "compile_benchmarks":
       - command: shell.exec
@@ -521,7 +521,7 @@ functions:
                   - TEST_WITH_VALGRIND
                   - use_mongocryptd
                   - USE_STATIC_LIBS
-              script: .evergreen/test.sh
+              script: .evergreen-old/test.sh
 
     "test auth":
         - command: shell.exec
@@ -536,7 +536,7 @@ functions:
                   export BUILD_TYPE=${build_type}
                   export BUILD_DIR=$(pwd)/build
                   export URI="mongodb://bob:pwd123@localhost"
-                  ./.evergreen/connect.sh
+                  ./.evergreen-old/connect.sh
 
     "test atlas connectivity":
         - command: shell.exec
@@ -555,7 +555,7 @@ functions:
                   # The atlas_serverless_uri expansion is set in the Evergreen project settings.
                   export URI="${atlas_serverless_uri}"
 
-                  ./.evergreen/connect.sh
+                  ./.evergreen-old/connect.sh
 
     "backtrace":
         - command: shell.exec
@@ -612,7 +612,7 @@ functions:
         params:
           binary: bash
           working_dir: "mongo-cxx-driver"
-          args: [-c, .evergreen/upload-code-coverage.sh]
+          args: [-c, .evergreen-old/upload-code-coverage.sh]
           include_expansions_in_env: [codecov_token]
 
     "docker-image-build":
@@ -659,7 +659,7 @@ functions:
           working_dir: "mongo-cxx-driver"
           add_expansions_to_env: true
           redirect_standard_error_to_output: true
-          args: [-c, .evergreen/compile-scan-build.sh]
+          args: [-c, .evergreen-old/compile-scan-build.sh]
 
     "upload scan artifacts":
       - command: subprocess.exec
@@ -709,7 +709,7 @@ functions:
             - ARTIFACTORY_PASSWORD
             - SILK_CLIENT_ID
             - SILK_CLIENT_SECRET
-          args: [-c, .evergreen/check-augmented-sbom.sh]
+          args: [-c, .evergreen-old/check-augmented-sbom.sh]
 
     "upload augmented sbom":
       - command: s3.put
@@ -1012,7 +1012,7 @@ tasks:
           working_dir: "mongo-cxx-driver"
           script: |-
             set -o errexit
-            ./.evergreen/uninstall_check.sh
+            ./.evergreen-old/uninstall_check.sh
 
     - name: uninstall_check_windows
       commands:
@@ -1028,7 +1028,7 @@ tasks:
           working_dir: "mongo-cxx-driver"
           script: |-
             set -o errexit
-            cmd.exe /c .\\.evergreen\\uninstall_check_windows.cmd
+            cmd.exe /c .\\.evergreen-old\\uninstall_check_windows.cmd
 
     - name: build_example_with_add_subdirectory
       commands:
@@ -1068,7 +1068,7 @@ tasks:
           script: |-
             set -o errexit
             export IS_PATCH="${is_patch}"
-            .evergreen/debian_package_build.sh
+            .evergreen-old/debian_package_build.sh
       - command: s3.put
         params:
           aws_key: ${aws_key}
@@ -1093,7 +1093,7 @@ tasks:
             set -o errexit
             export IS_PATCH="${is_patch}"
             export DEB_BUILD_PROFILES="pkg.mongo-cxx-driver.mnmlstc"
-            .evergreen/debian_package_build.sh
+            .evergreen-old/debian_package_build.sh
       - command: s3.put
         params:
           aws_key: ${aws_key}
@@ -1116,7 +1116,7 @@ tasks:
           shell: bash
           script: |-
             set -o errexit
-            .evergreen/build_snapshot_rpm.sh
+            .evergreen-old/build_snapshot_rpm.sh
       - command: s3.put
         params:
           aws_key: ${aws_key}
@@ -1283,7 +1283,7 @@ task_groups:
       - command: subprocess.exec
         params:
           binary: bash
-          args: [-c, mongo-cxx-driver/.evergreen/abi-stability-setup.sh]
+          args: [-c, mongo-cxx-driver/.evergreen-old/abi-stability-setup.sh]
           include_expansions_in_env: [cxx_standard]
     tasks: [".abi-stability"]
     teardown_task_can_fail_task: true

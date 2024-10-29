@@ -18,7 +18,7 @@ print_usage_and_exit () {
     BUILD_TYPE="Debug" \\
     BUILD_DIR=$(pwd)/cmake-build \\
     URI="mongodb://localhost:27017/?" \\
-        ./.evergreen/connect.sh
+        ./.evergreen-old/connect.sh
 EOF
     exit 1;
 }
