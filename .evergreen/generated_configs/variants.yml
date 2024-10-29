@@ -52,6 +52,14 @@ buildvariants:
     display_name: Docker Build
     tasks:
       - name: .docker-build
+  - name: integration-matrix
+    display_name: integration-matrix
+    tasks:
+      - name: .integration .rhel81-power8
+        batchtime: 1440
+      - name: .integration .rhel83-zseries
+        batchtime: 1440
+      - name: .integration !.rhel81-power8 !.rhel83-zseries
   - name: lint
     display_name: Lint
     tasks:
