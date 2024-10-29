@@ -12,16 +12,6 @@ include:
 #######################################
 
 functions:
-    "compile_benchmarks":
-      - command: shell.exec
-        type: setup
-        params:
-          shell: bash
-          working_dir: "mongo-cxx-driver"
-          script: |
-            cmake -S . -B build -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH="$(pwd)/../mongoc" -DCMAKE_CXX_STANDARD=20
-            cmake --build build --target microbenchmarks --parallel 64
-
     "test":
         - command: shell.exec
           params:
