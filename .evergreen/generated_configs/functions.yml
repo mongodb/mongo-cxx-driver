@@ -182,6 +182,22 @@ functions:
       type: setup
       params:
         file: drivers-evergreen-tools/mo-expansion.yml
+  stop_mongod:
+    command: subprocess.exec
+    type: system
+    params:
+      binary: bash
+      args:
+        - -c
+        - |
+          set -o errexit
+          set -o pipefail
+          if cd drivers-evergreen-tools/.evergreen/orchestration 2>/dev/null; then
+              . ../venv-utils.sh
+              if venvactivate venv; then
+              mongo-orchestration stop
+              fi
+          fi
   test_mongohouse:
     command: subprocess.exec
     type: test
