@@ -12,12 +12,6 @@ include:
 #######################################
 
 functions:
-    "backtrace":
-        - command: shell.exec
-          params:
-            working_dir: "mongo-cxx-driver"
-            script: |
-              ./etc/debug-core-evergreen.sh
     "upload working dir":
         - command: archive.targz_pack
           params:
