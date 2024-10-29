@@ -257,39 +257,6 @@ tasks:
             "$cmake_binary" --build build
             ./build/hello_mongocxx
 
-    - name: test_versioned_api
-      commands:
-        - func: "setup"
-        - func: "start_mongod"
-          vars:
-              REQUIRE_API_VERSION: true
-              # Authentication with versioned API should already be tested
-              # in the C driver.
-              AUTH: noauth
-        - func: "fetch_c_driver_source"
-        - func: "compile"
-        - func: "fetch-det"
-        - func: "run_kms_servers"
-        - func: "test"
-          vars:
-              MONGOCXX_TEST_TOPOLOGY: single
-              MONGODB_API_VERSION: 1
-
-    - name: test_versioned_api_accept_version_two
-      commands:
-        - func: "setup"
-        - func: "start_mongod"
-          vars:
-              ORCHESTRATION_FILE: versioned-api-testing.json
-              AUTH: noauth
-        - func: "fetch_c_driver_source"
-        - func: "compile"
-        - func: "fetch-det"
-        - func: "run_kms_servers"
-        - func: "test"
-          vars:
-              MONGOCXX_TEST_TOPOLOGY: single
-
 #######################################
 #           Buildvariants             #
 #######################################
@@ -683,30 +650,6 @@ buildvariants:
           example_projects_cxx_standard: 17
       tasks:
         - name: compile_and_test_auth_with_shared_libs
-
-    - name: integration-versioned-api-ubuntu2004-latest-single
-      display_name: "Ubuntu 20.04 Debug Latest Versioned API"
-      run_on: ubuntu2004-large
-      expansions:
-          mongodb_version: "latest"
-          build_type: "Debug"
-          ENABLE_CODE_COVERAGE: ON
-      tasks:
-        - name: test_versioned_api
-        - name: test_versioned_api_accept_version_two
-
-    - name: integration-versioned-api-vs2019-latest-single
-      display_name: "Windows (VS 2019) Debug Latest Versioned API"
-      run_on: windows-vsCurrent-large
-      expansions:
-          mongodb_version: "latest"
-          build_type: "Debug" # Same for Windows and Linux
-          generator: Visual Studio 16 2019
-          platform: x64
-          example_projects_cxx_standard: 17
-      tasks:
-        - name: test_versioned_api
-        - name: test_versioned_api_accept_version_two
 
     - name: integration-mongocryptd-ubuntu2004-latest
       display_name: "Ubuntu 20.04 Debug (MongoDB Latest) with mongocryptd"
@@ -1176,15 +1119,3 @@ buildvariants:
           - name: compile_and_test_with_shared_libs_extra_alignment
           - name: compile_and_test_with_static_libs
           - name: compile_and_test_with_static_libs_extra_alignment
-
-    - name: macos-1100-versioned-api
-      display_name: "MacOS 11.0 Release Versioned API"
-      expansions:
-          build_type: "Release"
-          BSONCXX_POLYFILL: "boost"
-          mongodb_version: "latest"
-      run_on:
-          - macos-1100
-      tasks:
-          - name: test_versioned_api
-          - name: test_versioned_api_accept_version_two

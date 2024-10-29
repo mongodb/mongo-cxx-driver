@@ -432,3 +432,138 @@ tasks:
           generator: Visual Studio 14 2015
           platform: x64
       - func: uninstall-check
+  - name: versioned-api-one-required-macos-1100-release-shared-boost
+    run_on: macos-1100
+    tags: [versioned-api, macos-1100, release, shared, boost]
+    commands:
+      - func: setup
+      - func: start_mongod
+        vars:
+          AUTH: noauth
+          REQUIRE_API_VERSION: true
+          mongodb_version: latest
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          BSONCXX_POLYFILL: boost
+          build_type: Release
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          MONGODB_API_VERSION: 1
+          build_type: Release
+  - name: versioned-api-one-required-ubuntu2004-debug-shared
+    run_on: ubuntu2004-large
+    tags: [versioned-api, ubuntu2004, debug, shared]
+    commands:
+      - func: setup
+      - func: start_mongod
+        vars:
+          AUTH: noauth
+          REQUIRE_API_VERSION: true
+          mongodb_version: latest
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          build_type: Debug
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          MONGODB_API_VERSION: 1
+          build_type: Debug
+  - name: versioned-api-one-required-windows-2019-vs2019-x64-debug-shared
+    run_on: windows-vsCurrent-large
+    tags: [versioned-api, windows-vsCurrent, vs2019x64, debug, shared]
+    commands:
+      - func: setup
+      - func: start_mongod
+        vars:
+          AUTH: noauth
+          REQUIRE_API_VERSION: true
+          mongodb_version: latest
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          build_type: Debug
+          generator: Visual Studio 16 2019
+          platform: x64
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          MONGODB_API_VERSION: 1
+          build_type: Debug
+          example_projects_cxx_standard: 17
+          generator: Visual Studio 16 2019
+          platform: x64
+  - name: versioned-api-two-accepted-macos-1100-release-shared-boost
+    run_on: macos-1100
+    tags: [versioned-api, macos-1100, release, shared, boost]
+    commands:
+      - func: setup
+      - func: start_mongod
+        vars:
+          AUTH: noauth
+          ORCHESTRATION_FILE: versioned-api-testing.json
+          mongodb_version: latest
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          BSONCXX_POLYFILL: boost
+          build_type: Release
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          build_type: Release
+  - name: versioned-api-two-accepted-ubuntu2004-debug-shared
+    run_on: ubuntu2004-large
+    tags: [versioned-api, ubuntu2004, debug, shared]
+    commands:
+      - func: setup
+      - func: start_mongod
+        vars:
+          AUTH: noauth
+          ORCHESTRATION_FILE: versioned-api-testing.json
+          mongodb_version: latest
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          build_type: Debug
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          build_type: Debug
+  - name: versioned-api-two-accepted-windows-2019-vs2019-x64-debug-shared
+    run_on: windows-vsCurrent-large
+    tags: [versioned-api, windows-vsCurrent, vs2019x64, debug, shared]
+    commands:
+      - func: setup
+      - func: start_mongod
+        vars:
+          AUTH: noauth
+          ORCHESTRATION_FILE: versioned-api-testing.json
+          mongodb_version: latest
+      - func: fetch_c_driver_source
+      - func: compile
+        vars:
+          build_type: Debug
+          generator: Visual Studio 16 2019
+          platform: x64
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          build_type: Debug
+          example_projects_cxx_standard: 17
+          generator: Visual Studio 16 2019
+          platform: x64
