@@ -32,6 +32,10 @@ buildvariants:
     display_name: Clang Tidy
     tasks:
       - name: .clang-tidy
+  - name: docker-build
+    display_name: Docker Build
+    tasks:
+      - name: .docker-build
   - name: lint
     display_name: Lint
     tasks:
