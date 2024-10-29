@@ -206,6 +206,310 @@ tasks:
     commands:
       - func: setup
       - func: build-package-rpm
+  - name: sanitizers-asan-ubuntu1804-clang-shared-5.0-single
+    run_on: ubuntu1804-large
+    tags: [sanitizers, asan, ubuntu1804, clang, shared, "5.0", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: clang }
+            - { key: cxx_compiler, value: clang++ }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "5.0"
+      - func: install_c_driver
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+          USE_SANITIZER_ASAN: "ON"
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          TEST_WITH_ASAN: "ON"
+          example_projects_cc: clang
+          example_projects_cxx: clang++
+          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
+          example_projects_ldflags: -fsanitize=address
+  - name: sanitizers-asan-ubuntu1804-clang-shared-extra_alignment-5.0-single
+    run_on: ubuntu1804-large
+    tags: [sanitizers, asan, ubuntu1804, clang, shared, extra_alignment, "5.0", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: clang }
+            - { key: cxx_compiler, value: clang++ }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "5.0"
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: compile
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          USE_SANITIZER_ASAN: "ON"
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          TEST_WITH_ASAN: "ON"
+          example_projects_cc: clang
+          example_projects_cxx: clang++
+          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
+          example_projects_ldflags: -fsanitize=address
+  - name: sanitizers-asan-ubuntu1804-clang-static-5.0-single
+    run_on: ubuntu1804-large
+    tags: [sanitizers, asan, ubuntu1804, clang, static, "5.0", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: clang }
+            - { key: cxx_compiler, value: clang++ }
+            - { key: USE_STATIC_LIBS, value: "1" }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "5.0"
+      - func: install_c_driver
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+          USE_SANITIZER_ASAN: "ON"
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          TEST_WITH_ASAN: "ON"
+          example_projects_cc: clang
+          example_projects_cxx: clang++
+          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
+          example_projects_ldflags: -fsanitize=address
+  - name: sanitizers-asan-ubuntu1804-clang-static-extra_alignment-5.0-single
+    run_on: ubuntu1804-large
+    tags: [sanitizers, asan, ubuntu1804, clang, static, extra_alignment, "5.0", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: clang }
+            - { key: cxx_compiler, value: clang++ }
+            - { key: USE_STATIC_LIBS, value: "1" }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "5.0"
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: compile
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          USE_SANITIZER_ASAN: "ON"
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          TEST_WITH_ASAN: "ON"
+          example_projects_cc: clang
+          example_projects_cxx: clang++
+          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
+          example_projects_ldflags: -fsanitize=address
+  - name: sanitizers-asan-ubuntu2004-clang-shared-5.0-single
+    run_on: ubuntu2004-large
+    tags: [sanitizers, asan, ubuntu2004, clang, shared, "5.0", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: clang }
+            - { key: cxx_compiler, value: clang++ }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "5.0"
+      - func: install_c_driver
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+          USE_SANITIZER_ASAN: "ON"
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          TEST_WITH_ASAN: "ON"
+          example_projects_cc: clang
+          example_projects_cxx: clang++
+          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
+          example_projects_ldflags: -fsanitize=address
+  - name: sanitizers-asan-ubuntu2004-clang-shared-extra_alignment-5.0-single
+    run_on: ubuntu2004-large
+    tags: [sanitizers, asan, ubuntu2004, clang, shared, extra_alignment, "5.0", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: clang }
+            - { key: cxx_compiler, value: clang++ }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "5.0"
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: compile
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          USE_SANITIZER_ASAN: "ON"
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          TEST_WITH_ASAN: "ON"
+          example_projects_cc: clang
+          example_projects_cxx: clang++
+          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
+          example_projects_ldflags: -fsanitize=address
+  - name: sanitizers-asan-ubuntu2004-clang-static-5.0-single
+    run_on: ubuntu2004-large
+    tags: [sanitizers, asan, ubuntu2004, clang, static, "5.0", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: clang }
+            - { key: cxx_compiler, value: clang++ }
+            - { key: USE_STATIC_LIBS, value: "1" }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "5.0"
+      - func: install_c_driver
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+          USE_SANITIZER_ASAN: "ON"
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          TEST_WITH_ASAN: "ON"
+          example_projects_cc: clang
+          example_projects_cxx: clang++
+          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
+          example_projects_ldflags: -fsanitize=address
+  - name: sanitizers-asan-ubuntu2004-clang-static-extra_alignment-5.0-single
+    run_on: ubuntu2004-large
+    tags: [sanitizers, asan, ubuntu2004, clang, static, extra_alignment, "5.0", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: clang }
+            - { key: cxx_compiler, value: clang++ }
+            - { key: USE_STATIC_LIBS, value: "1" }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "5.0"
+      - func: install_c_driver
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+      - func: compile
+        vars:
+          BSON_EXTRA_ALIGNMENT: 1
+          USE_SANITIZER_ASAN: "ON"
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          TEST_WITH_ASAN: "ON"
+          example_projects_cc: clang
+          example_projects_cxx: clang++
+          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=address -fno-omit-frame-pointer
+          example_projects_ldflags: -fsanitize=address
+  - name: sanitizers-ubsan-ubuntu1804-clang-static-5.0-single
+    run_on: ubuntu1804-large
+    tags: [sanitizers, ubsan, ubuntu1804, clang, static, "5.0", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: clang }
+            - { key: cxx_compiler, value: clang++ }
+            - { key: USE_STATIC_LIBS, value: "1" }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "5.0"
+      - func: install_c_driver
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+          USE_SANITIZER_UBSAN: "ON"
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          TEST_WITH_UBSAN: "ON"
+          example_projects_cc: clang
+          example_projects_cxx: clang++
+          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer
+          example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined
+  - name: sanitizers-ubsan-ubuntu2004-clang-static-5.0-single
+    run_on: ubuntu2004-large
+    tags: [sanitizers, ubsan, ubuntu2004, clang, static, "5.0", single]
+    commands:
+      - command: expansions.update
+        params:
+          updates:
+            - { key: build_type, value: Debug }
+            - { key: cc_compiler, value: clang }
+            - { key: cxx_compiler, value: clang++ }
+            - { key: USE_STATIC_LIBS, value: "1" }
+      - func: setup
+      - func: start_mongod
+        vars:
+          mongodb_version: "5.0"
+      - func: install_c_driver
+      - func: compile
+        vars:
+          RUN_DISTCHECK: 1
+          USE_SANITIZER_UBSAN: "ON"
+      - func: fetch-det
+      - func: run_kms_servers
+      - func: test
+        vars:
+          MONGOCXX_TEST_TOPOLOGY: single
+          TEST_WITH_UBSAN: "ON"
+          example_projects_cc: clang
+          example_projects_cxx: clang++
+          example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer
+          example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined
   - name: scan-build-ubuntu2204-std11-boost
     run_on: ubuntu2204-large
     tags: [scan-build, ubuntu2204, std11, boost]

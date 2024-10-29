@@ -68,6 +68,14 @@ buildvariants:
     display_name: Linux Distro Packaging
     tasks:
       - name: .packaging
+  - name: sanitizers-matrix
+    display_name: sanitizers-matrix
+    display_tasks:
+      - name: sanitizers-matrix
+        execution_tasks:
+          - .sanitizers
+    tasks:
+      - name: .sanitizers
   - name: scan-build-matrix
     display_name: scan-build-matrix
     display_tasks:
