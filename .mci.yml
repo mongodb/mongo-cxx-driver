@@ -12,24 +12,6 @@ include:
 #######################################
 
 functions:
-    "docker-image-build":
-      - command: shell.exec
-        params:
-          shell: bash
-          working_dir: "mongo-cxx-driver"
-          script: |
-            set -o errexit
-            set -o pipefail
-            set -x
-            echo "Building Alpine Docker image"
-            make -C extras/docker/alpine3.19 nocachebuild test
-            echo "Building Debian Docker image"
-            make -C extras/docker/bookworm nocachebuild test
-            echo "Building Red Hat UBI Docker image"
-            make -C extras/docker/redhat-ubi-9.4 nocachebuild test
-            echo "Building Ubuntu Docker image"
-            make -C extras/docker/noble nocachebuild test
-    
     "run benchmarks":
       - command: shell.exec
         type: setup
