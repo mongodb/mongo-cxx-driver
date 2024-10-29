@@ -1,4 +1,19 @@
 tasks:
+  - name: abi-compliance-check
+    run_on: ubuntu2204-large
+    tags: [abi-stability, abi-compliance-check, ubuntu2204]
+    commands:
+      - func: abi-compliance-check
+  - name: abi-prohibited-symbols
+    run_on: ubuntu2204-large
+    tags: [abi-stability, abi-prohibited-symbols, ubuntu2204]
+    commands:
+      - func: abi-prohibited-symbols
+  - name: abidiff
+    run_on: ubuntu2204-large
+    tags: [abi-stability, abidiff, ubuntu2204]
+    commands:
+      - func: abidiff
   - name: stub
     run_on: ubuntu2004-large
     commands:
