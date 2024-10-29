@@ -27,12 +27,6 @@ post:
 #######################################
 
 tasks:
-    - name: clang-tidy
-      commands:
-        - func: "setup"
-        - func: "install_c_driver"
-        - func: "clang-tidy"
-
     - name: compile_and_test_with_shared_libs
       commands:
         - func: "setup"
@@ -1290,7 +1284,6 @@ buildvariants:
       run_on:
         - ubuntu2004-large
       tasks:
-        - name: clang-tidy
         - name: compile_without_tests
         - name: compile_macro_guard_tests
 

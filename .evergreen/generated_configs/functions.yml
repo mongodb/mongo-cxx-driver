@@ -147,14 +147,13 @@ functions:
     params:
       binary: bash
       working_dir: mongo-cxx-driver
-      env:
-        CC: ${cc_compiler}
-        CXX: ${cxx_compiler}
       include_expansions_in_env:
+        - cc_compiler
+        - cxx_compiler
         - distro_id
       args:
         - -c
-        - ./etc/run-clang-tidy.sh
+        - etc/run-clang-tidy.sh
   compile:
     command: subprocess.exec
     type: test

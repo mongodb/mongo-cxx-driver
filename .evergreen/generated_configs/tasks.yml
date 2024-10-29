@@ -32,6 +32,19 @@ tasks:
         vars:
           build_type: Debug
       - func: test-search-index-helpers
+  - name: clang-tidy
+    run_on: ubuntu2004-small
+    tags: [clang-tidy, ubuntu2004]
+    commands:
+      - func: setup
+      - func: install_c_driver
+        vars:
+          cc_compiler: clang
+          cxx_compiler: clang++
+      - func: clang-tidy
+        vars:
+          cc_compiler: clang
+          cxx_compiler: clang++
   - name: lint
     run_on: ubuntu1804-large
     tags: [lint, ubuntu1804]

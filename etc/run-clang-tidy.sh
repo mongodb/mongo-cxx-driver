@@ -3,6 +3,9 @@
 set -o errexit
 set -o pipefail
 
+export CC="${cc_compiler:?}"
+export CXX="${cxx_compiler:?}"
+
 if [[ "${distro_id:?}" != ubuntu* ]]; then
   echo "run-clang-tidy.sh expects to be run on an Ubuntu distro!" 1>&2
   exit 1
