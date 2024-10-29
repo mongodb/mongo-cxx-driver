@@ -8,36 +8,10 @@ include:
   - filename: .evergreen/generated_configs/functions.yml
 
 #######################################
-#            Variables                #
-#######################################
-variables:
-
-    # If updating mongoc_version_minimum, also update:
-    # - LIBBSON_REQUIRED_VERSION and LIBMONGOC_REQUIRED_VERSION in CMakeLists.txt
-    # - the version of pkg:github/mongodb/mongo-c-driver in etc/purls.txt
-    # - the default value of --c-driver-build-ref in etc/make_release.py
-    # Only LIBMONGOC_DOWNLOAD_VERSION needs to be updated when pinning to an unreleased commit.
-    mongoc_version_minimum: &mongoc_version_minimum "1.28.0"
-
-#######################################
 #            Functions                #
 #######################################
 
 functions:
-    "install_c_driver":
-      - command: expansions.update
-        type: setup
-        params:
-          updates:
-            - key: mongoc_version_minimum
-              value: *mongoc_version_minimum
-      - command: shell.exec
-        type: setup
-        params:
-            shell: bash
-            add_expansions_to_env: true
-            script: mongo-cxx-driver/.evergreen-old/install_c_driver.sh
-
     # fetch_c_driver_source may be used to fetch the C driver source without installing the C driver.
     # This can be used when only CI scripts are needed.
     "fetch_c_driver_source":
