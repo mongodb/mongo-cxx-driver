@@ -451,14 +451,6 @@ tasks:
             BSONCXX_POLYFILL: std
         - func: "upload scan artifacts"
 
-    - name: silk-check-augmented-sbom
-      run_on: rhel8-latest-small
-      tags: [silk]
-      commands:
-        - func: "setup"
-        - func: "check augmented sbom"
-        - func: "upload augmented sbom"
-
 #######################################
 #           Buildvariants             #
 #######################################
@@ -1447,11 +1439,6 @@ buildvariants:
       display_name: scan-build-matrix
       tasks:
         - name: .scan-build-matrix
-
-    - name: silk
-      display_name: silk
-      tasks:
-        - name: .silk
 
     - name: rhel79-compile
       display_name: "RHEL 7.9 (gcc 4.8.5)"

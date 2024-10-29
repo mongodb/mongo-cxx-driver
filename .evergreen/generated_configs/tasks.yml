@@ -51,6 +51,13 @@ tasks:
     commands:
       - func: setup
       - func: lint
+  - name: silk
+    run_on: rhel8-latest-small
+    tags: [silk, rhel8-latest]
+    commands:
+      - func: setup
+      - func: check augmented sbom
+      - func: upload augmented sbom
   - name: stub
     run_on: ubuntu2004-large
     commands:

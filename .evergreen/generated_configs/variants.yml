@@ -40,6 +40,10 @@ buildvariants:
     display_name: Mongohouse
     tasks:
       - name: .mongohouse
+  - name: silk
+    display_name: Silk
+    tasks:
+      - name: .silk
   - name: stub
     display_name: stub
     tasks:
