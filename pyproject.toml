@@ -7,6 +7,11 @@ dependencies = []
 
 [dependency-groups]
 dev = [
+    # .evergreen/config_generator/generate.py
+    "packaging>=14.0",
+    "pydantic>=2.7",
+    "shrub-py>=3.3.1",
+
     # etc/make_release.py
     "click>=6.0",
     "gitpython>=3.1",

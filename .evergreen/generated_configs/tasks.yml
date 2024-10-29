@@ -1,0 +1,10 @@
+tasks:
+  - name: stub
+    run_on: ubuntu2004-large
+    commands:
+      - command: subprocess.exec
+        params:
+          binary: bash
+          args:
+            - -c
+            - "true"
