@@ -9,7 +9,15 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 
 ## 3.12.0 [Unreleased]
 
-<!-- Will contain entries for the next minor release. -->
+> [!WARNING]
+> Set CMake option `ENABLE_BSONCXX_POLY_USE_IMPLS=OFF` to preserve API backward compatibility!
+
+### Changed
+
+- The CMake option `ENABLE_BSONCXX_POLY_USE_IMPLS` is set to `ON` by default.
+  - This is a potential API breaking change for users who depend on deprecated default polyfill library selection behavior to select mnmlstc/core or Boost as the polyfill library.
+  - This is not an API breaking change for users who already explicitly set `ENABLE_BSONCXX_POLY_USE_IMPL` or one of the `BSONCXX_POLY_USE_*` options.
+  - Set `ENABLE_BSONCXX_POLY_USE_IMPLS=OFF` to preserve API backward compatibility.
 
 ## 3.11.0
 
