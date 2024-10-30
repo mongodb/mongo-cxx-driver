@@ -1,18 +1,15 @@
-#######################################
-#      CXX Driver Config for MCI      #
-#######################################
-
 exec_timeout_secs: 3600
+
+command_type: system
+stepback: true
+pre_error_fails_task: true
+post_error_fails_task: false
 
 include:
   - filename: .evergreen/generated_configs/functions.yml
   - filename: .evergreen/generated_configs/tasks.yml
   - filename: .evergreen/generated_configs/task_groups.yml
   - filename: .evergreen/generated_configs/variants.yml
-
-#######################################
-#              Post Task              #
-#######################################
 
 post:
     - func: "stop_mongod"
