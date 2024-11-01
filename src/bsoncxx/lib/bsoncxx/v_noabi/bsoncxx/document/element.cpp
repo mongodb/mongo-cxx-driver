@@ -103,18 +103,6 @@ stdx::string_view element::key() const {
 #include <bsoncxx/enums/type.hpp>
 #undef BSONCXX_ENUM
 
-types::b_string element::get_utf8() const {
-    if (_raw == nullptr) {
-        throw bsoncxx::v_noabi::exception{
-            error_code::k_unset_element,
-            "cannot get string from an uninitialized element" +
-                std::string(_key ? " with key \"" + std::string(_key.value().data()) + "\"" : "")};
-    }
-
-    types::bson_value::view v{_raw, _length, _offset, _keylen};
-    return v.get_string();
-}
-
 types::bson_value::view element::get_value() const {
     switch (static_cast<int>(type())) {
 #define BSONCXX_ENUM(type, val) \

@@ -14,6 +14,11 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 - Redeclarations of `bsoncxx::stdx` interfaces in the `mongocxx::stdx` namespace.
   - Use `bsoncxx::stdx::optional<T>` instead of `mongocxx::stdx::optional<T>`.
   - Use `bsoncxx::stdx::string_view` instead of `mongocxx::stdx::string_view`.
+- References to deprecated `utf8` which have equivalent `string` alternatives.
+  - `k_utf8` in `bsoncxx::v_noabi::type`. Use `k_string` instead.
+  - `b_utf8` in `bsoncxx::v_noabi::types`. Use `b_string` instead.
+  - `get_utf8` in `bsoncxx::v_noabi::document::element`, `bsoncxx::v_noabi::array::element`, and `bsoncxx::v_noabi::types::bson_value::view`. Use `get_string` instead.
+  - `k_cannot_append_utf8` and `k_need_element_type_k_utf8` in `bsoncxx::v_noabi::exception::error_code`. Use `k_cannot_append_string` and `k_need_element_type_k_string` instead.
 
 ## 3.11.0
 

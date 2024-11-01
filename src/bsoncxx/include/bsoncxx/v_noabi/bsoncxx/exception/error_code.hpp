@@ -141,12 +141,6 @@ enum class error_code : std::int32_t {
     k_cannot_append_minkey,
     /// @}
 
-    /// Failed to append a value of the given type.
-    k_cannot_append_utf8 = k_cannot_append_string,
-
-    /// @deprecated Use `k_need_element_type_k_string` instead.
-    k_need_element_type_k_utf8 = k_need_element_type_k_string,
-
     // Add new constant string message to error_code.cpp as well!
 };
 

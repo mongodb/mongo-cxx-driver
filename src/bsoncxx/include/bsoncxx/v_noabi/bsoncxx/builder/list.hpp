@@ -125,7 +125,7 @@ class list {
                 }
                 for (size_t i = 0; i < init.size(); i += 2) {
                     auto t = (begin(init) + i)->val.view().type();
-                    if (t != type::k_utf8) {
+                    if (t != type::k_string) {
                         err_msg << " : all keys must be string type. ";
                         err_msg << "Found type=" << to_string(t);
                         return false;
