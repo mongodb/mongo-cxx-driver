@@ -67,7 +67,6 @@ add_executable(test_driver
     options/bulk_write.cpp
     options/client_session.cpp
     options/count.cpp
-    options/create_collection.cpp
     options/delete.cpp
     options/distinct.cpp
     options/find_one_and_delete.cpp
@@ -366,7 +365,6 @@ set_dist_list(src_mongocxx_test_DIST
     options/bulk_write.cpp
     options/client_session.cpp
     options/count.cpp
-    options/create_collection.cpp
     options/delete.cpp
     options/distinct.cpp
     options/find_one_and_delete.cpp

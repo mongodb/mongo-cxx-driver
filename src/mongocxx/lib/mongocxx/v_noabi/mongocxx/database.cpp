@@ -308,80 +308,6 @@ collection database::_create_collection(
     return mongocxx::v_noabi::collection(*this, result);
 }
 
-collection database::_create_collection_deprecated(
-    const client_session* session,
-    bsoncxx::v_noabi::string::view_or_value name,
-    const options::create_collection_deprecated& collection_options,
-    const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>& write_concern) {
-    bsoncxx::v_noabi::builder::basic::document options_builder;
-
-    if (collection_options.capped()) {
-        options_builder.append(kvp("capped", *collection_options.capped()));
-    }
-
-    if (collection_options.collation()) {
-        options_builder.append(kvp("collation", *collection_options.collation()));
-    }
-
-    if (collection_options.max()) {
-        options_builder.append(kvp("max", *collection_options.max()));
-    }
-
-    if (collection_options.no_padding()) {
-        options_builder.append(kvp("flags", (*collection_options.no_padding() ? 0x10 : 0x00)));
-    }
-
-    if (collection_options.size()) {
-        options_builder.append(kvp("size", *collection_options.size()));
-    }
-
-    if (collection_options.storage_engine()) {
-        options_builder.append(kvp("storageEngine", *collection_options.storage_engine()));
-    }
-
-    if (collection_options.validation_criteria()) {
-        auto validation_level_to_string = [](validation_criteria::validation_level level) {
-            switch (level) {
-                case validation_criteria::validation_level::k_off:
-                    return "off";
-                case validation_criteria::validation_level::k_moderate:
-                    return "moderate";
-                case validation_criteria::validation_level::k_strict:
-                    return "strict";
-            }
-            MONGOCXX_UNREACHABLE;
-        };
-
-        auto validation_action_to_string = [](validation_criteria::validation_action action) {
-            switch (action) {
-                case validation_criteria::validation_action::k_warn:
-                    return "warn";
-                case validation_criteria::validation_action::k_error:
-                    return "error";
-            }
-            MONGOCXX_UNREACHABLE;
-        };
-
-        auto validation_criteria = *collection_options.validation_criteria();
-
-        if (validation_criteria.rule()) {
-            options_builder.append(kvp("validator", *validation_criteria.rule()));
-        }
-
-        if (validation_criteria.level()) {
-            options_builder.append(
-                kvp("validationLevel", validation_level_to_string(*validation_criteria.level())));
-        }
-
-        if (validation_criteria.action()) {
-            options_builder.append(kvp("validationAction",
-                                       validation_action_to_string(*validation_criteria.action())));
-        }
-    }
-
-    return _create_collection(session, name, options_builder.view(), write_concern);
-}
-
 mongocxx::v_noabi::collection database::create_collection(
     bsoncxx::v_noabi::stdx::string_view name,
     bsoncxx::v_noabi::document::view_or_value collection_options,
@@ -395,21 +321,6 @@ mongocxx::v_noabi::collection database::create_collection(
     bsoncxx::v_noabi::document::view_or_value collection_options,
     const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>& write_concern) {
     return _create_collection(&session, name, collection_options, write_concern);
-}
-
-mongocxx::v_noabi::collection database::create_collection_deprecated(
-    bsoncxx::v_noabi::string::view_or_value name,
-    const options::create_collection_deprecated& collection_options,
-    const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>& write_concern) {
-    return _create_collection_deprecated(nullptr, name, collection_options, write_concern);
-}
-
-mongocxx::v_noabi::collection database::create_collection_deprecated(
-    const client_session& session,
-    bsoncxx::v_noabi::string::view_or_value name,
-    const options::create_collection_deprecated& collection_options,
-    const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>& write_concern) {
-    return _create_collection_deprecated(&session, name, collection_options, write_concern);
 }
 
 void database::_drop(

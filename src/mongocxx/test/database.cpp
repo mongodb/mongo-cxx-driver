@@ -390,23 +390,6 @@ TEST_CASE("Database integration tests", "[database]") {
             obtained_collection.drop();
         }
 
-        SECTION("with deprecated options") {
-            database[collection_name].drop();
-
-            options::create_collection_deprecated opts;
-            opts.capped(true);
-            opts.size(256);
-            opts.max(100);
-            opts.no_padding(false);
-
-            BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN
-            collection obtained_collection = database.create_collection(collection_name, opts);
-            BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END
-
-            REQUIRE(obtained_collection.name() == collection_name);
-            obtained_collection.drop();
-        }
-
         SECTION("verify that collection is created server side") {
             database[collection_name].drop();
 

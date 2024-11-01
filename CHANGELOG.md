@@ -17,6 +17,7 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 - Inline namespace macros for bsoncxx and mongocxx namespace: `*_INLINE_NAMESPACE_*`.
 - The `<bsoncxx/types/value.hpp>` header.
 - The `<bsoncxx/util/functor.hpp>` header.
+- The `<mongocxx/options/create_collection.hpp>` header.
 - References to deprecated `utf8` which have equivalent `string` alternatives.
   - `k_utf8` in `bsoncxx::v_noabi::type`. Use `k_string` instead.
   - `b_utf8` in `bsoncxx::v_noabi::types`. Use `b_string` instead.
