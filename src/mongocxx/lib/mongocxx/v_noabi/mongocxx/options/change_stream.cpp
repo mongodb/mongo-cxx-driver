@@ -112,9 +112,13 @@ const bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds>& change_stream
 
 change_stream& change_stream::start_at_operation_time(
     bsoncxx::v_noabi::types::b_timestamp timestamp) {
-    _start_at_operation_time = timestamp;
-    _start_at_operation_time_set = true;
+    _start_at_operation_time = std::move(timestamp);
     return *this;
+}
+
+const bsoncxx::stdx::optional<bsoncxx::v_noabi::types::b_timestamp>&
+change_stream::start_at_operation_time() const {
+    return _start_at_operation_time;
 }
 
 namespace {
@@ -139,10 +143,7 @@ bsoncxx::v_noabi::document::value change_stream::as_bson() const {
     append_if(out, "batchSize", batch_size());
     append_if(out, "collation", collation());
     append_if(out, "comment", comment());
-    if (_start_at_operation_time_set) {
-        out.append(bsoncxx::v_noabi::builder::basic::kvp("startAtOperationTime",
-                                                         _start_at_operation_time));
-    }
+    append_if(out, "startAtOperationTime", start_at_operation_time());
 
     if (max_await_time()) {
         auto count = max_await_time().value().count();
