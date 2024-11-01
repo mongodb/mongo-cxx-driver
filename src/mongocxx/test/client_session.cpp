@@ -124,7 +124,7 @@ TEST_CASE("session options", "[session]") {
 
         options::client_session opts;
 
-        // Unfortunately, stdx::nullopt doesn't always play well with others, so we'll use
+        // Unfortunately, bsoncxx::stdx::nullopt doesn't always play well with others, so we'll use
         // an enumeration:
         enum struct optional_state { empty, no, yes };
 
@@ -215,8 +215,8 @@ TEST_CASE("session", "[session]") {
 
     SECTION("pool") {
         // "Pool is LIFO" test from Driver Sessions Spec.
-        auto session_a = stdx::make_unique<client_session>(c.start_session());
-        auto session_b = stdx::make_unique<client_session>(c.start_session());
+        auto session_a = bsoncxx::stdx::make_unique<client_session>(c.start_session());
+        auto session_b = bsoncxx::stdx::make_unique<client_session>(c.start_session());
         auto a_id = value(session_a->id());
         auto b_id = value(session_b->id());
 
@@ -227,9 +227,9 @@ TEST_CASE("session", "[session]") {
         session_a = nullptr;
         session_b = nullptr;
 
-        auto session_c = stdx::make_unique<client_session>(c.start_session());
+        auto session_c = bsoncxx::stdx::make_unique<client_session>(c.start_session());
         REQUIRE(session_c->id() == b_id);
-        auto session_d = stdx::make_unique<client_session>(c.start_session());
+        auto session_d = bsoncxx::stdx::make_unique<client_session>(c.start_session());
         REQUIRE(session_d->id() == a_id);
     }
 

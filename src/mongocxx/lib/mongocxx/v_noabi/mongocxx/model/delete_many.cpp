@@ -37,11 +37,12 @@ delete_many& delete_many::hint(mongocxx::v_noabi::hint index_hint) {
     return *this;
 }
 
-const stdx::optional<mongocxx::v_noabi::hint>& delete_many::hint() const {
+const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint>& delete_many::hint() const {
     return _hint;
 }
 
-const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& delete_many::collation() const {
+const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&
+delete_many::collation() const {
     return _collation;
 }
 

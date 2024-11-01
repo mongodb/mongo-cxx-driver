@@ -220,7 +220,7 @@ void configure_fail_point(const client& client, document::view test) {
     }
 }
 
-void disable_fail_point(const client& client, stdx::string_view fail_point) {
+void disable_fail_point(const client& client, bsoncxx::stdx::string_view fail_point) {
     /* Some transactions tests have a failCommand for "hello" repeat seven times. */
     for (int i = 0; i < kMaxHelloFailCommands; i++) {
         try {
@@ -255,7 +255,7 @@ struct fail_point_guard_type {
 
 void disable_fail_point(std::string uri_string,
                         options::client client_opts,
-                        stdx::string_view fail_point) {
+                        bsoncxx::stdx::string_view fail_point) {
     mongocxx::client client = {uri{uri_string}, client_opts};
     disable_fail_point(client, fail_point);
 }
@@ -664,7 +664,7 @@ static void run_transaction_operations(
     string_view coll_name,
     client_session* session0,
     client_session* session1,
-    stdx::optional<targeted_fail_point_guard_type>* targeted_fail_point_guard,
+    bsoncxx::stdx::optional<targeted_fail_point_guard_type>* targeted_fail_point_guard,
     const apm_checker& apm_checker,
     bool throw_on_error = false) {
     auto operations = test["operations"].get_array().value;
@@ -749,15 +749,15 @@ static void run_transaction_operations(
                 // activating the disable guard. There is no harm attempting to disable a fail point
                 // that hasn't been set.
                 if (operation["name"] && operation["name"].get_string().value ==
-                                             stdx::string_view("targetedFailPoint")) {
+                                             bsoncxx::stdx::string_view("targetedFailPoint")) {
                     const auto arguments = operation["arguments"];
 
                     const auto session = [&]() -> mongocxx::client_session* {
                         const auto value = arguments["session"].get_string().value;
-                        if (value == stdx::string_view("session0")) {
+                        if (value == bsoncxx::stdx::string_view("session0")) {
                             return session0;
                         }
-                        if (value == stdx::string_view("session1")) {
+                        if (value == bsoncxx::stdx::string_view("session1")) {
                             return session1;
                         }
                         FAIL("unexpected session name: " << value);
@@ -767,7 +767,7 @@ static void run_transaction_operations(
                     // We expect and assume the name of the fail point is always "failCommand". To
                     // date, *all* legacy spec tests use "failCommand" as the fail point name.
                     REQUIRE(arguments["failPoint"]["configureFailPoint"].get_string().value ==
-                            stdx::string_view("failCommand"));
+                            bsoncxx::stdx::string_view("failCommand"));
 
                     // We expect at most one targetedFailPoint operation per test case.
                     REQUIRE(!(*targeted_fail_point_guard));
@@ -894,7 +894,7 @@ void run_transactions_tests_in_file(const std::string& test_path) {
             test_setup(test.get_document().value, test_spec_view);
 
             {
-                stdx::optional<fail_point_guard_type> fail_point_guard;
+                bsoncxx::stdx::optional<fail_point_guard_type> fail_point_guard;
                 if (test["failPoint"]) {
                     const auto fail_point_name = string::to_string(
                         test["failPoint"]["configureFailPoint"].get_string().value);
@@ -949,7 +949,8 @@ void run_transactions_tests_in_file(const std::string& test_path) {
 
                     // If a test uses `targetedFailPoint`, disable the fail point after running all
                     // `operations` to avoid spurious failures in subsequent tests.
-                    stdx::optional<targeted_fail_point_guard_type> targeted_fail_point_guard;
+                    bsoncxx::stdx::optional<targeted_fail_point_guard_type>
+                        targeted_fail_point_guard;
 
                     // Step 11. Perform the operations.
                     run_transaction_operations(test.get_document().value,
@@ -1076,7 +1077,7 @@ void run_crud_tests_in_file(const std::string& test_path, uri test_uri) {
 
             configure_fail_point(client, test.get_document().value);
 
-            stdx::optional<fail_point_guard_type> fail_point_guard;
+            bsoncxx::stdx::optional<fail_point_guard_type> fail_point_guard;
             if (test["failPoint"]) {
                 const auto fail_point_name =
                     string::to_string(test["failPoint"]["configureFailPoint"].get_string().value);

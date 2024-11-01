@@ -22,7 +22,6 @@
 #include <mongocxx/private/read_concern.hh>
 #include <mongocxx/private/read_preference.hh>
 #include <mongocxx/private/write_concern.hh>
-#include <mongocxx/stdx.hpp>
 
 #include <mongocxx/config/private/prelude.hh>
 
@@ -62,14 +61,14 @@ class transaction::impl {
                                                      rc._impl->read_concern_t);
     }
 
-    stdx::optional<mongocxx::v_noabi::read_concern> read_concern() const {
+    bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_concern> read_concern() const {
         auto rc = libmongoc::transaction_opts_get_read_concern(_transaction_opt_t.get());
         if (!rc) {
             return {};
         }
-        mongocxx::v_noabi::read_concern rci(
-            stdx::make_unique<read_concern::impl>(libmongoc::read_concern_copy(rc)));
-        return stdx::optional<mongocxx::v_noabi::read_concern>(std::move(rci));
+        mongocxx::v_noabi::read_concern rci(bsoncxx::v_noabi::stdx::make_unique<read_concern::impl>(
+            libmongoc::read_concern_copy(rc)));
+        return bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_concern>(std::move(rci));
     }
 
     void write_concern(const mongocxx::v_noabi::write_concern& wc) {
@@ -77,14 +76,15 @@ class transaction::impl {
                                                       wc._impl->write_concern_t);
     }
 
-    stdx::optional<mongocxx::v_noabi::write_concern> write_concern() const {
+    bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern> write_concern() const {
         auto wc = libmongoc::transaction_opts_get_write_concern(_transaction_opt_t.get());
         if (!wc) {
             return {};
         }
         mongocxx::v_noabi::write_concern wci(
-            stdx::make_unique<write_concern::impl>(libmongoc::write_concern_copy(wc)));
-        return stdx::optional<mongocxx::v_noabi::write_concern>(std::move(wci));
+            bsoncxx::v_noabi::stdx::make_unique<write_concern::impl>(
+                libmongoc::write_concern_copy(wc)));
+        return bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>(std::move(wci));
     }
 
     void read_preference(const mongocxx::v_noabi::read_preference& rp) {
@@ -92,21 +92,22 @@ class transaction::impl {
                                                    rp._impl->read_preference_t);
     }
 
-    stdx::optional<mongocxx::v_noabi::read_preference> read_preference() const {
+    bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_preference> read_preference() const {
         auto rp = libmongoc::transaction_opts_get_read_prefs(_transaction_opt_t.get());
         if (!rp) {
             return {};
         }
         mongocxx::v_noabi::read_preference rpi(
-            stdx::make_unique<read_preference::impl>(libmongoc::read_prefs_copy(rp)));
-        return stdx::optional<mongocxx::v_noabi::read_preference>(std::move(rpi));
+            bsoncxx::v_noabi::stdx::make_unique<read_preference::impl>(
+                libmongoc::read_prefs_copy(rp)));
+        return bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_preference>(std::move(rpi));
     }
 
     void max_commit_time_ms(std::chrono::milliseconds ms) {
         libmongoc::transaction_opts_set_max_commit_time_ms(_transaction_opt_t.get(), ms.count());
     }
 
-    stdx::optional<std::chrono::milliseconds> max_commit_time_ms() const {
+    bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds> max_commit_time_ms() const {
         auto ms = libmongoc::transaction_opts_get_max_commit_time_ms(_transaction_opt_t.get());
         if (!ms) {
 #if !defined(__clang__) && defined(__GNUC__) && (__cplusplus >= 201709L)

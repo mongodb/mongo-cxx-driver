@@ -93,7 +93,7 @@ using bsoncxx::types::bson_value::make_value;
 using namespace mongocxx;
 
 // Takes a path relative to the CLIENT_SIDE_ENCRYPTION_TESTS_PATH variable, with leading '/'.
-bsoncxx::document::value _doc_from_file(stdx::string_view sub_path) {
+bsoncxx::document::value _doc_from_file(bsoncxx::stdx::string_view sub_path) {
     char* encryption_tests_path = std::getenv("CLIENT_SIDE_ENCRYPTION_TESTS_PATH");
     REQUIRE(encryption_tests_path);
 
@@ -242,7 +242,7 @@ void _add_cse_opts(options::client_encryption* opts,
 
 template <typename Callable>
 void run_datakey_and_double_encryption(Callable create_data_key,
-                                       stdx::string_view provider,
+                                       bsoncxx::stdx::string_view provider,
                                        client* setup_client,
                                        client* client_encrypted,
                                        client_encryption* client_encryption,
@@ -314,7 +314,7 @@ void run_datakey_and_double_encryption(Callable create_data_key,
     REQUIRE(res);
     auto decrypted_bson_val = res->view()["value"];
     REQUIRE(decrypted_bson_val.type() == bsoncxx::type::k_string);
-    REQUIRE(decrypted_bson_val.get_string().value == stdx::string_view{"hello there"});
+    REQUIRE(decrypted_bson_val.get_string().value == bsoncxx::stdx::string_view{"hello there"});
 
     // 3. Call client_encryption.encrypt() with the value "hello there", the algorithm
     // AEAD_AES_256_CBC_HMAC_SHA_512-Deterministic, and the key_alt_name of provider_altname
@@ -950,58 +950,58 @@ void _run_corpus_test(bool use_schema_map) {
 
         // If method is auto, copy the field to corpus_copied.
         // If method is explicit, encrypt explicitly.
-        if (method == stdx::string_view("auto")) {
+        if (method == bsoncxx::stdx::string_view("auto")) {
             corpus_copied_builder.append(kvp(field_name, ele.get_value()));
-        } else if (method == stdx::string_view{"explicit"}) {
+        } else if (method == bsoncxx::stdx::string_view{"explicit"}) {
             options::encrypt encrypt_opts;
 
             // Encrypt with the algorithm described by algo
-            if (algo == stdx::string_view{"rand"}) {
+            if (algo == bsoncxx::stdx::string_view{"rand"}) {
                 encrypt_opts.algorithm(options::encrypt::encryption_algorithm::k_random);
-            } else if (algo == stdx::string_view{"det"}) {
+            } else if (algo == bsoncxx::stdx::string_view{"det"}) {
                 encrypt_opts.algorithm(options::encrypt::encryption_algorithm::k_deterministic);
             } else {
                 throw exception{error_code::k_invalid_parameter, "unsupported algorithm"};
             }
 
-            if (identifier == stdx::string_view{"id"}) {
-                if (kms == stdx::string_view{"local"}) {
+            if (identifier == bsoncxx::stdx::string_view{"id"}) {
+                if (kms == bsoncxx::stdx::string_view{"local"}) {
                     // If kms is local set the key_id to the UUID with base64 value
                     // LOCALAAAAAAAAAAAAAAAAA==.
                     encrypt_opts.key_id(local_key_value.view());
-                } else if (kms == stdx::string_view{"aws"}) {
+                } else if (kms == bsoncxx::stdx::string_view{"aws"}) {
                     // If kms is aws set the key_id to the UUID with base64 value
                     // AWSAAAAAAAAAAAAAAAAAAA==.
                     encrypt_opts.key_id(aws_key_value.view());
-                } else if (kms == stdx::string_view{"azure"}) {
+                } else if (kms == bsoncxx::stdx::string_view{"azure"}) {
                     // If kms is azure set the key_id to the UUID with base64 value
                     // AZUREAAAAAAAAAAAAAAAAA==.
                     encrypt_opts.key_id(azure_key_value.view());
-                } else if (kms == stdx::string_view("gcp")) {
+                } else if (kms == bsoncxx::stdx::string_view("gcp")) {
                     // If kms is gcp set the key_id to the UUID with base64 value
                     // GCPAAAAAAAAAAAAAAAAAAA==.
                     encrypt_opts.key_id(gcp_key_value.view());
-                } else if (kms == stdx::string_view("kmip")) {
+                } else if (kms == bsoncxx::stdx::string_view("kmip")) {
                     // If kms is kmip set the key_id to the UUID with base64 value
                     // KMIPAAAAAAAAAAAAAAAAAA==.
                     encrypt_opts.key_id(kmip_key_value.view());
                 } else {
                     throw exception{error_code::k_invalid_parameter, "unsupported kms identifier"};
                 }
-            } else if (identifier == stdx::string_view{"altname"}) {
-                if (kms == stdx::string_view{"local"}) {
+            } else if (identifier == bsoncxx::stdx::string_view{"altname"}) {
+                if (kms == bsoncxx::stdx::string_view{"local"}) {
                     // If kms is local set the key_alt_name to "local".
                     encrypt_opts.key_alt_name("local");
-                } else if (kms == stdx::string_view{"aws"}) {
+                } else if (kms == bsoncxx::stdx::string_view{"aws"}) {
                     // If kms is aws set the key_alt_name to "aws".
                     encrypt_opts.key_alt_name("aws");
-                } else if (kms == stdx::string_view("azure")) {
+                } else if (kms == bsoncxx::stdx::string_view("azure")) {
                     // If kms is azure set the key_alt_name to "azure".
                     encrypt_opts.key_alt_name("azure");
-                } else if (kms == stdx::string_view("gcp")) {
+                } else if (kms == bsoncxx::stdx::string_view("gcp")) {
                     // If kms is gcp set the key_alt_name to "gcp".
                     encrypt_opts.key_alt_name("gcp");
-                } else if (kms == stdx::string_view("kmip")) {
+                } else if (kms == bsoncxx::stdx::string_view("kmip")) {
                     // If kms is kmip set the key_alt_name to "kmip".
                     encrypt_opts.key_alt_name("kmip");
                 } else {
@@ -1082,13 +1082,13 @@ void _run_corpus_test(bool use_schema_map) {
 
         // If the algo is det, that the value equals the value of the corresponding field
         // in corpus_encrypted_actual.
-        if (algo == stdx::string_view{"det"}) {
+        if (algo == bsoncxx::stdx::string_view{"det"}) {
             REQUIRE(value == actual_field["value"].get_value());
         }
 
         // If the algo is rand and allowed is true, that the value does not equal the value
         // of the corresponding field in corpus_encrypted_actual.
-        if (algo == stdx::string_view{"rand"} && allowed) {
+        if (algo == bsoncxx::stdx::string_view{"rand"} && allowed) {
             REQUIRE(value != actual_field["value"].get_value());
         }
 
@@ -1140,11 +1140,12 @@ void _round_trip(mongocxx::client_encryption* client_encryption,
     REQUIRE(decrypted_val == to_encrypt);
 }
 
-void _run_endpoint_test(mongocxx::client* setup_client,
-                        bsoncxx::document::view masterkey,
-                        std::string kms_provider,
-                        stdx::optional<std::string> error_msg = stdx::nullopt,
-                        stdx::optional<std::string> invalid_error_msg = stdx::nullopt) {
+void _run_endpoint_test(
+    mongocxx::client* setup_client,
+    bsoncxx::document::view masterkey,
+    std::string kms_provider,
+    bsoncxx::stdx::optional<std::string> error_msg = bsoncxx::stdx::nullopt,
+    bsoncxx::stdx::optional<std::string> invalid_error_msg = bsoncxx::stdx::nullopt) {
     INFO("masterkey" << bsoncxx::to_json(masterkey));
 
     mongocxx::options::client_encryption ce_opts;
@@ -1392,7 +1393,7 @@ TEST_CASE("Custom endpoint", "[client_side_encryption]") {
         _run_endpoint_test(&setup_client,
                            azure_masterkey.view(),
                            "azure",
-                           stdx::nullopt,
+                           bsoncxx::stdx::nullopt,
                            {{"Failed to resolve doesnotexist.invalid: generic server error"}});
     }
 
@@ -1424,7 +1425,7 @@ TEST_CASE("Custom endpoint", "[client_side_encryption]") {
         _run_endpoint_test(&setup_client,
                            gcp_masterkey.view(),
                            "gcp",
-                           stdx::nullopt,
+                           bsoncxx::stdx::nullopt,
                            {{"Failed to resolve doesnotexist.invalid: generic server error"}});
     }
 
@@ -1468,7 +1469,7 @@ TEST_CASE("Custom endpoint", "[client_side_encryption]") {
         _run_endpoint_test(&setup_client,
                            kmip_masterkey.view(),
                            "kmip",
-                           stdx::nullopt,
+                           bsoncxx::stdx::nullopt,
                            {{"Failed to resolve doesnotexist.local: generic server error"}});
     }
 
@@ -1823,9 +1824,9 @@ TEST_CASE("KMS TLS wrong host certificate", "[client_side_encryption]") {
                            kms_tls_wrong_host_cert_matcher());
 }
 
-bsoncxx::document::value make_kms_providers_with_custom_endpoints(stdx::string_view azure,
-                                                                  stdx::string_view gcp,
-                                                                  stdx::string_view kmip) {
+bsoncxx::document::value make_kms_providers_with_custom_endpoints(bsoncxx::stdx::string_view azure,
+                                                                  bsoncxx::stdx::string_view gcp,
+                                                                  bsoncxx::stdx::string_view kmip) {
     bsoncxx::builder::basic::document kms_doc;
 
     kms_doc.append(kvp("aws", [&](sub_document subdoc) {
@@ -1859,7 +1860,7 @@ enum struct with_certs { none, ca_only, cert_only, both };
 bsoncxx::document::value make_tls_opts_with_certs(with_certs with) {
     bsoncxx::builder::basic::document tls_opts;
 
-    stdx::string_view providers[] = {"aws", "azure", "gcp", "kmip"};
+    bsoncxx::stdx::string_view providers[] = {"aws", "azure", "gcp", "kmip"};
 
     for (const auto& provider : providers) {
         tls_opts.append(kvp(provider, [&](sub_document subdoc) {
@@ -1880,9 +1881,9 @@ bsoncxx::document::value make_tls_opts_with_certs(with_certs with) {
 }
 
 client_encryption make_prose_test_11_ce(mongocxx::client* client,
-                                        stdx::string_view azure,
-                                        stdx::string_view gcp,
-                                        stdx::string_view kmip,
+                                        bsoncxx::stdx::string_view azure,
+                                        bsoncxx::stdx::string_view gcp,
+                                        bsoncxx::stdx::string_view kmip,
                                         with_certs with) {
     options::client_encryption cse_opts;
     cse_opts.key_vault_client(client);
@@ -2489,7 +2490,7 @@ TEST_CASE("Create Encrypted Collection", "[client_side_encryption]") {
 
     struct which {
         std::string kms_provider;
-        stdx::optional<bsoncxx::document::value> master_key;
+        bsoncxx::stdx::optional<bsoncxx::document::value> master_key;
     };
 
     which w = GENERATE(Catch::Generators::values<which>({
@@ -2499,7 +2500,7 @@ TEST_CASE("Create Encrypted Collection", "[client_side_encryption]") {
              kvp("key",
                  "arn:aws:kms:us-east-1:579766882180:key/89fcc2c4-08b0-4bd9-9f25-e30687b580d0"))},
         // When testing 'local', use master_key of 'null'
-        {"local", stdx::nullopt},
+        {"local", bsoncxx::stdx::nullopt},
     }));
 
     options::client_encryption cse_opts;
@@ -2526,7 +2527,8 @@ TEST_CASE("Create Encrypted Collection", "[client_side_encryption]") {
                 create_opts,
                 fin_options,
                 w.kms_provider,
-                w.master_key ? stdx::make_optional(w.master_key->view()) : stdx::nullopt);
+                w.master_key ? bsoncxx::stdx::make_optional(w.master_key->view())
+                             : bsoncxx::stdx::nullopt);
             CAPTURE(fin_options, coll);
             try {
                 coll.insert_one(make_document(kvp("ssn", "123-45-6789")));
@@ -2545,7 +2547,8 @@ TEST_CASE("Create Encrypted Collection", "[client_side_encryption]") {
                     create_opts,
                     fin_options,
                     w.kms_provider,
-                    w.master_key ? stdx::make_optional(w.master_key->view()) : stdx::nullopt);
+                    w.master_key ? bsoncxx::stdx::make_optional(w.master_key->view())
+                                 : bsoncxx::stdx::nullopt);
                 CAPTURE(fin_options, coll);
                 FAIL_CHECK("Did not throw");
             } catch (const mongocxx::operation_exception& e) {
@@ -2568,7 +2571,8 @@ TEST_CASE("Create Encrypted Collection", "[client_side_encryption]") {
                     create_opts,
                     fin_options,
                     w.kms_provider,
-                    w.master_key ? stdx::make_optional(w.master_key->view()) : stdx::nullopt);
+                    w.master_key ? bsoncxx::stdx::make_optional(w.master_key->view())
+                                 : bsoncxx::stdx::nullopt);
                 CAPTURE(fin_options, coll);
                 FAIL_CHECK("Did not throw");
             } catch (const mongocxx::operation_exception& e) {
@@ -2591,7 +2595,8 @@ TEST_CASE("Create Encrypted Collection", "[client_side_encryption]") {
                 create_opts,
                 fin_options,
                 w.kms_provider,
-                w.master_key ? stdx::make_optional(w.master_key->view()) : stdx::nullopt);
+                w.master_key ? bsoncxx::stdx::make_optional(w.master_key->view())
+                             : bsoncxx::stdx::nullopt);
             CAPTURE(fin_options, coll);
 
             bsoncxx::types::b_string ssn{"123-45-6789"};

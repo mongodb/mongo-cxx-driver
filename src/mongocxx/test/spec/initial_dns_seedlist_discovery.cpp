@@ -63,7 +63,7 @@ struct initial_dns_seedlist_test {
     }
 };
 
-static bsoncxx::document::value _doc_from_file(mongocxx::stdx::string_view sub_path) {
+static bsoncxx::document::value _doc_from_file(bsoncxx::stdx::string_view sub_path) {
     const char* test_path = std::getenv("INITIAL_DNS_SEEDLIST_DISCOVERY_TESTS_PATH");
     REQUIRE(test_path);
 

@@ -33,7 +33,6 @@
 #include <bsoncxx/stdx/optional.hpp>
 
 #include <mongocxx/options/transaction.hpp>
-#include <mongocxx/stdx.hpp>
 
 #include <mongocxx/config/prelude.hpp>
 
@@ -225,7 +224,8 @@ class read_preference {
     /// @see
     /// - https://www.mongodb.com/docs/manual/core/read-preference-tags/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(stdx::optional<bsoncxx::v_noabi::document::view>) tags() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view>)
+    tags() const;
 
     ///
     /// Sets the max staleness setting for this read_preference.  Secondary
@@ -264,7 +264,8 @@ class read_preference {
     ///
     /// @return The optionally current max staleness setting.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(stdx::optional<std::chrono::seconds>) max_staleness() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<std::chrono::seconds>)
+    max_staleness() const;
 
     ///
     /// Sets the hedge document to be used for the read preference. Sharded clusters running MongoDB
@@ -292,7 +293,9 @@ class read_preference {
     ///
     /// @return A hedge document if one was set.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::view>) hedge() const;
+    MONGOCXX_ABI_EXPORT_CDECL(
+        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view>)
+    hedge() const;
 
     ///
     /// @relates mongocxx::v_noabi::read_preference

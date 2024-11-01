@@ -56,7 +56,7 @@ void pool::_release(client* client) {
 pool::~pool() = default;
 
 pool::pool(const uri& uri, const options::pool& options)
-    : _impl{stdx::make_unique<impl>(construct_client_pool(uri._impl->uri_t))} {
+    : _impl{bsoncxx::v_noabi::stdx::make_unique<impl>(construct_client_pool(uri._impl->uri_t))} {
 #if defined(MONGOCXX_ENABLE_SSL) && defined(MONGOC_ENABLE_SSL)
     if (options.client_opts().tls_opts()) {
         if (!uri.tls())
@@ -142,10 +142,10 @@ pool::entry pool::acquire() {
         entry::unique_client(new client(cli), [this](client* client) { _release(client); }));
 }
 
-stdx::optional<pool::entry> pool::try_acquire() {
+bsoncxx::v_noabi::stdx::optional<pool::entry> pool::try_acquire() {
     auto cli = libmongoc::client_pool_try_pop(_impl->client_pool_t);
     if (!cli)
-        return stdx::nullopt;
+        return bsoncxx::v_noabi::stdx::nullopt;
 
     return entry(
         entry::unique_client(new client(cli), [this](client* client) { _release(client); }));

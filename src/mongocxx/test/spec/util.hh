@@ -36,7 +36,7 @@ using namespace mongocxx;
 ///
 /// Returns corresponding error code from given error name.
 ///
-uint32_t error_code_from_name(stdx::string_view name);
+uint32_t error_code_from_name(bsoncxx::stdx::string_view name);
 
 bool check_if_skip_spec_test_impl(const client& client, document::view test, std::string& reason);
 
@@ -57,10 +57,10 @@ void configure_fail_point(const client& client, document::view test);
 ///
 /// Disables fail points set by tests.
 ///
-void disable_fail_point(const client& client, stdx::string_view failpoint = "failCommand");
+void disable_fail_point(const client& client, bsoncxx::stdx::string_view failpoint = "failCommand");
 void disable_fail_point(std::string uri_string,
                         options::client client_opts,
-                        stdx::string_view failpoint = "failCommand");
+                        bsoncxx::stdx::string_view failpoint = "failCommand");
 
 ///
 /// Drops the given collection, then recreates it using the jsonSchema
@@ -69,8 +69,8 @@ void disable_fail_point(std::string uri_string,
 ///
 void set_up_collection(const client& client,
                        document::view test,
-                       stdx::string_view database_name = "database_name",
-                       stdx::string_view collection_name = "collection_name");
+                       bsoncxx::stdx::string_view database_name = "database_name",
+                       bsoncxx::stdx::string_view collection_name = "collection_name");
 
 ///
 /// Deletes all existing documents in the given collection, then inserts

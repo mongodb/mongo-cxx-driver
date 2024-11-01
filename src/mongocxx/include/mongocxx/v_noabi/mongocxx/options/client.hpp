@@ -72,14 +72,15 @@ class client {
     ///
     /// @deprecated Please use tls_opts instead.
     ///
-    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<tls>&) ssl_opts() const;
+    MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<tls>&)
+        ssl_opts() const;
 
     ///
     /// The current TLS-related options.
     ///
     /// @return The TLS-related options.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<tls>&) tls_opts() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<tls>&) tls_opts() const;
 
     ///
     /// Sets the automatic encryption options.
@@ -99,7 +100,8 @@ class client {
     /// @return
     ///   The automatic encryption opts.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<auto_encryption>&) auto_encryption_opts() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<auto_encryption>&)
+    auto_encryption_opts() const;
 
     ///
     /// Sets the APM-related options.
@@ -118,7 +120,7 @@ class client {
     ///
     /// @return The APM-related options.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<apm>&) apm_opts() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<apm>&) apm_opts() const;
 
     ///
     /// Sets the server API options.
@@ -139,13 +141,14 @@ class client {
     /// @return
     ///   The server API options.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<server_api>&) server_api_opts() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<server_api>&)
+    server_api_opts() const;
 
    private:
-    stdx::optional<tls> _tls_opts;
-    stdx::optional<apm> _apm_opts;
-    stdx::optional<auto_encryption> _auto_encrypt_opts;
-    stdx::optional<server_api> _server_api_opts;
+    bsoncxx::v_noabi::stdx::optional<tls> _tls_opts;
+    bsoncxx::v_noabi::stdx::optional<apm> _apm_opts;
+    bsoncxx::v_noabi::stdx::optional<auto_encryption> _auto_encrypt_opts;
+    bsoncxx::v_noabi::stdx::optional<server_api> _server_api_opts;
 };
 
 }  // namespace options

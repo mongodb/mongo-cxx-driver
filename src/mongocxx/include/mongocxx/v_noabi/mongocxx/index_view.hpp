@@ -81,7 +81,7 @@ class index_view {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/method/db.collection.createIndex/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(stdx::optional<std::string>)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<std::string>)
     create_one(const bsoncxx::v_noabi::document::view_or_value& keys,
                const bsoncxx::v_noabi::document::view_or_value& index_options = {},
                const options::index_view& options = options::index_view{});
@@ -110,7 +110,7 @@ class index_view {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/method/db.collection.createIndex/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(stdx::optional<std::string>)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<std::string>)
     create_one(const client_session& session,
                const bsoncxx::v_noabi::document::view_or_value& keys,
                const bsoncxx::v_noabi::document::view_or_value& index_options = {},
@@ -135,7 +135,7 @@ class index_view {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/method/cursor.maxTimeMS/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(stdx::optional<std::string>)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<std::string>)
     create_one(const index_model& index,
                const options::index_view& options = options::index_view{});
 
@@ -160,7 +160,7 @@ class index_view {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/method/cursor.maxTimeMS/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(stdx::optional<std::string>)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<std::string>)
     create_one(const client_session& session,
                const index_model& index,
                const options::index_view& options = options::index_view{});
@@ -232,7 +232,8 @@ class index_view {
     /// - https://www.mongodb.com/docs/manual/reference/method/cursor.maxTimeMS/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(void)
-    drop_one(stdx::string_view name, const options::index_view& options = options::index_view{});
+    drop_one(bsoncxx::v_noabi::stdx::string_view name,
+             const options::index_view& options = options::index_view{});
 
     ///
     /// Drops a single index by name.
@@ -255,7 +256,7 @@ class index_view {
     ///
     MONGOCXX_ABI_EXPORT_CDECL(void)
     drop_one(const client_session& session,
-             stdx::string_view name,
+             bsoncxx::v_noabi::stdx::string_view name,
              const options::index_view& options = options::index_view{});
 
     ///

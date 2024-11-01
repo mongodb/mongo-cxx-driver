@@ -449,11 +449,11 @@ void add_observe_events(spec::apm_checker& apm, options::apm& apm_opts, document
 
     for (const auto& event : events) {
         const auto event_type = event.get_string().value;
-        if (event_type == mongocxx::stdx::string_view("commandStartedEvent")) {
+        if (event_type == bsoncxx::stdx::string_view("commandStartedEvent")) {
             apm.set_command_started_unified(apm_opts);
-        } else if (event_type == mongocxx::stdx::string_view("commandSucceededEvent")) {
+        } else if (event_type == bsoncxx::stdx::string_view("commandSucceededEvent")) {
             apm.set_command_succeeded_unified(apm_opts);
-        } else if (event_type == mongocxx::stdx::string_view("commandFailedEvent")) {
+        } else if (event_type == bsoncxx::stdx::string_view("commandFailedEvent")) {
             apm.set_command_failed_unified(apm_opts);
         } else {
             UNSCOPED_INFO("ignoring unsupported command monitoring event " << event_type);
@@ -1085,9 +1085,9 @@ struct fail_point_guard_type {
     }
 };
 
-void disable_targeted_fail_point(mongocxx::stdx::string_view uri,
+void disable_targeted_fail_point(bsoncxx::stdx::string_view uri,
                                  std::uint32_t server_id,
-                                 mongocxx::stdx::string_view fail_point) {
+                                 bsoncxx::stdx::string_view fail_point) {
     const auto command_owner =
         make_document(kvp("configureFailPoint", fail_point), kvp("mode", "off"));
     const auto command = command_owner.view();
@@ -1137,8 +1137,8 @@ document::value bulk_write_result(const mongocxx::bulk_write_exception& e) {
 }
 
 // Match test cases that should be skipped by both test and case descriptions.
-const std::map<std::pair<mongocxx::stdx::string_view, mongocxx::stdx::string_view>,
-               mongocxx::stdx::string_view>
+const std::map<std::pair<bsoncxx::stdx::string_view, bsoncxx::stdx::string_view>,
+               bsoncxx::stdx::string_view>
     should_skip_test_cases = {
         {{"retryable reads handshake failures",
           "collection.findOne succeeds after retryable handshake network error"},
@@ -1156,7 +1156,7 @@ const std::map<std::pair<mongocxx::stdx::string_view, mongocxx::stdx::string_vie
          "collection.listIndexNames optional helper is not supported"},
 };
 
-void run_tests(mongocxx::stdx::string_view test_description, document::view test) {
+void run_tests(bsoncxx::stdx::string_view test_description, document::view test) {
     REQUIRE(test["tests"]);
 
     for (const auto& ele : test["tests"].get_array().value) {
@@ -1299,7 +1299,7 @@ void run_tests_in_file(const std::string& test_path) {
 // file:
 void run_unified_format_tests_in_env_dir(
     const std::string& env_path,
-    const std::set<mongocxx::stdx::string_view>& unsupported_tests = {}) {
+    const std::set<bsoncxx::stdx::string_view>& unsupported_tests = {}) {
     const char* p = std::getenv(env_path.c_str());
 
     if (nullptr == p)
@@ -1328,7 +1328,7 @@ void run_unified_format_tests_in_env_dir(
 }
 
 TEST_CASE("unified format spec automated tests", "[unified_format_specs]") {
-    const std::set<mongocxx::stdx::string_view> unsupported_tests = {
+    const std::set<bsoncxx::stdx::string_view> unsupported_tests = {
         // Waiting on CDRIVER-3525 and CXX-2166.
         "valid-pass/entity-client-cmap-events.json",
         // Waiting on CDRIVER-3525 and CXX-2166.

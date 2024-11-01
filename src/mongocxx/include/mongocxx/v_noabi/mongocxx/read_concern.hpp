@@ -28,7 +28,6 @@
 #include <bsoncxx/stdx/string_view.hpp>
 
 #include <mongocxx/options/transaction.hpp>
-#include <mongocxx/stdx.hpp>
 
 #include <mongocxx/config/prelude.hpp>
 
@@ -139,7 +138,8 @@ class read_concern {
     /// @param rc_string
     ///   The read concern string.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(void) acknowledge_string(stdx::string_view rc_string);
+    MONGOCXX_ABI_EXPORT_CDECL(void)
+    acknowledge_string(bsoncxx::v_noabi::stdx::string_view rc_string);
 
     ///
     /// Gets the current read concern string.
@@ -149,7 +149,7 @@ class read_concern {
     ///
     /// @return The read concern string.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(stdx::string_view) acknowledge_string() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::string_view) acknowledge_string() const;
 
     ///
     /// Gets the document form of this read_concern.

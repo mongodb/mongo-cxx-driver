@@ -64,8 +64,8 @@ void user_log_handler(::mongoc_log_level_t mongoc_log_level,
                       const char* message,
                       void* user_data) {
     (*static_cast<logger*>(user_data))(convert_log_level(mongoc_log_level),
-                                       stdx::string_view{log_domain},
-                                       stdx::string_view{message});
+                                       bsoncxx::v_noabi::stdx::string_view{log_domain},
+                                       bsoncxx::v_noabi::stdx::string_view{message});
 }
 
 // A region of memory that acts as a sentintel value indicating that an instance object is being
@@ -145,7 +145,7 @@ instance::instance(std::unique_ptr<logger> logger) {
         throw logic_error{error_code::k_cannot_recreate_instance};
     }
 
-    _impl = stdx::make_unique<impl>(std::move(logger));
+    _impl = bsoncxx::v_noabi::stdx::make_unique<impl>(std::move(logger));
 }
 
 instance::instance(instance&&) noexcept = default;

@@ -25,8 +25,6 @@
 
 #include <bsoncxx/stdx/optional.hpp>
 
-#include <mongocxx/stdx.hpp>
-
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
@@ -83,7 +81,8 @@ class transaction {
     /// @return
     ///    An optional containing the read concern. If the read concern has not been set, a
     ///    disengaged optional is returned.
-    MONGOCXX_ABI_EXPORT_CDECL(stdx::optional<mongocxx::v_noabi::read_concern>) read_concern() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_concern>)
+    read_concern() const;
 
     ///
     /// Sets the transaction write concern.
@@ -106,7 +105,7 @@ class transaction {
     /// @return
     ///    An optional containing the write concern. If the write concern has not been set, a
     ///    disengaged optional is returned.
-    MONGOCXX_ABI_EXPORT_CDECL(stdx::optional<mongocxx::v_noabi::write_concern>)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>)
     write_concern() const;
 
     ///
@@ -128,7 +127,7 @@ class transaction {
     /// @return
     ///    An optional containing the read preference. If the read preference has not been set, a
     ///    disengaged optional is returned.
-    MONGOCXX_ABI_EXPORT_CDECL(stdx::optional<mongocxx::v_noabi::read_preference>)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_preference>)
     read_preference() const;
 
     ///
@@ -149,7 +148,8 @@ class transaction {
     ///   An optional containing the timeout. If the max commit time has not been set,
     ///   a disengaged optional is returned.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(stdx::optional<std::chrono::milliseconds>) max_commit_time_ms() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds>)
+    max_commit_time_ms() const;
 
    private:
     friend ::mongocxx::v_noabi::client_session;

@@ -47,7 +47,8 @@ client_session& client_session::default_transaction_opts(transaction default_tra
     return *this;
 }
 
-const stdx::optional<transaction>& client_session::default_transaction_opts() const {
+const bsoncxx::v_noabi::stdx::optional<transaction>& client_session::default_transaction_opts()
+    const {
     return _default_transaction_opts;
 }
 

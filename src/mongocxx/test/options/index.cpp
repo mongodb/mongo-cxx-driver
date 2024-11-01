@@ -35,7 +35,7 @@ TEST_CASE("index", "[index][option]") {
 
     options::index idx;
     std::unique_ptr<options::index::wiredtiger_storage_options> storage =
-        stdx::make_unique<options::index::wiredtiger_storage_options>();
+        bsoncxx::stdx::make_unique<options::index::wiredtiger_storage_options>();
 
     auto collation = make_document(kvp("locale", "en_US"));
     auto partial_filter_expression = make_document(kvp("x", true));

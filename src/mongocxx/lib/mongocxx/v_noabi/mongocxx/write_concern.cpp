@@ -28,7 +28,8 @@
 namespace mongocxx {
 namespace v_noabi {
 
-write_concern::write_concern() : _impl{stdx::make_unique<impl>(libmongoc::write_concern_new())} {}
+write_concern::write_concern()
+    : _impl{bsoncxx::v_noabi::stdx::make_unique<impl>(libmongoc::write_concern_new())} {}
 
 write_concern::write_concern(std::unique_ptr<impl>&& implementation) {
     _impl.reset(implementation.release());
@@ -38,10 +39,12 @@ write_concern::write_concern(write_concern&&) noexcept = default;
 write_concern& write_concern::operator=(write_concern&&) noexcept = default;
 
 write_concern::write_concern(const write_concern& other)
-    : _impl(stdx::make_unique<impl>(libmongoc::write_concern_copy(other._impl->write_concern_t))) {}
+    : _impl(bsoncxx::v_noabi::stdx::make_unique<impl>(
+          libmongoc::write_concern_copy(other._impl->write_concern_t))) {}
 
 write_concern& write_concern::operator=(const write_concern& other) {
-    _impl.reset(stdx::make_unique<impl>(libmongoc::write_concern_copy(other._impl->write_concern_t))
+    _impl.reset(bsoncxx::v_noabi::stdx::make_unique<impl>(
+                    libmongoc::write_concern_copy(other._impl->write_concern_t))
                     .release());
     return *this;
 }
@@ -86,7 +89,7 @@ void write_concern::acknowledge_level(write_concern::level confirm_level) {
     libmongoc::write_concern_set_w(_impl->write_concern_t, w);
 }
 
-void write_concern::tag(stdx::string_view confirm_from) {
+void write_concern::tag(bsoncxx::v_noabi::stdx::string_view confirm_from) {
     libmongoc::write_concern_set_wtag(_impl->write_concern_t,
                                       bsoncxx::v_noabi::string::to_string(confirm_from).data());
 }
@@ -112,9 +115,10 @@ bool write_concern::journal() const {
     return libmongoc::write_concern_get_journal(_impl->write_concern_t);
 }
 
-stdx::optional<std::int32_t> write_concern::nodes() const {
+bsoncxx::v_noabi::stdx::optional<std::int32_t> write_concern::nodes() const {
     std::int32_t w = libmongoc::write_concern_get_w(_impl->write_concern_t);
-    return w >= 0 ? stdx::optional<std::int32_t>{w} : stdx::nullopt;
+    return w >= 0 ? bsoncxx::v_noabi::stdx::optional<std::int32_t>{w}
+                  : bsoncxx::v_noabi::stdx::nullopt;
 }
 
 write_concern::level write_concern::acknowledge_level() const {
@@ -135,9 +139,10 @@ write_concern::level write_concern::acknowledge_level() const {
     }
 }
 
-stdx::optional<std::string> write_concern::tag() const {
+bsoncxx::v_noabi::stdx::optional<std::string> write_concern::tag() const {
     const char* tag_str = libmongoc::write_concern_get_wtag(_impl->write_concern_t);
-    return tag_str ? stdx::make_optional<std::string>(tag_str) : stdx::nullopt;
+    return tag_str ? bsoncxx::v_noabi::stdx::make_optional<std::string>(tag_str)
+                   : bsoncxx::v_noabi::stdx::nullopt;
 }
 
 bool write_concern::majority() const {

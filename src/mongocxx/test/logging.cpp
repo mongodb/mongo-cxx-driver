@@ -32,8 +32,8 @@ class test_log_handler : public logger {
     test_log_handler(std::vector<event>* events) : _events(events) {}
 
     void operator()(log_level level,
-                    stdx::string_view domain,
-                    stdx::string_view message) noexcept final {
+                    bsoncxx::stdx::string_view domain,
+                    bsoncxx::stdx::string_view message) noexcept final {
         if (level == log_level::k_error)
             _events->emplace_back(level, std::string(domain), std::string(message));
     }
@@ -53,7 +53,7 @@ TEST_CASE("a user-provided log handler will be used for logging output", "[insta
     reset_log_handler_when_done rlhwd;
 
     std::vector<test_log_handler::event> events;
-    mongocxx::instance driver{stdx::make_unique<test_log_handler>(&events)};
+    mongocxx::instance driver{bsoncxx::stdx::make_unique<test_log_handler>(&events)};
 
     REQUIRE(&mongocxx::instance::current() == &driver);
 

@@ -26,8 +26,6 @@
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/bson_value/view_or_value.hpp>
 
-#include <mongocxx/stdx.hpp>
-
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
@@ -131,7 +129,8 @@ class change_stream {
     /// @return
     ///   The current batch size.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<std::int32_t>&) batch_size() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<std::int32_t>&)
+    batch_size() const;
 
     ///
     /// Sets the current value of the comment option.
@@ -153,7 +152,7 @@ class change_stream {
     ///   The current comment option.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(
-        const stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>&)
+        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>&)
     comment() const;
 
     ///
@@ -180,7 +179,8 @@ class change_stream {
     /// @return
     ///   The current resumeToken.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(
+        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
     resume_after() const;
 
     ///
@@ -209,7 +209,8 @@ class change_stream {
     /// @return
     ///   The current startAfter token.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(
+        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
     start_after() const;
 
     ///
@@ -231,7 +232,8 @@ class change_stream {
     /// @return
     ///   The current collation.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(
+        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
     collation() const;
 
     ///
@@ -253,7 +255,7 @@ class change_stream {
     /// @return
     ///   The current max time (in milliseconds).
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<std::chrono::milliseconds>&)
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds>&)
     max_await_time() const;
 
     ///
@@ -280,17 +282,18 @@ class change_stream {
 
     bsoncxx::v_noabi::document::value as_bson() const;
 
-    stdx::optional<bsoncxx::v_noabi::string::view_or_value> _full_document;
-    stdx::optional<bsoncxx::v_noabi::string::view_or_value> _full_document_before_change;
-    stdx::optional<std::int32_t> _batch_size;
-    stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> _comment;
-    stdx::optional<bsoncxx::v_noabi::document::view_or_value> _collation;
-    stdx::optional<bsoncxx::v_noabi::document::view_or_value> _resume_after;
-    stdx::optional<bsoncxx::v_noabi::document::view_or_value> _start_after;
-    stdx::optional<std::chrono::milliseconds> _max_await_time;
-    // _start_at_operation_time is not wrapped in a stdx::optional because of a longstanding bug in
-    // the MNMLSTC polyfill that has been fixed on master, but not in the latest release:
-    // https://github.com/mnmlstc/core/pull/23
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> _full_document;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value>
+        _full_document_before_change;
+    bsoncxx::v_noabi::stdx::optional<std::int32_t> _batch_size;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> _comment;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _collation;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _resume_after;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _start_after;
+    bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds> _max_await_time;
+    // _start_at_operation_time is not wrapped in a bsoncxx::v_noabi::stdx::optional because of a
+    // longstanding bug in the MNMLSTC polyfill that has been fixed on master, but not in the latest
+    // release: https://github.com/mnmlstc/core/pull/23
     bsoncxx::v_noabi::types::b_timestamp _start_at_operation_time = {};
     bool _start_at_operation_time_set = false;
 };

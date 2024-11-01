@@ -151,7 +151,8 @@ class client_session::impl {
             _session_t.get(), operation_time.timestamp, operation_time.increment);
     }
 
-    void start_transaction(const stdx::optional<options::transaction>& transaction_opts) {
+    void start_transaction(
+        const bsoncxx::v_noabi::stdx::optional<options::transaction>& transaction_opts) {
         bson_error_t error;
         mongoc_transaction_opt_t* transaction_opt_t = nullptr;
 

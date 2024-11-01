@@ -23,8 +23,6 @@
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 
-#include <mongocxx/stdx.hpp>
-
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
@@ -83,7 +81,8 @@ class server_api {
     /// @return
     ///   The enum value of the given string.
     ///
-    static MONGOCXX_ABI_EXPORT_CDECL(version) version_from_string(stdx::string_view version);
+    static MONGOCXX_ABI_EXPORT_CDECL(version)
+        version_from_string(bsoncxx::v_noabi::stdx::string_view version);
 
     ///
     /// Sets the strict option, specifying whether the server should return
@@ -103,7 +102,7 @@ class server_api {
     /// @return
     ///   The optional value of the strict option.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bool>&) strict() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<bool>&) strict() const;
 
     ///
     /// Sets the deprecation errors option, specifying whether the server should
@@ -123,7 +122,8 @@ class server_api {
     /// @return
     ///   The optional value of the deprecation errors option.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bool>&) deprecation_errors() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<bool>&)
+    deprecation_errors() const;
 
     ///
     /// Gets the declared server api version.
@@ -138,8 +138,8 @@ class server_api {
     friend ::mongocxx::v_noabi::pool;
 
     version _version;
-    stdx::optional<bool> _strict;
-    stdx::optional<bool> _deprecation_errors;
+    bsoncxx::v_noabi::stdx::optional<bool> _strict;
+    bsoncxx::v_noabi::stdx::optional<bool> _deprecation_errors;
 };
 
 }  // namespace options

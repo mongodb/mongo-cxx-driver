@@ -27,7 +27,7 @@ namespace v_noabi {
 // Private constructors.
 client_session::client_session(const mongocxx::v_noabi::client* client,
                                const mongocxx::v_noabi::options::client_session& options)
-    : _impl(stdx::make_unique<impl>(client, options)) {}
+    : _impl(bsoncxx::v_noabi::stdx::make_unique<impl>(client, options)) {}
 
 client_session::client_session(client_session&&) noexcept = default;
 
@@ -69,7 +69,7 @@ void client_session::advance_operation_time(
 }
 
 void client_session::start_transaction(
-    const stdx::optional<options::transaction>& transaction_opts) {
+    const bsoncxx::v_noabi::stdx::optional<options::transaction>& transaction_opts) {
     _impl->start_transaction(transaction_opts);
 }
 
