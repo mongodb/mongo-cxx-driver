@@ -14,6 +14,7 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 - Redeclarations of `bsoncxx::stdx` interfaces in the `mongocxx::stdx` namespace.
   - Use `bsoncxx::stdx::optional<T>` instead of `mongocxx::stdx::optional<T>`.
   - Use `bsoncxx::stdx::string_view` instead of `mongocxx::stdx::string_view`.
+- The `<bsoncxx/types/value.hpp>` header.
 
 ## 3.11.0
 
