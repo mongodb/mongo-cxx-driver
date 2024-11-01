@@ -158,24 +158,6 @@
 #define BSONCXX_POLY_USE_STD
 
 ///
-/// @ingroup bsoncxx-v_noabi-bsoncxx-config-config-hpp
-/// For internal use only!
-///
-/// @deprecated To be removed in an upcoming major release.
-/// <!-- Explicitly documented due to long-standing availability. -->
-///
-#define BSONCXX_INLINE_NAMESPACE_BEGIN
-
-///
-/// @ingroup bsoncxx-v_noabi-bsoncxx-config-config-hpp
-/// For internal use only!
-///
-/// @deprecated To be removed in an upcoming major release.
-/// <!-- Explicitly documented due to long-standing availability. -->
-///
-#define BSONCXX_INLINE_NAMESPACE_END
-
-///
 /// @} <!-- bsoncxx/v_noabi/bsoncxx/config/config.hpp -->
 ///
 
