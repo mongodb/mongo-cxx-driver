@@ -25,7 +25,7 @@ scan_build_directories+=(
 )
 
 # Use system scan-build otherwise.
-IFS=: read -ra sys_dirs <<< "${PATH:-}"
+IFS=: read -ra sys_dirs <<<"${PATH:-}"
 scan_build_directories+=("${sys_dirs[@]:-}")
 
 declare scan_build_binary
@@ -63,13 +63,10 @@ scan_build_flags=(
   --use-cc "${CC:?}"
   --use-c++ "${CXX:?}"
   -analyze-headers
-  --exclude "$(pwd)/build/src/bsoncxx/third_party/_deps" # mnmlstc
-  --exclude "$(pwd)/build/_deps"                         # mongoc
+  --exclude "$(pwd)/build/_deps" # mongoc
 )
 
 case "${BSONCXX_POLYFILL:?}" in
-mnmlstc) cmake_flags+=(-D "BSONCXX_POLY_USE_MNMLSTC=ON") ;;
-boost) cmake_flags+=(-D "BSONCXX_POLY_USE_BOOST=ON") ;;
 impls) cmake_flags+=(-D "BSONCXX_POLY_USE_IMPLS=ON") ;;
 std) cmake_flags+=(-D "BSONCXX_POLY_USE_STD=ON") ;;
 esac

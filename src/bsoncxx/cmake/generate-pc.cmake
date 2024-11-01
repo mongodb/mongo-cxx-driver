@@ -9,7 +9,6 @@ set(input_vars
     is_static
     libbson_req_abi_ver
     libbson_req_ver
-    mnmlstc_enabled
 )
 
 foreach(var ${input_vars})
@@ -39,10 +38,6 @@ if(1)
 
     if(is_static)
         list(APPEND cflags "-DBSONCXX_STATIC")
-    endif()
-
-    if(mnmlstc_enabled)
-        list(APPEND cflags "-I\${includedir}/bsoncxx/v_noabi/bsoncxx/third_party/mnmlstc")
     endif()
 
     list(APPEND cflags "-I\${includedir}/bsoncxx/v_noabi")

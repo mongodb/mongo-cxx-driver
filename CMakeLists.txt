@@ -125,9 +125,6 @@ option(BUILD_SHARED_LIBS_WITH_STATIC_MONGOC
     OFF
 )
 
-# Allow the user to opt into using bsoncxx implementations for C++17 polyfills by default.
-option(ENABLE_BSONCXX_POLY_USE_IMPLS "Enable using bsoncxx implementations of C++17 polyfills for pre-C++17 configurations by default" OFF)
-
 if(DEFINED CACHE{ENABLE_ABI_TAG_IN_LIBRARY_FILENAMES} AND NOT MSVC)
     message(WARNING "ENABLE_ABI_TAG_IN_LIBRARY_FILENAMES is an MSVC-only option and will be ignored by the current configuration")
     unset(ENABLE_ABI_TAG_IN_LIBRARY_FILENAMES CACHE)
@@ -422,22 +419,6 @@ if(NOT(TARGET dist OR TARGET distcheck))
 
     if(NOT "${CMAKE_CXX_STANDARD}" STREQUAL "")
         list(APPEND polyfill_flags "-DCMAKE_CXX_STANDARD=${CMAKE_CXX_STANDARD}")
-    endif()
-
-    if(NOT "${BOOST_ROOT}" STREQUAL "")
-        list(APPEND polyfill_flags "-DBOOST_ROOT=${BOOST_ROOT}")
-    endif()
-
-    if(NOT "${BSONCXX_POLY_USE_MNMLSTC}" STREQUAL "")
-        list(APPEND polyfill_flags "-DBSONCXX_POLY_USE_MNMLSTC=${BSONCXX_POLY_USE_MNMLSTC}")
-    endif()
-
-    if(NOT "${BSONCXX_POLY_USE_SYSTEM_MNMLSTC}" STREQUAL "")
-        list(APPEND polyfill_flags "-DBSONCXX_POLY_USE_SYSTEM_MNMLSTC=${BSONCXX_POLY_USE_SYSTEM_MNMLSTC}")
-    endif()
-
-    if(NOT "${BSONCXX_POLY_USE_BOOST}" STREQUAL "")
-        list(APPEND polyfill_flags "-DBSONCXX_POLY_USE_BOOST=${BSONCXX_POLY_USE_BOOST}")
     endif()
 
     if(NOT "${BSONCXX_POLY_USE_IMPLS}" STREQUAL "")

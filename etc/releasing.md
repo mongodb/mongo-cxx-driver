@@ -497,10 +497,10 @@ Verify the new asset group (`mongo-cxx-driver-X.Y`) is present in the [Silk Asse
 
 Checkout the new release tag.
 
-Configure and build the CXX Driver with `BSONCXX_POLY_USE_MNMLSTC=ON` (force download of mnmlstc/core sources) and no `CMAKE_PREFIX_PATH` entry to an existing C Driver installation (force download of C Driver sources):
+Configure and build the CXX Driver and no `CMAKE_PREFIX_PATH` entry to an existing C Driver installation (force download of C Driver sources):
 
 ```bash
-cmake -S . -B build -D BSONCXX_POLY_USE_MNMLSTC=ON
+cmake -S . -B build
 cmake --build build
 ```
 

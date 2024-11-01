@@ -42,9 +42,6 @@ if [ "${IS_PATCH}" = "true" ]; then
     git log -n1 -p
   fi
 fi
-if [ "${DEB_BUILD_PROFILES#*pkg.mongo-cxx-driver.mnmlstc}" != "${DEB_BUILD_PROFILES}" ]; then
-   MNMLSTC_INCLUDE="-I/usr/include/bsoncxx/v_noabi/bsoncxx/third_party/mnmlstc "
-fi
 
 export CURRENT_BRANCH="$(git rev-parse --abbrev-ref HEAD)"
 
@@ -55,7 +52,7 @@ export DEBOOTSTRAP_DIR=`pwd`/debootstrap.git
 sudo -E ./debootstrap.git/debootstrap --variant=buildd unstable ./unstable-chroot/ http://cdn-aws.deb.debian.org/debian
 cp -a mongo-cxx-driver ./unstable-chroot/tmp/
 sudo DEB_BUILD_PROFILES="${DEB_BUILD_PROFILES}" chroot ./unstable-chroot /bin/bash -c "
-  (apt-get install -y ca-certificates cmake debhelper doxygen git libboost-dev libsasl2-dev libsnappy-dev libssl-dev libutf8proc-dev pkgconf zlib1g-dev build-essential curl fakeroot furo git-buildpackage python3-sphinx python3-sphinx-design python3-packaging && \
+  (apt-get install -y ca-certificates cmake debhelper doxygen git libsasl2-dev libsnappy-dev libssl-dev libutf8proc-dev pkgconf zlib1g-dev build-essential curl fakeroot furo git-buildpackage python3-sphinx python3-sphinx-design python3-packaging && \
   mkdir /tmp/mongo-c-driver && \
   cd /tmp/mongo-c-driver && \
   curl -o deb.tar.gz -L https://s3.amazonaws.com/mciuploads/mongo-c-driver/master/mongo-c-driver-debian-packages-latest.tar.gz && \
@@ -77,10 +74,10 @@ sudo DEB_BUILD_PROFILES="${DEB_BUILD_PROFILES}" chroot ./unstable-chroot /bin/ba
   LANG=C /bin/bash -x ./debian/build_snapshot.sh && \
   debc ../*.changes && \
   dpkg -i ../*.deb && \
-  /usr/bin/g++ ${MNMLSTC_INCLUDE:-}-I/usr/include/bsoncxx/v_noabi -I/usr/include/mongocxx/v_noabi -I. -o runcommand_examples examples/mongocxx/mongodb.com/runcommand_examples.cpp -lmongocxx -lbsoncxx && \
-  /usr/bin/g++ ${MNMLSTC_INCLUDE:-}-I/usr/include/bsoncxx/v_noabi -I/usr/include/mongocxx/v_noabi -I. -o aggregation_examples examples/mongocxx/mongodb.com/aggregation_examples.cpp -lmongocxx -lbsoncxx && \
-  /usr/bin/g++ ${MNMLSTC_INCLUDE:-}-I/usr/include/bsoncxx/v_noabi -I/usr/include/mongocxx/v_noabi -I. -o index_examples examples/mongocxx/mongodb.com/index_examples.cpp -lmongocxx -lbsoncxx && \
-  /usr/bin/g++ ${MNMLSTC_INCLUDE:-}-I/usr/include/bsoncxx/v_noabi -I/usr/include/mongocxx/v_noabi -I. -o documentation_examples examples/mongocxx/mongodb.com/documentation_examples.cpp -lmongocxx -lbsoncxx )"
+  /usr/bin/g++ -I/usr/include/bsoncxx/v_noabi -I/usr/include/mongocxx/v_noabi -I. -o runcommand_examples examples/mongocxx/mongodb.com/runcommand_examples.cpp -lmongocxx -lbsoncxx && \
+  /usr/bin/g++ -I/usr/include/bsoncxx/v_noabi -I/usr/include/mongocxx/v_noabi -I. -o aggregation_examples examples/mongocxx/mongodb.com/aggregation_examples.cpp -lmongocxx -lbsoncxx && \
+  /usr/bin/g++ -I/usr/include/bsoncxx/v_noabi -I/usr/include/mongocxx/v_noabi -I. -o index_examples examples/mongocxx/mongodb.com/index_examples.cpp -lmongocxx -lbsoncxx && \
+  /usr/bin/g++ -I/usr/include/bsoncxx/v_noabi -I/usr/include/mongocxx/v_noabi -I. -o documentation_examples examples/mongocxx/mongodb.com/documentation_examples.cpp -lmongocxx -lbsoncxx )"
 
 [ -e ./unstable-chroot/tmp/mongo-cxx-driver/runcommand_examples ] || (echo "Example 'runcommand_examples' was not built!" ; exit 1)
 [ -e ./unstable-chroot/tmp/mongo-cxx-driver/aggregation_examples ] || (echo "Example 'aggregation_examples' was not built!" ; exit 1)

@@ -1080,31 +1080,6 @@ tasks:
           content_type: ${content_type|application/x-gzip}
           display_name: "deb.tar.gz"
 
-    - name: debian-package-build-mnmlstc
-      run_on: debian12-latest-small
-      commands:
-      - func: "setup"
-      - command: shell.exec
-        type: test
-        params:
-          working_dir: "mongo-cxx-driver"
-          shell: bash
-          script: |-
-            set -o errexit
-            export IS_PATCH="${is_patch}"
-            export DEB_BUILD_PROFILES="pkg.mongo-cxx-driver.mnmlstc"
-            .evergreen/debian_package_build.sh
-      - command: s3.put
-        params:
-          aws_key: ${aws_key}
-          aws_secret: ${aws_secret}
-          local_file: deb.tar.gz
-          remote_file: mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${execution}/debian-packages-mnmlstc.tar.gz
-          bucket: mciuploads
-          permissions: public-read
-          content_type: ${content_type|application/x-gzip}
-          display_name: "deb.tar.gz"
-
     - name: rpm-package-build
       run_on: rhel92-arm64-small
       commands:
@@ -1202,30 +1177,6 @@ tasks:
               fi
 
               ./build/src/mongocxx/test/test_driver "atlas search indexes prose tests"
-
-    - name: scan-build-ubuntu2204-std11-mnmlstc
-      run_on: ubuntu2204-large
-      tags: [scan-build-matrix]
-      commands:
-        - func: "setup"
-        - func: "fetch_c_driver_source"
-        - func: "run scan build"
-          vars:
-            CXX_STANDARD: 11
-            BSONCXX_POLYFILL: mnmlstc
-        - func: "upload scan artifacts"
-
-    - name: scan-build-ubuntu2204-std11-boost
-      run_on: ubuntu2204-large
-      tags: [scan-build-matrix]
-      commands:
-        - func: "setup"
-        - func: "fetch_c_driver_source"
-        - func: "run scan build"
-          vars:
-            CXX_STANDARD: 11
-            BSONCXX_POLYFILL: boost
-        - func: "upload scan artifacts"
 
     - name: scan-build-ubuntu2204-std11-impls
       run_on: ubuntu2204-large
@@ -2178,10 +2129,9 @@ buildvariants:
     #         Mac and Windows             #
     #######################################
     - name: macos-1100-latest
-      display_name: "MacOS 11.0 Release (Boost) (MongoDB Latest)"
+      display_name: "MacOS 11.0 Release (MongoDB Latest)"
       expansions:
           build_type: "Release"
-          BSONCXX_POLYFILL: "boost"
           mongodb_version: "latest"
       run_on:
           - macos-1100
@@ -2192,10 +2142,9 @@ buildvariants:
           - name: compile_and_test_with_static_libs_extra_alignment
 
     - name: macos-1100-50
-      display_name: "MacOS 11.0 Release (Boost) (MongoDB 5.0)"
+      display_name: "MacOS 11.0 Release (MongoDB 5.0)"
       expansions:
           build_type: "Release"
-          BSONCXX_POLYFILL: "boost"
           mongodb_version: "5.0"
       run_on:
           - macos-1100
@@ -2209,7 +2158,6 @@ buildvariants:
       display_name: "MacOS 11.0 Release Versioned API"
       expansions:
           build_type: "Release"
-          BSONCXX_POLYFILL: "boost"
           mongodb_version: "latest"
       run_on:
           - macos-1100
@@ -2260,7 +2208,6 @@ buildvariants:
       display_name: Linux Distro Packaging
       tasks:
          - name: debian-package-build
-         - name: debian-package-build-mnmlstc
          - name: rpm-package-build
 
     - name: lint

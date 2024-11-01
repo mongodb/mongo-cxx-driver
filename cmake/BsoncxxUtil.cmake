@@ -53,16 +53,10 @@ function(bsoncxx_add_library TARGET OUTPUT_NAME LINK_TYPE)
         endif()
 
         # Library used for C++17 polyfills:
-        # - 'm' for mnmlstc/core.
-        # - 'b' for Boost.
         # - 'i' for bsoncxx implementations.
         # - 's' for standard library (no polyfill).
         if(1)
-            if(BSONCXX_POLY_USE_MNMLSTC)
-                set(polyfill "m")
-            elseif(BSONCXX_POLY_USE_BOOST)
-                set(polyfill "b")
-            elseif(BSONCXX_POLY_USE_IMPLS)
+            if(BSONCXX_POLY_USE_IMPLS)
                 set(polyfill "i")
             elseif(BSONCXX_POLY_USE_STD)
                 set(polyfill "s")
@@ -138,19 +132,6 @@ function(bsoncxx_add_library TARGET OUTPUT_NAME LINK_TYPE)
 
     if(LINK_TYPE STREQUAL "STATIC")
         target_compile_definitions(${TARGET} PUBLIC BSONCXX_STATIC)
-    endif()
-
-    if(BSONCXX_POLY_USE_MNMLSTC AND NOT BSONCXX_POLY_USE_SYSTEM_MNMLSTC)
-        target_include_directories(
-            ${TARGET}
-            SYSTEM
-            PUBLIC
-            $<BUILD_INTERFACE:${CORE_INCLUDE_DIR}>
-            $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/bsoncxx/v_noabi/bsoncxx/third_party/mnmlstc>
-        )
-    elseif(BSONCXX_POLY_USE_BOOST)
-        find_package(Boost 1.56.0 REQUIRED)
-        target_link_libraries(${TARGET} PUBLIC Boost::boost)
     endif()
 
     target_link_libraries(${TARGET} PRIVATE ${libbson_target})
