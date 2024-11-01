@@ -7,11 +7,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 Changes prior to 3.9.0 are documented as [release notes on GitHub](https://github.com/mongodb/mongo-cxx-driver/releases).
 
-## 3.12.0 [Unreleased]
+## 4.0.0 [Unreleased]
 
 <!-- Will contain entries for the next minor release. -->
 
 ## 3.11.0
+
+> [!IMPORTANT]
+> This is the final v3 minor release. Patch releases containing backports for relevant bug fixes will be supported for up to one year after the first v4 release. New features will not be backported.
 
 ### Added
 
