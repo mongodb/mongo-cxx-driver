@@ -320,8 +320,8 @@ class session_test {
             // Ignore auth commands like "saslStart", and handshakes with "hello" (and the legacy
             // "hello" command).
             std::string sasl{"sasl"};
-            if (event.command_name().substr(0, sasl.size()).compare(sasl) == 0 ||
-                command_name.compare("hello") == 0 || command_name.compare("isMaster") == 0) {
+            if (event.command_name().substr(0, sasl.size()) == sasl || command_name == "hello" ||
+                command_name == "isMaster") {
                 return;
             }
 

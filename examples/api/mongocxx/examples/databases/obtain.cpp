@@ -26,9 +26,9 @@ void example(mongocxx::client client) {
     mongocxx::database db = client["db"];
 
     EXPECT(db);
-    EXPECT(db.name().compare("db") == 0);
+    EXPECT(db.name() == "db");
 
-    EXPECT(client.database("db").name().compare("db") == 0);
+    EXPECT(client.database("db").name() == "db");
 }
 // [Example]
 

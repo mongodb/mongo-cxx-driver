@@ -34,7 +34,7 @@ void example(mongocxx::client client) {
         EXPECT(doc["sizeOnDisk"]);
         EXPECT(doc["empty"]);
 
-        if (doc["name"].get_string().value.compare("admin") == 0) {
+        if (doc["name"].get_string().value == "admin") {
             ++count;
         }
     }

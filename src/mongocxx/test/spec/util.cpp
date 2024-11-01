@@ -66,27 +66,27 @@ using bsoncxx::stdx::string_view;
 static const int kMaxHelloFailCommands = 7;
 
 uint32_t error_code_from_name(string_view name) {
-    if (name.compare("CannotSatisfyWriteConcern") == 0) {
+    if (name == "CannotSatisfyWriteConcern") {
         return 100;
-    } else if (name.compare("DuplicateKey") == 0) {
+    } else if (name == "DuplicateKey") {
         return 11000;
-    } else if (name.compare("NoSuchTransaction") == 0) {
+    } else if (name == "NoSuchTransaction") {
         return 251;
-    } else if (name.compare("WriteConflict") == 0) {
+    } else if (name == "WriteConflict") {
         return 112;
-    } else if (name.compare("Interrupted") == 0) {
+    } else if (name == "Interrupted") {
         return 11601;
-    } else if (name.compare("MaxTimeMSExpired") == 0) {
+    } else if (name == "MaxTimeMSExpired") {
         return 50;
-    } else if (name.compare("UnknownReplWriteConcern") == 0) {
+    } else if (name == "UnknownReplWriteConcern") {
         return 79;
-    } else if (name.compare("UnsatisfiableWriteConcern") == 0) {
+    } else if (name == "UnsatisfiableWriteConcern") {
         return 100;
-    } else if (name.compare("OperationNotSupportedInTransaction") == 0) {
+    } else if (name == "OperationNotSupportedInTransaction") {
         return 263;
-    } else if (name.compare("APIStrictError") == 0) {
+    } else if (name == "APIStrictError") {
         return 323;
-    } else if (name.compare("ChangeStreamFatalError") == 0) {
+    } else if (name == "ChangeStreamFatalError") {
         return 280;
     }
 
@@ -684,14 +684,14 @@ static void run_transaction_operations(
         const auto operation = op.get_document().value;
 
         // Handle with_transaction separately.
-        if (operation["name"].get_string().value.compare("withTransaction") == 0) {
+        if (operation["name"].get_string().value == "withTransaction") {
             const auto session = [&]() -> mongocxx::client_session* {
                 const auto object = operation["object"].get_string().value;
-                if (object.compare("session0") == 0) {
+                if (object == "session0") {
                     return session0;
                 }
 
-                if (object.compare("session1") == 0) {
+                if (object == "session1") {
                     return session1;
                 }
 
@@ -974,12 +974,12 @@ void run_transactions_tests_in_file(const std::string& test_path) {
                     [&](bsoncxx::stdx::string_view key,
                         bsoncxx::stdx::optional<bsoncxx::types::bson_value::view> main,
                         bsoncxx::types::bson_value::view pattern) {
-                        if (key.compare("lsid") == 0) {
+                        if (key == "lsid") {
                             REQUIRE(pattern.type() == type::k_string);
                             REQUIRE(main);
                             REQUIRE(main->type() == type::k_document);
                             auto session_name = pattern.get_string().value;
-                            if (session_name.compare("session0") == 0) {
+                            if (session_name == "session0") {
                                 REQUIRE(
                                     test_util::matches(session_lsid0, main->get_document().value));
                             } else {
@@ -992,7 +992,7 @@ void run_transactions_tests_in_file(const std::string& test_path) {
                                 return test_util::match_action::k_not_equal;
                             }
                             return test_util::match_action::k_skip;
-                        } else if (key.compare("upsert") == 0 || key.compare("multi") == 0) {
+                        } else if (key == "upsert" || key == "multi") {
                             // libmongoc includes `multi: false` and `upsert: false`.
                             // Some tests do not include `multi: false` and `upsert: false`
                             // in expectations. See DRIVERS-2271 and DRIVERS-976.

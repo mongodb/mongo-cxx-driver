@@ -2670,7 +2670,7 @@ TEST_CASE("expose writeErrors[].errInfo", "[collection]") {
                                       const mongocxx::events::command_succeeded_event& ev) {
         BSONCXX_TEST_EXCEPTION_GUARD_BEGIN(eguard);
 
-        if (0 != ev.command_name().compare("insert")) {
+        if (ev.command_name() != "insert") {
             return;
         }
 

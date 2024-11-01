@@ -90,7 +90,7 @@ RUNNER_REGISTER_COMPONENT_FOR_SINGLE() {
         for (auto doc : coll.indexes().list()) {
             EXPECT(doc["name"]);
 
-            if (doc["name"].get_string().value.compare("custom_name") == 0) {
+            if (doc["name"].get_string().value == "custom_name") {
                 EXPECT(doc["unique"]);
                 EXPECT(doc["unique"].get_bool().value == true);
             }

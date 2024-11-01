@@ -30,7 +30,7 @@ void example(bsoncxx::array::view arr) {
         auto iter = arr.find(1);
 
         EXPECT(iter != arr.end());
-        EXPECT(iter->key().compare("1") == 0);
+        EXPECT(iter->key() == "1");
         EXPECT(iter->get_int32().value == 2);
     }
 

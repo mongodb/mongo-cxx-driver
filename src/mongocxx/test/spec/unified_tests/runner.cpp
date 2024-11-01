@@ -505,7 +505,7 @@ read_preference get_read_preference(const document::element& opts) {
 
     const auto mode = read_pref["mode"].get_string().value;
 
-    if (mode.compare("secondaryPreferred") == 0) {
+    if (mode == "secondaryPreferred") {
         rp.mode(read_preference::read_mode::k_secondary_preferred);
     } else {
         FAIL("unhandled readPreference mode: " << mode);
@@ -519,7 +519,7 @@ write_concern get_write_concern(const document::element& opts) {
     if (auto w = opts["writeConcern"]["w"]) {
         if (w.type() == type::k_string) {
             const auto strval = w.get_string().value;
-            if (0 == strval.compare("majority")) {
+            if (strval == "majority") {
                 wc.acknowledge_level(mongocxx::write_concern::level::k_majority);
             } else {
                 FAIL("Unsupported write concern string " << strval);

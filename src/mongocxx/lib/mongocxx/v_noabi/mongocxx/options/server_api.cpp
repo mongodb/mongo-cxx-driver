@@ -38,7 +38,7 @@ std::string server_api::version_to_string(server_api::version version) {
 }
 
 server_api::version server_api::version_from_string(bsoncxx::v_noabi::stdx::string_view version) {
-    if (!version.compare("1")) {
+    if (version != "1") {
         return server_api::version::k_version_1;
     }
     throw mongocxx::v_noabi::logic_error{mongocxx::v_noabi::error_code::k_invalid_parameter,

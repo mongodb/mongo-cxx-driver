@@ -33,20 +33,20 @@ void example(bsoncxx::document::view doc) {
     {
         bsoncxx::document::element e = *iter;
 
-        EXPECT(e.key().compare("a") == 0);
+        EXPECT(e.key() == "a");
         EXPECT(e.get_int32().value == 1);
     }
 
     ++iter;
 
-    EXPECT(iter->key().compare("b") == 0);
+    EXPECT(iter->key() == "b");
     EXPECT(iter->get_int32().value == 2);
 
     {
         auto iter_copy = iter++;
 
         EXPECT(iter_copy != iter);
-        EXPECT(iter_copy->key().compare("b") == 0);
+        EXPECT(iter_copy->key() == "b");
         EXPECT(iter_copy->get_int32() == 2);
     }
 

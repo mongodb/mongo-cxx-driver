@@ -90,7 +90,7 @@ void run_command_monitoring_tests_in_file(std::string test_path) {
         apm_opts.on_command_started([&](const events::command_started_event& event) {
             BSONCXX_TEST_EXCEPTION_GUARD_BEGIN(eguard);
 
-            if (event.command_name().compare("endSessions") == 0) {
+            if (event.command_name() == "endSessions") {
                 return;
             }
 
@@ -101,13 +101,13 @@ void run_command_monitoring_tests_in_file(std::string test_path) {
                 bsoncxx::stdx::string_view field{ele.key()};
                 types::bson_value::view value{ele.get_value()};
 
-                if (field.compare("command_name") == 0) {
+                if (field == "command_name") {
                     REQUIRE(event.command_name() == value.get_string().value);
-                } else if (field.compare("command") == 0) {
+                } else if (field == "command") {
                     document::view expected_command = value.get_document().value;
                     document::view command = event.command();
                     REQUIRE_BSON_MATCHES(command, expected_command);
-                } else if (field.compare("database_name") == 0) {
+                } else if (field == "database_name") {
                     REQUIRE(event.database_name() == value.get_string().value);
                 } else {
                     FAIL("Should not reach this point.");
@@ -128,7 +128,7 @@ void run_command_monitoring_tests_in_file(std::string test_path) {
                 bsoncxx::stdx::string_view field{ele.key()};
                 types::bson_value::view value{ele.get_value()};
 
-                if (field.compare("command_name") == 0) {
+                if (field == "command_name") {
                     REQUIRE(event.command_name() == value.get_string().value);
                 } else {
                     FAIL("Should not reach this point.");
@@ -142,7 +142,7 @@ void run_command_monitoring_tests_in_file(std::string test_path) {
         apm_opts.on_command_succeeded([&](const events::command_succeeded_event& event) {
             BSONCXX_TEST_EXCEPTION_GUARD_BEGIN(eguard);
 
-            if (event.command_name().compare("endSessions") == 0) {
+            if (event.command_name() == "endSessions") {
                 return;
             }
 
@@ -153,9 +153,9 @@ void run_command_monitoring_tests_in_file(std::string test_path) {
                 bsoncxx::stdx::string_view field{ele.key()};
                 types::bson_value::view value{ele.get_value()};
 
-                if (field.compare("command_name") == 0) {
+                if (field == "command_name") {
                     REQUIRE(event.command_name() == value.get_string().value);
-                } else if (field.compare("reply") == 0) {
+                } else if (field == "reply") {
                     document::view expected_reply = value.get_document().value;
                     document::view reply = event.reply();
                     REQUIRE_BSON_MATCHES(reply, expected_reply);

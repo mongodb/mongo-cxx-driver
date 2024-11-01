@@ -48,7 +48,7 @@ void example(mongocxx::database db) {
             ++count;
 
             EXPECT(change["operationType"]);
-            EXPECT(change["operationType"].get_string().value.compare("insert") == 0);
+            EXPECT(change["operationType"].get_string().value == "insert");
 
             EXPECT(change["ns"]);
             EXPECT(change["ns"]["db"].get_string().value == db.name());

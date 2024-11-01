@@ -32,7 +32,7 @@ void example() {
     bsoncxx::document::view options = uri.options();
 
     EXPECT(options["appname"]);
-    EXPECT(options["appname"].get_string().value.compare("example") == 0);
+    EXPECT(options["appname"].get_string().value == "example");
 
     EXPECT(options["tls"]);
     EXPECT(options["tls"].get_bool().value == true);

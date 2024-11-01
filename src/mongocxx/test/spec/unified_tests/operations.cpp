@@ -368,7 +368,7 @@ document::value run_bulk_write(collection& coll, client_session* session, docume
         auto request_arguments = request_element[operation_name].get_document().value;
         CAPTURE(to_json(request_arguments), operation_name);
 
-        if (operation_name.compare("updateOne") == 0) {
+        if (operation_name == "updateOne") {
             auto update_one = _build_update_model<model::update_one>(request_arguments);
 
             add_hint_to_model(update_one, request_arguments);
@@ -390,7 +390,7 @@ document::value run_bulk_write(collection& coll, client_session* session, docume
             }
 
             writes.emplace_back(update_one);
-        } else if (operation_name.compare("updateMany") == 0) {
+        } else if (operation_name == "updateMany") {
             auto update_many = _build_update_model<model::update_many>(request_arguments);
 
             add_hint_to_model(update_many, request_arguments);
@@ -412,7 +412,7 @@ document::value run_bulk_write(collection& coll, client_session* session, docume
             }
 
             writes.emplace_back(update_many);
-        } else if (operation_name.compare("replaceOne") == 0) {
+        } else if (operation_name == "replaceOne") {
             document::view filter = request_arguments["filter"].get_document().value;
             document::view replacement = request_arguments["replacement"].get_document().value;
             model::replace_one replace_one(filter, replacement);
@@ -432,11 +432,11 @@ document::value run_bulk_write(collection& coll, client_session* session, docume
             }
 
             writes.emplace_back(replace_one);
-        } else if (operation_name.compare("insertOne") == 0) {
+        } else if (operation_name == "insertOne") {
             document::view document = request_arguments["document"].get_document().value;
             model::insert_one insert_one(document);
             writes.emplace_back(insert_one);
-        } else if (operation_name.compare("deleteOne") == 0) {
+        } else if (operation_name == "deleteOne") {
             document::view filter = request_arguments["filter"].get_document().value;
             model::delete_one delete_one(filter);
             add_hint_to_model(delete_one, request_arguments);
@@ -450,7 +450,7 @@ document::value run_bulk_write(collection& coll, client_session* session, docume
             }
 
             writes.emplace_back(delete_one);
-        } else if (operation_name.compare("deleteMany") == 0) {
+        } else if (operation_name == "deleteMany") {
             document::view filter = request_arguments["filter"].get_document().value;
             model::delete_many delete_many(filter);
             add_hint_to_model(delete_many, request_arguments);

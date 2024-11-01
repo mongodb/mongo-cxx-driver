@@ -44,7 +44,7 @@ void example(mongocxx::collection coll) {
             coll.create_index(bsoncxx::from_json(R"({"key_a": 1})"), opts.view());
 
         EXPECT(result["name"]);
-        EXPECT(result["name"].get_string().value.compare("custom_name") == 0);
+        EXPECT(result["name"].get_string().value == "custom_name");
     }
 
     // Create index options.
@@ -59,7 +59,7 @@ void example(mongocxx::collection coll) {
             coll.create_index(bsoncxx::from_json(R"({"key_b": 1})"), opts.view());
 
         EXPECT(result["name"]);
-        EXPECT(result["name"].get_string().value.compare("key_b_1") == 0);
+        EXPECT(result["name"].get_string().value == "key_b_1");
     }
 }
 // [Example]
@@ -79,7 +79,7 @@ RUNNER_REGISTER_COMPONENT_FOR_SINGLE() {
         for (auto doc : db["coll"].list_indexes()) {
             EXPECT(doc["name"]);
 
-            if (doc["name"].get_string().value.compare("custom_name") == 0) {
+            if (doc["name"].get_string().value == "custom_name") {
                 EXPECT(doc["unique"]);
                 EXPECT(doc["unique"].get_bool().value == true);
             }

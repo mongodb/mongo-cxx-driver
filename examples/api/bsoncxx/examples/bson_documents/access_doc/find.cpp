@@ -30,7 +30,7 @@ void example(bsoncxx::document::view doc) {
         auto iter = doc.find("b");
 
         EXPECT(iter != doc.end());
-        EXPECT(iter->key().compare("b") == 0);
+        EXPECT(iter->key() == "b");
         EXPECT(iter->get_int32().value == 2);
     }
 

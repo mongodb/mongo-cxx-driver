@@ -26,7 +26,7 @@ namespace {
 // [Example]
 // {"x": 1}
 void example(bsoncxx::document::element e) {
-    EXPECT(e.key().compare("x") == 0);
+    EXPECT(e.key() == "x");
     EXPECT(e.type() == bsoncxx::type::k_int32);
     EXPECT(e.get_int32().value == 1);
 

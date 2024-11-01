@@ -43,7 +43,7 @@ void example() {
         mongocxx::uri uri{"mongodb://localhost:27017/dbName?appName=example&retryReads=true"};
 
         auto database = uri.database();
-        EXPECT(database.compare("dbName") == 0);
+        EXPECT(database == "dbName");
 
         auto retry_reads_opt = uri.retry_reads();
         EXPECT(retry_reads_opt);

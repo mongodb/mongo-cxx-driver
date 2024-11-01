@@ -27,7 +27,7 @@ void example() {
 
     EXPECT(uri.to_string() == uri_str);
 
-    EXPECT(uri.username().compare("bob") == 0);
+    EXPECT(uri.username() == "bob");
     EXPECT(uri.password() == "pwd123");
     EXPECT(uri.tls() == true);
 }

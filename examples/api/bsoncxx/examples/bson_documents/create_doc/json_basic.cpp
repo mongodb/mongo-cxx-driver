@@ -35,7 +35,7 @@ void example() {
 
     EXPECT(doc["a"].get_int32().value == 1);
     EXPECT(doc["b"].get_double().value == 2.0);
-    EXPECT(doc["c"].get_string().value.compare("three") == 0);
+    EXPECT(doc["c"].get_string().value == "three");
 }
 // [Example]
 

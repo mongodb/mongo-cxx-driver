@@ -30,7 +30,7 @@ void example(bsoncxx::document::view doc) {
     {
         bsoncxx::document::element e = doc["b"];
 
-        EXPECT(e.key().compare("b") == 0);
+        EXPECT(e.key() == "b");
         EXPECT(e.get_int32().value == 2);
     }
 

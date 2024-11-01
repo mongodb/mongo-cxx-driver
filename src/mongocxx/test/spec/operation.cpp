@@ -87,11 +87,11 @@ bsoncxx::stdx::optional<write_concern> lookup_write_concern(document::view doc) 
         document::element w = doc["writeConcern"]["w"];
         if (w.type() == bsoncxx::type::k_string) {
             std::string level = string::to_string(w.get_string().value);
-            if (level.compare("majority") == 0) {
+            if (level == "majority") {
                 wc.acknowledge_level(write_concern::level::k_majority);
-            } else if (level.compare("acknowledged") == 0) {
+            } else if (level == "acknowledged") {
                 wc.acknowledge_level(write_concern::level::k_acknowledged);
-            } else if (level.compare("unacknowledged") == 0) {
+            } else if (level == "unacknowledged") {
                 wc.acknowledge_level(write_concern::level::k_unacknowledged);
             }
         } else if (w.type() == bsoncxx::type::k_int32) {
@@ -107,15 +107,15 @@ bsoncxx::stdx::optional<read_preference> lookup_read_preference(document::view d
     if (doc["readPreference"] && doc["readPreference"]["mode"]) {
         read_preference rp;
         std::string mode = string::to_string(doc["readPreference"]["mode"].get_string().value);
-        if (mode.compare("Primary") == 0) {
+        if (mode == "Primary") {
             rp.mode(read_preference::read_mode::k_primary);
-        } else if (mode.compare("PrimaryPreferred") == 0) {
+        } else if (mode == "PrimaryPreferred") {
             rp.mode(read_preference::read_mode::k_primary_preferred);
-        } else if (mode.compare("Secondary") == 0) {
+        } else if (mode == "Secondary") {
             rp.mode(read_preference::read_mode::k_secondary);
-        } else if (mode.compare("SecondaryPreferred") == 0) {
+        } else if (mode == "SecondaryPreferred") {
             rp.mode(read_preference::read_mode::k_secondary_preferred);
-        } else if (mode.compare("Nearest") == 0) {
+        } else if (mode == "Nearest") {
             rp.mode(read_preference::read_mode::k_nearest);
         }
         return rp;
@@ -125,11 +125,11 @@ bsoncxx::stdx::optional<read_preference> lookup_read_preference(document::view d
 }
 
 client_session* operation_runner::_lookup_session(bsoncxx::stdx::string_view key) {
-    if (key.compare("session0") == 0) {
+    if (key == "session0") {
         return _session0;
     }
 
-    if (key.compare("session1") == 0) {
+    if (key == "session1") {
         return _session1;
     }
 
@@ -1081,7 +1081,7 @@ document::value operation_runner::_run_bulk_write(document::view operation) {
         auto request_arguments = request["arguments"].get_document().value;
         auto operation_name = request["name"].get_string().value;
 
-        if (operation_name.compare("updateOne") == 0) {
+        if (operation_name == "updateOne") {
             auto update_one = _build_update_model<model::update_one>(request_arguments);
 
             if (request_arguments["hint"]) {
@@ -1104,7 +1104,7 @@ document::value operation_runner::_run_bulk_write(document::view operation) {
             }
 
             writes.emplace_back(update_one);
-        } else if (operation_name.compare("updateMany") == 0) {
+        } else if (operation_name == "updateMany") {
             auto update_many = _build_update_model<model::update_many>(request_arguments);
 
             if (request_arguments["hint"]) {
@@ -1127,7 +1127,7 @@ document::value operation_runner::_run_bulk_write(document::view operation) {
             }
 
             writes.emplace_back(update_many);
-        } else if (operation_name.compare("replaceOne") == 0) {
+        } else if (operation_name == "replaceOne") {
             document::view filter = request_arguments["filter"].get_document().value;
             document::view replacement = request_arguments["replacement"].get_document().value;
             model::replace_one replace_one(filter, replacement);
@@ -1147,11 +1147,11 @@ document::value operation_runner::_run_bulk_write(document::view operation) {
             }
 
             writes.emplace_back(replace_one);
-        } else if (operation_name.compare("insertOne") == 0) {
+        } else if (operation_name == "insertOne") {
             document::view document = request_arguments["document"].get_document().value;
             model::insert_one insert_one(document);
             writes.emplace_back(insert_one);
-        } else if (operation_name.compare("deleteOne") == 0) {
+        } else if (operation_name == "deleteOne") {
             document::view filter = request_arguments["filter"].get_document().value;
             model::delete_one delete_one(filter);
             if (request_arguments["hint"]) {
@@ -1166,7 +1166,7 @@ document::value operation_runner::_run_bulk_write(document::view operation) {
             }
 
             writes.emplace_back(delete_one);
-        } else if (operation_name.compare("deleteMany") == 0) {
+        } else if (operation_name == "deleteMany") {
             document::view filter = request_arguments["filter"].get_document().value;
             model::delete_many delete_many(filter);
             if (request_arguments["hint"]) {
@@ -1409,63 +1409,63 @@ document::value operation_runner::run(document::view operation) {
         object = operation["object"].get_string().value;
     }
 
-    if (key.compare("aggregate") == 0) {
+    if (key == "aggregate") {
         return _run_aggregate(operation);
-    } else if (key.compare("count") == 0) {
+    } else if (key == "count") {
         throw std::logic_error{"count command not supported"};
-    } else if (key.compare("countDocuments") == 0) {
+    } else if (key == "countDocuments") {
         return _run_count_documents(operation);
-    } else if (key.compare("estimatedDocumentCount") == 0) {
+    } else if (key == "estimatedDocumentCount") {
         return _run_estimated_document_count(operation);
-    } else if (key.compare("distinct") == 0) {
+    } else if (key == "distinct") {
         return _run_distinct(operation);
-    } else if (key.compare("find") == 0) {
+    } else if (key == "find") {
         return _run_find(operation);
-    } else if (key.compare("deleteMany") == 0) {
+    } else if (key == "deleteMany") {
         return _run_delete_many(operation);
-    } else if (key.compare("deleteOne") == 0) {
+    } else if (key == "deleteOne") {
         return _run_delete_one(operation);
-    } else if (key.compare("findOne") == 0) {
+    } else if (key == "findOne") {
         return _run_find_one(operation);
-    } else if (key.compare("findOneAndDelete") == 0) {
+    } else if (key == "findOneAndDelete") {
         return _run_find_one_and_delete(operation);
-    } else if (key.compare("findOneAndReplace") == 0) {
+    } else if (key == "findOneAndReplace") {
         return _run_find_one_and_replace(operation);
-    } else if (key.compare("findOneAndUpdate") == 0) {
+    } else if (key == "findOneAndUpdate") {
         return _run_find_one_and_update(operation);
-    } else if (key.compare("insertMany") == 0) {
+    } else if (key == "insertMany") {
         return _run_insert_many(operation);
-    } else if (key.compare("insertOne") == 0) {
+    } else if (key == "insertOne") {
         return _run_insert_one(operation);
-    } else if (key.compare("replaceOne") == 0) {
+    } else if (key == "replaceOne") {
         return _run_replace_one(operation);
-    } else if (key.compare("updateMany") == 0) {
+    } else if (key == "updateMany") {
         return _run_update_many(operation);
-    } else if (key.compare("updateOne") == 0) {
+    } else if (key == "updateOne") {
         return _run_update_one(operation);
-    } else if (key.compare("bulkWrite") == 0) {
+    } else if (key == "bulkWrite") {
         return _run_bulk_write(operation);
-    } else if (key.compare("startTransaction") == 0) {
+    } else if (key == "startTransaction") {
         return _run_start_transaction(operation);
-    } else if (key.compare("commitTransaction") == 0) {
+    } else if (key == "commitTransaction") {
         return _run_commit_transaction(operation);
-    } else if (key.compare("abortTransaction") == 0) {
+    } else if (key == "abortTransaction") {
         return _run_abort_transaction(operation);
-    } else if (key.compare("runCommand") == 0) {
+    } else if (key == "runCommand") {
         return _run_run_command(operation);
-    } else if (key.compare("assertSessionPinned") == 0) {
+    } else if (key == "assertSessionPinned") {
         const client_session* session =
             _lookup_session(operation["arguments"].get_document().value);
         REQUIRE(session);
         REQUIRE(session->server_id() != 0);
         return empty_document;
-    } else if (key.compare("assertSessionUnpinned") == 0) {
+    } else if (key == "assertSessionUnpinned") {
         const client_session* session =
             _lookup_session(operation["arguments"].get_document().value);
         REQUIRE(session);
         REQUIRE(session->server_id() == 0);
         return empty_document;
-    } else if (key.compare("assertSessionTransactionState") == 0) {
+    } else if (key == "assertSessionTransactionState") {
         const auto arguments = operation["arguments"].get_document().value;
         const client_session* session = _lookup_session(arguments);
         REQUIRE(session);
@@ -1488,63 +1488,63 @@ document::value operation_runner::run(document::view operation) {
                 break;
         }
         return empty_document;
-    } else if (key.compare("watch") == 0) {
-        if (object.compare("collection") == 0) {
+    } else if (key == "watch") {
+        if (object == "collection") {
             _coll->watch();
-        } else if (object.compare("database") == 0) {
+        } else if (object == "database") {
             _db->watch();
-        } else if (object.compare("client") == 0) {
+        } else if (object == "client") {
             _client->watch();
         } else {
             throw std::logic_error{"unsupported operation object: " + string::to_string(object)};
         }
         return empty_document;
-    } else if (key.compare("rename") == 0) {
+    } else if (key == "rename") {
         _coll->rename(operation["arguments"]["to"].get_string().value);
         return empty_document;
-    } else if (key.compare("drop") == 0) {
+    } else if (key == "drop") {
         _coll->drop();
         return empty_document;
-    } else if (key.compare("dropCollection") == 0) {
+    } else if (key == "dropCollection") {
         return _run_drop_collection(operation);
-    } else if (key.compare("listCollectionNames") == 0) {
+    } else if (key == "listCollectionNames") {
         _db->list_collection_names();
         return empty_document;
-    } else if (key.compare("listCollectionObjects") == 0) {
+    } else if (key == "listCollectionObjects") {
         throw std::logic_error("listCollectionObjects is not implemented in mongocxx");
-    } else if (key.compare("listCollections") == 0) {
+    } else if (key == "listCollections") {
         _db->list_collections();
         return empty_document;
-    } else if (key.compare("listDatabases") == 0) {
+    } else if (key == "listDatabases") {
         _client->list_databases().begin(); /* calling begin() iterates the cursor */
         return empty_document;
-    } else if (key.compare("listDatabaseNames") == 0) {
+    } else if (key == "listDatabaseNames") {
         _client->list_database_names();
         return empty_document;
-    } else if (key.compare("listIndexes") == 0) {
+    } else if (key == "listIndexes") {
         _coll->list_indexes().begin(); /* calling begin() iterates the cursor */
         return empty_document;
-    } else if (key.compare("download") == 0) {
+    } else if (key == "download") {
         std::ostream null_stream(nullptr); /* no need to store output */
         auto bucket = _db->gridfs_bucket();
         bucket.download_to_stream(operation["arguments"]["id"].get_value(), &null_stream);
 
         return empty_document;
-    } else if (key.compare("createCollection") == 0) {
+    } else if (key == "createCollection") {
         return _run_create_collection(operation);
-    } else if (key.compare("assertCollectionNotExists") == 0) {
+    } else if (key == "assertCollectionNotExists") {
         auto collection_name = operation["arguments"]["collection"].get_string().value;
         client client{uri{}};
         REQUIRE_FALSE(client[_db->name()].has_collection(collection_name));
         return empty_document;
-    } else if (key.compare("assertCollectionExists") == 0) {
+    } else if (key == "assertCollectionExists") {
         auto collection_name = operation["arguments"]["collection"].get_string().value;
         client client{uri{}};
         REQUIRE(client[_db->name()].has_collection(collection_name));
         return empty_document;
-    } else if (key.compare("createIndex") == 0) {
+    } else if (key == "createIndex") {
         return _create_index(operation);
-    } else if (key.compare("assertIndexNotExists") == 0) {
+    } else if (key == "assertIndexNotExists") {
         client client{uri{}};
         auto cursor = client[_db->name()][_coll->name()].list_indexes();
 
@@ -1555,7 +1555,7 @@ document::value operation_runner::run(document::view operation) {
             }));
 
         return empty_document;
-    } else if (key.compare("assertIndexExists") == 0) {
+    } else if (key == "assertIndexExists") {
         client client{uri{}};
         auto db = operation["arguments"]["database"].get_string().value;
         auto collection = operation["arguments"]["collection"].get_string().value;
@@ -1568,7 +1568,7 @@ document::value operation_runner::run(document::view operation) {
             }));
 
         return empty_document;
-    } else if (key.compare("targetedFailPoint") == 0) {
+    } else if (key == "targetedFailPoint") {
         REQUIRE(object == bsoncxx::stdx::string_view("testRunner"));
 
         const auto arguments = operation["arguments"].get_document().value;
