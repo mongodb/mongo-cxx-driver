@@ -26,7 +26,6 @@
 
 #include <mongocxx/hint.hpp>
 #include <mongocxx/options/find_one_common_options.hpp>
-#include <mongocxx/stdx.hpp>
 #include <mongocxx/write_concern.hpp>
 
 #include <mongocxx/config/prelude.hpp>
@@ -64,7 +63,8 @@ class find_one_and_update {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(
+        const bsoncxx::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
     collation() const;
 
     ///
@@ -95,7 +95,8 @@ class find_one_and_update {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bool>&) bypass_document_validation() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::stdx::optional<bool>&)
+    bypass_document_validation() const;
 
     ///
     /// Sets the index to use for this operation.
@@ -118,7 +119,7 @@ class find_one_and_update {
     ///
     /// @return The current hint, if one is set.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<mongocxx::v_noabi::hint>&) hint() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::stdx::optional<mongocxx::v_noabi::hint>&) hint() const;
 
     ///
     /// Set the value of the let option.
@@ -139,7 +140,8 @@ class find_one_and_update {
     /// @return
     ///  The current let option.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::view_or_value>)
+    MONGOCXX_ABI_EXPORT_CDECL(
+        const bsoncxx::stdx::optional<bsoncxx::v_noabi::document::view_or_value>)
     let() const;
 
     ///
@@ -162,7 +164,7 @@ class find_one_and_update {
     ///  The current comment option.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(
-        const stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>)
+        const bsoncxx::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>)
     comment() const;
 
     ///
@@ -188,7 +190,8 @@ class find_one_and_update {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<std::chrono::milliseconds>&) max_time() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::stdx::optional<std::chrono::milliseconds>&)
+    max_time() const;
 
     ///
     /// Sets a projection, which limits the fields to return.
@@ -214,7 +217,8 @@ class find_one_and_update {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(
+        const bsoncxx::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
     projection() const;
 
     ///
@@ -244,7 +248,8 @@ class find_one_and_update {
     /// - https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     /// - @ref mongocxx::v_noabi::options::return_document
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<mongocxx::v_noabi::options::return_document>&)
+    MONGOCXX_ABI_EXPORT_CDECL(
+        const bsoncxx::stdx::optional<mongocxx::v_noabi::options::return_document>&)
     return_document() const;
 
     ///
@@ -274,7 +279,8 @@ class find_one_and_update {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(
+        const bsoncxx::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
     sort() const;
 
     ///
@@ -302,7 +308,7 @@ class find_one_and_update {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bool>&) upsert() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::stdx::optional<bool>&) upsert() const;
 
     ///
     /// Sets the write concern for this operation.
@@ -329,7 +335,7 @@ class find_one_and_update {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<mongocxx::v_noabi::write_concern>&)
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::stdx::optional<mongocxx::v_noabi::write_concern>&)
     write_concern() const;
 
     ///
@@ -357,22 +363,23 @@ class find_one_and_update {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::array::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(
+        const bsoncxx::stdx::optional<bsoncxx::v_noabi::array::view_or_value>&)
     array_filters() const;
 
    private:
-    stdx::optional<bool> _bypass_document_validation;
-    stdx::optional<bsoncxx::v_noabi::document::view_or_value> _collation;
-    stdx::optional<mongocxx::v_noabi::hint> _hint;
-    stdx::optional<bsoncxx::v_noabi::document::view_or_value> _let;
-    stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> _comment;
-    stdx::optional<std::chrono::milliseconds> _max_time;
-    stdx::optional<bsoncxx::v_noabi::document::view_or_value> _projection;
-    stdx::optional<mongocxx::v_noabi::options::return_document> _return_document;
-    stdx::optional<bsoncxx::v_noabi::document::view_or_value> _ordering;
-    stdx::optional<bool> _upsert;
-    stdx::optional<mongocxx::v_noabi::write_concern> _write_concern;
-    stdx::optional<bsoncxx::v_noabi::array::view_or_value> _array_filters;
+    bsoncxx::stdx::optional<bool> _bypass_document_validation;
+    bsoncxx::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _collation;
+    bsoncxx::stdx::optional<mongocxx::v_noabi::hint> _hint;
+    bsoncxx::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _let;
+    bsoncxx::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> _comment;
+    bsoncxx::stdx::optional<std::chrono::milliseconds> _max_time;
+    bsoncxx::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _projection;
+    bsoncxx::stdx::optional<mongocxx::v_noabi::options::return_document> _return_document;
+    bsoncxx::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _ordering;
+    bsoncxx::stdx::optional<bool> _upsert;
+    bsoncxx::stdx::optional<mongocxx::v_noabi::write_concern> _write_concern;
+    bsoncxx::stdx::optional<bsoncxx::v_noabi::array::view_or_value> _array_filters;
 };
 
 }  // namespace options

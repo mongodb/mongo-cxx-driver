@@ -34,7 +34,7 @@ bsoncxx::v_noabi::document::view command_succeeded_event::reply() const {
     return {bson_get_data(reply), reply->len};
 }
 
-bsoncxx::v_noabi::stdx::string_view command_succeeded_event::command_name() const {
+bsoncxx::stdx::string_view command_succeeded_event::command_name() const {
     return libmongoc::apm_command_succeeded_get_command_name(
         static_cast<const mongoc_apm_command_succeeded_t*>(_succeeded_event));
 }
@@ -54,18 +54,17 @@ std::int64_t command_succeeded_event::operation_id() const {
         static_cast<const mongoc_apm_command_succeeded_t*>(_succeeded_event));
 }
 
-bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::oid> command_succeeded_event::service_id()
-    const {
+bsoncxx::stdx::optional<bsoncxx::v_noabi::oid> command_succeeded_event::service_id() const {
     const bson_oid_t* bson_oid = libmongoc::apm_command_succeeded_get_service_id(
         static_cast<const mongoc_apm_command_succeeded_t*>(_succeeded_event));
 
     if (nullptr == bson_oid)
-        return {bsoncxx::v_noabi::stdx::nullopt};
+        return {bsoncxx::stdx::nullopt};
 
     return {bsoncxx::helpers::make_oid(bson_oid)};
 }
 
-bsoncxx::v_noabi::stdx::string_view command_succeeded_event::host() const {
+bsoncxx::stdx::string_view command_succeeded_event::host() const {
     return libmongoc::apm_command_succeeded_get_host(
                static_cast<const mongoc_apm_command_succeeded_t*>(_succeeded_event))
         ->host;

@@ -22,7 +22,6 @@
 #include <bsoncxx/stdx/optional.hpp>
 
 #include <mongocxx/exception/exception.hpp>
-#include <mongocxx/stdx.hpp>
 
 #include <bsoncxx/config/prelude.hpp>
 
@@ -73,8 +72,8 @@ class operation_exception : public exception {
     /// @returns The raw server error, if it is available.
     ///
     /// @{
-    const stdx::optional<bsoncxx::v_noabi::document::value>& raw_server_error() const;
-    stdx::optional<bsoncxx::v_noabi::document::value>& raw_server_error();
+    const bsoncxx::stdx::optional<bsoncxx::v_noabi::document::value>& raw_server_error() const;
+    bsoncxx::stdx::optional<bsoncxx::v_noabi::document::value>& raw_server_error();
     /// @}
     ///
 
@@ -86,10 +85,10 @@ class operation_exception : public exception {
     ///
     /// @returns True if the label is found in the operation exception, and false otherwise.
     ///
-    bool has_error_label(stdx::string_view label) const;
+    bool has_error_label(bsoncxx::stdx::string_view label) const;
 
    private:
-    stdx::optional<bsoncxx::v_noabi::document::value> _raw_server_error;
+    bsoncxx::stdx::optional<bsoncxx::v_noabi::document::value> _raw_server_error;
 };
 
 BSONCXX_POP_WARNINGS();

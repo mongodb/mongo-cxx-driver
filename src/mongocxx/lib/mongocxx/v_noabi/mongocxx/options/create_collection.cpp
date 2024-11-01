@@ -66,33 +66,33 @@ create_collection_deprecated& create_collection_deprecated::validation_criteria(
     return *this;
 }
 
-const stdx::optional<bool>& create_collection_deprecated::capped() const {
+const bsoncxx::stdx::optional<bool>& create_collection_deprecated::capped() const {
     return _capped;
 }
 
-const stdx::optional<bsoncxx::v_noabi::document::view_or_value>&
+const bsoncxx::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&
 create_collection_deprecated::collation() const {
     return _collation;
 }
 
-const stdx::optional<std::int64_t>& create_collection_deprecated::max() const {
+const bsoncxx::stdx::optional<std::int64_t>& create_collection_deprecated::max() const {
     return _max_documents;
 }
 
-const stdx::optional<bool>& create_collection_deprecated::no_padding() const {
+const bsoncxx::stdx::optional<bool>& create_collection_deprecated::no_padding() const {
     return _no_padding;
 }
 
-const stdx::optional<std::int64_t>& create_collection_deprecated::size() const {
+const bsoncxx::stdx::optional<std::int64_t>& create_collection_deprecated::size() const {
     return _max_size;
 }
 
-const stdx::optional<bsoncxx::v_noabi::document::view_or_value>&
+const bsoncxx::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&
 create_collection_deprecated::storage_engine() const {
     return _storage_engine_opts;
 }
 
-const stdx::optional<mongocxx::v_noabi::validation_criteria>&
+const bsoncxx::stdx::optional<mongocxx::v_noabi::validation_criteria>&
 create_collection_deprecated::validation_criteria() const {
     return _validation;
 }

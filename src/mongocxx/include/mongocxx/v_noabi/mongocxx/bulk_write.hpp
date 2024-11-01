@@ -100,7 +100,7 @@ class bulk_write {
     /// @see
     /// - https://www.mongodb.com/docs/manual/core/bulk-write-operations/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(stdx::optional<result::bulk_write>) execute() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::stdx::optional<result::bulk_write>) execute() const;
 
    private:
     friend ::mongocxx::v_noabi::collection;

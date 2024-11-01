@@ -25,7 +25,6 @@
 #include <mongocxx/client.hpp>
 #include <mongocxx/database.hpp>
 #include <mongocxx/options/pool.hpp>
-#include <mongocxx/stdx.hpp>
 #include <mongocxx/uri.hpp>
 
 #include <mongocxx/config/prelude.hpp>
@@ -130,7 +129,7 @@ class pool {
     /// Acquires a client from the pool. This method will return immediately, but may return a
     /// disengaged optional if a client is not available.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(stdx::optional<entry>) try_acquire();
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::stdx::optional<entry>) try_acquire();
 
    private:
     friend ::mongocxx::v_noabi::options::auto_encryption;

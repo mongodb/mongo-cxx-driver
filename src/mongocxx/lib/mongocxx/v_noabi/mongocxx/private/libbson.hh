@@ -20,7 +20,6 @@
 #include <bsoncxx/private/libbson.hh>
 #include <bsoncxx/stdx/optional.hpp>
 
-#include <mongocxx/stdx.hpp>
 #include <mongocxx/test_util/export_for_testing.hh>
 
 #include <mongocxx/config/private/prelude.hh>
@@ -101,8 +100,8 @@ class scoped_bson_t {
     //
     // The internal bson_t is initialized if the optional contains a document.
     //
-    explicit MONGOCXX_ABI_EXPORT_CDECL_TESTING() scoped_bson_t(
-        bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> doc);
+    explicit MONGOCXX_ABI_EXPORT_CDECL_TESTING()
+        scoped_bson_t(bsoncxx::stdx::optional<bsoncxx::v_noabi::document::view_or_value> doc);
 
     //
     // Initializes a bson_t from the provided optional document.
@@ -110,8 +109,7 @@ class scoped_bson_t {
     // The internal bson_t is initialized if the optional contains a document.
     //
     MONGOCXX_ABI_EXPORT_CDECL_TESTING(void)
-    init_from_static(
-        bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> doc);
+    init_from_static(bsoncxx::stdx::optional<bsoncxx::v_noabi::document::view_or_value> doc);
 
     //
     // Initialize the internal bson_t.
@@ -159,7 +157,7 @@ class scoped_bson_t {
     bool _is_initialized = false;
 
     // If we are passed a value created on-the-fly, we'll need to own this.
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _doc;
+    bsoncxx::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _doc;
 };
 
 }  // namespace libbson

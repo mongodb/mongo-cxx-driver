@@ -63,7 +63,7 @@ scoped_bson_t::scoped_bson_t(bsoncxx::stdx::optional<bsoncxx::document::view_or_
 }
 
 void scoped_bson_t::init_from_static(
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> doc) {
+    bsoncxx::stdx::optional<bsoncxx::v_noabi::document::view_or_value> doc) {
     if (doc) {
         this->init_from_static(std::move(*doc));
     }

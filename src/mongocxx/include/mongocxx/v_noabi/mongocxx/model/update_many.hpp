@@ -22,7 +22,6 @@
 
 #include <mongocxx/hint.hpp>
 #include <mongocxx/pipeline.hpp>
-#include <mongocxx/stdx.hpp>
 
 #include <mongocxx/config/prelude.hpp>
 
@@ -119,7 +118,8 @@ class update_many {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/collation/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(
+        const bsoncxx::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
     collation() const;
 
     /// Sets the index to use for this operation.
@@ -141,7 +141,7 @@ class update_many {
     ///
     /// @return The current hint, if one is set.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<mongocxx::v_noabi::hint>&) hint() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::stdx::optional<mongocxx::v_noabi::hint>&) hint() const;
 
     ///
     /// Sets the upsert option.
@@ -163,7 +163,7 @@ class update_many {
     ///
     /// @return The optional value of the upsert option.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bool>&) upsert() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::stdx::optional<bool>&) upsert() const;
 
     ///
     /// Set array filters for this update operation.
@@ -186,17 +186,18 @@ class update_many {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/update/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::array::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(
+        const bsoncxx::stdx::optional<bsoncxx::v_noabi::array::view_or_value>&)
     array_filters() const;
 
    private:
     bsoncxx::v_noabi::document::view_or_value _filter;
     bsoncxx::v_noabi::document::view_or_value _update;
 
-    stdx::optional<bsoncxx::v_noabi::document::view_or_value> _collation;
-    stdx::optional<bsoncxx::v_noabi::array::view_or_value> _array_filters;
-    stdx::optional<bool> _upsert;
-    stdx::optional<mongocxx::v_noabi::hint> _hint;
+    bsoncxx::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _collation;
+    bsoncxx::stdx::optional<bsoncxx::v_noabi::array::view_or_value> _array_filters;
+    bsoncxx::stdx::optional<bool> _upsert;
+    bsoncxx::stdx::optional<mongocxx::v_noabi::hint> _hint;
 };
 
 }  // namespace model

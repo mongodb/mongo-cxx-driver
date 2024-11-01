@@ -67,9 +67,9 @@ document::value get_server_status(const client& client) {
     return status;
 }
 
-stdx::optional<document::value> get_shards(const client& client) {
+bsoncxx::stdx::optional<document::value> get_shards(const client& client) {
     static auto shards = client["config"]["shards"].find_one({});
-    return (shards) ? shards.value() : stdx::optional<document::value>{};
+    return (shards) ? shards.value() : bsoncxx::stdx::optional<document::value>{};
 }
 }  // namespace
 
@@ -96,7 +96,7 @@ bsoncxx::array::value transform_array(bsoncxx::array::view view,
 
     for (auto&& element : view) {
         // Array elements are passed with disengaged key.
-        auto transformed = fcn({stdx::nullopt, element.get_value()}, context);
+        auto transformed = fcn({bsoncxx::stdx::nullopt, element.get_value()}, context);
 
         // Omit element if transformed is disengaged.
         if (!transformed) {
@@ -228,12 +228,12 @@ bool newer_than(const client& client, std::string version) {
     return (compare_versions(server_version, version) >= 0);
 }
 
-std::basic_string<std::uint8_t> convert_hex_string_to_bytes(stdx::string_view hex) {
+std::basic_string<std::uint8_t> convert_hex_string_to_bytes(bsoncxx::stdx::string_view hex) {
     std::basic_string<std::uint8_t> bytes;
 
     // Convert each pair of hexadecimal digits into a number and store it in the array.
     for (std::size_t i = 0; i < hex.size(); i += 2) {
-        stdx::string_view sub = hex.substr(i, 2);
+        bsoncxx::stdx::string_view sub = hex.substr(i, 2);
         bytes.push_back(
             static_cast<std::uint8_t>(std::stoi(bsoncxx::string::to_string(sub), nullptr, 16)));
     }
@@ -328,7 +328,7 @@ std::string get_topology(const client& client) {
     return "single";
 }
 
-stdx::optional<bsoncxx::document::value> parse_test_file(std::string path) {
+bsoncxx::stdx::optional<bsoncxx::document::value> parse_test_file(std::string path) {
     std::stringstream stream;
     std::ifstream test_file{path};
 
@@ -366,7 +366,7 @@ bool is_numeric(types::bson_value::view value) {
            value.type() == type::k_double;
 }
 
-static stdx::optional<type> is_type_operator(types::bson_value::view value) {
+static bsoncxx::stdx::optional<type> is_type_operator(types::bson_value::view value) {
     if (value.type() == type::k_document && value.get_document().value["$$type"]) {
         auto t = value.get_document().value["$$type"].get_string().value;
         if (t.compare("binData") == 0) {
@@ -410,7 +410,7 @@ bool matches(types::bson_value::view main,
         for (auto&& el : pattern.get_document().value) {
             match_action action = match_action::k_proceed;
             if (visitor_fn) {
-                stdx::optional<types::bson_value::view> main_value;
+                bsoncxx::stdx::optional<types::bson_value::view> main_value;
                 if (main_view.find(el.key()) != main_view.end()) {
                     main_value = main_view[el.key()].get_value();
                 }
@@ -476,7 +476,7 @@ bool matches(document::view doc, document::view pattern, match_visitor visitor_f
                    visitor_fn);
 }
 
-std::string tolowercase(stdx::string_view view) {
+std::string tolowercase(bsoncxx::stdx::string_view view) {
     std::string out;
     out.reserve(view.size());
     for (size_t i = 0; i < view.length(); i++) {

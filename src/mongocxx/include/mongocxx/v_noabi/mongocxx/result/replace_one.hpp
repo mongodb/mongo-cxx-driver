@@ -22,7 +22,6 @@
 #include <bsoncxx/types.hpp>
 
 #include <mongocxx/result/bulk_write.hpp>
-#include <mongocxx/stdx.hpp>
 
 #include <mongocxx/config/prelude.hpp>
 
@@ -62,7 +61,7 @@ class replace_one {
     ///
     /// @return The value of the _id field for upserted document.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(stdx::optional<bsoncxx::v_noabi::document::element>)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::stdx::optional<bsoncxx::v_noabi::document::element>)
     upserted_id() const;
 
     friend MONGOCXX_ABI_EXPORT_CDECL(bool) operator==(const replace_one&, const replace_one&);

@@ -37,7 +37,7 @@ bsoncxx::v_noabi::document::view command_failed_event::failure() const {
     return {bson_get_data(failure), failure->len};
 }
 
-bsoncxx::v_noabi::stdx::string_view command_failed_event::command_name() const {
+bsoncxx::stdx::string_view command_failed_event::command_name() const {
     return libmongoc::apm_command_failed_get_command_name(
         static_cast<const mongoc_apm_command_failed_t*>(_failed_event));
 }
@@ -57,17 +57,17 @@ std::int64_t command_failed_event::operation_id() const {
         static_cast<const mongoc_apm_command_failed_t*>(_failed_event));
 }
 
-bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::oid> command_failed_event::service_id() const {
+bsoncxx::stdx::optional<bsoncxx::v_noabi::oid> command_failed_event::service_id() const {
     const bson_oid_t* bson_oid = libmongoc::apm_command_failed_get_service_id(
         static_cast<const mongoc_apm_command_failed_t*>(_failed_event));
 
     if (nullptr == bson_oid)
-        return {bsoncxx::v_noabi::stdx::nullopt};
+        return {bsoncxx::stdx::nullopt};
 
     return {bsoncxx::helpers::make_oid(bson_oid)};
 }
 
-bsoncxx::v_noabi::stdx::string_view command_failed_event::host() const {
+bsoncxx::stdx::string_view command_failed_event::host() const {
     return libmongoc::apm_command_failed_get_host(
                static_cast<const mongoc_apm_command_failed_t*>(_failed_event))
         ->host;

@@ -27,7 +27,8 @@
 namespace mongocxx {
 namespace v_noabi {
 
-read_concern::read_concern() : _impl{stdx::make_unique<impl>(libmongoc::read_concern_new())} {}
+read_concern::read_concern()
+    : _impl{bsoncxx::stdx::make_unique<impl>(libmongoc::read_concern_new())} {}
 
 read_concern::read_concern(std::unique_ptr<impl>&& implementation)
     : _impl{std::move(implementation)} {}
@@ -36,10 +37,12 @@ read_concern::read_concern(read_concern&&) noexcept = default;
 read_concern& read_concern::operator=(read_concern&&) noexcept = default;
 
 read_concern::read_concern(const read_concern& other)
-    : _impl(stdx::make_unique<impl>(libmongoc::read_concern_copy(other._impl->read_concern_t))) {}
+    : _impl(bsoncxx::stdx::make_unique<impl>(
+          libmongoc::read_concern_copy(other._impl->read_concern_t))) {}
 
 read_concern& read_concern::operator=(const read_concern& other) {
-    _impl = stdx::make_unique<impl>(libmongoc::read_concern_copy(other._impl->read_concern_t));
+    _impl =
+        bsoncxx::stdx::make_unique<impl>(libmongoc::read_concern_copy(other._impl->read_concern_t));
     return *this;
 }
 
@@ -78,7 +81,7 @@ void read_concern::acknowledge_level(read_concern::level rc_level) {
     }
 }
 
-void read_concern::acknowledge_string(stdx::string_view rc_string) {
+void read_concern::acknowledge_string(bsoncxx::stdx::string_view rc_string) {
     // libmongoc uses a NULL level to mean "use the server's default read_concern."
     libmongoc::read_concern_set_level(
         _impl->read_concern_t,
@@ -105,12 +108,12 @@ read_concern::level read_concern::acknowledge_level() const {
     }
 }
 
-stdx::string_view read_concern::acknowledge_string() const {
+bsoncxx::stdx::string_view read_concern::acknowledge_string() const {
     auto level = libmongoc::read_concern_get_level(_impl->read_concern_t);
     if (!level) {
         return "";
     }
-    return {stdx::string_view{level}};
+    return {bsoncxx::stdx::string_view{level}};
 }
 
 bsoncxx::v_noabi::document::value read_concern::to_document() const {

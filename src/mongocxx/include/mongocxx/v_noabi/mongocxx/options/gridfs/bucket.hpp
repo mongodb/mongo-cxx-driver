@@ -22,7 +22,6 @@
 
 #include <mongocxx/read_concern.hpp>
 #include <mongocxx/read_preference.hpp>
-#include <mongocxx/stdx.hpp>
 #include <mongocxx/write_concern.hpp>
 
 #include <mongocxx/config/prelude.hpp>
@@ -55,7 +54,7 @@ class bucket {
     /// @return
     ///   The name of the bucket.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<std::string>&) bucket_name() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::stdx::optional<std::string>&) bucket_name() const;
 
     ///
     /// Sets the size of the chunks in the bucket. This will be used as the chunk size for files
@@ -76,7 +75,8 @@ class bucket {
     /// @return
     ///   The size of the chunks in the bucket in bytes.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<std::int32_t>&) chunk_size_bytes() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::stdx::optional<std::int32_t>&)
+    chunk_size_bytes() const;
 
     ///
     /// Sets the read concern to be used when reading from the bucket. Defaults to the read
@@ -97,7 +97,7 @@ class bucket {
     /// @return
     ///   The read concern of the bucket.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<mongocxx::v_noabi::read_concern>&)
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::stdx::optional<mongocxx::v_noabi::read_concern>&)
     read_concern() const;
 
     ///
@@ -126,7 +126,7 @@ class bucket {
     /// @return
     ///   The read preference of the bucket.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<mongocxx::v_noabi::read_preference>&)
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::stdx::optional<mongocxx::v_noabi::read_preference>&)
     read_preference() const;
 
     ///
@@ -149,15 +149,15 @@ class bucket {
     /// @return
     ///   The write concern of the bucket.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<mongocxx::v_noabi::write_concern>&)
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::stdx::optional<mongocxx::v_noabi::write_concern>&)
     write_concern() const;
 
    private:
-    stdx::optional<std::string> _bucket_name;
-    stdx::optional<std::int32_t> _chunk_size_bytes;
-    stdx::optional<mongocxx::v_noabi::read_concern> _read_concern;
-    stdx::optional<mongocxx::v_noabi::read_preference> _read_preference;
-    stdx::optional<mongocxx::v_noabi::write_concern> _write_concern;
+    bsoncxx::stdx::optional<std::string> _bucket_name;
+    bsoncxx::stdx::optional<std::int32_t> _chunk_size_bytes;
+    bsoncxx::stdx::optional<mongocxx::v_noabi::read_concern> _read_concern;
+    bsoncxx::stdx::optional<mongocxx::v_noabi::read_preference> _read_preference;
+    bsoncxx::stdx::optional<mongocxx::v_noabi::write_concern> _write_concern;
 };
 
 }  // namespace gridfs

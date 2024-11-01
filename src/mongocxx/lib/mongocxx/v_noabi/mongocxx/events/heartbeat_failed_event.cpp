@@ -37,7 +37,7 @@ std::int64_t heartbeat_failed_event::duration() const {
     return libmongoc::apm_server_heartbeat_failed_get_duration(casted);
 }
 
-bsoncxx::v_noabi::stdx::string_view heartbeat_failed_event::host() const {
+bsoncxx::stdx::string_view heartbeat_failed_event::host() const {
     auto casted = static_cast<const mongoc_apm_server_heartbeat_failed_t*>(_failed_event);
     return libmongoc::apm_server_heartbeat_failed_get_host(casted)->host;
 }

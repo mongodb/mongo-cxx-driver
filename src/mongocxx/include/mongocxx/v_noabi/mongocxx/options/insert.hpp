@@ -20,7 +20,6 @@
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/types/bson_value/view_or_value.hpp>
 
-#include <mongocxx/stdx.hpp>
 #include <mongocxx/write_concern.hpp>
 
 #include <mongocxx/config/prelude.hpp>
@@ -56,7 +55,8 @@ class insert {
     ///
     /// @return The optional value of the bypass_document_validation option.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bool>&) bypass_document_validation() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::stdx::optional<bool>&)
+    bypass_document_validation() const;
 
     ///
     /// Sets the write_concern for this operation.
@@ -81,7 +81,7 @@ class insert {
     /// @see
     /// - https://www.mongodb.com/docs/manual/core/write-concern/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<mongocxx::v_noabi::write_concern>&)
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::stdx::optional<mongocxx::v_noabi::write_concern>&)
     write_concern() const;
 
     ///
@@ -112,7 +112,7 @@ class insert {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/insert/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bool>&) ordered() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::stdx::optional<bool>&) ordered() const;
 
     ///
     /// Sets the comment for this operation.
@@ -139,14 +139,14 @@ class insert {
     /// - https://www.mongodb.com/docs/manual/reference/command/insert/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(
-        const stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>&)
+        const bsoncxx::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>&)
     comment() const;
 
    private:
-    stdx::optional<mongocxx::v_noabi::write_concern> _write_concern;
-    stdx::optional<bool> _ordered;
-    stdx::optional<bool> _bypass_document_validation;
-    stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> _comment;
+    bsoncxx::stdx::optional<mongocxx::v_noabi::write_concern> _write_concern;
+    bsoncxx::stdx::optional<bool> _ordered;
+    bsoncxx::stdx::optional<bool> _bypass_document_validation;
+    bsoncxx::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> _comment;
 };
 
 }  // namespace options

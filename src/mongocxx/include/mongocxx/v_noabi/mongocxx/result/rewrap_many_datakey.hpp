@@ -40,12 +40,11 @@ class rewrap_many_datakey {
     ///
     /// @return The raw bulk write result.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::result::bulk_write>&)
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::stdx::optional<mongocxx::v_noabi::result::bulk_write>&)
     result();
 
    private:
-    bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::result::bulk_write> _result;
+    bsoncxx::stdx::optional<mongocxx::v_noabi::result::bulk_write> _result;
 };
 
 }  // namespace result

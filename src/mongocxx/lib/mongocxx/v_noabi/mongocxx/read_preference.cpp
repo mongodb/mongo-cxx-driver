@@ -32,11 +32,13 @@ read_preference::read_preference(read_preference&&) noexcept = default;
 read_preference& read_preference::operator=(read_preference&&) noexcept = default;
 
 read_preference::read_preference(const read_preference& other)
-    : _impl(stdx::make_unique<impl>(libmongoc::read_prefs_copy(other._impl->read_preference_t))) {}
+    : _impl(bsoncxx::stdx::make_unique<impl>(
+          libmongoc::read_prefs_copy(other._impl->read_preference_t))) {}
 
 read_preference& read_preference::operator=(const read_preference& other) {
-    _impl.reset(stdx::make_unique<impl>(libmongoc::read_prefs_copy(other._impl->read_preference_t))
-                    .release());
+    _impl.reset(
+        bsoncxx::stdx::make_unique<impl>(libmongoc::read_prefs_copy(other._impl->read_preference_t))
+            .release());
     return *this;
 }
 
@@ -45,13 +47,13 @@ read_preference::read_preference(std::unique_ptr<impl>&& implementation) {
 }
 
 read_preference::read_preference()
-    : _impl(stdx::make_unique<impl>(libmongoc::read_prefs_new(
+    : _impl(bsoncxx::stdx::make_unique<impl>(libmongoc::read_prefs_new(
           libmongoc::conversions::read_mode_t_from_read_mode(read_mode::k_primary)))) {}
 
 read_preference::read_preference(read_mode mode) : read_preference(mode, deprecated_tag{}) {}
 
 read_preference::read_preference(read_mode mode, deprecated_tag)
-    : _impl(stdx::make_unique<impl>(
+    : _impl(bsoncxx::stdx::make_unique<impl>(
           libmongoc::read_prefs_new(libmongoc::conversions::read_mode_t_from_read_mode(mode)))) {}
 
 read_preference::read_preference(read_mode mode, bsoncxx::v_noabi::document::view_or_value tags)
@@ -92,13 +94,13 @@ read_preference::read_mode read_preference::mode() const {
         libmongoc::read_prefs_get_mode(_impl->read_preference_t));
 }
 
-stdx::optional<bsoncxx::v_noabi::document::view> read_preference::tags() const {
+bsoncxx::stdx::optional<bsoncxx::v_noabi::document::view> read_preference::tags() const {
     const bson_t* bson_tags = libmongoc::read_prefs_get_tags(_impl->read_preference_t);
 
     if (bson_count_keys(bson_tags))
         return bsoncxx::v_noabi::document::view(bson_get_data(bson_tags), bson_tags->len);
 
-    return stdx::optional<bsoncxx::v_noabi::document::view>{};
+    return bsoncxx::stdx::optional<bsoncxx::v_noabi::document::view>{};
 }
 
 read_preference& read_preference::max_staleness(std::chrono::seconds max_staleness) {
@@ -111,12 +113,12 @@ read_preference& read_preference::max_staleness(std::chrono::seconds max_stalene
     return *this;
 }
 
-stdx::optional<std::chrono::seconds> read_preference::max_staleness() const {
+bsoncxx::stdx::optional<std::chrono::seconds> read_preference::max_staleness() const {
     auto staleness = libmongoc::read_prefs_get_max_staleness_seconds(_impl->read_preference_t);
 
     // libmongoc signals "disabled" with the value -1.
     if (staleness == -1) {
-        return stdx::nullopt;
+        return bsoncxx::stdx::nullopt;
     }
 
     return std::chrono::seconds{staleness};
@@ -129,14 +131,14 @@ read_preference& read_preference::hedge(bsoncxx::v_noabi::document::view_or_valu
     return *this;
 }
 
-const stdx::optional<bsoncxx::v_noabi::document::view> read_preference::hedge() const {
+const bsoncxx::stdx::optional<bsoncxx::v_noabi::document::view> read_preference::hedge() const {
     const bson_t* hedge_bson = libmongoc::read_prefs_get_hedge(_impl->read_preference_t);
 
     if (!bson_empty(hedge_bson)) {
         return bsoncxx::v_noabi::document::view(bson_get_data(hedge_bson), hedge_bson->len);
     }
 
-    return stdx::optional<bsoncxx::v_noabi::document::view>{};
+    return bsoncxx::stdx::optional<bsoncxx::v_noabi::document::view>{};
 }
 
 bool operator==(const read_preference& lhs, const read_preference& rhs) {

@@ -58,31 +58,33 @@ update& update::write_concern(mongocxx::v_noabi::write_concern wc) {
     return *this;
 }
 
-const stdx::optional<bool>& update::bypass_document_validation() const {
+const bsoncxx::stdx::optional<bool>& update::bypass_document_validation() const {
     return _bypass_document_validation;
 }
 
-const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& update::collation() const {
+const bsoncxx::stdx::optional<bsoncxx::v_noabi::document::view_or_value>& update::collation()
+    const {
     return _collation;
 }
 
-const stdx::optional<mongocxx::v_noabi::hint>& update::hint() const {
+const bsoncxx::stdx::optional<mongocxx::v_noabi::hint>& update::hint() const {
     return _hint;
 }
 
-const stdx::optional<bsoncxx::v_noabi::document::view_or_value> update::let() const {
+const bsoncxx::stdx::optional<bsoncxx::v_noabi::document::view_or_value> update::let() const {
     return _let;
 }
 
-const stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> update::comment() const {
+const bsoncxx::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> update::comment()
+    const {
     return _comment;
 }
 
-const stdx::optional<bool>& update::upsert() const {
+const bsoncxx::stdx::optional<bool>& update::upsert() const {
     return _upsert;
 }
 
-const stdx::optional<mongocxx::v_noabi::write_concern>& update::write_concern() const {
+const bsoncxx::stdx::optional<mongocxx::v_noabi::write_concern>& update::write_concern() const {
     return _write_concern;
 }
 
@@ -91,7 +93,8 @@ update& update::array_filters(bsoncxx::v_noabi::array::view_or_value array_filte
     return *this;
 }
 
-const stdx::optional<bsoncxx::v_noabi::array::view_or_value>& update::array_filters() const {
+const bsoncxx::stdx::optional<bsoncxx::v_noabi::array::view_or_value>& update::array_filters()
+    const {
     return _array_filters;
 }
 

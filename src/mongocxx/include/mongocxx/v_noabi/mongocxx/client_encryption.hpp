@@ -30,7 +30,6 @@
 #include <mongocxx/options/rewrap_many_datakey.hpp>
 #include <mongocxx/result/delete.hpp>
 #include <mongocxx/result/rewrap_many_datakey.hpp>
-#include <mongocxx/stdx.hpp>
 
 #include <mongocxx/config/prelude.hpp>
 
@@ -106,13 +105,13 @@ class client_encryption {
      * @return collection A handle to the newly created collection
      */
     MONGOCXX_ABI_EXPORT_CDECL(collection)
-    create_encrypted_collection(
-        const database& db,
-        const std::string& coll_name,
-        const bsoncxx::v_noabi::document::view& options,
-        bsoncxx::v_noabi::document::value& out_options,
-        const std::string& kms_provider,
-        const stdx::optional<bsoncxx::v_noabi::document::view>& masterkey = stdx::nullopt);
+    create_encrypted_collection(const database& db,
+                                const std::string& coll_name,
+                                const bsoncxx::v_noabi::document::view& options,
+                                bsoncxx::v_noabi::document::value& out_options,
+                                const std::string& kms_provider,
+                                const bsoncxx::stdx::optional<bsoncxx::v_noabi::document::view>&
+                                    masterkey = bsoncxx::stdx::nullopt);
 
     ///
     /// Encrypts a BSON value with a given key and algorithm.
@@ -217,7 +216,7 @@ class client_encryption {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/method/KeyVault.getKey/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(stdx::optional<bsoncxx::v_noabi::document::value>)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::stdx::optional<bsoncxx::v_noabi::document::value>)
     get_key(bsoncxx::v_noabi::types::bson_value::view_or_value id);
 
     ///
@@ -247,7 +246,7 @@ class client_encryption {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/method/KeyVault.addKeyAlternateName/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(stdx::optional<bsoncxx::v_noabi::document::value>)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::stdx::optional<bsoncxx::v_noabi::document::value>)
     add_key_alt_name(bsoncxx::v_noabi::types::bson_value::view_or_value id,
                      bsoncxx::v_noabi::string::view_or_value key_alt_name);
 
@@ -266,7 +265,7 @@ class client_encryption {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/method/KeyVault.removeKeyAlternateName/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(stdx::optional<bsoncxx::v_noabi::document::value>)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::stdx::optional<bsoncxx::v_noabi::document::value>)
     remove_key_alt_name(bsoncxx::v_noabi::types::bson_value::view_or_value id,
                         bsoncxx::v_noabi::string::view_or_value key_alt_name);
 
@@ -282,7 +281,7 @@ class client_encryption {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/method/KeyVault.getKeyByAltName/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(stdx::optional<bsoncxx::v_noabi::document::value>)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::stdx::optional<bsoncxx::v_noabi::document::value>)
     get_key_by_alt_name(bsoncxx::v_noabi::string::view_or_value key_alt_name);
 
    private:

@@ -27,7 +27,7 @@ rewrap_many_datakey::rewrap_many_datakey(
     _result = std::move(bulk_write_result_doc);
 }
 
-const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::result::bulk_write>&
+const bsoncxx::stdx::optional<mongocxx::v_noabi::result::bulk_write>&
 rewrap_many_datakey::result() {
     return _result;
 }

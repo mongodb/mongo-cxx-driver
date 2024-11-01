@@ -24,7 +24,6 @@
 #include <bsoncxx/types/bson_value/view_or_value.hpp>
 
 #include <mongocxx/options/range.hpp>
-#include <mongocxx/stdx.hpp>
 
 #include <mongocxx/config/prelude.hpp>
 
@@ -64,7 +63,7 @@ class encrypt {
     ///   An optional owning bson_value containing the key_id.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(
-        const stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>&)
+        const bsoncxx::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>&)
     key_id() const;
 
     ///
@@ -88,7 +87,7 @@ class encrypt {
     /// @return
     ///   An optional key name.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<std::string>&) key_alt_name() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::stdx::optional<std::string>&) key_alt_name() const;
 
     ///
     /// Determines which AEAD_AES_256_CBC algorithm to use with HMAC_SHA_512 when
@@ -159,7 +158,8 @@ class encrypt {
     /// @return
     ///   An optional algorithm.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<encryption_algorithm>&) algorithm() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::stdx::optional<encryption_algorithm>&)
+    algorithm() const;
 
     ///
     /// Sets the contention factor to use for encryption.
@@ -177,7 +177,7 @@ class encrypt {
     /// @return
     ///   An optional contention factor.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<int64_t>&) contention_factor() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::stdx::optional<int64_t>&) contention_factor() const;
 
     ///
     /// Sets the query type to use for encryption.
@@ -195,7 +195,8 @@ class encrypt {
     /// @return
     ///   A query type.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<encryption_query_type>&) query_type() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::stdx::optional<encryption_query_type>&)
+    query_type() const;
 
     ///
     /// Sets the range options to use for encryption.
@@ -208,19 +209,19 @@ class encrypt {
     /// @return
     ///   An optional range options.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<options::range>&) range_opts() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::stdx::optional<options::range>&) range_opts() const;
 
    private:
     friend ::mongocxx::v_noabi::client_encryption;
 
     void* convert() const;
 
-    stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> _key_id;
-    stdx::optional<std::string> _key_alt_name;
-    stdx::optional<encryption_algorithm> _algorithm;
-    stdx::optional<int64_t> _contention_factor;
-    stdx::optional<encryption_query_type> _query_type;
-    stdx::optional<options::range> _range_opts;
+    bsoncxx::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> _key_id;
+    bsoncxx::stdx::optional<std::string> _key_alt_name;
+    bsoncxx::stdx::optional<encryption_algorithm> _algorithm;
+    bsoncxx::stdx::optional<int64_t> _contention_factor;
+    bsoncxx::stdx::optional<encryption_query_type> _query_type;
+    bsoncxx::stdx::optional<options::range> _range_opts;
 };
 
 }  // namespace options

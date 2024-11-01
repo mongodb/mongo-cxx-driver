@@ -20,7 +20,6 @@
 #include <bsoncxx/stdx/optional.hpp>
 
 #include <mongocxx/options/transaction.hpp>
-#include <mongocxx/stdx.hpp>
 
 #include <mongocxx/config/prelude.hpp>
 
@@ -98,15 +97,16 @@ class client_session {
     ///
     /// @return The default transaction options.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<transaction>&) default_transaction_opts() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::stdx::optional<transaction>&)
+    default_transaction_opts() const;
 
    private:
     friend ::mongocxx::v_noabi::client_session;
 
-    stdx::optional<bool> _causal_consistency;
-    stdx::optional<bool> _enable_snapshot_reads;
+    bsoncxx::stdx::optional<bool> _causal_consistency;
+    bsoncxx::stdx::optional<bool> _enable_snapshot_reads;
 
-    stdx::optional<transaction> _default_transaction_opts;
+    bsoncxx::stdx::optional<transaction> _default_transaction_opts;
 };
 
 }  // namespace options

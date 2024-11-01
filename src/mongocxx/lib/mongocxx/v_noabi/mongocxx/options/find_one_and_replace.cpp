@@ -82,53 +82,54 @@ find_one_and_replace& find_one_and_replace::write_concern(
     return *this;
 }
 
-const stdx::optional<bool>& find_one_and_replace::bypass_document_validation() const {
+const bsoncxx::stdx::optional<bool>& find_one_and_replace::bypass_document_validation() const {
     return _bypass_document_validation;
 }
 
-const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& find_one_and_replace::collation()
-    const {
+const bsoncxx::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&
+find_one_and_replace::collation() const {
     return _collation;
 }
 
-const stdx::optional<mongocxx::v_noabi::hint>& find_one_and_replace::hint() const {
+const bsoncxx::stdx::optional<mongocxx::v_noabi::hint>& find_one_and_replace::hint() const {
     return _hint;
 }
 
-const stdx::optional<bsoncxx::v_noabi::document::view_or_value> find_one_and_replace::let() const {
+const bsoncxx::stdx::optional<bsoncxx::v_noabi::document::view_or_value> find_one_and_replace::let()
+    const {
     return _let;
 }
 
-const stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>
+const bsoncxx::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>
 find_one_and_replace::comment() const {
     return _comment;
 }
 
-const stdx::optional<std::chrono::milliseconds>& find_one_and_replace::max_time() const {
+const bsoncxx::stdx::optional<std::chrono::milliseconds>& find_one_and_replace::max_time() const {
     return _max_time;
 }
 
-const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& find_one_and_replace::projection()
-    const {
+const bsoncxx::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&
+find_one_and_replace::projection() const {
     return _projection;
 }
 
-const stdx::optional<mongocxx::v_noabi::options::return_document>&
+const bsoncxx::stdx::optional<mongocxx::v_noabi::options::return_document>&
 find_one_and_replace::return_document() const {
     return _return_document;
 }
 
-const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& find_one_and_replace::sort()
-    const {
+const bsoncxx::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&
+find_one_and_replace::sort() const {
     return _ordering;
 }
 
-const stdx::optional<bool>& find_one_and_replace::upsert() const {
+const bsoncxx::stdx::optional<bool>& find_one_and_replace::upsert() const {
     return _upsert;
 }
 
-const stdx::optional<mongocxx::v_noabi::write_concern>& find_one_and_replace::write_concern()
-    const {
+const bsoncxx::stdx::optional<mongocxx::v_noabi::write_concern>&
+find_one_and_replace::write_concern() const {
     return _write_concern;
 }
 

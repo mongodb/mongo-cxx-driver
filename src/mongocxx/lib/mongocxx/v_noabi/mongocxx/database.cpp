@@ -87,14 +87,14 @@ database::~database() = default;
 
 database::database(const mongocxx::v_noabi::client& client,
                    bsoncxx::v_noabi::string::view_or_value name)
-    : _impl(stdx::make_unique<impl>(
+    : _impl(bsoncxx::stdx::make_unique<impl>(
           libmongoc::client_get_database(client._get_impl().client_t, name.terminated().data()),
           &client._get_impl(),
           name.terminated().data())) {}
 
 database::database(const database& d) {
     if (d) {
-        _impl = stdx::make_unique<impl>(d._get_impl());
+        _impl = bsoncxx::stdx::make_unique<impl>(d._get_impl());
     }
 }
 
@@ -102,7 +102,7 @@ database& database::operator=(const database& d) {
     if (!d) {
         _impl.reset();
     } else if (!*this) {
-        _impl = stdx::make_unique<impl>(d._get_impl());
+        _impl = bsoncxx::stdx::make_unique<impl>(d._get_impl());
     } else {
         *_impl = d._get_impl();
     }
@@ -212,7 +212,7 @@ std::vector<std::string> database::list_collection_names(
     return _list_collection_names(&session, filter);
 }
 
-stdx::string_view database::name() const {
+bsoncxx::stdx::string_view database::name() const {
     return _get_impl().name;
 }
 
@@ -277,9 +277,9 @@ bsoncxx::v_noabi::document::value database::run_command(
 
 collection database::_create_collection(
     const client_session* session,
-    stdx::string_view name,
+    bsoncxx::stdx::string_view name,
     bsoncxx::v_noabi::document::view_or_value collection_options,
-    const stdx::optional<mongocxx::v_noabi::write_concern>& write_concern) {
+    const bsoncxx::stdx::optional<mongocxx::v_noabi::write_concern>& write_concern) {
     bsoncxx::v_noabi::builder::basic::document options_builder;
     bson_error_t error;
 
@@ -312,7 +312,7 @@ collection database::_create_collection_deprecated(
     const client_session* session,
     bsoncxx::v_noabi::string::view_or_value name,
     const options::create_collection_deprecated& collection_options,
-    const stdx::optional<mongocxx::v_noabi::write_concern>& write_concern) {
+    const bsoncxx::stdx::optional<mongocxx::v_noabi::write_concern>& write_concern) {
     bsoncxx::v_noabi::builder::basic::document options_builder;
 
     if (collection_options.capped()) {
@@ -383,24 +383,24 @@ collection database::_create_collection_deprecated(
 }
 
 mongocxx::v_noabi::collection database::create_collection(
-    stdx::string_view name,
+    bsoncxx::stdx::string_view name,
     bsoncxx::v_noabi::document::view_or_value collection_options,
-    const stdx::optional<mongocxx::v_noabi::write_concern>& write_concern) {
+    const bsoncxx::stdx::optional<mongocxx::v_noabi::write_concern>& write_concern) {
     return _create_collection(nullptr, name, collection_options, write_concern);
 }
 
 mongocxx::v_noabi::collection database::create_collection(
     const client_session& session,
-    stdx::string_view name,
+    bsoncxx::stdx::string_view name,
     bsoncxx::v_noabi::document::view_or_value collection_options,
-    const stdx::optional<mongocxx::v_noabi::write_concern>& write_concern) {
+    const bsoncxx::stdx::optional<mongocxx::v_noabi::write_concern>& write_concern) {
     return _create_collection(&session, name, collection_options, write_concern);
 }
 
 mongocxx::v_noabi::collection database::create_collection_deprecated(
     bsoncxx::v_noabi::string::view_or_value name,
     const options::create_collection_deprecated& collection_options,
-    const stdx::optional<mongocxx::v_noabi::write_concern>& write_concern) {
+    const bsoncxx::stdx::optional<mongocxx::v_noabi::write_concern>& write_concern) {
     return _create_collection_deprecated(nullptr, name, collection_options, write_concern);
 }
 
@@ -408,13 +408,13 @@ mongocxx::v_noabi::collection database::create_collection_deprecated(
     const client_session& session,
     bsoncxx::v_noabi::string::view_or_value name,
     const options::create_collection_deprecated& collection_options,
-    const stdx::optional<mongocxx::v_noabi::write_concern>& write_concern) {
+    const bsoncxx::stdx::optional<mongocxx::v_noabi::write_concern>& write_concern) {
     return _create_collection_deprecated(&session, name, collection_options, write_concern);
 }
 
 void database::_drop(
     const client_session* session,
-    const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>& write_concern) {
+    const bsoncxx::stdx::optional<mongocxx::v_noabi::write_concern>& write_concern) {
     bson_error_t error;
 
     bsoncxx::v_noabi::builder::basic::document opts_doc;
@@ -435,13 +435,13 @@ void database::_drop(
 }
 
 void database::drop(
-    const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>& write_concern) {
+    const bsoncxx::stdx::optional<mongocxx::v_noabi::write_concern>& write_concern) {
     return _drop(nullptr, write_concern);
 }
 
 void database::drop(
     const client_session& session,
-    const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>& write_concern) {
+    const bsoncxx::stdx::optional<mongocxx::v_noabi::write_concern>& write_concern) {
     return _drop(&session, write_concern);
 }
 
@@ -451,7 +451,7 @@ void database::read_concern(mongocxx::v_noabi::read_concern rc) {
 
 mongocxx::v_noabi::read_concern database::read_concern() const {
     auto rc = libmongoc::database_get_read_concern(_get_impl().database_t);
-    return {stdx::make_unique<read_concern::impl>(libmongoc::read_concern_copy(rc))};
+    return {bsoncxx::stdx::make_unique<read_concern::impl>(libmongoc::read_concern_copy(rc))};
 }
 
 void database::read_preference(mongocxx::v_noabi::read_preference rp) {
@@ -470,7 +470,7 @@ bool database::has_collection(bsoncxx::v_noabi::string::view_or_value name) cons
 }
 
 mongocxx::v_noabi::read_preference database::read_preference() const {
-    mongocxx::v_noabi::read_preference rp(stdx::make_unique<read_preference::impl>(
+    mongocxx::v_noabi::read_preference rp(bsoncxx::stdx::make_unique<read_preference::impl>(
         libmongoc::read_prefs_copy(libmongoc::database_get_read_prefs(_get_impl().database_t))));
     return rp;
 }
@@ -481,7 +481,7 @@ void database::write_concern(mongocxx::v_noabi::write_concern wc) {
 
 mongocxx::v_noabi::write_concern database::write_concern() const {
     mongocxx::v_noabi::write_concern wc(
-        stdx::make_unique<write_concern::impl>(libmongoc::write_concern_copy(
+        bsoncxx::stdx::make_unique<write_concern::impl>(libmongoc::write_concern_copy(
             libmongoc::database_get_write_concern(_get_impl().database_t))));
     return wc;
 }

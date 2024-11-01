@@ -182,7 +182,7 @@ bulk_write& bulk_write::append(const model::write& operation) {
     return *this;
 }
 
-stdx::optional<result::bulk_write> bulk_write::execute() const {
+bsoncxx::stdx::optional<result::bulk_write> bulk_write::execute() const {
     mongoc_bulk_operation_t* b = _impl->operation_t;
     scoped_bson_t reply;
     bson_error_t error;
@@ -193,12 +193,12 @@ stdx::optional<result::bulk_write> bulk_write::execute() const {
 
     // Reply is empty for unacknowledged writes, so return disengaged optional.
     if (reply.view().empty()) {
-        return stdx::nullopt;
+        return bsoncxx::stdx::nullopt;
     }
 
     result::bulk_write result(reply.steal());
 
-    return stdx::optional<result::bulk_write>(std::move(result));
+    return bsoncxx::stdx::optional<result::bulk_write>(std::move(result));
 }
 
 bulk_write::bulk_write(const collection& coll,
@@ -225,9 +225,9 @@ bulk_write::bulk_write(const collection& coll,
     }
 
     scoped_bson_t bson_options(options_builder.extract());
-    _impl =
-        stdx::make_unique<bulk_write::impl>(libmongoc::collection_create_bulk_operation_with_opts(
-            coll._get_impl().collection_t, bson_options.bson()));
+    _impl = bsoncxx::stdx::make_unique<bulk_write::impl>(
+        libmongoc::collection_create_bulk_operation_with_opts(coll._get_impl().collection_t,
+                                                              bson_options.bson()));
 
     if (auto validation = options.bypass_document_validation()) {
         libmongoc::bulk_operation_set_bypass_document_validation(_impl->operation_t, *validation);

@@ -82,7 +82,7 @@ TEST_CASE("list databases passes authorizedDatabases option", "[client]") {
     MOCK_CLIENT;
 
     bool called = false;
-    stdx::optional<bsoncxx::document::value> opts_passed;
+    bsoncxx::stdx::optional<bsoncxx::document::value> opts_passed;
 
     client_find_databases_with_opts->visit([&](mongoc_client_t*, const bson_t* opts) {
         called = true;
@@ -363,7 +363,7 @@ TEST_CASE("A client can create a named database object", "[client]") {
     database_set_concern->interpose([](mongoc_database_t*, const mongoc_write_concern_t*) {})
         .forever();
 
-    stdx::string_view name("database");
+    bsoncxx::stdx::string_view name("database");
 
     client mongo_client{uri{}, test_util::add_test_server_api()};
     database obtained_database = mongo_client[name];
@@ -384,7 +384,7 @@ TEST_CASE("integration tests for client metadata handshake feature") {
         bool found_op = false;
         for (auto&& op_view : cursor) {
             if (!op_view["appName"] ||
-                op_view["appName"].get_string().value != stdx::string_view(app_name)) {
+                op_view["appName"].get_string().value != bsoncxx::stdx::string_view(app_name)) {
                 continue;
             }
 
@@ -398,13 +398,14 @@ TEST_CASE("integration tests for client metadata handshake feature") {
 
             REQUIRE(metadata_view["application"]);
             auto application = metadata_view["application"].get_document();
-            REQUIRE(application.view()["name"].get_string().value == stdx::string_view(app_name));
+            REQUIRE(application.view()["name"].get_string().value ==
+                    bsoncxx::stdx::string_view(app_name));
 
             REQUIRE(metadata_view["driver"]);
             auto driver = metadata_view["driver"].get_document();
             auto driver_view = driver.view();
             REQUIRE(driver_view["name"].get_string().value ==
-                    stdx::string_view{"mongoc / mongocxx"});
+                    bsoncxx::stdx::string_view{"mongoc / mongocxx"});
             auto version = bsoncxx::string::to_string(driver_view["version"].get_string().value);
             REQUIRE(version.find(MONGOCXX_VERSION_STRING) != std::string::npos);
 

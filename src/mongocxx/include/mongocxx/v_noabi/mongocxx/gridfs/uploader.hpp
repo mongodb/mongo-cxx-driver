@@ -30,7 +30,6 @@
 #include <mongocxx/client_session.hpp>
 #include <mongocxx/collection.hpp>
 #include <mongocxx/result/gridfs/upload.hpp>
-#include <mongocxx/stdx.hpp>
 
 #include <mongocxx/config/prelude.hpp>
 
@@ -152,11 +151,11 @@ class uploader {
     //
     uploader(const client_session* session,
              bsoncxx::v_noabi::types::bson_value::view id,
-             stdx::string_view filename,
+             bsoncxx::stdx::string_view filename,
              collection files,
              collection chunks,
              std::int32_t chunk_size,
-             stdx::optional<bsoncxx::v_noabi::document::view_or_value> metadata = {});
+             bsoncxx::stdx::optional<bsoncxx::v_noabi::document::view_or_value> metadata = {});
 
     void finish_chunk();
     void flush_chunks();

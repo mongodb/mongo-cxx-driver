@@ -20,7 +20,6 @@
 #include <mongocxx/exception/logic_error.hpp>
 #include <mongocxx/options/server_api.hpp>
 #include <mongocxx/private/libmongoc.hh>
-#include <mongocxx/stdx.hpp>
 
 #include <mongocxx/config/private/prelude.hh>
 
@@ -38,7 +37,7 @@ std::string server_api::version_to_string(server_api::version version) {
     }
 }
 
-server_api::version server_api::version_from_string(stdx::string_view version) {
+server_api::version server_api::version_from_string(bsoncxx::stdx::string_view version) {
     if (!version.compare("1")) {
         return server_api::version::k_version_1;
     }
@@ -53,7 +52,7 @@ server_api& server_api::strict(bool strict) {
     return *this;
 }
 
-const stdx::optional<bool>& server_api::strict() const {
+const bsoncxx::stdx::optional<bool>& server_api::strict() const {
     return _strict;
 }
 
@@ -62,7 +61,7 @@ server_api& server_api::deprecation_errors(bool deprecation_errors) {
     return *this;
 }
 
-const stdx::optional<bool>& server_api::deprecation_errors() const {
+const bsoncxx::stdx::optional<bool>& server_api::deprecation_errors() const {
     return _deprecation_errors;
 }
 

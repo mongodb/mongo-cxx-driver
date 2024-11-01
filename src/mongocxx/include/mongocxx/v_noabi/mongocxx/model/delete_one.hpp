@@ -20,7 +20,6 @@
 #include <bsoncxx/stdx/optional.hpp>
 
 #include <mongocxx/hint.hpp>
-#include <mongocxx/stdx.hpp>
 
 #include <mongocxx/config/prelude.hpp>
 
@@ -69,7 +68,8 @@ class delete_one {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/collation/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(
+        const bsoncxx::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
     collation() const;
 
     ///
@@ -92,13 +92,13 @@ class delete_one {
     ///
     /// @return The current hint, if one is set.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<mongocxx::v_noabi::hint>&) hint() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::stdx::optional<mongocxx::v_noabi::hint>&) hint() const;
 
    private:
     bsoncxx::v_noabi::document::view_or_value _filter;
 
-    stdx::optional<bsoncxx::v_noabi::document::view_or_value> _collation;
-    stdx::optional<mongocxx::v_noabi::hint> _hint;
+    bsoncxx::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _collation;
+    bsoncxx::stdx::optional<mongocxx::v_noabi::hint> _hint;
 };
 
 }  // namespace model

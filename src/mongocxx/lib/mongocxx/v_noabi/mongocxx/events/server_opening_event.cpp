@@ -25,7 +25,7 @@ server_opening_event::server_opening_event(const void* event) : _event(event) {}
 
 server_opening_event::~server_opening_event() = default;
 
-bsoncxx::v_noabi::stdx::string_view server_opening_event::host() const {
+bsoncxx::stdx::string_view server_opening_event::host() const {
     return libmongoc::apm_server_changed_get_host(
                static_cast<const mongoc_apm_server_changed_t*>(_event))
         ->host;

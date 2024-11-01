@@ -32,7 +32,8 @@ delete_one& delete_one::collation(bsoncxx::v_noabi::document::view_or_value coll
     return *this;
 }
 
-const stdx::optional<bsoncxx::v_noabi::document::view_or_value>& delete_one::collation() const {
+const bsoncxx::stdx::optional<bsoncxx::v_noabi::document::view_or_value>& delete_one::collation()
+    const {
     return _collation;
 }
 
@@ -41,7 +42,7 @@ delete_one& delete_one::hint(mongocxx::v_noabi::hint index_hint) {
     return *this;
 }
 
-const stdx::optional<mongocxx::v_noabi::hint>& delete_one::hint() const {
+const bsoncxx::stdx::optional<mongocxx::v_noabi::hint>& delete_one::hint() const {
     return _hint;
 }
 

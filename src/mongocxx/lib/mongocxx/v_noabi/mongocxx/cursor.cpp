@@ -26,8 +26,9 @@
 namespace mongocxx {
 namespace v_noabi {
 
-cursor::cursor(void* cursor_ptr, bsoncxx::v_noabi::stdx::optional<cursor::type> cursor_type)
-    : _impl(stdx::make_unique<impl>(static_cast<mongoc_cursor_t*>(cursor_ptr), cursor_type)) {}
+cursor::cursor(void* cursor_ptr, bsoncxx::stdx::optional<cursor::type> cursor_type)
+    : _impl(bsoncxx::stdx::make_unique<impl>(static_cast<mongoc_cursor_t*>(cursor_ptr),
+                                             cursor_type)) {}
 
 cursor::cursor(cursor&&) noexcept = default;
 cursor& cursor::operator=(cursor&&) noexcept = default;

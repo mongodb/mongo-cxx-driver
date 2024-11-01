@@ -232,7 +232,7 @@ class client_encryption::impl {
             make_document(kvp("nRemoved", reply.view()["deletedCount"].get_int32()))));
     }
 
-    stdx::optional<bsoncxx::v_noabi::document::value> get_key(
+    bsoncxx::stdx::optional<bsoncxx::v_noabi::document::value> get_key(
         bsoncxx::v_noabi::types::bson_value::view_or_value id) {
         libbson::scoped_bson_t key_doc;
         bson_error_t error;
@@ -245,8 +245,8 @@ class client_encryption::impl {
         }
 
         return key_doc.view().empty()
-                   ? stdx::nullopt
-                   : stdx::optional<bsoncxx::v_noabi::document::value>{key_doc.steal()};
+                   ? bsoncxx::stdx::nullopt
+                   : bsoncxx::stdx::optional<bsoncxx::v_noabi::document::value>{key_doc.steal()};
     }
 
     mongocxx::v_noabi::cursor get_keys() {
@@ -262,7 +262,7 @@ class client_encryption::impl {
         return mongocxx::v_noabi::cursor(cursor);
     }
 
-    stdx::optional<bsoncxx::v_noabi::document::value> add_key_alt_name(
+    bsoncxx::stdx::optional<bsoncxx::v_noabi::document::value> add_key_alt_name(
         bsoncxx::v_noabi::types::bson_value::view_or_value id,
         bsoncxx::v_noabi::string::view_or_value key_alt_name) {
         scoped_bson_t key_doc;
@@ -278,11 +278,11 @@ class client_encryption::impl {
         }
 
         return key_doc.view().empty()
-                   ? stdx::nullopt
-                   : stdx::optional<bsoncxx::v_noabi::document::value>{key_doc.steal()};
+                   ? bsoncxx::stdx::nullopt
+                   : bsoncxx::stdx::optional<bsoncxx::v_noabi::document::value>{key_doc.steal()};
     }
 
-    stdx::optional<bsoncxx::v_noabi::document::value> get_key_by_alt_name(
+    bsoncxx::stdx::optional<bsoncxx::v_noabi::document::value> get_key_by_alt_name(
         bsoncxx::v_noabi::string::view_or_value key_alt_name) {
         scoped_bson_t key_doc;
         bson_error_t error;
@@ -295,11 +295,11 @@ class client_encryption::impl {
         }
 
         return key_doc.view().empty()
-                   ? stdx::nullopt
-                   : stdx::optional<bsoncxx::v_noabi::document::value>{key_doc.steal()};
+                   ? bsoncxx::stdx::nullopt
+                   : bsoncxx::stdx::optional<bsoncxx::v_noabi::document::value>{key_doc.steal()};
     }
 
-    stdx::optional<bsoncxx::v_noabi::document::value> remove_key_alt_name(
+    bsoncxx::stdx::optional<bsoncxx::v_noabi::document::value> remove_key_alt_name(
         bsoncxx::v_noabi::types::bson_value::view_or_value id,
         bsoncxx::v_noabi::string::view_or_value key_alt_name) {
         scoped_bson_t key_doc;
@@ -315,8 +315,8 @@ class client_encryption::impl {
         }
 
         return key_doc.view().empty()
-                   ? stdx::nullopt
-                   : stdx::optional<bsoncxx::v_noabi::document::value>{key_doc.steal()};
+                   ? bsoncxx::stdx::nullopt
+                   : bsoncxx::stdx::optional<bsoncxx::v_noabi::document::value>{key_doc.steal()};
     }
 
     collection create_encrypted_collection(
@@ -326,7 +326,7 @@ class client_encryption::impl {
         const bsoncxx::v_noabi::document::view opts,
         bsoncxx::v_noabi::document::value& out_options,
         const std::string& kms_provider,
-        const stdx::optional<bsoncxx::v_noabi::document::view>& masterkey) {
+        const bsoncxx::stdx::optional<bsoncxx::v_noabi::document::view>& masterkey) {
         bson_error_t error = {};
         scoped_bson_t out_opts;
         out_opts.init();

@@ -674,7 +674,7 @@ TEST_CASE("Watch a Collection", "[min36]") {
 
         SECTION("Can receive it") {
             auto it = *(x.begin());
-            REQUIRE(it["fullDocument"]["a"].get_string().value == stdx::string_view("b"));
+            REQUIRE(it["fullDocument"]["a"].get_string().value == bsoncxx::stdx::string_view("b"));
         }
 
         SECTION("iterator equals itself") {
@@ -692,8 +692,8 @@ TEST_CASE("Watch a Collection", "[min36]") {
             auto it = x.begin();
             auto a = *it;
             auto b = *it;
-            REQUIRE(a["fullDocument"]["a"].get_string().value == stdx::string_view("b"));
-            REQUIRE(b["fullDocument"]["a"].get_string().value == stdx::string_view("b"));
+            REQUIRE(a["fullDocument"]["a"].get_string().value == bsoncxx::stdx::string_view("b"));
+            REQUIRE(b["fullDocument"]["a"].get_string().value == bsoncxx::stdx::string_view("b"));
         }
 
         SECTION("Calling .begin multiple times doesn't advance state") {

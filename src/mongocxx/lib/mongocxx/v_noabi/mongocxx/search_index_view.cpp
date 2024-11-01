@@ -11,14 +11,14 @@ namespace mongocxx {
 namespace v_noabi {
 
 search_index_view::search_index_view(void* coll, void* client)
-    : _impl{stdx::make_unique<impl>(static_cast<mongoc_collection_t*>(coll),
-                                    static_cast<mongoc_client_t*>(client))} {}
+    : _impl{bsoncxx::stdx::make_unique<impl>(static_cast<mongoc_collection_t*>(coll),
+                                             static_cast<mongoc_client_t*>(client))} {}
 
 search_index_view::search_index_view(search_index_view&&) noexcept = default;
 search_index_view& search_index_view::operator=(search_index_view&&) noexcept = default;
 
 search_index_view::search_index_view(const search_index_view& other)
-    : _impl(stdx::make_unique<impl>(other._get_impl())) {}
+    : _impl(bsoncxx::stdx::make_unique<impl>(other._get_impl())) {}
 
 search_index_view& search_index_view::operator=(const search_index_view& other) {
     _get_impl() = other._get_impl();

@@ -17,7 +17,6 @@
 #include <mongocxx/options/gridfs/bucket.hpp>
 #include <mongocxx/read_concern.hpp>
 #include <mongocxx/read_preference.hpp>
-#include <mongocxx/stdx.hpp>
 #include <mongocxx/write_concern.hpp>
 
 #include <mongocxx/config/private/prelude.hh>
@@ -32,7 +31,7 @@ bucket& bucket::bucket_name(std::string bucket_name) {
     return *this;
 }
 
-const stdx::optional<std::string>& bucket::bucket_name() const {
+const bsoncxx::stdx::optional<std::string>& bucket::bucket_name() const {
     return _bucket_name;
 }
 
@@ -41,7 +40,7 @@ bucket& bucket::chunk_size_bytes(std::int32_t chunk_size_bytes) {
     return *this;
 }
 
-const stdx::optional<std::int32_t>& bucket::chunk_size_bytes() const {
+const bsoncxx::stdx::optional<std::int32_t>& bucket::chunk_size_bytes() const {
     return _chunk_size_bytes;
 }
 
@@ -50,7 +49,7 @@ bucket& bucket::read_concern(mongocxx::v_noabi::read_concern read_concern) {
     return *this;
 }
 
-const stdx::optional<mongocxx::v_noabi::read_concern>& bucket::read_concern() const {
+const bsoncxx::stdx::optional<mongocxx::v_noabi::read_concern>& bucket::read_concern() const {
     return _read_concern;
 }
 
@@ -59,7 +58,7 @@ bucket& bucket::read_preference(mongocxx::v_noabi::read_preference read_preferen
     return *this;
 }
 
-const stdx::optional<mongocxx::v_noabi::read_preference>& bucket::read_preference() const {
+const bsoncxx::stdx::optional<mongocxx::v_noabi::read_preference>& bucket::read_preference() const {
     return _read_preference;
 }
 
@@ -68,7 +67,7 @@ bucket& bucket::write_concern(mongocxx::v_noabi::write_concern write_concern) {
     return *this;
 }
 
-const stdx::optional<mongocxx::v_noabi::write_concern>& bucket::write_concern() const {
+const bsoncxx::stdx::optional<mongocxx::v_noabi::write_concern>& bucket::write_concern() const {
     return _write_concern;
 }
 

@@ -107,7 +107,7 @@ class change_stream {
     /// @return
     ///   The token.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view>)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::stdx::optional<bsoncxx::v_noabi::document::view>)
     get_resume_token() const;
 
    private:

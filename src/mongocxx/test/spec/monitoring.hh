@@ -44,7 +44,7 @@ class apm_checker {
     void has(bsoncxx::array::view expected);
 
     // True if we should not process the given command:
-    bool should_ignore(const stdx::string_view command_name) const;
+    bool should_ignore(const bsoncxx::stdx::string_view command_name) const;
 
     void clear();
     void clear_events();

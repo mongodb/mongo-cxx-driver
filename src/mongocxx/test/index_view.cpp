@@ -88,7 +88,8 @@ TEST_CASE("create_one", "[index_view]") {
 
         auto key = make_document(kvp("a", 1));
         auto options = make_document(kvp("name", "myIndex"));
-        stdx::optional<std::string> result = indexes.create_one(key.view(), options.view());
+        bsoncxx::stdx::optional<std::string> result =
+            indexes.create_one(key.view(), options.view());
 
         REQUIRE(result);
         REQUIRE(*result == "myIndex");
@@ -101,7 +102,7 @@ TEST_CASE("create_one", "[index_view]") {
         index_view indexes = coll.indexes();
 
         auto key = make_document(kvp("a", 1), kvp("b", -1));
-        stdx::optional<std::string> result = indexes.create_one(key.view());
+        bsoncxx::stdx::optional<std::string> result = indexes.create_one(key.view());
 
         REQUIRE(result);
         REQUIRE(*result == "a_1_b_-1");
@@ -116,7 +117,7 @@ TEST_CASE("create_one", "[index_view]") {
         auto key = make_document(kvp("a", 1));
         auto options = make_document(kvp("name", "myIndex"));
         index_model model(key.view(), options.view());
-        stdx::optional<std::string> result = indexes.create_one(model);
+        bsoncxx::stdx::optional<std::string> result = indexes.create_one(model);
 
         REQUIRE(result);
         REQUIRE(*result == "myIndex");
@@ -130,7 +131,7 @@ TEST_CASE("create_one", "[index_view]") {
 
         auto key = make_document(kvp("a", 1), kvp("b", -1));
         index_model model(key.view());
-        stdx::optional<std::string> result = indexes.create_one(model);
+        bsoncxx::stdx::optional<std::string> result = indexes.create_one(model);
 
         REQUIRE(result);
         REQUIRE(*result == "a_1_b_-1");
@@ -273,7 +274,7 @@ TEST_CASE("create_many", "[index_view]") {
             auto name = index["name"].get_string();
 
             for (auto expected : expected_names) {
-                if (stdx::string_view(expected) == name.value) {
+                if (bsoncxx::stdx::string_view(expected) == name.value) {
                     found++;
                 }
             }
@@ -298,7 +299,7 @@ TEST_CASE("drop_one", "[index_view]") {
         REQUIRE(std::distance(cursor.begin(), cursor.end()) == 1);
 
         auto key = make_document(kvp("a", 1));
-        stdx::optional<std::string> result = indexes.create_one(key.view());
+        bsoncxx::stdx::optional<std::string> result = indexes.create_one(key.view());
 
         auto cursor1 = indexes.list();
         REQUIRE(std::distance(cursor1.begin(), cursor1.end()) == 2);
@@ -319,7 +320,7 @@ TEST_CASE("drop_one", "[index_view]") {
         REQUIRE(std::distance(cursor.begin(), cursor.end()) == 1);
 
         auto key = make_document(kvp("a", 1));
-        stdx::optional<std::string> result = indexes.create_one(key.view());
+        bsoncxx::stdx::optional<std::string> result = indexes.create_one(key.view());
 
         auto cursor1 = indexes.list();
         REQUIRE(std::distance(cursor1.begin(), cursor1.end()) == 2);
@@ -341,7 +342,7 @@ TEST_CASE("drop_one", "[index_view]") {
 
         auto key = make_document(kvp("a", 1));
         index_model model(key.view());
-        stdx::optional<std::string> result = indexes.create_one(key.view());
+        bsoncxx::stdx::optional<std::string> result = indexes.create_one(key.view());
 
         auto cursor1 = indexes.list();
         REQUIRE(std::distance(cursor1.begin(), cursor1.end()) == 2);

@@ -126,7 +126,7 @@ class topology_description {
     ///
     /// @return The type as a short-lived string view.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::string_view) type() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::stdx::string_view) type() const;
 
     ///
     /// Determines if the topology has a readable server available. Servers are

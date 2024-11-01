@@ -153,7 +153,7 @@ class client_session {
     /// a transaction already in progress.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(void)
-    start_transaction(const stdx::optional<options::transaction>& transaction_opts = {});
+    start_transaction(const bsoncxx::stdx::optional<options::transaction>& transaction_opts = {});
 
     ///
     /// Commits a transaction on the current client session.

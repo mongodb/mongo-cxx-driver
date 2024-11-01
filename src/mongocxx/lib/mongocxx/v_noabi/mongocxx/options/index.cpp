@@ -129,27 +129,27 @@ index& index::haystack_bucket_size(double haystack_bucket_size) {
     return haystack_bucket_size_deprecated(haystack_bucket_size);
 }
 
-const stdx::optional<bool>& index::background() const {
+const bsoncxx::stdx::optional<bool>& index::background() const {
     return _background;
 }
 
-const stdx::optional<bool>& index::unique() const {
+const bsoncxx::stdx::optional<bool>& index::unique() const {
     return _unique;
 }
 
-const stdx::optional<bool>& index::hidden() const {
+const bsoncxx::stdx::optional<bool>& index::hidden() const {
     return _hidden;
 }
 
-const stdx::optional<bsoncxx::v_noabi::string::view_or_value>& index::name() const {
+const bsoncxx::stdx::optional<bsoncxx::v_noabi::string::view_or_value>& index::name() const {
     return _name;
 }
 
-const stdx::optional<bsoncxx::v_noabi::document::view>& index::collation() const {
+const bsoncxx::stdx::optional<bsoncxx::v_noabi::document::view>& index::collation() const {
     return _collation;
 }
 
-const stdx::optional<bool>& index::sparse() const {
+const bsoncxx::stdx::optional<bool>& index::sparse() const {
     return _sparse;
 }
 
@@ -157,51 +157,54 @@ const std::unique_ptr<index::base_storage_options>& index::storage_options() con
     return _storage_options;
 }
 
-const stdx::optional<std::chrono::seconds>& index::expire_after() const {
+const bsoncxx::stdx::optional<std::chrono::seconds>& index::expire_after() const {
     return _expire_after;
 }
 
-const stdx::optional<std::int32_t>& index::version() const {
+const bsoncxx::stdx::optional<std::int32_t>& index::version() const {
     return _version;
 }
 
-const stdx::optional<bsoncxx::v_noabi::document::view>& index::weights() const {
+const bsoncxx::stdx::optional<bsoncxx::v_noabi::document::view>& index::weights() const {
     return _weights;
 }
 
-const stdx::optional<bsoncxx::v_noabi::string::view_or_value>& index::default_language() const {
+const bsoncxx::stdx::optional<bsoncxx::v_noabi::string::view_or_value>& index::default_language()
+    const {
     return _default_language;
 }
 
-const stdx::optional<bsoncxx::v_noabi::string::view_or_value>& index::language_override() const {
+const bsoncxx::stdx::optional<bsoncxx::v_noabi::string::view_or_value>& index::language_override()
+    const {
     return _language_override;
 }
 
-const stdx::optional<bsoncxx::v_noabi::document::view>& index::partial_filter_expression() const {
+const bsoncxx::stdx::optional<bsoncxx::v_noabi::document::view>& index::partial_filter_expression()
+    const {
     return _partial_filter_expression;
 }
 
-const stdx::optional<std::uint8_t>& index::twod_sphere_version() const {
+const bsoncxx::stdx::optional<std::uint8_t>& index::twod_sphere_version() const {
     return _twod_sphere_version;
 }
 
-const stdx::optional<std::uint8_t>& index::twod_bits_precision() const {
+const bsoncxx::stdx::optional<std::uint8_t>& index::twod_bits_precision() const {
     return _twod_bits_precision;
 }
 
-const stdx::optional<double>& index::twod_location_min() const {
+const bsoncxx::stdx::optional<double>& index::twod_location_min() const {
     return _twod_location_min;
 }
 
-const stdx::optional<double>& index::twod_location_max() const {
+const bsoncxx::stdx::optional<double>& index::twod_location_max() const {
     return _twod_location_max;
 }
 
-const stdx::optional<double>& index::haystack_bucket_size_deprecated() const {
+const bsoncxx::stdx::optional<double>& index::haystack_bucket_size_deprecated() const {
     return _haystack_bucket_size;
 }
 
-const stdx::optional<double>& index::haystack_bucket_size() const {
+const bsoncxx::stdx::optional<double>& index::haystack_bucket_size() const {
     return haystack_bucket_size_deprecated();
 }
 
@@ -312,7 +315,7 @@ void index::wiredtiger_storage_options::config_string(
     _config_string = std::move(config_string);
 }
 
-const stdx::optional<bsoncxx::v_noabi::string::view_or_value>&
+const bsoncxx::stdx::optional<bsoncxx::v_noabi::string::view_or_value>&
 index::wiredtiger_storage_options::config_string() const {
     return _config_string;
 }

@@ -124,7 +124,7 @@ const std::type_info& map::type(const key_type& key) {
     return typeid(mongocxx::client);
 }
 
-database& map::get_database_by_name(stdx::string_view name) {
+database& map::get_database_by_name(bsoncxx::stdx::string_view name) {
     for (auto&& kvp : _database_map)
         if (name == kvp.second.name())
             return kvp.second;

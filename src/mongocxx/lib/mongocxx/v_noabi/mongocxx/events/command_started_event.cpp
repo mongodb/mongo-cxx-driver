@@ -34,12 +34,12 @@ bsoncxx::v_noabi::document::view command_started_event::command() const {
     return {bson_get_data(command), command->len};
 }
 
-bsoncxx::v_noabi::stdx::string_view command_started_event::database_name() const {
+bsoncxx::stdx::string_view command_started_event::database_name() const {
     return libmongoc::apm_command_started_get_database_name(
         static_cast<const mongoc_apm_command_started_t*>(_started_event));
 }
 
-bsoncxx::v_noabi::stdx::string_view command_started_event::command_name() const {
+bsoncxx::stdx::string_view command_started_event::command_name() const {
     return libmongoc::apm_command_started_get_command_name(
         static_cast<const mongoc_apm_command_started_t*>(_started_event));
 }
@@ -54,17 +54,17 @@ std::int64_t command_started_event::operation_id() const {
         static_cast<const mongoc_apm_command_started_t*>(_started_event));
 }
 
-bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::oid> command_started_event::service_id() const {
+bsoncxx::stdx::optional<bsoncxx::v_noabi::oid> command_started_event::service_id() const {
     const bson_oid_t* bson_oid = libmongoc::apm_command_started_get_service_id(
         static_cast<const mongoc_apm_command_started_t*>(_started_event));
 
     if (nullptr == bson_oid)
-        return {bsoncxx::v_noabi::stdx::nullopt};
+        return {bsoncxx::stdx::nullopt};
 
     return {bsoncxx::helpers::make_oid(bson_oid)};
 }
 
-bsoncxx::v_noabi::stdx::string_view command_started_event::host() const {
+bsoncxx::stdx::string_view command_started_event::host() const {
     return libmongoc::apm_command_started_get_host(
                static_cast<const mongoc_apm_command_started_t*>(_started_event))
         ->host;

@@ -40,19 +40,20 @@ insert& insert::comment(bsoncxx::v_noabi::types::bson_value::view_or_value comme
     return *this;
 }
 
-const stdx::optional<bool>& insert::bypass_document_validation() const {
+const bsoncxx::stdx::optional<bool>& insert::bypass_document_validation() const {
     return _bypass_document_validation;
 }
 
-const stdx::optional<mongocxx::v_noabi::write_concern>& insert::write_concern() const {
+const bsoncxx::stdx::optional<mongocxx::v_noabi::write_concern>& insert::write_concern() const {
     return _write_concern;
 }
 
-const stdx::optional<bool>& insert::ordered() const {
+const bsoncxx::stdx::optional<bool>& insert::ordered() const {
     return _ordered;
 }
 
-const stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>& insert::comment() const {
+const bsoncxx::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>& insert::comment()
+    const {
     return _comment;
 }
 

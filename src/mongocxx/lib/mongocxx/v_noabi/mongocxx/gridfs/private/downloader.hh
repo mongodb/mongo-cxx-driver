@@ -29,7 +29,7 @@ namespace gridfs {
 
 class downloader::impl {
    public:
-    impl(stdx::optional<cursor> chunks_param,
+    impl(bsoncxx::stdx::optional<cursor> chunks_param,
          chunks_and_bytes_offset start_param,
          std::int32_t chunk_size_param,
          std::int64_t file_len_param,
@@ -39,10 +39,11 @@ class downloader::impl {
           chunk_buffer_offset{0},
           chunk_buffer_ptr{nullptr},
           start{start_param},
-          chunks{chunks_param ? std::move(chunks_param) : stdx::nullopt},
-          chunks_curr{chunks ? stdx::make_optional<cursor::iterator>(chunks->begin())
-                             : stdx::nullopt},
-          chunks_end{chunks ? stdx::make_optional<cursor::iterator>(chunks->end()) : stdx::nullopt},
+          chunks{chunks_param ? std::move(chunks_param) : bsoncxx::stdx::nullopt},
+          chunks_curr{chunks ? bsoncxx::stdx::make_optional<cursor::iterator>(chunks->begin())
+                             : bsoncxx::stdx::nullopt},
+          chunks_end{chunks ? bsoncxx::stdx::make_optional<cursor::iterator>(chunks->end())
+                            : bsoncxx::stdx::nullopt},
           chunks_seen{0},
           chunk_size{chunk_size_param},
           closed{false},
@@ -83,15 +84,15 @@ class downloader::impl {
 
     // A cursor iterating over the chunks documents being read. In the case of a zero-length file,
     // this member does not have a value.
-    stdx::optional<cursor> chunks;
+    bsoncxx::stdx::optional<cursor> chunks;
 
     // An iterator to the current chunk document. In the case of a zero-length file, this member
     // does not have a value.
-    stdx::optional<cursor::iterator> chunks_curr;
+    bsoncxx::stdx::optional<cursor::iterator> chunks_curr;
 
     // An iterator to the end of `chunks`. In the case of a zero-length file, this member does not
     // have a value.
-    stdx::optional<cursor::iterator> chunks_end;
+    bsoncxx::stdx::optional<cursor::iterator> chunks_end;
 
     // The number of chunks already downloaded from the server.
     std::int32_t chunks_seen;

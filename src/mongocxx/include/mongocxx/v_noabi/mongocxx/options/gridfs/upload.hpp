@@ -19,8 +19,6 @@
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 
-#include <mongocxx/stdx.hpp>
-
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
@@ -52,7 +50,8 @@ class upload {
     /// @return
     ///   The chunk size of the GridFS file being uploaded in bytes.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<std::int32_t>&) chunk_size_bytes() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::stdx::optional<std::int32_t>&)
+    chunk_size_bytes() const;
 
     ///
     /// Sets the metadata field of the GridFS file being uploaded. A GridFS file can store arbitrary
@@ -73,12 +72,13 @@ class upload {
     /// @return
     ///   The metadata document of the GridFS file.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(
+        const bsoncxx::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
     metadata() const;
 
    private:
-    stdx::optional<std::int32_t> _chunk_size_bytes;
-    stdx::optional<bsoncxx::v_noabi::document::view_or_value> _metadata;
+    bsoncxx::stdx::optional<std::int32_t> _chunk_size_bytes;
+    bsoncxx::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _metadata;
 };
 
 }  // namespace gridfs

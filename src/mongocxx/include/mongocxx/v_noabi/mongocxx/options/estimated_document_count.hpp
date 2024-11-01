@@ -59,7 +59,7 @@ class estimated_document_count {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/count/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds>&)
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::stdx::optional<std::chrono::milliseconds>&)
     max_time() const;
 
     ///
@@ -87,7 +87,7 @@ class estimated_document_count {
     /// - https://www.mongodb.com/docs/manual/reference/command/count/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>&)
+        const bsoncxx::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>&)
     comment() const;
 
     ///
@@ -114,14 +114,13 @@ class estimated_document_count {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/count/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_preference>&)
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::stdx::optional<mongocxx::v_noabi::read_preference>&)
     read_preference() const;
 
    private:
-    bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds> _max_time;
-    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> _comment;
-    bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_preference> _read_preference;
+    bsoncxx::stdx::optional<std::chrono::milliseconds> _max_time;
+    bsoncxx::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> _comment;
+    bsoncxx::stdx::optional<mongocxx::v_noabi::read_preference> _read_preference;
 };
 
 }  // namespace options

@@ -394,13 +394,13 @@ TEST_CASE("Collection", "[collection]") {
         auto collection_find_called = false;
         auto find_doc = make_document(kvp("a", 1));
         auto doc = find_doc.view();
-        mongocxx::stdx::optional<bool> expected_allow_partial_results;
-        mongocxx::stdx::optional<bsoncxx::stdx::string_view> expected_comment{};
-        mongocxx::stdx::optional<mongocxx::cursor::type> expected_cursor_type{};
-        mongocxx::stdx::optional<bsoncxx::types::bson_value::view> expected_hint{};
-        mongocxx::stdx::optional<bool> expected_no_cursor_timeout;
-        mongocxx::stdx::optional<bsoncxx::document::view> expected_sort{};
-        mongocxx::stdx::optional<read_preference> expected_read_preference{};
+        bsoncxx::stdx::optional<bool> expected_allow_partial_results;
+        bsoncxx::stdx::optional<bsoncxx::stdx::string_view> expected_comment{};
+        bsoncxx::stdx::optional<mongocxx::cursor::type> expected_cursor_type{};
+        bsoncxx::stdx::optional<bsoncxx::types::bson_value::view> expected_hint{};
+        bsoncxx::stdx::optional<bool> expected_no_cursor_timeout;
+        bsoncxx::stdx::optional<bsoncxx::document::view> expected_sort{};
+        bsoncxx::stdx::optional<read_preference> expected_read_preference{};
 
         collection_find_with_opts->interpose([&](mongoc_collection_t*,
                                                  const bson_t* filter,
@@ -536,7 +536,7 @@ TEST_CASE("Collection", "[collection]") {
         auto expected_order_setting = false;
         auto expect_set_bypass_document_validation_called = false;
         auto expected_bypass_document_validation = false;
-        mongocxx::stdx::optional<bsoncxx::types::bson_value::view> expected_hint{};
+        bsoncxx::stdx::optional<bsoncxx::types::bson_value::view> expected_hint{};
 
         auto modification_doc = make_document(kvp("cool", "wow"), kvp("foo", "bar"));
 

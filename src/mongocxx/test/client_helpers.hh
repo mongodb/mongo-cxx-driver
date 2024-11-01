@@ -32,7 +32,6 @@
 #include <mongocxx/collection.hpp>
 #include <mongocxx/options/client.hpp>
 #include <mongocxx/private/libmongoc.hh>
-#include <mongocxx/stdx.hpp>
 
 #include <mongocxx/config/private/prelude.hh>
 
@@ -126,10 +125,12 @@ std::string get_hosts(const client& client = {uri{}, add_test_server_api()});
 ///
 /// Returns none if the path is not found.
 ///
-stdx::optional<bsoncxx::document::value> parse_test_file(std::string path);
+bsoncxx::stdx::optional<bsoncxx::document::value> parse_test_file(std::string path);
 
-using item_t = std::pair<stdx::optional<stdx::string_view>, bsoncxx::types::bson_value::view>;
-using xformer_t = std::function<stdx::optional<item_t>(item_t, bsoncxx::builder::basic::array*)>;
+using item_t = std::pair<bsoncxx::stdx::optional<bsoncxx::stdx::string_view>,
+                         bsoncxx::types::bson_value::view>;
+using xformer_t =
+    std::function<bsoncxx::stdx::optional<item_t>(item_t, bsoncxx::builder::basic::array*)>;
 
 //
 // Transforms a document and returns a copy of it.
@@ -195,7 +196,7 @@ bool matches(bsoncxx::document::view doc,
         }                                                                                          \
     } while (0)
 
-std::string tolowercase(stdx::string_view view);
+std::string tolowercase(bsoncxx::stdx::string_view view);
 
 void check_outcome_collection(mongocxx::collection* coll, bsoncxx::document::view expected);
 

@@ -56,7 +56,7 @@ struct URIOptionsTest {
     }
 };
 
-static bsoncxx::document::value _doc_from_file(mongocxx::stdx::string_view sub_path) {
+static bsoncxx::document::value _doc_from_file(bsoncxx::stdx::string_view sub_path) {
     const char* test_path = std::getenv("URI_OPTIONS_TESTS_PATH");
     REQUIRE(test_path);
 

@@ -422,9 +422,3 @@
 /// @namespace mongocxx::v_noabi::result::gridfs
 /// @copydoc mongocxx::result::gridfs
 ///
-
-///
-/// @namespace mongocxx::v_noabi::stdx
-/// @copydoc mongocxx::stdx
-/// @deprecated Use @ref bsoncxx::v_noabi::stdx instead.
-///

@@ -23,8 +23,6 @@
 #include <bsoncxx/document/view_or_value.hpp>
 #include <bsoncxx/stdx/optional.hpp>
 
-#include <mongocxx/stdx.hpp>
-
 #include <mongocxx/config/prelude.hpp>
 
 namespace mongocxx {
@@ -99,7 +97,8 @@ class data_key {
     /// @return
     ///   An optional document containing the master key.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+    MONGOCXX_ABI_EXPORT_CDECL(
+        const bsoncxx::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
     master_key() const;
 
     ///
@@ -161,16 +160,16 @@ class data_key {
     /// @see
     /// - https://www.mongodb.com/docs/v6.0/reference/method/KeyVault.createKey/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const stdx::optional<key_material_type>&) key_material();
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::stdx::optional<key_material_type>&) key_material();
 
    private:
     friend ::mongocxx::v_noabi::client_encryption;
 
     void* convert() const;
 
-    stdx::optional<bsoncxx::v_noabi::document::view_or_value> _master_key;
+    bsoncxx::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _master_key;
     std::vector<std::string> _key_alt_names;
-    stdx::optional<key_material_type> _key_material;
+    bsoncxx::stdx::optional<key_material_type> _key_material;
 };
 
 }  // namespace options

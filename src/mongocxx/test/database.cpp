@@ -84,7 +84,7 @@ TEST_CASE("mongocxx::database copy constructor", "[database]") {
         database database_a = client["a"];
         database database_b{database_a};
         REQUIRE(database_b);
-        REQUIRE(database_b.name() == stdx::string_view{"a"});
+        REQUIRE(database_b.name() == bsoncxx::stdx::string_view{"a"});
     }
 
     SECTION("constructing from invalid") {
@@ -104,7 +104,7 @@ TEST_CASE("mongocxx::database copy assignment operator", "[database]") {
         database database_b = client["b1"];
         database_b = database_a;
         REQUIRE(database_b);
-        REQUIRE(database_b.name() == stdx::string_view{"a1"});
+        REQUIRE(database_b.name() == bsoncxx::stdx::string_view{"a1"});
     }
 
     SECTION("assigning invalid to valid") {
@@ -119,7 +119,7 @@ TEST_CASE("mongocxx::database copy assignment operator", "[database]") {
         database database_b;
         database_b = database_a;
         REQUIRE(database_b);
-        REQUIRE(database_b.name() == stdx::string_view{"a3"});
+        REQUIRE(database_b.name() == bsoncxx::stdx::string_view{"a3"});
     }
 
     SECTION("assigning invalid to invalid") {
@@ -131,7 +131,7 @@ TEST_CASE("mongocxx::database copy assignment operator", "[database]") {
 }
 
 TEST_CASE("A database", "[database]") {
-    stdx::string_view database_name{"database"};
+    bsoncxx::stdx::string_view database_name{"database"};
     MOCK_CLIENT;
     MOCK_DATABASE;
 
@@ -143,7 +143,7 @@ TEST_CASE("A database", "[database]") {
         bool called = false;
         get_database->interpose([&](mongoc_client_t*, const char* d_name) {
             called = true;
-            REQUIRE(database_name == stdx::string_view{d_name});
+            REQUIRE(database_name == bsoncxx::stdx::string_view{d_name});
             return nullptr;
         });
 
@@ -290,7 +290,7 @@ TEST_CASE("A database", "[database]") {
 
     SECTION("may create a collection") {
         MOCK_COLLECTION;
-        stdx::string_view collection_name{"dummy_collection"};
+        bsoncxx::stdx::string_view collection_name{"dummy_collection"};
         database database = mongo_client[database_name];
         collection obtained_collection = database[collection_name];
         REQUIRE(obtained_collection.name() == collection_name);
@@ -325,7 +325,7 @@ TEST_CASE("Database integration tests", "[database]") {
     instance::current();
 
     client mongo_client{uri{}, test_util::add_test_server_api()};
-    stdx::string_view database_name{"database"};
+    bsoncxx::stdx::string_view database_name{"database"};
     database database = mongo_client[database_name];
 
     auto case_insensitive_collation = make_document(kvp("locale", "en_US"), kvp("strength", 2));
@@ -360,12 +360,13 @@ TEST_CASE("Database integration tests", "[database]") {
             auto results = get_results(std::move(cursor));
 
             REQUIRE(results.size() == 1);
-            REQUIRE(results[0].view()["name"].get_string().value == stdx::string_view("Jane"));
+            REQUIRE(results[0].view()["name"].get_string().value ==
+                    bsoncxx::stdx::string_view("Jane"));
         }
     }
 
     SECTION("A database may create a collection via create_collection") {
-        stdx::string_view collection_name{"collection_create_with_opts"};
+        bsoncxx::stdx::string_view collection_name{"collection_create_with_opts"};
 
         SECTION("without any options") {
             database[collection_name].drop();
@@ -425,7 +426,7 @@ TEST_CASE("Database integration tests", "[database]") {
     }
 
     SECTION("A database may be dropped") {
-        stdx::string_view collection_name{"collection_drop"};
+        bsoncxx::stdx::string_view collection_name{"collection_drop"};
         database[collection_name].drop();
 
         database.create_collection(collection_name);
@@ -581,7 +582,7 @@ TEST_CASE("serviceId presence depends on load-balancing mode") {
     // Adding ?loadBalanced=true results in an error in the C driver because
     // the initial hello response from the server does not include serviceId.
     client mongo_client(uri("mongodb://localhost:27017/"), client_opts);
-    stdx::string_view database_name{"database"};
+    bsoncxx::stdx::string_view database_name{"database"};
     database database = mongo_client[database_name];
 
     // Run a command, triggering start and completion events:

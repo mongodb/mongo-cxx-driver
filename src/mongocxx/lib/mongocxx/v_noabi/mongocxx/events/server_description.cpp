@@ -34,7 +34,7 @@ std::int64_t server_description::round_trip_time() const {
         static_cast<const mongoc_server_description_t*>(_sd));
 }
 
-bsoncxx::v_noabi::stdx::string_view server_description::type() const {
+bsoncxx::stdx::string_view server_description::type() const {
     return libmongoc::server_description_type(static_cast<const mongoc_server_description_t*>(_sd));
 }
 
@@ -48,7 +48,7 @@ bsoncxx::v_noabi::document::view server_description::hello() const {
     return {bson_get_data(reply), reply->len};
 }
 
-bsoncxx::v_noabi::stdx::string_view server_description::host() const {
+bsoncxx::stdx::string_view server_description::host() const {
     return libmongoc::server_description_host(static_cast<const mongoc_server_description_t*>(_sd))
         ->host;
 }

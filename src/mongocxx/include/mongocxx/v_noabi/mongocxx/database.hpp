@@ -203,9 +203,9 @@ class database {
     ///   mongocxx::v_noabi::operation_exception if the operation fails.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(mongocxx::v_noabi::collection)
-    create_collection(stdx::string_view name,
+    create_collection(bsoncxx::stdx::string_view name,
                       bsoncxx::v_noabi::document::view_or_value collection_options = {},
-                      const stdx::optional<write_concern>& write_concern = {});
+                      const bsoncxx::stdx::optional<write_concern>& write_concern = {});
 
     ///
     /// Explicitly creates a collection in this database with the specified options.
@@ -231,9 +231,9 @@ class database {
     ///
     MONGOCXX_ABI_EXPORT_CDECL(mongocxx::v_noabi::collection)
     create_collection(const client_session& session,
-                      stdx::string_view name,
+                      bsoncxx::stdx::string_view name,
                       bsoncxx::v_noabi::document::view_or_value collection_options = {},
-                      const stdx::optional<write_concern>& write_concern = {});
+                      const bsoncxx::stdx::optional<write_concern>& write_concern = {});
 
     ///
     /// Explicitly creates a collection in this database with the specified options.
@@ -259,14 +259,14 @@ class database {
     MONGOCXX_DEPRECATED MONGOCXX_ABI_EXPORT_CDECL(mongocxx::v_noabi::collection)
         create_collection(bsoncxx::v_noabi::string::view_or_value name,
                           const options::create_collection_deprecated& collection_options,
-                          const stdx::optional<write_concern>& write_concern = {}) {
+                          const bsoncxx::stdx::optional<write_concern>& write_concern = {}) {
         return create_collection_deprecated(name, collection_options, write_concern);
     }
 
     MONGOCXX_ABI_EXPORT_CDECL(mongocxx::v_noabi::collection)
     create_collection_deprecated(bsoncxx::v_noabi::string::view_or_value name,
                                  const options::create_collection_deprecated& collection_options,
-                                 const stdx::optional<write_concern>& write_concern = {});
+                                 const bsoncxx::stdx::optional<write_concern>& write_concern = {});
 
     ///
     /// Explicitly creates a collection in this database with the specified options.
@@ -295,7 +295,7 @@ class database {
         create_collection(const client_session& session,
                           bsoncxx::v_noabi::string::view_or_value name,
                           const options::create_collection_deprecated& collection_options,
-                          const stdx::optional<write_concern>& write_concern = {}) {
+                          const bsoncxx::stdx::optional<write_concern>& write_concern = {}) {
         return create_collection_deprecated(session, name, collection_options, write_concern);
     }
 
@@ -326,7 +326,7 @@ class database {
     create_collection_deprecated(const client_session& session,
                                  bsoncxx::v_noabi::string::view_or_value name,
                                  const options::create_collection_deprecated& collection_options,
-                                 const stdx::optional<write_concern>& write_concern = {});
+                                 const bsoncxx::stdx::optional<write_concern>& write_concern = {});
 
     ///
     /// Drops the database and all its collections.
@@ -342,8 +342,7 @@ class database {
     /// - https://www.mongodb.com/docs/manual/reference/command/dropDatabase/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(void)
-    drop(const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>& write_concern =
-             {});
+    drop(const bsoncxx::stdx::optional<mongocxx::v_noabi::write_concern>& write_concern = {});
 
     ///
     /// Drops the database and all its collections.
@@ -362,8 +361,7 @@ class database {
     ///
     MONGOCXX_ABI_EXPORT_CDECL(void)
     drop(const client_session& session,
-         const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>& write_concern =
-             {});
+         const bsoncxx::stdx::optional<mongocxx::v_noabi::write_concern>& write_concern = {});
 
     ///
     /// Checks whether this database contains a collection having the given name.
@@ -451,7 +449,7 @@ class database {
     ///
     /// @return the name of this database.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(stdx::string_view) name() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::stdx::string_view) name() const;
 
     ///
     /// Sets the read_concern for this database.
@@ -644,15 +642,15 @@ class database {
 
     mongocxx::v_noabi::collection _create_collection(
         const client_session* session,
-        stdx::string_view name,
+        bsoncxx::stdx::string_view name,
         bsoncxx::v_noabi::document::view_or_value collection_options,
-        const stdx::optional<mongocxx::v_noabi::write_concern>& write_concern);
+        const bsoncxx::stdx::optional<mongocxx::v_noabi::write_concern>& write_concern);
 
     mongocxx::v_noabi::collection _create_collection_deprecated(
         const client_session* session,
         bsoncxx::v_noabi::string::view_or_value name,
         const options::create_collection_deprecated& collection_options,
-        const stdx::optional<mongocxx::v_noabi::write_concern>& write_concern);
+        const bsoncxx::stdx::optional<mongocxx::v_noabi::write_concern>& write_concern);
 
     cursor _list_collections(const client_session* session,
                              bsoncxx::v_noabi::document::view_or_value filter);
@@ -660,9 +658,8 @@ class database {
     std::vector<std::string> _list_collection_names(
         const client_session* session, bsoncxx::v_noabi::document::view_or_value filter);
 
-    void _drop(
-        const client_session* session,
-        const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>& write_concern);
+    void _drop(const client_session* session,
+               const bsoncxx::stdx::optional<mongocxx::v_noabi::write_concern>& write_concern);
 
     change_stream _watch(const client_session* session,
                          const pipeline& pipe,
