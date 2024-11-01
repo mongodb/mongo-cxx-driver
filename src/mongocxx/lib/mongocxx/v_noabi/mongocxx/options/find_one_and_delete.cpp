@@ -64,40 +64,41 @@ find_one_and_delete& find_one_and_delete::comment(
     return *this;
 }
 
-const bsoncxx::stdx::optional<mongocxx::v_noabi::hint>& find_one_and_delete::hint() const {
+const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint>& find_one_and_delete::hint() const {
     return _hint;
 }
 
-const bsoncxx::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&
+const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&
 find_one_and_delete::collation() const {
     return _collation;
 }
 
-const bsoncxx::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&
+const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&
 find_one_and_delete::projection() const {
     return _projection;
 }
 
-const bsoncxx::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&
+const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&
 find_one_and_delete::sort() const {
     return _ordering;
 }
 
-const bsoncxx::stdx::optional<std::chrono::milliseconds>& find_one_and_delete::max_time() const {
+const bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds>& find_one_and_delete::max_time()
+    const {
     return _max_time;
 }
 
-const bsoncxx::stdx::optional<mongocxx::v_noabi::write_concern>&
+const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>&
 find_one_and_delete::write_concern() const {
     return _write_concern;
 }
 
-const bsoncxx::stdx::optional<bsoncxx::v_noabi::document::view_or_value> find_one_and_delete::let()
-    const {
+const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>
+find_one_and_delete::let() const {
     return _let;
 }
 
-const bsoncxx::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>
+const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>
 find_one_and_delete::comment() const {
     return _comment;
 }

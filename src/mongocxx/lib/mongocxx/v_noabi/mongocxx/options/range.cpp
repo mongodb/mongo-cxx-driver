@@ -25,8 +25,8 @@ range& range::min(bsoncxx::v_noabi::types::bson_value::view_or_value value) {
     return *this;
 }
 
-const bsoncxx::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>& range::min()
-    const {
+const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>&
+range::min() const {
     return _min;
 }
 
@@ -35,8 +35,8 @@ range& range::max(bsoncxx::v_noabi::types::bson_value::view_or_value value) {
     return *this;
 }
 
-const bsoncxx::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>& range::max()
-    const {
+const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>&
+range::max() const {
     return _max;
 }
 
@@ -50,11 +50,11 @@ range& range::trim_factor(std::int32_t value) {
     return *this;
 }
 
-const bsoncxx::stdx::optional<std::int64_t>& range::sparsity() const {
+const bsoncxx::v_noabi::stdx::optional<std::int64_t>& range::sparsity() const {
     return _sparsity;
 }
 
-const bsoncxx::stdx::optional<std::int32_t>& range::trim_factor() const {
+const bsoncxx::v_noabi::stdx::optional<std::int32_t>& range::trim_factor() const {
     return _trim_factor;
 }
 
@@ -63,7 +63,7 @@ range& range::precision(std::int32_t value) {
     return *this;
 }
 
-const bsoncxx::stdx::optional<std::int32_t>& range::precision() const {
+const bsoncxx::v_noabi::stdx::optional<std::int32_t>& range::precision() const {
     return _precision;
 }
 

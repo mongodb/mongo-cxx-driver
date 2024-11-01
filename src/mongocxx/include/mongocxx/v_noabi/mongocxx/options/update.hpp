@@ -57,7 +57,7 @@ class update {
     ///
     /// @return The optional value of the bypass_document_validation option.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::stdx::optional<bool>&)
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<bool>&)
     bypass_document_validation() const;
 
     ///
@@ -86,7 +86,7 @@ class update {
     /// - https://www.mongodb.com/docs/manual/reference/collation/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
     collation() const;
 
     ///
@@ -109,7 +109,8 @@ class update {
     ///
     /// @return The current hint, if one is set.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::stdx::optional<mongocxx::v_noabi::hint>&) hint() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint>&)
+    hint() const;
 
     ///
     /// Set the value of the let option.
@@ -130,7 +131,7 @@ class update {
     ///  The current let option.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::stdx::optional<bsoncxx::v_noabi::document::view_or_value>)
+        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>)
     let() const;
 
     ///
@@ -153,7 +154,7 @@ class update {
     ///  The current comment option.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>)
+        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>)
     comment() const;
 
     ///
@@ -179,7 +180,7 @@ class update {
     ///
     /// @return The optional value of the upsert option.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::stdx::optional<bool>&) upsert() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<bool>&) upsert() const;
 
     ///
     /// Sets the write_concern for this operation.
@@ -205,7 +206,8 @@ class update {
     /// @see
     /// - https://www.mongodb.com/docs/manual/core/write-concern/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::stdx::optional<mongocxx::v_noabi::write_concern>&)
+    MONGOCXX_ABI_EXPORT_CDECL(
+        const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>&)
     write_concern() const;
 
     ///
@@ -234,18 +236,18 @@ class update {
     /// - https://www.mongodb.com/docs/manual/reference/command/update/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::stdx::optional<bsoncxx::v_noabi::array::view_or_value>&)
+        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::array::view_or_value>&)
     array_filters() const;
 
    private:
-    bsoncxx::stdx::optional<bool> _bypass_document_validation;
-    bsoncxx::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _collation;
-    bsoncxx::stdx::optional<bool> _upsert;
-    bsoncxx::stdx::optional<mongocxx::v_noabi::write_concern> _write_concern;
-    bsoncxx::stdx::optional<bsoncxx::v_noabi::array::view_or_value> _array_filters;
-    bsoncxx::stdx::optional<mongocxx::v_noabi::hint> _hint;
-    bsoncxx::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _let;
-    bsoncxx::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> _comment;
+    bsoncxx::v_noabi::stdx::optional<bool> _bypass_document_validation;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _collation;
+    bsoncxx::v_noabi::stdx::optional<bool> _upsert;
+    bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern> _write_concern;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::array::view_or_value> _array_filters;
+    bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint> _hint;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _let;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> _comment;
 };
 
 }  // namespace options

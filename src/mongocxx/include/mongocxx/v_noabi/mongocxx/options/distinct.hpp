@@ -63,7 +63,7 @@ class distinct {
     /// - https://www.mongodb.com/docs/manual/reference/command/distinct/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
     collation() const;
 
     ///
@@ -89,7 +89,7 @@ class distinct {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/distinct/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::stdx::optional<std::chrono::milliseconds>&)
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds>&)
     max_time() const;
 
     ///
@@ -117,7 +117,7 @@ class distinct {
     /// - https://www.mongodb.com/docs/manual/reference/command/distinct/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>&)
+        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>&)
     comment() const;
 
     ///
@@ -143,14 +143,15 @@ class distinct {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/distinct/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::stdx::optional<mongocxx::v_noabi::read_preference>&)
+    MONGOCXX_ABI_EXPORT_CDECL(
+        const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_preference>&)
     read_preference() const;
 
    private:
-    bsoncxx::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _collation;
-    bsoncxx::stdx::optional<std::chrono::milliseconds> _max_time;
-    bsoncxx::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> _comment;
-    bsoncxx::stdx::optional<mongocxx::v_noabi::read_preference> _read_preference;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _collation;
+    bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds> _max_time;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> _comment;
+    bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_preference> _read_preference;
 };
 
 }  // namespace options

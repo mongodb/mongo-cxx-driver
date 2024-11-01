@@ -60,7 +60,7 @@ class index_view {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::stdx::optional<std::chrono::milliseconds>&)
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds>&)
     max_time() const;
 
     ///
@@ -88,7 +88,8 @@ class index_view {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/findAndModify/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::stdx::optional<mongocxx::v_noabi::write_concern>&)
+    MONGOCXX_ABI_EXPORT_CDECL(
+        const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>&)
     write_concern() const;
 
     ///
@@ -140,13 +141,14 @@ class index_view {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/createIndexes
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::stdx::optional<bsoncxx::v_noabi::document::value>)
+    MONGOCXX_ABI_EXPORT_CDECL(
+        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value>)
     commit_quorum() const;
 
    private:
-    bsoncxx::stdx::optional<std::chrono::milliseconds> _max_time;
-    bsoncxx::stdx::optional<mongocxx::v_noabi::write_concern> _write_concern;
-    bsoncxx::stdx::optional<bsoncxx::v_noabi::document::value> _commit_quorum;
+    bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds> _max_time;
+    bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern> _write_concern;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> _commit_quorum;
 };
 
 }  // namespace options

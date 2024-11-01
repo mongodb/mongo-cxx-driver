@@ -85,49 +85,52 @@ aggregate& aggregate::comment(bsoncxx::v_noabi::types::bson_value::view_or_value
     return *this;
 }
 
-const bsoncxx::stdx::optional<bool>& aggregate::allow_disk_use() const {
+const bsoncxx::v_noabi::stdx::optional<bool>& aggregate::allow_disk_use() const {
     return _allow_disk_use;
 }
 
-const bsoncxx::stdx::optional<std::int32_t>& aggregate::batch_size() const {
+const bsoncxx::v_noabi::stdx::optional<std::int32_t>& aggregate::batch_size() const {
     return _batch_size;
 }
 
-const bsoncxx::stdx::optional<bsoncxx::v_noabi::document::view_or_value>& aggregate::collation()
-    const {
+const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&
+aggregate::collation() const {
     return _collation;
 }
 
-const bsoncxx::stdx::optional<bsoncxx::v_noabi::document::view_or_value>& aggregate::let() const {
+const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>& aggregate::let()
+    const {
     return _let;
 }
 
-const bsoncxx::stdx::optional<std::chrono::milliseconds>& aggregate::max_time() const {
+const bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds>& aggregate::max_time() const {
     return _max_time;
 }
 
-const bsoncxx::stdx::optional<mongocxx::v_noabi::read_preference>& aggregate::read_preference()
-    const {
+const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_preference>&
+aggregate::read_preference() const {
     return _read_preference;
 }
 
-const bsoncxx::stdx::optional<bool>& aggregate::bypass_document_validation() const {
+const bsoncxx::v_noabi::stdx::optional<bool>& aggregate::bypass_document_validation() const {
     return _bypass_document_validation;
 }
 
-const bsoncxx::stdx::optional<mongocxx::v_noabi::hint>& aggregate::hint() const {
+const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint>& aggregate::hint() const {
     return _hint;
 }
 
-const bsoncxx::stdx::optional<mongocxx::v_noabi::read_concern>& aggregate::read_concern() const {
+const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_concern>& aggregate::read_concern()
+    const {
     return _read_concern;
 }
 
-const bsoncxx::stdx::optional<mongocxx::v_noabi::write_concern>& aggregate::write_concern() const {
+const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>& aggregate::write_concern()
+    const {
     return _write_concern;
 }
 
-const bsoncxx::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>&
+const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>&
 aggregate::comment() const {
     return _comment;
 }

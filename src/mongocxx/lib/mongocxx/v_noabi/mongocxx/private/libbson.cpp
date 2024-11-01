@@ -56,14 +56,15 @@ void scoped_bson_t::init_from_static(bsoncxx::document::value doc) {
     this->init_from_static(bsoncxx::document::view_or_value(std::move(doc)));
 }
 
-scoped_bson_t::scoped_bson_t(bsoncxx::stdx::optional<bsoncxx::document::view_or_value> doc) {
+scoped_bson_t::scoped_bson_t(
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::document::view_or_value> doc) {
     if (doc) {
         this->init_from_static(std::move(*doc));
     }
 }
 
 void scoped_bson_t::init_from_static(
-    bsoncxx::stdx::optional<bsoncxx::v_noabi::document::view_or_value> doc) {
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> doc) {
     if (doc) {
         this->init_from_static(std::move(*doc));
     }

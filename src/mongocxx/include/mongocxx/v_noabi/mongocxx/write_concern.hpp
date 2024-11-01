@@ -178,7 +178,7 @@ class write_concern {
     /// @param tag
     ///   The string representing on of the "getLastErrorModes" in the replica set configuration.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(void) tag(bsoncxx::stdx::string_view tag);
+    MONGOCXX_ABI_EXPORT_CDECL(void) tag(bsoncxx::v_noabi::stdx::string_view tag);
 
     ///
     /// Sets an upper bound on the time a write concern can take to be satisfied. If the write
@@ -210,7 +210,7 @@ class write_concern {
     ///
     /// @return The number of required nodes.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::stdx::optional<std::int32_t>) nodes() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<std::int32_t>) nodes() const;
 
     ///
     /// Gets the current acknowledgment level.
@@ -227,7 +227,7 @@ class write_concern {
     ///
     /// @return The current getLastErrorMode.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::stdx::optional<std::string>) tag() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<std::string>) tag() const;
 
     ///
     /// Gets whether the majority of nodes is currently required by this write_concern.

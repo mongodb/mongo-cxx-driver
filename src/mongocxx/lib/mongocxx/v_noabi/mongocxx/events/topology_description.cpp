@@ -84,7 +84,7 @@ topology_description::topology_description(void* td) : _td(td) {}
 
 topology_description::~topology_description() = default;
 
-bsoncxx::stdx::string_view topology_description::type() const {
+bsoncxx::v_noabi::stdx::string_view topology_description::type() const {
     return libmongoc::topology_description_type(static_cast<mongoc_topology_description_t*>(_td));
 }
 

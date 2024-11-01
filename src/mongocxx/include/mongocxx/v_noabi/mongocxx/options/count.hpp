@@ -64,7 +64,7 @@ class count {
     /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
     collation() const;
 
     ///
@@ -90,7 +90,8 @@ class count {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::stdx::optional<mongocxx::v_noabi::hint>&) hint() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint>&)
+    hint() const;
 
     ///
     /// Set the value of the comment option.
@@ -117,7 +118,7 @@ class count {
     /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>&)
+        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>&)
     comment() const;
 
     ///
@@ -143,7 +144,7 @@ class count {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::stdx::optional<std::int64_t>&) limit() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<std::int64_t>&) limit() const;
 
     ///
     /// Sets the maximum amount of time for this operation to run (server-side) in milliseconds.
@@ -168,7 +169,7 @@ class count {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::stdx::optional<std::chrono::milliseconds>&)
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds>&)
     max_time() const;
 
     ///
@@ -194,7 +195,7 @@ class count {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::stdx::optional<std::int64_t>&) skip() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<std::int64_t>&) skip() const;
 
     ///
     /// Sets the read_preference for this operation.
@@ -219,17 +220,18 @@ class count {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/command/aggregate/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::stdx::optional<mongocxx::v_noabi::read_preference>&)
+    MONGOCXX_ABI_EXPORT_CDECL(
+        const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_preference>&)
     read_preference() const;
 
    private:
-    bsoncxx::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _collation;
-    bsoncxx::stdx::optional<mongocxx::v_noabi::hint> _hint;
-    bsoncxx::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> _comment;
-    bsoncxx::stdx::optional<std::int64_t> _limit;
-    bsoncxx::stdx::optional<std::chrono::milliseconds> _max_time;
-    bsoncxx::stdx::optional<std::int64_t> _skip;
-    bsoncxx::stdx::optional<mongocxx::v_noabi::read_preference> _read_preference;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _collation;
+    bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint> _hint;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> _comment;
+    bsoncxx::v_noabi::stdx::optional<std::int64_t> _limit;
+    bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds> _max_time;
+    bsoncxx::v_noabi::stdx::optional<std::int64_t> _skip;
+    bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_preference> _read_preference;
 };
 
 }  // namespace options

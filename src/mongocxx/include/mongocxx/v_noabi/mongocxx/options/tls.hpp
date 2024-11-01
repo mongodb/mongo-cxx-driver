@@ -51,7 +51,7 @@ class tls {
     /// @return The path to the .pem file.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::stdx::optional<bsoncxx::v_noabi::string::view_or_value>&)
+        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value>&)
     pem_file() const;
 
     ///
@@ -73,7 +73,7 @@ class tls {
     /// @return The pass phrase.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::stdx::optional<bsoncxx::v_noabi::string::view_or_value>&)
+        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value>&)
     pem_password() const;
 
     ///
@@ -95,7 +95,7 @@ class tls {
     /// @return The path to the CA file.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::stdx::optional<bsoncxx::v_noabi::string::view_or_value>&)
+        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value>&)
     ca_file() const;
 
     ///
@@ -116,7 +116,7 @@ class tls {
     /// @return The path to the CA directory.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::stdx::optional<bsoncxx::v_noabi::string::view_or_value>&)
+        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value>&)
     ca_dir() const;
 
     ///
@@ -137,7 +137,7 @@ class tls {
     /// @return The path to the revoked certificates file.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::stdx::optional<bsoncxx::v_noabi::string::view_or_value>&)
+        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value>&)
     crl_file() const;
 
     ///
@@ -157,16 +157,16 @@ class tls {
     ///
     /// @return Whether or not the driver will check the server's CA file.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::stdx::optional<bool>&)
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<bool>&)
     allow_invalid_certificates() const;
 
    private:
-    bsoncxx::stdx::optional<bsoncxx::v_noabi::string::view_or_value> _pem_file;
-    bsoncxx::stdx::optional<bsoncxx::v_noabi::string::view_or_value> _pem_password;
-    bsoncxx::stdx::optional<bsoncxx::v_noabi::string::view_or_value> _ca_file;
-    bsoncxx::stdx::optional<bsoncxx::v_noabi::string::view_or_value> _ca_dir;
-    bsoncxx::stdx::optional<bsoncxx::v_noabi::string::view_or_value> _crl_file;
-    bsoncxx::stdx::optional<bool> _allow_invalid_certificates;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> _pem_file;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> _pem_password;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> _ca_file;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> _ca_dir;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> _crl_file;
+    bsoncxx::v_noabi::stdx::optional<bool> _allow_invalid_certificates;
 };
 
 }  // namespace options

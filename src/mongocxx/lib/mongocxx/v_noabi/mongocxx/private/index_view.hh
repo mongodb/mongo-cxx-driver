@@ -67,9 +67,9 @@ class index_view::impl {
         return libmongoc::collection_find_indexes_with_opts(_coll, nullptr);
     }
 
-    bsoncxx::stdx::optional<std::string> create_one(const client_session* session,
-                                                    const index_model& model,
-                                                    const options::index_view& options) {
+    bsoncxx::v_noabi::stdx::optional<std::string> create_one(const client_session* session,
+                                                             const index_model& model,
+                                                             const options::index_view& options) {
         const auto result = create_many(session, std::vector<index_model>{model}, options);
         auto result_view = result.view();
 
@@ -95,15 +95,15 @@ class index_view::impl {
 
         if (note && bsoncxx::v_noabi::string::to_string(note.get_string().value) ==
                         "all indexes already exist") {
-            return bsoncxx::stdx::nullopt;
+            return bsoncxx::v_noabi::stdx::nullopt;
         }
 
         if (auto name = model.options()["name"]) {
-            return bsoncxx::stdx::make_optional(
+            return bsoncxx::v_noabi::stdx::make_optional(
                 bsoncxx::v_noabi::string::to_string(name.get_value().get_string().value));
         }
 
-        return bsoncxx::stdx::make_optional(get_index_name_from_keys(model.keys()));
+        return bsoncxx::v_noabi::stdx::make_optional(get_index_name_from_keys(model.keys()));
     }
 
     bsoncxx::v_noabi::document::value create_many(const client_session* session,
@@ -184,9 +184,9 @@ class index_view::impl {
     }
 
     void drop_one(const client_session* session,
-                  bsoncxx::stdx::string_view name,
+                  bsoncxx::v_noabi::stdx::string_view name,
                   const options::index_view& options) {
-        if (name == bsoncxx::stdx::string_view{"*"}) {
+        if (name == bsoncxx::v_noabi::stdx::string_view{"*"}) {
             throw logic_error(error_code::k_invalid_parameter);
         }
 

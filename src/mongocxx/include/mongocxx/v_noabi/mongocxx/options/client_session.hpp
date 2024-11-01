@@ -97,16 +97,16 @@ class client_session {
     ///
     /// @return The default transaction options.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::stdx::optional<transaction>&)
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<transaction>&)
     default_transaction_opts() const;
 
    private:
     friend ::mongocxx::v_noabi::client_session;
 
-    bsoncxx::stdx::optional<bool> _causal_consistency;
-    bsoncxx::stdx::optional<bool> _enable_snapshot_reads;
+    bsoncxx::v_noabi::stdx::optional<bool> _causal_consistency;
+    bsoncxx::v_noabi::stdx::optional<bool> _enable_snapshot_reads;
 
-    bsoncxx::stdx::optional<transaction> _default_transaction_opts;
+    bsoncxx::v_noabi::stdx::optional<transaction> _default_transaction_opts;
 };
 
 }  // namespace options

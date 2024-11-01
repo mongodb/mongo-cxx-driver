@@ -46,7 +46,7 @@ enum class log_level {
 ///
 /// @return a std::string representation of the type.
 ///
-MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::stdx::string_view) to_string(log_level level);
+MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::string_view) to_string(log_level level);
 
 ///
 /// The interface that all user-defined loggers must implement.
@@ -71,8 +71,8 @@ class logger {
     /// @param message
     ///   The text of the current log message.
     virtual void operator()(log_level level,
-                            bsoncxx::stdx::string_view domain,
-                            bsoncxx::stdx::string_view message) noexcept = 0;
+                            bsoncxx::v_noabi::stdx::string_view domain,
+                            bsoncxx::v_noabi::stdx::string_view message) noexcept = 0;
 
    protected:
     ///
@@ -102,7 +102,7 @@ using ::mongocxx::v_noabi::to_string;
 namespace mongocxx {
 
 /// @ref mongocxx::v_noabi::to_string(v_noabi::log_level level)
-bsoncxx::stdx::string_view to_string(v_noabi::log_level level);
+bsoncxx::v_noabi::stdx::string_view to_string(v_noabi::log_level level);
 
 }  // namespace mongocxx
 

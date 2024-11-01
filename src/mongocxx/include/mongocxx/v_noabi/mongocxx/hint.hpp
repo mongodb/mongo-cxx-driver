@@ -93,8 +93,8 @@ class hint {
     }
 
    private:
-    bsoncxx::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _index_doc;
-    bsoncxx::stdx::optional<bsoncxx::v_noabi::string::view_or_value> _index_string;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _index_doc;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> _index_string;
 };
 
 ///

@@ -38,17 +38,18 @@ estimated_document_count& estimated_document_count::comment(
     return *this;
 }
 
-const bsoncxx::stdx::optional<std::chrono::milliseconds>& estimated_document_count::max_time()
-    const {
+const bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds>&
+estimated_document_count::max_time() const {
     return _max_time;
 }
 
-const bsoncxx::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>&
+const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>&
 estimated_document_count::comment() const {
     return _comment;
 }
 
-const bsoncxx::stdx::optional<read_preference>& estimated_document_count::read_preference() const {
+const bsoncxx::v_noabi::stdx::optional<read_preference>& estimated_document_count::read_preference()
+    const {
     return _read_preference;
 }
 

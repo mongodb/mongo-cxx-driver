@@ -76,7 +76,7 @@ class change_stream {
     ///   The current fullDocument option.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::stdx::optional<bsoncxx::v_noabi::string::view_or_value>&)
+        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value>&)
     full_document() const;
 
     ///
@@ -108,7 +108,7 @@ class change_stream {
     ///   The current fullDocumentBeforeChange option.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::stdx::optional<bsoncxx::v_noabi::string::view_or_value>&)
+        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value>&)
     full_document_before_change() const;
 
     ///
@@ -129,7 +129,8 @@ class change_stream {
     /// @return
     ///   The current batch size.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::stdx::optional<std::int32_t>&) batch_size() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<std::int32_t>&)
+    batch_size() const;
 
     ///
     /// Sets the current value of the comment option.
@@ -151,7 +152,7 @@ class change_stream {
     ///   The current comment option.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>&)
+        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>&)
     comment() const;
 
     ///
@@ -179,7 +180,7 @@ class change_stream {
     ///   The current resumeToken.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
     resume_after() const;
 
     ///
@@ -209,7 +210,7 @@ class change_stream {
     ///   The current startAfter token.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
     start_after() const;
 
     ///
@@ -232,7 +233,7 @@ class change_stream {
     ///   The current collation.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
     collation() const;
 
     ///
@@ -254,7 +255,7 @@ class change_stream {
     /// @return
     ///   The current max time (in milliseconds).
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::stdx::optional<std::chrono::milliseconds>&)
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds>&)
     max_await_time() const;
 
     ///
@@ -281,15 +282,16 @@ class change_stream {
 
     bsoncxx::v_noabi::document::value as_bson() const;
 
-    bsoncxx::stdx::optional<bsoncxx::v_noabi::string::view_or_value> _full_document;
-    bsoncxx::stdx::optional<bsoncxx::v_noabi::string::view_or_value> _full_document_before_change;
-    bsoncxx::stdx::optional<std::int32_t> _batch_size;
-    bsoncxx::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> _comment;
-    bsoncxx::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _collation;
-    bsoncxx::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _resume_after;
-    bsoncxx::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _start_after;
-    bsoncxx::stdx::optional<std::chrono::milliseconds> _max_await_time;
-    // _start_at_operation_time is not wrapped in a bsoncxx::stdx::optional because of a
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value> _full_document;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value>
+        _full_document_before_change;
+    bsoncxx::v_noabi::stdx::optional<std::int32_t> _batch_size;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value> _comment;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _collation;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _resume_after;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _start_after;
+    bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds> _max_await_time;
+    // _start_at_operation_time is not wrapped in a bsoncxx::v_noabi::stdx::optional because of a
     // longstanding bug in the MNMLSTC polyfill that has been fixed on master, but not in the latest
     // release: https://github.com/mnmlstc/core/pull/23
     bsoncxx::v_noabi::types::b_timestamp _start_at_operation_time = {};

@@ -46,8 +46,8 @@ update_one& update_one::collation(bsoncxx::v_noabi::document::view_or_value coll
     return *this;
 }
 
-const bsoncxx::stdx::optional<bsoncxx::v_noabi::document::view_or_value>& update_one::collation()
-    const {
+const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&
+update_one::collation() const {
     return _collation;
 }
 
@@ -56,7 +56,7 @@ update_one& update_one::hint(mongocxx::v_noabi::hint index_hint) {
     return *this;
 }
 
-const bsoncxx::stdx::optional<mongocxx::v_noabi::hint>& update_one::hint() const {
+const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint>& update_one::hint() const {
     return _hint;
 }
 
@@ -65,7 +65,7 @@ update_one& update_one::upsert(bool upsert) {
     return *this;
 }
 
-const bsoncxx::stdx::optional<bool>& update_one::upsert() const {
+const bsoncxx::v_noabi::stdx::optional<bool>& update_one::upsert() const {
     return _upsert;
 }
 
@@ -74,8 +74,8 @@ update_one& update_one::array_filters(bsoncxx::v_noabi::array::view_or_value arr
     return *this;
 }
 
-const bsoncxx::stdx::optional<bsoncxx::v_noabi::array::view_or_value>& update_one::array_filters()
-    const {
+const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::array::view_or_value>&
+update_one::array_filters() const {
     return _array_filters;
 }
 

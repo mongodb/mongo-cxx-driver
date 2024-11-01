@@ -57,7 +57,7 @@ class client_encryption {
     /// @return
     ///   An optional pointer to the key vault client.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::stdx::optional<mongocxx::v_noabi::client*>&)
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::client*>&)
     key_vault_client() const;
 
     ///
@@ -91,7 +91,8 @@ class client_encryption {
     ///   An optional pair of strings representing the namespace of the
     ///   key vault collection.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::stdx::optional<ns_pair>&) key_vault_namespace() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<ns_pair>&)
+    key_vault_namespace() const;
 
     ///
     /// Sets the KMS providers to use for client side encryption.
@@ -147,7 +148,7 @@ class client_encryption {
     ///   An optional document containing the KMS providers.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
     kms_providers() const;
 
     ///
@@ -183,7 +184,7 @@ class client_encryption {
     ///   An optional document containing the TLS options.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
     tls_opts() const;
 
    private:
@@ -191,10 +192,10 @@ class client_encryption {
 
     void* convert() const;
 
-    bsoncxx::stdx::optional<mongocxx::v_noabi::client*> _key_vault_client;
-    bsoncxx::stdx::optional<ns_pair> _key_vault_namespace;
-    bsoncxx::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _kms_providers;
-    bsoncxx::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _tls_opts;
+    bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::client*> _key_vault_client;
+    bsoncxx::v_noabi::stdx::optional<ns_pair> _key_vault_namespace;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _kms_providers;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _tls_opts;
 };
 
 }  // namespace options

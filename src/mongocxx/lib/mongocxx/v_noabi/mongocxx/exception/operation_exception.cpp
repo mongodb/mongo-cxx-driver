@@ -33,17 +33,17 @@ operation_exception::operation_exception(std::error_code ec,
                                          std::string what_arg)
     : exception(ec, what_arg), _raw_server_error{std::move(raw_server_error)} {}
 
-const bsoncxx::stdx::optional<bsoncxx::v_noabi::document::value>&
+const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value>&
 operation_exception::raw_server_error() const {
     return _raw_server_error;
 }
 
-bsoncxx::stdx::optional<bsoncxx::v_noabi::document::value>&
+bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value>&
 operation_exception::raw_server_error() {
     return _raw_server_error;
 }
 
-bool operation_exception::has_error_label(bsoncxx::stdx::string_view label) const {
+bool operation_exception::has_error_label(bsoncxx::v_noabi::stdx::string_view label) const {
     if (!_raw_server_error) {
         return false;
     }

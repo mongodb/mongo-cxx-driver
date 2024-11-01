@@ -129,7 +129,7 @@ class bucket {
     /// indexes.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(uploader)
-    open_upload_stream(bsoncxx::stdx::string_view filename,
+    open_upload_stream(bsoncxx::v_noabi::stdx::string_view filename,
                        const options::gridfs::upload& options = {});
 
     ///
@@ -164,7 +164,7 @@ class bucket {
     ///
     MONGOCXX_ABI_EXPORT_CDECL(uploader)
     open_upload_stream(const client_session& session,
-                       bsoncxx::stdx::string_view filename,
+                       bsoncxx::v_noabi::stdx::string_view filename,
                        const options::gridfs::upload& options = {});
 
     ///
@@ -197,7 +197,7 @@ class bucket {
     ///
     MONGOCXX_ABI_EXPORT_CDECL(uploader)
     open_upload_stream_with_id(bsoncxx::v_noabi::types::bson_value::view id,
-                               bsoncxx::stdx::string_view filename,
+                               bsoncxx::v_noabi::stdx::string_view filename,
                                const options::gridfs::upload& options = {});
 
     ///
@@ -235,7 +235,7 @@ class bucket {
     MONGOCXX_ABI_EXPORT_CDECL(uploader)
     open_upload_stream_with_id(const client_session& session,
                                bsoncxx::v_noabi::types::bson_value::view id,
-                               bsoncxx::stdx::string_view filename,
+                               bsoncxx::v_noabi::stdx::string_view filename,
                                const options::gridfs::upload& options = {});
 
     ///
@@ -280,7 +280,7 @@ class bucket {
     /// indexes.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(result::gridfs::upload)
-    upload_from_stream(bsoncxx::stdx::string_view filename,
+    upload_from_stream(bsoncxx::v_noabi::stdx::string_view filename,
                        std::istream* source,
                        const options::gridfs::upload& options = {});
 
@@ -330,7 +330,7 @@ class bucket {
     ///
     MONGOCXX_ABI_EXPORT_CDECL(result::gridfs::upload)
     upload_from_stream(const client_session& session,
-                       bsoncxx::stdx::string_view filename,
+                       bsoncxx::v_noabi::stdx::string_view filename,
                        std::istream* source,
                        const options::gridfs::upload& options = {});
 
@@ -377,7 +377,7 @@ class bucket {
     ///
     MONGOCXX_ABI_EXPORT_CDECL(void)
     upload_from_stream_with_id(bsoncxx::v_noabi::types::bson_value::view id,
-                               bsoncxx::stdx::string_view filename,
+                               bsoncxx::v_noabi::stdx::string_view filename,
                                std::istream* source,
                                const options::gridfs::upload& options = {});
 
@@ -428,7 +428,7 @@ class bucket {
     MONGOCXX_ABI_EXPORT_CDECL(void)
     upload_from_stream_with_id(const client_session& session,
                                bsoncxx::v_noabi::types::bson_value::view id,
-                               bsoncxx::stdx::string_view filename,
+                               bsoncxx::v_noabi::stdx::string_view filename,
                                std::istream* source,
                                const options::gridfs::upload& options = {});
 
@@ -635,7 +635,7 @@ class bucket {
     /// @return
     ///   The name of the GridFS bucket.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::stdx::string_view) bucket_name() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::string_view) bucket_name() const;
 
    private:
     friend ::mongocxx::v_noabi::database;
@@ -647,25 +647,25 @@ class bucket {
 
     uploader _open_upload_stream_with_id(const client_session* session,
                                          bsoncxx::v_noabi::types::bson_value::view id,
-                                         bsoncxx::stdx::string_view filename,
+                                         bsoncxx::v_noabi::stdx::string_view filename,
                                          const options::gridfs::upload& options);
 
     void _upload_from_stream_with_id(const client_session* session,
                                      bsoncxx::v_noabi::types::bson_value::view id,
-                                     bsoncxx::stdx::string_view filename,
+                                     bsoncxx::v_noabi::stdx::string_view filename,
                                      std::istream* source,
                                      const options::gridfs::upload& options);
 
     downloader _open_download_stream(const client_session* session,
                                      bsoncxx::v_noabi::types::bson_value::view id,
-                                     bsoncxx::stdx::optional<std::size_t> start,
-                                     bsoncxx::stdx::optional<std::size_t> end);
+                                     bsoncxx::v_noabi::stdx::optional<std::size_t> start,
+                                     bsoncxx::v_noabi::stdx::optional<std::size_t> end);
 
     void _download_to_stream(const client_session* session,
                              bsoncxx::v_noabi::types::bson_value::view id,
                              std::ostream* destination,
-                             bsoncxx::stdx::optional<std::size_t> start,
-                             bsoncxx::stdx::optional<std::size_t> end);
+                             bsoncxx::v_noabi::stdx::optional<std::size_t> start,
+                             bsoncxx::v_noabi::stdx::optional<std::size_t> end);
 
     void _delete_file(const client_session* session, bsoncxx::v_noabi::types::bson_value::view id);
 

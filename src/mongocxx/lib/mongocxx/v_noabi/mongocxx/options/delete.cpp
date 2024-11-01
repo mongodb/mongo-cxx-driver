@@ -36,17 +36,17 @@ delete_options& delete_options::hint(mongocxx::v_noabi::hint index_hint) {
     return *this;
 }
 
-const bsoncxx::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&
+const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&
 delete_options::collation() const {
     return _collation;
 }
 
-const bsoncxx::stdx::optional<mongocxx::v_noabi::write_concern>& delete_options::write_concern()
-    const {
+const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>&
+delete_options::write_concern() const {
     return _write_concern;
 }
 
-const bsoncxx::stdx::optional<mongocxx::v_noabi::hint>& delete_options::hint() const {
+const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::hint>& delete_options::hint() const {
     return _hint;
 }
 
@@ -55,8 +55,8 @@ delete_options& delete_options::let(bsoncxx::v_noabi::document::view_or_value le
     return *this;
 }
 
-const bsoncxx::stdx::optional<bsoncxx::v_noabi::document::view_or_value> delete_options::let()
-    const {
+const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>
+delete_options::let() const {
     return _let;
 }
 
@@ -66,7 +66,7 @@ delete_options& delete_options::comment(
     return *this;
 }
 
-const bsoncxx::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>
+const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::bson_value::view_or_value>
 delete_options::comment() const {
     return _comment;
 }

@@ -60,7 +60,7 @@ class command_succeeded_event {
     ///
     /// @return The command name.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::stdx::string_view) command_name() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::string_view) command_name() const;
 
     ///
     /// Returns the duration of the successful operation.
@@ -88,7 +88,7 @@ class command_succeeded_event {
     ///
     /// @return No contained value, or contains the service id if load balancing is enabled.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::stdx::optional<bsoncxx::v_noabi::oid>)
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::oid>)
     service_id() const;
 
     ///
@@ -96,7 +96,7 @@ class command_succeeded_event {
     ///
     /// @return The host name.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::stdx::string_view) host() const;
+    MONGOCXX_ABI_EXPORT_CDECL(bsoncxx::v_noabi::stdx::string_view) host() const;
 
     ///
     /// Returns the port.

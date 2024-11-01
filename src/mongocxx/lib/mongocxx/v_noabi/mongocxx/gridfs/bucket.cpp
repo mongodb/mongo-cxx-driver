@@ -132,7 +132,7 @@ bucket::bucket(const database& db, const options::gridfs::bucket& options) {
     collection chunks = db[bucket_name + ".chunks"];
     collection files = db[bucket_name + ".files"];
 
-    _impl = bsoncxx::stdx::make_unique<impl>(
+    _impl = bsoncxx::v_noabi::stdx::make_unique<impl>(
         std::move(bucket_name), default_chunk_size_bytes, std::move(chunks), std::move(files));
 
     if (auto read_concern = options.read_concern()) {
@@ -162,7 +162,7 @@ bucket::operator bool() const noexcept {
 
 bucket::bucket(const bucket& b) {
     if (b) {
-        _impl = bsoncxx::stdx::make_unique<impl>(b._get_impl());
+        _impl = bsoncxx::v_noabi::stdx::make_unique<impl>(b._get_impl());
     }
 }
 
@@ -170,21 +170,21 @@ bucket& bucket::operator=(const bucket& b) {
     if (!b) {
         _impl.reset();
     } else if (!*this) {
-        _impl = bsoncxx::stdx::make_unique<impl>(b._get_impl());
+        _impl = bsoncxx::v_noabi::stdx::make_unique<impl>(b._get_impl());
     } else {
         *_impl = b._get_impl();
     }
     return *this;
 }
 
-uploader bucket::open_upload_stream(bsoncxx::stdx::string_view filename,
+uploader bucket::open_upload_stream(bsoncxx::v_noabi::stdx::string_view filename,
                                     const options::gridfs::upload& options) {
     auto id = bsoncxx::v_noabi::types::bson_value::view{bsoncxx::v_noabi::types::b_oid{}};
     return open_upload_stream_with_id(id, filename, options);
 }
 
 uploader bucket::open_upload_stream(const client_session& session,
-                                    bsoncxx::stdx::string_view filename,
+                                    bsoncxx::v_noabi::stdx::string_view filename,
                                     const options::gridfs::upload& options) {
     auto id = bsoncxx::v_noabi::types::bson_value::view{bsoncxx::v_noabi::types::b_oid{}};
     return open_upload_stream_with_id(session, id, filename, options);
@@ -192,7 +192,7 @@ uploader bucket::open_upload_stream(const client_session& session,
 
 uploader bucket::_open_upload_stream_with_id(const client_session* session,
                                              bsoncxx::v_noabi::types::bson_value::view id,
-                                             bsoncxx::stdx::string_view filename,
+                                             bsoncxx::v_noabi::stdx::string_view filename,
                                              const options::gridfs::upload& options) {
     std::int32_t chunk_size_bytes = _get_impl().default_chunk_size_bytes;
 
@@ -218,19 +218,19 @@ uploader bucket::_open_upload_stream_with_id(const client_session* session,
 }
 
 uploader bucket::open_upload_stream_with_id(bsoncxx::v_noabi::types::bson_value::view id,
-                                            bsoncxx::stdx::string_view filename,
+                                            bsoncxx::v_noabi::stdx::string_view filename,
                                             const options::gridfs::upload& options) {
     return _open_upload_stream_with_id(nullptr, id, filename, options);
 }
 
 uploader bucket::open_upload_stream_with_id(const client_session& session,
                                             bsoncxx::v_noabi::types::bson_value::view id,
-                                            bsoncxx::stdx::string_view filename,
+                                            bsoncxx::v_noabi::stdx::string_view filename,
                                             const options::gridfs::upload& options) {
     return _open_upload_stream_with_id(&session, id, filename, options);
 }
 
-result::gridfs::upload bucket::upload_from_stream(bsoncxx::stdx::string_view filename,
+result::gridfs::upload bucket::upload_from_stream(bsoncxx::v_noabi::stdx::string_view filename,
                                                   std::istream* source,
                                                   const options::gridfs::upload& options) {
     auto id = bsoncxx::v_noabi::types::bson_value::view{bsoncxx::v_noabi::types::b_oid{}};
@@ -239,7 +239,7 @@ result::gridfs::upload bucket::upload_from_stream(bsoncxx::stdx::string_view fil
 }
 
 result::gridfs::upload bucket::upload_from_stream(const client_session& session,
-                                                  bsoncxx::stdx::string_view filename,
+                                                  bsoncxx::v_noabi::stdx::string_view filename,
                                                   std::istream* source,
                                                   const options::gridfs::upload& options) {
     auto id = bsoncxx::v_noabi::types::bson_value::view{bsoncxx::v_noabi::types::b_oid{}};
@@ -249,13 +249,13 @@ result::gridfs::upload bucket::upload_from_stream(const client_session& session,
 
 void bucket::_upload_from_stream_with_id(const client_session* session,
                                          bsoncxx::v_noabi::types::bson_value::view id,
-                                         bsoncxx::stdx::string_view filename,
+                                         bsoncxx::v_noabi::stdx::string_view filename,
                                          std::istream* source,
                                          const options::gridfs::upload& options) {
     uploader upload_stream = _open_upload_stream_with_id(session, id, filename, options);
     std::int32_t chunk_size = upload_stream.chunk_size();
     std::unique_ptr<std::uint8_t[]> buffer =
-        bsoncxx::stdx::make_unique<std::uint8_t[]>(static_cast<std::size_t>(chunk_size));
+        bsoncxx::v_noabi::stdx::make_unique<std::uint8_t[]>(static_cast<std::size_t>(chunk_size));
 
     do {
         source->read(reinterpret_cast<char*>(buffer.get()),
@@ -274,7 +274,7 @@ void bucket::_upload_from_stream_with_id(const client_session* session,
 }
 
 void bucket::upload_from_stream_with_id(bsoncxx::v_noabi::types::bson_value::view id,
-                                        bsoncxx::stdx::string_view filename,
+                                        bsoncxx::v_noabi::stdx::string_view filename,
                                         std::istream* source,
                                         const options::gridfs::upload& options) {
     return _upload_from_stream_with_id(nullptr, id, filename, source, options);
@@ -282,7 +282,7 @@ void bucket::upload_from_stream_with_id(bsoncxx::v_noabi::types::bson_value::vie
 
 void bucket::upload_from_stream_with_id(const client_session& session,
                                         bsoncxx::v_noabi::types::bson_value::view id,
-                                        bsoncxx::stdx::string_view filename,
+                                        bsoncxx::v_noabi::stdx::string_view filename,
                                         std::istream* source,
                                         const options::gridfs::upload& options) {
     return _upload_from_stream_with_id(&session, id, filename, source, options);
@@ -290,8 +290,8 @@ void bucket::upload_from_stream_with_id(const client_session& session,
 
 downloader bucket::_open_download_stream(const client_session* session,
                                          bsoncxx::v_noabi::types::bson_value::view id,
-                                         bsoncxx::stdx::optional<std::size_t> start,
-                                         bsoncxx::stdx::optional<std::size_t> end) {
+                                         bsoncxx::v_noabi::stdx::optional<std::size_t> start,
+                                         bsoncxx::v_noabi::stdx::optional<std::size_t> end) {
     using namespace bsoncxx;
 
     builder::basic::document files_filter;
@@ -320,7 +320,8 @@ downloader bucket::_open_download_stream(const client_session* session,
 
     if ((length.type() == type::k_int64 && !length.get_int64().value) ||
         (length.type() == type::k_int32 && !length.get_int32().value)) {
-        return downloader{bsoncxx::stdx::nullopt, start_offset, chunk_size, file_len, *files_doc};
+        return downloader{
+            bsoncxx::v_noabi::stdx::nullopt, start_offset, chunk_size, file_len, *files_doc};
     }
 
     builder::basic::document chunks_filter;
@@ -388,19 +389,21 @@ downloader bucket::_open_download_stream(const client_session* session,
 }
 
 downloader bucket::open_download_stream(bsoncxx::v_noabi::types::bson_value::view id) {
-    return _open_download_stream(nullptr, id, bsoncxx::stdx::nullopt, bsoncxx::stdx::nullopt);
+    return _open_download_stream(
+        nullptr, id, bsoncxx::v_noabi::stdx::nullopt, bsoncxx::v_noabi::stdx::nullopt);
 }
 
 downloader bucket::open_download_stream(const client_session& session,
                                         bsoncxx::v_noabi::types::bson_value::view id) {
-    return _open_download_stream(&session, id, bsoncxx::stdx::nullopt, bsoncxx::stdx::nullopt);
+    return _open_download_stream(
+        &session, id, bsoncxx::v_noabi::stdx::nullopt, bsoncxx::v_noabi::stdx::nullopt);
 }
 
 void bucket::_download_to_stream(const client_session* session,
                                  bsoncxx::v_noabi::types::bson_value::view id,
                                  std::ostream* destination,
-                                 bsoncxx::stdx::optional<std::size_t> start,
-                                 bsoncxx::stdx::optional<std::size_t> end) {
+                                 bsoncxx::v_noabi::stdx::optional<std::size_t> start,
+                                 bsoncxx::v_noabi::stdx::optional<std::size_t> end) {
     downloader download_stream = _open_download_stream(session, id, start, end);
 
     std::size_t chunk_size;
@@ -421,7 +424,7 @@ void bucket::_download_to_stream(const client_session* session,
     }
     auto bytes_expected = *end - *start;
     std::unique_ptr<std::uint8_t[]> buffer =
-        bsoncxx::stdx::make_unique<std::uint8_t[]>(static_cast<std::size_t>(chunk_size));
+        bsoncxx::v_noabi::stdx::make_unique<std::uint8_t[]>(static_cast<std::size_t>(chunk_size));
 
     while (bytes_expected > 0) {
         const std::size_t bytes_read = download_stream.read(
@@ -436,7 +439,8 @@ void bucket::_download_to_stream(const client_session* session,
 
 void bucket::download_to_stream(bsoncxx::v_noabi::types::bson_value::view id,
                                 std::ostream* destination) {
-    _download_to_stream(nullptr, id, destination, bsoncxx::stdx::nullopt, bsoncxx::stdx::nullopt);
+    _download_to_stream(
+        nullptr, id, destination, bsoncxx::v_noabi::stdx::nullopt, bsoncxx::v_noabi::stdx::nullopt);
 }
 
 void bucket::download_to_stream(bsoncxx::v_noabi::types::bson_value::view id,
@@ -449,7 +453,11 @@ void bucket::download_to_stream(bsoncxx::v_noabi::types::bson_value::view id,
 void bucket::download_to_stream(const client_session& session,
                                 bsoncxx::v_noabi::types::bson_value::view id,
                                 std::ostream* destination) {
-    _download_to_stream(&session, id, destination, bsoncxx::stdx::nullopt, bsoncxx::stdx::nullopt);
+    _download_to_stream(&session,
+                        id,
+                        destination,
+                        bsoncxx::v_noabi::stdx::nullopt,
+                        bsoncxx::v_noabi::stdx::nullopt);
 }
 
 void bucket::download_to_stream(const client_session& session,
@@ -506,7 +514,7 @@ cursor bucket::find(const client_session& session,
     return _get_impl().files.find(session, filter, options);
 }
 
-bsoncxx::stdx::string_view bucket::bucket_name() const {
+bsoncxx::v_noabi::stdx::string_view bucket::bucket_name() const {
     return _get_impl().bucket_name;
 }
 

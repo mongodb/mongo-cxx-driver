@@ -59,7 +59,7 @@ class create_collection_deprecated {
     /// @see
     /// - https://www.mongodb.com/docs/manual/reference/glossary/#term-capped-collection
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::stdx::optional<bool>&) capped() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<bool>&) capped() const;
 
     ///
     /// Sets the default collation for this collection.
@@ -87,7 +87,7 @@ class create_collection_deprecated {
     /// - https://www.mongodb.com/docs/manual/reference/collation/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
     collation() const;
 
     ///
@@ -113,7 +113,7 @@ class create_collection_deprecated {
     /// @return
     ///   Maximum number of documents allowed in the collection (if capped).
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::stdx::optional<std::int64_t>&) max() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<std::int64_t>&) max() const;
 
     ///
     /// When true, disables the power of 2 sizes allocation for the collection.
@@ -139,7 +139,7 @@ class create_collection_deprecated {
     /// @return
     ///   When true, power of 2 sizing is disabled for this collection.
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::stdx::optional<bool>&) no_padding() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<bool>&) no_padding() const;
 
     ///
     /// A maximum size, in bytes, for a capped collection.
@@ -164,7 +164,7 @@ class create_collection_deprecated {
     /// @return
     ///   Maximum size, in bytes, of this collection (if capped).
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::stdx::optional<std::int64_t>&) size() const;
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<std::int64_t>&) size() const;
 
     ///
     /// Specify configuration to the storage on a per-collection basis.
@@ -188,7 +188,7 @@ class create_collection_deprecated {
     ///   Configuration options specific to the storage engine.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
     storage_engine() const;
 
     ///
@@ -217,7 +217,7 @@ class create_collection_deprecated {
     /// - https://www.mongodb.com/docs/manual/core/document-validation/
     ///
     MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::stdx::optional<mongocxx::v_noabi::validation_criteria>&)
+        const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::validation_criteria>&)
     validation_criteria() const;
 
     ///
@@ -244,13 +244,14 @@ class create_collection_deprecated {
     }
 
    private:
-    bsoncxx::stdx::optional<bool> _capped;
-    bsoncxx::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _collation;
-    bsoncxx::stdx::optional<std::int64_t> _max_documents;
-    bsoncxx::stdx::optional<std::int64_t> _max_size;
-    bsoncxx::stdx::optional<bool> _no_padding;
-    bsoncxx::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _storage_engine_opts;
-    bsoncxx::stdx::optional<mongocxx::v_noabi::validation_criteria> _validation;
+    bsoncxx::v_noabi::stdx::optional<bool> _capped;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _collation;
+    bsoncxx::v_noabi::stdx::optional<std::int64_t> _max_documents;
+    bsoncxx::v_noabi::stdx::optional<std::int64_t> _max_size;
+    bsoncxx::v_noabi::stdx::optional<bool> _no_padding;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>
+        _storage_engine_opts;
+    bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::validation_criteria> _validation;
 };
 
 ///

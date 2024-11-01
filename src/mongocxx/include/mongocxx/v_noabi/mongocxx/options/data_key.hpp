@@ -98,7 +98,7 @@ class data_key {
     ///   An optional document containing the master key.
     ///
     MONGOCXX_ABI_EXPORT_CDECL(
-        const bsoncxx::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
+        const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value>&)
     master_key() const;
 
     ///
@@ -160,16 +160,17 @@ class data_key {
     /// @see
     /// - https://www.mongodb.com/docs/v6.0/reference/method/KeyVault.createKey/
     ///
-    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::stdx::optional<key_material_type>&) key_material();
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::v_noabi::stdx::optional<key_material_type>&)
+    key_material();
 
    private:
     friend ::mongocxx::v_noabi::client_encryption;
 
     void* convert() const;
 
-    bsoncxx::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _master_key;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _master_key;
     std::vector<std::string> _key_alt_names;
-    bsoncxx::stdx::optional<key_material_type> _key_material;
+    bsoncxx::v_noabi::stdx::optional<key_material_type> _key_material;
 };
 
 }  // namespace options

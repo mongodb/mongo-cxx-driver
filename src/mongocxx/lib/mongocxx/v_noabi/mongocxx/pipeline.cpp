@@ -27,7 +27,7 @@ using bsoncxx::v_noabi::builder::basic::sub_document;
 namespace mongocxx {
 namespace v_noabi {
 
-pipeline::pipeline() : _impl(bsoncxx::stdx::make_unique<impl>()) {}
+pipeline::pipeline() : _impl(bsoncxx::v_noabi::stdx::make_unique<impl>()) {}
 
 pipeline::pipeline(pipeline&&) noexcept = default;
 pipeline& pipeline::operator=(pipeline&&) noexcept = default;

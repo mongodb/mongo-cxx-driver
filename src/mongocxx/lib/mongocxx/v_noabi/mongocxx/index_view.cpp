@@ -27,8 +27,8 @@ namespace mongocxx {
 namespace v_noabi {
 
 index_view::index_view(void* coll, void* client)
-    : _impl{bsoncxx::stdx::make_unique<impl>(static_cast<mongoc_collection_t*>(coll),
-                                             static_cast<mongoc_client_t*>(client))} {}
+    : _impl{bsoncxx::v_noabi::stdx::make_unique<impl>(static_cast<mongoc_collection_t*>(coll),
+                                                      static_cast<mongoc_client_t*>(client))} {}
 
 index_view::index_view(index_view&&) noexcept = default;
 index_view& index_view::operator=(index_view&&) noexcept = default;
@@ -42,14 +42,14 @@ cursor index_view::list(const client_session& session) {
     return _get_impl().list(&session);
 }
 
-bsoncxx::stdx::optional<std::string> index_view::create_one(
+bsoncxx::v_noabi::stdx::optional<std::string> index_view::create_one(
     const bsoncxx::v_noabi::document::view_or_value& keys,
     const bsoncxx::v_noabi::document::view_or_value& index_options,
     const options::index_view& options) {
     return create_one(index_model{keys, index_options}, options);
 }
 
-bsoncxx::stdx::optional<std::string> index_view::create_one(
+bsoncxx::v_noabi::stdx::optional<std::string> index_view::create_one(
     const client_session& session,
     const bsoncxx::v_noabi::document::view_or_value& keys,
     const bsoncxx::v_noabi::document::view_or_value& index_options,
@@ -57,14 +57,13 @@ bsoncxx::stdx::optional<std::string> index_view::create_one(
     return create_one(session, index_model{keys, index_options}, options);
 }
 
-bsoncxx::stdx::optional<std::string> index_view::create_one(const index_model& model,
-                                                            const options::index_view& options) {
+bsoncxx::v_noabi::stdx::optional<std::string> index_view::create_one(
+    const index_model& model, const options::index_view& options) {
     return _get_impl().create_one(nullptr, model, options);
 }
 
-bsoncxx::stdx::optional<std::string> index_view::create_one(const client_session& session,
-                                                            const index_model& model,
-                                                            const options::index_view& options) {
+bsoncxx::v_noabi::stdx::optional<std::string> index_view::create_one(
+    const client_session& session, const index_model& model, const options::index_view& options) {
     return _get_impl().create_one(&session, model, options);
 }
 
@@ -79,12 +78,13 @@ bsoncxx::v_noabi::document::value index_view::create_many(const client_session& 
     return _get_impl().create_many(&session, indexes, options);
 }
 
-void index_view::drop_one(bsoncxx::stdx::string_view name, const options::index_view& options) {
+void index_view::drop_one(bsoncxx::v_noabi::stdx::string_view name,
+                          const options::index_view& options) {
     return _get_impl().drop_one(nullptr, name, options);
 }
 
 void index_view::drop_one(const client_session& session,
-                          bsoncxx::stdx::string_view name,
+                          bsoncxx::v_noabi::stdx::string_view name,
                           const options::index_view& options) {
     return _get_impl().drop_one(&session, name, options);
 }

@@ -129,27 +129,28 @@ index& index::haystack_bucket_size(double haystack_bucket_size) {
     return haystack_bucket_size_deprecated(haystack_bucket_size);
 }
 
-const bsoncxx::stdx::optional<bool>& index::background() const {
+const bsoncxx::v_noabi::stdx::optional<bool>& index::background() const {
     return _background;
 }
 
-const bsoncxx::stdx::optional<bool>& index::unique() const {
+const bsoncxx::v_noabi::stdx::optional<bool>& index::unique() const {
     return _unique;
 }
 
-const bsoncxx::stdx::optional<bool>& index::hidden() const {
+const bsoncxx::v_noabi::stdx::optional<bool>& index::hidden() const {
     return _hidden;
 }
 
-const bsoncxx::stdx::optional<bsoncxx::v_noabi::string::view_or_value>& index::name() const {
+const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value>& index::name()
+    const {
     return _name;
 }
 
-const bsoncxx::stdx::optional<bsoncxx::v_noabi::document::view>& index::collation() const {
+const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view>& index::collation() const {
     return _collation;
 }
 
-const bsoncxx::stdx::optional<bool>& index::sparse() const {
+const bsoncxx::v_noabi::stdx::optional<bool>& index::sparse() const {
     return _sparse;
 }
 
@@ -157,54 +158,54 @@ const std::unique_ptr<index::base_storage_options>& index::storage_options() con
     return _storage_options;
 }
 
-const bsoncxx::stdx::optional<std::chrono::seconds>& index::expire_after() const {
+const bsoncxx::v_noabi::stdx::optional<std::chrono::seconds>& index::expire_after() const {
     return _expire_after;
 }
 
-const bsoncxx::stdx::optional<std::int32_t>& index::version() const {
+const bsoncxx::v_noabi::stdx::optional<std::int32_t>& index::version() const {
     return _version;
 }
 
-const bsoncxx::stdx::optional<bsoncxx::v_noabi::document::view>& index::weights() const {
+const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view>& index::weights() const {
     return _weights;
 }
 
-const bsoncxx::stdx::optional<bsoncxx::v_noabi::string::view_or_value>& index::default_language()
-    const {
+const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value>&
+index::default_language() const {
     return _default_language;
 }
 
-const bsoncxx::stdx::optional<bsoncxx::v_noabi::string::view_or_value>& index::language_override()
-    const {
+const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value>&
+index::language_override() const {
     return _language_override;
 }
 
-const bsoncxx::stdx::optional<bsoncxx::v_noabi::document::view>& index::partial_filter_expression()
-    const {
+const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view>&
+index::partial_filter_expression() const {
     return _partial_filter_expression;
 }
 
-const bsoncxx::stdx::optional<std::uint8_t>& index::twod_sphere_version() const {
+const bsoncxx::v_noabi::stdx::optional<std::uint8_t>& index::twod_sphere_version() const {
     return _twod_sphere_version;
 }
 
-const bsoncxx::stdx::optional<std::uint8_t>& index::twod_bits_precision() const {
+const bsoncxx::v_noabi::stdx::optional<std::uint8_t>& index::twod_bits_precision() const {
     return _twod_bits_precision;
 }
 
-const bsoncxx::stdx::optional<double>& index::twod_location_min() const {
+const bsoncxx::v_noabi::stdx::optional<double>& index::twod_location_min() const {
     return _twod_location_min;
 }
 
-const bsoncxx::stdx::optional<double>& index::twod_location_max() const {
+const bsoncxx::v_noabi::stdx::optional<double>& index::twod_location_max() const {
     return _twod_location_max;
 }
 
-const bsoncxx::stdx::optional<double>& index::haystack_bucket_size_deprecated() const {
+const bsoncxx::v_noabi::stdx::optional<double>& index::haystack_bucket_size_deprecated() const {
     return _haystack_bucket_size;
 }
 
-const bsoncxx::stdx::optional<double>& index::haystack_bucket_size() const {
+const bsoncxx::v_noabi::stdx::optional<double>& index::haystack_bucket_size() const {
     return haystack_bucket_size_deprecated();
 }
 
@@ -315,7 +316,7 @@ void index::wiredtiger_storage_options::config_string(
     _config_string = std::move(config_string);
 }
 
-const bsoncxx::stdx::optional<bsoncxx::v_noabi::string::view_or_value>&
+const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::string::view_or_value>&
 index::wiredtiger_storage_options::config_string() const {
     return _config_string;
 }

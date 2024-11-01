@@ -32,7 +32,7 @@ class cursor::impl {
     // cursor, the cursor resets to k_pending on exhaustion so that it can resume later.
     enum class state { k_pending = 0, k_started = 1, k_dead = 2 };
 
-    impl(mongoc_cursor_t* cursor, bsoncxx::stdx::optional<cursor::type> cursor_type)
+    impl(mongoc_cursor_t* cursor, bsoncxx::v_noabi::stdx::optional<cursor::type> cursor_type)
         : cursor_t(cursor),
           status{cursor ? state::k_pending : state::k_dead},
           exhausted(!cursor),

@@ -29,15 +29,17 @@ namespace options {
 
 index_view::index_view() : _max_time(), _write_concern(), _commit_quorum() {}
 
-const bsoncxx::stdx::optional<mongocxx::v_noabi::write_concern>& index_view::write_concern() const {
+const bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>&
+index_view::write_concern() const {
     return _write_concern;
 }
 
-const bsoncxx::stdx::optional<std::chrono::milliseconds>& index_view::max_time() const {
+const bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds>& index_view::max_time() const {
     return _max_time;
 }
 
-const bsoncxx::stdx::optional<bsoncxx::v_noabi::document::value> index_view::commit_quorum() const {
+const bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value>
+index_view::commit_quorum() const {
     return _commit_quorum;
 }
 
@@ -52,13 +54,13 @@ index_view& index_view::write_concern(mongocxx::v_noabi::write_concern write_con
 }
 
 index_view& index_view::commit_quorum(int commit_quorum) {
-    _commit_quorum = bsoncxx::stdx::make_optional<bsoncxx::v_noabi::document::value>(
+    _commit_quorum = bsoncxx::v_noabi::stdx::make_optional<bsoncxx::v_noabi::document::value>(
         make_document(kvp("commitQuorum", bsoncxx::v_noabi::types::b_int32{commit_quorum})));
     return *this;
 }
 
 index_view& index_view::commit_quorum(std::string commit_quorum) {
-    _commit_quorum = bsoncxx::stdx::make_optional<bsoncxx::v_noabi::document::value>(
+    _commit_quorum = bsoncxx::v_noabi::stdx::make_optional<bsoncxx::v_noabi::document::value>(
         make_document(kvp("commitQuorum", commit_quorum)));
     return *this;
 }
