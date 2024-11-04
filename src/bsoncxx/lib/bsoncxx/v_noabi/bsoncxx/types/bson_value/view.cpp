@@ -114,11 +114,6 @@ bsoncxx::v_noabi::type view::type() const {
 #include <bsoncxx/enums/type.hpp>
 #undef BSONCXX_ENUM
 
-const types::b_string& view::get_utf8() const {
-    BSONCXX_TYPE_CHECK(string);
-    return _b_string;
-}
-
 view::view(const std::uint8_t* raw,
            std::uint32_t length,
            std::uint32_t offset,

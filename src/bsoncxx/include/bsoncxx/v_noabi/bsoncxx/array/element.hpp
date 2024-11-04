@@ -65,7 +65,6 @@ class element : private document::element {
     using document::element::get_symbol;
     using document::element::get_timestamp;
     using document::element::get_undefined;
-    using document::element::get_utf8;
 
     using document::element::get_value;
 

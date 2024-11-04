@@ -108,16 +108,6 @@ class view {
     ///
     /// Returns the underlying BSON UTF-8 string value.
     ///
-    /// @deprecated use get_string instead.
-    ///
-    /// @warning
-    ///   Calling the wrong get_<type> method will cause an exception to be thrown.
-    ///
-    BSONCXX_DEPRECATED BSONCXX_ABI_EXPORT_CDECL(const b_string&) get_utf8() const;
-
-    ///
-    /// Returns the underlying BSON UTF-8 string value.
-    ///
     /// @warning
     ///   Calling the wrong get_<type> method will cause an exception to be thrown.
     ///

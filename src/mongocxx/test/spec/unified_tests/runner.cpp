@@ -517,7 +517,7 @@ read_preference get_read_preference(const document::element& opts) {
 write_concern get_write_concern(const document::element& opts) {
     auto wc = write_concern{};
     if (auto w = opts["writeConcern"]["w"]) {
-        if (w.type() == type::k_utf8) {
+        if (w.type() == type::k_string) {
             const auto strval = w.get_string().value;
             if (0 == strval.compare("majority")) {
                 wc.acknowledge_level(mongocxx::write_concern::level::k_majority);
