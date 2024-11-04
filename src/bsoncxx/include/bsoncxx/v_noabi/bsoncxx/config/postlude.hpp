@@ -59,12 +59,6 @@
 #pragma pop_macro("bsoncxx_cxx14_constexpr")
 #pragma pop_macro("BSONCXX_RETURNS")
 
-// CXX-2769: out-of-place, but remains for backward compatibility.
-#ifdef BSONCXX_ENUM
-static_assert(false, "BSONCXX_ENUM must be undef'ed");
-#endif
-#pragma pop_macro("BSONCXX_ENUM")
-
 // util.hpp
 #pragma pop_macro("BSONCXX_PUSH_WARNINGS")
 #pragma pop_macro("BSONCXX_POP_WARNINGS")
