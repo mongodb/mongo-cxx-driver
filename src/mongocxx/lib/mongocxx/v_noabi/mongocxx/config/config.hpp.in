@@ -11,6 +11,3 @@
 // WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 // See the License for the specific language governing permissions and
 // limitations under the License.
-
-#define MONGOCXX_INLINE_NAMESPACE_BEGIN inline namespace v_noabi {
-#define MONGOCXX_INLINE_NAMESPACE_END }  // namespace v_noabi
