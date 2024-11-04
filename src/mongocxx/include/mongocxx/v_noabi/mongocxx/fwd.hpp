@@ -155,24 +155,6 @@
 ///
 
 ///
-/// @ingroup mongocxx-v_noabi-mongocxx-config-config-hpp
-/// For internal use only!
-///
-/// @deprecated To be removed in an upcoming major release.
-/// <!-- Explicitly documented due to long-standing availability. -->
-///
-#define MONGOCXX_INLINE_NAMESPACE_BEGIN
-
-///
-/// @ingroup mongocxx-v_noabi-mongocxx-config-config-hpp
-/// For internal use only!
-///
-/// @deprecated To be removed in an upcoming major release.
-/// <!-- Explicitly documented due to long-standing availability. -->
-///
-#define MONGOCXX_INLINE_NAMESPACE_END
-
-///
 /// @} <!-- mongocxx/v_noabi/mongocxx/config/config.hpp -->
 ///
 

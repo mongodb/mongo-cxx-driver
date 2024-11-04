@@ -14,7 +14,9 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 - Redeclarations of `bsoncxx::stdx` interfaces in the `mongocxx::stdx` namespace.
   - Use `bsoncxx::stdx::optional<T>` instead of `mongocxx::stdx::optional<T>`.
   - Use `bsoncxx::stdx::string_view` instead of `mongocxx::stdx::string_view`.
+- Inline namespace macros for bsoncxx and mongocxx namespace: `*_INLINE_NAMESPACE_*`.
 - The `<bsoncxx/types/value.hpp>` header.
+- The `<bsoncxx/util/functor.hpp>` header.
 
 ## 3.11.0
 
