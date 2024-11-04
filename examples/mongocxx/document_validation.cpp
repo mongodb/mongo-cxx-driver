@@ -22,6 +22,7 @@
 #include <mongocxx/exception/exception.hpp>
 #include <mongocxx/instance.hpp>
 #include <mongocxx/uri.hpp>
+#include <mongocxx/validation_criteria.hpp>
 
 #include <examples/macros.hh>
 

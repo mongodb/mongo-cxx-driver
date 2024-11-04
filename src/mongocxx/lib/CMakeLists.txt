@@ -69,7 +69,6 @@ set(mongocxx_sources_v_noabi
     mongocxx/v_noabi/mongocxx/options/client_session.cpp
     mongocxx/v_noabi/mongocxx/options/client.cpp
     mongocxx/v_noabi/mongocxx/options/count.cpp
-    mongocxx/v_noabi/mongocxx/options/create_collection.cpp
     mongocxx/v_noabi/mongocxx/options/data_key.cpp
     mongocxx/v_noabi/mongocxx/options/delete.cpp
     mongocxx/v_noabi/mongocxx/options/distinct.cpp
