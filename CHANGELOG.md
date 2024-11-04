@@ -22,6 +22,10 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
   - `b_utf8` in `bsoncxx::v_noabi::types`. Use `b_string` instead.
   - `get_utf8` in `bsoncxx::v_noabi::document::element`, `bsoncxx::v_noabi::array::element`, and `bsoncxx::v_noabi::types::bson_value::view`. Use `get_string` instead.
   - `k_cannot_append_utf8` and `k_need_element_type_k_utf8` in `bsoncxx::v_noabi::exception::error_code`. Use `k_cannot_append_string` and `k_need_element_type_k_string` instead.
+- Undocumented using-directives and using-declarations.
+  - `bsoncxx::builder::types` in `<bsoncxx/builder/list.hpp>`. Use `bsoncxx::types` in `<bsoncxx/types.hpp>` instead.
+  - `bsoncxx::builder::stream::concatenate` in `<bsoncxx/builder/stream/helpers.hpp>`. Use `bsoncxx::builder::concatenate` in `<bsoncxx/builder/concatenate.hpp>` instead.
+  - `mongocxx::events::read_preference` in `<mongocxx/events/topology_description.hpp>`. Use `mongocxx::read_preference` in `<mongocxx/read_preference.hpp>` instead.
 
 ## 3.11.0
 

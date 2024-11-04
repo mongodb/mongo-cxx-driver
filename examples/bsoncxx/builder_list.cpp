@@ -67,7 +67,7 @@ int EXAMPLES_CDECL main() {
            "BSON 32-bit signed integer value", -123,
            "BSON date value", std::chrono::milliseconds(123456789),
            "BSON Decimal128 value", decimal128{100, 200},
-           "BSON regex value with options", bson_value::value("regex", "imsx" /* opts */)};
+           "BSON regex value with options", types::bson_value::value("regex", "imsx" /* opts */)};
     // clang-format on
 
     //
@@ -95,7 +95,7 @@ int EXAMPLES_CDECL main() {
            -123,
            std::chrono::milliseconds(123456789),
            decimal128{100, 200},
-           bson_value::value("regex", "imsx" /* opts */)};
+           types::bson_value::value("regex", "imsx" /* opts */)};
 
     //
     // The list builder will create a BSON document, if possible. Otherwise, it will create a BSON

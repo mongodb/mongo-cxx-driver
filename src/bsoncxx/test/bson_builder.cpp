@@ -583,7 +583,8 @@ TEST_CASE("builder appends concatenate", "[bsoncxx::builder::stream]") {
 
         {
             using namespace builder::stream;
-            b << "foo" << open_document << concatenate(child_builder.view()) << close_document;
+            b << "foo" << open_document << builder::concatenate(child_builder.view())
+              << close_document;
         }
 
         bson_eq_stream(&expected, b);
@@ -602,7 +603,8 @@ TEST_CASE("builder appends concatenate", "[bsoncxx::builder::stream]") {
 
         {
             using namespace builder::stream;
-            b << "foo" << open_array << "bar" << concatenate(child_builder.view()) << close_array;
+            b << "foo" << open_array << "bar" << builder::concatenate(child_builder.view())
+              << close_array;
         }
 
         bson_eq_stream(&expected, b);
@@ -1120,7 +1122,7 @@ TEST_CASE("basic document builder works with concat", "[bsoncxx::builder::basic]
     builder::stream::document stream;
     builder::basic::document basic;
 
-    stream << builder::stream::concatenate(subdoc.view());
+    stream << builder::concatenate(subdoc.view());
 
     SECTION("single insert works") {
         basic.append(builder::basic::concatenate(subdoc.view()));
@@ -1129,7 +1131,7 @@ TEST_CASE("basic document builder works with concat", "[bsoncxx::builder::basic]
     }
 
     SECTION("variadic works") {
-        stream << builder::stream::concatenate(subdoc.view());
+        stream << builder::concatenate(subdoc.view());
 
         basic.append(builder::basic::concatenate(subdoc.view()),
                      builder::basic::concatenate(subdoc.view()));
@@ -1147,7 +1149,7 @@ TEST_CASE("basic array builder works with concat", "[bsoncxx::builder::basic]") 
     builder::stream::array stream;
     builder::basic::array basic;
 
-    stream << builder::stream::concatenate(array_view);
+    stream << builder::concatenate(array_view);
 
     SECTION("single insert works") {
         basic.append(builder::basic::concatenate(array_view));
@@ -1156,7 +1158,7 @@ TEST_CASE("basic array builder works with concat", "[bsoncxx::builder::basic]") 
     }
 
     SECTION("variadic works") {
-        stream << builder::stream::concatenate(array_view);
+        stream << builder::concatenate(array_view);
 
         basic.append(builder::basic::concatenate(array_view),
                      builder::basic::concatenate(array_view));
