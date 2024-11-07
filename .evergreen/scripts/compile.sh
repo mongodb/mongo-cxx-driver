@@ -132,10 +132,10 @@ export CMAKE_GENERATOR="${generator:?}"
 export CMAKE_GENERATOR_PLATFORM="${platform:-}"
 
 case "${BSONCXX_POLYFILL:-}" in
-mnmlstc) cmake_flags+=(-D "BSONCXX_POLY_USE_MNMLSTC=ON") ;;
-boost) cmake_flags+=(-D "BSONCXX_POLY_USE_BOOST=ON") ;;
-impls) cmake_flags+=(-D "BSONCXX_POLY_USE_IMPLS=ON") ;;
-std) cmake_flags+=(-D "BSONCXX_POLY_USE_STD=ON") ;;
+mnmlstc) cmake_flags+=("-DBSONCXX_POLY_USE_MNMLSTC=ON") ;;
+boost) cmake_flags+=("-DBSONCXX_POLY_USE_BOOST=ON") ;;
+impls) cmake_flags+=("-DBSONCXX_POLY_USE_IMPLS=ON") ;;
+std) cmake_flags+=("-DBSONCXX_POLY_USE_STD=ON") ;;
 *) ;;
 esac
 
