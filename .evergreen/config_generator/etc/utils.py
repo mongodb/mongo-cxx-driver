@@ -95,9 +95,7 @@ def write_to_file(yml, filename):
     # .evergreen/config_generator/etc/utils.py -> .evergreen
     evergreen_dir = Path(__file__).parent.parent.parent
     filename = evergreen_dir / 'generated_configs' / filename
-
-    with open(filename.resolve(), 'w', encoding='utf-8') as file:
-        file.write(yml)
+    filename.write_text(yml, encoding='utf-8')
 
 
 class Dumper(ConfigDumper):
