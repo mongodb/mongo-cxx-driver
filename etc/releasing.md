@@ -524,7 +524,6 @@ snyk_args=(
   --target-reference="${release_tag:?}"
   --unmanaged
   --all-projects
-  --detection-depth=10 # build/src/bsoncxx/third_party/_deps/core-install/include/core
   --exclude=extras # CXX-3042
 )
 snyk test "${snyk_args[@]:?}" --print-deps

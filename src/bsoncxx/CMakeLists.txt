@@ -184,7 +184,6 @@ set(src_bsoncxx_DIST
     ${src_bsoncxx_cmake_DIST}
     ${src_bsoncxx_include_DIST}
     ${src_bsoncxx_lib_DIST}
-    ${src_bsoncxx_third_party_DIST}
     ${src_bsoncxx_test_DIST}
     PARENT_SCOPE
 )
