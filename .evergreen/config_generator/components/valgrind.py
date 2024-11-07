@@ -1,5 +1,4 @@
 from config_generator.components.funcs.compile import Compile
-from config_generator.components.funcs.fetch_c_driver_source import FetchCDriverSource
 from config_generator.components.funcs.fetch_det import FetchDET
 from config_generator.components.funcs.install_c_driver import InstallCDriver
 from config_generator.components.funcs.run_kms_servers import RunKMSServers

@@ -1,4 +1,3 @@
-from shrub.v3.evg_command import EvgCommandType, s3_put
 from config_generator.components.funcs.fetch_c_driver_source import FetchCDriverSource
 from config_generator.components.funcs.setup import Setup
 
@@ -7,7 +6,7 @@ from config_generator.etc.function import Function, merge_defns
 from config_generator.etc.utils import bash_exec
 
 from shrub.v3.evg_build_variant import BuildVariant, DisplayTask
-from shrub.v3.evg_command import EvgCommandType
+from shrub.v3.evg_command import EvgCommandType, s3_put
 from shrub.v3.evg_task import EvgTask, EvgTaskRef
 
 
