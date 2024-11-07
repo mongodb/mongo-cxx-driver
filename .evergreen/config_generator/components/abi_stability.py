@@ -79,10 +79,6 @@ class AbiComplianceCheck(Function):
         ),
     ]
 
-    @classmethod
-    def call(cls, **kwargs):
-        return cls.default_call(**kwargs)
-
 
 class Abidiff(Function):
     name = 'abidiff'
@@ -119,10 +115,6 @@ class Abidiff(Function):
         ),
     ]
 
-    @classmethod
-    def call(cls, **kwargs):
-        return cls.default_call(**kwargs)
-
 
 class AbiProhibitedSymbols(Function):
     name = 'abi-prohibited-symbols'
@@ -130,10 +122,6 @@ class AbiProhibitedSymbols(Function):
         command_type=EvgCommandType.TEST,
         script='mongo-cxx-driver/.evergreen/scripts/abi-prohibited-symbols-test.sh'
     )
-
-    @classmethod
-    def call(cls, **kwargs):
-        return cls.default_call(**kwargs)
 
 
 def functions():

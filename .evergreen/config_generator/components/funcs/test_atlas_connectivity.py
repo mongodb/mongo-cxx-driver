@@ -24,10 +24,6 @@ class TestAtlasConnectivity(Function):
         '''
     )
 
-    @classmethod
-    def call(cls, **kwargs):
-        return cls.default_call(**kwargs)
-
 
 def functions():
     return TestAtlasConnectivity.defn()

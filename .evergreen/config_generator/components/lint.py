@@ -20,10 +20,6 @@ class Lint(Function):
         script='python etc/clang_format.py lint',
     )
 
-    @classmethod
-    def call(cls, **kwargs):
-        return cls.default_call(**kwargs)
-
 
 def functions():
     return Lint.defn()

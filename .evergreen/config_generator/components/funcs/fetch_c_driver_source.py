@@ -14,10 +14,6 @@ class FetchCDriverSource(Function):
         script='git clone --depth 1 https://github.com/mongodb/mongo-c-driver mongoc'
     )
 
-    @classmethod
-    def call(cls, **kwargs):
-        return cls.default_call(**kwargs)
-
 
 def functions():
     return FetchCDriverSource.defn()

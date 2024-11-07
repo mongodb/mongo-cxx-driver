@@ -37,10 +37,6 @@ class DebianPackageBuild(Function):
         ),
     ]
 
-    @classmethod
-    def call(cls, **kwargs):
-        return cls.default_call(**kwargs)
-
 
 class DebianPackageBuildMnmlstc(Function):
     name = 'build-package-debian-mnmlstc'
@@ -68,10 +64,6 @@ class DebianPackageBuildMnmlstc(Function):
         ),
     ]
 
-    @classmethod
-    def call(cls, **kwargs):
-        return cls.default_call(**kwargs)
-
 
 class RpmPackageBuild(Function):
     name = 'build-package-rpm'
@@ -92,10 +84,6 @@ class RpmPackageBuild(Function):
             remote_file='mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${execution}/rpm-packages.tar.gz',
         ),
     ]
-
-    @classmethod
-    def call(cls, **kwargs):
-        return cls.default_call(**kwargs)
 
 
 # pylint: disable=line-too-long

@@ -17,7 +17,7 @@ class UploadMongoOrchestrationArtifacts(Function):
                 if [[ -f mongodb-logs.tar ]]; then
                   gzip mongodb-logs.tar
                 fi
-            '''
+            ''',
         ),
         s3_put(
             command_type=EvgCommandType.SYSTEM,
@@ -32,10 +32,6 @@ class UploadMongoOrchestrationArtifacts(Function):
             remote_file='mongo-cxx-driver/${build_variant}/${revision}/${version_id}/${build_id}/logs/${task_id}-${execution}-mongodb-logs.tar.gz',
         ),
     ]
-
-    @classmethod
-    def call(cls, **kwargs):
-        return cls.default_call(**kwargs)
 
 
 def functions():

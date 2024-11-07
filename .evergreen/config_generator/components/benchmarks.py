@@ -37,10 +37,6 @@ class RunBenchmarks(Function):
         ),
     ]
 
-    @classmethod
-    def call(cls, **kwargs):
-        return cls.default_call(**kwargs)
-
 
 class CompileBenchmarks(Function):
     name = 'benchmarks-compile'
@@ -54,10 +50,6 @@ class CompileBenchmarks(Function):
             cmake --build build --target microbenchmarks --parallel 64
         '''
     )
-
-    @classmethod
-    def call(cls, **kwargs):
-        return cls.default_call(**kwargs)
 
 
 def functions():

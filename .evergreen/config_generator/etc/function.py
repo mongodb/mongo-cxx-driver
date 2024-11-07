@@ -18,6 +18,10 @@ class Function:
     def default_call(cls, **kwargs) -> FunctionCall:
         return FunctionCall(func=cls.name, **kwargs)
 
+    @classmethod
+    def call(cls, **kwargs) -> FunctionCall:
+        return cls.default_call(**kwargs)
+
 
 def merge_defns(*args):
     return ChainMap(*args)

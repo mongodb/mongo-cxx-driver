@@ -29,10 +29,6 @@ class BuildMongohouse(Function):
         '''
     )
 
-    @classmethod
-    def call(cls, **kwargs):
-        return cls.default_call(**kwargs)
-
 
 class RunMongohouse(Function):
     name = 'run_mongohouse'
@@ -46,10 +42,6 @@ class RunMongohouse(Function):
         '''
     )
 
-    @classmethod
-    def call(cls, **kwargs):
-        return cls.default_call(**kwargs)
-
 
 class TestMongohouse(Function):
     name = 'test_mongohouse'
@@ -58,10 +50,6 @@ class TestMongohouse(Function):
         working_dir='mongo-cxx-driver',
         script='.evergreen/scripts/test-mongohouse.sh'
     )
-
-    @classmethod
-    def call(cls, **kwargs):
-        return cls.default_call(**kwargs)
 
 
 def functions():

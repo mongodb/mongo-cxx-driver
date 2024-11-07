@@ -28,10 +28,6 @@ class CheckAugmentedSBOM(Function):
         script='.evergreen/scripts/check-augmented-sbom.sh',
     )
 
-    @classmethod
-    def call(cls, **kwargs):
-        return cls.default_call(**kwargs)
-
 
 class UploadAugmentedSBOM(Function):
     name = 'upload augmented sbom'
@@ -59,10 +55,6 @@ class UploadAugmentedSBOM(Function):
             remote_file='mongo-cxx-driver/${build_variant}/${revision}/${version_id}/${build_id}/silk/augmented.sbom.json.diff',
         ),
     ]
-
-    @classmethod
-    def call(cls, **kwargs):
-        return cls.default_call(**kwargs)
 
 
 def functions():

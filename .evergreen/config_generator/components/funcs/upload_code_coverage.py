@@ -13,10 +13,6 @@ class UploadCodeCoverage(Function):
         script='.evergreen/scripts/upload-code-coverage.sh',
     )
 
-    @classmethod
-    def call(cls, **kwargs):
-        return cls.default_call(**kwargs)
-
 
 def functions():
     return UploadCodeCoverage.defn()
