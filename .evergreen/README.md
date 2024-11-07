@@ -5,10 +5,10 @@
 Use [Astral uv](https://docs.astral.sh/uv/) to run the `config_generator/generate.py` script from the project root directory:
 
 ```bash
-uv run .evergreen/config_generator/generate.py
+uv run --frozen .evergreen/config_generator/generate.py
 ```
 
-Python binary and package requirements are defined in the project root directory's `pyproject.toml` file.
+Python binary and package requirements are defined in the project root directory's `pyproject.toml` file. When the `pyproject.toml` file is updated, omit `--frozen` to allow `uv.lock` to be updated.
 
 ## Layout
 
