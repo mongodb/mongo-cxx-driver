@@ -130,6 +130,8 @@ class Dumper(ConfigDumper):
             'args',
         ]
 
+        mapping = mapping.copy()
+
         ordered = {
             field: mapping.pop(field) for field in before if field in mapping
         }

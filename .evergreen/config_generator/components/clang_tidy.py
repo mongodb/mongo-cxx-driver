@@ -29,8 +29,8 @@ class ClangTidy(Function):
     )
 
     @classmethod
-    def call(cls, compiler: str, vars: Mapping[str, str] = {}):
-        vars = vars if vars else {}
+    def call(cls, compiler: str, vars: Mapping[str, str] = None):
+        vars = dict(vars or {})
 
         vars |= compiler_to_vars(compiler)
 

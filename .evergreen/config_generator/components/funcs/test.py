@@ -44,8 +44,8 @@ class Test(Function):
     )
 
     @classmethod
-    def call(cls, build_type: str | None = None, compiler: str | None = None, vars: Mapping[str, str] = {}):
-        vars = vars if vars else {}
+    def call(cls, build_type: str | None = None, compiler: str | None = None, vars: Mapping[str, str] = None):
+        vars = dict(vars or {})
 
         vars |= {'build_type': build_type} if build_type else {}
         vars |= compiler_to_vars(compiler)

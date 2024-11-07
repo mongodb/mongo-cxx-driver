@@ -29,8 +29,8 @@ class StartMongod(Function):
     ]
 
     @classmethod
-    def call(cls, mongodb_version: str, topology: str, vars: Mapping[str, str] = {}):
-        vars = vars if vars else {}
+    def call(cls, mongodb_version: str, topology: str, vars: Mapping[str, str] = None):
+        vars = dict(vars or {})
 
         vars |= {'mongodb_version': mongodb_version}
 
