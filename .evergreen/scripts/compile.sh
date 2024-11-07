@@ -243,10 +243,7 @@ if [[ "${COMPILE_MACRO_GUARD_TESTS:-"OFF"}" == "ON" ]]; then
 fi
 
 echo "Configuring with CMake flags:"
-for flag in "${cmake_flags[@]}"; do
-  echo " - ${flag:?}"
-done
-echo
+printf " - %s\n" "${cmake_flags[@]}"
 
 "${cmake_binary}" "${cmake_flags[@]}" ..
 
