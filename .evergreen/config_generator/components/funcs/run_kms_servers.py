@@ -13,9 +13,9 @@ class RunKMSServers(Function):
                 set -o errexit
                 echo "Preparing CSFLE venv environment..."
                 if [[ "${distro_id}" =~ windows-64-vs2015-* ]]; then
-                # Python: ImportError: DLL load failed while importing _rust: The specified procedure could not be found.
-                echo "Preparing CSFLE venv environment... skipped."
-                exit 0
+                    # Python: ImportError: DLL load failed while importing _rust: The specified procedure could not be found.
+                    echo "Preparing CSFLE venv environment... skipped."
+                    exit 0
                 fi
                 cd ./drivers-evergreen-tools/.evergreen/csfle
                 # This function ensures future invocations of activate-kmstlsvenv.sh conducted in
@@ -33,9 +33,9 @@ class RunKMSServers(Function):
                 set -o errexit
                 echo "Starting mock KMS servers..."
                 if [[ "${distro_id}" =~ windows-64-vs2015-* ]]; then
-                # Python: ImportError: DLL load failed while importing _rust: The specified procedure could not be found.
-                echo "Starting mock KMS servers... skipped."
-                exit 0
+                    # Python: ImportError: DLL load failed while importing _rust: The specified procedure could not be found.
+                    echo "Starting mock KMS servers... skipped."
+                    exit 0
                 fi
                 cd ./drivers-evergreen-tools/.evergreen/csfle
                 . ./activate-kmstlsvenv.sh
