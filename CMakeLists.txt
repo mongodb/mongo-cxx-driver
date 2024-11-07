@@ -185,18 +185,6 @@ To build static libraries only, set both BUILD_SHARED_LIBS and BUILD_SHARED_AND_
     set(MONGOCXX_LINK_WITH_STATIC_MONGOC ON CACHE INTERNAL "")
 endif()
 
-option(MONGOCXX_OVERRIDE_DEFAULT_INSTALL_PREFIX "If enabled, mongocxx will set a default CMAKE_INSTALL_PREFIX if one is not already defined" TRUE)
-
-if(CMAKE_INSTALL_PREFIX_INITIALIZED_TO_DEFAULT AND MONGOCXX_OVERRIDE_DEFAULT_INSTALL_PREFIX)
-    message(WARNING
-        "mongocxx: The default CMAKE_INSTALL_PREFIX is being overridden to the "
-        "build directory. This behavior will not be the default in a future "
-        "release. Build with 'MONGOCXX_OVERRIDE_DEFAULT_INSTALL_PREFIX=OFF' to opt "
-        "into what will be the default behavior in a future release. Setting install "
-        "path to: ${CMAKE_BINARY_DIR}/install")
-    set(CMAKE_INSTALL_PREFIX "${CMAKE_BINARY_DIR}/install" CACHE PATH "default install path" FORCE)
-endif()
-
 include(GNUInstallDirs)
 include(ParseVersion)
 

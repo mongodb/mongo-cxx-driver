@@ -18,6 +18,8 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
     - `BSONCXX_POLY_USE_MNMLSTC`
     - `BSONCXX_POLY_USE_MNMLSTC_SYSTEM`
     - `BSONCXX_POLY_USE_BOOST`
+- Support for CMake option `MONGOCXX_OVERRIDE_DEFAULT_INSTALL_PREFIX`.
+  - `MONGOCXX_OVERRIDE_DEFAULT_INSTALL_PREFIX=OFF` is now implicit behavior.
 - Redeclarations of `bsoncxx::stdx` interfaces in the `mongocxx::stdx` namespace.
   - Use `bsoncxx::stdx::optional<T>` instead of `mongocxx::stdx::optional<T>`.
   - Use `bsoncxx::stdx::string_view` instead of `mongocxx::stdx::string_view`.
