@@ -675,9 +675,9 @@ tasks:
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
           USE_STATIC_LIBS: 1
-  - name: integration-macos-1100-release-shared-boost-5.0-single
+  - name: integration-macos-1100-release-shared-5.0-single
     run_on: macos-1100
-    tags: [integration, macos-1100, release, shared, boost, "5.0", single]
+    tags: [integration, macos-1100, release, shared, "5.0", single]
     commands:
       - command: expansions.update
         params:
@@ -690,16 +690,15 @@ tasks:
       - func: fetch_c_driver_source
       - func: compile
         vars:
-          BSONCXX_POLYFILL: boost
           RUN_DISTCHECK: 1
       - func: fetch-det
       - func: run_kms_servers
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
-  - name: integration-macos-1100-release-shared-boost-extra_alignment-5.0-single
+  - name: integration-macos-1100-release-shared-extra_alignment-5.0-single
     run_on: macos-1100
-    tags: [integration, macos-1100, release, shared, boost, extra_alignment, "5.0", single]
+    tags: [integration, macos-1100, release, shared, extra_alignment, "5.0", single]
     commands:
       - command: expansions.update
         params:
@@ -715,16 +714,15 @@ tasks:
           SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: compile
         vars:
-          BSONCXX_POLYFILL: boost
           BSON_EXTRA_ALIGNMENT: 1
       - func: fetch-det
       - func: run_kms_servers
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
-  - name: integration-macos-1100-release-shared-boost-extra_alignment-latest-single
+  - name: integration-macos-1100-release-shared-extra_alignment-latest-single
     run_on: macos-1100
-    tags: [integration, macos-1100, release, shared, boost, extra_alignment, latest, single]
+    tags: [integration, macos-1100, release, shared, extra_alignment, latest, single]
     commands:
       - command: expansions.update
         params:
@@ -740,16 +738,15 @@ tasks:
           SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: compile
         vars:
-          BSONCXX_POLYFILL: boost
           BSON_EXTRA_ALIGNMENT: 1
       - func: fetch-det
       - func: run_kms_servers
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
-  - name: integration-macos-1100-release-shared-boost-latest-single
+  - name: integration-macos-1100-release-shared-latest-single
     run_on: macos-1100
-    tags: [integration, macos-1100, release, shared, boost, latest, single]
+    tags: [integration, macos-1100, release, shared, latest, single]
     commands:
       - command: expansions.update
         params:
@@ -762,16 +759,15 @@ tasks:
       - func: fetch_c_driver_source
       - func: compile
         vars:
-          BSONCXX_POLYFILL: boost
           RUN_DISTCHECK: 1
       - func: fetch-det
       - func: run_kms_servers
       - func: test
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
-  - name: integration-macos-1100-release-static-boost-5.0-single
+  - name: integration-macos-1100-release-static-5.0-single
     run_on: macos-1100
-    tags: [integration, macos-1100, release, static, boost, "5.0", single]
+    tags: [integration, macos-1100, release, static, "5.0", single]
     commands:
       - command: expansions.update
         params:
@@ -784,7 +780,6 @@ tasks:
       - func: fetch_c_driver_source
       - func: compile
         vars:
-          BSONCXX_POLYFILL: boost
           RUN_DISTCHECK: 1
           USE_STATIC_LIBS: 1
       - func: fetch-det
@@ -793,9 +788,9 @@ tasks:
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
           USE_STATIC_LIBS: 1
-  - name: integration-macos-1100-release-static-boost-extra_alignment-5.0-single
+  - name: integration-macos-1100-release-static-extra_alignment-5.0-single
     run_on: macos-1100
-    tags: [integration, macos-1100, release, static, boost, extra_alignment, "5.0", single]
+    tags: [integration, macos-1100, release, static, extra_alignment, "5.0", single]
     commands:
       - command: expansions.update
         params:
@@ -811,7 +806,6 @@ tasks:
           SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: compile
         vars:
-          BSONCXX_POLYFILL: boost
           BSON_EXTRA_ALIGNMENT: 1
           USE_STATIC_LIBS: 1
       - func: fetch-det
@@ -820,9 +814,9 @@ tasks:
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
           USE_STATIC_LIBS: 1
-  - name: integration-macos-1100-release-static-boost-extra_alignment-latest-single
+  - name: integration-macos-1100-release-static-extra_alignment-latest-single
     run_on: macos-1100
-    tags: [integration, macos-1100, release, static, boost, extra_alignment, latest, single]
+    tags: [integration, macos-1100, release, static, extra_alignment, latest, single]
     commands:
       - command: expansions.update
         params:
@@ -838,7 +832,6 @@ tasks:
           SKIP_INSTALL_LIBMONGOCRYPT: 1
       - func: compile
         vars:
-          BSONCXX_POLYFILL: boost
           BSON_EXTRA_ALIGNMENT: 1
           USE_STATIC_LIBS: 1
       - func: fetch-det
@@ -847,9 +840,9 @@ tasks:
         vars:
           MONGOCXX_TEST_TOPOLOGY: single
           USE_STATIC_LIBS: 1
-  - name: integration-macos-1100-release-static-boost-latest-single
+  - name: integration-macos-1100-release-static-latest-single
     run_on: macos-1100
-    tags: [integration, macos-1100, release, static, boost, latest, single]
+    tags: [integration, macos-1100, release, static, latest, single]
     commands:
       - command: expansions.update
         params:
@@ -862,7 +855,6 @@ tasks:
       - func: fetch_c_driver_source
       - func: compile
         vars:
-          BSONCXX_POLYFILL: boost
           RUN_DISTCHECK: 1
           USE_STATIC_LIBS: 1
       - func: fetch-det
@@ -3677,12 +3669,6 @@ tasks:
     commands:
       - func: setup
       - func: build-package-debian
-  - name: packaging-debian-mnmlstc
-    run_on: debian12-latest-large
-    tags: [packaging, debian12-latest]
-    commands:
-      - func: setup
-      - func: build-package-debian-mnmlstc
   - name: packaging-rpm
     run_on: rhel92-arm64-large
     tags: [packaging, rhel92-arm64]
@@ -4009,17 +3995,6 @@ tasks:
           example_projects_cxx: clang++
           example_projects_cxxflags: -D_GLIBCXX_USE_CXX11_ABI=0 -fsanitize=undefined -fno-sanitize-recover=undefined -fno-omit-frame-pointer
           example_projects_ldflags: -fsanitize=undefined -fno-sanitize-recover=undefined
-  - name: scan-build-ubuntu2204-std11-boost
-    run_on: ubuntu2204-large
-    tags: [scan-build, ubuntu2204, std11, boost]
-    commands:
-      - func: setup
-      - func: fetch_c_driver_source
-      - func: run scan build
-        vars:
-          BSONCXX_POLYFILL: boost
-          CXX_STANDARD: 11
-      - func: upload scan artifacts
   - name: scan-build-ubuntu2204-std11-default
     run_on: ubuntu2204-large
     tags: [scan-build, ubuntu2204, std11]
@@ -4041,28 +4016,6 @@ tasks:
           BSONCXX_POLYFILL: impls
           CXX_STANDARD: 11
       - func: upload scan artifacts
-  - name: scan-build-ubuntu2204-std11-mnmlstc
-    run_on: ubuntu2204-large
-    tags: [scan-build, ubuntu2204, std11, mnmlstc]
-    commands:
-      - func: setup
-      - func: fetch_c_driver_source
-      - func: run scan build
-        vars:
-          BSONCXX_POLYFILL: mnmlstc
-          CXX_STANDARD: 11
-      - func: upload scan artifacts
-  - name: scan-build-ubuntu2204-std14-boost
-    run_on: ubuntu2204-large
-    tags: [scan-build, ubuntu2204, std14, boost]
-    commands:
-      - func: setup
-      - func: fetch_c_driver_source
-      - func: run scan build
-        vars:
-          BSONCXX_POLYFILL: boost
-          CXX_STANDARD: 14
-      - func: upload scan artifacts
   - name: scan-build-ubuntu2204-std14-default
     run_on: ubuntu2204-large
     tags: [scan-build, ubuntu2204, std14]
@@ -4082,17 +4035,6 @@ tasks:
       - func: run scan build
         vars:
           BSONCXX_POLYFILL: impls
-          CXX_STANDARD: 14
-      - func: upload scan artifacts
-  - name: scan-build-ubuntu2204-std14-mnmlstc
-    run_on: ubuntu2204-large
-    tags: [scan-build, ubuntu2204, std14, mnmlstc]
-    commands:
-      - func: setup
-      - func: fetch_c_driver_source
-      - func: run scan build
-        vars:
-          BSONCXX_POLYFILL: mnmlstc
           CXX_STANDARD: 14
       - func: upload scan artifacts
   - name: scan-build-ubuntu2204-std17-default
@@ -4442,9 +4384,9 @@ tasks:
           TEST_WITH_VALGRIND: "ON"
           disable_slow_tests: 1
           use_mongocryptd: true
-  - name: versioned-api-one-required-macos-1100-release-shared-boost
+  - name: versioned-api-one-required-macos-1100-release-shared
     run_on: macos-1100
-    tags: [versioned-api, macos-1100, release, shared, boost]
+    tags: [versioned-api, macos-1100, release, shared]
     commands:
       - func: setup
       - func: start_mongod
@@ -4455,7 +4397,6 @@ tasks:
       - func: fetch_c_driver_source
       - func: compile
         vars:
-          BSONCXX_POLYFILL: boost
           build_type: Release
       - func: fetch-det
       - func: run_kms_servers
@@ -4511,9 +4452,9 @@ tasks:
           example_projects_cxx_standard: 17
           generator: Visual Studio 16 2019
           platform: x64
-  - name: versioned-api-two-accepted-macos-1100-release-shared-boost
+  - name: versioned-api-two-accepted-macos-1100-release-shared
     run_on: macos-1100
-    tags: [versioned-api, macos-1100, release, shared, boost]
+    tags: [versioned-api, macos-1100, release, shared]
     commands:
       - func: setup
       - func: start_mongod
@@ -4524,7 +4465,6 @@ tasks:
       - func: fetch_c_driver_source
       - func: compile
         vars:
-          BSONCXX_POLYFILL: boost
           build_type: Release
       - func: fetch-det
       - func: run_kms_servers

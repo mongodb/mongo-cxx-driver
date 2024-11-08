@@ -38,33 +38,6 @@ class DebianPackageBuild(Function):
     ]
 
 
-class DebianPackageBuildMnmlstc(Function):
-    name = 'build-package-debian-mnmlstc'
-    desc = 'debian-mnmlstc'
-    commands = [
-        bash_exec(
-            command_type=EvgCommandType.TEST,
-            working_dir='mongo-cxx-driver',
-            script='''\
-                set -o errexit
-                export IS_PATCH="${is_patch}"
-                export DEB_BUILD_PROFILES="pkg.mongo-cxx-driver.mnmlstc"
-                .evergreen/scripts/debian_package_build.sh
-            ''',
-        ),
-        s3_put(
-            aws_key='${aws_key}',
-            aws_secret='${aws_secret}',
-            bucket='mciuploads',
-            content_type='${content_type|application/x-gzip}',
-            display_name='"deb.tar.gz"',
-            local_file='deb.tar.gz',
-            permissions='public-read',
-            remote_file='mongo-cxx-driver/${branch_name}/${revision}/${version_id}/${build_id}/${execution}/debian-packages-mnmlstc.tar.gz',
-        ),
-    ]
-
-
 class RpmPackageBuild(Function):
     name = 'build-package-rpm'
     desc = 'rpm'
@@ -90,7 +63,6 @@ class RpmPackageBuild(Function):
 # fmt: off
 MATRIX = [
     (DebianPackageBuild,        'debian12-latest'),
-    (DebianPackageBuildMnmlstc, 'debian12-latest'),
     (RpmPackageBuild,           'rhel92-arm64'   ),
 ]
 # fmt: on
@@ -100,7 +72,6 @@ MATRIX = [
 def functions():
     return merge_defns(
         DebianPackageBuild.defn(),
-        DebianPackageBuildMnmlstc.defn(),
         RpmPackageBuild.defn(),
     )
 

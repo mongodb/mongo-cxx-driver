@@ -20,9 +20,9 @@ TAG = 'versioned-api'
 # pylint: disable=line-too-long
 # fmt: off
 MATRIX = [
-    ('macos-1100',        None,        ['Release'], ['shared'], ['boost']),
-    ('ubuntu2004',        None,        ['Debug'  ], ['shared'], [None   ]),
-    ('windows-vsCurrent', 'vs2019x64', ['Debug'  ], ['shared'], [None   ]),
+    ('macos-1100',        None,        ['Release'], ['shared'], [None]),
+    ('ubuntu2004',        None,        ['Debug'  ], ['shared'], [None]),
+    ('windows-vsCurrent', 'vs2019x64', ['Debug'  ], ['shared'], [None]),
 ]
 # fmt: on
 # pylint: enable=line-too-long
@@ -66,9 +66,8 @@ def tasks():
             compile_vars = {}
             test_vars |= {'MONGOCXX_TEST_TOPOLOGY': 'single'}
 
-            match distro.os_type:
-                case 'macos': compile_vars |= {'BSONCXX_POLYFILL': 'boost'}
-                case 'windows': test_vars |= {'example_projects_cxx_standard': 17}
+            if distro.os_type == 'windows':
+                test_vars |= {'example_projects_cxx_standard': 17}
 
             res.append(
                 EvgTask(
