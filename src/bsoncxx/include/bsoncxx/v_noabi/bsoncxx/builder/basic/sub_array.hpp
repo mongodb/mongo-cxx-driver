@@ -57,7 +57,6 @@ class sub_array {
     ///
     /// Inductive base-case for the variadic append(...)
     ///
-    BSONCXX_INLINE
     void append() {}
 
    private:
@@ -72,7 +71,6 @@ class sub_array {
     //
     // Concatenates another bson array directly.
     //
-    BSONCXX_INLINE
     void append_(concatenate_array array) {
         _core->concatenate(array.view());
     }

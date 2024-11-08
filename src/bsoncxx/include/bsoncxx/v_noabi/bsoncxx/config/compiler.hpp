@@ -36,12 +36,6 @@
 
 // clang-format on
 
-// For backward compatibility. Use `inline` instead.
-#define BSONCXX_INLINE inline BSONCXX_ABI_NO_EXPORT
-
-// For backward compatibility. Use BSONCXX_ABI_EXPORT_CDECL instead.
-#define BSONCXX_CALL BSONCXX_ABI_CDECL
-
 ///
 /// @file
 /// Provides macros for internal use.

@@ -56,7 +56,6 @@ class sub_document {
     ///
     /// Inductive base-case for the variadic append(...)
     ///
-    BSONCXX_INLINE
     void append() {}
 
    private:
@@ -92,7 +91,6 @@ class sub_document {
     //
     // Concatenates another bson document directly.
     //
-    BSONCXX_INLINE
     void append_(concatenate_doc doc) {
         _core->concatenate(doc);
     }
