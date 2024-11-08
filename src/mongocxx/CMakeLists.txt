@@ -104,6 +104,9 @@ if(1)
         set(mongocxx_export_header_custom_content "")
         string(APPEND mongocxx_export_header_custom_content
             "\n"
+            "#undef MONGOCXX_DEPRECATED_EXPORT\n"
+            "#undef MONGOCXX_DEPRECATED_NO_EXPORT\n"
+            "\n"
             "#if defined(_MSC_VER)\n"
             "#define MONGOCXX_ABI_CDECL __cdecl\n"
             "#else\n"
@@ -111,14 +114,11 @@ if(1)
             "#endif\n"
             "\n"
             "#define MONGOCXX_ABI_EXPORT_CDECL(...) MONGOCXX_ABI_EXPORT __VA_ARGS__ MONGOCXX_ABI_CDECL\n"
-            "\n"
-            "// Declare the entity as deprecated.\n"
-            "#define MONGOCXX_DEPRECATED MONGOCXX_ABI_DEPRECATED\n"
         )
         generate_export_header(${TARGET}
             BASE_NAME MONGOCXX_ABI
             EXPORT_MACRO_NAME MONGOCXX_ABI_EXPORT
-            DEPRECATED_MACRO_NAME MONGOCXX_ABI_DEPRECATED
+            DEPRECATED_MACRO_NAME MONGOCXX_DEPRECATED
             EXPORT_FILE_NAME ${PROJECT_BINARY_DIR}/lib/mongocxx/v_noabi/mongocxx/config/export.hpp
             STATIC_DEFINE MONGOCXX_STATIC
             CUSTOM_CONTENT_FROM_VARIABLE mongocxx_export_header_custom_content

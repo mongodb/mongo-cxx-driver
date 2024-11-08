@@ -157,6 +157,9 @@ if(1)
         set(bsoncxx_export_header_custom_content "")
         string(APPEND bsoncxx_export_header_custom_content
             "\n"
+            "#undef BSONCXX_DEPRECATED_EXPORT\n"
+            "#undef BSONCXX_DEPRECATED_NO_EXPORT\n"
+            "\n"
             "#if defined(_MSC_VER)\n"
             "#define BSONCXX_ABI_CDECL __cdecl\n"
             "#else\n"
