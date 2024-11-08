@@ -178,55 +178,11 @@
 
 ///
 /// @ingroup bsoncxx-v_noabi-bsoncxx-config-export-hpp
-/// Equivalent to @ref BSONCXX_ABI_EXPORT.
-///
-/// @warning For internal use only!
-///
-/// @note This is a symbol visibility control macro, NOT a declaration of public API. Public API vs.
-/// private API is determined by the placement of the entity being declared (e.g. in a public
-/// header, as a public class member, etc.) or by documentation (e.g. absence of "For internal use
-/// only!" warnings). See [API and ABI
-/// Versioning](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/api-abi-versioning/).
-///
-#define BSONCXX_API BSONCXX_ABI_EXPORT
-
-///
-/// @ingroup bsoncxx-v_noabi-bsoncxx-config-export-hpp
-/// Equivalent to `inline` with @ref BSONCXX_ABI_NO_EXPORT.
-///
-/// @warning For internal use only!
-///
-/// @note This is a symbol visibility control macro, NOT a declaration of private API. Public API
-/// vs. private API is determined by the placement of the entity being declared (e.g. in a detail
-/// header, as a private class member, etc.) or by documentation (e.g. "For internal use only!",
-/// absence of documentation, etc.). See [API and ABI
-/// Versioning](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/api-abi-versioning/).
-///
-#define BSONCXX_PRIVATE inline BSONCXX_ABI_NO_EXPORT
-
-///
-/// @ingroup bsoncxx-v_noabi-bsoncxx-config-export-hpp
 /// Declares the associated entity as deprecated.
 ///
 /// @warning For internal use only!
 ///
 #define BSONCXX_DEPRECATED
-
-///
-/// @ingroup bsoncxx-v_noabi-bsoncxx-config-export-hpp
-/// Equivalent to @ref BSONCXX_API and @ref BSONCXX_DEPRECATED.
-///
-/// @warning For internal use only!
-///
-#define BSONCXX_DEPRECATED_EXPORT
-
-///
-/// @ingroup bsoncxx-v_noabi-bsoncxx-config-export-hpp
-/// Equivalent to @ref BSONCXX_PRIVATE and @ref BSONCXX_DEPRECATED.
-///
-/// @warning For internal use only!
-///
-#define BSONCXX_DEPRECATED_NO_EXPORT
 
 ///
 /// @} <!-- bsoncxx/v_noabi/bsoncxx/config/export.hpp -->
