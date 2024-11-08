@@ -319,13 +319,6 @@
 ///
 
 ///
-/// @dir bsoncxx/v_noabi/bsoncxx/util
-/// Headers provided by this directory are deprecated.
-///
-/// @deprecated To be removed in an upcoming major release.
-///
-
-///
 /// @namespace bsoncxx::v_noabi
 /// Declares entities whose ABI stability is NOT guaranteed.
 ///
