@@ -70,8 +70,8 @@ DOC
 DOC
   } | tee -a old.xml new.xml >/dev/null
 
-  cat old.xml | tee cxx-abi/old.xml cxx-noabi/old.xml >/dev/null
-  cat new.xml | tee cxx-abi/new.xml cxx-noabi/new.xml >/dev/null
+  tee cxx-abi/old.xml cxx-noabi/old.xml <old.xml >/dev/null
+  tee cxx-abi/new.xml cxx-noabi/new.xml <new.xml >/dev/null
   rm old.xml new.xml
 fi
 
