@@ -1,0 +1,87 @@
+task_groups:
+  - name: tg-abi-stability
+    max_hosts: -1
+    setup_group_can_fail_task: true
+    setup_task:
+      - command: git.get_project
+        params:
+          directory: mongo-cxx-driver
+      - func: install_c_driver
+      - command: subprocess.exec
+        params:
+          binary: bash
+          include_expansions_in_env:
+            - cxx_standard
+          args:
+            - -c
+            - mongo-cxx-driver/.evergreen/scripts/abi-stability-setup.sh
+    tasks:
+      - .abi-stability
+    teardown_task:
+      - command: subprocess.exec
+        params:
+          binary: bash
+          args:
+            - -c
+            - rm -rf *
+    teardown_task_can_fail_task: true
+  - name: tg-atlas-search-indexes-7.0
+    setup_group:
+      - func: setup
+      - func: fetch-det
+      - command: subprocess.exec
+        params:
+          binary: bash
+          working_dir: mongo-cxx-driver
+          add_expansions_to_env: true
+          env:
+            MONGODB_VERSION: "7.0"
+          args:
+            - -c
+            - ${DRIVERS_TOOLS}/.evergreen/atlas/setup-atlas-cluster.sh
+      - command: expansions.update
+        params:
+          file: mongo-cxx-driver/atlas-expansion.yml
+    setup_group_can_fail_task: true
+    setup_group_timeout_secs: 1800
+    tasks:
+      - atlas-search-indexes-7.0
+    teardown_group:
+      - command: subprocess.exec
+        params:
+          binary: bash
+          working_dir: mongo-cxx-driver
+          add_expansions_to_env: true
+          args:
+            - -c
+            - ${DRIVERS_TOOLS}/.evergreen/atlas/teardown-atlas-cluster.sh
+  - name: tg-atlas-search-indexes-8.0
+    setup_group:
+      - func: setup
+      - func: fetch-det
+      - command: subprocess.exec
+        params:
+          binary: bash
+          working_dir: mongo-cxx-driver
+          add_expansions_to_env: true
+          env:
+            MONGODB_VERSION: "8.0"
+          args:
+            - -c
+            - ${DRIVERS_TOOLS}/.evergreen/atlas/setup-atlas-cluster.sh
+      - command: expansions.update
+        params:
+          file: mongo-cxx-driver/atlas-expansion.yml
+    setup_group_can_fail_task: true
+    setup_group_timeout_secs: 1800
+    tasks:
+      - atlas-search-indexes-8.0
+    teardown_group:
+      - command: subprocess.exec
+        params:
+          binary: bash
+          working_dir: mongo-cxx-driver
+          add_expansions_to_env: true
+          args:
+            - -c
+            - ${DRIVERS_TOOLS}/.evergreen/atlas/teardown-atlas-cluster.sh

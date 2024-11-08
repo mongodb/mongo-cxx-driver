@@ -3,7 +3,7 @@
 set -o errexit
 set -o pipefail
 
-: "${BSONCXX_POLYFILL:?}"
+: "${BSONCXX_POLYFILL:-}"
 : "${CXX_STANDARD:?}"
 
 mongoc_prefix="$(pwd)/../mongoc"
@@ -53,10 +53,10 @@ CMAKE_BUILD_PARALLEL_LEVEL="$(nproc)"
 export CMAKE_BUILD_PARALLEL_LEVEL
 
 cmake_flags=(
-  -D CMAKE_BUILD_TYPE=Debug
-  -D "CMAKE_CXX_STANDARD=${CXX_STANDARD:?}"
-  -D CMAKE_CXX_STANDARD_REQUIRED=ON
-  -D ENABLE_TESTS=OFF
+  "-DCMAKE_BUILD_TYPE=Debug"
+  "-DCMAKE_CXX_STANDARD=${CXX_STANDARD:?}"
+  "-DCMAKE_CXX_STANDARD_REQUIRED=ON"
+  "-DENABLE_TESTS=OFF"
 )
 
 scan_build_flags=(
@@ -66,12 +66,13 @@ scan_build_flags=(
   --exclude "$(pwd)/build/_deps" # mongoc
 )
 
-case "${BSONCXX_POLYFILL:?}" in
-impls) cmake_flags+=(-D "BSONCXX_POLY_USE_IMPLS=ON") ;;
-std) cmake_flags+=(-D "BSONCXX_POLY_USE_STD=ON") ;;
+case "${BSONCXX_POLYFILL:-}" in
+impls) cmake_flags+=("-DBSONCXX_POLY_USE_IMPLS=ON") ;;
+std) cmake_flags+=("-DBSONCXX_POLY_USE_STD=ON") ;;
 esac
 
-echo "Configuring with CMake flags: ${cmake_flags[*]}"
+echo "Configuring with CMake flags:"
+printf " - %s\n" "${cmake_flags[@]}"
 
 # Configure via scan-build for consistency.
 CCCACHE_DISABLE=1 "${scan_build_binary}" "${scan_build_flags[@]}" "${cmake_binary:?}" -S . -B build "${cmake_flags[@]}"

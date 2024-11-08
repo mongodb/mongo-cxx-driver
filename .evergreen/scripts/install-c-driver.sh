@@ -70,11 +70,13 @@ cmake_binary="$(find_cmake_latest)"
 command -v "${cmake_binary:?}"
 
 # Install libmongocrypt.
-{
-  echo "Installing libmongocrypt into ${mongoc_dir}..." 1>&2
-  "${mongoc_dir}/.evergreen/scripts/compile-libmongocrypt.sh" "${cmake_binary}" "${mongoc_idir}" "${mongoc_install_idir}"
-  echo "Installing libmongocrypt into ${mongoc_dir}... done." 1>&2
-} >/dev/null
+if [[ "${SKIP_INSTALL_LIBMONGOCRYPT:-}" != "1" ]]; then
+  {
+    echo "Installing libmongocrypt into ${mongoc_dir}..." 1>&2
+    "${mongoc_dir}/.evergreen/scripts/compile-libmongocrypt.sh" "${cmake_binary}" "${mongoc_idir}" "${mongoc_install_idir}"
+    echo "Installing libmongocrypt into ${mongoc_dir}... done." 1>&2
+  } >/dev/null
+fi
 
 if [[ "${OSTYPE}" == darwin* ]]; then
   # MacOS does not have nproc.
@@ -99,12 +101,15 @@ declare -a configure_flags=(
   "-DCMAKE_INSTALL_PREFIX=${mongoc_install_idir}"
   "-DCMAKE_PREFIX_PATH=${mongoc_idir}"
   "-DENABLE_AUTOMATIC_INIT_AND_CLEANUP=OFF"
-  "-DENABLE_CLIENT_SIDE_ENCRYPTION=ON"
   "-DENABLE_EXAMPLES=OFF"
   "-DENABLE_SHM_COUNTERS=OFF"
   "-DENABLE_STATIC=ON"
   "-DENABLE_TESTS=OFF"
 )
+
+if [[ "${SKIP_INSTALL_LIBMONGOCRYPT:-}" != "1" ]]; then
+  configure_flags+=("-DENABLE_CLIENT_SIDE_ENCRYPTION=ON")
+fi
 
 declare -a compile_flags
 

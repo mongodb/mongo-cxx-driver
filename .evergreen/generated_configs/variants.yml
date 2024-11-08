@@ -1,0 +1,126 @@
+buildvariants:
+  - name: abi-stability-polyfill
+    display_name: ABI Stability Checks (polyfill)
+    display_tasks:
+      - name: ABI Stability Checks (polyfill)
+        execution_tasks:
+          - .abi-stability
+    expansions:
+      cxx_standard: "11"
+    tasks:
+      - name: tg-abi-stability
+  - name: abi-stability-stdlib
+    display_name: ABI Stability Checks (stdlib)
+    display_tasks:
+      - name: ABI Stability Checks (stdlib)
+        execution_tasks:
+          - .abi-stability
+    expansions:
+      cxx_standard: "17"
+    tasks:
+      - name: tg-abi-stability
+  - name: atlas-search-indexes-matrix
+    display_name: atlas-search-indexes-matrix
+    display_tasks:
+      - name: atlas-search-indexes-matrix
+        execution_tasks:
+          - .atlas-search-indexes
+    tasks:
+      - name: tg-atlas-search-indexes-7.0
+      - name: tg-atlas-search-indexes-8.0
+  - name: benchmarks
+    display_name: benchmarks
+    tasks:
+      - name: .benchmarks
+  - name: clang-tidy
+    display_name: Clang Tidy
+    tasks:
+      - name: .clang-tidy
+  - name: compile-only-matrix
+    display_name: compile-only-matrix
+    display_tasks:
+      - name: compile-only-matrix
+        execution_tasks:
+          - .compile-only
+    tasks:
+      - name: .compile-only .rhel81-power8
+        batchtime: 1440
+      - name: .compile-only .rhel83-zseries
+        batchtime: 1440
+      - name: .compile-only !.rhel81-power8 !.rhel83-zseries
+  - name: docker-build
+    display_name: Docker Build
+    tasks:
+      - name: .docker-build
+  - name: integration-matrix
+    display_name: integration-matrix
+    tasks:
+      - name: .integration .rhel81-power8
+        batchtime: 1440
+      - name: .integration .rhel83-zseries
+        batchtime: 1440
+      - name: .integration !.rhel81-power8 !.rhel83-zseries
+  - name: lint
+    display_name: Lint
+    tasks:
+      - name: .lint
+  - name: macro-guards-matrix
+    display_name: macro-guards-matrix
+    display_tasks:
+      - name: macro-guards-matrix
+        execution_tasks:
+          - .macro-guards
+    tasks:
+      - name: .macro-guards
+  - name: mongohouse
+    display_name: Mongohouse
+    tasks:
+      - name: .mongohouse
+  - name: packaging
+    display_name: Linux Distro Packaging
+    tasks:
+      - name: .packaging
+  - name: sanitizers-matrix
+    display_name: sanitizers-matrix
+    display_tasks:
+      - name: sanitizers-matrix
+        execution_tasks:
+          - .sanitizers
+    tasks:
+      - name: .sanitizers
+  - name: scan-build-matrix
+    display_name: scan-build-matrix
+    display_tasks:
+      - name: scan-build-matrix
+        execution_tasks:
+          - .scan-build
+    tasks:
+      - name: .scan-build
+  - name: silk
+    display_name: Silk
+    tasks:
+      - name: .silk
+  - name: uninstall-check
+    display_name: Uninstall Check
+    display_tasks:
+      - name: uninstall-check
+        execution_tasks:
+          - .uninstall-check
+    tasks:
+      - name: .uninstall-check
+  - name: valgrind-matrix
+    display_name: valgrind-matrix
+    display_tasks:
+      - name: valgrind-matrix
+        execution_tasks:
+          - .valgrind
+    tasks:
+      - name: .valgrind
+  - name: versioned-api-matrix
+    display_name: versioned-api-matrix
+    display_tasks:
+      - name: versioned-api-matrix
+        execution_tasks:
+          - .versioned-api
+    tasks:
+      - name: .versioned-api
