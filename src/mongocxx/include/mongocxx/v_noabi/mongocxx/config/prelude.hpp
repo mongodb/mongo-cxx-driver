@@ -41,16 +41,8 @@
 #undef MONGOCXX_ABI_CDECL
 #pragma push_macro("MONGOCXX_ABI_EXPORT_CDECL")
 #undef MONGOCXX_ABI_EXPORT_CDECL
-#pragma push_macro("MONGOCXX_API")
-#undef MONGOCXX_API
-#pragma push_macro("MONGOCXX_PRIVATE")
-#undef MONGOCXX_PRIVATE
 #pragma push_macro("MONGOCXX_DEPRECATED")
 #undef MONGOCXX_DEPRECATED
-#pragma push_macro("MONGOCXX_DEPRECATED_EXPORT")
-#undef MONGOCXX_DEPRECATED_EXPORT
-#pragma push_macro("MONGOCXX_DEPRECATED_NO_EXPORT")
-#undef MONGOCXX_DEPRECATED_NO_EXPORT
 #endif
 
 #include <mongocxx/config/compiler.hpp>

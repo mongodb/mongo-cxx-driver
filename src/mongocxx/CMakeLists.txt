@@ -112,12 +112,6 @@ if(1)
             "\n"
             "#define MONGOCXX_ABI_EXPORT_CDECL(...) MONGOCXX_ABI_EXPORT __VA_ARGS__ MONGOCXX_ABI_CDECL\n"
             "\n"
-            "// For backward compatibility. Use MONGOCXX_ABI_EXPORT_CDECL instead.\n"
-            "#define MONGOCXX_API MONGOCXX_ABI_EXPORT\n"
-            "\n"
-            "// For backward compatibility. Use MONGOCXX_ABI_NO_EXPORT instead.\n"
-            "#define MONGOCXX_PRIVATE MONGOCXX_ABI_NO_EXPORT\n"
-            "\n"
             "// Declare the entity as deprecated.\n"
             "#define MONGOCXX_DEPRECATED MONGOCXX_ABI_DEPRECATED\n"
         )

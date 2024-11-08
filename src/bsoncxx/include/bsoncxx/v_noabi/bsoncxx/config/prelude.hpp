@@ -49,10 +49,6 @@
 #undef BSONCXX_FWD
 
 // compiler.hpp
-#pragma push_macro("BSONCXX_INLINE")
-#undef BSONCXX_INLINE
-#pragma push_macro("BSONCXX_CALL")
-#undef BSONCXX_CALL
 #pragma push_macro("BSONCXX_IF_MSVC")
 #undef BSONCXX_IF_MSVC
 #pragma push_macro("BSONCXX_IF_GCC")
@@ -95,15 +91,7 @@
 #undef BSONCXX_ABI_CDECL
 #pragma push_macro("BSONCXX_ABI_EXPORT_CDECL")
 #undef BSONCXX_ABI_EXPORT_CDECL
-#pragma push_macro("BSONCXX_API")
-#undef BSONCXX_API
-#pragma push_macro("BSONCXX_PRIVATE")
-#undef BSONCXX_PRIVATE
 #pragma push_macro("BSONCXX_DEPRECATED")
-#undef BSONCXX_DEPRECATED
-#pragma push_macro("BSONCXX_DEPRECATED_EXPORT")
-#undef BSONCXX_DEPRECATED
-#pragma push_macro("BSONCXX_DEPRECATED_NO_EXPORT")
 #undef BSONCXX_DEPRECATED
 
 #include <bsoncxx/config/util.hpp>

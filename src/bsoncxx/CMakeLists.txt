@@ -164,12 +164,6 @@ if(1)
             "#endif\n"
             "\n"
             "#define BSONCXX_ABI_EXPORT_CDECL(...) BSONCXX_ABI_EXPORT __VA_ARGS__ BSONCXX_ABI_CDECL\n"
-            "\n"
-            "// For backward compatibility. Use BSONCXX_ABI_EXPORT_CDECL instead.\n"
-            "#define BSONCXX_API BSONCXX_ABI_EXPORT\n"
-            "\n"
-            "// For backward compatibility. Use BSONCXX_ABI_NO_EXPORT instead.\n"
-            "#define BSONCXX_PRIVATE BSONCXX_ABI_NO_EXPORT\n"
         )
         generate_export_header(${TARGET}
             BASE_NAME BSONCXX_ABI

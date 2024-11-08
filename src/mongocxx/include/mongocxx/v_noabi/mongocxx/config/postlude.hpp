@@ -37,11 +37,7 @@
 #pragma pop_macro("MONGOCXX_ABI_NO_EXPORT")
 #pragma pop_macro("MONGOCXX_ABI_CDECL")
 #pragma pop_macro("MONGOCXX_ABI_EXPORT_CDECL")
-#pragma pop_macro("MONGOCXX_API")
-#pragma pop_macro("MONGOCXX_PRIVATE")
 #pragma pop_macro("MONGOCXX_DEPRECATED")
-#pragma pop_macro("MONGOCXX_DEPRECATED_EXPORT")
-#pragma pop_macro("MONGOCXX_DEPRECATED_NO_EXPORT")
 #endif
 
 // prelude.hpp

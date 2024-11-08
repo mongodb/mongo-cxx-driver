@@ -12,12 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// For backward compatibility. Use `inline` instead.
-#define MONGOCXX_INLINE inline MONGOCXX_ABI_NO_EXPORT
-
-// For backward compatibility. Use MONGOCXX_ABI_EXPORT_CDECL instead.
-#define MONGOCXX_CALL MONGOCXX_ABI_CDECL
-
 ///
 /// @file
 /// Provides macros for internal use.
