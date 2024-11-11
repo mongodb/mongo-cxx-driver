@@ -13,7 +13,7 @@
 // limitations under the License.
 
 #include <bsoncxx/builder/basic/document.hpp>
-#include <bsoncxx/stdx/make_unique.hpp>
+#include <bsoncxx/private/make_unique.hh>
 #include <bsoncxx/string/to_string.hpp>
 
 #include <mongocxx/exception/error_code.hpp>
@@ -29,7 +29,7 @@ namespace mongocxx {
 namespace v_noabi {
 
 write_concern::write_concern()
-    : _impl{bsoncxx::v_noabi::stdx::make_unique<impl>(libmongoc::write_concern_new())} {}
+    : _impl{bsoncxx::make_unique<impl>(libmongoc::write_concern_new())} {}
 
 write_concern::write_concern(std::unique_ptr<impl>&& implementation) {
     _impl.reset(implementation.release());
@@ -39,13 +39,14 @@ write_concern::write_concern(write_concern&&) noexcept = default;
 write_concern& write_concern::operator=(write_concern&&) noexcept = default;
 
 write_concern::write_concern(const write_concern& other)
-    : _impl(bsoncxx::v_noabi::stdx::make_unique<impl>(
-          libmongoc::write_concern_copy(other._impl->write_concern_t))) {}
+    : _impl(
+          bsoncxx::make_unique<impl>(libmongoc::write_concern_copy(other._impl->write_concern_t))) {
+}
 
 write_concern& write_concern::operator=(const write_concern& other) {
-    _impl.reset(bsoncxx::v_noabi::stdx::make_unique<impl>(
-                    libmongoc::write_concern_copy(other._impl->write_concern_t))
-                    .release());
+    _impl.reset(
+        bsoncxx::make_unique<impl>(libmongoc::write_concern_copy(other._impl->write_concern_t))
+            .release());
     return *this;
 }
 

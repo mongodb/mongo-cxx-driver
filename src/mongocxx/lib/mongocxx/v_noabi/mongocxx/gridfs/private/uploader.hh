@@ -17,7 +17,7 @@
 #include <string>
 #include <vector>
 
-#include <bsoncxx/stdx/make_unique.hpp>
+#include <bsoncxx/private/make_unique.hh>
 #include <bsoncxx/string/to_string.hpp>
 
 #include <mongocxx/gridfs/uploader.hpp>
@@ -38,8 +38,7 @@ class uploader::impl {
          std::int32_t chunk_size,
          bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::value> metadata)
         : session{session},
-          buffer{
-              bsoncxx::v_noabi::stdx::make_unique<std::uint8_t[]>(static_cast<size_t>(chunk_size))},
+          buffer{bsoncxx::make_unique<std::uint8_t[]>(static_cast<size_t>(chunk_size))},
           buffer_off{0},
           chunks{std::move(chunks)},
           chunk_size{chunk_size},

@@ -21,7 +21,7 @@
 #include <bsoncxx/builder/stream/document.hpp>
 #include <bsoncxx/builder/stream/helpers.hpp>
 #include <bsoncxx/document/element.hpp>
-#include <bsoncxx/stdx/make_unique.hpp>
+#include <bsoncxx/private/make_unique.hh>
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/bson_value/make_value.hpp>
@@ -3023,10 +3023,8 @@ range_explicit_encryption_objects range_explicit_encryption_setup(const std::str
 
     const auto kms_providers = _make_kms_doc(false);
 
-    using bsoncxx::stdx::make_unique;
-
     // Create a MongoClient named `keyVaultClient`.
-    auto& key_vault_client = *(res.key_vault_client_ptr = make_unique<mongocxx::client>(
+    auto& key_vault_client = *(res.key_vault_client_ptr = bsoncxx::make_unique<mongocxx::client>(
                                    uri(), test_util::add_test_server_api()));
 
     // Create a ClientEncryption object named `clientEncryption` with these options:
@@ -3036,7 +3034,7 @@ range_explicit_encryption_objects range_explicit_encryption_setup(const std::str
     //      kmsProviders: { "local": { "key": <base64 decoding of LOCAL_MASTERKEY> } }
     //   }
     auto& client_encryption =
-        *(res.client_encryption_ptr = make_unique<mongocxx::client_encryption>(
+        *(res.client_encryption_ptr = bsoncxx::make_unique<mongocxx::client_encryption>(
               options::client_encryption()
                   .key_vault_client(&key_vault_client)
                   .key_vault_namespace({"keyvault", "datakeys"})
@@ -3048,7 +3046,7 @@ range_explicit_encryption_objects range_explicit_encryption_setup(const std::str
     //      kmsProviders: { "local": { "key": <base64 decoding of LOCAL_MASTERKEY> } }
     //      bypassQueryAnalysis: true
     //   }
-    auto& encrypted_client = *(res.encrypted_client_ptr = make_unique<mongocxx::client>(
+    auto& encrypted_client = *(res.encrypted_client_ptr = bsoncxx::make_unique<mongocxx::client>(
                                    uri(),
                                    test_util::add_test_server_api().auto_encryption_opts(
                                        options::auto_encryption()
@@ -3057,7 +3055,8 @@ range_explicit_encryption_objects range_explicit_encryption_setup(const std::str
                                            .bypass_query_analysis(true))));
 
     // Ensure the type matches with the type of the encrypted field.
-    const auto& field_values = *(res.field_values_ptr = make_unique<field_type_values>(field_type));
+    const auto& field_values =
+        *(res.field_values_ptr = bsoncxx::make_unique<field_type_values>(field_type));
     const auto& field_name = (res.field_name = "encrypted" + type_str);
     const auto& range_opts = (res.range_opts = to_range_opts(field_type));
 

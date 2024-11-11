@@ -26,7 +26,7 @@
 #include <bsoncxx/exception/exception.hpp>
 #include <bsoncxx/private/helpers.hh>
 #include <bsoncxx/private/libbson.hh>
-#include <bsoncxx/stdx/make_unique.hpp>
+#include <bsoncxx/private/make_unique.hh>
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/types.hpp>
 
@@ -70,7 +70,6 @@ using bsoncxx::v_noabi::document::view_or_value;
 
 namespace {
 
-using bsoncxx::v_noabi::stdx::make_unique;
 using mongocxx::libbson::scoped_bson_t;
 
 const char* get_collection_name(mongoc_collection_t* collection) {
@@ -265,20 +264,20 @@ void collection::rename(
 
 collection::collection(const database& database,
                        bsoncxx::v_noabi::string::view_or_value collection_name)
-    : _impl(bsoncxx::v_noabi::stdx::make_unique<impl>(
+    : _impl(bsoncxx::make_unique<impl>(
           libmongoc::database_get_collection(database._get_impl().database_t,
                                              collection_name.terminated().data()),
           database.name(),
           database._get_impl().client_impl)) {}
 
 collection::collection(const database& database, void* collection)
-    : _impl(bsoncxx::v_noabi::stdx::make_unique<impl>(static_cast<mongoc_collection_t*>(collection),
-                                                      database.name(),
-                                                      database._get_impl().client_impl)) {}
+    : _impl(bsoncxx::make_unique<impl>(static_cast<mongoc_collection_t*>(collection),
+                                       database.name(),
+                                       database._get_impl().client_impl)) {}
 
 collection::collection(const collection& c) {
     if (c) {
-        _impl = bsoncxx::v_noabi::stdx::make_unique<impl>(c._get_impl());
+        _impl = bsoncxx::make_unique<impl>(c._get_impl());
     }
 }
 
@@ -286,7 +285,7 @@ collection& collection::operator=(const collection& c) {
     if (!c) {
         _impl.reset();
     } else if (!*this) {
-        _impl = bsoncxx::v_noabi::stdx::make_unique<impl>(c._get_impl());
+        _impl = bsoncxx::make_unique<impl>(c._get_impl());
     } else {
         *_impl = c._get_impl();
     }
@@ -1353,8 +1352,7 @@ void collection::read_concern(mongocxx::v_noabi::read_concern rc) {
 
 mongocxx::v_noabi::read_concern collection::read_concern() const {
     auto rc = libmongoc::collection_get_read_concern(_get_impl().collection_t);
-    return {
-        bsoncxx::v_noabi::stdx::make_unique<read_concern::impl>(libmongoc::read_concern_copy(rc))};
+    return {bsoncxx::make_unique<read_concern::impl>(libmongoc::read_concern_copy(rc))};
 }
 
 void collection::read_preference(mongocxx::v_noabi::read_preference rp) {
@@ -1363,7 +1361,7 @@ void collection::read_preference(mongocxx::v_noabi::read_preference rp) {
 
 mongocxx::v_noabi::read_preference collection::read_preference() const {
     mongocxx::v_noabi::read_preference rp(
-        bsoncxx::v_noabi::stdx::make_unique<read_preference::impl>(libmongoc::read_prefs_copy(
+        bsoncxx::make_unique<read_preference::impl>(libmongoc::read_prefs_copy(
             libmongoc::collection_get_read_prefs(_get_impl().collection_t))));
     return rp;
 }
@@ -1374,7 +1372,7 @@ void collection::write_concern(mongocxx::v_noabi::write_concern wc) {
 
 mongocxx::v_noabi::write_concern collection::write_concern() const {
     mongocxx::v_noabi::write_concern wc(
-        bsoncxx::v_noabi::stdx::make_unique<write_concern::impl>(libmongoc::write_concern_copy(
+        bsoncxx::make_unique<write_concern::impl>(libmongoc::write_concern_copy(
             libmongoc::collection_get_write_concern(_get_impl().collection_t))));
     return wc;
 }

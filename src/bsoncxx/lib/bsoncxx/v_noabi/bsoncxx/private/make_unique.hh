@@ -36,8 +36,6 @@
 #include <bsoncxx/stdx/type_traits.hpp>
 
 namespace bsoncxx {
-namespace v_noabi {
-namespace stdx {
 namespace detail {
 
 // Switch backend of make_unique by the type we are creating.
@@ -95,21 +93,17 @@ template <typename T>
 struct make_unique_impl<T&&> {};
 
 }  // namespace detail
-}  // namespace stdx
-}  // namespace v_noabi
 }  // namespace bsoncxx
 
 #endif  // !defined(BSONCXX_DETAIL_USE_STD_MAKE_UNIQUE) ||
         // !defined(__cpp_lib_smart_ptr_for_overwrite)
 
 namespace bsoncxx {
-namespace v_noabi {
-namespace stdx {
 
 // Unlike other C++17 polyfill features, this is a C++14 feature.
 // Use feature testing rather than polyfill library selection macros.
 #if defined(BSONCXX_DETAIL_USE_STD_MAKE_UNIQUE)
-using ::std::make_unique;
+using std::make_unique;
 #else
 
 // Equivalent to `std::make_unique<T>(args...)` where `T` is a non-array type.
@@ -143,7 +137,7 @@ std::unique_ptr<T> make_unique(std::size_t count) {
 // Unlike other C++17 polyfill features, this is a C++20 feature.
 // Use feature testing rather than polyfill library selection macros.
 #if defined(__cpp_lib_smart_ptr_for_overwrite)
-using ::std::make_unique_for_overwrite;
+using std::make_unique_for_overwrite;
 #else
 
 // Equivalent to `std::make_unique_for_overwrite<T>()` where `T` is a non-array type.
@@ -168,68 +162,8 @@ std::unique_ptr<T> make_unique_for_overwrite(std::size_t count) {
 
 #endif
 
-}  // namespace stdx
-}  // namespace v_noabi
 }  // namespace bsoncxx
 
 #pragma pop_macro("BSONCXX_DETAIL_USE_STD_MAKE_UNIQUE")
 
 #include <bsoncxx/config/postlude.hpp>
-
-namespace bsoncxx {
-namespace stdx {
-
-using ::bsoncxx::v_noabi::stdx::make_unique;
-using ::bsoncxx::v_noabi::stdx::make_unique_for_overwrite;
-
-}  // namespace stdx
-}  // namespace bsoncxx
-
-///
-/// @file
-/// Provides `std::make_unique`-related polyfills for internal use.
-///
-/// @deprecated Primarily for internal use; will be removed in an upcoming major release.
-///
-
-#if defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)
-
-namespace bsoncxx {
-namespace v_noabi {
-namespace stdx {
-
-///
-/// Equivalent to `std::make_unique` for non-array types.
-///
-/// @deprecated Primarily for internal use; will be removed in an upcoming major release.
-///
-template <typename T, typename... Args>
-std::unique_ptr<T> make_unique(Args&&... args);
-
-///
-/// Equivalent to `std::make_unique` for array types.
-///
-/// @deprecated Primarily for internal use. Will be removed in an upcoming major release.
-///
-template <typename T>
-std::unique_ptr<T> make_unique(std::size_t count);
-
-}  // namespace stdx
-}  // namespace v_noabi
-}  // namespace bsoncxx
-
-namespace bsoncxx {
-namespace stdx {
-
-/// @ref bsoncxx::v_noabi::stdx::make_unique(Args&&... args)
-template <typename T, typename... Args>
-std::unique_ptr<T> make_unique(Args&&... args);
-
-/// @ref bsoncxx::v_noabi::stdx::make_unique(std::size_t count)
-template <typename T>
-std::unique_ptr<T> make_unique(std::size_t count);
-
-}  // namespace stdx
-}  // namespace bsoncxx
-
-#endif  // defined(BSONCXX_PRIVATE_DOXYGEN_PREPROCESSOR)

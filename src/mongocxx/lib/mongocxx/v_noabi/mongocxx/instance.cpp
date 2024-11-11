@@ -17,7 +17,7 @@
 #include <type_traits>
 #include <utility>
 
-#include <bsoncxx/stdx/make_unique.hpp>
+#include <bsoncxx/private/make_unique.hh>
 
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
@@ -145,7 +145,7 @@ instance::instance(std::unique_ptr<logger> logger) {
         throw logic_error{error_code::k_cannot_recreate_instance};
     }
 
-    _impl = bsoncxx::v_noabi::stdx::make_unique<impl>(std::move(logger));
+    _impl = bsoncxx::make_unique<impl>(std::move(logger));
 }
 
 instance::instance(instance&&) noexcept = default;

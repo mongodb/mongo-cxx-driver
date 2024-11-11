@@ -2,7 +2,7 @@
 #include <cstdint>
 #include <new>
 
-#include <bsoncxx/stdx/make_unique.hpp>
+#include <bsoncxx/private/make_unique.hh>
 
 #include <bsoncxx/test/catch.hh>
 
@@ -14,18 +14,18 @@ struct something {
 };
 
 TEST_CASE("Create a unique_ptr") {
-    auto ptr = bsoncxx::stdx::make_unique<int>(12);
+    auto ptr = bsoncxx::make_unique<int>(12);
     REQUIRE(ptr);
     CHECK(*ptr == 12);
 
-    auto thing = bsoncxx::stdx::make_unique<something>(5);
+    auto thing = bsoncxx::make_unique<something>(5);
     REQUIRE(thing);
     CHECK(thing->value == 5);
 }
 
 TEST_CASE("Create a unique_ptr<T[]>") {
     const unsigned length = 12;
-    auto ptr = bsoncxx::stdx::make_unique<int[]>(length);
+    auto ptr = bsoncxx::make_unique<int[]>(length);
     REQUIRE(ptr);
     // All elements are direct-initialized, which produces '0' for `int`
     CHECK(ptr[0] == 0);
@@ -33,7 +33,7 @@ TEST_CASE("Create a unique_ptr<T[]>") {
     CHECK(res.first == ptr.get());
     CHECK(res.second == (ptr.get() + length));
 
-    ptr = bsoncxx::stdx::make_unique_for_overwrite<int[]>(length);
+    ptr = bsoncxx::make_unique_for_overwrite<int[]>(length);
     std::fill_n(ptr.get(), length, 42);
     CHECK(std::all_of(ptr.get(), ptr.get() + length, [](int n) { return n == 42; }));
 }

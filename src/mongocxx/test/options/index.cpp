@@ -13,7 +13,7 @@
 // limitations under the License.
 
 #include <bsoncxx/builder/basic/document.hpp>
-#include <bsoncxx/stdx/make_unique.hpp>
+#include <bsoncxx/private/make_unique.hh>
 #include <bsoncxx/types.hpp>
 
 #include <mongocxx/instance.hpp>
@@ -35,7 +35,7 @@ TEST_CASE("index", "[index][option]") {
 
     options::index idx;
     std::unique_ptr<options::index::wiredtiger_storage_options> storage =
-        bsoncxx::stdx::make_unique<options::index::wiredtiger_storage_options>();
+        bsoncxx::make_unique<options::index::wiredtiger_storage_options>();
 
     auto collation = make_document(kvp("locale", "en_US"));
     auto partial_filter_expression = make_document(kvp("x", true));

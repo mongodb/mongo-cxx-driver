@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/stdx/make_unique.hpp>
+#include <bsoncxx/private/make_unique.hh>
 
 #include <mongocxx/client_encryption.hpp>
 #include <mongocxx/private/client_encryption.hh>
@@ -26,7 +26,7 @@ namespace v_noabi {
 using mongocxx::libbson::scoped_bson_t;
 
 client_encryption::client_encryption(options::client_encryption opts)
-    : _impl(bsoncxx::v_noabi::stdx::make_unique<impl>(std::move(opts))) {}
+    : _impl(bsoncxx::make_unique<impl>(std::move(opts))) {}
 
 client_encryption::~client_encryption() = default;
 client_encryption::client_encryption(client_encryption&&) noexcept = default;

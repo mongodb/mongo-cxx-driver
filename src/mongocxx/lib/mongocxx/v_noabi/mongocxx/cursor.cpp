@@ -13,7 +13,7 @@
 // limitations under the License.
 
 #include <bsoncxx/private/libbson.hh>
-#include <bsoncxx/stdx/make_unique.hpp>
+#include <bsoncxx/private/make_unique.hh>
 
 #include <mongocxx/cursor.hpp>
 #include <mongocxx/exception/private/mongoc_error.hh>
@@ -27,8 +27,7 @@ namespace mongocxx {
 namespace v_noabi {
 
 cursor::cursor(void* cursor_ptr, bsoncxx::v_noabi::stdx::optional<cursor::type> cursor_type)
-    : _impl(bsoncxx::v_noabi::stdx::make_unique<impl>(static_cast<mongoc_cursor_t*>(cursor_ptr),
-                                                      cursor_type)) {}
+    : _impl(bsoncxx::make_unique<impl>(static_cast<mongoc_cursor_t*>(cursor_ptr), cursor_type)) {}
 
 cursor::cursor(cursor&&) noexcept = default;
 cursor& cursor::operator=(cursor&&) noexcept = default;

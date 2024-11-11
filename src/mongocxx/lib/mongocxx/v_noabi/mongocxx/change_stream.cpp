@@ -14,7 +14,7 @@
 
 #include <string>
 
-#include <bsoncxx/stdx/make_unique.hpp>
+#include <bsoncxx/private/make_unique.hh>
 
 #include <mongocxx/change_stream.hpp>
 #include <mongocxx/private/change_stream.hh>
@@ -62,8 +62,7 @@ bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view> change_stream
 
 // void* since we don't leak C driver defs into C++ driver
 change_stream::change_stream(void* change_stream_ptr)
-    : _impl(bsoncxx::v_noabi::stdx::make_unique<impl>(
-          static_cast<mongoc_change_stream_t*>(change_stream_ptr))) {}
+    : _impl(bsoncxx::make_unique<impl>(static_cast<mongoc_change_stream_t*>(change_stream_ptr))) {}
 
 change_stream::iterator::iterator()
     : change_stream::iterator::iterator{iter_type::k_default_constructed, nullptr} {}

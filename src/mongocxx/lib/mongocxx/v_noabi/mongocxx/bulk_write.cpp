@@ -14,7 +14,7 @@
 
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>
-#include <bsoncxx/stdx/make_unique.hpp>
+#include <bsoncxx/private/make_unique.hh>
 
 #include <mongocxx/bulk_write.hpp>
 #include <mongocxx/collection.hpp>
@@ -225,7 +225,7 @@ bulk_write::bulk_write(const collection& coll,
     }
 
     scoped_bson_t bson_options(options_builder.extract());
-    _impl = bsoncxx::v_noabi::stdx::make_unique<bulk_write::impl>(
+    _impl = bsoncxx::make_unique<bulk_write::impl>(
         libmongoc::collection_create_bulk_operation_with_opts(coll._get_impl().collection_t,
                                                               bson_options.bson()));
 

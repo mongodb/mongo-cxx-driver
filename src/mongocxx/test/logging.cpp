@@ -14,7 +14,7 @@
 
 #include <vector>
 
-#include <bsoncxx/stdx/make_unique.hpp>
+#include <bsoncxx/private/make_unique.hh>
 
 #include <mongocxx/instance.hpp>
 #include <mongocxx/logger.hpp>
@@ -53,7 +53,7 @@ TEST_CASE("a user-provided log handler will be used for logging output", "[insta
     reset_log_handler_when_done rlhwd;
 
     std::vector<test_log_handler::event> events;
-    mongocxx::instance driver{bsoncxx::stdx::make_unique<test_log_handler>(&events)};
+    mongocxx::instance driver{bsoncxx::make_unique<test_log_handler>(&events)};
 
     REQUIRE(&mongocxx::instance::current() == &driver);
 
