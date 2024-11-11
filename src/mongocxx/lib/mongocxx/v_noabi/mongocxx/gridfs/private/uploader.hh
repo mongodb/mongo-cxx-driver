@@ -17,7 +17,7 @@
 #include <string>
 #include <vector>
 
-#include <bsoncxx/stdx/make_unique.hpp>
+#include <bsoncxx/private/make_unique.hh>
 #include <bsoncxx/string/to_string.hpp>
 
 #include <mongocxx/gridfs/uploader.hpp>

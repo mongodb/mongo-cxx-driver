@@ -26,7 +26,7 @@
 #include <bsoncxx/exception/exception.hpp>
 #include <bsoncxx/private/helpers.hh>
 #include <bsoncxx/private/libbson.hh>
-#include <bsoncxx/stdx/make_unique.hpp>
+#include <bsoncxx/private/make_unique.hh>
 #include <bsoncxx/stdx/optional.hpp>
 #include <bsoncxx/types.hpp>
 

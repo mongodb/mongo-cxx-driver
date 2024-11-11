@@ -13,7 +13,7 @@
 // limitations under the License.
 
 #include <bsoncxx/builder/basic/kvp.hpp>
-#include <bsoncxx/stdx/make_unique.hpp>
+#include <bsoncxx/private/make_unique.hh>
 
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/error_code.hpp>

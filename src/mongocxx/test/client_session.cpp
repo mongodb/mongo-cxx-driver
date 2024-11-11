@@ -15,7 +15,7 @@
 #include <sstream>
 
 #include <bsoncxx/private/helpers.hh>
-#include <bsoncxx/stdx/make_unique.hpp>
+#include <bsoncxx/private/make_unique.hh>
 
 #include <mongocxx/client.hpp>
 #include <mongocxx/exception/bulk_write_exception.hpp>

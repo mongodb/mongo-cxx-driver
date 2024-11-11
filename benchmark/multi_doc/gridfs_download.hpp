@@ -18,7 +18,7 @@
 #include <fstream>
 
 #include "../microbench.hpp"
-#include <bsoncxx/stdx/make_unique.hpp>
+#include <bsoncxx/private/make_unique.hh>
 #include <bsoncxx/stdx/optional.hpp>
 #include <mongocxx/client.hpp>
 #include <mongocxx/gridfs/bucket.hpp>

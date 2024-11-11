@@ -13,7 +13,7 @@
 // limitations under the License.
 
 #include <bsoncxx/private/libbson.hh>
-#include <bsoncxx/stdx/make_unique.hpp>
+#include <bsoncxx/private/make_unique.hh>
 
 #include <mongocxx/cursor.hpp>
 #include <mongocxx/exception/private/mongoc_error.hh>

@@ -14,7 +14,7 @@
 
 #include <string>
 
-#include <bsoncxx/stdx/make_unique.hpp>
+#include <bsoncxx/private/make_unique.hh>
 
 #include <mongocxx/change_stream.hpp>
 #include <mongocxx/private/change_stream.hh>

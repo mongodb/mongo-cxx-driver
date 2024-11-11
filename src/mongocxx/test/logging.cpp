@@ -14,7 +14,7 @@
 
 #include <vector>
 
-#include <bsoncxx/stdx/make_unique.hpp>
+#include <bsoncxx/private/make_unique.hh>
 
 #include <mongocxx/instance.hpp>
 #include <mongocxx/logger.hpp>
