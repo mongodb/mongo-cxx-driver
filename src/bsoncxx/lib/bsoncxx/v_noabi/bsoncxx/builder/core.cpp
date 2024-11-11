@@ -256,7 +256,7 @@ class core::impl {
 };
 
 core::core(bool is_array) {
-    _impl = stdx::make_unique<impl>(is_array);
+    _impl = make_unique<impl>(is_array);
 }
 
 core::core(core&&) noexcept = default;

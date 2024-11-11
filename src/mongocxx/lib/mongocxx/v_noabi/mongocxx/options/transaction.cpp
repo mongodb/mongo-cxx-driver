@@ -24,16 +24,16 @@ namespace mongocxx {
 namespace v_noabi {
 namespace options {
 
-transaction::transaction() : _impl{bsoncxx::v_noabi::stdx::make_unique<impl>()} {}
+transaction::transaction() : _impl{bsoncxx::make_unique<impl>()} {}
 
 transaction::transaction(transaction&&) noexcept = default;
 transaction& transaction::operator=(transaction&&) noexcept = default;
 
 transaction::transaction(const transaction& other)
-    : _impl{bsoncxx::v_noabi::stdx::make_unique<impl>(other._get_impl().get_transaction_opt_t())} {}
+    : _impl{bsoncxx::make_unique<impl>(other._get_impl().get_transaction_opt_t())} {}
 
 transaction& transaction::operator=(const transaction& other) {
-    _impl = bsoncxx::v_noabi::stdx::make_unique<impl>(other._get_impl().get_transaction_opt_t());
+    _impl = bsoncxx::make_unique<impl>(other._get_impl().get_transaction_opt_t());
     return *this;
 }
 

@@ -28,7 +28,7 @@ struct validator::impl {
     bool _check_dot_keys{false};
 };
 
-validator::validator() : _impl{stdx::make_unique<impl>()} {}
+validator::validator() : _impl{make_unique<impl>()} {}
 
 validator::~validator() = default;
 

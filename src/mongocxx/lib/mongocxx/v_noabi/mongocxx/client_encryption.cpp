@@ -26,7 +26,7 @@ namespace v_noabi {
 using mongocxx::libbson::scoped_bson_t;
 
 client_encryption::client_encryption(options::client_encryption opts)
-    : _impl(bsoncxx::v_noabi::stdx::make_unique<impl>(std::move(opts))) {}
+    : _impl(bsoncxx::make_unique<impl>(std::move(opts))) {}
 
 client_encryption::~client_encryption() = default;
 client_encryption::client_encryption(client_encryption&&) noexcept = default;

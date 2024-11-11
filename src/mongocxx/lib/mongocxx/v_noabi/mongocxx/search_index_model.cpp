@@ -11,17 +11,17 @@ namespace mongocxx {
 namespace v_noabi {
 
 search_index_model::search_index_model(bsoncxx::v_noabi::document::view_or_value definition)
-    : _impl{bsoncxx::v_noabi::stdx::make_unique<impl>(definition)} {}
+    : _impl{bsoncxx::make_unique<impl>(definition)} {}
 search_index_model::search_index_model(bsoncxx::v_noabi::string::view_or_value name,
                                        bsoncxx::v_noabi::document::view_or_value definition)
-    : _impl{bsoncxx::v_noabi::stdx::make_unique<impl>(name, definition)} {}
+    : _impl{bsoncxx::make_unique<impl>(name, definition)} {}
 
 search_index_model::search_index_model(search_index_model&&) noexcept = default;
 
 search_index_model& search_index_model::operator=(search_index_model&&) noexcept = default;
 
 search_index_model::search_index_model(const search_index_model& other)
-    : _impl(bsoncxx::v_noabi::stdx::make_unique<impl>(other._get_impl())) {}
+    : _impl(bsoncxx::make_unique<impl>(other._get_impl())) {}
 
 search_index_model& search_index_model::operator=(const search_index_model& other) {
     _get_impl() = other._get_impl();

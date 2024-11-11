@@ -32,13 +32,13 @@ read_preference::read_preference(read_preference&&) noexcept = default;
 read_preference& read_preference::operator=(read_preference&&) noexcept = default;
 
 read_preference::read_preference(const read_preference& other)
-    : _impl(bsoncxx::v_noabi::stdx::make_unique<impl>(
-          libmongoc::read_prefs_copy(other._impl->read_preference_t))) {}
+    : _impl(
+          bsoncxx::make_unique<impl>(libmongoc::read_prefs_copy(other._impl->read_preference_t))) {}
 
 read_preference& read_preference::operator=(const read_preference& other) {
-    _impl.reset(bsoncxx::v_noabi::stdx::make_unique<impl>(
-                    libmongoc::read_prefs_copy(other._impl->read_preference_t))
-                    .release());
+    _impl.reset(
+        bsoncxx::make_unique<impl>(libmongoc::read_prefs_copy(other._impl->read_preference_t))
+            .release());
     return *this;
 }
 
@@ -47,13 +47,13 @@ read_preference::read_preference(std::unique_ptr<impl>&& implementation) {
 }
 
 read_preference::read_preference()
-    : _impl(bsoncxx::v_noabi::stdx::make_unique<impl>(libmongoc::read_prefs_new(
+    : _impl(bsoncxx::make_unique<impl>(libmongoc::read_prefs_new(
           libmongoc::conversions::read_mode_t_from_read_mode(read_mode::k_primary)))) {}
 
 read_preference::read_preference(read_mode mode) : read_preference(mode, deprecated_tag{}) {}
 
 read_preference::read_preference(read_mode mode, deprecated_tag)
-    : _impl(bsoncxx::v_noabi::stdx::make_unique<impl>(
+    : _impl(bsoncxx::make_unique<impl>(
           libmongoc::read_prefs_new(libmongoc::conversions::read_mode_t_from_read_mode(mode)))) {}
 
 read_preference::read_preference(read_mode mode, bsoncxx::v_noabi::document::view_or_value tags)

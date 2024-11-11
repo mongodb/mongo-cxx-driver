@@ -90,7 +90,7 @@ client::client(const mongocxx::v_noabi::uri& uri, const options::client& options
         throw exception{error_code::k_invalid_parameter, "could not construct client from URI"};
     }
 
-    _impl = bsoncxx::v_noabi::stdx::make_unique<impl>(std::move(new_client));
+    _impl = bsoncxx::make_unique<impl>(std::move(new_client));
 
     if (options.apm_opts()) {
         _impl->listeners = *options.apm_opts();
@@ -140,8 +140,7 @@ client::client(const mongocxx::v_noabi::uri& uri, const options::client& options
 }
 
 client::client(void* implementation)
-    : _impl{bsoncxx::v_noabi::stdx::make_unique<impl>(
-          static_cast<::mongoc_client_t*>(implementation))} {}
+    : _impl{bsoncxx::make_unique<impl>(static_cast<::mongoc_client_t*>(implementation))} {}
 
 client::client(client&&) noexcept = default;
 client& client::operator=(client&&) noexcept = default;
@@ -163,8 +162,7 @@ void client::read_concern(mongocxx::v_noabi::read_concern rc) {
 
 mongocxx::v_noabi::read_concern client::read_concern() const {
     auto rc = libmongoc::client_get_read_concern(_get_impl().client_t);
-    return {
-        bsoncxx::v_noabi::stdx::make_unique<read_concern::impl>(libmongoc::read_concern_copy(rc))};
+    return {bsoncxx::make_unique<read_concern::impl>(libmongoc::read_concern_copy(rc))};
 }
 
 void client::read_preference_deprecated(mongocxx::v_noabi::read_preference rp) {
@@ -176,14 +174,13 @@ void client::read_preference(mongocxx::v_noabi::read_preference rp) {
 }
 
 mongocxx::v_noabi::read_preference client::read_preference() const {
-    mongocxx::v_noabi::read_preference rp(
-        bsoncxx::v_noabi::stdx::make_unique<read_preference::impl>(
-            libmongoc::read_prefs_copy(libmongoc::client_get_read_prefs(_get_impl().client_t))));
+    mongocxx::v_noabi::read_preference rp(bsoncxx::make_unique<read_preference::impl>(
+        libmongoc::read_prefs_copy(libmongoc::client_get_read_prefs(_get_impl().client_t))));
     return rp;
 }
 
 mongocxx::v_noabi::uri client::uri() const {
-    mongocxx::v_noabi::uri connection_string(bsoncxx::v_noabi::stdx::make_unique<uri::impl>(
+    mongocxx::v_noabi::uri connection_string(bsoncxx::make_unique<uri::impl>(
         libmongoc::uri_copy(libmongoc::client_get_uri(_get_impl().client_t))));
     return connection_string;
 }
@@ -197,7 +194,7 @@ void client::write_concern(mongocxx::v_noabi::write_concern wc) {
 }
 
 mongocxx::v_noabi::write_concern client::write_concern() const {
-    mongocxx::v_noabi::write_concern wc(bsoncxx::v_noabi::stdx::make_unique<write_concern::impl>(
+    mongocxx::v_noabi::write_concern wc(bsoncxx::make_unique<write_concern::impl>(
         libmongoc::write_concern_copy(libmongoc::client_get_write_concern(_get_impl().client_t))));
     return wc;
 }

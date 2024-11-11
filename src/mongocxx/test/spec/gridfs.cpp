@@ -215,7 +215,7 @@ void test_download(database db,
     std::unique_ptr<std::uint8_t[]> actual(nullptr);
 
     if (length > 0) {
-        actual = bsoncxx::stdx::make_unique<std::uint8_t[]>(static_cast<std::size_t>(length));
+        actual = bsoncxx::make_unique<std::uint8_t[]>(static_cast<std::size_t>(length));
     }
 
     if (assert_doc["error"]) {

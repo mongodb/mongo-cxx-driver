@@ -2313,7 +2313,7 @@ TEST_CASE("create_index tests", "[collection]") {
         options.name(index_name);
 
         std::unique_ptr<options::index::wiredtiger_storage_options> wt_options =
-            bsoncxx::stdx::make_unique<options::index::wiredtiger_storage_options>();
+            bsoncxx::make_unique<options::index::wiredtiger_storage_options>();
         wt_options->config_string("block_allocation=first");
 
         REQUIRE_NOTHROW(options.storage_options(std::move(wt_options)));

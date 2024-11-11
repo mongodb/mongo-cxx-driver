@@ -481,7 +481,7 @@ TEST_CASE("optional: Nontrivial contents") {
         auto dup = std::move(aptr);
         CHECK(aptr == dup);
     }
-    aptr = bsoncxx::stdx::make_unique<int>(31);
+    aptr = bsoncxx::make_unique<int>(31);
     CHECK(aptr != nullopt);
     REQUIRE(aptr != nullptr);
     CHECK(**aptr == 31);

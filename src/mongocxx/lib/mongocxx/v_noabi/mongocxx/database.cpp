@@ -87,14 +87,14 @@ database::~database() = default;
 
 database::database(const mongocxx::v_noabi::client& client,
                    bsoncxx::v_noabi::string::view_or_value name)
-    : _impl(bsoncxx::v_noabi::stdx::make_unique<impl>(
+    : _impl(bsoncxx::make_unique<impl>(
           libmongoc::client_get_database(client._get_impl().client_t, name.terminated().data()),
           &client._get_impl(),
           name.terminated().data())) {}
 
 database::database(const database& d) {
     if (d) {
-        _impl = bsoncxx::v_noabi::stdx::make_unique<impl>(d._get_impl());
+        _impl = bsoncxx::make_unique<impl>(d._get_impl());
     }
 }
 
@@ -102,7 +102,7 @@ database& database::operator=(const database& d) {
     if (!d) {
         _impl.reset();
     } else if (!*this) {
-        _impl = bsoncxx::v_noabi::stdx::make_unique<impl>(d._get_impl());
+        _impl = bsoncxx::make_unique<impl>(d._get_impl());
     } else {
         *_impl = d._get_impl();
     }
@@ -362,8 +362,7 @@ void database::read_concern(mongocxx::v_noabi::read_concern rc) {
 
 mongocxx::v_noabi::read_concern database::read_concern() const {
     auto rc = libmongoc::database_get_read_concern(_get_impl().database_t);
-    return {
-        bsoncxx::v_noabi::stdx::make_unique<read_concern::impl>(libmongoc::read_concern_copy(rc))};
+    return {bsoncxx::make_unique<read_concern::impl>(libmongoc::read_concern_copy(rc))};
 }
 
 void database::read_preference(mongocxx::v_noabi::read_preference rp) {
@@ -382,9 +381,8 @@ bool database::has_collection(bsoncxx::v_noabi::string::view_or_value name) cons
 }
 
 mongocxx::v_noabi::read_preference database::read_preference() const {
-    mongocxx::v_noabi::read_preference rp(
-        bsoncxx::v_noabi::stdx::make_unique<read_preference::impl>(libmongoc::read_prefs_copy(
-            libmongoc::database_get_read_prefs(_get_impl().database_t))));
+    mongocxx::v_noabi::read_preference rp(bsoncxx::make_unique<read_preference::impl>(
+        libmongoc::read_prefs_copy(libmongoc::database_get_read_prefs(_get_impl().database_t))));
     return rp;
 }
 
@@ -394,7 +392,7 @@ void database::write_concern(mongocxx::v_noabi::write_concern wc) {
 
 mongocxx::v_noabi::write_concern database::write_concern() const {
     mongocxx::v_noabi::write_concern wc(
-        bsoncxx::v_noabi::stdx::make_unique<write_concern::impl>(libmongoc::write_concern_copy(
+        bsoncxx::make_unique<write_concern::impl>(libmongoc::write_concern_copy(
             libmongoc::database_get_write_concern(_get_impl().database_t))));
     return wc;
 }

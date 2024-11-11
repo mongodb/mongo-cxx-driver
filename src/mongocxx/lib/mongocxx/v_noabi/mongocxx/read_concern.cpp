@@ -27,8 +27,7 @@
 namespace mongocxx {
 namespace v_noabi {
 
-read_concern::read_concern()
-    : _impl{bsoncxx::v_noabi::stdx::make_unique<impl>(libmongoc::read_concern_new())} {}
+read_concern::read_concern() : _impl{bsoncxx::make_unique<impl>(libmongoc::read_concern_new())} {}
 
 read_concern::read_concern(std::unique_ptr<impl>&& implementation)
     : _impl{std::move(implementation)} {}
@@ -37,12 +36,11 @@ read_concern::read_concern(read_concern&&) noexcept = default;
 read_concern& read_concern::operator=(read_concern&&) noexcept = default;
 
 read_concern::read_concern(const read_concern& other)
-    : _impl(bsoncxx::v_noabi::stdx::make_unique<impl>(
-          libmongoc::read_concern_copy(other._impl->read_concern_t))) {}
+    : _impl(bsoncxx::make_unique<impl>(libmongoc::read_concern_copy(other._impl->read_concern_t))) {
+}
 
 read_concern& read_concern::operator=(const read_concern& other) {
-    _impl = bsoncxx::v_noabi::stdx::make_unique<impl>(
-        libmongoc::read_concern_copy(other._impl->read_concern_t));
+    _impl = bsoncxx::make_unique<impl>(libmongoc::read_concern_copy(other._impl->read_concern_t));
     return *this;
 }
 

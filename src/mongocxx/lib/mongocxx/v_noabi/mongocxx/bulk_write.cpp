@@ -225,7 +225,7 @@ bulk_write::bulk_write(const collection& coll,
     }
 
     scoped_bson_t bson_options(options_builder.extract());
-    _impl = bsoncxx::v_noabi::stdx::make_unique<bulk_write::impl>(
+    _impl = bsoncxx::make_unique<bulk_write::impl>(
         libmongoc::collection_create_bulk_operation_with_opts(coll._get_impl().collection_t,
                                                               bson_options.bson()));
 

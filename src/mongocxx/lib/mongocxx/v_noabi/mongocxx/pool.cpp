@@ -56,7 +56,7 @@ void pool::_release(client* client) {
 pool::~pool() = default;
 
 pool::pool(const uri& uri, const options::pool& options)
-    : _impl{bsoncxx::v_noabi::stdx::make_unique<impl>(construct_client_pool(uri._impl->uri_t))} {
+    : _impl{bsoncxx::make_unique<impl>(construct_client_pool(uri._impl->uri_t))} {
 #if defined(MONGOCXX_ENABLE_SSL) && defined(MONGOC_ENABLE_SSL)
     if (options.client_opts().tls_opts()) {
         if (!uri.tls())

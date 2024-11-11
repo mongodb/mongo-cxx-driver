@@ -14,12 +14,14 @@
 
 #pragma once
 
+#include "../microbench.hpp"
+
 #include <algorithm>
 #include <fstream>
+#include <memory>
 
-#include "../microbench.hpp"
-#include <bsoncxx/private/make_unique.hh>
 #include <bsoncxx/stdx/optional.hpp>
+
 #include <mongocxx/client.hpp>
 #include <mongocxx/gridfs/bucket.hpp>
 #include <mongocxx/instance.hpp>
@@ -29,7 +31,6 @@ namespace benchmark {
 
 using bsoncxx::builder::basic::kvp;
 using bsoncxx::builder::basic::make_document;
-using bsoncxx::stdx::make_unique;
 
 class gridfs_download : public microbench {
    public:
@@ -74,7 +75,7 @@ void gridfs_download::task() {
     auto file_length = downloader.file_length();
 
     auto buffer_size = std::min(file_length, static_cast<std::int64_t>(downloader.chunk_size()));
-    auto buffer = make_unique<std::uint8_t[]>(static_cast<std::size_t>(buffer_size));
+    auto buffer = std::make_unique<std::uint8_t[]>(static_cast<std::size_t>(buffer_size));
 
     while ([[maybe_unused]] auto length_read =
                downloader.read(buffer.get(), static_cast<std::size_t>(buffer_size))) {

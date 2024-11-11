@@ -66,8 +66,8 @@ class transaction::impl {
         if (!rc) {
             return {};
         }
-        mongocxx::v_noabi::read_concern rci(bsoncxx::v_noabi::stdx::make_unique<read_concern::impl>(
-            libmongoc::read_concern_copy(rc)));
+        mongocxx::v_noabi::read_concern rci(
+            bsoncxx::make_unique<read_concern::impl>(libmongoc::read_concern_copy(rc)));
         return bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_concern>(std::move(rci));
     }
 
@@ -82,8 +82,7 @@ class transaction::impl {
             return {};
         }
         mongocxx::v_noabi::write_concern wci(
-            bsoncxx::v_noabi::stdx::make_unique<write_concern::impl>(
-                libmongoc::write_concern_copy(wc)));
+            bsoncxx::make_unique<write_concern::impl>(libmongoc::write_concern_copy(wc)));
         return bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::write_concern>(std::move(wci));
     }
 
@@ -98,8 +97,7 @@ class transaction::impl {
             return {};
         }
         mongocxx::v_noabi::read_preference rpi(
-            bsoncxx::v_noabi::stdx::make_unique<read_preference::impl>(
-                libmongoc::read_prefs_copy(rp)));
+            bsoncxx::make_unique<read_preference::impl>(libmongoc::read_prefs_copy(rp)));
         return bsoncxx::v_noabi::stdx::optional<mongocxx::v_noabi::read_preference>(std::move(rpi));
     }
 

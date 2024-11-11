@@ -215,8 +215,8 @@ TEST_CASE("session", "[session]") {
 
     SECTION("pool") {
         // "Pool is LIFO" test from Driver Sessions Spec.
-        auto session_a = bsoncxx::stdx::make_unique<client_session>(c.start_session());
-        auto session_b = bsoncxx::stdx::make_unique<client_session>(c.start_session());
+        auto session_a = bsoncxx::make_unique<client_session>(c.start_session());
+        auto session_b = bsoncxx::make_unique<client_session>(c.start_session());
         auto a_id = value(session_a->id());
         auto b_id = value(session_b->id());
 
@@ -227,9 +227,9 @@ TEST_CASE("session", "[session]") {
         session_a = nullptr;
         session_b = nullptr;
 
-        auto session_c = bsoncxx::stdx::make_unique<client_session>(c.start_session());
+        auto session_c = bsoncxx::make_unique<client_session>(c.start_session());
         REQUIRE(session_c->id() == b_id);
-        auto session_d = bsoncxx::stdx::make_unique<client_session>(c.start_session());
+        auto session_d = bsoncxx::make_unique<client_session>(c.start_session());
         REQUIRE(session_d->id() == a_id);
     }
 
