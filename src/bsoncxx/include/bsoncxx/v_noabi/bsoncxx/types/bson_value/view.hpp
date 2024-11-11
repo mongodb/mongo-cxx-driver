@@ -37,9 +37,6 @@ using is_bson_view_compatible =
                             detail::is_alike<T, bsoncxx::v_noabi::types::bson_value::view>,
                             detail::is_alike<T, bsoncxx::v_noabi::types::bson_value::value>>>>;
 
-template <typename T>
-using not_view = is_bson_view_compatible<T>;
-
 }  // namespace detail
 }  // namespace bsoncxx
 
