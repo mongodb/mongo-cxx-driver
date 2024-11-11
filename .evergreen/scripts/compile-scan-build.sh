@@ -56,7 +56,6 @@ cmake_flags=(
   "-DCMAKE_BUILD_TYPE=Debug"
   "-DCMAKE_CXX_STANDARD=${CXX_STANDARD:?}"
   "-DCMAKE_CXX_STANDARD_REQUIRED=ON"
-  "-DENABLE_TESTS=OFF"
 )
 
 scan_build_flags=(

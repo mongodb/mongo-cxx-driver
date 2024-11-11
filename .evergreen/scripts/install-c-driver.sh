@@ -104,7 +104,6 @@ declare -a configure_flags=(
   "-DENABLE_EXAMPLES=OFF"
   "-DENABLE_SHM_COUNTERS=OFF"
   "-DENABLE_STATIC=ON"
-  "-DENABLE_TESTS=OFF"
 )
 
 if [[ "${SKIP_INSTALL_LIBMONGOCRYPT:-}" != "1" ]]; then

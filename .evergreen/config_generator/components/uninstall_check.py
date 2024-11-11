@@ -68,7 +68,6 @@ def tasks():
                         Compile.call(
                             build_type=build_type,
                             compiler=compiler,
-                            vars={'ENABLE_TESTS': 'OFF'},
                         ),
                         UninstallCheck.call(),
                     ],

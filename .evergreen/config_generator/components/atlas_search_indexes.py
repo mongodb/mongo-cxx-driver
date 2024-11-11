@@ -55,7 +55,7 @@ def tasks():
             run_on=distro.name,
             commands=[
                 InstallCDriver.call(),
-                Compile.call(build_type='Debug'),
+                Compile.call(build_type='Debug', vars={'ENABLE_TESTS': 'ON'}),
                 TestSearchIndexHelpers.call(),
             ],
         )

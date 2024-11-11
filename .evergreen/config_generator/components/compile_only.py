@@ -69,7 +69,6 @@ def generate_tasks():
                             build_type=build_type,
                             compiler=compiler,
                             polyfill=polyfill,
-                            vars={'ENABLE_TESTS': 'OFF'}
                         )
                     ],
                 )
