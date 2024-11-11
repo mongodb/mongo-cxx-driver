@@ -110,7 +110,7 @@ inline concatenate_doc concatenate(document::view_or_value doc) {
 ///
 /// @param array The array to concatenate.
 ///
-/// @return concatenate_doc A concatenating struct.
+/// @return concatenate_array A concatenating struct.
 ///
 /// @see
 /// - @ref bsoncxx::v_noabi::builder::concatenate_array
