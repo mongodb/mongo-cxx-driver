@@ -501,10 +501,10 @@ Verify the new asset group (`mongo-cxx-driver-X.Y`) is present in the [Silk Asse
 
 Checkout the new release tag.
 
-Configure and build the CXX Driver with `BSONCXX_POLY_USE_MNMLSTC=ON` (force download of mnmlstc/core sources) and no `CMAKE_PREFIX_PATH` entry to an existing C Driver installation (force download of C Driver sources):
+Configure and build the CXX Driver (do not reuse an existing C Driver installation; use the auto-downloaded C Driver sources instead):
 
 ```bash
-cmake -S . -B build -D BSONCXX_POLY_USE_MNMLSTC=ON
+cmake -S . -B build
 cmake --build build
 ```
 
@@ -528,7 +528,6 @@ snyk_args=(
   --target-reference="${release_tag:?}"
   --unmanaged
   --all-projects
-  --detection-depth=10 # build/src/bsoncxx/third_party/_deps/core-install/include/core
   --exclude=extras # CXX-3042
 )
 snyk test "${snyk_args[@]:?}" --print-deps

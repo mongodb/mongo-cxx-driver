@@ -41,22 +41,6 @@ function(RUN_DIST_CHECK PACKAGE_PREFIX EXT)
       list(APPEND polyfill_flags "-DCMAKE_CXX_STANDARD=${CMAKE_CXX_STANDARD}")
    endif()
 
-   if(NOT "${BOOST_ROOT}" STREQUAL "")
-      list(APPEND polyfill_flags "-DBOOST_ROOT=${BOOST_ROOT}")
-   endif()
-
-   if(NOT "${BSONCXX_POLY_USE_MNMLSTC}" STREQUAL "")
-      list(APPEND polyfill_flags "-DBSONCXX_POLY_USE_MNMLSTC=${BSONCXX_POLY_USE_MNMLSTC}")
-   endif()
-
-   if(NOT "${BSONCXX_POLY_USE_SYSTEM_MNMLSTC}" STREQUAL "")
-      list(APPEND polyfill_flags "-DBSONCXX_POLY_USE_SYSTEM_MNMLSTC=${BSONCXX_POLY_USE_SYSTEM_MNMLSTC}")
-   endif()
-
-   if(NOT "${BSONCXX_POLY_USE_BOOST}" STREQUAL "")
-      list(APPEND polyfill_flags "-DBSONCXX_POLY_USE_BOOST=${BSONCXX_POLY_USE_BOOST}")
-   endif()
-
    if(NOT "${BSONCXX_POLY_USE_IMPLS}" STREQUAL "")
       list(APPEND polyfill_flags "-DBSONCXX_POLY_USE_IMPLS=${BSONCXX_POLY_USE_IMPLS}")
    endif()

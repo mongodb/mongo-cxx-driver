@@ -17,6 +17,13 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 
 ## Removed
 
+- Support for external polyfill libraries.
+  - `ENABLE_BSONCXX_POLY_USE_IMPLS=ON` is now implicit behavior.
+  - The following CMake options are no longer supported:
+    - `ENABLE_BSONCXX_POLY_USE_IMPLS`
+    - `BSONCXX_POLY_USE_MNMLSTC`
+    - `BSONCXX_POLY_USE_MNMLSTC_SYSTEM`
+    - `BSONCXX_POLY_USE_BOOST`
 - Support for CMake option `MONGOCXX_OVERRIDE_DEFAULT_INSTALL_PREFIX`.
   - `MONGOCXX_OVERRIDE_DEFAULT_INSTALL_PREFIX=OFF` is now implicit behavior.
 - Redeclarations of `bsoncxx::stdx` interfaces in the `mongocxx::stdx` namespace.

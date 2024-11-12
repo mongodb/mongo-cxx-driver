@@ -62,13 +62,10 @@ scan_build_flags=(
   --use-cc "${CC:?}"
   --use-c++ "${CXX:?}"
   -analyze-headers
-  --exclude "$(pwd)/build/src/bsoncxx/third_party/_deps" # mnmlstc
-  --exclude "$(pwd)/build/_deps"                         # mongoc
+  --exclude "$(pwd)/build/_deps" # mongoc
 )
 
 case "${BSONCXX_POLYFILL:-}" in
-mnmlstc) cmake_flags+=("-DBSONCXX_POLY_USE_MNMLSTC=ON") ;;
-boost) cmake_flags+=("-DBSONCXX_POLY_USE_BOOST=ON") ;;
 impls) cmake_flags+=("-DBSONCXX_POLY_USE_IMPLS=ON") ;;
 std) cmake_flags+=("-DBSONCXX_POLY_USE_STD=ON") ;;
 esac

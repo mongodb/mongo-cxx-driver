@@ -117,36 +117,6 @@
 
 ///
 /// @ingroup bsoncxx-v_noabi-bsoncxx-config-config-hpp
-/// Defined when configured to use a bundled mnmlstc/core as the C++17 polyfill library.
-///
-/// @deprecated Support for external polyfill libraries is deprecated and will be removed in an
-/// upcoming major release. Set `ENABLE_BSONCXX_POLY_USE_IMPLS=ON` or `BSONCXX_POLY_USE_IMPLS=ON`
-/// when configuring the bsoncxx library.
-///
-#define BSONCXX_POLY_USE_MNMLSTC
-
-///
-/// @ingroup bsoncxx-v_noabi-bsoncxx-config-config-hpp
-/// Defined when configured to use an external mnmlstc/core as the C++17 polyfill library.
-///
-/// @deprecated Support for external polyfill libraries is deprecated and will be removed in an
-/// upcoming major release. Set `ENABLE_BSONCXX_POLY_USE_IMPLS=ON` or `BSONCXX_POLY_USE_IMPLS=ON`
-/// when configuring the bsoncxx library.
-///
-#define BSONCXX_POLY_USE_SYSTEM_MNMLSTC
-
-///
-/// @ingroup bsoncxx-v_noabi-bsoncxx-config-config-hpp
-/// Defined when configured to use Boost as the C++17 polyfill library.
-///
-/// @deprecated Support for external polyfill libraries is deprecated and will be removed in an
-/// upcoming major release. Set `ENABLE_BSONCXX_POLY_USE_IMPLS=ON` or `BSONCXX_POLY_USE_IMPLS=ON`
-/// when configuring the bsoncxx library.
-///
-#define BSONCXX_POLY_USE_BOOST
-
-///
-/// @ingroup bsoncxx-v_noabi-bsoncxx-config-config-hpp
 /// Defined when configured to use bsoncxx's own C++17 polyfill implementations.
 ///
 #define BSONCXX_POLY_USE_IMPLS

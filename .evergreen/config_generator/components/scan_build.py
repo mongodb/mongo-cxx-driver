@@ -17,13 +17,9 @@ TAG = 'scan-build'
 # fmt: off
 MATRIX = [
     (11,  None    ),
-    (11, 'mnmlstc'),
-    (11, 'boost'  ),
     (11, 'impls'  ),
 
     (14,  None    ),
-    (14, 'mnmlstc'),
-    (14, 'boost'  ),
     (14, 'impls'  ),
 
     (17,  None    ),

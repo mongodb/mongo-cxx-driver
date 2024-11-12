@@ -30,6 +30,34 @@ using bsoncxx::stdx::optional;
 #define NO_LWG_2543
 #endif
 
+// Catch2 has trouble understanding ADL-only comparison operators defined via `equality_operators`
+// and `tag_invoke` when decomposing expressions with VS 2017 despite being valid in normal code.
+// Move the comparison expression out of the Catch2 macro as a workaround to avoid decomposition.
+#if defined(_MSC_VER) && _MSC_VER < 1920
+#define REQUIRE_VS2017(...)             \
+    if (1) {                            \
+        const bool res = (__VA_ARGS__); \
+        CHECK(res);                     \
+    } else                              \
+        ((void)0)
+#define CHECK_VS2017(...)               \
+    if (1) {                            \
+        const bool res = (__VA_ARGS__); \
+        CHECK(res);                     \
+    } else                              \
+        ((void)0)
+#define CHECK_FALSE_VS2017(...)         \
+    if (1) {                            \
+        const bool res = (__VA_ARGS__); \
+        CHECK_FALSE(res);               \
+    } else                              \
+        ((void)0)
+#else
+#define REQUIRE_VS2017(...) REQUIRE(__VA_ARGS__)
+#define CHECK_VS2017(...) CHECK(__VA_ARGS__)
+#define CHECK_FALSE_VS2017(...) CHECK_FALSE(__VA_ARGS__)
+#endif
+
 namespace {
 
 template <typename T>
@@ -247,7 +275,7 @@ TEST_CASE("optional constructors") {
     {
         optional<int> opt1 = optional<int>(123);
         optional<int> opt2 = optional<int>(std::move(opt1));
-        CHECK(*opt2 == 123);
+        CHECK_VS2017(*opt2 == 123);
     }
 
     // (4)
@@ -267,7 +295,7 @@ TEST_CASE("optional constructors") {
         s.s = 123;
         optional<Src> opt_src = optional<Src>(s);
         optional<Dest> opt_dest = opt_src;
-        CHECK(opt_dest->d == 123);
+        CHECK_VS2017(opt_dest->d == 123);
     }
 
     // (5)
@@ -287,7 +315,7 @@ TEST_CASE("optional constructors") {
         s.s = 123;
         optional<Src> opt_src = optional<Src>(s);
         optional<Dest> opt_dest = std::move(opt_src);
-        CHECK(opt_dest->d == 123);
+        CHECK_VS2017(opt_dest->d == 123);
     }
 
     // (6)
@@ -299,7 +327,7 @@ TEST_CASE("optional constructors") {
             int c;
         };
         optional<Foo> opt = optional<Foo>(in_place, 1, 2);
-        CHECK(opt->c == 3);
+        CHECK_VS2017(opt->c == 3);
     }
 
     // (7)
@@ -338,9 +366,9 @@ TEST_CASE("optional assignment operator") {
         optional<int> other = 123;
         optional<int>& ref = (foo = other);
         CHECK(foo);
-        CHECK(*foo == 123);
+        CHECK_VS2017(*foo == 123);
         CHECK(ref);
-        CHECK(*ref == 123);
+        CHECK_VS2017(*ref == 123);
     }
 
     // (3)
@@ -349,15 +377,15 @@ TEST_CASE("optional assignment operator") {
         optional<int> other = 123;
         optional<int>& ref = (foo = std::move(other));
         CHECK(foo);
-        CHECK(*foo == 123);
+        CHECK_VS2017(*foo == 123);
         CHECK(ref);
-        CHECK(*ref == 123);
+        CHECK_VS2017(*ref == 123);
     }
 
     // (4)
     {
         optional<int> foo = 123;
-        CHECK(*foo == 123);
+        CHECK_VS2017(*foo == 123);
     }
 
     // (5)
@@ -377,7 +405,7 @@ TEST_CASE("optional assignment operator") {
         s.s = 123;
         optional<Src> opt_src = optional<Src>(s);
         optional<Dest> opt_dest = opt_src;
-        CHECK(opt_dest->d == 123);
+        CHECK_VS2017(opt_dest->d == 123);
     }
 
     // (6)
@@ -401,7 +429,7 @@ TEST_CASE("optional operator->") {
     };
     optional<Foo> opt = Foo();
     opt->x = 123;
-    CHECK(opt->x == 123);
+    CHECK_VS2017(opt->x == 123);
 }
 
 TEST_CASE("optional operator bool") {
@@ -418,7 +446,7 @@ TEST_CASE("optional operator bool") {
 
 TEST_CASE("optional value()") {
     optional<int> opt = 123;
-    CHECK(opt.value() == 123);
+    CHECK_VS2017(opt.value() == 123);
 }
 
 TEST_CASE("optional value_or()") {
@@ -434,7 +462,7 @@ TEST_CASE("optional value_or()") {
 
     optional<Dest> opt = nullopt;
     Dest d = opt.value_or(Src(123));
-    CHECK(d.x == 123);
+    CHECK_VS2017(d.x == 123);
 }
 
 TEST_CASE("optional reset()") {
@@ -446,13 +474,13 @@ TEST_CASE("optional reset()") {
 TEST_CASE("optional emplace()") {
     optional<int> opt = 123;
     opt.emplace(456);
-    CHECK(*opt == 456);
+    CHECK_VS2017(*opt == 456);
 }
 
 TEST_CASE("make_optional") {
     auto opt = bsoncxx::stdx::make_optional(123);
     CHECK(opt);
-    CHECK(*opt == 123);
+    CHECK_VS2017(*opt == 123);
 }
 
 TEST_CASE("optional swap") {
@@ -467,87 +495,87 @@ TEST_CASE("optional swap") {
 
 TEST_CASE("optional: Nontrivial contents") {
     optional<std::string> str = "abcd1234";
-    CHECK(str == "abcd1234");
+    CHECK_VS2017(str == "abcd1234");
     {
         auto dup = str;
-        CHECK(dup == str);
+        CHECK_VS2017(dup == str);
     }
-    CHECK(str == "abcd1234");
+    CHECK_VS2017(str == "abcd1234");
 
     optional<std::unique_ptr<int>> aptr;
-    CHECK(aptr != nullptr);
-    CHECK(aptr == bsoncxx::stdx::nullopt);
+    CHECK_VS2017(aptr != nullptr);
+    CHECK_VS2017(aptr == bsoncxx::stdx::nullopt);
     {
         auto dup = std::move(aptr);
-        CHECK(aptr == dup);
+        CHECK_VS2017(aptr == dup);
     }
     aptr = bsoncxx::make_unique<int>(31);
-    CHECK(aptr != nullopt);
-    REQUIRE(aptr != nullptr);
-    CHECK(**aptr == 31);
+    CHECK_VS2017(aptr != nullopt);
+    REQUIRE_VS2017(aptr != nullptr);
+    CHECK_VS2017(**aptr == 31);
     {
         auto dup = std::move(aptr);
         CHECK(aptr);
-        CHECK(aptr == nullptr);
+        CHECK_VS2017(aptr == nullptr);
         REQUIRE(dup);
-        REQUIRE(dup != nullptr);
-        CHECK(**dup == 31);
+        REQUIRE_VS2017(dup != nullptr);
+        CHECK_VS2017(**dup == 31);
     }
-    CHECK(aptr == nullptr);
+    CHECK_VS2017(aptr == nullptr);
 }
 
 TEST_CASE("Comparisons") {
     optional<int> a = 21;
     optional<int> b = 23;
     optional<int> c;
-    CHECK(a != nullopt);
-    CHECK(a == 21);
-    CHECK(b != nullopt);
-    CHECK(b == 23);
-    CHECK(c == nullopt);
+    CHECK_VS2017(a != nullopt);
+    CHECK_VS2017(a == 21);
+    CHECK_VS2017(b != nullopt);
+    CHECK_VS2017(b == 23);
+    CHECK_VS2017(c == nullopt);
     // Null compares less-than values:
-    CHECK(c < 42);
-    CHECK(a < b);
-    CHECK(c < a);
-    CHECK(c < b);
-    CHECK(c == nullopt);
-    CHECK(nullopt < a);
-    CHECK(nullopt == c);
-    CHECK(a != b);
-    CHECK(c != a);
-    CHECK(c != b);
-    CHECK(c == c);
+    CHECK_VS2017(c < 42);
+    CHECK_VS2017(a < b);
+    CHECK_VS2017(c < a);
+    CHECK_VS2017(c < b);
+    CHECK_VS2017(c == nullopt);
+    CHECK_VS2017(nullopt < a);
+    CHECK_VS2017(nullopt == c);
+    CHECK_VS2017(a != b);
+    CHECK_VS2017(c != a);
+    CHECK_VS2017(c != b);
+    CHECK_VS2017(c == c);
 
     optional<double> dbl = 3.14;
-    CHECK(dbl != a);
+    CHECK_VS2017(dbl != a);
 }
 
 template <typename T, typename U>
 void check_ordered(T const& lesser, U const& greater, std::string desc) {
     CAPTURE(__func__, desc);
-    CHECK(lesser < greater);
-    CHECK(greater > lesser);
-    CHECK(lesser <= greater);
-    CHECK(greater >= lesser);
-    CHECK_FALSE(greater < lesser);
-    CHECK_FALSE(lesser > greater);
-    CHECK(lesser != greater);
-    CHECK_FALSE(lesser == greater);
+    CHECK_VS2017(lesser < greater);
+    CHECK_VS2017(greater > lesser);
+    CHECK_VS2017(lesser <= greater);
+    CHECK_VS2017(greater >= lesser);
+    CHECK_FALSE_VS2017(greater < lesser);
+    CHECK_FALSE_VS2017(lesser > greater);
+    CHECK_VS2017(lesser != greater);
+    CHECK_FALSE_VS2017(lesser == greater);
 }
 
 template <typename T, typename U>
 void check_equivalent(T const& a, U const& b, std::string desc) {
     CAPTURE(__func__, desc);
-    CHECK(a == b);
-    CHECK(b == a);
-    CHECK_FALSE(a != b);
-    CHECK_FALSE(b != a);
-    CHECK(a <= b);
-    CHECK(b >= a);
-    CHECK_FALSE(a < b);
-    CHECK_FALSE(b > a);
-    CHECK_FALSE(b < a);
-    CHECK_FALSE(a > b);
+    CHECK_VS2017(a == b);
+    CHECK_VS2017(b == a);
+    CHECK_FALSE_VS2017(a != b);
+    CHECK_FALSE_VS2017(b != a);
+    CHECK_VS2017(a <= b);
+    CHECK_VS2017(b >= a);
+    CHECK_FALSE_VS2017(a < b);
+    CHECK_FALSE_VS2017(b > a);
+    CHECK_FALSE_VS2017(b < a);
+    CHECK_FALSE_VS2017(a > b);
 }
 
 template <typename T, typename U>
@@ -598,22 +626,22 @@ TEST_CASE("Optional-of-const-T") {
     check_equivalent(a, nullopt, "Null of const");
     a.emplace(21);
     check_equivalent(a, 21, "Const 21");
-    CHECK(hashit(a) == hashit(21));
+    CHECK_VS2017(hashit(a) == hashit(21));
     auto b = a;
-    CHECK(a == b);
+    CHECK_VS2017(a == b);
 }
 
 TEST_CASE("Optional: Hashing") {
     optional<int> a, b;
-    CHECK(hashit(a) == hashit(a));
-    CHECK(hashit(a) == hashit(b));
+    CHECK_VS2017(hashit(a) == hashit(a));
+    CHECK_VS2017(hashit(a) == hashit(b));
     b.emplace(41);
-    CHECK(hashit(41) == hashit(b));
-    CHECK(hashit(a) != hashit(b));  // (Extremely probable, but not certain)
+    CHECK_VS2017(hashit(41) == hashit(b));
+    CHECK_VS2017(hashit(a) != hashit(b));  // (Extremely probable, but not certain)
     a.emplace(41);
-    CHECK(hashit(a) == hashit(b));
+    CHECK_VS2017(hashit(a) == hashit(b));
     optional<const int> c = b;
-    CHECK(hashit(c) == hashit(a));
+    CHECK_VS2017(hashit(c) == hashit(a));
 }
 
 struct in_place_convertible {
@@ -629,7 +657,7 @@ TEST_CASE("optional<T> conversions") {
 #endif  // defined(BSONCXX_POLY_USE_IMPLS)
 
     optional<std::string> s1(bsoncxx::stdx::in_place);
-    CHECK(s1 == "");
+    CHECK_VS2017(s1 == "");
 
     optional<in_place_convertible> q(bsoncxx::stdx::in_place);
     REQUIRE(q.has_value());
@@ -638,8 +666,8 @@ TEST_CASE("optional<T> conversions") {
     optional<const char*> c_str = "foo";
     optional<std::string> string = c_str;
     optional<std::string> string2 = std::move(c_str);
-    CHECK(string == c_str);
-    CHECK(string2 == c_str);
+    CHECK_VS2017(string == c_str);
+    CHECK_VS2017(string2 == c_str);
 }
 
 #endif  // defined(BSONCXX_POLY_USE_IMPLS) || defined(BSONCXX_POLY_USE_STD)

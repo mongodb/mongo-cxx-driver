@@ -25,13 +25,6 @@ This section provides a template that may be used for actual vulnerability repor
 - **For Release:** The CXX Driver release version for which the "Fix Status" above was last updated.
 - **Notes:** Context or rationale for remediation, references to relevant issue trackers, etc.
 
-## mnmlstc/core
-
-> [!IMPORTANT]
-> These vulnerabilities only affect the MongoDB C++ Driver product when it is configured to use the mnmlstc/core as the C++17 polyfill library. See [Choosing a C++17 Polyfill](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/polyfill-selection/).
-
-None.
-
 ## mongodb/mongo-c-driver
 
 None.
