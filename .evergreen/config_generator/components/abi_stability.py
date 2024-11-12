@@ -2,11 +2,12 @@ from config_generator.components.funcs.install_c_driver import InstallCDriver
 
 from config_generator.etc.distros import find_large_distro
 from config_generator.etc.function import Function, merge_defns
-from config_generator.etc.utils import TaskGroup, bash_exec
+from config_generator.etc.utils import bash_exec
 
+from shrub.v3.evg_build_variant import BuildVariant, DisplayTask
 from shrub.v3.evg_command import EvgCommandType, git_get_project, s3_put
 from shrub.v3.evg_task import EvgTask, EvgTaskRef
-from shrub.v3.evg_build_variant import BuildVariant, DisplayTask
+from shrub.v3.evg_task_group import EvgTaskGroup
 
 
 TAG = 'abi-stability'
@@ -149,7 +150,7 @@ def tasks():
 
 def task_groups():
     return [
-        TaskGroup(
+        EvgTaskGroup(
             name=f'tg-{TAG}',
             max_hosts=-1,
             setup_group_can_fail_task=True,
