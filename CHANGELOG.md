@@ -18,7 +18,7 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 - CMake option `ENABLE_TESTS` is now `OFF` by default.
   - Set `ENABLE_TEST=ON` to re-enable building test targets.
   - Set `BUILD_TESTING=ON` to include test targets in the "all" target when `ENABLE_TESTS=ON` (since 3.9.0, `OFF` by default).
-- Layout of `mongocxx::v_noabi::options::change_stream` to support optional `start_at_operation_time` accessors.
+- Layout of `mongocxx::v_noabi::options::change_stream` to support the new optional `start_at_operation_time` accessor.
 
 ## Removed
 
