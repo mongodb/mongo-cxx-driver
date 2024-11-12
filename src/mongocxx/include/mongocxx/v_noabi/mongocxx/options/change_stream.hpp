@@ -275,6 +275,15 @@ class change_stream {
     MONGOCXX_ABI_EXPORT_CDECL(change_stream&)
     start_at_operation_time(bsoncxx::v_noabi::types::b_timestamp timestamp);
 
+    ///
+    /// The current start_at_operation_time setting.
+    ///
+    /// @return
+    ///   The current startAtOperationTime option.
+    ///
+    MONGOCXX_ABI_EXPORT_CDECL(const bsoncxx::stdx::optional<bsoncxx::v_noabi::types::b_timestamp>&)
+    start_at_operation_time() const;
+
    private:
     friend ::mongocxx::v_noabi::client;
     friend ::mongocxx::v_noabi::collection;
@@ -291,11 +300,7 @@ class change_stream {
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _resume_after;
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> _start_after;
     bsoncxx::v_noabi::stdx::optional<std::chrono::milliseconds> _max_await_time;
-    // _start_at_operation_time is not wrapped in a bsoncxx::v_noabi::stdx::optional because of a
-    // longstanding bug in the MNMLSTC polyfill that has been fixed on master, but not in the latest
-    // release: https://github.com/mnmlstc/core/pull/23
-    bsoncxx::v_noabi::types::b_timestamp _start_at_operation_time = {};
-    bool _start_at_operation_time_set = false;
+    bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::types::b_timestamp> _start_at_operation_time;
 };
 
 }  // namespace options
