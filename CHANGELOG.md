@@ -9,6 +9,12 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 
 ## 4.0.0 [Unreleased]
 
+## Changed
+
+- CMake option `ENABLE_TESTS` is now `OFF` by default.
+  - Set `ENABLE_TEST=ON` to re-enable building test targets.
+  - Set `BUILD_TESTING=ON` to include test targets in the "all" target when `ENABLE_TESTS=ON` (since 3.9.0, `OFF` by default).
+
 ## Removed
 
 - Support for external polyfill libraries.
@@ -24,6 +30,7 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
   - Use `bsoncxx::stdx::optional<T>` instead of `mongocxx::stdx::optional<T>`.
   - Use `bsoncxx::stdx::string_view` instead of `mongocxx::stdx::string_view`.
 - Inline namespace macros for bsoncxx and mongocxx namespace: `*_INLINE_NAMESPACE_*`.
+- The `<bsoncxx/stdx/make_unique.hpp>` header.
 - The `<bsoncxx/types/value.hpp>` header.
 - The `<bsoncxx/util/functor.hpp>` header.
 - The `<mongocxx/options/create_collection.hpp>` header.

@@ -51,7 +51,7 @@ uploader::uploader(
     collection chunks,
     std::int32_t chunk_size,
     bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::document::view_or_value> metadata)
-    : _impl{bsoncxx::v_noabi::stdx::make_unique<impl>(
+    : _impl{bsoncxx::make_unique<impl>(
           session,
           id,
           filename,

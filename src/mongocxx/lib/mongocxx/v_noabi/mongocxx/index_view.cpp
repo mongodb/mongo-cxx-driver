@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/stdx/make_unique.hpp>
+#include <bsoncxx/private/make_unique.hh>
 #include <bsoncxx/string/to_string.hpp>
 
 #include <mongocxx/client_session.hpp>
@@ -27,8 +27,8 @@ namespace mongocxx {
 namespace v_noabi {
 
 index_view::index_view(void* coll, void* client)
-    : _impl{bsoncxx::v_noabi::stdx::make_unique<impl>(static_cast<mongoc_collection_t*>(coll),
-                                                      static_cast<mongoc_client_t*>(client))} {}
+    : _impl{bsoncxx::make_unique<impl>(static_cast<mongoc_collection_t*>(coll),
+                                       static_cast<mongoc_client_t*>(client))} {}
 
 index_view::index_view(index_view&&) noexcept = default;
 index_view& index_view::operator=(index_view&&) noexcept = default;

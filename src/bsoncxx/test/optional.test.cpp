@@ -6,7 +6,7 @@
 #include <string>
 #include <type_traits>
 
-#include <bsoncxx/stdx/make_unique.hpp>
+#include <bsoncxx/private/make_unique.hh>
 #include <bsoncxx/stdx/operators.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/stdx/type_traits.hpp>
@@ -509,7 +509,7 @@ TEST_CASE("optional: Nontrivial contents") {
         auto dup = std::move(aptr);
         CHECK_VS2017(aptr == dup);
     }
-    aptr = bsoncxx::stdx::make_unique<int>(31);
+    aptr = bsoncxx::make_unique<int>(31);
     CHECK_VS2017(aptr != nullopt);
     REQUIRE_VS2017(aptr != nullptr);
     CHECK_VS2017(**aptr == 31);

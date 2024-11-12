@@ -17,7 +17,7 @@
 #include <cstring>
 #include <sstream>
 
-#include <bsoncxx/stdx/make_unique.hpp>
+#include <bsoncxx/private/make_unique.hh>
 #include <bsoncxx/types.hpp>
 
 #include <mongocxx/exception/error_code.hpp>
@@ -37,7 +37,7 @@ downloader::downloader(bsoncxx::v_noabi::stdx::optional<cursor> chunks,
                        std::int32_t chunk_size,
                        std::int64_t file_len,
                        bsoncxx::v_noabi::document::value files_doc)
-    : _impl{bsoncxx::v_noabi::stdx::make_unique<impl>(
+    : _impl{bsoncxx::make_unique<impl>(
           std::move(chunks), start, chunk_size, file_len, std::move(files_doc))} {}
 
 downloader::downloader() noexcept = default;

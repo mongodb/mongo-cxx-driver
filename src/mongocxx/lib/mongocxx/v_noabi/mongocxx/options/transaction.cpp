@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/stdx/make_unique.hpp>
+#include <bsoncxx/private/make_unique.hh>
 
 #include <mongocxx/exception/error_code.hpp>
 #include <mongocxx/exception/logic_error.hpp>
@@ -24,16 +24,16 @@ namespace mongocxx {
 namespace v_noabi {
 namespace options {
 
-transaction::transaction() : _impl{bsoncxx::v_noabi::stdx::make_unique<impl>()} {}
+transaction::transaction() : _impl{bsoncxx::make_unique<impl>()} {}
 
 transaction::transaction(transaction&&) noexcept = default;
 transaction& transaction::operator=(transaction&&) noexcept = default;
 
 transaction::transaction(const transaction& other)
-    : _impl{bsoncxx::v_noabi::stdx::make_unique<impl>(other._get_impl().get_transaction_opt_t())} {}
+    : _impl{bsoncxx::make_unique<impl>(other._get_impl().get_transaction_opt_t())} {}
 
 transaction& transaction::operator=(const transaction& other) {
-    _impl = bsoncxx::v_noabi::stdx::make_unique<impl>(other._get_impl().get_transaction_opt_t());
+    _impl = bsoncxx::make_unique<impl>(other._get_impl().get_transaction_opt_t());
     return *this;
 }
 

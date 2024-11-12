@@ -19,9 +19,9 @@
 #include <bsoncxx/exception/exception.hpp>
 #include <bsoncxx/private/itoa.hh>
 #include <bsoncxx/private/libbson.hh>
+#include <bsoncxx/private/make_unique.hh>
 #include <bsoncxx/private/stack.hh>
 #include <bsoncxx/private/suppress_deprecation_warnings.hh>
-#include <bsoncxx/stdx/make_unique.hpp>
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/string/to_string.hpp>
 #include <bsoncxx/types.hpp>
@@ -256,7 +256,7 @@ class core::impl {
 };
 
 core::core(bool is_array) {
-    _impl = stdx::make_unique<impl>(is_array);
+    _impl = make_unique<impl>(is_array);
 }
 
 core::core(core&&) noexcept = default;

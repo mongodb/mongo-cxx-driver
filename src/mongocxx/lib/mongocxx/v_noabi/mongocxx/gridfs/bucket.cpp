@@ -19,7 +19,7 @@
 #include <bsoncxx/builder/basic/document.hpp>
 #include <bsoncxx/builder/basic/kvp.hpp>
 #include <bsoncxx/oid.hpp>
-#include <bsoncxx/stdx/make_unique.hpp>
+#include <bsoncxx/private/make_unique.hh>
 #include <bsoncxx/stdx/optional.hpp>
 
 #include <mongocxx/database.hpp>
@@ -132,7 +132,7 @@ bucket::bucket(const database& db, const options::gridfs::bucket& options) {
     collection chunks = db[bucket_name + ".chunks"];
     collection files = db[bucket_name + ".files"];
 
-    _impl = bsoncxx::v_noabi::stdx::make_unique<impl>(
+    _impl = bsoncxx::make_unique<impl>(
         std::move(bucket_name), default_chunk_size_bytes, std::move(chunks), std::move(files));
 
     if (auto read_concern = options.read_concern()) {
@@ -162,7 +162,7 @@ bucket::operator bool() const noexcept {
 
 bucket::bucket(const bucket& b) {
     if (b) {
-        _impl = bsoncxx::v_noabi::stdx::make_unique<impl>(b._get_impl());
+        _impl = bsoncxx::make_unique<impl>(b._get_impl());
     }
 }
 
@@ -170,7 +170,7 @@ bucket& bucket::operator=(const bucket& b) {
     if (!b) {
         _impl.reset();
     } else if (!*this) {
-        _impl = bsoncxx::v_noabi::stdx::make_unique<impl>(b._get_impl());
+        _impl = bsoncxx::make_unique<impl>(b._get_impl());
     } else {
         *_impl = b._get_impl();
     }
@@ -255,7 +255,7 @@ void bucket::_upload_from_stream_with_id(const client_session* session,
     uploader upload_stream = _open_upload_stream_with_id(session, id, filename, options);
     std::int32_t chunk_size = upload_stream.chunk_size();
     std::unique_ptr<std::uint8_t[]> buffer =
-        bsoncxx::v_noabi::stdx::make_unique<std::uint8_t[]>(static_cast<std::size_t>(chunk_size));
+        bsoncxx::make_unique<std::uint8_t[]>(static_cast<std::size_t>(chunk_size));
 
     do {
         source->read(reinterpret_cast<char*>(buffer.get()),
@@ -424,7 +424,7 @@ void bucket::_download_to_stream(const client_session* session,
     }
     auto bytes_expected = *end - *start;
     std::unique_ptr<std::uint8_t[]> buffer =
-        bsoncxx::v_noabi::stdx::make_unique<std::uint8_t[]>(static_cast<std::size_t>(chunk_size));
+        bsoncxx::make_unique<std::uint8_t[]>(static_cast<std::size_t>(chunk_size));
 
     while (bytes_expected > 0) {
         const std::size_t bytes_read = download_stream.read(

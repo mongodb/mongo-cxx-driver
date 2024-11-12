@@ -63,7 +63,7 @@ def tasks():
                 tags.append(polyfill)
 
             mongod_vars |= {'AUTH': 'noauth'}  # Versioned API + auth is tested by the C Driver.
-            compile_vars = {}
+            compile_vars = {'ENABLE_TESTS': 'ON'}
             test_vars |= {'MONGOCXX_TEST_TOPOLOGY': 'single'}
 
             if distro.os_type == 'windows':

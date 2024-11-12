@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/stdx/make_unique.hpp>
+#include <bsoncxx/private/make_unique.hh>
 
 #include <mongocxx/exception/exception.hpp>
 #include <mongocxx/exception/private/mongoc_error.hh>
@@ -27,7 +27,7 @@ namespace v_noabi {
 // Private constructors.
 client_session::client_session(const mongocxx::v_noabi::client* client,
                                const mongocxx::v_noabi::options::client_session& options)
-    : _impl(bsoncxx::v_noabi::stdx::make_unique<impl>(client, options)) {}
+    : _impl(bsoncxx::make_unique<impl>(client, options)) {}
 
 client_session::client_session(client_session&&) noexcept = default;
 

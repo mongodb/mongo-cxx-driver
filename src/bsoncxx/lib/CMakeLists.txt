@@ -77,6 +77,7 @@ set_dist_list(src_bsoncxx_lib_DIST
     bsoncxx/v_noabi/bsoncxx/config/version.hpp.in
     bsoncxx/v_noabi/bsoncxx/private/b64_ntop.hh
     bsoncxx/v_noabi/bsoncxx/private/helpers.hh
+    bsoncxx/v_noabi/bsoncxx/private/make_unique.hh
     bsoncxx/v_noabi/bsoncxx/private/itoa.hh
     bsoncxx/v_noabi/bsoncxx/private/libbson.hh
     bsoncxx/v_noabi/bsoncxx/private/stack.hh

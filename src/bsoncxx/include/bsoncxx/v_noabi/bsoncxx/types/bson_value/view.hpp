@@ -28,6 +28,19 @@
 #include <bsoncxx/config/prelude.hpp>
 
 namespace bsoncxx {
+namespace detail {
+
+template <typename T>
+using is_bson_view_compatible =
+    detail::conjunction<std::is_constructible<bsoncxx::v_noabi::types::bson_value::view, T>,
+                        detail::negation<detail::disjunction<
+                            detail::is_alike<T, bsoncxx::v_noabi::types::bson_value::view>,
+                            detail::is_alike<T, bsoncxx::v_noabi::types::bson_value::value>>>>;
+
+}  // namespace detail
+}  // namespace bsoncxx
+
+namespace bsoncxx {
 namespace v_noabi {
 namespace types {
 namespace bson_value {
@@ -303,15 +316,6 @@ class view {
     };
 };
 
-template <typename T>
-using is_bson_view_compatible = detail::conjunction<
-    std::is_constructible<bson_value::view, T>,
-    detail::negation<detail::disjunction<detail::is_alike<T, bson_value::view>,
-                                         detail::is_alike<T, bson_value::value>>>>;
-
-template <typename T>
-using not_view = is_bson_view_compatible<T>;
-
 ///
 /// Compares a view with a type representable as a view.
 ///
@@ -322,28 +326,28 @@ using not_view = is_bson_view_compatible<T>;
 
 /// @relatesalso bsoncxx::v_noabi::types::bson_value::view
 template <typename T>
-detail::requires_t<bool, is_bson_view_compatible<T>>  //
+detail::requires_t<bool, detail::is_bson_view_compatible<T>>  //
 operator==(const bson_value::view& lhs, T&& rhs) {
     return lhs == bson_value::view{std::forward<T>(rhs)};
 }
 
 /// @relatesalso bsoncxx::v_noabi::types::bson_value::view
 template <typename T>
-detail::requires_t<bool, is_bson_view_compatible<T>>  //
+detail::requires_t<bool, detail::is_bson_view_compatible<T>>  //
 operator==(T&& lhs, const bson_value::view& rhs) {
     return bson_value::view{std::forward<T>(lhs)} == rhs;
 }
 
 /// @relatesalso bsoncxx::v_noabi::types::bson_value::view
 template <typename T>
-detail::requires_t<bool, is_bson_view_compatible<T>>  //
+detail::requires_t<bool, detail::is_bson_view_compatible<T>>  //
 operator!=(const bson_value::view& lhs, T&& rhs) {
     return lhs != bson_value::view{std::forward<T>(rhs)};
 }
 
 /// @relatesalso bsoncxx::v_noabi::types::bson_value::view
 template <typename T>
-detail::requires_t<bool, is_bson_view_compatible<T>>  //
+detail::requires_t<bool, detail::is_bson_view_compatible<T>>  //
 operator!=(T&& lhs, const bson_value::view& rhs) {
     return bson_value::view{std::forward<T>(lhs)} != rhs;
 }

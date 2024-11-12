@@ -26,7 +26,7 @@ set(CMAKE_MODULE_PATH
     ${PROJECT_SOURCE_DIR}/cmake/make_dist
 )
 
-option(BUILD_TESTING "Include test targets in the \"all\" target")
+option(BUILD_TESTING "When ENABLE_TESTS=ON, include test targets in the \"all\" target")
 
 if(CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
     if(CMAKE_CXX_COMPILER_VERSION VERSION_LESS "4.8.2")
@@ -324,8 +324,12 @@ add_custom_target(docs
 set(THIRD_PARTY_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src/third_party)
 set(DATA_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/data)
 
-option(ENABLE_TESTS "Build MongoDB C++ Driver tests." ON)
-option(ENABLE_MACRO_GUARD_TESTS "Enable targets for macro guard compile tests." OFF)
+option(ENABLE_TESTS "Enable building test targets." OFF)
+option(ENABLE_MACRO_GUARD_TESTS "When ENABLE_TESTS=ON, enable macro guard test targets." OFF)
+
+if(BUILD_TESTING AND NOT ENABLE_TESTS)
+    message(WARNING "BUILD_TESTING is enabled without also setting ENABLE_TESTS. Set ENABLE_TESTS=ON to building test targets.")
+endif()
 
 if(ENABLE_TESTS)
     enable_testing()

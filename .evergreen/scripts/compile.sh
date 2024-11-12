@@ -98,7 +98,6 @@ cd build
 cmake_flags=(
   "-DCMAKE_BUILD_TYPE=${build_type:?}"
   "-DCMAKE_PREFIX_PATH=${mongoc_prefix:?}"
-  -DBUILD_TESTING=ON
   -DMONGOCXX_ENABLE_SLOW_TESTS=ON
   -DCMAKE_INSTALL_PREFIX=install
   -DENABLE_UNINSTALL=ON
@@ -220,8 +219,11 @@ if [ "${USE_STATIC_LIBS:-}" ]; then
   cmake_flags+=("-DBUILD_SHARED_LIBS=OFF")
 fi
 
-if [ "${ENABLE_TESTS:-}" = "OFF" ]; then
-  cmake_flags+=("-DENABLE_TESTS=OFF")
+if [ "${ENABLE_TESTS:-}" = "ON" ]; then
+  cmake_flags+=(
+    "-DENABLE_TESTS=ON"
+    "-DBUILD_TESTING=ON"
+  )
 fi
 
 if [[ -n "${REQUIRED_CXX_STANDARD:-}" ]]; then

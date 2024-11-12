@@ -105,9 +105,15 @@ def tasks():
             distro = find_large_distro(distro_name)
 
             updates = []
-            icd_vars = {'BSON_EXTRA_ALIGNMENT': 1} if with_extra_align else {}
-            compile_vars = {'BSON_EXTRA_ALIGNMENT': 1} if with_extra_align else {'RUN_DISTCHECK': 1}
+            icd_vars = {}
+            compile_vars = {'ENABLE_TESTS': 'ON'}
             test_vars = {'MONGOCXX_TEST_TOPOLOGY': topology}
+
+            if with_extra_align:
+                icd_vars |= {'BSON_EXTRA_ALIGNMENT': 1}
+                compile_vars |= {'BSON_EXTRA_ALIGNMENT': 1}
+            else:
+                compile_vars |= {'RUN_DISTCHECK': 1}
 
             updates += [KeyValueParam(key='build_type', value=build_type)]
             updates += [KeyValueParam(key=key, value=value) for key, value in compiler_to_vars(compiler).items()]

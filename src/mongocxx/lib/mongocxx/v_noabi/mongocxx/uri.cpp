@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#include <bsoncxx/stdx/make_unique.hpp>
+#include <bsoncxx/private/make_unique.hh>
 #include <bsoncxx/types.hpp>
 
 #include <mongocxx/exception/error_code.hpp>
@@ -51,7 +51,7 @@ uri::uri(std::unique_ptr<impl>&& implementation) {
 uri::uri(bsoncxx::v_noabi::string::view_or_value uri_string) {
     bson_error_t error;
 
-    _impl = bsoncxx::v_noabi::stdx::make_unique<impl>(
+    _impl = bsoncxx::make_unique<impl>(
         libmongoc::uri_new_with_error(uri_string.terminated().data(), &error));
 
     if (_impl->uri_t == nullptr) {
@@ -99,13 +99,13 @@ std::string uri::password() const {
 mongocxx::v_noabi::read_concern uri::read_concern() const {
     auto rc = libmongoc::uri_get_read_concern(_impl->uri_t);
     return mongocxx::v_noabi::read_concern(
-        bsoncxx::v_noabi::stdx::make_unique<read_concern::impl>(libmongoc::read_concern_copy(rc)));
+        bsoncxx::make_unique<read_concern::impl>(libmongoc::read_concern_copy(rc)));
 }
 
 mongocxx::v_noabi::read_preference uri::read_preference() const {
     auto rp = libmongoc::uri_get_read_prefs_t(_impl->uri_t);
     return mongocxx::v_noabi::read_preference(
-        bsoncxx::v_noabi::stdx::make_unique<read_preference::impl>(libmongoc::read_prefs_copy(rp)));
+        bsoncxx::make_unique<read_preference::impl>(libmongoc::read_prefs_copy(rp)));
 }
 
 std::string uri::replica_set() const {
@@ -131,8 +131,7 @@ std::string uri::username() const {
 mongocxx::v_noabi::write_concern uri::write_concern() const {
     auto wc = libmongoc::uri_get_write_concern(_impl->uri_t);
     return mongocxx::v_noabi::write_concern(
-        bsoncxx::v_noabi::stdx::make_unique<write_concern::impl>(
-            libmongoc::write_concern_copy(wc)));
+        bsoncxx::make_unique<write_concern::impl>(libmongoc::write_concern_copy(wc)));
 }
 
 static bsoncxx::v_noabi::stdx::optional<bsoncxx::v_noabi::stdx::string_view> _string_option(

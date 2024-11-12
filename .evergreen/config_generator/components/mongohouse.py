@@ -72,7 +72,7 @@ def tasks():
             commands=[
                 Setup.call(),
                 FetchCDriverSource.call(),
-                Compile.call(build_type='Release'),
+                Compile.call(build_type='Release', vars={'ENABLE_TESTS': 'ON'}),
                 BuildMongohouse.call(),
                 RunMongohouse.call(),
                 TestMongohouse.call(),
