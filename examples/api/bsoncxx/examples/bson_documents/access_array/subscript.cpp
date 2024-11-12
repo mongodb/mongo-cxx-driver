@@ -30,7 +30,7 @@ void example(bsoncxx::array::view arr) {
     {
         bsoncxx::array::element e = arr[1];
 
-        EXPECT(e.key().compare("1") == 0);
+        EXPECT(e.key() == "1");
         EXPECT(e.get_int32().value == 2);
     }
 

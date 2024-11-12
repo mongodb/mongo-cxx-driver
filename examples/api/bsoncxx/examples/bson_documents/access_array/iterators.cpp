@@ -33,20 +33,20 @@ void example(bsoncxx::array::view arr) {
     {
         bsoncxx::array::element e = *iter;
 
-        EXPECT(e.key().compare("0") == 0);
+        EXPECT(e.key() == "0");
         EXPECT(e.get_int32().value == 1);
     }
 
     ++iter;
 
-    EXPECT(iter->key().compare("1") == 0);
+    EXPECT(iter->key() == "1");
     EXPECT(iter->get_int32().value == 2);
 
     {
         auto iter_copy = iter++;
 
         EXPECT(iter_copy != iter);
-        EXPECT(iter_copy->key().compare("1") == 0);
+        EXPECT(iter_copy->key() == "1");
         EXPECT(iter_copy->get_int32() == 2);
     }
 

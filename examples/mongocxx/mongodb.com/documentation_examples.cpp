@@ -121,7 +121,7 @@ mongocxx::options::client add_test_server_api(mongocxx::options::client opts = {
     const auto api_version_sv = bsoncxx::stdx::string_view(api_version);
 
     if (!api_version_sv.empty()) {
-        if (api_version_sv.compare("1") == 0) {
+        if (api_version_sv == "1") {
             opts.server_api_opts(
                 mongocxx::options::server_api(mongocxx::options::server_api::version::k_version_1));
         } else {

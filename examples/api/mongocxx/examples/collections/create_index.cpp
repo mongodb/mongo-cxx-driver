@@ -35,7 +35,7 @@ void example(mongocxx::collection coll) {
     bsoncxx::document::value result = coll.create_index(bsoncxx::from_json(R"({"key": 1})"));
 
     EXPECT(result["name"]);
-    EXPECT(result["name"].get_string().value.compare("key_1") == 0);
+    EXPECT(result["name"].get_string().value == "key_1");
 }
 // [Example]
 

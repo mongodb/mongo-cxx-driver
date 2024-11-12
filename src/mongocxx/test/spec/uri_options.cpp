@@ -34,17 +34,17 @@ struct URIOptionsTest {
         URIOptionsTest test;
 
         for (auto el : test_doc) {
-            if (0 == el.key().compare("description")) {
+            if (el.key() == "description") {
                 test.description = el.get_string().value;
-            } else if (0 == el.key().compare("uri")) {
+            } else if (el.key() == "uri") {
                 test.uri = el.get_string().value;
-            } else if (0 == el.key().compare("valid")) {
+            } else if (el.key() == "valid") {
                 test.valid = el.get_bool().value;
-            } else if (0 == el.key().compare("warning")) {
+            } else if (el.key() == "warning") {
                 test.warning = el.get_bool().value;
-            } else if (0 == el.key().compare("options")) {
+            } else if (el.key() == "options") {
                 test.options = el.get_document().value;
-            } else if ((0 == el.key().compare("hosts")) || ((0 == el.key().compare("auth")))) {
+            } else if (el.key() == "hosts" || el.key() == "auth") {
                 // hosts and auth will always be null are to be skipped as per the spec test
                 // description
             } else {

@@ -30,15 +30,15 @@ void example(bsoncxx::document::element e) {
 
     switch (v.type()) {
         case bsoncxx::type::k_int32:
-            EXPECT(e.key().compare("a") == 0);
+            EXPECT(e.key() == "a");
             EXPECT(v.get_int32() == e.get_int32());
             break;
         case bsoncxx::type::k_double:
-            EXPECT(e.key().compare("b") == 0);
+            EXPECT(e.key() == "b");
             EXPECT(v.get_double() == e.get_double());
             break;
         case bsoncxx::type::k_string:
-            EXPECT(e.key().compare("c") == 0);
+            EXPECT(e.key() == "c");
             EXPECT(v.get_string() == e.get_string());
             break;
     }

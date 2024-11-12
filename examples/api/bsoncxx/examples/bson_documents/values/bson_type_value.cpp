@@ -37,7 +37,7 @@ void example() {
 
     v = bsoncxx::types::b_string{"three"};
     EXPECT(v.view().type() == bsoncxx::type::k_string);
-    EXPECT(v.view().get_string().value.compare("three") == 0);
+    EXPECT(v.view().get_string().value == "three");
 }
 // [Example]
 

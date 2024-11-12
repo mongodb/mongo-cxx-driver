@@ -650,7 +650,7 @@ TEST_CASE("BSON size limits and batch splitting", "[client_side_encryption]") {
     int n_inserts = 0;
     options::apm apm_opts;
     apm_opts.on_command_started([&](const events::command_started_event& event) {
-        if (event.command_name().compare("insert") == 0) {
+        if (event.command_name() == "insert") {
             n_inserts++;
         }
     });

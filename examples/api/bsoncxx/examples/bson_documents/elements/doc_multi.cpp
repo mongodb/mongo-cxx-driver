@@ -26,7 +26,7 @@ namespace {
 void example(bsoncxx::document::element e) {
     switch (e.type()) {
         case bsoncxx::type::k_int32: {
-            EXPECT(e.key().compare("a") == 0);
+            EXPECT(e.key() == "a");
 
             bsoncxx::types::b_int32 v = e.get_int32();
 
@@ -36,7 +36,7 @@ void example(bsoncxx::document::element e) {
             break;
         }
         case bsoncxx::type::k_double: {
-            EXPECT(e.key().compare("b") == 0);
+            EXPECT(e.key() == "b");
 
             bsoncxx::types::b_double v = e.get_double();
 
@@ -46,12 +46,12 @@ void example(bsoncxx::document::element e) {
             break;
         }
         case bsoncxx::type::k_string: {
-            EXPECT(e.key().compare("c") == 0);
+            EXPECT(e.key() == "c");
 
             bsoncxx::types::b_string v = e.get_string();
 
             EXPECT(v.type_id == bsoncxx::type::k_string);
-            EXPECT(v.value.compare("three") == 0);
+            EXPECT(v.value == "three");
 
             break;
         }

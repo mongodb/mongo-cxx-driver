@@ -50,7 +50,7 @@ void example() {
         view_type v = owner.view();
 
         EXPECT(v.type() == bsoncxx::type::k_string);
-        EXPECT(v.get_string().value.compare("three") == 0);
+        EXPECT(v.get_string().value == "three");
     }
 }
 // [Example]

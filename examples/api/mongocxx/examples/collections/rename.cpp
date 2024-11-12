@@ -31,11 +31,11 @@ void example(mongocxx::database db) {
     EXPECT(db.has_collection("old"));
     EXPECT(!db.has_collection("new"));
 
-    EXPECT(coll.name().compare("old") == 0);
+    EXPECT(coll.name() == "old");
 
     coll.rename("new");
 
-    EXPECT(coll.name().compare("new") == 0);
+    EXPECT(coll.name() == "new");
 
     EXPECT(!db.has_collection("old"));
     EXPECT(db.has_collection("new"));

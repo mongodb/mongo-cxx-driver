@@ -35,7 +35,7 @@ void example() {
     {
         mongocxx::uri uri{"mongodb://bob:pwd123@localhost:27017/?tls=true"};
 
-        EXPECT(uri.username().compare("bob") == 0);
+        EXPECT(uri.username() == "bob");
         EXPECT(uri.password() == "pwd123");
 
         EXPECT(uri.tls() == true);

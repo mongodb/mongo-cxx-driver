@@ -29,7 +29,7 @@ namespace {
 
 // [Example]
 void example(mongocxx::database db) {
-    EXPECT(db.name().compare("db") == 0);
+    EXPECT(db.name() == "db");
 
     // The `getParameter` command can only be run in the `admin` database.
     auto cmd = bsoncxx::from_json(R"({"getParameter": "*"})");

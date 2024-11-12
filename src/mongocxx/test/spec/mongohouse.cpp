@@ -120,7 +120,7 @@ void test_kill_cursors() {
             cmd_ns += ".";
             cmd_ns += std::string(coll);
 
-            if (cmd_ns.compare(cursor_ns) != 0) {
+            if (cmd_ns != cursor_ns) {
                 continue;
             }
 

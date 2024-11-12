@@ -27,9 +27,9 @@ void example(mongocxx::database db) {
     mongocxx::collection coll = db["coll"];
 
     EXPECT(coll);
-    EXPECT(coll.name().compare("coll") == 0);
+    EXPECT(coll.name() == "coll");
 
-    EXPECT(db.collection("coll").name().compare("coll") == 0);
+    EXPECT(db.collection("coll").name() == "coll");
 }
 // [Example]
 

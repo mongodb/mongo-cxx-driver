@@ -300,7 +300,7 @@ static bool is_sharded_cluster(document::view reply) {
         return false;
     }
 
-    return msg.get_string().value.compare("isdbgrid") == 0;
+    return msg.get_string().value == "isdbgrid";
 }
 
 bool is_sharded_cluster(const client& client) {
@@ -369,9 +369,9 @@ bool is_numeric(types::bson_value::view value) {
 static bsoncxx::stdx::optional<type> is_type_operator(types::bson_value::view value) {
     if (value.type() == type::k_document && value.get_document().value["$$type"]) {
         auto t = value.get_document().value["$$type"].get_string().value;
-        if (t.compare("binData") == 0) {
+        if (t == "binData") {
             return {type::k_binary};
-        } else if (t.compare("long") == 0) {
+        } else if (t == "long") {
             return {type::k_int64};
         }
         throw std::logic_error{"unsupported type for $$type"};
@@ -402,7 +402,7 @@ bool matches(types::bson_value::view main,
 
     if (main.type() == type::k_document) {
         // the value '42' acts as placeholders for "any value"
-        if (pattern.type() == type::k_string && 0 == pattern.get_string().value.compare("42")) {
+        if (pattern.type() == type::k_string && pattern.get_string().value == "42") {
             return true;
         }
 
@@ -426,14 +426,14 @@ bool matches(types::bson_value::view main,
             }
 
             // For write errors, only check for existence.
-            if (el.key().compare("writeErrors") == 0) {
+            if (el.key() == "writeErrors") {
                 if (main_view.find(el.key()) == main_view.end()) {
                     return false;
                 }
                 continue;
             }
             // The C++ driver does not include insertedIds as part of the bulk write result.
-            if (el.key().compare("insertedIds") == 0) {
+            if (el.key() == "insertedIds") {
                 if (main_view.find(el.key()) == main_view.end()) {
                     return false;
                 }

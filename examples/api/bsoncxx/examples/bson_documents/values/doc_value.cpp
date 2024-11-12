@@ -37,7 +37,7 @@ void example() {
     v = v.view().get_document().value["key"].get_string();  // Copy: no dangling.
 
     EXPECT(v.view().type() == bsoncxx::type::k_string);
-    EXPECT(v.view().get_string().value.compare("value") == 0);
+    EXPECT(v.view().get_string().value == "value");
 }
 // [Example]
 

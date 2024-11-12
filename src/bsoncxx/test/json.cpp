@@ -55,14 +55,14 @@ TEST_CASE("valid json is converted to equivalent BSON") {
 
 TEST_CASE("empty document is converted correctly to json string") {
     using namespace bsoncxx;
-    REQUIRE(0 == to_json(make_document().view()).compare("{ }"));
+    REQUIRE(to_json(make_document().view()) == "{ }");
 }
 
 TEST_CASE("empty array is converted correctly to json string") {
     using bsoncxx::to_json;
 
     auto doc = make_document(kvp("array", make_array()));
-    REQUIRE(0 == to_json(doc.view()).compare(R"({ "array" : [  ] })"));
+    REQUIRE(to_json(doc.view()) == R"({ "array" : [  ] })");
 }
 
 TEST_CASE("CXX-941 is resolved") {

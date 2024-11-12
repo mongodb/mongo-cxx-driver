@@ -469,7 +469,7 @@ TEST_CASE("Documentation Examples", "[min36]") {
         }
         bsoncxx::document::view next = *it;
         // End Changestream Example 1
-        REQUIRE(0 == next["operationType"].get_string().value.compare("insert"));
+        REQUIRE(next["operationType"].get_string().value == "insert");
     }
 
     SECTION("Example 2") {
@@ -484,7 +484,7 @@ TEST_CASE("Documentation Examples", "[min36]") {
         }
         bsoncxx::document::view next = *it;
         // End Changestream Example 2
-        REQUIRE(0 == next["operationType"].get_string().value.compare("insert"));
+        REQUIRE(next["operationType"].get_string().value == "insert");
     }
 
     SECTION("Example 3") {
@@ -510,7 +510,7 @@ TEST_CASE("Documentation Examples", "[min36]") {
             it = stream.begin();
         }
         // End Changestream Example 3
-        REQUIRE(0 == (*it)["operationType"].get_string().value.compare("insert"));
+        REQUIRE((*it)["operationType"].get_string().value == "insert");
     }
 
     SECTION("Example 4") {
@@ -531,7 +531,7 @@ TEST_CASE("Documentation Examples", "[min36]") {
             it = stream.begin();
         }
         // End Changestream Example 4
-        REQUIRE(0 == (*it)["operationType"].get_string().value.compare("insert"));
+        REQUIRE((*it)["operationType"].get_string().value == "insert");
     }
 
     insert_thread_done = true;
