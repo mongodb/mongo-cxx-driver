@@ -68,7 +68,7 @@ def tasks():
 
     return [
         EvgTask(
-            name=TAG,
+            name='silk-check-augmented-sbom',
             tags=[TAG, distro_name],
             run_on=distro.name,
             commands=[
