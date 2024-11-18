@@ -20,6 +20,11 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
   - Set `BUILD_TESTING=ON` to include test targets in the "all" target when `ENABLE_TESTS=ON` (since 3.9.0, `OFF` by default).
 - Layout of `mongocxx::v_noabi::options::change_stream` to support the new optional `start_at_operation_time` accessor.
 
+## Deprecated
+
+- Support for MongoDB Server 4.0.
+  - See: [MongoDB Software Lifecycle Schedules](https://www.mongodb.com/legal/support-policy/lifecycles).
+
 ## Removed
 
 - Support for external polyfill libraries.
@@ -90,7 +95,9 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 
 ### Removed
 
-- Support for MongoDB Server 3.6. See [MongoDB Software Lifecycle Schedules](https://www.mongodb.com/legal/support-policy/lifecycles).
+- Support for MongoDB Server 3.6 (due to the minimum required C Driver version).
+  - See: [MongoDB Software Lifecycle Schedules](https://www.mongodb.com/legal/support-policy/lifecycles).
+  - See: [MongoDB C Driver 1.28.0 Release Notes](https://github.com/mongodb/mongo-c-driver/releases/tag/1.28.0).
 - Export of private member functions in the bsoncxx ABI:
   - `bsoncxx::v_noabi::types::bson_value::value::value(const uint8_t*, uint32_t, uint32_t, uint32_t)`
   - `bsoncxx::v_noabi::types::bson_value::view::_init(void*)`
