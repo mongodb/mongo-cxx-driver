@@ -30,9 +30,9 @@ if __name__ == "__main__":
         "redhat-ubi-9.4",
     ]
     base_image = {
-        "alpine3.19": "public.ecr.aws/docker/library/alpine:3.19",
-        "bookworm": "public.ecr.aws/docker/library/debian:12-slim",
-        "noble": "public.ecr.aws/docker/library/ubuntu:24.04",
+        "alpine3.19": "artifactory.corp.mongodb.com/dockerhub/library/alpine:3.19",
+        "bookworm": "artifactory.corp.mongodb.com/dockerhub/library/debian:12-slim",
+        "noble": "artifactory.corp.mongodb.com/dockerhub/library/ubuntu:24.04",
         "redhat-ubi-9.4": "registry.access.redhat.com/ubi9/ubi-minimal:9.4",
     }
     test_dependency_install_command = {

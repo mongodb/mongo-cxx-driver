@@ -30,6 +30,7 @@ class DockerImageBuild(Function):
         script='''\
             set -o errexit
             set -o pipefail
+            docker login -u "${ARTIFACTORY_USER}" --password-stdin artifactory.corp.mongodb.com <<<"${ARTIFACTORY_PASSWORD}"
             set -x
             echo "Building Alpine Docker image"
             make -C extras/docker/alpine3.19 nocachebuild test
