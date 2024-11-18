@@ -113,7 +113,16 @@ See the comment accompanying `MONGOC_VERSION_MINIMUM` for a list of other source
 
 Ensure there are no new or unexpected issues with High severity or greater.
 
-Update the [SSDLC Report spreadsheet](https://docs.google.com/spreadsheets/d/1sp0bLjj29xO9T8BwDIxUk5IPJ493QkBVCJKIgptxEPc/edit?usp=sharing) with any updates to new or known issues.
+Triage any outstanding issues using the `Issues: By Snapshot | Outstanding Issues` view, create JIRA tickets if necessary, and update issue fields accordingly.
+
+> [!NOTE]
+> The "Classification", "Action", and "MongoDB Final Status" fields should always be updated. The "Ext. Reference" field may refer to a JIRA ticket number or an external issue tracker as appropriate. Use the "Notes" field to document rationale for the "MongoDB Final Status" for issues with Medium severity or higher. Add any additional notes for future reference in the "Comments" field.
+
+Verify that all issues listed in the `Issues: By Snapshot | SSDLC Report (v2)` view have been triaged. All
+
+All issues with an Impact level of "High" or greater must have a "MongoDB Final Status" of "Fix Committed" and a corresponding JIRA ticket number in the "Ext. Reference" field.
+
+All issues with an Impact level of "Medium" or greater which do not have a "MongoDB Final Status" of "Fix Committed" must document rationale for its current status in the "Notes" field.
 
 ### SBOM Lite
 
@@ -276,7 +285,7 @@ Commit the updates to `CHANGELOG.md`.
 git commit -m 'Update CHANGELOG for X.Y.Z'
 ```
 
-## Pre-Release Changes PR
+### Pre-Release Changes PR
 
 Push the `pre-release-changes` branch to a fork repository and create a PR to merge `pre-release-changes` onto `master`:
 
@@ -424,17 +433,13 @@ git reset --hard rX.Y.Z
 git push -f upstream releases/stable
 ```
 
+### Coverity Report
+
+Export the `Issues: By Snapshot | SSDLC Report (v2)` view as a CSV named `static_analysis-X.Y.Z.csv`.
+
 ### Upload SSDLC Reports
 
-Navigate to the [C++ Driver SSDLC Reports](https://drive.google.com/drive/folders/1q9RI55trFzHlh8McALSIAbT6ugyn8zlO) folder and update the master spreadsheet.
-
-Once complete, make two copies of the spreadsheet.
-
-Rename one copy to: "SSDLC Report: mongo-cxx-driver X.Y.Z". Leave this copy in this folder.
-
-Rename the other copy to: "static_analysis_report-X.Y.Z". Move this copy into the [SSDLC Compliance Files](https://drive.google.com/drive/folders/1_qwTwYyqPL7VjrZOiuyiDYi1y2NYiClS) folder and name it.
-
-Upload a copy of the `etc/ssdlc_compliance_report.md`, `etc/third_party_vulnerabilities.md`, and `etc/augmented.sbom.json` files. Rename the files with the version number `-X.Y.Z` suffix in their filenames as already done for other files in this folder.
+Upload a copy of the `static_analysis-X.Y.Z.csv`, `etc/ssdlc_compliance_report.md`, `etc/third_party_vulnerabilities.md`, and `etc/augmented.sbom.json` files. Rename the files with the version number `-X.Y.Z` suffix in their filenames as already done for other files in this folder.
 
 > [!WARNING]
 > Uploading a file into the SSDLC Compliance Files folder is an irreversible action! However, the files may still be renamed. If necessary, rename any accidentally uploaded files to "(Delete Me)" or similar.
@@ -442,10 +447,10 @@ Upload a copy of the `etc/ssdlc_compliance_report.md`, `etc/third_party_vulnerab
 Four new files should be present in the [SSDLC Compliance Files](https://drive.google.com/drive/folders/1_qwTwYyqPL7VjrZOiuyiDYi1y2NYiClS) folder following a release `X.Y.Z`:
 
 ```
-ssdlc_compliance_report-X.Y.Z.md
-third_party_vulnerabilities-X.Y.Z.md
-static_analysis-X.Y.Z
 augmented.sbom-X.Y.Z.json
+ssdlc_compliance_report-X.Y.Z.md
+static_analysis-X.Y.Z.csv
+third_party_vulnerabilities-X.Y.Z.md
 ```
 
 ## Post-Release Steps
@@ -810,6 +815,10 @@ Sincerely,
 
 The C++ Driver Team
 ```
+
+### Update the Release Info Spreadsheet
+
+Add an entry to the [C/C++ Release Info](https://docs.google.com/spreadsheets/d/1yHfGmDnbA5-Qt8FX4tKWC5xk9AhzYZx1SKF4AD36ecY) spreadsheet documenting the date, release version, author (of the release), and additional comments.
 
 ## Packaging
 
