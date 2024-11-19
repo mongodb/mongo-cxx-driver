@@ -200,9 +200,6 @@ If the Augmented SBOM has not yet been updated in time for a release, a temporar
 . $HOME/.secrets/artifactory-creds.txt
 . $HOME/.secrets/silk-creds.txt
 
-# Required to parse JWT Token in authentication response below.
-command -V jq
-
 # Name of the temporary Silk Asset Group. Do NOT use an existing Silk Asset Group!
 asset_group_id="mongo-cxx-driver-X.Y.Z-tmp"
 
