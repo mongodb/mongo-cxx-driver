@@ -896,6 +896,10 @@ void assert_error(const mongocxx::operation_exception& exception,
             // { MONGOCRYPT_STATUS_ERROR_CLIENT, MONGOCRYPT_GENERIC_ERROR_CODE }
             // libmongocrypt: _mongocrypt_check_allowed_fields
             "Unexpected field: 'invalid'",
+
+            // { MONGOCRYPT_STATUS_ERROR_CLIENT, MONGOCRYPT_GENERIC_ERROR_CODE }
+            // libmongocrypt: _kms_done
+            "key material not expected length",
         };
 
         const bsoncxx::stdx::string_view message = exception.what();
