@@ -21,7 +21,6 @@
 #include <bsoncxx/json.hpp>
 #include <bsoncxx/private/b64_ntop.hh>
 #include <bsoncxx/private/libbson.hh>
-#include <bsoncxx/private/suppress_deprecation_warnings.hh>
 #include <bsoncxx/stdx/string_view.hpp>
 #include <bsoncxx/types.hpp>
 #include <bsoncxx/types/bson_value/view.hpp>
@@ -62,9 +61,7 @@ std::string to_json_helper(document::view view, char* (*converter)(const bson_t*
 std::string to_json(document::view view, ExtendedJsonMode mode) {
     switch (mode) {
         case ExtendedJsonMode::k_legacy:
-            BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_BEGIN
-            return to_json_helper(view, bson_as_json);
-            BSONCXX_SUPPRESS_DEPRECATION_WARNINGS_END
+            return to_json_helper(view, bson_as_legacy_extended_json);
 
         case ExtendedJsonMode::k_relaxed:
             return to_json_helper(view, bson_as_relaxed_extended_json);
@@ -79,7 +76,7 @@ std::string to_json(document::view view, ExtendedJsonMode mode) {
 std::string to_json(array::view view, ExtendedJsonMode mode) {
     switch (mode) {
         case ExtendedJsonMode::k_legacy:
-            return to_json_helper(view, bson_array_as_json);
+            return to_json_helper(view, bson_array_as_legacy_extended_json);
 
         case ExtendedJsonMode::k_relaxed:
             return to_json_helper(view, bson_array_as_relaxed_extended_json);
