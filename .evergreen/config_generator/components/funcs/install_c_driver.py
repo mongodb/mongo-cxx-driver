@@ -12,6 +12,8 @@ from typing import Mapping
 # - the version of pkg:github/mongodb/mongo-c-driver in etc/purls.txt
 # - the default value of --c-driver-build-ref in etc/make_release.py
 # Only LIBMONGOC_DOWNLOAD_VERSION needs to be updated when pinning to an unreleased commit.
+# If pinning to an unreleased commit, create a "Blocked" JIRA ticket with
+# a "depends on" link to the appropriate C Driver version release ticket.
 MONGOC_VERSION_MINIMUM = '1.29.0'
 
 
