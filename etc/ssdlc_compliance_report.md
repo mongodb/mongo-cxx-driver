@@ -11,17 +11,17 @@
 ## Tool used to track third party vulnerabilities
 
 - See [Silk](https://us1.app.silk.security/inventory/asset-group/mongodb____DedupedAssetGroup____60640b8853771efe3af5f78ea37af5d1cdd190df) (internal).
-- See [C++ Driver - SSDLC Reports](https://drive.google.com/drive/folders/1q9RI55trFzHlh8McALSIAbT6ugyn8zlO) for release-specific reports.
+- See [SSDLC Compliance Files: C++ Driver](https://drive.google.com/drive/folders/1_qwTwYyqPL7VjrZOiuyiDYi1y2NYiClS) (internal) for release-specific reports. Available as needed from the MongoDB C++ Driver team.
 
 ## Third-Party Dependency Information
 
 - See [etc/augmented.sbom.json](https://github.com/mongodb/mongo-cxx-driver/blob/master/etc/augmented.sbom.json) within the release tarball.
 - See [etc/third_party_vulnerabilities.md](https://github.com/mongodb/mongo-cxx-driver/blob/master/etc/third_party_vulnerabilities.md) within the release tarball.
-- See [C++ Driver - SSDLC Reports](https://drive.google.com/drive/folders/1q9RI55trFzHlh8McALSIAbT6ugyn8zlO) for release-specific reports.
+- See [SSDLC Compliance Files: C++ Driver](https://drive.google.com/drive/folders/1_qwTwYyqPL7VjrZOiuyiDYi1y2NYiClS) (internal) for release-specific reports. Available as needed from the MongoDB C++ Driver team.
 
 ## Static Analysis Findings
 
-- See [C++ Driver - SSDLC Reports](https://drive.google.com/drive/folders/1q9RI55trFzHlh8McALSIAbT6ugyn8zlO) for release-specific reports.
+- Available as needed from the MongoDB C++ Driver team.
 
 ## Security Testing Report
 
@@ -37,4 +37,4 @@
 
 ## Known Vulnerabilities
 
-- Any vulnerabilities that may be shown in the links referenced above have been reviewed and accepted by the appropriate approvers. For detailed information, see [C++ Driver - SSDLC Reports](https://drive.google.com/drive/folders/1q9RI55trFzHlh8McALSIAbT6ugyn8zlO) for release-specific reports.
+- Any vulnerabilities that may be shown in the links referenced above have been reviewed and accepted by the appropriate approvers. For more information, see [SSDLC Compliance Files: C++ Driver](https://drive.google.com/drive/folders/1_qwTwYyqPL7VjrZOiuyiDYi1y2NYiClS) (internal) for release-specific reports. Available as needed from the MongoDB C++ Driver team.
