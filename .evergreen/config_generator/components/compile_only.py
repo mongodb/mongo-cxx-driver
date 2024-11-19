@@ -53,8 +53,15 @@ def generate_tasks():
                 name += f'-{polyfill}'
                 tags.append(polyfill)
 
+            patchable = None
+
             # PowerPC and zSeries are limited resources.
-            patchable = False if any(pattern in distro_name for pattern in ['power8', 'zseries']) else None
+            if any(pattern in distro_name for pattern in ['power8', 'zseries']):
+                patchable = False
+
+            # etc/calc_release_version.py: error: unknown option `--format=...'
+            if distro_name == 'rhel79':
+                patchable = False
 
             res.append(
                 EvgTask(
