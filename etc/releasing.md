@@ -160,7 +160,9 @@ Generate an updated Augmented SBOM as described below.
 
 Ensure the `silk-check-augmented-sbom` task is passing on Evergreen for the relevant release branch. If it is passing, nothing needs to be done (unless the SBOM Lite was updated as described above).
 
- If the `silk-check-augmented-sbom` task was failing, update the Augmented SBOM document using the following command(s):
+#### Regular Update
+
+Update the Augmented SBOM document using the following command(s):
 
 ```bash
 # Artifactory and Silk credentials.
@@ -188,6 +190,47 @@ Update the [SSDLC Report spreadsheet](https://docs.google.com/spreadsheets/d/1sp
 Update `etc/third_party_vulnerabilities.md` with any updates to new or known vulnerabilities for third party dependencies that have not yet been fixed by the upcoming release.
 
 Commit the latest version of the Augmented SBOM document into the repo as `etc/augmented.sbom.json`. The Augmented SBOM document does not need to be updated if the `silk-check-augmented-sbom` was not failing (in which case the only changes present would a version bump or timestamp update).
+
+#### Instant Update
+
+If the Augmented SBOM has not yet been updated in time for a release, a temporary Silk Asset Group may be used instead:
+
+```bash
+# Artifactory and Silk credentials.
+. $HOME/.secrets/artifactory-creds.txt
+. $HOME/.secrets/silk-creds.txt
+
+# Required to parse JWT Token in authentication response below.
+command -V jq
+
+# Name of the temporary Silk Asset Group. Do NOT use an existing Silk Asset Group!
+asset_group_id="mongo-cxx-driver-X.Y.Z-tmp"
+
+# Output: "Login succeeded!"
+podman login --password-stdin --username "${ARTIFACTORY_USER:?}" artifactory.corp.mongodb.com <<<"${ARTIFACTORY_PASSWORD:?}"
+
+# Ensure latest version of SilkBomb is being used.
+podman pull artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:1.0
+
+# Common flags to podman.
+silkbomb_flags=(
+  --env-file "$HOME/.secrets/silk-creds.txt"
+  -it --rm -v "$(pwd):/pwd"
+  artifactory.corp.mongodb.com/release-tools-container-registry-public-local/silkbomb:1.0
+)
+
+# Create a new and temporary Silk Asset Group.
+podman run "${silkbomb_flags[@]:?}" asset-group --asset-cmd create --silk-asset-group "${asset_group_id:?}" --name "${asset_group_id:?}"
+
+# Upload the SBOM Lite.
+podman run "${silkbomb_flags[@]:?}" upload --silk-asset-group "${asset_group_id:?}" -i /pwd/etc/cyclonedx.sbom.json -o /pwd/etc/cyclonedx.sbom.json
+
+# Download the Augmented SBOM.
+podman run "${silkbomb_flags[@]:?}" download --silk-asset-group "${asset_group_id:?}" -o /pwd/etc/augmented.sbom.json
+
+# Remove the temporary Silk Asset Group.
+podman run "${silkbomb_flags[@]:?}" asset-group --asset-cmd delete --silk-asset-group "${asset_group_id:?}"
+```
 
 ### Check Snyk
 
