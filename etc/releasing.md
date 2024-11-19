@@ -118,7 +118,7 @@ Triage any outstanding issues using the `Issues: By Snapshot | Outstanding Issue
 > [!NOTE]
 > The "Classification", "Action", and "MongoDB Final Status" fields should always be updated. The "Ext. Reference" field may refer to a JIRA ticket number or an external issue tracker as appropriate. Use the "Notes" field to document rationale for the "MongoDB Final Status" for issues with Medium severity or higher. Add any additional notes for future reference in the "Comments" field.
 
-Verify that all issues listed in the `Issues: By Snapshot | SSDLC Report (v2)` view have been triaged. All
+Verify that all issues listed in the `Issues: By Snapshot | SSDLC Report (v2)` view have been triaged.
 
 All issues with an Impact level of "High" or greater must have a "MongoDB Final Status" of "Fix Committed" and a corresponding JIRA ticket number in the "Ext. Reference" field.
 
