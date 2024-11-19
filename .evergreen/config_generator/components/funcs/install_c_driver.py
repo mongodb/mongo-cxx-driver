@@ -12,7 +12,7 @@ from typing import Mapping
 # - the version of pkg:github/mongodb/mongo-c-driver in etc/purls.txt
 # - the default value of --c-driver-build-ref in etc/make_release.py
 # Only LIBMONGOC_DOWNLOAD_VERSION needs to be updated when pinning to an unreleased commit.
-MONGOC_VERSION_MINIMUM = '1.28.0'
+MONGOC_VERSION_MINIMUM = '1.29.0'
 
 
 class InstallCDriver(Function):
