@@ -874,7 +874,8 @@ void assert_error(const mongocxx::operation_exception& exception,
             "Snapshot reads require MongoDB 5.0 or later",
 
             // { MONGOC_ERROR_COMMAND, MONGOC_ERROR_PROTOCOL_BAD_WIRE_VERSION }
-            // mongoc: mongoc_collection_find_and_modify_with_opts, _mongoc_write_command_execute_idl
+            // mongoc: mongoc_collection_find_and_modify_with_opts,
+            // _mongoc_write_command_execute_idl
             "The selected server does not support hint for",
 
             // { MONGOC_ERROR_STREAM, MONGOC_ERROR_STREAM_NAME_RESOLUTION }
@@ -904,10 +905,11 @@ void assert_error(const mongocxx::operation_exception& exception,
 
         const bsoncxx::stdx::string_view message = exception.what();
 
-        const auto iter = std::find_if(
-            std::begin(patterns),
-            std::end(patterns),
-            [message](bsoncxx::stdx::string_view pattern) { return message.find(pattern) != message.npos; });
+        const auto iter = std::find_if(std::begin(patterns),
+                                       std::end(patterns),
+                                       [message](bsoncxx::stdx::string_view pattern) {
+                                           return message.find(pattern) != message.npos;
+                                       });
 
         if (iter != std::end(patterns)) {
             // Treat this as a client-side error.
