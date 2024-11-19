@@ -36,7 +36,7 @@ void bson_free_deleter(std::uint8_t* ptr) {
     bson_free(ptr);
 }
 
-std::string to_json_helper(document::view view, char* (*converter)(const bson_t*, std::size_t*)) {
+std::string to_json_helper(document::view view, decltype(bson_as_legacy_extended_json) converter) {
     bson_t bson;
 
     if (!bson_init_static(&bson, view.data(), view.length())) {
