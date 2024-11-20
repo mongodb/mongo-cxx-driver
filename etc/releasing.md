@@ -437,7 +437,6 @@ follows:
   distribution tarball.
 - If the script succeeded at creating the distribution tarball, pass it directly
   with `--dist-file ./build/mongo-cxx-driver-rX.Y.Z.tar.gz`.
-- If the only open JIRA ticket is the ticket tracking the release itself, pass `--allow-open-issues`.
 
 If all goes well, run the command again without `--dry-run`. This should update Jira and create a draft release on GitHub.
 
