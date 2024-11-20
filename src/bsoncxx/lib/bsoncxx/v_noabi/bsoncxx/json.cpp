@@ -36,7 +36,7 @@ void bson_free_deleter(std::uint8_t* ptr) {
     bson_free(ptr);
 }
 
-std::string to_json_helper(document::view view, decltype(bson_as_json) converter) {
+std::string to_json_helper(document::view view, decltype(bson_as_legacy_extended_json) converter) {
     bson_t bson;
 
     if (!bson_init_static(&bson, view.data(), view.length())) {
@@ -61,7 +61,7 @@ std::string to_json_helper(document::view view, decltype(bson_as_json) converter
 std::string to_json(document::view view, ExtendedJsonMode mode) {
     switch (mode) {
         case ExtendedJsonMode::k_legacy:
-            return to_json_helper(view, bson_as_json);
+            return to_json_helper(view, bson_as_legacy_extended_json);
 
         case ExtendedJsonMode::k_relaxed:
             return to_json_helper(view, bson_as_relaxed_extended_json);
@@ -76,7 +76,7 @@ std::string to_json(document::view view, ExtendedJsonMode mode) {
 std::string to_json(array::view view, ExtendedJsonMode mode) {
     switch (mode) {
         case ExtendedJsonMode::k_legacy:
-            return to_json_helper(view, bson_array_as_json);
+            return to_json_helper(view, bson_array_as_legacy_extended_json);
 
         case ExtendedJsonMode::k_relaxed:
             return to_json_helper(view, bson_array_as_relaxed_extended_json);

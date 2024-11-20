@@ -15,6 +15,7 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 
 ## Changed
 
+- Bump the minimum required C Driver version to [1.29.0](https://github.com/mongodb/mongo-c-driver/releases/tag/1.29.0).
 - CMake option `ENABLE_TESTS` is now `OFF` by default.
   - Set `ENABLE_TEST=ON` to re-enable building test targets.
   - Set `BUILD_TESTING=ON` to include test targets in the "all" target when `ENABLE_TESTS=ON` (since 3.9.0, `OFF` by default).

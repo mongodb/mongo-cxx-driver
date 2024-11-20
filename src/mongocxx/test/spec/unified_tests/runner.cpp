@@ -866,46 +866,59 @@ void assert_error(const mongocxx::operation_exception& exception,
     }
 
     if (const auto is_client_error = expect_error["isClientError"]) {
-        if (std::strstr(exception.what(), "Snapshot reads require MongoDB 5.0 or later") !=
-            nullptr) {
-            // Original error: { MONGOC_ERROR_CLIENT, MONGOC_ERROR_CLIENT_SESSION_FAILURE }
-            // Do not assert a server-side error.
-            // The C++ driver throws this error as a server-side error operation_exception.
-            // Remove this special case as part of CXX-2377.
-            REQUIRE(is_client_error.get_bool());
-        } else if (std::strstr(exception.what(), "The selected server does not support hint for") !=
-                   nullptr) {
-            // Original error: { MONGOC_ERROR_COMMAND, MONGOC_ERROR_PROTOCOL_BAD_WIRE_VERSION }
-            // Do not assert a server-side error.
-            // The C++ driver throws this error as a server-side error operation_exception.
-            // Remove this special case as part of CXX-2377.
-            REQUIRE(is_client_error.get_bool());
-        } else if (std::strstr(exception.what(), "Error in KMS response") != nullptr) {
-            REQUIRE(is_client_error.get_bool());
-        } else if (std::strstr(exception.what(),
-                               "keyMaterial should have length 96, but has length 84") != nullptr) {
-            REQUIRE(is_client_error.get_bool());
-        } else if (std::strstr(exception.what(), "expected UTF-8 key") != nullptr) {
-            REQUIRE(is_client_error.get_bool());
-        } else if (std::strstr(exception.what(), "Unexpected field: 'invalid'") != nullptr) {
-            REQUIRE(is_client_error.get_bool());
-        } else if (std::strstr(exception.what(), "Failed to resolve kms.invalid.amazonaws.com") !=
-                   nullptr) {
-            REQUIRE(is_client_error.get_bool());
-        } else if (std::strstr(
-                       exception.what(),
-                       "The ciphertext refers to a customer master key that does not exist") !=
-                   nullptr) {
-            REQUIRE(is_client_error.get_bool());
-        } else if (std::strstr(exception.what(), "does not exist") != nullptr) {
-            REQUIRE(is_client_error.get_bool());
-        } else if (std::strstr(exception.what(),
-                               "Failed to resolve invalid-vault-csfle.vault.azure.net") !=
-                   nullptr) {
-            REQUIRE(is_client_error.get_bool());
-        } else if (is_client_error.get_bool()) {
-            // An operation_exception represents a server-side error.
-            REQUIRE(!is_client_error.get_bool());
+        // An explicit list of client-side errors. We do not yet have a reliable and consistent
+        // method to distinguish client-side errors from server-side errors. (CXX-2377)
+        static const bsoncxx::stdx::string_view patterns[] = {
+            // { MONGOC_ERROR_CLIENT, MONGOC_ERROR_CLIENT_SESSION_FAILURE }
+            // mongoc: mongoc_cmd_parts_assemble
+            "Snapshot reads require MongoDB 5.0 or later",
+
+            // { MONGOC_ERROR_COMMAND, MONGOC_ERROR_PROTOCOL_BAD_WIRE_VERSION }
+            // mongoc: mongoc_collection_find_and_modify_with_opts,
+            // _mongoc_write_command_execute_idl
+            "The selected server does not support hint for",
+
+            // { MONGOC_ERROR_STREAM, MONGOC_ERROR_STREAM_NAME_RESOLUTION }
+            // mongoc: mongoc_client_connect_tcp, mongoc_topology_scanner_node_setup_tcp
+            "Failed to resolve ",
+
+            // { MONGOCRYPT_STATUS_ERROR_CLIENT, MONGOCRYPT_GENERIC_ERROR_CODE }
+            // libmongocrypt: mongocrypt_kms_ctx_feed
+            "Error in KMS response",
+
+            // { MONGOCRYPT_STATUS_ERROR_CLIENT, MONGOCRYPT_GENERIC_ERROR_CODE }
+            // libmongocrypt: mongocrypt_ctx_setopt_key_material
+            "keyMaterial should have length 96, but has length 84",
+
+            // { MONGOCRYPT_STATUS_ERROR_CLIENT, MONGOCRYPT_GENERIC_ERROR_CODE }
+            // libmongocrypt: _mongocrypt_parse_optional_utf8, _mongocrypt_parse_required_utf8
+            "expected UTF-8 key",
+
+            // { MONGOCRYPT_STATUS_ERROR_CLIENT, MONGOCRYPT_GENERIC_ERROR_CODE }
+            // libmongocrypt: _mongocrypt_check_allowed_fields
+            "Unexpected field: 'invalid'",
+
+            // { MONGOCRYPT_STATUS_ERROR_CLIENT, MONGOCRYPT_GENERIC_ERROR_CODE }
+            // libmongocrypt: _kms_done
+            "key material not expected length",
+        };
+
+        const bsoncxx::stdx::string_view message = exception.what();
+
+        const auto iter = std::find_if(std::begin(patterns),
+                                       std::end(patterns),
+                                       [message](bsoncxx::stdx::string_view pattern) {
+                                           return message.find(pattern) != message.npos;
+                                       });
+
+        if (iter != std::end(patterns)) {
+            // Treat this as a client-side error.
+            const auto pattern = *iter;
+            CAPTURE(pattern);
+            REQUIRE(is_client_error.get_bool().value);
+        } else {
+            // Treat this as a server-side error.
+            REQUIRE(!is_client_error.get_bool().value);
         }
     }
 
