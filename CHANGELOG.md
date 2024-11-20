@@ -9,11 +9,11 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
 
 ## 4.0.0
 
-## Added
+### Added
 
 - Getter for the `start_at_operation_time` option in `mongocxx::v_noabi::options::change_stream`.
 
-## Changed
+### Changed
 
 - Bump the minimum required C Driver version to [1.29.0](https://github.com/mongodb/mongo-c-driver/releases/tag/1.29.0).
 - CMake option `ENABLE_TESTS` is now `OFF` by default.
@@ -21,12 +21,12 @@ Changes prior to 3.9.0 are documented as [release notes on GitHub](https://githu
   - Set `BUILD_TESTING=ON` to include test targets in the "all" target when `ENABLE_TESTS=ON` (since 3.9.0, `OFF` by default).
 - Layout of `mongocxx::v_noabi::options::change_stream` to support the new optional `start_at_operation_time` accessor.
 
-## Deprecated
+### Deprecated
 
 - Support for MongoDB Server 4.0.
   - See: [MongoDB Software Lifecycle Schedules](https://www.mongodb.com/legal/support-policy/lifecycles).
 
-## Removed
+### Removed
 
 - Support for external polyfill libraries.
   - `ENABLE_BSONCXX_POLY_USE_IMPLS=ON` is now implicit behavior.
