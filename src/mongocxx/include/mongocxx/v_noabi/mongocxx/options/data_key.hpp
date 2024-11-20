@@ -44,7 +44,8 @@ class data_key {
     ///    region: String,
     ///    key: String, // The Amazon Resource Name (ARN) to the AWS customer master key (CMK).
     ///    endpoint: Optional<String> // An alternate host identifier to send KMS requests to. May
-    ///    include port number. Defaults to "kms.<region>.amazonaws.com"
+    ///                               // include port number. Defaults to
+    ///                               // "kms.<region>.amazonaws.com"
     /// }
     /// ```
     ///
@@ -55,7 +56,7 @@ class data_key {
     ///    keyVaultEndpoint: String, // Host with optional port. Example: "example.vault.azure.net".
     ///    keyName: String,
     ///    keyVersion: Optional<String> // A specific version of the named key, defaults to using
-    ///    the key's primary version.
+    ///                                 // the key's primary version.
     /// }
     /// ```
     ///
@@ -68,9 +69,9 @@ class data_key {
     ///    keyRing: String,
     ///    keyName: String,
     ///    keyVersion: Optional<String>, // A specific version of the named key, defaults to using
-    ///    the key's primary version.
+    ///                                  // the key's primary version.
     ///    endpoint: Optional<String> // Host with optional port. Defaults to
-    ///    "cloudkms.googleapis.com".
+    ///                               // "cloudkms.googleapis.com".
     /// }
     /// ```
     ///
