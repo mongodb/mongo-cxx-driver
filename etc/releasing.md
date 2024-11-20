@@ -411,9 +411,9 @@ Run the release script with the git tag created above as an argument and
 
 ```bash
 make_release_args=(
+    -r upstream
     --jira-creds-file ~/.secrets/jira-creds.txt
     --github-token-file ~/.secrets/github-token.txt
-    -r upstream # Only if mongodb/mongo-cxx-driver is not "origin".
 )
 python ./etc/make_release.py "${make_release_args[@]:?}" --dry-run rX.Y.Z
 ```
@@ -431,6 +431,7 @@ follows:
   distribution tarball.
 - If the script succeeded at creating the distribution tarball, pass it directly
   with `--dist-file ./build/mongo-cxx-driver-rX.Y.Z.tar.gz`.
+- If the only open JIRA ticket is the ticket tracking the release itself, pass `--allow-open-issues`.
 
 If all goes well, run the command again without `--dry-run`. This should update Jira and create a draft release on GitHub.
 
