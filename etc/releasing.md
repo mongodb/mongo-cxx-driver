@@ -255,6 +255,12 @@ Update the contents of related Jira tickets as appropriate (improve the title, c
 > A ticket whose changes may impact users should either be a "Bug" or "New Feature".
 > Otherwise, the ticket should typically be a "Task".
 
+### Dry-run etc/make_release.py
+
+Perform a dry-run of the "Run etc/make_release.py" steps described below.
+
+Verify there are no unexpected errors or issues.
+
 ## Release Steps
 
 ### Update CHANGELOG...
