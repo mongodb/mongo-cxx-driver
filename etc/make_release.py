@@ -407,7 +407,7 @@ def build_c_driver(c_driver_build_ref, quiet):
 
     env = os.environ.copy()
     env['mongoc_version'] = c_driver_build_ref
-    run_shell_script('./.evergreen/scripts/install_c_driver.sh', env=env)
+    run_shell_script('./.evergreen/scripts/install-c-driver.sh', env=env)
 
     if not quiet:
         click.echo('Build of C Driver version "{}" was successful.'.format(c_driver_build_ref))
@@ -441,7 +441,7 @@ def build_distribution(release_tag, release_version, c_driver_dir, quiet, skip_d
     run_shell_script('. .evergreen/scripts/find-cmake-old.sh;'
                      'cd build;'
                      'echo ' + release_version + ' > VERSION_CURRENT;'
-                     '${CMAKE} -DCMAKE_BUILD_TYPE=Release '
+                     '${CMAKE} -DCMAKE_BUILD_TYPE=Release -DENABLE_TESTS=ON '
                      '-DCMAKE_PREFIX_PATH="' + c_driver_dir + '" '
                      '-DENABLE_UNINSTALL=ON ..;'
                      'cmake --build . --target dist')
