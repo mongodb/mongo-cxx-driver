@@ -81,7 +81,9 @@ class data_key {
     ///     keyId: Optional<String>, // keyId is the KMIP Unique Identifier to a 96 byte KMIP Secret
     ///                              // Data managed object.If keyId is omitted, the driver creates
     ///                              // a random 96 byte KMIP Secret Data managed object.
-    ///     endpoint: Optional<String> // Host with optional port.
+    ///     endpoint: Optional<String>, // Host with optional port.
+    ///     delegated: Optional<Boolean> // If true, this key should be decrypted by the KMIP
+    ///                                  // server.
     /// }
     /// ```
     ///
