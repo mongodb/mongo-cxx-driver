@@ -39,43 +39,54 @@ class data_key {
     ///
     /// If the KMS provider is "aws" the masterKey is required and has the following fields:
     ///
+    /// ```
     /// {
     ///    region: String,
     ///    key: String, // The Amazon Resource Name (ARN) to the AWS customer master key (CMK).
     ///    endpoint: Optional<String> // An alternate host identifier to send KMS requests to. May
-    ///    include port number. Defaults to "kms.<region>.amazonaws.com"
+    ///                               // include port number. Defaults to
+    ///                               // "kms.<region>.amazonaws.com"
     /// }
+    /// ```
     ///
     /// If the KMS provider is "azure" the masterKey is required and has the following fields:
     ///
+    /// ```
     /// {
     ///    keyVaultEndpoint: String, // Host with optional port. Example: "example.vault.azure.net".
     ///    keyName: String,
     ///    keyVersion: Optional<String> // A specific version of the named key, defaults to using
-    ///    the key's primary version.
+    ///                                 // the key's primary version.
     /// }
+    /// ```
     ///
     /// If the KMS provider is "gcp" the masterKey is required and has the following fields:
     ///
+    /// ```
     /// {
     ///    projectId: String,
     ///    location: String,
     ///    keyRing: String,
     ///    keyName: String,
     ///    keyVersion: Optional<String>, // A specific version of the named key, defaults to using
-    ///    the key's primary version.
+    ///                                  // the key's primary version.
     ///    endpoint: Optional<String> // Host with optional port. Defaults to
-    ///    "cloudkms.googleapis.com".
+    ///                               // "cloudkms.googleapis.com".
     /// }
+    /// ```
     ///
     /// If the KMS provider is "kmip" the masterKey is required and has the following fields:
     ///
+    /// ```
     /// {
-    //     keyId: Optional<String>, // keyId is the KMIP Unique Identifier to a 96 byte KMIP Secret
-    //                              // Data managed object.If keyId is omitted, the driver creates a
-    //                              // random 96 byte KMIP Secret Data managed object.
-    //     endpoint: Optional<String> // Host with optional port.
+    ///     keyId: Optional<String>, // keyId is the KMIP Unique Identifier to a 96 byte KMIP Secret
+    ///                              // Data managed object.If keyId is omitted, the driver creates
+    ///                              // a random 96 byte KMIP Secret Data managed object.
+    ///     endpoint: Optional<String>, // Host with optional port.
+    ///     delegated: Optional<Boolean> // If true, this key should be decrypted by the KMIP
+    ///                                  // server.
     /// }
+    /// ```
     ///
     /// If the KMS provider is "local" the masterKey is not applicable.
     ///
