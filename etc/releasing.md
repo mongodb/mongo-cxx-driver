@@ -413,6 +413,7 @@ Run the release script with the git tag created above as an argument and
 make_release_args=(
     --jira-creds-file ~/.secrets/jira-creds.txt
     --github-token-file ~/.secrets/github-token.txt
+    -r upstream # Only if mongodb/mongo-cxx-driver is not "origin".
 )
 python ./etc/make_release.py "${make_release_args[@]:?}" --dry-run rX.Y.Z
 ```
