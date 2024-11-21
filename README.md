@@ -6,6 +6,20 @@
 
 Welcome to the MongoDB C++ Driver!
 
+## Latest Stable Release
+
+The `releases/stable` tag indicates the latest stable release.
+This tag corresponds to the driver version which we currently recommend for use in production.
+By default, new users should clone or download the driver version which is currently indicated by this tag, e.g.:
+
+```bash
+# Use the latest stable release, which is currently recommended for use.
+git clone -b release/stable https://github.com/mongodb/mongo-cxx-driver.git
+```
+
+> [!NOTE]
+> Prior to 2024-11-21, `releases/stable` was a _branch_, not a tag.
+
 ## Driver Development Status
 
 > [!IMPORTANT]
@@ -20,16 +34,13 @@ Welcome to the MongoDB C++ Driver!
 | ...         | ...             | ...                         | ...                |
 | 3.0.0       | None            | Ready for use.              | Not Supported      |
 
-## Branches - `releases/stable` versus `master`
+## MongoDB Server Compatibility
 
-The default checkout branch of this repository is `releases/stable`. 
-This will always contain the latest stable release of the driver. The
- `master` branch is used for active development. `master` should 
-**only** be used when making contributions back to the driver, as it 
-is not stable for use in production.
+Compatibility of each C++ driver version with each MongoDB server is documented in the [MongoDB Manual](https://www.mongodb.com/docs/drivers/cxx#mongodb-compatibility).
 
-See [Driver Status by family and version](#driver-status-by-family-and-version)
-for more details about the various versions of the driver.
+## Bugs and Issues
+
+See our [JIRA project](https://jira.mongodb.com/browse/CXX).
 
 ## Resources
 
@@ -43,14 +54,6 @@ for more details about the various versions of the driver.
 * [MongoDB Database Manual](https://www.mongodb.com/docs/manual/)
 * [MongoDB Developer Center](https://www.mongodb.com/developer/languages/cpp/)
 * [StackOverflow](https://stackoverflow.com/questions/tagged/mongodb%20c%2b%2b)
-
-## MongoDB compatibility
-
-Compatibility of each C++ driver version with each MongoDB server is documented in the [MongoDB manual](https://www.mongodb.com/docs/drivers/cxx#mongodb-compatibility).
-
-## Bugs and issues
-
-See our [JIRA project](https://jira.mongodb.com/browse/CXX).
 
 ## License
 
