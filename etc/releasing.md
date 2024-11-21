@@ -604,9 +604,9 @@ This branch will be used to create a PR later.
 > [!IMPORTANT]
 > Make sure the `post-release-changes` branch is created on `master`, not `rX.Y.Z` or `releases/vX.Y`!
 
-Update the tables in `etc/apidocmenu.md` with entries for the new release.
+In `etc/apidocmenu.md`, update the list of versions under "Driver Documentation By Version" and the table under "Driver Development Status" with a new entry corresponding to this release.
 
-Edit `README.md` to match the updated `etc/apidocmenu.md`.
+In `README.md`, sync the "Driver Development Status" table with the updated table from `etc/apidocmenu.md`.
 
 Commit these changes to the `post-release-changes` branch:
 
