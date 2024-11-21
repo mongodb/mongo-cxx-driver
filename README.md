@@ -10,10 +10,10 @@ Welcome to the MongoDB C++ Driver!
 
 The `releases/stable` tag indicates the latest stable release.
 This tag corresponds to the driver version which we currently recommend for use in production.
-By default, new users should clone or download the driver version which is currently indicated by this tag, e.g.:
+By default, new users should clone or download the driver version which is currently indicated by this tag.
 
 ```bash
-# Use the latest stable release, which is currently recommended for use.
+# Use the latest stable release which is currently recommended for use.
 git clone -b release/stable https://github.com/mongodb/mongo-cxx-driver.git
 ```
 
