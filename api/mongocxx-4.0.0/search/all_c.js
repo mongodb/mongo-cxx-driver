@@ -57,7 +57,7 @@ var searchData=
   ['mongocxx_5fversion_5fpatch_54',['MONGOCXX_VERSION_PATCH',['../group__mongocxx-v__noabi-mongocxx-config-version-hpp.html#ga27e53624cfa3bba69279139473df30bc',1,'fwd.hpp']]],
   ['mongocxx_5fversion_5fstring_55',['MONGOCXX_VERSION_STRING',['../group__mongocxx-v__noabi-mongocxx-config-version-hpp.html#ga5fca7c40db8ae44213c85e7ab55b4d1d',1,'fwd.hpp']]],
   ['mongodb_20c_20driver_56',['MongoDB C++ Driver',['../index.html',1,'']]],
-  ['mongodb_20sever_20compatibility_57',['MongoDB Sever Compatibility',['../index.html#mongodb-sever-compatibility',1,'']]],
+  ['mongodb_20server_20compatibility_57',['MongoDB Server Compatibility',['../index.html#mongodb-server-compatibility',1,'']]],
   ['multiple_20appends_58',['Multiple Appends',['../topic-bsoncxx-examples-bson-documents.html#with-multiple-appends',1,'With Multiple Appends'],['../topic-bsoncxx-examples-bson-documents.html#with-multiple-appends-1',1,'With Multiple Appends']]],
   ['multiple_20bulk_20write_20operations_59',['Execute Multiple Bulk Write Operations',['../topic-mongocxx-examples-collections.html#execute-multiple-bulk-write-operations',1,'']]],
   ['multiple_20documents_60',['Multiple Documents',['../topic-mongocxx-examples-collections.html#find-multiple-documents',1,'Find Multiple Documents'],['../topic-bsoncxx-examples-bson-documents.html#to-create-multiple-documents',1,'To Create Multiple Documents'],['../topic-bsoncxx-examples-bson-documents.html#to-create-multiple-documents-1',1,'To Create Multiple Documents'],['../topic-mongocxx-examples-collections.html#update-multiple-documents',1,'Update Multiple Documents']]],
