@@ -10,13 +10,13 @@
 > Relevant bug fixes will be backported from the current major version to the previous major version for a period of one year after the new major version is released.
 
 | Version     | ABI Stability   | Development Stability       | Development Status |
-| ----------- | --------------- | --------------------------- | ------------------ |
+| :---------: | :-------------: | :-------------------------: | :----------------: |
 | master      | N/A             | _Do not use in production!_ | Active             |
-| 4.0.0       | None            | Ready for use.              | Bug Fixes Only     |
-| 3.11.0      | None            | Ready for use.              | Bug Fixes Only     |
-| 3.10.2      | None            | Ready for use.              | Not Supported      |
+| 4.0.0       | None            | Ready for Use               | Bug Fixes Only     |
+| 3.11.0      | None            | Ready for Use               | Bug Fixes Only     |
+| 3.10.2      | None            | Ready for Use               | Not Supported      |
 | ...         | ...             | ...                         | ...                |
-| 3.0.0       | None            | Ready for use.              | Not Supported      |
+| 3.0.0       | None            | Ready for Use               | Not Supported      |
 
 ## MongoDB Server Compatibility
 
