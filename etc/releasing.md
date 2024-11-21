@@ -339,7 +339,7 @@ Navigate to the [Webhook Settings](https://github.com/mongodb/mongo-cxx-driver/s
 
 Click `Edit` on the hook for `https://githook.mongodb.com/`.
 
-Add the branch to the `Payload URL`.
+Add the new release branch to the `Payload URL`. Remove unmaintained release branches.
 
 ### Pre-Release Changes PR
 
