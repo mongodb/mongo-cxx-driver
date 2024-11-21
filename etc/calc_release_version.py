@@ -151,6 +151,10 @@ def check_head_tag():  # type: () -> str | None
     # have git tell us if any tags that look like release tags point at HEAD;
     # based on our policy, a commit should never have more than one release tag
     tags = check_output(['git', 'tag', '--points-at', 'HEAD', '--list', 'r*']).split()
+
+    # exclude the releases/stable tag
+    tags = [tag for tag in tags if tag != 'releases/stable']
+
     tag = ''
     if len(tags) == 1:
         tag = tags[0]
