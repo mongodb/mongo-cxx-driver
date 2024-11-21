@@ -17,9 +17,6 @@ By default, new users should clone or download the driver version which is curre
 git clone -b release/stable https://github.com/mongodb/mongo-cxx-driver.git
 ```
 
-> [!NOTE]
-> Prior to 2024-11-21, `releases/stable` was a _branch_, not a tag.
-
 ## Driver Development Status
 
 > [!IMPORTANT]
