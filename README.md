@@ -14,7 +14,7 @@ By default, new users should clone or download the driver version which is curre
 
 ```bash
 # Use the latest stable release which is currently recommended for use.
-git clone -b release/stable https://github.com/mongodb/mongo-cxx-driver.git
+git clone -b releases/stable https://github.com/mongodb/mongo-cxx-driver.git
 ```
 
 ## Driver Development Status
