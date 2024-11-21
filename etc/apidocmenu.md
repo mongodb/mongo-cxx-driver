@@ -18,7 +18,7 @@
 | ...         | ...             | ...                         | ...                |
 | 3.0.0       | None            | Ready for use.              | Not Supported      |
 
-## MongoDB Sever Compatibility
+## MongoDB Server Compatibility
 
 MongoDB server version compatibility per driver version is documented in the [MongoDB Manual](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/compatibility/).
 
