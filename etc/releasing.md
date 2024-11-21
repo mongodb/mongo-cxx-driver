@@ -713,19 +713,20 @@ git checkout gh-pages
 git pull
 ```
 
-Update the `api/mongocxx-v4` symlink to refer to the new release version, e.g.:
+Update the `api/mongocxx-vX` symlink to refer to the new release version, e.g.:
 
 ```bash
 cd api
-rm mongocxx-v4
-ln -s mongocxx-X.Y.Z mongocxx-v4
+rm mongocxx-vX
+ln -s mongocxx-X.Y.Z mongocxx-vX
 ```
 
-Double-check that the `current` symlink is pointing to the symlink tracking the latest stable release, e.g.:
+Double-check that the `current` symlink is valid and points to the symlink tracking the latest stable release of the most recent major release version, e.g.:
 
 ```
 current     -> mongocxx-v4
 mongocxx-v4 -> mongocxx-4.Y.Z
+mongocxx-v3 -> mongocxx-3.Y.Z
 ```
 
 Add a new entry to the `sitemap_index.xml` file referencing the sitemap for `api/mongocxx-X.Y.Z`.
