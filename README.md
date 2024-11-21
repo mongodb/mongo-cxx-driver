@@ -33,7 +33,7 @@ git clone -b release/stable https://github.com/mongodb/mongo-cxx-driver.git
 
 ## MongoDB Server Compatibility
 
-Compatibility of each C++ driver version with each MongoDB server is documented in the [MongoDB Manual](https://www.mongodb.com/docs/drivers/cxx#mongodb-compatibility).
+MongoDB server version compatibility per driver version is documented in the [MongoDB Manual](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/compatibility/).
 
 ## Bugs and Issues
 
