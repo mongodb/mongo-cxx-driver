@@ -482,11 +482,11 @@ git push -f upstream releases/stable
 
 ### Coverity Report
 
-Export the `Issues: By Snapshot | SSDLC Report (v2)` view as a CSV named `static_analysis-X.Y.Z.csv`.
+Export the `Issues: By Snapshot | SSDLC Report (v2)` view as a CSV named `static_analysis_report-X.Y.Z.csv`.
 
 ### Upload SSDLC Reports
 
-Upload a copy of the `static_analysis-X.Y.Z.csv`, `etc/ssdlc_compliance_report.md`, `etc/third_party_vulnerabilities.md`, and `etc/augmented.sbom.json` files. Rename the files with the version number `-X.Y.Z` suffix in their filenames as already done for other files in this folder.
+Upload a copy of the `static_analysis_report-X.Y.Z.csv`, `etc/ssdlc_compliance_report.md`, `etc/third_party_vulnerabilities.md`, and `etc/augmented.sbom.json` files. Rename the files with the version number `-X.Y.Z` suffix in their filenames as already done for other files in this folder.
 
 > [!WARNING]
 > Uploading a file into the SSDLC Compliance Files folder is an irreversible action! However, the files may still be renamed. If necessary, rename any accidentally uploaded files to "(Delete Me)" or similar.
@@ -496,7 +496,7 @@ Four new files should be present in the [SSDLC Compliance Files](https://drive.g
 ```
 augmented.sbom-X.Y.Z.json
 ssdlc_compliance_report-X.Y.Z.md
-static_analysis-X.Y.Z.csv
+static_analysis_report-X.Y.Z.csv
 third_party_vulnerabilities-X.Y.Z.md
 ```
 
@@ -604,9 +604,9 @@ This branch will be used to create a PR later.
 > [!IMPORTANT]
 > Make sure the `post-release-changes` branch is created on `master`, not `rX.Y.Z` or `releases/vX.Y`!
 
-Update the tables in `etc/apidocmenu.md` with entries for the new release.
+In `etc/apidocmenu.md`, update the list of versions under "Driver Documentation By Version" and the table under "Driver Development Status" with a new entry corresponding to this release.
 
-Edit `README.md` to match the updated `etc/apidocmenu.md`.
+In `README.md`, sync the "Driver Development Status" table with the updated table from `etc/apidocmenu.md`.
 
 Commit these changes to the `post-release-changes` branch:
 
@@ -713,19 +713,20 @@ git checkout gh-pages
 git pull
 ```
 
-Update the `api/mongocxx-v3` symlink to refer to the new release version:
+Update the `api/mongocxx-vX` symlink to refer to the new release version, e.g.:
 
 ```bash
 cd api
-rm mongocxx-v3
-ln -s mongocxx-X.Y.Z mongocxx-v3
+rm mongocxx-vX
+ln -s mongocxx-X.Y.Z mongocxx-vX
 ```
 
-Double-check that the `current` symlink is pointing to the symlink tracking the latest stable release:
+Double-check that the `current` symlink is valid and points to the symlink tracking the latest stable release of the most recent major release version, e.g.:
 
 ```
-current     -> mongocxx-v3
-mongocxx-v3 -> mongocxx-X.Y.Z
+current     -> mongocxx-v4
+mongocxx-v4 -> mongocxx-4.Y.Z
+mongocxx-v3 -> mongocxx-3.Y.Z
 ```
 
 Add a new entry to the `sitemap_index.xml` file referencing the sitemap for `api/mongocxx-X.Y.Z`.

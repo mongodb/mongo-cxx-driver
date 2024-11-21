@@ -1,71 +1,26 @@
 # MongoDB C++ Driver
 
-## Driver status by family and version
+## Driver Documentation By Version
 
-Stability indicates whether this driver is recommended for production use.
-Currently, no drivers guarantee API or ABI stability.
+[4.0.0](../mongocxx-4.0.0) | [3.11.0](../mongocxx-3.11.0) | [3.10.2](../mongocxx-3.10.2) | [3.10.1](../mongocxx-3.10.1) | [3.10.0](../mongocxx-3.10.0) | [3.9.0](../mongocxx-3.9.0) | [3.8.1](../mongocxx-3.8.1) | [3.8.0](../mongocxx-3.8.0) | [3.7.2](../mongocxx-3.7.2) | [3.7.1](../mongocxx-3.7.1) | [3.7.0](../mongocxx-3.7.0) | [3.6.7](../mongocxx-3.6.7) | [3.6.6](../mongocxx-3.6.6) | [3.6.5](../mongocxx-3.6.5) | [3.6.4](../mongocxx-3.6.4) | [3.6.3](../mongocxx-3.6.3) | [3.6.2](../mongocxx-3.6.2) | [3.6.1](../mongocxx-3.6.1) | [3.6.0](../mongocxx-3.6.0) | [3.5.1](../mongocxx-3.5.1) | [3.5.0](../mongocxx-3.5.0) | [3.4.2](../mongocxx-3.4.2) | [3.4.1](../mongocxx-3.4.1) | [3.4.0](../mongocxx-3.4.0) | [3.3.2](../mongocxx-3.3.2) | [3.3.1](../mongocxx-3.3.1) | [3.3.0](../mongocxx-3.3.0) | [3.2.1](../mongocxx-3.2.1) | [3.2.0](../mongocxx-3.2.0) | [3.1.4](../mongocxx-3.1.4/) | [3.1.3](../mongocxx-3.1.3/) | [3.1.2](../mongocxx-3.1.2/) | [3.1.1](../mongocxx-3.1.1/) | [3.1.0](../mongocxx-3.1.0/) | [3.0.3](../mongocxx-3.0.3/) | [3.0.2](../mongocxx-3.0.2/) | [3.0.1](../mongocxx-3.0.1/) | [3.0.0](../mongocxx-3.0.0/)
 
-| Family/version       | Stability | Development        | Purpose                            |
-| -------------------- | --------- | ------------------ | ---------------------------------- |
-| (repo master branch) | Unstable  | Active development | New feature development            |
-| mongocxx 3.11.x      | Stable    | Bug fixes only     | Current stable C++ driver release  |
-| mongocxx 3.10.x      | Stable    | None               | Previous stable C++ driver release |
-| mongocxx 3.9.x       | Stable    | None               | Previous stable C++ driver release |
-| mongocxx 3.8.x       | Stable    | None               | Previous stable C++ driver release |
-| mongocxx 3.7.x       | Stable    | None               | Previous stable C++ driver release |
-| mongocxx 3.6.x       | Stable    | None               | Previous stable C++ driver release |
-| mongocxx 3.5.x       | Stable    | None               | Previous stable C++ driver release |
-| mongocxx 3.4.x       | Stable    | None               | Previous stable C++ driver release |
-| mongocxx 3.3.x       | Stable    | None               | Previous stable C++ driver release |
-| mongocxx 3.2.x       | Stable    | None               | Previous stable C++ driver release |
-| mongocxx 3.1.x       | Stable    | None               | Previous stable C++ driver release |
-| mongocxx 3.0.x       | Stable    | None               | Previous stable C++ driver release |
+## Driver Development Status
 
-## Documentation versions available
+> [!IMPORTANT]
+> Relevant bug fixes will be backported from the current major version to the previous major version for a period of one year after the new major version is released.
 
-| mongocxx                             |
-| ------------------------------------ |
-| [mongocxx-3.11.0](../mongocxx-3.11.0)|
-| [mongocxx-3.10.2](../mongocxx-3.10.2)|
-| [mongocxx-3.10.1](../mongocxx-3.10.1)|
-| [mongocxx-3.10.0](../mongocxx-3.10.0)|
-| [mongocxx-3.9.0](../mongocxx-3.9.0)  |
-| [mongocxx-3.8.1](../mongocxx-3.8.1)  |
-| [mongocxx-3.8.0](../mongocxx-3.8.0)  |
-| [mongocxx-3.7.2](../mongocxx-3.7.2)  |
-| [mongocxx-3.7.1](../mongocxx-3.7.1)  |
-| [mongocxx-3.7.0](../mongocxx-3.7.0)  |
-| [mongocxx-3.6.7](../mongocxx-3.6.7)  |
-| [mongocxx-3.6.6](../mongocxx-3.6.6)  |
-| [mongocxx-3.6.5](../mongocxx-3.6.5)  |
-| [mongocxx-3.6.4](../mongocxx-3.6.4)  |
-| [mongocxx-3.6.3](../mongocxx-3.6.3)  |
-| [mongocxx-3.6.2](../mongocxx-3.6.2)  |
-| [mongocxx-3.6.1](../mongocxx-3.6.1)  |
-| [mongocxx-3.6.0](../mongocxx-3.6.0)  |
-| [mongocxx-3.5.1](../mongocxx-3.5.1)  |
-| [mongocxx-3.5.0](../mongocxx-3.5.0)  |
-| [mongocxx-3.4.2](../mongocxx-3.4.2)  |
-| [mongocxx-3.4.1](../mongocxx-3.4.1)  |
-| [mongocxx-3.4.0](../mongocxx-3.4.0)  |
-| [mongocxx-3.3.2](../mongocxx-3.3.2)  |
-| [mongocxx-3.3.1](../mongocxx-3.3.1)  |
-| [mongocxx-3.3.0](../mongocxx-3.3.0)  |
-| [mongocxx-3.2.1](../mongocxx-3.2.1)  |
-| [mongocxx-3.2.0](../mongocxx-3.2.0)  |
-| [mongocxx-3.1.4](../mongocxx-3.1.4/) |
-| [mongocxx-3.1.3](../mongocxx-3.1.3/) |
-| [mongocxx-3.1.2](../mongocxx-3.1.2/) |
-| [mongocxx-3.1.1](../mongocxx-3.1.1/) |
-| [mongocxx-3.1.0](../mongocxx-3.1.0/) |
-| [mongocxx-3.0.3](../mongocxx-3.0.3/) |
-| [mongocxx-3.0.2](../mongocxx-3.0.2/) |
-| [mongocxx-3.0.1](../mongocxx-3.0.1/) |
-| [mongocxx-3.0.0](../mongocxx-3.0.0/) |
+| Version     | ABI Stability   | Development Stability       | Development Status |
+| :---------: | :-------------: | :-------------------------: | :----------------: |
+| master      | N/A             | _Do not use in production!_ | Active             |
+| 4.0.0       | None            | Ready for Use               | Bug Fixes Only     |
+| 3.11.0      | None            | Ready for Use               | Bug Fixes Only     |
+| 3.10.2      | None            | Ready for Use               | Not Supported      |
+| ...         | ...             | ...                         | ...                |
+| 3.0.0       | None            | Ready for Use               | Not Supported      |
 
-## MongoDB compatibility
+## MongoDB Server Compatibility
 
-Compatibility of each C++ driver version with each MongoDB server is documented in the [MongoDB manual](https://www.mongodb.com/docs/drivers/cxx#mongodb-compatibility).
+MongoDB server version compatibility per driver version is documented in the [MongoDB Manual](https://www.mongodb.com/docs/languages/cpp/cpp-driver/current/compatibility/).
 
 ## Resources
 
