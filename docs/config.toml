@@ -1,4 +1,4 @@
-baseurl = "https://mongocxx.org"
+baseurl = "https://mongocxx.org/"
 languageCode = "en-us"
 title = "MongoDB C++ Driver Manual"
 theme = "mongodb"
@@ -22,7 +22,7 @@ disableKinds = ["taxonomy", "term"]
     pre = "<i class='fa fa-book'></i>"
     weight = 90
     identifier = "apiDocs"
-    url = "https://mongocxx.org/api/current"
+    url = "https://mongocxx.org/api/current/"
 
 [[menu.main]]
     name = "Contributing"
