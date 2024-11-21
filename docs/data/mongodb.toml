@@ -2,6 +2,4 @@
 githubRepo = "mongo-cxx-driver"
 githubBranch = "master"
 highlightTheme = "idea.css"
-api3Url = "https://mongocxx.org/api/mongocxx-v3"
-api1Url = "https://mongocxx.org/api/legacy-v1"
-
+apiUrl = "https://mongocxx.org/api/current/"
