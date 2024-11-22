@@ -546,6 +546,18 @@ python path/to/tools/create-silk-asset-group.py "${create_args[@]:?}"
 
 Verify the new asset group (`mongo-cxx-driver-X.Y`) is present in the [Silk Asset Inventory](https://us1.app.silk.security/inventory/all).
 
+Update the Silk asset group identifier in `.evergreen/scripts/check-augmented-sbom.sh` to refer to the new silk asset group created above:
+
+```bash
+silkbomb_download_flags=(
+  ...
+  --silk-asset-group mongo-cxx-driver-X.Y # <--
+  ...
+)
+```
+
+Commit and push this change on the `releases/vX.Y` branch.
+
 ### Update Snyk
 
 > [!IMPORTANT]
