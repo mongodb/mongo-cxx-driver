@@ -331,16 +331,6 @@ Commit the updates to `CHANGELOG.md`.
 git commit -m 'Update CHANGELOG for X.Y.Z'
 ```
 
-### Update GitHub Webhook
-
-For a non-patch release, update the [Github Webhook](https://wiki.corp.mongodb.com/display/INTX/Githook) to include the new branch.
-
-Navigate to the [Webhook Settings](https://github.com/mongodb/mongo-cxx-driver/settings/hooks)
-
-Click `Edit` on the hook for `https://githook.mongodb.com/`.
-
-Add the new release branch to the `Payload URL`. Remove unmaintained release branches.
-
 ### Pre-Release Changes PR
 
 Push the `pre-release-changes` branch to a fork repository and create a PR to merge `pre-release-changes` onto `master`:
@@ -472,6 +462,16 @@ Navigate to the
 [fixVersions page on Jira](https://jira.mongodb.com/plugins/servlet/project-config/CXX/versions?status=unreleased).
 
 Click the "..." next to the relevant version and select "Release".
+
+### Update GitHub Webhook
+
+For a non-patch release, update the [Github Webhook](https://wiki.corp.mongodb.com/display/INTX/Githook) to include the new branch.
+
+Navigate to the [Webhook Settings](https://github.com/mongodb/mongo-cxx-driver/settings/hooks)
+
+Click `Edit` on the hook for `https://githook.mongodb.com/`.
+
+Add the new release branch to the `Payload URL`. Remove unmaintained release branches.
 
 ### Update releases/stable
 
