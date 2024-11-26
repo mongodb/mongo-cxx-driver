@@ -22,20 +22,10 @@ export DEB_LDFLAGS_MAINT_APPEND := -lpthread
 	dh $@
 
 override_dh_auto_configure:
-ifneq (,$(filter pkg.mongo-cxx-driver.mnmlstc,$(DEB_BUILD_PROFILES)))
 	dh_auto_configure -B$(CURDIR)/build -- \
 	-DBUILD_VERSION=$(DEB_VERSION_UPSTREAM) \
-	-DBSONCXX_POLY_USE_MNMLSTC=1 \
-	-DFETCHCONTENT_FULLY_DISCONNECTED=OFF \
 	-DENABLE_TESTS=OFF \
 	-DENABLE_UNINSTALL=OFF
-else
-	dh_auto_configure -B$(CURDIR)/build -- \
-	-DBUILD_VERSION=$(DEB_VERSION_UPSTREAM) \
-	-DBSONCXX_POLY_USE_BOOST=1 \
-	-DENABLE_TESTS=OFF \
-	-DENABLE_UNINSTALL=OFF
-endif
 
 override_dh_auto_build:
 	dh_auto_build -B$(CURDIR)/build -- all doxygen-current

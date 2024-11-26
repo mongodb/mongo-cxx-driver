@@ -3,6 +3,7 @@ mongo-cxx-driver (4.0.0-1) UNRELEASED; urgency=medium
   * New upstream release
   * Drop Kyle Kloberdanz as uploader
   * Bump dependency on libmongoc-dev
+  * Drop MNMLSTC build profile and Boost dependency
 
  -- Roberto C. Sanchez <roberto@connexer.com>  Tue, 26 Nov 2024 12:15:26 -0500
 

@@ -4,12 +4,9 @@ Maintainer: Mongo C++ Driver Team <mongo-cxx-driver-debian@googlegroups.com>
 Uploaders: Kevin Albertson <kevin.albertson@mongodb.com>,
            Roberto C. Sanchez <roberto@connexer.com>
 Build-Depends: debhelper (>= 11),
-               git <pkg.mongo-cxx-driver.mnmlstc>,
-               ca-certificates <pkg.mongo-cxx-driver.mnmlstc>,
                cmake,
                pkgconf,
                libmongoc-dev (>= 1.29.0),
-               libboost-dev,
                libsasl2-dev,
                libutf8proc-dev,
                doxygen
