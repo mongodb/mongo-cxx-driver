@@ -2,8 +2,7 @@ Source: mongo-cxx-driver
 Priority: optional
 Maintainer: Mongo C++ Driver Team <mongo-cxx-driver-debian@googlegroups.com>
 Uploaders: Kevin Albertson <kevin.albertson@mongodb.com>,
-           Roberto C. Sanchez <roberto@connexer.com>,
-           Kyle Kloberdanz <kyle.kloberdanz@mongodb.com>
+           Roberto C. Sanchez <roberto@connexer.com>
 Build-Depends: debhelper (>= 11),
                git <pkg.mongo-cxx-driver.mnmlstc>,
                ca-certificates <pkg.mongo-cxx-driver.mnmlstc>,
